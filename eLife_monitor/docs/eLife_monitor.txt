@@ -1,0 +1,36 @@
+eLife_monitor. 
+Development notes.
+
+
+
+The eLife_monitor application is an extremely small java application that listens on port 10002 for 
+connections. The monitor should be configured as a auto-restarting service using the java service wrapper.
+
+To run the application:
+java eLife_monitor
+
+Currently support commands
+All file operations only operate on config, scripts and datafiles directories. 
+The exception is delete which will only operate on config and scripts.
+
+LIST . If a top level comment is present in the file
+it will be listed. eg. <DESC>some comments</DESC>
+START
+STOP 
+RESTART
+EXIT (leaves the monitor application, the service should be configured to restart automatically)
+DELETE
+UPLOAD (attatch the XML file as a child to the <ADMIN.... > root element. Scripts are not yet supported.
+DOWNLOAD (the file will be attatched to the root element<FILE NAME="..."/> . Scripts are not yet supported.
+SELECT (EXTRA should have the appropriate file to be set as the bootup configuration)
+
+XML syntax is
+<ADMIN COMMAND="..." DIR="..." EXTRA="..." />
+Not all commands require a directory to be specified.
+
+Commands are simple to ensure maximum reliability of this application.
+
+Errors are returned in a <ERROR> ... </ERROR> block if required
+
+All commands will return some indication, if the command does not by nature retun information (for example file delete
+or upload) , a success message will be returned. eg. <DELETE RESULT="SUCCESS" />

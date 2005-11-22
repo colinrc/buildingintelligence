@@ -1,0 +1,46 @@
+2005/6/14
+Added base 64 support for log files
+Released V1.44
+
+2005/6/7
+Added support for wildcard file selection in directory list. Supports log file access to admin plugin
+Released V1.43
+
+2005/2/26
+Handled connection from two Jedit plugin connections better
+Added startup parsing of bootstrap and passing startup file to jEdit plugin
+Added better error transmitting to the admin plugin 
+Added heartbeat to detect jEdit plugin client going away
+Released V1.39
+
+2005/2/26
+Fixed listing of script files
+Released version 1.38
+
+2005/2/24
+Added last modifed timestamp to file list
+Released version 1.36
+
+2005/2/20
+Modified to only pic up schema's from the templates directory. This must be used with eLife server 0.9.106 or above
+Released version 1.35
+
+2005/2/19
+All schema and dtd's files are now sent whenever the admin tool connects
+Released version 1.34
+
+2005/2/17
+XML parser misreports some erros as IO errors. Files with IO errors are now sent in the file list.
+Released version 1.33
+
+2005/2/15
+Ensured all file are sent in directory listing; even if they contain XML problems
+Released version 1.32
+
+2005/2/13
+Added client restart command
+Released version 1.31
+
+2005/2/11
+Ensure download can send arbitrary length files
+Released version 1.30

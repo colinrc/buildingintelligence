@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: ../ext/jdom.jar ../ext/xercesImpl.jar ../ext/xmlapis.jar 
+Main-Class: au.com.BI.Admin.eLife_monitor
+
