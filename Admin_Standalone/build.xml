@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<project name="eLife_Admin" default="dist" basedir=".">
+
+	<property file="build.properties"/>
+
+	
+	<property name="jar.name"  value="eLife_Admin.jar"/>
+
+	<path id="project.class.path">
+		<pathelement location="."/>
+	</path>
+
+
+
+	<target name="compile">
+		<javac
+			srcdir="src"
+			destdir = "bin"
+			deprecation="on"
+			includeJavaRuntime="yes"
+		>
+			<classpath refid="project.class.path"/>
+		</javac>
+	</target>
+
+
+
+	
+	<target name="jar" >
+		<jar jarfile="dist/${jar.name}">
+			<fileset dir="bin">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir=".">
+				<include name="**/*.props"/>
+				<include name="**/*.html"/>
+				<include name="**/*.gif"/>
+				<include name="actions.xml"/>
+				<include name="dockables.xml"/>
+			</fileset>
+			<fileset dir="src">
+				<include name="**/*.properties" />
+			</fileset>
+		</jar>
+	</target>
+	
+
+	<target name="clean" depends="">
+		<delete>
+			<fileset dir="bin">
+				<include name="**/*.class"/>
+			</fileset>
+		</delete>
+	</target>
+
+
+	<target name="clean-dist" depends="clean">
+		<delete file="${install.dir}/${jar.name}" />
+	</target>
+	<target name="increment" depends="" description="Increments build number and creates a zip file.">
+		<propertyfile file="src/my.properties" >
+		<entry  key="minor_version" type="int" operation="+" value="1" />
+	</propertyfile>
+	<property file="src/my.properties" />
+		<echo message="Version number now ${major_version}.${minor_version}" />
+	</target>
+
+	<target name="dist_clean" depends="" >
+		  <delete>
+		    <fileset dir="dist" includes="*.zip"/>
+		  </delete>
+	</target>
+		    	
+	<target name="dist" depends="dist_clean,increment" >
+		<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
+			update="false"
+			basedir="dist" 
+			includes = "*.jar"  />
+	</target>
+	
+	
+
+	
+</project>
