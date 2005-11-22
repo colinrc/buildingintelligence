@@ -1,0 +1,13 @@
+13/Sep/05
+Added GC100 simulator, port 5005. Currently IR only
+Released version 1.16
+
+26/Aug/05
+Reformatted output
+Released version 1.15
+
+25/Aug/05
+Added release notes file
+Added HexOnly parameter to sim.properties file. This will force all characters to the GUI to be displayed as HEX rather
+than just the non-printable ones.
+Released version 1.14
