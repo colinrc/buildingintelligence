@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE DOCKABLES SYSTEM "dockables.dtd">
+
+<!-- eLife dockable windows -->
+
+<DOCKABLES>
+	<DOCKABLE NAME="eLife">
+		new eLife_Admin(view, position);
+	</DOCKABLE>
+</DOCKABLES>

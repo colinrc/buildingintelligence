@@ -1,0 +1,118 @@
+2005/11/17
+Added M1 debug panel
+Released V0.35
+
+2005/10/2
+Added copy button for log pane, to copy log contents to clipboard.
+Released V0.34
+
+2005/9/16
+Fixed tail command
+Added explicit filtering for CBUS MMI commands on log pane. Use with care, may possibly remove other messages as
+the MMI filtering is based on the initial characters from the message.
+Released V0.33
+
+2005/7/5
+Added IR panel fields for IR end time 
+Released V0.32
+
+2005/6/23
+Added debug panel for Oregon weather station
+Ensure extraneous IR Learn instructions are not sent on first connection to server.
+Released V0.31
+
+2005/6/16
+Remove incorrect code to try to force popups always displayed in IR
+Released V0.30
+
+2005/6/15
+Added base 64 encoding
+Released V0.29
+
+2005/6/14
+Improved IR workflow
+Added server log access
+Added dynamic reload of IR database and macros
+Released V0.28
+
+2005/4/13
+Added IR learnt feedback
+Improved shutdown handling, should stop hanging
+Released V0.27
+
+2005/3/26
+Added colour coding for warning or severe log messages
+Ensure update messages occur for jrobin graph definitions
+Released V0.26
+
+2005/2/26
+Seperated eLife startup highlight file in config list, to the file it was actually started with
+Added filtering to log messages
+Fixed problem with dynamic unloading of plugin
+Fixed further heartbeat issues
+Added message if a admin client is already using the monitor
+Released V0.25
+
+2005/2/24
+Added timestamp to file list
+Released V0.23
+
+2005/2/24
+Ensure IP heartbeats are properly closed down to stop connection cycling
+Released V0.22
+
+2005/2/23
+Use OS specific path seperator to ensure sidekick functions correctly
+Released V0.20
+
+2005/2/22
+IR Learn with no IR configured on the server will now clear the learn button and display a message
+
+2005/2/19
+Fixed Datafiles tab for consistency with all tabs
+Added file transfer without buffer creation to support uploading schema files.
+Released V0.19
+
+2005/2/18
+Changed startup file to bold
+Made button names consistent
+Fixed config-core spacing problem
+Released V0.18
+
+2005/2/17
+Highlighted file in config list now currently selected startup file
+seperated Client and client-core into different panels
+Released V0.17
+
+2005/2/16
+Changes to support log stream
+Released V0.16
+
+2005/2/16
+Added status updates for client.xml upload
+Released V0.15
+
+2005/2/15
+Debug panels are no longer dynamically refreshed from client
+Debug packages request is not sent to client on system starup
+Current debug levels are sent to client on connection
+Changed log trace messages to be done in the AWT (swing) thread, try to stop system locks.
+Released V0.14
+
+2005/2/13
+Removed arbitrary command field
+Improved IR learning button enable handling
+Released V0.13
+
+2005/2/13
+Added Client restart button
+Released V0.12
+
+2005/2/13
+Added IR learn capabilities, once server is updated to support it
+Improved layout on client tab
+Changed client paths to reflect installation
+Improved handling of monitor client going away
+Added arbirary command
+Released V0.11
+
