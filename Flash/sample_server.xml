@@ -1,0 +1,541 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+        <DESC>My demonstration configuration</DESC>
+        <!-- ______________________________________  JRobin ________________________________ -->
+        <JROBIN ACTIVE="N" INTERVAL="5" RRD="test">
+               <DATA DATASOURCE="lounge_light" DISPLAY_NAME="LOUNGE_LIGHT" VARIABLE="RRD_LL" SOURCE="USAGE" SEARCH_VALUE="on" FUNCTION="TOTAL"/>
+               <!--DATA DATASOURCE="temperature" FUNCTION="TOTAL" VARIABLE="COUNTER"/-->
+                <DATA_ALL DISPLAY_NAME="LOUNGE_LIGHT">
+                        <DATASOURCE VARIABLE="RRD_LIGHT_USAGE" SOURCE="USAGE" SEARCH_VALUE="on" FUNCTION="TOTAL"/>
+                        <DATASOURCE VARIABLE="RRD_LIGHT_EXTRA" SOURCE="EXTRA_VALUE1" FUNCTION="AVG"/>
+                </DATA_ALL>
+                <DATA_POWER_CONSUMPTION DATASOURCE="lounge_light_power" DISPLAY_NAME="LOUNGE_LIGHT" VARIABLE="RRD_LL_PWR" SOURCE="EXTRA_VALUE1" RATIO = "1"/>
+        </JROBIN>
+        <!-- ______________________________________  IR LEARNER _____________________________ -->
+        <!-- flow may be NONE, RTSCTS" -->
+        <DEVICE ACTIVE="N" NAME="IR_LEARNER" DISPLAY_NAME="IR LEARNER">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="5000"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5003"/>
+                </CONNECTION>
+                <PARAMETERS>
+                        <ITEM NAME="STX" VALUE=""/>
+                        <ITEM NAME="ETX" VALUE="\n"/>
+                </PARAMETERS>
+                <IR_LEARNER/>
+        </DEVICE>
+       <!-- ______________________________________  PELCO DEFS  ____________________  -->
+        <DEVICE ACTIVE="N" NAME="PELCO" DISPLAY_NAME="Pelco Defs">
+                <CONNECTION>
+                        <SERIAL ACTIVE="Y" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                </CONNECTION>
+                <PARAMETERS>
+                        <ITEM NAME="PROTOCOL" VALUE="D" />
+                </PARAMETERS>
+                <PELCO>
+                        <CAMERA ACTIVE="Y" KEY="1" DISPLAY_NAME="FRONT_CAMERA" ZOOM="b8" />
+                </PELCO>
+        </DEVICE>
+        <!-- ______________________________________  TUTONDO DEFS  ____________________  -->
+        <DEVICE ACTIVE="Y" NAME="TUTONDO" DISPLAY_NAME="Tutondo Audio">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                </CONNECTION>
+                <CATALOGUE NAME="Tutondo Inputs">
+                        <ITEM CODE="cd1" VALUE="1"/>
+                        <ITEM CODE="cd2" VALUE="2"/>
+                        <ITEM CODE="digital" VALUE="3"/>
+                        <ITEM CODE="tv" VALUE="4"/>
+                </CATALOGUE>
+                <CATALOGUE NAME="Tutondo Functions">
+                        <ITEM CODE="cd-rw" VALUE="1"/>
+                        <ITEM CODE="cd-play" VALUE="4"/>
+                        <ITEM CODE="cd-ff" VALUE="5"/>
+                        <ITEM CODE="cd-stop" VALUE="3"/>
+                        <ITEM CODE="cd-pause" VALUE="9"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="INPUTS" VALUE="Tutondo Inputs"/>
+                        <ITEM NAME="FUNCTIONS" VALUE="Tutondo Functions"/>
+                        <ITEM NAME="POLL_INTERVAL" VALUE="3"/>
+                        <ITEM NAME="PROTOCOL" VALUE="B" />
+                </PARAMETERS>
+                <TUTONDO>
+                        <AUDIO KEY="1" DISPLAY_NAME="LOUNGE_AUDIO"/>
+                        <AUDIO ACTIVE="N" KEY="2" DISPLAY_NAME="BBQ_AUDIO"/>
+                </TUTONDO>
+        </DEVICE>
+        <!-- the key is the Tutondo zone, Display name is the flash icon name -->
+        
+        <!-- ______________________________________  KRAMER DEFS  ____________________  -->
+        <DEVICE ACTIVE="N" NAME="KRAMER" DISPLAY_NAME="Kramer Matrix">
+                <CONNECTION>
+                        <SERIAL ACTIVE="Y" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                </CONNECTION>
+                <CATALOGUE NAME="Kramer Audio Inputs">
+                        <ITEM CODE="cd1" VALUE="1"/>
+                        <ITEM CODE="cd2" VALUE="2"/>
+                        <ITEM CODE="digital" VALUE="3"/>
+                        <ITEM CODE="tv" VALUE="4"/>
+                </CATALOGUE>
+                <CATALOGUE NAME="Kramer Video Inputs">
+                        <ITEM CODE="cd1" VALUE="1"/>
+                        <ITEM CODE="cd2" VALUE="2"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="AUDIO_INPUTS" VALUE="Kramer Audio Inputs"/>
+                        <ITEM NAME="AV_INPUTS" VALUE="Kramer Video Inputs"/>
+                </PARAMETERS>
+                <KRAMER>
+                        <AV KEY="0" DISPLAY_NAME="ALL"/>
+                        <AV KEY="1" DISPLAY_NAME="FAMILY_AV"/>
+                        <AV KEY="2" DISPLAY_NAME="KITCHEN_AV"/>
+                        <AV KEY="3" DISPLAY_NAME="STUDY_AV"/>
+                </KRAMER>
+        </DEVICE>
+        <!-- the key is the Lramer output, Display name is the flash icon name -->
+        <!-- ______________________________________  HAL DEFS  ____________________  -->
+        <DEVICE ACTIVE="N" NAME="HAL" DISPLAY_NAME="HAL Audio">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="4800" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="5000"/>
+                </CONNECTION>
+                <CATALOGUE NAME="HAL Inputs">
+                        <ITEM CODE="cd1" VALUE="01"/>
+                        <ITEM CODE="cd2" VALUE="02"/>
+                        <ITEM CODE="digital" VALUE="03"/>
+                        <ITEM CODE="tv" VALUE="04"/>
+                </CATALOGUE>
+                <CATALOGUE NAME="HAL Functions">
+                        <ITEM CODE="cd-rw" VALUE="1"/>
+                        <ITEM CODE="cd-play" VALUE="4"/>
+                        <ITEM CODE="cd-ff" VALUE="5"/>
+                        <ITEM CODE="cd-stop" VALUE="3"/>
+                        <ITEM CODE="cd-pause" VALUE="9"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="INPUTS" VALUE="HAL Inputs"/>
+                        <ITEM NAME="FUNCTIONS" VALUE="HAL Functions"/>
+                        <ITEM NAME="POLL_INTERVAL" VALUE="10"/>
+                </PARAMETERS>
+                <HAL>
+                        <AUDIO KEY="00" DISPLAY_NAME="FAMILY_AUDIO"/>
+                        <AUDIO KEY="01" DISPLAY_NAME="LOUNGE_AUDIO"/>
+                        <AUDIO KEY="16" DISPLAY_NAME="PATIO_AUDIO"/>
+                </HAL>
+        </DEVICE>
+        <!-- the key is the HAL zone, Display name is the flash icon name -->
+
+        !-- ______________________________________  DynaLite DEFS  ____________________  -->
+        <DEVICE ACTIVE="N" NAME="DYNALITE" DISPLAY_NAME="DynaLite Lights">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <SERIAL ACTIVE="Y" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="NONE" />
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                </CONNECTION>
+                <DYNALITE>
+                        <CONTACT_CLOSURE ACTIVE="Y" KEY="01" BOX="01" NAME="Button 1" DISPLAY_NAME="BUTTON_1" />
+                        <CONTACT_CLOSURE ACTIVE="Y" KEY="02" BOX="01" NAME="Button 2" DISPLAY_NAME="BUTTON_2" />
+                        <LIGHT_DYNALITE ACTIVE="Y" KEY="FF" AREA="01" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_DYNALITE ACTIVE="Y" KEY="02" AREA="01" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_DYNALITE ACTIVE="Y" KEY="01" RELAY="Y" AREA="01" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_DYNALITE ACTIVE="Y" KEY="02" AREA="01" NAME="Ensuite LV Light" DISPLAY_NAME="ENSUITE_LV_LIGHT" RELAY="N" POWER_RATING="100"/>
+                </DYNALITE>
+        </DEVICE>
+
+        !-- ______________________________________  CBUS DEFS  ____________________  -->
+        <DEVICE ACTIVE="Y" NAME="CBUS" DISPLAY_NAME="CBUS Lights">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5004"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                </CONNECTION>
+                <CBUS>
+                        <SENSOR ACTIVE="Y" KEY="00" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
+                        <LIGHT_CBUS ACTIVE="Y" KEY="35" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="0C" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="0D" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" RELAY="Y" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="0E" NAME="Ensuite LV Light" DISPLAY_NAME="ENSUITE_LV_LIGHT" RELAY="N" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="10" NAME="Lounge LV Lights" DISPLAY_NAME="LOUNGE_LV_LIGHT" RELAY="Y" POWER_RATING="80"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="11" NAME="Dining Room Lights" DISPLAY_NAME="DINING_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="12" NAME="Lounge Light" DISPLAY_NAME="LOUNGE_LIGHT" RELAY="Y" POWER_RATING="80"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="0F" NAME="Family Light" DISPLAY_NAME="FAMILY_LIGHT" POWER_RATING="80"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="08" NAME="Hall Light" DISPLAY_NAME="HALL_LIGHT" POWER_RATING="80"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="09" RELAY="Y" NAME="Bath 1 Light" DISPLAY_NAME="BATH1_LIGHT" POWER_RATING="80"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="1E" NAME="Tessa Light" DISPLAY_NAME="TESSA_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" RELAY="Y" KEY="1E" NAME="Lounge LV Lights" DISPLAY_NAME="LOUNGE_LV_LIGHT" POWER_RATING="80"/>
+                        
+                        <LIGHT_CBUS ACTIVE="N" KEY="3C" NAME="Family Light" RELAY="Y"  DISPLAY_NAME="FAMILY_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="3B" NAME="Pool Light" DISPLAY_NAME="POOL_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="3B" NAME="Lounge Lv Light" RELAY="Y" DISPLAY_NAME="LOUNGE_LV_LIGHT" POWER_RATING="100"/>
+                </CBUS>
+        </DEVICE>
+        <!-- ______________________________________  RAW DEFS _____________________________ -->
+        <!-- flow may be NONE, RTSCTS" -->
+        <DEVICE ACTIVE="N" NAME="RAW_CONNECTION" DISPLAY_NAME="Raw Input">
+                <CONNECTION>
+                        <IP IP_ADDRESS="127.0.0.1" ACTIVE="Y" PORT="5003"/>
+                </CONNECTION>
+                <CATALOGUE NAME="Test List 1">
+                        <ITEM CODE="all_fs" VALUE="HEX1313401030504"/>
+                        <ITEM CODE="all_0s" VALUE="000000\r"/>
+                </CATALOGUE>
+                <CATALOGUE NAME="Audio stuff">
+                        <ITEM CODE="right" VALUE="Stuff to make right happen: should r :%ASDF%: this should R :%ZONE2%:"/>
+                        <ITEM CODE="left" VALUE="Stuff to make left happen: should be l :%ASDF%: and L :%ZONE2%:"/>
+                </CATALOGUE>
+                <CATALOGUE NAME="Light Settings">
+                        <ITEM CODE="on" VALUE="Extra = %EXTRA%"/>
+                        <ITEM CODE="full" VALUE="255"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="STX" VALUE=""/>
+                        <ITEM NAME="ETX" VALUE="\n"/>
+                        <ITEM NAME="STARTUP1" VALUE="+++ATH0\n"/>
+                        <ITEM NAME="STARTUP2" VALUE="Starup string 2\n"/>
+                        <ITEM NAME="STARTUP3" VALUE="Starup string 3\n"/>
+                        <ITEM NAME="STARTUP4" VALUE="Starup string 4\n"/>
+                        <ITEM NAME="STARTUP5" VALUE="Starup string 5\n"/>
+                        <ITEM NAME="POLL_VALUE1" VALUE="180"/>
+                        <ITEM NAME="POLL_STRING1" VALUE="First poll\x20World\r\n"/>
+                        <ITEM NAME="POLL_VALUE2" VALUE="270"/>
+                        <ITEM NAME="POLL_STRING2" VALUE="Second poll\n"/>
+                </PARAMETERS>
+                <RAW_CONNECTION>
+                        <CUSTOM_INPUT KEY="*" ACTIVE="N" NAME="Temperature" DISPLAY_NAME="LOUNGE_LV_LIGHT" COMMAND="on"/>
+                        <CUSTOM_INPUT KEY="(lounge|all)=(\d+)" KEY_IS_REGEX="Y" NAME="Lounge Light" DISPLAY_NAME="LOUNGE_LIGHT" COMMAND="on" EXTRA="@2"/>
+                        <CUSTOM_INPUT KEY="(kitchen|all)=(\d+)" KEY_IS_REGEX="Y" NAME="Kitchen Light" DISPLAY_NAME="KITCHEN_BENCH_LIGHT" COMMAND="on" EXTRA="@2"/>
+                        <CUSTOM_INPUT KEY="(PWR)=(ON|OFF)" KEY_IS_REGEX="Y" NAME="Pool Heater" DISPLAY_NAME="POOL_HEATER" COMMAND="@2"/>
+                        <CUSTOM_INPUT KEY="PWR" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="on"/>
+                        <RAW_INTERFACE NAME="LOUNGE_LIGHT" DISPLAY_NAME="LOUNGE_LIGHT">
+                                <RAW_ITEMS CATALOGUE="Light Settings">
+                                        <!--
+                                          Include EXTRA if you wish it to be matched on the command from Flash. If it is not
+                                          present the COMMAND alone will be matched
+                                        -->
+                                        <RAW COMMAND="on" CODE="on"/>
+                                </RAW_ITEMS>
+                        </RAW_INTERFACE>
+                        <RAW_INTERFACE NAME="BBQ_AUDIO" DISPLAY_NAME="BBQ_AUDIO">
+                                <RAW_ITEMS CATALOGUE="Audio stuff">
+                                        <!--
+                                          Include EXTRA if you wish it to be matched on the command from Flash. If it is not
+                                          present the COMMAND alone will be matched
+                                        -->
+                                        <RAW COMMAND="on" CODE="left">
+                                                <VARS NAME="ASDF" VALUE="a"/>
+                                                <VARS NAME="ZONE2" VALUE="\x4c"/>
+                                        </RAW>
+                                        <RAW COMMAND="send_audio_command" EXTRA="5" CODE="left">
+                                                <VARS NAME="ASDF" VALUE="a"/>
+                                                <VARS NAME="ZONE2" VALUE="\x4c"/>
+                                        </RAW>
+                                        <RAW COMMAND="send_audio_command" EXTRA="6" CODE="right">
+                                                <VARS NAME="ASDF" VALUE="b"/>
+                                                <VARS NAME="ZONE2" VALUE="\x52"/>
+                                        </RAW>
+                                </RAW_ITEMS>
+                                <RAW_ITEMS CATALOGUE="Test List 1">
+                                        <RAW COMMAND="up" CODE="all_fs"/>
+                                </RAW_ITEMS>
+                                <RAW_ITEMS CATALOGUE="Test List 1">
+                                        <RAW COMMAND="down" CODE="all_0s"/>
+                                </RAW_ITEMS>
+                        </RAW_INTERFACE>
+                        <RAW_INTERFACE NAME="PATIO_AUDIO" DISPLAY_NAME="BBQ_AUDIO">
+                                <RAW_ITEMS CATALOGUE="Audio stuff">
+                                        <!--
+                                          Include EXTRA if you wish it to be matched on the command from Flash. If it is not
+                                          present the COMMAND alone will be matched
+                                        -->
+                                        <RAW COMMAND="send_audio_command" EXTRA="5" CODE="left">
+                                                <VARS NAME="ASDF" VALUE="a"/>
+                                                <VARS NAME="ZONE2" VALUE="\x4c"/>
+                                        </RAW>
+                                        <RAW COMMAND="send_audio_command" EXTRA="6" CODE="right">
+                                                <VARS NAME="ASDF" VALUE="b"/>
+                                                <VARS NAME="ZONE2" VALUE="\x52"/>
+                                        </RAW>
+                                </RAW_ITEMS>
+                                <RAW_ITEMS CATALOGUE="Test List 1">
+                                        <RAW COMMAND="up" CODE="all_fs"/>
+                                </RAW_ITEMS>
+                                <RAW_ITEMS CATALOGUE="Test List 1">
+                                        <RAW COMMAND="down" CODE="all_0s"/>
+                                </RAW_ITEMS>
+                        </RAW_INTERFACE>
+                        <CUSTOM_INPUT KEY="BI01" NAME="IR" DISPLAY_NAME="IR" COMMAND="AV.COMFORT" EXTRA="COMFORT_KEYPAD.1"/>
+                </RAW_CONNECTION>
+        </DEVICE>
+        <!-- _____________________________ COMFORT DEFS _____________________________-->
+        <DEVICE ACTIVE="N" NAME="COMFORT" DISPLAY_NAME="Comfort Raw" PASSWORD="1234">
+                <CONNECTION>
+                        <SERIAL PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                </CONNECTION>
+                <COMFORT>
+                        <CUSTOM_INPUT KEY="BI01" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="on"/>
+                        <CUSTOM_INPUT KEY="BI02" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="off"/>
+                        <CUSTOM_INPUT KEY="BI03" NAME="LOUNGE_LIGHTS1" DISPLAY_NAME="LOUNGE_LIGHTS1" COMMAND="on" POWER_RATING="100"/>
+                        <CUSTOM_INPUT KEY="BI04" NAME="LOUNGE_LIGHTS1" DISPLAY_NAME="LOUNGE_LIGHTS1" COMMAND="off" POWER_RATING="100"/>
+                        <RAW_INTERFACE NAME="LIVING_LIGHT" DISPLAY_NAME="LIVING_LIGHT">
+                                <RAW_ITEMS CATALOGUE="Test List 1">
+                                        <RAW COMMAND="on" CODE="all_fs"/>
+                                </RAW_ITEMS>
+                                <RAW_ITEMS CATALOGUE="Test List 2">
+                                        <RAW COMMAND="off" CODE="all_1s"/>
+                                </RAW_ITEMS>
+                        </RAW_INTERFACE>
+                </COMFORT>
+        </DEVICE>
+        <!-- _____________________________ COMFORT DEFS _____________________________-->
+        <DEVICE ACTIVE="N" NAME="COMFORT" DISPLAY_NAME="Comfort" PASSWORD="1234">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.5" PORT="1001"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5002"/>
+                </CONNECTION>
+                <CATALOGUE NAME="DOOR_IDS">
+                        <ITEM CODE="31" VALUE="Main door"/>
+                </CATALOGUE>
+                <!-- user codes are 1 - 16 , hex -->
+                <CATALOGUE NAME="COMFORT_USERS">
+                        <ITEM CODE="01" VALUE="Colin"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="POLL_INTERVAL" VALUE="15"/>
+                        <ITEM NAME="ANALOGUE_POLL_INTERVAL" VALUE="30"/>
+                        <ITEM NAME="CBUS_APPLICATION" VALUE="38"/>
+                        <ITEM NAME="CBUS_UCM" VALUE="12"/>
+                        <ITEM NAME="COMFORT_USERS" VALUE="COMFORT_USERS"/>
+                        <!-- ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" / -->
+                        <!-- ITEM NAME="ALARM_IDS" VALUE="ALARM_IDS" / -->
+                        <ITEM NAME="DOOR_IDS" VALUE="DOOR_IDS"/>
+                        <ITEM NAME="SHOW_KEYPAD_MODES" VALUE="01,04"/>
+                </PARAMETERS>
+                <COMFORT>
+                        <!-- All codes are in hex -->
+                        <!-- The first 2 chars are the key, the last two are a parameter to be passed to the flash client in the EXTRA field -->
+                        <CUSTOM_INPUT KEY="BI01" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="on"/>
+                        <CUSTOM_INPUT KEY="BI02" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="off"/>
+                        <CUSTOM_INPUT KEY="BI03" NAME="IR" DISPLAY_NAME="IR" COMMAND="AV:COMFORT" EXTRA="COMFORT_KEYPAD.1"/>
+                        <CUSTOM_INPUT KEY="BI04" NAME="macro" DISPLAY_NAME="MACRO" COMMAND="MACRO.run" EXTRA="test"/>
+                        <!-- Counters are probably Comfort specific but I'll make it general for now -->
+                        <COUNTER KEY="0F" ACTIVE="N" NAME="Family room light" DISPLAY_NAME="FAMILY_LIGHT" MAX="100" POWER_RATING="100"/>
+                        <!--
+                          Direct light switches.
+                          These reflect the state of devices connected to comfort outputs (OP command)
+                        -->
+                        <TOGGLE_OUTPUT_MONITOR ACTIVE="N" KEY="01" NAME="Entry Door Lock" DISPLAY_NAME="ENTRY_LIGHTS"/>
+                        <LIGHT_CBUS KEY="0F" ACTIVE="Y" NAME="Lounge Lights" DISPLAY_NAME="LOUNGE_LV_LIGHT"/>
+                        <LIGHT_CBUS KEY="10" ACTIVE="Y" NAME="kitchen Lights" DISPLAY_NAME="KITCHEN_BENCH_LIGHT"/>
+                        <LIGHT_X10 KEY="01" ACTIVE="N" X10HOUSE_CODE="A" NAME="Family Room" DISPLAY_NAME="FAMILY_LIGHTS1"/>
+                        <PULSE_OUTPUT KEY="01" ACTIVE="N" NAME="Garage Door" DISPLAY_NAME="GARAGE_LIGHT"/>
+                        <TOGGLE_OUTPUT KEY="02" ACTIVE="N" NAME="Garage Door" DISPLAY_NAME="GARAGE_LIGHT"/>
+                        <TOGGLE_OUTPUT_MONITOR KEY="02" ACTIVE="Y" NAME="Lower Stairs Lights" DISPLAY_NAME="LOWER_STAIR_LIGHT"/>
+                        <!-- PIRs - (IP) -->
+                        <TOGGLE_INPUT ACTIVE="Y" KEY="01" NAME="Garage Input" DISPLAY_NAME="MEETING_PIR"/>
+                        <TOGGLE_INPUT ACTIVE="N" KEY="02" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT"/>
+                        <RAW_INTERFACE NAME="LIVING_LIGHT1" DISPLAY_NAME="LIVING_LIGHT1">
+                                <RAW_ITEMS CATALOGUE="Test List 1" PREFIX="01">
+                                        <RAW COMMAND="on" CODE="all_fs"/>
+                                </RAW_ITEMS>
+                                <RAW_ITEMS CATALOGUE="Test List 2" PREFIX="02">
+                                        <RAW COMMAND="off" CODE="all_1s"/>
+                                </RAW_ITEMS>
+                        </RAW_INTERFACE>
+                        <!-- Analogue inputs -->
+                        <ANALOGUE ACTIVE="N" KEY="01" NAME="Kitchen Light" DISPLAY_NAME="LOUNGE_LIGHT"/>
+                        <!--
+                          Set alarms on this comfort when sent from this display, if more than 1 icon is used in flash,
+                          list multiple ALARM entries, one for each DISPLAY_NAME
+                        -->
+                        <ALARM KEY="" DISPLAY_NAME="ANYTHING"/>
+                        <ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell"/>
+                        <ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone"/>
+                        <ALERT KEY="" ACTIVE="Y" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange"/>
+                        <ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="System"/>
+                        <ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Phone Trouble" ALERT_TYPE="System"/>
+                        <ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+                        <ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+                        <ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort (disarmed in &lt; 90 seconds)" ALERT_TYPE="System" CLIENT_CAT="Serious"/>
+                        <ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Siren Tamper" ALERT_TYPE="System"/>
+                        <ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+                        <ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+                        <ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Fire (Response-activated)" ALERT_TYPE="System"/>
+                        <ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Panic (Response-activated)" ALERT_TYPE="System"/>
+                        <ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+                        <ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="ID"/>
+                        <ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="ID"/>
+                        <ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="Doorbell pressed" ALERT_TYPE="ID"/>
+                        <ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Communications Failure (RS485)"/>
+                        <ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="Singin Tamper" ALERT_TYPE="ID"/>
+                        <ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="Intruder" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Bypass" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="User"/>
+                        <ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Arm Failure" ALERT_TYPE="User"/>
+                        <ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Security Off" ALERT_TYPE="User"/>
+                        <ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="User"/>
+                        <ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="User"/>
+                        <ALERT KEY="17" DISPLAY_NAME="PHONE" MESSAGE="New Message for " ALERT_TYPE="User"/>
+                        <!-- Special note; Alert 17 , is also used for system startup phone message reporting -->
+                        <!--  Correspond to AL command codes; ALERT_TYPE is the differentiation between various alert types -->
+                        <ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Intruder Alarm" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Phone Line Trouble" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Arm Fail" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Zone Alert" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="Panic" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0C" DISPLAY_NAME="ALARM" MESSAGE="Fire" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Gas" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Family Care" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0F" DISPLAY_NAME="ALARM" MESSAGE="Perimeter Alert" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Bypass Zone" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="System Disarmed" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="CMS Test" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Siren Trouble" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="RS485 Comms Fail" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Doorbell (Away)" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="1B" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="Alarm Type"/>
+                </COMFORT>
+        </DEVICE>
+	
+        <!-- _____________________________ GC-100 DEFS _____________________________-->
+        <DEVICE ACTIVE="Y" NAME="GC100" DISPLAY_NAME="GC100">
+                <CONNECTION>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4998"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                </CONNECTION>
+                <PARAMETERS>                
+                </PARAMETERS>
+                <GC100_IR NAME="IR1">
+                        <PARAMETERS>
+                                <ITEM NAME="MODULE" VALUE="4"/>
+                                <ITEM NAME="MODULE_TYPE" VALUE="IR"/>
+                                <!-- Valid types are serial, IR or relay -->
+                        </PARAMETERS>
+                        <TOGGLE_INPUT ACTIVE="N" KEY="02" NAME="Switch 1" DISPLAY_NAME="LOUNGE_AUDIO" />
+                        <IR KEY="01" NAME="Study IR" AV_NAME="STUDY_IR2"/>
+                        <IR KEY="02" NAME="Lounge IR" AV_NAME="LOUNGE_IR2"/>
+                </GC100_IR>
+                <GC100_IR NAME="IR2">
+                        <PARAMETERS>
+                                <ITEM NAME="MODULE" VALUE="5"/>
+                                <ITEM NAME="MODULE_TYPE" VALUE="IR"/>
+                                <!-- Valid types are serial, IR or relay -->
+                        </PARAMETERS>
+
+                        <IR KEY="01" NAME="Kitchen IR" AV_NAME="KITCHEN_IR2"/>
+                        <IR KEY="02" NAME="Porch IR" AV_NAME="PORCH_IR2"/>
+                        <TOGGLE_INPUT KEY="3" NAME="Switch 2" DISPLAY_NAME="SWITCH_TWO" />
+                </GC100_IR>
+                <GC100_Relay NAME="Relay">
+                        <PARAMETERS>
+                                <ITEM NAME="MODULE" VALUE="3"/>
+                                <ITEM NAME="MODULE_TYPE" VALUE="RELAY"/>
+                        </PARAMETERS>
+                        <TOGGLE_OUTPUT KEY="01" ACTIVE="N" NAME="Output 1" DISPLAY_NAME="DINING_LIGHT"/>
+                        <TOGGLE_OUTPUT KEY="02" NAME="Output 2" DISPLAY_NAME="OUT_2"/>
+                        <TOGGLE_OUTPUT KEY="03" NAME="Output 3" DISPLAY_NAME="OUT_3"/>
+                </GC100_Relay>
+        </DEVICE>	
+        <!-- _____________________________ GC-100 DEFS _____________________________-->
+        <DEVICE ACTIVE="N" NAME="GC100" DISPLAY_NAME="GC100">
+                <CONNECTION>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4998"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5005"/>
+                </CONNECTION>
+                <PARAMETERS>                
+                </PARAMETERS>
+                <GC100_IR NAME="IR1">
+                        <PARAMETERS>
+                                <ITEM NAME="MODULE" VALUE="4"/>
+                                <ITEM NAME="MODULE_TYPE" VALUE="IR"/>
+                                <!-- Valid types are serial, IR or relay -->
+                        </PARAMETERS>
+                        <TOGGLE_INPUT ACTIVE="N" KEY="02" NAME="Switch 1" DISPLAY_NAME="LOUNGE_AUDIO" />
+                        <TOGGLE_INPUT KEY="03" NAME="Switch 2" DISPLAY_NAME="SWITCH_TWO" />
+                        <IR KEY="01" NAME="Study IR" AV_NAME="STUDY_IR"/>
+                        <IR KEY="02" NAME="Lounge IR" AV_NAME="LOUNGE_IR"/>
+                </GC100_IR>
+                <GC100_IR NAME="IR2">
+                        <PARAMETERS>
+                                <ITEM NAME="MODULE" VALUE="4"/>
+                                <ITEM NAME="MODULE_TYPE" VALUE="IR"/>
+                                <!-- Valid types are serial, IR or relay -->
+                        </PARAMETERS>
+
+                        <IR KEY="01" NAME="Kitchen IR" AV_NAME="KITCHEN_IR"/>
+                        <IR KEY="02" NAME="Porch IR" AV_NAME="PORCH_IR"/>
+                </GC100_IR>
+                <GC100_Relay NAME="Relay">
+                        <PARAMETERS>
+                                <ITEM NAME="MODULE" VALUE="3"/>
+                                <ITEM NAME="MODULE_TYPE" VALUE="RELAY"/>
+                        </PARAMETERS>
+                        <TOGGLE_OUTPUT KEY="01" ACTIVE="N" NAME="Output 1" DISPLAY_NAME="DINING_LIGHT"/>
+                        <TOGGLE_OUTPUT KEY="02" NAME="Output 2" DISPLAY_NAME="OUT_2"/>
+                        <TOGGLE_OUTPUT KEY="03" NAME="Output 3" DISPLAY_NAME="OUT_3"/>
+                </GC100_Relay>
+        </DEVICE>
+                <!-- ______________________________________  OREGON_SCIENTIFIC  ____________________  -->
+        <DEVICE ACTIVE="N" NAME="OREGON" DISPLAY_NAME="Oregon Scientific">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                </CONNECTION>
+                <PARAMETERS>
+                        <ITEM NAME="MODEL" VALUE="WMR968"/>
+                </PARAMETERS>
+                <OREGON>
+                        <SENSOR ACTIVE="Y" KEY="In-Temp" CHANNEL="00" NAME="Inside Temp" DISPLAY_NAME="INSIDE_TEMP" />
+                        <SENSOR ACTIVE="Y" KEY="In-Humidity" CHANNEL="00" NAME="Inside Humidity" DISPLAY_NAME="INSIDE_HUM" />
+                        <SENSOR ACTIVE="Y" KEY="In-Dew-Point" CHANNEL="00" NAME="Inside Dew Point" DISPLAY_NAME="INSIDE_DP" />
+                        <SENSOR ACTIVE="Y" KEY="In-Bar" CHANNEL="00" NAME="Inside Barometer" DISPLAY_NAME="INSIDE_BARO" />
+                        <SENSOR ACTIVE="Y" KEY="In-Bar-Tend" CHANNEL="00" NAME="Inside Barometric Tendancy" DISPLAY_NAME="INSIDE_BT" />
+                        <SENSOR ACTIVE="Y" KEY="In-Sea-Lvl-Bar" CHANNEL="00" NAME="Inside Sea level pressure" DISPLAY_NAME="INSIDE_SEA" />
+ 
+                        <SENSOR ACTIVE="Y" KEY="Out-Temp" CHANNEL="01" NAME="Outside Temp" DISPLAY_NAME="OUTSIDE_TEMP" />
+                        <SENSOR ACTIVE="Y" KEY="Out-Humidity" CHANNEL="01" NAME="Outside Humidity" DISPLAY_NAME="OUTSIDE_HUM" />
+                        <SENSOR ACTIVE="Y" KEY="Out-Dew-Point" CHANNEL="01" NAME="Outside Dew Point" DISPLAY_NAME="OUTSIDE_DP" />
+                </OREGON>
+        </DEVICE>      
+               <!-- _____________________________ Controls _____________________________-->
+        <CONTROLS>
+                <VARIABLES>
+                        <VARIABLE ACTIVE="N" NAME="Master Bedroom Light" DISPLAY_NAME="MASTERBED_LIGHT"/>
+                        <VARIABLE ACTIVE="Y" NAME="Bedroom 4 light" DISPLAY_NAME="BED4_LIGHT"/>
+                        <VARIABLE ACTIVE="Y" NAME="Lattitude" DISPLAY_NAME="Lattitude" INIT_COMMAND="on" INIT_EXTRA="24.1" />
+                        <VARIABLE ACTIVE="Y" NAME="Longitude" DISPLAY_NAME="Longitude" INIT_COMMAND="on" INIT_EXTRA="12" />
+                 </VARIABLES>
+                <CALENDAR_MESSAGES>
+                		   <ITEM NAME="AUTOCLOSE" VALUE="5" />
+                		   <ITEM NAME="ICON" VALUE="calendar" />
+                		   <ITEM NAME="HIDECLOSE" VALUE="FALSE" />
+                </CALENDAR_MESSAGES>
+        </CONTROLS>
+         
+</CONFIG>
