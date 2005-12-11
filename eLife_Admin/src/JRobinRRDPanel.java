@@ -66,7 +66,7 @@ public class JRobinRRDPanel extends JPanel
 		upload.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
-						JRobinRRDPanel.this.eLife.uploadFile("server/JRobin/RRDDefinition");
+						JRobinRRDPanel.this.eLife.uploadFile("server/JRobin/RRDDefinition",false);
 					}
 				});
 		serviceButtons.add (upload);

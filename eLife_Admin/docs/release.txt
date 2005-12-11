@@ -1,3 +1,7 @@
+2005/12/11
+Ensure scripts are encoded in base 64 for upload
+Released V0.36
+
 2005/11/17
 Added M1 debug panel
 Released V0.35

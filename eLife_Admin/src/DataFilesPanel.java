@@ -67,7 +67,7 @@ public class DataFilesPanel extends JPanel
 		upload.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
-						DataFilesPanel.this.eLife.uploadFile("server/datafiles");
+						DataFilesPanel.this.eLife.uploadFile("server/datafiles",false);
 					}
 				});
 		serviceButtons.add (upload);

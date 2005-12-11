@@ -23,13 +23,13 @@ public class IP
 	protected Socket monitorSocket;
 	protected Socket debugSocket;
 	protected boolean monitorPortOpen = false;
-	protected boolean debugPortOpen = false;
-	protected OutputStream adminOs;
-	protected InputStream adminIs;	
+	protected boolean adminPortOpen = false;
+	protected OutputStream monitorOs;
+	protected InputStream monitorIs;	
 	protected OutputStream debugOs;
 	protected InputStream debugIs;	
 	protected DebugListener debugListener;
-	protected AdminListener adminListener;
+	protected MonitorListener monitorListener;
 	protected String logDir;
 	protected InetAddress ipAddress;
 	protected int monitorPort;
@@ -38,7 +38,7 @@ public class IP
 	private eLife_Admin eLife;
 	protected ConnectionManager manager;
 	protected IPHeartbeat debugHeartbeat;
-	protected IPHeartbeat adminHeartbeat;
+	protected IPHeartbeat monitorHeartbeat;
 	
 	public IP (eLife_Admin eLife, ConnectionManager manager)  {
 		this.eLife = eLife;
@@ -47,8 +47,7 @@ public class IP
 	}
 		
 	
-	public void sendMonitorMessage (String message) throws IOException {
-
+	public void sendDebugMessage (String message) throws IOException {
 		if (debugOs != null ) {
 			synchronized (debugOs) {
 				debugOs.write(message.getBytes());
@@ -56,15 +55,15 @@ public class IP
 				debugOs.flush();
 			}
 		}
-	}
+	} 
 	
 	
-	public void sendAdminMessage (String message) throws IOException {
-		if (adminOs != null) {
-			synchronized (adminOs) {
-					adminOs.write(message.getBytes());
-					adminOs.write((byte)0);
-					adminOs.flush();
+	public void sendMonitorMessage (String message) throws IOException {
+		if (monitorOs != null) {
+			synchronized (monitorOs) {
+					monitorOs.write(message.getBytes());
+					monitorOs.write((byte)0);
+					monitorOs.flush();
 				}
 			}
 	}
@@ -112,7 +111,7 @@ public class IP
 						debugListener = new DebugListener();
 						debugListener.setManager (manager);
 						debugListener.setInputStream (debugIs);
-						debugPortOpen = true;
+						adminPortOpen = true;
 	
 						LogPanel logViewer = eLife.getLogViewer();
 						if (logViewer != null) {
@@ -161,7 +160,7 @@ public class IP
 	 * @param port The ip monitorPort
 	 * @throws au.com.BI.comms.ConnectionFail
 	 */
-	public boolean connectAdmin (String ipAddressTxt, int monitorPort )
+	public boolean connectMonitor (String ipAddressTxt, int monitorPort )
 		throws ConnectionFail 
 		{
 			try
@@ -175,23 +174,23 @@ public class IP
 				monitorSocket.connect(sockaddr, timeoutMs);
 				if (monitorSocket.isConnected() &&!monitorSocket.isClosed()){
 					logger.log (Level.FINEST,"Obtained admin connection");
-					adminOs = monitorSocket.getOutputStream();
-					adminIs = monitorSocket.getInputStream();
-					adminListener = new AdminListener();
-					adminListener.setManager (manager);
-					adminListener.seteLife(eLife);
-					adminListener.setInputStream(adminIs);
-					adminListener.setLogDir(logDir);
-					adminListener.setOutputStream(adminOs);
-					adminListener.setHandleEvents(true);
+					monitorOs = monitorSocket.getOutputStream();
+					monitorIs = monitorSocket.getInputStream();
+					monitorListener = new MonitorListener();
+					monitorListener.setManager (manager);
+					monitorListener.seteLife(eLife);
+					monitorListener.setInputStream(monitorIs);
+					monitorListener.setLogDir(logDir);
+					monitorListener.setOutputStream(monitorOs);
+					monitorListener.setHandleEvents(true);
 					monitorSocket.setKeepAlive(true);
 					monitorPortOpen=true;
-					if (adminHeartbeat != null) {
-						adminHeartbeat.setHandleEvents(false);
+					if (monitorHeartbeat != null) {
+						monitorHeartbeat.setHandleEvents(false);
 					}
-					adminHeartbeat = new IPHeartbeat(adminOs,eLife,IPHeartbeat.MONITOR);
-					adminHeartbeat.start();
-					adminListener.start();
+					monitorHeartbeat = new IPHeartbeat(monitorOs,eLife,IPHeartbeat.MONITOR);
+					monitorHeartbeat.start();
+					monitorListener.start();
 					return true;
 				} else { 
 					return false;
@@ -208,7 +207,7 @@ public class IP
 		    }
 		}
 
-	public  boolean isAdminConnected () {
+	public  boolean isMonitorConnected () {
 		return monitorPortOpen;
 	}
 	
@@ -223,22 +222,22 @@ public class IP
 		//return debugPortOpen;
 	}
 
-	public void closeAdmin () throws ConnectionFail 
+	public void closeMonitor () throws ConnectionFail 
 	{
-		if (adminHeartbeat != null){
-			adminHeartbeat.setHandleEvents(false);
+		if (monitorHeartbeat != null){
+			monitorHeartbeat.setHandleEvents(false);
 		}
 
 		monitorPortOpen = false;
-		if (adminListener != null) {
-			adminListener.setHandleEvents(false);
+		if (monitorListener != null) {
+			monitorListener.setHandleEvents(false);
 		}
 		if (monitorSocket != null) {
 			try {
 			// close the i/o streams.
-			    if (adminOs != null) {
-			    	synchronized (adminOs) {
-			    		adminOs.close();
+			    if (monitorOs != null) {
+			    	synchronized (monitorOs) {
+			    		monitorOs.close();
 			    	}
 			    }
 			} catch (IOException e) {
@@ -247,9 +246,9 @@ public class IP
 
 			try {
 				// close the i/o streams.
-				    if (adminIs != null) {
-				    	synchronized (adminIs) {
-				    		adminIs.close();
+				    if (monitorIs != null) {
+				    	synchronized (monitorIs) {
+				    		monitorIs.close();
 				    	}
 				    }
 				} catch (IOException e) {
@@ -286,7 +285,7 @@ public class IP
 	    }
 	    if (debugSocket != null) {
 	    		synchronized (debugSocket) {
-				debugPortOpen = false;
+				adminPortOpen = false;
 				try {
 				// close the i/o streams.
 		    		if (debugOs != null) {
@@ -334,9 +333,9 @@ public class IP
 	{
 		try {
 			if (monitorPortOpen) {
-				synchronized (adminOs){
-					adminOs.write((message).getBytes());
-					adminOs.flush();
+				synchronized (monitorOs){
+					monitorOs.write((message).getBytes());
+					monitorOs.flush();
 				}
 			}
 		} catch (InterruptedIOException e) {
@@ -351,9 +350,9 @@ public class IP
 	{
 		try {
 			if (monitorPortOpen) {
-				synchronized (adminOs){
-					adminOs.write(message);
-					adminOs.flush();
+				synchronized (monitorOs){
+					monitorOs.write(message);
+					monitorOs.flush();
 				}
 			}
 		} catch (IOException e) {
@@ -393,8 +392,8 @@ public class IP
 
 	public void setLogDir(String logDir) {
 		this.logDir = logDir;
-		if (adminListener != null) {
-			adminListener.setLogDir(logDir);
+		if (monitorListener != null) {
+			monitorListener.setLogDir(logDir);
 		}
 	}
 }	

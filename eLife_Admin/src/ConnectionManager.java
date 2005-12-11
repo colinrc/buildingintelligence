@@ -9,7 +9,7 @@ import java.util.logging.*;
 public class ConnectionManager extends Thread {
 	private String IPaddress;
 	private IP ip;
-	private int adminPort;
+	private int monitorPort;
 	private int logPort;
 	private boolean tryToConnect = true;
 	private eLife_Admin eLife;
@@ -26,14 +26,14 @@ public class ConnectionManager extends Thread {
 		eLife.setIP (ip);
 	}
 	
-	public void connect (String IPaddress, int adminPort, int logPort) {
+	public void connect (String IPaddress, int monitorPort, int logPort) {
 		logger.info("Openning debug IP " + IPaddress + " port " + logPort);
-		logger.info("Openning admin IP " + IPaddress + " port " + adminPort);
+		logger.info("Openning monitor IP " + IPaddress + " port " + monitorPort);
 		
 		updatingParams = true;
-		if (ip.isAdminConnected()) {
+		if (ip.isMonitorConnected()) {
 			try {
-				ip.closeAdmin();
+				ip.closeMonitor();
 			} catch (ConnectionFail ex) {}
 		}
 		if (ip.isDebugConnected()) {
@@ -43,7 +43,7 @@ public class ConnectionManager extends Thread {
 		}
 		
 		this.IPaddress = IPaddress;
-		this.adminPort = adminPort;
+		this.monitorPort = monitorPort;
 		this.logPort = logPort;
 		updatingParams = false;
 	}
@@ -62,7 +62,7 @@ public class ConnectionManager extends Thread {
 		if (ip != null) {
 			//synchronized (ip){
 				try {
-						ip.closeAdmin();
+						ip.closeMonitor();
 				} catch (ConnectionFail ex) {}
 			//}
 		}
@@ -76,9 +76,9 @@ public class ConnectionManager extends Thread {
 		while (tryToConnect) {
 			if (!updatingParams) {
 				//synchronized (ip){
-					if (!ip.isAdminConnected()) {
+					if (!ip.isMonitorConnected()) {
 						try {
-							if (ip.connectAdmin(IPaddress,adminPort) ) {
+							if (ip.connectMonitor(IPaddress,monitorPort) ) {
 								synchronized (eLife) {
 									eLife.setAdminConnectionStatus(true);
 									eLife.doAdminConnectionStartup();
@@ -108,7 +108,7 @@ public class ConnectionManager extends Thread {
 	}
 	
 	public void sendMonitorMessage (String message) throws IOException {
-		ip.sendMonitorMessage (message);
+		ip.sendDebugMessage (message);
 	}
 	
 	/**

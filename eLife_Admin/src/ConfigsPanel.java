@@ -84,7 +84,7 @@ public class ConfigsPanel extends JPanel
 		upload.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
-						ConfigsPanel.this.eLife.uploadFile("server/config");
+						ConfigsPanel.this.eLife.uploadFile("server/config",false);
 					}
 				});
 		serviceButtons.add (upload);

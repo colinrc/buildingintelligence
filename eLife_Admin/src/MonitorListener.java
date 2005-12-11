@@ -24,7 +24,7 @@ import javax.xml.parsers.SAXParser;
  **/
 
 
-public class AdminListener extends Thread
+public class MonitorListener extends Thread
 {
 	protected InputStream is;
 	protected OutputStream os;
@@ -40,7 +40,7 @@ public class AdminListener extends Thread
 	/**
 	 * The main constructor
 	 */
-	public AdminListener ( ) {
+	public MonitorListener ( ) {
 		this.setName("Admin Listener");
 		logger = Logger.getLogger("Log");
 		 try {

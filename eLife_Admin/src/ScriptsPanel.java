@@ -66,7 +66,7 @@ public class ScriptsPanel extends JPanel
 		upload.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
-						ScriptsPanel.this.eLife.uploadFile("server/script");
+						ScriptsPanel.this.eLife.uploadFile("server/script",true);
 					}
 				});
 		serviceButtons.add (upload);

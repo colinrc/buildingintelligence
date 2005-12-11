@@ -24,8 +24,8 @@ import org.gjt.sp.jedit.browser.VFSBrowser;
 public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActions, DefaultFocusComponent
 {
 	private String serverIP = "127.0.0.1";
-	private int defaultMonitorPort = 10001;
-	private int defaultAdminPort = 10002;
+	private int defaultMonitorPort = 10002;
+	private int defaultAdminPort = 10001;
 	private int monitorPort = defaultMonitorPort;
 	private int adminPort = defaultAdminPort;
 	private String workingDir;
@@ -223,7 +223,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void learnIR () {
 		if (ip != null && irName != null && !irName.equals("")) {
 			try {
-				ip.sendMonitorMessage ("<IR_LEARN NAME=\"" + irName + "\" />\n");
+				ip.sendDebugMessage ("<IR_LEARN NAME=\"" + irName + "\" />\n");
 			} catch (IOException e) {
 			}
 		}
@@ -458,7 +458,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void sendArbitraryCommand (String command ) {
 		try {
 			if (ip != null) {
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"ARBITRARY\" EXTRA=\"" + command + "\" />\n");
+				ip.sendMonitorMessage ("<ADMIN COMMAND=\"ARBITRARY\" EXTRA=\"" + command + "\" />\n");
 			}
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
@@ -469,7 +469,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void getIRActions (String device) {
 		try {
 			if (ip != null) {
-				ip.sendMonitorMessage("<LIST_IR_ACTIONS DEVICE=\"" + device + "\" />\n");					
+				ip.sendDebugMessage("<LIST_IR_ACTIONS DEVICE=\"" + device + "\" />\n");					
 			}
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the server connection " + e.getMessage());
@@ -480,7 +480,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void getIRDevices () {
 		try {
 			if (ip != null) {
-				ip.sendMonitorMessage("<LIST_IR_DEVICES />\n");					
+				ip.sendDebugMessage("<LIST_IR_DEVICES />\n");					
 			}
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the server connection " + e.getMessage());
@@ -491,9 +491,9 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 		try {
 			if (ip != null) {
 				if (dir.endsWith("script")) {
-					ip.sendAdminMessage ("<ADMIN COMMAND=\"LIST\" DIR=\"" + dir + "\" FILTER=\".py\" />\n");
+					ip.sendMonitorMessage ("<ADMIN COMMAND=\"LIST\" DIR=\"" + dir + "\" FILTER=\".py\" />\n");
 				} else {
-					ip.sendAdminMessage ("<ADMIN COMMAND=\"LIST\" DIR=\"" + dir + "\" FILTER=\".xml\" />\n");					
+					ip.sendMonitorMessage ("<ADMIN COMMAND=\"LIST\" DIR=\"" + dir + "\" FILTER=\".xml\" />\n");					
 				}
 			}
 		} catch (IOException e) {
@@ -504,7 +504,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void readFiles (String dir,String filter) {
 		try {
 			if (ip != null) {
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"LIST\" DIR=\"" + dir + "\" FILTER=\"" + filter + "\" />\n");
+				ip.sendMonitorMessage ("<ADMIN COMMAND=\"LIST\" DIR=\"" + dir + "\" FILTER=\"" + filter + "\" />\n");
 			}
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
@@ -514,7 +514,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void downloadClientXML () {
 		try {
 			if (ip != null)
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"DOWNLOAD\" DIR=\"client\" EXTRA=\"client.xml\" />\n");
+				ip.sendMonitorMessage ("<ADMIN COMMAND=\"DOWNLOAD\" DIR=\"client\" EXTRA=\"client.xml\" />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
 		}		
@@ -523,7 +523,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void downloadFile (String dir, String fileName) {
 		try {
 			if (ip != null)
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"DOWNLOAD\" DIR=\"" + dir + "\" EXTRA=\"" + fileName + "\" />\n");
+				ip.sendMonitorMessage ("<ADMIN COMMAND=\"DOWNLOAD\" DIR=\"" + dir + "\" EXTRA=\"" + fileName + "\" />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
 		}		
@@ -532,7 +532,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void setStartup (String configFile) {
 		try {
 			if (ip != null)
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"SELECT\" EXTRA=\"" + configFile + "\" />\n");
+				ip.sendMonitorMessage ("<ADMIN COMMAND=\"SELECT\" EXTRA=\"" + configFile + "\" />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
 		}
@@ -541,13 +541,13 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void deleteFile (String dir, String configFile) {
 		try {
 			if (ip != null)
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"DELETE\" DIR=\"" + dir + "\" EXTRA=\"" + configFile + "\" />\n");
+				ip.sendMonitorMessage ("<ADMIN COMMAND=\"DELETE\" DIR=\"" + dir + "\" EXTRA=\"" + configFile + "\" />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
 		}
 	}
 	
-	public void uploadFile(String dir) {
+	public void uploadFile(String dir, boolean base64) {
 		View currentView = jEdit.getActiveView();
 		if (currentView != null) {
 			Buffer currentBuffer = currentView.getBuffer();
@@ -555,9 +555,16 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 				currentBuffer.readLock();
 				String fileName = currentBuffer.getName();
 				String fileContents = currentBuffer.getText (0,currentBuffer.getLength());
+				String newFileContents = "";
+				if (base64) {
+					newFileContents = Base64Coder.encode(fileContents);
+				}
 				currentBuffer.readUnlock();
 				try {
-					ip.sendAdminMessage ("<ADMIN COMMAND=\"UPLOAD\" NAME=\"" + fileName + "\" DIR=\"" + dir + "\" ><![CDATA[" + fileContents + " ]]></ADMIN>\n");
+					if (base64)
+						ip.sendMonitorMessage ("<ADMIN COMMAND=\"UPLOAD\" BASE64=\"Y\" NAME=\"" + fileName + "\" DIR=\"" + dir + "\" ><![CDATA[" + newFileContents + "]]></ADMIN>\n");
+					else 
+						ip.sendMonitorMessage ("<ADMIN COMMAND=\"UPLOAD\" BASE64=\"N\" NAME=\"" + fileName + "\" DIR=\"" + dir + "\" ><![CDATA[" + fileContents + "]]></ADMIN>\n");
 				}
 				catch (IOException e) {
 					logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());					
@@ -578,7 +585,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 				String fileContents = currentBuffer.getText (0,currentBuffer.getLength());
 				currentBuffer.readUnlock();
 				try {
-					ip.sendAdminMessage ("<ADMIN COMMAND=\"UPLOAD\" NAME=\"client.xml\" DIR=\"client\" ><![CDATA[" + fileContents + " ]]></ADMIN>\n");
+					ip.sendMonitorMessage ("<ADMIN COMMAND=\"UPLOAD\" NAME=\"client.xml\" DIR=\"client\" ><![CDATA[" + fileContents + " ]]></ADMIN>\n");
 				}
 				catch (IOException e) {
 					logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());					
@@ -771,7 +778,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	
 	public void reloadScripts() {
 		try {
-			ip.sendMonitorMessage("<RELOAD_SCRIPTS />\n");
+			ip.sendDebugMessage("<RELOAD_SCRIPTS />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the connection to the server " + e.getMessage());
 		}
@@ -779,7 +786,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	
 	public void reloadMacros() {
 		try {
-			ip.sendMonitorMessage("<RELOAD_MACROS />\n");
+			ip.sendDebugMessage("<RELOAD_MACROS />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the connection to the server " + e.getMessage());
 		}
@@ -787,7 +794,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 
 	public void reloadIRDB() {
 		try {
-			ip.sendMonitorMessage("<RELOAD_IRDB />\n");
+			ip.sendDebugMessage("<RELOAD_IRDB />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the connection to the server " + e.getMessage());
 		}
@@ -795,7 +802,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	
 	public void testIR(String repeatCount,String AVName,String irDevice,String irName) {
 		try {
-			ip.sendMonitorMessage("<TEST_IR DEVICE=\""+irDevice+"\" ACTION=\"" + irName+"\" TARGET=\"" + AVName +"\" REPEAT=\"" +repeatCount +"\" />\n");
+			ip.sendDebugMessage("<TEST_IR DEVICE=\""+irDevice+"\" ACTION=\"" + irName+"\" TARGET=\"" + AVName +"\" REPEAT=\"" +repeatCount +"\" />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the connection to the server " + e.getMessage());
 		}		
@@ -803,7 +810,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 
 	public void sendIR(String messsage) {
 		try {
-			ip.sendMonitorMessage("<IR_CONFIG EXTRA=\""+messsage+"\" />\n");
+			ip.sendDebugMessage("<IR_CONFIG EXTRA=\""+messsage+"\" />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the connection to the server " + e.getMessage());
 		}		
@@ -816,7 +823,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void startService() {
 		try {
 			if (ip != null)
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"START\" />\n");
+				ip.sendMonitorMessage ("<ADMIN COMMAND=\"START\" />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
 		}
@@ -825,7 +832,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void endService() {
 		try {
 			if (ip != null)
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"STOP\" />\n");
+				ip.sendMonitorMessage ("<ADMIN COMMAND=\"STOP\" />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
 		}	
@@ -834,7 +841,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void restartService() {
 		try {
 			if (ip != null)
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"RESTART\" />\n");
+				ip.sendMonitorMessage ("<ADMIN COMMAND=\"RESTART\" />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
 		}	
@@ -844,7 +851,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 	public void restartClient() {
 		try {
 			if (ip != null)
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"CLIENT_RESTART\" />\n");
+				ip.sendMonitorMessage ("<ADMIN COMMAND=\"CLIENT_RESTART\" />\n");
 		} catch (IOException e) {
 			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
 		}	

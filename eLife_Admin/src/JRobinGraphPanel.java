@@ -66,7 +66,7 @@ public class JRobinGraphPanel extends JPanel
 		upload.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
-						JRobinGraphPanel.this.eLife.uploadFile("server/JRobin/GraphDefinition");
+						JRobinGraphPanel.this.eLife.uploadFile("server/JRobin/GraphDefinition",false);
 					}
 				});
 		serviceButtons.add (upload);

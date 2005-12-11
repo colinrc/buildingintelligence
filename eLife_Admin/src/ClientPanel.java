@@ -62,7 +62,7 @@ public class ClientPanel extends JPanel
 		upload.addActionListener(
 				new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
-						ClientPanel.this.eLife.uploadFile("client");
+						ClientPanel.this.eLife.uploadFile("client",false);
 					}
 				});
 		serviceButtons.add (upload);
