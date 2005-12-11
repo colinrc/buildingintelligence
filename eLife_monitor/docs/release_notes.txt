@@ -1,3 +1,8 @@
+2005/12/11
+Ensure script files are sent to the admin client in base 64 encoding.
+Support upload of base 64 encoded files, add the attribute BASE64=Y to the upload XML header.
+Released V1.47
+
 2005/6/14
 Added base 64 support for log files
 Released V1.44

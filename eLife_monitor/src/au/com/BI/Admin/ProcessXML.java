@@ -291,8 +291,8 @@ public class ProcessXML extends Thread
 					    if (!extra.equals ("")) {
 					        logger.log (Level.FINER,"Downloading XML file " + extra);
 
-					        if (dir.indexOf("log") > 0) 
-				        			downloadFile(fileName,output,dir,"FILE",true);
+					        if (dir.indexOf("log") > 0 || dir.indexOf("script") > 0) 
+				        			downloadFile(fileName,output,dir,"FILE",true);					        
 					        else
 					        		downloadFile(fileName,output,dir,"FILE",false);
 							commandFound = true;
@@ -564,10 +564,17 @@ public class ProcessXML extends Thread
     	}
 
 	public void uploadFile (Element messageXML, OutputStream output) {
+		boolean base64encoding = false;
+		
 		try {
 			String dir = messageXML.getAttributeValue("DIR");
 			String fileName = messageXML.getAttributeValue ("NAME");
+			String base64 = messageXML.getAttributeValue ("BASE64");
 			String theFile = messageXML.getText();
+			if (base64 != null && base64.equals("Y")){
+				String tmpFile = Base64Coder.decode(theFile);
+				theFile = tmpFile;
+			}
 			
 			String fullPath = eSmart_install + "/" + dir + "/" + fileName;
 
