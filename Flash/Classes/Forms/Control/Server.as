@@ -1,6 +1,8 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Control.Server {
+	private var monitor_socket:XMLSocket;
+	private var server_socket:XMLSocket;
 	private var ipAddress_lb:mx.controls.Label;
 	private var ipAddress_ti:mx.controls.TextInput;
 	private var connect_btn:mx.controls.Button;
@@ -19,6 +21,8 @@ class Forms.Control.Server {
 	function Server() {
 	}
 	public function init():Void {
+		monitor_socket = new XMLSocket();
+		server_socket = new XMLSocket();
 		ipAddress_ti.restrict = "0-9.";
 		ipAddress_ti.maxChars = 15;
 		monitorPort_ti.restrict = "0-9";
@@ -50,12 +54,13 @@ class Forms.Control.Server {
 		disconnect_btn.addEventListener("click", Delegate.create(this, disconnect));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		set_btn.addEventListener("click", Delegate.create(this, setWorkingDir));
+		setupSockets();
 	}
 	function attemptConnection():Void {
-		serverStatus_lb.text = "Server: Attempting Connection";
-		monitorStatus_lb.text = "Monitor: Attempting Connection";
-		//server_socket.connect(settings_server_ip_in.text, settings_server_port_in.text);
-		//monitor_socket.connect(settings_server_ip_in.text, settings_monitor_port_in.text);
+		setServerStatus("Server: Attempting Connection");
+		setMonitorStatus("Monitor: Attempting Connection");
+		server_socket.connect(ipAddress_ti.text, parseInt(serverPort_ti.text));
+		monitor_socket.connect(ipAddress_ti.text, parseInt(monitorPort_ti.text));
 		//tabbar.enabled = true;
 		connect_btn.enabled = false;
 		disconnect_btn.enabled = true;
@@ -63,14 +68,62 @@ class Forms.Control.Server {
 		//getDebugLevels();
 	}
 	function disconnect():Void {
-		serverStatus_lb.text = "Server: Disconnected";
-		monitorStatus_lb.text = "Monitor: Disconnected";
+		setServerStatus("Server: Disconnected");
+		setMonitorStatus("Monitor: Disconnected");
+		server_socket.close();
+		monitor_socket.close();
 		connect_btn.enabled = true;
 		disconnect_btn.enabled = false;
 	}
 	function save():Void {
 	}
 	function setWorkingDir():Void {
+	}
+	function setupSockets():Void {
+		server_socket.onClose = Delegate.create(this, serverOnClose);
+		server_socket.onXML = Delegate.create(this, serverOnXML);
+		server_socket.onConnect = Delegate.create(this, serverOnConnect);
+		monitor_socket.onClose = Delegate.create(this, monitorOnClose);
+		monitor_socket.onXML = Delegate.create(this, monitorOnXML);
+		monitor_socket.onConnect = Delegate.create(this, monitorOnConnect);
+	}
+	function serverOnConnect(success:Boolean) {
+		if (success) {
+			setServerStatus("Server: Connected");
+		} else {
+			server_socket.close();
+			setServerStatus("Server: Connection Failed, retrying");
+			server_socket.connect(ipAddress_ti.text, parseInt(serverPort_ti.text));
+		}
+	}
+	function serverOnXML(inXML:XML) {
+		//trace(inXML);	
+	}
+	function serverOnClose() {
+		server_socket.connect(ipAddress_ti.text, parseInt(serverPort_ti.text));
+		setServerStatus("Server: Disconnected, retrying");
+	}
+	function monitorOnConnect(success:Boolean) {
+		if (success) {
+			setMonitorStatus("Monitor: Connected");
+		} else {
+			monitor_socket.close();
+			setMonitorStatus("Monitor: Connection Failed, retrying");
+			monitor_socket.connect(ipAddress_ti.text, parseInt(monitorPort_ti.text));
+		}
+	}
+	function monitorOnXML(inXML:XML) {
+		//trace(inXML);	
+	}
+	function monitorOnClose() {
+		monitor_socket.connect(ipAddress_ti.text, parseInt(monitorPort_ti.text));
+		setMonitorStatus("Monitor: Disconnected, retrying");
+	}
+	function setServerStatus(newText:String):Void {
+		serverStatus_lb.text = newText;
+	}
+	function setMonitorStatus(newText:String):Void {
+		monitorStatus_lb.text = newText;
 	}
 	function setVisible(showing:Boolean):Void {
 		ipAddress_lb._visible = showing;
