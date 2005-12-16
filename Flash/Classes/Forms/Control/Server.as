@@ -12,6 +12,7 @@ class Forms.Control.Server {
 	private var serverLogPanel:Forms.Control.ServerLog;
 	private var logLevelsPanel:Forms.Control.LogLevels;
 	private var irPanel:Forms.Control.IR;
+	private var filesPanel:Forms.Control.Files;
 	function Server() {
 	}
 	public function init():Void {
@@ -21,6 +22,7 @@ class Forms.Control.Server {
 		controlPanel.setSockets(monitor_socket, server_socket);
 		logLevelsPanel.setSockets(monitor_socket, server_socket);
 		irPanel.setSockets(monitor_socket, server_socket);
+		filesPanel.setSockets(monitor_socket, server_socket);
 		tabBar_tb.addEventListener("change", Delegate.create(this, setView));
 		setupSockets();
 	}
@@ -68,6 +70,7 @@ class Forms.Control.Server {
 				serverLogPanel.setVisible(false);
 				logLevelsPanel.setVisible(false);
 				irPanel.setVisible(false);
+				filesPanel.setVisible(false);
 			break;
 			case "Controls":
 				settingsPanel.setVisible(false);
@@ -75,6 +78,7 @@ class Forms.Control.Server {
 				serverLogPanel.setVisible(false);
 				logLevelsPanel.setVisible(false);
 				irPanel.setVisible(false);
+				filesPanel.setVisible(false);
 			break;
 			case "Log":
 				settingsPanel.setVisible(false);
@@ -82,6 +86,7 @@ class Forms.Control.Server {
 				serverLogPanel.setVisible(true);
 				logLevelsPanel.setVisible(false);
 				irPanel.setVisible(false);
+				filesPanel.setVisible(false);
 				break;
 			case "Log Levels":
 				settingsPanel.setVisible(false);
@@ -89,6 +94,7 @@ class Forms.Control.Server {
 				serverLogPanel.setVisible(false);
 				logLevelsPanel.setVisible(true);
 				irPanel.setVisible(false);
+				filesPanel.setVisible(false);
 				break;
 			case "IR":
 				settingsPanel.setVisible(false);
@@ -96,7 +102,15 @@ class Forms.Control.Server {
 				serverLogPanel.setVisible(false);
 				logLevelsPanel.setVisible(false);
 				irPanel.setVisible(true);
+				filesPanel.setVisible(false);
 				break;
+			case "Files":
+				settingsPanel.setVisible(false);
+				controlPanel.setVisible(false);
+				serverLogPanel.setVisible(false);
+				logLevelsPanel.setVisible(false);
+				irPanel.setVisible(false);
+				filesPanel.setVisible(true);
 			}
 	}
 	function monitorOnXML(inXML:XML) {
@@ -108,15 +122,15 @@ class Forms.Control.Server {
 		if (inNode.nodeName != null) {
 			switch (inNode.nodeName) {
 			case "ERROR" :
-				serverLogPanel.appendDebugText(inNode);
+				//serverLogPanel.appendDebugText(inNode);
+				trace(inNode);
 				break;
 			case "FILE_TRANSFER" :
 				//trace(inNode);
 				//do download here
 				break;
 			case "FILE" :
-				//trace(inNode);
-				//do download here
+				filesPanel.fileDownloaded(inNode);
 				break;
 			case "EXEC" :
 				if (inNode.hasChildNodes) {
@@ -126,148 +140,13 @@ class Forms.Control.Server {
 				}
 				break;
 			case "FILES" :
-				/*switch (inNode.attributes["DIR"]) {
-				case "server/config" :
-					for (child in inNode.childNodes) {
-						configs_lst.addItem({label:inNode.childNodes[child].attributes["NAME"], desc:inNode.childNodes[child].attributes["DESC"], mod:convertTime(parseInt(inNode.childNodes[child].attributes["MOD"]))});
-					}
-					enableConfigList();
-					break;
-				case "server/script" :
-					for (child in inNode.childNodes) {
-						scripts_lst.addItem({label:inNode.childNodes[child].attributes["NAME"], desc:inNode.childNodes[child].attributes["DESC"], mod:convertTime(parseInt(inNode.childNodes[child].attributes["MOD"]))});
-					}
-					enableScriptList();
-					break;
-				case "server/datafiles" :
-					for (child in inNode.childNodes) {
-						data_lst.addItem({label:inNode.childNodes[child].attributes["NAME"], desc:inNode.childNodes[child].attributes["DESC"], mod:convertTime(parseInt(inNode.childNodes[child].attributes["MOD"]))});
-					}
-					enableDataList();
-					break;
-				case "client" :
-					for (child in inNode.childNodes) {
-						client_lst.addItem({label:inNode.childNodes[child].attributes["NAME"], desc:inNode.childNodes[child].attributes["DESC"], mod:convertTime(parseInt(inNode.childNodes[child].attributes["MOD"]))});
-					}
-					enableClientList();
-					break;
-				case "client-core" :
-					for (child in inNode.childNodes) {
-						client_core_lst.addItem({label:inNode.childNodes[child].attributes["NAME"], desc:inNode.childNodes[child].attributes["DESC"], mod:convertTime(parseInt(inNode.childNodes[child].attributes["MOD"]))});
-					}
-					enableClientCoreList();
-					break;
-				case "server/JRobin/RRDDefinition" :
-					for (child in inNode.childNodes) {
-						rrd_lst.addItem({label:inNode.childNodes[child].attributes["NAME"], desc:inNode.childNodes[child].attributes["DESC"], mod:convertTime(parseInt(inNode.childNodes[child].attributes["MOD"]))});
-					}
-					enableRRDList();
-					break;
-				case "server/JRobin/GraphDefinition" :
-					for (child in inNode.childNodes) {
-						graph_lst.addItem({label:inNode.childNodes[child].attributes["NAME"], desc:inNode.childNodes[child].attributes["DESC"], mod:convertTime(parseInt(inNode.childNodes[child].attributes["MOD"]))});
-					}
-					enableGraphList();
-					break;
-				case "server/log" :
-					for (child in inNode.childNodes) {
-						server_logs_lst.addItem({label:inNode.childNodes[child].attributes["NAME"], desc:inNode.childNodes[child].attributes["DESC"], mod:convertTime(parseInt(inNode.childNodes[child].attributes["MOD"]))});
-					}
-					enableServerLogsList();
-					break;
-				default :
-					trace(inNode);
-					break;
-				}
-				*/
+					filesPanel.filesList(inNode);
 				break;
 			case "DELETE" :
-				/*if (inNode.attributes["RESULT"] == "SUCCESS") {
-					switch (inNode.attributes["DIR"]) {
-					case "server/config" :
-						var fileName:String = inNode.firstChild;
-						configs_status_lb.text = fileName;
-						refreshConfigsList();
-						break;
-					case "server/script" :
-						var fileName:String = inNode.firstChild;
-						scripts_status_lb.text = fileName;
-						refreshScriptsList();
-						break;
-					case "server/datafiles" :
-						var fileName:String = inNode.firstChild;
-						data_status_lb.text = fileName;
-						refreshDataList();
-						break;
-					case "client" :
-						var fileName:String = inNode.firstChild;
-						client_status_lb.text = fileName;
-						refreshClientList();
-						break;
-					case "client-core" :
-						var fileName:String = inNode.firstChild;
-						client_core_status_lb.text = fileName;
-						refreshClientCoreList();
-						break;
-					case "server/JRobin/RRDDefinition" :
-						var fileName:String = inNode.firstChild;
-						rrd_status_lb.text = fileName;
-						refreshRRDList();
-						break;
-					case "server/JRobin/GraphDefinition" :
-						var fileName:String = inNode.firstChild;
-						graph_status_lb.text = fileName;
-						refreshGraphList();
-						break;
-					case "server/log" :
-						var fileName:String = inNode.firstChild;
-						server_logs_status_lb.text = fileName;
-						refreshServerLogsList();
-						break;
-					default :
-						trace(inNode);
-						break;
-					}
-				}
-				*/
+					filesPanel.fileDeleted(inNode);
 				break;
 			case "UPLOAD" :
-				/*if (inNode.attributes["RESULT"] == "SUCCESS") {
-					switch (inNode.attributes["DIR"]) {
-					case "server/config" :
-						configs_status_lb.text = "Upload Successful";
-						refreshConfigsList();
-						break;
-					case "server/script" :
-						scripts_status_lb.text = "Upload Successful";
-						refreshScriptsList();
-						break;
-					case "server/datafiles" :
-						data_status_lb.text = "Upload Successful";
-						refreshDataList();
-						break;
-					case "client" :
-						client_status_lb.text = "Upload Successful";
-						refreshClientList();
-						break;
-					case "client-core" :
-						client_core_status_lb.text = "Upload Successful";
-						refreshClientCoreList();
-						break;
-					case "server/JRobin/RRDDefinition" :
-						rrd_status_lb.text = "Upload Successful";
-						refreshRRDList();
-						break;
-					case "server/JRobin/GraphDefinition" :
-						graph_status_lb.text = "Upload Successful";
-						refreshGraphList();
-						break;
-					default :
-						trace(inNode);
-						break;
-					}
-					}
-					*/
+					filesPanel.fileUploaded(inNode);
 					break;
 				case "STARTUP_FILE" :
 					/*startupFile = inNode.attributes["NAME"];*/
@@ -278,7 +157,7 @@ class Forms.Control.Server {
 				case "HEARTBEAT" :
 					break;
 				case "SELECT" :
-					/*configs_status_lb.text = inNode.firstChild;*/
+					filesPanel.fileSelected(inNode);
 					break;
 				default :
 					trace(inNode);
@@ -292,54 +171,53 @@ class Forms.Control.Server {
 		processServerNode(inXML.firstChild);	
 	}
 	function processServerNode(inNode) {
-	while (inNode != null) {
-		/*if valid node, ignoreWhite isnt working properly*/
-		if (inNode.nodeName != null) {
-			switch (inNode.nodeName) {
-			case "ERROR" :
-				serverLogPanel.appendDebugText(inNode);
-				break;
-			case "LOG" :
-				serverLogPanel.appendDebugText("<node>"+inNode.nodeName+": </node>");
-				for (var attr:String in inNode.attributes) {
-					if ((attr == "TIME") || (attr == "MOD") || (attr == "launched")) {
-						serverLogPanel.appendDebugText("<time>"+attr+":\t"+convertTime(parseInt(inNode.attributes[attr]))+"</time>");
-					} else {
-						serverLogPanel.appendDebugText("<attribute>"+attr+":\t"+inNode.attributes[attr]+"</attribute>");
-					}
+		while (inNode != null) {
+			/*if valid node, ignoreWhite isnt working properly*/
+			if (inNode.nodeName != null) {
+				switch (inNode.nodeName) {
+				case "ERROR" :
+					//serverLogPanel.appendDebugText(inNode);
+					trace(inNode);
+					break;
+				case "LOG" :
+					serverLogPanel.appendDebugText(inNode);
+					/*serverLogPanel.appendDebugText("<node>"+inNode.nodeName+": </node>");
+					for (var attr:String in inNode.attributes) {
+						if ((attr == "TIME") || (attr == "MOD") || (attr == "launched")) {
+							serverLogPanel.appendDebugText("<time>"+attr+":\t"+convertTime(parseInt(inNode.attributes[attr]))+"</time>");
+						} else {
+							serverLogPanel.appendDebugText("<attribute>"+attr+":\t"+inNode.attributes[attr]+"</attribute>");
+						}
+					}*/
+					break;
+				case "DEBUG_PACKAGES" :
+					logLevelsPanel.generateDebugLevels(inNode);
+					break;
+				case "IR_DEVICE_LIST" :
+					irPanel.deviceList(inNode);
+					break;
+				case "IR_ACTION_LIST" :
+					irPanel.actionList(inNode);
+					break;
+				case "IR_CONFIG":
+					irPanel.irResult(inNode);
+					break;
+				case "IR_LEARNT" :
+					irPanel.irLearnt(inNode);
+					break;
+				case "connected" :
+					//lanuched (time), config, logDir
+					break;
+				case "Admin_Clients" :
+					//count
+					break;
+				case "heartbeat" :
+					break;
+				default :
+					trace(inNode);
 				}
-				break;
-			case "DEBUG_PACKAGES" :
-				logLevelsPanel.generateDebugLevels(inNode);
-				break;
-			case "IR_DEVICE_LIST" :
-				irPanel.deviceList(inNode);
-				break;
-			case "IR_ACTION_LIST" :
-				irPanel.actionList(inNode);
-				break;
-			case "IR_CONFIG":
-				irPanel.irResult(inNode);
-				break;
-			case "IR_LEARNT" :
-				irPanel.irLearnt(inNode);
-				break;
-			case "connected" :
-				//lanuched (time), config, logDir
-				break;
-			case "Admin_Clients" :
-				//count
-				break;
-			case "heartbeat" :
-				break;
-			default :
-				trace(inNode);
 			}
+			inNode = inNode.nextSibling;
 		}
-		inNode = inNode.nextSibling;
-	}
-}	
-function convertTime (inTime):String {
-	return new Date(inTime).toString();
-}
+	}	
 }
