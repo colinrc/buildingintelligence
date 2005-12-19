@@ -1,5 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
+import Utils.Base64;
+
 class Forms.Control.Files {
 	private var upload_btn:mx.controls.Button;
 	private var download_btn:mx.controls.Button;

@@ -21,7 +21,7 @@ Actionscript 2.0 Port:
 	Copyright (C) 2005 Jason Nussbaum (http://www.jasonnussbaum.com)
 */
 
-class Base64
+class Utils.Base64
 	extends Object
 {
 ///#region Properties
