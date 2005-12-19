@@ -1,18 +1,16 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Control.LogLevels {
-	private var server_socket:XMLSocket;
-	private var monitor_socket:XMLSocket;
+	private var server:Objects.ServerObj;
 	private var levels_list:mx.controls.List;
 	private var levels_cb:mx.controls.ComboBox;
 	private var levels_lb:mx.controls.Label;
 	private var devices_lb:mx.controls.Label;
 	private var levels_dataGrid:mx.controls.DataGrid;
-	function LogLevels() {
+	public function LogLevels() {
 	}
-	public function setSockets(inMonitor_socket:XMLSocket, inServer_socket:XMLSocket) {
-		server_socket = inServer_socket;
-		monitor_socket = inMonitor_socket;
+	public function setSockets(inServer:Objects.ServerObj) {
+		server = inServer;
 	}
 	public function init():Void {
 		levels_cb.addEventListener("change", Delegate.create(this, comboSelection));
@@ -30,7 +28,7 @@ class Forms.Control.LogLevels {
 		levels_lb._visible = showing;
 		levels_dataGrid._visible = showing;
 	}
-	function generateDebugLevels(inLevels:XMLNode) {
+	public function generateDebugLevels(inLevels:XMLNode) {
 		levels_list.removeAll();
 		levels_dataGrid.removeAll();
 		var inNode:XMLNode = inLevels.firstChild;
@@ -40,32 +38,13 @@ class Forms.Control.LogLevels {
 			inNode = inNode.nextSibling;
 		}
 	}
-	function setDebugMenuLevel(menu, level) {
-		switch (level) {
-		case "WARNING" :
-			menu.selectedIndex = 0;
-			break;
-		case "INFO" :
-			menu.selectedIndex = 1;
-			break;
-		case "FINE" :
-			menu.selectedIndex = 2;
-			break;
-		case "FINER" :
-			menu.selectedIndex = 3;
-			break;
-		case "FINEST" :
-			menu.selectedIndex = 4;
-			break;
-		}
-	}
-	function changeDebugLevels(level:String, package:String) {
+	private function changeDebugLevels(level:String, package:String) {
 		var xmlMsg = new XML('<DEBUG PACKAGE="'+package+'" LEVEL="'+level+'" />\n');
-		server_socket.send(xmlMsg);
+		server.sendToServer(xmlMsg);
 		getDebugLevels();
 	}
-	function getDebugLevels() {
+	private function getDebugLevels() {
 		var xmlMsg = new XML('<DEBUG_PACKAGES />\n');
-		server_socket.send(xmlMsg);
+		server.sendToServer(xmlMsg);
 	}
 }

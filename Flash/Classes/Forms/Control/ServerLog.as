@@ -9,7 +9,7 @@ class Forms.Control.ServerLog {
 	private var filter_ch:mx.controls.CheckBox;
 	private var inv_filter_ch:mx.controls.CheckBox;
 	private var my_styles:StyleSheet;
-	function ServerLog() {
+	public function ServerLog() {
 	}
 	public function init():Void {
 		//setting the styles for the server log text area
@@ -42,7 +42,7 @@ class Forms.Control.ServerLog {
 		}
 		/*need to implement filter*/
 	}
-	function convertTime(inTime):String {
+	private function convertTime(inTime):String {
 		var time:Date = new Date(inTime);
 		return time.getDay()+"-"+time.getMonth()+"-"+time.getFullYear()+" "+time.getHours()+":"+time.getMinutes()+":"+time.getSeconds();
 	}
