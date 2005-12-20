@@ -1,7 +1,8 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Control.IR {
-	private var server:Objects.ServerObj;
+class Forms.Control.IR extends Forms.Control.AdminView {
+	public var server_socket:XMLSocket;
+	public var monitor_socket:XMLSocket;
 	private var action_cb:mx.controls.ComboBox;
 	private var action_lb:mx.controls.Label;
 	private var cancel_btn:mx.controls.Button;
@@ -21,7 +22,7 @@ class Forms.Control.IR {
 	private var value_50_rb:mx.controls.RadioButton;
 	public function IR() {
 	}
-	public function init() {
+	public function init():Void {
 		value_100_rb.addEventListener("click", Delegate.create(this, changeValue));
 		value_20_rb.addEventListener("click", Delegate.create(this, changeValue));
 		value_35_rb.addEventListener("click", Delegate.create(this, changeValue));
@@ -33,61 +34,43 @@ class Forms.Control.IR {
 		test_btn.addEventListener("click", Delegate.create(this, test));
 		reload_btn.addEventListener("click", Delegate.create(this, reload));
 	}
-	private function changeValue(eventObj) {
+	private function changeValue(eventObj):Void {
 		var xmlMsg = new XML('<IR_CONFIG EXTRA="'+eventObj.target.selection.data+'" />\n');
-		server.sendToServer(xmlMsg);
+		server_socket.send(xmlMsg);
 	}
-	public function setSockets(inServer:Objects.ServerObj) {
-		server = inServer;
+	public function setSockets(inServer_socket:XMLSocket, inMonitor_socket:XMLSocket):Void {
+		server_socket = inServer_socket;
+		monitor_socket = inMonitor_socket;
 	}
-	public function setVisible(showing:Boolean) {
-		action_cb._visible = showing;
-		action_lb._visible = showing;
-		cancel_btn._visible = showing;
-		device_cb._visible = showing;
-		device_lb._visible = showing;
-		learn_btn._visible = showing;
-		avname_ti._visible = showing;
-		reload_btn._visible = showing;
-		repeat_ti._visible = showing;
-		repeat_lb._visible = showing;
-		status_lb._visible = showing;
-		test_btn._visible = showing;
-		value_lb._visible = showing;
-		value_100_rb._visible = showing;
-		value_20_rb._visible = showing;
-		value_35_rb._visible = showing;
-		value_50_rb._visible = showing;
-	}
-	public function deviceChange(eventObj) {
+	public function deviceChange(eventObj):Void {
 		var xmlMsg = new XML('<LIST_IR_ACTIONS DEVICE="'+device_cb.selectedItem.label+'" />\n');
-		server.sendToServer(xmlMsg);
+		server_socket.send(xmlMsg);
 		learn_btn.enabled = false;
 	}
-	public function actionChange(eventObj) {
+	public function actionChange(eventObj):Void {
 		learn_btn.enabled = true;
 	}
-	private function learn() {
+	private function learn():Void {
 		var irName:String = device_cb.selectedItem.label+"."+action_cb.selectedItem.label;
 		var xmlMsg = new XML('<IR_LEARN NAME="'+irName+'" />\n');
-		server.sendToServer(xmlMsg);
+		server_socket.send(xmlMsg);
 		status_lb.text = "Learning "+irName;
 		learn_btn.enabled = false;
 	}
-	private function cancel() {
+	private function cancel():Void {
 		//if((ir_device_cb.selectedIndex>-1)&&(ir_action_cb.selectedItem.selectedIndex>-1)) {
 		//ir_learn_btn.enabled = true;
 		//}
 		//ir_status_lb.text ="Canceled learning ";
 	}
-	private function test() {
+	private function test():Void {
 		var xmlMsg = new XML('<TEST_IR DEVICE="'+device_cb.selectedItem.label+'" ACTION="'+action_cb.selectedItem.label+'" TARGET="'+avname_ti.text+'" REPEAT="'+repeat_ti.text+'" />\n');
-		server.sendToServer(xmlMsg);
+		server_socket.send(xmlMsg);
 	}
-	private function reload() {
+	private function reload():Void {
 		action_cb.removeAll();
 		var xmlMsg = new XML('<RELOAD_IRDB />\n');
-		server.sendToServer(xmlMsg);
+		server_socket.send(xmlMsg);
 		learn_btn.enabled = false;
 	}
 	public function irLearnt(inNode:XMLNode):Void {
@@ -102,7 +85,7 @@ class Forms.Control.IR {
 		action_cb.removeAll();
 		device_cb.removeAll();
 		if (inNode.hasChildNodes) {
-			for (var child:String in inNode.childNodes) {
+			for (var child in inNode.childNodes) {
 				device_cb.addItem(inNode.childNodes[child].attributes["NAME"]);
 			}
 		}
@@ -111,10 +94,32 @@ class Forms.Control.IR {
 	public function actionList(inNode:XMLNode):Void {
 		action_cb.removeAll();
 		if (inNode.hasChildNodes) {
-			for (var child:String in inNode.childNodes) {
+			for (var child in inNode.childNodes) {
 				action_cb.addItem(inNode.childNodes[child].attributes["NAME"]);
 			}
 		}
 		status_lb.text = device_cb.selectedItem.label+" actions loaded";
+	}
+	public function processXML(inNode:XMLNode) {
+		while (inNode != null) {
+			/*if valid node, ignoreWhite isnt working properly*/
+			if (inNode.nodeName != null) {
+				switch (inNode.nodeName) {
+				case "IR_DEVICE_LIST" :
+					deviceList(inNode);
+					break;
+				case "IR_ACTION_LIST" :
+					actionList(inNode);
+					break;
+				case "IR_CONFIG" :
+					irResult(inNode);
+					break;
+				case "IR_LEARNT" :
+					irLearnt(inNode);
+					break;
+				}
+			}
+			inNode = inNode.nextSibling;
+		}
 	}
 }

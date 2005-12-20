@@ -2,7 +2,7 @@
 import mx.utils.Delegate;
 import Utils.Base64;
 
-class Forms.Control.Files {
+class Forms.Control.Files extends Forms.Control.AdminView{
 	private var upload_btn:mx.controls.Button;
 	private var download_btn:mx.controls.Button;
 	private var default_btn:mx.controls.Button;
@@ -17,7 +17,8 @@ class Forms.Control.Files {
 	private var filter_ti:mx.controls.TextInput;
 	private var filter_lb:mx.controls.Label;
 	private var status_lb:mx.controls.Label;
-	private var server:Objects.ServerObj;
+	public var server_socket:XMLSocket;
+	public var monitor_socket:XMLSocket;
 	public function Files() {
 	}
 	public function init():Void {
@@ -26,9 +27,11 @@ class Forms.Control.Files {
 		default_btn.addEventListener("click", Delegate.create(this, setDefaultFile));
 		files_cb.addEventListener("change", Delegate.create(this, comboChange));
 		delete_btn.addEventListener("click", Delegate.create(this, deleteFile));
+		requestFiles();
 	}
-	public function setSockets(inServer:Objects.ServerObj) {
-		server = inServer;
+	public function setSockets(inServer_socket:XMLSocket,inMonitor_socket:XMLSocket):Void{
+		server_socket = inServer_socket;
+		monitor_socket = inMonitor_socket;
 	}
 	private function comboChange(eventObj:Object):Void {
 		if (files_cb.selectedItem.label == "server/config") {
@@ -41,31 +44,31 @@ class Forms.Control.Files {
 	private function requestFiles():Void {
 		files_list.removeAll();
 		var xmlMsg = new XML('<ADMIN COMMAND = "LIST" DIR = "'+files_cb.selectedItem.label+'" FILTER = "'+filter_ti.text+'" />\n');
-		server.sendToMonitor(xmlMsg);
+		monitor_socket.send(xmlMsg);
 	}
 	private function setDefaultFile():Void {
 		if ((files_list.selectedIndex>-1) && (confirm_chk.selected)) {
 			var xmlMsg = new XML('<ADMIN COMMAND = "SELECT" EXTRA="'+files_list.selectedItem.label+'" />\n');
-			server.sendToMonitor(xmlMsg);
+			monitor_socket.send(xmlMsg);
 		}
 	}
 	private function uploadFile():Void {
 		if (confirm_chk.selected) {
 			//var xmlMsg = new XML('<ADMIN COMMAND = "UPLOAD" NAME="'+fileName_ti.text+'" DIR="'+files_cb.selectedItem.label+'" BASE64="Y"><![CDATA['+Base64.Encode(buffer_ta.text)+']]></ADMIN>\n');
 			var xmlMsg = new XML('<ADMIN COMMAND = "UPLOAD" NAME="'+fileName_ti.text+'" DIR="'+files_cb.selectedItem.label+'" BASE64="N"><![CDATA['+buffer_ta.text+']]></ADMIN>\n');
-			server.sendToMonitor(xmlMsg);
+			monitor_socket.send(xmlMsg);
 		}
 	}
 	private function downloadFile():Void {
 		if ((files_list.selectedIndex>-1) && (confirm_chk.selected)) {
 			var xmlMsg = new XML('<ADMIN COMMAND = "DOWNLOAD" DIR="'+files_cb.selectedItem.label+'" EXTRA="'+files_list.selectedItem.label+'" />\n');
-			server.sendToMonitor(xmlMsg);
+			monitor_socket.send(xmlMsg);
 		}
 	}
 	private function deleteFile():Void {
 		if ((files_list.selectedIndex>-1) && (confirm_chk.selected)) {
 			var xmlMsg = new XML('<ADMIN COMMAND = "DELETE" DIR="'+files_cb.selectedItem.label+'" EXTRA="'+files_list.selectedItem.label+'" />\n');
-			server.sendToMonitor(xmlMsg);
+			monitor_socket.send(xmlMsg);
 		}
 	}
 	public function filesList(inNode:XMLNode):Void {
@@ -93,26 +96,32 @@ class Forms.Control.Files {
 	public function fileSelected(inNode:XMLNode):Void {
 		status_lb.text = inNode.firstChild.toString();
 	}
-	public function setVisible(showing:Boolean):Void {
-		if (showing) {
-			requestFiles();
-		}
-		upload_btn._visible = showing;
-		download_btn._visible = showing;
-		default_btn._visible = showing;
-		confirm_chk._visible = showing;
-		folder_lb._visible = showing;
-		files_cb._visible = showing;
-		files_list._visible = showing;
-		fileName_lb._visible = showing;
-		fileName_ti._visible = showing;
-		buffer_ta._visible = showing;
-		delete_btn._visible = showing;
-		filter_ti._visible = showing;
-		filter_lb._visible = showing;
-		status_lb._visible = showing;
-	}
 	private function convertTime(inTime):String {
 		return new Date(inTime).toString();
+	}
+	public function processXML(inNode:XMLNode):Void{
+		while (inNode != null) {
+				/*if valid node, ignoreWhite isnt working properly*/
+				if (inNode.nodeName != null) {
+					switch (inNode.nodeName) {
+					case "FILE" :
+						fileDownloaded(inNode);
+						break;
+					case "FILES" :
+						filesList(inNode);
+						break;
+					case "DELETE" :
+						fileDeleted(inNode);
+						break;
+					case "UPLOAD" :
+						fileUploaded(inNode);
+						break;
+					case "SELECT" :
+						fileSelected(inNode);
+						break;
+					}
+				}
+				inNode = inNode.nextSibling;
+			}
 	}
 }
