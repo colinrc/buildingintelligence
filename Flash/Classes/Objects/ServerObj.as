@@ -9,7 +9,7 @@ class Objects.ServerObj {
 	private var viewAttached:Boolean;
 	private var serverStatus:String;
 	private var monitorStatus:String;
-	private var view:Forms.Control.ServerView;
+	private var view:Forms.Control.AdminView;
 	
 	public function ServerObj(inServerName:String, inIPAddress:String, inMonitorPort:Number, inServerPort:Number) {
 		serverName = inServerName;
@@ -40,10 +40,10 @@ class Objects.ServerObj {
 	public function sendToMonitor(inXML:XML) {
 		monitor_socket.send(inXML);
 	}
-	public function attachView(inView:Forms.Control.ServerView){
+	public function attachView(inView:Forms.Control.AdminView){
 		view =inView;
 		viewAttached = true;
-		view.setServer(this);
+		view.setSockets(server_socket, monitor_socket);
 	}
 	public function dettachView():Void {
 		view =null;
@@ -58,43 +58,25 @@ class Objects.ServerObj {
 	private function serverOnConnect(success:Boolean) {
 		if (success) {
 			serverStatus = "Server: Connected";
-			if(viewAttached){
-				view.setServerStatus(serverStatus);
-			}
 		} else {
 			serverStatus ="Server: Connection Failed, retrying..."
-			if(viewAttached){
-				view.setServerStatus(serverStatus);
-			}
 			connectToServer();
 		}
 	}
 	private function serverOnClose() {
 		serverStatus = "Server: Disconnected, retrying...";
-		if(viewAttached){
-			view.setServerStatus(serverStatus);
-		}
 		connectToServer();
 	}
 	private function monitorOnConnect(success:Boolean) {
 		if (success) {
 			monitorStatus = "Monitor: Connected";
-			if(viewAttached){
-				view.setMonitorStatus(monitorStatus);
-			}
 		} else {
 			monitorStatus ="Monitor: Connection Failed, retrying..."
-			if(viewAttached){
-				view.setMonitorStatus(monitorStatus);
-			}
 			connectToMonitor();
 		}
 	}
 	private function monitorOnClose() {
 		monitorStatus = "Monitor: Disconnected, retrying...";
-		if(viewAttached){
-			view.setMonitorStatus(monitorStatus);
-		}
 		connectToMonitor();
 	}
 	private function setupSockets():Void {
@@ -106,106 +88,9 @@ class Objects.ServerObj {
 		monitor_socket.onConnect = Delegate.create(this, monitorOnConnect);
 	}
 	private function serverOnXML(inXML:XML) {
-		processServerNode(inXML.firstChild);
-	}
-	private function processServerNode(inNode) {
-		if (viewAttached) {
-			while (inNode != null) {
-				/*if valid node, ignoreWhite isnt working properly*/
-				if (inNode.nodeName != null) {
-					switch (inNode.nodeName) {
-					case "ERROR" :
-						//view.serverLogPanel.appendDebugText(inNode);
-						trace(inNode);
-						break;
-					case "LOG" :
-						view.serverLogPanel.appendDebugText(inNode);
-						break;
-					case "DEBUG_PACKAGES" :
-						view.logLevelsPanel.generateDebugLevels(inNode);
-						break;
-					case "IR_DEVICE_LIST" :
-						view.irPanel.deviceList(inNode);
-						break;
-					case "IR_ACTION_LIST" :
-						view.irPanel.actionList(inNode);
-						break;
-					case "IR_CONFIG" :
-						view.irPanel.irResult(inNode);
-						break;
-					case "IR_LEARNT" :
-						view.irPanel.irLearnt(inNode);
-						break;
-					case "connected" :
-						//lanuched (time), config, logDir
-						break;
-					case "Admin_Clients" :
-						//count
-						break;
-					case "heartbeat" :
-						break;
-					default :
-						trace(inNode);
-					}
-				}
-				inNode = inNode.nextSibling;
-			}
-		}
+		view.processXML(inXML.firstChild);
 	}
 	private function monitorOnXML(inXML:XML) {
-		processMonitorNode(inXML.firstChild);
-	}
-	private function processMonitorNode(inNode) {
-		if (viewAttached) {
-			while (inNode != null) {
-				/*if valid node, ignoreWhite isnt working properly*/
-				if (inNode.nodeName != null) {
-					switch (inNode.nodeName) {
-					case "ERROR" :
-						//view.serverLogPanel.appendDebugText(inNode);
-						trace(inNode);
-						break;
-					case "FILE_TRANSFER" :
-						//trace(inNode);
-						//do download here
-						break;
-					case "FILE" :
-						//filesPanel.fileDownloaded(inNode);
-						break;
-					case "EXEC" :
-						if (inNode.hasChildNodes) {
-							for (var child in inNode.childNodes) {
-								view.controlPanel.appendControlResults(inNode.childNodes[child]);
-							}
-						}
-						break;
-					case "FILES" :
-						view.filesPanel.filesList(inNode);
-						break;
-					case "DELETE" :
-						view.filesPanel.fileDeleted(inNode);
-						break;
-					case "UPLOAD" :
-						view.filesPanel.fileUploaded(inNode);
-						break;
-					case "STARTUP_FILE" :
-						/*startupFile = inNode.attributes["NAME"];*/
-						break;
-					case "ADMIN" :
-						view.controlPanel.appendControlResults(inNode);
-						break;
-					case "HEARTBEAT" :
-						break;
-					case "SELECT" :
-						view.filesPanel.fileSelected(inNode);
-						break;
-					default :
-						trace(inNode);
-						break;
-					}
-				}
-				inNode = inNode.nextSibling;
-			}
-		}
+		view.processXML(inXML.firstChild);
 	}
 }
