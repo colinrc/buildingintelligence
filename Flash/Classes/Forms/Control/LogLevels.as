@@ -22,7 +22,7 @@ class Forms.Control.LogLevels extends Forms.Control.AdminView {
 	}
 	public function setDefault() {
 		for (var index:Number = 0; index<levels_list.length; index++) {
-			changeDebugLevels("WARNING", levels_list.getItemAt(index).data);
+			changeDebugLevels("INFO", levels_list.getItemAt(index).data);
 		}
 	}
 	public function comboSelection(eventObj):Void {
