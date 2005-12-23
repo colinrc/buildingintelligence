@@ -42,8 +42,10 @@ class Forms.Control.Controls extends Forms.Control.AdminView {
 	public function clearResults():Void {
 		results_ta.text = "";
 	}
-	public function appendControlResults(inXML:XMLNode):Void {
-		results_ta.text += inXML.toString();
+	public function appendControlResults(inNode:XMLNode):Void {
+		for (var child in inNode.childNodes) {
+			results_ta.text += inNode.childNodes[child];
+		}
 	}
 	public function processXML(inNode:XMLNode):Void {
 		while (inNode != null) {
@@ -52,7 +54,9 @@ class Forms.Control.Controls extends Forms.Control.AdminView {
 				switch (inNode.nodeName) {
 				case "EXEC" :
 					for (var child in inNode.childNodes) {
-						appendControlResults(inNode.childNodes[child]);
+						if((inNode.childNodes[child].nodeName == "EXEC_ERROR")||(inNode.childNodes[child].nodeName == "EXEC_OUTPUT")){
+							appendControlResults(inNode.childNodes[child]);
+						}
 					}
 					break;
 				case "ADMIN" :
