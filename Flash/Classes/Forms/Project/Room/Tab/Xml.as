@@ -1,4 +1,5 @@
 ﻿import mx.controls.*
+import Utils.XMLHighlighter;
 
 class Forms.Project.Room.Tab.Xml {
 
@@ -10,6 +11,7 @@ class Forms.Project.Room.Tab.Xml {
 	}
 	
 	public function init():Void {
-		xml_ta.text = controls.toString();
+		xml_ta.html = true;
+		xml_ta.text = XMLHighlighter.highlight(controls);
 	}
 }
