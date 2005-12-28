@@ -17,7 +17,7 @@
                         <project_file path="./Classes/Forms/Project/Room/Tab/Preview.as" filetype="as" />
                     </project_folder>
                 </project_folder>
-                <project_folder name="Settings" expanded="false">
+                <project_folder name="Settings" expanded="true">
                     <project_file path="./Classes/Forms/Project/Settings/StringEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Room/Tab/Config.as" filetype="as" />
                 </project_folder>
@@ -26,6 +26,11 @@
                     <project_file path="./Classes/Forms/Project/JRobin/JRobin.as" filetype="as" />
                 </project_folder>
                 <project_folder name="Device" expanded="true">
+                    <project_file path="./Classes/Forms/Project/Device/Head.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Connection.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/IP.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Parameters.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Serial.as" filetype="as" />
                 </project_folder>
                 <project_file path="./Classes/Forms/Project/KeySelector.as" filetype="as" />
             </project_folder>
@@ -34,6 +39,8 @@
         </project_folder>
         <project_folder name="Objects" expanded="true">
             <project_file path="./Classes/Objects/ServerConnection.as" filetype="as" />
+            <project_file path="./Classes/Objects/History.as" filetype="as" />
+            <project_file path="./Classes/Objects/Library.as" filetype="as" />
         </project_folder>
         <project_folder name="Utils" expanded="true">
             <project_file path="./Classes/Utils/Base64.as" filetype="as" />
