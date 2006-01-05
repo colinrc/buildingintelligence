@@ -31,6 +31,30 @@
                     <project_file path="./Classes/Forms/Project/Device/IP.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Parameters.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Serial.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/AudioVideo.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Camera.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Catalogue.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Catalogues.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Contact.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/DynaliteLights.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/IR.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/CbusLights.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/CbusSensors.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/GC100_IR.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Toggle.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Comfort.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/GC100_Modules.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/GC100_Relay.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Counter.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/X10Lights.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Alarm.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Analogue.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/ToggleMonitor.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Alert.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Custom.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Raw.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Raw_Connection.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/Raw_Interfaces.as" filetype="as" />
                 </project_folder>
                 <project_file path="./Classes/Forms/Project/KeySelector.as" filetype="as" />
             </project_folder>
