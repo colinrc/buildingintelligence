@@ -51,7 +51,7 @@ class Forms.Project.Device.GC100_Modules {
 				}
 			}
 			if (found == false) {
-				newModules.push({name:modules_dg.getItemAt(index).name});
+				newModules.push({name:modules_dg.getItemAt(index).name,type:modules_dg.getItemAt(index).type});
 			}
 		}
 		var deletedModules = new Array();
@@ -63,12 +63,12 @@ class Forms.Project.Device.GC100_Modules {
 				}
 			}
 			if (found == false) {
-				deletedModules.push({name:node.childNodes[moduleIndex].attributes["NAME"]});
+				deletedModules.push({name:node.childNodes[moduleIndex].attributes["NAME"], type:node.childNodes[moduleIndex].nodeName});
 			}
 		}
 		for (var delModule in deletedModules) {
 			for (var moduleIndex in node.childNodes) {
-				if ((deletedModules[delModule].name == node.childNodes[moduleIndex].attributes["NAME"]) && (node.childNodes[moduleIndex].nodeName == modules_dg.getItemAt(index).type)){
+				if ((deletedModules[delModule].name == node.childNodes[moduleIndex].attributes["NAME"]) && (deletedModules[delModule].type == node.childNodes[moduleIndex].nodeName)){
 					node.childNodes[moduleIndex].removeNode();
 				}
 			}
