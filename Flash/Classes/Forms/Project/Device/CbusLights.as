@@ -3,6 +3,7 @@ import mx.utils.Delegate;
 class Forms.Project.Device.CbusLights {
 	private var lights:Array;
 	private var lights_dg:DataGrid;
+	private var save_btn:Button;
 	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
@@ -24,6 +25,7 @@ class Forms.Project.Device.CbusLights {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		lights_dg.addEventListener("change", Delegate.create(this, itemChange));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		lights_dg.removeItemAt(lights_dg.selectedIndex);
@@ -102,7 +104,7 @@ class Forms.Project.Device.CbusLights {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	public function getData():Array {
+	public function save():Void {
 		var newLights = new Array();
 		for (var index = 0; index<lights_dg.length; index++) {
 			var newLight = new XMLNode(1, "LIGHT_CBUS");
@@ -116,6 +118,6 @@ class Forms.Project.Device.CbusLights {
 			newLight.attributes["CBUS_APPLICATION"] = lights_dg.getItemAt(index).application;
 			newLights.push(newLight);
 		}
-		return newLights;
+		_global.left_tree.selectedNode.lights = newLights;
 	}
 }

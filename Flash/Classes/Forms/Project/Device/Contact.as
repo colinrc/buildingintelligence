@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Contact {
+	private var save_btn:Button;
 	private var closures:Array;
 	private var closures_dg:DataGrid;
 	private var update_btn:Button;
@@ -21,6 +22,7 @@ class Forms.Project.Device.Contact {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		closures_dg.addEventListener("change", Delegate.create(this, itemChange));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		closures_dg.removeItemAt(closures_dg.selectedIndex);
@@ -77,7 +79,7 @@ class Forms.Project.Device.Contact {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	public function getData():Array {
+	public function save():Void {
 		var newClosures = new Array();
 		for (var index = 0; index<closures_dg.length; index++) {
 			var newClosure = new XMLNode(1, "CONTACT_CLOSURE");
@@ -88,6 +90,6 @@ class Forms.Project.Device.Contact {
 			newClosure.attributes["BOX"] = closures_dg.getItemAt(index).box;
 			newClosures.push(newClosure);
 		}
-		return newClosures;
+		_global.left_tree.selectedNode.closures = newClosures;
 	}
 }

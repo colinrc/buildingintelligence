@@ -3,18 +3,11 @@ import mx.utils.Delegate;
 class Forms.Project.Device.Connection {
 	private var node:XMLNode;
 	private var type_cb:ComboBox;
-	private var active_chk:CheckBox;
 	private var type_mc:Loader;
 	private var details_mc:MovieClip;
 	public function Connection() {
 	}
 	public function init():Void {
-		if(node.firstChild.attributes["ACTIVE"] == "Y"){
-			active_chk.selected = true;
-		}
-		else{
-			active_chk.selected = false;
-		}
 		var dataObj = {node:node.firstChild};
 		if(node.firstChild.nodeName == "IP"){
 			details_mc = type_mc.attachMovie("forms.project.device.ip", "connection_mc", 0, dataObj);
@@ -40,12 +33,7 @@ class Forms.Project.Device.Connection {
 		var parentTag = new XMLNode(1, "CONNECTION");
 		var type = type_cb.selectedItem.data;
 		var connection = new XMLNode(1, type);
-		if(active_chk.selected){
-			connection.attributes["ACTIVE"] = "Y";
-		}
-		else {
-			connection.attributes["ACTIVE"] = "N";
-		}
+		connection.attributes["ACTIVE"] = "Y";
 		var dataObj = details_mc.getData();
 		if(type == "IP"){
 			connection.attributes["IP_ADDRESS"] = dataObj.address;

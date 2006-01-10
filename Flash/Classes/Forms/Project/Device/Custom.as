@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Custom {
+	private var save_btn:Button;
 	private var customs:Array;
 	private var customs_dg:DataGrid;
 	private var update_btn:Button;
@@ -24,6 +25,7 @@ class Forms.Project.Device.Custom {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		customs_dg.addEventListener("change", Delegate.create(this, itemChange));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		customs_dg.removeItemAt(customs_dg.selectedIndex);
@@ -102,7 +104,7 @@ class Forms.Project.Device.Custom {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	public function getData():Array {
+	public function save():Void {
 		var newCustoms = new Array();
 		for (var index = 0; index<customs_dg.length; index++) {
 			var newCustom = new XMLNode(1, "CUSTOM_INPUT");
@@ -116,6 +118,6 @@ class Forms.Project.Device.Custom {
 			newCustom.attributes["EXTRA"] = customs_dg.getItemAt(index).extra;
 			newCustoms.push(newCustom);
 		}
-		return newCustoms;
+		_global.left_tree.selectedNode.customs = newCustoms;
 	}
 }

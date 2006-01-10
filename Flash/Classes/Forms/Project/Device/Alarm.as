@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Alarm {
+	private var save_btn:Button;
 	private var alarms:Array;
 	private var alarms_dg:DataGrid;
 	private var update_btn:Button;
@@ -18,6 +19,7 @@ class Forms.Project.Device.Alarm {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		alarms_dg.addEventListener("change", Delegate.create(this, itemChange));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		alarms_dg.removeItemAt(alarms_dg.selectedIndex);
@@ -49,7 +51,7 @@ class Forms.Project.Device.Alarm {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	public function getData():Object {
+	public function save():Void {
 		var newAlarms = new Array();
 		for (var index = 0; index<alarms_dg.length; index++) {
 			var item = new XMLNode(1, "ALARM");
@@ -57,6 +59,6 @@ class Forms.Project.Device.Alarm {
 			item.attributes["DISPLAY_NAME"] = alarms_dg.getItemAt(index).dname;
 			newAlarms.push(item);
 		}
-		return newAlarms;
+		_global.left_tree.selectedNode.alarms = newAlarms;
 	}
 }

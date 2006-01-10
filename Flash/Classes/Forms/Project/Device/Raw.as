@@ -8,11 +8,15 @@ class Forms.Project.Device.Raw {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var save_btn:Button;
-	private var name_lb:TextInput;
+	private var command_ti:TextInput;
+	private var code_ti:TextInput;
+	private var extra_ti:TextInput;
 	private var name_ti:TextInput;
 	private var value_ti:TextInput;
 	public function init() {
-		name_lb.text = node.attributes["COMMAND"];
+		command_ti.text = node.attributes["COMMAND"];
+		code_ti.text = node.attributes["CODE"];
+		extra_ti.text = node.attributes["EXTRA"];
 		for (var child in device.childNodes) {
 			vars_dg.addItem({name:device.childNodes[child].attributes["NAME"], value:device.childNodes[child].attributes["VALUE"]});
 		}
@@ -21,7 +25,7 @@ class Forms.Project.Device.Raw {
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
-		save_btn.addEventListener("click",Delegate.create(this,save));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 		vars_dg.addEventListener("change", Delegate.create(this, itemChange));
 	}
 	private function deleteItem() {
@@ -54,14 +58,17 @@ class Forms.Project.Device.Raw {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	private function save():Void{
-		var newItems = new XMLNode(1,"RAW");
-		for(var index = 0; index < vars_dg.length; index++){
+	private function save():Void {
+		var newItems = new XMLNode(1, "RAW");
+		for (var index = 0; index<vars_dg.length; index++) {
 			var item = new XMLNode(1, "VARS");
 			item.attributes["NAME"] = vars_dg.getItemAt(index).name;
 			item.attributes["VALUE"] = vars_dg.getItemAt(index).value;
 			newItems.appendChild(item);
 		}
 		_global.left_tree.selectedNode.device = newItems;
+		_global.left_tree.selectedNode.attributes["COMMAND"] = command_ti.text;
+		_global.left_tree.selectedNode.attributes["CODE"] = code_ti.text;
+		_global.left_tree.selectedNode.attributes["EXTRA"] = extra_ti.text;
 	}
 }

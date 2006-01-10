@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Analogue {
+	private var save_btn:Button;
 	private var analogues:Array;
 	private var analogues_dg:DataGrid;
 	private var update_btn:Button;
@@ -25,6 +26,7 @@ class Forms.Project.Device.Analogue {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		analogues_dg.addEventListener("change", Delegate.create(this, itemChange));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		analogues_dg.removeItemAt(analogues_dg.selectedIndex);
@@ -72,7 +74,7 @@ class Forms.Project.Device.Analogue {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	public function getData():Object {
+	public function save():Void {
 		var newAnalogues = new Array();
 		for (var index = 0; index<analogues_dg.length; index++) {
 			var item = new XMLNode(1, "ANALOGUE");
@@ -82,6 +84,6 @@ class Forms.Project.Device.Analogue {
 			item.attributes["DISPLAY_NAME"] = analogues_dg.getItemAt(index).dname;
 			newAnalogues.push(item);
 		}
-		return newAnalogues;
+		_global.left_tree.selectedNode.analogues = newAnalogues;
 	}
 }

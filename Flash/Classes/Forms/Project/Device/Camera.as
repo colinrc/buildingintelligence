@@ -1,8 +1,9 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Camera {
-	private var node:XMLNode;
+	private var camera:Object;
 	private var cameras_dg:DataGrid;
+	private var save_btn:Button;
 	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
@@ -11,13 +12,13 @@ class Forms.Project.Device.Camera {
 	private var zoom_ti:TextInput;
 	private var active_chk:CheckBox;
 	public function init() {
-		for (var child in node.childNodes) {
-			if (node.childNodes[child].attributes["ACTIVE"] == "N") {
+		for (var child in camera.cameras.childNodes) {
+			if (camera.cameras.childNodes[child].attributes["ACTIVE"] == "N") {
 				var active = "N";
 			} else {
 				var active = "Y";
 			}
-			cameras_dg.addItem({key:node.childNodes[child].attributes["KEY"], name:node.childNodes[child].attributes["DISPLAY_NAME"], active:active, zoom:node.childNodes[child].attributes["ZOOM"]});
+			cameras_dg.addItem({key:camera.cameras.childNodes[child].attributes["KEY"], name:camera.cameras.childNodes[child].attributes["DISPLAY_NAME"], active:active, zoom:camera.cameras.childNodes[child].attributes["ZOOM"]});
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -25,6 +26,7 @@ class Forms.Project.Device.Camera {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		cameras_dg.addEventListener("change", Delegate.create(this, itemChange));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		cameras_dg.removeItemAt(cameras_dg.selectedIndex);
@@ -72,16 +74,16 @@ class Forms.Project.Device.Camera {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	public function getData():Object {
-		var cameras = new XMLNode(1, "PELCO");
+	public function save():Void {
+		var newCameras = new XMLNode(1, "PELCO");
 		for (var index = 0; index<cameras_dg.length; index++) {
 			var item = new XMLNode(1, "CAMERA");
 			item.attributes["KEY"] = cameras_dg.getItemAt(index).key;
 			item.attributes["DISPLAY_NAME"] = cameras_dg.getItemAt(index).name;
 			item.attributes["ACTIVE"] = cameras_dg.getItemAt(index).active;
 			item.attributes["ZOOM"] = cameras_dg.getItemAt(index).zoom;
-			cameras.appendChild(item);
+			newCameras.appendChild(item);
 		}
-		return cameras;
+		_global.left_tree.selectedNode.camera = new Object({cameras:newCameras});
 	}
 }

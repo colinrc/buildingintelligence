@@ -1,6 +1,8 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Toggle {
+	private var save_btn:Button;
+	private var node:XMLNode;
 	private var toggles:Array;
 	private var toggle_dg:DataGrid;
 	private var update_btn:Button;
@@ -13,6 +15,7 @@ class Forms.Project.Device.Toggle {
 	private var power_ti:TextInput;
 	private var active_chk:CheckBox;
 	public function init() {
+		title_lb.text = node.nodeName;
 		for (var toggle in toggles) {
 			toggle_dg.addItem({name:toggles[toggle].attributes["NAME"], key:toggles[toggle].attributes["KEY"], display_name:toggles[toggle].attributes["DISPLAY_NAME"],power:toggles[toggle].attributes["POWER_RATING"], active:toggles[toggle].attributes["ACTIVE"]});
 		}
@@ -23,6 +26,7 @@ class Forms.Project.Device.Toggle {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		toggle_dg.addEventListener("change", Delegate.create(this, itemChange));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		toggle_dg.removeItemAt(toggle_dg.selectedIndex);
@@ -79,10 +83,21 @@ class Forms.Project.Device.Toggle {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	public function getData():Array {
+	public function save():Void {
+		switch(title_lb.text){
+			case"Toggle Inputs":
+			var type = "TOGGLE_INPUT";
+			break;
+			case"Toggle Outputs":
+			var type = "TOGGLE_OUTPUT";
+			break;
+			case"Pulse Outputs":
+			var type = "PULSE_OUTPUT";
+			break;
+		}
 		var newToggles = new Array();
 		for(var index = 0; index < toggle_dg.length; index++){
-			var toggleNode = new XMLNode(1, title_lb.text);
+			var toggleNode = new XMLNode(1, type);
 			toggleNode.attributes["NAME"] = toggle_dg.getItemAt(index).name;
 			toggleNode.attributes["KEY"] = toggle_dg.getItemAt(index).key;
 			toggleNode.attributes["DISPLAY_NAME"] = toggle_dg.getItemAt(index).display_name;
@@ -90,6 +105,6 @@ class Forms.Project.Device.Toggle {
 			toggleNode.attributes["POWER_RATING"] = toggle_dg.getItemAt(index).power;
 			newToggles.push(toggleNode);
 		}
-		return newToggles;
+		_global.left_tree.selectedNode.toggles = newToggles;
 	}
 }

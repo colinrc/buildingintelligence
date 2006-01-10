@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Counter {
+	private var save_btn:Button;
 	private var counters:Array;
 	private var counters_dg:DataGrid;
 	private var update_btn:Button;
@@ -22,6 +23,7 @@ class Forms.Project.Device.Counter {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		counters_dg.addEventListener("change", Delegate.create(this, itemChange));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		counters_dg.removeItemAt(counters_dg.selectedIndex);
@@ -82,7 +84,7 @@ class Forms.Project.Device.Counter {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	public function getData():Array {
+	public function save():Void {
 		var newCounters = new Array();
 		for (var index = 0; index<counters_dg.length; index++) {
 			var newCounter = new XMLNode(1, "COUNTER");
@@ -94,6 +96,6 @@ class Forms.Project.Device.Counter {
 			newCounter.attributes["POWER_RATING"] = counters_dg.getItemAt(index).power;
 			newCounters.push(newCounter);
 		}
-		return newCounters;
+		_global.left_tree.selectedNode.counters = newCounters;
 	}
 }

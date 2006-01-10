@@ -7,11 +7,11 @@ class Forms.Project.Device.GC100_Relay {
 	private var toggles:Array;
 	private var parameters_mc:MovieClip;
 	private var toggle_mc:MovieClip;
-	private var name_lb:mx.controls.Label;
+	private var name_ti:mx.controls.TextInput;
 	private var save_btn:mx.controls.Button;
 	public function init():Void {
 		toggles = new Array();
-		name_lb.text = node.attributes["NAME"];
+		name_ti.text = node.attributes["NAME"];
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		processDevice();
 	}
@@ -37,6 +37,7 @@ class Forms.Project.Device.GC100_Relay {
 		for (var toggle in toggles) {
 			newGC100_Relay.appendChild(toggles[toggle]);
 		}
+		_global.left_tree.selectedNode.attributes["NAME"] = name_ti.text;
 		_global.left_tree.selectedNode.device = newGC100_Relay;
 	}
 }

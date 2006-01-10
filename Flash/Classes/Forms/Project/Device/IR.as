@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.IR {
+	private var save_btn:Button;
 	private var irs:Array;
 	private var ir_dg:DataGrid;
 	private var update_btn:Button;
@@ -19,6 +20,7 @@ class Forms.Project.Device.IR {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		ir_dg.addEventListener("change", Delegate.create(this, itemChange));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		ir_dg.removeItemAt(ir_dg.selectedIndex);
@@ -53,7 +55,7 @@ class Forms.Project.Device.IR {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	public function getData():Array {
+	public function save():Void {
 		var newIrs = new Array();
 		for(var index = 0; index < ir_dg.length; index++){
 			var irNode = new XMLNode(1, "IR");
@@ -62,6 +64,6 @@ class Forms.Project.Device.IR {
 			irNode.attributes["AV_NAME"] = ir_dg.getItemAt(index).avname;
 			newIrs.push(irNode);
 		}
-		return newIrs;
+		_global.left_tree.selectedNode.irs = newIrs;
 	}
 }

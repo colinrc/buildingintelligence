@@ -8,11 +8,11 @@ class Forms.Project.Device.Catalogue {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var save_btn:Button;
-	private var name_lb:TextInput;
+	private var name_ti:TextInput;
 	private var code_ti:TextInput;
 	private var value_ti:TextInput;
 	public function init() {
-		name_lb.text = node.attributes["NAME"];
+		name_ti.text = node.attributes["NAME"];
 		for (var child in items.childNodes) {
 			items_dg.addItem({code:items.childNodes[child].attributes["CODE"], value:items.childNodes[child].attributes["VALUE"]});
 		}
@@ -56,7 +56,7 @@ class Forms.Project.Device.Catalogue {
 	}
 	private function save():Void{
 		var newItems = new XMLNode(1,"CATALOGUE");
-		newItems.attributes["NAME"] = name_lb.text;
+		newItems.attributes["NAME"] = name_ti.text;
 		for(var index = 0; index < items_dg.length; index++){
 			var item = new XMLNode(1, "ITEM");
 			item.attributes["CODE"] = items_dg.getItemAt(index).code;
@@ -64,5 +64,6 @@ class Forms.Project.Device.Catalogue {
 			newItems.appendChild(item);
 		}
 		_global.left_tree.selectedNode.items = newItems;
+		_global.left_tree.selectedNode.attributes["NAME"] = name_ti.text
 	}
 }

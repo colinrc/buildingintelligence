@@ -10,6 +10,7 @@ class Forms.Project.Device.ToggleMonitor {
 	private var name_ti:TextInput;
 	private var dname_ti:TextInput;
 	private var active_chk:CheckBox;
+	private var save_btn:Button;
 	public function init() {
 		for (var monitor in monitors) {
 			if (monitors[monitor].attributes["ACTIVE"] == "N") {
@@ -25,6 +26,7 @@ class Forms.Project.Device.ToggleMonitor {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		monitors_dg.addEventListener("change", Delegate.create(this, itemChange));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		monitors_dg.removeItemAt(monitors_dg.selectedIndex);
@@ -72,7 +74,7 @@ class Forms.Project.Device.ToggleMonitor {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	public function getData():Object {
+	public function save():Void {
 		var newMonitors = new Array();
 		for (var index = 0; index<monitors_dg.length; index++) {
 			var item = new XMLNode(1, "TOGGLE_OUTPUT_MONITOR");
@@ -82,6 +84,6 @@ class Forms.Project.Device.ToggleMonitor {
 			item.attributes["DISPLAY_NAME"] = monitors_dg.getItemAt(index).dname;
 			newMonitors.push(item);
 		}
-		return newMonitors;
+		_global.left_tree.selectedNode.monitors = newMonitors;
 	}
 }

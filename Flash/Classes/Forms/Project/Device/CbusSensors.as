@@ -3,6 +3,7 @@ import mx.utils.Delegate;
 class Forms.Project.Device.CbusSensors {
 	private var sensors:Array;
 	private var sensors_dg:DataGrid;
+	private var save_btn:Button;
 	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
@@ -25,6 +26,7 @@ class Forms.Project.Device.CbusSensors {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		sensors_dg.addEventListener("change", Delegate.create(this, itemChange));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		sensors_dg.removeItemAt(sensors_dg.selectedIndex);
@@ -108,7 +110,7 @@ class Forms.Project.Device.CbusSensors {
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
-	public function getData():Array {
+	public function save():Void {
 		var newSensors = new Array();
 		for (var index = 0; index<sensors_dg.length; index++) {
 			var newSensor = new XMLNode(1, "LIGHT_DYNALITE");
@@ -123,6 +125,6 @@ class Forms.Project.Device.CbusSensors {
 			newSensor.attributes["UNITS"] = sensors_dg.getItemAt(index).units;
 			newSensors.push(newSensor);
 		}
-		return newSensors;
+		_global.left_tree.selectedNode.sensors = newSensors;
 	}
 }
