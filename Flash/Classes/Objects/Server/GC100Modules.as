@@ -1,0 +1,56 @@
+﻿class Objects.Server.GC100Modules extends Objects.BaseElement {
+	var modules:Array;
+	public function isValid():Boolean {
+		var flag = true;
+		for (var module in modules) {
+			if (!modules[module].isValid()) {
+				flag = false;
+			}
+		}
+		return flag;
+	}
+	public function getForm():String {
+		return "forms.project.device.modules";
+	}
+	public function toXML():XMLNode {
+		var newModules = new XMLNode(1, "Modules");
+		for (var module in modules) {
+			newModules.appendChild(modules[module].toXML());
+		}
+		return newModules;
+	}
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, getName());
+		for (var module in modules) {
+			newNode.appendChild(modules[module].toTree());
+		}
+		newNode.object = this;
+		return newNode;
+	}
+	public function getName():String {
+		return "Modules";
+	}
+	public function getData():Object {
+		return new Object({modules:modules});
+	}
+	public function setData(newData:Object){
+		//process module changes here
+	}
+	public function setXML(newData:XMLNode):Void {
+		modules = new Array();
+		for (var child in newData.childNodes) {
+			switch(newData.childNodes[child].nodeName){
+				case"GC100_Relay":
+				var newModule = new Objects.Server.GC100_Relay();
+				newModule.setXML(newData.childNodes[child]);
+				modules.push(newModule);
+				break;
+				case"GC100_IR":
+				var newModule = new Objects.Server.GC100_IR();
+				newModule.setXML(newData.childNodes[child]);
+				modules.push(newModule);
+				break;
+			}
+		}
+	}
+}
