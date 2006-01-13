@@ -21,9 +21,7 @@ class Forms.Project.Controls {
 		messages_mc.node = messages;
 	}
 	private function save():Void {
-		var newControls = new XMLNode(1, "CONTROLS")
-		newControls.appendChild(variables_mc.getData());
-		newControls.appendChild(messages_mc.getData());
-		_global.left_tree.selectedNode.controls = newControls;
+		_global.left_tree.selectedNode.object.variables = variables_mc.getData();
+		_global.left_tree.selectedNode.object.messages = messages_mc.getData();
 	}
 }

@@ -1,8 +1,10 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Head {
-	private var node:XMLNode;
-	private var connections:XMLNode;
+	private var name:String;
+	private var display_name:String;
+	private var active:String;
+	private var connection:XMLNode;
 	private var parameters:XMLNode;
 	private var connection_mc:MovieClip;
 	private var parameters_mc:MovieClip;
@@ -14,56 +16,31 @@ class Forms.Project.Device.Head {
 	public function Head() {
 	}
 	public function init():Void {
-		if (node.attributes["ACTIVE"] == "N") {
+		if (active == "N") {
 			active_chk.selected = false;
 		} else {
 			active_chk.selected = true;
 		}
-		name_lb.text = node.attributes["NAME"];
-		dName_ti.text = node.attributes["DISPLAY_NAME"];
+		name_lb.text = name;
+		dName_ti.text = display_name;
 		save_btn.addEventListener("click", Delegate.create(this, save));
-		processDevice();
+		connection_mc.node = connection;
+		var dataObj = {node:parameters};
+		parameters_mc = parameters_ld.attachMovie("forms.project.device.parameters", "parameters_mc", 0, dataObj);
+		parameters_mc.dataObj = dataObj;
 	}
-	private function processDevice():Void {
-		connection_mc.node = connections;
-		switch (node.attributes.NAME) {
-		case "CBUS" :
-		case "DYNALITE" :
-		case "GC100":
-			break;
-		case "IR_LEARNER" :
-		case "HAL" :
-		case "TUTONDO" :
-		case "KRAMER" :
-		case "PELCO" :
-		case "OREGON" :
-		default :
-			var dataObj = {node:parameters};
-			parameters_mc = parameters_ld.attachMovie("forms.project.device.parameters", "parameters_mc", 0, dataObj);
-			parameters_mc.dataObj = dataObj;
-			break;
-		}
-	}
-	private function save():Void {
+	private function save():Void {		
+		var newData = new Object();
+		newData.name = name_lb.text;
+		newData.display_name = dName_ti.text;
 		if (active_chk.selected) {
-			_global.left_tree.selectedNode.attributes["ACTIVE"] = "Y";
-		} else {
-			_global.left_tree.selectedNode.attributes["ACTIVE"] = "N";
+			newData.active = "Y";
 		}
-		switch (node.attributes.NAME) {
-		case "TUTONDO" :
-		case "HAL" :
-		case "KRAMER" :
-		case "PELCO" :
-		case "OREGON" :
-			_global.left_tree.selectedNode.parameters = parameters_mc.getData();
-			break;
-		case "CBUS" :
-		case "DYNALITE" :
-		case "GC100":
-		default:
-			break;
+		else{
+			newData.active = "N";
 		}
-		_global.left_tree.selectedNode.connections = connection_mc.getData();
+		newData.parameters = parameters_mc.getData();
+		newData.connection = connection_mc.getData();
+		_global.left_tree.selectedNode.object.setData(newData);
 	}
 }

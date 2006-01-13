@@ -118,6 +118,6 @@ class Forms.Project.Device.Custom {
 			newCustom.attributes["EXTRA"] = customs_dg.getItemAt(index).extra;
 			newCustoms.push(newCustom);
 		}
-		_global.left_tree.selectedNode.customs = newCustoms;
+		_global.left_tree.selectedNode.object.setData({customs:newCustoms});
 	}
 }

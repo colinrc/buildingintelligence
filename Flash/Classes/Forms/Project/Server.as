@@ -1,7 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Server {
-	private var node:XMLNode;
+	private var devices:Array;
 	private var description:String;
 	private var description_ta:TextArea;
 	private var devices_dg:DataGrid;
@@ -12,10 +12,8 @@ class Forms.Project.Server {
 	private var save_btn:Button;
 	public function init() {
 		description_ta.text = description;
-		for (var device in node.childNodes) {
-			if (node.childNodes[device].nodeName == "DEVICE") {
-				devices_dg.addItem({type:node.childNodes[device].attributes["NAME"], name:node.childNodes[device].attributes["DISPLAY_NAME"]});
-			}
+		for (var device in devices) {
+				devices_dg.addItem({type:devices[device].name, name:devices[device].display_name});
 		}
 		delete_btn.enabled = false;
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -39,7 +37,7 @@ class Forms.Project.Server {
 		delete_btn.enabled = true;
 	}
 	public function save():Void {
-		var newDevices = new Array();
+		/*var newDevices = new Array();
 		for (var index = 0; index<devices_dg.length; index++) {
 			var found = false;
 			for (var device in node.childNodes) {
@@ -126,7 +124,7 @@ class Forms.Project.Server {
 			var catalogues = new XMLNode(1, "Catalogues");
 			newNode.appendChild(catalogues);
 			node.appendChild(newNode);
-		}
-		_global.left_tree.selectedNode.description = description_ta.text;
+		}*/
+		_global.left_tree.selectedNode.object.description = description_ta.text;
 	}
 }

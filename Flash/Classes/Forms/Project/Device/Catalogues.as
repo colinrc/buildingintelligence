@@ -1,15 +1,15 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Catalogues {
-	private var node:XMLNode;
+	private var catalogues:Array;
 	private var catalogues_dg:DataGrid;
 	private var add_btn:Button;
 	private var delete_btn:Button;
 	private var name_ti:TextInput;
 	private var save_btn:Button;
 	public function init() {
-		for (var catalogue in node.childNodes) {
-			catalogues_dg.addItem({name:node.childNodes[catalogue].attributes["NAME"]});
+		for (var catalogue in catalogues) {
+			catalogues_dg.addItem({name:catalogues[catalogue].name});
 		}
 		delete_btn.enabled = false;
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -33,7 +33,7 @@ class Forms.Project.Device.Catalogues {
 		delete_btn.enabled = true;
 	}
 	public function save():Void {
-		var newCatalogues = new Array();
+		/*var newCatalogues = new Array();
 		for (var index = 0; index<catalogues_dg.length; index++) {
 			var found = false;
 			for (var catalogue in node.childNodes) {
@@ -68,6 +68,6 @@ class Forms.Project.Device.Catalogues {
 			var newNode = new XMLNode(1, "CATALOGUE");
 			newNode.attributes["NAME"] = newCatalogues[newCatalogue].name;
 			node.appendChild(newNode);
-		}
+		}*/
 	}
 }
