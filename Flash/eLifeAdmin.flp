@@ -11,21 +11,17 @@
                 <project_file path="./Classes/Forms/Control/AdminView.as" filetype="as" />
             </project_folder>
             <project_folder name="Project" expanded="true">
-                <project_folder name="Room" expanded="true">
-                    <project_folder name="Tab" expanded="true">
+                <project_folder name="Room" expanded="false">
+                    <project_folder name="Tab" expanded="false">
                         <project_file path="./Classes/Forms/Project/Room/Tab/Xml.as" filetype="as" />
                         <project_file path="./Classes/Forms/Project/Room/Tab/Preview.as" filetype="as" />
                     </project_folder>
                 </project_folder>
-                <project_folder name="Settings" expanded="true">
+                <project_folder name="Settings" expanded="false">
                     <project_file path="./Classes/Forms/Project/Settings/StringEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Room/Tab/Config.as" filetype="as" />
                 </project_folder>
-                <project_folder name="Device" expanded="false">
-                    <project_folder name="JRobin" expanded="false">
-                        <project_file path="./Classes/Forms/Project/JRobin/Data.as" filetype="as" />
-                        <project_file path="./Classes/Forms/Project/JRobin/JRobin.as" filetype="as" />
-                    </project_folder>
+                <project_folder name="Device" expanded="true">
                     <project_file path="./Classes/Forms/Project/Device/Head.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Connection.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/IP.as" filetype="as" />
@@ -60,6 +56,10 @@
                     <project_file path="./Classes/Forms/Project/Device/Comfort.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Raws.as" filetype="as" />
                 </project_folder>
+                <project_folder name="JRobin" expanded="false">
+                    <project_file path="./Classes/Forms/Project/JRobin/Data.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/JRobin/JRobin.as" filetype="as" />
+                </project_folder>
                 <project_file path="./Classes/Forms/Project/KeySelector.as" filetype="as" />
                 <project_file path="./Classes/Forms/Project/Variables.as" filetype="as" />
                 <project_file path="./Classes/Forms/Project/Controls.as" filetype="as" />
@@ -70,9 +70,50 @@
             <project_file path="./Classes/Forms/BaseForm.as" filetype="as" />
         </project_folder>
         <project_folder name="Objects" expanded="true">
+            <project_folder name="Server" expanded="true">
+                <project_file path="./Classes/Objects/Server/Controls.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Server.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Cameras.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Catalogue.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Catalogues.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/IR_Learner.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Oregon.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Pelco.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/AudioVideos.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/CBus.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/CBusSensors.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Hal.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Kramer.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Tutondo.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/CBusLights.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/ContactClosures.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Dynalite.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/DynaliteLights.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/GC100.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/GC100_IR.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/GC100Modules.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/IRs.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Customs.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/GC100_Relay.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Raw.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Raw_Connection.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Raw_Interface.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Raw_Item.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Raw_Items.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Toggles.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/X10Lights.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Alarms.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Alerts.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Analogues.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Comfort.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Counters.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Monitors.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Raw_Interfaces.as" filetype="as" />
+            </project_folder>
             <project_file path="./Classes/Objects/ServerConnection.as" filetype="as" />
             <project_file path="./Classes/Objects/History.as" filetype="as" />
             <project_file path="./Classes/Objects/Library.as" filetype="as" />
+            <project_file path="./Classes/Objects/BaseElement.as" filetype="as" />
         </project_folder>
         <project_folder name="Utils" expanded="true">
             <project_file path="./Classes/Utils/Base64.as" filetype="as" />
