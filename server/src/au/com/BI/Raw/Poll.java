@@ -1,0 +1,127 @@
+/*
+ * Created on Dec 14, 2004
+ */
+package au.com.BI.Raw;
+import java.util.List;
+import java.util.logging.*;
+
+import au.com.BI.Command.Command;
+import au.com.BI.Comms.*;
+
+
+/**
+ * @author colinc
+ */
+public class Poll  extends Thread {
+	/**
+	 * 
+	 */
+	protected Logger logger;
+	protected boolean running;
+	protected CommDevice comms;
+	protected long pollValue;
+	protected String pollString =  "";
+	protected List commandQueue;
+	protected int deviceNumber = -1;
+	
+	/**
+	 * @return Returns the pollValue.
+	 */
+	public long getPollValue() {
+		return pollValue;
+	}
+	/**
+	 * @param pollValue The pollValue to set.
+	 */
+	public void setPollValue(long pollValue) {
+		this.pollValue = pollValue;
+	}
+	public Poll() {
+		super();
+		logger = Logger.getLogger(this.getClass().getPackage().getName());
+		this.setName("Raw interface poll handler");
+	}
+	
+	
+	public void run () {
+		running  = true;
+		try {
+			while (running){
+					if (!pollString.equals ("")) {
+						CommsCommand analogueCommand = new CommsCommand("",pollString ,null,"Raw Command");
+						analogueCommand.setActionType(CommDevice.RawPoll);
+						analogueCommand.setActionCode("RAW_POLL");
+						synchronized (comms) {
+							comms.addCommandToQueue(analogueCommand);
+						}
+					try {
+						Thread.sleep (pollValue);
+					} catch (InterruptedException ie) {}
+					}
+			}
+		} catch (CommsFail e1) {
+			running = false;
+			logger.log(Level.WARNING, "Communication failed with raw device " + e1.getMessage());
+			Command command = new Command();
+			command.setCommand ("Attatch");
+			command.setKey("SYSTEM");
+			command.setExtraInfo (Integer.toString(deviceNumber));
+			synchronized (commandQueue) {
+				commandQueue.add(command);
+				commandQueue.notifyAll();
+			}
+		}
+		
+	}
+	/**
+	 * @return Returns the running.
+	 */
+	public boolean isRunning() {
+		return running;
+	}
+	/**
+	 * @param running The running to set.
+	 */
+	public void setRunning(boolean running) {
+		this.running = running;
+	}
+
+	/**
+	 * @param comms The comms to set.
+	 */
+	public void setComms(CommDevice comms) {
+		this.comms = comms;
+	}
+
+	/**
+	 * @return Returns the pollString.
+	 */
+	public String getPollString() {
+		return pollString;
+	}
+	/**
+	 * @param pollString The pollString to set.
+	 */
+	public void setPollString(String pollString) {
+		this.pollString = pollString;
+	}
+	
+	public List getCommandQueue() {
+		return commandQueue;
+	}
+
+
+	public void setCommandQueue(List commandQueue) {
+		this.commandQueue = commandQueue;
+	}
+
+
+	public int getDeviceNumber() {
+		return deviceNumber;
+	}
+
+
+	public void setDeviceNumber(int deviceNumber) {
+		this.deviceNumber = deviceNumber;
+	}
+}

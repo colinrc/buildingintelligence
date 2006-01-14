@@ -1,0 +1,36 @@
+RXTX is an open source serial library.
+
+http://www.rxtx.org/
+
+The port has been done to the 2.1.... version.
+
+Download the appropriate version and install.
+
+For linux install as follows
+
+Copy all of the shared objects from the download into this directory:
+cp rxtx-2.1-7pre17-i686-pc-linux-gnu/*.so .
+
+Copy the jar into the /lib/ext/directory
+rxtx-2.1-7pre17-i686-pc-linux-gnu/RXTXcomm.jar  
+
+Ensure you have write permission to the serial port (/dev/ttyS0). Many linux's ship 
+with root only write permission to these.
+
+Add the user who will run the program to the lock group.
+
+
+
+For OSX download the source version
+
+An installer exists in the MacOSX IDE / for packager ...... folder.
+
+Install the ...jag (jaguar) version.
+
+Create a directory for the lock files; /var/spool/uucp
+Add the user who will run the server to the uucp group
+
+
+
+TODO.
+Instructions for windows.

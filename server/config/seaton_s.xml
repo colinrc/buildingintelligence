@@ -1,0 +1,198 @@
+<CONFIG lastUpdated="2005-10-22" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+        <DESC>My demonstration configuration</DESC>
+        <!-- ______________________________________  JRobin ________________________________ -->
+        <JROBIN ACTIVE="N" INTERVAL="5" RRD="test">
+               <DATA DATASOURCE="lounge_light" DISPLAY_NAME="LOUNGE_LIGHT" VARIABLE="RRD_LL" SOURCE="USAGE" SEARCH_VALUE="on" FUNCTION="TOTAL"/>
+               <!--DATA DATASOURCE="temperature" FUNCTION="TOTAL" VARIABLE="COUNTER"/-->
+                <DATA_ALL DISPLAY_NAME="LOUNGE_LIGHT">
+                        <DATASOURCE VARIABLE="RRD_LIGHT_USAGE" SOURCE="USAGE" SEARCH_VALUE="on" FUNCTION="TOTAL"/>
+                        <DATASOURCE VARIABLE="RRD_LIGHT_EXTRA" SOURCE="EXTRA_VALUE1" FUNCTION="AVG"/>
+                </DATA_ALL>
+                <DATA_POWER_CONSUMPTION DATASOURCE="lounge_light_power" DISPLAY_NAME="LOUNGE_LIGHT" VARIABLE="RRD_LL_PWR" SOURCE="EXTRA_VALUE1" RATIO = "1"/>
+        </JROBIN>
+        <!-- ______________________________________  IR LEARNER _____________________________ -->
+        <!-- flow may be NONE, RTSCTS" -->
+        <DEVICE ACTIVE="Y" NAME="IR_LEARNER" DISPLAY_NAME="IR LEARNER">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.120" PORT="4999"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5003"/>
+                </CONNECTION>
+                <PARAMETERS>
+                        <ITEM NAME="STX" VALUE=""/>
+                        <ITEM NAME="ETX" VALUE="\n"/>
+                </PARAMETERS>
+                <IR_LEARNER/>
+        </DEVICE>
+     
+        <!-- ______________________________________  TUTONDO DEFS  ____________________  -->
+        <DEVICE ACTIVE="Y" NAME="TUTONDO" DISPLAY_NAME="Tutondo Audio">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.0.115" PORT="4999"/>
+                </CONNECTION>
+                <CATALOGUE NAME="Tutondo Inputs">
+                        <ITEM CODE="DIGI_BOX_1" VALUE="1"/>
+                        <ITEM CODE="DIGI_BOX_2" VALUE="2"/>
+                        <ITEM CODE="DIGI_BOX_3" VALUE="3"/>
+			<ITEM CODE="TUNER" VALUE="4"/>
+			<ITEM CODE="FOXTEL" VALUE="5"/>
+			<ITEM CODE="TVN" VALUE="6"/>
+			<ITEM CODE="SKYRACE" VALUE="7"/>
+			<ITEM CODE="JUKEBOX" VALUE="8"/>
+			<ITEM CODE="RADIO" VALUE="9"/>
+                </CATALOGUE>
+                <CATALOGUE NAME="Tutondo Functions">
+                        <ITEM CODE="cd-rw" VALUE="1"/>
+                        <ITEM CODE="cd-play" VALUE="4"/>
+                        <ITEM CODE="cd-ff" VALUE="5"/>
+                        <ITEM CODE="cd-stop" VALUE="3"/>
+                        <ITEM CODE="cd-pause" VALUE="9"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="INPUTS" VALUE="Tutondo Inputs"/>
+                        <ITEM NAME="FUNCTIONS" VALUE="Tutondo Functions"/>
+                        <ITEM NAME="POLL_INTERVAL" VALUE="10"/>
+                        <ITEM NAME="PROTOCOL" VALUE="B" />
+                </PARAMETERS>
+                <TUTONDO>
+                        <AUDIO KEY="1" DISPLAY_NAME="BAR_AUDIO"/>
+			<AUDIO KEY="2" DISPLAY_NAME="TAB_AUDIO"/>
+			<AUDIO KEY="3" DISPLAY_NAME="GARDEN/TOILETS_AUDIO"/>                       
+                </TUTONDO>
+        </DEVICE>
+        <!-- the key is the Tutondo zone, Display name is the flash icon name -->
+        
+        <!-- ______________________________________  KRAMER DEFS  ____________________  -->
+        <DEVICE ACTIVE="N" NAME="KRAMER" DISPLAY_NAME="Kramer Matrix">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.115" PORT="5000"/>
+                </CONNECTION>
+                <CATALOGUE NAME="Kramer Audio Inputs">
+                        <ITEM CODE="DIGI_BOX_1" VALUE="1"/>
+                        <ITEM CODE="DIGI_BOX_2" VALUE="2"/>
+                        <ITEM CODE="DIGI_BOX_3" VALUE="3"/>
+                        <ITEM CODE="FOXTEL" VALUE="4"/>
+			<ITEM CODE="TVN" VALUE="5"/>
+			<ITEM CODE="SKYRACE" VALUE="6"/>
+                        <ITEM CODE="JUKEBOX" VALUE="7"/>
+                </CATALOGUE>
+                <CATALOGUE NAME="Kramer Video Inputs">
+                        <ITEM CODE="DIGI_BOX_1" VALUE="1"/>
+                        <ITEM CODE="DIGI_BOX_2" VALUE="2"/>
+			<ITEM CODE="DIGI_BOX_3" VALUE="3"/>
+                        <ITEM CODE="FOXTEL" VALUE="4"/>
+			<ITEM CODE="TVN" VALUE="5"/>
+			<ITEM CODE="SKYRACE" VALUE="6"/>
+                        <ITEM CODE="JUKEBOX" VALUE="7"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="AUDIO_INPUTS" VALUE="Kramer Audio Inputs"/>
+                        <ITEM NAME="AV_INPUTS" VALUE="Kramer Video Inputs"/>
+                </PARAMETERS>
+                <KRAMER>
+                     
+                        <AV KEY="1" DISPLAY_NAME="NEC_LNK_GMG"/>
+                        <AV KEY="2" DISPLAY_NAME="NEC_LNK_LNG"/>
+                        <AV KEY="3" DISPLAY_NAME="NEC_LNK_DNG"/>
+			<AV KEY="4" DISPLAY_NAME="NEC_STAGE"/>
+                        <AV KEY="5" DISPLAY_NAME="NEC_TAB_LEFT"/>
+                        <AV KEY="6" DISPLAY_NAME="NEC_TAB_RIGHT"/>
+                      
+                </KRAMER>
+        </DEVICE>
+        <!-- the key is the Kramer output, Display name is the flash icon name -->
+   
+
+        !-- ______________________________________  CBUS DEFS  ____________________  -->
+        <DEVICE ACTIVE="N" NAME="CBUS" DISPLAY_NAME="CBUS Lights">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.125" PORT="14000"/>
+                       
+                </CONNECTION>
+                <CBUS>
+               
+                        <LIGHT_CBUS ACTIVE="Y" KEY="00" NAME="Bar Lights" DISPLAY_NAME="BAR_LIGHTS" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="03" NAME="Centre lights" DISPLAY_NAME="CENTRE_LIGHTS" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="05" NAME="Men's Toilet Lights" DISPLAY_NAME="MEN'S TOILET LIGHTS" RELAY="Y" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="02" NAME="Pool Table Lights" DISPLAY_NAME="POOL_TABLE_LIGHTS" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="01" NAME="Stage Lights" DISPLAY_NAME="STAGE_LIGHTS" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="04" NAME="Tab Lights" DISPLAY_NAME="TAB_LIGHTS" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="07" NAME="Cool Room Lights" RELAY="Y" DISPLAY_NAME="COOL_ROOM_LIGHTS" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="06" NAME="Garden Area Lights" RELAY="Y" DISPLAY_NAME="GARDEN_LIGHTS" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="08" NAME="Aircondition" RELAY="Y" DISPLAY_NAME="AIRCONDITION" POWER_RATING="100"/>
+                        
+                </CBUS>
+        </DEVICE>
+   
+        <!-- _____________________________ GC-100 DEFS _____________________________-->
+        <DEVICE ACTIVE="Y" NAME="GC100" DISPLAY_NAME="GC100">
+                <CONNECTION>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.0.115" PORT="4998"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4998"/>
+                       
+                </CONNECTION>
+                <PARAMETERS>                
+                </PARAMETERS>
+                <GC100_IR NAME="IR1">
+                        <PARAMETERS>
+                                <ITEM NAME="MODULE" VALUE="4"/>
+                                <ITEM NAME="MODULE_TYPE" VALUE="IR"/>
+                                <!-- Valid types are serial, IR or relay -->
+                        </PARAMETERS>
+                        <IR KEY="01" NAME="IR PORT1" AV_NAME="GC100_IR1"/>
+                        <IR KEY="02" NAME="IR PORT2" AV_NAME="GC100_IR2"/>
+			<IR KEY="03" NAME="IR PORT3" AV_NAME="GC100_IR3"/>
+                </GC100_IR>
+                <GC100_IR NAME="IR2">
+                        <PARAMETERS>
+                                <ITEM NAME="MODULE" VALUE="5"/>
+                                <ITEM NAME="MODULE_TYPE" VALUE="IR"/>
+                                <!-- Valid types are serial, IR or relay -->
+                        </PARAMETERS>
+                        <TOGGLE_INPUT KEY="3" NAME="Jukebox" DISPLAY_NAME="JUKEBOXIN" />
+                        <IR KEY="01" NAME="IR PORT4" AV_NAME="GC100_IR4"/>
+                        <IR KEY="02" NAME="IR PORT5" AV_NAME="GC100_IR5"/>
+		       
+		</GC100_IR>
+        </DEVICE>
+          
+	  <!-- _____________________________ GC-100 DEFS _____________________________-->
+        <DEVICE ACTIVE="N" NAME="GC100" DISPLAY_NAME="GC100">
+                <CONNECTION>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.120" PORT="4998"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.120" PORT="4999"/>
+                </CONNECTION>
+                <PARAMETERS>                
+                </PARAMETERS>
+                <GC100_IR NAME="IR1">
+                        <PARAMETERS>
+                                <ITEM NAME="MODULE" VALUE="4"/>
+                                <ITEM NAME="MODULE_TYPE" VALUE="IR"/>
+                                <!-- Valid types are serial, IR or relay -->
+                        </PARAMETERS>
+                        <IR KEY="01" NAME="IR_PORT7" AV_NAME="GC100_IR7"/>
+                        <IR KEY="02" NAME="IR_PORT8" AV_NAME="GC100_IR8"/>
+			<IR KEY="03" NAME="IR_PORT9" AV_NAME="GC100_IR9"/>
+                </GC100_IR>
+               
+        </DEVICE>
+               <!-- _____________________________ Controls _____________________________-->
+        <CONTROLS>
+                <VARIABLES>
+                        <VARIABLE ACTIVE="N" NAME="Master Bedroom Light" DISPLAY_NAME="MASTERBED_LIGHT"/>
+                   
+                 </VARIABLES>
+                <CALENDAR_MESSAGES>
+                		   <ITEM NAME="AUTOCLOSE" VALUE="60" />
+                		   <ITEM NAME="ICON" VALUE="calendar" />
+                		   <ITEM NAME="HIDECLOSE" VALUE="FALSE" />
+                </CALENDAR_MESSAGES>
+        </CONTROLS>
+         
+</CONFIG>

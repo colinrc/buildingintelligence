@@ -1,0 +1,274 @@
+<rrd_graph_def>
+     <!-- span -->
+         <!-- ISO FORMAT: yyyy-MM-dd HH:mm:ss -->
+         <!--start>2005-03-06 12:30:00</start -->
+         <!--  timestamp in seconds is also allowed -->
+         <!-- end>2005-03-06 14:30:00</end -->
+     <!-- /span -->
+     <options>
+         <anti_aliasing>true</anti_aliasing>
+         <arrow_color>#FF0000</arrow_color>
+         <axis_color>#00FFFF</axis_color>
+         <back_color>#123450</back_color>
+         <background>#FFFFFF</background>
+         <base_value>1024</base_value>
+         <canvas>#112211</canvas>
+         <left_padding>55</left_padding>
+         <default_font>
+             <name>Times</name>
+             <style>BOLD ITALIC</style>
+             <size>15</size>
+         </default_font>
+         <default_font_color>#000000</default_font_color>
+         <frame_color>#0000FF</frame_color>
+         <front_grid>true</front_grid>
+         <grid_range>
+             <lower>1</lower>
+             <upper>60</upper>
+             <rigid>false</rigid>
+         </grid_range>
+         <grid_x>true</grid_x>
+         <grid_y>false</grid_y>
+         <border>
+             <color>#505050</color>
+             <width>10</width>
+         </border>
+         <major_grid_color>#500050</major_grid_color>
+         <major_grid_x>true</major_grid_x>
+         <major_grid_y>true</major_grid_y>
+         <minor_grid_color>#FF00FF</minor_grid_color>
+         <minor_grid_x>true</minor_grid_x>
+         <minor_grid_y>true</minor_grid_y>
+      <!--   <overlay>overlay_image.png</overlay> -->
+         <show_legend>true</show_legend>
+         <show_signature>true</show_signature>
+         <time_axis>
+             <!-- ALLOWED TIME UNITS: SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR -->
+             <!--min_grid_time_unit>SECOND</min_grid_time_unit>
+             <min_grid_unit_steps>5</min_grid_unit_steps-->
+             <maj_grid_time_unit>MINUTE</maj_grid_time_unit>
+             <maj_grid_unit_steps>1</maj_grid_unit_steps>
+             <!--date_format>HH:mm</date_forma -->
+             <center_labels>true</center_labels>
+         </time_axis>
+         <time_axis_label>time</time_axis_label>
+         <title>RRD Test</title>
+         <title_font>
+             <name>Verdana</name>
+             <style>BOLD</style>
+             <size>17</size>
+         </title_font>
+         <title_font_color>#FF0000</title_font_color>
+         <units_exponent>2</units_exponent>
+         <value_axis>
+             <grid_step>10</grid_step>
+             <label_step>20</label_step>
+         </value_axis>
+         <vertical_label>Usage</vertical_label>
+     </options>
+     <datasources>
+             <def>
+                     <name>M5_RUNWAY_LIGHTS</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>M5_RUNWAY_LIGHTS</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>M5_RUNWAY_LIGHTS_POWER</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>M5_RUNWAY_LIGHTS_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>M5_NOC_LIGHTS</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>M5_NOC_LIGHTS</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>M5_NOC_LIGHTS_POWER</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>M5_NOC_LIGHTS_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>BI_WORK_LIGHTS</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>BI_WORK_LIGHTS</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>BI_WORK_LIGHTS_POWER</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>BI_WORK_LIGHTS_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>COMPUTER_ROOM_LIGHTS</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>COMPUTER_ROOM_LIGHTS</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>COMPUTER_ROOM_LIGHTS_POWER</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>COMPUTER_ROOM_LIGHTS_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>CONF_NORTH_LIGHTS</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>CONF_NORTH_LIGHTS</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>CONF_NORTH_LIGHTS_POWER</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>CONF_NORTH_LIGHTS_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>CONF_SOUTH_LIGHTS</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>CONF_SOUTH_LIGHTS</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>CONF_SOUTH_LIGHTS_POWER</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>CONF_SOUTH_LIGHTS_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>M5_WORK_LIGHTS</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>M5_WORK_LIGHTS</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>M5_WORK_LIGHTS_POWER</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>M5_WORK_LIGHTS_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>MEETING_ROOM_LIGHTS</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>MEETING_ROOM_LIGHTS</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>MEETING_ROOM_LIGHTS_POWER</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>MEETING_ROOM_LIGHTS_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>SECURE_ROOM_LIGHTS</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>SECURE_ROOM_LIGHTS</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>SECURE_ROOM_LIGHTS_POWER</name>
+                     <rrd>${rrdPath}rrdBI218.rrd</rrd>
+                     <source>SECURE_ROOM_LIGHTS_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+     </datasources>
+     <graph>
+         <area>
+             <datasource>M5_RUNWAY_LIGHTS</datasource>
+             <color>#FF6000</color>
+             <legend>M5 Runway Usage</legend>
+         </area>
+         <area>
+             <datasource>M5_RUNWAY_LIGHTS_POWER</datasource>
+             <color>#105577</color>
+             <legend>M5 Runway Power KW</legend>
+         </area>
+         <area>
+             <datasource>M5_NOC_LIGHTS</datasource>
+             <color>#FF6000</color>
+             <legend>M5 NOC Usage</legend>
+         </area>
+         <area>
+             <datasource>M5_NOC_LIGHTS_POWER</datasource>
+             <color>#105577</color>
+             <legend>M5 NOC Power KW</legend>
+         </area>
+          <area>
+             <datasource>BI_WORK_LIGHTS</datasource>
+             <color>#FF6000</color>
+             <legend>BI Work Usage</legend>
+         </area>
+         <area>
+             <datasource>BI_WORK_LIGHTS_POWER</datasource>
+             <color>#105577</color>
+             <legend>BI Work Power KW</legend>
+         </area>
+          <area>
+             <datasource>COMPUTER_ROOM_LIGHTS</datasource>
+             <color>#FF6000</color>
+             <legend>Comp Room Usage</legend>
+         </area>
+         <area>
+             <datasource>COMPUTER_ROOM_LIGHTS_POWER</datasource>
+             <color>#105577</color>
+             <legend>Comp Room Power KW</legend>
+         </area>
+          <area>
+             <datasource>CONF_NORTH_LIGHTS</datasource>
+             <color>#FF6000</color>
+             <legend>Conf North Usage</legend>
+         </area>
+         <area>
+             <datasource>CONF_NORTH_LIGHTS_POWER</datasource>
+             <color>#105577</color>
+             <legend>Conf North Power KW</legend>
+         </area>
+          <area>
+             <datasource>CONF_SOUTH_LIGHTS</datasource>
+             <color>#FF6000</color>
+             <legend>Conf South Usage</legend>
+         </area>
+         <area>
+             <datasource>CONF_SOUTH_LIGHTS_POWER</datasource>
+             <color>#105577</color>
+             <legend>Conf South Power KW</legend>
+         </area>
+         <area>
+             <datasource>M5_WORK_LIGHTS</datasource>
+             <color>#FF6000</color>
+             <legend>M5 Work Usage</legend>
+         </area>
+         <area>
+             <datasource>M5_WORK_LIGHTS_POWER</datasource>
+             <color>#105577</color>
+             <legend>M5 Work Power KW</legend>
+         </area>
+         <area>
+             <datasource>MEETING_ROOM_LIGHTS</datasource>
+             <color>#FF6000</color>
+             <legend>Meeting Room Usage</legend>
+         </area>
+         <area>
+             <datasource>MEETING_ROOM_LIGHTS_POWER</datasource>
+             <color>#105577</color>
+             <legend>Meeting Room Power KW</legend>
+         </area>
+                <area>
+             <datasource>SECURE_ROOM_LIGHTS</datasource>
+             <color>#FF6000</color>
+             <legend>Secure Room Usage</legend>
+         </area>
+         <area>
+             <datasource>SECURE_ROOM_LIGHTS_POWER</datasource>
+             <color>#105577</color>
+             <legend>Secure Room Power KW</legend>
+         </area>
+
+         <comment>Building Intelligence</comment>
+     </graph>
+ </rrd_graph_def>
+

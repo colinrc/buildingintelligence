@@ -1,0 +1,225 @@
+<rrd_graph_def>
+     <span>
+         <!-- ISO FORMAT: yyyy-MM-dd HH:mm:ss -->
+         <start>2005-02-02 01:00:00</start>
+         <!--  timestamp in seconds is also allowed -->
+         <end>2005-02-02 10:00:00</end>
+     </span>
+     <options>
+       <anti_aliasing>true</anti_aliasing>
+       <time_axis>
+         <min_grid_time_unit>MINUTE</min_grid_time_unit>
+         <min_grid_unit_steps>15</min_grid_unit_steps>
+         <maj_grid_time_unit>MINUTE</maj_grid_time_unit>
+         <maj_grid_unit_steps>30</maj_grid_unit_steps>
+         <date_format>HH:mm</date_format>
+         <center_labels>true</center_labels>
+       </time_axis>
+       <time_axis_label>Time</time_axis_label>
+         <title>PIR Demo</title>
+         <title_font>
+             <name>Verdana</name>
+             <style>BOLD</style>
+             <size>17</size>
+         </title_font>
+         <vertical_label>PIR Usage</vertical_label>
+     </options>
+     <datasources>
+       <def>
+         <name>ENTRY_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>ENTRY_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+       <def>
+         <name>DINING_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>DINING_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+       <def>
+         <name>LOUNGE_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>LOUNGE_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+       <def>
+         <name>FAMILY_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>FAMILY_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+       <def>
+         <name>HALL_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>HALL_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+       <def>
+         <name>MASTERBED_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>MASTERBED_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+       <def>
+         <name>STUDY_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>STUDY_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+       <def>
+         <name>GARAGE_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>GARAGE_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+       <def>
+         <name>LANDING_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>LANDING_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+       <def>
+         <name>THEATRE_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>THEATRE_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+       <def>
+         <name>BED3_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>BED3_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+       <def>
+         <name>BED4_PIR</name>
+         <rrd>${rrdPath}BIdemo.rrd</rrd>
+         <source>BED4_PIR</source>
+         <cf>AVERAGE</cf>
+       </def>
+     </datasources>
+     <graph>
+         <line>
+             <datasource>ENTRY_PIR</datasource>
+             <color>#000077</color>
+             <legend>Entry</legend>
+         </line>
+         <line>
+             <datasource>DINING_PIR</datasource>
+             <color>#0000FF</color>
+             <legend>Dining</legend>
+         </line>
+         <line>
+             <datasource>LOUNGE_PIR</datasource>
+             <color>#007700</color>
+             <legend>Lounge</legend>
+         </line>
+         <line>
+             <datasource>FAMILY_PIR</datasource>
+             <color>#00FF00</color>
+             <legend>Family</legend>
+         </line>
+         <line>
+             <datasource>HALL_PIR</datasource>
+             <color>#00FF77</color>
+             <legend>Hall</legend>
+         </line>
+         <line>
+             <datasource>MASTERBED_PIR</datasource>
+             <color>#00FFFF</color>
+             <legend>MasterBed</legend>
+         </line>
+         <line>
+             <datasource>STUDY_PIR</datasource>
+             <color>#FF0000</color>
+             <legend>Study</legend>
+         </line>
+         <line>
+             <datasource>GARAGE_PIR</datasource>
+             <color>#FF0077</color>
+             <legend>Garage</legend>
+         </line>
+         <line>
+             <datasource>LANDING_PIR</datasource>
+             <color>#FF00FF</color>
+             <legend>Landing</legend>
+         </line>
+           <line>
+             <datasource>THEATRE_PIR</datasource>
+             <color>#FF7700</color>
+             <legend>Theatre</legend>
+         </line>
+         <line>
+             <datasource>BED3_PIR</datasource>
+             <color>#FF77FF</color>
+             <legend>Bed3</legend>
+         </line>
+         <line>
+             <datasource>BED4_PIR</datasource>
+             <color>#FFFF00</color>
+             <legend>Bed4</legend>
+         </line>
+         <comment>@l@lMax Values@l</comment>
+          <gprint>
+             <datasource>ENTRY_PIR</datasource>
+             <cf>MAX</cf>
+             <format>Entry @0</format>
+         </gprint>
+         <gprint>
+             <datasource>DINING_PIR</datasource>
+             <cf>MAX</cf>
+             <format>Dining @0</format>
+         </gprint>
+         <gprint>
+             <datasource>LOUNGE_PIR</datasource>
+             <cf>MAX</cf>
+             <format>Lounge @0</format>
+         </gprint>
+         <gprint>
+             <datasource>FAMILY_PIR</datasource>
+             <cf>MAX</cf>
+             <format>Family @0</format>
+         </gprint>
+         <gprint>
+             <datasource>HALL_PIR</datasource>
+             <cf>MAX</cf>
+             <format>@lHall @0</format>
+         </gprint>
+         <gprint>
+             <datasource>MASTERBED_PIR</datasource>
+             <cf>MAX</cf>
+             <format>MasterBed @0</format>
+         </gprint>
+         <gprint>
+             <datasource>STUDY_PIR</datasource>
+             <cf>MAX</cf>
+             <format>Study @0</format>
+         </gprint>
+         <gprint>
+             <datasource>GARAGE_PIR</datasource>
+             <cf>MAX</cf>
+             <format>Garage @0</format>
+         </gprint>
+         <gprint>
+             <datasource>LANDING_PIR</datasource>
+             <cf>MAX</cf>
+             <format>@lLanding @0</format>
+         </gprint>
+           <gprint>
+             <datasource>THEATRE_PIR</datasource>
+             <cf>MAX</cf>
+             <format>Theatre @0</format>
+         </gprint>
+         <gprint>
+             <datasource>BED3_PIR</datasource>
+             <cf>MAX</cf>
+             <format>Bed3 @0</format>
+         </gprint>
+         <gprint>
+             <datasource>BED4_PIR</datasource>
+             <cf>MAX</cf>
+             <format>Bed4 @0@l</format>
+         </gprint>
+         <comment>@rBuilding Intelligence@r</comment>
+     </graph>
+ </rrd_graph_def> 

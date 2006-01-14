@@ -1,0 +1,168 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+	<DESC>My demonstration configuration</DESC>
+
+	<CONTROLS>
+		<VARIABLES>
+				<VARIABLE ACTIVE="Y" NAME="Test 1" DISPLAY_NAME="TEST_1"/>
+				<VARIABLE ACTIVE="Y" NAME="Test 2" DISPLAY_NAME="TEST_2"/>
+				<VARIABLE ACTIVE="Y" NAME="Test 3" DISPLAY_NAME="TEST_3"/>
+		</VARIABLES>
+		<CALENDAR_MESSAGES>
+                		   <ITEM NAME="AUTOCLOSE" VALUE="0" />
+                		   <ITEM NAME="ICON" VALUE="calendar" />
+                		   <ITEM NAME="HIDECLOSE" VALUE="FALSE" />
+                </CALENDAR_MESSAGES>
+	</CONTROLS>
+        <DEVICE ACTIVE="Y" NAME="CBUS" DISPLAY_NAME="CBUS Lights">
+                <CONNECTION>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5004"/>
+                </CONNECTION>
+                <CBUS>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="11" NAME="Pool Light" DISPLAY_NAME="POOL_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="12" NAME="Lounge Lv Light" RELAY="Y" DISPLAY_NAME="LOUNGE_LV_LIGHT" POWER_RATING="100"/>
+                </CBUS>
+        </DEVICE>
+	       <DEVICE ACTIVE="Y" NAME="COMFORT" DISPLAY_NAME="Comfort" PASSWORD="1234">
+                <CONNECTION>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5002"/>
+                </CONNECTION>
+                <CATALOGUE NAME="DOOR_IDS">
+                        <ITEM CODE="31" VALUE="Main door"/>
+                </CATALOGUE>
+                <!-- user codes are 1 - 16 , hex -->
+                <CATALOGUE NAME="COMFORT_USERS">
+                        <ITEM CODE="01" VALUE="Merik"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="POLL_INTERVAL" VALUE="15"/>
+                        <ITEM NAME="ANALOGUE_POLL_INTERVAL" VALUE="30"/>
+                        <ITEM NAME="CBUS_APPLICATION" VALUE="38"/>
+                        <ITEM NAME="CBUS_UCM" VALUE="12"/>
+                        <ITEM NAME="COMFORT_USERS" VALUE="COMFORT_USERS"/>
+                        <!-- ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" / -->
+                        <!-- ITEM NAME="ALARM_IDS" VALUE="ALARM_IDS" / -->
+                        <ITEM NAME="DOOR_IDS" VALUE="DOOR_IDS"/>
+                        <ITEM NAME="SHOW_KEYPAD_MODES" VALUE="01,04"/>
+                </PARAMETERS>
+                <COMFORT>
+
+                        <TOGGLE_OUTPUT_MONITOR ACTIVE="Y" KEY="03" NAME="Lawn Sprinklers" DISPLAY_NAME="LAWN_SPRINKLER"/>
+                        <TOGGLE_INPUT ACTIVE="Y" KEY="01" NAME="Entry PIR" DISPLAY_NAME="ENTRY_PIR"/>
+                        <TOGGLE_INPUT ACTIVE="Y" KEY="02" NAME="Garage Door" DISPLAY_NAME="GARAGE_DOOR"/>
+
+                        <ALARM KEY="" DISPLAY_NAME="ANYTHING"/>
+                        <ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell"/>
+                        <ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone"/>
+                        <ALERT KEY="" ACTIVE="Y" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange"/>
+                        <ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="System"/>
+                        <ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Phone Trouble" ALERT_TYPE="System"/>
+                        <ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+                        <ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+                        <ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort (disarmed in &lt; 90 seconds)" ALERT_TYPE="System" CLIENT_CAT="Serious"/>
+                        <ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Siren Tamper" ALERT_TYPE="System"/>
+                        <ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+                        <ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+                        <ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Fire (Response-activated)" ALERT_TYPE="System"/>
+                        <ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Panic (Response-activated)" ALERT_TYPE="System"/>
+                        <ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+                        <ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="ID"/>
+                        <ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="ID"/>
+                        <ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="Doorbell pressed" ALERT_TYPE="ID"/>
+                        <ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Communications Failure (RS485)"/>
+                        <ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="Singin Tamper" ALERT_TYPE="ID"/>
+                        <ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="Intruder" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Bypass" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="User"/>
+                        <ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Arm Failure" ALERT_TYPE="User"/>
+                        <ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Security Off" ALERT_TYPE="User"/>
+                        <ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="User"/>
+                        <ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="User"/>
+                        <ALERT KEY="17" DISPLAY_NAME="PHONE" MESSAGE="New Message for " ALERT_TYPE="User"/>
+                        <!-- Special note; Alert 17 , is also used for system startup phone message reporting -->
+                        <!--  Correspond to AL command codes; ALERT_TYPE is the differentiation between various alert types -->
+                        <ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Intruder Alarm" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Phone Line Trouble" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Arm Fail" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Zone Alert" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="Panic" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0C" DISPLAY_NAME="ALARM" MESSAGE="Fire" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Gas" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Family Care" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="0F" DISPLAY_NAME="ALARM" MESSAGE="Perimeter Alert" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Bypass Zone" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="System Disarmed" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="CMS Test" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Siren Trouble" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="RS485 Comms Fail" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Doorbell (Away)" ALERT_TYPE="Alarm Type"/>
+                        <ALERT KEY="1B" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="Alarm Type"/>
+                </COMFORT>
+        </DEVICE>
+	<DEVICE ACTIVE="Y" NAME="RAW_CONNECTION" DISPLAY_NAME="Pool Heater">
+                <CONNECTION>
+                        <IP IP_ADDRESS="127.0.0.1" ACTIVE="Y" PORT="5001"/>
+                </CONNECTION>
+                <CATALOGUE NAME="Pool Power">
+                        <ITEM CODE="on" VALUE="Pool On"/>
+                        <ITEM CODE="off" VALUE="Pool Off"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="STX" VALUE=""/>
+                        <ITEM NAME="ETX" VALUE="\n"/>
+                        <ITEM NAME="STARTUP1" VALUE=""/>
+                        <ITEM NAME="POLL_VALUE1" VALUE="300"/>
+                        <ITEM NAME="POLL_STRING1" VALUE="First Poll\n"/>
+                        <ITEM NAME="POLL_VALUE2" VALUE="270"/>
+                        <ITEM NAME="POLL_STRING2" VALUE="Second poll\n"/>
+                </PARAMETERS>
+                <RAW_CONNECTION>
+                <CUSTOM_INPUT KEY="BI01" NAME="IR" DISPLAY_NAME="IR" COMMAND="AV.COMFORT" EXTRA="COMFORT_KEYPAD.1"/>
+                <CUSTOM_INPUT KEY="BI02" NAME="IR" DISPLAY_NAME="" COMMAND="MACRO.run" EXTRA="Dual Test 2"/>
+                <CUSTOM_INPUT KEY="BI03" NAME="IR" DISPLAY_NAME="FAMILY_FLURO_LIGHT" COMMAND="on" EXTRA="100"/>
+
+                
+			<CUSTOM_INPUT KEY="Pool On" NAME="Pool Heater Power" DISPLAY_NAME="POOL_SPA_HEATER" COMMAND="on"/>
+			<CUSTOM_INPUT KEY="Pool Off" NAME="Pool Heater Power" DISPLAY_NAME="POOL_SPA_HEATER" COMMAND="off"/>
+			<CUSTOM_INPUT KEY="(TEMP:)(\d+)" KEY_IS_REGEX="Y" NAME="Pool Temperature" DISPLAY_NAME="POOL_TEMP" COMMAND="on" EXTRA="@2"/>
+                        <RAW_INTERFACE NAME="Pool Power" DISPLAY_NAME="POOL_SPA_HEATER">
+                                <RAW_ITEMS CATALOGUE="Pool Power">
+                                        <RAW COMMAND="on" CODE="on"/>
+					<RAW COMMAND="off" CODE="off"/>
+                                </RAW_ITEMS>
+                        </RAW_INTERFACE>
+                </RAW_CONNECTION>
+        </DEVICE>
+
+        <DEVICE ACTIVE="N" NAME="RAW_CONNECTION" DISPLAY_NAME="Test Raw">
+                <CONNECTION>
+                        <IP IP_ADDRESS="127.0.0.1" ACTIVE="Y" PORT="5001"/>
+                </CONNECTION>
+                <PARAMETERS>
+                        <ITEM NAME="STX" VALUE=""/>
+                        <ITEM NAME="ETX" VALUE="\n"/>
+                </PARAMETERS>
+                <RAW_CONNECTION>
+			<CUSTOM_INPUT KEY="Pool On" NAME="Pool Heater Power" DISPLAY_NAME="POOL_SPA_HEATER" COMMAND="on"/>
+			<CUSTOM_INPUT KEY="Pool Off" NAME="Pool Heater Power" DISPLAY_NAME="POOL_SPA_HEATER" COMMAND="off"/>
+			<CUSTOM_INPUT KEY="(TEMP:)(\d+)" KEY_IS_REGEX="Y" NAME="Pool Temperature" DISPLAY_NAME="POOL_TEMP" COMMAND="on" EXTRA="@2"/>
+                        <RAW_INTERFACE NAME="Pool Power" DISPLAY_NAME="POOL_SPA_HEATER">
+                                <RAW_ITEMS CATALOGUE="Pool Power">
+                                        <RAW COMMAND="on" CODE="on"/>
+					<RAW COMMAND="off" CODE="off"/>
+                                </RAW_ITEMS>
+                        </RAW_INTERFACE>
+                </RAW_CONNECTION>
+        </DEVICE>
+</CONFIG> 

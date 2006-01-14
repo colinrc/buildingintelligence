@@ -1,0 +1,47 @@
+package au.com.BI.Audio;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.jdom.Element;
+
+import au.com.BI.Config.RawHelper;
+import au.com.BI.Util.DeviceModel;
+import au.com.BI.Util.DeviceType;
+
+public class AudioFactory {
+	Logger logger;
+	
+	public AudioFactory () {
+		logger = Logger.getLogger(this.getClass().getPackage().getName());	
+	}
+
+	
+	/**
+	 * Parses an audio device
+	 *
+	 * @param targetDevices
+	 *            The list of DeviceModels of this type
+	 * @param element
+	 *            The element
+	 * @param type
+	 *            INPUT | OUTPUT | MONITORED
+	 */
+	public void addAudio(DeviceModel targetDevice, List clientModels,
+			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
+		String key = element.getAttributeValue("KEY");
+		String command = element.getAttributeValue("COMMAND");
+		String display_name = element.getAttributeValue("DISPLAY_NAME");
+		Audio audio = new Audio (display_name,connectionType);
+
+		audio.setKey (key);
+		audio.setOutputKey(display_name);
+		audio.setCommand(command);
+		audio.setGroupName(groupName);
+		targetDevice.addStartupQueryItem(key, audio, type);
+		targetDevice.addControlledItem(key, audio, type);
+		targetDevice.addControlledItem(display_name, audio, DeviceType.OUTPUT);
+	}
+}

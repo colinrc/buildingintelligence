@@ -1,0 +1,179 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+	<DESC>iQhome DemoCase No C-Bus Server Version 1.05</DESC>
+    <!-- iQhome DemoCase, File : iQDemoCase_s.xml -->
+    <!-- Target Client File:  iQDemoCase_c.xml             -->
+    <!--                                              -->
+    <!--   Uses Comfort
+			C-Bus via Comfort
+			Tutondo via GC100
+			Control of AV via GC100
+			Comfort Inputs
+				1  Front Door
+				2  HALL Movement
+				3  Robe Movement
+				4  Night Sensor
+				5 Smoke Detectot
+				6 Remote Alarm ON
+				7 Remote Alarm OFF
+				8 Remote Garage Door
+				
+			Outputs
+			1 Front Door Strike
+			2 Roller Shutter UP
+			3  Roller Shutter Down
+			4  
+			5 Video Signal Switch
+  -->
+ <!-- _____________________________ COMFORT DEFS _____________________________-->
+	<DEVICE ACTIVE="Y" NAME="COMFORT" DISPLAY_NAME="Comfort" PASSWORD="1234">
+		<CONNECTION>
+			<SERIAL ACTIVE="Y" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+			<SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+			<IP ACTIVE="N" IP_ADDRESS="192.168.1.5" PORT="1001"/>
+			<IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5000"/>
+		</CONNECTION>
+		<CATALOGUE NAME="DOOR_IDS">
+			<ITEM CODE="31" VALUE="Main door"/>
+		</CATALOGUE>
+		<!-- user codes are 1 - 16 , hex -->
+		<CATALOGUE NAME="COMFORT_USERS">
+			<ITEM CODE="01" VALUE="Ian"/>
+		</CATALOGUE>
+		<PARAMETERS>
+			<ITEM NAME="POLL_INTERVAL" VALUE="15"/>
+			<ITEM NAME="ANALOGUE_POLL_INTERVAL" VALUE="30"/>
+			<ITEM NAME="CBUS_APPLICATION" VALUE="38"/>
+			<ITEM NAME="CBUS_UCM" VALUE="12"/>
+			<ITEM NAME="COMFORT_USERS" VALUE="COMFORT_USERS"/>
+			<!-- ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" / -->
+			<!-- ITEM NAME="ALARM_IDS" VALUE="ALARM_IDS" / -->
+			<ITEM NAME="DOOR_IDS" VALUE="DOOR_IDS"/>
+		</PARAMETERS>
+		<SPEC>
+			<COMFORT>
+				<!-- All codes are in hex -->
+				<!-- The first 2 chars are the key, the last two are a parameter to be passed to the flash client in the EXTRA field -->
+				<CUSTOM_INPUT KEY="BI01" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="on"/>
+				<CUSTOM_INPUT KEY="BI02" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="off"/>
+				<CUSTOM_INPUT KEY="BI03" NAME="IR" DISPLAY_NAME="IR" COMMAND="AV:COMFORT" EXTRA="COMFORT_KEYPAD.1"/>
+				<CUSTOM_INPUT KEY="BI04" NAME="macro" DISPLAY_NAME="MACRO" COMMAND="run" EXTRA="test"/>
+				<!-- Counters are probably Comfort specific but I'll make it general for now -->
+				<COUNTER KEY="0F" ACTIVE="N" NAME="Family room light" DISPLAY_NAME="FAMILY_LIGHT" MAX="100"/>
+				<!-- 
+				These reflect the state of devices connected to comfort outputs (OP command) 				<TOGGLE_OUTPUT_MONITOR ACTIVE="N" KEY="01" NAME="Entry Door Lock" DISPLAY_NAME="ENTRY_LIGHTS"/>
+				<LIGHT_CBUS KEY="0F" ACTIVE="Y" CBUS_APPLICATION="38" NAME="Lounge Lights" DISPLAY_NAME="LOUNGE_LIGHT"/>
+				<LIGHT_CBUS KEY="10" ACTIVE="Y" NAME="kitchen Lights" DISPLAY_NAME="KITCHEN_BENCH_LIGHT"/>
+				<LIGHT_X10 KEY="01" ACTIVE="N" X10HOUSE_CODE="A" NAME="Family Room" DISPLAY_NAME="FAMILY_LIGHTS1"/>
+				<PULSE_OUTPUT KEY="01" ACTIVE="N" NAME="Garage Door" DISPLAY_NAME="GARAGE_LIGHT"/>
+				<TOGGLE_OUTPUT KEY="02" ACTIVE="N" NAME="Garage Door" DISPLAY_NAME="GARAGE_LIGHT"/>
+				<TOGGLE_OUTPUT_MONITOR KEY="02" ACTIVE="Y" NAME="Lower Stairs Lights" DISPLAY_NAME="LOWER_STAIR_LIGHT"/>
+				-->
+				
+				<!--   COMFORT INPUTS  -   Device: TOGGLE_INPUT       -->
+				<TOGGLE_INPUT KEY="01" NAME="Front Door" DISPLAY_NAME="FRONT_DOOR_REED" />
+				<TOGGLE_INPUT KEY="02" NAME="Hallway Pir" DISPLAY_NAME="HALLWAY_PIR" />
+				<TOGGLE_INPUT KEY="03" NAME="Walk-in-Robe Pir" DISPLAY_NAME="WIR_PIR" />
+				<TOGGLE_INPUT KEY="04" NAME="Night Sensor" DISPLAY_NAME="NIGHT_SENSOR" />
+				<TOGGLE_INPUT KEY="05" NAME="Smoke Detector" DISPLAY_NAME="SMOKE_DETECTOR" />
+				<TOGGLE_INPUT KEY="06" NAME="Remote Alarm ON" DISPLAY_NAME="REMOTE_ALARM_ON" />
+				<TOGGLE_INPUT KEY="07" NAME="Remote Alarm OFF" DISPLAY_NAME="REMOTE_ALARM_ON" />
+				<TOGGLE_INPUT KEY="08" NAME="Remote Garage Door" DISPLAY_NAME="REMOTE_GARAGE_DOOR" />
+				
+				
+				<!--  Comfort Outputs - Device: TOGGLE_OUTPUT            -->		
+				<TOGGLE_OUTPUT KEY="01" NAME="Garage Door LED"  DISPLAY_NAME="GARAGE_DOOR_LED" />
+				<TOGGLE_OUTPUT KEY="02" NAME="Entry LED"        DISPLAY_NAME="ENTRY_LED" />
+				<TOGGLE_OUTPUT KEY="03" NAME="Heater LED"       DISPLAY_NAME="HEATER_LED" />
+				<TOGGLE_OUTPUT KEY="04" NAME="Sprinklers LED"   DISPLAY_NAME="SPRINKLERS_LED" />
+				<TOGGLE_OUTPUT KEY="05" NAME="Walk-in-Robe LED" DISPLAY_NAME="WIR_LED" />
+				<TOGGLE_OUTPUT KEY="06" NAME="Hallway LED"      DISPLAY_NAME="HALLWAY_LED" />
+				<TOGGLE_OUTPUT KEY="07" NAME="Shutters LED"     DISPLAY_NAME="SHUTTERS_LED" />
+				<TOGGLE_OUTPUT KEY="08" NAME="TV LED"           DISPLAY_NAME="TV_LED" />
+
+				<!--  
+				<RAW_INTERFACE NAME="LIVING_LIGHT1" DISPLAY_NAME="LIVING_LIGHT1">
+					<RAW_ITEMS CATALOGUE="Test List 1" PREFIX="01">
+						<RAW COMMAND="on" CODE="all_fs"/>
+					</RAW_ITEMS>
+					<RAW_ITEMS CATALOGUE="Test List 2" PREFIX="02">
+						<RAW COMMAND="off" CODE="all_1s"/>
+					</RAW_ITEMS>
+				</RAW_INTERFACE>
+				-->
+				
+				<!-- Analogue inputs -->
+				<ANALOGUE ACTIVE="N" KEY="01" NAME="Kitchen Light" DISPLAY_NAME="LOUNGE_LIGHT"/>
+				<!-- Set alarms on this comfort when sent from this display, if more than 1 icon is used in flash, 
+				list multiple ALARM entries, one for each DISPLAY_NAME -->
+				<ALARM KEY="" DISPLAY_NAME="ANYTHING"/>
+				<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell"/>
+				<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone"/>
+				<ALERT KEY="" ACTIVE="Y" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange"/>
+				<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="System"/>
+				<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Phone Trouble" ALERT_TYPE="System"/>
+				<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+				<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+				<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort (disarmed in &lt; 90 seconds)" ALERT_TYPE="System" CLIENT_CAT="Serious"/>
+				<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Siren Tamper" ALERT_TYPE="System"/>
+				<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+				<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+				<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Fire (Response-activated)" ALERT_TYPE="System"/>
+				<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Panic (Response-activated)" ALERT_TYPE="System"/>
+				<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+				<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="ID"/>
+				<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="ID"/>
+				<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="Doorbell pressed" ALERT_TYPE="ID"/>
+				<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Communications Failure (RS485)"/>
+				<ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="Singin Tamper" ALERT_TYPE="ID"/>
+				<ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="Intruder" ALERT_TYPE="Zone"/>
+				<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Zone"/>
+				<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Zone"/>
+				<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Bypass" ALERT_TYPE="Zone"/>
+				<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Zone"/>
+				<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="User"/>
+				<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Arm Failure" ALERT_TYPE="User"/>
+				<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Security Off" ALERT_TYPE="User"/>
+				<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="User"/>
+				<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="User"/>
+				<ALERT KEY="17" DISPLAY_NAME="PHONE" MESSAGE="New Message for " ALERT_TYPE="User"/>
+				<!-- Special note; Alert 17 , is also used for system startup phone message reporting -->
+				<!--  Correspond to AL command codes; ALERT_TYPE is the differentiation between various alert types -->
+				<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Intruder Alarm" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Phone Line Trouble" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Arm Fail" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Zone Alert" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="Panic" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0C" DISPLAY_NAME="ALARM" MESSAGE="Fire" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Gas" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Family Care" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0F" DISPLAY_NAME="ALARM" MESSAGE="Perimeter Alert" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Bypass Zone" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="System Disarmed" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="CMS Test" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Siren Trouble" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="RS485 Comms Fail" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Doorbell (Away)" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="1B" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="Alarm Type"/>
+			</COMFORT>
+			</SPEC>
+	</DEVICE>
+
+		<!-- _____________________________ Controls _____________________________-->
+		<!-- 
+		<CONTROLS>
+			<VARIABLES>
+				<VARIABLE ACTIVE="Y" NAME="Master Bedroom Light" DISPLAY_NAME="MASTERBED_LIGHT"/>
+				<VARIABLE ACTIVE="Y" NAME="Bedroom 4 light" DISPLAY_NAME="BED4_LIGHT"/>
+			</VARIABLES>
+		</CONTROLS>
+		-->
+</CONFIG> 

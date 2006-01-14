@@ -1,0 +1,537 @@
+<CONFIG lastUpdated="2004-03-18">
+
+<SERVER IP="" PORT="10000" />
+
+<!-- ______________________________________  TUTONDO DEFS  ____________________  -->
+
+
+<CATALOGUE NAME="Tutondo Inputs">
+	<ITEM CODE="cd1" VALUE="1" />
+	<ITEM CODE="cd2" VALUE="2" />
+	<ITEM CODE="digital" VALUE="3" />
+	<ITEM CODE="tv" VALUE="4" />
+</CATALOGUE>
+
+<CATALOGUE NAME="Tutondo Functions">
+	<ITEM CODE="cd-rw" VALUE="1" />
+	<ITEM CODE="cd-play" VALUE="4" />
+	<ITEM CODE="cd-ff" VALUE="5" />
+	<ITEM CODE="cd-stop" VALUE="3" />
+	<ITEM CODE="cd-pause" VALUE="9" />
+
+</CATALOGUE>
+
+<DEVICE  ACTIVE="N" NAME="TUTONDO" DISPLAY_NAME="Tutondo Audio" CONNECTION="SERIAL" PORT="COM5" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE">
+	<PARAMETERS>
+		<ITEM NAME="INPUTS" VALUE="Tutondo Inputs" />
+		<ITEM NAME="FUNCTIONS" VALUE="Tutondo Functions" />
+		<ITEM NAME="POLL_INTERVAL" VALUE="3" />
+	</PARAMETERS>
+	
+	<AUDIO KEY="01" DISPLAY_NAME="FAMILY_AUDIO" />
+	<AUDIO KEY="02" DISPLAY_NAME="BBQ_AUDIO" />
+</DEVICE>
+	<!-- the key is the Tutondo zone, Display name is the flash icon name -->
+
+
+<!-- ______________________________________  HAL DEFS  ____________________  -->
+
+
+<CATALOGUE NAME="HAL Inputs">
+	<ITEM CODE="cd1" VALUE="1" />
+	<ITEM CODE="cd2" VALUE="2" />
+	<ITEM CODE="digital" VALUE="3" />
+	<ITEM CODE="tv" VALUE="4" />
+</CATALOGUE>
+
+<CATALOGUE NAME="HAL Functions">
+	<ITEM CODE="cd-rw" VALUE="1" />
+	<ITEM CODE="cd-play" VALUE="4" />
+	<ITEM CODE="cd-ff" VALUE="5" />
+	<ITEM CODE="cd-stop" VALUE="3" />
+	<ITEM CODE="cd-pause" VALUE="9" />
+</CATALOGUE>
+
+<DEVICE  ACTIVE="N" NAME="HAL" DISPLAY_NAME="HAL Audio" CONNECTION="SERIAL" PORT="COM4" BAUD="4800" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS">
+	<PARAMETERS>
+		<ITEM NAME="INPUTS" VALUE="HAL Inputs" />
+		<ITEM NAME="FUNCTIONS" VALUE="HAL Functions" />
+		<ITEM NAME="POLL_INTERVAL" VALUE="-1" />
+		
+	</PARAMETERS>
+	
+	<AUDIO KEY="00" DISPLAY_NAME="FAMILY_AUDIO" />
+	<AUDIO KEY="16" DISPLAY_NAME="MASTERBED_AUDIO" />
+</DEVICE>
+	<!-- the key is the HAL zone, Display name is the flash icon name -->
+
+!-- ______________________________________  CBUS DEFS  ____________________  -->
+
+
+<DEVICE ACTIVE="N" NAME="CBUS" DISPLAY_NAME="CBUS Lights" CONNECTION="IP" IP_ADDRESS="192.168.0.66" PORT="14000">
+
+	<PARAMETERS>
+			<ITEM NAME="CBUS_APPLICATION" VALUE="38" />
+	</PARAMETERS>
+
+
+<!-- Outside -->
+    <LIGHT_CBUS KEY="44" ACTIVE="Y" NAME="Back BBQ Floods" DISPLAY_NAME="BACK_BBQ_FLOODS" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="18" ACTIVE="Y" NAME="Back Door Light" DISPLAY_NAME="BACK_DOOR_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1A" ACTIVE="Y" NAME="East Eave Light" DISPLAY_NAME="EAST_EAVE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="46" ACTIVE="Y" NAME="East Wall Light" DISPLAY_NAME="EAST_WALL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="13" ACTIVE="Y" NAME="Front Garden Light" DISPLAY_NAME="FRONT_GARDEN_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="45" ACTIVE="Y" NAME="Laundry Garden Light" DISPLAY_NAME="LAUNDRY_GARDEN_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="10" ACTIVE="Y" NAME="North External Wall Light" DISPLAY_NAME="NORTH_EXTERNAL_WALL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="05" ACTIVE="Y" NAME="Rear Garden Light" DISPLAY_NAME="REAR_GARDEN_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="19" ACTIVE="Y" NAME="South Wall Light" DISPLAY_NAME="SOUTH_WALL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="16" ACTIVE="Y" NAME="West External Wall Light" DISPLAY_NAME="WEST_EXTERNAL_WALL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="12" ACTIVE="Y" NAME="West Wall Light" DISPLAY_NAME="WEST_WALL_LIGHT" TYPE="Monitored" />
+
+
+<!-- Pool and Spa -->
+    <LIGHT_CBUS KEY="06" ACTIVE="Y" NAME="Pond Pump" DISPLAY_NAME="POND_PUMP" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="0E" ACTIVE="Y" NAME="Pool and Spa Heater" DISPLAY_NAME="POOL_SPA_HEATER" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="0A" ACTIVE="Y" NAME="Pool Cleaner Pump" DISPLAY_NAME="POOL_CLEANER_PUMP" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="03" ACTIVE="Y" NAME="Pool Lights" DISPLAY_NAME="POOL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="3D" ACTIVE="Y" NAME="Return Relay" DISPLAY_NAME="POOL_RETURN_RELAY" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="0D" ACTIVE="Y" NAME="SPA Blower" DISPLAY_NAME="SPA_BLOWER" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="07" ACTIVE="Y" NAME="SPA Jet Pump" DISPLAY_NAME="SPA_JET_PUMP" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="04" ACTIVE="Y" NAME="SPA Lights" DISPLAY_NAME="SPA_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="08" ACTIVE="Y" NAME="SPA Overflow Pump" DISPLAY_NAME="SPA_OVERFLOW_PUMP" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1D" ACTIVE="Y" NAME="Suction Relay" DISPLAY_NAME="POOL_SUCTION_RELAY" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="09" ACTIVE="Y" NAME="Main Filter Pump" DISPLAY_NAME="POOL_FILTER_PUMP" TYPE="Monitored" />
+
+<!-- Downstairs -->
+    <LIGHT_CBUS KEY="43" ACTIVE="Y" NAME="Bed 2 Light" DISPLAY_NAME="OFFICE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="01" ACTIVE="Y" NAME="Dining Light" DISPLAY_NAME="DINING_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="28" ACTIVE="Y" NAME="Bath 1 Light" DISPLAY_NAME="BATH1_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="29" ACTIVE="Y" NAME="Bath 1 Fan" DISPLAY_NAME="BATH1_FAN" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2C" ACTIVE="Y" NAME="Bath 1 LV Light" DISPLAY_NAME="BATH1_LV_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2A" ACTIVE="Y" NAME="Bath 1 1st Heat" DISPLAY_NAME="BATH1_1_HEAT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2B" ACTIVE="Y" NAME="Bath 1 2nd Heat" DISPLAY_NAME="BATH1_2_HEAT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="40" ACTIVE="Y" NAME="Hall Light" DISPLAY_NAME="HALL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="30" ACTIVE="Y" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2D" ACTIVE="Y" NAME="Ensuite Fan" DISPLAY_NAME="ENSUITE_FAN" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2E" ACTIVE="Y" NAME="Ensuite 1st Heat" DISPLAY_NAME="ENSUITE_1_HEAT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2F" ACTIVE="Y" NAME="Ensuite 2nd Heat" DISPLAY_NAME="ENSUITE_2_HEAT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="31" ACTIVE="Y" NAME="Ensuite LV Light" DISPLAY_NAME="ENSUITE_LV_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="3E" ACTIVE="Y" NAME="Entry Light" DISPLAY_NAME="ENTRY_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="41" ACTIVE="Y" NAME="Family Light" DISPLAY_NAME="FAMILY_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1B" ACTIVE="Y" NAME="Family Fluro Light" DISPLAY_NAME="FAMILY_FLURO_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="0F" ACTIVE="Y" NAME="Garage Entry Light" DISPLAY_NAME="GARAGE_ENTRY_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="11" ACTIVE="Y" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="42" ACTIVE="Y" NAME="Kitchen Bench Light" DISPLAY_NAME="KITCHEN_BENCH_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="32" ACTIVE="Y" NAME="Kitchen Fluro Light" DISPLAY_NAME="KITCHEN_FLURO_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="17" ACTIVE="Y" NAME="Laundry Light" DISPLAY_NAME="LAUNDRY_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="02" ACTIVE="Y" NAME="Lounge Light" DISPLAY_NAME="LOUNGE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="3C" ACTIVE="Y" NAME="Lounge LV Light" DISPLAY_NAME="LOUNGE_LV_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="34" ACTIVE="Y" NAME="Masterbed Light" DISPLAY_NAME="MASTERBED_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="35" ACTIVE="Y" NAME="Masterbed Wall Light 1" DISPLAY_NAME="MASTERBED_WALL_1_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="36" ACTIVE="Y" NAME="Masterbed Wall Light 2" DISPLAY_NAME="MASTERBED_WALL_2_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="26" ACTIVE="Y" NAME="Lower Level Stair Light" DISPLAY_NAME="LOWER_STAIR_LIGHT" TYPE="Monitored" />
+
+
+<!-- Upstairs -->
+    <LIGHT_CBUS KEY="38" ACTIVE="Y" NAME="Bed 3 Light" DISPLAY_NAME="BED3_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="3A" ACTIVE="Y" NAME="Bed 4 Light" DISPLAY_NAME="BED4_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="33" ACTIVE="Y" NAME="Middle Stairs Light" DISPLAY_NAME="MIDDLE_STAIRS_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="22" ACTIVE="Y" NAME="Roof Space Light" DISPLAY_NAME="ROOF_SPACE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="39" ACTIVE="Y" NAME="Theatre Light" DISPLAY_NAME="THEATRE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="23" ACTIVE="Y" NAME="Theatre Fluro Light 1" DISPLAY_NAME="THEATRE_FLURO_1_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="24" ACTIVE="Y" NAME="Theatre Fluro Light 2" DISPLAY_NAME="THEATRE_FLURO_2_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="25" ACTIVE="Y" NAME="Theatre Fluro Light 3" DISPLAY_NAME="THEATRE_FLURO_3_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="27" ACTIVE="Y" NAME="Study Store" DISPLAY_NAME="STUDY_STORE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="3B" ACTIVE="Y" NAME="Top of Stairs Light" DISPLAY_NAME="TOP_STAIRS_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1C" ACTIVE="Y" NAME="Bath 2 Light" DISPLAY_NAME="BATH2_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1F" ACTIVE="Y" NAME="Bath 2 Fan" DISPLAY_NAME="BATH2_FAN" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="21" ACTIVE="Y" NAME="Bath 2 LV Light" DISPLAY_NAME="BATH2_LV_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1E" ACTIVE="Y" NAME="Bath 2 1st Heat" DISPLAY_NAME="BATH2_1_HEAT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="20" ACTIVE="Y" NAME="Bath 2 2nd Heat" DISPLAY_NAME="BATH2_2_HEAT" TYPE="Monitored" />
+
+
+</DEVICE>
+    
+<!-- ______________________________________  RAW DEFS _____________________________ -->
+
+	
+
+<CATALOGUE NAME="Test List 1">
+	<ITEM CODE="all_fs" VALUE="HEX1313401030504" />
+	<ITEM CODE="all_0s" VALUE="000000\r" />
+</CATALOGUE>
+
+<CATALOGUE NAME="Audio stuff">
+	<ITEM CODE="right" VALUE="Stuff to make right happen: should r :%ASDF%: this should R :%ZONE2%:" />
+	<ITEM CODE="left" VALUE="Stuff to make left happen: should be l :%ASDF%: and L :%ZONE2%:" />
+</CATALOGUE>
+
+<!-- flow may be NONE, RTSCTS" -->
+<!-- DEVICE ACTIVE="Y" NAME="RAW_INTERFACE" DISPLAY_NAME="Raw Input" CONNECTION="SERIAL" PORT="USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS" -->
+<DEVICE  ACTIVE="N" NAME="RAW_INTERFACE" DISPLAY_NAME="Raw Input" CONNECTION="IP" IP_ADDRESS="127.0.0.1" PORT="10000" >
+	<PARAMETERS>
+		<ITEM NAME="STX" VALUE="" />
+		<ITEM NAME="ETX" VALUE="\n" />
+	</PARAMETERS>
+	
+	<CUSTOM_INPUT KEY="BI01" NAME="Lounge Lights" DISPLAY_NAME="LOUNGE_LIGHTS1" COMMAND="off" TYPE="input" />
+	
+    <RAW_ONLY NAME="PATIO_AUDIO"   DISPLAY_NAME="BBQ_AUDIO"   TYPE="Output">
+    		<RAW_ITEMS CATALOGUE="Audio stuff" >
+
+						<!-- Include EXTRA if you wish it to be matched on the command from Flash. If it is not 
+							present the COMMAND alone will be matched -->
+							
+    			<RAW COMMAND="send_audio_command" EXTRA="5" CODE="left" >
+	        		<VARS NAME="ASDF" VALUE="a" />
+	        		<VARS NAME="ZONE2" VALUE="\x4c" />
+	        	</RAW>
+	        	<RAW COMMAND="send_audio_command" EXTRA="6" CODE="right">
+	        		<VARS NAME="ASDF" VALUE="b" />
+	        		<VARS NAME="ZONE2" VALUE="\x52" />
+	        	</RAW>
+    		</RAW_ITEMS>
+    		<RAW_ITEMS CATALOGUE="Test List 1" >
+    			<RAW COMMAND="up" CODE="all_fs" />
+    		</RAW_ITEMS>
+    		<RAW_ITEMS CATALOGUE="Test List 1" >
+    			<RAW COMMAND="down" CODE="all_0s" />
+    		</RAW_ITEMS>
+    </RAW_ONLY> 
+    	<CUSTOM_INPUT KEY="BI01" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="on" TYPE="input" />
+</DEVICE>
+
+
+
+<!-- _____________________________ COMFORT DEFS _____________________________-->
+
+<CATALOGUE NAME="DOOR_IDS">
+	<ITEM CODE="31" VALUE="Main door" />
+</CATALOGUE>
+
+<!-- user codes are 1 - 16 , hex -->
+<CATALOGUE NAME="COMFORT_USERS">
+	<ITEM CODE="01" VALUE="Merik" />
+</CATALOGUE>
+
+<CATALOGUE NAME="COMFORT_IR_RAW">
+	<ITEM CODE="tv_on" VALUE="DA810101810201810401810601\n" />
+	<ITEM CODE="tv_off" VALUE="DA810101810501810601\n" />
+</CATALOGUE>
+
+
+<DEVICE  ACTIVE="N" NAME="COMFORT" DISPLAY_NAME="Comfort Raw" CONNECTION="SERIAL" PORT="USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE" PASSWORD="1234" >
+	<CUSTOM_INPUT KEY="BI01" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="on" TYPE="input" />
+	<CUSTOM_INPUT KEY="BI02" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="off" TYPE="input" />
+	<CUSTOM_INPUT KEY="BI03" NAME="LOUNGE_LIGHTS1" DISPLAY_NAME="LOUNGE_LIGHTS1" COMMAND="on" TYPE="input" />
+	<CUSTOM_INPUT KEY="BI04" NAME="LOUNGE_LIGHTS1" DISPLAY_NAME="LOUNGE_LIGHTS1" COMMAND="off" TYPE="input" />
+	  <RAW_ONLY NAME="LIVING_LIGHT"   DISPLAY_NAME="LIVING_LIGHT"   TYPE="Monitored">
+    		<RAW_ITEMS CATALOGUE="Test List 1" >
+	        	<RAW COMMAND="on" CODE="all_fs"  />
+    		</RAW_ITEMS>
+    		<RAW_ITEMS CATALOGUE="Test List 2" >
+    			<RAW COMMAND="off" CODE="all_1s" />
+    		</RAW_ITEMS>
+    </RAW_ONLY> 
+</DEVICE>
+
+<DEVICE  ACTIVE="N" NAME="COMFORT" DISPLAY_NAME="Comfort" CONNECTION="SERIAL" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS" PASSWORD="1234" >
+	<PARAMETERS>
+		<ITEM NAME="POLL_INTERVAL" VALUE="15" />
+		<ITEM NAME="ANALOGUE_POLL_INTERVAL" VALUE="30" />
+		<ITEM NAME="CBUS_APPLICATION" VALUE="38" />
+		<ITEM NAME="CBUS_UCM" VALUE="12" />
+		<ITEM NAME="COMFORT_USERS" VALUE="COMFORT_USERS" />
+		<!-- ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" / -->
+		<!-- ITEM NAME="ALARM_IDS" VALUE="ALARM_IDS" / -->
+		<ITEM NAME="DOOR_IDS" VALUE="DOOR_IDS" />	
+	</PARAMETERS>
+
+	<RAW_ONLY NAME="Lounge TV" DISPLAY_NAME="LOUNGE_TV" TYPE="Output">
+		<RAW_ITEMS CATALOGUE="COMFORT_IR_RAW" >
+
+			<RAW COMMAND="on" CODE="tv_on" />
+	     		<RAW COMMAND="off" CODE="tv_off" />
+
+		</RAW_ITEMS>
+
+	</RAW_ONLY> 
+
+	<!-- PIRs - (IP) -->
+	<TOGGLE_INPUT KEY="01" NAME="Entry PIR" DISPLAY_NAME="ENTRY_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="02" NAME="Dining Room PIR" DISPLAY_NAME="DINING_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="03" NAME="Lounge Room PIR" DISPLAY_NAME="LOUNGE_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="04" NAME="Family Room PIR"  DISPLAY_NAME="FAMILY_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="05" NAME="Downstairs Hall PIR"  DISPLAY_NAME="HALL_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="06" NAME="Laundry Door Reed"  DISPLAY_NAME="LAUNDRY_DOOR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="07" NAME="Master Bedroom PIR"  DISPLAY_NAME="MASTERBED_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="08" NAME="Downstairs Smoke Detector"  DISPLAY_NAME="DOWNSTAIRS_SMOKE" TYPE="Input" />
+	<TOGGLE_INPUT KEY="09" NAME="Office PIR"  DISPLAY_NAME="STUDY_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0A" NAME="Downstairs Hall PIR"  DISPLAY_NAME="HALL_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0B" NAME="Garage PIR"  DISPLAY_NAME="GARAGE_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0C" NAME="Landing PIR"  DISPLAY_NAME="LANDING_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0D" NAME="Theatre PIR"  DISPLAY_NAME="THEATRE_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0E" NAME="Upstairs Smoke Detector"  DISPLAY_NAME="UPSTAIRS_SMOKE" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0F" NAME="Tessa's Room PIR"  DISPLAY_NAME="BED3_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="10" NAME="Ainslee's Room PIR"  DISPLAY_NAME="BED4_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="11" NAME="Front Gate Reed"  DISPLAY_NAME="FRONT_GATE" TYPE="Input" />
+	<TOGGLE_INPUT KEY="12" NAME="Garage Door Reed"  DISPLAY_NAME="GARAGE_DOOR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="13" NAME="Light Level Sensor"  DISPLAY_NAME="LIGHT_SENSOR" TYPE="Input" />
+
+    
+	<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell" TYPE="monitored" />
+	<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone" TYPE="monitored" />
+	<ALERT KEY="" ACTIVE="N" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange" TYPE="monitored" />
+
+	<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Phone Trouble" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort (disarmed in &lt; 90 seconds)" ALERT_TYPE="System" CLIENT_CAT="Serious" TYPE="monitored" />
+	<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Siren Tamper" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Fire (Response-activated)" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Panic (Response-activated)" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System" TYPE="monitored" />
+
+	<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="ID" TYPE="monitored" />
+	<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="ID" TYPE="monitored" />
+	<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="Doorbell pressed"  ALERT_TYPE="ID" TYPE="monitored" />
+	<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Communications Failure (RS485)" TYPE="monitored" />
+	<ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="Singin Tamper" ALERT_TYPE="ID" TYPE="monitored" />
+
+	<ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="Intruder" ALERT_TYPE="Zone" TYPE="monitored" />
+	<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Zone" TYPE="monitored" />
+	<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Zone" TYPE="monitored" />
+	<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Bypass" ALERT_TYPE="Zone" TYPE="monitored" />
+	<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Zone" TYPE="monitored" />
+
+	<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="User" TYPE="monitored" />
+	<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Arm Failure" ALERT_TYPE="User" TYPE="monitored" />
+	<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Security Off" ALERT_TYPE="User" TYPE="monitored" />
+	<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="User" TYPE="monitored" />
+	<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="User" TYPE="monitored" />
+
+	<ALERT KEY="17" DISPLAY_NAME="PHONE" MESSAGE="New Message for " ALERT_TYPE="User" TYPE="monitored" />
+	<!-- Special note; Alert 17 , is also used for system startup phone message reporting -->
+
+
+
+	<!--  Correspond to AL command codes; ALERT_TYPE is the differentiation between various alert types -->
+	<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Intruder Alarm" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Phone Line Trouble" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Arm Fail" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Zone Alert" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="Panic" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0C" DISPLAY_NAME="ALARM" MESSAGE="Fire" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Gas" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Family Care" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0F" DISPLAY_NAME="ALARM" MESSAGE="Perimeter Alert" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Bypass Zone" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="System Disarmed" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="CMS Test" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Siren Trouble" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="RS485 Comms Fail" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Doorbell (Away)" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="1B" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+
+  </DEVICE>
+
+  <DEVICE  ACTIVE="Y" NAME="COMFORT" DISPLAY_NAME="Comfort with CBUS" CONNECTION="SERIAL" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS" PASSWORD="1234" >
+	<PARAMETERS>
+		<ITEM NAME="POLL_INTERVAL" VALUE="15" />
+		<ITEM NAME="ANALOGUE_POLL_INTERVAL" VALUE="30" />
+		<ITEM NAME="CBUS_APPLICATION" VALUE="38" />
+		<ITEM NAME="CBUS_UCM" VALUE="12" />
+		<ITEM NAME="COMFORT_USERS" VALUE="COMFORT_USERS" />
+		<!-- ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" / -->
+		<!-- ITEM NAME="ALARM_IDS" VALUE="ALARM_IDS" / -->
+		<ITEM NAME="DOOR_IDS" VALUE="DOOR_IDS" />	
+	</PARAMETERS>
+
+	<RAW_ONLY NAME="Lounge TV" DISPLAY_NAME="LOUNGE_TV" TYPE="Output">
+		<RAW_ITEMS CATALOGUE="COMFORT_IR_RAW" >
+
+			<RAW COMMAND="on" CODE="tv_on" />
+	     		<RAW COMMAND="off" CODE="tv_off" />
+
+		</RAW_ITEMS>
+
+	</RAW_ONLY> 
+
+<!-- Outside -->
+    <LIGHT_CBUS KEY="44" ACTIVE="Y" NAME="Back BBQ Floods" DISPLAY_NAME="BACK_BBQ_FLOODS" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="18" ACTIVE="Y" NAME="Back Door Light" DISPLAY_NAME="BACK_DOOR_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1A" ACTIVE="Y" NAME="East Eave Light" DISPLAY_NAME="EAST_EAVE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="46" ACTIVE="Y" NAME="East Wall Light" DISPLAY_NAME="EAST_WALL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="13" ACTIVE="Y" NAME="Front Garden Light" DISPLAY_NAME="FRONT_GARDEN_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="45" ACTIVE="Y" NAME="Laundry Garden Light" DISPLAY_NAME="LAUNDRY_GARDEN_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="10" ACTIVE="Y" NAME="North External Wall Light" DISPLAY_NAME="NORTH_EXTERNAL_WALL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="05" ACTIVE="Y" NAME="Rear Garden Light" DISPLAY_NAME="REAR_GARDEN_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="19" ACTIVE="Y" NAME="South Wall Light" DISPLAY_NAME="SOUTH_WALL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="16" ACTIVE="Y" NAME="West External Wall Light" DISPLAY_NAME="WEST_EXTERNAL_WALL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="12" ACTIVE="Y" NAME="West Wall Light" DISPLAY_NAME="WEST_WALL_LIGHT" TYPE="Monitored" />
+
+
+<!-- Pool and Spa -->
+    <LIGHT_CBUS KEY="06" ACTIVE="Y" NAME="Pond Pump" DISPLAY_NAME="POND_PUMP" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="0E" ACTIVE="Y" NAME="Pool and Spa Heater" DISPLAY_NAME="POOL_SPA_HEATER" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="0A" ACTIVE="Y" NAME="Pool Cleaner Pump" DISPLAY_NAME="POOL_CLEANER_PUMP" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="03" ACTIVE="Y" NAME="Pool Lights" DISPLAY_NAME="POOL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="3D" ACTIVE="Y" NAME="Return Relay" DISPLAY_NAME="POOL_RETURN_RELAY" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="0D" ACTIVE="Y" NAME="SPA Blower" DISPLAY_NAME="SPA_BLOWER" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="07" ACTIVE="Y" NAME="SPA Jet Pump" DISPLAY_NAME="SPA_JET_PUMP" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="04" ACTIVE="Y" NAME="SPA Lights" DISPLAY_NAME="SPA_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="08" ACTIVE="Y" NAME="SPA Overflow Pump" DISPLAY_NAME="SPA_OVERFLOW_PUMP" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1D" ACTIVE="Y" NAME="Suction Relay" DISPLAY_NAME="POOL_SUCTION_RELAY" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="09" ACTIVE="Y" NAME="Main Filter Pump" DISPLAY_NAME="POOL_FILTER_PUMP" TYPE="Monitored" />
+
+<!-- Downstairs -->
+    <LIGHT_CBUS KEY="43" ACTIVE="Y" NAME="Bed 2 Light" DISPLAY_NAME="OFFICE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="01" ACTIVE="Y" NAME="Dining Light" DISPLAY_NAME="DINING_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="28" ACTIVE="Y" NAME="Bath 1 Light" DISPLAY_NAME="BATH1_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="29" ACTIVE="Y" NAME="Bath 1 Fan" DISPLAY_NAME="BATH1_FAN" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2C" ACTIVE="Y" NAME="Bath 1 LV Light" DISPLAY_NAME="BATH1_LV_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2A" ACTIVE="Y" NAME="Bath 1 1st Heat" DISPLAY_NAME="BATH1_1_HEAT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2B" ACTIVE="Y" NAME="Bath 1 2nd Heat" DISPLAY_NAME="BATH1_2_HEAT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="40" ACTIVE="Y" NAME="Hall Light" DISPLAY_NAME="HALL_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="30" ACTIVE="Y" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2D" ACTIVE="Y" NAME="Ensuite Fan" DISPLAY_NAME="ENSUITE_FAN" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2E" ACTIVE="Y" NAME="Ensuite 1st Heat" DISPLAY_NAME="ENSUITE_1_HEAT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="2F" ACTIVE="Y" NAME="Ensuite 2nd Heat" DISPLAY_NAME="ENSUITE_2_HEAT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="31" ACTIVE="Y" NAME="Ensuite LV Light" DISPLAY_NAME="ENSUITE_LV_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="3E" ACTIVE="Y" NAME="Entry Light" DISPLAY_NAME="ENTRY_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="41" ACTIVE="Y" NAME="Family Light" DISPLAY_NAME="FAMILY_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1B" ACTIVE="Y" NAME="Family Fluro Light" DISPLAY_NAME="FAMILY_FLURO_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="0F" ACTIVE="Y" NAME="Garage Entry Light" DISPLAY_NAME="GARAGE_ENTRY_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="11" ACTIVE="Y" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="42" ACTIVE="Y" NAME="Kitchen Bench Light" DISPLAY_NAME="KITCHEN_BENCH_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="32" ACTIVE="Y" NAME="Kitchen Fluro Light" DISPLAY_NAME="KITCHEN_FLURO_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="17" ACTIVE="Y" NAME="Laundry Light" DISPLAY_NAME="LAUNDRY_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="02" ACTIVE="Y" NAME="Lounge Light" DISPLAY_NAME="LOUNGE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="3C" ACTIVE="Y" NAME="Lounge LV Light" DISPLAY_NAME="LOUNGE_LV_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="34" ACTIVE="Y" NAME="Masterbed Light" DISPLAY_NAME="MASTERBED_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="35" ACTIVE="Y" NAME="Masterbed Wall Light 1" DISPLAY_NAME="MASTERBED_WALL_1_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="36" ACTIVE="Y" NAME="Masterbed Wall Light 2" DISPLAY_NAME="MASTERBED_WALL_2_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="26" ACTIVE="Y" NAME="Lower Level Stair Light" DISPLAY_NAME="LOWER_STAIR_LIGHT" TYPE="Monitored" />
+
+
+<!-- Upstairs -->
+    <LIGHT_CBUS KEY="38" ACTIVE="Y" NAME="Bed 3 Light" DISPLAY_NAME="BED3_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="3A" ACTIVE="Y" NAME="Bed 4 Light" DISPLAY_NAME="BED4_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="33" ACTIVE="Y" NAME="Middle Stairs Light" DISPLAY_NAME="MIDDLE_STAIRS_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="22" ACTIVE="Y" NAME="Roof Space Light" DISPLAY_NAME="ROOF_SPACE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="39" ACTIVE="Y" NAME="Theatre Light" DISPLAY_NAME="THEATRE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="23" ACTIVE="Y" NAME="Theatre Fluro Light 1" DISPLAY_NAME="THEATRE_FLURO_1_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="24" ACTIVE="Y" NAME="Theatre Fluro Light 2" DISPLAY_NAME="THEATRE_FLURO_2_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="25" ACTIVE="Y" NAME="Theatre Fluro Light 3" DISPLAY_NAME="THEATRE_FLURO_3_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="27" ACTIVE="Y" NAME="Study Store" DISPLAY_NAME="STUDY_STORE_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="3B" ACTIVE="Y" NAME="Top of Stairs Light" DISPLAY_NAME="TOP_STAIRS_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1C" ACTIVE="Y" NAME="Bath 2 Light" DISPLAY_NAME="BATH2_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1F" ACTIVE="Y" NAME="Bath 2 Fan" DISPLAY_NAME="BATH2_FAN" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="21" ACTIVE="Y" NAME="Bath 2 LV Light" DISPLAY_NAME="BATH2_LV_LIGHT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="1E" ACTIVE="Y" NAME="Bath 2 1st Heat" DISPLAY_NAME="BATH2_1_HEAT" TYPE="Monitored" />
+    <LIGHT_CBUS KEY="20" ACTIVE="Y" NAME="Bath 2 2nd Heat" DISPLAY_NAME="BATH2_2_HEAT" TYPE="Monitored" />
+
+	<!-- PIRs - (IP) -->
+	<TOGGLE_INPUT KEY="01" NAME="Entry PIR" DISPLAY_NAME="ENTRY_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="02" NAME="Dining Room PIR" DISPLAY_NAME="DINING_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="03" NAME="Lounge Room PIR" DISPLAY_NAME="LOUNGE_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="04" NAME="Family Room PIR"  DISPLAY_NAME="FAMILY_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="05" NAME="Downstairs Hall PIR"  DISPLAY_NAME="HALL_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="06" NAME="Laundry Door Reed"  DISPLAY_NAME="LAUNDRY_DOOR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="07" NAME="Master Bedroom PIR"  DISPLAY_NAME="MASTERBED_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="08" NAME="Downstairs Smoke Detector"  DISPLAY_NAME="DOWNSTAIRS_SMOKE" TYPE="Input" />
+	<TOGGLE_INPUT KEY="09" NAME="Office PIR"  DISPLAY_NAME="STUDY_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0A" NAME="Downstairs Hall PIR"  DISPLAY_NAME="HALL_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0B" NAME="Garage PIR"  DISPLAY_NAME="GARAGE_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0C" NAME="Landing PIR"  DISPLAY_NAME="LANDING_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0D" NAME="Theatre PIR"  DISPLAY_NAME="THEATRE_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0E" NAME="Upstairs Smoke Detector"  DISPLAY_NAME="UPSTAIRS_SMOKE" TYPE="Input" />
+	<TOGGLE_INPUT KEY="0F" NAME="Tessa's Room PIR"  DISPLAY_NAME="BED3_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="10" NAME="Ainslee's Room PIR"  DISPLAY_NAME="BED4_PIR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="11" NAME="Front Gate Reed"  DISPLAY_NAME="FRONT_GATE" TYPE="Input" />
+	<TOGGLE_INPUT KEY="12" NAME="Garage Door Reed"  DISPLAY_NAME="GARAGE_DOOR" TYPE="Input" />
+	<TOGGLE_INPUT KEY="13" NAME="Light Level Sensor"  DISPLAY_NAME="LIGHT_SENSOR" TYPE="Input" />
+
+    
+	<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell" TYPE="monitored" />
+	<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone" TYPE="monitored" />
+	<ALERT KEY="" ACTIVE="N" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange" TYPE="monitored" />
+
+	<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Phone Trouble" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort (disarmed in &lt; 90 seconds)" ALERT_TYPE="System" CLIENT_CAT="Serious" TYPE="monitored" />
+	<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Siren Tamper" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Fire (Response-activated)" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Panic (Response-activated)" ALERT_TYPE="System" TYPE="monitored" />
+	<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System" TYPE="monitored" />
+
+	<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="ID" TYPE="monitored" />
+	<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="ID" TYPE="monitored" />
+	<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="Doorbell pressed"  ALERT_TYPE="ID" TYPE="monitored" />
+	<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Communications Failure (RS485)" TYPE="monitored" />
+	<ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="Singin Tamper" ALERT_TYPE="ID" TYPE="monitored" />
+
+	<ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="Intruder" ALERT_TYPE="Zone" TYPE="monitored" />
+	<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Zone" TYPE="monitored" />
+	<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Zone" TYPE="monitored" />
+	<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Bypass" ALERT_TYPE="Zone" TYPE="monitored" />
+	<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Zone" TYPE="monitored" />
+
+	<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="User" TYPE="monitored" />
+	<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Arm Failure" ALERT_TYPE="User" TYPE="monitored" />
+	<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Security Off" ALERT_TYPE="User" TYPE="monitored" />
+	<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="User" TYPE="monitored" />
+	<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="User" TYPE="monitored" />
+
+	<ALERT KEY="17" DISPLAY_NAME="PHONE" MESSAGE="New Message for " ALERT_TYPE="User" TYPE="monitored" />
+	<!-- Special note; Alert 17 , is also used for system startup phone message reporting -->
+
+
+
+	<!--  Correspond to AL command codes; ALERT_TYPE is the differentiation between various alert types -->
+	<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Intruder Alarm" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Phone Line Trouble" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Arm Fail" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Zone Alert" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="Panic" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0C" DISPLAY_NAME="ALARM" MESSAGE="Fire" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Gas" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Family Care" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="0F" DISPLAY_NAME="ALARM" MESSAGE="Perimeter Alert" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Bypass Zone" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="System Disarmed" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="CMS Test" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Siren Trouble" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="RS485 Comms Fail" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Doorbell (Away)" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+	<ALERT KEY="1B" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="Alarm Type" TYPE="monitored" />
+
+  </DEVICE>
+ 
+</CONFIG>
+			

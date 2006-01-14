@@ -1,0 +1,77 @@
+The major interfaces are
+
+	DeviceModel
+	DeviceType
+	CommandInterface
+
+	A device model represents a house controller; eg. Comfort, CBUS controller, Tutondo etc.
+	A device type is a particular instance of a house item. eg. Audio speakers, Cbus light, X10 light etc.
+	A command represents something passing through the controller; eg. a message sent from flash, or a message created by an RS232 string being received
+
+	A device type is generic; the device model knows how to 'render' a device type into an action it can do ; eg. A cbus light is turned on.
+
+	A utility BaseModel class is availlable for deviceModels to subclass if desired; it provides most common functions a deviceModel will have to provide.
+
+	A logger object is available to all classes; called au.com.BI.House and the object sits in au.com.BI.Logger
+
+	The major event queue processing occurs in the contoller class controller (au.com.BI.controller). Every model also has a communications layer (au.com.BI.comms) and references the configuration object (au.com.BI.Config).   Pretty much all the other classes are utility classes; or type classes.
+
+	The central controller is au.com.BI.Home.Controller .  All messages in the system pass first through the controller with the exception of flash methods. These are rebroadcast to all other flash controllers instances, and hence all flash clients, as they come in and then are sent to the controller; this ensures visual consistency.
+
+	All device models sit in the same thread space as the controller; but many will have other threads for specific purposes (eg. comfort has a thread that wakes up every 30 seconds to poll analogue inputs).
+
+	System setup happens by the controller calling readConfig in the Config object.
+	readConfig  dynamically creates device models as they are found in the config file; and it populates them by reading assicated XML data. This config object does not know a great deal about individual lines, instead calls the appropriate addDeviceX methods in the individual device model.
+
+	Three device types are present Input, Output or Monitored.
+
+Input items are inputs to the controller (eg. doorbells, toggle outputs)
+Ouput items are flash targets (Output_Name in the config file)
+Monitored items are watched but cannot be changed by the system. (eg. light switches)
+ (I am not completely convinced that having monitored and input rather than just 1 is a good idea).
+
+	A helper object for deviceModels,  ConfigHelper, has methods to handle lists of Input, Monitored or Output items.
+
+	Once the config has been read a hook method finisheReadingConfig is called in each model. This allows an object to do any setup required knowing the configuration information is in place.
+
+	Communications layers are attached to each model using the attachComms method.
+
+	Next doSetup is called in each model; this is where each model will query as many physical deviceTypes attached as is possible.
+
+	All flash messages are added to Cache objects in each model; (keeping the state) and are broadcast to the flash clients.
+
+	The flash controller objects are set up and listen for clients to connect.
+
+	The main controller loop is now entered.
+
+
+
+	When a flash client connects, the flash controller broadcasts all known cache information to that client.
+
+	All flash client commands are stored in the cache and broadcast to all other flash clients.
+
+	The command is then added to the command queue and the controller is signalled.
+
+
+
+	When a message comes through a communication channel for a deviceModel , the message is added to the queue (the thread safe list CommandList)  and the controller is signalled.
+
+
+
+
+	The main controller loops looks for items added to the CommandList, if they are found the DeviceModel with the Comms object they orginated from is queried (via doIControl) to determine if it controls this command. The general pattern a model will use is to parse the structure of the command, and then test for 'key' presence in the ConfigHelper lists. For input and monitored types the key is the Key specified in the config file. For Output the key is the Display_Name in the config file.
+
+	If the deviceModel (doIControl) returns true , the controller then calls doCommand in the model for this object.
+
+	DoCommand is the primary interface for a model to make things happen. The general pattern that occurs is to go through a large switch chain to find the function for the particular DeviceType. The device object is accessible to a deviceModel via the appropriate getMonitoredDevice, getOutputDevice etc... call. The actual representation of these are hashMaps inside the configHelper so that lookup is extremely fast and involves so iterations.
+	DeviceType objects are initially configured by the readConfig method, added to Output, Input or Monitored hash tables in the ConfigHelper Object. The actual type of any device is accessible via it's getDeviceType method. This returns a constant from the au.com.BI.util.DeviceType interface.
+
+	Do command will generally create a resulting message; usually a flash message to display what was received, or a message to be sent through the comms layer back to the physical device. Flash messages are added again to the CommandList queue; comms commands are sent directly to the communication device attached to the model (eg. serial or IP)
+
+
+	Macros are recorded as sequences of command structures. When a macro is executed they commands are added to the command queue in sequence; with any appropriate time delays delaying the messages. Each macro runs in its own thread which terminates once the macro completes. MacroHandler is the main controller class for these objects. When the controller receives a RunMacro command on the queue, it calls MacroHandler passing the macro name. 
+
+	Calendars are timed invocations of macros. Every minute a timer wakes up and tests for any macros due to run. Each calendar event is represented by a MacroEvent object, this object returns true when shouldIRun is executed, if it should run at this timestamp. If so the TimedMacro object will run a macro using the MacroHandler object.
+
+	Scripts will be interfaced via a DeviceModel, similar to any physical devices. The package au.com.BI.Script.model will be the main file. Command objects are present for use by the model. When scripts 'register' for events; they will be added to the Output types in the configHelper object, referencing that model. In that way the main controller loop will automatically call the doCommand method in the script model when required. The doIControl method in the model determines if a particularly message (command) is under the models control, it should not need to be modified. If a script wishes to send a message on to the controller if will create a Command object and add it to the controller queue (commandList). CommandList is a synchronized list, so care should be taken to always access it in a thread safe manner. 
+	When a message found to be controlled by the model occurs the function registered will be called with the following parameters parsed from the XML;  (message_tag, display_name, command, extra, extra1, extra2, extra3, extra4).  Extra fields are merely parameters. A create message method is provided in the model object to create new commands from script files and add them to the main controller queue.
