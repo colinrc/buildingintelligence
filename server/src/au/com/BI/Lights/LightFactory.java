@@ -123,20 +123,8 @@ public class LightFactory {
 		
 
 		if (connectionType == DeviceType.LIGHT_DYNALITE_AREA) {
-			String areaCode = element.getAttributeValue("AREA");
-			int channel = 0;
-			int box = 0;
-			if (areaCode != null) {
-				theLight.setAreaCode(areaCode);
-			}
-	
-			try {
-				channel = Integer.parseInt(key,16);
-			}
-			catch (Exception ex){
-				logger.log (Level.WARNING,"Dynalight entry was not configured correctly in the configuration file " + 
-						((DeviceType)theLight).getName());
-			}
+			theLight.setAreaCode(key);
+			theLight.setAreaDevice(true);
 		}
 
 		targetDevice.addControlledItem(key, theLight, type);

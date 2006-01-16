@@ -35,4 +35,11 @@ public interface CBUSDevice {
 	public String getGroupName ();
 	
 	public boolean supportsLevelMMI ();
+	
+	public boolean isAreaDevice( );
+	/**
+	 * @return Sets if the device represents an area instead of a channel
+	 */
+	public void setAreaDevice( boolean area);
+
 }

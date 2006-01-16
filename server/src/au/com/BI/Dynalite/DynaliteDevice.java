@@ -8,6 +8,18 @@ package au.com.BI.Dynalite;
 public interface DynaliteDevice {
 	public static final int Linear = 0;
 	public static final int Classic = 1;
+	
+	/**
+	 * @return Returns if the device represents an area instead of a channel
+	 */
+	public boolean isAreaDevice( );
+
+	/**
+	 * @return Returns if the device represents an area instead of a channel
+	 */
+	public void setAreaDevice( boolean area);
+
+	
 	/**
 	 * @return Returns the areaCode.
 	 */

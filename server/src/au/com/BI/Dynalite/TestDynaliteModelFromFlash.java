@@ -120,16 +120,16 @@ public class TestDynaliteModelFromFlash extends TestCase {
 	}
 	
 	public void testFindSingleDevice () {
-		DynaliteDevice dev = model.findSingleDevice(2,3,false);
+		DynaliteDevice dev = model.findSingleDevice(DynaliteHelper.Light,2,3,false);
 		assertEquals ("Find Single Device found incorrect device",dev,testWithChannelA02C03);
 
-		DynaliteDevice dev4 = model.findSingleDevice(2,2,true);
+		DynaliteDevice dev4 = model.findSingleDevice(DynaliteHelper.Light,2,2,true);
 		assertEquals ("Find Single Device found incorrect device",dev,testWithChannelA02C03);
 
-		DynaliteDevice dev2 = model.findSingleDevice(3,0,false);
+		DynaliteDevice dev2 = model.findSingleDevice(DynaliteHelper.Light,3,0,false);
 		assertEquals ("Find Single Device found incorrect device",dev2,testAreaOnly);
 
-		DynaliteDevice dev3 = model.findSingleDevice(1,3,false);
+		DynaliteDevice dev3 = model.findSingleDevice(DynaliteHelper.Light,1,3,false);
 		assertEquals ("Find Single Device incorrectly found a device",dev3,null);
 		
 	}

@@ -22,7 +22,8 @@ public class CBUS extends BaseDevice implements LightDevice,CBUSDevice
 	protected int max = 255;
 	protected String rampRate = "4";
 	protected String relay = "N";
-	
+	protected boolean areaDevice = false;
+
 	
 	public CBUS (String name, int deviceType){
 		this.name = name;
@@ -93,6 +94,14 @@ public class CBUS extends BaseDevice implements LightDevice,CBUSDevice
 
 	public void setRelay(String relay) {
 		this.relay = relay;
+	}
+
+	public boolean isAreaDevice() {
+		return areaDevice;
+	}
+
+	public void setAreaDevice(boolean areaDevice) {
+		this.areaDevice = areaDevice;
 	}
 	
 

@@ -43,6 +43,38 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 		}
 
 	}
+	
+	/**
+	 * @return Returns if the device represents an area instead of a channel
+	 */
+	public boolean isAreaDevice( ) {
+		if (light.getDeviceType() == DeviceType.LIGHT_CBUS ){
+			return ((CBUSDevice)light).isAreaDevice();
+		}
+	
+		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE ){
+			return false;
+		}
+		
+		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE_AREA ){
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @return Returns if the device represents an area instead of a channel
+	 */
+	public void setAreaDevice( boolean areaFlag) {
+		if (light.getDeviceType() == DeviceType.LIGHT_CBUS ){
+			((CBUSDevice)light).setAreaDevice(areaFlag);
+		}
+	
+		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE ){
+			((DynaliteDevice)light).setAreaDevice(areaFlag);
+		}
+	}
 
 	public LightFascade (String name, int deviceType, String outputKey,String deviceName){
 		this (name,deviceType,deviceName);

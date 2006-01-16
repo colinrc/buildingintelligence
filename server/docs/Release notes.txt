@@ -1,3 +1,9 @@
+14/1/2006
+Corrected bug in IP listener for fixed length packets, if two packets were received before the 
+first is processed it was possible for the second to overwrite the first. This could have effected
+CBUS, Tutondo on protocol A, Dynalight, Pelco, when connected via IP.
+
+
 12/1/2006
 Released V1.5b7
 

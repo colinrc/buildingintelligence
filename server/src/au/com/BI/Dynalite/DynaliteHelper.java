@@ -18,11 +18,15 @@ import au.com.BI.Util.Utility;
 public class DynaliteHelper {
 	private Logger logger;
 	
+	static final char Light = 'L';
+	static final char IR = 'I';
+	static final char Button = 'C';
+	
 	public DynaliteHelper () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
-	public String buildKey (String areaCode, String channelCodeStr) {
+	public String buildKey (char code,String areaCode, String channelCodeStr) {
 		int channelCode = 0;
 		if (channelCodeStr.equals("")) {
 			channelCode = 255;
@@ -32,21 +36,21 @@ public class DynaliteHelper {
 			} catch (NumberFormatException ex){}
 		}
 		//if (channelCode > 0 ) channelCode --;
-		if (areaCode.equals("")) areaCode="01";
-		String resultKey = Utility.padString(areaCode) + ":" + Utility.padStringTohex(channelCode);
+		if (areaCode == null || areaCode.equals("")) areaCode="01";
+		String resultKey = code + ":" + Utility.padString(areaCode) + ":" + Utility.padStringTohex(channelCode);
 		return resultKey.toUpperCase();
 	}
 	
-	public String buildKey (String areaCode, int channelCode) {
-		return buildKey (areaCode,Utility.padStringTohex(channelCode));
+	public String buildKey (char code,String areaCode, int channelCode) {
+		return buildKey (code,areaCode,Utility.padStringTohex(channelCode));
 	}
 
-	public String buildKey (int areaCode, int channelCode) {
-		return buildKey (Utility.padStringTohex(areaCode), Utility.padStringTohex(channelCode));
+	public String buildKey (char code,int areaCode, int channelCode) {
+		return buildKey (code,Utility.padStringTohex(areaCode), Utility.padStringTohex(channelCode));
 	}
 
-	public String buildKey (int boxCode, String switchNumber) {
-		return buildKey (Utility.padStringTohex(boxCode),Utility.padString(switchNumber));
+	public String buildKey (char code,int boxCode, String switchNumber) {
+		return buildKey (code, Utility.padStringTohex(boxCode),Utility.padString(switchNumber));
 	}
 
 	public int scaleLevelForFlash(byte level) throws NumberFormatException {

@@ -89,22 +89,26 @@ public class Model extends BaseModel implements DeviceModel {
 				DynaliteDevice device = (DynaliteDevice)details;
 				if (((DeviceType)details).getDeviceType() == DeviceType.LIGHT_DYNALITE ) {
 					String areaCode = ((DynaliteDevice)details).getAreaCode() ;
-					theKey = dynaliteHelper.buildKey(areaCode,key);
+					theKey = dynaliteHelper.buildKey('L',areaCode,key);
 
 					areaCodes.addKey (areaCode);
 				}
 				if (((DeviceType)details).getDeviceType() == DeviceType.LIGHT_DYNALITE_AREA) {
-					theKey = dynaliteHelper.buildKey(key,0);
+					theKey = dynaliteHelper.buildKey('L',key,0);
 					areaCodes.addKey (theKey);
 				}
 			}
 			if (controlType == DeviceType.INPUT)  {
 				DynaliteInputDevice device = (DynaliteInputDevice)details;
-				if (((DeviceType)details).getDeviceType() == DeviceType.IR || 
-						(((DeviceType)details).getDeviceType() == DeviceType.CONTACT_CLOSURE)) {
+				if (((DeviceType)details).getDeviceType() == DeviceType.IR ) {
 					int box = device.getBox() ;
-					theKey = dynaliteHelper.buildKey(box,key);
+					theKey = dynaliteHelper.buildKey('I',box,key);
 				}
+				if (((DeviceType)details).getDeviceType() == DeviceType.CONTACT_CLOSURE) {
+					int box = device.getBox() ;
+					theKey = dynaliteHelper.buildKey('C',box,key);
+				}
+
 				if (((DeviceType)details).getDeviceType() == DeviceType.SENSOR) {
 					theKey = name;
 				}
@@ -142,7 +146,7 @@ public class Model extends BaseModel implements DeviceModel {
 			String nextArea = nextItem.getAreaCode();
 			if (area.equals (nextArea) || areaCodes.isJoined (area,nextArea)){
 				
-				String fullKey = dynaliteHelper.buildKey(nextItem.getAreaCode(),nextItem.getChannel());
+				String fullKey = dynaliteHelper.buildKey('L',nextItem.getAreaCode(),nextItem.getChannel());
 
 				DynaliteOutput result = this.buildDynaliteLevelRequestCommand(nextItem.getAreaCode(),nextItem.getChannel(),nextItem.getOutputKey(),255);
 				CommsCommand dynaliteCommsCommand = new CommsCommand();
@@ -165,7 +169,7 @@ public class Model extends BaseModel implements DeviceModel {
 				DeviceType nextDevice = (DeviceType)configHelper.getControlItem(nextKey);
 				if (nextDevice.getDeviceType() == DeviceType.LIGHT_DYNALITE )  {
 					DynaliteDevice nextItem = (DynaliteDevice)nextDevice;
-					String fullKey = dynaliteHelper.buildKey(nextItem.getAreaCode(),nextItem.getChannel());
+					String fullKey = dynaliteHelper.buildKey('L',nextItem.getAreaCode(),nextItem.getChannel());
 					if (nextItem.getChannel() == AreaCommand) continue; // cannot query level of an area
 					DynaliteOutput result = this.buildDynaliteLevelRequestCommand(nextItem.getAreaCode(),nextItem.getChannel(),nextItem.getOutputKey(),255);
 					CommsCommand dynaliteCommsCommand = new CommsCommand();
@@ -223,7 +227,7 @@ public class Model extends BaseModel implements DeviceModel {
 				switch (device.getDeviceType()) {
 					case DeviceType.LIGHT_DYNALITE :
 						DynaliteDevice lightDevice = (DynaliteDevice)device;
-						String fullKey = this.dynaliteHelper.buildKey(lightDevice.getAreaCode(),lightDevice.getKey());
+						String fullKey = this.dynaliteHelper.buildKey('L',lightDevice.getAreaCode(),lightDevice.getKey());
 	
 						if ((outputDynaliteCommand = buildDynaliteResult ((DynaliteDevice)device,command)) != null) {
 							try {
@@ -243,7 +247,7 @@ public class Model extends BaseModel implements DeviceModel {
 						
 					case DeviceType.LIGHT_DYNALITE_AREA :
 						DynaliteDevice lightArea = (DynaliteDevice)device;
-						String fullKeyStr = this.dynaliteHelper.buildKey(lightArea.getAreaCode(),lightArea.getKey());
+						String fullKeyStr = this.dynaliteHelper.buildKey('L',lightArea.getAreaCode(),lightArea.getKey());
 	
 						if ((outputDynaliteCommand = buildDynaliteResult ((DynaliteDevice)device,command)) != null) {
 							try {
@@ -316,10 +320,18 @@ public class Model extends BaseModel implements DeviceModel {
 		return deviceList;
 	}
 
-	public DynaliteInputDevice findInputDevice (int box, int channel){
+	public DynaliteInputDevice findIRDevice ( int box, int channel){
+		return findInputDevice (DynaliteHelper.IR,box,channel);
+	}
+
+	public DynaliteInputDevice findButton ( int box, int channel){
+		return findInputDevice (DynaliteHelper.Button,box,channel);
+	}
+
+	public DynaliteInputDevice findInputDevice (char code, int box, int channel){
 		DynaliteInputDevice result = null;
 		try {
-			String theKey = dynaliteHelper.buildKey(box,channel);
+			String theKey = dynaliteHelper.buildKey(code,box,channel);
 			result = (DynaliteInputDevice)configHelper.getInputItem(theKey);
 			return result;
 		} catch (ClassCastException ex){
@@ -328,13 +340,13 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public DynaliteDevice findSingleDevice (int areaKey, int channel,boolean origin0){
+	public DynaliteDevice findSingleDevice (char code,int areaKey, int channel,boolean origin0){
 		DynaliteDevice result = null;
 		try {
 			if (origin0){
-				result = (DynaliteDevice)configHelper.getControlledItem(dynaliteHelper.buildKey(areaKey,channel+1));
+				result = (DynaliteDevice)configHelper.getControlledItem(dynaliteHelper.buildKey(code,areaKey,channel+1));
 			} else {
-				result = (DynaliteDevice)configHelper.getControlledItem(dynaliteHelper.buildKey(areaKey,channel));				
+				result = (DynaliteDevice)configHelper.getControlledItem(dynaliteHelper.buildKey(code,areaKey,channel));				
 			}
 			return result;
 		} catch (ClassCastException ex){
@@ -349,14 +361,14 @@ public class Model extends BaseModel implements DeviceModel {
 		int irNumber = msg[4];
 		int irBox = msg[2];
 		if (msg[6] == 0) {
-			DynaliteInputDevice irDevice = this.findInputDevice(irBox,irNumber);
+			DynaliteInputDevice irDevice = this.findIRDevice(irBox,irNumber);
 			if (irDevice != null) {
 				dynResult = buildCommandForFlash ((DeviceType)irDevice,"off",0,0,255,this.currentUser);
 				result.decoded.add(dynResult);
 			}
 		}
 		else {
-			DynaliteInputDevice irDevice = this.findInputDevice(irBox,irNumber);
+			DynaliteInputDevice irDevice = this.findIRDevice(irBox,irNumber);
 			if (irDevice != null) {
 				dynResult= buildCommandForFlash ((DeviceType)irDevice,"on",100,0,255,this.currentUser);
 				result.decoded.add(dynResult);
@@ -371,7 +383,7 @@ public class Model extends BaseModel implements DeviceModel {
 		int presetNumber = msg[2];
 		int area = msg[1];
 
-		DynaliteDevice areaDevice = this.findSingleDevice(area, 0, false);
+		DynaliteDevice areaDevice = this.findSingleDevice(DynaliteHelper.Light,area, 0, false);
 		if (areaDevice != null) {
 			dynResult = buildCommandForFlash ((DeviceType)areaDevice,"preset",presetNumber+1,0,255,this.currentUser);
 			result.decoded.add(dynResult);
@@ -388,14 +400,14 @@ public class Model extends BaseModel implements DeviceModel {
 		int switchKey = msg[2];
 		boolean buttonPressed = false;
 		if (msg[6] == 0) {
-			DynaliteInputDevice switchDevice = this.findInputDevice(switchKey,buttonNumber);
+			DynaliteInputDevice switchDevice = this.findButton(switchKey,buttonNumber);
 			if (switchDevice != null) {
 				dynResult = buildCommandForFlash ((DeviceType)switchDevice,"off",0,0,255,this.currentUser);
 				result.decoded.add(dynResult);
 			}
 		}
 		else {
-			DynaliteInputDevice switchDevice = this.findInputDevice(switchKey,buttonNumber);
+			DynaliteInputDevice switchDevice = this.findButton(switchKey,buttonNumber);
 			if (switchDevice != null) {
 				dynResult = buildCommandForFlash ((DeviceType)switchDevice,"on",100,0,255,this.currentUser);
 				result.decoded.add(dynResult);
@@ -432,7 +444,7 @@ public class Model extends BaseModel implements DeviceModel {
 		byte area = msg[1];
 		byte offset = (byte)(msg[2] & 0xf);
 		this.setOffset(area,offset);
-		DynaliteDevice dev = this.findSingleDevice(area,0,false);
+		DynaliteDevice dev = this.findSingleDevice(DynaliteHelper.Light,area,0,false);
 		if (dev != null) {
 			dynResult = buildCommandForFlash ((DeviceType)dev,"offset",offset,-1,msg[6],this.currentUser);
 			result.decoded.add(dynResult);
@@ -453,7 +465,6 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public void interpretClassicPreset (InterpretResult result, byte msg[]) {
 			CommandInterface dynResult = null;
-			int level = dynaliteHelper.scaleLevelForFlash(msg[2]);
 			int area = msg[1];
 			int presetBase = msg[4];
 			int presetOffset = 0;
@@ -486,7 +497,7 @@ public class Model extends BaseModel implements DeviceModel {
 			DynaliteDevice dev = null;
 
 						
-			dev = findSingleDevice (area,0,false);
+			dev = findSingleDevice (DynaliteHelper.Light,area,0,false);
 			if (dev != null){
 				dynResult = buildCommandForFlash ((DeviceType)dev,"preset",presetNumber,0,255,this.currentUser);		
 				result.decoded.add(dynResult);
@@ -535,7 +546,7 @@ public class Model extends BaseModel implements DeviceModel {
 				commandStr = "on";
 			}
 						
-			dev = findSingleDevice (area,channel,false);
+			dev = findSingleDevice (DynaliteHelper.Light,area,channel,false);
 			if (dev != null){
 				dynResult = buildCommandForFlash ((DeviceType)dev,commandStr,level,rate,255,this.currentUser);		
 				result.decoded.add(dynResult);
@@ -573,7 +584,7 @@ public class Model extends BaseModel implements DeviceModel {
 				}
 				
 			} else {
-				dev = findSingleDevice (area,channel,true);
+				dev = findSingleDevice (DynaliteHelper.Light,area,channel,true);
 				if (dev != null){
 					dynResult = buildCommandForFlash ((DeviceType)dev,"on",level,rate,255,this.currentUser);		
 					result.decoded.add(dynResult);
@@ -597,7 +608,7 @@ public class Model extends BaseModel implements DeviceModel {
 				result.decoded.add(dynResult);
 			}
 		} else {
-			dev = findSingleDevice (area,channel,true);
+			dev = findSingleDevice (DynaliteHelper.Light,area,channel,true);
 			if (dev != null){
 				dynResult = buildCommandForFlash ((DeviceType)dev,"on",level,0,255,this.currentUser);		
 				result.decoded.add(dynResult);
@@ -624,11 +635,11 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void 	interpretChannelLevel (InterpretResult result, byte msg[])
+	public void interpretChannelLevel (InterpretResult result, byte msg[])
 	{
 		CommandInterface dynResult = null;
 		int area = msg[1];
-		DynaliteDevice lightDev = this.findSingleDevice(area,msg[2],true);
+		DynaliteDevice lightDev = this.findSingleDevice(DynaliteHelper.Light,area,msg[2],true);
 		if (lightDev != null) {
 			if (msg[4] == (byte)255){
 				dynResult = buildCommandForFlash ((DeviceType)lightDev,"off",0,0,255,this.currentUser);		
@@ -741,18 +752,18 @@ public class Model extends BaseModel implements DeviceModel {
 			byte join = dynaliteHelper.findJoin (command.getExtra3Info(),result);
 
 			if (this.protocol == DynaliteDevice.Linear) {
-				 dynaliteReturn =buildDynaliteLinearPresetCommand ( device.getAreaCode(), 
+				 dynaliteReturn =buildDynaliteLinearPresetCommand ( device.getKey(), 
 						 presetNumber,command.getExtra2Info(),join);
 			}
 			else {
-				 dynaliteReturn =buildDynaliteClassicPresetCommand ( device.getAreaCode(),
+				 dynaliteReturn =buildDynaliteClassicPresetCommand ( device.getKey(),
 						 presetNumber,command.getExtra2Info(),join);				
 			}
 			if (presetNumber.equals("4")) {
 				
 			} else {
 				try {
-					this.requestAllLevels(device.getAreaCode(),join);
+					this.requestAllLevels(device.getKey(),join);
 				} catch (CommsFail ex){
 					dynaliteReturn.isError = true;
 					dynaliteReturn.ex = ex;
@@ -785,9 +796,14 @@ public class Model extends BaseModel implements DeviceModel {
 		if (theCommand.equals("off") ) {
 
 			 int level = 255;
-	
-			 dynaliteReturn =buildDynaliteRampToCommand ( device.getAreaCode(), device.getKey(),
-						level,command.getExtra2Info(),command.getExtra3Info());
+
+			 if (device.isAreaDevice()) {
+				 dynaliteReturn =buildDynaliteRampToCommand ( device.getKey(),"0",
+							level,command.getExtra2Info(),command.getExtra3Info());
+			 } else {
+				 dynaliteReturn =buildDynaliteRampToCommand ( device.getAreaCode(), device.getKey(),
+							level,command.getExtra2Info(),command.getExtra3Info());
+			 }
 			commandFound = true;
 		}
 
@@ -907,7 +923,7 @@ public class Model extends BaseModel implements DeviceModel {
 		
 		if (this.protocol == DynaliteDevice.Classic) {
 			
-			if (channel != 255){
+			if (channel != 0){
 				dynaliteOutput.outputCodes[0] = 0x1c;
 				dynaliteOutput.outputCodes[1] = (byte)area;
 				dynaliteOutput.outputCodes[2] = (byte)level;
@@ -929,7 +945,7 @@ public class Model extends BaseModel implements DeviceModel {
 			}			
 		} else {
 				
-			if (channel != 255){
+			if (channel != 0){
 				dynaliteOutput.outputCodes[0] = 0x1c;
 				dynaliteOutput.outputCodes[1] = (byte)area;
 				dynaliteOutput.outputCodes[2] = (byte)(channel-1);

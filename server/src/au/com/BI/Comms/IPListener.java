@@ -110,7 +110,7 @@ public class IPListener extends Thread implements CommsListener
 	public void run () {
 		handleEvents = true;
         int bytesRead = 0;
-		byte readArray[] =  new byte [transmitOnBytes + 1];
+		byte readArray[] =  new byte [transmitOnBytes ];
 
 		if (is == null) return;
 		
@@ -152,14 +152,15 @@ public class IPListener extends Thread implements CommsListener
 							} else {
 								break;
 							}
-							if (startPos + bytesRead >=  transmitOnBytes) break;
+							if (startPos  >=  transmitOnBytes) break;
 				   }
 				   if (startPos != 0) {
-					   str = new String (readArray);
+					   byte retArray[] = (byte [])readArray.clone(); 
+					   str = new String (retArray);
 						logger.log (Level.FINEST,"Received ip packet : " + str);
 
 						CommsCommand command = new CommsCommand (str,"RawText",null);
-						command.setCommandBytes(readArray);
+						command.setCommandBytes(retArray);
 						command.setTargetDeviceModel(this.targetDeviceModel);
 						synchronized (commandList){
 							commandList.add (command);

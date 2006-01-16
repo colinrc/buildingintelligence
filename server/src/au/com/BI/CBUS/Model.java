@@ -487,7 +487,6 @@ public class Model extends BaseModel implements DeviceModel {
 					}
 					return;
 				}
-				firstChar = cBUSString.charAt(0);
 
 				int cbusStartByte = 0;
 				try {

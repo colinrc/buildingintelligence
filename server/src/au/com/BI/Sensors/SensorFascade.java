@@ -49,7 +49,14 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	public void setRelay(String relay) {
 		sensor.setRelay(relay);
 	}
-	
+
+	public boolean isAreaDevice () {
+		return false;
+	}
+
+	public void setAreaDevice (boolean flag) {
+	}
+
 	public boolean supportsLevelMMI() {
 		return false;
 	}

@@ -24,7 +24,8 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 	protected String relay = "N";
 	protected int channel = 0;
 	protected int box = 0;
-	
+
+	protected boolean areaDevice = false;
 	
 	public Dynalite (String name, int deviceType){
 		this.name = name;
@@ -132,6 +133,16 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 
 	public void setMax(int max) {
 		this.max = max;
+	}
+
+
+	public boolean isAreaDevice() {
+		return areaDevice;
+	}
+
+
+	public void setAreaDevice(boolean areaDevice) {
+		this.areaDevice = areaDevice;
 	}
 
 

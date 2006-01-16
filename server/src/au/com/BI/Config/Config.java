@@ -485,6 +485,10 @@ public class Config {
 						lightFactory.addLight( deviceModel, clientModels, item, DeviceType.MONITORED,
 								DeviceType.LIGHT_DYNALITE,groupName,rawHelper);
 					}
+					if (itemName.equals("LIGHT_DYNALITE_AREA")) {
+						lightFactory.addLightArea( deviceModel, clientModels, item, DeviceType.MONITORED,
+								DeviceType.LIGHT_DYNALITE_AREA,groupName,rawHelper);
+					}
 					if (itemName.equals("SENSOR")) {
 						sensorFactory.addSensor(deviceModel, clientModels, item, DeviceType.MONITORED,
 								DeviceType.SENSOR,groupName,rawHelper);
