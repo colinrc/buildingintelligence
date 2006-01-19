@@ -125,6 +125,6 @@ class Forms.Project.Device.CbusSensors {
 			newSensor.attributes["UNITS"] = sensors_dg.getItemAt(index).units;
 			newSensors.push(newSensor);
 		}
-		_global.left_tree.selectedNode.sensors = newSensors;
+		_global.left_tree.selectedNode.object.setData(new Object({sensors:newSensors}));
 	}
 }

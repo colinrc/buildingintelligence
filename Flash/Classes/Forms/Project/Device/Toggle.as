@@ -2,7 +2,7 @@
 import mx.utils.Delegate;
 class Forms.Project.Device.Toggle {
 	private var save_btn:Button;
-	private var node:XMLNode;
+	private var toggle_type:String;
 	private var toggles:Array;
 	private var toggle_dg:DataGrid;
 	private var update_btn:Button;
@@ -15,7 +15,17 @@ class Forms.Project.Device.Toggle {
 	private var power_ti:TextInput;
 	private var active_chk:CheckBox;
 	public function init() {
-		title_lb.text = node.nodeName;
+		switch(toggle_type){
+			case"TOGGLE_INPUT":
+			title_lb.text = "Toggle Inputs";
+			break;
+			case"TOGGLE_OUTPUT":
+			title_lb.text = "Toggle Outputs";
+			break;
+			case"PULSE_OUTPUT":
+			title_lb.text = "Pulse Outputs";
+			break;
+		}
 		for (var toggle in toggles) {
 			toggle_dg.addItem({name:toggles[toggle].attributes["NAME"], key:toggles[toggle].attributes["KEY"], display_name:toggles[toggle].attributes["DISPLAY_NAME"],power:toggles[toggle].attributes["POWER_RATING"], active:toggles[toggle].attributes["ACTIVE"]});
 		}
@@ -84,20 +94,9 @@ class Forms.Project.Device.Toggle {
 		delete_btn.enabled = true;
 	}
 	public function save():Void {
-		switch(title_lb.text){
-			case"Toggle Inputs":
-			var type = "TOGGLE_INPUT";
-			break;
-			case"Toggle Outputs":
-			var type = "TOGGLE_OUTPUT";
-			break;
-			case"Pulse Outputs":
-			var type = "PULSE_OUTPUT";
-			break;
-		}
 		var newToggles = new Array();
 		for(var index = 0; index < toggle_dg.length; index++){
-			var toggleNode = new XMLNode(1, type);
+			var toggleNode = new XMLNode(1, toggle_type);
 			toggleNode.attributes["NAME"] = toggle_dg.getItemAt(index).name;
 			toggleNode.attributes["KEY"] = toggle_dg.getItemAt(index).key;
 			toggleNode.attributes["DISPLAY_NAME"] = toggle_dg.getItemAt(index).display_name;
@@ -105,6 +104,6 @@ class Forms.Project.Device.Toggle {
 			toggleNode.attributes["POWER_RATING"] = toggle_dg.getItemAt(index).power;
 			newToggles.push(toggleNode);
 		}
-		_global.left_tree.selectedNode.toggles = newToggles;
+		_global.left_tree.selectedNode.object.setData(new Object({toggles:newToggles}));
 	}
 }

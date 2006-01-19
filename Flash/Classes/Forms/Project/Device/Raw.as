@@ -1,9 +1,11 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Raw {
-	private var node:XMLNode;
-	private var device:XMLNode;
-	private var vars_dg:DataGrid;
+	private var command:String;
+	private var code:String;
+	private var extra:String;
+	private var variables:Array;
+	private var variables_dg:DataGrid;
 	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
@@ -14,11 +16,11 @@ class Forms.Project.Device.Raw {
 	private var name_ti:TextInput;
 	private var value_ti:TextInput;
 	public function init() {
-		command_ti.text = node.attributes["COMMAND"];
-		code_ti.text = node.attributes["CODE"];
-		extra_ti.text = node.attributes["EXTRA"];
-		for (var child in device.childNodes) {
-			vars_dg.addItem({name:device.childNodes[child].attributes["NAME"], value:device.childNodes[child].attributes["VALUE"]});
+		command_ti.text = command;
+		code_ti.text = code;
+		extra_ti.text = extra;
+		for (var variable in variables) {
+			variables_dg.addItem({name:variables[variable].attributes["NAME"], value:variables[variable].attributes["VALUE"]});
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -26,49 +28,49 @@ class Forms.Project.Device.Raw {
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
-		vars_dg.addEventListener("change", Delegate.create(this, itemChange));
+		variables_dg.addEventListener("change", Delegate.create(this, itemChange));
 	}
 	private function deleteItem() {
-		vars_dg.removeItemAt(vars_dg.selectedIndex);
-		vars_dg.selectedIndex = undefined;
+		variables_dg.removeItemAt(variables_dg.selectedIndex);
+		variables_dg.selectedIndex = undefined;
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
 	}
 	private function updateItem() {
-		if (vars_dg.selectedIndex != undefined) {
-			vars_dg.getItemAt(vars_dg.selectedIndex).name = name_ti.text;
-			vars_dg.getItemAt(vars_dg.selectedIndex).value = value_ti.text;
+		if (variables_dg.selectedIndex != undefined) {
+			variables_dg.getItemAt(variables_dg.selectedIndex).name = name_ti.text;
+			variables_dg.getItemAt(variables_dg.selectedIndex).value = value_ti.text;
 		} else {
-			vars_dg.addItem({name:name_ti.text, value:value_ti.text});
+			variables_dg.addItem({name:name_ti.text, value:value_ti.text});
 		}
-		vars_dg.selectedIndex = undefined;
+		variables_dg.selectedIndex = undefined;
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
 	}
 	private function newItem() {
-		vars_dg.selectedIndex = undefined;
+		variables_dg.selectedIndex = undefined;
 		name_ti.text = "";
 		value_ti.text = "";
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
 	}
 	private function itemChange(evtObj) {
-		name_ti.text = vars_dg.selectedItem.name;
-		value_ti.text = vars_dg.selectedItem.value;
+		name_ti.text = variables_dg.selectedItem.name;
+		value_ti.text = variables_dg.selectedItem.value;
 		update_btn.enabled = true;
 		delete_btn.enabled = true;
 	}
 	private function save():Void {
-		var newItems = new XMLNode(1, "RAW");
-		for (var index = 0; index<vars_dg.length; index++) {
+		var newItems = new Array();
+		for (var index = 0; index<variables_dg.length; index++) {
 			var item = new XMLNode(1, "VARS");
-			item.attributes["NAME"] = vars_dg.getItemAt(index).name;
-			item.attributes["VALUE"] = vars_dg.getItemAt(index).value;
-			newItems.appendChild(item);
+			item.attributes["NAME"] = variables_dg.getItemAt(index).name;
+			item.attributes["VALUE"] = variables_dg.getItemAt(index).value;
+			newItems.push(item);
 		}
-		_global.left_tree.selectedNode.device = newItems;
-		_global.left_tree.selectedNode.attributes["COMMAND"] = command_ti.text;
-		_global.left_tree.selectedNode.attributes["CODE"] = code_ti.text;
-		_global.left_tree.selectedNode.attributes["EXTRA"] = extra_ti.text;
+		var tempIndex = _global.left_tree.selectedIndex;
+		_global.left_tree.selectedNode.object.setData(new Object({variables:newItems,command:command_ti.text,code:code_ti.text,extra:extra_ti.text}));
+		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
+		_global.left_tree.selectedIndex = tempIndex;
 	}
 }

@@ -1,15 +1,15 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Raw_Items {
-	private var node:XMLNode;
+	private var raw_items:Array;
 	private var raw_items_dg:DataGrid;
 	private var delete_btn:Button;
 	private var add_btn:Button;
 	private var save_btn:Button;
 	private var name_ti:TextInput;
 	public function init() {
-		for (var child in node.childNodes) {
-			raw_items_dg.addItem({name:node.childNodes[child].attributes["CATALOGUE"]});
+		for (var raw_item in raw_items) {
+			raw_items_dg.addItem({name:raw_items[raw_item].catalogue});
 		}
 		delete_btn.enabled = false;
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -34,41 +34,23 @@ class Forms.Project.Device.Raw_Items {
 	}
 	public function save():Void {
 		var newRaw_Items = new Array();
-		for (var index = 0; index<raw_items_dg.length; index++) {
-			var found = false;
-			for (var raw_item in node.childNodes) {
-				if (node.childNodes[raw_item].attributes["CATALOGUE"] == raw_items_dg.getItemAt(index).name) {
-					found = true;
-				}
-			}
-			if (found == false) {
-				newRaw_Items.push({name:raw_items_dg.getItemAt(index).name});
-			}
+		for(var index = 0; index < raw_items_dg.length; index++){
+			var Raw_Item = new Object();
+			Raw_Item.catalogue = raw_items_dg.getItemAt(index).name;
+			newRaw_Items.push(Raw_Item);
 		}
-		var deletedRaw_Items = new Array();
-		for (var raw_item in node.childNodes) {
-			var found = false;
-			for (var index = 0; index<raw_items_dg.length; index++) {
-				if (node.childNodes[raw_item].attributes["CATALOGUE"] == raw_items_dg.getItemAt(index).name) {
-					found = true;
-				}
-			}
-			if (found == false) {
-				deletedRaw_Items.push({name:node.childNodes[raw_item].attributes["CATALOGUE"]});
-			}
+		_global.left_tree.selectedNode.object.setData(new Object({raw_items:newRaw_Items}));
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,false);
+		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
+		for(var child in _global.left_tree.selectedNode.childNodes){
+			_global.left_tree.selectedNode.childNodes[child].removeNode();
 		}
-		for (var delRaw_Item in deletedRaw_Items) {
-			for (var raw_item in node.childNodes) {
-				if (deletedRaw_Items[delRaw_Item].name == node.childNodes[raw_item].attributes["CATALOGUE"]) {
-					node.childNodes[raw_item].removeNode();
-				}
-			}
+		// Nodes are added in reverse order to maintain consistancy
+		_global.left_tree.selectedNode.appendChild(new XMLNode(1,"Placeholder"));
+		for(var child in newNode.childNodes){
+			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
 		}
-		for (var newRaw_Item in newRaw_Items) {
-			var newNode = new XMLNode(1, "RAW_ITEMS");
-			newNode.attributes["CATALOGUE"] = newRaw_Items[newRaw_Item].name;
-			newNode.attributes["PREFIX"] = "";
-			node.appendChild(newNode);
-		}
+		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,true);
 	}
 }

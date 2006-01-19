@@ -118,6 +118,6 @@ class Forms.Project.Device.CbusLights {
 			newLight.attributes["CBUS_APPLICATION"] = lights_dg.getItemAt(index).application;
 			newLights.push(newLight);
 		}
-		_global.left_tree.selectedNode.lights = newLights;
+		_global.left_tree.selectedNode.object.setData(new Object({lights:newLights}));
 	}
 }

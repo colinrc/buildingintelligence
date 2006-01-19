@@ -64,6 +64,6 @@ class Forms.Project.Device.IR {
 			irNode.attributes["AV_NAME"] = ir_dg.getItemAt(index).avname;
 			newIrs.push(irNode);
 		}
-		_global.left_tree.selectedNode.irs = newIrs;
+		_global.left_tree.selectedNode.object.setData(new Object({irs:newIrs}));
 	}
 }

@@ -1,7 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Camera {
-	private var camera:Object;
+	private var cameras:Array;
 	private var cameras_dg:DataGrid;
 	private var save_btn:Button;
 	private var update_btn:Button;
@@ -12,13 +12,13 @@ class Forms.Project.Device.Camera {
 	private var zoom_ti:TextInput;
 	private var active_chk:CheckBox;
 	public function init() {
-		for (var child in camera.cameras.childNodes) {
-			if (camera.cameras.childNodes[child].attributes["ACTIVE"] == "N") {
+		for (var camera in cameras) {
+			if (cameras[camera].attributes["ACTIVE"] == "N") {
 				var active = "N";
 			} else {
 				var active = "Y";
 			}
-			cameras_dg.addItem({key:camera.cameras.childNodes[child].attributes["KEY"], name:camera.cameras.childNodes[child].attributes["DISPLAY_NAME"], active:active, zoom:camera.cameras.childNodes[child].attributes["ZOOM"]});
+			cameras_dg.addItem({key:cameras[camera].attributes["KEY"], name:cameras[camera].attributes["DISPLAY_NAME"], active:active, zoom:cameras[camera].attributes["ZOOM"]});
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -75,15 +75,15 @@ class Forms.Project.Device.Camera {
 		delete_btn.enabled = true;
 	}
 	public function save():Void {
-		var newCameras = new XMLNode(1, "PELCO");
+		var newCameras = new Array();
 		for (var index = 0; index<cameras_dg.length; index++) {
 			var item = new XMLNode(1, "CAMERA");
 			item.attributes["KEY"] = cameras_dg.getItemAt(index).key;
 			item.attributes["DISPLAY_NAME"] = cameras_dg.getItemAt(index).name;
 			item.attributes["ACTIVE"] = cameras_dg.getItemAt(index).active;
 			item.attributes["ZOOM"] = cameras_dg.getItemAt(index).zoom;
-			newCameras.appendChild(item);
+			newCameras.push(item);
 		}
-		_global.left_tree.selectedNode.camera = new Object({cameras:newCameras});
+		_global.left_tree.selectedNode.object.setData(new Object({cameras:newCameras}));
 	}
 }

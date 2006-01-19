@@ -1,7 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.GC100_Modules {
-	private var node:XMLNode;
+	private var modules:Array;
 	private var modules_dg:DataGrid;
 	private var type_cb:ComboBox;
 	private var save_btn:Button;
@@ -9,8 +9,8 @@ class Forms.Project.Device.GC100_Modules {
 	private var delete_btn:Button;
 	private var name_ti:TextInput;
 	public function init() {
-		for (var module in node.childNodes) {
-			modules_dg.addItem({name:node.childNodes[module].attributes["NAME"], type:node.childNodes[module].nodeName});
+		for (var module in modules) {
+			modules_dg.addItem({name:modules[module].name, type:modules[module].type});
 		}
 		type_cb.selectedIndex = 0;
 		delete_btn.enabled = false;
@@ -43,46 +43,24 @@ class Forms.Project.Device.GC100_Modules {
 	}
 	public function save():Void {
 		var newModules = new Array();
-		for (var index = 0; index<modules_dg.length; index++) {
-			var found = false;
-			for (var moduleIndex in node.childNodes) {
-				if ((node.childNodes[moduleIndex].attributes["NAME"] == modules_dg.getItemAt(index).name) && (node.childNodes[moduleIndex].nodeName == modules_dg.getItemAt(index).type)){
-					found = true;
-				}
-			}
-			if (found == false) {
-				newModules.push({name:modules_dg.getItemAt(index).name,type:modules_dg.getItemAt(index).type});
-			}
+		for(var index = 0; index < modules_dg.length; index++){
+			var module = new Object();
+			module.type = modules_dg.getItemAt(index).type;
+			module.name = modules_dg.getItemAt(index).name;
+			newModules.push(module);
 		}
-		var deletedModules = new Array();
-		for (var moduleIndex in node.childNodes) {
-			var found = false;
-			for (var index = 0; index<modules_dg.length; index++) {
-				if ((node.childNodes[moduleIndex].attributes["NAME"] == modules_dg.getItemAt(index).name) && (node.childNodes[moduleIndex].nodeName == modules_dg.getItemAt(index).type)){
-					found = true;
-				}
-			}
-			if (found == false) {
-				deletedModules.push({name:node.childNodes[moduleIndex].attributes["NAME"], type:node.childNodes[moduleIndex].nodeName});
-			}
+		_global.left_tree.selectedNode.object.setData(new Object({modules:newModules}));
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,false);
+		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
+		for(var child in _global.left_tree.selectedNode.childNodes){
+			_global.left_tree.selectedNode.childNodes[child].removeNode();
 		}
-		for (var delModule in deletedModules) {
-			for (var moduleIndex in node.childNodes) {
-				if ((deletedModules[delModule].name == node.childNodes[moduleIndex].attributes["NAME"]) && (deletedModules[delModule].type == node.childNodes[moduleIndex].nodeName)){
-					node.childNodes[moduleIndex].removeNode();
-				}
-			}
+		// Nodes are added in reverse order to maintain consistancy
+		_global.left_tree.selectedNode.appendChild(new XMLNode(1,"Placeholder"));
+		for(var child in newNode.childNodes){
+			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
 		}
-		for (var newModule in newModules) {
-			var newNode = new XMLNode(1, newModules[newModule].type);
-			newNode.attributes["NAME"] = newModules[newModule].name;
-			if (newNode.nodeName == "GC100_Relay") {
-				newNode.appendChild(new XMLNode(1, "Toggle Outputs"));
-			} else {
-				newNode.appendChild(new XMLNode(1, "Toggle Inputs"));
-				newNode.appendChild(new XMLNode(1, "IR Inputs"));
-			}
-			node.appendChild(newNode);
-		}
+		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,true);
 	}
 }

@@ -33,41 +33,24 @@ class Forms.Project.Device.Catalogues {
 		delete_btn.enabled = true;
 	}
 	public function save():Void {
-		/*var newCatalogues = new Array();
-		for (var index = 0; index<catalogues_dg.length; index++) {
-			var found = false;
-			for (var catalogue in node.childNodes) {
-				if (node.childNodes[catalogue].attributes["NAME"] == catalogues_dg.getItemAt(index).name) {
-					found = true;
-				}
-			}
-			if (found == false) {
-				newCatalogues.push({name:catalogues_dg.getItemAt(index).name});
-			}
+		var newCatalogues = new Array();
+		for(var index = 0; index < catalogues_dg.length; index++){
+			var Catalogue = new Object();
+			Catalogue.name = catalogues_dg.getItemAt(index).name;
+			newCatalogues.push(Catalogue);
 		}
-		var deletedCatalogues = new Array();
-		for (var catalogue in node.childNodes) {
-			var found = false;
-			for (var index = 0; index<catalogues_dg.length; index++) {
-				if (node.childNodes[catalogue].attributes["NAME"] == catalogues_dg.getItemAt(index).name) {
-					found = true;
-				}
-			}
-			if (found == false) {
-				deletedCatalogues.push({name:node.childNodes[catalogue].attributes["NAME"]});
-			}
+		_global.left_tree.selectedNode.object.setData(new Object({catalogues:newCatalogues}));
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,false);
+		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
+		for(var child in _global.left_tree.selectedNode.childNodes){
+			_global.left_tree.selectedNode.childNodes[child].removeNode();
 		}
-		for (var delCatalogue in deletedCatalogues) {
-			for (var catalogue in node.childNodes) {
-				if (deletedCatalogues[delCatalogue].name == node.childNodes[catalogue].attributes["NAME"]) {
-					node.childNodes[catalogue].removeNode();
-				}
-			}
+		// Nodes are added in reverse order to maintain consistancy
+		_global.left_tree.selectedNode.appendChild(new XMLNode(1,"Placeholder"));
+		for(var child in newNode.childNodes){
+			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
 		}
-		for (var newCatalogue in newCatalogues) {
-			var newNode = new XMLNode(1, "CATALOGUE");
-			newNode.attributes["NAME"] = newCatalogues[newCatalogue].name;
-			node.appendChild(newNode);
-		}*/
+		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,true);
 	}
 }

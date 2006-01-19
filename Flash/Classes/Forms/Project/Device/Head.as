@@ -41,6 +41,9 @@ class Forms.Project.Device.Head {
 		}
 		newData.parameters = parameters_mc.getData();
 		newData.connection = connection_mc.getData();
+		var tempIndex = _global.left_tree.selectedIndex;
 		_global.left_tree.selectedNode.object.setData(newData);
+		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
+		_global.left_tree.selectedIndex = tempIndex;
 	}
 }

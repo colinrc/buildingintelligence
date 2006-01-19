@@ -1,7 +1,8 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.AudioVideo {
-	private var audio:Object;
+	private var audiovideos:Array;
+	private var container:String;
 	private var inputs_dg:DataGrid;
 	private var update_btn:Button;
 	private var save_btn:Button;
@@ -11,13 +12,13 @@ class Forms.Project.Device.AudioVideo {
 	private var name_ti:TextInput;
 	private var active_chk:CheckBox;
 	public function init() {
-		for (var child in audio.audio.childNodes) {
-			if (audio.audio.childNodes[child].attributes["ACTIVE"] == "N") {
+		for (var audiovideo in audiovideos) {
+			if (audiovideos[audiovideo].attributes["ACTIVE"] == "N") {
 				var active = "N";
 			} else {
 				var active = "Y";
 			}
-			inputs_dg.addItem({key:audio.audio.childNodes[child].attributes["KEY"], name:audio.audio.childNodes[child].attributes["DISPLAY_NAME"], active:active});
+			inputs_dg.addItem({key:audiovideos[audiovideo].attributes["KEY"], name:audiovideos[audiovideo].attributes["DISPLAY_NAME"], active:active});
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -72,7 +73,7 @@ class Forms.Project.Device.AudioVideo {
 	}
 	public function save():Void {
 		var itemType:String;
-		switch (audio.audioName) {
+		switch (container) {
 		case "HAL":
 		case "TUTONDO" :
 			itemType = "AUDIO";
@@ -81,14 +82,14 @@ class Forms.Project.Device.AudioVideo {
 			itemType = "AV";
 			break;
 		}
-		var inputs = new XMLNode(1, audio.audioName);
+		var inputs = new Array();
 		for (var index = 0; index<inputs_dg.length; index++) {
 			var item = new XMLNode(1, itemType);
 			item.attributes["KEY"] = inputs_dg.getItemAt(index).key;
 			item.attributes["DISPLAY_NAME"] = inputs_dg.getItemAt(index).name;
 			item.attributes["ACTIVE"] = inputs_dg.getItemAt(index).active;
-			inputs.appendChild(item);
+			inputs.push(item);
 		}
-		_global.left_tree.selectedNode.audio = new Object({audio:inputs, audioName:audio.audioName});
+		_global.left_tree.selectedNode.object.setData(new Object({audiovideos:inputs}));
 	}
 }

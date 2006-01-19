@@ -1,15 +1,15 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Raw_Interfaces {
-	private var node:XMLNode;
+	private var raw_interfaces:Array;
 	private var interfaces_dg:DataGrid;
 	private var save_btn:Button;
 	private var add_btn:Button;
 	private var delete_btn:Button;
 	private var name_ti:TextInput;
 	public function init() {
-		for (var child in node.childNodes) {
-			interfaces_dg.addItem({name:node.childNodes[child].attributes["NAME"]});
+		for (var raw_interface in raw_interfaces) {
+			interfaces_dg.addItem({name:raw_interfaces[raw_interface].name});
 		}
 		delete_btn.enabled = false;
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -33,45 +33,24 @@ class Forms.Project.Device.Raw_Interfaces {
 		delete_btn.enabled = true;
 	}
 	public function save():Void {
-		var newInterfaces = new Array();
+		var newRaw_Interfaces = new Array();
 		for(var index = 0; index < interfaces_dg.length; index++){
-			var found = false;
-			for(var interfaceIndex in node.childNodes){
-				if (node.childNodes[interfaceIndex].attributes["NAME"] == interfaces_dg.getItemAt(index).name){
-					found = true;
-				}
-			}
-			if(found == false){
-				newInterfaces.push({name:interfaces_dg.getItemAt(index).name});
-			}
+			var Raw_Interface = new Object();
+			Raw_Interface.name = interfaces_dg.getItemAt(index).name;
+			newRaw_Interfaces.push(Raw_Interface);
 		}
-		var deletedInterfaces = new Array();
-		for(var interfaceIndex in node.childNodes){
-			var found = false;
-			for(var index = 0; index<interfaces_dg.length; index++){
-				if (node.childNodes[interfaceIndex].attributes["NAME"] == interfaces_dg.getItemAt(index).name){
-					found = true;
-				}
-			}
-			if(found == false){
-				deletedInterfaces.push({name:node.childNodes[interfaceIndex].attributes["NAME"]});
-			}
+		_global.left_tree.selectedNode.object.setData(new Object({raw_interfaces:newRaw_Interfaces}));
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,false);
+		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
+		for(var child in _global.left_tree.selectedNode.childNodes){
+			_global.left_tree.selectedNode.childNodes[child].removeNode();
 		}
-		for(var delInterface in deletedInterfaces){
-			for(var interfaceIndex in node.childNodes){
-				if(deletedInterfaces[delInterface].name == node.childNodes[interfaceIndex].attributes["NAME"]){
-					node.childNodes[interfaceIndex].removeNode();
-				}
-			}
+		// Nodes are added in reverse order to maintain consistancy
+		_global.left_tree.selectedNode.appendChild(new XMLNode(1,"Placeholder"));
+		for(var child in newNode.childNodes){
+			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
 		}
-		for(var newInterface in newInterfaces){
-			var newNode = new XMLNode(1, "RAW_INTERFACE");
-			newNode.attributes["NAME"] = newInterfaces[newInterface].name;
-			newNode.attributes["DISPLAY_NAME"] = "";
-			newNode.attributes["POWER_RATING"] = "";
-			newNode.appendChild(new XMLNode(1,"Custom Inputs"));
-			newNode.appendChild(new XMLNode(1,"Raw Items"));
-			node.appendChild(newNode);
-		}
+		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,true);
 	}
 }

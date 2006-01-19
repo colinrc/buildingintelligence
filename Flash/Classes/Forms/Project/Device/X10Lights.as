@@ -97,6 +97,6 @@ class Forms.Project.Device.X10Lights {
 			lightNode.attributes["X10HOUSE_CODE"] = lights_dg.getItemAt(index).x10;
 			newLights.push(lightNode);
 		}
-		_global.left_tree.selectedNode.lights = newLights;
+		_global.left_tree.selectedNode.object.setData(new Object({lights:newLights}));
 	}
 }

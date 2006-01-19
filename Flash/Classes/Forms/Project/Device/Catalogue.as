@@ -1,8 +1,8 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Catalogue {
-	private var node:XMLNode;
-	private var items:XMLNode;
+	private var name:String;
+	private var items:Array;
 	private var items_dg:DataGrid;
 	private var update_btn:Button;
 	private var new_btn:Button;
@@ -12,9 +12,9 @@ class Forms.Project.Device.Catalogue {
 	private var code_ti:TextInput;
 	private var value_ti:TextInput;
 	public function init() {
-		name_ti.text = node.attributes["NAME"];
-		for (var child in items.childNodes) {
-			items_dg.addItem({code:items.childNodes[child].attributes["CODE"], value:items.childNodes[child].attributes["VALUE"]});
+		name_ti.text = name;
+		for (var item in items) {
+			items_dg.addItem({code:items[item].attributes["CODE"], value:items[item].attributes["VALUE"]});
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -55,15 +55,16 @@ class Forms.Project.Device.Catalogue {
 		delete_btn.enabled = true;
 	}
 	private function save():Void{
-		var newItems = new XMLNode(1,"CATALOGUE");
-		newItems.attributes["NAME"] = name_ti.text;
+		var newItems = new Array();
 		for(var index = 0; index < items_dg.length; index++){
 			var item = new XMLNode(1, "ITEM");
 			item.attributes["CODE"] = items_dg.getItemAt(index).code;
 			item.attributes["VALUE"] = items_dg.getItemAt(index).value;
-			newItems.appendChild(item);
+			newItems.push(item);
 		}
-		_global.left_tree.selectedNode.items = newItems;
-		_global.left_tree.selectedNode.attributes["NAME"] = name_ti.text
+		var tempIndex = _global.left_tree.selectedIndex;
+		_global.left_tree.selectedNode.object.setData(new Object({name:name_ti.text,items:newItems}));
+		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
+		_global.left_tree.selectedIndex = tempIndex;
 	}
 }

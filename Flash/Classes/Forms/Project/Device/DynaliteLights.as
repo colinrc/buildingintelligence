@@ -112,6 +112,6 @@ class Forms.Project.Device.DynaliteLights {
 			newLight.attributes["RELAY"] = lights_dg.getItemAt(index).relay;
 			newLights.push(newLight);
 		}
-		_global.left_tree.selectedNode.lights = newLights;
+		_global.left_tree.selectedNode.object.setData(new Object({lights:newLights}));
 	}
 }

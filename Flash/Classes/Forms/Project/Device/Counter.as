@@ -96,6 +96,6 @@ class Forms.Project.Device.Counter {
 			newCounter.attributes["POWER_RATING"] = counters_dg.getItemAt(index).power;
 			newCounters.push(newCounter);
 		}
-		_global.left_tree.selectedNode.counters = newCounters;
+		_global.left_tree.selectedNode.object.setData(new Object({counters:newCounters}));
 	}
 }

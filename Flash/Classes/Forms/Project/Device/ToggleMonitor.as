@@ -84,6 +84,6 @@ class Forms.Project.Device.ToggleMonitor {
 			item.attributes["DISPLAY_NAME"] = monitors_dg.getItemAt(index).dname;
 			newMonitors.push(item);
 		}
-		_global.left_tree.selectedNode.monitors = newMonitors;
+		_global.left_tree.selectedNode.object.setData(new Object({monitors:newMonitors}));
 	}
 }
