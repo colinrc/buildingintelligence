@@ -1,7 +1,7 @@
 ﻿<flash_project name="eLifeAdmin" version="1">
     <project_folder name="Classes" expanded="true">
         <project_folder name="Forms" expanded="true">
-            <project_folder name="Control" expanded="true">
+            <project_folder name="Control" expanded="false">
                 <project_file path="./Classes/Forms/Control/Settings.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/Controls.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/IR.as" filetype="as" />
@@ -13,7 +13,6 @@
             <project_folder name="Project" expanded="true">
                 <project_folder name="Room" expanded="false">
                     <project_folder name="Tab" expanded="false">
-                        <project_file path="./Classes/Forms/Project/Room/Tab/Xml.as" filetype="as" />
                         <project_file path="./Classes/Forms/Project/Room/Tab/Preview.as" filetype="as" />
                     </project_folder>
                 </project_folder>
@@ -21,7 +20,7 @@
                     <project_file path="./Classes/Forms/Project/Settings/StringEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Room/Tab/Config.as" filetype="as" />
                 </project_folder>
-                <project_folder name="Device" expanded="true">
+                <project_folder name="Device" expanded="false">
                     <project_file path="./Classes/Forms/Project/Device/Head.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Connection.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/IP.as" filetype="as" />
@@ -48,7 +47,6 @@
                     <project_file path="./Classes/Forms/Project/Device/Alert.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Custom.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Raw.as" filetype="as" />
-                    <project_file path="./Classes/Forms/Project/Device/Raw_Connection.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Raw_Interfaces.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Raw_Interface.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Raw_Items.as" filetype="as" />
@@ -60,18 +58,27 @@
                     <project_file path="./Classes/Forms/Project/JRobin/Data.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/JRobin/JRobin.as" filetype="as" />
                 </project_folder>
+                <project_folder name="Client" expanded="true">
+                    <project_file path="./Classes/Forms/Project/Client/BooleanEdit.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/ColourEdit.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/NumberEdit.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/Settings.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/StatusBar.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/StringEdit.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/WebEdit.as" filetype="as" />
+                </project_folder>
                 <project_file path="./Classes/Forms/Project/KeySelector.as" filetype="as" />
                 <project_file path="./Classes/Forms/Project/Variables.as" filetype="as" />
                 <project_file path="./Classes/Forms/Project/Controls.as" filetype="as" />
                 <project_file path="./Classes/Forms/Project/Messages.as" filetype="as" />
                 <project_file path="./Classes/Forms/Project/Server.as" filetype="as" />
+                <project_file path="./Classes/Forms/Project/Xml.as" filetype="as" />
             </project_folder>
             <project_file path="./Classes/Forms/Home.as" filetype="as" />
             <project_file path="./Classes/Forms/BaseForm.as" filetype="as" />
         </project_folder>
         <project_folder name="Objects" expanded="true">
             <project_folder name="Server" expanded="true">
-                <project_file path="./Classes/Objects/Server/Controls.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/Server.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/Cameras.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/Catalogue.as" filetype="as" />
@@ -109,6 +116,19 @@
                 <project_file path="./Classes/Objects/Server/Counters.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/Monitors.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/Raw_Interfaces.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Controls.as" filetype="as" />
+            </project_folder>
+            <project_folder name="Client" expanded="true">
+                <project_file path="./Classes/Objects/Client/Client.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Apps_Bar.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Control_Panel_Apps.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Control_Types.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Logging.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Property.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Settings.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Sounds.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Status_Bar.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/StatusBarGroup.as" filetype="as" />
             </project_folder>
             <project_file path="./Classes/Objects/ServerConnection.as" filetype="as" />
             <project_file path="./Classes/Objects/History.as" filetype="as" />
