@@ -5,4 +5,6 @@ For the tabbar extension to be imported into an actionscript class file,
 To use the Base64.as code, the Base64.as script file must appear in the project 
 classpath. This is set in the "publish settings" dialog.
 
+To use the colour picker, the files within the "bhcolourpicker-0_2.zip" must be installed properly.
+
 Dave
