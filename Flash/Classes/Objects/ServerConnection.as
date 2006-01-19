@@ -82,9 +82,11 @@ class Objects.ServerConnection {
 	private function setupSockets():Void {
 		server_socket.onClose = Delegate.create(this, serverOnClose);
 		server_socket.onXML = Delegate.create(this, serverOnXML);
+		server_socket.onData = Delegate.create(this, serverOnData);
 		server_socket.onConnect = Delegate.create(this, serverOnConnect);
 		monitor_socket.onClose = Delegate.create(this, monitorOnClose);
 		monitor_socket.onXML = Delegate.create(this, monitorOnXML);
+		monitor_socket.onData = Delegate.create(this, monitorOnData);
 		monitor_socket.onConnect = Delegate.create(this, monitorOnConnect);
 	}
 	private function serverOnXML(inXML:XML) {
@@ -92,5 +94,11 @@ class Objects.ServerConnection {
 	}
 	private function monitorOnXML(inXML:XML) {
 		view.processXML(inXML.firstChild);
+	}
+	private function serverOnData(str:String) {
+		server_socket.onXML(new XML(str));
+	}
+	private function monitorOnData(str:String) {
+		monitor_socket.onXML(new XML(str));
 	}
 }
