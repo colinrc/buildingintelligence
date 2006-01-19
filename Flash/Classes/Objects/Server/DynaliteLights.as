@@ -1,6 +1,13 @@
 ﻿class Objects.Server.DynaliteLights extends Objects.BaseElement {
 	private var container:String;
 	private var lights:Array;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var light in lights){
+			tempKeys.push(lights[light].attributes["DISPLAY_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var light in lights) {

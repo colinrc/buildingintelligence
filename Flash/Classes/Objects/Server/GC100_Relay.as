@@ -3,6 +3,11 @@
 	private var name:String;
 	private var toggle_outputs:Objects.Server.Toggles;
 	private var parameters:XMLNode;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		tempKeys = tempKeys.concat(toggle_outputs.getKeys());
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		if ((name == undefined) || (name == "")) {
@@ -14,7 +19,7 @@
 		return flag;
 	}
 	public function getForm():String {
-		return "forms.project.device.gc100_relay";
+		return "forms.project.device.gc100relay";
 	}
 	public function toXML():XMLNode {
 		var newDevice = new XMLNode(1, type);
@@ -43,7 +48,7 @@
 		parameters = newData.parameters;
 	}
 	public function setXML(newData:XMLNode):Void {
-		toggle_outputs = new Objects.Server.Toggles();
+		toggle_outputs = new Objects.Server.Toggles("TOGGLE_OUTPUT");
 		if (newData.nodeName == "GC100_Relay") {
 			name = newData.attributes["NAME"];
 			var tempToggleOutputs = new XMLNode(1, "Toggle Outputs");

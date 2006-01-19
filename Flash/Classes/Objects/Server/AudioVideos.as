@@ -1,6 +1,13 @@
 ﻿class Objects.Server.AudioVideos extends Objects.BaseElement {
 	private var container:String;
 	private var audiovideos:Array;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var audiovideo in audiovideos){
+			tempKeys.push(audiovideos[audiovideo].attributes["DISPLAY_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var audiovideo in audiovideos) {
@@ -32,7 +39,7 @@
 		return newNode;
 	}
 	public function getData():Object {
-		return new Object({audiovideos:audiovideos});
+		return new Object({audiovideos:audiovideos, container:container});
 	}
 	public function setData(newData:Object){
 		audiovideos = newData.audiovideos;

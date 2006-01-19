@@ -1,6 +1,13 @@
 ﻿class Objects.Server.Monitors extends Objects.BaseElement {
 	private var container:String;
 	private var monitors:Array;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var monitor in monitors){
+			tempKeys.push(monitors[monitor].attributes["DISPLAY_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var monitor in monitors) {
@@ -20,7 +27,7 @@
 		return flag;
 	}
 	public function getForm():String {
-		return "forms.project.device.monitor";
+		return "forms.project.device.togglemonitor";
 	}
 	public function toXML():XMLNode {
 		var monitorsNode = new XMLNode(1, container);

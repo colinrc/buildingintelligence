@@ -1,6 +1,13 @@
 ﻿class Objects.Server.CBusSensors extends Objects.BaseElement {
 	private var container:String;
 	private var sensors:Array;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var sensor in sensors){
+			tempKeys.push(sensors[sensor].attributes["DISPLAY_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var sensor in sensors) {

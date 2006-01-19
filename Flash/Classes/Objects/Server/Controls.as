@@ -1,6 +1,13 @@
 ﻿class Objects.Server.Controls extends Objects.BaseElement {
 	private var messages:XMLNode;
 	private var variables:XMLNode;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var variable in variables.childNodes){
+			tempKeys.push(variables.childNodes[variable].attributes["DISPLAY_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var child in messages.childNodes) {
@@ -36,19 +43,21 @@
 	public function getName():String {
 		return "Controls";
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,"Controls");
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, "Controls");
 		newNode.object = this;
 		return newNode;
 	}
 	public function getData():Object {
 		return new Object({messages:messages, variables:variables});
 	}
-	public function setData(newData:Object):Void{
+	public function setData(newData:Object):Void {
 		messages = newData.messages;
 		variables = newData.variables;
 	}
 	public function setXML(newData:XMLNode):Void {
+		messages = new XMLNode();
+		variables = new XMLNode();
 		if (newData.nodeName == "CONTROLS") {
 			for (var child in newData.childNodes) {
 				switch (newData.childNodes[child].nodeName) {

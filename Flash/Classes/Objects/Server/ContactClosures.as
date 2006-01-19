@@ -1,6 +1,13 @@
 ﻿class Objects.Server.ContactClosures extends Objects.BaseElement {
 	private var container:String;
 	private var contacts:Array;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var contact in contacts){
+			tempKeys.push(contacts[contact].attributes["DISPLAY_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var contact in contacts) {

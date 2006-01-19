@@ -1,6 +1,13 @@
 ﻿class Objects.Server.Analogues extends Objects.BaseElement {
 	private var container:String;
 	private var analogues:Array;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var analogue in analogues){
+			tempKeys.push(analogues[analogue].attributes["DISPLAY_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var analogue in analogues) {

@@ -4,6 +4,12 @@
 	private var irs:Objects.Server.IRs;
 	private var toggle_inputs:Objects.Server.Toggles;
 	private var parameters:XMLNode;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		tempKeys = tempKeys.concat(irs.getKeys());
+		tempKeys = tempKeys.concat(toggle_inputs.getKeys());
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		if ((name == undefined) || (name == "")) {
@@ -18,7 +24,7 @@
 		return flag;
 	}
 	public function getForm():String {
-		return "forms.project.device.gc100_ir";
+		return "forms.project.device.gc100ir";
 	}
 	public function toXML():XMLNode {
 		var newDevice = new XMLNode(1, type);
@@ -53,7 +59,7 @@
 	}
 	public function setXML(newData:XMLNode):Void {
 		irs = new Objects.Server.IRs();
-		toggle_inputs = new Objects.Server.Toggles();
+		toggle_inputs = new Objects.Server.Toggles("TOGGLE_INPUT");
 		if (newData.nodeName == "GC100_IR") {
 			name = newData.attributes["NAME"];
 			var tempIRs = new XMLNode(1, "irs");

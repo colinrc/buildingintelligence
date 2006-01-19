@@ -5,6 +5,12 @@
 	private var power:String;
 	private var customs:Objects.Server.Customs;
 	private var raw_items:Objects.Server.Raw_Items;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		tempKeys = tempKeys.concat(customs.getKeys());
+		tempKeys.push(display_name);
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		if ((name == undefined) || (name == "")) {

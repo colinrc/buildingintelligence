@@ -1,33 +1,40 @@
 ﻿class Objects.Server.X10Lights extends Objects.BaseElement {
 	private var container:String;
-	private var x10lights:Array;
+	private var lights:Array;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var light in lights){
+			tempKeys.push(lights[light].attributes["DISPLAY_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
-		for (var x10light in x10lights) {
-			if ((x10lights[x10light].attributes["ACTIVE"] != "Y") && (x10lights[x10light].attributes["ACTIVE"] != "N")) {
+		for (var light in lights) {
+			if ((lights[light].attributes["ACTIVE"] != "Y") && (lights[light].attributes["ACTIVE"] != "N")) {
 				flag = false;
 			}
-			if ((x10lights[x10light].attributes["KEY"] == undefined) || (x10lights[x10light].attributes["KEY"] == "")) {
+			if ((lights[light].attributes["KEY"] == undefined) || (lights[light].attributes["KEY"] == "")) {
 				flag = false;
 			}
-			if ((x10lights[x10light].attributes["NAME"] == undefined) || (x10lights[x10light].attributes["NAME"] == "")) {
+			if ((lights[light].attributes["NAME"] == undefined) || (lights[light].attributes["NAME"] == "")) {
 				flag = false;
 			}
-			if ((x10lights[x10light].attributes["DISPLAY_NAME"] == undefined) || (x10lights[x10light].attributes["DISPLAY_NAME"] == "")) {
+			if ((lights[light].attributes["DISPLAY_NAME"] == undefined) || (lights[light].attributes["DISPLAY_NAME"] == "")) {
 				flag = false;
 			}
 		}
 		return flag;
 	}
 	public function getForm():String {
-		return "forms.project.device.x10light";
+		return "forms.project.device.x10lights";
 	}
 	public function toXML():XMLNode {
-		var x10lightsNode = new XMLNode(1, container);
-		for (var x10light in x10lights) {
-			x10lightsNode.appendChild(x10lights[x10light]);
+		var lightsNode = new XMLNode(1, container);
+		for (var light in lights) {
+			lightsNode.appendChild(lights[light]);
 		}
-		return x10lightsNode;
+		return lightsNode;
 	}
 	public function getName():String {
 		return "X10 Lights";
@@ -38,16 +45,16 @@
 		return newNode;
 	}
 	public function getData():Object {
-		return new Object({x10lights:x10lights});
+		return new Object({lights:lights});
 	}
 	public function setData(newData:Object):Void{
-		x10lights = newData.x10lights;
+		lights = newData.lights;
 	}
 	public function setXML(newData:XMLNode):Void {
-		x10lights = new Array();
+		lights = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			x10lights.push(newData.childNodes[child]);
+			lights.push(newData.childNodes[child]);
 		}
 	}
 }

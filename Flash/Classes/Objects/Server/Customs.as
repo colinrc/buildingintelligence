@@ -1,6 +1,13 @@
 ﻿class Objects.Server.Customs extends Objects.BaseElement {
 	private var container:String;
 	private var customs:Array;
+		public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var custom in customs){
+			tempKeys.push(customs[custom].attributes["DISPLAY_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var custom in customs) {

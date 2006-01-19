@@ -1,6 +1,13 @@
 ﻿class Objects.Server.Counters extends Objects.BaseElement {
 	private var container:String;
 	private var counters:Array;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var counter in counters){
+			tempKeys.push(counters[counter].attributes["DISPLAY_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var counter in counters) {

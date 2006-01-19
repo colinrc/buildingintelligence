@@ -19,8 +19,8 @@
 		}
 		return newCatalogues;
 	}
-	public function toTree():XMLNode{
-		var newNode= new XMLNode(1, "Catalogues");
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, "Catalogues");
 		for (var catalogue in catalogues) {
 			newNode.appendChild(catalogues[catalogue].toTree());
 		}
@@ -34,7 +34,38 @@
 		return new Object({catalogues:catalogues});
 	}
 	public function setData(newData:Object) {
-		//process new catalogues
+		//Process catalogue changes....
+		var newCatalogues = new Array();
+		for (var index in newData.catalogues) {
+			var found = false;
+			for (var catalogue in catalogues) {
+				if (catalogues[catalogue].name == newData.catalogues[index].name) {
+					found = true;
+				}
+			}
+			if (found == false) {
+				newCatalogues.push({name:newData.catalogues[index].name});
+			}
+		}
+		var deletedCatalogues = new Array();
+		for (var catalogue in catalogues) {
+			var found = false;
+			for (var index in newData.catalogues) {
+				if (catalogues[catalogue].name == newData.catalogues[index].name) {
+					found = true;
+				}
+			}
+			if (found == false) {
+				catalogues.splice(parseInt(catalogue), 1);
+			}
+		}
+		for (var newCatalogue in newCatalogues) {
+			var newNode = new XMLNode(1, "CATALOGUE");
+			newNode.attributes["NAME"] = newCatalogues[newCatalogue].name;
+			var newCatalogue = new Objects.Server.Catalogue();
+			newCatalogue.setXML(newNode);
+			catalogues.push(newCatalogue);
+		}
 	}
 	public function setXML(newData:XMLNode):Void {
 		catalogues = new Array();

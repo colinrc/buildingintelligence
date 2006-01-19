@@ -15,7 +15,7 @@
 		return flag;
 	}
 	public function getForm():String {
-		return "forms.project.device.raws";
+		return "forms.project.device.raw_item";
 	}
 	public function toXML():XMLNode {
 		var newRaw_Item = new XMLNode(1, "RAW ITEMS");
@@ -41,9 +41,40 @@
 		return new Object({raws:raws, catalogue:catalogue, prefix:prefix});
 	}
 	public function setData(newData:Object){
-		//process raw changes
 		catalogue = newData.catalogue;
 		prefix = newData.prefix;
+		//process raw changes
+		var newRaws = new Array();
+		for (var index in newData.raws) {
+			var found = false;
+			for (var raw_item in raws) {
+				if (raws[raw_item].command == newData.raws[index].command) {
+					found = true;
+				}
+			}
+			if (found == false) {
+				newRaws.push({command:newData.raws[index].command});
+			}
+		}
+		var deletedRaws = new Array();
+		for (var raw_item in raws) {
+			var found = false;
+			for (var index in newData.raws) {
+				if (raws[raw_item].command == newData.raws[index].command) {
+					found = true;
+				}
+			}
+			if (found == false) {
+				raws.splice(parseInt(raw_item), 1);
+			}
+		}
+		for (var newRaw in newRaws) {
+			var newNode = new XMLNode(1, "RAW");
+			newNode.attributes["COMMAND"] = newRaws[newRaw].command;
+			var newRaw = new Objects.Server.Raw();
+			newRaw.setXML(newNode);
+			raws.push(newRaw);
+		}
 	}
 	public function setXML(newData:XMLNode):Void {
 		catalogue = newData.attributes["CATALOGUE"];

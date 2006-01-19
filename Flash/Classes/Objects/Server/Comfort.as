@@ -18,6 +18,23 @@
 	private var analogues:Objects.Server.Analogues;
 	private var connection:XMLNode;
 	private var parameters:XMLNode;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		tempKeys = tempKeys.concat(counters.getKeys());
+		tempKeys = tempKeys.concat(customs.getKeys());
+		tempKeys = tempKeys.concat(raw_interfaces.getKeys());
+		tempKeys = tempKeys.concat(toggle_monitors.getKeys());
+		tempKeys = tempKeys.concat(cbus_lights.getKeys());
+		tempKeys = tempKeys.concat(x10_lights.getKeys());
+		tempKeys = tempKeys.concat(pulse_outputs.getKeys());
+		tempKeys = tempKeys.concat(toggle_inputs.getKeys());
+		tempKeys = tempKeys.concat(toggle_outputs.getKeys());
+		tempKeys = tempKeys.concat(alarms.getKeys());
+		tempKeys = tempKeys.concat(alerts.getKeys());
+		tempKeys = tempKeys.concat(analogues.getKeys());
+		tempKeys.push(display_name);
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		if ((name == undefined) || (name == "")) {
@@ -173,9 +190,9 @@
 		customs = new Objects.Server.Customs();
 		counters = new Objects.Server.Counters();
 		toggle_monitors = new Objects.Server.Monitors();
-		pulse_outputs = new Objects.Server.Toggles();
-		toggle_outputs = new Objects.Server.Toggles();
-		toggle_inputs = new Objects.Server.Toggles();
+		pulse_outputs = new Objects.Server.Toggles("PULSE_OUTPUT");
+		toggle_outputs = new Objects.Server.Toggles("TOGGLE_OUTPUT");
+		toggle_inputs = new Objects.Server.Toggles("TOGGLE_INPUT");
 		cbus_lights = new Objects.Server.CBusLights();
 		x10_lights = new Objects.Server.X10Lights();
 		alarms = new Objects.Server.Alarms();

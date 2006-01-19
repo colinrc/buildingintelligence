@@ -48,9 +48,12 @@
 	}
 	public function setData(newData:Object){
 		variables = newData.variables;
+		command = newData.command;
+		code = newData.code;
+		extra = newData.extra;
 	}
 	public function getData():Object {
-		return new Object({variables:variables});
+		return new Object({variables:variables,command:command,code:code,extra:extra});
 	}
 	public function setXML(newData:XMLNode):Void {
 		variables = new Array();

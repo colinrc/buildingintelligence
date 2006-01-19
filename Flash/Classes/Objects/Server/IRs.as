@@ -1,6 +1,13 @@
 ﻿class Objects.Server.IRs extends Objects.BaseElement {
 	private var container:String;
 	private var irs:Array;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var ir in irs){
+			tempKeys.push(irs[ir].attributes["AV_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var ir in irs) {

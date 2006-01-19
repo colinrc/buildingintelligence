@@ -2,6 +2,14 @@
 	private var description:String;
 	private var controls:Objects.Server.Controls;
 	private var devices:Array;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var device in devices){
+			tempKeys = tempKeys.concat(devices[device].getKeys());
+		}
+		tempKeys = tempKeys.concat(controls.getKeys());
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		if (!controls.isValid()) {
@@ -20,7 +28,7 @@
 	public function toXML():XMLNode {
 		var serverNode = new XMLNode(1, "CONFIG");
 		var descriptionNode = new XMLNode(1, "DESC");
-		descriptionNode.appendChild(new XMLNode(2,description));
+		descriptionNode.appendChild(new XMLNode(2, description));
 		serverNode.appendChild(controls.toXML());
 		serverNode.appendChild(descriptionNode);
 		for (var device in devices) {
@@ -28,10 +36,10 @@
 		}
 		return serverNode;
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,"Server");
-		newNode.appendChild(controls.toTree());
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, "Server");
 		newNode.object = this;
+		newNode.appendChild(controls.toTree());
 		for (var device in devices) {
 			newNode.appendChild(devices[device].toTree());
 		}
@@ -41,11 +49,100 @@
 		return "Server";
 	}
 	public function getData():Object {
-		return new Object({description:description,devices:devices});
+		return new Object({description:description, devices:devices});
 	}
-	public function setData(newData:Object){
+	public function setData(newData:Object) {
 		description = newData.description;
 		//Process device changes....
+		var newDevices = new Array();
+		for (var index in newData.devices) {
+			var found = false;
+			for (var device in devices) {
+				if ((devices[device].display_name == newData.devices[index].name) && (devices[device].name == newData.devices[index].type)) {
+					found = true;
+				}
+			}
+			if (found == false) {
+				newDevices.push({name:newData.devices[index].name, type:newData.devices[index].type});
+			}
+		}
+		var deletedDevices = new Array();
+		for (var device in devices) {
+			var found = false;
+			for (var index in newData.devices) {
+				if ((devices[device].display_name == newData.devices[index].name) && (devices[device].name == newData.devices[index].type)) {
+					found = true;
+				}
+			}
+			if (found == false) {
+				devices.splice(parseInt(device), 1);
+			}
+		}
+		for (var newDevice in newDevices) {
+			var newNode = new XMLNode(1, "DEVICE");
+			newNode.attributes["DISPLAY_NAME"] = newDevices[newDevice].name;
+			newNode.attributes["NAME"] = newDevices[newDevice].type;
+			newNode.attributes["ACTIVE"] = "N";
+			var newDevice = new XMLNode(1,newDevices[newDevice].type);
+			newNode.appendChild(newDevice);
+			switch (newNode.attributes["NAME"]) {
+			case "PELCO" :
+				var newPelco = new Objects.Server.Pelco();
+				newPelco.setXML(newNode);
+				devices.push(newPelco);
+				break;
+			case "OREGON" :
+				var newOregon = new Objects.Server.Oregon();
+				newOregon.setXML(newNode);
+				devices.push(newOregon);
+				break;
+			case "IR_LEARNER" :
+				var newIR = new Objects.Server.IR_Learner();
+				newIR.setXML(newNode);
+				devices.push(newIR);
+				break;
+			case "TUTONDO" :
+				var newTutondo = new Objects.Server.Tutondo();
+				newTutondo.setXML(newNode);
+				devices.push(newTutondo);
+				break;
+			case "KRAMER" :
+				var newKramer = new Objects.Server.Kramer();
+				newKramer.setXML(newNode);
+				devices.push(newKramer);
+				break;
+			case "HAL" :
+				var newHal = new Objects.Server.Hal();
+				newHal.setXML(newNode);
+				devices.push(newHal);
+				break;
+			case "CBUS" :
+				var newCBus = new Objects.Server.CBus();
+				newCBus.setXML(newNode);
+				devices.push(newCBus);
+				break;
+			case "DYNALITE" :
+				var newDynalite = new Objects.Server.Dynalite();
+				newDynalite.setXML(newNode);
+				devices.push(newDynalite);
+				break;
+			case "GC100" :
+				var newGC100 = new Objects.Server.GC100();
+				newGC100.setXML(newNode);
+				devices.push(newGC100);
+				break;
+			case "RAW_CONNECTION" :
+				var newRaw = new Objects.Server.Raw_Connection();
+				newRaw.setXML(newNode);
+				devices.push(newRaw);
+				break;
+			case "COMFORT" :
+				var newComfort = new Objects.Server.Comfort();
+				newComfort.setXML(newNode);
+				devices.push(newComfort);
+				break;
+			}
+		}
 	}
 	public function setXML(newData:XMLNode):Void {
 		controls = new Objects.Server.Controls();

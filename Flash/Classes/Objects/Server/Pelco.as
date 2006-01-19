@@ -7,6 +7,12 @@
 	private var catalogues:Objects.Server.Catalogues;
 	private var connection:XMLNode;
 	private var parameters:XMLNode;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		tempKeys = tempKeys.concat(cameras.getKeys());
+		tempKeys.push(display_name);
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		if ((name == undefined) || (name == "")) {

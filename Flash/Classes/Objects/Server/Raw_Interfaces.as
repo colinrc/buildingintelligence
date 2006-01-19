@@ -1,6 +1,13 @@
 ﻿class Objects.Server.Raw_Interfaces extends Objects.BaseElement {
 	var raw_interfaces:Array;
 	var container:String;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var raw_interface in raw_interfaces){
+			tempKeys = tempKeys.concat(raw_interfaces[raw_interface].getKeys());
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var raw_interface in raw_interfaces) {
@@ -35,7 +42,38 @@
 		return new Object({raw_interfaces:raw_interfaces});
 	}
 	public function setData(newData:Object) {
-		//process new interfaces
+		//Process raw_interface changes....
+		var newRaw_Interfaces = new Array();
+		for (var index in newData.raw_interfaces) {
+			var found = false;
+			for (var raw_interface in raw_interfaces) {
+				if (raw_interfaces[raw_interface].name == newData.raw_interfaces[index].name) {
+					found = true;
+				}
+			}
+			if (found == false) {
+				newRaw_Interfaces.push({name:newData.raw_interfaces[index].name});
+			}
+		}
+		var deletedRaw_Interfaces = new Array();
+		for (var raw_interface in raw_interfaces) {
+			var found = false;
+			for (var index in newData.raw_interfaces) {
+				if (raw_interfaces[raw_interface].name == newData.raw_interfaces[index].name) {
+					found = true;
+				}
+			}
+			if (found == false) {
+				raw_interfaces.splice(parseInt(raw_interface), 1);
+			}
+		}
+		for (var newRaw_Interface in newRaw_Interfaces) {
+			var newNode = new XMLNode(1, "RAW_INTERFACES");
+			newNode.attributes["NAME"] = newRaw_Interfaces[newRaw_Interface].name;
+			var newRaw_Interface = new Objects.Server.Raw_Interface();
+			newRaw_Interface.setXML(newNode);
+			raw_interfaces.push(newRaw_Interface);
+		}
 	}
 	public function setXML(newData:XMLNode):Void {
 		raw_interfaces = new Array();

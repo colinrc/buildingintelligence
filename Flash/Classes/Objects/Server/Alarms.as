@@ -1,6 +1,13 @@
 ﻿class Objects.Server.Alarms extends Objects.BaseElement {
 	private var container:String;
 	private var alarms:Array;
+	public function getKeys():Array{
+		var tempKeys = new Array();
+		for(var alarm in alarms){
+			tempKeys.push(alarms[alarm].attributes["DISPLAY_NAME"]);
+		}
+		return tempKeys;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var alarm in alarms) {
