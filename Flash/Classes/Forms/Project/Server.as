@@ -33,98 +33,28 @@ class Forms.Project.Server {
 		delete_btn.enabled = false;
 	}
 	private function itemChange(evtObj) {
-		name_ti.text = devices_dg.selectedItem.name;
 		delete_btn.enabled = true;
 	}
 	public function save():Void {
-		/*var newDevices = new Array();
-		for (var index = 0; index<devices_dg.length; index++) {
-			var found = false;
-			for (var device in node.childNodes) {
-				if (node.childNodes[device].attributes["DISPLAY_NAME"] == devices_dg.getItemAt(index).name) {
-					found = true;
-				}
-			}
-			if (found == false) {
-				newDevices.push({name:devices_dg.getItemAt(index).name, type:devices_dg.getItemAt(index).type});
-			}
+		var newDevices = new Array();
+		for(var index = 0; index < devices_dg.length; index++){
+			var device = new Object();
+			device.type = devices_dg.getItemAt(index).type;
+			device.name = devices_dg.getItemAt(index).name;
+			newDevices.push(device);
 		}
-		var deletedDevices = new Array();
-		for (var device in node.childNodes) {
-			var found = false;
-			for (var index = 0; index<devices_dg.length; index++) {
-				if ((node.childNodes[device].attributes["DISPLAY_NAME"] == devices_dg.getItemAt(index).name) && (node.childNodes[device].nodeName == "DEVICE")) {
-					found = true;
-				}
-			}
-			if (found == false) {
-				deletedDevices.push({name:node.childNodes[device].attributes["DISPLAY_NAME"]});
-			}
+		_global.left_tree.selectedNode.object.setData(new Object({description:description_ta.text,devices:newDevices}));
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,false);
+		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
+		for(var child in _global.left_tree.selectedNode.childNodes){
+			_global.left_tree.selectedNode.childNodes[child].removeNode();
 		}
-		for (var delDevice in deletedDevices) {
-			for (var device in node.childNodes) {
-				if ((deletedDevices[delDevice].name == node.childNodes[device].attributes["DISPLAY_NAME"]) && (node.childNodes[device].nodeName == "DEVICE")) {
-					node.childNodes[device].removeNode();
-				}
-			}
+		// Nodes are added in reverse order to maintain consistancy
+		_global.left_tree.selectedNode.appendChild(new XMLNode(1,"Placeholder"));
+		for(var child in newNode.childNodes){
+			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
 		}
-		for (var newDevice in newDevices) {
-			var newNode = new XMLNode(1, "DEVICE");
-			newNode.attributes["DISPLAY_NAME"] = newDevices[newDevice].name;
-			newNode.attributes["NAME"] = newDevices[newDevice].type;
-			newNode.attributes["ACTIVE"] = "N";
-			switch (newNode.attributes["NAME"]) {
-			case "PELCO" :
-				var cameraNode = new XMLNode(1, "Cameras");
-				newNode.appendChild(cameraNode);
-				break;
-			case "TUTONDO" :
-			case "KRAMER" :
-			case "HAL" :
-				var audioNode = new XMLNode(1, "Audio/Video Inputs");
-				audioNode.audio = new Object({audioName:node.attributes["NAME"]});
-				newNode.appendChild(audioNode);
-				break;
-			case "GC100" :
-				var modules = new XMLNode(1, "GC100 Modules");
-				newNode.appendChild(modules);
-				break;
-			case "DYNALITE" :
-				newNode.appendChild(new XMLNode(1, "IR Inputs"));
-				newNode.appendChild(new XMLNode(1, "Contact Closures"));
-				newNode.appendChild(new XMLNode(1, "Dynalite Lights"));
-				break;
-			case "OREGON" :
-				newNode.appendChild(new XMLNode(1, "Sensors"));
-				break;
-			case "CBUS" :
-				newNode.appendChild(new XMLNode(1, "Sensors"));
-				newNode.appendChild(new XMLNode(1, "Lights"));
-				break;
-			case "RAW_CONNECTION" :
-				newNode.appendChild(new XMLNode(1, "Custom Inputs"));
-				newNode.appendChild(new XMLNode(1, "Raw Interfaces"));
-				newNode.appendChild(new XMLNode(1, "Raw Items"));
-				break;
-			case "COMFORT" :
-				newNode.appendChild(new XMLNode(1, "Custom Inputs"));
-				newNode.appendChild(new XMLNode(1, "Counters"));
-				newNode.appendChild(new XMLNode(1, "Toggle Monitors"));
-				newNode.appendChild(new XMLNode(1, "Lights"));
-				newNode.appendChild(new XMLNode(1, "X10 Lights"));
-				newNode.appendChild(new XMLNode(1, "Toggle Outputs"));
-				newNode.appendChild(new XMLNode(1, "Toggle Inputs"));
-				newNode.appendChild(new XMLNode(1, "Analogue Inputs"));
-				newNode.appendChild(new XMLNode(1, "Comfort Alerts"));
-				newNode.appendChild(new XMLNode(1, "Comfort Alarms"));
-				newNode.appendChild(new XMLNode(1, "Pulse Outputs"));
-				newNode.appendChild(new XMLNode(1, "Raw Interfaces"));
-				break;
-			}
-			var catalogues = new XMLNode(1, "Catalogues");
-			newNode.appendChild(catalogues);
-			node.appendChild(newNode);
-		}*/
-		_global.left_tree.selectedNode.object.description = description_ta.text;
+		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,true);
 	}
 }
