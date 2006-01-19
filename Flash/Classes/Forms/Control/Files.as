@@ -1,7 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 import Utils.Base64;
-import Utils.XMLHighlighter;
+//import Utils.XMLHighlighter;
 class Forms.Control.Files extends Forms.Control.AdminView {
 	private var upload_btn:mx.controls.Button;
 	private var download_btn:mx.controls.Button;
@@ -58,8 +58,10 @@ class Forms.Control.Files extends Forms.Control.AdminView {
 	}
 	private function uploadFile():Void {
 		if (confirm_chk.selected) {
-			//var xmlMsg = new XML('<ADMIN COMMAND = "UPLOAD" NAME="'+fileName_ti.text+'" DIR="'+files_cb.selectedItem.label+'" BASE64="Y"><![CDATA['+Base64.Encode(buffer_ta.text)+']]></ADMIN>\n');
-			var xmlMsg = new XML('<ADMIN COMMAND = "UPLOAD" NAME="'+fileName_ti.text+'" DIR="'+files_cb.selectedItem.label+'" BASE64="N"><![CDATA['+buffer_ta.text+']]></ADMIN>\n');
+			var b64:Base64 = new Base64();
+			var xmlMsg = new XML('<ADMIN COMMAND = "UPLOAD" NAME="'+fileName_ti.text+'" DIR="'+files_cb.selectedItem.label+'" BASE64="Y"><![CDATA['+b64.encode(buffer_ta.text)+']]></ADMIN>\n');
+			trace(xmlMsg);
+			//var xmlMsg = new XML('<ADMIN COMMAND = "UPLOAD" NAME="'+fileName_ti.text+'" DIR="'+files_cb.selectedItem.label+'" BASE64="N"><![CDATA['+buffer_ta.text+']]></ADMIN>\n');
 			monitor_socket.send(xmlMsg);
 		}
 	}
@@ -84,17 +86,23 @@ class Forms.Control.Files extends Forms.Control.AdminView {
 		//fileName_ti.text=inNode.attributes["NAME"];
 		if (inNode.attributes["BASE64"] == "N") {
 			if (inNode.attributes["NAME"].substring(inNode.attributes["NAME"].length-4, inNode.attributes["NAME"].length).toLowerCase() == ".xml") {
-				buffer_ta.html = true;
-				buffer_ta.text = XMLHighlighter.highlight(new XML(inNode.firstChild.toString()));
+				//buffer_ta.html = true;
+				buffer_ta.html = false;
+				//buffer_ta.text = XMLHighlighter.highlight(new XML(inNode.firstChild.toString()));
+				buffer_ta.text = inNode.firstChild.toString();
 			} else {
 				buffer_ta.text = inNode.firstChild.toString();
 			}
 		} else {
 			if (inNode.attributes["NAME"].substring(inNode.attributes["NAME"].length-4, inNode.attributes["NAME"].length).toLowerCase() == ".xml") {
-				buffer_ta.html = true;
-				buffer_ta.text = XMLHighlighter.highlight(new XML(Base64.Decode(inNode.firstChild.toString())));
+				//buffer_ta.html = true;
+				buffer_ta.html = false;
+				//buffer_ta.text = XMLHighlighter.highlight(new XML(Base64.Decode(inNode.firstChild.toString())));
+				var b64:Base64 = new Base64();
+				buffer_ta.text = b64.decode(inNode.firstChild.toString());
 			} else {
-				buffer_ta.text = Base64.Decode(inNode.firstChild.toString());
+				var b64:Base64 = new Base64();
+				buffer_ta.text = b64.decode(inNode.firstChild.toString());
 			}
 		}
 	}
@@ -120,6 +128,7 @@ class Forms.Control.Files extends Forms.Control.AdminView {
 				switch (inNode.nodeName) {
 				case "FILE" :
 					fileDownloaded(inNode);
+					trace(inNode);
 					break;
 				case "FILES" :
 					filesList(inNode);
