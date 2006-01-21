@@ -115,11 +115,6 @@ public class AdminClientHandler extends Thread
 	{
 		logger.info("Client connection received. Handler started");
 		thisThreadRunning = true;
-		byte[] buf = new byte[0];  // buffer to read data off the input stream
-		int leftOverCount = 0;     // counter for any data still in "buf" after detecting "null"
-		int bufMarker = 0;         // counter to mark place in "buf"
-		int avail = 0;             // the number of bytes available to be read
-		int len = 0;               // the number of bytes actually read
 
 		doStartupCacheItems();
 		//sendStartupRequest();
@@ -127,7 +122,6 @@ public class AdminClientHandler extends Thread
 		while (thisThreadRunning)
 		{
 
-			int count = 0;         // number of bytes written to readBuffer
 
 			// endflag is set to true when we see a "null" byte
 			String newBuffer = "";
@@ -250,8 +244,6 @@ public class AdminClientHandler extends Thread
 	protected void processXML (Document xmlDoc){
 
 		String name = ""; // the name of the node
-		String key = "";
-		boolean commandBuilt = false;
 		
 		Element rootElement = xmlDoc.getRootElement(); 
 		name = rootElement.getName();

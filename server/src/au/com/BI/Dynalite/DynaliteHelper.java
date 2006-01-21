@@ -63,6 +63,7 @@ public class DynaliteHelper {
 		//if (templevel == 49) templevel = 50;
 		//if (templevel == 57) templevel = 58;
 		if (templevel >= 99) templevel = 100;
+		if (templevel <= 1) templevel = 0;
 
 		return templevel;
 	}

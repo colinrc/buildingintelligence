@@ -1,7 +1,26 @@
+20/1/2006
+Released V1.5b8
+
+Comms
+Ensure IP receiver does not overflow buffer in receipt of very large or numerous packets.
+Only resend a comms command that hasn't acknowleged 3 times before clearing the comamnd- ensures a rogue
+command cannot block a device. (only applies with devices that acknowleging commands)
+
+CBUS
+Fix infinite memory usage from CBUS temperature polls if the cbus network does not reply.
+Added POLL_TEMP_INTERVAL to CBUS configuration file, interval in seconds between polls.
+Ensure CBUS connection going away will not cause null pointer in the cbus temperature probe.
+
+Dynalite
+Ensure a light level of 1% is interpretted as off.
+Ensure correct behaviour for area fades.
+
+
 14/1/2006
 Corrected bug in IP listener for fixed length packets, if two packets were received before the 
 first is processed it was possible for the second to overwrite the first. This could have effected
 CBUS, Tutondo on protocol A, Dynalight, Pelco, when connected via IP.
+
 
 
 12/1/2006

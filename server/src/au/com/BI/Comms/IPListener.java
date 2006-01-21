@@ -110,7 +110,7 @@ public class IPListener extends Thread implements CommsListener
 	public void run () {
 		handleEvents = true;
         int bytesRead = 0;
-		byte readArray[] =  new byte [transmitOnBytes ];
+		byte readArray[] =  new byte [transmitOnBytes + 1];
 
 		if (is == null) return;
 		
@@ -155,7 +155,9 @@ public class IPListener extends Thread implements CommsListener
 							if (startPos  >=  transmitOnBytes) break;
 				   }
 				   if (startPos != 0) {
-					   byte retArray[] = (byte [])readArray.clone(); 
+					   byte retArray[] = new byte[transmitOnBytes];
+					   System.arraycopy (readArray,0,retArray,0,transmitOnBytes);
+					   
 					   str = new String (retArray);
 						logger.log (Level.FINEST,"Received ip packet : " + str);
 
@@ -226,6 +228,7 @@ public class IPListener extends Thread implements CommsListener
 						   }
 						   int arrayOffset = 0;
 						   int prevOffset = -1;
+						   // Test to make sure curPos will never get out of range! 
 						   if (readArray[curPos] < 0) {
 							   arrayOffset = 128 + readArray[curPos] & 127;
 						   } else {

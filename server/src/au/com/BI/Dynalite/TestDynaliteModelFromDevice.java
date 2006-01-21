@@ -6,7 +6,6 @@ import au.com.BI.Lights.*;
 import au.com.BI.Util.*;
 import junitx.framework.*;
 import java.util.*;
-import au.com.BI.Comms.CommsFail;
 import au.com.BI.ToggleSwitch.*;
 import au.com.BI.IR.*;
 

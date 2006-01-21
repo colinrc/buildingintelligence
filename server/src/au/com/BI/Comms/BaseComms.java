@@ -270,14 +270,20 @@ protected int transmitMessageOnBytes = 0;
 
 				timeOfLastCommand = System.currentTimeMillis();
 				waitingForFeedback = true;
-				if (nextCommand.hasByteArray()) {
-					if (logger.isLoggable(Level.FINEST)){
-						logger.log (Level.FINEST,"Resending command to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
-					}
-					sendString(lastCommand.getCommandBytes());
+				lastCommand.incRepeatCount();
+				if (lastCommand.getRepeatCount() > 3) {
+					logger.log(Level.FINER,"Comms command was sent 3 times without reply, deleting");
+					eachSentCommand.remove();
 				} else {
-					logger.log (Level.FINEST,"ReSending command to comms port " + (String)lastCommand.getCommandCode());
-					sendString((String)lastCommand.getCommandCode());
+					if (nextCommand.hasByteArray()) {
+						if (logger.isLoggable(Level.FINEST)){
+							logger.log (Level.FINEST,"Resending command to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
+						}
+						sendString(lastCommand.getCommandBytes());
+					} else {
+						logger.log (Level.FINEST,"ReSending command to comms port " + (String)lastCommand.getCommandCode());
+						sendString((String)lastCommand.getCommandCode());
+					}
 				}
 			}
 		}

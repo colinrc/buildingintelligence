@@ -23,6 +23,7 @@ public class CommsCommand extends Command implements CommandInterface{
 	public boolean sent = false;
 	public boolean sentSuccess = false;
 	protected boolean keepForHandshake = false;
+	protected int repeatCount = 0;
 
 
 	// public static int RawText = 1;
@@ -147,4 +148,16 @@ public class CommsCommand extends Command implements CommandInterface{
     public void setKeepForHandshake(boolean keepForHandshake) {
         this.keepForHandshake = keepForHandshake;
     }
+
+	public int getRepeatCount() {
+		return repeatCount;
+	}
+
+	public void setRepeatCount(int repeatCount) {
+		this.repeatCount = repeatCount;
+	}
+	
+	public void incRepeatCount() {
+		this.repeatCount++;
+	}
 }

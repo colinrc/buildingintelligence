@@ -111,11 +111,13 @@ public class Model extends BaseModel implements DeviceModel {
 	{
 		boolean didCommand=false;
 		User currentUser = command.getUser();
+		logger.log (Level.FINEST,"Received a Pelco ack");
 		try {
 			CommsCommand theCommand = (CommsCommand)command;
-			byte resp[] = theCommand.getKey().getBytes();
+			byte resp[] = theCommand.getCommandBytes();
 			if (resp != null) {
 				if (comms.acknowlegeCommand(CommDevice.PelcoSend,makeKey(resp[1]))) {
+					logger.log (Level.FINEST,"Acknowlegement was valid, sending next instruction");
 					comms.sendNextCommand(CommDevice.PelcoSend,makeKey(resp[1]));
 				}
 			}

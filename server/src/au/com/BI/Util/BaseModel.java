@@ -216,7 +216,6 @@ public class BaseModel
         public void incrementVariable(String key) {
                 Double value;
                 double numValue;
-                Double num;
                 Object hold;
                 Long longValue;
                 long numLong;
@@ -258,7 +257,6 @@ public class BaseModel
         public void decrementVariable(String key) {
                 Double value;
                 double numValue;
-                Double num;
                 Object hold;
                 Long longValue;
                 long numLong;
@@ -327,7 +325,6 @@ public class BaseModel
         }
 
         public void doCommand(CommandInterface command) throws CommsFail {
-                String theWholeKey = command.getKey();
 
                 if (configHelper.getLastCommandType() == DeviceType.OUTPUT) {
                         doOutputItem(command);

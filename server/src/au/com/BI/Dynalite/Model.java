@@ -88,7 +88,7 @@ public class Model extends BaseModel implements DeviceModel {
 			if (controlType == DeviceType.MONITORED)  {
 				DynaliteDevice device = (DynaliteDevice)details;
 				if (((DeviceType)details).getDeviceType() == DeviceType.LIGHT_DYNALITE ) {
-					String areaCode = ((DynaliteDevice)details).getAreaCode() ;
+					String areaCode = device.getAreaCode() ;
 					theKey = dynaliteHelper.buildKey('L',areaCode,key);
 
 					areaCodes.addKey (areaCode);
@@ -209,7 +209,6 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {
 		String theWholeKey = command.getKey();
-		boolean findingState = false;
 		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
 
 		if (deviceList == null) {
@@ -226,8 +225,8 @@ public class Model extends BaseModel implements DeviceModel {
 
 				switch (device.getDeviceType()) {
 					case DeviceType.LIGHT_DYNALITE :
-						DynaliteDevice lightDevice = (DynaliteDevice)device;
-						String fullKey = this.dynaliteHelper.buildKey('L',lightDevice.getAreaCode(),lightDevice.getKey());
+						//DynaliteDevice lightDevice = (DynaliteDevice)device;
+						//String fullKey = this.dynaliteHelper.buildKey('L',lightDevice.getAreaCode(),lightDevice.getKey());
 	
 						if ((outputDynaliteCommand = buildDynaliteResult ((DynaliteDevice)device,command)) != null) {
 							try {
@@ -246,8 +245,8 @@ public class Model extends BaseModel implements DeviceModel {
 						break;
 						
 					case DeviceType.LIGHT_DYNALITE_AREA :
-						DynaliteDevice lightArea = (DynaliteDevice)device;
-						String fullKeyStr = this.dynaliteHelper.buildKey('L',lightArea.getAreaCode(),lightArea.getKey());
+						//DynaliteDevice lightArea = (DynaliteDevice)device;
+						//String fullKeyStr = this.dynaliteHelper.buildKey('L',lightArea.getAreaCode(),lightArea.getKey());
 	
 						if ((outputDynaliteCommand = buildDynaliteResult ((DynaliteDevice)device,command)) != null) {
 							try {
@@ -398,7 +397,6 @@ public class Model extends BaseModel implements DeviceModel {
 		// Switch
 		int buttonNumber = msg[4];
 		int switchKey = msg[2];
-		boolean buttonPressed = false;
 		if (msg[6] == 0) {
 			DynaliteInputDevice switchDevice = this.findButton(switchKey,buttonNumber);
 			if (switchDevice != null) {
@@ -641,11 +639,12 @@ public class Model extends BaseModel implements DeviceModel {
 		int area = msg[1];
 		DynaliteDevice lightDev = this.findSingleDevice(DynaliteHelper.Light,area,msg[2],true);
 		if (lightDev != null) {
-			if (msg[4] == (byte)255){
+			int level = dynaliteHelper.scaleLevelForFlash(msg[4]);
+			if (msg[4] == (byte)255 || level == 0){
 				dynResult = buildCommandForFlash ((DeviceType)lightDev,"off",0,0,255,this.currentUser);		
 				result.decoded.add(dynResult);
 			} else {
-				dynResult = buildCommandForFlash ((DeviceType)lightDev,"on",dynaliteHelper.scaleLevelForFlash(msg[4]),0,255,this.currentUser);		
+				dynResult = buildCommandForFlash ((DeviceType)lightDev,"on",level,0,255,this.currentUser);		
 				result.decoded.add(dynResult);
 			}
 		}
@@ -660,7 +659,6 @@ public class Model extends BaseModel implements DeviceModel {
 	protected InterpretResult interperetDynaliteCode (byte msg[]) throws CommsFail {
 		int oppCode = msg[3];
 
-		DynaliteCommand dynResult = null;
 		InterpretResult result = new InterpretResult();
 		
 		switch (oppCode){
@@ -783,9 +781,13 @@ public class Model extends BaseModel implements DeviceModel {
 				} else {
 					level = dynaliteHelper.scaleLevelFromFlash(levelStr);
 				}
-	
-				dynaliteReturn =buildDynaliteRampToCommand ( device.getAreaCode(), device.getKey(),
-						level,command.getExtra2Info(),command.getExtra3Info());
+				if (device.isAreaDevice()) {
+					dynaliteReturn =buildDynaliteRampToCommand ( device.getKey(), "0",
+							level,command.getExtra2Info(),command.getExtra3Info());
+				} else {
+					dynaliteReturn =buildDynaliteRampToCommand ( device.getAreaCode(), device.getKey(),
+							level,command.getExtra2Info(),command.getExtra3Info());					
+				}
 
 			} catch (NumberFormatException ex){
 				logger.log (Level.WARNING,"Level string for Dynalite is not numeric " + command.getExtraInfo());

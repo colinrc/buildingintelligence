@@ -5,7 +5,6 @@ import au.com.BI.Flash.*;
 import au.com.BI.Lights.*;
 import au.com.BI.Util.*;
 import junitx.framework.*;
-import au.com.BI.Comms.*;
 
 public class TestDynaliteModelFromFlash extends TestCase {
 

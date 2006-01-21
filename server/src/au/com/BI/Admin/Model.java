@@ -10,7 +10,6 @@ import au.com.BI.Config.ConfigHelper;
 import au.com.BI.User.User;
 import au.com.BI.Util.*;
 
-import java.io.IOException;
 import java.util.*;
 
 import org.jdom.*;
@@ -123,7 +122,6 @@ public class Model extends BaseModel implements DeviceModel, ClientModel
 	
 	public void broadcastCommand (CommandInterface command){
 		Element message = command.getXMLCommand();
-		String key = command.getKey();
 		
 		if (command.getTargetDeviceID() != 0)
 			adminControlListener.sendToOneClient (new Document (message),command.getTargetDeviceID());

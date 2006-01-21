@@ -11,7 +11,6 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import au.com.BI.Comms.*;
-import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Command.*;
 import au.com.BI.Sensors.*;
 
@@ -25,7 +24,7 @@ public class PollTemperatures extends Thread {
 	protected boolean running;
 	protected CommDevice comms;
 	protected long pollValue = 60000;
-	protected List commandQueue;
+	protected List commandQueue = null;
 	protected int deviceNumber = -1;
 	protected List temperatureSensors = null;
 	
@@ -56,10 +55,12 @@ public class PollTemperatures extends Thread {
 		
 	public void run ()  {
 		running = true;
-		boolean commandSent = false;
 		try {
 			while (running) {
-			    commandSent = false;
+			    /*
+			    synchronized (comms){
+			    	comms.acknowlegeCommand(DeviceType.TEMPERATURE);
+			    }*/
 
 			    synchronized (temperatureSensors) {
 			    		Iterator eachTemp = temperatureSensors.iterator();
@@ -73,11 +74,12 @@ public class PollTemperatures extends Thread {
 						cbusCommsCommand.setActionType(DeviceType.TEMPERATURE);
 						cbusCommsCommand.setActionCode(device.getKey());
 						cbusCommsCommand.setExtraInfo (((SensorFascade)(device)).getOutputKey());
-		
-						synchronized (comms) {
-							comms.addCommandToQueue (cbusCommsCommand);
-						} 
-						logger.log (Level.FINEST,"Queueing cbus temperature probe "  + " for " + (String)cbusCommsCommand.getExtraInfo());
+						if (comms != null){
+							synchronized (comms) {
+								comms.addCommandToQueue (cbusCommsCommand);
+							} 
+							logger.log (Level.FINEST,"Queueing cbus temperature probe "  + " for " + (String)cbusCommsCommand.getExtraInfo());
+				    		}
 			    		}
 			    }
 				try {
@@ -86,7 +88,7 @@ public class PollTemperatures extends Thread {
 			}
 		} catch (CommsFail e1) {
 			running = false;
-			logger.log(Level.WARNING, "Communication failed polling HAL " + e1.getMessage());
+			logger.log(Level.WARNING, "Communication failed polling CBUS " + e1.getMessage());
 			Command command = new Command();
 			command.setCommand ("Attatch");
 			command.setKey("SYSTEM");

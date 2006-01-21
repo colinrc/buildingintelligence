@@ -35,8 +35,8 @@ public class Model extends BaseModel implements DeviceModel {
 	protected char currentChar = 'g';
 	protected LinkedList temperatureSensors = null;
 	protected PollTemperatures pollTemperatures = null;
+	protected long tempPollValue = 0L;
 
-	private int lastPercLevel = -1;
 	byte []etxChars;
 	String etxString = "";
 
@@ -281,12 +281,26 @@ public class Model extends BaseModel implements DeviceModel {
 
 	public void doStartup(List commandQueue) throws CommsFail {
 		if (applicationCodes.isEmpty()) applicationCodes.add("38");
+
+		String pollTempStr = (String)this.getParameter("POLL_TEMP_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
+
+		try {
+			tempPollValue = Long.parseLong(pollTempStr) * 1000;
+		} catch (NumberFormatException ex) {
+			tempPollValue = 0L;
+		}
 		enableMMI (true);
-		if (!temperatureSensors.isEmpty()) {
+
+		if (!temperatureSensors.isEmpty() && tempPollValue != 0L) {
 			pollTemperatures = new PollTemperatures();
+			pollTemperatures.setPollValue(tempPollValue);
 			pollTemperatures.setTemperatureSensors(temperatureSensors);
+			pollTemperatures.setCommandQueue(commandQueue);
+			pollTemperatures.setDeviceNumber(InstanceID);
 			pollTemperatures.setComms(comms);
 			pollTemperatures.start();
+		} else {
+			logger.log(Level.INFO,"Not starting temperature polls");
 		}
 	}
 
@@ -326,7 +340,6 @@ public class Model extends BaseModel implements DeviceModel {
 			//new byte [] {(byte)0xA3,(byte)0x42,(byte)00, (byte)02,'h',(byte)ETX});
 			CommsCommand cbusCommsCommand3 = new CommsCommand();
 			CommsCommand cbusCommsCommand4 = new CommsCommand();
-			String nextChar4 = "";
 			if (enable) {
 				toSend = "A3300029";
 				checkSum = this.calcChecksum(toSend);
@@ -357,6 +370,11 @@ public class Model extends BaseModel implements DeviceModel {
 
 	}
 
+    public int logout(User user) throws CommsFail {
+    	pollTemperatures.setRunning(false);
+        return DeviceModel.SUCCESS;
+    }
+    
 	public boolean doIControl (String keyName, boolean isClientCommand)
 	{
 		configHelper.wholeKeyChecked(keyName);
@@ -380,7 +398,6 @@ public class Model extends BaseModel implements DeviceModel {
 
 	public void doOutputItem (CommandInterface command) throws CommsFail {
 		String theWholeKey = command.getKey();
-		boolean findingState = false;
 		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
 
 		if (deviceList == null) {
@@ -531,6 +548,7 @@ public class Model extends BaseModel implements DeviceModel {
 
 				if (!didCommand && ((cbusStartByte & 120) == 8)) {
 					// Measurement command
+					/*
 					logger.log (Level.FINE,"Received measurement command " + cBUSString);
 					String deviceID = cBUSString.substring (2,4);
 					logger.log (Level.FINE,"For device ID " + deviceID);
@@ -539,6 +557,7 @@ public class Model extends BaseModel implements DeviceModel {
 					} catch (ClassCastException ex) {
 						logger.log (Level.WARNING,"Measurement Device ID matched a CBUS device that was not a Sensor");
 					}
+					*/
 
 				}
 				if (!didCommand && cbusStartByte == 5) {
@@ -866,10 +885,7 @@ public class Model extends BaseModel implements DeviceModel {
 			char nibbleVal2 = ' ';
 			char nibbleVal3 = ' ';
 			char nibbleVal4 = ' ';
-			byte testValue1 = 0;
-			byte testValue2 = 0;
-			byte testValue3 = 0;
-			byte testValue4 = 0;
+
 
 			// pair 0 is used to show the start group code. 
 			for (int i = 0; i <= numPairs ; i ++ ) {
@@ -910,7 +926,6 @@ public class Model extends BaseModel implements DeviceModel {
 				if (cBUSDevice == null || cBUSDevice.getRelay().equals ("Y")){
 					continue;
 				}
-				boolean cameFromFlash = this.getStateFromFlash(cBUSDevice);
 				if (value == 0) {
 					if (logger.isLoggable(Level.FINEST)){
 						logger.log (Level.FINEST,"Sending CBUS off to flash for key "+keyVal + "(0x"+Integer.toHexString(keyVal)+")");
