@@ -33,7 +33,7 @@ public class PollDevice extends Thread {
 	public boolean pausing = false;
 	protected int waitExtra = 0;
 	protected int deviceNumber = -1;
-	protected HashMap state = null;
+	protected HashMap halState = null;
 	
 	public PollDevice() {
 		super();
@@ -163,11 +163,11 @@ public class PollDevice extends Thread {
 									stateCommsCommand.setKeepForHandshake(true);
 			
 									comms.addCommandToQueue (stateCommsCommand);
-									synchronized (state){
-										StateOfZone zoneState = 	(StateOfZone)state.get (device.getKey());
+									synchronized (halState){
+										StateOfZone zoneState = 	(StateOfZone)halState.get (device.getKey());
 										if (zoneState == null) zoneState = new StateOfZone();
 										zoneState.setIgnoreNextPower(false);
-										state.put (device.getKey(),zoneState);
+										halState.put (device.getKey(),zoneState);
 									}
 								} catch (ClassCastException ex){
 									logger.log(Level.FINE,"Non audio device has been configured for HAL");
@@ -272,12 +272,12 @@ public class PollDevice extends Thread {
 	}
 
 
-	public HashMap getState() {
-		return state;
+	public HashMap getHalState() {
+		return halState;
 	}
 
 
-	public void setState(HashMap state) {
-		this.state = state;
+	public void setHalState(HashMap state) {
+		this.halState = state;
 	}
 }

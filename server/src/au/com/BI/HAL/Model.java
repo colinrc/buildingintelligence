@@ -225,7 +225,7 @@ public class Model extends AudioModel implements DeviceModel {
 		if (pollValue > 1000) {
 			pollDevice.setPollValue(pollValue);
 			pollDevice.setConfigHelper(configHelper);
-			pollDevice.setState(state);
+			pollDevice.setHalState(state);
 			logger.log(Level.FINE, "Starting HAL polling, interval = "
 				+ pollValueStr);
 			pollDevice.start();
@@ -412,7 +412,7 @@ public class Model extends AudioModel implements DeviceModel {
 			}
 			*/
 			synchronized (state) {
-		        pollDevice.setState(state);
+		        pollDevice.setHalState(state);
 			}
 		    synchronized (pollDevice) {
 		        pollDevice.pausing = false;
