@@ -1,0 +1,91 @@
+<!--
+Text is port 5001
+Comfort is port 5002
+Raw is port 5003
+CBUS is port 5004
+GC100 is port 5005
+M1 is port 5006
+-->
+
+<simulator>
+
+<log hexOnly="Y" />
+<!-- All characters will be translated to hex, rather than just unprintable ones. -->
+
+<control>
+	<name>Cbus Dining Light</name>
+	<protocol>CBUS</protocol>
+	<key>11</key>
+	<display_type>button</display_type>
+</control>
+
+<control>
+	<name>Cbus Lounge LV Light</name>
+	<protocol>CBUS</protocol>
+	<key>10</key>
+	<display_type>slider</display_type>
+</control>
+
+<control>
+	<name>Raw Pool Heater</name>
+	<protocol>RAW</protocol>
+	<on>Pool On</on>
+	<off>Pool Off</off>
+	<display_type>button</display_type>
+</control>
+
+<control>
+	<name>Raw Pool Temp</name>
+	<protocol>RAW</protocol>
+	<on>TEMP</on>
+	<display_type>slider</display_type>
+</control>
+
+<control>
+	<name>M1 Entry PIR (key 2)</name>
+	<protocol>M1</protocol>
+	<protocol_detail>INPUT</protocol_detail>
+	<key>002</key>
+	<display_type>button</display_type>
+</control>
+
+<control>
+	<name>M1 Lawn Sprinkler (key 1)</name>
+	<protocol>M1</protocol>
+	<protocol_detail>OUTPUT</protocol_detail>
+	<key>003</key>
+	<display_type>button</display_type>
+</control>
+
+<control>
+	<name>Comfort Garage Door</name>
+	<protocol>COMFORT</protocol>
+	<protocol_detail>INPUT</protocol_detail>
+	<key>002</key>
+	<display_type>button</display_type>
+</control>
+
+
+<control>
+	<name>Comfort Garage Door</name>
+	<protocol>COMFORT</protocol>
+	<protocol_detail>CONTROLS</protocol_detail>
+	<key>002</key>
+	<display_type>button</display_type>
+</control>
+
+<control>
+	<name>Comfort Controls</name>
+	<protocol>COMFORT</protocol>
+	<protocol_detail>CONTROLS</protocol_detail>
+	<key>AM01:Alarm 01,AM02:Alarm 02,DB01:Doorbell</key>
+	<display_type>control_list</display_type>
+</control>
+
+<control>
+	<name>Gc100 test</name>
+	<protocol>GC100</protocol>
+	<display_type>no_display</display_type>
+</control>
+
+</simulator>
