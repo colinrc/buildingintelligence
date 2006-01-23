@@ -1,7 +1,14 @@
+package au.com.BI.simulator.gui;
+
+
 import javax.swing.*;
 
+import au.com.BI.simulator.sims.Helper;
+import au.com.BI.simulator.sims.SimulateDevice;
+import au.com.BI.simulator.sims.Simulator;
+import au.com.BI.simulator.util.Utility;
+
 import java.util.*;
-import java.awt.*;
 
 
 public class ControlType {

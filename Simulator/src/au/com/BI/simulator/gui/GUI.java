@@ -1,11 +1,25 @@
+package au.com.BI.simulator.gui;
+
+
+
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+import au.com.BI.simulator.sims.Helper;
+import au.com.BI.simulator.sims.Simulator;
+import au.com.BI.simulator.util.Utility;
+import au.com.BI.simulator.conf.*;
+
 
 public class GUI extends JPanel {
-	   // Various GUI components and info
+	   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	// Various GUI components and info
 	   public JFrame mainFrame = null;
 	   public JTextArea chatText = null;
 	   public JTextField chatLine = null;
@@ -27,7 +41,7 @@ public class GUI extends JPanel {
 	   protected Icon iconOn;
 	   protected Icon iconOff;
 	   protected JPanel buttonBar;
-	   protected boolean hexOnly = false;
+	   protected Config config;
 
 	   public static StringBuffer toAppend = new StringBuffer("");
 	   /////////////////////////////////////////////////////////////////
@@ -35,11 +49,9 @@ public class GUI extends JPanel {
 	   public  GUI (Helper helper,Simulator simulator) {
 			  this.helper = helper;
 			  this.simulator = simulator;
+			  this.config = helper.getConfig();
 		      JPanel pane = null;
 		      ActionAdapter buttonListener = null;
-		      if (helper.getPropValue("HexOnly").equals("Y")) {
-		    	  	this.setHexOnly(true);
-		      }
 		      
 		      java.net.URL imageOnURL = Simulator.class.getResource("images/lightOn.png");
 		      java.net.URL imageOffURL = Simulator.class.getResource("images/lightOff.png");
@@ -146,6 +158,9 @@ public class GUI extends JPanel {
 		      mainFrame.setVisible(true);
 	   }
 
+	   public void redraw () {
+		   mainFrame.repaint();
+	   }
 	   
 	   public void addControls (Vector controls) {
 
@@ -294,7 +309,7 @@ public class GUI extends JPanel {
 		   String toWrite = "";
 		   for (int i = 0; i < s.length(); i ++ ){
 			   int eachOne = s.charAt(i);
-			   if (hexOnly || ((eachOne < 32 || eachOne > 126 ) && eachOne != 10 && eachOne != 13 ) ){
+			   if (config.isHexOnly()|| ((eachOne < 32 || eachOne > 126 ) && eachOne != 10 && eachOne != 13 ) ){
 				   String hexVers = Integer.toHexString(eachOne);
 				   if (hexVers.length() == 1) hexVers = "0" + hexVers;
 				   toWrite += "#" + hexVers;
@@ -334,7 +349,7 @@ public class GUI extends JPanel {
 			   return;
 		   }
 		   if (control.isHasSlider()){
-			   control.slider.setValue(level);
+			   control.getSlider().setValue(level);
 		   }
 	   }
 
@@ -363,13 +378,4 @@ public class GUI extends JPanel {
 		   SwingUtilities.invokeLater(update);
 	   }
 
-
-	public boolean isHexOnly() {
-		return hexOnly;
-	}
-
-
-	public void setHexOnly(boolean hexOnly) {
-		this.hexOnly = hexOnly;
-	}
 }

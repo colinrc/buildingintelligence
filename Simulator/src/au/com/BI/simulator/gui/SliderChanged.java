@@ -1,5 +1,12 @@
+package au.com.BI.simulator.gui;
+
+
 import javax.swing.event.*;
 import javax.swing.*;
+
+import au.com.BI.simulator.sims.Helper;
+import au.com.BI.simulator.sims.SimulateDevice;
+import au.com.BI.simulator.sims.Simulator;
 
 
 public class SliderChanged implements ChangeListener {
