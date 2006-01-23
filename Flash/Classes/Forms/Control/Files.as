@@ -60,7 +60,6 @@ class Forms.Control.Files extends Forms.Control.AdminView {
 		if (confirm_chk.selected) {
 			var b64:Base64 = new Base64();
 			var xmlMsg = new XML('<ADMIN COMMAND = "UPLOAD" NAME="'+fileName_ti.text+'" DIR="'+files_cb.selectedItem.label+'" BASE64="Y"><![CDATA['+b64.encode(buffer_ta.text)+']]></ADMIN>\n');
-			trace(xmlMsg);
 			//var xmlMsg = new XML('<ADMIN COMMAND = "UPLOAD" NAME="'+fileName_ti.text+'" DIR="'+files_cb.selectedItem.label+'" BASE64="N"><![CDATA['+buffer_ta.text+']]></ADMIN>\n');
 			monitor_socket.send(xmlMsg);
 		}

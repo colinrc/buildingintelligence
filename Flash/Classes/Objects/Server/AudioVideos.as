@@ -31,7 +31,7 @@
 		return audiovideosNode;
 	}
 	public function getName():String {
-		return "Audio/Video Inputs";
+		return "Audio/Video Zones";
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());

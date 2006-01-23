@@ -32,7 +32,6 @@
 		tempKeys = tempKeys.concat(alarms.getKeys());
 		tempKeys = tempKeys.concat(alerts.getKeys());
 		tempKeys = tempKeys.concat(analogues.getKeys());
-		tempKeys.push(display_name);
 		return tempKeys;
 	}
 	public function isValid():Boolean {
@@ -98,6 +97,10 @@
 		newDevice.attributes["ACTIVE"] = active;
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
+		var tempCatalogues = catalogues.toXML();
+		for (var child in tempCatalogues.childNodes) {
+			newDevice.appendChild(tempCatalogues.childNodes[child]);
+		}
 		var newRawConnection = new XMLNode(1, type);
 		var tempCustoms = customs.toXML();
 		for(var child in tempCustoms.childNodes){
@@ -148,10 +151,6 @@
 			newRawConnection.appendChild(tempAnalogues.childNodes[child]);
 		}
 		newDevice.appendChild(newRawConnection);
-		var tempCatalogues = catalogues.toXML();
-		for (var child in tempCatalogues.childNodes) {
-			newDevice.appendChild(tempCatalogues.childNodes[child]);
-		}
 		return newDevice;
 	}
 	public function toTree():XMLNode{

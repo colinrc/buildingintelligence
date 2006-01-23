@@ -10,7 +10,6 @@
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(audiovideos.getKeys());
-		tempKeys.push(display_name);
 		return tempKeys;
 	}
 	public function isValid():Boolean {
@@ -37,16 +36,16 @@
 		newDevice.attributes["ACTIVE"] = active;
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
+		var tempCatalogues = catalogues.toXML();
+		for (var child in tempCatalogues.childNodes) {
+			newDevice.appendChild(tempCatalogues.childNodes[child]);
+		}
 		var newHal = new XMLNode(1,type);
 		var tempAudioVideos = audiovideos.toXML();
 		for (var child in tempAudioVideos.childNodes){
 			newHal.appendChild(tempAudioVideos.childNodes[child]);
 		}
 		newDevice.appendChild(newHal);
-		var tempCatalogues = catalogues.toXML();
-		for (var child in tempCatalogues.childNodes) {
-			newDevice.appendChild(tempCatalogues.childNodes[child]);
-		}
 		return newDevice;
 	}
 	public function getName():String {
@@ -54,8 +53,8 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
-		newNode.appendChild(audiovideos.toTree());
 		newNode.appendChild(catalogues.toTree());
+		newNode.appendChild(audiovideos.toTree());
 		newNode.object = this;
 		return newNode;
 	}

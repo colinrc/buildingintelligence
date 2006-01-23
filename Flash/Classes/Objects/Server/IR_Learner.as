@@ -8,7 +8,6 @@
 	private var parameters:XMLNode;
 	public function getKeys():Array{
 		var tempKeys = new Array();
-		tempKeys.push(display_name);
 		return tempKeys;
 	}
 	public function isValid():Boolean {

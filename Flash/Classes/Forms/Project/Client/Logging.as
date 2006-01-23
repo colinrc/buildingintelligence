@@ -29,7 +29,6 @@ class Forms.Project.Client.Logging {
 		delete_btn.enabled = false;
 	}
 	private function itemChange(evtObj) {
-		name_ti.text = group_li.selectedItem.label;
 		delete_btn.enabled = true;
 	}
 	public function save():Void {

@@ -13,7 +13,6 @@
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(lights.getKeys());
 		tempKeys = tempKeys.concat(contacts.getKeys());
-		tempKeys.push(display_name);
 		return tempKeys;
 	}
 	public function isValid():Boolean {
@@ -49,6 +48,10 @@
 		newDevice.attributes["ACTIVE"] = active;
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
+		var tempCatalogues = catalogues.toXML();
+		for (var child in tempCatalogues.childNodes) {
+			newDevice.appendChild(tempCatalogues.childNodes[child]);
+		}
 		var newDynalite = new XMLNode(1, type);
 		var tempIRs = irs.toXML();
 		for (var child in tempIRs.childNodes) {
@@ -63,10 +66,6 @@
 			newDynalite.appendChild(tempContacts.childNodes[child]);
 		}
 		newDevice.appendChild(newDynalite);
-		var tempCatalogues = catalogues.toXML();
-		for (var child in tempCatalogues.childNodes) {
-			newDevice.appendChild(tempCatalogues.childNodes[child]);
-		}
 		return newDevice;
 	}
 	public function getName():String {
@@ -74,10 +73,10 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
+		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(lights.toTree());
 		newNode.appendChild(contacts.toTree());
 		newNode.appendChild(irs.toTree());
-		newNode.appendChild(catalogues.toTree());
 		newNode.object = this;
 		return newNode;
 	}

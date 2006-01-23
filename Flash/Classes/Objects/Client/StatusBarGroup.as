@@ -15,7 +15,8 @@
 		return "forms.project.client.statusbargroup";
 	}
 	public function toXML():XMLNode {
-		var newNode = new XMLNode(1,"group")
+		var newNode = new XMLNode(1,"group");
+		newNode.attributes["name"] = name;
 		newNode.attributes["icon"] = icon;
 		newNode.attributes["show"] = show;
 		newNode.attributes["hide"] = hide;

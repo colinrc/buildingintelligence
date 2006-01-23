@@ -29,8 +29,8 @@
 		var serverNode = new XMLNode(1, "CONFIG");
 		var descriptionNode = new XMLNode(1, "DESC");
 		descriptionNode.appendChild(new XMLNode(2, description));
-		serverNode.appendChild(controls.toXML());
 		serverNode.appendChild(descriptionNode);
+		serverNode.appendChild(controls.toXML());
 		for (var device in devices) {
 			serverNode.appendChild(devices[device].toXML());
 		}

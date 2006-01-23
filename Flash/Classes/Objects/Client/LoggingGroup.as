@@ -16,6 +16,7 @@
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1,"group")
+		newNode.attributes["name"] = name;
 		newNode.attributes["icon"] = icon;
 		newNode.attributes["type"] = type;
 		newNode.attributes["listenTo"] = listenTo;

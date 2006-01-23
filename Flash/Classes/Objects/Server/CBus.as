@@ -12,7 +12,6 @@
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(sensors.getKeys());
 		tempKeys = tempKeys.concat(lights.getKeys());
-		tempKeys.push(display_name);
 		return tempKeys;
 	}
 	public function isValid():Boolean {
@@ -45,6 +44,10 @@
 		newDevice.attributes["ACTIVE"] = active;
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
+		var tempCatalogues = catalogues.toXML();
+		for (var child in tempCatalogues.childNodes) {
+			newDevice.appendChild(tempCatalogues.childNodes[child]);
+		}
 		var newCBus = new XMLNode(1, type);
 		var tempSensors = sensors.toXML();
 		for (var child in tempSensors.childNodes) {
@@ -55,17 +58,13 @@
 			newCBus.appendChild(tempLights.childNodes[child]);
 		}
 		newDevice.appendChild(newCBus);
-		var tempCatalogues = catalogues.toXML();
-		for (var child in tempCatalogues.childNodes) {
-			newDevice.appendChild(tempCatalogues.childNodes[child]);
-		}
 		return newDevice;
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
+		newNode.appendChild(catalogues.toTree());		
 		newNode.appendChild(sensors.toTree());
 		newNode.appendChild(lights.toTree());
-		newNode.appendChild(catalogues.toTree());
 		newNode.object = this;
 		return newNode;
 	}

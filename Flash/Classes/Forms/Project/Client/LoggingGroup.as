@@ -85,27 +85,20 @@ class Forms.Project.Client.LoggingGroup {
 			newControls.push(newControl);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		/*
+		attributes = new Array();
 		switch (type_cmb.selectedItem.label) {
 		case "web" :
-			for (var attribute in attributes) {
-				if (attributes[attribute].name == "url") {
-					attributes[attribute].value = form_mc.url_ti.text;
-				}
-			}
+				attributes.push({name:"url",value:form_mc.url_ti.text});
 			break;
 		case "tally" :
-		case "log" :
-			for (var attribute in attributes) {
-				if (attributes[attribute].name == "label") {
-					dataObj.label = attributes[attribute].value;			
-				}
-				if (attributes[attribute].name == "timeformat") {
-					dataObj.timeformat = attributes[attribute].value;
-				}				
-			}
+				attributes.push({name:"label",value:form_mc.label_ti.text});
+				attributes.push({name:"timeformat",value:form_mc.timeformat_ti.text});
 			break;
-		}*/
+		case "log" :
+				attributes.push({name:"label",value:form_mc.label_ta.text});
+				attributes.push({name:"timeformat",value:form_mc.timeformat_ti.text});
+			break;
+		}
 		_global.left_tree.selectedNode.object.setData(new Object({controls:newControls, name:name_ti.text, icon:icon_ti.text, listenTo:listenTo_ti.text, type:type_cmb.selectedItem.label, attributes:attributes}));
 		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
 		_global.left_tree.selectedIndex = tempIndex;

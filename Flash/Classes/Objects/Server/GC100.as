@@ -10,7 +10,6 @@
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(modules.getKeys());
-		tempKeys.push(display_name);
 		return tempKeys;
 	}
 	public function isValid():Boolean {
@@ -52,8 +51,8 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
-		newNode.appendChild(modules.toTree());
 		newNode.appendChild(catalogues.toTree());
+		newNode.appendChild(modules.toTree());
 		newNode.object = this;
 		return newNode;
 	}
