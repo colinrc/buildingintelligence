@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Raw_Items {
+
+class Forms.Project.Device.Raw_Items extends Forms.BaseForm {
 	private var raw_items:Array;
 	private var raw_items_dg:DataGrid;
 	private var delete_btn:Button;

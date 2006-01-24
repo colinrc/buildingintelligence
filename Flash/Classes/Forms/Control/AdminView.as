@@ -1,4 +1,4 @@
-﻿class Forms.Control.AdminView {
+﻿class Forms.Control.AdminView extends Forms.BaseForm {
 	private var server_socket:XMLSocket;
 	private var monitor_socket:XMLSocket;
 	public function init():Void{

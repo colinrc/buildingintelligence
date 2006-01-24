@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.ArbitraryIcon{
+
+class Forms.Project.Client.ArbitraryIcon extends Forms.BaseForm {
 	private var icons_ti:TextInput;
 	private var commands_ti:TextInput;
 	private var key_ti:TextInput;

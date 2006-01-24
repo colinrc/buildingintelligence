@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Custom {
+
+class Forms.Project.Device.Custom extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var customs:Array;
 	private var customs_dg:DataGrid;

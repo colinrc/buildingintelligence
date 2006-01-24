@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Alert {
+
+class Forms.Project.Device.Alert extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var alerts:Array;
 	private var alerts_dg:DataGrid;

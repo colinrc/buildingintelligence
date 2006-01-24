@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Toggle {
+
+class Forms.Project.Device.Toggle extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var toggle_type:String;
 	private var toggles:Array;

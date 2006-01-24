@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.DynaliteLights {
+
+class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var lights:Array;
 	private var lights_dg:DataGrid;

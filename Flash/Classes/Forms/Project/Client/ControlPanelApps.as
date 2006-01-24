@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.ControlPanelApps{
+
+class Forms.Project.Client.ControlPanelApps extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var add_btn:Button;
 	private var del_btn:Button;

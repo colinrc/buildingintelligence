@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Camera {
+
+class Forms.Project.Device.Camera extends Forms.BaseForm {
 	private var cameras:Array;
 	private var cameras_dg:DataGrid;
 	private var save_btn:Button;

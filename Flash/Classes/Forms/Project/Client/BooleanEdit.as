@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.BooleanEdit{
+
+class Forms.Project.Client.BooleanEdit extends Forms.BaseForm {
 	private var update_btn:Button;
 	private var value_chk:CheckBox;
 	private var name_lb:Label;

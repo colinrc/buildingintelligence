@@ -1,5 +1,6 @@
 ﻿import mx.controls.*;
-class Forms.Project.Client.LoggingTally{
+
+class Forms.Project.Client.LoggingTally extends Forms.BaseForm {
 	private var label_ti:TextInput;
 	private var label:String;
 	private var timeformat_ti:TextInput;

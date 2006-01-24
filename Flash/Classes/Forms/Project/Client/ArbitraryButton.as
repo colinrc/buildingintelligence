@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.ArbitraryButton{
+
+class Forms.Project.Client.ArbitraryButton extends Forms.BaseForm {
 	private var bgColour_mc:MovieClip;
 	private var borderColour_mc:MovieClip;
 	private var fontColour_mc:MovieClip;

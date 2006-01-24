@@ -1,5 +1,6 @@
 ﻿import mx.controls.*;
-class Forms.Project.Device.IP {
+
+class Forms.Project.Device.IP extends Forms.BaseForm {
 	private var node:XMLNode;
 	private var address_ti:TextInput;
 	private var port_ti:TextInput;

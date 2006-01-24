@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.JRobin.JRobin {
+
+class Forms.Project.JRobin.JRobin extends Forms.BaseForm {
 	private var active_lb:Label;
 	private var active_cb:ComboBox;
 	private var interval_lb:Label;

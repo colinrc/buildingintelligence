@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.CbusLights {
+
+class Forms.Project.Device.CbusLights extends Forms.BaseForm {
 	private var lights:Array;
 	private var lights_dg:DataGrid;
 	private var save_btn:Button;

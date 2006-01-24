@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.CbusSensors {
+
+class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 	private var sensors:Array;
 	private var sensors_dg:DataGrid;
 	private var save_btn:Button;

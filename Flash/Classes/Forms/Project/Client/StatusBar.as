@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.StatusBar{
+
+class Forms.Project.Client.StatusBar extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var add_grp_btn:Button;
 	private var del_grp_btn:Button;

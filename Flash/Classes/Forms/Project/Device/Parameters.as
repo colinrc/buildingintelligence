@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Parameters {
+
+class Forms.Project.Device.Parameters extends Forms.BaseForm {
 	private var node:XMLNode;
 	private var params_dg:DataGrid;
 	private var update_btn:Button;

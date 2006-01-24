@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.GC100_IR {
+
+class Forms.Project.Device.GC100_IR extends Forms.BaseForm {
 	private var name:String;
 	private var parameters:XMLNode;
 	private var parameters_mc:MovieClip;

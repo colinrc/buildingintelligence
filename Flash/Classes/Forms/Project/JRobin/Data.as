@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.JRobin.Data {
+
+class Forms.Project.JRobin.Data extends Forms.BaseForm {
 	private var display_name:String;
 	private var variable:String;
 	private var source:String;

@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.ArbitraryLabel{
+
+class Forms.Project.Client.ArbitraryLabel extends Forms.BaseForm {
 	private var fontColour_mc:MovieClip;
 	private var label_ti:TextInput;
 	private var fontSize_ti:TextInput;

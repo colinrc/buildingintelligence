@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Raw_Interface {
+
+class Forms.Project.Device.Raw_Interface extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var name:String;
 	private var dname_ti:TextInput;

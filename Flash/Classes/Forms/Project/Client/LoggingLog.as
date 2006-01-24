@@ -1,5 +1,6 @@
 ﻿import mx.controls.*;
-class Forms.Project.Client.LoggingLog{
+
+class Forms.Project.Client.LoggingLog extends Forms.BaseForm {
 	private var label_ta:TextArea;
 	private var label:String;
 	private var timeformat_ti:TextInput;

@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Controls {
+
+class Forms.Project.Controls extends Forms.BaseForm {
 	private var controls:XMLNode;
 	private var variables:XMLNode;
 	private var messages:XMLNode;

@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.GC100_Modules {
+
+class Forms.Project.Device.GC100_Modules extends Forms.BaseForm {
 	private var modules:Array;
 	private var modules_dg:DataGrid;
 	private var type_cb:ComboBox;

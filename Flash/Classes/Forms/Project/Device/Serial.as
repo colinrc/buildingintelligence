@@ -1,6 +1,6 @@
 ﻿import mx.controls.*;
 
-class Forms.Project.Device.Serial {
+class Forms.Project.Device.Serial extends Forms.BaseForm {
 	private var node:XMLNode;
 	private var port_ti:TextInput;
 	private var baud_ti:TextInput;

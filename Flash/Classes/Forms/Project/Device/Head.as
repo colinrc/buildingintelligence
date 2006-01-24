@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Head {
+
+class Forms.Project.Device.Head extends Forms.BaseForm {
 	private var name:String;
 	private var display_name:String;
 	private var active:String;

@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.StatusBarGroup {
+
+class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var icon_ti:TextInput;
 	private var show_ti:TextInput;

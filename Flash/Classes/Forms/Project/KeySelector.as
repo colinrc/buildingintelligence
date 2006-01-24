@@ -1,6 +1,6 @@
 ﻿import mx.controls.*
 
-class Forms.Project.KeySelector {
+class Forms.Project.KeySelector extends Forms.BaseForm {
 
 	private var left_li:List;
 	private var right_li:List;

@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.X10Lights {
+
+class Forms.Project.Device.X10Lights extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var lights:Array;
 	private var lights_dg:DataGrid;

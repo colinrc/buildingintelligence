@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Catalogue {
+
+class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 	private var name:String;
 	private var items:Array;
 	private var items_dg:DataGrid;

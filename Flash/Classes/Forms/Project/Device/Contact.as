@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Contact {
+
+class Forms.Project.Device.Contact extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var contacts:Array;
 	private var contacts_dg:DataGrid;

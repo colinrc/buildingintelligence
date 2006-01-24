@@ -1,6 +1,6 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.Zone {
+class Forms.Project.Client.Zone extends Forms.BaseForm  {
 	private var rooms:Array;
 	private var name_ti:TextInput;
 	private var name:String;

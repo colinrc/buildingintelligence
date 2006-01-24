@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.Arbitrary {
+
+class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 	private var items:Array;
 	private var items_li:List;
 	private var save_btn:Button;

@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Server {
+
+class Forms.Project.Server extends Forms.BaseForm {
 	private var devices:Array;
 	private var description:String;
 	private var description_ta:TextArea;

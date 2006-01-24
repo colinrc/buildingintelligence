@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Variables {
+
+class Forms.Project.Variables extends Forms.BaseForm {
 	private var variables:XMLNode;
 	private var variables_dg:DataGrid;
 	private var update_btn:Button;

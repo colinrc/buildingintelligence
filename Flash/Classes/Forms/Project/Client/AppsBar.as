@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.AppsBar {
+
+class Forms.Project.Client.AppsBar extends Forms.BaseForm {
 	private var icons:Array;
 	private var icon_li:List;
 	private var add_btn:Button;

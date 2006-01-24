@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.AudioVideo {
+
+class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 	private var audiovideos:Array;
 	private var container:String;
 	private var inputs_dg:DataGrid;

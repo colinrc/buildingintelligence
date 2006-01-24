@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.LoggingGroup {
+
+class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var icon_ti:TextInput;
 	private var listenTo_ti:TextInput;

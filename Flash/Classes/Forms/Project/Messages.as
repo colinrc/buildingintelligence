@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Messages {
+
+class Forms.Project.Messages extends Forms.BaseForm {
 	private var node:XMLNode;
 	private var items_dg:DataGrid;
 	private var update_btn:Button;

@@ -1,6 +1,6 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Control.Settings {
+class Forms.Control.Settings extends Forms.BaseForm {
 	private var serverName_lb:mx.controls.Label;
 	private var serverName_ti:mx.controls.TextInput;
 	private var ipAddress_lb:mx.controls.Label;

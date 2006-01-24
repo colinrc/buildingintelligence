@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Raws {
+
+class Forms.Project.Device.Raws extends Forms.BaseForm {
 	private var raw:Array;
 	private var raw_dg:DataGrid;
 	private var update_btn:Button;

@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.Settings{
+
+class Forms.Project.Client.Settings extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var left_li:List;
 	private var right_li:List;

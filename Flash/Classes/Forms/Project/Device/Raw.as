@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Raw {
+
+class Forms.Project.Device.Raw extends Forms.BaseForm {
 	private var command:String;
 	private var code:String;
 	private var extra:String;

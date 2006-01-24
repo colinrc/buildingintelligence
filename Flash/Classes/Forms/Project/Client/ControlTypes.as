@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.ControlTypes {
+
+class Forms.Project.Client.ControlTypes extends Forms.BaseForm {
 	private var controls:Array;
 	private var controls_li:List;
 	private var add_btn:Button;

@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Counter {
+
+class Forms.Project.Device.Counter extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var counters:Array;
 	private var counters_dg:DataGrid;

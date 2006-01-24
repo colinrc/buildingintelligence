@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.ColourEdit{
+
+class Forms.Project.Client.ColourEdit extends Forms.BaseForm {
 	private var update_btn:Button;
 	private var colour_picker_mc:MovieClip;
 	private var name_lb:Label;

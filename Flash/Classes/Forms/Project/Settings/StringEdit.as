@@ -1,6 +1,6 @@
 ﻿import mx.controls.*
 
-class Forms.Project.Settings.StringEdit {
+class Forms.Project.Settings.StringEdit extends Forms.BaseForm {
 
 	private var label_lb:Label;
 	private var variable_ti:TextInput;

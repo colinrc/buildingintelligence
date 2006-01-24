@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.Property {
+
+class Forms.Project.Client.Property extends Forms.BaseForm {
 	private var zones:Array;
 	private var zones_li:DataGrid;
 	private var add_btn:Button;

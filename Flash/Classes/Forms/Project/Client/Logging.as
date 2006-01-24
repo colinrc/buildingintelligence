@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.Logging {
+
+class Forms.Project.Client.Logging extends Forms.BaseForm {
 	private var groups:Array;
 	private var group_li:List;
 	private var add_btn:Button;

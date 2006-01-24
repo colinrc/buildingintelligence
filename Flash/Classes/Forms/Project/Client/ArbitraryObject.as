@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.ArbitraryObject{
+
+class Forms.Project.Client.ArbitraryObject extends Forms.BaseForm {
 	private var src_ti:TextInput;
 	private var key_ti:TextInput;
 	private var width_ti:TextInput;

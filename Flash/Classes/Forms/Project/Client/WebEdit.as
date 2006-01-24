@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.WebEdit{
+
+class Forms.Project.Client.WebEdit extends Forms.BaseForm {
 	private var update_btn:Button;
 	private var value_ti:TextInput;
 	private var name_lb:Label;

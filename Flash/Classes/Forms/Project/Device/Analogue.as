@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Analogue {
+
+class Forms.Project.Device.Analogue extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var analogues:Array;
 	private var analogues_dg:DataGrid;

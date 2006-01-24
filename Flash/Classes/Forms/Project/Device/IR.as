@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.IR {
+
+class Forms.Project.Device.IR extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var irs:Array;
 	private var ir_dg:DataGrid;

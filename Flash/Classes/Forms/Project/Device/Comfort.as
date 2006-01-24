@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Comfort {
+
+class Forms.Project.Device.Comfort extends Forms.BaseForm {
 	private var device:Object;
 	private var scrollBar:mx.containers.ScrollPane;
 	private var save_btn:mx.controls.Button;

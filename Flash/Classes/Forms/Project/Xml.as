@@ -1,7 +1,8 @@
 ﻿import mx.controls.*
 //import Utils.XMLHighlighter;
 import mx.utils.Delegate;
-class Forms.Project.Xml {
+
+class Forms.Project.Xml extends Forms.BaseForm {
 
 	private var xml_ta:TextArea;
 	private var node:XMLNode;

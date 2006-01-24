@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Client.Control {
+
+class Forms.Project.Client.Control extends Forms.BaseForm {
 	private var type:String;
 	private var rows:Array;
 	private var rows_li:List;

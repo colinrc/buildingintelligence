@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Raw_Interfaces {
+
+class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 	private var raw_interfaces:Array;
 	private var interfaces_dg:DataGrid;
 	private var save_btn:Button;

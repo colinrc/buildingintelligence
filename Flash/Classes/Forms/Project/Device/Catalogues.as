@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Catalogues {
+
+class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 	private var catalogues:Array;
 	private var catalogues_dg:DataGrid;
 	private var add_btn:Button;

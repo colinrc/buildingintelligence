@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Raw_Connection {
+
+class Forms.Project.Device.Raw_Connection extends Forms.BaseForm {
 	private var device:Object;
 	private var customs_mc:MovieClip;
 	private var interfaces_mc:MovieClip;

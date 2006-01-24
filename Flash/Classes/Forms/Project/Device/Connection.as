@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.Connection {
+
+class Forms.Project.Device.Connection extends Forms.BaseForm {
 	private var node:XMLNode;
 	private var type_cb:ComboBox;
 	private var type_mc:Loader;

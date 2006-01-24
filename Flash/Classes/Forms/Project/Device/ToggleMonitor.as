@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Project.Device.ToggleMonitor {
+
+class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 	private var monitors:Array;
 	private var monitors_dg:DataGrid;
 	private var update_btn:Button;
