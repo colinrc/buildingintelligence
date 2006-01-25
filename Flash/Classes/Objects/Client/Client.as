@@ -69,6 +69,9 @@
 	public function getData():Object{
 		return new Object();
 	}
+	public function getControlTypes():Object{
+		return control_types.toXML();
+	}
 	public function setXML(newData:XMLNode):Void{
 		settings = new Objects.Client.Settings();
 		sounds = new Objects.Client.Sounds();

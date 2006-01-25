@@ -63,6 +63,7 @@
 					for(var room in newData.childNodes[child].childNodes){
 					var newRoom = new Objects.Client.Room();
 					newRoom.setXML(newData.childNodes[child].childNodes[room]);
+					rooms.push(newRoom);
 					}
 					break;
 				}
