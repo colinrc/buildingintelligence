@@ -13,11 +13,11 @@
 		return "forms.project.device.raw_items";
 	}
 	public function toXML():XMLNode {
-		var newModules = new XMLNode(1, "Raw Items");
+		var newRaw_Items = new XMLNode(1, "Raw Items");
 		for (var raw_item in raw_items) {
-			newModules.appendChild(raw_items[raw_item].toXML());
+			newRaw_Items.appendChild(raw_items[raw_item].toXML());
 		}
-		return newModules;
+		return newRaw_Items;
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,getName());

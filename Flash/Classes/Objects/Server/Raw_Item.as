@@ -18,7 +18,7 @@
 		return "forms.project.device.raw_item";
 	}
 	public function toXML():XMLNode {
-		var newRaw_Item = new XMLNode(1, "RAW ITEMS");
+		var newRaw_Item = new XMLNode(1, "RAW_ITEMS");
 		newRaw_Item.attributes["CATALOGUE"] = catalogue;
 		newRaw_Item.attributes["PREFIX"] = prefix;
 		for (var raw in raws) {

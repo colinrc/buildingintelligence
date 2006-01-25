@@ -20,7 +20,7 @@
 		return "forms.project.device.gc100_modules";
 	}
 	public function toXML():XMLNode {
-		var newModules = new XMLNode(1, "Modules");
+		var newModules = new XMLNode(1, "modules");
 		for (var module in modules) {
 			newModules.appendChild(modules[module].toXML());
 		}
