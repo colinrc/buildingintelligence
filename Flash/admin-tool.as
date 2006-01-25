@@ -28,7 +28,8 @@ server = new Objects.ServerConnection("Server1", "127.0.0.1", 10002, 10001);
 server.makeConnections();
 
 //_global.style.setStyle("themeColor", "haloOrange");
-left_tree.vScrollPolicy = right_tree.vScrollPolicy="auto";
+left_tree.vScrollPolicy = right_tree.vScrollPolicy = "auto";
+left_tree.hScrollPolicy = "auto";
 left_tree.setStyle("openDuration", 50);
 // form holder placed in the correct spot
 this.createEmptyMovieClip("formContent_mc", 0);
@@ -63,11 +64,10 @@ client_xml.onLoad = function(success) {
 		//var _global.server_test:Objects.Server.Server;
 		_global.server_test = new Objects.Server.Server();
 		_global.server_test.setXML(this.firstChild);
-		var client_test:Objects.Client.Client;
-		client_test = new Objects.Client.Client();
-		client_test.setXML(client_xml.firstChild);
+		_global.client_test = new Objects.Client.Client();
+		_global.client_test.setXML(client_xml.firstChild);
 		project_xml.appendChild(_global.server_test.toTree());
-		project_xml.appendChild(client_test.toTree());
+		project_xml.appendChild(_global.client_test.toTree());
 		setView("home");
 	};
 	server_xml.load("sample_server.xml");
@@ -85,7 +85,7 @@ setView = function (view, dataObj) {
 	tabs_tb._visible = true;
 	tabBody_mc._visible = true;
 	formContent_mc.form_mc.removeMovieClip();
-	formContent_mc.createEmptyMovieClip("form_mc", 20);
+	formContent_mc.createEmptyMovieClip("form_mc", 0);
 	// render the view
 	switch (view) {
 	case "home" :
@@ -136,7 +136,7 @@ setView = function (view, dataObj) {
 			view = "control.controls";
 		}
 		
-		var form_mc = formContent_mc.attachMovie("forms."+view, "form_mc", 0);
+		var form_mc = formContent_mc.attachMovie("forms."+view, "form"+random(999)+"_mc", 0);
 		server.attachView(form_mc);
 		break;
 	case "preview" :
@@ -159,11 +159,13 @@ setView = function (view, dataObj) {
 tabs_tb.change = function(eventObj) {
 	if (this.lastTab.view != eventObj.target.selectedItem.view && eventObj.target.selectedItem.view.length) {
 		if(left_tree.selectedNode.object != undefined){
-			formContent_mc.form_mc.removeMovieClip();
+			formContent_mc.form_mc.unloadMovie();
 			formContent_mc.createEmptyMovieClip("form_mc", 0);
 			if (eventObj.target.selectedItem.label =="XML") {
 				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, {node:left_tree.selectedNode.object.toXML()});				
-			} else{
+			} else if (eventObj.target.selectedItem.label =="Preview"){
+				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, {controls:_global.client_test.getControlTypes(),windowXML:left_tree.selectedNode.object.toXML()});				
+			}else{
 				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, left_tree.selectedNode.object.getData());				
 			}
 		}
@@ -181,9 +183,15 @@ leftTreeListener.change = function(eventObj) {
 	formContent_mc.form_mc.removeMovieClip();
 	formContent_mc.createEmptyMovieClip("form_mc", 0);
 	if (node.object != undefined) {
+		if(node.nodeName != "Window"){
 		var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + random(999) + "_mc", 0, node.object.getData());
 		tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}];
 		tabs_tb.selectedIndex = 0;
+		} else{
+		var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + random(999) + "_mc", 0, node.object.getData());
+		tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview",view:"forms.project.room.tab.preview"}];
+		tabs_tb.selectedIndex = 0;
+		}
 	}
 }
 left_tree.addEventListener("change", leftTreeListener);

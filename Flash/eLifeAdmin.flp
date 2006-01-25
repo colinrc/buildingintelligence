@@ -10,7 +10,7 @@
                 <project_file path="./Classes/Forms/Control/AdminView.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/Settings.as" filetype="as" />
             </project_folder>
-            <project_folder name="Project" expanded="false">
+            <project_folder name="Project" expanded="true">
                 <project_folder name="Room" expanded="true">
                     <project_folder name="Tab" expanded="true">
                         <project_file path="./Classes/Forms/Project/Room/Tab/Preview.as" filetype="as" />
@@ -59,7 +59,7 @@
                     <project_file path="./Classes/Forms/Project/JRobin/Data.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/JRobin/JRobin.as" filetype="as" />
                 </project_folder>
-                <project_folder name="Client" expanded="false">
+                <project_folder name="Client" expanded="true">
                     <project_file path="./Classes/Forms/Project/Client/BooleanEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/ColourEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/NumberEdit.as" filetype="as" />
@@ -169,4 +169,5 @@
         </project_folder>
     </project_folder>
     <project_file path="./admin-tool.fla" filetype="fla" profile="" def_file="true" />
+    <project_file path="./admin-tool.as" filetype="as" />
 </flash_project>
