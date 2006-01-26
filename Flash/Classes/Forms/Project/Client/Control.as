@@ -1,80 +1,193 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Client.Control extends Forms.BaseForm {
 	private var type:String;
 	private var rows:Array;
-	private var rows_li:List;
+	private var editor_dg:DataGrid;
+	private var editor_ld:Loader;
+	private var editor_mc:MovieClip;
 	private var type_ti:TextInput;
 	private var add_btn:Button;
-	private var delete_btn:Button;
 	private var up_btn:Button;
 	private var down_btn:Button;
+	private var left_btn:Button;
+	private var right_btn:Button;
 	private var save_btn:Button;
+	private var object:Object;
 	public function init() {
+		editor_dg.columnNames = ["0", "1", "2", "3", "4"];
+		editor_dg.getColumnAt(0).headerText = "Rows";
+		editor_dg.getColumnAt(1).headerText = "Item 1";
+		editor_dg.getColumnAt(2).headerText = "Item 2";
+		editor_dg.getColumnAt(3).headerText = "Item 3";
+		editor_dg.getColumnAt(4).headerText = "Item 4";
+		left_btn.enabled = false;
+		right_btn.enabled = false;
 		for (var row in rows) {
-			rows_li.addItem(rows[row]);
+			var newArray = new Array();
+			var newObject = {label:"Row", cases:rows[row].attributes["cases"]};
+			newObject.toString = function():String  {
+				return this.label;
+			};
+			newArray.push(newObject);			
+			for (var child = 0; child<rows[row].childNodes.length; child++) {
+				var newItem = {label:rows[row].childNodes[child].attributes["type"], object:rows[row].childNodes[child]};
+				newItem.toString = function():String  {
+					return this.label;
+				};
+				newArray.push(newItem);
+			}
+			editor_dg.addItem(newArray);
 		}
 		type_ti.text = type;
-		delete_btn.enabled = false;
-		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		add_btn.addEventListener("click", Delegate.create(this, addItem));
+		object = new Object();
+		object.itemIndex = undefined;
+		object.columnIndex = undefined;
+		add_btn.addEventListener("click", Delegate.create(this, addRow));
 		up_btn.addEventListener("click", Delegate.create(this, moveUp));
 		down_btn.addEventListener("click", Delegate.create(this, moveDown));
-		rows_li.addEventListener("change", Delegate.create(this, itemChange));
+		right_btn.addEventListener("click", Delegate.create(this, moveRight));
+		left_btn.addEventListener("click", Delegate.create(this, moveLeft));		
 		save_btn.addEventListener("click", Delegate.create(this, save));
-		rows_li.labelFunction = function(item_obj:Object):String  {
-			return item_obj.getName();
+		editor_dg.addEventListener("cellPress", Delegate.create(this,cellClick));
+	}
+	private function cellClick(eventObject){
+		editor_ld.createEmptyMovieClip("editor_mc",0);
+		object.itemIndex = eventObject.itemIndex;
+		object.columnIndex = eventObject.columnIndex;
+		if(editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].label == "Row"){	
+			right_btn.enabled = false;
+			left_btn.enabled = false;
+			editor_mc = editor_ld.attachMovie("forms.project.client.row", "editor_"+random(999)+"_mc", 0, {cases:editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].cases});
+			editor_mc.deleteRow = Delegate.create(this,deleteRow);
+			editor_mc.updateRow = Delegate.create(this,updateRow);
+			editor_mc.addItem = Delegate.create(this,addItem);
+		}
+		else{
+			right_btn.enabled = true;
+			left_btn.enabled = true;
+			editor_mc = editor_ld.attachMovie("forms.project.client.controltype"+editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].label,"editor_"+random(999)+"_mc",0, {object:editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].object});
+			editor_mc.deleteItem = Delegate.create(this,deleteItem);
+			editor_mc.updateItem = Delegate.create(this,updateItem);
+		}
+	}
+	private function deleteItem(){
+		editor_dg.dataProvider[object.itemIndex].splice(object.columnIndex,1);
+		editor_dg.selectedIndex = undefined;
+		object.itemIndex= undefined;
+		object.columnIndex = undefined;
+		editor_ld.createEmptyMovieClip("editor_mc",0);		
+	}
+	private function updateItem(){
+		editor_dg.dataProvider[object.itemIndex][object.columnIndex].object = editor_mc.getObject();
+		editor_dg.selectedIndex = undefined;
+		object.itemIndex= undefined;
+		object.columnIndex = undefined;
+		editor_ld.createEmptyMovieClip("editor_mc",0);		
+	}
+	private function addItem(){
+		var newItemNode = new XMLNode(1,"item");
+		newItemNode.attributes["type"] = editor_mc.type_cmb.text;
+		var newObject = new Object();
+		newObject.label = editor_mc.type_cmb.text;
+		newObject.object = newItemNode;
+		newObject.toString = function():String  {
+			return this.label;
 		};
+		editor_dg.dataProvider[object.itemIndex].push(newObject);
+		editor_dg.selectedIndex = editor_dg.selectedIndex;
+	}
+	private function addRow() {
+		var newArray = new Array();
+		var newObject = new Object();
+		newObject.label = "Row";
+		newObject.cases = undefined;
+		newObject.toString = function():String  {
+			return this.label;
+		};
+		newArray.push(newObject);
+		editor_dg.dataProvider.addItem(newArray);	
+		//this is not redrawing, why??
+		editor_dg.selectedIndex = editor_dg.selectedIndex;		
+	}
+	private function deleteRow() {
+		editor_dg.removeItemAt(object.itemIndex);
+		editor_dg.selectedIndex = undefined;
+		object.itemIndex= undefined;
+		object.columnIndex = undefined;
+		editor_ld.createEmptyMovieClip("editor_mc",0);
+	}
+	private function updateRow(){
+		editor_dg.dataProvider[object.itemIndex][object.columnIndex].cases = editor_mc.cases_ti.text;
+		editor_dg.selectedIndex = undefined;
+		object.itemIndex= undefined;
+		object.columnIndex = undefined;
+		editor_ld.createEmptyMovieClip("editor_mc",0);
+	}
+	private function moveLeft(){
+		if(object != undefined){
+			if(object.columnIndex != 1){
+				var tempObj = editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex-1);
+				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex-1,editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex));
+				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex,tempObj);
+				editor_dg.selectedIndex = undefined;
+				editor_dg.selectedIndices = undefined;
+				object.itemIndex = undefined;
+				object.columnIndex = undefined;
+			}
+		}
+	}
+	private function moveRight(){
+		if(object != undefined){
+			if(object.columnIndex != editor_dg.dataProvider[object.itemIndex].length-1){
+				var tempObj = editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex+1);
+				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex+1,editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex));
+				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex,tempObj);
+				editor_dg.selectedIndex = undefined;
+				editor_dg.selectedIndices = undefined;
+				object.itemIndex = undefined;
+				object.columnIndex = undefined;
+			}
+		}
 	}
 	private function moveUp() {
-		if (rows_li.selectedIndex != undefined) {
-			if (rows_li.selectedIndex != rows_li.length-1) {
-				var tempObj = rows_li.getItemAt(rows_li.selectedIndex+1);
-				rows_li.replaceItemAt(rows_li.selectedIndex+1, rows_li.selectedItem);
-				rows_li.replaceItemAt(rows_li.selectedIndex, tempObj);
-				var tempIndex = rows_li.selectedIndex+1;
-				rows_li.selectedIndex = undefined;
-				rows_li.selectedIndices = undefined;
-				rows_li.selectedIndex = tempIndex;
+		if (editor_dg.selectedIndex != undefined) {
+			if (editor_dg.selectedIndex != editor_dg.length-1) {
+				var tempObj = editor_dg.getItemAt(editor_dg.selectedIndex+1);
+				editor_dg.replaceItemAt(editor_dg.selectedIndex+1, editor_dg.selectedItem);
+				editor_dg.replaceItemAt(editor_dg.selectedIndex, tempObj);
+				//var tempIndex = editor_dg.selectedIndex+1;
+				editor_dg.selectedIndex = undefined;
+				editor_dg.selectedIndices = undefined;
+				//editor_dg.selectedIndex = tempIndex;
 			}
 		}
 	}
 	private function moveDown() {
-		if (rows_li.selectedIndex != undefined) {
-			if (rows_li.selectedIndex != 0) {
-				var tempObj = rows_li.getItemAt(rows_li.selectedIndex-1);
-				rows_li.replaceItemAt(rows_li.selectedIndex-1, rows_li.selectedItem);
-				rows_li.replaceItemAt(rows_li.selectedIndex, tempObj);
-				var tempIndex = rows_li.selectedIndex-1;
-				rows_li.selectedIndex = undefined;
-				rows_li.selectedIndices = undefined;
-				rows_li.selectedIndex = tempIndex;
+		if (editor_dg.selectedIndex != undefined) {
+			if (editor_dg.selectedIndex != 0) {
+				var tempObj = editor_dg.getItemAt(editor_dg.selectedIndex-1);
+				editor_dg.replaceItemAt(editor_dg.selectedIndex-1, editor_dg.selectedItem);
+				editor_dg.replaceItemAt(editor_dg.selectedIndex, tempObj);
+				//var tempIndex = editor_dg.selectedIndex-1;
+				editor_dg.selectedIndex = undefined;
+				editor_dg.selectedIndices = undefined;
+				//editor_dg.selectedIndex = tempIndex;
 			}
 		}
 	}
-	private function deleteItem() {
-		rows_li.removeItemAt(rows_li.selectedIndex);
-		rows_li.selectedIndex = undefined;
-		delete_btn.enabled = false;
-	}
-	private function addItem() {
-		var newRowNode = new XMLNode(1,"row");
-		var newRowObject = new Objects.Client.Row();
-		newRowObject.setXML(newRowNode);
-		rows_li.addItem(newRowObject);
-		rows_li.selectedIndex = undefined;
-		delete_btn.enabled = false;
-	}
-	private function itemChange(evtObj) {
-		delete_btn.enabled = true;
-	}
 	public function save():Void {
 		var newRows = new Array();
-		for (var index = rows_li.length-1; index>=0; index--) {
-			newRows.push(rows_li.getItemAt(index));
+		for (var index = editor_dg.dataProvider.length-1; index>=0; index--) {
+			var tempArray = editor_dg.getItemAt(index);
+			var newRow = new XMLNode(1,"row");
+			newRow.attributes["cases"] = tempArray[0].cases;
+			for(var item =0; item< tempArray.length;item++){
+				newRow.appendChild(tempArray[item].object);
+			}
+			newRows.push(newRow);
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({rows:newRows,type:type_ti.text}));
+		_global.left_tree.selectedNode.object.setData(new Object({rows:newRows, type:type_ti.text}));
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
 		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
 		for (var child in _global.left_tree.selectedNode.childNodes) {
