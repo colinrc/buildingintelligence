@@ -11,16 +11,13 @@
 		var newNode = new XMLNode(1,"control");
 		newNode.attributes["type"] = type;
 		for(var row in rows){
-			newNode.appendChild(rows[row].toXML());
+			newNode.appendChild(rows[row]);
 		}
 		return newNode;
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
-		for(var row in rows){
-			newNode.appendChild(rows[row].toTree());
-		}
 		return newNode;
 	}
 	public function getName():String{
@@ -34,9 +31,7 @@
 		if(newData.nodeName == "control"){
 			type = newData.attributes["type"];
 			for(var child in newData.childNodes){
-				var newRow = new Objects.Client.Row();
-				newRow.setXML(newData.childNodes[child]);
-				rows.push(newRow);
+				rows.push(newData.childNodes[child]);
 			}
 		}
 		else{
