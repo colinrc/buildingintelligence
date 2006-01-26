@@ -26,11 +26,11 @@
                 <IR_LEARNER/>
         </DEVICE>
        <!-- ______________________________________  PELCO DEFS  ____________________  -->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="PELCO" DESCRIPTION="Pelco Defs">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="PELCO" DESCRIPTION="Pelco Defs">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
-                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
-                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4999"/>
                 </CONNECTION>
                 <PARAMETERS>
                         <ITEM NAME="PROTOCOL" VALUE="D" />
@@ -162,7 +162,7 @@
         </DEVICE>
 
         !-- ______________________________________  CBUS DEFS  ____________________  -->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Lights">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Lights">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
@@ -181,7 +181,7 @@
                         <LIGHT_CBUS ACTIVE="N" KEY="0C" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="0D" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" RELAY="Y" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="0E" NAME="Ensuite LV Light" DISPLAY_NAME="ENSUITE_LV_LIGHT" RELAY="N" POWER_RATING="100"/>
-                        <LIGHT_CBUS ACTIVE="Y" KEY="10" NAME="Lounge LV Lights" DISPLAY_NAME="LOUNGE_LV_LIGHT" RELAY="Y" POWER_RATING="80"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="10" NAME="Lounge LV Lights" DISPLAY_NAME="LOUNGE_LV_LIGHT" RELAY="N" POWER_RATING="80"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="11" NAME="Dining Room Lights" DISPLAY_NAME="DINING_LIGHT" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="12" NAME="Lounge Light" DISPLAY_NAME="LOUNGE_LIGHT" RELAY="Y" POWER_RATING="80"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="0F" NAME="Family Light" DISPLAY_NAME="FAMILY_LIGHT" POWER_RATING="80"/>
@@ -328,7 +328,7 @@
                 </COMFORT>
         </DEVICE>
         <!-- _____________________________ COMFORT DEFS _____________________________-->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="COMFORT" DESCRIPTION="Comfort" PASSWORD="1234">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="COMFORT" DESCRIPTION="Comfort" PASSWORD="1234">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
