@@ -1,3 +1,28 @@
+26/1/2006
+Released V1.5b9
+Calendar.
+Added the ability to store EXTRA, EXTRA2,EXTRA3, COMMAND fields in the calendar record. 
+These are passed to the macro command when it runs. 
+Extra4,EXTRA5 are unavailable as they are used internally to pass information to the running macro.
+
+For example the following macro will switch the light passed in the extra field on. 
+It will be set to the level specified in extra2, the macro will pause for the time specified
+in extra3 then switch it off.
+
+ <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="Light On" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
+    <CONTROL KEY="%EXTRA%" COMMAND="on" EXTRA="%EXTRA2%" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+        <CONTROL KEY="" COMMAND="pause" EXTRA="%EXTRA3%"  />
+ <CONTROL KEY="%EXTRA%" COMMAND="off" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+
+
+The appropriate calendar entry to run this macro once would be
+ <event title="Test Light On" description="Test Light On" date="2006-01-26" time="15:41:16" eventType="once" macroName="Light On" extra="OFFICE_LIGHT" extra2="50" extra3="5" />
+
+
+Calendar subsystem refactored to facilitate testing.
+Added the ability to have the target control (ie. KEY) as a parameter.
+Calendar entries now maintain their order through multiple saves.
+
 20/1/2006
 Released V1.5b8
 
