@@ -8,6 +8,7 @@
 		update="false"
 		basedir="classes" 
 		includes = "**/*.class" 
+		excludes = "**/Test*.class"
 		manifest="manifest" />
 	<jar destfile="Build/eLife.jar" 
 		update="true"
