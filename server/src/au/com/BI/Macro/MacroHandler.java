@@ -371,14 +371,13 @@ public class MacroHandler {
 	    }
     }
 
-	public Map getCalendar_message_params() {
+    public Map getCalendar_message_params() {
 		return calendar_message_params;
 	}
 
 	public void setCalendar_message_params(Map calendar_message_params) {
 		this.calendar_message_params = calendar_message_params;
 	}
-
 
 	public List getCommandList() {
 		return commandList;

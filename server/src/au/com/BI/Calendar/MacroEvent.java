@@ -18,15 +18,21 @@ import java.util.Calendar;
 import java.util.List;
 
 public class MacroEvent implements Job {
-    protected String macroName;
-    protected String title;
-    protected String description;
-    protected String filter;
+
 	protected MacroHandler macroHandler;
 	protected Logger logger;
 	protected User user;
 	protected SkipDates skipDates = null;
-
+    protected String macroName = "";
+    protected String title = "";
+    protected String description = "";
+    protected String filter ="";
+    protected String extra ="";
+    protected String extra2 ="";
+    protected String extra3 ="";
+    protected String command ="";
+    protected String extra5 ="";
+    
     public MacroEvent () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
     }
@@ -35,11 +41,21 @@ public class MacroEvent implements Job {
     public void execute(JobExecutionContext context)
     		throws JobExecutionException
     		{
-	      String instGroup = context.getJobDetail().getGroup();
+    	
+        String macroName;
+        String title;
+        String description;
+        String filter;
+
+	    //  String instGroup = context.getJobDetail().getGroup();
 
 	      JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 	      macroName  = dataMap.getString("MacroName");
-		  title = dataMap.getString("Title");
+	      extra2  = dataMap.getString("extra2");
+	      extra3  = dataMap.getString("extra3");
+	      command  = dataMap.getString("command");
+	      extra  = dataMap.getString("extra");
+	      title = dataMap.getString("Title");
 		  skipDates = (SkipDates)dataMap.get("SkipDates");
 		  macroHandler = (MacroHandler)dataMap.get ("MacroHandler");
 		  description =dataMap.getString ("Description");
@@ -65,7 +81,13 @@ public class MacroEvent implements Job {
 		  }
 
 		  if (!macroName.equals ("")) {
-			  macroHandler.run(macroName , user,null);
+			  ClientCommand builtRunCommand = new ClientCommand ();
+			  builtRunCommand.setExtra2Info(extra2);
+			  builtRunCommand.setExtra3Info(extra3);
+			  builtRunCommand.setExtra4Info(command);
+			  builtRunCommand.setExtra5Info(extra);
+
+			  macroHandler.run(macroName , user,builtRunCommand);
 		  }
 		  if (!description.equals("") && !description.equals("undefined")) {
 			  ClientCommand newCommand = new ClientCommand();

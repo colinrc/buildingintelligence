@@ -72,19 +72,19 @@ public class Config {
 		jRobinParser = new JRobinParser();
 		lightFactory = new LightFactory() ;
 
-		sensorFactory = new SensorFactory() ;		
-		toggleSwitchFactory = new ToggleSwitchFactory() ;		
-		aVFactory = new AVFactory() ;		
-		audioFactory = new AudioFactory() ;		
-		pulseOutputFactory = new PulseOutputFactory ();		
-		virtualOutputFactory = new VirtualOutputFactory ();	
-		cameraFactory = new CameraFactory ();		
-		customInputFactory = new CustomInputFactory ();		
-		counterFactory = new CounterFactory ();	
-		alertFactory = new AlertFactory ();		
-		rawFactory = new RawFactory ();		
-		analogFactory = new AnalogFactory () ;		
-		iRFactory = new IRFactory ();		
+		this.setSensorFactory ( new SensorFactory()) ;		
+		this.setToggleSwitchFactory (new ToggleSwitchFactory()) ;		
+		this.setAVFactory(new AVFactory()) ;		
+		this.setAudioFactory(new AudioFactory());		
+		this.setPulseOutputFactory(new PulseOutputFactory());		
+		this.setVirtualOutputFactory (new VirtualOutputFactory ());	
+		this.setCameraFactory (new CameraFactory ());		
+		this.setCustomInputFactory (new CustomInputFactory ());		
+		this.setCounterFactory ( new CounterFactory ());	
+		this.setAlertFactory (new AlertFactory ());		
+		this.setRawFactory (new RawFactory ());		
+		this.setAnalogFactory ( new AnalogFactory ());		
+		this.setIRFactory (new IRFactory ());		
 		
 		calendar_message_params = new HashMap (5);
 		calendar_message_params.put ("ICON","");
@@ -600,6 +600,62 @@ public class Config {
 
 	public final void setSecurity(Security security) {
 		this.security = security;
+	}
+
+	public void setAlertFactory(AlertFactory alertFactory) {
+		this.alertFactory = alertFactory;
+	}
+
+	public void setAnalogFactory(AnalogFactory analogFactory) {
+		this.analogFactory = analogFactory;
+	}
+
+	public void setAudioFactory(AudioFactory audioFactory) {
+		this.audioFactory = audioFactory;
+	}
+
+	public void setAVFactory(AVFactory factory) {
+		aVFactory = factory;
+	}
+
+	public void setCameraFactory(CameraFactory cameraFactory) {
+		this.cameraFactory = cameraFactory;
+	}
+
+	public void setCounterFactory(CounterFactory counterFactory) {
+		this.counterFactory = counterFactory;
+	}
+
+	public void setCustomInputFactory(CustomInputFactory customInputFactory) {
+		this.customInputFactory = customInputFactory;
+	}
+
+	public void setIRFactory(IRFactory factory) {
+		iRFactory = factory;
+	}
+
+	public void setLightFactory(LightFactory lightFactory) {
+		this.lightFactory = lightFactory;
+	}
+
+	public void setPulseOutputFactory(PulseOutputFactory pulseOutputFactory) {
+		this.pulseOutputFactory = pulseOutputFactory;
+	}
+
+	public void setRawFactory(RawFactory rawFactory) {
+		this.rawFactory = rawFactory;
+	}
+
+	public void setSensorFactory(SensorFactory sensorFactory) {
+		this.sensorFactory = sensorFactory;
+	}
+
+	public void setToggleSwitchFactory(ToggleSwitchFactory toggleSwitchFactory) {
+		this.toggleSwitchFactory = toggleSwitchFactory;
+	}
+
+	public void setVirtualOutputFactory(VirtualOutputFactory virtualOutputFactory) {
+		this.virtualOutputFactory = virtualOutputFactory;
 	}
 	
 }

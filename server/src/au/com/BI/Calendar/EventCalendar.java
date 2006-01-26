@@ -24,7 +24,7 @@ import au.com.BI.User.*;
 
 
 public class EventCalendar {
-    protected Map events = null;
+    protected LinkedHashMap events = null;
     protected SimpleDateFormat df = null;
     protected SimpleDateFormat tf = null;
     protected SimpleDateFormat totalDayF = null;
@@ -45,7 +45,7 @@ public class EventCalendar {
 	protected MacroHandler macroHandler = null;
 	protected User user = null;
     protected SchedulerFactory schedFact = null;
-	protected Map calendar_message_params;
+	protected CalendarEventFactory calendarEventFactory = null;
 	
     public EventCalendar (MacroHandler macroHandler, User user) throws SchedulerException {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -64,9 +64,10 @@ public class EventCalendar {
 
 		schedFact = new org.quartz.impl.StdSchedulerFactory();
 		sched = schedFact.getScheduler();
-		events = new HashMap (20);
+		events = new LinkedHashMap (20);
 		
-		   
+		this.setCalendarEventFactory(new CalendarEventFactory());
+		calendarEventFactory.setMacroHandler(macroHandler);		   
     }
 	
  	
@@ -79,231 +80,46 @@ public class EventCalendar {
 		Iterator eachEvent = calendar.getChildren().iterator();
 		while (eachEvent.hasNext()) {
 		    Element nextEvent = (Element)eachEvent.next();
-		    this.addEvent(nextEvent);
+		    try {
+		    	CalendarEventEntry calendarEventEntry = calendarEventFactory.createEvent(nextEvent);
+		    	if (calendarEventEntry.isStillActive()){
+		    		addEvent (calendarEventEntry);
+		    	}
+		    	addEventXMLToStore (calendarEventEntry.getTitle(),nextEvent);
+		    } catch (CalendarException ex){
+		    }	    	
 		}
 	
 		return true;
 	}
 	
-    public boolean addEvent (Element nextEvent) {
-        boolean success = true;
+	public void addEventXMLToStore (String title, Element xml){
+		events.put( title,xml);		
+	}
 
-	    	String title = nextEvent.getAttributeValue("title"); 
-		events.put( title,nextEvent.clone());
-	    	String eventType = nextEvent.getAttributeValue("eventType"); 
-		if (eventType == null || eventType.equals ("")) {
-			eventType = "once";
-		}
-	    	String description = nextEvent.getAttributeValue("description"); 
-	    	if (description == null) description = "";
-		String startDate = "";
-		if (eventType.equals ("once")) {
-	    		startDate = nextEvent.getAttributeValue("date"); 
-		} else {
-    			startDate = nextEvent.getAttributeValue("startDate"); 			
-		}
-	    	String endDate = nextEvent.getAttributeValue("endDate"); 
-	    	String time  = nextEvent.getAttributeValue("time");
-			String hours = "";
-			String minutes = "";
-			String seconds = "";				
-	    	if (time == null || time.equals ("")) {
-				time = "09:00:00";
-				hours = "09";
-				minutes = "00";
-				seconds = "00";				
-	    	}else {
-				String timeParts[] = time.split(":");
-				if (timeParts.length > 2) seconds = timeParts[2]; else seconds = "00";		
-				if (timeParts.length > 1) minutes = timeParts[1]; else minutes = "00";		
-				if (timeParts.length > 0) hours = timeParts[0]; else hours = "09";		
-
-	    	}
-	    	String totalStartDate = startDate + " " + "0:00:00";
-		String totalEndDate = endDate + " 23:59:59";
-	    	String macroName  = nextEvent.getAttributeValue("macroName");
-	    	String filter  = nextEvent.getAttributeValue("filter");
-	    	String rawCronString = "";
-	    	if (filter == null) filter = "";
-
-
-	    	if (title == null || title.equals ("") ) {
-	    	    logger.log (Level.WARNING ,"No Title was set for the event");
-	    	    return false;
-	    	}
-		
-        Date startDateDecoded;
-		if (startDate == null || startDate.equals ("")) {
-			startDateDecoded = new Date();
-		} else { 
-	        try {
-	            startDateDecoded = totalDayF.parse(totalStartDate);
-	        } catch ( ParseException ex) {
-	            logger.log (Level.WARNING,"Could not parse event " + title + " start date. " + ex.getMessage());
-	            return false;
-	        }
-		}
-		
-		Date endDateDecoded;
-		if (endDate == null || endDate.equals ("")) {
-			endDateDecoded = new Date();
-			endDateDecoded.setYear(2999);
-		} else {
-	        try {
-	            endDateDecoded = totalDayF.parse(totalEndDate);
-	        } catch ( ParseException ex) {
-	            logger.log (Level.WARNING,"Could not parse event " + title + " end date. " + ex.getMessage());
-	            return false;
-	        }
-		}
-		if (endDateDecoded.before( new Date())) {
-			return false;
-		}
-        
-		JobDetail jobDetail = new JobDetail(title, 
-                Scheduler.DEFAULT_GROUP, // job group
-                MacroEvent.class);        // the java class to execute
-		
-		
-		JobDataMap map = jobDetail.getJobDataMap(); 
-		map.put ("Title",title);
-		map.put("MacroHandler",macroHandler);
-		map.put("MacroName",macroName);
-		map.put ("User", user);
-		map.put ("Filter", filter);
-		map.put ("Description",description);
-		
-		if (calendar_message_params != null) {
-	        map.put ("Icon",calendar_message_params.get("ICON"));
-			map.put ("AutoClose",calendar_message_params.get("AUTOCLOSE"));
-			map.put ("HideClose",calendar_message_params.get("HIDECLOSE"));
-		} else {
-	        map.put ("Icon","");
-			map.put ("AutoClose","AUTOCLOSE");
-			map.put ("HideClose","HIDECLOSE");			
-		}
-		
-		String daysOfWeek = "";
-		String weekOfMonth = "";
-		String month = "*";
-		String recur = "";
-		
-        Element patternXML = nextEvent.getChild("pattern");
-        if (patternXML != null) {
-
-			
-			recur = (String)patternXML.getAttributeValue("recur");
-			if (recur != null  && !recur.equals ("") && !recur.equals ("1")) {
-				recur = "#" + recur;
-			} else {
-				recur = "";
+	public boolean addEvent (CalendarEventEntry calendarEventEntry){
+    	if (calendarEventEntry.getEventType() == CalendarEventEntry.SINGLE_EVENT){
+    		try {
+				sched.deleteJob(calendarEventEntry.getTitle(),Scheduler.DEFAULT_GROUP);
+				sched.scheduleJob(calendarEventEntry.getJobDetail(), (SimpleTrigger)calendarEventEntry.getTrigger());
+				return true;
+    		} catch (SchedulerException e) {
+				logger.log (Level.WARNING,"Unable to add timed macro " + calendarEventEntry.getTitle() + " " + e.getMessage());
 			}
-			Iterator attributeList = patternXML.getAttributes().iterator();
-            	while (attributeList.hasNext()) {
-                Attribute patternElement = (Attribute)attributeList.next();
-                String name = patternElement.getName();
-                String value = patternElement.getValue();
- 			   if (eventType.equals ("cron") ) {
- 				   rawCronString = value;
- 			   }
-			   if (eventType.equals ("weekly") && value.equals ("1")) {
-				   if (name.equals ("sun")) daysOfWeek += ",1" + recur;
-				   if (name.equals ("mon")) daysOfWeek += ",2" + recur;
-				   if (name.equals ("tue")) daysOfWeek += ",3" + recur;
-				   if (name.equals ("wed")) daysOfWeek += ",4" + recur;
-				   if (name.equals ("thu")) daysOfWeek += ",5" + recur;
-				   if (name.equals ("fri")) daysOfWeek += ",6" + recur;
-				   if (name.equals ("sat")) daysOfWeek += ",7" + recur;
-				   if (name.equals("month")){
-					   month = value;
-				   }			   
-				   
-			   }
-			   if (eventType.equals ("monthly")) {
 
-				   if (name.equals("day")) {
-					   daysOfWeek = value.toUpperCase();
-				   }
-				   if (name.equals("month")){
-					   month = value;
-				   }	
-				   if (name.equals("week")){
-					   weekOfMonth = value;
-				   }
-
-			   }
-			   if (name.equals ("hour")) {
-				   hours=value;
-			   }
-			   if (name.equals ("minute")) {
-				   minutes=value;
-			   }
-            }
-    		   if (daysOfWeek.equals ("")) {
-    			   daysOfWeek = "*";
-    		   }  else {
-    			   if (daysOfWeek.charAt(0)==','){
-    				   daysOfWeek = daysOfWeek.substring(1);
-    			   }
-    		   }
-        } 
-        
-        SkipDates skipDates = new SkipDates();
-        skipDates.parseEvent(nextEvent);
-		map.put("SkipDates",skipDates);
-	
-        logger.log (Level.FINE,"Adding event " + title + " to the calendar");
-		if (eventType.equals ("once")){
-	        if (success) {
-				SimpleTrigger trigger = new SimpleTrigger("Trigger:"+title,
-	                      Scheduler.DEFAULT_GROUP,
-						 startDateDecoded,
-						 endDateDecoded,
-	                      0,
-	                      0L);			
-				trigger.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT );
-				
-				try {
-					sched.deleteJob(title,Scheduler.DEFAULT_GROUP);
-					sched.scheduleJob(jobDetail, trigger);
-				} catch (SchedulerException e) {
-					logger.log (Level.WARNING,"Unable to add timed macro " + title + " " + e.getMessage());
-				}
-	        }
-		} 
-		else {
-			String cronString = "";
-			if (eventType.equals ("cron")){
-				cronString = rawCronString;
-			}else {
-				if (!weekOfMonth.equals("")){
-					daysOfWeek += "#" + weekOfMonth;
-				}
-				cronString = seconds + " " + minutes + " " + hours + " ? " +  month + " " + daysOfWeek;
-			}
-			logger.log (Level.FINEST,"Entry is a repeating entry. Cron string is " + cronString);
-			try {
-				CronTrigger trigger = new CronTrigger ("Tigger"+title,
-						Scheduler.DEFAULT_GROUP,
-						title,
-						Scheduler.DEFAULT_GROUP,
-						startDateDecoded,
-						endDateDecoded,
-						cronString);
-				trigger.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING );
-				sched.deleteJob(title,Scheduler.DEFAULT_GROUP);
-				sched.scheduleJob(jobDetail,trigger);
-			} catch (ParseException e) {
-				logger.log (Level.WARNING,"Unable to add repeating macro " + title + ". " + e.getMessage());
+    	} else {
+    		try {
+				sched.deleteJob(calendarEventEntry.getTitle(),Scheduler.DEFAULT_GROUP);
+				sched.scheduleJob(calendarEventEntry.getJobDetail(), (CronTrigger)calendarEventEntry.getTrigger());
+				return true;
 			} catch (SchedulerException e) {
-				logger.log (Level.WARNING,"An internal scheduler error occured adding the job " + title + " " + e.getMessage());
+				logger.log (Level.WARNING,"An internal scheduler error occured adding the job " + calendarEventEntry.getTitle() + " " + e.getMessage());
 			} catch (StringIndexOutOfBoundsException e){
-				logger.log (Level.WARNING,"An internal scheduler error occured adding the job " + title + " " + e.getMessage());				
+				logger.log (Level.WARNING,"An internal scheduler error occured adding the job " + calendarEventEntry.getTitle() + " " + e.getMessage());				
 			}
-		}
-    
-        return success;
-    }
+    	}
+    	return false;
+	}
 	
 	public void setFileName (String fileName){
 		this.fileName = "datafiles" + File.separator + fileName;
@@ -452,14 +268,17 @@ public class EventCalendar {
 		this.sched = sched;
 	}
 
-
 	public Map getCalendar_message_params() {
-		return calendar_message_params;
+		return calendarEventFactory.getCalendar_message_params();
 	}
 
 
 	public void setCalendar_message_params(Map calendar_message_params) {
-		this.calendar_message_params = calendar_message_params;
+		calendarEventFactory.setCalendar_message_params(calendar_message_params);
+	}
+
+	public void setCalendarEventFactory(CalendarEventFactory calendarEventFactory) {
+		this.calendarEventFactory = calendarEventFactory;
 	}
 	
 }

@@ -81,8 +81,8 @@ public class RunMacro extends Thread {
 			    		if (clientCommand.getCommandCode().startsWith("%")) {
 			    			clientCommand.setCommand(readParam(clientCommand.getCommandCode()));
 			    		}
-			    		if (clientCommand.getDisplayName().startsWith("%")) {
-			    			clientCommand.setDisplayName(readParam(clientCommand.getDisplayName()));
+			    		if (clientCommand.getKey().startsWith("%")) {
+			    			clientCommand.setKey(readParam(clientCommand.getKey()));
 			    		}
 			    }
 
@@ -139,7 +139,7 @@ public class RunMacro extends Thread {
 	 */
 	public String readParam(String field){
 		if (field.equals("%EXTRA%")){
-			return origCommand.getExtraInfo();
+			return origCommand.getExtra5Info();
 		}
 		if (field.equals("%EXTRA2%")){
 			return origCommand.getExtra2Info();
@@ -150,7 +150,7 @@ public class RunMacro extends Thread {
 		if (field.equals("%COMMAND%")){
 			return origCommand.getExtra4Info();
 		}
-		if (field.equals("%EXTRA%")){
+		if (field.equals("%EXTRA5%")){
 			return origCommand.getExtra5Info();
 		}
 		return field;

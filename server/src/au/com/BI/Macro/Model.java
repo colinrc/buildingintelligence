@@ -4,12 +4,7 @@
 */
 package au.com.BI.Macro;
 
-/**
- * @author Colin Canfield
- * @author Explorative Sofwtare Pty Ltd
- *
-*/
-import au.com.BI.Calendar.EventCalendar;
+import au.com.BI.Calendar.*;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
@@ -29,13 +24,19 @@ public class Model extends BaseModel implements DeviceModel {
 	protected String ETX;
 	protected String parameter;
 	protected CustomInput deviceThatMatched;
-
+	protected CalendarEventFactory calendarEventFactory;
+	
 	public Model () {
 		super();
 		this.setName("Macro");
-
+		this.setCalendarEventFactory (new CalendarEventFactory());
 	}
 
+	public void setMacroHandler (MacroHandler macroHandler) {
+		calendarEventFactory.setMacroHandler(macroHandler);
+		super.setMacroHandler(macroHandler);
+	}
+	
 	public boolean isConnected () {
 		return true;
 	}
@@ -245,7 +246,15 @@ public class Model extends BaseModel implements DeviceModel {
 			Iterator eachEvent = elements.iterator();
 			while (eachEvent.hasNext()) {
 			    Element nextEvent = (Element)eachEvent.next();
-			    eventCalendar.addEvent (nextEvent);
+			    try {
+			    	CalendarEventEntry calendarEventEntry = calendarEventFactory.createEvent(nextEvent);
+			    	if (calendarEventEntry.isStillActive()){
+			    		eventCalendar.addEvent (calendarEventEntry);
+			    	}
+			    	eventCalendar.addEventXMLToStore (calendarEventEntry.getTitle(),nextEvent);
+			    } catch (CalendarException ex){
+			    	
+			    }
 			}
 			eventCalendar.saveCalendarFile();
 			doListUpdate = true;
@@ -295,4 +304,8 @@ public class Model extends BaseModel implements DeviceModel {
 
 	public void attatchComms(List commandList)
 	throws ConnectionFail  {}
+
+	public void setCalendarEventFactory(CalendarEventFactory calendarEventFactory) {
+		this.calendarEventFactory = calendarEventFactory;
+	}
 }
