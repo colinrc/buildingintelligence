@@ -3,20 +3,15 @@
 import mx.utils.Delegate;
 
 class Forms.Project.Xml extends Forms.BaseForm {
-
 	private var xml_ta:TextArea;
 	private var node:XMLNode;
-	//private var controls:XML;
 	private var save_btn:Button;
 	
 	function Xml() {
 	}
 	
 	public function init():Void {
-		//xml_ta.html = true;
 		xml_ta.html = false;
-		//controls = new XML();
-		//controls.appendChild(node);
 		//xml_ta.text = XMLHighlighter.highlight(controls);
 		xml_ta.text = node.toString();
 		save_btn.addEventListener("click", Delegate.create(this, save));
