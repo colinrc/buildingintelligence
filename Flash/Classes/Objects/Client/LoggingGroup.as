@@ -15,11 +15,19 @@
 		return "forms.project.client.logginggroup";
 	}
 	public function toXML():XMLNode {
-		var newNode = new XMLNode(1,"group")
-		newNode.attributes["name"] = name;
-		newNode.attributes["icon"] = icon;
-		newNode.attributes["type"] = type;
-		newNode.attributes["listenTo"] = listenTo;
+		var newNode = new XMLNode(1,"group");
+		if(name != "") {
+			newNode.attributes["name"] = name;
+		}
+		if(icon !="") {
+			newNode.attributes["icon"] = icon;
+		}
+		if(type !="") {
+			newNode.attributes["type"] = type;
+		}
+		if(listenTo !="") {
+			newNode.attributes["listenTo"] = listenTo;
+		}
 		for(var attribute in attributes){
 			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
 		}
@@ -40,6 +48,10 @@
 		return new Object({controls:controls, icon:icon,name:name,listenTo:listenTo,type:type,attributes:attributes});
 	}
 	public function setXML(newData:XMLNode):Void{
+		name ="";
+		icon ="";
+		listenTo="";
+		type="";
 		controls = new Array();
 		attributes = new Array();
 		if(newData.nodeName = "group"){

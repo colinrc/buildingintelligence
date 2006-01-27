@@ -15,12 +15,24 @@
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1,"zone");
-		newNode.attributes["name"] = name;
-		newNode.attributes["map"] = map;
-		newNode.attributes["background"] = background;
-		newNode.attributes["cycle"] = cycle;
-		newNode.attributes["alignment"] = alignment;
-		newNode.attributes["hideFromList"] = hideFromList;
+		if(name != ""){
+			newNode.attributes["name"] = name;
+		}
+		if(map != ""){		
+			newNode.attributes["map"] = map;
+		}
+		if(background != ""){				
+			newNode.attributes["background"] = background;
+		}
+		if(cycle != ""){				
+			newNode.attributes["cycle"] = cycle;
+		}
+		if(alignment != ""){				
+			newNode.attributes["alignment"] = alignment;
+		}
+		if(hideFromList != ""){				
+			newNode.attributes["hideFromList"] = hideFromList;
+		}	
 		newNode.appendChild(arbitrary.toXML());
 		var newRooms = new XMLNode(1,"rooms");
 		for(var room in rooms){
@@ -46,14 +58,32 @@
 	}
 	public function setXML(newData:XMLNode):Void{
 		rooms = new Array();
+		name = "";
+		map ="";
+		background ="";
+		cycle ="";
+		alignment = "";
+		hideFromList = "";
 		arbitrary = new Objects.Client.Arbitrary();
 		if(newData.nodeName == "zone"){
-			name = newData.attributes["name"];
-			map = newData.attributes["map"];
-			background = newData.attributes["background"];
-			cycle = newData.attributes["cycle"];
-			alignment = newData.attributes["alignment"];
-			hideFromList = newData.attributes["hideFromList"];
+			if(newData.attributes["name"] != undefined){
+				name = newData.attributes["name"];
+			}
+			if(newData.attributes["map"] != undefined){
+				map = newData.attributes["map"];
+			}
+			if(newData.attributes["background"] != undefined){
+				background = newData.attributes["background"];
+			}
+			if(newData.attributes["cycle"] != undefined){
+				cycle = newData.attributes["cycle"];
+			}
+			if(newData.attributes["alignment"] != undefined){
+				alignment = newData.attributes["alignment"];
+			}
+			if(newData.attributes["hideFromList"] != undefined){			
+				hideFromList = newData.attributes["hideFromList"];
+			}
 			for(var child in newData.childNodes){
 				switch(newData.childNodes[child].nodeName){
 					case "arbitrary":

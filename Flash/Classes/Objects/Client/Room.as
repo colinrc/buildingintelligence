@@ -13,9 +13,11 @@
 		if(!doors.isValid()){
 			flag = false;
 		}
-		/*if(!alertGroups.isValid()){
-			flag = false;
-		}*/
+		for(var alertGroup in alertGroups) {
+			if(!alertGroups[alertGroup].isValid()){
+				flag = false;
+			}
+		}
 		return flag;
 	}
 	public function getForm():String {
@@ -23,9 +25,15 @@
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1,"room");
-		newNode.attributes["name"] = name;
-		newNode.attributes["poly"] = poly;
-		newNode.attributes["switchZone"] = switchZone;
+		if(name != ""){
+			newNode.attributes["name"] = name;
+		}
+		if(poly != ""){
+			newNode.attributes["poly"] = poly;
+		}
+		if(switchZone != "") {
+			newNode.attributes["switchZone"] = switchZone;
+		}
 		newNode.appendChild(window.toXML());
 		newNode.appendChild(doors.toXML());
 		for(var alertGroup in alertGroups){
@@ -50,13 +58,22 @@
 		return new Object({name:name,poly:poly,switchZone:switchZone,alertGroups:alertGroups});
 	}
 	public function setXML(newData:XMLNode):Void{
+		name = "";
+		poly = "";
+		switchZone = "";
 		if(newData.nodeName == "room") {
 			window = new Objects.Client.Window();
 			alertGroups = new Array();
 			doors = new Objects.Client.Doors();
-			name = newData.attributes["name"];
-			poly = newData.attributes["poly"];
-			switchZone = newData.attributes["switchZone"];
+			if(newData.attributes["name"] != undefined) {
+				name = newData.attributes["name"];
+			}
+			if(newData.attributes["poly"] != undefined) {
+				poly = newData.attributes["poly"];
+			}
+			if(newData.attributes["switchZone"] != undefined) {
+				switchZone = newData.attributes["switchZone"];
+			}
 			for(var child in newData.childNodes){
 				switch(newData.childNodes[child].nodeName){
 					case "window":

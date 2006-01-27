@@ -1,4 +1,4 @@
-﻿class Objects.Client.Icon extends Objects.BaseElement{
+﻿class Objects.Client.Icon extends Objects.BaseElement {
 	private var name:String;
 	private var icon:String;
 	private var func:String;
@@ -8,58 +8,69 @@
 		return true;
 	}
 	public function getForm():String {
-		return "forms.project.client.Icon";
+		return "forms.project.client.icon";
 	}
 	public function toXML():XMLNode {
-		var newNode = new XMLNode(1,"icon");
-		newNode.attributes["name"] = name;
-		newNode.attributes["icon"] = icon;
-		newNode.attributes["func"] = func;
-		newNode.attributes["canOpen"] = canOpen;
-		for(var attribute in attributes){
+		var newNode = new XMLNode(1, "icon");
+		if ((name != undefined) && (name != "")) {
+			newNode.attributes["name"] = name;
+		}
+		if ((icon != undefined) && (icon != "")) {
+			newNode.attributes["icon"] = icon;
+		}
+		if ((func != undefined) && (func != "")) {
+			newNode.attributes["func"] = func;
+		}
+		if ((canOpen != undefined) && (canOpen != "")) {
+			newNode.attributes["canOpen"] = canOpen;
+		}
+		for (var attribute in attributes) {
 			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
 		}
 		return newNode;
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
 		return newNode;
 	}
-	public function getName():String{
+	public function getName():String {
 		return "Icon:"+name;
 	}
-	public function getData():Object{
-		return new Object({name:name,icon:icon,func:func,canOpen:canOpen,attributes:attributes});
+	public function getData():Object {
+		return new Object({name:name, icon:icon, func:func, canOpen:canOpen, attributes:attributes});
 	}
-	public function setXML(newData:XMLNode):Void{
+	public function setXML(newData:XMLNode):Void {
 		attributes = new Array();
-		if(newData.nodeName =="icon"){
-			for(var attribute in newData.attributes){
-				switch(attribute){
-					case "name":
+		name = "";
+		icon = "";
+		func = "";
+		canOpen = "";
+		if (newData.nodeName == "icon") {
+			for (var attribute in newData.attributes) {
+				switch (attribute) {
+				case "name" :
 					name = newData.attributes[attribute];
 					break;
-					case "icon":
+				case "icon" :
 					icon = newData.attributes[attribute];
 					break;
-					case "func":
+				case "func" :
 					func = newData.attributes[attribute];
 					break;
-					case "canOpen":
+				case "canOpen" :
 					canOpen = newData.attributes[attribute];
 					break;
-					default:
+				default :
 					attributes.push({name:attribute, value:newData.attributes[attribute]});
 					break;
 				}
 			}
-		}
-		else{
-			trace("Error, received "+newData.nodeName+", was expecting icon");			
+		} else {
+			trace("Error, received "+newData.nodeName+", was expecting icon");
 		}
 	}
-	public function setData(newData:Object):Void{
+	public function setData(newData:Object):Void {
 		name = newData.name;
 		icon = newData.icon;
 		func = newData.func;

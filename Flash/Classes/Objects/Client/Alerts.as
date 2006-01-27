@@ -5,7 +5,13 @@
 	public function isValid():Boolean {
 		var flag = true;
 		for (var alert in alerts) {
-			if (!alerts[alert]) {
+			if((alerts[alert].attributes["name"] == "")||(alerts[alert].attributes["name"] == undefined)){
+				flag = false;
+			}
+			if((alerts[alert].attributes["keys"] == "")||(alerts[alert].attributes["keys"] == undefined)){
+				flag = false;
+			}
+			if((alerts[alert].attributes["icon"] == "")||(alerts[alert].attributes["icon"] == undefined)){
 				flag = false;
 			}
 		}
@@ -16,8 +22,12 @@
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1, "alerts");
-		newNode.attributes["x"] = x_pos;
-		newNode.attributes["y"] = y_pos;
+		if((x_pos != "")&&(x_pos != undefined)){
+			newNode.attributes["x"] = x_pos;
+		}
+		if((y_pos != "")&&(y_pos != undefined)){
+			newNode.attributes["y"] = y_pos;
+		}
 		for (var alert in alerts) {
 			newNode.appendChild(alerts[alert]);
 		}
@@ -44,8 +54,16 @@
 	public function setXML(newData:XMLNode):Void {
 		if(newData.nodeName == "alerts"){
 			alerts = new Array();
-			x_pos = newData.attributes["x"];
-			y_pos = newData.attributes["y"];
+			if(newData.attributes["x"] != undefined){
+				x_pos = newData.attributes["x"];
+			} else {
+				x_pos = "";
+			}
+			if(newData.attributes["y"] != undefined){
+				y_pos = newData.attributes["y"];
+			} else {
+				y_pos = "";
+			}
 			for(var child in newData.childNodes){
 				alerts.push(newData.childNodes[child]);
 			}

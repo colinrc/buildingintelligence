@@ -1,7 +1,16 @@
 ﻿class Objects.Client.Control_Panel_Apps extends Objects.BaseElement{
 	private var apps:XMLNode;
 	public function isValid():Boolean {
-		return true;
+		var flag = true;
+		for(var child in apps.childNodes){
+			if(apps.childNodes[child].attributes["label"] == undefined){
+				flag = false;
+			}
+			if(apps.childNodes[child].attributes["program"] ==undefined){
+				flag = false;
+			}
+		}
+		return flag;
 	}
 	public function getForm():String {
 		return "forms.project.client.controlpanelapps";

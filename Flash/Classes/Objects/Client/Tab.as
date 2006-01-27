@@ -13,8 +13,12 @@
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1, "tab");
-		newNode.attributes["name"] = name;
-		newNode.attributes["icon"] = icon;
+		if(name != "") {
+			newNode.attributes["name"] = name;
+		}
+		if(icon != "") {
+			newNode.attributes["icon"] = icon;
+		}
 		for (var control in controls) {
 			newNode.appendChild(controls[control]);
 		}
@@ -32,9 +36,15 @@
 		return new Object({controls:controls,name:name,icon:icon});
 	}
 	public function setXML(newData:XMLNode):Void {
+		name = "";
+		icon = "";
 		if(newData.nodeName == "tab"){
-			name = newData.attributes["name"];
-			icon = newData.attributes["icon"];
+			if(newData.attributes["name"] != undefined) {
+				name = newData.attributes["name"];
+			}
+			if(newData.attributes["icon"] != undefined) {
+				icon = newData.attributes["icon"];
+			}
 			controls = new Array();
 			for(var child in newData.childNodes){
 				controls.push(newData.childNodes[child]);

@@ -16,10 +16,18 @@
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1,"group");
-		newNode.attributes["name"] = name;
-		newNode.attributes["icon"] = icon;
-		newNode.attributes["show"] = show;
-		newNode.attributes["hide"] = hide;
+		if(name != ""){
+			newNode.attributes["name"] = name;
+		}
+		if(icon != "") {
+			newNode.attributes["icon"] = icon;
+		}
+		if(show != "") {
+			newNode.attributes["show"] = show;
+		}
+		if(hide != "") {
+			newNode.attributes["hide"] = hide;
+		}
 		for(var attribute in attributes){
 			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
 		}
@@ -40,22 +48,34 @@
 		return new Object({controls:controls, icon:icon,name:name,show:show,hide:hide});
 	}
 	public function setXML(newData:XMLNode):Void{
+		name = "";
+		icon = "";
+		show = "";
+		hide = "";
 		controls = new Array();
 		attributes = new Array();
 		if(newData.nodeName = "group"){
 			for(var attribute in newData.attributes){
 				switch(attribute){
 					case "name":
-					name = newData.attributes[attribute];
+					if(newData.attributes[attribute] != undefined){
+						name = newData.attributes[attribute];
+					}
 					break;
 					case "icon":
-					icon = newData.attributes[attribute];
+					if(newData.attributes[attribute] != undefined){				
+						icon = newData.attributes[attribute];
+					}
 					break;
 					case "show":
-					show = newData.attributes[attribute];
+					if(newData.attributes[attribute] != undefined) {					
+						show = newData.attributes[attribute];
+					}
 					break;
 					case "hide":
-					hide = newData.attributes[attribute];
+					if(newData.attributes[attribute] != undefined) {
+						hide = newData.attributes[attribute];
+					}
 					break;
 					default:
 					attributes.push({name:attribute, value:newData.attributes[attribute]});

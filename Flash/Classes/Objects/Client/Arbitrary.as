@@ -1,7 +1,13 @@
 ﻿class Objects.Client.Arbitrary extends Objects.BaseElement {
 	private var items:Array;
 	public function isValid():Boolean {
-		return true;
+		var flag = true;
+		for (var item in items){
+			if((items[item].attributes["type"] == "")||(items[item].attributes["type"] == undefined)){
+				flag = false;
+			}
+		}
+		return flag;
 	}
 	public function getForm():String {
 		return "forms.project.client.arbitrary";

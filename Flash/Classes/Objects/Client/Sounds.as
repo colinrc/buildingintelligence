@@ -3,7 +3,7 @@
 		return true;
 	}
 	public function getForm():String {
-		return "base.form";
+		return "forms.project.client.sounds";
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1,"sounds")
