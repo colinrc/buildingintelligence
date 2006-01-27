@@ -12,8 +12,16 @@ class Forms.Project.Client.ControlPanelApps extends Forms.BaseForm {
 	public function init():Void{
 		for(var child in apps.childNodes){
 			var newObj = new Object();
-			newObj.label = apps.childNodes[child].attributes["label"];
-			newObj.program = apps.childNodes[child].attributes["program"];
+			if((apps.childNodes[child].attributes["label"] != undefined)&&(apps.childNodes[child].attributes["label"] != "")){
+				newObj.label = apps.childNodes[child].attributes["label"];
+			}else{
+				newObj.label = "";
+			}
+			if((apps.childNodes[child].attributes["program"] != undefined)&&(apps.childNodes[child].attributes["program"] != "")){	
+				newObj.program = apps.childNodes[child].attributes["program"];
+			}else{
+				newObj.program = "";
+			}
 			apps_li.addItem(newObj);
 		}
 		save_btn.addEventListener("click", Delegate.create(this, save));
@@ -36,8 +44,12 @@ class Forms.Project.Client.ControlPanelApps extends Forms.BaseForm {
 		var newApps = new XMLNode(1,"controlPanelApps");
 		for (var index = 0; index<apps_li.length; index++) {
 			var newOverride = new XMLNode(1,"app");
-			newOverride.attributes["label"] = apps_li.getItemAt(index).label;
-			newOverride.attributes["program"] = apps_li.getItemAt(index).program;
+			if((apps_li.getItemAt(index).label != undefined) && (apps_li.getItemAt(index).label != "")){
+				newOverride.attributes["label"] = apps_li.getItemAt(index).label;
+			}
+			if((apps_li.getItemAt(index).program != undefined) && (apps_li.getItemAt(index).program != "")){			
+				newOverride.attributes["program"] = apps_li.getItemAt(index).program;
+			}
 			newApps.appendChild(newOverride);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;

@@ -9,7 +9,12 @@ class Forms.Project.Client.Row extends Forms.BaseForm {
 	private var add_item_btn:Button;
 	private var type_cmb:ComboBox;
 	public function init() {
-		cases_ti.text = cases;
+		if(cases!=undefined){
+			cases_ti.text = cases;
+		}
+		else{
+			cases_ti.text ="";
+		}
 		delete_btn.addEventListener("click", Delegate.create(this, deleteRow));
 		update_btn.addEventListener("click", Delegate.create(this, updateRow));
 		add_item_btn.addEventListener("click", Delegate.create(this, addItem));

@@ -1,5 +1,6 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
+import mdm.Dialogs;
 
 class Forms.Project.Client.Item extends Forms.BaseForm {
 	private var save_btn:Button;

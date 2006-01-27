@@ -10,11 +10,31 @@ class Forms.Project.Client.ControlTypeToggle extends Forms.BaseForm {
 	private var command_ti:TextInput;
 	private var sounds_ti:TextInput;
 	public function init() {
-		icons_ti.text = object.attributes["icons"];
+		if(object.attributes["icons"] != undefined){
+			icons_ti.text = object.attributes["icons"];
+		} else{
+			icons_ti.text = "";
+		}
+		if(object.attributes["extras"] != undefined){		
 		extras_ti.text = object.attributes["extras"];
-		width_ti.text = object.attributes["width"];
-		command_ti.text = object.attributes["command"];
-		sounds_ti.text = object.attributes["sounds"];
+		} else {
+			extras_ti.text = "";
+		}
+		if(object.attributes["width"] != undefined){				
+			width_ti.text = object.attributes["width"];
+		} else {
+			width_ti.text = "";
+		}
+		if(object.attributes["command"] != undefined){
+			command_ti.text = object.attributes["command"];
+		} else {
+			command_ti.text = "";
+		}
+		if(object.attributes["sounds"] != undefined){		
+			sounds_ti.text = object.attributes["sounds"];
+		} else {
+			sounds_ti.text = "";
+		}
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 	}
@@ -25,11 +45,21 @@ class Forms.Project.Client.ControlTypeToggle extends Forms.BaseForm {
 	public function getObject():XMLNode {
 		var newObject = new XMLNode(1,"item");
 		newObject.attributes["type"] = "toggle";
-		newObject.attributes["icons"] = icons_ti.text;
-		newObject.attributes["extras"] = extras_ti.text;
-		newObject.attributes["width"] = width_ti.text;
-		newObject.attributes["command"] = command_ti.text;		
-		newObject.attributes["sounds"] = sounds_ti.text;
+		if(icons_ti.text != "") {
+			newObject.attributes["icons"] = icons_ti.text;
+		}
+		if(extras_ti.text != "") {
+			newObject.attributes["extras"] = extras_ti.text;
+		}
+		if(width_ti.text != "") {
+			newObject.attributes["width"] = width_ti.text;
+		}
+		if(command_ti.text !="") {
+			newObject.attributes["command"] = command_ti.text;		
+		}
+		if(sounds_ti.text !="") {
+			newObject.attributes["sounds"] = sounds_ti.text;
+		}
 		return newObject;
 	}
 }

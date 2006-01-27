@@ -22,10 +22,26 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		}
 		for(var door in doors){
 			var newDoor = new Object();
-			newDoor.name = doors[door].attributes["name"];
-			newDoor.key = doors[door].attributes["key"];
-			newDoor.pos = doors[door].attributes["pos"];
-			newDoor.colour = doors[door].attributes["colour"];
+			if(doors[door].attributes["name"] != undefined){
+				newDoor.name = doors[door].attributes["name"];
+			} else{
+				newDoor.name = "";
+			}
+			if(doors[door].attributes["key"] != undefined){			
+				newDoor.key = doors[door].attributes["key"];
+			} else {
+				newDoor.key = "";
+			}
+			if(doors[door].attributes["pos"] != undefined){						
+				newDoor.pos = doors[door].attributes["pos"];
+			} else {
+				newDoor.pos = "";
+			}				
+			if(doors[door].attributes["colour"] != undefined){
+				newDoor.colour = doors[door].attributes["colour"];
+			} else {
+				newDoor.colour = "";
+			}
 			doors_dg.addItem(newDoor);
 		}
 		delete_btn.enabled = false;
@@ -77,10 +93,18 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		var newDoors = new Array();
 		for (var index = 0; index<doors_dg.length; index++) {
 			var item = new XMLNode(1, "door");
-			item.attributes["name"] = doors_dg.getItemAt(index).name;
-			item.attributes["key"] = doors_dg.getItemAt(index).key;
-			item.attributes["pos"] = doors_dg.getItemAt(index).pos;
-			item.attributes["colour"] = doors_dg.getItemAt(index).colour;
+			if(doors_dg.getItemAt(index).name != ""){
+				item.attributes["name"] = doors_dg.getItemAt(index).name;
+			}
+			if(doors_dg.getItemAt(index).key != ""){
+				item.attributes["key"] = doors_dg.getItemAt(index).key;
+			}
+			if(doors_dg.getItemAt(index).pos !=""){
+				item.attributes["pos"] = doors_dg.getItemAt(index).pos;
+			}
+			if(doors_dg.getItemAt(index).colour != "") {
+				item.attributes["colour"] = doors_dg.getItemAt(index).colour;
+			}
 			newDoors.push(item);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({doors:newDoors}));

@@ -24,14 +24,34 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 			tempObject.label = tempKeys[key];
 			key_cmb.addItem(tempObject);
 		}
+		var tempControlTypes = _global.client_test.getControlTypes();
+		for(var controlType in tempControlTypes.childNodes){
+			type_cmb.addItem({label:tempControlTypes.childNodes[controlType].attributes["type"]});
+		}
 		name_ti.text = name;
 		icon_ti.text = icon;
 		for(var control in controls){
 			var newControl = new Object();
-			newControl.name = controls[control].attributes["name"];
-			newControl.key = controls[control].attributes["key"];
-			newControl.type = controls[control].attributes["type"];
-			newControl.icons = controls[control].attributes["icons"];
+			if(controls[control].attributes["name"] != undefined){
+				newControl.name = controls[control].attributes["name"];
+		    } else {
+				newControl.name = "";
+			}
+			if(controls[control].attributes["key"] != undefined){
+				newControl.key = controls[control].attributes["key"];
+			} else {
+				newControl.key = "";
+			}
+			if(controls[control].attributes["type"] != undefined) {
+				newControl.type = controls[control].attributes["type"];
+			} else {
+				newControl.type = "";
+			}
+			if(controls[control].attributes["icons"] != undefined) {
+				newControl.icons = controls[control].attributes["icons"];
+			} else{
+				newControl.icons = "";
+			}
 			controls_dg.addItem(newControl);
 		}
 		delete_btn.enabled = false;
@@ -82,10 +102,18 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 		var newControls = new Array();
 		for (var index = 0; index<controls_dg.length; index++) {
 			var item = new XMLNode(1, "control");
-			item.attributes["name"] = controls_dg.getItemAt(index).name;
-			item.attributes["key"] = controls_dg.getItemAt(index).key;
-			item.attributes["type"] = controls_dg.getItemAt(index).type;
-			item.attributes["icons"] = controls_dg.getItemAt(index).icons;
+			if(controls_dg.getItemAt(index).name != ""){
+				item.attributes["name"] = controls_dg.getItemAt(index).name;
+			}
+			if(controls_dg.getItemAt(index).key !=""){
+				item.attributes["key"] = controls_dg.getItemAt(index).key;
+			}
+			if(controls_dg.getItemAt(index).type !=""){
+				item.attributes["type"] = controls_dg.getItemAt(index).type;
+			}
+			if(controls_dg.getItemAt(index).icons !=""){
+				item.attributes["icons"] = controls_dg.getItemAt(index).icons;
+			}
 			newControls.push(item);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({controls:newControls,name:name_ti.text,icon:icon_ti.text}));

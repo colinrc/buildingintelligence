@@ -54,10 +54,12 @@ class Forms.Project.Client.AppsBar extends Forms.BaseForm {
 		delete_btn.enabled = false;
 	}
 	private function addItem() {
-		icon_li.addItem({label:name_ti.text});
-		icon_li.selectedIndex = undefined;
-		name_ti.text = "";
-		delete_btn.enabled = false;
+		if(name_ti.text != ""){
+			icon_li.addItem({label:name_ti.text});
+			icon_li.selectedIndex = undefined;
+			name_ti.text = "";
+			delete_btn.enabled = false;
+		}
 	}
 	private function itemChange(evtObj) {
 		delete_btn.enabled = true;

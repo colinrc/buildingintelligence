@@ -181,7 +181,9 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		for (var index = editor_dg.dataProvider.length-1; index>=0; index--) {
 			var tempArray = editor_dg.getItemAt(index);
 			var newRow = new XMLNode(1,"row");
-			newRow.attributes["cases"] = tempArray[0].cases;
+			if((tempArray[0].cases != undefined)&&(tempArray[0].cases !="")){
+				newRow.attributes["cases"] = tempArray[0].cases;
+			}
 			for(var item =0; item< tempArray.length;item++){
 				newRow.appendChild(tempArray[item].object);
 			}

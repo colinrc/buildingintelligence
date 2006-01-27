@@ -10,11 +10,31 @@ class Forms.Project.Client.ControlTypeVideo extends Forms.BaseForm {
 	private var videoWidth_ti:TextInput;
 	private var videoHeight_ti:TextInput;
 	public function init() {
-		src_ti.text = object.attributes["src"];
-		format_ti.text = object.attributes["format"];
+		if(object.attributes["src"] != undefined){
+			src_ti.text = object.attributes["src"];
+		} else {
+			src_ti.text = "";
+		}
+		if(object.attributes["format"] != undefined) {
+			format_ti.text = object.attributes["format"];
+		} else {
+			format_ti.text = "";
+		}
+		if(object.attributes["refreshRate"] != undefined) {		
 		refreshRate_ti.text = object.attributes["refreshRate"];
+		} else {
+			refreshRate_ti.text = "";
+		}
+		if(object.attributes["videoWidth"] != undefined) {				
 		videoWidth_ti.text = object.attributes["videoWidth"];
+		} else {
+			videoWidth_ti.text = "";
+		}
+		if(object.attributes["videoHeight"] != undefined) {				
 		videoHeight_ti.text = object.attributes["videoHeight"];
+		} else {
+			videoHeight_ti.text = "";
+		}	
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 	}

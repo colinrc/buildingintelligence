@@ -8,9 +8,21 @@ class Forms.Project.Client.ControlTypeMediaPlayer extends Forms.BaseForm {
 	private var videoWidth_ti:TextInput;
 	private var videoHeight_ti:TextInput;
 	public function init() {
-		refreshRate_ti.text = object.attributes["refreshRate"];
-		videoWidth_ti.text = object.attributes["videoWidth"];
-		videoHeight_ti.text = object.attributes["videoHeight"];
+		if(object.attributes["refreshRate"] != undefined){
+			refreshRate_ti.text = object.attributes["refreshRate"];
+		} else{
+			refreshRate_ti.text = "";
+		}
+		if(object.attributes["videoWidth"] != undefined){		
+			videoWidth_ti.text = object.attributes["videoWidth"];
+		} else{
+			videoWidth_ti.text = "";
+		}
+		if(object.attributes["videoHeight"] != undefined){				
+			videoHeight_ti.text = object.attributes["videoHeight"];
+		} else{
+			videoHeight_ti.text = "";
+		}	
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 	}
@@ -21,9 +33,15 @@ class Forms.Project.Client.ControlTypeMediaPlayer extends Forms.BaseForm {
 	public function getObject():XMLNode {
 		var newObject = new XMLNode(1,"item");
 		newObject.attributes["type"] = "mediaPlayer";
-		newObject.attributes["refreshRate"] = refreshRate_ti.text;
-		newObject.attributes["videoWidth"] = videoWidth_ti.text;
-		newObject.attributes["videoHeight"] = videoHeight_ti.text;		
+		if(refreshRate_ti.text != "") {
+			newObject.attributes["refreshRate"] = refreshRate_ti.text;
+		}
+		if(videoWidth_ti.text != "") {
+			newObject.attributes["videoWidth"] = videoWidth_ti.text;
+		}
+		if(videoHeight_ti.text !="") {
+			newObject.attributes["videoHeight"] = videoHeight_ti.text;		
+		}
 		return newObject;
 	}
 }

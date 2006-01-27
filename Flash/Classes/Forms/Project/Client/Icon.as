@@ -1,6 +1,6 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
+import mdm.Dialogs.BrowseFile;
 class Forms.Project.Client.Icon extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var left_li:List;

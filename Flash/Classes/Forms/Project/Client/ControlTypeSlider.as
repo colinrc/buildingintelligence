@@ -6,7 +6,11 @@ class Forms.Project.Client.ControlTypeSlider extends Forms.BaseForm {
 	private var update_btn:Button;
 	private var width_ti:TextInput;
 	public function init() {
-		width_ti.text = object.attributes["width"];
+		if(object.attributes["width"] != undefined) {
+			width_ti.text = object.attributes["width"];
+		} else{
+			width_ti.text ="";
+		}
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 	}
@@ -17,7 +21,9 @@ class Forms.Project.Client.ControlTypeSlider extends Forms.BaseForm {
 	public function getObject():XMLNode {
 		var newObject = new XMLNode(1,"item");
 		newObject.attributes["type"] = "slider";
-		newObject.attributes["width"] = width_ti.text;
+		if(width_ti.text != "") {
+			newObject.attributes["width"] = width_ti.text;
+		}
 		return newObject;
 	}
 }
