@@ -23,8 +23,8 @@ _global.controlTypeAttributes_xml.load("controlTypeAttributes.xml");
 //XML.prototype.ignoreWhite = true;
 
 //test serverconnection
-var server:Objects.ServerConnection;
-server = new Objects.ServerConnection("Server1", "127.0.0.1", 10002, 10001);
+//var server:Objects.ServerConnection;
+var server = new Objects.ServerConnection("Server1", "127.0.0.1", 10002, 10001);
 server.makeConnections();
 
 //_global.style.setStyle("themeColor", "haloOrange");
@@ -189,7 +189,7 @@ leftTreeListener.change = function(eventObj) {
 		tabs_tb.selectedIndex = 0;
 		} else{
 		var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + random(999) + "_mc", 0, node.object.getData());
-		tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview",view:"forms.project.room.tab.preview"}];
+		tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview",view:"forms.project.client.preview"}];
 		tabs_tb.selectedIndex = 0;
 		}
 	}
