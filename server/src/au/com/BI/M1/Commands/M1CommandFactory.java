@@ -45,6 +45,12 @@ public class M1CommandFactory {
 			m1Command = parseArmingStatusRequest(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("AS")) {
 			m1Command = parseReplyArmingStatusReportData(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("zs")) {
+			m1Command = parseZoneStatusRequest(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("ZS")) {
+			m1Command = parseZoneStatusReport(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("zp")) {
+			m1Command = parseZonePartitionRequest(unparsedCommand);
 		}
 		
 		if (m1Command == null) {
@@ -189,4 +195,76 @@ public class M1CommandFactory {
 			return(null);
 		}
 	}
+	
+	private M1Command parseZoneStatusRequest(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length()-2) {
+			return (null);
+		}
+		
+		ZoneStatusRequest _command = new ZoneStatusRequest();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setFutureUse(command.substring(4,6));
+		_command.setCheckSum(command.substring(6));
+		
+		// Get checksum and compare
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,6));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseZoneStatusReport(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ZoneStatusReport _command = new ZoneStatusReport();
+		ZoneStatus[] states = new ZoneStatus[208];
+		for (int i=0;i<208;i++) {
+			states[i] = ZoneStatus.getByValue(command.substring(i+4,i+5));
+		}
+		_command.setZoneStatus(states);
+		_command.setCheckSum(command.substring(command.length()-2));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseZonePartitionRequest(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length()-2) {
+			return (null);
+		}
+		
+		ZonePartitionRequest _command = new ZonePartitionRequest();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setFutureUse(command.substring(4,6));
+		_command.setCheckSum(command.substring(6));
+		
+		// Get checksum and compare
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,6));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	
 }
