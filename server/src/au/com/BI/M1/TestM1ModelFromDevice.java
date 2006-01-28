@@ -16,6 +16,10 @@ import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
+import au.com.BI.M1.Commands.ZonePartitionRequest;
+import au.com.BI.M1.Commands.ZoneStatus;
+import au.com.BI.M1.Commands.ZoneStatusReport;
+import au.com.BI.M1.Commands.ZoneStatusRequest;
 import au.com.BI.ToggleSwitch.ToggleSwitch;
 import au.com.BI.Util.DeviceType;
 import au.com.BI.Util.Utility;
@@ -93,6 +97,34 @@ public class TestM1ModelFromDevice extends TestCase {
 		assertEquals(m1Command.getClass(),ReplyArmingStatusReportData.class);
 		ReplyArmingStatusReportData data = (ReplyArmingStatusReportData)m1Command;
 		assertEquals(data.getArmedStatus()[0],ArmedStatus.ARMED_AWAY);
+		
+		str = "06zs004D";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),ZoneStatusRequest.class);
+		
+		str = "D6ZS01235679ABDEF00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+		String checksum = new M1Helper().calcM1Checksum(str);
+		str = str + checksum;
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),ZoneStatusReport.class);
+		ZoneStatusReport zoneStatus = (ZoneStatusReport)m1Command;
+		assertEquals(zoneStatus.getZoneStatus()[0],ZoneStatus.NORMAL_UNCONFIGURED);
+		assertEquals(zoneStatus.getZoneStatus()[1],ZoneStatus.NORMAL_OPEN);
+		assertEquals(zoneStatus.getZoneStatus()[2],ZoneStatus.NORMAL_EOL);
+		assertEquals(zoneStatus.getZoneStatus()[3],ZoneStatus.NORMAL_SHORT);
+		assertEquals(zoneStatus.getZoneStatus()[4],ZoneStatus.TROUBLE_OPEN);
+		assertEquals(zoneStatus.getZoneStatus()[5],ZoneStatus.TROUBLE_EOL);
+		assertEquals(zoneStatus.getZoneStatus()[6],ZoneStatus.TROUBLE_SHORT);
+		assertEquals(zoneStatus.getZoneStatus()[7],ZoneStatus.VIOLATED_OPEN);
+		assertEquals(zoneStatus.getZoneStatus()[8],ZoneStatus.VIOLATED_EOL);
+		assertEquals(zoneStatus.getZoneStatus()[9],ZoneStatus.VIOLATED_SHORT);
+		assertEquals(zoneStatus.getZoneStatus()[10],ZoneStatus.BYPASSED_OPEN);
+		assertEquals(zoneStatus.getZoneStatus()[11],ZoneStatus.BYPASSED_EOL);
+		assertEquals(zoneStatus.getZoneStatus()[12],ZoneStatus.BYPASSED_SHORT);
+		
+		str = "06zp0050";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),ZonePartitionRequest.class);
 	}
 
 }
