@@ -16,6 +16,8 @@ import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
+import au.com.BI.M1.Commands.ZonePartition;
+import au.com.BI.M1.Commands.ZonePartitionReport;
 import au.com.BI.M1.Commands.ZonePartitionRequest;
 import au.com.BI.M1.Commands.ZoneStatus;
 import au.com.BI.M1.Commands.ZoneStatusReport;
@@ -125,6 +127,26 @@ public class TestM1ModelFromDevice extends TestCase {
 		str = "06zp0050";
 		m1Command = M1CommandFactory.getInstance().getM1Command(str);
 		assertEquals(m1Command.getClass(),ZonePartitionRequest.class);
+		
+		str = "D6ZP112345678123400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+		checksum = new M1Helper().calcM1Checksum(str);
+		str = str + checksum;
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),ZonePartitionReport.class);
+		ZonePartitionReport zonePartitions = (ZonePartitionReport)m1Command;
+		assertEquals(zonePartitions.getZonePartitions()[0],ZonePartition.PARTITION_1);
+		assertEquals(zonePartitions.getZonePartitions()[1],ZonePartition.PARTITION_1);
+		assertEquals(zonePartitions.getZonePartitions()[2],ZonePartition.PARTITION_2);
+		assertEquals(zonePartitions.getZonePartitions()[3],ZonePartition.PARTITION_3);
+		assertEquals(zonePartitions.getZonePartitions()[4],ZonePartition.PARTITION_4);
+		assertEquals(zonePartitions.getZonePartitions()[5],ZonePartition.PARTITION_5);
+		assertEquals(zonePartitions.getZonePartitions()[6],ZonePartition.PARTITION_6);
+		assertEquals(zonePartitions.getZonePartitions()[7],ZonePartition.PARTITION_7);
+		assertEquals(zonePartitions.getZonePartitions()[8],ZonePartition.PARTITION_8);
+		assertEquals(zonePartitions.getZonePartitions()[9],ZonePartition.PARTITION_1);
+		assertEquals(zonePartitions.getZonePartitions()[10],ZonePartition.PARTITION_2);
+		assertEquals(zonePartitions.getZonePartitions()[11],ZonePartition.PARTITION_3);
+		assertEquals(zonePartitions.getZonePartitions()[12],ZonePartition.PARTITION_4);
 	}
 
 }

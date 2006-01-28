@@ -51,6 +51,8 @@ public class M1CommandFactory {
 			m1Command = parseZoneStatusReport(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("zp")) {
 			m1Command = parseZonePartitionRequest(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("ZP")) {
+			m1Command = parseZonePartitionReport(unparsedCommand);
 		}
 		
 		if (m1Command == null) {
@@ -266,5 +268,28 @@ public class M1CommandFactory {
 		}
 	}
 	
+	private M1Command parseZonePartitionReport(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ZonePartitionReport _command = new ZonePartitionReport();
+		ZonePartition[] partitions = new ZonePartition[208];
+		for (int i=0;i<208;i++) {
+			partitions[i] = ZonePartition.getByValue(command.substring(i+4,i+5));
+		}
+		_command.setZonePartitions(partitions);
+		_command.setCheckSum(command.substring(command.length()-2));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
 	
 }
