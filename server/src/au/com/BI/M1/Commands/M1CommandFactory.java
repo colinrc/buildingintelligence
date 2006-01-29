@@ -53,6 +53,10 @@ public class M1CommandFactory {
 			m1Command = parseZonePartitionRequest(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("ZP")) {
 			m1Command = parseZonePartitionReport(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("zb")) {
+			m1Command = parseZoneBypassRequest(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("ZB")) {
+			m1Command = parseReplyWithBypassedZoneState(unparsedCommand);
 		}
 		
 		if (m1Command == null) {
@@ -60,7 +64,7 @@ public class M1CommandFactory {
 		}
 		return m1Command;
 	}
-	
+
 	/**
 	 * Parse an output change command.
 	 * @param command
@@ -230,6 +234,10 @@ public class M1CommandFactory {
 		}
 		
 		ZoneStatusReport _command = new ZoneStatusReport();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(0,command.length()-2));
+
 		ZoneStatus[] states = new ZoneStatus[208];
 		for (int i=0;i<208;i++) {
 			states[i] = ZoneStatus.getByValue(command.substring(i+4,i+5));
@@ -277,12 +285,70 @@ public class M1CommandFactory {
 		}
 		
 		ZonePartitionReport _command = new ZonePartitionReport();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(0,command.length()-2));
+		
 		ZonePartition[] partitions = new ZonePartition[208];
 		for (int i=0;i<208;i++) {
 			partitions[i] = ZonePartition.getByValue(command.substring(i+4,i+5));
 		}
 		_command.setZonePartitions(partitions);
 		_command.setCheckSum(command.substring(command.length()-2));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseZoneBypassRequest(String command) {
+		
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		ZoneBypassRequest _command = new ZoneBypassRequest();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(command.length()-2));
+		String zone = command.substring(4,7);
+		_command.setZone(zone);
+		
+		if (zone.equals("000")) {
+			_command.setBypassAllZones(true);
+		} else if (zone.equals("999")) {
+			_command.setBypassAllViolatedZones(true);
+		}
+		_command.setArea(command.substring(7,8));
+		_command.setPinCode(command.substring(8,14));
+		_command.setFutureUse(command.substring(14,15));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseReplyWithBypassedZoneState(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		ReplyWithBypassedZoneState _command = new ReplyWithBypassedZoneState();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setZone(command.substring(4,7));
+		_command.setBypassState(ZoneBypassState.getByValue(command.substring(7,8)));
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
 		if (checkSum.equals(_command.getCheckSum())) {
