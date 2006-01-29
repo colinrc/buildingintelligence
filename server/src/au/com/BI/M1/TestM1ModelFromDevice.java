@@ -16,6 +16,9 @@ import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
+import au.com.BI.M1.Commands.ReplyWithBypassedZoneState;
+import au.com.BI.M1.Commands.ZoneBypassRequest;
+import au.com.BI.M1.Commands.ZoneBypassState;
 import au.com.BI.M1.Commands.ZonePartition;
 import au.com.BI.M1.Commands.ZonePartitionReport;
 import au.com.BI.M1.Commands.ZonePartitionRequest;
@@ -147,6 +150,21 @@ public class TestM1ModelFromDevice extends TestCase {
 		assertEquals(zonePartitions.getZonePartitions()[10],ZonePartition.PARTITION_2);
 		assertEquals(zonePartitions.getZonePartitions()[11],ZonePartition.PARTITION_3);
 		assertEquals(zonePartitions.getZonePartitions()[12],ZonePartition.PARTITION_4);
+		
+		str = "10zb0051003456006B";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),ZoneBypassRequest.class);
+		ZoneBypassRequest bypassRequest = (ZoneBypassRequest)m1Command;
+		assertEquals(bypassRequest.getArea(),"1");
+		assertEquals(bypassRequest.getZone(),"005");
+		assertEquals(bypassRequest.getPinCode(),"003456");
+		
+		str = "0AZB123100CC";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),ReplyWithBypassedZoneState.class);
+		ReplyWithBypassedZoneState replyWithState = (ReplyWithBypassedZoneState)m1Command;
+		assertEquals(replyWithState.getZone(),"123");
+		assertEquals(replyWithState.getBypassState(),ZoneBypassState.BYPASSED);
 	}
 
 }
