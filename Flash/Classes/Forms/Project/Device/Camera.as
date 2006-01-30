@@ -14,12 +14,25 @@ class Forms.Project.Device.Camera extends Forms.BaseForm {
 	private var active_chk:CheckBox;
 	public function init() {
 		for (var camera in cameras) {
+			var newCamera = new Object();
 			if (cameras[camera].attributes["ACTIVE"] == "N") {
-				var active = "N";
+				newCamera.active = "N";
 			} else {
-				var active = "Y";
+				newCamera.active = "Y";
 			}
-			cameras_dg.addItem({key:cameras[camera].attributes["KEY"], name:cameras[camera].attributes["DISPLAY_NAME"], active:active, zoom:cameras[camera].attributes["ZOOM"]});
+			newCamera.key = "";
+			newCamera.name = "";
+			newCamera.zoom = "";
+			if(cameras[camera].attributes["KEY"] != undefined){
+				newCamera.key = cameras[camera].attributes["KEY"];
+			}
+			if(cameras[camera].attributes["DISPLAY_NAME"] != undefined){			
+				newCamera.name = cameras[camera].attributes["DISPLAY_NAME"];
+			}
+			if(cameras[camera].attributes["ZOOM"]!= undefined){	
+				newCamera.zoom = cameras[camera].attributes["ZOOM"];
+			}
+			cameras_dg.addItem(newCamera);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -79,10 +92,18 @@ class Forms.Project.Device.Camera extends Forms.BaseForm {
 		var newCameras = new Array();
 		for (var index = 0; index<cameras_dg.length; index++) {
 			var item = new XMLNode(1, "CAMERA");
-			item.attributes["KEY"] = cameras_dg.getItemAt(index).key;
-			item.attributes["DISPLAY_NAME"] = cameras_dg.getItemAt(index).name;
-			item.attributes["ACTIVE"] = cameras_dg.getItemAt(index).active;
-			item.attributes["ZOOM"] = cameras_dg.getItemAt(index).zoom;
+			if(cameras_dg.getItemAt(index).key != ""){
+				item.attributes["KEY"] = cameras_dg.getItemAt(index).key;
+			}
+			if(cameras_dg.getItemAt(index).name != ""){			
+				item.attributes["DISPLAY_NAME"] = cameras_dg.getItemAt(index).name;
+			}
+			if(cameras_dg.getItemAt(index).active != ""){			
+				item.attributes["ACTIVE"] = cameras_dg.getItemAt(index).active;
+			}
+			if(cameras_dg.getItemAt(index).zoom != ""){			
+				item.attributes["ZOOM"] = cameras_dg.getItemAt(index).zoom;
+			}
 			newCameras.push(item);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({cameras:newCameras}));

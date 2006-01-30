@@ -11,8 +11,14 @@ class Forms.Project.Device.IP extends Forms.BaseForm {
 		address_ti.maxChars = 15;
 		port_ti.restrict = "0-9";
 		port_ti.maxChars = 5;
-		address_ti.text = node.attributes["IP_ADDRESS"];
-		port_ti.text = node.attributes["PORT"];
+		address_ti.text ="";
+		port_ti.text ="";
+		if(node.attributes["IP_ADDRESS"]!= undefined){
+			address_ti.text = node.attributes["IP_ADDRESS"];
+		}
+		if(node.attributes["PORT"]!=undefined){
+			port_ti.text = node.attributes["PORT"];
+		}
 	}
 	public function getData():Object{
 		return {address:address_ti.text, port:port_ti.text};

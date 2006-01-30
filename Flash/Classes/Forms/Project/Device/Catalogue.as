@@ -15,7 +15,16 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 	public function init() {
 		name_ti.text = name;
 		for (var item in items) {
-			items_dg.addItem({code:items[item].attributes["CODE"], value:items[item].attributes["VALUE"]});
+			var newItem = new Object();
+			newItem.code = "";
+			newItem.value = "";
+			if(items[item].attributes["CODE"]!=undefined){
+				newItem.code = items[item].attributes["CODE"];
+			}
+			if(items[item].attributes["VALUE"]!=undefined){			
+				newItem.value = items[item].attributes["VALUE"];
+			}
+			items_dg.addItem(newItem);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -59,8 +68,12 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		var newItems = new Array();
 		for(var index = 0; index < items_dg.length; index++){
 			var item = new XMLNode(1, "ITEM");
-			item.attributes["CODE"] = items_dg.getItemAt(index).code;
-			item.attributes["VALUE"] = items_dg.getItemAt(index).value;
+			if(items_dg.getItemAt(index).code != undefined){
+				item.attributes["CODE"] = items_dg.getItemAt(index).code;
+			}
+			if(items_dg.getItemAt(index).value != undefined){
+				item.attributes["VALUE"] = items_dg.getItemAt(index).value;
+			}
 			newItems.push(item);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;

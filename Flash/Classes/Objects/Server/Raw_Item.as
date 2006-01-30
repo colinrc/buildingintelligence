@@ -4,7 +4,7 @@
 	var prefix:String;
 	public function isValid():Boolean {
 		var flag = true;
-		if((catalogue == undefined)||(catalogue == "")){
+		if ((catalogue == undefined) || (catalogue == "")) {
 			flag = false;
 		}
 		for (var raw in raws) {
@@ -19,14 +19,18 @@
 	}
 	public function toXML():XMLNode {
 		var newRaw_Item = new XMLNode(1, "RAW_ITEMS");
-		newRaw_Item.attributes["CATALOGUE"] = catalogue;
-		newRaw_Item.attributes["PREFIX"] = prefix;
+		if (catalogue != "") {
+			newRaw_Item.attributes["CATALOGUE"] = catalogue;
+		}
+		if (prefix != "") {
+			newRaw_Item.attributes["PREFIX"] = prefix;
+		}
 		for (var raw in raws) {
 			newRaw_Item.appendChild(raws[raw].toXML());
 		}
 		return newRaw_Item;
 	}
-	public function toTree():XMLNode{
+	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		for (var raw in raws) {
 			newNode.appendChild(raws[raw].toTree());
@@ -40,7 +44,7 @@
 	public function getData():Object {
 		return new Object({raws:raws, catalogue:catalogue, prefix:prefix});
 	}
-	public function setData(newData:Object){
+	public function setData(newData:Object) {
 		catalogue = newData.catalogue;
 		prefix = newData.prefix;
 		//process raw changes
@@ -77,8 +81,14 @@
 		}
 	}
 	public function setXML(newData:XMLNode):Void {
-		catalogue = newData.attributes["CATALOGUE"];
-		prefix = newData.attributes["PREFIX"];
+		catalogue = "";
+		prefix = "";
+		if (newData.attributes["CATALOGUE"] != undefined) {
+			catalogue = newData.attributes["CATALOGUE"];
+		}
+		if (newData.attributes["PREFIX"] != undefined) {
+			prefix = newData.attributes["PREFIX"];
+		}
 		raws = new Array();
 		for (var child in newData.childNodes) {
 			var tempRaw = new Objects.Server.Raw();

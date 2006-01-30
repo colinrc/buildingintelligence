@@ -1,4 +1,5 @@
 ﻿class Objects.Client.Sounds extends Objects.BaseElement{
+	sounds:Array;
 	public function isValid():Boolean {
 		return true;
 	}
@@ -21,7 +22,9 @@
 		return new Object({object:""});
 	}
 	public function setXML(newData:XMLNode):Void{
+		
 	}
 	public function setData(newData:Object):Void{
+		sounds = newData.sounds;
 	}
 }

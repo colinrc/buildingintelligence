@@ -14,12 +14,21 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 	private var active_chk:CheckBox;
 	public function init() {
 		for (var audiovideo in audiovideos) {
+			var newAudiovideo = new Object();
 			if (audiovideos[audiovideo].attributes["ACTIVE"] == "N") {
-				var active = "N";
+				newAudiovideo.active = "N";
 			} else {
-				var active = "Y";
+				newAudiovideo.active = "Y";
 			}
-			inputs_dg.addItem({key:audiovideos[audiovideo].attributes["KEY"], name:audiovideos[audiovideo].attributes["DISPLAY_NAME"], active:active});
+			newAudiovideo.key = "";
+			newAudiovideo.name = "";
+			if(audiovideos[audiovideo].attributes["KEY"] != undefined){
+				newAudiovideo.key = audiovideos[audiovideo].attributes["KEY"];
+			}
+			if(audiovideos[audiovideo].attributes["DISPLAY_NAME"] != undefined){
+				newAudiovideo.name = audiovideos[audiovideo].attributes["DISPLAY_NAME"];
+			}
+			inputs_dg.addItem();
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -86,9 +95,15 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 		var inputs = new Array();
 		for (var index = 0; index<inputs_dg.length; index++) {
 			var item = new XMLNode(1, itemType);
-			item.attributes["KEY"] = inputs_dg.getItemAt(index).key;
-			item.attributes["DISPLAY_NAME"] = inputs_dg.getItemAt(index).name;
-			item.attributes["ACTIVE"] = inputs_dg.getItemAt(index).active;
+			if(inputs_dg.getItemAt(index).key !=""){
+				item.attributes["KEY"] = inputs_dg.getItemAt(index).key;
+			}
+			if(inputs_dg.getItemAt(index).name !=""){			
+				item.attributes["DISPLAY_NAME"] = inputs_dg.getItemAt(index).name;
+			}
+			if(inputs_dg.getItemAt(index).active !=""){			
+				item.attributes["ACTIVE"] = inputs_dg.getItemAt(index).active;
+			}
 			inputs.push(item);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({audiovideos:inputs}));

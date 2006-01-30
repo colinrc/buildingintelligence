@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Device.Counter extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var counters:Array;
@@ -16,7 +15,32 @@ class Forms.Project.Device.Counter extends Forms.BaseForm {
 	private var active_chk:CheckBox;
 	public function init() {
 		for (var counter in counters) {
-			counters_dg.addItem({name:counters[counter].attributes["NAME"], display_name:counters[counter].attributes["DISPLAY_NAME"], key:counters[counter].attributes["KEY"], active:counters[counter].attributes["ACTIVE"], max:counters[counter].attributes["MAX"], power:counters[counter].attributes["POWER_RATING"]});
+			var newCounter = new Object();
+			newCounter.name = "";
+			newCounter.display_name = "";
+			newCounter.key = "";
+			newCounter.active = "Y";
+			newCounter.max = "";
+			newCounter.power = "";
+			if (counters[counter].attributes["NAME"] != undefined) {
+				newCounter.name = counters[counter].attributes["NAME"];
+			}
+			if (counters[counter].attributes["DISPLAY_NAME"] != undefined) {
+				newCounter.display_name = counters[counter].attributes["DISPLAY_NAME"];
+			}
+			if (counters[counter].attributes["KEY"] != undefined) {
+				newCounter.key = counters[counter].attributes["KEY"];
+			}
+			if (counters[counter].attributes["ACTIVE"] != undefined) {
+				newCounter.active = counters[counter].attributes["ACTIVE"];
+			}
+			if (counters[counter].attributes["MAX"] != undefined) {
+				newCounter.max = counters[counter].attributes["MAX"];
+			}
+			if (counters[counter].attributes["POWER_RATING"] != undefined) {
+				newCounter.power = counters[counter].attributes["POWER_RATING"];
+			}
+			counters_dg.addItem(newCounter);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -89,12 +113,24 @@ class Forms.Project.Device.Counter extends Forms.BaseForm {
 		var newCounters = new Array();
 		for (var index = 0; index<counters_dg.length; index++) {
 			var newCounter = new XMLNode(1, "COUNTER");
-			newCounter.attributes["NAME"] = counters_dg.getItemAt(index).name;
-			newCounter.attributes["DISPLAY_NAME"] = counters_dg.getItemAt(index).display_name;
-			newCounter.attributes["KEY"] = counters_dg.getItemAt(index).key;
-			newCounter.attributes["ACTIVE"] = counters_dg.getItemAt(index).active;
-			newCounter.attributes["MAX"] = counters_dg.getItemAt(index).max;
-			newCounter.attributes["POWER_RATING"] = counters_dg.getItemAt(index).power;
+			if (counters_dg.getItemAt(index).name != "") {
+				newCounter.attributes["NAME"] = counters_dg.getItemAt(index).name;
+			}
+			if (counters_dg.getItemAt(index).display_name != "") {
+				newCounter.attributes["DISPLAY_NAME"] = counters_dg.getItemAt(index).display_name;
+			}
+			if (counters_dg.getItemAt(index).key != "") {
+				newCounter.attributes["KEY"] = counters_dg.getItemAt(index).key;
+			}
+			if (counters_dg.getItemAt(index).active != "") {
+				newCounter.attributes["ACTIVE"] = counters_dg.getItemAt(index).active;
+			}
+			if (counters_dg.getItemAt(index).max != "") {
+				newCounter.attributes["MAX"] = counters_dg.getItemAt(index).max;
+			}
+			if (counters_dg.getItemAt(index).power != "") {
+				newCounter.attributes["POWER_RATING"] = counters_dg.getItemAt(index).power;
+			}
 			newCounters.push(newCounter);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({counters:newCounters}));

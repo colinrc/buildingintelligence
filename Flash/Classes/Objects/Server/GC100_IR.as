@@ -28,7 +28,9 @@
 	}
 	public function toXML():XMLNode {
 		var newDevice = new XMLNode(1, type);
-		newDevice.attributes["NAME"] = name;
+		if(name != ""){
+			newDevice.attributes["NAME"] = name;
+		}
 		newDevice.appendChild(parameters);
 		var tempIRs = irs.toXML();
 		for (var child in tempIRs.childNodes) {
@@ -59,9 +61,12 @@
 	}
 	public function setXML(newData:XMLNode):Void {
 		irs = new Objects.Server.IRs();
+		name = "";		
 		toggle_inputs = new Objects.Server.Toggles("TOGGLE_INPUT");
 		if (newData.nodeName == "GC100_IR") {
-			name = newData.attributes["NAME"];
+			if(newData.attributes["NAME"]!=undefined){
+				name = newData.attributes["NAME"];
+			}
 			var tempIRs = new XMLNode(1, "irs");
 			var tempToggleInputs = new XMLNode(1, "Toggle Inputs");
 			for (var child in newData.childNodes) {

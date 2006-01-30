@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Device.Contact extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var contacts:Array;
@@ -15,7 +14,28 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 	private var active_chk:CheckBox;
 	public function init() {
 		for (var contact in contacts) {
-			contacts_dg.addItem({name:contacts[contact].attributes["NAME"], display_name:contacts[contact].attributes["DISPLAY_NAME"], key:contacts[contact].attributes["KEY"], active:contacts[contact].attributes["ACTIVE"], box:contacts[contact].attributes["BOX"]});
+			var newContact = new Object();
+			newContact.name = "";
+			newContact.display_name = "";
+			newContact.key = "";
+			newContact.active = "Y";
+			newContact.box = "";
+			if (contacts[contact].attributes["NAME"] != undefined) {
+				newContact.name = contacts[contact].attributes["NAME"];
+			}
+			if (contacts[contact].attributes["DISPLAY_NAME"] != undefined) {
+				newContact.display_name = contacts[contact].attributes["DISPLAY_NAME"];
+			}
+			if (contacts[contact].attributes["KEY"] != undefined) {
+				newContact.key = contacts[contact].attributes["KEY"];
+			}
+			if (contacts[contact].attributes["ACTIVE"] != undefined) {
+				newContact.active = contacts[contact].attributes["ACTIVE"];
+			}
+			if (contacts[contact].attributes["BOX"] != undefined) {
+				newContact.box = contacts[contact].attributes["BOX"];
+			}
+			contacts_dg.addItem(newContact);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -84,11 +104,21 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 		var newContacts = new Array();
 		for (var index = 0; index<contacts_dg.length; index++) {
 			var newContact = new XMLNode(1, "CONTACT_CLOSURE");
-			newContact.attributes["NAME"] = contacts_dg.getItemAt(index).name;
-			newContact.attributes["DISPLAY_NAME"] = contacts_dg.getItemAt(index).display_name;
-			newContact.attributes["KEY"] = contacts_dg.getItemAt(index).key;
-			newContact.attributes["ACTIVE"] = contacts_dg.getItemAt(index).active;
-			newContact.attributes["BOX"] = contacts_dg.getItemAt(index).box;
+			if (contacts_dg.getItemAt(index).name != "") {
+				newContact.attributes["NAME"] = contacts_dg.getItemAt(index).name;
+			}
+			if (contacts_dg.getItemAt(index).display_name != "") {
+				newContact.attributes["DISPLAY_NAME"] = contacts_dg.getItemAt(index).display_name;
+			}
+			if (contacts_dg.getItemAt(index).key != "") {
+				newContact.attributes["KEY"] = contacts_dg.getItemAt(index).key;
+			}
+			if (contacts_dg.getItemAt(index).active != "") {
+				newContact.attributes["ACTIVE"] = contacts_dg.getItemAt(index).active;
+			}
+			if (contacts_dg.getItemAt(index).box != "") {
+				newContact.attributes["BOX"] = contacts_dg.getItemAt(index).box;
+			}
 			newContacts.push(newContact);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({contacts:newContacts}));

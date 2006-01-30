@@ -14,6 +14,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 	private var right_btn:Button;
 	private var save_btn:Button;
 	private var object:Object;
+	private var preview_mc:MovieClip;
 	public function init() {
 		editor_dg.columnNames = ["0", "1", "2", "3", "4"];
 		editor_dg.getColumnAt(0).headerText = "Rows";
@@ -29,7 +30,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 			newObject.toString = function():String  {
 				return this.label;
 			};
-			newArray.push(newObject);			
+			newArray.push(newObject);
 			for (var child = 0; child<rows[row].childNodes.length; child++) {
 				var newItem = {label:rows[row].childNodes[child].attributes["type"], object:rows[row].childNodes[child]};
 				newItem.toString = function():String  {
@@ -47,46 +48,45 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		up_btn.addEventListener("click", Delegate.create(this, moveUp));
 		down_btn.addEventListener("click", Delegate.create(this, moveDown));
 		right_btn.addEventListener("click", Delegate.create(this, moveRight));
-		left_btn.addEventListener("click", Delegate.create(this, moveLeft));		
+		left_btn.addEventListener("click", Delegate.create(this, moveLeft));
 		save_btn.addEventListener("click", Delegate.create(this, save));
-		editor_dg.addEventListener("cellPress", Delegate.create(this,cellClick));
+		editor_dg.addEventListener("cellPress", Delegate.create(this, cellClick));
 	}
-	private function cellClick(eventObject){
-		editor_ld.createEmptyMovieClip("editor_mc",0);
+	private function cellClick(eventObject) {
+		editor_ld.createEmptyMovieClip("editor_mc", 0);
 		object.itemIndex = eventObject.itemIndex;
 		object.columnIndex = eventObject.columnIndex;
-		if(editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].label == "Row"){	
+		if (editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].label == "Row") {
 			right_btn.enabled = false;
 			left_btn.enabled = false;
 			editor_mc = editor_ld.attachMovie("forms.project.client.row", "editor_"+random(999)+"_mc", 0, {cases:editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].cases});
-			editor_mc.deleteRow = Delegate.create(this,deleteRow);
-			editor_mc.updateRow = Delegate.create(this,updateRow);
-			editor_mc.addItem = Delegate.create(this,addItem);
-		}
-		else{
+			editor_mc.deleteRow = Delegate.create(this, deleteRow);
+			editor_mc.updateRow = Delegate.create(this, updateRow);
+			editor_mc.addItem = Delegate.create(this, addItem);
+		} else {
 			right_btn.enabled = true;
 			left_btn.enabled = true;
-			editor_mc = editor_ld.attachMovie("forms.project.client.controltype"+editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].label,"editor_"+random(999)+"_mc",0, {object:editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].object});
-			editor_mc.deleteItem = Delegate.create(this,deleteItem);
-			editor_mc.updateItem = Delegate.create(this,updateItem);
+			editor_mc = editor_ld.attachMovie("forms.project.client.controltype"+editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].label, "editor_"+random(999)+"_mc", 0, {object:editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].object});
+			editor_mc.deleteItem = Delegate.create(this, deleteItem);
+			editor_mc.updateItem = Delegate.create(this, updateItem);
 		}
 	}
-	private function deleteItem(){
-		editor_dg.dataProvider[object.itemIndex].splice(object.columnIndex,1);
+	private function deleteItem() {
+		editor_dg.dataProvider[object.itemIndex].splice(object.columnIndex, 1);
 		editor_dg.selectedIndex = undefined;
-		object.itemIndex= undefined;
+		object.itemIndex = undefined;
 		object.columnIndex = undefined;
-		editor_ld.createEmptyMovieClip("editor_mc",0);		
+		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
-	private function updateItem(){
+	private function updateItem() {
 		editor_dg.dataProvider[object.itemIndex][object.columnIndex].object = editor_mc.getObject();
 		editor_dg.selectedIndex = undefined;
-		object.itemIndex= undefined;
+		object.itemIndex = undefined;
 		object.columnIndex = undefined;
-		editor_ld.createEmptyMovieClip("editor_mc",0);		
+		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
-	private function addItem(){
-		var newItemNode = new XMLNode(1,"item");
+	private function addItem() {
+		var newItemNode = new XMLNode(1, "item");
 		newItemNode.attributes["type"] = editor_mc.type_cmb.text;
 		var newObject = new Object();
 		newObject.label = editor_mc.type_cmb.text;
@@ -106,30 +106,30 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 			return this.label;
 		};
 		newArray.push(newObject);
-		editor_dg.dataProvider.addItem(newArray);	
+		editor_dg.dataProvider.addItem(newArray);
 		//this is not redrawing, why??
-		editor_dg.selectedIndex = editor_dg.selectedIndex;		
+		editor_dg.selectedIndex = editor_dg.selectedIndex;
 	}
 	private function deleteRow() {
 		editor_dg.removeItemAt(object.itemIndex);
 		editor_dg.selectedIndex = undefined;
-		object.itemIndex= undefined;
+		object.itemIndex = undefined;
 		object.columnIndex = undefined;
-		editor_ld.createEmptyMovieClip("editor_mc",0);
+		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
-	private function updateRow(){
+	private function updateRow() {
 		editor_dg.dataProvider[object.itemIndex][object.columnIndex].cases = editor_mc.cases_ti.text;
 		editor_dg.selectedIndex = undefined;
-		object.itemIndex= undefined;
+		object.itemIndex = undefined;
 		object.columnIndex = undefined;
-		editor_ld.createEmptyMovieClip("editor_mc",0);
+		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
-	private function moveLeft(){
-		if(object != undefined){
-			if(object.columnIndex != 1){
+	private function moveLeft() {
+		if (object != undefined) {
+			if (object.columnIndex != 1) {
 				var tempObj = editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex-1);
-				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex-1,editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex));
-				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex,tempObj);
+				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex-1, editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex));
+				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex, tempObj);
 				editor_dg.selectedIndex = undefined;
 				editor_dg.selectedIndices = undefined;
 				object.itemIndex = undefined;
@@ -137,12 +137,12 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 			}
 		}
 	}
-	private function moveRight(){
-		if(object != undefined){
-			if(object.columnIndex != editor_dg.dataProvider[object.itemIndex].length-1){
+	private function moveRight() {
+		if (object != undefined) {
+			if (object.columnIndex != editor_dg.dataProvider[object.itemIndex].length-1) {
 				var tempObj = editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex+1);
-				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex+1,editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex));
-				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex,tempObj);
+				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex+1, editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex));
+				editor_dg.dataProvider[object.itemIndex].replaceItemAt(object.columnIndex, tempObj);
 				editor_dg.selectedIndex = undefined;
 				editor_dg.selectedIndices = undefined;
 				object.itemIndex = undefined;
@@ -176,15 +176,32 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 			}
 		}
 	}
+	public function preview(controls:XMLNode):Void {
+		var preview_mc:MovieClip = this.createEmptyMovieClip("preview_mc", 100);
+		preview_mc._x=3;
+		preview_mc._y=390;
+		preview_mc.loadMovie("window-preview.swf");
+		var newControlTypes = new XMLNode(1,"controlTypes");
+		newControlTypes.appendChild(controls);
+		this.onEnterFrame = function() {
+			if (this.preview_mc.sampleControlTypes) {
+				var sampleWindow:XML = new XML('<window><tab name="Preview" ><control name="Main Light" key="ENSUITE_LIGHT" type="'+type_ti.text+'" icons="light-bulb-off,light-bulb" /></tab></window>');				
+				this.preview_mc.setWindowData(400, 250, sampleWindow);
+				this.preview_mc.setControlTypeData(new XML(newControlTypes.toString()));
+				this.preview_mc.setIconPath("D:/BI/eLife Client/Build/standalone/lib/icons/");
+				delete this.onEnterFrame;
+			}
+		};		
+	}
 	public function save():Void {
 		var newRows = new Array();
 		for (var index = editor_dg.dataProvider.length-1; index>=0; index--) {
 			var tempArray = editor_dg.getItemAt(index);
-			var newRow = new XMLNode(1,"row");
-			if((tempArray[0].cases != undefined)&&(tempArray[0].cases !="")){
+			var newRow = new XMLNode(1, "row");
+			if ((tempArray[0].cases != undefined) && (tempArray[0].cases != "")) {
 				newRow.attributes["cases"] = tempArray[0].cases;
 			}
-			for(var item =0; item< tempArray.length;item++){
+			for (var item = 0; item<tempArray.length; item++) {
 				newRow.appendChild(tempArray[item].object);
 			}
 			newRows.push(newRow);
@@ -192,6 +209,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		_global.left_tree.selectedNode.object.setData(new Object({rows:newRows, type:type_ti.text}));
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
 		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
+		preview(_global.left_tree.selectedNode.object.toXML());
 		for (var child in _global.left_tree.selectedNode.childNodes) {
 			_global.left_tree.selectedNode.childNodes[child].removeNode();
 		}

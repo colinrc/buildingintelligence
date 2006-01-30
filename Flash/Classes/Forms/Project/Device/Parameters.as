@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Device.Parameters extends Forms.BaseForm {
 	private var node:XMLNode;
 	private var params_dg:DataGrid;
@@ -15,7 +14,16 @@ class Forms.Project.Device.Parameters extends Forms.BaseForm {
 			return label_str;
 		};
 		for (var child in node.childNodes) {
-			params_dg.addItem({name:node.childNodes[child].attributes["NAME"], value:node.childNodes[child].attributes["VALUE"]});
+			var newParam = new Object();
+			newParam.name = "";
+			newParam.value = "";
+			if (node.childNodes[child].attributes["NAME"] != undefined) {
+				newParam.name = node.childNodes[child].attributes["NAME"];
+			}
+			if (node.childNodes[child].attributes["VALUE"] != undefined) {
+				newParam.value = node.childNodes[child].attributes["VALUE"];
+			}
+			params_dg.addItem(newParam);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -55,11 +63,15 @@ class Forms.Project.Device.Parameters extends Forms.BaseForm {
 		delete_btn.enabled = true;
 	}
 	public function getData():Object {
-		var parameters = new XMLNode(1,"PARAMETERS");
-		for(var index = 0; index < params_dg.length; index++){
+		var parameters = new XMLNode(1, "PARAMETERS");
+		for (var index = 0; index<params_dg.length; index++) {
 			var item = new XMLNode(1, "ITEM");
-			item.attributes["NAME"] = params_dg.getItemAt(index).name;
-			item.attributes["VALUE"] = params_dg.getItemAt(index).value;
+			if (params_dg.getItemAt(index).name != "") {
+				item.attributes["NAME"] = params_dg.getItemAt(index).name;
+			}
+			if (params_dg.getItemAt(index).value != "") {
+				item.attributes["VALUE"] = params_dg.getItemAt(index).value;
+			}
 			parameters.appendChild(item);
 		}
 		return parameters;

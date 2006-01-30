@@ -5,7 +5,7 @@
 	private var power:String;
 	private var customs:Objects.Server.Customs;
 	private var raw_items:Objects.Server.Raw_Items;
-	public function getKeys():Array{
+	public function getKeys():Array {
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(customs.getKeys());
 		tempKeys.push(display_name);
@@ -25,7 +25,7 @@
 		if (!raw_items.isValid()) {
 			flag = false;
 		}
-		//need to isValid connection and parameters    
+		//need to isValid connection and parameters     
 		return flag;
 	}
 	public function getForm():String {
@@ -33,9 +33,15 @@
 	}
 	public function toXML():XMLNode {
 		var newRawInterface = new XMLNode(1, "RAW_INTERFACE");
-		newRawInterface.attributes["NAME"] = name;
-		newRawInterface.attributes["DISPLAY_NAME"] = display_name;
-		newRawInterface.attributes["POWER_RATING"] = power;
+		if (name != "") {
+			newRawInterface.attributes["NAME"] = name;
+		}
+		if (display_name != "") {
+			newRawInterface.attributes["DISPLAY_NAME"] = display_name;
+		}
+		if (power != "") {
+			newRawInterface.attributes["POWER_RATING"] = power;
+		}
 		var tempCustoms = customs.toXML();
 		for (var child in tempCustoms.childNodes) {
 			newRawInterface.appendChild(tempCustoms.childNodes[child]);
@@ -46,8 +52,8 @@
 		}
 		return newRawInterface;
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,"Raw Interface");
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, "Raw Interface");
 		newNode.appendChild(customs.toTree());
 		newNode.appendChild(raw_items.toTree());
 		newNode.object = this;
@@ -59,15 +65,24 @@
 	public function getData():Object {
 		return new Object({display_name:display_name, name:name, power:power});
 	}
-	public function setData(newData:Object){
+	public function setData(newData:Object) {
 		display_name = newData.display_name;
 		name = newData.name;
 		power = newData.power;
 	}
 	public function setXML(newData:XMLNode):Void {
-		name = newData.attributes["NAME"];
-		display_name = newData.attributes["DISPLAY_NAME"];
-		power = newData.attributes["POWER_RATING"];
+		name = "";
+		display_name = "";
+		power = "";
+		if (newData.attributes["NAME"] != undefined) {
+			name = newData.attributes["NAME"];
+		}
+		if (newData.attributes["DISPLAY_NAME"] != undefined) {
+			display_name = newData.attributes["DISPLAY_NAME"];
+		}
+		if (newData.attributes["POWER_RATING"] != undefined) {
+			power = newData.attributes["POWER_RATING"];
+		}
 		raw_items = new Objects.Server.Raw_Items();
 		customs = new Objects.Server.Customs();
 		var tempCustomInputs = new XMLNode(1, type);

@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Device.Raw extends Forms.BaseForm {
 	private var command:String;
 	private var code:String;
@@ -21,7 +20,16 @@ class Forms.Project.Device.Raw extends Forms.BaseForm {
 		code_ti.text = code;
 		extra_ti.text = extra;
 		for (var variable in variables) {
-			variables_dg.addItem({name:variables[variable].attributes["NAME"], value:variables[variable].attributes["VALUE"]});
+			var newVariable = new Object();
+			newVariable.name = "";
+			newVariable.value = "";
+			if (variables[variable].attributes["NAME"] != undefined) {
+				newVariable.name = variables[variable].attributes["NAME"];
+			}
+			if (variables[variable].attributes["VALUE"] != undefined) {
+				newVariable.value = variables[variable].attributes["VALUE"];
+			}
+			variables_dg.addItem(newVariable);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -65,12 +73,16 @@ class Forms.Project.Device.Raw extends Forms.BaseForm {
 		var newItems = new Array();
 		for (var index = 0; index<variables_dg.length; index++) {
 			var item = new XMLNode(1, "VARS");
-			item.attributes["NAME"] = variables_dg.getItemAt(index).name;
-			item.attributes["VALUE"] = variables_dg.getItemAt(index).value;
+			if (variables_dg.getItemAt(index).name != "") {
+				item.attributes["NAME"] = variables_dg.getItemAt(index).name;
+			}
+			if (variables_dg.getItemAt(index).value != "") {
+				item.attributes["VALUE"] = variables_dg.getItemAt(index).value;
+			}
 			newItems.push(item);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		_global.left_tree.selectedNode.object.setData(new Object({variables:newItems,command:command_ti.text,code:code_ti.text,extra:extra_ti.text}));
+		_global.left_tree.selectedNode.object.setData(new Object({variables:newItems, command:command_ti.text, code:code_ti.text, extra:extra_ti.text}));
 		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
 		_global.left_tree.selectedIndex = tempIndex;
 	}

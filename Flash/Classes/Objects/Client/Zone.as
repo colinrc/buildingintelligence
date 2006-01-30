@@ -1,5 +1,6 @@
-﻿class Objects.Client.Zone extends Objects.BaseElement{
+﻿class Objects.Client.Zone extends Objects.BaseElement {
 	private var rooms:Array;
+	private var panels:Array;
 	private var arbitrary:Objects.Client.Arbitrary;
 	private var name:String;
 	private var map:String;
@@ -14,96 +15,111 @@
 		return "forms.project.client.zone";
 	}
 	public function toXML():XMLNode {
-		var newNode = new XMLNode(1,"zone");
-		if(name != ""){
+		var newNode = new XMLNode(1, "zone");
+		if (name != "") {
 			newNode.attributes["name"] = name;
 		}
-		if(map != ""){		
+		if (map != "") {
 			newNode.attributes["map"] = map;
 		}
-		if(background != ""){				
+		if (background != "") {
 			newNode.attributes["background"] = background;
 		}
-		if(cycle != ""){				
+		if (cycle != "") {
 			newNode.attributes["cycle"] = cycle;
 		}
-		if(alignment != ""){				
+		if (alignment != "") {
 			newNode.attributes["alignment"] = alignment;
 		}
-		if(hideFromList != ""){				
+		if (hideFromList != "") {
 			newNode.attributes["hideFromList"] = hideFromList;
-		}	
+		}
 		newNode.appendChild(arbitrary.toXML());
-		var newRooms = new XMLNode(1,"rooms");
-		for(var room in rooms){
+		var newRooms = new XMLNode(1, "rooms");
+		for (var room in rooms) {
 			newRooms.appendChild(rooms[room].toXML());
 		}
 		newNode.appendChild(newRooms);
+		var newPanels = new XMLNode(1, "panels");
+		for (var panel in panels) {
+			newPanels.appendChild(panels[panel].toXML());
+		}
+		newNode.appendChild(newPanels);
 		return newNode;
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
 		newNode.appendChild(arbitrary.toTree());
-		for(var room in rooms){
+		for (var room in rooms) {
 			newNode.appendChild(rooms[room].toTree());
+		}
+		for (var panel in panels) {
+			newNode.appendChild(panels[panel].toTree());
 		}
 		return newNode;
 	}
-	public function getName():String{
+	public function getName():String {
 		return "Zone : "+name;
 	}
-	public function getData():Object{
-		return new Object({rooms:rooms,name:name,map:map,background:background,cycle:cycle,alignment:alignment,hideFromList:hideFromList});
+	public function getData():Object {
+		return new Object({panels:panels, rooms:rooms, name:name, map:map, background:background, cycle:cycle, alignment:alignment, hideFromList:hideFromList});
 	}
-	public function setXML(newData:XMLNode):Void{
+	public function setXML(newData:XMLNode):Void {
 		rooms = new Array();
+		panels = new Array();
 		name = "";
-		map ="";
-		background ="";
-		cycle ="";
+		map = "";
+		background = "";
+		cycle = "";
 		alignment = "";
 		hideFromList = "";
 		arbitrary = new Objects.Client.Arbitrary();
-		if(newData.nodeName == "zone"){
-			if(newData.attributes["name"] != undefined){
+		if (newData.nodeName == "zone") {
+			if (newData.attributes["name"] != undefined) {
 				name = newData.attributes["name"];
 			}
-			if(newData.attributes["map"] != undefined){
+			if (newData.attributes["map"] != undefined) {
 				map = newData.attributes["map"];
 			}
-			if(newData.attributes["background"] != undefined){
+			if (newData.attributes["background"] != undefined) {
 				background = newData.attributes["background"];
 			}
-			if(newData.attributes["cycle"] != undefined){
+			if (newData.attributes["cycle"] != undefined) {
 				cycle = newData.attributes["cycle"];
 			}
-			if(newData.attributes["alignment"] != undefined){
+			if (newData.attributes["alignment"] != undefined) {
 				alignment = newData.attributes["alignment"];
 			}
-			if(newData.attributes["hideFromList"] != undefined){			
+			if (newData.attributes["hideFromList"] != undefined) {
 				hideFromList = newData.attributes["hideFromList"];
 			}
-			for(var child in newData.childNodes){
-				switch(newData.childNodes[child].nodeName){
-					case "arbitrary":
+			for (var child in newData.childNodes) {
+				switch (newData.childNodes[child].nodeName) {
+				case "arbitrary" :
 					arbitrary.setXML(newData.childNodes[child]);
 					break;
-					case "rooms":
-					for(var room in newData.childNodes[child].childNodes){
-					var newRoom = new Objects.Client.Room();
-					newRoom.setXML(newData.childNodes[child].childNodes[room]);
-					rooms.push(newRoom);
+				case "rooms" :
+					for (var room in newData.childNodes[child].childNodes) {
+						var newRoom = new Objects.Client.Room();
+						newRoom.setXML(newData.childNodes[child].childNodes[room]);
+						rooms.push(newRoom);
+					}
+					break;
+				case "panels" :
+					for (var panel in newData.childNodes[child].childNodes) {
+						var newPanel = new Objects.Client.Panel();
+						newPanel.setXML(newData.childNodes[child].childNodes[panel]);
+						panels.push(newPanel);
 					}
 					break;
 				}
 			}
-		}
-		else{
+		} else {
 			trace("Error, found "+newData.nodeName+", was expecting zone");
 		}
 	}
-	public function setData(newData:Object):Void{
+	public function setData(newData:Object):Void {
 		name = newData.name;
 		map = newData.map;
 		background = newData.background;
@@ -141,6 +157,38 @@
 			var newRoom = new Objects.Client.Room();
 			newRoom.setXML(newNode);
 			rooms.push(newRoom);
+		}
+		/****/
+		var newPanels = new Array();
+		for (var index in newData.panels) {
+			var found = false;
+			for (var panel in panels) {
+				if (panels[panel].name == newData.panels[index].name) {
+					found = true;
+				}
+			}
+			if (found == false) {
+				newPanels.push({name:newData.panels[index].name});
+			}
+		}
+		var deletedPanels = new Array();
+		for (var panel in panels) {
+			var found = false;
+			for (var index in newData.panels) {
+				if (panels[panel].name == newData.panels[index].name) {
+					found = true;
+				}
+			}
+			if (found == false) {
+				panels.splice(parseInt(panel), 1);
+			}
+		}
+		for (var newPanel in newPanels) {
+			var newNode = new XMLNode(1, "panel");
+			newNode.attributes["name"] = newPanels[newPanel].name;
+			var newPanel = new Objects.Client.Panel();
+			newPanel.setXML(newNode);
+			panels.push(newPanel);
 		}
 	}
 }

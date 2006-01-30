@@ -29,9 +29,15 @@
 	}
 	public function toXML():XMLNode {
 		var newDevice = new XMLNode(1, "DEVICE");
-		newDevice.attributes["NAME"] = name;
-		newDevice.attributes["DISPLAY_NAME"] = display_name;
-		newDevice.attributes["ACTIVE"] = active;
+		if(name != ""){
+			newDevice.attributes["NAME"] = name;
+		}
+		if(display_name != ""){
+			newDevice.attributes["DISPLAY_NAME"] = display_name;
+		}
+		if(active != "") {
+			newDevice.attributes["ACTIVE"] = active;
+		}
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
 		newDevice.appendChild(new XMLNode(1, "IR_LEARNER"));
@@ -61,12 +67,21 @@
 		parameters = newData.parameters;
 	}
 	public function setXML(newData:XMLNode):Void {
+		name = "";
+		display_name ="";
+		active = "Y";		
 		catalogues = new Objects.Server.Catalogues();
 		var tempCatalogues = new XMLNode(1, "Catalogues");
 		if (newData.nodeName == "DEVICE") {
-			name = newData.attributes["NAME"];
-			display_name = newData.attributes["DISPLAY_NAME"];
-			active = newData.attributes["ACTIVE"];
+			if(newData.attributes["NAME"]!=undefined){
+				name = newData.attributes["NAME"];
+			}
+			if(newData.attributes["DISPLAY_NAME"]!=undefined){			
+				display_name = newData.attributes["DISPLAY_NAME"];
+			}
+			if(newData.attributes["ACTIVE"]!=undefined){			
+				active = newData.attributes["ACTIVE"];
+			}
 			for (var child in newData.childNodes) {
 				switch (newData.childNodes[child].nodeName) {
 				case "CONNECTION" :

@@ -23,7 +23,9 @@
 	}
 	public function toXML():XMLNode {
 		var newDevice = new XMLNode(1, type);
-		newDevice.attributes["NAME"] = name;
+		if(name != ""){
+			newDevice.attributes["NAME"] = name;
+		}
 		newDevice.appendChild(parameters);
 		var tempToggleOutputs = toggle_outputs.toXML();
 		for (var child in tempToggleOutputs.childNodes) {
@@ -49,8 +51,11 @@
 	}
 	public function setXML(newData:XMLNode):Void {
 		toggle_outputs = new Objects.Server.Toggles("TOGGLE_OUTPUT");
+		name = "";
 		if (newData.nodeName == "GC100_Relay") {
-			name = newData.attributes["NAME"];
+			if(newData.attributes["NAME"]!=undefined){
+				name = newData.attributes["NAME"];
+			}
 			var tempToggleOutputs = new XMLNode(1, "Toggle Outputs");
 			for (var child in newData.childNodes) {
 				switch (newData.childNodes[child].nodeName) {

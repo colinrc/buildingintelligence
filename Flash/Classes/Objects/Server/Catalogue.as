@@ -18,7 +18,9 @@
 	}
 	public function toXML():XMLNode {
 		var newCatalogue = new XMLNode(1, "CATALOGUE");
-		newCatalogue.attributes["NAME"] = name;
+		if(name != ""){
+			newCatalogue.attributes["NAME"] = name;
+		}
 		for (var item in items) {
 			newCatalogue.appendChild(items[item]);
 		}
@@ -40,7 +42,10 @@
 		return new Object({name:name, items:items});
 	}
 	public function setXML(newData:XMLNode):Void {
-		name = newData.attributes["NAME"];
+		name = "";
+		if(newData.attributes["NAME"] != undefined){
+			name = newData.attributes["NAME"];
+		}
 		items = new Array();
 		for (var child in newData.childNodes) {
 			items.push(newData.childNodes[child]);

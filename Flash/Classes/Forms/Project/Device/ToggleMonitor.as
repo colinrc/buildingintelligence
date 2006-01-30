@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 	private var monitors:Array;
 	private var monitors_dg:DataGrid;
@@ -14,12 +13,25 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 	private var save_btn:Button;
 	public function init() {
 		for (var monitor in monitors) {
+			var newMonitor = new Object();
 			if (monitors[monitor].attributes["ACTIVE"] == "N") {
-				var active = "N";
+				newMonitor.active = "N";
 			} else {
-				var active = "Y";
+				newMonitor.active = "Y";
 			}
-			monitors_dg.addItem({key:monitors[monitor].attributes["KEY"], name:monitors[monitor].attributes["NAME"], active:active, dname:monitors[monitor].attributes["DISPLAY_NAME"]});
+			newMonitor.key = "";
+			newMonitor.name = "";
+			newMonitor.dname = "";
+			if (monitors[monitor].attributes["KEY"] != undefined) {
+				newMonitor.key = monitors[monitor].attributes["KEY"];
+			}
+			if (monitors[monitor].attributes["NAME"] != undefined) {
+				newMonitor.name = monitors[monitor].attributes["NAME"];
+			}
+			if (monitors[monitor].attributes["DISPLAY_NAME"] != undefined) {
+				newMonitor.dname = monitors[monitor].attributes["DISPLAY_NAME"];
+			}
+			monitors_dg.addItem(newMonitor);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -79,10 +91,18 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 		var newMonitors = new Array();
 		for (var index = 0; index<monitors_dg.length; index++) {
 			var item = new XMLNode(1, "TOGGLE_OUTPUT_MONITOR");
-			item.attributes["KEY"] = monitors_dg.getItemAt(index).key;
-			item.attributes["NAME"] = monitors_dg.getItemAt(index).name;
-			item.attributes["ACTIVE"] = monitors_dg.getItemAt(index).active;
-			item.attributes["DISPLAY_NAME"] = monitors_dg.getItemAt(index).dname;
+			if (monitors_dg.getItemAt(index).key != "") {
+				item.attributes["KEY"] = monitors_dg.getItemAt(index).key;
+			}
+			if (monitors_dg.getItemAt(index).name != "") {
+				item.attributes["NAME"] = monitors_dg.getItemAt(index).name;
+			}
+			if (monitors_dg.getItemAt(index).active != "") {
+				item.attributes["ACTIVE"] = monitors_dg.getItemAt(index).active;
+			}
+			if (monitors_dg.getItemAt(index).dname != "") {
+				item.attributes["DISPLAY_NAME"] = monitors_dg.getItemAt(index).dname;
+			}
 			newMonitors.push(item);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({monitors:newMonitors}));

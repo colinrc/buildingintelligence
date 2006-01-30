@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var lights:Array;
@@ -17,7 +16,35 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 	private var active_chk:CheckBox;
 	public function init() {
 		for (var light in lights) {
-			lights_dg.addItem({name:lights[light].attributes["NAME"], display_name:lights[light].attributes["DISPLAY_NAME"], key:lights[light].attributes["KEY"], active:lights[light].attributes["ACTIVE"], area:lights[light].attributes["AREA"], power:lights[light].attributes["POWER_RATING"], relay:lights[light].attributes["RELAY"]});
+			var newLight = new Object();
+			newLight.name = "";
+			newLight.display_name = "";
+			newLight.key = "";
+			newLight.active = "";
+			newLight.power = "Y";
+			newLight.relay = "Y";
+			if (lights[light].attributes["NAME"] != undefined) {
+				newLight.name = lights[light].attributes["NAME"];
+			}
+			if (lights[light].attributes["DISPLAY_NAME"] != undefined) {
+				newLight.display_name = lights[light].attributes["DISPLAY_NAME"];
+			}
+			if (lights[light].attributes["KEY"] != undefined) {
+				newLight.key = lights[light].attributes["KEY"];
+			}
+			if (lights[light].attributes["ACTIVE"] != undefined) {
+				newLight.active = lights[light].attributes["ACTIVE"];
+			}
+			if (lights[light].attributes["AREA"] != undefined) {
+				newLight.area = lights[light].attributes["AREA"];
+			}
+			if (lights[light].attributes["POWER_RATING"] != undefined) {
+				newLight.power = lights[light].attributes["POWER_RATING"];
+			}
+			if (lights[light].attributes["RELAY"] != undefined) {
+				newLight.relay = lights[light].attributes["RELAY"];
+			}
+			lights_dg.addItem(newLight);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -104,13 +131,27 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 		var newLights = new Array();
 		for (var index = 0; index<lights_dg.length; index++) {
 			var newLight = new XMLNode(1, "LIGHT_DYNALITE");
-			newLight.attributes["NAME"] = lights_dg.getItemAt(index).name;
-			newLight.attributes["DISPLAY_NAME"] = lights_dg.getItemAt(index).display_name;
-			newLight.attributes["KEY"] = lights_dg.getItemAt(index).key;
-			newLight.attributes["ACTIVE"] = lights_dg.getItemAt(index).active;
-			newLight.attributes["AREA"] = lights_dg.getItemAt(index).area;
-			newLight.attributes["POWER_RATING"] = lights_dg.getItemAt(index).power;
-			newLight.attributes["RELAY"] = lights_dg.getItemAt(index).relay;
+			if (lights_dg.getItemAt(index).name != "") {
+				newLight.attributes["NAME"] = lights_dg.getItemAt(index).name;
+			}
+			if (lights_dg.getItemAt(index).display_name != "") {
+				newLight.attributes["DISPLAY_NAME"] = lights_dg.getItemAt(index).display_name;
+			}
+			if (lights_dg.getItemAt(index).key != "") {
+				newLight.attributes["KEY"] = lights_dg.getItemAt(index).key;
+			}
+			if (lights_dg.getItemAt(index).active != "") {
+				newLight.attributes["ACTIVE"] = lights_dg.getItemAt(index).active;
+			}
+			if (lights_dg.getItemAt(index).area != "") {
+				newLight.attributes["AREA"] = lights_dg.getItemAt(index).area;
+			}
+			if (lights_dg.getItemAt(index).power != "") {
+				newLight.attributes["POWER_RATING"] = lights_dg.getItemAt(index).power;
+			}
+			if (lights_dg.getItemAt(index).relay != "") {
+				newLight.attributes["RELAY"] = lights_dg.getItemAt(index).relay;
+			}
 			newLights.push(newLight);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({lights:newLights}));

@@ -10,18 +10,23 @@ class Forms.Project.Device.Serial extends Forms.BaseForm {
 	private var dataBits_cb:ComboBox;
 	private var flow_cb:ComboBox;
 	public function init():Void{
+		port_ti.text ="";
 		if(node.attributes["PORT"] != undefined) {
 			port_ti.text = node.attributes["PORT"];
 		}
+		baud_ti.text ="";
 		if(node.attributes["BAUD"] != undefined) {
 			baud_ti.text = node.attributes["BAUD"];
 		}
+		parity_ti.text ="";
 		if(node.attributes["PARITY"] != undefined) {
 			parity_ti.text = node.attributes["PARITY"];
 		}
+		supportsCd_ti.text ="";
 		if(node.attributes["SUPPORTS_CD"] != undefined) {
 			supportsCd_ti.text = node.attributes["SUPPORTS_CD"];
 		}
+		stopBits_cb.selectedIndex = 0;
 		if(node.attributes["STOP_BITS"] != undefined) {
 			if(node.attributes["STOP_BITS"] == "0") {
 				stopBits_cb.selectedIndex = 0;
@@ -33,6 +38,7 @@ class Forms.Project.Device.Serial extends Forms.BaseForm {
 				stopBits_cb.selectedIndex = 2;
 			}
 		}
+		dataBits_cb.selectedIndex = 0;
 		if(node.attributes["DATA_BITS"] != undefined) {
 			if(node.attributes["DATA_BITS"] == "8") {
 				dataBits_cb.selectedIndex = 0;
@@ -41,6 +47,7 @@ class Forms.Project.Device.Serial extends Forms.BaseForm {
 				dataBits_cb.selectedIndex = 1;
 			}
 		}
+		flow_cb.selectedIndex = 0;
 		if(node.attributes["FLOW"] != undefined) {
 			if(node.attributes["FLOW"] == "NONE") {
 				flow_cb.selectedIndex = 0;

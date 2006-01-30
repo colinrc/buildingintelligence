@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 	private var sensors:Array;
 	private var sensors_dg:DataGrid;
@@ -19,7 +18,44 @@ class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 	private var active_chk:CheckBox;
 	public function init() {
 		for (var sensor in sensors) {
-			sensors_dg.addItem({name:sensors[sensor].attributes["NAME"], display_name:sensors[sensor].attributes["DISPLAY_NAME"], key:sensors[sensor].attributes["KEY"], active:sensors[sensor].attributes["ACTIVE"], power:sensors[sensor].attributes["POWER_RATING"], relay:sensors[sensor].attributes["RELAY"], channel:sensors[sensor].attributes["CHANNEL"], application:sensors[sensor].attributes["CBUS_APPLICATION"], units:sensors[sensor].attributes["UNITS"]});
+			var newSensor = new Object();
+			newSensor.name = "";
+			newSensor.display_name = "";
+			newSensor.key = "";
+			newSensor.active = "";
+			newSensor.power = "";
+			newSensor.relay = "";
+			newSensor.channel = "";
+			newSensor.application = "";
+			newSensor.units = "";
+			if (sensors[sensor].attributes["NAME"] != undefined) {
+				newSensor.name = sensors[sensor].attributes["NAME"];
+			}
+			if (sensors[sensor].attributes["DISPLAY_NAME"] != undefined) {
+				newSensor.display_name = sensors[sensor].attributes["DISPLAY_NAME"];
+			}
+			if (sensors[sensor].attributes["KEY"] != undefined) {
+				newSensor.key = sensors[sensor].attributes["KEY"];
+			}
+			if (sensors[sensor].attributes["ACTIVE"] != undefined) {
+				newSensor.active = sensors[sensor].attributes["ACTIVE"];
+			}
+			if (sensors[sensor].attributes["POWER_RATING"] != undefined) {
+				newSensor.power = sensors[sensor].attributes["POWER_RATING"];
+			}
+			if (sensors[sensor].attributes["RELAY"] != undefined) {
+				newSensor.relay = sensors[sensor].attributes["RELAY"];
+			}
+			if (sensors[sensor].attributes["CHANNEL"] != undefined) {
+				newSensor.channel = sensors[sensor].attributes["CHANNEL"];
+			}
+			if (sensors[sensor].attributes["CBUS_APPLICATION"] != undefined) {
+				newSensor.application = sensors[sensor].attributes["CBUS_APPLICATION"];
+			}
+			if (sensors[sensor].attributes["UNITS"] != undefined) {
+				newSensor.units = sensors[sensor].attributes["UNITS"];
+			}
+			sensors_dg.addItem(newSensor);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -115,15 +151,33 @@ class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 		var newSensors = new Array();
 		for (var index = 0; index<sensors_dg.length; index++) {
 			var newSensor = new XMLNode(1, "LIGHT_DYNALITE");
-			newSensor.attributes["NAME"] = sensors_dg.getItemAt(index).name;
-			newSensor.attributes["DISPLAY_NAME"] = sensors_dg.getItemAt(index).display_name;
-			newSensor.attributes["KEY"] = sensors_dg.getItemAt(index).key;
-			newSensor.attributes["ACTIVE"] = sensors_dg.getItemAt(index).active;
-			newSensor.attributes["POWER_RATING"] = sensors_dg.getItemAt(index).power;
-			newSensor.attributes["RELAY"] = sensors_dg.getItemAt(index).relay;
-			newSensor.attributes["CHANNEL"] = sensors_dg.getItemAt(index).relay;
-			newSensor.attributes["CBUS_APPLICATION"] = sensors_dg.getItemAt(index).relay;
-			newSensor.attributes["UNITS"] = sensors_dg.getItemAt(index).units;
+			if (sensors_dg.getItemAt(index).name != "") {
+				newSensor.attributes["NAME"] = sensors_dg.getItemAt(index).name;
+			}
+			if (sensors_dg.getItemAt(index).display_name != "") {
+				newSensor.attributes["DISPLAY_NAME"] = sensors_dg.getItemAt(index).display_name;
+			}
+			if (sensors_dg.getItemAt(index).key != "") {
+				newSensor.attributes["KEY"] = sensors_dg.getItemAt(index).key;
+			}
+			if (sensors_dg.getItemAt(index).active != "") {
+				newSensor.attributes["ACTIVE"] = sensors_dg.getItemAt(index).active;
+			}
+			if (sensors_dg.getItemAt(index).power != "") {
+				newSensor.attributes["POWER_RATING"] = sensors_dg.getItemAt(index).power;
+			}
+			if (sensors_dg.getItemAt(index).relay != "") {
+				newSensor.attributes["RELAY"] = sensors_dg.getItemAt(index).relay;
+			}
+			if (sensors_dg.getItemAt(index).channel != "") {
+				newSensor.attributes["CHANNEL"] = sensors_dg.getItemAt(index).channel;
+			}
+			if (sensors_dg.getItemAt(index).application != "") {
+				newSensor.attributes["CBUS_APPLICATION"] = sensors_dg.getItemAt(index).application;
+			}
+			if (sensors_dg.getItemAt(index).units != "") {
+				newSensor.attributes["UNITS"] = sensors_dg.getItemAt(index).units;
+			}
 			newSensors.push(newSensor);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({sensors:newSensors}));

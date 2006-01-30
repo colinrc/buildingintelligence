@@ -28,7 +28,7 @@
 	public function toXML():XMLNode {
 		var serverNode = new XMLNode(1, "CONFIG");
 		var descriptionNode = new XMLNode(1, "DESC");
-		descriptionNode.appendChild(new XMLNode(2, description));
+		descriptionNode.appendChild(new XMLNode(3, description));
 		serverNode.appendChild(descriptionNode);
 		serverNode.appendChild(controls.toXML());
 		for (var device in devices) {

@@ -12,7 +12,16 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 	private var dname_ti:TextInput;
 	public function init() {
 		for (var alarm in alarms) {
-			alarms_dg.addItem({key:alarms[alarm].attributes["KEY"], dname:alarms[alarm].attributes["DISPLAY_NAME"]});
+			var newAlarm = new Object();
+			newAlarm.key = "";
+			newAlarm.dname = "";
+			if(alarms[alarm].attributes["KEY"]!=undefined){
+				newAlarm.key = alarms[alarm].attributes["KEY"];
+			}
+			if(alarms[alarm].attributes["DISPLAY_NAME"]!=undefined){
+				newAlarm.dname = alarms[alarm].attributes["DISPLAY_NAME"];
+			}
+			alarms_dg.addItem(newAlarm);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -56,8 +65,12 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 		var newAlarms = new Array();
 		for (var index = 0; index<alarms_dg.length; index++) {
 			var item = new XMLNode(1, "ALARM");
-			item.attributes["KEY"] = alarms_dg.getItemAt(index).key;
-			item.attributes["DISPLAY_NAME"] = alarms_dg.getItemAt(index).dname;
+			if(alarms_dg.getItemAt(index).key != ""){
+				item.attributes["KEY"] = alarms_dg.getItemAt(index).key;
+			}
+			if(alarms_dg.getItemAt(index).dname !=""){
+				item.attributes["DISPLAY_NAME"] = alarms_dg.getItemAt(index).dname;
+ 		    }
 			newAlarms.push(item);
 		}
 		_global.left_tree.selectedNode.alarms = newAlarms;

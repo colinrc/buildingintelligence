@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Device.Analogue extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var analogues:Array;
@@ -14,12 +13,25 @@ class Forms.Project.Device.Analogue extends Forms.BaseForm {
 	private var active_chk:CheckBox;
 	public function init() {
 		for (var analogue in analogues) {
+			var newAnalogue = new Object();
 			if (analogues[analogue].attributes["ACTIVE"] == "N") {
-				var active = "N";
+				newAnalogue.active = "N";
 			} else {
-				var active = "Y";
+				newAnalogue.active = "Y";
 			}
-			analogues_dg.addItem({key:analogues[analogue].attributes["KEY"], name:analogues[analogue].attributes["NAME"], active:active, dname:analogues[analogue].attributes["DISPLAY_NAME"]});
+			newAnalogue.key = "";
+			newAnalogue.name = "";
+			newAnalogue.dname = "";
+			if (analogues[analogue].attributes["KEY"] != undefined) {
+				newAnalogue.key = analogues[analogue].attributes["KEY"];
+			}
+			if (analogues[analogue].attributes["NAME"] != undefined) {
+				newAnalogue.name = analogues[analogue].attributes["NAME"];
+			}
+			if (analogues[analogue].attributes["DISPLAY_NAME"] != undefined) {
+				newAnalogue.dname = analogues[analogue].attributes["DISPLAY_NAME"];
+			}
+			analogues_dg.addItem(newAnalogue);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -79,10 +91,18 @@ class Forms.Project.Device.Analogue extends Forms.BaseForm {
 		var newAnalogues = new Array();
 		for (var index = 0; index<analogues_dg.length; index++) {
 			var item = new XMLNode(1, "ANALOGUE");
-			item.attributes["KEY"] = analogues_dg.getItemAt(index).key;
-			item.attributes["NAME"] = analogues_dg.getItemAt(index).name;
-			item.attributes["ACTIVE"] = analogues_dg.getItemAt(index).active;
-			item.attributes["DISPLAY_NAME"] = analogues_dg.getItemAt(index).dname;
+			if (analogues_dg.getItemAt(index).key != "") {
+				item.attributes["KEY"] = analogues_dg.getItemAt(index).key;
+			}
+			if (analogues_dg.getItemAt(index).name != "") {
+				item.attributes["NAME"] = analogues_dg.getItemAt(index).name;
+			}
+			if (analogues_dg.getItemAt(index).active != "") {
+				item.attributes["ACTIVE"] = analogues_dg.getItemAt(index).active;
+			}
+			if (analogues_dg.getItemAt(index).dname != "") {
+				item.attributes["DISPLAY_NAME"] = analogues_dg.getItemAt(index).dname;
+			}
 			newAnalogues.push(item);
 		}
 		_global.left_tree.selectedNode.analogues = newAnalogues;

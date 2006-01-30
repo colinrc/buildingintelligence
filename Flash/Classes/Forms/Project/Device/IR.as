@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Device.IR extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var irs:Array;
@@ -10,10 +9,23 @@ class Forms.Project.Device.IR extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var name_ti:TextInput;
 	private var key_ti:TextInput;
-	private var avname_ti:TextInput;	
+	private var avname_ti:TextInput;
 	public function init() {
 		for (var ir in irs) {
-			ir_dg.addItem({name:irs[ir].attributes["NAME"], key:irs[ir].attributes["KEY"], avname:irs[ir].attributes["AV_NAME"]});
+			var newIr = new Object();
+			newIr.name = "";
+			newIr.key = "";
+			newIr.avname = "";
+			if (irs[ir].attributes["NAME"] != undefined) {
+				newIr.name = irs[ir].attributes["NAME"];
+			}
+			if (irs[ir].attributes["KEY"] != undefined) {
+				newIr.key = irs[ir].attributes["KEY"];
+			}
+			if (irs[ir].attributes["AV_NAME"] != undefined) {
+				newIr.avname = irs[ir].attributes["AV_NAME"];
+			}
+			ir_dg.addItem(newIr);
 		}
 		delete_btn.enabled = false;
 		update_btn.enabled = true;
@@ -58,11 +70,17 @@ class Forms.Project.Device.IR extends Forms.BaseForm {
 	}
 	public function save():Void {
 		var newIrs = new Array();
-		for(var index = 0; index < ir_dg.length; index++){
+		for (var index = 0; index<ir_dg.length; index++) {
 			var irNode = new XMLNode(1, "IR");
-			irNode.attributes["NAME"] = ir_dg.getItemAt(index).name;
-			irNode.attributes["KEY"] = ir_dg.getItemAt(index).key;
-			irNode.attributes["AV_NAME"] = ir_dg.getItemAt(index).avname;
+			if (ir_dg.getItemAt(index).name != "") {
+				irNode.attributes["NAME"] = ir_dg.getItemAt(index).name;
+			}
+			if (ir_dg.getItemAt(index).key != "") {
+				irNode.attributes["KEY"] = ir_dg.getItemAt(index).key;
+			}
+			if (ir_dg.getItemAt(index).avname != "") {
+				irNode.attributes["AV_NAME"] = ir_dg.getItemAt(index).avname;
+			}
 			newIrs.push(irNode);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({irs:newIrs}));

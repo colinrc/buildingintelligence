@@ -6,13 +6,13 @@
 	private var variables:Array;
 	public function isValid():Boolean {
 		var flag = true;
-		if((command == undefined) || (command=="")){
+		if ((command == undefined) || (command == "")) {
 			flag = false;
 		}
-		if((code == undefined)||(code =="")){
+		if ((code == undefined) || (code == "")) {
 			flag = false;
 		}
-		if((extra == undefined) || (extra=="")){
+		if ((extra == undefined) || (extra == "")) {
 			flag = false;
 		}
 		for (var variable in variables) {
@@ -30,9 +30,15 @@
 	}
 	public function toXML():XMLNode {
 		var variablesNode = new XMLNode(1, container);
-		variablesNode.attributes["COMMAND"] = command;
-		variablesNode.attributes["EXTRA"] = extra;
-		variablesNode.attributes["CODE"] = code;
+		if (command != "") {
+			variablesNode.attributes["COMMAND"] = command;
+		}
+		if (extra != "") {
+			variablesNode.attributes["EXTRA"] = extra;
+		}
+		if (code != "") {
+			variablesNode.attributes["CODE"] = code;
+		}
 		for (var variable in variables) {
 			variablesNode.appendChild(variables[variable]);
 		}
@@ -41,26 +47,35 @@
 	public function getName():String {
 		return command;
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
 		return newNode;
 	}
-	public function setData(newData:Object){
+	public function setData(newData:Object) {
 		variables = newData.variables;
 		command = newData.command;
 		code = newData.code;
 		extra = newData.extra;
 	}
 	public function getData():Object {
-		return new Object({variables:variables,command:command,code:code,extra:extra});
+		return new Object({variables:variables, command:command, code:code, extra:extra});
 	}
 	public function setXML(newData:XMLNode):Void {
+		command = "";
+		code = "";
+		extra = "";
 		variables = new Array();
 		container = newData.nodeName;
-		command = newData.attributes["COMMAND"];
-		code = newData.attributes["CODE"];
-		extra = newData.attributes["EXTRA"];
+		if (newData.attributes["COMMAND"] != undefined) {
+			command = newData.attributes["COMMAND"];
+		}
+		if (newData.attributes["CODE"] != undefined) {
+			code = newData.attributes["CODE"];
+		}
+		if (newData.attributes["EXTRA"] != undefined) {
+			extra = newData.attributes["EXTRA"];
+		}
 		for (var child in newData.childNodes) {
 			variables.push(newData.childNodes[child]);
 		}
