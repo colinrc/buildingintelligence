@@ -7,6 +7,18 @@ _global.style.setStyle("fontFamily", "_defaultFont");
 */
 
 var menu_mb:mx.controls.MenuBar;
+
+var history = new Objects.History();
+_global.history = history.getInstance();
+
+var right_tree:mx.controls.Tree;
+_global.right_tree = right_tree;
+_global.workflow_xml = new XML();
+_global.workflow_xml.ignoreWhite = true;
+_global.workflow_xml.onLoad = function(success){
+};
+_global.workflow_xml.load("workflow.xml")
+
 var left_tree:mx.controls.Tree;
 _global.left_tree = left_tree;
 _global.overrides_xml = new XML();
@@ -52,6 +64,11 @@ function refreshTheTree() {
 }
 // load project xml data
 var project_xml = new XML();
+//set project name
+//TODO: Add project open, set gloabl name there
+_global.project = "myProject";
+_global.history.setProject(_global.project);
+
 var client_xml = new XML();
 client_xml.ignoreWhite = true;
 client_xml.onLoad = function(success) {
@@ -261,6 +278,14 @@ setView = function (view, dataObj) {
 		tabs_tb.dataProvider = [{label:"Publish", view:"publish"}];
 		tabs_tb.selectedIndex = 0;
 		break;
+	case "history" :
+		treeFilter_cb._visible = false;
+		left_tree._visible = false;
+		right_tree._visible = false;
+		tabs_tb.dataProvider = [{label:_global.project + " History", view:"history"}];
+		tabs_tb.selectedIndex = 0;
+		formContent_mc.attachMovie("forms.history", "form"+random(999)+"_history", 0);
+		break;
 	}
 };
 setView("home");
@@ -323,6 +348,9 @@ buttonListener.click = function(eventObj) {
 	case publish_btn :
 		setView("publish");
 		break;
+	case historyViewer_btn :
+		setView("history");
+		break;
 	}
 };
 home_btn.addEventListener("click", buttonListener);
@@ -330,6 +358,7 @@ project_btn.addEventListener("click", buttonListener);
 control_btn.addEventListener("click", buttonListener);
 preview_btn.addEventListener("click", buttonListener);
 publish_btn.addEventListener("click", buttonListener);
+historyViewer_btn.addEventListener("click", buttonListener);
 treeFilter_cb.change = function(eventObj) {
 	switch (eventObj.target.selectedItem.label) {
 	case "Project" :
