@@ -6,6 +6,8 @@ _global.style.setStyle("embedFonts", true);
 _global.style.setStyle("fontFamily", "_defaultFont");
 */
 
+window-preview_mc.removeMovieClip();
+
 var menu_mb:mx.controls.MenuBar;
 var left_tree:mx.controls.Tree;
 _global.left_tree = left_tree;
@@ -241,3 +243,5 @@ treeFilter_cb.change = function(eventObj) {
 	}
 }
 treeFilter_cb.addEventListener("change", treeFilter_cb);
+
+stop();
