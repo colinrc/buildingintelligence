@@ -20,6 +20,6 @@
 	<classpathentry sourcepath="/Java/junit3.8.1/src.jar" kind="lib" path="ext/junit.jar"/>
 	<classpathentry sourcepath="/Java/junit-addons-1.4/src.jar" kind="lib" path="ext/junit-addons-1.4.jar"/>
 	<classpathentry kind="lib" path="ext/xmlunit1.0.jar"/>
-	<classpathentry kind="lib" path="ext/quartz-1.5.1.jar"/>
+	<classpathentry sourcepath="C:/Java/quartz1.5.1/src/java" kind="lib" path="ext/quartz-1.5.1.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
