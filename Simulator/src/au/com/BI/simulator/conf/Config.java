@@ -27,10 +27,13 @@ public class Config {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 
 		controlFactory = new ControlFactory() ;		
-		
+		setFactory (controlFactory);
 		controls = new ArrayList (10);
 	}
 
+	public void setFactory (ControlFactory controlFactory){
+		this.controlFactory = controlFactory;
+	}
 
 
 	public boolean readConfig(String fileName)
