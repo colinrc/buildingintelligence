@@ -28,21 +28,23 @@
 
 	
 	<target name="jar" >
-		<jar jarfile="dist/${jar.name}">
-			<fileset dir="bin">
-				<include name="**/*.class"/>
-			</fileset>
-			<fileset dir=".">
-				<include name="**/*.props"/>
-				<include name="**/*.html"/>
-				<include name="**/*.gif"/>
-				<include name="actions.xml"/>
-				<include name="dockables.xml"/>
-			</fileset>
-			<fileset dir="src">
-				<include name="**/*.properties" />
-			</fileset>
-		</jar>
+		<jar destfile="dist/${app_name}.jar" 
+			update="false"
+			basedir="bin" 
+			includes = "*.class" 
+			excludes = "*\$*.class" 
+			manifest="manifest"
+		/>
+		<jar destfile="dist/${app_name}.jar" 
+			update="true"
+			basedir="src" 
+			includes = "**/my.properties" 
+			 />
+		<jar destfile="dist/${app_name}.jar" 
+			update="true"
+			basedir="src/" 
+			includes = "images/*" 
+			 />
 	</target>
 	
 
@@ -72,7 +74,7 @@
 		  </delete>
 	</target>
 		    	
-	<target name="dist" depends="dist_clean,increment" >
+	<target name="dist" depends="dist_clean,increment,jar" >
 		<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
 			update="false"
 			basedir="dist" 
