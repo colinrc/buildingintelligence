@@ -6,7 +6,7 @@
     modified: 20060116
     copyright: Building Intelligence
 */
-import mdm.FileSystem;
+import mdm.FileSystem.*;
 class Objects.History {
 	//The history stored as xml
 	private var history:XML;
@@ -39,11 +39,13 @@ class Objects.History {
 		fileName = defaultDirectory + projectName;
 		var date_str:String = getDateTime();
 		if (mdm.FileSystem.fileExists(fileName) ) {
+			
 			mdm.FileSystem.appendFile(fileName, "Modified: " + date_str);
 			mdm.FileSystem.appendFile(fileName,"-----------------------------------------------------------------");
 		} 
 		else
 		{
+			trace("Savefile " + fileName);
 			mdm.FileSystem.saveFile(fileName, "Project: " + projectName);
 			mdm.FileSystem.appendFile(fileName, "Created: " + date_str);
 			mdm.FileSystem.appendFile(fileName,"-----------------------------------------------------------------");
@@ -81,8 +83,9 @@ class Objects.History {
 	}
 	
 	/* Used by the History UI screen to display history information*/
-	public function viewHistory():XML{
-		//This just needs to return the encapsulated XML
-		return history;
+	public function viewHistory():String{
+		var mySavedData = mdm.FileSystem.loadFile(fileName);
+
+		return mySavedData;
 	}
 }
