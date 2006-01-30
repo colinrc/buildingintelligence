@@ -11,15 +11,6 @@
                 <project_file path="./Classes/Forms/Control/Settings.as" filetype="as" />
             </project_folder>
             <project_folder name="Project" expanded="true">
-                <project_folder name="Room" expanded="true">
-                    <project_folder name="Tab" expanded="true">
-                        <project_file path="./Classes/Forms/Project/Room/Tab/Preview.as" filetype="as" />
-                        <project_file path="./Classes/Forms/Project/Room/Tab/Config.as" filetype="as" />
-                    </project_folder>
-                </project_folder>
-                <project_folder name="Settings" expanded="true">
-                    <project_file path="./Classes/Forms/Project/Settings/StringEdit.as" filetype="as" />
-                </project_folder>
                 <project_folder name="Device" expanded="false">
                     <project_file path="./Classes/Forms/Project/Device/Head.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Connection.as" filetype="as" />
@@ -87,6 +78,18 @@
                     <project_file path="./Classes/Forms/Project/Client/ArbitraryLabel.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/ArbitraryObject.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/Property.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/Alerts.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/ControlTypeButton.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/ControlTypeLabel.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/ControlTypeMediaPlayer.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/ControlTypeSlider.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/ControlTypeToggle.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/ControlTypeVideo.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/Doors.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/Preview.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/Room.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/Tab.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/Window.as" filetype="as" />
                 </project_folder>
                 <project_file path="./Classes/Forms/Project/KeySelector.as" filetype="as" />
                 <project_file path="./Classes/Forms/Project/Variables.as" filetype="as" />
@@ -139,7 +142,7 @@
                 <project_file path="./Classes/Objects/Server/Raw_Interfaces.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/Controls.as" filetype="as" />
             </project_folder>
-            <project_folder name="Client" expanded="false">
+            <project_folder name="Client" expanded="true">
                 <project_file path="./Classes/Objects/Client/Client.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Apps_Bar.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Control_Panel_Apps.as" filetype="as" />
@@ -157,6 +160,11 @@
                 <project_file path="./Classes/Objects/Client/Row.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Zone.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Arbitrary.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Alerts.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Doors.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Room.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Tab.as" filetype="as" />
+                <project_file path="./Classes/Objects/Client/Window.as" filetype="as" />
             </project_folder>
             <project_file path="./Classes/Objects/ServerConnection.as" filetype="as" />
             <project_file path="./Classes/Objects/History.as" filetype="as" />
