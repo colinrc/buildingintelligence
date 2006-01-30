@@ -95,6 +95,43 @@ subscribe = function (keys, movieClip, sendCurrentState) {
 	if (sendCurrentState) movieClip.update(key, _global.controls[key].state, _global.controls[key].value);
 }
 
+createSlider = function (item_mc, settings) {
+	var bg_mc = item_mc.createEmptyMovieClip("bg_mc",0);
+	bg_mc.beginFill(0x829ECB);
+	bg_mc.drawRect(0, 0, settings.w, settings.h, 4);
+	bg_mc.endFill();
+	
+	var slider_mc = item_mc.createEmptyMovieClip("slider_mc", 50);
+	slider_mc.width = settings.w - 4;
+	var padding = 2;
+	slider_mc._x = slider_mc._y = padding;
+		
+	var handle_mc = slider_mc.createEmptyMovieClip("handle_mc",10);
+	var iconOn_mc = handle_mc.attachMovie("bi.ui.Icon", "iconOn_mc", 10, {iconName:item_mc.icons[1], size:settings.h - (padding * 2)});
+	var iconOff_mc = handle_mc.attachMovie("bi.ui.Icon", "iconOff_mc", 0, {iconName:item_mc.icons[0], size:settings.h - (padding * 2)});
+	
+	bg_mc.onPress2 = function () {
+		var value = Math.round(this._xmouse / (this._width - (this._width * 0.2)) * 10) * 10;
+		if (value >= 0 && value <= 100) updateKey(this._parent.key, "on", value);
+	}
+	
+	item_mc.setPercent = function (value) {
+		this.slider_mc.handle_mc._x = Math.round((this.slider_mc.width - this.slider_mc.handle_mc._width) * (value / 100));	
+	}
+	/*
+	slider_mc.onPress2 = function () {
+		this.onMouseMove = function () {
+			var value = Math.round(this._xmouse / (this._parent.width - 4) * 10) * 10;
+			if (value >= 0 && value <= 100) updateKey(this._parent.key, "on", value);
+		}
+		this.onMouseMove();
+	}
+	slider_mc.onRelease = slider_mc.onDragOut = function () {
+		delete this.onMouseMove;
+	}
+	*/
+}
+
 import flash.display.BitmapData;
 
 #include "../../elife client/standalone/include/drawRect.as"
