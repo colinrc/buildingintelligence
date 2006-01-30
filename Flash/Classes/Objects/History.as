@@ -13,7 +13,7 @@ class Objects.History {
 	private static var instance:Objects.History = null;
 	private var projectName:String;
 	private var fileName:String;
-	private var defaultDirectory:String = "D:\\eLifeAdmin\\";
+	private var defaultDirectory:String = "C:\\eLifeAdmin\\";
 	
 	public function History(overideDefaultDirectory:String) {
 		if (overideDefaultDirectory.length > 0) {
