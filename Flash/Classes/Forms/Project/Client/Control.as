@@ -51,6 +51,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		left_btn.addEventListener("click", Delegate.create(this, moveLeft));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		editor_dg.addEventListener("cellPress", Delegate.create(this, cellClick));
+		preview(_global.left_tree.selectedNode.object.toXML());
 	}
 	private function cellClick(eventObject) {
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
@@ -180,18 +181,10 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		var preview_mc:MovieClip = this.createEmptyMovieClip("preview_mc", 100);
 		preview_mc._x=3;
 		preview_mc._y=390;
-		preview_mc.loadMovie("window-preview.swf");
 		var newControlTypes = new XMLNode(1,"controlTypes");
 		newControlTypes.appendChild(controls);
-		this.onEnterFrame = function() {
-			if (this.preview_mc.sampleControlTypes) {
-				var sampleWindow:XML = new XML('<window><tab name="Preview" ><control name="Main Light" key="ENSUITE_LIGHT" type="'+type_ti.text+'" icons="light-bulb-off,light-bulb" /></tab></window>');				
-				this.preview_mc.setWindowData(400, 250, sampleWindow);
-				this.preview_mc.setControlTypeData(new XML(newControlTypes.toString()));
-				this.preview_mc.setIconPath("D:/BI/eLife Client/Build/standalone/lib/icons/");
-				delete this.onEnterFrame;
-			}
-		};		
+		var sampleWindow:XML = new XML('<window><tab name="Preview" ><control name="Main Light" key="ENSUITE_LIGHT" type="'+type_ti.text+'" icons="light-bulb-off,light-bulb" /></tab></window>');				
+		preview_mc.attachMovie("window-preview", "preview_mc", 100, {width:400, height:250, controlTypeData:new XML(newControlTypes.toString()), windowData:sampleWindow, iconPath:"../../eLife Client/Build/standalone/lib/icons/"});		
 	}
 	public function save():Void {
 		var newRows = new Array();

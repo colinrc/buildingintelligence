@@ -58,19 +58,19 @@
 		for (var index in newData.devices) {
 			var found = false;
 			for (var device in devices) {
-				if ((devices[device].display_name == newData.devices[index].name) && (devices[device].name == newData.devices[index].type)) {
+				if ((devices[device].description == newData.devices[index].description) && (devices[device].device_type == newData.devices[index].device_type)) {
 					found = true;
 				}
 			}
 			if (found == false) {
-				newDevices.push({name:newData.devices[index].name, type:newData.devices[index].type});
+				newDevices.push({description:newData.devices[index].description, device_type:newData.devices[index].device_type});
 			}
 		}
 		var deletedDevices = new Array();
 		for (var device in devices) {
 			var found = false;
 			for (var index in newData.devices) {
-				if ((devices[device].display_name == newData.devices[index].name) && (devices[device].name == newData.devices[index].type)) {
+				if ((devices[device].description == newData.devices[index].description) && (devices[device].device_type == newData.devices[index].device_type)) {
 					found = true;
 				}
 			}
@@ -80,12 +80,12 @@
 		}
 		for (var newDevice in newDevices) {
 			var newNode = new XMLNode(1, "DEVICE");
-			newNode.attributes["DISPLAY_NAME"] = newDevices[newDevice].name;
-			newNode.attributes["NAME"] = newDevices[newDevice].type;
+			newNode.attributes["DESCRIPTION"] = newDevices[newDevice].description;
+			newNode.attributes["DEVICE_TYPE"] = newDevices[newDevice].device_type;
 			newNode.attributes["ACTIVE"] = "N";
-			var newDevice = new XMLNode(1,newDevices[newDevice].type);
+			var newDevice = new XMLNode(1,newDevices[newDevice].device_type);
 			newNode.appendChild(newDevice);
-			switch (newNode.attributes["NAME"]) {
+			switch (newNode.attributes["DEVICE_TYPE"]) {
 			case "PELCO" :
 				var newPelco = new Objects.Server.Pelco();
 				newPelco.setXML(newNode);
@@ -151,7 +151,13 @@
 			for (var child in newData.childNodes) {
 				switch (newData.childNodes[child].nodeName) {
 				case "DEVICE" :
-					switch (newData.childNodes[child].attributes["NAME"]) {
+				if(newData.childNodes[child].attributes["NAME"] != undefined){
+					var device_type = newData.childNodes[child].attributes["NAME"];										
+				}
+				if(newData.childNodes[child].attributes["DEVICE_TYPE"] != undefined){
+					var device_type = newData.childNodes[child].attributes["DEVICE_TYPE"];					
+				}				
+					switch (device_type) {
 					case "PELCO" :
 						var newPelco = new Objects.Server.Pelco();
 						newPelco.setXML(newData.childNodes[child]);

@@ -2,16 +2,16 @@
 import mx.utils.Delegate;
 
 class Forms.Project.Device.Head extends Forms.BaseForm {
-	private var name:String;
-	private var display_name:String;
+	private var device_type:String;
+	private var description:String;
 	private var active:String;
 	private var connection:XMLNode;
 	private var parameters:XMLNode;
 	private var connection_mc:MovieClip;
 	private var parameters_mc:MovieClip;
 	private var parameters_ld:mx.controls.Loader;
-	private var name_lb:mx.controls.Label;
-	private var dName_ti:mx.controls.TextInput;
+	private var device_type_lb:mx.controls.Label;
+	private var description_ti:mx.controls.TextInput;
 	private var save_btn:mx.controls.Button;
 	private var active_chk:mx.controls.CheckBox;
 	public function Head() {
@@ -22,8 +22,8 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 		} else {
 			active_chk.selected = true;
 		}
-		name_lb.text = name;
-		dName_ti.text = display_name;
+		device_type_lb.text = device_type;
+		description_ti.text = description;
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		connection_mc.node = connection;
 		var dataObj = {node:parameters};
@@ -32,8 +32,8 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 	}
 	private function save():Void {		
 		var newData = new Object();
-		newData.name = name_lb.text;
-		newData.display_name = dName_ti.text;
+		newData.device_type = device_type_lb.text;
+		newData.description = description_ti.text;
 		if (active_chk.selected) {
 			newData.active = "Y";
 		}

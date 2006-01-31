@@ -86,10 +86,10 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 		switch (container) {
 		case "HAL":
 		case "TUTONDO" :
-			itemType = "AUDIO";
+			itemType = "AUDIO_OUTPUT";
 			break;
 		case "KRAMER":
-			itemType = "AV";
+			itemType = "AV_OUTPUT";
 			break;
 		}
 		var inputs = new Array();

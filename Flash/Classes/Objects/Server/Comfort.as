@@ -1,9 +1,4 @@
-﻿class Objects.Server.Comfort extends Objects.BaseElement {
-	private var type:String = "COMFORT";
-	private var display_name:String;
-	private var name:String;
-	private var active:String;
-	private var catalogues:Objects.Server.Catalogues;
+﻿class Objects.Server.Comfort extends Objects.Server.Device {
 	private var counters:Objects.Server.Counters;
 	private var customs:Objects.Server.Customs;
 	private var raw_interfaces:Objects.Server.Raw_Interfaces;
@@ -16,8 +11,6 @@
 	private var alarms:Objects.Server.Alarms;
 	private var alerts:Objects.Server.Alerts;
 	private var analogues:Objects.Server.Analogues;
-	private var connection:XMLNode;
-	private var parameters:XMLNode;
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(counters.getKeys());
@@ -36,9 +29,12 @@
 	}
 	public function isValid():Boolean {
 		var flag = true;
-		if ((name == undefined) || (name == "")) {
+		if ((device_type == undefined) || (device_type == "")) {
 			flag = false;
 		}
+		if ((description == undefined) || (description == "")) {
+			flag = false;
+		}		
 		if ((active != "Y") && (active != "N")) {
 			flag = false;
 		}
@@ -87,16 +83,13 @@
 		//need to isValid connection and parameters  
 		return flag;
 	}
-	public function getForm():String {
-		return "forms.project.device.head";
-	}
 	public function toXML():XMLNode {
 		var newDevice = new XMLNode(1, "DEVICE");
-		if(name != ""){
-			newDevice.attributes["NAME"] = name;
+		if(device_type != ""){
+			newDevice.attributes["DEVICE_TYPE"] = device_type;
 		}
-		if(display_name != ""){
-			newDevice.attributes["DISPLAY_NAME"] = display_name;
+		if(description != ""){
+			newDevice.attributes["DESCRIPTION"] = description;
 		}
 		if(active != "") {
 			newDevice.attributes["ACTIVE"] = active;
@@ -107,7 +100,7 @@
 		for (var child in tempCatalogues.childNodes) {
 			newDevice.appendChild(tempCatalogues.childNodes[child]);
 		}
-		var newRawConnection = new XMLNode(1, type);
+		var newRawConnection = new XMLNode(1, device_type);
 		var tempCustoms = customs.toXML();
 		for(var child in tempCustoms.childNodes){
 			newRawConnection.appendChild(tempCustoms.childNodes[child]);
@@ -177,22 +170,9 @@
 		newNode.object = this;
 		return newNode;
 	}
-	public function getName():String {
-		return type+": "+display_name;
-	}
-	public function getData():Object {
-		return new Object({name:name, display_name:display_name, active:active, connection:connection, parameters:parameters});
-	}
-	public function setData(newData:Object) {
-		name = newData.name;
-		display_name = newData.display_name;
-		active = newData.active;
-		connection = newData.connection;
-		parameters = newData.parameters;
-	}
 	public function setXML(newData:XMLNode):Void {
-		name = "";
-		display_name ="";
+		device_type = "";
+		description ="";
 		active = "Y";		
 		raw_interfaces = new Objects.Server.Raw_Interfaces();
 		customs = new Objects.Server.Customs();
@@ -207,14 +187,20 @@
 		alerts = new Objects.Server.Alerts();
 		analogues = new Objects.Server.Analogues();
 		catalogues = new Objects.Server.Catalogues();
-		var tempCatalogues = new XMLNode(1, type);
+		var tempCatalogues = new XMLNode(1, device_type);
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
-				name = newData.attributes["NAME"];
+				device_type = newData.attributes["NAME"];
 			}
+			if(newData.attributes["DEVICE_TYPE"]!=undefined){
+				device_type = newData.attributes["DEVICE_TYPE"];
+			}			
 			if(newData.attributes["DISPLAY_NAME"]!=undefined){			
-				display_name = newData.attributes["DISPLAY_NAME"];
+				description = newData.attributes["DISPLAY_NAME"];
 			}
+			if(newData.attributes["DESCRIPTION"]!=undefined){			
+				description = newData.attributes["DESCRIPTION"];
+			}			
 			if(newData.attributes["ACTIVE"]!=undefined){			
 				active = newData.attributes["ACTIVE"];
 			}
@@ -231,18 +217,18 @@
 					break;
 				case "COMFORT" :
 					var tempNode = newData.childNodes[child];
-					var tempCustomInputs = new XMLNode(1, type);
-					var tempRawInterfaces = new XMLNode(1,type);
-					var tempCounters = new XMLNode(1,type);
-					var tempMonitors = new XMLNode(1,type);
-					var tempCbusLights = new XMLNode(1,type);
-					var tempX10Lights = new XMLNode(1,type);
-					var tempPulseOutputs = new XMLNode(1,type);
-					var tempToggleOutputs = new XMLNode(1,type);
-					var tempToggleInputs = new XMLNode(1,type);
-					var tempAlerts = new XMLNode(1,type);
-					var tempAlarms = new XMLNode(1,type);
-					var tempAnalogues = new XMLNode(1,type);
+					var tempCustomInputs = new XMLNode(1, device_type);
+					var tempRawInterfaces = new XMLNode(1,device_type);
+					var tempCounters = new XMLNode(1,device_type);
+					var tempMonitors = new XMLNode(1,device_type);
+					var tempCbusLights = new XMLNode(1,device_type);
+					var tempX10Lights = new XMLNode(1,device_type);
+					var tempPulseOutputs = new XMLNode(1,device_type);
+					var tempToggleOutputs = new XMLNode(1,device_type);
+					var tempToggleInputs = new XMLNode(1,device_type);
+					var tempAlerts = new XMLNode(1,device_type);
+					var tempAlarms = new XMLNode(1,device_type);
+					var tempAnalogues = new XMLNode(1,device_type);
 					for (var rawDevice in tempNode.childNodes) {
 						switch (tempNode.childNodes[rawDevice].nodeName) {
 						case "CUSTOM_INPUT" :
@@ -278,6 +264,7 @@
 						case "ALERT":
 							tempAlerts.appendChild(tempNode.childNodes[rawDevice]);
 							break;
+						case "ANALOG":
 						case "ANALOGUE":
 							tempAnalogues.appendChild(tempNode.childNodes[rawDevice]);
 							break;

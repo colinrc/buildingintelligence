@@ -1,7 +1,6 @@
-﻿class Objects.Server.Dynalite extends Objects.BaseElement {
-	private var type:String = "DYNALITE";
-	private var name:String;
-	private var display_name:String;
+﻿class Objects.Server.Dynalite extends Objects.Server.Device {
+	private var device_type:String;
+	private var description:String;
 	private var active:String;
 	private var irs:Objects.Server.IRs;
 	private var lights:Objects.Server.DynaliteLights;
@@ -17,9 +16,12 @@
 	}
 	public function isValid():Boolean {
 		var flag = true;
-		if ((name == undefined) || (name == "")) {
+		if ((device_type == undefined) || (device_type == "")) {
 			flag = false;
 		}
+		if ((description == undefined) || (description == "")) {
+			flag = false;
+		}		
 		if ((active != "Y") && (active != "N")) {
 			flag = false;
 		}
@@ -38,16 +40,13 @@
 		//need to isValid connection and parameters 
 		return flag;
 	}
-	public function getForm():String {
-		return "forms.project.device.head";
-	}
 	public function toXML():XMLNode {
 		var newDevice = new XMLNode(1, "DEVICE");
-		if(name != ""){
-			newDevice.attributes["NAME"] = name;
+		if(device_type != ""){
+			newDevice.attributes["DEVICE_TYPE"] = device_type;
 		}
-		if(display_name != ""){
-			newDevice.attributes["DISPLAY_NAME"] = display_name;
+		if(description != ""){
+			newDevice.attributes["DESCRIPTION"] = description;
 		}
 		if(active != "") {
 			newDevice.attributes["ACTIVE"] = active;
@@ -58,7 +57,7 @@
 		for (var child in tempCatalogues.childNodes) {
 			newDevice.appendChild(tempCatalogues.childNodes[child]);
 		}
-		var newDynalite = new XMLNode(1, type);
+		var newDynalite = new XMLNode(1, device_type);
 		var tempIRs = irs.toXML();
 		for (var child in tempIRs.childNodes) {
 			newDynalite.appendChild(tempIRs.childNodes[child]);
@@ -74,9 +73,6 @@
 		newDevice.appendChild(newDynalite);
 		return newDevice;
 	}
-	public function getName():String {
-		return type+" : "+display_name;
-	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
 		newNode.appendChild(catalogues.toTree());
@@ -86,19 +82,9 @@
 		newNode.object = this;
 		return newNode;
 	}
-	public function getData():Object {
-		return new Object({name:name, display_name:display_name, active:active, connection:connection, parameters:parameters});
-	}
-	public function setData(newData:Object) {
-		name = newData.name;
-		display_name = newData.display_name;
-		active = newData.active;
-		connection = newData.connection;
-		parameters = newData.parameters;
-	}
 	public function setXML(newData:XMLNode):Void {
-		name = "";
-		display_name ="";
+		device_type = "";
+		description ="";
 		active = "Y";		
 		catalogues = new Objects.Server.Catalogues();
 		var tempCatalogues = new XMLNode(1, "Catalogues");
@@ -107,11 +93,17 @@
 		contacts = new Objects.Server.ContactClosures();
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
-				name = newData.attributes["NAME"];
+				device_type = newData.attributes["NAME"];
 			}
+			if(newData.attributes["DEVICE_TYPE"]!=undefined){
+				device_type = newData.attributes["DEVICE_TYPE"];
+			}			
 			if(newData.attributes["DISPLAY_NAME"]!=undefined){			
-				display_name = newData.attributes["DISPLAY_NAME"];
+				description = newData.attributes["DISPLAY_NAME"];
 			}
+			if(newData.attributes["DESCRIPTION"]!=undefined){			
+				description = newData.attributes["DESCRIPTION"];
+			}			
 			if(newData.attributes["ACTIVE"]!=undefined){			
 				active = newData.attributes["ACTIVE"];
 			}

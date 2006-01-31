@@ -90,7 +90,7 @@ class Forms.Project.Device.Analogue extends Forms.BaseForm {
 	public function save():Void {
 		var newAnalogues = new Array();
 		for (var index = 0; index<analogues_dg.length; index++) {
-			var item = new XMLNode(1, "ANALOGUE");
+			var item = new XMLNode(1, "ANALOG");
 			if (analogues_dg.getItemAt(index).key != "") {
 				item.attributes["KEY"] = analogues_dg.getItemAt(index).key;
 			}

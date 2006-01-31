@@ -1,5 +1,5 @@
 ﻿import mx.controls.*
-//import Utils.XMLHighlighter;
+import Utils.XMLHighlighter;
 import mx.utils.Delegate;
 
 class Forms.Project.Xml extends Forms.BaseForm {
@@ -11,9 +11,12 @@ class Forms.Project.Xml extends Forms.BaseForm {
 	}
 	
 	public function init():Void {
-		xml_ta.html = false;
-		//xml_ta.text = XMLHighlighter.highlight(controls);
-		xml_ta.text = node.toString();
+		//xml_ta.html = false;
+		var newXML = new XML();
+		newXML.appendChild(node);
+		xml_ta.text = XMLHighlighter.highlight(newXML);
+		//xml_ta.text = node.toString();
+		save_btn.enabled = false;
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function save():Void {
