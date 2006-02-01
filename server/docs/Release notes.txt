@@ -1,4 +1,5 @@
-31/1/2006
+1/2/2006
+Released V1.5b10
 Security
 Added a 3 minute grace period for flash client connections before the security message appears. This will allow
 restarts of the client to not trigger a 'number of clients' security violation.
