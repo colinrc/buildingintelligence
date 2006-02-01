@@ -8,16 +8,24 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
+import au.com.BI.CustomInput.CustomInputFactory;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
 
 public class IRFactory {
 	Logger logger;
 	
-	public IRFactory () {
+	private IRFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
 	}
 
+	private static IRFactory _singleton = null;
+	public static IRFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new IRFactory();
+		}
+		return (_singleton);
+	}
 	/**
 	 * Parses the various  elements and adds them
 	 *

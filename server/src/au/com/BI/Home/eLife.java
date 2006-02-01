@@ -88,11 +88,6 @@ public class eLife {
 			controller.setBootstrap(bootstrap);
 			controller.setBindToAddress(bootstrap.getServerString());
 			controller.setClientPort(bootstrap.getMasterPort());
-			if (bootstrap.getGUI().equals ("Y"))
-				runHarness = true;
-			else
-				runHarness = false;
-			if (runHarness) controller.setUpGUIHarness(defaultLogLevel,globalLogger);
 			controller.setUp(); 
 			if (!configName.equals ("")) {
 				controller.setConfigFile (configName);

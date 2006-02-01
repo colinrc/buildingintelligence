@@ -8,16 +8,24 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
+import au.com.BI.CustomInput.CustomInputFactory;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
 
 public class ToggleSwitchFactory {
 	Logger logger;
 	
-	public ToggleSwitchFactory () {
+	private ToggleSwitchFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
 	}
 
+	private static ToggleSwitchFactory _singleton = null;
+	public static ToggleSwitchFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new ToggleSwitchFactory();
+		}
+		return (_singleton);
+	}
 	/**
 	 * Parses the various  elements and adds them
 	 *

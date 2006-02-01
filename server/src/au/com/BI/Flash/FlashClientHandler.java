@@ -38,6 +38,8 @@ public class FlashClientHandler extends Thread
 	protected boolean remoteServer = false;
 	protected EventCalendar eventCalendar;
 	protected AddressBook addressBook;
+	protected long connectionTime;
+	protected long serverID;
 	
 	protected List clientList; // used to remove this thread in case of disaster
 	protected XMLOutputter xmlOut;
@@ -560,6 +562,22 @@ public class FlashClientHandler extends Thread
 
 	public void setAddressBook(AddressBook addressBook) {
 		this.addressBook = addressBook;
+	}
+
+	public long getConnectionTime() {
+		return connectionTime;
+	}
+
+	public void setConnectionTime(long connectionTime) {
+		this.connectionTime = connectionTime;
+	}
+
+	public long getServerID() {
+		return serverID;
+	}
+
+	public void setServerID(long serverID) {
+		this.serverID = serverID;
 	}
 
 }

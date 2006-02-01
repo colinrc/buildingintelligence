@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
+import au.com.BI.PulseOutput.PulseOutputFactory;
 import au.com.BI.ToggleSwitch.ToggleSwitch;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
@@ -15,8 +16,16 @@ import au.com.BI.Util.DeviceType;
 public class RawFactory {
 	Logger logger;
 	
-	public RawFactory () {
+	private RawFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
+	}
+	
+	private static RawFactory _singleton = null;
+	public static RawFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new RawFactory();
+		}
+		return (_singleton);
 	}
 
 	/**

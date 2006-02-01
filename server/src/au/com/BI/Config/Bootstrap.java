@@ -27,7 +27,6 @@ public class Bootstrap {
 	protected int masterPort;
 	protected int adminPort;
 	protected int port;
-	protected String GUI = "N";
 	protected Level defaultDebugging = Level.INFO;
 	protected boolean fileLogging = false;
 	protected String logDir = "";
@@ -141,11 +140,6 @@ public class Bootstrap {
 			masterPort = 10000;
 		}
 
-		Element guiSpec = theConfig.getChild("GUI");
-		if (guiSpec != null) {
-			GUI = guiSpec.getAttributeValue ("DISPLAY");
-		}
-		if (GUI == null) GUI = "N";
 
 		Element debugConfig = theConfig.getChild("DEBUG");
 		if (debugConfig != null) {
@@ -167,11 +161,6 @@ public class Bootstrap {
 
 
 		}
-		
-		if (guiSpec != null) {
-			GUI = guiSpec.getAttributeValue ("DISPLAY");
-		}
-		if (GUI == null) GUI = "N";
 
 		} catch (JDOMException e) {
 		    throw new ConfigError(e);
@@ -263,12 +252,7 @@ public class Bootstrap {
     public void setAdminPort(int adminPort) {
         this.adminPort = adminPort;
     }
-	/**
-	 * @return Returns the gUI.
-	 */
-	public String getGUI() {
-		return GUI;
-	}
+
 	/**
 	 * @return Returns the defaultDebugging.
 	 */

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.jdom.Element;
 
+import au.com.BI.AV.AVFactory;
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
@@ -14,11 +15,17 @@ import au.com.BI.Util.DeviceType;
 public class CustomInputFactory {
 	Logger logger;
 	
-	public CustomInputFactory () {
+	private CustomInputFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
 	}
 
-
+	private static CustomInputFactory _singleton = null;
+	public static CustomInputFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new CustomInputFactory();
+		}
+		return (_singleton);
+	}
 
 	/**
 	 * Parses the various custom input elements and adds them

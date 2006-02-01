@@ -72,19 +72,19 @@ public class Config {
 		jRobinParser = new JRobinParser();
 		lightFactory = new LightFactory() ;
 
-		this.setSensorFactory ( new SensorFactory()) ;		
-		this.setToggleSwitchFactory (new ToggleSwitchFactory()) ;		
-		this.setAVFactory(new AVFactory()) ;		
-		this.setAudioFactory(new AudioFactory());		
-		this.setPulseOutputFactory(new PulseOutputFactory());		
-		this.setVirtualOutputFactory (new VirtualOutputFactory ());	
-		this.setCameraFactory (new CameraFactory ());		
-		this.setCustomInputFactory (new CustomInputFactory ());		
-		this.setCounterFactory ( new CounterFactory ());	
-		this.setAlertFactory (new AlertFactory ());		
-		this.setRawFactory (new RawFactory ());		
-		this.setAnalogFactory ( new AnalogFactory ());		
-		this.setIRFactory (new IRFactory ());		
+		this.setSensorFactory ( SensorFactory.getInstance()) ;		
+		this.setToggleSwitchFactory ( ToggleSwitchFactory.getInstance()) ;		
+		this.setAVFactory(AVFactory.getInstance()) ;		
+		this.setAudioFactory(AudioFactory.getInstance());		
+		this.setPulseOutputFactory(PulseOutputFactory.getInstance());		
+		this.setVirtualOutputFactory ( VirtualOutputFactory.getInstance());	
+		this.setCameraFactory ( CameraFactory.getInstance());		
+		this.setCustomInputFactory ( CustomInputFactory.getInstance());		
+		this.setCounterFactory (  CounterFactory.getInstance());	
+		this.setAlertFactory (AlertFactory.getInstance());		
+		this.setRawFactory (RawFactory.getInstance());		
+		this.setAnalogFactory ( AnalogFactory.getInstance());		
+		this.setIRFactory (IRFactory.getInstance());		
 		
 		calendar_message_params = new HashMap (5);
 		calendar_message_params.put ("ICON","");

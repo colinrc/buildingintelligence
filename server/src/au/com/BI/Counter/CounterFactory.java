@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.jdom.Element;
 
+import au.com.BI.Camera.CameraFactory;
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
@@ -14,10 +15,17 @@ import au.com.BI.Util.DeviceType;
 public class CounterFactory {
 	Logger logger;
 	
-	public CounterFactory () {
+	private CounterFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
 	}
-
+	
+	private static CounterFactory _singleton = null;
+	public static CounterFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new CounterFactory();
+		}
+		return (_singleton);
+	}
 	/**
 	 * Parses the various  elements and adds them
 	 *

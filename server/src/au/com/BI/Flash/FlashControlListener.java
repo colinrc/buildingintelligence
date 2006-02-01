@@ -50,6 +50,7 @@ public class FlashControlListener extends Thread
 	private int numberFlashClients = 0;
 	private Security security = null;
 	private Date timeOfLastLicenseMessage  = null;
+	protected long serverID = 0;
 	
 	public FlashControlListener (LinkedList flashControllers, int portNumber, String Address,List commandList,
 			String version,Security security,AddressBook addressBook) 
@@ -101,58 +102,63 @@ public class FlashControlListener extends Thread
 		running = true;
 		
 		try {
+			boolean recentConnection = false;
 
-				//iPPort = new ServerSocket (portNumber,0,iPAddress);
-				iPPort = new ServerSocket (portNumber);
-				iPPort.setSoTimeout(60000);
-				while (running) {
-				    while (!connectedMaster && masterNeeded) {
-				        this.addMasterServerListener();
-			    			if (!connectedMaster){
-			    			    Thread.yield();
-				            try {
-				                Thread.sleep(2000);
-				            } catch (InterruptedException ex) {}
-			    			}
-			    		}
+			//iPPort = new ServerSocket (portNumber,0,iPAddress);
+			iPPort = new ServerSocket (portNumber);
+			iPPort.setSoTimeout(60000);
+			while (running) {
+			    while (!connectedMaster && masterNeeded) {
+			        this.addMasterServerListener();
+		    			if (!connectedMaster){
+		    			    Thread.yield();
+			            try {
+			                Thread.sleep(2000);
+			            } catch (InterruptedException ex) {}
+		    			}
+		    		}
 
-					//Block until I get a connection then go
-					try {
-	
-						Socket flashConnection = iPPort.accept();
-						addTheHandler (flashConnection,false);
-						numberFlashClients ++;
+				//Block until I get a connection then go
+				try {
 
-					} catch (ConnectionFail conn){
-						logger.log(Level.SEVERE,"Could not attatch handler to client request");
-					} catch (SocketTimeoutException te) {
+					Socket flashConnection = iPPort.accept();
+					addTheHandler (flashConnection,false);
+					numberFlashClients ++;
 
-					    synchronized (flashControllers) { 
-						    ListIterator allControllers = flashControllers.listIterator();
-							boolean keepGoing = true;
-							numberFlashClients = 0;
-							while (keepGoing && allControllers.hasNext() ){
-							    FlashClientHandler flashClientHandler = (FlashClientHandler)allControllers.next();
-							    if (!flashClientHandler.sendXML (heartbeatDoc)) {
-								    	allControllers.remove();
-								    if (flashClientHandler.isRemoteServer() ) {
-									    logger.log (Level.INFO,"Lost connection to master server, re-establishing");
-									    connectedMaster = false;
-									    keepGoing = false;
-									}
-									else {
-									    logger.log (Level.INFO,"Client went away, removing the handler");
-									}
-							    } else {
-							    		numberFlashClients ++;
-							    }
-							}
+				} catch (ConnectionFail conn){
+					logger.log(Level.SEVERE,"Could not attatch handler to client request");
+				} catch (SocketTimeoutException te) {
+				    synchronized (flashControllers) { 
+				    		recentConnection = false;
+					    ListIterator allControllers = flashControllers.listIterator();
+						boolean keepGoing = true;
+						numberFlashClients = 0;
+						while (keepGoing && allControllers.hasNext() ){
+						    FlashClientHandler flashClientHandler = (FlashClientHandler)allControllers.next();
+						    if (!flashClientHandler.sendXML (heartbeatDoc)) {
+							    	allControllers.remove();
+							    if (flashClientHandler.isRemoteServer() ) {
+								    logger.log (Level.INFO,"Lost connection to master server, re-establishing");
+								    connectedMaster = false;
+								    keepGoing = false;
+								}
+								else {
+								    logger.log (Level.INFO,"Client went away, removing the handler");
+								}
+						    } else {
+						    		if (System.currentTimeMillis() - flashClientHandler.getConnectionTime()  < 60*1000*3) {
+						    			recentConnection = true;
+						    		}
+						    		numberFlashClients ++;
+						    }
 						}
+
 					}
-					if (!security.allowClient(numberFlashClients)) {
+					if (!recentConnection && !security.allowClient(numberFlashClients)) {
 						displayTooManyClients(numberFlashClients);
 					}
 				}
+			}
 		}catch (IOException io){
 			logger.log(Level.SEVERE, "Could not add client handler " +io.getMessage());
 			Command command = new Command();
@@ -187,6 +193,8 @@ public class FlashControlListener extends Thread
 		logger.info("Client connection received");
 		FlashClientHandler flashClientHandler = new FlashClientHandler (flashConnection,commandList,flashControllers,addressBook);
 		flashClientHandler.setID(System.currentTimeMillis());
+		flashClientHandler.setConnectionTime (System.currentTimeMillis());
+		flashClientHandler.setServerID (this.getServerID());
 		flashClientHandler.setCache(cache);
 		flashClientHandler.setMacroHandler (macroHandler);
 		flashClientHandler.setRemoteServer(isServer);
@@ -312,6 +320,14 @@ public class FlashControlListener extends Thread
 
 	public int getNumberFlashClients() {
 		return numberFlashClients;
+	}
+
+	public long getServerID() {
+		return serverID;
+	}
+
+	public void setServerID(long serverID) {
+		this.serverID = serverID;
 	}
 
 

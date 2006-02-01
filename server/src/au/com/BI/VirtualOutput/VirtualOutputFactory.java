@@ -8,16 +8,24 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
+import au.com.BI.CustomInput.CustomInputFactory;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
 
 public class VirtualOutputFactory {
 	Logger logger;
 	
-	public VirtualOutputFactory () {
+	private VirtualOutputFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
 	}
 
+	private static VirtualOutputFactory _singleton = null;
+	public static VirtualOutputFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new VirtualOutputFactory();
+		}
+		return (_singleton);
+	}
 	/**
 	 * Parses the various  elements and adds them
 	 *

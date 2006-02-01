@@ -8,16 +8,24 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
+import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
 
 public class AVFactory {
 	Logger logger;
 	
-	public AVFactory () {
+	private AVFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
 	}
-
+	
+	private static AVFactory _singleton = null;
+	public static AVFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new AVFactory();
+		}
+		return (_singleton);
+	}
 	/**
 	 * Parses an audio device
 	 *

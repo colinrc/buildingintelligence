@@ -8,16 +8,24 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
+import au.com.BI.Raw.RawFactory;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
 
 public class SensorFactory {
 	Logger logger;
 	
-	public SensorFactory () {
+	private SensorFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
 	}
 	
+	private static SensorFactory _singleton = null;
+	public static SensorFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new SensorFactory();
+		}
+		return (_singleton);
+	}
 	// physical sensors, such as temperature
 	public void addSensor(DeviceModel targetDevice, List clientModels,
 			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {

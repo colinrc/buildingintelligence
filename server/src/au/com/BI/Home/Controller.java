@@ -16,7 +16,6 @@ import java.util.logging.*;
 import java.util.*;
 import java.io.*;
 
-import au.com.BI.AWTHarness.AWTHarness;
 import au.com.BI.Admin.LogHandler;
 import au.com.BI.Flash.*;
 import au.com.BI.GC100.IRCodeDB;
@@ -34,8 +33,6 @@ public class Controller {
 	protected User currentUser;
 	protected Logger logger;
 	protected List commandQueue;
-	protected boolean runningHarness = false;
-	protected AWTHarness harness;
 	protected boolean running;
 	protected FlashHandler flashHandler;
 	protected au.com.BI.Admin.Model adminModel;
@@ -110,9 +107,6 @@ public class Controller {
 
 	public void setUp() throws CommsFail {
 			controls = new Controls (cache);
-		if (this.runningHarness) {
-			setDebugMenus();
-		}
 
 
 		macroHandler = new MacroHandler();
@@ -212,10 +206,6 @@ public class Controller {
 		logger.fine("Started the controller");
 		Iterator deviceModelList;
 		boolean successfulCommand = false;
-		if (runningHarness) {
-			harness.setCommandQueue(commandQueue);
-			harness.start();
-		}
 
 		irCodeDB = new IRCodeDB();
 
@@ -1068,17 +1058,7 @@ public class Controller {
 
 	}
 
-	public void setDebugMenus () {
-		harness.addPackageDebugMenu ("au.com.BI");
-		harness.addPackageDebugMenu ("au.com.BI.Config");
-		harness.addPackageDebugMenu ("au.com.BI.Comms");
 
-		Iterator eachModelPackage = modelRegistry.values().iterator();
-		while (eachModelPackage.hasNext()) {
-			String className = (String)eachModelPackage.next();
-			harness.addDebugMenu(className);
-		}
-	}
 	public boolean doReadConfig (String configName) {
 
 		try {
@@ -1099,10 +1079,7 @@ public class Controller {
 			config.readConfig(deviceModels, clientModels, cache, variableCache , commandQueue,
 					modelRegistry, irCodeDB, configName, macroHandler,bootstrap, controls);
 
-			if (runningHarness) {
-				harness.enableAllFunctions();
-				harness.start();
-			}
+
 			configLoaded = true;
 			logger.log(Level.FINER, "Read configuration file correctly.");
 		} catch (ConfigError configError) {
@@ -1147,16 +1124,7 @@ public class Controller {
 		logger.log (Level.SEVERE,"eLife server exiting");
 		System.exit(1);
 	}
-	public void setUpGUIHarness(Level defaultLogLevel, Logger sh) {
-		harness = new AWTHarness();
-		harness.setDefaultLevel(defaultLogLevel);
-		harness.setName("AWT_GUI");
-		harness.setVisible(true);
-		harness.repaint();
-		runningHarness = true;
-		//harness.setSerialPort(getSerialPort());
-		deviceModels.add(harness);
-	}
+
 	/**
 	 * Send login command to all attatched models
 	 *

@@ -8,16 +8,25 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
+import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
 
 public class AlertFactory {
 	Logger logger;
 	
-	public AlertFactory () {
+	private AlertFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
 	}
-
+	private static AlertFactory _singleton = null;
+	
+	public static AlertFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new AlertFactory();
+		}
+		return (_singleton);
+	}
+	
 	/**
 	 * Parses the various alert elements and adds them
 	 *

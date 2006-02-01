@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import org.jdom.Element;
 
+import au.com.BI.AV.AVFactory;
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
@@ -15,8 +16,15 @@ import au.com.BI.Util.DeviceType;
 public class CameraFactory {
 	Logger logger;
 	
-	public CameraFactory () {
+	private CameraFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
+	}
+	private static CameraFactory _singleton = null;
+	public static CameraFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new CameraFactory();
+		}
+		return (_singleton);
 	}
 
 	/**

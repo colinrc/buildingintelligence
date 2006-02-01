@@ -97,7 +97,8 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 		return true;
 	}
 
-	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID){};
+	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID){};
+
 	public void doStartup(java.util.List commandQueue){};
 
 	// Ensure listening will restart after a config reload.
@@ -111,6 +112,7 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 				commandQueue,bootstrap.getVersion(),security,addressBook);
 		flashControlListener.setCache(cache);
 		flashControlListener.setMacroHandler (macroHandler);
+		flashControlListener.setServerID(serverID);
 		flashControlListener.setEventCalendar (eventCalendar);
 		if (!masterIP.equals (""))
 		    flashControlListener.addMasterServerListener(masterIP,masterPort);

@@ -299,6 +299,29 @@ public interface DeviceModel {
 	
 	public void setTryingToConnect (boolean state);
 
+	/**
+	 * ALL_SERVERS indicates that all servers should attend to the command.
+	 */
+	public static final long ALL_SERVERS = -1;
+	
+	/**
+	 * Gets the server ID supporting the model
+	 * @return Server ID
+	 */
+	public long getServerID();
 
+	/**
+	 * Sets the server ID supporting the model
+	 * @param serverID
+	 */
+	public void setServerID(long serverID);
+
+    /** 
+     * Called when a new client connects to the server identified by serverID
+     * @param commandQueue The global event queue
+     * @param targetFlashDeviceID The target ID of the handler for the new client
+     * @param serverID The server ID to process the startup. 
+     */
+	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID);
 }
 

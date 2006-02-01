@@ -53,7 +53,8 @@ public class BaseModel
 		protected byte penultimateArray[] = null;
 		protected byte stxArray[] = null;
 		protected boolean tryingToConnect = false;
-
+		protected long serverID = 0;
+		
 		public User currentUser = null;
 		
         public BaseModel() {
@@ -89,6 +90,15 @@ public class BaseModel
 
         public void doStartup(java.util.List commandQueue)  throws au.com.BI.Comms.CommsFail {};
 
+        /** 
+         * Called when a new client connects to the server
+         * @param commandQueue
+         * @param targetFlashDeviceID
+         * @param serverID
+         */
+    		public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID){};
+
+    		
         /**
          * Name is used by the config reader to tie a particular device to configuration
          * @param name The identifying string for this device handler
@@ -660,6 +670,14 @@ public class BaseModel
 
 		public void setCurrentUser(User currentUser) {
 			this.currentUser = currentUser;
+		}
+
+		public long getServerID() {
+			return serverID;
+		}
+
+		public void setServerID(long serverID) {
+			this.serverID = serverID;
 		}
 
 }

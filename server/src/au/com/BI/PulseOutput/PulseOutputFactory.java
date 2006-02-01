@@ -8,14 +8,23 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
+import au.com.BI.IR.IRFactory;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
 
 public class PulseOutputFactory {
 	Logger logger;
 	
-	public PulseOutputFactory () {
+	private PulseOutputFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
+	}
+	
+	private static PulseOutputFactory _singleton = null;
+	public static PulseOutputFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new PulseOutputFactory();
+		}
+		return (_singleton);
 	}
 
 	/**

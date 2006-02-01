@@ -1,3 +1,15 @@
+31/1/2006
+Security
+Added a 3 minute grace period for flash client connections before the security message appears. This will allow
+restarts of the client to not trigger a 'number of clients' security violation.
+
+General Code
+Added a hook for every model which is called on every new client connection, doClientStartup.
+Removed AWT gui harness for main application, it is not longer used and caused maintenance problems.
+Refactored configuration module to use factory singleton pattern, should facilitate testing.
+Began to integrate a server ID concept to facilitate master slave development.
+
+ 
 26/1/2006
 Released V1.5b9
 Calendar.

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import org.jdom.Element;
 
+import au.com.BI.Analogue.AnalogFactory;
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
@@ -14,10 +15,18 @@ import au.com.BI.Util.DeviceType;
 public class AudioFactory {
 	Logger logger;
 	
-	public AudioFactory () {
+	private AudioFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
 	}
 
+	private static AudioFactory _singleton = null;
+	
+	public static AudioFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new AudioFactory();
+		}
+		return (_singleton);
+	}
 	
 	/**
 	 * Parses an audio device
