@@ -37,6 +37,24 @@ public class Model extends BaseModel implements DeviceModel {
 		super.setMacroHandler(macroHandler);
 	}
 	
+	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID){
+	    ClientCommand clientCommand = new ClientCommand();
+	    clientCommand.setFromElement (macroHandler.get("",false));
+	    clientCommand.setKey ("CLIENT_SEND");
+	    clientCommand.setTargetDeviceID(targetFlashDeviceID);
+		synchronized (commandQueue){
+			commandQueue.add(clientCommand);
+		}
+		
+	    ClientCommand calCommand = new ClientCommand();
+	    calCommand.setFromElement (macroHandler.getEventCalendar().get(""));
+	    calCommand.setKey ("CLIENT_SEND");
+	    calCommand.setTargetDeviceID(targetFlashDeviceID);
+		synchronized (commandQueue){
+			commandQueue.add(calCommand);
+		}
+	};
+
 	public boolean isConnected () {
 		return true;
 	}

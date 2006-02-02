@@ -408,6 +408,25 @@ public class Controller {
     }
 
     /**
+     * This method is called when a new client connects
+     */
+    public void doClientStartup (long targetFlashDeviceID,long serverID) {
+    		Iterator models = deviceModels.iterator();
+    		while (models.hasNext()){
+    			DeviceModel nextModel = (DeviceModel)models.next();
+    			nextModel.doClientStartup(commandQueue, targetFlashDeviceID, serverID);
+    		}
+    		
+    		Iterator cl_models = clientModels.iterator();
+    		while (cl_models.hasNext()){
+    			DeviceModel nextModel = (DeviceModel)cl_models.next();
+    			nextModel.doClientStartup(commandQueue, targetFlashDeviceID, serverID);
+    		}
+    		
+    		scriptModel.doClientStartup(commandQueue, targetFlashDeviceID, serverID);
+    }
+    
+    /**
      * @return Returns the value stored in variable.
      * @param key The key to get the value for.
      */
@@ -997,6 +1016,17 @@ public class Controller {
 				this.connectDevice(model,deviceModels);
 			} catch (NumberFormatException ex) {
 				logger.log (Level.WARNING,"An incorrect call was made to restart model number " + command.getExtraInfo());
+			}
+			
+		}
+		if (commandCode.equals("ClientAttach")) {
+			try {
+				long flashID = Long.parseLong(command.getExtraInfo() );
+				long serverID = Long.parseLong(command.getExtra2Info() );
+				this.doClientStartup(flashID, serverID);
+				
+			} catch (NumberFormatException ex) {
+				logger.log (Level.WARNING,"An incorrect call was made on client connection");
 			}
 			
 		}

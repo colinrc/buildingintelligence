@@ -334,6 +334,16 @@ public class Model
 			loadScripts();
         }
 
+	    	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID){
+	    	    ClientCommand clientCommand = new ClientCommand();
+	    	    clientCommand.setFromElement (scriptHandler.get(""));
+	    	    clientCommand.setKey ("CLIENT_SEND");
+	    	    clientCommand.setTargetDeviceID(targetFlashDeviceID);
+	    		synchronized (commandQueue){
+	    			commandQueue.add(clientCommand);
+	    		}
+	    	};
+	    	
         public void loadScripts() {
                 int j = 0;
                 logger.log(Level.INFO,"Loading scripts");

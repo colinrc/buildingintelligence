@@ -204,7 +204,7 @@ public class FlashControlListener extends Thread
 		synchronized (flashControllers) {
 		    flashControllers.add (flashClientHandler);
 		}
-		newClient(flashClientHandler);
+		newClient(flashClientHandler,flashClientHandler.getID(),this.getServerID());
 		flashClientHandler.start();
 
 	}
@@ -298,12 +298,22 @@ public class FlashControlListener extends Thread
 		this.cache = cache;
 	}
 
-	protected void newClient (FlashClientHandler flashClientHandler) {
+	protected void newClient (FlashClientHandler flashClientHandler, long flashID, long serverID) {
 		// tell the user that they're connected
 		Element conElement = new Element ("connected");
 		conElement.setAttribute ("version", version);
 		Document replyDoc = new Document (conElement);	
 		flashClientHandler.sendXML (replyDoc);
+		
+		Command initConnection = new Command (); 
+		initConnection.setKey("SYSTEM");
+		initConnection.setCommand("ClientAttach");
+		initConnection.setExtraInfo(Long.toString(flashID));
+		initConnection.setExtra2Info(Long.toString(serverID));
+		synchronized (commandList){
+			commandList.add (initConnection);
+			commandList.notifyAll();
+		}
 	}
 	/**
 	 * @return Returns the eventCalendar.

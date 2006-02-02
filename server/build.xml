@@ -26,7 +26,11 @@
 	</copy>
 </target>
 	
-
+<path id="run.path">
+		   <pathelement path="${classpath}"/>
+		   <pathelement location="classes"/>
+		   <fileset dir="ext" includes="*.jar"/>	 
+</path>
 	
 <target name="Build" depends="dist_clean,increment,jar,templates" >
 	<zip destfile="Build/${app_name}-${major_version}${minor_version}.zip" 
