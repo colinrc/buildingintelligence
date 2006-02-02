@@ -11,13 +11,7 @@
 	public function isValid():Boolean {
 		var flag = true;
 		for (var alarm in alarms) {
-			if ((alarms[alarm].attributes["ACTIVE"] != "Y") && (alarms[alarm].attributes["ACTIVE"] != "N")) {
-				flag = false;
-			}
 			if ((alarms[alarm].attributes["KEY"] == undefined) || (alarms[alarm].attributes["KEY"] == "")) {
-				flag = false;
-			}
-			if ((alarms[alarm].attributes["NAME"] == undefined) || (alarms[alarm].attributes["NAME"] == "")) {
 				flag = false;
 			}
 			if ((alarms[alarm].attributes["DISPLAY_NAME"] == undefined) || (alarms[alarm].attributes["DISPLAY_NAME"] == "")) {

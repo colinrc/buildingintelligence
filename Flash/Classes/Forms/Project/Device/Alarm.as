@@ -5,12 +5,18 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var alarms:Array;
 	private var alarms_dg:DataGrid;
-	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
-	private var key_ti:TextInput;
-	private var dname_ti:TextInput;
+	private var dataGridHandler:Object;
 	public function init() {
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.rescrict = "";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(alarms_dg);
+		dataGridHandler.addTextInputColumn("dname","eLife Name",restrictions);		
+		dataGridHandler.addTextInputColumn("key","Key",restrictions);
+		var DP = new Array();
 		for (var alarm in alarms) {
 			var newAlarm = new Object();
 			newAlarm.key = "";
@@ -21,58 +27,35 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 			if(alarms[alarm].attributes["DISPLAY_NAME"]!=undefined){
 				newAlarm.dname = alarms[alarm].attributes["DISPLAY_NAME"];
 			}
-			alarms_dg.addItem(newAlarm);
+			DP.push(newAlarm);
 		}
+		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.enabled = false;
-		update_btn.enabled = true;
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
-		alarms_dg.addEventListener("change", Delegate.create(this, itemChange));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
-		alarms_dg.removeItemAt(alarms_dg.selectedIndex);
-		alarms_dg.selectedIndex = undefined;
+		dataGridHandler.removeRow();
 		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function updateItem() {
-		if (alarms_dg.selectedIndex != undefined) {
-			alarms_dg.getItemAt(alarms_dg.selectedIndex).key = key_ti.text;
-			alarms_dg.getItemAt(alarms_dg.selectedIndex).dname = dname_ti.text;
-		} else {
-			alarms_dg.addItem({key:key_ti.text, dname:dname_ti.text});
-		}
-		alarms_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
 	}
 	private function newItem() {
-		alarms_dg.selectedIndex = undefined;
-		key_ti.text = "";
-		dname_ti.text = "";
+		dataGridHandler.addBlankRow();
 		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function itemChange(evtObj) {
-		key_ti.text = alarms_dg.selectedItem.key;
-		dname_ti.text = alarms_dg.selectedItem.dname;
-		update_btn.enabled = true;
-		delete_btn.enabled = true;
 	}
 	public function save():Void {
 		var newAlarms = new Array();
-		for (var index = 0; index<alarms_dg.length; index++) {
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var item = new XMLNode(1, "ALARM");
-			if(alarms_dg.getItemAt(index).key != ""){
-				item.attributes["KEY"] = alarms_dg.getItemAt(index).key;
-			}
-			if(alarms_dg.getItemAt(index).dname !=""){
-				item.attributes["DISPLAY_NAME"] = alarms_dg.getItemAt(index).dname;
- 		    }
+			//if(DP[index]["key"] != ""){
+				item.attributes["KEY"] = DP[index]["key"];
+			//}
+			//if(DP[index]["dname"] != ""){
+				item.attributes["DISPLAY_NAME"] = DP[index]["dname"];
+ 		    //}
 			newAlarms.push(item);
 		}
-		_global.left_tree.selectedNode.alarms = newAlarms;
+		_global.left_tree.selectedNode.object.setData({alarms:newAlarms});
 	}
 }

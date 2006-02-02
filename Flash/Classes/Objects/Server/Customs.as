@@ -46,12 +46,12 @@
 		return customsNode;
 	}
 	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,"Customs");
+		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
 		return newNode;
 	}
 	public function getName():String {
-		return "Customs";
+		return "Custom Inputs";
 	}
 	public function getData():Object {
 		return new Object({customs:customs});

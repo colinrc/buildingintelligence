@@ -1,6 +1,5 @@
 ﻿class Objects.Server.Raw_Connection extends Objects.Server.Device {
 	private var customs:Objects.Server.Customs;
-	private var raw_items:Objects.Server.Raw_Items;
 	private var raw_interfaces:Objects.Server.Raw_Interfaces;
 	public function getKeys():Array{
 		var tempKeys = new Array();
@@ -17,9 +16,6 @@
 			flag = false;
 		}
 		if (!customs.isValid()) {
-			flag = false;
-		}
-		if(!raw_items.isValid()){
 			flag = false;
 		}
 		if(!customs.isValid()){
@@ -56,10 +52,6 @@
 		for(var child in tempCustoms.childNodes){
 			newRawConnection.appendChild(tempCustoms.childNodes[child]);
 		}
-		var tempRaw_Items = raw_items.toXML();
-		for(var child in tempRaw_Items.childNodes){
-			newRawConnection.appendChild(tempRaw_Items.childNodes[child]);
-		}
 		var tempRaw_Interfaces = raw_interfaces.toXML();
 		for(var child in tempRaw_Interfaces.childNodes){
 			newRawConnection.appendChild(tempRaw_Interfaces.childNodes[child]);
@@ -71,7 +63,6 @@
 		var newNode = new XMLNode(1,"Raw Connection");
 		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(customs.toTree());
-		newNode.appendChild(raw_items.toTree());
 		newNode.appendChild(raw_interfaces.toTree());
 		newNode.object = this;
 		return newNode;
@@ -80,7 +71,6 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
-		raw_items = new Objects.Server.Raw_Items();
 		raw_interfaces = new Objects.Server.Raw_Interfaces();
 		customs = new Objects.Server.Customs();
 		catalogues = new Objects.Server.Catalogues();
@@ -115,15 +105,11 @@
 				case "RAW_CONNECTION" :
 					var tempNode = newData.childNodes[child];
 					var tempCustomInputs = new XMLNode(1, device_type);
-					var tempRawItems = new XMLNode(1, device_type);
 					var tempRawInterfaces = new XMLNode(1,device_type);
 					for (var rawDevice in tempNode.childNodes) {
 						switch (tempNode.childNodes[rawDevice].nodeName) {
 						case "CUSTOM_INPUT" :
 							tempCustomInputs.appendChild(tempNode.childNodes[rawDevice]);
-							break;
-						case "RAW_ITEMS" :
-							tempRawItems.appendChild(tempNode.childNodes[rawDevice]);
 							break;
 						case "RAW_INTERFACE" :
 							tempRawInterfaces.appendChild(tempNode.childNodes[rawDevice]);
@@ -131,7 +117,6 @@
 						}
 					}
 					customs.setXML(tempCustomInputs);
-					raw_items.setXML(tempRawItems);
 					raw_interfaces.setXML(tempRawInterfaces);
 					break;
 				}
