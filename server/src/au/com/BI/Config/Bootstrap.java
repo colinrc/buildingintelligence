@@ -21,10 +21,8 @@ public class Bootstrap {
 	protected String serverString;
 	protected String adminString;
 	protected String adminIP;
-	protected String masterIP;
 	protected String configFile;
 	protected String configEntry;
-	protected int masterPort;
 	protected int adminPort;
 	protected int port;
 	protected Level defaultDebugging = Level.INFO;
@@ -85,10 +83,20 @@ public class Bootstrap {
 		serverString = serverConfigs.getAttributeValue ("IP");
 		if (serverString == null) serverString = "";
 		String portString = serverConfigs.getAttributeValue ("PORT");
-		masterIP = serverConfigs.getAttributeValue ("MASTER");
-		if (masterIP == null) masterIP = "";
-		String masterPortString = serverConfigs.getAttributeValue ("MASTER_PORT");
 
+		if (portString != null && !portString.equals("")) {
+		    try {
+		        this.port = Integer.parseInt(portString);
+		    } catch (NumberFormatException ne) {
+		    	port = 10000;
+		    }
+
+		}
+		else {
+			port = 10000;
+		}
+		
+		
 		Element serverConfigFile = theConfig.getChild("CONFIG_FILE");
 		this.configEntry = serverConfigFile.getAttributeValue ("NAME");
 		configFile = "config" + File.separator + configEntry;
@@ -101,19 +109,6 @@ public class Bootstrap {
 			adminString = adminSpec.getAttributeValue ("IP");
 			if (adminString == null) adminString = "";
 			adminPortString = adminSpec.getAttributeValue ("PORT");
-
-			if (serverString.equals("")) serverString = "127.0.0.1"; // Bind to all ports;
-			if (portString != null && !portString.equals("")) {
-			    try {
-			        port = Integer.parseInt(portString);
-			    } catch (NumberFormatException ne) {
-				    port = 10000;
-			    }
-
-			}
-			else {
-			    port = 10000;
-			}
 		}
 
 		if (adminString.equals("")) adminString = "127.0.0.1"; // Bind to all ports;
@@ -128,18 +123,6 @@ public class Bootstrap {
 		else {
 		    adminPort = 10001;
 		}
-
-
-		if (masterPortString != null && !masterPortString.equals("")) {
-		    try {
-		        masterPort = Integer.parseInt(masterPortString);
-		    } catch (NumberFormatException ne) {
-			    masterPort = 10000;
-		    }
-		} else{
-			masterPort = 10000;
-		}
-
 
 		Element debugConfig = theConfig.getChild("DEBUG");
 		if (debugConfig != null) {
@@ -171,32 +154,6 @@ public class Bootstrap {
 		}
 
 	}
-
-
-    /**
-     * @return Returns the masterPort.
-     */
-    public int getMasterPort() {
-        return masterPort;
-    }
-    /**
-     * @param masterPort The masterPort to set.
-     */
-    public void setMasterPort(int masterPort) {
-        this.masterPort = masterPort;
-    }
-    /**
-     * @return Returns the masterString.
-     */
-    public String getMasterString() {
-        return masterIP;
-    }
-    /**
-     * @param masterString The masterString to set.
-     */
-    public void setMasterString(String masterString) {
-        this.masterIP = masterString;
-    }
     /**
      * @return Returns the portString.
      */

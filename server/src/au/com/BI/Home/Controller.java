@@ -176,8 +176,17 @@ public class Controller {
 
     }
 
-	public void setUpFlash() throws CommsFail {
-		flashHandler.startListenning(bindToAddress, clientPort,bootstrap.getMasterString(),bootstrap.getMasterPort());
+	public void setUpClients() throws CommsFail {
+		flashHandler.startListenning(bindToAddress, clientPort,bootstrap.getServerString(),bootstrap.getPort());
+	}
+	
+
+	public void closeDownClients() throws CommsFail {
+		try {
+			if (flashHandler != null){
+				flashHandler.closeComms();
+			}
+		} catch (ConnectionFail ex){}
 	}
 
 	public void setUpAdmin() throws CommsFail {
@@ -210,7 +219,7 @@ public class Controller {
 		irCodeDB = new IRCodeDB();
 
 		try {
-		    this.setUpFlash();
+		    this.setUpClients();
 			if (!configFile.equals ("")) {
 				if (doReadConfig (configFile)) {
 				    doSystemStartup(deviceModels);
@@ -218,18 +227,20 @@ public class Controller {
 
 						doJRobinStartup();
 					}
+					this.setUpAdmin();
+					this.macroHandler.runStartup();
+					running = true;
+				}
+				else {
+					running = false;
+					this.closeDownClients();
 				}
 			}
-			this.setUpAdmin();
-			this.macroHandler.runStartup();
-
 
 		} catch (CommsFail ex) {
 		    logger.log (Level.SEVERE,"Client controller could not be set up");
 		    running = false;
 		}
-
-		running = true;
 
 		while (running) {
 			CommandInterface item;

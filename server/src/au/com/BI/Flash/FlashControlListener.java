@@ -219,6 +219,14 @@ public class FlashControlListener extends Thread
 		try {
 		    if (iPPort != null) iPPort.close();
 		} catch (IOException io) { }
+		
+		synchronized (flashControllers) {
+			Iterator eachClient = flashControllers.iterator();
+			while (eachClient.hasNext()){
+				FlashClientHandler nextClientHandler = (FlashClientHandler)eachClient.next();
+				nextClientHandler.setThisThreadRunning(false);
+			}
+		}
 	}
 
 	/**

@@ -3,7 +3,6 @@
   <SERVER IP="" PORT="10000" />
   <ADMIN IP="" PORT="10001" />
   <CONFIG_FILE NAME="config_ref.xml" />
-  <GUI DISPLAY="N" />
   <DEBUG LEVEL="INFO" FILE="N" CONSOLE="Y"  LOGDIR="server/log" />
   <RRDGRAPH DIR=".\JRobin\Graph\" />
   <RRDBDIRECTORY DIR=".\JRobin\" />

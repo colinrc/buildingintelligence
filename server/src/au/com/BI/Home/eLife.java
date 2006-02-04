@@ -87,7 +87,7 @@ public class eLife {
 			controller.setLogHandler(sh);
 			controller.setBootstrap(bootstrap);
 			controller.setBindToAddress(bootstrap.getServerString());
-			controller.setClientPort(bootstrap.getMasterPort());
+			controller.setClientPort(bootstrap.getPort());
 			controller.setUp(); 
 			if (!configName.equals ("")) {
 				controller.setConfigFile (configName);
@@ -98,17 +98,22 @@ public class eLife {
 		} catch (ConfigError be) {
 		    logger.log (Level.SEVERE,"Error in the bootstrap file, the system cannot launch "
 		            + be.getMessage());
+			System.exit(1);
 		} catch (CommsFail fail){
 			
 			if (logger != null) 
 				logger.log(Level.SEVERE,"Could not set up controller " + fail.getMessage());
-			else
+			else {
 				System.out.print("Could not set up controller " + fail.getMessage());
+				System.exit(1);
+			}
+
 		} catch (java.lang.NullPointerException fail) {
 			StackTraceElement[] errors = fail.getStackTrace();
 			if (logger != null) {
 				logger.log(Level.SEVERE,"Exiting: Dire problems " + fail.getMessage());
 				logger.log(Level.SEVERE,"System died at : " + errors[0].toString());
+				System.exit(1);
 			}
 			else {
 				System.err.println ("Exiting: Dire problems " + fail.getMessage());
@@ -116,6 +121,7 @@ public class eLife {
 				System.exit(1);
 			}
 		}
+		System.exit(0);
 	}
 	
 	/**
@@ -157,9 +163,6 @@ public class eLife {
 				System.exit(0);
 			}
 			String configName = args[0];
-			if (args[1].equals("N")) {
-				runHarness = false;
-			}
 					
 			System.out.println ("Launching system with config " + args[0]);
 			helloHouse = new eLife(args[0],runHarness,sh);

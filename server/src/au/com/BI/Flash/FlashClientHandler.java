@@ -580,4 +580,12 @@ public class FlashClientHandler extends Thread
 		this.serverID = serverID;
 	}
 
+	public boolean isThisThreadRunning() {
+		return thisThreadRunning;
+	}
+
+	public void setThisThreadRunning(boolean thisThreadRunning) {
+		this.thisThreadRunning = thisThreadRunning;
+	}
+
 }

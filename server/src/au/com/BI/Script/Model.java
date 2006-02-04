@@ -335,12 +335,14 @@ public class Model
         }
 
 	    	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID){
-	    	    ClientCommand clientCommand = new ClientCommand();
-	    	    clientCommand.setFromElement (scriptHandler.get(""));
-	    	    clientCommand.setKey ("CLIENT_SEND");
-	    	    clientCommand.setTargetDeviceID(targetFlashDeviceID);
-	    		synchronized (commandQueue){
-	    			commandQueue.add(clientCommand);
+	    		if (scriptHandler != null) {
+		    	    ClientCommand clientCommand = new ClientCommand();
+		    	    clientCommand.setFromElement (scriptHandler.get(""));
+		    	    clientCommand.setKey ("CLIENT_SEND");
+		    	    clientCommand.setTargetDeviceID(targetFlashDeviceID);
+		    		synchronized (commandQueue){
+		    			commandQueue.add(clientCommand);
+		    		}
 	    		}
 	    	};
 	    	
