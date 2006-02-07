@@ -1,0 +1,21 @@
+<client>
+	<setting name="serverAddress" value="172.16.3.200" />
+	<setting name="serverPort" value="10000" />
+	<setting name="serverRetryTime" value="10" />
+	<setting name="allowedDomain" value="http://172.16.3.200" />
+	<setting name="applicationXML" value="../client-core/nb218new.xml" />
+	<setting name="coreLocation" value="../client-core/" />
+	<setting name="mapsLocation" value="../client-core/maps/" />
+	<setting name="libLocation" value="../client-core/lib/" />
+	<setting name="checkVersion" value="true" />
+	<setting name="forceUpdate" value="true" />
+	<setting name="latestVersionURL" value="http://172.16.3.200/CoreVersionChecker/getlatestversion" />
+	<setting name="coreUpdateLocation" value="http://172.16.3.200/core-versions/" />
+	<setting name="debugMode" value="false" />
+	<setting name="hideMouseCursor" value="false" />
+	<setting name="iconMode" value="internal" />
+	<setting name="fullScreen" value="true" />
+	<setting name="scale" value="false" />
+	<setting name="width" value="1024" />
+	<setting name="height" value="768" />
+</client>

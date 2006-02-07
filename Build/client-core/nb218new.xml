@@ -1,0 +1,535 @@
+<application lastUpdated="2005-01-30">
+	<settings>
+		<common>
+			om.au/\n\nAustralian Distributor IQHome.\nhttp://www.iqhome.com.au" />
+			
+			<setting name="screenLockTimeout" value="3600" />
+			<setting name="screenLockPin" value="1234" />
+			<setting name="adminPin" value="4321" />
+			<setting name="cachePinTime" value="360" />
+			<setting name="applicationBg" value="0x043B96" />
+			<setting name="globalBtnClickTimer" value="500" />
+			
+			<setting name="windowAutoCloseTime" value="65000" />
+			
+			<setting name="titleX" value="6" />
+			<setting name="titleY" value="9" />
+			<setting name="titleFontSize" value="19" />
+			<setting name="titleFontColour" value="0xFFFFFF" />
+			
+			<setting name="dateX" value="6" />
+			<setting name="dateY" value="9" />
+			<setting name="dateFontSize" value="19" />
+			<setting name="dateFontColour" value="0xFFFFFF" />
+				
+			<setting name="statusBarX" value="3" />
+			<setting name="statusBarY" value="52" />
+			<setting name="statusBarBtnWidth" value="48" />
+			<setting name="statusBarBtnHeight" value="48" />
+			<setting name="statusBarBtnSpacing" value="5" />
+			<setting name="statusBarBtnFadeRate" value="45" />
+
+			<setting name="appsBarX" value="2" />
+			<setting name="appsBarY" value="52" />					
+			<setting name="appsBarBtnWidth" value="48" />
+			<setting name="appsBarBtnHeight" value="48" />
+			<setting name="appsBarBtnSpacing" value="5" />
+			
+			<setting name="miniAlertBtnPadding" value="2" />
+			<setting name="miniAlertBtnBg" value="0x829ECB" />
+			<setting name="miniAlertBtnFadeInTime" value="100" />
+			<setting name="miniAlertBtnFadeOutTime" value="200" />
+	
+			<setting name="macroBtnWidth" value="110" />
+			<setting name="macroBtnHeight" value="35" />
+			<setting name="macroBtnSpacing" value="5" />
+			<setting name="macroBtnFontSize" value="14" />
+			<setting name="macroListY" value="12" />
+
+			<setting name="zonesX" value="0" />
+			<setting name="zonesY" value="105" />
+			
+			<setting name="zoneLabelsX" value="12" />
+			<setting name="zoneLabelsY" value="12" />
+			<setting name="zoneBtnFontSize" value="16" />
+			<setting name="zoneBtnWidth" value="130" />
+			<setting name="zoneBtnHeight" value="26" />
+			<setting name="zoneBtnSpacing" value="8" />
+
+			<setting name="zoneDoorColour" value="0xCC3333" />
+	
+			<setting name="zoneBg" value="0xFFCC00" />
+
+			<setting name="zoneChangeTimeout" value="30" />
+			<setting name="zoneChangeTime" value="15" />
+			<setting name="zoneFadeRate" value="50" />
+
+			<setting name="controlButtonSpacing" value="2" />
+			<setting name="controlButtonHeight" value="45" />
+			<setting name="controlButtonLabelColour" value="0x042D70" />
+			<setting name="controlButtonLabelFontSize" value="18" />
+			
+			<setting name="calendarCanEdit" value="superuser" />
+			
+			<setting name="longTimeFormat" value="H:nn:ss" />
+			<setting name="longDateFormat" value="d-mmm-yyyy" />
+			<setting name="clockFormat" value="h:nn TT dddd, dd/mm/yy" />
+			
+			<setting name="integratorHtml" value="http://172.16.3.200/client-core/lib/html/integrator.html" />
+			<setting name="defaultBrowserURL" value="http://www.buildingintelligence.com.au/" />
+		</common>
+	</settings>
+	<sounds>
+		<sound name="default" file="sounds/bloop.mp3" volume="100" />
+		<sound name="ding" file="sounds/ding.mp3" volume="40" />
+	</sounds>
+	<statusBar>
+		<group name="Lights" icon="light-bulb" show="on" hide="off" canOpen="" >
+			<control key="M5_RUNWAY_LIGHTS" />
+			<control key="M5_NOC_LIGHTS" />
+			<control key="BI_WORK_LIGHTS" />
+			<control key="COMPUTER_ROOM_LIGHTS" />
+			<control key="CONF_NORTH_LIGHTS" />
+			<control key="CONF_SOUTH_LIGHTS" />
+			<control key="M5_WORK_LIGHTS" />
+			<control key="MEETING_ROOM_LIGHTS" />
+			<control key="SECURE_ROOM_LIGHTS" />
+		</group>
+		<group name="Test Lights" icon="light-bulb" show="on" hide="off" >
+			<control key="TESSA_LIGHT" />
+			<control key="AINSLEE_LIGHT" />
+			<control key="AMY_LIGHT" />
+			<control key="JORDAN_LIGHT" />
+			<control key="MADISON_LIGHT" />
+			<control key="MORGAN_LIGHT" />
+		</group>
+		<group name="Audio" icon="music-note" show="on" hide="off" >
+			<control key="BI_AUDIO" />
+			<control key="CONF_AUDIO" />
+		</group>
+		<group name="Test" icon="gears" show="on" hide="off" >
+			<control key="TEST_SWITCH" />
+		</group>
+	</statusBar>
+	<logging>
+		<group name="PIRs" icon="green-man" listenTo="on" label="%room% %name%" timeformat="HH:mm d mmmm yyyy" type="tally">
+			<control key="ENTRY_PIR" />
+			<control key="CONF_PIR" />
+		</group>
+		<group name="Lights" icon="light-bulb" listenTo="on,off" label="%name% turned on %timestamp% (%extra%%),%name% turned off %timestamp%" type="log" timeformat="HH:mm d mmmm yyyy">
+			<control key="M5_RUNWAY_LIGHTS" />
+			<control key="M5_NOC_LIGHTS" />
+			<control key="BI_WORK_LIGHTS" />
+			<control key="COMPUTER_ROOM_LIGHTS" />
+			<control key="CONF_NORTH_LIGHTS" />
+			<control key="CONF_SOUTH_LIGHTS" />
+			<control key="M5_WORK_LIGHTS" />
+			<control key="MEETING_ROOM_LIGHTS" />
+			<control key="SECURE_ROOM_LIGHTS" />
+			<control key="TESSA_LIGHT" />
+			<control key="AINSLEE_LIGHT" />
+			<control key="AMY_LIGHT" />
+			<control key="JORDAN_LIGHT" />
+			<control key="MADISON_LIGHT" />
+			<control key="MORGAN_LIGHT" />
+		</group>
+		<group name="Test" icon="gears" type="web" url="http://172.16.3.200/GraphEngine/graph" />
+	</logging>
+	<appsBar>
+		<icon name="Keyboard" icon="keyboard" func="runexe" program="d:\bi\biwrap\keyboard.exe" canOpen="" />
+		<!--  icon name="TV" icon="tv" func="openTV" canOpen="superuser" /-->
+		<icon name="Web" icon="atom" func="openBrowser" canOpen="" />
+		<icon name="Logs" icon="notepad" func="openLogs" canOpen="" />
+		<icon name="Calendar" icon="calendar" func="openCalendar" canOpen="" />
+		<icon name="Control Panel" icon="gears" func="openControlPanel" canOpen="" />
+		<icon name="Authenticate" icon="locked" func="openAuthentication" />
+	</appsBar>
+	<property>
+		<zone name="218 Northbourne" map="bi-office2.png" cycle="false" alignment="center" >
+			<rooms>
+				<room name="Computer Room" poly="4,7,130,7,130,170,4,169,4,7" >
+					<controls>
+						<group name="Lights" icon="light-bulb">
+							<control name="Computer Room" key="COMPUTER_ROOM_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</group>
+					</controls>
+					<alerts >
+						<alert name="Lights" keys="COMPUTER_ROOM_LIGHTS" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="Conference Room" poly="264,331,519,332,519,513,263,513,264,331" >
+					<controls>
+						<group name="Lights" icon="light-bulb">
+							<control name="Conference Room South" key="CONF_SOUTH_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+							<control name="Conference Room North" key="CONF_NORTH_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</group>
+						<group name="Audio" icon="music-note">
+							<control name="Audio" key="CONF_AUDIO" type="audioPanel" icon="music-note" />
+						</group>
+					</controls>
+					<alerts >
+						<alert name="Lights" keys="CONF_NORTH_LIGHTS,CONF_SOUTH_LIGHTS" icon="light-bulb" />
+						<alert name="Audio" keys="CONF_AUDIO" icon="music-note" />
+						<alert name="PIR" keys="CONF_PIR" icon="green-man" fadeOutTime="3000" />
+					</alerts>
+				</room>
+				<room name="Meeting Room" poly="136,331,259,332,258,514,136,513,136,331" >
+					<controls>
+						<group name="Lights" icon="light-bulb">
+							<control name="Meeting Room" key="MEETING_ROOM_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</group>
+					</controls>
+					<alerts >
+						<alert name="Lights" keys="MEETING_ROOM_LIGHTS" icon="light-bulb" />
+						<alert name="PIR" keys="MEETING_PIR" icon="green-man" fadeOutTime="3000" />
+					</alerts>
+				</room>
+				<room name="Secure Room" poly="4,331,130,332,130,513,4,514,4,331" >
+					<controls>
+						<group name="Lights" icon="light-bulb">
+							<control name="Secure Room" key="SECURE_ROOM_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</group>
+					</controls>
+					<alerts >
+						<alert name="Lights" keys="SECURE_ROOM_LIGHTS" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="BI Work Area" poly="480,8,695,8,696,263,480,263,480,8" >
+					<controls>
+						<group name="Lights" icon="light-bulb">
+							<control name="BI Work Area" key="BI_WORK_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</group>
+						<group name="Audio" icon="music-note">
+							<control name="Audio" key="BI_AUDIO" type="audioPanel" icon="music-note" />
+						</group>
+						<group name="Front Gate" icon="videocamera">
+							<control name="Front Gate Video" type="frontGateVideo" />
+						</group>
+						<group name="Test Relay" icon="light-bulb" canSee="superuser">
+							<control name="Jordan Test Light" key="JORDAN_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+							<control name="Madison Test Light" key="MADISON_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+							<control name="Morgan Test Light" key="MORGAN_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</group>
+						<group name="Test Dimmer" icon="light-bulb" canSee="superuser">
+							<control name="Tessa Test Light" key="TESSA_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
+							<control name="Ainslee Test Light" key="AINSLEE_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
+							<control name="Amy Test Light" key="AMY_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
+						</group>
+						<group name="Test" icon="gears" canSee="superuser">
+							<control name="Test 1" key="TEST_1" type="onOff" icons="light-bulb-off,light-bulb" />
+							<control name="Entry Lock" key="ENTRY_LOCK" type="onOff" icons="locked,unlocked" />
+							<control name="Macro" key="FOO" type="test" icons="gears" />
+						</group>
+					</controls>
+					<alerts >
+						<alert name="Lights" keys="BI_WORK_LIGHTS,TESSA_LIGHT,AINSLEE_LIGHT,AMY_LIGHT,JORDAN_LIGHT,MADISON_LIGHT,MORGAN_LIGHT" icon="light-bulb" />
+						<alert name="Audio" keys="BI_AUDIO" icon="music-note" />
+						<alert name="Test" keys="TEST_SWITCH" icon="gears" />
+						<alert name="PIR" keys="BI_PIR" icon="green-man" fadeOutTime="3000" />
+					</alerts>
+					
+				</room>
+				<room name="M5 Work Area" poly="248,8,473,8,474,264,248,264,248,8" >
+					<controls>
+						<group name="Lights" icon="light-bulb">
+							<control name="M5 Work Lights" key="M5_WORK_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</group>
+					</controls>
+					<alerts >
+						<alert name="Lights" keys="M5_WORK_LIGHTS" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="NOC" poly="136,8,242,7,242,264,136,264,136,8" >
+					<controls>
+						<group name="Lights" icon="light-bulb">
+							<control name="M5 NOC Lights" key="M5_NOC_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</group>
+					</controls>
+					<alerts >
+						<alert name="Lights" keys="M5_NOC_LIGHTS" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="Runway" poly="82,175,130,175,130,269,520,271,520,325,83,325,82,175" >
+					<controls>
+						<group name="Lights" icon="light-bulb">
+							<control name="M5 Runway Lights" key="M5_RUNWAY_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</group>
+					</controls>
+					<alerts x="300" y="300" >
+						<alert name="Lights" keys="M5_RUNWAY_LIGHTS" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="Entry" poly="524,270,524,323,698,327,698,271,524,270" >
+					<alerts >
+						<alert name="Funky PIR" keys="ENTRY_PIR" icon="green-man" fadeOutTime="3000" />
+					</alerts>
+				</room>
+			</rooms>
+		</zone>
+		<zone name="Monitoring" cycle="false" alignment="topleft" canOpen="superuser" >
+			<panels>
+				<panel name="Office Monitor" x="340" y="5" width="300" height="300">
+					<control name="Front Gate Video" type="officeVideo" />
+				</panel>
+				<!-- <panel name="Gate Monitor" x="30" y="5" width="300" height="300">
+					<control name="Front Gate Video" type="frontGateVideo" />
+				</panel> -->
+			</panels>
+			<arbitrary>
+				<item type="label" x="300" y="450" label="BI Ceiling Temperature is %value% Degrees" defaultState="...." key="BI_TEMP" fontSize="16" fontColour="0xFFCC00" />
+				<item type="label" x="300" y="470" label="BI Floor Temperature is %value% Degrees" defaultState="...." key="M5_TEMP" fontSize="16" fontColour="0xFFCC00" />
+				<item type="label" x="300" y="490" label="BI Computer Temperature is %value% Degrees" defaultState="...." key="COMP_TEMP" fontSize="16" fontColour="0xFFCC00" />
+				<item type="label" x="300" y="510" label="A/C Duct Temperature is %value% Degrees" defaultState="...." key="CONF_TEMP" fontSize="16" fontColour="0xFFCC00" />
+			</arbitrary>
+		</zone>
+	</property>
+	<controlTypes>
+		<control type="slider">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="button" label="off" command="off" extra="0" width="20" />
+				<item type="slider" width="60" />
+				<item type="button" label="on" command="on" extra="100" width="20" />
+			</row>
+		</control>
+		<control type="onOff">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="toggle" command="state" extras="on,off" width="100" />
+			</row>
+		</control>
+		<control type="test">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="button" icon="gears" command="MACRO:run" extra="All Off" width="100" />
+			</row>
+		</control>
+		<control type="upDown">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="button" icon="up-arrow" command="up" repeatRate="200" />
+				<item type="button" icon="down-arrow" command="down" repeatRate="200" />
+			</row>
+		</control>
+		<control type="miniBrowser">
+			<row>
+				<item type="browserLabel" />
+			</row>
+			<row>
+				<item type="button" icon="left-arrow" command="up" />
+				<item type="button" icon="right-arrow" command="down" />
+			</row>
+			<row>
+				<item type="webBrowser" />
+			</row>
+		</control>
+		<control type="audioPanel">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="50" />
+				<item type="button" icon="volume-up" command="volume" extra="up" repeatRate="200" />
+				<item type="button" icon="volume-down" command="volume" extra="down" repeatRate="200" />
+			</row>
+			<row cases="state:on">
+				<item type="button" icon="cd-music" command="src" extra="cd1" showOn="true" />
+				<item type="button" icon="cd-music" command="src" extra="cd2" showOn="true" />
+				<item type="button" icon="radio" command="src" extra="radio" showOn="true" />
+				<item type="button" icon="atom" command="src" extra="atom" showOn="true" />
+				<item type="button" icon="tv" command="src" extra="tv" showOn="true" />
+			</row>
+			<row cases="state:on,src:cd1|cd2">
+				<item type="button" icon="media-play" command="AV.SONY" extra="sony.play" extra2="2"/>
+				<item type="button" icon="media-stop" command="AV.SONY" extra="sony.stop" extra2="2"/>
+				<item type="button" icon="media-pause" command="AV.SONY" extra="sony.pause" extra2="2"/>
+				<item type="button" icon="media-rwd" command="AV.SONY" extra="sony.back" extra2="2" repeatRate="200" />
+				<item type="button" icon="media-fwd" command="AV.SONY" extra="sony.fwd" extra2="2" repeatRate="200" />
+			</row>
+			<row cases="state:on,src:radio|tv|atom">
+				<item type="button" icon="left-arrow" command="send_audio_command" extra="5" />
+				<item type="button" icon="right-arrow" command="send_audio_command" extra="6" />
+				<item type="button" icon="up-arrow" command="send_audio_command" extra="7" />
+				<item type="button" icon="down-arrow" command="send_audio_command" extra="8" />
+			</row>
+			<row cases="state:on,src:atom">
+				<item type="button" icon="media-play" command="send_audio_command" extra="1" />
+				<item type="button" icon="media-stop" command="send_audio_command" extra="2" />
+			</row>
+		</control>
+		<control type="tvControl">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="50" />
+				<item type="button" icon="volume-up" command="volume_up" repeatRate="200" />
+				<item type="button" icon="volume-down" command="volume_down" repeatRate="200" />
+			</row>
+			<row cases="state:on">
+				<item type="button" icon="chan-abc" command="channel" extra="abc" showOn="true" />
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true" />
+				<item type="button" icon="chan-win" command="channel" extra="nine" showOn="true" />
+				<item type="button" icon="chan-prime" command="channel" extra="seven" showOn="true" />
+				<item type="button" icon="chan-10" command="channel" extra="ten" showOn="true" />
+			</row>
+		</control>
+		<control type="channelControl1">
+			<row>
+				<item type="button" icon="chan-10" command="channel" extra="10" showOn="true" />
+				<item type="button" icon="chan-31" command="channel" extra="31" showOn="true" />
+				<item type="button" icon="chan-31sydney" command="channel" extra="31sydney" showOn="true" />
+				<item type="button" icon="chan-7" command="channel" extra="7" showOn="true" />
+				<item type="button" icon="chan-9" command="channel" extra="9" showOn="true" />
+				<item type="button" icon="chan-a1" command="channel" extra="a1" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-abc" command="channel" extra="abc" showOn="true" />
+				<item type="button" icon="chan-acc" command="channel" extra="acc" showOn="true" />
+				<item type="button" icon="chan-adultsonly" command="channel" extra="adultsonly" showOn="true" />
+				<item type="button" icon="chan-aljazeera" command="channel" extra="aljazeera" showOn="true" />
+				<item type="button" icon="chan-animalplanet" command="channel" extra="animalplanet" showOn="true" />
+				<item type="button" icon="chan-antenna" command="channel" extra="antenna" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-arena" command="channel" extra="arena" showOn="true" />
+				<item type="button" icon="chan-art" command="channel" extra="art" showOn="true" />
+				<item type="button" icon="chan-bbcworld" command="channel" extra="bbcworld" showOn="true" />
+				<item type="button" icon="chan-bloomberg" command="channel" extra="bloomberg" showOn="true" />
+				<item type="button" icon="chan-cartoon" command="channel" extra="cartoon" showOn="true" />
+				<item type="button" icon="chan-cmc" command="channel" extra="cmc" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-cnbc" command="channel" extra="cnbc" showOn="true" />
+				<item type="button" icon="chan-cnn" command="channel" extra="cnn" showOn="true" />
+				<item type="button" icon="chan-cnnfn" command="channel" extra="cnnfn" showOn="true" />
+				<item type="button" icon="chan-comedy" command="channel" extra="comedy" showOn="true" />
+				<item type="button" icon="chan-discovery" command="channel" extra="discovery" showOn="true" />
+				<item type="button" icon="chan-disney" command="channel" extra="disney" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-espn" command="channel" extra="espn" showOn="true" />
+				<item type="button" icon="chan-expo" command="channel" extra="expo" showOn="true" />
+				<item type="button" icon="chan-fox8" command="channel" extra="fox8" showOn="true" />
+				<item type="button" icon="chan-foxclassics" command="channel" extra="foxclassics" showOn="true" />
+				<item type="button" icon="chan-foxfooty" command="channel" extra="foxfooty" showOn="true" />
+				<item type="button" icon="chan-foxnews" command="channel" extra="foxnews" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-foxsports1" command="channel" extra="foxsports1" showOn="true" />
+				<item type="button" icon="chan-foxsports2" command="channel" extra="foxsports2" showOn="true" />
+				<item type="button" icon="chan-fyi" command="channel" extra="fyi" showOn="true" />
+				<item type="button" icon="chan-games" command="channel" extra="games" showOn="true" />
+				<item type="button" icon="chan-hallmark" command="channel" extra="hallmark" showOn="true" />
+				<item type="button" icon="chan-history" command="channel" extra="history" showOn="true" />
+			</row>
+		</control>
+		<control type="channelControl2">
+			<row>
+				<item type="button" icon="chan-lbc" command="channel" extra="lbc" showOn="true" />
+				<item type="button" icon="chan-lifestyle" command="channel" extra="lifestyle" showOn="true" />
+				<item type="button" icon="chan-mainevent" command="channel" extra="mainevent" showOn="true" />
+				<item type="button" icon="chan-maineventadults" command="channel" extra="maineventadults" showOn="true" />
+				<item type="button" icon="chan-maineventadultsftv" command="channel" extra="maineventadultsftv" showOn="true" />
+				<item type="button" icon="chan-movieextra" command="channel" extra="movieextra" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-moviegreats" command="channel" extra="moviegreats" showOn="true" />
+				<item type="button" icon="chan-movieone" command="channel" extra="movieone" showOn="true" />
+				<item type="button" icon="chan-mtv" command="channel" extra="mtv" showOn="true" />
+				<item type="button" icon="chan-musicmax" command="channel" extra="musicmax" showOn="true" />
+				<item type="button" icon="chan-nbn" command="channel" extra="nbn" showOn="true" />
+				<item type="button" icon="chan-ng" command="channel" extra="ng" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-nickelodeon" command="channel" extra="nickelodeon" showOn="true" />
+				<item type="button" icon="chan-odyssey" command="channel" extra="odyssey" showOn="true" />
+				<item type="button" icon="chan-ovation" command="channel" extra="ovation" showOn="true" />
+				<item type="button" icon="chan-prime" command="channel" extra="prime" showOn="true" />
+				<item type="button" icon="chan-rai" command="channel" extra="rai" showOn="true" />
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-showtime" command="channel" extra="showtime" showOn="true" />
+				<item type="button" icon="chan-showtime2" command="channel" extra="showtime2" showOn="true" />
+				<item type="button" icon="chan-skynews" command="channel" extra="skynews" showOn="true" />
+				<item type="button" icon="chan-skyracing" command="channel" extra="skyracing" showOn="true" />
+				<item type="button" icon="chan-tcm" command="channel" extra="tcm" showOn="true" />
+				<item type="button" icon="chan-tv1" command="channel" extra="tv1" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-tvsn" command="channel" extra="tvsn" showOn="true" />
+				<item type="button" icon="chan-uktv" command="channel" extra="uktv" showOn="true" />
+				<item type="button" icon="chan-v" command="channel" extra="v" showOn="true" />
+				<item type="button" icon="chan-w" command="channel" extra="w" showOn="true" />
+				<item type="button" icon="chan-weatherchannel" command="channel" extra="weatherchannel" showOn="true" />
+				<item type="button" icon="chan-win" command="channel" extra="win" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-worldmovies" command="channel" extra="worldmovies" showOn="true" />
+			</row>
+		</control>
+		<control type="rawKeyPad">
+			<row>
+				<item type="button" label="7" command="keyPress" extra="07" />
+				<item type="button" label="8" command="keyPress" extra="08" />
+				<item type="button" label="9" command="keyPress" extra="09" />
+			</row>
+			<row>
+				<item type="button" label="4" command="keyPress" extra="04" />
+				<item type="button" label="5" command="keyPress" extra="05" />
+				<item type="button" label="6" command="keyPress" extra="06" />
+			</row>
+			<row>
+				<item type="button" label="1" command="keyPress" extra="01" />
+				<item type="button" label="2" command="keyPress" extra="02" />
+				<item type="button" label="3" command="keyPress" extra="03" />
+			</row>
+			<row>
+				<item type="button" label="*" command="keyPress" extra="0B" />
+				<item type="button" label="#" command="keyPress" extra="0C" />
+				<item type="button" label="F" command="keyPress" extra="0A" />
+			</row>
+			<row>
+				<item type="button" label="Away" command="keyPress" extra="0D" width="50" />
+				<item type="button" icon="moon" command="keyPress" extra="0E" />
+				<item type="button" icon="sun" command="keyPress" extra="0F" />
+			</row>
+		</control>
+		<control type="officeVideo">
+			<onShow command="" key="" extra=""/>;
+			<onClose command="" key="" extra=""/>
+			<row>
+				<item type="video" src="http://172.16.3.150/__live.jpg?&&&" format="jpg" refreshRate="500" videoWidth="240" videoHeight="180" />
+				<!-- <item type="video" src="sample.swf" videoWidth="240" videoHeight="180" /> -->
+				<!--item type="video" src="sample.flv" videoWidth="240" videoHeight="180" /-->
+				<!-- <item type="mediaPlayer" src="sample.flv" videoWidth="240" videoHeight="180" /> -->
+			</row>
+		</control>
+		<control type="frontGateVideo">
+			<onShow command="" key="" extra=""/>;
+			<onClose command="" key="" extra=""/>
+			<row>
+				<item type="video" src="http://172.16.3.200/client-core/lib/camera/sample.swf" format="swf" videoWidth="240" videoHeight="180" />
+				<!--item type="video" src="sample.flv" videoWidth="240" videoHeight="180" /-->
+				<!-- <item type="mediaPlayer" src="sample.flv" videoWidth="240" videoHeight="180" /> -->
+			</row>
+			<row>
+				<item type="button" label="Open Gate" key="FRONT_GATE" command="on" />
+			</row>
+		</control>
+		<control type="mediaPlayerSample">
+			<row>
+				<item type="mediaPlayer" />
+			</row>
+		</control>
+	</controlTypes>
+</application> 

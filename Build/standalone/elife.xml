@@ -1,0 +1,7 @@
+<client>
+	<setting name="serverAddress" value="127.0.0.1" />
+	<setting name="applicationXML" value="sample.xml" />
+	<setting name="fullScreen" value="false" />
+	<setting name="hideMouseCursor" value="false" />
+	<setting name="debugMode" value="true" />
+</client>
