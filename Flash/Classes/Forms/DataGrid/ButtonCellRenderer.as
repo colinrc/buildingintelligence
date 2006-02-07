@@ -33,7 +33,6 @@ class Forms.DataGrid.ButtonCellRenderer extends UIComponent {
 			button[attribute] = itemObject.attributes[attribute];
 		}
 		button.callBack = itemObject.callBack;
-		//button.addEventListener("click", itemObject.callBack);
 	}
 	function getPreferredHeight(Void):Number {
 		return 16;

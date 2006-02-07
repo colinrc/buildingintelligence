@@ -18,7 +18,7 @@
 	}
 	public function toXML():XMLNode {
 		var newCatalogue = new XMLNode(1, "CATALOGUE");
-		if(name != ""){
+		if (name != "") {
 			newCatalogue.attributes["NAME"] = name;
 		}
 		for (var item in items) {
@@ -29,12 +29,12 @@
 	public function getName():String {
 		return "Catalogue: "+name;
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
 		return newNode;
 	}
-	public function setData(newData:Object){
+	public function setData(newData:Object) {
 		name = newData.name;
 		items = newData.items;
 	}
@@ -43,7 +43,7 @@
 	}
 	public function setXML(newData:XMLNode):Void {
 		name = "";
-		if(newData.attributes["NAME"] != undefined){
+		if (newData.attributes["NAME"] != undefined) {
 			name = newData.attributes["NAME"];
 		}
 		items = new Array();

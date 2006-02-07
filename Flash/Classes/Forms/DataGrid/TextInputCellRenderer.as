@@ -1,7 +1,6 @@
 ﻿import mx.core.UIComponent;
-import mx.controls.TextInput;
+//import mx.controls.TextInput;
 class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
-	var input:MovieClip;
 	var label:MovieClip;
 	var listOwner:MovieClip;
 	// the reference we receive to the list
@@ -12,37 +11,53 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 	function TextInputCellRenderer() {
 	}
 	function createChildren(Void):Void {
-		input = createObject("TextInput", "TextInput", 2, {styleName:this, owner:this});
-		input.addEventListener("change", this);
 		label = createObject("Label", "Label", 1, {styleName:this, owner:this});
-		label._x = -2;
 		size();
 	}
 	function size(Void):Void {
-		input.setSize(150, 22);
-		//---set this to whatever the width of the column, and the height of the dataGrid rows.
-		input._x = -2;
-		input._y = 0;
+		if (label._name == "Label") {
+			label.setSize(__width, __height);
+			label._x = 2;
+			label._y = 2;
+		} else if (label._name == "TextInput") {
+			label.setSize(__width-2, listOwner.rowHeight);
+			label._x = 0;
+			label._y = 0;
+		}
 	}
 	function setValue(str:String, item:Object, sel:Boolean):Void {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		var itemObject = listOwner.dataProvider[itemLocation.itemIndex][columnName];
 		if (itemObject.sel) {
-			label._visible = false;
-			input._visible = (item != undefined);
-			input.maxChars = itemObject.restrictions.maxChars;
-			input.restrict = itemObject.restrictions.restrict;
-			input.text = itemObject.label;
+			if (label._name != "TextInput") {
+				label = createObject("TextInput", "TextInput", 1, {styleName:this, owner:this});
+				label.addEventListener("change", this);
+				label._visible = (item != undefined);
+				label.maxChars = itemObject.restrictions.maxChars;
+				label.restrict = itemObject.restrictions.restrict;
+				label.text = itemObject.label;
+				label.setFocus();
+				size();
+			}
 		} else {
-			input._visible = false;
+			if (label._name != "Label") {
+				label = createObject("Label", "Label", 1, {styleName:this, owner:this});
+				size();
+			}
 			label._visible = (item != undefined);
 			label.text = itemObject.label;
 		}
 	}
+	function getPreferredHeight(Void):Number {
+		return 25;
+	}
+	function getPreferredWidth(Void):Number {
+		return 20;
+	}
 	function change() {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
-		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = input.text;
+		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
 	}
 }

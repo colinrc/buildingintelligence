@@ -28,6 +28,7 @@ class Forms.DataGrid.ColourCellRenderer extends UIComponent {
 		var h = __height;
 		var w = __width;
 		colour.setSize(w-2, Math.max(h, listOwner.rowHeight-2));
+		label.setSize(w,h);
 	}
 	function setValue(str:String, item:Object, sel:Boolean):Void {
 		var itemLocation = getCellIndex();

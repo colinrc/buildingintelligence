@@ -3,16 +3,18 @@ import mx.utils.Delegate;
 class Forms.Project.Device.Parameters extends Forms.BaseForm {
 	private var node:XMLNode;
 	private var params_dg:DataGrid;
-	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
-	private var name_ti:TextInput;
-	private var value_ti:TextInput;
+	private var dataGridHandler:Object;	
 	public function init() {
-		params_dg.labelFunction = function(item_obj:Object):String  {
-			var label_str:String = "Name: "+item_obj.name+" - Value: "+item_obj.value;
-			return label_str;
-		};
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.rescrict = "";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(params_dg);
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
+		dataGridHandler.addTextInputColumn("value", "Value", restrictions);
+		var DP = new Array();				
 		for (var child in node.childNodes) {
 			var newParam = new Object();
 			newParam.name = "";
@@ -23,54 +25,28 @@ class Forms.Project.Device.Parameters extends Forms.BaseForm {
 			if (node.childNodes[child].attributes["VALUE"] != undefined) {
 				newParam.value = node.childNodes[child].attributes["VALUE"];
 			}
-			params_dg.addItem(newParam);
+			DP.push(newParam);
 		}
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.setDataGridDataProvider(DP);		
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
-		params_dg.addEventListener("change", Delegate.create(this, itemChange));
 	}
 	private function deleteItem() {
-		params_dg.removeItemAt(params_dg.selectedIndex);
-		params_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function updateItem() {
-		if (params_dg.selectedIndex != undefined) {
-			params_dg.getItemAt(params_dg.selectedIndex).name = name_ti.text;
-			params_dg.getItemAt(params_dg.selectedIndex).value = value_ti.text;
-		} else {
-			params_dg.addItem({name:name_ti.text, value:value_ti.text});
-		}
-		params_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.removeRow();
 	}
 	private function newItem() {
-		params_dg.selectedIndex = undefined;
-		name_ti.text = "";
-		value_ti.text = "";
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function itemChange(evtObj) {
-		name_ti.text = params_dg.selectedItem.name;
-		value_ti.text = params_dg.selectedItem.value;
-		update_btn.enabled = true;
-		delete_btn.enabled = true;
+		dataGridHandler.addBlankRow();
 	}
 	public function getData():Object {
 		var parameters = new XMLNode(1, "PARAMETERS");
-		for (var index = 0; index<params_dg.length; index++) {
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var item = new XMLNode(1, "ITEM");
-			if (params_dg.getItemAt(index).name != "") {
-				item.attributes["NAME"] = params_dg.getItemAt(index).name;
+			if (DP[index].name != "") {
+				item.attributes["NAME"] = DP[index].name;
 			}
-			if (params_dg.getItemAt(index).value != "") {
-				item.attributes["VALUE"] = params_dg.getItemAt(index).value;
+			if (DP[index].value != "") {
+				item.attributes["VALUE"] = DP[index].value;
 			}
 			parameters.appendChild(item);
 		}

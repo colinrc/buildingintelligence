@@ -7,55 +7,39 @@ class Forms.Project.Messages extends Forms.BaseForm {
 	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
-	private var name_ti:TextInput;
-	private var value_ti:TextInput;
+	private var dataGridHandler:Object;
 	public function init() {
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.rescrict = "";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(items_dg);
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
+		dataGridHandler.addTextInputColumn("value", "Value", restrictions);		
+		var DP = new Array();		
 		for (var child in node.childNodes) {
-			items_dg.addItem({name:node.childNodes[child].attributes["NAME"], value:node.childNodes[child].attributes["VALUE"]});
+			var newMessage = new Object();
+			newMessage.name = node.childNodes[child].attributes["NAME"];
+			newMessage.value = node.childNodes[child].attributes["VALUE"];
+			DP.push(newMessage);
 		}
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
-		items_dg.addEventListener("change", Delegate.create(this, itemChange));
 	}
 	private function deleteItem() {
-		items_dg.removeItemAt(items_dg.selectedIndex);
-		items_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function updateItem() {
-		if (items_dg.selectedIndex != undefined) {
-			items_dg.getItemAt(items_dg.selectedIndex).name = name_ti.text;
-			items_dg.getItemAt(items_dg.selectedIndex).value = value_ti.text;
-		} else {
-			items_dg.addItem({name:name_ti.text, value:value_ti.text});
-		}
-		items_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.removeRow();
 	}
 	private function newItem() {
-		items_dg.selectedIndex = undefined;
-		name_ti.text = "";
-		value_ti.text = "";
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function itemChange(evtObj) {
-		name_ti.text = items_dg.selectedItem.name;
-		value_ti.text = items_dg.selectedItem.value;
-		update_btn.enabled = true;
-		delete_btn.enabled = true;
-	}
+		dataGridHandler.addBlankRow();
+	}	
 	private function getData():XMLNode {
 		var newItems = new XMLNode(1, "CALENDAR_MESSAGES");
-		for (var index = 0; index<items_dg.length; index++) {
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var item = new XMLNode(1, "ITEM");
-			item.attributes["NAME"] = items_dg.getItemAt(index).name;
-			item.attributes["VALUE"] = items_dg.getItemAt(index).value;
+			item.attributes["NAME"] = DP[index].name;
+			item.attributes["VALUE"] = DP[index].value;
 			newItems.appendChild(item);
 		}
 		return newItems;

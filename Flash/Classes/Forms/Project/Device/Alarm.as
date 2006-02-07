@@ -14,46 +14,43 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 		restrictions.rescrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(alarms_dg);
-		dataGridHandler.addTextInputColumn("dname","eLife Name",restrictions);		
+		dataGridHandler.addTextInputColumn("display_name","eLife Name",restrictions);		
 		dataGridHandler.addTextInputColumn("key","Key",restrictions);
 		var DP = new Array();
 		for (var alarm in alarms) {
 			var newAlarm = new Object();
 			newAlarm.key = "";
-			newAlarm.dname = "";
+			newAlarm.display_name = "";
 			if(alarms[alarm].attributes["KEY"]!=undefined){
 				newAlarm.key = alarms[alarm].attributes["KEY"];
 			}
 			if(alarms[alarm].attributes["DISPLAY_NAME"]!=undefined){
-				newAlarm.dname = alarms[alarm].attributes["DISPLAY_NAME"];
+				newAlarm.display_name = alarms[alarm].attributes["DISPLAY_NAME"];
 			}
 			DP.push(newAlarm);
 		}
 		dataGridHandler.setDataGridDataProvider(DP);
-		delete_btn.enabled = false;
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();
-		delete_btn.enabled = false;
 	}
 	private function newItem() {
 		dataGridHandler.addBlankRow();
-		delete_btn.enabled = false;
 	}
 	public function save():Void {
 		var newAlarms = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {
 			var item = new XMLNode(1, "ALARM");
-			//if(DP[index]["key"] != ""){
-				item.attributes["KEY"] = DP[index]["key"];
-			//}
-			//if(DP[index]["dname"] != ""){
-				item.attributes["DISPLAY_NAME"] = DP[index]["dname"];
- 		    //}
+			if(DP[index].key != ""){
+				item.attributes["KEY"] = DP[index].key;
+			}
+			if(DP[index].display_name != ""){
+				item.attributes["DISPLAY_NAME"] = DP[index].display_name;
+ 		    }
 			newAlarms.push(item);
 		}
 		_global.left_tree.selectedNode.object.setData({alarms:newAlarms});

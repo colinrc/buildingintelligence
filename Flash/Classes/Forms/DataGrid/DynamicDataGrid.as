@@ -1,4 +1,4 @@
-﻿import mx.controls.DataGrid;
+﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.DataGrid.DynamicDataGrid {
 	private var my_dg:DataGrid;
@@ -12,14 +12,16 @@ class Forms.DataGrid.DynamicDataGrid {
 	}
 	public function setDataGrid(new_dg:DataGrid) {
 		my_dg = new_dg;
-		my_dg.setStyle("borderStyle", "none");
 		my_dg.editable = false;
 		my_dg.addEventListener("cellPress", Delegate.create(this, clickProcessor));
+		my_dg.vScrollPolicy = "auto";		
+		my_dg.hScrollPolicy = "auto";
 	}
 	public function addTextInputColumn(name:String, heading:String, restrictions:Object) {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "TextInputCellRenderer";
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 		columns[name] = new Object();
 		columns[name].type = "text";
 		columns[name].restrictions = restrictions;
@@ -28,6 +30,7 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CheckCellRenderer";
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 50;		
 		columns[name] = new Object();
 		columns[name].type = "check";
 		columns[name].values = values;
@@ -36,6 +39,7 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ComboBoxCellRenderer";
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;		
 		columns[name] = new Object();
 		columns[name].type = "combo";
 		columns[name].DP = DP;
@@ -44,6 +48,7 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ColourCellRenderer";
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;		
 		columns[name] = new Object();
 		columns[name].type = "colour";
 	}
@@ -51,6 +56,7 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ButtonCellRenderer";
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;		
 		buttonColumns[name] = new Object();
 		buttonColumns[name].columns = columns;
 		buttonColumns[name].callBack = callBack;
@@ -119,6 +125,7 @@ class Forms.DataGrid.DynamicDataGrid {
 			}
 			processed_dp.push(newRow);
 		}
+		my_dg.dataProvider.updateViews("change");
 		return processed_dp;
 	}
 	public function addBlankRow() {
@@ -141,7 +148,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				newRow[column] = newCheck;
 				break;
 			case "combo" :
-				var newCombo = {label:columns[column].DP[0], sel:false, DP:columns[column].DP};
+				var newCombo = {label:columns[column].DP[0].label, sel:false, DP:columns[column].DP};
 				newCombo.toString = function():String  {
 					return this.label;
 				};
@@ -162,21 +169,19 @@ class Forms.DataGrid.DynamicDataGrid {
 			newButton.callBack = buttonColumns[column].callBack;
 			newRow[column] = newButton;
 		}
-		my_dg.dataProvider.push(newRow);
-		var tempDP = my_dg.dataProvider;
-		my_dg.dataProvider = null;
-		my_dg.dataProvider = tempDP;
+		my_dg.dataProvider.addItemAt(0,newRow);
+		my_dg.dataProvider.updateViews("change");
+		my_dg.vPosition = 0;
+		my_dg.selectedIndex = 0;
+		lastClick.itemIndex = my_dg.selectedIndex;				
 	}
 	public function removeRow() {
 		my_dg.dataProvider.removeItemAt(my_dg.selectedIndex);
 		my_dg.selectedIndex = undefined;
-		var tempDP = my_dg.dataProvider;
-		my_dg.dataProvider = null;
-		my_dg.dataProvider = tempDP;
 		lastClick = undefined;
+		my_dg.dataProvider.updateViews("change");
 	}
 	function clickProcessor(event) {
-		my_dg.selectedIndex = event.itemIndex;
 		if ((event.itemIndex<my_dg.dataProvider.length) && (event.columnIndex<my_dg.columnNames.length)) {
 			for (var item in my_dg.dataProvider) {
 				for (var column in my_dg.dataProvider[item]) {
@@ -189,7 +194,7 @@ class Forms.DataGrid.DynamicDataGrid {
 					}
 				}
 			}
-			if ((lastClick.itemIndex == event.itemIndex) && (lastClick.columnIndex == event.columnIndex)) {
+			if ((lastClick.itemIndex == event.itemIndex) /*&& (lastClick.columnIndex == event.columnIndex)*/) {
 				switch (columns[my_dg.columnNames[event.columnIndex]].type) {
 				case "combo" :
 				case "text" :
@@ -197,11 +202,9 @@ class Forms.DataGrid.DynamicDataGrid {
 					my_dg.dataProvider[event.itemIndex][my_dg.columnNames[event.columnIndex]].sel = true;
 					break;
 				}
-				var tempDP = my_dg.dataProvider;
-				my_dg.dataProvider = null;
-				my_dg.dataProvider = tempDP;
-			}
-			lastClick = event;
+			}		
 		}
+		my_dg.dataProvider.updateViews("change");
+		lastClick = event;
 	}
 }

@@ -4,15 +4,24 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var contacts:Array;
 	private var contacts_dg:DataGrid;
-	private var update_btn:Button;
+	private var dataGridHandler:Object;
 	private var new_btn:Button;
 	private var delete_btn:Button;
-	private var name_ti:TextInput;
-	private var dname_ti:TextInput;
-	private var key_ti:TextInput;
-	private var box_ti:TextInput;
-	private var active_chk:CheckBox;
 	public function init() {
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.rescrict = "";
+		var values = new Object();
+		values.True = "Y";
+		values.False = "N";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(contacts_dg);
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
+		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
+		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
+		dataGridHandler.addTextInputColumn("box", "Box", restrictions);
+		dataGridHandler.addCheckColumn("active", "Active", values);
+		var DP = new Array();
 		for (var contact in contacts) {
 			var newContact = new Object();
 			newContact.name = "";
@@ -35,92 +44,41 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 			if (contacts[contact].attributes["BOX"] != undefined) {
 				newContact.box = contacts[contact].attributes["BOX"];
 			}
-			contacts_dg.addItem(newContact);
+			DP.push(newContact);
 		}
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
-		contacts_dg.addEventListener("change", Delegate.create(this, itemChange));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
-		contacts_dg.removeItemAt(contacts_dg.selectedIndex);
-		contacts_dg.selectedIndex = undefined;
-		name_ti.text = "";
-		dname_ti.text = "";
-		key_ti.text = "";
-		box_ti.text = "";
-		active_chk.selected = false;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function updateItem() {
-		if (active_chk.selected) {
-			var active = "Y";
-		} else {
-			var active = "N";
-		}
-		if (contacts_dg.selectedIndex != undefined) {
-			contacts_dg.getItemAt(contacts_dg.selectedIndex).name = name_ti.text;
-			contacts_dg.getItemAt(contacts_dg.selectedIndex).key = key_ti.text;
-			contacts_dg.getItemAt(contacts_dg.selectedIndex).display_name = dname_ti.text;
-			contacts_dg.getItemAt(contacts_dg.selectedIndex).active = active;
-			contacts_dg.getItemAt(contacts_dg.selectedIndex).box = box_ti.text;
-		} else {
-			contacts_dg.addItem({name:name_ti.text, display_name:dname_ti.text, key:key_ti.text, active:active, box:box_ti.text});
-		}
-		contacts_dg.selectedIndex = undefined;
-		active_chk.selected = false;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.removeRow();
 	}
 	private function newItem() {
-		contacts_dg.selectedIndex = undefined;
-		name_ti.text = "";
-		dname_ti.text = "";
-		key_ti.text = "";
-		box_ti.text = "";
-		active_chk.selected = false;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function itemChange(evtObj) {
-		name_ti.text = contacts_dg.selectedItem.name;
-		dname_ti.text = contacts_dg.selectedItem.display_name;
-		key_ti.text = contacts_dg.selectedItem.key;
-		box_ti.text = contacts_dg.selectedItem.box;
-		var active = contacts_dg.selectedItem.active;
-		if (active == "N") {
-			active_chk.selected = false;
-		} else {
-			active_chk.selected = true;
-		}
-		update_btn.enabled = true;
-		delete_btn.enabled = true;
-	}
+		dataGridHandler.addBlankRow();
+	}	
 	public function save():Void {
 		var newContacts = new Array();
-		for (var index = 0; index<contacts_dg.length; index++) {
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var newContact = new XMLNode(1, "CONTACT_CLOSURE");
-			if (contacts_dg.getItemAt(index).name != "") {
-				newContact.attributes["NAME"] = contacts_dg.getItemAt(index).name;
+			if (DP[index].name != "") {
+				newContact.attributes["NAME"] = DP[index].name;
 			}
-			if (contacts_dg.getItemAt(index).display_name != "") {
-				newContact.attributes["DISPLAY_NAME"] = contacts_dg.getItemAt(index).display_name;
+			if (DP[index].display_name != "") {
+				newContact.attributes["DISPLAY_NAME"] = DP[index].display_name;
 			}
-			if (contacts_dg.getItemAt(index).key != "") {
-				newContact.attributes["KEY"] = contacts_dg.getItemAt(index).key;
+			if (DP[index].key != "") {
+				newContact.attributes["KEY"] = DP[index].key;
 			}
-			if (contacts_dg.getItemAt(index).active != "") {
-				newContact.attributes["ACTIVE"] = contacts_dg.getItemAt(index).active;
+			if (DP[index].active != "") {
+				newContact.attributes["ACTIVE"] = DP[index].active;
 			}
-			if (contacts_dg.getItemAt(index).box != "") {
-				newContact.attributes["BOX"] = contacts_dg.getItemAt(index).box;
+			if (DP[index].box != "") {
+				newContact.attributes["BOX"] = DP[index].box;
 			}
 			newContacts.push(newContact);
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({contacts:newContacts}));
+		_global.left_tree.selectedNode.object.setData({contacts:newContacts});
 	}
 }

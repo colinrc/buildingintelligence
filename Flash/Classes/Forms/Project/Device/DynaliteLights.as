@@ -4,24 +4,32 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var lights:Array;
 	private var lights_dg:DataGrid;
-	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
-	private var name_ti:TextInput;
-	private var dname_ti:TextInput;
-	private var key_ti:TextInput;
-	private var area_ti:TextInput;
-	private var power_ti:TextInput;
-	private var relay_chk:CheckBox;
-	private var active_chk:CheckBox;
+	private var dataGridHandler:Object;	
 	public function init() {
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.rescrict = "";
+		var values = new Object();
+		values.True = "Y";
+		values.False = "N";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(lights_dg);
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
+		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
+		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
+		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions);
+		dataGridHandler.addCheckColumn("active", "Active", values);
+		dataGridHandler.addCheckColumn("relay", "Relay", values);		
+		var DP = new Array();
 		for (var light in lights) {
 			var newLight = new Object();
 			newLight.name = "";
 			newLight.display_name = "";
 			newLight.key = "";
-			newLight.active = "";
-			newLight.power = "Y";
+			newLight.active = "Y";
+			newLight.power = "";
 			newLight.relay = "Y";
 			if (lights[light].attributes["NAME"] != undefined) {
 				newLight.name = lights[light].attributes["NAME"];
@@ -44,116 +52,47 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 			if (lights[light].attributes["RELAY"] != undefined) {
 				newLight.relay = lights[light].attributes["RELAY"];
 			}
-			lights_dg.addItem(newLight);
+			DP.push(newLight);
 		}
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
-		lights_dg.addEventListener("change", Delegate.create(this, itemChange));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
-		lights_dg.removeItemAt(lights_dg.selectedIndex);
-		lights_dg.selectedIndex = undefined;
-		name_ti.text = "";
-		dname_ti.text = "";
-		key_ti.text = "";
-		area_ti.text = "";
-		power_ti.text = "";
-		active_chk.selected = false;
-		relay_chk.selected = false;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function updateItem() {
-		if (relay_chk.selected) {
-			var relay = "Y";
-		} else {
-			var relay = "N";
-		}
-		if (active_chk.selected) {
-			var active = "Y";
-		} else {
-			var active = "N";
-		}
-		if (lights_dg.selectedIndex != undefined) {
-			lights_dg.getItemAt(lights_dg.selectedIndex).name = name_ti.text;
-			lights_dg.getItemAt(lights_dg.selectedIndex).key = key_ti.text;
-			lights_dg.getItemAt(lights_dg.selectedIndex).display_name = dname_ti.text;
-			lights_dg.getItemAt(lights_dg.selectedIndex).active = active;
-			lights_dg.getItemAt(lights_dg.selectedIndex).area = area_ti.text;
-			lights_dg.getItemAt(lights_dg.selectedIndex).power = power_ti.text;
-		} else {
-			lights_dg.addItem({name:name_ti.text, display_name:dname_ti.text, key:key_ti.text, active:active, area:area_ti.text, relay:relay, power:power_ti.text});
-		}
-		lights_dg.selectedIndex = undefined;
-		active_chk.selected = false;
-		relay_chk.selected = false;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.removeRow();
 	}
 	private function newItem() {
-		lights_dg.selectedIndex = undefined;
-		name_ti.text = "";
-		dname_ti.text = "";
-		key_ti.text = "";
-		area_ti.text = "";
-		power_ti.text = "";
-		active_chk.selected = false;
-		relay_chk.selected = false;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function itemChange(evtObj) {
-		name_ti.text = lights_dg.selectedItem.name;
-		dname_ti.text = lights_dg.selectedItem.display_name;
-		key_ti.text = lights_dg.selectedItem.key;
-		power_ti.text = lights_dg.selectedItem.power;
-		area_ti.text = lights_dg.selectedItem.area;
-		var active = lights_dg.selectedItem.active;
-		if (active == "N") {
-			active_chk.selected = false;
-		} else {
-			active_chk.selected = true;
-		}
-		var relay = lights_dg.selectedItem.relay;
-		if (relay == "N") {
-			relay_chk.selected = false;
-		} else {
-			relay_chk.selected = true;
-		}
-		update_btn.enabled = true;
-		delete_btn.enabled = true;
+		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
 		var newLights = new Array();
-		for (var index = 0; index<lights_dg.length; index++) {
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var newLight = new XMLNode(1, "LIGHT_DYNALITE");
-			if (lights_dg.getItemAt(index).name != "") {
-				newLight.attributes["NAME"] = lights_dg.getItemAt(index).name;
+			if (DP[index].name != "") {
+				newLight.attributes["NAME"] = DP[index].name;
 			}
-			if (lights_dg.getItemAt(index).display_name != "") {
-				newLight.attributes["DISPLAY_NAME"] = lights_dg.getItemAt(index).display_name;
+			if (DP[index].display_name != "") {
+				newLight.attributes["DISPLAY_NAME"] = DP[index].display_name;
 			}
-			if (lights_dg.getItemAt(index).key != "") {
-				newLight.attributes["KEY"] = lights_dg.getItemAt(index).key;
+			if (DP[index].key != "") {
+				newLight.attributes["KEY"] = DP[index].key;
 			}
-			if (lights_dg.getItemAt(index).active != "") {
-				newLight.attributes["ACTIVE"] = lights_dg.getItemAt(index).active;
+			if (DP[index].active != "") {
+				newLight.attributes["ACTIVE"] = DP[index].active;
 			}
-			if (lights_dg.getItemAt(index).area != "") {
-				newLight.attributes["AREA"] = lights_dg.getItemAt(index).area;
+			if (DP[index].area != "") {
+				newLight.attributes["AREA"] = DP[index].area;
 			}
-			if (lights_dg.getItemAt(index).power != "") {
-				newLight.attributes["POWER_RATING"] = lights_dg.getItemAt(index).power;
+			if (DP[index].power != "") {
+				newLight.attributes["POWER_RATING"] = DP[index].power;
 			}
-			if (lights_dg.getItemAt(index).relay != "") {
-				newLight.attributes["RELAY"] = lights_dg.getItemAt(index).relay;
+			if (DP[index].relay != "") {
+				newLight.attributes["RELAY"] = DP[index].relay;
 			}
 			newLights.push(newLight);
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({lights:newLights}));
+		_global.left_tree.selectedNode.object.setData({lights:newLights});
 	}
 }

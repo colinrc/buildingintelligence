@@ -1,9 +1,9 @@
 ﻿class Objects.Server.Cameras extends Objects.BaseElement {
 	private var container:String;
 	private var cameras:Array;
-	public function getKeys():Array{
+	public function getKeys():Array {
 		var tempKeys = new Array();
-		for(var camera in cameras){
+		for (var camera in cameras) {
 			tempKeys.push(cameras[camera].attributes["DISPLAY_NAME"]);
 		}
 		return tempKeys;
@@ -20,7 +20,7 @@
 			if ((cameras[camera].attributes["DISPLAY_NAME"] == undefined) || (cameras[camera].attributes["DISPLAY_NAME"] == "")) {
 				flag = false;
 			}
-			//does zoom need to be checked?
+			//does zoom need to be checked? 
 		}
 		return flag;
 	}
@@ -37,12 +37,12 @@
 	public function getName():String {
 		return "Cameras";
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
 		return newNode;
 	}
-	public function setData(newData:Object){
+	public function setData(newData:Object) {
 		cameras = newData.cameras;
 	}
 	public function getData():Object {

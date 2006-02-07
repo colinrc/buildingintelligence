@@ -5,15 +5,10 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 	private var toggle_type:String;
 	private var toggles:Array;
 	private var toggle_dg:DataGrid;
-	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
+	private var dataGridHandler:Object;
 	private var title_lb:Label;
-	private var name_ti:TextInput;
-	private var key_ti:TextInput;
-	private var dname_ti:TextInput;
-	private var power_ti:TextInput;
-	private var active_chk:CheckBox;
 	public function init() {
 		switch (toggle_type) {
 		case "TOGGLE_INPUT" :
@@ -26,6 +21,20 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 			title_lb.text = "Pulse Outputs";
 			break;
 		}
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.rescrict = "";
+		var values = new Object();
+		values.True = "Y";
+		values.False = "N";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(toggle_dg);
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
+		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
+		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
+		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions);
+		dataGridHandler.addCheckColumn("active", "Active", values);
+		var DP = new Array();
 		for (var toggle in toggles) {
 			var newToggle = new Object();
 			newToggle.name = "";
@@ -48,88 +57,38 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 			if (toggles[toggle].attributes["ACTIVE"] != undefined) {
 				newToggle.active = toggles[toggle].attributes["ACTIVE"];
 			}
-			toggle_dg.addItem(newToggle);
+			DP.push(newToggle);
 		}
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-		active_chk.selected = false;
+		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
-		toggle_dg.addEventListener("change", Delegate.create(this, itemChange));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
-		toggle_dg.removeItemAt(toggle_dg.selectedIndex);
-		toggle_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-		active_chk.selected = false;
-		name_ti.text = "";
-		dname_ti.text = "";
-		key_ti.text = "";
-		power_ti.text = "";
-	}
-	private function updateItem() {
-		if (active_chk.selected) {
-			var active = "Y";
-		} else {
-			var active = "N";
-		}
-		if (toggle_dg.selectedIndex != undefined) {
-			toggle_dg.getItemAt(toggle_dg.selectedIndex).name = name_ti.text;
-			toggle_dg.getItemAt(toggle_dg.selectedIndex).key = key_ti.text;
-			toggle_dg.getItemAt(toggle_dg.selectedIndex).display_name = dname_ti.text;
-			toggle_dg.getItemAt(toggle_dg.selectedIndex).power = power_ti.text;
-			toggle_dg.getItemAt(toggle_dg.selectedIndex).active = active;
-		} else {
-			toggle_dg.addItem({name:name_ti.text, key:key_ti.text, display_name:dname_ti.text, power:power_ti.text, active:active});
-		}
-		toggle_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.removeRow();
 	}
 	private function newItem() {
-		toggle_dg.selectedIndex = undefined;
-		active_chk.selected = false;
-		name_ti.text = "";
-		dname_ti.text = "";
-		key_ti.text = "";
-		power_ti.text = "";
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function itemChange(evtObj) {
-		name_ti.text = toggle_dg.selectedItem.name;
-		key_ti.text = toggle_dg.selectedItem.key;
-		dname_ti.text = toggle_dg.selectedItem.display_name;
-		power_ti.text = toggle_dg.selectedItem.power;
-		if (toggle_dg.selectedItem.active == "N") {
-			active_chk.selected = false;
-		} else {
-			active_chk.selected = true;
-		}
-		update_btn.enabled = true;
-		delete_btn.enabled = true;
+		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
 		var newToggles = new Array();
-		for (var index = 0; index<toggle_dg.length; index++) {
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var toggleNode = new XMLNode(1, toggle_type);
-			if (toggle_dg.getItemAt(index).name != "") {
-				toggleNode.attributes["NAME"] = toggle_dg.getItemAt(index).name;
+			if (DP[index].name != "") {
+				toggleNode.attributes["NAME"] = DP[index].name;
 			}
-			if (toggle_dg.getItemAt(index).key != "") {
-				toggleNode.attributes["KEY"] = toggle_dg.getItemAt(index).key;
+			if (DP[index].key != "") {
+				toggleNode.attributes["KEY"] = DP[index].key;
 			}
-			if (toggle_dg.getItemAt(index).display_name != "") {
-				toggleNode.attributes["DISPLAY_NAME"] = toggle_dg.getItemAt(index).display_name;
+			if (DP[index].display_name != "") {
+				toggleNode.attributes["DISPLAY_NAME"] = DP[index].display_name;
 			}
-			if (toggle_dg.getItemAt(index).active != "") {
-				toggleNode.attributes["ACTIVE"] = toggle_dg.getItemAt(index).active;
+			if (DP[index].active != "") {
+				toggleNode.attributes["ACTIVE"] = DP[index].active;
 			}
-			if (toggle_dg.getItemAt(index).power != "") {
-				toggleNode.attributes["POWER_RATING"] = toggle_dg.getItemAt(index).power;
+			if (DP[index].power != "") {
+				toggleNode.attributes["POWER_RATING"] = DP[index].power;
 			}
 			newToggles.push(toggleNode);
 		}

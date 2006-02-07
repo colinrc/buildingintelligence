@@ -1,6 +1,6 @@
 ﻿class Objects.Server.Device extends Objects.BaseElement{
-	private var device_type:String;
-	private var description:String;
+	public var device_type:String;
+	public var description:String;
 	private var active:String;
 	private var catalogues:Objects.Server.Catalogues;
 	private var connection:XMLNode;

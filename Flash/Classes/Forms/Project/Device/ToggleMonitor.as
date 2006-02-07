@@ -3,25 +3,30 @@ import mx.utils.Delegate;
 class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 	private var monitors:Array;
 	private var monitors_dg:DataGrid;
-	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
-	private var key_ti:TextInput;
-	private var name_ti:TextInput;
-	private var dname_ti:TextInput;
-	private var active_chk:CheckBox;
 	private var save_btn:Button;
+	private var dataGridHandler:Object;	
 	public function init() {
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.rescrict = "";
+		var values = new Object();
+		values.True = "Y";
+		values.False = "N";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(monitors_dg);
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
+		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
+		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
+		dataGridHandler.addCheckColumn("active", "Active", values);
+		var DP = new Array();		
 		for (var monitor in monitors) {
 			var newMonitor = new Object();
-			if (monitors[monitor].attributes["ACTIVE"] == "N") {
-				newMonitor.active = "N";
-			} else {
-				newMonitor.active = "Y";
-			}
 			newMonitor.key = "";
 			newMonitor.name = "";
-			newMonitor.dname = "";
+			newMonitor.display_name = "";
+			newMonitor.active = "Y";			
 			if (monitors[monitor].attributes["KEY"] != undefined) {
 				newMonitor.key = monitors[monitor].attributes["KEY"];
 			}
@@ -29,82 +34,43 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 				newMonitor.name = monitors[monitor].attributes["NAME"];
 			}
 			if (monitors[monitor].attributes["DISPLAY_NAME"] != undefined) {
-				newMonitor.dname = monitors[monitor].attributes["DISPLAY_NAME"];
+				newMonitor.display_name = monitors[monitor].attributes["DISPLAY_NAME"];
 			}
-			monitors_dg.addItem(newMonitor);
+			if (monitors[monitor].attributes["ACTIVE"] != undefined) {
+				newMonitor.active = monitors[monitor].attributes["ACTIVE"];
+			}			
+			DP.push(newMonitor);
 		}
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
-		monitors_dg.addEventListener("change", Delegate.create(this, itemChange));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
-		monitors_dg.removeItemAt(monitors_dg.selectedIndex);
-		monitors_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function updateItem() {
-		if (active_chk.selected) {
-			var active = "Y";
-		} else {
-			var active = "N";
-		}
-		if (monitors_dg.selectedIndex != undefined) {
-			monitors_dg.getItemAt(monitors_dg.selectedIndex).key = key_ti.text;
-			monitors_dg.getItemAt(monitors_dg.selectedIndex).name = name_ti.text;
-			monitors_dg.getItemAt(monitors_dg.selectedIndex).dname = dname_ti.text;
-			monitors_dg.getItemAt(monitors_dg.selectedIndex).active = active;
-		} else {
-			monitors_dg.addItem({key:key_ti.text, name:name_ti.text, active:active, dname:dname_ti.text});
-		}
-		monitors_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.removeRow();
 	}
 	private function newItem() {
-		monitors_dg.selectedIndex = undefined;
-		key_ti.text = "";
-		name_ti.text = "";
-		dname_ti.text = "";
-		active_chk.selected = true;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function itemChange(evtObj) {
-		key_ti.text = monitors_dg.selectedItem.key;
-		name_ti.text = monitors_dg.selectedItem.name;
-		dname_ti.text = monitors_dg.selectedItem.dname;
-		var active = monitors_dg.selectedItem.active;
-		if (active == "N") {
-			active_chk.selected = false;
-		} else {
-			active_chk.selected = true;
-		}
-		update_btn.enabled = true;
-		delete_btn.enabled = true;
+		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
 		var newMonitors = new Array();
-		for (var index = 0; index<monitors_dg.length; index++) {
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var item = new XMLNode(1, "TOGGLE_OUTPUT_MONITOR");
-			if (monitors_dg.getItemAt(index).key != "") {
-				item.attributes["KEY"] = monitors_dg.getItemAt(index).key;
+			if (DP[index].key != "") {
+				item.attributes["KEY"] = DP[index].key;
 			}
-			if (monitors_dg.getItemAt(index).name != "") {
-				item.attributes["NAME"] = monitors_dg.getItemAt(index).name;
+			if (DP[index].name != "") {
+				item.attributes["NAME"] = DP[index].name;
 			}
-			if (monitors_dg.getItemAt(index).active != "") {
-				item.attributes["ACTIVE"] = monitors_dg.getItemAt(index).active;
+			if (DP[index].active != "") {
+				item.attributes["ACTIVE"] = DP[index].active;
 			}
-			if (monitors_dg.getItemAt(index).dname != "") {
-				item.attributes["DISPLAY_NAME"] = monitors_dg.getItemAt(index).dname;
+			if (DP[index].display_name != "") {
+				item.attributes["DISPLAY_NAME"] = DP[index].display_name;
 			}
 			newMonitors.push(item);
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({monitors:newMonitors}));
+		_global.left_tree.selectedNode.object.setData({monitors:newMonitors});
 	}
 }

@@ -42,7 +42,7 @@
 		return new Object({alarms:alarms});
 	}
 	public function setData(newData:Object):Void{
-		alarms = setData.alarms;
+		alarms = newData.alarms;
 	}
 	public function setXML(newData:XMLNode):Void {
 		alarms = new Array();
