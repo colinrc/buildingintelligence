@@ -1,28 +1,23 @@
 <application lastUpdated="2005-10-31">
 	<settings>
-		<common>	
-			<setting name="screenLockDisplay" value="logo" />
-			<setting name="screenLockPhotoPath" value="\\172.16.3.200\bi\client-core\lib\photos\" />
-			<setting name="screenLockPhotoScale" value="noscale" />
-			<setting name="screenLockPhotoRotate" value="5" />
+		<setting name="screenLockDisplay" value="logo" />
+		<setting name="screenLockPhotoPath" value="\\172.16.3.200\bi\client-core\lib\photos\" />
+		<setting name="screenLockPhotoScale" value="noscale" />
+		<setting name="screenLockPhotoRotate" value="5" />
+		<setting name="applicationBg" value="0x52688D" />
+		<setting name="windowWidth" value="400" />
+		<setting name="windowHeight" value="420" />
+		<setting name="windowBgOpacity" value="90" />
+		<setting name="windowBgColour1" value="0x405F91" />
+		<setting name="windowBgColour2" value="0x3A5582" />
+		<setting name="windowShadowOffset" value="2" />
+		<setting name="windowCornerRadius" value="10" />
+		<setting name="windowBorderColour" value="0xFFFFFF" />
+		<setting name="windowBorderWidth" value="0" />
 
-			<setting name="applicationBg" value="0x52688D" />
+		<setting name="globalBtnClickTimer" value="0" />
 
-
-			<setting name="windowWidth" value="400" />
-			<setting name="windowHeight" value="420" />
-			<setting name="windowBgOpacity" value="90" />
-			<setting name="windowBgColour1" value="0x405F91" />
-			<setting name="windowBgColour2" value="0x3A5582" />
-			<setting name="windowShadowOffset" value="2" />
-			<setting name="windowCornerRadius" value="10" />
-			<setting name="windowBorderColour" value="0xFFFFFF" />
-			<setting name="windowBorderWidth" value="0" />
-
-			<setting name="globalBtnClickTimer" value="0" />
-
-			<setting name="integratorHtml" value="http://127.0.0.1:8080/client-core/lib/html/integrator.html" />
-		</common>
+		<setting name="integratorHtml" value="http://127.0.0.1:8080/client-core/lib/html/integrator.html" />
 	</settings>
 	<sounds>
 		<sound name="ding" file="sounds/ding.mp3" volume="40" />
