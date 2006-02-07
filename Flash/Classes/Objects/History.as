@@ -22,33 +22,22 @@ class Objects.History {
 	}
 	
 	/*
-	Call getInstance to create an instance of this class.
-	This code implements the Singleton class.
-	*/
-	public static function getInstance():Objects.History {
-		if (Objects.History.instance == null) {
-			Objects.History.instance = new Objects.History();
-		}
-		return Objects.History.instance;
-	}
-	/*
-	Call setProject straight after you call getInstance.
+	Call setProject when opening a project or creating a new one
 	*/
 	public function setProject(project:String) {
 		projectName = project;
-		fileName = defaultDirectory + projectName;
+		var ret:String = chr(13);
+		fileName = defaultDirectory + projectName + ".log";
 		var date_str:String = getDateTime();
 		if (mdm.FileSystem.fileExists(fileName) ) {
-			
-			mdm.FileSystem.appendFile(fileName, "Modified: " + date_str);
-			mdm.FileSystem.appendFile(fileName,"-----------------------------------------------------------------");
+			mdm.FileSystem.appendFile(fileName, "Modified: " + date_str + ret);
+			mdm.FileSystem.appendFile(fileName,"--------------------------------------------------------------------------------------------------------------------------" + ret);
 		} 
 		else
 		{
-			trace("Savefile " + fileName);
-			mdm.FileSystem.saveFile(fileName, "Project: " + projectName);
-			mdm.FileSystem.appendFile(fileName, "Created: " + date_str);
-			mdm.FileSystem.appendFile(fileName,"-----------------------------------------------------------------");
+			mdm.FileSystem.saveFile(fileName, "Project: " + projectName + ret);
+			mdm.FileSystem.appendFile(fileName, "Created: " + date_str + ret);
+			mdm.FileSystem.appendFile(fileName,"--------------------------------------------------------------------------------------------------------------------------" + ret);
 		}									  
 	}
 	
@@ -62,30 +51,42 @@ class Objects.History {
 	*/
 	// Function changed used when a value already exists
 	public function changed(category:String, type:String, description:String, oldValues:Object, newValues:Object):Void{
-		mdm.FileSystem.appendFile(fileName,"CHANGED:" + getDateTime() + " CAT:"+category+ " Type:"+type+ " DESC:"+description + "OLDVALUE:"+oldValues.toString() + "NEWVALUE:" + newValues.toString());
+		mdm.FileSystem.appendFile(fileName,"CHANGED:" + getDateTime() + " CAT:"+category+ " Type:"+type+ " DESC:"+description + " OLDVALUE:"+oldValues.toString() + " NEWVALUE:" + newValues.toString());
 	}
 	
 	// Function created used when a new value is used without an existing one.
 	public function created(category:String, type:String, description:String, newValues:Object){
-		mdm.FileSystem.appendFile(fileName,"CREATED:" + getDateTime() + " CAT:"+category+ " Type:"+type+ " DESC:"+description + "NEWVALUE:" + newValues.toString());
+		mdm.FileSystem.appendFile(fileName,"CREATED:" + getDateTime() + " CAT:"+category+ " Type:"+type+ " DESC:"+description + " NEWVALUE:" + newValues.toString());
 	}
 	
 	// Function deleted is used when an existing value is removed.
 	public function deleted(category:String, type:String, description:String, oldValues:Object){
-		mdm.FileSystem.appendFile(fileName,"DELETED:" + getDateTime() + " CAT:"+category+ " Type:"+type+ " DESC:"+description + "OLDVALUE:"+oldValues.toString());
+		mdm.FileSystem.appendFile(fileName,"DELETED:" + getDateTime() + " CAT:"+category+ " Type:"+type+ " DESC:"+description + " OLDVALUE:"+oldValues.toString());
 	}
 	
 	// Returns the current dateTime
 	private function getDateTime():String {
 		var today_date:Date = new Date();
-		var date_str:String = today_date.getFullYear()+(today_date.getMonth()+1)+today_date.getDate() + today_date.getHours+":"+today_date.getMinutes+":"+today_date.getSeconds;
+		var time_str:String = today_date.getHours().toString()+":"+today_date.getMinutes().toString()+":"+today_date.getSeconds().toString()
+		var date_str:String = today_date.getDate().toString()+" "+ getMonthAsString(today_date.getMonth()) + " "+today_date.getFullYear().toString()+" "+time_str;
 		return date_str;
 	}
 	
+	private function getMonthAsString(month:Number):String {
+    	var monthNames_array:Array = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    	return monthNames_array[month];
+	}
+
+	
 	/* Used by the History UI screen to display history information*/
 	public function viewHistory():String{
-		var mySavedData = mdm.FileSystem.loadFile(fileName);
-
+		if (mdm.FileSystem.fileExists(fileName)) {
+			var mySavedData = mdm.FileSystem.loadFile(fileName);
+		}
+		else
+		{
+			mySavedData="";
+		}
 		return mySavedData;
 	}
 }

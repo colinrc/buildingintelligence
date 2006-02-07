@@ -6,15 +6,22 @@ _global.style.setStyle("embedFonts", true);
 _global.style.setStyle("fontFamily", "_defaultFont");
 */
 var menu_mb:mx.controls.MenuBar;
-var history = new Objects.History();
-_global.history = history.getInstance();
+_global.history = new Objects.History();
 var right_tree:mx.controls.Tree;
 _global.right_tree = right_tree;
 _global.workflow_xml = new XML();
 _global.workflow_xml.ignoreWhite = true;
-_global.workflow_xml.onLoad = function(success) {
-};
+//_global.workflow_xml.onLoad = function(success) {
+	//if (success) {
+		
+		//.childNodes
+	//} else {
+		// something didn't load..
+	//}
+//};
 _global.workflow_xml.load("workflow.xml");
+_global.workflow = new Objects.WorkFlow();
+
 var left_tree:mx.controls.Tree;
 _global.left_tree = left_tree;
 _global.overrides_xml = new XML();
@@ -56,12 +63,10 @@ function refreshTheTree() {
 	// clear
 	_global.left_tree.dataProvider = oBackupDP;
 }
-//set project name
-//TODO: Add project open, set gloabl name there
-_global.project = "myProject";
-_global.history.setProject(_global.project);
+
 // load project xml data
 var project_xml = new XML();
+_global.project = "";
 var projectTree_xml = new XML();
 project_xml.ignoreWhite = true;
 project_xml.onLoad = function(success) {
@@ -75,6 +80,12 @@ project_xml.onLoad = function(success) {
 		case "application" :
 			_global.client_test = new Objects.Client.Client();
 			_global.client_test.setXML(project_xml.firstChild.childNodes[child]);
+			break;
+		case "projectSettings" :
+			_global.project = project_xml.firstChild.childNodes[child].firstChild.attributes.project;
+			_global.history =null;
+			_global.history = new Objects.History();
+			_global.history.setProject(_global.project);
 			break;
 		}
 	}
@@ -174,6 +185,8 @@ function saveFile(saveType:String):Void {
 	if (saveType == "Project") {
 		if (_global.projectFileName != "") {
 			var newProjectXML = new XMLNode(1, "project");
+			var myXml = new XML('<projectSettings><Name project="'+_global.project+'"/></projectSettings>');
+			newProjectXML.appendChild(myXml.firstChild);
 			newProjectXML.appendChild(_global.server_test.toXML());
 			newProjectXML.appendChild(_global.client_test.toXML());
 			mdm.FileSystem.saveFile(projectFileName, writeXMLFile(newProjectXML, 0));
@@ -212,6 +225,7 @@ menuListener.change = function(evt:Object) {
 		break;
 	case "new" :
 		_global.projectFileName = "";
+		_global.project = "";
 		/** Load templates*/
 		//client_xml.load(file);
 		//server_xml.load(file);
