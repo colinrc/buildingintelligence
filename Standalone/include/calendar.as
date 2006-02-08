@@ -561,7 +561,8 @@
 		var buttons_mc = content_mc.createEmptyMovieClip("buttons_mc", 60);
 		buttons_mc.attachMovie("bi.ui.Button", "newEvent_btn", 10, {settings:{width:calendar_ec._width, height: 30, label:"Create new event"}});
 		buttons_mc.newEvent_btn.press = function () {
-			newCalendarEvent();
+			trace(dateObj);
+			newCalendarEvent(null, this._parent._parent.dateObj);
 		}
 		buttons_mc.newEvent_btn.addEventListener("press", buttons_mc.newEvent_btn);
 		buttons_mc.attachMovie("bi.ui.Button", "today_btn", 20, {settings:{width:calendar_ec._width, height: 30, label:"Go to today"}});
@@ -781,6 +782,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		calendarObj.macroName = "";
 		calendarObj.time = now.dateTimeFormat(_global.settings.shortTimeFormat);
 		calendarObj.startDate = dateObj;
+		trace(dateObj);
 		calendarObj.endDate = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds())
 		calendarObj.pattern = new Object();
 		var window_mc = showWindow({width:570, height:425, title:"Create new event:", iconName:"calendar", megaModel:true, depth:1110});
@@ -906,7 +908,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 				var saveObj = new Object();
 				saveObj.title = content_mc.title_ti.text;
 				saveObj.memo = content_mc.msg_ti.text;
-				saveObj.time = content_mc.time_ti.text;
+				saveObj.time = content_mc.time_ti.text + ":00";
 				saveObj.macroName = "";
 				saveObj.startDate = calendarObj.startDate;
 				saveObj.endDate = calendarObj.endDate;
@@ -958,11 +960,9 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		}
 		switch (eventObj.target._name) {
 			case "saveEvent_btn":
-				trace("save");
 				saveEvent(saveObj);
 				break;
 			case "createEvent_btn":
-				trace("create");
 				saveObj.isNew = true;
 				saveEvent(saveObj);
 				break;

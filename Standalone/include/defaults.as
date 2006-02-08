@@ -16,7 +16,7 @@ _global.settings.height = 768;
 _global.sounds = new Object();
 _global.sounds["default"] = new Sound();
 _global.sounds["default"].attachSound("sfx_default");
-		
+
 _global.settings.screenLockTimeout = 360;
 _global.settings.screenLockPin = "1234";
 			
