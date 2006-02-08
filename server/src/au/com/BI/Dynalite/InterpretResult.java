@@ -10,7 +10,9 @@ public class InterpretResult {
 	String fullKey;
 	
 	boolean rescanLevels = false;
-	int rescanArea = 0;
+	boolean rescanSingleChannel = false;
+	byte rescanArea = 0;
+	byte rescanChannel = 0;
 	
 	public InterpretResult () {
 		 decoded = new LinkedList ();
@@ -33,12 +35,28 @@ public class InterpretResult {
 		this.rescanLevels = rescanLevels;
 	}
 
-	public int getRescanArea() {
+	public byte getRescanArea() {
 		return rescanArea;
 	}
 
-	public void setRescanArea(int rescanArea) {
+	public void setRescanArea(byte rescanArea) {
 		this.rescanArea = rescanArea;
+	}
+
+	public boolean isRescanSingleChannel() {
+		return rescanSingleChannel;
+	}
+
+	public void setRescanSingleChannel(boolean rescanSingleChannel) {
+		this.rescanSingleChannel = rescanSingleChannel;
+	}
+
+	public byte getRescanChannel() {
+		return rescanChannel;
+	}
+
+	public void setRescanChannel(byte rescanChannel) {
+		this.rescanChannel = rescanChannel;
 	}
 
 }

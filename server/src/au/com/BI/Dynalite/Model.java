@@ -137,6 +137,21 @@ public class Model extends BaseModel implements DeviceModel {
 	public void requestAllLevels (int area,byte join) throws CommsFail{
 		requestAllLevels (Utility.padStringTohex(area),join);
 	}
+
+	
+	public void requestLevel (String area, int channel ,String outputKey) throws CommsFail {
+		String fullKey = dynaliteHelper.buildKey('L',area,channel);
+
+		DynaliteOutput result = this.buildDynaliteLevelRequestCommand(area,channel,outputKey,255);
+		CommsCommand dynaliteCommsCommand = new CommsCommand();
+		dynaliteCommsCommand.setKey (fullKey);
+		dynaliteCommsCommand.setCommandBytes(result.outputCodes);
+		dynaliteCommsCommand.setExtraInfo (outputKey);
+		dynaliteCommsCommand.setKeepForHandshake(true);
+		dynaliteCommsCommand.setActionType(DynaliteCommand.REQUEST_LEVEL);
+		dynaliteCommsCommand.setActionCode(fullKey);
+		comms.addCommandToQueue(dynaliteCommsCommand);	
+	}
 	
 	public void requestAllLevels (String area,byte join) throws CommsFail{
 		List allLights = findDevicesInArea (area,false,join);
@@ -145,18 +160,8 @@ public class Model extends BaseModel implements DeviceModel {
 			DynaliteDevice nextItem = (DynaliteDevice)eachLight.next();
 			String nextArea = nextItem.getAreaCode();
 			if (area.equals (nextArea) || areaCodes.isJoined (area,nextArea)){
+				requestLevel (nextItem.getAreaCode(),nextItem.getChannel(),nextItem.getOutputKey());
 				
-				String fullKey = dynaliteHelper.buildKey('L',nextItem.getAreaCode(),nextItem.getChannel());
-
-				DynaliteOutput result = this.buildDynaliteLevelRequestCommand(nextItem.getAreaCode(),nextItem.getChannel(),nextItem.getOutputKey(),255);
-				CommsCommand dynaliteCommsCommand = new CommsCommand();
-				dynaliteCommsCommand.setKey (fullKey);
-				dynaliteCommsCommand.setCommandBytes(result.outputCodes);
-				dynaliteCommsCommand.setExtraInfo (nextItem.getOutputKey());
-				dynaliteCommsCommand.setKeepForHandshake(true);
-				dynaliteCommsCommand.setActionType(DynaliteCommand.REQUEST_LEVEL);
-				dynaliteCommsCommand.setActionCode(fullKey);
-				comms.addCommandToQueue(dynaliteCommsCommand);
 			}
 		}
 	}
@@ -221,7 +226,7 @@ public class Model extends BaseModel implements DeviceModel {
 
 			while (devices.hasNext()) {
 				DeviceType device = (DeviceType)devices.next();
-				logger.log(Level.FINER, "Monitored Dynalite event sending to channel " + device.getKey());
+				logger.log(Level.FINER, "Monitored Dynalite event, sending it to the channel " + device.getKey());
 
 				switch (device.getDeviceType()) {
 					case DeviceType.LIGHT_DYNALITE :
@@ -293,6 +298,12 @@ public class Model extends BaseModel implements DeviceModel {
 				}
 				if (results.isRescanLevels()){
 					this.requestAllLevels(results.getRescanArea(), (byte)255);
+				}
+				if (results.isRescanSingleChannel()){
+					DynaliteDevice dev = findSingleDevice (DynaliteHelper.Light,results.getRescanArea(), results.getRescanChannel(),true);
+					if (dev != null) {
+						this.requestLevel(dev.getAreaCode(),dev.getChannel(),dev.getOutputKey());
+					}
 				}
 			}
 		}
@@ -387,7 +398,7 @@ public class Model extends BaseModel implements DeviceModel {
 			dynResult = buildCommandForFlash ((DeviceType)areaDevice,"preset",presetNumber+1,0,255,this.currentUser);
 			result.decoded.add(dynResult);
 			result.setRescanLevels(true);
-			result.setRescanArea (area);
+			result.setRescanArea ((byte)area);
 		}
 	}
 	
@@ -500,7 +511,7 @@ public class Model extends BaseModel implements DeviceModel {
 				dynResult = buildCommandForFlash ((DeviceType)dev,"preset",presetNumber,0,255,this.currentUser);		
 				result.decoded.add(dynResult);
 				result.setRescanLevels(true);
-				result.setRescanArea(area);
+				result.setRescanArea((byte)area);
 			}
 	}
 	
@@ -508,13 +519,13 @@ public class Model extends BaseModel implements DeviceModel {
 		// Fade channel or area to level , 1c is classic, others linear
 			CommandInterface dynResult = null;
 			int level = dynaliteHelper.scaleLevelForFlash(msg[2]);
-			int area = msg[1];
-			int channelBase = msg[4];
-			int channelOffset = (msg[3] & 0xff) - 0x80;
+			byte area = msg[1];
+			byte channelBase = msg[4];
+			byte channelOffset = (byte)((msg[3] & 0xff) - 0x80);
 			int channel = 0;
 			int rate = (int)(msg[5] * 0.02);
 			switch (channelBase){
-				case 0xff:
+				case (byte)0xff:
 					channel = 1 + channelOffset;
 					break;
 					
@@ -527,7 +538,7 @@ public class Model extends BaseModel implements DeviceModel {
 					break;
 					
 				case 0x02:
-					channel = 13 + channelOffset;
+					channel = (13 + channelOffset);
 					break;
 					
 				default:
@@ -594,23 +605,16 @@ public class Model extends BaseModel implements DeviceModel {
 	// Fade channel or area to level , 1c is classic, others linear
 		CommandInterface dynResult = null;
 		int level = dynaliteHelper.scaleLevelForFlash(msg[4]);
-		int channel = msg[2];
-		int area = msg[1];
+		byte channel = msg[2];
+		byte area = msg[1];
 		DynaliteDevice dev = null;
-		if (channel == 0xff){
-			List devList = this.findDevicesInArea(area,true,msg[6]);
-			Iterator eachDev = devList.iterator();
-			while (eachDev.hasNext()){
-				dev = (DynaliteDevice)eachDev.next();
-				dynResult = buildCommandForFlash ((DeviceType)dev,"on",level,0,255,this.currentUser);			
-				result.decoded.add(dynResult);
-			}
+		if (channel == (byte)0xff){
+			result.setRescanLevels(true);
+			result.setRescanArea(area);
 		} else {
-			dev = findSingleDevice (DynaliteHelper.Light,area,channel,true);
-			if (dev != null){
-				dynResult = buildCommandForFlash ((DeviceType)dev,"on",level,0,255,this.currentUser);		
-				result.decoded.add(dynResult);
-			}
+			result.setRescanSingleChannel(true);
+			result.setRescanArea(area);
+			result.setRescanChannel(channel);
 		}
 	}
 
@@ -657,38 +661,42 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 
 	protected InterpretResult interperetDynaliteCode (byte msg[]) throws CommsFail {
-		int oppCode = msg[3];
+		byte oppCode = msg[3];
 
 		InterpretResult result = new InterpretResult();
 		
 		switch (oppCode){
-			case 0x60:
+			case (byte)0x60:
 				interpretChannelLevel (result,msg);
 				comms.acknowlegeCommand(DynaliteCommand.REQUEST_LEVEL,result.getFullKey());
 				comms.sendNextCommand(DynaliteCommand.REQUEST_LEVEL);
 				// process preset return value
 				break;
-			case 0x49:
+			case (byte)0x49:
 				interpretIR (result,msg);
 				break;
 
-			case 0x76: 
+			case (byte)0x76: 
 				interpretRampStop (result,msg);
 				break;
 
-			case 0x79: 
+			case (byte)0x79: 
 				interpretClassicAreaLevel(result,msg);
 				break;
 
-			case 0x80: case 0x81: case 0x82: case 0x83: 
+			case (byte)0x80: case (byte)0x81: case (byte)0x82: case (byte)0x83: 
 				interpretClassicChannelLevel(result,msg);
 				break;
 
-			case 0x43: case 0x64: 
+			case (byte)0x43: 
 				interpretSwitch (result,msg);
 				break;
 				
-			case 0x65: 
+			case (byte)0x64: 
+				this.interpretClassicPresetOffset(result,msg);
+				break;
+
+			case (byte)0x65: 
 				interpretLinearPreset (result,msg);
 				break;
 
@@ -696,7 +704,7 @@ public class Model extends BaseModel implements DeviceModel {
 				interpretClassicPreset (result,msg);
 				break;
 			
-			case 0x71: case 0x72: case 0x73: case 0x1c:
+			case (byte)0x71: case (byte)0x72: case (byte)0x73: case (byte)0x1c:
 				interpretFadeChannelOrArea (result,msg);
 				break;
 	
@@ -757,18 +765,29 @@ public class Model extends BaseModel implements DeviceModel {
 				 dynaliteReturn =buildDynaliteClassicPresetCommand ( device.getKey(),
 						 presetNumber,command.getExtra2Info(),join);				
 			}
-			if (presetNumber.equals("4")) {
-				
-			} else {
-				try {
-					this.requestAllLevels(device.getKey(),join);
-				} catch (CommsFail ex){
-					dynaliteReturn.isError = true;
-					dynaliteReturn.ex = ex;
-				}
+			try {
+				dynaliteReturn.setRescanArea(Integer.parseInt(device.getKey(),16));
+				dynaliteReturn.setRescanLevels(true);
+			} catch (NumberFormatException ex){
+				logger.log (Level.WARNING,"A Dynalight device was configured with an invalid area number " + ex.getMessage());
 			}
+			//if (presetNumber.equals("4")) {
+				
+			//} else {
+
+			//}
 			//@TODO if preset = 4, and standard config, send off to client, otherwise scan for levels
 			
+			commandFound = true;
+		}
+		
+		if (theCommand.equals("offset") ) {
+			String offsetNumber = command.getExtraInfo();
+			DynaliteOutput result = new DynaliteOutput();
+			byte join = dynaliteHelper.findJoin (command.getExtra3Info(),result);
+
+			 dynaliteReturn = buildDynalitePresetOffsetCommand ( device.getKey(),
+					 offsetNumber,join);							
 			commandFound = true;
 		}
 		
@@ -782,8 +801,14 @@ public class Model extends BaseModel implements DeviceModel {
 					level = dynaliteHelper.scaleLevelFromFlash(levelStr);
 				}
 				if (device.isAreaDevice()) {
-					dynaliteReturn =buildDynaliteRampToCommand ( device.getKey(), "0",
-							level,command.getExtra2Info(),command.getExtra3Info());
+					try {
+						dynaliteReturn =buildDynaliteRampToCommand ( device.getKey(), "0",
+								level,command.getExtra2Info(),command.getExtra3Info());
+						dynaliteReturn.setRescanArea(Integer.parseInt(device.getKey(),16));
+						dynaliteReturn.setRescanLevels(true);
+					} catch (NumberFormatException ex){
+						logger.log (Level.WARNING,"A Dynalight device was configured with an invalid area number " + ex.getMessage());
+					}
 				} else {
 					dynaliteReturn =buildDynaliteRampToCommand ( device.getAreaCode(), device.getKey(),
 							level,command.getExtra2Info(),command.getExtra3Info());					
@@ -800,8 +825,14 @@ public class Model extends BaseModel implements DeviceModel {
 			 int level = 255;
 
 			 if (device.isAreaDevice()) {
-				 dynaliteReturn =buildDynaliteRampToCommand ( device.getKey(),"0",
-							level,command.getExtra2Info(),command.getExtra3Info());
+					try {
+						 dynaliteReturn =buildDynaliteRampToCommand ( device.getKey(),"0",
+									level,command.getExtra2Info(),command.getExtra3Info());
+						dynaliteReturn.setRescanArea(Integer.parseInt(device.getKey(),16));
+						dynaliteReturn.setRescanLevels(true);
+					} catch (NumberFormatException ex){
+						logger.log (Level.WARNING,"A Dynalight device was configured with an invalid area number " + ex.getMessage());
+					}
 			 } else {
 				 dynaliteReturn =buildDynaliteRampToCommand ( device.getAreaCode(), device.getKey(),
 							level,command.getExtra2Info(),command.getExtra3Info());
@@ -854,6 +885,28 @@ public class Model extends BaseModel implements DeviceModel {
 		return returnVal;
 	}
 
+	protected DynaliteOutput buildDynalitePresetOffsetCommand ( String areaCode, String presetNumber,
+			byte join) {
+		DynaliteOutput result = new DynaliteOutput();
+		try {
+			byte area = Byte.parseByte(areaCode);
+			byte preset = Byte.parseByte(presetNumber);
+			result.outputCodes[0] = 0x1c;
+			result.outputCodes[1] = area;
+			result.outputCodes[2]= (byte)(preset | (byte)0x80);
+			result.outputCodes[3] = 0x64;
+			result.outputCodes[4]= 0;
+			result.outputCodes[5] = 0;
+			result.outputCodes[6]= join;
+			dynaliteHelper.addChecksum(result.outputCodes);
+		} catch (NumberFormatException ex) {
+			result.isError = true;
+			result.ex = ex;
+		}
+		
+		return result;
+	}
+	
 	protected DynaliteOutput buildDynaliteClassicPresetCommand ( String areaCode, String presetNumber,
 			String fade, byte join) {
 		DynaliteOutput result = new DynaliteOutput();
@@ -925,7 +978,8 @@ public class Model extends BaseModel implements DeviceModel {
 		
 		if (this.protocol == DynaliteDevice.Classic) {
 			
-			if (channel != 0){
+			if (channel == 0){
+				// Area
 				dynaliteOutput.outputCodes[0] = 0x1c;
 				dynaliteOutput.outputCodes[1] = (byte)area;
 				dynaliteOutput.outputCodes[2] = (byte)level;
@@ -933,7 +987,9 @@ public class Model extends BaseModel implements DeviceModel {
 				dynaliteOutput.outputCodes[4] = rate.lowByte;
 				dynaliteOutput.outputCodes[5] = rate.highByte;
 				dynaliteOutput.outputCodes[6] = join;
+				dynaliteOutput.isArea = true;
 			} else {
+				// Channel
 				byte opCode = (byte)(0x80 + ((channel - 1) % 4));
 				byte offset = (byte)(((channel - 1) / 4) - 1);
 				dynaliteOutput.outputCodes[0] = 0x1c;
@@ -943,11 +999,12 @@ public class Model extends BaseModel implements DeviceModel {
 				dynaliteOutput.outputCodes[4] = (byte)offset;
 				dynaliteOutput.outputCodes[5] = (byte)rate.lowByte;
 				dynaliteOutput.outputCodes[6] = join;		
-				dynaliteOutput.isArea = true;
+
 			}			
 		} else {
 				
 			if (channel != 0){
+				// Channel
 				dynaliteOutput.outputCodes[0] = 0x1c;
 				dynaliteOutput.outputCodes[1] = (byte)area;
 				dynaliteOutput.outputCodes[2] = (byte)(channel-1);
@@ -956,6 +1013,7 @@ public class Model extends BaseModel implements DeviceModel {
 				dynaliteOutput.outputCodes[5] = rate.linearFadeRate;
 				dynaliteOutput.outputCodes[6] = join;
 			} else {
+				// Area
 				dynaliteOutput.outputCodes[0] = 0x1c;
 				dynaliteOutput.outputCodes[1] = (byte)area;
 				dynaliteOutput.outputCodes[2] = (byte)255;
