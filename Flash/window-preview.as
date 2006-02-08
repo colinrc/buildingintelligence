@@ -142,7 +142,6 @@ import flash.display.BitmapData;
 
 _global.controls = new Object();
 _global.controlTypes = new Object();
-_global.icons = new Object();
 _global.zones = [new Array()];
 _global.zones[0].rooms = [new Array()];
 _global.zones[0].rooms[0].name = "Preview";
@@ -178,6 +177,7 @@ loadIcons = function () {
 	//trace("load icons");
 	var st = getTimer();
 	var iconLoader_mc = _root.createEmptyMovieClip("iconLoader_mc", -9999);
+	iconLoader_mc._visible = false;
 	loader = new MovieClipLoader();
 	loader.addListener(loader);
 	loader.onLoadInit = function (mc) {
@@ -215,7 +215,12 @@ loadIcons = function () {
 
 setIconPath = function (path) {
 	iconPath = path;	
-	loadIcons();
+	if (_global.iconNames.length) {
+		openRoomControl(_global.zones[0].rooms[0]);
+	} else {
+		_global.icons = new Object();
+		loadIcons();
+	}
 }
 
 setControlTypeData(controlTypeData);
