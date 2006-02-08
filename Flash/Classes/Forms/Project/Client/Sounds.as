@@ -12,13 +12,13 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
 		var attributes = new Object();
-		attributes.label = "Coming Soon!";
+		attributes.label = "Play";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(sounds_dg);
 		dataGridHandler.addTextInputColumn("name", "Sound Name", restrictions);
 		dataGridHandler.addTextInputColumn("file", "File", restrictions);
 		dataGridHandler.addTextInputColumn("volume", "Volume", restrictions);
-		dataGridHandler.addButtonColumn("Play", "Play", attributes, previewItem);
+		dataGridHandler.addButtonColumn("Play", "Play", attributes, Delegate.create(this, previewItem));
 		var DP = new Array();
 		for (var sound in sounds) {
 			var newSound = new Object();
@@ -42,17 +42,16 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function previewItem(itemLocation:Object) {
-		//var DP = dataGridHandler.getDataGridDataProvider();
-		//var file = DP[itemLocation.itemIndex].file;
-		new_btn.label = itemLocation.itemIndex;
-		/*var my_sound:Sound = new Sound();
+		var DP = dataGridHandler.getDataGridDataProvider();
+		var file = DP[itemLocation.itemIndex].file;
+		var my_sound:Sound = new Sound();
 		my_sound.onLoad = function(success:Boolean) {
-		if (success) {
-		this.setVolume(DP[itemLocation.itemIndex].volume);
-		this.start();
-		}
+			if (success) {
+				this.setVolume(DP[itemLocation.itemIndex].volume);
+				this.start();
+			}
 		};
-		my_sound.loadSound(file, true);*/
+		my_sound.loadSound(file, true);
 	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();

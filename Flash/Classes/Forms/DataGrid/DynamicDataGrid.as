@@ -22,6 +22,7 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "TextInputCellRenderer";
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
 		columns[name] = new Object();
 		columns[name].type = "text";
 		columns[name].restrictions = restrictions;
@@ -30,7 +31,8 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CheckCellRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 50;		
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 50;
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;		
 		columns[name] = new Object();
 		columns[name].type = "check";
 		columns[name].values = values;
@@ -39,7 +41,8 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ComboBoxCellRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;		
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;		
 		columns[name] = new Object();
 		columns[name].type = "combo";
 		columns[name].DP = DP;
@@ -48,7 +51,8 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ColourCellRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;		
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;		
 		columns[name] = new Object();
 		columns[name].type = "colour";
 	}
@@ -56,7 +60,8 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ButtonCellRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;		
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;		
 		buttonColumns[name] = new Object();
 		buttonColumns[name].attributes = attributes;
 		buttonColumns[name].callBack = callBack;
@@ -194,7 +199,7 @@ class Forms.DataGrid.DynamicDataGrid {
 					}
 				}
 			}
-			if ((lastClick.itemIndex == event.itemIndex) /*&& (lastClick.columnIndex == event.columnIndex)*/) {
+			if (lastClick.itemIndex == event.itemIndex){
 				switch (columns[my_dg.columnNames[event.columnIndex]].type) {
 				case "combo" :
 				case "text" :

@@ -34,8 +34,9 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 				label = createObject("TextInput", "TextInput", 1, {styleName:this, owner:this});
 				label.addEventListener("change", this);
 				label._visible = (item != undefined);
-				label.maxChars = itemObject.restrictions.maxChars;
-				label.restrict = itemObject.restrictions.restrict;
+				for (var restriction in itemObject.restrictions) {
+					label[restriction] = itemObject.restrictions[restriction];
+				}
 				label.text = itemObject.label;
 				label.setFocus();
 				size();

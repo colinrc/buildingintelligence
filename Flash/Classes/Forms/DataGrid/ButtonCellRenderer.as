@@ -1,5 +1,6 @@
 ﻿import mx.core.UIComponent;
 import mx.controls.Button;
+import mx.utils.Delegate;
 class Forms.DataGrid.ButtonCellRenderer extends UIComponent {
 	var button:MovieClip;
 	var listOwner:MovieClip;
@@ -12,14 +13,14 @@ class Forms.DataGrid.ButtonCellRenderer extends UIComponent {
 	}
 	function createChildren(Void):Void {
 		button = createObject("Button", "button", 1, {styleName:this, owner:this});
-		button.addEventListener("click", this);
-		button._x = 0;
-		button._y = 0;
+		button.addEventListener("click", this);				
 		size();
 	}
 	// note that setSize is implemented by UIComponent and calls size(), after setting
 	// __width and __height
 	function size(Void):Void {
+		button._x = 0;
+		button._y = -1;		
 		button.setSize(__width-2, listOwner.rowHeight-2);
 	}
 	function setValue(str:String, item:Object, sel:Boolean):Void {
@@ -40,5 +41,6 @@ class Forms.DataGrid.ButtonCellRenderer extends UIComponent {
 	}
 	function click() {
 		button.callBack(getCellIndex());
+		listOwner.selectedIndex=getCellIndex().itemIndex;
 	}
 }

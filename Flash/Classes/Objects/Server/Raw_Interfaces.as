@@ -4,17 +4,17 @@
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var raw_interface in raw_interfaces){
-			tempKeys = tempKeys.concat(raw_interfaces[raw_interface].getKeys());
+			tempKeys.push(raw_interfaces[raw_interface].attributes.DISPLAY_NAME);
 		}
 		return tempKeys;
 	}
 	public function isValid():Boolean {
 		var flag = true;
-		for (var raw_interface in raw_interfaces) {
+		/*for (var raw_interface in raw_interfaces) {
 			if (!raw_interfaces[raw_interface].isValid()) {
 				flag = false;
 			}
-		}
+		}*/
 		return flag;
 	}
 	public function getForm():String {
@@ -23,7 +23,7 @@
 	public function toXML():XMLNode {
 		var newRaw_Interfaces = new XMLNode(1, container);
 		for (var raw_interface in raw_interfaces) {
-			newRaw_Interfaces.appendChild(raw_interfaces[raw_interface].toXML());
+			newRaw_Interfaces.appendChild(raw_interfaces[raw_interface]);
 		}
 		return newRaw_Interfaces;
 	}
@@ -36,14 +36,15 @@
 		return newNode;
 	}
 	public function getName():String {
-		return "Raw Interfaces";
+		return "Custom Outputs";
 	}
 	public function getData():Object {
 		return new Object({raw_interfaces:raw_interfaces});
 	}
 	public function setData(newData:Object) {
+		raw_interfaces = newData.raw_interfaces;
 		//Process raw_interface changes....
-		var newRaw_Interfaces = new Array();
+		/*var newRaw_Interfaces = new Array();
 		for (var index in newData.raw_interfaces) {
 			var found = false;
 			for (var raw_interface in raw_interfaces) {
@@ -73,15 +74,15 @@
 			var newRaw_Interface = new Objects.Server.Raw_Interface();
 			newRaw_Interface.setXML(newNode);
 			raw_interfaces.push(newRaw_Interface);
-		}
+		}*/
 	}
 	public function setXML(newData:XMLNode):Void {
 		raw_interfaces = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			var newRaw_Interface = new Objects.Server.Raw_Interface();
-			newRaw_Interface.setXML(newData.childNodes[child]);
-			raw_interfaces.push(newRaw_Interface);
+			//var newRaw_Interface = new Objects.Server.Raw_Interface();
+			//newRaw_Interface.setXML(newData.childNodes[child]);
+			raw_interfaces.push(newData.childNodes[child]);
 		}
 	}
 }

@@ -4,22 +4,21 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	private var alerts:Array;
 	private var alerts_dg:DataGrid;
 	private var save_btn:Button;
-	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var x_pos:String;
 	private var x_ti:TextInput;
 	private var y_pos:String;
 	private var y_ti:TextInput;
-	private var alert_name_ti:TextInput;
-	private var icon_ti:TextInput;
-	private var fadeOutTime_ti:TextInput;
+	//******************************//	
 	private var left_li:ComboBox;
 	private var right_li:ComboBox;
 	private var addSelected_btn:Button;
 	private var addAll_btn:Button;
 	private var removeSelected_btn:Button;
 	private var removeAll_btn:Button;
+	//******************************//	
+	private var dataGridHandler:Object;
 	public function init() {
 		x_ti.text = x_pos;
 		y_ti.text = y_pos;
@@ -29,6 +28,23 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			tempObject.label = tempKeys[key];
 			left_li.addItem(tempObject);
 		}
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.restrict = "";
+		var restrictions2 = new Object();
+		restrictions2.maxChars = undefined;
+		restrictions2.restrict = "";
+		restrictions2.editable = false;
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(alerts_dg);
+		var attributes = new Object();
+		attributes.label = "Set Keys";
+		dataGridHandler.addTextInputColumn("name", "Alert Name", restrictions);
+		dataGridHandler.addTextInputColumn("icon", "Icon", restrictions);
+		dataGridHandler.addTextInputColumn("fadeOutTime", "Fade Out Time", restrictions);
+		dataGridHandler.addTextInputColumn("keys", "Selected Keys", restrictions2);
+		dataGridHandler.addButtonColumn("selectKeys", "Selected Keys", attributes, Delegate.create(this, saveItem));
+		var DP = new Array();
 		for (var alert in alerts) {
 			var newAlert = new Object();
 			if (alerts[alert].attributes["name"] != undefined) {
@@ -51,82 +67,57 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			} else {
 				newAlert.fadeOutTime = "";
 			}
-			alerts_dg.addItem(newAlert);
+			DP.push(newAlert);
 		}
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		update_btn.addEventListener("click", Delegate.create(this, updateItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
-		alerts_dg.addEventListener("change", Delegate.create(this, itemChange));
 		addSelected_btn.addEventListener("click", Delegate.create(this, addSel));
 		addAll_btn.addEventListener("click", Delegate.create(this, addAll));
 		removeSelected_btn.addEventListener("click", Delegate.create(this, remSel));
 		removeAll_btn.addEventListener("click", Delegate.create(this, remAll));
 		save_btn.addEventListener("click", Delegate.create(this, save));
+		alerts_dg.addEventListener("change", Delegate.create(this, itemChange));
 	}
 	private function deleteItem() {
-		alerts_dg.removeItemAt(alerts_dg.selectedIndex);
-		alerts_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function updateItem() {
-		var newKeys = "";
-		for (var key = 0; key<right_li.length; key++) {
-			newKeys += right_li.getItemAt(key).label;
-			if (key != right_li.length-1) {
-				newKeys += ",";
-			}
-		}
-		if (alerts_dg.selectedIndex != undefined) {
-			alerts_dg.getItemAt(alerts_dg.selectedIndex).name = alert_name_ti.text;
-			alerts_dg.getItemAt(alerts_dg.selectedIndex).keys = newKeys;
-			alerts_dg.getItemAt(alerts_dg.selectedIndex).icon = icon_ti.text;
-			alerts_dg.getItemAt(alerts_dg.selectedIndex).fadeOutTime = fadeOutTime_ti.text;
-		} else {
-			alerts_dg.addItem({name:alert_name_ti.text, keys:newKeys, icon:icon_ti.text, fadeOutTime:fadeOutTime_ti.text});
-		}
-		alerts_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.removeRow();
 	}
 	private function newItem() {
-		alerts_dg.selectedIndex = undefined;
-		alert_name_ti.text = "";
-		icon_ti.text = "";
-		fadeOutTime_ti.text = "";
-		remAll();
-		delete_btn.enabled = false;
-		update_btn.enabled = true;
+		dataGridHandler.addBlankRow();
+	}
+	private function saveItem(evtObj) {
+		var newKeys = "";
+		for (var item in right_li.dataProvider) {
+			newKeys += right_li.dataProvider[item].label;
+			if (item != right_li.dataProvider.length-1) {
+				newKeys += ", ";
+			}
+		}
+		alerts_dg.dataProvider[evtObj.itemIndex].keys.label = newKeys;
 	}
 	private function itemChange(evtObj) {
-		alert_name_ti.text = alerts_dg.selectedItem.name;
-		icon_ti.text = alerts_dg.selectedItem.icon;
-		var alertKeys:Array = alerts_dg.selectedItem.keys.split(",");
-		fadeOutTime_ti.text = alerts_dg.selectedItem.fadeOutTime;
 		remAll();
+		var alertKeys:Array = alerts_dg.selectedItem.keys.label.split(",");
 		for (var key in alertKeys) {
 			right_li.addItem({label:alertKeys[key]});
 		}
-		update_btn.enabled = true;
-		delete_btn.enabled = true;
 	}
 	public function save():Void {
 		var newAlerts = new Array();
-		for (var index = 0; index<alerts_dg.length; index++) {
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var item = new XMLNode(1, "alert");
-			if (alerts_dg.getItemAt(index).name != "") {
-				item.attributes["name"] = alerts_dg.getItemAt(index).name;
+			if (DP[index].name != "") {
+				item.attributes["name"] = DP[index].name;
 			}
-			if (alerts_dg.getItemAt(index).icon != "") {
-				item.attributes["icon"] = alerts_dg.getItemAt(index).icon;
+			if (DP[index].icon != "") {
+				item.attributes["icon"] = DP[index].icon;
 			}
-			if (alerts_dg.getItemAt(index).keys != "") {
-				item.attributes["keys"] = alerts_dg.getItemAt(index).keys;
+			if (DP[index].keys != "") {
+				item.attributes["keys"] = DP[index].keys;
 			}
-			if (alerts_dg.getItemAt(index).fadeOutTime != "") {
-				item.attributes["fadeOutTime"] = alerts_dg.getItemAt(index).fadeOutTime;
+			if (DP[index].fadeOutTime != "") {
+				item.attributes["fadeOutTime"] = DP[index].fadeOutTime;
 			}
 			newAlerts.push(item);
 		}
