@@ -9,17 +9,10 @@ var menu_mb:mx.controls.MenuBar;
 _global.history = new Objects.History();
 var right_tree:mx.controls.Tree;
 _global.right_tree = right_tree;
-_global.workflow_xml = new XML();
-_global.workflow_xml.ignoreWhite = true;
-//_global.workflow_xml.onLoad = function(success) {
-	//if (success) {
-		
-		//.childNodes
-	//} else {
-		// something didn't load..
-	//}
-//};
-_global.workflow_xml.load("workflow.xml");
+_global.right_tree_xml = new XML();
+
+//values set in workflow object
+_global.right_tree_xml.ignoreWhite = true;
 _global.workflow = new Objects.WorkFlow();
 
 var left_tree:mx.controls.Tree;
@@ -62,6 +55,10 @@ function refreshTheTree() {
 	_global.left_tree.dataProvider = null;
 	// clear
 	_global.left_tree.dataProvider = oBackupDP;
+	
+	oBackupDP = _global.right_tree.dataProvider;
+	_global.right_tree.dataProvider = null;
+	_global.right_tree.dataProvider = oBackupDP;
 }
 
 // load project xml data
