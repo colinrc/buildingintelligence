@@ -11,7 +11,7 @@
 		}
 		
 		var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:{width:window_mc.contentClip.width, height:window_mc.contentClip.height}});
-		tabs_mc.tabData = [{name:"Today", iconName:"calendar"}, {name:"Watering", iconName:"sprinkler"}, {name:"Macros", iconName:"atom"}];
+		tabs_mc.tabData = [{name:"Today", iconName:"calendar"}, {name:"Watering", iconName:"sprinkler", enabled:false}, {name:"Macros", iconName:"atom", enabled:false}];
 		
 		for (var i=0; i<tabs_mc.tabData.length; i++) {
 			_root[tabs_mc.tabData[i].func](tabs_mc.contentClips[i]);
@@ -536,7 +536,7 @@
 		
 		content_mc.update = function () {
 			this.calendar_ec.setDataProvider(_global.calendarData);
-			this.calendar_ec.getDayByDate(this.currentDateObj.getDate()).onRelease();
+			this.calendar_ec.getDayByDate(this.dateObj.getDate()).onRelease();
 		}
 		subscribe("events", content_mc);
 				
@@ -563,7 +563,6 @@
 		var buttons_mc = content_mc.createEmptyMovieClip("buttons_mc", 60);
 		buttons_mc.attachMovie("bi.ui.Button", "newEvent_btn", 10, {settings:{width:calendar_ec._width, height: 30, label:"Create new event"}});
 		buttons_mc.newEvent_btn.press = function () {
-			trace(dateObj);
 			newCalendarEvent(null, this._parent._parent.dateObj);
 		}
 		buttons_mc.newEvent_btn.addEventListener("press", buttons_mc.newEvent_btn);
@@ -772,21 +771,19 @@ skipCalendarEvent = function (eventObj) {
 editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	if (calendarObj != undefined) {
 		var mode = "edit";
-		var window_mc = showWindow({width:570, height:425, title:"Edit event: " + eventObj.title, iconName:"calendar", megaModel:true, depth:1110});
+		var window_mc = showWindow({width:570, height:425, title:"Edit event: " + calendarObj.title, iconName:"calendar", megaModel:true, depth:1110});
 	} else {
 		var mode = "create";
 		var calendarObj = new Object();
-		var now = new Date();
 		calendarObj.isNew = true;
 		calendarObj.eventType = "once";
 		calendarObj.title = "Untitled";
 		calendarObj.memo = "";
 		calendarObj.macroName = "";
 		calendarObj.filter = "";
-		calendarObj.time = now();
+		calendarObj.time = new Date();
 		calendarObj.startDate = dateObj;
-		trace(dateObj);
-		calendarObj.endDate = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds())
+		calendarObj.endDate = new Date(dateObj.getFullYear() + 1, dateObj.getMonth(), dateObj.getDate(), dateObj.getHours(), dateObj.getMinutes(), dateObj.getSeconds())
 		calendarObj.pattern = new Object();
 		var window_mc = showWindow({width:570, height:425, title:"Create new event:", iconName:"calendar", megaModel:true, depth:1110});
 	}
@@ -797,7 +794,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	content_mc.attachMovie("bi.ui.TextInput", "title_ti", 15, {settings:{width:180, text:calendarObj.title, _x:90, maxLength:20}});
 	
 	content_mc.attachMovie("bi.ui.Label", "time_lb", 20, {settings:{width:80, text:"Time:", _y:35}});
-	content_mc.attachMovie("bi.ui.TextInput", "time_ti", 25, {settings:{width:180, text:calendarObj.time.dateTimeFormat(_global.settings.shortTimeFormat), _x:90, _y:35, maxLength:5}});
+	content_mc.attachMovie("bi.ui.TimePicker", "time_tp", 25, {settings:{width:180, time:calendarObj.time, _x:90, _y:35}});
 	
 	content_mc.attachMovie("bi.ui.Label", "alarm_lb", 30, {settings:{width:80, text:"Alarm:", _y:70}});
 	content_mc.attachMovie("bi.ui.CheckBox", "alarm_cb", 35, {settings:{_x:90, _y:70}});
@@ -915,7 +912,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 				var saveObj = new Object();
 				saveObj.title = content_mc.title_ti.text;
 				saveObj.memo = content_mc.msg_ti.text;
-				saveObj.time = content_mc.time_ti.text + ":00";
+				saveObj.time = content_mc.time_tp.timeAsString;
 				saveObj.macroName = "";
 				saveObj.startDate = calendarObj.startDate;
 				saveObj.endDate = calendarObj.endDate;

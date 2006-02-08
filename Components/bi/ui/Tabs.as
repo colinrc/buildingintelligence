@@ -175,7 +175,8 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 					
 					tab_mc.id = i;
 					tab_mc.name = _tabs_array[i].name;
-
+					tab_mc.enabled = _tabs_array[i].enabled;
+					
 					tab_mc.onRelease = function () {
 						_parent._parent.activeTab = this.id;
 					}

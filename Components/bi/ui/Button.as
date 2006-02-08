@@ -190,6 +190,7 @@ class bi.ui.Button extends bi.ui.CoreUI {
 			if (!_toggle) highlight = false;
 			dispatchEvent({type:"onDragOut", target:this});
 			dispatchEvent({type:"dragout", target:this});
+			dispatchEvent({type:"release", target:this});
 		}
 	}
   

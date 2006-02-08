@@ -6,6 +6,7 @@
 	private var __width:Number;
 	private var __height:Number;
 	private var dispatchEvent:Function;
+	public var addEventListener:Function;
 	
 	public function set width(width:Number):Void {
 		setSize(width, null);

@@ -1,5 +1,5 @@
 ﻿class bi.ui.TextInput extends bi.ui.CoreUI {
-	private var clipParameters:Object = {settings:1, width:1, height:1, text:1};   
+	private var clipParameters:Object = {settings:1, width:1, height:1, text:1, readOnly:1, maxLength:1, restrict:1, inputType:1, fontColour:1, fontSize:1};   
 	
 	private var text_txt:TextField;
 	private var text_tf:TextFormat;
@@ -11,6 +11,7 @@
 	private var _fontColour:Number;
 	private var _maxLength:Number = 10;
 	private var _inputType:String;
+	private var _readOnly:Boolean = false;
 	
 	private var _borderWidth:Number = 0;
 	private var _borderColour:Number = 0xFFFFFF;
@@ -31,6 +32,14 @@
 			_text = txt;
 			text_txt.text = _text;
 		}
+	}
+	
+	public function get readOnly():Boolean {
+		return _readOnly;
+	}
+	
+	public function set readOnly(readOnly:Boolean):Void {
+		_readOnly = readOnly;
 	}
 	
 	public function set restrict(chars:String):Void {
@@ -88,12 +97,15 @@
 		text_txt.wordWrap = true;
 			
 		onPress2 = function () {
-			var updateTitle = function (txt, caller) {
-				if (txt.length) {
-					caller.text = txt;
+			if (!_readOnly) {
+				var updateTitle = function (txt, caller) {
+					if (txt.length) {
+						caller.text = txt;
+					}
 				}
+				_root.showKeyboard(_maxLength, updateTitle, this, _text, false, _inputType);
 			}
-			_root.showKeyboard(_maxLength, updateTitle, this, _text, false, _inputType);
+			dispatchEvent({type:"focus", target:this});
 		}
 	}
   
