@@ -1,9 +1,10 @@
 ﻿class Objects.Server.Raw_Interfaces extends Objects.BaseElement {
 	var raw_interfaces:Array;
 	var container:String;
-	public function getKeys():Array{
+	var catalogues:Objects.Server.Catalogues;
+	public function getKeys():Array {
 		var tempKeys = new Array();
-		for(var raw_interface in raw_interfaces){
+		for (var raw_interface in raw_interfaces) {
 			tempKeys.push(raw_interfaces[raw_interface].attributes.DISPLAY_NAME);
 		}
 		return tempKeys;
@@ -11,9 +12,9 @@
 	public function isValid():Boolean {
 		var flag = true;
 		/*for (var raw_interface in raw_interfaces) {
-			if (!raw_interfaces[raw_interface].isValid()) {
-				flag = false;
-			}
+		if (!raw_interfaces[raw_interface].isValid()) {
+		flag = false;
+		}
 		}*/
 		return flag;
 	}
@@ -39,49 +40,15 @@
 		return "Custom Outputs";
 	}
 	public function getData():Object {
-		return new Object({raw_interfaces:raw_interfaces});
+		return new Object({raw_interfaces:raw_interfaces, catalogues:catalogues.toXML()});
 	}
 	public function setData(newData:Object) {
 		raw_interfaces = newData.raw_interfaces;
-		//Process raw_interface changes....
-		/*var newRaw_Interfaces = new Array();
-		for (var index in newData.raw_interfaces) {
-			var found = false;
-			for (var raw_interface in raw_interfaces) {
-				if (raw_interfaces[raw_interface].name == newData.raw_interfaces[index].name) {
-					found = true;
-				}
-			}
-			if (found == false) {
-				newRaw_Interfaces.push({name:newData.raw_interfaces[index].name});
-			}
-		}
-		var deletedRaw_Interfaces = new Array();
-		for (var raw_interface in raw_interfaces) {
-			var found = false;
-			for (var index in newData.raw_interfaces) {
-				if (raw_interfaces[raw_interface].name == newData.raw_interfaces[index].name) {
-					found = true;
-				}
-			}
-			if (found == false) {
-				raw_interfaces.splice(parseInt(raw_interface), 1);
-			}
-		}
-		for (var newRaw_Interface in newRaw_Interfaces) {
-			var newNode = new XMLNode(1, "RAW_INTERFACES");
-			newNode.attributes["NAME"] = newRaw_Interfaces[newRaw_Interface].name;
-			var newRaw_Interface = new Objects.Server.Raw_Interface();
-			newRaw_Interface.setXML(newNode);
-			raw_interfaces.push(newRaw_Interface);
-		}*/
 	}
 	public function setXML(newData:XMLNode):Void {
 		raw_interfaces = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			//var newRaw_Interface = new Objects.Server.Raw_Interface();
-			//newRaw_Interface.setXML(newData.childNodes[child]);
 			raw_interfaces.push(newData.childNodes[child]);
 		}
 	}

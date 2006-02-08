@@ -286,6 +286,7 @@
 				}
 			}
 			catalogues.setXML(tempCatalogues);
+			raw_interfaces.catalogues = catalogues;
 		} else {
 			trace("ERROR, found node "+newData.nodeName+", expecting DEVICE");
 		}

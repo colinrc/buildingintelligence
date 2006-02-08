@@ -8,7 +8,16 @@
 			tempKeys = tempKeys.concat(devices[device].getKeys());
 		}
 		tempKeys = tempKeys.concat(controls.getKeys());
-		return tempKeys;
+		tempKeys = tempKeys.sort();
+		var keys = new Array();
+		var lastKey:String;
+		for(var tempKey in tempKeys){
+			if(tempKeys[tempKey] != lastKey){
+				keys.push(tempKeys[tempKey]);
+				lastKey = tempKeys[tempKey];
+			}
+		}
+		return keys;
 	}
 	public function isValid():Boolean {
 		var flag = true;
