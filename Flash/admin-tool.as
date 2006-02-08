@@ -38,7 +38,7 @@ _global.controlTypeAttributes_xml.load("controlTypeAttributes.xml");
 //test serverconnection
 var server = new Objects.ServerConnection("Server1", "127.0.0.1", 10002, 10001);
 server.makeConnections();
-//_global.style.setStyle("themeColor", "haloOrange");
+_global.style.setStyle("themeColor", "haloBlue");
 _global.left_tree.vScrollPolicy = right_tree.vScrollPolicy="auto";
 _global.left_tree.hScrollPolicy = "auto";
 _global.left_tree.setStyle("openDuration", 50);
