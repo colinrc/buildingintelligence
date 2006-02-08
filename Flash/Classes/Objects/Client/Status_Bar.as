@@ -53,12 +53,11 @@
 			var found = false;
 			for (var group in groups) {
 				if (groups[group].name == newData.groups[index].name) {
-					groups[group].attributes = newData.groups[index].attributes;
 					found = true;
 				}
 			}
 			if (found == false) {
-				newGroups.push({name:newData.groups[index].name, attributes:newData.groups[index].attributes});
+				newGroups.push({name:newData.groups[index].name});
 			}
 		}
 		var deletedGroups = new Array();
@@ -76,9 +75,6 @@
 		for (var newGroup in newGroups) {
 			var newNode = new XMLNode(1, "group");
 			newNode.attributes["name"] = newGroups[newGroup].name;
-			for(var attribute in newGroups[newGroup].attributes){
-				newNode.attributes[newGroups[newGroup].attributes[attribute].name] = newGroups[newGroup].attributes[attribute].value;
-			}
 			var newGroup = new Objects.Client.StatusBarGroup();
 			newGroup.setXML(newNode);
 			groups.push(newGroup);

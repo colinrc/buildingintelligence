@@ -14,17 +14,16 @@ class Objects.History {
 	private var projectName:String;
 	private var fileName:String;
 	private var defaultDirectory:String = "C:\\eLifeAdmin\\";
-	
-	public function History(overideDefaultDirectory:String) {
-		if (overideDefaultDirectory.length > 0) {
-			defaultDirectory = overideDefaultDirectory;
-		}
+	public function History() {
 	}
 	
 	/*
 	Call setProject when opening a project or creating a new one
 	*/
-	public function setProject(project:String) {
+	public function setProject(project:String, overideDefaultDirectory:String) {
+		if (overideDefaultDirectory.length > 0) {
+			defaultDirectory = overideDefaultDirectory;
+		}		
 		projectName = project;
 		var ret:String = chr(13);
 		fileName = defaultDirectory + projectName + ".log";
@@ -35,9 +34,16 @@ class Objects.History {
 		} 
 		else
 		{
-			mdm.FileSystem.saveFile(fileName, "Project: " + projectName + ret);
-			mdm.FileSystem.appendFile(fileName, "Created: " + date_str + ret);
-			mdm.FileSystem.appendFile(fileName,"--------------------------------------------------------------------------------------------------------------------------" + ret);
+			if(mdm.FileSystem.folderExists(defaultDirectory)){
+				mdm.FileSystem.saveFile(fileName, "Project: " + projectName + ret);
+				mdm.FileSystem.appendFile(fileName, "Created: " + date_str + ret);
+				mdm.FileSystem.appendFile(fileName,"--------------------------------------------------------------------------------------------------------------------------" + ret);
+		   	} else{
+				mdm.FileSystem.makeFolder(defaultDirectory);
+				mdm.FileSystem.saveFile(fileName, "Project: " + projectName + ret);
+				mdm.FileSystem.appendFile(fileName, "Created: " + date_str + ret);
+				mdm.FileSystem.appendFile(fileName,"--------------------------------------------------------------------------------------------------------------------------" + ret);				
+			}
 		}									  
 	}
 	

@@ -45,7 +45,7 @@
 		return "Group: "+name;
 	}
 	public function getData():Object{
-		return new Object({controls:controls, icon:icon,name:name,show:show,hide:hide});
+		return new Object({controls:controls,attributes:attributes, icon:icon,name:name,show:show,hide:hide});
 	}
 	public function setXML(newData:XMLNode):Void{
 		name = "";
@@ -92,6 +92,7 @@
 	}
 	public function setData(newData:Object):Void{
 		controls = newData.controls;
+		attributes = newData.attributes;
 		name = newData.name;
 		icon = newData.icon;
 		show = newData.show;

@@ -10,7 +10,7 @@ class Forms.Project.Device.Alert extends Forms.BaseForm {
 	public function init() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";

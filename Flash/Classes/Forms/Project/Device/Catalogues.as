@@ -10,7 +10,7 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 	public function init() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(catalogues_dg);
 		dataGridHandler.addTextInputColumn("name", "Name", restrictions);

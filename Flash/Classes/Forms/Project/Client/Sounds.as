@@ -3,15 +3,23 @@ import mx.utils.Delegate;
 class Forms.Project.Client.Sounds extends Forms.BaseForm {
 	private var sounds:Array;
 	private var sounds_dg:DataGrid;
-	private var update_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var save_btn:Button;
-	private var play_btn:Button;
-	private var name_ti:TextInput;
-	private var file_ti:TextInput;
-	private var volume_ti:TextInput;
+	private var dataGridHandler:Object;
 	public function init() {
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.restrict = "";
+		var attributes = new Object();
+		attributes.label = "Coming Soon!";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(sounds_dg);
+		dataGridHandler.addTextInputColumn("name", "Sound Name", restrictions);
+		dataGridHandler.addTextInputColumn("file", "File", restrictions);
+		dataGridHandler.addTextInputColumn("volume", "Volume", restrictions);
+		dataGridHandler.addButtonColumn("Play", "Play", attributes, previewItem);
+		var DP = new Array();
 		for (var sound in sounds) {
 			var newSound = new Object();
 			newSound.name = "";
@@ -26,78 +34,45 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 			if (sounds[sound].attributes["volume"] != undefined) {
 				newSound.volume = sounds[sound].attributes["volume"];
 			}
-			sounds_dg.addItem(newSound);
+			DP.push(newSound);
 		}
-		delete_btn.enabled = false;
-		play_btn.enabled = false;
-		update_btn.enabled = true;
-		delete_btn.addEventListener("click", Delegate.create(this, deleteSound));
-		play_btn.addEventListener("click", Delegate.create(this, previewItem));
-		update_btn.addEventListener("click", Delegate.create(this, updateSound));
+		dataGridHandler.setDataGridDataProvider(DP);
+		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
-		sounds_dg.addEventListener("change", Delegate.create(this, soundChange));
 	}
-	private function previewItem() {
-		/*var file = sounds_dg.selectedItem.file;
-		var my_sound:Sound = new Sound();
-		my_sound.setVolume(50);
+	public function previewItem(itemLocation:Object) {
+		//var DP = dataGridHandler.getDataGridDataProvider();
+		//var file = DP[itemLocation.itemIndex].file;
+		new_btn.label = itemLocation.itemIndex;
+		/*var my_sound:Sound = new Sound();
 		my_sound.onLoad = function(success:Boolean) {
-			if (success) {
-				my_sound.start();
-			}
+		if (success) {
+		this.setVolume(DP[itemLocation.itemIndex].volume);
+		this.start();
+		}
 		};
 		my_sound.loadSound(file, true);*/
 	}
-	private function deleteSound() {
-		sounds_dg.removeItemAt(sounds_dg.selectedIndex);
-		sounds_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		play_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function updateSound() {
-		if (sounds_dg.selectedIndex != undefined) {
-			sounds_dg.getItemAt(sounds_dg.selectedIndex).name = name_ti.text;
-			sounds_dg.getItemAt(sounds_dg.selectedIndex).file = file_ti.text;
-			sounds_dg.getItemAt(sounds_dg.selectedIndex).volume = volume_ti.text;
-		} else {
-			sounds_dg.addItem({name:name_ti.text, file:file_ti.text, volume:volume_ti.text});
-		}
-		sounds_dg.selectedIndex = undefined;
-		delete_btn.enabled = false;
-		play_btn.enabled = false;
-		update_btn.enabled = true;
+	private function deleteItem() {
+		dataGridHandler.removeRow();
 	}
 	private function newItem() {
-		sounds_dg.selectedIndex = undefined;
-		name_ti.text = "";
-		file_ti.text = "";
-		volume_ti.text = "";
-		delete_btn.enabled = false;
-		play_btn.enabled = false;
-		update_btn.enabled = true;
-	}
-	private function soundChange(evtObj) {
-		name_ti.text = sounds_dg.selectedItem.name;
-		file_ti.text = sounds_dg.selectedItem.file;
-		volume_ti.text = sounds_dg.selectedItem.volume;
-		update_btn.enabled = true;
-		delete_btn.enabled = true;
-		play_btn.enabled = true;
+		dataGridHandler.addBlankRow();
 	}
 	private function save():Void {
 		var newSounds = new Array();
-		for (var index = 0; index<sounds_dg.length; index++) {
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var sound = new XMLNode(1, "sound");
-			if (sounds_dg.getItemAt(index).name != undefined) {
-				sound.attributes["name"] = sounds_dg.getItemAt(index).name;
+			if (DP[index].name != undefined) {
+				sound.attributes["name"] = DP[index].name;
 			}
-			if (sounds_dg.getItemAt(index).file != undefined) {
-				sound.attributes["file"] = sounds_dg.getItemAt(index).file;
+			if (DP[index].file != undefined) {
+				sound.attributes["file"] = DP[index].file;
 			}
-			if (sounds_dg.getItemAt(index).volume != undefined) {
-				sound.attributes["volume"] = sounds_dg.getItemAt(index).volume;
+			if (DP[index].volume != undefined) {
+				sound.attributes["volume"] = DP[index].volume;
 			}
 			newSounds.push(sound);
 		}

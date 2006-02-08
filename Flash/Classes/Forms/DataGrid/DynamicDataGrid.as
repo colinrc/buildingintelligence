@@ -52,13 +52,13 @@ class Forms.DataGrid.DynamicDataGrid {
 		columns[name] = new Object();
 		columns[name].type = "colour";
 	}
-	public function addButtonColumn(name:String, heading:String, columns:Object, callBack:Function) {
+	public function addButtonColumn(name:String, heading:String, attributes:Object, callBack:Function) {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ButtonCellRenderer";
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;		
 		buttonColumns[name] = new Object();
-		buttonColumns[name].columns = columns;
+		buttonColumns[name].attributes = attributes;
 		buttonColumns[name].callBack = callBack;
 	}
 	public function setDataGridDataProvider(new_dp:Array) {
@@ -99,7 +99,7 @@ class Forms.DataGrid.DynamicDataGrid {
 			}
 			for (var column in buttonColumns) {
 				var newButton = new Object();
-				newButton.columns = buttonColumns[column].columns;
+				newButton.attributes = buttonColumns[column].attributes;
 				newButton.callBack = buttonColumns[column].callBack;
 				newRow[column] = newButton;
 			}
@@ -165,7 +165,7 @@ class Forms.DataGrid.DynamicDataGrid {
 		}
 		for (var column in buttonColumns) {
 			var newButton = new Object();
-			newButton.columns = buttonColumns[column].columns;
+			newButton.attributes = buttonColumns[column].attributes;
 			newButton.callBack = buttonColumns[column].callBack;
 			newRow[column] = newButton;
 		}

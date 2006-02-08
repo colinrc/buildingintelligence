@@ -1,7 +1,5 @@
 ﻿import mx.core.UIComponent;
-//import mx.controls.ComboBox;
 class Forms.DataGrid.ComboBoxCellRenderer extends UIComponent {
-	//var combo:MovieClip;
 	var label:MovieClip;
 	var instanceName:String;
 	var listOwner:MovieClip;
@@ -13,7 +11,6 @@ class Forms.DataGrid.ComboBoxCellRenderer extends UIComponent {
 	function ComboBoxCellRenderer() {
 	}
 	function createChildren(Void):Void {
-		//Creates a ComboBox object and listen to changes
 		instanceName = "Label";
 		label = createObject("Label", "Label"+random(999)+"Box", 1, {styleName:this, owner:this});
 		size();

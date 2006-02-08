@@ -9,12 +9,20 @@ var menu_mb:mx.controls.MenuBar;
 _global.history = new Objects.History();
 var right_tree:mx.controls.Tree;
 _global.right_tree = right_tree;
+_global.workflow_xml = new XML();
+_global.workflow_xml.ignoreWhite = true;
+//_global.workflow_xml.onLoad = function(success) {
+//if (success) {
+//.childNodes
+//} else {
+// something didn't load..
+//}
+//};
+_global.workflow_xml.load("workflow.xml");
 _global.right_tree_xml = new XML();
-
 //values set in workflow object
 _global.right_tree_xml.ignoreWhite = true;
 _global.workflow = new Objects.WorkFlow();
-
 var left_tree:mx.controls.Tree;
 _global.left_tree = left_tree;
 _global.overrides_xml = new XML();
@@ -55,19 +63,27 @@ function refreshTheTree() {
 	_global.left_tree.dataProvider = null;
 	// clear
 	_global.left_tree.dataProvider = oBackupDP;
-	
 	oBackupDP = _global.right_tree.dataProvider;
 	_global.right_tree.dataProvider = null;
 	_global.right_tree.dataProvider = oBackupDP;
 }
-
 // load project xml data
 var project_xml = new XML();
-_global.project = "";
+_global.project = new Object();
 var projectTree_xml = new XML();
 project_xml.ignoreWhite = true;
 project_xml.onLoad = function(success) {
-	projectTree_xml = new XML();
+	//projectTree_xml = new XML();
+	for (var child in projectTree_xml.childNodes) {
+		if (projectTree_xml.childNodes[child].nodeName == "Client") {
+			projectTree_xml.childNodes[child].removeNode();
+		}
+	}
+	for (var child in projectTree_xml.childNodes) {
+		if (projectTree_xml.childNodes[child].nodeName == "Server") {
+			projectTree_xml.childNodes[child].removeNode();
+		}
+	}
 	for (var child in project_xml.firstChild.childNodes) {
 		switch (project_xml.firstChild.childNodes[child].nodeName) {
 		case "CONFIG" :
@@ -79,10 +95,13 @@ project_xml.onLoad = function(success) {
 			_global.client_test.setXML(project_xml.firstChild.childNodes[child]);
 			break;
 		case "projectSettings" :
-			_global.project = project_xml.firstChild.childNodes[child].firstChild.attributes.project;
-			_global.history =null;
+			_global.project = new Object();
+			for (var attrib in project_xml.firstChild.childNodes[child].attributes) {
+				_global.project[attrib] = project_xml.firstChild.childNodes[child].attributes[attrib];
+			}
+			_global.history = null;
 			_global.history = new Objects.History();
-			_global.history.setProject(_global.project);
+			_global.history.setProject(_global.project.project);
 			break;
 		}
 	}
@@ -180,13 +199,18 @@ function writeXMLFile(inNode:XMLNode, depth:Number):String {
 }
 function saveFile(saveType:String):Void {
 	if (saveType == "Project") {
-		if (_global.projectFileName != "") {
+		if (_global.projectFileName.length) {
 			var newProjectXML = new XMLNode(1, "project");
-			var myXml = new XML('<projectSettings><Name project="'+_global.project+'"/></projectSettings>');
-			newProjectXML.appendChild(myXml.firstChild);
+			var myXML = new XMLNode(1, 'projectSettings');
+			for (var attrib in _global.project) {
+				if (_global.project[attrib].length) {
+					myXML.attributes[attrib] = _global.project[attrib];
+				}
+			}
+			newProjectXML.appendChild(myXML);
 			newProjectXML.appendChild(_global.server_test.toXML());
 			newProjectXML.appendChild(_global.client_test.toXML());
-			mdm.FileSystem.saveFile(projectFileName, writeXMLFile(newProjectXML, 0));
+			mdm.FileSystem.saveFile(_global.projectFileName, writeXMLFile(newProjectXML, 0));
 		}
 	} else {
 		mdm.Dialogs.BrowseFile.buttonText = "Save file";
@@ -207,10 +231,12 @@ function saveFile(saveType:String):Void {
 }
 _global.projectFileName = "";
 // setup the drop down menus at the top
-var file_xml = new XML('<mi label="New Project" instanceName="new" /><mi label="Open Project" instanceName="open" /><mi type="separator" /><mi label="Import Client.xml" instanceName="importClient" /><mi label="Import Server.xml" instanceName="importServer" /><mi type="separator" /><mi label="Save Project" instanceName="save" /><mi label="Project Save As..." instanceName="saveAs" /><mi type="separator" /><mi label="Exit" instanceName="exit" />');
+var file_xml = new XML('<mi label="New Project" instanceName="new" /><mi label="Open Project" instanceName="open" /><mi type="separator" /><mi label="Import Client.xml" instanceName="importClient" /><mi label="Import Server.xml" instanceName="importServer" /><mi type="separator" /><mi label="Save Project" instanceName="save" /><mi label="Save Project As..." instanceName="saveAs" /><mi type="separator" /><mi label="Exit" instanceName="exit" />');
 menu_mb.addMenu("File", file_xml);
-menu_mb.addMenu("Edit", null);
-menu_mb.addMenu("Help", null);
+var coming_soon_xml = new XML('<n label="Coming Soon!"/>');
+var coming_soon_xml2 = new XML('<n label="Coming Soon!"/>');
+menu_mb.addMenu("Edit", coming_soon_xml);
+menu_mb.addMenu("Help", coming_soon_xml2);
 mdm.Application.enableExitHandler(appExit);
 var menuListener:Object = new Object();
 menuListener.change = function(evt:Object) {
@@ -219,10 +245,12 @@ menuListener.change = function(evt:Object) {
 	switch (item.attributes["instanceName"]) {
 	case "open" :
 		openFile("Project");
+		setView("project");
 		break;
 	case "new" :
 		_global.projectFileName = "";
-		_global.project = "";
+		_global.project = new Object();
+		setView("home");
 		/** Load templates*/
 		//client_xml.load(file);
 		//server_xml.load(file);
@@ -243,8 +271,11 @@ menuListener.change = function(evt:Object) {
 		mdm.Dialogs.BrowseFile.defaultExtension = "xml";
 		mdm.Dialogs.BrowseFile.filterList = "XML Files|*.xml";
 		mdm.Dialogs.BrowseFile.filterText = "XML Files|*.xml";
-		_global.projectFileName = mdm.Dialogs.BrowseFile.show();
-		saveFile("Project");
+		var tempString = mdm.Dialogs.BrowseFile.show();
+		if (tempString != "false") {
+			_global.projectFileName = tempString;
+			saveFile("Project");
+		}
 		break;
 	case "save" :
 		saveFile("Project");
@@ -259,7 +290,7 @@ setView = function (view, dataObj) {
 	treeFilter_cb._visible = true;
 	left_tree._visible = true;
 	left_tree._y = 93;
-	left_tree._height = 670;
+	left_tree.setSize(244, 670);
 	right_tree._visible = true;
 	tabs_tb._visible = true;
 	tabBody_mc._visible = true;
@@ -272,7 +303,7 @@ setView = function (view, dataObj) {
 		left_tree._visible = false;
 		right_tree._visible = false;
 		formContent_mc.attachMovie("forms.home", "form_mc", 0);
-		tabs_tb.dataProvider = [{label:"Sample House"}];
+		tabs_tb.dataProvider = [{label:"Project Details"}];
 		tabs_tb.selectedIndex = 0;
 		tabs_tb._visible = true;
 		break;
@@ -295,9 +326,9 @@ setView = function (view, dataObj) {
 	case "control.ir" :
 		treeFilter_cb._visible = false;
 		left_tree._y = 68;
-		left_tree._height = 695;
+		left_tree.setSize(244, 695);
 		left_tree.dataProvider = null;
-		//left_tree.dataProvider = new XML('<n label="Servers"><n label="Server 1" /><n label="Server 2" /></n><n label="Clients"><n label="Client 1" /><n label="Client 2" /><n label="Client 3" /></n>');
+		left_tree.dataProvider = new XML('<n label="Servers"><n label="Coming Soon!" /></n><n label="Clients"><n label="Coming Soon!" /></n>');
 		left_tree.labelFunction = null;
 		tabs_tb.dataProvider = [{label:"Control", view:"control.controls"}, {label:"Files", view:"control.files"}, {label:"Log Levels", view:"control.logLevels"}, {label:"Log", view:"control.serverLog"}, {label:"IR", view:"control.ir"}];
 		if (view == "control.controls") {
@@ -317,6 +348,7 @@ setView = function (view, dataObj) {
 		var form_mc = formContent_mc.attachMovie("forms."+view, "form"+random(999)+"_mc", 0);
 		server.attachView(form_mc);
 		break;
+	case "none" :
 	case "preview" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
@@ -330,20 +362,17 @@ setView = function (view, dataObj) {
 		right_tree._visible = false;
 		tabs_tb.dataProvider = [{label:"Publish", view:"publish"}];
 		tabs_tb.selectedIndex = 0;
-		saveFile("Client");
-		saveFile("Server");
 		break;
 	case "history" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		right_tree._visible = false;
-		tabs_tb.dataProvider = [{label:_global.project+" History", view:"history"}];
+		tabs_tb.dataProvider = [{label:_global.project.project+" History", view:"history"}];
 		tabs_tb.selectedIndex = 0;
 		formContent_mc.attachMovie("forms.history", "form"+random(999)+"_history", 0);
 		break;
 	}
 };
-setView("home");
 tabs_tb.change = function(eventObj) {
 	if (this.lastTab.view != eventObj.target.selectedItem.view && eventObj.target.selectedItem.view.length) {
 		if (left_tree.selectedNode.object != undefined) {
@@ -429,4 +458,5 @@ treeFilter_cb.change = function(eventObj) {
 	}
 };
 treeFilter_cb.addEventListener("change", treeFilter_cb);
+setView("none");
 stop();
