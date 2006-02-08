@@ -142,8 +142,8 @@ _global.settings.dropShadowFilterSmall = new DropShadowFilter(0, 0, 0x000000, 20
 
 _global.settings.calendarCanEdit = "superuser";
 			
-_global.settings.shortTimeFormat = "H:nn";
-_global.settings.longTimeFormat = "H:nn:ss";
+_global.settings.shortTimeFormat = "HH:nn";
+_global.settings.longTimeFormat = "HH:nn:ss";
 _global.settings.longDateFormat = "d-mmm-yyyy";
 _global.settings.clockFormat = "H:nn dddd, d mmmm yyyy";
 

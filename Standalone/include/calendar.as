@@ -63,23 +63,25 @@
 			context.standardEvents_mc.removeAll();
 			context.day_lb.text = dateObj.dateTimeFormat("dddd, d mmmm yyyy:");
 			context.macroEvents_mc.removeAll();
+			eventsData.sortOn("time");
 			for (var i=0; i<eventsData.length; i++) {
 				var eventObj = new Object();
 				eventObj.eventType = eventsData[i].eventType;
 				eventObj.title = eventsData[i].title;
 				eventObj.memo = eventsData[i].memo;
-				eventObj.time = eventsData[i].time.split(":").slice(0, 2).join(":");
+				eventObj.time = eventsData[i].time;
 				eventObj.macroName = eventsData[i].macroName;
 				eventObj.startDate = eventsData[i].startDate;
 				eventObj.endDate = eventsData[i].endDate;
+				eventObj.filter = eventsData[i].filter;
 				eventObj.pattern = new Object();
 				for (var q in eventsData[i].pattern) {
 					eventObj.pattern[q] = eventsData[i].pattern[q];
 				}
 				if (eventObj.macroName.length) {
-					macroEvents_mc.addItem({label:eventObj.time  +"\t" + eventObj.title, value:eventObj});
+					macroEvents_mc.addItem({label:eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat)  +"\t" + eventObj.title, value:eventObj});
 				} else {
-					standardEvents_mc.addItem({label:eventObj.time +"\t" + eventObj.title, value:eventObj});
+					standardEvents_mc.addItem({label:eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat) +"\t" + eventObj.title, value:eventObj});
 				}
 			}
 			/*
@@ -780,7 +782,8 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		calendarObj.title = "Untitled";
 		calendarObj.memo = "";
 		calendarObj.macroName = "";
-		calendarObj.time = now.dateTimeFormat(_global.settings.shortTimeFormat);
+		calendarObj.filter = "";
+		calendarObj.time = now();
 		calendarObj.startDate = dateObj;
 		trace(dateObj);
 		calendarObj.endDate = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds())
@@ -794,7 +797,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	content_mc.attachMovie("bi.ui.TextInput", "title_ti", 15, {settings:{width:180, text:calendarObj.title, _x:90, maxLength:20}});
 	
 	content_mc.attachMovie("bi.ui.Label", "time_lb", 20, {settings:{width:80, text:"Time:", _y:35}});
-	content_mc.attachMovie("bi.ui.TextInput", "time_ti", 25, {settings:{width:180, text:calendarObj.time, _x:90, _y:35, maxLength:5}});
+	content_mc.attachMovie("bi.ui.TextInput", "time_ti", 25, {settings:{width:180, text:calendarObj.time.dateTimeFormat(_global.settings.shortTimeFormat), _x:90, _y:35, maxLength:5}});
 	
 	content_mc.attachMovie("bi.ui.Label", "alarm_lb", 30, {settings:{width:80, text:"Alarm:", _y:70}});
 	content_mc.attachMovie("bi.ui.CheckBox", "alarm_cb", 35, {settings:{_x:90, _y:70}});
@@ -834,15 +837,19 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	tab_mc._visible = false;
 	// daily tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("daily_mc", 10);
-	tab_mc.attachMovie("bi.ui.RadioButton", "everyXdays_rb", 0, {settings:{width:200, label:"Every         day(s)",  data:"days", groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyXdays_rb", 0, {settings:{width:200, label:"Every         day(s)",  data:"", groupName:"every"}});
 	tab_mc.attachMovie("bi.ui.TextInput", "numDays_ti", 5, {settings:{width:30, text:"1", _x:85, maxLength:1, inputType:"numeric"}});	
-	tab_mc.attachMovie("bi.ui.RadioButton", "everyOddDay_rb", 10, {settings:{width:200, label:"Every odd day",  data:"odds", _y:35, groupName:"every"}});
-	tab_mc.attachMovie("bi.ui.RadioButton", "everyEvenDay_rb", 20, {settings:{width:200, label:"Every even day",  data:"evens", _y:70, groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyOddDay_rb", 10, {settings:{width:200, label:"Every odd day",  data:"odd", _y:35, groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyEvenDay_rb", 20, {settings:{width:200, label:"Every even day",  data:"even", _y:70, groupName:"every"}});
 	if (calendarObj.eventType == "daily") {
-		tab_mc.every.data = "days";
-		tab_mc.numDays_ti.text = calendarObj.pattern.recur;
+		if (calendarObj.filter == "odd" || calendarObj.filter == "even") {
+			tab_mc.every.data = calendarObj.filter;
+		} else {
+			tab_mc.every.data = "";
+			tab_mc.numDays_ti.text = calendarObj.pattern.recur;
+		}
 	} else {
-		tab_mc.every.data = "days";
+		tab_mc.every.data = "";
 	}
 	tab_mc._visible = false;
 	// weekly tab
@@ -918,10 +925,13 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 					var tab_mc = content_mc.tabs_mc[saveObj.eventType + "_mc"];
 					switch (saveObj.eventType) {
 						case "hourly":
-							saveObj.pattern.recur = tab_mc.numHours_ti.text;
+							saveObj.pattern.recur = tab_mc.numHours_ti.text
 							break;
 						case "daily":
-							saveObj.pattern.recur = tab_mc.numDays_ti.text;
+							saveObj.filter = tab_mc.every.data;
+							if (tab_mc.every.data == "") {
+								saveObj.pattern.recur = tab_mc.numDays_ti.text;
+							}
 							break;
 						case "weekly":
 							saveObj.pattern.recur = tab_mc.numWeeks_ti.text;

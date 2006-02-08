@@ -243,7 +243,7 @@ saveEvent = function (event) {
 	if (event.eventType == "once") {
 		xmlMsg += '<event title="' + event.title + '" description="' + event.memo + '" date="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time + '" eventType="' + event.eventType + '" macroName="' + event.macroName + '" />';
 	} else {
-		xmlMsg += '<event title="' + event.title + '" description="' + event.memo + '" startDate="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" endDate="' + event.endDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time + '" eventType="' + event.eventType + '"  macroName="' + event.macroName + '">';		
+		xmlMsg += '<event title="' + event.title + '" description="' + event.memo + '" startDate="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" endDate="' + event.endDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time + '" eventType="' + event.eventType + '"  macroName="' + event.macroName + '" filter="' + event.filter + '">';		
 		xmlMsg += "<pattern";
 		for (var attrib in event.pattern) {
 			xmlMsg += " " + attrib + '="' + event.pattern[attrib] + '"';

@@ -211,7 +211,9 @@ defineCalendarData = function (events) {
 	_global.calendarData = new Array();
 	for (var event=0; event<events.length; event++) {
 		var d = events[event].attributes;
-		trace("pushing event: " + d.title + ":" + d.description + ":" + d.time + ":" + d.extra2 + ":" + d.startDate.parseDate() + ":" + d.endDate.parseDate() + ":" + d.eventType);
+		trace("pushing event: " + d.title + ":" + d.description + ":" + d.time + ":" + d.extra2 + ":" + d.startDate.parseDate() + ":" + d.endDate.parseDate() + ":" + d.eventType + ":" + d.filter);
+		var t = d.time.split(":");
+		d.time = new Date(1976, 8, 27, t[0], t[1], t[2]);
 		if (d.eventType == "once") {
 			_global.calendarData.push({title:d.title, memo:d.description, startDate:d.date.parseDate(), endDate:d.date.parseDate(), time:d.time, runTime:d.runTime, skip:d.skip, eventType:"once", macroName:d.macroName});
 		} else {
@@ -224,7 +226,7 @@ defineCalendarData = function (events) {
 				}
 				trace("-- pattern: " + attrib + ":" + events[event].firstChild.attributes[attrib]);
 			}
-			_global.calendarData.push({title:d.title, memo:d.description, startDate:d.startDate.parseDate(), endDate:d.endDate.parseDate(), time:d.time, runTime:d.extra2, skip:d.skip, eventType:d.eventType, macroName:d.macroName, pattern:pattern});
+			_global.calendarData.push({title:d.title, memo:d.description, startDate:d.startDate.parseDate(), endDate:d.endDate.parseDate(), time:d.time, runTime:d.extra2, skip:d.skip, eventType:d.eventType, macroName:d.macroName, filter:d.filter, pattern:pattern});
 		}
 	}
 }
