@@ -2,53 +2,39 @@ package au.com.BI.simulator.conf;
 
 import au.com.BI.simulator.sims.SimulateDevice;
 import au.com.BI.simulator.util.Utility;
+import java.util.logging.*;
 import java.util.*;
 
-
 public class Control {
-	   public final static int ALL=-1;
-	   public final static int UNKNOWN=0;
-	   public final static int CBUS=1;
-	   public final static int RAW=2;
-	   public final static int COMFORT=3;
-	   public final static int GC100=4;
-	   public final static int M1=5;
-	   
+	   public static enum DisplayTypes {UNKNOWN,BUTTONS,SLIDER,CONTROLS,SLIDER_RAW,BUTTONS_RAW,NONE}
+
+	   public static enum SimTypes {ALL,UNKNOWN,CBUS,RAW,COMFORT,GC100,M1}
+	   public static enum SimSubTypes {UNKNOWN, INPUT,OUTPUT,COUNTER,CONTROLS,TEMP}
 	   protected boolean hasSlider = false;
 	   
-	   public final static int COMFORT_INPUT=10;
-	   public final static int COMFORT_OUTPUT=11;
-	   public final static int COMFORT_COUNTER=12;
-	   public final static int COMFORT_CONTROLS=13;
-
-	   public final static int M1_INPUT=20;
-	   public final static int M1_OUTPUT=21;
-	   public final static int M1_CONTROLS=22;
-	   public final static int M1_TEMP=23;
 	   
-	   private int currentGroupType = UNKNOWN;
-	   private int currentSubGroupType = UNKNOWN;
+	   private SimTypes simType = SimTypes.UNKNOWN;
+	   private SimSubTypes simSubType = SimSubTypes.UNKNOWN;
 	   
-	   protected SimulateDevice sim;
-	   
-	   public static int OFF = 0;
-	   public static int ON = 1;
-	   public static int CUSTOM = 2;
-	   
+	   public static enum ControlStates { OFF,ON,CUSTOM}
+  
 	   private String key;
-	   private String onString;
-	   private String offString;
+	   private String keyOn;
+	   private String keyOff;
 	   private String selectList = "";
 	   private String title;
 	   private boolean updatingSlider = false;
 	   private boolean isControls = false;
-
+	   private DisplayTypes displayType = DisplayTypes.BUTTONS;
 
 	   protected Vector controlTitles = null;
 	   protected Vector controlCommands = null;
 	   protected Vector controlObjects = null;
-	   
+		public Logger logger;
+		
 	   public Control () {
+			logger = Logger.getLogger(this.getClass().getPackage().getName());
+		   
 		   controlCommands = new Vector (10);
 		   controlTitles = new Vector (10);
 		   controlObjects = new Vector(10);
@@ -66,113 +52,51 @@ public class Control {
 	   
 	   
 	   public void setGroupType(String typeStr,String subTypeStr) {
-		   if (typeStr== null || typeStr.equals("")) {
-			   currentGroupType = UNKNOWN;
-		   }
-		   if (typeStr.equals("ALL")) {
-			   currentGroupType = ALL;
-		   }
-		   if (typeStr.equals("CBUS")) {
-			   currentGroupType =  CBUS;
-		   }
-		   if (typeStr.equals("RAW")) {
-			   currentGroupType =  RAW;
-		   }
-		   if (typeStr.equals("GC100")) {
-			   currentGroupType =  GC100;
-		   }
-		   if (typeStr.equals("COMFORT")) {
-			   currentGroupType =  COMFORT;
-			   if (subTypeStr.equals("INPUT")) {
-				   currentSubGroupType = COMFORT_INPUT;
-			   }
-			   if (subTypeStr.equals("OUTPUT")) {
-				   currentSubGroupType = COMFORT_OUTPUT;
-			   }
-			   if (subTypeStr.equals("COUNTER")) {
-				   currentSubGroupType = COMFORT_COUNTER;
-			   }
-			   if (subTypeStr.equals("CONTROLS")) {
-				   currentSubGroupType = COMFORT_CONTROLS;
-				   isControls = true;
-			   }
-		   }
-		   if (typeStr.equals("M1")) {
-			   currentGroupType =  M1;
-			   if (subTypeStr.equals("INPUT")) {
-				   currentSubGroupType = M1_INPUT;
-			   }
-			   if (subTypeStr.equals("OUTPUT")) {
-				   currentSubGroupType = M1_OUTPUT;
-			   }
-			   if (subTypeStr.equals("CONTROLS")) {
-				   currentSubGroupType = M1_CONTROLS;
-				   isControls = true;
-			   }
-			   if (subTypeStr.equals("TEMP")) {
-				   currentSubGroupType = M1_TEMP;
-				   isControls = true;
-			   }
-		   }
-
+		   this.setSimType(typeStr);
+		   this.setSimSubType(subTypeStr);
+	   }
+	   	   
+	   public SimTypes getSimType () {
+		   return simType;
 	   }
 	   
-	   public String toString () {
-		   switch (currentGroupType) {
-	   			case ALL :
-					return "ALL";
-				
-		   		case CBUS :
-					return "CBUS";
-				
-		   		case GC100 :
-					return "GC100";
-				
-		   		case RAW :
-					return "RAW";
-		   
-		   		case COMFORT :
-					return "COMFORT";
-					
-					   
-		   		case M1 :
-					return "M1";
-
-				default :
-					return "";
-		   }
+	   public void  setSimType (SimTypes simType) {
+		   this.simType = simType;
 	   }
 	   
-	   
-	   public String toString (int groupType) {
-		   switch (groupType) {
-	   			case ALL :
-					return "ALL";
-				
-		   		case CBUS :
-					return "CBUS";
-				
-		   		case RAW :
-					return "RAW";
-		   
-		   		case COMFORT :
-					return "COMFORT";
 
-
-				default :
-					return "";
-		   }
+		public void setSimType(String simTypeStr) {
+			try {
+				this.simType = SimTypes.valueOf(simTypeStr);
+			} catch (IllegalArgumentException ex) {
+				logger.log (Level.WARNING,"An illegal simulator type was specified for the control " + title + " : " + simTypeStr);
+				setSimType(SimTypes.UNKNOWN);
+			} catch (NullPointerException ex){
+				logger.log (Level.WARNING,"A simulator type was not specified for the control " + title);
+				setSimType(SimTypes.UNKNOWN);
+			}
+		}
+		
+	   public SimSubTypes getSimSubType () {
+		   return simSubType;
 	   }
 	   
-	   public int getGroupType () {
-		   return currentGroupType;
+	   public void  setSimSubType (SimSubTypes simSubType) {
+		   this.simSubType = simSubType;
 	   }
 	   
-	   
-	   public int getSubGroupType () {
-		   return currentSubGroupType;
-	   }
 
+		public void setSimSubType(String simSubType) {
+			try {
+				this.simSubType = SimSubTypes.valueOf(simSubType);
+			} catch (IllegalArgumentException ex) {
+				logger.log (Level.WARNING,"An illegal simulator sub-type was specified " + title +" : " + simSubType);
+				setSimSubType(SimSubTypes.UNKNOWN);
+			} catch (NullPointerException ex){
+				logger.log (Level.WARNING,"A simulator sub-type was not specified for the control " + title);
+				setSimSubType(SimSubTypes.UNKNOWN);
+			}
+		}
 
 	public boolean isHasSlider() {
 		return hasSlider;
@@ -187,6 +111,7 @@ public class Control {
 	}
 
 	public void setKey(String key) {
+		this.key = "";
 		if (this.isControls()) {
 			String commands[] = key.split(",");
 			for (int i = 0; i < commands.length; i ++){
@@ -198,20 +123,20 @@ public class Control {
 		}
 	}
 
-	public String getOffString() {
-		return offString;
+	public String getKeyOff() {
+		return keyOff;
 	}
 
-	public void setOffString(String offString) {
-		this.offString = Utility.parseString(offString);
+	public void setKeyOff(String offString) {
+		this.keyOff = Utility.parseString(offString);
 	}
 
-	public String getOnString() {
-		return onString;
+	public String getKeyOn() {
+		return keyOn;
 	}
 
-	public void setOnString(String onString) {
-		this.onString = Utility.parseString(onString);
+	public void setKeyOn(String onString) {
+		this.keyOn = Utility.parseString(onString);
 	}
 
 	public String getTitle() {
@@ -222,13 +147,6 @@ public class Control {
 		this.title = title;
 	}
 
-	public SimulateDevice getSim() {
-		return sim;
-	}
-
-	public void setSim(SimulateDevice sim) {
-		this.sim = sim;
-	}
 
 	public boolean isUpdatingSlider() {
 		return updatingSlider;
@@ -252,5 +170,25 @@ public class Control {
 
 	public void setControls(boolean isSelection) {
 		this.isControls = isSelection;
+	}
+
+	public DisplayTypes getDisplayType() {
+		return displayType;
+	}
+
+	public void setDisplayType(DisplayTypes displayType) {
+		this.displayType = displayType;
+	}
+	
+	public void setDisplayType(String displayType) {
+		try {
+			this.displayType = DisplayTypes.valueOf(displayType);
+		} catch (IllegalArgumentException ex) {
+			logger.log (Level.WARNING,"An illegal display type was specified " + displayType);
+			setDisplayType(DisplayTypes.UNKNOWN);
+		} catch (NullPointerException ex){
+			logger.log (Level.WARNING,"A display type was not specified for the control");
+			setDisplayType(DisplayTypes.UNKNOWN);
+		}
 	}
    }
