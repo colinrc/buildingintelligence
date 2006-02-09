@@ -8,8 +8,8 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
+import au.com.BI.simulator.Simulator;
 import au.com.BI.simulator.sims.Helper;
-import au.com.BI.simulator.sims.Simulator;
 import au.com.BI.simulator.util.Utility;
 import au.com.BI.simulator.conf.*;
 

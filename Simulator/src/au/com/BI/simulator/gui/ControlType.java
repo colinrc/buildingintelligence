@@ -2,47 +2,20 @@ package au.com.BI.simulator.gui;
 
 
 import javax.swing.*;
-
+import au.com.BI.simulator.Simulator;
 import au.com.BI.simulator.sims.Helper;
 import au.com.BI.simulator.sims.SimulateDevice;
-import au.com.BI.simulator.sims.Simulator;
 import au.com.BI.simulator.util.Utility;
 
 import java.util.*;
-
+import static au.com.BI.simulator.conf.Control.*;
 
 public class ControlType {
-	   public final static int ALL=-1;
-	   public final static int UNKNOWN=0;
-	   public final static int CBUS=1;
-	   public final static int RAW=2;
-	   public final static int COMFORT=3;
-	   public final static int GC100=4;
-	   public final static int M1=5;
-	   
 	   protected JSlider slider = null;
 	   protected JLabel light = null;
 	   
-	   protected boolean hasSlider = false;
-	   
-	   public final static int COMFORT_INPUT=10;
-	   public final static int COMFORT_OUTPUT=11;
-	   public final static int COMFORT_COUNTER=12;
-	   public final static int COMFORT_CONTROLS=13;
-
-	   public final static int M1_INPUT=20;
-	   public final static int M1_OUTPUT=21;
-	   public final static int M1_CONTROLS=22;
-	   public final static int M1_TEMP=23;
-	   
-	   private int currentGroupType = UNKNOWN;
-	   private int currentSubGroupType = UNKNOWN;
-	   
+	   protected boolean hasSlider = false;	   
 	   protected SimulateDevice sim;
-	   
-	   public static int OFF = 0;
-	   public static int ON = 1;
-	   public static int CUSTOM = 2;
 	   
 	   private String key;
 	   private String onString;
@@ -139,8 +112,8 @@ public class ControlType {
 		   return eachBox;
 	   }
 	   
-	   public ControlType(String groupType,String subGroupType) {
-		  this.setGroupType (groupType,subGroupType);  
+	   public ControlType (Control control) {
+		   this.control = control;
 	   }
 	   
 	   private class StatusUpdater implements Runnable  {

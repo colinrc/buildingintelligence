@@ -4,8 +4,8 @@ package au.com.BI.simulator.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import au.com.BI.simulator.Simulator;
 import au.com.BI.simulator.sims.Helper;
-import au.com.BI.simulator.sims.Simulator;
 
 
 public class ButtonPressed implements ActionListener {
