@@ -5,24 +5,40 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 	private var cataloguesNode:XMLNode;
 	private var interfaces_dg:DataGrid;
 	private var save_btn:Button;
-	private var add_btn:Button;
+	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var string_lb:Label;
+	private var dataGridHandler:Object;
+	private var catalogueDP:Array;
 	public function init() {
-		interfaces_dg.vScrollPolicy = "auto";
-		interfaces_dg.hScrollPolicy = "auto";
-		var catalogueDP = new Array();
+		catalogueDP = new Array();
 		var catalogues = new Array();
 		for (var catalogue in cataloguesNode.childNodes) {
-			catalogueDP.push({label:cataloguesNode.childNodes[catalogue].attributes.NAME});
 			var codes = new Array();
 			var values = new Array();
 			for (var item in cataloguesNode.childNodes[catalogue].childNodes) {
-				codes.push({label:cataloguesNode.childNodes[catalogue].childNodes.attributes.CODE});
-				values.push(cataloguesNode.childNodes[catalogue].childNodes.attributes.VALUE);
+				codes.push({label:cataloguesNode.childNodes[catalogue].childNodes[item].attributes.CODE});
+				values.push(cataloguesNode.childNodes[catalogue].childNodes[item].attributes.VALUE);
 			}
+			catalogueDP.push({label:cataloguesNode.childNodes[catalogue].attributes.NAME, data:codes});
 			catalogues.push({codes:codes, values:values});
 		}
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.restrict = "";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(interfaces_dg);
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
+		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
+		dataGridHandler.addCatalogueComboBoxColumn("catalogue", "Catalogue", catalogueDP);
+		dataGridHandler.addCodeComboBoxColumn("code", "Code");
+		dataGridHandler.addTextInputColumn("command", "Command", restrictions);
+		dataGridHandler.addTextInputColumn("extra", "Extra", restrictions);
+		dataGridHandler.addTextInputColumn("extra2", "Extra2", restrictions);
+		dataGridHandler.addTextInputColumn("extra3", "Extra3", restrictions);
+		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions);
+		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions);
+		var DP = new Array();
 		for (var raw_interface in raw_interfaces) {
 			var newRaw_interface = new Object();
 			newRaw_interface.display_name = "";
@@ -41,7 +57,7 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 				}
 				var raws = raw_items[raw_item].childNodes;
 				for (var raw in raws) {
-					newRaw_interface.code = "";
+					newRaw_interface.code = new Object();
 					newRaw_interface.command = "";
 					newRaw_interface.extra = "";
 					newRaw_interface.extra2 = "";
@@ -49,7 +65,18 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 					newRaw_interface.extra4 = "";
 					newRaw_interface.extra5 = "";
 					if (raws[raw].attributes.CODE != undefined) {
-						newRaw_interface.code = raws[raw].attributes.CODE;
+						for (var catalogue in catalogueDP) {
+							if (newRaw_interface.catalogue == catalogueDP[catalogue].label) {
+								for (var code in catalogueDP[catalogue].data) {
+									if (raws[raw].attributes.CODE == catalogueDP[catalogue].data[code].label) {
+										newRaw_interface.code.label = catalogueDP[catalogue].data[code].label;
+										newRaw_interface.code.DP = catalogueDP[catalogue].data;
+										break;
+									}
+								}
+								break;
+							}
+						}
 					}
 					if (raws[raw].attributes.COMMAND != undefined) {
 						newRaw_interface.command = raws[raw].attributes.COMMAND;
@@ -80,18 +107,21 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 					for (var attribute in newRaw_interface) {
 						actualInterface[attribute] = newRaw_interface[attribute];
 					}
-					interfaces_dg.addItem(actualInterface);
+					DP.addItem(actualInterface);
 				}
 			}
 		}
+		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		add_btn.addEventListener("click", Delegate.create(this, addItem));
+		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		interfaces_dg.addEventListener("change", Delegate.create(this, itemChange));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
+		dataGridHandler.removeRow();
 	}
-	private function addItem() {
+	private function newItem() {
+		dataGridHandler.addBlankRow(catalogueDP[0].data);
 	}
 	private function itemChange(evtObj) {
 	}

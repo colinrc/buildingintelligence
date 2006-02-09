@@ -40,7 +40,7 @@
 		return "Custom Outputs";
 	}
 	public function getData():Object {
-		return new Object({raw_interfaces:raw_interfaces, catalogues:catalogues.toXML()});
+		return new Object({raw_interfaces:raw_interfaces, cataloguesNode:catalogues.toXML()});
 	}
 	public function setData(newData:Object) {
 		raw_interfaces = newData.raw_interfaces;
