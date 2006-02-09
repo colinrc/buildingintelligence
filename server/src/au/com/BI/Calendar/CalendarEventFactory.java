@@ -90,12 +90,18 @@ public class CalendarEventFactory {
 	    	}
 	    	String totalStartDate = startDate + " " + time;
 		String totalEndDate = endDate + " 23:59:59";
+		String id  = nextEvent.getAttributeValue("id");
+		if (id == null || id.equals ("")){
+			id = Long.toString(System.currentTimeMillis());
+		}
+		
 	    	String macroName  = nextEvent.getAttributeValue("macroName");
 	    	String command = nextEvent.getAttributeValue("command");
 	    	String extra = nextEvent.getAttributeValue("extra");
 	    	String extra2 = nextEvent.getAttributeValue("extra2");
 	    	String extra3 = nextEvent.getAttributeValue("extra3");
 
+	    	
 	    	String filter  = nextEvent.getAttributeValue("filter");
 	    	String rawCronString = "";
 	    	if (filter == null) filter = "";
@@ -137,7 +143,7 @@ public class CalendarEventFactory {
 			return returnVal;
 		}
         
-		JobDetail jobDetail = new JobDetail(title, 
+		JobDetail jobDetail = new JobDetail(id, 
                 Scheduler.DEFAULT_GROUP, // job group
                 MacroEvent.class);        // the java class to execute
 		
@@ -150,6 +156,7 @@ public class CalendarEventFactory {
 		map.put("extra",extra);
 		map.put("extra2",extra2);
 		map.put("extra3",extra3);
+		map.put ("ID", id);
 		map.put ("User", user);
 		map.put ("Filter", filter);
 		map.put ("Description",description);
@@ -245,7 +252,7 @@ public class CalendarEventFactory {
 				trigger.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT );
 				returnVal.setEventType(CalendarEventEntry.SINGLE_EVENT);
 				returnVal.setTrigger(trigger);
-				returnVal.setTitle(title);
+				returnVal.setId(title);
 				returnVal.setJobDetail(jobDetail);
 				
 				return returnVal;
@@ -276,7 +283,7 @@ public class CalendarEventFactory {
 				trigger.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING );
 				returnVal.setEventType(CalendarEventEntry.REPEATING_EVENT);
 				returnVal.setTrigger(trigger);
-				returnVal.setTitle(title);
+				returnVal.setId(title);
 				returnVal.setJobDetail(jobDetail);
 				return returnVal;
 				
