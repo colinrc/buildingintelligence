@@ -24,5 +24,7 @@
   <event title="Test Event 7" description="last friday of april" eventType="monthly" macroName="t3" startDate="2004-01-01" endDate="2004-12-31" time="09:00:00">
     <pattern month="3" day="fri" week="5" />
   </event>
-  <event title="test cc" description="" date="2006-01-26" time="16:10:00" eventType="once" macroName="AllOn" />
+  <event title="xzs" description="" startDate="2006-02-08" endDate="2007-02-08" time="15:52:00" eventType="weekly" macroName="AllOn">
+    <pattern mon="0" tue="1" wed="0" thu="0" fri="0" sat="0" sun="0" />
+  </event>
 </events>

@@ -1,3 +1,9 @@
+9/2/2006
+Dynalite
+--------
+Added ramp up / down for channels and areas
+
+
 3/2/2006
 Added validation to ensure script and macro handlers are not called if they have not yet fully initialised.
 Improved error handling if a correct configuration script has not been specified.

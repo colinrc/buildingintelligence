@@ -126,6 +126,41 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Interpretting dynalite linear preset failed",testRes,result.decoded);
 	}
 	
+	public void testInterpretRampUp() {
+		byte ret1[] = new byte[]{(byte)0x1C,07,(byte)0xff,(byte)0x69,(byte)0x00,(byte)0x0,(byte)0xff,(byte)0x00};
+		dynaliteHelper.addChecksum(ret1);
+		
+		LightFascade testA07C00 = new LightFascade("A0A700", DeviceType.LIGHT_DYNALITE ,"A07C00","DYNALITE");
+		testA07C00.setAreaCode("07");
+		testA07C00.setKey("00");
+		
+		model.addControlledItem("00",testA07C00,DeviceType.MONITORED);		
+		InterpretResult result = new InterpretResult();
+		LinkedList testRes = new LinkedList();
+		DynaliteCommand a07C0ramp = new DynaliteCommand("CLIENT_SEND","on",null,"100","0","255","","");
+		a07C0ramp.setDisplayName("A07C00");
+		testRes.add(a07C0ramp);
+		model.interpretRampUp(result, ret1);
+		ListAssert.assertEquals("Interpretting dynalite linear preset failed",testRes,result.decoded);
+	}
+	
+	public void testInterpretRampDown() {
+		byte ret1[] = new byte[]{(byte)0x1C,03,(byte)0xff,(byte)0x68,(byte)0x00,(byte)0x0,(byte)0xff,(byte)0x00};
+		dynaliteHelper.addChecksum(ret1);
+		
+		LightFascade testA03C00 = new LightFascade("A0A300", DeviceType.LIGHT_DYNALITE ,"A03C00","DYNALITE");
+		testA03C00.setAreaCode("03");
+		testA03C00.setKey("00");
+		
+		model.addControlledItem("00",testA03C00,DeviceType.MONITORED);		
+		InterpretResult result = new InterpretResult();
+		LinkedList testRes = new LinkedList();
+		DynaliteCommand a03C0ramp = new DynaliteCommand("CLIENT_SEND","off",null,"0","0","255","","");
+		a03C0ramp.setDisplayName("A03C00");
+		testRes.add(a03C0ramp);
+		model.interpretRampDown(result, ret1);
+		ListAssert.assertEquals("Interpretting dynalite linear preset failed",testRes,result.decoded);
+	}
 	
 	public void testInterpretClassicPreset() {
 		byte ret1[] = new byte[]{(byte)0x1C,02,(byte)0x0,(byte)0x03,(byte)0x00,(byte)0x00,(byte)0xff,(byte)0x00};

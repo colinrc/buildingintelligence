@@ -618,6 +618,56 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
+	public void interpretRampUp (InterpretResult result, byte msg[]) {
+	// Fade channel or area to level , 1c is classic, others linear
+		CommandInterface dynResult = null;
+		int level = 100;
+		byte channel = msg[2];
+		byte area = msg[1];
+		DynaliteDevice dev = null;
+		if (channel == (byte)0xff){
+			List devList = this.findDevicesInArea(area,true,msg[6]);
+			Iterator eachDev = devList.iterator();
+			while (eachDev.hasNext()){
+				dev = (DynaliteDevice)eachDev.next();
+				dynResult = buildCommandForFlash ((DeviceType)dev,"on",level,0,255,this.currentUser);			
+				result.decoded.add(dynResult);
+			}
+			
+		} else {
+			dev = findSingleDevice (DynaliteHelper.Light,area,channel,true);
+			if (dev != null){
+				dynResult = buildCommandForFlash ((DeviceType)dev,"on",level,0,255,this.currentUser);		
+				result.decoded.add(dynResult);
+			}
+		}
+	}
+
+	
+	public void interpretRampDown (InterpretResult result, byte msg[]) {
+		// Fade channel or area to level , 1c is classic, others linear
+			CommandInterface dynResult = null;
+			int level = 0;
+			byte channel = msg[2];
+			byte area = msg[1];
+			DynaliteDevice dev = null;
+			if (channel == 0xff){
+				List devList = this.findDevicesInArea(area,true,msg[6]);
+				Iterator eachDev = devList.iterator();
+				while (eachDev.hasNext()){
+					dev = (DynaliteDevice)eachDev.next();
+					dynResult = buildCommandForFlash ((DeviceType)dev,"off",level,0,255,this.currentUser);			
+					result.decoded.add(dynResult);
+				}
+				
+			} else {
+				dev = findSingleDevice (DynaliteHelper.Light,area,channel,true);
+				if (dev != null){
+					dynResult = buildCommandForFlash ((DeviceType)dev,"off",level,0,255,this.currentUser);		
+					result.decoded.add(dynResult);
+				}
+			}
+		}
 
 	public void 	interpretAreaOff (InterpretResult result, byte msg[])
 	// Area off, not often used, instead preset 4 is usually used
@@ -698,6 +748,14 @@ public class Model extends BaseModel implements DeviceModel {
 
 			case (byte)0x65: 
 				interpretLinearPreset (result,msg);
+				break;
+				
+			case (byte)0x68:
+				this.interpretRampUp(result,msg);
+				break;
+
+			case (byte)0x69:
+				this.interpretRampDown(result,msg);
 				break;
 
 			case 0x0: case 0x1: case 0x2: case 0x3: case 0xa:  case 0xb:  case 0xc:  case 0xd:

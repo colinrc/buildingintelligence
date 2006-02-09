@@ -328,7 +328,7 @@
                 </COMFORT>
         </DEVICE>
         <!-- _____________________________ COMFORT DEFS _____________________________-->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="COMFORT" DESCRIPTION="Comfort" PASSWORD="1234">
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="COMFORT" DESCRIPTION="Comfort" PASSWORD="1234">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
@@ -492,7 +492,7 @@
                 </GC100_Relay>
         </DEVICE>	
         <!-- _____________________________ GC-100 DEFS _____________________________-->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="GC100" DESCRIPTION="GC100">
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="GC100" DESCRIPTION="GC100">
                 <CONNECTION>
                         <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4998"/>
                         <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5005"/>
