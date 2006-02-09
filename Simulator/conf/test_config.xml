@@ -15,54 +15,61 @@ M1 is port 5006
 <control>
 	<name>Cbus Dining Light</name>
 	<protocol>CBUS</protocol>
-	<key>11</key>
-	<display_type>button</display_type>
+	<type value="BUTTONS">
+		<key value="11" />
+	</type>
 </control>
 
 <control>
 	<name>Cbus Lounge LV Light</name>
 	<protocol>CBUS</protocol>
-	<key>10</key>
-	<display_type>slider</display_type>
+	<type value="SLIDER" >
+		<key value="10" />
+	</type>
 </control>
 
 <control>
 	<name>Raw Pool Heater</name>
 	<protocol>RAW</protocol>
-	<on>Pool On</on>
-	<off>Pool Off</off>
-	<display_type>button</display_type>
+	<type value="BUTTONS_RAW" >
+		<key_on value="Pool On" />
+		<key_off value="Pool Off" />
+	</type>
 </control>
 
 <control>
 	<name>Raw Pool Temp</name>
 	<protocol>RAW</protocol>
-	<on>TEMP</on>
-	<display_type>slider</display_type>
+	<type value="SLIDER_RAW" >
+		<key value="TEMP" />
+	</type>
 </control>
 
 <control>
 	<name>M1 Entry PIR (key 2)</name>
 	<protocol>M1</protocol>
 	<protocol_detail>INPUT</protocol_detail>
-	<key>002</key>
-	<display_type>button</display_type>
+	<type value="BUTTONS" >
+		<key value="002" />
+	</type>
 </control>
 
 <control>
 	<name>M1 Lawn Sprinkler (key 1)</name>
 	<protocol>M1</protocol>
 	<protocol_detail>OUTPUT</protocol_detail>
-	<key>003</key>
-	<display_type>button</display_type>
+	<type value="BUTTONS" >
+		<key value="003" />
+	</type>
 </control>
 
 <control>
 	<name>Comfort Garage Door</name>
 	<protocol>COMFORT</protocol>
 	<protocol_detail>INPUT</protocol_detail>
-	<key>002</key>
-	<display_type>button</display_type>
+	<type value="BUTTONS" >
+		<key value="002" />
+	</type>
 </control>
 
 
@@ -70,22 +77,26 @@ M1 is port 5006
 	<name>Comfort Garage Door</name>
 	<protocol>COMFORT</protocol>
 	<protocol_detail>CONTROLS</protocol_detail>
-	<key>002</key>
-	<display_type>button</display_type>
+	<type value="BUTTONS" >
+		<key value="002" />
+	</type>
 </control>
 
 <control>
 	<name>Comfort Controls</name>
 	<protocol>COMFORT</protocol>
 	<protocol_detail>CONTROLS</protocol_detail>
-	<key>AM01:Alarm 01,AM02:Alarm 02,DB01:Doorbell</key>
-	<display_type>control_list</display_type>
+	<type value="CONTROLS">
+		<key value="AM01" Label="Alarm 01" />
+		<key value="AM02" Label="Alarm 02" />
+		<key value="DB01" Label="Doorbell" />
+	</type>
 </control>
 
 <control>
 	<name>Gc100 test</name>
 	<protocol>GC100</protocol>
-	<display_type>no_display</display_type>
+	<type value="NONE" />
 </control>
 
 </simulator>
