@@ -19,16 +19,22 @@ import java.util.logging.*;
 public class Config {
 	public Logger logger;
 
-	protected ArrayList controls;
+	protected List<Control> controls;
 	protected ControlFactory controlFactory;	
 	protected boolean hexOnly = false;
 
 	public Config() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 
+<<<<<<< .mine
+		controlFactory = ControlFactory.getInstance() ;		
+		setFactory (controlFactory);
+		controls = new ArrayList<Control>();
+=======
 		controlFactory = new ControlFactory() ;		
 		setFactory (controlFactory);
 		controls = new ArrayList (10);
+>>>>>>> .r193
 	}
 
 	public void setFactory (ControlFactory controlFactory){
@@ -54,10 +60,8 @@ public class Config {
 			else
 				this.setHexOnly(false);
 
-			List controlList = theConfig.getChildren("control");
-			Iterator eachControl = controlList.iterator();
-			while (eachControl.hasNext()) {
-				Element controlElement = (Element) eachControl.next();
+			List<Element> controlList = theConfig.getChildren("control");
+			for (Element controlElement: controlList){
 					Control newControl = controlFactory.createControl(controlElement);
 					controls.add(newControl);
 			}
@@ -76,6 +80,14 @@ public class Config {
 
 	public void setHexOnly(boolean hexOnly) {
 		this.hexOnly = hexOnly;
+	}
+
+	public List<Control> getControls() {
+		return controls;
+	}
+
+	public void setControls(List<Control> controls) {
+		this.controls = controls;
 	}
 	
 }
