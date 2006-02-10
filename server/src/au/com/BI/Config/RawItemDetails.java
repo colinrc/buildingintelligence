@@ -77,6 +77,11 @@ public class RawItemDetails {
 		if (catalogueValue.equals ("")) return "";
 		Iterator vars = variableMap.keySet().iterator();
 		catalogueValue = catalogueValue.replaceAll("%EXTRA%", command.getExtraInfo());
+		catalogueValue = catalogueValue.replaceAll("%EXTRA2%", command.getExtra2Info());
+		catalogueValue = catalogueValue.replaceAll("%EXTRA3%", command.getExtra3Info());
+		catalogueValue = catalogueValue.replaceAll("%EXTRA4%", command.getExtra4Info());
+		catalogueValue = catalogueValue.replaceAll("%EXTRA5%", command.getExtra5Info());
+		catalogueValue = catalogueValue.replaceAll("%COMMAND%", command.getCommandCode());
 		while (vars.hasNext()) {
 			String varName = (String)vars.next();
 			String varValue = (String)variableMap.get(varName);
