@@ -398,14 +398,18 @@ leftTreeListener.change = function(eventObj) {
 	formContent_mc.form_mc.removeMovieClip();
 	formContent_mc.createEmptyMovieClip("form_mc", 0);
 	if (node.object != undefined) {
-		if (node.nodeName != "Window") {
-			var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_"+random(999)+"_mc", 0, node.object.getData());
-			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}];
-			tabs_tb.selectedIndex = 0;
-		} else {
+		switch (node.nodeName) {
+		case "Control" :
+		case "Window" :
 			var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_"+random(999)+"_mc", 0, node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview", view:"forms.project.client.preview"}];
 			tabs_tb.selectedIndex = 0;
+			break;
+		default :
+			var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_"+random(999)+"_mc", 0, node.object.getData());
+			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}];
+			tabs_tb.selectedIndex = 0;
+			break;
 		}
 	}
 };

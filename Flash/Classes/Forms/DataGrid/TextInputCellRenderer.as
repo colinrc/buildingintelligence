@@ -29,7 +29,7 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		var itemObject = listOwner.dataProvider[itemLocation.itemIndex][columnName];
-		if (itemObject.sel) {
+		if ((itemObject.sel)&&(itemObject.restrictions.editable != false)){
 			if (label._name != "TextInput") {
 				label = createObject("TextInput", "TextInput", 1, {styleName:this, owner:this});
 				label.addEventListener("change", this);

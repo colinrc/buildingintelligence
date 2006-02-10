@@ -15,15 +15,15 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 	private var alignment:String;
 	private var hideFromList_chk:CheckBox;
 	private var hideFromList:String;
-	private var rooms_li:List;
+	private var save_btn:Button;
+	private var dataGridHandler:Object;
+	private var rooms_dg:DataGrid;
 	private var add_room_btn:Button;
 	private var del_room_btn:Button;
-	private var roomName_ti:TextInput;
-	private var panels_li:List;
+	private var dataGridHandler2:Object;
+	private var panels_dg:DataGrid;
 	private var add_panel_btn:Button;
 	private var del_panel_btn:Button;
-	private var panelName_ti:TextInput;
-	private var save_btn:Button;
 	public function init() {
 		name_ti.text = name;
 		map_ti.text = map;
@@ -39,67 +39,60 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		} else {
 			hideFromList_chk.selected = false;
 		}
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.restrict = "";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(rooms_dg);
+		dataGridHandler.addTextInputColumn("name", "Room Name", restrictions);
+		var DP = new Array();
 		for (var room in rooms) {
-			rooms_li.addItem({name:rooms[room].name});
+			var newRoom = new Object();
+			newRoom.name = rooms[room].name;
+			DP.push(newRoom);
 		}
+		dataGridHandler.setDataGridDataProvider(DP);
+		dataGridHandler2 = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler2.setDataGrid(panels_dg);
+		dataGridHandler2.addTextInputColumn("name", "Panel Name", restrictions);
+		var DP2 = new Array();
 		for (var panel in panels) {
-			panels_li.addItem({name:panels[panel].name});
+			var newPanel = new Object();
+			newPanel.name = panels[panel].name;
+			DP.push(newPanel);
 		}
-		rooms_li.labelFunction = function(item_obj:Object):String  {
-			return item_obj.name;
-		};
-		panels_li.labelFunction = function(item_obj:Object):String  {
-			return item_obj.name;
-		};
-		del_room_btn.enabled = false;
-		del_panel_btn.enabled = false;
+		dataGridHandler2.setDataGridDataProvider(DP2);
 		del_room_btn.addEventListener("click", Delegate.create(this, deleteRoom));
 		add_room_btn.addEventListener("click", Delegate.create(this, addRoom));
-		rooms_li.addEventListener("change", Delegate.create(this, roomChange));
 		del_panel_btn.addEventListener("click", Delegate.create(this, deletePanel));
 		add_panel_btn.addEventListener("click", Delegate.create(this, addPanel));
-		panels_li.addEventListener("change", Delegate.create(this, panelChange));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteRoom() {
-		rooms_li.removeItemAt(rooms_li.selectedIndex);
-		rooms_li.selectedIndex = undefined;
-		del_room_btn.enabled = false;
+		dataGridHandler.removeRow();
 	}
 	private function addRoom() {
-		rooms_li.addItem({name:roomName_ti.text});
-		rooms_li.selectedIndex = undefined;
-		roomName_ti.text = "";
-		del_room_btn.enabled = false;
-	}
-	private function roomChange(evtObj) {
-		del_room_btn.enabled = true;
+		dataGridHandler.addBlankRow();
 	}
 	private function deletePanel() {
-		panels_li.removeItemAt(panels_li.selectedIndex);
-		panels_li.selectedIndex = undefined;
-		del_panel_btn.enabled = false;
+		dataGridHandler2.removeRow();
 	}
 	private function addPanel() {
-		panels_li.addItem({name:panelName_ti.text});
-		panels_li.selectedIndex = undefined;
-		panelName_ti.text = "";
-		del_panel_btn.enabled = false;
-	}
-	private function panelChange(evtObj) {
-		del_panel_btn.enabled = true;
+		dataGridHandler2.addBlankRow();
 	}
 	public function save():Void {
 		var newRooms = new Array();
-		for (var index = 0; index<rooms_li.length; index++) {
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var Room = new Object();
-			Room.name = rooms_li.getItemAt(index).name;
+			Room.name = DP[index].name;
 			newRooms.push(Room);
 		}
 		var newPanels = new Array();
-		for (var index = 0; index<panels_li.length; index++) {
+		var DP = dataGridHandler2.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var Panel = new Object();
-			Panel.name = panels_li.getItemAt(index).name;
+			Panel.name = DP[index].name;
 			newPanels.push(Panel);
 		}
 		if (cycle_chk.selected) {

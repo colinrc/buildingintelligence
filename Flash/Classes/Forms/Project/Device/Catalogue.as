@@ -33,13 +33,13 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		}
 		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		new_btn.addEventListener("click", Delegate.create(this, newItem));
+		new_btn.addEventListener("click", Delegate.create(this, newRow));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();
 	}
-	private function newItem() {
+	private function newRow() {
 		dataGridHandler.addBlankRow();
 	}
 	private function save():Void {

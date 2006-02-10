@@ -3,75 +3,75 @@ import mx.utils.Delegate;
 
 class Forms.Project.Client.AppsBar extends Forms.BaseForm {
 	private var icons:Array;
-	private var icon_li:List;
-	private var add_btn:Button;
+	private var icon_dg:DataGrid;
+	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var up_btn:Button;
 	private var down_btn:Button;
 	private var name_ti:TextInput;
 	private var save_btn:Button;
+	private var dataGridHandler:Object;	
 	public function init() {
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.restrict = "";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(icon_dg);
+		dataGridHandler.addTextInputColumn("name", "Icon Name", restrictions);
+		var DP = new Array();		
 		for (var icon in icons) {
-			icon_li.addItem({label:icons[icon].name});
+			DP.push({name:icons[icon].name});
 		}
-		delete_btn.enabled = false;
+		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		add_btn.addEventListener("click", Delegate.create(this, addItem));
+		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		up_btn.addEventListener("click", Delegate.create(this, moveUp));
 		down_btn.addEventListener("click", Delegate.create(this, moveDown));
-		icon_li.addEventListener("change", Delegate.create(this, itemChange));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function moveUp() {
-		if (icon_li.selectedIndex != undefined) {
-			if (icon_li.selectedIndex != icon_li.length-1) {
-				var tempObj = icon_li.getItemAt(icon_li.selectedIndex+1);
-				icon_li.replaceItemAt(icon_li.selectedIndex+1, icon_li.selectedItem);
-				icon_li.replaceItemAt(icon_li.selectedIndex, tempObj);
-				var tempIndex = icon_li.selectedIndex+1;
-				icon_li.selectedIndex = undefined;
-				icon_li.selectedIndices = undefined;
-				icon_li.selectedIndex = tempIndex;
+		if (icon_dg.selectedIndex != undefined) {
+			if (icon_dg.selectedIndex != icon_dg.length-1) {
+				var tempObj = icon_dg.getItemAt(icon_dg.selectedIndex+1);
+				icon_dg.replaceItemAt(icon_dg.selectedIndex+1, icon_dg.selectedItem);
+				icon_dg.replaceItemAt(icon_dg.selectedIndex, tempObj);
+				var tempIndex = icon_dg.selectedIndex+1;
+				icon_dg.dataProvider.updateViews("change");
+				icon_dg.selectedIndex = undefined;
+				icon_dg.selectedIndices = undefined;
+				//icon_dg.selectedIndex = tempIndex;
 			}
 		}
 	}
 	private function moveDown() {
-		if (icon_li.selectedIndex != undefined) {
-			if (icon_li.selectedIndex != 0) {
-				var tempObj = icon_li.getItemAt(icon_li.selectedIndex-1);
-				icon_li.replaceItemAt(icon_li.selectedIndex-1, icon_li.selectedItem);
-				icon_li.replaceItemAt(icon_li.selectedIndex, tempObj);
-				var tempIndex = icon_li.selectedIndex-1;
-				icon_li.selectedIndex = undefined;
-				icon_li.selectedIndices = undefined;
-				icon_li.selectedIndex = tempIndex;
+		if (icon_dg.selectedIndex != undefined) {
+			if (icon_dg.selectedIndex != 0) {
+				var tempObj = icon_dg.getItemAt(icon_dg.selectedIndex-1);
+				icon_dg.replaceItemAt(icon_dg.selectedIndex-1, icon_dg.selectedItem);
+				icon_dg.replaceItemAt(icon_dg.selectedIndex, tempObj);
+				var tempIndex = icon_dg.selectedIndex-1;
+				icon_dg.dataProvider.updateViews("change");
+				icon_dg.selectedIndex = undefined;
+				icon_dg.selectedIndices = undefined;
+				//icon_dg.selectedIndex = tempIndex;
 			}
 		}
 	}
 	private function deleteItem() {
-		icon_li.removeItemAt(icon_li.selectedIndex);
-		icon_li.selectedIndex = undefined;
-		delete_btn.enabled = false;
+		dataGridHandler.removeRow();
 	}
-	private function addItem() {
-		if(name_ti.text != ""){
-			icon_li.addItem({label:name_ti.text});
-			icon_li.selectedIndex = undefined;
-			name_ti.text = "";
-			delete_btn.enabled = false;
-		}
-	}
-	private function itemChange(evtObj) {
-		delete_btn.enabled = true;
+	private function newItem() {
+		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
 		var newIcons = new Array();
-		for (var index = 0; index<icon_li.length; index++) {
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
 			var Icon = new Object();
-			Icon.name = icon_li.getItemAt(index).label;
+			Icon.name = DP[index].name;
 			newIcons.push(Icon);
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({icons:newIcons}));
+		_global.left_tree.selectedNode.object.setData({icons:newIcons});
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
 		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
 		for (var child in _global.left_tree.selectedNode.childNodes) {

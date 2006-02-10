@@ -1,59 +1,59 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Client.ControlPanelApps extends Forms.BaseForm {
 	private var save_btn:Button;
-	private var add_btn:Button;
-	private var del_btn:Button;
-	private var apps_li:List;
-	private var prog_cmb:ComboBox;
-	private var label_ti:TextInput;
-	private var apps:XMLNode;
-	public function init():Void{
-		for(var child in apps.childNodes){
-			var newObj = new Object();
-			if((apps.childNodes[child].attributes["label"] != undefined)&&(apps.childNodes[child].attributes["label"] != "")){
-				newObj.label = apps.childNodes[child].attributes["label"];
-			}else{
-				newObj.label = "";
+	private var new_btn:Button;
+	private var delete_btn:Button;
+	private var apps_dg:DataGrid;
+	private var apps:Array;
+	private var dataGridHandler:Object;
+	public function init():Void {
+		var restrictions = new Object();
+		restrictions.maxChars = undefined;
+		restrictions.restrict = "";
+		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		dataGridHandler.setDataGrid(apps_dg);
+		dataGridHandler.addTextInputColumn("label", "Program Label", restrictions);
+		dataGridHandler.addTextInputColumn("program", "Program Location", restrictions);
+		var DP = new Array();
+		for (var app in apps) {
+			var newApp = new Object();
+			newApp.label = "";
+			newApp.program = "";
+			if (apps[app].attributes["label"] != undefined) {
+				newApp.label = apps[app].attributes["label"];
 			}
-			if((apps.childNodes[child].attributes["program"] != undefined)&&(apps.childNodes[child].attributes["program"] != "")){	
-				newObj.program = apps.childNodes[child].attributes["program"];
-			}else{
-				newObj.program = "";
+			if (apps[app].attributes["program"] != undefined) {
+				newApp.program = apps[app].attributes["program"];
 			}
-			apps_li.addItem(newObj);
+			DP.push(newApp);
 		}
+		dataGridHandler.setDataGridDataProvider(DP);
 		save_btn.addEventListener("click", Delegate.create(this, save));
-		add_btn.addEventListener("click", Delegate.create(this, addItem));
-		del_btn.addEventListener("click", Delegate.create(this, delItem));
-		apps_li.labelFunction = function(item_obj:Object):String {
-			var label_str:String = item_obj.label + " - Program: " + item_obj.program;
-			return label_str;
-		}
+		new_btn.addEventListener("click", Delegate.create(this, newItem));
+		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 	}
-	private function addItem(){
-		apps_li.addItem({label:label_ti.text, program:prog_cmb.text});
+	private function deleteItem() {
+		dataGridHandler.removeRow();
 	}
-	private function delItem(){
-		if(apps_li.selectedIndex != undefined){
-			apps_li.removeItemAt(apps_li.selectedIndex);
-		}
+	private function newItem() {
+		dataGridHandler.addBlankRow();
 	}
-	private function save(){
-		var newApps = new XMLNode(1,"controlPanelApps");
-		for (var index = 0; index<apps_li.length; index++) {
-			var newOverride = new XMLNode(1,"app");
-			if((apps_li.getItemAt(index).label != undefined) && (apps_li.getItemAt(index).label != "")){
-				newOverride.attributes["label"] = apps_li.getItemAt(index).label;
+	private function save() {
+		var newApps = new Array();
+		var DP = dataGridHandler.getDataGridDataProvider();
+		for (var index = 0; index<DP.length; index++) {
+			var newApp = new XMLNode(1, "app");
+			if (DP[index].label.length) {
+				newApp.attributes["label"] = DP[index].label;
 			}
-			if((apps_li.getItemAt(index).program != undefined) && (apps_li.getItemAt(index).program != "")){			
-				newOverride.attributes["program"] = apps_li.getItemAt(index).program;
+			if (DP[index].program.length) {
+				newApp.attributes["program"] = DP[index].program;
 			}
-			newApps.appendChild(newOverride);
+			newApps.push(newApp);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		_global.left_tree.selectedNode.object.setData(new Object({apps:newApps}));
+		_global.left_tree.selectedNode.object.setData({apps:newApps});
 		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
 		_global.left_tree.selectedIndex = tempIndex;
 	}

@@ -50,7 +50,7 @@ class Forms.DataGrid.DynamicDataGrid {
 	public function addCodeComboBoxColumn(name:String, heading:String) {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ComboBoxCellRenderer";
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CodeComboBoxCellRenderer";
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
 		columns[name] = new Object();
@@ -84,6 +84,10 @@ class Forms.DataGrid.DynamicDataGrid {
 		buttonColumns[name] = new Object();
 		buttonColumns[name].attributes = attributes;
 		buttonColumns[name].callBack = callBack;
+	}
+	public function addHiddenColumn(name:String){
+		columns[name] = new Object();
+		columns[name].type = "hidden";		
 	}
 	public function setDataGridDataProvider(new_dp:Array) {
 		var processed_dp = new Array();
@@ -126,7 +130,10 @@ class Forms.DataGrid.DynamicDataGrid {
 					};
 					newRow[column] = newCombo;
 					break;
-				}
+				case "hidden" :
+					newRow[column] = new_dp[row][column];
+					break;
+				}					
 			}
 			for (var column in buttonColumns) {
 				var newButton = new Object();
@@ -152,6 +159,9 @@ class Forms.DataGrid.DynamicDataGrid {
 					break;
 				case "colour" :
 					newRow[column] = my_dg.dataProvider[row][column].colour;
+					break;
+				case "hidden":
+					newRow[column] = my_dg.dataProvider[row][column];
 					break;
 				}
 			}
@@ -199,6 +209,9 @@ class Forms.DataGrid.DynamicDataGrid {
 					return this.colour;
 				};
 				newRow[column] = newColour;
+				break;
+			case "hidden":
+				newRow[column] = new Object();
 				break;
 			}
 		}

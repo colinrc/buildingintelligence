@@ -9,19 +9,17 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var string_lb:Label;
 	private var dataGridHandler:Object;
+	private var dataGridHandler2:Object;	
 	private var catalogueDP:Array;
+	private var vars_dg:DataGrid;
 	public function init() {
 		catalogueDP = new Array();
-		var catalogues = new Array();
 		for (var catalogue in cataloguesNode.childNodes) {
 			var codes = new Array();
-			var values = new Array();
 			for (var item in cataloguesNode.childNodes[catalogue].childNodes) {
-				codes.push({label:cataloguesNode.childNodes[catalogue].childNodes[item].attributes.CODE});
-				values.push(cataloguesNode.childNodes[catalogue].childNodes[item].attributes.VALUE);
+				codes.push({label:cataloguesNode.childNodes[catalogue].childNodes[item].attributes.CODE, data:cataloguesNode.childNodes[catalogue].childNodes[item].attributes.VALUE});
 			}
 			catalogueDP.push({label:cataloguesNode.childNodes[catalogue].attributes.NAME, data:codes});
-			catalogues.push({codes:codes, values:values});
 		}
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -38,6 +36,15 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("extra3", "Extra3", restrictions);
 		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions);
 		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions);
+		dataGridHandler.addHiddenColumn("vars");
+		
+		dataGridHandler2 = new Forms.DataGrid.DynamicDataGrid();
+		var restrictions2 = new Object();
+		restrictions2.editable = false;
+		dataGridHandler2.setDataGrid(vars_dg);		
+		dataGridHandler2.addTextInputColumn("name", "Name", restrictions2);
+		dataGridHandler2.addTextInputColumn("value", "Value", restrictions);		
+		
 		var DP = new Array();
 		for (var raw_interface in raw_interfaces) {
 			var newRaw_interface = new Object();
@@ -96,16 +103,19 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 					if (raws[raw].attributes.EXTRA5 != undefined) {
 						newRaw_interface.extra5 = raws[raw].attributes.EXTRA5;
 					}
-					if (raws[raw].hasChildNodes) {
-						var variables = raws[raw].childNodes;
+					if (raws[raw].hasChildNodes()) {
 						newRaw_interface.vars = new Array();
-						for (var variable in variables) {
-							newRaw_interface.vars.push(variables[variable]);
+						for (var variable in raws[raw].childNodes) {
+							newRaw_interface.vars.push(raws[raw].childNodes[variable]);
 						}
 					}
 					var actualInterface = new Object();
 					for (var attribute in newRaw_interface) {
 						actualInterface[attribute] = newRaw_interface[attribute];
+					}
+					actualInterface.vars = new Array();
+					for (var variable in newRaw_interface.vars) {
+						actualInterface.vars.push(newRaw_interface.vars[variable]);
 					}
 					DP.addItem(actualInterface);
 				}
@@ -124,6 +134,45 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		dataGridHandler.addBlankRow(catalogueDP[0].data);
 	}
 	private function itemChange(evtObj) {
+		var tempCatalogue = interfaces_dg.selectedItem.catalogue.label;
+		var tempCode = interfaces_dg.selectedItem.code.label;
+		var tempString = new String("");
+		for (var catalogue in catalogueDP) {
+			if (tempCatalogue == catalogueDP[catalogue].label) {
+				for (var code in catalogueDP[catalogue].data) {
+					if (tempCode == catalogueDP[catalogue].data[code].label) {
+						var splitString = catalogueDP[catalogue].data[code].data.split("%");
+						var isEven = false;
+						for (var subString in splitString) {
+							if (isEven) {
+								for (var variable in interfaces_dg.selectedItem.vars) {
+									if ((splitString[subString] != "COMMAND") && (splitString[subString] != "EXTRA") && (splitString[subString] != "EXTRA2") && (splitString[subString] != "EXTRA3") && (splitString[subString] != "EXTRA4") && (splitString[subString] != "EXTRA5")) {
+										if (interfaces_dg.selectedItem.vars[variable].attributes.NAME == splitString[subString]) {
+											splitString[subString] = interfaces_dg.selectedItem.vars[variable].attributes.VALUE;
+										}
+									}
+								}
+								isEven = false;
+							} else {
+								isEven = true;
+							}
+						}
+						tempString = splitString.join("%");
+						break;
+					}
+				}
+				break;
+			}
+		}
+		var tempDP = new Array();
+		for(var variable in interfaces_dg.selectedItem.vars) {
+			var newVariable = new Object();
+			newVariable.name = interfaces_dg.selectedItem.vars[variable].attributes.NAME;
+			newVariable.value = interfaces_dg.selectedItem.vars[variable].attributes.VALUE;
+			tempDP.push(newVariable);
+		}
+		dataGridHandler2.setDataGridDataProvider(tempDP);
+		string_lb.text = tempString;
 	}
 	public function save():Void {
 		/*var newRaw_Interfaces = new Array();

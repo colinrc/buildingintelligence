@@ -51,7 +51,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		left_btn.addEventListener("click", Delegate.create(this, moveLeft));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		editor_dg.addEventListener("cellPress", Delegate.create(this, cellClick));
-		preview(_global.left_tree.selectedNode.object.toXML());
+		//preview(_global.left_tree.selectedNode.object.toXML());
 	}
 	private function cellClick(eventObject) {
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
@@ -177,7 +177,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 			}
 		}
 	}
-	public function preview(controls:XMLNode):Void {
+	/*public function preview(controls:XMLNode):Void {
 		var preview_mc:MovieClip = this.createEmptyMovieClip("preview_mc", 100);
 		preview_mc._x=3;
 		preview_mc._y=390;
@@ -185,7 +185,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		newControlTypes.appendChild(controls);
 		var sampleWindow:XML = new XML('<window><tab name="Preview" ><control name="Main Light" key="ENSUITE_LIGHT" type="'+type_ti.text+'" icons="light-bulb-off,light-bulb" /></tab></window>');				
 		preview_mc.attachMovie("window-preview", "preview_mc", 100, {width:400, height:250, controlTypeData:new XML(newControlTypes.toString()), windowData:sampleWindow, iconPath:"../../eLife Client/Build/standalone/lib/icons/"});		
-	}
+	}*/
 	public function save():Void {
 		var newRows = new Array();
 		for (var index = editor_dg.dataProvider.length-1; index>=0; index--) {
@@ -202,7 +202,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		_global.left_tree.selectedNode.object.setData(new Object({rows:newRows, type:type_ti.text}));
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
 		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
-		preview(_global.left_tree.selectedNode.object.toXML());
+		//preview(_global.left_tree.selectedNode.object.toXML());
 		for (var child in _global.left_tree.selectedNode.childNodes) {
 			_global.left_tree.selectedNode.childNodes[child].removeNode();
 		}
