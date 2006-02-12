@@ -60,7 +60,8 @@
 				item_mc.defaultValue = items[item].defaultValue;
 				item_mc.states = items[item].states.split(",");
 				item_mc.formats = items[item].formats.split(",");
-				createLabel(item_mc, {w:width, label:control.name});
+				//createLabel(item_mc, {w:width, label:control.name});
+				item_mc.attachMovie("bi.ui.Label", "label_lb", 0, {settings:{width:width, label:control.name, fontSize:14}});
 				
 				item_mc.update = function (key) {
 					var state = _global.controls[key].storedStates["state"];
@@ -90,7 +91,7 @@
 					label = label.split("%value%").join(value);
 					label = label.split("%src%").join(src);
 					
-					this.label_txt.text = label;
+					this.label_lb.text = label;
 				}
 			} else if (type == "picker") {
 				var item_mc = row_mc.createEmptyMovieClip("item" + item + "_mc", item);
