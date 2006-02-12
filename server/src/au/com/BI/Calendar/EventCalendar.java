@@ -85,7 +85,7 @@ public class EventCalendar {
 		    	if (calendarEventEntry.isStillActive()){
 		    		addEvent (calendarEventEntry);
 		    	}
-		    	addEventXMLToStore (calendarEventEntry.getId(),nextEvent);
+		    	addEventXMLToStore (calendarEventEntry.getTitle(),nextEvent);
 		    } catch (CalendarException ex){
 		    }	    	
 		}
@@ -100,22 +100,22 @@ public class EventCalendar {
 	public boolean addEvent (CalendarEventEntry calendarEventEntry){
     	if (calendarEventEntry.getEventType() == CalendarEventEntry.SINGLE_EVENT){
     		try {
-				sched.deleteJob(calendarEventEntry.getId(),Scheduler.DEFAULT_GROUP);
+				sched.deleteJob(calendarEventEntry.getTitle(),Scheduler.DEFAULT_GROUP);
 				sched.scheduleJob(calendarEventEntry.getJobDetail(), (SimpleTrigger)calendarEventEntry.getTrigger());
 				return true;
     		} catch (SchedulerException e) {
-				logger.log (Level.WARNING,"Unable to add timed macro " + calendarEventEntry.getId() + " " + e.getMessage());
+				logger.log (Level.WARNING,"Unable to add timed macro " + calendarEventEntry.getTitle() + " " + e.getMessage());
 			}
 
     	} else {
     		try {
-				sched.deleteJob(calendarEventEntry.getId(),Scheduler.DEFAULT_GROUP);
+				sched.deleteJob(calendarEventEntry.getTitle(),Scheduler.DEFAULT_GROUP);
 				sched.scheduleJob(calendarEventEntry.getJobDetail(), (CronTrigger)calendarEventEntry.getTrigger());
 				return true;
 			} catch (SchedulerException e) {
-				logger.log (Level.WARNING,"An internal scheduler error occured adding the job " + calendarEventEntry.getId() + " " + e.getMessage());
+				logger.log (Level.WARNING,"An internal scheduler error occured adding the job " + calendarEventEntry.getTitle() + " " + e.getMessage());
 			} catch (StringIndexOutOfBoundsException e){
-				logger.log (Level.WARNING,"An internal scheduler error occured adding the job " + calendarEventEntry.getId() + " " + e.getMessage());				
+				logger.log (Level.WARNING,"An internal scheduler error occured adding the job " + calendarEventEntry.getTitle() + " " + e.getMessage());				
 			}
     	}
     	return false;

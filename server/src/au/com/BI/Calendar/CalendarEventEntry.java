@@ -6,7 +6,7 @@ public class CalendarEventEntry {
 	public static final int SINGLE_EVENT = 1;
 	public static final int REPEATING_EVENT = 2;
 	protected Trigger trigger = null;
-	protected String id = "";
+	protected String title = "";
 	protected JobDetail jobDetail = null;
 	protected boolean stillActive = true;
 	
@@ -23,12 +23,12 @@ public class CalendarEventEntry {
 		this.jobDetail = jobDetail;
 	}
 
-	public String getId() {
-		return id;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setId(String title) {
-		this.id = title;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public Trigger getTrigger() {

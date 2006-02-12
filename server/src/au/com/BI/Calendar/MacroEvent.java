@@ -32,7 +32,6 @@ public class MacroEvent implements Job {
     protected String extra3 ="";
     protected String command ="";
     protected String extra5 ="";
-    protected String id ="";
     
     public MacroEvent () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -57,7 +56,6 @@ public class MacroEvent implements Job {
 	      command  = dataMap.getString("command");
 	      extra  = dataMap.getString("extra");
 	      title = dataMap.getString("Title");
-	      id = dataMap.getString("ID");
 		  skipDates = (SkipDates)dataMap.get("SkipDates");
 		  macroHandler = (MacroHandler)dataMap.get ("MacroHandler");
 		  description =dataMap.getString ("Description");

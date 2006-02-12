@@ -63,8 +63,7 @@ public class CalendarEventFactory {
 		if (eventType == null || eventType.equals ("")) {
 			eventType = "once";
 		}
-	    	String description = nextEvent.getAttributeValue("description"); 
-	    	if (description == null) description = "";
+	    	
 		String startDate = "";
 		if (eventType.equals ("once")) {
 	    		startDate = nextEvent.getAttributeValue("date"); 
@@ -90,10 +89,7 @@ public class CalendarEventFactory {
 	    	}
 	    	String totalStartDate = startDate + " " + time;
 		String totalEndDate = endDate + " 23:59:59";
-		String id  = nextEvent.getAttributeValue("id");
-		if (id == null || id.equals ("")){
-			id = Long.toString(System.currentTimeMillis());
-		}
+
 		
 	    	String macroName  = nextEvent.getAttributeValue("macroName");
 	    	String command = nextEvent.getAttributeValue("command");
@@ -112,7 +108,10 @@ public class CalendarEventFactory {
 	    		logger.log(Level.WARNING,errorMessage);
 	    	    throw new CalendarException (errorMessage);
 	    	}
-		
+	    	
+	    	String description = nextEvent.getAttributeValue("description"); 
+	    	if (description == null || description.equals ("")) description = title;
+	    	
         Date startDateDecoded;
 		if (startDate == null || startDate.equals ("")) {
 			startDateDecoded = new Date();
@@ -143,7 +142,7 @@ public class CalendarEventFactory {
 			return returnVal;
 		}
         
-		JobDetail jobDetail = new JobDetail(id, 
+		JobDetail jobDetail = new JobDetail(title, 
                 Scheduler.DEFAULT_GROUP, // job group
                 MacroEvent.class);        // the java class to execute
 		
@@ -156,7 +155,6 @@ public class CalendarEventFactory {
 		map.put("extra",extra);
 		map.put("extra2",extra2);
 		map.put("extra3",extra3);
-		map.put ("ID", id);
 		map.put ("User", user);
 		map.put ("Filter", filter);
 		map.put ("Description",description);
@@ -252,7 +250,7 @@ public class CalendarEventFactory {
 				trigger.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT );
 				returnVal.setEventType(CalendarEventEntry.SINGLE_EVENT);
 				returnVal.setTrigger(trigger);
-				returnVal.setId(title);
+				returnVal.setTitle(title);
 				returnVal.setJobDetail(jobDetail);
 				
 				return returnVal;
@@ -283,7 +281,7 @@ public class CalendarEventFactory {
 				trigger.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING );
 				returnVal.setEventType(CalendarEventEntry.REPEATING_EVENT);
 				returnVal.setTrigger(trigger);
-				returnVal.setId(title);
+				returnVal.setTitle(title);
 				returnVal.setJobDetail(jobDetail);
 				return returnVal;
 				
