@@ -1,12 +1,14 @@
 package au.com.BI.simulator.sims;
 
 import au.com.BI.simulator.conf.*;
+import au.com.BI.simulator.conf.Control.SimTypes;
+
 import java.util.*;
 import java.io.*;
 
 import java.net.*;
 
-import au.com.BI.simulator.gui.ControlType;
+import au.com.BI.simulator.gui.GUIPanel;
 import au.com.BI.simulator.gui.GUI;
 
 public abstract class SimulateDevice extends Thread {
@@ -23,7 +25,8 @@ public abstract class SimulateDevice extends Thread {
 
    public StringBuffer toSend = new StringBuffer("");  
    protected Helper helper;
-
+   public SimTypes simType = SimTypes.UNKNOWN;
+   
    // TCP Components
    public ServerSocket hostServer = null;
    public Socket socket = null;
@@ -34,8 +37,9 @@ public abstract class SimulateDevice extends Thread {
    public String groupTypeStr = "";
    public GUI gui;
    
-   public Vector controls;
-   
+   public Vector<GUIPanel> gUIPanels;
+   public Vector<Control> controls;
+     
    protected SimulationListener simListener;
    
    /////////////////////////////////////////////////////////////////
@@ -43,10 +47,10 @@ public abstract class SimulateDevice extends Thread {
    public SimulateDevice (Helper helper, GUI gui) {
 	  this.gui = gui;
 	  this.helper = helper;
-
+	  controls = new Vector<Control>();
 
 	config = helper.getConfig();
-	controls = new Vector();		
+	gUIPanels = new Vector<GUIPanel>();		
    } 
    
    public String getDeviceName() {
@@ -126,15 +130,15 @@ public abstract class SimulateDevice extends Thread {
 		changeStatusTS(Helper.BEGIN_CONNECT, false);
 	}
 
-	public abstract String buildOnString (ControlType control);
-	public abstract String buildOffString (ControlType control);
-	public abstract String buildSliderString (ControlType control,int val);
+	public abstract String buildOnString (Control control);
+	public abstract String buildOffString (Control control);
+	public abstract String buildSliderString (Control control,int val);
 	
 	public void changeStatusTS (int status, boolean noError){
-		Iterator eachControl = controls.iterator();
-		while (eachControl.hasNext()){
-			((ControlType)eachControl.next()).changeStatus(status);
+		for (GUIPanel gUIPanel : gUIPanels) {
+			gUIPanel.changeStatus(status);			
 		}
+
 		gui.changeStatusTS (status,noError);
 	}
 	
@@ -208,14 +212,6 @@ public void setConnectionStatus(int connectionStatus) {
 	this.setConnectionDetails(connectionStatus);
 }
 
-public Vector getControls () {
-	return controls;
-}
-
-public void addControl (ControlType control) {
-	controls.add(control);
-}
-
 
 public int getPort() {
 	return port;
@@ -225,5 +221,22 @@ public int getPort() {
 public void setPort(int port) {
 	this.port = port;
 }
+
+public void addControl (Control control){
+	controls.add(control);
+}
+
+public void addGUIPanel (GUIPanel gUIPanel){
+	gUIPanels.add(gUIPanel);
+}
+
+public Vector<GUIPanel> getGUIPanels() {
+	return gUIPanels;
+}
+
+public Vector<Control> getControls() {
+	return controls;
+}
+
 
 }

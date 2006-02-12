@@ -1,12 +1,10 @@
 package au.com.BI.simulator.sims;
 
-import au.com.BI.simulator.gui.ControlType;
+import au.com.BI.simulator.conf.Control.SimTypes;
 import au.com.BI.simulator.gui.GUI;
-
+import au.com.BI.simulator.conf.Control;
 
 public class SimulateGC100 extends SimulateDevice {
-   
-   public String groupTypeStr = "Comfort";
    
    /////////////////////////////////////////////////////////////////
    // The main procedure
@@ -15,6 +13,7 @@ public class SimulateGC100 extends SimulateDevice {
 	   super (helper,gui);
 	   this.setName("GC100 Simulator");
 	   this.setPort(5005);
+		simType = SimTypes.GC100;
    }
    	   
 	
@@ -44,17 +43,17 @@ public class SimulateGC100 extends SimulateDevice {
 		}
 	}
 	
-	public String buildSliderString (ControlType control,int val) {
+	public String buildSliderString (Control control,int val) {
 		return "";
 	}
 	
-	public String buildOnString (ControlType control) {
+	public String buildOnString (Control control) {
 		String toSend = "";
 		return toSend;
 	}
 
 	
-	public String buildOffString (ControlType control) {
+	public String buildOffString (Control control) {
 		String toSend = "";
 		return toSend;
 	}

@@ -4,9 +4,9 @@ package au.com.BI.simulator.sims;
 import java.util.*;
 import java.io.*;
 import java.net.*;
-import au.com.BI.simulator.gui.ControlType;
-import au.com.BI.simulator.gui.GUI;
+import au.com.BI.simulator.gui.*;
 import au.com.BI.simulator.conf.*;
+import static au.com.BI.simulator.conf.Control.*;
 
 public class Simulator {
    
@@ -31,8 +31,8 @@ public class Simulator {
    public static BufferedReader in = null;
    public static PrintWriter out = null;
    
-   public int groupType = ControlType.UNKNOWN;
-   private HashMap simulationDevices = null;
+   public SimTypes groupType = SimTypes.UNKNOWN;
+   private HashMap<SimTypes,SimulateDevice> simulationDevices = null;
    
 	SimulateUnknown textCon = null;
 	SimulateComfort comfortCon = null;
@@ -62,82 +62,67 @@ public class Simulator {
    }
    
    public void start() {
-	      Vector controls = new Vector(10);
+	      Vector<Control> controls = new Vector<Control>(10);
 
-	simulationDevices = new HashMap();
+	simulationDevices = new HashMap<SimTypes,SimulateDevice>();
 
 	
 	gui = new GUI(helper,this);
 	
 	textCon = new SimulateUnknown (helper, gui);
 	textCon.start();
-	simulationDevices.put("UNKNOWN",textCon);
+	simulationDevices.put(SimTypes.UNKNOWN,textCon);
 
 	comfortCon = new SimulateComfort (helper, gui);
 	comfortCon.start();
-	simulationDevices.put("COMFORT",comfortCon);
+	simulationDevices.put(SimTypes.COMFORT,comfortCon);
 
 	rawCon = new SimulateRaw (helper, gui);
 	rawCon.start();
-	simulationDevices.put("RAW",rawCon);
+	simulationDevices.put(SimTypes.RAW,rawCon);
 
 	cbusCon = new SimulateCBUS (helper, gui);
 	cbusCon.start();
-	simulationDevices.put("CBUS",cbusCon);
+	simulationDevices.put(SimTypes.CBUS,cbusCon);
 	
 	gc100Con = new SimulateGC100 (helper, gui);
 	gc100Con.start();
-	simulationDevices.put("GC100",gc100Con);
+	simulationDevices.put(SimTypes.GC100,gc100Con);
 
 	m1Con = new SimulateM1 (helper, gui);
 	m1Con.start();
-	simulationDevices.put("M1",m1Con);
+	simulationDevices.put(SimTypes.M1,m1Con);
 
-	
-	for (int i = 0; i < 10 ; i ++) {
-	    String groupType = helper.getPropValue("GroupType."+i);
-	    String subGroupType = helper.getPropValue("GroupSubType."+i);
-		SimulateDevice sim = (SimulateDevice)simulationDevices.get(groupType);
+	for (Control control: config.getControls()){
+		
+		SimulateDevice sim = simulationDevices.get(groupType);
 		if (sim == null) {
-			System.out.println("Could not find simulation handler for group " + i + " type : " + groupType);
+			System.out.println("Could not find simulation handler for group " + sim.toString() + " type : " + groupType);
 			continue;
 		}
 
-		ControlType control = new ControlType(sim);
-	    control.setGroupType(groupType,subGroupType);
-		String groupName = helper.getPropValue("GroupName."+i);
-		if (groupName.equals("")) continue;
-	    control.setTitle(groupName);
-	    control.setKey(helper.getPropValue("GroupKey."+i));
-	    control.setOnString(helper.getPropValue("GroupString."+i+".ON"));	    
-	    control.setOffString(helper.getPropValue("GroupString."+i+".OFF"));	
-	    String isSlider = helper.getPropValue("GroupIsSlider."+i);
-	    if (isSlider.equals("Y"))
-	    		control.setHasSlider(true);
-	    else
-	    		control.setHasSlider(false);
-	    
-	    switch (control.getGroupType()) {
-	    		case ControlType.CBUS:
+	    GUIPanel gUIPanel = new GUIPanel(sim,control);
+	        
+	    switch (control.getSimType()) {
+	    		case CBUS:
 	    			cbusCon.addControl (control);
 	    			break;
 	    			
-	    		case ControlType.COMFORT:
+	    		case COMFORT:
 	    			comfortCon.addControl (control);
 	    			break;
 
-	    		case ControlType.M1:
+	    		case M1:
 	    			m1Con.addControl (control);
 	    			break;
 	    			
-	    		case ControlType.RAW:
+	    		case RAW:
 	    			rawCon.addControl (control);
 	    			break;
 	    }
 	    controls.add(control);
-
+		gui.addGUIPanel(gUIPanel);
 	}
-	gui.addControls(controls);
 	gui.redraw();
 
 //	gui.changeStatusNTS(Helper.NULL, true, new ControlType ("UNKNOWN"));
@@ -157,61 +142,52 @@ public class Simulator {
    /////////////////////////////////////////////////////////////////
 
    public void sendString (String s) {
-	   sendString (ControlType.UNKNOWN,s);
+	   sendString (SimTypes.UNKNOWN,s);
    }
    // Add text to send-buffer
-   public  void sendString(int groupType, String s) {
-	    switch (groupType) {
-		case ControlType.CBUS:
+   public  void sendString(SimTypes simType, String s) {
+	    switch (simType) {
+		case CBUS:
 			cbusCon.sendString (s);
 			break;
 			
-		case ControlType.COMFORT:
+		case COMFORT:
 			comfortCon.sendString (s);
 			break;
 			
-		case ControlType.M1:
+		case M1:
 			m1Con.sendString (s);
 			break;
 						
-		case ControlType.RAW:
+		case RAW:
 			rawCon.sendString (s);
 			break;
 
-		case ControlType.UNKNOWN:
+		case UNKNOWN:
 			textCon.sendString (s);
 			break;
 	    }
 
    }
    
-   public SimulateDevice getSimulateDevice (ControlType groupType) {
+   public SimulateDevice getSimulateDevice (SimTypes simType) {
 	   SimulateDevice simulate = null;
 	   try {
-		   simulate = (SimulateDevice)this.simulationDevices.get(groupType.toString());
-	   } catch (ClassCastException ex) {
-		   System.out.print("Group type " + groupType.toString() + " not initialised correctly");
-		   return null;
+		   return simulationDevices.get(simType);
 	   } catch (NullPointerException ex){
 		   System.out.print("Group " + groupType.toString() + " not found");
 		   return null;
 	   }
-	   return simulate;
    }
 
    public void setConnectionStatus (int connectionStatus) {
-	    Iterator eachSim = this.simulationDevices.keySet().iterator();
-	   while (eachSim.hasNext()) {
-		   String simKey = (String)eachSim.next();
-		   SimulateDevice sim = (SimulateDevice)simulationDevices.get(simKey);
-		   if (sim != null) sim.setConnectionStatus(connectionStatus);		   
-	   }	
-	   
-	   //this.textCon.setConnectionStatus(connectionStatus);
+	   for (SimulateDevice sim : simulationDevices.values()) {
+		   sim.setConnectionStatus(connectionStatus);
+	   }
    }
    
-   public void setConnectionStatus (int connectionStatus,ControlType groupType) {
-	   SimulateDevice simulate = this.getSimulateDevice (groupType);
+   public void setConnectionStatus (int connectionStatus,SimTypes simType) {
+	   SimulateDevice simulate = this.getSimulateDevice (simType);
 	   if (simulate != null) simulate.setConnectionStatus(connectionStatus);
    }
 

@@ -3,13 +3,13 @@ package au.com.BI.simulator.sims;
 
 import java.util.*;
 
-import au.com.BI.simulator.gui.ControlType;
+import au.com.BI.simulator.gui.GUIPanel;
 import au.com.BI.simulator.gui.GUI;
+import au.com.BI.simulator.conf.Control;
+import static au.com.BI.simulator.conf.Control.*;
 
 public class SimulateCBUS extends SimulateDevice {
 
-   public String groupTypeStr = "CBUS";
-   
    /////////////////////////////////////////////////////////////////
    // The main procedure
 
@@ -17,6 +17,7 @@ public class SimulateCBUS extends SimulateDevice {
 	   super (helper,gui);
 	   this.setName("CBUS Simulator");
 	   this.setPort(5004);
+		simType = SimTypes.CBUS;
    }
    
 	public void doStartup () {
@@ -28,20 +29,20 @@ public class SimulateCBUS extends SimulateDevice {
 		   return "CBUS";
    }
    
-	public String buildOnString (ControlType control) {
+	public String buildOnString (Control control) {
 			//on
 			String toSend= "0500380079"+control.getKey();
 			toSend = helper.addCBUSChecksum(toSend) + "\n";
 			return toSend;
 	}
 	
-	public String buildOffString (ControlType control) {
+	public String buildOffString (Control control) {
 		String toSend= "0500380001"+control.getKey();
 		toSend = helper.addCBUSChecksum(toSend) + "\n";
 		return toSend;
 	}
 	
-	public String buildSliderString (ControlType control,int val) {
+	public String buildSliderString (Control control,int val) {
 		String strVal = Integer.toHexString(val);
 		if (strVal.length() == 1)  strVal = "0" + strVal;
 		String toSend= "0500380002"+control.getKey()+strVal;
@@ -64,12 +65,12 @@ public class SimulateCBUS extends SimulateDevice {
 			boolean commandFound = false;
 			if (command.equals ("79")) {
 				commandFound = true;
-				ControlType control = findControl (theKey);
+				GUIPanel control = findControl (theKey);
 				gui.changeIcon(control,true);
 			}
 			if (command.equals("01")) {
 				commandFound = true;
-				ControlType control = findControl (theKey);
+				GUIPanel control = findControl (theKey);
 				gui.changeIcon(control,false);
 				if (control.isHasSlider()){
 					control.setUpdatingSlider(true);
@@ -78,7 +79,7 @@ public class SimulateCBUS extends SimulateDevice {
 				}
 			}
 			if (!commandFound) {
-				ControlType control = findControl (theKey);
+				GUIPanel control = findControl (theKey);
 				if (control != null){
 					gui.changeIcon(control,true);
 					if (control.isHasSlider()) {
@@ -97,10 +98,10 @@ public class SimulateCBUS extends SimulateDevice {
 		} catch (IndexOutOfBoundsException ex){}
 	}
  
-	public ControlType findControl (String theKey){
+	public GUIPanel findControl (String theKey){
 		Iterator eachCon = this.controls.iterator();
 		while (eachCon.hasNext()) {
-			ControlType control = (ControlType)eachCon.next();
+			GUIPanel control = (GUIPanel)eachCon.next();
 			if (control.getKey().equals(theKey)) {
 				return control;
 			}

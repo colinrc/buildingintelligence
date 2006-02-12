@@ -3,13 +3,12 @@ package au.com.BI.simulator.sims;
 
 import java.util.*;
 
-import au.com.BI.simulator.gui.ControlType;
+import au.com.BI.simulator.conf.Control.SimTypes;
+import au.com.BI.simulator.conf.Control;
+import au.com.BI.simulator.gui.GUIPanel;
 import au.com.BI.simulator.gui.GUI;
 
 public class SimulateRaw extends SimulateDevice {
-   
-
-   public String groupTypeStr = "Raw";
    
    /////////////////////////////////////////////////////////////////
    // The main procedure
@@ -18,6 +17,7 @@ public class SimulateRaw extends SimulateDevice {
 	   super (helper,gui);
 	   this.setName("RAW Simulator");
 	   this.setPort(5003);
+		simType = SimTypes.RAW;
    }
 	
    public String getDeviceName() {
@@ -30,7 +30,7 @@ public class SimulateRaw extends SimulateDevice {
 		String theKey = in.trim();
 		Iterator eachCon = this.controls.iterator();
 		while (eachCon.hasNext()) {
-			ControlType control = (ControlType)eachCon.next();
+			GUIPanel control = (GUIPanel)eachCon.next();
 			if (control.getOnString().equals(theKey))
 				gui.changeIcon(control,true);
 			if (control.getOffString().equals(theKey))
@@ -38,18 +38,18 @@ public class SimulateRaw extends SimulateDevice {
 		}
 	}
 	
-	public String buildSliderString (ControlType control,int val) {
-		String toSend = control.getOnString();
+	public String buildSliderString (Control control,int val) {
+		String toSend = control.getKeyOn();
 		toSend += String.valueOf(val) + "\n";
 		return toSend;
 	}
 	
-	public String buildOnString (ControlType control) {
-		return control.getOnString() + "\n";
+	public String buildOnString (Control control) {
+		return control.getKeyOn() + "\n";
 	}
 
-	public String buildOffString (ControlType control) {
-		return control.getOffString() + "\n";
+	public String buildOffString (Control control) {
+		return control.getKeyOff() + "\n";
 	}
 }
 

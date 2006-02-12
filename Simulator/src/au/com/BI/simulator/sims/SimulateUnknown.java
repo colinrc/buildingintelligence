@@ -3,16 +3,16 @@ package au.com.BI.simulator.sims;
 
 import java.awt.*;
 
-import au.com.BI.simulator.gui.ControlType;
+import au.com.BI.simulator.gui.GUIPanel;
 import au.com.BI.simulator.gui.GUI;
-
+import au.com.BI.simulator.conf.Control;
 
 public class SimulateUnknown extends SimulateDevice {
    
    public static int port = 5000;
   
 
-   public ControlType groupType;
+   public GUIPanel groupType;
    public String groupTypeStr = "";
    
    /////////////////////////////////////////////////////////////////
@@ -52,16 +52,16 @@ public class SimulateUnknown extends SimulateDevice {
 	      }
 	   }
 	   
-		public String buildSliderString (ControlType control,int val) {
+		public String buildSliderString (Control control,int val) {
 			return "";
 		}
 		
-		public String buildOnString (ControlType control)
+		public String buildOnString (Control control)
 		{
 			return "";
 		}
 		
-		public String buildOffString (ControlType control){
+		public String buildOffString (Control control){
 			return "";
 		}
 }

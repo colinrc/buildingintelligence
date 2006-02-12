@@ -3,14 +3,15 @@ package au.com.BI.simulator.sims;
 
 import java.util.*;
 
-import au.com.BI.simulator.gui.ControlType;
+import static au.com.BI.simulator.conf.Control.*;
+import au.com.BI.simulator.conf.Control;
+import au.com.BI.simulator.gui.GUIPanel;
 import au.com.BI.simulator.gui.GUI;
 
 
 public class SimulateComfort extends SimulateDevice {
    
-   public String groupTypeStr = "Comfort";
-   
+  
    /////////////////////////////////////////////////////////////////
    // The main procedure
 
@@ -18,6 +19,7 @@ public class SimulateComfort extends SimulateDevice {
 	   super (helper,gui);
 	   this.setName("Comfort Simulator");
 	   this.setPort(5002);
+		simType = SimTypes.COMFORT;
    }
    	   
 	
@@ -76,7 +78,7 @@ public class SimulateComfort extends SimulateDevice {
 			String theCode = in.substring(4,6);
 			Iterator eachCon = this.controls.iterator();
 			while (eachCon.hasNext()) {
-				ControlType control = (ControlType)eachCon.next();
+				GUIPanel control = (GUIPanel)eachCon.next();
 				if (control.getKey().equals(theKey)) {
 					if (theCode.equals("00"))
 						gui.changeIcon(control,false);
@@ -87,28 +89,28 @@ public class SimulateComfort extends SimulateDevice {
 		}
 	}
 	
-	public String buildSliderString (ControlType control,int val) {
+	public String buildSliderString (Control control,int val) {
 		return "";
 	}
 	
-	public String buildOnString (ControlType control) {
+	public String buildOnString (Control control) {
 		String toSend = "";
-		if (control.getSubGroupType() == ControlType.COMFORT_INPUT){
+		if (control.getSimSubType() == SimSubTypes.INPUT){
 			toSend= "\03IP"+control.getKey()+"01"+ "\n";
 		}
-		if (control.getSubGroupType() == ControlType.COMFORT_OUTPUT){
+		if (control.getSimSubType() == SimSubTypes.OUTPUT){
 			toSend= "\03OP"+control.getKey()+"01"+ "\n";
 		}
 		return toSend;
 	}
 
 	
-	public String buildOffString (ControlType control) {
+	public String buildOffString (Control control) {
 		String toSend = "";
-		if (control.getSubGroupType() == ControlType.COMFORT_INPUT){
+		if (control.getSimSubType() == SimSubTypes.INPUT){
 			toSend= "\03IP"+control.getKey()+"00"+"\n";
 		}
-		if (control.getSubGroupType() == ControlType.COMFORT_OUTPUT){
+		if (control.getSimSubType() == SimSubTypes.OUTPUT){
 			toSend= "\03OP"+control.getKey()+"00"+"\n";
 		}	
 		return toSend;

@@ -8,8 +8,7 @@ import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-import au.com.BI.simulator.Simulator;
-import au.com.BI.simulator.sims.Helper;
+import au.com.BI.simulator.sims.*;
 import au.com.BI.simulator.util.Utility;
 import au.com.BI.simulator.conf.*;
 
@@ -159,22 +158,15 @@ public class GUI extends JPanel {
 	   }
 
 	   public void redraw () {
+		   mainFrame.pack();
+		      //mainFrame.repaint();
+		   mainFrame.setVisible(true);
 		   mainFrame.repaint();
 	   }
 	   
-	   public void addControls (Vector controls) {
-
-		   
-		   Iterator eachControl = controls.iterator();
-		   while (eachControl.hasNext()) {
-		   		ControlType control = (ControlType)eachControl.next();
-		   		JPanel eachBox = control.drawPanel(iconOn,iconOff, helper,this,simulator);
-				   buttonBar.add(eachBox);
-		   }
-		      mainFrame.pack();
-		      //mainFrame.repaint();
-		      mainFrame.setVisible(true);
-
+	   public void addGUIPanel (GUIPanel gUIPanel) {
+	   		JPanel eachBox = gUIPanel.drawPanel(iconOn,iconOff, helper,this,simulator);
+		   buttonBar.add(eachBox);
 	   }
 	   
 	   private class SimulatorAdapter extends ActionAdapter {
@@ -197,14 +189,14 @@ public class GUI extends JPanel {
             }
 	   }
 	   
-	   public void setLight (boolean state, ControlType control) {
-		   if (control == null) {
+	   public void setLight (boolean state, GUIPanel gUIPanel) {
+		   if (gUIPanel == null) {
 			   return;
 		   }
 		 if (state) {
-			 control.getLight().setIcon(iconOn);
+			 gUIPanel.getLight().setIcon(iconOn);
 		 } else {
-			 control.getLight().setIcon(iconOff);			 
+			 gUIPanel.getLight().setIcon(iconOff);			 
 		 }
 	   }
 	   
@@ -322,10 +314,10 @@ public class GUI extends JPanel {
 	   }
 
 	   private class UpdateIcon implements Runnable  {
-		   private ControlType control;
+		   private GUIPanel control;
 		   private boolean flag;
 		   
-		   public UpdateIcon (ControlType control,boolean flag) {
+		   public UpdateIcon (GUIPanel control,boolean flag) {
 			   this.control = control;
 			   this.flag = flag;
 		   }
@@ -339,12 +331,12 @@ public class GUI extends JPanel {
 	   /////////////////////////////////////////////////////////////////
 
 	   // Thread-safe way to append to the chat box
-	   public  void changeIcon(ControlType control, boolean flag) {
+	   public  void changeIcon(GUIPanel control, boolean flag) {
 		   UpdateIcon update = new UpdateIcon (control,flag);
 		   SwingUtilities.invokeLater(update);
 	   }
 	   
-	   public void setLevel (ControlType control,int level) {
+	   public void setLevel (GUIPanel control,int level) {
 		   if (control == null) {
 			   return;
 		   }
@@ -354,10 +346,10 @@ public class GUI extends JPanel {
 	   }
 
 	   private class UpdateLevel implements Runnable  {
-		   private ControlType control;
+		   private GUIPanel control;
 		   private int level;
 		   
-		   public UpdateLevel (ControlType control,int level) {
+		   public UpdateLevel (GUIPanel control,int level) {
 			   this.control = control;
 			   this.level = level;
 		   }
@@ -373,7 +365,7 @@ public class GUI extends JPanel {
 	   /////////////////////////////////////////////////////////////////
 
 	   // Thread-safe way to append to the chat box
-	   public  void changeLevel(ControlType control, int level) {
+	   public  void changeLevel(GUIPanel control, int level) {
 		   UpdateLevel update = new UpdateLevel (control,level);
 		   SwingUtilities.invokeLater(update);
 	   }

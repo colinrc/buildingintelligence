@@ -26,15 +26,9 @@ public class Config {
 	public Config() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 
-<<<<<<< .mine
 		controlFactory = ControlFactory.getInstance() ;		
 		setFactory (controlFactory);
 		controls = new ArrayList<Control>();
-=======
-		controlFactory = new ControlFactory() ;		
-		setFactory (controlFactory);
-		controls = new ArrayList (10);
->>>>>>> .r193
 	}
 
 	public void setFactory (ControlFactory controlFactory){
@@ -62,8 +56,12 @@ public class Config {
 
 			List<Element> controlList = theConfig.getChildren("control");
 			for (Element controlElement: controlList){
+				try {
 					Control newControl = controlFactory.createControl(controlElement);
 					controls.add(newControl);
+				} catch (NullPointerException ex){
+					logger.log (Level.WARNING,"Failed to add control " + ex.getMessage()); 
+				}
 			}
 			return true;
 		}

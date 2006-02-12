@@ -16,7 +16,7 @@ M1 is port 5006
 	<name>Cbus Dining Light</name>
 	<protocol>CBUS</protocol>
 	<type value="BUTTONS">
-		<key value="11" />
+		<key>11</key>
 	</type>
 </control>
 
@@ -24,7 +24,7 @@ M1 is port 5006
 	<name>Cbus Lounge LV Light</name>
 	<protocol>CBUS</protocol>
 	<type value="SLIDER" >
-		<key value="10" />
+		<key>10</key>
 	</type>
 </control>
 
@@ -32,8 +32,8 @@ M1 is port 5006
 	<name>Raw Pool Heater</name>
 	<protocol>RAW</protocol>
 	<type value="BUTTONS_RAW" >
-		<key_on value="Pool On" />
-		<key_off value="Pool Off" />
+		<key_on>Pool On</key_on>
+		<key_off>Pool Off"</key_off>
 	</type>
 </control>
 
@@ -41,7 +41,7 @@ M1 is port 5006
 	<name>Raw Pool Temp</name>
 	<protocol>RAW</protocol>
 	<type value="SLIDER_RAW" >
-		<key value="TEMP" />
+		<key>TEMP</key>
 	</type>
 </control>
 
@@ -50,7 +50,7 @@ M1 is port 5006
 	<protocol>M1</protocol>
 	<protocol_detail>INPUT</protocol_detail>
 	<type value="BUTTONS" >
-		<key value="002" />
+		<key>002</key>
 	</type>
 </control>
 
@@ -59,7 +59,7 @@ M1 is port 5006
 	<protocol>M1</protocol>
 	<protocol_detail>OUTPUT</protocol_detail>
 	<type value="BUTTONS" >
-		<key value="003" />
+		<key>003</key>
 	</type>
 </control>
 
@@ -68,7 +68,7 @@ M1 is port 5006
 	<protocol>COMFORT</protocol>
 	<protocol_detail>INPUT</protocol_detail>
 	<type value="BUTTONS" >
-		<key value="002" />
+		<key>002</key>
 	</type>
 </control>
 
@@ -78,7 +78,7 @@ M1 is port 5006
 	<protocol>COMFORT</protocol>
 	<protocol_detail>CONTROLS</protocol_detail>
 	<type value="BUTTONS" >
-		<key value="002" />
+		<key>002</key>
 	</type>
 </control>
 
@@ -87,9 +87,9 @@ M1 is port 5006
 	<protocol>COMFORT</protocol>
 	<protocol_detail>CONTROLS</protocol_detail>
 	<type value="CONTROLS">
-		<key value="AM01" Label="Alarm 01" />
-		<key value="AM02" Label="Alarm 02" />
-		<key value="DB01" Label="Doorbell" />
+		<key label="Alarm 01">AM01</key>
+		<key label="Alarm 02">AM02</key>
+		<key label="Doorbell">DB01</key>
 	</type>
 </control>
 

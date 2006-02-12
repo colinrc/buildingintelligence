@@ -3,13 +3,13 @@ package au.com.BI.simulator.sims;
 
 import java.util.*;
 
-import au.com.BI.simulator.gui.ControlType;
-import au.com.BI.simulator.gui.GUI;
+import static au.com.BI.simulator.conf.Control.*;
+import au.com.BI.simulator.conf.*;
+import au.com.BI.simulator.gui.*;
 import au.com.BI.simulator.util.Utility;
 
 public class SimulateM1 extends SimulateDevice {
    
-   public String groupTypeStr = "M1";
    protected M1Helper m1Helper;
    /////////////////////////////////////////////////////////////////
    // The main procedure
@@ -19,6 +19,7 @@ public class SimulateM1 extends SimulateDevice {
 	   this.setName("M1 Simulator");
 	   this.setPort(5006);
 	   m1Helper = new M1Helper ();
+		simType = SimTypes.M1;
    }
    	   
 	
@@ -47,7 +48,7 @@ public class SimulateM1 extends SimulateDevice {
 			String theKey = in.substring(4,7);
 			Iterator eachCon = this.controls.iterator();
 			while (eachCon.hasNext()) {
-				ControlType control = (ControlType)eachCon.next();
+				GUIPanel control = (GUIPanel)eachCon.next();
 				if (control.getKey().equals(theKey)) {
 						gui.changeIcon(control,false);
 				}
@@ -58,7 +59,7 @@ public class SimulateM1 extends SimulateDevice {
 			String theKey = in.substring(4,7);
 			Iterator eachCon = this.controls.iterator();
 			while (eachCon.hasNext()) {
-				ControlType control = (ControlType)eachCon.next();
+				GUIPanel control = (GUIPanel)eachCon.next();
 				if (control.getKey().equals(theKey)) {
 						gui.changeIcon(control,true);
 				}
@@ -68,28 +69,28 @@ public class SimulateM1 extends SimulateDevice {
 
 	}
 	
-	public String buildSliderString (ControlType control,int val) {
+	public String buildSliderString (Control control,int val) {
 		return "";
 	}
 	
-	public String buildOnString (ControlType control) {
+	public String buildOnString (Control control) {
 		String toSend = "";
-		if (control.getSubGroupType() == ControlType.M1_INPUT){
+		if (control.getSimSubType() == SimSubTypes.INPUT){
 			toSend= "\03IP"+control.getKey()+"01"+ "\r\n";
 		}
-		if (control.getSubGroupType() == ControlType.M1_OUTPUT){
+		if (control.getSimSubType() == SimSubTypes.OUTPUT){
 			toSend= m1Helper.buildCompleteM1String("CC"+Utility.padString(control.getKey(),3)+"100")+"\r\n";
 		}
 		return toSend;
 	}
 
 	
-	public String buildOffString (ControlType control) {
+	public String buildOffString (Control control) {
 		String toSend = "";
-		if (control.getSubGroupType() == ControlType.M1_INPUT){
+		if (control.getSimSubType() == SimSubTypes.INPUT){
 			toSend= m1Helper.buildCompleteM1String("CC"+Utility.padString(control.getKey(),3)+"00")+"\r\n";
 		}
-		if (control.getSubGroupType() == ControlType.M1_OUTPUT){
+		if (control.getSimSubType() == SimSubTypes.OUTPUT){
 			toSend= m1Helper.buildCompleteM1String("CC"+Utility.padString(control.getKey(),3)+"000")+"\r\n";
 		}	
 		return toSend;
