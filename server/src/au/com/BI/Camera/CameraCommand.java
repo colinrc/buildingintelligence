@@ -45,6 +45,20 @@ public class CameraCommand extends Command implements CommandInterface {
 	public boolean cacheAllCommands () {
 		return true;
 	}
-
+	
+	/** 
+	 * Returns the XML representation of this command 
+	 */
+	public Element getXMLCommand () {
+		if (displayName == null || commandCode == null){ 
+			return null;
+		}
+		
+		Element element = super.getXMLCommand();
+		
+		element.setAttribute ("KEY", displayName);
+			
+		return element;
+	}
 	
 }
