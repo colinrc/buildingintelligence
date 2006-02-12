@@ -3,13 +3,13 @@ import mx.utils.Delegate;
 class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 	private var raw_interfaces:Array;
 	private var cataloguesNode:XMLNode;
-	private var interfaces_dg:DataGrid;
+	public var interfaces_dg:DataGrid;
 	private var save_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var string_lb:Label;
 	private var dataGridHandler:Object;
-	private var dataGridHandler2:Object;	
+	private var dataGridHandler2:Object;
 	private var catalogueDP:Array;
 	private var vars_dg:DataGrid;
 	public function init() {
@@ -28,8 +28,8 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		dataGridHandler.setDataGrid(interfaces_dg);
 		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
 		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addCatalogueComboBoxColumn("catalogue", "Catalogue", catalogueDP);
-		dataGridHandler.addCodeComboBoxColumn("code", "Code");
+		dataGridHandler.addCatalogueComboBoxColumn("catalogue", "Catalogue", catalogueDP, this);
+		dataGridHandler.addCodeComboBoxColumn("code", "Code", this);
 		dataGridHandler.addTextInputColumn("command", "Command", restrictions);
 		dataGridHandler.addTextInputColumn("extra", "Extra", restrictions);
 		dataGridHandler.addTextInputColumn("extra2", "Extra2", restrictions);
@@ -37,14 +37,12 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions);
 		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions);
 		dataGridHandler.addHiddenColumn("vars");
-		
 		dataGridHandler2 = new Forms.DataGrid.DynamicDataGrid();
 		var restrictions2 = new Object();
 		restrictions2.editable = false;
-		dataGridHandler2.setDataGrid(vars_dg);		
+		dataGridHandler2.setDataGrid(vars_dg);
 		dataGridHandler2.addTextInputColumn("name", "Name", restrictions2);
-		dataGridHandler2.addTextInputColumn("value", "Value", restrictions);		
-		
+		dataGridHandler2.addValueInputColumn("value", "Value", restrictions, this);
 		var DP = new Array();
 		for (var raw_interface in raw_interfaces) {
 			var newRaw_interface = new Object();
@@ -165,7 +163,7 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 			}
 		}
 		var tempDP = new Array();
-		for(var variable in interfaces_dg.selectedItem.vars) {
+		for (var variable in interfaces_dg.selectedItem.vars) {
 			var newVariable = new Object();
 			newVariable.name = interfaces_dg.selectedItem.vars[variable].attributes.NAME;
 			newVariable.value = interfaces_dg.selectedItem.vars[variable].attributes.VALUE;
@@ -175,24 +173,123 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		string_lb.text = tempString;
 	}
 	public function save():Void {
-		/*var newRaw_Interfaces = new Array();
-		for(var index = 0; index < interfaces_dg.length; index++){
-		var Raw_Interface = new Object();
-		Raw_Interface.name = interfaces_dg.getItemAt(index).name;
-		newRaw_Interfaces.push(Raw_Interface);
+		var newRaw_Interfaces = new Array();
+		var DP = dataGridHandler.getDataGridDataProvider();
+		DP.sortOn(["display_name", "name", "catalogue", "code", "command"]);
+		for (var index = 0; index<DP.length; index++) {
+			var foundInterface = false;
+			for (var rawInterface in newRaw_Interfaces) {
+				if ((newRaw_Interfaces[rawInterface].attributes.NAME == DP[index].name) && (newRaw_Interfaces[rawInterface].attributes.DISPLAY_NAME == DP[index].display_name)) {
+					foundInterface = true;
+					var foundItems = false;
+					for (var rawItem in newRaw_Interfaces[rawInterface].childNodes) {
+						if (newRaw_Interfaces[rawInterface].childNodes[rawItem].attributes.CATALOGUE == DP[index].catalogue) {
+							foundItems = true;
+							var Raw = new XMLNode(1, "RAW");
+							if (DP[index].code.length) {
+								Raw.attributes.CODE = DP[index].code;
+							}
+							if (DP[index].command.length) {
+								Raw.attributes.COMMAND = DP[index].command;
+							}
+							if (DP[index].extra.length) {
+								Raw.attributes.EXTRA = DP[index].extra;
+							}
+							if (DP[index].extra2.length) {
+								Raw.attributes.EXTRA2 = DP[index].extra2;
+							}
+							if (DP[index].extra3.length) {
+								Raw.attributes.EXTRA3 = DP[index].extra3;
+							}
+							if (DP[index].extra4.length) {
+								Raw.attributes.EXTRA4 = DP[index].extra4;
+							}
+							if (DP[index].extra5.length) {
+								Raw.attributes.EXTRA5 = DP[index].extra5;
+							}
+							for (var variable in DP[index].vars) {
+								Raw.appendChild(DP[index].vars[variable]);
+							}
+							newRaw_Interfaces[rawInterface].childNodes[rawItem].appendChild(Raw);
+						}
+					}
+					if (!foundItems) {
+						var Raw_Items = new XMLNode(1, "RAW_ITEMS");
+						if (DP[index].catalogue.length) {
+							Raw_Items.attributes.CATALOGUE = DP[index].catalogue;
+						}
+						var Raw = new XMLNode(1, "RAW");
+						if (DP[index].code.length) {
+							Raw.attributes.CODE = DP[index].code;
+						}
+						if (DP[index].command.length) {
+							Raw.attributes.COMMAND = DP[index].command;
+						}
+						if (DP[index].extra.length) {
+							Raw.attributes.EXTRA = DP[index].extra;
+						}
+						if (DP[index].extra2.length) {
+							Raw.attributes.EXTRA2 = DP[index].extra2;
+						}
+						if (DP[index].extra3.length) {
+							Raw.attributes.EXTRA3 = DP[index].extra3;
+						}
+						if (DP[index].extra4.length) {
+							Raw.attributes.EXTRA4 = DP[index].extra4;
+						}
+						if (DP[index].extra5.length) {
+							Raw.attributes.EXTRA5 = DP[index].extra5;
+						}
+						for (var variable in DP[index].vars) {
+							Raw.appendChild(DP[index].vars[variable]);
+						}
+						Raw_Items.appendChild(Raw);
+						newRaw_Interfaces[rawInterface].appendChild(Raw_Items);
+					}
+				}
+			}
+			if (!foundInterface) {
+				var Raw_Interface = new XMLNode(1, "RAW_INTERFACE");
+				if (DP[index].name.length) {
+					Raw_Interface.attributes.NAME = DP[index].name;
+				}
+				if (DP[index].display_name.length) {
+					Raw_Interface.attributes.DISPLAY_NAME = DP[index].display_name;
+				}
+				var Raw_Items = new XMLNode(1, "RAW_ITEMS");
+				if (DP[index].catalogue.length) {
+					Raw_Items.attributes.CATALOGUE = DP[index].catalogue;
+				}
+				var Raw = new XMLNode(1, "RAW");
+				if (DP[index].code.length) {
+					Raw.attributes.CODE = DP[index].code;
+				}
+				if (DP[index].command.length) {
+					Raw.attributes.COMMAND = DP[index].command;
+				}
+				if (DP[index].extra.length) {
+					Raw.attributes.EXTRA = DP[index].extra;
+				}
+				if (DP[index].extra2.length) {
+					Raw.attributes.EXTRA2 = DP[index].extra2;
+				}
+				if (DP[index].extra3.length) {
+					Raw.attributes.EXTRA3 = DP[index].extra3;
+				}
+				if (DP[index].extra4.length) {
+					Raw.attributes.EXTRA4 = DP[index].extra4;
+				}
+				if (DP[index].extra5.length) {
+					Raw.attributes.EXTRA5 = DP[index].extra5;
+				}
+				for (var variable in DP[index].vars) {
+					Raw.appendChild(DP[index].vars[variable]);
+				}
+				Raw_Items.appendChild(Raw);
+				Raw_Interface.appendChild(Raw_Items);
+				newRaw_Interfaces.push(Raw_Interface);
+			}
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({raw_interfaces:newRaw_Interfaces}));
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,false);
-		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
-		for(var child in _global.left_tree.selectedNode.childNodes){
-		_global.left_tree.selectedNode.childNodes[child].removeNode();
-		}
-		// Nodes are added in reverse order to maintain consistancy
-		_global.left_tree.selectedNode.appendChild(new XMLNode(1,"Placeholder"));
-		for(var child in newNode.childNodes){
-		_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
-		}
-		_global.left_tree.selectedNode.lastChild.removeNode();
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,true);*/
+		_global.left_tree.selectedNode.object.setData({raw_interfaces:newRaw_Interfaces});
 	}
 }

@@ -8,6 +8,7 @@ class Forms.DataGrid.CatalogueComboBoxCellRenderer extends UIComponent {
 	// the function we receive from the list
 	var getDataLabel:Function;
 	// the function we receive from the list
+	var rawInterFaceForm:MovieClip;	
 	function ComboBoxCellRenderer() {
 	}
 	function createChildren(Void):Void {
@@ -37,6 +38,7 @@ class Forms.DataGrid.CatalogueComboBoxCellRenderer extends UIComponent {
 				label.addEventListener("change", this);
 				label._visible = (item != undefined);
 				label.dataProvider = itemObject.DP;
+				rawInterFaceForm = itemObject.form;
 				for (var index in label.dataProvider) {
 					if (itemObject.label == label.dataProvider[index].label) {
 						label.selectedIndex = index;
@@ -66,7 +68,28 @@ class Forms.DataGrid.CatalogueComboBoxCellRenderer extends UIComponent {
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.selectedItem.label;
 		listOwner.dataProvider[itemLocation.itemIndex].code.DP = label.selectedItem.data;
-		listOwner.dataProvider[itemLocation.itemIndex].code.label = label.selectedItem.data[0].label;		
+		listOwner.dataProvider[itemLocation.itemIndex].code.label = label.selectedItem.data[0].label;
+		var blankVars = new Array();
+		var splitString = label.selectedItem.data[0].data.split("%");
+		var isEven = false;
+		for (var subString in splitString) {
+			if (isEven) {
+				if ((splitString[subString] != "COMMAND") && (splitString[subString] != "EXTRA") && (splitString[subString] != "EXTRA2") && (splitString[subString] != "EXTRA3") && (splitString[subString] != "EXTRA4") && (splitString[subString] != "EXTRA5")) {
+					var newVar = new XMLNode(1, "VARS");
+					newVar.attributes.NAME = splitString[subString];
+					newVar.attributes.VALUE = "";
+					blankVars.push(newVar);
+				}
+				isEven = false;
+			} else {
+				isEven = true;
+			}
+		}
+		listOwner.dataProvider[itemLocation.itemIndex].vars = new Array();
+		for (var variable in blankVars) {
+			listOwner.dataProvider[itemLocation.itemIndex].vars.push(blankVars[variable]);
+		}		
 		listOwner.dataProvider.updateViews("change");
+		rawInterFaceForm.itemChange({});		
 	}
 }

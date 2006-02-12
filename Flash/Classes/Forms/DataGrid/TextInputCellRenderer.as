@@ -32,7 +32,7 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 		if ((itemObject.sel)&&(itemObject.restrictions.editable != false)){
 			if (label._name != "TextInput") {
 				label = createObject("TextInput", "TextInput", 1, {styleName:this, owner:this});
-				label.addEventListener("change", this);
+				label.addEventListener("enter", this);
 				label._visible = (item != undefined);
 				for (var restriction in itemObject.restrictions) {
 					label[restriction] = itemObject.restrictions[restriction];
@@ -56,9 +56,11 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 	function getPreferredWidth(Void):Number {
 		return 20;
 	}
-	function change() {
+	function enter() {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
+		listOwner.dataProvider.updateViews("change");		
+		listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;
 	}
 }

@@ -27,6 +27,17 @@ class Forms.DataGrid.DynamicDataGrid {
 		columns[name].type = "text";
 		columns[name].restrictions = restrictions;
 	}
+	public function addValueInputColumn(name:String, heading:String, restrictions:Object, rawInterFaceForm:MovieClip) {
+		my_dg.addColumn(name);
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ValueInputCellRenderer";
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
+		columns[name] = new Object();
+		columns[name].type = "value";
+		columns[name].restrictions = restrictions;
+		columns[name].rawInterFaceForm = rawInterFaceForm;				
+	}	
 	public function addCheckColumn(name:String, heading:String, values:Object) {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
@@ -47,7 +58,7 @@ class Forms.DataGrid.DynamicDataGrid {
 		columns[name].type = "combo";
 		columns[name].DP = DP;
 	}
-	public function addCodeComboBoxColumn(name:String, heading:String) {
+	public function addCodeComboBoxColumn(name:String, heading:String, rawInterFaceForm:MovieClip) {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CodeComboBoxCellRenderer";
@@ -55,16 +66,18 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
 		columns[name] = new Object();
 		columns[name].type = "codecombo";
+		columns[name].rawInterFaceForm = rawInterFaceForm;
 	}
-	public function addCatalogueComboBoxColumn(name:String, heading:String, DP:Array) {
+	public function addCatalogueComboBoxColumn(name:String, heading:String, DP:Array, rawInterFaceForm:MovieClip) {
 		my_dg.addColumn(name);
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CatalogueComboBoxCellRenderer";
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
 		columns[name] = new Object();
-		columns[name].type = "combo";
+		columns[name].type = "cataloguecombo";
 		columns[name].DP = DP;
+		columns[name].rawInterFaceForm = rawInterFaceForm;
 	}
 	public function addColourColumn(name:String, heading:String) {
 		my_dg.addColumn(name);
@@ -85,9 +98,9 @@ class Forms.DataGrid.DynamicDataGrid {
 		buttonColumns[name].attributes = attributes;
 		buttonColumns[name].callBack = callBack;
 	}
-	public function addHiddenColumn(name:String){
+	public function addHiddenColumn(name:String) {
 		columns[name] = new Object();
-		columns[name].type = "hidden";		
+		columns[name].type = "hidden";
 	}
 	public function setDataGridDataProvider(new_dp:Array) {
 		var processed_dp = new Array();
@@ -102,6 +115,13 @@ class Forms.DataGrid.DynamicDataGrid {
 					};
 					newRow[column] = newText;
 					break;
+				case "value" :
+					var newText = {label:new_dp[row][column], sel:false, restrictions:columns[column].restrictions, form:columns[column].rawInterFaceForm};
+					newText.toString = function():String  {
+						return this.label;
+					};
+					newRow[column] = newText;
+					break;				
 				case "check" :
 					var newCheck = {label:new_dp[row][column], values:columns[column].values};
 					newCheck.toString = function():String  {
@@ -116,6 +136,13 @@ class Forms.DataGrid.DynamicDataGrid {
 					};
 					newRow[column] = newCombo;
 					break;
+				case "cataloguecombo" :
+					var newCombo = {label:new_dp[row][column], sel:false, DP:columns[column].DP, form:columns[column].rawInterFaceForm};
+					newCombo.toString = function():String  {
+						return this.label;
+					};
+					newRow[column] = newCombo;
+					break;
 				case "colour" :
 					var newColour = {colour:new_dp[row][column], sel:false};
 					newColour.toString = function():String  {
@@ -124,7 +151,7 @@ class Forms.DataGrid.DynamicDataGrid {
 					newRow[column] = newColour;
 					break;
 				case "codecombo" :
-					var newCombo = {label:new_dp[row][column].label, sel:false, DP:new_dp[row][column].DP};
+					var newCombo = {label:new_dp[row][column].label, sel:false, DP:new_dp[row][column].DP, form:columns[column].rawInterFaceForm};
 					newCombo.toString = function():String  {
 						return this.label;
 					};
@@ -133,7 +160,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				case "hidden" :
 					newRow[column] = new_dp[row][column];
 					break;
-				}					
+				}
 			}
 			for (var column in buttonColumns) {
 				var newButton = new Object();
@@ -151,16 +178,18 @@ class Forms.DataGrid.DynamicDataGrid {
 			var newRow = new Object();
 			for (var column in columns) {
 				switch (columns[column].type) {
+				case "value" :
 				case "text" :
 				case "check" :
 				case "combo" :
+				case "cataloguecombo" :
 				case "codecombo" :
 					newRow[column] = my_dg.dataProvider[row][column].label;
 					break;
 				case "colour" :
 					newRow[column] = my_dg.dataProvider[row][column].colour;
 					break;
-				case "hidden":
+				case "hidden" :
 					newRow[column] = my_dg.dataProvider[row][column];
 					break;
 				}
@@ -182,6 +211,13 @@ class Forms.DataGrid.DynamicDataGrid {
 				};
 				newRow[column] = newText;
 				break;
+			case "value" :
+				var newText = {label:"", sel:false, restrictions:columns[column].restrictions, form:columns[column].rawInterFaceForm};
+				newText.toString = function():String  {
+					return this.label;
+				};
+				newRow[column] = newText;
+				break;				
 			case "check" :
 				var newCheck = {label:columns[column].values.False, values:columns[column].values};
 				newCheck.toString = function():String  {
@@ -190,13 +226,20 @@ class Forms.DataGrid.DynamicDataGrid {
 				newRow[column] = newCheck;
 				break;
 			case "codecombo" :
-				var newCombo = {label:columns[column].DP[0].label, sel:false, DP:codeDP};
+				var newCombo = {label:columns[column].DP[0].label, sel:false, DP:codeDP, form:columns[column].rawInterFaceForm};
 				newCombo.toString = function():String  {
 					return this.label;
 				};
 				newRow[column] = newCombo;
 				break;
 			case "combo" :
+				var newCombo = {label:columns[column].DP[0].label, sel:false, DP:columns[column].DP, form:columns[column].rawInterFaceForm};
+				newCombo.toString = function():String  {
+					return this.label;
+				};
+				newRow[column] = newCombo;
+				break;
+			case "cataloguecombo" :
 				var newCombo = {label:columns[column].DP[0].label, sel:false, DP:columns[column].DP};
 				newCombo.toString = function():String  {
 					return this.label;
@@ -210,7 +253,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				};
 				newRow[column] = newColour;
 				break;
-			case "hidden":
+			case "hidden" :
 				newRow[column] = new Object();
 				break;
 			}
@@ -241,7 +284,9 @@ class Forms.DataGrid.DynamicDataGrid {
 					case "combo" :
 					case "codecombo" :
 					case "text" :
+					case "value" :
 					case "colour" :
+					case "cataloguecombo" :
 						my_dg.dataProvider[item][column].sel = false;
 						break;
 					}
@@ -251,8 +296,10 @@ class Forms.DataGrid.DynamicDataGrid {
 				switch (columns[my_dg.columnNames[event.columnIndex]].type) {
 				case "combo" :
 				case "text" :
+				case "value" :				
 				case "colour" :
 				case "codecombo" :
+				case "cataloguecombo" :
 					my_dg.dataProvider[event.itemIndex][my_dg.columnNames[event.columnIndex]].sel = true;
 					break;
 				}

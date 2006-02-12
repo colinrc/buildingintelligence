@@ -8,6 +8,7 @@ class Forms.DataGrid.CodeComboBoxCellRenderer extends UIComponent {
 	// the function we receive from the list
 	var getDataLabel:Function;
 	// the function we receive from the list
+	var rawInterFaceForm:MovieClip;
 	function ComboBoxCellRenderer() {
 	}
 	function createChildren(Void):Void {
@@ -37,10 +38,11 @@ class Forms.DataGrid.CodeComboBoxCellRenderer extends UIComponent {
 				label.addEventListener("change", this);
 				label._visible = (item != undefined);
 				label.dataProvider = itemObject.DP;
+				rawInterFaceForm = itemObject.form;
 				for (var index in label.dataProvider) {
 					if (itemObject.label == label.dataProvider[index].label) {
 						label.selectedIndex = index;
-						listOwner.dataProvider[itemLocation.itemIndex].code.DP = label.selectedItem.data;
+						//listOwner.dataProvider[itemLocation.itemIndex].code.DP = label.selectedItem.data;
 					}
 				}
 				size();
@@ -65,6 +67,7 @@ class Forms.DataGrid.CodeComboBoxCellRenderer extends UIComponent {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.selectedItem.label;
+		//listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.dataProvider;		
 		var blankVars = new Array();
 		var splitString = label.selectedItem.data.split("%");
 		var isEven = false;
@@ -85,6 +88,7 @@ class Forms.DataGrid.CodeComboBoxCellRenderer extends UIComponent {
 		for (var variable in blankVars) {
 			listOwner.dataProvider[itemLocation.itemIndex].vars.push(blankVars[variable]);
 		}
+		rawInterFaceForm.itemChange({});
 		listOwner.dataProvider.updateViews("change");
 	}
 }
