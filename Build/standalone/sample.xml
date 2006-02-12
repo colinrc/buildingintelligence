@@ -409,6 +409,12 @@
 		</control>
 		<control type="audioPanel">
 			<row>
+				<item type="button" label="1" command="keyPress" extra="01" />
+				<item type="button" label="2" command="keyPress" extra="02" />
+				<item type="button" label="3" command="keyPress" extra="03" />
+				<item type="button" label="Away" command="keyPress" extra="0D" />
+			</row>
+			<row>
 				<item type="label" states="on,off" formats="%name% (%src%):,%name% (OFF):" />
 			</row>
 			<row>

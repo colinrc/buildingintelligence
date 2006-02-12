@@ -76,7 +76,6 @@
 	private function draw():Void {
 		if (!__width) return;
 		
-		trace("Asd: " + __width);
 		label_txt._width = __width;
 		label_txt._height = __height;
 

@@ -162,7 +162,7 @@
 					}
 				}
 			} else if (type == "button") {
-				var item_mc = row_mc.attachMovie("bi.ui.Button", "item" + item + "_mc", item, {settings:{width:width, height:height, label:items[item].label, iconName:items[item].icon, toggle:items[item].showOn, bgColour:items[item].bgColour, borderColour:items[item].borderColour, fontSize:items[item].fontSize, fontColour:items[item].fontColour}});
+				var item_mc = row_mc.attachMovie("bi.ui.Button", "item" + item + "_mc", item, {settings:{width:width, height:height, label:items[item].label.toString(), iconName:items[item].icon, toggle:items[item].showOn, bgColour:items[item].bgColour, borderColour:items[item].borderColour, fontSize:items[item].fontSize, fontColour:items[item].fontColour}});
 				item_mc.addEventListener("press", item_mc);
 				item_mc.addEventListener("release", item_mc);
 				item_mc.sound = items[item].sound;
