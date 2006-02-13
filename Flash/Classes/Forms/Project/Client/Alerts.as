@@ -127,14 +127,11 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 				var newObject = new Object();
 				newObject.label = left_li.selectedItem.label;
 				right_li.addItem(newObject);
-				var newKeys = "";
+				var newKeys = new Array();
 				for (var item in right_li.dataProvider) {
-					newKeys += right_li.dataProvider[item].label;
-					if (item != right_li.dataProvider.length-1) {
-						newKeys += ", ";
-					}
+					newKeys.push(right_li.dataProvider[item].label);
 				}
-				alerts_dg.selectedItem.keys = newKeys;
+				alerts_dg.selectedItem.keys = newKeys.join(",");
 			}
 		}
 	}
@@ -152,38 +149,29 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 				right_li.addItem(newObject);
 			}
 		}
-		var newKeys = "";
+		var newKeys = new Array();
 		for (var item in right_li.dataProvider) {
-			newKeys += right_li.dataProvider[item].label;
-			if (item != right_li.dataProvider.length-1) {
-				newKeys += ", ";
-			}
+			newKeys.push(right_li.dataProvider[item].label);
 		}
-		alerts_dg.selectedItem.keys = newKeys;
+		alerts_dg.selectedItem.keys = newKeys.join(",");
 	}
 	private function remSel() {
 		if (right_li.selectedItem != undefined) {
 			right_li.removeItemAt(right_li.selectedIndex);
-			var newKeys = "";
+			var newKeys = new Array();
 			for (var item in right_li.dataProvider) {
-				newKeys += right_li.dataProvider[item].label;
-				if (item != right_li.dataProvider.length-1) {
-					newKeys += ", ";
-				}
+				newKeys.push(right_li.dataProvider[item].label);
 			}
-			alerts_dg.selectedItem.keys = newKeys;
+			alerts_dg.selectedItem.keys = newKeys.join(",");
 		}
 	}
 	private function remAll() {
 		right_li.removeAll();
-		var newKeys = "";
+		var newKeys = new Array();
 		for (var item in right_li.dataProvider) {
-			newKeys += right_li.dataProvider[item].label;
-			if (item != right_li.dataProvider.length-1) {
-				newKeys += ", ";
-			}
+			newKeys.push(right_li.dataProvider[item].label);
 		}
-		alerts_dg.selectedItem.keys = newKeys;
+		alerts_dg.selectedItem.keys = newKeys.join(",");
 	}
 	private function hideButtons(visible:Boolean) {
 		left_li._visible = visible;
