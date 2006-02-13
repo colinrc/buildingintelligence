@@ -226,7 +226,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				newRow[column] = newCheck;
 				break;
 			case "codecombo" :
-				var newCombo = {label:columns[column].DP[0].label, sel:false, DP:codeDP, form:columns[column].rawInterFaceForm};
+				var newCombo = {label:codeDP[0].label, sel:false, DP:codeDP, form:columns[column].rawInterFaceForm};
 				newCombo.toString = function():String  {
 					return this.label;
 				};

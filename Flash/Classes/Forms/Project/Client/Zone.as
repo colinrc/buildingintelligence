@@ -11,7 +11,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 	private var background:String;
 	private var cycle_chk:CheckBox;
 	private var cycle:String;
-	private var alignment_ti:TextInput;
+	private var alignment_cmb:ComboBox;
 	private var alignment:String;
 	private var hideFromList_chk:CheckBox;
 	private var hideFromList:String;
@@ -28,7 +28,13 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		name_ti.text = name;
 		map_ti.text = map;
 		background_ti.text = background;
-		alignment_ti.text = alignment;
+		/*********************************/
+		for (var align in alignment_cmb.dataProvider) {
+			if (alignment_cmb.dataProvider[align].label == alignment) {
+				alignment_cmb.selectedIndex = align;
+			}
+		}
+		/********************************/
 		if (cycle == "true") {
 			cycle_chk.selected = true;
 		} else {
@@ -105,7 +111,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		} else {
 			hideFromList = "false";
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({panels:newPanels, rooms:newRooms, name:name_ti.text, map:map_ti.text, background:background_ti.text, cycle:cycle, alignment:alignment_ti.text, hideFromList:hideFromList}));
+		_global.left_tree.selectedNode.object.setData(new Object({panels:newPanels, rooms:newRooms, name:name_ti.text, map:map_ti.text, background:background_ti.text, cycle:cycle, alignment:alignment_cmb.selectedItem.label, hideFromList:hideFromList}));
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
 		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
 		for (var child in _global.left_tree.selectedNode.childNodes) {

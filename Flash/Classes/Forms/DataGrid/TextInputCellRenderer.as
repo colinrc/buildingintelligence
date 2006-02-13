@@ -1,5 +1,5 @@
 ﻿import mx.core.UIComponent;
-//import mx.controls.TextInput;
+import mx.utils.Delegate;
 class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 	var label:MovieClip;
 	var listOwner:MovieClip;
@@ -32,7 +32,8 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 		if ((itemObject.sel)&&(itemObject.restrictions.editable != false)){
 			if (label._name != "TextInput") {
 				label = createObject("TextInput", "TextInput", 1, {styleName:this, owner:this});
-				label.addEventListener("enter", this);
+				label.addEventListener("enter", Delegate.create(this, enterText));
+				label.addEventListener("change", Delegate.create(this, changeText));
 				label._visible = (item != undefined);
 				for (var restriction in itemObject.restrictions) {
 					label[restriction] = itemObject.restrictions[restriction];
@@ -56,7 +57,13 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 	function getPreferredWidth(Void):Number {
 		return 20;
 	}
-	function enter() {
+	function changeText() {
+		var itemLocation = getCellIndex();
+		var columnName = listOwner.columnNames[itemLocation.columnIndex];
+		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
+		listOwner.dataProvider.updateViews("change");		
+	}	
+	function enterText() {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;

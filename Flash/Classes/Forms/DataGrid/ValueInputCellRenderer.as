@@ -1,5 +1,5 @@
 ﻿import mx.core.UIComponent;
-//import mx.controls.TextInput;
+import mx.utils.Delegate;
 class Forms.DataGrid.ValueInputCellRenderer extends UIComponent {
 	var label:MovieClip;
 	var listOwner:MovieClip;
@@ -33,7 +33,8 @@ class Forms.DataGrid.ValueInputCellRenderer extends UIComponent {
 		if ((itemObject.sel) && (itemObject.restrictions.editable != false)) {
 			if (label._name != "TextInput") {
 				label = createObject("TextInput", "TextInput", 1, {styleName:this, owner:this});
-				label.addEventListener("enter", this);
+				label.addEventListener("enter", Delegate.create(this, enterText));
+				label.addEventListener("change", Delegate.create(this, changeText));
 				label._visible = (item != undefined);
 				rawInterFaceForm = itemObject.form;
 				for (var restriction in itemObject.restrictions) {
@@ -58,7 +59,21 @@ class Forms.DataGrid.ValueInputCellRenderer extends UIComponent {
 	function getPreferredWidth(Void):Number {
 		return 20;
 	}
-	function enter() {
+	function changeText() {	
+		var itemLocation = getCellIndex();
+		var columnName = listOwner.columnNames[itemLocation.columnIndex];
+		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
+		listOwner.dataProvider.updateViews("change");
+		var valueName = listOwner.dataProvider[itemLocation.itemIndex].name.label;
+		var tempVars = rawInterFaceForm.interfaces_dg.dataProvider[rawInterFaceForm.interfaces_dg.selectedIndex].vars;
+		for (var child in tempVars) {
+			if (tempVars[child].attributes.NAME == valueName) {
+				tempVars[child].attributes.VALUE = label.text;
+			}
+		}
+		rawInterFaceForm.itemChange({});	
+	}
+	function enterText() {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
@@ -71,8 +86,6 @@ class Forms.DataGrid.ValueInputCellRenderer extends UIComponent {
 				tempVars[child].attributes.VALUE = label.text;
 			}
 		}
-		//rawInterFaceForm.save_btn.label = tempVars;
-		//rawInterFaceForm.interfaces_dg.dataProvider[rawInterFaceForm.interfaces_dg.selectedIndex].vars = tempVars;
 		rawInterFaceForm.itemChange({});
 	}
 }

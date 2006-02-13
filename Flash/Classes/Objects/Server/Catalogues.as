@@ -31,7 +31,7 @@
 		return "Catalogues";
 	}
 	public function getData():Object {
-		return new Object({catalogues:catalogues});
+		return {catalogues:catalogues};
 	}
 	public function setData(newData:Object) {
 		//Process catalogue changes....

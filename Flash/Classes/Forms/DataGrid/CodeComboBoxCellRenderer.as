@@ -42,9 +42,9 @@ class Forms.DataGrid.CodeComboBoxCellRenderer extends UIComponent {
 				for (var index in label.dataProvider) {
 					if (itemObject.label == label.dataProvider[index].label) {
 						label.selectedIndex = index;
-						//listOwner.dataProvider[itemLocation.itemIndex].code.DP = label.selectedItem.data;
 					}
 				}
+				rawInterFaceForm.itemChange({});
 				size();
 			}
 		} else {

@@ -154,6 +154,8 @@ function openFile(openType:String):Void {
 		case "Project" :
 			_global.projectFileName = file;
 			project_xml.load(file);
+			setButtons(true);
+			setView("project");
 			break;
 		case "Server" :
 			server_xml.load(file);
@@ -245,15 +247,15 @@ menuListener.change = function(evt:Object) {
 	switch (item.attributes["instanceName"]) {
 	case "open" :
 		openFile("Project");
-		setView("project");
 		break;
 	case "new" :
 		_global.projectFileName = "";
 		_global.project = new Object();
 		setView("home");
 		/** Load templates*/
-		//client_xml.load(file);
-		//server_xml.load(file);
+		client_xml.load("default_client.xml");
+		server_xml.load("default_server.xml");
+		setButtons(true);
 		break;
 	case "importClient" :
 		openFile("Client");
@@ -381,7 +383,7 @@ tabs_tb.change = function(eventObj) {
 			if (eventObj.target.selectedItem.label == "XML") {
 				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_"+random(999)+"_mc", 0, {node:left_tree.selectedNode.object.toXML()});
 			} else if (eventObj.target.selectedItem.label == "Preview") {
-				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_"+random(999)+"_mc", 0, {controls:_global.client_test.getControlTypes(), windowXML:left_tree.selectedNode.object.toXML()});
+				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_"+random(999)+"_mc", 0, {controls:_global.client_test.getControlTypes(), previewXML:left_tree.selectedNode.object.toXML()});
 			} else {
 				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_"+random(999)+"_mc", 0, left_tree.selectedNode.object.getData());
 			}
@@ -399,6 +401,8 @@ leftTreeListener.change = function(eventObj) {
 	formContent_mc.createEmptyMovieClip("form_mc", 0);
 	if (node.object != undefined) {
 		switch (node.nodeName) {
+		case "Panel" :
+		case "Tab" :
 		case "Control" :
 		case "Window" :
 			var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_"+random(999)+"_mc", 0, node.object.getData());
@@ -441,12 +445,36 @@ buttonListener.click = function(eventObj) {
 		break;
 	}
 };
+function setButtons(enabled:Boolean) {
+	home_btn.enabled = enabled;
+	project_btn.enabled = enabled;
+	control_btn.enabled = enabled;
+	preview_btn.enabled = enabled;
+	publish_btn.enabled = enabled;
+	historyViewer_btn.enabled = enabled;
+	for (var child in menu_mb.dataProvider.firstChild.childNodes) {
+		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "importClient") {
+			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
+		}
+		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "importServer") {
+			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
+		}
+		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "saveAs") {
+			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
+		}
+		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "save") {
+			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
+		}		
+	}
+	menu_mb.dataProvider.updateViews("change");
+}
 home_btn.addEventListener("click", buttonListener);
 project_btn.addEventListener("click", buttonListener);
 control_btn.addEventListener("click", buttonListener);
 preview_btn.addEventListener("click", buttonListener);
 publish_btn.addEventListener("click", buttonListener);
 historyViewer_btn.addEventListener("click", buttonListener);
+setButtons(false);
 treeFilter_cb.change = function(eventObj) {
 	switch (eventObj.target.selectedItem.label) {
 	case "Project" :

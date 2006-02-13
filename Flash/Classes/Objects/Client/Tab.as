@@ -25,7 +25,7 @@
 		return newNode;
 	}
 	public function toTree():XMLNode {
-		var newNode = new XMLNode(1, this.getName());
+		var newNode = new XMLNode(1, "Tab");
 		newNode.object = this;
 		return newNode;
 	}
