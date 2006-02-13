@@ -7,11 +7,13 @@ public class ReplyWithBypassedZoneState extends M1Command {
 
 	public ReplyWithBypassedZoneState() {
 		super();
+		this.setKey("ZB");
 		// TODO Auto-generated constructor stub
 	}
 
 	public ReplyWithBypassedZoneState(String sum, String use) {
 		super(sum, use);
+		this.setKey("ZB");
 		// TODO Auto-generated constructor stub
 	}
 

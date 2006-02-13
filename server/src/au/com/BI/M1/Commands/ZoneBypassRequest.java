@@ -12,11 +12,15 @@ public class ZoneBypassRequest extends M1Command {
 		super();
 		bypassAllZones = false;
 		bypassAllViolatedZones = false;
+		this.setKey("zb");
 		// TODO Auto-generated constructor stub
 	}
 
 	public ZoneBypassRequest(String sum, String use) {
 		super(sum, use);
+		this.setKey("zb");
+		bypassAllZones = false;
+		bypassAllViolatedZones = false;
 		// TODO Auto-generated constructor stub
 	}
 
