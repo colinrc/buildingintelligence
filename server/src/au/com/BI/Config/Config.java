@@ -556,7 +556,7 @@ public class Config {
 								DeviceType.ALERT,groupName,rawHelper);
 					}
 					if (itemName.equals("ALARM")) {
-						alertFactory.addAlarm(deviceModel, clientModels, item, DeviceType.OUTPUT,
+						alertFactory.addAlarm(deviceModel, clientModels, item, DeviceType.MONITORED,
 								DeviceType.ALARM,groupName,rawHelper);
 					}
 				}

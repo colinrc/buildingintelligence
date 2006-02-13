@@ -1,3 +1,10 @@
+12/2/2006
+Calendar
+--------
+Reverted calendar entries to use title as the key.
+If the description field is null, the title is copied into the description; this will assist migrating earlier calendar
+entries when the description was empty, rather than the displayed user description, as it is now.
+
 9/2/2006
 Dynalite
 --------

@@ -27,6 +27,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public final static int AreaCommand = 0;
 	protected int protocol = DynaliteDevice.Linear;
 	protected HashMap areaOffset;
+	protected int bla = 0;
 	
 	public Model () {
 		super();
@@ -66,6 +67,14 @@ public class Model extends BaseModel implements DeviceModel {
     		if (protocolStr.equals("LINEAR")) {
     			this.protocol = DynaliteDevice.Linear;
     		}
+    		String blaStr = (String)this.getParameter("BLA","");
+    		if (blaStr != null && !blaStr.equals ("")) {
+    			try {
+    				bla = Integer.parseInt(blaStr,16);
+    			} catch (NumberFormatException ex){
+    				logger.log (Level.WARNING,"Base link area was incorrectly formatted for dynalite "+ ex.getMessage());
+    			}
+    		}
     };
 
 	public void sendToComms (byte vals[]) throws CommsFail{
@@ -97,6 +106,9 @@ public class Model extends BaseModel implements DeviceModel {
 					theKey = dynaliteHelper.buildKey('L',key,0);
 					areaCodes.addKey (theKey);
 				}
+				if (((DeviceType)details).getDeviceType() == DeviceType.ALARM) {
+					theKey = "ALARM";
+				}
 			}
 			if (controlType == DeviceType.INPUT)  {
 				DynaliteInputDevice device = (DynaliteInputDevice)details;
@@ -112,6 +124,7 @@ public class Model extends BaseModel implements DeviceModel {
 				if (((DeviceType)details).getDeviceType() == DeviceType.SENSOR) {
 					theKey = name;
 				}
+				
 			}
 
 
@@ -687,6 +700,49 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
+	public void 	interpretPanicOn (InterpretResult result, byte msg[])
+	// Area off, not often used, instead preset 4 is usually used
+	{
+		CommandInterface dynResult = null;
+		byte area = msg[1];
+		DynaliteDevice dev = (DynaliteDevice)configHelper.getControlledItem("ALARM");
+		if (dev != null ) {
+			DynaliteDevice areaDev = this.findSingleDevice(DynaliteHelper.Light,area,0,false);
+			String areaName = "";
+			if (areaDev != null) {
+				areaName = areaDev.getOutputKey();
+			} else {
+				areaName = Byte.toString(area);
+			}
+			dynResult = buildCommandForFlash ((DeviceType)dev,"on","Panic Triggered for Area " + areaName,areaName,"panic-on",this.currentUser);		
+			result.decoded.add(dynResult);
+			result.setRescanLevels(true);
+			result.setRescanArea(area);
+		}
+	}
+
+	public void 	interpretPanicOff (InterpretResult result, byte msg[])
+	// Area off, not often used, instead preset 4 is usually used
+	{
+		CommandInterface dynResult = null;
+		byte area = msg[1];
+		DynaliteDevice dev = (DynaliteDevice)configHelper.getControlledItem("ALARM");
+		if (dev != null ) {
+			DynaliteDevice areaDev = this.findSingleDevice(DynaliteHelper.Light,area,0,false);
+			String areaName = "";
+			if (areaDev != null) {
+				areaName = areaDev.getOutputKey();
+			} else {
+				areaName = Byte.toString(area);
+			}
+			dynResult = buildCommandForFlash ((DeviceType)dev,"on","Panic Released for Area " + areaName,areaName,"panic-off",this.currentUser);		
+			result.decoded.add(dynResult);
+			result.setRescanLevels(true);
+			result.setRescanArea(area);
+		}
+	}
+
+
 	public void interpretChannelLevel (InterpretResult result, byte msg[])
 	{
 		CommandInterface dynResult = null;
@@ -770,6 +826,15 @@ public class Model extends BaseModel implements DeviceModel {
 				interpretAreaOff (result,msg);
 				// Area off, not often used, instead preset 4 is usually used
 				break;
+				
+			case 0x17:
+				interpretPanicOn (result,msg);
+				break;
+				
+			case 0x18:
+				interpretPanicOff (result,msg);
+				break;
+
 		}
 		return result;
 	}
@@ -794,6 +859,22 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 	
 		
+	protected CommandInterface buildCommandForFlash (DeviceType dynaliteDevice,String command,String extra, String extra2, String extra3,User currentUser){
+		if (dynaliteDevice == null) {
+			return null;
+		} else {
+			CommandInterface dynaliteCommand = (CommandInterface)(dynaliteDevice.buildDisplayCommand ());
+			dynaliteCommand.setCommand (command);
+			dynaliteCommand.setExtraInfo(extra);
+			dynaliteCommand.setExtra2Info(extra2);
+			dynaliteCommand.setExtra3Info(extra3);
+			dynaliteCommand.setKey ("CLIENT_SEND");
+			dynaliteCommand.setUser(currentUser);
+			return dynaliteCommand;
+		}
+	}
+	
+	
 	public DynaliteOutput buildDynaliteResult (DynaliteDevice device, CommandInterface command)  {
 		DynaliteOutput dynaliteReturn = new DynaliteOutput ();
 		boolean commandFound = false;
@@ -898,6 +979,27 @@ public class Model extends BaseModel implements DeviceModel {
 			commandFound = true;
 		}
 
+		/*
+		if (theCommand.equals("link") ) {
+			 if (device.isAreaDevice()) {
+				 String linkToStr = command.getExtraInfo();
+				 
+					try {
+						int linkTo = Integer.parseInt(linkToStr,16);
+						 dynaliteReturn =buildDynaliteLinkToCommand ( device.getKey(),"0",
+									level,command.getExtra2Info(),command.getExtra3Info());
+						dynaliteReturn.setRescanArea(Integer.parseInt(device.getKey(),16));
+						dynaliteReturn.setRescanLevels(true);
+					} catch (NumberFormatException ex){
+						logger.log (Level.WARNING,"A Dynalight device was configured with an invalid area number " + ex.getMessage());
+					}
+			 } else {
+				 dynaliteReturn =buildDynaliteRampToCommand ( device.getAreaCode(), device.getKey(),
+							level,command.getExtra2Info(),command.getExtra3Info());
+			 }
+			commandFound = true;
+		}
+		*/
 		if (commandFound && dynaliteReturn != null) {
 			return dynaliteReturn;
 		}

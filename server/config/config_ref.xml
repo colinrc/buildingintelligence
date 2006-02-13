@@ -145,6 +145,7 @@
                 </CONNECTION>
                 <PARAMETERS>
                 		<ITEM NAME="PROTOCOL" VALUE="CLASSIC" />
+                		<ITEM NAME="BLA" VALUE="3" />
                 </PARAMETERS>
                 <DYNALITE>
                 
@@ -153,8 +154,11 @@
                         
                         <IR ACTIVE="Y" KEY="01" BOX="02" NAME="IR 1" DISPLAY_NAME="IR_1" />
                         
-                        <LIGHT_DYNALITE_AREA ACTIVE="Y" BLA="01" KEY="01" NAME="Area 01" DISPLAY_NAME="GARAGE_LIGHT" />
-                        <LIGHT_DYNALITE_AREA ACTIVE="Y" BLA="01" KEY="02" NAME="Area 02" DISPLAY_NAME="BBQ_LIGHT" />
+					 <ALARM KEY="ALARM" DISPLAY_NAME="ALARM" NAME="Panic Messages" />
+					 
+					
+                        <LIGHT_DYNALITE_AREA ACTIVE="Y" KEY="01" NAME="Area 01" DISPLAY_NAME="GARAGE_LIGHT" />
+                        <LIGHT_DYNALITE_AREA ACTIVE="Y" KEY="02" NAME="Area 02" DISPLAY_NAME="BBQ_LIGHT" />
 
                         <LIGHT_DYNALITE ACTIVE="Y" KEY="01" AREA="01" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT" POWER_RATING="100"/>
                         <LIGHT_DYNALITE ACTIVE="Y" KEY="02" AREA="02" NAME="Hall Light" DISPLAY_NAME="HALL_LIGHT" POWER_RATING="100"/>

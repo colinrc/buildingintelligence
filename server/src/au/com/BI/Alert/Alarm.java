@@ -4,17 +4,21 @@
  */
 package au.com.BI.Alert;
 import au.com.BI.Util.*;
+import au.com.BI.CBUS.CBUSDevice;
 import au.com.BI.Command.*;
-
+import au.com.BI.Dynalite.DynaliteDevice;
+import au.com.BI.Lights.LightDevice;
 
 
 /**
  * @author Colin Canfield
  *
  **/
-public class Alarm extends BaseDevice implements DeviceType 
+public class Alarm extends BaseDevice implements DeviceType,DynaliteDevice
 {
-
+	protected boolean areaFlag = false;
+	protected String areaCode = "";
+	protected int channel = 0;
 
 	public Alarm (String name, int deviceType, String outputKey){
 		this.name = name;
@@ -63,4 +67,60 @@ public class Alarm extends BaseDevice implements DeviceType
 		return alarmCommand;
 	}
 	
+	/**
+	 * @return Returns if the device represents an area instead of a channel
+	 */
+	public boolean isAreaDevice( ) {
+		return areaFlag;
+	}
+
+	/**
+	 * @return Returns if the device represents an area instead of a channel
+	 */
+	public void setAreaDevice( boolean areaFlag) {
+		this.areaFlag = areaFlag;
+	}
+	
+	public void setMax(String max) {
+
+	}
+
+	public int getMax () {
+		return 0;
+	}
+	
+	public void setMax (int max) {
+	}
+	
+	public String getMaxStr () {
+		return "";
+	}
+	/**
+	 * @param areaCode The areaCode to set.
+	 */
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
+	}
+	/**
+	 * @param areaCode The areaCode to get.
+	 */
+	public String getAreaCode() {
+		return areaCode;
+	}
+
+	public int getChannel () {
+		return channel;
+	}
+	
+	public void setChannel (int channel) {
+		this.channel = channel;
+	}
+	
+	public String getRelay() {
+		return "";
+	}
+	
+	public void setRelay (String a){
+		
+	}
 }

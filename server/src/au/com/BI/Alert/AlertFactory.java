@@ -78,7 +78,9 @@ public class AlertFactory {
 		theOutput.setKey (key);
 		theOutput.setGroupName (groupName);
 		rawHelper.checkForRaw ( element,theOutput);
-
+		targetDevice.addControlledItem(key, theOutput, type);
+		targetDevice.addStartupQueryItem(key, theOutput, type);
+				
 		if (outKey != null && !outKey.equals("")) {
 			targetDevice.addControlledItem(outKey, theOutput, DeviceType.OUTPUT);
 			Iterator clientModelList = clientModels.iterator();

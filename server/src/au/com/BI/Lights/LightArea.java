@@ -2,8 +2,7 @@
  * Created on Feb 12, 2004
  *
  */
-package au.com.BI.Dynalite;
-import au.com.BI.Lights.LightCommand;
+package au.com.BI.Lights;
 import au.com.BI.Util.*;
 import au.com.BI.Command.*;
 
@@ -14,7 +13,6 @@ import au.com.BI.Command.*;
  **/
 public class LightArea extends BaseDevice 
 {
-	protected int BLA;
 	
 	public LightArea (String name, int deviceType){
 		this.name = name;
@@ -32,14 +30,6 @@ public class LightArea extends BaseDevice
 		LightCommand lightCommand = new LightCommand ();
 		lightCommand.setDisplayName(getOutputKey());
 		return lightCommand;
-	}
-
-	public int getBLA() {
-		return BLA;
-	}
-
-	public void setBLA(int bla) {
-		BLA = bla;
 	}
 
 

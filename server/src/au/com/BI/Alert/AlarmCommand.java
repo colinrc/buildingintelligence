@@ -30,17 +30,6 @@ public class AlarmCommand extends Command implements CommandInterface {
 	    super();
 	}
 
-	public AlarmCommand (String key,String commandCode, User user)
-	{
-		super (key,commandCode,user);
-
-	}
-	
-
-	public AlarmCommand (String key,String commandCode, User user, String extraInfo)
-	{
-		super (key, commandCode,user,extraInfo);
-	}
 
 
 
@@ -52,16 +41,10 @@ public class AlarmCommand extends Command implements CommandInterface {
 			return null;
 		}
 		
-		Element element = new Element ("CONTROL");
+		Element element = super.getXMLCommand();
+		
 		element.setAttribute ("KEY", displayName);
-		// element.setAttribute ("COMMAND", commandCode);
 		element.setAttribute ("COMMAND", "on");
-		if (extraInfo != null) {
-			element.setAttribute ("EXTRA", extraInfo.toString());
-		}
-		else {
-			element.setAttribute ("EXTRA", "An unknown error occured");
-		}
 			
 		return element;
 	}
