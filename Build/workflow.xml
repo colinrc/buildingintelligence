@@ -1,5 +1,6 @@
 <workflow>
-	<step label="Step1" key="Device" description="" order="1"/>
-	<step label="Step2" key="CBus" description="" order="2"/>
- 	<step label="Step3" key="HAL" description="" order="3"/>
+	<step label="Step1" key="Client" description="" order="1"/>
+	<step label="Step2" key="Device" description="" order="2"/>
+	<step label="Step3" key="CBus" description="" order="3"/>
+ 	<step label="Step4" key="HAL" description="" order="4"/>
 </workflow>
