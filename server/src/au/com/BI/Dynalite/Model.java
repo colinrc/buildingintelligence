@@ -979,27 +979,19 @@ public class Model extends BaseModel implements DeviceModel {
 			commandFound = true;
 		}
 
-		/*
 		if (theCommand.equals("link") ) {
 			 if (device.isAreaDevice()) {
-				 String linkToStr = command.getExtraInfo();
-				 
-					try {
-						int linkTo = Integer.parseInt(linkToStr,16);
-						 dynaliteReturn =buildDynaliteLinkToCommand ( device.getKey(),"0",
-									level,command.getExtra2Info(),command.getExtra3Info());
-						dynaliteReturn.setRescanArea(Integer.parseInt(device.getKey(),16));
-						dynaliteReturn.setRescanLevels(true);
-					} catch (NumberFormatException ex){
-						logger.log (Level.WARNING,"A Dynalight device was configured with an invalid area number " + ex.getMessage());
-					}
-			 } else {
-				 dynaliteReturn =buildDynaliteRampToCommand ( device.getAreaCode(), device.getKey(),
-							level,command.getExtra2Info(),command.getExtra3Info());
+					dynaliteReturn =buildLinkToCommand ( device.getKey(),command.getExtraInfo(),command.getExtra3Info(),true);
 			 }
 			commandFound = true;
 		}
-		*/
+		if (theCommand.equals("unlink") ) {
+			 if (device.isAreaDevice()) {
+					dynaliteReturn =buildLinkToCommand ( device.getKey(),command.getExtraInfo(),command.getExtra3Info(),false);
+			 }
+			commandFound = true;
+		}
+
 		if (commandFound && dynaliteReturn != null) {
 			return dynaliteReturn;
 		}
@@ -1008,7 +1000,59 @@ public class Model extends BaseModel implements DeviceModel {
 
 		}
 	}
+	
+	protected DynaliteOutput buildLinkToCommand ( String areaCodeStr, String blaOffsetStr, String joinStr, boolean linkOrUnlink) {
+		
+		DynaliteOutput returnVal = new DynaliteOutput();
+		 
+		try {
+			
+			byte areaVal = Byte.parseByte(areaCodeStr,16); 
+			byte linkTo = Byte.parseByte(blaOffsetStr);
+			byte join = dynaliteHelper.findJoin(joinStr,returnVal);
+			this.areaCodes.addJoin (areaCodeStr, blaOffsetStr);
+			if (linkTo >= 1 || linkTo <= 8 ) {
+				returnVal.outputCodes[2] = (byte)(128 >> (linkTo -1));	
+			} else {
+				returnVal.outputCodes[2] = 0;
+			}
+			if (linkTo >= 9 || linkTo <= 16 ) {
+				returnVal.outputCodes[4] = (byte)(128 >> (linkTo -9));	
+			} else {
+				returnVal.outputCodes[4] = 0;
+			}
+			if (linkTo >= 17 || linkTo <= 24 ) {
+				returnVal.outputCodes[5] = (byte)(128 >> (linkTo -17));	
+			} else {
+				returnVal.outputCodes[5] = 0;
+			}	
+			if (linkTo > 24) {
+				logger.log(Level.WARNING,"Dynalite link instructions must be within 24. Area = " + blaOffsetStr);
+				returnVal.isError = true;
+				return returnVal;
+			}
+	
+			returnVal.outputCodes[0] = 0x1c;
+			returnVal.outputCodes[1] = areaVal;
+			
+			if (linkOrUnlink)
+				returnVal.outputCodes[3] = (byte)0x20; // link
+			else
+				returnVal.outputCodes[3] = (byte)0x21; // unlink
+				
+			returnVal.outputCodes[6] = (byte)join;
+			this.dynaliteHelper.addChecksum(returnVal.outputCodes);
+		} catch (NumberFormatException ex){
+			logger.log(Level.WARNING,"Device parameters have been incorrectly formatted " + ex.getMessage());
+			returnVal.isError = true;
+			returnVal.ex = ex;
+		}
+		
+		return returnVal;
+	}
 
+		
+				
 	protected DynaliteOutput buildDynaliteLinearPresetCommand ( String areaCodeStr, String presetStr,
 				String rateStr, byte join) {
 		byte preset = 0;

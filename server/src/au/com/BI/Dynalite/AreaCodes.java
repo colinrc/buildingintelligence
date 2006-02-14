@@ -28,11 +28,10 @@ public class AreaCodes {
 		}
 	}
 	
-	public void addJoin (int BLA, String areaCode,String toArea){
+	public void addJoin ( String areaCode,String toArea){
 		String paddedKey = Utility.padString (areaCode,2);
 		int toAreaInt = Integer.parseInt(toArea);
-		int newKey = toAreaInt + BLA; 
-		String paddedToKey = Utility.padStringTohex(newKey);
+		String paddedToKey = Utility.padStringTohex(toAreaInt);
 		if (areaCodes.containsKey(paddedKey)){
 			LinkedList keys = (LinkedList)areaCodes.get (paddedKey);
 			keys.add(paddedToKey);

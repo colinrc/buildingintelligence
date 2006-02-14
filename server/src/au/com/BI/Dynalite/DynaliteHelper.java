@@ -109,12 +109,14 @@ public class DynaliteHelper {
 		try {
 			if (!joinStr.equals(""))
 				join = (byte)Integer.parseInt(joinStr);
+
 		} catch (Exception ex) {
 			logger.log( Level.WARNING,"Join is not correctly formatted");
 			dynaliteOutput.ex = ex;
 			dynaliteOutput.isError = true;
 
 		}
+		if (join == 0) join = (byte)255;
 		return join;
 	}
 }
