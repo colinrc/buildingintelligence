@@ -57,6 +57,7 @@
 		for (var panel in panels) {
 			newNode.appendChild(panels[panel].toTree());
 		}
+		_global.workflow.addNode("Zone",newNode);
 		return newNode;
 	}
 	public function getName():String {

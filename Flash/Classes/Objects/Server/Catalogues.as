@@ -25,6 +25,7 @@
 			newNode.appendChild(catalogues[catalogue].toTree());
 		}
 		newNode.object = this;
+		_global.workflow.addNode("Catalogues",newNode);
 		return newNode;
 	}
 	public function getName():String {

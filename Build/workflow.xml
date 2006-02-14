@@ -1,6 +1,12 @@
 <workflow>
-	<step label="Step1" key="Client" description="" order="1"/>
-	<step label="Step2" key="Device" description="" order="2"/>
-	<step label="Step3" key="CBus" description="" order="3"/>
- 	<step label="Step4" key="HAL" description="" order="4"/>
+	<step label="Add Devices" key="Server" description="" order="1"/>
+	<step label="Alarms" key="Alarms" description="" order="2"/>
+	<step label="Alerts" key="Alerts" description="" order="3"/>
+ 	<step label="Analogues" key="Analogues" description="" order="4"/>
+	<step label="AudioVideos" key="AudioVideos" description="" order="5"/>
+	<step label="Cameras" key="Cameras" description="" order="61"/>
+	<step label="Catalogue" key="Catalogue" description="" order="7"/>
+	<step label="Catalogues" key="Catalogues" description="" order="8"/>
+ 	<step label="CBus" key="CBus" description="" order="9"/>
+	<step label="AudioVideos" key="AudioVideos" description="" order="10"/>
 </workflow>

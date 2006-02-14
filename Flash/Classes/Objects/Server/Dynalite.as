@@ -80,6 +80,7 @@
 		newNode.appendChild(contacts.toTree());
 		newNode.appendChild(irs.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("Dynalite",newNode);
 		return newNode;
 	}
 	public function setXML(newData:XMLNode):Void {

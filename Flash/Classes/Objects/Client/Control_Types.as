@@ -19,6 +19,7 @@
 		for (var control in controls) {
 			newNode.appendChild(controls[control].toTree());
 		}
+		_global.workflow.addNode("ClientControl_Types",newNode);
 		return newNode;
 	}
 	public function getName():String {

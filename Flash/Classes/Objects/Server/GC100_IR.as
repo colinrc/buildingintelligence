@@ -50,6 +50,7 @@
 		newNode.appendChild(irs.toTree());
 		newNode.appendChild(toggle_inputs.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("GC100_IR",newNode);
 		return newNode;
 	}
 	public function getData():Object {

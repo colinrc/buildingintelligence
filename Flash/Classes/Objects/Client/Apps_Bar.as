@@ -25,6 +25,7 @@
 			newNode.appendChild(icons[icon].toTree());
 		}
 		newNode.object = this;
+		_global.workflow.addNode("ClientApps_Bar",newNode);
 		return newNode;
 	}
 	public function getName():String{

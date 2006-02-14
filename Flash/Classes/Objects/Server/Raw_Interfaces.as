@@ -34,6 +34,7 @@
 			newNode.appendChild(raw_interfaces[raw_interface].toTree());
 		}
 		newNode.object = this;
+		_global.workflow.addNode("Raw_interfaces",newNode);
 		return newNode;
 	}
 	public function getName():String {

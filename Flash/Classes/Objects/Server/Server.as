@@ -52,6 +52,7 @@
 		for (var device in devices) {
 			newNode.appendChild(devices[device].toTree());
 		}
+		_global.workflow.addNode("Server",newNode);
 		return newNode;
 	}
 	public function getName():String {

@@ -65,6 +65,7 @@
 		newNode.appendChild(sensors.toTree());
 		newNode.appendChild(lights.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("CBus",newNode);
 		return newNode;
 	}
 	public function setXML(newData:XMLNode):Void {

@@ -22,6 +22,7 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
+		_global.workflow.addNode("ClientArbitrary",newNode);
 		return newNode;
 	}
 	public function getName():String{

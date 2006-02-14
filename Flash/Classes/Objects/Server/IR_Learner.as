@@ -41,6 +41,7 @@
 		var newNode = new XMLNode(1, this.getName());
 		newNode.appendChild(catalogues.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("IR_Learner",newNode);
 		return newNode;
 	}
 	public function setXML(newData:XMLNode):Void {

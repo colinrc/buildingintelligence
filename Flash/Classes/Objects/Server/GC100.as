@@ -48,6 +48,7 @@
 		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(modules.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("GC100",newNode);
 		return newNode;
 	}
 	public function setXML(newData:XMLNode):Void {

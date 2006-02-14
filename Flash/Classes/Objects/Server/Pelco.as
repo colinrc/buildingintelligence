@@ -52,6 +52,7 @@
 		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(cameras.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("Pelco",newNode);
 		return newNode;
 	}
 	public function setXML(newData:XMLNode):Void {

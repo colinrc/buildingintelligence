@@ -48,6 +48,7 @@ class Forms.Project.Server extends Forms.BaseForm {
 		_global.left_tree.selectedNode.object.setData({description:description_ta.text, devices:newDevices});
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
 		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
+		
 		for (var child in _global.left_tree.selectedNode.childNodes) {
 			_global.left_tree.selectedNode.childNodes[child].removeNode();
 		}

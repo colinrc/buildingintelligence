@@ -46,6 +46,7 @@
 		newNode.appendChild(doors.toTree());
 		newNode.appendChild(alerts.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("ClientRoom",newNode);
 		return newNode;
 	}
 	public function getName():String {

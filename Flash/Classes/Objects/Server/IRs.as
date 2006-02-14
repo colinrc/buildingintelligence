@@ -39,6 +39,7 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
+		_global.workflow.addNode("IRs",newNode);
 		return newNode;
 	}
 	public function setData(newData:Object){

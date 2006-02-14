@@ -43,13 +43,13 @@ class Objects.WorkFlow {
 	<step label="Step1" key="Device" description="" order="1"/>
 	*/
 	public function addNode(key:String, inst:Object) {
-		//_root.debugger.text += "    in addNode" +key+"\r";
+		_root.debugger.text += "    in addNode" +key+"\r";
 		var order = getOrder(key);
 		var found:Boolean = false;
 		var newNode = new XMLNode(1, "step ");
 		newNode.attributes.label = getLabel(key);
 		newNode.left_node = inst;
-		//_root.debugger.text += "    key="+key+" inst="+inst.toString()+"\r";
+		_root.debugger.text += "    key="+key+" inst="+inst.toString()+"\r";
 		if (_global.right_tree_xml.hasChildNodes()) {
 			for (var i = 0; i<_global.right_tree_xml.firstChild.childNodes.length; i++) {
 				if (order<_global.right_tree_xml.firstChild.childNodes[i].attributes.order) {
@@ -60,7 +60,7 @@ class Objects.WorkFlow {
 				}
 			}
 		}
-		//_root.debugger.text += "   found="+found.toString()+"\r";
+		_root.debugger.text += "   found="+found.toString()+"\r";
 		if (found == false) {
 			_global.right_tree_xml.appendChild(newNode);
 		}

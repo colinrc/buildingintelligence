@@ -27,6 +27,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Tab");
 		newNode.object = this;
+		_global.workflow.addNode("ClientTab",newNode);
 		return newNode;
 	}
 	public function getName():String {

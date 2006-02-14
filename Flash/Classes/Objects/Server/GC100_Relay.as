@@ -40,6 +40,7 @@
 		var newNode = new XMLNode(1, this.getName());
 		newNode.appendChild(toggle_outputs.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("GC100_Relay",newNode);
 		return newNode;
 	}
 	public function getData():Object {

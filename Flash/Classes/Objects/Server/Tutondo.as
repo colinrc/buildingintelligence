@@ -49,6 +49,7 @@
 		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(audiovideos.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("Tutondo",newNode);
 		return newNode;
 	}
 	public function setXML(newData:XMLNode):Void {

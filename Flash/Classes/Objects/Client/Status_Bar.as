@@ -25,6 +25,7 @@
 			newNode.appendChild(groups[group].toTree());
 		}
 		newNode.object = this;
+		_global.workflow.addNode("ClientStatus_Bar",newNode);
 		return newNode;
 	}
 	public function getName():String{

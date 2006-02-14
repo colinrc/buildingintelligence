@@ -52,6 +52,7 @@
 		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(sensors.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("Oregon",newNode);
 		return newNode;
 	}
 	public function setXML(newData:XMLNode):Void{

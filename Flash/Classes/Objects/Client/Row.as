@@ -21,6 +21,7 @@
 		for (var item in items) {
 			newNode.appendChild(items[item].toTree());
 		}
+		_global.workflow.addNode("ClientRow",newNode);
 		return newNode;
 	}
 	public function getName():String {

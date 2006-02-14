@@ -19,6 +19,7 @@
 		for(var zone in zones){
 			newNode.appendChild(zones[zone].toTree());
 		}
+		_global.workflow.addNode("ClientProperty",newNode);
 		return newNode;
 	}
 	public function getName():String{

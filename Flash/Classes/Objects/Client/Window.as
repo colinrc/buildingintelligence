@@ -25,6 +25,7 @@
 			newNode.appendChild(tabs[tab].toTree());
 		}
 		newNode.object = this;
+		_global.workflow.addNode("ClientWindow",newNode);
 		return newNode;
 	}
 	public function getName():String {

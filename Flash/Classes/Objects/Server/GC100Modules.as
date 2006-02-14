@@ -32,6 +32,7 @@
 			newNode.appendChild(modules[module].toTree());
 		}
 		newNode.object = this;
+		_global.workflow.addNode("GC100Modules",newNode);
 		return newNode;
 	}
 	public function getName():String {

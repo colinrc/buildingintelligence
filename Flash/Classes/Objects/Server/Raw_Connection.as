@@ -65,6 +65,7 @@
 		newNode.appendChild(customs.toTree());
 		newNode.appendChild(raw_interfaces.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("Raw_Connection",newNode);
 		return newNode;
 	}
 	public function setXML(newData:XMLNode):Void {

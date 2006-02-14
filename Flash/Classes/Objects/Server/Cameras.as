@@ -40,6 +40,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
+		_global.workflow.addNode("Cameras",newNode);
 		return newNode;
 	}
 	public function setData(newData:Object) {

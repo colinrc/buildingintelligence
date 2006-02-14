@@ -168,6 +168,7 @@
 		newNode.appendChild(alerts.toTree());
 		newNode.appendChild(analogues.toTree());
 		newNode.object = this;
+		_global.workflow.addNode("Comfort",newNode);
 		return newNode;
 	}
 	public function setXML(newData:XMLNode):Void {
