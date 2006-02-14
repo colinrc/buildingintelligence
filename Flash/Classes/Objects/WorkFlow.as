@@ -48,21 +48,23 @@ class Objects.WorkFlow {
 		var found:Boolean = false;
 		var newNode = new XMLNode(1, "step ");
 		newNode.attributes.label = getLabel(key);
-		newNode.left_node = inst;
-		_root.debugger.text += "    key="+key+" inst="+inst.toString()+"\r";
-		if (_global.right_tree_xml.hasChildNodes()) {
-			for (var i = 0; i<_global.right_tree_xml.firstChild.childNodes.length; i++) {
-				if (order<_global.right_tree_xml.firstChild.childNodes[i].attributes.order) {
-					//add to tree_xml at correct location, add inst for uri lookup
-					_global.right_tree_xml.insertBefore(newNode, _global.right_tree_xml.firstChild.childNodes[i]);
-					found = true;
-					break;
+		if (newNode.attributes.label.length > 0) {
+			newNode.left_node = inst;
+			_root.debugger.text += "    key="+key+" inst="+inst.toString()+"\r";
+			if (_global.right_tree_xml.hasChildNodes()) {
+				for (var i = 0; i<_global.right_tree_xml.firstChild.childNodes.length; i++) {
+					if (order<_global.right_tree_xml.firstChild.childNodes[i].attributes.order) {
+						//add to tree_xml at correct location, add inst for uri lookup
+						_global.right_tree_xml.insertBefore(newNode, _global.right_tree_xml.firstChild.childNodes[i]);
+						found = true;
+						break;
+					}
 				}
 			}
-		}
-		_root.debugger.text += "   found="+found.toString()+"\r";
-		if (found == false) {
-			_global.right_tree_xml.appendChild(newNode);
+			_root.debugger.text += "   found="+found.toString()+"\r";
+			if (found == false) {
+				_global.right_tree_xml.appendChild(newNode);
+			}
 		}
 	}
 	public function getOrder(key:String):Number {
