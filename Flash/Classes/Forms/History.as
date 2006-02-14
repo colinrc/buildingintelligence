@@ -6,6 +6,7 @@ class Forms.History extends Forms.BaseForm {
 	}
 	
 	public function init():Void {
-		history_ta.text = _global.history.viewHistory();
+		history_ta.text = "Coming soon!";
+		//_global.history.viewHistory();
 	}
 }

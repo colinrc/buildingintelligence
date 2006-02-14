@@ -36,9 +36,9 @@ _global.controlTypeAttributes_xml.onLoad = function(success) {
 };
 _global.controlTypeAttributes_xml.load("controlTypeAttributes.xml");
 //test serverconnection
-var server = new Objects.ServerConnection("Server1", "127.0.0.1", 10002, 10001);
-server.makeConnections();
-_global.style.setStyle("themeColor", "haloBlue");
+_global.server = new Objects.ServerConnection();
+//server.makeConnections();*/
+_global.style.setStyle("themeColor", "haloGreen");
 _global.left_tree.vScrollPolicy = right_tree.vScrollPolicy="auto";
 _global.left_tree.hScrollPolicy = "auto";
 _global.left_tree.setStyle("openDuration", 50);
@@ -166,7 +166,7 @@ function openFile(openType:String):Void {
 		}
 	}
 }
-function writeXMLFile(inNode:XMLNode, depth:Number):String {
+_global.writeXMLFile = function (inNode:XMLNode, depth:Number):String {
 	var tempString = "";
 	if (inNode.nodeType == 3) {
 		tempString += inNode.toString();
@@ -183,12 +183,12 @@ function writeXMLFile(inNode:XMLNode, depth:Number):String {
 	if (inNode.hasChildNodes()) {
 		if (inNode.firstChild.nodeType == 3) {
 			tempString += ">";
-			tempString += writeXMLFile(inNode.firstChild, 0);
+			tempString += _global.writeXMLFile(inNode.firstChild, 0);
 			return tempString+"</"+inNode.nodeName+"> \n";
 		} else {
 			tempString += "> \n";
 			for (var child = 0; child<inNode.childNodes.length; child++) {
-				tempString += writeXMLFile(inNode.childNodes[child], depth+1);
+				tempString += _global.writeXMLFile(inNode.childNodes[child], depth+1);
 			}
 			for (index=0; index<depth; index++) {
 				tempString += "\t";
@@ -212,7 +212,7 @@ function saveFile(saveType:String):Void {
 			newProjectXML.appendChild(myXML);
 			newProjectXML.appendChild(_global.server_test.toXML());
 			newProjectXML.appendChild(_global.client_test.toXML());
-			mdm.FileSystem.saveFile(_global.projectFileName, writeXMLFile(newProjectXML, 0));
+			mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
 		}
 	} else {
 		mdm.Dialogs.BrowseFile.buttonText = "Save file";
@@ -224,9 +224,9 @@ function saveFile(saveType:String):Void {
 		var file = mdm.Dialogs.BrowseFile.show();
 		if (file != undefined) {
 			if (saveType == "Server") {
-				mdm.FileSystem.saveFile(file, writeXMLFile(_global.server_test.toXML(), 0));
+				mdm.FileSystem.saveFile(file, _global.writeXMLFile(_global.server_test.toXML(), 0));
 			} else {
-				mdm.FileSystem.saveFile(file, writeXMLFile(_global.client_test.toXML(), 0));
+				mdm.FileSystem.saveFile(file, _global.writeXMLFile(_global.client_test.toXML(), 0));
 			}
 		}
 	}
@@ -295,6 +295,7 @@ setView = function (view, dataObj) {
 	left_tree.setSize(244, 670);
 	right_tree._visible = true;
 	tabs_tb._visible = true;
+	tabs_tb.enabled = false;
 	tabBody_mc._visible = true;
 	formContent_mc.form_mc.removeMovieClip();
 	formContent_mc.createEmptyMovieClip("form_mc", 0);
@@ -318,6 +319,7 @@ setView = function (view, dataObj) {
 		}
 		tabs_tb.dataProvider = tabs;
 		tabs_tb.selectedIndex = currentTab;
+		tabs_tb.enabled = true;
 		//formContent_mc.attachMovie("forms."+view, "form_mc", 0, dataObj);
 		break;
 	case "control" :
@@ -348,20 +350,30 @@ setView = function (view, dataObj) {
 			view = "control.controls";
 		}
 		var form_mc = formContent_mc.attachMovie("forms."+view, "form"+random(999)+"_mc", 0);
-		server.attachView(form_mc);
+		_global.server.attachView(form_mc);
+		tabs_tb.enabled = true;
 		break;
 	case "none" :
-	case "preview" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		right_tree._visible = false;
 		tabs_tb._visible = false;
 		tabBody_mc._visible = false;
 		break;
+	case "preview" :
+		treeFilter_cb._visible = false;
+		left_tree._visible = false;
+		right_tree._visible = false;
+		formContent_mc.attachMovie("forms.preview", "form_mc", 0);
+		tabs_tb.dataProvider = [{label:"Client Preview"}];
+		tabs_tb.selectedIndex = 0;
+		tabs_tb._visible = true;
+		break;
 	case "publish" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		right_tree._visible = false;
+		formContent_mc.attachMovie("forms.publish", "form_mc", 0);		
 		tabs_tb.dataProvider = [{label:"Publish", view:"publish"}];
 		tabs_tb.selectedIndex = 0;
 		break;
@@ -464,7 +476,7 @@ function setButtons(enabled:Boolean) {
 		}
 		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "save") {
 			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
-		}		
+		}
 	}
 	menu_mb.dataProvider.updateViews("change");
 }

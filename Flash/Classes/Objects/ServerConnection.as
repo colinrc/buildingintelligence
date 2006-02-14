@@ -11,7 +11,9 @@ class Objects.ServerConnection {
 	private var monitorStatus:String;
 	private var view:Forms.Control.AdminView;
 	
-	public function ServerConnection(inServerName:String, inIPAddress:String, inMonitorPort:Number, inServerPort:Number) {
+	public function ServerConnection() {
+	}
+	public function setServerAddress(inServerName:String, inIPAddress:String, inServerPort:Number, inMonitorPort:Number){
 		serverName = inServerName;
 		ipAddress = inIPAddress;
 		monitorPort = inMonitorPort;
@@ -19,9 +21,15 @@ class Objects.ServerConnection {
 		monitor_socket = new XMLSocket();
 		server_socket = new XMLSocket();
 		viewAttached = false;
-		setupSockets();
+		setupSockets();		
+	}
+	public function disconnect(){
+		monitor_socket.close();
+		server_socket.close();
 	}
 	public function  makeConnections(){
+		monitor_socket.close();
+		server_socket.close();
 		connectToServer();
 		connectToMonitor();
 	}
@@ -59,25 +67,21 @@ class Objects.ServerConnection {
 		if (success) {
 			serverStatus = "Server: Connected";
 		} else {
-			serverStatus ="Server: Connection Failed, retrying..."
-			connectToServer();
+			serverStatus ="Server: Connection Failed"
 		}
 	}
 	private function serverOnClose() {
-		serverStatus = "Server: Disconnected, retrying...";
-		connectToServer();
+		serverStatus = "Server: Disconnected";
 	}
 	private function monitorOnConnect(success:Boolean) {
 		if (success) {
 			monitorStatus = "Monitor: Connected";
 		} else {
-			monitorStatus ="Monitor: Connection Failed, retrying..."
-			connectToMonitor();
+			monitorStatus ="Monitor: Connection Failed"
 		}
 	}
 	private function monitorOnClose() {
-		monitorStatus = "Monitor: Disconnected, retrying...";
-		connectToMonitor();
+		monitorStatus = "Monitor: Disconnected";
 	}
 	private function setupSockets():Void {
 		server_socket.onClose = Delegate.create(this, serverOnClose);
