@@ -2,6 +2,8 @@
 
 _global.systemInformation = "Copyright © " + new Date().getFullYear() + " Building Intelligence Pty Ltd";
 
+_global.flashMajorVersion = Number(System.capabilities.version.split(" ")[1].split(",")[0]);
+
 _global.settings.serverPort = 10000;
 _global.settings.serverRetryTime = 10;
 _global.settings.serverConnectTimeout = 3;

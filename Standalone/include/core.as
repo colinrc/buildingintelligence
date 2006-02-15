@@ -3064,7 +3064,7 @@ application_xml.onLoad = function () {
 }
 
 loadIcons = function () {
-	if (_global.settings.device == "pda") {
+	if (_global.settings.device == "pda" || _global.flashMajorVersion < 8) {
 		application_xml.load(_global.settings.applicationXML);
 	} else {
 		var st = getTimer();

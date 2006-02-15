@@ -133,7 +133,7 @@ class bi.ui.Window extends bi.ui.CoreUI {
 		
 		if (_borderWidth) bg_mc.lineStyle(_borderWidth, _borderColour);
 		
-		if (_bgColour1 == _bgColour2 || _global.settings.device == "pda") {
+		if (_bgColour1 == _bgColour2 || _global.settings.device == "pda" || new Matrix() == undefined) {
 			bg_mc.beginFill(_bgColour1, _bgOpacity);
 		} else {
 			var matrix = new Matrix();

@@ -72,7 +72,7 @@ class bi.ui.Icon extends bi.ui.CoreUI {
 	private function draw():Void {
 		if (!_size || !_iconName.length) return;
 		
-		if (_global.settings.device == "pda") {
+		if (_global.settings.device == "pda" || _global.flashMajorVersion < 8) {
 			attachMovie("icons", "icons_mc", 10);
 			icons_mc.gotoAndStop(_iconName);
 		} else {
