@@ -29,8 +29,12 @@ public class AreaCodes {
 	}
 	
 	public void addJoin ( String areaCode,String toArea){
-		String paddedKey = Utility.padString (areaCode,2);
 		int toAreaInt = Integer.parseInt(toArea);
+		addJoin (areaCode,toAreaInt);
+	}
+
+	public void addJoin ( String areaCode,int toAreaInt){
+		String paddedKey = Utility.padString (areaCode,2);
 		String paddedToKey = Utility.padStringTohex(toAreaInt);
 		if (areaCodes.containsKey(paddedKey)){
 			LinkedList keys = (LinkedList)areaCodes.get (paddedKey);
@@ -38,7 +42,20 @@ public class AreaCodes {
 		}
 	}
 
-	
+	public void removeJoin ( String areaCode,String toArea){
+		int toAreaInt = Integer.parseInt(toArea);
+		removeJoin (areaCode,toAreaInt);
+	}
+
+	public void removeJoin ( String areaCode,int toAreaInt){
+		String paddedKey = Utility.padString (areaCode,2);
+		String paddedToKey = Utility.padStringTohex(toAreaInt);
+		if (areaCodes.containsKey(paddedKey)){
+			LinkedList keys = (LinkedList)areaCodes.get (paddedKey);
+			keys.remove(paddedToKey);
+		}
+	}
+
 	public void add (String areaCode, String key){
 		LinkedList keys;
 		if (areaCodes.containsKey(areaCode)){

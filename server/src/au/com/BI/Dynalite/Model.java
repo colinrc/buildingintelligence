@@ -742,7 +742,54 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
+	public void 	interpretLink (InterpretResult result, byte msg[])
+	{
+		CommandInterface dynResult = null;
+		byte area = msg[1];
+		
+		DynaliteDevice areaDev = this.findSingleDevice(DynaliteHelper.Light,area,0,false);
+		if (areaDev != null) {
+			decodeLinkByte (result,msg[2],msg[7],0,areaDev,true);
+			decodeLinkByte (result,msg[4],msg[7],1,areaDev,true);
+			decodeLinkByte (result,msg[5],msg[7],2,areaDev,true);
+			
+		}
+	}
 
+	public void 	interpretUnLink (InterpretResult result, byte msg[])
+	{
+		CommandInterface dynResult = null;
+		byte area = msg[1];
+		
+		DynaliteDevice areaDev = this.findSingleDevice(DynaliteHelper.Light,area,0,false);
+		if (areaDev != null) {
+			decodeLinkByte (result,msg[2],msg[7],0,areaDev,false);
+			decodeLinkByte (result,msg[4],msg[7],1,areaDev,false);
+			decodeLinkByte (result,msg[5],msg[7],2,areaDev,false);
+			
+		}
+	}
+
+	public void decodeLinkByte (InterpretResult result,byte theByte, byte join, int byteNumber,DynaliteDevice dev, boolean linkOrUnlink){
+		String linkCommand = "unlink";
+		if (linkOrUnlink)  linkCommand = "link";
+		String areaName = dev.getOutputKey();
+		
+		for (int i = 0; i < 8 ; i ++){
+			if ((theByte | 2 ^ i) != 0){
+				int linkToNumber = i + 1 + byteNumber * 8; 
+				CommandInterface dynResult = buildCommandForFlash ((DeviceType)dev,linkCommand,linkToNumber,0,join,this.currentUser);		
+				result.decoded.add(dynResult);
+				if (linkOrUnlink) {
+					areaCodes.addJoin(dev.getKey(), linkToNumber);
+				}
+				else {
+					areaCodes.removeJoin(dev.getKey(), linkToNumber);					
+				}
+			}			
+		}		
+	}
+	
 	public void interpretChannelLevel (InterpretResult result, byte msg[])
 	{
 		CommandInterface dynResult = null;
@@ -835,6 +882,13 @@ public class Model extends BaseModel implements DeviceModel {
 				interpretPanicOff (result,msg);
 				break;
 
+			case 0x20:
+				interpretLink (result,msg);
+				break;
+				
+			case 0x21:
+				interpretUnLink (result,msg);
+				break;
 		}
 		return result;
 	}
