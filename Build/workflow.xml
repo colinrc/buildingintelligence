@@ -16,4 +16,4 @@
 	<step label="Configure Status Bar" key="StatusBar" description="Add status bar groups\nConfigure status bar groups\n" order="14"/>
  	<step label="Configure Logging" key="Logging" description="Add logging groups\nConfigure logging groups" order="15"/>
 	<step label="Publish Project" key="AudioVideos" description="Update eLIFE client and server\nwith new configuration" order="16"/>
-</workflow>
+</workflow> 
