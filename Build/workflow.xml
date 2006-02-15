@@ -1,13 +1,14 @@
 <workflow>
-	<step label="Add Devices" key="Server" description="" order="1"/>
-	<step label="Comfort" key="Comfort" description="" order="2"/>
-	<step label="Alarms" key="Alarms" description="" order="3"/>
-	<step label="Alerts" key="Alerts" description="" order="4"/>
- 	<step label="Analogues" key="Analogues" description="" order="5"/>
-	<step label="AudioVideos" key="AudioVideos" description="" order="6"/>
-	<step label="Cameras" key="Cameras" description="" order="7"/>
-	<step label="Catalogue" key="Catalogue" description="" order="8"/>
-	<step label="Catalogues" key="Catalogues" description="" order="9"/>
- 	<step label="CBus" key="CBus" description="" order="10"/>
-	<step label="AudioVideos" key="AudioVideos" description="" order="11"/>
+	<step label="Configure Server" key="Server" description="Add Device Types\nConfigure Device type connection settings\nConfigure devices\nAdd Controls" order="1"/>
+	<step label="CBus" key="CBus" description="Add lights\nConfigure lights\nAdd sensors\nConfigure sensors\nAdd catalogues\nConfigure catalogues" order="2"/>
+	<step label="GC100" key="GC100" description="Add catalogues\nConfigure catalogues\nAdd modules\nConfigure Modules\n" order="3"/>
+	<step label="Tutondo" key="Tutondo" description="Add catalogues\nConfigure catalogues\nAdd Audio Zones" order="4"/>
+	<step label="Comfort" key="Comfort" description="Add catalogues\nConfigure catalogues\nConfigure Custom Inputs\nConfigure Custom Outputs\nConfigure Toggle Inputs\nConfigure Toggle Outputs\nAdd Comfort Alerts
+" order="5"/>
+	<step label="IR Learner" key="IRLearner" description="Add catalogues\nConfigure catalogues\n" order="6"/>
+	<step label="Configure Property" key="Property" description="Add zone\nConfigure zone" order="7"/>
+	<step label="Configure Zone" key="Zone" description="Add arbitrary's\nAdd rooms\nConfigure Windows\nConfigure Tabs\nConfigure Doors\nAdd Alerts\nConfigure Alerts" order="8"/>
+	<step label="Configure Status Bar" key="StatusBar" description="Add status bar groups\nConfigure status bar groups\n" order="9"/>
+ 	<step label="Configure Logging" key="Logging" description="Add logging groups\nConfigure logging groups" order="10"/>
+	<step label="Publish Project" key="AudioVideos" description="Update eLIFE client and server\nwith new configuration" order="11"/>
 </workflow>
