@@ -7,6 +7,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 	private var name:String;
 	private var map_ti:TextInput;
 	private var map:String;
+	private var setMap_btn:Button;
 	private var background_ti:TextInput;
 	private var background:String;
 	private var cycle_chk:CheckBox;
@@ -72,8 +73,18 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		add_room_btn.addEventListener("click", Delegate.create(this, addRoom));
 		del_panel_btn.addEventListener("click", Delegate.create(this, deletePanel));
 		add_panel_btn.addEventListener("click", Delegate.create(this, addPanel));
+		setMap_btn.addEventListener("click", Delegate.create(this, setMap));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
+	public function setMap():Void {
+		mdm.Dialogs.BrowseFile.title = "Please select a Map File";
+		mdm.Dialogs.BrowseFile.filterList = "";
+		mdm.Dialogs.BrowseFile.filterText = "";
+		var tempString = mdm.Dialogs.BrowseFile.show();
+		if (tempString != "false") {
+			map_ti.text = tempString;
+		}
+	}	
 	private function deleteRoom() {
 		dataGridHandler.removeRow();
 	}

@@ -3,7 +3,7 @@
 	private var panels:Array;
 	private var arbitrary:Objects.Client.Arbitrary;
 	private var name:String;
-	private var map:String;
+	public var map:String;
 	private var background:String;
 	private var cycle:String;
 	private var alignment:String;
@@ -104,6 +104,7 @@
 					for (var room in newData.childNodes[child].childNodes) {
 						var newRoom = new Objects.Client.Room();
 						newRoom.setXML(newData.childNodes[child].childNodes[room]);
+						newRoom.setZone(this);
 						rooms.push(newRoom);
 					}
 					break;
@@ -157,6 +158,7 @@
 			newNode.attributes["name"] = newRooms[newRoom].name;
 			var newRoom = new Objects.Client.Room();
 			newRoom.setXML(newNode);
+			newRoom.setZone(this);
 			rooms.push(newRoom);
 		}
 		/****/

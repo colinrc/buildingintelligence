@@ -71,11 +71,20 @@ class Forms.Home extends Forms.BaseForm {
 		if (_global.project.ipAddress.length) {
 			ipAddress_ti.text = _global.project.ipAddress;
 		}
+		else{
+			_global.project.ipAddress = ipAddress_ti.text;
+		}
 		if (_global.project.serverPort.length) {
 			serverPort_ti.text = _global.project.serverPort;
 		}
+		else{
+			_global.project.serverPort = serverPort_ti.text;
+		}
 		if (_global.project.monitorPort.length) {
 			monitorPort_ti.text = _global.project.monitorPort;
+		}
+		else{
+			_global.project.monitorPort = monitorPort_ti.text;
 		}
 		save_btn.addEventListener("click", Delegate.create(this, saveProjectDetails));
 		path_btn.addEventListener("click", Delegate.create(this, selectFolder));
@@ -89,8 +98,7 @@ class Forms.Home extends Forms.BaseForm {
 		_global.project.serverPort = serverPort_ti.text;
 		_global.history.changed("Project Details", "Monitor Port", "Monitor Port Number", _global.project.monitorPort, monitorPort_ti.text);
 		_global.project.monitorPort = monitorPort_ti.text;
-		_global.server.setServerAddress("", _global.project.ipAddress, parseInt(_global.project.serverPort), parseInt(_global.project.monitorPort));
-		_global.server.makeConnections();
+		_global.server.makeConnections("", _global.project.ipAddress, parseInt(_global.project.serverPort), parseInt(_global.project.monitorPort));
 	}
 	public function disconnect():Void {
 		_global.server.disconnect();

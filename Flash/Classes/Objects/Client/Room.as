@@ -5,6 +5,10 @@
 	private var window:Objects.Client.Window;
 	private var doors:Objects.Client.Doors;
 	private var alerts:Objects.Client.AlertGroups;
+	private var zone:Objects.Client.Zone;
+	public function setZone(inZone:Objects.Client.Zone){
+		zone = inZone;
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		if (!window.isValid()) {
@@ -53,7 +57,7 @@
 		return "Room : "+name;
 	}
 	public function getData():Object {
-		return new Object({name:name, poly:poly, switchZone:switchZone});
+		return {name:name, poly:poly, switchZone:switchZone, map:zone.map};
 	}
 	public function setXML(newData:XMLNode):Void {
 		name = "";

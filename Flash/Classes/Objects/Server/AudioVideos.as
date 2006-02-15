@@ -46,7 +46,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("AudioVideos",newNode);
+		_global.workflow.addNode("AudioVideos", newNode);
 		return newNode;
 	}
 	public function getData():Object {

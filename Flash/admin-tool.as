@@ -5,10 +5,15 @@ _global.style.setStyle("color", 0x000000);
 _global.style.setStyle("embedFonts", true);
 _global.style.setStyle("fontFamily", "_defaultFont");
 */
+//var debugger:mx.controls.TextArea;
+//_root.debugger = debugger;
+//_root.debugger.text +="blsh \n";
 var menu_mb:mx.controls.MenuBar;
 _global.history = new Objects.History();
 var right_tree:mx.controls.Tree;
 _global.right_tree = right_tree;
+var infoflow_ta:mx.controls.TextArea;
+_global.infoflow_ta = infoflow_ta;
 _global.workflow_xml = new XML();
 _global.workflow_xml.ignoreWhite = true;
 //_global.workflow_xml.onLoad = function(success) {
@@ -22,6 +27,7 @@ _global.workflow_xml.load("workflow.xml");
 _global.right_tree_xml = new XML();
 //values set in workflow object
 _global.right_tree_xml.ignoreWhite = true;
+_global.right_tree.dataProvider = _global.right_tree_xml;
 _global.workflow = new Objects.WorkFlow();
 var left_tree:mx.controls.Tree;
 _global.left_tree = left_tree;
@@ -35,11 +41,9 @@ _global.controlTypeAttributes_xml.ignoreWhite = true;
 _global.controlTypeAttributes_xml.onLoad = function(success) {
 };
 _global.controlTypeAttributes_xml.load("controlTypeAttributes.xml");
-//test serverconnection
 _global.server = new Objects.ServerConnection();
-//server.makeConnections();*/
-_global.style.setStyle("themeColor", "haloGreen");
-_global.left_tree.vScrollPolicy = right_tree.vScrollPolicy="auto";
+_global.style.setStyle("themeColor", "haloBlue");
+_global.left_tree.vScrollPolicy = right_tree.vScrollPolicy = "auto";
 _global.left_tree.hScrollPolicy = "auto";
 _global.left_tree.setStyle("openDuration", 50);
 // form holder placed in the correct spot
@@ -47,7 +51,7 @@ this.createEmptyMovieClip("formContent_mc", 0);
 formContent_mc._x = 270;
 formContent_mc._y = 114;
 _global.comboSetSelected = function(combo, val, field) {
-	for (var i = 0; i<combo.length; i++) {
+	for (var i = 0; i < combo.length; i++) {
 		if (field.length && combo.getItemAt(i)[field] == val) {
 			combo.selectedIndex = i;
 			break;
@@ -143,8 +147,8 @@ function appExit():Void {
 }
 function openFile(openType:String):Void {
 	mdm.Dialogs.BrowseFile.buttonText = "Open file";
-	mdm.Dialogs.BrowseFile.title = "Please select a "+openType+".xml file to open";
-	mdm.Dialogs.BrowseFile.dialogText = "Select a "+openType+".xml to Use";
+	mdm.Dialogs.BrowseFile.title = "Please select a " + openType + ".xml file to open";
+	mdm.Dialogs.BrowseFile.dialogText = "Select a " + openType + ".xml to Use";
 	mdm.Dialogs.BrowseFile.defaultExtension = "xml";
 	mdm.Dialogs.BrowseFile.filterList = "XML Files|*.xml";
 	mdm.Dialogs.BrowseFile.filterText = "XML Files|*.xml";
@@ -166,39 +170,39 @@ function openFile(openType:String):Void {
 		}
 	}
 }
-_global.writeXMLFile = function (inNode:XMLNode, depth:Number):String {
+_global.writeXMLFile = function(inNode:XMLNode, depth:Number):String  {
 	var tempString = "";
 	if (inNode.nodeType == 3) {
 		tempString += inNode.toString();
 		return tempString;
 	}
-	for (index=0; index<depth; index++) {
+	for (index = 0; index < depth; index++) {
 		tempString += "\t";
 	}
 	tempString += "<";
 	tempString += inNode.nodeName;
 	for (attribute in inNode.attributes) {
-		tempString += " "+attribute+'= "'+inNode.attributes[attribute]+'"';
+		tempString += " " + attribute + '= "' + inNode.attributes[attribute] + '"';
 	}
 	if (inNode.hasChildNodes()) {
 		if (inNode.firstChild.nodeType == 3) {
 			tempString += ">";
 			tempString += _global.writeXMLFile(inNode.firstChild, 0);
-			return tempString+"</"+inNode.nodeName+"> \n";
+			return tempString + "</" + inNode.nodeName + "> \n";
 		} else {
 			tempString += "> \n";
-			for (var child = 0; child<inNode.childNodes.length; child++) {
-				tempString += _global.writeXMLFile(inNode.childNodes[child], depth+1);
+			for (var child = 0; child < inNode.childNodes.length; child++) {
+				tempString += _global.writeXMLFile(inNode.childNodes[child], depth + 1);
 			}
-			for (index=0; index<depth; index++) {
+			for (index = 0; index < depth; index++) {
 				tempString += "\t";
 			}
-			return tempString+"</"+inNode.nodeName+"> \n";
+			return tempString + "</" + inNode.nodeName + "> \n";
 		}
 	} else {
-		return tempString+"/> \n";
+		return tempString + "/> \n";
 	}
-}
+};
 function saveFile(saveType:String):Void {
 	if (saveType == "Project") {
 		if (_global.projectFileName.length) {
@@ -216,8 +220,8 @@ function saveFile(saveType:String):Void {
 		}
 	} else {
 		mdm.Dialogs.BrowseFile.buttonText = "Save file";
-		mdm.Dialogs.BrowseFile.title = "Please select a "+saveType+".xml file to save";
-		mdm.Dialogs.BrowseFile.dialogText = "Select a "+saveType+".xml to Save";
+		mdm.Dialogs.BrowseFile.title = "Please select a " + saveType + ".xml file to save";
+		mdm.Dialogs.BrowseFile.dialogText = "Select a " + saveType + ".xml to Save";
 		mdm.Dialogs.BrowseFile.defaultExtension = "xml";
 		mdm.Dialogs.BrowseFile.filterList = "XML Files|*.xml";
 		mdm.Dialogs.BrowseFile.filterText = "XML Files|*.xml";
@@ -294,8 +298,9 @@ setView = function (view, dataObj) {
 	left_tree._y = 93;
 	left_tree.setSize(244, 670);
 	right_tree._visible = true;
+	_global.infoflow_ta._visible = true;
 	tabs_tb._visible = true;
-	tabs_tb.enabled = false;
+	//tabs_tb.enabled = false;
 	tabBody_mc._visible = true;
 	formContent_mc.form_mc.removeMovieClip();
 	formContent_mc.createEmptyMovieClip("form_mc", 0);
@@ -305,6 +310,7 @@ setView = function (view, dataObj) {
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		right_tree._visible = false;
+		_global.infoflow_ta._visible = false;
 		formContent_mc.attachMovie("forms.home", "form_mc", 0);
 		tabs_tb.dataProvider = [{label:"Project Details"}];
 		tabs_tb.selectedIndex = 0;
@@ -319,7 +325,7 @@ setView = function (view, dataObj) {
 		}
 		tabs_tb.dataProvider = tabs;
 		tabs_tb.selectedIndex = currentTab;
-		tabs_tb.enabled = true;
+		//tabs_tb.enabled = true;
 		//formContent_mc.attachMovie("forms."+view, "form_mc", 0, dataObj);
 		break;
 	case "control" :
@@ -328,6 +334,8 @@ setView = function (view, dataObj) {
 	case "control.logLevels" :
 	case "control.serverLog" :
 	case "control.ir" :
+		_global.infoflow_ta._visible = false;
+		right_tree._visible = false;
 		treeFilter_cb._visible = false;
 		left_tree._y = 68;
 		left_tree.setSize(244, 695);
@@ -349,14 +357,16 @@ setView = function (view, dataObj) {
 			tabs_tb.selectedIndex = 0;
 			view = "control.controls";
 		}
-		var form_mc = formContent_mc.attachMovie("forms."+view, "form"+random(999)+"_mc", 0);
+		var form_mc = formContent_mc.attachMovie("forms." + view, "form_" + random(999) + "_mc", 0);
+		//_root.debugger.text += "setting view "+view+"\n";
 		_global.server.attachView(form_mc);
-		tabs_tb.enabled = true;
+		//tabs_tb.enabled = true;
 		break;
 	case "none" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		right_tree._visible = false;
+		_global.infoflow_ta._visible = false;
 		tabs_tb._visible = false;
 		tabBody_mc._visible = false;
 		break;
@@ -364,6 +374,7 @@ setView = function (view, dataObj) {
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		right_tree._visible = false;
+		_global.infoflow_ta._visible = false;
 		formContent_mc.attachMovie("forms.preview", "form_mc", 0);
 		tabs_tb.dataProvider = [{label:"Client Preview"}];
 		tabs_tb.selectedIndex = 0;
@@ -373,7 +384,8 @@ setView = function (view, dataObj) {
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		right_tree._visible = false;
-		formContent_mc.attachMovie("forms.publish", "form_mc", 0);		
+		_global.infoflow_ta._visible = false;
+		formContent_mc.attachMovie("forms.publish", "form_mc", 0);
 		tabs_tb.dataProvider = [{label:"Publish", view:"publish"}];
 		tabs_tb.selectedIndex = 0;
 		break;
@@ -381,9 +393,10 @@ setView = function (view, dataObj) {
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		right_tree._visible = false;
-		tabs_tb.dataProvider = [{label:_global.project.project+" History", view:"history"}];
+		_global.infoflow_ta._visible = false;
+		tabs_tb.dataProvider = [{label:_global.project.project + " History", view:"history"}];
 		tabs_tb.selectedIndex = 0;
-		formContent_mc.attachMovie("forms.history", "form"+random(999)+"_history", 0);
+		formContent_mc.attachMovie("forms.history", "form" + random(999) + "_history", 0);
 		break;
 	}
 };
@@ -392,12 +405,16 @@ tabs_tb.change = function(eventObj) {
 		if (left_tree.selectedNode.object != undefined) {
 			formContent_mc.form_mc.unloadMovie();
 			formContent_mc.createEmptyMovieClip("form_mc", 0);
-			if (eventObj.target.selectedItem.label == "XML") {
-				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_"+random(999)+"_mc", 0, {node:left_tree.selectedNode.object.toXML()});
-			} else if (eventObj.target.selectedItem.label == "Preview") {
-				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_"+random(999)+"_mc", 0, {controls:_global.client_test.getControlTypes(), previewXML:left_tree.selectedNode.object.toXML()});
-			} else {
-				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_"+random(999)+"_mc", 0, left_tree.selectedNode.object.getData());
+			switch (eventObj.target.selectedItem.label) {
+			case "XML" :
+				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, {node:left_tree.selectedNode.object.toXML()});
+				break;
+			case "Preview" :
+				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, {controls:_global.client_test.getControlTypes(), previewXML:left_tree.selectedNode.object.toXML()});
+				break;
+			default :
+				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, left_tree.selectedNode.object.getData());
+				break;
 			}
 		} else {
 			setView(eventObj.target.selectedItem.view, form_mc.dataObj);
@@ -411,18 +428,24 @@ leftTreeListener.change = function(eventObj) {
 	var node = eventObj.target.selectedNode;
 	formContent_mc.form_mc.removeMovieClip();
 	formContent_mc.createEmptyMovieClip("form_mc", 0);
+	right_tree.selectedNode = undefined;
 	if (node.object != undefined) {
+		if (node.description.length) {
+			infoflow_ta.text = node.description;
+		} else {
+			infoflow_ta.text = "";
+		}
 		switch (node.nodeName) {
 		case "Panel" :
 		case "Tab" :
 		case "Control" :
 		case "Window" :
-			var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_"+random(999)+"_mc", 0, node.object.getData());
+			var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + random(999) + "_mc", 0, node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview", view:"forms.project.client.preview"}];
 			tabs_tb.selectedIndex = 0;
 			break;
 		default :
-			var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_"+random(999)+"_mc", 0, node.object.getData());
+			var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + random(999) + "_mc", 0, node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}];
 			tabs_tb.selectedIndex = 0;
 			break;
@@ -478,7 +501,9 @@ function setButtons(enabled:Boolean) {
 			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
 		}
 	}
-	menu_mb.dataProvider.updateViews("change");
+	var oBackupDP = menu_mb.dataProvider;
+	menu_mb.dataProvider = null;
+	menu_mb.dataProvider = oBackupDP;
 }
 home_btn.addEventListener("click", buttonListener);
 project_btn.addEventListener("click", buttonListener);
@@ -502,5 +527,24 @@ treeFilter_cb.change = function(eventObj) {
 	}
 };
 treeFilter_cb.addEventListener("change", treeFilter_cb);
+rightTreeListener = new Object();
+rightTreeListener.change = function(eventObj) {
+	var node = eventObj.target.selectedNode;
+	left_tree.setIsOpen(node.left_node, true);
+	var temp_node = node.left_node.parentNode;
+	while (temp_node != null) {
+		left_tree.setIsOpen(temp_node, true);
+		temp_node = temp_node.parentNode;
+	}
+	left_tree.selectedNode = node.left_node;
+	infoflow_ta.text = node.attributes.description;
+	left_tree.setFocus();
+	left_tree.dataProvider.updateViews("change");
+	selectNode = new Object();
+	selectNode.target = _global.left_tree;
+	selectNode.type = "change";
+	left_tree.dispatchEvent(selectNode);
+};
+right_tree.addEventListener("change", rightTreeListener);
 setView("none");
 stop();
