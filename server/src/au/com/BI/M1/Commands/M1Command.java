@@ -18,8 +18,6 @@ public class M1Command extends Command {
 		futureUse = use;
 	}
 
-
-
 	public String getFutureUse() {
 		return futureUse;
 	}

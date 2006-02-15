@@ -13,7 +13,6 @@ public class M1CommandFactory {
 
 	private M1CommandFactory() {
 		super();
-		// TODO Auto-generated constructor stub
 		Logger logger = Logger.getLogger(M1CommandFactory.class.getPackage().getName());
 	}
 	
@@ -57,6 +56,8 @@ public class M1CommandFactory {
 			m1Command = parseZoneBypassRequest(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("ZB")) {
 			m1Command = parseReplyWithBypassedZoneState(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("ZC")) {
+			m1Command = parseZoneChangeUpdate(unparsedCommand);
 		}
 		
 		if (m1Command == null) {
@@ -349,6 +350,30 @@ public class M1CommandFactory {
 		_command.setCheckSum(command.substring(command.length()-2));
 		_command.setZone(command.substring(4,7));
 		_command.setBypassState(ZoneBypassState.getByValue(command.substring(7,8)));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseZoneChangeUpdate(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ZoneChangeUpdate _command = new ZoneChangeUpdate();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setZone(command.substring(4,7));
+		_command.setZoneStatus(ZoneStatus.getByValue(command.substring(7,8)));
+		_command.setFutureUse(command.substring(8,10));
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
 		if (checkSum.equals(_command.getCheckSum())) {

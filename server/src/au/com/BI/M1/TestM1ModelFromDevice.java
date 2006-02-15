@@ -19,6 +19,7 @@ import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
 import au.com.BI.M1.Commands.ReplyWithBypassedZoneState;
 import au.com.BI.M1.Commands.ZoneBypassRequest;
 import au.com.BI.M1.Commands.ZoneBypassState;
+import au.com.BI.M1.Commands.ZoneChangeUpdate;
 import au.com.BI.M1.Commands.ZonePartition;
 import au.com.BI.M1.Commands.ZonePartitionReport;
 import au.com.BI.M1.Commands.ZonePartitionRequest;
@@ -165,6 +166,14 @@ public class TestM1ModelFromDevice extends TestCase {
 		ReplyWithBypassedZoneState replyWithState = (ReplyWithBypassedZoneState)m1Command;
 		assertEquals(replyWithState.getZone(),"123");
 		assertEquals(replyWithState.getBypassState(),ZoneBypassState.BYPASSED);
+		
+		str = "0BZC00220009D";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),ZoneChangeUpdate.class);
+		ZoneChangeUpdate zoneChangeUpdate = (ZoneChangeUpdate)m1Command;
+		assertEquals(zoneChangeUpdate.getZone(),"002");
+		assertEquals(zoneChangeUpdate.getZoneStatus(),ZoneStatus.NORMAL_EOL);
+		assertEquals(zoneChangeUpdate.getFutureUse(),"00");
 	}
 
 }
