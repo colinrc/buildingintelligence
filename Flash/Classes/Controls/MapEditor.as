@@ -110,8 +110,6 @@ class Controls.MapEditor extends MovieClip {
 		
 		scrollPane_sp._width = __width;
 		scrollPane_sp._height = __height - scrollPane_sp._y;
-		
-		trace(__width);
 	}
 	
 	/* Constructor */
