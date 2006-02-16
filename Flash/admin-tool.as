@@ -8,6 +8,59 @@ _global.style.setStyle("fontFamily", "_defaultFont");
 //var debugger:mx.controls.TextArea;
 //_root.debugger = debugger;
 //_root.debugger.text +="blsh \n";
+/****************************************************************/
+//create the tooltip clip 
+_root.createEmptyMovieClip("ToolTip", 15999);
+// add the tooltip background box 
+_root.ToolTip.createEmptyMovieClip("TipBackground", 1);
+with (_root.ToolTip.TipBackground) {
+	beginFill(0xCCCCCC, 100);
+	lineStyle(1, 0x666666, 100);
+	moveTo(0, 0);
+	lineTo(110, 0);
+	lineTo(110, 20);
+	lineTo(0, 20);
+	lineTo(0, 0);
+	endFill();
+}
+// add the tooltip textfield. you could easily apply a 
+// textFormat to this to customise the text more.
+_root.ToolTip.createTextField("TipText", 2, 2, 0, 100, 20);
+_root.ToolTip.TipText.type = "dynamic";
+// mouse listener for tooltips 
+TipMover = new Object();
+TipMover.onMouseMove = function() {
+	ToolTip._x = _xmouse;
+	ToolTip._y = _ymouse + 20;
+};
+// adds a text-description of the buttons function 
+function DisplayTip(tip) {
+	Mouse.addListener(TipMover);
+	ToolTip._x = _xmouse;
+	ToolTip._y = _ymouse + 20;
+	ToolTip.swapDepths(15999);
+	ToolTip._width = 100;
+	ToolTip._height = 20;	
+	ToolTip._alpha = 100;
+	ToolTip.TipText.text = tip;
+	ToolTip.TipText.width = ToolTip.TipText.textWidth;
+	ToolTip.TipBackground._width = ToolTip.TipText.textWidth + 8;
+}
+// hide tip 
+function CloseTip() {
+	Mouse.removeListener(TipMover);
+	ToolTip._alpha = 100;
+	ToolTip._x = 0;
+	ToolTip._y = 0;	
+	ToolTip._width = 1;
+	ToolTip._height = 1;
+	/*ToolTip.TipText._width = 0;
+	ToolTip.TipBackground._width = 0;	
+	ToolTip.TipText.text = "";*/
+}
+// hide the tip initially 
+CloseTip();
+/********************************************************/
 var menu_mb:mx.controls.MenuBar;
 _global.history = new Objects.History();
 var right_tree:mx.controls.Tree;
@@ -109,6 +162,7 @@ project_xml.onLoad = function(success) {
 			break;
 		}
 	}
+	_global.right_tree.dataProvider.removeAll();
 	projectTree_xml.appendChild(_global.client_test.toTree());
 	projectTree_xml.appendChild(_global.server_test.toTree());
 	refreshTheTree();
@@ -430,11 +484,11 @@ leftTreeListener.change = function(eventObj) {
 	formContent_mc.createEmptyMovieClip("form_mc", 0);
 	right_tree.selectedNode = undefined;
 	if (node.object != undefined) {
-		if (node.description.length) {
-			infoflow_ta.text = node.description;
+		/*if (node.description.length) {
+		infoflow_ta.text = node.description;
 		} else {
-			infoflow_ta.text = "";
-		}
+		infoflow_ta.text = "";
+		}*/
 		switch (node.nodeName) {
 		case "Panel" :
 		case "Tab" :
@@ -511,13 +565,66 @@ control_btn.addEventListener("click", buttonListener);
 preview_btn.addEventListener("click", buttonListener);
 publish_btn.addEventListener("click", buttonListener);
 historyViewer_btn.addEventListener("click", buttonListener);
+home_btn.onRollOver = function(){
+	DisplayTip("Project Details");
+	this.setState("highlighted");
+}
+project_btn.onRollOver = function(){
+	DisplayTip("Project Design");
+	this.setState("highlighted");
+}
+control_btn.onRollOver = function(){
+	DisplayTip("Server Controls");
+	this.setState("highlighted");	
+}
+preview_btn.onRollOver = function(){
+	DisplayTip("Client Preview");
+	this.setState("highlighted");	
+}
+publish_btn.onRollOver = function(){
+	DisplayTip("Project Publish");
+	this.setState("highlighted");	
+}
+historyViewer_btn.onRollOver = function(){
+	DisplayTip("Changelog");
+	this.setState("highlighted");	
+}
+home_btn.onRollOut = function(){
+	CloseTip();
+	this.setState(false);	
+}
+project_btn.onRollOut = function(){
+	CloseTip();
+	this.setState(false);		
+}
+control_btn.onRollOut = function(){
+	CloseTip();
+	this.setState(false);		
+}
+preview_btn.onRollOut = function(){
+	CloseTip();
+	this.setState(false);		
+}
+publish_btn.onRollOut = function(){
+	CloseTip();
+	this.setState(false);		
+}
+historyViewer_btn.onRollOut = function(){
+	CloseTip();
+	this.setState(false);		
+}
 setButtons(false);
 treeFilter_cb.change = function(eventObj) {
 	switch (eventObj.target.selectedItem.label) {
 	case "Project" :
 		left_tree.dataProvider = projectTree_xml;
 		left_tree.labelFunction = function(item_obj:Object):String  {
-			return item_obj.object.getName();
+			if(item_obj.object.isValid()) {
+				return item_obj.object.getName();
+			}
+			else{
+				return "*"+item_obj.object.getName();
+			}
 		};
 		break;
 	case "Library" :

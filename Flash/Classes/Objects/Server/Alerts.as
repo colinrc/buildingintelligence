@@ -17,9 +17,6 @@
 			if ((alerts[alert].attributes["KEY"] == undefined) || (alerts[alert].attributes["KEY"] == "")) {
 				flag = false;
 			}
-			if ((alerts[alert].attributes["NAME"] == undefined) || (alerts[alert].attributes["NAME"] == "")) {
-				flag = false;
-			}
 			if ((alerts[alert].attributes["DISPLAY_NAME"] == undefined) || (alerts[alert].attributes["DISPLAY_NAME"] == "")) {
 				flag = false;
 			}

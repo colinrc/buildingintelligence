@@ -46,7 +46,7 @@ class Objects.WorkFlow {
 		var newNode = new XMLNode(1, "step ");
 		newNode.attributes.label = getLabel(key);
 		newNode.attributes.order = order;
-		newNode.attributes.description = getDescription(key);
+		newNode.attributes.description = getDescription(key).split("\\n").join("\n");
 		newNode.left_node.description = newNode.attributes.description;
 		if (newNode.attributes.label.length>0) {
 			newNode.left_node = inst;

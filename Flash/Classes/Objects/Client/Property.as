@@ -14,12 +14,12 @@
 		return newNode;
 	}
 	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
+		var newNode = new XMLNode(1,"Property");
 		newNode.object = this;
 		for(var zone in zones){
 			newNode.appendChild(zones[zone].toTree());
 		}
-		_global.workflow.addNode("ClientProperty",newNode);
+		_global.workflow.addNode("Property",newNode);
 		return newNode;
 	}
 	public function getName():String{

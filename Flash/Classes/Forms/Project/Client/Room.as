@@ -13,8 +13,17 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 	public function init() {
 		name_ti.text = name;
 		roomEditor.map = map.split('\\').join('/');
-		roomEditor.poly = poly;		
-		switchZone_cmb.text = switchZone;
+		roomEditor.poly = poly;
+		switchZone_cmb.addItem({label:"None"});//switchZone;
+		var tempZones = _global.client_test.Property.zones;
+		for(var zone in tempZones){
+			switchZone_cmb.addItem({label:tempZones[zone].name});
+		}
+		for(var zone in switchZone_cmb.dataProvider){
+			if(switchZone_cmb.dataProvider[zone].label == switchZone){
+				switchZone_cmb.selectedIndex = parseInt(zone);
+			}
+		}
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function save():Void {

@@ -39,7 +39,7 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("ClientStatusBarGroup",newNode);
+		_global.workflow.addNode("StatusBarGroup",newNode);
 		return newNode;
 	}
 	public function getName():String{
