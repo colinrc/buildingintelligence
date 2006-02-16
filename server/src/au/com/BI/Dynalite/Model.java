@@ -682,7 +682,7 @@ public class Model extends BaseModel implements DeviceModel {
 			}
 		}
 
-	public void 	interpretAreaOff (InterpretResult result, byte msg[])
+	public void interpretAreaOff (InterpretResult result, byte msg[])
 	// Area off, not often used, instead preset 4 is usually used
 	{
 		CommandInterface dynResult = null;
@@ -700,7 +700,7 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void 	interpretPanicOn (InterpretResult result, byte msg[])
+	public void interpretPanicOn (InterpretResult result, byte msg[])
 	// Area off, not often used, instead preset 4 is usually used
 	{
 		CommandInterface dynResult = null;
@@ -721,7 +721,7 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void 	interpretPanicOff (InterpretResult result, byte msg[])
+	public void interpretPanicOff (InterpretResult result, byte msg[])
 	// Area off, not often used, instead preset 4 is usually used
 	{
 		CommandInterface dynResult = null;
@@ -742,9 +742,8 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void 	interpretLink (InterpretResult result, byte msg[])
+	public void interpretLink (InterpretResult result, byte msg[])
 	{
-		CommandInterface dynResult = null;
 		byte area = msg[1];
 		
 		DynaliteDevice areaDev = this.findSingleDevice(DynaliteHelper.Light,area,0,false);
@@ -756,9 +755,8 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void 	interpretUnLink (InterpretResult result, byte msg[])
+	public void interpretUnLink (InterpretResult result, byte msg[])
 	{
-		CommandInterface dynResult = null;
 		byte area = msg[1];
 		
 		DynaliteDevice areaDev = this.findSingleDevice(DynaliteHelper.Light,area,0,false);
@@ -773,7 +771,6 @@ public class Model extends BaseModel implements DeviceModel {
 	public void decodeLinkByte (InterpretResult result,byte theByte, byte join, int byteNumber,DynaliteDevice dev, boolean linkOrUnlink){
 		String linkCommand = "unlink";
 		if (linkOrUnlink)  linkCommand = "link";
-		String areaName = dev.getOutputKey();
 		
 		for (int i = 0; i < 8 ; i ++){
 			if ((theByte | 2 ^ i) != 0){

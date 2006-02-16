@@ -30,9 +30,9 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		testWithChannelA02C03.setAreaCode("02");
 		testWithChannelA02C03.setKey("03");
 		
-		testAreaOnly = new LightFascade("Area Only", DeviceType.LIGHT_DYNALITE ,"AREA03_ONLY","DYNALITE");
+		testAreaOnly = new LightFascade("Area Only", DeviceType.LIGHT_DYNALITE_AREA ,"AREA03_ONLY","DYNALITE");
 		testAreaOnly.setAreaCode("03");
-		testAreaOnly.setKey("00");
+		testAreaOnly.setKey("03");
 		
 		area5Sec = new ClientCommand("AREA03_CHANNEL02","on",null,"50","5","","","");
 		area50Sec = new ClientCommand("AREA03_CHANNEL02","on",null,"50","50","","","");
@@ -123,7 +123,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		assertEquals ("Find Single Device found incorrect device",dev,testWithChannelA02C03);
 
 		DynaliteDevice dev4 = model.findSingleDevice(DynaliteHelper.Light,2,2,true);
-		assertEquals ("Find Single Device found incorrect device",dev,testWithChannelA02C03);
+		assertEquals ("Find Single Device found incorrect device",dev4,testWithChannelA02C03);
 
 		DynaliteDevice dev2 = model.findSingleDevice(DynaliteHelper.Light,3,0,false);
 		assertEquals ("Find Single Device found incorrect device",dev2,testAreaOnly);
