@@ -1,4 +1,4 @@
-	<application> 
+	<application>
 		<settings> 
 			<setting value= "http://www.news.com.au" name= "defaultBrowserURL"/> 
 		</settings> 
@@ -81,7 +81,7 @@
 			<app label= "Calculator" program= "calc.exe"/> 
 		</controlPanelApps> 
 		<property> 
-			<zone hideFromList= "false" alignment= "center" cycle= "false" map= "groundplan.swf" name= "Ground Floor"> 
+			<zone hideFromList= "false" alignment= "center" cycle= "false" map= "mk-floor1.swf" name= "Ground Floor"> 
 				<arbitrary/> 
 				<rooms> 
 					<room poly= "58,10,58,115,195,115,195,10" name= "Bedroom"> 
