@@ -87,7 +87,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		LinkedList testRes = new LinkedList();
 		testRes.add(testA03C03);
 		testRes.add(testA03C04);
-		result = model.findDevicesInArea(3,true,0xff);
+		result = model.areaCodes.findDevicesInArea(3,true,0xff);
 		ListAssert.assertEquals("Finding devices in area failed",testRes,result);
 	}
 	

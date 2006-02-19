@@ -48,6 +48,7 @@ public interface DynaliteDevice {
 	
 	public String getOutputKey ();
 	
-
+	public String getBLA();
+	public void setBLA(String bLA);
 	
 }

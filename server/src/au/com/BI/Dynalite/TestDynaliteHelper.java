@@ -38,6 +38,12 @@ public class TestDynaliteHelper extends TestCase {
 		dynaliteHelper.addChecksum(items);
 		assertEquals ("Checksum calculation failed",(byte)0xbb,items[7]);
 
+		/* 
+		items = new byte[]{(byte)0x1C,04,(byte)0x80,0x20,0x0,0,(byte)0xff,(byte)0x0};
+		dynaliteHelper.addChecksum(items);
+		assertEquals ("Checksum calculation failed",(byte)0xc0,items[7]);
+		Example from area link area in pdf file, possibly incorrect.
+		*/
 	}
 
 

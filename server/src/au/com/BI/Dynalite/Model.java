@@ -24,7 +24,6 @@ public class Model extends BaseModel implements DeviceModel {
 	protected HashMap state;
 	protected DynaliteHelper dynaliteHelper;
 	protected AreaCodes areaCodes = null;
-	public final static int AreaCommand = 0;
 	protected int protocol = DynaliteDevice.Linear;
 	protected HashMap areaOffset;
 	protected int bla = 0;
@@ -98,13 +97,10 @@ public class Model extends BaseModel implements DeviceModel {
 				DynaliteDevice device = (DynaliteDevice)details;
 				if (((DeviceType)details).getDeviceType() == DeviceType.LIGHT_DYNALITE ) {
 					String areaCode = device.getAreaCode() ;
-					theKey = dynaliteHelper.buildKey('L',areaCode,key);
-
-					areaCodes.addKey (areaCode);
+					areaCodes.add (areaCode,(DynaliteDevice)details);
 				}
 				if (((DeviceType)details).getDeviceType() == DeviceType.LIGHT_DYNALITE_AREA) {
-					theKey = dynaliteHelper.buildKey('L',key,0);
-					areaCodes.addKey (theKey);
+					areaCodes.add (theKey,(DynaliteDevice)details);
 				}
 				if (((DeviceType)details).getDeviceType() == DeviceType.ALARM) {
 					theKey = "ALARM";
@@ -167,15 +163,11 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 	
 	public void requestAllLevels (String area,byte join) throws CommsFail{
-		List allLights = findDevicesInArea (area,false,join);
+		List allLights = areaCodes.findDevicesInArea (area,false,join);
 		Iterator eachLight = allLights.iterator();
 		while (eachLight.hasNext()){
 			DynaliteDevice nextItem = (DynaliteDevice)eachLight.next();
-			String nextArea = nextItem.getAreaCode();
-			if (area.equals (nextArea) || areaCodes.isJoined (area,nextArea)){
-				requestLevel (nextItem.getAreaCode(),nextItem.getChannel(),nextItem.getOutputKey());
-				
-			}
+			requestLevel (nextItem.getAreaCode(),nextItem.getChannel(),nextItem.getOutputKey());				
 		}
 	}
 	
@@ -188,7 +180,7 @@ public class Model extends BaseModel implements DeviceModel {
 				if (nextDevice.getDeviceType() == DeviceType.LIGHT_DYNALITE )  {
 					DynaliteDevice nextItem = (DynaliteDevice)nextDevice;
 					String fullKey = dynaliteHelper.buildKey('L',nextItem.getAreaCode(),nextItem.getChannel());
-					if (nextItem.getChannel() == AreaCommand) continue; // cannot query level of an area
+					if (nextItem.getChannel() == areaCodes.AreaCommand) continue; // cannot query level of an area
 					DynaliteOutput result = this.buildDynaliteLevelRequestCommand(nextItem.getAreaCode(),nextItem.getChannel(),nextItem.getOutputKey(),255);
 					CommsCommand dynaliteCommsCommand = new CommsCommand();
 					dynaliteCommsCommand.setKey (fullKey);
@@ -323,26 +315,6 @@ public class Model extends BaseModel implements DeviceModel {
 
 	}
 
-	public List findDevicesInArea (int areaInt, boolean includeAreaControl,int join) {
-		String area = Utility.padStringTohex(areaInt);
-		return findDevicesInArea (area,includeAreaControl,join);
-	}
-
-	public List findDevicesInArea (String area, boolean includeAreaControl,int join) {
-		LinkedList deviceList = new LinkedList();
-		Iterator eachLight = configHelper.getControlledItemsList();
-		while (eachLight.hasNext()){
-			String nextKey = (String)eachLight.next();
-			DynaliteDevice nextItem = (DynaliteDevice)configHelper.getControlledItem(nextKey);
-			if (!includeAreaControl && nextItem.getChannel() == AreaCommand) continue;
-			String nextArea = nextItem.getAreaCode();
-			if (area.equals (nextArea) || areaCodes.isJoined (area,nextArea)){
-				deviceList.add(nextItem);
-			}
-		}
-		return deviceList;
-	}
-
 	public DynaliteInputDevice findIRDevice ( int box, int channel){
 		return findInputDevice (DynaliteHelper.IR,box,channel);
 	}
@@ -451,7 +423,7 @@ public class Model extends BaseModel implements DeviceModel {
 			commandStr = "on";
 		}
 		
-		List devList = this.findDevicesInArea(area,true,msg[6]);
+		List devList = areaCodes.findDevicesInArea(area,true,msg[6]);
 		Iterator eachDev = devList.iterator();
 		while (eachDev.hasNext()){
 			dev = (DynaliteDevice)eachDev.next();
@@ -597,7 +569,7 @@ public class Model extends BaseModel implements DeviceModel {
 
 			}
 			if (channel == 0xff){
-				List devList = this.findDevicesInArea(area,true,msg[6]);
+				List devList = areaCodes.findDevicesInArea(area,true,msg[6]);
 				Iterator eachDev = devList.iterator();
 				while (eachDev.hasNext()){
 					dev = (DynaliteDevice)eachDev.next();
@@ -639,7 +611,7 @@ public class Model extends BaseModel implements DeviceModel {
 		byte area = msg[1];
 		DynaliteDevice dev = null;
 		if (channel == (byte)0xff){
-			List devList = this.findDevicesInArea(area,true,msg[6]);
+			List devList = areaCodes.findDevicesInArea(area,true,msg[6]);
 			Iterator eachDev = devList.iterator();
 			while (eachDev.hasNext()){
 				dev = (DynaliteDevice)eachDev.next();
@@ -665,7 +637,7 @@ public class Model extends BaseModel implements DeviceModel {
 			byte area = msg[1];
 			DynaliteDevice dev = null;
 			if (channel == 0xff){
-				List devList = this.findDevicesInArea(area,true,msg[6]);
+				List devList = areaCodes.findDevicesInArea(area,true,msg[6]);
 				Iterator eachDev = devList.iterator();
 				while (eachDev.hasNext()){
 					dev = (DynaliteDevice)eachDev.next();
@@ -691,7 +663,7 @@ public class Model extends BaseModel implements DeviceModel {
 		int rate = (int)((msg[4] * 256 + msg[2]) * .02);
 		// CC complete
 		
-		List devList = this.findDevicesInArea(area,true,msg[6]);
+		List devList = areaCodes.findDevicesInArea(area,true,msg[6]);
 		Iterator eachDev = devList.iterator();
 		while (eachDev.hasNext()){
 			dev = (DynaliteDevice)eachDev.next();
@@ -1062,17 +1034,17 @@ public class Model extends BaseModel implements DeviceModel {
 			byte linkTo = Byte.parseByte(blaOffsetStr);
 			byte join = dynaliteHelper.findJoin(joinStr,returnVal);
 			this.areaCodes.addJoin (areaCodeStr, blaOffsetStr);
-			if (linkTo >= 1 || linkTo <= 8 ) {
+			if (linkTo >= 1 && linkTo <= 8 ) {
 				returnVal.outputCodes[2] = (byte)(128 >> (linkTo -1));	
 			} else {
 				returnVal.outputCodes[2] = 0;
 			}
-			if (linkTo >= 9 || linkTo <= 16 ) {
+			if (linkTo >= 9 && linkTo <= 16 ) {
 				returnVal.outputCodes[4] = (byte)(128 >> (linkTo -9));	
 			} else {
 				returnVal.outputCodes[4] = 0;
 			}
-			if (linkTo >= 17 || linkTo <= 24 ) {
+			if (linkTo >= 17 && linkTo <= 24 ) {
 				returnVal.outputCodes[5] = (byte)(128 >> (linkTo -17));	
 			} else {
 				returnVal.outputCodes[5] = 0;

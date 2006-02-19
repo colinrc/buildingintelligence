@@ -13,7 +13,7 @@ import au.com.BI.Lights.*;
 
 
 /**
- * @author Colin Canfield
+ * @author Colin Canfield 
  *
  **/
 public class Dynalite extends BaseDevice implements LightDevice,DeviceType,DynaliteDevice,DynaliteInputDevice
@@ -24,6 +24,7 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 	protected String relay = "N";
 	protected int channel = 0;
 	protected int box = 0;
+	protected String BLA = "";
 
 	protected boolean areaDevice = false;
 	
@@ -143,6 +144,16 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 
 	public void setAreaDevice(boolean areaDevice) {
 		this.areaDevice = areaDevice;
+	}
+
+
+	public String getBLA() {
+		return BLA;
+	}
+
+
+	public void setBLA(String bla) {
+		BLA = bla;
 	}
 
 

@@ -31,7 +31,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		testWithChannelA02C03.setKey("03");
 		
 		testAreaOnly = new LightFascade("Area Only", DeviceType.LIGHT_DYNALITE_AREA ,"AREA03_ONLY","DYNALITE");
-		testAreaOnly.setAreaCode("03");
+		//testAreaOnly.setAreaCode("03");
 		testAreaOnly.setKey("03");
 		
 		area5Sec = new ClientCommand("AREA03_CHANNEL02","on",null,"50","5","","","");
@@ -40,7 +40,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		model = new Model();
 		//ConfigHelper configHelper = model.getConfigHelper();
 		model.addControlledItem("03",testWithChannelA02C03,DeviceType.MONITORED);
-		model.addControlledItem("00",testAreaOnly,DeviceType.MONITORED);
+		model.addControlledItem("03",testAreaOnly,DeviceType.MONITORED);
 		dynaliteHelper = model.getDynaliteHelper();
 	}
 
@@ -133,5 +133,29 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		
 	}
 		
+	public void testDynaliteLinkArea() {
+		byte ret1[] = new byte[]{(byte)0x1C,04,(byte)0x80,0x20,0x0,0,(byte)0xff,(byte)0xc0};
+		dynaliteHelper.addChecksum (ret1);
+		LightFascade testAreaOnly = new LightFascade("Area Only", DeviceType.LIGHT_DYNALITE_AREA ,"Area04","DYNALITE");
+		testAreaOnly.setKey("04");
+		testAreaOnly.setBLA("04");
+		model.addControlledItem("04",testAreaOnly,DeviceType.MONITORED);
+		
+		DynaliteOutput result1 = model.buildLinkToCommand("04", "1","255", true);
+		ArrayAssert.assertEquals ("Build linek area failed.",ret1,result1.outputCodes);
+		
+	}
 	
+	public void testDynaliteUnlinkArea() {
+		byte ret1[] = new byte[]{(byte)0x1C,04,(byte)0x80,0x21,0x0,0,(byte)0xff,(byte)0x40};
+
+		LightFascade testAreaOnly = new LightFascade("Area Only", DeviceType.LIGHT_DYNALITE_AREA ,"Area04","DYNALITE");
+		testAreaOnly.setKey("04");
+		testAreaOnly.setBLA("04");
+		model.addControlledItem("04",testAreaOnly,DeviceType.MONITORED);
+		
+		DynaliteOutput result1 = model.buildLinkToCommand("04", "1","255", false);
+		ArrayAssert.assertEquals ("Build linek area failed.",ret1,result1.outputCodes);
+		
+	}
 }
