@@ -40,7 +40,7 @@ function DisplayTip(tip) {
 	ToolTip._y = _ymouse + 20;
 	ToolTip.swapDepths(15999);
 	ToolTip._width = 100;
-	ToolTip._height = 20;	
+	ToolTip._height = 20;
 	ToolTip._alpha = 100;
 	ToolTip.TipText.text = tip;
 	ToolTip.TipText.width = ToolTip.TipText.textWidth;
@@ -51,7 +51,7 @@ function CloseTip() {
 	Mouse.removeListener(TipMover);
 	ToolTip._alpha = 100;
 	ToolTip._x = 0;
-	ToolTip._y = 0;	
+	ToolTip._y = 0;
 	ToolTip._width = 1;
 	ToolTip._height = 1;
 	/*ToolTip.TipText._width = 0;
@@ -511,25 +511,30 @@ buttonListener = new Object();
 buttonListener.last_btn = null;
 buttonListener.click = function(eventObj) {
 	this.last_btn.selected = false;
-	eventObj.target.selected = true;
 	this.last_btn = eventObj.target;
 	switch (eventObj.target) {
 	case home_btn :
+		eventObj.target.selected = true;
 		setView("home");
 		break;
 	case project_btn :
+		eventObj.target.selected = true;
 		setView("project");
 		break;
 	case control_btn :
+		eventObj.target.selected = true;
 		setView("control");
 		break;
 	case preview_btn :
+		eventObj.target.selected = true;
 		setView("preview");
 		break;
 	case publish_btn :
+		eventObj.target.selected = true;
 		setView("publish");
 		break;
 	case historyViewer_btn :
+		eventObj.target.selected = true;
 		setView("history");
 		break;
 	}
@@ -541,6 +546,7 @@ function setButtons(enabled:Boolean) {
 	preview_btn.enabled = enabled;
 	publish_btn.enabled = enabled;
 	historyViewer_btn.enabled = enabled;
+	//save_btn.enabled = enabled;
 	for (var child in menu_mb.dataProvider.firstChild.childNodes) {
 		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "importClient") {
 			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
@@ -565,53 +571,72 @@ control_btn.addEventListener("click", buttonListener);
 preview_btn.addEventListener("click", buttonListener);
 publish_btn.addEventListener("click", buttonListener);
 historyViewer_btn.addEventListener("click", buttonListener);
-home_btn.onRollOver = function(){
+save_btn.addEventListener("click", buttonListener);
+save_btn.enabled = true;
+save_btn.icon = "floppytrue";
+home_btn.onRollOver = function() {
 	DisplayTip("Project Details");
 	this.setState("highlighted");
-}
-project_btn.onRollOver = function(){
+};
+project_btn.onRollOver = function() {
 	DisplayTip("Project Design");
 	this.setState("highlighted");
-}
-control_btn.onRollOver = function(){
+};
+control_btn.onRollOver = function() {
 	DisplayTip("Server Controls");
-	this.setState("highlighted");	
-}
-preview_btn.onRollOver = function(){
+	this.setState("highlighted");
+};
+preview_btn.onRollOver = function() {
 	DisplayTip("Client Preview");
-	this.setState("highlighted");	
-}
-publish_btn.onRollOver = function(){
+	this.setState("highlighted");
+};
+publish_btn.onRollOver = function() {
 	DisplayTip("Project Publish");
-	this.setState("highlighted");	
-}
-historyViewer_btn.onRollOver = function(){
+	this.setState("highlighted");
+};
+historyViewer_btn.onRollOver = function() {
 	DisplayTip("Changelog");
-	this.setState("highlighted");	
-}
-home_btn.onRollOut = function(){
+	this.setState("highlighted");
+};
+save_btn.onRollOver = function() {
+	DisplayTip("Save");
+	this.setState("highlighted");
+};
+home_btn.onRollOut = function() {
 	CloseTip();
-	this.setState(false);	
-}
-project_btn.onRollOut = function(){
+	this.setState(false);
+};
+project_btn.onRollOut = function() {
 	CloseTip();
-	this.setState(false);		
-}
-control_btn.onRollOut = function(){
+	this.setState(false);
+};
+control_btn.onRollOut = function() {
 	CloseTip();
-	this.setState(false);		
-}
-preview_btn.onRollOut = function(){
+	this.setState(false);
+};
+preview_btn.onRollOut = function() {
 	CloseTip();
-	this.setState(false);		
-}
-publish_btn.onRollOut = function(){
+	this.setState(false);
+};
+publish_btn.onRollOut = function() {
 	CloseTip();
-	this.setState(false);		
-}
-historyViewer_btn.onRollOut = function(){
+	this.setState(false);
+};
+historyViewer_btn.onRollOut = function() {
 	CloseTip();
-	this.setState(false);		
+	this.setState(false);
+};
+save_btn.onRollOut = function() {
+	CloseTip();
+	this.setState(false);
+	//this.highlight = false;
+};
+save_btn.click = function(){
+		//DO SAVE
+		this.icon = "floppyfalse";
+		//eventObj.target.selected =false;
+		//eventObj.target.enabled = false;
+		break;
 }
 setButtons(false);
 treeFilter_cb.change = function(eventObj) {
@@ -619,11 +644,10 @@ treeFilter_cb.change = function(eventObj) {
 	case "Project" :
 		left_tree.dataProvider = projectTree_xml;
 		left_tree.labelFunction = function(item_obj:Object):String  {
-			if(item_obj.object.isValid()) {
+			if (item_obj.object.isValid()) {
 				return item_obj.object.getName();
-			}
-			else{
-				return "*"+item_obj.object.getName();
+			} else {
+				return "*" + item_obj.object.getName();
 			}
 		};
 		break;
