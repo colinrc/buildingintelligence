@@ -19,7 +19,8 @@ public class Alarm extends BaseDevice implements DeviceType,DynaliteDevice
 	protected boolean areaFlag = false;
 	protected String areaCode = "";
 	protected int channel = 0;
-
+	protected String BLA = "";
+	
 	public Alarm (String name, int deviceType, String outputKey){
 		this.name = name;
 		this.deviceType = deviceType;
@@ -122,5 +123,11 @@ public class Alarm extends BaseDevice implements DeviceType,DynaliteDevice
 	
 	public void setRelay (String a){
 		
+	}
+	public String getBLA() {
+		return BLA;
+	}
+	public void setBLA(String bla) {
+		BLA = bla;
 	}
 }
