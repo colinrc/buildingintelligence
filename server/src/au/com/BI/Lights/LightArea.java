@@ -11,8 +11,10 @@ import au.com.BI.Command.*;
  * @author Colin Canfield
  *
  **/
-public class LightArea extends BaseDevice 
+public class LightArea extends BaseDevice
 {
+
+	protected String BLA = "";
 	
 	public LightArea (String name, int deviceType){
 		this.name = name;
@@ -30,6 +32,14 @@ public class LightArea extends BaseDevice
 		LightCommand lightCommand = new LightCommand ();
 		lightCommand.setDisplayName(getOutputKey());
 		return lightCommand;
+	}
+
+	public String getBLA() {
+		return BLA;
+	}
+
+	public void setBLA(String bla) {
+		BLA = bla;
 	}
 
 

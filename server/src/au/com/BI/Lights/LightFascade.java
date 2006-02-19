@@ -38,6 +38,9 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 		if (deviceType == DeviceType.LIGHT_DYNALITE ){
 			light = new Dynalite(name, deviceType);
 		}
+		if (deviceType == DeviceType.LIGHT_DYNALITE_AREA ){
+			light = new LightArea(name, deviceType);
+		}
 		if (light == null) {
 			light = new Light(name, deviceType);
 		}
@@ -300,5 +303,28 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 
 	public boolean isContinueAfterMatch () {
 	    return false;
+	}
+	
+	public String getBLA() {
+		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE ){
+			return ((Dynalite)light).getBLA();
+		}
+		
+		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE_AREA ){
+			return ((Dynalite)light).getBLA();
+		}
+		
+		return "";
+	}
+	
+	public void setBLA(String bLA){
+		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE ){
+			((Dynalite)light).setBLA(bLA);
+		}
+		
+		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE_AREA ){
+			((LightArea)light).setBLA(bLA);
+		}
+		
 	}
 }
