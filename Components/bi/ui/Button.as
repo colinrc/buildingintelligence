@@ -13,7 +13,7 @@ class bi.ui.Button extends bi.ui.CoreUI {
 		
 	private var _enabled:Boolean = true;
 	private var _label:String;
-	private var _font:String = "bi.ui.globalFont";
+	private var _font:String;
 	private var _fontSize:Number;
 	private var _fontColour:Number;
 	private var _iconName:String;
@@ -101,6 +101,12 @@ class bi.ui.Button extends bi.ui.CoreUI {
 		return _showHighlight;
 	}
 	
+	public function set font(font:String):Void {
+		if (font != undefined) {
+			_font = font;
+		}
+	}
+	
 	public function set fontSize(fontSize:Number):Void {
 		if (fontSize != undefined) {
 			_fontSize = fontSize;
@@ -142,6 +148,7 @@ class bi.ui.Button extends bi.ui.CoreUI {
 	private function init():Void {
 		if (_bgColour == null) _bgColour = _global.settings.buttonBgColour;
 		if (_borderColour == null) _borderColour = _global.settings.buttonBorderColour;
+		if (_font == null) _font = _global.settings.buttonFont
 		if (_fontColour == null) _fontColour = _global.settings.buttonFontColour;
 		if (_fontSize == null) _fontSize = _global.settings.buttonFontSize;
 	}
@@ -163,7 +170,7 @@ class bi.ui.Button extends bi.ui.CoreUI {
 		label_tf.color = _fontColour;
 		label_tf.size = _fontSize;
 		label_tf.bold = true;
-		label_tf.font = _font;
+		label_tf.font = "bi.ui.Fonts:" + _font;
 		label_txt.autoSize = true;
 		label_txt.embedFonts = true;
 		label_txt.selectable = false;

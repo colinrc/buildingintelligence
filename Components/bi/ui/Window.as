@@ -21,7 +21,7 @@ class bi.ui.Window extends bi.ui.CoreUI {
 	private var _bgColour2:Number;
 	private var _bgOpacity:Number;
 	private var _shadowOffset:Number
-	private var _titleFont:String = "bi.ui.globalFont";
+	private var _font:String;
 	private var _title:String;
 	private var _iconName:String;
 
@@ -35,6 +35,12 @@ class bi.ui.Window extends bi.ui.CoreUI {
 		return _title;
 	}
 
+	public function set font(font:String):Void {
+		if (font != undefined) {
+			_font = font;
+		}
+	}
+	
 	public function set hideClose(hideClose:Boolean):Void {
 		_hideClose = hideClose;
 	}
@@ -86,6 +92,7 @@ class bi.ui.Window extends bi.ui.CoreUI {
 	}
 
 	private function init():Void {
+		if (_font == null) _font = _global.settings.windowFont;
 		if (_borderColour == null) _borderColour = _global.settings.windowBorderColour;
 		if (_borderWidth == null) _borderWidth = _global.settings.windowBorderWidth;		
 		if (_cornerRadius == null) _cornerRadius = _global.settings.windowCornerRadius;
@@ -106,7 +113,7 @@ class bi.ui.Window extends bi.ui.CoreUI {
 		title_tf.color = 0xFFFFFF;
 		title_tf.size = 18;
 		title_tf.bold = true;
-		title_tf.font = _titleFont;
+		title_tf.font = "bi.ui.Fonts:" + _font;
 		title_txt.embedFonts = true;
 		title_txt.selectable = false;
 		title_txt.setNewTextFormat(title_tf);

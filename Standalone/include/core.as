@@ -73,7 +73,7 @@ confirm = function (msg, scope, onYes, onNo) {
 	content_tf.color = 0xFFFFFF;
 	content_tf.size = 16;
 	content_tf.bold = true;
-	content_tf.font = "bi.ui.globalFont";
+	content_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 	content_tf.align = "center";
 	
 	content_txt.embedFonts = true;
@@ -91,7 +91,6 @@ confirm = function (msg, scope, onYes, onNo) {
 	var yes_mc = buttons_mc.attachMovie("bi.ui.Button", "yes_mc", 5, {settings:{width:60, height:35, label:"Yes", fontSize:14}});
 	yes_mc.func = onYes;
 	yes_mc.press = function () {
-		trace(this._parent.scope +":"+this.func);
 		this._parent.scope[this.func]();
 		this._parent._parent.removeMovieClip();
 		megaModal_mc._visible = false;
@@ -145,7 +144,7 @@ showMessageWindow = function (msgObj) {
 		content_tf.color = 0xFFFFFF;
 		content_tf.size = 14;
 		content_tf.bold = true;
-		content_tf.font = "bi.ui.globalFont";
+		content_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 		content_tf.align = "center";
 		
 		content_txt.embedFonts = true;
@@ -308,7 +307,7 @@ createKeyboard = function (type) {
 	label_tf.size = 28;
 	label_tf.bold = true;
 	label_tf.align = "center";
-	label_tf.font = "bi.ui.globalFont";
+	label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 	
 	inputArea_mc.inputField_txt.embedFonts = true;
 	inputArea_mc.inputField_txt.selectable = false;
@@ -1032,13 +1031,24 @@ renderZone = function (zone, clip) {
 				var pos = doors[door].pos;
 				if (doors[door].colour != undefined) {
 					door_mc.beginFill(doors[door].colour);
+				} else if (doors[door].colours != undefined) {
+					door_mc.colours = doors[door].colours;
+					door_mc.beginFill(0xFFFFFF);
 				} else {
 					door_mc.beginFill(_global.settings.zoneDoorColour);
 				}
 				door_mc.drawRect(pos[0], pos[1], pos[2], pos[3]);
 				door_mc.endFill();
 				door_mc.update = function (key, state, value) {
-					this._visible = (state == "on");
+					if (this.colours.length) {
+						if (state == "on") {
+							new Color(this).setRGB(this.colours[1]);
+						} else {
+							new Color(this).setRGB(this.colours[0]);
+						}
+					} else {
+						this._visible = (state == "on");
+					}
 				}
 				subscribe(doors[door].key, door_mc);
 				door_mc.update();
@@ -1075,7 +1085,7 @@ renderZone = function (zone, clip) {
 			label_tf.color = 0xFFFFFF;
 			label_tf.size = 14;
 			label_tf.bold = true;
-			label_tf.font = "bi.ui.globalFont";
+			label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 			
 			panel_mc.label_txt.embedFonts = true;
 			panel_mc.label_txt.selectable = false;
@@ -1130,7 +1140,7 @@ renderZone = function (zone, clip) {
 						label_tf.size = 12;
 					}
 					label_tf.bold = true;
-					label_tf.font = "bi.ui.globalFont";
+					label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 					
 					item_mc.label_txt.embedFonts = true;
 					item_mc.label_txt.selectable = false;
@@ -1223,7 +1233,7 @@ renderZone = function (zone, clip) {
 						label_tf.size = 11;
 						label_tf.bold = true;
 						label_tf.align = "center";
-						label_tf.font = "bi.ui.globalFont";
+						label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 						
 						item_mc.label_txt.embedFonts = true;
 						item_mc.label_txt.selectable = false;
@@ -1284,7 +1294,7 @@ renderZone = function (zone, clip) {
 						label_tf.size = 11;
 						label_tf.bold = true;
 						label_tf.align = "center";
-						label_tf.font = "bi.ui.globalFont";
+						label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 						
 						item_mc.label_txt.embedFonts = true;
 						item_mc.label_txt.selectable = false;
@@ -1409,7 +1419,7 @@ openStatusWindow = function (statusObj) {
 		label_tf.color = 0xFFFFFF;
 		label_tf.size = 16;
 		label_tf.bold = true;
-		label_tf.font = "bi.ui.globalFont";
+		label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 
 		var controls = new Array();
 		for (var i=0; i<statusObj.controls.length; i++) {
@@ -1490,7 +1500,7 @@ openAbout = function () {
 		about_tf.color = 0xFFFFFF;
 		about_tf.size = 12;
 		about_tf.bold = true;
-		about_tf.font = "bi.ui.globalFont";
+		about_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 		about_tf.align = "center";
 		
 		var upTime = getTimer() - _global.clientStartTime; 
@@ -1778,7 +1788,7 @@ createLogContent = function (logObj, content_mc) {
 			label_tf.color = 0xFFFFFF;
 			label_tf.size = 16;
 			label_tf.bold = true;
-			label_tf.font = "bi.ui.globalFont";
+			label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 	
 			var log = logObj.log;
 			
@@ -1902,7 +1912,7 @@ createUsasgeGraphs = function (content_mc) {
 		label_tf.color = 0xFFFFFF;
 		label_tf.size = 16;
 		label_tf.bold = true;
-		label_tf.font = "bi.ui.globalFont";		
+		label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;		
 
 		graph_mc.createTextField("label" + i + "_txt", 20, 0, 0, 350, 20);
 		var label_txt = graph_mc["label" + i + "_txt"];
@@ -2001,7 +2011,7 @@ createMacroAdmin = function (content_mc) {
 	label_tf.color = 0xFFFFFF;
 	label_tf.size = 16;
 	label_tf.bold = true;
-	label_tf.font = "bi.ui.globalFont";
+	label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 		
 	content_mc.createTextField("label1_txt", 1, 3, 3, 350, 20);
 	var label_txt = content_mc["label1_txt"];
@@ -2060,7 +2070,7 @@ createMacroAdmin = function (content_mc) {
 		label_tf.color = 0xFFFFFF;
 		label_tf.size = 16;
 		label_tf.bold = true;
-		label_tf.font = "bi.ui.globalFont";
+		label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 
 		this.maxItems = _global.macros.length;
 		this.itemsPerPage = 14;
@@ -2227,7 +2237,7 @@ createScriptsAdmin = function (content_mc) {
 	label_tf.color = 0xFFFFFF;
 	label_tf.size = 16;
 	label_tf.bold = true;
-	label_tf.font = "bi.ui.globalFont";
+	label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 		
 	content_mc.createTextField("label1_txt", 1, 3, 3, 350, 20);
 	var label_txt = content_mc["label1_txt"];
@@ -2245,7 +2255,7 @@ createScriptsAdmin = function (content_mc) {
 		label_tf.color = 0xFFFFFF;
 		label_tf.size = 16;
 		label_tf.bold = true;
-		label_tf.font = "bi.ui.globalFont";
+		label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 
 		this.maxItems = _global.scripts.length;
 		this.itemsPerPage = 14;
@@ -2364,7 +2374,7 @@ openMacroEdit = function (macro) {
 		label_tf.color = 0xFFFFFF;
 		label_tf.size = 16;
 		label_tf.bold = true;
-		label_tf.font = "bi.ui.globalFont";
+		label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 		label_tf.align = "center";
 
 		this.maxItems = macroControls.length;
@@ -2569,7 +2579,7 @@ createLabel = function (item_mc, settings) {
 	label_tf.color = 0xFFFFFF;
 	label_tf.size = 14;
 	label_tf.bold = true;
-	label_tf.font = "bi.ui.globalFont";
+	label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
 	
 	item_mc.createTextField("label_txt", 10, 0, 0, settings.w, 20);
 	var label_txt = item_mc.label_txt;
@@ -2883,11 +2893,11 @@ layout = function () {
 	overlay_mc.createTextField("date_txt", 30, _global.settings.applicationWidth - _global.settings.dateX, _global.settings.dateY, 1, 1);
 
 	var label_tf = new TextFormat();
+	label_tf.font = "bi.ui.Fonts:" + _global.settings.titleFont;
 	label_tf.color = _global.settings.titleFontColour;
 	label_tf.size = _global.settings.titleFontSize;
 	label_tf.bold = true;
 	label_tf.align = "left";
-	label_tf.font = "bi.ui.globalFont";
 	overlay_mc.title_txt.embedFonts = true;
 	overlay_mc.title_txt.selectable = false;
 	overlay_mc.title_txt.setNewTextFormat(label_tf);

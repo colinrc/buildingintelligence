@@ -61,7 +61,7 @@
 				item_mc.states = items[item].states.split(",");
 				item_mc.formats = items[item].formats.split(",");
 				//createLabel(item_mc, {w:width, label:control.name});
-				item_mc.attachMovie("bi.ui.Label", "label_lb", 0, {settings:{width:width, label:control.name, fontSize:14}});
+				item_mc.attachMovie("bi.ui.Label", "label_lb", 0, {settings:{width:width, label:control.name}});
 				
 				item_mc.update = function (key) {
 					var state = _global.controls[key].storedStates["state"];
@@ -215,6 +215,7 @@
 						}
 					}
 				} else {
+					// find the macros internal ID
 					for (var i=0; i<_global.macros.length; i++) {
 						if (_global.macros[i].name == items[item].macro) {
 							var macroID = i;
@@ -222,6 +223,7 @@
 						}
 					}
 					item_mc.macroID = macroID;
+					
 					if (_global.macros[macroID].type == "dual") {
 						if (_global.macroStatus[macroID] == 1) {
 							item_mc.label = _global.macros[macroID].controls[1].command;
@@ -257,20 +259,23 @@
 						}
 					}
 					item_mc.update = function (key, state, value) {
-						if (key == "MACRO") {
-							if (_global.macros[this.macroID].running) {
-								this.highlight = true;
+						if (value == this.macroName) {
+							if (_global.macros[macroID].type == "dual") {
+								if (_global.macroStatus[this.macroID] == 0) {
+									this.label = _global.macros[this.macroID].controls[0].command;
+									this.macroName = _global.macros[this.macroID].controls[0].command;
+									this.onChangeID = 1;
+								} else {
+									this.label = _global.macros[this.macroID].controls[1].command;
+									this.macroName = _global.macros[this.macroID].controls[1].command;
+									this.onChangeID = 0;
+								}
 							} else {
-								this.highlight = true;
-							}
-							if (_global.macroStatus[this.macroID] == 0) {
-								this.label = _global.macros[this.macroID].controls[0].command;
-								this.macroName = _global.macros[this.macroID].controls[0].command;
-								this.onChangeID = 1;
-							} else {
-								this.label = _global.macros[this.macroID].controls[1].command;
-								this.macroName = _global.macros[this.macroID].controls[1].command;
-								this.onChangeID = 0;
+								if (_global.macros[this.macroID].running) {
+									this.highlight = true;
+								} else {
+									this.highlight = false;
+								}
 							}
 						}
 					}

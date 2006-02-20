@@ -30,6 +30,8 @@ _global.settings.screenLockPhotoRotate = 5;
 _global.settings.adminPin = "4321";
 _global.settings.cachePinTime = 360;
 
+_global.settings.defaultFont = "helvetica";
+
 _global.settings.applicationBg = 0x52688D;
 
 _global.settings.globalBtnClickTimer = 500;
@@ -38,6 +40,7 @@ _global.settings.windowAutoCloseTime = 360;
 
 _global.settings.windowWidth = 400;
 _global.settings.windowHeight = 420;
+_global.settings.windowFont = "helvetica";
 _global.settings.windowBgOpacity = 100;
 _global.settings.windowBgColour1 = 0x476390;
 _global.settings.windowBgColour2 = 0x445C85;
@@ -60,9 +63,11 @@ _global.settings.tabGreyWhenOff = true;
 
 _global.settings.buttonBgColour = 0x7C90B0;
 _global.settings.buttonBorderColour = 0x95A7C4;
+_global.settings.buttonFont = "helvetica";
 _global.settings.buttonFontColour = 0xFFFFFF;
 _global.settings.buttonFontSize = 16;
 
+_global.settings.labelFont = "helvetica";
 _global.settings.labelFontColour = 0xFFFFFF;
 _global.settings.labelFontSize = 16;
 
@@ -81,6 +86,7 @@ _global.settings.listItemCornerRadius = 7;
 
 _global.settings.titleX = 6;
 _global.settings.titleY = 10;
+_global.settings.titleFont = "helvetica";
 _global.settings.titleFontSize = 19;
 _global.settings.titleFontColour = 0xFFFFFF;
 			

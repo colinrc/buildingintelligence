@@ -127,7 +127,7 @@ defineZones = function (zones) {
 									for (var p=0; p<pos.length; p++) {
 										pos[p] = Number(pos[p]);
 									}
-									_global.zones[zone].rooms[room].doors.push({name:doors[door].attributes.name, pos:pos, key:doors[door].attributes.key, colour:doors[door].attributes.colour});
+									_global.zones[zone].rooms[room].doors.push({name:doors[door].attributes.name, pos:pos, key:doors[door].attributes.key, colour:doors[door].attributes.colour, colours:doors[door].attributes.colours.split(",")});
 									if (_global.controls[doors[door].attributes.key] == undefined) _global.controls[doors[door].attributes.key] = {key:doors[door].attributes.key, name:doors[door].attributes.name, zone:zones[zone].attributes.name, room:rooms[room].attributes.name};
 								}
 								break;
@@ -162,12 +162,32 @@ defineZones = function (zones) {
 
 defineWindow = function (window_xml, zone, room) {
 	for (var attrib in window_xml.attributes) {
-		_global.zones[zone].rooms[room].window[attrib] = window_xml.attributes[attrib];
+		if (Number(window_xml.attributes[attrib]) == window_xml.attributes[attrib]) {
+			_global.zones[zone].rooms[room].window[attrib] = Number(settings[setting].attributes.value);
+		} else if (window_xml.attributes[attrib] == "true" || window_xml.attributes[attrib] == "false") {
+			_global.zones[zone].rooms[room].window[attrib] = (window_xml.attributes[attrib] == "true");
+		} else {
+			_global.zones[zone].rooms[room].window[attrib] = window_xml.attributes[attrib];
+		}
 	}
 	_global.zones[zone].rooms[room].window.tabs = new Array();
 	var tabs = window_xml.childNodes;
 	for (var tab=0; tab<tabs.length; tab++) {
-		_global.zones[zone].rooms[room].window.tabs.push({name:tabs[tab].attributes.name, icon:tabs[tab].attributes.icon, canSee:tabs[tab].attributes.canSee, controls:[]});
+		
+		var tabObj = new Object();
+		tabObj.controls = new Array();
+		for (var attrib in tabs[tab].attributes) {
+			if (Number(tabs[tab].attributes[attrib]) == tabs[tab].attributes[attrib]) {
+				tabObj[attrib] = Number(settings[setting].attributes.value);
+			} else if (tabs[tab].attributes[attrib] == "true" || tabs[tab].attributes[attrib] == "false") {
+				tabObj[attrib] = (tabs[tab].attributes[attrib] == "true");
+			} else {
+				tabObj[attrib] = tabs[tab].attributes[attrib];
+			}
+		}
+		
+		_global.zones[zone].rooms[room].window.tabs.push(tabObj);
+		
 		var controls = tabs[tab].childNodes;
 		for (var control=0; control<controls.length; control++) {
 			if (controls[control].attributes.key != undefined && _global.controls[controls[control].attributes.key] == undefined) _global.controls[controls[control].attributes.key] = {key:controls[control].attributes.key, zone:_global.zones[zone].attributes.name, room:_global.zones[zone].rooms[room].name, name:controls[control].attributes.name, storedStates:new Object()};

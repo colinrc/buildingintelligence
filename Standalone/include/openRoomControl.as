@@ -21,7 +21,18 @@
 	var tabObject = new Object();
 	tabObject.width = window_mc.contentClip.width;
 	tabObject.height = window_mc.contentClip.height;
+
+	if (room.window.tabOpacity != undefined) tabObject.tabOpacity = room.window.tabBgOpacity;
+	if (room.window.tabOnColour != undefined) tabObject.tabOnColour = room.window.tabOnColour;
+	if (room.window.tabOffColour != undefined) tabObject.tabOffColour = room.window.tabOffColour;
+	if (room.window.tabOffAlpha != undefined) tabObject.tabOffAlpha = room.window.tabOffAlpha;
 	if (room.window.tabPosition != undefined) tabObject.tabPosition = room.window.tabPosition;
+	if (room.window.tabWidth != undefined) tabObject.tabWidth = room.window.tabWidth;
+	if (room.window.tabHeight != undefined) tabObject.tabHeight = room.window.tabHeight;
+	if (room.window.tabSpacing != undefined) tabObject.tabSpacing = room.window.tabSpacing;
+	if (room.window.cornerRadius != undefined) tabObject.cornerRadius = room.window.tabCornerRadius;
+	if (room.window.contentPadding != undefined) tabObject.contentPadding = room.window.tabContentPadding;	
+	
 	var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:tabObject});
 
 	var tab_array = new Array();

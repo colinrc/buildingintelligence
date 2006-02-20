@@ -6,7 +6,7 @@
 		
 	private var _label:String;
 	private var _align:String = "left";
-	private var _font:String = "bi.ui.globalFont";
+	private var _font:String;
 	private var _fontSize:Number;
 	private var _fontColour:Number;
 	
@@ -25,6 +25,12 @@
 			label_tf = new TextFormat();
 			label_tf.align = _align;
 			label_txt.setTextFormat(label_tf);
+		}
+	}
+
+	public function set font(font:String):Void {
+		if (font != undefined) {
+			_font = font;
 		}
 	}
 	
@@ -59,6 +65,7 @@
 	/* Private functions */
 	
 	private function init():Void {
+		if (_font == null) _font = _global.settings.labelFont;
 		if (_fontColour == null) _fontColour = _global.settings.labelFontColour;
 		if (_fontSize == null) _fontSize = _global.settings.labelFontSize;
 	}
@@ -83,7 +90,7 @@
 		label_tf.color = _fontColour;
 		label_tf.size = _fontSize;
 		label_tf.bold = true;
-		label_tf.font = _font;
+		label_tf.font = "bi.ui.Fonts:" + _font;
 		label_tf.align = _align;
 		label_txt.setNewTextFormat(label_tf);
 		

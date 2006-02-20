@@ -107,7 +107,7 @@
 		<zone name="Downstairs" map="downstairs.swf" cycle="false" alignment="center">
 			<rooms>
 				<room name="Ensuite" poly="443,219,443,296,579,296,579,153,477,153,477,219">
-					<window>
+					<window tabPosition="bottom">
 						<tab name="Lights &amp; Fan" icon="light-bulb">
 							<control name="Main Light" key="ENSUITE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
 							<control name="LV Light" key="ENSUITE_LV_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
@@ -146,7 +146,7 @@
 						<alert name="Lights" keys="ENTRY_LIGHT" icon="light-bulb" />
 					</alerts>
 					<doors>
-						<door name="Front Door" pos="184,295,61,4" key="FRONT_DOOR" colour="0xDB0000" />
+						<door name="Front Door" pos="184,295,61,4" key="FRONT_DOOR" colours="0xDB0000,0x3383D5" />
 					</doors>
 				</room>
 				<room name="Living Room" poly="165,201,377,201,377,168,339,168,339,9,136,9,136,29,129,165" switchZone="Living Room">
