@@ -15,7 +15,7 @@ class bi.ui.List extends  bi.ui.CoreUI {
 	private var _bgOpacity:Number;
 	private var _cornerRadius:Number;
 	private var _padding:Number;
-	private var _itemFont:String = "bi.ui.globalFont";
+	private var _itemFont:String;
 	private var _itemFontSize:Number;
 	private var _itemFontColour:Number;
 	private var _itemBgOpacity:Number;
@@ -52,6 +52,12 @@ class bi.ui.List extends  bi.ui.CoreUI {
 	public function get enabled():Boolean {
 		return _enabled;
 	}
+
+	public function set font(font:String):Void {
+		if (font != undefined) {
+			_itemFont = font;
+		}
+	}
 	
 	/* Constructor */
 	
@@ -85,6 +91,7 @@ class bi.ui.List extends  bi.ui.CoreUI {
 		if (_bgOpacity == null) _bgOpacity = _global.settings.listBgOpacity;
 		if (_cornerRadius == null) _cornerRadius = _global.settings.listCornerRadius;
 		if (_padding == null) _padding = _global.settings.listPadding;
+		if (_itemFont == null) _itemFont = _global.settings.listItemFont;
 		if (_itemFontColour == null) _itemFontColour = _global.settings.listItemFontColour;
 		if (_itemFontSize == null) _itemFontSize = _global.settings.listItemFontSize;
 		if (_itemBgOpacity == null) _itemBgOpacity = _global.settings.listItemBgOpacity;
@@ -126,7 +133,7 @@ class bi.ui.List extends  bi.ui.CoreUI {
 			var label_tf:TextFormat = new TextFormat();
 			label_tf.color = _itemFontColour;
 			label_tf.size = _itemFontSize;
-			label_tf.font = _itemFont;
+			label_tf.font = "bi.ui.Fonts:" + _itemFont;
 			label_txt.embedFonts = true;
 			label_txt.selectable = false;
 			label_txt.setNewTextFormat(label_tf);

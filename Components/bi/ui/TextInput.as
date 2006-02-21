@@ -6,7 +6,7 @@
 	private var bg_mc:MovieClip;
 		
 	private var _text:String = "";
-	private var _font:String = "bi.ui.globalFont";
+	private var _font:String;
 	private var _fontSize:Number;
 	private var _fontColour:Number;
 	private var _maxLength:Number = 10;
@@ -54,6 +54,12 @@
 		_inputType = type;
 	}
 	
+	public function set font(font:String):Void {
+		if (font != undefined) {
+			_font = font;
+		}
+	}
+	
 	public function set fontSize(fontSize:Number):Void {
 		if (fontSize != undefined) {
 			_fontSize = fontSize;
@@ -86,6 +92,7 @@
 	/* Private functions */
 	
 	private function init():Void {
+		if (_font == null) _font = _global.settings.buttonFont;
 		if (_fontColour == null) _fontColour = _global.settings.buttonFontColour;
 		if (_fontSize == null) _fontSize = _global.settings.buttonFontSize;
 	}
@@ -119,7 +126,7 @@
 		text_tf.color = _fontColour;
 		text_tf.size = _fontSize;
 		text_tf.bold = true;
-		text_tf.font = _font;
+		text_tf.font = "bi.ui.Fonts:" + _font;
 		text_txt.setNewTextFormat(text_tf);
 		
 		text_txt.text = _text;

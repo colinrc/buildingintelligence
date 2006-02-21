@@ -11,7 +11,7 @@ class bi.ui.RadioButton extends bi.ui.CoreUI {
 	private var _tickIcon:String = "check2";
 
 	private var _label:String;
-	private var _font:String = "bi.ui.globalFont";
+	private var _font:String;
 	private var _fontSize:Number = 16;
 	private var _fontColour:Number = 0xFFFFFF;
 	
@@ -76,6 +76,9 @@ class bi.ui.RadioButton extends bi.ui.CoreUI {
 	/* Private functions */
 	
 	private function init():Void {
+		if (_font == null) _font = _global.settings.buttonFont;
+		if (_fontColour == null) _fontColour = _global.settings.buttonFontColour;
+		if (_fontSize == null) _fontSize = _global.settings.buttonFontSize;
 	}
 
 	private function createChildren():Void {
@@ -121,7 +124,7 @@ class bi.ui.RadioButton extends bi.ui.CoreUI {
 		label_tf.color = _fontColour;
 		label_tf.size = _fontSize;
 		label_tf.bold = true;
-		label_tf.font = _font;
+		label_tf.font = "bi.ui.Fonts:" + _font;
 		label_txt.setNewTextFormat(label_tf);
 		
 		label_txt.text = _label;

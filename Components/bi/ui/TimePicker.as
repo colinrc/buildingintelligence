@@ -94,7 +94,7 @@ class bi.ui.TimePicker extends bi.ui.CoreUI {
 		_currentField = hours_ti;
 	}
   
-	private function arrange():Void {
+	private function draw():Void {
 	}
 	
 	private function changeFocus(eventObj):Void {

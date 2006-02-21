@@ -75,6 +75,7 @@ _global.settings.listBgOpacity = 100;
 _global.settings.listBgColour = 0x6E82A6;
 _global.settings.listCornerRadius = 10;
 _global.settings.listPadding = 2;
+_global.settings.listItemFont = "helvetica";
 _global.settings.listItemFontColour = 0xFFFFFF;
 _global.settings.listItemFontSize = 14;
 _global.settings.listItemBgOpacity = 100;

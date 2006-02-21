@@ -84,53 +84,6 @@
 					standardEvents_mc.addItem({label:eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat) +"\t" + eventObj.title, value:eventObj});
 				}
 			}
-			/*
-			currentDay_mc.refresh = function () {
-				var events_mc = this.createEmptyMovieClip("events_mc", 10);
-				events_mc._y = 30;
-				for (var event=0; event<this.eventsData.length; event++) {
-					var d = this.eventsData[event];
-					var event_mc = events_mc.attachMovie("bi.ui.Label", "event" + event + "_mc", event, {width:this._parent.calendar_ec.width, height:30, label:d.title, colour:0x7F9BC9});
-					event_mc._y = event * 35;
-					event_mc.event = this.eventsData[event];
-					event_mc.buttonDown = function () {
-						var eventObj = new Object();
-						eventObj.eventType = this.event.eventType;
-						eventObj.title = this.event.title;
-						eventObj.memo = this.event.memo;
-						eventObj.time = this.event.time;
-						eventObj.macroName = this.event.macroName;
-						eventObj.startDate = this.event.startDate;
-						eventObj.endDate = this.event.endDate;
-						eventObj.pattern = new Object();
-						for (var i in this.event.pattern) {
-							eventObj.pattern[i] = this.event.pattern[i];
-						}
-
-						this._parent._parent._parent.showEvent(eventObj);
-					}
-				}
-				if (isAuthenticated(_global.settitngs.calendarCanEdit)) {
-					var newEvent_mc = events_mc.attachMovie("bi.ui.Label", "newEvent_mc", event, {width:this._parent.calendar_ec.width, height:30, label:"Create New Event...", colour:0x7F9BC9});
-					newEvent_mc._y = event * 35;			
-					newEvent_mc.buttonDown = function () {
-						var now = new Date();
-						var eventObj = new Object();
-						eventObj.isNew = true;
-						eventObj.eventType = "once";
-						eventObj.title = "Untitled";
-						eventObj.memo = "";
-						eventObj.macroName = "";
-						eventObj.time = now.dateTimeFormat(_global.settings.longTimeFormat);
-						eventObj.startDate = this._parent._parent.dateObj;
-						eventObj.endDate = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate(), now.getHours(), now.getMinutes(), now.getSeconds())
-						eventObj.pattern = new Object();
-						this._parent._parent._parent.showEvent(eventObj);
-					}
-				}
-			}
-			currentDay_mc.refresh();
-			*/
 		}
 	
 		/*
@@ -771,7 +724,7 @@ skipCalendarEvent = function (eventObj) {
 editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	if (calendarObj != undefined) {
 		var mode = "edit";
-		var window_mc = showWindow({width:570, height:425, title:"Edit event: " + calendarObj.title, iconName:"calendar", megaModel:true, depth:1110});
+		var window_mc = showWindow({width:570, height:455, title:"Edit event: " + calendarObj.title, iconName:"calendar", megaModel:true, depth:1110});
 	} else {
 		var mode = "create";
 		var calendarObj = new Object();
@@ -785,7 +738,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		calendarObj.startDate = dateObj;
 		calendarObj.endDate = new Date(dateObj.getFullYear() + 1, dateObj.getMonth(), dateObj.getDate(), dateObj.getHours(), dateObj.getMinutes(), dateObj.getSeconds())
 		calendarObj.pattern = new Object();
-		var window_mc = showWindow({width:570, height:425, title:"Create new event:", iconName:"calendar", megaModel:true, depth:1110});
+		var window_mc = showWindow({width:570, height:455, title:"Create new event:", iconName:"calendar", megaModel:true, depth:1110});
 	}
 	
 	var content_mc = window_mc.content_mc;
@@ -800,7 +753,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	content_mc.attachMovie("bi.ui.CheckBox", "alarm_cb", 35, {settings:{_x:90, _y:70}});
 
 	content_mc.attachMovie("bi.ui.Label", "msg_lb", 40, {settings:{width:80, text:"Message:", _y:105}});
-	content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 45, {settings:{width:180, height:215, text:calendarObj.memo, _x:90, _y:105, maxLength:200}});
+	content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 45, {settings:{width:180, height:245, text:calendarObj.memo, _x:90, _y:105, maxLength:200}});
 		
 	content_mc.attachMovie("bi.ui.Label", "recurrence_lb", 50, {settings:{width:100, text:"Recurrence:", _x:280}});
 	
@@ -878,10 +831,10 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	tab_mc.attachMovie("bi.ui.TextInput", "numMonths_ti", 10, {settings:{width:30, text:"1", _x:35, _y:35, maxLength:1, inputType:"numeric"}});
 	tab_mc.attachMovie("bi.ui.Label", "every_lb", 15, {settings:{width:100, text:"month(s)", _x:70, _y:35}});
 	tab_mc.attachMovie("bi.ui.RadioButton", "day_rb", 20, {settings:{width:200, label:"The", data:"day", groupName:"every", _y:105}});
-	tab_mc.attachMovie("bi.ui.TextInput", "week_ti", 25, {settings:{width:70, text:"first", _x:70, _y:105, maxLength:6}});
-	tab_mc.attachMovie("bi.ui.TextInput", "day_ti", 30, {settings:{width:100, text:"Monday", _x:150, _y:105, maxLength:8}});
-	tab_mc.attachMovie("bi.ui.Label", "every_lb", 35,{settings:{width:200, text:"of every         month(s)", _x:35, _y:140}});
-	tab_mc.attachMovie("bi.ui.TextInput", "numMonths2_ti", 40, {settings:{width:30, text:"1", _x:105, _y:140, maxLength:1, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "week_ip", 25, {settings:{width:170, items:[{label:"first", value:1}, {label:"second", value:2}, {label:"third", value:3}, {label:"fourth", value:4}, {label:"last", value:5}], _x:70, _y:105}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "day_ip", 30, {settings:{width:205, items:[{label:"Monday", value:"mon"}, {label:"Tuesday", value:"tue"}, {label:"Wednesday", value:"wed"}, {label:"Thursday", value:"thu"}, {label:"Friday", value:"fri"}, {label:"Saturday", value:"sat"}, {label:"Sunday", value:"sun"}], _x:35, _y:140}});
+	tab_mc.attachMovie("bi.ui.Label", "every_lb", 35,{settings:{width:200, text:"of every         month(s)", _x:35, _y:175}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numMonths2_ti", 40, {settings:{width:30, text:"1", _x:105, _y:175, maxLength:1, inputType:"numeric"}});
 	if (calendarObj.eventType == "monthly") {
 		if (calendarObj.pattern.date != undefined) {
 			tab_mc.every.data = "date";
@@ -889,8 +842,8 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 			tab_mc.numMonths_ti.text = calendarObj.pattern.recur;
 		} else if (calendarObj.pattern.day != undefined) {
 			tab_mc.every.data = "day";
-			tab_mc.day_ti = calendarObj.pattern.day;
-			tab_mc.week_ti = calendarObj.pattern.week;
+			tab_mc.day_ip.selectedItem = calendarObj.pattern.day;
+			tab_mc.week_ip.selectedItem = calendarObj.pattern.week;
 			tab_mc.numMonths2_ti.text = calendarObj.pattern.recur;
 		}		
 	} else {
@@ -951,9 +904,9 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 								case "day":
 									saveObj.pattern.recur = tab_mc.numMonths2_ti.text;
 									trace(saveObj.pattern.recur);
-									saveObj.pattern.day = tab_mc.day_ti.text.substr(0, 3).toLowerCase();
+									saveObj.pattern.day = tab_mc.day_ip.selectedItem.value;
 									trace(saveObj.pattern.day);
-									saveObj.pattern.week = tab_mc.week_ti.text;
+									saveObj.pattern.week = tab_mc.week_ip.selectedItem.value;
 									trace(saveObj.pattern.week);
 									break;
 							}
@@ -966,6 +919,9 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 				break;
 		}
 		switch (eventObj.target._name) {
+			case "deleteEvent_btn":
+				deleteEvent(calendarObj);
+				break;
 			case "saveEvent_btn":
 				saveEvent(saveObj);
 				break;
@@ -981,12 +937,16 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	}
 	
 	if (mode == "edit") {
-		content_mc.attachMovie("bi.ui.Button", "saveEvent_btn", 200, {settings:{width:150, label:"Save", _x:120, _y:335}});
+		content_mc.attachMovie("bi.ui.Button", "saveEvent_btn", 200, {settings:{width:150, label:"Save", _x:45, _y:365}});
 		content_mc.saveEvent_btn.addEventListener("press", buttonListener);
+		content_mc.attachMovie("bi.ui.Button", "deleteEvent_btn", 205, {settings:{width:150, label:"Delete", _x:205, _y:365}});
+		content_mc.deleteEvent_btn.addEventListener("press", buttonListener);
+		content_mc.attachMovie("bi.ui.Button", "cancel_btn", 210, {settings:{width:150, label:"Cancel", _x:365, _y:365}});
+		content_mc.cancel_btn.addEventListener("press", buttonListener);
 	} else {
-		content_mc.attachMovie("bi.ui.Button", "createEvent_btn", 200, {settings:{width:150, label:"Create", _x:120, _y:335}});
+		content_mc.attachMovie("bi.ui.Button", "createEvent_btn", 200, {settings:{width:150, label:"Create", _x:120, _y:365}});
 		content_mc.createEvent_btn.addEventListener("press", buttonListener);
+		content_mc.attachMovie("bi.ui.Button", "cancel_btn", 205, {settings:{width:150, label:"Cancel", _x:280, _y:365}});
+		content_mc.cancel_btn.addEventListener("press", buttonListener);
 	}
-	content_mc.attachMovie("bi.ui.Button", "cancel_btn", 205, {settings:{width:150, label:"Cancel", _x:280, _y:335}});
-	content_mc.cancel_btn.addEventListener("press", buttonListener);
 }

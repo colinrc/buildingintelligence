@@ -1,54 +1,111 @@
-﻿class bi.ui.ItemPicker extends MovieClip {
+﻿import bi.ui.TextInput;
+import bi.ui.Button;
+import mx.utils.Delegate;
 
-	private var mcBoundingBox:MovieClip;
-	private var __width:Number;
-	private var __height:Number;
-	private var dispatchEvent:Function;
+class bi.ui.ItemPicker extends bi.ui.CoreUI {
 
-	public function set width(width:Number):Void {
-		setSize(width, null);
-	}
+	private var items_ti:TextInput;
+	private var up_btn:Button;
+	private var down_btn:Button;
+	
+	private var _items:Array;
+	private var _selectedIndex:Number;
+	
+	private var _repeatInterval;
 
-	public function get width():Number {
-		return __width;
-	}
-  
-	public function set height(height:Number):Void {
-		setSize(null, height);
-	}
+	/* Getters and Setters */
 
-	public function get height():Number {
-		return __height;
+	public function get selectedIndex():Number {
+		return _selectedIndex;
 	}
-  
-	public function setSize(width:Number, height:Number):Void {
-		_xscale = 100;
-		_yscale = 100;
-		__width = width;
-		__height = height;
-		arrange();
+	
+	public function set selectedIndex(index:Number):Void {
+		if (index != undefined) {
+			_selectedIndex = index;
+			items_ti.text = _items[_selectedIndex].label;
+		}
 	}
-
+	
+	public function get selectedItem():Object {
+		return _items[_selectedIndex];
+	}
+	
+	public function set selectedItem(val):Void {
+		for (var i=0; i<_items.length; i++) {
+			if (_items[i].value == val) break;
+		}
+		selectedIndex = i;
+	}
+	
+	public function set items(items:Array):Void {
+		if (items != undefined) {
+			_items = items;
+			selectedIndex = 0;
+		}
+	}
+	
+	
+	/* Constructor */
+	
 	function ItemPicker() {
+		initFromClipParameters();
+		super.init();
 		init();
 		createChildren();
-		arrange();
+		draw();
 	}
 
+	/* Private functions */
+
 	private function init():Void {
-		__width = _width;
-		__height = _height;
-		_xscale = 100;
-		_yscale = 100;
-		mx.events.EventDispatcher.initialize(this);
-		mcBoundingBox._visible = false;
-		mcBoundingBox._width = 0;
-		mcBoundingBox._height = 0;
 	}
 
 	private function createChildren():Void {
+		attachMovie("bi.ui.TextInput", "items_ti", 10, {settings:{width:100, _x:0, readOnly:true}});
+		attachMovie("bi.ui.Button", "up_btn", 40, {settings:{width:45, _x:105, iconName:"up-arrow"}});
+		attachMovie("bi.ui.Button", "down_btn", 50, {settings:{width:45, _x:160, iconName:"down-arrow"}});
+		
+		up_btn.addEventListener("press", Delegate.create(this, buttonPress));
+		down_btn.addEventListener("press", Delegate.create(this, buttonPress));
+		up_btn.addEventListener("release", Delegate.create(this, buttonRelease));
+		down_btn.addEventListener("release", Delegate.create(this, buttonRelease));
+		
+		selectedIndex = 0;
 	}
   
-	private function arrange():Void {
+	private function draw():Void {
+		if (!__width) return;
+		
+		items_ti.width = __width - 100;
+		up_btn._x = __width - 95;
+		down_btn._x = __width - 45;
+	}
+		
+	private function buttonPress(eventObj):Void {
+		if (eventObj.target == up_btn) {
+			_repeatInterval = setInterval(this, "buttonAction", 250, "up");
+			buttonAction("up");
+		} else {
+			_repeatInterval = setInterval(this, "buttonAction", 250, "down");
+			buttonAction("down");
+		}
+	}
+	
+	private function buttonRelease(eventObj):Void {
+		clearInterval(_repeatInterval);
+	}
+	
+	private function buttonAction(direction):Void {
+		var index = _selectedIndex;
+		if (direction == "up") {
+			var amt = 1;
+		} else {
+			var amt = - 1;
+		}
+		index += amt;
+		if (index == _items.length) index = 0;
+		if (index < 0) index = _items.length - 1;
+		
+		selectedIndex = index;
 	}
 }

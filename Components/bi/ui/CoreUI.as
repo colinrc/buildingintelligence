@@ -37,6 +37,7 @@
 		_yscale = 100;
 		if (width) __width = width;
 		if (height) __height = height;
+		draw();
 	}
 	
 	function CoreUI() {
