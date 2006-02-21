@@ -81,6 +81,8 @@ _global.right_tree_xml = new XML();
 //values set in workflow object
 _global.right_tree_xml.ignoreWhite = true;
 _global.right_tree.dataProvider = _global.right_tree_xml;
+_global.right_tree.setStyle("depthColors",[ 0x00ff00, 0xff0000, 0x0000ff ]);
+//_global.right_tree.setStyle("borderStyle","alert");
 _global.workflow = new Objects.WorkFlow();
 var left_tree:mx.controls.Tree;
 _global.left_tree = left_tree;
@@ -448,7 +450,7 @@ setView = function (view, dataObj) {
 		left_tree._visible = false;
 		right_tree._visible = false;
 		_global.infoflow_ta._visible = false;
-		tabs_tb.dataProvider = [{label:_global.project.project + " History", view:"history"}];
+		tabs_tb.dataProvider = [{label:"History", view:"history"}];
 		tabs_tb.selectedIndex = 0;
 		formContent_mc.attachMovie("forms.history", "form" + random(999) + "_history", 0);
 		break;
@@ -644,11 +646,11 @@ treeFilter_cb.change = function(eventObj) {
 	case "Project" :
 		left_tree.dataProvider = projectTree_xml;
 		left_tree.labelFunction = function(item_obj:Object):String  {
-			if (item_obj.object.isValid()) {
+			//if (item_obj.object.isValid()) {
 				return item_obj.object.getName();
-			} else {
+			/*} else {
 				return "*" + item_obj.object.getName();
-			}
+			}*/
 		};
 		break;
 	case "Library" :

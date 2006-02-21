@@ -1,9 +1,9 @@
 ﻿class Objects.Server.Monitors extends Objects.BaseElement {
 	private var container:String;
 	private var monitors:Array;
-	public function getKeys():Array{
+	public function getKeys():Array {
 		var tempKeys = new Array();
-		for(var monitor in monitors){
+		for (var monitor in monitors) {
 			tempKeys.push(monitors[monitor].attributes["DISPLAY_NAME"]);
 		}
 		return tempKeys;
@@ -32,14 +32,27 @@
 	public function toXML():XMLNode {
 		var monitorsNode = new XMLNode(1, container);
 		for (var monitor in monitors) {
-			monitorsNode.appendChild(monitors[monitor]);
+			var monitorNode = new XMLNode(1, "TOGGLE_OUTPUT_MONITOR");
+			if (monitor[monitors].key != "") {
+				monitorNode.attributes["KEY"] = monitor[monitors].key;
+			}
+			if (monitor[monitors].name != "") {
+				monitorNode.attributes["NAME"] = monitor[monitors].name;
+			}
+			if (monitor[monitors].active != "") {
+				monitorNode.attributes["ACTIVE"] = monitor[monitors].active;
+			}
+			if (monitor[monitors].display_name != "") {
+				monitorNode.attributes["DISPLAY_NAME"] = monitor[monitors].display_name;
+			}
+			monitorsNode.appendChild(monitorNode);
 		}
 		return monitorsNode;
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("Monitors",newNode);
+		_global.workflow.addNode("Monitors", newNode);
 		return newNode;
 	}
 	public function getName():String {
@@ -48,14 +61,31 @@
 	public function getData():Object {
 		return new Object({monitors:monitors});
 	}
-	public function setData(newData:Object){
+	public function setData(newData:Object) {
 		monitors = newData.monitors;
 	}
 	public function setXML(newData:XMLNode):Void {
 		monitors = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			monitors.push(newData.childNodes[child]);
+			var newMonitor = new Object();
+			newMonitor.key = "";
+			newMonitor.name = "";
+			newMonitor.display_name = "";
+			newMonitor.active = "Y";
+			if (newData.childNodes[child].attributes["KEY"] != undefined) {
+				newMonitor.key = newData.childNodes[child].attributes["KEY"];
+			}
+			if (newData.childNodes[child].attributes["NAME"] != undefined) {
+				newMonitor.name = newData.childNodes[child].attributes["NAME"];
+			}
+			if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
+				newMonitor.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+			}
+			if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
+				newMonitor.active = newData.childNodes[child].attributes["ACTIVE"];
+			}
+			monitors.push(newMonitor);
 		}
 	}
 }

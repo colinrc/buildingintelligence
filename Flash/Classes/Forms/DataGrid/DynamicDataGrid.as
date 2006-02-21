@@ -183,9 +183,12 @@ class Forms.DataGrid.DynamicDataGrid {
 				case "check" :
 				case "combo" :
 				case "cataloguecombo" :
-				case "codecombo" :
 					newRow[column] = my_dg.dataProvider[row][column].label;
-					break;
+					break;				
+				case "codecombo" :
+					newRow[column] = new Object();
+					newRow[column].label = my_dg.dataProvider[row][column].label;
+					break;				
 				case "colour" :
 					newRow[column] = my_dg.dataProvider[row][column].colour;
 					break;

@@ -41,23 +41,24 @@ class Objects.WorkFlow {
 	*/
 	public function addNode(key:String, inst:Object) {
 		//_root.debugger.text += "    in addNode"+key+"\r";
-		var order = getOrder(key);
+		//var order = getOrder(key);
 		var found:Boolean = false;
-		var newNode = new XMLNode(1, "step ");
-		newNode.attributes.label = getLabel(key);
-		newNode.attributes.order = order;
-		newNode.attributes.description = getDescription(key).split("\\n").join("\n");
+		var newNode = new XMLNode(1, "step");
+		setAttributes(key,newNode);
+		//newNode.attributes.label = getLabel(key);
+		//newNode.attributes.order = order;
+		//newNode.attributes.description = getDescription(key).split("\\n").join("\n");
 		newNode.left_node.description = newNode.attributes.description;
 		if (newNode.attributes.label.length>0) {
 			newNode.left_node = inst;
 			newNode.attributes.label = newNode.left_node.object.getName();
 			if (_global.right_tree_xml.hasChildNodes()) {
-				_root.debugger.text += "Child Nodes existant \n";
+				//_root.debugger.text += "Child Nodes existant \n";
 				for (var i = 0; i<_global.right_tree_xml.childNodes.length; i++) {
 					_root.debugger.text += _global.right_tree_xml.childNodes[i].attributes.order+" \n";
-					if (order<parseInt(_global.right_tree_xml.childNodes[i].attributes.order)) {
+					if (newNode.attributes.order<parseInt(_global.right_tree_xml.childNodes[i].attributes.order)) {
 						//add to tree_xml at correct location, add inst for uri lookup
-						_root.debugger.text += order+" found\n";
+						//_root.debugger.text += order+" found\n";
 						_global.right_tree_xml.insertBefore(newNode, _global.right_tree_xml.childNodes[i]);
 						found = true;
 						break;
@@ -66,12 +67,12 @@ class Objects.WorkFlow {
 			}
 			//_root.debugger.text += "   found="+found.toString()+"\r";   
 			if (found == false) {
-				_root.debugger.text += order+" didnt find\n";
+				//_root.debugger.text += order+" didnt find\n";
 				_global.right_tree_xml.appendChild(newNode);
 			}
 		}
 	}
-	public function getOrder(key:String):Number {
+	/*public function getOrder(key:String):Number {
 		for (var i = 0; i<steps.length; i++) {
 			if (key == steps[i].attributes.key) {
 				////_root.debugger.text += "   in getOrder, found="+steps[i].attributes.order+"\r";
@@ -100,7 +101,19 @@ class Objects.WorkFlow {
 		}
 		////_root.debugger.text += "   in getLabel, NOT FOUND";
 		return "";
-	}	
+	}*/
+	public function setAttributes(key:String,newNode:XMLNode):Void{
+		for (var i = 0; i<steps.length; i++) {
+			if (key == steps[i].attributes.key) {
+				newNode.attributes.label = steps[i].attributes.label;
+				newNode.attributes.order = steps[i].attributes.order;
+				newNode.attributes.description = steps[i].attributes.description.split("\\n").join("\n");
+				for(var child = 0; child<steps[i].childNodes.length;child++){
+					newNode.appendChild(steps[i].childNodes[child]);
+				}
+			}
+		}
+	}
 	public function getTreeXML():XML {
 		return workflow_xml;
 	}
