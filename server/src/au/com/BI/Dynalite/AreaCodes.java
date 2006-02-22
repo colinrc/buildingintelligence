@@ -20,18 +20,29 @@ public class AreaCodes {
 	}
 	
 	// @TODO fix
-	public void addJoin ( String areaCode,String toArea){
-		int toAreaInt = Integer.parseInt(toArea);
-		addJoin (areaCode,toAreaInt);
+	public void addJoin ( String areaCode,String toAreaOffsetStr){
+		int toAreaOffset = Integer.parseInt(toAreaOffsetStr);
+		addJoin (areaCode,toAreaOffset);
 	}
 	
 	// @TODO change to iterate over all dynalite devices
-	public void addJoin ( String areaCode,int toAreaInt){
+	public void addJoin ( String areaCode,int toAreaOffset){
+		
 		String paddedKey = Utility.padString (areaCode,2);
-		String paddedToKey = Utility.padStringTohex(toAreaInt);
+		
 		if (areaCodes.containsKey(paddedKey)){
-			LinkedList keys = (LinkedList)areaCodes.get (paddedKey);
-			keys.add(paddedToKey);
+			LinkedList devs = (LinkedList)areaCodes.get (paddedKey);
+			Iterator devsIter = devs.iterator();
+			while (devsIter.hasNext()){
+				try {
+					DynaliteDevice dev = (DynaliteDevice)devsIter.next();
+					int newArea = dev.listensToLinkArea(toAreaOffset);
+					if (newArea != 255){
+						String paddedToKey = Utility.padStringTohex(toAreaOffset);
+						this.add(paddedToKey, dev);
+					}
+				} catch (ClassCastException ex){}
+			}
 		}
 	}
 
@@ -56,10 +67,23 @@ public class AreaCodes {
 		}else {
 			keys = new LinkedList();
 		}
-		keys.add(device);
-		areaCodes.put(areaCode,keys);
+		synchronized (keys){
+			keys.add(device);
+			areaCodes.put(areaCode,keys);
+		}
 	}
 	
+	public void remove (String areaCode, String key){
+		LinkedList keys;
+		if (!areaCodes.containsKey(areaCode)){
+			return;
+		}
+		keys = (LinkedList)areaCodes.get(areaCode);
+		synchronized (keys){
+			keys.remove(key);
+			areaCodes.put(areaCode,keys);
+		}
+	}
 	
 
 	public List findDevicesInArea (int areaInt, boolean includeAreaControl,int join) {

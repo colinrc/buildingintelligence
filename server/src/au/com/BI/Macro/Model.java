@@ -274,7 +274,7 @@ public class Model extends BaseModel implements DeviceModel {
 			    	if (calendarEventEntry.isStillActive()){
 			    		eventCalendar.addEvent (calendarEventEntry);
 			    	}
-			    	eventCalendar.addEventXMLToStore (calendarEventEntry.getTitle(),nextEvent);
+			    	eventCalendar.addEventXMLToStore (calendarEventEntry.getId(),nextEvent);
 			    } catch (CalendarException ex){
 			    	
 			    }

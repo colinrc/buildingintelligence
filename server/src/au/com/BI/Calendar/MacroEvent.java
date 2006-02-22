@@ -25,7 +25,7 @@ public class MacroEvent implements Job {
 	protected SkipDates skipDates = null;
     protected String macroName = "";
     protected String title = "";
-    protected String description = "";
+    protected String memo = "";
     protected String filter ="";
     protected String extra ="";
     protected String extra2 ="";
@@ -44,8 +44,11 @@ public class MacroEvent implements Job {
     	
         String macroName;
         String title;
-        String description;
+        String memo;
         String filter;
+        String alarm;
+        String id;
+        String category;
 
 	    //  String instGroup = context.getJobDetail().getGroup();
 
@@ -56,9 +59,12 @@ public class MacroEvent implements Job {
 	      command  = dataMap.getString("command");
 	      extra  = dataMap.getString("extra");
 	      title = dataMap.getString("Title");
-		  skipDates = (SkipDates)dataMap.get("SkipDates");
+	      id = dataMap.getString("Id");
+	      alarm = dataMap.getString("Alarm");
+	      category = dataMap.getString("Category");
+	      skipDates = (SkipDates)dataMap.get("SkipDates");
 		  macroHandler = (MacroHandler)dataMap.get ("MacroHandler");
-		  description =dataMap.getString ("Description");
+		  memo =dataMap.getString ("Memo");
 		  String icon =dataMap.getString ("Icon");
 		  String autoclose = dataMap.getString ("AutoClose");
 		  String hideclose = dataMap.getString ("HideClose");
@@ -89,13 +95,13 @@ public class MacroEvent implements Job {
 
 			  macroHandler.run(macroName , user,builtRunCommand);
 		  }
-		  if (!description.equals("") && !description.equals("undefined")) {
+		  if (!memo.equals("") && !memo.equals("undefined") && !alarm.equals ("N")) {
 			  ClientCommand newCommand = new ClientCommand();
 			  newCommand.setTargetDeviceID(0);
 			  
 		        newCommand.setTitle(title);
 		        newCommand.setIcon(icon);
-		        newCommand.setContent(description);
+		        newCommand.setContent(memo);
 		        newCommand.setAutoclose(autoclose);
 		        newCommand.setHideclose(hideclose);
 		        newCommand.setMessageType (CommandInterface.Message);

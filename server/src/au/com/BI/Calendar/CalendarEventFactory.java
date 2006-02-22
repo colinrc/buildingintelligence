@@ -57,8 +57,12 @@ public class CalendarEventFactory {
     public CalendarEventEntry createEvent (Element nextEvent) throws CalendarException {
         boolean success = true;
         CalendarEventEntry returnVal = new CalendarEventEntry();
-
-	    	String title = nextEvent.getAttributeValue("title"); 
+	    	
+	    	String id = nextEvent.getAttributeValue("id"); 
+	    	if (id == null || id.equals ("")) {
+	    		id = Long.toString(System.currentTimeMillis());
+	    	}
+	    	
 	    	String eventType = nextEvent.getAttributeValue("eventType"); 
 		if (eventType == null || eventType.equals ("")) {
 			eventType = "once";
@@ -73,6 +77,10 @@ public class CalendarEventFactory {
 	    	String endDate = nextEvent.getAttributeValue("endDate"); 
 	    	String time  = nextEvent.getAttributeValue("time");
 			String hours = "";
+			String orig_hour = "";
+			String dateBits[] = startDate.split("-");
+			String year = dateBits[0];
+			String orig_year = "";
 			String minutes = "";
 			String seconds = "";				
 	    	if (time == null || time.equals ("")) {
@@ -102,15 +110,17 @@ public class CalendarEventFactory {
 	    	String rawCronString = "";
 	    	if (filter == null) filter = "";
 
-
-	    	if (title == null || title.equals ("") ) {
-	    		String errorMessage = "No Title was set for the event";
-	    		logger.log(Level.WARNING,errorMessage);
-	    	    throw new CalendarException (errorMessage);
-	    	}
+	    	String title = nextEvent.getAttributeValue("title"); 
+	    	if (title == null)  title = "";
 	    	
-	    	String description = nextEvent.getAttributeValue("description"); 
-	    	if (description == null || description.equals ("")) description = title;
+	    	String alarm = nextEvent.getAttributeValue("alarm"); 
+	    	if (alarm == null)  alarm = "";
+	    	
+	    	String category = nextEvent.getAttributeValue("category"); 
+	    	if (category == null)  category = "";
+	    	
+	    	String memo = nextEvent.getAttributeValue("memo"); 
+	    	if (memo == null)  memo = "";
 	    	
         Date startDateDecoded;
 		if (startDate == null || startDate.equals ("")) {
@@ -133,7 +143,7 @@ public class CalendarEventFactory {
 	        try {
 	            endDateDecoded = totalDayF.parse(totalEndDate);
 	        } catch ( ParseException ex) {
-	        	String errorMessage = "Could not parse event " + title + " end date. " + ex.getMessage();
+	        	String errorMessage = "Could not parse event " + id + " end date. " + ex.getMessage();
 	        	logger.log(Level.WARNING,errorMessage);
 	    	    throw new CalendarException (errorMessage,ex);	        }
 		}
@@ -142,12 +152,15 @@ public class CalendarEventFactory {
 			return returnVal;
 		}
         
-		JobDetail jobDetail = new JobDetail(title, 
+		JobDetail jobDetail = new JobDetail(id, 
                 Scheduler.DEFAULT_GROUP, // job group
                 MacroEvent.class);        // the java class to execute
 		
 		
 		JobDataMap map = jobDetail.getJobDataMap(); 
+		map.put ("ID",id);
+		map.put ("Category",category);
+		map.put ("Alarm",alarm);
 		map.put ("Title",title);
 		map.put("MacroHandler",macroHandler);
 		map.put("MacroName",macroName);
@@ -157,7 +170,7 @@ public class CalendarEventFactory {
 		map.put("extra3",extra3);
 		map.put ("User", user);
 		map.put ("Filter", filter);
-		map.put ("Description",description);
+		map.put ("Memo",memo);
 		
 		if (calendar_message_params != null) {
 	        map.put ("Icon",calendar_message_params.get("ICON"));
@@ -173,8 +186,16 @@ public class CalendarEventFactory {
 		String weekOfMonth = "";
 		String month = "*";
 		String recur = "";
-		
-        Element patternXML = nextEvent.getChild("pattern");
+	   if (eventType.equals ("hourly")) {
+		   orig_hour = hours;
+		   hours="*";
+	   }
+	   if (eventType.equals ("yearly")) {
+		   orig_year = year;
+		   year="*";
+	   }
+	   
+	   Element patternXML = nextEvent.getChild("pattern");
         if (patternXML != null) {
 
 			
@@ -218,11 +239,17 @@ public class CalendarEventFactory {
 				   }
 
 			   }
-			   if (name.equals ("hour")) {
-				   hours=value;
+			   if (eventType.equals ("hourly")) {
+
+				   if (name.equals("recur")) {
+					  hours = orig_hour+"/" + value.toUpperCase();
+				   }
 			   }
-			   if (name.equals ("minute")) {
-				   minutes=value;
+			   if (eventType.equals ("yearly")) {
+
+				   if (name.equals("recur")) {
+					  year = orig_year+"/" + value.toUpperCase();
+				   }
 			   }
             }
     		   if (daysOfWeek.equals ("")) {
@@ -241,7 +268,7 @@ public class CalendarEventFactory {
         logger.log (Level.FINE,"Adding event " + title + " to the calendar");
 		if (eventType.equals ("once")){
 	        if (success) {
-				SimpleTrigger trigger = new SimpleTrigger("Trigger:"+title,
+				SimpleTrigger trigger = new SimpleTrigger("ID:"+id,
 	                      Scheduler.DEFAULT_GROUP,
 						 startDateDecoded,
 						 endDateDecoded,
@@ -250,7 +277,7 @@ public class CalendarEventFactory {
 				trigger.setMisfireInstruction(SimpleTrigger.MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT );
 				returnVal.setEventType(CalendarEventEntry.SINGLE_EVENT);
 				returnVal.setTrigger(trigger);
-				returnVal.setTitle(title);
+				returnVal.setId(id);
 				returnVal.setJobDetail(jobDetail);
 				
 				return returnVal;
@@ -267,13 +294,13 @@ public class CalendarEventFactory {
 				if (!weekOfMonth.equals("")){
 					daysOfWeek += "#" + weekOfMonth;
 				}
-				cronString = seconds + " " + minutes + " " + hours + " ? " +  month + " " + daysOfWeek;
+				cronString = seconds + " " + minutes + " " + hours + " ? " +  month + " " + daysOfWeek +" " + year;
 			}
 			logger.log (Level.FINEST,"Entry is a repeating entry. Cron string is " + cronString);
 			try {
-				CronTrigger trigger = new CronTrigger ("Tigger"+title,
+				CronTrigger trigger = new CronTrigger ("ID:"+id,
 							Scheduler.DEFAULT_GROUP,
-							title,
+							id,
 							Scheduler.DEFAULT_GROUP,
 							startDateDecoded,
 							endDateDecoded,
@@ -281,7 +308,7 @@ public class CalendarEventFactory {
 				trigger.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING );
 				returnVal.setEventType(CalendarEventEntry.REPEATING_EVENT);
 				returnVal.setTrigger(trigger);
-				returnVal.setTitle(title);
+				returnVal.setId(id);
 				returnVal.setJobDetail(jobDetail);
 				return returnVal;
 				

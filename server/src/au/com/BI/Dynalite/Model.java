@@ -678,7 +678,7 @@ public class Model extends BaseModel implements DeviceModel {
 	{
 		CommandInterface dynResult = null;
 		byte area = msg[1];
-		DynaliteDevice dev = (DynaliteDevice)configHelper.getControlledItem("ALARM");
+		DeviceType dev = (DeviceType)configHelper.getControlledItem("ALARM");
 		if (dev != null ) {
 			DynaliteDevice areaDev = this.findSingleDevice(DynaliteHelper.Light,area,0,false);
 			String areaName = "";
@@ -699,7 +699,7 @@ public class Model extends BaseModel implements DeviceModel {
 	{
 		CommandInterface dynResult = null;
 		byte area = msg[1];
-		DynaliteDevice dev = (DynaliteDevice)configHelper.getControlledItem("ALARM");
+		DeviceType dev = (DeviceType)configHelper.getControlledItem("ALARM");
 		if (dev != null ) {
 			DynaliteDevice areaDev = this.findSingleDevice(DynaliteHelper.Light,area,0,false);
 			String areaName = "";

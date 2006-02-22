@@ -5,9 +5,8 @@
 package au.com.BI.Dynalite;
 
 
-public interface DynaliteDevice {
-	public static final int Linear = 0;
-	public static final int Classic = 1;
+public interface DynaliteMessage {
+
 	
 	/**
 	 * @return Returns if the device represents an area instead of a channel
@@ -31,25 +30,9 @@ public interface DynaliteDevice {
 	public void setAreaCode(String areaCode) ;
 
 	
-	public int getMax ();
-	
-	public String getRelay ();
-	public void setRelay (String relay);
-	
 	public int getDeviceType ();
 	
 	public String getKey ();
-	
-
-	public int getChannel ();
-	public void setChannel(int channel);
-
-	public String getMaxStr ();
-	
 	public String getOutputKey ();
 	
-	public String getBLA();
-	public void setBLA(String bLA);
-	
-	public int listensToLinkArea (int linkOffset);
 }

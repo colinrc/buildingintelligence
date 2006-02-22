@@ -1,3 +1,12 @@
+22/2/2006
+Calendar
+--------
+Added ID,category and alarm field
+Ensure alarm does not trigger if it is flagged as N
+Handle calendar files created before the new fields.
+
+Add hourly and yearly recurrences.
+
 12/2/2006
 Calendar
 --------

@@ -85,7 +85,7 @@ public class EventCalendar {
 		    	if (calendarEventEntry.isStillActive()){
 		    		addEvent (calendarEventEntry);
 		    	}
-		    	addEventXMLToStore (calendarEventEntry.getTitle(),nextEvent);
+		    	addEventXMLToStore (calendarEventEntry.getId(),nextEvent);
 		    } catch (CalendarException ex){
 		    }	    	
 		}
@@ -93,14 +93,15 @@ public class EventCalendar {
 		return true;
 	}
 	
-	public void addEventXMLToStore (String title, Element xml){
-		events.put( title,xml);		
+	public void addEventXMLToStore (String id, Element xml){
+		xml.setAttribute("id",id);
+		events.put( id,xml);		
 	}
 
 	public boolean addEvent (CalendarEventEntry calendarEventEntry){
     	if (calendarEventEntry.getEventType() == CalendarEventEntry.SINGLE_EVENT){
     		try {
-				sched.deleteJob(calendarEventEntry.getTitle(),Scheduler.DEFAULT_GROUP);
+				sched.deleteJob(calendarEventEntry.getId(),Scheduler.DEFAULT_GROUP);
 				sched.scheduleJob(calendarEventEntry.getJobDetail(), (SimpleTrigger)calendarEventEntry.getTrigger());
 				return true;
     		} catch (SchedulerException e) {
@@ -109,7 +110,7 @@ public class EventCalendar {
 
     	} else {
     		try {
-				sched.deleteJob(calendarEventEntry.getTitle(),Scheduler.DEFAULT_GROUP);
+				sched.deleteJob(calendarEventEntry.getId(),Scheduler.DEFAULT_GROUP);
 				sched.scheduleJob(calendarEventEntry.getJobDetail(), (CronTrigger)calendarEventEntry.getTrigger());
 				return true;
 			} catch (SchedulerException e) {

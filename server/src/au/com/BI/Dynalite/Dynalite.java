@@ -25,6 +25,8 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 	protected int channel = 0;
 	protected int box = 0;
 	protected String BLA = "";
+	protected int bLAInt = 255;
+	protected boolean devFromLink = false;
 
 	protected boolean areaDevice = false;
 	
@@ -152,9 +154,20 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 	}
 
 
-	public void setBLA(String bla) {
+	public void setBLA(String bla) throws NumberFormatException{
 		BLA = bla;
+		bLAInt = Integer.parseInt(bla,16);
 	}
 
+
+	public int listensToLinkArea (int linkOffset) {
+		int toLink = 255;
+		
+		if (this.bLAInt != 255) {
+			toLink = bLAInt + linkOffset;
+			if (toLink > 255) toLink = 255;
+		}
+		return toLink;
+	}
 
 }

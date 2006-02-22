@@ -9,7 +9,9 @@ public class CalendarEventEntry {
 	protected String title = "";
 	protected JobDetail jobDetail = null;
 	protected boolean stillActive = true;
-	
+	protected String alarm = "";
+	protected String category = "";
+	protected String id = "";
 	int eventType  = this.SINGLE_EVENT;
 
 	public CalendarEventEntry () {
@@ -53,6 +55,30 @@ public class CalendarEventEntry {
 
 	public boolean isStillActive() {
 		return stillActive;
+	}
+
+	public String getAlarm() {
+		return alarm;
+	}
+
+	public void setAlarm(String alarm) {
+		this.alarm = alarm;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }
