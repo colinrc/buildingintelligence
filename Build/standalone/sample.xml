@@ -91,7 +91,7 @@
 	</appsBar>
 	<calendar>
 		<tab view="today" />
-		<tab view="watering" macro="watering">
+		<tab view="filtered" macro="watering">
 			<zone key="WATER_FRONT_LAWN" label="Front lawn" />
 			<zone key="WATER_BACK_LAWN" label="Back lawn" />
 			<zone key="WATER_BACK_GARDEN" label="Back garden" />

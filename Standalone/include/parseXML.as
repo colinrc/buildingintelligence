@@ -54,6 +54,19 @@ defineAppsBar = function (icons) {
 	}
 }
 
+defineCalendar= function (tabs) {
+	for (var tab=0; tab<tabs.length; tab++) {
+		var tabObj = new Object();
+		tabObj.view = tabs[tab].attributes.view;
+		tabObj.macro = tabs[tab].attributes.macro;
+		tabObj.zone = new Array();
+		for (var zone=0; zone<tabs[tab].childNodes.length; zone++){
+			tabObj.zone.push({key:tabs[tab].childNodes[zone].key, label:tabs[tab].childNodes[zone].label});
+		}
+		_global.calendar.push(tabObj);
+	}
+}
+
 defineMacros = function (macros) {
 	_global.macros = new Array();
 	for (var macro=0; macro<macros.length; macro++) {

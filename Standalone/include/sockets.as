@@ -10,9 +10,10 @@ serverOnConnect = function (status) {
 	clearInterval(serverConnectID);
 	clearInterval(serverTimeoutID);
 	if (status) {
-		//sendCmd("MACRO","getList","");
-		//sendCmd("SCRIPT","getList","");
-		//sendCmd("CALENDAR","getEvents","");
+		//sendCmd("MACRO", "getList", "");
+		//sendCmd("SCRIPT", "getList", "");
+		//sendCmd("CALENDAR", "getEvents", "");
+		//sendCmd("ID", "getList", "");
 		if (commsError) {
 			window_mc.close();
 			delete commsError;

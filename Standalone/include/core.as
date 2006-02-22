@@ -29,6 +29,7 @@ _global.appsBar = new Array();
 _global.macros = new Array();
 _global.macroStatus = new Array();
 _global.scripts = new Array();
+_global.calendar = new Array();
 _global.controls = new Object();
 _global.controlTypes = new Object();
 _global.calendarData = new Array();
@@ -3042,6 +3043,9 @@ application_xml.onLoad = function () {
 			case ("appsBar") :
 				defineAppsBar(top[i].childNodes)
 				break;
+			case ("calendar") :
+				defineCalendar(top[i].childNodes)
+				break;				
 			case ("controlPanelApps") :
 				defineControlPanelApps(top[i].childNodes);
 				break;

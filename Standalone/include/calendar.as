@@ -140,7 +140,7 @@
 		// render watering and automation view //
 		/////////////////////////////////////////
 		
-		for (var q=0; q<2; q++) {
+		for (var q=0; q<_global.calendar.length; q++) {
 		
 			var content_mc = tabs_mc.contentClips[1 + q];
 			var currentWeekStarting = new Date(2006, 0, 23);
@@ -177,16 +177,32 @@
 				daysOfWeek_mc.attachMovie("bi.ui.Label", "day" + i + "_txt", i, {settings:{width:colWidth, text:daysOfWeek[i], fontSize:16, align:"center", _x:i * colWidth + colStart}});
 			}
 			
-			if (q == 0) {
-				var listData = [{label:"Front lawn"}, {label:"Back lawn"}, {label:"Back garden"}, {label:"Front lawn(2)"}];
-			} else {
-				var listData = [];
-				for (var i=0; i<_global.calendarData.length; i++) {
-					if (_global.calendarData[i].macroName.length && _global.calendarData[i].startDate < new Date(currentWeekStarting.getTime() + 604800000) && _global.calendarData[i].endDate > currentWeekStarting) {
-						listData.push({label:_global.calendarData[i].title, time:_global.calendarData[i].time.split(":").slice(0, 2).join(":"), runTime:Number(_global.calendarData[i].runTime.split(":")[0]) * 60 + Number(_global.calendarData[i].runTime.split(":")[1]), pattern:_global.calendarData[i].pattern, skip:_global.calendarData[i].skip});
+			switch (_global.calendar[q].view) {
+				case "filtered":
+					var listData = [];
+					for (var i=0; i<_global.calendar[q].zones; i++) {
+						listData.push(_global.calendar[q].zones[i].label);
 					}
-				}
+					break;
+				case "macros":
+					var listData = [];
+					for (var m=0; m<_global.macros.length; m++) {
+						var eventObj = new Object();
+						eventObj.label = _global.macros[m].name;
+						for (var i=0; i<_global.calendarData.length; i++) {
+							if (_global.macros[m].name == _global.calendarData[i].macroName && _global.calendarData[i].startDate < new Date(currentWeekStarting.getTime() + 604800000) && _global.calendarData[i].endDate > currentWeekStarting) {
+								eventObj.time = _global.calendarData[i].time.split(":").slice(0, 2).join(":");
+								eventObj.runTime = Number(_global.calendarData[i].runTime.split(":")[0]) * 60 + Number(_global.calendarData[i].runTime.split(":")[1]);
+								eventObj.pattern = _global.calendarData[i].pattern;
+								eventObj.skip = _global.calendarData[i].skip;
+								break;
+							}
+						}
+						listData.push(eventObj);
+					}
+					break;
 			}
+			
 			var rows_mc = content_mc.createEmptyMovieClip("rows_mc", 50);
 			rows_mc._y = daysOfWeek_mc._y + 30;
 			for (var i=0; i<listData.length; i++) {
@@ -225,18 +241,7 @@
 						
 						holder_mc.attachMovie("bi.ui.Icon", "icon_mc", 10, {settings:{iconName: "check", size: 25}});
 						
-						holder_mc.createTextField("label_txt", 20, 0, 0, colWidth - holder_mc.icon_mc._width - 8, 0);
-						var label_txt = holder_mc.label_txt;
-						label_txt._x = holder_mc.icon_mc._width + 4;
-						var label_tf = new TextFormat();
-						label_tf.color = 0xFFFFFF;
-						label_tf.size = 10;
-						label_tf.font = "bi.ui.globalFont";
-						label_txt.autoSize = true;
-						label_txt.embedFonts = true;
-						label_txt.selectable = false;
-						label_txt.setNewTextFormat(label_tf);
-						label_txt.text = listData[i].runTime + " mins\n@ " + listData[i].time;
+						var holder_mc = row_mc.attachMovie("bi.ui.Label", "label_txt", 20, {settings:{width: colWidth - holder_mc.icon_mc._width - 8, fontSize:8, text:listData[i].runTime + " mins\n@ " + listData[i].time, _x:holder_mc.icon_mc._width + 4}});
 						
 						holder_mc._x = Math.round((hitArea_mc._width / 2) - (holder_mc._width / 2));
 						holder_mc._y = Math.round((hitArea_mc._height / 2) - (holder_mc._height / 2));
@@ -437,6 +442,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	tab_mc.attachMovie("bi.ui.ItemPicker", "month_ip", 10, {settings:{width:200, items:[{label:"January", value:0}, {label:"February", value:1}, {label:"March", value:2}, {label:"April", value:3}, {label:"May", value:4}, {label:"June", value:5}, {label:"July", value:6}, {label:"August", value:7}, {label:"September", value:8}, {label:"October", value:9}, {label:"November", value:10}, {label:"December", value:11}], _y:35}});
 	tab_mc.attachMovie("bi.ui.NumberPicker", "date_np", 20, {settings:{width:150, minValue:1, maxValue:31, step:1, _y:70}});
 	if (calendarObj.eventType == "yearly") {
+		tab_mc.numYears_ti.text = calendarObj.pattern.recur;
 		tab_mc.month_ip.selectedValue = calendarObj.pattern.month;
 		tab_mc.date_np.selectedValue = calendarObj.pattern.date;
 	} else {
