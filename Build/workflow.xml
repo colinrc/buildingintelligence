@@ -1,5 +1,11 @@
 <workflow>
-	<step label="Configure Server" key="Server" description="Add Device Types\nConfigure Device type connection settings\nConfigure devices\nAdd Controls" order="1"/>
+	<step label="Configure Server" key="Server" description="Add Device Types\nConfigure Device type connection settings\nConfigure devices\nAdd Controls" order="1">
+		  <lvl1 label="Description">
+		  		<lvl2 label="Step 1"/>
+		  		<lvl2 label="Step 2"/>
+		  		<lvl2 label="Step 3"/>
+		  </lvl1>
+	</step>
 	<step label="CBus" key="CBus" description="Add lights\nConfigure lights\nAdd sensors\nConfigure sensors\nAdd catalogues\nConfigure catalogues" order="2"/>
 	<step label="GC100" key="GC100" description="Add catalogues\nConfigure catalogues\nAdd modules\nConfigure Modules\n" order="3"/>
 	<step label="Tutondo" key="Tutondo" description="Add catalogues\nConfigure catalogues\nAdd Audio Zones" order="4"/>
@@ -16,4 +22,4 @@
 	<step label="Configure Status Bar" key="StatusBar" description="Add status bar groups\nConfigure status bar groups\n" order="14"/>
  	<step label="Configure Logging" key="Logging" description="Add logging groups\nConfigure logging groups" order="15"/>
 	<step label="Publish Project" key="Publish" description="Update eLIFE client and server\nwith new configuration" order="16"/>
-</workflow> 
+</workflow>
