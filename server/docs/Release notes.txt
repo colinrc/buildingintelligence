@@ -1,4 +1,5 @@
 22/2/2006
+Released V1.5b12
 Calendar
 --------
 Added ID,category and alarm field
