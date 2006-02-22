@@ -35,6 +35,7 @@ public class ClientCommand extends Command implements CommandInterface {
 	protected Element messageFromFlash;
 	protected String target = AddressBook.ALL;
 	protected String targetUser = "";
+	protected String audible = "";
 	protected boolean broadcast = true;
 	
 	public ClientCommand ()
@@ -120,6 +121,7 @@ public class ClientCommand extends Command implements CommandInterface {
 	        this.setHideclose(element.getAttributeValue("HIDECLOSE"));
 	        this.setTarget(element.getAttributeValue("TARGET"));
 	        this.setTargetUser(element.getAttributeValue("TARGET_USER"));
+	        this.setAudible(element.getAttributeValue("AUDIBLE"));
 	        this.setMessageType (CommandInterface.Message);
 		    found = true;
 	    }
@@ -232,6 +234,7 @@ public class ClientCommand extends Command implements CommandInterface {
 			element.setAttribute ("ICON", icon);
 			element.setAttribute ("AUTOCLOSE", autoclose);
 			element.setAttribute ("HIDECLOSE", hideclose);
+			element.setAttribute ("AUDIBLE", audible);
 	    }
 	    if (this.messageType == CommandInterface.RawElement) {
 	        element = this.element;
@@ -311,5 +314,13 @@ public class ClientCommand extends Command implements CommandInterface {
 
 	public void setBroadcast(boolean broadcast) {
 		this.broadcast = broadcast;
+	}
+
+	public String getAudible() {
+		return audible;
+	}
+
+	public void setAudible(String audible) {
+		this.audible = audible;
 	}
 }

@@ -32,7 +32,10 @@ public class MacroEvent implements Job {
     protected String extra3 ="";
     protected String command ="";
     protected String extra5 ="";
-    
+	protected String audible = "";
+	protected String target = "";
+	protected String target_user = "";
+	
     public MacroEvent () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
     }
@@ -46,7 +49,7 @@ public class MacroEvent implements Job {
         String title;
         String memo;
         String filter;
-        String alarm;
+        String popup;
         String id;
         String category;
 
@@ -60,7 +63,11 @@ public class MacroEvent implements Job {
 	      extra  = dataMap.getString("extra");
 	      title = dataMap.getString("Title");
 	      id = dataMap.getString("Id");
-	      alarm = dataMap.getString("Alarm");
+	      popup = dataMap.getString("Popup");
+	      audible = dataMap.getString("Audible");
+	      target = dataMap.getString("Target");
+	      target_user = dataMap.getString("TargetUser");
+	      
 	      category = dataMap.getString("Category");
 	      skipDates = (SkipDates)dataMap.get("SkipDates");
 		  macroHandler = (MacroHandler)dataMap.get ("MacroHandler");
@@ -95,7 +102,7 @@ public class MacroEvent implements Job {
 
 			  macroHandler.run(macroName , user,builtRunCommand);
 		  }
-		  if (!memo.equals("") && !memo.equals("undefined") && !alarm.equals ("N")) {
+		  if (!memo.equals("") && !memo.equals("undefined") && !popup.equals ("N")) {
 			  ClientCommand newCommand = new ClientCommand();
 			  newCommand.setTargetDeviceID(0);
 			  
@@ -104,6 +111,9 @@ public class MacroEvent implements Job {
 		        newCommand.setContent(memo);
 		        newCommand.setAutoclose(autoclose);
 		        newCommand.setHideclose(hideclose);
+		        newCommand.setTarget(target);
+		        newCommand.setTargetUser(target_user);
+		        newCommand.setAudible (audible);
 		        newCommand.setMessageType (CommandInterface.Message);
 				List commandList = macroHandler.getCommandList();
 				synchronized (commandList) {

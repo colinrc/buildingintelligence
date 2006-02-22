@@ -113,9 +113,18 @@ public class CalendarEventFactory {
 	    	String title = nextEvent.getAttributeValue("title"); 
 	    	if (title == null)  title = "";
 	    	
-	    	String alarm = nextEvent.getAttributeValue("alarm"); 
-	    	if (alarm == null)  alarm = "";
-	    	
+	    	String popup = nextEvent.getAttributeValue("popup"); 
+	    	if (popup == null)  popup = "";
+
+	    	String audible = nextEvent.getAttributeValue("audible"); 
+	    	if (audible == null)  audible = "";
+
+	    	String target = nextEvent.getAttributeValue("target"); 
+	    	if (target == null)  target = "";
+
+	    	String target_user = nextEvent.getAttributeValue("target_user"); 
+	    	if (target_user == null)  target_user = "";
+
 	    	String category = nextEvent.getAttributeValue("category"); 
 	    	if (category == null)  category = "";
 	    	
@@ -160,7 +169,7 @@ public class CalendarEventFactory {
 		JobDataMap map = jobDetail.getJobDataMap(); 
 		map.put ("ID",id);
 		map.put ("Category",category);
-		map.put ("Alarm",alarm);
+		map.put ("Popup",popup);
 		map.put ("Title",title);
 		map.put("MacroHandler",macroHandler);
 		map.put("MacroName",macroName);
@@ -170,7 +179,10 @@ public class CalendarEventFactory {
 		map.put("extra3",extra3);
 		map.put ("User", user);
 		map.put ("Filter", filter);
-		map.put ("Memo",memo);
+		map.put ("Audible",audible);
+		
+		map.put ("Target",target);
+		map.put ("Target_User",target_user);
 		
 		if (calendar_message_params != null) {
 	        map.put ("Icon",calendar_message_params.get("ICON"));

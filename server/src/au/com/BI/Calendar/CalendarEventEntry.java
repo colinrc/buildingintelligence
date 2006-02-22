@@ -9,9 +9,12 @@ public class CalendarEventEntry {
 	protected String title = "";
 	protected JobDetail jobDetail = null;
 	protected boolean stillActive = true;
-	protected String alarm = "";
+	protected String popup = "";
 	protected String category = "";
 	protected String id = "";
+	protected String audible = "";
+	protected String target = "";
+	protected String target_user = "";
 	int eventType  = this.SINGLE_EVENT;
 
 	public CalendarEventEntry () {
@@ -57,12 +60,12 @@ public class CalendarEventEntry {
 		return stillActive;
 	}
 
-	public String getAlarm() {
-		return alarm;
+	public String getPopup() {
+		return popup;
 	}
 
-	public void setAlarm(String alarm) {
-		this.alarm = alarm;
+	public void setPopup(String popup) {
+		this.popup = popup;
 	}
 
 	public String getCategory() {
@@ -79,6 +82,30 @@ public class CalendarEventEntry {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getAudible() {
+		return audible;
+	}
+
+	public void setAudible(String audible) {
+		this.audible = audible;
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
+	}
+
+	public String getTarget_user() {
+		return target_user;
+	}
+
+	public void setTarget_user(String target_user) {
+		this.target_user = target_user;
 	}
 	
 }
