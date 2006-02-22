@@ -16,10 +16,11 @@ class Forms.Project.Device.Analogue extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(analogues_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
-		dataGridHandler.addCheckColumn("active", "Active", values);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "?", restrictions,false);
+		dataGridHandler.addCheckColumn("active", "Active", values,false);
+		dataGridHandler.setAdvanced(false);//Debug						
 		var DP = new Array();
 		for (var analogue in analogues) {
 			var newAnalogue = new Object();
@@ -53,6 +54,7 @@ class Forms.Project.Device.Analogue extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		dataGridHandler.clearSelection();		
 		var newAnalogues = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

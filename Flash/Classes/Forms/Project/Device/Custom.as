@@ -16,14 +16,15 @@ class Forms.Project.Device.Custom extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(customs_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
-		dataGridHandler.addTextInputColumn("command", "Command", restrictions);
-		dataGridHandler.addTextInputColumn("extra", "Extra", restrictions);
-		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions);
-		dataGridHandler.addCheckColumn("regex", "Key is Regex.", values);
-		dataGridHandler.addCheckColumn("active", "Active", values);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "?", restrictions,false);
+		dataGridHandler.addTextInputColumn("command", "Command", restrictions,false);
+		dataGridHandler.addTextInputColumn("extra", "Extra", restrictions,false);
+		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions,false);
+		dataGridHandler.addCheckColumn("regex", "Key is Regex.", values,false);
+		dataGridHandler.addCheckColumn("active", "Active", values,false);
+		dataGridHandler.setAdvanced(false);//Debug		
 		var DP = new Array();
 		for (var custom in customs) {
 			var newCustom = new Object();
@@ -73,6 +74,7 @@ class Forms.Project.Device.Custom extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		dataGridHandler.clearSelection();		
 		var newCustoms = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

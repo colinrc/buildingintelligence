@@ -16,15 +16,16 @@ class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(sensors_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addTextInputColumn("key", "CBUS Key", restrictions);
-		dataGridHandler.addTextInputColumn("channel", "Channel", restrictions);
-		dataGridHandler.addTextInputColumn("units", "Units", restrictions);		
-		dataGridHandler.addTextInputColumn("application", "CBUS App.", restrictions);
-		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions);
-		dataGridHandler.addCheckColumn("relay", "Relay", values);
-		dataGridHandler.addCheckColumn("active", "Active", values);		
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "CBUS Key", restrictions,false);
+		dataGridHandler.addTextInputColumn("channel", "Channel", restrictions,false);
+		dataGridHandler.addTextInputColumn("units", "Units", restrictions,false);		
+		dataGridHandler.addTextInputColumn("application", "CBUS App.", restrictions,false);
+		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions,false);
+		dataGridHandler.addCheckColumn("relay", "Relay", values,false);
+		dataGridHandler.addCheckColumn("active", "Active", values,false);		
+		dataGridHandler.setAdvanced(false);//Debug						
 		var DP = new Array();		
 		for (var sensor in sensors) {
 			var newSensor = new Object();
@@ -78,6 +79,7 @@ class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		dataGridHandler.clearSelection();		
 		var newSensors = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

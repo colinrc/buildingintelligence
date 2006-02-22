@@ -26,24 +26,26 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(interfaces_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
+		dataGridHandler.addTextInputColumn("name", "?", restrictions, false);
 		dataGridHandler.addCatalogueComboBoxColumn("catalogue", "Catalogue", catalogueDP, this);
 		dataGridHandler.addCodeComboBoxColumn("code", "Code", this);
-		dataGridHandler.addTextInputColumn("command", "Command", restrictions);
-		dataGridHandler.addTextInputColumn("extra", "Extra", restrictions);
-		dataGridHandler.addTextInputColumn("extra2", "Extra2", restrictions);
-		dataGridHandler.addTextInputColumn("extra3", "Extra3", restrictions);
-		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions);
-		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions);
+		dataGridHandler.addTextInputColumn("command", "Command", restrictions, false);
+		dataGridHandler.addTextInputColumn("extra", "Extra", restrictions, true);
+		dataGridHandler.addTextInputColumn("extra2", "Extra2", restrictions, true);
+		dataGridHandler.addTextInputColumn("extra3", "Extra3", restrictions, true);
+		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions, true);
+		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions, true);
 		dataGridHandler.addHiddenColumn("vars");
+		dataGridHandler.setAdvanced(true);
+		//Debug						
 		dataGridHandler2 = new Forms.DataGrid.DynamicDataGrid();
 		var restrictions2 = new Object();
 		restrictions2.editable = false;
 		dataGridHandler2.setDataGrid(vars_dg);
-		dataGridHandler2.addTextInputColumn("name", "Name", restrictions2);
+		dataGridHandler2.addTextInputColumn("name", "Name", restrictions2, false);
 		dataGridHandler2.addValueInputColumn("value", "Value", restrictions, this);
-		for(var raw_interface in raw_interfaces){
+		for (var raw_interface in raw_interfaces) {
 			var found_catalogue = false;
 			for (var catalogue in catalogueDP) {
 				if (raw_interfaces[raw_interface].catalogue == catalogueDP[catalogue].label) {
@@ -56,33 +58,33 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 							break;
 						}
 					}
-					if(!found_code){
+					if (!found_code) {
 						raw_interfaces[raw_interface].code.label = catalogueDP[catalogue].data[0].label;
 						raw_interfaces[raw_interface].code.DP = catalogueDP[catalogue].data;
 					}
 					break;
 				}
 			}
-			if(!found_catalogue){
+			if (!found_catalogue) {
 				raw_interfaces[raw_interface].catalogue = catalogueDP[0].label;
 				raw_interfaces[raw_interface].code.label = catalogueDP[0].data[0].label;
-				raw_interfaces[raw_interface].code.DP =	catalogueDP[0].data;
+				raw_interfaces[raw_interface].code.DP = catalogueDP[0].data;
 				/*var splitString = catalogueDP[0].data[0].data.split("%");
 				var isEven = false;
 				for (var subString in splitString) {
-					if (isEven) {
-						for (var variable in interfaces_dg.selectedItem.vars) {
-							if ((splitString[subString] != "COMMAND") && (splitString[subString] != "EXTRA") && (splitString[subString] != "EXTRA2") && (splitString[subString] != "EXTRA3") && (splitString[subString] != "EXTRA4") && (splitString[subString] != "EXTRA5")) {
-								if (interfaces_dg.selectedItem.vars[variable].attributes.NAME == splitString[subString]) {
-									splitString[subString] = interfaces_dg.selectedItem.vars[variable].attributes.VALUE;
-								}
-							}
-						}
-						isEven = false;
-					} else {
-						isEven = true;
-					}
-				}*/	
+				if (isEven) {
+				for (var variable in interfaces_dg.selectedItem.vars) {
+				if ((splitString[subString] != "COMMAND") && (splitString[subString] != "EXTRA") && (splitString[subString] != "EXTRA2") && (splitString[subString] != "EXTRA3") && (splitString[subString] != "EXTRA4") && (splitString[subString] != "EXTRA5")) {
+				if (interfaces_dg.selectedItem.vars[variable].attributes.NAME == splitString[subString]) {
+				splitString[subString] = interfaces_dg.selectedItem.vars[variable].attributes.VALUE;
+				}
+				}
+				}
+				isEven = false;
+				} else {
+				isEven = true;
+				}
+				}*/
 			}
 		}
 		dataGridHandler.setDataGridDataProvider(raw_interfaces);
@@ -139,6 +141,8 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		string_lb.text = tempString;
 	}
 	public function save():Void {
+		dataGridHandler.setAdvanced(false);
+		dataGridHandler.clearSelection();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		_global.left_tree.selectedNode.object.setData({raw_interfaces:DP});
 	}

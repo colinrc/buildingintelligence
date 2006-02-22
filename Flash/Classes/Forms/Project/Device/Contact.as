@@ -16,11 +16,13 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(contacts_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
-		dataGridHandler.addTextInputColumn("box", "Box", restrictions);
-		dataGridHandler.addCheckColumn("active", "Active", values);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
+		dataGridHandler.addTextInputColumn("key", "?", restrictions, false);
+		dataGridHandler.addTextInputColumn("box", "Box", restrictions, false);
+		dataGridHandler.addCheckColumn("active", "Active", values, false);
+		dataGridHandler.setAdvanced(false);
+		//Debug						
 		var DP = new Array();
 		for (var contact in contacts) {
 			var newContact = new Object();
@@ -56,11 +58,12 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 	}
 	private function newItem() {
 		dataGridHandler.addBlankRow();
-	}	
+	}
 	public function save():Void {
+		dataGridHandler.clearSelection();
 		var newContacts = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index<DP.length; index++) {
+		for (var index = 0; index < DP.length; index++) {
 			var newContact = new XMLNode(1, "CONTACT_CLOSURE");
 			if (DP[index].name != "") {
 				newContact.attributes["NAME"] = DP[index].name;

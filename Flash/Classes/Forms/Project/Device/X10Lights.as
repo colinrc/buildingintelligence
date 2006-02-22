@@ -16,13 +16,14 @@ class Forms.Project.Device.X10Lights extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(lights_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
-		dataGridHandler.addTextInputColumn("power", "Power", restrictions);
-		dataGridHandler.addTextInputColumn("x10", "Housecode", restrictions);
-		dataGridHandler.addCheckColumn("active", "Active", values);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "?", restrictions,false);
+		dataGridHandler.addTextInputColumn("power", "Power", restrictions,false);
+		dataGridHandler.addTextInputColumn("x10", "Housecode", restrictions,false);
+		dataGridHandler.addCheckColumn("active", "Active", values,false);	
 		dataGridHandler.setDataGridDataProvider(lights);
+		dataGridHandler.setAdvanced(false);//Debug						
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
@@ -34,6 +35,7 @@ class Forms.Project.Device.X10Lights extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		dataGridHandler.clearSelection();		
 		var DP = dataGridHandler.getDataGridDataProvider();
 		_global.left_tree.selectedNode.object.setData({lights:DP});
 	}

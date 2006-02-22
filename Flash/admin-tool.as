@@ -1,11 +1,4 @@
-﻿//import mx.styles.CSSStyleDeclaration;
-/*
-_global.style.setStyle("fontSize", "11");
-_global.style.setStyle("color", 0x000000);
-_global.style.setStyle("embedFonts", true);
-_global.style.setStyle("fontFamily", "_defaultFont");
-*/
-//var debugger:mx.controls.TextArea;
+﻿//var debugger:mx.controls.TextArea;
 //_root.debugger = debugger;
 //_root.debugger.text +="blsh \n";
 /****************************************************************/
@@ -54,35 +47,24 @@ function CloseTip() {
 	ToolTip._y = 0;
 	ToolTip._width = 1;
 	ToolTip._height = 1;
-	/*ToolTip.TipText._width = 0;
-	ToolTip.TipBackground._width = 0;	
-	ToolTip.TipText.text = "";*/
 }
 // hide the tip initially 
 CloseTip();
 /********************************************************/
 var menu_mb:mx.controls.MenuBar;
 _global.history = new Objects.History();
-var right_tree:mx.controls.Tree;
+var right_tree = workFlow_split.setFirstContents("Tree","right_tree",0);
+var infoflow_ta = workFlow_split.setSecondContents("TextArea","infoflow_ta",1);
 _global.right_tree = right_tree;
-var infoflow_ta:mx.controls.TextArea;
 _global.infoflow_ta = infoflow_ta;
 _global.workflow_xml = new XML();
 _global.workflow_xml.ignoreWhite = true;
-//_global.workflow_xml.onLoad = function(success) {
-//if (success) {
-//.childNodes
-//} else {
-// something didn't load..
-//}
-//};
 _global.workflow_xml.load("workflow.xml");
 _global.right_tree_xml = new XML();
 //values set in workflow object
 _global.right_tree_xml.ignoreWhite = true;
 _global.right_tree.dataProvider = _global.right_tree_xml;
 _global.right_tree.setStyle("depthColors",[ 0x00ff00, 0xff0000, 0x0000ff ]);
-//_global.right_tree.setStyle("borderStyle","alert");
 _global.workflow = new Objects.WorkFlow();
 var left_tree:mx.controls.Tree;
 _global.left_tree = left_tree;
@@ -117,7 +99,6 @@ _global.comboSetSelected = function(combo, val, field) {
 	}
 };
 function refreshTheTree() {
-	//_global.left_tree.refresh(); // this is USELESS
 	var oBackupDP = _global.left_tree.dataProvider;
 	_global.left_tree.dataProvider = null;
 	// clear
@@ -353,10 +334,8 @@ setView = function (view, dataObj) {
 	left_tree._visible = true;
 	left_tree._y = 93;
 	left_tree.setSize(244, 670);
-	right_tree._visible = true;
-	_global.infoflow_ta._visible = true;
+	workFlow_split._visible = true;
 	tabs_tb._visible = true;
-	//tabs_tb.enabled = false;
 	tabBody_mc._visible = true;
 	formContent_mc.form_mc.removeMovieClip();
 	formContent_mc.createEmptyMovieClip("form_mc", 0);
@@ -365,8 +344,7 @@ setView = function (view, dataObj) {
 	case "home" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
-		right_tree._visible = false;
-		_global.infoflow_ta._visible = false;
+		workFlow_split._visible = false;
 		formContent_mc.attachMovie("forms.home", "form_mc", 0);
 		tabs_tb.dataProvider = [{label:"Project Details"}];
 		tabs_tb.selectedIndex = 0;
@@ -381,8 +359,6 @@ setView = function (view, dataObj) {
 		}
 		tabs_tb.dataProvider = tabs;
 		tabs_tb.selectedIndex = currentTab;
-		//tabs_tb.enabled = true;
-		//formContent_mc.attachMovie("forms."+view, "form_mc", 0, dataObj);
 		break;
 	case "control" :
 	case "control.controls" :
@@ -390,8 +366,8 @@ setView = function (view, dataObj) {
 	case "control.logLevels" :
 	case "control.serverLog" :
 	case "control.ir" :
-		_global.infoflow_ta._visible = false;
-		right_tree._visible = false;
+		//_global.infoflow_ta._visible = false;
+		workFlow_split._visible = false;
 		treeFilter_cb._visible = false;
 		left_tree._y = 68;
 		left_tree.setSize(244, 695);
@@ -416,21 +392,18 @@ setView = function (view, dataObj) {
 		var form_mc = formContent_mc.attachMovie("forms." + view, "form_" + random(999) + "_mc", 0);
 		//_root.debugger.text += "setting view "+view+"\n";
 		_global.server.attachView(form_mc);
-		//tabs_tb.enabled = true;
 		break;
 	case "none" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
-		right_tree._visible = false;
-		_global.infoflow_ta._visible = false;
+		workFlow_split._visible = false;
 		tabs_tb._visible = false;
 		tabBody_mc._visible = false;
 		break;
 	case "preview" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
-		right_tree._visible = false;
-		_global.infoflow_ta._visible = false;
+		workFlow_split._visible = false;
 		formContent_mc.attachMovie("forms.preview", "form_mc", 0);
 		tabs_tb.dataProvider = [{label:"Client Preview"}];
 		tabs_tb.selectedIndex = 0;
@@ -439,8 +412,7 @@ setView = function (view, dataObj) {
 	case "publish" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
-		right_tree._visible = false;
-		_global.infoflow_ta._visible = false;
+		workFlow_split._visible = false;
 		formContent_mc.attachMovie("forms.publish", "form_mc", 0);
 		tabs_tb.dataProvider = [{label:"Publish", view:"publish"}];
 		tabs_tb.selectedIndex = 0;
@@ -448,8 +420,7 @@ setView = function (view, dataObj) {
 	case "history" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
-		right_tree._visible = false;
-		_global.infoflow_ta._visible = false;
+		workFlow_split._visible = false;
 		tabs_tb.dataProvider = [{label:"History", view:"history"}];
 		tabs_tb.selectedIndex = 0;
 		formContent_mc.attachMovie("forms.history", "form" + random(999) + "_history", 0);
@@ -486,11 +457,6 @@ leftTreeListener.change = function(eventObj) {
 	formContent_mc.createEmptyMovieClip("form_mc", 0);
 	right_tree.selectedNode = undefined;
 	if (node.object != undefined) {
-		/*if (node.description.length) {
-		infoflow_ta.text = node.description;
-		} else {
-		infoflow_ta.text = "";
-		}*/
 		switch (node.nodeName) {
 		case "Panel" :
 		case "Tab" :

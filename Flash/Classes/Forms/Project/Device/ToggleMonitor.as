@@ -6,7 +6,7 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var save_btn:Button;
-	private var dataGridHandler:Object;	
+	private var dataGridHandler:Object;
 	public function init() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -16,10 +16,12 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(monitors_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
-		dataGridHandler.addCheckColumn("active", "Active", values);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
+		dataGridHandler.addTextInputColumn("key", "?", restrictions, false);
+		dataGridHandler.addCheckColumn("active", "Active", values, false);
+		dataGridHandler.setAdvanced(false);
+		//Debug						
 		dataGridHandler.setDataGridDataProvider(monitors);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
@@ -32,6 +34,7 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		dataGridHandler.clearSelection();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		_global.left_tree.selectedNode.object.setData({monitors:DP});
 	}

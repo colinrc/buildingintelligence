@@ -16,12 +16,13 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(lights_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
-		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions);
-		dataGridHandler.addCheckColumn("active", "Active", values);
-		dataGridHandler.addCheckColumn("relay", "Relay", values);		
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
+		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "?", restrictions,false);
+		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions,false);
+		dataGridHandler.addCheckColumn("active", "Active", values,false);
+		dataGridHandler.addCheckColumn("relay", "Relay", values,false);		
+		dataGridHandler.setAdvanced(false);//Debug						
 		var DP = new Array();
 		for (var light in lights) {
 			var newLight = new Object();
@@ -66,6 +67,7 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		dataGridHandler.clearSelection();		
 		var newLights = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

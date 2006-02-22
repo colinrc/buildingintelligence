@@ -16,14 +16,15 @@ class Forms.Project.Device.CbusLights extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(lights_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addTextInputColumn("key", "CBUS Key", restrictions);
-		dataGridHandler.addTextInputColumn("area", "CBUS Area", restrictions);
-		dataGridHandler.addTextInputColumn("application", "CBUS App.", restrictions);
-		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions);
-		dataGridHandler.addCheckColumn("relay", "Relay", values);
-		dataGridHandler.addCheckColumn("active", "Active", values);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "CBUS Key", restrictions,false);
+		dataGridHandler.addTextInputColumn("area", "CBUS Area", restrictions,false);
+		dataGridHandler.addTextInputColumn("application", "CBUS App.", restrictions,false);
+		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions,false);
+		dataGridHandler.addCheckColumn("relay", "Relay", values,false);
+		dataGridHandler.addCheckColumn("active", "Active", values,false);
+		dataGridHandler.setAdvanced(false);//Debug						
 		var DP = new Array();
 		for (var light in lights) {
 			var newLight = new Object();
@@ -73,6 +74,7 @@ class Forms.Project.Device.CbusLights extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		dataGridHandler.clearSelection();		
 		var newLights = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

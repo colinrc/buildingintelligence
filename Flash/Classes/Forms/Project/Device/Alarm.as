@@ -14,8 +14,9 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 		restrictions.rescrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(alarms_dg);
-		dataGridHandler.addTextInputColumn("display_name","eLife Name",restrictions);		
-		dataGridHandler.addTextInputColumn("key","Key",restrictions);
+		dataGridHandler.addTextInputColumn("display_name","Key",restrictions,false);		
+		dataGridHandler.addTextInputColumn("key","?",restrictions,false);
+		dataGridHandler.setAdvanced(false);//Debug
 		var DP = new Array();
 		for (var alarm in alarms) {
 			var newAlarm = new Object();
@@ -42,6 +43,7 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 	}
 	public function save():Void {
 		var newAlarms = new Array();
+		dataGridHandler.clearSelection();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {
 			var item = new XMLNode(1, "ALARM");

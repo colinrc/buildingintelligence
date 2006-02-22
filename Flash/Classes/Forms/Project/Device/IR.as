@@ -13,9 +13,10 @@ class Forms.Project.Device.IR extends Forms.BaseForm {
 		restrictions.rescrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(ir_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
-		dataGridHandler.addTextInputColumn("avname", "AV Name", restrictions);		
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "Key", restrictions,false);
+		dataGridHandler.addTextInputColumn("avname", "AV Name", restrictions,false);		
+		dataGridHandler.setAdvanced(false);//Debug						
 		var DP = new Array();		
 		for (var ir in irs) {
 			var newIr = new Object();
@@ -45,6 +46,7 @@ class Forms.Project.Device.IR extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}	
 	public function save():Void {
+		dataGridHandler.clearSelection();		
 		var newIrs = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

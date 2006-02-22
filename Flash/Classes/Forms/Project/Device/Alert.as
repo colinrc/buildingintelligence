@@ -16,12 +16,13 @@ class Forms.Project.Device.Alert extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(alerts_dg);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addTextInputColumn("key", "Key", restrictions);
-		dataGridHandler.addTextInputColumn("cat", "Client Catagory", restrictions);
-		dataGridHandler.addComboBoxColumn("type", "Alert Type", [{label:"Alarm Type"}, {label:"DoorBell"}, {label:"ID"}, {label:"ModeChange"}, {label:"Phone"}, {label:"System"}, {label:"User"}, {label:"Zone"}]);
-		dataGridHandler.addTextInputColumn("message", "Message", restrictions);
-		dataGridHandler.addCheckColumn("active", "Active", values);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "?", restrictions,false);
+		dataGridHandler.addTextInputColumn("cat", "Client Catagory", restrictions,false);
+		dataGridHandler.addComboBoxColumn("type", "Alert Type", [{label:"Alarm Type"}, {label:"DoorBell"}, {label:"ID"}, {label:"ModeChange"}, {label:"Phone"}, {label:"System"}, {label:"User"}, {label:"Zone"}],false);
+		dataGridHandler.addTextInputColumn("message", "Message", restrictions,false);
+		dataGridHandler.addCheckColumn("active", "Active", values,false);
+		dataGridHandler.setAdvanced(false);//Debug				
 		var DP = new Array();
 		for (var alert in alerts) {
 			var newAlert = new Object();
@@ -63,6 +64,7 @@ class Forms.Project.Device.Alert extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		dataGridHandler.clearSelection();		
 		var newAlerts = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

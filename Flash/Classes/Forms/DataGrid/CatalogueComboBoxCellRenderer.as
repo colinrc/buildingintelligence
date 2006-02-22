@@ -67,8 +67,9 @@ class Forms.DataGrid.CatalogueComboBoxCellRenderer extends UIComponent {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.selectedItem.label;
+		listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;		
 		listOwner.dataProvider[itemLocation.itemIndex].code.DP = label.selectedItem.data;
-		listOwner.dataProvider[itemLocation.itemIndex].code.label = label.selectedItem.data[0].label;
+		listOwner.dataProvider[itemLocation.itemIndex].code.label = label.selectedItem.data[0].label;	
 		var blankVars = new Array();
 		var splitString = label.selectedItem.data[0].data.split("%");
 		var isEven = false;

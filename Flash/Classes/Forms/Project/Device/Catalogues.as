@@ -13,7 +13,8 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(catalogues_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false);
+		dataGridHandler.setAdvanced(false);//Debug						
 		var DP = new Array();
 		for (var catalogue in catalogues) {
 			var newCatalogue = new Object();
@@ -32,6 +33,7 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		dataGridHandler.clearSelection();		
 		var newCatalogues = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

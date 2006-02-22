@@ -66,7 +66,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		for (var panel in panels) {
 			var newPanel = new Object();
 			newPanel.name = panels[panel].name;
-			DP.push(newPanel);
+			DP2.push(newPanel);
 		}
 		dataGridHandler2.setDataGridDataProvider(DP2);
 		del_room_btn.addEventListener("click", Delegate.create(this, deleteRoom));

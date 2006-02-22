@@ -18,7 +18,7 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(inputs_dg);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);
 		var itemType:String;
 		switch (container) {
 		case "HAL" :
@@ -31,8 +31,9 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 			title_lb.text = "AV Zones";
 			break;
 		}
-		dataGridHandler.addTextInputColumn("key", itemType, restrictions);
-		dataGridHandler.addCheckColumn("active", "Active", values);
+		dataGridHandler.addTextInputColumn("key", itemType, restrictions,false);
+		dataGridHandler.addCheckColumn("active", "Active", values,false);
+		dataGridHandler.setAdvanced(false);//Debug						
 		var DP = new Array();
 		for (var audiovideo in audiovideos) {
 			var newAudiovideo = new Object();
@@ -62,6 +63,7 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		dataGridHandler.clearSelection();		
 		var itemType:String;
 		switch (container) {
 		case "HAL" :

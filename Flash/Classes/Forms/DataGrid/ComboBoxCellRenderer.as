@@ -64,5 +64,6 @@ class Forms.DataGrid.ComboBoxCellRenderer extends UIComponent {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.selectedItem.label;
+		listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;
 	}
 }

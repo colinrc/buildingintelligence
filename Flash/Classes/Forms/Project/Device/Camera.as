@@ -16,10 +16,11 @@ class Forms.Project.Device.Camera extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(cameras_dg);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addTextInputColumn("key", "Camera Zone", restrictions);
-		dataGridHandler.addTextInputColumn("zoom", "Camera Zoom", restrictions);		
-		dataGridHandler.addCheckColumn("active", "Active", values);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "Camera Zone", restrictions,false);
+		dataGridHandler.addTextInputColumn("zoom", "Camera Zoom", restrictions,false);		
+		dataGridHandler.addCheckColumn("active", "Active", values,false);
+		dataGridHandler.setAdvanced(false);//Debug						
 		var DP = new Array();
 		for (var camera in cameras) {
 			var newCamera = new Object();
@@ -53,6 +54,7 @@ class Forms.Project.Device.Camera extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		dataGridHandler.clearSelection();		
 		var newCameras = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

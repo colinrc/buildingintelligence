@@ -61,6 +61,7 @@ class Forms.DataGrid.ColourCellRenderer extends UIComponent {
 	function onColourChange(newColour:Number) {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
-		listOwner.dataProvider[itemLocation.itemIndex][columnName].colour = "0x"+newColour.toString(16).toUpperCase();;
+		listOwner.dataProvider[itemLocation.itemIndex][columnName].colour = "0x"+newColour.toString(16).toUpperCase();
+		listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;	
 	}
 }
