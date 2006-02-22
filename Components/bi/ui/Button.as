@@ -137,8 +137,13 @@ class bi.ui.Button extends bi.ui.CoreUI {
 	
 	function Button() {
 		initFromClipParameters();
-		super.init();
-		init();
+
+		if (_bgColour == null) _bgColour = _global.settings.buttonBgColour;
+		if (_borderColour == null) _borderColour = _global.settings.buttonBorderColour;
+		if (_font == null) _font = _global.settings.buttonFont
+		if (_fontColour == null) _fontColour = _global.settings.buttonFontColour;
+		if (_fontSize == null) _fontSize = _global.settings.buttonFontSize;
+		
 		createChildren();
 		draw();
 	}
@@ -146,11 +151,6 @@ class bi.ui.Button extends bi.ui.CoreUI {
 	/* Private functions */
 	
 	private function init():Void {
-		if (_bgColour == null) _bgColour = _global.settings.buttonBgColour;
-		if (_borderColour == null) _borderColour = _global.settings.buttonBorderColour;
-		if (_font == null) _font = _global.settings.buttonFont
-		if (_fontColour == null) _fontColour = _global.settings.buttonFontColour;
-		if (_fontSize == null) _fontSize = _global.settings.buttonFontSize;
 	}
 
 	private function createChildren():Void {

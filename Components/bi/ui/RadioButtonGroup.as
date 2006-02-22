@@ -36,13 +36,13 @@
 	/* Constructor */
 	
 	function RadioButtonGroup() {
-		init();
-	}
-
-	private function init():Void {
 		_clips = new Array();
 		
 		mx.events.EventDispatcher.initialize(this);
+	}
+
+	private function init():Void {
+
 	}
 	
 	public function click(instance:MovieClip):Void {

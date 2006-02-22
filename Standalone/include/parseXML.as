@@ -232,7 +232,13 @@ defineCalendarData = function (events) {
 	_global.calendarData = new Array();
 	for (var event=0; event<events.length; event++) {
 		var d = events[event].attributes;
-		//trace("pushing event: " + d.id + ":" + d.title + ":" + d.memo + ":" + d.category + ":" + d.time + ":" + d.extra2 + ":" + d.startDate.parseDate() + ":" + d.endDate.parseDate() + ":" + d.eventType + ":" + d.filter);
+		
+		var debug = "EventObj: ";
+		for (var q in d) {
+			debug += q + "=" + d[q] + "; ";
+		}
+		trace(debug);
+
 		var t = d.time.split(":");
 		d.time = new Date(1976, 8, 27, t[0], t[1], t[2]);
 		if (d.eventType == "once") {

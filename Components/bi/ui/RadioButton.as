@@ -67,8 +67,11 @@ class bi.ui.RadioButton extends bi.ui.CoreUI {
 	
 	function RadioButton() {
 		initFromClipParameters();
-		super.init();
-		init();
+
+		if (_font == null) _font = _global.settings.buttonFont;
+		if (_fontColour == null) _fontColour = _global.settings.buttonFontColour;
+		if (_fontSize == null) _fontSize = _global.settings.buttonFontSize;
+
 		createChildren();
 		draw();
 	}
@@ -76,9 +79,6 @@ class bi.ui.RadioButton extends bi.ui.CoreUI {
 	/* Private functions */
 	
 	private function init():Void {
-		if (_font == null) _font = _global.settings.buttonFont;
-		if (_fontColour == null) _fontColour = _global.settings.buttonFontColour;
-		if (_fontSize == null) _fontSize = _global.settings.buttonFontSize;
 	}
 
 	private function createChildren():Void {

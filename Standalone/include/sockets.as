@@ -232,7 +232,7 @@ setScriptEnabled = function (scriptName) {
 	if (_global.settings.debugMode) debug_mc.outgoing_txt.text = xmlMsg + "\n" + debug_mc.outgoing_txt.text;
 }
 
-deleteMacro = function (macroName) {
+deleteMacro = function (id) {
 	var xmlMsg = '<CONTROL KEY="MACRO" COMMAND="delete" EXTRA="' + macroName + '" />';
 	server.send(xmlMsg);
 	if (_global.settings.debugMode) debug_mc.outgoing_txt.text = xmlMsg + "\n" + debug_mc.outgoing_txt.text;

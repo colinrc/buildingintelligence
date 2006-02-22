@@ -53,17 +53,12 @@ class bi.ui.Icon extends bi.ui.CoreUI {
 	
 	function Icon() {
 		initFromClipParameters();
-		super.init();
-		init();
+		if (!_size) _size = (_width < _height) ? __width : __height;
 		createChildren();
 		draw();
 	}
 
 	private function init():Void {
-		if (!_size) _size = (_width < _height) ? __width : __height;
-		mcBoundingBox._visible = false;
-		mcBoundingBox._width = 0;
-		mcBoundingBox._height = 0;
 	}
 
 	private function createChildren():Void {

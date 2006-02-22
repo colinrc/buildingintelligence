@@ -75,15 +75,7 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 	
 	function Tabs() {
 		initFromClipParameters();
-		super.init();
-		init();
-		createChildren();
-		draw();
-	}
 
-	/* Private Functions */
-	
-	private function init():Void {
 		if (_tabOpacity == null) _tabOpacity =_global.settings.tabBgOpacity;
 		if (_tabOnColour == null) _tabOnColour =_global.settings.tabOnColour;
 		if (_tabOffColour == null) _tabOffColour =_global.settings.tabOffColour;
@@ -94,6 +86,14 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		if (_tabSpacing == null) _tabSpacing =_global.settings.tabSpacing;
 		if (_cornerRadius == null) _cornerRadius =_global.settings.tabCornerRadius;
 		if (_contentPadding == null) _contentPadding =_global.settings.tabContentPadding;
+		
+		createChildren();
+		draw();
+	}
+
+	/* Private Functions */
+	
+	private function init():Void {
 	}
 
 	private function createChildren():Void {

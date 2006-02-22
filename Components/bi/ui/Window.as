@@ -85,13 +85,7 @@ class bi.ui.Window extends bi.ui.CoreUI {
 	
 	function Window() {
 		initFromClipParameters();
-		super.init();
-		init();
-		createChildren();
-		draw();
-	}
-
-	private function init():Void {
+		
 		if (_font == null) _font = _global.settings.windowFont;
 		if (_borderColour == null) _borderColour = _global.settings.windowBorderColour;
 		if (_borderWidth == null) _borderWidth = _global.settings.windowBorderWidth;		
@@ -100,6 +94,12 @@ class bi.ui.Window extends bi.ui.CoreUI {
 		if (_bgColour2 == null) _bgColour2 = _global.settings.windowBgColour2;
 		if (_bgOpacity == null) _bgOpacity = _global.settings.windowBgOpacity;
 		if (_shadowOffset == null) _shadowOffset = _global.settings.windowShadowOffset;
+		
+		createChildren();
+		draw();
+	}
+
+	private function init():Void {
 	}
 
 	private function createChildren():Void {

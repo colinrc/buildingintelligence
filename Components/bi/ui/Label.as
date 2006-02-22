@@ -56,8 +56,11 @@
 	
 	function Label() {
 		initFromClipParameters();
-		super.init();
-		init();
+		
+		if (_font == null) _font = _global.settings.labelFont;
+		if (_fontColour == null) _fontColour = _global.settings.labelFontColour;
+		if (_fontSize == null) _fontSize = _global.settings.labelFontSize;
+		
 		createChildren();
 		draw();
 	}
@@ -65,15 +68,14 @@
 	/* Private functions */
 	
 	private function init():Void {
-		if (_font == null) _font = _global.settings.labelFont;
-		if (_fontColour == null) _fontColour = _global.settings.labelFontColour;
-		if (_fontSize == null) _fontSize = _global.settings.labelFontSize;
 	}
 
 	private function createChildren():Void {
 		createTextField("label_txt", 0, 0, 0, __width, __height);
 		label_txt.embedFonts = true;
 		label_txt.selectable = false;
+		label_txt.wordWrap = true;
+		label_txt.autoSize = true;
 		
 		if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
 			label_txt.filters = [_global.settings.dropShadowFilterSmall];

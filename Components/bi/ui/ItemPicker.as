@@ -29,8 +29,8 @@ class bi.ui.ItemPicker extends bi.ui.CoreUI {
 	public function get selectedItem():Object {
 		return _items[_selectedIndex];
 	}
-	
-	public function set selectedItem(val):Void {
+		
+	public function set selectedValue(val):Void {
 		for (var i=0; i<_items.length; i++) {
 			if (_items[i].value == val) break;
 		}
@@ -49,8 +49,7 @@ class bi.ui.ItemPicker extends bi.ui.CoreUI {
 	
 	function ItemPicker() {
 		initFromClipParameters();
-		super.init();
-		init();
+		
 		createChildren();
 		draw();
 	}

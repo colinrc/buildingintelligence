@@ -32,8 +32,6 @@
 	
 	function CheckBox() {
 		initFromClipParameters();
-		super.init();
-		init();
 		createChildren();
 		draw();
 	}

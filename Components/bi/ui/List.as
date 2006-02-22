@@ -63,8 +63,21 @@ class bi.ui.List extends  bi.ui.CoreUI {
 	
 	function List() {
 		initFromClipParameters();
-		super.init();
-		init();
+
+		if (_bgColour == null) _bgColour = _global.settings.listBgColour;
+		if (_bgOpacity == null) _bgOpacity = _global.settings.listBgOpacity;
+		if (_cornerRadius == null) _cornerRadius = _global.settings.listCornerRadius;
+		if (_padding == null) _padding = _global.settings.listPadding;
+		if (_itemFont == null) _itemFont = _global.settings.listItemFont;
+		if (_itemFontColour == null) _itemFontColour = _global.settings.listItemFontColour;
+		if (_itemFontSize == null) _itemFontSize = _global.settings.listItemFontSize;
+		if (_itemBgOpacity == null) _itemBgOpacity = _global.settings.listItemBgOpacity;
+		if (_itemBgColour1 == null) _itemBgColour1 = _global.settings.listItemBgColour1;
+		if (_itemBgColour2 == null) _itemBgColour2 = _global.settings.listItemBgColour2;
+		if (_itemHeight == null) _itemHeight = _global.settings.listItemHeight;
+		if (_itemSpacing == null) _itemSpacing = _global.settings.listItemSpacing;
+		if (_itemCornerRadius == null) _itemCornerRadius = _global.settings.listItemCornerRadius;
+		
 		createChildren();
 		draw();
 	}
@@ -87,19 +100,6 @@ class bi.ui.List extends  bi.ui.CoreUI {
 	/* Private functions */
 	
 	private function init():Void {	
-		if (_bgColour == null) _bgColour = _global.settings.listBgColour;
-		if (_bgOpacity == null) _bgOpacity = _global.settings.listBgOpacity;
-		if (_cornerRadius == null) _cornerRadius = _global.settings.listCornerRadius;
-		if (_padding == null) _padding = _global.settings.listPadding;
-		if (_itemFont == null) _itemFont = _global.settings.listItemFont;
-		if (_itemFontColour == null) _itemFontColour = _global.settings.listItemFontColour;
-		if (_itemFontSize == null) _itemFontSize = _global.settings.listItemFontSize;
-		if (_itemBgOpacity == null) _itemBgOpacity = _global.settings.listItemBgOpacity;
-		if (_itemBgColour1 == null) _itemBgColour1 = _global.settings.listItemBgColour1;
-		if (_itemBgColour2 == null) _itemBgColour2 = _global.settings.listItemBgColour2;
-		if (_itemHeight == null) _itemHeight = _global.settings.listItemHeight;
-		if (_itemSpacing == null) _itemSpacing = _global.settings.listItemSpacing;
-		if (_itemCornerRadius == null) _itemCornerRadius = _global.settings.listItemCornerRadius;
 	}
 
 	private function createChildren():Void {

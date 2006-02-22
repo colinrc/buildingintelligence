@@ -41,9 +41,6 @@
 	}
 	
 	function CoreUI() {
-	}
-	
-	private function init():Void {
 		mx.events.EventDispatcher.initialize(this);
 		
 		if (!__width) __width = _width;
@@ -55,6 +52,9 @@
 		mcBoundingBox._visible = false;
 		mcBoundingBox._width = 0;
 		mcBoundingBox._height = 0;
+	}
+	
+	private function init():Void {
 	}
 	
 	private function draw():Void {}

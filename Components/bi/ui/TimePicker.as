@@ -64,8 +64,6 @@ class bi.ui.TimePicker extends bi.ui.CoreUI {
 	
 	function TimePicker() {
 		initFromClipParameters();
-		super.init();
-		init();
 		createChildren();
 		draw();
 	}

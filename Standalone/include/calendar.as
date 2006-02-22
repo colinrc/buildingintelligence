@@ -11,7 +11,7 @@
 		}
 		
 		var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:{width:window_mc.contentClip.width, height:window_mc.contentClip.height}});
-		tabs_mc.tabData = [{name:"Today", iconName:"calendar"}, {name:"Watering", iconName:"sprinkler", enabled:false}, {name:"Macros", iconName:"atom", enabled:false}];
+		tabs_mc.tabData = [{name:"Today", iconName:"calendar"}, {name:"Watering", iconName:"sprinkler", enabled:true}, {name:"Macros", iconName:"atom", enabled:true}];
 		
 		for (var i=0; i<tabs_mc.tabData.length; i++) {
 			_root[tabs_mc.tabData[i].func](tabs_mc.contentClips[i]);
@@ -25,9 +25,9 @@
 		tabs_mc.addEventListener("changeTab", tabs_mc);
 		tabs_mc.activeTab = 0;
 
-		////////////////////
-		// render today view
-		////////////////////
+		///////////////////////
+		// render today view //
+		///////////////////////
 		
 		var content_mc = tabs_mc.contentClips[0];
 
@@ -151,19 +151,7 @@
 			}
 			leftArrow_mc.addEventListener("press", leftArrow_mc);
 			
-			arrows_mc.createTextField("week_txt", 50, 0, 3, 250, 15);
-			var week_txt = arrows_mc.week_txt;
-			week_txt._x = leftArrow_mc._width;
-			var label_tf = new TextFormat();
-			label_tf.color = 0xFFFFFF;
-			label_tf.size = 18;
-			label_tf.bold = true;
-			label_tf.font = "bi.ui.globalFont";
-			label_tf.align = "center";
-			week_txt.embedFonts = true;
-			week_txt.selectable = false;
-			week_txt.setNewTextFormat(label_tf);
-			week_txt.text = "Week: " + currentWeekStarting.dateTimeFormat("d mmmm yyyy");
+			var week_txt = arrows_mc.attachMovie("bi.ui.Label", "week_txt", 50, {settings:{width:250, text:"Week: " + currentWeekStarting.dateTimeFormat("d mmmm yyyy"), fontSize:18, align:"center", _x:leftArrow_mc._width, _y:3}});
 	
 			var rightArrow_mc = arrows_mc.attachMovie("bi.ui.Button", "rightArrow_mc", 20, {settings:{width:60, height:30, iconName:"right-arrow"}});
 			rightArrow_mc._x = leftArrow_mc._width + week_txt._width;
@@ -186,20 +174,7 @@
 				lines_mc.moveTo(i * colWidth + colStart, daysOfWeek_mc._y + 20);
 				lines_mc.lineTo(i * colWidth + colStart,  content_mc.height);
 				
-				daysOfWeek_mc.createTextField("day" + i + "_txt", i, 0, 0, colWidth, 30);
-				var day_txt = daysOfWeek_mc["day" + i + "_txt"];
-				var label_tf = new TextFormat();
-				label_tf.color = 0xFFFFFF;
-				label_tf.size = 16;
-				label_tf.bold = true;
-				label_tf.font = "bi.ui.globalFont";
-				label_tf.align = "center";
-				day_txt.embedFonts = true;
-				day_txt.selectable = false;
-				day_txt.setNewTextFormat(label_tf);
-				day_txt.text = daysOfWeek[i];
-				
-				day_txt._x = i * colWidth + colStart;
+				daysOfWeek_mc.attachMovie("bi.ui.Label", "day" + i + "_txt", i, {settings:{width:colWidth, text:daysOfWeek[i], fontSize:16, align:"center", _x:i * colWidth + colStart}});
 			}
 			
 			if (q == 0) {
@@ -228,17 +203,7 @@
 				
 				row_mc._y = (row_mc._height + 2) * i;
 				
-				row_mc.createTextField("label_txt", 10, 4, 0, colStart, 0);
-				var label_txt = row_mc.label_txt;
-				var label_tf = new TextFormat();
-				label_tf.color = 0xFFFFFF;
-				label_tf.size = 14;
-				label_tf.font = "bi.ui.globalFont";
-				label_txt.embedFonts = true;
-				label_txt.selectable = false;
-				label_txt.setNewTextFormat(label_tf);
-				label_txt.autoSize = true;
-				label_txt.text = listData[i].label;
+				var label_txt = row_mc.attachMovie("bi.ui.Label", "label_txt", 10, {settings:{width:colStart, text:listData[i].label, fontSize:14, _x:4}});
 				label_txt._y = Math.round((bg_mc._height / 2) - (label_txt._height / 2));
 								
 				for (var z=0; z<7; z++) {
@@ -333,7 +298,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		calendarObj.isNew = true;
 		calendarObj.id = "";
 		calendarObj.eventType = "once";
-		calendarObj.title = "Untitled";
+		calendarObj.title = "";
 		calendarObj.alarm = false;
 		calendarObj.memo = "";
 		calendarObj.category = "";
@@ -361,7 +326,8 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 45, {settings:{width:180, height:210, text:calendarObj.memo, _x:90, _y:105, maxLength:200}});
 	
 	content_mc.attachMovie("bi.ui.Label", "category_lb", 50, {settings:{width:80, text:"Category:", _y:320}});
-	content_mc.attachMovie("bi.ui.ItemPicker", "category_ip", 55, {settings:{width:180, items:[{label:"", value:""}, {label:"Holiday", value:"holiday"}, {label:"Birthday", value:"birthday"}, {label:"Work", value:"work"}, {label:"Reminder", value:"reminder"}], selectedItem:calendarObj.category, _x:90, _y:320}});
+	content_mc.attachMovie("bi.ui.ItemPicker", "category_ip", 55, {settings:{width:180, items:[{label:"", value:""}, {label:"Holiday", value:"holiday"}, {label:"Birthday", value:"birthday"}, {label:"Work", value:"work"}, {label:"Reminder", value:"reminder"}], _x:90, _y:320}});
+	content_mc.category_ip.selectedItem = calendarObj.category;
 	
 	content_mc.attachMovie("bi.ui.Label", "recurrence_lb", 60, {settings:{width:100, text:"Recurrence:", _x:280}});
 	
@@ -385,6 +351,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	var tabs_mc = content_mc.createEmptyMovieClip("tabs_mc", 80);
 	tabs_mc._x = 280;
 	tabs_mc._y = 150;
+	
 	// hourly tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("hourly_mc", 0);
 	tab_mc.attachMovie("bi.ui.Label", "every_lb", 0, {settings:{width:200, text:"Every         hour(s)"}});
@@ -393,6 +360,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		tab_mc.numHours_ti.text = calendarObj.pattern.recur;
 	}
 	tab_mc._visible = false;
+	
 	// daily tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("daily_mc", 10);
 	tab_mc.attachMovie("bi.ui.RadioButton", "everyXdays_rb", 0, {settings:{width:200, label:"Every         day(s)",  data:"", groupName:"every"}});
@@ -410,6 +378,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		tab_mc.every.data = "";
 	}
 	tab_mc._visible = false;
+	
 	// weekly tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("weekly_mc", 20);
 	tab_mc.attachMovie("bi.ui.Label", "every_lb", 0, {settings:{width:200, text:"Every         week(s) on:"}});
@@ -432,6 +401,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		tab_mc.sunday_rb.selected = calendarObj.pattern.sun;	
 	}
 	tab_mc._visible = false;
+	
 	// monthly tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("monthly_mc", 30);
 	tab_mc.attachMovie("bi.ui.RadioButton", "date_rb", 0, {settings:{width:200, label:"Day        of every", data:"date", groupName:"every"}});
@@ -450,18 +420,32 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 			tab_mc.numMonths_ti.text = calendarObj.pattern.recur;
 		} else if (calendarObj.pattern.day != undefined) {
 			tab_mc.every.data = "day";
-			tab_mc.day_ip.selectedItem = calendarObj.pattern.day;
-			tab_mc.week_ip.selectedItem = calendarObj.pattern.week;
+			tab_mc.day_ip.selectedValue = calendarObj.pattern.day;
+			tab_mc.week_ip.selectedValue = calendarObj.pattern.week;
 			tab_mc.numMonths2_ti.text = calendarObj.pattern.recur;
 		}		
 	} else {
 		tab_mc.every.data = "date";
+		tab_mc.date_ti.text = new Date().getDate();
 	}
-	
 	tab_mc._visible = false;
+	
 	// yearly tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("yearly_mc", 40);
+	tab_mc.attachMovie("bi.ui.Label", "every_lb", 0, {settings:{width:200, text:"Every         year(s) on:"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numYears_ti", 5, {settings:{width:30, text:"1", _x:50, maxLength:2, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "month_ip", 10, {settings:{width:200, items:[{label:"January", value:0}, {label:"February", value:1}, {label:"March", value:2}, {label:"April", value:3}, {label:"May", value:4}, {label:"June", value:5}, {label:"July", value:6}, {label:"August", value:7}, {label:"September", value:8}, {label:"October", value:9}, {label:"November", value:10}, {label:"December", value:11}], _y:35}});
+	tab_mc.attachMovie("bi.ui.NumberPicker", "date_np", 20, {settings:{width:150, minValue:1, maxValue:31, step:1, _y:70}});
+	if (calendarObj.eventType == "yearly") {
+		tab_mc.month_ip.selectedValue = calendarObj.pattern.month;
+		tab_mc.date_np.selectedValue = calendarObj.pattern.date;
+	} else {
+		tab_mc.month_ip.selectedValue = new Date().getMonth();
+		tab_mc.date_np.selectedValue = new Date().getDate();
+	}
+	tab_mc._visible = false;
 	
+	// set tabs
 	tabs_mc.selectedTab = tabs_mc[calendarObj.eventType + "_mc"];
 	tabs_mc.selectedTab._visible = true;
 
@@ -523,7 +507,9 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 							}
 							break;
 						case "yearly":
-							//saveObj.pattern.recur = tab_mc.numYears_ti.text;
+							saveObj.pattern.recur = tab_mc.numYears_ti.text;
+							saveObj.pattern.month = tab_mc.month_ip.selectedItem.value;
+							saveObj.pattern.date = tab_mc.date_np.selectedItem.value;
 							break;
 					}
 				}
