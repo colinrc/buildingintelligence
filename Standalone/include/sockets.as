@@ -241,9 +241,9 @@ deleteMacro = function (macroName) {
 saveEvent = function (event) {
 	var xmlMsg = '<CONTROL KEY="CALENDAR" COMMAND="save" EXTRA="">';
 	if (event.eventType == "once") {
-		xmlMsg += '<event title="' + event.title + '" description="' + event.memo + '" date="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time + '" eventType="' + event.eventType + '" macroName="' + event.macroName + '" />';
+		xmlMsg += '<event id="' + event.id + '" title="' + event.title + '" alarm="' + (event.alarm?"Y":"N") + '" memo="' + event.memo + '" category="' + event.category + '" date="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time + '" eventType="' + event.eventType + '" macroName="' + event.macroName + '" />';
 	} else {
-		xmlMsg += '<event title="' + event.title + '" description="' + event.memo + '" startDate="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" endDate="' + event.endDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time + '" eventType="' + event.eventType + '"  macroName="' + event.macroName + '" filter="' + event.filter + '">';		
+		xmlMsg += '<event id="' + event.id + '" title="' + event.title + '" alarm="' + (event.alarm?"Y":"N") + '" memo="' + event.memo + '" category="' + event.category + '" startDate="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" endDate="' + event.endDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time + '" eventType="' + event.eventType + '"  macroName="' + event.macroName + '" filter="' + event.filter + '">';		
 		xmlMsg += "<pattern";
 		for (var attrib in event.pattern) {
 			xmlMsg += " " + attrib + '="' + event.pattern[attrib] + '"';
@@ -258,7 +258,7 @@ saveEvent = function (event) {
 }
 
 deleteEvent = function (event) {
-	var xmlMsg = '<CONTROL KEY="CALENDAR" COMMAND="delete" EXTRA="' + event.title + '" />';
+	var xmlMsg = '<CONTROL KEY="CALENDAR" COMMAND="delete" EXTRA="' + event.id + '" />';
 	server.send(xmlMsg);
 	if (_global.settings.debugMode) debug_mc.outgoing_txt.text = xmlMsg + "\n" + debug_mc.outgoing_txt.text;
 }
