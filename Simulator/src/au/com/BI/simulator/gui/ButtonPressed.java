@@ -48,6 +48,7 @@ public class ButtonPressed implements ActionListener {
 				this.simulator = simulator;
 				this.gui = gui;
 				this.buttonState = buttonState;
+				this.control = control;
 
 				if (buttonState == ControlStates.ON)
 					toSend = gUIPanel.getSim().buildOnString(control);

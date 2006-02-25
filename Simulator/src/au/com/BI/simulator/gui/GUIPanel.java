@@ -50,7 +50,7 @@ public class GUIPanel {
 				   JButton jButton = new JButton ();
 				   jButton.setText(eachControl.get(key));
 				   jButton.setActionCommand(key);
-				   jButton.setEnabled (false);
+				   jButton.setEnabled (true);
 				   jButton.addActionListener(new ButtonPressed(ControlStates.CUSTOM,helper,simulator,gui,this,control));
 				   jButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 				   controlObjects.add(jButton);
@@ -69,7 +69,7 @@ public class GUIPanel {
 				   slider.setPaintTicks(true);
 				   slider.setPaintLabels(false);
 				   slider.setSnapToTicks(false);
-				   slider.setEnabled(false);
+				   slider.setEnabled(true);
 				   slider.addChangeListener(new SliderChanged (helper,simulator,gui,this,control));
 				   slider.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 				   eachBox.add(slider);
@@ -77,7 +77,7 @@ public class GUIPanel {
 			   } else {
 				   buttonOn.setText("On");
 				   buttonOn.setActionCommand("ON");
-				   buttonOn.setEnabled(false);
+				   buttonOn.setEnabled(true);
 				   buttonOn.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 				   buttonOn.addActionListener(new ButtonPressed(ControlStates.ON,helper,simulator,gui,this,control));
 				   eachBox.add(buttonOn);
@@ -86,7 +86,7 @@ public class GUIPanel {
 	
 			   buttonOff.setText("Off");
 			   buttonOff.setActionCommand("OFF");
-			   buttonOff.setEnabled(false);
+			   buttonOff.setEnabled(true);
 			   buttonOff.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 			   buttonOff.addActionListener(new ButtonPressed(ControlStates.OFF,helper,simulator,gui,this,control));
 			   eachBox.add(buttonOff);

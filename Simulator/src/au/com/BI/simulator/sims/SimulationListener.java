@@ -1,5 +1,6 @@
 package au.com.BI.simulator.sims;
 import java.io.*;
+import java.net.*;
 
 public class SimulationListener extends Thread {
 
@@ -7,8 +8,14 @@ public class SimulationListener extends Thread {
 	private BufferedReader in = null;
 	protected SimulateDevice sim;
 	
-	public SimulationListener (SimulateDevice sim) {
+	public SimulationListener (SimulateDevice sim,Socket simulationConnection) {
 		this.sim = sim;
+		try {
+			in = new BufferedReader(new 
+					InputStreamReader(simulationConnection.getInputStream()));
+		} catch ( IOException ex){
+			in = null;
+		}
 	}
 	
 	public void run () {
@@ -37,19 +44,6 @@ public class SimulationListener extends Thread {
 			}
 		}
 		
-	}
-	
-	public void setIn (BufferedReader newIn) {
-		if (in != null) {
-			synchronized (in) {
-				try {
-					in.close();
-					in = null;
-				} catch (IOException ex) {}
-			}
-		}
-		this.in = newIn;
-		running = true;
 	}
 
 	public boolean isRunning() {

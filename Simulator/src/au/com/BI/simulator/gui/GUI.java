@@ -78,47 +78,14 @@ public class GUI extends JPanel {
 		      pane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		      pane.add(clearButton);
 		      this.add(pane);
-		      
-
-		      // Connect/disconnect buttons
-		      JPanel buttonPane = new JPanel(new GridLayout(1, 2));
-		      buttonListener = new ActionAdapter() {
-		    	  	
-		            public void actionPerformed(ActionEvent e) {
-		               // Request a connection initiation
-		               if (e.getActionCommand().equals("connect")) {
-		                  changeStatusNTS(Helper.BEGIN_CONNECT, true);
-		               }
-		               // Disconnect
-		               else {
-						   changeStatusNTS(Helper.DISCONNECTING, true);
-						   //simulator.disconnectAll();
-						   connectButton.setEnabled(true);
-		               }
-		            }
-		         };
-		      connectButton = new JButton("Listen");
-		      connectButton.setMnemonic(KeyEvent.VK_C);
-		      connectButton.setActionCommand("connect");
-		      connectButton.addActionListener(buttonListener);
-		      connectButton.setEnabled(true);
-		      disconnectButton = new JButton("Disconnect");
-		      disconnectButton.setMnemonic(KeyEvent.VK_D);
-		      disconnectButton.setActionCommand("disconnect");
-		      disconnectButton.addActionListener(buttonListener);
-		      disconnectButton.setEnabled(true);
-		      buttonPane.add(connectButton);
-		      buttonPane.add(disconnectButton);
-		      this.add(buttonPane);
-
-		
+		      		
 			   // Other controls
 		      // Set up the status bar
 		      statusField = new JLabel();
 		      statusField.setText(Helper.statusMessages[Helper.DISCONNECTED]);
 		      statusColor = new JTextField(1);
 		      statusColor.setBackground(Color.red);
-		      statusColor.setEditable(false);
+		      statusColor.setEditable(true);
 		      statusBar = new JPanel(new BorderLayout());
 		      statusBar.add(statusColor, BorderLayout.WEST);
 		      statusBar.add(statusField, BorderLayout.CENTER);

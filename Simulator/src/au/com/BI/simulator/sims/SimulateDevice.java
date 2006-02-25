@@ -57,70 +57,14 @@ public abstract class SimulateDevice extends Thread {
 	   return "UNKNOWN";
    }
    
-   public void run() {
-	
-      while (true) {
-         try { // Poll every ~10 ms
-            Thread.sleep(200);
-         }
-         catch (InterruptedException e) {}
+   public void newConnection (Socket socket) throws IOException {
+	   out = new PrintWriter(socket.getOutputStream(), true);
 
-         switch (connectionStatus) {
-         case Helper.BEGIN_CONNECT:
-            try {
-               // Try to set up a server if host
-                  hostServer = new ServerSocket(getPort());
-                  socket = hostServer.accept();
-
-               in = new BufferedReader(new 
-                  InputStreamReader(socket.getInputStream()));
-               out = new PrintWriter(socket.getOutputStream(), true);
-               
-        	   simListener = new SimulationListener (this);
-        	   simListener.start();
-        	   simListener.setName( getDeviceName() + " Listener");
-        	   
-               simListener.setIn (in);
-               this.setConnectionStatus(Helper.CONNECTED);
-               changeStatusTS(Helper.CONNECTED, true);
-			   doStartup ();
-            }
-            // If error, clean up and output an error message
-            catch (IOException e) {
-               cleanUp();
-               changeStatusTS(Helper.DISCONNECTED, false);
-            }
-            break;
-
-         case Helper.CONNECTED:
-              // Send data
-              if (toSend.length() != 0) {
-            	  	synchronized (out){
-            	  		out.print(toSend); out.flush();
-            	  	}
-                 toSend.setLength(0);
-                 //changeStatusTS(Helper.NULL, true);
-             } 
-
-            break;
-
-         case Helper.DISCONNECTING:
-		    if (out != null) {
-	      	  	synchronized (out){
-		            out.print(END_CHAT_SESSION); 
-		            out.flush();
-		        	 }
-	    	  	}
-
-            // Clean up (close all streams/sockets)
-            cleanUp();
-            changeStatusTS(Helper.DISCONNECTED, true);
-            break;
-
-		 default: break; // do nothing
-         }
-      }
+       this.setConnectionStatus(Helper.CONNECTED);
+       changeStatusTS(Helper.CONNECTED, true);
    }
+   
+
 	public String buildCustomString (String actionCommand){
 		return "";
 	}

@@ -4,6 +4,7 @@ package au.com.BI.simulator.sims;
 import java.util.*;
 import java.io.*;
 import java.net.*;
+import java.util.logging.*;
 import au.com.BI.simulator.gui.*;
 import au.com.BI.simulator.conf.*;
 import static au.com.BI.simulator.conf.Control.*;
@@ -40,6 +41,12 @@ public class Simulator {
 	SimulateCBUS cbusCon = null;
 	SimulateGC100 gc100Con = null;	
 	SimulateM1 m1Con = null;
+	   SimulationControlListener textListener = null;
+	   SimulationControlListener comfortListener = null;
+	   SimulationControlListener rawListener = null;
+	   SimulationControlListener cbusListener = null;
+	   SimulationControlListener gc100Listener =  null;
+	   SimulationControlListener m1Listener =  null;
 	
    /////////////////////////////////////////////////////////////////
    // The main procedure
@@ -60,7 +67,7 @@ public class Simulator {
 		helper.setConfig(config);
 		return true;
    }
-   
+
    public void start() {
 	      Vector<Control> controls = new Vector<Control>(10);
 
@@ -70,27 +77,39 @@ public class Simulator {
 	gui = new GUI(helper,this);
 	
 	textCon = new SimulateUnknown (helper, gui);
-	textCon.start();
+	//textCon.start();
+	textListener = new SimulationControlListener (textCon.getPort(),"",Level.INFO,textCon);
+	textListener.start();
 	simulationDevices.put(SimTypes.UNKNOWN,textCon);
 
 	comfortCon = new SimulateComfort (helper, gui);
-	comfortCon.start();
+	//comfortCon.start();
+	comfortListener = new SimulationControlListener (comfortCon.getPort(),"",Level.INFO,comfortCon);
+	comfortListener.start();
 	simulationDevices.put(SimTypes.COMFORT,comfortCon);
 
 	rawCon = new SimulateRaw (helper, gui);
-	rawCon.start();
+	//rawCon.start();
+	rawListener = new SimulationControlListener (rawCon.getPort(),"",Level.INFO,rawCon);
+	rawListener.start();
 	simulationDevices.put(SimTypes.RAW,rawCon);
 
 	cbusCon = new SimulateCBUS (helper, gui);
-	cbusCon.start();
+	//cbusCon.start();
+	cbusListener = new SimulationControlListener (cbusCon.getPort(),"",Level.INFO,cbusCon);
+	cbusListener.start();
 	simulationDevices.put(SimTypes.CBUS,cbusCon);
 	
 	gc100Con = new SimulateGC100 (helper, gui);
-	gc100Con.start();
+	//gc100Con.start();
+	gc100Listener = new SimulationControlListener (gc100Con.getPort(),"",Level.INFO,gc100Con);
+	gc100Listener.start();
 	simulationDevices.put(SimTypes.GC100,gc100Con);
 
 	m1Con = new SimulateM1 (helper, gui);
-	m1Con.start();
+	//m1Con.start();
+	m1Listener = new SimulationControlListener (m1Con.getPort(),"",Level.INFO,m1Con);
+	m1Listener.start();
 	simulationDevices.put(SimTypes.M1,m1Con);
 
 	for (Control control: config.getControls()){

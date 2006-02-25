@@ -46,7 +46,7 @@ public class ControlFactory {
 				break;
 
 			case CONTROLS:
-				List<Element> keys = (List<Element>)typeXML.getChildren("keys");
+				List<Element> keys = (List<Element>)typeXML.getChildren("key");
 			    for(Element keyElm : keys) {
 			    		String value = keyElm.getText();
 			    		String label = keyElm.getAttributeValue("label");
