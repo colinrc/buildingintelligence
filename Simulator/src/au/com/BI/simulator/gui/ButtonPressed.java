@@ -39,7 +39,7 @@ public class ButtonPressed implements ActionListener {
 		             }
 		    	   	}
 		         simulator.sendString(this.control.getSimType(),toSend);
-		         gui.appendToChatBox("OUT",control.toString()+ "." + toSend,"");
+		         gui.appendToChatBox("OUT",control.toString()+ "." + toSend,"\n");
 		       }
 			   
 			ButtonPressed (ControlStates buttonState, Helper helper, Simulator simulator, GUI gui,GUIPanel gUIPanel,Control control) {

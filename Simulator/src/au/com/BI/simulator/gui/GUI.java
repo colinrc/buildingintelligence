@@ -26,8 +26,6 @@ public class GUI extends JPanel {
 	   public JLabel statusField = null;
 	   public JTextField statusColor = null;
 	   public JButton clearButton = null;
-	   public JButton connectButton = null;
-	   public JButton disconnectButton = null;
 	   private Helper helper = null;
 	   public Simulator simulator;
 	   
@@ -169,7 +167,6 @@ public class GUI extends JPanel {
 	   
 	   public void setAllStatus (boolean connectState, boolean disconnectState, boolean ipState,
 			   boolean chatState, Color statusColorState) {
-	         connectButton.setEnabled(connectState);
 	         chatLine.setEnabled(chatState);
 	         statusColor.setBackground(statusColorState);
 			 if (chatState) this.chatLine.grabFocus();

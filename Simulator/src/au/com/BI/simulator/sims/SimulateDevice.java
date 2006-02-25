@@ -97,10 +97,11 @@ public abstract class SimulateDevice extends Thread {
    /////////////////////////////////////////////////////////////////
    // Add text to send-buffer
    public  void sendString(String s) {
-      synchronized (toSend) {
-         toSend.append(s + "\n");
-         //toSend.append(s);
-      }
+	   if (out != null){
+	         synchronized (out){
+	 	  		out.print(toSend); out.flush();
+	 	  	}
+	   }
    }
 
    /////////////////////////////////////////////////////////////////

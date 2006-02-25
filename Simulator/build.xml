@@ -28,8 +28,8 @@
 		includes = "*.jar"  />
 	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
 		update="true"
-		basedir="src"
-		includes = "sim.properties" />	
+		basedir="."
+		includes = "config/*" />	
 </target>
 
 <target name="dist_clean" depends="" >
