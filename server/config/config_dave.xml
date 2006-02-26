@@ -281,18 +281,50 @@
         <DEVICE ACTIVE="Y" NAME="M1" DISPLAY_NAME="M1" PASSWORD="1234">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
-                          <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5006"/>
+                          <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
                 </CONNECTION>
                 <M1>
                         <!-- CONTACT_CLOSURE ACTIVE="Y" KEY="01" NAME="Button 1" DISPLAY_NAME="M1PIR" />
-                        <CONTACT_CLOSURE ACTIVE="Y" KEY="02" NAME="Button 2" DISPLAY_NAME="BUTTON_2" /-->
+                        <CONTACT_CLOSURE ACTIVE="Y" KEY="02" NAME="Button 2" DISPLAY_NAME="BUTTON_2" />
                         <CONTACT_CLOSURE ACTIVE="Y" KEY="001" NAME="Button 1" DISPLAY_NAME="M1PIR" />
                         <CONTACT_CLOSURE ACTIVE="Y" KEY="002" NAME="Button 2" DISPLAY_NAME="BUTTON_2" />
                         <LIGHT_DYNALITE ACTIVE="Y" KEY="FF" AREA="01" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>
                         <LIGHT_DYNALITE ACTIVE="Y" KEY="02" AREA="01" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT" POWER_RATING="100"/>
                         <LIGHT_DYNALITE ACTIVE="Y" KEY="01" RELAY="Y" AREA="01" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" POWER_RATING="100"/>
                         <LIGHT_DYNALITE ACTIVE="Y" KEY="02" AREA="01" NAME="Ensuite LV Light" DISPLAY_NAME="ENSUITE_LV_LIGHT" RELAY="N" POWER_RATING="100"/>
-                        <TOGGLE_OUTPUT KEY="002" ACTIVE="Y" NAME="Garage Door" DISPLAY_NAME="GARAGE_LIGHT"/>
+                        <TOGGLE_OUTPUT KEY="002" ACTIVE="Y" NAME="Garage Door" DISPLAY_NAME="GARAGE_LIGHT"/-->
+                        
+                        <TOGGLE_OUTPUT KEY="001" AREA="001" NAME="Outside Siren" DISPLAY_NAME="Outside Siren"/>
+                        <TOGGLE_OUTPUT KEY="002" AREA="001" NAME="Panel Box Tamper" DISPLAY_NAME="Panel Box Tamper"/>
+                        <TOGGLE_OUTPUT KEY="003" AREA="001" NAME="Sue Garage" DISPLAY_NAME="Sue Garage"/>
+                        <TOGGLE_OUTPUT KEY="004" AREA="001" NAME="Dave Garage" DISPLAY_NAME="Dave Garage"/>
+                        <TOGGLE_OUTPUT KEY="005" AREA="001" NAME="West Side Gate" DISPLAY_NAME="West Side Gate"/>
+                        <TOGGLE_OUTPUT KEY="006" AREA="001" NAME="Garage Window" DISPLAY_NAME="Garage Window"/>
+                        <TOGGLE_OUTPUT KEY="007" AREA="001" NAME="Garage Side Door" DISPLAY_NAME="Garage Side Door"/>
+                        <TOGGLE_OUTPUT KEY="008" AREA="001" NAME="Master Bed Windw" DISPLAY_NAME="Master Bed Window"/>
+                        <TOGGLE_OUTPUT KEY="009" AREA="001" NAME="Lounge Window" DISPLAY_NAME="Lounge Window"/>
+                        <TOGGLE_OUTPUT KEY="010" AREA="001" NAME="Study Window" DISPLAY_NAME="Study Window"/>
+                        <TOGGLE_OUTPUT KEY="012" AREA="001" NAME="Garage PIR" DISPLAY_NAME="Garage PIR"/>
+                        <TOGGLE_OUTPUT KEY="013" AREA="001" NAME="Study PIR" DISPLAY_NAME="Study PIR"/>
+                        <TOGGLE_OUTPUT KEY="014" AREA="001" NAME="Lounge  PIR" DISPLAY_NAME="Lounge  PIR"/>
+                        <TOGGLE_OUTPUT KEY="015" AREA="001" NAME="Front Hall PIR" DISPLAY_NAME="Front Hall PIR"/>
+                        <TOGGLE_OUTPUT KEY="016" AREA="001" NAME="Master Bed PIR" DISPLAY_NAME="Master Bed PIR"/>
+                        <TOGGLE_OUTPUT KEY="017" AREA="001" NAME="East Side Gate" DISPLAY_NAME="East Side Gate"/>
+                        <TOGGLE_OUTPUT KEY="018" AREA="001" NAME="Laura Window" DISPLAY_NAME="Laura Window"/>
+                        <TOGGLE_OUTPUT KEY="019" AREA="001" NAME="Family Room Wind" DISPLAY_NAME="Family Room Window"/>
+                        <TOGGLE_OUTPUT KEY="020" AREA="001" NAME="Emma Window" DISPLAY_NAME="Emma Window"/>
+                        <TOGGLE_OUTPUT KEY="021" AREA="001" NAME="Toilet/Bathroom" DISPLAY_NAME="Toilet/Bathroom"/>
+                        <TOGGLE_OUTPUT KEY="022" AREA="001" NAME="Laundry Window" DISPLAY_NAME="Laundry Window"/>
+                        <TOGGLE_OUTPUT KEY="023" AREA="001" NAME="Laundry Door" DISPLAY_NAME="Laundry Door"/>
+                        <TOGGLE_OUTPUT KEY="024" AREA="001" NAME="Smoke Detectors" DISPLAY_NAME="Smoke Detectors"/>
+                        <TOGGLE_OUTPUT KEY="026" AREA="001" NAME="Dining/Kit Windw" DISPLAY_NAME="Dining/Kitchen Window"/>
+                        <TOGGLE_OUTPUT KEY="027" AREA="001" NAME="Family Room Door" DISPLAY_NAME="Family Room Door"/>
+                        <TOGGLE_OUTPUT KEY="028" AREA="001" NAME="Dining Room" DISPLAY_NAME="Dining Room"/>
+                        <TOGGLE_OUTPUT KEY="029" AREA="001" NAME="Laura Room PIR" DISPLAY_NAME="Laura Room PIR"/>
+                        <TOGGLE_OUTPUT KEY="030" AREA="001" NAME="Emma Room PIR" DISPLAY_NAME="Emma Room PIR"/>
+                        <TOGGLE_OUTPUT KEY="031" AREA="001" NAME="Back Hall PIR" DISPLAY_NAME="Back Hall PIR"/>
+                        <TOGGLE_OUTPUT KEY="032" AREA="001" NAME="Family PIR" DISPLAY_NAME="Family PIR"/>
+                        
                  </M1>
         </DEVICE>
         <!-- _____________________________ COMFORT DEFS _____________________________-->
