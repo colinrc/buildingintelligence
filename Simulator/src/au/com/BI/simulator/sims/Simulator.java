@@ -33,7 +33,7 @@ public class Simulator {
    public static PrintWriter out = null;
    
    public SimTypes groupType = SimTypes.UNKNOWN;
-   private HashMap<SimTypes,SimulateDevice> simulationDevices = null;
+   private LinkedHashMap<SimTypes,SimulateDevice> simulationDevices = null;
    
 	SimulateUnknown textCon = null;
 	SimulateComfort comfortCon = null;
@@ -71,7 +71,7 @@ public class Simulator {
    public void start() {
 	      Vector<Control> controls = new Vector<Control>(10);
 
-	simulationDevices = new HashMap<SimTypes,SimulateDevice>();
+	simulationDevices = new LinkedHashMap<SimTypes,SimulateDevice>();
 
 	
 	gui = new GUI(helper,this);
@@ -142,6 +142,7 @@ public class Simulator {
 	    controls.add(control);
 		gui.addGUIPanel(gUIPanel);
 	}
+	gui.setSimulatorList(simulationDevices);
 	gui.redraw();
 
 //	gui.changeStatusNTS(Helper.NULL, true, new ControlType ("UNKNOWN"));

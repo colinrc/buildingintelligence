@@ -5,13 +5,13 @@ package au.com.BI.simulator.gui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
 
 import au.com.BI.simulator.sims.*;
 import au.com.BI.simulator.util.Utility;
 import au.com.BI.simulator.conf.*;
-
+import java.util.*;
+import au.com.BI.simulator.conf.Control.SimTypes;
 
 public class GUI extends JPanel implements ItemListener {
 	   /**
@@ -27,10 +27,11 @@ public class GUI extends JPanel implements ItemListener {
 	   public JTextField statusColor = null;
 	   public JButton clearButton = null;
 	   public JCheckBox hexOnlyBox = null;
+	   public JComboBox textTarget = null;
 	   private Helper helper = null;
 	   public Simulator simulator;
 	   public boolean hexOnly = false;
-	   
+	   public SimTypes textTargetSim = SimTypes.UNKNOWN; 
 	   // Connection atate info
 	   public static String hostIP = "localhost";
 	   public int connectionStatus = Helper.BEGIN_CONNECT;
@@ -41,7 +42,7 @@ public class GUI extends JPanel implements ItemListener {
 	   protected Icon iconOff;
 	   protected JPanel buttonBar;
 	   protected Config config;
-
+	   protected LinkedHashMap<SimTypes,SimulateDevice> simTextTargets;
 	   public static StringBuffer toAppend = new StringBuffer("");
 	   /////////////////////////////////////////////////////////////////
 
@@ -50,6 +51,7 @@ public class GUI extends JPanel implements ItemListener {
 			  this.simulator = simulator;
 			  this.config = helper.getConfig();
 		      JPanel pane = null;
+		      simTextTargets = new LinkedHashMap<SimTypes,SimulateDevice>(10);
 		      ActionAdapter buttonListener = null;
 		      
 		      java.net.URL imageOnURL = Simulator.class.getResource("/images/lightOn.png");
@@ -67,8 +69,9 @@ public class GUI extends JPanel implements ItemListener {
 			   // Set up controls for the simulator
 			   buttonBar = new JPanel (new FlowLayout());
 			   buttonBar.setAlignmentX(CENTER_ALIGNMENT);
-			   buttonBar.setAlignmentY(CENTER_ALIGNMENT);
-			   
+			   buttonBar.setAlignmentY(LEFT_ALIGNMENT);
+			   buttonBar.setPreferredSize(new Dimension(800,340));
+
 				
 		      // Clear button
 		      clearButtonListener = new ActionAdapter() {
@@ -80,19 +83,32 @@ public class GUI extends JPanel implements ItemListener {
 			  pane.setLayout(new BoxLayout(pane,BoxLayout.Y_AXIS));
 			  
 		      clearButton = new JButton ("Clear");
+		      clearButton.setAlignmentX(LEFT_ALIGNMENT);
 		      clearButton.addActionListener(clearButtonListener);
 		      pane.add(clearButton);
 
-		      pane.add(Box.createRigidArea(new Dimension(0, 5)));
+		      pane.add(Box.createRigidArea(new Dimension(0, 20)));
 		      
 		      hexOnlyBox = new JCheckBox ("Hex Only");
+		      hexOnlyBox.setAlignmentX(LEFT_ALIGNMENT);
 		      hexOnlyBox.addItemListener(this);
 
 		      pane.add(hexOnlyBox);
+		      pane.add(Box.createRigidArea(new Dimension(0, 20)));
+		      JLabel textTargetLabel = new JLabel ("Text Target");
+		      textTargetLabel.setAlignmentX(LEFT_ALIGNMENT);
+		      pane.add(textTargetLabel);
+
+		      textTarget = new JComboBox ();
+		      textTarget.setAlignmentX(LEFT_ALIGNMENT);
+		      textTarget.addItemListener(this);
+
+		      pane.add(textTarget);
+		      
 		      
 		      // Set up the chat pane
 		      JPanel chatPane = new JPanel(new BorderLayout());
-		      chatText = new JTextArea(10, 20);
+		      chatText = new JTextArea(50, 20);
 		      chatText.setLineWrap(true);
 		      chatText.setEditable(false);
 		      chatText.setForeground(Color.blue);
@@ -100,16 +116,18 @@ public class GUI extends JPanel implements ItemListener {
 		         JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 		         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		      chatLine = new JTextField();
-		      chatLine.setEnabled(false);
+		      chatLine.setEnabled(true);
 		      chatLine.addActionListener(new SimulatorAdapter(simulator) {});
 		      chatPane.add(chatLine, BorderLayout.SOUTH);
 		      chatPane.add(chatTextPane, BorderLayout.CENTER);
-		      chatPane.setPreferredSize(new Dimension(200, 200));
+
 		      
 		      JPanel middleBit = new JPanel();
-		      middleBit.add(pane, BorderLayout.WEST);
-		      middleBit.add(chatPane, BorderLayout.CENTER);
-
+		      middleBit.setLayout( new BoxLayout(middleBit,BoxLayout.LINE_AXIS));
+		      middleBit.add(pane);
+		      middleBit.add(chatPane);
+		      middleBit.setPreferredSize(new Dimension(800, 180));
+		      middleBit.setMaximumSize(new Dimension(800, 180));
 		      		
 			   // Other controls
 		      // Set up the status bar
@@ -121,18 +139,29 @@ public class GUI extends JPanel implements ItemListener {
 		      statusBar = new JPanel(new BorderLayout());
 		      statusBar.add(statusColor, BorderLayout.WEST);
 		      statusBar.add(statusField, BorderLayout.CENTER);
-
-
+		      statusBar.setPreferredSize(new Dimension(800,30));
+		      statusBar.setMaximumSize(new Dimension(800,30));
 
 
 		      // Set up the main pane
-		      this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-		      buttonBar.setAlignmentX(LEFT_ALIGNMENT);
-		      middleBit.setAlignmentX(LEFT_ALIGNMENT);
-		      statusBar.setAlignmentX(LEFT_ALIGNMENT);
+		      SpringLayout layout = new SpringLayout();
+		      this.setLayout(layout);
 			 this.add(buttonBar);
+			 layout.putConstraint(SpringLayout.WEST, buttonBar,5,SpringLayout.WEST, this);
+			 layout.putConstraint(SpringLayout.NORTH, buttonBar,5,SpringLayout.NORTH, this);
+			 layout.putConstraint(SpringLayout.EAST, buttonBar,5,SpringLayout.EAST, this);
+
 			 this.add(middleBit);
+			 layout.putConstraint(SpringLayout.NORTH, middleBit,5,SpringLayout.SOUTH, buttonBar);
+
+			 layout.putConstraint(SpringLayout.WEST, middleBit,5,SpringLayout.WEST, this);
+			
+			 layout.putConstraint(SpringLayout.EAST, middleBit,1,SpringLayout.EAST, this);
+			 
 		      this.add(statusBar);
+			 layout.putConstraint(SpringLayout.NORTH, statusBar,5,SpringLayout.SOUTH, middleBit);
+			 layout.putConstraint(SpringLayout.EAST,this ,5,SpringLayout.EAST, statusBar);
+			 layout.putConstraint(SpringLayout.SOUTH, this,5,SpringLayout.SOUTH, statusBar);
 
 		      // Set up the main frame
 		      mainFrame = new JFrame("eLife House Simulator");
@@ -155,6 +184,12 @@ public class GUI extends JPanel implements ItemListener {
 		        		setHexOnly (true);
 		        }
 	        }
+	        if (e.getSource().equals(textTarget) ) {
+	    	        if (e.getStateChange() == ItemEvent.SELECTED) {
+		        		textTargetSim = (SimTypes)textTarget.getSelectedItem();
+		        }
+
+	        }
 	   }
 	   
 	   public void setHexOnly (boolean hexOnly){
@@ -173,6 +208,13 @@ public class GUI extends JPanel implements ItemListener {
 		   buttonBar.add(eachBox);
 	   }
 	   
+	   public void setSimulatorList (LinkedHashMap<SimTypes,SimulateDevice> simList) {
+		   this.simTextTargets = simList;
+		   for (SimTypes simType: simList.keySet()) {
+	   			textTarget.addItem(simType);			   
+		   }
+	   }
+
 	   private class SimulatorAdapter extends ActionAdapter {
 		   Simulator simulator;
 		   public SimulatorAdapter (Simulator simulator) {
@@ -188,7 +230,7 @@ public class GUI extends JPanel implements ItemListener {
                   chatLine.selectAll();
 
                   // Send the string
-                  simulator.sendString(ps+"\n");
+                  simulator.sendString(textTargetSim,ps+"\n");
                }
             }
 	   }
