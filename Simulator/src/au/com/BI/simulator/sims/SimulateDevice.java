@@ -91,7 +91,7 @@ public abstract class SimulateDevice extends Thread {
 	}
 	
 	public void parseString (String in) {
-		gui.appendToChatBox ("IN",in,"\n");
+		gui.appendToChatBox ("IN",in);
 	}
  
    /////////////////////////////////////////////////////////////////

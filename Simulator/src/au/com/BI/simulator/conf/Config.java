@@ -21,7 +21,6 @@ public class Config {
 
 	protected List<Control> controls;
 	protected ControlFactory controlFactory;	
-	protected boolean hexOnly = false;
 
 	public Config() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -48,11 +47,6 @@ public class Config {
 			Element theConfig = doc.getRootElement();
 			
 			Element log = theConfig.getChild("log");
-			String hexOnlyStr = log.getAttributeValue("hexOnly");
-			if (hexOnlyStr.equals("Y")) 
-				this.setHexOnly(true);
-			else
-				this.setHexOnly(false);
 
 			List<Element> controlList = theConfig.getChildren("control");
 			for (Element controlElement: controlList){
@@ -70,14 +64,6 @@ public class Config {
 		} catch (IOException e) {
 			throw new ConfigError(e);
 		}
-	}
-
-	public boolean isHexOnly() {
-		return hexOnly;
-	}
-
-	public void setHexOnly(boolean hexOnly) {
-		this.hexOnly = hexOnly;
 	}
 
 	public List<Control> getControls() {

@@ -13,7 +13,7 @@ import au.com.BI.simulator.util.Utility;
 import au.com.BI.simulator.conf.*;
 
 
-public class GUI extends JPanel {
+public class GUI extends JPanel implements ItemListener {
 	   /**
 	 * 
 	 */
@@ -26,8 +26,10 @@ public class GUI extends JPanel {
 	   public JLabel statusField = null;
 	   public JTextField statusColor = null;
 	   public JButton clearButton = null;
+	   public JCheckBox hexOnlyBox = null;
 	   private Helper helper = null;
 	   public Simulator simulator;
+	   public boolean hexOnly = false;
 	   
 	   // Connection atate info
 	   public static String hostIP = "localhost";
@@ -50,8 +52,8 @@ public class GUI extends JPanel {
 		      JPanel pane = null;
 		      ActionAdapter buttonListener = null;
 		      
-		      java.net.URL imageOnURL = Simulator.class.getResource("../images/lightOn.png");
-		      java.net.URL imageOffURL = Simulator.class.getResource("../images/lightOff.png");
+		      java.net.URL imageOnURL = Simulator.class.getResource("/images/lightOn.png");
+		      java.net.URL imageOffURL = Simulator.class.getResource("/images/lightOff.png");
 		      if (imageOnURL != null)
 		    	  	iconOn = new ImageIcon(imageOnURL);
 		      if (imageOffURL != null)
@@ -60,35 +62,34 @@ public class GUI extends JPanel {
 				statusString = Helper.statusMessages[connectionStatus];
 				
 		      // Create an options pane
-			  this.setLayout (new GridLayout(5, 1));
+			  //this.setLayout (new GridLayout(5, 1));
 			  
 			   // Set up controls for the simulator
 			   buttonBar = new JPanel (new FlowLayout());
-		   		buttonBar.setAlignmentY(JPanel.TOP_ALIGNMENT);
+			   buttonBar.setAlignmentX(CENTER_ALIGNMENT);
+			   buttonBar.setAlignmentY(CENTER_ALIGNMENT);
+			   
+				
 		      // Clear button
 		      clearButtonListener = new ActionAdapter() {
 		            public void actionPerformed(ActionEvent e) {
 		                chatText.setText("");
 		            }
 		         };
+			  pane = new JPanel();
+			  pane.setLayout(new BoxLayout(pane,BoxLayout.Y_AXIS));
+			  
 		      clearButton = new JButton ("Clear");
 		      clearButton.addActionListener(clearButtonListener);
-		      pane = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		      pane.add(clearButton);
-		      this.add(pane);
-		      		
-			   // Other controls
-		      // Set up the status bar
-		      statusField = new JLabel();
-		      statusField.setText(Helper.statusMessages[Helper.DISCONNECTED]);
-		      statusColor = new JTextField(1);
-		      statusColor.setBackground(Color.red);
-		      statusColor.setEditable(true);
-		      statusBar = new JPanel(new BorderLayout());
-		      statusBar.add(statusColor, BorderLayout.WEST);
-		      statusBar.add(statusField, BorderLayout.CENTER);
 
+		      pane.add(Box.createRigidArea(new Dimension(0, 5)));
+		      
+		      hexOnlyBox = new JCheckBox ("Hex Only");
+		      hexOnlyBox.addItemListener(this);
 
+		      pane.add(hexOnlyBox);
+		      
 		      // Set up the chat pane
 		      JPanel chatPane = new JPanel(new BorderLayout());
 		      chatText = new JTextArea(10, 20);
@@ -104,24 +105,62 @@ public class GUI extends JPanel {
 		      chatPane.add(chatLine, BorderLayout.SOUTH);
 		      chatPane.add(chatTextPane, BorderLayout.CENTER);
 		      chatPane.setPreferredSize(new Dimension(200, 200));
+		      
+		      JPanel middleBit = new JPanel();
+		      middleBit.add(pane, BorderLayout.WEST);
+		      middleBit.add(chatPane, BorderLayout.CENTER);
+
+		      		
+			   // Other controls
+		      // Set up the status bar
+		      statusField = new JLabel();
+		      statusField.setText(Helper.statusMessages[Helper.DISCONNECTED]);
+		      statusColor = new JTextField(1);
+		      statusColor.setBackground(Color.red);
+		      statusColor.setEditable(true);
+		      statusBar = new JPanel(new BorderLayout());
+		      statusBar.add(statusColor, BorderLayout.WEST);
+		      statusBar.add(statusField, BorderLayout.CENTER);
+
+
+
 
 		      // Set up the main pane
-		      JPanel mainPane = new JPanel(new BorderLayout());
-			  mainPane.add(buttonBar,BorderLayout.PAGE_START);
-		      mainPane.add(statusBar, BorderLayout.SOUTH);
-		      mainPane.add(this, BorderLayout.WEST);
-		      mainPane.add(chatPane, BorderLayout.CENTER);
+		      this.setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+		      buttonBar.setAlignmentX(LEFT_ALIGNMENT);
+		      middleBit.setAlignmentX(LEFT_ALIGNMENT);
+		      statusBar.setAlignmentX(LEFT_ALIGNMENT);
+			 this.add(buttonBar);
+			 this.add(middleBit);
+		      this.add(statusBar);
 
 		      // Set up the main frame
 		      mainFrame = new JFrame("eLife House Simulator");
 		      mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		      mainFrame.setContentPane(mainPane);
+		      mainFrame.setContentPane(this);
 		      mainFrame.setSize(mainFrame.getPreferredSize());
 		      mainFrame.setLocation(200, 200);
 		      mainFrame.pack();
 		      mainFrame.setVisible(true);
 	   }
+	   
+	   public void itemStateChanged(ItemEvent e) {
+	        Object source = e.getItemSelectable();
 
+	        if (e.getSource().equals(hexOnlyBox) ) {
+	    	        if (e.getStateChange() == ItemEvent.DESELECTED) {
+		        		setHexOnly (false);
+		        }
+		        else { 
+		        		setHexOnly (true);
+		        }
+	        }
+	   }
+	   
+	   public void setHexOnly (boolean hexOnly){
+		   this.hexOnly = hexOnly;
+	   }
+	   
 	   public void redraw () {
 		   mainFrame.pack();
 		      //mainFrame.repaint();
@@ -145,7 +184,7 @@ public class GUI extends JPanel {
                String s = chatLine.getText();
                if (!s.equals("")) {
             	   	String ps = Utility.parseString(s);
-                  appendToChatBox("OUT",ps,"\n");
+                  appendToChatBox("OUT",ps);
                   chatLine.selectAll();
 
                   // Send the string
@@ -261,11 +300,13 @@ public class GUI extends JPanel {
 	   /////////////////////////////////////////////////////////////////
 
 	   // Thread-safe way to append to the chat box
-	   public  void appendToChatBox(String prefix,String s,String suffix) {
+	   public  void appendToChatBox(String prefix,String s) {
 		   String toWrite = "";
+		   String suffix = "";
+		   int eachOne = 0;
 		   for (int i = 0; i < s.length(); i ++ ){
-			   int eachOne = s.charAt(i);
-			   if (config.isHexOnly()|| ((eachOne < 32 || eachOne > 126 ) && eachOne != 10 && eachOne != 13 ) ){
+			   eachOne = s.charAt(i);
+			   if (hexOnly|| ((eachOne < 32 || eachOne > 126 ) && eachOne != 10 && eachOne != 13 ) ){
 				   String hexVers = Integer.toHexString(eachOne);
 				   if (hexVers.length() == 1) hexVers = "0" + hexVers;
 				   toWrite += "#" + hexVers;
@@ -273,6 +314,7 @@ public class GUI extends JPanel {
 				   toWrite += (char)eachOne;
 			   }
 		   }
+		   if (hexOnly || eachOne != 10) suffix = "\n";
 		   UpdateChat update = new UpdateChat (prefix+"."+toWrite+suffix);
 		   SwingUtilities.invokeLater(update);
 	   }

@@ -24,7 +24,7 @@ public class SimulateUnknown extends SimulateDevice {
    }  
 	
 	public void parseString (String in) {
-		gui.appendToChatBox ("IN",in,"\n");
+		gui.appendToChatBox ("IN",in);
 	}
 
 	   /////////////////////////////////////////////////////////////////

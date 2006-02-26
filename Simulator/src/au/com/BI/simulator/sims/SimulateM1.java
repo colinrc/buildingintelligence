@@ -41,7 +41,7 @@ public class SimulateM1 extends SimulateDevice {
 		
 	public void parseString (String in) {
 		boolean commandFound = false;
-		gui.appendToChatBox ("IN.M1",in,"\n");
+		gui.appendToChatBox ("IN.M1",in);
 		String cmd = in.substring(2,4);
 
 		if (!commandFound && cmd.equals ("cf") ) {

@@ -2,6 +2,15 @@
     <description>
         The simulator applicaiton eLife
     </description>
+
+	<target name="copy_images">
+		
+			<copy todir = "bin/images">
+				<fileset dir="src/images" >
+					<include name="*" /> 
+				</fileset>
+			</copy>
+	</target>
 	
 <target name="jar"  >
 	<jar destfile="dist/simulator.jar" 
@@ -21,7 +30,7 @@
 		includes = "images/*" 
 		 />
 </target>
-	<target name="dist" depends="dist_clean,increment,jar" >
+	<target name="dist" depends="dist_clean,increment,copy_images,jar" >
 	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
 		update="false"
 		basedir="dist" 

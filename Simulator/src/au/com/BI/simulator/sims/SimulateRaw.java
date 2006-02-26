@@ -26,7 +26,7 @@ public class SimulateRaw extends SimulateDevice {
    
 
 	public void parseString (String in) {
-		gui.appendToChatBox ("IN.Raw",in,"\n");
+		gui.appendToChatBox ("IN.Raw",in);
 		String theKey = in.trim();
 		Iterator eachCon = this.controls.iterator();
 		while (eachCon.hasNext()) {

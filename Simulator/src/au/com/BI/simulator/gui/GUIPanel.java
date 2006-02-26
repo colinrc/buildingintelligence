@@ -2,10 +2,12 @@ package au.com.BI.simulator.gui;
 
 
 import javax.swing.*;
+
 import au.com.BI.simulator.sims.Simulator;
 import au.com.BI.simulator.sims.Helper;
 import au.com.BI.simulator.sims.SimulateDevice;
 
+import java.awt.Dimension;
 import java.util.*;
 import static au.com.BI.simulator.conf.Control.*;
 import au.com.BI.simulator.conf.Control;
@@ -37,9 +39,14 @@ public class GUIPanel {
 	   public JPanel drawPanel (Icon iconOn, Icon iconOff,Helper helper, GUI gui, Simulator simulator) {
 		   
 		   JPanel eachBox = new JPanel();
-		   eachBox.setAlignmentY(SwingConstants.TOP);
+		   Dimension size = new Dimension (125,150);
+		   eachBox.setPreferredSize(size);
+		   JLabel simName = new JLabel (sim.getDeviceName());
+		   simName.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+		   eachBox.add(simName);
+		   
 		   JLabel name = new JLabel (getTitle());
-		   name.setAlignmentY(JComponent.TOP_ALIGNMENT);
+		   name.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 		   eachBox.setLayout (new BoxLayout (eachBox, BoxLayout.Y_AXIS));
 		   eachBox.setBorder(BorderFactory.createEtchedBorder() );
 		   eachBox.add( name);
@@ -59,8 +66,9 @@ public class GUIPanel {
 		   } else {
 			   JLabel pic = new JLabel (iconOff);
 			   pic.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+			   eachBox.add(Box.createRigidArea(new Dimension(0, 2)));
 			   eachBox.add(pic);
-
+			   
 			   setLight(pic);
 			   
 			   if (this.isHasSlider()){

@@ -9,11 +9,17 @@ M1 is port 5006
 
 <simulator>
 
-<log hexOnly="N" />
-<!-- All characters will be translated to hex, rather than just unprintable ones. -->
+<control>
+	<name>Garage Button</name>
+	<protocol>COMFORT</protocol>
+	<protocol_detail>OUTPUT</protocol_detail>
+	<type value="BUTTONS" >
+		<key>002</key>
+	</type>
+</control>
 
 <control>
-	<name>Cbus Dining Light</name>
+	<name>Dining Light</name>
 	<protocol>CBUS</protocol>
 	<type value="BUTTONS">
 		<key>11</key>
@@ -21,7 +27,7 @@ M1 is port 5006
 </control>
 
 <control>
-	<name>Cbus Lounge LV Light</name>
+	<name>Lounge LV Light</name>
 	<protocol>CBUS</protocol>
 	<type value="SLIDER" >
 		<key>10</key>
@@ -29,7 +35,7 @@ M1 is port 5006
 </control>
 
 <control>
-	<name>Raw Pool Heater</name>
+	<name>Pool Heater</name>
 	<protocol>RAW</protocol>
 	<type value="BUTTONS_RAW" >
 		<key_on>Pool On</key_on>
@@ -38,7 +44,7 @@ M1 is port 5006
 </control>
 
 <control>
-	<name>Raw Pool Temp</name>
+	<name>Pool Temp</name>
 	<protocol>RAW</protocol>
 	<type value="SLIDER_RAW" >
 		<key>TEMP</key>
@@ -46,7 +52,7 @@ M1 is port 5006
 </control>
 
 <control>
-	<name>M1 Entry PIR (key 2)</name>
+	<name>Entry PIR (key 2)</name>
 	<protocol>M1</protocol>
 	<protocol_detail>INPUT</protocol_detail>
 	<type value="BUTTONS" >
@@ -55,7 +61,7 @@ M1 is port 5006
 </control>
 
 <control>
-	<name>M1 Lawn Sprinkler (key 1)</name>
+	<name>Lawn Sprinkler (key 1)</name>
 	<protocol>M1</protocol>
 	<protocol_detail>OUTPUT</protocol_detail>
 	<type value="BUTTONS" >
@@ -64,7 +70,7 @@ M1 is port 5006
 </control>
 
 <control>
-	<name>Comfort Garage Door</name>
+	<name>Garage Door</name>
 	<protocol>COMFORT</protocol>
 	<protocol_detail>INPUT</protocol_detail>
 	<type value="BUTTONS" >
@@ -74,16 +80,7 @@ M1 is port 5006
 
 
 <control>
-	<name>Comfort Garage Button</name>
-	<protocol>COMFORT</protocol>
-	<protocol_detail>CONTROLS</protocol_detail>
-	<type value="BUTTONS" >
-		<key>002</key>
-	</type>
-</control>
-
-<control>
-	<name>Comfort Controls</name>
+	<name>Controls</name>
 	<protocol>COMFORT</protocol>
 	<protocol_detail>CONTROLS</protocol_detail>
 	<type value="CONTROLS">
@@ -94,7 +91,7 @@ M1 is port 5006
 </control>
 
 <control>
-	<name>Gc100 test</name>
+	<name>Test</name>
 	<protocol>GC100</protocol>
 	<type value="NONE" />
 </control>

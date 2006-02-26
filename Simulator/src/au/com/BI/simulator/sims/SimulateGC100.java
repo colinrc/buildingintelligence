@@ -36,7 +36,7 @@ public class SimulateGC100 extends SimulateDevice {
 			commandFound = true;
 			String bits [] = rawIn.split(",");
 			String outStr = "completeir," + bits[1]+"," + bits[2];
-			gui.appendToChatBox ("OUT.GC100",outStr,"\n");
+			gui.appendToChatBox ("OUT.GC100",outStr);
 			this.sendString (outStr+"\n");
 			
 			commandFound = true;

@@ -44,7 +44,7 @@ public class SimulateComfort extends SimulateDevice {
 		if (rawIn.length() < 2) return;
 		String in = rawIn.substring(1);
 		boolean commandFound = false;
-		gui.appendToChatBox ("IN.Comfort",in,"\n");
+		gui.appendToChatBox ("IN.Comfort",in);
 		if (in.charAt(1) == '?') {
 			if (in.charAt(0) == 'I') {
 				String theKey = in.substring(2);
