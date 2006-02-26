@@ -9,7 +9,7 @@ M1 is port 5006
 
 <simulator>
 
-<log hexOnly="Y" />
+<log hexOnly="N" />
 <!-- All characters will be translated to hex, rather than just unprintable ones. -->
 
 <control>
@@ -74,7 +74,7 @@ M1 is port 5006
 
 
 <control>
-	<name>Comfort Garage Door</name>
+	<name>Comfort Garage Button</name>
 	<protocol>COMFORT</protocol>
 	<protocol_detail>CONTROLS</protocol_detail>
 	<type value="BUTTONS" >

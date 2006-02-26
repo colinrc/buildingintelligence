@@ -25,7 +25,7 @@ public class ControlFactory {
 		control.setTitle(name);
 		
 		String protocol = controlXML.getChildText("protocol");
-		String subProtocol = controlXML.getAttributeValue("protocol_detail");
+		String subProtocol = controlXML.getChildText("protocol_detail");
 		control.setGroupType(protocol, subProtocol);
 
 		Element typeXML = controlXML.getChild("type");

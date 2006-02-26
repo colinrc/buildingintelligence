@@ -23,23 +23,24 @@ public class ButtonPressed implements ActionListener {
 		       public void actionPerformed(ActionEvent e) {
 
 		    	   	if (buttonState == ControlStates.CUSTOM) {
-		    	   		toSend = gUIPanel.getSim().buildCustomString(e.getActionCommand());
+		    	   		toSend = gUIPanel.getSim().buildCustomString(e.getActionCommand(),control);
 		    	   	}else {
 		             if (buttonState == ControlStates.OFF) {
-		             	gui.setLight(false,gUIPanel);
-		             	toSend = gUIPanel.getSim().buildOffString(control);
-			             if (control.isHasSlider()) {
-			            	 	gUIPanel.setUpdatingSlider(true);
-			            	 	gUIPanel.getSlider().setValue(0);
-			            	 	gUIPanel.setUpdatingSlider(false);
-			             }
-		             } else {
+			             	gui.setLight(false,gUIPanel);
+			             	toSend = gUIPanel.getSim().buildOffString(control);
+				             if (control.isHasSlider()) {
+				            	 	gUIPanel.setUpdatingSlider(true);
+				            	 	gUIPanel.getSlider().setValue(0);
+				            	 	gUIPanel.setUpdatingSlider(false);
+				             }
+		             } 
+		             if (buttonState == ControlStates.ON) {
 		            	 	gui.setLight(true,gUIPanel);	
 		            	 	toSend = gUIPanel.getSim().buildOnString(control);
 		             }
 		    	   	}
 		         simulator.sendString(this.control.getSimType(),toSend);
-		         gui.appendToChatBox("OUT",control.toString()+ "." + toSend,"\n");
+		         gui.appendToChatBox("OUT",control.getTitle()+ "." + toSend,"\n");
 		       }
 			   
 			ButtonPressed (ControlStates buttonState, Helper helper, Simulator simulator, GUI gui,GUIPanel gUIPanel,Control control) {
@@ -52,8 +53,8 @@ public class ButtonPressed implements ActionListener {
 
 				if (buttonState == ControlStates.ON)
 					toSend = gUIPanel.getSim().buildOnString(control);
-				else
-					toSend = gUIPanel.getSim().buildOffString(control);
 				
+				if (buttonState == ControlStates.OFF)
+					toSend = gUIPanel.getSim().buildOffString(control);				
 			}
 }

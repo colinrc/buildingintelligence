@@ -114,9 +114,9 @@ public class Simulator {
 
 	for (Control control: config.getControls()){
 		
-		SimulateDevice sim = simulationDevices.get(groupType);
+		SimulateDevice sim = simulationDevices.get(control.getSimType());
 		if (sim == null) {
-			System.out.println("Could not find simulation handler for group " + sim.toString() + " type : " + groupType);
+			System.out.println("Could not find simulation handler for group type : " + control.getSimType());
 			continue;
 		}
 

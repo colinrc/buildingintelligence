@@ -65,8 +65,8 @@ public abstract class SimulateDevice extends Thread {
    }
    
 
-	public String buildCustomString (String actionCommand){
-		return "";
+	public String buildCustomString (String actionCommand,Control control){
+		return actionCommand;
 	}
 	
 	public void disconnect () {
@@ -99,7 +99,7 @@ public abstract class SimulateDevice extends Thread {
    public  void sendString(String s) {
 	   if (out != null){
 	         synchronized (out){
-	 	  		out.print(toSend); out.flush();
+	 	  		out.print(s); out.flush();
 	 	  	}
 	   }
    }

@@ -50,8 +50,8 @@ public class GUI extends JPanel {
 		      JPanel pane = null;
 		      ActionAdapter buttonListener = null;
 		      
-		      java.net.URL imageOnURL = Simulator.class.getResource("images/lightOn.png");
-		      java.net.URL imageOffURL = Simulator.class.getResource("images/lightOff.png");
+		      java.net.URL imageOnURL = Simulator.class.getResource("../images/lightOn.png");
+		      java.net.URL imageOffURL = Simulator.class.getResource("../images/lightOff.png");
 		      if (imageOnURL != null)
 		    	  	iconOn = new ImageIcon(imageOnURL);
 		      if (imageOffURL != null)
