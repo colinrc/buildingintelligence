@@ -38,7 +38,7 @@
 	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
 		update="true"
 		basedir="."
-		includes = "config/*" />	
+		includes = "conf/*.xml" />	
 </target>
 
 <target name="dist_clean" depends="" >
