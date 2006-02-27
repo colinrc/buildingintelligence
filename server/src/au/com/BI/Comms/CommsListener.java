@@ -31,10 +31,10 @@ public interface CommsListener {
 	
 	public void setTransmitMessageOnBytes(int numberBytes) ;
 	
-	public void setEndBytes(byte endVals[]);
+	public void setEndBytes(int endVals[]);
 	
-	public void setPenultimateVals(byte[] penultimateVals);
+	public void setPenultimateVals(int penultimateVals[]);
 
-	public void setStartBytes(byte startVals[]);
+	public void setStartBytes(int startVals[]);
 	
 }

@@ -27,7 +27,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 	protected StringBuffer inputBuffer ;
 	protected int targetDeviceModel = -1;
 	protected boolean hasETXArray = false;
-	protected byte eTXArray[];
+	protected int eTXArray[];
 	protected int numberCharsEtx = 0;
 	protected int bufferHandle = CommDevice.FullLine;
 	protected boolean startVals[];
@@ -36,7 +36,8 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 	protected boolean penultimateVals[];
 
 
-	protected int defaultTransmitOnBytes = 100000000; 
+	protected int defaultTransmitOnBytes = 100000; 
+	byte retBuff[];
 	protected int transmitOnBytes = defaultTransmitOnBytes; 
 	// number of bytes to receive before sending the string if we do not get newline.
 	// can be set lower if required by device (eg. 1 character for many devices
@@ -46,6 +47,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 	 */
 	public SerialListener ( ) {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
+		retBuff = new byte [this.transmitOnBytes];
 		inputBuffer = new StringBuffer();
 		startVals = new boolean[256];
 		endVals = new boolean [256];
@@ -77,7 +79,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 		this.handleEvents = flag;
 	}
 
-	public void setEndBytes(byte endVals[]) {
+	public void setEndBytes(int endVals[]) {
 		for (int i = 0; i < endVals.length; i ++) {
 			this.endVals[endVals[i]] = true;
 		}
@@ -85,15 +87,15 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 		hasETXArray = true;
 	}
 	
-	public void setPenultimateVals(byte[] penultimateVals) {
-		for (int i = 0; i < endVals.length; i ++) {
+	public void setPenultimateVals(int penultimateVals[]) {
+		for (int i = 0; i < penultimateVals.length; i ++) {
 			this.penultimateVals[penultimateVals[i]] = true;
 		}
 
 		twoByteFinish = true;
 	}
 	
-	public void setStartBytes(byte startVals[]) {
+	public void setStartBytes(int startVals[]) {
 		for (int i = 0; i < startVals.length; i ++) {
 			this.startVals[startVals[i]] = true;
 		}
@@ -152,7 +154,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 		int prevData = -1;
 		boolean lastCharacterEOL = false;
 		int newDataCounter = 0;
-		byte retBuff[] = new byte [this.transmitOnBytes];
+		
 
 		while (newData != -1 && newDataCounter < this.transmitOnBytes) {
 			try { 

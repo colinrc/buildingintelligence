@@ -29,9 +29,9 @@ public class IP extends BaseComms implements CommDevice
 	protected InetAddress ipAddress;
 	protected int port;
 	protected IPHeartbeat ipHeartbeat;
-	protected byte etxArray[] = null;
-	protected byte stxArray[] = null;
-	protected byte penultimateVals[] = null;
+	protected int etxArray[] = null;
+	protected int stxArray[] = null;
+	protected int penultimateVals[] = null;
 	protected int transmitMessageOnBytes = 0;
 
 	
@@ -41,7 +41,7 @@ public class IP extends BaseComms implements CommDevice
 	}
 		
 	
-	public void setPenultimateArray(byte[] penultimateVals) {
+	public void setPenultimateArray(int[] penultimateVals) {
 		this.penultimateVals = penultimateVals;
 	}
 	
@@ -60,11 +60,11 @@ public class IP extends BaseComms implements CommDevice
 		return returnCode;
 	}
 	
-	public void setETXArray (byte etxArray[]){
+	public void setETXArray (int etxArray[]){
 		this.etxArray = etxArray;
 	}
 
-	public void setSTXArray (byte stxArray[]){
+	public void setSTXArray (int stxArray[]){
 		this.stxArray = stxArray;
 	}
 	

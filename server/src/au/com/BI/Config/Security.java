@@ -36,7 +36,7 @@ public class Security {
 		/*
 		connected = true;
 		return ;
-       */
+      	*/
 
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 
@@ -82,12 +82,10 @@ public class Security {
                         fsize,
                         allowNumbers);
        }
-
 	}
 	
 	public final boolean allowClient (int clientCount) {
 		//return true;
-		//  TODO Fix number of Clients
 
 		lastFlashClients = clientCount;
 		try { 

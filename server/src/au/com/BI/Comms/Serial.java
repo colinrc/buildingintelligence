@@ -31,9 +31,9 @@ public class Serial extends BaseComms implements CommDevice
 	protected OutputStream os;
 	protected InputStream is;	
 	protected SerialListener serialListener;
-	protected byte etxArray[] = null;
-	protected byte penultimateVals[] = null;
-	protected byte stxArray[] = null;
+	protected int etxArray[] = null;
+	protected int penultimateVals[] = null;
+	protected int stxArray[] = null;
 	protected int transmitMessageOnBytes = 0;
 
 
@@ -43,21 +43,21 @@ public class Serial extends BaseComms implements CommDevice
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
-	public void setETXArray (byte etxArray[]){
+	public void setETXArray (int etxArray[]){
 		if (serialListener != null){
 			this.etxArray = etxArray;
 			serialListener.setEndBytes(etxArray);
 		}
 	}
 	
-	public void setPenultimateArray(byte[] penultimateVals) {
+	public void setPenultimateArray(int penultimateVals[]) {
 		if (serialListener != null){
 			this.penultimateVals = penultimateVals;
-			serialListener.setPenultimateVals(etxArray);
+			serialListener.setPenultimateVals(penultimateVals);
 		}
 	}
 
-	public void setSTXArray (byte stxArray[]){
+	public void setSTXArray (int stxArray[]){
 		if (serialListener != null) {
 			this.stxArray = stxArray;
 			serialListener.setStartBytes(stxArray);

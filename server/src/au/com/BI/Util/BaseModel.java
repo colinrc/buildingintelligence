@@ -49,9 +49,9 @@ public class BaseModel
         protected Collection modelList;
         protected Bootstrap bootstrap;
         protected int powerRating;
-		protected byte etxArray[] = null;
-		protected byte penultimateArray[] = null;
-		protected byte stxArray[] = null;
+		protected int etxArray[] = null;
+		protected int penultimateArray[] = null;
+		protected int stxArray[] = null;
 		protected boolean tryingToConnect = false;
 		protected long serverID = 0;
 		
@@ -70,11 +70,11 @@ public class BaseModel
                 transmitOnBytes = numberBytes;
         }
 
-		public void setETXArray (byte etxArray[]){
+		public void setETXArray (int etxArray[]){
 			this.etxArray = etxArray;
 		}
 
-		public void setSTXArray (byte stxArray[]){
+		public void setSTXArray (int stxArray[]){
 			this.stxArray = stxArray;
 		}
 
@@ -656,11 +656,11 @@ public class BaseModel
 			this.tryingToConnect = tryingToConnect;
 		}
 
-		public byte[] getPenultimateArray() {
+		public int[] getPenultimateArray() {
 			return penultimateArray;
 		}
 
-		public void setPenultimateArray(byte[] penultimateArray) {
+		public void setPenultimateArray(int[] penultimateArray) {
 			this.penultimateArray = penultimateArray;
 		}
 

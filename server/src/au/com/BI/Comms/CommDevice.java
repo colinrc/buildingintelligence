@@ -97,7 +97,7 @@ public interface CommDevice {
 	public boolean acknowlegeCommand(String key);
 	public boolean acknowlegeCommand(int actionType,String key);
 	
-	public void setETXArray (byte etxArray[]);
-	public void setSTXArray (byte stxArray[]);
-	public void setPenultimateArray (byte penultimateArray[]);
+	public void setETXArray (int etxArray[]);
+	public void setSTXArray (int stxArray[]);
+	public void setPenultimateArray (int penultimateArray[]);
 }

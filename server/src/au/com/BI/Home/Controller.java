@@ -234,6 +234,7 @@ public class Controller {
 				else {
 					running = false;
 					this.closeDownClients();
+					System.err.print("Could not launch the system, there is an error in configuration file");
 				}
 			}
 

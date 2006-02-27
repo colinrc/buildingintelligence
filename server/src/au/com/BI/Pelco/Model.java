@@ -160,6 +160,7 @@ public class Model extends BaseModel implements DeviceModel {
 					case DeviceType.CAMERA :
 						logger.log(Level.FINER, "Received event from flash for CAMERA item from " + theWholeKey);
 						if ((pelcoOutput = buildCameraArray ((Camera)device,command)) != null) {
+							comms.clearCommandQueue();
 							CommsCommand commsCommand = new CommsCommand ();
 							commsCommand.setCommandBytes(pelcoOutput.outputCodes);
 							commsCommand.setActionType(CommDevice.PelcoSend);

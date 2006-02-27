@@ -37,7 +37,7 @@ public class Model extends BaseModel implements DeviceModel {
 	protected PollTemperatures pollTemperatures = null;
 	protected long tempPollValue = 0L;
 
-	byte []etxChars;
+	int []etxChars;
 	String etxString = "";
 
 	public Model () {
@@ -51,9 +51,9 @@ public class Model extends BaseModel implements DeviceModel {
 		sendingExtended = new HashMap (256);
 		levelMMIQueues = new HashMap (5);
 		temperatureSensors = new LinkedList();
-		etxChars = new byte[] {'.','$','%','#','!','\''};
+		etxChars = new int[] {'.','$','%','#','!','\''};
 
-		etxString = new String(etxChars);
+		etxString = new String(".$%#!\'");
 
 	}
 

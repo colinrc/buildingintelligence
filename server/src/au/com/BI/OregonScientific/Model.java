@@ -33,16 +33,16 @@ public class Model extends BaseModel implements DeviceModel {
 	protected Logger logger;
 	protected HashMap weatherCache;
 
-	protected byte []penChars;
-	protected byte []etxChars;
+	protected int []penChars;
+	protected int []etxChars;
 	
 	public Model () {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		pollReaders = new Poll[10];
 		weatherCache = new HashMap(10);
-		penChars = new byte[] {'A'};
-		etxChars = new byte[] {'A'};
+		penChars = new int[] {0xff};
+		etxChars = new int[] {0xff};
 	}
 
        	public void finishedReadingConfig () {
