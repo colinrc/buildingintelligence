@@ -8,7 +8,7 @@ public class OutputChangeUpdate extends M1Command {
 	
 	public OutputChangeUpdate() {
 		super();
-		this.setKey("CC");
+		this.setCommand("CC");
 		// TODO Auto-generated constructor stub
 	}
 

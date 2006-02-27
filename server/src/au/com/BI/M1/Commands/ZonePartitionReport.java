@@ -6,13 +6,13 @@ public class ZonePartitionReport extends M1Command {
 
 	public ZonePartitionReport() {
 		super();
-		this.setKey("ZP");
+		this.setCommand("ZP");
 		// TODO Auto-generated constructor stub
 	}
 
 	public ZonePartitionReport(String sum, String use) {
 		super(sum, use);
-		this.setKey("ZP");
+		this.setCommand("ZP");
 		// TODO Auto-generated constructor stub
 	}
 

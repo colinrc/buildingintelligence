@@ -9,7 +9,7 @@ public class ArmAndDisarmMessage extends M1Command {
 
 	public ArmAndDisarmMessage() {
 		super();
-		this.setKey("a");
+		this.setCommand("a");
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -19,7 +19,7 @@ public class ArmAndDisarmMessage extends M1Command {
 		armingLevel = level;
 		this.partition = partition;
 		userCode = code;
-		this.setKey("a");
+		this.setCommand("a");
 	}
 
 	public String getArmingLevel() {

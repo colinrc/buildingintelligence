@@ -315,10 +315,11 @@ public class M1CommandFactory {
 		}
 		ZoneBypassRequest _command = new ZoneBypassRequest();
 		_command.setCommand(command);
-		_command.setKey(command.substring(2,4));
+//		_command.setKey(command.substring(2,4));
 		_command.setCheckSum(command.substring(command.length()-2));
 		String zone = command.substring(4,7);
 		_command.setZone(zone);
+		_command.setKey(zone);
 		
 		if (zone.equals("000")) {
 			_command.setBypassAllZones(true);
@@ -346,9 +347,10 @@ public class M1CommandFactory {
 		}
 		ReplyWithBypassedZoneState _command = new ReplyWithBypassedZoneState();
 		_command.setCommand(command);
-		_command.setKey(command.substring(2,4));
+//		_command.setKey(command.substring(2,4));
 		_command.setCheckSum(command.substring(command.length()-2));
 		_command.setZone(command.substring(4,7));
+		_command.setKey(command.substring(4,7));
 		_command.setBypassState(ZoneBypassState.getByValue(command.substring(7,8)));
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
@@ -369,9 +371,10 @@ public class M1CommandFactory {
 		
 		ZoneChangeUpdate _command = new ZoneChangeUpdate();
 		_command.setCommand(command);
-		_command.setKey(command.substring(2,4));
+//		_command.setKey(command.substring(2,4));
 		_command.setCheckSum(command.substring(command.length()-2));
 		_command.setZone(command.substring(4,7));
+		_command.setKey(command.substring(4,7));
 		_command.setZoneStatus(ZoneStatus.getByValue(command.substring(7,8)));
 		_command.setFutureUse(command.substring(8,10));
 		

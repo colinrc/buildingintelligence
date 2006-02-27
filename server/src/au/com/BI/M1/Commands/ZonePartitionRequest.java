@@ -4,13 +4,13 @@ public class ZonePartitionRequest extends M1Command {
 
 	public ZonePartitionRequest() {
 		super();
-		this.setKey("zp");
+		this.setCommand("zp");
 		// TODO Auto-generated constructor stub
 	}
 
 	public ZonePartitionRequest(String sum, String use) {
 		super(sum, use);
-		this.setKey("zp");
+		this.setCommand("zp");
 		// TODO Auto-generated constructor stub
 	}
 

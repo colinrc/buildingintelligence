@@ -7,14 +7,14 @@ public class ZoneChangeUpdate extends M1Command {
 
 	public ZoneChangeUpdate() {
 		super();
-		this.setKey("ZC");
+		this.setCommand("ZC");
 		// TODO Auto-generated constructor stub
 	}
 
 	public ZoneChangeUpdate(String sum, String use) {
 		super(sum, use);
 		// TODO Auto-generated constructor stub
-		this.setKey("ZC");
+		this.setCommand("ZC");
 	}
 
 	public String getZone() {
