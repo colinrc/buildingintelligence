@@ -70,7 +70,8 @@ public abstract class SimulateDevice extends Thread {
 	}
 	
 	public void disconnect () {
-		this.simListener.setRunning(false);
+		if (this.simListener != null)
+			this.simListener.setRunning(false);
 		changeStatusTS(Helper.BEGIN_CONNECT, false);
 	}
 

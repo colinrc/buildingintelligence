@@ -70,8 +70,8 @@ public class GUI extends JPanel implements ItemListener {
 			   buttonBar = new JPanel (new FlowLayout());
 			   buttonBar.setAlignmentX(CENTER_ALIGNMENT);
 			   buttonBar.setAlignmentY(LEFT_ALIGNMENT);
-			   buttonBar.setPreferredSize(new Dimension(800,340));
 
+			   buttonBar.setPreferredSize(new Dimension(800,340));
 				
 		      // Clear button
 		      clearButtonListener = new ActionAdapter() {
@@ -108,7 +108,7 @@ public class GUI extends JPanel implements ItemListener {
 		      
 		      // Set up the chat pane
 		      JPanel chatPane = new JPanel(new BorderLayout());
-		      chatText = new JTextArea(50, 20);
+		      chatText = new JTextArea(10,55);
 		      chatText.setLineWrap(true);
 		      chatText.setEditable(false);
 		      chatText.setForeground(Color.blue);
@@ -121,14 +121,6 @@ public class GUI extends JPanel implements ItemListener {
 		      chatPane.add(chatLine, BorderLayout.SOUTH);
 		      chatPane.add(chatTextPane, BorderLayout.CENTER);
 
-		      
-		      JPanel middleBit = new JPanel();
-		      middleBit.setLayout( new BoxLayout(middleBit,BoxLayout.LINE_AXIS));
-		      middleBit.add(pane);
-		      middleBit.add(chatPane);
-		      middleBit.setPreferredSize(new Dimension(800, 180));
-		      middleBit.setMaximumSize(new Dimension(800, 180));
-		      		
 			   // Other controls
 		      // Set up the status bar
 		      statusField = new JLabel();
@@ -151,17 +143,20 @@ public class GUI extends JPanel implements ItemListener {
 			 layout.putConstraint(SpringLayout.NORTH, buttonBar,5,SpringLayout.NORTH, this);
 			 layout.putConstraint(SpringLayout.EAST, buttonBar,5,SpringLayout.EAST, this);
 
-			 this.add(middleBit);
-			 layout.putConstraint(SpringLayout.NORTH, middleBit,5,SpringLayout.SOUTH, buttonBar);
 
-			 layout.putConstraint(SpringLayout.WEST, middleBit,5,SpringLayout.WEST, this);
-			
-			 layout.putConstraint(SpringLayout.EAST, middleBit,1,SpringLayout.EAST, this);
+			 this.add(pane);
+			 this.add(chatPane);
+			 this.add(statusBar);
 			 
-		      this.add(statusBar);
-			 layout.putConstraint(SpringLayout.NORTH, statusBar,5,SpringLayout.SOUTH, middleBit);
-			 layout.putConstraint(SpringLayout.EAST,this ,5,SpringLayout.EAST, statusBar);
-			 layout.putConstraint(SpringLayout.SOUTH, this,5,SpringLayout.SOUTH, statusBar);
+			 layout.putConstraint(SpringLayout.WEST, pane,5,SpringLayout.WEST, this);
+			 layout.putConstraint(SpringLayout.NORTH, chatPane,5,SpringLayout.SOUTH, buttonBar);
+			 layout.putConstraint(SpringLayout.NORTH, pane,5,SpringLayout.SOUTH, buttonBar);
+			 layout.putConstraint(SpringLayout.EAST, this,5,SpringLayout.EAST, chatPane);
+			 layout.putConstraint(SpringLayout.WEST, chatPane ,10,SpringLayout.EAST, pane);
+		      
+		      layout.putConstraint(SpringLayout.NORTH, statusBar,5,SpringLayout.SOUTH, chatPane);
+
+			 layout.putConstraint(SpringLayout.SOUTH,this  ,5,SpringLayout.SOUTH, statusBar);
 
 		      // Set up the main frame
 		      mainFrame = new JFrame("eLife House Simulator");

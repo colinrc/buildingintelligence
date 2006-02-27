@@ -34,6 +34,8 @@ public class SimulationListener extends Thread {
 						in = null;
 					}
 					sim.disconnect();
+				} catch (NullPointerException ex) {
+					System.err.print("Weird null error");
 				}
 			} else {
 

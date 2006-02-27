@@ -99,7 +99,7 @@ public class SimulateCBUS extends SimulateDevice {
 	}
  
 	public GUIPanel findControl (String theKey){
-		Iterator eachCon = this.controls.iterator();
+		Iterator eachCon = this.gUIPanels.iterator();
 		while (eachCon.hasNext()) {
 			GUIPanel control = (GUIPanel)eachCon.next();
 			if (control.getKey().equals(theKey)) {
