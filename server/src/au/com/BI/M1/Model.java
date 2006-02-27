@@ -8,22 +8,25 @@ package au.com.BI.M1;
  *
 */
 
-import au.com.BI.Command.*;
-import au.com.BI.Comms.*;
-import au.com.BI.Dynalite.DynaliteDevice;
-import au.com.BI.Dynalite.DynaliteInputDevice;
-import au.com.BI.ToggleSwitch.ToggleSwitch;
-import au.com.BI.Util.*;
-import au.com.BI.User.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import java.util.*;
-import java.util.logging.*;
-
-
-import au.com.BI.Lights.*;
+import au.com.BI.Alert.AlertCommand;
+import au.com.BI.Command.CommandInterface;
+import au.com.BI.Comms.CommsFail;
 import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
+import au.com.BI.M1.Commands.ZoneChangeUpdate;
+import au.com.BI.ToggleSwitch.ToggleSwitch;
+import au.com.BI.Util.BaseModel;
+import au.com.BI.Util.DeviceModel;
+import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.Utility;
 
 public class Model extends BaseModel implements DeviceModel {
 
@@ -103,13 +106,36 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public void sendToFlash (List commandQueue, long targetFlashID, CommandInterface command) {
 
+		CommandInterface _command = null;
 		String theKey = command.getKey();
 		DeviceType device = (DeviceType) configHelper.getControlItem(theKey);
-
+		
+		/*
+		 * todo change the PIR's to ToggleSwitches and the others to alarms
+		 * todo check the device type - if toggle switch then send on/off signal and an alert
+		 * todo if it is a alarm then send an alert
+		 * todo only do an alert if the alarm is in trouble, violated or bypassed
+		 */
+		if (command.getClass().equals(ZoneChangeUpdate.class)) {
+			ToggleSwitch toggleSwitch = (ToggleSwitch)device;
+			ZoneChangeUpdate zoneChangeUpdate = (ZoneChangeUpdate)command;
+			_command = new AlertCommand();
+			_command.setDisplayName(device.getName());
+			_command.setTargetDeviceID(targetFlashID);
+			_command.setUser(command.getUser());
+			_command.setExtraInfo(device.getName()+ " has changed to " + zoneChangeUpdate.getZoneStatus().getDescription());
+			_command.setExtra2Info("Area " + toggleSwitch.getArea());
+			_command.setKey ("CLIENT_SEND");
+			cache.setCachedCommand(_command.getKey(),_command);
+		}
 		command.setTargetDeviceID(targetFlashID);
 		logger.log (Level.INFO,"Sending to flash " + theKey + ":" + command.getCommandCode() + ":" + command.getExtraInfo());
 		synchronized (this.commandQueue){
 			commandQueue.add( command);
+			
+			if (_command != null) {
+				commandQueue.add(_command);
+			}
 		}
 	}
 	
