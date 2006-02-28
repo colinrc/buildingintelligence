@@ -10,6 +10,7 @@ public class SimulationListener extends Thread {
 	
 	public SimulationListener (SimulateDevice sim,Socket simulationConnection) {
 		this.sim = sim;
+		this.setName(sim.getDeviceName() + " listener");
 		try {
 			in = new BufferedReader(new 
 					InputStreamReader(simulationConnection.getInputStream()));

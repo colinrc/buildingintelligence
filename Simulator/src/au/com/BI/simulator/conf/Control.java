@@ -45,8 +45,8 @@ public class Control {
 	   }
 	   
 
-	   public void  addControlKeyPair (String value, String label){
-		   controlKeyPairs.put(value, label);
+	   public void  addControlKeyPair (String label, String value){
+		   controlKeyPairs.put(label, value);
 	   }
 	   
 	   public Map<String,String> getControlKeyPairs (){

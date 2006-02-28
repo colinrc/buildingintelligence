@@ -53,13 +53,12 @@
 
 <target name="run" depends="" >
 	  <java 
-	  	jar="simulator.jar"
-	  	fork="true" >
+	  	classname="au.com.BI.simulator.sims.Simulator"
+	  	 >
 	  	
 	    <classpath>
-	    		<fileset dir="ext">
-	    			<include name="*.jar"/>	
-	    		</fileset>
+	    		<pathelement location="bin"/>
+	    	<fileset dir="ext" includes="*.jar"/>		
 	  	</classpath>
 	  </java>
 </target>

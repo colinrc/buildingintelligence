@@ -55,8 +55,8 @@ public class GUIPanel {
 			    Map<String,String> eachControl = control.getControlKeyPairs();
 			   for (String key: eachControl.keySet()) {
 				   JButton jButton = new JButton ();
-				   jButton.setText(eachControl.get(key));
-				   jButton.setActionCommand(key);
+				   jButton.setText(key);
+				   jButton.setActionCommand(eachControl.get(key));
 				   jButton.setEnabled (true);
 				   jButton.addActionListener(new ButtonPressed(ControlStates.CUSTOM,helper,simulator,gui,this,control));
 				   jButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);

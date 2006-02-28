@@ -32,7 +32,7 @@ public class SimulationControlListener extends Thread
 	protected SimulationListener simulationListener = null;
 	protected SimulationListener currentSimulationListener = null;
 	protected SimulateDevice sim = null;
-	
+	protected Socket currentSocket = null;
 	
 	public SimulationControlListener ( int portNumber, String address, Level defaultDebugLevel,
 			SimulateDevice sim) 
@@ -96,13 +96,17 @@ public class SimulationControlListener extends Thread
 		    logger.info("Simulation connection received,closing existing connections");
 		    if (currentSimulationListener != null) {
 		        currentSimulationListener.setRunning(false);
+		        if (currentSocket != null) currentSocket.close();
 		    }
+		    currentSocket = simulationConnection;
 		    sim.newConnection (simulationConnection);
 			SimulationListener simulationListener = new SimulationListener (sim,simulationConnection);
 			currentSimulationListener = simulationListener;
 
 			simulationListener.start();
-	} catch (java.net.SocketException ex) {}
+		} catch (java.net.SocketException ex) {
+			logger.log (Level.WARNING,"Could not bind socket to simulation listener " + ex.getMessage());
+		}
 		
 
 	}

@@ -2,6 +2,7 @@ package au.com.BI.simulator.conf;
 
 import org.jdom.*;
 import java.util.List;
+import au.com.BI.simulator.util.Utility;
 
 public class ControlFactory {
 
@@ -50,7 +51,8 @@ public class ControlFactory {
 			    for(Element keyElm : keys) {
 			    		String value = keyElm.getText();
 			    		String label = keyElm.getAttributeValue("label");
-			    		control.addControlKeyPair (value,label);
+			    		String parseString = Utility.parseString (value);
+			    		control.addControlKeyPair (label,parseString);
 			    }
 			    break;
 				

@@ -29,7 +29,7 @@ public class SliderChanged implements ChangeListener {
 
 					gui.setLight(true,gUIPanel);
 					toSend = gUIPanel.getSim().buildSliderString(control,val);
-		             gui.appendToChatBox("OUT",control.toString() + "." + toSend);
+		             gui.appendToChatBox("OUT",control.getSimType() + "." + toSend);
 		             // Send the string
 		             simulator.sendString(this.control.getSimType(),toSend);
 		    	    }
