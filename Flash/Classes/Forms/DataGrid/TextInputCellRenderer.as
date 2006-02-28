@@ -62,6 +62,7 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
 		listOwner.dataProvider.updateViews("change");		
+		_global.needSave();
 	}	
 	function enterText() {
 		var itemLocation = getCellIndex();
@@ -69,5 +70,6 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
 		listOwner.dataProvider.updateViews("change");		
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;
+		_global.needSave();		
 	}
 }

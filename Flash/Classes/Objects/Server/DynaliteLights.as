@@ -41,7 +41,32 @@
 	public function toXML():XMLNode {
 		var lightsNode = new XMLNode(1, container);
 		for (var light in lights) {
-			lightsNode.appendChild(lights[light]);
+			var newLight = new XMLNode(1, "LIGHT_DYNALITE");
+			if (lights[light].name != "") {
+				newLight.attributes["NAME"] = lights[light].name;
+			}
+			if (lights[light].display_name != "") {
+				newLight.attributes["DISPLAY_NAME"] = lights[light].display_name;
+			}
+			if (lights[light].key != "") {
+				newLight.attributes["KEY"] = lights[light].key;
+			}
+			if (lights[light].active != "") {
+				newLight.attributes["ACTIVE"] = lights[light].active;
+			}
+			if (lights[light].area != "") {
+				newLight.attributes["AREA"] = lights[light].area;
+			}
+			if (lights[light].power != "") {
+				newLight.attributes["POWER_RATING"] = lights[light].power;
+			}
+			if (lights[light].bla != "") {
+				newLight.attributes["BLA"] = lights[light].bla;
+			}
+			if (lights[light].relay != "") {
+				newLight.attributes["RELAY"] = lights[light].relay;
+			}			
+			lightsNode.appendChild(newLight);
 		}
 		return lightsNode;
 	}
@@ -64,7 +89,36 @@
 		lights = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			lights.push(newData.childNodes[child]);
+			var newLight = new Object();
+			newLight.name = "";
+			newLight.display_name = "";
+			newLight.key = "";
+			newLight.active = "Y";
+			newLight.power = "";
+			newLight.bla = "";
+			newLight.relay = "N";
+			if (newData.childNodes[child].attributes["NAME"] != undefined) {
+				newLight.name = newData.childNodes[child].attributes["NAME"];
+			}
+			if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
+				newLight.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+			}
+			if (newData.childNodes[child].attributes["KEY"] != undefined) {
+				newLight.key = newData.childNodes[child].attributes["KEY"];
+			}
+			if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
+				newLight.active = newData.childNodes[child].attributes["ACTIVE"];
+			}
+			if (newData.childNodes[child].attributes["AREA"] != undefined) {
+				newLight.area = newData.childNodes[child].attributes["AREA"];
+			}
+			if (newData.childNodes[child].attributes["POWER_RATING"] != undefined) {
+				newLight.power = newData.childNodes[child].attributes["POWER_RATING"];
+			}
+			if (newData.childNodes[child].attributes["BLA"] != undefined) {
+				newLight.bla = newData.childNodes[child].attributes["BLA"];
+			}
+			lights.push(newLight);
 		}
 	}
 }

@@ -8,7 +8,7 @@ class Forms.Project.Controls extends Forms.BaseForm {
 	private var variables_mc:MovieClip;
 	private var messages_mc:MovieClip;
 	private var save_btn:mx.controls.Button;
-	public function init():Void {
+	public function onLoad():Void {
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		for (var child in controls.childNodes){
 			if(controls.childNodes[child].nodeName == "VARIABLES"){

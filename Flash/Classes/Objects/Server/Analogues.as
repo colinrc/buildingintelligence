@@ -32,12 +32,25 @@
 	public function toXML():XMLNode {
 		var analoguesNode = new XMLNode(1, container);
 		for (var analogue in analogues) {
-			analoguesNode.appendChild(analogues[analogue]);
+			var newAnalogue = new XMLNode(1, "ANALOG");
+			if (analogues[analogue].key != "") {
+				newAnalogue.attributes["KEY"] = analogues[analogue].key;
+			}
+			if (analogues[analogue].name != "") {
+				newAnalogue.attributes["NAME"] = analogues[analogue].name;
+			}
+			if (analogues[analogue].active != "") {
+				newAnalogue.attributes["ACTIVE"] = analogues[analogue].active;
+			}
+			if (analogues[analogue].display_name != "") {
+				newAnalogue.attributes["DISPLAY_NAME"] = analogues[analogue].display_name;
+			}
+			analoguesNode.appendChild(newAnalogue);
 		}
 		return analoguesNode;
 	}
 	public function getName():String {
-		return "Analogues";
+		return "Analogs";
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
@@ -55,7 +68,24 @@
 		analogues = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			analogues.push(newData.childNodes[child]);
+			var newAnalogue = new Object();
+			newAnalogue.key = "";
+			newAnalogue.name = "";
+			newAnalogue.display_name = "";
+			newAnalogue.active = "Y";			
+			if (newData.childNodes[child].attributes["KEY"] != undefined) {
+				newAnalogue.key = newData.childNodes[child].attributes["KEY"];
+			}
+			if (newData.childNodes[child].attributes["NAME"] != undefined) {
+				newAnalogue.name = newData.childNodes[child].attributes["NAME"];
+			}	
+			if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
+				newAnalogue.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+			}
+			if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
+				newAnalogue.active = newData.childNodes[child].attributes["ACTIVE"];
+			}			
+			analogues.push(newAnalogue);
 		}
 	}
 }

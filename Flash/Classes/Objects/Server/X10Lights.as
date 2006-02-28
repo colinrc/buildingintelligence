@@ -61,6 +61,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
+		newNode._visible = false;
 		_global.workflow.addNode("X10Lights", newNode);
 		return newNode;
 	}

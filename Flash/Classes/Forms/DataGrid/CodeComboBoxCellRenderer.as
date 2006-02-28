@@ -90,5 +90,6 @@ class Forms.DataGrid.CodeComboBoxCellRenderer extends UIComponent {
 		}
 		rawInterFaceForm.itemChange({});
 		listOwner.dataProvider.updateViews("change");
+		_global.needSave();		
 	}
 }

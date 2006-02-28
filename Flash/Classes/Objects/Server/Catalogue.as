@@ -27,7 +27,7 @@
 		return newCatalogue;
 	}
 	public function getName():String {
-		return "Catalogue: "+name;
+		return name;
 	}
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());

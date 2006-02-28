@@ -1,67 +1,80 @@
 ﻿import mx.controls.*;
-
 class Forms.Project.Device.Serial extends Forms.BaseForm {
 	private var node:XMLNode;
 	private var port_ti:TextInput;
-	private var baud_ti:TextInput;
-	private var parity_ti:TextInput;
-	private var supportsCd_ti:TextInput;
-	private var stopBits_cb:ComboBox;
-	private var dataBits_cb:ComboBox;
-	private var flow_cb:ComboBox;
-	public function init():Void{
-		port_ti.text ="";
-		if(node.attributes["PORT"] != undefined) {
+	private var supportsCd_chk:CheckBox;
+	private var baud_cmb:ComboBox;
+	private var parity_cmb:ComboBox;
+	private var stopBits_cmb:ComboBox;
+	private var dataBits_cmb:ComboBox;
+	private var flow_cmb:ComboBox;
+	public function Serial() {
+	}
+	public function onLoad():Void {
+		port_ti.text = "";
+		if (node.attributes["PORT"] != undefined) {
 			port_ti.text = node.attributes["PORT"];
 		}
-		baud_ti.text ="";
-		if(node.attributes["BAUD"] != undefined) {
-			baud_ti.text = node.attributes["BAUD"];
-		}
-		parity_ti.text ="";
-		if(node.attributes["PARITY"] != undefined) {
-			parity_ti.text = node.attributes["PARITY"];
-		}
-		supportsCd_ti.text ="";
-		if(node.attributes["SUPPORTS_CD"] != undefined) {
-			supportsCd_ti.text = node.attributes["SUPPORTS_CD"];
-		}
-		stopBits_cb.selectedIndex = 0;
-		if(node.attributes["STOP_BITS"] != undefined) {
-			if(node.attributes["STOP_BITS"] == "0") {
-				stopBits_cb.selectedIndex = 0;
-			}
-			else if (node.attributes["STOP_BITS"] == "1") {
-				stopBits_cb.selectedIndex = 1;
-			}
-			else if (node.attributes["STOP_BITS"] == "2") {
-				stopBits_cb.selectedIndex = 2;
+		baud_cmb.selectedIndex = 1;
+		if (node.attributes["BAUD"] != undefined) {
+			for (var baud:Number = 0; baud < baud_cmb.dataProvider.length; baud++) {
+				if (node.attributes["BAUD"] == baud_cmb.dataProvider[baud].label) {
+					baud_cmb.selectedIndex = baud;
+				}
 			}
 		}
-		dataBits_cb.selectedIndex = 0;
-		if(node.attributes["DATA_BITS"] != undefined) {
-			if(node.attributes["DATA_BITS"] == "8") {
-				dataBits_cb.selectedIndex = 0;
-			}
-			else {
-				dataBits_cb.selectedIndex = 1;
+		parity_cmb.selectedIndex = 0;
+		if (node.attributes["PARITY"] != undefined) {
+			for (var parity:Number = 0; parity < parity_cmb.dataProvider.length; parity++) {
+				if (node.attributes["PARITY"] == parity_cmb.dataProvider[parity].label) {
+					parity_cmb.selectedIndex = parity;
+				}
 			}
 		}
-		flow_cb.selectedIndex = 0;
-		if(node.attributes["FLOW"] != undefined) {
-			if(node.attributes["FLOW"] == "NONE") {
-				flow_cb.selectedIndex = 0;
+		supportsCd_chk.selected = false;
+		if (node.attributes["SUPPORTS_CD"] == "Y") {
+			supportsCd_chk.selected = true;
+		}
+		stopBits_cmb.selectedIndex = 1;
+		if (node.attributes["STOP_BITS"] != undefined) {
+			if (node.attributes["STOP_BITS"] == "0") {
+				stopBits_cmb.selectedIndex = 0;
+			} else if (node.attributes["STOP_BITS"] == "1") {
+				stopBits_cmb.selectedIndex = 1;
+			} else if (node.attributes["STOP_BITS"] == "2") {
+				stopBits_cmb.selectedIndex = 2;
 			}
-			else if(node.attributes["FLOW"] == "RTSCTS") {
-				flow_cb.selectedIndex = 1;
+		}
+		dataBits_cmb.selectedIndex = 0;
+		if (node.attributes["DATA_BITS"] != undefined) {
+			if (node.attributes["DATA_BITS"] == "8") {
+				dataBits_cmb.selectedIndex = 0;
+			} else {
+				dataBits_cmb.selectedIndex = 1;
+			}
+		}
+		flow_cmb.selectedIndex = 0;
+		if (node.attributes["FLOW"] != undefined) {
+			if (node.attributes["FLOW"] == "NONE") {
+				flow_cmb.selectedIndex = 0;
+			} else if (node.attributes["FLOW"] == "RTSCTS") {
+				flow_cmb.selectedIndex = 1;
 			}
 		}
 	}
-	public function getData():Object{
-		var dataObj = {port:port_ti.text, baud:baud_ti.text, parity:parity_ti.text, supportsCd:supportsCd_ti.text};
-		dataObj.stopBits = stopBits_cb.selectedItem.label;
-		dataObj.dataBits = dataBits_cb.selectedItem.label;
-		dataObj.flow = flow_cb.selectedItem.label;
+	public function getData():Object {
+		var dataObj = new Object();
+		dataObj.port = port_ti.text;
+		dataObj.baud = baud_cmb.selectedItem.label;
+		dataObj.parity = parity_cmb.selectedItem.label;
+		if (supportsCd_chk.selected) {
+			dataObj.supportsCd = "Y";
+		} else {
+			dataObj.supportsCd = "N";
+		}
+		dataObj.stopBits = stopBits_cmb.selectedItem.label;
+		dataObj.dataBits = dataBits_cmb.selectedItem.label;
+		dataObj.flow = flow_cmb.selectedItem.label;
 		return dataObj;
 	}
 }

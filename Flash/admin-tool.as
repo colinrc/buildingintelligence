@@ -1,4 +1,9 @@
-﻿//var debugger:mx.controls.TextArea;
+﻿save_btn.enabled = false;
+historyViewer_btn._visible = false;
+_global.advanced = false;
+var form_mc;
+//advanced_btn._visible = false;
+//var debugger:mx.controls.TextArea;
 //_root.debugger = debugger;
 //_root.debugger.text +="blsh \n";
 /****************************************************************/
@@ -53,8 +58,8 @@ CloseTip();
 /********************************************************/
 var menu_mb:mx.controls.MenuBar;
 _global.history = new Objects.History();
-var right_tree = workFlow_split.setFirstContents("Tree","right_tree",0);
-var infoflow_ta = workFlow_split.setSecondContents("TextArea","infoflow_ta",1);
+var right_tree = workFlow_split.setFirstContents("Tree", "right_tree", 0);
+var infoflow_ta = workFlow_split.setSecondContents("TextArea", "infoflow_ta", 1);
 _global.right_tree = right_tree;
 _global.infoflow_ta = infoflow_ta;
 _global.workflow_xml = new XML();
@@ -64,7 +69,7 @@ _global.right_tree_xml = new XML();
 //values set in workflow object
 _global.right_tree_xml.ignoreWhite = true;
 _global.right_tree.dataProvider = _global.right_tree_xml;
-_global.right_tree.setStyle("depthColors",[ 0x00ff00, 0xff0000, 0x0000ff ]);
+_global.right_tree.setStyle("depthColors", [0x00ff00, 0xff0000, 0x0000ff]);
 _global.workflow = new Objects.WorkFlow();
 var left_tree:mx.controls.Tree;
 _global.left_tree = left_tree;
@@ -254,6 +259,7 @@ function saveFile(saveType:String):Void {
 			newProjectXML.appendChild(_global.server_test.toXML());
 			newProjectXML.appendChild(_global.client_test.toXML());
 			mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
+			mdm.Dialogs.prompt("File saved to: "+_global.projectFileName);		
 		}
 	} else {
 		mdm.Dialogs.BrowseFile.buttonText = "Save file";
@@ -269,6 +275,7 @@ function saveFile(saveType:String):Void {
 			} else {
 				mdm.FileSystem.saveFile(file, _global.writeXMLFile(_global.client_test.toXML(), 0));
 			}
+			mdm.Dialogs.prompt("File saved to: "+file);		
 		}
 	}
 }
@@ -319,9 +326,11 @@ menuListener.change = function(evt:Object) {
 			_global.projectFileName = tempString;
 			saveFile("Project");
 		}
+		save_btn.icon = "floppyfalse";		
 		break;
 	case "save" :
 		saveFile("Project");
+		save_btn.icon = "floppyfalse";		
 		break;
 	}
 };
@@ -337,15 +346,15 @@ setView = function (view, dataObj) {
 	workFlow_split._visible = true;
 	tabs_tb._visible = true;
 	tabBody_mc._visible = true;
-	formContent_mc.form_mc.removeMovieClip();
-	formContent_mc.createEmptyMovieClip("form_mc", 0);
+	form_mc.removeMovieClip();
+	form_mc = formContent_mc.createEmptyMovieClip("form_mc", 0);
 	// render the view
 	switch (view) {
 	case "home" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
-		formContent_mc.attachMovie("forms.home", "form_mc", 0);
+		form_mc = formContent_mc.attachMovie("forms.home", "form_mc", 0);
 		tabs_tb.dataProvider = [{label:"Project Details"}];
 		tabs_tb.selectedIndex = 0;
 		tabs_tb._visible = true;
@@ -389,7 +398,7 @@ setView = function (view, dataObj) {
 			tabs_tb.selectedIndex = 0;
 			view = "control.controls";
 		}
-		var form_mc = formContent_mc.attachMovie("forms." + view, "form_" + random(999) + "_mc", 0);
+		form_mc = formContent_mc.attachMovie("forms." + view, "form_" + random(999) + "_mc", 0);
 		//_root.debugger.text += "setting view "+view+"\n";
 		_global.server.attachView(form_mc);
 		break;
@@ -404,7 +413,7 @@ setView = function (view, dataObj) {
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
-		formContent_mc.attachMovie("forms.preview", "form_mc", 0);
+		form_mc = formContent_mc.attachMovie("forms.preview", "form_mc", 0);
 		tabs_tb.dataProvider = [{label:"Client Preview"}];
 		tabs_tb.selectedIndex = 0;
 		tabs_tb._visible = true;
@@ -413,7 +422,7 @@ setView = function (view, dataObj) {
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
-		formContent_mc.attachMovie("forms.publish", "form_mc", 0);
+		form_mc = formContent_mc.attachMovie("forms.publish", "form_mc", 0);
 		tabs_tb.dataProvider = [{label:"Publish", view:"publish"}];
 		tabs_tb.selectedIndex = 0;
 		break;
@@ -423,24 +432,24 @@ setView = function (view, dataObj) {
 		workFlow_split._visible = false;
 		tabs_tb.dataProvider = [{label:"History", view:"history"}];
 		tabs_tb.selectedIndex = 0;
-		formContent_mc.attachMovie("forms.history", "form" + random(999) + "_history", 0);
+		form_mc = formContent_mc.attachMovie("forms.history", "form" + random(999) + "_history", 0);
 		break;
 	}
 };
 tabs_tb.change = function(eventObj) {
 	if (this.lastTab.view != eventObj.target.selectedItem.view && eventObj.target.selectedItem.view.length) {
 		if (left_tree.selectedNode.object != undefined) {
-			formContent_mc.form_mc.unloadMovie();
-			formContent_mc.createEmptyMovieClip("form_mc", 0);
+			form_mc.unloadMovie();
+			form_mc = formContent_mc.createEmptyMovieClip("form_mc", 0);
 			switch (eventObj.target.selectedItem.label) {
 			case "XML" :
-				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, {node:left_tree.selectedNode.object.toXML()});
+				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, {node:left_tree.selectedNode.object.toXML()});
 				break;
 			case "Preview" :
-				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, {controls:_global.client_test.getControlTypes(), previewXML:left_tree.selectedNode.object.toXML()});
+				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, {controls:_global.client_test.getControlTypes(), previewXML:left_tree.selectedNode.object.toXML()});
 				break;
 			default :
-				var form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, left_tree.selectedNode.object.getData());
+				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, left_tree.selectedNode.object.getData());
 				break;
 			}
 		} else {
@@ -449,12 +458,13 @@ tabs_tb.change = function(eventObj) {
 	}
 	this.lastTab = this.selectedItem;
 };
+
 tabs_tb.addEventListener("change", tabs_tb);
 leftTreeListener = new Object();
 leftTreeListener.change = function(eventObj) {
 	var node = eventObj.target.selectedNode;
-	formContent_mc.form_mc.removeMovieClip();
-	formContent_mc.createEmptyMovieClip("form_mc", 0);
+	form_mc.removeMovieClip();
+	form_mc = formContent_mc.createEmptyMovieClip("form_mc", 0);
 	right_tree.selectedNode = undefined;
 	if (node.object != undefined) {
 		switch (node.nodeName) {
@@ -462,12 +472,12 @@ leftTreeListener.change = function(eventObj) {
 		case "Tab" :
 		case "Control" :
 		case "Window" :
-			var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + random(999) + "_mc", 0, node.object.getData());
+			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + random(999) + "_mc", 0, node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview", view:"forms.project.client.preview"}];
 			tabs_tb.selectedIndex = 0;
 			break;
 		default :
-			var form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + random(999) + "_mc", 0, node.object.getData());
+			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + random(999) + "_mc", 0, node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}];
 			tabs_tb.selectedIndex = 0;
 			break;
@@ -507,6 +517,75 @@ buttonListener.click = function(eventObj) {
 		break;
 	}
 };
+home_btn.addEventListener("click", buttonListener);
+project_btn.addEventListener("click", buttonListener);
+control_btn.addEventListener("click", buttonListener);
+preview_btn.addEventListener("click", buttonListener);
+publish_btn.addEventListener("click", buttonListener);
+historyViewer_btn.addEventListener("click", buttonListener);
+buttonListener2 = new Object();
+buttonListener2.click = function(eventObj) {
+	switch (eventObj.target) {
+	case save_btn :
+		saveFile("Project");
+		save_btn.icon = "floppyfalse";
+		break;
+	case advanced_btn :
+		advanced_btn.icon = "advanced" + (!_global.advanced);
+		_global.advanced = (!_global.advanced);
+		CloseTip();
+		var tempObject = _global.left_tree.selectedNode.object;
+		for (var child in projectTree_xml.childNodes) {
+			if ((projectTree_xml.childNodes[child].nodeName == "Server")||(projectTree_xml.childNodes[child].nodeName == "Client")){
+				projectTree_xml.childNodes[child].removeNode();
+			}
+		}
+		_global.right_tree.dataProvider.removeAll();
+		projectTree_xml.appendChild(_global.client_test.toTree());
+		projectTree_xml.appendChild(_global.server_test.toTree());
+		if (_global.advanced) {
+			DisplayTip("Advanced View");
+		} else {
+			DisplayTip("Basic View");
+		}
+		var foundNode = searchProject(_global.left_tree.dataProvider, tempObject);
+		if(foundNode != undefined){
+			left_tree.setIsOpen(foundNode, true);
+			var temp_node = foundNode.parentNode;
+			while (temp_node != null) {
+				left_tree.setIsOpen(temp_node, true);
+				temp_node = temp_node.parentNode;
+			}
+			form_mc.setAdvanced();			
+		} else{
+			//Reset project
+			setView("project");
+		}
+		refreshTheTree();				
+		left_tree.selectedNode = foundNode;							
+		break;
+	}
+};
+function searchProject (treeNode:Object,object:Object):Object{
+	if(treeNode.object == object){
+		return treeNode;
+	} else {
+		for(var child in treeNode.childNodes){
+			var foundNode = searchProject(treeNode.childNodes[child],object);
+			if(foundNode != undefined){
+				return foundNode;
+			}
+		}
+		return undefined;
+	}
+}
+_global.needSave = function(){
+	if(save_btn.icon !="floppytrue"){
+		save_btn.icon = "floppytrue";
+	}
+}
+advanced_btn.addEventListener("click", buttonListener2);
+save_btn.addEventListener("click", buttonListener2);
 function setButtons(enabled:Boolean) {
 	home_btn.enabled = enabled;
 	project_btn.enabled = enabled;
@@ -514,7 +593,8 @@ function setButtons(enabled:Boolean) {
 	preview_btn.enabled = enabled;
 	publish_btn.enabled = enabled;
 	historyViewer_btn.enabled = enabled;
-	//save_btn.enabled = enabled;
+	advanced_btn.enabled = enabled;
+	save_btn.enabled = enabled;
 	for (var child in menu_mb.dataProvider.firstChild.childNodes) {
 		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "importClient") {
 			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
@@ -533,15 +613,7 @@ function setButtons(enabled:Boolean) {
 	menu_mb.dataProvider = null;
 	menu_mb.dataProvider = oBackupDP;
 }
-home_btn.addEventListener("click", buttonListener);
-project_btn.addEventListener("click", buttonListener);
-control_btn.addEventListener("click", buttonListener);
-preview_btn.addEventListener("click", buttonListener);
-publish_btn.addEventListener("click", buttonListener);
-historyViewer_btn.addEventListener("click", buttonListener);
-save_btn.addEventListener("click", buttonListener);
-save_btn.enabled = true;
-save_btn.icon = "floppytrue";
+save_btn.enabled = false;
 home_btn.onRollOver = function() {
 	DisplayTip("Project Details");
 	this.setState("highlighted");
@@ -570,6 +642,14 @@ save_btn.onRollOver = function() {
 	DisplayTip("Save");
 	this.setState("highlighted");
 };
+advanced_btn.onRollOver = function() {
+	if (this.icon == "advancedfalse") {
+		DisplayTip("To Advanced");
+	} else {
+		DisplayTip("To Basic");
+	}
+	this.setState("highlighted");
+};
 home_btn.onRollOut = function() {
 	CloseTip();
 	this.setState(false);
@@ -594,18 +674,14 @@ historyViewer_btn.onRollOut = function() {
 	CloseTip();
 	this.setState(false);
 };
+advanced_btn.onRollOut = function() {
+	CloseTip();
+	this.setState(false);
+};
 save_btn.onRollOut = function() {
 	CloseTip();
 	this.setState(false);
-	//this.highlight = false;
 };
-save_btn.click = function(){
-		//DO SAVE
-		this.icon = "floppyfalse";
-		//eventObj.target.selected =false;
-		//eventObj.target.enabled = false;
-		break;
-}
 setButtons(false);
 treeFilter_cb.change = function(eventObj) {
 	switch (eventObj.target.selectedItem.label) {
@@ -613,9 +689,9 @@ treeFilter_cb.change = function(eventObj) {
 		left_tree.dataProvider = projectTree_xml;
 		left_tree.labelFunction = function(item_obj:Object):String  {
 			//if (item_obj.object.isValid()) {
-				return item_obj.object.getName();
+			return item_obj.object.getName();
 			/*} else {
-				return "*" + item_obj.object.getName();
+			return "*" + item_obj.object.getName();
 			}*/
 		};
 		break;

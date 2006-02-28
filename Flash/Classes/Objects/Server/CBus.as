@@ -1,10 +1,14 @@
 ﻿class Objects.Server.CBus extends Objects.Server.Device {
 	private var sensors:Objects.Server.CBusSensors;
+	private var temperatureSensors:Objects.Server.CBusTemperatureSensors;
 	private var lights:Objects.Server.CBusLights;
+	private var relays:Objects.Server.CBusRelays;
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(sensors.getKeys());
 		tempKeys = tempKeys.concat(lights.getKeys());
+		tempKeys = tempKeys.concat(relays.getKeys());
+		tempKeys = tempKeys.concat(temperatureSensors.getKeys());		
 		return tempKeys;
 	}
 	public function isValid():Boolean {
@@ -24,6 +28,12 @@
 		if (!lights.isValid()) {
 			flag = false;
 		}
+		if (!relays.isValid()) {
+			flag = false;
+		}
+		if (!temperatureSensors.isValid()) {
+			flag = false;
+		}		
 		if (!catalogues.isValid()) {
 			flag = false;
 		}
@@ -56,6 +66,14 @@
 		for (var child in tempLights.childNodes) {
 			newCBus.appendChild(tempLights.childNodes[child]);
 		}
+		var tempRelays = relays.toXML();
+		for (var child in tempRelays.childNodes) {
+			newCBus.appendChild(tempRelays.childNodes[child]);
+		}
+		var tempTemperatureSensors = temperatureSensors.toXML();
+		for (var child in tempTemperatureSensors.childNodes) {
+			newCBus.appendChild(tempTemperatureSensors.childNodes[child]);
+		}		
 		newDevice.appendChild(newCBus);
 		return newDevice;
 	}
@@ -64,6 +82,8 @@
 		newNode.appendChild(catalogues.toTree());		
 		newNode.appendChild(sensors.toTree());
 		newNode.appendChild(lights.toTree());
+		newNode.appendChild(relays.toTree());
+		newNode.appendChild(temperatureSensors.toTree());
 		newNode.object = this;
 		_global.workflow.addNode("CBus",newNode);
 		return newNode;
@@ -76,6 +96,8 @@
 		var tempCatalogues = new XMLNode(1, "Catalogues");
 		sensors = new Objects.Server.CBusSensors();
 		lights = new Objects.Server.CBusLights();
+		relays = new Objects.Server.CBusRelays();
+		temperatureSensors = new Objects.Server.CBusTemperatureSensors();
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
 				device_type = newData.attributes["NAME"];
@@ -97,19 +119,31 @@
 				case "CBUS" :
 					var tempSensors = new XMLNode(1, "sensors");
 					var tempLights = new XMLNode(1, "lights");
+					var tempRelays = new XMLNode (1, "relays");
+					var tempTemperatureSensors = new XMLNode(1,"temperatureSensors");
 					var tempNode = newData.childNodes[child];
 					for (var cbusDevice in tempNode.childNodes) {
 						switch (tempNode.childNodes[cbusDevice].nodeName) {
 						case "LIGHT_CBUS" :
-							tempLights.appendChild(tempNode.childNodes[cbusDevice]);
+							if(tempNode.childNodes[cbusDevice].attributes["RELAY"] == "Y"){
+								tempRelays.appendChild(tempNode.childNodes[cbusDevice]);
+							}
+							else{					
+								tempLights.appendChild(tempNode.childNodes[cbusDevice]);
+							}
 							break;
 						case "SENSOR" :
 							tempSensors.appendChild(tempNode.childNodes[cbusDevice]);
+							break;
+						case "TEMPERATURE":
+							tempTemperatureSensors.appendChild(tempNode.childNodes[cbusDevice]);
 							break;
 						}
 					}
 					sensors.setXML(tempSensors);
 					lights.setXML(tempLights);
+					relays.setXML(tempRelays);
+					temperatureSensors.setXML(tempTemperatureSensors);
 					break;
 				case "CONNECTION" :
 					connection = newData.childNodes[child];

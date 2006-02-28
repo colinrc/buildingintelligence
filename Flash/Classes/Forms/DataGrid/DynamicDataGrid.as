@@ -19,18 +19,22 @@ class Forms.DataGrid.DynamicDataGrid {
 					my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
 					switch (columns[name].type) {
 					case "text" :
+						my_dg.getColumnAt(columns[name].colNo-1).width = 100;
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "TextInputCellRenderer";
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 						break;
 					case "check" :
+						my_dg.getColumnAt(columns[name].colNo-1).width = 100;					
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CheckCellRenderer";
-						my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 20;
+						my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 						break;
 					case "combo" :
+						my_dg.getColumnAt(columns[name].colNo-1).width = 100;					
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ComboBoxCellRenderer";
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 						break;
 					case "colour" :
+						my_dg.getColumnAt(columns[name].colNo-1).width = 100;					
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ColourCellRenderer";
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 						break;
@@ -44,6 +48,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				}
 			}
 		}
+		my_dg.dataProvider.updateViews("change");
 	}
 	public function setDataGrid(new_dg:DataGrid) {
 		my_dg = new_dg;
@@ -79,6 +84,16 @@ class Forms.DataGrid.DynamicDataGrid {
 		columns[name].rawInterFaceForm = rawInterFaceForm;
 		columns[name].advanced = false;
 	}
+	public function addActiveColumn(name:String, values:Object) {
+		columns[name] = new Object();
+		columns[name].type = "active";
+		columns[name].values = values;
+		my_dg.addColumn(name);
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "ActiveHeaderRenderer";
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CheckCellRenderer";
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 20;
+		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
+	}
 	public function addCheckColumn(name:String, heading:String, values:Object, advanced:Boolean) {
 		columns[name] = new Object();
 		columns[name].type = "check";
@@ -90,7 +105,7 @@ class Forms.DataGrid.DynamicDataGrid {
 			my_dg.addColumn(name);
 			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
 			my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CheckCellRenderer";
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 20;
+			my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 			my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
 		}
 	}
@@ -185,6 +200,7 @@ class Forms.DataGrid.DynamicDataGrid {
 					};
 					newRow[column] = newText;
 					break;
+				case "active":
 				case "check" :
 					var newCheck = {label:new_dp[row][column], values:columns[column].values};
 					newCheck.toString = function():String  {
@@ -241,6 +257,7 @@ class Forms.DataGrid.DynamicDataGrid {
 			var newRow = new Object();
 			for (var column in columns) {
 				switch (columns[column].type) {
+				case "active" :
 				case "value" :
 				case "text" :
 				case "check" :
@@ -290,6 +307,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				}
 				newRow[column] = newText;
 				break;
+			case "active" :
 			case "check" :
 				var newCheck = {label:columns[column].values.False, values:columns[column].values};
 				newCheck.toString = function():String  {

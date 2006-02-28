@@ -1,9 +1,9 @@
 ﻿class Objects.Server.ContactClosures extends Objects.BaseElement {
 	private var container:String;
 	private var contacts:Array;
-	public function getKeys():Array{
+	public function getKeys():Array {
 		var tempKeys = new Array();
-		for(var contact in contacts){
+		for (var contact in contacts) {
 			tempKeys.push(contacts[contact].attributes["DISPLAY_NAME"]);
 		}
 		return tempKeys;
@@ -35,20 +35,36 @@
 	public function toXML():XMLNode {
 		var contactsNode = new XMLNode(1, container);
 		for (var contact in contacts) {
-			contactsNode.appendChild(contacts[contact]);
+			var newContact = new XMLNode(1, "CONTACT_CLOSURE");
+			if (contacts[contact].name != "") {
+				newContact.attributes["NAME"] = contacts[contact].name;
+			}
+			if (contacts[contact].display_name != "") {
+				newContact.attributes["DISPLAY_NAME"] = contacts[contact].display_name;
+			}
+			if (contacts[contact].key != "") {
+				newContact.attributes["KEY"] = contacts[contact].key;
+			}
+			if (contacts[contact].active != "") {
+				newContact.attributes["ACTIVE"] = contacts[contact].active;
+			}
+			if (contacts[contact].box != "") {
+				newContact.attributes["BOX"] = contacts[contact].box;
+			}
+			contactsNode.appendChild(newContact);
 		}
 		return contactsNode;
 	}
 	public function getName():String {
 		return "Contact Closures";
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("ContactClosures",newNode);
+		_global.workflow.addNode("ContactClosures", newNode);
 		return newNode;
 	}
-	public function setData(newData:Object){
+	public function setData(newData:Object) {
 		contacts = newData.contacts;
 	}
 	public function getData():Object {
@@ -58,7 +74,28 @@
 		contacts = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			contacts.push(newData.childNodes[child]);
+			var newContact = new Object();
+			newContact.name = "";
+			newContact.display_name = "";
+			newContact.key = "";
+			newContact.active = "Y";
+			newContact.box = "";
+			if (newData.childNodes[child].attributes["NAME"] != undefined) {
+				newContact.name = newData.childNodes[child].attributes["NAME"];
+			}
+			if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
+				newContact.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+			}
+			if (newData.childNodes[child].attributes["KEY"] != undefined) {
+				newContact.key = newData.childNodes[child].attributes["KEY"];
+			}
+			if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
+				newContact.active = newData.childNodes[child].attributes["ACTIVE"];
+			}
+			if (newData.childNodes[child].attributes["BOX"] != undefined) {
+				newContact.box = newData.childNodes[child].attributes["BOX"];
+			}
+			contacts.push(newContact);
 		}
 	}
 }

@@ -7,7 +7,7 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 	private var dataGridHandler:Object;
 	private var new_btn:Button;
 	private var delete_btn:Button;
-	public function init() {
+	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.rescrict = "";
@@ -16,43 +16,24 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(contacts_dg);
+		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
-		dataGridHandler.addTextInputColumn("key", "?", restrictions, false);
+		dataGridHandler.addTextInputColumn("key", "Input Key", restrictions, false);
 		dataGridHandler.addTextInputColumn("box", "Box", restrictions, false);
-		dataGridHandler.addCheckColumn("active", "Active", values, false);
-		dataGridHandler.setAdvanced(false);
-		//Debug						
-		var DP = new Array();
-		for (var contact in contacts) {
-			var newContact = new Object();
-			newContact.name = "";
-			newContact.display_name = "";
-			newContact.key = "";
-			newContact.active = "Y";
-			newContact.box = "";
-			if (contacts[contact].attributes["NAME"] != undefined) {
-				newContact.name = contacts[contact].attributes["NAME"];
-			}
-			if (contacts[contact].attributes["DISPLAY_NAME"] != undefined) {
-				newContact.display_name = contacts[contact].attributes["DISPLAY_NAME"];
-			}
-			if (contacts[contact].attributes["KEY"] != undefined) {
-				newContact.key = contacts[contact].attributes["KEY"];
-			}
-			if (contacts[contact].attributes["ACTIVE"] != undefined) {
-				newContact.active = contacts[contact].attributes["ACTIVE"];
-			}
-			if (contacts[contact].attributes["BOX"] != undefined) {
-				newContact.box = contacts[contact].attributes["BOX"];
-			}
-			DP.push(newContact);
-		}
-		dataGridHandler.setDataGridDataProvider(DP);
+		dataGridHandler.setAdvanced(_global.advanced);
+		dataGridHandler.setDataGridDataProvider(contacts);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
+	public function setAdvanced(){
+		if(_global.advanced){
+			dataGridHandler.setAdvanced(_global.advanced);
+		} else {
+			dataGridHandler.setAdvanced(_global.advanced);
+		}
+	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();
 	}
@@ -61,27 +42,6 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 	}
 	public function save():Void {
 		dataGridHandler.clearSelection();
-		var newContacts = new Array();
-		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index < DP.length; index++) {
-			var newContact = new XMLNode(1, "CONTACT_CLOSURE");
-			if (DP[index].name != "") {
-				newContact.attributes["NAME"] = DP[index].name;
-			}
-			if (DP[index].display_name != "") {
-				newContact.attributes["DISPLAY_NAME"] = DP[index].display_name;
-			}
-			if (DP[index].key != "") {
-				newContact.attributes["KEY"] = DP[index].key;
-			}
-			if (DP[index].active != "") {
-				newContact.attributes["ACTIVE"] = DP[index].active;
-			}
-			if (DP[index].box != "") {
-				newContact.attributes["BOX"] = DP[index].box;
-			}
-			newContacts.push(newContact);
-		}
-		_global.left_tree.selectedNode.object.setData({contacts:newContacts});
+		_global.left_tree.selectedNode.object.setData({contacts:dataGridHandler.getDataGridDataProvider()});
 	}
 }

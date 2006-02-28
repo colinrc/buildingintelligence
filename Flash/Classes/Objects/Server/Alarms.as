@@ -24,14 +24,21 @@
 		return "forms.project.device.alarm";
 	}
 	public function toXML():XMLNode {
-		var alarmsNode = new XMLNode(1, container);
+		var alarmsNode = new XMLNode(1, container);		
 		for (var alarm in alarms) {
-			alarmsNode.appendChild(alarms[alarm]);
+			var newAlarm = new XMLNode(1, "ALARM");
+			if(alarms[alarm].key != ""){
+				newAlarm.attributes["KEY"] = alarms[alarm].key;
+			}
+			if(alarms[alarm].display_name != ""){
+				newAlarm.attributes["DISPLAY_NAME"] = alarms[alarm].display_name;
+ 		    }
+			alarmsNode.appendChild(newAlarm);
 		}
 		return alarmsNode;
 	}
 	public function getName():String {
-		return "Comfort Alarms";
+		return "Alarms";
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
@@ -49,7 +56,16 @@
 		alarms = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			alarms.push(newData.childNodes[child]);
+			var newAlarm = new Object();
+			newAlarm.key = "";
+			newAlarm.display_name = "";
+			if(newData.childNodes[child].attributes["KEY"]!=undefined){
+				newAlarm.key = newData.childNodes[child].attributes["KEY"];
+			}
+			if(newData.childNodes[child].attributes["DISPLAY_NAME"]!=undefined){
+				newAlarm.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+			}
+			alarms.push(newAlarm);
 		}
 	}
 }

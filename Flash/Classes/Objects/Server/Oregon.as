@@ -1,5 +1,5 @@
 ﻿class Objects.Server.Oregon extends Objects.Server.Device {
-	private var sensors:Objects.Server.CBusSensors;
+	private var sensors:Objects.Server.OregonSensors;
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(sensors.getKeys());
@@ -61,7 +61,7 @@
 		active = "Y";		
 		catalogues = new Objects.Server.Catalogues();
 		var tempCatalogues = new XMLNode(1,"Catalogues");
-		sensors = new Objects.Server.CBusSensors();
+		sensors = new Objects.Server.OregonSensors();
 		if(newData.nodeName == "DEVICE"){
 			if(newData.attributes["NAME"]!=undefined){
 				device_type = newData.attributes["NAME"];

@@ -29,7 +29,7 @@
 		return newNode;
 	}
 	public function getName():String {
-		return "Catalogues";
+		return "Catalogs";
 	}
 	public function getData():Object {
 		return {catalogues:catalogues};

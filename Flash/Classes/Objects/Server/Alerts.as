@@ -29,7 +29,26 @@
 	public function toXML():XMLNode {
 		var alertsNode = new XMLNode(1, container);
 		for (var alert in alerts) {
-			alertsNode.appendChild(alerts[alert]);
+			var alertNode = new XMLNode(1, "ALERT");
+			if (alerts[alert].key != "") {
+				alertNode.attributes["KEY"] = alerts[alert].key;
+			}
+			if (alerts[alert].display_name != "") {
+				alertNode.attributes["DISPLAY_NAME"] = alerts[alert].display_name;
+			}
+			if (alerts[alert].active != "") {
+				alertNode.attributes["ACTIVE"] = alerts[alert].active;
+			}
+			if (alerts[alert].cat != "") {
+				alertNode.attributes["CLIENT_CAT"] = alerts[alert].cat;
+			}
+			if (alerts[alert].message != "") {
+				alertNode.attributes["MESSAGE"] = alerts[alert].message;
+			}
+			if (alerts[alert].type != "") {
+				alertNode.attributes["ALERT_TYPE"] = alerts[alert].type;
+			}
+			alertsNode.appendChild(alertNode);
 		}
 		return alertsNode;
 	}
@@ -52,7 +71,32 @@
 		alerts = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			alerts.push(newData.childNodes[child]);
+			var newAlert = new Object();
+			newAlert.key = "";
+			newAlert.display_name = "";
+			newAlert.message = "";
+			newAlert.active = "Y";
+			newAlert.type = "";
+			newAlert.cat = "";
+			if (newData.childNodes[child].attributes["KEY"] != undefined) {
+				newAlert.key = newData.childNodes[child].attributes["KEY"];
+			}
+			if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
+				newAlert.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+			}
+			if (newData.childNodes[child].attributes["CLIENT_CAT"] != undefined) {
+				newAlert.cat = newData.childNodes[child].attributes["CLIENT_CAT"];
+			}
+			if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
+				newAlert.active = newData.childNodes[child].attributes["ACTIVE"];
+			}
+			if (newData.childNodes[child].attributes["MESSAGE"] != undefined) {
+				newAlert.message = newData.childNodes[child].attributes["MESSAGE"];
+			}
+			if (newData.childNodes[child].attributes["ALERT_TYPE"] != undefined) {
+				newAlert.type = newData.childNodes[child].attributes["ALERT_TYPE"];
+			}
+			alerts.push(newAlert);
 		}
 	}
 }

@@ -2,16 +2,23 @@
 	private var device_type:String;
 	private var description:String;
 	private var active:String;
-	private var irs:Objects.Server.IRs;
+	private var irs:Objects.Server.DynaliteIRs;
 	private var lights:Objects.Server.DynaliteLights;
+	private var relays:Objects.Server.DynaliteRelays;
+	private var lightAreas:Objects.Server.DynaliteLightAreas;	
 	private var contacts:Objects.Server.ContactClosures;
 	private var catalogues:Objects.Server.Catalogues;
+	private var alarms:Objects.Server.Alarms
 	private var connection:XMLNode;
 	private var parameters:XMLNode;
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(lights.getKeys());
+		tempKeys = tempKeys.concat(relays.getKeys());
 		tempKeys = tempKeys.concat(contacts.getKeys());
+		tempKeys = tempKeys.concat(irs.getKeys());
+		tempKeys = tempKeys.concat(lightAreas.getKeys());
+		tempKeys = tempKeys.concat(alarms.getKeys());
 		return tempKeys;
 	}
 	public function isValid():Boolean {
@@ -32,6 +39,12 @@
 			flag = false;
 		}
 		if (!contacts.isValid()) {
+			flag = false;
+		}
+		if (!alarms.isValid()) {
+			flag = false;
+		}
+		if (!lightAreas.isValid()) {
 			flag = false;
 		}
 		if (!catalogues.isValid()) {
@@ -66,9 +79,21 @@
 		for (var child in tempLights.childNodes) {
 			newDynalite.appendChild(tempLights.childNodes[child]);
 		}
+		var tempRelays = relays.toXML();
+		for (var child in tempRelays.childNodes) {
+			newDynalite.appendChild(tempRelays.childNodes[child]);
+		}		
 		var tempContacts = contacts.toXML();
 		for (var child in tempContacts.childNodes) {
 			newDynalite.appendChild(tempContacts.childNodes[child]);
+		}
+		var tempLightAreas = lightAreas.toXML();
+		for (var child in tempLightAreas.childNodes) {
+			newDynalite.appendChild(tempLightAreas.childNodes[child]);
+		}		
+		var tempAlarms = alarms.toXML();
+		for (var child in tempAlarms.childNodes) {
+			newDynalite.appendChild(tempAlarms.childNodes[child]);
 		}
 		newDevice.appendChild(newDynalite);
 		return newDevice;
@@ -77,8 +102,11 @@
 		var newNode = new XMLNode(1, this.getName());
 		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(lights.toTree());
+		newNode.appendChild(relays.toTree());
 		newNode.appendChild(contacts.toTree());
 		newNode.appendChild(irs.toTree());
+		newNode.appendChild(lightAreas.toTree());
+		newNode.appendChild(alarms.toTree());
 		newNode.object = this;
 		_global.workflow.addNode("Dynalite",newNode);
 		return newNode;
@@ -89,9 +117,12 @@
 		active = "Y";		
 		catalogues = new Objects.Server.Catalogues();
 		var tempCatalogues = new XMLNode(1, "Catalogues");
-		irs = new Objects.Server.IRs();
+		irs = new Objects.Server.DynaliteIRs();
 		lights = new Objects.Server.DynaliteLights();
+		relays = new Objects.Server.DynaliteRelays();
+		lightAreas = new Objects.Server.DynaliteLightAreas();
 		contacts = new Objects.Server.ContactClosures();
+		alarms = new Objects.Server.Alarms();
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
 				device_type = newData.attributes["NAME"];
@@ -114,11 +145,18 @@
 					var tempIRs = new XMLNode(1, "irs");
 					var tempLights = new XMLNode(1, "lights");
 					var tempContacts = new XMLNode(1, "contact closures");
+					var tempLightAreas = new XMLNode(1,"light areas");
+					var tempRelays = new XMLNode(1,"relays");
+					var tempAlarms = new XMLNode(1,"alarms");
 					var tempNode = newData.childNodes[child];
 					for (var dynaliteDevice in tempNode.childNodes) {
 						switch (tempNode.childNodes[dynaliteDevice].nodeName) {
 						case "LIGHT_DYNALITE" :
-							tempLights.appendChild(tempNode.childNodes[dynaliteDevice]);
+							if(tempNode.childNodes[dynaliteDevice].attributes["RELAY"] == "Y"){
+								tempRelays.appendChild(tempNode.childNodes[dynaliteDevice]);								
+							} else {
+								tempLights.appendChild(tempNode.childNodes[dynaliteDevice]);
+							}
 							break;
 						case "IR" :
 							tempIRs.appendChild(tempNode.childNodes[dynaliteDevice]);
@@ -126,11 +164,20 @@
 						case "CONTACT_CLOSURE" :
 							tempContacts.appendChild(tempNode.childNodes[dynaliteDevice]);
 							break;
+						case "LIGHT_DYNALITE_AREA" :
+							tempLightAreas.appendChild(tempNode.childNodes[dynaliteDevice]);
+							break;
+						case "ALARM":
+							tempAlarms.appendChild(tempNode.childNodes[dynaliteDevice]);
+							break;
 						}
 					}
+					relays.setXML(tempRelays);
 					irs.setXML(tempIRs);
 					lights.setXML(tempLights);
 					contacts.setXML(tempContacts);
+					lightAreas.setXML(tempLightAreas);
+					alarms.setXML(tempAlarms);
 					break;
 				case "CONNECTION" :
 					connection = newData.childNodes[child];

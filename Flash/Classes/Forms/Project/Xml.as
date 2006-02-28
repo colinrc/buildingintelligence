@@ -10,7 +10,7 @@ class Forms.Project.Xml extends Forms.BaseForm {
 	function Xml() {
 	}
 	
-	public function init():Void {
+	public function onLoad():Void {
 		//xml_ta.html = false;
 		var newXML = new XML();
 		newXML.appendChild(node);

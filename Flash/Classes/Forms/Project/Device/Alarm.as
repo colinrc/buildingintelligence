@@ -8,32 +8,31 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
-	public function init() {
+	public function Alarm(){
+	}
+	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
+		var keyRestrictions = new Object();		
+		keyRestrictions.maxChars = 2;
+		keyRestrictions.restrict = "1-0A-Fa-f";		
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(alarms_dg);
 		dataGridHandler.addTextInputColumn("display_name","Key",restrictions,false);		
-		dataGridHandler.addTextInputColumn("key","?",restrictions,false);
-		dataGridHandler.setAdvanced(false);//Debug
-		var DP = new Array();
-		for (var alarm in alarms) {
-			var newAlarm = new Object();
-			newAlarm.key = "";
-			newAlarm.display_name = "";
-			if(alarms[alarm].attributes["KEY"]!=undefined){
-				newAlarm.key = alarms[alarm].attributes["KEY"];
-			}
-			if(alarms[alarm].attributes["DISPLAY_NAME"]!=undefined){
-				newAlarm.display_name = alarms[alarm].attributes["DISPLAY_NAME"];
-			}
-			DP.push(newAlarm);
-		}
-		dataGridHandler.setDataGridDataProvider(DP);
+		dataGridHandler.addTextInputColumn("key","Comfort Code",keyRestrictions,false);
+		dataGridHandler.setAdvanced(_global.advanced);
+		dataGridHandler.setDataGridDataProvider(alarms);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
+	}
+	public function setAdvanced(){
+		if(_global.advanced){
+			dataGridHandler.setAdvanced(_global.advanced);
+		} else {
+			dataGridHandler.setAdvanced(_global.advanced);
+		}
 	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();
@@ -44,17 +43,6 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 	public function save():Void {
 		var newAlarms = new Array();
 		dataGridHandler.clearSelection();
-		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index<DP.length; index++) {
-			var item = new XMLNode(1, "ALARM");
-			if(DP[index].key != ""){
-				item.attributes["KEY"] = DP[index].key;
-			}
-			if(DP[index].display_name != ""){
-				item.attributes["DISPLAY_NAME"] = DP[index].display_name;
- 		    }
-			newAlarms.push(item);
-		}
-		_global.left_tree.selectedNode.object.setData({alarms:newAlarms});
+		_global.left_tree.selectedNode.object.setData({alarms:dataGridHandler.getDataGridDataProvider()});
 	}
 }

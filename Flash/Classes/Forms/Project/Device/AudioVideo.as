@@ -9,15 +9,16 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
 	private var title_lb:Label;
-	public function init() {
+	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(inputs_dg);
+		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);
 		var itemType:String;
 		switch (container) {
@@ -32,30 +33,19 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 			break;
 		}
 		dataGridHandler.addTextInputColumn("key", itemType, restrictions,false);
-		dataGridHandler.addCheckColumn("active", "Active", values,false);
-		dataGridHandler.setAdvanced(false);//Debug						
-		var DP = new Array();
-		for (var audiovideo in audiovideos) {
-			var newAudiovideo = new Object();
-			newAudiovideo.key = "";
-			newAudiovideo.display_name = "";
-			newAudiovideo.active = "Y";
-			if (audiovideos[audiovideo].attributes["KEY"] != undefined) {
-				newAudiovideo.key = audiovideos[audiovideo].attributes["KEY"];
-			}
-			if (audiovideos[audiovideo].attributes["DISPLAY_NAME"] != undefined) {
-				newAudiovideo.display_name = audiovideos[audiovideo].attributes["DISPLAY_NAME"];
-			}
-			if (audiovideos[audiovideo].attributes["ACTIVE"] != undefined) {
-				newAudiovideo.active = audiovideos[audiovideo].attributes["ACTIVE"];
-			}
-			DP.push(newAudiovideo);
-		}
-		dataGridHandler.setDataGridDataProvider(DP);	
+		dataGridHandler.setAdvanced(_global.advanced);					
+		dataGridHandler.setDataGridDataProvider(audiovideos);	
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
+	public function setAdvanced(){
+		if(_global.advanced){
+			dataGridHandler.setAdvanced(_global.advanced);
+		} else {
+			dataGridHandler.setAdvanced(_global.advanced);
+		}
+	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();
 	}
@@ -64,31 +54,6 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 	}
 	public function save():Void {
 		dataGridHandler.clearSelection();		
-		var itemType:String;
-		switch (container) {
-		case "HAL" :
-		case "TUTONDO" :
-			itemType = "AUDIO_OUTPUT";
-			break;
-		case "KRAMER" :
-			itemType = "AV_OUTPUT";
-			break;
-		}
-		var inputs = new Array();
-		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index<DP.length; index++) {
-			var item = new XMLNode(1, itemType);
-			if (DP[index].key != "") {
-				item.attributes["KEY"] = DP[index].key;
-			}
-			if (DP[index].display_name != "") {
-				item.attributes["DISPLAY_NAME"] = DP[index].display_name;
-			}
-			if (DP[index].active != "") {
-				item.attributes["ACTIVE"] = DP[index].active;
-			}
-			inputs.push(item);
-		}
-		_global.left_tree.selectedNode.object.setData({audiovideos:inputs});
+		_global.left_tree.selectedNode.object.setData({audiovideos:dataGridHandler.getDataGridDataProvider()});
 	}
 }

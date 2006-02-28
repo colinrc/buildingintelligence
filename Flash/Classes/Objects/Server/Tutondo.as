@@ -46,7 +46,9 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
-		newNode.appendChild(catalogues.toTree());
+		if(_global.advanced){
+			newNode.appendChild(catalogues.toTree());
+		}			
 		newNode.appendChild(audiovideos.toTree());
 		newNode.object = this;
 		_global.workflow.addNode("Tutondo",newNode);

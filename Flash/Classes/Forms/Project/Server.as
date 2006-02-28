@@ -9,7 +9,7 @@ class Forms.Project.Server extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
-	public function init() {
+	public function onLoad() {
 		description_ta.text = description;
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;

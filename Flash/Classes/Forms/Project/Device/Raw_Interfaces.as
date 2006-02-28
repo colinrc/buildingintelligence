@@ -12,7 +12,7 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 	private var dataGridHandler2:Object;
 	private var catalogueDP:Array;
 	private var vars_dg:DataGrid;
-	public function init() {
+	public function onLoad() {
 		catalogueDP = new Array();
 		for (var catalogue in cataloguesNode.childNodes) {
 			var codes = new Array();
@@ -27,7 +27,7 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(interfaces_dg);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
-		dataGridHandler.addTextInputColumn("name", "?", restrictions, false);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
 		dataGridHandler.addCatalogueComboBoxColumn("catalogue", "Catalogue", catalogueDP, this);
 		dataGridHandler.addCodeComboBoxColumn("code", "Code", this);
 		dataGridHandler.addTextInputColumn("command", "Command", restrictions, false);
@@ -37,8 +37,7 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions, true);
 		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions, true);
 		dataGridHandler.addHiddenColumn("vars");
-		dataGridHandler.setAdvanced(true);
-		//Debug						
+		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler2 = new Forms.DataGrid.DynamicDataGrid();
 		var restrictions2 = new Object();
 		restrictions2.editable = false;
@@ -93,6 +92,13 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		interfaces_dg.addEventListener("change", Delegate.create(this, itemChange));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
+	public function setAdvanced(){
+		if(_global.advanced){
+			dataGridHandler.setAdvanced(_global.advanced);
+		} else {
+			dataGridHandler.setAdvanced(_global.advanced);
+		}
+	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();
 	}
@@ -141,9 +147,7 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		string_lb.text = tempString;
 	}
 	public function save():Void {
-		dataGridHandler.setAdvanced(false);
 		dataGridHandler.clearSelection();
-		var DP = dataGridHandler.getDataGridDataProvider();
-		_global.left_tree.selectedNode.object.setData({raw_interfaces:DP});
+		_global.left_tree.selectedNode.object.setData({raw_interfaces:dataGridHandler.getDataGridDataProvider()});
 	}
 }

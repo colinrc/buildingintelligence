@@ -4,6 +4,7 @@
 	private var raw_interfaces:Objects.Server.Raw_Interfaces;
 	private var toggle_monitors:Objects.Server.Monitors;
 	private var cbus_lights:Objects.Server.CBusLights;
+	private var cbus_relays:Objects.Server.CBusRelays;			
 	private var x10_lights:Objects.Server.X10Lights;
 	private var pulse_outputs:Objects.Server.Toggles;
 	private var toggle_inputs:Objects.Server.Toggles;
@@ -18,6 +19,7 @@
 		tempKeys = tempKeys.concat(raw_interfaces.getKeys());
 		tempKeys = tempKeys.concat(toggle_monitors.getKeys());
 		tempKeys = tempKeys.concat(cbus_lights.getKeys());
+		tempKeys = tempKeys.concat(cbus_relays.getKeys());
 		tempKeys = tempKeys.concat(x10_lights.getKeys());
 		tempKeys = tempKeys.concat(pulse_outputs.getKeys());
 		tempKeys = tempKeys.concat(toggle_inputs.getKeys());
@@ -56,6 +58,9 @@
 		if(!cbus_lights.isValid()){
 			flag = false;
 		}
+		if(!cbus_relays.isValid()){
+			flag = false;
+		}		
 		if(!x10_lights.isValid()){
 			flag = false;
 		}
@@ -100,56 +105,60 @@
 		for (var child in tempCatalogues.childNodes) {
 			newDevice.appendChild(tempCatalogues.childNodes[child]);
 		}
-		var newRawConnection = new XMLNode(1, device_type);
+		var newComfort = new XMLNode(1, device_type);
 		var tempCustoms = customs.toXML();
 		for(var child in tempCustoms.childNodes){
-			newRawConnection.appendChild(tempCustoms.childNodes[child]);
+			newComfort.appendChild(tempCustoms.childNodes[child]);
 		}
 		var tempRaw_Interfaces = raw_interfaces.toXML();
 		for(var child in tempRaw_Interfaces.childNodes){
-			newRawConnection.appendChild(tempRaw_Interfaces.childNodes[child]);
+			newComfort.appendChild(tempRaw_Interfaces.childNodes[child]);
 		}
 		var tempCounters = counters.toXML();
 		for(var child in tempCounters.childNodes){
-			newRawConnection.appendChild(tempCounters.childNodes[child]);
+			newComfort.appendChild(tempCounters.childNodes[child]);
 		}
 		var tempMonitors = toggle_monitors.toXML();
 		for(var child in tempMonitors.childNodes){
-			newRawConnection.appendChild(tempMonitors.childNodes[child]);
+			newComfort.appendChild(tempMonitors.childNodes[child]);
 		}
 		var tempCbusLights = cbus_lights.toXML();
 		for(var child in tempCbusLights.childNodes){
-			newRawConnection.appendChild(tempCbusLights.childNodes[child]);
+			newComfort.appendChild(tempCbusLights.childNodes[child]);
 		}
+		var tempCbusRelays = cbus_relays.toXML();
+		for(var child in tempCbusRelays.childNodes){
+			newComfort.appendChild(tempCbusRelays.childNodes[child]);
+		}		
 		var tempX10Lights = x10_lights.toXML();
 		for(var child in tempX10Lights.childNodes){
-			newRawConnection.appendChild(tempX10Lights.childNodes[child]);
+			newComfort.appendChild(tempX10Lights.childNodes[child]);
 		}
 		var tempPulseOutputs = pulse_outputs.toXML();
 		for(var child in tempPulseOutputs.childNodes){
-			newRawConnection.appendChild(tempPulseOutputs.childNodes[child]);
+			newComfort.appendChild(tempPulseOutputs.childNodes[child]);
 		}
 		var tempToggleOutputs = toggle_outputs.toXML();
 		for(var child in tempToggleOutputs.childNodes){
-			newRawConnection.appendChild(tempToggleOutputs.childNodes[child]);
+			newComfort.appendChild(tempToggleOutputs.childNodes[child]);
 		}
 		var tempToggleInputs = toggle_inputs.toXML();
 		for(var child in tempToggleInputs.childNodes){
-			newRawConnection.appendChild(tempToggleInputs.childNodes[child]);
+			newComfort.appendChild(tempToggleInputs.childNodes[child]);
 		}
 		var tempAlerts = alerts.toXML();
 		for (var child in tempAlerts.childNodes){
-			newRawConnection.appendChild(tempAlerts.childNodes[child]);
+			newComfort.appendChild(tempAlerts.childNodes[child]);
 		}
 		var tempAlarms = alarms.toXML();
 		for (var child in tempAlarms.childNodes){
-			newRawConnection.appendChild(tempAlarms.childNodes[child]);
+			newComfort.appendChild(tempAlarms.childNodes[child]);
 		}
 		var tempAnalogues = analogues.toXML();
 		for (var child in tempAnalogues.childNodes){
-			newRawConnection.appendChild(tempAnalogues.childNodes[child]);
+			newComfort.appendChild(tempAnalogues.childNodes[child]);
 		}
-		newDevice.appendChild(newRawConnection);
+		newDevice.appendChild(newComfort);
 		return newDevice;
 	}
 	public function toTree():XMLNode{
@@ -160,6 +169,7 @@
 		newNode.appendChild(raw_interfaces.toTree());
 		newNode.appendChild(toggle_monitors.toTree());
 		newNode.appendChild(cbus_lights.toTree());
+		newNode.appendChild(cbus_relays.toTree());
 		newNode.appendChild(x10_lights.toTree());
 		newNode.appendChild(pulse_outputs.toTree());
 		newNode.appendChild(toggle_inputs.toTree());
@@ -183,6 +193,7 @@
 		toggle_outputs = new Objects.Server.Toggles("TOGGLE_OUTPUT");
 		toggle_inputs = new Objects.Server.Toggles("TOGGLE_INPUT");
 		cbus_lights = new Objects.Server.CBusLights();
+		cbus_relays = new Objects.Server.CBusRelays();		
 		x10_lights = new Objects.Server.X10Lights();
 		alarms = new Objects.Server.Alarms();
 		alerts = new Objects.Server.Alerts();
@@ -223,6 +234,7 @@
 					var tempCounters = new XMLNode(1,device_type);
 					var tempMonitors = new XMLNode(1,device_type);
 					var tempCbusLights = new XMLNode(1,device_type);
+					var tempCbusRelays = new XMLNode(1,device_type);					
 					var tempX10Lights = new XMLNode(1,device_type);
 					var tempPulseOutputs = new XMLNode(1,device_type);
 					var tempToggleOutputs = new XMLNode(1,device_type);
@@ -245,7 +257,11 @@
 							tempMonitors.appendChild(tempNode.childNodes[rawDevice]);
 							break;
 						case "LIGHT_CBUS":
-							tempCbusLights.appendChild(tempNode.childNodes[rawDevice]);
+							if(tempNode.childNodes[rawDevice].attributes["RELAY"] == "Y"){
+								tempCbusRelays.appendChild(tempNode.childNodes[rawDevice]);							
+							} else {
+								tempCbusLights.appendChild(tempNode.childNodes[rawDevice]);
+							}
 							break;
 						case "LIGHT_X10":
 							tempX10Lights.appendChild(tempNode.childNodes[rawDevice]);
@@ -273,6 +289,7 @@
 					}
 					customs.setXML(tempCustomInputs);
 					cbus_lights.setXML(tempCbusLights);
+					cbus_relays.setXML(tempCbusRelays);					
 					x10_lights.setXML(tempX10Lights);
 					raw_interfaces.setXML(tempRawInterfaces);
 					counters.setXML(tempCounters);

@@ -1,9 +1,9 @@
 ﻿class Objects.Server.CBusLights extends Objects.BaseElement {
 	private var container:String;
 	private var lights:Array;
-	public function getKeys():Array{
+	public function getKeys():Array {
 		var tempKeys = new Array();
-		for(var light in lights){
+		for (var light in lights) {
 			tempKeys.push(lights[light].attributes["DISPLAY_NAME"]);
 		}
 		return tempKeys;
@@ -35,30 +35,81 @@
 	public function toXML():XMLNode {
 		var lightsNode = new XMLNode(1, container);
 		for (var light in lights) {
-			lightsNode.appendChild(lights[light]);
+			var newLight = new XMLNode(1, "LIGHT_CBUS");
+			if (lights[light].name != "") {
+				newLight.attributes["NAME"] = lights[light].name;
+			}
+			if (lights[light].display_name != "") {
+				newLight.attributes["DISPLAY_NAME"] = lights[light].display_name;
+			}
+			if (lights[light].key != "") {
+				newLight.attributes["KEY"] = lights[light].key;
+			}
+			if (lights[light].active != "") {
+				newLight.attributes["ACTIVE"] = lights[light].active;
+			}
+			if (lights[light].power != "") {
+				newLight.attributes["POWER_RATING"] = lights[light].power;
+			}
+			if (lights[light].relay != "") {
+				newLight.attributes["RELAY"] = lights[light].relay;
+			}
+			if (lights[light].application != "") {
+				newLight.attributes["CBUS_APPLICATION"] = lights[light].application;
+			}
+			lightsNode.appendChild(newLight);
 		}
 		return lightsNode;
 	}
 	public function getName():String {
-		return "Lights";
+		return "Dimmers";
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("CBusLights",newNode);
+		_global.workflow.addNode("CBusLights", newNode);
 		return newNode;
 	}
-	public function setData(newData:Object){
+	public function setData(newData:Object) {
 		lights = newData.lights;
 	}
 	public function getData():Object {
-		return new Object({lights:lights});
+		return {lights:lights};
 	}
 	public function setXML(newData:XMLNode):Void {
 		lights = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			lights.push(newData.childNodes[child]);
+			var newLight = new Object();
+			newLight.name = "";
+			newLight.display_name = "";
+			newLight.key = "";
+			newLight.active = "Y";
+			newLight.power = "";
+			newLight.relay = "N";
+			newLight.application = "38";
+			if (newData.childNodes[child].attributes["NAME"] != undefined) {
+				newLight.name = newData.childNodes[child].attributes["NAME"];
+			}
+			if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
+				newLight.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+			}
+			if (newData.childNodes[child].attributes["KEY"] != undefined) {
+				newLight.key = newData.childNodes[child].attributes["KEY"];
+			}
+			if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
+				newLight.active = newData.childNodes[child].attributes["ACTIVE"];
+			}
+			if (newData.childNodes[child].attributes["POWER_RATING"] != undefined) {
+				newLight.power = newData.childNodes[child].attributes["POWER_RATING"];
+			}
+			/*if (newData.childNodes[child].attributes["RELAY"] != undefined) {
+			newLight.relay = newData.childNodes[child].attributes["RELAY"];
+			}*/ 
+			if (newData.childNodes[child].attributes["CBUS_APPLICATION"] != undefined) {
+				newLight.application = newData.childNodes[child].attributes["CBUS_APPLICATION"];
+			}
+			lights.push(newLight);
 		}
 	}
 }

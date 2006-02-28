@@ -7,56 +7,37 @@ class Forms.Project.Device.Alert extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
-	public function init() {
+	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
+		var keyRestrictions = new Object();		
+		keyRestrictions.maxChars = 2;
+		keyRestrictions.restrict = "1-0A-Fa-f";				
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(alerts_dg);
+		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "?", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "Comfort Code", restrictions,false);
 		dataGridHandler.addTextInputColumn("cat", "Client Catagory", restrictions,false);
 		dataGridHandler.addComboBoxColumn("type", "Alert Type", [{label:"Alarm Type"}, {label:"DoorBell"}, {label:"ID"}, {label:"ModeChange"}, {label:"Phone"}, {label:"System"}, {label:"User"}, {label:"Zone"}],false);
 		dataGridHandler.addTextInputColumn("message", "Message", restrictions,false);
-		dataGridHandler.addCheckColumn("active", "Active", values,false);
-		dataGridHandler.setAdvanced(false);//Debug				
-		var DP = new Array();
-		for (var alert in alerts) {
-			var newAlert = new Object();
-			newAlert.key = "";
-			newAlert.display_name = "";
-			newAlert.message = "";
-			newAlert.active = "Y";
-			newAlert.type = "";
-			newAlert.cat = "";
-			if (alerts[alert].attributes["KEY"] != undefined) {
-				newAlert.key = alerts[alert].attributes["KEY"];
-			}
-			if (alerts[alert].attributes["DISPLAY_NAME"] != undefined) {
-				newAlert.display_name = alerts[alert].attributes["DISPLAY_NAME"];
-			}
-			if (alerts[alert].attributes["CLIENT_CAT"] != undefined) {
-				newAlert.cat = alerts[alert].attributes["CLIENT_CAT"];
-			}
-			if (alerts[alert].attributes["ACTIVE"] != undefined) {
-				newAlert.active = alerts[alert].attributes["ACTIVE"];
-			}
-			if (alerts[alert].attributes["MESSAGE"] != undefined) {
-				newAlert.message = alerts[alert].attributes["MESSAGE"];
-			}
-			if (alerts[alert].attributes["ALERT_TYPE"] != undefined) {
-				newAlert.type = alerts[alert].attributes["ALERT_TYPE"];
-			}
-			DP.push(newAlert);
-		}
-		dataGridHandler.setDataGridDataProvider(DP);
+		dataGridHandler.setAdvanced(_global.advanced);	
+		dataGridHandler.setDataGridDataProvider(alerts);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
+	public function setAdvanced(){
+		if(_global.advanced){
+			dataGridHandler.setAdvanced(_global.advanced);
+		} else {
+			dataGridHandler.setAdvanced(_global.advanced);
+		}
+	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();
 	}
@@ -65,30 +46,6 @@ class Forms.Project.Device.Alert extends Forms.BaseForm {
 	}
 	public function save():Void {
 		dataGridHandler.clearSelection();		
-		var newAlerts = new Array();
-		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index<DP.length; index++) {
-			var alertNode = new XMLNode(1, "ALERT");
-			if (DP[index].key != "") {
-				alertNode.attributes["KEY"] = DP[index].key;
-			}
-			if (DP[index].display_name != "") {
-				alertNode.attributes["DISPLAY_NAME"] = DP[index].display_name;
-			}
-			if (DP[index].active != "") {
-				alertNode.attributes["ACTIVE"] = DP[index].active;
-			}
-			if (DP[index].cat != "") {
-				alertNode.attributes["CLIENT_CAT"] = DP[index].cat;
-			}
-			if (DP[index].message != "") {
-				alertNode.attributes["MESSAGE"] = DP[index].message;
-			}
-			if (DP[index].type != "") {
-				alertNode.attributes["ALERT_TYPE"] = DP[index].type;
-			}
-			newAlerts.push(alertNode);
-		}
-		_global.left_tree.selectedNode.object.setData({alerts:newAlerts});
+		_global.left_tree.selectedNode.object.setData({alerts:dataGridHandler.getDataGridDataProvider()});
 	}
 }

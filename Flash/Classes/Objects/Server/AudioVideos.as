@@ -25,8 +25,28 @@
 	}
 	public function toXML():XMLNode {
 		var audiovideosNode = new XMLNode(1, container);
-		for (var audiovideo in audiovideos) {
-			audiovideosNode.appendChild(audiovideos[audiovideo]);
+		var itemType:String;
+		switch (container) {
+		case "HAL" :
+		case "TUTONDO" :
+			itemType = "AUDIO_OUTPUT";
+			break;
+		case "KRAMER" :
+			itemType = "AV_OUTPUT";
+			break;
+		}
+		for (var audiovideo in audiovideos) {		
+			var newAudioVideoNode = new XMLNode(1, itemType);
+			if (audiovideos[audiovideo].key != "") {
+				newAudioVideoNode.attributes["KEY"] = audiovideos[audiovideo].key;
+			}
+			if (audiovideos[audiovideo].display_name != "") {
+				newAudioVideoNode.attributes["DISPLAY_NAME"] = audiovideos[audiovideo].display_name;
+			}
+			if (audiovideos[audiovideo].active != "") {
+				newAudioVideoNode.attributes["ACTIVE"] = audiovideos[audiovideo].active;
+			}
+			audiovideosNode.appendChild(newAudioVideoNode);
 		}
 		return audiovideosNode;
 	}
@@ -59,7 +79,20 @@
 		audiovideos = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			audiovideos.push(newData.childNodes[child]);
+			var newAudiovideo = new Object();
+			newAudiovideo.key = "";
+			newAudiovideo.display_name = "";
+			newAudiovideo.active = "Y";
+			if (newData.childNodes[child].attributes["KEY"] != undefined) {
+				newAudiovideo.key = newData.childNodes[child].attributes["KEY"];
+			}
+			if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
+				newAudiovideo.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+			}
+			if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
+				newAudiovideo.active = newData.childNodes[child].attributes["ACTIVE"];
+			}
+			audiovideos.push(newAudiovideo);
 		}
 	}
 }

@@ -7,7 +7,7 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
-	public function init() {
+	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.rescrict = "";
@@ -16,17 +16,23 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(monitors_dg);
+		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
-		dataGridHandler.addTextInputColumn("key", "?", restrictions, false);
-		dataGridHandler.addCheckColumn("active", "Active", values, false);
-		dataGridHandler.setAdvanced(false);
-		//Debug						
+		dataGridHandler.addTextInputColumn("key", "Output Number", restrictions, false);
+		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(monitors);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
+	public function setAdvanced(){
+		if(_global.advanced){
+			dataGridHandler.setAdvanced(_global.advanced);
+		} else {
+			dataGridHandler.setAdvanced(_global.advanced);
+		}
+	}		
 	private function deleteItem() {
 		dataGridHandler.removeRow();
 	}
@@ -35,7 +41,6 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 	}
 	public function save():Void {
 		dataGridHandler.clearSelection();
-		var DP = dataGridHandler.getDataGridDataProvider();
-		_global.left_tree.selectedNode.object.setData({monitors:DP});
+		_global.left_tree.selectedNode.object.setData({monitors:dataGridHandler.getDataGridDataProvider()});
 	}
 }

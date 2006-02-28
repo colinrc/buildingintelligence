@@ -20,7 +20,7 @@
 			if ((cameras[camera].attributes["DISPLAY_NAME"] == undefined) || (cameras[camera].attributes["DISPLAY_NAME"] == "")) {
 				flag = false;
 			}
-			//does zoom need to be checked? 
+			//does zoom need to be checked?  
 		}
 		return flag;
 	}
@@ -30,7 +30,20 @@
 	public function toXML():XMLNode {
 		var camerasNode = new XMLNode(1, container);
 		for (var camera in cameras) {
-			camerasNode.appendChild(cameras[camera]);
+			var newCamera = new XMLNode(1, "CAMERA");
+			if (cameras[camera].key != "") {
+				newCamera.attributes["KEY"] = cameras[camera].key;
+			}
+			if (cameras[camera].display_name != "") {
+				newCamera.attributes["DISPLAY_NAME"] = cameras[camera].display_name;
+			}
+			if (cameras[camera].active != "") {
+				newCamera.attributes["ACTIVE"] = cameras[camera].active;
+			}
+			if (cameras[camera].zoom != "") {
+				newCamera.attributes["ZOOM"] = cameras[camera].zoom;
+			}			
+			camerasNode.appendChild(newCamera);
 		}
 		return camerasNode;
 	}
@@ -40,7 +53,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("Cameras",newNode);
+		_global.workflow.addNode("Cameras", newNode);
 		return newNode;
 	}
 	public function setData(newData:Object) {
@@ -53,7 +66,24 @@
 		cameras = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			cameras.push(newData.childNodes[child]);
+			var newCamera = new Object();
+			newCamera.active = "Y";
+			newCamera.key = "";
+			newCamera.display_name = "";
+			newCamera.zoom = "";
+			if (newData.childNodes[child].attributes["KEY"] != undefined) {
+				newCamera.key = newData.childNodes[child].attributes["KEY"];
+			}
+			if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
+				newCamera.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+			}
+			if (newData.childNodes[child].attributes["ZOOM"] != undefined) {
+				newCamera.zoom = newData.childNodes[child].attributes["ZOOM"];
+			}
+			if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
+				newCamera.active = newData.childNodes[child].attributes["ACTIVE"];
+			}
+			cameras.push(newCamera);
 		}
 	}
 }

@@ -36,7 +36,23 @@
 	public function toXML():XMLNode {
 		var togglesNode = new XMLNode(1, container);
 		for (var toggle in toggles) {
-			togglesNode.appendChild(toggles[toggle]);
+			var toggleNode = new XMLNode(1, toggle_type);
+			if (toggles[toggle].name != "") {
+				toggleNode.attributes["NAME"] = toggles[toggle].name;
+			}
+			if (toggles[toggle].key != "") {
+				toggleNode.attributes["KEY"] = toggles[toggle].key;
+			}
+			if (toggles[toggle].display_name != "") {
+				toggleNode.attributes["DISPLAY_NAME"] = toggles[toggle].display_name;
+			}
+			if (toggles[toggle].active != "") {
+				toggleNode.attributes["ACTIVE"] = toggles[toggle].active;
+			}
+			if (toggles[toggle].power != "") {
+				toggleNode.attributes["POWER_RATING"] = toggles[toggle].power;
+			}
+			togglesNode.appendChild(toggleNode);
 		}
 		return togglesNode;
 	}
@@ -69,7 +85,28 @@
 		toggles = new Array();
 		container = newData.nodeName;
 		for (var child in newData.childNodes) {
-			toggles.push(newData.childNodes[child]);
+			var newToggle = new Object();
+			newToggle.name = "";
+			newToggle.key = "";
+			newToggle.display_name = "";
+			newToggle.power = "";
+			newToggle.active = "Y";
+			if (newData.childNodes[child].attributes["NAME"] != undefined) {
+				newToggle.name = newData.childNodes[child].attributes["NAME"];
+			}
+			if (newData.childNodes[child].attributes["KEY"] != undefined) {
+				newToggle.key = newData.childNodes[child].attributes["KEY"];
+			}
+			if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
+				newToggle.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+			}
+			if (newData.childNodes[child].attributes["POWER_RATING"] != undefined) {
+				newToggle.power = newData.childNodes[child].attributes["POWER_RATING"];
+			}
+			if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
+				newToggle.active = newData.childNodes[child].attributes["ACTIVE"];
+			}
+			toggles.push(newToggle);
 		}
 	}
 }
