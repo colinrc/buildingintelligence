@@ -1,3 +1,9 @@
+Calendar
+--------
+Renamed alarm to popup
+Added audible field
+Added target and target_user fields for messages. target_user is for future use.
+
 22/2/2006
 Released V1.5b12
 Calendar
@@ -5,25 +11,15 @@ Calendar
 Added ID,category and alarm field
 Ensure alarm does not trigger if it is flagged as N
 Handle calendar files created before the new fields.
-
 Add hourly and yearly recurrences.
 
-12/2/2006
-Calendar
---------
-Reverted calendar entries to use title as the key.
-If the description field is null, the title is copied into the description; this will assist migrating earlier calendar
-entries when the description was empty, rather than the displayed user description, as it is now.
-
-9/2/2006
 Dynalite
 --------
 Added ramp up / down for channels and areas
 
-
-3/2/2006
 Added validation to ensure script and macro handlers are not called if they have not yet fully initialised.
 Improved error handling if a correct configuration script has not been specified.
+
 
 2/2/2006
 Released V1.5b11
