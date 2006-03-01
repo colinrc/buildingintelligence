@@ -35,6 +35,7 @@ public class Serial extends BaseComms implements CommDevice
 	protected int penultimateVals[] = null;
 	protected int stxArray[] = null;
 	protected int transmitMessageOnBytes = 0;
+	String deviceName = "";
 
 
 	public Serial ()  {
@@ -74,9 +75,10 @@ public class Serial extends BaseComms implements CommDevice
 	 * @see au.com.BI.Comms.SerialParameters
 	 * @throws au.com.BI.comms.ConnectionFail
 	 */
-	public void connect (String portName, SerialParameters parameters, List commandList, int targetDeviceModel)
+	public void connect (String portName, SerialParameters parameters, List commandList, int targetDeviceModel,String deviceName)
 		throws ConnectionFail 
 		{
+			this.deviceName = deviceName;
 			try
 			{
 				portId = 

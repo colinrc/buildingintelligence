@@ -33,7 +33,7 @@ public class IP extends BaseComms implements CommDevice
 	protected int stxArray[] = null;
 	protected int penultimateVals[] = null;
 	protected int transmitMessageOnBytes = 0;
-
+	protected String deviceName = "";
 	
 	public IP ()  {
 
@@ -41,6 +41,7 @@ public class IP extends BaseComms implements CommDevice
 	}
 		
 	
+
 	public void setPenultimateArray(int[] penultimateVals) {
 		this.penultimateVals = penultimateVals;
 	}
@@ -78,9 +79,11 @@ public class IP extends BaseComms implements CommDevice
 	 * @param portNum The ip port
 	 * @throws au.com.BI.comms.ConnectionFail
 	 */
-	public void connect (String ipAddressTxt, String portNum,  List commandList, int targetDeviceModel, boolean doHeartBeat, String heartbeatString)
+	public void connect (String ipAddressTxt, String portNum,  List commandList, int targetDeviceModel, boolean doHeartBeat, 
+			String heartbeatString,String deviceName)
 		throws ConnectionFail 
 		{
+			this.deviceName = deviceName;
 			try
 			{
 				ipListener = new IPListener();
@@ -103,6 +106,7 @@ public class IP extends BaseComms implements CommDevice
 				
 				if (doHeartBeat) {
 					ipHeartbeat = new IPHeartbeat ();
+					ipHeartbeat.setDeviceName(deviceName);
 					ipHeartbeat.setCommandQueue(commandList);
 					ipHeartbeat.setDeviceNumber(targetDeviceModel);
 					ipHeartbeat.setHeartbeatString (heartbeatString);
@@ -112,6 +116,7 @@ public class IP extends BaseComms implements CommDevice
 				
 				ipSocket.setKeepAlive(true);
 				ipListener.setInputStream (is);
+				ipListener.setDeviceName (deviceName);
 				ipListener.setCommandList(commandList);
 				if (this.transmitMessageOnBytes > 0)
 				    ipListener.setTransmitMessageOnBytes(this.transmitMessageOnBytes);

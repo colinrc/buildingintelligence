@@ -30,6 +30,7 @@ public class IPListener extends Thread implements CommsListener
 	protected boolean endVals[];
 	protected boolean penultimateVals[];
 	protected boolean twoByteFinish = false;
+	protected String deviceName = "";
 	
 	protected BufferedReader rd = null;
 	
@@ -44,6 +45,10 @@ public class IPListener extends Thread implements CommsListener
 		this.setName("IP Listener");
 		readArray =  new byte [transmitOnBytes + 1];
 
+	}
+	
+	public void setDeviceName (String deviceName) {
+		super.setName("IP Listener - " + deviceName);
 	}
 	
 	public void setTargetDeviceModel (int targetDeviceModel) {

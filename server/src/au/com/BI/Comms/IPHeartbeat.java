@@ -34,7 +34,7 @@ public class IPHeartbeat extends Thread {
 		this.setName("IP Heartbeat");
 	}
 
-	public void setModelName (String name) {
+	public void setDeviceName (String name) {
 		this.setName("IP Heartbeat - " + name);
 		this.modelName = name;
 	}
