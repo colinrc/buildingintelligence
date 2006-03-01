@@ -1,3 +1,12 @@
+Comms
+-----
+Ensure comms device know theeir associated models for more meaninful error reporting.
+IP and serial listener modified to support end byes markers larger than 128 (eg. 255 for Orgenon)
+
+Alerts
+------
+Add single point to send alert and alarm messages. Simplifying later migration to persistent logging.
+
 Calendar
 --------
 Renamed alarm to popup
