@@ -40,35 +40,15 @@ _global.controlPanelApps = new Array();
 _global.tv = new Object();
 
 createObjects = function () {
-	// create modal blocker
-	modal_mc.beginFill(0x000000, 30);
-	modal_mc.drawRect(0, 0, _global.settings.applicationWidth, _global.settings.applicationHeight);
-	modal_mc.endFill();
-	modal_mc.onPress = function () {};
-	modal_mc.useHandCursor = false;
-	modal_mc._visible = false;
-
-	// create mega modal blocker
-	megaModal_mc.beginFill(0x000000, 45);
-	megaModal_mc.drawRect(0, 0, _global.settings.applicationWidth, _global.settings.applicationHeight);
-	megaModal_mc.endFill();
-	megaModal_mc.onPress = function () {};
-	megaModal_mc.useHandCursor = false;
-	megaModal_mc._visible = false;
 }
 
-confirm = function (msg, scope, onYes, onNo) {
-	var window_mc = confirm_mc.createEmptyMovieClip("bg_mc", 10);
-	megaModal_mc._visible = true;
-
-	var bg_mc = window_mc.createEmptyMovieClip("bg_mc", 10);
-	bg_mc.lineStyle(2, 0xFFFFFF);
-	bg_mc.beginFill(0x043B96);
-	bg_mc.drawRect(0, 0, 300, 150, 10);
-	bg_mc.endFill();
+confirm = function (msg, scope, onYes, onNo, param1) {
+	var window_mc = showWindow({width:300, height:180, title:"Achtung!", iconName:"warning", hideClose:msgObj.hideClose, noAutoClose:true});
 	
-	window_mc.createTextField("content_txt", 20, 10, 0, bg_mc._width - 10, 10);
-	var content_txt = window_mc.content_txt;
+	var content_mc = window_mc.content_mc;
+	
+	content_mc.createTextField("content_txt", 20, 10, 0, content_mc.width - 10, 10);
+	var content_txt = content_mc.content_txt;
 	
 	var content_tf = new TextFormat();
 	content_tf.color = 0xFFFFFF;
@@ -84,17 +64,18 @@ confirm = function (msg, scope, onYes, onNo) {
 	content_txt.autoSize = true;
 	content_txt.setNewTextFormat(content_tf);
 	content_txt.text = msg;
-	content_txt._x = Math.round((bg_mc._width / 2) - (content_txt._width / 2));
-	content_txt._y = Math.round(((bg_mc._height - 40) / 2) - (content_txt.textHeight / 2));
+	content_txt._x = Math.round((content_mc.width / 2) - (content_txt._width / 2));
+	content_txt._y = Math.round(((content_mc.height - 40) / 2) - (content_txt.textHeight / 2));
 	
-	var buttons_mc = window_mc.createEmptyMovieClip("buttons_mc", 30);
+	var buttons_mc = content_mc.createEmptyMovieClip("buttons_mc", 30);
 	buttons_mc.scope = scope;
+	buttons_mc.window_mc = window_mc;
 	var yes_mc = buttons_mc.attachMovie("bi.ui.Button", "yes_mc", 5, {settings:{width:60, height:35, label:"Yes", fontSize:14}});
 	yes_mc.func = onYes;
+	yes_mc.param = param1;
 	yes_mc.press = function () {
-		this._parent.scope[this.func]();
-		this._parent._parent.removeMovieClip();
-		megaModal_mc._visible = false;
+		this._parent.scope[this.func](this.param);
+		this._parent.window_mc.close();
 	}
 	yes_mc.addEventListener("press", yes_mc);
 	var no_mc = buttons_mc.attachMovie("bi.ui.Button", "no_mc", 10, {settings:{width:60, height:35, label:"No", fontSize:14}});
@@ -102,21 +83,17 @@ confirm = function (msg, scope, onYes, onNo) {
 	no_mc.func = onNo;
 	no_mc.press = function () {
 		this._parent.scope[this.func]();
-		this._parent._parent.removeMovieClip();
-		megaModal_mc._visible = false;
+		this._parent.window_mc.close();
 	}
 	no_mc.addEventListener("press", no_mc);
-	buttons_mc._x = Math.round((bg_mc._width / 2) - (buttons_mc._width / 2));
-	buttons_mc._y = 110;
-	
-	window_mc._x = Math.round(((_global.settings.applicationWidth - 121) / 2) - (bg_mc._width / 2));
-	window_mc._y = Math.round(((_global.settings.applicationHeight - 104) / 2) - (bg_mc._height / 2)) + 104;
+	buttons_mc._x = Math.round((content_mc.width / 2) - (buttons_mc._width / 2));
+	buttons_mc._y = content_txt._y + content_txt.textHeight + 20;
 }
 	
 showMessageWindow = function (msgObj) {
 	var width = (msgObj.width == undefined) ? 450 : msgObj.width;
 	var height = (msgObj.height == undefined) ? 300 : msgObj.height;
-	showWindow({width:width, height:height, title:msgObj.title, iconName:msgObj.icon, megaModel:true, hideClose:msgObj.hideClose, noAutoClose:true});
+	var window_mc = showWindow({width:width, height:height, title:msgObj.title, iconName:msgObj.icon, hideClose:msgObj.hideClose, noAutoClose:true});
 
 	// set autoclose for this window if required
 	if (msgObj.autoClose > 1) {
@@ -167,24 +144,6 @@ showMessageWindow = function (msgObj) {
 }
 
 showKeyboard = function (limit, onClose, callerObj, initial, password, type) {
-	createKeyboard(type);
-	megaModal_mc._visible = true;
-	keyboard_mc._visible = true;
-	keyboard_mc.password = true;
-	keyboard_mc.inputArea_mc.inputField_txt.maxChars = limit;
-	keyboard_mc.inputArea_mc.inputField_txt.text = (initial != undefined) ? initial : "";
-	keyboard_mc.inputArea_mc.inputField_txt.scrollRight();
-	keyboard_mc.inputArea_mc.inputField_txt.password = password;
-	keyboard_mc.onClose = onClose;
-	keyboard_mc.callerObj = callerObj;
-}
-
-hideKeyboard = function () {
-	megaModal_mc._visible = false;
-	keyboard_mc._visible = false;
-}
-
-createKeyboard = function (type) {
 	if (type == "numeric") {
 		var keyboard = "1,2,3;4,5,6;7,8,9;*,0,#;clear,ok";
 	} else if (type == "web") {
@@ -192,8 +151,10 @@ createKeyboard = function (type) {
 	} else {
 		var keyboard = "1,2,3,4,5,6,7,8,9,0,!;q,w,e,r,t,y,u,i,o,p,';a,s,d,f,g,h,j,k,l,:;clear,z,x,c,v,b,n,m,.,del;shift,space,ok";
 	}
+
+	var keyboard_mc = showWindow({width:600, height:500, title:"", iconName:"keyboard_key", align:"center"});
 	
-	var keys_mc = keyboard_mc.createEmptyMovieClip("keys_mc", 100);
+	var keys_mc = keyboard_mc.content_mc.createEmptyMovieClip("keys_mc", 100);
 
 	var buttonWidth = buttonHeight = 50;
 	var buttonSpacing = 2;
@@ -240,7 +201,7 @@ createKeyboard = function (type) {
 				key_mc.press = function () {
 					var inputField_txt = this.keyboard_mc.inputArea_mc.inputField_txt;
 					this.keyboard_mc.onClose(inputField_txt.text, this.keyboard_mc.callerObj);
-					hideKeyboard();
+					this.keyboard_mc._parent.close();
 				}
 				key_mc.addEventListener("press", key_mc);
 			} else if (keys[key] == "shift") {
@@ -266,7 +227,7 @@ createKeyboard = function (type) {
 				}
 				key_mc.addEventListener("press", key_mc);
 			}
-			key_mc.keyboard_mc = keyboard_mc;
+			key_mc.keyboard_mc = keyboard_mc.content_mc;
 			key_mc._x = currentX;
 			key_mc.debounce = 0;
 			currentX += realWidth + buttonSpacing;
@@ -277,24 +238,8 @@ createKeyboard = function (type) {
 	
 	var w = keys_mc._width + buttonSpacing + 9;
 	var h = keys_mc._height + buttonSpacing + 56;
-
-	var bg_mc = keyboard_mc.createEmptyMovieClip("bg_mc", 10);
-	bg_mc.lineStyle(2, 0xFFFFFF);
-	bg_mc.beginFill(0x043B96);
-	bg_mc.drawRect(0, 0, w, h, 10);
-	bg_mc.endFill();
 	
-	var close_btn = keyboard_mc.attachMovie("bi.ui.Window:closeBtn","close_btn", 80);
-	close_btn._x = w - close_btn._width + 2;
-	close_btn._y = 7;
-	close_btn.onPress2 = function () {
-		this.gotoAndStop(2);
-		this._parent.onClose("", this._parent.callerObj);
-		hideKeyboard();
-	}
-
-	
-	var inputArea_mc = keyboard_mc.createEmptyMovieClip("inputArea_mc", 200);
+	var inputArea_mc = keyboard_mc.content_mc.createEmptyMovieClip("inputArea_mc", 200);
 	inputArea_mc.createEmptyMovieClip("bg_mc", 10);
 	inputArea_mc.bg_mc.lineStyle(2, 0x91A7CD);
 	inputArea_mc.bg_mc.beginFill(0x24519B);
@@ -302,6 +247,10 @@ createKeyboard = function (type) {
 	inputArea_mc.bg_mc.endFill();
 	inputArea_mc.createTextField("inputField_txt", 20, 5, 0, inputArea_mc._width - 15, inputArea_mc._height);
 	inputArea_mc._x = inputArea_mc._y = 6;
+	inputArea_mc.inputField_txt.maxChars = limit;
+	inputArea_mc.inputField_txt.text = (initial != undefined) ? initial : "";
+	inputArea_mc.inputField_txt.scrollRight();
+	inputArea_mc.inputField_txt.password = password;
 	
 	var label_tf = new TextFormat();
 	label_tf.color = 0xFFFFFF;
@@ -320,17 +269,18 @@ createKeyboard = function (type) {
 		this.background = false;
 	}
 	
-	keyboard_mc._x = Math.round((_global.settings.applicationWidth / 2) - (w / 2));
-	keyboard_mc._y = Math.round(((_global.settings.applicationHeight - 100) / 2) - (h / 2)) + 100;
+	//keyboard_mc._x = Math.round((_global.settings.applicationWidth / 2) - (w / 2));
+	//keyboard_mc._y = Math.round(((_global.settings.applicationHeight - 100) / 2) - (h / 2)) + 100;
 	
-	keyboard_mc._visible = false;
+	keyboard_mc.content_mc.onClose = onClose;
+	keyboard_mc.content_mc.callerObj = callerObj;
 }
 
 showWindow = function (windowObj) {
-	if (windowObj.depth == undefined) {
-		if (window_mc._visible) window_mc.close();
-		delete window_mc.onClose;
-	}
+	//if (windowObj.depth == undefined) {
+		//if (window_mc._visible) window_mc.close();
+		//delete window_mc.onClose;
+	//}
 	
 	if (windowObj.width == undefined) windowObj.width = _global.settings.windowWidth;
 	if (windowObj.height == undefined) windowObj.height = _global.settings.windowHeight;
@@ -343,41 +293,41 @@ showWindow = function (windowObj) {
 	if (windowObj.width == "full" || _global.settings.device == "pda") {
 		windowObj.width = _global.settings.applicationWidth;
 		var x = 0;
-	} else if (windowObj.width == "map") {
-		windowObj.width = _global.settings.applicationWidth - 120;
-		var x = 0;
+	} else if (windowObj.align == "center") {
+		var x = Math.round((_global.settings.applicationWidth / 2) - (windowObj.width / 2));
 	} else {
-		var x = Math.round(((_global.settings.applicationWidth - 120) / 2) - (windowObj.width / 2));
-	}
-	if (windowObj.height == "full" || _global.settings.device == "pda") {
-		var y = _global.settings.statusBarY - _global.settings.statusBarBtnSpacing;
-		windowObj.height = _global.settings.applicationHeight - y;
-	} else if (windowObj.height == "map") {
-		var y = _global.settings.statusBarY + _global.settings.statusBarBtnHeight + _global.settings.statusBarBtnSpacing;
-		windowObj.height = _global.settings.applicationHeight - y;
-	} else {
-		var y = Math.round(((_global.settings.applicationHeight - 104) / 2) - (windowObj.height / 2)) + 104;
+		var toolbarWidth = 120;
+		var x = Math.round(((_global.settings.applicationWidth - toolbarWidth) / 2) - (windowObj.width / 2));
 	}
 	
-	modal_mc._visible = true;
-	megaModal_mc._visible = windowObj.megaModal;
+	if (windowObj.height == "full" || _global.settings.device == "pda") {
+		windowObj.height = _global.settings.applicationHeight;
+		var y = 0;
+	} else if (windowObj.align == "center") {
+		var y = Math.round((_global.settings.applicationHeight / 2) - (windowObj.height / 2));
+	} else {
+		var toolbarHeight = _global.settings.statusBarY + _global.settings.statusBarBtnHeight + _global.settings.statusBarBtnSpacing;
+		var y = Math.round(((_global.settings.applicationHeight - toolbarHeight) / 2) - (windowObj.height / 2)) + toolbarHeight;
+	}
+	
 	//window_mc._visible = true;
 	
-	if (windowObj.depth == undefined) {
-		var window_mc = attachMovie("bi.ui.Window", "window_mc", 1100, {settings:windowObj});
-	} else {
-		var window_mc = attachMovie("bi.ui.Window", "window" + windowObj.depth + "_mc", windowObj.depth, {settings:windowObj});
-	}
-
+	var modal_mc = window_mc.createEmptyMovieClip("modal_mc", window_mc.getNextHighestDepth());
+	modal_mc.beginFill(0x000000, 30);
+	modal_mc.drawRect(0, 0, 1000 + _global.settings.applicationWidth, 1000 + _global.settings.applicationHeight);
+	modal_mc.endFill();
+	modal_mc.onPress = function () {};
+	modal_mc.useHandCursor = false;
+	
+	var window_mc = window_mc.attachMovie("bi.ui.Window", "window_mc", window_mc.getNextHighestDepth(), {settings:windowObj});
+	window_mc.modal_mc = modal_mc;
+	
 	window_mc.close = function () {
 		delete window_mc.onMouseMove;
-		this.gotoAndStop(1);
-		this._visible = false;
-		modal_mc._visible = false;
-		megaModal_mc._visible = false;
+		this.modal_mc.removeMovieClip();
 		clearInterval(this.closeWindowID);
 		this.onClose();
-		this.content_mc.removeMovieClip();
+		this.removeMovieClip();
 	}
 
 	window_mc._x = x;
@@ -867,8 +817,19 @@ renderZone = function (zone, clip) {
 				room_mc.onPress2 = function () {
 					if (this.roomObj.canOpen == undefined || isAuthenticated(this.roomObj.canOpen)) {
 						this._alpha = 100;
-						openRoomControl(this.roomObj, this);
-						new Tween(this, "_alpha", Regular.easeInOut, 100, 0, _global.settings.roomFadeRate, true);
+						var timeBeforeFade = new Tween(this, null, Regular.easeInOut, 0, 0, _global.settings.roomHighlightTime, true);
+						timeBeforeFade.obj = this;
+						timeBeforeFade.onMotionFinished = function () {
+							if (_global.settings.roomFadeRate) {
+								new Tween(this.obj, "_alpha", Regular.easeInOut, 100, 0, _global.settings.roomFadeRate, true);
+							} else {
+								this.obj._alpha = 0;
+							}
+						}
+						this.onEnterFrame = function () {
+							openRoomControl(this.roomObj, this);
+							delete this.onEnterFrame;
+						}
 					}
 				}
 			} else if (rooms[room].switchZone.length) {
@@ -1378,8 +1339,8 @@ createScrollBar = function (mc, height, func) {
 	scrollDown_mc.release = function () {
 		clearInterval(this.repeatID);
 	}
-	scrollDown_mc.addEventListener("press", scrollUp_mc);
-	scrollUp_mc.addEventListener("release", scrollUp_mc);
+	scrollDown_mc.addEventListener("press", scrollDown_mc);
+	scrollDown_mc.addEventListener("release", scrollDown_mc);
 	scrollDown_mc.action = function () {
 		var p = this._parent._parent;
 		if (p.startRow + p.itemsPerPage < p.maxItems) {
@@ -1406,7 +1367,7 @@ openStatusWindow = function (statusObj) {
 	if (statusObj.windowCornerRadius != undefined) windowObject.cornerRadius = Number(statusObj.windowCornerRadius);
 	if (statusObj.windowShadowOffset != undefined) windowObject.shadowOffset = Number(statusObj.windowShadowOffset);
 	
-	showWindow(windowObject);
+	var window_mc = showWindow(windowObject);
 
 	window_mc.content_mc.statusObj = statusObj;
 	window_mc.content_mc.startRow = 0;
@@ -1494,7 +1455,7 @@ openAbout = function () {
 	if (_global.windows["openAbout"] == "open") {
 		window_mc.close();
 	} else {
-		showWindow({width:600, height:500, title:"About eLIFE", iconName:"home"});
+		var window_mc = showWindow({width:600, height:500, title:"About eLIFE", iconName:"home"});
 		var content_mc = window_mc.content_mc;
 		
 		var about_tf = new TextFormat();
@@ -1611,7 +1572,7 @@ openBrowser = function () {
 	if (_global.windows["openBrowser"] == "open") {
 		window_mc.close();
 	} else {
-		showWindow({width:"full", height:"map", title:"Browser", iconName:"atom", modal:true, noAutoClose:true});
+		var window_mc = showWindow({width:"full", height:"full", title:"Browser", iconName:"atom", noAutoClose:true});
 		appsBar_mc.openBrowser_mc.showHighlight();
 		_global.windows["openBrowser"] = "open";
 		window_mc.onClose = function () {
@@ -1704,7 +1665,7 @@ openControlPanel = function () {
 	if (_global.windows["openControlPanel"] == "open") {
 		window_mc.close();
 	} else {
-		showWindow({width:"full", height:"map", title:"Control Panel", iconName:"gears", autoClose:false});
+		var window_mc = showWindow({width:"full", height:"full", title:"Control Panel", iconName:"gears", autoClose:false});
 		appsBar_mc.openControlPanel_mc.showHighlight();		
 		_global.windows["openControlPanel"] = "open";
 		window_mc.onClose = function () {
@@ -1735,7 +1696,7 @@ openLogs = function () {
 	if (_global.windows["openLogs"] == "open") {
 		window_mc.close();
 	} else {
-		showWindow({width:"full", height:"map", title:"logs", iconName:"notepad", modal:true});
+		var window_mc = showWindow({width:"full", height:"full", title:"logs", iconName:"notepad"});
 		appsBar_mc.openLogs_mc.showHighlight();
 		_global.windows["openLogs"] = "open";
 		window_mc.onClose = function () {
@@ -2353,7 +2314,7 @@ createScriptsAdmin = function (content_mc) {
 openMacroEdit = function (macro) {
 	var macroObj = _global.macros[macro];
 
-	showWindow({width:400, height:465, title:"Edit Macro: " + macroObj.name, iconName:"gears", modal:true, hideClose:true});
+	var window_mc = showWindow({width:400, height:465, title:"Edit Macro: " + macroObj.name, iconName:"gears", hideClose:true});
 	
 	window_mc.content_mc.macroObj = macroObj;
 	window_mc.content_mc.macroName = macroObj.name;
@@ -2470,6 +2431,7 @@ openMacroEdit = function (macro) {
 					clearInterval(this.repeatID);
 				}
 				upArrow_mc.addEventListener("press", upArrow_mc);
+				upArrow_mc.addEventListener("release", upArrow_mc);
 				upArrow_mc.action = function () {
 					if (this._parent.controlObj.extra < 60) {
 						this._parent.controlObj.extra++;
@@ -2830,11 +2792,9 @@ layout = function () {
 	_root.createEmptyMovieClip("bg2_mc", 10);
 	_root.createEmptyMovieClip("zones_mc", 100);
 	_root.createEmptyMovieClip("zoneLabels_mc", 200);
-	_root.createEmptyMovieClip("modal_mc", 300);
 	_root.createEmptyMovieClip("overlay_mc", 400);
 	_root.createEmptyMovieClip("statusBar_mc", 500);
 	_root.createEmptyMovieClip("appsBar_mc", 600);
-	_root.createEmptyMovieClip("megaModal_mc", 1000);
 	_root.createEmptyMovieClip("screensaver_mc", 1050);
 	_root.createEmptyMovieClip("window_mc", 1100);
 	_root.createEmptyMovieClip("confirm_mc", 1500);

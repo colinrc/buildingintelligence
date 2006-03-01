@@ -387,6 +387,9 @@
 			<row>
 				<item type="toggle" command="state" extras="on,off" />
 			</row>
+			<row>
+				<item type="button" icon="atom" macro="badaboom" extra="%key%" extra2="%name%" />
+			</row>
 		</control>
 		<control type="upDown">
 			<row>

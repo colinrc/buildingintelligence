@@ -138,7 +138,8 @@ _global.settings.zoneChangeTimeout = 10;
 _global.settings.zoneChangeTime = 15;
 _global.settings.zoneFadeRate = 50;
 
-_global.settings.roomFadeRate = .5; // seconds
+_global.settings.roomHighlightTime = .5; // seconds
+_global.settings.roomFadeRate = 0; // seconds
 			
 _global.settings.controlButtonSpacing = 2;
 _global.settings.controlButtonHeight = 45;

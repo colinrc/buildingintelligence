@@ -13,7 +13,7 @@
 	if (room.window.windowCornerRadius != undefined) windowObject.cornerRadius = Number(room.window.windowCornerRadius);
 	if (room.window.windowShadowOffset != undefined) windowObject.shadowOffset = Number(room.window.windowShadowOffset);
 	
-	showWindow(windowObject);
+	var window_mc = showWindow(windowObject);
 	
 	var tabs = room.window.tabs;
 	window_mc.content_mc.groups = room.window.tabs;

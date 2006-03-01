@@ -2,7 +2,7 @@
 	if (_global.windows["openCalendar"] == "open") {
 		window_mc.close();
 	} else {
-		showWindow({width:"full", height:"map", title:"Calendar", iconName:"calendar", modal:true});
+		var window_mc = showWindow({width:"full", height:"full", title:"Calendar", iconName:"calendar"});
 		appsBar_mc.openCalendar_mc.showHighlight();
 		_global.windows["openCalendar"] = "open";
 		window_mc.onClose = function () {
@@ -273,7 +273,7 @@
 }
 
 skipCalendarEvent = function (eventObj) {
-	var window_mc = showWindow({width:350, height:265, title:"Edit: " + eventObj.title, iconName:"calendar", megaModel:true, depth:1110});
+	var window_mc = showWindow({width:350, height:265, title:"Edit: " + eventObj.title, iconName:"calendar", align:"center"});
 	
 	var content_mc = window_mc.content_mc;
 	var buttonWidth = content_mc.width;
@@ -296,7 +296,7 @@ skipCalendarEvent = function (eventObj) {
 editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	if (calendarObj != undefined) {
 		var mode = "edit";
-		var window_mc = showWindow({width:570, height:455, title:"Edit event: " + calendarObj.title, iconName:"calendar", megaModel:true, depth:1110});
+		var window_mc = showWindow({width:570, height:455, title:"Edit event: " + calendarObj.title, iconName:"calendar", align:"center"});
 	} else {
 		var mode = "create";
 		var calendarObj = new Object();
@@ -313,7 +313,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		calendarObj.startDate = dateObj;
 		calendarObj.endDate = new Date(dateObj.getFullYear() + 1, dateObj.getMonth(), dateObj.getDate(), dateObj.getHours(), dateObj.getMinutes(), dateObj.getSeconds())
 		calendarObj.pattern = new Object();
-		var window_mc = showWindow({width:570, height:455, title:"Create new event:", iconName:"calendar", megaModel:true, depth:1110});
+		var window_mc = showWindow({width:570, height:455, title:"Create new event:", iconName:"calendar", align:"center"});
 	}
 	
 	var content_mc = window_mc.content_mc;
@@ -523,7 +523,8 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		}
 		switch (eventObj.target._name) {
 			case "deleteEvent_btn":
-				deleteEvent(calendarObj);
+				confirm("Are you sure you want to delete this event?", _root, "deleteEvent", null, calendarObj);
+				//deleteEvent(calendarObj);
 				break;
 			case "saveEvent_btn":
 				saveEvent(saveObj);
