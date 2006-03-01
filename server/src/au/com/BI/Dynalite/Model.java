@@ -55,6 +55,7 @@ public class Model extends BaseModel implements DeviceModel {
 
 	public void doStartup (List commandQueue) throws CommsFail{
 		this.requestAllLevels();
+		this.requestAllAreaLinks();
 	}
 
 
@@ -198,6 +199,31 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
+	public void requestAllAreaLinks () throws CommsFail{
+		List areaDeviceList = areaCodes.findAllAreas();
+		Iterator eachArea = areaDeviceList.iterator();
+		while (eachArea.hasNext()){
+			try {
+				DynaliteDevice nextItem = (DynaliteDevice)eachArea.next();
+				if (nextItem.getDeviceType() == DeviceType.LIGHT_DYNALITE_AREA )  {
+					String fullKey = dynaliteHelper.buildKey('L',nextItem.getAreaCode(),nextItem.getChannel());
+					if (nextItem.getChannel() != areaCodes.AreaCommand) continue; 
+					DynaliteOutput result = this.buildDynaliteLinkRequestCommand(nextItem.getAreaCode(),nextItem.getOutputKey(),255);
+					CommsCommand dynaliteCommsCommand = new CommsCommand();
+					dynaliteCommsCommand.setKey (fullKey);
+					dynaliteCommsCommand.setCommandBytes(result.outputCodes);
+					dynaliteCommsCommand.setExtraInfo (nextItem.getOutputKey());
+					dynaliteCommsCommand.setKeepForHandshake(true);
+					dynaliteCommsCommand.setActionType(DynaliteCommand.REQUEST_LEVEL);
+					dynaliteCommsCommand.setActionCode(fullKey);
+					comms.addCommandToQueue(dynaliteCommsCommand);		
+				}
+			} catch (ClassCastException ex){
+				logger.log (Level.WARNING,"A device that is not a dynalite device had been added to dynalite "+ex.getMessage());
+			}
+		}
+	}
+	
 	public boolean doIControl (String keyName, boolean isClientCommand)
 	{
 		configHelper.wholeKeyChecked(keyName);
@@ -1168,6 +1194,27 @@ public class Model extends BaseModel implements DeviceModel {
 			returnVal.outputCodes[1] = (byte)areaVal;
 			returnVal.outputCodes[2] = (byte)(channelNumber - 1);
 			returnVal.outputCodes[3] = (byte)0x61;
+			returnVal.outputCodes[4] = 0;
+			returnVal.outputCodes[5] = 0;
+			returnVal.outputCodes[6] = (byte)join;
+			this.dynaliteHelper.addChecksum(returnVal.outputCodes);
+		} catch (NumberFormatException ex){
+			logger.log(Level.WARNING,"Device parameters have been incorrectly formatted " + ex.getMessage());
+			returnVal.isError = true;
+			returnVal.ex = ex;
+		}
+		
+		return returnVal;
+	}
+	
+	protected DynaliteOutput buildDynaliteLinkRequestCommand (String areaCodeStr, String key, int join) {
+		DynaliteOutput returnVal = new DynaliteOutput();
+		try {
+			returnVal.outputCodes[0] = 0x1c;
+			int areaVal = Integer.parseInt(areaCodeStr,16);
+			returnVal.outputCodes[1] = (byte)areaVal;
+			returnVal.outputCodes[2] = 0;
+			returnVal.outputCodes[3] = (byte)0x23;
 			returnVal.outputCodes[4] = 0;
 			returnVal.outputCodes[5] = 0;
 			returnVal.outputCodes[6] = (byte)join;
