@@ -43,8 +43,6 @@ public class IPListener extends Thread implements CommsListener
 		endVals = new boolean [256];
 		penultimateVals = new boolean [256];
 		this.setName("IP Listener");
-		readArray =  new byte [transmitOnBytes + 1];
-
 	}
 	
 	public void setDeviceName (String deviceName) {
@@ -123,7 +121,7 @@ public class IPListener extends Thread implements CommsListener
 	public void run () {
 		handleEvents = true;
 		int bytesRead = 0;
-		
+		readArray =  new byte [transmitOnBytes + 1];
 		if (is == null) return;
 		
 		switch (bufferHandle) {
@@ -336,29 +334,29 @@ public class IPListener extends Thread implements CommsListener
 			if (avail < (transmitOnBytes - startPos)) {
 				bytesToRead = avail;
 			} else {
-				bytesToRead = transmitOnBytes - startPos;
+				bytesToRead = transmitOnBytes;
 			}
-			bytesRead = is.read(readArray, startPos,bytesToRead );
+			bytesRead = is.read(readArray, startPos % transmitOnBytes,bytesToRead );
 			if (bytesRead >= 0) {
 				startPos += bytesRead;
 			} else {
 				break;
 			}
-			if (startPos  >=  transmitOnBytes) break;
-		}
-		if (startPos != 0) {
-			byte retArray[] = new byte[transmitOnBytes];
-			System.arraycopy (readArray,0,retArray,0,transmitOnBytes);
-			
-			str = new String (retArray);
-			logger.log (Level.FINEST,"Received ip packet : " + str);
-			
-			CommsCommand command = new CommsCommand (str,"RawText",null);
-			command.setCommandBytes(retArray);
-			command.setTargetDeviceModel(this.targetDeviceModel);
-			synchronized (commandList){
-				commandList.add (command);
-				commandList.notifyAll (); 
+			if (startPos % transmitOnBytes == 0) {
+				startPos = 0;
+				byte retArray[] = new byte[transmitOnBytes];
+				System.arraycopy (readArray,0,retArray,0,transmitOnBytes);
+				
+				str = new String (retArray);
+				logger.log (Level.FINEST,"Received ip packet : " + str);
+				
+				CommsCommand command = new CommsCommand (str,"RawText",null);
+				command.setCommandBytes(retArray);
+				command.setTargetDeviceModel(this.targetDeviceModel);
+				synchronized (commandList){
+					commandList.add (command);
+					commandList.notifyAll (); 
+				}
 			}
 		}
 	}
