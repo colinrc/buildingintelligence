@@ -24,6 +24,7 @@ public class IPHeartbeat extends Thread {
 	String heartbeatString = "\n";
 	protected List commandQueue;
 	protected int deviceNumber = -1;
+	protected String modelName = "";
 	/**
 	 * 
 	 */
@@ -33,6 +34,11 @@ public class IPHeartbeat extends Thread {
 		this.setName("IP Heartbeat");
 	}
 
+	public void setModelName (String name) {
+		this.setName("IP Heartbeat - " + name);
+		this.modelName = name;
+	}
+	
 	public boolean getHandleEvents () {
 		return handleEvents;
 	}
@@ -75,7 +81,7 @@ public class IPHeartbeat extends Thread {
 							os.flush();
 						}
 					} catch (IOException e1) {
-					    logger.log (Level.FINEST,"Connection failed to the IP device - reconnecting");
+					    logger.log (Level.WARNING,"Connection failed, " + modelName + " - reconnecting");
 						handleEvents = false;
 						Command command = new Command();
 						command.setCommand ("Attatch");
