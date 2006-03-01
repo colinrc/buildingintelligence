@@ -426,7 +426,7 @@ public class BaseModel
                         parameters.buildFromDevice(this);
                         synchronized (comms) {
                                 ( (Serial) comms).connect( (String)this.getParameter("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
-                                  parameters, commandList, this.getInstanceID());
+                                  parameters, commandList, this.getInstanceID(),this.getName());
                                 comms.clearCommandQueue();
                         }
                 }
@@ -450,7 +450,7 @@ public class BaseModel
                         synchronized (comms) {
                                 ( (IP) comms).connect( (String)this.getParameter("IP_Address", DeviceModel.MAIN_DEVICE_GROUP),
                                   (String)this.getParameter("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
-                                  commandList, this.getInstanceID(), doIPHeartbeat(),getHeartbeatString());
+                                  commandList, this.getInstanceID(), doIPHeartbeat(),getHeartbeatString(),this.getName());
                                 comms.clearCommandQueue();
                         }
                 }
