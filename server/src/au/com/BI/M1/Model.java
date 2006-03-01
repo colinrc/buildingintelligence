@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import au.com.BI.Alert.AlertCommand;
+import au.com.BI.M1.ControlledHelper;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.M1.Commands.M1Command;
@@ -32,11 +33,13 @@ public class Model extends BaseModel implements DeviceModel {
 
 	protected String outputM1Command = "";
 	protected M1Helper m1Helper;
+	protected ControlledHelper controlledHelper;
 	
 	public Model () {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		m1Helper = new M1Helper();
+		controlledHelper = new ControlledHelper();
 	}
 
 	public void clearItems () {
@@ -95,67 +98,8 @@ public class Model extends BaseModel implements DeviceModel {
 	 */
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{
-		if (command.isCommsCommand()){	
-			// create the command objects 
-			CommandInterface m1Command =  buildCommandForFlash(command);
-			cache.setCachedCommand(m1Command.getKey(),m1Command);
-			this.sendToFlash(commandQueue,-1,m1Command);
-		}
-
+		controlledHelper.doControlledItem(command, configHelper, cache, commandQueue, this);
 	}
-	
-	public void sendToFlash (List commandQueue, long targetFlashID, CommandInterface command) {
-
-		CommandInterface _command = null;
-		String theKey = command.getKey();
-		DeviceType device = (DeviceType) configHelper.getControlItem(theKey);
-		
-		/*
-		 * todo change the PIR's to ToggleSwitches and the others to alarms
-		 * todo check the device type - if toggle switch then send on/off signal and an alert
-		 * todo if it is a alarm then send an alert
-		 * todo only do an alert if the alarm is in trouble, violated or bypassed
-		 */
-		if (command.getClass().equals(ZoneChangeUpdate.class)) {
-			ToggleSwitch toggleSwitch = (ToggleSwitch)device;
-			ZoneChangeUpdate zoneChangeUpdate = (ZoneChangeUpdate)command;
-			_command = new AlertCommand();
-			_command.setDisplayName(device.getName());
-			_command.setTargetDeviceID(targetFlashID);
-			_command.setUser(command.getUser());
-			_command.setExtraInfo(device.getName()+ " has changed to " + zoneChangeUpdate.getZoneStatus().getDescription());
-			_command.setExtra2Info("Area " + toggleSwitch.getArea());
-			_command.setKey ("CLIENT_SEND");
-			cache.setCachedCommand(_command.getKey(),_command);
-		}
-		command.setTargetDeviceID(targetFlashID);
-		logger.log (Level.INFO,"Sending to flash " + theKey + ":" + command.getCommandCode() + ":" + command.getExtraInfo());
-		synchronized (this.commandQueue){
-			commandQueue.add( command);
-			
-			if (_command != null) {
-				commandQueue.add(_command);
-			}
-		}
-	}
-	
-	protected CommandInterface buildCommandForFlash (CommandInterface command){
-		M1Command m1Command = M1CommandFactory.getInstance().getM1Command(command.getKey());
-		
-		if (m1Command.getClass().equals(OutputChangeUpdate.class)) {
-		
-			if (((OutputChangeUpdate)m1Command).getOutputState().equals("0")) {
-				m1Command.setCommand("off");
-			} else {
-				m1Command.setCommand("on");
-			}
-			m1Command.setDisplayName(((ToggleSwitch)configHelper.getControlItem(m1Command.getKey())).getOutputKey());
-			m1Command.setKey("CLIENT_SEND");
-			m1Command.setUser(this.currentUser);
-		}
-		return m1Command;
-	}
-	
 	
 	public boolean doIControl (String keyName, boolean isClientCommand)
 	{
