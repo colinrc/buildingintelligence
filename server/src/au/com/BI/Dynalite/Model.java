@@ -154,11 +154,11 @@ public class Model extends BaseModel implements DeviceModel {
 		String fullKey = dynaliteHelper.buildKey('L',area,channel);
 
 		DynaliteOutput result = this.buildDynaliteLevelRequestCommand(area,channel,outputKey,255);
-		CommsCommand dynaliteCommsCommand = new CommsCommand();
+ 		CommsCommand dynaliteCommsCommand = new CommsCommand();
 		dynaliteCommsCommand.setKey (fullKey);
 		dynaliteCommsCommand.setCommandBytes(result.outputCodes);
 		dynaliteCommsCommand.setExtraInfo (outputKey);
-		dynaliteCommsCommand.setKeepForHandshake(true);
+		dynaliteCommsCommand.setKeepForHandshake(false);
 		dynaliteCommsCommand.setActionType(DynaliteCommand.REQUEST_LEVEL);
 		dynaliteCommsCommand.setActionCode(fullKey);
 		comms.addCommandToQueue(dynaliteCommsCommand);	
@@ -182,13 +182,13 @@ public class Model extends BaseModel implements DeviceModel {
 				if (nextDevice.getDeviceType() == DeviceType.LIGHT_DYNALITE )  {
 					DynaliteDevice nextItem = (DynaliteDevice)nextDevice;
 					String fullKey = dynaliteHelper.buildKey('L',nextItem.getAreaCode(),nextItem.getChannel());
-					if (nextItem.getChannel() == areaCodes.AreaCommand) continue; // cannot query level of an area
+					if (nextItem.isAreaDevice()) continue; // cannot query level of an area
 					DynaliteOutput result = this.buildDynaliteLevelRequestCommand(nextItem.getAreaCode(),nextItem.getChannel(),nextItem.getOutputKey(),255);
 					CommsCommand dynaliteCommsCommand = new CommsCommand();
 					dynaliteCommsCommand.setKey (fullKey);
 					dynaliteCommsCommand.setCommandBytes(result.outputCodes);
 					dynaliteCommsCommand.setExtraInfo (nextItem.getOutputKey());
-					dynaliteCommsCommand.setKeepForHandshake(true);
+					dynaliteCommsCommand.setKeepForHandshake(false);
 					dynaliteCommsCommand.setActionType(DynaliteCommand.REQUEST_LEVEL);
 					dynaliteCommsCommand.setActionCode(fullKey);
 					comms.addCommandToQueue(dynaliteCommsCommand);		
@@ -207,7 +207,7 @@ public class Model extends BaseModel implements DeviceModel {
 				DynaliteDevice nextItem = (DynaliteDevice)eachArea.next();
 				if (nextItem.getDeviceType() == DeviceType.LIGHT_DYNALITE_AREA )  {
 					String fullKey = dynaliteHelper.buildKey('L',nextItem.getAreaCode(),nextItem.getChannel());
-					if (nextItem.getChannel() != areaCodes.AreaCommand) continue; 
+					if (	nextItem.isAreaDevice()) continue; 
 					DynaliteOutput result = this.buildDynaliteLinkRequestCommand(nextItem.getAreaCode(),nextItem.getOutputKey(),255);
 					CommsCommand dynaliteCommsCommand = new CommsCommand();
 					dynaliteCommsCommand.setKey (fullKey);

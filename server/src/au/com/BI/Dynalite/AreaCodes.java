@@ -102,13 +102,16 @@ public class AreaCodes {
 	}
 
 	public List findDevicesInArea (String area, boolean includeAreaControl,int join) {
+		LinkedList resultList = new LinkedList();
 		LinkedList deviceList = (LinkedList)(areaCodes.get(area));
 		Iterator eachLight = deviceList.iterator();
 		while (eachLight.hasNext()){
 			DynaliteDevice nextItem = (DynaliteDevice)eachLight.next();
-			if (!includeAreaControl && nextItem.getChannel() == AreaCommand) continue;
+			if (!includeAreaControl && nextItem.isAreaDevice()) continue;
+			resultList.add(nextItem);
+			
 		}
-		return deviceList;
+		return resultList;
 	}
 	
 	public List findAllAreas () {
@@ -120,7 +123,7 @@ public class AreaCodes {
 			Iterator eachLight = deviceList.iterator();
 			while (eachLight.hasNext()){
 				DynaliteDevice nextItem = (DynaliteDevice)eachLight.next();
-				if (nextItem.getChannel() == AreaCommand) {
+				if (nextItem.isAreaDevice()) {
 					allAreas.add (nextItem);
 				}
 			}
