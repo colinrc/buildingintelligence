@@ -110,4 +110,21 @@ public class AreaCodes {
 		}
 		return deviceList;
 	}
+	
+	public List findAllAreas () {
+		LinkedList allAreas = new LinkedList();
+		Iterator eachArea = areaCodes.keySet().iterator();
+		while (eachArea.hasNext()){
+			String nextArea = (String)eachArea.next();
+			LinkedList deviceList = (LinkedList)(areaCodes.get(nextArea));
+			Iterator eachLight = deviceList.iterator();
+			while (eachLight.hasNext()){
+				DynaliteDevice nextItem = (DynaliteDevice)eachLight.next();
+				if (nextItem.getChannel() == AreaCommand) {
+					allAreas.add (nextItem);
+				}
+			}
+		}
+		return allAreas;
+	}
 }
