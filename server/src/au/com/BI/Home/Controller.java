@@ -20,7 +20,7 @@ import au.com.BI.Admin.LogHandler;
 import au.com.BI.Flash.*;
 import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Config.*;
-
+import au.com.BI.AlarmLogging.*;
 import au.com.BI.JRobin.*;
 import org.jrobin.core.*;
 /**
@@ -53,18 +53,20 @@ public class Controller {
 	protected EventCalendar eventCalendar;
 	protected Bootstrap bootstrap;
 	private Security security = null;
-        protected static org.jrobin.core.RrdDbPool rrdbPool;
-        protected au.com.BI.JRobin.RRDGraph rrdGraph;
-        protected au.com.BI.Script.Model scriptModel;
-        protected JRobinQuery jrobin;
-        protected Controls controls;
-        protected HashMap variableCache;
-        protected HashMap jRobinRRDS;
-        protected LogHandler logHandler;
-        protected static String RRDBDIRECTORY = ".\\JRobin\\";
-        protected static String RRDXMLDIRECTORY = ".\\JRobin\\RRDDefinition\\";
-        protected String RRDGRAPH = ".\\JRobin\\Graph\\";  // Default value for testing
-        protected AddressBook addressBook = null;
+	protected AlarmLogging alarmLogging = null;
+	
+    protected static org.jrobin.core.RrdDbPool rrdbPool;
+    protected au.com.BI.JRobin.RRDGraph rrdGraph;
+    protected au.com.BI.Script.Model scriptModel;
+    protected JRobinQuery jrobin;
+    protected Controls controls;
+    protected HashMap variableCache;
+    protected HashMap jRobinRRDS;
+    protected LogHandler logHandler;
+    protected static String RRDBDIRECTORY = ".\\JRobin\\";
+    protected static String RRDXMLDIRECTORY = ".\\JRobin\\RRDDefinition\\";
+    protected String RRDGRAPH = ".\\JRobin\\Graph\\";  // Default value for testing
+    protected AddressBook addressBook = null;
 
 	// All known object representations of devices active in the system
 	/**
@@ -76,16 +78,20 @@ public class Controller {
 		deviceModels = new ArrayList();
 		clientModels = new ArrayList();
 		modelRegistry = new HashMap (10);
+		commandQueue = Collections.synchronizedList(new LinkedList());
 		cache = new Cache();
         cache.setController(this);
         variableCache = new HashMap(20);
         jRobinRRDS = new HashMap ();
         security = new Security();
         addressBook = new AddressBook();
+        alarmLogging = new AlarmLogging();
+        alarmLogging.setCache(cache);
+        alarmLogging.setCommandQueue(commandQueue);
 
-		commandQueue = Collections.synchronizedList(new LinkedList());
-		configLoaded = false;
-		modelRegistry.put("COMFORT", "au.com.BI.Comfort.Model");
+        configLoaded = false;
+
+        modelRegistry.put("COMFORT", "au.com.BI.Comfort.Model");
 		modelRegistry.put("RAW_CONNECTION", "au.com.BI.Raw.Model");
 		modelRegistry.put("FLASH_CLIENT", "au.com.BI.Flash.FlashHandler");
 		modelRegistry.put("ADMIN", "au.com.BI.Admin.Model");
@@ -129,8 +135,10 @@ public class Controller {
                 scriptModel.setVariableCache(variableCache);
 		scriptModel.setMacroHandler(macroHandler);
 		scriptModel.setModelList(deviceModels);
-                scriptModel.setController(this);
-                scriptModel.setBootstrap(bootstrap);
+        scriptModel.setController(this);
+        scriptModel.setBootstrap(bootstrap);
+        scriptModel.setAddressBook(addressBook);
+        scriptModel.setAlarmLogging (alarmLogging);
 		scriptModel.setInstanceID(deviceModels.size()-1);
 
 		flashHandler = new FlashHandler(DeviceModel.PROBABLE_FLASH_CLIENTS,security);
@@ -138,7 +146,8 @@ public class Controller {
 		flashHandler.setCommandQueue(commandQueue);
 		flashHandler.setCache(cache);
 		flashHandler.setAddressBook (addressBook);
-         flashHandler.setVariableCache(variableCache);
+		flashHandler.setAlarmLogging (alarmLogging);
+        flashHandler.setVariableCache(variableCache);
 		flashHandler.setMacroHandler(macroHandler);
 		flashHandler.setEventCalendar (macroHandler.getEventCalendar());
 		flashHandler.setModelList(deviceModels);
@@ -151,6 +160,9 @@ public class Controller {
 		adminModel.setModelRegistry (modelRegistry);
 		adminModel.setModelList(deviceModels);
 		adminModel.setBootstrap(bootstrap);
+		adminModel.setAddressBook(addressBook);
+		adminModel.setAlarmLogging (alarmLogging);
+
 		deviceModels.add( adminModel);
 		adminModel.setInstanceID(deviceModels.size()-1);
 
@@ -161,6 +173,7 @@ public class Controller {
 		messagingModel.setBootstrap(bootstrap);
 		messagingModel.setModelList(deviceModels);
 		messagingModel.setAddressBook(addressBook);
+		messagingModel.setAlarmLogging(alarmLogging);
 		deviceModels.add( messagingModel);
 		messagingModel.setInstanceID(deviceModels.size()-1);
 		
@@ -170,6 +183,8 @@ public class Controller {
 		macroModel.setMacroHandler(macroHandler);
 		macroModel.setBootstrap(bootstrap);
 		macroModel.setModelList(deviceModels);
+		macroModel.setAddressBook(addressBook);
+		macroModel.setAlarmLogging(alarmLogging);
 		deviceModels.add( macroModel);
 		macroModel.setInstanceID(deviceModels.size()-1);
 
@@ -1118,8 +1133,9 @@ public class Controller {
 				}
 			}
 
-			config.readConfig(deviceModels, clientModels, cache, variableCache , commandQueue,
-					modelRegistry, irCodeDB, configName, macroHandler,bootstrap, controls);
+			config.readConfig(deviceModels, clientModels, cache, variableCache ,
+					commandQueue, modelRegistry, irCodeDB, configName, macroHandler,
+					bootstrap, controls, addressBook, alarmLogging);
 
 
 			configLoaded = true;
