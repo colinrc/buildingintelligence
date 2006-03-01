@@ -19,6 +19,8 @@ import java.util.*;
 import java.util.logging.*;
 import au.com.BI.Macro.MacroHandler;
 import au.com.BI.Config.Bootstrap;
+import au.com.BI.AlarmLogging.*;
+import au.com.BI.Messaging.*;
 
 public class BaseModel
   implements DeviceModel {
@@ -54,6 +56,8 @@ public class BaseModel
 		protected int stxArray[] = null;
 		protected boolean tryingToConnect = false;
 		protected long serverID = 0;
+		protected AddressBook addressBook = null;
+		protected AlarmLogging alarmLogging = null;
 		
 		public User currentUser = null;
 		
@@ -678,6 +682,22 @@ public class BaseModel
 
 		public void setServerID(long serverID) {
 			this.serverID = serverID;
+		}
+
+		public AddressBook getAddressBook() {
+			return addressBook;
+		}
+
+		public void setAddressBook(AddressBook addressBook) {
+			this.addressBook = addressBook;
+		}
+
+		public AlarmLogging getAlarmLogging() {
+			return alarmLogging;
+		}
+
+		public void setAlarmLogging(AlarmLogging alarmLogging) {
+			this.alarmLogging = alarmLogging;
 		}
 
 }

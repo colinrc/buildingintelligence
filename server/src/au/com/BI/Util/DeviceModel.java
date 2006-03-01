@@ -6,12 +6,14 @@ package au.com.BI.Util;
 
 import java.util.*;
 
+import au.com.BI.AlarmLogging.AlarmLogging;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.Bootstrap;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Macro.MacroHandler;
+import au.com.BI.Messaging.AddressBook;
 /**
  * @author Colin Canfield
  * @author Explorative Sofwtare Pty Ltd
@@ -323,5 +325,15 @@ public interface DeviceModel {
      * @param serverID The server ID to process the startup. 
      */
 	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID);
+
+
+	public AddressBook getAddressBook();
+
+	public void setAddressBook(AddressBook addressBook);
+
+	public AlarmLogging getAlarmLogging();
+
+	public void setAlarmLogging(AlarmLogging alarmLogging);
 }
+
 
