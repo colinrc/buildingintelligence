@@ -17,6 +17,9 @@ public class AlarmLogging {
 	public static final int SMOKE = 4;
 	public static final int DOORBELL = 5;
 	public static final int PHONE_MESSAGE = 6;
+	public static final int TROUBLE = 7;
+	public static final int VIOLATED = 8;
+	public static final int BYPASSED = 9;
 	
 	protected Logger logger = null;
 	protected List commandQueue = null;
@@ -39,7 +42,9 @@ public class AlarmLogging {
 			case SMOKE: return "SMOKE";
 			case DOORBELL: return "DOORBELL";
 			case PHONE_MESSAGE: return "PHONE_MESSAGE";
-
+			case TROUBLE: return "TROUBLE";
+			case VIOLATED: return "VIOLATED";
+			case BYPASSED: return "BYPASSED";
 		}
 		return "";
 	}
@@ -54,13 +59,13 @@ public class AlarmLogging {
 	 * @param time The time the event occured, if the time is null it will be the current time.
 	 */
 	public void addAlarmLog (String displayName, String message, int reason, 
-			String triggerDevice, String nativeAlarmCode, long targetFlashID, User user,
+			String triggerDevice, String nativeAlarmCode, User user,
 			Date time){
 		
 	
 		CommandInterface _command = new AlertCommand();
 		_command.setDisplayName(displayName);
-		_command.setTargetDeviceID(targetFlashID);
+		_command.setTargetDeviceID(-1);
 		_command.setUser(user);
 		_command.setExtraInfo(message);
 		_command.setExtra2Info(triggerDevice);
@@ -71,7 +76,6 @@ public class AlarmLogging {
 
 		logger.log (Level.INFO,"Sending alarm to flash " + displayName + ":" +  message);
 		synchronized (this.commandQueue){
-			commandQueue.add( _command);
 			
 			if (_command != null) {
 				commandQueue.add(_command);
@@ -89,13 +93,13 @@ public class AlarmLogging {
 	 * @param time The time the event occured, if the time is null it will be the current time.
 	 */
 	public void addAlertLog (String displayName, String message, int reason, 
-			String triggerDevice, String nativeAlarmCode, long targetFlashID, User user,
+			String triggerDevice, String nativeAlarmCode, User user,
 			Date time){
 		
 	
 		CommandInterface _command = new AlertCommand();
 		_command.setDisplayName(displayName);
-		_command.setTargetDeviceID(targetFlashID);
+		_command.setTargetDeviceID(-1);
 		_command.setUser(user);
 		_command.setExtraInfo(message);
 		_command.setExtra2Info(triggerDevice);
@@ -106,11 +110,11 @@ public class AlarmLogging {
 
 		logger.log (Level.INFO,"Sending alarm to flash " + displayName + ":" +  message);
 		synchronized (this.commandQueue){
-			commandQueue.add( _command);
 			
 			if (_command != null) {
 				commandQueue.add(_command);
 			}
+			commandQueue.notifyAll();
 		}
 	}
 		
