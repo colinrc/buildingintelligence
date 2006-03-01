@@ -142,7 +142,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		model.addControlledItem("04",testAreaOnly,DeviceType.MONITORED);
 		
 		DynaliteOutput result1 = model.buildLinkToCommand("04", "1","255", true);
-		ArrayAssert.assertEquals ("Build linek area failed.",ret1,result1.outputCodes);
+		ArrayAssert.assertEquals ("Build link area failed.",ret1,result1.outputCodes);
 		
 	}
 	
@@ -155,7 +155,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		model.addControlledItem("04",testAreaOnly,DeviceType.MONITORED);
 		
 		DynaliteOutput result1 = model.buildLinkToCommand("04", "1","255", false);
-		ArrayAssert.assertEquals ("Build linek area failed.",ret1,result1.outputCodes);
+		ArrayAssert.assertEquals ("Build link area failed.",ret1,result1.outputCodes);
 		
 	}
 }
