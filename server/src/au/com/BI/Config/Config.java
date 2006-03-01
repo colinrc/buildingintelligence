@@ -14,6 +14,8 @@ import org.jdom.*;
 import org.jdom.input.*;
 import java.util.logging.*;
 
+import au.com.BI.AlarmLogging.*;
+import au.com.BI.Messaging.*;
 import au.com.BI.AV.*;
 import au.com.BI.Alert.*;
 import au.com.BI.Camera.*;
@@ -105,8 +107,11 @@ public class Config {
 	}
 
 
-	public void readConfig(List deviceModels, List clientModels,Cache cache,HashMap variableCache, List commandQueue, Map modelRegistry,
-			IRCodeDB irCodeDB, String fileName, MacroHandler macroHandler, Bootstrap bootstrap, Controls controls)
+	public void readConfig(List deviceModels, List clientModels,Cache cache,
+			HashMap variableCache, List commandQueue, Map modelRegistry,
+			IRCodeDB irCodeDB, String fileName, MacroHandler macroHandler, 
+			Bootstrap bootstrap, Controls controls, AddressBook addressBook,
+			AlarmLogging alarmLogging)
 			throws ConfigError {
 		// Create an instance of the tester and test
 		try {
@@ -142,6 +147,8 @@ public class Config {
 						newDeviceModel.setMacroHandler(macroHandler);
 						newDeviceModel.setModelList(deviceModels);
 						newDeviceModel.setBootstrap(bootstrap);
+						newDeviceModel.setAddressBook (addressBook);						
+						newDeviceModel.setAlarmLogging (alarmLogging);						
 						deviceModels.add(newDeviceModel);
 						newDeviceModel.setInstanceID(deviceModels.size()-1);
 					}
