@@ -13,21 +13,28 @@ class Forms.Project.Device.GC100Toggle extends Forms.BaseForm {
 	public function onLoad() {
 		switch (toggle_type) {
 		case "TOGGLE_INPUT" :
-			title_lb.text = "Toggle Inputs";
-			var keyType = "Input Number";
+			title_lb.text = "Toggle Inputs:";
+			var keyType = "Input\nNumber";
 			break;
 		case "TOGGLE_OUTPUT" :
-			title_lb.text = "Toggle Outputs";
-			var keyType = "Output Number";			
+			title_lb.text = "Toggle Outputs:";
+			var keyType = "Output\nNumber";			
 			break;
 		}
 		var DP = new Array();
 		for(var module in modules){
-			DP.push({label:modules[module].number});
+			if((modules[module].type =="IR")&&(toggle_type =="TOGGLE_INPUT")){
+				DP.push({label:modules[module].number});
+			} else if((modules[module].type =="RELAY")&&(toggle_type =="TOGGLE_OUTPUT")){
+				DP.push({label:modules[module].number});
+			}
 		}
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
+		var keyRestrictions = new Object();		
+		keyRestrictions.maxChars = 2;
+		keyRestrictions.restrict = "0-9A-Fa-f";			
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -36,7 +43,7 @@ class Forms.Project.Device.GC100Toggle extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
-		dataGridHandler.addTextInputColumn("key", keyType, restrictions, false);
+		dataGridHandler.addTextInputColumn("key", keyType, keyRestrictions, false);
 		dataGridHandler.addComboBoxColumn("module", "Module No.", DP,false);		
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(toggles);

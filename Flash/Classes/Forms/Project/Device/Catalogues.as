@@ -7,14 +7,14 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
-	public function init() {
+	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(catalogues_dg);
 		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false);
-		dataGridHandler.setAdvanced(false);//Debug						
+		dataGridHandler.setAdvanced(_global.advanced);//Debug						
 		var DP = new Array();
 		for (var catalogue in catalogues) {
 			var newCatalogue = new Object();
@@ -26,6 +26,13 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
+	public function setAdvanced(){
+		if(_global.advanced){
+			dataGridHandler.setAdvanced(_global.advanced);
+		} else {
+			dataGridHandler.setAdvanced(_global.advanced);
+		}
+	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();
 	}
@@ -33,7 +40,7 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
-		dataGridHandler.clearSelection();		
+		dataGridHandler.clearSelection();
 		var newCatalogues = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

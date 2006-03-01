@@ -16,9 +16,6 @@
 		if(!sensors.isValid()){
 			flag = false;
 		}
-		if (!catalogues.isValid()) {
-			flag = false;
-		}
 		//need to isValid connection and parameters
 		return flag;
 	}
@@ -35,10 +32,6 @@
 		}
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
-		var tempCatalogues = catalogues.toXML();
-		for(var child in tempCatalogues.childNodes){
-			newDevice.appendChild(tempCatalogues.childNodes[child]);
-		}
 		var newOregon = new XMLNode(1,device_type);
 		var tempSensors = sensors.toXML();
 		for(var child in tempSensors.childNodes){
@@ -49,7 +42,6 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
-		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(sensors.toTree());
 		newNode.object = this;
 		_global.workflow.addNode("Oregon",newNode);
@@ -59,8 +51,6 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
-		catalogues = new Objects.Server.Catalogues();
-		var tempCatalogues = new XMLNode(1,"Catalogues");
 		sensors = new Objects.Server.OregonSensors();
 		if(newData.nodeName == "DEVICE"){
 			if(newData.attributes["NAME"]!=undefined){
@@ -89,12 +79,8 @@
 					case "PARAMETERS":
 					parameters = newData.childNodes[child];
 					break;
-					case "CATALOGUE":
-					tempCatalogues.appendChild(newData.childNodes[child]);
-					break;
 				}
 			}
-			catalogues.setXML(tempCatalogues);
 		}
 		else{
 			trace("ERROR, found node "+newData.nodeName+", expecting DEVICE");

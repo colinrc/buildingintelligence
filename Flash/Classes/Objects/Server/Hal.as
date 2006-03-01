@@ -1,5 +1,7 @@
 ﻿class Objects.Server.Hal extends Objects.Server.Device {
 	private var audiovideos:Objects.Server.AudioVideos;
+	private var inputs:Objects.Server.Catalogue;
+	private var functions:Objects.Server.Catalogue;		
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(audiovideos.getKeys());
@@ -32,6 +34,8 @@
 		}
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
+		newDevice.appendChild(inputs.toXML());
+		newDevice.appendChild(functions.toXML());		
 		var tempCatalogues = catalogues.toXML();
 		for (var child in tempCatalogues.childNodes) {
 			newDevice.appendChild(tempCatalogues.childNodes[child]);
@@ -46,7 +50,10 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
-		newNode.appendChild(catalogues.toTree());
+		if(_global.advanced){
+			newNode.appendChild(inputs.toTree());
+			newNode.appendChild(functions.toTree());			
+		}				
 		newNode.appendChild(audiovideos.toTree());
 		newNode.object = this;
 		_global.workflow.addNode("Hal",newNode);
@@ -56,8 +63,14 @@
 		device_type = "";
 		description ="";
 		active = "Y";
-		catalogues = new Objects.Server.Catalogues();
-		var tempCatalogues = new XMLNode(1, "Catalogues");
+		inputs = new Objects.Server.Catalogue();
+		var newInputs = new XMLNode(1,"CATALOGUE");
+		newInputs.attributes["NAME"] = "HAL Inputs";
+		inputs.setXML(newInputs);
+		functions = new Objects.Server.Catalogue();		
+		var newFunctions = new XMLNode(1, "CATALOGUE");
+		newFunctions.attributes["NAME"] = "HAL Functions";
+		functions.setXML(newFunctions);				
 		audiovideos = new Objects.Server.AudioVideos();
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
@@ -84,14 +97,17 @@
 					parameters = newData.childNodes[child];
 					break;
 				case "CATALOGUE" :
-					tempCatalogues.appendChild(newData.childNodes[child]);
+					if(newData.childNodes[child].attributes["NAME"] == "HAL Inputs"){
+						inputs.setXML(newData.childNodes[child]);
+					} else if(newData.childNodes[child].attributes["NAME"] == "HAL Functions"){
+						functions.setXML(newData.childNodes[child]);						
+					}
 					break;
 				case "HAL":
 					audiovideos.setXML(newData.childNodes[child]);
 					break;
 				}
 			}
-			catalogues.setXML(tempCatalogues);
 		} else {
 			trace("ERROR, found node "+newData.nodeName+", expecting DEVICE");
 		}

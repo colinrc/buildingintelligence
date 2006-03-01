@@ -12,7 +12,7 @@ class Forms.Project.Device.CbusRelays extends Forms.BaseForm {
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		var keyRestrictions = new Object();
 		keyRestrictions.maxChars = 2;
 		keyRestrictions.restrict = "0-9A-Fa-f";
@@ -24,9 +24,9 @@ class Forms.Project.Device.CbusRelays extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
-		dataGridHandler.addTextInputColumn("key", "Group Address", keyRestrictions, false);
-		dataGridHandler.addTextInputColumn("application", "CBUS App.", restrictions, true);
-		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions, true);
+		dataGridHandler.addTextInputColumn("key", "Group\nAddr.", keyRestrictions, false);
+		dataGridHandler.addTextInputColumn("application", "CBUS\nApp.", keyRestrictions, true);
+		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions, true);
 		dataGridHandler.addHiddenColumn("relay");
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(relays);

@@ -10,7 +10,10 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
+		var keyRestrictions = new Object();		
+		keyRestrictions.maxChars = 2;
+		keyRestrictions.restrict = "0-9A-Fa-f";				
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -19,10 +22,10 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);	
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
 		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Dynalite Code", restrictions,false);
-		dataGridHandler.addTextInputColumn("area", "Area", restrictions,false);		
-		dataGridHandler.addTextInputColumn("bla", "BLA", restrictions, true);		
-		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions,true);
+		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false);
+		dataGridHandler.addTextInputColumn("area", "Area", keyRestrictions,false);		
+		dataGridHandler.addTextInputColumn("bla", "BLA", keyRestrictions, true);		
+		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions,true);
 		dataGridHandler.addHiddenColumn("relay");
 		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(lights);

@@ -10,7 +10,7 @@ class Forms.Project.Device.Custom extends Forms.BaseForm {
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -19,15 +19,15 @@ class Forms.Project.Device.Custom extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Input Number", restrictions,false);
-		dataGridHandler.addCheckColumn("regex", "Key is RegEx.", values,false);		
+		dataGridHandler.addTextInputColumn("key", "Input\nNumber", restrictions,false);
+		dataGridHandler.addCheckColumn("regex", "Key is\nRegEx.", values,false);		
 		dataGridHandler.addTextInputColumn("command", "Command", restrictions,false);
 		dataGridHandler.addTextInputColumn("extra", "Extra", restrictions,true);
 		dataGridHandler.addTextInputColumn("extra2", "Extra2", restrictions,true);		
 		dataGridHandler.addTextInputColumn("extra3", "Extra3", restrictions,true);		
 		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions,true);		
 		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions,true);		
-		dataGridHandler.addTextInputColumn("power", "Power Rating", restrictions,true);
+		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions,true);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(customs);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

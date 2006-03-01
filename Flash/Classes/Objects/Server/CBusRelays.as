@@ -62,7 +62,11 @@
 		return relaysNode;
 	}
 	public function getName():String {
-		return "Relays";
+		if(container == "COMFORT"){
+			return "CBus Relays";
+		} else{
+			return "Relays";
+		}		
 	}
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());

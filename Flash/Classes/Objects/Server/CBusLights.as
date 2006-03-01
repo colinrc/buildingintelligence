@@ -62,7 +62,11 @@
 		return lightsNode;
 	}
 	public function getName():String {
-		return "Dimmers";
+		if(container == "COMFORT"){
+			return "CBus Dimmers";
+		} else{
+			return "Dimmers";
+		}				
 	}
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());

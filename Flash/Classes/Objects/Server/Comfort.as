@@ -12,6 +12,10 @@
 	private var alarms:Objects.Server.Alarms;
 	private var alerts:Objects.Server.Alerts;
 	private var analogues:Objects.Server.Analogues;
+	private var door_ids:Objects.Server.Catalogue;
+	private var comfort_users:Objects.Server.Catalogue;
+	//DOOR_IDS
+	//COMFORT_USERS
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(counters.getKeys());
@@ -85,6 +89,12 @@
 		if (!catalogues.isValid()) {
 			flag = false;
 		}
+		if (!door_ids.isValid()) {
+			flag = false;
+		}
+		if (!comfort_users.isValid()) {
+			flag = false;
+		}		
 		//need to isValid connection and parameters  
 		return flag;
 	}
@@ -101,6 +111,8 @@
 		}
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
+		newDevice.appendChild(door_ids.toXML());
+		newDevice.appendChild(comfort_users.toXML());
 		var tempCatalogues = catalogues.toXML();
 		for (var child in tempCatalogues.childNodes) {
 			newDevice.appendChild(tempCatalogues.childNodes[child]);
@@ -163,6 +175,8 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,"Customs");
+		newNode.appendChild(door_ids.toTree());
+		newNode.appendChild(comfort_users.toTree());
 		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(counters.toTree());
 		newNode.appendChild(customs.toTree());
@@ -199,6 +213,14 @@
 		alerts = new Objects.Server.Alerts();
 		analogues = new Objects.Server.Analogues();
 		catalogues = new Objects.Server.Catalogues();
+		door_ids = new Objects.Server.Catalogue();
+		comfort_users = new Objects.Server.Catalogue();
+		var newDoors = new XMLNode(1,"CATALOGUE");
+		newDoors.attributes["NAME"] = "Door IDs";
+		door_ids.setXML(newDoors);
+		var newUsers = new XMLNode(1, "CATALOGUE");
+		newUsers.attributes["NAME"] = "Comfort Users";
+		comfort_users.setXML(newUsers);			
 		var tempCatalogues = new XMLNode(1, device_type);
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
@@ -225,7 +247,13 @@
 					parameters = newData.childNodes[child];
 					break;
 				case "CATALOGUE" :
-					tempCatalogues.appendChild(newData.childNodes[child]);
+					if(newData.childNodes[child].attributes["NAME"] == "Door IDs"){
+						door_ids.setXML(newData.childNodes[child]);
+					} else if(newData.childNodes[child].attributes["NAME"] == "Comfort Users"){
+						comfort_users.setXML(newData.childNodes[child]);						
+					} else {
+						tempCatalogues.appendChild(newData.childNodes[child]);
+					}
 					break;
 				case "COMFORT" :
 					var tempNode = newData.childNodes[child];

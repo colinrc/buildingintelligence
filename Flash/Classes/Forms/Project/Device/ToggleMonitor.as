@@ -10,7 +10,7 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -19,7 +19,7 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
-		dataGridHandler.addTextInputColumn("key", "Output Number", restrictions, false);
+		dataGridHandler.addTextInputColumn("key", "Output\nNumber", restrictions, false);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(monitors);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

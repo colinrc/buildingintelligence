@@ -1,5 +1,4 @@
 ﻿class Objects.Server.GC100 extends Objects.Server.Device {
-	private var catalogues:Objects.Server.Catalogues;
 	private var modules:Objects.Server.GC100Modules;
 	private var irs:Objects.Server.GC100IRs;
 	private var toggle_inputs:Objects.Server.GC100Toggles;
@@ -19,9 +18,6 @@
 		if ((active != "Y") && (active != "N")) {
 			flag = false;
 		}
-		if (!catalogues.isValid()) {
-			flag = false;
-		}
 		//need to isValid connection and parameters 
 		return flag;
 	}
@@ -38,20 +34,10 @@
 		}
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
-		var tempCatalogues = catalogues.toXML();
-		for (var child in tempCatalogues.childNodes) {
-			newDevice.appendChild(tempCatalogues.childNodes[child]);
-		}
-		var tempObject:Object = modules.getData();
-		var tempModules:Array =  tempObject.modules;
+		var tempModules =  modules.getData();
 		var tempInputs = toggle_inputs.getData();
 		var tempOutputs = toggle_outputs.getData();
 		var tempIRs = irs.getData();
-		trace(modules.getData());
-		trace(tempObject);
-		trace(tempObject.modules);
-		trace(modules.getData().modules);
-		trace(tempModules);		
 		for (var child in tempModules.modules) {
 			if(tempModules.modules[child].type == "IR"){
 				var newModule = new XMLNode(1,"GC100_IR");				
@@ -107,7 +93,6 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
-		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(modules.toTree());
 		newNode.appendChild(irs.toTree());
 		newNode.appendChild(toggle_inputs.toTree());
@@ -125,7 +110,6 @@
 		irs = new Objects.Server.GC100IRs();
 		toggle_inputs = new Objects.Server.GC100Toggles("TOGGLE_INPUT");
 		toggle_outputs = new Objects.Server.GC100Toggles("TOGGLE_OUTPUT");
-		var tempCatalogues = new XMLNode(1, "Catalogues");
 		var tempModules = new Array();
 		var tempIRs = new Array();
 		var tempToggle_Inputs = new Array();
@@ -153,9 +137,6 @@
 					break;
 				case "PARAMETERS" :
 					parameters = newData.childNodes[child];
-					break;
-				case "CATALOGUE" :
-					tempCatalogues.appendChild(newData.childNodes[child]);
 					break;
 				case "GC100_IR":
 				case "GC100_Relay":
@@ -241,14 +222,13 @@
 					break;
 				}
 			}
-			catalogues.setXML(tempCatalogues);
-			modules.setData(tempModules);
+			modules.setData({modules:tempModules});
 			irs.setData({irs:tempIRs});
-			irs.setModules(tempModules);
+			irs.setModules(modules);
 			toggle_inputs.setData({toggles:tempToggle_Inputs});
-			toggle_inputs.setModules(tempModules);
+			toggle_inputs.setModules(modules);
 			toggle_outputs.setData({toggles:tempToggle_Outputs});
-			toggle_outputs.setModules(tempModules);			
+			toggle_outputs.setModules(modules);			
 		} else {
 			trace("ERROR, found node "+newData.nodeName+", expecting DEVICE");
 		}

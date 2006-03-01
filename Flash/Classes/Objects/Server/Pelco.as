@@ -35,10 +35,6 @@
 		}
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
-		var tempCatalogues = catalogues.toXML();
-		for (var child in tempCatalogues.childNodes) {
-			newDevice.appendChild(tempCatalogues.childNodes[child]);
-		}
 		var newPelco = new XMLNode(1,device_type);
 		var tempCameras = cameras.toXML();
 		for (var child in tempCameras.childNodes){
@@ -49,7 +45,6 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
-		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(cameras.toTree());
 		newNode.object = this;
 		_global.workflow.addNode("Pelco",newNode);
@@ -59,8 +54,6 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
-		catalogues = new Objects.Server.Catalogues();
-		var tempCatalogues = new XMLNode(1, "Catalogues");
 		cameras = new Objects.Server.Cameras();
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
@@ -89,12 +82,8 @@
 				case "PARAMETERS" :
 					parameters = newData.childNodes[child];
 					break;
-				case "CATALOGUE" :
-					tempCatalogues.appendChild(newData.childNodes[child]);
-					break;
 				}
 			}
-			catalogues.setXML(tempCatalogues);
 		} else {
 			trace("ERROR, found node "+newData.nodeName+", expecting DEVICE");
 		}

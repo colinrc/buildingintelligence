@@ -12,7 +12,7 @@ class Forms.Project.Device.CbusTemperatureSensors extends Forms.BaseForm {
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		var keyRestrictions = new Object();		
 		keyRestrictions.maxChars = 2;
 		keyRestrictions.restrict = "0-9A-Fa-f";		
@@ -24,7 +24,7 @@ class Forms.Project.Device.CbusTemperatureSensors extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);		
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Unit Address", keyRestrictions,false);
+		dataGridHandler.addTextInputColumn("key", "Unit\nAddr.", keyRestrictions,false);
 		dataGridHandler.setAdvanced(_global.advanced );
 		dataGridHandler.setDataGridDataProvider(sensors);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

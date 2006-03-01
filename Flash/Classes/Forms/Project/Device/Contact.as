@@ -10,7 +10,10 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
+		var keyRestrictions = new Object();		
+		keyRestrictions.maxChars = 2;
+		keyRestrictions.restrict = "0-9A-Fa-f";			
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -19,8 +22,8 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
-		dataGridHandler.addTextInputColumn("key", "Input Key", restrictions, false);
-		dataGridHandler.addTextInputColumn("box", "Box", restrictions, false);
+		dataGridHandler.addTextInputColumn("key", "Input\nKey", keyRestrictions, false);
+		dataGridHandler.addTextInputColumn("box", "Box", keyRestrictions, false);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(contacts);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

@@ -7,7 +7,6 @@
 	private var relays:Objects.Server.DynaliteRelays;
 	private var lightAreas:Objects.Server.DynaliteLightAreas;	
 	private var contacts:Objects.Server.ContactClosures;
-	private var catalogues:Objects.Server.Catalogues;
 	private var alarms:Objects.Server.Alarms
 	private var connection:XMLNode;
 	private var parameters:XMLNode;
@@ -47,9 +46,6 @@
 		if (!lightAreas.isValid()) {
 			flag = false;
 		}
-		if (!catalogues.isValid()) {
-			flag = false;
-		}
 		//need to isValid connection and parameters 
 		return flag;
 	}
@@ -66,10 +62,6 @@
 		}
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
-		var tempCatalogues = catalogues.toXML();
-		for (var child in tempCatalogues.childNodes) {
-			newDevice.appendChild(tempCatalogues.childNodes[child]);
-		}
 		var newDynalite = new XMLNode(1, device_type);
 		var tempIRs = irs.toXML();
 		for (var child in tempIRs.childNodes) {
@@ -100,7 +92,6 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
-		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(lights.toTree());
 		newNode.appendChild(relays.toTree());
 		newNode.appendChild(contacts.toTree());
@@ -115,8 +106,6 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
-		catalogues = new Objects.Server.Catalogues();
-		var tempCatalogues = new XMLNode(1, "Catalogues");
 		irs = new Objects.Server.DynaliteIRs();
 		lights = new Objects.Server.DynaliteLights();
 		relays = new Objects.Server.DynaliteRelays();
@@ -185,12 +174,8 @@
 				case "PARAMETERS" :
 					parameters = newData.childNodes[child];
 					break;
-				case "CATALOGUE" :
-					tempCatalogues.appendChild(newData.childNodes[child]);
-					break;
 				}
 			}
-			catalogues.setXML(tempCatalogues);
 		} else {
 			trace("ERROR, found node "+newData.nodeName+", expecting DEVICE");
 		}

@@ -11,17 +11,22 @@ class Forms.Project.Device.GC100IR extends Forms.BaseForm {
 	public function onLoad() {
 		var DP = new Array();
 		for(var module in modules){
-			DP.push({label:modules[module].number});
+			if(modules[module].type =="IR"){
+				DP.push({label:modules[module].number});
+			}
 		}		
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
+		var keyRestrictions = new Object();		
+		keyRestrictions.maxChars = 2;
+		keyRestrictions.restrict = "0-9A-Fa-f";			
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(ir_dg);
 		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Key", restrictions,false);
-		dataGridHandler.addTextInputColumn("avname", "AV Name", restrictions,false);		
-		dataGridHandler.addComboBoxColumn("module", "Module No.", DP,false);				
+		dataGridHandler.addTextInputColumn("key", "Key", keyRestrictions,false);
+		dataGridHandler.addTextInputColumn("avname", "AV\nName", restrictions,false);		
+		dataGridHandler.addComboBoxColumn("module", "Module\nNo.", DP,false);				
 		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(irs);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

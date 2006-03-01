@@ -36,7 +36,6 @@
 		return newNode;
 	}
 	public function setData(newData:Object) {
-		name = newData.name;
 		items = newData.items;
 	}
 	public function getData():Object {

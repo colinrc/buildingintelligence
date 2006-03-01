@@ -50,7 +50,11 @@
 		return sensorsNode;
 	}
 	public function getName():String {
-		return "Temperatures";
+		if(container == "COMFORT"){
+			return "CBus Temperatures";
+		} else{
+			return "Temperatures";
+		}						
 	}
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());

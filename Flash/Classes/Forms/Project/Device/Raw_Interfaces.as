@@ -68,22 +68,7 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 				raw_interfaces[raw_interface].catalogue = catalogueDP[0].label;
 				raw_interfaces[raw_interface].code.label = catalogueDP[0].data[0].label;
 				raw_interfaces[raw_interface].code.DP = catalogueDP[0].data;
-				/*var splitString = catalogueDP[0].data[0].data.split("%");
-				var isEven = false;
-				for (var subString in splitString) {
-				if (isEven) {
-				for (var variable in interfaces_dg.selectedItem.vars) {
-				if ((splitString[subString] != "COMMAND") && (splitString[subString] != "EXTRA") && (splitString[subString] != "EXTRA2") && (splitString[subString] != "EXTRA3") && (splitString[subString] != "EXTRA4") && (splitString[subString] != "EXTRA5")) {
-				if (interfaces_dg.selectedItem.vars[variable].attributes.NAME == splitString[subString]) {
-				splitString[subString] = interfaces_dg.selectedItem.vars[variable].attributes.VALUE;
-				}
-				}
-				}
-				isEven = false;
-				} else {
-				isEven = true;
-				}
-				}*/
+				raw_interfaces[raw_interface].vars =  catalogueDP[0].data[0].data;
 			}
 		}
 		dataGridHandler.setDataGridDataProvider(raw_interfaces);
@@ -92,13 +77,13 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		interfaces_dg.addEventListener("change", Delegate.create(this, itemChange));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
-	public function setAdvanced(){
-		if(_global.advanced){
+	public function setAdvanced() {
+		if (_global.advanced) {
 			dataGridHandler.setAdvanced(_global.advanced);
 		} else {
 			dataGridHandler.setAdvanced(_global.advanced);
 		}
-	}	
+	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();
 	}

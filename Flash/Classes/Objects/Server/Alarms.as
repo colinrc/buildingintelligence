@@ -33,6 +33,9 @@
 			if(alarms[alarm].display_name != ""){
 				newAlarm.attributes["DISPLAY_NAME"] = alarms[alarm].display_name;
  		    }
+			if(alarms[alarm].name != ""){
+				newAlarm.attributes["NAME"] = alarms[alarm].name;
+ 		    }			
 			alarmsNode.appendChild(newAlarm);
 		}
 		return alarmsNode;
@@ -59,12 +62,16 @@
 			var newAlarm = new Object();
 			newAlarm.key = "";
 			newAlarm.display_name = "";
+			newAlarm.name = "";
 			if(newData.childNodes[child].attributes["KEY"]!=undefined){
 				newAlarm.key = newData.childNodes[child].attributes["KEY"];
 			}
 			if(newData.childNodes[child].attributes["DISPLAY_NAME"]!=undefined){
 				newAlarm.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
 			}
+			if(newData.childNodes[child].attributes["NAME"]!=undefined){
+				newAlarm.name = newData.childNodes[child].attributes["NAME"];
+			}			
 			alarms.push(newAlarm);
 		}
 	}

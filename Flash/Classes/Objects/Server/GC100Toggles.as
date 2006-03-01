@@ -2,7 +2,7 @@
 	private var container:String;
 	private var toggle_type:String;
 	private var toggles:Array;
-	private var modules:Array;
+	private var modules:Object;
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var toggle in toggles){
@@ -13,7 +13,7 @@
 	public function GC100Toggles(inToggle_type:String) {
 		toggle_type = inToggle_type;
 	}
-	public function setModules(inModules:Array){
+	public function setModules(inModules:Object){
 		modules = inModules;
 	}
 	public function isValid():Boolean {
@@ -54,7 +54,7 @@
 		}
 	}
 	public function getData():Object {
-		return {toggles:toggles,toggle_type:toggle_type,modules:modules};
+		return {toggles:toggles,toggle_type:toggle_type,modules:modules.getData().modules};
 	}
 	public function setData(newData:Object):Void{
 		toggles = newData.toggles;

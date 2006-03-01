@@ -8,9 +8,9 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var save_btn:Button;
-	private var name_ti:TextInput;
-	public function init() {
-		name_ti.text = name;
+	private var name_lb:Label;
+	public function onLoad() {
+		name_lb.text = name+":";
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.rescrict = "";
@@ -18,7 +18,7 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		dataGridHandler.setDataGrid(items_dg);
 		dataGridHandler.addTextInputColumn("code", "Code", restrictions,false);
 		dataGridHandler.addTextInputColumn("value", "Value", restrictions,false);
-		dataGridHandler.setAdvanced(false);//Debug						
+		dataGridHandler.setAdvanced(_global.advanced);//Debug						
 		var DP = new Array();
 		for (var item in items) {
 			var newItem = new Object();
@@ -37,6 +37,13 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		new_btn.addEventListener("click", Delegate.create(this, newRow));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
+	public function setAdvanced(){
+		if(_global.advanced){
+			dataGridHandler.setAdvanced(_global.advanced);
+		} else {
+			dataGridHandler.setAdvanced(_global.advanced);
+		}
+	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();
 	}
@@ -58,8 +65,6 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 			newItems.push(item);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		_global.left_tree.selectedNode.object.setData({name:name_ti.text, items:newItems});
-		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
-		_global.left_tree.selectedIndex = tempIndex;
+		_global.left_tree.selectedNode.object.setData({items:newItems});
 	}
 }

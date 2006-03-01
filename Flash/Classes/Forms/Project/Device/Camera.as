@@ -21,8 +21,8 @@ class Forms.Project.Device.Camera extends Forms.BaseForm {
 		dataGridHandler.setDataGrid(cameras_dg);
 		dataGridHandler.addActiveColumn("active", values);		
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Camera Zone", keyRestrictions,false);
-		dataGridHandler.addTextInputColumn("zoom", "Camera Zoom", keyRestrictions,false);		
+		dataGridHandler.addTextInputColumn("key", "Camera\nZone", keyRestrictions,false);
+		dataGridHandler.addTextInputColumn("zoom", "Camera\nZoom", keyRestrictions,false);		
 		dataGridHandler.setAdvanced(_global.advanced);				
 		dataGridHandler.setDataGridDataProvider(cameras);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

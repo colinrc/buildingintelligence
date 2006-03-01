@@ -14,13 +14,11 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
-		var keyRestrictions = new Object();		
-		keyRestrictions.maxChars = 2;
-		keyRestrictions.restrict = "1-0A-Fa-f";		
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(alarms_dg);
 		dataGridHandler.addTextInputColumn("display_name","Key",restrictions,false);		
-		dataGridHandler.addTextInputColumn("key","Comfort Code",keyRestrictions,false);
+		dataGridHandler.addTextInputColumn("name","Description",restrictions,false);				
+		dataGridHandler.addTextInputColumn("key","Alarm\nCode",restrictions,false);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(alarms);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

@@ -10,7 +10,10 @@ class Forms.Project.Device.DynaliteLightAreas extends Forms.BaseForm {
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
+		var keyRestrictions = new Object();		
+		keyRestrictions.maxChars = 2;
+		keyRestrictions.restrict = "0-9A-Fa-f";				
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -19,7 +22,7 @@ class Forms.Project.Device.DynaliteLightAreas extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
 		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Dynalite Code", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false);
 		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(lightAreas);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

@@ -38,7 +38,7 @@ class Forms.DataGrid.ComboBoxCellRenderer extends UIComponent {
 				label._visible = (item != undefined);
 				label.dataProvider = itemObject.DP;
 				for (var index in label.dataProvider) {
-					if (itemObject.label == label.dataProvider[index].label) {
+					if ((itemObject.label == label.dataProvider[index].label)&&(itemObject.label != undefined)){
 						label.selectedIndex = index;
 					}
 				}

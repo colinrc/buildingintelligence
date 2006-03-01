@@ -19,8 +19,8 @@ class Forms.DataGrid.CheckCellRenderer extends UIComponent {
 	// __width and __height
 	function size(Void):Void {
 		check.setSize(20, __height);
-		check._x = (__width-20)/2;
-		check._y = (__height-16)/2;
+		check._x = (__width-20)/2+2;
+		check._y = (__height-16)/2+2;
 	}
 	function setValue(str:String, item:Object, sel:Boolean):Void {
 		var itemLocation = getCellIndex();

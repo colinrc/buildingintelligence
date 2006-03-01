@@ -12,7 +12,7 @@ class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		var keyRestrictions = new Object();		
 		keyRestrictions.maxChars = 2;
 		keyRestrictions.restrict = "0-9A-Fa-f";		
@@ -24,10 +24,10 @@ class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Unit Address", keyRestrictions,false);
-		dataGridHandler.addTextInputColumn("channel", "Channel", restrictions,false);
-		dataGridHandler.addTextInputColumn("units", "Units", restrictions,false);		
-		dataGridHandler.addTextInputColumn("application", "CBUS App.", restrictions,true);
+		dataGridHandler.addTextInputColumn("key", "Unit\nAddr.", keyRestrictions,false);
+		dataGridHandler.addTextInputColumn("channel", "Channel", keyRestrictions,false);
+		dataGridHandler.addTextInputColumn("units", "Units", keyRestrictions,false);		
+		dataGridHandler.addTextInputColumn("application", "CBUS\nApp.", keyRestrictions,true);
 		dataGridHandler.setAdvanced(_global.advanced );//Debug						
 		dataGridHandler.setDataGridDataProvider(sensors);		
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

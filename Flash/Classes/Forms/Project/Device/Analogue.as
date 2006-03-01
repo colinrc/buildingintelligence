@@ -11,6 +11,9 @@ class Forms.Project.Device.Analogue extends Forms.BaseForm {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
+		var keyRestrictions = new Object();		
+		keyRestrictions.maxChars = 2;
+		keyRestrictions.restrict = "1-0A-Fa-f";			
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -19,7 +22,7 @@ class Forms.Project.Device.Analogue extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Input Number", restrictions,false);
+		dataGridHandler.addTextInputColumn("key", "Input\nNumber", keyRestrictions,false);
 		dataGridHandler.setAdvanced(_global.advanced);		
 		dataGridHandler.setDataGridDataProvider(analogues);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

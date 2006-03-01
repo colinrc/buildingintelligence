@@ -34,9 +34,6 @@
 		if (!temperatureSensors.isValid()) {
 			flag = false;
 		}		
-		if (!catalogues.isValid()) {
-			flag = false;
-		}
 		//need to isValid connection and parameters 
 		return flag;
 	}
@@ -53,10 +50,6 @@
 		}
 		newDevice.appendChild(connection);
 		newDevice.appendChild(parameters);
-		var tempCatalogues = catalogues.toXML();
-		for (var child in tempCatalogues.childNodes) {
-			newDevice.appendChild(tempCatalogues.childNodes[child]);
-		}
 		var newCBus = new XMLNode(1, device_type);
 		var tempSensors = sensors.toXML();
 		for (var child in tempSensors.childNodes) {
@@ -79,7 +72,6 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
-		newNode.appendChild(catalogues.toTree());		
 		newNode.appendChild(sensors.toTree());
 		newNode.appendChild(lights.toTree());
 		newNode.appendChild(relays.toTree());
@@ -92,8 +84,6 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
-		catalogues = new Objects.Server.Catalogues();
-		var tempCatalogues = new XMLNode(1, "Catalogues");
 		sensors = new Objects.Server.CBusSensors();
 		lights = new Objects.Server.CBusLights();
 		relays = new Objects.Server.CBusRelays();
@@ -151,12 +141,8 @@
 				case "PARAMETERS" :
 					parameters = newData.childNodes[child];
 					break;
-				case "CATALOGUE" :
-					tempCatalogues.appendChild(newData.childNodes[child]);
-					break;
 				}
 			}
-			catalogues.setXML(tempCatalogues);
 		} else {
 			trace("ERROR, found node "+newData.nodeName+", expecting DEVICE");
 		}

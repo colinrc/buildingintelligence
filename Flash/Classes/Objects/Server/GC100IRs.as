@@ -1,8 +1,8 @@
 ﻿class Objects.Server.GC100IRs extends Objects.BaseElement {
 	private var container:String;
 	private var irs:Array;
-	private var modules:Array;
-	public function setModules(inModules:Array){
+	private var modules:Object;
+	public function setModules(inModules:Object){
 		modules = inModules;
 	}
 	public function getKeys():Array{
@@ -43,6 +43,6 @@
 		irs = newData.irs;
 	}
 	public function getData():Object {
-		return {irs:irs,modules:modules};
+		return {irs:irs,modules:modules.getData().modules};
 	}
 }

@@ -10,7 +10,7 @@ class Forms.Project.Device.Counter extends Forms.BaseForm {
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		var keyRestrictions = new Object();		
 		keyRestrictions.maxChars = 2;
 		keyRestrictions.restrict = "1-0A-Fa-f";			

@@ -34,8 +34,8 @@
 						if (newRaw_Interfaces[rawInterface].childNodes[rawItem].attributes.CATALOGUE == raw_interfaces[index].catalogue) {
 							foundItems = true;
 							var Raw = new XMLNode(1, "RAW");
-							if (raw_interfaces[index].code.length) {
-								Raw.attributes.CODE = raw_interfaces[index].code;
+							if (raw_interfaces[index].code.label.length) {
+								Raw.attributes.CODE = raw_interfaces[index].code.label;
 							}
 							if (raw_interfaces[index].command.length) {
 								Raw.attributes.COMMAND = raw_interfaces[index].command;
@@ -67,8 +67,8 @@
 							Raw_Items.attributes.CATALOGUE = raw_interfaces[index].catalogue;
 						}
 						var Raw = new XMLNode(1, "RAW");
-						if (raw_interfaces[index].code.length) {
-							Raw.attributes.CODE = raw_interfaces[index].code;
+						if (raw_interfaces[index].code.label.length) {
+							Raw.attributes.CODE = raw_interfaces[index].code.label;
 						}
 						if (raw_interfaces[index].command.length) {
 							Raw.attributes.COMMAND = raw_interfaces[index].command;
@@ -109,8 +109,8 @@
 					Raw_Items.attributes.CATALOGUE = raw_interfaces[index].catalogue;
 				}
 				var Raw = new XMLNode(1, "RAW");
-				if (raw_interfaces[index].code.length) {
-					Raw.attributes.CODE = raw_interfaces[index].code;
+				if (raw_interfaces[index].code.label.length) {
+					Raw.attributes.CODE = raw_interfaces[index].code.label;
 				}
 				if (raw_interfaces[index].command.length) {
 					Raw.attributes.COMMAND = raw_interfaces[index].command;
