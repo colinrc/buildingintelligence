@@ -83,6 +83,10 @@ public class Type implements Serializable, Cloneable {
 	public String getValue() {
 		return value;
 	}
+	
+	public String getDescription() {
+		return desc;
+	}
 
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Type)) {
