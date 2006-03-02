@@ -52,4 +52,10 @@ public interface DynaliteDevice {
 	public void setBLA(String bLA);
 	
 	public int listensToLinkArea (int linkOffset);
+	
+	public boolean isLinked();
+
+	public void incLinkCount ();
+	
+	public void decLinkCount ();
 }

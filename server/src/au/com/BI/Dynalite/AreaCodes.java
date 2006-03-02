@@ -38,7 +38,7 @@ public class AreaCodes {
 					DynaliteDevice dev = (DynaliteDevice)devsIter.next();
 					int newArea = dev.listensToLinkArea(toAreaOffset);
 					if (newArea != 255){
-						String paddedToKey = Utility.padStringTohex(toAreaOffset);
+						String paddedToKey = Utility.padStringTohex(newArea);
 						this.add(paddedToKey, dev);
 					}
 				} catch (ClassCastException ex){}
@@ -61,7 +61,7 @@ public class AreaCodes {
 					DynaliteDevice dev = (DynaliteDevice)devsIter.next();
 					int newArea = dev.listensToLinkArea(toAreaOffset);
 					if (newArea != 255){
-						String paddedToKey = Utility.padStringTohex(toAreaOffset);
+						String paddedToKey = Utility.padStringTohex(newArea);
 						this.remove(paddedToKey, dev);
 					}
 				} catch (ClassCastException ex){}
@@ -77,6 +77,9 @@ public class AreaCodes {
 		}else {
 			keys = new LinkedList();
 		}
+		synchronized (device){
+			device.incLinkCount();
+		}
 		synchronized (keys){
 			keys.add(device);
 			areaCodes.put(areaCode,keys);
@@ -89,6 +92,9 @@ public class AreaCodes {
 			return;
 		}
 		keys = (LinkedList)areaCodes.get(areaCode);
+		synchronized (device){
+			device.decLinkCount();
+		}
 		synchronized (keys){
 			if (keys.contains(keys)) areaCodes.remove(device);
 			areaCodes.put(areaCode,keys);

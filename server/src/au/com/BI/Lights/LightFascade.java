@@ -335,4 +335,25 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 		}		
 		return 255;
 	}
+
+	public boolean isLinked() {
+		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE ){
+			return ((Dynalite)light).isLinked ( );
+		}		
+		return false;
+	}
+
+	public void incLinkCount() {
+		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE ){
+			((Dynalite)light).incLinkCount ( );
+		}		
+	}
+
+
+	public void decLinkCount() {
+		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE ){
+			((Dynalite)light).decLinkCount ( );
+		}		
+	}
+
 }

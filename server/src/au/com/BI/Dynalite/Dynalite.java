@@ -27,7 +27,7 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 	protected String BLA = "";
 	protected int bLAInt = 255;
 	protected boolean devFromLink = false;
-
+	protected int linkCount = 0;
 	protected boolean areaDevice = false;
 	
 	public Dynalite (String name, int deviceType){
@@ -168,6 +168,19 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 			if (toLink > 255) toLink = 255;
 		}
 		return toLink;
+	}
+
+
+	public boolean isLinked() {
+		if (linkCount > 0) return true; else return  false;
+	}
+
+	public void incLinkCount () {
+		linkCount ++;
+	}
+	
+	public void decLinkCount () {
+		if (linkCount > 0 ) linkCount --;
 	}
 
 }

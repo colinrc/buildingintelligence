@@ -61,12 +61,15 @@ public class LightFactory {
 		if (connectionType == DeviceType.LIGHT_DYNALITE) {
 			String areaCode = element.getAttributeValue("AREA");
 			String relay = element.getAttributeValue("RELAY");
+			String bla = element.getAttributeValue("BLA");
 			int channel = 0;
 			int box = 0;
 			if (areaCode != null) {
 				theLight.setAreaCode(areaCode);
 			}
-	
+			if (bla != null) {
+				theLight.setBLA(bla);
+			}
 			if (relay != null) {
 				theLight.setRelay(relay);
 			}
