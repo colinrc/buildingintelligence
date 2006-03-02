@@ -1,6 +1,10 @@
+Logging
+-------
+Try to ensure empty "severe error" messages are not sent to the flash client
+
 Comms
 -----
-Ensure comms device know theeir associated models for more meaninful error reporting.
+Ensure comms device know their associated models for more meaninful error reporting.
 IP and serial listener modified to support end byes markers larger than 128 (eg. 255 for Orgenon)
 
 Alerts
