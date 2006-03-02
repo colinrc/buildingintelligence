@@ -1060,7 +1060,11 @@ public class Model extends BaseModel implements DeviceModel {
 			byte areaVal = Byte.parseByte(areaCodeStr,16); 
 			byte linkTo = Byte.parseByte(blaOffsetStr);
 			byte join = dynaliteHelper.findJoin(joinStr,returnVal);
-			this.areaCodes.addJoin (areaCodeStr, blaOffsetStr);
+			if (linkOrUnlink) {
+				this.areaCodes.addJoin (areaCodeStr, blaOffsetStr);
+			} else {
+				this.areaCodes.removeJoin(areaCodeStr, blaOffsetStr);				
+			}
 			if (linkTo >= 1 && linkTo <= 8 ) {
 				returnVal.outputCodes[2] = (byte)(128 >> (linkTo -1));	
 			} else {
