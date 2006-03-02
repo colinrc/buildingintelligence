@@ -1,5 +1,5 @@
 package au.com.BI.simulator.util;
-
+ 
 
 public class Utility {
 	public static String parseString (String str){

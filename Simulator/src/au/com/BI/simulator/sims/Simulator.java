@@ -150,11 +150,7 @@ public class Simulator {
    }	   
  
    public void disconnectAll () {
-	  Iterator eachSim = this.simulationDevices.keySet().iterator();
-	  while (eachSim.hasNext()){
-		  String eachkey = (String)eachSim.next();
-		  SimulateDevice sim = (SimulateDevice)simulationDevices.get(eachkey);
-		  
+	   for (SimulateDevice sim: simulationDevices.values()){
 		  sim.disconnect();
 	  }
    }
@@ -209,6 +205,11 @@ public class Simulator {
    public void setConnectionStatus (int connectionStatus,SimTypes simType) {
 	   SimulateDevice simulate = this.getSimulateDevice (simType);
 	   if (simulate != null) simulate.setConnectionStatus(connectionStatus);
+   }
+   
+   public void exit () {
+	   this.disconnectAll();
+	   System.exit(0);
    }
 
    public static void main(String args[]) {

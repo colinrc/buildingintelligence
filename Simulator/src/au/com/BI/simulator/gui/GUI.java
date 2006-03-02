@@ -11,6 +11,8 @@ import au.com.BI.simulator.sims.*;
 import au.com.BI.simulator.util.Utility;
 import au.com.BI.simulator.conf.*;
 import java.util.*;
+
+import au.com.BI.simulator.conf.Control.ControlStates;
 import au.com.BI.simulator.conf.Control.SimTypes;
 
 public class GUI extends JPanel implements ItemListener {
@@ -19,15 +21,18 @@ public class GUI extends JPanel implements ItemListener {
 	 */
 	private static final long serialVersionUID = 1L;
 	// Various GUI components and info
-	   public JFrame mainFrame = null;
-	   public JTextArea chatText = null;
-	   public JTextField chatLine = null;
-	   public JPanel statusBar = null;
-	   public JLabel statusField = null;
-	   public JTextField statusColor = null;
-	   public JButton clearButton = null;
-	   public JCheckBox hexOnlyBox = null;
-	   public JComboBox textTarget = null;
+		protected JFrame mainFrame = null;
+	   protected JTextArea chatText = null;
+	   protected JTextField chatLine = null;
+	   protected JPanel statusBar = null;
+	   protected JLabel statusField = null;
+	   protected JTextField statusColor = null;
+	   protected JButton clearButton = null;
+	   protected JCheckBox hexOnlyBox = null;
+	   protected JComboBox textTarget = null;
+	   protected JMenuBar menuBar = null;
+	   protected JMenu menu = null; 
+	   protected JMenuItem exitItem = null;
 	   private Helper helper = null;
 	   public Simulator simulator;
 	   public boolean hexOnly = false;
@@ -83,27 +88,31 @@ public class GUI extends JPanel implements ItemListener {
 			  pane.setLayout(new BoxLayout(pane,BoxLayout.Y_AXIS));
 			  
 		      clearButton = new JButton ("Clear");
-		      clearButton.setAlignmentX(LEFT_ALIGNMENT);
+		      clearButton.setAlignmentX(CENTER_ALIGNMENT);
 		      clearButton.addActionListener(clearButtonListener);
 		      pane.add(clearButton);
 
 		      pane.add(Box.createRigidArea(new Dimension(0, 20)));
 		      
 		      hexOnlyBox = new JCheckBox ("Hex Only");
-		      hexOnlyBox.setAlignmentX(LEFT_ALIGNMENT);
+		      hexOnlyBox.setAlignmentX(CENTER_ALIGNMENT);
 		      hexOnlyBox.addItemListener(this);
 
 		      pane.add(hexOnlyBox);
 		      pane.add(Box.createRigidArea(new Dimension(0, 20)));
 		      JLabel textTargetLabel = new JLabel ("Text Target");
-		      textTargetLabel.setAlignmentX(LEFT_ALIGNMENT);
+		      textTargetLabel.setAlignmentX(CENTER_ALIGNMENT);
 		      pane.add(textTargetLabel);
 
 		      textTarget = new JComboBox ();
-		      textTarget.setAlignmentX(LEFT_ALIGNMENT);
+		      textTarget.setAlignmentX(CENTER_ALIGNMENT);
 		      textTarget.addItemListener(this);
+		      textTarget.setAlignmentY(BOTTOM_ALIGNMENT);
 
 		      pane.add(textTarget);
+		      pane.add(Box.createRigidArea(new Dimension(0, 8)));
+		      //Border blankBorder = BorderFactory.createEtchedBorder();
+		      //pane.setBorder( blankBorder);
 		      
 		      
 		      // Set up the chat pane
@@ -150,7 +159,7 @@ public class GUI extends JPanel implements ItemListener {
 			 
 			 layout.putConstraint(SpringLayout.WEST, pane,5,SpringLayout.WEST, this);
 			 layout.putConstraint(SpringLayout.NORTH, chatPane,5,SpringLayout.SOUTH, buttonBar);
-			 layout.putConstraint(SpringLayout.NORTH, pane,5,SpringLayout.SOUTH, buttonBar);
+			 layout.putConstraint(SpringLayout.SOUTH, pane,5,SpringLayout.SOUTH, chatPane);
 			 layout.putConstraint(SpringLayout.EAST, this,5,SpringLayout.EAST, chatPane);
 			 layout.putConstraint(SpringLayout.WEST, chatPane ,10,SpringLayout.EAST, pane);
 		      
@@ -160,6 +169,21 @@ public class GUI extends JPanel implements ItemListener {
 
 		      // Set up the main frame
 		      mainFrame = new JFrame("eLife House Simulator");
+
+		      // Create the menu bar.
+		      menuBar = new JMenuBar();
+
+		      // Build the first menu.
+		      menu = new JMenu("File");
+		      menuBar.add(menu);
+		      exitItem = new JMenuItem("Exit",
+                      KeyEvent.VK_T);
+		      exitItem.setAccelerator(KeyStroke.getKeyStroke(
+		    		  KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+		      exitItem.addActionListener(new CloseDown (simulator));
+		      menu.add(exitItem);
+
+		      mainFrame.setJMenuBar(menuBar);
 		      mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		      mainFrame.setContentPane(this);
 		      mainFrame.setSize(mainFrame.getPreferredSize());
@@ -185,6 +209,18 @@ public class GUI extends JPanel implements ItemListener {
 		        }
 
 	        }
+	   }
+	   
+	   public class CloseDown implements ActionListener {
+		   protected Simulator simulator;
+		   
+		   public CloseDown (Simulator simulator){
+			   this.simulator = simulator;
+		   }
+		   
+    	  public void actionPerformed (ActionEvent a){
+    		  simulator.exit();
+    	  }
 	   }
 	   
 	   public void setHexOnly (boolean hexOnly){
@@ -221,7 +257,7 @@ public class GUI extends JPanel implements ItemListener {
                String s = chatLine.getText();
                if (!s.equals("")) {
             	   	String ps = Utility.parseString(s);
-                  appendToChatBox("OUT",ps);
+                  appendToChatBox("OUT."+textTargetSim,ps);
                   chatLine.selectAll();
 
                   // Send the string

@@ -62,13 +62,15 @@ public class GUIPanel {
 				   jButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 				   controlObjects.add(jButton);
 				   eachBox.add(jButton);
+				   eachBox.add( Box.createRigidArea(new Dimension(0, 2)));
 			   }
 		   } else {
 			   JLabel pic = new JLabel (iconOff);
 			   pic.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 			   eachBox.add(Box.createRigidArea(new Dimension(0, 2)));
 			   eachBox.add(pic);
-			   
+			   eachBox.add( Box.createRigidArea(new Dimension(0, 2)));
+
 			   setLight(pic);
 			   
 			   if (this.isHasSlider()){
@@ -81,7 +83,7 @@ public class GUIPanel {
 				   slider.addChangeListener(new SliderChanged (helper,simulator,gui,this,control));
 				   slider.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 				   eachBox.add(slider);
-	
+				   eachBox.add( Box.createRigidArea(new Dimension(0, 2)));
 			   } else {
 				   buttonOn.setText("On");
 				   buttonOn.setActionCommand("ON");
@@ -89,6 +91,7 @@ public class GUIPanel {
 				   buttonOn.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 				   buttonOn.addActionListener(new ButtonPressed(ControlStates.ON,helper,simulator,gui,this,control));
 				   eachBox.add(buttonOn);
+				   eachBox.add( Box.createRigidArea(new Dimension(0, 2)));
 			   }
 	
 	
