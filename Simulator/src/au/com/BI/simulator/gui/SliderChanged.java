@@ -25,13 +25,13 @@ public class SliderChanged implements ChangeListener {
 		    	   	JSlider source = (JSlider)e.getSource();
 		    	   	
 		    	    if (!source.getValueIsAdjusting() && !control.isUpdatingSlider()) {
-			    	    	int val = (int)source.getValue();
+		    	    	int val = (int)source.getValue();
 
-					gui.setLight(true,gUIPanel);
-					toSend = gUIPanel.getSim().buildSliderString(control,val);
-		             gui.appendToChatBox("OUT",control.getSimType() + "." + toSend);
-		             // Send the string
-		             simulator.sendString(this.control.getSimType(),toSend);
+						gui.setLight(true,gUIPanel);
+						toSend = gUIPanel.getSim().buildSliderString(control,val);
+			             gui.appendToChatBox("OUT",control.getSimType() + "." + toSend);
+			             // Send the string
+			             simulator.sendString(this.control.getSimType(),toSend);
 		    	    }
 		       }
 			   

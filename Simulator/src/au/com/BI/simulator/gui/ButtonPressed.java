@@ -26,12 +26,12 @@ public class ButtonPressed implements ActionListener {
 		    	   		toSend = gUIPanel.getSim().buildCustomString(e.getActionCommand(),control);
 		    	   	}else {
 		             if (buttonState == ControlStates.OFF) {
-			             	gui.setLight(false,gUIPanel);
 			             	toSend = gUIPanel.getSim().buildOffString(control);
 				             if (control.isHasSlider()) {
-				            	 	gUIPanel.setUpdatingSlider(true);
+				            	 	control.setUpdatingSlider(true);
+					             	gui.setLight(false,gUIPanel);
 				            	 	gUIPanel.getSlider().setValue(0);
-				            	 	gUIPanel.setUpdatingSlider(false);
+				            	 	control.setUpdatingSlider(false);
 				             }
 		             } 
 		             if (buttonState == ControlStates.ON) {
