@@ -21,7 +21,7 @@ public class BroadcastFormatter extends Formatter {
 			String methodName = record.getSourceMethodName();
 			if (methodName == null) methodName = "";
 			if (methodName.equals ("<init>")) methodName = "init";
-			if (!cleanMessage.equals("")) {
+			if (!cleanMessage.trim().equals("")) {
 				String retString = "<MESSAGE ICON=\"warning\" TITLE=\"SEVERE ERROR\" CONTENT=\"" + cleanMessage+ "\" />";
 				return retString + "\r\n";
 			}
