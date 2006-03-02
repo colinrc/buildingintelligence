@@ -5,13 +5,14 @@
 package au.com.BI.Alert;
 import au.com.BI.Util.*;
 import au.com.BI.Command.*;
+import au.com.BI.Dynalite.DynaliteDevice;
 
 
 /**
  * @author Colin Canfield
  *
  **/
-public class Alarm extends BaseDevice implements DeviceType
+public class Alarm extends BaseDevice implements DeviceType,DynaliteDevice
 {
 	
 	public Alarm (String name, int deviceType, String outputKey){
@@ -59,6 +60,71 @@ public class Alarm extends BaseDevice implements DeviceType
 		alarmCommand.setCommand("on");
 		alarmCommand.setDisplayName(this.getOutputKey());
 		return alarmCommand;
+	}
+	
+	public boolean isAreaDevice() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public void setAreaDevice(boolean area) {
+		// TODO Auto-generated method stub
+		
+	}
+	public String getAreaCode() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void setAreaCode(String areaCode) {
+		// TODO Auto-generated method stub
+		
+	}
+	public int getMax() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public String getRelay() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void setRelay(String relay) {
+		// TODO Auto-generated method stub
+		
+	}
+	public int getChannel() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public void setChannel(int channel) {
+		// TODO Auto-generated method stub
+		
+	}
+	public String getMaxStr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public String getBLA() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public void setBLA(String bLA) {
+		// TODO Auto-generated method stub
+		
+	}
+	public int listensToLinkArea(int linkOffset) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public boolean isLinked() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public void incLinkCount() {
+		// TODO Auto-generated method stub
+		
+	}
+	public void decLinkCount() {
+		// TODO Auto-generated method stub
+		
 	}
 
 
