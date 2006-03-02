@@ -78,9 +78,7 @@ public class SimulationControlListener extends Thread
 						addTheHandler (simulationConnection);
 
 					} catch (SocketTimeoutException te) {
-					     if (currentSimulationListener != null) {
-					  		currentSimulationListener.setRunning(false);
-					  	}
+
 					}catch (IOException io){
 						logger.log(Level.INFO, "Could not add client handler " +io.getMessage());
 					}
