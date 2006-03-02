@@ -95,7 +95,7 @@ public class Model extends BaseModel implements DeviceModel {
 
 			
 			if (controlType == DeviceType.MONITORED)  {
-				DynaliteDevice device = (DynaliteDevice)details;
+				DynaliteDevice device = (DynaliteDevice)details;				
 				if (((DeviceType)details).getDeviceType() == DeviceType.LIGHT_DYNALITE ) {
 					theKey = dynaliteHelper.buildKey('L',device.getAreaCode(),device.getChannel());
 					areaCodes.add (device.getAreaCode(),device);
@@ -178,7 +178,8 @@ public class Model extends BaseModel implements DeviceModel {
 		while (eachLight.hasNext()){
 			String nextKey = (String)eachLight.next();
 			try {
-				DeviceType nextDevice = (DeviceType)configHelper.getControlItem(nextKey);
+				Object tempDevice = configHelper.getControlledItem(nextKey);
+				DeviceType nextDevice = (DeviceType)tempDevice;
 				if (nextDevice.getDeviceType() == DeviceType.LIGHT_DYNALITE )  {
 					DynaliteDevice nextItem = (DynaliteDevice)nextDevice;
 					String fullKey = dynaliteHelper.buildKey('L',nextItem.getAreaCode(),nextItem.getChannel());
