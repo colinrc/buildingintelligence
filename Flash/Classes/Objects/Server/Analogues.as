@@ -50,7 +50,7 @@
 		return analoguesNode;
 	}
 	public function getName():String {
-		return "Analogs";
+		return "Analog Inputs";
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());

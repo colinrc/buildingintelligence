@@ -26,7 +26,11 @@
 			newDevice.attributes["ACTIVE"] = active;
 		}
 		newDevice.appendChild(connection);
-		newDevice.appendChild(parameters);
+		var newParameters = new XMLNode(1,"PARAMETERS");
+		for(var parameter in parameters){
+			newParameters.appendChild(parameters[parameter]);
+		}
+		newDevice.appendChild(newParameters);
 		newDevice.appendChild(new XMLNode(1, "IR_LEARNER"));
 		return newDevice;
 	}
@@ -39,7 +43,8 @@
 	public function setXML(newData:XMLNode):Void {
 		device_type = "";
 		description ="";
-		active = "Y";		
+		active = "Y";
+		parameters = new Array();		
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
 				device_type = newData.attributes["NAME"];
@@ -62,7 +67,9 @@
 					connection = newData.childNodes[child];
 					break;
 				case "PARAMETERS" :
-					parameters = newData.childNodes[child];
+					for(var parameter in newData.childNodes[child].childNodes){
+						parameters.push(newData.childNodes[child].childNodes[parameter]);
+					}
 					break;
 				}
 			}

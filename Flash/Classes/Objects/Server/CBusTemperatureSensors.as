@@ -51,9 +51,9 @@
 	}
 	public function getName():String {
 		if(container == "COMFORT"){
-			return "CBus Temperatures";
+			return "CBus Temperature Sensors";
 		} else{
-			return "Temperatures";
+			return "Temperatures Sensors";
 		}						
 	}
 	public function toTree():XMLNode {

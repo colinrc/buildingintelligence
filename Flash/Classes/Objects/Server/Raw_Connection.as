@@ -42,7 +42,11 @@
 			newDevice.attributes["ACTIVE"] = active;
 		}
 		newDevice.appendChild(connection);
-		newDevice.appendChild(parameters);
+		var newParameters = new XMLNode(1,"PARAMETERS");
+		for(var parameter in parameters){
+			newParameters.appendChild(parameters[parameter]);
+		}
+		newDevice.appendChild(newParameters);
 		var tempCatalogues = catalogues.toXML();
 		for (var child in tempCatalogues.childNodes) {
 			newDevice.appendChild(tempCatalogues.childNodes[child]);
@@ -72,6 +76,7 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
+		parameters = new Array();		
 		raw_interfaces = new Objects.Server.Raw_Interfaces();
 		customs = new Objects.Server.Customs();
 		catalogues = new Objects.Server.Catalogues();
@@ -98,7 +103,9 @@
 					connection = newData.childNodes[child];
 					break;
 				case "PARAMETERS" :
-					parameters = newData.childNodes[child];
+					for(var parameter in newData.childNodes[child].childNodes){
+						parameters.push(newData.childNodes[child].childNodes[parameter]);
+					}
 					break;
 				case "CATALOGUE" :
 					tempCatalogues.appendChild(newData.childNodes[child]);

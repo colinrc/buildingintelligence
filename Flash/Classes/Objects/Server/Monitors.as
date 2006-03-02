@@ -56,7 +56,7 @@
 		return newNode;
 	}
 	public function getName():String {
-		return "Monitors";
+		return "Output Monitors";
 	}
 	public function getData():Object {
 		return new Object({monitors:monitors});

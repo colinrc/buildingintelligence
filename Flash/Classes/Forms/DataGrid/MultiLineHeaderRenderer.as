@@ -16,7 +16,7 @@ class Forms.DataGrid.MultiLineHeaderRenderer extends mx.core.UIComponent
    function createChildren():Void
    {
 // createLabel is a useful method of UIObject--all components use this
-      var c = multiLineLabel = createLabel("multiLineLabel", 10);
+      var c = multiLineLabel = createLabel("multiLineLabel", -1);
 // links the style of the label to the
 // style of the grid
       c.styleName = listOwner;
@@ -25,7 +25,8 @@ class Forms.DataGrid.MultiLineHeaderRenderer extends mx.core.UIComponent
       c.background = false;
       c.border = false;
       c.multiline = true;
-      c.wordWrap = true;
+     // c.wordWrap = true;
+	  c.autoSize = "false";
    }
 
 // By extending UIComponent, you get setSize for free;
@@ -36,9 +37,14 @@ class Forms.DataGrid.MultiLineHeaderRenderer extends mx.core.UIComponent
    {
 // __width and __height are the underlying variables 
 // of the getter/setters .width and .height
-      var c = multiLineLabel;
-      c._width = __width;
-      c._height = __height;
+     var c = multiLineLabel;
+	 c._x= 0;
+	 c.setSize(__width,__height);
+	/* if(c.textWidth >__width){
+		 c.textWidth = __width;
+	 }*/
+     //c._width = __width;
+      //c._height = __height;
    }
 
    function getPreferredHeight():Number

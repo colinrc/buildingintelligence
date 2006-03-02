@@ -33,7 +33,7 @@
 			newDevice.attributes["ACTIVE"] = active;
 		}
 		newDevice.appendChild(connection);
-		newDevice.appendChild(parameters);
+		//newDevice.appendChild(parameters);
 		var tempModules =  modules.getData();
 		var tempInputs = toggle_inputs.getData();
 		var tempOutputs = toggle_outputs.getData();
@@ -135,9 +135,9 @@
 				case "CONNECTION" :
 					connection = newData.childNodes[child];
 					break;
-				case "PARAMETERS" :
+				/*case "PARAMETERS" :
 					parameters = newData.childNodes[child];
-					break;
+					break;*/
 				case "GC100_IR":
 				case "GC100_Relay":
 					var tempNode = newData.childNodes[child];

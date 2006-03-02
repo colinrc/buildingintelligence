@@ -7,10 +7,11 @@ class Forms.Project.Variables extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
+	private var save_btn:mx.controls.Button;	
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -49,6 +50,7 @@ class Forms.Project.Variables extends Forms.BaseForm {
 		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
+		save_btn.addEventListener("click", Delegate.create(this, save));		
 	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();
@@ -56,7 +58,7 @@ class Forms.Project.Variables extends Forms.BaseForm {
 	private function newItem() {
 		dataGridHandler.addBlankRow();
 	}
-	public function getData():XMLNode {
+	private function save():Void {
 		var newVariables = new XMLNode(1, "VARIABLES");
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {
@@ -78,6 +80,6 @@ class Forms.Project.Variables extends Forms.BaseForm {
 			}
 			newVariables.appendChild(variableNode);
 		}
-		return newVariables;
+		_global.left_tree.selectedNode.object.setData({variables:newVariables});
 	}
 }

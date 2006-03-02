@@ -8,8 +8,6 @@
 	private var lightAreas:Objects.Server.DynaliteLightAreas;	
 	private var contacts:Objects.Server.ContactClosures;
 	private var alarms:Objects.Server.Alarms
-	private var connection:XMLNode;
-	private var parameters:XMLNode;
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(lights.getKeys());
@@ -61,7 +59,11 @@
 			newDevice.attributes["ACTIVE"] = active;
 		}
 		newDevice.appendChild(connection);
-		newDevice.appendChild(parameters);
+		var newParameters = new XMLNode(1,"PARAMETERS");
+		for(var parameter in parameters){
+			newParameters.appendChild(parameters[parameter]);
+		}
+		newDevice.appendChild(newParameters);
 		var newDynalite = new XMLNode(1, device_type);
 		var tempIRs = irs.toXML();
 		for (var child in tempIRs.childNodes) {
@@ -95,9 +97,11 @@
 		newNode.appendChild(lights.toTree());
 		newNode.appendChild(relays.toTree());
 		newNode.appendChild(contacts.toTree());
-		newNode.appendChild(irs.toTree());
 		newNode.appendChild(lightAreas.toTree());
-		newNode.appendChild(alarms.toTree());
+		if(_global.advanced){		
+			newNode.appendChild(irs.toTree());		
+			newNode.appendChild(alarms.toTree());
+		}
 		newNode.object = this;
 		_global.workflow.addNode("Dynalite",newNode);
 		return newNode;
@@ -106,6 +110,7 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
+		parameters = new Array();		
 		irs = new Objects.Server.DynaliteIRs();
 		lights = new Objects.Server.DynaliteLights();
 		relays = new Objects.Server.DynaliteRelays();
@@ -172,7 +177,9 @@
 					connection = newData.childNodes[child];
 					break;
 				case "PARAMETERS" :
-					parameters = newData.childNodes[child];
+					for(var parameter in newData.childNodes[child].childNodes){
+						parameters.push(newData.childNodes[child].childNodes[parameter]);
+					}
 					break;
 				}
 			}

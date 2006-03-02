@@ -5,7 +5,7 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 	private var description:String;
 	private var active:String;
 	private var connection:XMLNode;
-	private var parameters:XMLNode;
+	private var parameters:Array;
 	private var connection_mc:MovieClip;
 	private var parameters_mc:MovieClip;
 	private var device_type_lb:mx.controls.Label;
@@ -22,9 +22,13 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 		}
 		device_type_lb.text = device_type;
 		description_ti.text = description;
-		save_btn.addEventListener("click", Delegate.create(this, save));
+		save_btn.addEventListener("click", Delegate.create(this, save));	
+		parameters_mc = this.attachMovie("forms.project.device.parameters"+device_type.toLowerCase(),"parameters_"+random(999)+"_mc",0,{parameters:parameters,device_type:device_type});
+		parameters_mc._x = 0;
+		parameters_mc._y = 170;
 		connection_mc.node = connection;
-		parameters_mc.node = parameters;
+		/*parameters_mc.device_type = device_type;
+		parameters_mc.parameters = parameters;*/
 	}
 	private function save():Void {
 		var newData = new Object();

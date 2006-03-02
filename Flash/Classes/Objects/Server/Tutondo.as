@@ -33,7 +33,19 @@
 			newDevice.attributes["ACTIVE"] = active;
 		}
 		newDevice.appendChild(connection);
-		newDevice.appendChild(parameters);
+		var newParameters = new XMLNode(1,"PARAMETERS");
+		for(var parameter in parameters){
+			newParameters.appendChild(parameters[parameter]);
+		}
+		var newParameter = new XMLNode(1,"ITEM");
+		newParameter.attributes["NAME"] = "INPUTS";
+		newParameter.attributes["VALUE"] = "Tutondo Inputs";
+		newParameters.appendChild(newParameter);
+		var newParameter = new XMLNode(1,"ITEM");
+		newParameter.attributes["NAME"] = "FUNCTIONS";
+		newParameter.attributes["VALUE"] = "Tutondo Functions";
+		newParameters.appendChild(newParameter);		
+		newDevice.appendChild(newParameters);
 		newDevice.appendChild(inputs.toXML());
 		newDevice.appendChild(functions.toXML());
 		var newTutondo = new XMLNode(1,device_type);
@@ -46,10 +58,8 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
-		if(_global.advanced){
-			newNode.appendChild(inputs.toTree());
-			newNode.appendChild(functions.toTree());			
-		}			
+		newNode.appendChild(inputs.toTree());
+		newNode.appendChild(functions.toTree());			
 		newNode.appendChild(audiovideos.toTree());
 		newNode.object = this;
 		_global.workflow.addNode("Tutondo",newNode);
@@ -59,6 +69,7 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
+		parameters = new Array();		
 		inputs = new Objects.Server.Catalogue();
 		var newInputs = new XMLNode(1,"CATALOGUE");
 		newInputs.attributes["NAME"] = "Tutondo Inputs";
@@ -90,7 +101,11 @@
 					connection = newData.childNodes[child];
 					break;
 				case "PARAMETERS" :
-					parameters = newData.childNodes[child];
+					for(var parameter in newData.childNodes[child].childNodes){
+						if((newData.childNodes[child].childNodes[parameter].attributes["NAME"] != "INPUTS")&&(newData.childNodes[child].childNodes[parameter].attributes["NAME"] != "FUNCTIONS")){
+							parameters.push(newData.childNodes[child].childNodes[parameter]);
+					  	}
+					}
 					break;
 				case "CATALOGUE" :
 					if(newData.childNodes[child].attributes["NAME"] == "Tutondo Inputs"){

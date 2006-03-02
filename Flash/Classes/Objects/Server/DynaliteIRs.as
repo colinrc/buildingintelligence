@@ -56,7 +56,7 @@
 		return irsNode;
 	}
 	public function getName():String {
-		return "IRs";
+		return "IR Inputs";
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());

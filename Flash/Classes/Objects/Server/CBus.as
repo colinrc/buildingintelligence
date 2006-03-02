@@ -49,7 +49,11 @@
 			newDevice.attributes["ACTIVE"] = active;
 		}
 		newDevice.appendChild(connection);
-		newDevice.appendChild(parameters);
+		var newParameters = new XMLNode(1,"PARAMETERS");
+		for(var parameter in parameters){
+			newParameters.appendChild(parameters[parameter]);
+		}
+		newDevice.appendChild(newParameters);
 		var newCBus = new XMLNode(1, device_type);
 		var tempSensors = sensors.toXML();
 		for (var child in tempSensors.childNodes) {
@@ -72,10 +76,12 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
-		newNode.appendChild(sensors.toTree());
 		newNode.appendChild(lights.toTree());
 		newNode.appendChild(relays.toTree());
-		newNode.appendChild(temperatureSensors.toTree());
+		if(_global.advanced){		
+			newNode.appendChild(sensors.toTree());		
+			newNode.appendChild(temperatureSensors.toTree());
+		}
 		newNode.object = this;
 		_global.workflow.addNode("CBus",newNode);
 		return newNode;
@@ -84,6 +90,7 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
+		parameters = new Array();		
 		sensors = new Objects.Server.CBusSensors();
 		lights = new Objects.Server.CBusLights();
 		relays = new Objects.Server.CBusRelays();
@@ -139,7 +146,9 @@
 					connection = newData.childNodes[child];
 					break;
 				case "PARAMETERS" :
-					parameters = newData.childNodes[child];
+					for(var parameter in newData.childNodes[child].childNodes){
+						parameters.push(newData.childNodes[child].childNodes[parameter]);
+					}
 					break;
 				}
 			}

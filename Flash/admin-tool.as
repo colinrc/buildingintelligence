@@ -78,6 +78,11 @@ _global.overrides_xml.ignoreWhite = true;
 _global.overrides_xml.onLoad = function(success) {
 };
 _global.overrides_xml.load("overrides.xml");
+_global.parameters_xml = new XML();
+_global.parameters_xml.ignoreWhite = true;
+_global.parameters_xml.onLoad = function(success) {
+};
+_global.parameters_xml.load("parameters.xml");
 _global.controlTypeAttributes_xml = new XML();
 _global.controlTypeAttributes_xml.ignoreWhite = true;
 _global.controlTypeAttributes_xml.onLoad = function(success) {

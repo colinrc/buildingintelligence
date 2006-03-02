@@ -50,7 +50,7 @@
 		return lightAreasNode;
 	}
 	public function getName():String {
-		return "Light Areas";
+		return "Areas";
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());

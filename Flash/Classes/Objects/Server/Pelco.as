@@ -34,7 +34,11 @@
 			newDevice.attributes["ACTIVE"] = active;
 		}
 		newDevice.appendChild(connection);
-		newDevice.appendChild(parameters);
+		var newParameters = new XMLNode(1,"PARAMETERS");
+		for(var parameter in parameters){
+			newParameters.appendChild(parameters[parameter]);
+		}
+		newDevice.appendChild(newParameters);
 		var newPelco = new XMLNode(1,device_type);
 		var tempCameras = cameras.toXML();
 		for (var child in tempCameras.childNodes){
@@ -53,7 +57,8 @@
 	public function setXML(newData:XMLNode):Void {
 		device_type = "";
 		description ="";
-		active = "Y";		
+		active = "Y";
+		parameters = new Array();
 		cameras = new Objects.Server.Cameras();
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
@@ -80,7 +85,9 @@
 					connection = newData.childNodes[child];
 					break;
 				case "PARAMETERS" :
-					parameters = newData.childNodes[child];
+					for(var parameter in newData.childNodes[child].childNodes){
+						parameters.push(newData.childNodes[child].childNodes[parameter]);
+					}
 					break;
 				}
 			}

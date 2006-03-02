@@ -4,7 +4,7 @@
 	private var active:String;
 	private var catalogues:Objects.Server.Catalogues;
 	private var connection:XMLNode;
-	private var parameters:XMLNode;
+	private var parameters:Array;
 	public function getForm():String {
 		return "forms.project.device.head";
 	}

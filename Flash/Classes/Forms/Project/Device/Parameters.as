@@ -1,29 +1,39 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
 class Forms.Project.Device.Parameters extends Forms.BaseForm {
-	private var node:XMLNode;
+	private var parameters:Array;
+	private var device_type;
 	private var params_dg:DataGrid;
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;	
 	public function onLoad() {
+		var DP = new Array();
+		for(var child in _global.parameters_xml.childNodes){
+			if(_global.parameters_xml.childNodes[child].attributes["TYPE"] == device_type){
+				for(var index in _global.parameters_xml.childNodes[child].childNodes){
+					DP.push({label:_global.parameters_xml.childNodes[child].childNodes[index].attributes["name"],data:_global.parameters_xml.childNodes[child].childNodes[index].attributes["default"]});
+				}
+				break;
+			}
+		}
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(params_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
+		dataGridHandler.addParameterComboBoxColumn("name", "Name", DP);
 		dataGridHandler.addTextInputColumn("value", "Value", restrictions);
 		var DP = new Array();				
-		for (var child in node.childNodes) {
+		for (var parameter in parameters) {
 			var newParam = new Object();
 			newParam.name = "";
 			newParam.value = "";
-			if (node.childNodes[child].attributes["NAME"] != undefined) {
-				newParam.name = node.childNodes[child].attributes["NAME"];
+			if (parameters[parameter].attributes["NAME"] != undefined) {
+				newParam.name = parameters[parameter].attributes["NAME"];
 			}
-			if (node.childNodes[child].attributes["VALUE"] != undefined) {
-				newParam.value = node.childNodes[child].attributes["VALUE"];
+			if (parameters[parameter].attributes["VALUE"] != undefined) {
+				newParam.value = parameters[parameter].attributes["VALUE"];
 			}
 			DP.push(newParam);
 		}
@@ -38,7 +48,7 @@ class Forms.Project.Device.Parameters extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function getData():Object {
-		var parameters = new XMLNode(1, "PARAMETERS");
+		var newParameters = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {
 			var item = new XMLNode(1, "ITEM");
@@ -48,8 +58,8 @@ class Forms.Project.Device.Parameters extends Forms.BaseForm {
 			if (DP[index].value != "") {
 				item.attributes["VALUE"] = DP[index].value;
 			}
-			parameters.appendChild(item);
+			newParameters.push(item);
 		}
-		return parameters;
+		return newParameters;
 	}
 }

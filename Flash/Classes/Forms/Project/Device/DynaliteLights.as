@@ -24,7 +24,7 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false);
 		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false);
 		dataGridHandler.addTextInputColumn("area", "Area", keyRestrictions,false);		
-		dataGridHandler.addTextInputColumn("bla", "BLA", keyRestrictions, true);		
+		dataGridHandler.addTextInputColumn("bla", "Base\nLink\nArea", keyRestrictions, true);		
 		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions,true);
 		dataGridHandler.addHiddenColumn("relay");
 		dataGridHandler.setAdvanced(_global.advanced);					

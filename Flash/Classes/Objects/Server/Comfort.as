@@ -110,7 +110,19 @@
 			newDevice.attributes["ACTIVE"] = active;
 		}
 		newDevice.appendChild(connection);
-		newDevice.appendChild(parameters);
+		var newParameters = new XMLNode(1,"PARAMETERS");
+		for(var parameter in parameters){
+			newParameters.appendChild(parameters[parameter]);
+		}
+		var newParameter = new XMLNode(1,"ITEM");
+		newParameter.attributes["NAME"] = "DOOR_IDS";
+		newParameter.attributes["VALUE"] = "Door IDs";
+		newParameters.appendChild(newParameter);
+		newParameter = new XMLNode(1,"ITEM");
+		newParameter.attributes["NAME"] = "COMFORT_USERS";
+		newParameter.attributes["VALUE"] = "Comfort Users";		
+		newParameters.appendChild(newParameter);		
+		newDevice.appendChild(newParameters);
 		newDevice.appendChild(door_ids.toXML());
 		newDevice.appendChild(comfort_users.toXML());
 		var tempCatalogues = catalogues.toXML();
@@ -175,12 +187,16 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,"Customs");
+		if(_global.advanced){
+			newNode.appendChild(catalogues.toTree());		
+			newNode.appendChild(customs.toTree());
+			newNode.appendChild(raw_interfaces.toTree());
+			newNode.appendChild(alarms.toTree());
+			newNode.appendChild(alerts.toTree());			
+		}		
 		newNode.appendChild(door_ids.toTree());
 		newNode.appendChild(comfort_users.toTree());
-		newNode.appendChild(catalogues.toTree());
 		newNode.appendChild(counters.toTree());
-		newNode.appendChild(customs.toTree());
-		newNode.appendChild(raw_interfaces.toTree());
 		newNode.appendChild(toggle_monitors.toTree());
 		newNode.appendChild(cbus_lights.toTree());
 		newNode.appendChild(cbus_relays.toTree());
@@ -188,8 +204,6 @@
 		newNode.appendChild(pulse_outputs.toTree());
 		newNode.appendChild(toggle_inputs.toTree());
 		newNode.appendChild(toggle_outputs.toTree());
-		newNode.appendChild(alarms.toTree());
-		newNode.appendChild(alerts.toTree());
 		newNode.appendChild(analogues.toTree());
 		newNode.object = this;
 		_global.workflow.addNode("Comfort",newNode);
@@ -199,6 +213,7 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
+		parameters = new Array();		
 		raw_interfaces = new Objects.Server.Raw_Interfaces();
 		customs = new Objects.Server.Customs();
 		counters = new Objects.Server.Counters();
@@ -244,7 +259,11 @@
 					connection = newData.childNodes[child];
 					break;
 				case "PARAMETERS" :
-					parameters = newData.childNodes[child];
+					for(var parameter in newData.childNodes[child].childNodes){
+						if((newData.childNodes[child].childNodes[parameter].attributes["NAME"] != "DOOR_IDS")&&(newData.childNodes[child].childNodes[parameter].attributes["NAME"] != "COMFORT_USERS")){
+							parameters.push(newData.childNodes[child].childNodes[parameter]);
+					  	}
+					}
 					break;
 				case "CATALOGUE" :
 					if(newData.childNodes[child].attributes["NAME"] == "Door IDs"){

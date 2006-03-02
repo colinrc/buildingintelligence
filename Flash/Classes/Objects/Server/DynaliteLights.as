@@ -71,7 +71,7 @@
 		return lightsNode;
 	}
 	public function getName():String {
-		return "Lights";
+		return "Dimmers";
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());

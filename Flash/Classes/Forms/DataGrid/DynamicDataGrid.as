@@ -113,6 +113,23 @@ class Forms.DataGrid.DynamicDataGrid {
 			my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
 		}
 	}
+	public function addParameterComboBoxColumn(name:String, heading:String, DP:Array, advanced:Boolean) {
+		columns[name] = new Object();
+		columns[name].type = "paramcombo";
+		columns[name].DP = DP;
+		columns[name].heading = heading;
+		columns[name].advanced = advanced;
+		columns[name].colNo = my_dg.columnCount;
+		if (!advanced) {
+			my_dg.addColumn(name);
+			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
+			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";					
+			my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ParameterComboBoxCellRenderer";
+			my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
+			my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
+		}
+	}
+	
 	public function addComboBoxColumn(name:String, heading:String, DP:Array, advanced:Boolean) {
 		columns[name] = new Object();
 		columns[name].type = "combo";
@@ -217,6 +234,7 @@ class Forms.DataGrid.DynamicDataGrid {
 					};
 					newRow[column] = newCheck;
 					break;
+				case "paramcombo":
 				case "combo" :
 					var newCombo = {label:new_dp[row][column], sel:false, DP:columns[column].DP};
 					newCombo.toString = function():String  {
@@ -273,6 +291,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				case "check" :
 					newRow[column] = my_dg.dataProvider[row][column].label;
 					break;				
+				case "paramcombo" :				
 				case "combo" :
 				case "cataloguecombo" :
 					if(my_dg.dataProvider[row][column].label != ""){
@@ -347,13 +366,29 @@ class Forms.DataGrid.DynamicDataGrid {
 				}
 				newRow[column] = newCombo;
 				break;
+			case "paramcombo":
+				if(columns[column].DP[0].label != undefined){
+					var label = columns[column].DP[0].label;
+				} else{
+					var label = "";
+				}			
+				var newCombo = {label:label, sel:false, DP:columns[column].DP};
+				newCombo.toString = function():String  {
+					return this.label;
+				};
+				if (my_dg.getColumnIndex(column) == 0) {
+					newCombo.sel = true;
+				}
+				newRow[column] = newCombo;
+				newRow["value"].label = columns[column].DP[0].data;
+				break;			
 			case "combo" :
 				if(columns[column].DP[0].label != undefined){
 					var label = columns[column].DP[0].label;
 				} else{
 					var label = "";
 				}			
-				var newCombo = {label:label, sel:false, DP:columns[column].DP, form:columns[column].rawInterFaceForm};
+				var newCombo = {label:label, sel:false, DP:columns[column].DP};
 				newCombo.toString = function():String  {
 					return this.label;
 				};
@@ -414,6 +449,7 @@ class Forms.DataGrid.DynamicDataGrid {
 		for (var item in my_dg.dataProvider) {
 			for (var column in my_dg.dataProvider[item]) {
 				switch (columns[column].type) {
+				case "paramcombo":					
 				case "combo" :
 				case "codecombo" :
 				case "text" :
@@ -440,6 +476,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				case "text" :
 				case "value" :
 				case "colour" :
+				case "paramcombo":
 				case "codecombo" :
 				case "cataloguecombo" :
 					my_dg.dataProvider[event.itemIndex][my_dg.columnNames[event.columnIndex]].sel = true;

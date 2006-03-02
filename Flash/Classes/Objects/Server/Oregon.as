@@ -31,7 +31,11 @@
 			newDevice.attributes["ACTIVE"] = active;
 		}
 		newDevice.appendChild(connection);
-		newDevice.appendChild(parameters);
+		var newParameters = new XMLNode(1,"PARAMETERS");
+		for(var parameter in parameters){
+			newParameters.appendChild(parameters[parameter]);
+		}
+		newDevice.appendChild(newParameters);
 		var newOregon = new XMLNode(1,device_type);
 		var tempSensors = sensors.toXML();
 		for(var child in tempSensors.childNodes){
@@ -51,6 +55,7 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
+		parameters = new Array();		
 		sensors = new Objects.Server.OregonSensors();
 		if(newData.nodeName == "DEVICE"){
 			if(newData.attributes["NAME"]!=undefined){
@@ -77,7 +82,9 @@
 					connection = newData.childNodes[child];
 					break;
 					case "PARAMETERS":
-					parameters = newData.childNodes[child];
+					for(var parameter in newData.childNodes[child].childNodes){
+						parameters.push(newData.childNodes[child].childNodes[parameter]);
+					}
 					break;
 				}
 			}

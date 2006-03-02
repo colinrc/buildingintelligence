@@ -1,6 +1,7 @@
 ﻿class Objects.Server.Server extends Objects.BaseElement {
 	private var description:String;
 	private var controls:Objects.Server.Controls;
+	private var settings:Objects.Server.Settings;
 	private var devices:Array;
 	public function getKeys():Array{
 		var tempKeys = new Array();
@@ -39,7 +40,10 @@
 		var descriptionNode = new XMLNode(1, "DESC");
 		descriptionNode.appendChild(new XMLNode(3, description));
 		serverNode.appendChild(descriptionNode);
-		serverNode.appendChild(controls.toXML());
+		var controlNode = new XMLNode(1,"CONTROLS");
+		controlNode.appendChild(controls.toXML());
+		controlNode.appendChild(settings.toXML());
+		serverNode.appendChild(controlNode);
 		for (var device in devices) {
 			serverNode.appendChild(devices[device].toXML());
 		}
@@ -48,7 +52,10 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Server");
 		newNode.object = this;
-		newNode.appendChild(controls.toTree());
+		if(_global.advanced){
+			newNode.appendChild(controls.toTree());
+			newNode.appendChild(settings.toTree());			
+		}					
 		for (var device in devices) {
 			newNode.appendChild(devices[device].toTree());
 		}
@@ -156,6 +163,7 @@
 	}
 	public function setXML(newData:XMLNode):Void {
 		controls = new Objects.Server.Controls();
+		settings = new Objects.Server.Settings();
 		devices = new Array();
 		if (newData.nodeName == "CONFIG") {
 			for (var child in newData.childNodes) {
@@ -226,7 +234,16 @@
 					}
 					break;
 				case "CONTROLS" :
-					controls.setXML(newData.childNodes[child]);
+					for(var index in newData.childNodes[child].childNodes){
+						switch(newData.childNodes[child].childNodes[index].nodeName){
+							case "VARIABLES":
+								controls.setXML(newData.childNodes[child].childNodes[index]);
+							break;
+							case "CALENDAR_MESSAGES":						
+								settings.setXML(newData.childNodes[child].childNodes[index]);
+							break;						
+						}
+					}
 					break;
 				case "DESC" :
 					description = newData.childNodes[child].firstChild;

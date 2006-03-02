@@ -24,7 +24,7 @@ class Forms.Project.Device.OregonSensors extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);			
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Measurement Type", keyRestrictions,false);
+		dataGridHandler.addTextInputColumn("key", "Measurement\nType", keyRestrictions,false);
 		dataGridHandler.addTextInputColumn("channel", "Channel", restrictions,false);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(sensors);		
