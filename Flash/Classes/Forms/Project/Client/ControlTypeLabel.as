@@ -5,7 +5,7 @@ class Forms.Project.Client.ControlTypeLabel extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var update_btn:Button;
 	private var label_ti:TextInput;
-	public function init() {
+	public function onLoad() {
 		if (object.attributes["label"] != undefined) {
 			label_ti.text = object.attributes["label"];
 		} else {

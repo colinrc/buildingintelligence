@@ -4,7 +4,7 @@
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var camera in cameras) {
-			tempKeys.push(cameras[camera].attributes["DISPLAY_NAME"]);
+			tempKeys.push(cameras[camera].display_name);
 		}
 		return tempKeys;
 	}

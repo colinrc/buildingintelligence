@@ -1,5 +1,6 @@
 ﻿class Objects.Client.Property extends Objects.BaseElement{
 	private var zones:Array;
+	private var treeNode:XMLNode;		
 	public function isValid():Boolean {
 		return true;
 	}
@@ -20,6 +21,7 @@
 			newNode.appendChild(zones[zone].toTree());
 		}
 		_global.workflow.addNode("Property",newNode);
+		treeNode = newNode;			
 		return newNode;
 	}
 	public function getName():String{
@@ -72,6 +74,7 @@
 			newNode.attributes["name"] = newZones[newZone].name;
 			var newZone = new Objects.Client.Zone();
 			newZone.setXML(newNode);
+			treeNode.appendChild(newZone.toTree());			
 			zones.push(newZone);
 		}
 	}

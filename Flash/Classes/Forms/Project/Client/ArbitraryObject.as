@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Client.ArbitraryObject extends Forms.BaseForm {
 	private var src_ti:TextInput;
 	private var key_ti:TextInput;
@@ -9,8 +8,7 @@ class Forms.Project.Client.ArbitraryObject extends Forms.BaseForm {
 	private var show_ti:TextInput;
 	private var hide_ti:TextInput;
 	private var dataObj:Object;
-	
-	public function init():Void{
+	public function onLoad():Void {
 		src_ti.text = dataObj.src;
 		key_ti.text = dataObj.key;
 		width_ti.text = dataObj.width;
@@ -18,7 +16,7 @@ class Forms.Project.Client.ArbitraryObject extends Forms.BaseForm {
 		show_ti.text = dataObj.show;
 		hide_ti.text = dataObj.hide;
 	}
-	private function getData():Object{
+	private function getData():Object {
 		var newObj = new Object();
 		newObj.src = src_ti.text;
 		newObj.key = key_ti.text;

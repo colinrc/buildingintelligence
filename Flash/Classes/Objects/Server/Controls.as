@@ -3,7 +3,7 @@
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var variable in variables.childNodes){
-			tempKeys.push(variables.childNodes[variable].attributes["DISPLAY_NAME"]);
+			tempKeys.push(variables.childNodes[variable].display_name);
 		}
 		return tempKeys;
 	}

@@ -8,6 +8,7 @@
 	private var cycle:String;
 	private var alignment:String;
 	private var hideFromList:String;
+	private var treeNode:XMLNode;		
 	public function isValid():Boolean {
 		return true;
 	}
@@ -58,6 +59,7 @@
 			newNode.appendChild(panels[panel].toTree());
 		}
 		_global.workflow.addNode("Zone",newNode);
+		treeNode = newNode;			
 		return newNode;
 	}
 	public function getName():String {
@@ -157,8 +159,9 @@
 			var newNode = new XMLNode(1, "room");
 			newNode.attributes["name"] = newRooms[newRoom].name;
 			var newRoom = new Objects.Client.Room();
-			newRoom.setXML(newNode);
+			newRoom.setXML(newNode);		
 			newRoom.setZone(this);
+			treeNode.appendChild(newRoom.toTree());			
 			rooms.push(newRoom);
 		}
 		/****/
@@ -191,6 +194,7 @@
 			newNode.attributes["name"] = newPanels[newPanel].name;
 			var newPanel = new Objects.Client.Panel();
 			newPanel.setXML(newNode);
+			treeNode.appendChild(newPanel.toTree());
 			panels.push(newPanel);
 		}
 	}

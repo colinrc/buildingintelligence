@@ -9,7 +9,7 @@ class Forms.Project.Client.ControlTypeToggle extends Forms.BaseForm {
 	private var width_ti:TextInput;
 	private var command_ti:TextInput;
 	private var sounds_ti:TextInput;
-	public function init() {
+	public function onLoad() {
 		if(object.attributes["icons"] != undefined){
 			icons_ti.text = object.attributes["icons"];
 		} else{

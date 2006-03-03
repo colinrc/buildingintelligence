@@ -4,7 +4,7 @@
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var analogue in analogues){
-			tempKeys.push(analogues[analogue].attributes["DISPLAY_NAME"]);
+			tempKeys.push(analogues[analogue].display_name);
 		}
 		return tempKeys;
 	}

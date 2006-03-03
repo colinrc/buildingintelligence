@@ -33,27 +33,25 @@ class Objects.WorkFlow {
 		var newNode = new XMLNode(1, "step");
 		setAttributes(key, newNode);
 		newNode.left_node.description = newNode.attributes.description;
-		if (newNode.attributes.label.length > 0) {
+		if (newNode.attributes.label.length) {
 			newNode.left_node = inst;
-			newNode.attributes.label = newNode.left_node.object.getName();
 			newNode.attributes.complete = inst.object.isValid();
-			for (var child in _global.right_tree_xml.childNodes) {
-				if (newNode.attributes.stepOrder == _global.right_tree_xml.childNodes[child].stepOrder) {
-					var tempNode = _global.right_tree_xml.childNodes[child];
+			for (var child in _global.right_tree.dataProvider.childNodes) {
+				if (newNode.attributes.stepOrder == _global.right_tree.dataProvider.childNodes[child].attributes.stepOrder) {
+					var tempNode = _global.right_tree.dataProvider.childNodes[child];
 					if (tempNode.hasChildNodes()) {
 						for (var i = 0; i < tempNode.childNodes.length; i++) {
-							if (newNode.attributes.order < parseInt(tempNode.childNodes[i].attributes.order)) {
+							if (parseInt(newNode.attributes.order) < parseInt(tempNode.childNodes[i].attributes.order)) {
 								tempNode.insertBefore(newNode, tempNode.childNodes[i]);
-								trace("hello");
 								found = true;
 								break;
 							}
 						}
 					}
-					if (found == false) {
+					if (!found) {
 						tempNode.appendChild(newNode);
-						trace("hello2");						
 					}
+					break;
 				}
 			}
 		}
@@ -61,7 +59,7 @@ class Objects.WorkFlow {
 	public function setAttributes(key:String, newNode:XMLNode):Void {
 		for (var i = 0; i < steps.length; i++) {
 			for (var child in steps[i].childNodes) {
-				if (key == steps[i].attributes.key) {
+				if (key == steps[i].childNodes[child].attributes.key) {
 					newNode.attributes.label = steps[i].childNodes[child].attributes.label;
 					newNode.attributes.order = steps[i].childNodes[child].attributes.order;
 					newNode.attributes.description = steps[i].childNodes[child].attributes.description.split("\\n").join("\n");
@@ -71,18 +69,14 @@ class Objects.WorkFlow {
 			}
 		}
 	}
-	/*public function getTreeXML():XML {
-	return workflow_xml;
-	}*/
 	public function buildWorkflowTree() {
-		//_global.right_tree.dataProvider = _global.workflow;
 		_global.right_tree.dataProvider = new XML();
-		for(var child in steps){
-			var newNode = new XMLNode(1,"step");
+		for (var child = 0; child < steps.length; child++) {
+			var newNode = new XMLNode(1, "step");
 			newNode.attributes.stepOrder = steps[child].attributes.stepOrder;
 			newNode.attributes.label = steps[child].attributes.label;
 			newNode.attributes.description = steps[child].attributes.description.split("\\n").join("\n");
-			_global.right_tree.dataProvider.appendChild();
+			_global.right_tree.dataProvider.appendChild(newNode);
 		}
 	}
 }

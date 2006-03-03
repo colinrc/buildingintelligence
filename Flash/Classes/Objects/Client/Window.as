@@ -1,5 +1,6 @@
 ﻿class Objects.Client.Window extends Objects.BaseElement {
 	private var tabs:Array;
+	private var treeNode:XMLNode;		
 	public function isValid():Boolean {
 		var flag = true;
 		for (var tab in tabs) {
@@ -26,6 +27,7 @@
 		}
 		newNode.object = this;
 		_global.workflow.addNode("ClientWindow",newNode);
+		treeNode = newNode;			
 		return newNode;
 	}
 	public function getName():String {
@@ -77,6 +79,7 @@
 			newNode.attributes["name"] = newTabs[newTab].name;
 			var newTab = new Objects.Client.Tab();
 			newTab.setXML(newNode);
+			treeNode.appendChild(newTab.toTree());			
 			tabs.push(newTab);
 		}
 		//sort according to desired order

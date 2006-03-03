@@ -7,14 +7,14 @@ class Forms.Project.Client.ControlPanelApps extends Forms.BaseForm {
 	private var apps_dg:DataGrid;
 	private var apps:Array;
 	private var dataGridHandler:Object;
-	public function init():Void {
+	public function onLoad():Void {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(apps_dg);
-		dataGridHandler.addTextInputColumn("label", "Program Label", restrictions);
-		dataGridHandler.addTextInputColumn("program", "Program Location", restrictions);
+		dataGridHandler.addTextInputColumn("label", "Program Label", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("program", "Program Location", restrictions,false,150);
 		var DP = new Array();
 		for (var app in apps) {
 			var newApp = new Object();
@@ -54,7 +54,8 @@ class Forms.Project.Client.ControlPanelApps extends Forms.BaseForm {
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
 		_global.left_tree.selectedNode.object.setData({apps:newApps});
-		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
-		_global.left_tree.selectedIndex = tempIndex;
+		_global.needSave();						
+		_global.refreshTheTree();		
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 }

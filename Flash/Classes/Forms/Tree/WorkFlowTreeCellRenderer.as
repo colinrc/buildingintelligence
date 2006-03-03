@@ -2,6 +2,7 @@
 	var owner;
 	var listOwner;
 	var cell:Object;
+	var icon:MovieClip;
 	
 	function WorkFlowTreeCellRenderer() {
 	}
@@ -20,7 +21,10 @@
 			drawRect(-indent, Math.ceil(owner.height) - .25, listOwner.width, Math.ceil(owner.height) + .25);
 			endFill();
 			var iconName = (owner.node.attributes.complete == "false") ? "stop" : "tick";
-			attachMovie("Icon:" + iconName, "icon", 100, {_x:listOwner.width - indent + 5, _y:2});
+			icon = attachMovie("Icon:" + iconName, "icon", 100, {_x:listOwner.width - indent + 5, _y:2});
+		}
+		else{
+			icon.removeMovieClip();
 		}
 		size();
 	}

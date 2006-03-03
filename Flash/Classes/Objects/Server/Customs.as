@@ -4,7 +4,7 @@
 		public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var custom in customs){
-			tempKeys.push(customs[custom].attributes["DISPLAY_NAME"]);
+			tempKeys.push(customs[custom].display_name);
 		}
 		return tempKeys;
 	}

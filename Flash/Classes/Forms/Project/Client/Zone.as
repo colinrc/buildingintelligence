@@ -25,14 +25,14 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 	private var panels_dg:DataGrid;
 	private var add_panel_btn:Button;
 	private var del_panel_btn:Button;
-	public function init() {
+	public function onLoad() {
 		name_ti.text = name;
 		map_ti.text = map;
 		background_ti.text = background;
 		/*********************************/
 		for (var align in alignment_cmb.dataProvider) {
 			if (alignment_cmb.dataProvider[align].label == alignment) {
-				alignment_cmb.selectedIndex = align;
+				alignment_cmb.selectedIndex = parseInt(align);
 			}
 		}
 		/********************************/
@@ -51,7 +51,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(rooms_dg);
-		dataGridHandler.addTextInputColumn("name", "Room Name", restrictions);
+		dataGridHandler.addTextInputColumn("name", "Room Name", restrictions,false,150);
 		var DP = new Array();
 		for (var room in rooms) {
 			var newRoom = new Object();
@@ -61,7 +61,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		dataGridHandler.setDataGridDataProvider(DP);
 		dataGridHandler2 = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler2.setDataGrid(panels_dg);
-		dataGridHandler2.addTextInputColumn("name", "Panel Name", restrictions);
+		dataGridHandler2.addTextInputColumn("name", "Panel Name", restrictions,false,150);
 		var DP2 = new Array();
 		for (var panel in panels) {
 			var newPanel = new Object();
@@ -123,17 +123,8 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 			hideFromList = "false";
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({panels:newPanels, rooms:newRooms, name:name_ti.text, map:map_ti.text, background:background_ti.text, cycle:cycle, alignment:alignment_cmb.selectedItem.label, hideFromList:hideFromList}));
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
-		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
-		for (var child in _global.left_tree.selectedNode.childNodes) {
-			_global.left_tree.selectedNode.childNodes[child].removeNode();
-		}
-		// Nodes are added in reverse order to maintain consistancy
-		_global.left_tree.selectedNode.appendChild(new XMLNode(1, "Placeholder"));
-		for (var child in newNode.childNodes) {
-			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
-		}
-		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.needSave();						
+		_global.refreshTheTree();		
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 }

@@ -7,7 +7,7 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
-	public function init() {
+	public function onLoad() {
 		var restrictions = new Object();
 		var restrictions2 = new Object();
 		restrictions.maxChars = undefined;
@@ -15,9 +15,9 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 		restrictions2.editable = false;
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(alertgroups_dg);
-		dataGridHandler.addTextInputColumn("alert", "Alert Group", restrictions2);
-		dataGridHandler.addTextInputColumn("x_pos", "x Pos", restrictions);
-		dataGridHandler.addTextInputColumn("y_pos", "y Pos", restrictions);
+		dataGridHandler.addTextInputColumn("alert", "Alert Group", restrictions2,false,100);
+		dataGridHandler.addTextInputColumn("x_pos", "x Pos", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("y_pos", "y Pos", restrictions,false,150);
 		var DP = new Array();
 		for (var alertgroup in alertgroups) {
 			var newAlertGroup = new Object();
@@ -48,17 +48,8 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 			newAlertGroup.push(AlertGroup);
 		}
 		_global.left_tree.selectedNode.object.setData({alertgroups:newAlertGroup});
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
-		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
-		for (var child in _global.left_tree.selectedNode.childNodes) {
-			_global.left_tree.selectedNode.childNodes[child].removeNode();
-		}
-		// Nodes are added in reverse order to maintain consistancy
-		_global.left_tree.selectedNode.appendChild(new XMLNode(1, "Placeholder"));
-		for (var child in newNode.childNodes) {
-			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
-		}
-		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.needSave();						
+		_global.refreshTheTree();		
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 }

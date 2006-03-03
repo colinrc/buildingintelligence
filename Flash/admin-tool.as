@@ -64,13 +64,6 @@ var infoflow_ta = workFlow_split.setSecondContents("TextArea", "infoflow_ta", 1)
 _global.right_tree = right_tree;
 _global.infoflow_ta = infoflow_ta;
 _global.infoflow_ta.editable = false;
-_global.workflow_xml = new XML();
-_global.workflow_xml.ignoreWhite = true;
-_global.workflow_xml.load("workflow.xml");
-_global.right_tree_xml = new XML();
-//values set in workflow object
-_global.right_tree_xml.ignoreWhite = true;
-
 _global.workflow = new Objects.WorkFlow();
 var left_tree:mx.controls.Tree;
 _global.left_tree = left_tree;
@@ -109,7 +102,7 @@ _global.comboSetSelected = function(combo, val, field) {
 		}
 	}
 };
-function refreshTheTree() {
+_global.refreshTheTree = function () {
 	var oBackupDP = _global.left_tree.dataProvider;
 	_global.left_tree.dataProvider = null;
 	// clear
@@ -157,6 +150,7 @@ project_xml.onLoad = function(success) {
 		}
 	}
 	_global.right_tree.dataProvider.removeAll();
+	_global.workflow.buildWorkflowTree();	
 	projectTree_xml.appendChild(_global.client_test.toTree());
 	projectTree_xml.appendChild(_global.server_test.toTree());
 	refreshTheTree();
@@ -265,8 +259,8 @@ function saveFile(saveType:String):Void {
 			newProjectXML.appendChild(_global.server_test.toXML());
 			newProjectXML.appendChild(_global.client_test.toXML());
 			mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
-			mdm.Dialogs.prompt("File saved to: "+_global.projectFileName);		
-		} else{
+			mdm.Dialogs.prompt("File saved to: " + _global.projectFileName);
+		} else {
 			mdm.Dialogs.BrowseFile.buttonText = "Save Project";
 			mdm.Dialogs.BrowseFile.title = "Please select a location to save to";
 			mdm.Dialogs.BrowseFile.dialogText = "Please select a location to save to";
@@ -277,7 +271,7 @@ function saveFile(saveType:String):Void {
 			if (tempString != "false") {
 				_global.projectFileName = tempString;
 				saveFile("Project");
-			}			
+			}
 		}
 	} else {
 		mdm.Dialogs.BrowseFile.buttonText = "Save file";
@@ -293,7 +287,7 @@ function saveFile(saveType:String):Void {
 			} else {
 				mdm.FileSystem.saveFile(file, _global.writeXMLFile(_global.client_test.toXML(), 0));
 			}
-			mdm.Dialogs.prompt("File saved to: "+file);		
+			mdm.Dialogs.prompt("File saved to: " + file);
 		}
 	}
 }
@@ -319,6 +313,8 @@ menuListener.change = function(evt:Object) {
 		_global.project = new Object();
 		setView("home");
 		/** Load templates*/
+		_global.right_tree.dataProvider.removeAll();
+		_global.workflow.buildWorkflowTree();
 		client_xml.load("default_client.xml");
 		server_xml.load("default_server.xml");
 		setButtons(true);
@@ -344,11 +340,11 @@ menuListener.change = function(evt:Object) {
 			_global.projectFileName = tempString;
 			saveFile("Project");
 		}
-		save_btn.icon = "floppyfalse";		
+		save_btn.icon = "floppyfalse";
 		break;
 	case "save" :
 		saveFile("Project");
-		save_btn.icon = "floppyfalse";		
+		save_btn.icon = "floppyfalse";
 		break;
 	}
 };
@@ -372,7 +368,7 @@ setView = function (view, dataObj) {
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
-		form_mc = formContent_mc.attachMovie("forms.home", "form_"+ (_global.formDepth++)+"_mc",  formContent_mc.getNextHighestDepth());
+		form_mc = formContent_mc.attachMovie("forms.home", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());
 		tabs_tb.dataProvider = [{label:"Project Details"}];
 		tabs_tb.selectedIndex = 0;
 		tabs_tb._visible = true;
@@ -416,7 +412,7 @@ setView = function (view, dataObj) {
 			tabs_tb.selectedIndex = 0;
 			view = "control.controls";
 		}
-		form_mc = formContent_mc.attachMovie("forms." + view, "form_" + (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth());
+		form_mc = formContent_mc.attachMovie("forms." + view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());
 		//_root.debugger.text += "setting view "+view+"\n";
 		_global.server.attachView(form_mc);
 		break;
@@ -431,7 +427,7 @@ setView = function (view, dataObj) {
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
-		form_mc = formContent_mc.attachMovie("forms.preview", "form_"+ (_global.formDepth++)+"_mc",  formContent_mc.getNextHighestDepth());
+		form_mc = formContent_mc.attachMovie("forms.preview", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());
 		tabs_tb.dataProvider = [{label:"Client Preview"}];
 		tabs_tb.selectedIndex = 0;
 		tabs_tb._visible = true;
@@ -440,7 +436,7 @@ setView = function (view, dataObj) {
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
-		form_mc = formContent_mc.attachMovie("forms.publish", "form_"+ (_global.formDepth++)+"_mc",  formContent_mc.getNextHighestDepth());
+		form_mc = formContent_mc.attachMovie("forms.publish", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());
 		tabs_tb.dataProvider = [{label:"Publish", view:"publish"}];
 		tabs_tb.selectedIndex = 0;
 		break;
@@ -450,7 +446,7 @@ setView = function (view, dataObj) {
 		workFlow_split._visible = false;
 		tabs_tb.dataProvider = [{label:"History", view:"history"}];
 		tabs_tb.selectedIndex = 0;
-		form_mc = formContent_mc.attachMovie("forms.history", "form" +  (_global.formDepth++) + "_history",  formContent_mc.getNextHighestDepth());
+		form_mc = formContent_mc.attachMovie("forms.history", "form" + (_global.formDepth++) + "_history", formContent_mc.getNextHighestDepth());
 		break;
 	}
 };
@@ -461,13 +457,13 @@ tabs_tb.change = function(eventObj) {
 			//form_mc = formContent_mc.createEmptyMovieClip("form_"+ formContent_mc.getNextHighestDepth()+"mc",  formContent_mc.getNextHighestDepth());
 			switch (eventObj.target.selectedItem.label) {
 			case "XML" :
-				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth(), {node:left_tree.selectedNode.object.toXML()});
+				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {node:left_tree.selectedNode.object.toXML()});
 				break;
 			case "Preview" :
-				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth(), {controls:_global.client_test.getControlTypes(), previewXML:left_tree.selectedNode.object.toXML()});
+				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {controls:_global.client_test.getControlTypes(), previewXML:left_tree.selectedNode.object.toXML()});
 				break;
 			default :
-				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth(), left_tree.selectedNode.object.getData());
+				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), left_tree.selectedNode.object.getData());
 				break;
 			}
 		} else {
@@ -476,7 +472,6 @@ tabs_tb.change = function(eventObj) {
 	}
 	this.lastTab = this.selectedItem;
 };
-
 tabs_tb.addEventListener("change", tabs_tb);
 leftTreeListener = new Object();
 leftTreeListener.change = function(eventObj) {
@@ -490,12 +485,12 @@ leftTreeListener.change = function(eventObj) {
 		case "Tab" :
 		case "Control" :
 		case "Window" :
-			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" +  (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth(), node.object.getData());
+			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview", view:"forms.project.client.preview"}];
 			tabs_tb.selectedIndex = 0;
 			break;
 		default :
-			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth(), node.object.getData());
+			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}];
 			tabs_tb.selectedIndex = 0;
 			break;
@@ -554,12 +549,12 @@ buttonListener2.click = function(eventObj) {
 		CloseTip();
 		var tempObject = _global.left_tree.selectedNode.object;
 		for (var child in projectTree_xml.childNodes) {
-			if ((projectTree_xml.childNodes[child].nodeName == "Server")||(projectTree_xml.childNodes[child].nodeName == "Client")){
+			if ((projectTree_xml.childNodes[child].nodeName == "Server") || (projectTree_xml.childNodes[child].nodeName == "Client")) {
 				projectTree_xml.childNodes[child].removeNode();
 			}
 		}
 		_global.right_tree.dataProvider.removeAll();
-		_global.workflow.buildWorkflowTree();		
+		_global.workflow.buildWorkflowTree();
 		projectTree_xml.appendChild(_global.client_test.toTree());
 		projectTree_xml.appendChild(_global.server_test.toTree());
 		if (_global.advanced) {
@@ -568,41 +563,41 @@ buttonListener2.click = function(eventObj) {
 			DisplayTip("Basic View");
 		}
 		var foundNode = searchProject(_global.left_tree.dataProvider, tempObject);
-		if(foundNode != undefined){
+		if (foundNode != undefined) {
 			left_tree.setIsOpen(foundNode, true);
 			var temp_node = foundNode.parentNode;
 			while (temp_node != null) {
 				left_tree.setIsOpen(temp_node, true);
 				temp_node = temp_node.parentNode;
 			}
-			form_mc.setAdvanced();			
-		} else{
+			form_mc.setAdvanced();
+		} else {
 			//Reset project
 			setView("project");
 		}
-		refreshTheTree();				
-		left_tree.selectedNode = foundNode;							
+		refreshTheTree();
+		left_tree.selectedNode = foundNode;
 		break;
 	}
 };
-function searchProject (treeNode:Object,object:Object):Object{
-	if(treeNode.object == object){
+function searchProject(treeNode:Object, object:Object):Object {
+	if (treeNode.object == object) {
 		return treeNode;
 	} else {
-		for(var child in treeNode.childNodes){
-			var foundNode = searchProject(treeNode.childNodes[child],object);
-			if(foundNode != undefined){
+		for (var child in treeNode.childNodes) {
+			var foundNode = searchProject(treeNode.childNodes[child], object);
+			if (foundNode != undefined) {
 				return foundNode;
 			}
 		}
 		return undefined;
 	}
 }
-_global.needSave = function(){
-	if(save_btn.icon !="floppytrue"){
+_global.needSave = function() {
+	if (save_btn.icon != "floppytrue") {
 		save_btn.icon = "floppytrue";
 	}
-}
+};
 advanced_btn.addEventListener("click", buttonListener2);
 save_btn.addEventListener("click", buttonListener2);
 function setButtons(enabled:Boolean) {
@@ -707,11 +702,7 @@ treeFilter_cb.change = function(eventObj) {
 	case "Project" :
 		left_tree.dataProvider = projectTree_xml;
 		left_tree.labelFunction = function(item_obj:Object):String  {
-			//if (item_obj.object.isValid()) {
 			return item_obj.object.getName();
-			/*} else {
-			return "*" + item_obj.object.getName();
-			}*/
 		};
 		break;
 	case "Library" :
@@ -721,37 +712,16 @@ treeFilter_cb.change = function(eventObj) {
 	}
 };
 treeFilter_cb.addEventListener("change", treeFilter_cb);
-/*rightTreeListener = new Object();
-rightTreeListener.change = function(eventObj) {
-	var node = eventObj.target.selectedNode;
-	left_tree.setIsOpen(node.left_node, true);
-	var temp_node = node.left_node.parentNode;
-	while (temp_node != null) {
-		left_tree.setIsOpen(temp_node, true);
-		temp_node = temp_node.parentNode;
-	}
-	left_tree.selectedNode = node.left_node;
-	infoflow_ta.text = node.attributes.description;
-	left_tree.setFocus();
-	left_tree.dataProvider.updateViews("change");
-	selectNode = new Object();
-	selectNode.target = _global.left_tree;
-	selectNode.type = "change";
-	left_tree.dispatchEvent(selectNode);
-};
-right_tree.addEventListener("change", rightTreeListener);*/
 setView("none");
 /****************************************************************/
-//_global.right_tree.dataProvider = _global.right_tree_xml;
-//_global.right_tree.setStyle("depthColors", [0x00ff00, 0xff0000, 0x0000ff]);
 _global.right_tree.setStyle("indentation", 10);
 _global.right_tree.setStyle("defaultLeafIcon", "Icon:null");
 _global.right_tree.setStyle("folderOpenIcon", "Icon:null");
 _global.right_tree.setStyle("folderClosedIcon", "Icon:null");
 _global.right_tree.setStyle("disclosureClosedIcon", "Icon:null");
 _global.right_tree.setStyle("disclosureOpenIcon", "Icon:null");
-_global.right_tree.setStyle("depthColors", [0xEEEEEE, 0xFFFFFF]);
-_global.right_tree.setStyle("rollOverColor", 0xCCCCCC);
+_global.right_tree.setStyle("depthColors", [0xCCCCCC, 0xFFFFFF]);
+_global.right_tree.setStyle("rollOverColor", 0xDDDDDD);
 _global.right_tree.setStyle("selectionColor", 0xCFDFF0);
 _global.right_tree.setStyle("selectionDuration", 0);
 _global.right_tree.setStyle("textRollOverColor", 0x000000);
@@ -760,17 +730,13 @@ _global.right_tree.cellRenderer = "workFlowTreeCellRenderer";
 _global.right_tree.setStyle("lineColor", 0x000000);
 _global.right_tree.setStyle("lineAlpha", 20);
 _global.right_tree.vScrollPolicy = "auto";
-
-//treeXML = new XML('<a label="Level 1" complete="0"><b label="Sub-level 1" complete="0" /><b label="Sub-level 2" complete="1" /><b label="Sub-level 3" complete="1" /></a><a label="Level 2" complete="1"><b label="Sub-level 1" complete="1" /><b label="Sub-level 2" complete="1" /></a>');
-
 var treeListener:Object = new Object();
 treeListener.target = right_tree;
 treeListener.opened = undefined;
 treeListener.open_next = undefined;
-
 /* a node in the tree has been selected */
 treeListener.change = function(evt:Object) {
-	var node = evt.target.selectedItem;
+	var node = evt.target.selectedNode;
 	var is_open = evt.target.getIsOpen(node);
 	var is_branch = evt.target.getIsBranch(node);
 	var node_to_close = node.getSiblings(this.target);
@@ -784,11 +750,22 @@ treeListener.change = function(evt:Object) {
 		} else {
 			this.target.selectedNode = node;
 			this.target.dispatchEvent({type:"click", target:evt.target});
+			left_tree.setIsOpen(node.left_node, true);
+			var temp_node = node.left_node.parentNode;
+			while (temp_node != null) {
+				left_tree.setIsOpen(temp_node, true);
+				temp_node = temp_node.parentNode;
+			}
+			left_tree.selectedNode = node.left_node;
+			infoflow_ta.text = node.attributes.description;
+			selectNode = new Object();
+			selectNode.target = _global.left_tree;
+			selectNode.type = "change";
+			left_tree.dispatchEvent(selectNode);
 		}
 		this.open_next = undefined;
 	}
-}
-
+};
 treeListener.closeNode = function(node:XMLNode) {
 	for (var a in node.childNodes) {
 		if (this.target.getIsOpen(node.childNodes[a])) {
@@ -796,8 +773,7 @@ treeListener.closeNode = function(node:XMLNode) {
 		}
 	}
 	this.target.setIsOpen(node, false, false);
-}
-
+};
 treeListener.nodeClose = function(evt:Object) {
 	this.closeNode(evt.node);
 	if (this.open_next != undefined and evt.target.getIsBranch(this.open_next)) {
@@ -807,12 +783,10 @@ treeListener.nodeClose = function(evt:Object) {
 		this.target.dispatchEvent({type:"click", target:evt.target});
 		this.open_next = undefined;
 	}
-}
-
+};
 treeListener.nodeOpen = function(evt:Object) {
 	evt.target.selectedNode = evt.node;
-}
-
+};
 XMLNode.prototype.getSiblings = function(cTree:mx.controls.Tree) {
 	var parent = this.parentNode;
 	for (var a = 0; a < parent.childNodes.length; a++) {
@@ -821,13 +795,11 @@ XMLNode.prototype.getSiblings = function(cTree:mx.controls.Tree) {
 		}
 	}
 	return undefined;
-}
-
+};
 // set out listeners for the menu
 _global.right_tree.addEventListener('change', treeListener);
 _global.right_tree.addEventListener('nodeClose', treeListener);
 _global.right_tree.addEventListener('nodeOpen', treeListener);
-//_global.right_tree.dataProvider = treeXML;
 _global.workflow.buildWorkflowTree();
 /************************************************************************/
 stop();

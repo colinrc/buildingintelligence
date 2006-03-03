@@ -4,7 +4,7 @@
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var alarm in alarms){
-			tempKeys.push(alarms[alarm].attributes["DISPLAY_NAME"]);
+			tempKeys.push(alarms[alarm].display_name);
 		}
 		return tempKeys;
 	}

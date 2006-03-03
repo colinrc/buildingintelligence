@@ -5,7 +5,7 @@
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var raw_interface in raw_interfaces) {
-			tempKeys.push(raw_interfaces[raw_interface].attributes.DISPLAY_NAME);
+			tempKeys.push(raw_interfaces[raw_interface].display_name);
 		}
 		return tempKeys;
 	}

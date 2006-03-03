@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Client.Logging extends Forms.BaseForm {
 	private var groups:Array;
 	private var group_dg:DataGrid;
@@ -8,19 +7,19 @@ class Forms.Project.Client.Logging extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var name_ti:TextInput;
 	private var save_btn:Button;
-	private var dataGridHandler:Object;	
-	public function init() {
+	private var dataGridHandler:Object;
+	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(group_dg);
-		dataGridHandler.addTextInputColumn("name", "Logging Group", restrictions);
-		var DP = new Array();		
+		dataGridHandler.addTextInputColumn("name", "Logging Group", restrictions,false,150);
+		var DP = new Array();
 		for (var group in groups) {
 			var newGroup = new Object();
 			newGroup.name = "";
-			if(groups[group].name.length) {
+			if (groups[group].name.length) {
 				newGroup.name = groups[group].name;
 			}
 			DP.push(newGroup);
@@ -39,23 +38,14 @@ class Forms.Project.Client.Logging extends Forms.BaseForm {
 	public function save():Void {
 		var newGroups = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index<DP.length; index++) {
+		for (var index = 0; index < DP.length; index++) {
 			var Group = new Object();
 			Group.name = DP[index].name;
 			newGroups.push(Group);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({groups:newGroups}));
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,false);
-		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
-		for(var child in _global.left_tree.selectedNode.childNodes){
-			_global.left_tree.selectedNode.childNodes[child].removeNode();
-		}
-		// Nodes are added in reverse order to maintain consistancy
-		_global.left_tree.selectedNode.appendChild(new XMLNode(1,"Placeholder"));
-		for(var child in newNode.childNodes){
-			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
-		}
-		_global.left_tree.selectedNode.lastChild.removeNode();
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode,true);
+		_global.needSave();						
+		_global.refreshTheTree();		
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 }

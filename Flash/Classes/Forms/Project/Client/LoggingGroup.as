@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var icon_ti:TextInput;
@@ -21,7 +20,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var removeAll_btn:Button;
 	private var controls:Array;
 	private var attributes:Array;
-	public function init():Void {
+	public function onLoad():Void {
 		var tempKeys = _global.server_test.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
@@ -40,7 +39,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		name_ti.text = name;
 		icon_ti.text = icon;
 		listenTo_ti.text = listenTo;
-		for (var index = 0; index<type_cmb.length; index++) {
+		for (var index = 0; index < type_cmb.length; index++) {
 			if (type == type_cmb.getItemAt(index).label) {
 				type_cmb.selectedIndex = index;
 			}
@@ -55,7 +54,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	}
 	private function typeChange() {
 		logType_ld.createEmptyMovieClip("form_mc", 0);
-		var dataObj =  new Object();
+		var dataObj = new Object();
 		switch (type_cmb.selectedItem.label) {
 		case "web" :
 			for (var attribute in attributes) {
@@ -68,19 +67,19 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		case "log" :
 			for (var attribute in attributes) {
 				if (attributes[attribute].name == "label") {
-					dataObj.label = attributes[attribute].value;			
+					dataObj.label = attributes[attribute].value;
 				}
 				if (attributes[attribute].name == "timeformat") {
 					dataObj.timeformat = attributes[attribute].value;
-				}				
+				}
 			}
 			break;
 		}
-		form_mc = logType_ld.attachMovie("forms.project.client.logging"+type_cmb.selectedItem.label, "form_mc", 0, dataObj);
+		form_mc = logType_ld.attachMovie("forms.project.client.logging" + type_cmb.selectedItem.label, "form_mc", 0, dataObj);
 	}
 	private function save() {
 		var newControls = new Array();
-		for (var index = 0; index<right_li.length; index++) {
+		for (var index = 0; index < right_li.length; index++) {
 			var newControl = new XMLNode(1, "control");
 			newControl.attributes["key"] = right_li.getItemAt(index).label;
 			newControls.push(newControl);
@@ -89,25 +88,26 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		attributes = new Array();
 		switch (type_cmb.selectedItem.label) {
 		case "web" :
-				attributes.push({name:"url",value:form_mc.url_ti.text});
+			attributes.push({name:"url", value:form_mc.url_ti.text});
 			break;
 		case "tally" :
-				attributes.push({name:"label",value:form_mc.label_ti.text});
-				attributes.push({name:"timeformat",value:form_mc.timeformat_ti.text});
+			attributes.push({name:"label", value:form_mc.label_ti.text});
+			attributes.push({name:"timeformat", value:form_mc.timeformat_ti.text});
 			break;
 		case "log" :
-				attributes.push({name:"label",value:form_mc.label_ta.text});
-				attributes.push({name:"timeformat",value:form_mc.timeformat_ti.text});
+			attributes.push({name:"label", value:form_mc.label_ta.text});
+			attributes.push({name:"timeformat", value:form_mc.timeformat_ti.text});
 			break;
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({controls:newControls, name:name_ti.text, icon:icon_ti.text, listenTo:listenTo_ti.text, type:type_cmb.selectedItem.label, attributes:attributes}));
-		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
-		_global.left_tree.selectedIndex = tempIndex;
+		_global.needSave();						
+		_global.refreshTheTree();		
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 	private function addSel() {
 		if (left_li.selectedItem != undefined) {
 			var flag = false;
-			for (var index = 0; index<right_li.length; index++) {
+			for (var index = 0; index < right_li.length; index++) {
 				if (left_li.selectedItem.label == right_li.getItemAt(index).label) {
 					flag = true;
 				}
@@ -120,9 +120,9 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		}
 	}
 	private function addAll() {
-		for (var leftIndex = 0; leftIndex<left_li.length; leftIndex++) {
+		for (var leftIndex = 0; leftIndex < left_li.length; leftIndex++) {
 			var flag = false;
-			for (var rightIndex = 0; rightIndex<right_li.length; rightIndex++) {
+			for (var rightIndex = 0; rightIndex < right_li.length; rightIndex++) {
 				if (left_li.getItemAt(leftIndex).label == right_li.getItemAt(rightIndex).label) {
 					flag = true;
 				}

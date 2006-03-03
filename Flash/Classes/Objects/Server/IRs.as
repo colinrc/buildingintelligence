@@ -4,7 +4,7 @@
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var ir in irs){
-			tempKeys.push(irs[ir].attributes["AV_NAME"]);
+			tempKeys.push(irs[ir].avname);
 		}
 		return tempKeys;
 	}

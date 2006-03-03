@@ -8,7 +8,7 @@ class Forms.Project.Client.Row extends Forms.BaseForm {
 	private var update_btn:Button;
 	private var add_item_btn:Button;
 	private var type_cmb:ComboBox;
-	public function init() {
+	public function onLoad() {
 		if(cases!=undefined){
 			cases_ti.text = cases;
 		}

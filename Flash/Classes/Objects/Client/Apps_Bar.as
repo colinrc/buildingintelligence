@@ -1,5 +1,6 @@
 ﻿class Objects.Client.Apps_Bar extends Objects.BaseElement{
 	private var icons:Array;
+	private var treeNode:XMLNode;		
 	public function isValid():Boolean {
 		var flag = true;
 		for(var icon in icons){
@@ -26,6 +27,7 @@
 		}
 		newNode.object = this;
 		_global.workflow.addNode("ClientApps_Bar",newNode);
+		treeNode = newNode;				
 		return newNode;
 	}
 	public function getName():String{
@@ -78,6 +80,7 @@
 			newNode.attributes["name"] = newIcons[newIcon].name;
 			var newIcon = new Objects.Client.Icon();
 			newIcon.setXML(newNode);
+			treeNode.appendChild(newIcon.toTree());					
 			icons.push(newIcon);
 		}
 		//sort according to desired order

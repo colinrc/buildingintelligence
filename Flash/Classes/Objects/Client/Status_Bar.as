@@ -1,5 +1,6 @@
 ﻿class Objects.Client.Status_Bar extends Objects.BaseElement{
 	private var groups:Array;
+	private var treeNode:XMLNode;		
 	public function isValid():Boolean {
 		var flag = true;
 		for(var group in groups){
@@ -26,6 +27,7 @@
 		}
 		newNode.object = this;
 		_global.workflow.addNode("Status_Bar",newNode);
+		treeNode = newNode;			
 		return newNode;
 	}
 	public function getName():String{
@@ -78,6 +80,7 @@
 			newNode.attributes["name"] = newGroups[newGroup].name;
 			var newGroup = new Objects.Client.StatusBarGroup();
 			newGroup.setXML(newNode);
+			treeNode.appendChild(newGroup.toTree());			
 			groups.push(newGroup);
 		}
 	}

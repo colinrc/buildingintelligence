@@ -4,7 +4,7 @@
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var relay in relays) {
-			tempKeys.push(relays[relay].attributes["DISPLAY_NAME"]);
+			tempKeys.push(relays[relay].display_name);
 		}
 		return tempKeys;
 	}

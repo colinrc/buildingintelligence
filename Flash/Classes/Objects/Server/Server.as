@@ -3,6 +3,7 @@
 	private var controls:Objects.Server.Controls;
 	private var settings:Objects.Server.Settings;
 	private var devices:Array;
+	private var treeNode:XMLNode;
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var device in devices){
@@ -60,6 +61,7 @@
 			newNode.appendChild(devices[device].toTree());
 		}
 		_global.workflow.addNode("Server",newNode);
+		treeNode = newNode;
 		return newNode;
 	}
 	public function getName():String {
@@ -106,56 +108,67 @@
 			case "PELCO" :
 				var newPelco = new Objects.Server.Pelco();
 				newPelco.setXML(newNode);
+				treeNode.appendChild(newPelco.toTree());				
 				devices.push(newPelco);
 				break;
 			case "OREGON" :
 				var newOregon = new Objects.Server.Oregon();
 				newOregon.setXML(newNode);
+				treeNode.appendChild(newOregon.toTree());
 				devices.push(newOregon);
 				break;
 			case "IR_LEARNER" :
 				var newIR = new Objects.Server.IR_Learner();
 				newIR.setXML(newNode);
+				treeNode.appendChild(newIR.toTree());
 				devices.push(newIR);
 				break;
 			case "TUTONDO" :
 				var newTutondo = new Objects.Server.Tutondo();
 				newTutondo.setXML(newNode);
+				treeNode.appendChild(newTutondo.toTree());				
 				devices.push(newTutondo);
 				break;
 			case "KRAMER" :
 				var newKramer = new Objects.Server.Kramer();
 				newKramer.setXML(newNode);
+				treeNode.appendChild(newKramer.toTree());				
 				devices.push(newKramer);
 				break;
 			case "HAL" :
 				var newHal = new Objects.Server.Hal();
 				newHal.setXML(newNode);
+				treeNode.appendChild(newHal.toTree());				
 				devices.push(newHal);
 				break;
 			case "CBUS" :
 				var newCBus = new Objects.Server.CBus();
 				newCBus.setXML(newNode);
+				treeNode.appendChild(newCBus.toTree());				
 				devices.push(newCBus);
 				break;
 			case "DYNALITE" :
 				var newDynalite = new Objects.Server.Dynalite();
 				newDynalite.setXML(newNode);
+				treeNode.appendChild(newDynalite.toTree());
 				devices.push(newDynalite);
 				break;
 			case "GC100" :
 				var newGC100 = new Objects.Server.GC100();
 				newGC100.setXML(newNode);
+				treeNode.appendChild(newGC100.toTree());
 				devices.push(newGC100);
 				break;
 			case "RAW_CONNECTION" :
 				var newRaw = new Objects.Server.Raw_Connection();
 				newRaw.setXML(newNode);
+				treeNode.appendChild(newRaw.toTree());		
 				devices.push(newRaw);
 				break;
 			case "COMFORT" :
 				var newComfort = new Objects.Server.Comfort();
 				newComfort.setXML(newNode);
+				treeNode.appendChild(newComfort.toTree());
 				devices.push(newComfort);
 				break;
 			}

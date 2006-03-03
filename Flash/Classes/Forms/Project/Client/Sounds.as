@@ -7,7 +7,7 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
-	public function init() {
+	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
@@ -15,10 +15,10 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 		attributes.label = "Play";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(sounds_dg);
-		dataGridHandler.addTextInputColumn("name", "Sound Name", restrictions);
-		dataGridHandler.addTextInputColumn("file", "File", restrictions);
-		dataGridHandler.addTextInputColumn("volume", "Volume", restrictions);
-		dataGridHandler.addButtonColumn("Play", "Play", attributes, Delegate.create(this, previewItem));
+		dataGridHandler.addTextInputColumn("name", "Sound Name", restrictions,false,100);
+		dataGridHandler.addTextInputColumn("file", "File", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("volume", "Volume", restrictions,false,60);
+		dataGridHandler.addButtonColumn("Play", "Play", attributes, Delegate.create(this, previewItem),false,150);
 		var DP = new Array();
 		for (var sound in sounds) {
 			var newSound = new Object();
@@ -62,7 +62,7 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 	private function save():Void {
 		var newSounds = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index<DP.length; index++) {
+		for (var index = 0; index < DP.length; index++) {
 			var sound = new XMLNode(1, "sound");
 			if (DP[index].name != undefined) {
 				sound.attributes["name"] = DP[index].name;
@@ -76,8 +76,9 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 			newSounds.push(sound);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		_global.left_tree.selectedNode.object.setData(new Object({sounds:newSounds}));
-		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
-		_global.left_tree.selectedIndex = tempIndex;
+		_global.left_tree.selectedNode.object.setData({sounds:newSounds});
+		_global.needSave();						
+		_global.refreshTheTree();		
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 }

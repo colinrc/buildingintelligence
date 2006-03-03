@@ -7,7 +7,7 @@ class Forms.Project.Client.ControlTypeWebBrowser extends Forms.BaseForm {
 	private var url_ti:TextInput;
 	private var width_ti:TextInput;
 	private var height_ti:TextInput;
-	public function init() {
+	public function onLoad() {
 		if(object.attributes["url"] != undefined){
 			url_ti.text = object.attributes["url"];
 		} else {

@@ -9,7 +9,7 @@ class Forms.Project.Client.ControlTypeMediaPlayer extends Forms.BaseForm {
 	private var videoHeight_ti:TextInput;
 	private var format_ti:TextInput;
 	private var src_ti:TextInput;
-	public function init() {
+	public function onLoad() {
 		if(object.attributes["refreshRate"] != undefined){
 			refreshRate_ti.text = object.attributes["refreshRate"];
 		} else{

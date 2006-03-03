@@ -5,7 +5,7 @@
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var toggle in toggles){
-			tempKeys.push(toggles[toggle].attributes["DISPLAY_NAME"]);
+			tempKeys.push(toggles[toggle].display_name);
 		}
 		return tempKeys;
 	}

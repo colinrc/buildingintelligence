@@ -4,7 +4,7 @@
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var light in lights){
-			tempKeys.push(lights[light].attributes["DISPLAY_NAME"]);
+			tempKeys.push(lights[light].display_name);
 		}
 		return tempKeys;
 	}

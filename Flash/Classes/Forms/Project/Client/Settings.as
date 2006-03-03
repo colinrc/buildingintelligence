@@ -13,15 +13,17 @@ class Forms.Project.Client.Settings extends Forms.BaseForm {
 	private var variable_mc:MovieClip;
 	private var settings:XMLNode;
 	
-	public function init():Void{
+	public function onLoad():Void{
 		var tempNode = _global.overrides_xml.firstChild;
 		for(var child in tempNode.childNodes){
-			var tempObject = new Object();
-			tempObject.label = tempNode.childNodes[child].attributes["name"];
-			tempObject.type = tempNode.childNodes[child].attributes["type"];
-			tempObject.def = tempNode.childNodes[child].attributes["default"];
-			tempObject.description = tempNode.childNodes[child].attributes["description"];
-			left_li.addItem(tempObject);
+			for(var index in tempNode.childNodes[child].childNodes){
+				var tempObject = new Object();
+				tempObject.label = tempNode.childNodes[child].childNodes[index].attributes["name"];
+				tempObject.type = tempNode.childNodes[child].childNodes[index].attributes["type"];
+				tempObject.def = tempNode.childNodes[child].childNodes[index].attributes["default"];
+				tempObject.description = tempNode.childNodes[child].childNodes[index].attributes["description"];
+				left_li.addItem(tempObject);
+			}
 		}
 		for(var child in settings.childNodes){
 			var tempObject = new Object();
@@ -57,8 +59,9 @@ class Forms.Project.Client.Settings extends Forms.BaseForm {
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
 		_global.left_tree.selectedNode.object.setData(new Object({settings:newNode}));
-		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
-		_global.left_tree.selectedIndex = tempIndex;
+		_global.needSave();						
+		_global.refreshTheTree();		
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 	private function addSel(){
 		if(left_li.selectedItem != undefined){

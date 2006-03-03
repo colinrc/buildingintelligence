@@ -4,7 +4,7 @@
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var sensor in sensors) {
-			tempKeys.push(sensors[sensor].attributes["DISPLAY_NAME"]);
+			tempKeys.push(sensors[sensor].display_name);
 		}
 		return tempKeys;
 	}

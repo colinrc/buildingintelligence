@@ -7,7 +7,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
-	public function init() {
+	public function onLoad() {
 		var tempKeys = _global.server_test.getKeys();
 		var DPKey = new Array();
 		for (var key in tempKeys) {
@@ -20,10 +20,10 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(doors_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("pos", "Position", restrictions);
-		dataGridHandler.addComboBoxColumn("key", "Key", DPKey);
-		dataGridHandler.addColourColumn("colour", "Colour");
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("pos", "Position", restrictions,false,100);
+		dataGridHandler.addComboBoxColumn("key", "Key", DPKey,false,100);
+		dataGridHandler.addColourColumn("colour", "Colour",100);
 		var DP = new Array();
 		for (var door in doors) {
 			var newDoor = new Object();
@@ -63,7 +63,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 	public function save():Void {
 		var newDoors = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index<DP.length; index++) {
+		for (var index = 0; index < DP.length; index++) {
 			var item = new XMLNode(1, "door");
 			if (DP[index].name != "") {
 				item.attributes["name"] = DP[index].name;
@@ -80,5 +80,6 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			newDoors.push(item);
 		}
 		_global.left_tree.selectedNode.object.setData({doors:newDoors});
+		_global.needSave();						
 	}
 }

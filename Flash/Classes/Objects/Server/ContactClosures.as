@@ -4,7 +4,7 @@
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var contact in contacts) {
-			tempKeys.push(contacts[contact].attributes["DISPLAY_NAME"]);
+			tempKeys.push(contacts[contact].display_name);
 		}
 		return tempKeys;
 	}

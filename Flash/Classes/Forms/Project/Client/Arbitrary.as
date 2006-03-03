@@ -12,7 +12,7 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 	private var y_ti:TextInput;
 	private var item_ld:Loader;
 	private var item_mc:MovieClip;
-	public function init() {
+	public function onLoad() {
 		for (var item in items) {
 			items_li.addItem(items[item]);
 		}
@@ -320,18 +320,9 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 		for (var index = 0; index<items_li.length; index++) {
 			newItems.push(items_li.getItemAt(index));
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({items:newItems}));
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
-		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
-		for (var child in _global.left_tree.selectedNode.childNodes) {
-			_global.left_tree.selectedNode.childNodes[child].removeNode();
-		}
-		// Nodes are added in reverse order to maintain consistancy
-		_global.left_tree.selectedNode.appendChild(new XMLNode(1, "Placeholder"));
-		for (var child in newNode.childNodes) {
-			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
-		}
-		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.left_tree.selectedNode.object.setData({items:newItems});
+		_global.needSave();						
+		_global.refreshTheTree();		
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 }

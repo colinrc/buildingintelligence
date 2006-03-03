@@ -15,7 +15,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var object:Object;
 	private var preview_mc:MovieClip;
-	public function init() {
+	public function onLoad() {
 		editor_dg.columnNames = ["0", "1", "2", "3", "4"];
 		editor_dg.getColumnAt(0).headerText = "Rows";
 		editor_dg.getColumnAt(1).headerText = "Item 1";
@@ -157,10 +157,8 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 				var tempObj = editor_dg.getItemAt(editor_dg.selectedIndex+1);
 				editor_dg.replaceItemAt(editor_dg.selectedIndex+1, editor_dg.selectedItem);
 				editor_dg.replaceItemAt(editor_dg.selectedIndex, tempObj);
-				//var tempIndex = editor_dg.selectedIndex+1;
 				editor_dg.selectedIndex = undefined;
 				editor_dg.selectedIndices = undefined;
-				//editor_dg.selectedIndex = tempIndex;
 			}
 		}
 	}
@@ -170,22 +168,12 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 				var tempObj = editor_dg.getItemAt(editor_dg.selectedIndex-1);
 				editor_dg.replaceItemAt(editor_dg.selectedIndex-1, editor_dg.selectedItem);
 				editor_dg.replaceItemAt(editor_dg.selectedIndex, tempObj);
-				//var tempIndex = editor_dg.selectedIndex-1;
 				editor_dg.selectedIndex = undefined;
 				editor_dg.selectedIndices = undefined;
-				//editor_dg.selectedIndex = tempIndex;
 			}
 		}
 	}
-	/*public function preview(controls:XMLNode):Void {
-		var preview_mc:MovieClip = this.createEmptyMovieClip("preview_mc", 100);
-		preview_mc._x=3;
-		preview_mc._y=390;
-		var newControlTypes = new XMLNode(1,"controlTypes");
-		newControlTypes.appendChild(controls);
-		var sampleWindow:XML = new XML('<window><tab name="Preview" ><control name="Main Light" key="ENSUITE_LIGHT" type="'+type_ti.text+'" icons="light-bulb-off,light-bulb" /></tab></window>');				
-		preview_mc.attachMovie("window-preview", "preview_mc", 100, {width:400, height:250, controlTypeData:new XML(newControlTypes.toString()), windowData:sampleWindow, iconPath:"../../eLife Client/Build/standalone/lib/icons/"});		
-	}*/
+
 	public function save():Void {
 		var newRows = new Array();
 		for (var index = editor_dg.dataProvider.length-1; index>=0; index--) {
@@ -199,19 +187,9 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 			}
 			newRows.push(newRow);
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({rows:newRows, type:type_ti.text}));
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
-		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
-		//preview(_global.left_tree.selectedNode.object.toXML());
-		for (var child in _global.left_tree.selectedNode.childNodes) {
-			_global.left_tree.selectedNode.childNodes[child].removeNode();
-		}
-		// Nodes are added in reverse order to maintain consistancy
-		_global.left_tree.selectedNode.appendChild(new XMLNode(1, "Placeholder"));
-		for (var child in newNode.childNodes) {
-			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
-		}
-		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.left_tree.selectedNode.object.setData({rows:newRows, type:type_ti.text});
+		_global.needSave();						
+		_global.refreshTheTree();		
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 }

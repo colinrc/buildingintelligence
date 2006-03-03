@@ -54,12 +54,8 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg = new_dg;
 		my_dg.editable = false;
 		my_dg.addEventListener("cellPress", Delegate.create(this, clickProcessor));
-		/*my_dg.onPress =Delegate.create(this, function () {
-		clearEdit();
-		});*/
 		my_dg.vScrollPolicy = "auto";
 		my_dg.headerHeight = 35;
-		//my_dg.hScrollPolicy = "auto";		
 	}
 	public function addTextInputColumn(name:String, heading:String, restrictions:Object, advanced:Boolean, width:Number) {
 		columns[name] = new Object();
@@ -291,6 +287,7 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.dataProvider = processed_dp;
 	}
 	public function getDataGridDataProvider():Array {
+		clearSelection();		
 		var processed_dp = new Array();
 		for (var row in my_dg.dataProvider) {
 			var newRow = new Object();

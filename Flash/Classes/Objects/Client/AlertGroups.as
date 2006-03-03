@@ -1,5 +1,6 @@
 ﻿class Objects.Client.AlertGroups extends Objects.BaseElement {
 	var alertgroups:Array;
+	private var treeNode:XMLNode;		
 	public function isValid():Boolean {
 		var flag = true;
 		for (var alertgroup in alertgroups) {
@@ -25,6 +26,7 @@
 			newNode.appendChild(alertgroups[alertgroup].toTree());
 		}
 		newNode.object = this;
+		treeNode = newNode;		
 		return newNode;
 	}
 	public function getName():String {
@@ -65,6 +67,7 @@
 			newNode.attributes["y"] = newAlertGroups[newAlertGroup].y_pos;
 			var newAlertGroup = new Objects.Client.Alerts();
 			newAlertGroup.setXML(newNode);
+			treeNode.appendChild(newAlertGroup.toTree());				
 			alertgroups.push(newAlertGroup);
 		}
 	}	

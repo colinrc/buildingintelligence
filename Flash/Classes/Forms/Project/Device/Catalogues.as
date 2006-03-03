@@ -50,17 +50,7 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 			newCatalogues.push(Catalogue);
 		}
 		_global.left_tree.selectedNode.object.setData({catalogues:newCatalogues});
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
-		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
-		for (var child in _global.left_tree.selectedNode.childNodes) {
-			_global.left_tree.selectedNode.childNodes[child].removeNode();
-		}
-		// Nodes are added in reverse order to maintain consistancy
-		_global.left_tree.selectedNode.appendChild(new XMLNode(1, "Placeholder"));
-		for (var child in newNode.childNodes) {
-			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
-		}
-		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.refreshTheTree();		
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 }

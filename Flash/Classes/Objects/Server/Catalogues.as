@@ -1,5 +1,6 @@
 ﻿class Objects.Server.Catalogues extends Objects.BaseElement {
 	var catalogues:Array;
+	private var treeNode:XMLNode;	
 	public function isValid():Boolean {
 		var flag = true;
 		for (var catalogue in catalogues) {
@@ -26,6 +27,7 @@
 		}
 		newNode.object = this;
 		_global.workflow.addNode("Catalogues",newNode);
+		treeNode = newNode;		
 		return newNode;
 	}
 	public function getName():String {
@@ -65,6 +67,7 @@
 			newNode.attributes["NAME"] = newCatalogues[newCatalogue].name;
 			var newCatalogue = new Objects.Server.Catalogue();
 			newCatalogue.setXML(newNode);
+			treeNode.appendChild(newCatalogue.toTree());			
 			catalogues.push(newCatalogue);
 		}
 	}

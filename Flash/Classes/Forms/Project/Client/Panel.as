@@ -18,7 +18,7 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 	private var width:String;
 	private var width_ti:TextInput;
 	private var dataGridHandler:Object;
-	public function init() {
+	public function onLoad() {
 		name_ti.text = name;
 		x_pos_ti.text = x_pos;
 		y_pos_ti.text = y_pos;
@@ -43,10 +43,10 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(controls_dg);
-		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions);
-		dataGridHandler.addTextInputColumn("icons", "Icons", restrictions);
-		dataGridHandler.addComboBoxColumn("key", "Key", DPKey);
-		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl);
+		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions,false,100);
+		dataGridHandler.addTextInputColumn("icons", "Icons", restrictions,false,100);
+		dataGridHandler.addComboBoxColumn("key", "Key", DPKey,false,100);
+		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl,false,100);
 		var DP = new Array();
 		for (var control in controls) {
 			var newControl = new Object();
@@ -103,5 +103,8 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 			newControls.push(item);
 		}
 		_global.left_tree.selectedNode.object.setData({controls:newControls, name:name_ti.text, x_pos:x_pos_ti.text, y_pos:y_pos_ti.text, width:width_ti.text, height:height_ti.text});
+		_global.needSave();						
+		_global.refreshTheTree();		
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);		
 	}
 }

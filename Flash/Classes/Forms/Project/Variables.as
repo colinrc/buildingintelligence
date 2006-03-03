@@ -63,6 +63,7 @@ class Forms.Project.Variables extends Forms.BaseForm {
 		_global.needSave();				
 		var newVariables = new XMLNode(1, "VARIABLES");
 		var DP = dataGridHandler.getDataGridDataProvider();
+		dataGridHandler.clearSelection();		
 		for (var index = 0; index<DP.length; index++) {
 			var variableNode = new XMLNode(1, "VARIABLE");
 			if (DP[index].name != "") {

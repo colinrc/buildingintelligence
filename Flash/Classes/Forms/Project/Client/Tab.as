@@ -11,7 +11,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
-	public function init() {
+	public function onLoad() {
 		name_ti.text = name;
 		icon_ti.text = icon;
 		var tempKeys = _global.server_test.getKeys();
@@ -33,10 +33,10 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(controls_dg);
-		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions);
-		dataGridHandler.addTextInputColumn("icons", "Icons", restrictions);
-		dataGridHandler.addComboBoxColumn("key", "Key", DPKey);
-		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl);
+		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions,100);
+		dataGridHandler.addTextInputColumn("icons", "Icons", restrictions,150);
+		dataGridHandler.addComboBoxColumn("key", "Key", DPKey,100);
+		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl,100);
 		var DP = new Array();
 		for (var control in controls) {
 			var newControl = new Object();
@@ -76,8 +76,8 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 	public function save():Void {
 		var newControls = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index<DP.length; index++) {
-			var item = new XMLNode(1,"control");
+		for (var index = 0; index < DP.length; index++) {
+			var item = new XMLNode(1, "control");
 			if (DP[index].name.length) {
 				item.attributes["name"] = DP[index].name;
 			}
@@ -93,5 +93,8 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 			newControls.push(item);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({controls:newControls, name:name_ti.text, icon:icon_ti.text}));
+		_global.needSave();						
+		_global.refreshTheTree();		
+		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);		
 	}
 }

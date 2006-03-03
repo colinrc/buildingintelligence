@@ -8,13 +8,13 @@ class Forms.Project.Client.Property extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
-	public function init() {
+	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(zones_dg);
-		dataGridHandler.addTextInputColumn("name", "Zone Name", restrictions);
+		dataGridHandler.addTextInputColumn("name", "Zone Name", restrictions,false,150);
 		var DP = new Array();
 		for (var zone in zones) {
 			var newZone = new Object();
@@ -41,17 +41,8 @@ class Forms.Project.Client.Property extends Forms.BaseForm {
 			newZones.push(Zone);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({zones:newZones}));
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
-		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
-		for (var child in _global.left_tree.selectedNode.childNodes) {
-			_global.left_tree.selectedNode.childNodes[child].removeNode();
-		}
-		// Nodes are added in reverse order to maintain consistancy
-		_global.left_tree.selectedNode.appendChild(new XMLNode(1, "Placeholder"));
-		for (var child in newNode.childNodes) {
-			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
-		}
-		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.needSave();						
+		_global.refreshTheTree();		
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 }

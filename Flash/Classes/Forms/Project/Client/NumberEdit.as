@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Client.NumberEdit extends Forms.BaseForm {
 	private var update_btn:Button;
 	private var value_ti:TextInput;
@@ -8,8 +7,7 @@ class Forms.Project.Client.NumberEdit extends Forms.BaseForm {
 	private var default_lb:Label;
 	private var description_lb:Label;
 	private var setting:Object;
-	
-	public function init():Void{
+	public function onLoad():Void {
 		update_btn.addEventListener("click", Delegate.create(this, update));
 		value_ti.restrict = "0-9";
 		value_ti.text = setting.value;
@@ -17,7 +15,7 @@ class Forms.Project.Client.NumberEdit extends Forms.BaseForm {
 		description_lb.text = setting.description;
 		name_lb.text = setting.label;
 	}
-	private function update(){
-		setting.value=value_ti.text;
+	private function update() {
+		setting.value = value_ti.text;
 	}
 }

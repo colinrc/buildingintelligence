@@ -19,7 +19,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	private var removeAll_btn:Button;
 	//******************************//	
 	private var dataGridHandler:Object;
-	public function init() {
+	public function onLoad() {
 		x_ti.text = x_pos;
 		y_ti.text = y_pos;
 		var tempKeys = _global.server_test.getKeys();
@@ -39,9 +39,9 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		dataGridHandler.setDataGrid(alerts_dg);
 		var attributes = new Object();
 		attributes.label = "Set Keys";
-		dataGridHandler.addTextInputColumn("name", "Alert Name", restrictions);
-		dataGridHandler.addTextInputColumn("icon", "Icon", restrictions);
-		dataGridHandler.addTextInputColumn("fadeOutTime", "Fade Out Time", restrictions);
+		dataGridHandler.addTextInputColumn("name", "Alert Name", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("icon", "Icon", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("fadeOutTime", "Fade Out Time", restrictions,false,150);
 		dataGridHandler.addHiddenColumn("keys");
 		var DP = new Array();
 		for (var alert in alerts) {
@@ -114,6 +114,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			newAlerts.push(item);
 		}
 		_global.left_tree.selectedNode.object.setData(new Object({alerts:newAlerts, x_pos:x_ti.text, y_pos:y_ti.text}));
+		_global.needSave();							
 	}
 	private function addSel() {
 		if (left_li.selectedItem != undefined) {

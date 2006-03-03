@@ -4,7 +4,7 @@
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var monitor in monitors) {
-			tempKeys.push(monitors[monitor].attributes["DISPLAY_NAME"]);
+			tempKeys.push(monitors[monitor].display_name);
 		}
 		return tempKeys;
 	}

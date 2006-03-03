@@ -13,7 +13,7 @@ class Forms.Project.Client.ControlTypeButton extends Forms.BaseForm {
 	private var command_ti:TextInput;
 	private var repeatRate_ti:TextInput;
 	private var showOn_ti:TextInput;
-	public function init() {
+	public function onLoad() {
 		if (object.attributes["label"] != undefined) {
 			label_ti.text = object.attributes["label"];
 		} else {

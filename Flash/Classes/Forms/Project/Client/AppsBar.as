@@ -11,13 +11,13 @@ class Forms.Project.Client.AppsBar extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;	
-	public function init() {
+	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(icon_dg);
-		dataGridHandler.addTextInputColumn("name", "Icon Name", restrictions);
+		dataGridHandler.addTextInputColumn("name", "Icon Name", restrictions,false,200);
 		var DP = new Array();		
 		for (var icon in icons) {
 			DP.push({name:icons[icon].name});
@@ -72,17 +72,8 @@ class Forms.Project.Client.AppsBar extends Forms.BaseForm {
 			newIcons.push(Icon);
 		}
 		_global.left_tree.selectedNode.object.setData({icons:newIcons});
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
-		var newNode:XMLNode = _global.left_tree.selectedNode.object.toTree();
-		for (var child in _global.left_tree.selectedNode.childNodes) {
-			_global.left_tree.selectedNode.childNodes[child].removeNode();
-		}
-		// Nodes are added in reverse order to maintain consistancy
-		_global.left_tree.selectedNode.appendChild(new XMLNode(1, "Placeholder"));
-		for (var child in newNode.childNodes) {
-			_global.left_tree.selectedNode.insertBefore(newNode.childNodes[child], _global.left_tree.selectedNode.firstChild);
-		}
-		_global.left_tree.selectedNode.lastChild.removeNode();
+		_global.needSave();						
+		_global.refreshTheTree();		
 		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 }
