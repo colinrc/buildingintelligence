@@ -20,7 +20,7 @@ _global.sounds["default"] = new Sound();
 _global.sounds["default"].attachSound("sfx_default");
 
 _global.settings.screenLockTimeout = 360;
-_global.settings.screenLockPin = "1234";
+_global.settings.screenLockPin = "";
 			
 _global.settings.screenLockDisplay = "logo";
 _global.settings.screenLockPhotoPath = "";
@@ -147,8 +147,11 @@ _global.settings.controlButtonLabelColour = 0x042D70;
 _global.settings.controlButtonLabelFontSize = 18;
 
 _global.settings.showDropShadows = false;
-_global.settings.dropShadowFilterBig = new DropShadowFilter(0, 0, 0x000000, 5, 3, 3, 1, 2);
+_global.settings.dropShadowFilterBig = new DropShadowFilter(0, 0, 0x000000, 5, 8, 8, 1, 1);
+_global.settings.dropShadowFilterMedium = new DropShadowFilter(0, 0, 0x000000, 5, 3, 3, 1, 2);
 _global.settings.dropShadowFilterSmall = new DropShadowFilter(0, 0, 0x000000, 20, 2, 2, 1, 2);
+
+_global.settings.modalBlur = false;
 
 _global.settings.calendarCanEdit = "superuser";
 			

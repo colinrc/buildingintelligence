@@ -60,9 +60,9 @@ class bi.ui.ItemPicker extends bi.ui.CoreUI {
 	}
 
 	private function createChildren():Void {
-		attachMovie("bi.ui.TextInput", "items_ti", 10, {settings:{width:100, _x:0, readOnly:true}});
-		attachMovie("bi.ui.Button", "up_btn", 40, {settings:{width:45, _x:105, iconName:"up-arrow"}});
-		attachMovie("bi.ui.Button", "down_btn", 50, {settings:{width:45, _x:160, iconName:"down-arrow"}});
+		attachMovie("bi.ui.TextInput", "items_ti", 10, {settings:{width:__width - 100, _x:0, readOnly:true}});
+		attachMovie("bi.ui.Button", "up_btn", 40, {settings:{width:45, _x:__width - 95, iconName:"up-arrow"}});
+		attachMovie("bi.ui.Button", "down_btn", 50, {settings:{width:45, _x: __width - 45, iconName:"down-arrow"}});
 		
 		up_btn.addEventListener("press", Delegate.create(this, buttonPress));
 		down_btn.addEventListener("press", Delegate.create(this, buttonPress));

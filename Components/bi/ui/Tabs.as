@@ -117,8 +117,8 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		bg_mc.endFill();
 
 		if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
-			tabsForeground_mc.filters = [_global.settings.dropShadowFilterBig];
-			tabsBackground_mc.filters = [_global.settings.dropShadowFilterBig];
+			tabsForeground_mc.filters = [_global.settings.dropShadowFilterMedium];
+			tabsBackground_mc.filters = [_global.settings.dropShadowFilterMedium];
 		}
 		
 		_contentClips_array = new Array();

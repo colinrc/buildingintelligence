@@ -164,7 +164,7 @@ class bi.ui.Window extends bi.ui.CoreUI {
 				this._parent.close();
 			}
 			if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
-				close_btn.filters = [_global.settings.dropShadowFilterBig];
+				close_btn.filters = [_global.settings.dropShadowFilterMedium];
 			}
 			close_btn._y = 8;
 			close_btn._x = __width - close_btn._width - close_btn._y;

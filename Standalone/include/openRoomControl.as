@@ -42,7 +42,7 @@
 		}
 	}
 	tabs_mc.tabData = tab_array;
-
+	
 	var tabCount = 0;
 	for (var tab=0; tab<tabs.length; tab++) {
 		if (tabs[tab].canSee == undefined || isAuthenticated(tabs[tab].canSee)) {
@@ -73,14 +73,14 @@
 		for (var control=0; control<controls.length; control++) {
 			var control_mc = this.contentClips[eventObj.id]["control" + control + "_mc"];
 			control_mc.onShow();
-			//trace("onShow: " + control_mc);
+			//debug("onShow: " + control_mc);
 		}
 		// fire onHide event to hidden clip
 		var controls = this.tabs[eventObj.oldId].controls;
 		for (var control=0; control<controls.length; control++) {
 			var control_mc = this.contentClips[eventObj.oldId]["control" + control + "_mc"];
 			control_mc.onHide();
-			//trace("onHide: " + control_mc);
+			//debug("onHide: " + control_mc);
 		}
 	}
 	tabs_mc.addEventListener("changeTab", tabs_mc);

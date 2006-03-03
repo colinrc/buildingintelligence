@@ -29,7 +29,7 @@
 		for (i in settings) {
 			this[i] = settings[i];
 		}
-		draw();
+		//draw();
 	}
 	
 	public function setSize(width:Number, height:Number):Void {
@@ -37,7 +37,7 @@
 		_yscale = 100;
 		if (width) __width = width;
 		if (height) __height = height;
-		draw();
+		//draw();
 	}
 	
 	function CoreUI() {

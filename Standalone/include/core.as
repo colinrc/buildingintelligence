@@ -33,7 +33,6 @@ _global.calendar = new Array();
 _global.controls = new Object();
 _global.controlTypes = new Object();
 _global.calendarData = new Array();
-_global.windows = new Array();
 _global.icons = new Object();
 _global.iconNames = new Array();
 _global.controlPanelApps = new Array();
@@ -43,7 +42,7 @@ createObjects = function () {
 }
 
 confirm = function (msg, scope, onYes, onNo, param1) {
-	var window_mc = showWindow({width:300, height:180, title:"Achtung!", iconName:"warning", hideClose:msgObj.hideClose, noAutoClose:true});
+	var window_mc = showWindow({width:300, height:180, title:"Warning:", iconName:"warning", hideClose:msgObj.hideClose, noAutoClose:true});
 	
 	var content_mc = window_mc.content_mc;
 	
@@ -93,8 +92,12 @@ confirm = function (msg, scope, onYes, onNo, param1) {
 showMessageWindow = function (msgObj) {
 	var width = (msgObj.width == undefined) ? 450 : msgObj.width;
 	var height = (msgObj.height == undefined) ? 300 : msgObj.height;
-	var window_mc = showWindow({width:width, height:height, title:msgObj.title, iconName:msgObj.icon, hideClose:msgObj.hideClose, noAutoClose:true});
+	var window_mc = showWindow({width:width, height:height, title:msgObj.title, iconName:msgObj.icon, hideClose:msgObj.hideClose, noAutoClose:true, align:"center"});
 
+	if (msgObj.onClose != undefined) {
+		window_mc.onClose = msgObj.onClose;
+	}
+	
 	// set autoclose for this window if required
 	if (msgObj.autoClose > 1) {
 		window_mc.countDown = new Object();
@@ -144,24 +147,34 @@ showMessageWindow = function (msgObj) {
 }
 
 showKeyboard = function (limit, onClose, callerObj, initial, password, type) {
-	if (type == "numeric") {
-		var keyboard = "1,2,3;4,5,6;7,8,9;*,0,#;clear,ok";
+	var buttonWidth = buttonHeight = 50;
+	var buttonSpacing = 2;
+	
+	if (type == "pin") {
+		var keyboard = "1,2,3;4,5,6;7,8,9;clear,0,ok_small";
+		var cols = 3;
+		var title = "Pin:";
+	} else if (type == "numeric") {
+		var keyboard = "1,2,3;4,5,6;7,8,9;clear,0,ok_small";
+		var cols = 3;
+		var title = "Number:";
 	} else if (type == "web") {
 		var keyboard = "1,2,3,4,5,6,7,8,9,0,/;q,w,e,r,t,y,u,i,o,p,';http://,a,s,d,f,g,h,j,k,l,:;www.,z,x,c,v,b,n,m,.,clear,del;.com,.au,shift,space,ok";
+		var cols = 11;
+		var title = "Address:";
 	} else {
 		var keyboard = "1,2,3,4,5,6,7,8,9,0,!;q,w,e,r,t,y,u,i,o,p,';a,s,d,f,g,h,j,k,l,:;clear,z,x,c,v,b,n,m,.,del;shift,space,ok";
+		var cols = 11;
+		var title = "Text:";
 	}
+	var rows = keyboard.split(";").length;
 
-	var keyboard_mc = showWindow({width:600, height:500, title:"", iconName:"keyboard_key", align:"center"});
+	var keyboard_mc = showWindow({width:10 + (cols * buttonWidth) + ((cols - 1) * buttonSpacing), height:110 + (rows * buttonHeight) + ((rows - 1) * buttonSpacing), title:title, iconName:"keyboard_key", align:"center", hideClose:true});
 	
 	var keys_mc = keyboard_mc.content_mc.createEmptyMovieClip("keys_mc", 100);
 
-	var buttonWidth = buttonHeight = 50;
-	var buttonSpacing = 2;
 
-	keys_mc._x = keys_mc._y = buttonSpacing;
-	keys_mc._x += 3;
-	keys_mc._y += 50;
+	keys_mc._y = 50;
 	
 	var rows = keyboard.split(";");
 	var counter = 0;
@@ -173,56 +186,60 @@ showKeyboard = function (limit, onClose, callerObj, initial, password, type) {
 			var realWidth = buttonWidth;
 			if (keys[key] == "space") {
 				realWidth = (buttonWidth + buttonSpacing) * 5 - buttonSpacing;
-				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:realWidth, height:buttonHeight, label:keys[key].toUpperCase(), fontSize:13}});
+				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:realWidth, height:buttonHeight, label:keys[key].toUpperCase(), fontSize:15}});
 				key_mc.press = function () {
-					var inputField_txt = this.keyboard_mc.inputArea_mc.inputField_txt;
-					if (inputField_txt.length < inputField_txt.maxChars) inputField_txt.text += " ";
-					inputField_txt.scrollRight();
+					var inputField_ti = this.keyboard_mc.inputField_ti;
+					if (inputField_ti.length < inputField_ti.maxChars) inputField_ti.text += " ";
+					inputField_ti.scrollRight();
 				}
 				key_mc.addEventListener("press", key_mc);
 			} else if (keys[key] == "del") {
-				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:buttonWidth, height:buttonHeight, label:keys[key].toUpperCase(), fontSize:13}});
+				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:buttonWidth, height:buttonHeight, label:keys[key].toUpperCase(), fontSize:15}});
 				key_mc.press = function () {
-					var inputField_txt = this.keyboard_mc.inputArea_mc.inputField_txt;
-					inputField_txt.text = inputField_txt.text.substr(0, inputField_txt.length - 1);
-					inputField_txt.scrollRight();
+					var inputField_ti = this.keyboard_mc.inputField_ti;
+					inputField_ti.text = inputField_ti.text.substr(0, inputField_ti.length - 1);
+					inputField_ti.scrollRight();
 				}
 				key_mc.addEventListener("press", key_mc);
 			} else if (keys[key] == "clear") {
-				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:buttonWidth, height:buttonHeight, label:keys[key].toUpperCase(), fontSize:13}});
+				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:buttonWidth, height:buttonHeight, label:keys[key].toUpperCase(), fontSize:15}});
 				key_mc.press = function () {
-					var inputField_txt = this.keyboard_mc.inputArea_mc.inputField_txt;
-					inputField_txt.text = "";
+					var inputField_ti = this.keyboard_mc.inputField_ti;
+					inputField_ti.text = "";
 				}
 				key_mc.addEventListener("press", key_mc);
-			} else if (keys[key] == "ok") {
-				realWidth = (buttonWidth + buttonSpacing) * 2 - buttonSpacing;
-				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:realWidth, height:buttonHeight, label:keys[key].toUpperCase(), fontSize:13}});
+			} else if (keys[key] == "ok" || keys[key] == "ok_small") {
+				if (keys[key] == "ok") {
+					realWidth = (buttonWidth + buttonSpacing) * 2 - buttonSpacing;
+				}
+				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:realWidth, height:buttonHeight, label:"OK", fontSize:15}});
 				key_mc.press = function () {
-					var inputField_txt = this.keyboard_mc.inputArea_mc.inputField_txt;
-					this.keyboard_mc.onClose(inputField_txt.text, this.keyboard_mc.callerObj);
+					var inputField_ti = this.keyboard_mc.inputField_ti;
+					this.keyboard_mc.onClose(inputField_ti.text, this.keyboard_mc.callerObj);
 					this.keyboard_mc._parent.close();
 				}
 				key_mc.addEventListener("press", key_mc);
 			} else if (keys[key] == "shift") {
 				realWidth = (buttonWidth + buttonSpacing)* 2 - buttonSpacing;
-				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:realWidth, height:buttonHeight, label:keys[key].toUpperCase(), fontSize:13}});
+				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:realWidth, height:buttonHeight, label:keys[key].toUpperCase(), fontSize:15}});
 				key_mc.press = function () {
 					this.keyboard_mc.useShift = true;
 				}
 				key_mc.addEventListener("press", key_mc);
 			} else {
-				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:buttonWidth, height:buttonHeight, label:keys[key].toLowerCase(), fontSize:13}});
+				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:buttonWidth, height:buttonHeight, label:keys[key].toLowerCase(), fontSize:15}});
 				key_mc.press = function () {
-					var inputField_txt = this.keyboard_mc.inputArea_mc.inputField_txt;
-					if (inputField_txt.length < inputField_txt.maxChars) {
+					var inputField_ti = this.keyboard_mc.inputField_ti;
+					trace(inputField_ti.maxChars + ":" + inputField_ti.length)
+					if (inputField_ti.maxChars < 3 && inputField_ti.length == inputField_ti.maxChars) inputField_ti.text = "";
+					if (inputField_ti.length < inputField_ti.maxChars) {
 						if (this.keyboard_mc.useShift) {
-							inputField_txt.text += this.label.toUpperCase();
+							inputField_ti.text += this.label.toUpperCase();
 							this.keyboard_mc.useShift = false;
 						} else {
-							inputField_txt.text += this.label.toLowerCase();
+							inputField_ti.text += this.label.toLowerCase();
 						}
-						inputField_txt.scrollRight();
+						inputField_ti.scrollRight();
 					}
 				}
 				key_mc.addEventListener("press", key_mc);
@@ -236,41 +253,12 @@ showKeyboard = function (limit, onClose, callerObj, initial, password, type) {
 		row_mc._x = Math.round((keys_mc._width / 2) - (row_mc._width / 2));
 	}
 	
-	var w = keys_mc._width + buttonSpacing + 9;
-	var h = keys_mc._height + buttonSpacing + 56;
-	
-	var inputArea_mc = keyboard_mc.content_mc.createEmptyMovieClip("inputArea_mc", 200);
-	inputArea_mc.createEmptyMovieClip("bg_mc", 10);
-	inputArea_mc.bg_mc.lineStyle(2, 0x91A7CD);
-	inputArea_mc.bg_mc.beginFill(0x24519B);
-	inputArea_mc.bg_mc.drawRect(0, 0, keyboard_mc._width - 62, 40, 10);
-	inputArea_mc.bg_mc.endFill();
-	inputArea_mc.createTextField("inputField_txt", 20, 5, 0, inputArea_mc._width - 15, inputArea_mc._height);
-	inputArea_mc._x = inputArea_mc._y = 6;
-	inputArea_mc.inputField_txt.maxChars = limit;
-	inputArea_mc.inputField_txt.text = (initial != undefined) ? initial : "";
-	inputArea_mc.inputField_txt.scrollRight();
-	inputArea_mc.inputField_txt.password = password;
-	
-	var label_tf = new TextFormat();
-	label_tf.color = 0xFFFFFF;
-	label_tf.size = 28;
-	label_tf.bold = true;
-	label_tf.align = "center";
-	label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
-	
-	inputArea_mc.inputField_txt.embedFonts = true;
-	inputArea_mc.inputField_txt.selectable = false;
-	
-	inputArea_mc.inputField_txt.setNewTextFormat(label_tf);
-	
-	inputArea_mc.inputField_txt.scrollRight = function () {
-		this.hscroll = this.maxhscroll;
-		this.background = false;
+	var inputField_ti = keyboard_mc.content_mc.attachMovie("bi.ui.TextInput", "inputField_ti", 200, {settings:{width:keyboard_mc.content_mc.width, wordWrap:false, height:45, fontSize:30, readOnly:true, text:(initial != undefined) ? initial : "", maxChars:limit, password:password}});
+	inputField_ti.scrollRight = function () {
+		this.text_txt.hscroll = this.text_txt.maxhscroll;
+		this.text_txt.background = false;
 	}
-	
-	//keyboard_mc._x = Math.round((_global.settings.applicationWidth / 2) - (w / 2));
-	//keyboard_mc._y = Math.round(((_global.settings.applicationHeight - 100) / 2) - (h / 2)) + 100;
+	inputField_ti.scrollRight();
 	
 	keyboard_mc.content_mc.onClose = onClose;
 	keyboard_mc.content_mc.callerObj = callerObj;
@@ -310,16 +298,26 @@ showWindow = function (windowObj) {
 		var y = Math.round(((_global.settings.applicationHeight - toolbarHeight) / 2) - (windowObj.height / 2)) + toolbarHeight;
 	}
 	
-	//window_mc._visible = true;
-	
 	var modal_mc = window_mc.createEmptyMovieClip("modal_mc", window_mc.getNextHighestDepth());
-	modal_mc.beginFill(0x000000, 30);
-	modal_mc.drawRect(0, 0, 1000 + _global.settings.applicationWidth, 1000 + _global.settings.applicationHeight);
-	modal_mc.endFill();
+	
+	if (_global.settings.modalBlur) {
+		var blurCopyObj = new BitmapData(Stage.width, Stage.height, true, 0x00FFFFFF);
+		blurCopyObj.draw(_root);
+		var blur_mc= modal_mc.createEmptyMovieClip("blur_mc", 0);	
+		blur_mc.attachBitmap(blurCopyObj, 0, "auto", true);
+		blur_mc.filters = [new BlurFilter(2, 2, 4)];
+	}
+	
+	var bg_mc = modal_mc.createEmptyMovieClip("black_mc", 10);
+	bg_mc.beginFill(0x000000, 40);
+	bg_mc.drawRect(0, 0, 1000 + _global.settings.applicationWidth, 1000 + _global.settings.applicationHeight);
+	bg_mc.endFill();
+	
 	modal_mc.onPress = function () {};
 	modal_mc.useHandCursor = false;
 	
-	var window_mc = window_mc.attachMovie("bi.ui.Window", "window_mc", window_mc.getNextHighestDepth(), {settings:windowObj});
+	var depth = window_mc.getNextHighestDepth();
+	var window_mc = window_mc.attachMovie("bi.ui.Window", "window" + depth + "_mc", depth, {settings:windowObj});
 	window_mc.modal_mc = modal_mc;
 	
 	window_mc.close = function () {
@@ -470,14 +468,11 @@ renderAppsBar = function () {
 			icon_mc.showOn = true;
 			
 			icon_mc.press = function () {
-				if (_global.windows[this.func] == undefined && this.canOpen == "superuser" && !isAuthenticated("superuser")) {
-					//openPinPad(authenticateUser, this.func);
-					this.hideHighlight();
-					return;
+				if (this.canOpen == "superuser" && !isAuthenticated("superuser")) {
+					openPinPad(authenticateUser, this.func);
 				} else {
 					if (this.func == "runexe") {
 						mdm.System.exec(this.program);
-						this.hideHighlight();
 					} else {
 						_root[this.func]();
 					}
@@ -1452,40 +1447,34 @@ openStatusWindow = function (statusObj) {
 #include "openRoomControl.as"
 
 openAbout = function () {
-	if (_global.windows["openAbout"] == "open") {
-		window_mc.close();
-	} else {
-		var window_mc = showWindow({width:600, height:500, title:"About eLIFE", iconName:"home"});
-		var content_mc = window_mc.content_mc;
-		
-		var about_tf = new TextFormat();
-		about_tf.color = 0xFFFFFF;
-		about_tf.size = 12;
-		about_tf.bold = true;
-		about_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
-		about_tf.align = "center";
-		
-		var upTime = getTimer() - _global.clientStartTime; 
-		upTime = upTime.timeFormat();
+	var window_mc = showWindow({width:600, height:500, title:"About eLIFE", iconName:"home"});
+	var content_mc = window_mc.content_mc;
+	
+	var about_tf = new TextFormat();
+	about_tf.color = 0xFFFFFF;
+	about_tf.size = 12;
+	about_tf.bold = true;
+	about_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
+	about_tf.align = "center";
+	
+	var upTime = getTimer() - _global.clientStartTime; 
+	upTime = upTime.timeFormat();
 
-		content_mc.createTextField("about_txt", 10, 0, 0, content_mc.width, 20);
-		var about_txt = content_mc.about_txt;
-		about_txt.embedFonts = true;
-		about_txt.selectable = false;
-		about_txt.wordWrap = true;
-		about_txt.multiline = true;
-		about_txt.autoSize = true;
-		about_txt.setNewTextFormat(about_tf);
-		about_txt.text = _global.systemInformation + "\nClient: v" + _global.clientVersion + "  Server: v" + _global.serverVersion + " Uptime: " + upTime;
-		about_txt._y = content_mc.height - about_txt._height;
-		
-		aboutBrowser = new mdm.Browser(Math.round((window_mc._x + content_mc._x) / _global.screenRatio), Math.round((window_mc._y + content_mc._y) / _global.screenRatio), Math.round(content_mc.width / _global.screenRatio), Math.round((content_mc.height - about_txt._height) / _global.screenRatio), _global.settings.integratorHtml, "false");
+	content_mc.createTextField("about_txt", 10, 0, 0, content_mc.width, 20);
+	var about_txt = content_mc.about_txt;
+	about_txt.embedFonts = true;
+	about_txt.selectable = false;
+	about_txt.wordWrap = true;
+	about_txt.multiline = true;
+	about_txt.autoSize = true;
+	about_txt.setNewTextFormat(about_tf);
+	about_txt.text = _global.systemInformation + "\nClient: v" + _global.clientVersion + "  Server: v" + _global.serverVersion + " Uptime: " + upTime;
+	about_txt._y = content_mc.height - about_txt._height;
+	
+	aboutBrowser = new mdm.Browser(Math.round((window_mc._x + content_mc._x) / _global.screenRatio), Math.round((window_mc._y + content_mc._y) / _global.screenRatio), Math.round(content_mc.width / _global.screenRatio), Math.round((content_mc.height - about_txt._height) / _global.screenRatio), _global.settings.integratorHtml, "false");
 
-		_global.windows["openAbout"] = "open";
-		window_mc.onClose = function () {
-			aboutBrowser.close();
-			delete _global.windows["openAbout"];
-		}
+	window_mc.onClose = function () {
+		aboutBrowser.close();
 	}
 }
 
@@ -1512,7 +1501,6 @@ openTV = function (setTo) {
 		var x = 0;
 		var y = 0;
 	} else if (tvStatus == "off") {
-		appsBar_mc.openTV_mc.hideHighlight();
 		updateKey(_global.tv.close.key, _global.tv.close.command, _global.tv.close.extra, true);
 	}
 	if (tvStatus == "inset" || tvStatus == "fullscreen") {
@@ -1569,91 +1557,82 @@ openTV = function () {
 */
 
 openBrowser = function () {
-	if (_global.windows["openBrowser"] == "open") {
-		window_mc.close();
-	} else {
-		var window_mc = showWindow({width:"full", height:"full", title:"Browser", iconName:"atom", noAutoClose:true});
-		appsBar_mc.openBrowser_mc.showHighlight();
-		_global.windows["openBrowser"] = "open";
-		window_mc.onClose = function () {
-			appsBar_mc.openBrowser_mc.hideHighlight();
-			webBrowser.close();
-			clearInterval(this.content_mc.checkBusyId);
-			delete _global.windows["openBrowser"];
-		}
-		
-		window_mc.content_mc.attachMovie("bi.ui.Button", "back_btn", 50, {settings:{width:48, height:48, iconName:"left-arrow"}});
-		window_mc.content_mc.back_btn.press = function () {
-			webBrowser.back();
-		}
-		window_mc.content_mc.back_btn.addEventListener("press", window_mc.content_mc.back_btn);
-
-		window_mc.content_mc.attachMovie("bi.ui.Button", "fwd_btn", 51, {settings:{width:48, height:48, iconName:"right-arrow"}});
-		window_mc.content_mc.fwd_btn._x = 50;
-		window_mc.content_mc.fwd_btn.press = function () {
-			webBrowser.forward();
-		}
-		window_mc.content_mc.fwd_btn.addEventListener("press", window_mc.content_mc.fwd_btn);
-		
-		window_mc.content_mc.attachMovie("bi.ui.Button", "stop_btn", 52, {settings:{width:48, height:48, iconName:"stop"}});
-		window_mc.content_mc.stop_btn._x = 100;
-		window_mc.content_mc.stop_btn.press = function () {
-			webBrowser.stop();
-		}
-		window_mc.content_mc.stop_btn.addEventListener("press", window_mc.content_mc.stop_btn);
-		
-		window_mc.content_mc.attachMovie("bi.ui.Button", "refresh_btn", 53, {settings:{width:48, height:48, iconName:"refresh"}});
-		window_mc.content_mc.refresh_btn._x = 150;
-		window_mc.content_mc.refresh_btn.press = function () {
-			webBrowser.refresh();
-		}
-		window_mc.content_mc.refresh_btn.addEventListener("press", window_mc.content_mc.refresh_btn);
-		
-		window_mc.content_mc.attachMovie("bi.ui.Button", "home_btn", 54, {settings:{width:48, height:48, iconName:"home"}});
-		window_mc.content_mc.home_btn._x = 200;
-		window_mc.content_mc.home_btn.press = function () {
-			webBrowser.goto(_global.settings.defaultBrowserURL);
-		}
-		window_mc.content_mc.home_btn.addEventListener("press", window_mc.content_mc.home_btn);
-		
-		window_mc.content_mc.attachMovie("bi.ui.Button", "keyboard_btn", 55, {settings:{width:48, height:48, iconName:"keyboard-key"}});
-		window_mc.content_mc.keyboard_btn._x = 250;
-		window_mc.content_mc.keyboard_btn.press = function () {
-			webBrowser.hide();
-			this.goto = function (url, caller) {
-				webBrowser.show();
-				if (url.length) {
-					webBrowser.goto(url);
-				}
-			}
-			showKeyboard(50, this.goto, this._parent, "http://", false, "web");
-		}
-		window_mc.content_mc.keyboard_btn.addEventListener("press", window_mc.content_mc.keyboard_btn);
-		
-		window_mc.content_mc.attachMovie("bi.ui.Button", "find_btn", 56, {settings:{width:48, height:48, iconName:"find"}});
-		window_mc.content_mc.find_btn._x = 300;
-		window_mc.content_mc.find_btn.press = function () {
-			webBrowser.hide();
-			this.search = function (query, caller) {
-				webBrowser.show();
-				if (query.length) {
-					webBrowser.goto("http://www.google.com/search?&q=" + query);
-				}
-			}
-			showKeyboard(20, this.search);			
-		}
-		window_mc.content_mc.find_btn.addEventListener("press", window_mc.content_mc.find_btn);
-
-		window_mc.content_mc.checkBusy = function () {
-			this.stop_btn._visible = webBrowser.isBusy;
-		}
-		webBrowser = new mdm.Browser(Math.round((window_mc._x + window_mc.content_mc._x) / _global.screenRatio), Math.round((window_mc._y + window_mc.content_mc._y + 50) / _global.screenRatio), Math.round(window_mc.content_mc.width / _global.screenRatio), Math.round((window_mc.content_mc.height - 54) / _global.screenRatio), _global.settings.defaultBrowserURL, "false");
-		window_mc.content_mc.checkBusyId = setInterval(window_mc.content_mc, "checkBusy", 500);
+	var window_mc = showWindow({width:"full", height:"full", title:"Browser", iconName:"atom", noAutoClose:true});
+	window_mc.onClose = function () {
+		webBrowser.close();
+		clearInterval(this.content_mc.checkBusyId);
 	}
+	
+	window_mc.content_mc.attachMovie("bi.ui.Button", "back_btn", 50, {settings:{width:48, height:48, iconName:"left-arrow"}});
+	window_mc.content_mc.back_btn.press = function () {
+		webBrowser.back();
+	}
+	window_mc.content_mc.back_btn.addEventListener("press", window_mc.content_mc.back_btn);
+
+	window_mc.content_mc.attachMovie("bi.ui.Button", "fwd_btn", 51, {settings:{width:48, height:48, iconName:"right-arrow"}});
+	window_mc.content_mc.fwd_btn._x = 50;
+	window_mc.content_mc.fwd_btn.press = function () {
+		webBrowser.forward();
+	}
+	window_mc.content_mc.fwd_btn.addEventListener("press", window_mc.content_mc.fwd_btn);
+	
+	window_mc.content_mc.attachMovie("bi.ui.Button", "stop_btn", 52, {settings:{width:48, height:48, iconName:"stop"}});
+	window_mc.content_mc.stop_btn._x = 100;
+	window_mc.content_mc.stop_btn.press = function () {
+		webBrowser.stop();
+	}
+	window_mc.content_mc.stop_btn.addEventListener("press", window_mc.content_mc.stop_btn);
+	
+	window_mc.content_mc.attachMovie("bi.ui.Button", "refresh_btn", 53, {settings:{width:48, height:48, iconName:"refresh"}});
+	window_mc.content_mc.refresh_btn._x = 150;
+	window_mc.content_mc.refresh_btn.press = function () {
+		webBrowser.refresh();
+	}
+	window_mc.content_mc.refresh_btn.addEventListener("press", window_mc.content_mc.refresh_btn);
+	
+	window_mc.content_mc.attachMovie("bi.ui.Button", "home_btn", 54, {settings:{width:48, height:48, iconName:"home"}});
+	window_mc.content_mc.home_btn._x = 200;
+	window_mc.content_mc.home_btn.press = function () {
+		webBrowser.goto(_global.settings.defaultBrowserURL);
+	}
+	window_mc.content_mc.home_btn.addEventListener("press", window_mc.content_mc.home_btn);
+	
+	window_mc.content_mc.attachMovie("bi.ui.Button", "keyboard_btn", 55, {settings:{width:48, height:48, iconName:"keyboard_key"}});
+	window_mc.content_mc.keyboard_btn._x = 250;
+	window_mc.content_mc.keyboard_btn.press = function () {
+		webBrowser.hide();
+		this.goto = function (url, caller) {
+			webBrowser.show();
+			if (url.length) {
+				webBrowser.goto(url);
+			}
+		}
+		showKeyboard(50, this.goto, this._parent, "http://", false, "web");
+	}
+	window_mc.content_mc.keyboard_btn.addEventListener("press", window_mc.content_mc.keyboard_btn);
+	
+	window_mc.content_mc.attachMovie("bi.ui.Button", "find_btn", 56, {settings:{width:48, height:48, iconName:"find"}});
+	window_mc.content_mc.find_btn._x = 300;
+	window_mc.content_mc.find_btn.press = function () {
+		webBrowser.hide();
+		this.search = function (query, caller) {
+			webBrowser.show();
+			if (query.length) {
+				webBrowser.goto("http://www.google.com/search?&q=" + query);
+			}
+		}
+		showKeyboard(20, this.search);			
+	}
+	window_mc.content_mc.find_btn.addEventListener("press", window_mc.content_mc.find_btn);
+
+	window_mc.content_mc.checkBusy = function () {
+		this.stop_btn._visible = webBrowser.isBusy;
+	}
+	webBrowser = new mdm.Browser(Math.round((window_mc._x + window_mc.content_mc._x) / _global.screenRatio), Math.round((window_mc._y + window_mc.content_mc._y + 50) / _global.screenRatio), Math.round(window_mc.content_mc.width / _global.screenRatio), Math.round((window_mc.content_mc.height - 54) / _global.screenRatio), _global.settings.defaultBrowserURL, "false");
+	window_mc.content_mc.checkBusyId = setInterval(window_mc.content_mc, "checkBusy", 500);
 }
 
 openAuthentication = function () {
-	appsBar_mc.openAuthentication_mc.hideHighlight();
 	if (!isAuthenticated("superuser")) {
 		openPinPad(authenticateUser);
 	} else if (_global.settings.adminPin) {
@@ -1662,76 +1641,62 @@ openAuthentication = function () {
 }
 
 openControlPanel = function () {
-	if (_global.windows["openControlPanel"] == "open") {
-		window_mc.close();
-	} else {
-		var window_mc = showWindow({width:"full", height:"full", title:"Control Panel", iconName:"gears", autoClose:false});
-		appsBar_mc.openControlPanel_mc.showHighlight();		
-		_global.windows["openControlPanel"] = "open";
-		window_mc.onClose = function () {
-			delete _global.windows["openControlPanel"];
-			appsBar_mc.openControlPanel_mc.hideHighlight();
-			for (var i=0; i<this.contentClip.tabs_mc.tabData.length; i++) {
-				this.contentClip.tabs_mc.contentClips[i].onClose();
-			}
+	var window_mc = showWindow({width:"full", height:"full", title:"Control Panel", iconName:"gears", autoClose:false});
+	appsBar_mc.openControlPanel_mc.showHighlight();		
+	window_mc.onClose = function () {
+		for (var i=0; i<this.contentClip.tabs_mc.tabData.length; i++) {
+			this.contentClip.tabs_mc.contentClips[i].onClose();
 		}
-		var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:{width:window_mc.contentClip.width, height:window_mc.contentClip.height}});
-		tabs_mc.tabData = [{name:"Macros", iconName:"atom", func:"createMacroAdmin"}, {name:"Scripts", iconName:"notepad", func:"createScriptsAdmin"}, {name:"Volume Control", iconName:"speaker", func:"createVolumeControl"}, {name:"Clean Screen", iconName:"spanner", func:"createCleanScreen"}, {name:"External Applications", iconName:"red-pin", func:"createAppsPanel"}];
-		
-		for (var i=0; i<tabs_mc.tabData.length; i++) {
-			_root[tabs_mc.tabData[i].func](tabs_mc.contentClips[i]);
-		}
-		
-		tabs_mc.originalTitle = "Admin";
-		tabs_mc.changeTab = function (eventObj) {
-			// set window title
-			this._parent._parent.title = this.originalTitle + ": " + eventObj.name;
-		}
-		tabs_mc.addEventListener("changeTab", tabs_mc);
-		tabs_mc.activeTab = 0;
 	}
+	var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:{width:window_mc.contentClip.width, height:window_mc.contentClip.height}});
+	tabs_mc.tabData = [{name:"Macros", iconName:"atom", func:"createMacroAdmin"}, {name:"Scripts", iconName:"notepad", func:"createScriptsAdmin"}, {name:"Volume Control", iconName:"speaker", func:"createVolumeControl"}, {name:"Clean Screen", iconName:"spanner", func:"createCleanScreen"}, {name:"External Applications", iconName:"red-pin", func:"createAppsPanel"}];
+	
+	for (var i=0; i<tabs_mc.tabData.length; i++) {
+		_root[tabs_mc.tabData[i].func](tabs_mc.contentClips[i]);
+	}
+	
+	tabs_mc.originalTitle = "Admin";
+	tabs_mc.changeTab = function (eventObj) {
+		// set window title
+		this._parent._parent.title = this.originalTitle + ": " + eventObj.name;
+	}
+	tabs_mc.addEventListener("changeTab", tabs_mc);
+	tabs_mc.activeTab = 0;
 }
 
 openLogs = function () {
-	if (_global.windows["openLogs"] == "open") {
-		window_mc.close();
-	} else {
-		var window_mc = showWindow({width:"full", height:"full", title:"logs", iconName:"notepad"});
-		appsBar_mc.openLogs_mc.showHighlight();
-		_global.windows["openLogs"] = "open";
-		window_mc.onClose = function () {
-			appsBar_mc.openLogs_mc.hideHighlight();
-			delete _global.windows["openLogs"];
-			this.contentClip.tabs_mc.contentClips[this.contentClip.tabs_mc.activeTab].onHide();
-		}
-		
-		var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:{width:window_mc.contentClip.width, height:window_mc.contentClip.height}});
-		
-		var tab_array = new Array();
-		for (var i=0; i<_global.logging.length; i++) {
-			if (groups[group].canSee == undefined || isAuthenticated(groups[group].canSee)) {
-				tab_array.push({name:_global.logging[i].name, iconName:_global.logging[i].icon});
-			}
-		}
-		tabs_mc.tabData = tab_array;
-	
-		for (var i=0; i<_global.logging.length; i++) {
-			createLogContent(_global.logging[i], tabs_mc.contentClips[i])
-		}
-		
-		tabs_mc.originalTitle = "Logging";
-		window_mc.title = room.name + ": " + tabs_mc.tabData[0].name;
-		tabs_mc.changeTab = function (eventObj) {
-			// set window title
-			this._parent._parent.title = this.originalTitle + ": " + eventObj.name;
-			// fire onShow event to active tab
-			this.contentClips[eventObj.id].onShow();
-			// fire onHide event to hidden clip
-			this.contentClips[eventObj.oldId].onHide();
-		}
-		tabs_mc.addEventListener("changeTab", tabs_mc);
-		tabs_mc.activeTab = 0;
+	var window_mc = showWindow({width:"full", height:"full", title:"logs", iconName:"notepad"});
+	appsBar_mc.openLogs_mc.showHighlight();
+	window_mc.onClose = function () {
+		this.contentClip.tabs_mc.contentClips[this.contentClip.tabs_mc.activeTab].onHide();
 	}
+	
+	var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:{width:window_mc.contentClip.width, height:window_mc.contentClip.height}});
+	
+	var tab_array = new Array();
+	for (var i=0; i<_global.logging.length; i++) {
+		if (groups[group].canSee == undefined || isAuthenticated(groups[group].canSee)) {
+			tab_array.push({name:_global.logging[i].name, iconName:_global.logging[i].icon});
+		}
+	}
+	tabs_mc.tabData = tab_array;
+
+	for (var i=0; i<_global.logging.length; i++) {
+		createLogContent(_global.logging[i], tabs_mc.contentClips[i])
+	}
+	
+	tabs_mc.originalTitle = "Logging";
+	window_mc.title = room.name + ": " + tabs_mc.tabData[0].name;
+	tabs_mc.changeTab = function (eventObj) {
+		// set window title
+		this._parent._parent.title = this.originalTitle + ": " + eventObj.name;
+		// fire onShow event to active tab
+		this.contentClips[eventObj.id].onShow();
+		// fire onHide event to hidden clip
+		this.contentClips[eventObj.oldId].onHide();
+	}
+	tabs_mc.addEventListener("changeTab", tabs_mc);
+	tabs_mc.activeTab = 0;
 }
 
 createLogContent = function (logObj, content_mc) {
@@ -2485,16 +2450,12 @@ openMacroEdit = function (macro) {
 
 screenUnlock = function (pin) {
 	if (pin == _global.settings.screenLockPin) {
-		screenSaver("stop");
 		screenLocked = false;
-		_root.pinOpen = false;
+		_root.pinPadOpen = false;
 	} else if (pin.length) {
-		showMessageWindow({title:"Invalid Password", height:100, content:"The password you entered was incorrect.", icon:"warning", hideClose:false, autoClose:10});
-		window_mc.onClose = function () {
-			_root.pinOpen = false;
-		}
+		showMessageWindow({title:"Invalid Password", height:100, content:"The password you entered was incorrect.", icon:"warning", hideClose:false, autoClose:10, onClose:function () {_root.pinPadOpen = false;}});
 	} else {
-		_root.pinOpen = false;
+		_root.pinPadOpen = false;
 	}
 }
 
@@ -2503,28 +2464,18 @@ authenticateUser = function (pin) {
 		_global.adminLastVerified = getTimer();
 		setAuthenticated(true);
 		if (_root.onUnlock != undefined) _root[_root.onUnlock]();
-		_root.pinOpen = false;
 	} else if (pin.length) {
 		showMessageWindow({title:"Invalid Password", height:100, content:"The password you entered was incorrect.", icon:"warning", hideClose:false, autoClose:10});
-		window_mc.onClose = function () {
-			_root.pinOpen = false;
-		}
-	} else {
-		_root.pinOpen = false;
 	}
+	_root.pinPadOpen = false;
 	delete _root.onUnlock;
 }
 
 openPinPad = function (func, onUnlock) {
-	if (_global.windows["openBrowser"] == "open" || _global.windows["openAbout"] == "open" || _global.windows["openTV"] == "open") {
-		window_mc.close();
-	} else if (_global.windows["openTV"] == "mini") {
-		//mdm.mp_close("0");
-	}
-	if (pinOpen || commsError) return;
+	if (_root.pinPadOpen || commsError) return;
+	_root.pinPadOpen = true;
 	_root.onUnlock = onUnlock;
-	_root.pinOpen = true;
-	showKeyboard(15, func, this, "", true, "numeric");
+	showKeyboard(15, func, this, "", true, "pin");
 }
 
 showCommsError = function () {
@@ -2795,10 +2746,10 @@ layout = function () {
 	_root.createEmptyMovieClip("overlay_mc", 400);
 	_root.createEmptyMovieClip("statusBar_mc", 500);
 	_root.createEmptyMovieClip("appsBar_mc", 600);
-	_root.createEmptyMovieClip("screensaver_mc", 1050);
 	_root.createEmptyMovieClip("window_mc", 1100);
 	_root.createEmptyMovieClip("confirm_mc", 1500);
 	_root.createEmptyMovieClip("keyboard_mc", 2000);
+	_root.createEmptyMovieClip("screensaver_mc", 5000);
 	//_root.createEmptyMovieClip("tv_mc", 3000);
 	
 	createObjects();
@@ -2919,10 +2870,12 @@ layout = function () {
 	if (_global.settings.screenLockTimeout > 0) {
 		_root.onMouseMove = _root.onMouseDown = function () {
 			clearInterval(screenLockID);
+			screenLockID = setInterval(screenLock, _global.settings.screenLockTimeout * 1000)
 			if (screenLocked) {
-				openPinPad(screenUnlock)
-			} else {
-				screenLockID = setInterval(screenLock, _global.settings.screenLockTimeout * 1000)
+				screenSaver("stop");
+				if (_global.settings.screenLockPin.length) {
+					openPinPad(screenUnlock);
+				}
 			}
 		}
 		screenLockID = setInterval(screenLock, _global.settings.screenLockTimeout * 1000)

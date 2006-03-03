@@ -1,5 +1,5 @@
 ﻿class bi.ui.TextInput extends bi.ui.CoreUI {
-	private var clipParameters:Object = {settings:1, width:1, height:1, text:1, readOnly:1, maxLength:1, restrict:1, inputType:1, fontColour:1, fontSize:1};   
+	private var clipParameters:Object = {settings:1, width:1, height:1, text:1, readOnly:1, maxChars:1, restrict:1, inputType:1, fontColour:1, fontSize:1};   
 	
 	private var text_txt:TextField;
 	private var text_tf:TextFormat;
@@ -9,9 +9,11 @@
 	private var _font:String;
 	private var _fontSize:Number;
 	private var _fontColour:Number;
-	private var _maxLength:Number = 10;
+	private var _maxChars:Number = 10;
 	private var _inputType:String;
 	private var _readOnly:Boolean = false;
+	private var _password:Boolean = false;
+	private var _wordWrap:Boolean = true;
 	
 	private var _borderWidth:Number = 0;
 	private var _borderColour:Number = 0xFFFFFF;
@@ -33,7 +35,7 @@
 			text_txt.text = _text;
 		}
 	}
-	
+
 	public function get readOnly():Boolean {
 		return _readOnly;
 	}
@@ -46,8 +48,26 @@
 		text_txt.restrict = chars;
 	}
 	
-	public function set maxLength(max:Number):Void {
-		_maxLength = max;
+	public function set wordWrap(wrap:Boolean):Void {
+		_wordWrap = wrap;
+		text_txt.wordWrap = wrap;
+	}
+	
+	public function set password(pwd:Boolean):Void {
+		_password = pwd;
+		text_txt.password = pwd;
+	}
+	
+	public function get length():Number {
+		return text_txt.length;
+	}
+	
+	public function get maxChars():Number {
+		return _maxChars;
+	}
+	
+	public function set maxChars(max:Number):Void {
+		_maxChars = max;
 	}
 	
 	public function set inputType(type:String):Void {
@@ -98,10 +118,11 @@
 	}
 
 	private function createChildren():Void {
-		createTextField("text_txt", 20, 2, 2, __width, __height);
+		createTextField("text_txt", 20, 2, 2, __width - 4, __height - 4);
 		text_txt.embedFonts = true;
 		text_txt.selectable = false;
-		text_txt.wordWrap = true;
+		text_txt.wordWrap = _wordWrap;
+		text_txt.password = _password;
 			
 		onPress2 = function () {
 			if (!_readOnly) {
@@ -110,7 +131,7 @@
 						caller.text = txt;
 					}
 				}
-				_root.showKeyboard(_maxLength, updateTitle, this, _text, false, _inputType);
+				_root.showKeyboard(_maxChars, updateTitle, this, _text, false, _inputType);
 			}
 			dispatchEvent({type:"focus", target:this});
 		}
@@ -119,8 +140,8 @@
 	private function draw():Void {
 		if (!__width) return;
 				
-		text_txt._width = __width;
-		text_txt._height = __height;
+		text_txt._width = __width - 4;
+		text_txt._height = __height - 4;
 
 		text_tf = new TextFormat();
 		text_tf.color = _fontColour;

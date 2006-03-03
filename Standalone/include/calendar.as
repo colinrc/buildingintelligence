@@ -11,7 +11,7 @@
 		}
 		
 		var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:{width:window_mc.contentClip.width, height:window_mc.contentClip.height}});
-		tabs_mc.tabData = [{name:"Today", iconName:"calendar"}, {name:"Watering", iconName:"sprinkler", enabled:true}, {name:"Macros", iconName:"atom", enabled:true}];
+		tabs_mc.tabData = [{name:"Today", iconName:"calendar"}, {name:"Watering", iconName:"sprinkler", enabled:false}, {name:"Macros", iconName:"atom", enabled:false}];
 		
 		for (var i=0; i<tabs_mc.tabData.length; i++) {
 			_root[tabs_mc.tabData[i].func](tabs_mc.contentClips[i]);
@@ -319,7 +319,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	var content_mc = window_mc.content_mc;
 	
 	content_mc.attachMovie("bi.ui.Label", "title_lb", 10, {settings:{width:80, text:"Title:"}});
-	content_mc.attachMovie("bi.ui.TextInput", "title_ti", 15, {settings:{width:180, text:calendarObj.title, _x:90, maxLength:20}});
+	content_mc.attachMovie("bi.ui.TextInput", "title_ti", 15, {settings:{width:180, text:calendarObj.title, _x:90, maxChars:20}});
 	
 	content_mc.attachMovie("bi.ui.Label", "time_lb", 20, {settings:{width:80, text:"Time:", _y:35}});
 	content_mc.attachMovie("bi.ui.TimePicker", "time_tp", 25, {settings:{width:180, time:calendarObj.time, _x:90, _y:35}});
@@ -328,7 +328,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	content_mc.attachMovie("bi.ui.CheckBox", "alarm_cb", 35, {settings:{_x:90, _y:70, selected:calendarObj.alarm}});
 
 	content_mc.attachMovie("bi.ui.Label", "msg_lb", 40, {settings:{width:80, text:"Message:", _y:105}});
-	content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 45, {settings:{width:180, height:210, text:calendarObj.memo, _x:90, _y:105, maxLength:200}});
+	content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 45, {settings:{width:180, height:210, text:calendarObj.memo, _x:90, _y:105, maxChars:200}});
 	
 	content_mc.attachMovie("bi.ui.Label", "category_lb", 50, {settings:{width:80, text:"Category:", _y:320}});
 	content_mc.attachMovie("bi.ui.ItemPicker", "category_ip", 55, {settings:{width:180, items:[{label:"", value:""}, {label:"Holiday", value:"holiday"}, {label:"Birthday", value:"birthday"}, {label:"Work", value:"work"}, {label:"Reminder", value:"reminder"}], _x:90, _y:320}});
@@ -360,7 +360,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	// hourly tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("hourly_mc", 0);
 	tab_mc.attachMovie("bi.ui.Label", "every_lb", 0, {settings:{width:200, text:"Every         hour(s)"}});
-	tab_mc.attachMovie("bi.ui.TextInput", "numHours_ti", 5, {settings:{width:30, text:"1", _x:50, maxLength:1, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numHours_ti", 5, {settings:{width:30, text:"1", _x:50, maxChars:1, inputType:"numeric"}});
 	if (calendarObj.eventType == "hourly") {
 		tab_mc.numHours_ti.text = calendarObj.pattern.recur;
 	}
@@ -369,7 +369,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	// daily tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("daily_mc", 10);
 	tab_mc.attachMovie("bi.ui.RadioButton", "everyXdays_rb", 0, {settings:{width:200, label:"Every         day(s)",  data:"", groupName:"every"}});
-	tab_mc.attachMovie("bi.ui.TextInput", "numDays_ti", 5, {settings:{width:30, text:"1", _x:85, maxLength:1, inputType:"numeric"}});	
+	tab_mc.attachMovie("bi.ui.TextInput", "numDays_ti", 5, {settings:{width:30, text:"1", _x:85, maxChars:1, inputType:"numeric"}});	
 	tab_mc.attachMovie("bi.ui.RadioButton", "everyOddDay_rb", 10, {settings:{width:200, label:"Every odd day",  data:"odd", _y:35, groupName:"every"}});
 	tab_mc.attachMovie("bi.ui.RadioButton", "everyEvenDay_rb", 20, {settings:{width:200, label:"Every even day",  data:"even", _y:70, groupName:"every"}});
 	if (calendarObj.eventType == "daily") {
@@ -387,7 +387,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	// weekly tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("weekly_mc", 20);
 	tab_mc.attachMovie("bi.ui.Label", "every_lb", 0, {settings:{width:200, text:"Every         week(s) on:"}});
-	tab_mc.attachMovie("bi.ui.TextInput", "numWeeks_ti", 5, {settings:{width:30, text:"1", _x:50, maxLength:1, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numWeeks_ti", 5, {settings:{width:30, text:"1", _x:50, maxChars:1, inputType:"numeric"}});
 	tab_mc.attachMovie("bi.ui.RadioButton", "monday_rb", 10, {settings:{width:130, label:"Monday", _y:35}});
 	tab_mc.attachMovie("bi.ui.RadioButton", "tuesday_rb", 15, {settings:{width:130, label:"Tuesday", _y:70}});
 	tab_mc.attachMovie("bi.ui.RadioButton", "wednesday_rb", 20, {settings:{width:130, label:"Wednesday", _y:105}});
@@ -410,14 +410,14 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	// monthly tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("monthly_mc", 30);
 	tab_mc.attachMovie("bi.ui.RadioButton", "date_rb", 0, {settings:{width:200, label:"Day        of every", data:"date", groupName:"every"}});
-	tab_mc.attachMovie("bi.ui.TextInput", "date_ti", 5, {settings:{width:30, text:"1", _x:70, maxLength:2, inputType:"numeric"}});
-	tab_mc.attachMovie("bi.ui.TextInput", "numMonths_ti", 10, {settings:{width:30, text:"1", _x:35, _y:35, maxLength:1, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "date_ti", 5, {settings:{width:30, text:"1", _x:70, maxChars:2, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numMonths_ti", 10, {settings:{width:30, text:"1", _x:35, _y:35, maxChars:1, inputType:"numeric"}});
 	tab_mc.attachMovie("bi.ui.Label", "every_lb", 15, {settings:{width:100, text:"month(s)", _x:70, _y:35}});
 	tab_mc.attachMovie("bi.ui.RadioButton", "day_rb", 20, {settings:{width:200, label:"The", data:"day", groupName:"every", _y:105}});
 	tab_mc.attachMovie("bi.ui.ItemPicker", "week_ip", 25, {settings:{width:170, items:[{label:"first", value:1}, {label:"second", value:2}, {label:"third", value:3}, {label:"fourth", value:4}, {label:"last", value:5}], _x:70, _y:105}});
 	tab_mc.attachMovie("bi.ui.ItemPicker", "day_ip", 30, {settings:{width:205, items:[{label:"Monday", value:"mon"}, {label:"Tuesday", value:"tue"}, {label:"Wednesday", value:"wed"}, {label:"Thursday", value:"thu"}, {label:"Friday", value:"fri"}, {label:"Saturday", value:"sat"}, {label:"Sunday", value:"sun"}], _x:35, _y:140}});
 	tab_mc.attachMovie("bi.ui.Label", "every_lb", 35,{settings:{width:200, text:"of every         month(s)", _x:35, _y:175}});
-	tab_mc.attachMovie("bi.ui.TextInput", "numMonths2_ti", 40, {settings:{width:30, text:"1", _x:105, _y:175, maxLength:1, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numMonths2_ti", 40, {settings:{width:30, text:"1", _x:105, _y:175, maxChars:1, inputType:"numeric"}});
 	if (calendarObj.eventType == "monthly") {
 		if (calendarObj.pattern.date != undefined) {
 			tab_mc.every.data = "date";
@@ -438,7 +438,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	// yearly tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("yearly_mc", 40);
 	tab_mc.attachMovie("bi.ui.Label", "every_lb", 0, {settings:{width:200, text:"Every         year(s) on:"}});
-	tab_mc.attachMovie("bi.ui.TextInput", "numYears_ti", 5, {settings:{width:30, text:"1", _x:50, maxLength:2, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numYears_ti", 5, {settings:{width:30, text:"1", _x:50, maxChars:2, inputType:"numeric"}});
 	tab_mc.attachMovie("bi.ui.ItemPicker", "month_ip", 10, {settings:{width:200, items:[{label:"January", value:0}, {label:"February", value:1}, {label:"March", value:2}, {label:"April", value:3}, {label:"May", value:4}, {label:"June", value:5}, {label:"July", value:6}, {label:"August", value:7}, {label:"September", value:8}, {label:"October", value:9}, {label:"November", value:10}, {label:"December", value:11}], _y:35}});
 	tab_mc.attachMovie("bi.ui.NumberPicker", "date_np", 20, {settings:{width:150, minValue:1, maxValue:31, step:1, _y:70}});
 	if (calendarObj.eventType == "yearly") {
