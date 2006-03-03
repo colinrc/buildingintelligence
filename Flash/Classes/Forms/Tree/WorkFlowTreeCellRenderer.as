@@ -1,9 +1,9 @@
-﻿class workFlowTreeCellRenderer extends mx.controls.treeclasses.TreeRow {
+﻿class Forms.Tree.WorkFlowTreeCellRenderer extends mx.controls.treeclasses.TreeRow {
 	var owner;
 	var listOwner;
 	var cell:Object;
 	
-	function workFlowTreeCellRenderer() {
+	function WorkFlowTreeCellRenderer() {
 	}
 	
 	function createChildren() {

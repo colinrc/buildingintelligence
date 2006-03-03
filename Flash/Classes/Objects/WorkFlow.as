@@ -11,27 +11,16 @@ import mx.utils.Delegate;
 class Objects.WorkFlow {
 	private var workflow_xml:XML;
 	private var steps:Array;
-	private var alt;
 	public function WorkFlow() {
-		////_root.debugger.text += "   in workflow constructor"+"\r";
 		workflow_xml = new XML();
 		workflow_xml.ignoreWhite = true;
 		workflow_xml.onLoad = Delegate.create(this, loadWorkflow);
 		workflow_xml.load("workflow.xml");
 	}
 	public function loadWorkflow(success:Boolean) {
-		//workflow_xml.onLoad = function(success) {
 		if (success) {
-			////_root.debugger.text += "Nodename="+workflow_xml.toString()+"\r";
-			//newData = this.firstChild;
 			steps = workflow_xml.firstChild.childNodes;
-			////_root.debugger.text += "steps=" + steps.toString()+"\r";
-		} else {
-			////_root.debugger.text += "WORKFLOW NOT LOADED.....\r";
-			// something didn't load..
 		}
-		//};
-		////_root.debugger.text += "   fin loadWorkflow"+"\r";
 	}
 	/*
 	Call addNode to add right tree node in the correct order
@@ -40,84 +29,60 @@ class Objects.WorkFlow {
 	<step label="Step1" key="Device" description="" order="1"/>
 	*/
 	public function addNode(key:String, inst:Object) {
-		//_root.debugger.text += "    in addNode"+key+"\r";
-		//var order = getOrder(key);
 		var found:Boolean = false;
 		var newNode = new XMLNode(1, "step");
-		setAttributes(key,newNode);
-		//newNode.attributes.label = getLabel(key);
-		//newNode.attributes.order = order;
-		//newNode.attributes.description = getDescription(key).split("\\n").join("\n");
+		setAttributes(key, newNode);
 		newNode.left_node.description = newNode.attributes.description;
-		if (newNode.attributes.label.length>0) {
+		if (newNode.attributes.label.length > 0) {
 			newNode.left_node = inst;
 			newNode.attributes.label = newNode.left_node.object.getName();
-			if (_global.right_tree_xml.hasChildNodes()) {
-				//_root.debugger.text += "Child Nodes existant \n";
-				for (var i = 0; i<_global.right_tree_xml.childNodes.length; i++) {
-					_root.debugger.text += _global.right_tree_xml.childNodes[i].attributes.order+" \n";
-					if (newNode.attributes.order<parseInt(_global.right_tree_xml.childNodes[i].attributes.order)) {
-						//add to tree_xml at correct location, add inst for uri lookup
-						//_root.debugger.text += order+" found\n";
-						_global.right_tree_xml.insertBefore(newNode, _global.right_tree_xml.childNodes[i]);
-						found = true;
-						break;
+			newNode.attributes.complete = inst.object.isValid();
+			for (var child in _global.right_tree_xml.childNodes) {
+				if (newNode.attributes.stepOrder == _global.right_tree_xml.childNodes[child].stepOrder) {
+					var tempNode = _global.right_tree_xml.childNodes[child];
+					if (tempNode.hasChildNodes()) {
+						for (var i = 0; i < tempNode.childNodes.length; i++) {
+							if (newNode.attributes.order < parseInt(tempNode.childNodes[i].attributes.order)) {
+								tempNode.insertBefore(newNode, tempNode.childNodes[i]);
+								trace("hello");
+								found = true;
+								break;
+							}
+						}
+					}
+					if (found == false) {
+						tempNode.appendChild(newNode);
+						trace("hello2");						
 					}
 				}
 			}
-			//_root.debugger.text += "   found="+found.toString()+"\r";   
-			if (found == false) {
-				//_root.debugger.text += order+" didnt find\n";
-				_global.right_tree_xml.appendChild(newNode);
-			}
 		}
 	}
-	/*public function getOrder(key:String):Number {
-		for (var i = 0; i<steps.length; i++) {
-			if (key == steps[i].attributes.key) {
-				////_root.debugger.text += "   in getOrder, found="+steps[i].attributes.order+"\r";
-				return parseInt(steps[i].attributes.order);
-			}
-		}
-		////_root.debugger.text += "   in getOrder, NOT FOUND";
-		return 0;
-	}
-	public function getLabel(key:String):String {
-		for (var i = 0; i<steps.length; i++) {
-			if (key == steps[i].attributes.key) {
-				////_root.debugger.text += "   in getLabel, found="+steps[i].attributes.label+"\r";
-				return steps[i].attributes.label;
-			}
-		}
-		////_root.debugger.text += "   in getLabel, NOT FOUND";
-		return "";
-	}
-	public function getDescription(key:String):String {
-		for (var i = 0; i<steps.length; i++) {
-			if (key == steps[i].attributes.key) {
-				////_root.debugger.text += "   in getLabel, found="+steps[i].attributes.label+"\r";
-				return steps[i].attributes.description;
-			}
-		}
-		////_root.debugger.text += "   in getLabel, NOT FOUND";
-		return "";
-	}*/
-	public function setAttributes(key:String,newNode:XMLNode):Void{
-		for (var i = 0; i<steps.length; i++) {
-			if (key == steps[i].attributes.key) {
-				newNode.attributes.label = steps[i].attributes.label;
-				newNode.attributes.order = steps[i].attributes.order;
-				newNode.attributes.description = steps[i].attributes.description.split("\\n").join("\n");
-				for(var child = 0; child<steps[i].childNodes.length;child++){
-					newNode.appendChild(steps[i].childNodes[child]);
+	public function setAttributes(key:String, newNode:XMLNode):Void {
+		for (var i = 0; i < steps.length; i++) {
+			for (var child in steps[i].childNodes) {
+				if (key == steps[i].attributes.key) {
+					newNode.attributes.label = steps[i].childNodes[child].attributes.label;
+					newNode.attributes.order = steps[i].childNodes[child].attributes.order;
+					newNode.attributes.description = steps[i].childNodes[child].attributes.description.split("\\n").join("\n");
+					newNode.attributes.stepOrder = steps[i].attributes.stepOrder;
+					break;
 				}
 			}
 		}
 	}
-	public function getTreeXML():XML {
-		return workflow_xml;
-	}
+	/*public function getTreeXML():XML {
+	return workflow_xml;
+	}*/
 	public function buildWorkflowTree() {
-		_global.right_tree.dataProvider = _global.workflow;
+		//_global.right_tree.dataProvider = _global.workflow;
+		_global.right_tree.dataProvider = new XML();
+		for(var child in steps){
+			var newNode = new XMLNode(1,"step");
+			newNode.attributes.stepOrder = steps[child].attributes.stepOrder;
+			newNode.attributes.label = steps[child].attributes.label;
+			newNode.attributes.description = steps[child].attributes.description.split("\\n").join("\n");
+			_global.right_tree.dataProvider.appendChild();
+		}
 	}
 }

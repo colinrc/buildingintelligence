@@ -63,14 +63,14 @@ var right_tree = workFlow_split.setFirstContents("Tree", "right_tree", 0);
 var infoflow_ta = workFlow_split.setSecondContents("TextArea", "infoflow_ta", 1);
 _global.right_tree = right_tree;
 _global.infoflow_ta = infoflow_ta;
+_global.infoflow_ta.editable = false;
 _global.workflow_xml = new XML();
 _global.workflow_xml.ignoreWhite = true;
 _global.workflow_xml.load("workflow.xml");
 _global.right_tree_xml = new XML();
 //values set in workflow object
 _global.right_tree_xml.ignoreWhite = true;
-_global.right_tree.dataProvider = _global.right_tree_xml;
-_global.right_tree.setStyle("depthColors", [0x00ff00, 0xff0000, 0x0000ff]);
+
 _global.workflow = new Objects.WorkFlow();
 var left_tree:mx.controls.Tree;
 _global.left_tree = left_tree;
@@ -559,6 +559,7 @@ buttonListener2.click = function(eventObj) {
 			}
 		}
 		_global.right_tree.dataProvider.removeAll();
+		_global.workflow.buildWorkflowTree();		
 		projectTree_xml.appendChild(_global.client_test.toTree());
 		projectTree_xml.appendChild(_global.server_test.toTree());
 		if (_global.advanced) {
@@ -720,7 +721,7 @@ treeFilter_cb.change = function(eventObj) {
 	}
 };
 treeFilter_cb.addEventListener("change", treeFilter_cb);
-rightTreeListener = new Object();
+/*rightTreeListener = new Object();
 rightTreeListener.change = function(eventObj) {
 	var node = eventObj.target.selectedNode;
 	left_tree.setIsOpen(node.left_node, true);
@@ -738,6 +739,95 @@ rightTreeListener.change = function(eventObj) {
 	selectNode.type = "change";
 	left_tree.dispatchEvent(selectNode);
 };
-right_tree.addEventListener("change", rightTreeListener);
+right_tree.addEventListener("change", rightTreeListener);*/
 setView("none");
+/****************************************************************/
+//_global.right_tree.dataProvider = _global.right_tree_xml;
+//_global.right_tree.setStyle("depthColors", [0x00ff00, 0xff0000, 0x0000ff]);
+_global.right_tree.setStyle("indentation", 10);
+_global.right_tree.setStyle("defaultLeafIcon", "Icon:null");
+_global.right_tree.setStyle("folderOpenIcon", "Icon:null");
+_global.right_tree.setStyle("folderClosedIcon", "Icon:null");
+_global.right_tree.setStyle("disclosureClosedIcon", "Icon:null");
+_global.right_tree.setStyle("disclosureOpenIcon", "Icon:null");
+_global.right_tree.setStyle("depthColors", [0xEEEEEE, 0xFFFFFF]);
+_global.right_tree.setStyle("rollOverColor", 0xCCCCCC);
+_global.right_tree.setStyle("selectionColor", 0xCFDFF0);
+_global.right_tree.setStyle("selectionDuration", 0);
+_global.right_tree.setStyle("textRollOverColor", 0x000000);
+_global.right_tree.setStyle("textSelectedColor", 0x000000);
+_global.right_tree.cellRenderer = "workFlowTreeCellRenderer";
+_global.right_tree.setStyle("lineColor", 0x000000);
+_global.right_tree.setStyle("lineAlpha", 20);
+_global.right_tree.vScrollPolicy = "auto";
+
+//treeXML = new XML('<a label="Level 1" complete="0"><b label="Sub-level 1" complete="0" /><b label="Sub-level 2" complete="1" /><b label="Sub-level 3" complete="1" /></a><a label="Level 2" complete="1"><b label="Sub-level 1" complete="1" /><b label="Sub-level 2" complete="1" /></a>');
+
+var treeListener:Object = new Object();
+treeListener.target = right_tree;
+treeListener.opened = undefined;
+treeListener.open_next = undefined;
+
+/* a node in the tree has been selected */
+treeListener.change = function(evt:Object) {
+	var node = evt.target.selectedItem;
+	var is_open = evt.target.getIsOpen(node);
+	var is_branch = evt.target.getIsBranch(node);
+	var node_to_close = node.getSiblings(this.target);
+	// close the opened node first
+	if (this.target.getIsOpen(node_to_close) && this.target.getIsBranch(node_to_close)) {
+		this.target.setIsOpen(node_to_close, false, true, true);
+		this.open_next = node;
+	} else {
+		if (is_branch) {
+			this.target.setIsOpen(node, true, true, true);
+		} else {
+			this.target.selectedNode = node;
+			this.target.dispatchEvent({type:"click", target:evt.target});
+		}
+		this.open_next = undefined;
+	}
+}
+
+treeListener.closeNode = function(node:XMLNode) {
+	for (var a in node.childNodes) {
+		if (this.target.getIsOpen(node.childNodes[a])) {
+			this.closeNode(node.childNodes[a]);
+		}
+	}
+	this.target.setIsOpen(node, false, false);
+}
+
+treeListener.nodeClose = function(evt:Object) {
+	this.closeNode(evt.node);
+	if (this.open_next != undefined and evt.target.getIsBranch(this.open_next)) {
+		evt.target.setIsOpen(this.open_next, true, true, true);
+	} else {
+		evt.target.selectedNode = this.open_next;
+		this.target.dispatchEvent({type:"click", target:evt.target});
+		this.open_next = undefined;
+	}
+}
+
+treeListener.nodeOpen = function(evt:Object) {
+	evt.target.selectedNode = evt.node;
+}
+
+XMLNode.prototype.getSiblings = function(cTree:mx.controls.Tree) {
+	var parent = this.parentNode;
+	for (var a = 0; a < parent.childNodes.length; a++) {
+		if (parent.childNodes[a] != this && cTree.getIsOpen(parent.childNodes[a])) {
+			return parent.childNodes[a];
+		}
+	}
+	return undefined;
+}
+
+// set out listeners for the menu
+_global.right_tree.addEventListener('change', treeListener);
+_global.right_tree.addEventListener('nodeClose', treeListener);
+_global.right_tree.addEventListener('nodeOpen', treeListener);
+//_global.right_tree.dataProvider = treeXML;
+_global.workflow.buildWorkflowTree();
+/************************************************************************/
 stop();
