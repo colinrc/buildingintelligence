@@ -2,6 +2,7 @@
 historyViewer_btn._visible = false;
 _global.advanced = false;
 var form_mc;
+_global.formDepth = 0;
 //advanced_btn._visible = false;
 //var debugger:mx.controls.TextArea;
 //_root.debugger = debugger;
@@ -265,6 +266,18 @@ function saveFile(saveType:String):Void {
 			newProjectXML.appendChild(_global.client_test.toXML());
 			mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
 			mdm.Dialogs.prompt("File saved to: "+_global.projectFileName);		
+		} else{
+			mdm.Dialogs.BrowseFile.buttonText = "Save Project";
+			mdm.Dialogs.BrowseFile.title = "Please select a location to save to";
+			mdm.Dialogs.BrowseFile.dialogText = "Please select a location to save to";
+			mdm.Dialogs.BrowseFile.defaultExtension = "xml";
+			mdm.Dialogs.BrowseFile.filterList = "XML Files|*.xml";
+			mdm.Dialogs.BrowseFile.filterText = "XML Files|*.xml";
+			var tempString = mdm.Dialogs.BrowseFile.show();
+			if (tempString != "false") {
+				_global.projectFileName = tempString;
+				saveFile("Project");
+			}			
 		}
 	} else {
 		mdm.Dialogs.BrowseFile.buttonText = "Save file";
@@ -352,14 +365,14 @@ setView = function (view, dataObj) {
 	tabs_tb._visible = true;
 	tabBody_mc._visible = true;
 	form_mc.removeMovieClip();
-	form_mc = formContent_mc.createEmptyMovieClip("form_mc", 0);
+	//form_mc = formContent_mc.createEmptyMovieClip("form_"+ formContent_mc.getNextHighestDepth()+"_mc", formContent_mc.getNextHighestDepth());
 	// render the view
 	switch (view) {
 	case "home" :
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
-		form_mc = formContent_mc.attachMovie("forms.home", "form_mc", 0);
+		form_mc = formContent_mc.attachMovie("forms.home", "form_"+ (_global.formDepth++)+"_mc",  formContent_mc.getNextHighestDepth());
 		tabs_tb.dataProvider = [{label:"Project Details"}];
 		tabs_tb.selectedIndex = 0;
 		tabs_tb._visible = true;
@@ -403,7 +416,7 @@ setView = function (view, dataObj) {
 			tabs_tb.selectedIndex = 0;
 			view = "control.controls";
 		}
-		form_mc = formContent_mc.attachMovie("forms." + view, "form_" + random(999) + "_mc", 0);
+		form_mc = formContent_mc.attachMovie("forms." + view, "form_" + (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth());
 		//_root.debugger.text += "setting view "+view+"\n";
 		_global.server.attachView(form_mc);
 		break;
@@ -418,7 +431,7 @@ setView = function (view, dataObj) {
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
-		form_mc = formContent_mc.attachMovie("forms.preview", "form_mc", 0);
+		form_mc = formContent_mc.attachMovie("forms.preview", "form_"+ (_global.formDepth++)+"_mc",  formContent_mc.getNextHighestDepth());
 		tabs_tb.dataProvider = [{label:"Client Preview"}];
 		tabs_tb.selectedIndex = 0;
 		tabs_tb._visible = true;
@@ -427,7 +440,7 @@ setView = function (view, dataObj) {
 		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
-		form_mc = formContent_mc.attachMovie("forms.publish", "form_mc", 0);
+		form_mc = formContent_mc.attachMovie("forms.publish", "form_"+ (_global.formDepth++)+"_mc",  formContent_mc.getNextHighestDepth());
 		tabs_tb.dataProvider = [{label:"Publish", view:"publish"}];
 		tabs_tb.selectedIndex = 0;
 		break;
@@ -437,24 +450,24 @@ setView = function (view, dataObj) {
 		workFlow_split._visible = false;
 		tabs_tb.dataProvider = [{label:"History", view:"history"}];
 		tabs_tb.selectedIndex = 0;
-		form_mc = formContent_mc.attachMovie("forms.history", "form" + random(999) + "_history", 0);
+		form_mc = formContent_mc.attachMovie("forms.history", "form" +  (_global.formDepth++) + "_history",  formContent_mc.getNextHighestDepth());
 		break;
 	}
 };
 tabs_tb.change = function(eventObj) {
 	if (this.lastTab.view != eventObj.target.selectedItem.view && eventObj.target.selectedItem.view.length) {
 		if (left_tree.selectedNode.object != undefined) {
-			form_mc.unloadMovie();
-			form_mc = formContent_mc.createEmptyMovieClip("form_mc", 0);
+			form_mc.removeMovieClip();
+			//form_mc = formContent_mc.createEmptyMovieClip("form_"+ formContent_mc.getNextHighestDepth()+"mc",  formContent_mc.getNextHighestDepth());
 			switch (eventObj.target.selectedItem.label) {
 			case "XML" :
-				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, {node:left_tree.selectedNode.object.toXML()});
+				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth(), {node:left_tree.selectedNode.object.toXML()});
 				break;
 			case "Preview" :
-				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, {controls:_global.client_test.getControlTypes(), previewXML:left_tree.selectedNode.object.toXML()});
+				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth(), {controls:_global.client_test.getControlTypes(), previewXML:left_tree.selectedNode.object.toXML()});
 				break;
 			default :
-				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + random(999) + "_mc", 0, left_tree.selectedNode.object.getData());
+				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth(), left_tree.selectedNode.object.getData());
 				break;
 			}
 		} else {
@@ -469,7 +482,7 @@ leftTreeListener = new Object();
 leftTreeListener.change = function(eventObj) {
 	var node = eventObj.target.selectedNode;
 	form_mc.removeMovieClip();
-	form_mc = formContent_mc.createEmptyMovieClip("form_mc", 0);
+	//form_mc = formContent_mc.createEmptyMovieClip("form_mc", 0);
 	right_tree.selectedNode = undefined;
 	if (node.object != undefined) {
 		switch (node.nodeName) {
@@ -477,12 +490,12 @@ leftTreeListener.change = function(eventObj) {
 		case "Tab" :
 		case "Control" :
 		case "Window" :
-			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + random(999) + "_mc", 0, node.object.getData());
+			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" +  (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview", view:"forms.project.client.preview"}];
 			tabs_tb.selectedIndex = 0;
 			break;
 		default :
-			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + random(999) + "_mc", 0, node.object.getData());
+			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc",  formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}];
 			tabs_tb.selectedIndex = 0;
 			break;
