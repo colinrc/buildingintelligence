@@ -24,7 +24,7 @@ MovieClip.prototype.addProperty("onPress2",
 _global.zones = new Array();
 _global.alerts = new Array();
 _global.statusBar = new Array();
-_global.logging = new Array();
+_global.logging = new Object();
 _global.appsBar = new Array();
 _global.macros = new Array();
 _global.macroStatus = new Array();
@@ -461,7 +461,21 @@ renderAppsBar = function () {
 	} else {
 		for (var icon=0; icon<_global.appsBar.length; icon++) {
 			var iconObj = _global.appsBar[icon];
-			var icon_mc = appsBar_mc.attachMovie("bi.ui.Button", iconObj.func + "_mc", icon, {settings:{width:_global.settings.appsBarBtnWidth, height:_global.settings.appsBarBtnHeight, iconName:iconObj.icon, bgColour:iconObj.bgColour, borderColour:iconObj.borderColour}});
+
+			var buttonObject = {width:_global.settings.appsBarBtnWidth, height:_global.settings.appsBarBtnHeight, iconName:iconObj.icon};
+			for (var attr in iconObj) {
+				if (attr.substr(0, 6) == "button") {
+					if (iconObj[attr] == Number(iconObj[attr])) {
+						buttonObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = Number(iconObj[attr]);
+					} else if (iconObj[attr] == "true" || iconObj[attr] == "false") {
+						buttonObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = (iconObj[attr] == "true");
+					} else {
+						buttonObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = iconObj[attr];
+					}
+				}
+			}
+			
+			var icon_mc = appsBar_mc.attachMovie("bi.ui.Button", iconObj.func + "_mc", icon, {settings:buttonObject});
 			icon_mc.func = iconObj.func;
 			icon_mc.program = iconObj.program;
 			icon_mc.canOpen = iconObj.canOpen;
@@ -1349,18 +1363,19 @@ createScrollBar = function (mc, height, func) {
 
 openStatusWindow = function (statusObj) {
 	var windowObject = new Object();
+	for (var attr in statusObj) {
+		if (attr.substr(0, 6) == "window") {
+			if (statusObj[attr] == Number(statusObj[attr])) {
+				windowObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = Number(statusObj[attr]);
+			} else if (statusObj[attr] == "true" || statusObj[attr] == "false") {
+				windowObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = (statusObj[attr] == "true");
+			} else {
+				windowObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = statusObj[attr];
+			}
+		}
+	}
 	windowObject.title = "Status: " + statusObj.name;
 	windowObject.iconName = statusObj.icon;
-	
-	if (statusObj.windowWidth != undefined) windowObject.width = Number(statusObj.windowWidth);
-	if (statusObj.windowHeight != undefined) windowObject.height = Number(statusObj.windowHeight);
-	if (statusObj.windowBgOpacity != undefined) windowObject.bgOpacity = Number(statusObj.windowBgOpacity);
-	if (statusObj.windowBgColour1 != undefined) windowObject.bgColour1 = Number(statusObj.windowBgColour1);
-	if (statusObj.windowBgColour2 != undefined) windowObject.bgColour2 = Number(statusObj.windowBgColour2);
-	if (statusObj.windowBorderColour != undefined) windowObject.borderColour = Number(statusObj.windowBorderColour);
-	if (statusObj.windowBorderWidth != undefined) windowObject.borderWidth = Number(statusObj.windowBorderWidth);
-	if (statusObj.windowCornerRadius != undefined) windowObject.cornerRadius = Number(statusObj.windowCornerRadius);
-	if (statusObj.windowShadowOffset != undefined) windowObject.shadowOffset = Number(statusObj.windowShadowOffset);
 	
 	var window_mc = showWindow(windowObject);
 
@@ -1665,7 +1680,21 @@ openControlPanel = function () {
 }
 
 openLogs = function () {
-	var window_mc = showWindow({width:"full", height:"full", title:"logs", iconName:"notepad"});
+	var windowObject = {width:"full", height:"full", title:"logs", iconName:"notepad"};
+	for (var attr in _global.logging) {
+		if (attr.substr(0, 6) == "window") {
+			if (_global.logging[attr] == Number(_global.logging[attr])) {
+				windowObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = Number(_global.logging[attr]);
+			} else if (_global.logging[attr] == "true" || _global.logging[attr] == "false") {
+				windowObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = (_global.logging[attr] == "true");
+			} else {
+				windowObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = _global.logging[attr];
+			}
+		}
+	}
+	
+	var window_mc = showWindow(windowObject);
+	
 	appsBar_mc.openLogs_mc.showHighlight();
 	window_mc.onClose = function () {
 		this.contentClip.tabs_mc.contentClips[this.contentClip.tabs_mc.activeTab].onHide();
@@ -1674,15 +1703,15 @@ openLogs = function () {
 	var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:{width:window_mc.contentClip.width, height:window_mc.contentClip.height}});
 	
 	var tab_array = new Array();
-	for (var i=0; i<_global.logging.length; i++) {
+	for (var i=0; i<_global.logging.groups.length; i++) {
 		if (groups[group].canSee == undefined || isAuthenticated(groups[group].canSee)) {
-			tab_array.push({name:_global.logging[i].name, iconName:_global.logging[i].icon});
+			tab_array.push({name:_global.logging.groups[i].name, iconName:_global.logging.groups[i].icon});
 		}
 	}
 	tabs_mc.tabData = tab_array;
 
-	for (var i=0; i<_global.logging.length; i++) {
-		createLogContent(_global.logging[i], tabs_mc.contentClips[i])
+	for (var i=0; i<_global.logging.groups.length; i++) {
+		createLogContent(_global.logging.groups[i], tabs_mc.contentClips[i])
 	}
 	
 	tabs_mc.originalTitle = "Logging";
@@ -2951,7 +2980,7 @@ application_xml.onLoad = function () {
 				defineStatusBar(top[i].childNodes)
 				break;
 			case ("logging") :
-				defineLogging(top[i].childNodes)
+				defineLogging(top[i])
 				break;
 			case ("appsBar") :
 				defineAppsBar(top[i].childNodes)

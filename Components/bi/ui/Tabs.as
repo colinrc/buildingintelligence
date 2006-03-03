@@ -2,7 +2,7 @@
 import flash.filters.ColorMatrixFilter;
 
 class bi.ui.Tabs extends bi.ui.CoreUI {
-	private var clipParameters:Object = {width:1, height:1, settings:1, tabData:1, tabPosition:1, contentClips:1, activeTab:1};  
+	private var clipParameters:Object = {width:1, height:1, settings:1, tabData:1, position:1, contentClips:1, activeTab:1};  
 
 	private var tabsContent_mc:MovieClip;
 	private var	tabsForeground_mc:MovieClip;
@@ -13,7 +13,7 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 	private var _tabOffColour:Number;
 	private var _tabOffAlpha:Number;
 
-	private var _tabPosition:String;
+	private var _position:String;
 	private var _tabWidth:Number;
 	private var _tabHeight:Number;
 	private var _tabSpacing:Number;
@@ -36,8 +36,8 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		return _tabs_array;
 	}
 
-	public function set tabPosition(tabPosition:String):Void {
-		_tabPosition = tabPosition;
+	public function set position(position:String):Void {
+		_position = position;
 	}
 	
 	public function get contentClips():Array {
@@ -76,16 +76,16 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 	function Tabs() {
 		initFromClipParameters();
 
-		if (_tabOpacity == null) _tabOpacity =_global.settings.tabBgOpacity;
-		if (_tabOnColour == null) _tabOnColour =_global.settings.tabOnColour;
-		if (_tabOffColour == null) _tabOffColour =_global.settings.tabOffColour;
-		if (_tabOffAlpha == null) _tabOffAlpha =_global.settings.tabOffAlpha;
-		if (_tabPosition == null) _tabPosition =_global.settings.tabPosition;
-		if (_tabWidth == null) _tabWidth =_global.settings.tabWidth;
-		if (_tabHeight == null) _tabHeight =_global.settings.tabHeight;
-		if (_tabSpacing == null) _tabSpacing =_global.settings.tabSpacing;
-		if (_cornerRadius == null) _cornerRadius =_global.settings.tabCornerRadius;
-		if (_contentPadding == null) _contentPadding =_global.settings.tabContentPadding;
+		if (_tabOpacity == null) _tabOpacity = _global.settings.tabBgOpacity;
+		if (_tabOnColour == null) _tabOnColour = _global.settings.tabOnColour;
+		if (_tabOffColour == null) _tabOffColour = _global.settings.tabOffColour;
+		if (_tabOffAlpha == null) _tabOffAlpha = _global.settings.tabOffAlpha;
+		if (_position == null) _position = _global.settings.tabPosition;
+		if (_tabWidth == null) _tabWidth = _global.settings.tabWidth;
+		if (_tabHeight == null) _tabHeight = _global.settings.tabHeight;
+		if (_tabSpacing == null) _tabSpacing = _global.settings.tabSpacing;
+		if (_cornerRadius == null) _cornerRadius = _global.settings.tabCornerRadius;
+		if (_contentPadding == null) _contentPadding = _global.settings.tabContentPadding;
 		
 		createChildren();
 		draw();
@@ -109,11 +109,11 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		createEmptyMovieClip("tabsContent_mc", 30);
 		
 		var bg_mc:MovieClip = tabsForeground_mc.createEmptyMovieClip("bg_mc", -1);
-		if (_tabPosition == "left") bg_mc._x = _tabWidth;
-		if (_tabPosition == "top") bg_mc._y = _tabHeight;
+		if (_position == "left") bg_mc._x = _tabWidth;
+		if (_position == "top") bg_mc._y = _tabHeight;
 		bg_mc.beginFill(_tabOnColour, _tabOpacity);
-		if (_tabPosition == "left" || _tabPosition == "right") bg_mc.drawRect(0, 0, __width - _tabWidth, __height, _cornerRadius);
-		if (_tabPosition == "top" || _tabPosition == "bottom") bg_mc.drawRect(0, 0, __width, __height - _tabHeight, _cornerRadius);
+		if (_position == "left" || _position == "right") bg_mc.drawRect(0, 0, __width - _tabWidth, __height, _cornerRadius);
+		if (_position == "top" || _position == "bottom") bg_mc.drawRect(0, 0, __width, __height - _tabHeight, _cornerRadius);
 		bg_mc.endFill();
 
 		if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
@@ -126,12 +126,12 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		for (var i=0; i<_tabs_array.length; i++) {
 			var tabContent_mc:MovieClip = tabsContent_mc.createEmptyMovieClip("tab" + i + "_mc", i + 100);
 			tabContent_mc._x = tabContent_mc._y = _contentPadding;
-			if (_tabPosition == "left") tabContent_mc._x = _tabWidth + _contentPadding;
-			if (_tabPosition == "top") tabContent_mc._y = _tabHeight + _contentPadding;
+			if (_position == "left") tabContent_mc._x = _tabWidth + _contentPadding;
+			if (_position == "top") tabContent_mc._y = _tabHeight + _contentPadding;
 			tabContent_mc.width = __width - (_contentPadding * 2);
 			tabContent_mc.height = __height - (_contentPadding * 2);
-			if (_tabPosition == "left" || _tabPosition == "right") tabContent_mc.width -= _tabWidth;
-			if (_tabPosition == "top" || _tabPosition == "bottom") tabContent_mc.height -= _tabHeight;
+			if (_position == "left" || _position == "right") tabContent_mc.width -= _tabWidth;
+			if (_position == "top" || _position == "bottom") tabContent_mc.height -= _tabHeight;
 			tabContent_mc._visible = false;
 			_contentClips_array.push(tabContent_mc);
 			
@@ -144,10 +144,10 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 				
 				var bg_mc = tab_mc.createEmptyMovieClip("bg_mc", 0);
 				bg_mc.beginFill(_tabOnColour, _tabOpacity);
-				if (_tabPosition == "left") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:_cornerRadius,tr:0,bl:_cornerRadius,br:0});
-				if (_tabPosition == "top") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:_cornerRadius,tr:_cornerRadius,bl:0,br:0});
-				if (_tabPosition == "right") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:0,tr:_cornerRadius,bl:0,br:_cornerRadius});
-				if (_tabPosition == "bottom") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:0,tr:0,bl:_cornerRadius,br:_cornerRadius});
+				if (_position == "left") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:_cornerRadius,tr:0,bl:_cornerRadius,br:0});
+				if (_position == "top") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:_cornerRadius,tr:_cornerRadius,bl:0,br:0});
+				if (_position == "right") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:0,tr:_cornerRadius,bl:0,br:_cornerRadius});
+				if (_position == "bottom") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:0,tr:0,bl:_cornerRadius,br:_cornerRadius});
 				bg_mc.endFill();
 	
 				var iconSize:Number = (_tabWidth < _tabHeight) ? _tabWidth : _tabHeight;
@@ -156,10 +156,10 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 				icon_mc._x = Math.round((_tabWidth / 2) - (iconSize / 2));
 				icon_mc._y = Math.round((_tabHeight / 2) - (iconSize / 2));;
 				
-				if (_tabPosition == "left" || _tabPosition == "right") tab_mc._y = i * (_tabHeight + _tabSpacing) + _cornerRadius;
-				if (_tabPosition == "top" || _tabPosition == "bottom") tab_mc._x = i * (_tabWidth + _tabSpacing) + _cornerRadius;
-				if (_tabPosition == "right") tab_mc._x = __width - _tabWidth;
-				if (_tabPosition == "bottom") tab_mc._y = __height - _tabHeight;
+				if (_position == "left" || _position == "right") tab_mc._y = i * (_tabHeight + _tabSpacing) + _cornerRadius;
+				if (_position == "top" || _position == "bottom") tab_mc._x = i * (_tabWidth + _tabSpacing) + _cornerRadius;
+				if (_position == "right") tab_mc._x = __width - _tabWidth;
+				if (_position == "bottom") tab_mc._y = __height - _tabHeight;
 					
 				if (q == 0) {
 					tab_mc._visible = false;

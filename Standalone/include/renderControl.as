@@ -162,7 +162,20 @@
 					}
 				}
 			} else if (type == "button") {
-				var item_mc = row_mc.attachMovie("bi.ui.Button", "item" + item + "_mc", item, {settings:{width:width, height:height, label:items[item].label.toString(), iconName:items[item].icon, toggle:items[item].showOn, bgColour:items[item].bgColour, borderColour:items[item].borderColour, fontSize:items[item].fontSize, fontColour:items[item].fontColour}});
+				var buttonObject = {width:width, height:height, label:items[item].label.toString(), iconName:items[item].icon, toggle:items[item].showOn};
+				for (var attr in items[item]) {
+					if (attr.substr(0, 6) == "button") {
+						if (items[item][attr] == Number(items[item][attr])) {
+							buttonObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = Number(items[item][attr]);
+						} else if (items[item][attr] == "true" || items[item][attr] == "false") {
+							buttonObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = (items[item][attr] == "true");
+						} else {
+							buttonObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = items[item][attr];
+						}
+					}
+				}
+				
+				var item_mc = row_mc.attachMovie("bi.ui.Button", "item" + item + "_mc", item, {settings:buttonObject});
 				item_mc.addEventListener("press", item_mc);
 				item_mc.addEventListener("release", item_mc);
 				item_mc.sound = items[item].sound;
@@ -287,7 +300,20 @@
 					}
 				}
 			} else if (type == "toggle") {
-				var item_mc = row_mc.attachMovie("bi.ui.Button", "item" + item + "_mc", item, {settings:{width:width, height:height, bgColour:items[item].bgColour, borderColour:items[item].borderColour, fontSize:items[item].fontSize, fontColour:items[item].fontColour}});
+				var buttonObject = {width:width, height:height};
+				for (var attr in items[item]) {
+					if (attr.substr(0, 6) == "button") {
+						if (items[item][attr] == Number(items[item][attr])) {
+							buttonObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = Number(items[item][attr]);
+						} else if (items[item][attr] == "true" || items[item][attr] == "false") {
+							buttonObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = (items[item][attr] == "true");
+						} else {
+							buttonObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = items[item][attr];
+						}
+					}
+				}
+			
+				var item_mc = row_mc.attachMovie("bi.ui.Button", "item" + item + "_mc", item, {settings:buttonObject});
 				item_mc.arrayPos = 0;
 				if (items[item].key != undefined) {
 					item_mc.key = items[item].key;

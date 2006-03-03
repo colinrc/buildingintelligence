@@ -31,14 +31,19 @@ defineStatusBar = function (groups) {
 	}
 }
 
-defineLogging = function (groups) {
+defineLogging = function (logging) {
+	for (var attrib in logging.attributes) {
+		_global.logging[attrib] = logging.attributes[attrib];
+	}
+	var groups = logging.childNodes;
+	_global.logging.groups = new Array();
 	for (var group=0; group<groups.length; group++) {
-		_global.logging.push({name:groups[group].attributes.name, icon:groups[group].attributes.icon, label:groups[group].attributes.label, listenTo:groups[group].attributes.listenTo, type:groups[group].attributes.type, url:groups[group].attributes.url, timeformat:groups[group].attributes.timeformat, controls:[], log:[]});
+		_global.logging.groups.push({name:groups[group].attributes.name, icon:groups[group].attributes.icon, label:groups[group].attributes.label, listenTo:groups[group].attributes.listenTo, type:groups[group].attributes.type, url:groups[group].attributes.url, timeformat:groups[group].attributes.timeformat, controls:[], log:[]});
 		var controls = groups[group].childNodes;
 		for (var control=0; control<controls.length; control++) {
-			_global.logging[group].controls[control] = new Object();
+			_global.logging.groups[group].controls[control] = new Object();
 			for (var attrib in controls[control].attributes) {
-				_global.logging[group].controls[control][attrib] = controls[control].attributes[attrib];
+				_global.logging.groups[group].controls[control][attrib] = controls[control].attributes[attrib];
 			}
 		}
 	}
@@ -176,7 +181,7 @@ defineZones = function (zones) {
 defineWindow = function (window_xml, zone, room) {
 	for (var attrib in window_xml.attributes) {
 		if (Number(window_xml.attributes[attrib]) == window_xml.attributes[attrib]) {
-			_global.zones[zone].rooms[room].window[attrib] = Number(settings[setting].attributes.value);
+			_global.zones[zone].rooms[room].window[attrib] = Number(window_xml.attributes[attrib]);
 		} else if (window_xml.attributes[attrib] == "true" || window_xml.attributes[attrib] == "false") {
 			_global.zones[zone].rooms[room].window[attrib] = (window_xml.attributes[attrib] == "true");
 		} else {

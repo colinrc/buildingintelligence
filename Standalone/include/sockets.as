@@ -116,7 +116,6 @@ receiveCmd = function (xml) {
 			if (changed) broadcastChange(msg.attributes.KEY);
 		}
 	}
-	
 	if (_global.settings.debugMode) {
 		debug_mc.incoming_txt.text = msg + "\n" + debug_mc.incoming_txt.text;
 	} else {
@@ -185,7 +184,7 @@ saveMacro = function (macroName, controlArray) {
 	}
 	xmlMsg += "</CONTROL>"
 	server.send(xmlMsg);
-	if (_global.settings.debugMode) debug_mc.outgoing_txt.text = xmlMsg + "\n" + debug_mc.outgoing_txt.text;
+	trace("OUTGOING: " + xmlMsg);
 }
 
 reorderMacros = function (dir, id) {
@@ -230,13 +229,14 @@ setScriptEnabled = function (scriptName) {
 	*/
 	var xmlMsg = '<CONTROL KEY="SCRIPT" COMMAND="save" EXTRA="' + scriptObj.name + '" EXTRA2="'+ scriptObj.enabled + '"/>';
 	server.send(xmlMsg);
-	if (_global.settings.debugMode) debug_mc.outgoing_txt.text = xmlMsg + "\n" + debug_mc.outgoing_txt.text;
+	debug(xmlMsg);
 }
 
-deleteMacro = function (id) {
+deleteMacro = function (macroName) {
+	trace("macroName: " + macroName);
 	var xmlMsg = '<CONTROL KEY="MACRO" COMMAND="delete" EXTRA="' + macroName + '" />';
 	server.send(xmlMsg);
-	if (_global.settings.debugMode) debug_mc.outgoing_txt.text = xmlMsg + "\n" + debug_mc.outgoing_txt.text;
+	debug(xmlMsg);
 }
 
 saveEvent = function (event) {
@@ -254,8 +254,7 @@ saveEvent = function (event) {
 	}
 	xmlMsg += "</CONTROL>";
 	server.send(xmlMsg);
-	trace(xmlMsg);
-	if (_global.settings.debugMode) debug_mc.outgoing_txt.text = xmlMsg + "\n" + debug_mc.outgoing_txt.text;
+	debug(xmlMsg);
 }
 
 deleteEvent = function (event) {

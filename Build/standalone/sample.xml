@@ -10,7 +10,7 @@
 
 			<setting name="showDropShadows" value="true" />
 
-			<setting name="integratorHtml" value="http://127.0.0.1:8080/client-core/lib/html/integrator.html" />
+			<setting name="integratorHtml" value="about:blank" />
 		</common>
 	</settings>
 	<sounds>
@@ -67,7 +67,7 @@
 			<control key="MASTER_BED_TV" />
 		</group>
 	</statusBar>
-	<logging>
+	<logging windowWidth="300" windowHeight="450" windowBgOpacity="60" windowBgColour1="0xFFCC00" windowBgColour2="0x990000" windowCornerRadius="30" windowBorderColour="0xCC0000" windowBorderWidth="2" windowShadowOffset="10">
 		<group name="Lights" icon="light-bulb" listenTo="on,off" label="%room%: %name%" timeformat="HH:mm d mmmm yyyy" type="tally">
 			<control key="LOUNGE_LIGHT" />
 		</group>
@@ -87,7 +87,7 @@
 		<icon name="Logs" icon="notepad" func="openLogs" canOpen="" />
 		<icon name="Calendar" icon="calendar" func="openCalendar" canOpen="" />
 		<icon name="Control Panel" icon="gears" func="openControlPanel" canOpen="superuser" />
-		<icon name="Authenticate" icon="locked" func="openAuthentication" bgColour="0xCC0000" borderColour="0xEE0000" />
+		<icon name="Authenticate" icon="locked" func="openAuthentication" buttonBgColour="0xCC0000" buttonBorderColour="0xEE0000" />
 	</appsBar>
 	<calendar>
 		<tab view="today" />
@@ -107,7 +107,7 @@
 		<zone name="Downstairs" map="downstairs.swf" cycle="false" alignment="center">
 			<rooms>
 				<room name="Ensuite" poly="443,219,443,296,579,296,579,153,477,153,477,219">
-					<window tabPosition="bottom">
+					<window tabPosition="bottom" windowWidth="300" windowHeight="450" windowBgOpacity="60" windowBgColour1="0xFFCC00" windowBgColour2="0x990000" windowCornerRadius="30" windowBorderColour="0xCC0000" windowBorderWidth="2" windowShadowOffset="10">
 						<tab name="Lights &amp; Fan" icon="light-bulb">
 							<control name="Main Light" key="ENSUITE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
 							<control name="LV Light" key="ENSUITE_LV_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
@@ -388,7 +388,7 @@
 				<item type="toggle" command="state" extras="on,off" />
 			</row>
 			<row>
-				<item type="button" icon="atom" macro="badaboom" extra="%key%" extra2="%name%" />
+				<item type="button" icon="atom" macro="badaboom" extra="%key%" extra2="%name%" buttonBgColour="0xFFcc00" buttonBorderColour="0xFF0000" />
 			</row>
 		</control>
 		<control type="upDown">

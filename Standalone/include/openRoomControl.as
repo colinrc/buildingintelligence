@@ -3,15 +3,19 @@
 	windowObject.title = room.name;
 	windowObject.iconName = statusObj.icon;
 	
-	if (room.window.windowWidth != undefined) windowObject.width = Number(room.window.windowWidth);
-	if (room.window.windowHeight != undefined) windowObject.height = Number(room.window.windowHeight);
-	if (room.window.windowBgOpacity != undefined) windowObject.bgOpacity = Number(room.window.windowBgOpacity);
-	if (room.window.windowBgColour1 != undefined) windowObject.bgColour1 = Number(room.window.windowBgColour1);
-	if (room.window.windowBgColour2 != undefined) windowObject.bgColour2 = Number(room.window.windowBgColour2);
-	if (room.window.windowBorderColour != undefined) windowObject.borderColour = Number(room.window.windowBorderColour);
-	if (room.window.windowBorderWidth != undefined) windowObject.borderWidth = Number(room.window.windowBorderWidth);
-	if (room.window.windowCornerRadius != undefined) windowObject.cornerRadius = Number(room.window.windowCornerRadius);
-	if (room.window.windowShadowOffset != undefined) windowObject.shadowOffset = Number(room.window.windowShadowOffset);
+	for (var attr in room.window) {
+		if (attr.substr(0, 6) == "window") {
+			trace(attr + ":" + room.window[attr]);
+			if (room.window[attr] == Number(room.window[attr])) {
+				windowObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = Number(room.window[attr]);
+			} else if (room.window[attr] == "true" || room.window[attr] == "false") {
+				windowObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = (room.windowg[attr] == "true");
+			} else {
+				windowObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = room.window[attr];
+			}
+		}
+	}
+	
 	
 	var window_mc = showWindow(windowObject);
 	
@@ -22,16 +26,17 @@
 	tabObject.width = window_mc.contentClip.width;
 	tabObject.height = window_mc.contentClip.height;
 
-	if (room.window.tabOpacity != undefined) tabObject.tabOpacity = room.window.tabBgOpacity;
-	if (room.window.tabOnColour != undefined) tabObject.tabOnColour = room.window.tabOnColour;
-	if (room.window.tabOffColour != undefined) tabObject.tabOffColour = room.window.tabOffColour;
-	if (room.window.tabOffAlpha != undefined) tabObject.tabOffAlpha = room.window.tabOffAlpha;
-	if (room.window.tabPosition != undefined) tabObject.tabPosition = room.window.tabPosition;
-	if (room.window.tabWidth != undefined) tabObject.tabWidth = room.window.tabWidth;
-	if (room.window.tabHeight != undefined) tabObject.tabHeight = room.window.tabHeight;
-	if (room.window.tabSpacing != undefined) tabObject.tabSpacing = room.window.tabSpacing;
-	if (room.window.cornerRadius != undefined) tabObject.cornerRadius = room.window.tabCornerRadius;
-	if (room.window.contentPadding != undefined) tabObject.contentPadding = room.window.tabContentPadding;	
+	for (var attr in room.window) {
+		if (attr.substr(0, 3) == "tab") {
+			if (room.window[attr] == Number(room.window[attr])) {
+				tabObject[attr.substr(3, 1).toLowerCase() + attr.substr(4)] = Number(room.window[attr]);
+			} else if (room.window[attr] == "true" || room.window[attr] == "false") {
+				tabObject[attr.substr(3, 1).toLowerCase() + attr.substr(4)] = (room.windowg[attr] == "true");
+			} else {
+				tabObject[attr.substr(3, 1).toLowerCase() + attr.substr(4)] = room.window[attr];
+			}
+		}
+	}	
 	
 	var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:tabObject});
 
