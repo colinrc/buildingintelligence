@@ -42,6 +42,5 @@ class Forms.DataGrid.ButtonCellRenderer extends UIComponent {
 	function click() {
 		button.callBack(getCellIndex());
 		listOwner.selectedIndex=getCellIndex().itemIndex;
-		_global.needSave();		
 	}
 }

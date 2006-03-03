@@ -25,6 +25,7 @@ class Forms.Project.CalendarSettings extends Forms.BaseForm {
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function save():Void {
+		_global.needSave();				
 		var newSettings = new XMLNode(1,"CALENDAR_MESSAGES");
 		var newItem = new XMLNode (1,"ITEM");
 		newItem.attributes["NAME"] = "HIDECLOSE";

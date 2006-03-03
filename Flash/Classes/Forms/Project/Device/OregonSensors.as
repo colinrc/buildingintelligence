@@ -22,10 +22,10 @@ class Forms.Project.Device.OregonSensors extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(sensors_dg);
 		dataGridHandler.addActiveColumn("active", values);			
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Measurement\nType", keyRestrictions,false);
-		dataGridHandler.addTextInputColumn("channel", "Channel", restrictions,false);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("key", "Measurement\nType", restrictions,false,100);
+		dataGridHandler.addTextInputColumn("channel", "Channel", keyRestrictions,false,40);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(sensors);		
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -46,6 +46,7 @@ class Forms.Project.Device.OregonSensors extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		_global.needSave();				
 		dataGridHandler.clearSelection();		
 		_global.left_tree.selectedNode.object.setData({sensors:dataGridHandler.getDataGridDataProvider()});
 	}

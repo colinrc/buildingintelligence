@@ -14,9 +14,6 @@
 			if ((lights[light].attributes["ACTIVE"] != "Y") && (lights[light].attributes["ACTIVE"] != "N")) {
 				flag = false;
 			}
-			if ((lights[light].attributes["RELAY"] != "Y") && (lights[light].attributes["RELAY"] != "N")) {
-				flag = false;
-			}
 			if ((lights[light].attributes["KEY"] == undefined) || (lights[light].attributes["KEY"] == "")) {
 				flag = false;
 			}
@@ -63,9 +60,7 @@
 			if (lights[light].bla != "") {
 				newLight.attributes["BLA"] = lights[light].bla;
 			}
-			if (lights[light].relay != "") {
-				newLight.attributes["RELAY"] = lights[light].relay;
-			}			
+			newLight.attributes["RELAY"] = "Y";
 			lightsNode.appendChild(newLight);
 		}
 		return lightsNode;
@@ -96,7 +91,6 @@
 			newLight.active = "Y";
 			newLight.power = "";
 			newLight.bla = "";
-			newLight.relay = "Y";
 			if (newData.childNodes[child].attributes["NAME"] != undefined) {
 				newLight.name = newData.childNodes[child].attributes["NAME"];
 			}

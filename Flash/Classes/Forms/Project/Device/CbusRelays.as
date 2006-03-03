@@ -22,12 +22,11 @@ class Forms.Project.Device.CbusRelays extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(relays_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
-		dataGridHandler.addTextInputColumn("key", "Group\nAddr.", keyRestrictions, false);
-		dataGridHandler.addTextInputColumn("application", "CBUS\nApp.", keyRestrictions, true);
-		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions, true);
-		dataGridHandler.addHiddenColumn("relay");
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,150);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,150);
+		dataGridHandler.addTextInputColumn("key", "Group\nAddr.", keyRestrictions, false,40);
+		dataGridHandler.addTextInputColumn("application", "CBUS\nApp.", keyRestrictions, true,40);
+		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions, true,50);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(relays);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -48,6 +47,7 @@ class Forms.Project.Device.CbusRelays extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		_global.needSave();				
 		dataGridHandler.clearSelection();
 		_global.left_tree.selectedNode.object.setData({relays:dataGridHandler.getDataGridDataProvider()});
 	}

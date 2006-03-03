@@ -18,11 +18,12 @@ class Forms.Project.Device.Camera extends Forms.BaseForm {
 		values.True = "Y";
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
+		//cameras_dg.hScrollPolicy = "off";		
 		dataGridHandler.setDataGrid(cameras_dg);
 		dataGridHandler.addActiveColumn("active", values);		
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Camera\nZone", keyRestrictions,false);
-		dataGridHandler.addTextInputColumn("zoom", "Camera\nZoom", keyRestrictions,false);		
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("key", "Camera\nZone", keyRestrictions,false,40);
+		dataGridHandler.addTextInputColumn("zoom", "Camera\nZoom", keyRestrictions,false,40);		
 		dataGridHandler.setAdvanced(_global.advanced);				
 		dataGridHandler.setDataGridDataProvider(cameras);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -43,6 +44,7 @@ class Forms.Project.Device.Camera extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		_global.needSave();				
 		dataGridHandler.clearSelection();		
 		_global.left_tree.selectedNode.object.setData({cameras:dataGridHandler.getDataGridDataProvider()});
 	}

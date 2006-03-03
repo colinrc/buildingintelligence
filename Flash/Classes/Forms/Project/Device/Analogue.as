@@ -17,12 +17,13 @@ class Forms.Project.Device.Analogue extends Forms.BaseForm {
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
+		//analogues_dg.hScrollPolicy = "off";						
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(analogues_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Input\nNumber", keyRestrictions,false);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("key", "Input\nNo.", keyRestrictions,false,40);
 		dataGridHandler.setAdvanced(_global.advanced);		
 		dataGridHandler.setDataGridDataProvider(analogues);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -43,6 +44,7 @@ class Forms.Project.Device.Analogue extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		_global.needSave();				
 		dataGridHandler.clearSelection();		
 		_global.left_tree.selectedNode.object.setData({analogues:dataGridHandler.getDataGridDataProvider()});
 	}

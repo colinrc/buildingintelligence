@@ -24,26 +24,28 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
+		interfaces_dg.hScrollPolicy = "auto";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(interfaces_dg);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
-		dataGridHandler.addCatalogueComboBoxColumn("catalogue", "Catalogue", catalogueDP, this);
-		dataGridHandler.addCodeComboBoxColumn("code", "Code", this);
-		dataGridHandler.addTextInputColumn("command", "Command", restrictions, false);
-		dataGridHandler.addTextInputColumn("extra", "Extra", restrictions, true);
-		dataGridHandler.addTextInputColumn("extra2", "Extra2", restrictions, true);
-		dataGridHandler.addTextInputColumn("extra3", "Extra3", restrictions, true);
-		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions, true);
-		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions, true);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,150);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,150);
+		dataGridHandler.addCatalogueComboBoxColumn("catalogue", "Catalogue", catalogueDP, this,100);
+		dataGridHandler.addCodeComboBoxColumn("code", "Code", this,100);
+		dataGridHandler.addTextInputColumn("command", "Command", restrictions, false,100);
+		dataGridHandler.addTextInputColumn("extra", "Extra", restrictions, true,100);
+		dataGridHandler.addTextInputColumn("extra2", "Extra2", restrictions, true,100);
+		dataGridHandler.addTextInputColumn("extra3", "Extra3", restrictions, true,100);
+		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions, true,100);
+		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions, true,100);
 		dataGridHandler.addHiddenColumn("vars");
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler2 = new Forms.DataGrid.DynamicDataGrid();
 		var restrictions2 = new Object();
 		restrictions2.editable = false;
-		dataGridHandler2.setDataGrid(vars_dg);
-		dataGridHandler2.addTextInputColumn("name", "Name", restrictions2, false);
-		dataGridHandler2.addValueInputColumn("value", "Value", restrictions, this);
+		dataGridHandler2.setDataGrid(vars_dg);	
+		dataGridHandler2.addTextInputColumn("name", "Name", restrictions2, false,200);
+		dataGridHandler2.addValueInputColumn("value", "Value", restrictions, this,200);
+		dataGridHandler2.setAdvanced(_global.advanced);		
 		for (var raw_interface in raw_interfaces) {
 			var found_catalogue = false;
 			for (var catalogue in catalogueDP) {
@@ -86,9 +88,11 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();
+		itemChange();
 	}
 	private function newItem() {
 		dataGridHandler.addBlankRow(catalogueDP[0].data);
+		itemChange();		
 	}
 	private function itemChange(evtObj) {
 		var tempCatalogue = interfaces_dg.selectedItem.catalogue.label;
@@ -132,7 +136,9 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		string_lb.text = tempString;
 	}
 	public function save():Void {
+		_global.needSave();				
 		dataGridHandler.clearSelection();
+		itemChange();		
 		_global.left_tree.selectedNode.object.setData({raw_interfaces:dataGridHandler.getDataGridDataProvider()});
 	}
 }

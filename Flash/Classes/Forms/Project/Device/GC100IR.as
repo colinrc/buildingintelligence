@@ -23,10 +23,10 @@ class Forms.Project.Device.GC100IR extends Forms.BaseForm {
 		keyRestrictions.restrict = "0-9A-Fa-f";			
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(ir_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Key", keyRestrictions,false);
-		dataGridHandler.addTextInputColumn("avname", "AV\nName", restrictions,false);		
-		dataGridHandler.addComboBoxColumn("module", "Module\nNo.", DP,false);				
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("key", "Key", keyRestrictions,false,40);
+		dataGridHandler.addTextInputColumn("avname", "AV\nName", restrictions,false,100);		
+		dataGridHandler.addComboBoxColumn("module", "Module\nNo.", DP,false,50);				
 		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(irs);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

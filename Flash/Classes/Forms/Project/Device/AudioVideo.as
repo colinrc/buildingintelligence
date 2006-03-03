@@ -13,13 +13,17 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
+		var keyRestrictions = new Object();		
+		keyRestrictions.maxChars = 2;
+		keyRestrictions.restrict = "1-0A-Fa-f";			
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
+		//inputs_dg.hScrollPolicy = "off";		
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(inputs_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);
 		var itemType:String;
 		switch (container) {
 		case "HAL" :
@@ -32,7 +36,7 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 			title_lb.text = "AV Zones";
 			break;
 		}
-		dataGridHandler.addTextInputColumn("key", itemType, restrictions,false);
+		dataGridHandler.addTextInputColumn("key", itemType, keyRestrictions,false,40);
 		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(audiovideos);	
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -53,6 +57,7 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		_global.needSave();				
 		dataGridHandler.clearSelection();		
 		_global.left_tree.selectedNode.object.setData({audiovideos:dataGridHandler.getDataGridDataProvider()});
 	}

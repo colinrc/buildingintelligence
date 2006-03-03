@@ -23,7 +23,7 @@
 	}
 	public function toXML():XMLNode {
 		var newRaw_Interfaces = new XMLNode(1, container);
-		raw_interfaces.sortOn(["display_name", "name", "catalogue", "code", "command"]);
+		//raw_interfaces.sortOn(["display_name", "name", "catalogue", "code", "command"]);
 		for (var index = 0; index < raw_interfaces.length; index++) {
 			var foundInterface = false;
 			for (var rawInterface in newRaw_Interfaces) {

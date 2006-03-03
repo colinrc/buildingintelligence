@@ -50,6 +50,5 @@ class Forms.DataGrid.CheckCellRenderer extends UIComponent {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = Value;
-		_global.needSave();		
 	}
 }

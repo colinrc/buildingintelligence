@@ -20,10 +20,10 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(contacts_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false);
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false);
-		dataGridHandler.addTextInputColumn("key", "Input\nKey", keyRestrictions, false);
-		dataGridHandler.addTextInputColumn("box", "Box", keyRestrictions, false);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,150);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,150);
+		dataGridHandler.addTextInputColumn("key", "Input\nKey", keyRestrictions, false,40);
+		dataGridHandler.addTextInputColumn("box", "Box", keyRestrictions, false,40);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(contacts);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -44,6 +44,7 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		_global.needSave();				
 		dataGridHandler.clearSelection();
 		_global.left_tree.selectedNode.object.setData({contacts:dataGridHandler.getDataGridDataProvider()});
 	}

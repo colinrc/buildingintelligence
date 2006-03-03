@@ -72,6 +72,5 @@ class Forms.DataGrid.ValueInputCellRenderer extends UIComponent {
 			}
 		}
 		rawInterFaceForm.itemChange({});
-		_global.needSave();		
 	}
 }

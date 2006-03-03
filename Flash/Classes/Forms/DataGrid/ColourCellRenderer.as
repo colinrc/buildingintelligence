@@ -13,7 +13,7 @@ class Forms.DataGrid.ColourCellRenderer extends UIComponent {
 	function createChildren(Void):Void {
 		//Creates a ComboBox object and listen to changes
 		instanceName = "Label";
-		label = createObject("Label", "Label"+random(999)+"Box", 1, {styleName:this, owner:this});
+		label = createObject("Label", "Label"+(_global.formDepth++)+"Box", 1, {styleName:this, owner:this});
 		size();
 	}
 	// note that setSize is implemented by UIComponent and calls size(), after setting
@@ -36,7 +36,7 @@ class Forms.DataGrid.ColourCellRenderer extends UIComponent {
 		if (itemObject.sel) {
 			if (instanceName != "Colour") {
 				instanceName = "Colour";
-				label = createObject("BHColourPickerHex", "Colour"+random(999)+"Box", 1, {styleName:this, owner:this});
+				label = createObject("BHColourPickerHex", "Colour"+(_global.formDepth++)+"Box", 1, {styleName:this, owner:this});
 				label.setCallbackObject(this);
 				label._visible = (item != undefined);
 				label.setColour(itemObject.colour);
@@ -45,7 +45,7 @@ class Forms.DataGrid.ColourCellRenderer extends UIComponent {
 		} else {
 			if (instanceName != "Label") {
 				instanceName = "Label";
-				label = createObject("Label", "Label"+random(999)+"Box", 1, {styleName:this, owner:this});
+				label = createObject("Label", "Label"+(_global.formDepth++)+"Box", 1, {styleName:this, owner:this});
 				size();
 			}
 			label._visible = (item != undefined);
@@ -63,6 +63,5 @@ class Forms.DataGrid.ColourCellRenderer extends UIComponent {
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].colour = "0x"+newColour.toString(16).toUpperCase();
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;	
-		_global.needSave();
 	}
 }

@@ -9,11 +9,11 @@ class Forms.Project.Device.Connection extends Forms.BaseForm {
 	public function onLoad():Void {
 		var dataObj = {node:node.firstChild};
 		if (node.firstChild.nodeName == "IP") {
-			details_mc = this.attachMovie("forms.project.device.ip", "connection_" + random(999) + "mc", 0, dataObj);
+			details_mc = this.attachMovie("forms.project.device.ip", "connection_" +(_global.formDepth++) + "mc", 0, dataObj);
 			details_mc.dataObj = dataObj;
 			type_cb.selectedIndex = 0;
 		} else {
-			details_mc = this.attachMovie("forms.project.device.serial", "connection_" + random(999) + "mc", 0, dataObj);
+			details_mc = this.attachMovie("forms.project.device.serial", "connection_" + (_global.formDepth++) + "mc", 0, dataObj);
 			details_mc.dataObj = dataObj;
 			type_cb.selectedIndex = 1;
 		}
@@ -23,9 +23,9 @@ class Forms.Project.Device.Connection extends Forms.BaseForm {
 	}
 	private function typeChange(evtObj) {
 		if (type_cb.selectedIndex == 0) {
-			details_mc = this.attachMovie("forms.project.device.ip", "connection_" + random(999) + "mc", 0);
+			details_mc = this.attachMovie("forms.project.device.ip", "connection_" + (_global.formDepth++) + "mc", 0);
 		} else {
-			details_mc = this.attachMovie("forms.project.device.serial", "connection_" + random(999) + "mc", 0);
+			details_mc = this.attachMovie("forms.project.device.serial", "connection_" + (_global.formDepth++) + "mc", 0);
 		}
 		details_mc._x = 0;
 		details_mc._y = 50;

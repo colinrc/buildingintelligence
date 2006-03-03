@@ -13,11 +13,12 @@ class Forms.Project.Server extends Forms.BaseForm {
 		description_ta.text = description;
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
-		restrictions.rescrict = "";
+		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(devices_dg);
-		dataGridHandler.addComboBoxColumn("device_type", "Device Type", [{label:"IR_LEARNER"}, {label:"PELCO"}, {label:"GC100"}, {label:"TUTONDO"}, {label:"DYNALITE"}, {label:"COMFORT"}, {label:"RAW_CONNECTION"}, {label:"HAL"}, {label:"OREGON"}, {label:"KRAMER"}, {label:"CBUS"}]);
-		dataGridHandler.addTextInputColumn("description", "Description", restrictions);
+		dataGridHandler.addComboBoxColumn("device_type", "Device Type", [{label:"IR_LEARNER"}, {label:"PELCO"}, {label:"GC100"}, {label:"TUTONDO"}, {label:"DYNALITE"}, {label:"COMFORT"}, {label:"RAW_CONNECTION"}, {label:"HAL"}, {label:"OREGON"}, {label:"KRAMER"}, {label:"CBUS"}],false,120);
+		dataGridHandler.addTextInputColumn("description", "Description", restrictions,false,150);
+		dataGridHandler.setAdvanced(_global.advanced);		
 		var DP = new Array();
 		for (var device in devices) {
 			var newDevice = new Object();
@@ -37,6 +38,7 @@ class Forms.Project.Server extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		_global.needSave();				
 		var newDevices = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

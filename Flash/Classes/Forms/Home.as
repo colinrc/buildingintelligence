@@ -135,6 +135,7 @@ class Forms.Home extends Forms.BaseForm {
 		_global.project.serverPort = serverPort_ti.text;
 		_global.history.changed("Project Details", "Monitor Port", "Monitor Port Number", _global.project.monitorPort, monitorPort_ti.text);
 		_global.project.monitorPort = monitorPort_ti.text;
+		_global.needSave();		
 	}
 	public function selectFolder():Void {
 		mdm.Dialogs.BrowseFolder.title = "Please select a Folder";

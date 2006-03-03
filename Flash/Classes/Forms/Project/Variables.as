@@ -17,11 +17,12 @@ class Forms.Project.Variables extends Forms.BaseForm {
 		values.False = "N";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(variables_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions);
-		dataGridHandler.addTextInputColumn("display_name", "eLife Name", restrictions);
-		dataGridHandler.addTextInputColumn("command", "Init Command", restrictions);
-		dataGridHandler.addTextInputColumn("extra", "Init Extra", restrictions);
-		dataGridHandler.addCheckColumn("active", "Active", values);
+		dataGridHandler.addActiveColumn("active", values);
+		dataGridHandler.addTextInputColumn("display_name", "Key",false, restrictions,150);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("command", "Init\nCommand",false, restrictions,100);
+		dataGridHandler.addTextInputColumn("extra", "Init\nExtra",false, restrictions,100);
+		dataGridHandler.setAdvanced(_global.advanced);		
 		var DP = new Array();
 		for (var child in variables.childNodes) {
 			var newVariable = new Object();
@@ -59,6 +60,7 @@ class Forms.Project.Variables extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	private function save():Void {
+		_global.needSave();				
 		var newVariables = new XMLNode(1, "VARIABLES");
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index<DP.length; index++) {

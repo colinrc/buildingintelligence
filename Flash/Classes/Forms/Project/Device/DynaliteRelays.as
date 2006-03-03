@@ -20,13 +20,12 @@ class Forms.Project.Device.DynaliteRelays extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(lights_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
-		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false);
-		dataGridHandler.addTextInputColumn("area", "Area", keyRestrictions,false);		
-		dataGridHandler.addTextInputColumn("bla", "BLA", keyRestrictions, true);		
-		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions,true);
-		dataGridHandler.addHiddenColumn("relay");
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
+		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false,40);
+		dataGridHandler.addTextInputColumn("area", "Area", keyRestrictions,false,40);		
+		dataGridHandler.addTextInputColumn("bla", "BLA", keyRestrictions, true,40);		
+		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions,true,50);
 		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(lights);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -47,6 +46,7 @@ class Forms.Project.Device.DynaliteRelays extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		_global.needSave();				
 		dataGridHandler.clearSelection();		
 		_global.left_tree.selectedNode.object.setData({lights:dataGridHandler.getDataGridDataProvider()});
 	}

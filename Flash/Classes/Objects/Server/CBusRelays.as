@@ -51,9 +51,8 @@
 			if (relays[relay].power != "") {
 				newRelay.attributes["POWER_RATING"] = relays[relay].power;
 			}
-			if (relays[relay].relay != "") {
-				newRelay.attributes["RELAY"] = relays[relay].relay;
-			}
+			newRelay.attributes["RELAY"] = "Y";
+			
 			if (relays[relay].application != "") {
 				newRelay.attributes["CBUS_APPLICATION"] = relays[relay].application;
 			}
@@ -90,7 +89,6 @@
 			newRelay.key = "";
 			newRelay.active = "Y";
 			newRelay.power = "";
-			newRelay.relay = "Y";
 			newRelay.application = "38";
 			if (newData.childNodes[child].attributes["NAME"] != undefined) {
 				newRelay.name = newData.childNodes[child].attributes["NAME"];
@@ -107,9 +105,6 @@
 			if (newData.childNodes[child].attributes["POWER_RATING"] != undefined) {
 				newRelay.power = newData.childNodes[child].attributes["POWER_RATING"];
 			}
-			/*if (newData.childNodes[child].attributes["RELAY"] != undefined) {
-			newRelay.relay = newData.childNodes[child].attributes["RELAY"];
-			}*/ 
 			if (newData.childNodes[child].attributes["CBUS_APPLICATION"] != undefined) {
 				newRelay.application = newData.childNodes[child].attributes["CBUS_APPLICATION"];
 			}

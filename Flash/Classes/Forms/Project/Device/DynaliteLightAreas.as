@@ -20,9 +20,9 @@ class Forms.Project.Device.DynaliteLightAreas extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(lightAreas_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false);		
-		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false);
-		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
+		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false,40);
 		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(lightAreas);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -43,6 +43,7 @@ class Forms.Project.Device.DynaliteLightAreas extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
+		_global.needSave();				
 		dataGridHandler.clearSelection();		
 		_global.left_tree.selectedNode.object.setData({lightAreas:dataGridHandler.getDataGridDataProvider()});
 	}

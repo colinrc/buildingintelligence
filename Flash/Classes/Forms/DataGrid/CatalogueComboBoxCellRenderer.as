@@ -13,7 +13,7 @@ class Forms.DataGrid.CatalogueComboBoxCellRenderer extends UIComponent {
 	}
 	function createChildren(Void):Void {
 		instanceName = "Label";
-		label = createObject("Label", "Label"+random(999)+"Box", 1, {styleName:this, owner:this});
+		label = createObject("Label", "Label"+(_global.formDepth++)+"Box", 1, {styleName:this, owner:this});
 		size();
 	}
 	function size(Void):Void {
@@ -34,7 +34,7 @@ class Forms.DataGrid.CatalogueComboBoxCellRenderer extends UIComponent {
 		if (itemObject.sel) {
 			if (instanceName != "ComboBox") {
 				instanceName = "ComboBox";
-				label = createObject("ComboBox", "Combo"+random(999)+"Box", 1, {styleName:this, owner:this});
+				label = createObject("ComboBox", "Combo"+(_global.formDepth++)+"Box", 1, {styleName:this, owner:this});
 				label.addEventListener("change", this);
 				label._visible = (item != undefined);
 				label.dataProvider = itemObject.DP;
@@ -50,7 +50,7 @@ class Forms.DataGrid.CatalogueComboBoxCellRenderer extends UIComponent {
 		} else {
 			if (instanceName != "Label") {
 				instanceName = "Label";
-				label = createObject("Label", "Label"+random(999)+"Box", 1, {styleName:this, owner:this});
+				label = createObject("Label", "Label"+(_global.formDepth++)+"Box", 1, {styleName:this, owner:this});
 				size();
 			}
 			label._visible = (item != undefined);
@@ -92,6 +92,5 @@ class Forms.DataGrid.CatalogueComboBoxCellRenderer extends UIComponent {
 		}		
 		listOwner.dataProvider.updateViews("change");
 		rawInterFaceForm.itemChange({});		
-		_global.needSave();		
 	}
 }

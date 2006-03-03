@@ -16,8 +16,8 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		restrictions.rescrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(items_dg);
-		dataGridHandler.addTextInputColumn("code", "Code", restrictions,false);
-		dataGridHandler.addTextInputColumn("value", "Value", restrictions,false);
+		dataGridHandler.addTextInputColumn("code", "Code", restrictions,false,200);
+		dataGridHandler.addTextInputColumn("value", "Value", restrictions,false,200);
 		dataGridHandler.setAdvanced(_global.advanced);//Debug						
 		var DP = new Array();
 		for (var item in items) {
@@ -51,6 +51,7 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	private function save():Void {
+		_global.needSave();				
 		dataGridHandler.clearSelection();		
 		var newItems = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
