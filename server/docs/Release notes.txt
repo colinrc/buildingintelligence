@@ -1,3 +1,9 @@
+Released V1.5b13
+
+Macro
+-----
+Revert macro's to sending macro list after saving
+
 Logging
 -------
 Try to ensure empty "severe error" messages are not sent to the flash client
