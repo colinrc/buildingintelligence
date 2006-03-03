@@ -1,108 +1,130 @@
 <overrides>
-  <override name ="serverPort" type="number" default="10000" description=""/>
-  <override name ="serverRetryTime" type="number" default="10" description=""/>
-  <override name ="serverConnectTimeout" type="number" default="3" description=""/>
-  <override name ="libLocation" type="string" default="lib/" description=""/>
-  <override name ="debugMode" type="boolean" default="false" description=""/>
-  <override name ="hideMouseCursor" type="boolean" default="true" description=""/>
-  <override name ="fullScreen" type="boolean" default="true" description=""/>
-  <override name ="scale" type="boolean" default="false" description=""/>
-  <override name ="width" type="number" default="1024" description=""/>
-  <override name ="height" type="number" default="768" description=""/>
-  <override name ="screenLockTimeout" type="number" default="360" description=""/>
-  <override name ="screenLockPin" type="string" default="1234" description=""/>
-  <override name ="screenLockDisplay" type="string" default="logo" description=""/>
-  <override name ="screenLockPhotoPath" type="string" default="" description=""/>
-  <override name ="screenLockPhotoScale" type="string" default="noscale" description=""/>
-  <override name ="screenLockPhotoRotate" type="number" default="5" description=""/>
-  <override name ="adminPin" type="string" default="4321" description=""/>
-  <override name ="cachePinTime" type="number" default="360" description=""/>
-  <override name ="applicationBg" type="colour" default="0x043B96" description=""/>
-  <override name ="globalBtnClickTimer" type="number" default="500" description=""/>
-  <override name ="windowAutoCloseTime" type="number" default="360" description=""/>
-  <override name ="windowWidth" type="number" default="400" description=""/>
-  <override name ="windowHeight" type="number" default="420" description=""/>
-  <override name ="windowBgOpacity" type="number" default="90" description=""/>
-  <override name ="windowBgColour1" type="colour" default="0x405F91" description=""/>
-  <override name ="windowBgColour2" type="colour" default="0x3A5582" description=""/>
-  <override name ="windowShadowOffset" type="number" default="2" description=""/>
-  <override name ="windowCornerRadius" type="number" default="10" description=""/>
-  <override name ="windowBorderColour" type="colour" default="0xFFFFFF" description=""/>
-  <override name ="windowBorderWidth" type="number" default="0" description=""/>
-  <override name ="tabBgOpacity" type="number" default="80" description=""/>
-  <override name ="tabOnColour" type="colour" default="0x6C87B4" description=""/>
-  <override name ="tabOffColour" type="colour" default="0x4769A2" description=""/>
-  <override name ="tabOffAlpha" type="number" default="70" description=""/>
-  <override name ="tabPosition" type ="string" default="left" description=""/>
-  <override name ="tabWidth" type="number" default="50" description=""/>
-  <override name ="tabHeight" type="number" default="50" description=""/>
-  <override name ="tabSpacing" type="number" default="5" description=""/>
-  <override name ="tabCornerRadius" type="number" default="10" description=""/>
-  <override name ="tabContentPadding" type="number" default="10" description=""/>
-  <override name ="buttonBgColour" type="colour" default="0x7C90B0" description=""/>
-  <override name ="buttonBorderColour" type="colour" default="0x95A7C4" description=""/>
-  <override name ="buttonFontColour" type="colour" default="0xFFFFFF" description=""/>
-  <override name ="buttonFontSize" type="number" default="16" description=""/>
-  <override name ="listBgOpacity" type="number" default="30" description=""/>
-  <override name ="listBgColour" type="colour" default="0x6C87B4" description=""/>
-  <override name ="listCornerRadius" type="number" default="10" description=""/>
-  <override name ="listPadding" type="number" default="2" description=""/>
-  <override name ="listItemFontColour" type="colour" default="0xFFFFFF" description=""/>
-  <override name ="listItemFontSize" type="number" default="14" description=""/>
-  <override name ="listItemBgOpacity" type="number" default="80" description=""/>
-  <override name ="listItemBgColour1" type="colour" default="0x5E7FB5" description=""/>
-  <override name ="listItemBgColour2" type="colour" default="0x426399" description=""/>
-  <override name ="listItemHeight" type="number" default="30" description=""/>
-  <override name ="listItemSpacing" type="number" default="2" description=""/>
-  <override name ="listItemCornerRadius" type="number" default="7" description=""/>
-  <override name ="titleX" type="number" default="6" description=""/>
-  <override name ="titleY" type="number" default="9" description=""/>
-  <override name ="titleFontSize" type="number" default="19" description=""/>
-  <override name ="titleFontColour" type="colour" default="0xFFFFFF" description=""/>
-  <override name ="dateX" type="number" default="6" description=""/>
-  <override name ="dateY" type="number" default="9" description=""/>
-  <override name ="dateFontSize" type="number" default="19" description=""/>
-  <override name ="dateFontColour" type="colour" default="0xFFFFFF" description=""/>
-  <override name ="statusBarX" type="number" default="3" description=""/>
-  <override name ="statusBarY" type="number" default="52" description=""/>
-  <override name ="statusBarBtnWidth" type="number" default="48" description=""/>
-  <override name ="statusBarBtnHeight" type="number" default="48" description=""/>
-  <override name ="statusBarBtnSpacing" type="number" default="5" description=""/>
-  <override name ="statusBarBtnFadeRate" type="number" default="45" description=""/>
-  <override name ="appsBarX" type="number" default="2" description=""/>
-  <override name ="appsBarY" type="number" default="52" description=""/>
-  <override name ="appsBarBtnWidth" type="number" default="48" description=""/>
-  <override name ="appsBarBtnHeight" type="number" default="48" description=""/>
-  <override name ="appsBarBtnSpacing" type="number" default="5" description=""/>
-  <override name ="miniAlertBtnPadding" type="number" default="2" description=""/>
-  <override name ="miniAlertBtnBg" type="colour" default="0x829ECB" description=""/>
-  <override name ="miniAlertBtnFadeInTime" type="number" default="100" description=""/>
-  <override name ="miniAlertBtnFadeOutTime" type="number" default="200" description=""/>
-  <override name ="macroBtnWidth" type="number" default="110" description=""/>
-  <override name ="macroBtnHeight" type="number" default="35" description=""/>
-  <override name ="macroBtnSpacing" type="number" default="5" description=""/>
-  <override name ="macroBtnFontSize" type="number" default="14" description=""/>
-  <override name ="macroListY" type="number" default="12" description=""/>
-  <override name ="zonesX" type="number" default="0" description=""/>
-  <override name ="zonesY" type="number" default="105" description=""/>
-  <override name ="zoneLabelsX" type="number" default="12" description=""/>
-  <override name ="zoneLabelsY" type="number" default="12" description=""/>
-  <override name ="zoneBtnFontSize" type="number" default="16" description=""/>
-  <override name ="zoneBtnWidth" type="number" default="130" description=""/>
-  <override name ="zoneBtnHeight" type="number" default="26" description=""/>
-  <override name ="zoneBtnSpacing" type="number" default="8" description=""/>
-  <override name ="zoneDoorColour" type="colour" default="0xCC3333" description=""/>
-  <override name ="zoneBg" type="colour" default="0xFFCC00" description=""/>
-  <override name ="zoneChangeTimeout" type="number" default="10" description=""/>
-  <override name ="zoneChangeTime" type="number" default="15" description=""/>
-  <override name ="zoneFadeRate" type="number" default="50" description=""/>
-  <override name ="controlButtonSpacing" type="number" default="2" description=""/>
-  <override name ="controlButtonHeight" type="number" default="45" description=""/>
-  <override name ="controlButtonLabelColour" type="colour" default="0x042D70" description=""/>
-  <override name ="controlButtonLabelFontSize" type="number" default="18" description=""/>
-  <override name ="calendarCanEdit" type ="string" default="superuser" description=""/>
-  <override name ="longTimeFormat" type ="string" default="H:nn:ss" description=""/>
-  <override name ="longDateFormat" type ="string" default="d-mmm-yyyy" description=""/>
-  <override name ="clockFormat" type ="string" default="H:nn dddd, d mmmm yyyy" description=""/>
-  <override name ="defaultBrowserURL" type="web" default="http://www.google.com/" description=""/>
+	<group name="settings">
+		<override name="serverPort" type="number" default="10000" description=""/>
+		<override name="serverRetryTime" type="number" default="10" description=""/>
+		<override name="serverConnectTimeout" type="number" default="3" description=""/>
+		<override name="libLocation" type="string" default="lib/" description=""/>
+		<override name="debugMode" type="boolean" default="false" description=""/>
+		<override name="hideMouseCursor" type="boolean" default="true" description=""/>
+		<override name="fullScreen" type="boolean" default="true" description=""/>
+		<override name="scale" type="boolean" default="false" description=""/>
+		<override name="width" type="number" default="1024" description=""/>
+		<override name="height" type="number" default="768" description=""/>
+		<override name="screenLockTimeout" type="number" default="360" description=""/>
+		<override name="screenLockPin" type="string" default="" description=""/>
+		<override name="screenLockDisplay" type="string" default="logo" description=""/>
+		<override name="screenLockPhotoPath" type="string" default="" description=""/>
+		<override name="screenLockPhotoScale" type="string" default="noscale" description=""/>
+		<override name="screenLockPhotoRotate" type="number" default="5" description=""/>
+		<override name="adminPin" type="string" default="4321" description=""/>
+		<override name="cachePinTime" type="number" default="360" description=""/>
+		<override name="defaultFont" type="font" default="helvetica" description=""/>
+		<override name="applicationBg" type="colour" default="0x043B96" description=""/>
+		<override name="globalBtnClickTimer" type="number" default="500" description=""/>
+		<override name="windowAutoCloseTime" type="number" default="360" description=""/>
+		<override name="tabGreyWhenOff" type="boolean" default="true" description=""/>
+		<override name="labelFont" type="font" default="helvetica" description=""/>
+		<override name="labelFontColour" type="colour" default="0xFFFFFF" description=""/>
+		<override name="labelFontSize" type="number" default="16" description=""/>
+		<override name="listBgOpacity" type="number" default="30" description=""/>
+		<override name="listBgColour" type="colour" default="0x6C87B4" description=""/>
+		<override name="listCornerRadius" type="number" default="10" description=""/>
+		<override name="listPadding" type="number" default="2" description=""/>
+		<override name="listItemFont" type="font" default="helvetica" description=""/>
+		<override name="listItemFontColour" type="colour" default="0xFFFFFF" description=""/>
+		<override name="listItemFontSize" type="number" default="14" description=""/>
+		<override name="listItemBgOpacity" type="number" default="80" description=""/>
+		<override name="listItemBgColour1" type="colour" default="0x5E7FB5" description=""/>
+		<override name="listItemBgColour2" type="colour" default="0x426399" description=""/>
+		<override name="listItemHeight" type="number" default="30" description=""/>
+		<override name="listItemSpacing" type="number" default="2" description=""/>
+		<override name="listItemCornerRadius" type="number" default="7" description=""/>
+		<override name="titleX" type="number" default="6" description=""/>
+		<override name="titleY" type="number" default="9" description=""/>
+		<override name="titleFont" type="font" default="helvetica" description=""/>
+		<override name="titleFontSize" type="number" default="19" description=""/>
+		<override name="titleFontColour" type="colour" default="0xFFFFFF" description=""/>
+		<override name="dateX" type="number" default="6" description=""/>
+		<override name="dateY" type="number" default="9" description=""/>
+		<override name="dateFontSize" type="number" default="19" description=""/>
+		<override name="dateFontColour" type="colour" default="0xFFFFFF" description=""/>
+		<override name="statusBarX" type="number" default="3" description=""/>
+		<override name="statusBarY" type="number" default="52" description=""/>
+		<override name="statusBarBtnWidth" type="number" default="48" description=""/>
+		<override name="statusBarBtnHeight" type="number" default="48" description=""/>
+		<override name="statusBarBtnSpacing" type="number" default="5" description=""/>
+		<override name="statusBarBtnFadeRate" type="number" default="45" description=""/>
+		<override name="appsBarX" type="number" default="2" description=""/>
+		<override name="appsBarY" type="number" default="52" description=""/>
+		<override name="appsBarBtnWidth" type="number" default="48" description=""/>
+		<override name="appsBarBtnHeight" type="number" default="48" description=""/>
+		<override name="appsBarBtnSpacing" type="number" default="5" description=""/>
+		<override name="miniAlertBtnPadding" type="number" default="2" description=""/>
+		<override name="miniAlertBtnBg" type="colour" default="0x829ECB" description=""/>
+		<override name="miniAlertBtnFadeInTime" type="number" default="100" description=""/>
+		<override name="miniAlertBtnFadeOutTime" type="number" default="200" description=""/>
+		<override name="macroBtnWidth" type="number" default="110" description=""/>
+		<override name="macroBtnHeight" type="number" default="35" description=""/>
+		<override name="macroBtnSpacing" type="number" default="5" description=""/>
+		<override name="macroBtnFontSize" type="number" default="14" description=""/>
+		<override name="macroListY" type="number" default="12" description=""/>
+		<override name="zonesX" type="number" default="0" description=""/>
+		<override name="zonesY" type="number" default="105" description=""/>
+		<override name="zoneLabelsX" type="number" default="12" description=""/>
+		<override name="zoneLabelsY" type="number" default="12" description=""/>
+		<override name="zoneBtnFontSize" type="number" default="16" description=""/>
+		<override name="zoneBtnWidth" type="number" default="130" description=""/>
+		<override name="zoneBtnHeight" type="number" default="26" description=""/>
+		<override name="zoneBtnSpacing" type="number" default="8" description=""/>
+		<override name="zoneDoorColour" type="colour" default="0xCC3333" description=""/>
+		<override name="zoneBg" type="colour" default="0xFFCC00" description=""/>
+		<override name="zoneChangeTimeout" type="number" default="10" description=""/>
+		<override name="zoneChangeTime" type="number" default="15" description=""/>
+		<override name="zoneFadeRate" type="number" default="50" description=""/>
+		<override name="roomHighlightTime" type="number" default=".5" description=""/>
+		<override name="roomFadeRate" type="number" default="0" description=""/>
+		<override name="controlButtonSpacing" type="number" default="2" description=""/>
+		<override name="controlButtonHeight" type="number" default="45" description=""/>
+		<override name="controlButtonLabelColour" type="colour" default="0x042D70" description=""/>
+		<override name="controlButtonLabelFontSize" type="number" default="18" description=""/>
+		<override name="showDropShadows" type="boolean" default="false" description=""/>
+		<override name="modalBlur" type="boolean" default="false" description=""/>
+		<override name="calendarCanEdit" type="string" default="superuser" description=""/>
+		<override name="shortTimeFormat" type="string" default="HH:nn" description=""/>
+		<override name="longTimeFormat" type="string" default="H:nn:ss" description=""/>
+		<override name="longDateFormat" type ="string" default="d-mmm-yyyy" description=""/>
+		<override name="clockFormat" type="string" default="H:nn dddd, d mmmm yyyy" description=""/>
+		<override name="defaultBrowserURL" type="web" default="http://www.google.com/" description=""/>
+	</settings>
+	<window>
+		<override name="windowWidth" type="number" default="400" description=""/>
+		<override name="windowHeight" type="number" default="420" description=""/>
+		<override name="windowFont" type="font" default="helvetica" description=""/>
+		<override name="windowBgOpacity" type="number" default="90" description=""/>
+		<override name="windowBgColour1" type="colour" default="0x405F91" description=""/>
+		<override name="windowBgColour2" type="colour" default="0x3A5582" description=""/>
+		<override name="windowShadowOffset" type="number" default="2" description=""/>
+		<override name="windowCornerRadius" type="number" default="10" description=""/>
+		<override name="windowBorderColour" type="colour" default="0xFFFFFF" description=""/>
+		<override name="windowBorderWidth" type="number" default="0" description=""/>
+	</window>
+	<button>
+		<override name="buttonBgColour" type="colour" default="0x7C90B0" description=""/>
+		<override name="buttonBorderColour" type="colour" default="0x95A7C4" description=""/>
+		<override name="buttonFont" type="font" default="helvetica" description=""/>
+		<override name="buttonFontColour" type="colour" default="0xFFFFFF" description=""/>
+		<override name="buttonFontSize" type="number" default="16" description=""/>
+	</button>
+	<tabs>
+		<override name="tabBgOpacity" type="number" default="80" description=""/>
+		<override name="tabOnColour" type="colour" default="0x6C87B4" description=""/>
+		<override name="tabOffColour" type="colour" default="0x4769A2" description=""/>
+		<override name="tabOffAlpha" type="number" default="70" description=""/>
+		<override name="tabPosition" type ="string" default="left" description=""/>
+		<override name="tabWidth" type="number" default="50" description=""/>
+		<override name="tabHeight" type="number" default="50" description=""/>
+		<override name="tabSpacing" type="number" default="5" description=""/>
+		<override name="tabCornerRadius" type="number" default="10" description=""/>
+		<override name="tabContentPadding" type="number" default="10" description=""/>
+	</tabs>
 </overrides>
