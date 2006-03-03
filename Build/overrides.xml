@@ -1,5 +1,5 @@
 <overrides>
-	<group name="settings">
+	<settings>
 		<override name="serverPort" type="number" default="10000" description=""/>
 		<override name="serverRetryTime" type="number" default="10" description=""/>
 		<override name="serverConnectTimeout" type="number" default="3" description=""/>

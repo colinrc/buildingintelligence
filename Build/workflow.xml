@@ -1,5 +1,5 @@
 <workflow>
-	<step label="Server" description="Configure Server\nAdd Device Types\nConfigure Device type connection settings\nConfigure devices\nAdd Controls" stepOrder="1"> 
+	<step label="Server" description="Configure Server\nAdd Device Types\nConfigure Device type connection settings\nConfigure devices\nAdd Controls" stepOrder="1">
 		<item label="Configure Server" key="Server" description="Add Device Types\nConfigure Device type connection settings\nConfigure devices\nAdd Controls" order="1"/>
 		<item label="CBus" key="CBus" description="Add lights\nConfigure lights\nAdd sensors\nConfigure sensors\nAdd catalogues\nConfigure catalogues" order="2"/>
 		<item label="GC100" key="GC100" description="Add catalogues\nConfigure catalogues\nAdd modules\nConfigure Modules\n" order="3"/>
@@ -11,13 +11,12 @@
 		<item label="Raw Connection" key="Raw" description="Add catalogues\nConfigure catalogues\nConfigure Custom Inputs\nConfigure Custom Outputs" order="9"/>
 		<item label="Comfort" key="Comfort" description="Add catalogues\nConfigure catalogues\nConfigure Custom Inputs\nConfigure Custom Outputs\nConfigure Toggle Inputs\nConfigure Toggle Outputs\nAdd Comfort Alerts" order="10"/>
 	</step>
-	<step label"=Client" description="Configure Client" stepOrder="2">
+	<step label="Client" description="Configure Client" stepOrder="2">
 		<item label="IR Learner" key="IRLearner" description="Add catalogues\nConfigure catalogues\n" order="11"/>
 		<item label="Configure Property" key="Property" description="Add zone\nConfigure zone" order="12"/>
 		<item label="Configure Zone" key="Zone" description="Add arbitrary's\nAdd rooms\nConfigure Windows\nConfigure Tabs\nConfigure Doors\nAdd Alerts\nConfigure Alerts" order="13"/>
 		<item label="Configure Status Bar" key="StatusBar" description="Add status bar groups\nConfigure status bar groups\n" order="14"/>
  		<item label="Configure Logging" key="Logging" description="Add logging groups\nConfigure logging groups" order="15"/>
-		<item label="Publish Project" key="AudioVideos" description="Update eLIFE client and server\nwith new configuration" order="16"/>
+		<item label="Publish Project" key="Publish" description="Update eLIFE client and server\nwith new configuration" order="16"/>
 	</step>
 </workflow>
-	 

@@ -1,226 +1,95 @@
-	<application>
-		<settings> 
-			<setting value= "http://www.news.com.au" name= "defaultBrowserURL"/> 
-		</settings> 
-		<sounds> 
-			<sound name= "default" file= "sounds/bloop.mp3" volume= "20"/> 
-			<sound name= "ding" file= "sounds/ding.mp3" volume= "40"/> 
-		</sounds> 
-		<statusBar> 
-			<group hide= "off" show= "on" icon= "light-bulb" name= "Lights"> 
-				<control key= "MAIN_LIGHT"/> 
-				<control key= "GARAGE_LIGHT"/> 
-				<control key= "ENTRY_LIGHT"/> 
-				<control key= "BEDROOM_LIGHT"/> 
-			</group> 
-			<group hide= "off" show= "on" icon= "heater" name= "Heaters"> 
-				<control key= "BATH2_1_HEAT"/> 
-				<control key= "BATH2_2_HEAT"/> 
-				<control key= "BATH1_1_HEAT"/> 
-				<control key= "BATH1_2_HEAT"/> 
-				<control key= "ENSUITE_1_HEAT"/> 
-				<control key= "ENSUITE_2_HEAT"/> 
-			</group> 
-			<group hide= "off" show= "on" icon= "fan" name= "Fans"> 
-				<control key= "BATH2_FAN"/> 
-				<control key= "BATH1_FAN"/> 
-				<control key= "ENSUITE_FAN"/> 
-			</group> 
-			<group hide= "off" show= "on" icon= "music-note" name= "Audio"> 
-				<control key= "MAIN_AUDIO"/> 
-				<control key= "BEDROOM_AUDIO"/> 
-			</group> 
-			<group hide= "off" show= "on" icon= "tv" name= "TV"> 
-				<control key= "MAIN_TV"/> 
-			</group> 
-			<group label= "%datestamp% %timestamp% %name% %extra% " type= "log" hide= "off" show= "on" icon= "warning" name= "Messages"> 
-				<control key= "VOICE_MAIL"/> 
-				<control key= "SMS_MESSAGE"/> 
-			</group> 
-		</statusBar> 
-		<logging> 
-			<group label= "%room%: %name%" timeformat= "HH:nn d mmmm yyyy" listenTo= "on,of" type= "tally" icon= "light-bulb" name= "Lights"> 
-				<control key= "MAIN_LIGHT"/> 
-				<control key= "GARAGE_LIGHT"/> 
-				<control key= "ENTRY_LIGHT"/> 
-				<control key= "BEDROOM_LIGHT"/> 
-			</group> 
-			<group label= "%room% PIR" timeformat= "HH:nn d mmmm yyyy" listenTo= "on" type= "tally" icon= "green-man" name= "PIRs"> 
-				<control key= "MAIN_PIR"/> 
-				<control key= "GARAGE_PIR"/> 
-				<control key= "ENTRY_PIR"/> 
-			</group> 
-			<group label= "%name% turned on %timestamp% (%extra%%),%name% turned off %timestamp%" timeformat= "HH:nn d mmmm yyyy" listenTo= "on,off" type= "log" icon= "light-bulb" name= "Lights"> 
-				<control key= "MAIN_LIGHT"/> 
-				<control key= "GARAGE_LIGHT"/> 
-				<control key= "ENTRY_LIGHT"/> 
-				<control key= "BEDROOM_LIGHT"/> 
-			</group> 
-			<group label= "%name% opened %timestamp%,%name% closed %timestamp%" timeformat= "HH:nn d mmmm yyyy" listenTo= "on,off" type= "log" icon= "door-open" name= "Doors"> 
-				<control key= "ENTRY_DOOR"/> 
-			</group> 
-			<group label= "%name% %extra% %timestamp%" timeformat= "HH:nn d mmmm yyyy" listenTo= "on" type= "log" icon= "warning" name= "Alarms"> 
-				<control key= "MAIN_PIR"/> 
-				<control key= "GARAGE_PIR"/> 
-				<control key= "ENTRY_PIR"/> 
-				<control key= "ENTRY_DOOR"/> 
-				<control key= "ALARM"/> 
-			</group> 
-		</logging> 
-		<appsBar> 
-			<icon func= "runexe" icon= "keyboard" name= "Keyboard"/> 
-			<icon func= "openTV" icon= "tv" name= "TV"/> 
-			<icon func= "openBrowser" icon= "atom" name= "Web"/> 
-			<icon func= "openLogs" icon= "notepad" name= "Logs"/> 
-			<icon func= "openCalendar" icon= "calendar" name= "Calendar"/> 
-			<icon canOpen= "superuser" func= "openControlPanel" icon= "gears" name= "Control Panel"/> 
-			<icon func= "openAuthentication" icon= "locked" name= "Authenticate"/> 
-		</appsBar> 
-		<controlPanelApps> 
-			<app label= "Internet Explorer" program= "iexplore.exe /k"/> 
-			<app label= "Calculator" program= "calc.exe"/> 
-		</controlPanelApps> 
-		<property> 
-			<zone hideFromList= "false" alignment= "center" cycle= "false" map= "mk-floor1.swf" name= "Ground Floor"> 
-				<arbitrary/> 
-				<rooms> 
-					<room poly= "58,10,58,115,195,115,195,10" name= "Bedroom"> 
-						<window> 
-							<tab icon= "light-bulb" name= "Lights"> 
-								<control icons= "light-bulb-off,light-bulb" type= "slider" key= "BEDROOM_LIGHT" name= "Bedroom Lights"/> 
-							</tab> 
-							<tab icon= "music-note" name= "Audio"> 
-								<control icons= "Music-note" type= "audioPanel" key= "BEDROOM_AUDIO" name= "Bedroom Audio"/> 
-							</tab> 
-						</window> 
-						<doors/> 
-						<alerts> 
-							<alert keys= "BEDROOM_AUDIO" icon= "music-note" name= "Audio"/> 
-							<alert keys= "BEDROOM_LIGHT" icon= "light-bulb" name= "Lights"/> 
-						</alerts> 
-					</room> 
-					<room poly= "10,196,10,332,186,332,186,284,161,284,161,254,136,247,136,196" name= "Garage"> 
-						<window> 
-							<tab icon= "light-bulb" name= "Lights"> 
-								<control icons= "light-bulb-off,light-bulb" type= "onOff" key= "GARAGE_LIGHT" name= "Garage Light"/> 
-							</tab> 
-						</window> 
-						<doors> 
-							<door name= "Garage Door" pos= "9,208,5,119" key= "GARAGE_DOOR" colour= "0xFFCC55"/> 
-						</doors> 
-						<alerts> 
-							<alert keys= "GARAGE_LIGHT" icon= "light-bulb" name= "Garage Light"/> 
-							<alert fadeOutTime= "3000" keys= "GARAGE_PIR" icon= "green-man" name= "Garage Motion"/> 
-						</alerts> 
-					</room> 
-					<room poly= "316,195,316,247,405,247,405,195" name= "Entry"> 
-						<window> 
-							<tab icon= "light-bulb" name= "Lights"> 
-								<control icons= "light-bulb-off,light-bulb" type= "onOff" key= "ENTRY_LIGHT" name= "Entry Light"/> 
-							</tab> 
-						</window> 
-						<doors> 
-							<door name= "Front Door" pos= "351,247,19,5" key= "ENTRY_DOOR"/> 
-						</doors> 
-						<alerts> 
-							<alert name= "Lights" keys= "ENTRY_LIGHT" icon= "light-bulb"/> 
-							<alert name= "Entry Room Motion" keys= "ENTRY_PIR" icon= "green-man" fadeOutTime= "3000"/> 
-						</alerts> 
-					</room> 
-					<room poly= "406,115,405,205,542,205,542,115" name= "Main"> 
-						<window> 
-							<tab icon= "light-bulb" name= "Lights"> 
-								<control icons= "light-bulb-off,light-bulb" type= "slider" key= "MAIN_LIGHT" name= "Main Lights"/> 
-							</tab> 
-							<tab icon= "music-note" name= "Audio"> 
-								<control icons= "music-note" type= "audioPanel" key= "MAIN_AUDIO" name= "Main Audio"/> 
-							</tab> 
-							<tab icon= "tv" name= "TV"> 
-								<control icons= "tv" type= "tvControl" key= "MAIN_TV" name= "Main TV"/> 
-							</tab> 
-						</window> 
-						<doors/> 
-						<alerts> 
-							<alert keys= "MAIN_TV, " icon= "tv" name= "TV"/> 
-							<alert fadeOutTime= "3000" keys= "MAIN_PIR" icon= "green-man" name= "Motion"/> 
-							<alert keys= "MAIN_AUDIO" icon= "music-note" name= "Audio"/> 
-							<alert keys= "MAIN_LIGHT" icon= "light-bulb" name= "Lights"/> 
-						</alerts> 
-					</room> 
-				</rooms> 
-				<panels/> 
-			</zone> 
-		</property> 
-		<controlTypes> 
-			<control type= "slider"> 
-				<row> 
-					<item type= "label" states= "on,off" formats= "%name% (%value%%):,%name% (OFF):" defaultState= "off" defaultValue= "0"/> 
-				</row> 
-				<row> 
-					<item type= "button" label= "off" command= "off" extra= "0" width= "20"/> 
-					<item type= "slider" width= "60"/> 
-					<item type= "button" label= "on" command= "on" extra= "100" extra2= "40" extra3= "0" width= "20"/> 
-				</row> 
-			</control> 
-			<control type= "onOff"> 
-				<row> 
-					<item type= "label"/> 
-				</row> 
-				<row> 
-					<item type= "toggle" command= "state" extras= "on,off" width= "100"/> 
-				</row> 
-			</control> 
-			<control type= "audioPanel"> 
-				<row> 
-					<item type= "label" states= "on,off" formats= "%name% (%src%):,%name% (OFF):"/> 
-				</row> 
-				<row> 
-					<item type= "toggle" icons= "power-red,power-green" command= "state" extras= "on,off" width= "50"/> 
-					<item type= "button" icon= "volume-up" command= "volume" extra= "UP" repeatRate= "200"/> 
-					<item type= "button" icon= "volume-down" command= "volume" extra= "DOWN" repeatRate= "200"/> 
-				</row> 
-				<row cases= "state:on"> 
-					<item type= "button" icon= "cd-music:1" command= "src" extra= "CD" showOn= "true"/> 
-					<item type= "button" icon= "cd-music:2" command= "src" extra= "CD2" showOn= "true"/> 
-					<item type= "button" icon= "radio" command= "src" extra= "TUNER" showOn= "true"/> 
-					<item type= "button" icon= "atom" command= "src" extra= "atom" showOn= "true"/> 
-					<item type= "button" icon= "tv" command= "src" extra= "TV" showOn= "true"/> 
-				</row> 
-				<row cases= "state:on,src:CD|CD2"> 
-					<item type= "button" icon= "media-play" command= "send_audio_command" extra= "cd-play"/> 
-					<item type= "button" icon= "media-stop" command= "send_audio_command" extra= "cd-stop"/> 
-					<item type= "button" icon= "media-pause" command= "send_audio_command" extra= "cd-pause"/> 
-					<item type= "button" icon= "media-rwd" command= "send_audio_command" extra= "cd-rw" repeatRate= "200"/> 
-					<item type= "button" icon= "media-fwd" command= "send_audio_command" extra= "cd-ff" repeatRate= "200"/> 
-				</row> 
-				<row cases= "state:on,src:!CD|!CD2"> 
-					<item type= "button" icon= "left-arrow" command= "send_audio_command" extra= "5"/> 
-					<item type= "button" icon= "right-arrow" command= "send_audio_command" extra= "6"/> 
-					<item type= "button" icon= "up-arrow" command= "send_audio_command" extra= "7"/> 
-					<item type= "button" icon= "down-arrow" command= "send_audio_command" extra= "8"/> 
-				</row> 
-				<row cases= "state:on,src:atom"> 
-					<item type= "button" icon= "media-play" command= "send_audio_command" extra= "1"/> 
-					<item type= "button" icon= "media-stop" command= "send_audio_command" extra= "2"/> 
-				</row> 
-			</control> 
-			<control type= "tvControl"> 
-				<row> 
-					<item type= "label"/> 
-				</row> 
-				<row> 
-					<item type= "toggle" icons= "power-red,power-green" command= "state" extras= "on,off" width= "50" sounds= "ding,default"/> 
-					<item type= "button" icon= "volume-up" command= "volume_up" repeatRate= "200"/> 
-					<item type= "button" icon= "volume-down" command= "volume_down" repeatRate= "200"/> 
-				</row> 
-				<row cases= "state:on"> 
-					<item type= "button" icon= "chan-abc" command= "channel" extra= "abc" showOn= "true" sound= "ding"/> 
-					<item type= "button" icon= "chan-sbs" command= "channel" extra= "sbs" showOn= "true"/> 
-					<item type= "button" icon= "chan-win" command= "channel" extra= "nine" showOn= "true"/> 
-					<item type= "button" icon= "chan-prime" command= "channel" extra= "seven" showOn= "true"/> 
-					<item type= "button" icon= "chan-10" command= "channel" extra= "ten" showOn= "true"/> 
-				</row> 
-			</control> 
-		</controlTypes> 
-	</application> 
-
+<application> 
+	<settings> 
+		<setting value= "http://www.news.com.au" name= "defaultBrowserURL"/> 
+	</settings> 
+	<sounds> 
+		<sound name= "ding" file= "sounds/ding.mp3" volume= "40"/> 
+	</sounds> 
+	<statusBar/> 
+	<logging/> 
+	<appsBar> 
+		<icon func= "runexe" icon= "keyboard" name= "Keyboard"/> 
+		<icon func= "openTV" icon= "tv" name= "TV"/> 
+		<icon func= "openBrowser" icon= "atom" name= "Web"/> 
+		<icon func= "openLogs" icon= "notepad" name= "Logs"/> 
+		<icon func= "openCalendar" icon= "calendar" name= "Calendar"/> 
+		<icon canOpen= "superuser" func= "openControlPanel" icon= "gears" name= "Control Panel"/> 
+		<icon func= "openAuthentication" icon= "locked" name= "Authenticate"/> 
+	</appsBar> 
+	<controlPanelApps> 
+		<app label= "Internet Explorer" program= "iexplore.exe /k"/> 
+		<app label= "Calculator" program= "calc.exe"/> 
+	</controlPanelApps> 
+	<property/> 
+	<controlTypes> 
+		<control type= "slider"> 
+			<row> 
+				<item type= "label" states= "on,off" formats= "%name% (%value%%):,%name% (OFF):" defaultState= "off" defaultValue= "0"/> 
+			</row> 
+			<row> 
+				<item type= "button" label= "off" command= "off" extra= "0" width= "20"/> 
+				<item type= "slider" width= "60"/> 
+				<item type= "button" label= "on" command= "on" extra= "100" extra2= "40" extra3= "0" width= "20"/> 
+			</row> 
+		</control> 
+		<control type= "onOff"> 
+			<row> 
+				<item type= "label"/> 
+			</row> 
+			<row> 
+				<item type= "toggle" command= "state" extras= "on,off" width= "100"/> 
+			</row> 
+		</control> 
+		<control type= "audioPanel"> 
+			<row> 
+				<item type= "label" states= "on,off" formats= "%name% (%src%):,%name% (OFF):"/> 
+			</row> 
+			<row> 
+				<item type= "toggle" icons= "power-red,power-green" command= "state" extras= "on,off" width= "50"/> 
+				<item type= "button" icon= "volume-up" command= "volume" extra= "UP" repeatRate= "200"/> 
+				<item type= "button" icon= "volume-down" command= "volume" extra= "DOWN" repeatRate= "200"/> 
+			</row> 
+			<row cases= "state:on"> 
+				<item type= "button" icon= "cd-music:1" command= "src" extra= "CD" showOn= "true"/> 
+				<item type= "button" icon= "cd-music:2" command= "src" extra= "CD2" showOn= "true"/> 
+				<item type= "button" icon= "radio" command= "src" extra= "TUNER" showOn= "true"/> 
+				<item type= "button" icon= "atom" command= "src" extra= "atom" showOn= "true"/> 
+				<item type= "button" icon= "tv" command= "src" extra= "TV" showOn= "true"/> 
+			</row> 
+			<row cases= "state:on,src:CD|CD2"> 
+				<item type= "button" icon= "media-play" command= "send_audio_command" extra= "cd-play"/> 
+				<item type= "button" icon= "media-stop" command= "send_audio_command" extra= "cd-stop"/> 
+				<item type= "button" icon= "media-pause" command= "send_audio_command" extra= "cd-pause"/> 
+				<item type= "button" icon= "media-rwd" command= "send_audio_command" extra= "cd-rw" repeatRate= "200"/> 
+				<item type= "button" icon= "media-fwd" command= "send_audio_command" extra= "cd-ff" repeatRate= "200"/> 
+			</row> 
+			<row cases= "state:on,src:!CD|!CD2"> 
+				<item type= "button" icon= "left-arrow" command= "send_audio_command" extra= "5"/> 
+				<item type= "button" icon= "right-arrow" command= "send_audio_command" extra= "6"/> 
+				<item type= "button" icon= "up-arrow" command= "send_audio_command" extra= "7"/> 
+				<item type= "button" icon= "down-arrow" command= "send_audio_command" extra= "8"/> 
+			</row> 
+			<row cases= "state:on,src:atom"> 
+				<item type= "button" icon= "media-play" command= "send_audio_command" extra= "1"/> 
+				<item type= "button" icon= "media-stop" command= "send_audio_command" extra= "2"/> 
+			</row> 
+		</control> 
+		<control type= "tvControl"> 
+			<row> 
+				<item type= "label"/> 
+			</row> 
+			<row> 
+				<item type= "toggle" icons= "power-red,power-green" command= "state" extras= "on,off" width= "50" sounds= "ding,default"/> 
+				<item type= "button" icon= "volume-up" command= "volume_up" repeatRate= "200"/> 
+				<item type= "button" icon= "volume-down" command= "volume_down" repeatRate= "200"/> 
+			</row> 
+			<row cases= "state:on"> 
+				<item type= "button" icon= "chan-abc" command= "channel" extra= "abc" showOn= "true" sound= "ding"/> 
+				<item type= "button" icon= "chan-sbs" command= "channel" extra= "sbs" showOn= "true"/> 
+				<item type= "button" icon= "chan-win" command= "channel" extra= "nine" showOn= "true"/> 
+				<item type= "button" icon= "chan-prime" command= "channel" extra= "seven" showOn= "true"/> 
+				<item type= "button" icon= "chan-10" command= "channel" extra= "ten" showOn= "true"/> 
+			</row> 
+		</control> 
+	</controlTypes> 
+</application> 
