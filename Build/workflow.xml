@@ -9,10 +9,9 @@
 		<item label="Pelco" key="Pelco" description="Add catalogues\nConfigure catalogues\nAdd Cameras" order="7"/>
 		<item label="Dynalite" key="Dynalite" description="Add catalogues\nConfigure catalogues\nAdd Lights\nConfigure Lights\nAdd Contact Closures\nAdd IR Inputs\nConfigure IR Inputs" order="8"/>
 		<item label="Raw Connection" key="Raw" description="Add catalogues\nConfigure catalogues\nConfigure Custom Inputs\nConfigure Custom Outputs" order="9"/>
-		<item label="Comfort" key="Comfort" description="Add catalogues\nConfigure catalogues\nConfigure Custom Inputs\nConfigure Custom Outputs\nConfigure Toggle Inputs\nConfigure Toggle Outputs\nAdd Comfort Alerts
-" order="10"/>
+		<item label="Comfort" key="Comfort" description="Add catalogues\nConfigure catalogues\nConfigure Custom Inputs\nConfigure Custom Outputs\nConfigure Toggle Inputs\nConfigure Toggle Outputs\nAdd Comfort Alerts" order="10"/>
 	</step>
-	<step label=Client" description="Configure Client" stepOrder="2">
+	<step label"=Client" description="Configure Client" stepOrder="2">
 		<item label="IR Learner" key="IRLearner" description="Add catalogues\nConfigure catalogues\n" order="11"/>
 		<item label="Configure Property" key="Property" description="Add zone\nConfigure zone" order="12"/>
 		<item label="Configure Zone" key="Zone" description="Add arbitrary's\nAdd rooms\nConfigure Windows\nConfigure Tabs\nConfigure Doors\nAdd Alerts\nConfigure Alerts" order="13"/>
