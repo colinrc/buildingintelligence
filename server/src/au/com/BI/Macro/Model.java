@@ -139,7 +139,7 @@ public class Model extends BaseModel implements DeviceModel {
 		if (commandStr.equals("save")) {
 			macroHandler.put((String)command.getExtraInfo(),command.getMessageFromFlash());
 			logger.log (Level.FINER, "Saving new macro " + command.getExtraInfo());
-			doListUpdate = false;
+			doListUpdate = true;
 		}
 		if (commandStr.equals("saveList")) {
 			macroHandler.clearAll();
