@@ -57,7 +57,7 @@
 	  	 >
 	  	
 	    <classpath>
-	    		<pathelement location="bin"/>
+    		<pathelement location="dist/*.jar"/>
 	    	<fileset dir="ext" includes="*.jar"/>		
 	  	</classpath>
 	  </java>
