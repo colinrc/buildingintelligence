@@ -356,9 +356,7 @@ public class Model extends BaseModel implements DeviceModel {
 		    	    didCommand = true;
 		    	}
 		    	if (gc100StringParts[0].startsWith("unknowncommand")) {
-		    	    if (gc100StringParts[0].equals("unknowncommand 14")) {
-			    	    didCommand = true;
-		    	    }
+
 		    	    if (!didCommand) {
 					CommsCommand lastCommandSent = comms.getLastCommandSent();
 					if (lastCommandSent != null) {
@@ -380,7 +378,7 @@ public class Model extends BaseModel implements DeviceModel {
 		catch (CommsFail ex) {
 			throw new CommsFail ("Communication failed with GC100. " + ex.getMessage());
 		}
-		
+			
 		if (!didCommand) {
 			logger.log (Level.INFO,"Received a return code from GC100 I do not understand : " + gc100String);
 		}
