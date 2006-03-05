@@ -26,6 +26,7 @@ public class DynaliteHelper {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
+	
 	public String buildKey (char code,String areaCode, String channelCodeStr) {
 		int channelCode = 0;
 		if (channelCodeStr.equals("")) {
