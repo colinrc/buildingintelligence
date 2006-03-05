@@ -20,6 +20,7 @@ public class AlarmLogging {
 	public static final int TROUBLE = 7;
 	public static final int VIOLATED = 8;
 	public static final int BYPASSED = 9;
+	public static final int PANIC_RELEASED = 10;
 	
 	protected Logger logger = null;
 	protected List commandQueue = null;
