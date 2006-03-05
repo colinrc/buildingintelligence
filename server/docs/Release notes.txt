@@ -1,9 +1,16 @@
+5/3/06
+== Released V1.5b14 ==
+
 Dynalite
 --------
 Added update of linked devices when a change is received (eg. switched on or off)
 
+GC100
+-----
+Ensure a bad command cannot block the communications to the device.
 
-Released V1.5b13
+
+== Released V1.5b13 ==
 
 Macro
 -----
@@ -29,7 +36,7 @@ Added audible field
 Added target and target_user fields for messages. target_user is for future use.
 
 22/2/2006
-Released V1.5b12
+== Released V1.5b12 ==
 Calendar
 --------
 Added ID,category and alarm field
