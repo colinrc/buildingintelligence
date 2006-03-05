@@ -503,9 +503,9 @@
         <!-- _____________________________ GC-100 DEFS _____________________________-->
         <DEVICE ACTIVE="N" DEVICE_TYPE="GC100" DESCRIPTION="GC100">
                 <CONNECTION>
-                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4998"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4998"/>
                         <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5005"/>
-                        <IP ACTIVE="Y" IP_ADDRESS="172.16.3.215" PORT="4998"/>
+                        <IP ACTIVE="N" IP_ADDRESS="172.16.3.215" PORT="4998"/>
                 </CONNECTION>
                 <PARAMETERS>                
                 </PARAMETERS>
