@@ -1,3 +1,8 @@
+Dynalite
+--------
+Added update of linked devices when a change is received (eg. switched on or off)
+
+
 Released V1.5b13
 
 Macro
