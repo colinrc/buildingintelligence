@@ -1,6 +1,6 @@
-﻿save_btn.enabled = false;
-historyViewer_btn._visible = false;
+﻿historyViewer_btn._visible = false;
 _global.advanced = false;
+_global.unSaved = false;
 var form_mc;
 _global.formDepth = 0;
 //advanced_btn._visible = false;
@@ -102,7 +102,7 @@ _global.comboSetSelected = function(combo, val, field) {
 		}
 	}
 };
-_global.refreshTheTree = function () {
+_global.refreshTheTree = function() {
 	var oBackupDP = _global.left_tree.dataProvider;
 	_global.left_tree.dataProvider = null;
 	// clear
@@ -110,7 +110,7 @@ _global.refreshTheTree = function () {
 	oBackupDP = _global.right_tree.dataProvider;
 	_global.right_tree.dataProvider = null;
 	_global.right_tree.dataProvider = oBackupDP;
-}
+};
 // load project xml data
 var project_xml = new XML();
 _global.project = new Object();
@@ -150,7 +150,7 @@ project_xml.onLoad = function(success) {
 		}
 	}
 	_global.right_tree.dataProvider.removeAll();
-	_global.workflow.buildWorkflowTree();	
+	_global.workflow.buildWorkflowTree();
 	projectTree_xml.appendChild(_global.client_test.toTree());
 	projectTree_xml.appendChild(_global.server_test.toTree());
 	refreshTheTree();
@@ -185,6 +185,12 @@ mdm.Application.onAppExit = function() {
 	appExit();
 };
 function appExit():Void {
+	if (_global.unSaved) {
+		var Result = mdm.Dialogs.promptModal("Save before exiting?", "yesno", "alert");
+		if (Result) {
+			saveFile("Project");
+		}
+	}
 	mdm.Application.exit("ask", "Are you sure you want to Exit?");
 }
 function openFile(openType:String):Void {
@@ -259,7 +265,8 @@ function saveFile(saveType:String):Void {
 			newProjectXML.appendChild(_global.server_test.toXML());
 			newProjectXML.appendChild(_global.client_test.toXML());
 			mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
-			mdm.Dialogs.prompt("File saved to: " + _global.projectFileName);
+			//mdm.Dialogs.prompt("File saved to: " + _global.projectFileName);
+			_global.unSaved = false;
 		} else {
 			mdm.Dialogs.BrowseFile.buttonText = "Save Project";
 			mdm.Dialogs.BrowseFile.title = "Please select a location to save to";
@@ -291,6 +298,7 @@ function saveFile(saveType:String):Void {
 		}
 	}
 }
+_global.saveFile = saveFile;
 _global.projectFileName = "";
 // setup the drop down menus at the top
 var file_xml = new XML('<mi label="New Project" instanceName="new" /><mi label="Open Project" instanceName="open" /><mi type="separator" /><mi label="Import Client.xml" instanceName="importClient" /><mi label="Import Server.xml" instanceName="importServer" /><mi type="separator" /><mi label="Save Project" instanceName="save" /><mi label="Save Project As..." instanceName="saveAs" /><mi type="separator" /><mi label="Exit" instanceName="exit" />');
@@ -340,11 +348,9 @@ menuListener.change = function(evt:Object) {
 			_global.projectFileName = tempString;
 			saveFile("Project");
 		}
-		save_btn.icon = "floppyfalse";
 		break;
 	case "save" :
 		saveFile("Project");
-		save_btn.icon = "floppyfalse";
 		break;
 	}
 };
@@ -352,11 +358,18 @@ menuListener.change = function(evt:Object) {
 menu_mb.addEventListener("change", menuListener);
 // set view function to display correct form
 setView = function (view, dataObj) {
-	// reset all the components on stage to their "original" size, positions and make them visible
-	treeFilter_cb._visible = true;
+	if (_global.unSaved) {
+		var Result = mdm.Dialogs.promptModal("You are about to lose your changes, would you like to save?", "yesno", "alert");
+		if (Result) {
+			form_mc.save();
+		} else {
+			_global.unSaved = false;
+		}
+	}
+	// reset all the components on stage to their "original" size, positions and make them visible  
 	left_tree._visible = true;
-	left_tree._y = 93;
-	left_tree.setSize(244, 670);
+	/*left_tree._y = 93;
+	left_tree.setSize(244, 670);*/
 	workFlow_split._visible = true;
 	tabs_tb._visible = true;
 	tabBody_mc._visible = true;
@@ -365,7 +378,6 @@ setView = function (view, dataObj) {
 	// render the view
 	switch (view) {
 	case "home" :
-		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
 		form_mc = formContent_mc.attachMovie("forms.home", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());
@@ -375,13 +387,16 @@ setView = function (view, dataObj) {
 		break;
 	case "project" :
 		var currentTab = 0;
-		treeFilter_cb.change({target:treeFilter_cb});
 		var label = "Project";
 		if (tabs == undefined) {
 			tabs = [{label:"Project"}];
 		}
 		tabs_tb.dataProvider = tabs;
 		tabs_tb.selectedIndex = currentTab;
+		left_tree.dataProvider = projectTree_xml;
+		left_tree.labelFunction = function(item_obj:Object):String  {
+			return item_obj.object.getName();
+		};		
 		break;
 	case "control" :
 	case "control.controls" :
@@ -391,9 +406,8 @@ setView = function (view, dataObj) {
 	case "control.ir" :
 		//_global.infoflow_ta._visible = false;
 		workFlow_split._visible = false;
-		treeFilter_cb._visible = false;
-		left_tree._y = 68;
-		left_tree.setSize(244, 695);
+		/*left_tree._y = 68;
+		left_tree.setSize(244, 695);*/
 		left_tree.dataProvider = null;
 		left_tree.dataProvider = new XML('<n label="Servers"><n label="Coming Soon!" /></n><n label="Clients"><n label="Coming Soon!" /></n>');
 		left_tree.labelFunction = null;
@@ -417,14 +431,12 @@ setView = function (view, dataObj) {
 		_global.server.attachView(form_mc);
 		break;
 	case "none" :
-		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
 		tabs_tb._visible = false;
 		tabBody_mc._visible = false;
 		break;
 	case "preview" :
-		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
 		form_mc = formContent_mc.attachMovie("forms.preview", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());
@@ -433,7 +445,6 @@ setView = function (view, dataObj) {
 		tabs_tb._visible = true;
 		break;
 	case "publish" :
-		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
 		form_mc = formContent_mc.attachMovie("forms.publish", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());
@@ -441,7 +452,6 @@ setView = function (view, dataObj) {
 		tabs_tb.selectedIndex = 0;
 		break;
 	case "history" :
-		treeFilter_cb._visible = false;
 		left_tree._visible = false;
 		workFlow_split._visible = false;
 		tabs_tb.dataProvider = [{label:"History", view:"history"}];
@@ -452,6 +462,14 @@ setView = function (view, dataObj) {
 };
 tabs_tb.change = function(eventObj) {
 	if (this.lastTab.view != eventObj.target.selectedItem.view && eventObj.target.selectedItem.view.length) {
+		if (_global.unSaved) {
+			var Result = mdm.Dialogs.promptModal("You are about to lose your changes, would you like to save?", "yesno", "alert");
+			if (Result) {
+				form_mc.save();
+			} else {
+				_global.unSaved = false;
+			}
+		}
 		if (left_tree.selectedNode.object != undefined) {
 			form_mc.removeMovieClip();
 			//form_mc = formContent_mc.createEmptyMovieClip("form_"+ formContent_mc.getNextHighestDepth()+"mc",  formContent_mc.getNextHighestDepth());
@@ -475,9 +493,16 @@ tabs_tb.change = function(eventObj) {
 tabs_tb.addEventListener("change", tabs_tb);
 leftTreeListener = new Object();
 leftTreeListener.change = function(eventObj) {
+	if (_global.unSaved) {
+		var Result = mdm.Dialogs.promptModal("You are about to lose your changes, would you like to save?", "yesno", "alert");
+		if (Result) {
+			form_mc.save();
+		} else {
+			_global.unSaved = false;
+		}
+	}
 	var node = eventObj.target.selectedNode;
 	form_mc.removeMovieClip();
-	//form_mc = formContent_mc.createEmptyMovieClip("form_mc", 0);
 	right_tree.selectedNode = undefined;
 	if (node.object != undefined) {
 		switch (node.nodeName) {
@@ -539,10 +564,6 @@ historyViewer_btn.addEventListener("click", buttonListener);
 buttonListener2 = new Object();
 buttonListener2.click = function(eventObj) {
 	switch (eventObj.target) {
-	case save_btn :
-		saveFile("Project");
-		save_btn.icon = "floppyfalse";
-		break;
 	case advanced_btn :
 		advanced_btn.icon = "advanced" + (!_global.advanced);
 		_global.advanced = (!_global.advanced);
@@ -593,13 +614,7 @@ function searchProject(treeNode:Object, object:Object):Object {
 		return undefined;
 	}
 }
-_global.needSave = function() {
-	if (save_btn.icon != "floppytrue") {
-		save_btn.icon = "floppytrue";
-	}
-};
 advanced_btn.addEventListener("click", buttonListener2);
-save_btn.addEventListener("click", buttonListener2);
 function setButtons(enabled:Boolean) {
 	home_btn.enabled = enabled;
 	project_btn.enabled = enabled;
@@ -608,7 +623,6 @@ function setButtons(enabled:Boolean) {
 	publish_btn.enabled = enabled;
 	historyViewer_btn.enabled = enabled;
 	advanced_btn.enabled = enabled;
-	save_btn.enabled = enabled;
 	for (var child in menu_mb.dataProvider.firstChild.childNodes) {
 		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "importClient") {
 			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
@@ -627,7 +641,6 @@ function setButtons(enabled:Boolean) {
 	menu_mb.dataProvider = null;
 	menu_mb.dataProvider = oBackupDP;
 }
-save_btn.enabled = false;
 home_btn.onRollOver = function() {
 	DisplayTip("Project Details");
 	this.setState("highlighted");
@@ -650,10 +663,6 @@ publish_btn.onRollOver = function() {
 };
 historyViewer_btn.onRollOver = function() {
 	DisplayTip("Changelog");
-	this.setState("highlighted");
-};
-save_btn.onRollOver = function() {
-	DisplayTip("Save");
 	this.setState("highlighted");
 };
 advanced_btn.onRollOver = function() {
@@ -692,12 +701,8 @@ advanced_btn.onRollOut = function() {
 	CloseTip();
 	this.setState(false);
 };
-save_btn.onRollOut = function() {
-	CloseTip();
-	this.setState(false);
-};
 setButtons(false);
-treeFilter_cb.change = function(eventObj) {
+/*treeFilter_cb.change = function(eventObj) {
 	switch (eventObj.target.selectedItem.label) {
 	case "Project" :
 		left_tree.dataProvider = projectTree_xml;
@@ -711,7 +716,7 @@ treeFilter_cb.change = function(eventObj) {
 		break;
 	}
 };
-treeFilter_cb.addEventListener("change", treeFilter_cb);
+treeFilter_cb.addEventListener("change", treeFilter_cb);*/
 setView("none");
 /****************************************************************/
 _global.right_tree.setStyle("indentation", 10);
