@@ -2,13 +2,13 @@
 
 ''' Dynalite '''
 Added update of linked devices when a change is received (eg. switched on or off)
- [ticket:4]
+ Resolved Issues: [ticket:4]
 
 
 ''' GC100 '''
 
 Ensure a bad command cannot block the communications to the device.
- [ticket:152]
+ Resolved Issues: [ticket:152]
 
 
 == Released [attachment:wiki:SoftwareReleases:elife-server-1.5b13.zip V1.5b13] ==
@@ -38,7 +38,7 @@ Added ID,category and alarm field
 Ensure alarm does not trigger if it is flagged as N
 Handle calendar files created before the new fields.
 Add hourly and yearly recurrences.
- [ticket:7],[ticket:8]
+ Resolved Issues: [ticket:7],[ticket:8]
  
 == Dynalite ==
 Added ramp up / down for channels and areas
@@ -347,25 +347,34 @@ Scripts will now queue if attempted to run again when it is currently running. U
 4 will be ignored.
 If a script must not be queued, send no_queue in the extra parameter of the script run.  
 
-First release of Pelco
-Camera only, no alarm testing. 
-Following are the allowed commands
-Command      Extra                        Extra2
-on           auto/manual (a) 
-off
-pan          left/right/stop/0-35999(b)   0-64(c)
-tilt         up/down/stop/0-35999(b)      0-63(c)
-zoom         wide/tele/stop
-focus        far/near/stop
-iris         open/close/stop
-preset       1-32(d)
-(a) Scan. The default is for auto scan.
-(b) Not all devices pay attention to an absolute number.
-(c) Speed. 0 is very slow, not stationary.
-(d) Many devices support more than 32 presets.
+== Initial Pelco release. ==
+
+Supports camera only, no alarm functionality is yet included.
+
+Commands from flash.
+
+||Command||Extra||Extra2
+||on||auto/manual (a) 
+||off
+||pan||left/right/stop/0-35999(b)||0-64(c)
+||tilt||up/down/stop/0-35999(b)||0-63(c)
+||zoom||wide/tele/stop
+||focus||far/near/stop
+||iris||open/close/stop
+||preset||1-32(d)
+
+ * (a) Scan. The default is for auto scan.
+ * (b) Not all devices pay attention to an absolute number.
+ * (c) Speed. 0 is very slow, not stationary.
+ * (d) Many devices support more than 32 presets.
 
 Cameras must be specied in the PELCO block of the config file. The format is
+
+
+{{{
 <CAMERA ACTIVE="Y" KEY="1" DISPLAY_NAME="FRONT_CAMERA" ZOOM="b8" />
+}}}
+
 
 This represents a camera listening on address1, with a zoom capability of 148
 
@@ -373,13 +382,16 @@ Following is a test macro; this will switch on the camera listening on address 0
 It will start it panning left for 5 seconds
 It will then stop the pan and switch off.
 
-  <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="Camera test" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
+ 
+{{{
+ <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="Camera test" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
     <CONTROL KEY="FRONT_CAMERA" COMMAND="on" EXTRA="manual" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
     <CONTROL KEY="FRONT_CAMERA" COMMAND="pan" EXTRA="left" EXTRA2="32" EXTRA3="" EXTRA4="" EXTRA5="" />
     <CONTROL KEY="pause" COMMAND="pause" EXTRA="5" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
     <CONTROL KEY="FRONT_CAMERA" COMMAND="pan" EXTRA="stop" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
     <CONTROL KEY="FRONT_CAMERA" COMMAND="off" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />  
   </CONTROL>
+}}}
 Released version 0.9.233
 
 2005/9/14
