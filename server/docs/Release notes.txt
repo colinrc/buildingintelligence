@@ -1,6 +1,7 @@
 == Released [attachment:wiki:SoftwareReleases:elife-server-1.5b15.zip V1.5b15] ==
 
 ''' Dynalite '''
+
 Added update of linked devices when a change is received (eg. switched on or off)
  Resolved Issues: [ticket:4]
 
@@ -49,9 +50,11 @@ Add hourly and yearly recurrences.
  Resolved Issues: [ticket:7],[ticket:8]
  
 ''' Dynalite '''
+
 Added ramp up / down for channels and areas
 
 ''' Scripts '''
+
 Added validation to ensure script and macro handlers are not called if they have not yet fully initialised.
 Improved error handling if a correct configuration script has not been specified.
 
@@ -63,6 +66,7 @@ Ensure macro, calendar and script lists are sent to the client for every client 
 
 1/2/2006
 Released V1.5b10
+
 ''' Security '''
 
 Added a 3 minute grace period for flash client connections before the security message appears. This will allow
@@ -79,6 +83,7 @@ Began to integrate a server ID concept to facilitate master slave development.
 26/1/2006
 Released V1.5b9
 ''' Calendar '''
+
 Added the ability to store EXTRA, EXTRA2,EXTRA3, COMMAND fields in the calendar record. 
 These are passed to the macro command when it runs. 
 Extra4,EXTRA5 are unavailable as they are used internally to pass information to the running macro.
@@ -112,11 +117,13 @@ Only resend a comms command that hasn't acknowleged 3 times before clearing the 
 command cannot block a device. (only applies with devices that acknowleging commands)
 
 ''' CBUS '''
+
 Fix infinite memory usage from CBUS temperature polls if the cbus network does not reply.
 Added POLL_TEMP_INTERVAL to CBUS configuration file, interval in seconds between polls.
 Ensure CBUS connection going away will not cause null pointer in the cbus temperature probe.
 
 ''' Dynalite '''
+
 Ensure a light level of 1% is interpretted as off.
 Ensure correct behaviour for area fades.
 
@@ -194,7 +201,7 @@ Message structure is
 	<CONTROL KEY="ID" COMMAND="name" EXTRA="Kitchen"  />
 }}}
 
-''' Skip Dates in Calendar '''
+''' Calendar '''
 
 Added ability for the calendar to skip dates.
 Add <skip start_date="yyyy-mm-dd" end_date="yyyy-mm-dd" /> elements to the particular event XML block.
@@ -202,7 +209,6 @@ Muliple skip elements can be added to an event; all dates are inclusive.
 
 
 ''' Dynalite Initial Release '''
-
 
 Dynalite understands ordinary light commands; off/on level.
 
@@ -383,7 +389,7 @@ Scripts will now queue if attempted to run again when it is currently running. U
 4 will be ignored.
 If a script must not be queued, send no_queue in the extra parameter of the script run.  
 
-== Initial Pelco release. ==
+''' Pelco '''
 
 Supports camera only, no alarm functionality is yet included.
 
@@ -477,13 +483,17 @@ Extra HAL debugging added
 Added ability for scripts to run more than once simultaneously, set EXTRA2=no_lock in the script call
 
 First release kramer module. 
+
 Commands are 
+
 COMMAND="volume" EXTRA="up/down/level" (level is 0-99) EXTRA2="machine number"
 COMMAND="bass" EXTRA="up/down/level" (level is 0-99) EXTRA2="machine number" 
 COMMAND="src" EXTRA="input source" EXTRA2="machine number" EXTRA3="AV/AUDIO_ONLY/VIDEO_ONLY" default is AV
+
 if AV,VIDEO_ONLY or an empty string is used in EXTRA3 the AV_INPUTS catalogue will be used to map the source name to an inupt 
 channel. if AUDIO_ONLY is specified the AUDIO_INPUTS catalogue will be used. This allows audio only devices to be specified in a 
 meaningful way.
+
 Machine number is only needed if multiple switches have been daisy chained to one RS232 port.
 Ouput number is determined by the key specified in the configuration file; output of 0 is used to switch an input to every output.
 Audio and video commands refer to the output circuit rather than the inputs, 
@@ -547,13 +557,14 @@ Ensure illegal GC100 IR strings are thrown out rather than retrying.
 Released version 0.9.219
 
 2005/7/15
-Further CBUS updates to ensure state is as current as possible
-Ensure ramp with command on ramp to 0 ; is considered the same state as off 0
+Further CBUS updates to ensure state is as current as possible.
+Ensure ramp with command on ramp to 0 ; is considered the same state as off 0.
 Returned checksum in pelco model
 Released version 0.9.218
 
 2005/7/14
-Added extra exception catching accross all models
+Added extra exception catching accross all models.
+
 Fixed bug where Control/variable INIT_EXTRA4 and INIT_EXTRA5 parameters were ignored.
 Updated MMI handling to fix CBUS problem on MMI overwriting last user action
 Released version 0.9.217
@@ -736,11 +747,11 @@ modes that will generate the keypad message. If not specified the default value 
 VALUE="01,04"
 
 Modes are
-00 = Security Off
-01 = Away Mode
-02 = Night Mode
-03 = Day Mode
-04 = Vacation Mode
+ * 00 = Security Off
+ * 01 = Away Mode
+ * 02 = Night Mode
+ * 03 = Day Mode
+ * 04 = Vacation Mode
 
 Released version 0.9.171
 
@@ -1732,10 +1743,11 @@ Flash output correctly functioning
 10/Jun
 Added analogue poll interval parameter for Comfort.
 For example the folling comfort parameter block sets an interval of 30 seconds
-
+{{{
 	<PARAMETERS>
 		<ITEM NAME="ANALOGUE_POLL_INTERVAL" VALUE="30" />
 	</PARAMETERS>
+}}}
 
 Fixed analouge thread ownership problem
 
@@ -1790,13 +1802,13 @@ Fixed startup bug that triggered phone ring
 
 17/May
 Fixed alarms
-Raw IP interface added
-RAW_SERIAL refactored to RAW_INTERFACE to reflect IP + serial
-Added CUSTOM_INPUT for serial transmit to service in type RAW_SERIAL
-Fixed parsing of \n in config file
-Added ACTIVE flag in Device config lines. Useful if you are building config files for various devices that need the same serial port
-Added variables for raw serial output (see RAW_SERIAL) in config file for examples
-Added STX ETX to raw serial to simplify configuration
-Removed PREFIX entry in config file, it wasn't useful
+Raw IP interface added.
+RAW_SERIAL refactored to RAW_INTERFACE to reflect IP + serial.
+Added CUSTOM_INPUT for serial transmit to service in type RAW_SERIAL.
+Fixed parsing of \n in config file.
+Added ACTIVE flag in Device config lines. Useful if you are building config files for various devices that need the same serial port.
+Added variables for raw serial output (see RAW_SERIAL) in config file for examples.
+Added STX ETX to raw serial to simplify configuration.
+Removed PREFIX entry in config file, it wasn't useful.
 
 Created release notes file
