@@ -16,9 +16,14 @@ class Controls.MapEditor extends MovieClip {
 	
 	private var _poly:Array;
 	private var _mode:String;
+	private var _mapMode:String = "roomPoly";
+	private var _snapToGrid:Number = 5;
+	
+	private var _alerts:Array;
 	
 	private var __width:Number;
 	private var __height:Number;
+	private var dispatchEvent:Function;
 
 	public var onMapLoad:Function;
 
@@ -29,14 +34,32 @@ class Controls.MapEditor extends MovieClip {
 		
 		drawPoly();
 		
-		drawHandles();
+		if (_mapMode == "roomPoly") drawHandles();
 		
-		zoomPoly();
+		//zoomPoly();
+		
+		var counter = 0;
+		onEnterFrame = function () {
+			if (counter++ == 2) {
+				centrePoly();
+				delete onEnterFrame;
+			}
+		}
 	}
 	
 	public function get poly():String {
 		return _poly.join(",");
 	}
+	
+	public function set alerts(alerts:Array):Void {
+		_alerts = alerts;
+		
+		drawAlerts();
+	}
+	
+	public function get alerts():Array {
+		return _alerts;
+	}	
 	
 	public function set map(url:String):Void {
 		var myListener = new Object();
@@ -59,7 +82,11 @@ class Controls.MapEditor extends MovieClip {
 		bg_mc.onPress = function () {
 			if (this.obj.mode == "addPoints") {
 				var content = this.obj.scrollPane_sp.content;
-				this.obj.addPoint(content._xmouse, content._ymouse);
+				if (this.obj.mapMode == "roomPoly") {
+					this.obj.addPoint(content._xmouse, content._ymouse);
+				} else if (this.obj.mapMode = "alertGroups") {
+					this.obj.addAlert(content._xmouse, content._ymouse);
+				}
 			}
 		}
 	}
@@ -82,6 +109,14 @@ class Controls.MapEditor extends MovieClip {
 
 	public function get mode():String {
 		return _mode;
+	}
+	
+	public function set mapMode(mapMode:String):Void {
+		_mapMode = mapMode;
+	}
+	
+	public function get mapMode():String {
+		return _mapMode;
 	}
 	
 	public function set width(width:Number):Void {
@@ -115,6 +150,7 @@ class Controls.MapEditor extends MovieClip {
 	/* Constructor */
 	
 	function MapEditor() {
+		mx.events.EventDispatcher.initialize(this);
 		init();
 	}
 	
@@ -181,7 +217,7 @@ class Controls.MapEditor extends MovieClip {
 		var minY = Number(_poly[1]);
 		
 		poly_mc.lineStyle(1, 0xFFCC00);
-		poly_mc.beginFill(0xFFCC00, 50);
+		poly_mc.beginFill(0xFFCC00, (_mapMode == "roomPoly") ? 50 : 20);
 		for (q; q<len; q+=2) {
 			if (_poly[q] < minX) minX = Number(_poly[q]);
 			if (_poly[q+1] < minY) minY = Number(_poly[q+1]);
@@ -206,30 +242,33 @@ class Controls.MapEditor extends MovieClip {
 			handle_mc._y = _poly[q+1];
 			handle_mc.idx = q;
 			handle_mc.obj = this;
+			handle_mc.snapToGrid = _snapToGrid;
 			
 			handle_mc.onPress = function () {
 				if (this.obj.mode == "movePoints") {
 					var scrollPane_sp = this.obj.scrollPane_sp;
 					var bg_mc = scrollPane_sp.content.background_mc;
 					
-					startDrag(this, true, 2, 2, bg_mc._width - 2, bg_mc._height - 2);
+					startDrag(this, false, 2, 2, bg_mc._width - 2, bg_mc._height - 2);
 					this.onEnterFrame = function () {
-						if (_root._xmouse < scrollPane_sp._x) {
+						if (this.obj._xmouse < scrollPane_sp._x) {
 							scrollPane_sp.hPosition -= 10;
 							if (scrollPane_sp.hPosition < 10) scrollPane_sp.hPosition = 1;
 						}
-						if (_root._ymouse < scrollPane_sp._y) {
+						if (this.obj._ymouse < scrollPane_sp._y ) {
 							scrollPane_sp.vPosition -= 10;
 							if (scrollPane_sp.vPosition < 10) scrollPane_sp.vPosition = 1;
 						}
-						if (_root._xmouse > scrollPane_sp._x + scrollPane_sp.width) {
+						if (this.obj._xmouse > scrollPane_sp._x + scrollPane_sp.width) {
 							scrollPane_sp.hPosition += 10;
 							if (scrollPane_sp.hPosition > scrollPane_sp.maxHPosition + 10) scrollPane_sp.hPosition = scrollPane_sp.maxHPosition;
 						}
-						if (_root._ymouse > scrollPane_sp._y + scrollPane_sp.height) {
+						if (this.obj._ymouse > scrollPane_sp._y + scrollPane_sp.height) {
 							scrollPane_sp.vPosition += 10;
 							if (scrollPane_sp.vPosition > scrollPane_sp.maxVPosition + 10) scrollPane_sp.vPosition = scrollPane_sp.maxVPosition;
 						}
+						_x = Math.round(_x / this.snapToGrid) * this.snapToGrid;
+						_y = Math.round(_y / this.snapToGrid) * this.snapToGrid;
 						this.obj._poly[this.idx] = _x;
 						this.obj._poly[this.idx+1] = _y;
 						this.obj.drawPoly();
@@ -243,6 +282,63 @@ class Controls.MapEditor extends MovieClip {
 					stopDrag();
 					this.onEnterFrame();
 					delete this.onEnterFrame;				
+				}
+			}
+		}
+	}
+	
+	private function drawAlerts():Void {
+		var alerts_mc:MovieClip = scrollPane_sp.content.createEmptyMovieClip("alerts_mc", 20);
+		
+		for (var i=0; i<_alerts.length; i++) {
+			var handle_mc = alerts_mc.attachMovie("handle", "handle_mc", alerts_mc.getNextHighestDepth());
+			handle_mc._x = _alerts[i].x;
+			handle_mc._y = _alerts[i].y;
+			handle_mc.id = _alerts[i].id
+			handle_mc.idx = i;
+			handle_mc.obj = this;
+			handle_mc.snapToGrid = _snapToGrid;
+			
+			handle_mc.onPress = function () {
+				if (this.obj.mode == "movePoints") {
+					this.obj.dispatchEvent({type:"alertSelect", target:this.obj.alerts[this.idx]});
+					var scrollPane_sp = this.obj.scrollPane_sp;
+					var bg_mc = scrollPane_sp.content.background_mc;
+					
+					startDrag(this, false, 2, 2, bg_mc._width - 2, bg_mc._height - 2);
+					this.onEnterFrame = function () {
+						if (this.obj._xmouse < scrollPane_sp._x) {
+							scrollPane_sp.hPosition -= 10;
+							if (scrollPane_sp.hPosition < 10) scrollPane_sp.hPosition = 1;
+						}
+						if (this.obj._ymouse < scrollPane_sp._y ) {
+							scrollPane_sp.vPosition -= 10;
+							if (scrollPane_sp.vPosition < 10) scrollPane_sp.vPosition = 1;
+						}
+						if (this.obj._xmouse > scrollPane_sp._x + scrollPane_sp.width) {
+							scrollPane_sp.hPosition += 10;
+							if (scrollPane_sp.hPosition > scrollPane_sp.maxHPosition + 10) scrollPane_sp.hPosition = scrollPane_sp.maxHPosition;
+						}
+						if (this.obj._ymouse > scrollPane_sp._y + scrollPane_sp.height) {
+							scrollPane_sp.vPosition += 10;
+							if (scrollPane_sp.vPosition > scrollPane_sp.maxVPosition + 10) scrollPane_sp.vPosition = scrollPane_sp.maxVPosition;
+						}
+						_x = Math.round(_x / this.snapToGrid) * this.snapToGrid;
+						_y = Math.round(_y / this.snapToGrid) * this.snapToGrid;
+						this.obj._alerts[this.idx].x = _x;
+						this.obj._alerts[this.idx].y = _y;
+					}
+				} else if (this.obj.mode == "deletePoints") {
+					this.obj.dispatchEvent({type:"alertDelete", target:this.obj.alerts[this.idx]});
+					this.obj.removeAlert(this.idx);
+				}
+			}
+			handle_mc.onRelease = handle_mc.onReleaseOutside = function () {
+				if (this.obj.mode == "movePoints") {
+					stopDrag();
+					this.onEnterFrame();
+					delete this.onEnterFrame;
+					this.obj.dispatchEvent({type:"alertMove", target:this.obj.alerts[this.idx]});
 				}
 			}
 		}
@@ -279,14 +375,20 @@ class Controls.MapEditor extends MovieClip {
 		var counter = 0;
 		onEnterFrame = function () {
 			if (counter++ == 2) {
-				centrePoly();
+				//centrePoly();
 				delete onEnterFrame;
 			}
 		}
 	}
 	
 	private function addPoint(x:Number, y:Number):Void {
-		if (_poly.length > 2) {
+		x = Math.round(x / _snapToGrid) * _snapToGrid;
+		y = Math.round(y / _snapToGrid) * _snapToGrid;
+		if (_poly == undefined) {
+			_poly = [x, y];
+		} else if (_poly.length == 2) {
+			_poly = _poly.concat([x, y]);
+		} else {
 			var i = 0;
 			var len = _poly.length;
 			var p1, p2, dist1, dist2, vertDist;
@@ -308,8 +410,6 @@ class Controls.MapEditor extends MovieClip {
 				}
 			}
 			_poly.splice(idx, 0, x, y);
-		} else {
-			_poly = _poly.concat([x, y]);
 		}
 		drawHandles();
 		drawPoly();
@@ -319,6 +419,19 @@ class Controls.MapEditor extends MovieClip {
 		_poly.splice(idx, 2);
 		drawHandles();
 		drawPoly();
+	}
+	
+	private function addAlert(x:Number, y:Number):Void {
+		x = Math.round(x / _snapToGrid) * _snapToGrid;
+		y = Math.round(y / _snapToGrid) * _snapToGrid;
+		_alerts.push({id:0, x:x, y:y});
+		dispatchEvent({type:"alertAdd", target:alerts[alerts.length]});
+		drawAlerts();
+	}
+	
+	private function removeAlert(idx):Void {
+		_alerts.splice(idx, 1);
+		drawAlerts();
 	}
 	
 	private function draw():Void {}
