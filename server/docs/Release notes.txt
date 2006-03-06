@@ -76,11 +76,12 @@ For example the following macro will switch the light passed in the extra field 
 It will be set to the level specified in extra2, the macro will pause for the time specified
 in extra3 then switch it off.
 
+{{{
  <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="Light On" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
     <CONTROL KEY="%EXTRA%" COMMAND="on" EXTRA="%EXTRA2%" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
         <CONTROL KEY="" COMMAND="pause" EXTRA="%EXTRA3%"  />
  <CONTROL KEY="%EXTRA%" COMMAND="off" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
-
+}}}
 
 The appropriate calendar entry to run this macro once would be
  <event title="Test Light On" description="Test Light On" date="2006-01-26" time="15:41:16" eventType="once" macroName="Light On" extra="OFFICE_LIGHT" extra2="50" extra3="5" />
@@ -127,9 +128,15 @@ CBUS
 ----
 Added support for temperature sensors
 Configuration syntax is
-                  <TEMPERATURE ACTIVE="Y" KEY="42" NAME="Temp Sensor2" DISPLAY_NAME="TEMP_SENSOR2" />
+{{{
+	<TEMPERATURE ACTIVE="Y" KEY="42" NAME="Temp Sensor2" DISPLAY_NAME="TEMP_SENSOR2" />
+}}}
+
 A message will be sent to the client whenever the temperature changes. Temperatures are reported in whole numbers only
-    				COMMAND="on" EXTRA="temperature"
+
+{{{
+	COMMAND="on" EXTRA="temperature"
+}}}
 
 
 Configuration
@@ -162,14 +169,18 @@ no specific target has been specified.
 A target of All_Inc_Src sends the message to all clients, this may prove to not be useful.
 
 Message structure is
+{{{
 	<MESSAGE TARGET="Kitchen" TITLE="Test" HIDECLODE="TRUE" AUTOCLOSE="5" ICON="" CONTENT="Hello" />
     <MESSAGE TARGET="Lounge" TITLE="Test" HIDECLODE="TRUE" AUTOCLOSE="5" ICON="" CONTENT="Hello" />
 	<MESSAGE TARGET="All" TITLE="Test" HIDECLODE="TRUE" AUTOCLOSE="5" ICON="" CONTENT="Hello" />
-	
+}}}
+
 	The flash identification command is as follows. This should be sent as soon as possible after initial 
 	connection to facilitate messaging.
+{{{
 	<CONTROL KEY="ID" COMMAND="name" EXTRA="Lounge"  />
 	<CONTROL KEY="ID" COMMAND="name" EXTRA="Kitchen"  />
+}}}
 
 Skip Dates in Calendar
 ----------------------
@@ -190,7 +201,9 @@ Fades originating from the dynalite network will send messages to flash with the
 
 Lights are configured as follows
 
-            <LIGHT_DYNALITE ACTIVE="Y" KEY="01" AREA="01" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>
+{{{
+	<LIGHT_DYNALITE ACTIVE="Y" KEY="01" AREA="01" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>
+}}}
  
 Area commands are supported using key=0-; fades to this key will operate on all lights in the area, and any linked areas.
 Area commands originating in the dynalite network will be sent to that key.
@@ -212,8 +225,9 @@ be the area device controlling a particular area number (ie . channel 0)
 
 Classic and Linear protocols are supported, their is a parameter in the config file to which protocol to use for message
 generation. The system will always interpret both.
-               <ITEM NAME="PROTOCOL" VALUE="Linear | Classic" />
-
+{{{
+	<ITEM NAME="PROTOCOL" VALUE="Linear | Classic" />
+}}}
 
 All command can accept a join parameter in EXTRA3; the value will be passed directly to dynalite, see dynalite documentation
 for join details.
@@ -225,8 +239,9 @@ this value.
 Switch and IR commands send on/off messages as applicable to the flash client. The switches must be configured in the
 dynalite network to send a key message. For example to listen to box 01, key 01. press/release actions on the button will 
 generate on/off messages to BUTTON_1
-               <CONTACT_CLOSURE ACTIVE="Y" KEY="01" BOX="01" NAME="Button 1" DISPLAY_NAME="BUTTON_1" />
-
+{{{
+	<CONTACT_CLOSURE ACTIVE="Y" KEY="01" BOX="01" NAME="Button 1" DISPLAY_NAME="BUTTON_1" />
+}}}
 
 Todo.
 Area Linking
@@ -258,8 +273,10 @@ field (macro_name=label" will be used to communicate start and finish messages t
 For example. 
 A macro is called on_light you would like to call it from two buttons on the client
 one would generate 
+{{{
    COMMAND="run" EXTRA="on_light:LOUGE_LIGHT" 
    the other could be COMMAND="run" EXTRA="on_light:GARAGE_LIGHT"
+}}}
 
 Added macro pause based on a passed in value for the length (passed in via the EXTRA field)
 Ugraded quartz scheduling library to version 1.5.1
@@ -308,12 +325,17 @@ connect AV units to the same input number for both audio and video.
 Commands are 
 
 preset selection. 
-COMMAND="preset" EXTRA="#preset number" EXTRA2="#machine_number#"  (should be sent to the ALL device)
+{{{
+	COMMAND="preset" EXTRA="#preset number" EXTRA2="#machine_number#"  (should be sent to the ALL device)
+}}}
 
 src          
-COMMAND="src" EXTRA="#source name#" EXTRA2="#machine number#" EXTRA3="AV|AUDIO_ONLY|VIDEO_ONLY"
+{{{
+	COMMAND="src" EXTRA="#source name#" EXTRA2="#machine number#" EXTRA3="AV|AUDIO_ONLY|VIDEO_ONLY"
+}}}
 
 The kramer block should be similar to this
+{{{
                 <CATALOGUE NAME="Kramer Audio Inputs">
                         <ITEM CODE="cd1" VALUE="1"/>
                         <ITEM CODE="cd2" VALUE="2"/>
@@ -334,6 +356,8 @@ The kramer block should be similar to this
                         <AV KEY="2" DISPLAY_NAME="KITCHEN_AV"/>
                         <AV KEY="3" DISPLAY_NAME="STUDY_AV"/>
                 </KRAMER>
+}}}
+
 Released version 0.9.235              
 
 2005/9/25
@@ -407,17 +431,20 @@ Released version 0.9.231
 Can now send multiple IR codes from one instruction. Use commas between instructions. This would generally be used to select a 2 digit
 channel or station.
 eg. 
+{{{
 <item type="button" icon="volume-up" command="AV.STUDY_IR" extra="Philips MC-200.VOLUP,Philips MC-200.CD" repeatRate="200" />
-
+}}}
 Added Kramer preset selection. COMMAND="preset" EXTRA="#preset number" EXTRA2="#machine_number#" 
 extra 2 is optional
 
 
 
 Added Dynalite commands
-COMMAND="preset" EXTRA="#preset#" EXTRA2="#fade rate#" EXTRA3="#join#" 
-COMMAND="on" EXTRA="#level#" EXTRA2="#fade rate#" EXTRA3="#join#" 
-COMMAND="off" EXTRA="" EXTRA2="#fade rate#" EXTRA3="#join#" 
+{{{
+	COMMAND="preset" EXTRA="#preset#" EXTRA2="#fade rate#" EXTRA3="#join#" 
+	COMMAND="on" EXTRA="#level#" EXTRA2="#fade rate#" EXTRA3="#join#" 
+	COMMAND="off" EXTRA="" EXTRA2="#fade rate#" EXTRA3="#join#" 
+}}}
 join defaults through to 255.
 fade rate ranges from 0.02 to 65535 seconds. This is rounded to the nearest 0.02 seconds.
      rate can be expressed as minutes  eg. 2m
