@@ -1,41 +1,40 @@
 5/3/06
 == Released [attachment:wiki:SoftwareReleases:elife-server-1.5b15.zip V1.5b15] ==
-[attachment:wiki:SoftwareReleases:elife-server-1.5b15.zip V1.5b15]
 
-=== Dynalite ===
+''' Dynalite '''
 Added update of linked devices when a change is received (eg. switched on or off)
  [ticket:4]
  
-=== GC100 ===
+''' GC100 '''
 
 Ensure a bad command cannot block the communications to the device.
  [ticket:152]
 
 
-== Released V1.5b13 ==
+== [attachment:wiki:SoftwareReleases:elife-server-1.5b13.zip V1.5b13] ==
 
-=== Macro ===
+''' Macro '''
 
 Revert macro's to sending macro list after saving
 
-=== Logging ===
+''' Logging '''
 Try to ensure empty "severe error" messages are not sent to the flash client
 
-=== Comms ===
+''' Comms '''
 Ensure comms device know their associated models for more meaninful error reporting.
 IP and serial listener modified to support end byes markers larger than 128 (eg. 255 for Orgenon)
 
-=== Alerts ===
+''' Alerts '''
 Add single point to send alert and alarm messages. Simplifying later migration to persistent logging.
 
-=== Calendar ===
+''' Calendar '''
 Renamed alarm to popup
 Added audible field
 Added target and target_user fields for messages. target_user is for future use.
 
 22/2/2006
 == Released V1.5b12 ==
-=== Calendar ===
+''' Calendar '''
 Added ID,category and alarm field
 Ensure alarm does not trigger if it is flagged as N
 Handle calendar files created before the new fields.
