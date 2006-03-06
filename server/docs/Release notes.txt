@@ -41,6 +41,7 @@ Added audible field
 Added target and target_user fields for messages. target_user is for future use.
 
 == Released [attachment:wiki:SoftwareReleases:elife-server-1.5b12.zip V1.5b12] ==
+
 ''' Calendar '''
 
 Added ID,category and alarm field.
@@ -48,7 +49,7 @@ Ensure alarm does not trigger if it is flagged as N.
 Handle calendar files created before the new fields.
 Add hourly and yearly recurrences.
  Resolved Issues: [ticket:7],[ticket:8]
- 
+
 ''' Dynalite '''
 
 Added ramp up / down for channels and areas
