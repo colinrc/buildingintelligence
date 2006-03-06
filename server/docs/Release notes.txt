@@ -17,32 +17,41 @@ Ensure a bad command cannot block the communications to the device.
 
 Revert macro's to sending macro list after saving
 
+
 ''' Logging '''
+
 Try to ensure empty "severe error" messages are not sent to the flash client
 
+
 ''' Comms '''
+
 Ensure comms device know their associated models for more meaninful error reporting.
 IP and serial listener modified to support end byes markers larger than 128 (eg. 255 for Orgenon)
 
 ''' Alerts '''
+
 Add single point to send alert and alarm messages. Simplifying later migration to persistent logging.
 
+
 ''' Calendar '''
+
 Renamed alarm to popup
 Added audible field
 Added target and target_user fields for messages. target_user is for future use.
 
 == Released [attachment:wiki:SoftwareReleases:elife-server-1.5b12.zip V1.5b12] ==
 ''' Calendar '''
-Added ID,category and alarm field
-Ensure alarm does not trigger if it is flagged as N
+
+Added ID,category and alarm field.
+Ensure alarm does not trigger if it is flagged as N.
 Handle calendar files created before the new fields.
 Add hourly and yearly recurrences.
  Resolved Issues: [ticket:7],[ticket:8]
  
-== Dynalite ==
+''' Dynalite '''
 Added ramp up / down for channels and areas
 
+''' Scripts '''
 Added validation to ensure script and macro handlers are not called if they have not yet fully initialised.
 Improved error handling if a correct configuration script has not been specified.
 
@@ -54,11 +63,13 @@ Ensure macro, calendar and script lists are sent to the client for every client 
 
 1/2/2006
 Released V1.5b10
-Security
+''' Security '''
+
 Added a 3 minute grace period for flash client connections before the security message appears. This will allow
 restarts of the client to not trigger a 'number of clients' security violation.
 
-General Code
+''' General Code '''
+
 Added a hook for every model which is called on every new client connection, doClientStartup.
 Removed AWT gui harness for main application, it is not longer used and caused maintenance problems.
 Refactored configuration module to use factory singleton pattern, should facilitate testing.
@@ -67,7 +78,7 @@ Began to integrate a server ID concept to facilitate master slave development.
  
 26/1/2006
 Released V1.5b9
-Calendar.
+''' Calendar '''
 Added the ability to store EXTRA, EXTRA2,EXTRA3, COMMAND fields in the calendar record. 
 These are passed to the macro command when it runs. 
 Extra4,EXTRA5 are unavailable as they are used internally to pass information to the running macro.
@@ -94,17 +105,18 @@ Calendar entries now maintain their order through multiple saves.
 20/1/2006
 Released V1.5b8
 
-Comms
+''' Comms '''
+
 Ensure IP receiver does not overflow buffer in receipt of very large or numerous packets.
 Only resend a comms command that hasn't acknowleged 3 times before clearing the comamnd- ensures a rogue
 command cannot block a device. (only applies with devices that acknowleging commands)
 
-CBUS
+''' CBUS '''
 Fix infinite memory usage from CBUS temperature polls if the cbus network does not reply.
 Added POLL_TEMP_INTERVAL to CBUS configuration file, interval in seconds between polls.
 Ensure CBUS connection going away will not cause null pointer in the cbus temperature probe.
 
-Dynalite
+''' Dynalite '''
 Ensure a light level of 1% is interpretted as off.
 Ensure correct behaviour for area fades.
 
@@ -119,13 +131,13 @@ CBUS, Tutondo on protocol A, Dynalight, Pelco, when connected via IP.
 12/1/2006
 Released V1.5b7
 
-Dynalite
---------
+''' Dynalite '''
+
 Interpret preset changes from dynalite network
 Scan levels of devices in an area after preset change in an area.
 
-CBUS
-----
+''' CBUS '''
+
 Added support for temperature sensors
 Configuration syntax is
 {{{
@@ -139,8 +151,8 @@ A message will be sent to the client whenever the temperature changes. Temperatu
 }}}
 
 
-Configuration
--------------
+''' Configuration '''
+
 Added ANALOG synonym for ANALOGUE
 Added AUDIO_OUTPUT synonym for AUDIO
 Added AV_OUTPUT synonym for AV
@@ -153,8 +165,8 @@ Changed model NAME to DEVICE_TYPE; NAME can still be used
 2005/12/18
 Released V1.5b6
 
-Named Clients
-----------------
+''' Named Clients '''
+
 Infrastructure support for named clients has been added.
 If a client sends a CONTROL message with KEY="ID" COMMAND="name" EXTRA="name for the client" the address book 
 will be updated with this information.
@@ -182,15 +194,15 @@ Message structure is
 	<CONTROL KEY="ID" COMMAND="name" EXTRA="Kitchen"  />
 }}}
 
-Skip Dates in Calendar
-----------------------
+''' Skip Dates in Calendar '''
+
 Added ability for the calendar to skip dates.
 Add <skip start_date="yyyy-mm-dd" end_date="yyyy-mm-dd" /> elements to the particular event XML block.
 Muliple skip elements can be added to an event; all dates are inclusive.
 
 
-Dynalite Initial Release
-----------------
+''' Dynalite Initial Release '''
+
 
 Dynalite understands ordinary light commands; off/on level.
 
@@ -248,13 +260,13 @@ Area Linking
 Alarm Messages
 Determinine light levels after preset switch.
 
-Security
---------
+''' Security '''
+
 Fixed bug where number of clients is not correctly counted if clients connecct within the first 30 seconds of
 server startup and never reboot.
 
-Bugs
-----
+''' Bugs '''
+
 Ensure script handler will not crash if the config file specified in the bootstrap file is not found.
 Fixed bug with serial handler; will possibly oregon scientific handling. 
 
@@ -759,7 +771,7 @@ controlled by the same IR port.
 
 The following example is for a Philips micro component system, it illustrates the useage. STUDY_IR has been configured as an
 IR port on the GC100.
-
+{{{
 		<control type="studyAudio">
 			<row>
 				<item type="label" />
@@ -791,7 +803,7 @@ IR port on the GC100.
 				<item type="button" icon="right-arrow" command="AV.STUDY_IR" extra="Philips MC-200.FASTFORWARD" />
 			</row>
 		</control>
-
+}}}
 Released version 0.9.168
 
 
@@ -819,11 +831,13 @@ Added message popups for calendar events
 Scripts with a STATUS of HIDDEN in the datafiles/script_status.xml are not displayed to the client
 Fixed problem with Script enabled / disabled
 Added elements to the config CONTROLS definitions controlling message parameters.
+{{{
                 <CALENDAR_MESSAGES>
                 		   <ITEM NAME="AUTOCLOSE" VALUE="ON" />
                 		   <ITEM NAME="ICON" VALUE="" />
                 		   <ITEM NAME="HIDECLOSE" VALUE="HIDECLOSE" />
                 </CALENDAR_MESSAGES>
+}}}
 Updated demoConfig.xml file
 Update schema
 Released version 0.9.164
@@ -1166,6 +1180,7 @@ Released version 0.9.97
 2005/1/28
 Remodelled JRobin definition and updating
 Format is now as follows; this creates two jrobin update tasks
+{{{
 	<JROBIN INTERVAL="30" RRD="test">
 		<DATA DATASOURCE="LOUNGE_LIGHT"/>
 		<DATA DATASOURCE="HALL_LIGHT"/>
@@ -1173,6 +1188,7 @@ Format is now as follows; this creates two jrobin update tasks
 	<JROBIN INTERVAL="40" RRD="lounge_activity">
 		<DATA DATASOURCE="LOUNGE_LIGHT"/>
 	</JROBIN>
+}}}
 Released version 0.9.96
 
 2005/1/27
@@ -1726,7 +1742,7 @@ Fixed analouge thread ownership problem
 8/Jun
 Modifed handling of src codes from tutondo.
 Use flash config such as...
-
+{{{
 			<row cases="state:on">
 				<item type="button" icon="cd-music" command="src" extra="cd1" showOn="true" />
 				<item type="button" icon="cd-music" command="src" extra="cd2" showOn="true" />
@@ -1741,13 +1757,14 @@ Use flash config such as...
 				<item type="button" icon="media-pause" command="send_audio_command" extra="cd_pause" />
 			</row>
 
-
+}}}
 The server config file maps these audio commands to program slots.
+{{{
 <RAW_DEFS NAME="Tutondo Functions">
 	<ITEM CODE="cd_play" VALUE="0" />
 	<ITEM CODE="cd_rw" VALUE="1" />
 ....
-
+}}}
 
 6/Jun
 Ensure all tutondo commands are queued
