@@ -38,7 +38,8 @@ Added ID,category and alarm field
 Ensure alarm does not trigger if it is flagged as N
 Handle calendar files created before the new fields.
 Add hourly and yearly recurrences.
- [ticket:7,8]
+ [ticket:7],[ticket:8]
+ 
 == Dynalite ==
 Added ramp up / down for channels and areas
 
