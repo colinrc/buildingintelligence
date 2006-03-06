@@ -4,7 +4,7 @@
 Dynalite
 --------
 Added update of linked devices when a change is received (eg. switched on or off)
-
+ [ticket:4]
 GC100
 -----
 Ensure a bad command cannot block the communications to the device.
