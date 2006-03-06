@@ -4,6 +4,11 @@ class Forms.Project.Device.ParametersPelco extends Forms.BaseForm {
 	private var device_type;
 	private var protocol_cmb:ComboBox;
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		protocol_cmb.addEventListener("change", changeListener);
 		for (var parameter in parameters) {
 			if (parameters[parameter].attributes["NAME"] == "PROTOCOL") {
 				for (var protocol in protocol_cmb.dataProvider) {

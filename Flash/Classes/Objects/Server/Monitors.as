@@ -52,14 +52,16 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("Monitors", newNode);
 		return newNode;
 	}
+	public function getKey():String {
+		return "Monitors";
+	}	
 	public function getName():String {
 		return "Output Monitors";
 	}
 	public function getData():Object {
-		return new Object({monitors:monitors});
+		return {monitors:monitors, dataObject:this};
 	}
 	public function setData(newData:Object) {
 		monitors = newData.monitors;

@@ -14,8 +14,6 @@
 	private var analogues:Objects.Server.Analogues;
 	private var door_ids:Objects.Server.Catalogue;
 	private var comfort_users:Objects.Server.Catalogue;
-	//DOOR_IDS
-	//COMFORT_USERS
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(counters.getKeys());
@@ -206,8 +204,10 @@
 		newNode.appendChild(toggle_outputs.toTree());
 		newNode.appendChild(analogues.toTree());
 		newNode.object = this;
-		_global.workflow.addNode("Comfort",newNode);
 		return newNode;
+	}
+	public function getKey():String {
+		return "Comfort";
 	}
 	public function setXML(newData:XMLNode):Void {
 		device_type = "";

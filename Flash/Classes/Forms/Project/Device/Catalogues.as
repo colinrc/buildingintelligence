@@ -7,6 +7,7 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
+	private var dataObject:Object;	
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -40,7 +41,6 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
-		_global.needSave();				
 		dataGridHandler.clearSelection();
 		var newCatalogues = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
@@ -49,8 +49,8 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 			Catalogue.name = DP[index].name;
 			newCatalogues.push(Catalogue);
 		}
-		_global.left_tree.selectedNode.object.setData({catalogues:newCatalogues});
+		dataObject.setData({catalogues:newCatalogues});
 		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		_global.saveFile("Project");
 	}
 }

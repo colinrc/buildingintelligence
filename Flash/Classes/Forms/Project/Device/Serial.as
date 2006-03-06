@@ -11,6 +11,17 @@ class Forms.Project.Device.Serial extends Forms.BaseForm {
 	public function Serial() {
 	}
 	public function onLoad():Void {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		port_ti.addEventListener("change", changeListener);
+		supportsCd_chk.addEventListener("change", changeListener);		
+		baud_cmb.addEventListener("change", changeListener);
+		parity_cmb.addEventListener("change", changeListener);		
+		stopBits_cmb.addEventListener("change", changeListener);
+		dataBits_cmb.addEventListener("change", changeListener);
+		flow_cmb.addEventListener("change", changeListener);		
 		port_ti.text = "";
 		if (node.attributes["PORT"] != undefined) {
 			port_ti.text = node.attributes["PORT"];

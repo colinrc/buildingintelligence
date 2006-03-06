@@ -67,5 +67,6 @@ class Forms.DataGrid.ParameterComboBoxCellRenderer extends UIComponent {
 		listOwner.dataProvider[itemLocation.itemIndex].value.label = label.selectedItem.data;
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;
 		listOwner.dataProvider.updateViews("change");
+		_global.unSaved = true;		
 	}
 }

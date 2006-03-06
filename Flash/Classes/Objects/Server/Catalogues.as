@@ -26,15 +26,17 @@
 			newNode.appendChild(catalogues[catalogue].toTree());
 		}
 		newNode.object = this;
-		_global.workflow.addNode("Catalogues",newNode);
 		treeNode = newNode;		
 		return newNode;
+	}
+	public function getKey():String {
+		return "Catalogues";
 	}
 	public function getName():String {
 		return "Catalogs";
 	}
 	public function getData():Object {
-		return {catalogues:catalogues};
+		return {catalogues:catalogues, dataObject:this};
 	}
 	public function setData(newData:Object) {
 		//Process catalogue changes....

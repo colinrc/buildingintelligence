@@ -8,6 +8,7 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
+	private var dataObject:Object;	
 	public function Alarm(){
 	}
 	public function onLoad() {
@@ -40,9 +41,9 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
-		_global.needSave();		
 		var newAlarms = new Array();
 		dataGridHandler.clearSelection();
-		_global.left_tree.selectedNode.object.setData({alarms:dataGridHandler.getDataGridDataProvider()});
+		dataObject.setData({alarms:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");				
 	}
 }

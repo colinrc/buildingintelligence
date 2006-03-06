@@ -37,9 +37,11 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("IR_Learner",newNode);
 		return newNode;
 	}
+	public function getKey():String {
+		return "IR_Learner";
+	}	
 	public function setXML(newData:XMLNode):Void {
 		device_type = "";
 		description ="";

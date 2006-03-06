@@ -62,11 +62,13 @@
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
 		newNode._visible = false;
-		_global.workflow.addNode("X10Lights", newNode);
 		return newNode;
 	}
+	public function getKey():String {
+		return "X10Lights";
+	}			
 	public function getData():Object {
-		return new Object({lights:lights});
+		return {lights:lights, dataObject:this};
 	}
 	public function setData(newData:Object):Void {
 		lights = newData.lights;

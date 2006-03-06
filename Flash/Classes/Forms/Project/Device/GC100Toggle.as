@@ -9,7 +9,8 @@ class Forms.Project.Device.GC100Toggle extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
 	private var title_lb:Label;
-	private var modules:Array;	
+	private var modules:Array;
+	private var dataObject:Object;	
 	public function onLoad() {
 		switch (toggle_type) {
 		case "TOGGLE_INPUT" :
@@ -66,6 +67,7 @@ class Forms.Project.Device.GC100Toggle extends Forms.BaseForm {
 	}
 	public function save():Void {
 		dataGridHandler.clearSelection();
-		_global.left_tree.selectedNode.object.setData(new Object({toggles:dataGridHandler.getDataGridDataProvider()}));
+		dataObject.setData({toggles:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");		
 	}
 }

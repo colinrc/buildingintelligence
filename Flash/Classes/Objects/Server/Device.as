@@ -12,7 +12,7 @@
 		return device_type+" : "+description;
 	}
 	public function getData():Object {
-		return new Object({device_type:device_type, description:description, active:active, connection:connection, parameters:parameters});
+		return {device_type:device_type, description:description, active:active, connection:connection, parameters:parameters, dataObject:this};
 	}
 	public function setData(newData:Object) {
 		device_type = newData.device_type;

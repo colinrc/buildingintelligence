@@ -8,6 +8,7 @@ class Forms.Project.Device.GC100IR extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
 	private var modules:Array;
+	private var dataObject:Object;
 	public function onLoad() {
 		var DP = new Array();
 		for(var module in modules){
@@ -48,6 +49,7 @@ class Forms.Project.Device.GC100IR extends Forms.BaseForm {
 	}	
 	public function save():Void {
 		dataGridHandler.clearSelection();		
-		_global.left_tree.selectedNode.object.setData({irs:dataGridHandler.getDataGridDataProvider()});
+		dataObject.setData({irs:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");
 	}
 }

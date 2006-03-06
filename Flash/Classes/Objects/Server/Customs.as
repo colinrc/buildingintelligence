@@ -82,14 +82,16 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("Customs",newNode);
 		return newNode;
+	}
+	public function getKey():String {
+		return "Customs";
 	}
 	public function getName():String {
 		return "Custom Inputs";
 	}
 	public function getData():Object {
-		return new Object({customs:customs});
+		return {customs:customs, dataObject:this};
 	}
 	public function setData(newData:Object){
 		customs = newData.customs;

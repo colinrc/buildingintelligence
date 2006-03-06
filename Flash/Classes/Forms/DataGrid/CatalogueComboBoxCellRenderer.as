@@ -91,6 +91,7 @@ class Forms.DataGrid.CatalogueComboBoxCellRenderer extends UIComponent {
 			listOwner.dataProvider[itemLocation.itemIndex].vars.push(blankVars[variable]);
 		}		
 		listOwner.dataProvider.updateViews("change");
-		rawInterFaceForm.itemChange({});		
+		rawInterFaceForm.itemChange({});
+		_global.unSaved = true;		
 	}
 }

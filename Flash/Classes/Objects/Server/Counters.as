@@ -58,14 +58,16 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("Counters",newNode);
 		return newNode;
+	}
+	public function getKey():String {
+		return "Counters";
 	}
 	public function getName():String {
 		return "Counters";
 	}
 	public function getData():Object {
-		return new Object({counters:counters});
+		return {counters:counters, dataObject:this};
 	}
 	public function setData(newData:Object){
 		counters = newData.counters;

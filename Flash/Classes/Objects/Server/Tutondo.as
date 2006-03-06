@@ -62,9 +62,11 @@
 		newNode.appendChild(functions.toTree());			
 		newNode.appendChild(audiovideos.toTree());
 		newNode.object = this;
-		_global.workflow.addNode("Tutondo",newNode);
 		return newNode;
 	}
+	public function getKey():String {
+		return "Tutondo";
+	}		
 	public function setXML(newData:XMLNode):Void {
 		device_type = "";
 		description ="";

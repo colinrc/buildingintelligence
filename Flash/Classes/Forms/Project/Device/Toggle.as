@@ -9,6 +9,7 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
 	private var title_lb:Label;
+	private var dataObject:Object;
 	public function onLoad() {
 		switch (toggle_type) {
 		case "TOGGLE_INPUT" :
@@ -60,8 +61,8 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
-		_global.needSave();				
 		dataGridHandler.clearSelection();
-		_global.left_tree.selectedNode.object.setData(new Object({toggles:dataGridHandler.getDataGridDataProvider()}));
+		dataObject.setData({toggles:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");
 	}
 }

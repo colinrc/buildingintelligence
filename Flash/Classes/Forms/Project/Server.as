@@ -9,8 +9,14 @@ class Forms.Project.Server extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
+	private var dataObject:Object;	
 	public function onLoad() {
 		description_ta.text = description;
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+		    _global.unSaved = true;
+		};
+		description_ta.addEventListener("change", changeListener);		
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
@@ -46,10 +52,9 @@ class Forms.Project.Server extends Forms.BaseForm {
 			device.description = DP[index].description;
 			newDevices.push(device);
 		}
-		_global.left_tree.selectedNode.object.setData({description:description_ta.text, devices:newDevices});
-		_global.needSave();						
+		dataObject.setData({description:description_ta.text, devices:newDevices});
+		_global.saveFile("Project");				
 		_global.refreshTheTree();		
 		dataGridHandler.clearSelection();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 	}
 }

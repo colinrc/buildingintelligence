@@ -143,14 +143,16 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Raw Interfaces");
 		newNode.object = this;
-		_global.workflow.addNode("Raw_interfaces", newNode);
 		return newNode;
+	}
+	public function getKey():String {
+		return "Raw_interfaces";
 	}
 	public function getName():String {
 		return "Custom Outputs";
 	}
 	public function getData():Object {
-		return {raw_interfaces:raw_interfaces, cataloguesNode:catalogues.toXML()};
+		return {raw_interfaces:raw_interfaces, cataloguesNode:catalogues.toXML(), dataObject:this};
 	}
 	public function setData(newData:Object) {
 		raw_interfaces = newData.raw_interfaces;

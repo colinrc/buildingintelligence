@@ -6,6 +6,12 @@ class Forms.Project.Device.IP extends Forms.BaseForm {
 	public function IP() {
 	}
 	public function onLoad():Void {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		address_ti.addEventListener("change", changeListener);
+		port_ti.addEventListener("change", changeListener);
 		address_ti.restrict = "0-9.";
 		address_ti.maxChars = 15;
 		port_ti.restrict = "0-9";

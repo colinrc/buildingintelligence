@@ -36,13 +36,15 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("IRs",newNode);
 		return newNode;
+	}
+	public function getKey():String {
+		return "IRs";
 	}
 	public function setData(newData:Object){
 		irs = newData.irs;
 	}
 	public function getData():Object {
-		return {irs:irs,modules:modules.getData().modules};
+		return {irs:irs,modules:modules.getData().modules, dataObject:this};
 	}
 }

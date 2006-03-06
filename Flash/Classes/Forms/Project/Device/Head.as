@@ -12,9 +12,16 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 	private var description_ti:mx.controls.TextInput;
 	private var save_btn:mx.controls.Button;
 	private var active_chk:mx.controls.CheckBox;
+	private var dataObject:Object;		
 	public function Head() {
 	}
 	public function onLoad():Void {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+		    _global.unSaved = true;
+		};
+		description_ti.addEventListener("change", changeListener);
+		active_chk.addEventListener("change", changeListener);
 		if (active == "N") {
 			active_chk.selected = false;
 		} else {
@@ -27,11 +34,8 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 		parameters_mc._x = 0;
 		parameters_mc._y = 170;
 		connection_mc.node = connection;
-		/*parameters_mc.device_type = device_type;
-		parameters_mc.parameters = parameters;*/
 	}
 	private function save():Void {
-		_global.needSave();				
 		var newData = new Object();
 		newData.device_type = device_type_lb.text;
 		newData.description = description_ti.text;
@@ -42,9 +46,7 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 		}
 		newData.parameters = parameters_mc.getData();
 		newData.connection = connection_mc.getData();
-		var tempIndex = _global.left_tree.selectedIndex;
-		_global.left_tree.selectedNode.object.setData(newData);
-		_global.left_tree.selectedNode = _global.left_tree.selectedNode.object.toTree();
-		_global.left_tree.selectedIndex = tempIndex;
+		dataObject.setData(newData);
+		_global.saveFile("Project");				
 	}
 }

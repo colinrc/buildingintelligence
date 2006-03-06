@@ -27,11 +27,13 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Calendar_Settings");
 		newNode.object = this;
-		_global.workflow.addNode("Calendar_Settings",newNode);
 		return newNode;
 	}
+	public function getKey():String {
+		return "Calendar_Settings";
+	}
 	public function getData():Object {
-		return {settings:settings};
+		return {settings:settings, dataObject:this};
 	}
 	public function setData(newData:Object):Void {
 		settings = newData.settings;

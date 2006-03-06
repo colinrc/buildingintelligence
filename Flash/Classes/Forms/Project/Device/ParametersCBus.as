@@ -4,6 +4,11 @@ class Forms.Project.Device.ParametersCBus extends Forms.BaseForm {
 	private var device_type;
 	private var poll_temp_interval_ti:TextInput;
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		poll_temp_interval_ti.addEventListener("change", changeListener);
 		for(var parameter in parameters){
 			poll_temp_interval_ti.restrict = "0-9";
 			if(parameters[parameter].attributes["NAME"] == "POLL_TEMP_INTERVAL"){

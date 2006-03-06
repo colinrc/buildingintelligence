@@ -61,14 +61,16 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("DynaliteIRs",newNode);
 		return newNode;
 	}
+	public function getKey():String {
+		return "DynaliteIRs";
+	}	
 	public function setData(newData:Object){
 		irs = newData.irs;
 	}
 	public function getData():Object {
-		return {irs:irs};
+		return {irs:irs, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		irs = new Array();

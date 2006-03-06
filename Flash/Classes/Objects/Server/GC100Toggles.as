@@ -40,8 +40,10 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("Toggles",newNode);
 		return newNode;
+	}
+	public function getKey():String {
+		return "Toggles";
 	}
 	public function getName():String {
 		switch(toggle_type){
@@ -54,7 +56,7 @@
 		}
 	}
 	public function getData():Object {
-		return {toggles:toggles,toggle_type:toggle_type,modules:modules.getData().modules};
+		return {toggles:toggles,toggle_type:toggle_type,modules:modules.getData().modules, dataObject:this};
 	}
 	public function setData(newData:Object):Void{
 		toggles = newData.toggles;

@@ -10,6 +10,16 @@ class Forms.Project.Device.ParametersComfort extends Forms.BaseForm {
 	private var cbus_app_ti:TextInput;
 	private var cbus_ucm_ti:TextInput;
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		poll_ti.addEventListener("change", changeListener);		
+		analog_poll_ti.addEventListener("change", changeListener);		
+		keypad_ti.addEventListener("change", changeListener);		
+		cbus_chk.addEventListener("change", changeListener);		
+		cbus_app_ti.addEventListener("change", changeListener);
+		cbus_ucm_ti.addEventListener("change", changeListener);				
 		poll_ti.restrict = "0-9";
 		analog_poll_ti.restrict = "0-9";
 		cbus_app_ti.restrict = "0-9";

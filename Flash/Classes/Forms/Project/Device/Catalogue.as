@@ -9,6 +9,7 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var save_btn:Button;
 	private var name_lb:Label;
+	private var dataObject:Object;		
 	public function onLoad() {
 		name_lb.text = name+":";
 		var restrictions = new Object();
@@ -51,7 +52,6 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	private function save():Void {
-		_global.needSave();				
 		dataGridHandler.clearSelection();		
 		var newItems = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
@@ -66,6 +66,7 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 			newItems.push(item);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		_global.left_tree.selectedNode.object.setData({items:newItems});
+		dataObject.setData({items:newItems});
+		_global.saveFile("Project");
 	}
 }

@@ -22,6 +22,27 @@ class Forms.Home extends Forms.BaseForm {
 	private var connect_btn:Button;
 	private var disconnect_btn:Button;
 	public function init():Void {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+		    _global.unSaved = true;
+		};
+		project_name_ti.addEventListener("change", changeListener);
+		project_path_ti.addEventListener("change", changeListener);
+		job_ti.addEventListener("change", changeListener);
+		client_name_ti.addEventListener("change", changeListener);
+		client_address_ta.addEventListener("change", changeListener);
+		integrator_ti.addEventListener("change", changeListener);
+		company_ti.addEventListener("change", changeListener);
+		company_address_ta.addEventListener("change", changeListener);
+		phone_ti.addEventListener("change", changeListener);
+		fax_ti.addEventListener("change", changeListener);
+		mobile_ti.addEventListener("change", changeListener);
+		email_ti.addEventListener("change", changeListener);
+		notes_ta.addEventListener("change", changeListener);
+		ipAddress_ti.addEventListener("change", changeListener);
+		serverPort_ti.addEventListener("change", changeListener);
+		monitorPort_ti.addEventListener("change", changeListener);
+		
 		project_path_ti.text = "c:\\ ";
 		if (_global.project.path.length) {
 			project_path_ti.text = _global.project.path;
@@ -86,7 +107,7 @@ class Forms.Home extends Forms.BaseForm {
 		else{
 			_global.project.monitorPort = monitorPort_ti.text;
 		}
-		save_btn.addEventListener("click", Delegate.create(this, saveProjectDetails));
+		save_btn.addEventListener("click", Delegate.create(this, save));
 		path_btn.addEventListener("click", Delegate.create(this, selectFolder));
 		connect_btn.addEventListener("click", Delegate.create(this, connect));
 		disconnect_btn.addEventListener("click", Delegate.create(this, disconnect));
@@ -103,7 +124,7 @@ class Forms.Home extends Forms.BaseForm {
 	public function disconnect():Void {
 		_global.server.disconnect();
 	}
-	public function saveProjectDetails():Void {
+	public function save():Void {
 		_global.history.changed("Project Details", "Project Name", "Name of project", _global.project.project, project_name_ti.text);
 		_global.project.project = project_name_ti.text;
 		_global.history.setProject(_global.project.project, _global.project.path);
@@ -135,7 +156,7 @@ class Forms.Home extends Forms.BaseForm {
 		_global.project.serverPort = serverPort_ti.text;
 		_global.history.changed("Project Details", "Monitor Port", "Monitor Port Number", _global.project.monitorPort, monitorPort_ti.text);
 		_global.project.monitorPort = monitorPort_ti.text;
-		_global.needSave();		
+		_global.saveFile("Project");		
 	}
 	public function selectFolder():Void {
 		mdm.Dialogs.BrowseFolder.title = "Please select a Folder";
@@ -145,6 +166,7 @@ class Forms.Home extends Forms.BaseForm {
 			_global.history.changed("Project Details", "Project Path", "Directory of project", _global.project.path, tempString);
 			_global.project.path = tempString;
 			_global.history.setProject(_global.project.project, _global.project.path);
+		    _global.unsaved = true;			
 		}
 	}
 }

@@ -5,6 +5,12 @@ class Forms.Project.Device.ParametersTutondo extends Forms.BaseForm {
 	private var poll_ti:TextInput;
 	private var protocol_cmb:ComboBox;	
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		poll_ti.addEventListener("change", changeListener);
+		protocol_cmb.addEventListener("change", changeListener);		
 		poll_ti.restrict = "0-9";
 		for (var parameter in parameters) {
 			if (parameters[parameter].attributes["NAME"] == "POLL_INTERVAL") {

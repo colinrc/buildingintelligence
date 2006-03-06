@@ -4,6 +4,11 @@ class Forms.Project.Device.ParametersOregon extends Forms.BaseForm {
 	private var device_type;
 	private var model_cmb:ComboBox;	
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		model_cmb.addEventListener("change", changeListener);				
 		for(var parameter in parameters){
 			if(parameters[parameter].attributes["NAME"] == "MODEL"){
 				for(var model in model_cmb.dataProvider){

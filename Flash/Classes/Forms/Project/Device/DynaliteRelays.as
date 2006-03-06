@@ -7,6 +7,7 @@ class Forms.Project.Device.DynaliteRelays extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;	
+	private var dataObject:Object;
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -46,8 +47,8 @@ class Forms.Project.Device.DynaliteRelays extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
-		_global.needSave();				
 		dataGridHandler.clearSelection();		
-		_global.left_tree.selectedNode.object.setData({lights:dataGridHandler.getDataGridDataProvider()});
+		dataObject.setData({lights:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");		
 	}
 }

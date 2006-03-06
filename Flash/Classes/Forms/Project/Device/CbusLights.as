@@ -7,6 +7,7 @@ class Forms.Project.Device.CbusLights extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
+	private var dataObject:Object;		
 	public function CbusLights(){
 	}	
 	public function onLoad() {
@@ -47,8 +48,8 @@ class Forms.Project.Device.CbusLights extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
-		_global.needSave();				
 		dataGridHandler.clearSelection();		
-		_global.left_tree.selectedNode.object.setData({lights:dataGridHandler.getDataGridDataProvider()});
+		dataObject.setData({lights:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");
 	}
 }

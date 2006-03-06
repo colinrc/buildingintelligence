@@ -34,11 +34,13 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Controls");
 		newNode.object = this;
-		_global.workflow.addNode("Controls",newNode);
 		return newNode;
 	}
+	public function getKey():String {
+		return "Controls";
+	}
 	public function getData():Object {
-		return new Object({variables:variables});
+		return {variables:variables, dataObject:this};
 	}
 	public function setData(newData:Object):Void {
 		variables = newData.variables;

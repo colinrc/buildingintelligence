@@ -7,6 +7,7 @@ class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
+	private var dataObject:Object;
 	public function CbusSensors(){
 	}
 	public function onLoad() {
@@ -48,8 +49,8 @@ class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
-		_global.needSave();				
 		dataGridHandler.clearSelection();		
-		_global.left_tree.selectedNode.object.setData({sensors: dataGridHandler.getDataGridDataProvider()});
+		dataObject.setData({sensors: dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");
 	}
 }

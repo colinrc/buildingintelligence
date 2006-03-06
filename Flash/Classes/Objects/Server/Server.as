@@ -60,15 +60,17 @@
 		for (var device in devices) {
 			newNode.appendChild(devices[device].toTree());
 		}
-		_global.workflow.addNode("Server",newNode);
 		treeNode = newNode;
 		return newNode;
 	}
+	public function getKey():String {
+		return "Server";
+	}	
 	public function getName():String {
 		return "Server";
 	}
 	public function getData():Object {
-		return new Object({description:description, devices:devices});
+		return {description:description, devices:devices, dataObject:this};
 	}
 	public function setData(newData:Object) {
 		description = newData.description;

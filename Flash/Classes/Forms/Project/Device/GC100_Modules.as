@@ -7,6 +7,7 @@ class Forms.Project.Device.GC100_Modules extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
+	private var dataObject:Object;
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -37,6 +38,7 @@ class Forms.Project.Device.GC100_Modules extends Forms.BaseForm {
 	}
 	public function save():Void {
 		dataGridHandler.clearSelection();		
-		_global.left_tree.selectedNode.object.setData({modules:dataGridHandler.getDataGridDataProvider()});
+		dataObject.setData({modules:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");
 	}
 }

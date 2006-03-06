@@ -466,12 +466,14 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.vPosition = 0;
 		my_dg.selectedIndex = 0;
 		lastClick.itemIndex = my_dg.selectedIndex;
+		_global.unSaved = true;
 	}
 	public function removeRow() {
 		my_dg.dataProvider.removeItemAt(my_dg.selectedIndex);
 		my_dg.selectedIndex = undefined;
 		lastClick = undefined;
 		my_dg.dataProvider.updateViews("change");
+		_global.unSaved = true;		
 	}
 	public function clearEdit() {
 		for (var item in my_dg.dataProvider) {

@@ -1,9 +1,9 @@
 ﻿class Objects.Server.Alerts extends Objects.BaseElement {
 	private var container:String;
 	private var alerts:Array;
-	public function getKeys():Array{
+	public function getKeys():Array {
 		var tempKeys = new Array();
-		for(var alert in alerts){
+		for (var alert in alerts) {
 			tempKeys.push(alerts[alert].display_name);
 		}
 		return tempKeys;
@@ -55,17 +55,19 @@
 	public function getName():String {
 		return "Comfort Alerts";
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,getName());
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, getName());
 		newNode.object = this;
-		_global.workflow.addNode("Alerts",newNode);
 		return newNode;
 	}
-	public function getData():Object {
-		return new Object({alerts:alerts});
+	public function getKey():String {
+		return "Alerts";
 	}
-	public function setData(newData:Object):Void{
-		alerts= newData.alerts;
+	public function getData():Object {
+		return {alerts:alerts, dataObject:this};
+	}
+	public function setData(newData:Object):Void {
+		alerts = newData.alerts;
 	}
 	public function setXML(newData:XMLNode):Void {
 		alerts = new Array();

@@ -51,9 +51,11 @@
 		var newNode = new XMLNode(1, this.getName());
 		newNode.appendChild(cameras.toTree());
 		newNode.object = this;
-		_global.workflow.addNode("Pelco",newNode);
 		return newNode;
 	}
+	public function getKey():String {
+		return "Pelco";
+	}	
 	public function setXML(newData:XMLNode):Void {
 		device_type = "";
 		description ="";

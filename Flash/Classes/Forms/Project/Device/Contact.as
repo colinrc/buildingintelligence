@@ -7,6 +7,7 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 	private var dataGridHandler:Object;
 	private var new_btn:Button;
 	private var delete_btn:Button;
+	private var dataObject:Object;		
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -44,8 +45,8 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
-		_global.needSave();				
 		dataGridHandler.clearSelection();
-		_global.left_tree.selectedNode.object.setData({contacts:dataGridHandler.getDataGridDataProvider()});
+		dataObject.setData({contacts:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");		
 	}
 }

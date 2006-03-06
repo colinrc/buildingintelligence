@@ -83,8 +83,10 @@
 			newNode.appendChild(temperatureSensors.toTree());
 		}
 		newNode.object = this;
-		_global.workflow.addNode("CBus",newNode);
 		return newNode;
+	}
+	public function getKey():String {
+		return "CBus";
 	}
 	public function setXML(newData:XMLNode):Void {
 		device_type = "";

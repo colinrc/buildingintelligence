@@ -7,7 +7,8 @@ class Forms.Project.Variables extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
-	private var save_btn:mx.controls.Button;	
+	private var save_btn:mx.controls.Button;
+	private var dataObject:Object;
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -60,7 +61,6 @@ class Forms.Project.Variables extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	private function save():Void {
-		_global.needSave();				
 		var newVariables = new XMLNode(1, "VARIABLES");
 		var DP = dataGridHandler.getDataGridDataProvider();
 		dataGridHandler.clearSelection();		
@@ -83,6 +83,7 @@ class Forms.Project.Variables extends Forms.BaseForm {
 			}
 			newVariables.appendChild(variableNode);
 		}
-		_global.left_tree.selectedNode.object.setData({variables:newVariables});
+		dataObject.setData({variables:newVariables});
+		_global.saveFile("Project");						
 	}
 }

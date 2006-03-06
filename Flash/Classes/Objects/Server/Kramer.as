@@ -63,9 +63,11 @@
 		newNode.appendChild(avinputs.toTree());			
 		newNode.appendChild(audiovideos.toTree());
 		newNode.object = this;
-		_global.workflow.addNode("Kramer",newNode);
 		return newNode;
 	}
+	public function getKey():String {
+		return "Kramer";
+	}	
 	public function setXML(newData:XMLNode):Void {
 		device_type = "";
 		description ="";

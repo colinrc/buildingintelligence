@@ -98,9 +98,11 @@
 		newNode.appendChild(toggle_inputs.toTree());
 		newNode.appendChild(toggle_outputs.toTree());		
 		newNode.object = this;
-		_global.workflow.addNode("GC100",newNode);
 		return newNode;
 	}
+	public function getKey():String {
+		return "GC100";
+	}	
 	public function setXML(newData:XMLNode):Void {
 		device_type = "";
 		description ="";

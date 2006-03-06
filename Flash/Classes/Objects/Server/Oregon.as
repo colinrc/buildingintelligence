@@ -48,9 +48,11 @@
 		var newNode = new XMLNode(1, this.getName());
 		newNode.appendChild(sensors.toTree());
 		newNode.object = this;
-		_global.workflow.addNode("Oregon",newNode);
 		return newNode;
 	}
+	public function getKey():String {
+		return "Oregon";
+	}		
 	public function setXML(newData:XMLNode):Void{
 		device_type = "";
 		description ="";

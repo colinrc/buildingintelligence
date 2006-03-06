@@ -7,6 +7,7 @@ class Forms.Project.Device.DynaliteLightAreas extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;	
+	private var dataObject:Object;
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -43,8 +44,8 @@ class Forms.Project.Device.DynaliteLightAreas extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
-		_global.needSave();				
 		dataGridHandler.clearSelection();		
-		_global.left_tree.selectedNode.object.setData({lightAreas:dataGridHandler.getDataGridDataProvider()});
+		dataObject.setData({lightAreas:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");
 	}
 }

@@ -7,6 +7,7 @@ class Forms.Project.Device.CbusRelays extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
+	private var dataObject:Object;	
 	public function CbusRelays() {
 	}
 	public function onLoad() {
@@ -47,8 +48,8 @@ class Forms.Project.Device.CbusRelays extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
-		_global.needSave();				
 		dataGridHandler.clearSelection();
-		_global.left_tree.selectedNode.object.setData({relays:dataGridHandler.getDataGridDataProvider()});
+		dataObject.setData({relays:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");
 	}
 }

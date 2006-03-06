@@ -61,14 +61,16 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("OregonSensors", newNode);
 		return newNode;
+	}
+	public function getKey():String {
+		return "OregonSensors";
 	}
 	public function setData(newData:Object) {
 		sensors = newData.sensors;
 	}
 	public function getData():Object {
-		return new Object({sensors:sensors});
+		return {sensors:sensors, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		sensors = new Array();

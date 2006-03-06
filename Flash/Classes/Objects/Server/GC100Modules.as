@@ -18,14 +18,16 @@
 			newNode.appendChild(modules[module].toTree());
 		}*/
 		newNode.object = this;
-		_global.workflow.addNode("GC100Modules",newNode);
 		return newNode;
+	}
+	public function getKey():String {
+		return "GC100Modules";
 	}
 	public function getName():String {
 		return "GC100 Modules";
 	}
 	public function getData():Object {
-		return {modules:modules};
+		return {modules:modules, dataObject:this};
 	}
 	public function setData(newData:Object){
 		modules = newData.modules;

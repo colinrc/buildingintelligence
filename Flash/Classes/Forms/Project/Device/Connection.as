@@ -29,6 +29,7 @@ class Forms.Project.Device.Connection extends Forms.BaseForm {
 		}
 		details_mc._x = 0;
 		details_mc._y = 50;
+		_global.unSaved = true;
 	}
 	public function getData():Object {
 		var parentTag = new XMLNode(1, "CONNECTION");

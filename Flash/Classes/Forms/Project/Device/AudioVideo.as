@@ -9,6 +9,7 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
 	private var title_lb:Label;
+	private var dataObject:Object;
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -57,8 +58,8 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 		dataGridHandler.addBlankRow();
 	}
 	public function save():Void {
-		_global.needSave();				
 		dataGridHandler.clearSelection();		
-		_global.left_tree.selectedNode.object.setData({audiovideos:dataGridHandler.getDataGridDataProvider()});
+		dataObject.setData({audiovideos:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");
 	}
 }

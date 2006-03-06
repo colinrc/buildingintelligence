@@ -103,8 +103,10 @@
 			newNode.appendChild(alarms.toTree());
 		}
 		newNode.object = this;
-		_global.workflow.addNode("Dynalite",newNode);
 		return newNode;
+	}
+	public function getKey():String {
+		return "Dynalite";
 	}
 	public function setXML(newData:XMLNode):Void {
 		device_type = "";

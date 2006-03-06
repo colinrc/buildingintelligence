@@ -12,6 +12,7 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 	private var dataGridHandler2:Object;
 	private var catalogueDP:Array;
 	private var vars_dg:DataGrid;
+	private var dataObject:Object;	
 	public function onLoad() {
 		catalogueDP = new Array();
 		for (var catalogue in cataloguesNode.childNodes) {
@@ -136,9 +137,9 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		string_lb.text = tempString;
 	}
 	public function save():Void {
-		_global.needSave();				
 		dataGridHandler.clearSelection();
 		itemChange();		
-		_global.left_tree.selectedNode.object.setData({raw_interfaces:dataGridHandler.getDataGridDataProvider()});
+		dataObject.setData({raw_interfaces:dataGridHandler.getDataGridDataProvider()});
+		_global.saveFile("Project");
 	}
 }
