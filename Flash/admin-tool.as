@@ -107,10 +107,21 @@ _global.refreshTheTree = function() {
 	_global.left_tree.dataProvider = null;
 	// clear
 	_global.left_tree.dataProvider = oBackupDP;
+	_global.workflow.buildWorkflowTree();
+	createWorkflow(projectTree_xml);
 	oBackupDP = _global.right_tree.dataProvider;
 	_global.right_tree.dataProvider = null;
 	_global.right_tree.dataProvider = oBackupDP;
+	/*for(var child in _global.right_tree.dataProvider.childNodes){
+		_global.right_tree.setIsOpen(_global.right_tree.dataProvider.childNodes[child],false);
+	}*/
 };
+function createWorkflow(inNode:Object){
+	_global.workflow.addNode(inNode.object.getKey(),inNode);
+	for(var child in inNode.childNodes){
+		createWorkflow(inNode.childNodes[child]);
+	}
+}
 // load project xml data
 var project_xml = new XML();
 _global.project = new Object();
@@ -150,7 +161,6 @@ project_xml.onLoad = function(success) {
 		}
 	}
 	_global.right_tree.dataProvider.removeAll();
-	_global.workflow.buildWorkflowTree();
 	projectTree_xml.appendChild(_global.client_test.toTree());
 	projectTree_xml.appendChild(_global.server_test.toTree());
 	refreshTheTree();
@@ -321,10 +331,11 @@ menuListener.change = function(evt:Object) {
 		_global.project = new Object();
 		setView("home");
 		/** Load templates*/
-		_global.right_tree.dataProvider.removeAll();
-		_global.workflow.buildWorkflowTree();
+		/*_global.right_tree.dataProvider.removeAll();
+		_global.workflow.buildWorkflowTree();*/
 		client_xml.load("default_client.xml");
 		server_xml.load("default_server.xml");
+		_global.refreshTheTree();
 		setButtons(true);
 		break;
 	case "importClient" :
@@ -574,10 +585,11 @@ buttonListener2.click = function(eventObj) {
 				projectTree_xml.childNodes[child].removeNode();
 			}
 		}
-		_global.right_tree.dataProvider.removeAll();
-		_global.workflow.buildWorkflowTree();
+		/*_global.right_tree.dataProvider.removeAll();
+		_global.workflow.buildWorkflowTree();*/
 		projectTree_xml.appendChild(_global.client_test.toTree());
 		projectTree_xml.appendChild(_global.server_test.toTree());
+		_global.refreshTheTree();
 		if (_global.advanced) {
 			DisplayTip("Advanced View");
 		} else {
@@ -805,6 +817,6 @@ XMLNode.prototype.getSiblings = function(cTree:mx.controls.Tree) {
 _global.right_tree.addEventListener('change', treeListener);
 _global.right_tree.addEventListener('nodeClose', treeListener);
 _global.right_tree.addEventListener('nodeOpen', treeListener);
-_global.workflow.buildWorkflowTree();
+//_global.workflow.buildWorkflowTree();
 /************************************************************************/
 stop();
