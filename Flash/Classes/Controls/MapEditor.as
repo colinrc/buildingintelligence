@@ -30,21 +30,17 @@ class Controls.MapEditor extends MovieClip {
 	/* Getters and Setters */
 
 	public function set poly(poly_str:String):Void {
-		_poly = poly_str.split(",");
+		if (poly_str.split(",").length > 1) {
+			_poly = poly_str.split(",");
+		} else {
+			_poly = new Array();
+		}
 		
 		drawPoly();
 		
 		if (_mapMode == "roomPoly") drawHandles();
-		
-		//zoomPoly();
-		
-		var counter = 0;
-		onEnterFrame = function () {
-			if (counter++ == 2) {
-				centrePoly();
-				delete onEnterFrame;
-			}
-		}
+
+		if (_poly.length > 2) zoomPoly();
 	}
 	
 	public function get poly():String {
@@ -78,6 +74,8 @@ class Controls.MapEditor extends MovieClip {
 		
 		var bg_mc = scrollPane_sp.content.background_mc;
 		bg_mc.obj = this;
+		bg_mc._width = 300;
+		bg_mc._height = 300;
 		bg_mc.useHandCursor = false;
 		bg_mc.onPress = function () {
 			if (this.obj.mode == "addPoints") {
@@ -215,12 +213,16 @@ class Controls.MapEditor extends MovieClip {
 		
 		var minX = Number(_poly[0]);
 		var minY = Number(_poly[1]);
+		var maxX = Number(_poly[0]);
+		var maxY = Number(_poly[1]);		
 		
 		poly_mc.lineStyle(1, 0xFFCC00);
 		poly_mc.beginFill(0xFFCC00, (_mapMode == "roomPoly") ? 50 : 20);
 		for (q; q<len; q+=2) {
 			if (_poly[q] < minX) minX = Number(_poly[q]);
 			if (_poly[q+1] < minY) minY = Number(_poly[q+1]);
+			if (_poly[q] > maxX) maxX = Number(_poly[q]);
+			if (_poly[q+1] > maxY) maxY = Number(_poly[q+1]);			
 			if (q > 0) {
 				poly_mc.lineTo(_poly[q], _poly[q+1]);
 			} else {
@@ -229,6 +231,8 @@ class Controls.MapEditor extends MovieClip {
 		}
 		poly_mc.minX = minX;
 		poly_mc.minY = minY;
+		poly_mc.maxX = maxX;
+		poly_mc.maxY = maxY;		
 		poly_mc.moveTo(0, 0);
 		poly_mc.endFill();
 	}
@@ -348,11 +352,13 @@ class Controls.MapEditor extends MovieClip {
 		var background_mc = scrollPane_sp.content.background_mc;
 		var poly_mc = scrollPane_sp.content.poly_mc;
 		
-		var centerX = poly_mc.minX + (poly_mc._width / 2);
-		var centerY = poly_mc.minY + (poly_mc._height / 2);
+		var ratioX = (poly_mc.maxX - poly_mc.minX) / background_mc._width;
+		var ratioY = (poly_mc.maxY - poly_mc.minY) / background_mc._height;
+		
+		trace(ratioX + ":" + ratioY);
 
-		scrollPane_sp.hPosition = scrollPane_sp.maxHPosition * (centerX / background_mc._width);
-		scrollPane_sp.vPosition = scrollPane_sp.maxVPosition * (centerY / background_mc._height);
+		scrollPane_sp.hPosition = scrollPane_sp.maxHPosition * ratioX;
+		scrollPane_sp.vPosition = scrollPane_sp.maxVPosition *  ratioY;
 	}
 
 	private function zoomPoly():Void {
@@ -368,14 +374,14 @@ class Controls.MapEditor extends MovieClip {
 			// zoom to fit vertically
 			var scaleFactor:Number = ratioY;
 		}
-		
+			
 		scrollPane_sp.content._xscale = scrollPane_sp.content._yscale = (scaleFactor * 80);
 		scrollPane_sp.invalidate();
 		
 		var counter = 0;
 		onEnterFrame = function () {
-			if (counter++ == 2) {
-				//centrePoly();
+			if (counter++ == 10) {
+				centrePoly();
 				delete onEnterFrame;
 			}
 		}
@@ -384,7 +390,7 @@ class Controls.MapEditor extends MovieClip {
 	private function addPoint(x:Number, y:Number):Void {
 		x = Math.round(x / _snapToGrid) * _snapToGrid;
 		y = Math.round(y / _snapToGrid) * _snapToGrid;
-		if (_poly == undefined) {
+		if (_poly == undefined || _poly.length == 0) {
 			_poly = [x, y];
 		} else if (_poly.length == 2) {
 			_poly = _poly.concat([x, y]);
