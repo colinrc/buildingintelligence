@@ -3,9 +3,12 @@
  *
  */
 package au.com.BI.Command;
+import java.util.logging.Logger;
+
 import au.com.BI.User.*;
 import au.com.BI.JRobin.JRobinData;
 import org.jdom.*;
+import java.util.logging.*;
 
 /**
  * @author Colin Canfield
@@ -28,6 +31,7 @@ public class Command implements CommandInterface {
         protected Object rrdValueObject;
         protected JRobinData jRobinData;
 		protected boolean adminCommand = false;
+        protected Logger logger;
 
         public User user;
 
@@ -68,20 +72,19 @@ public class Command implements CommandInterface {
                 setKey (key);
                 setCommand (commandCode);
                 setUser (user);
-
         }
 
         public Command (String key,String commandCode, User user,String extraInfo)
         {
             creationDate = System.currentTimeMillis();
-                this.extraInfo = extraInfo;
-                setExtraInfo (extraInfo);
-                setKey (key);
-                setCommand (commandCode);
-                setUser (user);
-
+            this.extraInfo = extraInfo;
+            setExtraInfo (extraInfo);
+            setKey (key);
+            setCommand (commandCode);
+            setUser (user);
         }
 
+        
 		public boolean isCommsCommand () {
 			return false;
 		}

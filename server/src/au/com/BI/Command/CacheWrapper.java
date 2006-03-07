@@ -1,6 +1,8 @@
 package au.com.BI.Command;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CacheWrapper {
 	boolean isSet = false;
@@ -8,6 +10,7 @@ public class CacheWrapper {
 	Map map = null;
 	String key;
 	long creationTime = 0;
+	protected Logger logger = null;
 	
 	public CacheWrapper (String key, CommandInterface command) {
 		isSet = false;
@@ -15,6 +18,7 @@ public class CacheWrapper {
 		this.key = key;
 		Date now = new Date();
 		creationTime = now.getTime();
+        logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
 	public CacheWrapper (String key, Map map) {
@@ -23,6 +27,7 @@ public class CacheWrapper {
 		this.map = map;
 		Date now = new Date();
 		creationTime = now.getTime();
+        logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
 	
@@ -33,8 +38,19 @@ public class CacheWrapper {
 		if (isSet) {
 			map = new HashMap();
 		}
+        logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
+
+    public Object clone () {
+    		try {
+    			return super.clone();
+    		} catch (CloneNotSupportedException ex){
+    			logger.log (Level.SEVERE,"Command object cannot be copied, web clients will not function.");
+    			return null;
+    		}
+    }
+    
 	public boolean isSet() {
 		return isSet;
 	}

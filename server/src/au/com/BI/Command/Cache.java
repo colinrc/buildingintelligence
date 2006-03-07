@@ -99,6 +99,23 @@ public class Cache {
 				return null;
 			}
         }
+        
+        public List getAllCommands (Date startTime, Date endTime){
+        		long startLong = startTime.getTime();
+        		long endLong = endTime.getTime();
+        		LinkedList result = new LinkedList();
+        		synchronized (cachedCommands){
+        			Set commandSet = cachedCommands.entrySet();
+        			Iterator commandIter = commandSet.iterator();
+        			while (commandIter.hasNext()){
+        				CacheWrapper command = (CacheWrapper)commandIter.next();
+        				if (command.creationTime >= startLong && command.creationTime < endLong) {
+        					result.add(command.clone());
+        				}
+        			}
+        		}
+        		return result;	
+        }
 		
         /*
          * @return Time last accessed

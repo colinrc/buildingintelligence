@@ -34,6 +34,9 @@ public class Bootstrap {
     protected String RRDXMLDIRECTORY = "." + File.separator + "JRobin" + File.separator+"RRDDefinition" + File.separator;
 	protected Date startTime;
 	protected String version;
+	protected String docRoot = "";
+	protected int jettyPort = 80;
+	protected boolean SSL = false;
 
 	public Bootstrap() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -141,9 +144,28 @@ public class Bootstrap {
 					this.defaultDebugging = Level.INFO;
 				}
 			}
-
-
 		}
+		
+		Element jettyConfig = theConfig.getChild("JETTY");
+		if (jettyConfig != null) {
+			String docRoot = jettyConfig.getAttributeValue ("DOCROOT");
+			if (docRoot == null ){
+				logger.log (Level.WARNING,"Jetty document root is not configured, please add DOCROOT to the JETTY element.");
+			}
+			String jettyPortStr = jettyConfig.getAttributeValue ("PORT");
+			String SSLStr = jettyConfig.getAttributeValue ("SSL");
+			if (SSLStr == null) SSL = false;
+			if (jettyPortStr != null) {
+				try {
+					jettyPort = Integer.parseInt(jettyPortStr);
+				} catch (NumberFormatException ex){
+					throw new ConfigError ("Jetty port is not a number, please correct PORT entry in the JETTY element.");
+				}
+			}
+		} else {
+			logger.log(Level.WARNING,"Please add a configuration entry for JETTY to the bootstrap.xml file");
+		}
+
 
 		} catch (JDOMException e) {
 		    throw new ConfigError(e);
@@ -291,5 +313,26 @@ public class Bootstrap {
 	public void setLogDir(String logDir) {
 		this.logDir = logDir;
 	}
+
+	public String getDocRoot() {
+		return docRoot;
+	}
+
+	public void setDocRoot(String docRoot) {
+		this.docRoot = docRoot;
+	}
+
+	public boolean isSSL() {
+		return SSL;
+	}
+
+	public void setSSL(boolean ssl) {
+		SSL = ssl;
+	}
+
+	public int getJettyPort() {
+		return jettyPort;
+	}
+
 	
 }
