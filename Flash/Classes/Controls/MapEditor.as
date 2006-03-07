@@ -355,7 +355,7 @@ class Controls.MapEditor extends MovieClip {
 		var ratioX = (poly_mc.maxX - poly_mc.minX) / background_mc._width;
 		var ratioY = (poly_mc.maxY - poly_mc.minY) / background_mc._height;
 		
-		trace(ratioX + ":" + ratioY);
+		//trace(ratioX + ":" + ratioY);
 
 		scrollPane_sp.hPosition = scrollPane_sp.maxHPosition * ratioX;
 		scrollPane_sp.vPosition = scrollPane_sp.maxVPosition *  ratioY;
