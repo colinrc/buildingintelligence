@@ -51,7 +51,6 @@
 		//Process new zones
 		var newZones = new Array();
 		for (var index in newData.zones) {
-			trace(newData.zones[index].id);
 			if (newData.zones[index].id == undefined) {
 				newZones.push({name:newData.zones[index].name});
 			}

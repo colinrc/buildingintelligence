@@ -6,6 +6,7 @@ class Forms.Project.Xml extends Forms.BaseForm {
 	private var xml_ta:TextArea;
 	private var node:XMLNode;
 	private var save_btn:Button;
+	private var dataObject:Object;
 	
 	function Xml() {
 	}

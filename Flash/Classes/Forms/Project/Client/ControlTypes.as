@@ -53,6 +53,7 @@ class Forms.Project.Client.ControlTypes extends Forms.BaseForm {
 			newControls.push(Control);
 		}
 		dataObject.setData({controls:newControls});
+		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}
 }

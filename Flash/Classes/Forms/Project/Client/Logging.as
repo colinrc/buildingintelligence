@@ -53,6 +53,7 @@ class Forms.Project.Client.Logging extends Forms.BaseForm {
 			newGroups.push(Group);
 		}
 		dataObject.setData({groups:newGroups});
+		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}
 }

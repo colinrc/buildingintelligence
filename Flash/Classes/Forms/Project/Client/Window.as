@@ -82,6 +82,7 @@ class Forms.Project.Client.Window extends Forms.BaseForm {
 			newTabs.push(Tab);
 		}
 		dataObject.setData({tabs:newTabs});
+		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}
 }

@@ -84,6 +84,7 @@ class Forms.Project.Client.AppsBar extends Forms.BaseForm {
 			newIcons.push(Icon);
 		}
 		dataObject.setData({icons:newIcons});
+		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}
 }

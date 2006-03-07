@@ -18,7 +18,13 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 		};
 		name_ti.addEventListener("change", changeListener);		
 		name_ti.text = name;
+		if(map == undefined){
+			map = "";
+		}
 		roomEditor.map = map.split('\\').join('/');
+		if(poly == undefined){
+			poly = "";
+		}
 		roomEditor.poly = poly;
 		switchZone_cmb.addItem({label:"None"});
 		var tempZones = _global.client_test.Property.zones;
@@ -34,6 +40,7 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 	}
 	public function save():Void {
 		dataObject.setData({name:name_ti.text, poly:roomEditor.poly, switchZone:switchZone_cmb.text});
+		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}
 }

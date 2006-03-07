@@ -20,6 +20,14 @@ class Objects.WorkFlow {
 	public function loadWorkflow(success:Boolean) {
 		if (success) {
 			steps = workflow_xml.firstChild.childNodes;
+			_global.right_tree.dataProvider = new XML();
+			for (var child = 0; child < steps.length; child++) {
+				var newNode = new XMLNode(1, "step");
+				newNode.attributes.stepOrder = steps[child].attributes.stepOrder;
+				newNode.attributes.label = steps[child].attributes.label;
+				newNode.attributes.description = steps[child].attributes.description.split("\\n").join("\n");
+				_global.right_tree.dataProvider.appendChild(newNode);
+			}
 		}
 	}
 	/*
@@ -70,13 +78,10 @@ class Objects.WorkFlow {
 		}
 	}
 	public function buildWorkflowTree() {
-		_global.right_tree.dataProvider = new XML();
-		for (var child = 0; child < steps.length; child++) {
-			var newNode = new XMLNode(1, "step");
-			newNode.attributes.stepOrder = steps[child].attributes.stepOrder;
-			newNode.attributes.label = steps[child].attributes.label;
-			newNode.attributes.description = steps[child].attributes.description.split("\\n").join("\n");
-			_global.right_tree.dataProvider.appendChild(newNode);
+		for (var child in _global.right_tree.dataProvider.childNodes) {
+			for(var index in _global.right_tree.dataProvider.childNodes[child].childNodes){
+				_global.right_tree.dataProvider.childNodes[child].childNodes[index].removeNode();
+			}
 		}
 	}
 }

@@ -30,7 +30,7 @@
 		return newNode;
 	}
 	public function getKey():String{
-		return "Status_Bar";
+		return "StatusBar";
 	}	
 	public function getName():String{
 		return "Status Bar";

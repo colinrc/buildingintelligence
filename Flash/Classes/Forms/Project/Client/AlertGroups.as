@@ -52,6 +52,7 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 			newAlertGroup.push(AlertGroup);
 		}
 		dataObject.setData({alertgroups:newAlertGroup});
+		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}
 }

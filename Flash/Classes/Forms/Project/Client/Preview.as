@@ -2,6 +2,7 @@
 	private var controls:XMLNode;
 	private var previewXML:XMLNode;
 	private var preview_mc:MovieClip;
+	private var dataObject:Object;
 	function Preview() {
 	}
 	public function onLoad():Void {

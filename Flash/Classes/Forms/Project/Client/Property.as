@@ -50,6 +50,7 @@ class Forms.Project.Client.Property extends Forms.BaseForm {
 			newZones.push(Zone);
 		}
 		dataObject.setData({zones:newZones});
+		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}
 }

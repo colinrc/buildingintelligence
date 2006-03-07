@@ -140,6 +140,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 			hideFromList = "false";
 		}
 		dataObject.setData({panels:newPanels, rooms:newRooms, name:name_ti.text, map:map_ti.text, background:background_ti.text, cycle:cycle, alignment:alignment_cmb.selectedItem.label, hideFromList:hideFromList});
+		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}
 }

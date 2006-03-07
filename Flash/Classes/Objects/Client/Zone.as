@@ -61,15 +61,17 @@
 		for (var panel in panels) {
 			newNode.appendChild(panels[panel].toTree());
 		}
-		_global.workflow.addNode("Zone",newNode);
 		treeNode = newNode;			
 		return newNode;
 	}
+	public function getKey():String{
+		return "Zone";
+	}	
 	public function getName():String {
 		return "Zone : "+name;
 	}
 	public function getData():Object {
-		return {panels:panels, rooms:rooms, name:name, map:map, background:background, cycle:cycle, alignment:alignment, hideFromList:hideFromList};
+		return {panels:panels, rooms:rooms, name:name, map:map, background:background, cycle:cycle, alignment:alignment, hideFromList:hideFromList,dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		rooms = new Array();

@@ -41,7 +41,7 @@
 		return newNode;
 	}
 	public function getKey():String {
-		return "IR_Learner";
+		return "IRLearner";
 	}	
 	public function setXML(newData:XMLNode):Void {
 		device_type = "";

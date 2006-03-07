@@ -43,6 +43,7 @@ class Forms.Project.Client.StatusBar extends Forms.BaseForm {
 			newGroups.push(Group);
 		}
 		dataObject.setData({groups:newGroups});
+		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}
 }
