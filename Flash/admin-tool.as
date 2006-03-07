@@ -113,12 +113,12 @@ _global.refreshTheTree = function() {
 	_global.right_tree.dataProvider = null;
 	_global.right_tree.dataProvider = oBackupDP;
 	/*for(var child in _global.right_tree.dataProvider.childNodes){
-		_global.right_tree.setIsOpen(_global.right_tree.dataProvider.childNodes[child],false);
+	_global.right_tree.setIsOpen(_global.right_tree.dataProvider.childNodes[child],false);
 	}*/
 };
-function createWorkflow(inNode:Object){
-	_global.workflow.addNode(inNode.object.getKey(),inNode);
-	for(var child in inNode.childNodes){
+function createWorkflow(inNode:Object) {
+	_global.workflow.addNode(inNode.object.getKey(), inNode);
+	for (var child in inNode.childNodes) {
 		createWorkflow(inNode.childNodes[child]);
 	}
 }
@@ -377,7 +377,7 @@ setView = function (view, dataObj) {
 			_global.unSaved = false;
 		}
 	}
-	// reset all the components on stage to their "original" size, positions and make them visible  
+	// reset all the components on stage to their "original" size, positions and make them visible   
 	left_tree._visible = true;
 	/*left_tree._y = 93;
 	left_tree.setSize(244, 670);*/
@@ -407,7 +407,7 @@ setView = function (view, dataObj) {
 		left_tree.dataProvider = projectTree_xml;
 		left_tree.labelFunction = function(item_obj:Object):String  {
 			return item_obj.object.getName();
-		};		
+		};
 		break;
 	case "control" :
 	case "control.controls" :
@@ -481,18 +481,19 @@ tabs_tb.change = function(eventObj) {
 				_global.unSaved = false;
 			}
 		}
-		if (left_tree.selectedNode.object != undefined) {
+		if (form_mc.dataObject != undefined) {
+			var tempObject = form_mc.dataObject;
 			form_mc.removeMovieClip();
 			//form_mc = formContent_mc.createEmptyMovieClip("form_"+ formContent_mc.getNextHighestDepth()+"mc",  formContent_mc.getNextHighestDepth());
 			switch (eventObj.target.selectedItem.label) {
 			case "XML" :
-				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {node:left_tree.selectedNode.object.toXML()});
+				form_mc = formContent_mc.attachMovie("forms.project.xml", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {node:tempObject.toXML(), dataObject:tempObject});
 				break;
 			case "Preview" :
-				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {controls:_global.client_test.getControlTypes(), previewXML:left_tree.selectedNode.object.toXML()});
+				form_mc = formContent_mc.attachMovie("forms.project.client.preview", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {controls:_global.client_test.getControlTypes(), previewXML:tempObject.toXML(), dataObject:tempObject});
 				break;
 			default :
-				form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), left_tree.selectedNode.object.getData());
+				form_mc = formContent_mc.attachMovie(tempObject.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getData());
 				break;
 			}
 		} else {
@@ -715,18 +716,18 @@ advanced_btn.onRollOut = function() {
 };
 setButtons(false);
 /*treeFilter_cb.change = function(eventObj) {
-	switch (eventObj.target.selectedItem.label) {
-	case "Project" :
-		left_tree.dataProvider = projectTree_xml;
-		left_tree.labelFunction = function(item_obj:Object):String  {
-			return item_obj.object.getName();
-		};
-		break;
-	case "Library" :
-		left_tree.dataProvider = new XML('<n label="Icons" /><n label="Sounds" /><n label="Windows" /><n label="Tabs" /><n label="Rooms" /><n label="Controls" />');
-		left_tree.labelFunction = null;
-		break;
-	}
+switch (eventObj.target.selectedItem.label) {
+case "Project" :
+left_tree.dataProvider = projectTree_xml;
+left_tree.labelFunction = function(item_obj:Object):String  {
+return item_obj.object.getName();
+};
+break;
+case "Library" :
+left_tree.dataProvider = new XML('<n label="Icons" /><n label="Sounds" /><n label="Windows" /><n label="Tabs" /><n label="Rooms" /><n label="Controls" />');
+left_tree.labelFunction = null;
+break;
+}
 };
 treeFilter_cb.addEventListener("change", treeFilter_cb);*/
 setView("none");
@@ -758,7 +759,7 @@ treeListener.change = function(evt:Object) {
 	var is_branch = evt.target.getIsBranch(node);
 	var node_to_close = node.getSiblings(this.target);
 	// close the opened node first
-	if (this.target.getIsOpen(node_to_close) && this.target.getIsBranch(node_to_close)) {
+	if ((this.target.getIsOpen(node_to_close)) && (this.target.getIsBranch(node_to_close)) && (node_to_close != undefined)) {
 		this.target.setIsOpen(node_to_close, false, true, true);
 		this.open_next = node;
 	} else {
