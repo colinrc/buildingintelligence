@@ -11,7 +11,14 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
+	private var dataObject:Object;		
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		name_ti.addEventListener("change", changeListener);		
+		icon_ti.addEventListener("change", changeListener);				
 		name_ti.text = name;
 		icon_ti.text = icon;
 		var tempKeys = _global.server_test.getKeys();
@@ -92,9 +99,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 			}
 			newControls.push(item);
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({controls:newControls, name:name_ti.text, icon:icon_ti.text}));
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);		
+		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_ti.text});
+		_global.saveFile("Project");
 	}
 }

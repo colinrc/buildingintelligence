@@ -7,6 +7,7 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
+	private var dataObject:Object;			
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -76,9 +77,7 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 			newSounds.push(sound);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		_global.left_tree.selectedNode.object.setData({sounds:newSounds});
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		dataObject.setData({sounds:newSounds});
+		_global.saveFile("Project");
 	}
 }

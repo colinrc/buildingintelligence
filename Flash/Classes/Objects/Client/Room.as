@@ -6,6 +6,10 @@
 	private var doors:Objects.Client.Doors;
 	private var alerts:Objects.Client.AlertGroups;
 	private var zone:Objects.Client.Zone;
+	private var treeNode:XMLNode;
+	public function deleteSelf(){
+		treeNode.removeNode();
+	}		
 	public function setZone(inZone:Objects.Client.Zone){
 		zone = inZone;
 	}
@@ -50,14 +54,17 @@
 		newNode.appendChild(doors.toTree());
 		newNode.appendChild(alerts.toTree());
 		newNode.object = this;
-		_global.workflow.addNode("ClientRoom",newNode);
+		treeNode = newNode;
 		return newNode;
+	}
+	public function getKey():String{
+		return "ClientRoom";
 	}
 	public function getName():String {
 		return "Room : "+name;
 	}
 	public function getData():Object {
-		return {name:name, poly:poly, switchZone:switchZone, map:zone.map};
+		return {name:name, poly:poly, switchZone:switchZone, map:zone.map, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		name = "";

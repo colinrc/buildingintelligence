@@ -26,10 +26,12 @@
 			newNode.appendChild(tabs[tab].toTree());
 		}
 		newNode.object = this;
-		_global.workflow.addNode("ClientWindow",newNode);
 		treeNode = newNode;			
 		return newNode;
 	}
+	public function getKey():String{
+		return "ClientWindow";
+	}	
 	public function getName():String {
 		return "Window";
 	}
@@ -42,6 +44,7 @@
 			for(var child in newData.childNodes){
 				var newTab = new Objects.Client.Tab();
 				newTab.setXML(newData.childNodes[child]);
+				newTab.id = _global.formDepth++;
 				tabs.push(newTab);
 			}
 		} else{
@@ -49,28 +52,23 @@
 		}
 	}
 	public function setData(newData:Object):Void {
+		_global.left_tree.setIsOpen(treeNode, false);		
 		//process new tabs
 		var newTabs = new Array();
 		for (var index in newData.tabs) {
-			var found = false;
-			for (var tab in tabs) {
-				if (tabs[tab].name == newData.tabs[index].name) {
-					found = true;
-				}
-			}
-			if (found == false) {
+			if (newData.tabs[index].id==undefined) {
 				newTabs.push({name:newData.tabs[index].name});
 			}
 		}
-		var deletedTabs = new Array();
 		for (var tab in tabs) {
 			var found = false;
 			for (var index in newData.tabs) {
-				if (tabs[tab].name == newData.tabs[index].name) {
+				if (tabs[tab].id == newData.tabs[index].id) {
 					found = true;
 				}
 			}
 			if (found == false) {
+				tabs[tab].deleteSelf();
 				tabs.splice(parseInt(tab), 1);
 			}
 		}
@@ -79,6 +77,7 @@
 			newNode.attributes["name"] = newTabs[newTab].name;
 			var newTab = new Objects.Client.Tab();
 			newTab.setXML(newNode);
+			newTab.id = _global.formDepth++;			
 			treeNode.appendChild(newTab.toTree());			
 			tabs.push(newTab);
 		}
@@ -92,5 +91,6 @@
 			}
 		}
 		tabs = newTabs;
+		_global.left_tree.setIsOpen(treeNode, true);		
 	}
 }

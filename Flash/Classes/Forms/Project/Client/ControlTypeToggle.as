@@ -2,14 +2,21 @@
 import mx.utils.Delegate;
 class Forms.Project.Client.ControlTypeToggle extends Forms.BaseForm {
 	private var object:XMLNode;
-	private var delete_btn:Button;
-	private var update_btn:Button;
 	private var icons_ti:TextInput;
 	private var extras_ti:TextInput;
 	private var width_ti:TextInput;
 	private var command_ti:TextInput;
 	private var sounds_ti:TextInput;
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		icons_ti.addEventListener("change", changeListener);
+		extras_ti.addEventListener("change", changeListener);
+		width_ti.addEventListener("change", changeListener);
+		command_ti.addEventListener("change", changeListener);
+		sounds_ti.addEventListener("change", changeListener);
 		if(object.attributes["icons"] != undefined){
 			icons_ti.text = object.attributes["icons"];
 		} else{
@@ -35,12 +42,6 @@ class Forms.Project.Client.ControlTypeToggle extends Forms.BaseForm {
 		} else {
 			sounds_ti.text = "";
 		}
-		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		update_btn.addEventListener("click", Delegate.create(this, updateItem));
-	}
-	public function deleteItem() {
-	}
-	public function updateItem() {
 	}
 	public function getObject():XMLNode {
 		var newObject = new XMLNode(1,"item");

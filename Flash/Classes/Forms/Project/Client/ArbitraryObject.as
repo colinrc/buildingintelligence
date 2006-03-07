@@ -9,6 +9,16 @@ class Forms.Project.Client.ArbitraryObject extends Forms.BaseForm {
 	private var hide_ti:TextInput;
 	private var dataObj:Object;
 	public function onLoad():Void {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		src_ti.addEventListener("change", changeListener);	
+		key_ti.addEventListener("change", changeListener);		
+		width_ti.addEventListener("change", changeListener);
+		height_ti.addEventListener("change", changeListener);		
+		show_ti.addEventListener("change", changeListener);		
+		hide_ti.addEventListener("change", changeListener);				
 		src_ti.text = dataObj.src;
 		key_ti.text = dataObj.key;
 		width_ti.text = dataObj.width;

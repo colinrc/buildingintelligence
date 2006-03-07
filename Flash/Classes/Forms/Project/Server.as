@@ -24,12 +24,14 @@ class Forms.Project.Server extends Forms.BaseForm {
 		dataGridHandler.setDataGrid(devices_dg);
 		dataGridHandler.addComboBoxColumn("device_type", "Device Type", [{label:"IR_LEARNER"}, {label:"PELCO"}, {label:"GC100"}, {label:"TUTONDO"}, {label:"DYNALITE"}, {label:"COMFORT"}, {label:"RAW_CONNECTION"}, {label:"HAL"}, {label:"OREGON"}, {label:"KRAMER"}, {label:"CBUS"}],false,120);
 		dataGridHandler.addTextInputColumn("description", "Description", restrictions,false,150);
+		dataGridHandler.addHiddenColumn("id");
 		dataGridHandler.setAdvanced(_global.advanced);		
 		var DP = new Array();
 		for (var device in devices) {
 			var newDevice = new Object();
 			newDevice.device_type = devices[device].device_type;
 			newDevice.description = devices[device].description;
+			newDevice.id = devices[device].id;
 			DP.push(newDevice);
 		}
 		dataGridHandler.setDataGridDataProvider(DP);
@@ -50,6 +52,7 @@ class Forms.Project.Server extends Forms.BaseForm {
 			var device = new Object();
 			device.device_type = DP[index].device_type;
 			device.description = DP[index].description;
+			device.id = DP[index].id;
 			newDevices.push(device);
 		}
 		dataObject.setData({description:description_ta.text, devices:newDevices});

@@ -4,6 +4,10 @@
 	private var func:String;
 	private var canOpen:String;
 	private var attributes:Array;
+	private var treeNode:XMLNode;
+	public function deleteSelf(){
+		treeNode.removeNode();
+	}			
 	public function isValid():Boolean {
 		return true;
 	}
@@ -32,14 +36,17 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("ClientIcon",newNode);
+		treeNode = newNode;
 		return newNode;
 	}
+	public function getKey():String{
+		return "ClientIcon";
+	}	
 	public function getName():String {
 		return "Icon:"+name;
 	}
 	public function getData():Object {
-		return new Object({name:name, icon:icon, func:func, canOpen:canOpen, attributes:attributes});
+		return {name:name, icon:icon, func:func, canOpen:canOpen, attributes:attributes, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		attributes = new Array();

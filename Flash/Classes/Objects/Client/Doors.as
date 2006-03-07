@@ -31,14 +31,16 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("ClientDoors",newNode);
 		return newNode;
+	}
+	public function getKey():String{
+		return "ClientDoors";
 	}
 	public function getName():String {
 		return "Doors";
 	}
 	public function getData():Object {
-		return new Object({doors:doors});
+		return {doors:doors, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		doors = new Array();

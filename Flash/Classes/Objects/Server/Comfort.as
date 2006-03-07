@@ -180,7 +180,7 @@
 		for (var child in tempAnalogues.childNodes){
 			newComfort.appendChild(tempAnalogues.childNodes[child]);
 		}
-		newDevice.appendChild(newComfort);
+		newDevice.appendChild(newComfort);	
 		return newDevice;
 	}
 	public function toTree():XMLNode{
@@ -204,6 +204,7 @@
 		newNode.appendChild(toggle_outputs.toTree());
 		newNode.appendChild(analogues.toTree());
 		newNode.object = this;
+		treeNode = newNode;		
 		return newNode;
 	}
 	public function getKey():String {

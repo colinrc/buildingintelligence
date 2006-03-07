@@ -26,15 +26,17 @@
 			newNode.appendChild(groups[group].toTree());
 		}
 		newNode.object = this;
-		_global.workflow.addNode("Status_Bar",newNode);
 		treeNode = newNode;			
 		return newNode;
 	}
+	public function getKey():String{
+		return "Status_Bar";
+	}	
 	public function getName():String{
 		return "Status Bar";
 	}
 	public function getData():Object{
-		return new Object({groups:groups});
+		return {groups:groups, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void{
 		groups = new Array();
@@ -42,6 +44,7 @@
 			for(var child in newData.childNodes){
 				var newGroup = new Objects.Client.StatusBarGroup();
 				newGroup.setXML(newData.childNodes[child]);
+				newGroup.id = _global.formDepth++;
 				groups.push(newGroup);
 			}
 		}
@@ -50,38 +53,37 @@
 		}
 	}
 	public function setData(newData:Object):Void{
-		//process new groups
+		_global.left_tree.setIsOpen(treeNode, false);
+		/*Find new groups*/
 		var newGroups = new Array();
 		for (var index in newData.groups) {
-			var found = false;
-			for (var group in groups) {
-				if (groups[group].name == newData.groups[index].name) {
-					found = true;
-				}
-			}
-			if (found == false) {
+			if (newData.groups[index].id == undefined) {
 				newGroups.push({name:newData.groups[index].name});
 			}
 		}
-		var deletedGroups = new Array();
+		/*Delete missing groups*/
 		for (var group in groups) {
 			var found = false;
 			for (var index in newData.groups) {
-				if (groups[group].name == newData.groups[index].name) {
+				if (groups[group].id == newData.groups[index].id) {
 					found = true;
 				}
 			}
 			if (found == false) {
+				groups[group].deleteSelf();
 				groups.splice(parseInt(group), 1);
 			}
 		}
+		/*Create new Group objects*/
 		for (var newGroup in newGroups) {
 			var newNode = new XMLNode(1, "group");
 			newNode.attributes["name"] = newGroups[newGroup].name;
 			var newGroup = new Objects.Client.StatusBarGroup();
 			newGroup.setXML(newNode);
+			newGroup.id = _global.formDepth++;
 			treeNode.appendChild(newGroup.toTree());			
 			groups.push(newGroup);
 		}
+		_global.left_tree.setIsOpen(treeNode, true);		
 	}
 }

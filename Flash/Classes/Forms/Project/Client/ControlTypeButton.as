@@ -2,8 +2,6 @@
 import mx.utils.Delegate;
 class Forms.Project.Client.ControlTypeButton extends Forms.BaseForm {
 	private var object:XMLNode;
-	private var delete_btn:Button;
-	private var update_btn:Button;
 	private var label_ti:TextInput;
 	private var icon_ti:TextInput;
 	private var extra_ti:TextInput;
@@ -14,6 +12,19 @@ class Forms.Project.Client.ControlTypeButton extends Forms.BaseForm {
 	private var repeatRate_ti:TextInput;
 	private var showOn_ti:TextInput;
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		label_ti.addEventListener("change", changeListener);	
+		icon_ti.addEventListener("change", changeListener);	
+		extra_ti.addEventListener("change", changeListener);	
+		extra2_ti.addEventListener("change", changeListener);	
+		extra3_ti.addEventListener("change", changeListener);	
+		width_ti.addEventListener("change", changeListener);	
+		command_ti.addEventListener("change", changeListener);	
+		repeatRate_ti.addEventListener("change", changeListener);	
+		showOn_ti.addEventListener("change", changeListener);
 		if (object.attributes["label"] != undefined) {
 			label_ti.text = object.attributes["label"];
 		} else {
@@ -59,12 +70,6 @@ class Forms.Project.Client.ControlTypeButton extends Forms.BaseForm {
 		} else {
 			showOn_ti.text = "";
 		}
-		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		update_btn.addEventListener("click", Delegate.create(this, updateItem));
-	}
-	public function deleteItem() {
-	}
-	public function updateItem() {
 	}
 	public function getObject():XMLNode {
 		var newObject = new XMLNode(1, "item");

@@ -39,28 +39,23 @@
 		return {catalogues:catalogues, dataObject:this};
 	}
 	public function setData(newData:Object) {
+		_global.left_tree.setIsOpen(treeNode, false);		
 		//Process catalogue changes....
 		var newCatalogues = new Array();
 		for (var index in newData.catalogues) {
-			var found = false;
-			for (var catalogue in catalogues) {
-				if (catalogues[catalogue].name == newData.catalogues[index].name) {
-					found = true;
-				}
-			}
-			if (found == false) {
+			if (newData.catalogues[index].id == undefined) {
 				newCatalogues.push({name:newData.catalogues[index].name});
 			}
 		}
-		var deletedCatalogues = new Array();
 		for (var catalogue in catalogues) {
 			var found = false;
 			for (var index in newData.catalogues) {
-				if (catalogues[catalogue].name == newData.catalogues[index].name) {
+				if (catalogues[catalogue].id == newData.catalogues[index].id) {
 					found = true;
 				}
 			}
 			if (found == false) {
+				catalogues[catalogue].deleteSelf();
 				catalogues.splice(parseInt(catalogue), 1);
 			}
 		}
@@ -69,15 +64,18 @@
 			newNode.attributes["NAME"] = newCatalogues[newCatalogue].name;
 			var newCatalogue = new Objects.Server.Catalogue();
 			newCatalogue.setXML(newNode);
+			newCatalogue.id = _global.formDepth++;
 			treeNode.appendChild(newCatalogue.toTree());			
 			catalogues.push(newCatalogue);
 		}
+		_global.left_tree.setIsOpen(treeNode, true);		
 	}
 	public function setXML(newData:XMLNode):Void {
 		catalogues = new Array();
 		for (var child in newData.childNodes) {
 			var newCatalogue = new Objects.Server.Catalogue();
 			newCatalogue.setXML(newData.childNodes[child]);
+			newCatalogue.id = _global.formDepth++;			
 			catalogues.push(newCatalogue);
 		}
 	}

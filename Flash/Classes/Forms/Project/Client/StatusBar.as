@@ -7,6 +7,7 @@ class Forms.Project.Client.StatusBar extends Forms.BaseForm {
 	private var groups_dg:DataGrid;
 	private var groups:Array;
 	private var dataGridHandler:Object;
+	private var dataObject:Object;
 	public function onLoad():Void {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -14,9 +15,10 @@ class Forms.Project.Client.StatusBar extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(groups_dg);
 		dataGridHandler.addTextInputColumn("name", "Group Name", restrictions,false,150);
+		dataGridHandler.addHiddenColumn("id");
 		var DP = new Array();
 		for (var group in groups) {
-			DP.push({name:groups[group].name});
+			DP.push({name:groups[group].name,id:groups[group].id});
 		}
 		dataGridHandler.setDataGridDataProvider(DP);
 		save_btn.addEventListener("click", Delegate.create(this, save));
@@ -36,12 +38,11 @@ class Forms.Project.Client.StatusBar extends Forms.BaseForm {
 			var Group = new Object();
 			if (DP[index].name.length) {
 				Group.name = DP[index].name;
+				Group.id = DP[index].id;				
 			}
 			newGroups.push(Group);
 		}
-		_global.left_tree.selectedNode.object.setData({groups:newGroups});
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		dataObject.setData({groups:newGroups});
+		_global.saveFile("Project");
 	}
 }

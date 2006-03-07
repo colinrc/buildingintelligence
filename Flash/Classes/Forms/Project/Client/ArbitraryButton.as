@@ -11,6 +11,14 @@ class Forms.Project.Client.ArbitraryButton extends Forms.BaseForm {
 	private var fontSize_ti:TextInput;
 	private var dataObj:Object;
 	public function onLoad():Void {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		labels_ti.addEventListener("change", changeListener);	
+		commands_ti.addEventListener("change", changeListener);	
+		key_ti.addEventListener("change", changeListener);
+		fontSize_ti.addEventListener("change", changeListener);			
 		bgColour_mc.setColour(dataObj.bgColour);
 		borderColour_mc.setColour(dataObj.borderColour);
 		fontColour_mc.setColour(dataObj.fontColour);

@@ -5,6 +5,10 @@
 	private var catalogues:Objects.Server.Catalogues;
 	private var connection:XMLNode;
 	private var parameters:Array;
+	private var treeNode:XMLNode;
+	public function deleteSelf(){
+		treeNode.removeNode();
+	}			
 	public function getForm():String {
 		return "forms.project.device.head";
 	}

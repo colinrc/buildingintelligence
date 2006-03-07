@@ -83,6 +83,7 @@
 			newNode.appendChild(temperatureSensors.toTree());
 		}
 		newNode.object = this;
+		treeNode = newNode;		
 		return newNode;
 	}
 	public function getKey():String {

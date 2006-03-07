@@ -69,6 +69,7 @@
 		newNode.appendChild(customs.toTree());
 		newNode.appendChild(raw_interfaces.toTree());
 		newNode.object = this;
+		treeNode = newNode;
 		return newNode;
 	}
 	public function getKey():String {

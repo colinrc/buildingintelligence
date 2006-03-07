@@ -2,6 +2,10 @@
 	private var x_pos:String;
 	private var y_pos:String;
 	private var alerts:Array;
+	private var treeNode:XMLNode;
+	public function deleteSelf(){
+		treeNode.removeNode();
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var alert in alerts) {
@@ -36,8 +40,11 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("ClientAlerts",newNode);
+		treeNode = newNode;
 		return newNode;
+	}
+	public function getKey():String{
+		return "ClientAlerts";
 	}
 	public function getName():String {
 		var newString = "Alerts";
@@ -50,7 +57,7 @@
 		return newString;
 	}
 	public function getData():Object {
-		return new Object({x_pos:x_pos,y_pos:y_pos,alerts:alerts});
+		return {x_pos:x_pos,y_pos:y_pos,alerts:alerts, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		if(newData.nodeName == "alerts"){

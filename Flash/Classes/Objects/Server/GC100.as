@@ -98,6 +98,7 @@
 		newNode.appendChild(toggle_inputs.toTree());
 		newNode.appendChild(toggle_outputs.toTree());		
 		newNode.object = this;
+		treeNode = newNode;		
 		return newNode;
 	}
 	public function getKey():String {

@@ -21,8 +21,10 @@
 		for (var item in items) {
 			newNode.appendChild(items[item].toTree());
 		}
-		_global.workflow.addNode("ClientRow",newNode);
 		return newNode;
+	}
+	public function getKey():String{
+		return "ClientRow";
 	}
 	public function getName():String {
 		var rowName = "Row ";
@@ -47,7 +49,7 @@
 		return rowName;
 	}
 	public function getData():Object {
-		return new Object({cases:cases, items:items});
+		return {cases:cases, items:items, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		items = new Array();

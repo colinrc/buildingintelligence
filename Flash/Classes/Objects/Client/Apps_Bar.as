@@ -26,15 +26,17 @@
 			newNode.appendChild(icons[icon].toTree());
 		}
 		newNode.object = this;
-		_global.workflow.addNode("ClientApps_Bar",newNode);
 		treeNode = newNode;				
 		return newNode;
 	}
+	public function getKey():String{
+		return "ClientApps_Bar";
+	}	
 	public function getName():String{
 		return "Apps Bar";
 	}
 	public function getData():Object{
-		return new Object({icons:icons});
+		return {icons:icons, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void{
 		icons = new Array();
@@ -42,6 +44,7 @@
 			for(var child in newData.childNodes){
 				var newIcon = new Objects.Client.Icon();
 				newIcon.setXML(newData.childNodes[child]);
+				newIcon.id = _global.formDepth++;
 				icons.push(newIcon);
 			}
 		}
@@ -50,28 +53,23 @@
 		}
 	}
 	public function setData(newData:Object):Void{
+		_global.left_tree.setIsOpen(treeNode, false);		
 		//process new icons
 		var newIcons = new Array();
 		for (var index in newData.icons) {
-			var found = false;
-			for (var icon in icons) {
-				if (icons[icon].name == newData.icons[index].name) {
-					found = true;
-				}
-			}
-			if (found == false) {
+			if (newData.icons[index].id == undefined) {
 				newIcons.push({name:newData.icons[index].name});
 			}
 		}
-		var deletedIcons = new Array();
 		for (var icon in icons) {
 			var found = false;
 			for (var index in newData.icons) {
-				if (icons[icon].name == newData.icons[index].name) {
+				if (icons[icon].id == newData.icons[index].id) {
 					found = true;
 				}
 			}
 			if (found == false) {
+				icons[icon].deleteSelf();
 				icons.splice(parseInt(icon), 1);
 			}
 		}
@@ -80,9 +78,11 @@
 			newNode.attributes["name"] = newIcons[newIcon].name;
 			var newIcon = new Objects.Client.Icon();
 			newIcon.setXML(newNode);
+			newIcon.id = _global.formDepth++;			
 			treeNode.appendChild(newIcon.toTree());					
 			icons.push(newIcon);
 		}
+		_global.left_tree.setIsOpen(treeNode, true);		
 		//sort according to desired order
 		newIcons = new Array();
 		for(var newIcon in newData.icons){

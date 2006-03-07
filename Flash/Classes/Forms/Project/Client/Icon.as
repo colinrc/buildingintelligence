@@ -20,7 +20,16 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 	private var func_ti:TextInput;
 	private var canOpen:String;
 	private var canOpen_ti:TextInput;
+	private var dataObject:Object;
 	public function onLoad():Void {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		name_ti.addEventListener("change", changeListener);
+		icon_ti.addEventListener("change", changeListener);
+		func_ti.addEventListener("change", changeListener);		
+		canOpen_ti.addEventListener("change", changeListener);		
 		var tempNode = _global.overrides_xml.firstChild;
 		for (var child in tempNode.childNodes) {
 			if(tempNode.childNodes[child].nodeName == "button"){
@@ -59,6 +68,7 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 		removeAll_btn.addEventListener("click", Delegate.create(this, remAll));
 	}
 	private function rightListChange(eventObj) {
+		_global.unSaved = true;		
 		variable_ld.createEmptyMovieClip("form_mc", 0);
 		variable_ld.attachMovie("forms.project.client." + eventObj.target.selectedItem.type + "edit", "form_mc", 0, {setting:eventObj.target.selectedItem});
 	}
@@ -70,13 +80,11 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 			newOverride.value = right_li.getItemAt(index).value;
 			newAttributes.push(newOverride);
 		}
-		var tempIndex = _global.left_tree.selectedIndex;
-		_global.left_tree.selectedNode.object.setData(new Object({attributes:newAttributes, name:name, icon:icon, func:func, canOpen:canOpen}));
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.selectedIndex = tempIndex;
+		dataObject.setData({attributes:newAttributes, name:name, icon:icon, func:func, canOpen:canOpen});
+		_global.saveFile("Project");
 	}
 	private function addSel() {
+		_global.unSaved = true;		
 		if (left_li.selectedItem != undefined) {
 			var flag = false;
 			for (var index = 0; index < right_li.length; index++) {
@@ -96,6 +104,7 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 		}
 	}
 	private function addAll() {
+		_global.unSaved = true;		
 		for (var leftIndex = 0; leftIndex < left_li.length; leftIndex++) {
 			var flag = false;
 			for (var rightIndex = 0; rightIndex < right_li.length; rightIndex++) {
@@ -115,12 +124,14 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 		}
 	}
 	private function remSel() {
+		_global.unSaved = true;		
 		if (right_li.selectedItem != undefined) {
 			right_li.removeItemAt(right_li.selectedIndex);
 			variable_ld.createEmptyMovieClip("form_mc", 0);
 		}
 	}
 	private function remAll() {
+		_global.unSaved = true;
 		right_li.removeAll();
 		variable_ld.createEmptyMovieClip("form_mc", 0);
 	}

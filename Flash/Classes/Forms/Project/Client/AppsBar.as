@@ -11,16 +11,23 @@ class Forms.Project.Client.AppsBar extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;	
+	private var dataObject:Object;	
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		name_ti.addEventListener("change", changeListener);	
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(icon_dg);
 		dataGridHandler.addTextInputColumn("name", "Icon Name", restrictions,false,200);
+		dataGridHandler.addHiddenColumn("id");
 		var DP = new Array();		
 		for (var icon in icons) {
-			DP.push({name:icons[icon].name});
+			DP.push({name:icons[icon].name,id:icons[icon].id});
 		}
 		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
@@ -41,6 +48,7 @@ class Forms.Project.Client.AppsBar extends Forms.BaseForm {
 				icon_dg.selectedIndices = undefined;
 				//icon_dg.selectedIndex = tempIndex;
 			}
+			_global.unSaved = true;			
 		}
 	}
 	private function moveDown() {
@@ -55,13 +63,16 @@ class Forms.Project.Client.AppsBar extends Forms.BaseForm {
 				icon_dg.selectedIndices = undefined;
 				//icon_dg.selectedIndex = tempIndex;
 			}
+			_global.unSaved = true;			
 		}
 	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();
+		_global.unSaved = true;		
 	}
 	private function newItem() {
 		dataGridHandler.addBlankRow();
+		_global.unSaved = true;		
 	}
 	public function save():Void {
 		var newIcons = new Array();
@@ -69,11 +80,10 @@ class Forms.Project.Client.AppsBar extends Forms.BaseForm {
 		for (var index = 0; index<DP.length; index++) {
 			var Icon = new Object();
 			Icon.name = DP[index].name;
+			Icon.id = DP[index].id;			
 			newIcons.push(Icon);
 		}
-		_global.left_tree.selectedNode.object.setData({icons:newIcons});
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		dataObject.setData({icons:newIcons});
+		_global.saveFile("Project");
 	}
 }

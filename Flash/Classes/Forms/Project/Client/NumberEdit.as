@@ -8,6 +8,11 @@ class Forms.Project.Client.NumberEdit extends Forms.BaseForm {
 	private var description_lb:Label;
 	private var setting:Object;
 	public function onLoad():Void {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		value_ti.addEventListener("change", changeListener);		
 		update_btn.addEventListener("click", Delegate.create(this, update));
 		value_ti.restrict = "0-9";
 		value_ti.text = setting.value;

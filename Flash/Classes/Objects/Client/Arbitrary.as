@@ -22,14 +22,16 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("ClientArbitrary",newNode);
 		return newNode;
+	}
+	public function getKey():String{
+		return "ClientArbitrary";
 	}
 	public function getName():String{
 		return "Arbitrary";
 	}
 	public function getData():Object{
-		return new Object({items:items});
+		return {items:items, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void{
 		items = new Array();

@@ -1,5 +1,6 @@
 ﻿class Objects.Client.Control_Types extends Objects.BaseElement {
 	private var controls:Array;
+	private var treeNode:XMLNode;		
 	public function isValid():Boolean {
 		return true;
 	}
@@ -19,14 +20,17 @@
 		for (var control in controls) {
 			newNode.appendChild(controls[control].toTree());
 		}
-		_global.workflow.addNode("ClientControl_Types",newNode);
+		treeNode = newNode;				
 		return newNode;
 	}
+	public function getKey():String{
+		return "ClientControl_Types";
+	}	
 	public function getName():String {
 		return "Control Types";
 	}
 	public function getData():Object {
-		return new Object({controls:controls});
+		return {controls:controls, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		controls = new Array();
@@ -34,6 +38,7 @@
 			for (var child in newData.childNodes) {
 				var newControl = new Objects.Client.Control();
 				newControl.setXML(newData.childNodes[child]);
+				newControl.id = _global.formDepth++;
 				controls.push(newControl);
 			}
 		} else {
@@ -41,28 +46,23 @@
 		}
 	}
 	public function setData(newData:Object):Void {
+		_global.left_tree.setIsOpen(treeNode, false);
 		//Process control changes....
 		var newControls = new Array();
 		for (var index in newData.controls) {
-			var found = false;
-			for (var control in controls) {
-				if (controls[control].type == newData.controls[index].type) {
-					found = true;
-				}
-			}
-			if (found == false) {
+			if (newData.controls[index].id == undefined) {
 				newControls.push({type:newData.controls[index].type});
 			}
 		}
-		var deletedControls = new Array();
 		for (var control in controls) {
 			var found = false;
 			for (var index in newData.controls) {
-				if (controls[control].type == newData.controls[index].type) {
+				if (controls[control].id == newData.controls[index].id) {
 					found = true;
 				}
 			}
 			if (found == false) {
+				controls[control].deleteSelf();
 				controls.splice(parseInt(control), 1);
 			}
 		}
@@ -71,7 +71,10 @@
 			newNode.attributes["type"] = newControls[newControl].type;
 			var newControl = new Objects.Client.Control();
 			newControl.setXML(newNode);
+			newControl.id = _global.formDepth++;			
+			treeNode.appendChild(newControl.toTree());	
 			controls.push(newControl);
 		}
+		_global.left_tree.setIsOpen(treeNode, true);
 	}
 }

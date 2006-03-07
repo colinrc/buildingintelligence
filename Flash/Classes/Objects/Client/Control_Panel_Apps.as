@@ -25,14 +25,16 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("ClientControl_Panel_Apps",newNode);
 		return newNode;
 	}
+	public function getKey():String{
+		return "ClientControl_Panel_Apps";
+	}	
 	public function getName():String{
 		return "Control Panel Apps";
 	}
 	public function getData():Object{
-		return {apps:apps};
+		return {apps:apps, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void{
 		apps = new Array();

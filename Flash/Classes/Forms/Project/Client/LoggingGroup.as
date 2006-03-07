@@ -20,7 +20,16 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var removeAll_btn:Button;
 	private var controls:Array;
 	private var attributes:Array;
+	private var dataObject:Object;
 	public function onLoad():Void {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		name_ti.addEventListener("change", changeListener);
+		icon_ti.addEventListener("change", changeListener);
+		listenTo_ti.addEventListener("change", changeListener);
+		type_cmb.addEventListener("change", changeListener);		
 		var tempKeys = _global.server_test.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
@@ -53,6 +62,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		type_cmb.addEventListener("change", Delegate.create(this, typeChange));
 	}
 	private function typeChange() {
+		_global.unSaved = true;		
 		logType_ld.createEmptyMovieClip("form_mc", 0);
 		var dataObj = new Object();
 		switch (type_cmb.selectedItem.label) {
@@ -99,12 +109,11 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			attributes.push({name:"timeformat", value:form_mc.timeformat_ti.text});
 			break;
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({controls:newControls, name:name_ti.text, icon:icon_ti.text, listenTo:listenTo_ti.text, type:type_cmb.selectedItem.label, attributes:attributes}));
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_ti.text, listenTo:listenTo_ti.text, type:type_cmb.selectedItem.label, attributes:attributes});
+		_global.saveFile("Project");
 	}
 	private function addSel() {
+		_global.unSaved = true;
 		if (left_li.selectedItem != undefined) {
 			var flag = false;
 			for (var index = 0; index < right_li.length; index++) {
@@ -120,6 +129,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		}
 	}
 	private function addAll() {
+		_global.unSaved = true;
 		for (var leftIndex = 0; leftIndex < left_li.length; leftIndex++) {
 			var flag = false;
 			for (var rightIndex = 0; rightIndex < right_li.length; rightIndex++) {
@@ -135,11 +145,13 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		}
 	}
 	private function remSel() {
+		_global.unSaved = true;
 		if (right_li.selectedItem != undefined) {
 			right_li.removeItemAt(right_li.selectedIndex);
 		}
 	}
 	private function remAll() {
+		_global.unSaved = true;
 		right_li.removeAll();
 	}
 }

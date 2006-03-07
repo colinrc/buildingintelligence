@@ -73,17 +73,12 @@
 		return {description:description, devices:devices, dataObject:this};
 	}
 	public function setData(newData:Object) {
+		_global.left_tree.setIsOpen(treeNode, false);		
 		description = newData.description;
 		//Process device changes....
 		var newDevices = new Array();
 		for (var index in newData.devices) {
-			var found = false;
-			for (var device in devices) {
-				if ((devices[device].description == newData.devices[index].description) && (devices[device].device_type == newData.devices[index].device_type)) {
-					found = true;
-				}
-			}
-			if (found == false) {
+			if (newData.devices[index].id == undefined) {
 				newDevices.push({description:newData.devices[index].description, device_type:newData.devices[index].device_type});
 			}
 		}
@@ -91,11 +86,12 @@
 		for (var device in devices) {
 			var found = false;
 			for (var index in newData.devices) {
-				if ((devices[device].description == newData.devices[index].description) && (devices[device].device_type == newData.devices[index].device_type)) {
+				if (devices[device].id == newData.devices[index].id) {
 					found = true;
 				}
 			}
 			if (found == false) {
+				devices[device].deleteSelf();
 				devices.splice(parseInt(device), 1);
 			}
 		}
@@ -110,71 +106,83 @@
 			case "PELCO" :
 				var newPelco = new Objects.Server.Pelco();
 				newPelco.setXML(newNode);
+				newPelco.id = _global.formDepth++;
 				treeNode.appendChild(newPelco.toTree());				
 				devices.push(newPelco);
 				break;
 			case "OREGON" :
 				var newOregon = new Objects.Server.Oregon();
 				newOregon.setXML(newNode);
+				newOregon.id = _global.formDepth++;
 				treeNode.appendChild(newOregon.toTree());
 				devices.push(newOregon);
 				break;
 			case "IR_LEARNER" :
 				var newIR = new Objects.Server.IR_Learner();
 				newIR.setXML(newNode);
+				newIR.id = _global.formDepth++;
 				treeNode.appendChild(newIR.toTree());
 				devices.push(newIR);
 				break;
 			case "TUTONDO" :
 				var newTutondo = new Objects.Server.Tutondo();
 				newTutondo.setXML(newNode);
+				newTutondo.id = _global.formDepth++;
 				treeNode.appendChild(newTutondo.toTree());				
 				devices.push(newTutondo);
 				break;
 			case "KRAMER" :
 				var newKramer = new Objects.Server.Kramer();
 				newKramer.setXML(newNode);
+				newKramer.id = _global.formDepth++;
 				treeNode.appendChild(newKramer.toTree());				
 				devices.push(newKramer);
 				break;
 			case "HAL" :
 				var newHal = new Objects.Server.Hal();
 				newHal.setXML(newNode);
+				newHal.id = _global.formDepth++;
 				treeNode.appendChild(newHal.toTree());				
 				devices.push(newHal);
 				break;
 			case "CBUS" :
 				var newCBus = new Objects.Server.CBus();
 				newCBus.setXML(newNode);
+				newCBus.id = _global.formDepth++;
 				treeNode.appendChild(newCBus.toTree());				
 				devices.push(newCBus);
 				break;
 			case "DYNALITE" :
 				var newDynalite = new Objects.Server.Dynalite();
 				newDynalite.setXML(newNode);
+				newDynalite.id = _global.formDepth++;				
 				treeNode.appendChild(newDynalite.toTree());
 				devices.push(newDynalite);
 				break;
 			case "GC100" :
 				var newGC100 = new Objects.Server.GC100();
 				newGC100.setXML(newNode);
+				newGC100.id = _global.formDepth++;
 				treeNode.appendChild(newGC100.toTree());
 				devices.push(newGC100);
 				break;
 			case "RAW_CONNECTION" :
 				var newRaw = new Objects.Server.Raw_Connection();
 				newRaw.setXML(newNode);
+				newRaw.id = _global.formDepth++;				
 				treeNode.appendChild(newRaw.toTree());		
 				devices.push(newRaw);
 				break;
 			case "COMFORT" :
 				var newComfort = new Objects.Server.Comfort();
 				newComfort.setXML(newNode);
+				newComfort.id = _global.formDepth++;								
 				treeNode.appendChild(newComfort.toTree());
 				devices.push(newComfort);
 				break;
 			}
 		}
+		_global.left_tree.setIsOpen(treeNode, true);		
 	}
 	public function setXML(newData:XMLNode):Void {
 		controls = new Objects.Server.Controls();
@@ -194,56 +202,67 @@
 					case "PELCO" :
 						var newPelco = new Objects.Server.Pelco();
 						newPelco.setXML(newData.childNodes[child]);
+						newPelco.id = _global.formDepth++;
 						devices.push(newPelco);
 						break;
 					case "OREGON" :
 						var newOregon = new Objects.Server.Oregon();
 						newOregon.setXML(newData.childNodes[child]);
+						newOregon.id = _global.formDepth++;
 						devices.push(newOregon);
 						break;
 					case "IR_LEARNER" :
 						var newIR = new Objects.Server.IR_Learner();
 						newIR.setXML(newData.childNodes[child]);
+						newIR.id = _global.formDepth++;
 						devices.push(newIR);
 						break;
 					case "TUTONDO" :
 						var newTutondo = new Objects.Server.Tutondo();
 						newTutondo.setXML(newData.childNodes[child]);
+						newTutondo.id = _global.formDepth++;
 						devices.push(newTutondo);
 						break;
 					case "KRAMER" :
 						var newKramer = new Objects.Server.Kramer();
 						newKramer.setXML(newData.childNodes[child]);
+						newKramer.id = _global.formDepth++;
 						devices.push(newKramer);
 						break;
 					case "HAL" :
 						var newHal = new Objects.Server.Hal();
 						newHal.setXML(newData.childNodes[child]);
+						newHal.id = _global.formDepth++;
 						devices.push(newHal);
 						break;
 					case "CBUS" :
 						var newCBus = new Objects.Server.CBus();
 						newCBus.setXML(newData.childNodes[child]);
+						newCBus.id = _global.formDepth++;
 						devices.push(newCBus);
 						break;
 					case "DYNALITE" :
 						var newDynalite = new Objects.Server.Dynalite();
 						newDynalite.setXML(newData.childNodes[child]);
+						newDynalite.id = _global.formDepth++;
 						devices.push(newDynalite);
 						break;
 					case "GC100" :
 						var newGC100 = new Objects.Server.GC100();
 						newGC100.setXML(newData.childNodes[child]);
+						newGC100.id = _global.formDepth++;
 						devices.push(newGC100);
 						break;
 					case "RAW_CONNECTION" :
 						var newRaw = new Objects.Server.Raw_Connection();
 						newRaw.setXML(newData.childNodes[child]);
+						newRaw.id = _global.formDepth++;						
 						devices.push(newRaw);
 						break;
 					case "COMFORT" :
 						var newComfort = new Objects.Server.Comfort();
 						newComfort.setXML(newData.childNodes[child]);
+						newComfort.id = _global.formDepth++;
 						devices.push(newComfort);
 						break;
 					}

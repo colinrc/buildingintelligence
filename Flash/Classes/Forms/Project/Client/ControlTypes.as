@@ -8,19 +8,27 @@ class Forms.Project.Client.ControlTypes extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
+	private var dataObject:Object;
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		name_ti.addEventListener("change", changeListener);
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(controls_dg);
 		dataGridHandler.addTextInputColumn("type", "Control Type", restrictions,false,150);
+		dataGridHandler.addHiddenColumn("id");
 		var DP = new Array();
 		for (var control in controls) {
 			var newControl = new Object();
 			newControl.type = "";
 			if (controls[control].type.length) {
 				newControl.type = controls[control].type;
+				newControl.id = controls[control].id;				
 			}
 			DP.push(newControl);
 		}
@@ -41,11 +49,10 @@ class Forms.Project.Client.ControlTypes extends Forms.BaseForm {
 		for (var index = 0; index<DP.length; index++) {
 			var Control = new Object();
 			Control.type = DP[index].type;
+			Control.id = DP[index].id;							
 			newControls.push(Control);
 		}
-		_global.left_tree.selectedNode.object.setData({controls:newControls});
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		dataObject.setData({controls:newControls});
+		_global.saveFile("Project");
 	}
 }

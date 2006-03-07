@@ -10,7 +10,13 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var roomEditor:MapEditor;
 	private var map:String;
+	private var dataObject:Object;	
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		name_ti.addEventListener("change", changeListener);		
 		name_ti.text = name;
 		roomEditor.map = map.split('\\').join('/');
 		roomEditor.poly = poly;
@@ -27,9 +33,7 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function save():Void {
-		_global.left_tree.selectedNode.object.setData({name:name_ti.text, poly:roomEditor.poly, switchZone:switchZone_cmb.text});
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);		
+		dataObject.setData({name:name_ti.text, poly:roomEditor.poly, switchZone:switchZone_cmb.text});
+		_global.saveFile("Project");
 	}
 }

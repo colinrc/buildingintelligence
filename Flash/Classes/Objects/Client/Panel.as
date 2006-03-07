@@ -5,6 +5,10 @@
 	private var y_pos:String;
 	private var height:String;
 	private var width:String;	
+	private var treeNode:XMLNode;
+	public function deleteSelf(){
+		treeNode.removeNode();
+	}		
 	public function isValid():Boolean {
 		var flag = true;
 		for (var control in controls) {
@@ -39,13 +43,17 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Panel");
 		newNode.object = this;
+		treeNode = newNode;
 		return newNode;
+	}
+	public function getKey():String{
+		return "Panel";
 	}
 	public function getName():String {
 		return "Panel : "+name;
 	}
 	public function getData():Object {
-		return new Object({controls:controls,name:name,x_pos:x_pos,y_pos:y_pos,width:width,height:height});
+		return {controls:controls,name:name,x_pos:x_pos,y_pos:y_pos,width:width,height:height, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		name = "";

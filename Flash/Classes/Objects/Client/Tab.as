@@ -2,6 +2,10 @@
 	private var controls:Array;
 	private var name:String;
 	private var icon:String;
+	private var treeNode:XMLNode;
+	public function deleteSelf(){
+		treeNode.removeNode();
+	}		
 	public function isValid():Boolean {
 		var flag = true;
 		for (var control in controls) {
@@ -27,14 +31,17 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Tab");
 		newNode.object = this;
-		_global.workflow.addNode("ClientTab",newNode);
+		treeNode = newNode;
 		return newNode;
+	}
+	public function getKey():String{
+		return "ClientTab";
 	}
 	public function getName():String {
 		return "Tab : "+name;
 	}
 	public function getData():Object {
-		return new Object({controls:controls,name:name,icon:icon});
+		return {controls:controls,name:name,icon:icon, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		name = "";

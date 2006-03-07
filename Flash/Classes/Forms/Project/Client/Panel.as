@@ -18,7 +18,17 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 	private var width:String;
 	private var width_ti:TextInput;
 	private var dataGridHandler:Object;
+	private var dataObject:Object;
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		name_ti.addEventListener("change", changeListener);
+		x_pos_ti.addEventListener("change", changeListener);
+		y_pos_ti.addEventListener("change", changeListener);
+		height_ti.addEventListener("change", changeListener);
+		width_ti.addEventListener("change", changeListener);		
 		name_ti.text = name;
 		x_pos_ti.text = x_pos;
 		y_pos_ti.text = y_pos;
@@ -102,9 +112,7 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 			}
 			newControls.push(item);
 		}
-		_global.left_tree.selectedNode.object.setData({controls:newControls, name:name_ti.text, x_pos:x_pos_ti.text, y_pos:y_pos_ti.text, width:width_ti.text, height:height_ti.text});
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);		
+		dataObject.setData({controls:newControls, name:name_ti.text, x_pos:x_pos_ti.text, y_pos:y_pos_ti.text, width:width_ti.text, height:height_ti.text});
+		_global.saveFile("Project");
 	}
 }

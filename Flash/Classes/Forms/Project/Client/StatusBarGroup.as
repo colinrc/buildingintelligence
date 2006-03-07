@@ -27,7 +27,16 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private var overrides_removeAll_btn:Button;
 	private var variable_ld:Loader;
 	private var variable_mc:MovieClip;
+	private var dataObject:Object;	
 	public function onLoad():Void {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		name_ti.addEventListener("change", changeListener);
+		icon_ti.addEventListener("change", changeListener);
+		show_ti.addEventListener("change", changeListener);
+		hide_ti.addEventListener("change", changeListener);		
 		var tempKeys = _global.server_test.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
@@ -99,12 +108,11 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 			newOverrides.push(newOverride);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		_global.left_tree.selectedNode.object.setData(new Object({controls:newControls, attributes:newOverrides, name:name_ti.text, icon:icon_ti.text, show:show_ti.text, hide:hide_ti.text}));
-		_global.needSave();
-		_global.refreshTheTree();
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		dataObject.setData({controls:newControls, attributes:newOverrides, name:name_ti.text, icon:icon_ti.text, show:show_ti.text, hide:hide_ti.text});
+		_global.saveFile("Project");
 	}
 	private function keys_addSel() {
+		_global.unSaved = true;
 		if (keys_left_li.selectedItem != undefined) {
 			var flag = false;
 			for (var index = 0; index < keys_right_li.length; index++) {
@@ -120,6 +128,7 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		}
 	}
 	private function keys_addAll() {
+		_global.unSaved = true;
 		for (var leftIndex = 0; leftIndex < keys_left_li.length; leftIndex++) {
 			var flag = false;
 			for (var rightIndex = 0; rightIndex < keys_right_li.length; rightIndex++) {
@@ -135,18 +144,22 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		}
 	}
 	private function keys_remSel() {
+		_global.unSaved = true;
 		if (keys_right_li.selectedItem != undefined) {
 			keys_right_li.removeItemAt(keys_right_li.selectedIndex);
 		}
 	}
 	private function keys_remAll() {
+		_global.unSaved = true;
 		keys_right_li.removeAll();
 	}
 	private function overrides_rightListChange(eventObj) {
+		_global.unSaved = true;
 		variable_ld.createEmptyMovieClip("form_mc", 0);
 		variable_ld.attachMovie("forms.project.client." + eventObj.target.selectedItem.type + "edit", "form_mc", 0, {setting:eventObj.target.selectedItem});
 	}
 	private function overrides_addSel() {
+		_global.unSaved = true;
 		if (overrides_left_li.selectedItem != undefined) {
 			var flag = false;
 			for (var index = 0; index < overrides_right_li.length; index++) {
@@ -166,6 +179,7 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		}
 	}
 	private function overrides_addAll() {
+		_global.unSaved = true;
 		for (var leftIndex = 0; leftIndex < overrides_left_li.length; leftIndex++) {
 			var flag = false;
 			for (var rightIndex = 0; rightIndex < overrides_right_li.length; rightIndex++) {
@@ -185,12 +199,14 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		}
 	}
 	private function overrides_remSel() {
+		_global.unSaved = true;		
 		if (overrides_right_li.selectedItem != undefined) {
 			overrides_right_li.removeItemAt(overrides_right_li.selectedIndex);
 			variable_ld.createEmptyMovieClip("form_mc", 0);
 		}
 	}
 	private function overrides_remAll() {
+		_global.unSaved = true;		
 		overrides_right_li.removeAll();
 		variable_ld.createEmptyMovieClip("form_mc", 0);
 	}

@@ -62,8 +62,10 @@
 		newNode.appendChild(control_types.toTree());
 		newNode.object = this;
 		//_root.debugger.text += "in client xml newNode ="+newNode.toString();
-		_global.workflow.addNode("Client",newNode);
 		return newNode;
+	}
+	public function getKey():String{
+		return "Client";
 	}
 	public function getName():String{
 		return "Client";

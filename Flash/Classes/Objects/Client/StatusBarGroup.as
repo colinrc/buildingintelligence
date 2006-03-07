@@ -5,6 +5,10 @@
 	private var hide:String;
 	private var controls:Array;
 	private var attributes:Array;
+	private var treeNode:XMLNode;
+	public function deleteSelf(){
+		treeNode.removeNode();
+	}	
 	public function isValid():Boolean {
 		var flag = true;
 		for(var control in controls){
@@ -39,14 +43,17 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("StatusBarGroup",newNode);
+		treeNode = newNode;
 		return newNode;
 	}
+	public function getKey():String{
+		return "StatusBarGroup";
+	}		
 	public function getName():String{
 		return "Group: "+name;
 	}
 	public function getData():Object{
-		return new Object({controls:controls,attributes:attributes, icon:icon,name:name,show:show,hide:hide});
+		return {controls:controls,attributes:attributes, icon:icon,name:name,show:show,hide:hide, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void{
 		name = "";

@@ -12,7 +12,15 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 	private var y_ti:TextInput;
 	private var item_ld:Loader;
 	private var item_mc:MovieClip;
+	private var dataObject:Object;
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		type_cmb.addEventListener("change", changeListener);	
+		x_ti.addEventListener("change", changeListener);	
+		y_ti.addEventListener("change", changeListener);
 		for (var item in items) {
 			items_li.addItem(items[item]);
 		}
@@ -37,8 +45,10 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 		items_li.removeItemAt(items_li.selectedIndex);
 		items_li.selectedIndex = undefined;
 		delete_btn.enabled = false;
+		_global.unSaved = true;		
 	}
 	private function updateItem() {
+		_global.unSaved = true;		
 		var newItem = new XMLNode(1, "item");
 		newItem.attributes["type"] = type_cmb.selectedItem.label;
 		if (x_ti.text != "") {
@@ -125,6 +135,7 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 		}
 	}
 	private function addItem() {
+		_global.unSaved = true;		
 		var newItem = new XMLNode(1, "item");
 		newItem.attributes["type"] = type_cmb.selectedItem.label;
 		newItem.attributes["x"] = x_ti.text;
@@ -165,6 +176,7 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 		delete_btn.enabled = false;
 	}
 	private function itemChange(evtObj) {
+		_global.unSaved = true;		
 		delete_btn.enabled = true;
 		for (var index = 0; index<items_li.length; index++) {
 			if (type_cmb.getItemAt(index).label == items_li.selectedItem.attributes["type"]) {
@@ -184,9 +196,11 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 		typeChange(items_li.selectedItem.attributes["type"]);
 	}
 	private function comboChange(evtObj) {
+		_global.unSaved = true;		
 		typeChange(type_cmb.selectedItem.label);
 	}
 	private function typeChange(type) {
+		_global.unSaved = true;		
 		var dataObj = new Object();
 		switch (type) {
 		case "label" :
@@ -315,14 +329,12 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 		}
 		item_mc = item_ld.attachMovie("forms.project.client.arbitrary"+type, "item_mc", 0, {dataObj:dataObj});
 	}
-	public function save():Void {
+	public function save():Void {	
 		var newItems = new Array();
 		for (var index = 0; index<items_li.length; index++) {
 			newItems.push(items_li.getItemAt(index));
 		}
-		_global.left_tree.selectedNode.object.setData({items:newItems});
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		dataObject.setData({items:newItems});
+		_global.saveFile("Project");
 	}
 }

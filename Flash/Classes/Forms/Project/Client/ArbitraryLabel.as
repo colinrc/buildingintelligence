@@ -9,6 +9,15 @@ class Forms.Project.Client.ArbitraryLabel extends Forms.BaseForm {
 	private var fontSize_ti:TextInput;
 	private var dataObj:Object;
 	public function onLoad():Void {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		label_ti.addEventListener("change", changeListener);	
+		key_ti.addEventListener("change", changeListener);		
+		defaultState_ti.addEventListener("change", changeListener);
+		defaultValue_ti.addEventListener("change", changeListener);		
+		fontSize_ti.addEventListener("change", changeListener);
 		fontColour_mc.setColour(dataObj.fontColour);
 		label_ti.text = dataObj.label;
 		key_ti.text = dataObj.key;

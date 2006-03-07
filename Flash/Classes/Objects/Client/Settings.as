@@ -21,14 +21,16 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
-		_global.workflow.addNode("ClientSettings",newNode);
 		return newNode;
+	}
+	public function getKey():String{
+		return "ClientSettings";
 	}
 	public function getName():String{
 		return "Settings";
 	}
 	public function getData():Object{
-		return new Object({settings:settings});
+		return {settings:settings, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void{
 		if(newData.nodeName == "settings"){

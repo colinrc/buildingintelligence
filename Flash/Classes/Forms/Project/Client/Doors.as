@@ -7,6 +7,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
+	private var dataObject:Object;	
 	public function onLoad() {
 		var tempKeys = _global.server_test.getKeys();
 		var DPKey = new Array();
@@ -79,7 +80,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			}
 			newDoors.push(item);
 		}
-		_global.left_tree.selectedNode.object.setData({doors:newDoors});
-		_global.needSave();						
+		dataObject.setData({doors:newDoors});
+		_global.saveFile("Project");
 	}
 }

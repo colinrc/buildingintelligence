@@ -7,7 +7,8 @@ class Forms.Project.Client.ControlPanelApps extends Forms.BaseForm {
 	private var apps_dg:DataGrid;
 	private var apps:Array;
 	private var dataGridHandler:Object;
-	public function onLoad():Void {
+	private var dataObject:Object;
+	public function onLoad():Void {	
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
@@ -53,9 +54,7 @@ class Forms.Project.Client.ControlPanelApps extends Forms.BaseForm {
 			newApps.push(newApp);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		_global.left_tree.selectedNode.object.setData({apps:newApps});
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		dataObject.setData({apps:newApps});
+		_global.saveFile("Project");
 	}
 }

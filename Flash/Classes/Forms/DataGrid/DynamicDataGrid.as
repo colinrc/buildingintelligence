@@ -451,7 +451,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				newRow[column] = newColour;
 				break;
 			case "hidden" :
-				newRow[column] = new Object();
+				//newRow[column] = new Object();
 				break;
 			}
 		}

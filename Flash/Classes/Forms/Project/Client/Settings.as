@@ -12,7 +12,7 @@ class Forms.Project.Client.Settings extends Forms.BaseForm {
 	private var removeAll_btn:Button;
 	private var variable_mc:MovieClip;
 	private var settings:XMLNode;
-	
+	private var dataObject:Object;		
 	public function onLoad():Void{
 		var tempNode = _global.overrides_xml.firstChild;
 		for(var child in tempNode.childNodes){
@@ -46,6 +46,7 @@ class Forms.Project.Client.Settings extends Forms.BaseForm {
 		removeAll_btn.addEventListener("click", Delegate.create(this,remAll));
 	}
 	private function rightListChange(eventObj){
+		_global.unSaved = true;		
 		variable_ld.createEmptyMovieClip("form_mc",0);
 		variable_ld.attachMovie("forms.project.client."+eventObj.target.selectedItem.type+"edit", "form_mc", 0, {setting:eventObj.target.selectedItem});
 	}
@@ -58,12 +59,11 @@ class Forms.Project.Client.Settings extends Forms.BaseForm {
 			newNode.appendChild(newOverride);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		_global.left_tree.selectedNode.object.setData(new Object({settings:newNode}));
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		dataObject.setData({settings:newNode});
+		_global.saveFile("Project");
 	}
 	private function addSel(){
+		_global.unSaved = true;		
 		if(left_li.selectedItem != undefined){
 			var flag = false;
 			for (var index = 0; index<right_li.length; index++) {
@@ -83,6 +83,7 @@ class Forms.Project.Client.Settings extends Forms.BaseForm {
 		}
 	}
 	private function addAll(){
+		_global.unSaved = true;		
 		for (var leftIndex = 0; leftIndex<left_li.length; leftIndex++) {
 			var flag = false;
 			for (var rightIndex = 0; rightIndex<right_li.length; rightIndex++) {
@@ -102,12 +103,14 @@ class Forms.Project.Client.Settings extends Forms.BaseForm {
 		}
 	}
 	private function remSel(){
+		_global.unSaved = true;		
 		if(right_li.selectedItem != undefined){
 			right_li.removeItemAt(right_li.selectedIndex);
 			variable_ld.createEmptyMovieClip("form_mc",0);
 		}
 	}
 	private function remAll(){
+		_global.unSaved = true;		
 		right_li.removeAll();
 		variable_ld.createEmptyMovieClip("form_mc",0);
 	}

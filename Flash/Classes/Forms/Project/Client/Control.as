@@ -15,7 +15,13 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var object:Object;
 	private var preview_mc:MovieClip;
+	private var dataObject:Object;	
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		type_ti.addEventListener("change", changeListener);	
 		editor_dg.columnNames = ["0", "1", "2", "3", "4"];
 		editor_dg.getColumnAt(0).headerText = "Rows";
 		editor_dg.getColumnAt(1).headerText = "Item 1";
@@ -54,6 +60,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		//preview(_global.left_tree.selectedNode.object.toXML());
 	}
 	private function cellClick(eventObject) {
+		_global.unSaved = true;		
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
 		object.itemIndex = eventObject.itemIndex;
 		object.columnIndex = eventObject.columnIndex;
@@ -73,6 +80,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		}
 	}
 	private function deleteItem() {
+		_global.unSaved = true;		
 		editor_dg.dataProvider[object.itemIndex].splice(object.columnIndex, 1);
 		editor_dg.selectedIndex = undefined;
 		object.itemIndex = undefined;
@@ -80,6 +88,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
 	private function updateItem() {
+		_global.unSaved = true;		
 		editor_dg.dataProvider[object.itemIndex][object.columnIndex].object = editor_mc.getObject();
 		editor_dg.selectedIndex = undefined;
 		object.itemIndex = undefined;
@@ -87,6 +96,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
 	private function addItem() {
+		_global.unSaved = true;		
 		var newItemNode = new XMLNode(1, "item");
 		newItemNode.attributes["type"] = editor_mc.type_cmb.text;
 		var newObject = new Object();
@@ -99,6 +109,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		editor_dg.selectedIndex = editor_dg.selectedIndex;
 	}
 	private function addRow() {
+		_global.unSaved = true;		
 		var newArray = new Array();
 		var newObject = new Object();
 		newObject.label = "Row";
@@ -112,6 +123,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		editor_dg.selectedIndex = editor_dg.selectedIndex;
 	}
 	private function deleteRow() {
+		_global.unSaved = true;		
 		editor_dg.removeItemAt(object.itemIndex);
 		editor_dg.selectedIndex = undefined;
 		object.itemIndex = undefined;
@@ -119,6 +131,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
 	private function updateRow() {
+		_global.unSaved = true;		
 		editor_dg.dataProvider[object.itemIndex][object.columnIndex].cases = editor_mc.cases_ti.text;
 		editor_dg.selectedIndex = undefined;
 		object.itemIndex = undefined;
@@ -126,6 +139,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
 	private function moveLeft() {
+		_global.unSaved = true;		
 		if (object != undefined) {
 			if (object.columnIndex != 1) {
 				var tempObj = editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex-1);
@@ -139,6 +153,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		}
 	}
 	private function moveRight() {
+		_global.unSaved = true;		
 		if (object != undefined) {
 			if (object.columnIndex != editor_dg.dataProvider[object.itemIndex].length-1) {
 				var tempObj = editor_dg.dataProvider[object.itemIndex].getItemAt(object.columnIndex+1);
@@ -152,6 +167,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		}
 	}
 	private function moveUp() {
+		_global.unSaved = true;		
 		if (editor_dg.selectedIndex != undefined) {
 			if (editor_dg.selectedIndex != editor_dg.length-1) {
 				var tempObj = editor_dg.getItemAt(editor_dg.selectedIndex+1);
@@ -163,6 +179,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		}
 	}
 	private function moveDown() {
+		_global.unSaved = true;		
 		if (editor_dg.selectedIndex != undefined) {
 			if (editor_dg.selectedIndex != 0) {
 				var tempObj = editor_dg.getItemAt(editor_dg.selectedIndex-1);
@@ -187,9 +204,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 			}
 			newRows.push(newRow);
 		}
-		_global.left_tree.selectedNode.object.setData({rows:newRows, type:type_ti.text});
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		dataObject.setData({rows:newRows, type:type_ti.text});
+		_global.saveFile("Project");
 	}
 }

@@ -51,6 +51,7 @@
 		var newNode = new XMLNode(1, this.getName());
 		newNode.appendChild(cameras.toTree());
 		newNode.object = this;
+		treeNode = newNode;		
 		return newNode;
 	}
 	public function getKey():String {

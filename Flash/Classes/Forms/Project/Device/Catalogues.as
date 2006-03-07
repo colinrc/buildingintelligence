@@ -15,11 +15,13 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(catalogues_dg);
 		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false,150);
+		dataGridHandler.addHiddenColumn("id");
 		dataGridHandler.setAdvanced(_global.advanced);//Debug						
 		var DP = new Array();
 		for (var catalogue in catalogues) {
 			var newCatalogue = new Object();
 			newCatalogue.name = catalogues[catalogue].name;
+			newCatalogue.id = catalogues[catalogue].id;			
 			DP.push(newCatalogue);
 		}
 		dataGridHandler.setDataGridDataProvider(DP);
@@ -47,6 +49,7 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 		for (var index = 0; index<DP.length; index++) {
 			var Catalogue = new Object();
 			Catalogue.name = DP[index].name;
+			Catalogue.id = DP[index].id;			
 			newCatalogues.push(Catalogue);
 		}
 		dataObject.setData({catalogues:newCatalogues});

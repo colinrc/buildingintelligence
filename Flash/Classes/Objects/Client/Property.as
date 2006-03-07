@@ -20,15 +20,17 @@
 		for(var zone in zones){
 			newNode.appendChild(zones[zone].toTree());
 		}
-		_global.workflow.addNode("Property",newNode);
 		treeNode = newNode;			
 		return newNode;
+	}
+	public function getKey():String{
+		return "Property";
 	}
 	public function getName():String{
 		return "Property";
 	}
 	public function getData():Object{
-		return new Object({zones:zones});
+		return {zones:zones, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void{
 		zones = new Array();
@@ -36,6 +38,7 @@
 			for(var child in newData.childNodes){
 				var newZone = new Objects.Client.Zone();
 				newZone.setXML(newData.childNodes[child]);
+				newZone.id = _global.formDepth++;				
 				zones.push(newZone);
 			}
 		}
@@ -44,28 +47,24 @@
 		}
 	}
 	public function setData(newData:Object):Void{
+		_global.left_tree.setIsOpen(treeNode, false);		
 		//Process new zones
 		var newZones = new Array();
 		for (var index in newData.zones) {
-			var found = false;
-			for (var zone in zones) {
-				if (zones[zone].name == newData.zones[index].name) {
-					found = true;
-				}
-			}
-			if (found == false) {
+			trace(newData.zones[index].id);
+			if (newData.zones[index].id == undefined) {
 				newZones.push({name:newData.zones[index].name});
 			}
 		}
-		var deletedZones = new Array();
 		for (var zone in zones) {
 			var found = false;
 			for (var index in newData.zones) {
-				if (zones[zone].name == newData.zones[index].name) {
+				if (zones[zone].id == newData.zones[index].id) {
 					found = true;
 				}
 			}
 			if (found == false) {
+				zones[zone].deleteSelf();
 				zones.splice(parseInt(zone), 1);
 			}
 		}
@@ -73,9 +72,11 @@
 			var newNode = new XMLNode(1, "zone");
 			newNode.attributes["name"] = newZones[newZone].name;
 			var newZone = new Objects.Client.Zone();
+			newZone.id = _global.formDepth++;
 			newZone.setXML(newNode);
 			treeNode.appendChild(newZone.toTree());			
 			zones.push(newZone);
 		}
+		_global.left_tree.setIsOpen(treeNode, true);		
 	}
 }

@@ -25,7 +25,18 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 	private var panels_dg:DataGrid;
 	private var add_panel_btn:Button;
 	private var del_panel_btn:Button;
+	private var dataObject:Object;	
 	public function onLoad() {
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		name_ti.addEventListener("change", changeListener);	
+		map_ti.addEventListener("change", changeListener);	
+		background_ti.addEventListener("change", changeListener);	
+		cycle_chk.addEventListener("change", changeListener);	
+		alignment_cmb.addEventListener("change", changeListener);	
+		hideFromList_chk.addEventListener("change", changeListener);			
 		name_ti.text = name;
 		map_ti.text = map;
 		background_ti.text = background;
@@ -52,20 +63,24 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(rooms_dg);
 		dataGridHandler.addTextInputColumn("name", "Room Name", restrictions,false,150);
+		dataGridHandler.addHiddenColumn("id");		
 		var DP = new Array();
 		for (var room in rooms) {
 			var newRoom = new Object();
 			newRoom.name = rooms[room].name;
+			newRoom.id = rooms[room].id;			
 			DP.push(newRoom);
 		}
 		dataGridHandler.setDataGridDataProvider(DP);
 		dataGridHandler2 = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler2.setDataGrid(panels_dg);
 		dataGridHandler2.addTextInputColumn("name", "Panel Name", restrictions,false,150);
+		dataGridHandler2.addHiddenColumn("id");		
 		var DP2 = new Array();
 		for (var panel in panels) {
 			var newPanel = new Object();
 			newPanel.name = panels[panel].name;
+			newPanel.id = panels[panel].id;			
 			DP2.push(newPanel);
 		}
 		dataGridHandler2.setDataGridDataProvider(DP2);
@@ -103,6 +118,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		for (var index = 0; index<DP.length; index++) {
 			var Room = new Object();
 			Room.name = DP[index].name;
+			Room.id = DP[index].id;			
 			newRooms.push(Room);
 		}
 		var newPanels = new Array();
@@ -110,6 +126,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		for (var index = 0; index<DP.length; index++) {
 			var Panel = new Object();
 			Panel.name = DP[index].name;
+			Panel.id = DP[index].id;			
 			newPanels.push(Panel);
 		}
 		if (cycle_chk.selected) {
@@ -122,9 +139,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		} else {
 			hideFromList = "false";
 		}
-		_global.left_tree.selectedNode.object.setData(new Object({panels:newPanels, rooms:newRooms, name:name_ti.text, map:map_ti.text, background:background_ti.text, cycle:cycle, alignment:alignment_cmb.selectedItem.label, hideFromList:hideFromList}));
-		_global.needSave();						
-		_global.refreshTheTree();		
-		_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+		dataObject.setData({panels:newPanels, rooms:newRooms, name:name_ti.text, map:map_ti.text, background:background_ti.text, cycle:cycle, alignment:alignment_cmb.selectedItem.label, hideFromList:hideFromList});
+		_global.saveFile("Project");
 	}
 }
