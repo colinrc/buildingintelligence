@@ -1,9 +1,9 @@
 ﻿client_xml = new XML();
 client_xml.onLoad = function () {
-	parseClient(this);
+	parseClientXML(this);
 }
 
-parseClient = function (xml) {
+parseClientXML = function (xml) {
 	var settings = xml.firstChild.childNodes;
 	for (var setting=0; setting<settings.length; setting++) {
 		if (Number(settings[setting].attributes.value) == settings[setting].attributes.value) {
@@ -44,6 +44,10 @@ parseClient = function (xml) {
 			delete counter;
 		}
 	}
+}
+
+parseClient = function (xml_string) {
+	parseClientXML(new XML(xml_string));
 }
 
 if (!mdm.Forms.Preview.isCreated) {
