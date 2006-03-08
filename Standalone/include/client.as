@@ -1,6 +1,10 @@
 ﻿client_xml = new XML();
 client_xml.onLoad = function () {
-	var settings = this.firstChild.childNodes;
+	parseClient(this);
+}
+
+parseClient = function (xml) {
+	var settings = xml.firstChild.childNodes;
 	for (var setting=0; setting<settings.length; setting++) {
 		if (Number(settings[setting].attributes.value) == settings[setting].attributes.value) {
 			_global.settings[settings[setting].attributes.name] = Number(settings[setting].attributes.value);
@@ -42,4 +46,8 @@ client_xml.onLoad = function () {
 	}
 }
 
-client_xml.load("elife.xml");
+if (!mdm.Forms.Preview.isCreated) {
+	client_xml.load("elife.xml");
+//} else {
+	//parseClient(new XML('<client><setting name="serverAddress" value="127.0.0.1" /><setting name="applicationXML" value="E:/BI/eLife Client/Build/standalone/sample.xml" /><setting name="libLocation" value="E:/BI/eLife Client/Build/standalone/lib/" /><setting name="fullScreen" value="false" /><setting name="hideMouseCursor" value="false" /><setting name="debugMode" value="false" /></client>'))
+}

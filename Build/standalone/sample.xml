@@ -67,18 +67,15 @@
 			<control key="MASTER_BED_TV" />
 		</group>
 	</statusBar>
-	<logging windowWidth="300" windowHeight="450" windowBgOpacity="60" windowBgColour1="0xFFCC00" windowBgColour2="0x990000" windowCornerRadius="30" windowBorderColour="0xCC0000" windowBorderWidth="2" windowShadowOffset="10">
+	<logging>
 		<group name="Lights" icon="light-bulb" listenTo="on,off" label="%room%: %name%" timeformat="HH:mm d mmmm yyyy" type="tally">
-			<control key="LOUNGE_LIGHT" />
+			<control key="ENSUITE_LIGHT" />
 		</group>
 		<group name="PIRs" icon="green-man" listenTo="on" label="%room% PIR" timeformat="HH:mm d mmmm yyyy" type="tally">
 			<control key="ENTRY_PIR" />
 		</group>
-		<group name="Lights" icon="light-bulb" listenTo="on,off" label="%name% turned on %timestamp% (%extra%%),%name% turned off %timestamp%" type="log" timeformat="HH:mm d mmmm yyyy">
-			<control key="LOUNGE_LIGHT" />
-		</group>
 		<group name="Doors" icon="door-open" listenTo="on,off" label="%name% opened %timestamp%,%name% closed %timestamp%" type="log" timeformat="HH:mm d mmmm yyyy">
-			<control key="ENTRY_DOOR" />
+			<control key="GARAGE_DOOR" />
 		</group>
 		<group name="Test" icon="gears" type="web" url="http://www.sparkos.com/" />
 	</logging>

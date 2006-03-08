@@ -4,9 +4,10 @@ class bi.ui.List extends  bi.ui.CoreUI {
 	private var clipParameters:Object = {settings:1, width:1, height:1, label:1}; 
 
 	private var bg_mc:MovieClip;
+	private var mask_mc:MovieClip;
 	private var listItems_mc:MovieClip;
 	
-	private var _data_array:Array = new Array();
+	private var _data_array:Array;
 
 	private var _enabled:Boolean = true;
 	private var _selectedIndex:Number;
@@ -32,12 +33,40 @@ class bi.ui.List extends  bi.ui.CoreUI {
 	}
 	
 	public function set selectedIndex(index:Number):Number {
-		_selectedIndex = index;
-		dispatchEvent({type:"change", target:this});
+		var oldIndex = _selectedIndex;
+		listItems_mc["row" + oldIndex + "_mc"].label_txt.textColor = _global.settings.listItemFontColour;
+		if (index != oldIndex) {
+			_selectedIndex = index;
+		} else {
+			_selectedIndex = null;
+		}
+		
+		if (_selectedIndex != null) {
+			listItems_mc["row" + index + "_mc"].label_txt.textColor = 0xFFCC00;
+			dispatchEvent({type:"change", target:this});
+		}
 	}
 	
 	public function get selectedIndex():Number {
 		return _selectedIndex;
+	}
+
+	public function set selectedValue(val):Void {
+		for (var i=0; i<_data_array.length; i++) {
+			if (_data_array[i].value == val) {
+				selectedIndex = i;
+				break;
+			}
+		}
+	}
+	
+	public function set selectedLabel(label:String):Void {
+		for (var i=0; i<_data_array.length; i++) {
+			if (_data_array[i].label == label) {
+				selectedIndex = i;
+				break;
+			}
+		}
 	}
 	
 	public function set dataProvider(provider:Array):Void {
@@ -64,6 +93,8 @@ class bi.ui.List extends  bi.ui.CoreUI {
 	function List() {
 		initFromClipParameters();
 
+		_data_array = new Array();
+		
 		if (_bgColour == null) _bgColour = _global.settings.listBgColour;
 		if (_bgOpacity == null) _bgOpacity = _global.settings.listBgOpacity;
 		if (_cornerRadius == null) _cornerRadius = _global.settings.listCornerRadius;
@@ -114,21 +145,34 @@ class bi.ui.List extends  bi.ui.CoreUI {
 		bg_mc.drawRect(0, 0, __width, __height, _cornerRadius);
 		bg_mc.endFill();
 		
+		if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
+			bg_mc.filters = [_global.settings.dropShadowFilterSmall];
+		}
+		
 		createEmptyMovieClip("listItems_mc", 20);
-		listItems_mc._x = listItems_mc._y = _padding;
+		listItems_mc._x = listItems_mc._y = 0;
+		
+		createEmptyMovieClip("mask_mc", 30);
+		mask_mc.beginFill(0xFFFFFF);
+		mask_mc.drawRect(0, 0, __width, __height, _cornerRadius);
+		mask_mc.endFill();
+		mask_mc._visible = false;
+		
+		listItems_mc.setMask(mask_mc);
 			
 		for (var i=0; i<_data_array.length; i++) {
 			var row_mc:MovieClip = listItems_mc.createEmptyMovieClip("row" + i + "_mc", i);
-			var listBg_mc:MovieClip = row_mc.createEmptyMovieClip("listBg_mc", 0);
 			
+			var listBg_mc:MovieClip = row_mc.createEmptyMovieClip("bg_mc", 0);
 			if (i % 2) {
 				listBg_mc.beginFill(_itemBgColour2, _itemBgOpacity);
 			} else {
 				listBg_mc.beginFill(_itemBgColour1, _itemBgOpacity);
 			}
-			listBg_mc.drawRect(0, 0, __width - (_padding * 2), _itemHeight, _itemCornerRadius);
-			
-			row_mc.createTextField("label_txt", 10, 2, 0, bg_mc._width - 2, 0);
+			listBg_mc.drawRect(0, 0, __width, _itemHeight);
+			listBg_mc.endFill();
+	
+			row_mc.createTextField("label_txt", 20, 2, 0, bg_mc._width - 2, 0);
 			var label_txt:TextField = row_mc.label_txt;
 			var label_tf:TextFormat = new TextFormat();
 			label_tf.color = _itemFontColour;

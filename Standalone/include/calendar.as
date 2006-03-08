@@ -103,6 +103,7 @@
 		standardEvents_mc.addEventListener("change", standardEvents_mc);
 		standardEvents_mc.change = function (eventObj) {
 			editCalendarEvent(eventObj.target.selectedItem.value, this._parent.dateObj);
+			this.selectedIndex = null;
 		}
 
 		content_mc.attachMovie("bi.ui.Label", "events_lb", 40, {settings:{text:"Scheduled macros:", width:content_mc.width - columnBreak - 10, align:"center", _x:columnBreak + 10, _y:Math.round(content_mc.height / 2), fontSize:18}});
@@ -112,8 +113,10 @@
 		macroEvents_mc._y = content_mc.height / 2 + 30;
 		macroEvents_mc.addEventListener("change", macroEvents_mc);
 		macroEvents_mc.change = function (eventObj) {
-			skipCalendarEvent(eventObj.target.selectedItem.value);
-		}		
+			editCalendarEvent(eventObj.target.selectedItem.value, this._parent.dateObj);
+			//skipCalendarEvent(eventObj.target.selectedItem.value);
+			this.selectedIndex = null
+		}
 		
 		var buttons_mc = content_mc.createEmptyMovieClip("buttons_mc", 60);
 		buttons_mc.attachMovie("bi.ui.Button", "newEvent_btn", 10, {settings:{width:calendar_ec._width, height: 30, label:"Create new event"}});
@@ -296,7 +299,7 @@ skipCalendarEvent = function (eventObj) {
 editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	if (calendarObj != undefined) {
 		var mode = "edit";
-		var window_mc = showWindow({width:570, height:455, title:"Edit event: " + calendarObj.title, iconName:"calendar", align:"center"});
+		var window_mc = showWindow({width:700, height:455, title:"Edit event: " + calendarObj.title, iconName:"calendar", align:"center"});
 	} else {
 		var mode = "create";
 		var calendarObj = new Object();
@@ -313,7 +316,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		calendarObj.startDate = dateObj;
 		calendarObj.endDate = new Date(dateObj.getFullYear() + 1, dateObj.getMonth(), dateObj.getDate(), dateObj.getHours(), dateObj.getMinutes(), dateObj.getSeconds())
 		calendarObj.pattern = new Object();
-		var window_mc = showWindow({width:570, height:455, title:"Create new event:", iconName:"calendar", align:"center"});
+		var window_mc = showWindow({width:700, height:455, title:"Create new event:", iconName:"calendar", align:"center"});
 	}
 	
 	var content_mc = window_mc.content_mc;
@@ -455,6 +458,16 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	tabs_mc.selectedTab = tabs_mc[calendarObj.eventType + "_mc"];
 	tabs_mc.selectedTab._visible = true;
 
+	
+	content_mc.attachMovie("bi.ui.Label", "macro_lb", 90, {settings:{width:100, text:"Macro:", _x:530}});
+	
+	var macros_mc = content_mc.attachMovie("bi.ui.List", "standardEvents_mc", 100, {settings:{width:155, height:315, _x:530, _y:35}});
+	macros_mc.addEventListener("change", macros_mc);
+	for (var macro=0; macro<_global.macros.length; macro++) {
+		macros_mc.addItem({label:_global.macros[macro].name, value:macro});
+	}
+	macros_mc.selectedLabel = calendarObj.macroName;
+		
 	var buttonListener = new Object();
 	buttonListener.press = function (eventObj) {
 		switch (eventObj.target._name) {
@@ -467,7 +480,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 				saveObj.memo = content_mc.msg_ti.text;
 				saveObj.category = content_mc.category_ip.selectedItem.value;
 				saveObj.time = content_mc.time_tp.timeAsString;
-				saveObj.macroName = "";
+				saveObj.macroName = (macros_mc.selectedItem.label.length) ? macros_mc.selectedItem.label : "";
 				saveObj.startDate = calendarObj.startDate;
 				saveObj.endDate = calendarObj.endDate;
 				saveObj.eventType = content_mc.period.data;

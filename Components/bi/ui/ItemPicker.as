@@ -32,9 +32,11 @@ class bi.ui.ItemPicker extends bi.ui.CoreUI {
 		
 	public function set selectedValue(val):Void {
 		for (var i=0; i<_items.length; i++) {
-			if (_items[i].value == val) break;
+			if (_items[i].value == val) {
+				selectedIndex = i;
+				break;
+			}
 		}
-		selectedIndex = i;
 	}
 	
 	public function set items(items:Array):Void {

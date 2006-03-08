@@ -144,6 +144,8 @@ showMessageWindow = function (msgObj) {
 	} else if (msgObj.video != undefined) {
 		renderControl({type:msgObj.video}, window_mc.content_mc, window_mc.content_mc.width);
 	}
+	
+	return window_mc;
 }
 
 showKeyboard = function (limit, onClose, callerObj, initial, password, type) {
@@ -230,7 +232,6 @@ showKeyboard = function (limit, onClose, callerObj, initial, password, type) {
 				var key_mc = row_mc.attachMovie("bi.ui.Button", "key" + key + "_mc", key, {settings:{width:buttonWidth, height:buttonHeight, label:keys[key].toLowerCase(), fontSize:15}});
 				key_mc.press = function () {
 					var inputField_ti = this.keyboard_mc.inputField_ti;
-					trace(inputField_ti.maxChars + ":" + inputField_ti.length)
 					if (inputField_ti.maxChars < 3 && inputField_ti.length == inputField_ti.maxChars) inputField_ti.text = "";
 					if (inputField_ti.length < inputField_ti.maxChars) {
 						if (this.keyboard_mc.useShift) {
@@ -298,7 +299,7 @@ showWindow = function (windowObj) {
 		var y = Math.round(((_global.settings.applicationHeight - toolbarHeight) / 2) - (windowObj.height / 2)) + toolbarHeight;
 	}
 	
-	var modal_mc = window_mc.createEmptyMovieClip("modal_mc", window_mc.getNextHighestDepth());
+	var modal_mc = windows_mc.createEmptyMovieClip("modal_mc", windows_mc.getNextHighestDepth());
 	
 	if (_global.settings.modalBlur) {
 		var blurCopyObj = new BitmapData(Stage.width, Stage.height, true, 0x00FFFFFF);
@@ -316,8 +317,8 @@ showWindow = function (windowObj) {
 	modal_mc.onPress = function () {};
 	modal_mc.useHandCursor = false;
 	
-	var depth = window_mc.getNextHighestDepth();
-	var window_mc = window_mc.attachMovie("bi.ui.Window", "window" + depth + "_mc", depth, {settings:windowObj});
+	var depth = windows_mc.getNextHighestDepth();
+	window_mc = windows_mc.attachMovie("bi.ui.Window", "window" + depth + "_mc", depth, {settings:windowObj});
 	window_mc.modal_mc = modal_mc;
 	
 	window_mc.close = function () {
@@ -763,14 +764,26 @@ renderZone = function (zone, clip) {
 	if (_global.settings.device == "pda") {
 		var rooms_mc = clip.createEmptyMovieClip("rooms_mc", 100);
 		var rooms = zone.rooms;
+		var col = 0;
+		var row = 0;
+		var colBreak = (rooms.length > 10) ? Math.floor(rooms.length / 2) : -1;
 		for (var room=0; room<rooms.length; room++) {
 			var button_mc = rooms_mc.attachMovie("bi.ui.Button", "room" + room + "_btn", room, {settings:{width:200, height:45, label:rooms[room].name}});
-			button_mc._y = room * (button_mc._height + 2);
+	
+			button_mc._x = col * (button_mc._width + 4);
+			button_mc._y = row * (button_mc._height + 2);
 			button_mc.roomObj = rooms[room];
 			button_mc.press = function () {
 				openRoomControl(this.roomObj, null);
 			}
 			button_mc.addEventListener("press", button_mc);
+			
+			if (room == colBreak) {
+				col++;
+				row = 0;
+			} else {
+				row++;
+			}
 		}
 	} else {
 		var zoneContainer_mc = clip.createEmptyMovieClip("zoneContainer_mc", 100);
@@ -1992,8 +2005,8 @@ createMacroAdmin = function (content_mc) {
 		if (recordingMacro) {
 			newMacroArray = new Array();
 			window_mc.close();
-				overlay_mc.status_txt.text = "** MACRO RECORDING **";
-				overlay_mc.startStatusBlink();
+			overlay_mc.status_txt.text = "** MACRO RECORDING **";
+			overlay_mc.startStatusBlink();
 		} else {
 			overlay_mc.status_txt.text = "";
 			overlay_mc.stopStatusBlink();
@@ -2508,7 +2521,9 @@ openPinPad = function (func, onUnlock) {
 }
 
 showCommsError = function () {
-	showMessageWindow({title:"Server Disconnected", content:"The connection with the server has been lost.\n\nPlease wait while the connection is restablished.", icon:"warning", hideClose:true})
+	if (window_mc.title != "Server Disconnected") {
+		showMessageWindow({title:"Server Disconnected", content:"The connection with the server has been lost.\n\nPlease wait while the connection is restablished.", icon:"warning", hideClose:true})
+	}
 }
 
 #include "renderControl.as"
@@ -2775,7 +2790,7 @@ layout = function () {
 	_root.createEmptyMovieClip("overlay_mc", 400);
 	_root.createEmptyMovieClip("statusBar_mc", 500);
 	_root.createEmptyMovieClip("appsBar_mc", 600);
-	_root.createEmptyMovieClip("window_mc", 1100);
+	_root.createEmptyMovieClip("windows_mc", 1100);
 	_root.createEmptyMovieClip("confirm_mc", 1500);
 	_root.createEmptyMovieClip("keyboard_mc", 2000);
 	_root.createEmptyMovieClip("screensaver_mc", 5000);
@@ -3043,7 +3058,7 @@ loadIcons = function () {
 		loader.loadNext = function () {
 			var name = _global.iconNames[this.loadPointer];
 			var loadClip_mc = iconLoader_mc.createEmptyMovieClip(name.split(".")[0], this.loadPointer);
-			this.loadClip("lib/icons/" + name, loadClip_mc);
+			this.loadClip(_global.settings.libLocation + "icons/" + name, loadClip_mc);
 			this.loadPointer++;
 			this.loadCounter++;
 			if (this.loadPointer < _global.iconNames.length) {
@@ -3053,7 +3068,7 @@ loadIcons = function () {
 		
 		// load the list of icons and store them into the icon objects
 		var loadIconList = new LoadVars();
-		loadIconList.load("lib/icons/_icons.txt");
+		loadIconList.load(_global.settings.libLocation + "icons/_icons.txt");
 		loadIconList.onData = function (src) {
 			_global.iconNames = src.split(chr(13) + chr(10));
 			loader.loadNext();

@@ -82,8 +82,8 @@ _global.settings.listItemBgOpacity = 100;
 _global.settings.listItemBgColour1 = 0x98A6BE;
 _global.settings.listItemBgColour2 = 0x45608D;
 _global.settings.listItemHeight = 30;
-_global.settings.listItemSpacing = 2;
-_global.settings.listItemCornerRadius = 7;
+_global.settings.listItemSpacing = 0;
+_global.settings.listItemCornerRadius = 0;
 
 _global.settings.titleX = 6;
 _global.settings.titleY = 10;
