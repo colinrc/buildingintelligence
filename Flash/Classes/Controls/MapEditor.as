@@ -278,6 +278,9 @@ class Controls.MapEditor extends MovieClip {
 		poly_mc.minY = minY;
 		poly_mc.maxX = maxX;
 		poly_mc.maxY = maxY;		
+		poly_mc.midX = (maxX + minX) / 2;
+		poly_mc.midY = (maxY + minY) / 2;
+
 		poly_mc.moveTo(0, 0);
 		poly_mc.endFill();
 	}
@@ -341,8 +344,14 @@ class Controls.MapEditor extends MovieClip {
 		
 		for (var i=0; i<_alerts.length; i++) {
 			var handle_mc = alerts_mc.attachMovie("handle", "handle_mc", alerts_mc.getNextHighestDepth());
-			handle_mc._x = _alerts[i].x;
-			handle_mc._y = _alerts[i].y;
+			
+			if (_alerts[i].x != undefined && _alerts[i].y != undefined) {
+				handle_mc._x = _alerts[i].x;
+				handle_mc._y = _alerts[i].y;
+			} else {
+				handle_mc._x = scrollPane_sp.content.poly_mc.midX;
+				handle_mc._y = scrollPane_sp.content.poly_mc.midY;
+			}
 			handle_mc.id = _alerts[i].id
 			handle_mc.idx = i;
 			handle_mc.obj = this;
@@ -415,7 +424,7 @@ class Controls.MapEditor extends MovieClip {
 			
 			handle1_mc.onPress = handle2_mc.onPress = function () {
 				if (this.obj.mode == "movePoints") {
-					this.obj.dispatchEvent({type:"alertSelect", target:this.obj.alerts[this.idx]});
+					this.obj.dispatchEvent({type:"doorSelect", target:this.obj.alerts[this.idx]});
 					var scrollPane_sp = this.obj.scrollPane_sp;
 					
 					this.onEnterFrame = function () {
@@ -497,10 +506,7 @@ class Controls.MapEditor extends MovieClip {
 		onEnterFrame = function () {
 			var background_mc = scrollPane_sp.content.background_mc;
 			var poly_mc = scrollPane_sp.content.poly_mc;
-			
-			var midX = (poly_mc.maxX + poly_mc.minX) / 2;
-			var midY = (poly_mc.maxY + poly_mc.minY) / 2;
-			
+						
 			var ratioX = poly_mc.maxX / background_mc._width;
 			var ratioY = poly_mc.maxY / background_mc._height;
 	
