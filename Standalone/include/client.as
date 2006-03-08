@@ -48,6 +48,7 @@ parseClientXML = function (xml) {
 
 parseClient = function (xml_string) {
 	parseClientXML(new XML(xml_string));
+	mdm.Dialogs.prompt("parsing xml string: " + xml_string)
 }
 
 if (!mdm.Forms.Preview.isCreated) {
