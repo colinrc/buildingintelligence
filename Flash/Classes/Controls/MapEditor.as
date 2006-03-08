@@ -59,21 +59,13 @@ class Controls.MapEditor extends MovieClip {
 	}
 	
 	public function set doors(doors:Array):Void {
-		_doors = new Array();
-		for (var i=0; i<doors.length; i++) {
-			_doors.push(doors[i].split(","));
-		}
+		_doors = doors;
 		
 		drawDoors();
 	}
 	
 	public function get doors():Array {
-		var doors = new Array();
-		for (var i=0; i<_doors.length; i++) {
-			doors.push(_doors[i].join(","));
-		}
-		
-		return doors;
+		return _doors;
 	}	
 	
 	public function set map(url:String):Void {
@@ -406,25 +398,25 @@ class Controls.MapEditor extends MovieClip {
 		for (var i=0; i<_doors.length; i++) {
 			var door_mc = doors_mc.createEmptyMovieClip("door" + i + "_mc", doors_mc.getNextHighestDepth());
 			
+			var coords = _doors[i].door.split(",");
+			
 			var handle1_mc = door_mc.attachMovie("handle", "handle1_mc", 20);
-			handle1_mc._x = _doors[i][0];
-			handle1_mc._y = _doors[i][1];
+			handle1_mc._x = coords[0];
+			handle1_mc._y = coords[1];
 			handle1_mc.idx = i;
 			handle1_mc.obj = this;
-			handle1_mc.thickness = _doors[i][4];
 			
 			var handle2_mc = door_mc.attachMovie("handle", "handle2_mc", 30);
-			handle2_mc._x = _doors[i][2];
-			handle2_mc._y = _doors[i][3];
+			handle2_mc._x = coords[2];
+			handle2_mc._y = coords[3];
 			handle2_mc.idx = i;
 			handle2_mc.obj = this;
-			handle2_mc.thickness = _doors[i][4];
 			
-			drawDoor(i, _doors[i][4]);
+			drawDoor(i, coords);
 			
 			handle1_mc.onPress = handle2_mc.onPress = function () {
 				if (this.obj.mode == "movePoints") {
-					this.obj.dispatchEvent({type:"doorSelect", target:this.obj.alerts[this.idx]});
+					this.obj.dispatchEvent({type:"doorSelect", target:this.obj.doors[this.idx]});
 					var scrollPane_sp = this.obj.scrollPane_sp;
 					
 					this.onEnterFrame = function () {
@@ -449,15 +441,19 @@ class Controls.MapEditor extends MovieClip {
 						_x = Math.round(_x / this.obj._snapToGrid) * this.obj._snapToGrid;
 						_y = Math.round(_y / this.obj._snapToGrid) * this.obj._snapToGrid;
 
+						var coords = this.obj._doors[this.idx].door.split(",");
+											
 						if (this._name == "handle1_mc") {
-							this.obj._doors[this.idx][0] = _x;
-							this.obj._doors[this.idx][1] = _y;
+							coords[0] = _x;
+							coords[1] = _y;
 						} else {
-							this.obj._doors[this.idx][2] = _x;
-							this.obj._doors[this.idx][3] = _y;							
+							coords[2] = _x;
+							coords[3] = _y;							
 						}
 						
-						this.obj.drawDoor(this.idx, this.thickness);
+						this.obj._doors[this.idx].door = coords.join(",");
+						
+						this.obj.drawDoor(this.idx, coords);
 					}
 				} else if (this.obj.mode == "deletePoints") {
 					this.obj.dispatchEvent({type:"doorDelete", target:this.obj.alerts[this.idx]});
@@ -474,14 +470,16 @@ class Controls.MapEditor extends MovieClip {
 		}
 	}
 	
-	private function drawDoor(idx, thickness):Void {
+	private function drawDoor(idx, coords):Void {
 		var doors_mc:MovieClip = scrollPane_sp.content.doors_mc;
 		var door_mc:MovieClip = doors_mc["door" + idx + "_mc"];
 		
+		var thickness = (_doors[idx].thickness > 0) ? _doors[idx].thickness : 5;
+
 		var line_mc = door_mc.createEmptyMovieClip("line_mc", 50);
 		line_mc.lineStyle(thickness, 0xFF0000, 90, true, "normal", "none");
-		line_mc.moveTo(_doors[idx][0], _doors[idx][1]);
-		line_mc.lineTo(_doors[idx][2], _doors[idx][3]);
+		line_mc.moveTo(coords[0], coords[1]);
+		line_mc.lineTo(coords[2], coords[3]);
 	}
 	
 	private function focusPoly():Void {
@@ -561,15 +559,15 @@ class Controls.MapEditor extends MovieClip {
 		x = Math.round(x / _snapToGrid) * _snapToGrid;
 		y = Math.round(y / _snapToGrid) * _snapToGrid;
 		_alerts.push({id:0, x:x, y:y});
-		dispatchEvent({type:"alertAdd", target:alerts[alerts.length]});
+		dispatchEvent({type:"alertAdd", target:alerts[alerts.length - 1]});
 		drawAlerts();
 	}
 	
 	private function addDoor(x:Number, y:Number):Void {
 		x = Math.round(x / _snapToGrid) * _snapToGrid;
 		y = Math.round(y / _snapToGrid) * _snapToGrid;
-		_doors.push([x, y, x + 50, y, 5]);
-		dispatchEvent({type:"doorAdd", target:doors[doors.length]});
+		_doors.push({door:x + "," + y + "," + (x + 50) + "," + y, thickness:5});
+		dispatchEvent({type:"doorAdd", target:doors[doors.length - 1]});
 		drawDoors();
 	}
 	
