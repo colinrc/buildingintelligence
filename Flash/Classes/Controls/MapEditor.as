@@ -273,9 +273,8 @@ class Controls.MapEditor extends MovieClip {
 			handle_mc.onPress = function () {
 				if (this.obj.mode == "movePoints") {
 					var scrollPane_sp = this.obj.scrollPane_sp;
-					var bg_mc = scrollPane_sp.content.background_mc;
+					var points_mc = scrollPane_sp.content.points_mc;
 					
-					startDrag(this, false, 2, 2, bg_mc._width - 2, bg_mc._height - 2);
 					this.onEnterFrame = function () {
 						if (this.obj._xmouse < scrollPane_sp._x) {
 							scrollPane_sp.hPosition -= 10;
@@ -293,6 +292,8 @@ class Controls.MapEditor extends MovieClip {
 							scrollPane_sp.vPosition += 10;
 							if (scrollPane_sp.vPosition > scrollPane_sp.maxVPosition + 10) scrollPane_sp.vPosition = scrollPane_sp.maxVPosition;
 						}
+						_x = points_mc._xmouse;
+						_y = points_mc._ymouse;
 						_x = Math.round(_x / this.obj._snapToGrid) * this.obj._snapToGrid;
 						_y = Math.round(_y / this.obj._snapToGrid) * this.obj._snapToGrid;
 						this.obj._poly[this.idx] = _x;
@@ -305,7 +306,6 @@ class Controls.MapEditor extends MovieClip {
 			}
 			handle_mc.onRelease = handle_mc.onReleaseOutside = function () {
 				if (this.obj.mode == "movePoints") {
-					stopDrag();
 					this.onEnterFrame();
 					delete this.onEnterFrame;				
 				}
@@ -328,9 +328,8 @@ class Controls.MapEditor extends MovieClip {
 				if (this.obj.mode == "movePoints") {
 					this.obj.dispatchEvent({type:"alertSelect", target:this.obj.alerts[this.idx]});
 					var scrollPane_sp = this.obj.scrollPane_sp;
-					var bg_mc = scrollPane_sp.content.background_mc;
+					var points_mc = scrollPane_sp.content.points_mc;
 					
-					startDrag(this, false, 2, 2, bg_mc._width - 2, bg_mc._height - 2);
 					this.onEnterFrame = function () {
 						if (this.obj._xmouse < scrollPane_sp._x) {
 							scrollPane_sp.hPosition -= 10;
@@ -348,6 +347,8 @@ class Controls.MapEditor extends MovieClip {
 							scrollPane_sp.vPosition += 10;
 							if (scrollPane_sp.vPosition > scrollPane_sp.maxVPosition + 10) scrollPane_sp.vPosition = scrollPane_sp.maxVPosition;
 						}
+						_x = points_mc._xmouse;
+						_y = points_mc._ymouse;
 						_x = Math.round(_x / this.obj._snapToGrid) * this.obj._snapToGrid;
 						_y = Math.round(_y / this.obj._snapToGrid) * this.obj._snapToGrid;
 						this.obj._alerts[this.idx].x = _x;
@@ -360,7 +361,6 @@ class Controls.MapEditor extends MovieClip {
 			}
 			handle_mc.onRelease = handle_mc.onReleaseOutside = function () {
 				if (this.obj.mode == "movePoints") {
-					stopDrag();
 					this.onEnterFrame();
 					delete this.onEnterFrame;
 					this.obj.dispatchEvent({type:"alertMove", target:this.obj.alerts[this.idx]});
@@ -371,6 +371,8 @@ class Controls.MapEditor extends MovieClip {
 	
 	private function focusPoly():Void {
 		var poly_mc = scrollPane_sp.content.poly_mc;
+		
+		if (poly_mc._width == 0) return;
 		
 		var ratioX:Number = scrollPane_sp.width / poly_mc._width;
 		var ratioY:Number = scrollPane_sp.height / poly_mc._height;
