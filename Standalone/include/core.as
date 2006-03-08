@@ -21,24 +21,23 @@ MovieClip.prototype.addProperty("onPress2",
 	}
 )
 
-_global.zones = new Array();
-_global.alerts = new Array();
-_global.statusBar = new Array();
-_global.logging = new Object();
-_global.appsBar = new Array();
-_global.macros = new Array();
-_global.macroStatus = new Array();
-_global.scripts = new Array();
-_global.calendar = new Array();
-_global.controls = new Object();
-_global.controlTypes = new Object();
-_global.calendarData = new Array();
-_global.icons = new Object();
-_global.iconNames = new Array();
-_global.controlPanelApps = new Array();
-_global.tv = new Object();
-
 createObjects = function () {
+	_global.zones = new Array();
+	_global.alerts = new Array();
+	_global.statusBar = new Array();
+	_global.logging = new Object();
+	_global.appsBar = new Array();
+	_global.macros = new Array();
+	_global.macroStatus = new Array();
+	_global.scripts = new Array();
+	_global.calendar = new Array();
+	_global.controls = new Object();
+	_global.controlTypes = new Object();
+	_global.calendarData = new Array();
+	_global.icons = new Object();
+	_global.iconNames = new Array();
+	_global.controlPanelApps = new Array();
+	_global.tv = new Object();
 }
 
 confirm = function (msg, scope, onYes, onNo, param1) {
@@ -460,8 +459,8 @@ renderAppsBar = function () {
 			icon_mc.addEventListener("press", icon_mc);
 		}
 	} else {
-		for (var icon=0; icon<_global.appsBar.length; icon++) {
-			var iconObj = _global.appsBar[icon];
+		for (var btn=0; btn<_global.appsBar.length; btn++) {
+			var iconObj = _global.appsBar[btn];
 
 			var buttonObject = {width:_global.settings.appsBarBtnWidth, height:_global.settings.appsBarBtnHeight, iconName:iconObj.icon};
 			for (var attr in iconObj) {
@@ -476,7 +475,7 @@ renderAppsBar = function () {
 				}
 			}
 			
-			var icon_mc = appsBar_mc.attachMovie("bi.ui.Button", iconObj.func + "_mc", icon, {settings:buttonObject});
+			var icon_mc = appsBar_mc.attachMovie("bi.ui.Button", iconObj.func + "_mc", btn, {settings:buttonObject});
 			icon_mc.func = iconObj.func;
 			icon_mc.program = iconObj.program;
 			icon_mc.canOpen = iconObj.canOpen;
@@ -493,7 +492,7 @@ renderAppsBar = function () {
 					}
 				}
 			}
-			icon_mc._x = (_global.settings.appsBarBtnWidth + _global.settings.appsBarBtnSpacing) * icon;
+			icon_mc._x = (_global.settings.appsBarBtnWidth + _global.settings.appsBarBtnSpacing) * btn;
 			icon_mc.addEventListener("press", icon_mc);
 		}
 	}
@@ -2795,9 +2794,7 @@ layout = function () {
 	_root.createEmptyMovieClip("keyboard_mc", 2000);
 	_root.createEmptyMovieClip("screensaver_mc", 5000);
 	//_root.createEmptyMovieClip("tv_mc", 3000);
-	
-	createObjects();
-	
+		
 	bg_mc.beginFill(_global.settings.applicationBg);
 	bg_mc.drawRect(0, 0, _global.settings.applicationWidth, _global.settings.applicationHeight);
 	bg_mc.endFill();
@@ -3077,6 +3074,7 @@ loadIcons = function () {
 }
 
 init = function () {
+	createObjects();
 	if (_global.settings.device == "pda") {
 		_global.settings.applicationWidth = _global.settings.width;
 		_global.settings.applicationHeight = _global.settings.height;
