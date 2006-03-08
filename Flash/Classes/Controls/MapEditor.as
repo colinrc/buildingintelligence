@@ -7,6 +7,7 @@ class Controls.MapEditor extends MovieClip {
 	private var zoomOut_btn:Button;
 	private var zoom100_btn:Button;
 	private var zoomIn_btn:Button;
+	private var snap_btn:Button;	
 	private var centre_btn:Button;
 	private var add_btn:Button;
 	private var move_btn:Button;
@@ -17,7 +18,7 @@ class Controls.MapEditor extends MovieClip {
 	private var _poly:Array;
 	private var _mode:String;
 	private var _mapMode:String = "roomPoly";
-	private var _snapToGrid:Number = 5;
+	private var _snapToGrid:Number;
 	
 	private var _alerts:Array;
 	
@@ -39,8 +40,6 @@ class Controls.MapEditor extends MovieClip {
 		drawPoly();
 		
 		if (_mapMode == "roomPoly") drawHandles();
-
-		if (_poly.length > 2) zoomPoly();
 	}
 	
 	public function get poly():String {
@@ -64,6 +63,7 @@ class Controls.MapEditor extends MovieClip {
 			scrollPane_sp.invalidate();
 			scrollPane_sp.content.background_mc._width = map._width + 20;
 			scrollPane_sp.content.background_mc._height = map._height + 20;
+			scrollPane_sp._parent.focusPoly();
 		}
 		var my_mcl = new MovieClipLoader();
 		my_mcl.addListener(myListener);
@@ -107,6 +107,15 @@ class Controls.MapEditor extends MovieClip {
 
 	public function get mode():String {
 		return _mode;
+	}
+	
+	public function set snap(snap:Boolean):Void {
+		if (snap) {
+			_snapToGrid = 5;
+		} else {
+			_snapToGrid = 1;
+		}
+		snap_btn.selected = snap;
 	}
 	
 	public function set mapMode(mapMode:String):Void {
@@ -167,13 +176,23 @@ class Controls.MapEditor extends MovieClip {
 		zoom100_btn.addEventListener("click", Delegate.create(this, zoom));
 		zoomIn_btn.addEventListener("click", Delegate.create(this, zoom));
 		
-		centre_btn.addEventListener("click", Delegate.create(this, centrePoly));
+		snap_btn.addEventListener("click", Delegate.create(this, toggleSnapping));
+		centre_btn.addEventListener("click", Delegate.create(this, focusPoly));
 		
 		add_btn.addEventListener("click", Delegate.create(this, changeMode));
 		move_btn.addEventListener("click", Delegate.create(this, changeMode));
 		delete_btn.addEventListener("click", Delegate.create(this, changeMode));
-		
+
+		/*
+		var spListener_obj = new Object();
+		spListener_obj.scroll = function(eventObject) {
+			trace("hPosition: " + eventObject.target.hPosition + "   MaxHPosition: " + eventObject.target.maxHPosition + ":" + eventObject.target.content._x);
+		}
+		scrollPane_sp.addEventListener("scroll", spListener_obj);
+		*/		 
+		 
 		mode = "movePoints";
+		snap = true;
 	}
 	
 	private function changeMode(eventObj:Object):Void {
@@ -188,6 +207,10 @@ class Controls.MapEditor extends MovieClip {
 				mode = "deletePoints";
 				break;			
 		}
+	}
+	
+	private function toggleSnapping(eventObj:Object):Void {
+		snap = (_snapToGrid != 5);
 	}
 	
 	private function zoom(eventObj:Object):Void {
@@ -246,7 +269,6 @@ class Controls.MapEditor extends MovieClip {
 			handle_mc._y = _poly[q+1];
 			handle_mc.idx = q;
 			handle_mc.obj = this;
-			handle_mc.snapToGrid = _snapToGrid;
 			
 			handle_mc.onPress = function () {
 				if (this.obj.mode == "movePoints") {
@@ -271,8 +293,8 @@ class Controls.MapEditor extends MovieClip {
 							scrollPane_sp.vPosition += 10;
 							if (scrollPane_sp.vPosition > scrollPane_sp.maxVPosition + 10) scrollPane_sp.vPosition = scrollPane_sp.maxVPosition;
 						}
-						_x = Math.round(_x / this.snapToGrid) * this.snapToGrid;
-						_y = Math.round(_y / this.snapToGrid) * this.snapToGrid;
+						_x = Math.round(_x / this.obj._snapToGrid) * this.obj._snapToGrid;
+						_y = Math.round(_y / this.obj._snapToGrid) * this.obj._snapToGrid;
 						this.obj._poly[this.idx] = _x;
 						this.obj._poly[this.idx+1] = _y;
 						this.obj.drawPoly();
@@ -301,7 +323,6 @@ class Controls.MapEditor extends MovieClip {
 			handle_mc.id = _alerts[i].id
 			handle_mc.idx = i;
 			handle_mc.obj = this;
-			handle_mc.snapToGrid = _snapToGrid;
 			
 			handle_mc.onPress = function () {
 				if (this.obj.mode == "movePoints") {
@@ -327,8 +348,8 @@ class Controls.MapEditor extends MovieClip {
 							scrollPane_sp.vPosition += 10;
 							if (scrollPane_sp.vPosition > scrollPane_sp.maxVPosition + 10) scrollPane_sp.vPosition = scrollPane_sp.maxVPosition;
 						}
-						_x = Math.round(_x / this.snapToGrid) * this.snapToGrid;
-						_y = Math.round(_y / this.snapToGrid) * this.snapToGrid;
+						_x = Math.round(_x / this.obj._snapToGrid) * this.obj._snapToGrid;
+						_y = Math.round(_y / this.obj._snapToGrid) * this.obj._snapToGrid;
 						this.obj._alerts[this.idx].x = _x;
 						this.obj._alerts[this.idx].y = _y;
 					}
@@ -348,20 +369,7 @@ class Controls.MapEditor extends MovieClip {
 		}
 	}
 	
-	private function centrePoly():Void {
-		var background_mc = scrollPane_sp.content.background_mc;
-		var poly_mc = scrollPane_sp.content.poly_mc;
-		
-		var ratioX = (poly_mc.maxX - poly_mc.minX) / background_mc._width;
-		var ratioY = (poly_mc.maxY - poly_mc.minY) / background_mc._height;
-		
-		//trace(ratioX + ":" + ratioY);
-
-		scrollPane_sp.hPosition = scrollPane_sp.maxHPosition * ratioX;
-		scrollPane_sp.vPosition = scrollPane_sp.maxVPosition *  ratioY;
-	}
-
-	private function zoomPoly():Void {
+	private function focusPoly():Void {
 		var poly_mc = scrollPane_sp.content.poly_mc;
 		
 		var ratioX:Number = scrollPane_sp.width / poly_mc._width;
@@ -375,15 +383,22 @@ class Controls.MapEditor extends MovieClip {
 			var scaleFactor:Number = ratioY;
 		}
 			
-		scrollPane_sp.content._xscale = scrollPane_sp.content._yscale = (scaleFactor * 80);
+		scrollPane_sp.content._xscale = scrollPane_sp.content._yscale = (scaleFactor * 50);
 		scrollPane_sp.invalidate();
 		
-		var counter = 0;
 		onEnterFrame = function () {
-			if (counter++ == 10) {
-				centrePoly();
-				delete onEnterFrame;
-			}
+			var background_mc = scrollPane_sp.content.background_mc;
+			var poly_mc = scrollPane_sp.content.poly_mc;
+			
+			var midX = (poly_mc.maxX + poly_mc.minX) / 2;
+			var midY = (poly_mc.maxY + poly_mc.minY) / 2;
+			
+			var ratioX = poly_mc.maxX / background_mc._width;
+			var ratioY = poly_mc.maxY / background_mc._height;
+	
+			scrollPane_sp.hPosition = scrollPane_sp.maxHPosition * ratioX;
+			scrollPane_sp.vPosition = scrollPane_sp.maxVPosition * ratioY;
+			delete onEnterFrame;
 		}
 	}
 	
