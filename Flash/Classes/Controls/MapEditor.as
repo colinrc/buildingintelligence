@@ -21,10 +21,12 @@ class Controls.MapEditor extends MovieClip {
 	private var _snapToGrid:Number;
 	
 	private var _alerts:Array;
+	private var _doors:Array;
 	
 	private var __width:Number;
 	private var __height:Number;
 	private var dispatchEvent:Function;
+	public var addEventListener:Function;
 
 	public var onMapLoad:Function;
 
@@ -54,6 +56,24 @@ class Controls.MapEditor extends MovieClip {
 	
 	public function get alerts():Array {
 		return _alerts;
+	}
+	
+	public function set doors(doors:Array):Void {
+		_doors = new Array();
+		for (var i=0; i<doors.length; i++) {
+			_doors.push(doors[i].split(","));
+		}
+		
+		drawDoors();
+	}
+	
+	public function get doors():Array {
+		var doors = new Array();
+		for (var i=0; i<_doors.length; i++) {
+			doors.push(_doors[i].join(","));
+		}
+		
+		return doors;
 	}	
 	
 	public function set map(url:String):Void {
@@ -82,8 +102,10 @@ class Controls.MapEditor extends MovieClip {
 				var content = this.obj.scrollPane_sp.content;
 				if (this.obj.mapMode == "roomPoly") {
 					this.obj.addPoint(content._xmouse, content._ymouse);
-				} else if (this.obj.mapMode = "alertGroups") {
+				} else if (this.obj.mapMode == "alertGroups") {
 					this.obj.addAlert(content._xmouse, content._ymouse);
+				} else if (this.obj.mapMode == "doors") {
+					this.obj.addDoor(content._xmouse, content._ymouse);
 				}
 			}
 		}
@@ -273,7 +295,6 @@ class Controls.MapEditor extends MovieClip {
 			handle_mc.onPress = function () {
 				if (this.obj.mode == "movePoints") {
 					var scrollPane_sp = this.obj.scrollPane_sp;
-					var points_mc = scrollPane_sp.content.points_mc;
 					
 					this.onEnterFrame = function () {
 						if (this.obj._xmouse < scrollPane_sp._x) {
@@ -302,12 +323,14 @@ class Controls.MapEditor extends MovieClip {
 					}
 				} else if (this.obj.mode == "deletePoints") {
 					this.obj.removePoint(this.idx);
+					dispatchEvent({type:"polyChange", target:this});
 				}
 			}
 			handle_mc.onRelease = handle_mc.onReleaseOutside = function () {
 				if (this.obj.mode == "movePoints") {
 					this.onEnterFrame();
-					delete this.onEnterFrame;				
+					delete this.onEnterFrame;			
+					dispatchEvent({type:"polyChange", target:this});
 				}
 			}
 		}
@@ -328,7 +351,6 @@ class Controls.MapEditor extends MovieClip {
 				if (this.obj.mode == "movePoints") {
 					this.obj.dispatchEvent({type:"alertSelect", target:this.obj.alerts[this.idx]});
 					var scrollPane_sp = this.obj.scrollPane_sp;
-					var points_mc = scrollPane_sp.content.points_mc;
 					
 					this.onEnterFrame = function () {
 						if (this.obj._xmouse < scrollPane_sp._x) {
@@ -347,8 +369,8 @@ class Controls.MapEditor extends MovieClip {
 							scrollPane_sp.vPosition += 10;
 							if (scrollPane_sp.vPosition > scrollPane_sp.maxVPosition + 10) scrollPane_sp.vPosition = scrollPane_sp.maxVPosition;
 						}
-						_x = points_mc._xmouse;
-						_y = points_mc._ymouse;
+						_x = alerts_mc._xmouse;
+						_y = alerts_mc._ymouse;
 						_x = Math.round(_x / this.obj._snapToGrid) * this.obj._snapToGrid;
 						_y = Math.round(_y / this.obj._snapToGrid) * this.obj._snapToGrid;
 						this.obj._alerts[this.idx].x = _x;
@@ -367,6 +389,90 @@ class Controls.MapEditor extends MovieClip {
 				}
 			}
 		}
+	}
+	
+	private function drawDoors():Void {
+		var doors_mc:MovieClip = scrollPane_sp.content.createEmptyMovieClip("doors_mc", 30);
+		
+		for (var i=0; i<_doors.length; i++) {
+			var door_mc = doors_mc.createEmptyMovieClip("door" + i + "_mc", doors_mc.getNextHighestDepth());
+			
+			var handle1_mc = door_mc.attachMovie("handle", "handle1_mc", 20);
+			handle1_mc._x = _doors[i][0];
+			handle1_mc._y = _doors[i][1];
+			handle1_mc.idx = i;
+			handle1_mc.obj = this;
+			handle1_mc.thickness = _doors[i][4];
+			
+			var handle2_mc = door_mc.attachMovie("handle", "handle2_mc", 30);
+			handle2_mc._x = _doors[i][2];
+			handle2_mc._y = _doors[i][3];
+			handle2_mc.idx = i;
+			handle2_mc.obj = this;
+			handle2_mc.thickness = _doors[i][4];
+			
+			drawDoor(i, _doors[i][4]);
+			
+			handle1_mc.onPress = handle2_mc.onPress = function () {
+				if (this.obj.mode == "movePoints") {
+					this.obj.dispatchEvent({type:"alertSelect", target:this.obj.alerts[this.idx]});
+					var scrollPane_sp = this.obj.scrollPane_sp;
+					
+					this.onEnterFrame = function () {
+						if (this.obj._xmouse < scrollPane_sp._x) {
+							scrollPane_sp.hPosition -= 10;
+							if (scrollPane_sp.hPosition < 10) scrollPane_sp.hPosition = 1;
+						}
+						if (this.obj._ymouse < scrollPane_sp._y ) {
+							scrollPane_sp.vPosition -= 10;
+							if (scrollPane_sp.vPosition < 10) scrollPane_sp.vPosition = 1;
+						}
+						if (this.obj._xmouse > scrollPane_sp._x + scrollPane_sp.width) {
+							scrollPane_sp.hPosition += 10;
+							if (scrollPane_sp.hPosition > scrollPane_sp.maxHPosition + 10) scrollPane_sp.hPosition = scrollPane_sp.maxHPosition;
+						}
+						if (this.obj._ymouse > scrollPane_sp._y + scrollPane_sp.height) {
+							scrollPane_sp.vPosition += 10;
+							if (scrollPane_sp.vPosition > scrollPane_sp.maxVPosition + 10) scrollPane_sp.vPosition = scrollPane_sp.maxVPosition;
+						}
+						_x = doors_mc._xmouse;
+						_y = doors_mc._ymouse;
+						_x = Math.round(_x / this.obj._snapToGrid) * this.obj._snapToGrid;
+						_y = Math.round(_y / this.obj._snapToGrid) * this.obj._snapToGrid;
+
+						if (this._name == "handle1_mc") {
+							this.obj._doors[this.idx][0] = _x;
+							this.obj._doors[this.idx][1] = _y;
+						} else {
+							this.obj._doors[this.idx][2] = _x;
+							this.obj._doors[this.idx][3] = _y;							
+						}
+						
+						this.obj.drawDoor(this.idx, this.thickness);
+					}
+				} else if (this.obj.mode == "deletePoints") {
+					this.obj.dispatchEvent({type:"doorDelete", target:this.obj.alerts[this.idx]});
+					this.obj.removeDoor(this.idx);
+				}
+			}
+			handle1_mc.onRelease = handle1_mc.onReleaseOutside = handle2_mc.onRelease = handle2_mc.onReleaseOutside = function () {
+				if (this.obj.mode == "movePoints") {
+					this.onEnterFrame();
+					delete this.onEnterFrame;
+					this.obj.dispatchEvent({type:"doorMove", target:this.obj.alerts[this.idx]});
+				}
+			}
+		}
+	}
+	
+	private function drawDoor(idx, thickness):Void {
+		var doors_mc:MovieClip = scrollPane_sp.content.doors_mc;
+		var door_mc:MovieClip = doors_mc["door" + idx + "_mc"];
+		
+		var line_mc = door_mc.createEmptyMovieClip("line_mc", 50);
+		line_mc.lineStyle(thickness, 0xFF0000, 90, true, "normal", "none");
+		line_mc.moveTo(_doors[idx][0], _doors[idx][1]);
+		line_mc.lineTo(_doors[idx][2], _doors[idx][3]);
 	}
 	
 	private function focusPoly():Void {
@@ -434,6 +540,7 @@ class Controls.MapEditor extends MovieClip {
 			}
 			_poly.splice(idx, 0, x, y);
 		}
+		dispatchEvent({type:"polyChange", target:this});
 		drawHandles();
 		drawPoly();
 	}
@@ -452,9 +559,22 @@ class Controls.MapEditor extends MovieClip {
 		drawAlerts();
 	}
 	
+	private function addDoor(x:Number, y:Number):Void {
+		x = Math.round(x / _snapToGrid) * _snapToGrid;
+		y = Math.round(y / _snapToGrid) * _snapToGrid;
+		_doors.push([x, y, x + 50, y, 5]);
+		dispatchEvent({type:"doorAdd", target:doors[doors.length]});
+		drawDoors();
+	}
+	
 	private function removeAlert(idx):Void {
 		_alerts.splice(idx, 1);
 		drawAlerts();
+	}
+	
+	private function removeDoor(idx):Void {
+		_doors.splice(idx, 1);
+		drawDoors();
 	}
 	
 	private function draw():Void {}
