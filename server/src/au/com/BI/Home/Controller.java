@@ -4,6 +4,7 @@
  */
 package au.com.BI.Home;
 import au.com.BI.User.*;
+import au.com.BI.Jetty.*;
 import org.quartz.*;
 import au.com.BI.Util.*;
 import au.com.BI.Calendar.EventCalendar;
@@ -67,6 +68,7 @@ public class Controller {
     protected static String RRDXMLDIRECTORY = ".\\JRobin\\RRDDefinition\\";
     protected String RRDGRAPH = ".\\JRobin\\Graph\\";  // Default value for testing
     protected AddressBook addressBook = null;
+    protected JettyHandler jettyHandler = null;
 
 	// All known object representations of devices active in the system
 	/**
@@ -188,7 +190,16 @@ public class Controller {
 		deviceModels.add( macroModel);
 		macroModel.setInstanceID(deviceModels.size()-1);
 
-
+		jettyHandler = new JettyHandler ();
+		jettyHandler.setPort(bootstrap.getJettyPort());
+		jettyHandler.setDocRoot(bootstrap.getDocRoot());
+		jettyHandler.setSSL(bootstrap.isSSL());
+		jettyHandler.setCache(cache);
+		try {
+			jettyHandler.start();
+		} catch (JettyException ex){
+			logger.log (Level.SEVERE,"Could not start web server " + ex.getMessage());
+		}
     }
 
 	public void setUpClients() throws CommsFail {
