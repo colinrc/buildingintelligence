@@ -1,14 +1,14 @@
-=Admin GUI Releases=\n
+= Admin GUI Releases =
 == Released [attachment:"wiki:SoftwareReleases:Admin GUI A1.zip" Alpha release of Admin GUI] ==
 
 == Released [attachment:"wiki:SoftwareReleases:eLife Admin Beta 1.3A.exe" Prerelease Beta 1.3 of Admin GUI] ==
 
 == Released [attachment:"wiki:SoftwareReleases:eLife Admin Beta 1.3B.exe" Beta 1.3 of Admin GUI] ==
 
-==Whats New==\n
-* Added workflow split panel component\n
-* Integrated new client preview\n
-* Fixed problems with mini client preview\n
-* Introduced auto-save feature\n
-* Improved table layout problems\n
-* Enhanced GUI design \n
+== Whats New ==
+* Added workflow split panel component
+* Integrated new client preview
+* Fixed problems with mini client preview
+* Introduced auto-save feature
+* Improved table layout problems
+* Enhanced GUI design 
