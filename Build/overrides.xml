@@ -1,7 +1,5 @@
 <overrides>
 	<settings>
-		<override name="applicationXML" type="string" default="client.xml" description="" advanced="0" />
-		<override name="serverAddress" type="ip" default="127.0.0.1" description="" advanced="0" />
 		<override name="serverPort" type="number" default="10000" description="" advanced="1" />
 		<override name="serverRetryTime" type="number" default="10" description="" advanced="1" />
 		<override name="serverConnectTimeout" type="number" default="3" description="" advanced="1" />
@@ -18,7 +16,6 @@
 		<override name="screenLockPhotoPath" type="string" default="" description="" advanced="1" />
 		<override name="screenLockPhotoScale" type="string" default="noscale" description="" advanced="1" />
 		<override name="screenLockPhotoRotate" type="number" default="5" description="" advanced="1" />
-		<override name="adminPin" type="string" default="4321" description="" advanced="0" />
 		<override name="cachePinTime" type="number" default="360" description="" advanced="1" />
 		<override name="defaultFont" type="font" default="helvetica" description="" advanced="1" />
 		<override name="applicationBg" type="colour" default="0x043B96" description="" advanced="1" />
@@ -97,7 +94,6 @@
 		<override name="longDateFormat" type ="string" default="d-mmm-yyyy" description="" advanced="1" />
 		<override name="clockFormat" type="string" default="H:nn dddd, d mmmm yyyy" description="" advanced="1" />
 		<override name="defaultBrowserURL" type="web" default="http://www.google.com/" description="" advanced="1" />
-		<override name="integratorHtml" type="web" default="about:blank" description="" advanced="0" />
 	</settings>
 	<window>
 		<override name="windowWidth" type="number" default="400" description="" advanced="1" />

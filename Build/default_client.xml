@@ -1,4 +1,4 @@
-<application> 
+<application>
 	<settings> 
 		<setting value= "http://www.news.com.au" name= "defaultBrowserURL"/> 
 	</settings> 
@@ -29,7 +29,7 @@
 			<row> 
 				<item type= "button" label= "off" command= "off" extra= "0" width= "20"/> 
 				<item type= "slider" width= "60"/> 
-				<item type= "button" label= "on" command= "on" extra= "100" extra2= "40" extra3= "0" width= "20"/> 
+				<item type= "button" label= "on" command= "on" extra= "100" extra2= "0" extra3= "0" width= "20"/> 
 			</row> 
 		</control> 
 		<control type= "onOff"> 
@@ -81,7 +81,7 @@
 			<row> 
 				<item type= "toggle" icons= "power-red,power-green" command= "state" extras= "on,off" width= "50" sounds= "ding,default"/> 
 				<item type= "button" icon= "volume-up" command= "volume_up" repeatRate= "200"/> 
-				<item type= "button" icon= "volume-down" command= "volume_down" repeatRate= "200"/> 
+				<item type= "button" icon= "volume-down" command= "volume_down" repeatRate= "200"/>
 			</row> 
 			<row cases= "state:on"> 
 				<item type= "button" icon= "chan-abc" command= "channel" extra= "abc" showOn= "true" sound= "ding"/> 
