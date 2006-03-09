@@ -1,10 +1,8 @@
 ﻿class Objects.Client.Client extends Objects.BaseElement{
 	private var settings:XMLNode;
 	private var adminPin:String;
-	//private var serverAddress:String;
 	private var applicationXML:String;
 	private var integratorHtml:String;	
-	//private var settings:Objects.Client.Settings;
 	private var sounds:Objects.Client.Sounds;
 	private var status_bar:Objects.Client.Status_Bar;
 	private var logging:Objects.Client.Logging;
@@ -14,9 +12,6 @@
 	private var control_types:Objects.Client.Control_Types;
 	public function isValid():Boolean {
 		var flag = true
-		/*if(!settings.isValid()){
-			flag = false;
-		}*/
 		if(!sounds.isValid()){
 			flag = false;
 		}
@@ -77,7 +72,6 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,"Client");
-		//newNode.appendChild(settings.toTree());
 		newNode.appendChild(sounds.toTree());
 		newNode.appendChild(status_bar.toTree());
 		newNode.appendChild(logging.toTree());
@@ -86,7 +80,6 @@
 		newNode.appendChild(Property.toTree());
 		newNode.appendChild(control_types.toTree());
 		newNode.object = this;
-		//_root.debugger.text += "in client xml newNode ="+newNode.toString();
 		return newNode;
 	}
 	public function getKey():String{
@@ -101,10 +94,8 @@
 	public function setData(newData:Object):Void{
 		settings = newData.settings;
 		adminPin = newData.adminPin;
-		//serverAddress = newData.serverAddress;
 		applicationXML = newData.applicationXML;
 		integratorHtml = newData.integratorHtml;	
-		trace(settings);
 	}	
 	public function getControlTypes():Object{
 		return control_types.toXML();
