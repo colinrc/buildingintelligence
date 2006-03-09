@@ -1,8 +1,11 @@
 == Released [attachment:wiki:SoftwareReleases:eLife_simulator_2.7.zip V2.7] ==
 
-Simulator completely rewritten. 
+Simulator completely rewritten.
+
 JDK1.5 is required.
+
 Configuration is now via the xml configuration file in the config directory.
 default.xml is used if no parameters are passed.
+
  * An alternative configuration file can be used at the command line.
  * java -jar eLife_simulator.jar alternative.xml
