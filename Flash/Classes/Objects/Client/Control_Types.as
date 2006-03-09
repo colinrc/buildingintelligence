@@ -58,6 +58,7 @@
 			var found = false;
 			for (var index in newData.controls) {
 				if (controls[control].id == newData.controls[index].id) {
+					controls[control].type = newData.controls[index].type;
 					found = true;
 				}
 			}

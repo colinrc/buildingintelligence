@@ -44,8 +44,8 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		var restrictions2 = new Object();
 		restrictions2.editable = false;
 		dataGridHandler2.setDataGrid(vars_dg);	
-		dataGridHandler2.addTextInputColumn("name", "Name", restrictions2, false,200);
-		dataGridHandler2.addValueInputColumn("value", "Value", restrictions, this,200);
+		dataGridHandler2.addTextInputColumn("name", "Name", restrictions2, false,250);
+		dataGridHandler2.addValueInputColumn("value", "Value", restrictions, this,250);
 		dataGridHandler2.setAdvanced(_global.advanced);		
 		for (var raw_interface in raw_interfaces) {
 			var found_catalogue = false;

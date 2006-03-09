@@ -23,7 +23,7 @@ class Forms.Project.Device.Parameters extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(params_dg);
 		dataGridHandler.addParameterComboBoxColumn("name", "Name", DP,150);
-		dataGridHandler.addTextInputColumn("value", "Value", restrictions,250);
+		dataGridHandler.addTextInputColumn("value", "Value", restrictions,false,250);
 		var DP = new Array();				
 		for (var parameter in parameters) {
 			var newParam = new Object();

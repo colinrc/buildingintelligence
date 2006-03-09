@@ -456,7 +456,7 @@ class Controls.MapEditor extends MovieClip {
 						this.obj.drawDoor(this.idx, coords);
 					}
 				} else if (this.obj.mode == "deletePoints") {
-					this.obj.dispatchEvent({type:"doorDelete", target:this.obj.alerts[this.idx]});
+					this.obj.dispatchEvent({type:"doorDelete", target:this.obj.doors[this.idx]});
 					this.obj.removeDoor(this.idx);
 				}
 			}
@@ -464,7 +464,7 @@ class Controls.MapEditor extends MovieClip {
 				if (this.obj.mode == "movePoints") {
 					this.onEnterFrame();
 					delete this.onEnterFrame;
-					this.obj.dispatchEvent({type:"doorMove", target:this.obj.alerts[this.idx]});
+					this.obj.dispatchEvent({type:"doorMove", target:this.obj.doors[this.idx]});
 				}
 			}
 		}

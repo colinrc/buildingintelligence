@@ -24,7 +24,7 @@ class Forms.Project.Device.Analogue extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "Input\nNo.", keyRestrictions,false,40);
+		dataGridHandler.addTextInputColumn("key", "Input\nNo.", keyRestrictions,false,50);
 		dataGridHandler.setAdvanced(_global.advanced);		
 		dataGridHandler.setDataGridDataProvider(analogues);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

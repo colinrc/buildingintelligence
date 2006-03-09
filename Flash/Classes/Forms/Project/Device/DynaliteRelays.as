@@ -23,10 +23,10 @@ class Forms.Project.Device.DynaliteRelays extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
 		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false,40);
-		dataGridHandler.addTextInputColumn("area", "Area", keyRestrictions,false,40);		
-		dataGridHandler.addTextInputColumn("bla", "BLA", keyRestrictions, true,40);		
-		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions,true,50);
+		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false,60);
+		dataGridHandler.addTextInputColumn("area", "Area", keyRestrictions,false,60);		
+		dataGridHandler.addTextInputColumn("bla", "Base\nLink\nArea", keyRestrictions, true,50);		
+		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions,true,60);
 		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(lights);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

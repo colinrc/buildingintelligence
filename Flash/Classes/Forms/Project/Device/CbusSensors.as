@@ -25,10 +25,10 @@ class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "Unit\nAddr.", keyRestrictions,false,40);
-		dataGridHandler.addTextInputColumn("channel", "Channel", keyRestrictions,false,40);
-		dataGridHandler.addTextInputColumn("units", "Units", keyRestrictions,false,40);		
-		dataGridHandler.addTextInputColumn("application", "CBUS\nApp.", keyRestrictions,true,40);
+		dataGridHandler.addTextInputColumn("key", "Unit\nAddr.", keyRestrictions,false,60);
+		dataGridHandler.addTextInputColumn("channel", "Channel", keyRestrictions,false,60);
+		dataGridHandler.addTextInputColumn("units", "Units", keyRestrictions,false,60);		
+		dataGridHandler.addTextInputColumn("application", "CBUS\nApp.", keyRestrictions,true,60);
 		dataGridHandler.setAdvanced(_global.advanced );//Debug						
 		dataGridHandler.setDataGridDataProvider(sensors);		
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

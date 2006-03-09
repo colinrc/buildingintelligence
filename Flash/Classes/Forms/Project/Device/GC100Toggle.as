@@ -44,7 +44,7 @@ class Forms.Project.Device.GC100Toggle extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,150);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,150);
-		dataGridHandler.addTextInputColumn("key", keyType, keyRestrictions, false,40);
+		dataGridHandler.addTextInputColumn("key", keyType, keyRestrictions, false,50);
 		dataGridHandler.addComboBoxColumn("module", "Module No.", DP,false,100);		
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(toggles);

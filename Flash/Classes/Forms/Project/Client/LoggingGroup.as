@@ -22,14 +22,6 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var attributes:Array;
 	private var dataObject:Object;
 	public function onLoad():Void {
-		var changeListener:Object = new Object();
-		changeListener.change = function(eventObject:Object) {
-			_global.unSaved = true;
-		};
-		name_ti.addEventListener("change", changeListener);
-		icon_ti.addEventListener("change", changeListener);
-		listenTo_ti.addEventListener("change", changeListener);
-		type_cmb.addEventListener("change", changeListener);		
 		var tempKeys = _global.server_test.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
@@ -60,9 +52,17 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		removeSelected_btn.addEventListener("click", Delegate.create(this, remSel));
 		removeAll_btn.addEventListener("click", Delegate.create(this, remAll));
 		type_cmb.addEventListener("change", Delegate.create(this, typeChange));
+		var changeListener:Object = new Object();
+		changeListener.change = function(eventObject:Object) {
+			_global.unSaved = true;
+		};
+		name_ti.addEventListener("change", changeListener);
+		icon_ti.addEventListener("change", changeListener);
+		listenTo_ti.addEventListener("change", changeListener);
+		type_cmb.addEventListener("change", changeListener);
 	}
 	private function typeChange() {
-		_global.unSaved = true;		
+		_global.unSaved = true;
 		logType_ld.createEmptyMovieClip("form_mc", 0);
 		var dataObj = new Object();
 		switch (type_cmb.selectedItem.label) {

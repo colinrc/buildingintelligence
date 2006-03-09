@@ -23,7 +23,7 @@ class Forms.Project.Device.Alert extends Forms.BaseForm {
 		dataGridHandler.setDataGrid(alerts_dg);
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "Comfort\nCode", keyRestrictions,false,40);
+		dataGridHandler.addTextInputColumn("key", "Comfort\nCode", keyRestrictions,false,50);
 		dataGridHandler.addTextInputColumn("cat", "Client\nCatagory", restrictions,false,100);
 		dataGridHandler.addComboBoxColumn("type", "Alert\nType", [{label:"Alarm Type"}, {label:"DoorBell"}, {label:"ID"}, {label:"ModeChange"}, {label:"Phone"}, {label:"System"}, {label:"User"}, {label:"Zone"}],false,100);
 		dataGridHandler.addTextInputColumn("message", "Message", restrictions,false,100);

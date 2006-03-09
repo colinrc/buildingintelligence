@@ -19,11 +19,11 @@ class Forms.Project.Variables extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(variables_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key",false, restrictions,150);		
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("command", "Init\nCommand",false, restrictions,100);
-		dataGridHandler.addTextInputColumn("extra", "Init\nExtra",false, restrictions,100);
-		dataGridHandler.setAdvanced(_global.advanced);		
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false, 150);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false, 150);
+		dataGridHandler.addTextInputColumn("command", "Init\nCommand", restrictions, false, 100);
+		dataGridHandler.addTextInputColumn("extra", "Init\nExtra", restrictions, false, 100);
+		dataGridHandler.setAdvanced(_global.advanced);
 		var DP = new Array();
 		for (var child in variables.childNodes) {
 			var newVariable = new Object();
@@ -52,7 +52,7 @@ class Forms.Project.Variables extends Forms.BaseForm {
 		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
-		save_btn.addEventListener("click", Delegate.create(this, save));		
+		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();
@@ -63,8 +63,8 @@ class Forms.Project.Variables extends Forms.BaseForm {
 	private function save():Void {
 		var newVariables = new XMLNode(1, "VARIABLES");
 		var DP = dataGridHandler.getDataGridDataProvider();
-		dataGridHandler.clearSelection();		
-		for (var index = 0; index<DP.length; index++) {
+		dataGridHandler.clearSelection();
+		for (var index = 0; index < DP.length; index++) {
 			var variableNode = new XMLNode(1, "VARIABLE");
 			if (DP[index].name != "") {
 				variableNode.attributes["NAME"] = DP[index].name;
@@ -84,6 +84,6 @@ class Forms.Project.Variables extends Forms.BaseForm {
 			newVariables.appendChild(variableNode);
 		}
 		dataObject.setData({variables:newVariables});
-		_global.saveFile("Project");						
+		_global.saveFile("Project");
 	}
 }

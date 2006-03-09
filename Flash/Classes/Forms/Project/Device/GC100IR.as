@@ -25,9 +25,9 @@ class Forms.Project.Device.GC100IR extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(ir_dg);
 		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "Key", keyRestrictions,false,40);
+		dataGridHandler.addTextInputColumn("key", "Key", keyRestrictions,false,150);
 		dataGridHandler.addTextInputColumn("avname", "AV\nName", restrictions,false,100);		
-		dataGridHandler.addComboBoxColumn("module", "Module\nNo.", DP,false,50);				
+		dataGridHandler.addComboBoxColumn("module", "Module\nNo.", DP,false,60);				
 		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(irs);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

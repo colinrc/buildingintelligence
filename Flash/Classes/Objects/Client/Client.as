@@ -1,5 +1,10 @@
 ﻿class Objects.Client.Client extends Objects.BaseElement{
-	private var settings:Objects.Client.Settings;
+	private var settings:XMLNode;
+	private var adminPin:String;
+	//private var serverAddress:String;
+	private var applicationXML:String;
+	private var integratorHtml:String;	
+	//private var settings:Objects.Client.Settings;
 	private var sounds:Objects.Client.Sounds;
 	private var status_bar:Objects.Client.Status_Bar;
 	private var logging:Objects.Client.Logging;
@@ -9,9 +14,9 @@
 	private var control_types:Objects.Client.Control_Types;
 	public function isValid():Boolean {
 		var flag = true
-		if(!settings.isValid()){
+		/*if(!settings.isValid()){
 			flag = false;
-		}
+		}*/
 		if(!sounds.isValid()){
 			flag = false;
 		}
@@ -36,11 +41,31 @@
 		return flag;
 	}
 	public function getForm():String {
-		return "NONE";
+		return "forms.project.client.settings";
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1,"application");
-		newNode.appendChild(settings.toXML());
+		var newSettings = new XMLNode(1,"settings");
+		var newSetting = new XMLNode(1,"setting");
+		newSetting.attributes.name = "serverAddress";
+		newSetting.attributes.value = _global.project.ipAddress;
+		newSettings.appendChild(newSetting);
+		newSetting = new XMLNode(1,"setting");
+		newSetting.attributes.name = "applicationXML";
+		newSetting.attributes.value = applicationXML;
+		newSettings.appendChild(newSetting);		
+		newSetting = new XMLNode(1,"setting");
+		newSetting.attributes.name = "adminPin";
+		newSetting.attributes.value = adminPin;
+		newSettings.appendChild(newSetting);		
+		newSetting = new XMLNode(1,"setting");
+		newSetting.attributes.name = "integratorHtml";
+		newSetting.attributes.value = integratorHtml;
+		newSettings.appendChild(newSetting);
+		for(var setting in settings.childNodes){
+			newSettings.appendChild(settings.childNodes[setting].cloneNode(false));
+		}
+		newNode.appendChild(newSettings);
 		newNode.appendChild(sounds.toXML());
 		newNode.appendChild(status_bar.toXML());
 		newNode.appendChild(logging.toXML());
@@ -52,7 +77,7 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,"Client");
-		newNode.appendChild(settings.toTree());
+		//newNode.appendChild(settings.toTree());
 		newNode.appendChild(sounds.toTree());
 		newNode.appendChild(status_bar.toTree());
 		newNode.appendChild(logging.toTree());
@@ -71,13 +96,24 @@
 		return "Client";
 	}
 	public function getData():Object{
-		return new Object();
+		return {settings:settings, dataObject:this, adminPin:adminPin, applicationXML:applicationXML, integratorHtml:integratorHtml};
 	}
+	public function setData(newData:Object):Void{
+		settings = newData.settings;
+		adminPin = newData.adminPin;
+		//serverAddress = newData.serverAddress;
+		applicationXML = newData.applicationXML;
+		integratorHtml = newData.integratorHtml;	
+		trace(settings);
+	}	
 	public function getControlTypes():Object{
 		return control_types.toXML();
 	}
 	public function setXML(newData:XMLNode):Void{
-		settings = new Objects.Client.Settings();
+		//settings = new Objects.Client.Settings();
+		adminPin = "4321";
+		applicationXML = "client.xml";
+		integratorHtml = "about:blank";
 		sounds = new Objects.Client.Sounds();
 		status_bar = new Objects.Client.Status_Bar();
 		logging = new Objects.Client.Logging();
@@ -89,7 +125,25 @@
 			for(var child in newData.childNodes){
 				switch(newData.childNodes[child].nodeName){
 					case "settings":
-					settings.setXML(newData.childNodes[child]);
+					settings = newData.childNodes[child];
+					for(var setting in settings.childNodes){
+						if(settings.childNodes[setting].attributes["name"] == "adminPin"){
+							adminPin = settings.childNodes[setting].attributes["value"];
+							settings.childNodes[setting].removeNode();
+						}
+						if(settings.childNodes[setting].attributes["name"] == "applicationXML"){
+							applicationXML = settings.childNodes[setting].attributes["value"];
+							settings.childNodes[setting].removeNode();							
+						}
+						if(settings.childNodes[setting].attributes["name"] == "serverAddress"){
+							//same as _global.project.ipAddress
+							settings.childNodes[setting].removeNode();							
+						}
+						if(settings.childNodes[setting].attributes["name"] == "integratorHtml"){
+							integratorHtml = settings.childNodes[setting].attributes["value"];
+							settings.childNodes[setting].removeNode();							
+						}						
+					}
 					break;
 					case "sounds":
 					sounds.setXML(newData.childNodes[child]);
@@ -121,7 +175,5 @@
 		else{
 			trace("Found node "+newData.nodeName+", was expecting application");
 		}
-	}
-	public function setData(newData:Object):Void{
 	}
 }

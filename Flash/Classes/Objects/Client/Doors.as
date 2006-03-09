@@ -1,5 +1,9 @@
 ﻿class Objects.Client.Doors extends Objects.BaseElement {
 	private var doors:Array;
+	var room:Object;
+	public function setRoom(inRoom:Object) {
+		room = inRoom;
+	}	
 	public function isValid():Boolean {
 		var flag = true;
 		for (var door in doors) {
@@ -40,7 +44,7 @@
 		return "Doors";
 	}
 	public function getData():Object {
-		return {doors:doors, dataObject:this};
+		return {doors:doors, dataObject:this,poly:room.poly,map:room.zone.map};
 	}
 	public function setXML(newData:XMLNode):Void {
 		doors = new Array();

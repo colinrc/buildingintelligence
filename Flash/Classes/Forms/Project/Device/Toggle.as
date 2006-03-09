@@ -14,15 +14,15 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 		switch (toggle_type) {
 		case "TOGGLE_INPUT" :
 			title_lb.text = "Toggle Inputs:";
-			var keyType = "Input\nNumber";
+			var keyType = "Input\nNo.";
 			break;
 		case "TOGGLE_OUTPUT" :
 			title_lb.text = "Toggle Outputs:";
-			var keyType = "Output\nNumber";
+			var keyType = "Output\nNo.";
 			break;
 		case "PULSE_OUTPUT" :
 			title_lb.text = "Pulse Outputs:";
-			var keyType = "Output\nNumber";
+			var keyType = "Output\nNo.";
 			break;
 		}
 		var restrictions = new Object();
@@ -39,8 +39,8 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false, 150);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false, 150);
-		dataGridHandler.addTextInputColumn("key", keyType, restrictions, false, 40);
-		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions, true, 50);
+		dataGridHandler.addTextInputColumn("key", keyType, restrictions, false, 60);
+		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions, true, 80);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(toggles);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

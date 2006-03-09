@@ -23,8 +23,8 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,150);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,150);
-		dataGridHandler.addTextInputColumn("key", "Input\nKey", keyRestrictions, false,40);
-		dataGridHandler.addTextInputColumn("box", "Box", keyRestrictions, false,40);
+		dataGridHandler.addTextInputColumn("key", "Input\nKey", keyRestrictions, false,60);
+		dataGridHandler.addTextInputColumn("box", "Box", keyRestrictions, false,60);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(contacts);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

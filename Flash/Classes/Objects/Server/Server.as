@@ -82,12 +82,16 @@
 				newDevices.push({description:newData.devices[index].description, device_type:newData.devices[index].device_type});
 			}
 		}
-		var deletedDevices = new Array();
 		for (var device in devices) {
 			var found = false;
 			for (var index in newData.devices) {
 				if (devices[device].id == newData.devices[index].id) {
-					found = true;
+					if(devices[device].device_type == newData.devices[index].device_type){
+						devices[device].description = newData.devices[index].description;
+						found = true;
+					} else{
+						newDevices.push({description:newData.devices[index].description, device_type:newData.devices[index].device_type});
+					}
 				}
 			}
 			if (found == false) {

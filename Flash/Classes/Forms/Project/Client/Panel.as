@@ -28,7 +28,7 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 		x_pos_ti.addEventListener("change", changeListener);
 		y_pos_ti.addEventListener("change", changeListener);
 		height_ti.addEventListener("change", changeListener);
-		width_ti.addEventListener("change", changeListener);		
+		width_ti.addEventListener("change", changeListener);
 		name_ti.text = name;
 		x_pos_ti.text = x_pos;
 		y_pos_ti.text = y_pos;
@@ -53,10 +53,12 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(controls_dg);
-		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions,false,100);
-		dataGridHandler.addTextInputColumn("icons", "Icons", restrictions,false,100);
-		dataGridHandler.addComboBoxColumn("key", "Key", DPKey,false,100);
-		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl,false,100);
+		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions, false, 150);
+		dataGridHandler.addTextInputColumn("icon1", "Icon1", restrictions, false, 150);
+		dataGridHandler.addTextInputColumn("icon2", "Icon2", restrictions, false, 150);
+		//dataGridHandler.addTextInputColumn("icons", "Icons", restrictions,false,150);
+		dataGridHandler.addComboBoxColumn("key", "Key", DPKey, false, 150);
+		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl, false, 150);
 		var DP = new Array();
 		for (var control in controls) {
 			var newControl = new Object();
@@ -76,9 +78,20 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 				newControl.type = "";
 			}
 			if (controls[control].attributes["icons"] != undefined) {
-				newControl.icons = controls[control].attributes["icons"];
+				var newIcons = controls[control].attributes["icons"].split(",");
+				if (newIcons[0].length) {
+					newControl.icon1 = newIcons[0];
+				} else {
+					newControl.icon1 = "";
+				}
+				if (newIcons[1].length) {
+					newControl.icon2 = newIcons[1];
+				} else {
+					newControl.icon2 = "";
+				}
 			} else {
-				newControl.icons = "";
+				newControl.icon1 = "";
+				newControl.icon2 = "";
 			}
 			DP.push(newControl);
 		}
@@ -96,7 +109,7 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 	public function save():Void {
 		var newControls = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index<DP.length; index++) {
+		for (var index = 0; index < DP.length; index++) {
 			var item = new XMLNode(1, "control");
 			if (DP[index].name.length) {
 				item.attributes["name"] = DP[index].name;
@@ -107,8 +120,19 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 			if (DP[index].type.length) {
 				item.attributes["type"] = DP[index].type;
 			}
-			if (DP[index].icons.length) {
-				item.attributes["icons"] = DP[index].icons;
+			if (DP[index].icon1.length) {
+				if (DP[index].icon2.length) {
+					var newIcons = new Array();
+					newIcons.push(DP[index].icon1);
+					newIcons.push(DP[index].icon2);
+					item.attributes["icons"] = newIcons.join(",");
+				} else {
+					item.attributes["icons"] = DP[index].icon1;
+				}
+			} else {
+				if (DP[index].icon2.length) {
+					item.attributes["icons"] = DP[index].icon2;
+				} 
 			}
 			newControls.push(item);
 		}

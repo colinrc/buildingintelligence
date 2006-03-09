@@ -11,20 +11,17 @@ class Forms.Project.Client.ControlTypeButton extends Forms.BaseForm {
 	private var command_ti:TextInput;
 	private var repeatRate_ti:TextInput;
 	private var showOn_ti:TextInput;
+	private var delete_btn:Button;
 	public function onLoad() {
-		var changeListener:Object = new Object();
-		changeListener.change = function(eventObject:Object) {
-			_global.unSaved = true;
-		};
-		label_ti.addEventListener("change", changeListener);	
-		icon_ti.addEventListener("change", changeListener);	
-		extra_ti.addEventListener("change", changeListener);	
-		extra2_ti.addEventListener("change", changeListener);	
-		extra3_ti.addEventListener("change", changeListener);	
-		width_ti.addEventListener("change", changeListener);	
-		command_ti.addEventListener("change", changeListener);	
-		repeatRate_ti.addEventListener("change", changeListener);	
-		showOn_ti.addEventListener("change", changeListener);
+		label_ti.addEventListener("change", Delegate.create(this, changeListener));
+		icon_ti.addEventListener("change", Delegate.create(this, changeListener));
+		extra_ti.addEventListener("change", Delegate.create(this, changeListener));
+		extra2_ti.addEventListener("change", Delegate.create(this, changeListener));
+		extra3_ti.addEventListener("change", Delegate.create(this, changeListener));
+		width_ti.addEventListener("change", Delegate.create(this, changeListener));
+		command_ti.addEventListener("change", Delegate.create(this, changeListener));
+		repeatRate_ti.addEventListener("change", Delegate.create(this, changeListener));
+		showOn_ti.addEventListener("change", Delegate.create(this, changeListener));
 		if (object.attributes["label"] != undefined) {
 			label_ti.text = object.attributes["label"];
 		} else {
@@ -70,37 +67,21 @@ class Forms.Project.Client.ControlTypeButton extends Forms.BaseForm {
 		} else {
 			showOn_ti.text = "";
 		}
+		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 	}
-	public function getObject():XMLNode {
-		var newObject = new XMLNode(1, "item");
-		newObject.attributes["type"] = "button";
-		if(label_ti.text != ""){
-			newObject.attributes["label"] = label_ti.text;
-		}
-		if(icon_ti.text != ""){
-			newObject.attributes["icon"] = icon_ti.text;
-		}
-		if(extra_ti.text != ""){		
-			newObject.attributes["extra"] = extra_ti.text;
-		}
-		if(extra2_ti.text != ""){		
-			newObject.attributes["extra2"] = extra2_ti.text;
-		}
-		if(extra3_ti.text != ""){		
-			newObject.attributes["extra3"] = extra3_ti.text;
-		}
-		if(width_ti.text != ""){		
-			newObject.attributes["width"] = width_ti.text;
-		}
-		if(command_ti.text != ""){		
-			newObject.attributes["command"] = command_ti.text;
-		}
-		if(repeatRate_ti.text != ""){		
-			newObject.attributes["repeatRate"] = repeatRate_ti.text;
-		}
-		if(showOn_ti.text != ""){		
-			newObject.attributes["showOn"] = showOn_ti.text;
-		}	
-		return newObject;
+	public function changeListener(evtObj) {
+		_global.unSaved = true;
+		object.attributes["type"] = "button";
+		object.attributes["label"] = label_ti.text;
+		object.attributes["icon"] = icon_ti.text;
+		object.attributes["extra"] = extra_ti.text;
+		object.attributes["extra2"] = extra2_ti.text;
+		object.attributes["extra3"] = extra3_ti.text;
+		object.attributes["width"] = width_ti.text;
+		object.attributes["command"] = command_ti.text;
+		object.attributes["repeatRate"] = repeatRate_ti.text;
+		object.attributes["showOn"] = showOn_ti.text;
+	}
+	public function deleteItem() {
 	}
 }

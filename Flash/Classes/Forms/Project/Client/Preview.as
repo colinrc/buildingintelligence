@@ -6,6 +6,7 @@
 	function Preview() {
 	}
 	public function onLoad():Void {
+		//trace(previewXML);
 		switch (previewXML.nodeName) {
 		case "control" :
 			var sampleWindow:XML = new XML('<window><tab name="'+previewXML.attributes.type+'" ><control name="Preview" key="PREVIEW" type="'+previewXML.attributes.type+'"  /></tab></window>');

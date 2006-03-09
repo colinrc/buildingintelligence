@@ -59,6 +59,7 @@
 			var found = false;
 			for (var index in newData.zones) {
 				if (zones[zone].id == newData.zones[index].id) {
+					zones[zone].name = newData.zones[index].name;
 					found = true;
 				}
 			}

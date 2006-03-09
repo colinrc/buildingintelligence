@@ -22,8 +22,10 @@ class Forms.Project.Server extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(devices_dg);
-		dataGridHandler.addComboBoxColumn("device_type", "Device Type", [{label:"IR_LEARNER"}, {label:"PELCO"}, {label:"GC100"}, {label:"TUTONDO"}, {label:"DYNALITE"}, {label:"COMFORT"}, {label:"RAW_CONNECTION"}, {label:"HAL"}, {label:"OREGON"}, {label:"KRAMER"}, {label:"CBUS"}],false,120);
-		dataGridHandler.addTextInputColumn("description", "Description", restrictions,false,150);
+		var newArray = [{label:"COMFORT"}, {label:"IR_LEARNER"}, {label:"PELCO"}, {label:"GC100"}, {label:"TUTONDO"}, {label:"DYNALITE"},  {label:"RAW_CONNECTION"}, {label:"HAL"}, {label:"OREGON"}, {label:"KRAMER"}, {label:"CBUS"}]
+		newArray.sortOn("label");
+		dataGridHandler.addComboBoxColumn("device_type", "Device Type", newArray,false,120);
+		dataGridHandler.addTextInputColumn("description", "Description", restrictions,false,300);
 		dataGridHandler.addHiddenColumn("id");
 		dataGridHandler.setAdvanced(_global.advanced);		
 		var DP = new Array();

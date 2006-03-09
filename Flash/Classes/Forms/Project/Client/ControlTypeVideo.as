@@ -7,16 +7,13 @@ class Forms.Project.Client.ControlTypeVideo extends Forms.BaseForm {
 	private var refreshRate_ti:TextInput;
 	private var videoWidth_ti:TextInput;
 	private var videoHeight_ti:TextInput;
+	private var delete_btn:Button;
 	public function onLoad() {
-		var changeListener:Object = new Object();
-		changeListener.change = function(eventObject:Object) {
-			_global.unSaved = true;
-		};
-		src_ti.addEventListener("change", changeListener);
-		format_ti.addEventListener("change", changeListener);
-		refreshRate_ti.addEventListener("change", changeListener);
-		videoWidth_ti.addEventListener("change", changeListener);
-		videoHeight_ti.addEventListener("change", changeListener);		
+		src_ti.addEventListener("change", Delegate.create(this, changeListener));
+		format_ti.addEventListener("change", Delegate.create(this, changeListener));
+		refreshRate_ti.addEventListener("change", Delegate.create(this, changeListener));
+		videoWidth_ti.addEventListener("change", Delegate.create(this, changeListener));
+		videoHeight_ti.addEventListener("change", Delegate.create(this, changeListener));
 		if (object.attributes["src"] != undefined) {
 			src_ti.text = object.attributes["src"];
 		} else {
@@ -42,15 +39,17 @@ class Forms.Project.Client.ControlTypeVideo extends Forms.BaseForm {
 		} else {
 			videoHeight_ti.text = "";
 		}
+		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 	}
-	public function getObject():XMLNode {
-		var newObject = new XMLNode(1, "item");
-		newObject.attributes["type"] = "video";
-		newObject.attributes["src"] = src_ti.text;
-		newObject.attributes["format"] = format_ti.text;
-		newObject.attributes["refreshRate"] = refreshRate_ti.text;
-		newObject.attributes["videoWidth"] = videoWidth_ti.text;
-		newObject.attributes["videoHeight"] = videoHeight_ti.text;
-		return newObject;
+	public function deleteItem() {
+	}
+	public function changeListener(eventObject:Object) {
+		_global.unSaved = true;
+		object.attributes["type"] = "video";
+		object.attributes["src"] = src_ti.text;
+		object.attributes["format"] = format_ti.text;
+		object.attributes["refreshRate"] = refreshRate_ti.text;
+		object.attributes["videoWidth"] = videoWidth_ti.text;
+		object.attributes["videoHeight"] = videoHeight_ti.text;
 	}
 }

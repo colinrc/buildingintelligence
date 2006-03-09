@@ -65,6 +65,7 @@
 			var found = false;
 			for (var index in newData.icons) {
 				if (icons[icon].id == newData.icons[index].id) {
+					icons[icon].name = newData.icons[index].name;
 					found = true;
 				}
 			}

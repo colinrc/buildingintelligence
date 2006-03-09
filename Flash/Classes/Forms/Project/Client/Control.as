@@ -67,16 +67,15 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		if (editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].label == "Row") {
 			right_btn.enabled = false;
 			left_btn.enabled = false;
-			editor_mc = editor_ld.attachMovie("forms.project.client.row", "editor_"+random(999)+"_mc", 0, {cases:editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].cases});
+			editor_mc = editor_ld.attachMovie("forms.project.client.row", "editor_"+random(999)+"_mc", 0, {object:editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex]});
 			editor_mc.deleteRow = Delegate.create(this, deleteRow);
-			editor_mc.updateRow = Delegate.create(this, updateRow);
+			//editor_mc.updateRow = Delegate.create(this, updateRow);
 			editor_mc.addItem = Delegate.create(this, addItem);
 		} else {
 			right_btn.enabled = true;
 			left_btn.enabled = true;
 			editor_mc = editor_ld.attachMovie("forms.project.client.controltype"+editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].label, "editor_"+random(999)+"_mc", 0, {object:editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex].object});
 			editor_mc.deleteItem = Delegate.create(this, deleteItem);
-			editor_mc.updateItem = Delegate.create(this, updateItem);
 		}
 	}
 	private function deleteItem() {
@@ -87,14 +86,14 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		object.columnIndex = undefined;
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
-	private function updateItem() {
+	/*public function updateItem() {
 		_global.unSaved = true;		
 		editor_dg.dataProvider[object.itemIndex][object.columnIndex].object = editor_mc.getObject();
 		editor_dg.selectedIndex = undefined;
 		object.itemIndex = undefined;
 		object.columnIndex = undefined;
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
-	}
+	}*/
 	private function addItem() {
 		_global.unSaved = true;		
 		var newItemNode = new XMLNode(1, "item");
@@ -130,14 +129,14 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		object.columnIndex = undefined;
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
-	private function updateRow() {
+	/*private function updateRow() {
 		_global.unSaved = true;		
 		editor_dg.dataProvider[object.itemIndex][object.columnIndex].cases = editor_mc.cases_ti.text;
 		editor_dg.selectedIndex = undefined;
 		object.itemIndex = undefined;
 		object.columnIndex = undefined;
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
-	}
+	}*/
 	private function moveLeft() {
 		_global.unSaved = true;		
 		if (object != undefined) {

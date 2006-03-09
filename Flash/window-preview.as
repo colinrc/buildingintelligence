@@ -162,8 +162,7 @@ setWindowData = function (w, h, window) {
 	windowObj.borderColour = _global.settings.windowBorderColour;
 	windowObj.borderWidth = _global.settings.windowBorderWidth;
 	windowObj.hideClose = true;
-		
-	attachMovie("bi.ui.Window", "window_mc", 10, windowObj);
+	attachMovie("bi.ui.Window", "window_mc", 10, {settings:windowObj});
 	
 	defineWindow(window.firstChild, 0, 0);
 }
@@ -211,6 +210,10 @@ loadIcons = function () {
 		_global.iconNames = src.split(chr(13) + chr(10));
 		loader.loadNext();
 	}
+}
+
+showWindow = function (windowObject) {
+    return window_mc;
 }
 
 setIconPath = function (path) {

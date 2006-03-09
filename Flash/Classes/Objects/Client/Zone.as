@@ -24,7 +24,7 @@
 			newNode.attributes["name"] = name;
 		}
 		if (map != "") {
-			newNode.attributes["map"] = map;
+			newNode.attributes["map"] = map.substr(map.lastIndexOf("\\")+1, map.length-1);
 		}
 		if (background != "") {
 			newNode.attributes["background"] = background;
@@ -149,6 +149,7 @@
 			var found = false;
 			for (var index in newData.rooms) {
 				if (rooms[room].id == newData.rooms[index].id) {
+					rooms[room].name = newData.rooms[index].name;
 					found = true;
 				}
 			}
@@ -179,6 +180,7 @@
 			var found = false;
 			for (var index in newData.panels) {
 				if (panels[panel].id == newData.panels[index].id) {
+					panels[panel].name = newData.panels[index].name;
 					found = true;
 				}
 			}

@@ -14,7 +14,7 @@ class Forms.Project.Device.Camera extends Forms.BaseForm {
 		restrictions.restrict = "";
 		var keyRestrictions = new Object();		
 		keyRestrictions.maxChars = 2;
-		keyRestrictions.restrict = "1-0A-Fa-f";					
+		keyRestrictions.restrict = "0-9A-Fa-f";					
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -23,8 +23,8 @@ class Forms.Project.Device.Camera extends Forms.BaseForm {
 		dataGridHandler.setDataGrid(cameras_dg);
 		dataGridHandler.addActiveColumn("active", values);		
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "Camera\nZone", keyRestrictions,false,40);
-		dataGridHandler.addTextInputColumn("zoom", "Camera\nZoom", keyRestrictions,false,40);		
+		dataGridHandler.addTextInputColumn("key", "Camera\nZone", keyRestrictions,false,60);
+		dataGridHandler.addTextInputColumn("zoom", "Camera\nZoom", keyRestrictions,false,60);		
 		dataGridHandler.setAdvanced(_global.advanced);				
 		dataGridHandler.setDataGridDataProvider(cameras);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

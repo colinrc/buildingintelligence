@@ -65,6 +65,7 @@
 			var found = false;
 			for (var index in newData.groups) {
 				if (groups[group].id == newData.groups[index].id) {
+					groups[group].name = newData.groups[index].name;
 					found = true;
 				}
 			}

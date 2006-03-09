@@ -70,11 +70,15 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 			tempObject.label = attributes[attribute].name;
 			tempObject.value = attributes[attribute].value;
 			for (var override in tempNode.childNodes) {
-				if (attributes[attribute].name == tempNode.childNodes[override].attributes["name"]) {
-					tempObject.type = tempNode.childNodes[override].attributes["type"];
-					tempObject.def = tempNode.childNodes[override].attributes["default"];
-					tempObject.description = tempNode.childNodes[override].attributes["description"];
-					overrides_right_li.addItem(tempObject);
+				if (tempNode.childNodes[override].nodeName == "window") {
+					for (var index in tempNode.childNodes[override].childNodes) {
+						if (attributes[attribute].name == tempNode.childNodes[override].childNodes[index].attributes["name"]) {
+							tempObject.type = tempNode.childNodes[override].childNodes[index].attributes["type"];
+							tempObject.def = tempNode.childNodes[override].childNodes[index].attributes["default"];
+							tempObject.description = tempNode.childNodes[override].childNodes[index].attributes["description"];
+							overrides_right_li.addItem(tempObject);
+						}
+					}
 				}
 			}
 		}

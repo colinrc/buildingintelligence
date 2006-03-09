@@ -23,7 +23,7 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,150);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,150);
-		dataGridHandler.addTextInputColumn("key", "Output\nNumber", keyRestrictions, false,40);
+		dataGridHandler.addTextInputColumn("key", "Output\nNo.", keyRestrictions, false,80);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(monitors);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

@@ -7,6 +7,21 @@
 	private var alerts:Objects.Client.AlertGroups;
 	private var zone:Objects.Client.Zone;
 	private var treeNode:XMLNode;
+	public function Room(){
+		name = "";
+		poly = "";
+		switchZone = "";
+		window = new Objects.Client.Window();
+		var newNode = new XMLNode(1,"window");
+		window.setXML(newNode);
+		doors = new Objects.Client.Doors();		
+		var newNode = new XMLNode(1,"doors");
+		doors.setXML(newNode);
+		alerts = new Objects.Client.AlertGroups();
+		var tempAlertGroups = new XMLNode(1, "AlertGroups");		
+		alerts.setXML(tempAlertGroups);		
+		alerts.setRoom(this);		
+	}
 	public function deleteSelf(){
 		treeNode.removeNode();
 	}		
@@ -67,14 +82,8 @@
 		return {name:name, poly:poly, switchZone:switchZone, map:zone.map, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
-		name = "";
-		poly = "";
-		switchZone = "";
+		var tempAlertGroups = new XMLNode(1, "AlertGroups");		
 		if (newData.nodeName == "room") {
-			alerts = new Objects.Client.AlertGroups();
-			var tempAlertGroups = new XMLNode(1, "AlertGroups");
-			window = new Objects.Client.Window();
-			doors = new Objects.Client.Doors();
 			if (newData.attributes["name"] != undefined) {
 				name = newData.attributes["name"];
 			}
@@ -97,10 +106,12 @@
 					break;
 				}
 			}
-			alerts.setXML(tempAlertGroups);
 		} else {
 			trace("Error, found "+newData.nodeName+", was expecting room");
 		}
+		alerts.setXML(tempAlertGroups);		
+		alerts.setRoom(this);		
+		doors.setRoom(this);
 	}
 	public function setData(newData:Object):Void {
 		name = newData.name;

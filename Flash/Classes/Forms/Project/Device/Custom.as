@@ -22,14 +22,14 @@ class Forms.Project.Device.Custom extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
 		dataGridHandler.addTextInputColumn("key", "Input\nNumber", restrictions,false,100);
-		dataGridHandler.addCheckColumn("regex", "Key is\nRegEx.", values,false,40);		
+		dataGridHandler.addCheckColumn("regex", "Key is\nRegEx.", values,false,70);		
 		dataGridHandler.addTextInputColumn("command", "Command", restrictions,false,100);
 		dataGridHandler.addTextInputColumn("extra", "Extra", restrictions,true,100);
 		dataGridHandler.addTextInputColumn("extra2", "Extra2", restrictions,true,100);		
 		dataGridHandler.addTextInputColumn("extra3", "Extra3", restrictions,true,100);		
 		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions,true,100);		
 		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions,true,100);		
-		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions,true,50);
+		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions,true,800);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(customs);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

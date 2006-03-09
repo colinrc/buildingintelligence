@@ -1,54 +1,61 @@
 ﻿import mx.controls.*;
+import Controls.MapEditor;
 import mx.utils.Delegate;
 class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 	private var alertgroups:Array;
-	private var alertgroups_dg:DataGrid;
-	private var new_btn:Button;
-	private var delete_btn:Button;
+	private var poly:String;
+	private var roomEditor:MapEditor;
+	private var map:String;
 	private var save_btn:Button;
-	private var dataGridHandler:Object;
 	private var dataObject:Object;
 	public function onLoad() {
-		var restrictions = new Object();
-		var restrictions2 = new Object();
-		restrictions.maxChars = undefined;
-		restrictions.restrict = "";
-		restrictions2.editable = false;
-		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
-		dataGridHandler.setDataGrid(alertgroups_dg);
-		dataGridHandler.addTextInputColumn("alert", "Alert Group", restrictions2,false,100);
-		dataGridHandler.addTextInputColumn("x_pos", "x Pos", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("y_pos", "y Pos", restrictions,false,150);
-		dataGridHandler.addHiddenColumn("id");		
 		var DP = new Array();
 		for (var alertgroup in alertgroups) {
 			var newAlertGroup = new Object();
-			newAlertGroup.alert = "Alert";
-			newAlertGroup.x_pos = alertgroups[alertgroup].x_pos;
-			newAlertGroup.y_pos = alertgroups[alertgroup].y_pos;
+			newAlertGroup.x = alertgroups[alertgroup].x_pos;
+			newAlertGroup.y = alertgroups[alertgroup].y_pos;
 			newAlertGroup.id = alertgroups[alertgroup].id;			
 			DP.push(newAlertGroup);
 		}
-		dataGridHandler.setDataGridDataProvider(DP);
-		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		new_btn.addEventListener("click", Delegate.create(this, newItem));
+		roomEditor.map = map;
+		roomEditor.mapMode = "alertGroups";
+		roomEditor.poly = poly;
+		roomEditor.alerts = DP;
+		//roomEditor.alerts = [{name:"test 1", icon:"heater", keys:"a,b,c,d,e,f", x:400, y:300}, {name:"test 2", icon:"fan", keys:"q,t,r,f,y,h", x:300, y:200}];
+		
+		var editorListener = new Object();
+		editorListener.alertSelect = function (eventObj) {
+			_global.unSaved = true;	
+		}
+		editorListener.alertAdd = function (eventObj) {
+			_global.unSaved = true;	
+		}
+		editorListener.alertMove = function (eventObj) {
+			_global.unSaved = true;	
+		}
+		editorListener.alertNew = function (eventObj) {
+			_global.unSaved = true;	
+		}
+		editorListener.alertDelete = function (eventObj) {
+			_global.unSaved = true;	
+		}
+		roomEditor.addEventListener("alertSelect", editorListener);
+		roomEditor.addEventListener("alertAdd", editorListener);
+		roomEditor.addEventListener("alertMove", editorListener);
+		roomEditor.addEventListener("alertNew", editorListener);
+		roomEditor.addEventListener("alertDelete", editorListener);
 		save_btn.addEventListener("click", Delegate.create(this, save));
-	}
-	private function deleteItem() {
-		dataGridHandler.removeRow();
-	}
-	private function newItem() {
-		dataGridHandler.addBlankRow();
-		alertgroups_dg.getItemAt(0).alert.label = "Alert";
 	}
 	public function save():Void {
 		var newAlertGroup = new Array();
-		var DP = dataGridHandler.getDataGridDataProvider();
+		var DP = roomEditor.alerts;
 		for (var index = 0; index<DP.length; index++) {
 			var AlertGroup = new Object();
-			AlertGroup.x_pos = DP[index].x_pos;
-			AlertGroup.y_pos = DP[index].y_pos;
-			AlertGroup.id = DP[index].id;
+			AlertGroup.x_pos = DP[index].x;
+			AlertGroup.y_pos = DP[index].y;
+			if(DP[index].id != "0"){
+				AlertGroup.id = DP[index].id;
+			}
 			newAlertGroup.push(AlertGroup);
 		}
 		dataObject.setData({alertgroups:newAlertGroup});

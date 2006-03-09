@@ -1,13 +1,18 @@
 ﻿import mx.controls.*;
+import Controls.MapEditor;
 import mx.utils.Delegate;
 class Forms.Project.Client.Doors extends Forms.BaseForm {
 	private var doors:Array;
-	private var doors_dg:DataGrid;
+	private var poly:String;
+	private var roomEditor:MapEditor;
+	private var map:String;
 	private var save_btn:Button;
-	private var new_btn:Button;
-	private var delete_btn:Button;
-	private var dataGridHandler:Object;
+	private var colour_mc:MovieClip;
+	private var thickness_ti:TextInput;
+	private var key_cmb:ComboBox;
+	private var name_ti:TextInput;
 	private var dataObject:Object;	
+	private var currentDoor:Object;
 	public function onLoad() {
 		var tempKeys = _global.server_test.getKeys();
 		var DPKey = new Array();
@@ -16,15 +21,6 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			tempObject.label = tempKeys[key];
 			DPKey.push(tempObject);
 		}
-		var restrictions = new Object();
-		restrictions.maxChars = undefined;
-		restrictions.restrict = "";
-		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
-		dataGridHandler.setDataGrid(doors_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("pos", "Position", restrictions,false,100);
-		dataGridHandler.addComboBoxColumn("key", "Key", DPKey,false,100);
-		dataGridHandler.addColourColumn("colour", "Colour",100);
 		var DP = new Array();
 		for (var door in doors) {
 			var newDoor = new Object();
@@ -38,11 +34,16 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			} else {
 				newDoor.key = "";
 			}
-			if (doors[door].attributes["pos"] != undefined) {
-				newDoor.pos = doors[door].attributes["pos"];
+			if (doors[door].attributes["door"] != undefined) {
+				newDoor.door = doors[door].attributes["door"];
 			} else {
-				newDoor.pos = "";
+				newDoor.door = "";
 			}
+			if (doors[door].attributes["thickness"] != undefined) {
+				newDoor.thickness = doors[door].attributes["thickness"];
+			} else {
+				newDoor.thickness = "";
+			}			
 			if (doors[door].attributes["colour"] != undefined) {
 				newDoor.colour = doors[door].attributes["colour"];
 			} else {
@@ -50,20 +51,40 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			}
 			DP.push(newDoor);
 		}
-		dataGridHandler.setDataGridDataProvider(DP);
-		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
-		new_btn.addEventListener("click", Delegate.create(this, newItem));
+		roomEditor.map = map;
+		roomEditor.mapMode = "doors";
+		roomEditor.poly = poly;
+		roomEditor.doors = DP;			
+		var editorListener = new Object();
+		colour_mc.setColour("0xFFFFFF");
+		thickness_ti.text = "";
+		thickness_ti.restrict = "0-9";
+		key_cmb.dataProvider = DPKey;
+		key_cmb.text = "";
+		name_ti.text = "";
+		currentDoor = undefined;			
+		roomEditor.addEventListener("doorSelect", Delegate.create(this,doorSelect));
+		roomEditor.addEventListener("doorAdd", Delegate.create(this,doorAdd));
+		roomEditor.addEventListener("doorMove", Delegate.create(this,doorMove));
+		roomEditor.addEventListener("doorDelete", Delegate.create(this,doorDelete));
 		save_btn.addEventListener("click", Delegate.create(this, save));
+		colour_mc.setCallbackObject(this);
+		key_cmb.addEventListener("change", Delegate.create(this,cmbChange));
+		name_ti.addEventListener("change", Delegate.create(this,nameChange));
+		thickness_ti.addEventListener("change", Delegate.create(this,thicknessChange));
 	}
-	private function deleteItem() {
-		dataGridHandler.removeRow();
+	public function cmbChange(eventObj){
+		currentDoor.key = key_cmb.text;
 	}
-	private function newItem() {
-		dataGridHandler.addBlankRow();
+	public function nameChange(eventObj){
+		currentDoor.name = name_ti.text;		
+	}
+	public function thicknessChange(eventObj){
+		currentDoor.thickness = thickness_ti.text;		
 	}
 	public function save():Void {
 		var newDoors = new Array();
-		var DP = dataGridHandler.getDataGridDataProvider();
+		var DP = roomEditor.doors;
 		for (var index = 0; index < DP.length; index++) {
 			var item = new XMLNode(1, "door");
 			if (DP[index].name != "") {
@@ -72,15 +93,58 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			if (DP[index].key != "") {
 				item.attributes["key"] = DP[index].key;
 			}
-			if (DP[index].pos != "") {
-				item.attributes["pos"] = DP[index].pos;
+			if (DP[index].door != "") {
+				item.attributes["door"] = DP[index].door;
 			}
 			if (DP[index].colour != "") {
 				item.attributes["colour"] = DP[index].colour;
 			}
+			if (DP[index].thickness != "") {
+				item.attributes["thickness"] = DP[index].thickness;
+			}			
 			newDoors.push(item);
 		}
 		dataObject.setData({doors:newDoors});
 		_global.saveFile("Project");
 	}
+	function onColourChange(newColour:Number) {
+		currentDoor.colour = "0x"+newColour.toString(16).toUpperCase();
+		_global.unSaved = true;		
+	}	
+		public function doorSelect(eventObj) {
+			currentDoor = eventObj.target;			
+			colour_mc.setColour(currentDoor.colour);
+			thickness_ti.text = currentDoor.thickness;
+			key_cmb.text = currentDoor.key;
+			name_ti.text = currentDoor.name;
+			_global.unSaved = true;					
+		}
+		public function doorAdd(eventObj) {
+			currentDoor = eventObj.target;
+			currentDoor.colour = "0xFFFFFF";
+			currentDoor.thickness = "";
+			currentDoor.key = "";
+			currentDoor.name = "";
+			colour_mc.setColour("0xFFFFFF");
+			thickness_ti.text = "";
+			key_cmb.text = "";
+			name_ti.text = "";
+			_global.unSaved = true;
+		}
+		public function doorMove (eventObj) {
+			currentDoor = eventObj.target;					
+			colour_mc.setColour(currentDoor.colour);
+			thickness_ti.text = currentDoor.thickness;
+			key_cmb.text = currentDoor.key;
+			name_ti.text = currentDoor.name;
+			_global.unSaved = true;					
+		}
+		public function doorDelete(eventObj) {
+			colour_mc.setColour("0xFFFFFF");
+			thickness_ti.text = "";
+			key_cmb.text = "";
+			name_ti.text = "";
+			currentDoor = undefined;			
+			_global.unSaved = true;		
+		}	
 }

@@ -64,6 +64,7 @@ var infoflow_ta = workFlow_split.setSecondContents("TextArea", "infoflow_ta", 1)
 _global.right_tree = right_tree;
 _global.infoflow_ta = infoflow_ta;
 _global.infoflow_ta.editable = false;
+_global.infoflow_ta.wordWrap = true;
 _global.workflow = new Objects.WorkFlow();
 var left_tree:mx.controls.Tree;
 _global.left_tree = left_tree;
@@ -287,7 +288,19 @@ function saveFile(saveType:String):Void {
 			var tempString = mdm.Dialogs.BrowseFile.show();
 			if (tempString != "false") {
 				_global.projectFileName = tempString;
-				saveFile("Project");
+				var newProjectXML = new XMLNode(1, "project");
+				var myXML = new XMLNode(1, 'projectSettings');
+				for (var attrib in _global.project) {
+					if (_global.project[attrib].length) {
+						myXML.attributes[attrib] = _global.project[attrib];
+					}
+				}
+				newProjectXML.appendChild(myXML);
+				newProjectXML.appendChild(_global.server_test.toXML());
+				newProjectXML.appendChild(_global.client_test.toXML());
+				mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
+				//mdm.Dialogs.prompt("File saved to: " + _global.projectFileName);
+				_global.unSaved = false;
 			}
 		}
 	} else {
@@ -377,7 +390,7 @@ setView = function (view, dataObj) {
 			_global.unSaved = false;
 		}
 	}
-	// reset all the components on stage to their "original" size, positions and make them visible   
+	// reset all the components on stage to their "original" size, positions and make them visible    
 	left_tree._visible = true;
 	/*left_tree._y = 93;
 	left_tree.setSize(244, 670);*/
@@ -417,11 +430,12 @@ setView = function (view, dataObj) {
 	case "control.ir" :
 		//_global.infoflow_ta._visible = false;
 		workFlow_split._visible = false;
+		left_tree._visible =false;
 		/*left_tree._y = 68;
-		left_tree.setSize(244, 695);*/
+		left_tree.setSize(244, 695);
 		left_tree.dataProvider = null;
 		left_tree.dataProvider = new XML('<n label="Servers"><n label="Coming Soon!" /></n><n label="Clients"><n label="Coming Soon!" /></n>');
-		left_tree.labelFunction = null;
+		left_tree.labelFunction = null;*/
 		tabs_tb.dataProvider = [{label:"Control", view:"control.controls"}, {label:"Files", view:"control.files"}, {label:"Log Levels", view:"control.logLevels"}, {label:"Log", view:"control.serverLog"}, {label:"IR", view:"control.ir"}];
 		if (view == "control.controls") {
 			tabs_tb.selectedIndex = 0;
@@ -446,14 +460,6 @@ setView = function (view, dataObj) {
 		workFlow_split._visible = false;
 		tabs_tb._visible = false;
 		tabBody_mc._visible = false;
-		break;
-	case "preview" :
-		left_tree._visible = false;
-		workFlow_split._visible = false;
-		form_mc = formContent_mc.attachMovie("forms.preview", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());
-		tabs_tb.dataProvider = [{label:"Client Preview"}];
-		tabs_tb.selectedIndex = 0;
-		tabs_tb._visible = true;
 		break;
 	case "publish" :
 		left_tree._visible = false;
@@ -554,8 +560,9 @@ buttonListener.click = function(eventObj) {
 		setView("control");
 		break;
 	case preview_btn :
-		eventObj.target.selected = true;
-		setView("preview");
+		mdm.FileSystem.saveFile("client.xml", _global.writeXMLFile(_global.client_test.toXML(), 0));
+		mdm.Forms.Preview.callFunction("parseClient", '<client><setting name="applicationXML" value="client.xml" /><setting name="libLocation" value="lib/" /><setting name="fullScreen" value="false" /><setting name="hideMouseCursor" value="false" /></client>', "|");
+		mdm.Forms.Preview.showModal();	
 		break;
 	case publish_btn :
 		eventObj.target.selected = true;

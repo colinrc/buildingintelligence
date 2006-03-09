@@ -5,36 +5,35 @@ class Forms.Project.Client.ControlTypeWebBrowser extends Forms.BaseForm {
 	private var url_ti:TextInput;
 	private var width_ti:TextInput;
 	private var height_ti:TextInput;
+	private var delete_btn:Button;
 	public function onLoad() {
-		var changeListener:Object = new Object();
-		changeListener.change = function(eventObject:Object) {
-			_global.unSaved = true;
-		};
-		url_ti.addEventListener("change", changeListener);
-		width_ti.addEventListener("change", changeListener);
-		height_ti.addEventListener("change", changeListener);		
-		if(object.attributes["url"] != undefined){
+		url_ti.addEventListener("change", Delegate.create(this, changeListener));
+		width_ti.addEventListener("change", Delegate.create(this, changeListener));
+		height_ti.addEventListener("change", Delegate.create(this, changeListener));
+		if (object.attributes["url"] != undefined) {
 			url_ti.text = object.attributes["url"];
 		} else {
 			url_ti.text = "";
 		}
-		if(object.attributes["width"] != undefined) {				
-		width_ti.text = object.attributes["width"];
+		if (object.attributes["width"] != undefined) {
+			width_ti.text = object.attributes["width"];
 		} else {
 			width_ti.text = "";
 		}
-		if(object.attributes["height"] != undefined) {				
-		height_ti.text = object.attributes["height"];
+		if (object.attributes["height"] != undefined) {
+			height_ti.text = object.attributes["height"];
 		} else {
 			height_ti.text = "";
-		}	
+		}
+		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 	}
-	public function getObject():XMLNode {
-		var newObject = new XMLNode(1,"item");
-		newObject.attributes["type"] = "browser";
-		newObject.attributes["url"] = url_ti.text;
-		newObject.attributes["width"] = width_ti.text;
-		newObject.attributes["height"] = height_ti.text;		
-		return newObject;
+	public function deleteItem() {
+	}
+	public function changeListener(eventObject:Object) {
+		_global.unSaved = true;
+		object.attributes["type"] = "browser";
+		object.attributes["url"] = url_ti.text;
+		object.attributes["width"] = width_ti.text;
+		object.attributes["height"] = height_ti.text;
 	}
 }

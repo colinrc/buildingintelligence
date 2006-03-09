@@ -1,6 +1,10 @@
 ﻿class Objects.Client.AlertGroups extends Objects.BaseElement {
 	var alertgroups:Array;
-	private var treeNode:XMLNode;		
+	private var treeNode:XMLNode;
+	var room:Object;
+	public function AlertGroups() {
+		alertgroups = new Array();				
+	}
 	public function isValid():Boolean {
 		var flag = true;
 		for (var alertgroup in alertgroups) {
@@ -12,6 +16,9 @@
 	}
 	public function getForm():String {
 		return "forms.project.client.alertgroups";
+	}
+	public function setRoom(inRoom:Object) {
+		room = inRoom;
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1, "AlertGroups");
@@ -26,17 +33,17 @@
 			newNode.appendChild(alertgroups[alertgroup].toTree());
 		}
 		newNode.object = this;
-		treeNode = newNode;		
+		treeNode = newNode;
 		return newNode;
 	}
-	public function getKey():String{
+	public function getKey():String {
 		return "AlertGroups";
-	}	
+	}
 	public function getName():String {
 		return "Alert Groups";
 	}
 	public function getData():Object {
-		return {alertgroups:alertgroups, dataObject:this};
+		return {alertgroups:alertgroups, dataObject:this, map:room.zone.map, poly:room.poly};
 	}
 	public function setData(newData:Object) {
 		_global.left_tree.setIsOpen(treeNode, false);
@@ -44,13 +51,15 @@
 		var newAlertGroups = new Array();
 		for (var index in newData.alertgroups) {
 			if (newData.alertgroups[index].id == undefined) {
-				newAlertGroups.push({x_pos:newData.alertgroups[index].x_pos,y_pos:newData.alertgroups[index].y_pos});
+				newAlertGroups.push({x_pos:newData.alertgroups[index].x_pos, y_pos:newData.alertgroups[index].y_pos});
 			}
 		}
 		for (var alertGroup in alertgroups) {
 			var found = false;
 			for (var index in newData.alertgroups) {
 				if (alertgroups[alertGroup].id == newData.alertgroups[index].id) {
+					alertgroups[alertGroup].x_pos = newData.alertgroups[index].x_pos;
+					alertgroups[alertGroup].y_pos = newData.alertgroups[index].y_pos;
 					found = true;
 				}
 			}
@@ -59,20 +68,19 @@
 				alertgroups.splice(parseInt(alertGroup), 1);
 			}
 		}
-		for (var newAlertGroup in newAlertGroups) {
+		for (var AlertGroup in newAlertGroups) {
 			var newNode = new XMLNode(1, "alerts");
-			newNode.attributes["x"] = newAlertGroups[newAlertGroup].x_pos;
-			newNode.attributes["y"] = newAlertGroups[newAlertGroup].y_pos;
+			newNode.attributes["x"] = newAlertGroups[AlertGroup].x_pos;
+			newNode.attributes["y"] = newAlertGroups[AlertGroup].y_pos;
 			var newAlertGroup = new Objects.Client.Alerts();
 			newAlertGroup.setXML(newNode);
-			newAlertGroup.id = _global.formDepth++;			
-			treeNode.appendChild(newAlertGroup.toTree());				
+			newAlertGroup.id = _global.formDepth++;
+			treeNode.appendChild(newAlertGroup.toTree());
 			alertgroups.push(newAlertGroup);
 		}
-		_global.left_tree.setIsOpen(treeNode, true);		
-	}	
+		_global.left_tree.setIsOpen(treeNode, true);
+	}
 	public function setXML(newData:XMLNode):Void {
-		alertgroups = new Array();
 		for (var child in newData.childNodes) {
 			var newAlertGroup = new Objects.Client.Alerts();
 			newAlertGroup.setXML(newData.childNodes[child]);

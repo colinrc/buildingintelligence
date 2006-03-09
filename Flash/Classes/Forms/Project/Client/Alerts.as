@@ -7,9 +7,9 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var x_pos:String;
-	private var x_ti:TextInput;
+	private var x_lb:Label;
 	private var y_pos:String;
-	private var y_ti:TextInput;
+	private var y_lb:Label;
 	//******************************//	
 	private var left_li:ComboBox;
 	private var right_li:ComboBox;
@@ -25,10 +25,10 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
 		};
-		x_ti.addEventListener("change", changeListener);		
-		y_ti.addEventListener("change", changeListener);
-		x_ti.text = x_pos;
-		y_ti.text = y_pos;
+		x_lb.addEventListener("change", changeListener);
+		y_lb.addEventListener("change", changeListener);
+		x_lb.text = x_pos;
+		y_lb.text = y_pos;
 		var tempKeys = _global.server_test.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
@@ -46,9 +46,9 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		dataGridHandler.setDataGrid(alerts_dg);
 		var attributes = new Object();
 		attributes.label = "Set Keys";
-		dataGridHandler.addTextInputColumn("name", "Alert Name", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("icon", "Icon", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("fadeOutTime", "Fade Out Time", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("name", "Alert Name", restrictions, false, 150);
+		dataGridHandler.addTextInputColumn("icon", "Icon", restrictions, false, 150);
+		dataGridHandler.addTextInputColumn("fadeOutTime", "Fade Out Time", restrictions, false, 150);
 		dataGridHandler.addHiddenColumn("keys");
 		var DP = new Array();
 		for (var alert in alerts) {
@@ -89,25 +89,27 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	private function deleteItem() {
 		hideButtons(false);
 		dataGridHandler.removeRow();
-		_global.unSaved = true;		
+		_global.unSaved = true;
 	}
 	private function newItem() {
 		hideButtons(false);
 		dataGridHandler.addBlankRow();
-		_global.unSaved = true;		
+		_global.unSaved = true;
 	}
 	private function itemChange(evtObj) {
 		hideButtons(true);
 		var alertKeys:Array = alerts_dg.selectedItem.keys.split(",");
 		for (var key in alertKeys) {
-			right_li.addItem({label:alertKeys[key]});
+			if(alertKeys[key].length){
+				right_li.addItem({label:alertKeys[key]});
+			}
 		}
-		_global.unSaved = true;		
+		_global.unSaved = true;
 	}
 	public function save():Void {
 		var newAlerts = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index<DP.length; index++) {
+		for (var index = 0; index < DP.length; index++) {
 			var item = new XMLNode(1, "alert");
 			if (DP[index].name != "") {
 				item.attributes["name"] = DP[index].name;
@@ -123,13 +125,13 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			}
 			newAlerts.push(item);
 		}
-		dataObject.setData({alerts:newAlerts, x_pos:x_ti.text, y_pos:y_ti.text});
-		_global.saveFile("Project");					
+		dataObject.setData({alerts:newAlerts});
+		_global.saveFile("Project");
 	}
 	private function addSel() {
 		if (left_li.selectedItem != undefined) {
 			var flag = false;
-			for (var index = 0; index<right_li.length; index++) {
+			for (var index = 0; index < right_li.length; index++) {
 				if (left_li.selectedItem.label == right_li.getItemAt(index).label) {
 					flag = true;
 				}
@@ -144,13 +146,14 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 				}
 				alerts_dg.selectedItem.keys = newKeys.join(",");
 			}
-			_global.unSaved = true;			
+			_global.unSaved = true;
 		}
 	}
 	private function addAll() {
-		for (var leftIndex = 0; leftIndex<left_li.length; leftIndex++) {
+		_global.unSaved = true;		
+		for (var leftIndex = 0; leftIndex < left_li.length; leftIndex++) {
 			var flag = false;
-			for (var rightIndex = 0; rightIndex<right_li.length; rightIndex++) {
+			for (var rightIndex = 0; rightIndex < right_li.length; rightIndex++) {
 				if (left_li.getItemAt(leftIndex).label == right_li.getItemAt(rightIndex).label) {
 					flag = true;
 				}
@@ -165,7 +168,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		for (var item in right_li.dataProvider) {
 			newKeys.push(right_li.dataProvider[item].label);
 		}
-		_global.unSaved = true;		
+		_global.unSaved = true;
 		alerts_dg.selectedItem.keys = newKeys.join(",");
 	}
 	private function remSel() {
@@ -176,7 +179,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 				newKeys.push(right_li.dataProvider[item].label);
 			}
 			alerts_dg.selectedItem.keys = newKeys.join(",");
-			_global.unSaved = true;			
+			_global.unSaved = true;
 		}
 	}
 	private function remAll() {
@@ -186,7 +189,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			newKeys.push(right_li.dataProvider[item].label);
 		}
 		alerts_dg.selectedItem.keys = newKeys.join(",");
-		_global.unSaved = true;		
+		_global.unSaved = true;
 	}
 	private function hideButtons(visible:Boolean) {
 		left_li._visible = visible;
