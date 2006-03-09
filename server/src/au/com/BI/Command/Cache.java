@@ -182,7 +182,7 @@ public class Cache {
         	Iterator eachListener = cacheListeners.iterator();
         	while (eachListener.hasNext()){
         		CacheListener cacheListener = (CacheListener)eachListener.next();
-        		cacheListener.cacheUpdated(key, cacheWrapper);
+        		cacheListener.cacheUpdated(key, (CacheWrapper)cacheWrapper.clone());
         	}
         }
         
