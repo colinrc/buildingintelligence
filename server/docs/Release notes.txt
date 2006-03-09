@@ -45,9 +45,13 @@ Added target and target_user fields for messages. target_user is for future use.
 ''' Calendar '''
 
 Added ID,category and alarm field.
+
 Ensure alarm does not trigger if it is flagged as N.
+
 Handle calendar files created before the new fields.
+
 Add hourly and yearly recurrences.
+
  Resolved Issues: [ticket:7],[ticket:8]
 
 ''' Dynalite '''
@@ -57,6 +61,7 @@ Added ramp up / down for channels and areas
 ''' Scripts '''
 
 Added validation to ensure script and macro handlers are not called if they have not yet fully initialised.
+
 Improved error handling if a correct configuration script has not been specified.
 
 
@@ -76,8 +81,11 @@ restarts of the client to not trigger a 'number of clients' security violation.
 ''' General Code '''
 
 Added a hook for every model which is called on every new client connection, doClientStartup.
+
 Removed AWT gui harness for main application, it is not longer used and caused maintenance problems.
+
 Refactored configuration module to use factory singleton pattern, should facilitate testing.
+
 Began to integrate a server ID concept to facilitate master slave development.
 
  
@@ -86,10 +94,13 @@ Released V1.5b9
 ''' Calendar '''
 
 Added the ability to store EXTRA, EXTRA2,EXTRA3, COMMAND fields in the calendar record. 
+
 These are passed to the macro command when it runs. 
+
 Extra4,EXTRA5 are unavailable as they are used internally to pass information to the running macro.
 
 For example the following macro will switch the light passed in the extra field on. 
+
 It will be set to the level specified in extra2, the macro will pause for the time specified
 in extra3 then switch it off.
 
@@ -105,8 +116,11 @@ The appropriate calendar entry to run this macro once would be
 
 
 Calendar subsystem refactored to facilitate testing.
+
 Added the ability to have the target control (ie. KEY) as a parameter.
+
 Calendar entries now maintain their order through multiple saves.
+
 
 20/1/2006
 Released V1.5b8
@@ -114,18 +128,22 @@ Released V1.5b8
 ''' Comms '''
 
 Ensure IP receiver does not overflow buffer in receipt of very large or numerous packets.
+
 Only resend a comms command that hasn't acknowleged 3 times before clearing the comamnd- ensures a rogue
 command cannot block a device. (only applies with devices that acknowleging commands)
 
 ''' CBUS '''
 
 Fix infinite memory usage from CBUS temperature polls if the cbus network does not reply.
+
 Added POLL_TEMP_INTERVAL to CBUS configuration file, interval in seconds between polls.
+
 Ensure CBUS connection going away will not cause null pointer in the cbus temperature probe.
 
 ''' Dynalite '''
 
 Ensure a light level of 1% is interpretted as off.
+
 Ensure correct behaviour for area fades.
 
 
@@ -141,12 +159,14 @@ Released V1.5b7
 
 ''' Dynalite '''
 
-Interpret preset changes from dynalite network
+Interpret preset changes from dynalite network.
+
 Scan levels of devices in an area after preset change in an area.
 
 ''' CBUS '''
 
 Added support for temperature sensors
+
 Configuration syntax is
 {{{
 	<TEMPERATURE ACTIVE="Y" KEY="42" NAME="Temp Sensor2" DISPLAY_NAME="TEMP_SENSOR2" />
@@ -162,11 +182,17 @@ A message will be sent to the client whenever the temperature changes. Temperatu
 ''' Configuration '''
 
 Added ANALOG synonym for ANALOGUE
+
 Added AUDIO_OUTPUT synonym for AUDIO
+
 Added AV_OUTPUT synonym for AV
+
 Added CAMERA_INPUT synonym for CAMERA
+
 Refactored configuration parser to be more modular.
+
 Changed model DISPLAY_NAME to DESCRIPTION; DISPLAY_NAME can still be used
+
 Changed model NAME to DEVICE_TYPE; NAME can still be used
 
 
@@ -176,16 +202,22 @@ Released V1.5b6
 ''' Named Clients '''
 
 Infrastructure support for named clients has been added.
+
 If a client sends a CONTROL message with KEY="ID" COMMAND="name" EXTRA="name for the client" the address book 
 will be updated with this information.
+
 If a client sends a CONTROL message with KEY="ID"  COMMAND="user" EXTRA="user name" the address book will
 be updated with this information.
+
 The fields TARGET and TARGET_USER have been added to all client XML packets, initially only MESSAGE control 
 types will be useful. Underlying support for TARGET_USER has not yet been fully implemented, more functionality
 is required for it to be fully useful.
+
 If a TARGET is specified and a MESSAGE command is sent from the client; it will be conveyed to the TARGET.
+
 A target of All sends the message to all clients apart from the orginating client. -1 is the default if
 no specific target has been specified.
+
 A target of All_Inc_Src sends the message to all clients, this may prove to not be useful.
 
 Message structure is
@@ -205,7 +237,9 @@ Message structure is
 ''' Calendar '''
 
 Added ability for the calendar to skip dates.
+
 Add <skip start_date="yyyy-mm-dd" end_date="yyyy-mm-dd" /> elements to the particular event XML block.
+
 Muliple skip elements can be added to an event; all dates are inclusive.
 
 
@@ -216,6 +250,7 @@ Dynalite understands ordinary light commands; off/on level.
 Fade times can also be given in the extra2 message field, fades can be minutes or seconds; eg. EXTRA2="10m" instructs the
 fade to occur over 10 minutes. EXTRA2="10" will indicate 10 seconds. Most dynalite commands support up to 28 minutes for 
 fades.
+
 Fades originating from the dynalite network will send messages to flash with the fade time included in EXTRA2.
 
 Lights are configured as follows
@@ -225,17 +260,22 @@ Lights are configured as follows
 }}}
  
 Area commands are supported using key=0-; fades to this key will operate on all lights in the area, and any linked areas.
+
 Area commands originating in the dynalite network will be sent to that key.
 
   
 Presets are supported;  eg.  command="preset" extra="preset_number" 
+
 Switching an area off using preset 4 is the preferred way to switch lights off in an area when the dynalite network has been
 configured in this manner (recomended by dynalite). 
+
 Preset changes should be sent to the area key configured as described above as presets operate on areas, not individual 
 channels.
+
 Classic presets pay attention to offset levels in the same manner as the Dynalite network.
 
 Fade times can given for preset switching in the EXTRA2 field in the same manner as light fades.
+
 Preset changes in the network are returned to flash with the same structure.
 
 Classic preset offset commands are supported. Send command="preset" extra="preset_number" , the target device should
@@ -263,8 +303,11 @@ generate on/off messages to BUTTON_1
 }}}
 
 Todo.
+
 Area Linking
+
 Alarm Messages
+
 Determinine light levels after preset switch.
 
 ''' Security '''
@@ -275,16 +318,19 @@ server startup and never reboot.
 ''' Bugs '''
 
 Ensure script handler will not crash if the config file specified in the bootstrap file is not found.
+
 Fixed bug with serial handler; will possibly oregon scientific handling. 
 
 
 2005/11/30
 Enabled security for number of clients using HASP key
+
 Released V1.5b5
 
 2005/11/27
 Macros calls no longer list all macros for run,abort or complete commands. Instead the macro started and finished 
 messages are only transmitted.
+
 Macros can be run with a 'virtual name' to differentiate multiple instances of the same running macro. Run the 
 macro with EXTRA="macro_name:label". macro_name will be used to identify the true macro to run whereas the entire 
 field (macro_name=label" will be used to communicate start and finish messages to the client. 
@@ -298,49 +344,65 @@ one would generate
 }}}
 
 Added macro pause based on a passed in value for the length (passed in via the EXTRA field)
+
 Ugraded quartz scheduling library to version 1.5.1
-Released V1.5b4
 
-2005/11/23
+''' 2005/11/23 Released V1.5b4 '''
+
 updated number scheme
+
 Added ability to place a parameter in the DISPLAY_NAME field of macros.
-Released V1.5b2
 
-2005/11/9
+''' 2005/11/9 Released V1.5b2 '''
+
 Possible fix for HAL implemented.
-Release V1.1.5
 
-2005/10/29
+''' 2005/10/29 Release V1.1.5 '''
+
 Fixed Kramer AV src selection with an input not specified in both audio and video input catalogues.
+
 Further checking for script updating on file system
-Released V1.1.4
 
-2005/10/27
+
+''' 2005/10/27 Released V1.1.3 '''
+
 Fixed severe_error alert bug
-Released V1.1.3
 
-2005/10/27
+
+'''2005/10/27 Released V1.1.1 '''
+
 Fixed problems with adding and removing script files.
+
 Fixed client display of severe errors
+
 Updated numbering
-Released V1.1.1
 
-2005/10/26
+
+''' 2005/10/26 Released V0.9.237 '''
+
 Made flash dialog modal for security
-Released V0.9.237
 
-2005/10/26
+
+''' 2005/10/26 Released V0.9.236 '''
+
 HASP security model added; client count only supported at this stage.
-Ensure the HASP JNI library is in the java run path
-Memory location 0 is number of clients
-Bug with two GC100 IR modules rectified
-Released V0.9.236
 
-2005/9/30
+Ensure the HASP JNI library is in the java run path
+
+Memory location 0 is number of clients
+
+Bug with two GC100 IR modules rectified
+
+
+
+''' 2005/9/30 Released version 0.9.235 '''
+
 Updates to suppport Kramer model
+
 Ensure input names for both audio and video catalogues are correct, when using extra="AV" or extra="" commands (rather 
 then VIDEO_ONLY or AUDIO_ONLY) both catalogues will be checked for the input name. For simplicity it is recomended you
 connect AV units to the same input number for both audio and video.
+
 Commands are 
 
 preset selection. 
@@ -377,18 +439,20 @@ The kramer block should be similar to this
                 </KRAMER>
 }}}
 
-Released version 0.9.235              
+             
 
-2005/9/25
+''' 2005/9/25 Released version 0.9.234 '''
+
 Improved logging for binary IO to all serial devices.
-Released version 0.9.234
 
-2005/9/22
 Significant refactoring within script model. No changes were made to the script interpretter, or API interface to flash 
 client or other system components.
+
 Scripts will now queue if attempted to run again when it is currently running. Up to 4 times will be queued. More than
 4 will be ignored.
+
 If a script must not be queued, send no_queue in the extra parameter of the script run.  
+
 
 ''' Pelco '''
 
@@ -422,7 +486,9 @@ Cameras must be specied in the PELCO block of the config file. The format is
 This represents a camera listening on address1, with a zoom capability of 148
 
 Following is a test macro; this will switch on the camera listening on address 0 ; 
+
 It will start it panning left for 5 seconds
+
 It will then stop the pan and switch off.
 
  
@@ -435,24 +501,31 @@ It will then stop the pan and switch off.
     <CONTROL KEY="FRONT_CAMERA" COMMAND="off" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />  
   </CONTROL>
 }}}
-Released version 0.9.233
 
-2005/9/14
+
+''' 2005/9/14 Released version 0.9.232 '''
+
 Improved logging for messages containing unprintable characters.
+
 Resend instructions which have not been attended to in a reasonable time
-Released version 0.9.232
 
-2005/9/14
+
+''' 2005/9/14 Released version 0.9.231 '''
+
 Fixed errors in adding CBUS devices to the system when parsing the config file
-Released version 0.9.231
 
-2005/9/13
+
+''' 2005/9/13 Released version 0.9.230 '''
+
 Can now send multiple IR codes from one instruction. Use commas between instructions. This would generally be used to select a 2 digit
 channel or station.
+
 eg. 
+
 {{{
 <item type="button" icon="volume-up" command="AV.STUDY_IR" extra="Philips MC-200.VOLUP,Philips MC-200.CD" repeatRate="200" />
 }}}
+
 Added Kramer preset selection. COMMAND="preset" EXTRA="#preset number" EXTRA2="#machine_number#" 
 extra 2 is optional
 
@@ -465,20 +538,25 @@ Added Dynalite commands
 	COMMAND="off" EXTRA="" EXTRA2="#fade rate#" EXTRA3="#join#" 
 }}}
 join defaults through to 255.
+
 fade rate ranges from 0.02 to 65535 seconds. This is rounded to the nearest 0.02 seconds.
      rate can be expressed as minutes  eg. 2m
 
 
 Corrected errors in GC100 log messages
+
 Corrected problems in handling of queued comms messages
+
 Ensured GC100 IR strings are queue accross multiple IR ports, rather than in parrallel. Should solve issues with
 GC100s being used to drive devices on multiple IR port within a single macro/script
-Released version 0.9.230
+
+
 
 
 
  
-2005/8/25
+''' 2005/8/25 Released version 0.9.229 '''
+
 Extra HAL debugging added
 
 Added ability for scripts to run more than once simultaneously, set EXTRA2=no_lock in the script call
@@ -487,9 +565,9 @@ First release kramer module.
 
 Commands are 
 
-COMMAND="volume" EXTRA="up/down/level" (level is 0-99) EXTRA2="machine number"
-COMMAND="bass" EXTRA="up/down/level" (level is 0-99) EXTRA2="machine number" 
-COMMAND="src" EXTRA="input source" EXTRA2="machine number" EXTRA3="AV/AUDIO_ONLY/VIDEO_ONLY" default is AV
+ * COMMAND="volume" EXTRA="up/down/level" (level is 0-99) EXTRA2="machine number"
+ * COMMAND="bass" EXTRA="up/down/level" (level is 0-99) EXTRA2="machine number" 
+ * COMMAND="src" EXTRA="input source" EXTRA2="machine number" EXTRA3="AV/AUDIO_ONLY/VIDEO_ONLY" default is AV
 
 if AV,VIDEO_ONLY or an empty string is used in EXTRA3 the AV_INPUTS catalogue will be used to map the source name to an inupt 
 channel. if AUDIO_ONLY is specified the AUDIO_INPUTS catalogue will be used. This allows audio only devices to be specified in a 
@@ -504,7 +582,7 @@ Added macro parameters. If a field in a command from the macro contains %EXTRA2%
 replaced with the corresponding field from the command object that ran the MACRO. If the macro contains %COMMAND% or %EXTRA%
 they value will be read from the EXTRA4 or EXTRA5 field respectively. (The COMMAND and EXTRA fields are unavailable as they are 
 used to specify running the MACRO). 
-Released version 0.9.229
+
 
 
 
