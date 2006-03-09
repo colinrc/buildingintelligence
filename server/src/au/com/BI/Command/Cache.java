@@ -26,12 +26,14 @@ public class Cache {
         protected Controller controller;
         protected JRobinCacheUpdater jRobinCacheUpdater = null;
 		protected boolean jRobinActive = false;
+		protected List cacheListeners = null;
 
         public Cache() {
                 cachedCommands = Collections.synchronizedMap(new HashMap(
                     DeviceModel.
                     NUMBER_CACHE_COMMANDS));
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
+                cacheListeners = new LinkedList();
         }
 
         public Collection getSetElements(CacheWrapper cachedObject) {
@@ -42,6 +44,14 @@ public class Cache {
 			}
         }
 
+        /**
+         * Notified when cache updates occur
+         * @param cacheListener
+         */
+        public void registerCacheListener (CacheListener cacheListener){
+        	cacheListeners.add(cacheListener);
+        }
+        
         /**
          * Returns a particular command structure or a set of command structures based on the rules determined
          * by cacheAllCommands. See setCachedCommand for details.
@@ -143,13 +153,15 @@ public class Cache {
 
                     synchronized (cachedCommands) {
                             if (cachedCommands.containsKey(key)) {
-                                  CacheWrapper oldItem = (CacheWrapper)cachedCommands.get(key);
+                                CacheWrapper oldItem = (CacheWrapper)cachedCommands.get(key);
 								oldItem.addToMap (key,command);
+								updateListeners (key,oldItem);
                             }
                             else {
 								CacheWrapper newItem = new CacheWrapper (true);
 								newItem.addToMap(key,command);
-                                  cachedCommands.put(key, newItem);
+                                cachedCommands.put(key, newItem);
+  								updateListeners (key,newItem);
                             }
                     }
             String displayName;
@@ -166,6 +178,14 @@ public class Cache {
 		   }
     }
 		
+        public void updateListeners (String key, CacheWrapper cacheWrapper) {
+        	Iterator eachListener = cacheListeners.iterator();
+        	while (eachListener.hasNext()){
+        		CacheListener cacheListener = (CacheListener)eachListener.next();
+        		cacheListener.cacheUpdated(key, cacheWrapper);
+        	}
+        }
+        
 
         /**
          * Adds a command to the cache, this represents the state of devices
@@ -202,14 +222,17 @@ public class Cache {
                                         CacheWrapper oldItem = (CacheWrapper)cachedCommands.get(key);
                                         if (oldItem.isSet()) {
 											oldItem.addToMap (key,command);
+											updateListeners (key,oldItem);
                                         }
                                         else {
 											oldItem.setCommand(key,command);
+											updateListeners (key,oldItem);
                                         }
                                 }
                                 else {
 									CacheWrapper newItem = new CacheWrapper (key,command);
                                         cachedCommands.put(key, newItem);
+        								updateListeners (key,newItem);
                                 }
                         }
                 }
