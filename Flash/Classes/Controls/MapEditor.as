@@ -280,8 +280,9 @@ class Controls.MapEditor extends MovieClip {
 	private function drawHandles():Void {
 		var points_mc:MovieClip = scrollPane_sp.content.createEmptyMovieClip("points_mc", 5);
 		
+		var counter = 0;
 		for (var q=0; q<_poly.length; q=q+2) {
-			var handle_mc = points_mc.attachMovie("handle", "handle_mc", points_mc.getNextHighestDepth());
+			var handle_mc = points_mc.attachMovie("handle", "handle" + (counter++) + "_mc", points_mc.getNextHighestDepth());
 			handle_mc._x = _poly[q];
 			handle_mc._y = _poly[q+1];
 			handle_mc.idx = q;
@@ -475,9 +476,11 @@ class Controls.MapEditor extends MovieClip {
 		var door_mc:MovieClip = doors_mc["door" + idx + "_mc"];
 		
 		var thickness = (_doors[idx].thickness > 0) ? _doors[idx].thickness : 5;
+		var colour = (_doors[idx].colour.split(",").length) ? _doors[idx].colour.split(",")[1] : _doors[idx].colour;
 
 		var line_mc = door_mc.createEmptyMovieClip("line_mc", 50);
-		line_mc.lineStyle(thickness, 0xFF0000, 90, true, "normal", "none");
+				
+		line_mc.lineStyle(thickness, colour, 90, true, "normal", "none");
 		line_mc.moveTo(coords[0], coords[1]);
 		line_mc.lineTo(coords[2], coords[3]);
 	}
@@ -517,6 +520,7 @@ class Controls.MapEditor extends MovieClip {
 	private function addPoint(x:Number, y:Number):Void {
 		x = Math.round(x / _snapToGrid) * _snapToGrid;
 		y = Math.round(y / _snapToGrid) * _snapToGrid;
+		
 		if (_poly == undefined || _poly.length == 0) {
 			_poly = [x, y];
 		} else if (_poly.length == 2) {
@@ -524,9 +528,10 @@ class Controls.MapEditor extends MovieClip {
 		} else {
 			var i = 0;
 			var len = _poly.length;
-			var p1, p2, dist1, dist2, vertDist;
 			var smallestDist = Number.POSITIVE_INFINITY;
+			var p1, p2, dist;
 			var idx = 0;
+						
 			for (i; i<len; i+=2) {
 				p1 = {x:_poly[i], y:_poly[i+1]};
 				if (i < len - 2) {
@@ -534,14 +539,15 @@ class Controls.MapEditor extends MovieClip {
 				} else {
 					p2 = {x:_poly[0], y:_poly[1]};
 				}
-				dist1 = Math.sqrt(Math.pow(p1.x - x, 2) + Math.pow(p1.y - y, 2));
-				dist2 = Math.sqrt(Math.pow(p2.x - x, 2) + Math.pow(p2.y - y, 2));
-				
-				if (dist1 + dist2 < smallestDist) {
-					smallestDist = dist1 + dist2;
-					idx = i+2;
+							
+				dist = point2LineLength(x, y, p1.x, p1.y, p2.x, p2.y);
+			
+				if (dist < smallestDist) {
+					smallestDist = dist;
+					idx = i + 2;
 				}
 			}
+			
 			_poly.splice(idx, 0, x, y);
 		}
 		dispatchEvent({type:"polyChange", target:this});
@@ -579,6 +585,34 @@ class Controls.MapEditor extends MovieClip {
 	private function removeDoor(idx):Void {
 		_doors.splice(idx, 1);
 		drawDoors();
+	}
+	
+	private function point2LineLength(x:Number, y:Number, x0:Number, y0:Number, x1:Number, y1:Number) {
+		var o, left, tg;
+		
+		function lineLength(x, y, x0, y0) {
+			return Math.sqrt((x -= x0) * x + (y -= y0) * y);
+		}
+
+		if (!(x1 - x0)) {
+			o = {x:x0, y:y};			
+		} else if (!(y1 - y0)) {
+			o = {x:x, y:y0};
+		} else {
+			tg = -1 / ((y1 - y0) / (x1 - x0));
+			o = {x:left = (x1 * (x * tg - y + y0) + x0 * (x * -tg + y - y1)) / (tg * (x1 - x0) + y0 - y1), y:tg * left - tg * x + y};
+		}
+
+		if (!(o.x >= Math.min(x0, x1) && o.x <= Math.max(x0, x1) && o.y >= Math.min(y0, y1) && o.y <= Math.max(y0, y1))) {
+			var line1 = lineLength(x, y, x0, y0);
+			var line2 = lineLength(x, y, x1, y1);
+			return line1 > line2 ? line2 : line1;
+		} else {
+			var a = y0 - y1;
+			var b = x1 - x0;
+			var c = x0 * y1 - y0 * x1;
+			return Math.abs(a * x + b * y + c) / Math.sqrt(a * a + b * b);
+		}
 	}
 	
 	private function draw():Void {}
