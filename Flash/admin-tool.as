@@ -3,6 +3,13 @@ _global.advanced = false;
 _global.unSaved = false;
 var form_mc;
 _global.formDepth = 0;
+var keyListener:Object = new Object();
+keyListener.onKeyDown = function() {
+    if (Key.isDown(Key.ESCAPE)) {
+		appExit();
+    }
+};
+Key.addListener(keyListener);
 //advanced_btn._visible = false;
 //var debugger:mx.controls.TextArea;
 //_root.debugger = debugger;
@@ -196,6 +203,7 @@ mdm.Application.onAppExit = function() {
 	appExit();
 };
 function appExit():Void {
+	trace("WEEE");
 	if (_global.unSaved) {
 		var Result = mdm.Dialogs.promptModal("Save before exiting?", "yesno", "alert");
 		if (Result) {
