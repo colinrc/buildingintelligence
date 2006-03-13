@@ -197,7 +197,7 @@ public class Controller {
 		jettyHandler.setCache(cache);
 		try {
 			jettyHandler.start();
-		} catch (JettyException ex){
+		} catch (Exception ex){
 			logger.log (Level.SEVERE,"Could not start web server " + ex.getMessage());
 		}
     }
