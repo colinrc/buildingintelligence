@@ -476,7 +476,7 @@ class Controls.MapEditor extends MovieClip {
 		var door_mc:MovieClip = doors_mc["door" + idx + "_mc"];
 		
 		var thickness = (_doors[idx].thickness > 0) ? _doors[idx].thickness : 5;
-		var colour = (_doors[idx].colour.split(",").length) ? _doors[idx].colour.split(",")[1] : _doors[idx].colour;
+		var colour = (_doors[idx].colour.split(",").length > 1) ? _doors[idx].colour.split(",")[1] : _doors[idx].colour;
 
 		var line_mc = door_mc.createEmptyMovieClip("line_mc", 50);
 				
@@ -572,7 +572,7 @@ class Controls.MapEditor extends MovieClip {
 	private function addDoor(x:Number, y:Number):Void {
 		x = Math.round(x / _snapToGrid) * _snapToGrid;
 		y = Math.round(y / _snapToGrid) * _snapToGrid;
-		_doors.push({door:x + "," + y + "," + (x + 50) + "," + y, thickness:5});
+		_doors.push({door:x + "," + y + "," + (x + 50) + "," + y, colour:"0xCC0000", thickness:5});
 		dispatchEvent({type:"doorAdd", target:doors[doors.length - 1]});
 		drawDoors();
 	}
