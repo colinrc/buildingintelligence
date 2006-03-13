@@ -51,7 +51,9 @@ parseClient = function (xml_string) {
 }
 
 if (!mdm.Forms.Preview.isCreated) {
-	client_xml.load("elife.xml");
+	//client_xml.load("elife.xml");
 //} else {
 	//parseClient('<client><setting name="serverAddress" value="127.0.0.1" /><setting name="applicationXML" value="D:/BI/eLife Client/Build/standalone/sample.xml" /><setting name="libLocation" value="D:/BI/eLife Client/Build/standalone/lib/" /><setting name="fullScreen" value="false" /><setting name="hideMouseCursor" value="false" /><setting name="debugMode" value="false" /></client>')
 }
+
+parseClient('<client><setting name="serverAddress" value="127.0.0.1" /><setting name="applicationXML" value="E:/BI/eLife Client/Build/standalone/sample.xml" /><setting name="libLocation" value="E:/BI/eLife Client/Build/standalone/lib/" /><setting name="fullScreen" value="false" /><setting name="hideMouseCursor" value="false" /><setting name="debugMode" value="false" /></client>')
