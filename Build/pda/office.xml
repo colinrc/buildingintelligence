@@ -1,0 +1,369 @@
+<application lastUpdated="2006-03-07">
+	<settings>
+		<common>	
+			<setting name="applicationBg" value="0x52688D" />
+
+			<setting name="windowBgOpacity" value="100" />
+			<setting name="windowCornerRadius" value="0" />
+			<setting name="windowBorderWidth" value="0" />
+
+			<setting name="globalBtnClickTimer" value="0" />
+			<setting name="screenLockTimeout" value="0" />
+		</common>
+	</settings>
+	<statusBar>
+		<tab name="Lights" icon="light-bulb" show="on" hide="off" canOpen="" >
+			<control key="M5_RUNWAY_LIGHTS" />
+			<control key="M5_NOC_LIGHTS" />
+			<control key="BI_WORK_LIGHTS" />
+			<control key="COMPUTER_ROOM_LIGHTS" />
+			<control key="CONF_NORTH_LIGHTS" />
+			<control key="CONF_SOUTH_LIGHTS" />
+			<control key="M5_WORK_LIGHTS" />
+			<control key="MEETING_ROOM_LIGHTS" />
+			<control key="SECURE_ROOM_LIGHTS" />
+		</tab>
+		<tab name="Test Lights" icon="light-bulb" show="on" hide="off" >
+			<control key="TESSA_LIGHT" />
+			<control key="AINSLEE_LIGHT" />
+			<control key="AMY_LIGHT" />
+			<control key="JORDAN_LIGHT" />
+			<control key="MADISON_LIGHT" />
+			<control key="MORGAN_LIGHT" />
+		</tab>
+		<tab name="Audio" icon="music-note" show="on" hide="off" >
+			<control key="BI_AUDIO" />
+			<control key="CONF_AUDIO" />
+		</tab>
+		<tab name="Test" icon="gears" show="on" hide="off" >
+			<control key="TEST_SWITCH" />
+		</tab>
+	</statusBar>
+	<property>
+		<zone name="218 Northbourne">
+			<rooms>
+				<room name="Computer Room">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Computer Room" key="COMPUTER_ROOM_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+					</window>
+					<alerts >
+						<alert name="Lights" keys="COMPUTER_ROOM_LIGHTS" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="Conference Room">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Conference Room South" key="CONF_SOUTH_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+							<control name="Conference Room North" key="CONF_NORTH_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Audio" icon="music-note">
+							<control name="Audio" key="CONF_AUDIO" type="audioPanel" icon="music-note" />
+						</tab>
+					</window>
+					<alerts >
+						<alert name="Lights" keys="CONF_NORTH_LIGHTS,CONF_SOUTH_LIGHTS" icon="light-bulb" />
+						<alert name="Audio" keys="CONF_AUDIO" icon="music-note" />
+						<alert name="PIR" keys="CONF_PIR" icon="green-man" fadeOutTime="3000" />
+					</alerts>
+				</room>
+				<room name="Meeting Room">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Meeting Room" key="MEETING_ROOM_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+					</window>
+					<alerts >
+						<alert name="Lights" keys="MEETING_ROOM_LIGHTS" icon="light-bulb" />
+						<alert name="PIR" keys="MEETING_PIR" icon="green-man" fadeOutTime="3000" />
+					</alerts>
+				</room>
+				<room name="Secure Room">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Secure Room" key="SECURE_ROOM_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+					</window>
+					<alerts >
+						<alert name="Lights" keys="SECURE_ROOM_LIGHTS" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="BI Work Area">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="BI Work Area" key="BI_WORK_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Audio" icon="music-note">
+							<control name="Audio" key="BI_AUDIO" type="audioPanel" icon="music-note" />
+						</tab>
+					</window>
+					<alerts>
+						<alert name="Lights" keys="BI_WORK_LIGHTS,TESSA_LIGHT,AINSLEE_LIGHT,AMY_LIGHT,JORDAN_LIGHT,MADISON_LIGHT,MORGAN_LIGHT" icon="light-bulb" />
+						<alert name="Audio" keys="BI_AUDIO" icon="music-note" />
+						<alert name="Test" keys="TEST_SWITCH" icon="gears" />
+						<alert name="PIR" keys="BI_PIR" icon="green-man" fadeOutTime="3000" />
+					</alerts>
+					
+				</room>
+				<room name="M5 Work Area">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="M5 Work Lights" key="M5_WORK_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+					</window>
+					<alerts >
+						<alert name="Lights" keys="M5_WORK_LIGHTS" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="NOC">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="M5 NOC Lights" key="M5_NOC_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+					</window>
+					<alerts >
+						<alert name="Lights" keys="M5_NOC_LIGHTS" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="Runway">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="M5 Runway Lights" key="M5_RUNWAY_LIGHTS" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+					</window>
+					<alerts x="300" y="300" >
+						<alert name="Lights" keys="M5_RUNWAY_LIGHTS" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="Entry">
+					<alerts >
+						<alert name="Funky PIR" keys="ENTRY_PIR" icon="green-man" fadeOutTime="3000" />
+					</alerts>
+				</room>
+			</rooms>
+		</zone>
+	</property>
+	<controlTypes>
+		<control type="slider">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="button" label="off" command="off" extra="0" width="20" />
+				<item type="slider" width="60" />
+				<item type="button" label="on" command="on" extra="100" width="20" />
+			</row>
+		</control>
+		<control type="onOff">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="toggle" command="state" extras="on,off" width="100" />
+			</row>
+		</control>
+		<control type="test">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="button" icon="gears" command="MACRO:run" extra="All Off" width="100" />
+			</row>
+		</control>
+		<control type="upDown">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="button" icon="up-arrow" command="up" repeatRate="200" />
+				<item type="button" icon="down-arrow" command="down" repeatRate="200" />
+			</row>
+		</control>
+		<control type="miniBrowser">
+			<row>
+				<item type="browserLabel" />
+			</row>
+			<row>
+				<item type="button" icon="left-arrow" command="up" />
+				<item type="button" icon="right-arrow" command="down" />
+			</row>
+			<row>
+				<item type="webBrowser" />
+			</row>
+		</control>
+		<control type="audioPanel">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="50" />
+				<item type="button" icon="volume-up" command="volume" extra="up" repeatRate="200" />
+				<item type="button" icon="volume-down" command="volume" extra="down" repeatRate="200" />
+			</row>
+			<row cases="state:on">
+				<item type="button" icon="cd-music" command="src" extra="cd1" showOn="true" />
+				<item type="button" icon="cd-music" command="src" extra="cd2" showOn="true" />
+				<item type="button" icon="radio" command="src" extra="radio" showOn="true" />
+				<item type="button" icon="atom" command="src" extra="atom" showOn="true" />
+				<item type="button" icon="tv" command="src" extra="tv" showOn="true" />
+			</row>
+			<row cases="state:on,src:cd1|cd2">
+				<item type="button" icon="media-play" command="AV.SONY" extra="sony.play" extra2="2"/>
+				<item type="button" icon="media-stop" command="AV.SONY" extra="sony.stop" extra2="2"/>
+				<item type="button" icon="media-pause" command="AV.SONY" extra="sony.pause" extra2="2"/>
+				<item type="button" icon="media-rwd" command="AV.SONY" extra="sony.back" extra2="2" repeatRate="200" />
+				<item type="button" icon="media-fwd" command="AV.SONY" extra="sony.fwd" extra2="2" repeatRate="200" />
+			</row>
+			<row cases="state:on,src:radio|tv|atom">
+				<item type="button" icon="left-arrow" command="send_audio_command" extra="5" />
+				<item type="button" icon="right-arrow" command="send_audio_command" extra="6" />
+				<item type="button" icon="up-arrow" command="send_audio_command" extra="7" />
+				<item type="button" icon="down-arrow" command="send_audio_command" extra="8" />
+			</row>
+			<row cases="state:on,src:atom">
+				<item type="button" icon="media-play" command="send_audio_command" extra="1" />
+				<item type="button" icon="media-stop" command="send_audio_command" extra="2" />
+			</row>
+		</control>
+		<control type="tvControl">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="50" />
+				<item type="button" icon="volume-up" command="volume_up" repeatRate="200" />
+				<item type="button" icon="volume-down" command="volume_down" repeatRate="200" />
+			</row>
+			<row cases="state:on">
+				<item type="button" icon="chan-abc" command="channel" extra="abc" showOn="true" />
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true" />
+				<item type="button" icon="chan-win" command="channel" extra="nine" showOn="true" />
+				<item type="button" icon="chan-prime" command="channel" extra="seven" showOn="true" />
+				<item type="button" icon="chan-10" command="channel" extra="ten" showOn="true" />
+			</row>
+		</control>
+		<control type="channelControl1">
+			<row>
+				<item type="button" icon="chan-10" command="channel" extra="10" showOn="true" />
+				<item type="button" icon="chan-31" command="channel" extra="31" showOn="true" />
+				<item type="button" icon="chan-31sydney" command="channel" extra="31sydney" showOn="true" />
+				<item type="button" icon="chan-7" command="channel" extra="7" showOn="true" />
+				<item type="button" icon="chan-9" command="channel" extra="9" showOn="true" />
+				<item type="button" icon="chan-a1" command="channel" extra="a1" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-abc" command="channel" extra="abc" showOn="true" />
+				<item type="button" icon="chan-acc" command="channel" extra="acc" showOn="true" />
+				<item type="button" icon="chan-adultsonly" command="channel" extra="adultsonly" showOn="true" />
+				<item type="button" icon="chan-aljazeera" command="channel" extra="aljazeera" showOn="true" />
+				<item type="button" icon="chan-animalplanet" command="channel" extra="animalplanet" showOn="true" />
+				<item type="button" icon="chan-antenna" command="channel" extra="antenna" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-arena" command="channel" extra="arena" showOn="true" />
+				<item type="button" icon="chan-art" command="channel" extra="art" showOn="true" />
+				<item type="button" icon="chan-bbcworld" command="channel" extra="bbcworld" showOn="true" />
+				<item type="button" icon="chan-bloomberg" command="channel" extra="bloomberg" showOn="true" />
+				<item type="button" icon="chan-cartoon" command="channel" extra="cartoon" showOn="true" />
+				<item type="button" icon="chan-cmc" command="channel" extra="cmc" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-cnbc" command="channel" extra="cnbc" showOn="true" />
+				<item type="button" icon="chan-cnn" command="channel" extra="cnn" showOn="true" />
+				<item type="button" icon="chan-cnnfn" command="channel" extra="cnnfn" showOn="true" />
+				<item type="button" icon="chan-comedy" command="channel" extra="comedy" showOn="true" />
+				<item type="button" icon="chan-discovery" command="channel" extra="discovery" showOn="true" />
+				<item type="button" icon="chan-disney" command="channel" extra="disney" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-espn" command="channel" extra="espn" showOn="true" />
+				<item type="button" icon="chan-expo" command="channel" extra="expo" showOn="true" />
+				<item type="button" icon="chan-fox8" command="channel" extra="fox8" showOn="true" />
+				<item type="button" icon="chan-foxclassics" command="channel" extra="foxclassics" showOn="true" />
+				<item type="button" icon="chan-foxfooty" command="channel" extra="foxfooty" showOn="true" />
+				<item type="button" icon="chan-foxnews" command="channel" extra="foxnews" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-foxsports1" command="channel" extra="foxsports1" showOn="true" />
+				<item type="button" icon="chan-foxsports2" command="channel" extra="foxsports2" showOn="true" />
+				<item type="button" icon="chan-fyi" command="channel" extra="fyi" showOn="true" />
+				<item type="button" icon="chan-games" command="channel" extra="games" showOn="true" />
+				<item type="button" icon="chan-hallmark" command="channel" extra="hallmark" showOn="true" />
+				<item type="button" icon="chan-history" command="channel" extra="history" showOn="true" />
+			</row>
+		</control>
+		<control type="channelControl2">
+			<row>
+				<item type="button" icon="chan-lbc" command="channel" extra="lbc" showOn="true" />
+				<item type="button" icon="chan-lifestyle" command="channel" extra="lifestyle" showOn="true" />
+				<item type="button" icon="chan-mainevent" command="channel" extra="mainevent" showOn="true" />
+				<item type="button" icon="chan-maineventadults" command="channel" extra="maineventadults" showOn="true" />
+				<item type="button" icon="chan-maineventadultsftv" command="channel" extra="maineventadultsftv" showOn="true" />
+				<item type="button" icon="chan-movieextra" command="channel" extra="movieextra" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-moviegreats" command="channel" extra="moviegreats" showOn="true" />
+				<item type="button" icon="chan-movieone" command="channel" extra="movieone" showOn="true" />
+				<item type="button" icon="chan-mtv" command="channel" extra="mtv" showOn="true" />
+				<item type="button" icon="chan-musicmax" command="channel" extra="musicmax" showOn="true" />
+				<item type="button" icon="chan-nbn" command="channel" extra="nbn" showOn="true" />
+				<item type="button" icon="chan-ng" command="channel" extra="ng" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-nickelodeon" command="channel" extra="nickelodeon" showOn="true" />
+				<item type="button" icon="chan-odyssey" command="channel" extra="odyssey" showOn="true" />
+				<item type="button" icon="chan-ovation" command="channel" extra="ovation" showOn="true" />
+				<item type="button" icon="chan-prime" command="channel" extra="prime" showOn="true" />
+				<item type="button" icon="chan-rai" command="channel" extra="rai" showOn="true" />
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-showtime" command="channel" extra="showtime" showOn="true" />
+				<item type="button" icon="chan-showtime2" command="channel" extra="showtime2" showOn="true" />
+				<item type="button" icon="chan-skynews" command="channel" extra="skynews" showOn="true" />
+				<item type="button" icon="chan-skyracing" command="channel" extra="skyracing" showOn="true" />
+				<item type="button" icon="chan-tcm" command="channel" extra="tcm" showOn="true" />
+				<item type="button" icon="chan-tv1" command="channel" extra="tv1" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-tvsn" command="channel" extra="tvsn" showOn="true" />
+				<item type="button" icon="chan-uktv" command="channel" extra="uktv" showOn="true" />
+				<item type="button" icon="chan-v" command="channel" extra="v" showOn="true" />
+				<item type="button" icon="chan-w" command="channel" extra="w" showOn="true" />
+				<item type="button" icon="chan-weatherchannel" command="channel" extra="weatherchannel" showOn="true" />
+				<item type="button" icon="chan-win" command="channel" extra="win" showOn="true" />
+			</row>
+			<row>
+				<item type="button" icon="chan-worldmovies" command="channel" extra="worldmovies" showOn="true" />
+			</row>
+		</control>
+		<control type="rawKeyPad">
+			<row>
+				<item type="button" label="7" command="keyPress" extra="07" />
+				<item type="button" label="8" command="keyPress" extra="08" />
+				<item type="button" label="9" command="keyPress" extra="09" />
+			</row>
+			<row>
+				<item type="button" label="4" command="keyPress" extra="04" />
+				<item type="button" label="5" command="keyPress" extra="05" />
+				<item type="button" label="6" command="keyPress" extra="06" />
+			</row>
+			<row>
+				<item type="button" label="1" command="keyPress" extra="01" />
+				<item type="button" label="2" command="keyPress" extra="02" />
+				<item type="button" label="3" command="keyPress" extra="03" />
+			</row>
+			<row>
+				<item type="button" label="*" command="keyPress" extra="0B" />
+				<item type="button" label="#" command="keyPress" extra="0C" />
+				<item type="button" label="F" command="keyPress" extra="0A" />
+			</row>
+			<row>
+				<item type="button" label="Away" command="keyPress" extra="0D" width="50" />
+				<item type="button" icon="moon" command="keyPress" extra="0E" />
+				<item type="button" icon="sun" command="keyPress" extra="0F" />
+			</row>
+		</control>
+	</controlTypes>
+</application> 
