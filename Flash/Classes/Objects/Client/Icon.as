@@ -3,6 +3,7 @@
 	private var icon:String;
 	private var func:String;
 	private var canOpen:String;
+	private var param:String;
 	private var attributes:Array;
 	private var treeNode:XMLNode;
 	public function deleteSelf(){
@@ -25,9 +26,10 @@
 		if ((func != undefined) && (func != "")) {
 			newNode.attributes["func"] = func;
 		}
-		if ((canOpen != undefined) && (canOpen != "")) {
-			newNode.attributes["canOpen"] = canOpen;
-		}
+		if ((param != undefined) && (param != "")) {
+			newNode.attributes["program"] = param;
+		}		
+		newNode.attributes["canOpen"] = canOpen;
 		for (var attribute in attributes) {
 			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
 		}
@@ -46,7 +48,7 @@
 		return "Icon:"+name;
 	}
 	public function getData():Object {
-		return {name:name, icon:icon, func:func, canOpen:canOpen, attributes:attributes, dataObject:this};
+		return {name:name, icon:icon, func:func, canOpen:canOpen, param:param, attributes:attributes, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		attributes = new Array();
@@ -54,6 +56,7 @@
 		icon = "";
 		func = "";
 		canOpen = "";
+		param = "";
 		if (newData.nodeName == "icon") {
 			for (var attribute in newData.attributes) {
 				switch (attribute) {
@@ -69,6 +72,9 @@
 				case "canOpen" :
 					canOpen = newData.attributes[attribute];
 					break;
+				case "program":
+					param = newData.attributes[attribute];
+					break;
 				default :
 					attributes.push({name:attribute, value:newData.attributes[attribute]});
 					break;
@@ -83,6 +89,7 @@
 		icon = newData.icon;
 		func = newData.func;
 		canOpen = newData.canOpen;
+		param = newData.param;
 		attributes = newData.attributes;
 	}
 }

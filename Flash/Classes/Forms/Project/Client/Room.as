@@ -21,7 +21,7 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 		if(map == undefined){
 			map = "";
 		}
-		roomEditor.map = map.split('\\').join('/');
+		roomEditor.map = "lib/maps/"+map;
 		if(poly == undefined){
 			poly = "";
 		}

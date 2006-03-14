@@ -1,20 +1,20 @@
 ﻿historyViewer_btn._visible = false;
+mdm.Application.enableExitHandler(appExit);
 _global.advanced = false;
 _global.unSaved = false;
 var form_mc;
 _global.formDepth = 0;
 var keyListener:Object = new Object();
 keyListener.onKeyDown = function() {
-    if (Key.isDown(Key.ESCAPE)) {
+	if (Key.isDown(Key.ESCAPE)) {
 		appExit();
-    }
+	}
 };
 Key.addListener(keyListener);
 //advanced_btn._visible = false;
 //var debugger:mx.controls.TextArea;
 //_root.debugger = debugger;
 //_root.debugger.text +="blsh \n";
-/****************************************************************/
 //create the tooltip clip 
 _root.createEmptyMovieClip("ToolTip", 15999);
 // add the tooltip background box 
@@ -168,7 +168,7 @@ project_xml.onLoad = function(success) {
 			break;
 		}
 	}
-	_global.right_tree.dataProvider.removeAll();
+	//_global.right_tree.dataProvider.removeAll();
 	projectTree_xml.appendChild(_global.client_test.toTree());
 	projectTree_xml.appendChild(_global.server_test.toTree());
 	refreshTheTree();
@@ -203,7 +203,6 @@ mdm.Application.onAppExit = function() {
 	appExit();
 };
 function appExit():Void {
-	trace("WEEE");
 	if (_global.unSaved) {
 		var Result = mdm.Dialogs.promptModal("Save before exiting?", "yesno", "alert");
 		if (Result) {
@@ -332,62 +331,62 @@ function saveFile(saveType:String):Void {
 _global.saveFile = saveFile;
 _global.projectFileName = "";
 // setup the drop down menus at the top
-var file_xml = new XML('<mi label="New Project" instanceName="new" /><mi label="Open Project" instanceName="open" /><mi type="separator" /><mi label="Import Client.xml" instanceName="importClient" /><mi label="Import Server.xml" instanceName="importServer" /><mi type="separator" /><mi label="Save Project" instanceName="save" /><mi label="Save Project As..." instanceName="saveAs" /><mi type="separator" /><mi label="Exit" instanceName="exit" />');
-menu_mb.addMenu("File", file_xml);
-var coming_soon_xml = new XML('<n label="Coming Soon!"/>');
-var coming_soon_xml2 = new XML('<n label="Coming Soon!"/>');
-menu_mb.addMenu("Edit", coming_soon_xml);
-menu_mb.addMenu("Help", coming_soon_xml2);
-mdm.Application.enableExitHandler(appExit);
-var menuListener:Object = new Object();
-menuListener.change = function(evt:Object) {
-	var menu = evt.menu;
-	var item = evt.menuItem;
-	switch (item.attributes["instanceName"]) {
-	case "open" :
-		openFile("Project");
-		break;
-	case "new" :
-		_global.projectFileName = "";
-		_global.project = new Object();
-		setView("home");
-		/** Load templates*/
-		/*_global.right_tree.dataProvider.removeAll();
-		_global.workflow.buildWorkflowTree();*/
-		client_xml.load("default_client.xml");
-		server_xml.load("default_server.xml");
-		_global.refreshTheTree();
-		setButtons(true);
-		break;
-	case "importClient" :
-		openFile("Client");
-		break;
-	case "importServer" :
-		openFile("Server");
-		break;
-	case "exit" :
-		appExit();
-		break;
-	case "saveAs" :
-		mdm.Dialogs.BrowseFile.buttonText = "Save Project";
-		mdm.Dialogs.BrowseFile.title = "Please select a location to save to";
-		mdm.Dialogs.BrowseFile.dialogText = "Please select a location to save to";
-		mdm.Dialogs.BrowseFile.defaultExtension = "xml";
-		mdm.Dialogs.BrowseFile.filterList = "XML Files|*.xml";
-		mdm.Dialogs.BrowseFile.filterText = "XML Files|*.xml";
-		var tempString = mdm.Dialogs.BrowseFile.show();
-		if (tempString != "false") {
-			_global.projectFileName = tempString;
-			saveFile("Project");
-		}
-		break;
-	case "save" :
+/****************************************************************/
+mdm.Menu.Main.menuType = "function";
+mdm.Menu.Main.insertHeader("File");
+mdm.Menu.Main.insertHeader("Help");
+mdm.Menu.Main.insertItem("File", "New Project");
+mdm.Menu.Main.insertItem("File", "Open Project");
+mdm.Menu.Main.insertDivider("File");
+mdm.Menu.Main.insertItem("File", "Import Server XML");
+mdm.Menu.Main.insertItem("File", "Import Client XML");
+mdm.Menu.Main.insertDivider("File");
+mdm.Menu.Main.insertItem("File", "Save Project");
+mdm.Menu.Main.insertItem("File", "Save Project As..");
+mdm.Menu.Main.insertDivider("File");
+mdm.Menu.Main.insertItem("File", "Exit");
+mdm.Menu.Main.onMenuClick_New_Project = function() {
+	_global.projectFileName = "";
+	_global.project = new Object();
+	setView("home");
+	/** Load templates*/
+	/*_global.right_tree.dataProvider.removeAll();
+	_global.workflow.buildWorkflowTree();*/
+	client_xml.load("default_client.xml");
+	server_xml.load("default_server.xml");
+	_global.refreshTheTree();
+	setButtons(true);
+};
+mdm.Menu.Main.onMenuClick_Open_Project = function() {
+	openFile("Project");
+};
+mdm.Menu.Main.onMenuClick_Import_Server_XML = function() {
+	openFile("Server");	
+};
+mdm.Menu.Main.onMenuClick_Import_Client_XML = function() {
+	openFile("Client");
+};
+mdm.Menu.Main.onMenuClick_Save_Project = function() {
+	saveFile("Project");
+};
+mdm.Menu.Main.onMenuClick_Save_Project_As__ = function() {
+	mdm.Dialogs.BrowseFile.buttonText = "Save Project";
+	mdm.Dialogs.BrowseFile.title = "Please select a location to save to";
+	mdm.Dialogs.BrowseFile.dialogText = "Please select a location to save to";
+	mdm.Dialogs.BrowseFile.defaultExtension = "xml";
+	mdm.Dialogs.BrowseFile.filterList = "XML Files|*.xml";
+	mdm.Dialogs.BrowseFile.filterText = "XML Files|*.xml";
+	var tempString = mdm.Dialogs.BrowseFile.show();
+	if (tempString != "false") {
+		_global.projectFileName = tempString;
 		saveFile("Project");
-		break;
 	}
 };
-//saveFile("Client");
-menu_mb.addEventListener("change", menuListener);
+mdm.Menu.Main.onMenuClick_Exit = function() {
+	appExit();
+};
+/****************************************************************/
+
 // set view function to display correct form
 setView = function (view, dataObj) {
 	if (_global.unSaved) {
@@ -398,7 +397,7 @@ setView = function (view, dataObj) {
 			_global.unSaved = false;
 		}
 	}
-	// reset all the components on stage to their "original" size, positions and make them visible    
+	// reset all the components on stage to their "original" size, positions and make them visible     
 	left_tree._visible = true;
 	/*left_tree._y = 93;
 	left_tree.setSize(244, 670);*/
@@ -438,7 +437,7 @@ setView = function (view, dataObj) {
 	case "control.ir" :
 		//_global.infoflow_ta._visible = false;
 		workFlow_split._visible = false;
-		left_tree._visible =false;
+		left_tree._visible = false;
 		/*left_tree._y = 68;
 		left_tree.setSize(244, 695);
 		left_tree.dataProvider = null;
@@ -570,7 +569,7 @@ buttonListener.click = function(eventObj) {
 	case preview_btn :
 		mdm.FileSystem.saveFile("client.xml", _global.writeXMLFile(_global.client_test.toXML(), 0));
 		mdm.Forms.Preview.callFunction("parseClient", '<client><setting name="applicationXML" value="client.xml" /><setting name="libLocation" value="lib/" /><setting name="fullScreen" value="false" /><setting name="hideMouseCursor" value="false" /></client>', "|");
-		mdm.Forms.Preview.showModal();	
+		mdm.Forms.Preview.showModal();
 		break;
 	case publish_btn :
 		eventObj.target.selected = true;
@@ -651,24 +650,11 @@ function setButtons(enabled:Boolean) {
 	publish_btn.enabled = enabled;
 	historyViewer_btn.enabled = enabled;
 	advanced_btn.enabled = enabled;
-	for (var child in menu_mb.dataProvider.firstChild.childNodes) {
-		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "importClient") {
-			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
-		}
-		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "importServer") {
-			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
-		}
-		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "saveAs") {
-			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
-		}
-		if (menu_mb.dataProvider.firstChild.childNodes[child].attributes["instanceName"] == "save") {
-			menu_mb.dataProvider.firstChild.childNodes[child].attributes.enabled = enabled;
-		}
+mdm.Menu.Main.itemVisible("File", "Import Server XML",enabled);
+mdm.Menu.Main.itemVisible("File", "Import Client XML",enabled);
+mdm.Menu.Main.itemVisible("File", "Save Project",enabled);
+mdm.Menu.Main.itemVisible("File", "Save Project As..",enabled);
 	}
-	var oBackupDP = menu_mb.dataProvider;
-	menu_mb.dataProvider = null;
-	menu_mb.dataProvider = oBackupDP;
-}
 home_btn.onRollOver = function() {
 	DisplayTip("Project Details");
 	this.setState("highlighted");

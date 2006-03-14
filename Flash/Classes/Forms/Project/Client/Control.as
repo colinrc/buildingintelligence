@@ -28,6 +28,11 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		editor_dg.getColumnAt(2).headerText = "Item 2";
 		editor_dg.getColumnAt(3).headerText = "Item 3";
 		editor_dg.getColumnAt(4).headerText = "Item 4";
+		editor_dg.getColumnAt(0).sortable = false;
+		editor_dg.getColumnAt(1).sortable = false;
+		editor_dg.getColumnAt(2).sortable = false;
+		editor_dg.getColumnAt(3).sortable = false;
+		editor_dg.getColumnAt(4).sortable = false;		
 		left_btn.enabled = false;
 		right_btn.enabled = false;
 		for (var row in rows) {
@@ -57,7 +62,6 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		left_btn.addEventListener("click", Delegate.create(this, moveLeft));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		editor_dg.addEventListener("cellPress", Delegate.create(this, cellClick));
-		//preview(_global.left_tree.selectedNode.object.toXML());
 	}
 	private function cellClick(eventObject) {
 		_global.unSaved = true;		
@@ -69,7 +73,6 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 			left_btn.enabled = false;
 			editor_mc = editor_ld.attachMovie("forms.project.client.row", "editor_"+random(999)+"_mc", 0, {object:editor_dg.dataProvider[eventObject.itemIndex][eventObject.columnIndex]});
 			editor_mc.deleteRow = Delegate.create(this, deleteRow);
-			//editor_mc.updateRow = Delegate.create(this, updateRow);
 			editor_mc.addItem = Delegate.create(this, addItem);
 		} else {
 			right_btn.enabled = true;
@@ -86,14 +89,6 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		object.columnIndex = undefined;
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
-	/*public function updateItem() {
-		_global.unSaved = true;		
-		editor_dg.dataProvider[object.itemIndex][object.columnIndex].object = editor_mc.getObject();
-		editor_dg.selectedIndex = undefined;
-		object.itemIndex = undefined;
-		object.columnIndex = undefined;
-		editor_ld.createEmptyMovieClip("editor_mc", 0);
-	}*/
 	private function addItem() {
 		_global.unSaved = true;		
 		var newItemNode = new XMLNode(1, "item");
@@ -105,7 +100,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 			return this.label;
 		};
 		editor_dg.dataProvider[object.itemIndex].push(newObject);
-		editor_dg.selectedIndex = editor_dg.selectedIndex;
+		editor_dg.dataProvider.updateViews("change");
 	}
 	private function addRow() {
 		_global.unSaved = true;		
@@ -118,8 +113,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		};
 		newArray.push(newObject);
 		editor_dg.dataProvider.addItem(newArray);
-		//this is not redrawing, why??
-		editor_dg.selectedIndex = editor_dg.selectedIndex;
+		editor_dg.dataProvider.updateViews("change");
 	}
 	private function deleteRow() {
 		_global.unSaved = true;		
@@ -129,14 +123,6 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 		object.columnIndex = undefined;
 		editor_ld.createEmptyMovieClip("editor_mc", 0);
 	}
-	/*private function updateRow() {
-		_global.unSaved = true;		
-		editor_dg.dataProvider[object.itemIndex][object.columnIndex].cases = editor_mc.cases_ti.text;
-		editor_dg.selectedIndex = undefined;
-		object.itemIndex = undefined;
-		object.columnIndex = undefined;
-		editor_ld.createEmptyMovieClip("editor_mc", 0);
-	}*/
 	private function moveLeft() {
 		_global.unSaved = true;		
 		if (object != undefined) {

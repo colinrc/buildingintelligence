@@ -85,7 +85,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			}
 			break;
 		}
-		form_mc = logType_ld.attachMovie("forms.project.client.logging" + type_cmb.selectedItem.label, "form_mc", 0, dataObj);
+		form_mc = logType_ld.attachMovie("forms.project.client.logging" + type_cmb.selectedItem.label, "form"+random(999)+"_mc", 0, dataObj);
 	}
 	private function save() {
 		var newControls = new Array();
@@ -102,11 +102,11 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			break;
 		case "tally" :
 			attributes.push({name:"label", value:form_mc.label_ti.text});
-			attributes.push({name:"timeformat", value:form_mc.timeformat_ti.text});
+			attributes.push({name:"timeformat", value:form_mc.timeformat_cmb.text});
 			break;
 		case "log" :
 			attributes.push({name:"label", value:form_mc.label_ta.text});
-			attributes.push({name:"timeformat", value:form_mc.timeformat_ti.text});
+			attributes.push({name:"timeformat", value:form_mc.timeformat_cmb.text});
 			break;
 		}
 		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_ti.text, listenTo:listenTo_ti.text, type:type_cmb.selectedItem.label, attributes:attributes});

@@ -21,21 +21,25 @@ class Forms.DataGrid.DynamicDataGrid {
 					case "text" :
 						my_dg.getColumnAt(columns[name].colNo - 1).width = 100;
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "TextInputCellRenderer";
+						my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";						
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 						break;
 					case "check" :
 						my_dg.getColumnAt(columns[name].colNo - 1).width = 100;
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CheckCellRenderer";
+						my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";						
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 						break;
 					case "combo" :
 						my_dg.getColumnAt(columns[name].colNo - 1).width = 100;
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ComboBoxCellRenderer";
+						my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";						
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 						break;
 					case "colour" :
 						my_dg.getColumnAt(columns[name].colNo - 1).width = 100;
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ColourCellRenderer";
+						my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
 						my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 100;
 						break;
 					}

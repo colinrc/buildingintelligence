@@ -16,7 +16,7 @@ class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 		restrictions.restrict = "";
 		var keyRestrictions = new Object();		
 		keyRestrictions.maxChars = 2;
-		keyRestrictions.restrict = "0-9A-Fa-f";		
+		keyRestrictions.restrict = "0-9A-Fa-f";
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";

@@ -24,7 +24,7 @@
 			newNode.attributes["name"] = name;
 		}
 		if (map != "") {
-			newNode.attributes["map"] = map.substr(map.lastIndexOf("\\")+1, map.length-1);
+			newNode.attributes["map"] = map;
 		}
 		if (background != "") {
 			newNode.attributes["background"] = background;

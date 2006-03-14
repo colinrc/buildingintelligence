@@ -17,7 +17,7 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 			newAlertGroup.id = alertgroups[alertgroup].id;			
 			DP.push(newAlertGroup);
 		}
-		roomEditor.map = map;
+		roomEditor.map = "lib/maps/"+map;
 		roomEditor.mapMode = "alertGroups";
 		roomEditor.poly = poly;
 		roomEditor.alerts = DP;

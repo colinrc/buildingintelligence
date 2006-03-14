@@ -60,14 +60,22 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 	function changeText() {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
-		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
+		if(listOwner.dataProvider[itemLocation.itemIndex][columnName].restrictions.restrict == "0-9A-Fa-f"){
+			listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text.toUpperCase();
+		} else{
+			listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
+		}
 		listOwner.dataProvider.updateViews("change");		
 		_global.unSaved = true;
 	}	
 	function enterText() {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
-		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
+		if(listOwner.dataProvider[itemLocation.itemIndex][columnName].restrictions.restrict == "0-9A-Fa-f"){
+			listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text.toUpperCase();
+		} else{
+			listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
+		}
 		listOwner.dataProvider.updateViews("change");		
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;
 		_global.unSaved = true;		

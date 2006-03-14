@@ -72,11 +72,13 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,"Client");
+		if(_global.advanced){
+			newNode.appendChild(control_panel_apps.toTree());			
+		}					
 		newNode.appendChild(sounds.toTree());
 		newNode.appendChild(status_bar.toTree());
 		newNode.appendChild(logging.toTree());
 		newNode.appendChild(apps_bar.toTree());
-		newNode.appendChild(control_panel_apps.toTree());
 		newNode.appendChild(Property.toTree());
 		newNode.appendChild(control_types.toTree());
 		newNode.object = this;

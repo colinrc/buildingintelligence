@@ -97,7 +97,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		mdm.Dialogs.BrowseFile.filterText = "";
 		var tempString = mdm.Dialogs.BrowseFile.show();
 		if (tempString != "false") {
-			map_ti.text = tempString;
+			map_ti.text = tempString.substr(tempString.lastIndexOf("\\")+1, tempString.length-1);
 		}
 	}	
 	private function deleteRoom() {

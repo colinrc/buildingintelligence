@@ -31,6 +31,9 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 		var keyRestrictions = new Object();
 		keyRestrictions.maxChars = 2;
 		keyRestrictions.restrict = "0-9A-Fa-f";
+		var powerRestrictions = new Object();
+		powerRestrictions.maxChars = 3;
+		powerRestrictions.restrict = "0-9";		
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -40,7 +43,7 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false, 150);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false, 150);
 		dataGridHandler.addTextInputColumn("key", keyType, restrictions, false, 60);
-		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions, true, 80);
+		dataGridHandler.addTextInputColumn("power", "Power\nRating", powerRestrictions, true, 80);
 		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(toggles);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

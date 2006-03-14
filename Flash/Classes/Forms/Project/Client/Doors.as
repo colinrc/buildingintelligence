@@ -51,7 +51,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			}
 			DP.push(newDoor);
 		}
-		roomEditor.map = map;
+		roomEditor.map = "lib/maps/"+map;
 		roomEditor.mapMode = "doors";
 		roomEditor.poly = poly;
 		roomEditor.doors = DP;			

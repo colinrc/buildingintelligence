@@ -15,11 +15,11 @@ class Forms.Project.Device.GC100Toggle extends Forms.BaseForm {
 		switch (toggle_type) {
 		case "TOGGLE_INPUT" :
 			title_lb.text = "Toggle Inputs:";
-			var keyType = "Input\nNumber";
+			var keyType = "Input\nNo.";
 			break;
 		case "TOGGLE_OUTPUT" :
 			title_lb.text = "Toggle Outputs:";
-			var keyType = "Output\nNumber";			
+			var keyType = "Output\nNo.";			
 			break;
 		}
 		var DP = new Array();

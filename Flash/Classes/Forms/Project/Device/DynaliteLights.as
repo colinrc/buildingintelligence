@@ -14,7 +14,10 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 		restrictions.restrict = "";
 		var keyRestrictions = new Object();		
 		keyRestrictions.maxChars = 2;
-		keyRestrictions.restrict = "0-9A-Fa-f";				
+		keyRestrictions.restrict = "0-9A-Fa-f";
+		var powerRestrictions = new Object();
+		powerRestrictions.maxChars = 3;
+		powerRestrictions.restrict = "0-9";		
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -26,7 +29,7 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false,60);
 		dataGridHandler.addTextInputColumn("area", "Area", keyRestrictions,false,60);		
 		dataGridHandler.addTextInputColumn("bla", "Base\nLink\nArea", keyRestrictions, true,60);		
-		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions,true,60);
+		dataGridHandler.addTextInputColumn("power", "Power\nRating", powerRestrictions,true,60);
 		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(lights);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
