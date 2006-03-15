@@ -26,9 +26,9 @@
                 <IR_LEARNER/>
         </DEVICE>
        <!-- ______________________________________  PELCO DEFS  ____________________  -->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="PELCO" DESCRIPTION="Pelco Defs">
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="PELCO" DESCRIPTION="Pelco Defs">
                 <CONNECTION>
-                        <SERIAL ACTIVE="Y" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <SERIAL ACTIVE="Y" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="4800" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
                         <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
                         <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
                 </CONNECTION>
@@ -136,7 +136,7 @@
         <!-- the key is the HAL zone, Display name is the flash icon name -->
 
         !-- ______________________________________  DynaLite DEFS  ____________________  -->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="DYNALITE" DESCRIPTION="DynaLite Lights">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="DYNALITE" DESCRIPTION="DynaLite Lights">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N"  FLOW="NONE"/>
                         <SERIAL ACTIVE="Y" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="NONE" />
