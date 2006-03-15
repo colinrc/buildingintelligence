@@ -36,8 +36,44 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		return _tabs_array;
 	}
 
-	public function set position(position:String):Void {
+	public function set tabOpacity(tabOpacity:Number):Void {
+		_tabOpacity = tabOpacity;
+	}
+	
+	public function set tabOnColour(tabOnColour:Number):Void {
+		_tabOnColour = tabOnColour;
+	}
+	
+	public function set tabOffColour(tabOffColour:Number):Void {
+		_tabOffColour = tabOffColour;
+	}
+	
+	public function set tabOffAlpha(tabOffAlpha:Number):Void {
+		_tabOffAlpha = tabOffAlpha;
+	}
+	
+	public function set tabPosition(position:String):Void {
 		_position = position;
+	}
+	
+	public function set tabWidth(tabWidth:Number):Void {
+		_tabWidth = tabWidth;
+	}
+	
+	public function set tabHeight(tabHeight:Number):Void {
+		_tabHeight = tabHeight;
+	}
+	
+	public function set tabSpacing(tabSpacing:Number):Void {
+		_tabSpacing = tabSpacing;
+	}
+	
+	public function set cornerRadius(cornerRadius:Number):Void {
+		_cornerRadius = cornerRadius;
+	}
+	
+	public function set contentPadding(contentPadding:Number):Void {
+		_contentPadding = contentPadding;
 	}
 	
 	public function get contentClips():Array {

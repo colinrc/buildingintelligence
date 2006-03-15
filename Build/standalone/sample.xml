@@ -11,6 +11,7 @@
 			<setting name="showDropShadows" value="true" />
 
 			<setting name="integratorHtml" value="about:blank" />
+			<setting name="tabPosition" value="top" />
 		</common>
 	</settings>
 	<sounds>
@@ -104,7 +105,7 @@
 		<zone name="Downstairs" map="downstairs.swf" cycle="false" alignment="center">
 			<rooms>
 				<room name="Ensuite" poly="443,219,443,296,579,296,579,153,477,153,477,219">
-					<window tabPosition="bottom" windowWidth="300" windowHeight="450" windowBgOpacity="60" windowBgColour1="0xFFCC00" windowBgColour2="0x990000" windowCornerRadius="30" windowBorderColour="0xCC0000" windowBorderWidth="2" windowShadowOffset="10">
+					<window tabPosition="bottom" tabHeight="90" tabOnColour="0xFFCC00" tabBgOpacity="20" windowWidth="300" windowHeight="450" windowBgOpacity="60" windowBgColour1="0xFFCC00" windowBgColour2="0x990000" windowCornerRadius="30" windowBorderColour="0xCC0000" windowBorderWidth="2" windowShadowOffset="10">
 						<tab name="Lights &amp; Fan" icon="light-bulb">
 							<control name="Main Light" key="ENSUITE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
 							<control name="LV Light" key="ENSUITE_LV_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />

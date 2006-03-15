@@ -28,12 +28,13 @@
 
 	for (var attr in room.window) {
 		if (attr.substr(0, 3) == "tab") {
+			trace(attr + ":" + room.window[attr]);
 			if (room.window[attr] == Number(room.window[attr])) {
-				tabObject[attr.substr(3, 1).toLowerCase() + attr.substr(4)] = Number(room.window[attr]);
+				tabObject[attr] = Number(room.window[attr]);
 			} else if (room.window[attr] == "true" || room.window[attr] == "false") {
-				tabObject[attr.substr(3, 1).toLowerCase() + attr.substr(4)] = (room.windowg[attr] == "true");
+				tabObject[attr] = (room.window[attr] == "true");
 			} else {
-				tabObject[attr.substr(3, 1).toLowerCase() + attr.substr(4)] = room.window[attr];
+				tabObject[attr] = room.window[attr];
 			}
 		}
 	}	
