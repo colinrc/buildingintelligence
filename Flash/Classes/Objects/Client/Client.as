@@ -1,5 +1,5 @@
 ﻿class Objects.Client.Client extends Objects.BaseElement{
-	private var settings:XMLNode;
+	private var attributes:Array;
 	private var adminPin:String;
 	private var applicationXML:String;
 	private var integratorHtml:String;	
@@ -10,6 +10,7 @@
 	private var control_panel_apps:Objects.Client.Control_Panel_Apps;
 	private var Property:Objects.Client.Property;
 	private var control_types:Objects.Client.Control_Types;
+	private var attributeGroups = ["settings","window","button","tabs"];
 	public function isValid():Boolean {
 		var flag = true
 		if(!sounds.isValid()){
@@ -57,8 +58,11 @@
 		newSetting.attributes.name = "integratorHtml";
 		newSetting.attributes.value = integratorHtml;
 		newSettings.appendChild(newSetting);
-		for(var setting in settings.childNodes){
-			newSettings.appendChild(settings.childNodes[setting].cloneNode(false));
+		for(var attribute in attributes){
+			newSetting = new XMLNode(1,"setting");
+			newSetting.attributes.name = attributes[attribute].name;
+			newSetting.attributes.value = attributes[attribute].value;
+			newSettings.appendChild(newSetting);
 		}
 		newNode.appendChild(newSettings);
 		newNode.appendChild(sounds.toXML());
@@ -91,19 +95,25 @@
 		return "Client";
 	}
 	public function getData():Object{
-		return {settings:settings, dataObject:this, adminPin:adminPin, applicationXML:applicationXML, integratorHtml:integratorHtml};
+		return {attributes:attributes, dataObject:this, adminPin:adminPin, applicationXML:applicationXML, integratorHtml:integratorHtml};
 	}
 	public function setData(newData:Object):Void{
-		settings = newData.settings;
+		attributes = newData.attributes;
 		adminPin = newData.adminPin;
 		applicationXML = newData.applicationXML;
 		integratorHtml = newData.integratorHtml;	
-	}	
+	}
+	public function getAttributes():Array{
+		return attributes;
+	}
+	public function setAttributes(newAttributes:Array){
+		attributes = newAttributes;
+	}
 	public function getControlTypes():Object{
 		return control_types.toXML();
 	}
 	public function setXML(newData:XMLNode):Void{
-		//settings = new Objects.Client.Settings();
+		attributes = new Array();
 		adminPin = "4321";
 		applicationXML = "client.xml";
 		integratorHtml = "about:blank";
@@ -118,24 +128,27 @@
 			for(var child in newData.childNodes){
 				switch(newData.childNodes[child].nodeName){
 					case "settings":
-					settings = newData.childNodes[child];
-					for(var setting in settings.childNodes){
-						if(settings.childNodes[setting].attributes["name"] == "adminPin"){
-							adminPin = settings.childNodes[setting].attributes["value"];
-							settings.childNodes[setting].removeNode();
-						}
-						if(settings.childNodes[setting].attributes["name"] == "applicationXML"){
-							applicationXML = settings.childNodes[setting].attributes["value"];
-							settings.childNodes[setting].removeNode();							
-						}
-						if(settings.childNodes[setting].attributes["name"] == "serverAddress"){
+					for(var setting in newData.childNodes[child].childNodes){
+						switch(newData.childNodes[child].childNodes[setting].attributes["name"]){
+						case ("adminPin"):
+							adminPin = newData.childNodes[child].childNodes[setting].attributes["value"];
+						break;
+						case ("applicationXML"):
+							applicationXML = newData.childNodes[child].childNodes[setting].attributes["value"];
+						break;
+						case("serverAddress"):
 							//same as _global.project.ipAddress
-							settings.childNodes[setting].removeNode();							
+						break;
+						case("integratorHtml"):
+							integratorHtml = newData.childNodes[child].childNodes[setting].attributes["value"];
+						break;
+						default:
+							var newAttribute = new Object();
+							newAttribute.name = newData.childNodes[child].childNodes[setting].attributes["name"];
+							newAttribute.value = newData.childNodes[child].childNodes[setting].attributes["value"];
+							attributes.push(newAttribute);
+						break;
 						}
-						if(settings.childNodes[setting].attributes["name"] == "integratorHtml"){
-							integratorHtml = settings.childNodes[setting].attributes["value"];
-							settings.childNodes[setting].removeNode();							
-						}						
 					}
 					break;
 					case "sounds":

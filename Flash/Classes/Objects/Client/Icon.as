@@ -6,6 +6,7 @@
 	private var param:String;
 	private var attributes:Array;
 	private var treeNode:XMLNode;
+	private var attributeGroups = ["button"];	
 	public function deleteSelf(){
 		treeNode.removeNode();
 	}			
@@ -36,7 +37,7 @@
 		return newNode;
 	}
 	public function toTree():XMLNode {
-		var newNode = new XMLNode(1, this.getName());
+		var newNode = new XMLNode(1, this.getKey());
 		newNode.object = this;
 		treeNode = newNode;
 		return newNode;
@@ -48,8 +49,21 @@
 		return "Icon:"+name;
 	}
 	public function getData():Object {
-		return {name:name, icon:icon, func:func, canOpen:canOpen, param:param, attributes:attributes, dataObject:this};
+		return {name:name, icon:icon, func:func, canOpen:canOpen, param:param, dataObject:this};
 	}
+	public function setData(newData:Object):Void {
+		name = newData.name;
+		icon = newData.icon;
+		func = newData.func;
+		canOpen = newData.canOpen;
+		param = newData.param;
+	}
+	public function getAttributes():Array{
+		return attributes;
+	}
+	public function setAttributes(newAttributes:Array){
+		attributes = newAttributes;
+	}	
 	public function setXML(newData:XMLNode):Void {
 		attributes = new Array();
 		name = "";
@@ -83,13 +97,5 @@
 		} else {
 			trace("Error, received "+newData.nodeName+", was expecting icon");
 		}
-	}
-	public function setData(newData:Object):Void {
-		name = newData.name;
-		icon = newData.icon;
-		func = newData.func;
-		canOpen = newData.canOpen;
-		param = newData.param;
-		attributes = newData.attributes;
 	}
 }

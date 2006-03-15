@@ -1,6 +1,8 @@
 ﻿class Objects.Client.Window extends Objects.BaseElement {
 	private var tabs:Array;
-	private var treeNode:XMLNode;		
+	private var treeNode:XMLNode;
+	private var attributes:Array;
+	private var attributeGroups = ["window", "tabs"];
 	public function isValid():Boolean {
 		var flag = true;
 		for (var tab in tabs) {
@@ -15,6 +17,9 @@
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1, "window");
+		for (var attribute in attributes) {
+			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
+		}
 		for (var tab in tabs) {
 			newNode.appendChild(tabs[tab].toXML());
 		}
@@ -26,38 +31,49 @@
 			newNode.appendChild(tabs[tab].toTree());
 		}
 		newNode.object = this;
-		treeNode = newNode;			
+		treeNode = newNode;
 		return newNode;
 	}
-	public function getKey():String{
+	public function getKey():String {
 		return "ClientWindow";
-	}	
+	}
 	public function getName():String {
 		return "Window";
 	}
 	public function getData():Object {
-		return {tabs:tabs,dataObject:this};
+		return {tabs:tabs, dataObject:this};
+	}
+	public function getAttributes():Array {
+		return attributes;
+	}
+	public function setAttributes(newAttributes:Array) {
+		attributes = newAttributes;
 	}
 	public function setXML(newData:XMLNode):Void {
-		if(newData.nodeName == "window"){
+		attributes = new Array();
+		if (newData.nodeName == "window") {
+			for (var attribute in newData.attributes) {
+				attributes.push({name:attribute, value:newData.attributes[attribute]});
+			}
 			tabs = new Array();
-			for(var child in newData.childNodes){
+			for (var child in newData.childNodes) {
 				var newTab = new Objects.Client.Tab();
 				newTab.setXML(newData.childNodes[child]);
 				newTab.id = _global.formDepth++;
 				tabs.push(newTab);
 			}
-		} else{
-			trace("Error, found "+ newData.nodeName+", was expecting window");
+		} else {
+			trace("Error, found " + newData.nodeName + ", was expecting window");
 		}
 	}
 	public function setData(newData:Object):Void {
-		_global.left_tree.setIsOpen(treeNode, false);		
+		_global.left_tree.setIsOpen(treeNode, false);
 		//process new tabs
 		var newTabs = new Array();
 		for (var index in newData.tabs) {
 			if (newData.tabs[index].id == undefined) {
-				newTabs.push({name:newData.tabs[index].name});
+				newData.tabs[index].id = _global.formDepth++;
+				newTabs.push({name:newData.tabs[index].name, id:newData.tabs[index].id});
 			}
 		}
 		for (var tab in tabs) {
@@ -79,21 +95,21 @@
 			newNode.attributes["name"] = newTabs[newTab].name;
 			var Tab = new Objects.Client.Tab();
 			Tab.setXML(newNode);
-			Tab.id = _global.formDepth++;			
-			treeNode.appendChild(Tab.toTree());			
+			Tab.id = newTabs[newTab].id;
+			treeNode.appendChild(Tab.toTree());
 			tabs.push(Tab);
 		}
 		//sort according to desired order
-		/*newTabs = new Array();
-		for(var newTab in newData.tabs){
-			for(var tab in tabs){
-				if(newData.tabs[newTab].id == tabs[tab].id){
+		newTabs = new Array();
+		for (var newTab in newData.tabs) {
+			for (var tab in tabs) {
+				if (newData.tabs[newTab].id == tabs[tab].id) {
 					newTabs.push(tabs[tab]);
 					break;
 				}
 			}
 		}
-		tabs = newTabs;*/
-		_global.left_tree.setIsOpen(treeNode, true);		
+		tabs = newTabs;
+		_global.left_tree.setIsOpen(treeNode, true);
 	}
 }

@@ -1,6 +1,8 @@
 ﻿class Objects.Client.Logging extends Objects.BaseElement{
 	private var groups:Array;
-	private var treeNode:XMLNode;		
+	private var treeNode:XMLNode;
+	private var attributes:Array;
+	private var attributeGroups = ["window","tabs"];	
 	public function isValid():Boolean {
 		var flag = true;
 		for(var group in groups){
@@ -14,7 +16,10 @@
 		return "forms.project.client.logging";
 	}
 	public function toXML():XMLNode {
-		var newNode = new XMLNode(1,"logging")
+		var newNode = new XMLNode(1,"logging");
+		for(var attribute in attributes){
+			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
+		}		
 		for(var group in groups){
 			newNode.appendChild(groups[group].toXML());
 		}
@@ -38,9 +43,19 @@
 	public function getData():Object{
 		return {groups:groups, dataObject:this};
 	}
+	public function getAttributes():Array{
+		return attributes;
+	}
+	public function setAttributes(newAttributes:Array){
+		attributes = newAttributes;
+	}	
 	public function setXML(newData:XMLNode):Void{
 		groups = new Array();
+		attributes = new Array();
 		if(newData.nodeName = "logging"){
+			for(var attribute in newData.attributes){
+				attributes.push({name:attribute, value:newData.attributes[attribute]});
+			}			
 			for(var child in newData.childNodes){
 				var newGroup = new Objects.Client.LoggingGroup();
 				newGroup.setXML(newData.childNodes[child]);

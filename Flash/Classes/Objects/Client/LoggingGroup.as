@@ -41,7 +41,7 @@
 		return newNode;
 	}
 	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
+		var newNode = new XMLNode(1,this.getKey());
 		newNode.object = this;
 		treeNode = newNode;
 		return newNode;
@@ -54,6 +54,14 @@
 	}
 	public function getData():Object{
 		return {controls:controls, icon:icon,name:name,listenTo:listenTo,type:type,attributes:attributes, dataObject:this};
+	}
+	public function setData(newData:Object):Void{
+		controls = newData.controls;
+		name = newData.name;
+		icon = newData.icon;
+		listenTo = newData.listenTo;
+		type = newData.type;
+		attributes = newData.attributes;
 	}
 	public function setXML(newData:XMLNode):Void{
 		name ="";
@@ -89,13 +97,5 @@
 		else{
 			trace("Error, received "+newData.nodeName+", was expecting group");
 		}
-	}
-	public function setData(newData:Object):Void{
-		controls = newData.controls;
-		name = newData.name;
-		icon = newData.icon;
-		listenTo = newData.listenTo;
-		type = newData.type;
-		attributes = newData.attributes;
 	}
 }

@@ -505,6 +505,9 @@ tabs_tb.change = function(eventObj) {
 			case "Preview" :
 				form_mc = formContent_mc.attachMovie("forms.project.client.preview", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {controls:_global.client_test.getControlTypes(), previewXML:tempObject.toXML(), dataObject:tempObject});
 				break;
+			case "Overrides":
+				form_mc = formContent_mc.attachMovie("forms.project.client.overrides", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {attributes:tempObject.getAttributes(), attributeGroups:tempObject.attributeGroups,dataObject:tempObject});
+				break;			
 			default :
 				form_mc = formContent_mc.attachMovie(tempObject.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getData());
 				break;
@@ -531,10 +534,22 @@ leftTreeListener.change = function(eventObj) {
 	right_tree.selectedNode = undefined;
 	if (node.object != undefined) {
 		switch (node.nodeName) {
+		case "Client":
+		case "StatusBarGroup":
+		case "Logging":
+		case "ClientIcon":
+			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
+			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()},{label:"Overrides", view:"forms.project.client.overrides"}, {label:"XML", view:"forms.project.xml"}];
+			tabs_tb.selectedIndex = 0;		
+			break;
+		case "Window" :
+			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
+			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"Overrides", view:"forms.project.client.overrides"},{label:"Preview", view:"forms.project.client.preview"},{label:"XML", view:"forms.project.xml"}];
+			tabs_tb.selectedIndex = 0;
+			break;
 		case "Panel" :
 		case "Tab" :
 		case "Control" :
-		case "Window" :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview", view:"forms.project.client.preview"}];
 			tabs_tb.selectedIndex = 0;

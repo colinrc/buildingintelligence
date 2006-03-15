@@ -21,7 +21,6 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 		roomEditor.mapMode = "alertGroups";
 		roomEditor.poly = poly;
 		roomEditor.alerts = DP;
-		//roomEditor.alerts = [{name:"test 1", icon:"heater", keys:"a,b,c,d,e,f", x:400, y:300}, {name:"test 2", icon:"fan", keys:"q,t,r,f,y,h", x:300, y:200}];
 		
 		var editorListener = new Object();
 		editorListener.alertSelect = function (eventObj) {

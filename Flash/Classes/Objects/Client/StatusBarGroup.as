@@ -6,6 +6,7 @@
 	private var controls:Array;
 	private var attributes:Array;
 	private var treeNode:XMLNode;
+	private var attributeGroups = ["window"];	
 	public function deleteSelf(){
 		treeNode.removeNode();
 	}	
@@ -41,7 +42,7 @@
 		return newNode;
 	}
 	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
+		var newNode = new XMLNode(1,this.getKey());
 		newNode.object = this;
 		treeNode = newNode;
 		return newNode;
@@ -53,8 +54,21 @@
 		return "Group: "+name;
 	}
 	public function getData():Object{
-		return {controls:controls,attributes:attributes, icon:icon,name:name,show:show,hide:hide, dataObject:this};
+		return {controls:controls, icon:icon,name:name,show:show,hide:hide, dataObject:this};
 	}
+	public function getAttributes():Array{
+		return attributes;
+	}
+	public function setAttributes(newAttributes:Array){
+		attributes = newAttributes;
+	}
+	public function setData(newData:Object):Void{
+		controls = newData.controls;
+		name = newData.name;
+		icon = newData.icon;
+		show = newData.show;
+		hide = newData.hide;
+	}	
 	public function setXML(newData:XMLNode):Void{
 		name = "";
 		icon = "";
@@ -97,13 +111,5 @@
 		else{
 			trace("Error, received "+newData.nodeName+", was expecting group");
 		}
-	}
-	public function setData(newData:Object):Void{
-		controls = newData.controls;
-		attributes = newData.attributes;
-		name = newData.name;
-		icon = newData.icon;
-		show = newData.show;
-		hide = newData.hide;
 	}
 }
