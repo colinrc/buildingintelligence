@@ -160,14 +160,14 @@ public class Model extends BaseModel implements DeviceModel {
 					case DeviceType.CAMERA :
 						logger.log(Level.FINER, "Received event from flash for CAMERA item from " + theWholeKey);
 						if ((pelcoOutput = buildCameraArray ((Camera)device,command)) != null) {
-							comms.clearCommandQueue();
+							// comms.clearCommandQueue();
 							CommsCommand commsCommand = new CommsCommand ();
 							commsCommand.setCommandBytes(pelcoOutput.outputCodes);
 							commsCommand.setActionType(CommDevice.PelcoSend);
 							commsCommand.setActionCode(device.getKey());
-							commsCommand.setKeepForHandshake(true);
+							commsCommand.setKeepForHandshake(false);
 							commsCommand.setKey(device.getKey());
-							comms.addCommandToQueue(commsCommand);
+							comms.sendString(commsCommand.getCommandBytes());
 						}
 						break;
 				}
