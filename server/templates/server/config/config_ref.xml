@@ -28,9 +28,9 @@
        <!-- ______________________________________  PELCO DEFS  ____________________  -->
         <DEVICE ACTIVE="N" DEVICE_TYPE="PELCO" DESCRIPTION="Pelco Defs">
                 <CONNECTION>
-                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <SERIAL ACTIVE="Y" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
                         <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
-                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
                 </CONNECTION>
                 <PARAMETERS>
                         <ITEM NAME="PROTOCOL" VALUE="D" />
@@ -136,7 +136,7 @@
         <!-- the key is the HAL zone, Display name is the flash icon name -->
 
         !-- ______________________________________  DynaLite DEFS  ____________________  -->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="DYNALITE" DESCRIPTION="DynaLite Lights">
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="DYNALITE" DESCRIPTION="DynaLite Lights">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N"  FLOW="NONE"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="NONE" />
@@ -144,25 +144,33 @@
                         <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4999"/>
                 </CONNECTION>
                 <PARAMETERS>
-                		<ITEM NAME="PROTOCOL" VALUE="Linear" />
+                		<ITEM NAME="PROTOCOL" VALUE="CLASSIC" />
                 </PARAMETERS>
                 <DYNALITE>
                 
-                        <CONTACT_CLOSURE ACTIVE="Y" KEY="01" BOX="01" NAME="Button 1" DISPLAY_NAME="BUTTON_1" />
-                        <CONTACT_CLOSURE ACTIVE="Y" KEY="01" BOX="02" NAME="Button 2" DISPLAY_NAME="BUTTON_2" />
+                        <CONTACT_CLOSURE ACTIVE="Y" KEY="01" BOX="02" NAME="Button 1" DISPLAY_NAME="BUTTON_1" />
+                        <CONTACT_CLOSURE ACTIVE="Y" KEY="02" BOX="02" NAME="Button 2" DISPLAY_NAME="BUTTON_2" />
                         
-                        <LIGHT_DYNALITE_AREA ACTIVE="Y" BLA="01" KEY="01" NAME="Area 01" DISPLAY_NAME="GARAGE_LIGHT" />
-                        <LIGHT_DYNALITE_AREA ACTIVE="Y" BLA="01" KEY="02" NAME="Area 02" DISPLAY_NAME="BBQ_LIGHT" />
+                        <IR ACTIVE="Y" KEY="01" BOX="02" NAME="IR 1" DISPLAY_NAME="IR_1" />
+                        
+					 <ALARM KEY="ALARM" DISPLAY_NAME="ALARM" NAME="Panic Messages" />
+					 
+					
+                        <LIGHT_DYNALITE_AREA ACTIVE="Y" KEY="04" NAME="Area 01" DISPLAY_NAME="GARAGE_LIGHT" />
+                        <LIGHT_DYNALITE_AREA ACTIVE="Y" KEY="02" NAME="Area 02" DISPLAY_NAME="BBQ_LIGHT" />
 
-                        <LIGHT_DYNALITE ACTIVE="Y" KEY="01" AREA="01" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT" POWER_RATING="100"/>
-                        <LIGHT_DYNALITE ACTIVE="Y" KEY="02" AREA="02" NAME="Hall Light" DISPLAY_NAME="HALL_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_DYNALITE ACTIVE="Y" KEY="01" BLA="01" AREA="04" NAME="Bedroom Light" DISPLAY_NAME="MASTER_BED_LIGHT" POWER_RATING="100"/>
+                         <LIGHT_DYNALITE ACTIVE="Y" KEY="01" BLA="01" AREA="02" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" POWER_RATING="100"/>
+ 
+                        <LIGHT_DYNALITE ACTIVE="Y" KEY="02" BLA="01" AREA="03" NAME="Dining Light" DISPLAY_NAME="DINING_LIGHT" POWER_RATING="100"/>
+      
                         <LIGHT_DYNALITE ACTIVE="Y" KEY="05" RELAY="Y" AREA="01" NAME="BBQ Floods" DISPLAY_NAME="BBQ_FLOODS" POWER_RATING="100"/>
                         <LIGHT_DYNALITE ACTIVE="Y" KEY="06" AREA="02" RELAY="Y" NAME="Back Door Light" DISPLAY_NAME="BACK_DOOR_LIGHT" POWER_RATING="100"/>
                 </DYNALITE>
         </DEVICE>
 
         !-- ______________________________________  CBUS DEFS  ____________________  -->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Lights">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Lights">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
@@ -171,12 +179,12 @@
                         <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
                 </CONNECTION>
                 <PARAMETERS>
-                	<ITEM NAME="POLL_TEMP_INTERVAL" VALUE="5" />
+                	<!-- ITEM NAME="POLL_TEMP_INTERVAL" VALUE="5" / -->
                 </PARAMETERS>
                 
                 <CBUS>
-                        <SENSOR ACTIVE="Y" KEY="00" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
-                        <TEMPERATURE ACTIVE="Y" KEY="42" NAME="Temp Sensor2" DISPLAY_NAME="TEMP_SENSOR2" />
+                        <SENSOR ACTIVE="N" KEY="00" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
+                        <TEMPERATURE ACTIVE="N" KEY="42" NAME="Temp Sensor2" DISPLAY_NAME="TEMP_SENSOR2" />
                         <LIGHT_CBUS ACTIVE="Y" KEY="35" CBUS_APPLICATION="30" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="0C" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="0D" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" RELAY="Y" POWER_RATING="100"/>
@@ -328,13 +336,14 @@
                 </COMFORT>
         </DEVICE>
         <!-- _____________________________ COMFORT DEFS _____________________________-->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="COMFORT" DESCRIPTION="Comfort" PASSWORD="1234">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="COMFORT" DESCRIPTION="Comfort" PASSWORD="1234">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
                         <IP ACTIVE="N" IP_ADDRESS="192.168.1.5" PORT="1001"/>
                         <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
                         <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5002"/>
+                        <IP ACTIVE="N" IP_ADDRESS="172.16.3.105" PORT="1001"/>
                 </CONNECTION>
                 <CATALOGUE NAME="DOOR_IDS">
                         <ITEM CODE="31" VALUE="Main door"/>
@@ -376,7 +385,7 @@
                         <TOGGLE_OUTPUT_MONITOR KEY="02" ACTIVE="Y" NAME="Lower Stairs Lights" DISPLAY_NAME="LOWER_STAIR_LIGHT"/>
                         <!-- PIRs - (IP) -->
                         <TOGGLE_INPUT ACTIVE="Y" KEY="01" NAME="Garage Input" DISPLAY_NAME="MEETING_PIR"/>
-                        <TOGGLE_INPUT ACTIVE="N" KEY="02" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT"/>
+                        <TOGGLE_INPUT ACTIVE="Y" KEY="02" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT"/>
                         <RAW_INTERFACE NAME="LIVING_LIGHT1" DISPLAY_NAME="LIVING_LIGHT1">
                                 <RAW_ITEMS CATALOGUE="Test List 1" PREFIX="01">
                                         <RAW COMMAND="on" CODE="all_fs"/>
@@ -455,7 +464,7 @@
         <!-- _____________________________ GC-100 DEFS _____________________________-->
         <DEVICE ACTIVE="N" DEVICE_TYPE="GC100" DESCRIPTION="GC100" >
                 <CONNECTION>
-                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4998"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4998"/>
                         <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
                 </CONNECTION>
                 <PARAMETERS>                
@@ -492,10 +501,11 @@
                 </GC100_Relay>
         </DEVICE>	
         <!-- _____________________________ GC-100 DEFS _____________________________-->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="GC100" DESCRIPTION="GC100">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="GC100" DESCRIPTION="GC100">
                 <CONNECTION>
-                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4998"/>
-                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5005"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4998"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5005"/>
+                        <IP ACTIVE="N" IP_ADDRESS="172.16.3.215" PORT="4998"/>
                 </CONNECTION>
                 <PARAMETERS>                
                 </PARAMETERS>

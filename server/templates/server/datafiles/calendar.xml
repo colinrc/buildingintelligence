@@ -1,28 +1,23 @@
 <events>
-  <event title="Test Light On" description="Test Light On" date="2006-01-26" time="15:41:16" eventType="once" macroName="Light On" extra="OFFICE_LIGHT" extra2="50" extra3="5" />
-  <event title="eq" description="undefined" startDate="2005-06-29" endDate="2006-03-19" eventType="weekly" macroName="All on3">
-    <pattern mon="1" tue="1" wed="1" thu="1" fri="1" sat="1" sun="1" hour="*" minute="52" />
+  <event id="1140576716430" title="james" alarm="Y" memo="testing" category="holiday" startDate="2006-02-22" endDate="2007-02-22" time="15:7:00" eventType="yearly" macroName="" filter="undefined">
+    <pattern date="undefined" month="1" recur="1" />
   </event>
-  <event title="Test Event 2" description="once on 27 september" macroName="" date="2004-09-27" time="09:00:00" />
-  <event title="Test Event 3" description="once on 15 december" macroName="" date="2004-12-15" time="09:00:00" />
-  <event title="Test Event 5" description="every monday" eventType="weekly" macroName="t3" startDate="2005-03-12" endDate="2006-03-30" time="15:19:00">
-    <pattern wed="0" sat="0" fri="0" sun="0" tue="0" thu="0" recur="2" mon="1" hour="21" minute="15/5" />
+  <event id="1140581621658" title="james" alarm="Y" memo="rrr" category="" startDate="2006-02-22" endDate="2007-02-22" time="15:13:00" eventType="yearly" macroName="" filter="undefined">
+    <pattern date="undefined" month="1" recur="1" />
   </event>
-  <event title="same" description="undefined" startDate="2005-03-20" endDate="2006-03-19" time="16:58:02" eventType="weekly" macroName="James Test">
-    <pattern mon="0" tue="1" wed="0" thu="0" fri="0" sat="0" sun="0" />
+  <event id="1140582252964" title="james" alarm="Y" memo="rrfhh" category="" startDate="2006-02-22" endDate="2007-02-22" time="15:25:00" eventType="yearly" macroName="" filter="undefined">
+    <pattern date="22" month="1" recur="2" />
   </event>
-  <event title="adf" description="A test message" date="2005-04-21" time="00:45:16" eventType="once" macroName="" />
-  <event title="Test Event 4" description="once on 1 april" macroName="" date="2004-04-01" time="09:00:00" />
-  <event title="Cron Line" description="Test a cron pattern" macroName="All on" eventType="cron" startDate="2005-06-29" endDate="2006-03-19">
-    <pattern cronline="0 0 12 * * ?" />
+  <event id="1140582660186" title="more test" alarm="Y" memo="a message" category="" startDate="2006-02-22" endDate="2007-02-22" time="13:5:00" eventType="hourly" macroName="" filter="undefined">
+    <pattern recur="2" />
   </event>
-  <event title="fr" description="undefined" startDate="2005-03-21" endDate="2006-03-19" time="15:24:21" eventType="weekly" macroName="AllOn">
-    <pattern day="wed" recur="1" />
-    <skip start_date="2005-12-22" end_date="2005-12-23" />
-    <skip start_date="2005-12-25" end_date="2005-12-27" />
+  <event id="" title="sa" alarm="Y" memo="ryu" category="reminder" startDate="2004-02-22" endDate="2005-02-22" time="16:34:00" eventType="yearly" macroName="" filter="undefined">
+    <pattern />
   </event>
-  <event title="Test Event 7" description="last friday of april" eventType="monthly" macroName="t3" startDate="2004-01-01" endDate="2004-12-31" time="09:00:00">
-    <pattern month="3" day="fri" week="5" />
+  <event id="1140586832241" title="mnvv" alarm="Y" memo="3f" category="reminder" startDate="2005-02-22" endDate="2006-02-22" time="16:41:00" eventType="yearly" macroName="" filter="undefined">
+    <pattern />
   </event>
-  <event title="test cc" description="" date="2006-01-26" time="16:10:00" eventType="once" macroName="AllOn" />
+  <event id="1140587313571" title="vvf" alarm="Y" memo="wret" category="" startDate="2004-02-22" endDate="2006-02-22" time="17:11:00" eventType="yearly" macroName="" filter="undefined">
+    <pattern date="22" month="1" recur="2" />
+  </event>
 </events>
