@@ -47,16 +47,7 @@ public class JettyHandler implements CacheListener{
         //String home = System.getProperty("jetty.home",".");
         //context.setResourceBase(home+"/demo/webapps/jetty/tut/");
         //context.addHandler(new ResourceHandler());
-        /*
-              <Array type="org.mortbay.jetty.security.UserRealm">
-        <Item>
-          <New class="org.mortbay.jetty.security.HashUserRealm">
-            <Set name="name">Test Realm</Set>
-            <Set name="config">etc/realm.properties</Set>
-          </New>
-        </Item>
-      </Array>
-          */            
+
         HashUserRealm webPass = new HashUserRealm();
         webPass.setName("eLife");
         webPass.setConfig("datafiles/realm.properties");
