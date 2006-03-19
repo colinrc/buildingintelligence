@@ -1,82 +1,69 @@
-<project name="eLife" default="Build" basedir=".">
-    <description>
-        The eLife application
-    </description>
-	
-<target name="jar"  >
-	<jar destfile="Build/eLife.jar" 
-		update="false"
-		basedir="classes" 
-		includes = "**/*.class" 
-		excludes = "**/Test*.class"
-		manifest="manifest" />
-	<jar destfile="Build/eLife.jar" 
-		update="true"
-		basedir="src" 
-		includes = "**/*.properties" 
-		 />
-</target>
-	
-<target name="templates" >
-	<copy todir="templates">
-	    <fileset dir="../" includes="**/*.xsd"  excludes="**/templates/**" />
-	    <fileset dir="../" includes="**/*.dtd"  excludes="**/templates/**" />
-	    <fileset dir="../" includes="**/config_ref.xml" excludes="**/templates/**" />
-	    <fileset dir="../" includes="**/datafiles/*.xml" excludes="**/templates/**" />
-	</copy>
-</target>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<project name="server" default="default" basedir=".">
+    <description>Builds, tests, and runs the project server.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <!--
+
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
+
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-compile-test-single:  called before javac compilation of single JUnit test
+      -post-compile-test-single: called after javac compilation of single JUunit test
+      -pre-jar:                  called before JAR building
+      -post-jar:                 called after JAR building
+      -post-clean:               called after cleaning build products
+
+    (Targets beginning with '-' are not intended to be called on their own.)
+
+    Example of inserting an obfuscator after compilation could look like this:
+
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
+
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
 
 
-	<target name="run" depends="" >
-		  <java 
-		  	classname="au.com.BI.Home.eLife"
-		  	 >
-		  	
-		    <classpath>
-		    		<pathelement location="classes"/>
-		    	   <fileset dir="ext" includes="*.jar"/>	 
-		  	</classpath>
-		  </java>
-	</target>
-	
-<path id="run.path">
-		   <pathelement path="${classpath}"/>
-		   <pathelement location="classes"/>
-		   <fileset dir="ext" includes="*.jar"/>	 
-</path>
-	
-<target name="Build" depends="dist_clean,increment,jar,templates" >
-	<zip destfile="Build/${app_name}-${major_version}${minor_version}.zip" 
-		update="false"
-		basedir="Build" 
-		includes = "*.jar" />
-	<zip destfile="Build/${app_name}-${major_version}${minor_version}.zip" 
-		update="true"
-		basedir="."
-		includes = "my.properties" />
-	<zip destfile="Build/${app_name}-${major_version}${minor_version}.zip" 
-		update="true"
-		basedir="."
-		includes = "templates/**" />	
-	<zip destfile="Build/${app_name}-${major_version}${minor_version}.zip" 
-		update="true"
-		basedir="."
-		includes = "config/config_ref.xml" />	
-</target>
+    Another way to customize the build is by overriding existing main targets.
+    The targets of interest are: 
 
-<target name="dist_clean" depends="" >
-	  <delete>
-	    <fileset dir="Build" includes="*.zip"/>
-	    <fileset dir="Build" includes="*.jar"/>
-	  </delete>
-</target>
+      -init-macrodef-javac:     defines macro for javac compilation
+      -init-macrodef-junit:     defines macro for junit execution
+      -init-macrodef-debug:     defines macro for class debugging
+      -init-macrodef-java:      defines macro for class execution
+      -do-jar-with-manifest:    JAR building (if you are using a manifest)
+      -do-jar-without-manifest: JAR building (if you are not using a manifest)
+      run:                      execution of project 
+      -javadoc-build:           Javadoc generation
+      test-report:              JUnit report generation
 
-<target name="increment" depends="" description="Increments build number and creates a zip file.">
-<propertyfile file="src/au/com/BI/Home/my.properties" >
-  <entry  key="minor_version" type="int" operation="+" value="1" />
-</propertyfile>
-<property file="src/au/com/BI/Home/my.properties" />
-	<echo message="Version number now ${major_version}${minor_version}" />
-</target>
+    An example of overriding the target for project execution could look like this:
 
+        <target name="run" depends="server-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
+
+    Notice that the overridden target depends on the jar target and not only on 
+    the compile target as the regular run target does. Again, for a list of available 
+    properties which you can use, check the target you are overriding in the
+    nbproject/build-impl.xml file. 
+
+    -->
 </project>
