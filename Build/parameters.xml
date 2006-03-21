@@ -1,4 +1,4 @@
-<device TYPE="RAW">
+<device TYPE="RAW_CONNECTION">
 		<parameter name="STX" default=""/>
 		<parameter name="ETX" default="\n"/>
 		<parameter name="STARTUP1" default="+++ATH0\n"/>
