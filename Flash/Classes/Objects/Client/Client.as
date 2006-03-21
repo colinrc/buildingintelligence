@@ -10,6 +10,7 @@
 	private var control_panel_apps:Objects.Client.Control_Panel_Apps;
 	private var Property:Objects.Client.Property;
 	private var control_types:Objects.Client.Control_Types;
+	private var calendar:Objects.Client.Calendar;
 	private var attributeGroups = ["settings","window","button","tabs"];
 	public function isValid():Boolean {
 		var flag = true
@@ -65,6 +66,7 @@
 			newSettings.appendChild(newSetting);
 		}
 		newNode.appendChild(newSettings);
+		newNode.appendChild(calendar.toXML());		
 		newNode.appendChild(sounds.toXML());
 		newNode.appendChild(status_bar.toXML());
 		newNode.appendChild(logging.toXML());
@@ -79,6 +81,7 @@
 		if(_global.advanced){
 			newNode.appendChild(control_panel_apps.toTree());			
 		}					
+		newNode.appendChild(calendar.toTree());		
 		newNode.appendChild(sounds.toTree());
 		newNode.appendChild(status_bar.toTree());
 		newNode.appendChild(logging.toTree());
@@ -122,6 +125,7 @@
 		logging = new Objects.Client.Logging();
 		apps_bar = new Objects.Client.Apps_Bar();
 		control_panel_apps = new Objects.Client.Control_Panel_Apps();
+		calendar = new Objects.Client.Calendar();
 		Property = new Objects.Client.Property();
 		control_types = new Objects.Client.Control_Types();
 		if(newData.nodeName == "application") {
@@ -171,6 +175,9 @@
 					break;
 					case "controlTypes":
 					control_types.setXML(newData.childNodes[child]);
+					break;
+					case "calendar":
+					calendar.setXML(newData.childNodes[child]);
 					break;
 					default:
 					trace(newData.childNodes[child]);

@@ -12,6 +12,7 @@ class Forms.Control.ServerLog extends Forms.BaseForm {
 	private var inv_filter_ch:mx.controls.CheckBox;
 	private var my_styles:StyleSheet;
 	private var serverConnection:Object;
+	private var dataObject:Object;
 	public function ServerLog() {
 	}
 	public function onLoad():Void {

@@ -15,6 +15,7 @@ class Forms.Control.ServerControls extends Forms.BaseForm {
 	private var connect_btn:Button;
 	private var disconnect_btn:Button;	
 	private var serverConnection:Object;
+	private var dataObject:Object;
 	public function ServerControls() {
 	}
 	public function onLoad():Void {

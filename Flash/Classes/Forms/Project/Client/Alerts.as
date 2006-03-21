@@ -29,12 +29,14 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		y_lb.addEventListener("change", changeListener);
 		x_lb.text = x_pos;
 		y_lb.text = y_pos;
+		
 		var tempKeys = _global.server_test.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
 			left_li.addItem(tempObject);
 		}
+		
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
@@ -101,11 +103,19 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		var alertKeys:Array = alerts_dg.selectedItem.keys.split(",");
 		for (var key in alertKeys) {
 			if(alertKeys[key].length){
-				right_li.addItem({label:alertKeys[key]});
+				var leftLength = left_li.dataProvider.length;
+				for(var index = 0; index < leftLength;index++){
+					if(alertKeys[key] == left_li.getItemAt(index).label){
+						right_li.addItem(left_li.removeItemAt(index));
+						break;
+					}
+				}
 			}
 		}
+		right_li.sortItemsBy("label", "ASC");
+		left_li.sortItemsBy("label", "ASC");		
 		_global.unSaved = true;
-	}
+}
 	public function save():Void {
 		var newAlerts = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
@@ -130,40 +140,29 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	}
 	private function addSel() {
 		if (left_li.selectedItem != undefined) {
-			var flag = false;
-			for (var index = 0; index < right_li.length; index++) {
-				if (left_li.selectedItem.label == right_li.getItemAt(index).label) {
-					flag = true;
-				}
+			right_li.addItem(left_li.removeItemAt(left_li.selectedIndex));
+			right_li.sortItemsBy("label", "ASC");
+			left_li.sortItemsBy("label", "ASC");		
+			var newKeys = new Array();
+			for (var item in right_li.dataProvider) {
+				newKeys.push(right_li.dataProvider[item].label);
 			}
-			if (!flag) {
-				var newObject = new Object();
-				newObject.label = left_li.selectedItem.label;
-				right_li.addItem(newObject);
-				var newKeys = new Array();
-				for (var item in right_li.dataProvider) {
-					newKeys.push(right_li.dataProvider[item].label);
-				}
-				alerts_dg.selectedItem.keys = newKeys.join(",");
-			}
+			alerts_dg.selectedItem.keys = newKeys.join(",");
 			_global.unSaved = true;
 		}
 	}
 	private function addAll() {
-		_global.unSaved = true;		
-		for (var leftIndex = 0; leftIndex < left_li.length; leftIndex++) {
-			var flag = false;
-			for (var rightIndex = 0; rightIndex < right_li.length; rightIndex++) {
-				if (left_li.getItemAt(leftIndex).label == right_li.getItemAt(rightIndex).label) {
-					flag = true;
-				}
-			}
-			if (!flag) {
-				var newObject = new Object();
-				newObject.label = left_li.getItemAt(leftIndex).label;
-				right_li.addItem(newObject);
-			}
+		_global.unSaved = true;
+		left_li.removeAll();
+		right_li.removeAll();
+		var tempKeys = _global.server_test.getKeys();
+		for (var key in tempKeys) {
+			var tempObject = new Object();
+			tempObject.label = tempKeys[key];
+			right_li.addItem(tempObject);
 		}
+		right_li.sortItemsBy("label", "ASC");
+		left_li.sortItemsBy("label", "ASC");		
 		var newKeys = new Array();
 		for (var item in right_li.dataProvider) {
 			newKeys.push(right_li.dataProvider[item].label);
@@ -173,7 +172,9 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	}
 	private function remSel() {
 		if (right_li.selectedItem != undefined) {
-			right_li.removeItemAt(right_li.selectedIndex);
+			left_li.addItem(right_li.removeItemAt(right_li.selectedIndex));
+			right_li.sortItemsBy("label", "ASC");
+			left_li.sortItemsBy("label", "ASC");		
 			var newKeys = new Array();
 			for (var item in right_li.dataProvider) {
 				newKeys.push(right_li.dataProvider[item].label);
@@ -183,7 +184,16 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		}
 	}
 	private function remAll() {
+		left_li.removeAll();
 		right_li.removeAll();
+		var tempKeys = _global.server_test.getKeys();
+		for (var key in tempKeys) {
+			var tempObject = new Object();
+			tempObject.label = tempKeys[key];
+			left_li.addItem(tempObject);
+		}
+		right_li.sortItemsBy("label", "ASC");
+		left_li.sortItemsBy("label", "ASC");		
 		var newKeys = new Array();
 		for (var item in right_li.dataProvider) {
 			newKeys.push(right_li.dataProvider[item].label);
@@ -199,5 +209,12 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		removeSelected_btn._visible = visible;
 		removeAll_btn._visible = visible;
 		right_li.removeAll();
+		left_li.removeAll();
+		var tempKeys = _global.server_test.getKeys();
+		for (var key in tempKeys) {
+			var tempObject = new Object();
+			tempObject.label = tempKeys[key];
+			left_li.addItem(tempObject);
+		}
 	}
 }

@@ -1,8 +1,9 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-class Forms.Control.IR extends Forms.Control.AdminView {
-	public var server_socket:XMLSocket;
-	public var monitor_socket:XMLSocket;
+class Forms.Control.IR extends Forms.BaseForm {
+	private var dataObject:Object;	
+	/*public var server_socket:XMLSocket;
+	public var monitor_socket:XMLSocket;*/
 	private var action_cb:mx.controls.ComboBox;
 	private var action_lb:mx.controls.Label;
 	private var cancel_btn:mx.controls.Button;
@@ -22,7 +23,7 @@ class Forms.Control.IR extends Forms.Control.AdminView {
 	private var value_50_rb:mx.controls.RadioButton;
 	public function IR() {
 	}
-	public function init():Void {
+	public function onLoad():Void {
 		value_100_rb.addEventListener("click", Delegate.create(this, changeValue));
 		value_20_rb.addEventListener("click", Delegate.create(this, changeValue));
 		value_35_rb.addEventListener("click", Delegate.create(this, changeValue));
@@ -36,15 +37,15 @@ class Forms.Control.IR extends Forms.Control.AdminView {
 	}
 	private function changeValue(eventObj):Void {
 		var xmlMsg = new XML('<IR_CONFIG EXTRA="'+eventObj.target.selection.data+'" />\n');
-		server_socket.send(xmlMsg);
+		//server_socket.send(xmlMsg);
 	}
 	public function setSockets(inServer_socket:XMLSocket, inMonitor_socket:XMLSocket):Void {
-		server_socket = inServer_socket;
-		monitor_socket = inMonitor_socket;
+		//server_socket = inServer_socket;
+		//monitor_socket = inMonitor_socket;
 	}
 	public function deviceChange(eventObj):Void {
 		var xmlMsg = new XML('<LIST_IR_ACTIONS DEVICE="'+device_cb.selectedItem.label+'" />\n');
-		server_socket.send(xmlMsg);
+		//server_socket.send(xmlMsg);
 		learn_btn.enabled = false;
 	}
 	public function actionChange(eventObj):Void {
@@ -53,7 +54,7 @@ class Forms.Control.IR extends Forms.Control.AdminView {
 	private function learn():Void {
 		var irName:String = device_cb.selectedItem.label+"."+action_cb.selectedItem.label;
 		var xmlMsg = new XML('<IR_LEARN NAME="'+irName+'" />\n');
-		server_socket.send(xmlMsg);
+		//server_socket.send(xmlMsg);
 		status_lb.text = "Learning "+irName;
 		learn_btn.enabled = false;
 	}
@@ -65,12 +66,12 @@ class Forms.Control.IR extends Forms.Control.AdminView {
 	}
 	private function test():Void {
 		var xmlMsg = new XML('<TEST_IR DEVICE="'+device_cb.selectedItem.label+'" ACTION="'+action_cb.selectedItem.label+'" TARGET="'+avname_ti.text+'" REPEAT="'+repeat_ti.text+'" />\n');
-		server_socket.send(xmlMsg);
+		//server_socket.send(xmlMsg);
 	}
 	private function reload():Void {
 		action_cb.removeAll();
 		var xmlMsg = new XML('<RELOAD_IRDB />\n');
-		server_socket.send(xmlMsg);
+		//server_socket.send(xmlMsg);
 		learn_btn.enabled = false;
 	}
 	public function irLearnt(inNode:XMLNode):Void {
