@@ -11,7 +11,13 @@
 		}
 		
 		var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:{width:window_mc.contentClip.width, height:window_mc.contentClip.height}});
-		tabs_mc.tabData = [{name:"Today", iconName:"calendar"}, {name:"Watering", iconName:"sprinkler", enabled:false}, {name:"Macros", iconName:"atom", enabled:false}];
+		
+		var tabData = new Array();
+		for (var q=0; q<_global.calendar.length; q++) {
+			tabData.push({name:_global.calendar[q].view, iconName:_global.calendar[q].icon});
+		}
+		
+		tabs_mc.tabData = tabData;
 		
 		for (var i=0; i<tabs_mc.tabData.length; i++) {
 			_root[tabs_mc.tabData[i].func](tabs_mc.contentClips[i]);
@@ -25,119 +31,11 @@
 		tabs_mc.addEventListener("changeTab", tabs_mc);
 		tabs_mc.activeTab = 0;
 
-		///////////////////////
-		// render today view //
-		///////////////////////
+		///////////////////
+		// render views //
+		//////////////////
 		
-		var content_mc = tabs_mc.contentClips[0];
-
 		var columnBreak = 490;
-		
-		content_mc.createEmptyMovieClip("line1_mc", 100);
-		content_mc.line1_mc.lineStyle(1, 0xFFFFFF, 40);
-		content_mc.line1_mc.lineTo(0,  content_mc.height);
-		content_mc.line1_mc._x = columnBreak;
-		
-		var calendar_ec = content_mc.attachMovie("bi.ui.Calendar", "calendar_ec", 10, {});
-		calendar_ec._x = 15;
-	
-		calendar_ec.onDisplayEvent = function (eventsData, dateObj) {
-			showDay(dateObj, eventsData, this._parent);
-		}
-		
-		// onSelectDate is called when a day with no events is clicked
-		calendar_ec.onSelectDate = function (dateObj) {
-			showDay(dateObj, null, this._parent);
-		}
-	
-		calendar_ec.onHideEvent = function () {
-			currentDay_mc.removeMovieClip();
-			standardEvents_mc.removeAll();
-			this._parent.day_lb.text = "";
-			macroEvents_mc.removeAll();
-		}
-		
-		showDay = function (dateObj, eventsData, context) {
-			context.dateObj = dateObj;
-			var currentDay_mc = context.createEmptyMovieClip("currentDay_mc", 20);
-			context.standardEvents_mc.removeAll();
-			context.day_lb.text = dateObj.dateTimeFormat("dddd, d mmmm yyyy:");
-			context.macroEvents_mc.removeAll();
-			eventsData.sortOn("time");
-			for (var i=0; i<eventsData.length; i++) {
-				var eventObj = new Object();
-				eventObj.eventType = eventsData[i].eventType;
-				eventObj.id = eventsData[i].id;
-				eventObj.title = eventsData[i].title;
-				eventObj.alarm = eventsData[i].alarm;
-				eventObj.memo = eventsData[i].memo;
-				eventObj.category = eventsData[i].category;
-				eventObj.time = eventsData[i].time;
-				eventObj.macroName = eventsData[i].macroName;
-				eventObj.startDate = eventsData[i].startDate;
-				eventObj.endDate = eventsData[i].endDate;
-				eventObj.filter = eventsData[i].filter;
-				eventObj.pattern = new Object();
-				for (var q in eventsData[i].pattern) {
-					eventObj.pattern[q] = eventsData[i].pattern[q];
-				}
-				if (eventObj.macroName.length) {
-					macroEvents_mc.addItem({label:eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat)  +"\t" + eventObj.title, value:eventObj});
-				} else {
-					standardEvents_mc.addItem({label:eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat) +"\t" + eventObj.title, value:eventObj});
-				}
-			}
-		}
-	
-		content_mc.update = function () {
-			this.calendar_ec.setDataProvider(_global.calendarData);
-			this.calendar_ec.getDayByDate(this.dateObj.getDate()).onRelease();
-		}
-		subscribe("events", content_mc);
-				
-		content_mc.attachMovie("bi.ui.Label", "day_lb", 25, {settings:{width:content_mc.width - columnBreak - 10, align:"center", _x:columnBreak + 10, _y:0, fontSize:18}});
-
-		var standardEvents_mc = content_mc.attachMovie("bi.ui.List", "standardEvents_mc", 30, {settings:{width:content_mc.width - columnBreak - 10, height:content_mc.height / 2 - 30}});
-		standardEvents_mc._x = columnBreak + 10;
-		standardEvents_mc._y = 30;
-		standardEvents_mc.addEventListener("change", standardEvents_mc);
-		standardEvents_mc.change = function (eventObj) {
-			editCalendarEvent(eventObj.target.selectedItem.value, this._parent.dateObj);
-			this.selectedIndex = null;
-		}
-
-		content_mc.attachMovie("bi.ui.Label", "events_lb", 40, {settings:{text:"Scheduled macros:", width:content_mc.width - columnBreak - 10, align:"center", _x:columnBreak + 10, _y:Math.round(content_mc.height / 2), fontSize:18}});
-		
-		var macroEvents_mc = content_mc.attachMovie("bi.ui.List", "macroEvents_mc", 50, {settings:{width:content_mc.width - columnBreak - 10, height:content_mc.height / 2 - 30}});
-		macroEvents_mc._x = columnBreak + 10;
-		macroEvents_mc._y = content_mc.height / 2 + 30;
-		macroEvents_mc.addEventListener("change", macroEvents_mc);
-		macroEvents_mc.change = function (eventObj) {
-			editCalendarEvent(eventObj.target.selectedItem.value, this._parent.dateObj);
-			//skipCalendarEvent(eventObj.target.selectedItem.value);
-			this.selectedIndex = null
-		}
-		
-		var buttons_mc = content_mc.createEmptyMovieClip("buttons_mc", 60);
-		buttons_mc.attachMovie("bi.ui.Button", "newEvent_btn", 10, {settings:{width:calendar_ec._width, height: 30, label:"Create new event"}});
-		buttons_mc.newEvent_btn.press = function () {
-			newCalendarEvent(null, this._parent._parent.dateObj);
-		}
-		buttons_mc.newEvent_btn.addEventListener("press", buttons_mc.newEvent_btn);
-		buttons_mc.attachMovie("bi.ui.Button", "today_btn", 20, {settings:{width:calendar_ec._width, height: 30, label:"Go to today"}});
-		buttons_mc.today_btn.press = function () {
-			calendar_ec.setDate(new Date());
-			calendar_ec.getDayByDate(new Date().getDate()).onRelease();
-		}
-		buttons_mc.today_btn.addEventListener("press", buttons_mc.today_btn);
-		buttons_mc.today_btn._y = 35;
-		
-		buttons_mc._x = calendar_ec._x;
-		buttons_mc._y = calendar_ec._y + calendar_ec._height + 70;
-				
-		calendar_ec.setDisplayRange({begin:new Date(2000, 0),end:new Date(2010, 11)});
-		calendar_ec.setDataProvider(_global.calendarData);
-		calendar_ec.getDayByDate(new Date().getDate()).onRelease();
 		
 		/////////////////////////////////////////
 		// render watering and automation view //
@@ -145,131 +43,274 @@
 		
 		for (var q=0; q<_global.calendar.length; q++) {
 		
-			var content_mc = tabs_mc.contentClips[1 + q];
-			var currentWeekStarting = new Date(2006, 0, 23);
-			
-			var arrows_mc = content_mc.createEmptyMovieClip("arrows_mc",10);
-			var leftArrow_mc = arrows_mc.attachMovie("bi.ui.Button", "leftArrow_mc", 10, {settings:{width:60, height:30, iconName:"left-arrow"}});
-			leftArrow_mc.press = function () {
-			}
-			leftArrow_mc.addEventListener("press", leftArrow_mc);
-			
-			var week_txt = arrows_mc.attachMovie("bi.ui.Label", "week_txt", 50, {settings:{width:250, text:"Week: " + currentWeekStarting.dateTimeFormat("d mmmm yyyy"), fontSize:18, align:"center", _x:leftArrow_mc._width, _y:3}});
-	
-			var rightArrow_mc = arrows_mc.attachMovie("bi.ui.Button", "rightArrow_mc", 20, {settings:{width:60, height:30, iconName:"right-arrow"}});
-			rightArrow_mc._x = leftArrow_mc._width + week_txt._width;
-			rightArrow_mc.press = function () {
-			}
-			rightArrow_mc.addEventListener("press", rightArrow_mc);
-			
-			arrows_mc._x = Math.round((content_mc.width / 2) - (arrows_mc._width / 2));
-			
-			var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-			
-			var lines_mc = content_mc.createEmptyMovieClip("lines_mc", 100);
-			var daysOfWeek_mc = content_mc.createEmptyMovieClip("daysOfWeek_mc", 20);
-			daysOfWeek_mc._y = 50;
-			lines_mc._alpha = 40;
-			lines_mc.lineStyle(1, 0xFFFFFF);
-			var colStart = 150;
-			var colWidth = Math.round((content_mc.width - colStart) / 7);
-			for (var i=0; i<7; i++) {
-				lines_mc.moveTo(i * colWidth + colStart, daysOfWeek_mc._y + 20);
-				lines_mc.lineTo(i * colWidth + colStart,  content_mc.height);
-				
-				daysOfWeek_mc.attachMovie("bi.ui.Label", "day" + i + "_txt", i, {settings:{width:colWidth, text:daysOfWeek[i], fontSize:16, align:"center", _x:i * colWidth + colStart}});
-			}
+			var content_mc = tabs_mc.contentClips[q];
 			
 			switch (_global.calendar[q].view) {
-				case "filtered":
-					var listData = [];
-					for (var i=0; i<_global.calendar[q].zones; i++) {
-						listData.push(_global.calendar[q].zones[i].label);
+				case "today":
+					content_mc.createEmptyMovieClip("line1_mc", 100);
+					content_mc.line1_mc.lineStyle(1, 0xFFFFFF, 40);
+					content_mc.line1_mc.lineTo(0,  content_mc.height);
+					content_mc.line1_mc._x = columnBreak;
+					
+					var calendar_ec = content_mc.attachMovie("bi.ui.Calendar", "calendar_ec", 10, {});
+					calendar_ec._x = 15;
+				
+					calendar_ec.onDisplayEvent = function (eventsData, dateObj) {
+						showDay(dateObj, eventsData, this._parent);
 					}
-					break;
-				case "macros":
-					var listData = [];
-					for (var m=0; m<_global.macros.length; m++) {
-						var eventObj = new Object();
-						eventObj.label = _global.macros[m].name;
-						for (var i=0; i<_global.calendarData.length; i++) {
-							if (_global.macros[m].name == _global.calendarData[i].macroName && _global.calendarData[i].startDate < new Date(currentWeekStarting.getTime() + 604800000) && _global.calendarData[i].endDate > currentWeekStarting) {
-								eventObj.time = _global.calendarData[i].time.split(":").slice(0, 2).join(":");
-								eventObj.runTime = Number(_global.calendarData[i].runTime.split(":")[0]) * 60 + Number(_global.calendarData[i].runTime.split(":")[1]);
-								eventObj.pattern = _global.calendarData[i].pattern;
-								eventObj.skip = _global.calendarData[i].skip;
-								break;
+					
+					// onSelectDate is called when a day with no events is clicked
+					calendar_ec.onSelectDate = function (dateObj) {
+						showDay(dateObj, null, this._parent);
+					}
+				
+					calendar_ec.onHideEvent = function () {
+						currentDay_mc.removeMovieClip();
+						standardEvents_mc.removeAll();
+						this._parent.day_lb.text = "";
+						macroEvents_mc.removeAll();
+					}
+					
+					showDay = function (dateObj, eventsData, context) {
+						context.dateObj = dateObj;
+						var currentDay_mc = context.createEmptyMovieClip("currentDay_mc", 20);
+						context.standardEvents_mc.removeAll();
+						context.day_lb.text = dateObj.dateTimeFormat("dddd, d mmmm yyyy:");
+						context.macroEvents_mc.removeAll();
+						eventsData.sortOn("time");
+						for (var i=0; i<eventsData.length; i++) {
+							var eventObj = new Object();
+							eventObj.eventType = eventsData[i].eventType;
+							eventObj.id = eventsData[i].id;
+							eventObj.title = eventsData[i].title;
+							eventObj.alarm = eventsData[i].alarm;
+							eventObj.memo = eventsData[i].memo;
+							eventObj.category = eventsData[i].category;
+							eventObj.time = eventsData[i].time;
+							eventObj.macroName = eventsData[i].macroName;
+							eventObj.startDate = eventsData[i].startDate;
+							eventObj.endDate = eventsData[i].endDate;
+							eventObj.filter = eventsData[i].filter;
+							eventObj.pattern = new Object();
+							for (var q in eventsData[i].pattern) {
+								eventObj.pattern[q] = eventsData[i].pattern[q];
+							}
+							if (eventObj.macroName.length) {
+								macroEvents_mc.addItem({label:eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat)  +"\t" + eventObj.title, value:eventObj});
+							} else {
+								standardEvents_mc.addItem({label:eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat) +"\t" + eventObj.title, value:eventObj});
 							}
 						}
-						listData.push(eventObj);
 					}
-					break;
-			}
+				
+					content_mc.update = function () {
+						this.calendar_ec.setDataProvider(_global.calendarData);
+						this.calendar_ec.getDayByDate(this.dateObj.getDate()).onRelease();
+					}
+					subscribe("events", content_mc);
+							
+					content_mc.attachMovie("bi.ui.Label", "day_lb", 25, {settings:{width:content_mc.width - columnBreak - 10, align:"center", _x:columnBreak + 10, _y:0, fontSize:18}});
 			
-			var rows_mc = content_mc.createEmptyMovieClip("rows_mc", 50);
-			rows_mc._y = daysOfWeek_mc._y + 30;
-			for (var i=0; i<listData.length; i++) {
-				var row_mc = rows_mc.createEmptyMovieClip("row" + i + "_mc", i);
-				
-				var bg_mc = row_mc.createEmptyMovieClip("bg_mc", 0);
-				if (i % 2) {
-					bg_mc.beginFill(0x043B96, 30);				
-				} else {
-					bg_mc.beginFill(0xFFFFFF, 25);
-				}
-				bg_mc.drawRect(0, 0, content_mc.width, 40, 6);
-				bg_mc.endFill();
-				
-				row_mc._y = (row_mc._height + 2) * i;
-				
-				var label_txt = row_mc.attachMovie("bi.ui.Label", "label_txt", 10, {settings:{width:colStart, text:listData[i].label, fontSize:14, _x:4}});
-				label_txt._y = Math.round((bg_mc._height / 2) - (label_txt._height / 2));
-								
-				for (var z=0; z<7; z++) {
-					var currentDate = new Date(currentWeekStarting.getTime() + (z * 86400000));
-					currentDate = currentDate.dateTimeFormat("yyyy-mm-dd");
-
-					// check if current day fits into defined pattern
-					if (listData[i].pattern[daysOfWeek[z].toLowerCase().substr(0, 3)] == 1) {			
-						var cell_mc = row_mc.createEmptyMovieClip("cell" + z + "_mc", z + 20);
-						cell_mc._x = z * colWidth + colStart;
+					var standardEvents_mc = content_mc.attachMovie("bi.ui.List", "standardEvents_mc", 30, {settings:{width:content_mc.width - columnBreak - 10, height:content_mc.height / 2 - 30}});
+					standardEvents_mc._x = columnBreak + 10;
+					standardEvents_mc._y = 30;
+					standardEvents_mc.addEventListener("change", standardEvents_mc);
+					standardEvents_mc.change = function (eventObj) {
+						editCalendarEvent(eventObj.target.selectedItem.value, this._parent.dateObj);
+						this.selectedIndex = null;
+					}
+			
+					content_mc.attachMovie("bi.ui.Label", "events_lb", 40, {settings:{text:"Scheduled macros:", width:content_mc.width - columnBreak - 10, align:"center", _x:columnBreak + 10, _y:Math.round(content_mc.height / 2), fontSize:18}});
+					
+					var macroEvents_mc = content_mc.attachMovie("bi.ui.List", "macroEvents_mc", 50, {settings:{width:content_mc.width - columnBreak - 10, height:content_mc.height / 2 - 30}});
+					macroEvents_mc._x = columnBreak + 10;
+					macroEvents_mc._y = content_mc.height / 2 + 30;
+					macroEvents_mc.addEventListener("change", macroEvents_mc);
+					macroEvents_mc.change = function (eventObj) {
+						editCalendarEvent(eventObj.target.selectedItem.value, this._parent.dateObj);
+						//skipCalendarEvent(eventObj.target.selectedItem.value);
+						this.selectedIndex = null
+					}
+					
+					var buttons_mc = content_mc.createEmptyMovieClip("buttons_mc", 60);
+					buttons_mc.attachMovie("bi.ui.Button", "newEvent_btn", 10, {settings:{width:calendar_ec._width, height: 30, label:"Create new event"}});
+					buttons_mc.newEvent_btn.press = function () {
+						newCalendarEvent(null, this._parent._parent.dateObj);
+					}
+					buttons_mc.newEvent_btn.addEventListener("press", buttons_mc.newEvent_btn);
+					buttons_mc.attachMovie("bi.ui.Button", "today_btn", 20, {settings:{width:calendar_ec._width, height: 30, label:"Go to today"}});
+					buttons_mc.today_btn.press = function () {
+						calendar_ec.setDate(new Date());
+						calendar_ec.getDayByDate(new Date().getDate()).onRelease();
+					}
+					buttons_mc.today_btn.addEventListener("press", buttons_mc.today_btn);
+					buttons_mc.today_btn._y = 35;
+					
+					buttons_mc._x = calendar_ec._x;
+					buttons_mc._y = calendar_ec._y + calendar_ec._height + 70;
+							
+					calendar_ec.setDisplayRange({begin:new Date(2000, 0),end:new Date(2010, 11)});
+					calendar_ec.setDataProvider(_global.calendarData);
+					calendar_ec.getDayByDate(new Date().getDate()).onRelease();
+					break;
+				case "filtered":
+				case "macros":				
+					var arrows_mc = content_mc.createEmptyMovieClip("arrows_mc",10);
+					var leftArrow_mc = arrows_mc.attachMovie("bi.ui.Button", "leftArrow_mc", 10, {settings:{width:60, height:30, iconName:"left-arrow"}});
+					leftArrow_mc.press = function () {
+						var base = this._parent._parent;
+						base.currentWeekStarting.setDate(base.currentWeekStarting.getDate() - 7);
+						base.update();
+					}
+					leftArrow_mc.addEventListener("press", leftArrow_mc);
+					
+					var week_txt = arrows_mc.attachMovie("bi.ui.Label", "week_txt", 50, {settings:{width:250, fontSize:18, align:"center", _x:leftArrow_mc._width, _y:3}});
+			
+					var rightArrow_mc = arrows_mc.attachMovie("bi.ui.Button", "rightArrow_mc", 20, {settings:{width:60, height:30, iconName:"right-arrow"}});
+					rightArrow_mc._x = leftArrow_mc._width + week_txt._width;
+					rightArrow_mc.press = function () {
+						var base = this._parent._parent;
+						base.currentWeekStarting.setDate(base.currentWeekStarting.getDate() + 7);
+						base.update();
+					}
+					rightArrow_mc.addEventListener("press", rightArrow_mc);
+					
+					arrows_mc._x = Math.round((content_mc.width / 2) - (arrows_mc._width / 2));
+					
+					var daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+					
+					var lines_mc = content_mc.createEmptyMovieClip("lines_mc", 100);
+					var daysOfWeek_mc = content_mc.createEmptyMovieClip("daysOfWeek_mc", 20);
+					daysOfWeek_mc._y = 50;
+					lines_mc._alpha = 40;
+					lines_mc.lineStyle(1, 0xFFFFFF);
+					var colStart = 150;
+					var colWidth = Math.round((content_mc.width - colStart) / 7);
+					for (var i=0; i<7; i++) {
+						lines_mc.moveTo(i * colWidth + colStart, daysOfWeek_mc._y + 20);
+						lines_mc.lineTo(i * colWidth + colStart,  content_mc.height);
 						
-						var hitArea_mc = cell_mc.createEmptyMovieClip("hitArea_mc", 0);
-						hitArea_mc.beginFill(0xFFCC00);
-						hitArea_mc.drawRect(0, 0, colWidth, bg_mc._height);
-						cell_mc.hitArea = hitArea_mc;
-						hitArea_mc._visible = false;
-						
-						var holder_mc = cell_mc.createEmptyMovieClip("holder_mc", 10);
-						
-						holder_mc.attachMovie("bi.ui.Icon", "icon_mc", 10, {settings:{iconName: "check", size: 25}});
-						
-						var holder_mc = row_mc.attachMovie("bi.ui.Label", "label_txt", 20, {settings:{width: colWidth - holder_mc.icon_mc._width - 8, fontSize:8, text:listData[i].runTime + " mins\n@ " + listData[i].time, _x:holder_mc.icon_mc._width + 4}});
-						
-						holder_mc._x = Math.round((hitArea_mc._width / 2) - (holder_mc._width / 2));
-						holder_mc._y = Math.round((hitArea_mc._height / 2) - (holder_mc._height / 2));
-		
-						cell_mc.onRelease = function () {
-							trace("bing");
+						daysOfWeek_mc.attachMovie("bi.ui.Label", "day" + i + "_txt", i, {settings:{width:colWidth, text:daysOfWeek[i], fontSize:16, align:"center", _x:i * colWidth + colStart}});
+					}
+					
+					content_mc.calendarTab = _global.calendar[q];
+					var now = new Date();
+					now.setDate(now.getDate() - now.getDay() + 1);
+					now.setHours(0);
+					now.setMinutes(0);
+					now.setSeconds(0);
+					now.setMilliseconds(0);
+					content_mc.currentWeekStarting = now;
+					content_mc.update = function () {
+						this.arrows_mc.week_txt.text = "Week: " + this.currentWeekStarting.dateTimeFormat("d mmmm yyyy");
+						switch (this.calendarTab.view) {
+							case "filtered":
+								var listData = [];
+								for (var i=0; i<this.calendarTab.zones.length; i++) {
+									listData.push({label:this.calendarTab.zones[i].label});
+								}
+								break;
+							case "macros":
+								var listData = [];
+								for (var m=0; m<_global.macros.length; m++) {
+									var eventObj = new Object();
+									eventObj.label = _global.macros[m].name;
+									for (var i=0; i<_global.calendarData.length; i++) {
+										if (_global.macros[m].name == _global.calendarData[i].macroName) {
+											eventObj.time = _global.calendarData[i].time.dateTimeFormat(_global.settings.shortTimeFormat);
+											if (_global.calendarData[i].runTime.split(":").length > 1) {
+												eventObj.runTime = (Number(_global.calendarData[i].runTime.split(":")[0]) * 60 + Number(_global.calendarData[i].runTime.split(":")[1])) + " mins";
+											} else {
+												eventObj.runTime = "Once";
+											}
+											eventObj.pattern = _global.calendarData[i].pattern;
+											eventObj.skip = _global.calendarData[i].skip;
+											eventObj.eventObj = _global.calendarData[i];
+											break;
+										}
+									}
+									listData.push(eventObj);
+								}
+								break;
 						}
 						
-						var skip = false;
-						var skipData = listData[i].skip.split(",");
-						for (var p=0; p<skipData.length; p++) {
-							if (skipData[p] == currentDate) {
-								skip = true;
-								break;
+						var rows_mc = content_mc.createEmptyMovieClip("rows_mc", 50);
+						rows_mc._y = daysOfWeek_mc._y + 30;
+						for (var i=0; i<listData.length; i++) {
+							var row_mc = rows_mc.createEmptyMovieClip("row" + i + "_mc", i);
+							
+							var bg_mc = row_mc.createEmptyMovieClip("bg_mc", 0);
+							if (i % 2) {
+								bg_mc.beginFill(0x043B96, 30);				
+							} else {
+								bg_mc.beginFill(0xFFFFFF, 25);
+							}
+							bg_mc.drawRect(0, 0, content_mc.width, 40, 6);
+							bg_mc.endFill();
+							
+							row_mc._y = (row_mc._height + 2) * i;
+							
+							var label_txt = row_mc.attachMovie("bi.ui.Label", "label_txt", 10, {settings:{width:colStart, text:listData[i].label, fontSize:14, _x:4}});
+							label_txt._y = Math.round((bg_mc._height / 2) - (label_txt._height / 2));
+							
+							var eventObj = listData[i].eventObj;
+							
+							if (eventObj != undefined) {
+								for (var z=0; z<7; z++) {
+									var currentDate = new Date(this.currentWeekStarting.getTime());
+									currentDate.setDate(currentDate.getDate() + z);
+				
+									// check if day is within start/end range
+									if (currentDate >= eventObj.startDate && currentDate <= eventObj.endDate) {
+										// check if current day fits into defined pattern
+										if (listData[i].pattern[daysOfWeek[z].toLowerCase().substr(0, 3)] == 1) {			
+											var cell_mc = row_mc.createEmptyMovieClip("cell" + z + "_mc", z + 20);
+											cell_mc.eventObj = listData[i].eventObj;
+											cell_mc.dateObj = new Date();
+											cell_mc._x = z * colWidth + colStart;
+											
+											var hitArea_mc = cell_mc.createEmptyMovieClip("hitArea_mc", 0);
+											hitArea_mc.beginFill(0xFFCC00);
+											hitArea_mc.drawRect(0, 0, colWidth, bg_mc._height);
+											cell_mc.hitArea = hitArea_mc;
+											hitArea_mc._visible = false;
+											
+											var holder_mc = cell_mc.createEmptyMovieClip("holder_mc", 10);
+											
+											holder_mc.attachMovie("bi.ui.Icon", "icon_mc", 10, {settings:{iconName:"check", size:25, _y:2}});								
+											holder_mc.attachMovie("bi.ui.Label", "label_txt", 20, {settings:{width:colWidth - holder_mc.icon_mc._width - 20, fontSize:10, text:listData[i].runTime + "\n@ " + listData[i].time, _x:holder_mc.icon_mc._width + 4}});
+											
+											holder_mc._x = Math.round((hitArea_mc._width / 2) - (holder_mc._width / 2));
+											holder_mc._y = Math.round((hitArea_mc._height / 2) - (holder_mc._height / 2));
+							
+											cell_mc.onRelease = function () {
+												editCalendarEvent(this.eventObj, this.dateObj);
+											}
+											
+											var skip = false;
+											var skipData = listData[i].skip.split(",");
+											for (var p=0; p<skipData.length; p++) {
+												if (skipData[p] == currentDate.dateTimeFormat("yyyy-mm-dd")) {
+													skip = true;
+													break;
+												}
+											}
+											
+											if (skip) {
+												cell_mc.enabled = false;
+												holder_mc._alpha = 70;
+												var myColorMatrix_filter = new ColorMatrixFilter([0.3, 0.59, 0.11, 0, 0, 0.3, 0.59, 0.11, 0, 0, 0.3, 0.59, 0.11, 0, 0, 0, 0, 0, 1, 0]);
+												holder_mc.filters = [myColorMatrix_filter];
+											}
+										}
+									}
+								}
 							}
 						}
-						
-						if (skip) {
-							cell_mc.enabled = false;
-							holder_mc._alpha = 70;
-							var myColorMatrix_filter = new ColorMatrixFilter([0.3, 0.59, 0.11, 0, 0, 0.3, 0.59, 0.11, 0, 0, 0.3, 0.59, 0.11, 0, 0, 0, 0, 0, 1, 0]);
-							holder_mc.filters = [myColorMatrix_filter];
-						}
 					}
-				}
+					content_mc.update();
+					subscribe("events", content_mc);
+					break;
 			}
 		}
 	}

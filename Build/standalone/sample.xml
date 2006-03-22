@@ -88,13 +88,13 @@
 		<icon name="Authenticate" icon="locked" func="openAuthentication" buttonBgColour="0xCC0000" buttonBorderColour="0xEE0000" />
 	</appsBar>
 	<calendar>
-		<tab view="today" />
-		<tab view="filtered" macro="watering">
+		<tab label="Today" view="today" icon="calendar" />
+		<tab label="Watering" view="filtered" macro="watering" icon="sprinkler">
 			<zone key="WATER_FRONT_LAWN" label="Front lawn" />
 			<zone key="WATER_BACK_LAWN" label="Back lawn" />
 			<zone key="WATER_BACK_GARDEN" label="Back garden" />
 		</tab>
-		<tab view="macros" macro="*" />
+		<tab label="Macros" view="macros" macro="*" icon="atom" />
 	</calendar>
 	<controlPanelApps>
 		<app label="Calculator" program="calc.exe" />

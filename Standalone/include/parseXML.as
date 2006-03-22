@@ -63,10 +63,12 @@ defineCalendar= function (tabs) {
 	for (var tab=0; tab<tabs.length; tab++) {
 		var tabObj = new Object();
 		tabObj.view = tabs[tab].attributes.view;
+		tabObj.label = tabs[tab].attributes.label;
 		tabObj.macro = tabs[tab].attributes.macro;
-		tabObj.zone = new Array();
+		tabObj.icon = tabs[tab].attributes.icon;
+		tabObj.zones = new Array();
 		for (var zone=0; zone<tabs[tab].childNodes.length; zone++){
-			tabObj.zone.push({key:tabs[tab].childNodes[zone].key, label:tabs[tab].childNodes[zone].label});
+			tabObj.zones.push({key:tabs[tab].childNodes[zone].attributes.key, label:tabs[tab].childNodes[zone].attributes.label});
 		}
 		_global.calendar.push(tabObj);
 	}
