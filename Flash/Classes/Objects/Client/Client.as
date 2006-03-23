@@ -1,4 +1,5 @@
 ﻿class Objects.Client.Client extends Objects.BaseElement{
+	private var description:String;
 	private var attributes:Array;
 	private var adminPin:String;
 	private var applicationXML:String;
@@ -95,7 +96,7 @@
 		return "Client";
 	}
 	public function getName():String{
-		return "Client";
+		return description;
 	}
 	public function getData():Object{
 		return {attributes:attributes, dataObject:this, adminPin:adminPin, applicationXML:applicationXML, integratorHtml:integratorHtml};

@@ -4,6 +4,17 @@
 	private var settings:Objects.Server.Settings;
 	private var devices:Array;
 	private var treeNode:XMLNode;
+	private var clientDesigns:Objects.ClientDesigns;
+	public function Server(){
+		description = "";
+		devices = new Array();
+		controls = new Objects.Server.Controls();
+		settings = new Objects.Server.Settings();
+		clientDesigns = new Objects.ClientDesigns();
+	}
+	public function deleteSelf(){
+		treeNode.removeNode();
+	}			
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var device in devices){
@@ -50,6 +61,21 @@
 		}
 		return serverNode;
 	}
+	public function toProject():XMLNode {
+		var serverNode = new XMLNode(1, "CONFIG");
+		var descriptionNode = new XMLNode(1, "DESC");
+		descriptionNode.appendChild(new XMLNode(3, description));
+		serverNode.appendChild(descriptionNode);
+		var controlNode = new XMLNode(1,"CONTROLS");
+		controlNode.appendChild(controls.toXML());
+		controlNode.appendChild(settings.toXML());
+		serverNode.appendChild(controlNode);
+		for (var device in devices) {
+			serverNode.appendChild(devices[device].toXML());
+		}
+		serverNode.appendChild(clientDesigns.toXML());
+		return serverNode;
+	}	
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Server");
 		newNode.object = this;
@@ -60,6 +86,7 @@
 		for (var device in devices) {
 			newNode.appendChild(devices[device].toTree());
 		}
+		newNode.appendChild(clientDesigns.toTree());
 		treeNode = newNode;
 		return newNode;
 	}
@@ -67,7 +94,7 @@
 		return "Server";
 	}	
 	public function getName():String {
-		return "Server";
+		return description;
 	}
 	public function getData():Object {
 		return {description:description, devices:devices, dataObject:this};
@@ -192,6 +219,7 @@
 		controls = new Objects.Server.Controls();
 		settings = new Objects.Server.Settings();
 		devices = new Array();
+		clientDesigns = new Objects.ClientDesigns();
 		if (newData.nodeName == "CONFIG") {
 			for (var child in newData.childNodes) {
 				switch (newData.childNodes[child].nodeName) {
@@ -287,6 +315,9 @@
 					description = newData.childNodes[child].firstChild;
 					break;
 				case "JROBIN" :
+					break;
+				case "clientDesigns":
+					clientDesigns.setXML(newData.childNodes[child]);
 					break;
 				}
 			}
