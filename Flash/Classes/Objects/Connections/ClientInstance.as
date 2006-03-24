@@ -1,4 +1,4 @@
-﻿class Objects.Connections.ClientInstance{
+﻿class Objects.Instances.ClientInstance{
 	private var __ipAddress:String;
 	private var __monitorPort:Number;
 	private var clientType:String;

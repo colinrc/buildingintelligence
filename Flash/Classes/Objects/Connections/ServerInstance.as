@@ -1,4 +1,4 @@
-﻿class Objects.Connections.ServerInstance{
+﻿class Objects.Instances.ServerInstance{
 	private var __ipAddress:String;
 	private var __serverPort:Number;
 	private var __monitorPort:Number;
@@ -41,7 +41,7 @@
 		serverConnection = new Objects.ServerConnection();
 	}
 	public function toXML():XMLNode {
-		var serverNode = new XMLNode(1, "server");
+		var serverNode = new XMLNode(1, "serverInstance");
 		serverNode.attributes.serverName = serverName;
 		serverNode.attributes.ipAddress = __ipAddress;
 		serverNode.attributes.serverPort = __serverPort;
@@ -53,7 +53,7 @@
 	}
 	public function setXML(newData:XMLNode):Void {
 		clients = new Array();
-		if (newData.nodeName == "server") {
+		if (newData.nodeName == "serverInstance") {
 			if(newData.attributes.serverName != undefined){
 				serverName = newData.attributes.serverName;
 			}
@@ -67,13 +67,13 @@
 				__monitorPort = newData.attributes.monitorPort;
 			}			
 			for (var child in newData.childNodes) {
-				var newClient = new Objects.Connections.Client();
+				var newClient = new Objects.Instances.ClientInstance();
 				newClient.setXML(newData.childNodes[child]);
 				newClient.id = _global.formDepth++;
 				clients.push(newClient);
 			}
 		} else {
-			trace("ERROR, found node "+newData.nodeName+", expecting CONFIG");
+			trace("ERROR, found node "+newData.nodeName+", expecting serverInstance");
 		}
 	}	
 	public function toTree():XMLNode {
@@ -86,7 +86,7 @@
 		return newNode;
 	}
 	public function getName():String {
-		return serverName;
+		return "Server";
 	}
 	public function getClients():Object {
 		return {clients:clients,dataObject:this};
