@@ -29,6 +29,7 @@
         <DEVICE ACTIVE="Y" DEVICE_TYPE="PELCO" DESCRIPTION="Pelco Defs">
                 <CONNECTION>
                         <SERIAL ACTIVE="Y" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="4800" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+
                         <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
                         <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
                 </CONNECTION>
