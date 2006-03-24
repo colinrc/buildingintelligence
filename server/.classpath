@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/RXTX"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetty"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JRobin1.4.0"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Quartz1.5.2"/>
-	<classpathentry kind="lib" path="ext/RXTXcomm.jar"/>
-	<classpathentry kind="lib" path="ext/inspector-1.4.0.jar"/>
-	<classpathentry kind="lib" path="ext/xercesImpl.jar"/>
-	<classpathentry kind="lib" path="ext/xml-apis.jar"/>
-	<classpathentry kind="lib" path="ext/commons-pool-1.1.jar"/>
-	<classpathentry kind="lib" path="ext/commons-digester.jar"/>
-	<classpathentry kind="lib" path="ext/commons-beanutils.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Junit"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JDom"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JRobin"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jython"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetty6b12"/>
-	<classpathentry kind="output" path="Build/classes"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
