@@ -25,7 +25,7 @@ class Objects.WorkFlow {
 				var newNode = new XMLNode(1, "step");
 				newNode.attributes.stepOrder = steps[child].attributes.stepOrder;
 				newNode.attributes.label = steps[child].attributes.label;
-				newNode.attributes.description = steps[child].attributes.description.split("\\n").join("\n");
+				newNode.attributes.description = steps[child].attributes.description;
 				_global.right_tree.dataProvider.appendChild(newNode);
 			}
 		}
@@ -70,7 +70,7 @@ class Objects.WorkFlow {
 				if (key == steps[i].childNodes[child].attributes.key) {
 					newNode.attributes.label = steps[i].childNodes[child].attributes.label;
 					newNode.attributes.order = steps[i].childNodes[child].attributes.order;
-					newNode.attributes.description = steps[i].childNodes[child].attributes.description.split("\\n").join("\n");
+					newNode.attributes.description = steps[i].childNodes[child].firstChild.toString();
 					newNode.attributes.stepOrder = steps[i].attributes.stepOrder;
 					break;
 				}

@@ -4,13 +4,19 @@ historyViewer_btn._visible = false;
 /*************************************************************************/
 //Global style
 _global.style.setStyle("themeColor", "haloBlue");
+/********************************************************/
+// form holder placed in the correct spot
+this.createEmptyMovieClip("formContent_mc", 0);
+formContent_mc._x = 270;
+formContent_mc._y = 114;
+var form_mc;
 //Global variables
 _global.advanced = false;
 _global.unSaved = false;
 _global.formDepth = 0;
 _global.projectFileName = "";
-_global.serverDesigns = new Objects.ServerDesigns();
-_global.serverInstances = new Objects.ServerInstances();
+_global.serverDesign = new Objects.Server.Server();
+_global.serverInstance = new Objects.Instances.ServerInstance();
 //_global.history = new Objects.History();
 /*Workflow tree variables and initialization*/
 var right_tree = workFlow_split.setFirstContents("Tree", "right_tree", 0);
@@ -19,6 +25,7 @@ _global.right_tree = right_tree;
 _global.infoflow_ta = infoflow_ta;
 _global.infoflow_ta.editable = false;
 _global.infoflow_ta.wordWrap = true;
+_global.infoflow_ta.html = true;
 _global.workflow = new Objects.WorkFlow();
 //Create global reference to project/design tree
 var left_tree:mx.controls.Tree;
@@ -95,17 +102,21 @@ project_xml.onLoad = function(success) {
 		_global.project[attrib] = project_xml.firstChild.attributes[attrib];
 	}
 	//Append list of server designs and list of server implementations
-	_global.serverDesigns = new Objects.ServerDesigns();
-	_global.serverInstances = new Objects.ServerInstances();
+	_global.serverDesign = new Objects.Server.Server();
+	_global.serverInstance = new Objects.Instances.ServerInstance();
 	for (var child in project_xml.firstChild.childNodes) {
 		switch (project_xml.firstChild.childNodes[child].nodeName) {
-		case "serverDesigns":
-			_global.serverDesigns.setXML(project_xml.firstChild.childNodes[child]);
-			designTree_xml.appendChild(_global.serverDesigns.toTree());
+		case "CONFIG":
+			_global.serverDesign.setXML(project_xml.firstChild.childNodes[child]);
+			designTree_xml.appendChild(_global.serverDesign.toTree());
+			var clients = _global.serverDesign.getClients();
+			for(var client in clients){
+				designTree_xml.appendChild(clients[client].toTree());
+			}
 			break;		
-		case "serverInstances":
-			_global.serverInstances.setXML(project_xml.firstChild.childNodes[child]);
-			controlTree_xml.appendChild(_global.serverInstances.toTree());
+		case "serverInstance":
+			_global.serverInstance.setXML(project_xml.firstChild.childNodes[child]);
+			controlTree_xml.appendChild(_global.serverInstance.toTree());
 			break;					
 		}
 	}
@@ -189,8 +200,8 @@ _global.saveFile = function (saveType:String):Void {
 					}
 				}
 				/*Append project contents to project node*/
-				newProjectXML.appendChild(_global.serverDesigns.toXML());
-				newProjectXML.appendChild(_global.serverInstances.toXML());
+				newProjectXML.appendChild(_global.serverDesign.toProject());
+				newProjectXML.appendChild(_global.serverInstance.toProject());
 				mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
 				_global.unSaved = false;
 			}
@@ -211,6 +222,38 @@ _global.saveFile = function (saveType:String):Void {
 			}
 			mdm.Dialogs.prompt("File saved to: " + file);
 		}
+	}
+}
+/****************************************************************/
+function searchProject(treeNode:Object, object:Object):Object {
+	if (treeNode.object == object) {
+		return treeNode;
+	} else {
+		for (var child in treeNode.childNodes) {
+			var foundNode = searchProject(treeNode.childNodes[child], object);
+			if (foundNode != undefined) {
+				return foundNode;
+			}
+		}
+		return undefined;
+	}
+}
+/********************************************************/
+_global.refreshTheTree = function() {
+	//var oBackupDP = _global.left_tree.dataProvider;
+	_global.left_tree.dataProvider = null;
+	// clear
+	_global.left_tree.dataProvider = designTree_xml;
+	_global.workflow.buildWorkflowTree();
+	createWorkflow(designTree_xml);
+	oBackupDP = _global.right_tree.dataProvider;
+	_global.right_tree.dataProvider = null;
+	_global.right_tree.dataProvider = oBackupDP;
+};
+function createWorkflow(inNode:Object) {
+	_global.workflow.addNode(inNode.object.getKey(), inNode);
+	for (var child in inNode.childNodes) {
+		createWorkflow(inNode.childNodes[child]);
 	}
 }
 /*************************************************************************
@@ -250,91 +293,6 @@ _global.writeXMLFile = function(inNode:XMLNode, depth:Number):String  {
 		return tempString + "/> \n";
 	}
 };
-/*************************************************************************/
-//create the tooltip clip 
-_root.createEmptyMovieClip("ToolTip", 15999);
-// add the tooltip background box 
-_root.ToolTip.createEmptyMovieClip("TipBackground", 1);
-with (_root.ToolTip.TipBackground) {
-	beginFill(0xCCCCCC, 100);
-	lineStyle(1, 0x666666, 100);
-	moveTo(0, 0);
-	lineTo(110, 0);
-	lineTo(110, 20);
-	lineTo(0, 20);
-	lineTo(0, 0);
-	endFill();
-}
-// add the tooltip textfield. you could easily apply a 
-// textFormat to this to customise the text more.
-_root.ToolTip.createTextField("TipText", 2, 2, 0, 100, 20);
-_root.ToolTip.TipText.type = "dynamic";
-// mouse listener for tooltips 
-TipMover = new Object();
-TipMover.onMouseMove = function() {
-	ToolTip._x = _xmouse;
-	ToolTip._y = _ymouse + 20;
-};
-// adds a text-description of the buttons function 
-function DisplayTip(tip) {
-	Mouse.addListener(TipMover);
-	ToolTip._x = _xmouse;
-	ToolTip._y = _ymouse + 20;
-	ToolTip.swapDepths(15999);
-	ToolTip._width = 100;
-	ToolTip._height = 20;
-	ToolTip._alpha = 100;
-	ToolTip.TipText.text = tip;
-	ToolTip.TipText.width = ToolTip.TipText.textWidth;
-	ToolTip.TipBackground._width = ToolTip.TipText.textWidth + 8;
-}
-// hide tip 
-function CloseTip() {
-	Mouse.removeListener(TipMover);
-	ToolTip._alpha = 100;
-	ToolTip._x = 0;
-	ToolTip._y = 0;
-	ToolTip._width = 1;
-	ToolTip._height = 1;
-}
-// hide the tip initially 
-CloseTip();
-/********************************************************/
-// form holder placed in the correct spot
-this.createEmptyMovieClip("formContent_mc", 0);
-formContent_mc._x = 270;
-formContent_mc._y = 114;
-var form_mc;
-/********************************************************/
-_global.comboSetSelected = function(combo, val, field) {
-	for (var i = 0; i < combo.length; i++) {
-		if (field.length && combo.getItemAt(i)[field] == val) {
-			combo.selectedIndex = i;
-			break;
-		} else if (combo.getItemAt(i) == val) {
-			combo.selectedIndex = i;
-			break;
-		}
-	}
-};
-/********************************************************/
-_global.refreshTheTree = function() {
-	//var oBackupDP = _global.left_tree.dataProvider;
-	_global.left_tree.dataProvider = null;
-	// clear
-	_global.left_tree.dataProvider = designTree_xml;
-	_global.workflow.buildWorkflowTree();
-	createWorkflow(designTree_xml);
-	oBackupDP = _global.right_tree.dataProvider;
-	_global.right_tree.dataProvider = null;
-	_global.right_tree.dataProvider = oBackupDP;
-};
-function createWorkflow(inNode:Object) {
-	_global.workflow.addNode(inNode.object.getKey(), inNode);
-	for (var child in inNode.childNodes) {
-		createWorkflow(inNode.childNodes[child]);
-	}
-}
 /****************************************************************************/
 //Application exit handling
 mdm.Application.enableExitHandler(appExit);
@@ -350,6 +308,18 @@ function appExit():Void {
 	}
 	mdm.Application.exit("ask", "Are you sure you want to Exit?");
 }
+/********************************************************/
+_global.comboSetSelected = function(combo, val, field) {
+	for (var i = 0; i < combo.length; i++) {
+		if (field.length && combo.getItemAt(i)[field] == val) {
+			combo.selectedIndex = i;
+			break;
+		} else if (combo.getItemAt(i) == val) {
+			combo.selectedIndex = i;
+			break;
+		}
+	}
+};
 /****************************************************************/
 mdm.Menu.Main.menuType = "function";
 mdm.Menu.Main.insertHeader("File");
@@ -368,11 +338,16 @@ mdm.Menu.Main.insertItem("Help", "Help");
 mdm.Menu.Main.onMenuClick_New_Project = function() {
 	_global.projectFileName = "";
 	_global.project = new Object();
-	_global.serverDesigns = new Objects.ServerDesigns();
-	_global.serverInstances = new Objects.ServerInstances();	
-	setView("home");
+	_global.serverDesign = new Objects.Server.Server();
+	_global.serverInstance = new Objects.Instances.ServerInstance();
 	designTree_xml = new XML();
-	designTree_xml.appendChild(serverDesigns.toTree());
+	designTree_xml.appendChild(serverDesign.toTree());	
+	var clients = _global.serverDesign.getClients();
+	for(var client in clients){
+		designTree_xml.appendChild(clients[client].toTree());
+	}
+	controlTree_xml.appendChild(_global.serverInstance.toTree());
+	setView("home");
 	_global.refreshTheTree();
 	setButtons(true);
 };
@@ -459,11 +434,7 @@ setView = function (view, dataObj) {
 		left_tree._visible = true;
 		workFlow_split._visible = true;
 		tabBody_mc._visible = true;
-		var label = "Project Design";
-		if (tabs == undefined) {
-			tabs = [{label:"Project Design"}];
-		}
-		tabs_tb.dataProvider = tabs;
+		tabs_tb.dataProvider = [{label:"Project Design"}];
 		tabs_tb.selectedIndex = 0;
 		left_tree.dataProvider = designTree_xml;
 		left_tree.labelFunction = function(item_obj:Object):String  {
@@ -487,12 +458,8 @@ setView = function (view, dataObj) {
 		left_tree.labelFunction = function(item_obj:Object):String  {
 			return item_obj.object.getName();
 		};
-		tabs_tb.dataProvider = [{label:"Control", view:"control.servercontrols"}, {label:"Clients", view:"control.clients"}, {label:"Log", view:"control.serverLog"}, {label:"IR", view:"control.ir"}, {label:"Publish", view:"control.publish"}];
-		tabs_tb.selectedIndex = 0;
-		view = "control.servercontrols";
-		form_mc = formContent_mc.attachMovie("forms." + view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());
-		//Need to rewrite how a view is attached to a server object
-		//_global.server.attachView(form_mc);
+		tabs_tb.dataProvider = [{label:"Project Command and Control"}];
+		tabs_tb.selectedIndex = 0;		
 		break;
 		/***********************************************************************************/
 	case "none" :
@@ -526,6 +493,9 @@ tabs_tb.change = function(eventObj) {
 		var tempObject = form_mc.dataObject;
 		form_mc.removeMovieClip();
 		switch (eventObj.target.selectedItem.label) {
+		case "Client Designs" :
+			form_mc = formContent_mc.attachMovie("forms.project.clientDesigns", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {clients:tempObject.getClients(), dataObject:tempObject});
+			break;		
 		case "XML" :
 			form_mc = formContent_mc.attachMovie("forms.project.xml", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {node:tempObject.toXML(), dataObject:tempObject});
 			break;
@@ -595,6 +565,18 @@ leftTreeListener.change = function(eventObj) {
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview", view:"forms.project.client.preview"}];
 			tabs_tb.selectedIndex = 0;
 			break;
+		case "Server_Design":
+			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());		
+			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"Client Designs", view:"forms.project.clientDesigns"}, {label:"XML", view:"forms.project.xml"}];
+			tabs_tb.selectedIndex = 0;
+			break;
+		case "Server":
+			form_mc = formContent_mc.attachMovie("forms.control.servercontrols", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());		
+			tabs_tb.dataProvider = [{label:"Control", view:"control.servercontrols"}, {label:"Clients", view:"control.clients"}, {label:"Log", view:"control.serverLog"}, {label:"IR", view:"control.ir"}, {label:"Publish", view:"control.publish"}];
+			tabs_tb.selectedIndex = 0;
+			//Need to rewrite how a view is attached to a server object
+			//_global.server.attachView(form_mc);			
+			break;		
 		default :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}];
@@ -648,7 +630,11 @@ buttonListener2.click = function(eventObj) {
 	CloseTip();
 	var tempObject = _global.left_tree.selectedNode.object;
 	designTree_xml = new XML();
-	designTree_xml.appendChild(serverDesigns.toTree());
+	designTree_xml.appendChild(serverDesign.toTree());
+	var clients = _global.serverDesign.getClients();
+	for(var client in clients){
+		designTree_xml.appendChild(clients[client].toTree());
+	}	
 	_global.refreshTheTree();
 	if (_global.advanced) {
 		DisplayTip("To Basic");
@@ -672,20 +658,6 @@ buttonListener2.click = function(eventObj) {
 	left_tree.selectedNode = foundNode;
 };
 advanced_btn.addEventListener("click", buttonListener2);
-/****************************************************************/
-function searchProject(treeNode:Object, object:Object):Object {
-	if (treeNode.object == object) {
-		return treeNode;
-	} else {
-		for (var child in treeNode.childNodes) {
-			var foundNode = searchProject(treeNode.childNodes[child], object);
-			if (foundNode != undefined) {
-				return foundNode;
-			}
-		}
-		return undefined;
-	}
-}
 /****************************************************************/
 function setButtons(enabled:Boolean) {
 	home_btn.enabled = enabled;
@@ -859,4 +831,53 @@ _global.right_tree.addEventListener('nodeClose', treeListener);
 _global.right_tree.addEventListener('nodeOpen', treeListener);
 //_global.workflow.buildWorkflowTree();
 /************************************************************************/
+//create the tooltip clip 
+_root.createEmptyMovieClip("ToolTip", 15999);
+// add the tooltip background box 
+_root.ToolTip.createEmptyMovieClip("TipBackground", 1);
+with (_root.ToolTip.TipBackground) {
+	beginFill(0xCCCCCC, 100);
+	lineStyle(1, 0x666666, 100);
+	moveTo(0, 0);
+	lineTo(110, 0);
+	lineTo(110, 20);
+	lineTo(0, 20);
+	lineTo(0, 0);
+	endFill();
+}
+// add the tooltip textfield. you could easily apply a 
+// textFormat to this to customise the text more.
+_root.ToolTip.createTextField("TipText", 2, 2, 0, 100, 20);
+_root.ToolTip.TipText.type = "dynamic";
+// mouse listener for tooltips 
+TipMover = new Object();
+TipMover.onMouseMove = function() {
+	ToolTip._x = _xmouse;
+	ToolTip._y = _ymouse + 20;
+};
+// adds a text-description of the buttons function 
+function DisplayTip(tip) {
+	Mouse.addListener(TipMover);
+	ToolTip._x = _xmouse;
+	ToolTip._y = _ymouse + 20;
+	ToolTip.swapDepths(15999);
+	ToolTip._width = 100;
+	ToolTip._height = 20;
+	ToolTip._alpha = 100;
+	ToolTip.TipText.text = tip;
+	ToolTip.TipText.width = ToolTip.TipText.textWidth;
+	ToolTip.TipBackground._width = ToolTip.TipText.textWidth + 8;
+}
+// hide tip 
+function CloseTip() {
+	Mouse.removeListener(TipMover);
+	ToolTip._alpha = 100;
+	ToolTip._x = 0;
+	ToolTip._y = 0;
+	ToolTip._width = 1;
+	ToolTip._height = 1;
+}
+// hide the tip initially 
+CloseTip();
+/*************************************************************************/
 stop();

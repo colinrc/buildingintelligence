@@ -4,13 +4,20 @@
 	private var settings:Objects.Server.Settings;
 	private var devices:Array;
 	private var treeNode:XMLNode;
-	private var clientDesigns:Objects.ClientDesigns;
+	private var clients:Array;
 	public function Server(){
 		description = "";
 		devices = new Array();
 		controls = new Objects.Server.Controls();
 		settings = new Objects.Server.Settings();
-		clientDesigns = new Objects.ClientDesigns();
+		clients = new Array();
+		/**Append default client device here*/		
+		var new_client = new Objects.Client.Client();
+		new_client.setXML(_global.default_client_xml.firstChild);
+		//mdm.Dialogs.prompt(_global.default_client_xml);
+		new_client.description = "Client-1";
+		new_client.id = _global.formDepth++;
+		clients.push(new_client);		
 	}
 	public function deleteSelf(){
 		treeNode.removeNode();
@@ -73,11 +80,13 @@
 		for (var device in devices) {
 			serverNode.appendChild(devices[device].toXML());
 		}
-		serverNode.appendChild(clientDesigns.toXML());
+		for (var client in clients) {
+			serverNode.appendChild(clients[client].toXML());
+		}		
 		return serverNode;
 	}	
 	public function toTree():XMLNode {
-		var newNode = new XMLNode(1, "Server");
+		var newNode = new XMLNode(1, "Server_Design");
 		newNode.object = this;
 		if(_global.advanced){
 			newNode.appendChild(controls.toTree());
@@ -86,7 +95,6 @@
 		for (var device in devices) {
 			newNode.appendChild(devices[device].toTree());
 		}
-		newNode.appendChild(clientDesigns.toTree());
 		treeNode = newNode;
 		return newNode;
 	}
@@ -94,10 +102,63 @@
 		return "Server";
 	}	
 	public function getName():String {
-		return description;
+		return "Server Design";
 	}
 	public function getData():Object {
 		return {description:description, devices:devices, dataObject:this};
+	}
+	public function getClients():Array{
+		return clients;
+	}
+	public function setClients(newData:Object){
+		/*Close the left node, if nodes are added while node is open graphical glitches occur*/
+		_global.left_tree.setIsOpen(treeNode, false);		
+		//Process client list changes....
+		/*Create an array to store new clients*/
+		var newClients = new Array();
+		/*For each client in incoming object*/
+		for (var index in newData.clients) {
+			/*If a client object in incoming object does not have unique id*/
+			if (newData.clients[index].id == undefined) {
+				/*Assign object new unique id*/
+				newData.clients[index].id = _global.formDepth++;
+				/*Append new client to new client list*/
+				newClients.push({description:newData.clients[index].description,id:newData.clients[index].id});
+			}
+		}
+		/* Find all clients that have been removed */
+		for (var client in clients) {
+			/*Prime flag to false*/
+			var found = false;
+			/*For each client in incoming object*/
+			for (var index in newData.clients) {
+				/*If client id exists*/
+				if (clients[client].id == newData.clients[index].id) {
+					/*Update description*/
+					clients[client].description = newData.clients[index].description;
+					found = true;
+				}
+			}
+			/*If existing client is not a member of incoming object*/
+			if (found == false) {
+				/*Delete client*/
+				clients[client].deleteSelf();
+				/*Remove reference*/
+				clients.splice(parseInt(client), 1);
+			}
+		}
+		for (var newClient in newClients) {
+			/*Add new Clients*/
+			/*Reference Vanilla Object*/
+			var new_client = new Objects.Client.Client();
+			new_client.setXML(_global.default_client_xml);
+			new_client.description = newClients[newClient].description;
+			new_client.id = newClients[newClient].id;
+			//Append global tree
+			//treeNode.appendChild(new_client.toTree());
+			clients.push(new_client);
+		}
+		_global.left_tree.setIsOpen(treeNode, true);		
 	}
 	public function setData(newData:Object) {
 		_global.left_tree.setIsOpen(treeNode, false);		
@@ -219,7 +280,7 @@
 		controls = new Objects.Server.Controls();
 		settings = new Objects.Server.Settings();
 		devices = new Array();
-		clientDesigns = new Objects.ClientDesigns();
+		clients = new Array();
 		if (newData.nodeName == "CONFIG") {
 			for (var child in newData.childNodes) {
 				switch (newData.childNodes[child].nodeName) {
@@ -316,8 +377,11 @@
 					break;
 				case "JROBIN" :
 					break;
-				case "clientDesigns":
-					clientDesigns.setXML(newData.childNodes[child]);
+				case "application":
+					var newClient = new Objects.Client.Client();
+					newClient.setXML(newData.childNodes[child]);
+					newClient.id = _global.formDepth++;
+					clients.push(newClient);
 					break;
 				}
 			}

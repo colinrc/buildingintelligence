@@ -6,7 +6,7 @@
 	public function ServerInstances(){
 		servers = new Array();
 		/**Append default server device here*/		
-		var new_server = new Objects.Connections.Server();
+		var new_server = new Objects.Instances.ServerInstance();
 		new_server.setXML(_global.default_server_xml);
 		new_server.description = "Default Server";
 		new_server.id = _global.formDepth++;
@@ -30,7 +30,7 @@
 		servers = new Array();
 		if (newData.nodeName == "serverInstances") {
 			for (var child in newData.childNodes) {
-				var newServer = new Objects.Connections.Server();
+				var newServer = new Objects.Instances.ServerInstance();
 				newServer.setXML(newData.childNodes[child]);
 				newServer.id = _global.formDepth++;
 				servers.push(newServer);
@@ -99,7 +99,7 @@
 		for (var newServer in newServers) {
 			/*Add new Servers*/
 			/*Reference Vanilla Object*/
-			var new_server = new Objects.Connections.Server();
+			var new_server = new Objects.Instances.ServerInstance();
 			new_server.setXML(_global.default_server_xml);
 			new_server.description = newServers[newServer].description;
 			new_server.id = newServers[newServer].id;
