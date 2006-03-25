@@ -66,4 +66,62 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="templates" >
+	<copy todir="templates">
+	    <fileset dir="../" includes="**/*.xsd"  excludes="**/templates/**" />
+	    <fileset dir="../" includes="**/*.dtd"  excludes="**/templates/**" />
+	    <fileset dir="../" includes="**/config_ref.xml" excludes="**/templates/**" />
+	    <fileset dir="../" includes="**/datafiles/*.xml" excludes="**/templates/**" />
+	</copy>
+    </target>
+
+    <target name="increment" depends="" description="Increments build number and creates a zip file.">
+        <propertyfile file="src/au/com/BI/Home/my.properties" >
+          <entry  key="minor_version" type="int" operation="+" value="1" />
+        </propertyfile>
+        <property file="src/au/com/BI/Home/my.properties" />
+        <echo message="Version number now ${major_version}${minor_version}" />
+    </target>
+
+    <target name="dist" depends="increment,jar,javadoc,templates" >
+	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+		update="false"
+		basedir="dist" 
+		includes = "*.jar" />
+	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+		update="true"
+		basedir="."
+		includes = "my.properties" />
+	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+		update="true"
+		basedir="."
+		includes = "templates/**" />	
+	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+		update="true"
+		basedir="."
+		includes = "config/config_ref.xml" />	
+    </target>
+    
+    <target name="dist-libs"  >
+         <property file="src/au/com/BI/Home/my.properties" />
+	<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+		update="false"
+		basedir="dist" 
+		includes = "lib/*.jar" />
+        <copy todir="dist">
+	    <fileset dir="." includes="*.dll" />
+	    <fileset dir="." includes="*.jnilib" />
+	</copy>
+	<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+		update="true"
+		basedir="dist"
+		includes = "*.dll" />
+        <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+		update="true"
+		basedir="dist"
+		includes = "*.jnilib" />
+
+    </target>
+
+
 </project>
