@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/RXTX"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetty"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JRobin1.4.0"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Quartz1.5.2"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetty6b12"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JRobin"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/RXTX2.1-7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JDom"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Junit"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jython"/>
+	<classpathentry kind="output" path="build/classes"/>
 </classpath>
