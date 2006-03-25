@@ -45,6 +45,9 @@ public class JettyHandler {
             updateContextHandler.setWar(docRoot+"/webapps/"+"eLife");
             */
 
+            /*
+             * Switched to web app 
+             *
             // HTML Security realm
             HashUserRealm webPass = new HashUserRealm();
             webPass.setName("eLife");
@@ -85,7 +88,7 @@ public class JettyHandler {
             server.addHandler(servletSec);
 
             
-            /*
+            
             
             // logout servlet
             ServletHandler logoutHandler = new ServletHandler ();   
@@ -107,8 +110,8 @@ public class JettyHandler {
             logoutSec.setConstraintMappings(new ConstraintMapping[] {logoutConstraintMap});
             logoutSec.setHandler(logoutHandler);
             server.addHandler(logoutSec);
-*/
-            
+
+            */
             // HTML static handler
             ContextHandler mainContextHandler = new ContextHandler ();
             mainContextHandler.setContextPath("/");
@@ -118,14 +121,17 @@ public class JettyHandler {
 
             ServletHolder defServlet = servletHandler.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/*");
             mainContextHandler.setHandler(servletHandler);
-            // server.addHandler(mainContextHandler);
+            
+            server.addHandler(mainContextHandler); // added to security handler if security is needed
             
             
+            /*
             // HTML Security config
             SecurityHandler overallSec = new SecurityHandler();
             overallSec.setServer(server);
             overallSec.setAuthMethod(Constraint.__BASIC_AUTH);
-            overallSec.setUserRealm(webPass);
+            overallSec.setUserRealm(webPass); Temporarily switch off security for static content
+            
             ConstraintMapping overallConstraintMap = new ConstraintMapping();
             overallConstraintMap.setPathSpec("/");
             Constraint overallConstraint = new Constraint();
@@ -136,7 +142,7 @@ public class JettyHandler {
             overallSec.setConstraintMappings(new ConstraintMapping[] {overallConstraintMap});
             overallSec.setHandler(mainContextHandler);
             server.addHandler(overallSec);
-
+            */
 
             server.setStopAtShutdown(true);
             

@@ -36,6 +36,7 @@ public class Bootstrap {
     protected String version;
     protected String docRoot = "";
     protected int jettyPort = 80;
+    private boolean jettyActive = false;
     protected boolean SSL = false;
     
     public Bootstrap() {
@@ -151,6 +152,10 @@ public class Bootstrap {
                     logger.log(Level.WARNING,"Jetty document root is not configured, please add DOCROOT to the JETTY element.");
                 }
                 String jettyPortStr = jettyConfig.getAttributeValue("PORT");
+                String jettyActiveStr = jettyConfig.getAttributeValue("ACTIVE");
+                if (jettyActiveStr != null && jettyActiveStr.equals ("Y")){
+                	setJettyActive(true);
+                }
                 String SSLStr = jettyConfig.getAttributeValue("SSL");
                 if (SSLStr == null) SSL = false;
                 if (jettyPortStr != null) {
@@ -330,6 +335,14 @@ public class Bootstrap {
     
     public int getJettyPort() {
         return jettyPort;
+    }
+
+    public boolean isJettyActive() {
+        return jettyActive;
+    }
+
+    public void setJettyActive(boolean jettyActive) {
+        this.jettyActive = jettyActive;
     }
     
     

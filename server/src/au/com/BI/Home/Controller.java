@@ -189,17 +189,19 @@ public class Controller {
 		macroModel.setAlarmLogging(alarmLogging);
 		deviceModels.add( macroModel);
 		macroModel.setInstanceID(deviceModels.size()-1);
-
-		jettyHandler = new JettyHandler ();
-		jettyHandler.setPort(bootstrap.getJettyPort());
-		jettyHandler.setDocRoot(bootstrap.getDocRoot());
-		jettyHandler.setSSL(bootstrap.isSSL());
-		jettyHandler.setCache(cache);
-		try {
-			jettyHandler.start();
-		} catch (Exception ex){
-			logger.log (Level.SEVERE,"Could not start web server " + ex.getMessage());
-		}
+                
+                if (bootstrap.isJettyActive()){
+                    jettyHandler = new JettyHandler ();
+                    jettyHandler.setPort(bootstrap.getJettyPort());
+                    jettyHandler.setDocRoot(bootstrap.getDocRoot());
+                    jettyHandler.setSSL(bootstrap.isSSL());
+                    jettyHandler.setCache(cache);
+                    try {
+                            jettyHandler.start();
+                    } catch (Exception ex){
+                            logger.log (Level.SEVERE,"Could not start web server " + ex.getMessage());
+                    }
+                    }
     }
 
 	public void setUpClients() throws CommsFail {

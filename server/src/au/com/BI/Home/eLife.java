@@ -45,9 +45,9 @@ public class eLife {
 	    String eSmart_install = properties.getProperty("eSmart_install");
 
 
-		System.out.println ("Launching eLife V" + major_version + "." + 
+		System.out.println ("Launching eLife V" + major_version +  
 				minor_version);
-		logger.log (Level.INFO,"Launching eLife V" + major_version + "." + 
+		logger.log (Level.INFO,"Launching eLife V" + major_version +  
 				minor_version);
 
 		try {
