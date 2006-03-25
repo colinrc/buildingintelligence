@@ -171,7 +171,7 @@
         </DEVICE>
 
         !-- ______________________________________  CBUS DEFS  ____________________  -->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Lights">
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Lights">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
