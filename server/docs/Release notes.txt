@@ -1,3 +1,25 @@
+
+
+''' General '''
+
+Restructured project to support netbeans or eclipse layout.
+
+Modified ant build files for netbeans or eclipse builds.
+
+Release is 1.5 or 1.4 compatable, when used with the included libraries.
+
+Update ant build files to include libraries on major version releases
+
+
+''' Jetty '''
+
+Incorporated Jetty webserver. Configuration is via the bootstrap file, currently SSL is not available.
+
+{{{
+  <JETTY DOCROOT="www" PORT="8081" SSL="N" ACTIVE="Y" />
+}}}
+
+
 == Released [attachment:wiki:SoftwareReleases:elife-server-1.5b15.zip V1.5b15] ==
 
 ''' Dynalite '''
