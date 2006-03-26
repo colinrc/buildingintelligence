@@ -65,7 +65,7 @@ public class Model extends BaseModel implements DeviceModel {
 				 DeviceType device = (DeviceType)eachDev.next();
 				 String retCode = "";
 				 
-				 if (device.getDeviceType() == DeviceType.CONTACT_CLOSURE) {
+				 if (device.getDeviceType() == DeviceType.TOGGLE_OUTPUT) {
 					 retCode = buildToggleOutput ((DeviceType)device,command);
 				 }	
 				 
