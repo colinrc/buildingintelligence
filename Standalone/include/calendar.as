@@ -608,3 +608,275 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		content_mc.cancel_btn.addEventListener("press", buttonListener);
 	}
 }
+
+newRecurringEvent = newRecurringEvent = function (calendarObj, dateObj) {
+	if (calendarObj != undefined) {
+		var mode = "edit";
+		var window_mc = showWindow({width:700, height:455, title:"Edit event: " + calendarObj.title, iconName:"calendar", align:"center"});
+	} else {
+		var mode = "create";
+		var calendarObj = new Object();
+		calendarObj.isNew = true;
+		calendarObj.id = "";
+		calendarObj.eventType = "once";
+		calendarObj.title = "";
+		calendarObj.alarm = false;
+		calendarObj.memo = "";
+		calendarObj.category = "";
+		calendarObj.macroName = "";
+		calendarObj.filter = "";
+		calendarObj.time = new Date();
+		calendarObj.startDate = dateObj;
+		calendarObj.endDate = new Date(dateObj.getFullYear() + 1, dateObj.getMonth(), dateObj.getDate(), dateObj.getHours(), dateObj.getMinutes(), dateObj.getSeconds())
+		calendarObj.pattern = new Object();
+		var window_mc = showWindow({width:700, height:455, title:"Create new event:", iconName:"calendar", align:"center"});
+	}
+	
+	var content_mc = window_mc.content_mc;
+	
+	content_mc.attachMovie("bi.ui.Label", "title_lb", 10, {settings:{width:80, text:"Title:"}});
+	content_mc.attachMovie("bi.ui.TextInput", "title_ti", 15, {settings:{width:180, text:calendarObj.title, _x:90, maxChars:20}});
+	
+	content_mc.attachMovie("bi.ui.Label", "time_lb", 20, {settings:{width:80, text:"Time:", _y:35}});
+	content_mc.attachMovie("bi.ui.TimePicker", "time_tp", 25, {settings:{width:180, time:calendarObj.time, _x:90, _y:35}});
+	
+	content_mc.attachMovie("bi.ui.Label", "alarm_lb", 30, {settings:{width:80, text:"Alarm:", _y:70}});
+	content_mc.attachMovie("bi.ui.CheckBox", "alarm_cb", 35, {settings:{_x:90, _y:70, selected:calendarObj.alarm}});
+
+	content_mc.attachMovie("bi.ui.Label", "msg_lb", 40, {settings:{width:80, text:"Message:", _y:105}});
+	content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 45, {settings:{width:180, height:210, text:calendarObj.memo, _x:90, _y:105, maxChars:200}});
+	
+	content_mc.attachMovie("bi.ui.Label", "category_lb", 50, {settings:{width:80, text:"Category:", _y:320}});
+	content_mc.attachMovie("bi.ui.ItemPicker", "category_ip", 55, {settings:{width:180, items:[{label:"", value:""}, {label:"Holiday", value:"holiday"}, {label:"Birthday", value:"birthday"}, {label:"Work", value:"work"}, {label:"Reminder", value:"reminder"}], _x:90, _y:320}});
+	content_mc.category_ip.selectedItem = calendarObj.category;
+	
+	content_mc.attachMovie("bi.ui.Label", "recurrence_lb", 60, {settings:{width:100, text:"Recurrence:", _x:280}});
+	
+	content_mc.attachMovie("bi.ui.RadioButton", "once_rb", 70, {settings:{width:110, label:"Once", data:"once", _x:280, _y:35, groupName:"period"}});
+	content_mc.attachMovie("bi.ui.RadioButton", "hourly_rb", 71, {settings:{width:110, label:"Hourly", data:"hourly", _x:420, _y:35, groupName:"period"}});
+	content_mc.attachMovie("bi.ui.RadioButton", "daily_rb", 72, {settings:{width:110, label:"Daily", data:"daily", _x:280, _y:70, groupName:"period"}});
+	content_mc.attachMovie("bi.ui.RadioButton", "weekly_rb", 73, {settings:{width:110, label:"Weekly", data:"weekly", _x:420, _y:70, groupName:"period"}});
+	content_mc.attachMovie("bi.ui.RadioButton", "monthly_rb", 74, {settings:{width:110, label:"Monthly", data:"monthly", _x:280, _y:105, groupName:"period"}});
+	content_mc.attachMovie("bi.ui.RadioButton", "yearly_rb", 75, {settings:{width:110, label:"Yearly", data:"yearly", _x:420, _y:105, groupName:"period"}});
+	content_mc.period.data = calendarObj.eventType;
+	
+	var periodListener = new Object();
+	periodListener.click = function (eventObj) {
+		var tabs_mc = eventObj.target.selection._parent.tabs_mc;
+		tabs_mc.selectedTab._visible = false;
+		tabs_mc.selectedTab = tabs_mc[eventObj.target.data + "_mc"];
+		tabs_mc.selectedTab._visible = true;
+	}
+	content_mc.period.addEventListener("click", periodListener);
+	
+	var tabs_mc = content_mc.createEmptyMovieClip("tabs_mc", 80);
+	tabs_mc._x = 280;
+	tabs_mc._y = 150;
+	
+	// hourly tab
+	var tab_mc = tabs_mc.createEmptyMovieClip("hourly_mc", 0);
+	tab_mc.attachMovie("bi.ui.Label", "every_lb", 0, {settings:{width:200, text:"Every         hour(s)"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numHours_ti", 5, {settings:{width:30, text:"1", _x:50, maxChars:1, inputType:"numeric"}});
+	if (calendarObj.eventType == "hourly") {
+		tab_mc.numHours_ti.text = calendarObj.pattern.recur;
+	}
+	tab_mc._visible = false;
+	
+	// daily tab
+	var tab_mc = tabs_mc.createEmptyMovieClip("daily_mc", 10);
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyXdays_rb", 0, {settings:{width:200, label:"Every         day(s)",  data:"", groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numDays_ti", 5, {settings:{width:30, text:"1", _x:85, maxChars:1, inputType:"numeric"}});	
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyOddDay_rb", 10, {settings:{width:200, label:"Every odd day",  data:"odd", _y:35, groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyEvenDay_rb", 20, {settings:{width:200, label:"Every even day",  data:"even", _y:70, groupName:"every"}});
+	if (calendarObj.eventType == "daily") {
+		if (calendarObj.filter == "odd" || calendarObj.filter == "even") {
+			tab_mc.every.data = calendarObj.filter;
+		} else {
+			tab_mc.every.data = "";
+			tab_mc.numDays_ti.text = calendarObj.pattern.recur;
+		}
+	} else {
+		tab_mc.every.data = "";
+	}
+	tab_mc._visible = false;
+	
+	// weekly tab
+	var tab_mc = tabs_mc.createEmptyMovieClip("weekly_mc", 20);
+	tab_mc.attachMovie("bi.ui.Label", "every_lb", 0, {settings:{width:200, text:"Every         week(s) on:"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numWeeks_ti", 5, {settings:{width:30, text:"1", _x:50, maxChars:1, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "monday_rb", 10, {settings:{width:130, label:"Monday", _y:35}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "tuesday_rb", 15, {settings:{width:130, label:"Tuesday", _y:70}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "wednesday_rb", 20, {settings:{width:130, label:"Wednesday", _y:105}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "thursday_rb", 25, {settings:{width:130, label:"Thursday", _y:140}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "friday_rb", 30, {settings:{width:130, label:"Friday", _x:140, _y:35}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "saturday_rb", 35, {settings:{width:130, label:"Saturday", _x:140, _y:70}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "sunday_rb", 40, {settings:{width:130, label:"Sunday", _x:140, _y:105}});
+	if (calendarObj.eventType == "weekly") {
+		tab_mc.numWeeks_ti.text = calendarObj.pattern.recur;
+		tab_mc.monday_rb.selected = calendarObj.pattern.mon;
+		tab_mc.tuesday_rb.selected = calendarObj.pattern.tue;
+		tab_mc.wednesday_rb.selected = calendarObj.pattern.wed;
+		tab_mc.thursday_rb.selected = calendarObj.pattern.thu;
+		tab_mc.friday_rb.selected = calendarObj.pattern.fri;
+		tab_mc.saturday_rb.selected = calendarObj.pattern.sat;
+		tab_mc.sunday_rb.selected = calendarObj.pattern.sun;	
+	}
+	tab_mc._visible = false;
+	
+	// monthly tab
+	var tab_mc = tabs_mc.createEmptyMovieClip("monthly_mc", 30);
+	tab_mc.attachMovie("bi.ui.RadioButton", "date_rb", 0, {settings:{width:200, label:"Day        of every", data:"date", groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "date_ti", 5, {settings:{width:30, text:"1", _x:70, maxChars:2, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numMonths_ti", 10, {settings:{width:30, text:"1", _x:35, _y:35, maxChars:1, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.Label", "every_lb", 15, {settings:{width:100, text:"month(s)", _x:70, _y:35}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "day_rb", 20, {settings:{width:200, label:"The", data:"day", groupName:"every", _y:105}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "week_ip", 25, {settings:{width:170, items:[{label:"first", value:1}, {label:"second", value:2}, {label:"third", value:3}, {label:"fourth", value:4}, {label:"last", value:5}], _x:70, _y:105}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "day_ip", 30, {settings:{width:205, items:[{label:"Monday", value:"mon"}, {label:"Tuesday", value:"tue"}, {label:"Wednesday", value:"wed"}, {label:"Thursday", value:"thu"}, {label:"Friday", value:"fri"}, {label:"Saturday", value:"sat"}, {label:"Sunday", value:"sun"}], _x:35, _y:140}});
+	tab_mc.attachMovie("bi.ui.Label", "every_lb", 35,{settings:{width:200, text:"of every         month(s)", _x:35, _y:175}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numMonths2_ti", 40, {settings:{width:30, text:"1", _x:105, _y:175, maxChars:1, inputType:"numeric"}});
+	if (calendarObj.eventType == "monthly") {
+		if (calendarObj.pattern.date != undefined) {
+			tab_mc.every.data = "date";
+			tab_mc.date_ti.text = calendarObj.pattern.date;
+			tab_mc.numMonths_ti.text = calendarObj.pattern.recur;
+		} else if (calendarObj.pattern.day != undefined) {
+			tab_mc.every.data = "day";
+			tab_mc.day_ip.selectedValue = calendarObj.pattern.day;
+			tab_mc.week_ip.selectedValue = calendarObj.pattern.week;
+			tab_mc.numMonths2_ti.text = calendarObj.pattern.recur;
+		}		
+	} else {
+		tab_mc.every.data = "date";
+		tab_mc.date_ti.text = new Date().getDate();
+	}
+	tab_mc._visible = false;
+	
+	// yearly tab
+	var tab_mc = tabs_mc.createEmptyMovieClip("yearly_mc", 40);
+	tab_mc.attachMovie("bi.ui.Label", "every_lb", 0, {settings:{width:200, text:"Every         year(s) on:"}});
+	tab_mc.attachMovie("bi.ui.TextInput", "numYears_ti", 5, {settings:{width:30, text:"1", _x:50, maxChars:2, inputType:"numeric"}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "month_ip", 10, {settings:{width:200, items:[{label:"January", value:0}, {label:"February", value:1}, {label:"March", value:2}, {label:"April", value:3}, {label:"May", value:4}, {label:"June", value:5}, {label:"July", value:6}, {label:"August", value:7}, {label:"September", value:8}, {label:"October", value:9}, {label:"November", value:10}, {label:"December", value:11}], _y:35}});
+	tab_mc.attachMovie("bi.ui.NumberPicker", "date_np", 20, {settings:{width:150, minValue:1, maxValue:31, step:1, _y:70}});
+	if (calendarObj.eventType == "yearly") {
+		tab_mc.numYears_ti.text = calendarObj.pattern.recur;
+		tab_mc.month_ip.selectedValue = calendarObj.pattern.month;
+		tab_mc.date_np.selectedValue = calendarObj.pattern.date;
+	} else {
+		tab_mc.month_ip.selectedValue = new Date().getMonth();
+		tab_mc.date_np.selectedValue = new Date().getDate();
+	}
+	tab_mc._visible = false;
+	
+	// set tabs
+	tabs_mc.selectedTab = tabs_mc[calendarObj.eventType + "_mc"];
+	tabs_mc.selectedTab._visible = true;
+
+	
+	content_mc.attachMovie("bi.ui.Label", "macro_lb", 90, {settings:{width:100, text:"Macro:", _x:530}});
+	
+	var macros_mc = content_mc.attachMovie("bi.ui.List", "standardEvents_mc", 100, {settings:{width:155, height:315, _x:530, _y:35}});
+	macros_mc.addEventListener("change", macros_mc);
+	for (var macro=0; macro<_global.macros.length; macro++) {
+		macros_mc.addItem({label:_global.macros[macro].name, value:macro});
+	}
+	macros_mc.selectedLabel = calendarObj.macroName;
+		
+	var buttonListener = new Object();
+	buttonListener.press = function (eventObj) {
+		switch (eventObj.target._name) {
+			case "saveEvent_btn":
+			case "createEvent_btn":
+				var saveObj = new Object();
+				saveObj.id = calendarObj.id;
+				saveObj.title = content_mc.title_ti.text;
+				saveObj.alarm = content_mc.alarm_cb.selected;
+				saveObj.memo = content_mc.msg_ti.text;
+				saveObj.category = content_mc.category_ip.selectedItem.value;
+				saveObj.time = content_mc.time_tp.timeAsString;
+				saveObj.macroName = (macros_mc.selectedItem.label.length) ? macros_mc.selectedItem.label : "";
+				saveObj.startDate = calendarObj.startDate;
+				saveObj.endDate = calendarObj.endDate;
+				saveObj.eventType = content_mc.period.data;
+				if (saveObj.eventType != "once") {
+					saveObj.pattern = new Object();
+					var tab_mc = content_mc.tabs_mc[saveObj.eventType + "_mc"];
+					switch (saveObj.eventType) {
+						case "hourly":
+							saveObj.pattern.recur = tab_mc.numHours_ti.text
+							break;
+						case "daily":
+							saveObj.filter = tab_mc.every.data;
+							if (tab_mc.every.data == "") {
+								saveObj.pattern.recur = tab_mc.numDays_ti.text;
+							}
+							break;
+						case "weekly":
+							saveObj.pattern.recur = tab_mc.numWeeks_ti.text;
+							saveObj.pattern.mon = (tab_mc.monday_rb.selected) ? 1 : 0;
+							saveObj.pattern.tue = (tab_mc.tuesday_rb.selected) ? 1 : 0;
+							saveObj.pattern.wed = (tab_mc.wednesday_rb.selected) ? 1 : 0;
+							saveObj.pattern.thu = (tab_mc.thursday_rb.selected) ? 1 : 0;
+							saveObj.pattern.fri = (tab_mc.friday_rb.selected) ? 1 : 0;
+							saveObj.pattern.sat = (tab_mc.saturday_rb.selected) ? 1 : 0;
+							saveObj.pattern.sun = (tab_mc.sunday_rb.selected) ? 1 : 0;
+							break;
+						case "monthly":
+							switch (tab_mc.every.data) {
+								case "date":
+									saveObj.pattern.recur = tab_mc.numMonths_ti.text;
+									trace(saveObj.pattern.recur);
+									saveObj.pattern.date = tab_mc.date_ti.text;
+									trace(saveObj.pattern.date);
+									break;
+								case "day":
+									saveObj.pattern.recur = tab_mc.numMonths2_ti.text;
+									trace(saveObj.pattern.recur);
+									saveObj.pattern.day = tab_mc.day_ip.selectedItem.value;
+									trace(saveObj.pattern.day);
+									saveObj.pattern.week = tab_mc.week_ip.selectedItem.value;
+									trace(saveObj.pattern.week);
+									break;
+							}
+							break;
+						case "yearly":
+							saveObj.pattern.recur = tab_mc.numYears_ti.text;
+							saveObj.pattern.month = tab_mc.month_ip.selectedItem.value;
+							saveObj.pattern.date = tab_mc.date_np.selectedItem.value;
+							break;
+					}
+				}
+				break;
+		}
+		switch (eventObj.target._name) {
+			case "deleteEvent_btn":
+				confirm("Are you sure you want to delete this event?", _root, "deleteEvent", null, calendarObj);
+				//deleteEvent(calendarObj);
+				break;
+			case "saveEvent_btn":
+				saveEvent(saveObj);
+				break;
+			case "createEvent_btn":
+				saveObj.isNew = true;
+				saveEvent(saveObj);
+				break;
+			case "cancel_btn":
+				trace("cancel");
+				break;
+		}
+		eventObj.target._parent._parent.close();
+	}
+	
+	if (mode == "edit") {
+		content_mc.attachMovie("bi.ui.Button", "saveEvent_btn", 200, {settings:{width:150, label:"Save", _x:45, _y:365}});
+		content_mc.saveEvent_btn.addEventListener("press", buttonListener);
+		content_mc.attachMovie("bi.ui.Button", "deleteEvent_btn", 205, {settings:{width:150, label:"Delete", _x:205, _y:365}});
+		content_mc.deleteEvent_btn.addEventListener("press", buttonListener);
+		content_mc.attachMovie("bi.ui.Button", "cancel_btn", 210, {settings:{width:150, label:"Cancel", _x:365, _y:365}});
+		content_mc.cancel_btn.addEventListener("press", buttonListener);
+	} else {
+		content_mc.attachMovie("bi.ui.Button", "createEvent_btn", 200, {settings:{width:150, label:"Create", _x:120, _y:365}});
+		content_mc.createEvent_btn.addEventListener("press", buttonListener);
+		content_mc.attachMovie("bi.ui.Button", "cancel_btn", 205, {settings:{width:150, label:"Cancel", _x:280, _y:365}});
+		content_mc.cancel_btn.addEventListener("press", buttonListener);
+	}
+}
