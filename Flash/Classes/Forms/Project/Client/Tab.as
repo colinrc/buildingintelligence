@@ -21,7 +21,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 		icon_ti.addEventListener("change", changeListener);
 		name_ti.text = name;
 		icon_ti.text = icon;
-		var tempKeys = _global.server_test.getKeys();
+		var tempKeys = _global.serverDesign.getKeys();
 		var DPKey = new Array();
 		for (var key in tempKeys) {
 			var tempObject = new Object();

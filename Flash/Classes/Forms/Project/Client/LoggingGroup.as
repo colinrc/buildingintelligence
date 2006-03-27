@@ -22,7 +22,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var attributes:Array;
 	private var dataObject:Object;
 	public function onLoad():Void {
-		var tempKeys = _global.server_test.getKeys();
+		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
@@ -126,7 +126,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private function addAll() {
 		_global.unSaved = true;
 		right_li.removeAll();
-		var tempKeys = _global.server_test.getKeys();		
+		var tempKeys = _global.serverDesign.getKeys();		
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
@@ -148,7 +148,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		_global.unSaved = true;
 		left_li.removeAll();		
 		right_li.removeAll();
-		var tempKeys = _global.server_test.getKeys();		
+		var tempKeys = _global.serverDesign.getKeys();		
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];

@@ -13,6 +13,10 @@
 	private var control_types:Objects.Client.Control_Types;
 	private var calendar:Objects.Client.Calendar;
 	private var attributeGroups = ["settings","window","button","tabs"];
+	private var treeNode:XMLNode;	
+	public function deleteSelf(){
+		treeNode.removeNode();
+	}		
 	public function isValid():Boolean {
 		var flag = true
 		if(!sounds.isValid()){
@@ -43,6 +47,7 @@
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1,"application");
+		newNode.attributes.description = description;
 		var newSettings = new XMLNode(1,"settings");
 		var newSetting = new XMLNode(1,"setting");
 		newSetting.attributes.name = "serverAddress";
@@ -90,6 +95,7 @@
 		newNode.appendChild(Property.toTree());
 		newNode.appendChild(control_types.toTree());
 		newNode.object = this;
+		treeNode = newNode;		
 		return newNode;
 	}
 	public function getKey():String{
@@ -130,6 +136,7 @@
 		Property = new Objects.Client.Property();
 		control_types = new Objects.Client.Control_Types();
 		if(newData.nodeName == "application") {
+			description = newData.attributes.description;
 			for(var child in newData.childNodes){
 				switch(newData.childNodes[child].nodeName){
 					case "settings":

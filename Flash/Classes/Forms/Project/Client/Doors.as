@@ -14,7 +14,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 	private var dataObject:Object;	
 	private var currentDoor:Object;
 	public function onLoad() {
-		var tempKeys = _global.server_test.getKeys();
+		var tempKeys = _global.serverDesign.getKeys();
 		var DPKey = new Array();
 		for (var key in tempKeys) {
 			var tempObject = new Object();

@@ -2,7 +2,7 @@
 import mx.utils.Delegate;
 class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private var name_ti:TextInput;
-	private var icon_ti:TextInput;
+	private var icon_cmb:ComboBox;
 	private var show_ti:TextInput;
 	private var hide_ti:TextInput;
 	private var name:String;
@@ -22,15 +22,29 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private var variable_mc:MovieClip;
 	private var dataObject:Object;
 	public function onLoad():Void {
+		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
+		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"\\lib\\icons", "*.png");
+		for(var myIcon in myIcons){
+			var newIcon = new Object();
+			newIcon.label = myIcons[myIcon];
+			newIcon.icon = mdm.Application.path+"\\lib\\icons"+myIcons[myIcon];
+			icon_cmb.addItem(newIcon);
+		}
+		/**var path = mdm.Application.path+"myImage.jpg";
+		/**D:\BI\eLife Admin\Build\lib\icons
+		mdm.Dialogs.prompt(myFiles[0])
+		mdm.Dialogs.prompt(myFiles[1])
+		// ... and so on*/
+
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
 		};
 		name_ti.addEventListener("change", changeListener);
-		icon_ti.addEventListener("change", changeListener);
+		icon_cmb.addEventListener("change", changeListener);
 		show_ti.addEventListener("change", changeListener);
 		hide_ti.addEventListener("change", changeListener);
-		var tempKeys = _global.server_test.getKeys();
+		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
@@ -49,7 +63,7 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 			}
 		}
 		name_ti.text = name;
-		icon_ti.text = icon;
+		icon_cmb.text = icon;
 		show_ti.text = show;
 		hide_ti.text = hide;
 		save_btn.addEventListener("click", Delegate.create(this, save));
@@ -66,7 +80,7 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 			newControls.push(newControl);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_ti.text, show:show_ti.text, hide:hide_ti.text});
+		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_cmb.text, show:show_ti.text, hide:hide_ti.text});
 		_global.saveFile("Project");
 	}
 	private function addSel() {
@@ -80,7 +94,7 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private function addAll() {
 		_global.unSaved = true;
 		right_li.removeAll();
-		var tempKeys = _global.server_test.getKeys();
+		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
@@ -102,7 +116,7 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		_global.unSaved = true;
 		left_li.removeAll();
 		right_li.removeAll();
-		var tempKeys = _global.server_test.getKeys();
+		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];

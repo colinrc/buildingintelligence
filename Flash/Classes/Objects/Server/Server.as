@@ -150,12 +150,12 @@
 		for (var newClient in newClients) {
 			/*Add new Clients*/
 			/*Reference Vanilla Object*/
-			var new_client = new Objects.Client.Client();
-			new_client.setXML(_global.default_client_xml);
+			var new_client = new Objects.Client.Client();		
+			new_client.setXML(_global.default_client_xml.firstChild);
 			new_client.description = newClients[newClient].description;
 			new_client.id = newClients[newClient].id;
 			//Append global tree
-			//treeNode.appendChild(new_client.toTree());
+			_global.designTree_xml.appendChild(new_client.toTree());
 			clients.push(new_client);
 		}
 		_global.left_tree.setIsOpen(treeNode, true);		
@@ -199,6 +199,7 @@
 				var newPelco = new Objects.Server.Pelco();
 				newPelco.setXML(newNode);
 				newPelco.id = _global.formDepth++;
+				newPelco.active = "Y";
 				treeNode.appendChild(newPelco.toTree());				
 				devices.push(newPelco);
 				break;
@@ -206,6 +207,7 @@
 				var newOregon = new Objects.Server.Oregon();
 				newOregon.setXML(newNode);
 				newOregon.id = _global.formDepth++;
+				newOregon.active = "Y";				
 				treeNode.appendChild(newOregon.toTree());
 				devices.push(newOregon);
 				break;
@@ -213,6 +215,7 @@
 				var newIR = new Objects.Server.IR_Learner();
 				newIR.setXML(newNode);
 				newIR.id = _global.formDepth++;
+				newIR.active = "Y";				
 				treeNode.appendChild(newIR.toTree());
 				devices.push(newIR);
 				break;
@@ -220,6 +223,7 @@
 				var newTutondo = new Objects.Server.Tutondo();
 				newTutondo.setXML(newNode);
 				newTutondo.id = _global.formDepth++;
+				newTutondo.active = "Y";				
 				treeNode.appendChild(newTutondo.toTree());				
 				devices.push(newTutondo);
 				break;
@@ -227,6 +231,7 @@
 				var newKramer = new Objects.Server.Kramer();
 				newKramer.setXML(newNode);
 				newKramer.id = _global.formDepth++;
+				newKramer.active = "Y";				
 				treeNode.appendChild(newKramer.toTree());				
 				devices.push(newKramer);
 				break;
@@ -234,6 +239,7 @@
 				var newHal = new Objects.Server.Hal();
 				newHal.setXML(newNode);
 				newHal.id = _global.formDepth++;
+				newHal.active = "Y";				
 				treeNode.appendChild(newHal.toTree());				
 				devices.push(newHal);
 				break;
@@ -241,6 +247,7 @@
 				var newCBus = new Objects.Server.CBus();
 				newCBus.setXML(newNode);
 				newCBus.id = _global.formDepth++;
+				newCBus.active = "Y";				
 				treeNode.appendChild(newCBus.toTree());				
 				devices.push(newCBus);
 				break;
@@ -248,6 +255,7 @@
 				var newDynalite = new Objects.Server.Dynalite();
 				newDynalite.setXML(newNode);
 				newDynalite.id = _global.formDepth++;				
+				newDynalite.active = "Y";				
 				treeNode.appendChild(newDynalite.toTree());
 				devices.push(newDynalite);
 				break;
@@ -255,6 +263,7 @@
 				var newGC100 = new Objects.Server.GC100();
 				newGC100.setXML(newNode);
 				newGC100.id = _global.formDepth++;
+				newGC100.active = "Y";				
 				treeNode.appendChild(newGC100.toTree());
 				devices.push(newGC100);
 				break;
@@ -262,6 +271,7 @@
 				var newRaw = new Objects.Server.Raw_Connection();
 				newRaw.setXML(newNode);
 				newRaw.id = _global.formDepth++;				
+				newRaw.active = "Y";				
 				treeNode.appendChild(newRaw.toTree());		
 				devices.push(newRaw);
 				break;
@@ -269,6 +279,7 @@
 				var newComfort = new Objects.Server.Comfort();
 				newComfort.setXML(newNode);
 				newComfort.id = _global.formDepth++;								
+				newComfort.active = "Y";				
 				treeNode.appendChild(newComfort.toTree());
 				devices.push(newComfort);
 				break;
@@ -296,66 +307,77 @@
 						var newPelco = new Objects.Server.Pelco();
 						newPelco.setXML(newData.childNodes[child]);
 						newPelco.id = _global.formDepth++;
+						newPelco.active = "Y";						
 						devices.push(newPelco);
 						break;
 					case "OREGON" :
 						var newOregon = new Objects.Server.Oregon();
 						newOregon.setXML(newData.childNodes[child]);
 						newOregon.id = _global.formDepth++;
+						newOregon.active = "Y";						
 						devices.push(newOregon);
 						break;
 					case "IR_LEARNER" :
 						var newIR = new Objects.Server.IR_Learner();
 						newIR.setXML(newData.childNodes[child]);
 						newIR.id = _global.formDepth++;
+						newIR.active = "Y";						
 						devices.push(newIR);
 						break;
 					case "TUTONDO" :
 						var newTutondo = new Objects.Server.Tutondo();
 						newTutondo.setXML(newData.childNodes[child]);
 						newTutondo.id = _global.formDepth++;
+						newTutondo.active = "Y";						
 						devices.push(newTutondo);
 						break;
 					case "KRAMER" :
 						var newKramer = new Objects.Server.Kramer();
 						newKramer.setXML(newData.childNodes[child]);
 						newKramer.id = _global.formDepth++;
+						newKramer.active = "Y";						
 						devices.push(newKramer);
 						break;
 					case "HAL" :
 						var newHal = new Objects.Server.Hal();
 						newHal.setXML(newData.childNodes[child]);
 						newHal.id = _global.formDepth++;
+						newHal.active = "Y";						
 						devices.push(newHal);
 						break;
 					case "CBUS" :
 						var newCBus = new Objects.Server.CBus();
 						newCBus.setXML(newData.childNodes[child]);
 						newCBus.id = _global.formDepth++;
+						newCBus.active = "Y";						
 						devices.push(newCBus);
 						break;
 					case "DYNALITE" :
 						var newDynalite = new Objects.Server.Dynalite();
 						newDynalite.setXML(newData.childNodes[child]);
 						newDynalite.id = _global.formDepth++;
+						newDynalite.active = "Y";						
 						devices.push(newDynalite);
 						break;
 					case "GC100" :
 						var newGC100 = new Objects.Server.GC100();
 						newGC100.setXML(newData.childNodes[child]);
 						newGC100.id = _global.formDepth++;
+						newGC100.active = "Y";						
 						devices.push(newGC100);
 						break;
 					case "RAW_CONNECTION" :
 						var newRaw = new Objects.Server.Raw_Connection();
 						newRaw.setXML(newData.childNodes[child]);
 						newRaw.id = _global.formDepth++;						
+						newRaw.active = "Y";						
 						devices.push(newRaw);
 						break;
 					case "COMFORT" :
 						var newComfort = new Objects.Server.Comfort();
 						newComfort.setXML(newData.childNodes[child]);
 						newComfort.id = _global.formDepth++;
+						newComfort.active = "Y";						
 						devices.push(newComfort);
 						break;
 					}

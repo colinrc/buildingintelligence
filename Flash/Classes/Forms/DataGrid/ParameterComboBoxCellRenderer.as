@@ -42,6 +42,8 @@ class Forms.DataGrid.ParameterComboBoxCellRenderer extends UIComponent {
 						label.selectedIndex = index;
 					}
 				}
+				listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.selectedItem.label;
+				listOwner.dataProvider[itemLocation.itemIndex].value.label = label.selectedItem.data;
 				size();
 			}
 		} else {

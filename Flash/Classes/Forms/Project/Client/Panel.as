@@ -34,7 +34,7 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 		y_pos_ti.text = y_pos;
 		width_ti.text = width;
 		height_ti.text = height;
-		var tempKeys = _global.server_test.getKeys();
+		var tempKeys = _global.serverDesign.getKeys();
 		var DPKey = new Array();
 		for (var key in tempKeys) {
 			var tempObject = new Object();

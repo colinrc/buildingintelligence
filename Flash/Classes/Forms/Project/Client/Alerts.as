@@ -30,7 +30,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		x_lb.text = x_pos;
 		y_lb.text = y_pos;
 		
-		var tempKeys = _global.server_test.getKeys();
+		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
@@ -155,7 +155,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		_global.unSaved = true;
 		left_li.removeAll();
 		right_li.removeAll();
-		var tempKeys = _global.server_test.getKeys();
+		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
@@ -186,7 +186,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	private function remAll() {
 		left_li.removeAll();
 		right_li.removeAll();
-		var tempKeys = _global.server_test.getKeys();
+		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
@@ -210,7 +210,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		removeAll_btn._visible = visible;
 		right_li.removeAll();
 		left_li.removeAll();
-		var tempKeys = _global.server_test.getKeys();
+		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];

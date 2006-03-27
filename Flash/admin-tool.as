@@ -39,7 +39,7 @@ _global.left_tree.setStyle("openDuration", 50);
 _global.overrides_xml = new XML();
 _global.overrides_xml.ignoreWhite = true;
 _global.overrides_xml.onLoad = function(success) {
-	if(!success){
+	if (!success) {
 		mdm.Dialogs.prompt("Error, overrides.xml file not loaded!");
 	}
 };
@@ -48,16 +48,16 @@ _global.overrides_xml.load("overrides.xml");
 _global.parameters_xml = new XML();
 _global.parameters_xml.ignoreWhite = true;
 _global.parameters_xml.onLoad = function(success) {
-	if(!success){
+	if (!success) {
 		mdm.Dialogs.prompt("Error, parameters.xml file not loaded!");
-	}	
+	}
 };
 _global.parameters_xml.load("parameters.xml");
 //Load default client configuration
 _global.default_client_xml = new XML();
 _global.default_client_xml.ignoreWhite = true;
 _global.default_client_xml.onLoad = function(success) {
-	if(!success){
+	if (!success) {
 		mdm.Dialogs.prompt("Error, client.xml file not loaded!");
 	}
 };
@@ -66,16 +66,16 @@ _global.default_client_xml.load("default_client.xml");
 _global.default_server_xml = new XML();
 _global.default_server_xml.ignoreWhite = true;
 _global.default_server_xml.onLoad = function(success) {
-	if(!success){	
+	if (!success) {
 		mdm.Dialogs.prompt("Error, server.xml file not loaded!");
-	}	
+	}
 };
 _global.default_server_xml.load("default_server.xml");
 //Load list of possible control type attributes
 _global.controlTypeAttributes_xml = new XML();
 _global.controlTypeAttributes_xml.ignoreWhite = true;
 _global.controlTypeAttributes_xml.onLoad = function(success) {
-	if(!success){
+	if (!success) {
 		mdm.Dialogs.prompt("Error, controlTypeAttributes.xml file not loaded!");
 	}
 };
@@ -84,17 +84,17 @@ _global.controlTypeAttributes_xml.load("controlTypeAttributes.xml");
 // load project xml data
 _global.project = new Object();
 //Design tree dataprovider
-var designTree_xml = new XML();
+_global.designTree_xml = new XML();
 //Control Tree dataprovider
-var controlTree_xml = new XML();
+_global.controlTree_xml = new XML();
 //Project xml loader
 var project_xml = new XML();
 project_xml.ignoreWhite = true;
 project_xml.onLoad = function(success) {
 	//Reset the Design
-	designTree_xml = new XML();
+	_global.designTree_xml = new XML();
 	//Reset the Control
-	controlTree_xml = new XML();
+	_global.controlTree_xml = new XML();
 	//Reset the Project Details
 	_global.project = new Object();
 	//Build Project Details from project xml
@@ -104,20 +104,21 @@ project_xml.onLoad = function(success) {
 	//Append list of server designs and list of server implementations
 	_global.serverDesign = new Objects.Server.Server();
 	_global.serverInstance = new Objects.Instances.ServerInstance();
+	mdm.Dialogs.prompt(project_xml.toString());
 	for (var child in project_xml.firstChild.childNodes) {
 		switch (project_xml.firstChild.childNodes[child].nodeName) {
-		case "CONFIG":
+		case "CONFIG" :
 			_global.serverDesign.setXML(project_xml.firstChild.childNodes[child]);
-			designTree_xml.appendChild(_global.serverDesign.toTree());
+			_global.designTree_xml.appendChild(_global.serverDesign.toTree());
 			var clients = _global.serverDesign.getClients();
-			for(var client in clients){
-				designTree_xml.appendChild(clients[client].toTree());
+			for (var client in clients) {
+				_global.designTree_xml.appendChild(clients[client].toTree());
 			}
-			break;		
-		case "serverInstance":
+			break;
+		case "serverInstance" :
 			_global.serverInstance.setXML(project_xml.firstChild.childNodes[child]);
-			controlTree_xml.appendChild(_global.serverInstance.toTree());
-			break;					
+			_global.controlTree_xml.appendChild(_global.serverInstance.toTree());
+			break;
 		}
 	}
 	_global.refreshTheTree();
@@ -127,8 +128,8 @@ project_xml.onLoad = function(success) {
 var client_xml = new XML();
 client_xml.ignoreWhite = true;
 client_xml.onLoad = function(success) {
-	if(success){	
-	} else{
+	if (success) {
+	} else {
 		mdm.Dialogs.prompt("Error, client.xml file not loaded!");
 	}
 };
@@ -137,10 +138,10 @@ client_xml.onLoad = function(success) {
 var server_xml = new XML();
 server_xml.ignoreWhite = true;
 server_xml.onLoad = function(success) {
-	if(success){	
-	} else{
+	if (success) {
+	} else {
 		mdm.Dialogs.prompt("Error, server.xml file not loaded!");
-	}	
+	}
 };
 /**************************************************************************************/
 function openFile(openType:String):Void {
@@ -159,17 +160,17 @@ function openFile(openType:String):Void {
 			setButtons(true);
 			setView("project");
 			break;
-		/*case "Server" :
+			/*case "Server" :
 			server_xml.load(file);
 			break;
-		case "Client" :
+			case "Client" :
 			client_xml.load(file);
 			break;*/
 		}
 	}
 }
 /**************************************************************************************/
-_global.saveFile = function (saveType:String):Void {
+_global.saveFile = function(saveType:String):Void  {
 	if (saveType == "Project") {
 		if (_global.projectFileName.length) {
 			var newProjectXML = new XMLNode(1, "project");
@@ -179,8 +180,8 @@ _global.saveFile = function (saveType:String):Void {
 				}
 			}
 			/*Append project contents to project node*/
-			newProjectXML.appendChild(_global.serverDesigns.toXML());
-			newProjectXML.appendChild(_global.serverInstances.toXML());
+			newProjectXML.appendChild(_global.serverDesign.toProject());
+			newProjectXML.appendChild(_global.serverInstance.toXML());
 			mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
 			_global.unSaved = false;
 		} else {
@@ -223,7 +224,7 @@ _global.saveFile = function (saveType:String):Void {
 			mdm.Dialogs.prompt("File saved to: " + file);
 		}
 	}
-}
+};
 /****************************************************************/
 function searchProject(treeNode:Object, object:Object):Object {
 	if (treeNode.object == object) {
@@ -243,9 +244,9 @@ _global.refreshTheTree = function() {
 	//var oBackupDP = _global.left_tree.dataProvider;
 	_global.left_tree.dataProvider = null;
 	// clear
-	_global.left_tree.dataProvider = designTree_xml;
+	_global.left_tree.dataProvider = _global.designTree_xml;
 	_global.workflow.buildWorkflowTree();
-	createWorkflow(designTree_xml);
+	createWorkflow(_global.designTree_xml);
 	oBackupDP = _global.right_tree.dataProvider;
 	_global.right_tree.dataProvider = null;
 	_global.right_tree.dataProvider = oBackupDP;
@@ -340,13 +341,13 @@ mdm.Menu.Main.onMenuClick_New_Project = function() {
 	_global.project = new Object();
 	_global.serverDesign = new Objects.Server.Server();
 	_global.serverInstance = new Objects.Instances.ServerInstance();
-	designTree_xml = new XML();
-	designTree_xml.appendChild(serverDesign.toTree());	
+	_global.designTree_xml = new XML();
+	_global.designTree_xml.appendChild(serverDesign.toTree());
 	var clients = _global.serverDesign.getClients();
-	for(var client in clients){
-		designTree_xml.appendChild(clients[client].toTree());
+	for (var client in clients) {
+		_global.designTree_xml.appendChild(clients[client].toTree());
 	}
-	controlTree_xml.appendChild(_global.serverInstance.toTree());
+	_global.controlTree_xml.appendChild(_global.serverInstance.toTree());
 	setView("home");
 	_global.refreshTheTree();
 	setButtons(true);
@@ -356,10 +357,10 @@ mdm.Menu.Main.onMenuClick_Open_Project = function() {
 };
 /*
 mdm.Menu.Main.onMenuClick_Import_Server_XML = function() {
-	openFile("Server");
+openFile("Server");
 };
 mdm.Menu.Main.onMenuClick_Import_Client_XML = function() {
-	openFile("Client");
+openFile("Client");
 };
 */
 mdm.Menu.Main.onMenuClick_Save_Project = function() {
@@ -436,7 +437,7 @@ setView = function (view, dataObj) {
 		tabBody_mc._visible = true;
 		tabs_tb.dataProvider = [{label:"Project Design"}];
 		tabs_tb.selectedIndex = 0;
-		left_tree.dataProvider = designTree_xml;
+		left_tree.dataProvider = _global.designTree_xml;
 		left_tree.labelFunction = function(item_obj:Object):String  {
 			return item_obj.object.getName();
 		};
@@ -454,12 +455,12 @@ setView = function (view, dataObj) {
 		tabBody_mc._width = 766;
 		workFlow_split._visible = false;
 		left_tree._visible = true;
-		left_tree.dataProvider = controlTree_xml;
+		left_tree.dataProvider = _global.controlTree_xml;
 		left_tree.labelFunction = function(item_obj:Object):String  {
 			return item_obj.object.getName();
 		};
 		tabs_tb.dataProvider = [{label:"Project Command and Control"}];
-		tabs_tb.selectedIndex = 0;		
+		tabs_tb.selectedIndex = 0;
 		break;
 		/***********************************************************************************/
 	case "none" :
@@ -495,7 +496,7 @@ tabs_tb.change = function(eventObj) {
 		switch (eventObj.target.selectedItem.label) {
 		case "Client Designs" :
 			form_mc = formContent_mc.attachMovie("forms.project.clientDesigns", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {clients:tempObject.getClients(), dataObject:tempObject});
-			break;		
+			break;
 		case "XML" :
 			form_mc = formContent_mc.attachMovie("forms.project.xml", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {node:tempObject.toXML(), dataObject:tempObject});
 			break;
@@ -565,18 +566,18 @@ leftTreeListener.change = function(eventObj) {
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview", view:"forms.project.client.preview"}];
 			tabs_tb.selectedIndex = 0;
 			break;
-		case "Server_Design":
-			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());		
+		case "Server_Design" :
+			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"Client Designs", view:"forms.project.clientDesigns"}, {label:"XML", view:"forms.project.xml"}];
 			tabs_tb.selectedIndex = 0;
 			break;
-		case "Server":
-			form_mc = formContent_mc.attachMovie("forms.control.servercontrols", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());		
+		case "Server" :
+			form_mc = formContent_mc.attachMovie("forms.control.servercontrols", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());
 			tabs_tb.dataProvider = [{label:"Control", view:"control.servercontrols"}, {label:"Clients", view:"control.clients"}, {label:"Log", view:"control.serverLog"}, {label:"IR", view:"control.ir"}, {label:"Publish", view:"control.publish"}];
 			tabs_tb.selectedIndex = 0;
 			//Need to rewrite how a view is attached to a server object
 			//_global.server.attachView(form_mc);			
-			break;		
+			break;
 		default :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}];
@@ -606,9 +607,28 @@ buttonListener.click = function(eventObj) {
 		setView("control");
 		break;
 	case preview_btn :
-		mdm.FileSystem.saveFile("client.xml", _global.writeXMLFile(_global.client_test.toXML(), 0));
-		mdm.Forms.Preview.callFunction("parseClient", '<client><setting name="applicationXML" value="client.xml" /><setting name="libLocation" value="lib/" /><setting name="fullScreen" value="false" /><setting name="hideMouseCursor" value="false" /></client>', "|");
-		mdm.Forms.Preview.showModal();
+		if (_global.left_tree.visible) {
+			var temp_node = _global.left_tree.selectedNode;
+			var found_node_id = null;
+			while ((temp_node != null) && (found_node_id == null)) {
+				if (temp_node.nodeName == "Client") {
+					found_node_id = temp_node.object.id;
+				} else {
+					temp_node = temp_node.parentNode;
+				}
+			}
+			if (found_node_id != null) {
+				var clients = _global.serverDesign.getClients();
+				for (var client in clients) {
+					if (clients[client].id == found_node_id) {
+						mdm.FileSystem.saveFile("client.xml", _global.writeXMLFile(clients[client].toXML(), 0));
+						mdm.Forms.Preview.callFunction("parseClient", '<client><setting name="applicationXML" value="client.xml" /><setting name="libLocation" value="lib/" /><setting name="fullScreen" value="false" /><setting name="hideMouseCursor" value="false" /></client>', "|");
+						mdm.Forms.Preview.showModal();
+						break;
+					}
+				}
+			}
+		}
 		break;
 		/*
 		case historyViewer_btn :
@@ -629,12 +649,12 @@ buttonListener2.click = function(eventObj) {
 	_global.advanced = (!_global.advanced);
 	CloseTip();
 	var tempObject = _global.left_tree.selectedNode.object;
-	designTree_xml = new XML();
-	designTree_xml.appendChild(serverDesign.toTree());
+	_global.designTree_xml = new XML();
+	_global.designTree_xml.appendChild(serverDesign.toTree());
 	var clients = _global.serverDesign.getClients();
-	for(var client in clients){
-		designTree_xml.appendChild(clients[client].toTree());
-	}	
+	for (var client in clients) {
+		_global.designTree_xml.appendChild(clients[client].toTree());
+	}
 	_global.refreshTheTree();
 	if (_global.advanced) {
 		DisplayTip("To Basic");
@@ -729,7 +749,7 @@ setButtons(false);
 /*treeFilter_cb.change = function(eventObj) {
 switch (eventObj.target.selectedItem.label) {
 case "Project" :
-left_tree.dataProvider = designTree_xml;
+left_tree.dataProvider = _global.designTree_xml;
 left_tree.labelFunction = function(item_obj:Object):String  {
 return item_obj.object.getName();
 };
