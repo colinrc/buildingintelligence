@@ -334,7 +334,8 @@ is divided into following sections:
             <path path="${run.classpath}"/>
             <map from="${build.classes.dir.resolved}" to="${dist.jar.resolved}"/>
         </pathconvert>
-        <echo>${platform.java} -cp "${run.classpath.with.dist.jar}" ${main.class}</echo>
+    	<echo>dist is ${dist.jar}, build classes dir ${build.classes.dir.resolved} jar resolved ${dist.jar.resolved} </echo>
+    	<echo>${platform.java} -cp "${run.classpath.with.dist.jar}" ${main.class}</echo>
     </target>
     <target name="-do-jar-with-libraries" depends="init,compile,-pre-pre-jar,-pre-jar" if="manifest.available+main.class+mkdist.available">
         <property name="build.classes.dir.resolved" location="${build.classes.dir}"/>
@@ -346,7 +347,7 @@ is divided into following sections:
             <path path="${run.classpath.without.build.classes.dir}"/>
             <chainedmapper>
                 <flattenmapper/>
-                <globmapper from="*" to="ext/*"/>
+                <globmapper from="*" to="../ext/*"/> <!-- modified this line --> 
             </chainedmapper>
         </pathconvert>
         <taskdef classname="org.netbeans.modules.java.j2seproject.copylibstask.CopyLibs" name="copylibs" classpath="${libs.CopyLibs.classpath}"/>
