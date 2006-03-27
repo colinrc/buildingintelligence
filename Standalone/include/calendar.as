@@ -128,7 +128,7 @@
 					macroEvents_mc.addEventListener("change", macroEvents_mc);
 					macroEvents_mc.change = function (eventObj) {
 						//editCalendarEvent(eventObj.target.selectedItem.value, this._parent.dateObj);
-						skipCalendarEvent(eventObj.target.selectedItem.value);
+						skipCalendarEvent(eventObj.target.selectedItem.value, this._parent.dateObj);
 						this.selectedIndex = null
 					}
 					
@@ -212,27 +212,6 @@
 								break;
 							case "macros":
 								var listData = [];
-								/*
-								for (var m=0; m<_global.macros.length; m++) {
-									var eventObj = new Object();
-									eventObj.label = _global.macros[m].name;
-									for (var i=0; i<_global.calendarData.length; i++) {
-										if (_global.macros[m].name == _global.calendarData[i].macroName) {
-											eventObj.time = _global.calendarData[i].time.dateTimeFormat(_global.settings.shortTimeFormat);
-											if (_global.calendarData[i].runTime.split(":").length > 1) {
-												eventObj.runTime = (Number(_global.calendarData[i].runTime.split(":")[0]) * 60 + Number(_global.calendarData[i].runTime.split(":")[1])) + " mins";
-											} else {
-												eventObj.runTime = "Once";
-											}
-											eventObj.pattern = _global.calendarData[i].pattern;
-											eventObj.skip = _global.calendarData[i].skip;
-											eventObj.eventObj = _global.calendarData[i];
-											break;
-										}
-									}
-									listData.push(eventObj);
-								}
-								*/
 								for (var i=0; i<_global.calendarData.length; i++) {
 									if (_global.calendarData[i].macroName.length) {
 										var eventObj = new Object();
@@ -289,7 +268,7 @@
 										if (listData[i].pattern[daysOfWeek[z].toLowerCase().substr(0, 3)] == 1) {			
 											var cell_mc = row_mc.createEmptyMovieClip("cell" + z + "_mc", z + 20);
 											cell_mc.eventObj = listData[i].eventObj;
-											cell_mc.dateObj = new Date();
+											cell_mc.dateObj = currentDate;
 											cell_mc._x = z * colWidth + colStart;
 											
 											var hitArea_mc = cell_mc.createEmptyMovieClip("hitArea_mc", 0);
@@ -310,14 +289,14 @@
 												this.pressTime = getTimer();
 												this.onEnterFrame = function () {
 													if (getTimer() > this.pressTime + 500) {
-														skipCalendarEvent(this.eventObj);
+														skipCalendarEvent(this.eventObj, this.dateObj);
 														delete this.onEnterFrame;
 													}
 												}
 											}
 											cell_mc.onRelease = function () {
 												if (getTimer() < this.pressTime + 500) {
-													trace("skip for this occurance");
+													updateEventSkip(this.eventObj, true, this.dateObj, this.dateObj);
 													delete this.onEnterFrame;
 												}
 											}
@@ -361,13 +340,14 @@
 	}
 }
 
-skipCalendarEvent = function (calendarObj) {
-	var window_mc = showWindow({width:350, height:280, title:"Edit: " + eventObj.title, iconName:"calendar", align:"center"});
+skipCalendarEvent = function (calendarObj, dateObj) {
+	var window_mc = showWindow({width:350, height:280, title:"Edit: " + calendarObj.title, iconName:"calendar", align:"center"});
 	
 	var content_mc = window_mc.content_mc;
 	var buttonWidth = content_mc.width;
 	
-	//content_mc.attachMovie("bi.ui.Label", "label_mc", 5, {settings:{width:buttonWidth, height:35, text:"Skip event until:"}});
+	var from = new Date(dateObj.getTime());
+	var to = new Date(dateObj.getTime());
 	
 	var buttonListener = new Object();
 	buttonListener.calendarObj = calendarObj;
@@ -376,15 +356,38 @@ skipCalendarEvent = function (calendarObj) {
 			case "editEvent":
 				editRecurringEvent(this.calendarObj);
 				break;
+			case "tomorrow":
+				to = dateAdd(to, "d", 1);
+				break;
+			case "week":
+				to = dateAdd(to, "w", 1);
+				break;
+			case "month":
+				to = dateAdd(to, "m", 1);
+				break;
+		}
+		if (eventObj.target.id != "editEvent") {
+			updateEventSkip(this.calendarObj, true, from, to);
 		}
 		eventObj.target._parent._parent.close();
 	}
 	
-	var buttons = [{label:"Skip until next occurrence", id:"nextOccurance"}, {label:"Skip for a day", id:"nextDay"}, {label:"Skip for a week", id:"nextWeek"}, {label:"Skip for a month", id:"nextMonth"}, {label:"Edit event", id:"editEvent"}];
+	var daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	var tmp = new Date(to.getTime());
+	
+	var buttons = [{label:"Skip until " + daysOfWeek[dateAdd(to, "d", 1).getDay()], id:"today"}, {label:"Skip until " +  daysOfWeek[dateAdd(to, "d", 2).getDay()], id:"tomorrow"}, {label:"Skip for 1 week", id:"week"}, {label:"Skip for 1 month", id:"month"}, {label:"Edit event", id:"editEvent"}];
 	for (var i=0; i<buttons.length; i++) {
 		var btn_mc = content_mc.attachMovie("bi.ui.Button", buttons[i].id + "_btn", i + 10, {settings:{width:buttonWidth, height:35, label:buttons[i].label}, id:buttons[i].id});
 		btn_mc._y = i * (btn_mc._height + 8);
 		btn_mc.addEventListener("press", buttonListener);
+	}
+}
+
+updateEventSkip = function (calendarObj, skip, from, to) {
+	if (skip) {
+		trace("skip for " + from.dateTimeFormat("yyyy-mm-dd") + " until " + to.dateTimeFormat("yyyy-mm-dd"));
+	} else {
+		trace("unskip for " + from.dateTimeFormat("yyyy-mm-dd") + " until " + to.dateTimeFormat("yyyy-mm-dd"));
 	}
 }
 
@@ -573,7 +576,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 				saveObj.memo = content_mc.msg_ti.text;
 				saveObj.category = content_mc.category_ip.selectedItem.value;
 				saveObj.time = content_mc.time_tp.timeAsString;
-				//saveObj.macroName = (macros_mc.selectedItem.label.length) ? macros_mc.selectedItem.label : "";
+				saveObj.macroName = "";
 				saveObj.startDate = calendarObj.startDate;
 				saveObj.endDate = calendarObj.endDate;
 				saveObj.eventType = content_mc.period.data;
@@ -847,7 +850,7 @@ editRecurringEvent = newRecurringEvent = function (calendarObj, dateObj) {
 				saveObj.memo = content_mc.msg_ti.text;
 				saveObj.category = content_mc.category_ip.selectedItem.value;
 				saveObj.time = content_mc.time_tp.timeAsString;
-				//saveObj.macroName = (macros_mc.selectedItem.label.length) ? macros_mc.selectedItem.label : "";
+				saveObj.macroName = calendarObj.macroName;
 				saveObj.startDate = calendarObj.startDate;
 				saveObj.endDate = calendarObj.endDate;
 				saveObj.eventType = content_mc.period.data;
@@ -933,4 +936,23 @@ editRecurringEvent = newRecurringEvent = function (calendarObj, dateObj) {
 		content_mc.attachMovie("bi.ui.Button", "cancel_btn", 205, {settings:{width:150, label:"Cancel", _x:280, _y:365}});
 		content_mc.cancel_btn.addEventListener("press", buttonListener);
 	}
+}
+
+dateAdd = function (dateObj, unit, amount) {
+	var newDate = new Date(dateObj.getTime());
+	switch (unit) {
+		case "d":
+			newDate.setDate(newDate.getDate() + amount);
+			break;
+		case "w":
+			newDate.setDate(newDate.getDate() + (amount * 7));
+			break;
+		case "m":
+			newDate.setMonth(newDate.getMonth() + amount);
+			break;
+		case "y":
+			newDate.setMonth(newDate.getMonth() + (amount * 12));
+			break;
+	}
+	return newDate;
 }
