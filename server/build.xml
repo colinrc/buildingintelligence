@@ -68,13 +68,22 @@
     -->
     <target name="templates" >
 	<copy todir="templates">
-	    <fileset dir="../" includes="**/*.xsd"  excludes="**/templates/**" />
-	    <fileset dir="../" includes="**/*.dtd"  excludes="**/templates/**" />
-	    <fileset dir="../" includes="**/config_ref.xml" excludes="**/templates/**" />
-	    <fileset dir="../" includes="**/datafiles/*.xml" excludes="**/templates/**" />
+	    <fileset dir="./" includes="**/*.xsd"  excludes="**/templates/**" />
+	    <fileset dir="./" includes="**/*.dtd"  excludes="**/templates/**" />
+	    <fileset dir="./" includes="**/config_ref.xml" excludes="**/templates/**" />
+	    <fileset dir="./" includes="**/datafiles/*.xml" excludes="**/templates/**" />
 	</copy>
     </target>
 
+    <target name="-post-jar" depends="" description="Moves lib files to ext.">
+      <move todir="dist/ext">
+        <fileset dir="dist/lib">
+          <include name="*.jar"/>
+        </fileset>
+      </move>
+        <echo message="Moved lib files into ext" />
+    </target>
+    
     <target name="increment" depends="" description="Increments build number and creates a zip file.">
         <propertyfile file="src/au/com/BI/Home/my.properties" >
           <entry  key="minor_version" type="int" operation="+" value="1" />
@@ -82,8 +91,8 @@
         <property file="src/au/com/BI/Home/my.properties" />
         <echo message="Version number now ${major_version}${minor_version}" />
     </target>
-
-    <target name="dist" depends="increment,jar,javadoc,templates" >
+    
+    <target name="dist" depends="increment,jar,templates" >
 	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
 		update="false"
 		basedir="dist" 
@@ -95,7 +104,8 @@
 	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
 		update="true"
 		basedir="."
-		includes = "templates/**" />	
+		includes = "templates/**/*.xml" 	
+    		excludes = ".." />
 	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
 		update="true"
 		basedir="."
@@ -107,7 +117,7 @@
 	<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
 		update="false"
 		basedir="dist" 
-		includes = "lib/*.jar" />
+		includes = "ext/*.jar" />
         <copy todir="dist">
 	    <fileset dir="." includes="*.dll" />
 	    <fileset dir="." includes="*.jnilib" />
@@ -120,8 +130,5 @@
 		update="true"
 		basedir="dist"
 		includes = "*.jnilib" />
-
     </target>
-
-
 </project>
