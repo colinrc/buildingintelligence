@@ -19,7 +19,7 @@ _global.sounds = new Object();
 _global.sounds["default"] = new Sound();
 _global.sounds["default"].attachSound("sfx_default");
 
-_global.settings.screenLockTimeout = 360;
+_global.settings.screenLockTimeout = 300;
 _global.settings.screenLockPin = "";
 			
 _global.settings.screenLockDisplay = "logo";

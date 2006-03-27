@@ -127,8 +127,8 @@
 					macroEvents_mc._y = content_mc.height / 2 + 30;
 					macroEvents_mc.addEventListener("change", macroEvents_mc);
 					macroEvents_mc.change = function (eventObj) {
-						editCalendarEvent(eventObj.target.selectedItem.value, this._parent.dateObj);
-						//skipCalendarEvent(eventObj.target.selectedItem.value);
+						//editCalendarEvent(eventObj.target.selectedItem.value, this._parent.dateObj);
+						skipCalendarEvent(eventObj.target.selectedItem.value);
 						this.selectedIndex = null
 					}
 					
@@ -212,6 +212,7 @@
 								break;
 							case "macros":
 								var listData = [];
+								/*
 								for (var m=0; m<_global.macros.length; m++) {
 									var eventObj = new Object();
 									eventObj.label = _global.macros[m].name;
@@ -231,6 +232,23 @@
 									}
 									listData.push(eventObj);
 								}
+								*/
+								for (var i=0; i<_global.calendarData.length; i++) {
+									if (_global.calendarData[i].macroName.length) {
+										var eventObj = new Object();
+										eventObj.label = _global.calendarData[i].title + " (" + _global.calendarData[i].macroName + ")";
+										eventObj.time = _global.calendarData[i].time.dateTimeFormat(_global.settings.shortTimeFormat);
+										if (_global.calendarData[i].runTime.split(":").length > 1) {
+											eventObj.runTime = (Number(_global.calendarData[i].runTime.split(":")[0]) * 60 + Number(_global.calendarData[i].runTime.split(":")[1])) + " mins";
+										} else {
+											eventObj.runTime = "Once";
+										}
+										eventObj.pattern = _global.calendarData[i].pattern;
+										eventObj.skip = _global.calendarData[i].skip;
+										eventObj.eventObj = _global.calendarData[i];
+										listData.push(eventObj);
+									}
+								}
 								break;
 						}
 						
@@ -249,6 +267,11 @@
 							bg_mc.endFill();
 							
 							row_mc._y = (row_mc._height + 2) * i;
+							
+							bg_mc.calendarObj = listData[i].eventObj;
+							bg_mc.onPress = function () {
+								editRecurringEvent(this.calendarObj);
+							}
 							
 							var label_txt = row_mc.attachMovie("bi.ui.Label", "label_txt", 10, {settings:{width:colStart, text:listData[i].label, fontSize:14, _x:4}});
 							label_txt._y = Math.round((bg_mc._height / 2) - (label_txt._height / 2));
@@ -283,8 +306,20 @@
 											holder_mc._x = Math.round((hitArea_mc._width / 2) - (holder_mc._width / 2));
 											holder_mc._y = Math.round((hitArea_mc._height / 2) - (holder_mc._height / 2));
 							
+											cell_mc.onPress = function () {
+												this.pressTime = getTimer();
+												this.onEnterFrame = function () {
+													if (getTimer() > this.pressTime + 500) {
+														skipCalendarEvent(this.eventObj);
+														delete this.onEnterFrame;
+													}
+												}
+											}
 											cell_mc.onRelease = function () {
-												editCalendarEvent(this.eventObj, this.dateObj);
+												if (getTimer() < this.pressTime + 500) {
+													trace("skip for this occurance");
+													delete this.onEnterFrame;
+												}
 											}
 											
 											var skip = false;
@@ -307,6 +342,16 @@
 								}
 							}
 						}
+						// add new event button
+						var row_mc = rows_mc.createEmptyMovieClip("row" + i + "_mc", i);
+						row_mc._y = 42 * i;
+						var add_btn = row_mc.attachMovie("bi.ui.Button", "label_txt", 10, {settings:{width:colStart - 8, label:"Add", fontSize:14, _x:4, _y:4}});
+						add_btn.currentWeekStarting = this.currentWeekStarting;
+						add_btn.press = function (eventObj) {
+							trace(this.currentWeekStarting);
+							newRecurringEvent(null, this.currentWeekStarting);
+						}
+						add_btn.addEventListener("press", add_btn);
 					}
 					content_mc.update();
 					subscribe("events", content_mc);
@@ -316,23 +361,29 @@
 	}
 }
 
-skipCalendarEvent = function (eventObj) {
-	var window_mc = showWindow({width:350, height:265, title:"Edit: " + eventObj.title, iconName:"calendar", align:"center"});
+skipCalendarEvent = function (calendarObj) {
+	var window_mc = showWindow({width:350, height:280, title:"Edit: " + eventObj.title, iconName:"calendar", align:"center"});
 	
 	var content_mc = window_mc.content_mc;
 	var buttonWidth = content_mc.width;
 	
-	content_mc.attachMovie("bi.ui.Label", "label_mc", 5, {settings:{width:buttonWidth, height:35, text:"Skip event until:"}});
+	//content_mc.attachMovie("bi.ui.Label", "label_mc", 5, {settings:{width:buttonWidth, height:35, text:"Skip event until:"}});
 	
 	var buttonListener = new Object();
+	buttonListener.calendarObj = calendarObj;
 	buttonListener.press = function (eventObj) {
+		switch (eventObj.target.id) {
+			case "editEvent":
+				editRecurringEvent(this.calendarObj);
+				break;
+		}
 		eventObj.target._parent._parent.close();
 	}
 	
-	var buttons = [{label:"Next occurrence", id:"nextOccurance"}, {label:"Next day", id:"nextDay"}, {label:"Next week", id:"nextWeek"}, {label:"Next month", id:"nextMonth"}];
+	var buttons = [{label:"Skip until next occurrence", id:"nextOccurance"}, {label:"Skip for a day", id:"nextDay"}, {label:"Skip for a week", id:"nextWeek"}, {label:"Skip for a month", id:"nextMonth"}, {label:"Edit event", id:"editEvent"}];
 	for (var i=0; i<buttons.length; i++) {
-		var btn_mc = content_mc.attachMovie("bi.ui.Button", buttons[i].id + "_btn", i + 10, {settings:{width:buttonWidth, height:35, label:buttons[i].label}});
-		btn_mc._y = i * (btn_mc._height + 8) + 35;
+		var btn_mc = content_mc.attachMovie("bi.ui.Button", buttons[i].id + "_btn", i + 10, {settings:{width:buttonWidth, height:35, label:buttons[i].label}, id:buttons[i].id});
+		btn_mc._y = i * (btn_mc._height + 8);
 		btn_mc.addEventListener("press", buttonListener);
 	}
 }
@@ -340,7 +391,7 @@ skipCalendarEvent = function (eventObj) {
 editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	if (calendarObj != undefined) {
 		var mode = "edit";
-		var window_mc = showWindow({width:700, height:455, title:"Edit event: " + calendarObj.title, iconName:"calendar", align:"center"});
+		var window_mc = showWindow({width:580, height:455, title:"Edit event: " + calendarObj.title, iconName:"calendar", align:"center"});
 	} else {
 		var mode = "create";
 		var calendarObj = new Object();
@@ -499,7 +550,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	tabs_mc.selectedTab = tabs_mc[calendarObj.eventType + "_mc"];
 	tabs_mc.selectedTab._visible = true;
 
-	
+	/*
 	content_mc.attachMovie("bi.ui.Label", "macro_lb", 90, {settings:{width:100, text:"Macro:", _x:530}});
 	
 	var macros_mc = content_mc.attachMovie("bi.ui.List", "standardEvents_mc", 100, {settings:{width:155, height:315, _x:530, _y:35}});
@@ -508,6 +559,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		macros_mc.addItem({label:_global.macros[macro].name, value:macro});
 	}
 	macros_mc.selectedLabel = calendarObj.macroName;
+	*/
 		
 	var buttonListener = new Object();
 	buttonListener.press = function (eventObj) {
@@ -521,7 +573,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 				saveObj.memo = content_mc.msg_ti.text;
 				saveObj.category = content_mc.category_ip.selectedItem.value;
 				saveObj.time = content_mc.time_tp.timeAsString;
-				saveObj.macroName = (macros_mc.selectedItem.label.length) ? macros_mc.selectedItem.label : "";
+				//saveObj.macroName = (macros_mc.selectedItem.label.length) ? macros_mc.selectedItem.label : "";
 				saveObj.startDate = calendarObj.startDate;
 				saveObj.endDate = calendarObj.endDate;
 				saveObj.eventType = content_mc.period.data;
@@ -609,10 +661,10 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	}
 }
 
-newRecurringEvent = newRecurringEvent = function (calendarObj, dateObj) {
+editRecurringEvent = newRecurringEvent = function (calendarObj, dateObj) {
 	if (calendarObj != undefined) {
 		var mode = "edit";
-		var window_mc = showWindow({width:700, height:455, title:"Edit event: " + calendarObj.title, iconName:"calendar", align:"center"});
+		var window_mc = showWindow({width:580, height:455, title:"Edit event: " + calendarObj.title, iconName:"calendar", align:"center"});
 	} else {
 		var mode = "create";
 		var calendarObj = new Object();
@@ -772,6 +824,7 @@ newRecurringEvent = newRecurringEvent = function (calendarObj, dateObj) {
 	tabs_mc.selectedTab._visible = true;
 
 	
+	/*
 	content_mc.attachMovie("bi.ui.Label", "macro_lb", 90, {settings:{width:100, text:"Macro:", _x:530}});
 	
 	var macros_mc = content_mc.attachMovie("bi.ui.List", "standardEvents_mc", 100, {settings:{width:155, height:315, _x:530, _y:35}});
@@ -780,6 +833,7 @@ newRecurringEvent = newRecurringEvent = function (calendarObj, dateObj) {
 		macros_mc.addItem({label:_global.macros[macro].name, value:macro});
 	}
 	macros_mc.selectedLabel = calendarObj.macroName;
+	*/
 		
 	var buttonListener = new Object();
 	buttonListener.press = function (eventObj) {
@@ -793,7 +847,7 @@ newRecurringEvent = newRecurringEvent = function (calendarObj, dateObj) {
 				saveObj.memo = content_mc.msg_ti.text;
 				saveObj.category = content_mc.category_ip.selectedItem.value;
 				saveObj.time = content_mc.time_tp.timeAsString;
-				saveObj.macroName = (macros_mc.selectedItem.label.length) ? macros_mc.selectedItem.label : "";
+				//saveObj.macroName = (macros_mc.selectedItem.label.length) ? macros_mc.selectedItem.label : "";
 				saveObj.startDate = calendarObj.startDate;
 				saveObj.endDate = calendarObj.endDate;
 				saveObj.eventType = content_mc.period.data;

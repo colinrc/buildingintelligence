@@ -2755,23 +2755,33 @@ screenSaver = function (mode) {
 			screensaver_mc.loadPicture();
 		} else if (_global.settings.screenLockDisplay == "logo") {
 			var logo_mc = screensaver_mc.attachMovie("bi-logo", "logo_mc", 10);
-			logo_mc._x = Math.round((_global.settings.applicationWidth / 2) - (logo_mc._width / 2));
-			logo_mc._y = Math.round((_global.settings.applicationHeight / 2) - (logo_mc._height / 2));
+
+			logo_mc._x = Math.round(Math.random() * (_global.settings.applicationWidth - logo_mc._width));
+			logo_mc._y = Math.round(Math.random() * (_global.settings.applicationHeight - logo_mc._height));
+		
+			var $dirX = 1;
+			var $dirY = 1;
 			
-			logo_mc.drive = function () {
-				var x = Math.round((_global.settings.applicationWidth - this._width) * Math.random());
-				var y = Math.round((_global.settings.applicationHeight- this._height) * Math.random());
-				var t1 = Math.random() * 4 + 1;
-				var t2 = Math.random() * 4 + 1;
-				var e = ["easeInOut", "easeIn", "easeOut"][Math.random() * 3];
-				var xMove = new Tween(this, "_x", Regular[e], this._x, x, t1, true);
-				var yMove = new Tween(this, "_y", Regular[e], this._y, y, t2, true);
-				xMove.logo = this;
-				xMove.onMotionFinished = function () {
-					this.logo.drive();
+			var $r = random(360) * (Math.PI / 180);
+			var $s = 3 + random(8);
+			
+			logo_mc.onEnterFrame = function() {
+				this._x += Math.round(Math.cos($r) * $s * $dirX);
+				this._y += Math.round(Math.sin($r) * $s * $dirY);
+				
+				if (this._x < 0 || this._x > (_global.settings.applicationWidth - this._width)) {
+					this._x = Math.round((this._x < 0) ? 0 : _global.settings.applicationWidth - this._width);
+					$dirX *= -1;
+					$r = (20 + random(40)) * (Math.PI / 180);
+					$s = 3 + random(6);	
+				}
+				if (this._y < 0 || this._y > (_global.settings.applicationHeight - this._height)) {
+					this._y =  Math.round((this._y < 0) ? 0 : _global.settings.applicationHeight - this._height);
+					$dirY *= -1;
+					$r = (20 + random(40)) * (Math.PI / 180);
+					$s = 3 + random(6);	
 				}
 			}
-			logo_mc.drive();
 		}
 	} else {
 		// stop
