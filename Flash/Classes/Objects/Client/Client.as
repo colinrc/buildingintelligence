@@ -48,29 +48,31 @@
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1,"application");
 		newNode.attributes.description = description;
+		var newCommon = new XMLNode(1,"common");
 		var newSettings = new XMLNode(1,"settings");
 		var newSetting = new XMLNode(1,"setting");
-		newSetting.attributes.name = "serverAddress";
-		newSetting.attributes.value = _global.project.ipAddress;
-		newSettings.appendChild(newSetting);
+		//newSetting.attributes.name = "serverAddress";
+		//newSetting.attributes.value = _global.project.ipAddress;
+		//newCommon.appendChild(newSetting);
 		newSetting = new XMLNode(1,"setting");
 		newSetting.attributes.name = "applicationXML";
 		newSetting.attributes.value = applicationXML;
-		newSettings.appendChild(newSetting);		
+		newCommon.appendChild(newSetting);		
 		newSetting = new XMLNode(1,"setting");
 		newSetting.attributes.name = "adminPin";
 		newSetting.attributes.value = adminPin;
-		newSettings.appendChild(newSetting);		
+		newCommon.appendChild(newSetting);		
 		newSetting = new XMLNode(1,"setting");
 		newSetting.attributes.name = "integratorHtml";
 		newSetting.attributes.value = integratorHtml;
-		newSettings.appendChild(newSetting);
+		newCommon.appendChild(newSetting);
 		for(var attribute in attributes){
 			newSetting = new XMLNode(1,"setting");
 			newSetting.attributes.name = attributes[attribute].name;
 			newSetting.attributes.value = attributes[attribute].value;
-			newSettings.appendChild(newSetting);
+			newCommon.appendChild(newSetting);
 		}
+		newSettings.appendChild(newCommon);
 		newNode.appendChild(newSettings);
 		newNode.appendChild(calendar.toXML());		
 		newNode.appendChild(sounds.toXML());
@@ -140,24 +142,25 @@
 			for(var child in newData.childNodes){
 				switch(newData.childNodes[child].nodeName){
 					case "settings":
-					for(var setting in newData.childNodes[child].childNodes){
-						switch(newData.childNodes[child].childNodes[setting].attributes["name"]){
+					var common = newData.childNodes[child].firstChild;
+					for(var setting in common.childNodes){
+						switch(common.childNodes[setting].attributes["name"]){
 						case ("adminPin"):
-							adminPin = newData.childNodes[child].childNodes[setting].attributes["value"];
+							adminPin = common.childNodes[setting].attributes["value"];
 						break;
 						case ("applicationXML"):
-							applicationXML = newData.childNodes[child].childNodes[setting].attributes["value"];
+							applicationXML = common.childNodes[setting].attributes["value"];
 						break;
 						case("serverAddress"):
 							//same as _global.project.ipAddress
 						break;
 						case("integratorHtml"):
-							integratorHtml = newData.childNodes[child].childNodes[setting].attributes["value"];
+							integratorHtml = common.childNodes[setting].attributes["value"];
 						break;
 						default:
 							var newAttribute = new Object();
-							newAttribute.name = newData.childNodes[child].childNodes[setting].attributes["name"];
-							newAttribute.value = newData.childNodes[child].childNodes[setting].attributes["value"];
+							newAttribute.name = common.childNodes[setting].attributes["name"];
+							newAttribute.value = common.childNodes[setting].attributes["value"];
 							attributes.push(newAttribute);
 						break;
 						}
