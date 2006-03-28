@@ -242,14 +242,29 @@ deleteMacro = function (macroName) {
 saveEvent = function (event) {
 	var xmlMsg = '<CONTROL KEY="CALENDAR" COMMAND="save" EXTRA="">';
 	if (event.eventType == "once") {
-		xmlMsg += '<event id="' + event.id + '" title="' + event.title + '" alarm="' + (event.alarm?"Y":"N") + '" memo="' + event.memo + '" category="' + event.category + '" date="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time + '" eventType="' + event.eventType + '" macroName="' + event.macroName + '" />';
+		xmlMsg += '<event id="' + event.id + '" title="' + event.title + '" alarm="' + (event.alarm?"Y":"N") + '" memo="' + event.memo + '" category="' + event.category + '" date="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time.dateTimeFormat("HH:nn:ss") + '" eventType="' + event.eventType + '" macroName="' + event.macroName + '" />';
 	} else {
-		xmlMsg += '<event id="' + event.id + '" title="' + event.title + '" alarm="' + (event.alarm?"Y":"N") + '" memo="' + event.memo + '" category="' + event.category + '" startDate="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" endDate="' + event.endDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time + '" eventType="' + event.eventType + '"  macroName="' + event.macroName + '" filter="' + event.filter + '">';		
+		xmlMsg += '<event id="' + event.id + '" title="' + event.title + '" alarm="' + (event.alarm?"Y":"N") + '" memo="' + event.memo + '" category="' + event.category + '" startDate="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" endDate="' + event.endDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time.dateTimeFormat("HH:nn:ss") + '" eventType="' + event.eventType + '"  macroName="' + event.macroName + '" filter="' + event.filter + '">';		
 		xmlMsg += "<pattern";
 		for (var attrib in event.pattern) {
 			xmlMsg += " " + attrib + '="' + event.pattern[attrib] + '"';
 		}
-		xmlMsg += "/>";		
+		xmlMsg += "/>";
+		if (event.skip.length == 1) {
+			var s = new Date(event.skip[0]);
+			var e = new Date(event.skip[0]);
+			xmlMsg += '<skip start_date="' + s.dateTimeFormat("yyyy-mm-dd") + '" end_date="' + e.dateTimeFormat("yyyy-mm-dd") + '" />';
+		} else if (event.skip.length > 1) {
+			var startDate = event.skip[0];
+			for (var i=0; i<event.skip.length; i++) {
+				if (event.skip[i + 1] > event.skip[i] + 86400000 || i == event.skip.length - 1) {
+					var s = new Date(startDate);
+					var e = new Date(event.skip[i]);
+					xmlMsg += '<skip start_date="' + s.dateTimeFormat("yyyy-mm-dd") + '" end_date="' + e.dateTimeFormat("yyyy-mm-dd") + '" />';
+					startDate = event.skip[i + 1];
+				}
+			}
+		}
 		xmlMsg += '</event>'
 	}
 	xmlMsg += "</CONTROL>";

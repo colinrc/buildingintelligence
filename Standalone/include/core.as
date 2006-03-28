@@ -3075,7 +3075,7 @@ loadIcons = function () {
 		
 		// load the list of icons and store them into the icon objects
 		var loadIconList = new LoadVars();
-		trace(_global.settings.libLocation);
+		//trace(_global.settings.libLocation);
 		loadIconList.load(_global.settings.libLocation + "icons/_icons.txt");
 		loadIconList.onData = function (src) {
 			_global.iconNames = src.split(chr(13) + chr(10));

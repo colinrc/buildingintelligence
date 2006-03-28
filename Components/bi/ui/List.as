@@ -172,7 +172,14 @@ class bi.ui.List extends  bi.ui.CoreUI {
 			listBg_mc.drawRect(0, 0, __width, _itemHeight);
 			listBg_mc.endFill();
 	
+			if (_data_array[i].iconName != undefined) {
+				row_mc.attachMovie("bi.ui.Icon", "icon_mc", 10, {settings:{iconName:_data_array[i].iconName, size:_itemHeight, _x:__width - _itemHeight - 2}});
+			} else {
+				row_mc.createTextField("label_txt", 20, 2, 0, bg_mc._width - 2, 0);
+			}
+			
 			row_mc.createTextField("label_txt", 20, 2, 0, bg_mc._width - 2, 0);
+			
 			var label_txt:TextField = row_mc.label_txt;
 			var label_tf:TextFormat = new TextFormat();
 			label_tf.color = _itemFontColour;

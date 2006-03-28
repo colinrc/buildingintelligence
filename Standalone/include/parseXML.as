@@ -257,23 +257,40 @@ defineCalendarData = function (events) {
 		for (var q in d) {
 			debug += q + "=" + d[q] + "; ";
 		}
-		trace(debug);
+		//trace(debug);
 
 		var t = d.time.split(":");
 		d.time = new Date(1976, 8, 27, t[0], t[1], t[2]);
 		if (d.eventType == "once") {
-			_global.calendarData.push({id:d.id, title:d.title, alarm:d.alarm == "Y", memo:d.memo, category:d.category, startDate:d.date.parseDate(), endDate:d.date.parseDate(), time:d.time, runTime:d.runTime, skip:d.skip, eventType:"once", macroName:d.macroName});
+			_global.calendarData.push({id:d.id, title:d.title, alarm:d.alarm == "Y", memo:d.memo, category:d.category, startDate:d.date.parseDate(), endDate:d.date.parseDate(), time:d.time, runTime:d.runTime, eventType:"once", macroName:d.macroName});
 		} else {
-			var pattern = new Object();
-			for (var attrib in events[event].firstChild.attributes) {
-				if (Number(events[event].firstChild.attributes[attrib]) == events[event].firstChild.attributes[attrib]) {
-					pattern[attrib] = Number(events[event].firstChild.attributes[attrib]);
-				} else {
-					pattern[attrib] = events[event].firstChild.attributes[attrib];
+			var skip = new Array();
+			for (var i in events[event].childNodes) {
+				var node = events[event].childNodes[i];
+				switch (node.nodeName) {
+					case "skip":
+						var from = node.attributes.start_date.parseDate();
+						var to = node.attributes.end_date.parseDate();
+						while (from <= to) {
+							skip.push(from.getTime());
+							from.setDate(from.getDate() + 1);
+						}
+						skip.sort();
+						break;
+					case "pattern":
+						var pattern = new Object();
+						for (var attrib in node.attributes) {
+							if (Number(node.attributes[attrib]) == node.attributes[attrib]) {
+								pattern[attrib] = Number(node.attributes[attrib]);
+							} else {
+								pattern[attrib] = node.attributes[attrib];
+							}
+							//trace("-- pattern: " + attrib + ":" + node.attributes[attrib]);
+						}
+						break;
 				}
-				//trace("-- pattern: " + attrib + ":" + events[event].firstChild.attributes[attrib]);
 			}
-			_global.calendarData.push({id:d.id, title:d.title, alarm:d.alarm == "Y", memo:d.memo, category:d.category, startDate:d.startDate.parseDate(), endDate:d.endDate.parseDate(), time:d.time, runTime:d.extra2, skip:d.skip, eventType:d.eventType, macroName:d.macroName, filter:d.filter, pattern:pattern});
+			_global.calendarData.push({id:d.id, title:d.title, alarm:d.alarm == "Y", memo:d.memo, category:d.category, startDate:d.startDate.parseDate(), endDate:d.endDate.parseDate(), time:d.time, runTime:d.extra2, skip:skip, eventType:d.eventType, macroName:d.macroName, filter:d.filter, pattern:pattern});
 		}
 	}
 }

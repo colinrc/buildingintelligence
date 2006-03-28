@@ -160,7 +160,7 @@ class bi.ui.Window extends bi.ui.CoreUI {
 		if (!_hideClose) {
 			close_btn._visible = true;
 			attachMovie("bi.ui.Window:windowCloseBtn","close_btn", 25);
-			close_btn.onPress = function () {
+			close_btn.onPress = close_btn.onDragOver = function () {
 				this._parent.close();
 			}
 			if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
