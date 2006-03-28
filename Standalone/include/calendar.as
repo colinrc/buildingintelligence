@@ -98,7 +98,7 @@
 							if (eventObj.macroName.length) {
 								macroEvents_mc.addItem({label:eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat)  +"\t" + eventObj.title, value:eventObj, iconName:"atom"});
 							} else {
-								standardEvents_mc.addItem({label:eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat) +"\t" + eventObj.title, value:eventObj, iconName:"atom"});
+								standardEvents_mc.addItem({label:eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat) +"\t" + eventObj.title, value:eventObj});
 							}
 						}
 					}
@@ -391,7 +391,7 @@ skipCalendarEvent = function (calendarObj, dateObj) {
 
 updateEventSkip = function (calendarObj, skip, from, to) {
 	if (skip) {
-		trace("skip for " + from.dateTimeFormat("yyyy-mm-dd") + " until " + to.dateTimeFormat("yyyy-mm-dd"));
+		//trace("skip for " + from.dateTimeFormat("yyyy-mm-dd") + " until " + to.dateTimeFormat("yyyy-mm-dd"));
 		while (from <= to) {
 			calendarObj.skip.push(from.getTime());
 			from.setDate(from.getDate() + 1);
@@ -401,7 +401,7 @@ updateEventSkip = function (calendarObj, skip, from, to) {
 		if (from == undefined || to == undefined) {
 			calendarObj.skip = new Array();
 		} else {
-			trace("unskip for " + from.dateTimeFormat("yyyy-mm-dd") + " until " + to.dateTimeFormat("yyyy-mm-dd"));
+			//trace("unskip for " + from.dateTimeFormat("yyyy-mm-dd") + " until " + to.dateTimeFormat("yyyy-mm-dd"));
 			for (var i=0; i<calendarObj.skip.length; i++) {
 				if (calendarObj.skip[i] == from.getTime()) {
 					var remove = (from.getTime() == to.getTime()) ? 1 : (to.getTime() - from.getTime()) / 86400000;
@@ -433,7 +433,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		calendarObj.startDate = dateObj;
 		calendarObj.endDate = new Date(dateObj.getFullYear() + 1, dateObj.getMonth(), dateObj.getDate(), dateObj.getHours(), dateObj.getMinutes(), dateObj.getSeconds())
 		calendarObj.pattern = new Object();
-		var window_mc = showWindow({width:700, height:455, title:"Create new event:", iconName:"calendar", align:"center"});
+		var window_mc = showWindow({width:580, height:455, title:"Create new event:", iconName:"calendar", align:"center"});
 	}
 	
 	var content_mc = window_mc.content_mc;
@@ -686,7 +686,24 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	}
 }
 
-editRecurringEvent = newRecurringEvent = function (calendarObj, dateObj) {
+newRecurringEvent = function (calendarObj, dateObj) {
+	var window_mc = showWindow({width:350, height:320, title:"Select macro:", iconName:"calendar", align:"center"});
+	
+	var content_mc = window_mc.content_mc;
+	
+	var macros_mc = content_mc.attachMovie("bi.ui.List", "macros_mc", 10, {settings:{width:content_mc.width, height:content_mc.height}});
+	macros_mc.addEventListener("change", macros_mc);
+	macros_mc.change = function (eventObj) {
+		trace(eventObj.target.value)
+		eventObj.target._parent._parent.close();
+	}
+	
+	for (var macro=0; macro<_global.macros.length; macro++) {
+		macros_mc.addItem({label:_global.macros[macro].name, value:macro});
+	}
+}
+
+editRecurringEvent = function (calendarObj, dateObj) {
 	if (calendarObj != undefined) {
 		var mode = "edit";
 		var window_mc = showWindow({width:580, height:455, title:"Edit event: " + calendarObj.title, iconName:"calendar", align:"center"});
@@ -706,7 +723,7 @@ editRecurringEvent = newRecurringEvent = function (calendarObj, dateObj) {
 		calendarObj.startDate = dateObj;
 		calendarObj.endDate = new Date(dateObj.getFullYear() + 1, dateObj.getMonth(), dateObj.getDate(), dateObj.getHours(), dateObj.getMinutes(), dateObj.getSeconds())
 		calendarObj.pattern = new Object();
-		var window_mc = showWindow({width:700, height:455, title:"Create new event:", iconName:"calendar", align:"center"});
+		var window_mc = showWindow({width:580, height:455, title:"Create new event:", iconName:"calendar", align:"center"});
 	}
 	
 	var content_mc = window_mc.content_mc;
