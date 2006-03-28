@@ -4,7 +4,8 @@ public class ZoneChangeUpdate extends M1Command {
 	
 	private ZoneStatus zoneStatus;
 	private String zone;
-
+	private String outputState;
+	
 	public ZoneChangeUpdate() {
 		super();
 		this.setCommand("ZC");
@@ -32,4 +33,14 @@ public class ZoneChangeUpdate extends M1Command {
 	public void setZoneStatus(ZoneStatus zoneStatus) {
 		this.zoneStatus = zoneStatus;
 	}
+
+	public String getOutputState() {
+		return outputState;
+	}
+
+	public void setOutputState(String outputState) {
+		this.outputState = outputState;
+	}
+	
+
 }

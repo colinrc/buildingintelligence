@@ -55,7 +55,9 @@ public class ControlledHelper {
 			// create the command object and cache it
 			String theKey = command.getKey();
 			CommandInterface m1Command =  buildCommandForFlash(command, configHelper, m1);
-			cache.setCachedCommand(theKey,m1Command);
+			if (m1Command == null) return;
+			
+			cache.setCachedCommand(m1Command.getDisplayName(),m1Command);
 			
 			// Check the command class
 			if (m1Command.getClass().equals(ZoneChangeUpdate.class)) {
@@ -208,21 +210,51 @@ public class ControlledHelper {
 			ConfigHelper configHelper,
 			Model m1){
 		M1Command m1Command = M1CommandFactory.getInstance().getM1Command(command.getKey());
+		if (m1Command == null) return null;
 		
-		if (m1Command.getClass().equals(OutputChangeUpdate.class)) {
-		
-			if (((OutputChangeUpdate)m1Command).getOutputState().equals("0")) {
-				m1Command.setCommand("off");
-			} else {
-				m1Command.setCommand("on");
+		BaseDevice configDevice = ((BaseDevice)configHelper.getControlItem(m1Command.getKey()));
+
+		if (configDevice != null){
+
+			boolean commandFound = false;
+			
+			if (m1Command.getClass().equals(OutputChangeUpdate.class)) {
+				commandFound = true;
+				// Dave check this. the PIR triggers the Short, sort of makes sense, in other words the violate short means PIR on
+				// violate EOL means off.  
+			
+				if (((OutputChangeUpdate)m1Command).getOutputState().equals("0")) {
+					m1Command.setCommand("off");
+				} else {
+					m1Command.setCommand("on");
+				}
+					m1Command.setDisplayName(configDevice.getOutputKey());
+				}
+			
+			if (m1Command.getClass().equals(ZoneChangeUpdate.class) ) {
+				commandFound = true;
+				// Dave check this. the PIR triggers the Short, sort of makes sense, in other words the violate short means PIR on
+				// violate EOL means off.  
+			
+				if (((ZoneChangeUpdate)m1Command).getOutputState().equals("0")) {
+					m1Command.setCommand("off");
+				} else {
+					m1Command.setCommand("on");
+				}
+					m1Command.setDisplayName(configDevice.getOutputKey());
+				}
+
+				 
+	      if (!commandFound){
+				m1Command.setDisplayName(configDevice.getOutputKey());
 			}
-			m1Command.setDisplayName(((BaseDevice)configHelper.getControlItem(m1Command.getKey())).getOutputKey());
+			
+			m1Command.setKey("CLIENT_SEND");
+			m1Command.setUser(m1.currentUser);
+			return m1Command;
 		} else {
-			m1Command.setDisplayName(((BaseDevice)configHelper.getControlItem(m1Command.getKey())).getOutputKey());
-		}
+			return null;
 		
-		m1Command.setKey("CLIENT_SEND");
-		m1Command.setUser(m1.currentUser);
-		return m1Command;
+		}
 	}
 }

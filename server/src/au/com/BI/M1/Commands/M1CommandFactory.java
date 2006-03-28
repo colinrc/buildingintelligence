@@ -13,7 +13,7 @@ public class M1CommandFactory {
 
 	private M1CommandFactory() {
 		super();
-		Logger logger = Logger.getLogger(M1CommandFactory.class.getPackage().getName());
+		logger = Logger.getLogger(M1CommandFactory.class.getPackage().getName());
 	}
 	
 	public static M1CommandFactory getInstance() {
@@ -61,7 +61,7 @@ public class M1CommandFactory {
 		}
 		
 		if (m1Command == null) {
-			logger.log(Level.WARNING,"m1Command was not found for: " + unparsedCommand);
+			logger.log(Level.FINEST,"m1Command was not found for: " + unparsedCommand);
 		}
 		return m1Command;
 	}
@@ -378,6 +378,14 @@ public class M1CommandFactory {
 		_command.setZoneStatus(ZoneStatus.getByValue(command.substring(7,8)));
 		_command.setFutureUse(command.substring(8,10));
 		
+		if (_command.getZoneStatus() == ZoneStatus.VIOLATED_SHORT) {
+			_command.setOutputState("1");
+		}
+		if (_command.getZoneStatus() == ZoneStatus.NORMAL_EOL) {
+			_command.setOutputState("0");
+		}
+		// Dave you need to make sure these status strings don't trigger an alarm, they are just standard PIR on/off messages
+			
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
 		if (checkSum.equals(_command.getCheckSum())) {
 			return(_command);
