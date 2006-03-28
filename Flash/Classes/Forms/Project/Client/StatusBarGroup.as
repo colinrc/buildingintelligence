@@ -23,19 +23,13 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private var dataObject:Object;
 	public function onLoad():Void {
 		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
-		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"\\lib\\icons", "*.png");
-		for(var myIcon in myIcons){
+		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
+		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
 			var newIcon = new Object();
-			newIcon.label = myIcons[myIcon];
-			newIcon.icon = mdm.Application.path+"\\lib\\icons"+myIcons[myIcon];
+			newIcon.label = myIcons[myIcon].split(".")[0];
+			newIcon.icon = mdm.Application.path+"lib\\icons\\"+myIcons[myIcon];
 			icon_cmb.addItem(newIcon);
 		}
-		/**var path = mdm.Application.path+"myImage.jpg";
-		/**D:\BI\eLife Admin\Build\lib\icons
-		mdm.Dialogs.prompt(myFiles[0])
-		mdm.Dialogs.prompt(myFiles[1])
-		// ... and so on*/
-
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;

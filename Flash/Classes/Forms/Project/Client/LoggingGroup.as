@@ -2,7 +2,7 @@
 import mx.utils.Delegate;
 class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var name_ti:TextInput;
-	private var icon_ti:TextInput;
+	private var icon_cmb:ComboBox;
 	private var listenTo_ti:TextInput;
 	private var type_cmb:ComboBox;
 	private var logType_ld:Loader;
@@ -22,6 +22,14 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var attributes:Array;
 	private var dataObject:Object;
 	public function onLoad():Void {
+		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
+		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
+		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
+			var newIcon = new Object();
+			newIcon.label = myIcons[myIcon].split(".")[0];
+			newIcon.icon = mdm.Application.path+"lib\\icons\\"+myIcons[myIcon];
+			icon_cmb.addItem(newIcon);
+		}
 		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
@@ -41,7 +49,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			}
 		}
 		name_ti.text = name;
-		icon_ti.text = icon;
+		icon_cmb.text = icon;
 		listenTo_ti.text = listenTo;
 		for (var index = 0; index < type_cmb.length; index++) {
 			if (type == type_cmb.getItemAt(index).label) {
@@ -60,12 +68,12 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			_global.unSaved = true;
 		};
 		name_ti.addEventListener("change", changeListener);
-		icon_ti.addEventListener("change", changeListener);
+		icon_cmb.addEventListener("change", changeListener);
 		listenTo_ti.addEventListener("change", changeListener);
 		type_cmb.addEventListener("change", changeListener);
 	}
 	private function typeChange() {
-		_global.unSaved = true;
+		//_global.unSaved = true;
 		logType_ld.createEmptyMovieClip("form_mc", 0);
 		var dataObj = new Object();
 		switch (type_cmb.selectedItem.label) {
@@ -112,7 +120,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			attributes.push({name:"timeformat", value:form_mc.timeformat_cmb.text});
 			break;
 		}
-		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_ti.text, listenTo:listenTo_ti.text, type:type_cmb.selectedItem.label, attributes:attributes});
+		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_cmb.text, listenTo:listenTo_ti.text, type:type_cmb.selectedItem.label, attributes:attributes});
 		_global.saveFile("Project");
 	}
 	private function addSel() {

@@ -273,7 +273,7 @@ _global.writeXMLFile = function(inNode:XMLNode, depth:Number):String  {
 	tempString += "<";
 	tempString += inNode.nodeName;
 	for (attribute in inNode.attributes) {
-		tempString += " " + attribute + '= "' + inNode.attributes[attribute] + '"';
+		tempString += " " + attribute + '="' + inNode.attributes[attribute] + '"';
 	}
 	if (inNode.hasChildNodes()) {
 		if (inNode.firstChild.nodeType == 3) {

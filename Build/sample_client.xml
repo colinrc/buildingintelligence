@@ -1,5 +1,6 @@
 <application lastUpdated="2005-10-31">
 	<settings>
+       <common>
 		<setting name="screenLockDisplay" value="logo" />
 		<setting name="screenLockPhotoPath" value="\\172.16.3.200\bi\client-core\lib\photos\" />
 		<setting name="screenLockPhotoScale" value="noscale" />
@@ -18,6 +19,7 @@
 		<setting name="globalBtnClickTimer" value="0" />
 
 		<setting name="integratorHtml" value="http://127.0.0.1:8080/client-core/lib/html/integrator.html" />
+		</common>
 	</settings>
 	<sounds>
 		<sound name="ding" file="sounds/ding.mp3" volume="40" />

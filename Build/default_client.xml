@@ -1,6 +1,8 @@
 <application>
-	<settings> 
-		<setting value= "http://www.news.com.au" name= "defaultBrowserURL"/> 
+	<settings>
+        <common>
+		<setting value= "http://www.news.com.au" name= "defaultBrowserURL"/>
+		</common>
 	</settings> 
 	<sounds> 
 		<sound name= "ding" file= "sounds/ding.mp3" volume= "40"/> 
@@ -29,7 +31,7 @@
 			<row> 
 				<item type= "button" label= "off" command= "off" extra= "0" width= "20"/> 
 				<item type= "slider" width= "60"/> 
-				<item type= "button" label= "on" command= "on" extra= "100" extra2= "0" extra3= "0" width= "20"/> 
+				<item type= "button" label= "on" command= "on" extra= "100" extra2= "0" extra3= "0" width= "20"/>
 			</row> 
 		</control> 
 		<control type= "onOff"> 

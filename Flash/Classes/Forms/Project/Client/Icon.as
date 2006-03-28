@@ -6,7 +6,7 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 	private var name:String;
 	private var name_ti:TextInput;
 	private var icon:String;
-	private var icon_ti:TextInput;
+	private var icon_cmb:ComboBox;
 	private var func:String;
 	private var func_cmb:ComboBox;
 	private var canOpen:String;
@@ -16,6 +16,14 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 	private var param_ti:TextInput;
 	private var param_lb:Label;
 	public function onLoad():Void {
+		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
+		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
+		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
+			var newIcon = new Object();
+			newIcon.label = myIcons[myIcon].split(".")[0];
+			newIcon.icon = mdm.Application.path+"lib\\icons\\"+myIcons[myIcon];
+			icon_cmb.addItem(newIcon);
+		}
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
@@ -38,7 +46,7 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 			param_ti.text = "";
 		}
 		name_ti.text = name;
-		icon_ti.text = icon;
+		icon_cmb.text = icon;
 		func_cmb.text = func;
 		if (canOpen == "superuser") {
 			canOpen_chk.selected = true;
@@ -46,7 +54,7 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 			canOpen_chk.selected = false;
 		}
 		name_ti.addEventListener("change", Delegate.create(this,changeListener.change));
-		icon_ti.addEventListener("change", Delegate.create(this,changeListener.change));
+		icon_cmb.addEventListener("change", Delegate.create(this,changeListener.change));
 		func_cmb.addEventListener("change", Delegate.create(this,changeListener.change));
 		canOpen_chk.addEventListener("change", Delegate.create(this,changeListener.change));
 		param_ti.addEventListener("change", Delegate.create(this,changeListener.change));		
@@ -58,7 +66,7 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 		} else {
 			var newCanOpen = "";
 		}
-		dataObject.setData({name:name_ti.text, icon:icon_ti.text, func:func_cmb.text, param:param_ti.text, canOpen:newCanOpen});
+		dataObject.setData({name:name_ti.text, icon:icon_cmb.text, func:func_cmb.text, param:param_ti.text, canOpen:newCanOpen});
 		_global.saveFile("Project");
 	}
 }

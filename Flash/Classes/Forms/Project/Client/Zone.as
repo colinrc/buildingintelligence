@@ -5,10 +5,9 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 	private var panels:Array;
 	private var name_ti:TextInput;
 	private var name:String;
-	private var map_ti:TextInput;
+	private var map_cmb:ComboBox;
 	private var map:String;
-	private var setMap_btn:Button;
-	private var background_ti:TextInput;
+	private var background_cmb:ComboBox;
 	private var background:String;
 	private var cycle_chk:CheckBox;
 	private var cycle:String;
@@ -27,19 +26,40 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 	private var del_panel_btn:Button;
 	private var dataObject:Object;	
 	public function onLoad() {
+		map_cmb.dropdown.cellRenderer = "ImageCellRenderer";
+		var myMaps = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\maps", "*.png");
+		myMaps = myMaps.concat(mdm.FileSystem.getFileList(mdm.Application.path+"lib\\maps", "*.swf"));
+		myMaps.sort();
+		for(var myMap =0; myMap <myMaps.length; myMap++){
+			var newMap = new Object();
+			newMap.label = myMaps[myMap];
+			newMap.icon = mdm.Application.path+"lib\\maps\\"+myMaps[myMap];
+			map_cmb.addItem(newMap);
+		}
+		background_cmb.dropdown.cellRenderer = "ImageCellRenderer";
+		var myBGs = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\backgrounds", "*.jpg");
+		myBGs = myBGs.concat(mdm.FileSystem.getFileList(mdm.Application.path+"lib\\backgrounds", "*.png"));
+		myBGs = myBGs.concat(mdm.FileSystem.getFileList(mdm.Application.path+"lib\\backgrounds", "*.swf"));		
+		myBGs.sort();
+		for(var myBG =0; myBG <myBGs.length; myBG++){
+			var newBG = new Object();
+			newBG.label = myBGs[myBG];
+			newBG.icon = mdm.Application.path+"lib\\backgrounds\\"+myBGs[myBG];
+			background_cmb.addItem(newBG);
+		}		
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
 		};
 		name_ti.addEventListener("change", changeListener);	
-		map_ti.addEventListener("change", changeListener);	
-		background_ti.addEventListener("change", changeListener);	
+		map_cmb.addEventListener("change", changeListener);	
+		background_cmb.addEventListener("change", changeListener);	
 		cycle_chk.addEventListener("change", changeListener);	
 		alignment_cmb.addEventListener("change", changeListener);	
 		hideFromList_chk.addEventListener("change", changeListener);			
 		name_ti.text = name;
-		map_ti.text = map;
-		background_ti.text = background;
+		map_cmb.text = map;
+		background_cmb.text = background;
 		/*********************************/
 		for (var align in alignment_cmb.dataProvider) {
 			if (alignment_cmb.dataProvider[align].label == alignment) {
@@ -88,18 +108,8 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		add_room_btn.addEventListener("click", Delegate.create(this, addRoom));
 		del_panel_btn.addEventListener("click", Delegate.create(this, deletePanel));
 		add_panel_btn.addEventListener("click", Delegate.create(this, addPanel));
-		setMap_btn.addEventListener("click", Delegate.create(this, setMap));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
-	public function setMap():Void {
-		mdm.Dialogs.BrowseFile.title = "Please select a Map File";
-		mdm.Dialogs.BrowseFile.filterList = "";
-		mdm.Dialogs.BrowseFile.filterText = "";
-		var tempString = mdm.Dialogs.BrowseFile.show();
-		if (tempString != "false") {
-			map_ti.text = tempString.substr(tempString.lastIndexOf("\\")+1, tempString.length-1);
-		}
-	}	
 	private function deleteRoom() {
 		dataGridHandler.removeRow();
 	}
@@ -139,7 +149,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		} else {
 			hideFromList = "false";
 		}
-		dataObject.setData({panels:newPanels, rooms:newRooms, name:name_ti.text, map:map_ti.text, background:background_ti.text, cycle:cycle, alignment:alignment_cmb.selectedItem.label, hideFromList:hideFromList});
+		dataObject.setData({panels:newPanels, rooms:newRooms, name:name_ti.text, map:map_cmb.text, background:background_cmb.text, cycle:cycle, alignment:alignment_cmb.selectedItem.label, hideFromList:hideFromList});
 		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}
