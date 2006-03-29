@@ -160,7 +160,8 @@ public class Model extends BaseModel implements DeviceModel {
 							gc100CommsCommand.setCommand(outputCommand);
 							gc100CommsCommand.setExtraInfo (((ToggleSwitch)(device)).getOutputKey());
 								try { 
-									comms.addCommandToQueue (gc100CommsCommand);
+									//comms.addCommandToQueue (gc100CommsCommand);
+									comms.sendString(outputCommand);
 								} catch (CommsFail e1) {
 									throw new CommsFail ("Communication failed with GC100. " + e1.getMessage());
 								} 
@@ -249,7 +250,7 @@ public class Model extends BaseModel implements DeviceModel {
 			logger.log(Level.SEVERE,"No module number was specified for switch " + outswitch.getName() + " in group " + outswitch.getGroupName());
 			return null;
 		}
-		connector += ":" + outswitch.getKey();
+		connector = outswitch.getKey();
 		
 		if (command.getCommandCode().equals( "on")) {
 			logger.log (Level.FINER,"Sending a relay on command to " + connector);
