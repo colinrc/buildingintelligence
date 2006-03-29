@@ -1,7 +1,8 @@
 ﻿class Objects.Server.Customs extends Objects.BaseElement {
 	private var container:String;
 	private var customs:Array;
-		public function getKeys():Array{
+	var treeNode:XMLNode;			
+	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var custom in customs){
 			tempKeys.push(customs[custom].display_name);
@@ -82,6 +83,7 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
+		treeNode = newNode;				
 		return newNode;
 	}
 	public function getKey():String {

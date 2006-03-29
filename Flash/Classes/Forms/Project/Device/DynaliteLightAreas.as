@@ -46,6 +46,7 @@ class Forms.Project.Device.DynaliteLightAreas extends Forms.BaseForm {
 	public function save():Void {
 		dataGridHandler.clearSelection();		
 		dataObject.setData({lightAreas:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

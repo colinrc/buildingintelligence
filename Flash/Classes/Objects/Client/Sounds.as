@@ -1,5 +1,6 @@
 ﻿class Objects.Client.Sounds extends Objects.BaseElement {
 	private var sounds:Array;
+	private var treeNode:XMLNode;
 	public function isValid():Boolean {
 		var flag = true;
 		for (var sound in sounds) {
@@ -23,6 +24,7 @@
 		for(var sound in sounds){
 			newNode.appendChild(sounds[sound]);
 		}
+		treeNode = newNode;
 		return newNode;
 	}
 	public function toTree():XMLNode {

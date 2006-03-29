@@ -1,6 +1,7 @@
 ﻿class Objects.Server.Alarms extends Objects.BaseElement {
 	private var container:String;
 	private var alarms:Array;
+	var treeNode:XMLNode;
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var alarm in alarms){
@@ -46,6 +47,7 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
+		treeNode = newNode;	
 		return newNode;
 	}
 	public function getKey():String{

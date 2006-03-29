@@ -2,6 +2,7 @@
 	private var audiovideos:Objects.Server.AudioVideos;
 	private var inputs:Objects.Server.Catalogue;
 	private var avinputs:Objects.Server.Catalogue;	
+	private var treeNode:XMLNode;	
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(audiovideos.getKeys());

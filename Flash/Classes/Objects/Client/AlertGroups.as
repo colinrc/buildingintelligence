@@ -1,11 +1,12 @@
 ﻿class Objects.Client.AlertGroups extends Objects.BaseElement {
 	var alertgroups:Array;
-	private var treeNode:XMLNode;
+	var treeNode:XMLNode;
 	var room:Object;
 	public function AlertGroups() {
 		alertgroups = new Array();				
 	}
 	public function isValid():Boolean {
+		/*Build validation array here*/
 		var flag = true;
 		for (var alertgroup in alertgroups) {
 			if (!alertgroups[alertgroup].isValid()) {

@@ -3,6 +3,7 @@
 	private var temperatureSensors:Objects.Server.CBusTemperatureSensors;
 	private var lights:Objects.Server.CBusLights;
 	private var relays:Objects.Server.CBusRelays;
+	var treeNode:XMLNode;	
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(sensors.getKeys());

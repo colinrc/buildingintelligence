@@ -49,6 +49,7 @@ class Forms.Project.Device.OregonSensors extends Forms.BaseForm {
 	public function save():Void {
 		dataGridHandler.clearSelection();		
 		dataObject.setData({sensors:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

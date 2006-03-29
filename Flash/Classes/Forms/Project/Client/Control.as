@@ -190,6 +190,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 			newRows.push(newRow);
 		}
 		dataObject.setData({rows:newRows, type:type_ti.text});
-		_global.saveFile("Project");
+		_global.refreshTheTree();		
+		_global.saveFile("Project");	
 	}
 }

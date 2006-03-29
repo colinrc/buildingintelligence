@@ -1,6 +1,7 @@
 ﻿class Objects.Client.Doors extends Objects.BaseElement {
 	private var doors:Array;
 	var room:Object;
+	private var treeNode;
 	public function setRoom(inRoom:Object) {
 		room = inRoom;
 	}	
@@ -35,6 +36,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
+		treeNode = newNode;
 		return newNode;
 	}
 	public function getKey():String{

@@ -67,6 +67,7 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 			var newCanOpen = "";
 		}
 		dataObject.setData({name:name_ti.text, icon:icon_cmb.text, func:func_cmb.text, param:param_ti.text, canOpen:newCanOpen});
-		_global.saveFile("Project");
+		_global.refreshTheTree();		
+		_global.saveFile("Project");	
 	}
 }

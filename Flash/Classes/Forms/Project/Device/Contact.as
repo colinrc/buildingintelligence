@@ -47,6 +47,7 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 	public function save():Void {
 		dataGridHandler.clearSelection();
 		dataObject.setData({contacts:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");		
 	}
 }

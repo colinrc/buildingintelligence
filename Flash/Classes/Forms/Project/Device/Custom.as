@@ -52,6 +52,7 @@ class Forms.Project.Device.Custom extends Forms.BaseForm {
 	public function save():Void {
 		dataGridHandler.clearSelection();		
 		dataObject.setData({customs:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");		
 	}
 }

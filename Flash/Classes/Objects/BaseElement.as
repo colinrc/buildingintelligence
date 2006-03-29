@@ -1,4 +1,8 @@
 ﻿class Objects.BaseElement {
+	var validation:Array;
+	public function getValidation():Array{
+		return validation;
+	}
 	public function isValid():Boolean {
 		return true;
 	}

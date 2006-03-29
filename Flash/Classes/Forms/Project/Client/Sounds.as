@@ -78,6 +78,7 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
 		dataObject.setData({sounds:newSounds});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

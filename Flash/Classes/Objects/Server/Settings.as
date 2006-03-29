@@ -1,5 +1,6 @@
 ﻿class Objects.Server.Settings extends Objects.BaseElement {
 	private var settings:XMLNode;
+	private var treeNode:XMLNode;	
 	public function isValid():Boolean {
 		var flag = true;
 		/*for (var child in settings.childNodes) {
@@ -27,6 +28,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Calendar_Settings");
 		newNode.object = this;
+		treeNode = newNode;				
 		return newNode;
 	}
 	public function getKey():String {

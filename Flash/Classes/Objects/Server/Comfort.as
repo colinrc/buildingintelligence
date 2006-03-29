@@ -14,6 +14,7 @@
 	private var analogues:Objects.Server.Analogues;
 	private var door_ids:Objects.Server.Catalogue;
 	private var comfort_users:Objects.Server.Catalogue;
+	var treeNode:XMLNode;			
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(counters.getKeys());

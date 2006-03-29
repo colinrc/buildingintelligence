@@ -55,6 +55,7 @@ class Forms.Project.Client.ControlPanelApps extends Forms.BaseForm {
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
 		dataObject.setData({apps:newApps});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

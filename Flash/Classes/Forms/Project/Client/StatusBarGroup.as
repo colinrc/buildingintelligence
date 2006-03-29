@@ -75,6 +75,7 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
 		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_cmb.text, show:show_ti.text, hide:hide_ti.text});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 	private function addSel() {

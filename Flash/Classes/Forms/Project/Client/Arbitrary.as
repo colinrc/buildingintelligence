@@ -335,6 +335,7 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 			newItems.push(items_li.getItemAt(index));
 		}
 		dataObject.setData({items:newItems});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

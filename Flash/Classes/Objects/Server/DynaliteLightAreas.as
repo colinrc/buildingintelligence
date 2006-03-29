@@ -1,6 +1,7 @@
 ﻿class Objects.Server.DynaliteLightAreas extends Objects.BaseElement {
 	private var container:String;
 	private var lightAreas:Array;
+	private var treeNode:XMLNode;	
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var lightArea in lightAreas){
@@ -55,6 +56,7 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
+		treeNode = newNode;				
 		return newNode;
 	}
 	public function getKey():String {

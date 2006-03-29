@@ -2,6 +2,7 @@
 	var raw_interfaces:Array;
 	var container:String;
 	var catalogues:Objects.Server.Catalogues;
+	private var treeNode:XMLNode;	
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var raw_interface in raw_interfaces) {
@@ -143,6 +144,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Raw Interfaces");
 		newNode.object = this;
+		treeNode = newNode;				
 		return newNode;
 	}
 	public function getKey():String {

@@ -68,6 +68,7 @@ class Forms.Project.Device.GC100Toggle extends Forms.BaseForm {
 	public function save():Void {
 		dataGridHandler.clearSelection();
 		dataObject.setData({toggles:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");		
 	}
 }

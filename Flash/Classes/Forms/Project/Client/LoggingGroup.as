@@ -121,6 +121,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			break;
 		}
 		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_cmb.text, listenTo:listenTo_ti.text, type:type_cmb.selectedItem.label, attributes:attributes});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 	private function addSel() {

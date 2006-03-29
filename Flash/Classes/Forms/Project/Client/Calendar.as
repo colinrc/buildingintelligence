@@ -18,12 +18,12 @@ class Forms.Project.Client.Calendar extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(tab_dg);
-		dataGridHandler.addTextInputColumn("name", "Tab Name", restrictions, false, 150);
+		dataGridHandler.addTextInputColumn("label", "Tab label", restrictions, false, 150);
 		dataGridHandler.addHiddenColumn("id");
 		var DP = new Array();
 		for (var tab in tabs) {
 			var newTab = new Object();
-			newTab.name = tabs[tab].name;
+			newTab.label = tabs[tab].label;
 			newTab.id = tabs[tab].id;
 			DP.push(newTab);
 		}
@@ -43,7 +43,7 @@ class Forms.Project.Client.Calendar extends Forms.BaseForm {
 		var DP = dataGridHandler.getDataGridDataProvider();
 		for (var index = 0; index < DP.length; index++) {
 			var Tab = new Object();
-			Tab.name = DP[index].name;
+			Tab.label = DP[index].label;
 			Tab.id = DP[index].id;
 			newTabs.push(Tab);
 		}

@@ -43,7 +43,7 @@ class Objects.WorkFlow {
 		newNode.left_node.description = newNode.attributes.description;
 		if (newNode.attributes.label.length) {
 			newNode.left_node = inst;
-			newNode.attributes.complete = inst.object.isValid();
+			newNode.attributes.complete = inst.object.isValid().toString();
 			for (var child in _global.right_tree.dataProvider.childNodes) {
 				if (newNode.attributes.stepOrder == _global.right_tree.dataProvider.childNodes[child].attributes.stepOrder) {
 					var tempNode = _global.right_tree.dataProvider.childNodes[child];

@@ -1,6 +1,7 @@
 ﻿class Objects.Server.Alerts extends Objects.BaseElement {
 	private var container:String;
 	private var alerts:Array;
+	var treeNode:XMLNode;
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var alert in alerts) {
@@ -58,6 +59,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, getName());
 		newNode.object = this;
+		treeNode = newNode;			
 		return newNode;
 	}
 	public function getKey():String {

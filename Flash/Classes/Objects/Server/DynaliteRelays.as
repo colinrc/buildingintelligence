@@ -1,6 +1,7 @@
 ﻿class Objects.Server.DynaliteRelays extends Objects.BaseElement {
 	private var container:String;
 	private var lights:Array;
+	private var treeNode:XMLNode;	
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var light in lights){
@@ -71,6 +72,7 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
+		treeNode = newNode;				
 		return newNode;
 	}
 	public function getKey():String {

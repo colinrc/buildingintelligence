@@ -137,6 +137,7 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 			newControls.push(item);
 		}
 		dataObject.setData({controls:newControls, name:name_ti.text, x_pos:x_pos_ti.text, y_pos:y_pos_ti.text, width:width_ti.text, height:height_ti.text});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

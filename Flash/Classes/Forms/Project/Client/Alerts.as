@@ -136,6 +136,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			newAlerts.push(item);
 		}
 		dataObject.setData({alerts:newAlerts});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 	private function addSel() {

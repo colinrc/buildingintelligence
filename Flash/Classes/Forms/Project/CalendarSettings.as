@@ -54,6 +54,7 @@ class Forms.Project.CalendarSettings extends Forms.BaseForm {
 		}
 		newSettings.appendChild(newItem);
 		dataObject.setData({settings:newSettings});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

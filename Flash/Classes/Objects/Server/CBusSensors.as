@@ -1,6 +1,7 @@
 ﻿class Objects.Server.CBusSensors extends Objects.BaseElement {
 	private var container:String;
 	private var sensors:Array;
+	var treeNode:XMLNode;			
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var sensor in sensors) {
@@ -71,6 +72,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
+		treeNode = newNode;				
 		return newNode;
 	}
 	public function getKey():String {

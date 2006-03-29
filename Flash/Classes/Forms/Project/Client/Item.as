@@ -67,6 +67,7 @@ class Forms.Project.Client.Item extends Forms.BaseForm {
 			newAttributes.push(newAttribute);
 		}
 		dataObject.setData({attributes:newAttributes, type:type_cmb.selectedItem.label});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 	private function addSel() {

@@ -2,6 +2,7 @@
 	private var container:String;
 	private var irs:Array;
 	private var modules:Object;
+	private var treeNode:XMLNode;	
 	public function setModules(inModules:Object){
 		modules = inModules;
 	}
@@ -36,10 +37,11 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
+		treeNode = newNode;				
 		return newNode;
 	}
 	public function getKey():String {
-		return "IRs";
+		return "GC100_IRs";
 	}
 	public function setData(newData:Object){
 		irs = newData.irs;

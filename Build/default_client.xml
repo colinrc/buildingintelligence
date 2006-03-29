@@ -7,9 +7,18 @@
 	<sounds> 
 		<sound name= "ding" file= "sounds/ding.mp3" volume= "40"/> 
 	</sounds> 
-	<statusBar/> 
-	<logging/> 
-	<appsBar> 
+	<statusBar/>
+	<calendar>
+		<tab label="Today" view="today" icon="calendar" />
+		<tab label="Watering" view="filtered" macro="watering" icon="sprinkler">
+			<zone key="WATER_FRONT_LAWN" label="Front lawn" />
+			<zone key="WATER_BACK_LAWN" label="Back lawn" />
+			<zone key="WATER_BACK_GARDEN" label="Back garden" />
+		</tab>
+		<tab label="Macros" view="macros" macro="*" icon="atom" />
+	</calendar>	
+	<logging/>
+	<appsBar>
 		<icon func= "runexe" icon= "keyboard" name= "Keyboard"/> 
 		<icon func= "openTV" icon= "tv" name= "TV"/> 
 		<icon func= "openBrowser" icon= "atom" name= "Web"/> 

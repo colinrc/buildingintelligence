@@ -46,6 +46,7 @@ class Forms.Project.Device.ToggleMonitor extends Forms.BaseForm {
 	public function save():Void {
 		dataGridHandler.clearSelection();
 		dataObject.setData({monitors:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

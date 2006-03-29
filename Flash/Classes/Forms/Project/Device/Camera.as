@@ -47,6 +47,7 @@ class Forms.Project.Device.Camera extends Forms.BaseForm {
 	public function save():Void {
 		dataGridHandler.clearSelection();		
 		dataObject.setData({cameras:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

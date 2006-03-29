@@ -1,6 +1,7 @@
 ﻿class Objects.Server.ContactClosures extends Objects.BaseElement {
 	private var container:String;
 	private var contacts:Array;
+	var treeNode:XMLNode;			
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var contact in contacts) {
@@ -61,6 +62,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
+		treeNode = newNode;				
 		return newNode;
 	}
 	public function getKey():String {

@@ -48,6 +48,7 @@ class Forms.Project.Device.X10Lights extends Forms.BaseForm {
 	public function save():Void {
 		dataGridHandler.clearSelection();
 		dataObject.setData({lights:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

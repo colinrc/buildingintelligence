@@ -105,6 +105,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			newDoors.push(item);
 		}
 		dataObject.setData({doors:newDoors});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 	function onColourChange(newColour:Number) {

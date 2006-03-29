@@ -1,6 +1,7 @@
 ﻿class Objects.Server.Cameras extends Objects.BaseElement {
 	private var container:String;
 	private var cameras:Array;
+	var treeNode:XMLNode;
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var camera in cameras) {
@@ -53,6 +54,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
+		treeNode = newNode;	
 		return newNode;
 	}
 	public function getKey():String {

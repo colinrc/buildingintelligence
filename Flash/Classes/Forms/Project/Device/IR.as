@@ -64,6 +64,7 @@ class Forms.Project.Device.IR extends Forms.BaseForm {
 			newIrs.push(irNode);
 		}
 		dataObject.setData({irs:newIrs});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");						
 	}
 }

@@ -53,6 +53,7 @@ class Forms.Project.Device.CbusRelays extends Forms.BaseForm {
 	public function save():Void {
 		dataGridHandler.clearSelection();
 		dataObject.setData({relays:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

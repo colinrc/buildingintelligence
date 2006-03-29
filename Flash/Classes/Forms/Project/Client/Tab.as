@@ -124,6 +124,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 			newControls.push(item);
 		}
 		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_ti.text});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

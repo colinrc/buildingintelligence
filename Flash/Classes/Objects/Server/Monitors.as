@@ -1,6 +1,7 @@
 ﻿class Objects.Server.Monitors extends Objects.BaseElement {
 	private var container:String;
 	private var monitors:Array;
+	private var treeNode:XMLNode;	
 	public function getKeys():Array {
 		var tempKeys = new Array();
 		for (var monitor in monitors) {
@@ -52,6 +53,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
+		treeNode = newNode;				
 		return newNode;
 	}
 	public function getKey():String {

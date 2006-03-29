@@ -52,6 +52,7 @@ class Forms.Project.Device.DynaliteRelays extends Forms.BaseForm {
 	public function save():Void {
 		dataGridHandler.clearSelection();		
 		dataObject.setData({lights:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");		
 	}
 }

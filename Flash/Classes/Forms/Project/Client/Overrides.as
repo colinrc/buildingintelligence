@@ -76,6 +76,7 @@ class Forms.Project.Client.Overrides extends Forms.BaseForm {
 			newAttributes.push(newOverride);
 		}
 		dataObject.setAttributes(newAttributes);
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 	private function addSel() {

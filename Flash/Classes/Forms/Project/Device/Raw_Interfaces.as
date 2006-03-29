@@ -140,6 +140,7 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		dataGridHandler.clearSelection();
 		itemChange();		
 		dataObject.setData({raw_interfaces:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

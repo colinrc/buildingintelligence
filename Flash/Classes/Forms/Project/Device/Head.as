@@ -53,6 +53,7 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 		newData.parameters = parameters_mc.getData();
 		newData.connection = connection_mc.getData();
 		dataObject.setData(newData);
+		_global.refreshTheTree();		
 		_global.saveFile("Project");				
 	}
 }

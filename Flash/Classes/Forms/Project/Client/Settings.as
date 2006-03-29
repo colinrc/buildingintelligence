@@ -28,6 +28,7 @@ class Forms.Project.Client.Settings extends Forms.BaseForm {
 	}
 	private function save() {
 		dataObject.setData({adminPin:adminPin_ti.text, applicationXML:applicationXML_ti.text, integratorHtml:integratorHtml_ti.text});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

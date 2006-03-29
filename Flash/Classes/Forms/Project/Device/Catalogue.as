@@ -67,6 +67,7 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
 		dataObject.setData({items:newItems});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

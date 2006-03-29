@@ -1,5 +1,6 @@
 ﻿class Objects.Server.GC100Modules extends Objects.BaseElement {
 	var modules:Array;
+	private var treeNode:XMLNode;	
 	public function isValid():Boolean {
 		var flag = true;
 		/*for (var module in modules) {
@@ -18,6 +19,7 @@
 			newNode.appendChild(modules[module].toTree());
 		}*/
 		newNode.object = this;
+		treeNode = newNode;				
 		return newNode;
 	}
 	public function getKey():String {

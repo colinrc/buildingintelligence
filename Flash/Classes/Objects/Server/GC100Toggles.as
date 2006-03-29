@@ -3,6 +3,7 @@
 	private var toggle_type:String;
 	private var toggles:Array;
 	private var modules:Object;
+	private var treeNode:XMLNode;	
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var toggle in toggles){
@@ -40,10 +41,11 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
+		treeNode = newNode;		
 		return newNode;
 	}
 	public function getKey():String {
-		return "Toggles";
+		return "GC100_Toggles";
 	}
 	public function getName():String {
 		switch(toggle_type){

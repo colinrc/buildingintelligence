@@ -84,6 +84,7 @@ class Forms.Project.Variables extends Forms.BaseForm {
 			newVariables.appendChild(variableNode);
 		}
 		dataObject.setData({variables:newVariables});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
 }

@@ -1,5 +1,7 @@
 ﻿//Temp
 //mdm.Dialogs.prompt();
+mdm.Application.title = "eLIFE Admin Tool";
+mdm.Forms.MainForm.title = "eLIFE Admin Tool";
 historyViewer_btn._visible = false;
 /*************************************************************************/
 //Global style
@@ -104,7 +106,7 @@ project_xml.onLoad = function(success) {
 	//Append list of server designs and list of server implementations
 	_global.serverDesign = new Objects.Server.Server();
 	_global.serverInstance = new Objects.Instances.ServerInstance();
-	mdm.Dialogs.prompt(project_xml.toString());
+	//mdm.Dialogs.prompt(project_xml.toString());
 	for (var child in project_xml.firstChild.childNodes) {
 		switch (project_xml.firstChild.childNodes[child].nodeName) {
 		case "CONFIG" :
@@ -156,6 +158,8 @@ function openFile(openType:String):Void {
 		switch (openType) {
 		case "Project" :
 			_global.projectFileName = file;
+			mdm.Application.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
+			mdm.Forms.MainForm.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
 			project_xml.load(file);
 			setButtons(true);
 			setView("project");
@@ -183,6 +187,8 @@ _global.saveFile = function(saveType:String):Void  {
 			newProjectXML.appendChild(_global.serverDesign.toProject());
 			newProjectXML.appendChild(_global.serverInstance.toXML());
 			mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
+			mdm.Application.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
+			mdm.Forms.MainForm.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
 			_global.unSaved = false;
 		} else {
 			mdm.Dialogs.BrowseFile.buttonText = "Save";
@@ -204,6 +210,8 @@ _global.saveFile = function(saveType:String):Void  {
 				newProjectXML.appendChild(_global.serverDesign.toProject());
 				newProjectXML.appendChild(_global.serverInstance.toProject());
 				mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
+				mdm.Application.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
+				mdm.Forms.MainForm.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
 				_global.unSaved = false;
 			}
 		}
@@ -348,6 +356,8 @@ mdm.Menu.Main.onMenuClick_New_Project = function() {
 		_global.designTree_xml.appendChild(clients[client].toTree());
 	}
 	_global.controlTree_xml.appendChild(_global.serverInstance.toTree());
+	mdm.Application.title = "eLIFE Admin Tool - [unsaved]";
+	mdm.Forms.MainForm.title = "eLIFE Admin Tool - [unsaved]";
 	setView("home");
 	_global.refreshTheTree();
 	setButtons(true);

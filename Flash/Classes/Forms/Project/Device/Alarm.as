@@ -44,6 +44,7 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 		var newAlarms = new Array();
 		dataGridHandler.clearSelection();
 		dataObject.setData({alarms:dataGridHandler.getDataGridDataProvider()});
+		_global.refreshTheTree();		
 		_global.saveFile("Project");				
 	}
 }

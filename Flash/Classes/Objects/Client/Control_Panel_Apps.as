@@ -1,5 +1,6 @@
 ﻿class Objects.Client.Control_Panel_Apps extends Objects.BaseElement{
 	private var apps:Array;
+	private var treeNode:XMLNode;
 	public function isValid():Boolean {
 		var flag = true;
 		/*for(var child in apps.childNodes){
@@ -24,6 +25,7 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
+		treeNode = newNode;
 		newNode.object = this;
 		return newNode;
 	}

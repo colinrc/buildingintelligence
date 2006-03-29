@@ -1,6 +1,7 @@
 ﻿class Objects.Server.Raw_Connection extends Objects.Server.Device {
 	private var customs:Objects.Server.Customs;
 	private var raw_interfaces:Objects.Server.Raw_Interfaces;
+	private var treeNode:XMLNode;	
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(customs.getKeys());

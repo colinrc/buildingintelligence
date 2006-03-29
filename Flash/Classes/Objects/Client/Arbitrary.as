@@ -1,5 +1,6 @@
 ﻿class Objects.Client.Arbitrary extends Objects.BaseElement {
 	private var items:Array;
+	private var treeNode:XMLNode;	
 	public function isValid():Boolean {
 		var flag = true;
 		for (var item in items){
@@ -22,6 +23,7 @@
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());
 		newNode.object = this;
+		treeNode = newNode;
 		return newNode;
 	}
 	public function getKey():String{

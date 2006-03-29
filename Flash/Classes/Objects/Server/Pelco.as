@@ -1,5 +1,6 @@
 ﻿class Objects.Server.Pelco extends Objects.Server.Device {
 	private var cameras:Objects.Server.Cameras;
+	private var treeNode:XMLNode;	
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(cameras.getKeys());
