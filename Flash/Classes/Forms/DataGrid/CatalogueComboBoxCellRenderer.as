@@ -47,6 +47,7 @@ class Forms.DataGrid.CatalogueComboBoxCellRenderer extends UIComponent {
 				}
 				listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.selectedItem.label;
 				listOwner.dataProvider[itemLocation.itemIndex].code.DP = label.selectedItem.data;
+				_global.unSaved = true;		
 				//listOwner.dataProvider[itemLocation.itemIndex].code.label = label.selectedItem.data[0].label;					
 				size();
 			}

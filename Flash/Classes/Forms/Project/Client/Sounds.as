@@ -9,16 +9,27 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 	private var dataGridHandler:Object;
 	private var dataObject:Object;			
 	public function onLoad() {
+		var soundDP = new Array();
+		var mySounds = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\sounds", "*.mp3");
+		for(var mySound =0; mySound <mySounds.length; mySound++){
+			var newSound = new Object();
+			newSound.label = "sounds\\"+mySounds[mySound];
+			soundDP.push(newSound);
+		}		
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
+		var volRestrictions = new Object();
+		volRestrictions.maxChars = 3;
+		volRestrictions.restrict = "0-9";		
 		var attributes = new Object();
 		attributes.label = "Play";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(sounds_dg);
 		dataGridHandler.addTextInputColumn("name", "Sound Name", restrictions,false,100);
-		dataGridHandler.addTextInputColumn("file", "File", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("volume", "Volume", restrictions,false,60);
+		//dataGridHandler.addTextInputColumn("file", "File", restrictions,false,150);
+		dataGridHandler.addComboBoxColumn("file", "File", soundDP, false, 150);		
+		dataGridHandler.addTextInputColumn("volume", "Volume", volRestrictions,false,60);
 		dataGridHandler.addButtonColumn("Play", "Play", attributes, Delegate.create(this, previewItem),false,150);
 		var DP = new Array();
 		for (var sound in sounds) {
@@ -44,15 +55,15 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 	}
 	public function previewItem(itemLocation:Object) {
 		var DP = dataGridHandler.getDataGridDataProvider();
-		var file = DP[itemLocation.itemIndex].file;
+		var file = DP[DP.length-(itemLocation.itemIndex+1)].file;
 		var my_sound:Sound = new Sound();
+		my_sound.setVolume(DP[DP.length-(itemLocation.itemIndex+1)].volume);		
 		my_sound.onLoad = function(success:Boolean) {
 			if (success) {
-				this.setVolume(DP[itemLocation.itemIndex].volume);
 				this.start();
 			}
 		};
-		my_sound.loadSound(file, true);
+		my_sound.loadSound("lib\\"+file, true);
 	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();

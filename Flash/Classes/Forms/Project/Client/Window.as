@@ -25,7 +25,7 @@ class Forms.Project.Client.Window extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("name", "Tab Name", restrictions, false, 150);
 		dataGridHandler.addHiddenColumn("id");
 		var DP = new Array();
-		for (var tab in tabs) {
+		for (var tab = 0; tab<tabs.length;tab++){						
 			var newTab = new Object();
 			newTab.name = tabs[tab].name;
 			newTab.id = tabs[tab].id;

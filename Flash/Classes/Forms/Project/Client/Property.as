@@ -5,6 +5,8 @@ class Forms.Project.Client.Property extends Forms.BaseForm {
 	private var zones_dg:DataGrid;
 	private var new_btn:Button;
 	private var delete_btn:Button;
+	private var up_btn:Button;
+	private var down_btn:Button;	
 	private var name_ti:TextInput;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
@@ -23,7 +25,7 @@ class Forms.Project.Client.Property extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("name", "Zone Name", restrictions,false,150);
 		dataGridHandler.addHiddenColumn("id");
 		var DP = new Array();
-		for (var zone in zones) {
+		for (var zone = 0; zone<zones.length;zone++){				
 			var newZone = new Object();
 			newZone.name = zones[zone].name;
 			newZone.id = zones[zone].id;
@@ -32,6 +34,8 @@ class Forms.Project.Client.Property extends Forms.BaseForm {
 		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
+		up_btn.addEventListener("click", Delegate.create(this, moveUp));
+		down_btn.addEventListener("click", Delegate.create(this, moveDown));		
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
@@ -40,6 +44,36 @@ class Forms.Project.Client.Property extends Forms.BaseForm {
 	private function newItem() {
 		dataGridHandler.addBlankRow();
 	}
+	private function moveUp() {
+		if (zones_dg.selectedIndex != undefined) {
+			if (zones_dg.selectedIndex != zones_dg.length-1) {
+				var tempObj = zones_dg.getItemAt(zones_dg.selectedIndex+1);
+				zones_dg.replaceItemAt(zones_dg.selectedIndex+1, zones_dg.selectedItem);
+				zones_dg.replaceItemAt(zones_dg.selectedIndex, tempObj);
+				var tempIndex = zones_dg.selectedIndex+1;
+				zones_dg.dataProvider.updateViews("change");
+				zones_dg.selectedIndex = undefined;
+				zones_dg.selectedIndices = undefined;
+				//zones_dg.selectedIndex = tempIndex;
+			}
+			_global.unSaved = true;			
+		}
+	}
+	private function moveDown() {
+		if (zones_dg.selectedIndex != undefined) {
+			if (zones_dg.selectedIndex != 0) {
+				var tempObj = zones_dg.getItemAt(zones_dg.selectedIndex-1);
+				zones_dg.replaceItemAt(zones_dg.selectedIndex-1, zones_dg.selectedItem);
+				zones_dg.replaceItemAt(zones_dg.selectedIndex, tempObj);
+				var tempIndex = zones_dg.selectedIndex-1;
+				zones_dg.dataProvider.updateViews("change");
+				zones_dg.selectedIndex = undefined;
+				zones_dg.selectedIndices = undefined;
+				//zones_dg.selectedIndex = tempIndex;
+			}
+			_global.unSaved = true;			
+		}
+	}	
 	public function save():Void {
 		var newZones = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();

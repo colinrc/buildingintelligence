@@ -26,7 +26,7 @@ class Forms.Project.Client.AppsBar extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("name", "Icon Name", restrictions,false,200);
 		dataGridHandler.addHiddenColumn("id");
 		var DP = new Array();		
-		for (var icon in icons) {
+		for (var icon = 0; icon<icons.length;icon++){
 			DP.push({name:icons[icon].name,id:icons[icon].id});
 		}
 		dataGridHandler.setDataGridDataProvider(DP);

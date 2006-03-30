@@ -52,7 +52,7 @@
 		return newNode;
 	}
 	public function toTree():XMLNode {
-		var newNode = new XMLNode(1, this.getName());
+		var newNode = new XMLNode(1, "Zone");
 		newNode.object = this;
 		newNode.appendChild(arbitrary.toTree());
 		for (var room in rooms) {
@@ -71,8 +71,14 @@
 		return "Zone : "+name;
 	}
 	public function getData():Object {
-		return {panels:panels, rooms:rooms, name:name, map:map, background:background, cycle:cycle, alignment:alignment, hideFromList:hideFromList,dataObject:this};
+		return {name:name, map:map, background:background, cycle:cycle, alignment:alignment, hideFromList:hideFromList,dataObject:this};
 	}
+	public function getPanels():Array{
+		return panels;
+	}
+	public function getRooms():Array{
+		return rooms;
+	}	
 	public function setXML(newData:XMLNode):Void {
 		rooms = new Array();
 		panels = new Array();
@@ -130,45 +136,8 @@
 			trace("Error, found "+newData.nodeName+", was expecting zone");
 		}
 	}
-	public function setData(newData:Object):Void {
-		_global.left_tree.setIsOpen(treeNode, false);
-		name = newData.name;
-		map = newData.map;
-		background = newData.background;
-		cycle = newData.cycle;
-		alignment = newData.alignment;
-		hideFromList = newData.hideFromList;
-		//Process rooms changes....
-		var newRooms = new Array();
-		for (var index in newData.rooms) {
-			if (newData.rooms[index].id == undefined) {
-				newRooms.push({name:newData.rooms[index].name});
-			}
-		}
-		for (var room in rooms) {
-			var found = false;
-			for (var index in newData.rooms) {
-				if (rooms[room].id == newData.rooms[index].id) {
-					rooms[room].name = newData.rooms[index].name;
-					found = true;
-				}
-			}
-			if (found == false) {
-				rooms[room].deleteSelf();
-				rooms.splice(parseInt(room), 1);
-			}
-		}
-		for (var newRoom in newRooms) {
-			var newNode = new XMLNode(1, "room");
-			newNode.attributes["name"] = newRooms[newRoom].name;
-			var newRoom = new Objects.Client.Room();
-			newRoom.setXML(newNode);		
-			newRoom.id = _global.formDepth++;	
-			newRoom.setZone(this);
-			treeNode.appendChild(newRoom.toTree());			
-			rooms.push(newRoom);
-		}
-		/****/
+	public function setPanels(newData:Object):Void {
+		_global.left_tree.setIsOpen(treeNode, false);		
 		var newPanels = new Array();
 		for (var index in newData.panels) {
 			if (newData.panels[index].id == undefined) {
@@ -198,6 +167,47 @@
 			treeNode.appendChild(newPanel.toTree());
 			panels.push(newPanel);
 		}
-		_global.left_tree.setIsOpen(treeNode, true);		
+		_global.left_tree.setIsOpen(treeNode, true);				
+	}
+	public function setRooms(newData:Object):Void {
+		_global.left_tree.setIsOpen(treeNode, false);		
+		var newRooms = new Array();
+		for (var index in newData.rooms) {
+			if (newData.rooms[index].id == undefined) {
+				newRooms.push({name:newData.rooms[index].name});
+			}
+		}
+		for (var room in rooms) {
+			var found = false;
+			for (var index in newData.rooms) {
+				if (rooms[room].id == newData.rooms[index].id) {
+					rooms[room].name = newData.rooms[index].name;
+					found = true;
+				}
+			}
+			if (found == false) {
+				rooms[room].deleteSelf();
+				rooms.splice(parseInt(room), 1);
+			}
+		}
+		for (var newRoom in newRooms) {
+			var newNode = new XMLNode(1, "room");
+			newNode.attributes["name"] = newRooms[newRoom].name;
+			var newRoom = new Objects.Client.Room();
+			newRoom.setXML(newNode);		
+			newRoom.id = _global.formDepth++;	
+			newRoom.setZone(this);
+			treeNode.appendChild(newRoom.toTree());			
+			rooms.push(newRoom);
+		}		
+		_global.left_tree.setIsOpen(treeNode, true);			
+	}
+	public function setData(newData:Object):Void {
+		name = newData.name;
+		map = newData.map;
+		background = newData.background;
+		cycle = newData.cycle;
+		alignment = newData.alignment;
+		hideFromList = newData.hideFromList;
 	}
 }

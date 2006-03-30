@@ -531,6 +531,12 @@ tabs_tb.change = function(eventObj) {
 		case "Publish" :
 			form_mc = formContent_mc.attachMovie("forms.control.publish", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnection());
 			break;
+		case "Panels" :
+			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject,panels:tempObject.getPanels()});
+			break;
+		case "Rooms" :
+			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject,rooms:tempObject.getRooms()});
+			break;			
 		default :
 			form_mc = formContent_mc.attachMovie(tempObject.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getData());
 			break;
@@ -588,6 +594,14 @@ leftTreeListener.change = function(eventObj) {
 			//Need to rewrite how a view is attached to a server object
 			//_global.server.attachView(form_mc);			
 			break;
+		case "Zone" :
+			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
+			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"Rooms", view:"forms.project.client.rooms"}, {label:"Panels", view:"forms.project.client.panels"}, {label:"XML", view:"forms.project.xml"}];
+			tabs_tb.selectedIndex = 0;
+			break;
+			//Need to rewrite how a view is attached to a server object
+			//_global.server.attachView(form_mc);			
+			break;			
 		default :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}];

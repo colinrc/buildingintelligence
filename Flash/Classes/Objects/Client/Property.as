@@ -1,6 +1,6 @@
-﻿class Objects.Client.Property extends Objects.BaseElement{
+﻿class Objects.Client.Property extends Objects.BaseElement {
 	private var zones:Array;
-	private var treeNode:XMLNode;		
+	private var treeNode:XMLNode;
 	public function isValid():Boolean {
 		return true;
 	}
@@ -8,46 +8,45 @@
 		return "forms.project.client.property";
 	}
 	public function toXML():XMLNode {
-		var newNode = new XMLNode(1,"property");
-		for(var zone in zones){
+		var newNode = new XMLNode(1, "property");
+		for (var zone = 0; zone < zones.length; zone++) {
 			newNode.appendChild(zones[zone].toXML());
 		}
 		return newNode;
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,"Property");
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, "Property");
 		newNode.object = this;
-		for(var zone in zones){
+		for (var zone = 0; zone < zones.length; zone++) {
 			newNode.appendChild(zones[zone].toTree());
 		}
-		treeNode = newNode;			
+		treeNode = newNode;
 		return newNode;
 	}
-	public function getKey():String{
+	public function getKey():String {
 		return "Property";
 	}
-	public function getName():String{
+	public function getName():String {
 		return "Property";
 	}
-	public function getData():Object{
+	public function getData():Object {
 		return {zones:zones, dataObject:this};
 	}
-	public function setXML(newData:XMLNode):Void{
+	public function setXML(newData:XMLNode):Void {
 		zones = new Array();
-		if(newData.nodeName == "property"){
-			for(var child in newData.childNodes){
+		if (newData.nodeName == "property") {
+			for (var child = 0; child < newData.childNodes.length; child++) {
 				var newZone = new Objects.Client.Zone();
 				newZone.setXML(newData.childNodes[child]);
-				newZone.id = _global.formDepth++;				
+				newZone.id = _global.formDepth++;
 				zones.push(newZone);
 			}
-		}
-		else{
-			trace("Error, found "+ newData.nodeName +", was expecting property");
+		} else {
+			trace("Error, found " + newData.nodeName + ", was expecting property");
 		}
 	}
-	public function setData(newData:Object):Void{
-		_global.left_tree.setIsOpen(treeNode, false);		
+	public function setData(newData:Object):Void {
+		_global.left_tree.setIsOpen(treeNode, false);
 		//Process new zones
 		var newZones = new Array();
 		for (var index in newData.zones) {
@@ -74,9 +73,25 @@
 			var newZone = new Objects.Client.Zone();
 			newZone.id = _global.formDepth++;
 			newZone.setXML(newNode);
-			treeNode.appendChild(newZone.toTree());			
 			zones.push(newZone);
 		}
-		_global.left_tree.setIsOpen(treeNode, true);		
+		//sort according to desired order
+		newZones = new Array();
+		for (var newZone = 0; newZone < newData.zones.length; newZone++) {
+			for (var zone = 0; zone < zones.length; zone++) {
+				if (newData.zones[newZone].name == zones[zone].name) {
+					newZones.push(zones[zone]);
+				}
+			}
+		}
+		zones = newZones;
+		var treeLength = treeNode.childNodes.length;
+		for(var child = treeLength-1; child > -1;child--){
+			treeNode.childNodes[child].removeNode();
+		}
+		for(var zone = 0; zone<zones.length;zone++){
+			treeNode.appendChild(zones[zone].toTree());
+		}
+		_global.left_tree.setIsOpen(treeNode, true);
 	}
 }

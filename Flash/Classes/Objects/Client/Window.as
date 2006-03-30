@@ -20,14 +20,14 @@
 		for (var attribute in attributes) {
 			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
 		}
-		for (var tab in tabs) {
+		for (var tab = 0; tab < tabs.length; tab++) {			
 			newNode.appendChild(tabs[tab].toXML());
 		}
 		return newNode;
 	}
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
-		for (var tab in tabs) {
+		for (var tab = 0; tab < tabs.length; tab++) {			
 			newNode.appendChild(tabs[tab].toTree());
 		}
 		newNode.object = this;
@@ -56,7 +56,7 @@
 				attributes.push({name:attribute, value:newData.attributes[attribute]});
 			}
 			tabs = new Array();
-			for (var child in newData.childNodes) {
+			for (var child = 0; child < newData.childNodes.length; child++) {			
 				var newTab = new Objects.Client.Tab();
 				newTab.setXML(newData.childNodes[child]);
 				newTab.id = _global.formDepth++;
@@ -96,13 +96,12 @@
 			var Tab = new Objects.Client.Tab();
 			Tab.setXML(newNode);
 			Tab.id = newTabs[newTab].id;
-			treeNode.appendChild(Tab.toTree());
 			tabs.push(Tab);
 		}
 		//sort according to desired order
 		newTabs = new Array();
-		for (var newTab in newData.tabs) {
-			for (var tab in tabs) {
+		for (var newTab = 0; newTab < newData.tabs.length; newTab++) {			
+			for (var tab = 0; tab < tabs.length; tab++) {			
 				if (newData.tabs[newTab].id == tabs[tab].id) {
 					newTabs.push(tabs[tab]);
 					break;
@@ -110,6 +109,13 @@
 			}
 		}
 		tabs = newTabs;
+		var treeLength = treeNode.childNodes.length;
+		for(var child = treeLength-1; child > -1;child--){
+			treeNode.childNodes[child].removeNode();
+		}
+		for(var tab = 0; tab<tabs.length;tab++){
+			treeNode.appendChild(tabs[tab].toTree());
+		}		
 		_global.left_tree.setIsOpen(treeNode, true);
 	}
 }

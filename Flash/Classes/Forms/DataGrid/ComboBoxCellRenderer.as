@@ -43,6 +43,7 @@ class Forms.DataGrid.ComboBoxCellRenderer extends UIComponent {
 					}
 				}
 				listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.selectedItem.label;
+				_global.unSaved = true;		
 				size();
 			}
 		} else {

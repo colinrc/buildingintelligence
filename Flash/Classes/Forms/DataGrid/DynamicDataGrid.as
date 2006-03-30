@@ -222,7 +222,7 @@ class Forms.DataGrid.DynamicDataGrid {
 	}
 	public function setDataGridDataProvider(new_dp:Array) {
 		var processed_dp = new Array();
-		for (var row in new_dp) {
+		for (var row = 0; row < new_dp.length;row++) {
 			var newRow = new Object();
 			for (var column in new_dp[row]) {
 				switch (columns[column].type) {
@@ -295,7 +295,7 @@ class Forms.DataGrid.DynamicDataGrid {
 	public function getDataGridDataProvider():Array {
 		clearSelection();		
 		var processed_dp = new Array();
-		for (var row in my_dg.dataProvider) {
+		for (var row =0; row < my_dg.dataProvider.length;row++) {
 			var newRow = new Object();
 			for (var column in columns) {
 				switch (columns[column].type) {
@@ -467,12 +467,14 @@ class Forms.DataGrid.DynamicDataGrid {
 			newButton.callBack = buttonColumns[column].callBack;
 			newRow[column] = newButton;
 		}
-		my_dg.dataProvider.addItemAt(0, newRow);
+		my_dg.dataProvider.addItemAt(my_dg.dataProvider.length, newRow);
+		//my_dg.dataProvider.addItemAt(0, newRow);
 		my_dg.dataProvider.updateViews("change");
-		my_dg.vPosition = 0;
-		my_dg.selectedIndex = 0;
+		my_dg.vPosition = my_dg.maxVPosition;
+		my_dg.selectedIndex = my_dg.dataProvider.length-1;
 		lastClick.itemIndex = my_dg.selectedIndex;
 		_global.unSaved = true;
+		my_dg.vPosition = my_dg.maxVPosition;
 	}
 	public function removeRow() {
 		my_dg.dataProvider.removeItemAt(my_dg.selectedIndex);

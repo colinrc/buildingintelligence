@@ -1,10 +1,10 @@
-﻿class Objects.Client.Status_Bar extends Objects.BaseElement{
+﻿class Objects.Client.Status_Bar extends Objects.BaseElement {
 	private var groups:Array;
-	private var treeNode:XMLNode;		
+	private var treeNode:XMLNode;
 	public function isValid():Boolean {
 		var flag = true;
-		for(var group in groups){
-			if(!groups[group].isValid()){
+		for (var group in groups) {
+			if (!groups[group].isValid()) {
 				flag = false;
 			}
 		}
@@ -14,45 +14,44 @@
 		return "forms.project.client.statusbar";
 	}
 	public function toXML():XMLNode {
-		var newNode = new XMLNode(1,"statusBar")
-		for(var group in groups){
+		var newNode = new XMLNode(1, "statusBar");
+		for (var group = 0; group < groups.length; group++) {
 			newNode.appendChild(groups[group].toXML());
 		}
 		return newNode;
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getName());
-		for(var group in groups){
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, this.getName());
+		for (var group = 0; group < groups.length; group++) {
 			newNode.appendChild(groups[group].toTree());
 		}
 		newNode.object = this;
-		treeNode = newNode;			
+		treeNode = newNode;
 		return newNode;
 	}
-	public function getKey():String{
+	public function getKey():String {
 		return "StatusBar";
-	}	
-	public function getName():String{
+	}
+	public function getName():String {
 		return "Status Bar";
 	}
-	public function getData():Object{
+	public function getData():Object {
 		return {groups:groups, dataObject:this};
 	}
-	public function setXML(newData:XMLNode):Void{
+	public function setXML(newData:XMLNode):Void {
 		groups = new Array();
-		if(newData.nodeName = "statusBar"){
-			for(var child in newData.childNodes){
+		if (newData.nodeName = "statusBar") {
+			for (var child = 0; child < newData.childNodes.length; child++) {
 				var newGroup = new Objects.Client.StatusBarGroup();
 				newGroup.setXML(newData.childNodes[child]);
 				newGroup.id = _global.formDepth++;
 				groups.push(newGroup);
 			}
-		}
-		else{
-			trace("Error, received "+newData.nodeName+", was expecting statusBar");
+		} else {
+			trace("Error, received " + newData.nodeName + ", was expecting statusBar");
 		}
 	}
-	public function setData(newData:Object):Void{
+	public function setData(newData:Object):Void {
 		_global.left_tree.setIsOpen(treeNode, false);
 		/*Find new groups*/
 		var newGroups = new Array();
@@ -82,9 +81,26 @@
 			var newGroup = new Objects.Client.StatusBarGroup();
 			newGroup.setXML(newNode);
 			newGroup.id = _global.formDepth++;
-			treeNode.appendChild(newGroup.toTree());			
+			treeNode.appendChild(newGroup.toTree());
 			groups.push(newGroup);
 		}
-		_global.left_tree.setIsOpen(treeNode, true);		
+		//sort according to desired order
+		newGroups = new Array();
+		for (var newGroup = 0; newGroup < newData.groups.length; newGroup++) {
+			for (var group = 0; group < groups.length; group++) {
+				if (newData.groups[newGroup].name == groups[group].name) {
+					newGroups.push(groups[group]);
+				}
+			}
+		}
+		groups = newGroups;
+		var treeLength = treeNode.childNodes.length;
+		for(var child = treeLength-1; child > -1;child--){
+			treeNode.childNodes[child].removeNode();
+		}
+		for(var group = 0; group<groups.length;group++){
+			treeNode.appendChild(groups[group].toTree());
+		}		
+		_global.left_tree.setIsOpen(treeNode, true);
 	}
 }

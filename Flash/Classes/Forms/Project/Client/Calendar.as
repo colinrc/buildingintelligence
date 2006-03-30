@@ -5,6 +5,8 @@ class Forms.Project.Client.Calendar extends Forms.BaseForm {
 	private var tab_dg:DataGrid;
 	private var new_btn:Button;
 	private var delete_btn:Button;
+	private var up_btn:Button;
+	private var down_btn:Button;	
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
 	private var dataObject:Object;
@@ -21,7 +23,7 @@ class Forms.Project.Client.Calendar extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("label", "Tab label", restrictions, false, 150);
 		dataGridHandler.addHiddenColumn("id");
 		var DP = new Array();
-		for (var tab in tabs) {
+		for (var tab = 0; tab<tabs.length;tab++){
 			var newTab = new Object();
 			newTab.label = tabs[tab].label;
 			newTab.id = tabs[tab].id;
@@ -30,6 +32,8 @@ class Forms.Project.Client.Calendar extends Forms.BaseForm {
 		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
+		up_btn.addEventListener("click", Delegate.create(this, moveUp));
+		down_btn.addEventListener("click", Delegate.create(this, moveDown));		
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	private function deleteItem() {
@@ -38,6 +42,36 @@ class Forms.Project.Client.Calendar extends Forms.BaseForm {
 	private function newItem() {
 		dataGridHandler.addBlankRow();
 	}
+	private function moveUp() {
+		if (tab_dg.selectedIndex != undefined) {
+			if (tab_dg.selectedIndex != tab_dg.length-1) {
+				var tempObj = tab_dg.getItemAt(tab_dg.selectedIndex+1);
+				tab_dg.replaceItemAt(tab_dg.selectedIndex+1, tab_dg.selectedItem);
+				tab_dg.replaceItemAt(tab_dg.selectedIndex, tempObj);
+				var tempIndex = tab_dg.selectedIndex+1;
+				tab_dg.dataProvider.updateViews("change");
+				tab_dg.selectedIndex = undefined;
+				tab_dg.selectedIndices = undefined;
+				//tab_dg.selectedIndex = tempIndex;
+			}
+			_global.unSaved = true;			
+		}
+	}
+	private function moveDown() {
+		if (tab_dg.selectedIndex != undefined) {
+			if (tab_dg.selectedIndex != 0) {
+				var tempObj = tab_dg.getItemAt(tab_dg.selectedIndex-1);
+				tab_dg.replaceItemAt(tab_dg.selectedIndex-1, tab_dg.selectedItem);
+				tab_dg.replaceItemAt(tab_dg.selectedIndex, tempObj);
+				var tempIndex = tab_dg.selectedIndex-1;
+				tab_dg.dataProvider.updateViews("change");
+				tab_dg.selectedIndex = undefined;
+				tab_dg.selectedIndices = undefined;
+				//tab_dg.selectedIndex = tempIndex;
+			}
+			_global.unSaved = true;			
+		}
+	}	
 	public function save():Void {
 		var newTabs = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();

@@ -24,10 +24,10 @@
 			newNode.attributes["name"] = name;
 		}
 		if(x_pos != "") {
-			newNode.attributes["x_pos"] = x_pos;
+			newNode.attributes["x"] = x_pos;
 		}
 		if(y_pos != "") {
-			newNode.attributes["y_pos"] = y_pos;
+			newNode.attributes["y"] = y_pos;
 		}
 		if(height != "") {
 			newNode.attributes["height"] = height;
@@ -65,11 +65,11 @@
 			if(newData.attributes["name"] != undefined) {
 				name = newData.attributes["name"];
 			}
-			if(newData.attributes["x_pos"] != undefined) {
-				x_pos = newData.attributes["x_pos"];
+			if(newData.attributes["x"] != undefined) {
+				x_pos = newData.attributes["x"];
 			}
-			if(newData.attributes["y_pos"] != undefined) {
-				y_pos = newData.attributes["y_pos"];
+			if(newData.attributes["y"] != undefined) {
+				y_pos = newData.attributes["y"];
 			}
 			if(newData.attributes["width"] != undefined) {
 				width = newData.attributes["width"];
