@@ -84,7 +84,7 @@ public class ControlledHelper {
 							m1.currentUser,
 							new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_EOL) {
-					
+					/* Dave this is just normal PIR strigger 
 					alarmLogger.addAlertLog("ALERT",
 							"Normal - EOL",
 							AlarmLogging.GENERAL_MESSAGE,
@@ -92,6 +92,7 @@ public class ControlledHelper {
 							zoneChangeUpdate.getZoneStatus().getDescription(),
 							m1.currentUser,
 							new Date());
+							*/
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_SHORT) {
 					
 					alarmLogger.addAlertLog("ALERT",
@@ -147,7 +148,7 @@ public class ControlledHelper {
 							m1.currentUser,
 							new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_SHORT) {
-					
+					/* Dave this is just normal PIR strigger 
 					alarmLogger.addAlarmLog("ALARM",
 							"Violated - Short",
 							AlarmLogging.VIOLATED,
@@ -155,6 +156,7 @@ public class ControlledHelper {
 							zoneChangeUpdate.getZoneStatus().getDescription(),
 							m1.currentUser,
 							new Date());
+							*/
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.BYPASSED_OPEN) {
 					
 					alarmLogger.addAlarmLog("ALARM",
