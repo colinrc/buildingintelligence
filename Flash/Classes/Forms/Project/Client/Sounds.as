@@ -55,9 +55,9 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 	}
 	public function previewItem(itemLocation:Object) {
 		var DP = dataGridHandler.getDataGridDataProvider();
-		var file = DP[DP.length-(itemLocation.itemIndex+1)].file;
+		var file = DP[itemLocation.itemIndex].file;
 		var my_sound:Sound = new Sound();
-		my_sound.setVolume(DP[DP.length-(itemLocation.itemIndex+1)].volume);		
+		my_sound.setVolume(DP[itemLocation.itemIndex].volume);		
 		my_sound.onLoad = function(success:Boolean) {
 			if (success) {
 				this.start();

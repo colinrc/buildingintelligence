@@ -6,21 +6,34 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 	private var name:String;
 	private var name_ti:TextInput;
 	private var icon:String;
-	private var icon_ti:TextInput;
+	private var icon_cmb:ComboBox;
+	private var icon_ldr:Loader;
 	private var save_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
 	private var dataObject:Object;
 	public function onLoad() {
+		icon_ldr.autoLoad = true;
+		icon_ldr.scaleContent = true;				
+		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
+		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
+		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
+			var newIcon = new Object();
+			newIcon.label = myIcons[myIcon].split(".")[0];
+			newIcon.icon = mdm.Application.path+"lib\\icons\\"+myIcons[myIcon];
+			icon_cmb.addItem(newIcon);
+		}		
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
 		};
 		name_ti.addEventListener("change", changeListener);
-		icon_ti.addEventListener("change", changeListener);
 		name_ti.text = name;
-		icon_ti.text = icon;
+		if(icon.length){
+			icon_cmb.text = icon;
+			icon_ldr.load(mdm.Application.path+"lib\\icons\\"+icon+".png");
+		} 
 		var tempKeys = _global.serverDesign.getKeys();
 		var DPKey = new Array();
 		for (var key in tempKeys) {
@@ -86,7 +99,12 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
+		icon_cmb.addEventListener("change", Delegate.create(this, loadIcon));			
 	}
+	public function loadIcon(eventObject){
+		_global.unSaved = true;
+		icon_ldr.load(icon_cmb.selectedItem.icon);
+	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();
 	}
@@ -123,7 +141,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 			}
 			newControls.push(item);
 		}
-		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_ti.text});
+		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_cmb.text});
 		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}

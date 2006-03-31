@@ -3,6 +3,7 @@ import mx.utils.Delegate;
 class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var icon_cmb:ComboBox;
+	private var icon_ldr:Loader;	
 	private var show_ti:TextInput;
 	private var hide_ti:TextInput;
 	private var name:String;
@@ -21,7 +22,11 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private var variable_ld:Loader;
 	private var variable_mc:MovieClip;
 	private var dataObject:Object;
+	private var canOpen:String;
+	private var canOpen_chk:CheckBox;	
 	public function onLoad():Void {
+		icon_ldr.autoLoad = true;
+		icon_ldr.scaleContent = true;		
 		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
 		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
 		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
@@ -35,7 +40,6 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 			_global.unSaved = true;
 		};
 		name_ti.addEventListener("change", changeListener);
-		icon_cmb.addEventListener("change", changeListener);
 		show_ti.addEventListener("change", changeListener);
 		hide_ti.addEventListener("change", changeListener);
 		var tempKeys = _global.serverDesign.getKeys();
@@ -57,7 +61,16 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 			}
 		}
 		name_ti.text = name;
-		icon_cmb.text = icon;
+		if(icon.length){
+			icon_cmb.text = icon;
+			icon_ldr.load(mdm.Application.path+"lib\\icons\\"+icon+".png");
+		} 
+		if (canOpen == "superuser") {
+			canOpen_chk.selected = true;
+		} else {
+			canOpen_chk.selected = false;
+		}
+		canOpen_chk.addEventListener("change", Delegate.create(this,changeListener.change));		
 		show_ti.text = show;
 		hide_ti.text = hide;
 		save_btn.addEventListener("click", Delegate.create(this, save));
@@ -65,8 +78,18 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		addAll_btn.addEventListener("click", Delegate.create(this, addAll));
 		removeSelected_btn.addEventListener("click", Delegate.create(this, remSel));
 		removeAll_btn.addEventListener("click", Delegate.create(this, remAll));
+		icon_cmb.addEventListener("change", Delegate.create(this, loadIcon));			
 	}
+	public function loadIcon(eventObject){
+		_global.unSaved = true;
+		icon_ldr.load(icon_cmb.selectedItem.icon);
+	}	
 	private function save() {
+		if (canOpen_chk.selected) {
+			var newCanOpen = "superuser";
+		} else {
+			var newCanOpen = "";
+		}		
 		var newControls = new Array();
 		for (var index = 0; index < right_li.length; index++) {
 			var newControl = new XMLNode(1, "control");
@@ -74,7 +97,7 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 			newControls.push(newControl);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_cmb.text, show:show_ti.text, hide:hide_ti.text});
+		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_cmb.text, show:show_ti.text, hide:hide_ti.text, canOpen:newCanOpen});
 		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}

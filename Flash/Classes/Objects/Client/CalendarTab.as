@@ -3,6 +3,7 @@
 	private var label:String;
 	private var icon:String;
 	private var view:String;
+	private var macro:String;
 	private var treeNode:XMLNode;
 	public function deleteSelf(){
 		treeNode.removeNode();
@@ -26,7 +27,10 @@
 		}
 		if(view != "") {
 			newNode.attributes["view"] = view;
-		}		
+		}
+		if(macro !=""){
+			newNode.attributes["macro"] = macro;
+		}
 		for (var zone in zones) {
 			newNode.appendChild(zones[zone]);
 		}
@@ -45,12 +49,14 @@
 		return label;
 	}
 	public function getData():Object {
-		return {zones:zones,label:label,icon:icon,view:view, dataObject:this};
+		return {zones:zones, label:label, icon:icon, view:view, macro:macro, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		label = "";
 		icon = "";
 		view = "";
+		macro = "";
+		zones = new Array();		
 		if(newData.nodeName == "tab"){
 			if(newData.attributes["label"] != undefined) {
 				label = newData.attributes["label"];
@@ -61,7 +67,9 @@
 			if(newData.attributes["view"] != undefined) {
 				view = newData.attributes["view"];
 			}			
-			zones = new Array();
+			if(newData.attributes["macro"] != undefined) {
+				macro = newData.attributes["macro"];
+			}						
 			for(var child in newData.childNodes){
 				zones.push(newData.childNodes[child]);
 			}
@@ -74,5 +82,6 @@
 		zones = newData.zones;
 		label = newData.label;
 		icon = newData.icon;
+		macro = newData.macro;
 	}
 }

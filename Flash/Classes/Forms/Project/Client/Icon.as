@@ -7,6 +7,7 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var icon:String;
 	private var icon_cmb:ComboBox;
+	private var icon_ldr:Loader;	
 	private var func:String;
 	private var func_cmb:ComboBox;
 	private var canOpen:String;
@@ -16,6 +17,8 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 	private var param_ti:TextInput;
 	private var param_lb:Label;
 	public function onLoad():Void {
+		icon_ldr.autoLoad = true;
+		icon_ldr.scaleContent = true;				
 		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
 		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
 		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
@@ -46,7 +49,10 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 			param_ti.text = "";
 		}
 		name_ti.text = name;
-		icon_cmb.text = icon;
+		if(icon.length){
+			icon_cmb.text = icon;
+			icon_ldr.load(mdm.Application.path+"lib\\icons\\"+icon+".png");
+		} 
 		func_cmb.text = func;
 		if (canOpen == "superuser") {
 			canOpen_chk.selected = true;
@@ -54,12 +60,16 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 			canOpen_chk.selected = false;
 		}
 		name_ti.addEventListener("change", Delegate.create(this,changeListener.change));
-		icon_cmb.addEventListener("change", Delegate.create(this,changeListener.change));
 		func_cmb.addEventListener("change", Delegate.create(this,changeListener.change));
 		canOpen_chk.addEventListener("change", Delegate.create(this,changeListener.change));
 		param_ti.addEventListener("change", Delegate.create(this,changeListener.change));		
 		save_btn.addEventListener("click", Delegate.create(this, save));
+		icon_cmb.addEventListener("change", Delegate.create(this, loadIcon));			
 	}
+	public function loadIcon(eventObject){
+		_global.unSaved = true;
+		icon_ldr.load(icon_cmb.selectedItem.icon);
+	}	
 	private function save() {
 		if (canOpen_chk.selected) {
 			var newCanOpen = "superuser";

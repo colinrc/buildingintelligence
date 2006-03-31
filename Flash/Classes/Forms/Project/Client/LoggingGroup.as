@@ -3,6 +3,7 @@ import mx.utils.Delegate;
 class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var icon_cmb:ComboBox;
+	private var icon_ldr:Loader;	
 	private var listenTo_ti:TextInput;
 	private var type_cmb:ComboBox;
 	private var logType_ld:Loader;
@@ -22,6 +23,8 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var attributes:Array;
 	private var dataObject:Object;
 	public function onLoad():Void {
+		icon_ldr.autoLoad = true;
+		icon_ldr.scaleContent = true;				
 		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
 		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
 		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
@@ -49,7 +52,10 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			}
 		}
 		name_ti.text = name;
-		icon_cmb.text = icon;
+		if(icon.length){
+			icon_cmb.text = icon;
+			icon_ldr.load(mdm.Application.path+"lib\\icons\\"+icon+".png");
+		} 
 		listenTo_ti.text = listenTo;
 		for (var index = 0; index < type_cmb.length; index++) {
 			if (type == type_cmb.getItemAt(index).label) {
@@ -68,10 +74,14 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			_global.unSaved = true;
 		};
 		name_ti.addEventListener("change", changeListener);
-		icon_cmb.addEventListener("change", changeListener);
 		listenTo_ti.addEventListener("change", changeListener);
 		type_cmb.addEventListener("change", changeListener);
+		icon_cmb.addEventListener("change", Delegate.create(this, loadIcon));			
 	}
+	public function loadIcon(eventObject){
+		_global.unSaved = true;
+		icon_ldr.load(icon_cmb.selectedItem.icon);
+	}	
 	private function typeChange() {
 		//_global.unSaved = true;
 		logType_ld.createEmptyMovieClip("form_mc", 0);
