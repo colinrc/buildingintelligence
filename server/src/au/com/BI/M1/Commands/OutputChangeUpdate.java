@@ -28,6 +28,14 @@ public class OutputChangeUpdate extends M1Command {
 	public String getOutputState() {
 		return outputState;
 	}
+	
+	public boolean isOn() {
+		if (outputState.equals("1")) {
+			return(true);
+		} else {
+			return(false);
+		}
+	}
 
 	public void setOutputState(String outputState) {
 		this.outputState = outputState;

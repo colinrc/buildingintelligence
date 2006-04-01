@@ -38,4 +38,8 @@ public class M1Command extends Command {
 		return ("commandMessage=" + this.getCommandCode() + ";outputNumber=" + this.getKey() + ";futureUse=" + futureUse + ";checkSum=" + checkSum);
 	}
 	
+	public String buildM1String() {
+		return "";
+	}
+	
 }

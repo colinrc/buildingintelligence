@@ -58,6 +58,14 @@ public class M1CommandFactory {
 			m1Command = parseReplyWithBypassedZoneState(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("ZC")) {
 			m1Command = parseZoneChangeUpdate(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("cn")) {
+			m1Command = parseControlOutputOn(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("cf")) {
+			m1Command = parseControlOutputOff(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("ct")) {
+			m1Command = parseControlOutputToggle(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("cs")) {
+			m1Command = parseControlOutputStatusRequest(unparsedCommand);
 		}
 		
 		if (m1Command == null) {
@@ -386,6 +394,93 @@ public class M1CommandFactory {
 		}
 		// Dave you need to make sure these status strings don't trigger an alarm, they are just standard PIR on/off messages
 			
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseControlOutputOn(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ControlOutputOn _command = new ControlOutputOn();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setKey(command.substring(4,7));
+		_command.setOutputNumber(command.substring(4,7));
+		_command.setSeconds(command.substring(7,12));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseControlOutputOff(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ControlOutputOff _command = new ControlOutputOff();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setKey(command.substring(4,7));
+		_command.setOutputNumber(command.substring(4,7));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseControlOutputToggle(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ControlOutputToggle _command = new ControlOutputToggle();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setKey(command.substring(4,7));
+		_command.setOutputNumber(command.substring(4,7));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseControlOutputStatusRequest(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ControlOutputStatusRequest _command = new ControlOutputStatusRequest();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
 		if (checkSum.equals(_command.getCheckSum())) {
 			return(_command);
