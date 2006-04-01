@@ -57,7 +57,7 @@ public class Model extends BaseModel implements DeviceModel {
 		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
 
 		if (deviceList == null) {
-			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
+			logger.log(Level.INFO, "Error in config, no output key for " + theWholeKey);
 		}
 		else {
 			Iterator eachDev = deviceList.iterator();
@@ -69,7 +69,7 @@ public class Model extends BaseModel implements DeviceModel {
 					 retCode = buildToggleOutput ((DeviceType)device,command);
 				 }	
 				 
-				 logger.log(Level.INFO,retCode);
+				 logger.log(Level.FINE,retCode);
 
 				if (!retCode.equals ("")){
 					comms.sendString(retCode);
@@ -125,13 +125,13 @@ public class Model extends BaseModel implements DeviceModel {
 				
 		if (command.getCommandCode().equals ("on")){
 			
-			returnString = m1Helper.buildCompleteM1String("cn"+Utility.padString(command.getKey(),3)+"0000000")+"\r\n";
+			returnString = m1Helper.buildCompleteM1String("cn"+Utility.padString(device.getKey(),3)+"0000000")+"\r\n";
 		} else if (command.getCommandCode().equals("pulse")) {
 			// build off string
 			
-			returnString = m1Helper.buildCompleteM1String("cn"+Utility.padString(command.getKey(),3)+Utility.padString(command.getExtraInfo(),5)+"00")+"\r\n";
+			returnString = m1Helper.buildCompleteM1String("cn"+Utility.padString(device.getKey(),3)+Utility.padString(command.getExtraInfo(),5)+"00")+"\r\n";
 		} else if (command.getCommandCode().equals("off")) {
-			returnString = m1Helper.buildCompleteM1String("cf"+Utility.padString(command.getKey(),3)+"00")+"\r\n";
+			returnString = m1Helper.buildCompleteM1String("cf"+Utility.padString(device.getKey(),3)+"00")+"\r\n";
 		}
 		return(returnString);
 	}
