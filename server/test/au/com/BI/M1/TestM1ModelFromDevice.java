@@ -11,6 +11,10 @@ import au.com.BI.M1.Commands.ArmToStayInstant;
 import au.com.BI.M1.Commands.ArmToVacation;
 import au.com.BI.M1.Commands.ArmedStatus;
 import au.com.BI.M1.Commands.ArmingStatusRequest;
+import au.com.BI.M1.Commands.ControlOutputOff;
+import au.com.BI.M1.Commands.ControlOutputOn;
+import au.com.BI.M1.Commands.ControlOutputStatusRequest;
+import au.com.BI.M1.Commands.ControlOutputToggle;
 import au.com.BI.M1.Commands.Disarm;
 import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
@@ -174,6 +178,30 @@ public class TestM1ModelFromDevice extends TestCase {
 		assertEquals(zoneChangeUpdate.getZone(),"002");
 		assertEquals(zoneChangeUpdate.getZoneStatus(),ZoneStatus.NORMAL_EOL);
 		assertEquals(zoneChangeUpdate.getFutureUse(),"00");
+		
+		ControlOutputOn controlOutputOn = new ControlOutputOn();
+		controlOutputOn.setOutputNumber("001");
+		controlOutputOn.setSeconds(10);
+		assertEquals(controlOutputOn.buildM1String(),"0Ecn0010001000D8");
+		m1Command = M1CommandFactory.getInstance().getM1Command(controlOutputOn.buildM1String());
+		assertEquals(m1Command.getClass(),controlOutputOn.getClass());
+		
+		ControlOutputOff controlOutputOff = new ControlOutputOff();
+		controlOutputOff.setOutputNumber("002");
+		assertEquals(controlOutputOff.buildM1String(),"09cf00200DC");
+		m1Command = M1CommandFactory.getInstance().getM1Command(controlOutputOff.buildM1String());
+		assertEquals(m1Command.getClass(),controlOutputOff.getClass());
+		
+		ControlOutputToggle controlOutputToggle = new ControlOutputToggle();
+		controlOutputToggle.setOutputNumber("002");
+		assertEquals(controlOutputToggle.buildM1String(),"09ct00200CE");
+		m1Command = M1CommandFactory.getInstance().getM1Command(controlOutputToggle.buildM1String());
+		assertEquals(m1Command.getClass(),controlOutputToggle.getClass());
+		
+		ControlOutputStatusRequest controlOutputStatusRequest = new ControlOutputStatusRequest();
+		assertEquals(controlOutputStatusRequest.buildM1String(),"06cs0064");
+		m1Command = M1CommandFactory.getInstance().getM1Command(controlOutputStatusRequest.buildM1String());
+		assertEquals(m1Command.getClass(),controlOutputStatusRequest.getClass());
 	}
 
 }
