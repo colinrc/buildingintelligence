@@ -122,12 +122,16 @@ public class Model extends BaseModel implements DeviceModel {
 
 	public String buildToggleOutput (DeviceType device, CommandInterface command) {
 		String returnString = "";
-		
+				
 		if (command.getCommandCode().equals ("on")){
-			returnString = m1Helper.buildCompleteM1String("CC"+Utility.padString(command.getKey(),3)+"100")+"\r\n";
-		} else {
+			
+			returnString = m1Helper.buildCompleteM1String("cn"+Utility.padString(command.getKey(),3)+"0000000")+"\r\n";
+		} else if (command.getCommandCode().equals("pulse")) {
 			// build off string
-			returnString = m1Helper.buildCompleteM1String("CC"+Utility.padString(command.getKey(),3)+"000")+"\r\n";
+			
+			returnString = m1Helper.buildCompleteM1String("cn"+Utility.padString(command.getKey(),3)+Utility.padString(command.getExtraInfo(),5)+"00")+"\r\n";
+		} else if (command.getCommandCode().equals("off")) {
+			returnString = m1Helper.buildCompleteM1String("cf"+Utility.padString(command.getKey(),3)+"00")+"\r\n";
 		}
 		return(returnString);
 	}
