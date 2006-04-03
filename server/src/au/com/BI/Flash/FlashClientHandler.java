@@ -96,7 +96,7 @@ public class FlashClientHandler extends Thread
 		int bufMarker = 0;         // counter to mark place in "buf"
 		int avail = 0;             // the number of bytes available to be read
 		int len = 0;               // the number of bytes actually read
-		int readBufLength = 50000;
+		int readBufLength = 8000;
 
 		doStartupCacheItems();
 		
@@ -111,10 +111,10 @@ public class FlashClientHandler extends Thread
 			// endflag is set to true when we see a "null" byte
 			
 			boolean endFlag = false;
-			
+			count = 0;			
 			do {
 				endFlag = false;
-				count = 0;
+
 
 				if (leftOverCount == 0) {	
 					//add available characters to byte collection
@@ -160,7 +160,7 @@ public class FlashClientHandler extends Thread
 
 					}
 					if (count + avail > readBufLength) {
-						readBufLength += 50000;
+						readBufLength += readBufLength;
 						byte [] newReadBuffer = new byte[readBufLength];
 						System.arraycopy (newReadBuffer,0,readBuffer,0,readBuffer.length);
 						readBuffer = newReadBuffer;
@@ -169,18 +169,29 @@ public class FlashClientHandler extends Thread
 					System.arraycopy(buf,bufMarker,readBuffer,count,avail);
 					count += avail;
 				}
-
+		
+				
 				if (!endFlag) {
 					try {
 					    if (i.available() == 0) {
 					        Thread.sleep(200); // give the CPU a break
+					    } else {
+					    	endFlag = false;
 					    }
 					} catch (InterruptedException e) {
 					} catch (IOException e) {
 				    }
-					
-					Thread.yield(); // ensure another process always has a chance
 				}
+				else {
+					try {
+					    if (i.available() != 0) {
+					    	endFlag = false; // another packet to process
+					    }
+					} catch (IOException e) {
+				    }
+					
+				}
+				Thread.yield(); // ensure another process always has a chance
 			} while(!endFlag && thisThreadRunning); //keep going until EOM
 		
 			if (count > 0 && thisThreadRunning)
