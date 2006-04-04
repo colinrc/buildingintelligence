@@ -66,6 +66,8 @@ public class M1CommandFactory {
 			m1Command = parseControlOutputToggle(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("cs")) {
 			m1Command = parseControlOutputStatusRequest(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("CS")) {
+			m1Command = parseControlOutputStatusReport(unparsedCommand);
 		}
 		
 		if (m1Command == null) {
@@ -479,6 +481,40 @@ public class M1CommandFactory {
 		
 		ControlOutputStatusRequest _command = new ControlOutputStatusRequest();
 		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseControlOutputStatusReport(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ControlOutputStatusReport _command = new ControlOutputStatusReport();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(0,command.length()-2));
+
+		boolean[] states = new boolean[208];
+		for (int i=0;i<208;i++) {
+			String state = command.substring(i+4,i+5);
+			
+			if (state.equals("0")) {
+				states[i] = false;
+			} else {
+				states[i] = true;
+			}
+		}
+		_command.setOutputStatus(states);
 		_command.setCheckSum(command.substring(command.length()-2));
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
