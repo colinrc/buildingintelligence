@@ -19,6 +19,8 @@ import au.com.BI.Alert.AlertCommand;
 import au.com.BI.M1.ControlledHelper;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsFail;
+import au.com.BI.M1.Commands.ControlOutputOff;
+import au.com.BI.M1.Commands.ControlOutputOn;
 import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
@@ -120,18 +122,34 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
+	/**
+	 * Builds the toggle output command based on the Control Output commands.
+	 * cn - Control Output On, created when the command code is "on"
+	 * ct - Control Output Toggle, created when the command code is pulse and there is a time element.
+	 * cf - Control Output Off, created when the command code is "off"
+	 * @param device
+	 * @param command
+	 * @return
+	 */
 	public String buildToggleOutput (DeviceType device, CommandInterface command) {
 		String returnString = "";
 				
 		if (command.getCommandCode().equals ("on")){
-			
-			returnString = m1Helper.buildCompleteM1String("cn"+Utility.padString(device.getKey(),3)+"0000000")+"\r\n";
+			ControlOutputOn controlOutputOn = new ControlOutputOn();
+			controlOutputOn.setKey(device.getKey());
+			controlOutputOn.setOutputNumber(device.getKey());
+			returnString = controlOutputOn.buildM1String() + "\r\n";
 		} else if (command.getCommandCode().equals("pulse")) {
-			// build off string
-			
-			returnString = m1Helper.buildCompleteM1String("cn"+Utility.padString(device.getKey(),3)+Utility.padString(command.getExtraInfo(),5)+"00")+"\r\n";
+			ControlOutputOn controlOutputOn = new ControlOutputOn();
+			controlOutputOn.setKey(device.getKey());
+			controlOutputOn.setOutputNumber(device.getKey());
+			controlOutputOn.setSeconds(command.getExtraInfo());
+			returnString = controlOutputOn.buildM1String() + "\r\n";
 		} else if (command.getCommandCode().equals("off")) {
-			returnString = m1Helper.buildCompleteM1String("cf"+Utility.padString(device.getKey(),3)+"00")+"\r\n";
+			ControlOutputOff controlOutputOff = new ControlOutputOff();
+			controlOutputOff.setKey(device.getKey());
+			controlOutputOff.setOutputNumber(device.getKey());
+			returnString = controlOutputOff.buildM1String() + "\r\n";
 		}
 		return(returnString);
 	}
