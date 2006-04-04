@@ -13,6 +13,7 @@ import au.com.BI.M1.Commands.ArmedStatus;
 import au.com.BI.M1.Commands.ArmingStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputOff;
 import au.com.BI.M1.Commands.ControlOutputOn;
+import au.com.BI.M1.Commands.ControlOutputStatusReport;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputToggle;
 import au.com.BI.M1.Commands.Disarm;
@@ -202,6 +203,14 @@ public class TestM1ModelFromDevice extends TestCase {
 		assertEquals(controlOutputStatusRequest.buildM1String(),"06cs0064");
 		m1Command = M1CommandFactory.getInstance().getM1Command(controlOutputStatusRequest.buildM1String());
 		assertEquals(m1Command.getClass(),controlOutputStatusRequest.getClass());
+		
+		str = "D6CS100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000000000000000";
+		checksum = new M1Helper().calcM1Checksum(str);
+		str = str + checksum;
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),ControlOutputStatusReport.class);
+		ControlOutputStatusReport controlOutputStatusReport = (ControlOutputStatusReport)m1Command;
+		assertEquals(controlOutputStatusReport.getOutputStatus()[0],true);		
 	}
 
 }
