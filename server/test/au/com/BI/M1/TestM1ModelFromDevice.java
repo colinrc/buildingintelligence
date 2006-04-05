@@ -22,6 +22,8 @@ import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
 import au.com.BI.M1.Commands.ReplyWithBypassedZoneState;
+import au.com.BI.M1.Commands.RequestTemperature;
+import au.com.BI.M1.Commands.RequestTemperatureReply;
 import au.com.BI.M1.Commands.ZoneBypassRequest;
 import au.com.BI.M1.Commands.ZoneBypassState;
 import au.com.BI.M1.Commands.ZoneChangeUpdate;
@@ -210,7 +212,15 @@ public class TestM1ModelFromDevice extends TestCase {
 		m1Command = M1CommandFactory.getInstance().getM1Command(str);
 		assertEquals(m1Command.getClass(),ControlOutputStatusReport.class);
 		ControlOutputStatusReport controlOutputStatusReport = (ControlOutputStatusReport)m1Command;
-		assertEquals(controlOutputStatusReport.getOutputStatus()[0],true);		
+		assertEquals(controlOutputStatusReport.getOutputStatus()[0],true);	
+		
+		str = "09st00100BF";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),RequestTemperature.class);
+		
+		str = "0CST001135005C";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),RequestTemperatureReply.class);
 	}
 
 }

@@ -29,6 +29,21 @@ public class M1CommandFactory {
 	 * <ul>
 	 * 	<li>CC - OutputChangeUpdate</li>
 	 *   <li>a - Arm/Disarm Message</li>
+	 *   <li>as - Arming Status Request Message</li>
+	 *   <li>AS - Arming Status Report Message</li>
+	 *   <li>zs - Zone Status Request Message</li>
+	 *   <li>ZS - Zone Status Report Message</li>
+	 *   <li>zp - Zone Partition Request Message</li>
+	 *   <li>ZP - Zone Partition Report Message</li>
+	 *   <li>zb - Zone Bypass Request Message</li>
+	 *   <li>ZB - Zone Bypass Report Message</li>
+	 *   <li>cn - Control Output On Message</li>
+	 *   <li>cf - Control Output Off Message</li>
+	 *   <li>ct - Control Output Toggle Message</li>
+	 *   <li>cs - Control Output Status Request Message</li>
+	 *   <li>CS - Control Output Status Report Message</li>
+	 *   <li>st - Request Temperature Message</li>
+	 *   <li>ST - Request Temperature Reply Message</li>
 	 * </ul>
 	 * @param unparsedCommand
 	 * @return
@@ -68,6 +83,10 @@ public class M1CommandFactory {
 			m1Command = parseControlOutputStatusRequest(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("CS")) {
 			m1Command = parseControlOutputStatusReport(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("st")) {
+			m1Command = parseRequestTemperature(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("ST")) {
+			m1Command = parseRequestTemperatureReply(unparsedCommand);
 		}
 		
 		if (m1Command == null) {
@@ -503,7 +522,6 @@ public class M1CommandFactory {
 		_command.setCommand(command);
 		_command.setKey(command.substring(2,4));
 		_command.setCheckSum(command.substring(0,command.length()-2));
-
 		boolean[] states = new boolean[208];
 		for (int i=0;i<208;i++) {
 			String state = command.substring(i+4,i+5);
@@ -515,6 +533,55 @@ public class M1CommandFactory {
 			}
 		}
 		_command.setOutputStatus(states);
+		_command.setCheckSum(command.substring(command.length()-2));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseRequestTemperature(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		RequestTemperature _command = new RequestTemperature();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(0,command.length()-2));
+		_command.setGroup(Group.getByValue(command.substring(4,5)));
+		_command.setDevice(command.substring(5,7));
+		_command.setCheckSum(command.substring(command.length()-2));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseRequestTemperatureReply(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		RequestTemperatureReply _command = new RequestTemperatureReply();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(0,command.length()-2));
+		_command.setGroup(Group.getByValue(command.substring(4,5)));
+		_command.setDevice(command.substring(5,7));
+		_command.setTemperature(command.substring(7,10));
 		_command.setCheckSum(command.substring(command.length()-2));
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
