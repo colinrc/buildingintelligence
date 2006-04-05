@@ -9,23 +9,23 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var ir in irs) {
 			if ((irs[ir].attributes["ACTIVE"] != "Y") && (irs[ir].attributes["ACTIVE"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((irs[ir].attributes["KEY"] == undefined) || (irs[ir].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((irs[ir].attributes["BOX"] == undefined) || (irs[ir].attributes["BOX"] == "")) {
-				flag = false;
+				flag = "error";
 			}			
 			if ((irs[ir].attributes["NAME"] == undefined) || (irs[ir].attributes["NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((irs[ir].attributes["DISPLAY_NAME"] == undefined) || (irs[ir].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

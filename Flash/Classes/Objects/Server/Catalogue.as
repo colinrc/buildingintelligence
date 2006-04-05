@@ -5,14 +5,14 @@
 	public function deleteSelf(){
 		treeNode.removeNode();
 	}			
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var item in items) {
 			if ((items[item].attributes["CODE"] == undefined) || (items[item].attributes["CODE"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((items[item].attributes["VALUE"] == undefined) || (items[item].attributes["VALUE"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

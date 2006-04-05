@@ -1,8 +1,8 @@
 ﻿class Objects.Client.Property extends Objects.BaseElement {
 	private var zones:Array;
 	private var treeNode:XMLNode;
-	public function isValid():Boolean {
-		return true;
+	public function isValid():String {
+		return "ok";
 	}
 	public function getForm():String {
 		return "forms.project.client.property";

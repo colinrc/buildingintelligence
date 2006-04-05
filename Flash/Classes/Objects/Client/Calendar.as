@@ -6,8 +6,8 @@
 	public function deleteSelf() {
 		treeNode.removeNode();
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		return flag;
 	}
 	public function getForm():String {

@@ -1,10 +1,10 @@
-﻿class Forms.Tree.WorkFlowTreeCellRenderer extends mx.controls.treeclasses.TreeRow {
+﻿class Forms.Tree.workFlowTreeCellRenderer extends mx.controls.treeclasses.TreeRow {
 	var owner;
 	var listOwner;
 	var cell:Object;
 	var icon:MovieClip;
 	
-	function WorkFlowTreeCellRenderer() {
+	function workFlowTreeCellRenderer() {
 	}
 	
 	function createChildren() {
@@ -20,7 +20,18 @@
 			beginFill(lineColor, listOwner.getStyle('lineAlpha') || 100);
 			drawRect(-indent, Math.ceil(owner.height) - .25, listOwner.width, Math.ceil(owner.height) + .25);
 			endFill();
-			var iconName = (owner.node.attributes.complete == "false") ? "stop" : "tick";
+			var iconName="";
+			if (owner.node.attributes.complete == "error") {
+				iconName = "stop";
+			} 
+			else {
+				if (owner.node.attributes.complete == "ok") {
+					iconName = "tick";
+				} 
+				else {/*warning*/
+					iconName = "warning";
+				}
+			}
 			icon = attachMovie("Icon:" + iconName, "icon", 100, {_x:listOwner.width - indent + 5, _y:2});
 		}
 		else{

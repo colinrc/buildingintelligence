@@ -1,8 +1,8 @@
 ﻿class Objects.Client.Control_Panel_Apps extends Objects.BaseElement{
 	private var apps:Array;
 	private var treeNode:XMLNode;
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		/*for(var child in apps.childNodes){
 			if(apps.childNodes[child].attributes["label"] == undefined){
 				flag = false;

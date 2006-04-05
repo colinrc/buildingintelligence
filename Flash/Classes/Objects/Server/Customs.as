@@ -9,26 +9,26 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var custom in customs) {
 			if ((customs[custom].attributes["ACTIVE"] != "Y") && (customs[custom].attributes["ACTIVE"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((customs[custom].attributes["KEY_IS_REGEX"] != "Y") && (customs[custom].attributes["KEY_IS_REGEX"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((customs[custom].attributes["KEY"] == undefined) || (customs[custom].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((customs[custom].attributes["NAME"] == undefined) || (customs[custom].attributes["NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((customs[custom].attributes["DISPLAY_NAME"] == undefined) || (customs[custom].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((customs[custom].attributes["COMMAND"] == undefined) || (customs[custom].attributes["COMMAND"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

@@ -3,11 +3,11 @@
 	private var treeNode:XMLNode;
 	private var attributes:Array;
 	private var attributeGroups = ["window", "tabs"];
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var tab in tabs) {
 			if (!tabs[tab].isValid()) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

@@ -5,12 +5,12 @@
 	public function AlertGroups() {
 		alertgroups = new Array();				
 	}
-	public function isValid():Boolean {
+	public function isValid():String {
 		/*Build validation array here*/
-		var flag = true;
+		var flag = "ok";
 		for (var alertgroup in alertgroups) {
 			if (!alertgroups[alertgroup].isValid()) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

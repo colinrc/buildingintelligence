@@ -1,11 +1,11 @@
 ﻿class Objects.Client.Arbitrary extends Objects.BaseElement {
 	private var items:Array;
 	private var treeNode:XMLNode;	
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var item in items){
 			if((items[item].attributes["type"] == "")||(items[item].attributes["type"] == undefined)){
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

@@ -32,68 +32,33 @@
 		tempKeys = tempKeys.concat(analogues.getKeys());
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		if ((device_type == undefined) || (device_type == "")) {
-			flag = false;
+			flag = "error";
 		}
 		if ((description == undefined) || (description == "")) {
-			flag = false;
+			flag = "error";
 		}		
 		if ((active != "Y") && (active != "N")) {
-			flag = false;
+			flag = "error";
 		}
-		if (!customs.isValid()) {
-			flag = false;
-		}
-		if(!customs.isValid()){
-			flag = false;
-		}
-		if(!raw_interfaces.isValid()){
-			flag = false;
-		}
-		if(!counters.isValid()){
-			flag = false;
-		}
-		if(!toggle_monitors.isValid()){
-			flag = false;
-		}
-		if(!cbus_lights.isValid()){
-			flag = false;
-		}
-		if(!cbus_relays.isValid()){
-			flag = false;
-		}		
-		if(!x10_lights.isValid()){
-			flag = false;
-		}
-		if(!pulse_outputs.isValid()){
-			flag = false;
-		}
-		if(!toggle_outputs.isValid()){
-			flag = false;
-		}
-		if(!toggle_inputs.isValid()){
-			flag = false;
-		}
-		if(!alarms.isValid()){
-			flag = false;
-		}
-		if(!alerts.isValid()){
-			flag = false;
-		}
-		if(!analogues.isValid()){
-			flag = false;
-		}
-		if (!catalogues.isValid()) {
-			flag = false;
-		}
-		if (!door_ids.isValid()) {
-			flag = false;
-		}
-		if (!comfort_users.isValid()) {
-			flag = false;
-		}		
+		flag = getHighestFlagValue(flag, customs.isValid());
+		flag = getHighestFlagValue(flag, raw_interfaces.isValid());
+		flag = getHighestFlagValue(flag, counters.isValid());
+		flag = getHighestFlagValue(flag, toggle_monitors.isValid());
+		flag = getHighestFlagValue(flag, cbus_lights.isValid());
+		flag = getHighestFlagValue(flag, cbus_relays.isValid());
+		flag = getHighestFlagValue(flag, x10_lights.isValid());
+		flag = getHighestFlagValue(flag, pulse_outputs.isValid());
+		flag = getHighestFlagValue(flag, toggle_outputs.isValid());
+		flag = getHighestFlagValue(flag, toggle_inputs.isValid());
+		flag = getHighestFlagValue(flag, alarms.isValid());
+		flag = getHighestFlagValue(flag, alerts.isValid());
+		flag = getHighestFlagValue(flag, analogues.isValid());
+		flag = getHighestFlagValue(flag, catalogues.isValid());
+		flag = getHighestFlagValue(flag, door_ids.isValid());
+		flag = getHighestFlagValue(flag, comfort_users.isValid());
 		//need to isValid connection and parameters  
 		return flag;
 	}

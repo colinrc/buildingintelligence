@@ -9,14 +9,14 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var alarm in alarms) {
 			if ((alarms[alarm].attributes["KEY"] == undefined) || (alarms[alarm].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((alarms[alarm].attributes["DISPLAY_NAME"] == undefined) || (alarms[alarm].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

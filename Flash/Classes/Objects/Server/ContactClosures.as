@@ -9,23 +9,23 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var contact in contacts) {
 			if ((contacts[contact].attributes["ACTIVE"] != "Y") && (contacts[contact].attributes["ACTIVE"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((contacts[contact].attributes["KEY"] == undefined) || (contacts[contact].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((contacts[contact].attributes["BOX"] == undefined) || (contacts[contact].attributes["BOX"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((contacts[contact].attributes["NAME"] == undefined) || (contacts[contact].attributes["NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((contacts[contact].attributes["DISPLAY_NAME"] == undefined) || (contacts[contact].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

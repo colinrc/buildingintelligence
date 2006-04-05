@@ -11,8 +11,8 @@
 	public function deleteSelf() {
 		treeNode.removeNode();
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var control in controls) {
 		}
 		return flag;

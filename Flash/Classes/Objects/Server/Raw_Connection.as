@@ -8,26 +8,18 @@
 		tempKeys = tempKeys.concat(raw_interfaces.getKeys());
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		if ((device_type == undefined) || (device_type == "")) {
-			flag = false;
+			flag = "error";
 		}
 		if ((active != "Y") && (active != "N")) {
-			flag = false;
+			flag = "error";
 		}
-		if (!customs.isValid()) {
-			flag = false;
-		}
-		if(!customs.isValid()){
-			flag = false;
-		}
-		if(!raw_interfaces.isValid()){
-			flag = false;
-		}
-		if (!catalogues.isValid()) {
-			flag = false;
-		}
+		flag = getHighestFlagValue(flag, customs.isValid()) ;
+		flag = getHighestFlagValue(flag, customs.isValid());
+		flag = getHighestFlagValue(flag, raw_interfaces.isValid());
+		flag = getHighestFlagValue(flag, catalogues.isValid());
 		//need to isValid connection and parameters  
 		return flag;
 	}

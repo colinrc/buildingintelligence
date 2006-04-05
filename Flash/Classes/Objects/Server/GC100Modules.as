@@ -1,8 +1,8 @@
 ﻿class Objects.Server.GC100Modules extends Objects.BaseElement {
 	var modules:Array;
 	private var treeNode:XMLNode;	
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		/*for (var module in modules) {
 			if (!modules[module].isValid()) {
 				flag = false;

@@ -18,32 +18,22 @@
 		tempKeys = tempKeys.concat(alarms.getKeys());
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		if ((device_type == undefined) || (device_type == "")) {
-			flag = false;
+			flag = "error";
 		}
 		if ((description == undefined) || (description == "")) {
-			flag = false;
+			flag = "error";
 		}		
 		if ((active != "Y") && (active != "N")) {
-			flag = false;
+			flag = "error";
 		}
-		if (!irs.isValid()) {
-			flag = false;
-		}
-		if (!lights.isValid()) {
-			flag = false;
-		}
-		if (!contacts.isValid()) {
-			flag = false;
-		}
-		if (!alarms.isValid()) {
-			flag = false;
-		}
-		if (!lightAreas.isValid()) {
-			flag = false;
-		}
+		flag = getHighestFlagValue(flag, irs.isValid());
+		flag = getHighestFlagValue(flag, lights.isValid());
+		flag = getHighestFlagValue(flag, contacts.isValid());
+		flag = getHighestFlagValue(flag, alarms.isValid());
+		flag = getHighestFlagValue(flag, lightAreas.isValid());
 		//need to isValid connection and parameters 
 		return flag;
 	}

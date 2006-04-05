@@ -6,17 +6,17 @@
 	public function deleteSelf() {
 		treeNode.removeNode();
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var alert in alerts) {
 			if ((alerts[alert].attributes["name"] == "") || (alerts[alert].attributes["name"] == undefined)) {
-				flag = false;
+				flag = "error";
 			}
 			if ((alerts[alert].attributes["keys"] == "") || (alerts[alert].attributes["keys"] == undefined)) {
-				flag = false;
+				flag = "error";
 			}
 			if ((alerts[alert].attributes["icon"] == "") || (alerts[alert].attributes["icon"] == undefined)) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

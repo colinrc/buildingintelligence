@@ -12,29 +12,21 @@
 		tempKeys = tempKeys.concat(temperatureSensors.getKeys());		
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		if ((device_type == undefined) || (device_type == "")) {
-			flag = false;
+			flag = "error";
 		}
 		if ((description == undefined) || (description == "")) {
-			flag = false;
+			flag = "error";
 		}		
 		if ((active != "Y") && (active != "N")) {
-			flag = false;
+			flag = "error";
 		}
-		if (!sensors.isValid()) {
-			flag = false;
-		}
-		if (!lights.isValid()) {
-			flag = false;
-		}
-		if (!relays.isValid()) {
-			flag = false;
-		}
-		if (!temperatureSensors.isValid()) {
-			flag = false;
-		}		
+		flag = getHighestFlagValue(flag, sensors.isValid());
+		flag = getHighestFlagValue(flag, lights.isValid());
+		flag = getHighestFlagValue(flag, relays.isValid());
+		flag = getHighestFlagValue(flag, temperatureSensors.isValid());
 		//need to isValid connection and parameters 
 		return flag;
 	}

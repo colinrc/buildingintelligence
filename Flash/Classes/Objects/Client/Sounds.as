@@ -1,19 +1,29 @@
 ﻿class Objects.Client.Sounds extends Objects.BaseElement {
 	private var sounds:Array;
 	private var treeNode:XMLNode;
-	public function isValid():Boolean {
-		var flag = true;
+	public function deleteSelf() {
+		treeNode.removeNode();
+	}
+	public function isValid():String {
+		//mdm.Dialogs.prompt("InSound");
+		var flag = "ok";
+		clearValidationMsg();
 		for (var sound in sounds) {
 			if ((sounds[sound].attributes["name"] == undefined) || (sounds[sound].attributes["name"] == "")) {
-				flag = false;
+				flag = "warning";
+				appendValidationMsg("Name is invalid");
 			}
 			if ((sounds[sound].attributes["file"] == undefined) || (sounds[sound].attributes["file"] == "")) {
-				flag = false;
+				flag = "warning";
+				appendValidationMsg("File is invalid");
 			}
 			if ((sounds[sound].attributes["volume"] == undefined) || (sounds[sound].attributes["volume"] == "")) {
-				flag = false;
+				flag = "warning";
+				appendValidationMsg("Volume is invalid");
 			}
 		}
+		mdm.Exception.DebugWindow(flag);
+
 		return flag;
 	}
 	public function getForm():String {
@@ -24,16 +34,16 @@
 		for(var sound in sounds){
 			newNode.appendChild(sounds[sound]);
 		}
-		treeNode = newNode;
 		return newNode;
 	}
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, this.getName());
 		newNode.object = this;
+		treeNode = newNode;
 		return newNode;
 	}
 	public function getKey():String{
-		return "ClientSounds";
+		return "Sounds";
 	}
 	public function getName():String {
 		return "Sounds";

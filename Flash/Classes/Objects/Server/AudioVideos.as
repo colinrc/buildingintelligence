@@ -9,14 +9,14 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var audiovideo in audiovideos) {
 			if ((audiovideos[audiovideo].attributes["KEY"] == undefined) || (audiovideos[audiovideo].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((audiovideos[audiovideo].attributes["DISPLAY_NAME"] == undefined) || (audiovideos[audiovideo].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

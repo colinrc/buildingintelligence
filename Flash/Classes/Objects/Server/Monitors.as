@@ -9,20 +9,20 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var monitor in monitors) {
 			if ((monitors[monitor].attributes["ACTIVE"] != "Y") && (monitors[monitor].attributes["ACTIVE"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((monitors[monitor].attributes["KEY"] == undefined) || (monitors[monitor].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((monitors[monitor].attributes["NAME"] == undefined) || (monitors[monitor].attributes["NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((monitors[monitor].attributes["DISPLAY_NAME"] == undefined) || (monitors[monitor].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

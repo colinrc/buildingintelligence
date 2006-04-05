@@ -1,11 +1,11 @@
 ﻿class Objects.Client.Apps_Bar extends Objects.BaseElement {
 	private var icons:Array;
 	private var treeNode:XMLNode;
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var icon in icons) {
 			if (!icons[icon].isValid()) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

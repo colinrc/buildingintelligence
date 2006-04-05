@@ -9,20 +9,20 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var sensor in sensors) {
 			if ((sensors[sensor].attributes["ACTIVE"] != "Y") && (sensors[sensor].attributes["ACTIVE"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((sensors[sensor].attributes["KEY"] == undefined) || (sensors[sensor].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((sensors[sensor].attributes["NAME"] == undefined) || (sensors[sensor].attributes["NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((sensors[sensor].attributes["DISPLAY_NAME"] == undefined) || (sensors[sensor].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

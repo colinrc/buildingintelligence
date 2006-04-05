@@ -9,17 +9,17 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var camera in cameras) {
 			if ((cameras[camera].attributes["ACTIVE"] != "Y") && (cameras[camera].attributes["ACTIVE"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((cameras[camera].attributes["KEY"] == undefined) || (cameras[camera].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((cameras[camera].attributes["DISPLAY_NAME"] == undefined) || (cameras[camera].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			//does zoom need to be checked?  
 		}

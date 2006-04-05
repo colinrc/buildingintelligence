@@ -17,29 +17,15 @@
 	public function deleteSelf(){
 		treeNode.removeNode();
 	}		
-	public function isValid():Boolean {
-		var flag = true
-		if(!sounds.isValid()){
-			flag = false;
-		}
-		if(!status_bar.isValid()){
-			flag = false;
-		}
-		if(!logging.isValid()){
-			flag = false;
-		}
-		if(!apps_bar.isValid()){
-			flag = false;
-		}
-		if(!control_panel_apps.isValid()){
-			flag = false;
-		}
-		if(!Property.isValid()){
-			flag = false;
-		}
-		if(!control_types.isValid()){
-			flag = false;
-		}
+	public function isValid():String {
+		var flag = "ok"
+		flag = getHighestFlagValue(flag, sounds.isValid());
+		flag = getHighestFlagValue(flag, status_bar.isValid());
+		flag = getHighestFlagValue(flag, logging.isValid());
+		flag = getHighestFlagValue(flag, apps_bar.isValid());
+		flag = getHighestFlagValue(flag, control_panel_apps.isValid());
+		flag = getHighestFlagValue(flag, Property.isValid());
+		flag = getHighestFlagValue(flag, control_types.isValid());
 		return flag;
 	}
 	public function getForm():String {

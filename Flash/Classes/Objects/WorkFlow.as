@@ -41,9 +41,11 @@ class Objects.WorkFlow {
 		var newNode = new XMLNode(1, "step");
 		setAttributes(key, newNode);
 		newNode.left_node.description = newNode.attributes.description;
+		//mdm.Dialogs.prompt("InAddnode:"+key);
 		if (newNode.attributes.label.length) {
 			newNode.left_node = inst;
-			newNode.attributes.complete = inst.object.isValid().toString();
+			newNode.attributes.complete = inst.object.isValid();
+			mdm.Dialogs.prompt("InAddnode:IsValidCall:"+newNode.attributes.complete+"  "+key);
 			for (var child in _global.right_tree.dataProvider.childNodes) {
 				if (newNode.attributes.stepOrder == _global.right_tree.dataProvider.childNodes[child].attributes.stepOrder) {
 					var tempNode = _global.right_tree.dataProvider.childNodes[child];
@@ -52,15 +54,26 @@ class Objects.WorkFlow {
 							if (parseInt(newNode.attributes.order) < parseInt(tempNode.childNodes[i].attributes.order)) {
 								tempNode.insertBefore(newNode, tempNode.childNodes[i]);
 								found = true;
+								//mdm.Dialogs.prompt("InAddnode-found");
 								break;
 							}
 						}
 					}
 					if (!found) {
+						//mdm.Dialogs.prompt("InAddnode-notfound");
 						tempNode.appendChild(newNode);
 					}
 					break;
 				}
+			}
+		}
+	}
+	public function deleteNode(inst:Object) {
+		for (var child in _global.right_tree.dataProvider.childNodes) {
+			var tempNode = _global.right_tree.dataProvider.childNodes[child];
+			if (inst == tempNode.left_node) {
+				tempNode.removeNode();
+				break;
 			}
 		}
 	}

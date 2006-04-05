@@ -17,8 +17,8 @@
 	public function setModules(inModules:Object){
 		modules = inModules;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		/*for (var toggle in toggles) {
 			if ((toggles[toggle].attributes["ACTIVE"] != "Y") && (toggles[toggle].attributes["ACTIVE"] != "N")) {
 				flag = false;

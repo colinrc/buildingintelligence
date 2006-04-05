@@ -28,17 +28,11 @@
 	public function setZone(inZone:Objects.Client.Zone){
 		zone = inZone;
 	}
-	public function isValid():Boolean {
-		var flag = true;
-		if (!window.isValid()) {
-			flag = false;
-		}
-		if (!doors.isValid()) {
-			flag = false;
-		}
-		if (!alerts.isValid()) {
-			flag = false;
-		}
+	public function isValid():String {
+		var flag = "ok";
+		flag = getHighestFlagValue(flag, window.isValid());
+		flag = getHighestFlagValue(flag, doors.isValid());
+		flag = getHighestFlagValue(flag, alerts.isValid());
 		return flag;
 	}
 	public function getForm():String {

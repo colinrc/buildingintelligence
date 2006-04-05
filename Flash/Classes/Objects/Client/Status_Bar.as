@@ -1,11 +1,11 @@
 ﻿class Objects.Client.Status_Bar extends Objects.BaseElement {
 	private var groups:Array;
 	private var treeNode:XMLNode;
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var group in groups) {
 			if (!groups[group].isValid()) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

@@ -10,8 +10,8 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		/*for (var raw_interface in raw_interfaces) {
 		if (!raw_interfaces[raw_interface].isValid()) {
 		flag = false;

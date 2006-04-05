@@ -9,17 +9,17 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var alert in alerts) {
 			if ((alerts[alert].attributes["ACTIVE"] != "Y") && (alerts[alert].attributes["ACTIVE"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((alerts[alert].attributes["KEY"] == undefined) || (alerts[alert].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((alerts[alert].attributes["DISPLAY_NAME"] == undefined) || (alerts[alert].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

@@ -5,20 +5,20 @@
 	public function setRoom(inRoom:Object) {
 		room = inRoom;
 	}	
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var door in doors) {
 			if((doors[door].attributes["name"] == "")||(doors[door].attributes["name"] == undefined)){
-				flag = false;
+				flag = "error";
 			}
 			if((doors[door].attributes["key"] == "")||(doors[door].attributes["key"] == undefined)){
-				flag = false;
+				flag = "error";
 			}
 			if((doors[door].attributes["pos"] == "")||(doors[door].attributes["pos"] == undefined)){
-				flag = false;
+				flag = "error";
 			}
 			if((doors[door].attributes["colour"] == "")||(doors[door].attributes["colour"] == undefined)){
-				flag = false;
+				flag = "error";
 			}			
 		}
 		return flag;

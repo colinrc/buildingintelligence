@@ -13,20 +13,20 @@
 	public function Toggles(inToggle_type:String) {
 		toggle_type = inToggle_type;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var toggle in toggles) {
 			if ((toggles[toggle].attributes["ACTIVE"] != "Y") && (toggles[toggle].attributes["ACTIVE"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((toggles[toggle].attributes["KEY"] == undefined) || (toggles[toggle].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((toggles[toggle].attributes["NAME"] == undefined) || (toggles[toggle].attributes["NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((toggles[toggle].attributes["DISPLAY_NAME"] == undefined) || (toggles[toggle].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

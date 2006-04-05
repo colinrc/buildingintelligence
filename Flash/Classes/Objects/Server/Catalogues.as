@@ -1,11 +1,11 @@
 ﻿class Objects.Server.Catalogues extends Objects.BaseElement {
 	var catalogues:Array;
 	private var treeNode:XMLNode;	
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var catalogue in catalogues) {
 			if (!catalogues[catalogue].isValid()) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

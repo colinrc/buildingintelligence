@@ -35,19 +35,21 @@
 			if(tempKeys[tempKey] != lastKey){
 				keys.push(tempKeys[tempKey]);
 				lastKey = tempKeys[tempKey];
+				//What if not in order
 			}
 		}
 		return keys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
-		if (!controls.isValid()) {
-			flag = false;
-		}
+	public function vaildateKeys():Array{
+		var keys = new Array();
+		return keys;
+	}
+	
+	public function isValid():String {
+		var flag = "ok";
+		flag = getHighestFlagValue(flag, controls.isValid());
 		for (var device in devices) {
-			if (!devices[device].isValid()) {
-				flag = false;
-			}
+			flag = getHighestFlagValue(flag, devices[device].isValid());
 		}
 		return flag;
 	}

@@ -8,17 +8,17 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var child in variables.childNodes) {
 			if ((variables.childNodes[child].attributes["NAME"] == undefined) || (variables.childNodes[child].attributes["NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((variables.childNodes[child].attributes["DISPLAY_NAME"] == undefined) || (variables.childNodes[child].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((variables.childNodes[child].attributes["ACTIVE"] != "Y") && (variables.childNodes[child].attributes["ACTIVE"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

@@ -9,23 +9,23 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var relay in relays) {
 			if ((relays[relay].attributes["ACTIVE"] != "Y") && (relays[relay].attributes["ACTIVE"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((relays[relay].attributes["KEY"] == undefined) || (relays[relay].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((relays[relay].attributes["CHANNEL"] == undefined) || (relays[relay].attributes["CHANNEL"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((relays[relay].attributes["NAME"] == undefined) || (relays[relay].attributes["NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((relays[relay].attributes["DISPLAY_NAME"] == undefined) || (relays[relay].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

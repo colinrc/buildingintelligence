@@ -9,17 +9,17 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var ir in irs) {
 			if ((irs[ir].attributes["KEY"] == undefined) || (irs[ir].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((irs[ir].attributes["NAME"] == undefined) || (irs[ir].attributes["NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((irs[ir].attributes["AV_NAME"] == undefined) || (irs[ir].attributes["AV_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

@@ -9,20 +9,20 @@
 		}
 		return tempKeys;
 	}
-	public function isValid():Boolean {
-		var flag = true;
+	public function isValid():String {
+		var flag = "ok";
 		for (var lightArea in lightAreas) {
 			if ((lightAreas[lightArea].attributes["ACTIVE"] != "Y") && (lightAreas[lightArea].attributes["ACTIVE"] != "N")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((lightAreas[lightArea].attributes["KEY"] == undefined) || (lightAreas[lightArea].attributes["KEY"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((lightAreas[lightArea].attributes["NAME"] == undefined) || (lightAreas[lightArea].attributes["NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 			if ((lightAreas[lightArea].attributes["DISPLAY_NAME"] == undefined) || (lightAreas[lightArea].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+				flag = "error";
 			}
 		}
 		return flag;

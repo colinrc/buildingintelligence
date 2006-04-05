@@ -10,8 +10,8 @@
 	public function deleteSelf(){
 		treeNode.removeNode();
 	}			
-	public function isValid():Boolean {
-		return true;
+	public function isValid():String {
+		return "ok";
 	}
 	public function getForm():String {
 		return "forms.project.client.icon";
