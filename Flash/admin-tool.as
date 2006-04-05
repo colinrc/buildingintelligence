@@ -1,5 +1,14 @@
 ﻿//Temp
 //mdm.Dialogs.prompt();
+mdm.Exception.enableHandler();
+mdm.Application.onMDMScriptException = function(myObject){
+  /* mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
+   mdm.Dialogs.prompt("Command: " +myObject.command);
+   mdm.Dialogs.prompt("MSG: " +myObject.message);
+   mdm.Dialogs.prompt("Form Type: " +myObject.formType);
+   mdm.Dialogs.prompt("Parameter: " +myObject.parameter);
+   mdm.Dialogs.prompt("Value: " +myObject.value);*/
+}
 mdm.Application.title = "eLIFE Admin Tool";
 mdm.Forms.MainForm.title = "eLIFE Admin Tool";
 historyViewer_btn._visible = false;
@@ -22,12 +31,11 @@ _global.serverInstance = new Objects.Instances.ServerInstance();
 //_global.history = new Objects.History();
 /*Workflow tree variables and initialization*/
 var right_tree = workFlow_split.setFirstContents("Tree", "right_tree", 0);
-var infoflow_ta = workFlow_split.setSecondContents("TextArea", "infoflow_ta", 1);
+var output_panel = workFlow_split.setSecondContents("OutputPanel", "output_panel", 1);
 _global.right_tree = right_tree;
-_global.infoflow_ta = infoflow_ta;
-_global.infoflow_ta.editable = false;
-_global.infoflow_ta.wordWrap = true;
-_global.infoflow_ta.html = true;
+_global.output_panel = output_panel;
+_global.output_panel.setDescription("BLAH BLAH BLAH");
+_global.output_panel.setError("YAK YAK YAK");
 _global.workflow = new Objects.WorkFlow();
 //Create global reference to project/design tree
 var left_tree:mx.controls.Tree;
@@ -830,7 +838,7 @@ treeListener.change = function(evt:Object) {
 				temp_node = temp_node.parentNode;
 			}
 			left_tree.selectedNode = node.left_node;
-			infoflow_ta.text = node.attributes.description;
+			output_panel.text = node.attributes.description;
 			selectNode = new Object();
 			selectNode.target = _global.left_tree;
 			selectNode.type = "change";

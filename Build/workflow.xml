@@ -12,7 +12,83 @@
 				</font>
 			</description>
 		</item>
+		<item label="Server Variables" key="Variables" order="2">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Server Variables</b></p>
+				<p>Add Variables and configure.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Calendar" key="Calendar_Settings" order="3">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Calendar Settings</b></p>
+				<p>Set the correct IP or serial settings for the device.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure CBUS" key="CBus" order="4">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Connection Settings</b></p>
+				<p>Set the correct IP or serial settings for the device.</p>
+				<p><b>Step2 - Add Lights or Sensors</b></p>
+				<p>Configure the Lights and Sensors.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure CBUS Relays" key="CBusRelays" order="5">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add relay Lights</b></p>
+				<p>Add your CBUS relay Lights.</p>
+				<p><b>Step2 - Configure Lights</b></p>
+				<p>Configure the relay Lights.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure CBUS Dimmers" key="CBusLights" order="6">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add dimmer Lights</b></p>
+				<p>Add your CBUS dimmer Lights.</p>
+				<p><b>Step2 - Configure Lights</b></p>
+				<p>Configure the dimmer Lights.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure CBUS Sensors" key="CBusSensors" order="7">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add CBUS Sensors</b></p>
+				<p>Add your CBUS Sensors.</p>
+				<p><b>Step2 - Configure Sensors</b></p>
+				<p>Configure the CBUS Sensors.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure CBUS Temperature Sensor" key="CBusTemperatures" order="8">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add CBUS Temperature Sensors</b></p>
+				<p>Add your CBUS Temperature Sensors.</p>
+				<p><b>Step2 - Configure Temperature Sensors</b></p>
+				<p>Configure the CBUS Temperature Sensors.</p>
+				</font>
+			</description>
+		</item>
 	</step>
 	<step label="Client" stepOrder="2">
+		<item label="Configure Property" key="Property" order="1">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
 	</step>
 </workflow>
