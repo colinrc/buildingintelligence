@@ -30,18 +30,13 @@ class Forms.Project.Device.Custom extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions,true,100);		
 		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions,true,100);		
 		dataGridHandler.addTextInputColumn("power", "Power\nRating", restrictions,true,800);
-		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(customs);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();

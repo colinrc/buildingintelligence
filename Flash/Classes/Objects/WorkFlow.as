@@ -40,12 +40,12 @@ class Objects.WorkFlow {
 		var found:Boolean = false;
 		var newNode = new XMLNode(1, "step");
 		setAttributes(key, newNode);
-		newNode.left_node.description = newNode.attributes.description;
 		//mdm.Dialogs.prompt("InAddnode:"+key);
 		if (newNode.attributes.label.length) {
 			newNode.left_node = inst;
+			newNode.left_node.description = newNode.attributes.description;			
 			newNode.attributes.complete = inst.object.isValid();
-			mdm.Dialogs.prompt("InAddnode:IsValidCall:"+newNode.attributes.complete+"  "+key);
+			//mdm.Dialogs.prompt("InAddnode:IsValidCall:"+newNode.attributes.complete+"  "+key);
 			for (var child in _global.right_tree.dataProvider.childNodes) {
 				if (newNode.attributes.stepOrder == _global.right_tree.dataProvider.childNodes[child].attributes.stepOrder) {
 					var tempNode = _global.right_tree.dataProvider.childNodes[child];

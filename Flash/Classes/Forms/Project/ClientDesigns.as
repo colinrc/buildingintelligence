@@ -16,7 +16,6 @@ class Forms.Project.ClientDesigns extends Forms.BaseForm {
 		dataGridHandler.setDataGrid(clients_dg);
 		dataGridHandler.addTextInputColumn("description", "Name", restrictions,false,150);
 		dataGridHandler.addHiddenColumn("id");
-		dataGridHandler.setAdvanced(_global.advanced);//Debug						
 		var DP = new Array();
 		for (var client in clients) {
 			var newClient = new Object();
@@ -30,11 +29,7 @@ class Forms.Project.ClientDesigns extends Forms.BaseForm {
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();

@@ -15,8 +15,7 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(catalogues_dg);
 		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false,150);
-		dataGridHandler.addHiddenColumn("id");
-		dataGridHandler.setAdvanced(_global.advanced);//Debug						
+		dataGridHandler.addHiddenColumn("id");				
 		var DP = new Array();
 		for (var catalogue in catalogues) {
 			var newCatalogue = new Object();
@@ -30,11 +29,7 @@ class Forms.Project.Device.Catalogues extends Forms.BaseForm {
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();

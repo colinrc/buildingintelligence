@@ -14,10 +14,20 @@ class Forms.Control.Publish extends Forms.BaseForm {
 	private var password:String;
 	private var localPath:String;
 	private var remotePath:String;
+	private var isServer:Boolean = false;
+	private var localDirectory_cmb:ComboBox;
+	private var remoteDirectory_cmb:ComboBox;	
 	public function Publish() {
 	}
 	public function onLoad():Void {
-		localPath = "c:/hello/";
+		if(isServer){
+			localDirectory_cmb.dataProvider = [mdm.Application.path+"/",mdm.Application.path+"/script",mdm.Application.path+"/config",mdm.Application.path+"/log",mdm.Application.path+"/datafiles"];			
+			remoteDirectory_cmb.dataProvider = ["/","/script","/config","/log","/datafiles"];			
+		} else{
+			localDirectory_cmb.dataProvider = [mdm.Application.path+"/",mdm.Application.path+"/lib/maps",mdm.Application.path+"/lib/backgrounds",mdm.Application.path+"/lib/icons",mdm.Application.path+"/lib/sounds"];			
+			remoteDirectory_cmb.dataProvider = ["/","/lib/maps","/lib/backgrounds","/lib/icons","/lib/sounds"];
+		}
+		localPath = mdm.Application.path+"/";
 		remotePath = "/";		
 		user = "test1";
 		port = 22;
@@ -58,7 +68,18 @@ class Forms.Control.Publish extends Forms.BaseForm {
 		left_li.iconField = "icon";		
 		getSelected_btn.addEventListener("click", Delegate.create(this, getItem));
 		putSelected_btn.addEventListener("click", Delegate.create(this, putItem));		
+		localDirectory_cmb.addEventListener("change", Delegate.create(this, localChange));
+		remoteDirectory_cmb.addEventListener("change", Delegate.create(this, remoteChange));
+		
 	}
+	public function localChange(eventObject:Object):Void{
+		localPath = localDirectory_cmb.text;
+		refreshLocal();
+	}
+	public function remoteChange(eventObject:Object):Void{
+		remotePath = remoteDirectory_cmb.text;
+		refreshRemote();
+	}	
 	public function getItem():Void{
 		myActiveX.addMethodParam(1, "string", localPath+right_li.selectedItem.label);		
 		myActiveX.addMethodParam(2, "string", remotePath+right_li.selectedItem.label);

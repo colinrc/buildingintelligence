@@ -43,7 +43,7 @@
 		return newNode;
 	}
 	public function getKey():String{
-		return "Sounds";
+		return "ClientSounds";
 	}
 	public function getName():String {
 		return "Sounds";

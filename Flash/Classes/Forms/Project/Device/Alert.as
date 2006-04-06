@@ -27,18 +27,13 @@ class Forms.Project.Device.Alert extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("cat", "Client\nCatagory", restrictions,false,100);
 		dataGridHandler.addComboBoxColumn("type", "Alert\nType", [{label:"Alarm Type"}, {label:"DoorBell"}, {label:"ID"}, {label:"ModeChange"}, {label:"Phone"}, {label:"System"}, {label:"User"}, {label:"Zone"}],false,100);
 		dataGridHandler.addTextInputColumn("message", "Message", restrictions,false,100);
-		dataGridHandler.setAdvanced(_global.advanced);	
 		dataGridHandler.setDataGridDataProvider(alerts);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();

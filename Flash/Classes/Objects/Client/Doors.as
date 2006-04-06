@@ -43,7 +43,7 @@
 		return "ClientDoors";
 	}
 	public function getName():String {
-		return "Doors";
+		return "Doors & Windows";
 	}
 	public function getData():Object {
 		return {doors:doors, dataObject:this,poly:room.poly,map:room.zone.map};

@@ -31,18 +31,13 @@ class Forms.Project.Device.CbusLights extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("key", "Group\nAddr.", keyRestrictions,false,60);
 		dataGridHandler.addTextInputColumn("application", "CBUS\nApp.", keyRestrictions,true,60);
 		dataGridHandler.addTextInputColumn("power", "Power\nRating", powerRestrictions,true,60);
-		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(lights);	
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();

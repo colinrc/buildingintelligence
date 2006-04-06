@@ -28,18 +28,13 @@ class Forms.Project.Device.Counter extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,150);
 		dataGridHandler.addTextInputColumn("key", "Counter\nNo.", keyRestrictions, false,60);
 		dataGridHandler.addTextInputColumn("max", "Max", maxRestrictions, false,60);
-		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler.setDataGridDataProvider(counters);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();

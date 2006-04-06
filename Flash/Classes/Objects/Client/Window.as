@@ -38,7 +38,7 @@
 		return "ClientWindow";
 	}
 	public function getName():String {
-		return "Window";
+		return "Room Control Panel";
 	}
 	public function getData():Object {
 		return {tabs:tabs, dataObject:this};

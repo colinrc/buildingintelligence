@@ -19,7 +19,6 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		dataGridHandler.setDataGrid(items_dg);
 		dataGridHandler.addTextInputColumn("code", "Code", restrictions,false,200);
 		dataGridHandler.addTextInputColumn("value", "Value", restrictions,false,200);
-		dataGridHandler.setAdvanced(_global.advanced);//Debug						
 		var DP = new Array();
 		for (var item in items) {
 			var newItem = new Object();
@@ -39,11 +38,7 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();

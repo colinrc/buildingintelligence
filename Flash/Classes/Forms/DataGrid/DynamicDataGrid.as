@@ -205,14 +205,12 @@ class Forms.DataGrid.DynamicDataGrid {
 		columns[name].advanced = advanced;
 		columns[name].colNo = columnCount - 1;
 		columns[name].width = width;
-		if (!advanced) {
-			my_dg.addColumn(name);
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ButtonCellRenderer";
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = width;
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
-		}
+		columns[name].column = new DataGridColumn(name);		
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "ButtonCellRenderer";
+		columns[name].column.width = width;
+		columns[name].column.sortable = false;
 	}
 	public function addHiddenColumn(name:String) {
 		columns[name] = new Object();
@@ -305,6 +303,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				}
 			}
 		}
+		my_dg.dataProvider.updateViews("change");
 		tempDP = new_dp;
 		my_dg.doLater(this, "buildDG");
 	}

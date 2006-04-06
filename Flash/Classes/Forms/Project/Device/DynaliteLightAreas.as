@@ -24,18 +24,13 @@ class Forms.Project.Device.DynaliteLightAreas extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
 		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false,150);
 		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false,60);
-		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(lightAreas);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();

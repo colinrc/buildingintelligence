@@ -37,19 +37,14 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 			title_lb.text = "AV Zones";
 			break;
 		}
-		dataGridHandler.addTextInputColumn("key", itemType, keyRestrictions,false,60);
-		dataGridHandler.setAdvanced(_global.advanced);					
+		dataGridHandler.addTextInputColumn("key", itemType, keyRestrictions,false,60);	
 		dataGridHandler.setDataGridDataProvider(audiovideos);	
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();

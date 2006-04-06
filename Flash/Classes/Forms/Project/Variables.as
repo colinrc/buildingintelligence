@@ -23,7 +23,6 @@ class Forms.Project.Variables extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false, 150);
 		dataGridHandler.addTextInputColumn("command", "Init\nCommand", restrictions, false, 100);
 		dataGridHandler.addTextInputColumn("extra", "Init\nExtra", restrictions, false, 100);
-		dataGridHandler.setAdvanced(_global.advanced);
 		var DP = new Array();
 		for (var child in variables.childNodes) {
 			var newVariable = new Object();

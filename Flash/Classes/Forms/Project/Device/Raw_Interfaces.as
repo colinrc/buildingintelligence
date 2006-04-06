@@ -39,7 +39,6 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("extra4", "Extra4", restrictions, true,100);
 		dataGridHandler.addTextInputColumn("extra5", "Extra5", restrictions, true,100);
 		dataGridHandler.addHiddenColumn("vars");
-		dataGridHandler.setAdvanced(_global.advanced);
 		dataGridHandler2 = new Forms.DataGrid.DynamicDataGrid();
 		var restrictions2 = new Object();
 		restrictions2.editable = false;
@@ -81,11 +80,7 @@ class Forms.Project.Device.Raw_Interfaces extends Forms.BaseForm {
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced() {
-		if (_global.advanced) {
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();

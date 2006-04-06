@@ -21,18 +21,13 @@ class Forms.Project.Device.GC100_Modules extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("name", "Module\nName", restrictions,false,150);
 		dataGridHandler.addComboBoxColumn("type", "Module\nType", [{label:"IR"}, {label:"RELAY"}],false,100);
 		dataGridHandler.addComboBoxColumn("number", "Module\nNo.", moduleNos,false,50);
-		dataGridHandler.setAdvanced(_global.advanced);			
 		dataGridHandler.setDataGridDataProvider(modules);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}		
 	private function deleteItem() {
 		dataGridHandler.removeRow();

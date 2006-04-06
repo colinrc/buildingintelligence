@@ -66,6 +66,7 @@ class Controls.OutputPanel extends UIComponent {
 		tabControl.addItem("Errors");
 		description_ta._x = 0;
 		description_ta._y = tabControl.height;
+		description_ta.html = true;
 		error_ta._x = 0;
 		error_ta._y = tabControl.height;
 		error_ta.editable = false;

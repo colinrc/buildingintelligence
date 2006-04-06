@@ -78,6 +78,44 @@
 				</font>
 			</description>
 		</item>
+		<item label="Configure Comfort" key="Comfort" order="9">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Connection Settings</b></p>
+				<p>Set the correct IP or serial settings for the device.</p>
+				<p><b>Step2 - Add Toggle Inputs and Outputs</b></p>
+				<p>Add Toggle Inputs and Outputs.</p>
+				<p><b>Step3 - Add Alarms and Alerts</b></p>
+				<p>Add Comfort Alarms and Alerts.</p>
+				<p><b>Step4 - Add Door ID's and Users</b></p>
+				<p>Add Door ID's and setup Comfort Users.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure Input/Output Toggles" key="Toggles" order="10">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Comfort Alarms/Alerts" key="Toggles" order="11">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
 	</step>
 	<step label="Client" stepOrder="2">
 		<item label="Configure Property" key="Property" order="1">

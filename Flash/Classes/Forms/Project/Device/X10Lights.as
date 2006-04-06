@@ -27,17 +27,12 @@ class Forms.Project.Device.X10Lights extends Forms.BaseForm {
 		dataGridHandler.addComboBoxColumn("key", "Unit\nNumber", [{label:"1"}, {label:"2"}, {label:"3"}, {label:"4"}, {label:"5"}, {label:"6"}, {label:"7"}, {label:"8"}, {label:"9"}, {label:"10"}, {label:"11"}, {label:"12"}, {label:"13"}, {label:"14"}, {label:"15"}, {label:"16"}], false, 60);
 		dataGridHandler.addTextInputColumn("power", "Power\nRating", powerRestrictions, true, 100);
 		dataGridHandler.setDataGridDataProvider(lights);
-		dataGridHandler.setAdvanced(_global.advanced);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced() {
-		if (_global.advanced) {
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced(_global.advanced);
 	}
 	private function deleteItem() {
 		dataGridHandler.removeRow();

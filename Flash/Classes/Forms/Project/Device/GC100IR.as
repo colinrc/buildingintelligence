@@ -28,18 +28,13 @@ class Forms.Project.Device.GC100IR extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("key", "Key", keyRestrictions,false,150);
 		dataGridHandler.addTextInputColumn("avname", "AV\nName", restrictions,false,100);		
 		dataGridHandler.addComboBoxColumn("module", "Module\nNo.", DP,false,60);				
-		dataGridHandler.setAdvanced(_global.advanced);					
 		dataGridHandler.setDataGridDataProvider(irs);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();

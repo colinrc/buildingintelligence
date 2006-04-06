@@ -20,7 +20,11 @@ _global.style.setStyle("themeColor", "haloBlue");
 this.createEmptyMovieClip("formContent_mc", 0);
 formContent_mc._x = 270;
 formContent_mc._y = 114;
+formContent_mc.tabChildren=true; 
+formContent_mc.tabEnabled=false;
 var form_mc;
+form_mc.tabChildren=true; 
+form_mc.tabEnabled=false;
 //Global variables
 _global.advanced = false;
 _global.unSaved = false;
@@ -34,8 +38,8 @@ var right_tree = workFlow_split.setFirstContents("Tree", "right_tree", 0);
 var output_panel = workFlow_split.setSecondContents("OutputPanel", "output_panel", 1);
 _global.right_tree = right_tree;
 _global.output_panel = output_panel;
-_global.output_panel.setDescription("BLAH BLAH BLAH");
-_global.output_panel.setError("YAK YAK YAK");
+//_global.output_panel.setDescription("BLAH BLAH BLAH");
+//_global.output_panel.setError("YAK YAK YAK");
 _global.workflow = new Objects.WorkFlow();
 //Create global reference to project/design tree
 var left_tree:mx.controls.Tree;
@@ -568,6 +572,9 @@ leftTreeListener.change = function(eventObj) {
 	form_mc.removeMovieClip();
 	right_tree.selectedNode = undefined;
 	if (node.object != undefined) {
+		_global.output_panel.setDescription(node.description);
+		_global.output_panel.setError(node.object.getValidationMsg());
+		_global.output_panel.draw();
 		switch (node.nodeName) {
 		case "Client" :
 		case "StatusBarGroup" :
@@ -838,7 +845,6 @@ treeListener.change = function(evt:Object) {
 				temp_node = temp_node.parentNode;
 			}
 			left_tree.selectedNode = node.left_node;
-			output_panel.text = node.attributes.description;
 			selectNode = new Object();
 			selectNode.target = _global.left_tree;
 			selectNode.type = "change";

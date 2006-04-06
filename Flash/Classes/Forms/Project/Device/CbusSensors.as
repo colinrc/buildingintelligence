@@ -29,18 +29,13 @@ class Forms.Project.Device.CbusSensors extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("channel", "Channel", keyRestrictions,false,60);
 		dataGridHandler.addTextInputColumn("units", "Units", keyRestrictions,false,60);		
 		dataGridHandler.addTextInputColumn("application", "CBUS\nApp.", keyRestrictions,true,60);
-		dataGridHandler.setAdvanced(_global.advanced );//Debug						
 		dataGridHandler.setDataGridDataProvider(sensors);		
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function setAdvanced(){
-		if(_global.advanced){
-			dataGridHandler.setAdvanced(_global.advanced);
-		} else {
-			dataGridHandler.setAdvanced(_global.advanced);
-		}
+		dataGridHandler.setAdvanced();
 	}	
 	private function deleteItem() {
 		dataGridHandler.removeRow();

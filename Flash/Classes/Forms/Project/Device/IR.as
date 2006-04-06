@@ -17,7 +17,6 @@ class Forms.Project.Device.IR extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false,150);
 		dataGridHandler.addTextInputColumn("key", "Key", restrictions,false,150);
 		dataGridHandler.addTextInputColumn("avname", "AV Name", restrictions,false,150);		
-		dataGridHandler.setAdvanced(false);//Debug						
 		var DP = new Array();		
 		for (var ir in irs) {
 			var newIr = new Object();

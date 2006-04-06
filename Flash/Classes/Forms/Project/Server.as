@@ -27,7 +27,6 @@ class Forms.Project.Server extends Forms.BaseForm {
 		dataGridHandler.addComboBoxColumn("device_type", "Device Type", newArray,false,120);
 		dataGridHandler.addTextInputColumn("description", "Description", restrictions,false,300);
 		dataGridHandler.addHiddenColumn("id");
-		dataGridHandler.setAdvanced(_global.advanced);		
 		var DP = new Array();
 		for (var device in devices) {
 			var newDevice = new Object();

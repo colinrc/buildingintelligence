@@ -1,6 +1,6 @@
 ﻿class Objects.BaseElement {
 	var validation:Array;
-	private var errorText:String;
+	private var errorText:String ="";
 	public function getValidation():Array{
 		return validation;
 	}
@@ -11,7 +11,10 @@
 		errorText+=inString+"\n";
 	}
 	public function clearValidationMsg(){
-		errorText = null;
+		errorText = "";
+	}
+	public function getValidationMsg():String{
+		return errorText;
 	}
 	public function isValid():Boolean {
 		return true;
