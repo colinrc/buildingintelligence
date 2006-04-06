@@ -18,7 +18,7 @@ public class SkipDates {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 
         skipDate = (SimpleDateFormat)SimpleDateFormat.getDateTimeInstance();
-        skipDate.applyPattern("yyyy-MM-dd");
+        skipDate.applyPattern("yyyy-MM-dd hh:mm:ss");
         skipDates = new LinkedList ();    	
     }
     
@@ -27,8 +27,8 @@ public class SkipDates {
         Iterator eachSkip = skipElements.iterator();
         while (eachSkip.hasNext()){
         		Element skipElement = (Element)eachSkip.next();
-        		String skipStart = skipElement.getAttributeValue("start_date");
-           	String skipEnd = skipElement.getAttributeValue("end_date");
+        		String skipStart = skipElement.getAttributeValue("start_date") + " 00:00:00";
+           	String skipEnd = skipElement.getAttributeValue("end_date") + " 23:59:59";
            	this.addDates(skipStart,skipEnd);
         }
 	}

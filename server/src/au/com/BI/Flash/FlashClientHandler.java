@@ -254,10 +254,12 @@ public class FlashClientHandler extends Thread
 			processXML(xmlDoc);
 		}
 		catch (JDOMException ex)
-		{
+                {
 			logger.log (Level.WARNING,"XML ERROR " + ex.getMessage());
+                        String badElement = new String (xmlByte);
+                        System.out.println (badElement);
 			Element error = new Element ("error");
-			error.setAttribute ("msg", "JDOM parsing error");
+			error.setAttribute ("msg", "JDOM parsing error, illegal message from the Client");
 			Document replyDoc = new Document (error);
 			sendXML (replyDoc);
 		}

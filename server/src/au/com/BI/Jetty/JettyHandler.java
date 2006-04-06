@@ -33,7 +33,6 @@ public class JettyHandler {
             connector.setPort(port);
             connector.setMaxIdleTime(50000);
             server.setConnectors(new Connector[]{connector});
-            
            
 
             /*
@@ -120,8 +119,8 @@ public class JettyHandler {
             ServletHandler servletHandler = new ServletHandler ();
 
             ServletHolder defServlet = servletHandler.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/*");
+            defServlet.setInitParameter("dirAllowed","false");
             mainContextHandler.setHandler(servletHandler);
-            
             server.addHandler(mainContextHandler); // added to security handler if security is needed
             
             

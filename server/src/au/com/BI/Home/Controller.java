@@ -119,11 +119,16 @@ public class Controller {
 
 		macroHandler = new MacroHandler();
 		macroHandler.setFileName("macros");
+                macroHandler.setIntegratorFileName("integrator_macros");
 		macroHandler.setCalendarFileName("calendar");
 		macroHandler.setCommandList(commandQueue);
-		if (!macroHandler.readMacroFile() && logger!= null) {
-			logger.log (Level.SEVERE,"Could not read macro file");
+		if (!macroHandler.readMacroFile(false) && logger!= null) {
+			logger.log (Level.WARNING,"Could not read user macro file");
 		}
+                if (!macroHandler.readMacroFile(true) && logger!= null) {
+			logger.log (Level.WARNING,"Could not read integrator macro file");
+		}
+                
 		try {
 			macroHandler.startCalendar(currentUser,commandQueue);
 		}
@@ -976,6 +981,7 @@ public class Controller {
 				return false;
 			}
 			if (deviceModel.doIControl(itemKey, item.isUserControllerCommand())) {
+                            try {
 				while (!successfulCommand) {
 					try {
 						deviceModel.doCommand(item);
@@ -989,14 +995,16 @@ public class Controller {
 						ex.printStackTrace();
 						deviceModel.setConnected(false);
 						connectDevice (deviceModel,this.deviceModels);
-					} catch (ArrayIndexOutOfBoundsException ex) {
-						logger.log (Level.WARNING,"Caught an array index out of bounds exception in device " + deviceModel.getName() + " ");				
-						ex.printStackTrace();
-					} catch (Exception ex) {
-						logger.log (Level.WARNING,"Caught an unknown error in device " + deviceModel.getName() + " : " + ex.getMessage());
-						ex.printStackTrace();
 					}
+                                        
 				}
+                            } catch (ArrayIndexOutOfBoundsException ex) {
+				logger.log (Level.WARNING,"Caught an array index out of bounds exception in device " + deviceModel.getName() + " ");				
+				ex.printStackTrace();
+                            } catch (Exception ex) {
+				logger.log (Level.WARNING,"Caught an unknown error in device " + deviceModel.getName() + " : " + ex.getMessage());
+				ex.printStackTrace();
+                            }
 			}
 		}
 		return successfulCommand;
@@ -1089,7 +1097,7 @@ public class Controller {
           }
 		if (commandCode.equals("LoadMacros")) {
 			try {
-				this.macroHandler.readMacroFile();
+				this.macroHandler.readMacroFile(false);
 				this.macroModel.sendListToClient();
              } catch (Exception e) {
                  logger.log (Level.WARNING,"Macros could not be loaded");

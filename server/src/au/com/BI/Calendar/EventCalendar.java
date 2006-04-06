@@ -178,8 +178,8 @@ public class EventCalendar {
 		return true;
 	}
 
-	public Element buildListElement (String eventName) {
-		Element event = (Element)events.get(eventName);
+	public Element buildListElement (String eventID) {
+		Element event = (Element)events.get(eventID);
 				
 		return event;
 	}
@@ -189,25 +189,33 @@ public class EventCalendar {
 	 * @param eventName Empty string for all events or the name of an event
 	 * @return
 	 */
-	public Element get (String eventName) {
+	public Element get (String eventID) {
 		Element top = new Element ("events");
-		
+
 		synchronized (events) {
-			if (eventName.equals ("")) {
-				Iterator eventNames = events.keySet().iterator();
-				while (eventNames.hasNext()) {
-					Element macroDef =  buildListElement ((String)eventNames.next());
-					if (macroDef != null) {
-						Element copyOfElement = (Element)macroDef.clone();
-						top.addContent(copyOfElement);
-					}
-				}
+			if (eventID.equals ("")) {
+                            top.setAttribute("COMPLETE","Y");
+                            Iterator eventNames = events.keySet().iterator();
+                            while (eventNames.hasNext()) {
+                                Element macroDef =  buildListElement ((String)eventNames.next());
+                                if (macroDef != null) {
+                                        Element copyOfElement = (Element)macroDef.clone();
+                                        top.addContent(copyOfElement);
+                                }
+                            }
 			}
 			else {
-				Element eventDef = buildListElement (eventName);
-				top.addContent( eventDef);
-				
-				}
+                            top.setAttribute("COMPLETE","N");
+                            String eventIDs[] = eventID.split (",");
+                            for (int i = 0; i < eventIDs.length; i ++){
+                                Element eventDef = buildListElement (eventIDs[i]);
+                                if (eventDef != null) {
+                                        Element copyOfElement = (Element)eventDef.clone();
+                                        top.addContent(copyOfElement);
+                                }
+                            }
+                            
+                        }
 		}
 		return top;
 	}

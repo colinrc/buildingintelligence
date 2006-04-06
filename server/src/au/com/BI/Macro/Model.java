@@ -40,7 +40,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID){
 		if (macroHandler != null){
 		    ClientCommand clientCommand = new ClientCommand();
-		    clientCommand.setFromElement (macroHandler.get("",false));
+		    clientCommand.setFromElement (macroHandler.get("",false,false));
 		    clientCommand.setKey ("CLIENT_SEND");
 		    clientCommand.setTargetDeviceID(targetFlashDeviceID);
 			synchronized (commandQueue){
@@ -137,25 +137,38 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 
 		if (commandStr.equals("save")) {
-			macroHandler.put((String)command.getExtraInfo(),command.getMessageFromFlash());
+			macroHandler.put((String)command.getExtraInfo(),command.getMessageFromFlash(),false);
 			logger.log (Level.FINER, "Saving new macro " + command.getExtraInfo());
 			doListUpdate = true;
 		}
+                if (commandStr.equals("getContents")) {
+			Element macro = macroHandler.getContents((String)command.getExtraInfo(),false);
+			logger.log (Level.FINER, "Fetching contents for macro " + command.getExtraInfo());
+			doListUpdate = false;
+                        
+			if (macro == null)
+				logger.log (Level.WARNING, "Could not retrieve macro list");
+			else {
+			    clientCommand = new ClientCommand();
+			    clientCommand.setFromElement (macro);
+			    clientCommand.setKey ("CLIENT_SEND");
+				clientCommand.setTargetDeviceID(command.getOriginatingID());
+			}
+		}
 		if (commandStr.equals("saveList")) {
-			macroHandler.clearAll();
-			macroHandler.saveMacroList(command.getMessageFromFlash());
-			macroHandler.readMacroFile();
+			macroHandler.saveMacroList(command.getMessageFromFlash(),false);
+			macroHandler.readMacroFile(false);
 			logger.log (Level.FINER, "Saving macro list" );
 			doListUpdate = true;
 		}
 		if (commandStr.equals("delete")) {
-			macroHandler.delete((String)command.getExtraInfo(),currentUser);
+			macroHandler.delete((String)command.getExtraInfo(),currentUser,false);
 			logger.log (Level.FINER, "Deleting macro " + command.getExtraInfo());
 			doListUpdate = true;
 		}
 		if (commandStr.equals("getList")) {
 			logger.log (Level.FINER, "Fetching macro list");
-		    Element macro = macroHandler.get(command.getExtraInfo(),false);
+		    Element macro = macroHandler.get(command.getExtraInfo(),false,false);
 
 			if (macro == null)
 				logger.log (Level.WARNING, "Could not retrieve macro list");
@@ -167,17 +180,17 @@ public class Model extends BaseModel implements DeviceModel {
 			}
 		}
 		if (doListUpdate) {
-			logger.log (Level.FINER, "Fetching macro list");
-		    Element macro = macroHandler.get("",false);
+                    logger.log (Level.FINER, "Fetching macro list");
+		    Element macro = macroHandler.get("",false,false);
 
-			if (macro == null)
-				logger.log (Level.WARNING, "Could not retrieve macro list");
-			else {
-			    clientCommand = new ClientCommand();
-			    clientCommand.setFromElement (macro);
-			    clientCommand.setKey ("CLIENT_SEND");
-				clientCommand.setTargetDeviceID(0);
-			}
+                    if (macro == null)
+                            logger.log (Level.WARNING, "Could not retrieve macro list");
+                    else {
+                        clientCommand = new ClientCommand();
+                        clientCommand.setFromElement (macro);
+                        clientCommand.setKey ("CLIENT_SEND");
+                            clientCommand.setTargetDeviceID(0);
+                    }
 		}
 		if (clientCommand != null) {
 
@@ -188,28 +201,29 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 	
 	public void sendListToClient () {
-		logger.log (Level.FINER, "Fetching macro list");
-	    Element macro = macroHandler.get("",false);
+            logger.log (Level.FINER, "Fetching macro list");
+	    Element macro = macroHandler.get("",false,false);
 
-		if (macro == null)
-			logger.log (Level.WARNING, "Could not retrieve macro list");
-		else {
-		    ClientCommand clientCommand = new ClientCommand();
-		    clientCommand.setFromElement (macro);
-		    clientCommand.setKey ("CLIENT_SEND");
-			clientCommand.setTargetDeviceID(0);
+            if (macro == null)
+                    logger.log (Level.WARNING, "Could not retrieve macro list");
+            else {
+                ClientCommand clientCommand = new ClientCommand();
+                clientCommand.setFromElement (macro);
+                clientCommand.setKey ("CLIENT_SEND");
+                clientCommand.setTargetDeviceID(0);
 
-				synchronized (this.commandQueue){
-					commandQueue.add(clientCommand);
-					commandQueue.notifyAll();
-				}
-		}
+                synchronized (this.commandQueue){
+                        commandQueue.add(clientCommand);
+                        commandQueue.notifyAll();
+                }
+            }
 	}
 
 	public void doCalendarItem (CommandInterface commandIntf) {
 	    ClientCommand command = (ClientCommand)commandIntf;
 	    boolean doListUpdate = false;
-
+            long targetDeviceID = 0;
+            
 	    try {
 	        command = (ClientCommand)commandIntf;
 	    } catch (ClassCastException e) {
@@ -218,14 +232,14 @@ public class Model extends BaseModel implements DeviceModel {
 		ClientCommand clientCommand = null;
 
 		String commandStr = command.getCommandCode();
-		String extra = command.getExtraInfo();
+		String eventID = "";
+                String extra = command.getExtraInfo();
 		User currentUser = command.getUser();
 		EventCalendar eventCalendar = macroHandler.getEventCalendar();
 		boolean successfullyParsed = true;
 
 		logger.log (Level.FINER, "Received calendar command");
 
-		if (extra == null) extra = "";
 
 		if (commandStr.equals("saveAll")) {
 			logger.log (Level.FINER, "Received new event calendar");
@@ -238,25 +252,19 @@ public class Model extends BaseModel implements DeviceModel {
 			if (successfullyParsed) {
 				eventCalendar.saveCalendarFile();
 				logger.log (Level.FINE, "Activating new events calendar");
+                                doListUpdate = true; // make sure all calendars are updated
 			}
 			else {
-				logger.log (Level.WARNING, "Events calendar parse failed");
+                            logger.log (Level.WARNING, "Events calendar parse failed");
 			    clientCommand = null;
 			}
 		}
 
-		if (commandStr.equals("getEvents") && extra != null) {
+		if (commandStr.equals("getEvents")) {
 			logger.log (Level.FINER, "Listing all calendar entries to the client.");
-
-			 Element eventList = eventCalendar.get(extra);
-			if (eventList == null)
-				logger.log (Level.WARNING, "Could not retrieve event list");
-			else {
-			    clientCommand = new ClientCommand();
-				clientCommand.setTargetDeviceID(command.getOriginatingID());
-			    clientCommand.setFromElement (eventList);
-			    clientCommand.setKey ("CLIENT_SEND");
-			}
+                        doListUpdate = true;
+                        eventID = "";
+                        targetDeviceID = command.getOriginatingID();
 		}
 
 		if (commandStr.equals("save")) {
@@ -273,7 +281,10 @@ public class Model extends BaseModel implements DeviceModel {
 			    	CalendarEventEntry calendarEventEntry = calendarEventFactory.createEvent(nextEvent);
 			    	if (calendarEventEntry.isStillActive()){
 			    		eventCalendar.addEvent (calendarEventEntry);
+                                        eventID = eventID +','+ calendarEventEntry.getId();
 			    	}
+                                if (eventID.charAt(0) == ',')eventID = eventID.substring(1);
+                 
 			    	eventCalendar.addEventXMLToStore (calendarEventEntry.getId(),nextEvent);
 			    } catch (CalendarException ex){
 			    	
@@ -283,11 +294,11 @@ public class Model extends BaseModel implements DeviceModel {
 			doListUpdate = true;
 		}
 
-		if (commandStr.equals("delete")) {
+		if (commandStr.equals("delete") && !extra.equals("")) {
 			logger.log (Level.FINER, "Deleting event : " + extra);
 			eventCalendar.deleteEvent (extra);
 			eventCalendar.saveCalendarFile();
-			extra = "";
+                        eventID = "";
 			doListUpdate = true;
 		}
 
@@ -295,12 +306,13 @@ public class Model extends BaseModel implements DeviceModel {
 			logger.log (Level.FINER, "Clearing all events in the calendar");
 			eventCalendar.clear();
 			eventCalendar.saveCalendarFile();
+                        eventID = "";
 			doListUpdate = true;
 		}
 
 		if (doListUpdate) {
-			logger.log (Level.FINER, "Listing all calendar entries to the client.");
-			Element eventList = eventCalendar.get(extra);
+			logger.log (Level.FINER, "Listing updated calendar entries to the client.");
+			Element eventList = eventCalendar.get(eventID);
 			if (eventList == null)
 				logger.log (Level.WARNING, "Could not retrieve event list");
 			else {
@@ -314,6 +326,7 @@ public class Model extends BaseModel implements DeviceModel {
 
 			synchronized (this.commandQueue){
 				commandQueue.add(clientCommand);
+                                commandQueue.notifyAll();
 			}
 		}
 

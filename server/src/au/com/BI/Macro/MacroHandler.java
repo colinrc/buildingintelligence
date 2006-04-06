@@ -34,8 +34,10 @@ public class MacroHandler {
 	 * 
 	 */
 	protected String fileName = "";
+        private String integratorFileName = "";
 	protected String calendarFileName = "";
 	protected Map macros = null;
+        protected Map integratorMacros = null;
 	protected Map macros_status = null;
 	protected Logger logger;
 	protected List commandList = null;
@@ -43,30 +45,48 @@ public class MacroHandler {
 	protected EventCalendar eventCalendar = null;
 	protected Map macros_type = null;
 	protected Map calendar_message_params;
-	
+	protected Vector macroNames = null;
+        protected Vector integratorMacroNames = null;
+                
 	public MacroHandler() {
 		super();
-		
-		macros = Collections.synchronizedMap(new LinkedHashMap(DeviceModel.NUMBER_MACROS));
+		macroNames = new Vector(DeviceModel.NUMBER_MACROS);
+                integratorMacroNames = new Vector(DeviceModel.NUMBER_MACROS);
+                
+		macros = Collections.synchronizedMap(new HashMap(DeviceModel.NUMBER_MACROS));
+		integratorMacros = Collections.synchronizedMap(new HashMap(DeviceModel.NUMBER_MACROS));
 
-		macros_status =  Collections.synchronizedMap(new LinkedHashMap(DeviceModel.NUMBER_MACROS));
-		macros_type = Collections.synchronizedMap(new LinkedHashMap(DeviceModel.NUMBER_MACROS));
+		macros_status =  Collections.synchronizedMap(new HashMap(DeviceModel.NUMBER_MACROS));
+		macros_type = Collections.synchronizedMap(new HashMap(DeviceModel.NUMBER_MACROS));
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		runningMacros = Collections.synchronizedMap(new HashMap(DeviceModel.NUMBER_MACROS));
 	}
 	
 
-	public void clearAll () {
-		this.abortAll();
-		synchronized (macros) {
-			macros.clear();
-		}
-		synchronized (macros_status) {
-			macros_status.clear();
-		}
-		synchronized (runningMacros) {
-			runningMacros.clear();
-		}
+	public void clearAll (boolean integrator) {
+
+            if (!integrator){
+                this.abortAll();
+                synchronized (macroNames) {
+                        macroNames.clear();
+                }
+                synchronized (macros) {
+                        macros.clear();
+                }
+                synchronized (macros_status) {
+                        macros_status.clear();
+                }
+                synchronized (runningMacros) {
+                        runningMacros.clear();
+                }
+            } else {
+                synchronized (integratorMacroNames) {
+                        integratorMacroNames.clear();
+                }
+                synchronized (integratorMacros) {
+                        integratorMacros.clear();
+                }
+            }
 	}
 
 	public boolean run(String macroName, User user,CommandInterface origCommand) {
@@ -74,10 +94,16 @@ public class MacroHandler {
 		boolean doNotRun = false;
 		
 		String realName[] = macroName.split(":");
-		
+                
 		synchronized (macros) {
 			macro = (List)macros.get(realName[0]);
 		}
+                if (macro == null){
+        		synchronized (integratorMacros) {
+                            macro = (List)integratorMacros.get(realName[0]);
+                    }
+                    
+                }
 		if (macro == null) {
 			logger.log (Level.WARNING,"Specified macro not found : " + macroName);
 			return false;
@@ -130,7 +156,7 @@ public class MacroHandler {
 
 	public boolean complete(String macroName, User user) {
 	    RunMacro theMacro;
-        logger.log (Level.FINE,"Running macro "+ macroName + " to completion");
+            logger.log (Level.FINE,"Running macro "+ macroName + " to completion");
 	    synchronized (runningMacros) {
 	        theMacro = (RunMacro)runningMacros.get(macroName);
 	    }
@@ -145,47 +171,94 @@ public class MacroHandler {
 	 * @param macroName Empty string for all macros or the name of a macro
 	 * @return
 	 */
-	public Element get (String macroName, boolean showHidden) {
+	public Element get (String macroName, boolean integrator, boolean fullContents) {
 		Element top = new Element ("MACROS");
 		
-		synchronized (macros) {
-			if (macroName.equals ("")) {
-				Iterator macroNames = macros.keySet().iterator();
-				while (macroNames.hasNext()) {
-					Element macroDef =  buildListElement ((String)macroNames.next(),showHidden);
-					try { 
-					    if (macroDef != null) top.addContent(macroDef);
-					} catch (NoSuchMethodError ex) {
-					    logger.log (Level.SEVERE,"Error calling jdom library " + ex.getMessage());
-					}
-				}
-			}
-			else {
-				Element macroDef = buildListElement (macroName,showHidden);
-				if (macroDef != null)
-				    top.addContent( macroDef);
-				
-			}
+                Vector localMacroNames = null;
+                if (integrator){
+                    localMacroNames = this.integratorMacroNames;
+                } else {
+                    localMacroNames = this.macroNames;
+                }
+
+		synchronized (localMacroNames) {
+                    if (macroName.equals ("")) {
+                        Iterator eachMacroName = localMacroNames.iterator();
+                        while (eachMacroName.hasNext()) {
+                            Element macroDef =  buildListElement ((String)eachMacroName.next(),integrator,fullContents);
+                            try { 
+                                if (macroDef != null) top.addContent(macroDef);
+                            } catch (NoSuchMethodError ex) {
+                                logger.log (Level.SEVERE,"Error calling jdom library " + ex.getMessage());
+                            }
+                        }
+                    }
 		}
 		return top;
 	}
 
-	
+	/**
+	 * Returns the macro  as an XML element.
+	 * @param macroName The macro name
+	 * @return
+	 */
+	public Element getContents (String macroName, boolean integrator) {
+            Element top = new Element ("MACRO_CONTENTS");
+
+            Map localMacros;
+            if (integrator){
+                localMacros = integratorMacros;
+            } else {
+                localMacros = macros;
+            }
+
+            synchronized (localMacros) {
+                if (!macroName.equals ("")) {
+                    Element macroDef =  buildListElement (macroName,integrator,true);
+                    try { 
+                        if (macroDef != null) top.addContent(macroDef);
+                    } catch (NoSuchMethodError ex) {
+                        logger.log (Level.SEVERE,"Error calling jdom library " + ex.getMessage());
+                    }
+                }
+            }
+            return top;
+	}
+
 	/**
 	 * Returns the macro list as an XML element,or a specific macro.
 	 * @param macroName Empty string for all macros or the name of a macro
 	 * @return
 	 */
-	public boolean delete (String macroName, User user) {
+	public boolean delete (String macroName, User user,boolean integrator) {
 	
-		synchronized (macros) {
+            if (integrator){
+                
+		synchronized (integratorMacros) {
+                    integratorMacros.remove(macroName);
+		}
+                synchronized (integratorMacroNames){
+                    integratorMacroNames.remove(macroName);
+                }
+            } else {
+                synchronized (macros) {
 			macros.remove(macroName);
 		}
-		return this.saveMacroFile();
+                synchronized (macroNames){
+                    macroNames.remove(macroName);
+                }
+            }
+            return this.saveMacroFile(integrator);
 	}
 	
-	public Element buildListElement (String macroName,boolean showHidden) {
-		LinkedList macro = (LinkedList)macros.get(macroName);
+	public Element buildListElement (String macroName,boolean integrator,boolean includeContents) {
+		LinkedList macro;
+
+                if (integrator){
+                    macro = (LinkedList)integratorMacros.get(macroName);
+                } else {
+                    macro = (LinkedList)macros.get(macroName);                    
+                }
 		if (macro == null) return null;
 		
 		Element macroDef = new Element ("CONTROL");
@@ -197,37 +270,54 @@ public class MacroHandler {
 		macroDef.setAttribute("TYPE",type);
 		String status = (String)this.macros_status.get(macroName);
 		if (status == null ) status = "";
-		if (!showHidden && status.indexOf("isHidden") >= 0) return null;
+		if (!integrator && status.indexOf("isHidden") >= 0) return null;
 		macroDef.setAttribute("STATUS",status);
-		if (this.runningMacros.containsKey(macroName)) {
-			macroDef.setAttribute("RUNNING","1");		    
-		} else {
-			macroDef.setAttribute("RUNNING","0");		    		    
-		}
+                
+                if (this.runningMacros.containsKey(macroName)) {
+                        macroDef.setAttribute("RUNNING","1");		    
+                } else {
+                        macroDef.setAttribute("RUNNING","0");		    		    
+                }                    
 
-		Iterator eachElementList = macro.iterator();
-		while (eachElementList.hasNext()) {
-			ClientCommand macroElement = (ClientCommand)eachElementList.next();
-			Element macroXML = macroElement.getXMLCommand();
-			macroDef.addContent(macroXML);
-		}
+                if (includeContents){
+                    Iterator eachElementList = macro.iterator();
+                    while (eachElementList.hasNext()) {
+                            ClientCommand macroElement = (ClientCommand)eachElementList.next();
+                            Element macroXML = macroElement.getXMLCommand();
+                            macroDef.addContent(macroXML);
+                    }
+                }
 		return macroDef;
 	}
 	
-	public void put (String name, Element macroElement) {
-		LinkedList macro = parseElement (macroElement);
-		if (macro != null) {
-			synchronized (macros) {
-				macros.put (name,macro);
-			}
-			synchronized (macros_type) {
-				macros_type.put (name,macroElement.getAttributeValue("TYPE"));
-			}
-			synchronized (macros_status) {
-				macros_status.put (name,macroElement.getAttributeValue("STATUS"));
-			}
-		}
-		this.saveMacroFile();
+	public void put (String name, Element macroElement,boolean integrator) {
+            LinkedList macro = parseElement (macroElement);
+            if (macro != null) {
+                if (integrator){
+                    synchronized (integratorMacros) {
+                            integratorMacros.put (name,macro);
+                    }
+                    if (!integratorMacroNames.contains(name)) {
+                        integratorMacroNames.add(name);
+                    }
+                } else {
+                    synchronized (macros) {
+                            macros.put (name,macro);
+                    }
+                    if (!macroNames.contains(name)) {
+                        macroNames.add(name);
+                    }
+                }
+
+                synchronized (macros_type) {
+                        macros_type.put (name,macroElement.getAttributeValue("TYPE"));
+                }
+                synchronized (macros_status) {
+                        macros_status.put (name,macroElement.getAttributeValue("STATUS"));
+                }
+
+            }
+            this.saveMacroFile(integrator);  
 	}
 	
 	public LinkedList parseElement (Element element) {
@@ -257,32 +347,45 @@ public class MacroHandler {
 		return eventCalendar.readCalendarFile();
 	}
 	
-	public boolean readMacroFile()  {
-		this.clearAll();
-		SAXBuilder builder = null;
-		Element macrosElement;
-		
-		builder = new SAXBuilder();
-		Document doc;
-		
-		try {
-			doc = builder.build(fileName+".xml");
-			macrosElement = doc.getRootElement();
-			List macroList = macrosElement.getChildren();
-			Iterator eachMacro = macroList.iterator();
-			while (eachMacro.hasNext()){
-				Element macro = (Element)eachMacro.next();
-				LinkedList macroCommands = parseElement (macro);
-				String macroName = macro.getAttributeValue("EXTRA");
-				if (macroName == null) macroName = "";
-				String macroType = macro.getAttributeValue("TYPE");
-				if (macroType == null)macroType = "";
-				String status = macro.getAttributeValue("STATUS");
-				if (status == null) status = "";
-				macros.put(macroName, macroCommands);
-				macros_status.put(macroName, status);
-				macros_type.put(macroName, macroType);
-			}
+	public boolean readMacroFile(boolean integrator)  {
+            String localFileName = "";
+            this.clearAll(integrator);
+            if (!integrator) {
+
+                localFileName = fileName;
+            }else {
+                localFileName = integratorFileName;
+            }
+            SAXBuilder builder = null;
+            Element macrosElement;
+
+            builder = new SAXBuilder();
+            Document doc;
+
+            try {
+                doc = builder.build(localFileName+".xml");
+                macrosElement = doc.getRootElement();
+                List macroList = macrosElement.getChildren();
+                Iterator eachMacro = macroList.iterator();
+                while (eachMacro.hasNext()){
+                        Element macro = (Element)eachMacro.next();
+                        LinkedList macroCommands = parseElement (macro);
+                        String macroName = macro.getAttributeValue("EXTRA");
+                        if (macroName == null) macroName = "";
+                        String macroType = macro.getAttributeValue("TYPE");
+                        if (macroType == null)macroType = "";
+                        String status = macro.getAttributeValue("STATUS");
+                        if (status == null) status = "";
+                        if (integrator){
+                            integratorMacros.put(macroName, macroCommands);
+                            integratorMacroNames.add(macroName);
+                        } else {
+                            macros.put(macroName, macroCommands);
+                            macroNames.add(macroName);
+                        }
+                        macros_status.put(macroName, status);
+                        macros_type.put(macroName, macroType);
+                }
 			
 		} catch (JDOMException e) {
 			logger.log(Level.WARNING,"Error in macro file "+ e.getLocalizedMessage());
@@ -291,53 +394,82 @@ public class MacroHandler {
 			logger.log(Level.WARNING,"IO error in reading file "+ e.getLocalizedMessage());
 			return false;
 		}
-		logger.log (Level.FINE,"Successfully read macro file " + fileName+".xml");
+		logger.log (Level.FINE,"Successfully read macro file " + localFileName+".xml");
 		return true;
 	}
 
-	public boolean saveMacroList (Element theList) {
-		try	 {
-		    
-					XMLOutputter xmlOut = new XMLOutputter (Format.getPrettyFormat());
-					File outputFile = new File (fileName+".new");
-					FileWriter out = new FileWriter(outputFile);
-					xmlOut.output(theList, out) ;
-					out.flush();
-					out.close();
-					logger.log (Level.INFO,"Macro write succeeded.");
-					
-					File oldFile = new File (fileName+".xml");
-					File newName = new File (fileName+".old");
-					
-					if (oldFile.exists()) {
-					    if (newName.exists() && !newName.delete()) {
-						    logger.log (Level.SEVERE, "Could not delete old backup macro file "+oldFile.getName());
-						    return false;
-					    }
-						if (!oldFile.renameTo (newName)) { 
-						    logger.log (Level.SEVERE, "Could not rename old file "+oldFile.getName()+" to " + newName.getName());
-						    return false;
-						}
-					}
+ 
+	boolean saveMacroList (Element theList, boolean integrator) {
+            String localFileName;
+            List eachName = theList.getChildren();
+            Iterator nameIter = eachName.iterator();
+            
+            if (integrator) {
+                localFileName = integratorFileName;
 
-					if (!outputFile.renameTo(oldFile)) {
-					    logger.log (Level.SEVERE, "Could not rename new file "+outputFile.getName()+" to " + oldFile.getName());
-					    return false;
-					} else {
-						return true;
-					}
-					    
-				}
-				catch (IOException ex)
-				{
-					logger.log (Level.FINER, "IO error saving macro file " + ex.getMessage());
-					return false;
-				}
+                synchronized (integratorMacroNames){
+                    integratorMacroNames.clear();
+                    while (nameIter.hasNext()){
+                        integratorMacroNames.add((String)nameIter.next());
+                    }
+                }
+                
+            } else {
+                localFileName = fileName;
+                synchronized (macroNames){
+                    macroNames.clear();
+                    while (nameIter.hasNext()){
+                        Element eachNameEl = (Element)nameIter.next();
+                        macroNames.add((String)eachNameEl.getAttributeValue("EXTRA"));
+                    }
+                }
+            }
+            
+            Element newMacroList = this.get("",integrator,true);
+            
+            try	
+            {
+
+                XMLOutputter xmlOut = new XMLOutputter (Format.getPrettyFormat());
+                File outputFile = new File (localFileName+".new");
+                FileWriter out = new FileWriter(outputFile);
+                xmlOut.output(newMacroList, out) ;
+                out.flush();
+                out.close();
+                logger.log (Level.INFO,"Macro write succeeded.");
+
+                File oldFile = new File (localFileName+".xml");
+                File newName = new File (localFileName+".old");
+
+                if (oldFile.exists()) {
+                    if (newName.exists() && !newName.delete()) {
+                            logger.log (Level.SEVERE, "Could not delete old backup macro file "+oldFile.getName());
+                            return false;
+                    }
+                        if (!oldFile.renameTo (newName)) { 
+                            logger.log (Level.SEVERE, "Could not rename old file "+oldFile.getName()+" to " + newName.getName());
+                            return false;
+                        }
+                }
+
+                if (!outputFile.renameTo(oldFile)) {
+                    logger.log (Level.SEVERE, "Could not rename new file "+outputFile.getName()+" to " + oldFile.getName());
+                    return false;
+                } else {
+                        return true;
+                }
+
+            }
+            catch (IOException ex)
+            {
+                    logger.log (Level.FINER, "IO error saving macro file " + ex.getMessage());
+                    return false;
+            }
 	}
 	
-	public boolean saveMacroFile() {
-		Element theList = this.get("",true);
-		return saveMacroList (theList);
+	private boolean saveMacroFile(boolean integrator) {
+		Element theList = this.get("",integrator,true);
+		return saveMacroList (theList,integrator);
 	}
 
     /**
@@ -347,15 +479,15 @@ public class MacroHandler {
         return eventCalendar;
     }
     
-	public void startCalendar (User user, List commandQueue) throws SchedulerException {
-		eventCalendar = new EventCalendar (this,user);
-		eventCalendar.setFileName(this.calendarFileName);
-		eventCalendar.setCommandList(commandQueue);
-		/* if (!eventCalendar.readCalendarFile() && logger!= null) {
-			logger.log (Level.SEVERE,"Could not read calendar file");
-		} */
-	}
-	
+    public void startCalendar (User user, List commandQueue) throws SchedulerException {
+            eventCalendar = new EventCalendar (this,user);
+            eventCalendar.setFileName(this.calendarFileName);
+            eventCalendar.setCommandList(commandQueue);
+            /* if (!eventCalendar.readCalendarFile() && logger!= null) {
+                    logger.log (Level.SEVERE,"Could not read calendar file");
+            } */
+    }
+
     public void abortAll() {
 	    RunMacro theMacro;
 	    Iterator eachMacro = runningMacros.keySet().iterator();
@@ -382,4 +514,12 @@ public class MacroHandler {
 	public List getCommandList() {
 		return commandList;
 	}
+
+    public String getIntegratorFileName() {
+        return integratorFileName;
+    }
+
+    public void setIntegratorFileName(String integratorFileName) {
+        this.integratorFileName = "datafiles" + File.separator + integratorFileName;
+    }
 }

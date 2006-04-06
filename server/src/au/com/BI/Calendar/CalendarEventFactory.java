@@ -62,7 +62,7 @@ public class CalendarEventFactory {
 	    	if (id == null || id.equals ("")) {
 	    		id = Long.toString(System.currentTimeMillis());
 	    	}
-	    	
+	    	returnVal.setId(id);
 	    	String eventType = nextEvent.getAttributeValue("eventType"); 
 		if (eventType == null || eventType.equals ("")) {
 			eventType = "once";
@@ -180,6 +180,7 @@ public class CalendarEventFactory {
 		map.put ("User", user);
 		map.put ("Filter", filter);
 		map.put ("Audible",audible);
+                map.put ("Memo",memo);
 		
 		map.put ("Target",target);
 		map.put ("Target_User",target_user);
@@ -320,7 +321,6 @@ public class CalendarEventFactory {
 				trigger.setMisfireInstruction(CronTrigger.MISFIRE_INSTRUCTION_DO_NOTHING );
 				returnVal.setEventType(CalendarEventEntry.REPEATING_EVENT);
 				returnVal.setTrigger(trigger);
-				returnVal.setId(id);
 				returnVal.setJobDetail(jobDetail);
 				return returnVal;
 				
