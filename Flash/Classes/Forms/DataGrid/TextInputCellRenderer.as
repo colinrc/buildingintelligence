@@ -20,7 +20,7 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 			label._x = 2;
 			label._y = 2;
 		} else if (label._name == "TextInput") {
-			label.setSize(__width-2, listOwner.rowHeight);
+			label.setSize(__width - 2, listOwner.rowHeight);
 			label._x = 0;
 			label._y = 0;
 		}
@@ -29,26 +29,29 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		var itemObject = listOwner.dataProvider[itemLocation.itemIndex][columnName];
-		if ((itemObject.sel)&&(itemObject.restrictions.editable != false)){
-			if (label._name != "TextInput") {
-				label = createObject("TextInput", "TextInput", 1, {styleName:this, owner:this});
-				label.addEventListener("enter", Delegate.create(this, enterText));
-				label.addEventListener("change", Delegate.create(this, changeText));
-				label._visible = (item != undefined);
-				for (var restriction in itemObject.restrictions) {
-					label[restriction] = itemObject.restrictions[restriction];
+		if (item != undefined) {
+			label._visible = true;
+			if ((itemObject.sel) && (itemObject.restrictions.editable != false)) {
+				if (label._name != "TextInput") {
+					label = createObject("TextInput", "TextInput", 1, {styleName:this, owner:this});
+					label.addEventListener("enter", Delegate.create(this, enterText));
+					label.addEventListener("change", Delegate.create(this, changeText));
+					for (var restriction in itemObject.restrictions) {
+						label[restriction] = itemObject.restrictions[restriction];
+					}
+					label.text = itemObject.label;
+					label.setFocus();
+					size();
+				}
+			} else {
+				if (label._name != "Label") {
+					label = createObject("Label", "Label", 1, {styleName:this, owner:this});
+					size();
 				}
 				label.text = itemObject.label;
-				label.setFocus();
-				size();
 			}
 		} else {
-			if (label._name != "Label") {
-				label = createObject("Label", "Label", 1, {styleName:this, owner:this});
-				size();
-			}
-			label._visible = (item != undefined);
-			label.text = itemObject.label;
+			label._visible = false;
 		}
 	}
 	function getPreferredHeight(Void):Number {
@@ -60,24 +63,24 @@ class Forms.DataGrid.TextInputCellRenderer extends UIComponent {
 	function changeText() {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
-		if(listOwner.dataProvider[itemLocation.itemIndex][columnName].restrictions.restrict == "0-9A-Fa-f"){
+		if (listOwner.dataProvider[itemLocation.itemIndex][columnName].restrictions.restrict == "0-9A-Fa-f") {
 			listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text.toUpperCase();
-		} else{
+		} else {
 			listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
 		}
-		listOwner.dataProvider.updateViews("change");		
+		listOwner.dataProvider.updateViews("change");
 		_global.unSaved = true;
-	}	
+	}
 	function enterText() {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
-		if(listOwner.dataProvider[itemLocation.itemIndex][columnName].restrictions.restrict == "0-9A-Fa-f"){
+		if (listOwner.dataProvider[itemLocation.itemIndex][columnName].restrictions.restrict == "0-9A-Fa-f") {
 			listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text.toUpperCase();
-		} else{
+		} else {
 			listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
 		}
-		listOwner.dataProvider.updateViews("change");		
+		listOwner.dataProvider.updateViews("change");
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;
-		_global.unSaved = true;		
+		_global.unSaved = true;
 	}
 }

@@ -19,19 +19,23 @@ class Forms.DataGrid.CheckCellRenderer extends UIComponent {
 	// __width and __height
 	function size(Void):Void {
 		check.setSize(20, __height);
-		check._x = (__width-20)/2+2;
-		check._y = (__height-16)/2+2;
+		check._x = (__width - 20) / 2 + 2;
+		check._y = (__height - 16) / 2 + 2;
 	}
 	function setValue(str:String, item:Object, sel:Boolean):Void {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		var itemObject = listOwner.dataProvider[itemLocation.itemIndex][columnName];
-		check._visible = (item != undefined);		
-		check.values = itemObject.values;
-		if(itemObject.label == check.values.True){
-			check.selected = true;
-		} else{
-			check.selected = false;
+		if (item != undefined) {
+			check._visible = true;
+			check.values = itemObject.values;
+			if (itemObject.label == check.values.True) {
+				check.selected = true;
+			} else {
+				check.selected = false;
+			}
+		} else {
+			check._visible = false;
 		}
 	}
 	function getPreferredHeight(Void):Number {
@@ -42,14 +46,14 @@ class Forms.DataGrid.CheckCellRenderer extends UIComponent {
 	}
 	function click() {
 		var Value;
-		if(check.selected){
+		if (check.selected) {
 			Value = check.values.True;
-		} else{
+		} else {
 			Value = check.values.False;
 		}
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = Value;
-		_global.unSaved = true;		
+		_global.unSaved = true;
 	}
 }

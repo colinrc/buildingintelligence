@@ -1,16 +1,21 @@
 ﻿import mx.controls.*;
+import mx.controls.gridclasses.DataGridColumn;
 import mx.utils.Delegate;
 class Forms.DataGrid.DynamicDataGrid {
 	private var my_dg:DataGrid;
 	private var columns:Object;
 	private var buttonColumns:Object;
 	private var lastClick:Object;
+	private var tempDP:Array;
+	private var columnCount;
 	public function DynamicDataGrid() {
 		columns = new Object();
 		buttonColumns = new Object();
 		lastClick = undefined;
+		columnCount = 0;
 	}
-	public function setAdvanced(advanced:Boolean) {
+	public function setAdvanced() {
+		var advanced = _global.advanced;
 		if (advanced) {
 			for (var name in columns) {
 				if (columns[name].advanced) {
@@ -64,148 +69,141 @@ class Forms.DataGrid.DynamicDataGrid {
 		my_dg.rowHeight = 22;
 	}
 	public function addTextInputColumn(name:String, heading:String, restrictions:Object, advanced:Boolean, width:Number) {
+		columnCount++;
 		columns[name] = new Object();
 		columns[name].type = "text";
 		columns[name].restrictions = restrictions;
 		columns[name].heading = heading;
 		columns[name].advanced = advanced;
-		columns[name].colNo = my_dg.columnCount;
+		columns[name].colNo = columnCount - 1;
 		columns[name].width = width;
-		/*if (!advanced) {
-			my_dg.addColumn(name);
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "TextInputCellRenderer";
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = width;
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
-		}*/
+		columns[name].column = new DataGridColumn(name);
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "TextInputCellRenderer";
+		columns[name].column.sortable = false;
 	}
 	public function addValueInputColumn(name:String, heading:String, restrictions:Object, rawInterFaceForm:MovieClip, width:Number) {
-		/*my_dg.addColumn(name);
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ValueInputCellRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = width;
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;*/
+		columnCount++;
 		columns[name] = new Object();
 		columns[name].type = "value";
 		columns[name].restrictions = restrictions;
 		columns[name].rawInterFaceForm = rawInterFaceForm;
 		columns[name].advanced = false;
 		columns[name].width = width;
+		columns[name].column = new DataGridColumn(name);
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "ValueInputCellRenderer";
+		columns[name].column.sortable = false;
 	}
 	public function addActiveColumn(name:String, values:Object) {
+		columnCount++;
 		columns[name] = new Object();
 		columns[name].type = "active";
 		columns[name].values = values;
-		/*my_dg.addColumn(name);
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "ActiveHeaderRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CheckCellRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 20;
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).resizable = false;
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;*/
+		columns[name].column = new DataGridColumn(name);
+		columns[name].width = 20;
+		columns[name].column.headerRenderer = "ActiveHeaderRenderer";
+		columns[name].column.cellRenderer = "CheckCellRenderer";
+		columns[name].column.resizable = false;
+		columns[name].column.sortable = false;
 	}
 	public function addCheckColumn(name:String, heading:String, values:Object, advanced:Boolean, width:Number) {
+		columnCount++;
 		columns[name] = new Object();
 		columns[name].type = "check";
 		columns[name].values = values;
 		columns[name].heading = heading;
 		columns[name].advanced = advanced;
-		columns[name].colNo = my_dg.columnCount;
+		columns[name].colNo = columnCount - 1;
 		columns[name].width = width;
-		/*if (!advanced) {
-			my_dg.addColumn(name);
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CheckCellRenderer";
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = width;
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
-		}*/
+		columns[name].column = new DataGridColumn(name);
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "CheckCellRenderer";
+		columns[name].column.sortable = false;
 	}
 	public function addParameterComboBoxColumn(name:String, heading:String, DP:Array, advanced:Boolean, width:Number) {
+		columnCount++;
 		columns[name] = new Object();
 		columns[name].type = "paramcombo";
 		columns[name].DP = DP;
 		columns[name].heading = heading;
 		columns[name].advanced = advanced;
-		columns[name].colNo = my_dg.columnCount;
+		columns[name].colNo = columnCount - 1;
 		columns[name].width = width;
-		/*if (!advanced) {
-			my_dg.addColumn(name);
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ParameterComboBoxCellRenderer";
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = width;
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
-		}*/
+		columns[name].column = new DataGridColumn(name);
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "ParameterComboBoxCellRenderer";
+		columns[name].column.sortable = false;
 	}
 	public function addComboBoxColumn(name:String, heading:String, DP:Array, advanced:Boolean, width:Number) {
+		columnCount++;
 		columns[name] = new Object();
 		columns[name].type = "combo";
 		columns[name].DP = DP;
 		columns[name].heading = heading;
 		columns[name].advanced = advanced;
-		columns[name].colNo = my_dg.columnCount;
+		columns[name].colNo = columnCount - 1;
 		columns[name].width = width;
-		/*if (!advanced) {
-			my_dg.addColumn(name);
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ComboBoxCellRenderer";
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = width;
-			my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
-		}*/
+		columns[name].column = new DataGridColumn(name);
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "ComboBoxCellRenderer";
+		columns[name].column.sortable = false;
 	}
 	public function addCodeComboBoxColumn(name:String, heading:String, rawInterFaceForm:MovieClip, width:Number) {
-		/*my_dg.addColumn(name);
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CodeComboBoxCellRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = width;
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;*/
+		columnCount++;
 		columns[name] = new Object();
 		columns[name].type = "codecombo";
 		columns[name].rawInterFaceForm = rawInterFaceForm;
 		columns[name].advanced = false;
 		columns[name].width = width;
+		columns[name].column = new DataGridColumn(name);
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "CodeComboBoxCellRenderer";
+		columns[name].column.sortable = false;
 	}
 	public function addCatalogueComboBoxColumn(name:String, heading:String, DP:Array, rawInterFaceForm:MovieClip, width:Number) {
-		/*my_dg.addColumn(name);
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CatalogueComboBoxCellRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = width;
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;*/
+		columnCount++;
 		columns[name] = new Object();
 		columns[name].type = "cataloguecombo";
 		columns[name].DP = DP;
 		columns[name].rawInterFaceForm = rawInterFaceForm;
 		columns[name].advanced = false;
 		columns[name].width = width;
+		columns[name].column = new DataGridColumn(name);
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "CatalogueComboBoxCellRenderer";
+		columns[name].column.sortable = false;
 	}
 	public function addColourColumn(name:String, heading:String, advanced:Boolean, width:Number) {
+		columnCount++;
 		columns[name] = new Object();
 		columns[name].type = "colour";
 		columns[name].heading = heading;
 		columns[name].advanced = advanced;
-		columns[name].colNo = my_dg.columnCount;
+		columns[name].colNo = columnCount - 1;
 		columns[name].width = width;
-		/*if (!advanced) {
-		my_dg.addColumn(name);
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = heading;
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ColourCellRenderer";
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = width;
-		my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
-		}*/
+		columns[name].column = new DataGridColumn(name);
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "ColourCellRenderer";
+		columns[name].column.sortable = false;
+		//}
 	}
 	public function addButtonColumn(name:String, heading:String, attributes:Object, callBack:Function, advanced:Boolean, width:Number) {
+		columnCount++;
 		buttonColumns[name] = new Object();
 		buttonColumns[name].attributes = attributes;
 		buttonColumns[name].callBack = callBack;
 		columns[name].heading = heading;
 		columns[name].advanced = advanced;
-		columns[name].colNo = my_dg.columnCount;
+		columns[name].colNo = columnCount - 1;
 		columns[name].width = width;
 		if (!advanced) {
 			my_dg.addColumn(name);
@@ -220,21 +218,21 @@ class Forms.DataGrid.DynamicDataGrid {
 		columns[name] = new Object();
 		columns[name].type = "hidden";
 	}
-	public function setDataGridDataProvider(new_dp:Array) {
+	private function buildDG() {
 		var processed_dp = new Array();
-		for (var row = 0; row < new_dp.length; row++) {
+		for (var row = 0; row < tempDP.length; row++) {
 			var newRow = new Object();
-			for (var column in new_dp[row]) {
+			for (var column in tempDP[row]) {
 				switch (columns[column].type) {
 				case "text" :
-					var newText = {label:new_dp[row][column], sel:false, restrictions:columns[column].restrictions};
+					var newText = {label:tempDP[row][column], sel:false, restrictions:columns[column].restrictions};
 					newText.toString = function():String  {
 						return this.label;
 					};
 					newRow[column] = newText;
 					break;
 				case "value" :
-					var newText = {label:new_dp[row][column], sel:false, restrictions:columns[column].restrictions, form:columns[column].rawInterFaceForm};
+					var newText = {label:tempDP[row][column], sel:false, restrictions:columns[column].restrictions, form:columns[column].rawInterFaceForm};
 					newText.toString = function():String  {
 						return this.label;
 					};
@@ -242,7 +240,7 @@ class Forms.DataGrid.DynamicDataGrid {
 					break;
 				case "active" :
 				case "check" :
-					var newCheck = {label:new_dp[row][column], values:columns[column].values};
+					var newCheck = {label:tempDP[row][column], values:columns[column].values};
 					newCheck.toString = function():String  {
 						return this.label;
 					};
@@ -250,35 +248,35 @@ class Forms.DataGrid.DynamicDataGrid {
 					break;
 				case "paramcombo" :
 				case "combo" :
-					var newCombo = {label:new_dp[row][column], sel:false, DP:columns[column].DP};
+					var newCombo = {label:tempDP[row][column], sel:false, DP:columns[column].DP};
 					newCombo.toString = function():String  {
 						return this.label;
 					};
 					newRow[column] = newCombo;
 					break;
 				case "cataloguecombo" :
-					var newCombo = {label:new_dp[row][column], sel:false, DP:columns[column].DP, form:columns[column].rawInterFaceForm};
+					var newCombo = {label:tempDP[row][column], sel:false, DP:columns[column].DP, form:columns[column].rawInterFaceForm};
 					newCombo.toString = function():String  {
 						return this.label;
 					};
 					newRow[column] = newCombo;
 					break;
 				case "colour" :
-					var newColour = {colour:new_dp[row][column], sel:false};
+					var newColour = {colour:tempDP[row][column], sel:false};
 					newColour.toString = function():String  {
 						return this.colour;
 					};
 					newRow[column] = newColour;
 					break;
 				case "codecombo" :
-					var newCombo = {label:new_dp[row][column].label, sel:false, DP:new_dp[row][column].DP, form:columns[column].rawInterFaceForm};
+					var newCombo = {label:tempDP[row][column].label, sel:false, DP:tempDP[row][column].DP, form:columns[column].rawInterFaceForm};
 					newCombo.toString = function():String  {
 						return this.label;
 					};
 					newRow[column] = newCombo;
 					break;
 				case "hidden" :
-					newRow[column] = new_dp[row][column];
+					newRow[column] = tempDP[row][column];
 					break;
 				}
 			}
@@ -291,75 +289,24 @@ class Forms.DataGrid.DynamicDataGrid {
 			processed_dp.push(newRow);
 		}
 		my_dg.dataProvider = processed_dp;
+	}
+	public function setDataGridDataProvider(new_dp:Array) {
+		/*Reverse properties of columns object*/
+		var newColumns = new Object();
+		for(var name in columns){
+			newColumns[name] = columns[name];
+		}
+		columns = newColumns;
 		for (var name in columns) {
-			switch (columns[name].type) {
-			case "text" :
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = columns[name].heading;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "TextInputCellRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = columns[name].width;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;			
-				break;
-			case "value" :
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = columns[name].heading;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ValueInputCellRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = columns[name].width;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;			
-				break;
-			case "active" :
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "ActiveHeaderRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CheckCellRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = 20;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).resizable = false;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;			
-				break;
-			case "check" :
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = columns[name].heading;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CheckCellRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = columns[name].width;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;			
-				break;
-			case "paramcombo" :
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = columns[name].heading;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ParameterComboBoxCellRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = columns[name].width;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;			
-				break;
-			case "combo" :
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = columns[name].heading;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ComboBoxCellRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = columns[name].width;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;			
-				break;
-			case "cataloguecombo" :
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = columns[name].heading;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CatalogueComboBoxCellRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = columns[name].width;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;		
-				break;
-			case "colour" :
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = columns[name].heading;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "ColourCellRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = columns[name].width;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
-				break;
-			case "codecombo" :
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerText = columns[name].heading;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).headerRenderer = "MultiLineHeaderRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).cellRenderer = "CodeComboBoxCellRenderer";
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).width = columns[name].width;
-				my_dg.getColumnAt(my_dg.getColumnIndex(name)).sortable = false;
-				break;
-			case "hidden" :
-				break;
+			if (columns[name].column != undefined) {
+				if (((_global.advanced) && (columns[name].advanced)) || (!columns[name].advanced)) {
+					my_dg.addColumn(columns[name].column);
+					my_dg.getColumnAt(my_dg.columnCount-1).width = columns[name].width;
+				}
 			}
 		}
+		tempDP = new_dp;
+		my_dg.doLater(this, "buildDG");
 	}
 	public function getDataGridDataProvider():Array {
 		clearSelection();

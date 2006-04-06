@@ -1,7 +1,17 @@
 ﻿class Objects.BaseElement {
 	var validation:Array;
+	private var errorText:String;
 	public function getValidation():Array{
 		return validation;
+	}
+	public function getHighestFlagValue(inString1:String,inString2:String):String{
+		return "ok";
+	}
+	public function appendValidationMsg(inString:String){
+		errorText+=inString+"\n";
+	}
+	public function clearValidationMsg(){
+		errorText = null;
 	}
 	public function isValid():Boolean {
 		return true;

@@ -9,9 +9,7 @@ class Forms.DataGrid.ActiveHeaderRenderer extends UIComponent {
 	// the function we receive from the list
 	function CheckCellRenderer() {
 	}
-	function createChildren(Void):Void {
-		bulb = createObject("active", "bulb", 1, {styleName:this, owner:this});
-		size();
+	function createChildren(Void):Void {	
 	}
 	// note that setSize is implemented by UIComponent and calls size(), after setting
 	// __width and __height
@@ -21,6 +19,8 @@ class Forms.DataGrid.ActiveHeaderRenderer extends UIComponent {
 		bulb._y = (__height-16)/2+3;
 	}
 	function setValue(str:String, item:Object, sel:Boolean):Void {
+		bulb = createObject("active", "bulb", 1, {styleName:this, owner:this});
+		size();		
 	}
 	function getPreferredHeight(Void):Number {
 		return 16;

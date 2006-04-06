@@ -21,7 +21,7 @@ class Forms.DataGrid.ValueInputCellRenderer extends UIComponent {
 			label._x = 2;
 			label._y = 2;
 		} else if (label._name == "TextInput") {
-			label.setSize(__width-2, listOwner.rowHeight);
+			label.setSize(__width - 2, listOwner.rowHeight);
 			label._x = 0;
 			label._y = 0;
 		}
@@ -30,26 +30,30 @@ class Forms.DataGrid.ValueInputCellRenderer extends UIComponent {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		var itemObject = listOwner.dataProvider[itemLocation.itemIndex][columnName];
-		if ((itemObject.sel) && (itemObject.restrictions.editable != false)) {
-			if (label._name != "TextInput") {
-				label = createObject("TextInput", "TextInput", 1, {styleName:this, owner:this});
-				label.addEventListener("enter", Delegate.create(this, enterText));
-				label._visible = (item != undefined);
-				rawInterFaceForm = itemObject.form;
-				for (var restriction in itemObject.restrictions) {
-					label[restriction] = itemObject.restrictions[restriction];
+		if (item != undefined) {
+			label._visible = true;
+			if ((itemObject.sel) && (itemObject.restrictions.editable != false)) {
+				if (label._name != "TextInput") {
+					label = createObject("TextInput", "TextInput", 1, {styleName:this, owner:this});
+					label.addEventListener("enter", Delegate.create(this, enterText));
+					label._visible = (item != undefined);
+					rawInterFaceForm = itemObject.form;
+					for (var restriction in itemObject.restrictions) {
+						label[restriction] = itemObject.restrictions[restriction];
+					}
+					label.text = itemObject.label;
+					label.setFocus();
+					size();
+				}
+			} else {
+				if (label._name != "Label") {
+					label = createObject("Label", "Label", 1, {styleName:this, owner:this});
+					size();
 				}
 				label.text = itemObject.label;
-				label.setFocus();
-				size();
 			}
 		} else {
-			if (label._name != "Label") {
-				label = createObject("Label", "Label", 1, {styleName:this, owner:this});
-				size();
-			}
-			label._visible = (item != undefined);
-			label.text = itemObject.label;
+			label._visible = false;
 		}
 	}
 	function getPreferredHeight(Void):Number {
@@ -72,6 +76,6 @@ class Forms.DataGrid.ValueInputCellRenderer extends UIComponent {
 			}
 		}
 		rawInterFaceForm.itemChange({});
-		_global.unSaved = true;		
+		_global.unSaved = true;
 	}
 }

@@ -12,7 +12,7 @@ class Forms.DataGrid.ParameterComboBoxCellRenderer extends UIComponent {
 	}
 	function createChildren(Void):Void {
 		instanceName = "Label";
-		label = createObject("Label", "Label"+(_global.formDepth++)+"Box", 1, {styleName:this, owner:this});
+		label = createObject("Label", "Label" + (_global.formDepth++) + "Box", 1, {styleName:this, owner:this});
 		size();
 	}
 	function size(Void):Void {
@@ -21,7 +21,7 @@ class Forms.DataGrid.ParameterComboBoxCellRenderer extends UIComponent {
 			label._x = 2;
 			label._y = 2;
 		} else if (instanceName == "ComboBox") {
-			label.setSize(__width-2, listOwner.rowHeight);
+			label.setSize(__width - 2, listOwner.rowHeight);
 			label._x = 0;
 			label._y = 0;
 		}
@@ -30,31 +30,34 @@ class Forms.DataGrid.ParameterComboBoxCellRenderer extends UIComponent {
 		var itemLocation = getCellIndex();
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		var itemObject = listOwner.dataProvider[itemLocation.itemIndex][columnName];
-		if (itemObject.sel) {
-			if (instanceName != "ComboBox") {
-				instanceName = "ComboBox";
-				label = createObject("ComboBox", "Combo"+(_global.formDepth++)+"Box", 1, {styleName:this, owner:this});
-				label.addEventListener("change", this);
-				label._visible = (item != undefined);
-				label.dataProvider = itemObject.DP;
-				for (var index in label.dataProvider) {
-					if ((itemObject.label == label.dataProvider[index].label)&&(itemObject.label != undefined)){
-						label.selectedIndex = index;
+		if (item != undefined) {
+			label._visible = true;
+			if (itemObject.sel) {
+				if (instanceName != "ComboBox") {
+					instanceName = "ComboBox";
+					label = createObject("ComboBox", "Combo" + (_global.formDepth++) + "Box", 1, {styleName:this, owner:this});
+					label.addEventListener("change", this);
+					label.dataProvider = itemObject.DP;
+					for (var index in label.dataProvider) {
+						if ((itemObject.label == label.dataProvider[index].label) && (itemObject.label != undefined)) {
+							label.selectedIndex = index;
+						}
 					}
+					listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.selectedItem.label;
+					listOwner.dataProvider[itemLocation.itemIndex].value.label = label.selectedItem.data;
+					_global.unSaved = true;
+					size();
 				}
-				listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.selectedItem.label;
-				listOwner.dataProvider[itemLocation.itemIndex].value.label = label.selectedItem.data;
-				_global.unSaved = true;		
-				size();
+			} else {
+				if (instanceName != "Label") {
+					instanceName = "Label";
+					label = createObject("Label", "Label" + (_global.formDepth++) + "Box", 1, {styleName:this, owner:this});
+					size();
+				}
+				label.text = itemObject.label;
 			}
 		} else {
-			if (instanceName != "Label") {
-				instanceName = "Label";
-				label = createObject("Label", "Label"+(_global.formDepth++)+"Box", 1, {styleName:this, owner:this});
-				size();
-			}
-			label._visible = (item != undefined);
-			label.text = itemObject.label;
+			label._visible = false;
 		}
 	}
 	function getPreferredHeight(Void):Number {
@@ -70,6 +73,6 @@ class Forms.DataGrid.ParameterComboBoxCellRenderer extends UIComponent {
 		listOwner.dataProvider[itemLocation.itemIndex].value.label = label.selectedItem.data;
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;
 		listOwner.dataProvider.updateViews("change");
-		_global.unSaved = true;		
+		_global.unSaved = true;
 	}
 }
