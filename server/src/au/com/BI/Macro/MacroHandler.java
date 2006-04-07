@@ -291,7 +291,7 @@ public class MacroHandler {
 	}
 	
 	public void put (String name, Element macroElement,boolean integrator) {
-            LinkedList macro = parseElement (macroElement);
+            LinkedList macro = parseElement (macroElement,name);
             if (macro != null) {
                 if (integrator){
                     synchronized (integratorMacros) {
@@ -320,9 +320,17 @@ public class MacroHandler {
             this.saveMacroFile(integrator);  
 	}
 	
-	public LinkedList parseElement (Element element) {
+	public LinkedList parseElement (Element element, String macroName) {
 		LinkedList newMacro = new LinkedList ();
 		List macroCommands = element.getChildren();
+		if (macroCommands.isEmpty()) {
+			if (macros.containsKey(macroName)) {
+				return (LinkedList) macros.get(macroName);
+			}
+			if (integratorMacros.containsKey(macroName)) {
+				return (LinkedList) integratorMacros.get(macroName);
+			}
+		} 
 		Iterator macroCommandList = macroCommands.iterator();
 		while (macroCommandList.hasNext()) {
 			Element macroElement = (Element)macroCommandList.next();
@@ -369,9 +377,9 @@ public class MacroHandler {
                 Iterator eachMacro = macroList.iterator();
                 while (eachMacro.hasNext()){
                         Element macro = (Element)eachMacro.next();
-                        LinkedList macroCommands = parseElement (macro);
                         String macroName = macro.getAttributeValue("EXTRA");
                         if (macroName == null) macroName = "";
+                        LinkedList macroCommands = parseElement (macro,macroName);
                         String macroType = macro.getAttributeValue("TYPE");
                         if (macroType == null)macroType = "";
                         String status = macro.getAttributeValue("STATUS");
