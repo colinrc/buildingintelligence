@@ -814,7 +814,7 @@ _global.right_tree.setStyle("selectionColor", 0xCFDFF0);
 _global.right_tree.setStyle("selectionDuration", 0);
 _global.right_tree.setStyle("textRollOverColor", 0x000000);
 _global.right_tree.setStyle("textSelectedColor", 0x000000);
-_global.right_tree.cellRenderer = "workFlowTreeCellRenderer";
+_global.right_tree.cellRenderer = "WorkFlowTreeCellRenderer";
 _global.right_tree.setStyle("lineColor", 0x000000);
 _global.right_tree.setStyle("lineAlpha", 20);
 _global.right_tree.vScrollPolicy = "auto";
