@@ -16,40 +16,59 @@ class Forms.Control.Publish extends Forms.BaseForm {
 	private var remotePath:String;
 	private var isServer:Boolean = false;
 	private var localDirectory_cmb:ComboBox;
-	private var remoteDirectory_cmb:ComboBox;	
+	private var remoteDirectory_cmb:ComboBox;
+	private var lastCode:String;
+	private var intervalId:Number;
+	private var duration:Number = 100;
+	private var port_ti:TextInput;
+	private var address_ti:TextInput;
+	private var userName_ti:TextInput;
+	private var password_ti:TextInput;
+	private var connect_btn:Button;
+	private var disconnect_btn:Button;
+	
+	public function checkStatus():Void {
+		var tempCode;
+		tempCode = myActiveX.getProperty("State");
+		if(tempCode != lastCode){
+			lastCode = tempCode;
+			appendOutput(connectionStatus(tempCode));
+			if(lastCode == "0"){
+				right_li.removeAll();
+			}
+		}
+	}
+	
 	public function Publish() {
+		intervalId = setInterval(this, "checkStatus", duration);
 	}
 	public function onLoad():Void {
-		if(isServer){
-			localDirectory_cmb.dataProvider = [mdm.Application.path+"/",mdm.Application.path+"/script",mdm.Application.path+"/config",mdm.Application.path+"/log",mdm.Application.path+"/datafiles"];			
-			remoteDirectory_cmb.dataProvider = ["/","/script","/config","/log","/datafiles"];			
-		} else{
-			localDirectory_cmb.dataProvider = [mdm.Application.path+"/",mdm.Application.path+"/lib/maps",mdm.Application.path+"/lib/backgrounds",mdm.Application.path+"/lib/icons",mdm.Application.path+"/lib/sounds"];			
-			remoteDirectory_cmb.dataProvider = ["/","/lib/maps","/lib/backgrounds","/lib/icons","/lib/sounds"];
+		output_ta.editable = false;
+		password_ti.password = true;
+		port_ti.restrict = "0-9";
+		port_ti.maxChars = 5;
+		address_ti.restrict = "0-9.";
+		address_ti.maxChars = 15;
+		if (isServer) {
+			localDirectory_cmb.dataProvider = ["/", "/script", "/config", "/log", "/datafiles"];
+			remoteDirectory_cmb.dataProvider = ["/", "/script", "/config", "/log", "/datafiles"];
+		} else {
+			localDirectory_cmb.dataProvider = ["/", "/lib/maps", "/lib/backgrounds", "/lib/icons", "/lib/sounds"];
+			remoteDirectory_cmb.dataProvider = ["/", "/lib/maps", "/lib/backgrounds", "/lib/icons", "/lib/sounds"];
 		}
-		localPath = mdm.Application.path+"/";
-		remotePath = "/";		
+		localPath = mdm.Application.path + "/";
+		remotePath = "/";
+		myActiveX = new mdm.ActiveX(0, 0, 0, 0, "WeOnlyDo.wodSFTP.1");		
+		myActiveX.setProperty("LocalPath", "string", localPath);
+		myActiveX.setProperty("RemotePath", "string", remotePath);		
 		user = "test1";
 		port = 22;
 		hostname = "172.16.3.52";
 		password = "password";
-		myActiveX = new mdm.ActiveX(0, 0, 0, 0, "WeOnlyDo.wodSFTP.1");
-		myActiveX.setProperty("Hostname", "string", hostname);
-		myActiveX.setProperty("Port", "integer", port);
-		myActiveX.setProperty("Blocking", "integer", 1);
-		myActiveX.setProperty("Login", "string", user);
-		myActiveX.setProperty("Password", "string", password);
-		myActiveX.setProperty("LocalPath", "string", localPath);
-		myActiveX.setProperty("RemotePath", "string", remotePath);		
-		myActiveX.runMethod("Connect", 0);
-		var lastError = myActiveX.getProperty("LastError");
-		if (lastError != "0") {
-			appendOutput(processError(lastError));
-		} else {
-			appendOutput("connected as: " + user + ", at:" + hostname);
-			refreshRemote();
-			refreshLocal();
-		}
+		userName_ti.text = user;
+		port_ti.text = port.toString();
+		address_ti.text = hostname;
+		password_ti.text = password;
 		right_li.iconFunction = function(item:Object):String  {
 			if (item.folder) {
 				return "Icon:folder";
@@ -65,71 +84,111 @@ class Forms.Control.Publish extends Forms.BaseForm {
 				return "Icon:file";
 			}
 		};
-		left_li.iconField = "icon";		
+		left_li.iconField = "icon";
 		getSelected_btn.addEventListener("click", Delegate.create(this, getItem));
-		putSelected_btn.addEventListener("click", Delegate.create(this, putItem));		
+		putSelected_btn.addEventListener("click", Delegate.create(this, putItem));
 		localDirectory_cmb.addEventListener("change", Delegate.create(this, localChange));
 		remoteDirectory_cmb.addEventListener("change", Delegate.create(this, remoteChange));
-		
+		connect_btn.addEventListener("click", Delegate.create(this, connect));
+		disconnect_btn.addEventListener("click", Delegate.create(this, disconnect));
 	}
-	public function localChange(eventObject:Object):Void{
-		localPath = localDirectory_cmb.text;
+	public function connect():Void{
+		myActiveX.setProperty("Hostname", "string", address_ti.text);
+		myActiveX.setProperty("Port", "integer", parseInt(port_ti.text));
+		myActiveX.setProperty("Blocking", "integer", 1);
+		myActiveX.setProperty("Login", "string", userName_ti.text);
+		myActiveX.setProperty("Password", "string", password_ti.text);
+		myActiveX.runMethod("Connect", 0);
+		var lastError = myActiveX.getProperty("LastError");
+		if (lastError != "0") {
+			appendOutput(processError(lastError));
+		} else {
+			appendOutput("connected as: " + user + ", at:" + hostname);
+			refreshRemote();
+			refreshLocal();
+		}		
+	}
+	public function disconnect():Void{
+		myActiveX.runMethod("Disconnect", 0);
+		var lastError = myActiveX.getProperty("LastError");		
+		if (lastError != "0") {
+			appendOutput(processError(lastError));
+		}		
+	}
+	public function localChange(eventObject:Object):Void {
+		localPath = mdm.Application.path + "\\"+localDirectory_cmb.text;
+		myActiveX.setProperty("LocalPath", "string", localPath);			
 		refreshLocal();
 	}
-	public function remoteChange(eventObject:Object):Void{
+	public function remoteChange(eventObject:Object):Void {
 		remotePath = remoteDirectory_cmb.text;
+		myActiveX.setProperty("RemotePath", "string", remotePath);				
 		refreshRemote();
-	}	
-	public function getItem():Void{
-		myActiveX.addMethodParam(1, "string", localPath+right_li.selectedItem.label);		
-		myActiveX.addMethodParam(2, "string", remotePath+right_li.selectedItem.label);
-		myActiveX.runMethod("GetFile", 2);
-		var lastError = myActiveX.getProperty("LastError");
-		if (lastError != "0") {
-			appendOutput(processError(lastError));
+	}
+	public function getItem():Void {
+		if(right_li.selectedIndex != undefined){
+			if(lastCode != "0"){			
+			myActiveX.addMethodParam(1, "string", localPath + right_li.selectedItem.label);
+			myActiveX.addMethodParam(2, "string", remotePath + right_li.selectedItem.label);
+			myActiveX.runMethod("GetFile", 2);
+			var lastError = myActiveX.getProperty("LastError");
+			if (lastError != "0") {
+				appendOutput(processError(lastError));
+			} else {
+				appendOutput("File Transfer Successful!");
+				appendOutput("Downloaded file: " + right_li.selectedItem.label + ", from: " + remotePath + right_li.selectedItem.label);
+				refreshLocal();
+			}
+			} else{
+				appendOutput("Error: No Connection Present");
+			}			
 		} else{
-			appendOutput("File Transfer Successful!");
-			appendOutput("Downloaded file: "+right_li.selectedItem.label+", from: "+remotePath+right_li.selectedItem.label);
-			refreshLocal();			
+			appendOutput("Error: Please Select File to Download!");
 		}
 	}
-	public function putItem():Void{
-		myActiveX.addMethodParam(1, "string", localPath+left_li.selectedItem.label);		
-		myActiveX.addMethodParam(2, "string", remotePath+left_li.selectedItem.label);
-		myActiveX.runMethod("PutFile", 2);
-		var lastError = myActiveX.getProperty("LastError");
-		if (lastError != "0") {
-			appendOutput(processError(lastError));
+	public function putItem():Void {
+		if(left_li.selectedIndex != undefined){
+			if(lastCode != "0"){
+				myActiveX.addMethodParam(1, "string", localPath + left_li.selectedItem.label);
+				myActiveX.addMethodParam(2, "string", remotePath + left_li.selectedItem.label);
+				myActiveX.runMethod("PutFile", 2);
+				var lastError = myActiveX.getProperty("LastError");
+				if (lastError != "0") {
+					appendOutput(processError(lastError));
+				} else {
+					appendOutput("File Transfer Successful!");
+					appendOutput("Uploaded file: " + left_li.selectedItem.label + ", from: " + localPath + left_li.selectedItem.label);
+					refreshRemote();
+				}
+			} else{
+				appendOutput("Error: No Connection Present");
+			}
 		} else{
-			appendOutput("File Transfer Successful!");
-			appendOutput("Uploaded file: "+left_li.selectedItem.label+", from: "+localPath+left_li.selectedItem.label);			
-			refreshRemote();			
+			appendOutput("Error: Please Select File to Upload!");
 		}
 	}
 	public function refreshRemote():Void {
-		myActiveX.addMethodParam(1, "string", remotePath);		
+		myActiveX.addMethodParam(1, "string", remotePath);
 		myActiveX.runMethod("ListNames", 1);
 		var lastError = myActiveX.getProperty("LastError");
 		if (lastError != "0") {
 			appendOutput(processError(lastError));
 		} else {
 			right_li.removeAll();
-			var dirList = myActiveX.getProperty("ListItem").split(chr(13)+chr(10));
-			for (var index = 0; index < dirList.length-1; index++) {
+			var dirList = myActiveX.getProperty("ListItem").split(chr(13) + chr(10));
+			for (var index = 0; index < dirList.length - 1; index++) {
 				var newItem = new Object();
-				if(dirList[index].charAt(dirList[index].length-1) == "/"){
-					newItem.label =dirList[index].substr(0,dirList[index].length-1);
+				if (dirList[index].charAt(dirList[index].length - 1) == "/") {
+					newItem.label = dirList[index].substr(0, dirList[index].length - 1);
 					newItem.folder = true;
-				} else{
-					newItem.label =dirList[index];
+				} else {
+					newItem.label = dirList[index];
 					newItem.folder = false;
 				}
 				right_li.addItem(newItem);
 			}
-			right_li.dataProvider.sortOn("folder",Array.DESCENDING);
+			right_li.dataProvider.sortOn("folder", Array.DESCENDING);
 		}
-		//myActiveX.runMethod("ListAttributes", 0);
-		//mdm.Dialogs.prompt(myActiveX.getProperty("ListItem"));
 	}
 	public function refreshLocal():Void {
 		var myFiles = mdm.FileSystem.getFileList(localPath, "*.*");
@@ -137,20 +196,45 @@ class Forms.Control.Publish extends Forms.BaseForm {
 		left_li.removeAll();
 		for (var index = 0; index < myFiles.length; index++) {
 			var newItem = new Object();
-			newItem.label =myFiles[index];
+			newItem.label = myFiles[index];
 			newItem.folder = false;
 			left_li.addItem(newItem);
 		}
 		for (var index = 0; index < myFolders.length; index++) {
 			var newItem = new Object();
-			newItem.label =myFolders[index];
+			newItem.label = myFolders[index];
 			newItem.folder = true;
-			left_li.addItem(newItem);				
-		} 
-		left_li.dataProvider.sortOn("folder",Array.DESCENDING);		
+			left_li.addItem(newItem);
+		}
+		left_li.dataProvider.sortOn("folder", Array.DESCENDING);
 	}
 	public function appendOutput(inString:String):Void {
 		output_ta.text += inString + "\n";
+	}
+	public function connectionStatus(inCode:String):String {
+		switch (inCode) {
+		case "0" :
+			return "Disconnected from server.";
+			break;
+		case "1" :
+			return "Connecting to server.";
+			break;
+		case "2" :
+			return "Sending authentication data.";
+			break;
+		case "3" :
+			return "Connected to server - idle.";
+			break;
+		case "4" :
+			return "Receiving data from server.";
+			break;
+		case "5" :
+			return "Sending data to server.";
+			break;
+		case "6" :
+			return "Executing command on server.";
+			break;
+		}
 	}
 	public function processError(inCode:String):String {
 		switch (inCode) {
@@ -286,7 +370,7 @@ class Forms.Control.Publish extends Forms.BaseForm {
 		case "30017" :
 			return "Server returned invalid response to [FXP_ATTRS/FXP_OPEN/FXP_READ/FXP_REALPATH/FXP_READDIR/FXP_LSTAT].";
 			break;
-		case "30018" :			
+		case "30018" :
 			return myActiveX.getProperty("ServerErrorText");
 			break;
 		case "30019" :

@@ -104,7 +104,367 @@
 			 </font>
 			</description>
 		</item>
-		<item label="Add Comfort Alarms/Alerts" key="Toggles" order="11">
+		<item label="Add Comfort Alarms" key="Alarms" order="11">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Comfort Alerts" key="Alerts" order="12">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Comfort Analogues" key="Analogues" order="13">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Comfort Counters" key="Counters" order="14">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Comfort IR's" key="IRs" order="15">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Comfort Output Monitors" key="Monitors" order="16">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add X10 Lights" key="X10Lights" order="17">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure Dynalite" key="Dynalite" order="18">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Dynalite Relays" key="DynaliteRelays" order="19">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Dynalite Dimmers" key="DynaliteLights" order="20">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Dynalite Light Areas" key="DynaliteLightAreas" order="21">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Dynalite IR's" key="DynaliteIRs" order="22">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Dynalite Contact Closures" key="ContactClosures" order="23">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure GC100" key="GC100" order="24">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add GC100 Modules" key="GC100Modules" order="25">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add GC100 IR's" key="GC100_IRs" order="26">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add GC100 Toggles" key="GC100_Toggles" order="27">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure HAL" key="Hal" order="28">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Audio/Video Inputs" key="AudioVideo" order="29">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure IR Learner" key="IRLearner" order="30">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure Kramer" key="Kramer" order="31">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure Oregon" key="Oregon" order="32">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Oregon Sensors" key="OregonSensors" order="33">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure Pelco" key="Pelco" order="34">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Add Pelco Cameras" key="Cameras" order="35">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure RAW Connection" key="Raw_Connection" order="36">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure Catalogue" key="Catalogue" order="37">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure Catalogues" key="Catalogues" order="38">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="RAW Inputs" key="Customs" order="39">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="RAW Outputs" key="Raw_interfaces" order="40">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Add Toggle</b></p>
+				<p>Add Toggle Key for the Server.</p>
+				<p><b>Step2 - Add Input/Output number</b></p>
+				<p>Add the Input or Output number from Comfigurator.</p>
+				<p><b>Step3 - Add Description</b></p>
+				<p>Add Description for Toggle.</p>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure Tutondo" key="Tutondo" order="41">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Add Toggle</b></p>
@@ -119,6 +479,226 @@
 	</step>
 	<step label="Client" stepOrder="2">
 		<item label="Configure Property" key="Property" order="1">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Zone" key="Zone" order="2">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Rooms" key="ClientRoom" order="3">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Window" key="ClientWindow" order="4">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Add Tabs" key="ClientTab" order="5">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Add Doors" key="ClientDoors" order="6">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Add Alert Groups" key="AlertGroups" order="7">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Alert Groups" key="ClientAlerts" order="8">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Add Arbitraries" key="ClientArbitrary" order="9">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Add Panels" key="Panel" order="10">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Add Status Bar Group" key="StatusBar" order="11">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Status Bar Group" key="StatusBarGroup" order="12">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Add Logging Groups" key="Logging" order="13">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Logging Group" key="LoggingGroup" order="14">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Add Control Types" key="ClientControl_Types" order="15">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Control Types" key="ClientControl" order="16">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Calendar" key="Calendar" order="16">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Calendar Tabs" key="Calendar_Tab" order="17">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Sounds" key="ClientSounds" order="18">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Add Client Apps" key="ClientIcon" order="19">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Client Apps" key="ClientApps_Bar" order="20">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Add Control Panel Apps" key="ClientControl_Panel_Apps" order="21">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Step1 - Configure Property</b></p>
+				<p>Name your Property and configure settings.</p>
+				<p><b>Step2 - Add Zones</b></p>
+				<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Base Client Settings" key="Client" order="22">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
