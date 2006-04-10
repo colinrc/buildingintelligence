@@ -91,9 +91,7 @@ public class eLife {
 			controller.setUp(); 
 			if (!configName.equals ("")) {
 				controller.setConfigFile (configName);
-			} else {
-			    controller.setConfigFile (bootstrap.getConfigFile());
-			}
+			} 
 			controller.run();
 		} catch (ConfigError be) {
 		    logger.log (Level.SEVERE,"Error in the bootstrap file, the system cannot launch "

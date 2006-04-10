@@ -238,43 +238,48 @@ public class Controller {
 	 *
 	 */
 	public void run() {
-		currentUser = new User();
-		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		logger.setLevel(Level.INFO);
-		config = new Config();
-		config.setSecurity(security);
-		boolean commandDone;
+	    currentUser = new User();
+	    logger = Logger.getLogger(this.getClass().getPackage().getName());
+	    logger.setLevel(Level.INFO);
+	    config = new Config();
+	    config.setSecurity(security);
+	    boolean commandDone;
 
-		logger.fine("Started the controller");
-		Iterator deviceModelList;
-		boolean successfulCommand = false;
+	    logger.fine("Started the controller");
+	    Iterator deviceModelList;
+	    boolean successfulCommand = false;
 
-		irCodeDB = new IRCodeDB();
+	    irCodeDB = new IRCodeDB();
+	    try {
+		this.setUpClients();
 
-		try {
-		    this.setUpClients();
-			if (!configFile.equals ("")) {
-				if (doReadConfig (configFile)) {
-				    doSystemStartup(deviceModels);
-					if ( config.jRobinParser.isJRobinActive()) {
+		running = true;
 
-						doJRobinStartup();
-					}
-					this.setUpAdmin();
-					this.macroHandler.runStartup();
-					running = true;
-				}
-				else {
-					running = false;
-					this.closeDownClients();
-					System.err.print("Could not launch the system, there is an error in configuration file");
-				}
-			}
-
-		} catch (CommsFail ex) {
-		    logger.log (Level.SEVERE,"Client controller could not be set up");
-		    running = false;
+		if (!configFile.equals ("")) {
+		    doReadConfig ("config",configFile);
+		} else {    
+		    doReadConfig ("config",bootstrap.getConfigFile());
 		}
+
+		doSystemStartup(deviceModels);
+		if ( config.jRobinParser.isJRobinActive()) {
+
+		    doJRobinStartup();
+		}
+		this.setUpAdmin();
+		this.macroHandler.runStartup();
+
+	    } catch (CommsFail ex) {
+		System.err.println("Could not set up flash interface");
+		
+		logger.log(Level.SEVERE,"Could not set up flash interface");
+		try {
+		    this.closeDownClients();
+		} catch (CommsFail ex2){
+		    
+		}
+		running = false;
+	    }
 
 		while (running) {
 			CommandInterface item;
@@ -1082,7 +1087,7 @@ public class Controller {
 			login((User) ((CommsCommand) command).getUser());
 		}
 		if (commandCode.equals("ReadConfig")) {
-			if (doReadConfig ((String)command.getExtraInfo())) {
+			if (doReadConfig ("config",(String)command.getExtraInfo())) {
 				doSystemStartup(deviceModels);
 			}
 
@@ -1135,57 +1140,70 @@ public class Controller {
 		}
 
 	}
+	
+	
+	public boolean doReadConfig (String dir,String configPattern) {
 
+	
+	    Iterator deviceModelClearList = deviceModels.iterator();
+	    // clear all model information
+	    while (deviceModelClearList.hasNext()) {
+		DeviceModel model = (DeviceModel) deviceModelClearList.next();
+		if (!model.removeModelOnConfigReload())  {
+		    try {
+			model.close();
+		    } catch (ConnectionFail e1) {
 
-	public boolean doReadConfig (String configName) {
-
-		try {
-			Iterator deviceModelList = deviceModels.iterator();
-			// clear all model information
-			while (deviceModelList.hasNext()) {
-				DeviceModel model = (DeviceModel) deviceModelList.next();
-				if (!model.removeModelOnConfigReload())  {
-					try {
-					    model.close();
-					} catch (ConnectionFail e1) {
-
-					}
-					model.clearItems();
-				}
-			}
-
-			config.readConfig(deviceModels, clientModels, cache, variableCache ,
-					commandQueue, modelRegistry, irCodeDB, configName, macroHandler,
-					bootstrap, controls, addressBook, alarmLogging);
-
-
-			configLoaded = true;
-			logger.log(Level.FINER, "Read configuration file correctly.");
-		} catch (ConfigError configError) {
-			logger.log(Level.SEVERE, "Error in configuration file " + configName + " "
-					+ configError.getMessage());
-			return false;
+		    }
+		    model.clearItems();
 		}
+	    }
+	    config.prepareToReadConfigs(deviceModels,controls,macroHandler);
+
+	    File theDir = new File(dir);
+	    AcceptConfig acceptConfig = new AcceptConfig();
+	    acceptConfig.setPattern(configPattern);
+	    File configFiles[] = theDir.listFiles(acceptConfig);
+
+	    configLoaded = false;
+	    for (int i = 0; i < configFiles.length; i ++){
+		try {
+		    config.readConfig(deviceModels, clientModels, cache, variableCache ,
+			    commandQueue, modelRegistry, irCodeDB, configFiles[i], macroHandler,
+			    bootstrap, controls, addressBook, alarmLogging);
+		    configLoaded = true;
+		} catch (ConfigError configError) {
+		    logger.log(Level.SEVERE, "Error in configuration file " + configFiles[i].toString() + " "
+				+ configError.getMessage());
+		}
+	    }
+
+	    if (configLoaded){
+		logger.log(Level.FINER, "Read configuration file correctly.");
+	    }
+
+
 	    this.setBindToAddress(bootstrap.getServerString());
 	    this.setClientPort(bootstrap.getPort());
 
-		Iterator deviceModelList = deviceModels.iterator();
-		int deviceCounter = 0;
-		while (deviceModelList.hasNext()){
-			DeviceModel deviceModel = (DeviceModel)deviceModelList.next();
-			deviceModel.setInstanceID(deviceCounter); // update it in case the position has changed.
-			deviceCounter ++;
-			this.connectDevice(deviceModel,deviceModels);
-		}
-		try {
-			scriptModel.finishedReadingConfig();
-		} catch (SetupException fail) {
-			logger.log(Level.SEVERE, "Error configuring script model. " + fail.getMessage());
-		}
+	    Iterator deviceModelList = deviceModels.iterator();
+	    int deviceCounter = 0;
+	    while (deviceModelList.hasNext()){
+		    DeviceModel deviceModel = (DeviceModel)deviceModelList.next();
+		    deviceModel.setInstanceID(deviceCounter); // update it in case the position has changed.
+		    deviceCounter ++;
+		    this.connectDevice(deviceModel,deviceModels);
+	    }
+	    try {
+		    scriptModel.finishedReadingConfig();
+	    } catch (SetupException fail) {
+		    logger.log(Level.SEVERE, "Error configuring script model. " + fail.getMessage());
+	    }
 
-		return true;
+	    return true;
 	}
 
+	
 	public List getCommandQueue() {
 		return commandQueue;
 	}

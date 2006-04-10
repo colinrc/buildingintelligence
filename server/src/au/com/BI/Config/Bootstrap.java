@@ -102,7 +102,7 @@ public class Bootstrap {
             
             Element serverConfigFile = theConfig.getChild("CONFIG_FILE");
             this.configEntry = serverConfigFile.getAttributeValue("NAME");
-            configFile = "config" + File.separator + configEntry;
+            configFile = configEntry;
             
             this.startTime = new Date();
             

@@ -95,6 +95,14 @@ public class Config {
 		calendar_message_params.put ("TARGET","All");
 	}
 
+        public void prepareToReadConfigs (List deviceModels,Controls controls,MacroHandler macroHandler) {
+            jRobinParser.clearRRDS();
+            removeModels (deviceModels);
+            macroHandler.setCalendar_message_params (this.calendar_message_params);
+            this.controls = controls;
+            controls.clearVariables();
+        }
+        
 	public void removeModels (List deviceModels) {
 		Iterator eachDeviceModel = deviceModels.iterator();
 		while (eachDeviceModel.hasNext()) {
@@ -109,19 +117,13 @@ public class Config {
 
 	public void readConfig(List deviceModels, List clientModels,Cache cache,
 			HashMap variableCache, List commandQueue, Map modelRegistry,
-			IRCodeDB irCodeDB, String fileName, MacroHandler macroHandler, 
+			IRCodeDB irCodeDB, File configFile, MacroHandler macroHandler, 
 			Bootstrap bootstrap, Controls controls, AddressBook addressBook,
 			AlarmLogging alarmLogging)
 			throws ConfigError {
 		// Create an instance of the tester and test
 		try {
-			jRobinParser.clearRRDS();
 
-
-			removeModels( deviceModels);
-			this.controls = controls;
-			macroHandler.setCalendar_message_params (this.calendar_message_params);
-			controls.clearVariables();
 			SAXBuilder builder = null;
 
 			Iterator clientModelList = clientModels.iterator();
@@ -130,7 +132,7 @@ public class Config {
 				model.clearItems();
 			}
 			builder = new SAXBuilder();
-			Document doc = builder.build(fileName);
+			Document doc = builder.build(configFile);
 			Element theConfig = doc.getRootElement();
 
 			List deviceConfigs = theConfig.getChildren("DEVICE");
