@@ -89,9 +89,9 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
 		dataObject.setData({sounds:newSounds});
-		if (!dataObject.isValid()){
+		//if (dataObject.isValid() != null){
 			_global.infoflow_ta.text = dataObject.getValidationMsg();
-		}
+		//}
 		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}

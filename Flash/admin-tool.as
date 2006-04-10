@@ -261,6 +261,7 @@ function searchProject(treeNode:Object, object:Object):Object {
 }
 /********************************************************/
 _global.refreshTheTree = function() {
+	
 	//var oBackupDP = _global.left_tree.dataProvider;
 	_global.left_tree.dataProvider = null;
 	// clear
@@ -571,6 +572,11 @@ leftTreeListener.change = function(eventObj) {
 	var node = eventObj.target.selectedNode;
 	form_mc.removeMovieClip();
 	right_tree.selectedNode = undefined;
+	if (node.object == undefined) {
+		_global.output_panel.setDescription("");
+		_global.output_panel.setError("");
+		_global.output_panel.draw();
+	}
 	if (node.object != undefined) {
 		_global.output_panel.setDescription(node.description);
 		_global.output_panel.setError(node.object.getValidationMsg());

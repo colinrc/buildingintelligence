@@ -43,9 +43,15 @@ class Controls.OutputPanel extends UIComponent {
 		error_ta.setSize(__width, __height - tabControl.height);		
 	}
 	public function setDescription(inText:String){
+		if (inText == null) {
+			inText = "";
+		}
 		description_ta.text = inText;		
 	}
 	public function setError(inText:String){
+		if (inText == null) {
+			inText = "";
+		}
 		error_ta.text = inText;		
 	}
 	private function tabChange(eventObject) {

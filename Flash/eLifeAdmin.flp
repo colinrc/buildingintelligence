@@ -55,7 +55,7 @@
                     <project_file path="./Classes/Forms/Project/JRobin/Data.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/JRobin/JRobin.as" filetype="as" />
                 </project_folder>
-                <project_folder name="Client" expanded="false">
+                <project_folder name="Client" expanded="true">
                     <project_file path="./Classes/Forms/Project/Client/BooleanEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/ColourEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/NumberEdit.as" filetype="as" />
@@ -108,7 +108,7 @@
                 <project_file path="./Classes/Forms/Project/CalendarSettings.as" filetype="as" />
             </project_folder>
             <project_folder name="Tree" expanded="true">
-                <project_file path="./Classes/Forms/Tree/workFlowTreeCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/Tree/WorkFlowTreeCellRenderer.as" filetype="as" />
             </project_folder>
             <project_file path="./Classes/Forms/Home.as" filetype="as" />
             <project_file path="./Classes/Forms/BaseForm.as" filetype="as" />
@@ -201,6 +201,11 @@
         <project_folder name="Utils" expanded="true">
             <project_file path="./Classes/Utils/Base64.as" filetype="as" />
             <project_file path="./Classes/Utils/XMLHighlighter.as" filetype="as" />
+        </project_folder>
+        <project_folder name="Controls" expanded="true">
+            <project_file path="./Classes/Controls/SplitPanel.as" filetype="as" />
+            <project_file path="./Classes/Controls/MapEditor.as" filetype="as" />
+            <project_file path="./Classes/Controls/OutputPanel.as" filetype="as" />
         </project_folder>
     </project_folder>
     <project_file path="./admin-tool.fla" filetype="fla" profile="" def_file="true" />
