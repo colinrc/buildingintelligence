@@ -1,23 +1,46 @@
 ﻿class Objects.BaseElement {
+	private var validationMsg="";
 	var validation:Array;
 	private var errorText:String ="";
 	public function getValidation():Array{
 		return validation;
 	}
-	public function getHighestFlagValue(inString1:String,inString2:String):String{
+	public function isValid():String {
 		return "ok";
 	}
-	public function appendValidationMsg(inString:String){
-		errorText+=inString+"\n";
+	public function getHighestFlagValue(oldFlag:String, isValidFlag:String):String{
+		if (oldFlag == "ok"){
+			return isValidFlag;
+		}
+		if (oldFlag == "warning"){
+			if (isValidFlag == "warning"){
+				return "warning";
+			}
+			else {
+				if (isValidFlag == "error"){
+					return "error";
+				}
+				else {
+					return "warning";
+				}
+			}
+		}
+		else{
+			return "error";
+		}
 	}
-	public function clearValidationMsg(){
-		errorText = "";
-	}
+			
 	public function getValidationMsg():String{
-		return errorText;
+		return validationMsg;
 	}
-	public function isValid():Boolean {
-		return true;
+	public function setValidationMsg(msg:String):Void{
+		validationMsg = msg+"\n";
+	}
+	public function clearValidationMsg():Void{
+		validationMsg = "";
+	}
+	public function appendValidationMsg(msg:String):Void{
+		validationMsg += msg+"\n";
 	}
 	public function getForm():String {
 		return "base.form";
