@@ -201,6 +201,7 @@ class Forms.DataGrid.DynamicDataGrid {
 		buttonColumns[name] = new Object();
 		buttonColumns[name].attributes = attributes;
 		buttonColumns[name].callBack = callBack;
+		columns[name] = new Object();		
 		columns[name].heading = heading;
 		columns[name].advanced = advanced;
 		columns[name].colNo = columnCount - 1;

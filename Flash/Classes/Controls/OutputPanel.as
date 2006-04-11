@@ -25,13 +25,13 @@ class Controls.OutputPanel extends UIComponent {
 		mcBoundingBox._height = 0;
 	}
 	private function draw():Void {
-		tabControl.enabled = true;
 		if(error_ta.text == ""){
+			tabControl.dataProvider = [{label:"Help"}];
 			tabControl.selectedIndex = 0;
 			description_ta._visible = true;
 			error_ta._visible = false;
-			tabControl.enabled = false;
 		} else{
+			tabControl.dataProvider = [{label:"Help"},{label:"Error"}];
 			tabControl.selectedIndex = 1;			
 			description_ta._visible = false;
 			error_ta._visible = true;			
@@ -39,17 +39,17 @@ class Controls.OutputPanel extends UIComponent {
 	}
 	private function arrange():Void {
 		tabControl.setSize(__width, 22);		
-		description_ta.setSize(__width, __height - tabControl.height);
-		error_ta.setSize(__width, __height - tabControl.height);		
+		description_ta.setSize(__width, (__height - tabControl.height));
+		error_ta.setSize(__width, (__height - tabControl.height));
 	}
 	public function setDescription(inText:String){
-		if (inText == null) {
+		if (inText == undefined) {
 			inText = "";
 		}
 		description_ta.text = inText;		
 	}
 	public function setError(inText:String){
-		if (inText == null) {
+		if (inText == undefined) {
 			inText = "";
 		}
 		error_ta.text = inText;		
@@ -73,10 +73,15 @@ class Controls.OutputPanel extends UIComponent {
 		description_ta._x = 0;
 		description_ta._y = tabControl.height;
 		description_ta.html = true;
+		description_ta.
 		error_ta._x = 0;
 		error_ta._y = tabControl.height;
+		error_ta.setStyle("borderStyle","none");
+		description_ta.setStyle("borderStyle","none");
 		error_ta.editable = false;
 		description_ta.editable = false;
+		error_ta.wordWrap = true;
+		description_ta.wordWrap = true;		
 		tabControl.addEventListener("change", Delegate.create(this, tabChange));
 	}
 }

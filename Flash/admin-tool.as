@@ -271,6 +271,9 @@ _global.refreshTheTree = function() {
 	oBackupDP = _global.right_tree.dataProvider;
 	_global.right_tree.dataProvider = null;
 	_global.right_tree.dataProvider = oBackupDP;
+	_global.output_panel.setDescription(_global.left_tree.selectedNode.description);
+	_global.output_panel.setError(_global.left_tree.selectedNode.object.getValidationMsg());
+	_global.output_panel.draw();	
 };
 function createWorkflow(inNode:Object) {
 	_global.workflow.addNode(inNode.object.getKey(), inNode);
@@ -541,9 +544,12 @@ tabs_tb.change = function(eventObj) {
 		case "IR" :
 			form_mc = formContent_mc.attachMovie("forms.control.ir", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnection());
 			break;
-		case "Publish" :
-			form_mc = formContent_mc.attachMovie("forms.control.publish", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnection());
+		case "SFTP" :
+			form_mc = formContent_mc.attachMovie("forms.control.sftp", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnection());
 			break;
+		case "Publish" :
+			form_mc = formContent_mc.attachMovie("forms.control.publishserver", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnection());
+			break;			
 		case "Panels" :
 			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject,panels:tempObject.getPanels()});
 			break;
@@ -610,7 +616,7 @@ leftTreeListener.change = function(eventObj) {
 			break;
 		case "Server" :
 			form_mc = formContent_mc.attachMovie("forms.control.servercontrols", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth());
-			tabs_tb.dataProvider = [{label:"Control", view:"control.servercontrols"}, {label:"Clients", view:"control.clients"}, {label:"Log", view:"control.serverLog"}, {label:"IR", view:"control.ir"}, {label:"Publish", view:"control.publish"}];
+			tabs_tb.dataProvider = [{label:"Control", view:"control.servercontrols"}, {label:"Clients", view:"control.clients"}, {label:"Log", view:"control.serverLog"}, {label:"IR", view:"control.ir"}, {label:"Publish", view:"control.publishserver"}, {label:"SFTP", view:"control.sftp"}];
 			tabs_tb.selectedIndex = 0;
 			//Need to rewrite how a view is attached to a server object
 			//_global.server.attachView(form_mc);			

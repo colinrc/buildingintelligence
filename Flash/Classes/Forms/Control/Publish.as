@@ -3,10 +3,6 @@ import mx.utils.Delegate;
 class Forms.Control.Publish extends Forms.BaseForm {
 	private var dataObject:Object;
 	private var myActiveX:Object;
-	private var left_li:List;
-	private var right_li:List;
-	private var getSelected_btn:Button;
-	private var putSelected_btn:Button;
 	private var output_ta:TextArea;
 	private var user:String;
 	private var port:Number;
@@ -17,7 +13,7 @@ class Forms.Control.Publish extends Forms.BaseForm {
 	private var isServer:Boolean = false;
 	private var localDirectory_cmb:ComboBox;
 	private var remoteDirectory_cmb:ComboBox;
-	private var lastCode:String;
+	private var lastCode:String = "0";
 	private var intervalId:Number;
 	private var duration:Number = 100;
 	private var port_ti:TextInput;
@@ -26,6 +22,7 @@ class Forms.Control.Publish extends Forms.BaseForm {
 	private var password_ti:TextInput;
 	private var connect_btn:Button;
 	private var disconnect_btn:Button;
+	private var appPath:String;
 	
 	public function checkStatus():Void {
 		var tempCode;
@@ -35,11 +32,13 @@ class Forms.Control.Publish extends Forms.BaseForm {
 			appendOutput(connectionStatus(tempCode));
 			if(lastCode == "0"){
 				right_li.removeAll();
+				remoteDirectory_cmb.selectedIndex = 0;							
 			}
 		}
 	}
 	
 	public function Publish() {
+		appPath = mdm.Application.path.substring(0,mdm.Application.path.length-1)
 		intervalId = setInterval(this, "checkStatus", duration);
 	}
 	public function onLoad():Void {
@@ -49,15 +48,6 @@ class Forms.Control.Publish extends Forms.BaseForm {
 		port_ti.maxChars = 5;
 		address_ti.restrict = "0-9.";
 		address_ti.maxChars = 15;
-		if (isServer) {
-			localDirectory_cmb.dataProvider = ["/", "/script", "/config", "/log", "/datafiles"];
-			remoteDirectory_cmb.dataProvider = ["/", "/script", "/config", "/log", "/datafiles"];
-		} else {
-			localDirectory_cmb.dataProvider = ["/", "/lib/maps", "/lib/backgrounds", "/lib/icons", "/lib/sounds"];
-			remoteDirectory_cmb.dataProvider = ["/", "/lib/maps", "/lib/backgrounds", "/lib/icons", "/lib/sounds"];
-		}
-		localPath = mdm.Application.path + "/";
-		remotePath = "/";
 		myActiveX = new mdm.ActiveX(0, 0, 0, 0, "WeOnlyDo.wodSFTP.1");		
 		myActiveX.setProperty("LocalPath", "string", localPath);
 		myActiveX.setProperty("RemotePath", "string", remotePath);		
@@ -69,26 +59,8 @@ class Forms.Control.Publish extends Forms.BaseForm {
 		port_ti.text = port.toString();
 		address_ti.text = hostname;
 		password_ti.text = password;
-		right_li.iconFunction = function(item:Object):String  {
-			if (item.folder) {
-				return "Icon:folder";
-			} else {
-				return "Icon:file";
-			}
-		};
-		right_li.iconField = "icon";
-		left_li.iconFunction = function(item:Object):String  {
-			if (item.folder) {
-				return "Icon:folder";
-			} else {
-				return "Icon:file";
-			}
-		};
-		left_li.iconField = "icon";
-		getSelected_btn.addEventListener("click", Delegate.create(this, getItem));
-		putSelected_btn.addEventListener("click", Delegate.create(this, putItem));
-		localDirectory_cmb.addEventListener("change", Delegate.create(this, localChange));
-		remoteDirectory_cmb.addEventListener("change", Delegate.create(this, remoteChange));
+		/*getSelected_btn.addEventListener("click", Delegate.create(this, getItem));
+		putSelected_btn.addEventListener("click", Delegate.create(this, putItem));*/
 		connect_btn.addEventListener("click", Delegate.create(this, connect));
 		disconnect_btn.addEventListener("click", Delegate.create(this, disconnect));
 	}
@@ -104,8 +76,6 @@ class Forms.Control.Publish extends Forms.BaseForm {
 			appendOutput(processError(lastError));
 		} else {
 			appendOutput("connected as: " + user + ", at:" + hostname);
-			refreshRemote();
-			refreshLocal();
 		}		
 	}
 	public function disconnect():Void{
@@ -115,17 +85,7 @@ class Forms.Control.Publish extends Forms.BaseForm {
 			appendOutput(processError(lastError));
 		}		
 	}
-	public function localChange(eventObject:Object):Void {
-		localPath = mdm.Application.path + "\\"+localDirectory_cmb.text;
-		myActiveX.setProperty("LocalPath", "string", localPath);			
-		refreshLocal();
-	}
-	public function remoteChange(eventObject:Object):Void {
-		remotePath = remoteDirectory_cmb.text;
-		myActiveX.setProperty("RemotePath", "string", remotePath);				
-		refreshRemote();
-	}
-	public function getItem():Void {
+	public function getItem(file:String):Void {
 		if(right_li.selectedIndex != undefined){
 			if(lastCode != "0"){			
 			myActiveX.addMethodParam(1, "string", localPath + right_li.selectedItem.label);
@@ -137,7 +97,6 @@ class Forms.Control.Publish extends Forms.BaseForm {
 			} else {
 				appendOutput("File Transfer Successful!");
 				appendOutput("Downloaded file: " + right_li.selectedItem.label + ", from: " + remotePath + right_li.selectedItem.label);
-				refreshLocal();
 			}
 			} else{
 				appendOutput("Error: No Connection Present");
@@ -158,7 +117,6 @@ class Forms.Control.Publish extends Forms.BaseForm {
 				} else {
 					appendOutput("File Transfer Successful!");
 					appendOutput("Uploaded file: " + left_li.selectedItem.label + ", from: " + localPath + left_li.selectedItem.label);
-					refreshRemote();
 				}
 			} else{
 				appendOutput("Error: No Connection Present");
@@ -166,47 +124,6 @@ class Forms.Control.Publish extends Forms.BaseForm {
 		} else{
 			appendOutput("Error: Please Select File to Upload!");
 		}
-	}
-	public function refreshRemote():Void {
-		myActiveX.addMethodParam(1, "string", remotePath);
-		myActiveX.runMethod("ListNames", 1);
-		var lastError = myActiveX.getProperty("LastError");
-		if (lastError != "0") {
-			appendOutput(processError(lastError));
-		} else {
-			right_li.removeAll();
-			var dirList = myActiveX.getProperty("ListItem").split(chr(13) + chr(10));
-			for (var index = 0; index < dirList.length - 1; index++) {
-				var newItem = new Object();
-				if (dirList[index].charAt(dirList[index].length - 1) == "/") {
-					newItem.label = dirList[index].substr(0, dirList[index].length - 1);
-					newItem.folder = true;
-				} else {
-					newItem.label = dirList[index];
-					newItem.folder = false;
-				}
-				right_li.addItem(newItem);
-			}
-			right_li.dataProvider.sortOn("folder", Array.DESCENDING);
-		}
-	}
-	public function refreshLocal():Void {
-		var myFiles = mdm.FileSystem.getFileList(localPath, "*.*");
-		var myFolders = mdm.FileSystem.getFolderList(localPath);
-		left_li.removeAll();
-		for (var index = 0; index < myFiles.length; index++) {
-			var newItem = new Object();
-			newItem.label = myFiles[index];
-			newItem.folder = false;
-			left_li.addItem(newItem);
-		}
-		for (var index = 0; index < myFolders.length; index++) {
-			var newItem = new Object();
-			newItem.label = myFolders[index];
-			newItem.folder = true;
-			left_li.addItem(newItem);
-		}
-		left_li.dataProvider.sortOn("folder", Array.DESCENDING);
 	}
 	public function appendOutput(inString:String):Void {
 		output_ta.text += inString + "\n";
