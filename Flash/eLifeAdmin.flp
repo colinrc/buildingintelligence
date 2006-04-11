@@ -1,7 +1,7 @@
 ﻿<flash_project name="eLifeAdmin" version="1">
     <project_folder name="Classes" expanded="true">
         <project_folder name="Forms" expanded="true">
-            <project_folder name="Control" expanded="false">
+            <project_folder name="Control" expanded="true">
                 <project_file path="./Classes/Forms/Control/IR.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/ServerLog.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/Files.as" filetype="as" />
@@ -10,7 +10,7 @@
                 <project_file path="./Classes/Forms/Control/Clients.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/Publish.as" filetype="as" />
             </project_folder>
-            <project_folder name="Project" expanded="false">
+            <project_folder name="Project" expanded="true">
                 <project_folder name="Device" expanded="false">
                     <project_file path="./Classes/Forms/Project/Device/Head.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Connection.as" filetype="as" />
@@ -159,7 +159,7 @@
                 <project_file path="./Classes/Objects/Server/GC100IRs.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/GC100Toggles.as" filetype="as" />
             </project_folder>
-            <project_folder name="Client" expanded="false">
+            <project_folder name="Client" expanded="true">
                 <project_file path="./Classes/Objects/Client/Client.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Apps_Bar.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Control_Panel_Apps.as" filetype="as" />
@@ -198,11 +198,11 @@
             <project_file path="./Classes/Objects/ServerDesigns.as" filetype="as" />
             <project_file path="./Classes/Objects/ServerInstances.as" filetype="as" />
         </project_folder>
-        <project_folder name="Utils" expanded="true">
+        <project_folder name="Utils" expanded="false">
             <project_file path="./Classes/Utils/Base64.as" filetype="as" />
             <project_file path="./Classes/Utils/XMLHighlighter.as" filetype="as" />
         </project_folder>
-        <project_folder name="Controls" expanded="true">
+        <project_folder name="Controls" expanded="false">
             <project_file path="./Classes/Controls/SplitPanel.as" filetype="as" />
             <project_file path="./Classes/Controls/MapEditor.as" filetype="as" />
             <project_file path="./Classes/Controls/OutputPanel.as" filetype="as" />

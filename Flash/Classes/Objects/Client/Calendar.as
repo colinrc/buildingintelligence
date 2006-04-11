@@ -8,6 +8,11 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
+		if (tabs.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Calendar Tabs are defined");
+		}
 		return flag;
 	}
 	public function getForm():String {

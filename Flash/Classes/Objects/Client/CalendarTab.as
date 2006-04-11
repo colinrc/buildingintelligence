@@ -8,10 +8,40 @@
 	public function deleteSelf(){
 		treeNode.removeNode();
 	}		
-	public function isValid():Boolean {
-		var flag = true;
-		for (var zone in zones) {
+	public function isValid():String {
+		var flag = "ok";
+		clearValidationMsg();
+		if (zones.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Zones are defined");
 		}
+		for (var zone in zones) {
+			if (zones[zone].attributes["name"] == null || zones[zone].attributes["name"] == "") {
+				flag = "warning";
+				appendValidationMsg("Zone Name is missing");
+			}
+			if (zones[zone].attributes["key"] == null || zones[zone].attributes["key"] == "") {
+				flag = "warning";
+				appendValidationMsg("Zone Key is missing");
+			}
+		}
+		if (label == null || label == "") {
+			flag = "warning";
+			appendValidationMsg("Label is missing");
+		}
+		if (icon == null || icon == "") {
+			flag = "warning";
+			appendValidationMsg("Icon is missing");
+		}
+		if (view == null || view == "") {
+			flag = "warning";
+			appendValidationMsg("View is missing");
+		}
+		if (macro == null || macro == "") {
+			flag = "warning";
+			appendValidationMsg("Macro is missing");
+		}
+		
 		return flag;
 	}
 	public function getForm():String {
@@ -83,5 +113,6 @@
 		label = newData.label;
 		icon = newData.icon;
 		macro = newData.macro;
+		view = newData.view;
 	}
 }

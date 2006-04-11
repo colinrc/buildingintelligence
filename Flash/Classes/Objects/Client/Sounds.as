@@ -8,6 +8,10 @@
 		//mdm.Dialogs.prompt("InSound");
 		var flag = "ok";
 		clearValidationMsg();
+		if (sounds.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Sounds are defined");
+		}
 		for (var sound in sounds) {
 			if ((sounds[sound].attributes["name"] == undefined) || (sounds[sound].attributes["name"] == "")) {
 				flag = "warning";
@@ -22,8 +26,6 @@
 				appendValidationMsg("Volume is invalid");
 			}
 		}
-		mdm.Exception.DebugWindow(flag);
-
 		return flag;
 	}
 	public function getForm():String {

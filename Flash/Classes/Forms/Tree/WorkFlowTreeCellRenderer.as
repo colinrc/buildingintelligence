@@ -28,8 +28,14 @@
 				if (owner.node.attributes.complete == "ok") {
 					iconName = "tick";
 				} 
-				else {/*warning*/
-					iconName = "warning";
+				else {
+					if (owner.node.attributes.complete == "empty") {
+						iconName = "incomplete";
+					}
+					else
+						{/*warning*/
+							iconName = "warning";
+						}
 				}
 			}
 			icon = attachMovie("Icon:" + iconName, "icon", 100, {_x:listOwner.width - indent + 5, _y:2});

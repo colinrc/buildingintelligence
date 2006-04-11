@@ -12,22 +12,23 @@
 		if (oldFlag == "ok"){
 			return isValidFlag;
 		}
-		if (oldFlag == "warning"){
-			if (isValidFlag == "warning"){
-				return "warning";
+		if (oldFlag == "empty") {
+			if (isValidFlag == "warning" || isValidFlag == "error") {
+				return isValidFlag;
 			}
 			else {
-				if (isValidFlag == "error"){
-					return "error";
-				}
-				else {
-					return "warning";
-				}
+				return "empty";
 			}
 		}
-		else{
-			return "error";
+		if (oldFlag == "warning") {
+			if (isValidFlag == "warning" || isValidFlag == "error") {
+				return isValidFlag;
+			}
+			else {
+				return "warning";
+			}
 		}
+		return "error";
 	}
 			
 	public function getValidationMsg():String{
