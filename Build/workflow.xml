@@ -1,5 +1,5 @@
 <workflow>
-	<step label="Server" stepOrder="1">
+	<step label="Server Components" stepOrder="1">
 		<item label="Configure Server" key="Server" order="1">
 			<description>
 		 	 <font size="10">
@@ -226,7 +226,7 @@
 		</item>
 		<item label="Add Dynalite Light Areas" key="DynaliteLightAreas" order="21">
 			<description>
-		 	 <font size="10">
+		 	 <font size="10 >
 		 		<p><b>Step1 - Add Toggle</b></p>
 				<p>Add Toggle Key for the Server.</p>
 				<p><b>Step2 - Add Input/Output number</b></p>
@@ -340,7 +340,7 @@
 				<p><b>Step2 - Add Input/Output number</b></p>
 				<p>Add the Input or Output number from Comfigurator.</p>
 				<p><b>Step3 - Add Description</b></p>
-				<p>Add Description for Toggle.</p>
+				<p>Add Description for Toggle.</p>
 			 </font>
 			</description>
 		</item>
@@ -457,7 +457,7 @@
 		 	 <font size="10">
 		 		<p><b>Step1 - Add Toggle</b></p>
 				<p>Add Toggle Key for the Server.</p>
-				<p><b>Step2 - Add Input/Output number</b></p>
+				<p><b>Ste 2 - Add Input/Output number</b></p>
 				<p>Add the Input or Output number from Comfigurator.</p>
 				<p><b>Step3 - Add Description</b></p>
 				<p>Add Description for Toggle.</p>
@@ -477,7 +477,7 @@
 			</description>
 		</item>
 	</step>
-	<step label="Client" stepOrder="2">
+	<step label="Configure Client" stepOrder="2">
 		<item label="Configure Property" key="Property" order="1">
 			<description>
 		 	 <font size="10">
@@ -582,7 +582,7 @@
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
-				<p>Name your Property and configure settings.</p>
+				 p>Name your Property and configure settings.</p>
 				<p><b>Step2 - Add Zones</b></p>
 				<p>Add Zones to the Property.</p>
 				</font>
@@ -661,10 +661,7 @@
 		<item label="Configure Sounds" key="ClientSounds" order="18">
 			<description>
 		 	 <font size="10">
-		 		<p><b>Step1 - Configure Property</b></p>
-				<p>Name your Property and configure settings.</p>
-				<p><b>Step2 - Add Zones</b></p>
-				<p>Add Zones to the Property.</p>
+		 		<p><b>Add Sounds</b></p>
 				</font>
 			</description>
 		</item>
