@@ -6,9 +6,11 @@
 	private var serverConnection:Object;
 	private var serverName:String;
 	private var treeNode:XMLNode;
+	private var sftpConnection:Object;
 	public function deleteSelf(){
 		serverConnection.disconnectServer();
 		serverConnection.disconnectMonitor();		
+		sftpConnection.disconnect();
 		treeNode.removeNode();
 	}				
 	public function get ipAddress():String{
@@ -39,6 +41,7 @@
 		clients = new Array();
 		serverName = "";
 		serverConnection = new Objects.ServerConnection();
+		sftpConnection = new Objects.SFTPConnection(true);
 	}
 	public function toXML():XMLNode {
 		var serverNode = new XMLNode(1, "serverInstance");
@@ -93,6 +96,9 @@
 	}
 	public function getConnection():Object {
 		return {serverConnection:serverConnection,dataObject:this};
+	}
+	public function getSFTP():Object{
+		return {SFTPConnection:sftpConnection,dataObject:this};
 	}
 	public function setData(newData:Object) {
 		_global.left_tree.setIsOpen(treeNode, false);		

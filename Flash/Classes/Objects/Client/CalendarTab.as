@@ -16,7 +16,7 @@
 			appendValidationMsg("No Zones are defined");
 		}
 		for (var zone in zones) {
-			if (zones[zone].attributes["name"] == null || zones[zone].attributes["name"] == "") {
+			if (zones[zone].attributes["label"] == null || zones[zone].attributes["label"] == "") {
 				flag = "warning";
 				appendValidationMsg("Zone Name is missing");
 			}

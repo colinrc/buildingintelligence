@@ -17,6 +17,15 @@ class Forms.Control.ServerControls extends Forms.BaseForm {
 	private var serverConnection:Object;
 	private var dataObject:Object;
 	public function ServerControls() {
+		/*
+		password_ti.password = true;
+		port_ti.restrict = "0-9";
+		port_ti.maxChars = 5;
+		address_ti.restrict = "0-9.";
+		address_ti.maxChars = 15;
+		connect_btn.addEventListener("click", Delegate.create(this, connect));
+		disconnect_btn.addEventListener("click", Delegate.create(this, disconnect));		
+		*/
 	}
 	public function onLoad():Void {
 		start_btn.addEventListener("click", Delegate.create(this, startServer));
