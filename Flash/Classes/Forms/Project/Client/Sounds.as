@@ -27,7 +27,6 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(sounds_dg);
 		dataGridHandler.addTextInputColumn("name", "Sound Name", restrictions,false,100);
-		//dataGridHandler.addTextInputColumn("file", "File", restrictions,false,150);
 		dataGridHandler.addComboBoxColumn("file", "File", soundDP, false, 150);		
 		dataGridHandler.addTextInputColumn("volume", "Volume", volRestrictions,false,60);
 		dataGridHandler.addButtonColumn("Play", "Play", attributes, Delegate.create(this, previewItem),false,150);

@@ -55,6 +55,7 @@ class Objects.ServerConnection {
 		if (success) {
 			serverStatus = true;
 			appendOutput("Server: Connected at "+ipAddress);
+			getDebugLevels();
 		} else {
 			serverStatus = false;
 			appendOutput("Server: Connection Failed at "+ipAddress);
@@ -95,7 +96,7 @@ class Objects.ServerConnection {
 		return time.getDay()+"-"+time.getMonth()+"-"+time.getFullYear()+" "+time.getHours()+":"+time.getMinutes()+":"+time.getSeconds();
 	}	
 	public function appendDebugText(inNode:XMLNode):Void {
-		var logMessage:String;
+		var logMessage = "";
 		logMessage += "<time>Time: "+convertTime(parseInt(inNode.attributes["TIME"]))+"</time>";
 		logMessage += inNode.attributes["SRC"]+", "+inNode.attributes["LEVEL"]+", "+inNode.attributes["MSG"]+"\n";
 		appendOutput(logMessage);
@@ -104,6 +105,7 @@ class Objects.ServerConnection {
 		for (var index:Number = 0; index<levels.length; index++) {
 			changeDebugLevels("INFO", levels[index].packagename);
 		}
+		getDebugLevels();
 	}
 	private function changeDebugLevels(logLevel:String, package:String):Void {
 		sendToServer(new XML('<DEBUG PACKAGE="'+package+'" LEVEL="'+logLevel+'" />\n'));
@@ -116,8 +118,9 @@ class Objects.ServerConnection {
 	}
 	public function generateDebugPackages(inLevels:XMLNode):Void {
 		var inNode:XMLNode = inLevels.firstChild;
-		while (inNode != null) {
-			levels.addItem({shortname:inNode.attributes["SHORTNAME"], packagename:inNode.attributes["PACKAGENAME"], level:inNode.attributes["LEVEL"]});
+		levels = new Array();
+		while (inNode != undefined) {
+			levels.push({shortname:inNode.attributes["SHORTNAME"], packagename:inNode.attributes["PACKAGENAME"], level:inNode.attributes["LEVEL"]});
 			inNode = inNode.nextSibling;
 		}
 	}

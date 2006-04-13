@@ -8,6 +8,7 @@ class Forms.DataGrid.DynamicDataGrid {
 	private var lastClick:Object;
 	private var tempDP:Array;
 	private var columnCount;
+	private var doOnce:Boolean = true;
 	public function DynamicDataGrid() {
 		columns = new Object();
 		buttonColumns = new Object();
@@ -291,22 +292,26 @@ class Forms.DataGrid.DynamicDataGrid {
 	}
 	public function setDataGridDataProvider(new_dp:Array) {
 		/*Reverse properties of columns object*/
-		var newColumns = new Object();
-		for(var name in columns){
-			newColumns[name] = columns[name];
-		}
-		columns = newColumns;
-		for (var name in columns) {
-			if (columns[name].column != undefined) {
-				if (((_global.advanced) && (columns[name].advanced)) || (!columns[name].advanced)) {
-					my_dg.addColumn(columns[name].column);
-					my_dg.getColumnAt(my_dg.columnCount-1).width = columns[name].width;
+		clearSelection();
+		if(doOnce){
+			var newColumns = new Object();
+			for(var name in columns){
+				newColumns[name] = columns[name];
+			}
+			columns = newColumns;
+			for (var name in columns) {
+				if (columns[name].column != undefined) {
+					if (((_global.advanced) && (columns[name].advanced)) || (!columns[name].advanced)) {
+						my_dg.addColumn(columns[name].column);
+						my_dg.getColumnAt(columns[name].colNo).width = columns[name].width;
+					}
 				}
 			}
-		}
-		my_dg.dataProvider.updateViews("change");
+			doOnce = false;			
+		}		
 		tempDP = new_dp;
 		my_dg.doLater(this, "buildDG");
+		my_dg.dataProvider.updateViews("change");		
 	}
 	public function getDataGridDataProvider():Array {
 		clearSelection();

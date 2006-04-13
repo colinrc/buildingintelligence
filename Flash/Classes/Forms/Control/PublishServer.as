@@ -63,7 +63,7 @@ class Forms.Control.PublishServer extends Forms.BaseForm {
 	private function addAll() {
 		var leftLength = left_li.length;
 		for (var leftIndex = 0; leftIndex < leftLength; leftIndex++) {
-			right_li.addItem(right_li.removeItemAt(0));
+			right_li.addItem(left_li.removeItemAt(0));
 		}
 		right_li.sortItemsBy("label", "ASC");
 	}
