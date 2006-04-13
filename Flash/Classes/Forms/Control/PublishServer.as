@@ -2,7 +2,7 @@
 import mx.utils.Delegate;
 class Forms.Control.PublishServer extends Forms.BaseForm {
 	private var dataObject:Object;
-	private var SFTPConnection:Object;
+	private var sftpConnection:Object;
 	private var output_ta:TextArea;
 	private var appPath:String;
 	private var right_li:List;
@@ -14,10 +14,10 @@ class Forms.Control.PublishServer extends Forms.BaseForm {
 	public function PublishServer() {
 	}
 	public function onUnload():Void{
-		SFTPConnection.dettachView();
+		sftpConnection.dettachView();
 	}	
 	public function onLoad():Void {
-		SFTPConnection.attachView(this);		
+		sftpConnection.attachView(this);		
 		output_ta.editable = false;
 		addSelected_btn.addEventListener("click", Delegate.create(this, addSel));
 		addAll_btn.addEventListener("click", Delegate.create(this, addAll));
@@ -34,25 +34,25 @@ class Forms.Control.PublishServer extends Forms.BaseForm {
 		//refreshRemote();
 	}
 	public function localChange(eventObject:Object):Void {
-		//SFTPConnection.setLocalPath(localDirectory_cmb.text);
+		//sftpConnection.setLocalPath(localDirectory_cmb.text);
 	}
 	public function remoteChange(eventObject:Object):Void {
-		//SFTPConnection.setRemotePath(remoteDirectory_cmb.text);
+		//sftpConnection.setRemotePath(remoteDirectory_cmb.text);
 	}
 	public function getItem():Void {
-		//SFTPConnection.getItem(right_li.selectedItem.label);
+		//sftpConnection.getItem(right_li.selectedItem.label);
 	}
 	public function putItem():Void {
-		//SFTPConnection.getItem(left_li.selectedItem.label);		
+		//sftpConnection.getItem(left_li.selectedItem.label);		
 	}
 	public function refreshRemote():Void {
-		//right_li.dataProvider = SFTPConnection.getRemoteList();
+		//right_li.dataProvider = sftpConnection.getRemoteList();
 	}
 	public function refreshLocal():Void {
-		//left_li.dataProvider = SFTPConnection.getLocalList();
+		//left_li.dataProvider = sftpConnection.getLocalList();
 	}
 	public function refreshOutput():Void {
-		output_ta.text = SFTPConnection.getOutput();
+		output_ta.text = sftpConnection.getOutput();
 	}
 	private function addSel() {
 		if (left_li.selectedItem != undefined) {

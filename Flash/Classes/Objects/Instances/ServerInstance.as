@@ -1,54 +1,32 @@
-﻿class Objects.Instances.ServerInstance{
-	private var __ipAddress:String;
-	private var __serverPort:Number;
-	private var __monitorPort:Number;
+﻿class Objects.Instances.ServerInstance {
+	private var ipAddress:String;
+	private var userName:String;
+	private var password:String;
 	private var clients:Array;
 	private var serverConnection:Object;
-	private var serverName:String;
+	private var monitorConnection:Object;
 	private var treeNode:XMLNode;
 	private var sftpConnection:Object;
-	public function deleteSelf(){
+	public function deleteSelf() {
 		serverConnection.disconnectServer();
-		serverConnection.disconnectMonitor();		
+		serverConnection.disconnectMonitor();
 		sftpConnection.disconnect();
 		treeNode.removeNode();
-	}				
-	public function get ipAddress():String{
-		return __ipAddress;
 	}
-	public function set ipAddress(inIpAddress:String){
-		__ipAddress = inIpAddress;
-		serverConnection.ipAddress = __ipAddress;
-	}
-	public function get serverPort():Number{
-		return __serverPort;
-	}
-	public function set serverPort(inServerPort:Number){
-		__serverPort = inServerPort;
-		serverConnection.serverPort = __serverPort;
-	}
-	public function get monitorPort():Number{
-		return __monitorPort;
-	}
-	public function set monitorPort(inMonitorPort:Number){
-		__monitorPort = inMonitorPort;
-		serverConnection.monitorPort = __monitorPort;
-	}	
-	public function ServerInstance(){
-		__ipAddress = "172.16.3.101";
-		__serverPort = 10001;
-		__monitorPort = 10002;
+	public function ServerInstance() {
+		ipAddress = "127.0.0.1";
+		userName = "";
+		password = "";
 		clients = new Array();
-		serverName = "";
 		serverConnection = new Objects.ServerConnection();
+		monitorConnection = new Objects.MonitorConnection();
 		sftpConnection = new Objects.SFTPConnection(true);
 	}
 	public function toXML():XMLNode {
 		var serverNode = new XMLNode(1, "serverInstance");
-		serverNode.attributes.serverName = serverName;
-		serverNode.attributes.ipAddress = __ipAddress;
-		serverNode.attributes.serverPort = __serverPort;
-		serverNode.attributes.monitorPort = __monitorPort;
+		serverNode.attributes.ipAddress = ipAddress;
+		serverNode.attributes.userName = userName;
+		serverNode.attributes.password = password;
 		for (var client in clients) {
 			serverNode.appendChild(clients[client].toXML());
 		}
@@ -57,18 +35,15 @@
 	public function setXML(newData:XMLNode):Void {
 		clients = new Array();
 		if (newData.nodeName == "serverInstance") {
-			if(newData.attributes.serverName != undefined){
-				serverName = newData.attributes.serverName;
+			if (newData.attributes.ipAddress != undefined) {
+				ipAddress = newData.attributes.ipAddress;
 			}
-			if(newData.attributes.ipAddress != undefined){
-				__ipAddress = newData.attributes.ipAddress;
+			if (newData.attributes.userName != undefined) {
+				userName = newData.attributes.userName;
 			}
-			if(newData.attributes.serverPort != undefined){
-				__serverPort = newData.attributes.serverPort;
+			if (newData.attributes.password != undefined) {
+				password = newData.attributes.password;
 			}
-			if(newData.attributes.monitorPort != undefined){
-				__monitorPort = newData.attributes.monitorPort;
-			}			
 			for (var child in newData.childNodes) {
 				var newClient = new Objects.Instances.ClientInstance();
 				newClient.setXML(newData.childNodes[child]);
@@ -76,9 +51,9 @@
 				clients.push(newClient);
 			}
 		} else {
-			trace("ERROR, found node "+newData.nodeName+", expecting serverInstance");
+			trace("ERROR, found node " + newData.nodeName + ", expecting serverInstance");
 		}
-	}	
+	}
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Server");
 		newNode.object = this;
@@ -92,16 +67,18 @@
 		return "Server";
 	}
 	public function getClients():Object {
-		return {clients:clients,dataObject:this};
+		return {clients:clients, dataObject:this};
 	}
-	public function getConnection():Object {
-		return {serverConnection:serverConnection,dataObject:this};
+	public function getConnections():Object {
+		return {serverConnection:serverConnection, monitorConnection:monitorConnection, sftpConnection:sftpConnection, dataObject:this, ipAddress:ipAddress, userName:userName, password:password};
 	}
-	public function getSFTP():Object{
-		return {SFTPConnection:sftpConnection,dataObject:this};
+	public function setDetails(newData:Object):Void{
+		ipAddress = newData.ipAddress;
+		userName = newData.userName;
+		password = newData.password;
 	}
 	public function setData(newData:Object) {
-		_global.left_tree.setIsOpen(treeNode, false);		
+		_global.left_tree.setIsOpen(treeNode, false);
 		//Process client changes....
 		var newClients = new Array();
 		for (var index in newData.clients) {
@@ -115,9 +92,9 @@
 				if (clients[client].id == newData.clients[index].id) {
 					clients[client].client_type = newData.clients[index].client_type;
 					clients[client].description = newData.clients[index].description;
-					clients[client].ipAddress = newData.clients[index].ipAddress;						
+					clients[client].ipAddress = newData.clients[index].ipAddress;
 					found = true;
-				} else{
+				} else {
 					newClients.push({description:newData.clients[index].description, client_type:newData.clients[index].client_type});
 				}
 			}
@@ -127,7 +104,6 @@
 			}
 		}
 		for (var newClient in newClients) {
-			
 		}
 		_global.left_tree.setIsOpen(treeNode, true);
 	}

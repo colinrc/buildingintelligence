@@ -1,237 +1,149 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
+import TextField.StyleSheet;
 
 class Forms.Control.ServerControls extends Forms.BaseForm {
-	private var start_btn:mx.controls.Button;
-	private var stop_btn:mx.controls.Button;
-	private var restart_btn:mx.controls.Button;
-	private var clear_btn:mx.controls.Button;
-	private var client_restart_btn:mx.controls.Button;
-	private var ver_work_lb:mx.controls.Label;
-	private var results_ta:mx.controls.TextArea;
+	private var start_btn:Button;
+	private var stop_btn:Button;
+	private var restart_btn:Button;
+	private var monitorOutput_ta:TextArea;
+	private var serverOutput_ta:TextArea;	
+	private var sftpOutput_ta:TextArea;
+	private var monitorStatus_mc:MovieClip;
+	private var serverStatus_mc:MovieClip;
+	private var sftpStatus_mc:MovieClip;		
+	private var sftpStatus:Boolean;
+	private var monitorStatus:Boolean;
+	private var serverStatus:Boolean;
 	private var ipAddress_ti:TextInput;
-	private var serverPort_ti:TextInput;
-	private var monitorPort_ti:TextInput;	
-	private var connect_btn:Button;
-	private var disconnect_btn:Button;	
+	private var userName_ti:TextInput;
+	private var password_ti:TextInput;
+	private var serverConnect_btn:Button;
+	private var serverDisconnect_btn:Button;	
+	private var monitorConnect_btn:Button;
+	private var monitorDisconnect_btn:Button;	
+	private var sftpConnect_btn:Button;
+	private var sftpDisconnect_btn:Button;		
 	private var serverConnection:Object;
+	private var monitorConnection:Object;	
+	private var sftpConnection:Object;		
 	private var dataObject:Object;
+	private var ipAddress:String;
+	private var userName:String;
+	private var password:String;
 	public function ServerControls() {
-		/*
 		password_ti.password = true;
-		port_ti.restrict = "0-9";
-		port_ti.maxChars = 5;
-		address_ti.restrict = "0-9.";
-		address_ti.maxChars = 15;
-		connect_btn.addEventListener("click", Delegate.create(this, connect));
-		disconnect_btn.addEventListener("click", Delegate.create(this, disconnect));		
-		*/
+		ipAddress_ti.restrict = "0-9.";
+		ipAddress_ti.maxChars = 15;
+		sftpStatus = undefined;
+		monitorStatus = undefined;
+		serverStatus = undefined;
 	}
 	public function onLoad():Void {
+		password_ti.text = password;
+		ipAddress_ti.text = ipAddress;
+		userName_ti.text = userName;		
+		var listenerObject:Object = new Object();
+		listenerObject.change = function(eventObject:Object) {
+	    		dataObject.setDetails(new Object({ipAddress:ipAddress_ti.text,userName:userName_ti.text,password:password_ti.text}));
+		};
+		password_ti.addEventListener("change", Delegate.create(this,listenerObject.change));
+		ipAddress_ti.addEventListener("change", Delegate.create(this,listenerObject.change));
+		userName_ti.addEventListener("change", Delegate.create(this,listenerObject.change));
 		start_btn.addEventListener("click", Delegate.create(this, startServer));
 		stop_btn.addEventListener("click", Delegate.create(this, stopServer));
 		restart_btn.addEventListener("click", Delegate.create(this, restartServer));
-		clear_btn.addEventListener("click", Delegate.create(this, clearResults));
-		client_restart_btn.addEventListener("click", Delegate.create(this, restartClient));
+		monitorConnect_btn.addEventListener("click", Delegate.create(this, monitorConnect));
+		monitorDisconnect_btn.addEventListener("click", Delegate.create(this, monitorDisconnect));
+		serverConnect_btn.addEventListener("click", Delegate.create(this, serverConnect));
+		serverDisconnect_btn.addEventListener("click", Delegate.create(this, serverDisconnect));
+		sftpConnect_btn.addEventListener("click", Delegate.create(this, sftpConnect));
+		sftpDisconnect_btn.addEventListener("click", Delegate.create(this, sftpDisconnect));
+		sftpConnection.attachView(this);
+		monitorConnection.attachView(this);
+		serverConnection.attachView(this);
+		var my_styles = new StyleSheet();
+		my_styles.setStyle("time", {fontFamily:'Arial,Helvetica,sans-serif', fontSize:'10px', color:'#000000', textDecoration:'underline'});
+		my_styles.setStyle("error", {fontFamily:'Arial,Helvetica,sans-serif', fontSize:'12px', color:'#FF0000'});
+		serverOutput_ta.html = true;
+		serverOutput_ta.styleSheet = my_styles;
+		serverOutput_ta.text = "";		
 	}
-	private function startServer():Void {
-		serverConnection.sendToMonitor(new XML('<ADMIN COMMAND="START" />\n'));
+	public function onUnload():Void{
+		sftpConnection.detachView();
+		monitorConnection.detachView();
+		serverConnection.detachView();
 	}
-	private function stopServer():Void {
-		serverConnection.sendToMonitor(new XML('<ADMIN COMMAND="STOP" />\n'));
-	}
-	private function restartServer():Void {
-		serverConnection.sendToMonitor(new XML('<ADMIN COMMAND="RESTART" />\n'));		
-	}
-	private function restartClient():Void {
-		serverConnection.sendToMonitor(new XML('<ADMIN COMMAND="CLIENT_RESTART" />\n'));		
-	}
-	public function clearResults():Void {
-		results_ta.text = "";
-	}
-	public function appendControlResults(inNode:XMLNode):Void {
-		for (var child in inNode.childNodes) {
-			results_ta.text += inNode.childNodes[child];
-		}
-	}
-	public function processXML(inNode:XMLNode):Void {
-		while (inNode != null) {
-			/*if valid node, ignoreWhite isnt working properly*/
-			if (inNode.nodeName != null) {
-				switch (inNode.nodeName) {
-				case "EXEC" :
-					for (var child in inNode.childNodes) {
-						if((inNode.childNodes[child].nodeName == "EXEC_ERROR")||(inNode.childNodes[child].nodeName == "EXEC_OUTPUT")){
-							appendControlResults(inNode.childNodes[child]);
-						}
-					}
-					break;
-				case "ADMIN" :
-					appendControlResults(inNode);
-					break;
-				}
+	public function notifyChange():Void{
+		sftpOutput_ta.text = sftpConnection.getOutput();
+		monitorOutput_ta.text = monitorConnection.getOutput();
+		serverOutput_ta.text = serverConnection.getOutput();
+		
+		var tempSftpStatus = sftpConnection.getStatus();
+		if(tempSftpStatus != sftpStatus){
+			sftpStatus = tempSftpStatus;
+			sftpStatus_mc.removeMovieClip();
+			if(sftpStatus){
+				sftpStatus_mc = this.attachMovie("on","sftpStatus_mc",3);
+			} else{
+				sftpStatus_mc = this.attachMovie("off","sftpStatus_mc",3);
 			}
-			inNode = inNode.nextSibling;
+			sftpStatus_mc.setSize(32,32);
+			sftpStatus_mc._x = 573;
+			sftpStatus_mc._y = 116;
 		}
+		var tempMonitorStatus = monitorConnection.getStatus();
+		if(tempMonitorStatus != monitorStatus){
+			monitorStatus = tempMonitorStatus;
+			monitorStatus_mc.removeMovieClip();
+			if(monitorStatus){
+				monitorStatus_mc = this.attachMovie("on","monitorStatus_mc",2);
+			} else{
+				monitorStatus_mc = this.attachMovie("off","monitorStatus_mc",2);
+			}
+			monitorStatus_mc.setSize(32,32);
+			monitorStatus_mc._x = 227;
+			monitorStatus_mc._y = 85;
+		}
+		var tempServerStatus = serverConnection.getStatus();
+		if(tempServerStatus != serverStatus){
+			serverStatus = tempServerStatus;
+			serverStatus_mc.removeMovieClip();
+			if(serverStatus){
+				serverStatus_mc = this.attachMovie("on","serverStatus_mc",1);
+			} else{
+				serverStatus_mc = this.attachMovie("off","serverStatus_mc",1);
+			}
+			serverStatus_mc.setSize(32,32);
+			serverStatus_mc._x = 227;
+			serverStatus_mc._y = 55;
+		}
+	}	
+	private function startServer():Void{
+		monitorConnection.startServer();
+	}
+	private function stopServer():Void{
+		monitorConnection.stopServer();
+	}
+	private function restartServer():Void{
+		monitorConnection.restartServer();
+	}
+	private function monitorConnect():Void{
+		monitorConnection.connect(ipAddress_ti.text,10002);
+	}
+	private function monitorDisconnect():Void{
+		monitorConnection.disconnect();
+	}
+	private function serverConnect():Void{
+		serverConnection.connect(ipAddress_ti.text,10001);		
+	}
+	private function serverDisconnect():Void{
+		serverConnection.disconnect();
+	}
+	private function sftpConnect():Void{
+		sftpConnection.connect(userName_ti.text,22,ipAddress_ti.text,password_ti.text);
+	}
+	private function sftpDisconnect():Void{
+		sftpConnection.disconnect();		
 	}
 }
-/**
-
-		ipAddress_ti.restrict = "0-9.";
-		ipAddress_ti.maxChars = 15;
-		monitorPort_ti.restrict = "0-9";
-		monitorPort_ti.maxChars = 5;
-		serverPort_ti.restrict = "0-9";
-		serverPort_ti.maxChars = 5;		
-		if (_global.project.ipAddress.length) {
-			ipAddress_ti.text = _global.project.ipAddress;
-		}
-		else{
-			_global.project.ipAddress = ipAddress_ti.text;
-		}
-		if (_global.project.serverPort.length) {
-			serverPort_ti.text = _global.project.serverPort;
-		}
-		else{
-			_global.project.serverPort = serverPort_ti.text;
-		}
-		if (_global.project.monitorPort.length) {
-			monitorPort_ti.text = _global.project.monitorPort;
-		}
-		else{
-			_global.project.monitorPort = monitorPort_ti.text;
-		}
-		connect_btn.addEventListener("click", Delegate.create(this, connect));
-		disconnect_btn.addEventListener("click", Delegate.create(this, disconnect));
-		
-		
-		
-		
-		
-		
-		import mx.controls.*;
-import mx.utils.Delegate;
-class Forms.Control.IR extends Forms.Control.AdminView {
-	public var server_socket:XMLSocket;
-	public var monitor_socket:XMLSocket;
-	private var action_cb:mx.controls.ComboBox;
-	private var action_lb:mx.controls.Label;
-	private var cancel_btn:mx.controls.Button;
-	private var device_cb:mx.controls.ComboBox;
-	private var device_lb:mx.controls.Label;
-	private var learn_btn:mx.controls.Button;
-	private var avname_ti:mx.controls.TextInput;
-	private var reload_btn:mx.controls.Button;
-	private var repeat_ti:mx.controls.TextInput;
-	private var repeat_lb:mx.controls.Label;
-	private var status_lb:mx.controls.Label;
-	private var test_btn:mx.controls.Button;
-	private var value_lb:mx.controls.Label;
-	private var value_100_rb:mx.controls.RadioButton;
-	private var value_20_rb:mx.controls.RadioButton;
-	private var value_35_rb:mx.controls.RadioButton;
-	private var value_50_rb:mx.controls.RadioButton;
-	public function IR() {
-	}
-	public function init():Void {
-		value_100_rb.addEventListener("click", Delegate.create(this, changeValue));
-		value_20_rb.addEventListener("click", Delegate.create(this, changeValue));
-		value_35_rb.addEventListener("click", Delegate.create(this, changeValue));
-		value_50_rb.addEventListener("click", Delegate.create(this, changeValue));
-		device_cb.addEventListener("change", Delegate.create(this, deviceChange));
-		action_cb.addEventListener("change", Delegate.create(this, actionChange));
-		learn_btn.addEventListener("click", Delegate.create(this, learn));
-		cancel_btn.addEventListener("click", Delegate.create(this, cancel));
-		test_btn.addEventListener("click", Delegate.create(this, test));
-		reload_btn.addEventListener("click", Delegate.create(this, reload));
-	}
-	private function changeValue(eventObj):Void {
-		var xmlMsg = new XML('<IR_CONFIG EXTRA="'+eventObj.target.selection.data+'" />\n');
-		server_socket.send(xmlMsg);
-	}
-	public function setSockets(inServer_socket:XMLSocket, inMonitor_socket:XMLSocket):Void {
-		server_socket = inServer_socket;
-		monitor_socket = inMonitor_socket;
-	}
-	public function deviceChange(eventObj):Void {
-		var xmlMsg = new XML('<LIST_IR_ACTIONS DEVICE="'+device_cb.selectedItem.label+'" />\n');
-		server_socket.send(xmlMsg);
-		learn_btn.enabled = false;
-	}
-	public function actionChange(eventObj):Void {
-		learn_btn.enabled = true;
-	}
-	private function learn():Void {
-		var irName:String = device_cb.selectedItem.label+"."+action_cb.selectedItem.label;
-		var xmlMsg = new XML('<IR_LEARN NAME="'+irName+'" />\n');
-		server_socket.send(xmlMsg);
-		status_lb.text = "Learning "+irName;
-		learn_btn.enabled = false;
-	}
-	private function cancel():Void {
-		//if((ir_device_cb.selectedIndex>-1)&&(ir_action_cb.selectedItem.selectedIndex>-1)) {
-		//ir_learn_btn.enabled = true;
-		//}
-		//ir_status_lb.text ="Canceled learning ";
-	}
-	private function test():Void {
-		var xmlMsg = new XML('<TEST_IR DEVICE="'+device_cb.selectedItem.label+'" ACTION="'+action_cb.selectedItem.label+'" TARGET="'+avname_ti.text+'" REPEAT="'+repeat_ti.text+'" />\n');
-		server_socket.send(xmlMsg);
-	}
-	private function reload():Void {
-		action_cb.removeAll();
-		var xmlMsg = new XML('<RELOAD_IRDB />\n');
-		server_socket.send(xmlMsg);
-		learn_btn.enabled = false;
-	}
-	public function irLearnt(inNode:XMLNode):Void {
-		status_lb.text = inNode.attributes["RESULT"];
-		learn_btn.enabled = true;
-	}
-	public function irResult(inNode:XMLNode):Void {
-		status_lb.text = inNode.attributes["RESULT"];
-		learn_btn.enabled = true;
-	}
-	public function deviceList(inNode:XMLNode):Void {
-		action_cb.removeAll();
-		device_cb.removeAll();
-		if (inNode.hasChildNodes) {
-			for (var child in inNode.childNodes) {
-				device_cb.addItem(inNode.childNodes[child].attributes["NAME"]);
-			}
-		}
-		status_lb.text = "IR Devices loaded";
-	}
-	public function actionList(inNode:XMLNode):Void {
-		action_cb.removeAll();
-		if (inNode.hasChildNodes) {
-			for (var child in inNode.childNodes) {
-				action_cb.addItem(inNode.childNodes[child].attributes["NAME"]);
-			}
-		}
-		status_lb.text = device_cb.selectedItem.label+" actions loaded";
-	}
-	public function processXML(inNode:XMLNode) {
-		while (inNode != null) {
-			if (inNode.nodeName != null) {
-				switch (inNode.nodeName) {
-				case "IR_DEVICE_LIST" :
-					deviceList(inNode);
-					break;
-				case "IR_ACTION_LIST" :
-					actionList(inNode);
-					break;
-				case "IR_CONFIG" :
-					irResult(inNode);
-					break;
-				case "IR_LEARNT" :
-					irLearnt(inNode);
-					break;
-				}
-			}
-			inNode = inNode.nextSibling;
-		}
-	}
-}
-
-*/

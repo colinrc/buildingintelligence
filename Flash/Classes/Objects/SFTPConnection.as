@@ -6,7 +6,7 @@
 	private var appPath:String;
 	private var lastCode:String = "0";
 	private var intervalId:Number;
-	private var duration:Number = 100;
+	private var duration:Number = 1000;
 	private var isServer:Boolean = false;
 	private var view:Object;
 	public function checkStatus():Void {
@@ -26,6 +26,13 @@
 	private function getOutput():String {
 		return output;
 	}
+	private function getStatus():Boolean{
+		if(lastCode == "0"){
+			return false;
+		} else{
+			return true;
+		}
+	}
 	private function attachView(inView:Object) {
 		view = inView;
 		if (view != undefined) {
@@ -33,7 +40,7 @@
 			view.needRefresh();			
 		}		
 	}
-	private function dettachView() {
+	private function detachView() {
 		view = undefined;
 	}
 	public function SFTPConnection(server:Boolean) {
@@ -42,6 +49,7 @@
 		remotePath = "/";
 		output = "";
 		view = undefined;
+		lastCode = "0";
 		isServer = server;
 		myActiveX = new mdm.ActiveX(0, 0, 0, 0, "WeOnlyDo.wodSFTP.1");
 		myActiveX.setProperty("LocalPath", "string", localPath);
@@ -69,22 +77,18 @@
 		} else {
 			var dirList = myActiveX.getProperty("ListItem").split(chr(13) + chr(10));
 			for (var index = 0; index < dirList.length - 1; index++) {
-				var newItem = new Object();
-				if (dirList[index].charAt(dirList[index].length - 1) == "/") {
-					newItem.label = dirList[index].substr(0, dirList[index].length - 1);
-					newItem.folder = true;
-				} else {
+				if (dirList[index].charAt(dirList[index].length - 1) != "/") {
+					var newItem = new Object();					
 					newItem.label = dirList[index];
 					newItem.folder = false;
+					remoteList.push(newItem);					
 				}
-				remoteList.push(newItem);
 			}
 		}
-		return remoteList.sortOn("folder", Array.DESCENDING);
+		return remoteList;
 	}
 	public function getLocalList():Array {
 		var myFiles = mdm.FileSystem.getFileList(localPath, "*.*");
-		var myFolders = mdm.FileSystem.getFolderList(localPath);
 		var localList = new Array();
 		for (var index = 0; index < myFiles.length; index++) {
 			var newItem = new Object();
@@ -92,13 +96,7 @@
 			newItem.folder = false;
 			localList.push(newItem);
 		}
-		for (var index = 0; index < myFolders.length; index++) {
-			var newItem = new Object();
-			newItem.label = myFolders[index];
-			newItem.folder = true;
-			localList.push(newItem);
-		}
-		return localList.sortOn("folder", Array.DESCENDING);
+		return localList;
 	}
 	public function connect(user:String, port:Number, hostname:String, password:String):Void {
 		myActiveX.setProperty("Hostname", "string", hostname);
@@ -121,6 +119,12 @@
 	}
 	public function disconnect():Void {
 		myActiveX.runMethod("Disconnect", 0);
+		if(lastCode == "0"){
+			appendOutput("Error: No Connection Present!");
+			return;
+		} else{
+			appendOutput("Disconnected Successfully");
+		}
 		var lastError = myActiveX.getProperty("LastError");
 		if (lastError != "0") {
 			appendOutput(processError(lastError));
@@ -176,7 +180,7 @@
 		}
 	}
 	public function appendOutput(inString:String):Void {
-		output += inString + "\n";
+		output = inString + "\n"+output;
 		if (view != undefined) {
 			view.notifyChange();
 		}

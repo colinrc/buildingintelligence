@@ -2,11 +2,11 @@
 	private var __ipAddress:String;
 	private var __monitorPort:Number;
 	private var clientType:String;
-	private var clientConnection:Object;
+	private var monitorConnection:Object;
 	private var clientName:String;
 	private var treeNode:XMLNode;
 	public function deleteSelf(){
-		clientConnection.disconnectMonitor();		
+		monitorConnection.disconnect();
 		treeNode.removeNode();
 	}				
 	public function get ipAddress():String{
@@ -14,20 +14,20 @@
 	}
 	public function set ipAddress(inIpAddress:String){
 		__ipAddress = inIpAddress;
-		clientConnection.ipAddress = __ipAddress;
+		monitorConnection.ipAddress = __ipAddress;
 	}
 	public function get monitorPort():Number{
 		return __monitorPort;
 	}
 	public function set monitorPort(inMonitorPort:Number){
 		__monitorPort = inMonitorPort;
-		clientConnection.monitorPort = __monitorPort;
+		monitorConnection.monitorPort = __monitorPort;
 	}	
 	public function ClientInstance(){
 		__ipAddress = "172.16.3.101";
 		__monitorPort = 10002;
 		clientName = "";
-		clientConnection = new Objects.ClientConnection();
+		monitorConnection = new Objects.MonitorConnection();
 	}
 	public function toXML():XMLNode {
 		var clientNode = new XMLNode(1, "client");
@@ -61,7 +61,7 @@
 		return clientName;
 	}
 	public function getConnection():Object {
-		return {clientConnection:clientConnection,dataObject:this};
+		return {monitorConnection:monitorConnection,dataObject:this};
 	}
 	public function setData(newData:Object) {
 		/*process client changes*/

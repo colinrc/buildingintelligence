@@ -533,22 +533,22 @@ tabs_tb.change = function(eventObj) {
 			form_mc = formContent_mc.attachMovie("forms.project.client.overrides", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {attributes:tempObject.getAttributes(), attributeGroups:tempObject.attributeGroups, dataObject:tempObject});
 			break;
 		case "Control" :
-			form_mc = formContent_mc.attachMovie("forms.control.servercontrols", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnection());
+			form_mc = formContent_mc.attachMovie("forms.control.servercontrols", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
 			break;
 		case "Clients" :
 			form_mc = formContent_mc.attachMovie("forms.control.clients", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getClients());
 			break;
 		case "Log" :
-			form_mc = formContent_mc.attachMovie("forms.control.serverLog", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnection());
+			form_mc = formContent_mc.attachMovie("forms.control.serverLog", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
 			break;
 		case "IR" :
-			form_mc = formContent_mc.attachMovie("forms.control.ir", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnection());
+			form_mc = formContent_mc.attachMovie("forms.control.ir", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
 			break;
 		case "SFTP" :
-			form_mc = formContent_mc.attachMovie("forms.control.sftp", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getSFTP());
+			form_mc = formContent_mc.attachMovie("forms.control.sftp", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
 			break;
 		case "Publish" :
-			form_mc = formContent_mc.attachMovie("forms.control.publishserver", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getSFTP());
+			form_mc = formContent_mc.attachMovie("forms.control.publishserver", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
 			break;			
 		case "Panels" :
 			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject,panels:tempObject.getPanels()});
@@ -615,7 +615,7 @@ leftTreeListener.change = function(eventObj) {
 			tabs_tb.selectedIndex = 0;
 			break;
 		case "Server" :
-			form_mc = formContent_mc.attachMovie("forms.control.servercontrols", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getConnection());
+			form_mc = formContent_mc.attachMovie("forms.control.servercontrols", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getConnections());
 			tabs_tb.dataProvider = [{label:"Control", view:"control.servercontrols"}, {label:"Clients", view:"control.clients"}, {label:"Log", view:"control.serverLog"}, {label:"IR", view:"control.ir"}, {label:"Publish", view:"control.publishserver"}, {label:"SFTP", view:"control.sftp"}];
 			tabs_tb.selectedIndex = 0;
 			//Need to rewrite how a view is attached to a server object

@@ -1,167 +1,104 @@
 ﻿import mx.utils.Delegate;
 class Objects.ServerConnection {
-	private var monitor_socket:XMLSocket;
 	private var server_socket:XMLSocket;
-	private var viewAttached:Boolean;
-	private var serverStatus:String;
-	private var monitorStatus:String;
+	private var serverStatus:Boolean;
 	private var view:Object;
 	private var levels:Array;
-	private var __serverName:String;
-	public function get serverName():String {
-		return __serverName;
-	}
-	public function set serverName(newName:String) {
-		__serverName = newName;
-	}
-	private var __ipAddress:String;
-	[Inspectable(defaultValue="172.16.3.101")]
-	 public function get ipAddress():String {
-		return __ipAddress;
-	}
-	public function set ipAddress(newAddress:String) {
-		__ipAddress = newAddress;
-	}
-	private var __serverPort:Number;
-	[Inspectable(defaultValue=10001)]
-	 public function get serverPort():Number {
-		return __serverPort;
-	}
-	public function set serverPort(newPort:Number) {
-		__serverPort = newPort;
-	}
-	private var __monitorPort:Number;
-	[Inspectable(defaultValue=10002)]
-	 public function get monitorPort():Number {
-		return __monitorPort;
-	}
-	public function set monitorPort(newPort:Number) {
-		__monitorPort = newPort;
-	}
+	private var ipAddress:String;
+	private var output:String;
 	public function ServerConnection() {
-		monitor_socket = new XMLSocket();
 		server_socket = new XMLSocket();
-		viewAttached = false;
-		setupSockets();
+		view = undefined;		
+		output = "";
+		serverStatus = false;
+		levels = new Array();
+		server_socket.onClose = Delegate.create(this, serverOnClose);
+		server_socket.onXML = Delegate.create(this, serverOnXML);
+		server_socket.onConnect = Delegate.create(this, serverOnConnect);
 	}
 	public function getLevels():Array{
 		return levels;
 	}
-	public function disconnectServer() {
-		setDefault();
-		server_socket.close();
+	public function disconnect() {
+		if(serverStatus){
+			setDefault();
+			server_socket.close();
+			serverStatus = false;		
+			appendOutput("Disconnected Successfully");
+		} else{
+			appendOutput("Error: No Connection Present");			
+		}
 	}
-	public function disconnectMonitor() {
-		monitor_socket.close();
-	}	
-	private function connectToServer() {
-		server_socket.connect(ipAddress, serverPort);
-	}
-	private function connectToMonitor() {
-		monitor_socket.connect(ipAddress, monitorPort);
-	}
-	public function getName():String {
-		return serverName;
+	private function connect(inIpAddress:String, port) {
+		ipAddress = inIpAddress;
+		server_socket.connect(ipAddress, port);
 	}
 	public function sendToServer(inXML:XML) {
 		server_socket.send(inXML);
 	}
-	public function sendToMonitor(inXML:XML) {
-		monitor_socket.send(inXML);
-	}
 	public function attachView(inView:Object) {
 		view = inView;
-		viewAttached = true;
+		if (view != undefined) {
+			view.notifyChange();
+		}	
 	}
-	public function dettachView():Void {
-		view = null;
-		viewAttached = false;
+	public function detachView():Void {
+		view = undefined;
 	}
-	public function getServerStatus():String {
+	public function getStatus():Boolean {
 		return serverStatus;
 	}
-	public function getMonitorStatus():String {
-		return monitorStatus;
-	}
-	private function setupSockets():Void {
-		server_socket.onClose = Delegate.create(this, serverOnClose);
-		server_socket.onXML = Delegate.create(this, serverOnXML);
-		server_socket.onConnect = Delegate.create(this, serverOnConnect);
-		monitor_socket.onClose = Delegate.create(this, monitorOnClose);
-		monitor_socket.onXML = Delegate.create(this, monitorOnXML);
-		monitor_socket.onConnect = Delegate.create(this, monitorOnConnect);
-	}
-	private function serverOnXML(inXML:XML) {
-		/*******************************************************/
-		/*view.processXML(inXML.firstChild);
-				while (inNode != null) {
-			//if valid node, ignoreWhite isnt working properly
-			if (inNode.nodeName != null) {
-				switch (inNode.nodeName) {
-				case "ERROR" :
-					appendDebugText(inNode);
-					break;
-				case "LOG" :
-					appendDebugText(inNode);
-					break;
-				case "DEBUG_PACKAGES" :
-					generateDebugLevels(inNode);
-					break;					
-				}
-			}
-			inNode = inNode.nextSibling;
-		}*/
-	}
-	private function monitorOnXML(inXML:XML) {
-		/*******************************************************/		
-		/*view.processXML(inXML.firstChild);
-				while (inNode != null) {
-			//if valid node, ignoreWhite isnt working properly
-			if (inNode.nodeName != null) {
-				switch (inNode.nodeName) {
-				case "ERROR" :
-					appendDebugText(inNode);
-					break;
-				case "LOG" :
-					appendDebugText(inNode);
-					break;
-				case "DEBUG_PACKAGES" :
-					generateDebugLevels(inNode);
-					break;					
-				}
-			}
-			inNode = inNode.nextSibling;
-		}*/
+	private function getOutput():String{
+		return output;
 	}
 	private function serverOnConnect(success:Boolean) {
 		if (success) {
-			serverStatus = "Server: Connected";
-			mdm.Dialogs.prompt(serverStatus+" at "+ipAddress+", port "+serverPort+".");
-			levels = new Array();
-			getDebugLevels();
+			serverStatus = true;
+			appendOutput("Server: Connected at "+ipAddress);
 		} else {
-			serverStatus = "Server: Connection Failed";
-			mdm.Dialogs.prompt(serverStatus+" at "+ipAddress+", port "+serverPort+".");		
-			levels = new Array();			
+			serverStatus = false;
+			appendOutput("Server: Connection Failed at "+ipAddress);
 		}
 	}
 	private function serverOnClose() {
-		serverStatus = "Server: Disconnected";
-		mdm.Dialogs.prompt(serverStatus+" at "+ipAddress+", port "+serverPort+".");		
-		levels = new Array();		
+		serverStatus = false;
+		appendOutput("Server: Disconnected at "+ipAddress);
 	}
-	private function monitorOnConnect(success:Boolean) {
-		if (success) {
-			monitorStatus = "Monitor: Connected";
-			mdm.Dialogs.prompt(monitorStatus+" at "+ipAddress+", port "+monitorPort+".");
-		} else {
-			monitorStatus = "Monitor: Connection Failed";
-			mdm.Dialogs.prompt(monitorStatus+" at "+ipAddress+", port "+monitorPort+".");
+	public function appendOutput(inString:String):Void {
+		output = inString + "\n"+output;
+		if (view != undefined) {
+			view.notifyChange();
 		}
 	}
-	private function monitorOnClose() {
-		monitorStatus = "Monitor: Disconnected";
-			mdm.Dialogs.prompt(monitorStatus+" at "+ipAddress+", port "+monitorPort+".");
+	private function serverOnXML(inXML:XML) {
+		var inNode = inXML.firstChild;
+		while (inNode != null) {
+			//if valid node, ignoreWhite isnt working properly
+			if (inNode.nodeName != null) {
+				switch (inNode.nodeName) {
+				case "ERROR" :
+					appendDebugText(inNode);
+					break;
+				case "LOG" :
+					appendDebugText(inNode);
+					break;
+				case "DEBUG_PACKAGES" :
+					generateDebugPackages(inNode);
+					break;					
+				}
+			}
+			inNode = inNode.nextSibling;
+		}
+	}
+	private function convertTime(inTime):String {
+		var time:Date = new Date(inTime);
+		return time.getDay()+"-"+time.getMonth()+"-"+time.getFullYear()+" "+time.getHours()+":"+time.getMinutes()+":"+time.getSeconds();
+	}	
+	public function appendDebugText(inNode:XMLNode):Void {
+		var logMessage:String;
+		logMessage += "<time>Time: "+convertTime(parseInt(inNode.attributes["TIME"]))+"</time>";
+		logMessage += inNode.attributes["SRC"]+", "+inNode.attributes["LEVEL"]+", "+inNode.attributes["MSG"]+"\n";
+		appendOutput(logMessage);
 	}
 	public function setDefault() {
 		for (var index:Number = 0; index<levels.length; index++) {

@@ -9,18 +9,17 @@ class Forms.Control.SFTP extends Forms.BaseForm {
 	private var output_ta:TextArea;
 	private var localDirectory_cmb:ComboBox;
 	private var remoteDirectory_cmb:ComboBox;
-	private var SFTPConnection:Object;
+	private var sftpConnection:Object;
 
 	public function SFTP() {
 	}
 	public function onUnload():Void{
-		SFTPConnection.dettachView();
+		sftpConnection.detachView();
 	}
 	public function onLoad():Void {
-		mdm.Dialogs.prompt(SFTPConnection.toString());
 		output_ta.editable = false;
-		SFTPConnection.attachView(this);
-		if (SFTPConnection.isServer()) {
+		sftpConnection.attachView(this);
+		if (sftpConnection.isServer()) {
 			localDirectory_cmb.dataProvider = ["/", "/script", "/config", "/log", "/datafiles"];
 			remoteDirectory_cmb.dataProvider = ["/", "/script", "/config", "/log", "/datafiles"];
 		} else {
@@ -28,19 +27,11 @@ class Forms.Control.SFTP extends Forms.BaseForm {
 			remoteDirectory_cmb.dataProvider = ["/", "/lib/maps", "/lib/backgrounds", "/lib/icons", "/lib/sounds"];
 		}
 		right_li.iconFunction = function(item:Object):String  {
-			if (item.folder) {
-				return "Icon:folder";
-			} else {
-				return "Icon:file";
-			}
+			return "Icon:file";
 		};
 		right_li.iconField = "icon";
 		left_li.iconFunction = function(item:Object):String  {
-			if (item.folder) {
-				return "Icon:folder";
-			} else {
-				return "Icon:file";
-			}
+			return "Icon:file";
 		};
 		left_li.iconField = "icon";
 		getSelected_btn.addEventListener("click", Delegate.create(this, getItem));
@@ -60,24 +51,26 @@ class Forms.Control.SFTP extends Forms.BaseForm {
 		refreshRemote();
 	}
 	public function localChange(eventObject:Object):Void {
-		SFTPConnection.setLocalPath(localDirectory_cmb.text);
+		sftpConnection.setLocalPath(localDirectory_cmb.text);
+		refreshLocal();
 	}
 	public function remoteChange(eventObject:Object):Void {
-		SFTPConnection.setRemotePath(remoteDirectory_cmb.text);
+		sftpConnection.setRemotePath(remoteDirectory_cmb.text);
+		refreshRemote();
 	}
 	public function getItem():Void {
-		SFTPConnection.getItem(right_li.selectedItem.label);
+		sftpConnection.getItem(right_li.selectedItem.label);
 	}
 	public function putItem():Void {
-		SFTPConnection.getItem(left_li.selectedItem.label);		
+		sftpConnection.getItem(left_li.selectedItem.label);		
 	}
 	public function refreshRemote():Void {
-		right_li.dataProvider = SFTPConnection.getRemoteList();
+		right_li.dataProvider = sftpConnection.getRemoteList();
 	}
 	public function refreshLocal():Void {
-		left_li.dataProvider = SFTPConnection.getLocalList();
+		left_li.dataProvider = sftpConnection.getLocalList();
 	}
 	public function refreshOutput():Void {
-		output_ta.text = SFTPConnection.getOutput();
+		output_ta.text = sftpConnection.getOutput();
 	}
 }
