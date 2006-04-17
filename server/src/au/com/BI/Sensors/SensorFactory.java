@@ -28,13 +28,14 @@ public class SensorFactory {
 	}
 	// physical sensors, such as temperature
 	public void addSensor(DeviceModel targetDevice, List clientModels,
-			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
+		Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
 		String key = element.getAttributeValue("KEY");
 		String name = element.getAttributeValue("NAME");
 		String channel = "";
 		String units = "";
+		String group = element.getAttributeValue("GROUP");;
 		String outKey = element.getAttributeValue("DISPLAY_NAME");
-		SensorFascade theSensor = new SensorFascade(name, channel, units, connectionType, outKey,name);
+		SensorFascade theSensor = new SensorFascade(name, channel, units, group, connectionType, outKey,name);
 		theSensor.setKey(key);
 		theSensor.setGroupName(groupName);
 
@@ -44,9 +45,10 @@ public class SensorFactory {
 			theSensor.setMax("255");
 			channel = element.getAttributeValue("CHANNEL");
 			units = element.getAttributeValue("UNITS");
+			group = element.getAttributeValue("GROUP");
 		}
-		targetDevice.addControlledItem(key, theSensor, type);
-		targetDevice.addStartupQueryItem(key, theSensor, type);
+		targetDevice.addControlledItem(key, theSensor, connectionType);
+		targetDevice.addStartupQueryItem(key, theSensor, connectionType);
 
 		if (outKey != null && !outKey.equals("")) {
 			targetDevice.addControlledItem(outKey, theSensor, DeviceType.OUTPUT);

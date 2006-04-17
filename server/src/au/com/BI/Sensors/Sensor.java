@@ -15,6 +15,7 @@ public class Sensor extends BaseDevice
 {
 	
 	private String channel = "";
+	private String group = "";
 	protected int max;
 	protected String applicationCode = "38";
 	protected String units = "";
@@ -27,6 +28,16 @@ public class Sensor extends BaseDevice
 		this.outputKey = "";
 		this.channel = channel;
 		this.units = units;
+	}
+	
+	public Sensor (String name, String channel, String units, int deviceType, String group) {
+		this.name = name;
+		this.deviceType = deviceType;
+		this.command = "";
+		this.outputKey = "";
+		this.channel = channel;
+		this.units = units;
+		this.group = group;
 	}
 	
 
@@ -99,5 +110,15 @@ public class Sensor extends BaseDevice
 	public void setRelay(String relay) {
 		this.relay = relay;
 	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+	
+	
 	
 }

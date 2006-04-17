@@ -41,6 +41,29 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 		}
 	}
 	
+	public SensorFascade (String name, String channel, String units, String group, int deviceType, String deviceName){
+		if (deviceName == null)
+			this.deviceName = "";
+		else
+			this.deviceName = deviceName;
+		
+		sensor = new Sensor(name,channel, units, deviceType, group);
+		
+		if (deviceType == DeviceType.SENSOR ) {
+			sensor.setMax (255);
+		}
+	}
+
+	public SensorFascade (String name, String channel, String units, String group, int deviceType, String outputKey, String deviceName){
+
+		this (name, channel, units, group, deviceType,deviceName);
+		sensor.setOutputKey(outputKey);
+		if (deviceType == DeviceType.SENSOR ) {
+			sensor.setMax (255);
+		}
+	}
+	
+	
 
 	public String getRelay() {
 		return sensor.getRelay();
@@ -237,5 +260,13 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	
 	public boolean isContinueAfterMatch () {
 	    return false;
+	}
+	
+	public void setGroup(String group) {
+		sensor.setGroup(group);
+	}
+	
+	public String getGroup() {
+		return sensor.getGroup();
 	}
 }
