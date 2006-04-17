@@ -577,7 +577,7 @@ public class M1CommandFactory {
 		
 		RequestTemperatureReply _command = new RequestTemperatureReply();
 		_command.setCommand(command);
-		_command.setKey(command.substring(2,4));
+		_command.setKey(command.substring(5,7));
 		_command.setCheckSum(command.substring(0,command.length()-2));
 		_command.setGroup(Group.getByValue(command.substring(4,5)));
 		_command.setDevice(command.substring(5,7));
