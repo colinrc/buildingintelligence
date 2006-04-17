@@ -1,5 +1,8 @@
 package au.com.BI.M1.Commands;
 
+import au.com.BI.M1.M1Helper;
+import au.com.BI.Util.Utility;
+
 public class RequestTemperature extends M1Command {
 
 	private Group group;
@@ -31,4 +34,9 @@ public class RequestTemperature extends M1Command {
 		this.device = device;
 	}
 	
+	public String buildM1String() {
+		String returnString = "";
+		returnString = new M1Helper().buildCompleteM1String("st"+Utility.padString(this.group.getValue(),1)+Utility.padString(this.device,2)+"00");
+		return returnString;
+	}
 }
