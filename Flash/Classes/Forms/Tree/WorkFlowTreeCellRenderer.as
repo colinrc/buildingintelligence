@@ -38,7 +38,7 @@
 						}
 				}
 			}
-			icon = attachMovie("Icon:" + iconName, "icon", 100, {_x:listOwner.width - indent + 5, _y:2});
+			icon = attachMovie("Icon:" + iconName, "icon", 100, {_x:listOwner.width - (indent+5), _y:2});
 		}
 		else{
 			icon.removeMovieClip();

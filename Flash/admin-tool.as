@@ -237,7 +237,7 @@ _global.saveFile = function(saveType:String):Void  {
 		var file = mdm.Dialogs.BrowseFile.show();
 		if (file != undefined) {
 			if (saveType == "Server") {
-				//mdm.FileSystem.saveFile(file, _global.writeXMLFile(_global.server_test.toXML(), 0));
+				//mdm.FileSystem.saveFile(file, _global.writeXMLFile(_global.serverDesign.toXML(), 0));
 			} else {
 				//mdm.FileSystem.saveFile(file, _global.writeXMLFile(_global.client_test.toXML(), 0));
 			}
@@ -331,7 +331,11 @@ function appExit():Void {
 			saveFile("Project");
 		}
 	}
-	mdm.Application.exit("ask", "Are you sure you want to Exit?");
+	var Result = mdm.Dialogs.promptModal("Are you sure you want to Exit?", "yesno", "alert");
+	if (Result) {
+		_global.serverInstance.serverConnection.disconnect();
+		mdm.Application.exit();
+	}	
 }
 /********************************************************/
 _global.comboSetSelected = function(combo, val, field) {

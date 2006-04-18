@@ -1,69 +1,76 @@
-﻿class Objects.Instances.ClientInstance{
-	private var __ipAddress:String;
-	private var __monitorPort:Number;
-	private var clientType:String;
+﻿class Objects.Instances.ClientInstance {
+	private var ipAddress:String;
+	private var userName:String;
+	private var password:String;
+	private var clients:Array;
+	private var clientConnection:Object;
 	private var monitorConnection:Object;
-	private var clientName:String;
 	private var treeNode:XMLNode;
-	public function deleteSelf(){
-		monitorConnection.disconnect();
+	private var sftpConnection:Object;
+	private var name:String;
+	public function deleteSelf() {
+		monitorConnection.disconnectMonitor();
+		sftpConnection.disconnect();
 		treeNode.removeNode();
-	}				
-	public function get ipAddress():String{
-		return __ipAddress;
 	}
-	public function set ipAddress(inIpAddress:String){
-		__ipAddress = inIpAddress;
-		monitorConnection.ipAddress = __ipAddress;
-	}
-	public function get monitorPort():Number{
-		return __monitorPort;
-	}
-	public function set monitorPort(inMonitorPort:Number){
-		__monitorPort = inMonitorPort;
-		monitorConnection.monitorPort = __monitorPort;
-	}	
-	public function ClientInstance(){
-		__ipAddress = "172.16.3.101";
-		__monitorPort = 10002;
-		clientName = "";
+	public function ClientInstance() {
+		ipAddress = "127.0.0.1";
+		userName = "";
+		password = "";
+		clients = new Array();
 		monitorConnection = new Objects.MonitorConnection();
+		sftpConnection = new Objects.SFTPConnection(true);
 	}
 	public function toXML():XMLNode {
-		var clientNode = new XMLNode(1, "client");
-		clientNode.attributes.clientName = clientName;
-		clientNode.attributes.ipAddress = __ipAddress;
-		clientNode.attributes.monitorPort = __monitorPort;
+		var clientNode = new XMLNode(1, "clientInstance");
+		clientNode.attributes.ipAddress = ipAddress;
+		clientNode.attributes.userName = userName;
+		clientNode.attributes.password = password;
+		for (var client in clients) {
+			clientNode.appendChild(clients[client].toXML());
+		}
 		return clientNode;
 	}
 	public function setXML(newData:XMLNode):Void {
-		if (newData.nodeName == "client") {
-			if(newData.attributes.clientName != undefined){
-				clientName = newData.attributes.clientName;
+		clients = new Array();
+		if (newData.nodeName == "clientInstance") {
+			if (newData.attributes.ipAddress != undefined) {
+				ipAddress = newData.attributes.ipAddress;
 			}
-			if(newData.attributes.ipAddress != undefined){
-				__ipAddress = newData.attributes.ipAddress;
+			if (newData.attributes.userName != undefined) {
+				userName = newData.attributes.userName;
 			}
-			if(newData.attributes.monitorPort != undefined){
-				__monitorPort = newData.attributes.monitorPort;
-			}			
+			if (newData.attributes.password != undefined) {
+				password = newData.attributes.password;
+			}
+			for (var child in newData.childNodes) {
+				var newClient = new Objects.Instances.ClientInstance();
+				newClient.setXML(newData.childNodes[child]);
+				newClient.id = _global.formDepth++;
+				clients.push(newClient);
+			}
 		} else {
-			trace("ERROR, found node "+newData.nodeName+", expecting client");
+			trace("ERROR, found node " + newData.nodeName + ", expecting clientInstance");
 		}
-	}	
+	}
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Client");
 		newNode.object = this;
+		for (var client in clients) {
+			newNode.appendChild(clients[client].toTree());
+		}
 		treeNode = newNode;
 		return newNode;
 	}
 	public function getName():String {
-		return clientName;
+		return name;
 	}
-	public function getConnection():Object {
-		return {monitorConnection:monitorConnection,dataObject:this};
+	public function getConnections():Object {
+		return {monitorConnection:monitorConnection, sftpConnection:sftpConnection, dataObject:this, ipAddress:ipAddress, userName:userName, password:password};
 	}
-	public function setData(newData:Object) {
-		/*process client changes*/
+	public function setDetails(newData:Object):Void{
+		ipAddress = newData.ipAddress;
+		userName = newData.userName;
+		password = newData.password;
 	}
 }

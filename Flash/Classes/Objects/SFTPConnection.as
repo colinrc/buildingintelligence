@@ -46,7 +46,11 @@
 	public function SFTPConnection(server:Boolean) {
 		appPath = mdm.Application.path.substring(0, mdm.Application.path.length - 1);
 		localPath = appPath + "/";
-		remotePath = "/";
+		if(server){
+			remotePath = "client";
+		} else{
+			remotePath = "server";
+		}
 		output = "";
 		view = undefined;
 		lastCode = "0";
@@ -136,15 +140,15 @@
 	public function getItem(fileName:String):Void {
 		if (fileName.length) {
 			if (lastCode != "0") {
-				myActiveX.addMethodParam(1, "string", localPath + fileName);
-				myActiveX.addMethodParam(2, "string", remotePath + fileName);
+				myActiveX.addMethodParam(1, "string", localPath+fileName);
+				myActiveX.addMethodParam(2, "string", remotePath + "/" +fileName);
 				myActiveX.runMethod("GetFile", 2);
 				var lastError = myActiveX.getProperty("LastError");
 				if (lastError != "0") {
 					appendOutput(processError(lastError));
 				} else {
 					appendOutput("File Transfer Successful!");
-					appendOutput("Downloaded file: " + fileName + ", from: " + remotePath + fileName);
+					appendOutput("Downloaded file: " + fileName + ", from: " + remotePath + "/" + fileName);
 					if (view != undefined) {
 						view.needRefresh();
 					}
@@ -159,8 +163,8 @@
 	public function putItem(fileName:String):Void {
 		if (fileName.length) {
 			if (lastCode != "0") {
-				myActiveX.addMethodParam(1, "string", localPath + fileName);
-				myActiveX.addMethodParam(2, "string", remotePath + fileName);
+				myActiveX.addMethodParam(1, "string", localPath+fileName);
+				myActiveX.addMethodParam(2, "string", remotePath + "/" +fileName);
 				myActiveX.runMethod("PutFile", 2);
 				var lastError = myActiveX.getProperty("LastError");
 				if (lastError != "0") {
@@ -168,6 +172,29 @@
 				} else {
 					appendOutput("File Transfer Successful!");
 					appendOutput("Uploaded file: " + fileName + ", from: " + localPath + fileName);
+					if (view != undefined) {
+						view.needRefresh();
+					}
+				}
+			} else {
+				appendOutput("Error: No Connection Present");
+			}
+		} else {
+			appendOutput("Error: Please Select File to Upload!");
+		}
+	}
+	public function putData(data:String,fileName:String):Void {
+		if (fileName.length) {
+			if (lastCode != "0") {
+				myActiveX.addMethodParam(1, "string", data);
+				myActiveX.addMethodParam(2, "string", remotePath + "/" +fileName);
+				myActiveX.runMethod("PutData", 2);
+				var lastError = myActiveX.getProperty("LastError");
+				if (lastError != "0") {
+					appendOutput(processError(lastError));
+				} else {
+					appendOutput("File Transfer Successful!");
+					appendOutput("Uploaded file: " + fileName);
 					if (view != undefined) {
 						view.needRefresh();
 					}

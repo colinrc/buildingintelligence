@@ -19,12 +19,12 @@ class Forms.Control.SFTP extends Forms.BaseForm {
 	public function onLoad():Void {
 		output_ta.editable = false;
 		sftpConnection.attachView(this);
-		if (sftpConnection.isServer()) {
+		if (sftpConnection.isServer) {
 			localDirectory_cmb.dataProvider = ["/", "/script", "/config", "/log", "/datafiles"];
-			remoteDirectory_cmb.dataProvider = ["/", "/script", "/config", "/log", "/datafiles"];
+			remoteDirectory_cmb.dataProvider = ["/server", "/server/script", "/server/config", "/server/log", "/server/datafiles"];
 		} else {
 			localDirectory_cmb.dataProvider = ["/", "/lib/maps", "/lib/backgrounds", "/lib/icons", "/lib/sounds"];
-			remoteDirectory_cmb.dataProvider = ["/", "/lib/maps", "/lib/backgrounds", "/lib/icons", "/lib/sounds"];
+			remoteDirectory_cmb.dataProvider = ["/client", "/client/lib/maps", "/client/lib/backgrounds", "/client/lib/icons", "/client/lib/sounds"];
 		}
 		right_li.iconFunction = function(item:Object):String  {
 			return "Icon:file";
@@ -38,6 +38,8 @@ class Forms.Control.SFTP extends Forms.BaseForm {
 		putSelected_btn.addEventListener("click", Delegate.create(this, putItem));
 		localDirectory_cmb.addEventListener("change", Delegate.create(this, localChange));
 		remoteDirectory_cmb.addEventListener("change", Delegate.create(this, remoteChange));
+		localChange();
+		remoteChange();
 	}
 	public function SFTPdisconnected():Void{
 		right_li.removeAll();
@@ -62,7 +64,7 @@ class Forms.Control.SFTP extends Forms.BaseForm {
 		sftpConnection.getItem(right_li.selectedItem.label);
 	}
 	public function putItem():Void {
-		sftpConnection.getItem(left_li.selectedItem.label);		
+		sftpConnection.putItem(left_li.selectedItem.label);		
 	}
 	public function refreshRemote():Void {
 		right_li.dataProvider = sftpConnection.getRemoteList();

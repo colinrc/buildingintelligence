@@ -195,8 +195,23 @@ class Forms.DataGrid.DynamicDataGrid {
 		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
 		columns[name].column.cellRenderer = "ColourCellRenderer";
 		columns[name].column.sortable = false;
-		//}
 	}
+	public function addLogComboBoxColumn(name:String, heading:String, DP:Array, callBack:Function, width:Number) {
+		columnCount++;
+		columns[name] = new Object();
+		columns[name].type = "log";
+		columns[name].DP = DP;
+		columns[name].heading = heading;
+		columns[name].callBack = callBack;		
+		columns[name].advanced = false;
+		columns[name].colNo = columnCount - 1;
+		columns[name].width = width;
+		columns[name].column = new DataGridColumn(name);
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "LogComboBoxCellRenderer";
+		columns[name].column.sortable = false;
+	}	
 	public function addButtonColumn(name:String, heading:String, attributes:Object, callBack:Function, advanced:Boolean, width:Number) {
 		columnCount++;
 		buttonColumns[name] = new Object();
@@ -278,6 +293,13 @@ class Forms.DataGrid.DynamicDataGrid {
 				case "hidden" :
 					newRow[column] = tempDP[row][column];
 					break;
+				case "log" :
+					var newCombo = {label:tempDP[row][column], sel:false, DP:columns[column].DP, callBack:columns[column].callBack};
+					newCombo.toString = function():String  {
+						return this.label;
+					};
+					newRow[column] = newCombo;
+					break;					
 				}
 			}
 			for (var column in buttonColumns) {
@@ -538,6 +560,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				case "paramcombo" :
 				case "codecombo" :
 				case "cataloguecombo" :
+				case "log":
 					my_dg.dataProvider[event.itemIndex][my_dg.columnNames[event.columnIndex]].sel = true;
 					break;
 				}

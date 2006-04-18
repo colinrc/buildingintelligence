@@ -27,7 +27,7 @@ class Forms.Control.ServerLog extends Forms.BaseForm {
 		levels_dg.resizableColumns = false;
 		dataGridHandler.setDataGrid(levels_dg);
 		dataGridHandler.addTextInputColumn("shortname", "Package", restrictions,false,150);
-		dataGridHandler.addComboBoxColumn("level", "Level", [{label:"INFO"},{label:"WARNING"},{label:"FINE"},{label:"FINER"},{label:"FINEST"}], false, 80);
+		dataGridHandler.addLogComboBoxColumn("level", "Level", [{label:"INFO"},{label:"WARNING"},{label:"FINE"},{label:"FINER"},{label:"FINEST"}], Delegate.create(this, comboSelection), 80);
 		dataGridHandler.addHiddenColumn("packagename");		
 		serverConnection.attachView(this);		
 		defaults_btn.addEventListener("click", Delegate.create(this, setDefault));
@@ -43,10 +43,12 @@ class Forms.Control.ServerLog extends Forms.BaseForm {
 	public function notifyChange():Void{
 		log_ta.text = serverConnection.getOutput();
 	}
-	/*public function comboSelection(eventObj):Void {
-		changeDebugLevels(levels_cb.selectedItem.data, levels_list.selectedItem.data);
+	public function	needRefresh():Void{
 		generateDebugLevels(serverConnection.getLevels());
-	}*/
+	}
+	public function comboSelection(package:String,level:String):Void {
+		serverConnection.changeDebugLevels(level, package);
+	}
 	public function generateDebugLevels(inLevels:Array):Void {
 		dataGridHandler.setDataGridDataProvider(inLevels);
 	}

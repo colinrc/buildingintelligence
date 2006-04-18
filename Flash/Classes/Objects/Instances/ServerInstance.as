@@ -9,7 +9,7 @@
 	private var sftpConnection:Object;
 	public function deleteSelf() {
 		serverConnection.disconnectServer();
-		serverConnection.disconnectMonitor();
+		monitorConnection.disconnectMonitor();
 		sftpConnection.disconnect();
 		treeNode.removeNode();
 	}

@@ -61,13 +61,13 @@ class Forms.Control.ServerControls extends Forms.BaseForm {
 		sftpDisconnect_btn.addEventListener("click", Delegate.create(this, sftpDisconnect));
 		sftpConnection.attachView(this);
 		monitorConnection.attachView(this);
-		serverConnection.attachView(this);
 		var my_styles = new StyleSheet();
 		my_styles.setStyle("time", {fontFamily:'Arial,Helvetica,sans-serif', fontSize:'10px', color:'#000000', textDecoration:'underline'});
-		my_styles.setStyle("error", {fontFamily:'Arial,Helvetica,sans-serif', fontSize:'12px', color:'#FF0000'});
+		my_styles.setStyle("error", {fontFamily:'Arial,Helvetica,sans-serif', fontSize:'12px', color:'#FF0000'});		
 		serverOutput_ta.html = true;
-		serverOutput_ta.styleSheet = my_styles;
-		serverOutput_ta.text = "";		
+		serverOutput_ta.styleSheet = my_styles;		
+		serverOutput_ta.text = "";				
+		serverConnection.attachView(this);
 	}
 	public function onUnload():Void{
 		sftpConnection.detachView();

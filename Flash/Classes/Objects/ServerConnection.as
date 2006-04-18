@@ -109,12 +109,7 @@ class Objects.ServerConnection {
 	}
 	private function changeDebugLevels(logLevel:String, package:String):Void {
 		sendToServer(new XML('<DEBUG PACKAGE="'+package+'" LEVEL="'+logLevel+'" />\n'));
-		for(var level in levels){
-			if(package == levels[level].packagename){
-				levels[level].level = logLevel;
-				break;
-			}
-		}
+		getDebugLevels();
 	}
 	public function generateDebugPackages(inLevels:XMLNode):Void {
 		var inNode:XMLNode = inLevels.firstChild;
@@ -123,6 +118,9 @@ class Objects.ServerConnection {
 			levels.push({shortname:inNode.attributes["SHORTNAME"], packagename:inNode.attributes["PACKAGENAME"], level:inNode.attributes["LEVEL"]});
 			inNode = inNode.nextSibling;
 		}
+		if (view != undefined) {
+			view.needRefresh();
+		}		
 	}
 	private function getDebugLevels():Void {
 		sendToServer(new XML('<DEBUG_PACKAGES />\n'));
