@@ -8,16 +8,35 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
+		if (alerts.length == 0) {
+			flag = "error";
+			appendValidationMsg("No Alerts are defined");
+		}
 		for (var alert in alerts) {
 			if ((alerts[alert].attributes["name"] == "") || (alerts[alert].attributes["name"] == undefined)) {
 				flag = "error";
+				appendValidationMsg("Name is invalid");
 			}
 			if ((alerts[alert].attributes["keys"] == "") || (alerts[alert].attributes["keys"] == undefined)) {
 				flag = "error";
+				appendValidationMsg("No Keys are used");
+			}
+			else {
+				if (_global.isKeyValid(alerts[alert].attributes["keys"]) == false) {
+					flag = "error";
+					appendValidationMsg("Key has changed and is invalid");
+				}
 			}
 			if ((alerts[alert].attributes["icon"] == "") || (alerts[alert].attributes["icon"] == undefined)) {
 				flag = "error";
+				appendValidationMsg("No Icon is used");
 			}
+			if ((alerts[alert].attributes["fadeOutTime"] == "") || (alerts[alert].attributes["fadeOutTime"] == undefined)) {
+				flag = "error";
+				appendValidationMsg("No Fade Out Time is used");
+			}
+			
 		}
 		return flag;
 	}
@@ -81,5 +100,21 @@
 	}
 	public function setData(newData:Object):Void {
 		alerts = newData.alerts;
+	}
+	public function getUsedKeys():Array{
+		for (var alert in alerts) {
+			if ((alerts[alert].attributes["keys"] != "") && (alerts[alert].attributes["keys"] != undefined)) {
+				addUsedKey(alerts[alert].attributes["keys"]);
+			}
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		for (var alert in alerts) {
+			if ((alerts[alert].attributes["icon"] != "") && (alerts[alert].attributes["icon"] != undefined)) {
+				addIcon(alerts[alert].attributes["icon"]);
+			}
+		}
+		return super.getIcons();
 	}
 }

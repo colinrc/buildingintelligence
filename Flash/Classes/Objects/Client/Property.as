@@ -2,7 +2,13 @@
 	private var zones:Array;
 	private var treeNode:XMLNode;
 	public function isValid():String {
-		return "ok";
+		var flag = "ok";
+		clearValidationMsg();
+		if (zones.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Zones are defined");
+		}
+		return flag;
 	}
 	public function getForm():String {
 		return "forms.project.client.property";
@@ -93,5 +99,17 @@
 			treeNode.appendChild(zones[zone].toTree());
 		}
 		_global.left_tree.setIsOpen(treeNode, true);
+	}
+	public function getUsedKeys():Array{
+		for (var zone in zones) {
+			usedKeys.concat(zones[zone].getUsedKeys());
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		for (var zone in zones) {
+			icons.concat(zones[zone].getIcons());
+		}
+		return super.getIcons();
 	}
 }

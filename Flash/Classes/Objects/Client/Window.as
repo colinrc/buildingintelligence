@@ -5,11 +5,17 @@
 	private var attributeGroups = ["window", "tabs"];
 	public function isValid():String {
 		var flag = "ok";
-		for (var tab in tabs) {
-			if (!tabs[tab].isValid()) {
-				flag = "error";
-			}
+		clearValidationMsg();
+		if (tabs.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Tabs are defined");
 		}
+		/*for (var tab in tabs) {
+			if (tabs[tab].isValid()!="ok") {
+				flag = "warning";
+				appendValidationMsg(tabs[tab].attributes["name"] + " is invalid");
+			}
+		}*/
 		return flag;
 	}
 	public function getForm():String {

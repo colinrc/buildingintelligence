@@ -11,7 +11,26 @@
 	}			
 	public function isValid():String {
 		var flag = "ok";
-		for(var control in controls){
+		clearValidationMsg();
+		if (controls.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Keys are being used");
+		}
+		if (( name == undefined) || ( name == "")) {
+				flag = "warning";
+				appendValidationMsg("Name is invalid");
+		}
+		if (( icon == undefined) || ( icon == "")) {
+				flag = "warning";
+				appendValidationMsg("Icon is invalid");
+		}
+		if (( type == undefined) || ( type == "")) {
+				flag = "warning";
+				appendValidationMsg("Type is invalid");
+		}
+		if (( listenTo == undefined) || ( listenTo == "")) {
+				flag = "warning";
+				appendValidationMsg("Listen to is invalid");
 		}
 		return flag;
 	}
@@ -97,5 +116,19 @@
 		else{
 			trace("Error, received "+newData.nodeName+", was expecting group");
 		}
+	}
+	public function getIcons():Array{
+		if (icon != "" && icon != undefined){
+			addIcon(icon);
+		}
+		return super.getIcons();
+	}
+	public function getUsedKeys():Array{
+		for (var cont in controls) {
+			if ((controls[cont].attributes["key"] != "") && (controls[cont].attributes["key"] != undefined)) {
+				addUsedKey(controls[cont].attributes["key"]);
+			}
+		}
+		return super.getUsedKeys();
 	}
 }

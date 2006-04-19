@@ -3,9 +3,11 @@
 	private var treeNode:XMLNode;
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var icon in icons) {
-			if (!icons[icon].isValid()) {
+			if (icons[icon].isValid() != "ok" ){
 				flag = "error";
+				appendValidationMsg("Icon " + icons[icon].name + " is invalid");
 			}
 		}
 		return flag;
@@ -99,5 +101,13 @@
 			treeNode.appendChild(icons[icon].toTree());
 		}
 		_global.left_tree.setIsOpen(treeNode, true);
+	}
+	public function getIcons():Array{
+		for (var icon in icons) {
+			if ((icons[icon].icon != "") && (icons[icon].icon != undefined)) {
+				addIcon(icons[icon].icon);
+			}
+		}
+		return super.getIcons();
 	}
 }

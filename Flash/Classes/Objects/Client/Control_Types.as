@@ -2,7 +2,13 @@
 	private var controls:Array;
 	private var treeNode:XMLNode;		
 	public function isValid():String {
-		return "ok";
+		var flag = "ok";
+		clearValidationMsg();
+		if (controls.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Controls are defined");
+		}
+		return flag;
 	}
 	public function getForm():String {
 		return "forms.project.client.controltypes";
@@ -77,5 +83,17 @@
 			controls.push(newControl);
 		}
 		_global.left_tree.setIsOpen(treeNode, true);
+	}
+	public function getUsedKeys():Array{
+		for (var control in controls) {
+			usedKeys.concat(controls[control].getUsedKeys());
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		for (var control in controls) {
+			icons.concat(controls[control].getIcons());
+		}
+		return super.getIcons();
 	}
 }

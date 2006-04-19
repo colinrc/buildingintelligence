@@ -121,4 +121,16 @@
 			trace("Error, received " + newData.nodeName + ", was expecting calendar");
 		}
 	}
+	public function getUsedKeys():Array{
+		for (var tab in tabs) {
+			usedKeys.concat(tabs[tab].getUsedKeys());
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		for (var tab in tabs) {
+			icons.concat(tabs[tab].getIcons());
+		}
+		return super.getIcons();
+	}
 }

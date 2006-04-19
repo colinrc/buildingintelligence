@@ -7,19 +7,33 @@
 	}	
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var door in doors) {
 			if((doors[door].attributes["name"] == "")||(doors[door].attributes["name"] == undefined)){
 				flag = "error";
+				appendValidationMsg("Name is invalid");
 			}
 			if((doors[door].attributes["key"] == "")||(doors[door].attributes["key"] == undefined)){
 				flag = "error";
+				appendValidationMsg("Key is invalid");
+			} else {
+				if (_global.isKeyValid(doors[door].attributes["key"]) == false) {
+					flag = "error";
+					appendValidationMsg("Key has changed and is invalid");
+				}
 			}
-			if((doors[door].attributes["pos"] == "")||(doors[door].attributes["pos"] == undefined)){
+			if((doors[door].attributes["door"] == "")||(doors[door].attributes["door"] == undefined)){
 				flag = "error";
+				appendValidationMsg("Position is invalid");
 			}
 			if((doors[door].attributes["colour"] == "")||(doors[door].attributes["colour"] == undefined)){
 				flag = "error";
+				appendValidationMsg("Colour is invalid");
 			}			
+			if((doors[door].attributes["door"] == "")||(doors[door].attributes["door"] == undefined)){
+				flag = "error";
+				appendValidationMsg("Door polygon is invalid");
+			}		
 		}
 		return flag;
 	}
@@ -61,5 +75,13 @@
 	}
 	public function setData(newData:Object):Void {
 		doors = newData.doors;
+	}
+	public function getUsedKeys():Array{
+		for (var door in doors) {
+			if ((doors[door].attributes["key"] != "") && (doors[door].attributes["key"] != undefined)) {
+				addUsedKey(doors[door].attributes["key"]);
+			}
+		}
+		return super.getUsedKeys();
 	}
 }

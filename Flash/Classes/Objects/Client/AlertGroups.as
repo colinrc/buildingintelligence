@@ -6,12 +6,11 @@
 		alertgroups = new Array();				
 	}
 	public function isValid():String {
-		/*Build validation array here*/
 		var flag = "ok";
-		for (var alertgroup in alertgroups) {
-			if (!alertgroups[alertgroup].isValid()) {
-				flag = "error";
-			}
+		clearValidationMsg();
+		if (alertgroups.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No AlertGroups are defined");
 		}
 		return flag;
 	}
@@ -88,5 +87,18 @@
 			newAlertGroup.id = _global.formDepth++;
 			alertgroups.push(newAlertGroup);
 		}
+	}
+	public function getUsedKeys():Array{
+		for (var alerts in alertgroups) {
+			usedKeys.concat(alertgroups[alerts].getUsedKeys());
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		for (var alerts in alertgroups) {
+			//var newAlerts = new Objects.Client.Alerts();
+			icons.concat(alertgroups[alerts].getIcons());
+		}
+		return super.getIcons();
 	}
 }

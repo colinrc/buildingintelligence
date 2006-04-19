@@ -11,12 +11,24 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
+		if (alarms.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Alarms are defined");
+		}
 		for (var alarm in alarms) {
 			if ((alarms[alarm].attributes["KEY"] == undefined) || (alarms[alarm].attributes["KEY"] == "")) {
 				flag = "error";
+				appendValidationMsg("Key is invalid");
+			} else {
+				if (_global.isKeyUsed(alarms[alarm].attributes["KEY"]) == false) {
+					flag = "error";
+					appendValidationMsg(alarms[alarm].attributes["KEY"]+" Key is not being used");
+				}
 			}
 			if ((alarms[alarm].attributes["DISPLAY_NAME"] == undefined) || (alarms[alarm].attributes["DISPLAY_NAME"] == "")) {
 				flag = "error";
+				appendValidationMsg("Display Name is invalid");
 			}
 		}
 		return flag;

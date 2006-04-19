@@ -13,8 +13,44 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
-		for (var control in controls) {
+		clearValidationMsg();
+		if (name == null || name == "") {
+			flag = "warning";
+			appendValidationMsg("Name is missing");
 		}
+		if (icon == null || icon == "") {
+			flag = "warning";
+			appendValidationMsg("Icon is missing");
+		}
+		if (show == null || show == "") {
+			flag = "warning";
+			appendValidationMsg("Show is missing");
+		}
+		if (hide == null || hide == "") {
+			flag = "warning";
+			appendValidationMsg("Hide is missing");
+		}
+		if (canOpen == null || canOpen == "") {
+			flag = "warning";
+			appendValidationMsg("Can Open is missing");
+		}
+		if (controls.length == 0) {
+			flag = "error";
+			appendValidationMsg("No Keys are used");
+		}
+		for (var cont in controls) {
+			if (controls[cont].attributes["key"] == null || controls[cont].attributes["key"] == "") {
+				flag = "error";
+				appendValidationMsg("Key Name is missing");
+			}
+			else {
+				if (_global.isKeyValid(controls[cont].attributes["key"]) == false) {
+					flag = "error";
+					appendValidationMsg("Key has changed and is invalid");
+				}
+			}
+		}
+		
 		return flag;
 	}
 	public function getForm():String {
@@ -117,5 +153,19 @@
 		} else {
 			trace("Error, received " + newData.nodeName + ", was expecting group");
 		}
+	}
+	public function getUsedKeys():Array{
+		for (var control in controls) {
+			if ((controls[control].attributes["key"] != "") && (controls[control].attributes["key"] != undefined)) {
+				addUsedKey(controls[control].attributes["key"]);
+			}
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		if (icon != "" && icon != undefined){
+			addIcon(icon);
+		}
+		return super.getIcons();
 	}
 }

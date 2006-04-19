@@ -3,10 +3,10 @@
 	private var treeNode:XMLNode;
 	public function isValid():String {
 		var flag = "ok";
-		for (var group in groups) {
-			if (!groups[group].isValid()) {
-				flag = "error";
-			}
+		clearValidationMsg();
+		if (groups.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Groups are defined");
 		}
 		return flag;
 	}
@@ -102,5 +102,17 @@
 			treeNode.appendChild(groups[group].toTree());
 		}		
 		_global.left_tree.setIsOpen(treeNode, true);
+	}
+	public function getUsedKeys():Array{
+		for (var group in groups) {
+			usedKeys.concat(groups[group].getUsedKeys());
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		for (var group in groups) {
+			icons.concat(groups[group].getIcons());
+		}
+		return super.getIcons();
 	}
 }

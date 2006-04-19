@@ -116,7 +116,7 @@
             <project_file path="./Classes/Forms/Publish.as" filetype="as" />
         </project_folder>
         <project_folder name="Objects" expanded="true">
-            <project_folder name="Server" expanded="false">
+            <project_folder name="Server" expanded="true">
                 <project_file path="./Classes/Objects/Server/Server.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/Cameras.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/Catalogue.as" filetype="as" />
@@ -166,15 +166,12 @@
                 <project_file path="./Classes/Objects/Client/Control_Types.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Logging.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Property.as" filetype="as" />
-                <project_file path="./Classes/Objects/Client/Settings.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Sounds.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Status_Bar.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/StatusBarGroup.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/LoggingGroup.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Control.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Icon.as" filetype="as" />
-                <project_file path="./Classes/Objects/Client/Item.as" filetype="as" />
-                <project_file path="./Classes/Objects/Client/Row.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Zone.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Arbitrary.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Alerts.as" filetype="as" />

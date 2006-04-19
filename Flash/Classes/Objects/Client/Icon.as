@@ -11,7 +11,26 @@
 		treeNode.removeNode();
 	}			
 	public function isValid():String {
-		return "ok";
+		var flag = "ok";
+		clearValidationMsg();
+		if (name == undefined || name == "") {
+				flag = "error";
+				appendValidationMsg("Name is invalid");
+		}
+		if (icon == undefined || icon == "") {
+				flag = "error";
+				appendValidationMsg("Icon is invalid");
+		}
+		if (func == undefined || func == "") {
+				flag = "error";
+				appendValidationMsg("Function is invalid");
+		}
+		if ((func == "runexe") && param == undefined || param == "") {
+				flag = "error";
+				appendValidationMsg("Parameter is invalid");
+		}
+		
+		return flag;
 	}
 	public function getForm():String {
 		return "forms.project.client.icon";
@@ -97,5 +116,12 @@
 		} else {
 			trace("Error, received "+newData.nodeName+", was expecting icon");
 		}
+	}
+
+	public function getIcons():Array{
+		if (icon != "" && icon != undefined){
+			addIcon(icon);
+		}
+		return super.getIcons();
 	}
 }

@@ -478,7 +478,17 @@
 		</item>
 	</step>
 	<step label="Client" stepOrder="2">
-		<item label="Configure Property" key="Property" order="1">
+		<item label="Configure Client" key="Client" order="1">
+			<description>
+		 	 	<font size="10">
+		 			<p><b>Step1 - Configure Property</b></p>
+					<p>Name your Property and configure settings.</p>
+					<p><b>Step2 - Add Zones</b></p>
+					<p>Add Zones to the Property.</p>
+				</font>
+			</description>
+		</item>
+		<item label="Configure Property" key="Property" order="2">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -488,7 +498,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Configure Zone" key="Zone" order="2">
+		<item label="Configure Zone" key="Zone" order="3">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -498,7 +508,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Configure Rooms" key="ClientRoom" order="3">
+		<item label="Configure Rooms" key="ClientRoom" order="4">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -508,7 +518,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Configure Window" key="ClientWindow" order="4">
+		<item label="Configure Window" key="ClientWindow" order="5">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -518,7 +528,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Add Tabs" key="ClientTab" order="5">
+		<item label="Add Tabs" key="ClientTab" order="6">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -528,7 +538,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Add Doors" key="ClientDoors" order="6">
+		<item label="Add Doors" key="ClientDoors" order="7">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -538,7 +548,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Add Alert Groups" key="AlertGroups" order="7">
+		<item label="Add Alert Groups" key="AlertGroups" order="8">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -548,7 +558,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Configure Alert Groups" key="ClientAlerts" order="8">
+		<item label="Configure Alert Groups" key="ClientAlerts" order="9">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -558,7 +568,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Add Arbitraries" key="ClientArbitrary" order="9">
+		<item label="Add Arbitraries" key="ClientArbitrary" order="10">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -568,7 +578,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Add Panels" key="Panel" order="10">
+		<item label="Add Panels" key="Panel" order="11">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -578,7 +588,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Add Status Bar Group" key="StatusBar" order="11">
+		<item label="Add Status Bar Group" key="StatusBar" order="12">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -588,7 +598,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Configure Status Bar Group" key="StatusBarGroup" order="12">
+		<item label="Configure Status Bar Group" key="StatusBarGroup" order="13">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -598,7 +608,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Add Logging Groups" key="Logging" order="13">
+		<item label="Add Logging Groups" key="Logging" order="14">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -608,7 +618,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Configure Logging Group" key="LoggingGroup" order="14">
+		<item label="Configure Logging Group" key="LoggingGroup" order="15">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -618,7 +628,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Add Control Types" key="ClientControl_Types" order="15">
+		<item label="Add Control Types" key="ClientControl_Types" order="16">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -628,7 +638,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Configure Control Types" key="ClientControl" order="16">
+		<item label="Configure Control Types" key="ClientControl" order="17">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -638,7 +648,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Configure Calendar" key="Calendar" order="16">
+		<item label="Configure Calendar" key="Calendar" order="18">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -648,7 +658,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Configure Calendar Tabs" key="Calendar_Tab" order="17">
+		<item label="Configure Calendar Tabs" key="Calendar_Tab" order="19">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -658,7 +668,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Configure Sounds" key="ClientSounds" order="18">
+		<item label="Configure Sounds" key="ClientSounds" order="20">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -668,7 +678,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Add Client Apps" key="ClientIcon" order="19">
+		<item label="Add Client Apps" key="ClientIcon" order="21">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -678,7 +688,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Configure Client Apps" key="ClientApps_Bar" order="20">
+		<item label="Configure Client Apps" key="ClientApps_Bar" order="22">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>
@@ -688,17 +698,7 @@
 				</font>
 			</description>
 		</item>
-		<item label="Add Control Panel Apps" key="ClientControl_Panel_Apps" order="21">
-			<description>
-		 	 <font size="10">
-		 		<p><b>Step1 - Configure Property</b></p>
-				<p>Name your Property and configure settings.</p>
-				<p><b>Step2 - Add Zones</b></p>
-				<p>Add Zones to the Property.</p>
-				</font>
-			</description>
-		</item>
-		<item label="Configure Base Client Settings" key="Client" order="22">
+		<item label="Add Control Panel Apps" key="ClientControl_Panel_Apps" order="23">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Property</b></p>

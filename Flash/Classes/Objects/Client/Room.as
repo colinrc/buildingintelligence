@@ -30,10 +30,22 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
-		flag = getHighestFlagValue(flag, window.isValid());
-		flag = getHighestFlagValue(flag, doors.isValid());
-		flag = getHighestFlagValue(flag, alerts.isValid());
+		clearValidationMsg();
+		if ((switchZone == "") || (switchZone == undefined)) {
+			flag = "empty";
+			appendValidationMsg("SwitchZone is empty");
+		}
+		if ((name == "") || (name == undefined)) {
+			flag = "error";
+			appendValidationMsg("Name is invalid");
+		}
+		if ((poly == "") || (poly == undefined)) {
+			flag = "error";
+			appendValidationMsg("Room polygon is invalid");
+		}
+		
 		return flag;
+		
 	}
 	public function getForm():String {
 		return "forms.project.client.room";
@@ -111,5 +123,19 @@
 		name = newData.name;
 		poly = newData.poly;
 		switchZone = newData.switchZone;
+	}
+	public function getUsedKeys():Array{
+		usedKeys.concat(window.getUsedKeys());
+		usedKeys.concat(doors.getUsedKeys());
+		usedKeys.concat(alerts.getUsedKeys());
+		usedKeys.concat(zone.getUsedKeys());
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		icons.concat(window.getIcons());
+		icons.concat(doors.getIcons());
+		icons.concat(alerts.getIcons());
+		icons.concat(zone.getIcons());
+		return super.getIcons();
 	}
 }

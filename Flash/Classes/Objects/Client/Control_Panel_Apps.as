@@ -3,14 +3,17 @@
 	private var treeNode:XMLNode;
 	public function isValid():String {
 		var flag = "ok";
-		/*for(var child in apps.childNodes){
-			if(apps.childNodes[child].attributes["label"] == undefined){
-				flag = false;
+		clearValidationMsg();
+		for(var child in apps.childNodes){
+			if((apps.childNodes[child].attributes["label"] == undefined)||(apps.childNodes[child].attributes["label"] == "")){
+				flag = "warning";
+				appendValidationMsg("Label is invalid");
 			}
-			if(apps.childNodes[child].attributes["program"] ==undefined){
-				flag = false;
+			if((apps.childNodes[child].attributes["program"] ==undefined)||(apps.childNodes[child].attributes["program"] =="")){
+				flag = "warning";
+				appendValidationMsg("Program is invalid");
 			}
-		}*/
+		}
 		return flag;
 	}
 	public function getForm():String {

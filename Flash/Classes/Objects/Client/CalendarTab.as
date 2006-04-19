@@ -15,16 +15,6 @@
 			flag = "empty";
 			appendValidationMsg("No Zones are defined");
 		}
-		for (var zone in zones) {
-			if (zones[zone].attributes["label"] == null || zones[zone].attributes["label"] == "") {
-				flag = "warning";
-				appendValidationMsg("Zone Name is missing");
-			}
-			if (zones[zone].attributes["key"] == null || zones[zone].attributes["key"] == "") {
-				flag = "warning";
-				appendValidationMsg("Zone Key is missing");
-			}
-		}
 		if (label == null || label == "") {
 			flag = "warning";
 			appendValidationMsg("Label is missing");
@@ -40,6 +30,22 @@
 		if (macro == null || macro == "") {
 			flag = "warning";
 			appendValidationMsg("Macro is missing");
+		}
+		for (var zone in zones) {
+			if (zones[zone].attributes["label"] == null || zones[zone].attributes["label"] == "") {
+				flag = "warning";
+				appendValidationMsg("Zone Name is missing");
+			}
+			if (zones[zone].attributes["key"] == null || zones[zone].attributes["key"] == "") {
+				flag = "error";
+				appendValidationMsg("Zone Key is missing");
+			}
+			else {
+				if (_global.isKeyValid(zones[zone].attributes["key"]) == false) {
+					flag = "error";
+					appendValidationMsg("Key has changed and is invalid");
+				}
+			}
 		}
 		
 		return flag;
@@ -114,5 +120,21 @@
 		icon = newData.icon;
 		macro = newData.macro;
 		view = newData.view;
+	}
+	public function getUsedKeys():Array{
+		for (var zone in zones) {
+			if ((zones[zone].attributes["keys"] != "") && (zones[zone].attributes["keys"] != undefined)) {
+				addUsedKey(zones[zone].attributes["keys"]);
+			}
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		for (var zone in zones) {
+			if ((zones[zone].attributes["icon"] != "") && (zones[zone].attributes["icon"] != undefined)) {
+				addIcon(zones[zone].attributes["icon"]);
+			}
+		}
+		return super.getIcons();
 	}
 }

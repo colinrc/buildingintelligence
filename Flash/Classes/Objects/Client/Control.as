@@ -6,7 +6,101 @@
 		treeNode.removeNode();
 	}
 	public function isValid():String {
-		return "ok";
+		var flag = "ok";
+		clearValidationMsg();
+		for (var item in rows){
+			switch (type) {
+				case "slider" :
+					if((rows[item].attributes["label"] == "")||(rows[item].attributes["label"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Label is invalid");
+					}
+					if((rows[item].attributes["fontSize"] == "")||(rows[item].attributes["fontSize"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Font size is invalid");
+					}
+					if((rows[item].attributes["fontColour"] == "")||(rows[item].attributes["fontColour"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Font colour is invalid");
+					}				
+					break;
+				case "button" :
+					if((rows[item].attributes["bgColour"] == "")||(rows[item].attributes["bgColour"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Backgroung Colour is invalid");
+					}
+					if((rows[item].attributes["borderColour"] == "")||(rows[item].attributes["borderColour"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Border colour is invalid");
+					}
+					if((rows[item].attributes["fontColour"] == "")||(rows[item].attributes["fontColour"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Font colour is invalid");
+					}
+					if((rows[item].attributes["labels"] == "")||(rows[item].attributes["labels"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Labels are invalid");
+					}
+					if((rows[item].attributes["commands"] == "")||(rows[item].attributes["commands"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Commands are invalid");
+					}
+					if((rows[item].attributes["width"] == "")||(rows[item].attributes["width"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Width is invalid");
+					}
+					if((rows[item].attributes["key"] == "")||(rows[item].attributes["key"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Key is invalid");
+					}
+					if((rows[item].attributes["fontSize"] == "")||(rows[item].attributes["fontSize"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Font size is invalid");
+					}
+					break;
+				case "icon" :
+					if((rows[item].attributes["icons"] == "")||(rows[item].attributes["icons"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Icons are invalid");
+					}
+					if((rows[item].attributes["commands"] == "")||(rows[item].attributes["commands"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Commands are invalid");
+					}
+					if((rows[item].attributes["key"] == "")||(rows[item].attributes["key"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Key is invalid");
+					}
+					break;
+				case "object" :
+					if((rows[item].attributes["src"] == "")||(rows[item].attributes["src"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Source is invalid");
+					}
+					if((rows[item].attributes["key"] == "")||(rows[item].attributes["key"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Key is invalid");
+					}
+					if((rows[item].attributes["width"] == "")||(rows[item].attributes["width"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Width is invalid");
+					}
+					if((rows[item].attributes["height"] == "")||(rows[item].attributes["height"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Height is invalid");
+					}
+					if((rows[item].attributes["show"] == "")||(rows[item].attributes["show"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Show is invalid");
+					}
+					if((rows[item].attributes["hide"] == "")||(rows[item].attributes["hide"] == undefined)){
+						flag = "warning";
+						appendValidationMsg("Hide is invalid");
+					}
+					break;
+			}
+		}
+		return flag;
 	}
 	public function getForm():String {
 		return "forms.project.client.control";
@@ -48,5 +142,21 @@
 	public function setData(newData:Object):Void {
 		type = newData.type;
 		rows = newData.rows;
+	}
+	public function getUsedKeys():Array{
+		for (var item in rows) {
+			if ((rows[item].attributes["key"] != "") && (rows[item].attributes["key"] != undefined)) {
+				addUsedKey(rows[item].attributes["key"]);
+			}
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		for (var item in rows) {
+			if ((rows[item].attributes["icons"] != "") && (rows[item].attributes["icons"] != undefined)) {
+				addIcon(rows[item].attributes["icons"]);
+			}
+		}
+		return super.getIcons();
 	}
 }

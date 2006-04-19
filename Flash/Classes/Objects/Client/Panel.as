@@ -11,7 +11,50 @@
 	}		
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
+		if (controls.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Controls are defined");
+		}
+		if (name == undefined || name == "") {
+				flag = "error";
+				appendValidationMsg("Name is invalid");
+		}
+		if (x_pos == undefined || x_pos == "") {
+				flag = "error";
+				appendValidationMsg("X pos is invalid");
+		}
+		if (height == undefined || height == "") {
+				flag = "error";
+				appendValidationMsg("Heigth is invalid");
+		}
+		if (width == undefined || width == "") {
+				flag = "error";
+				appendValidationMsg("Width is invalid");
+		}
 		for (var control in controls) {
+			if ((controls[control].attributes["name"] == "") || (controls[control].attributes["name"] == undefined)) {
+				flag = "error";
+				appendValidationMsg("Control Name is invalid");
+			}
+			if ((controls[control].attributes["key"] == "") || (controls[control].attributes["key"] == undefined)) {
+				flag = "error";
+				appendValidationMsg("No Keys are used");
+			}
+			else {
+				if (_global.isKeyValid(controls[control].attributes["key"]) == false) {
+					flag = "error";
+					appendValidationMsg("Key has changed and is invalid");
+				}
+			}
+			if ((controls[control].attributes["type"] == "") || (controls[control].attributes["type"] == undefined)) {
+				flag = "error";
+				appendValidationMsg("Control Type is invalid");
+			}
+			if ((controls[control].attributes["icons"] == "") || (controls[control].attributes["icons"] == undefined)) {
+				flag = "error";
+				appendValidationMsg("Icons are invalid");
+			}
 		}
 		return flag;
 	}
@@ -93,5 +136,21 @@
 		y_pos = newData.y_pos;
 		width = newData.width;
 		height = newData.height;		
+	}
+	public function getUsedKeys():Array{
+		for (var control in controls) {
+			if ((controls[control].attributes["key"] != "") && (controls[control].attributes["key"] != undefined)) {
+				addUsedKey(controls[control].attributes["key"]);
+			}
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		for (var control in controls) {
+			if ((controls[control].attributes["icons"] != "") && (controls[control].attributes["icons"] != undefined)) {
+				addIcon(controls[control].attributes["icons"]);
+			}
+		}
+		return super.getIcons();
 	}
 }

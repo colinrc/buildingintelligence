@@ -8,7 +8,18 @@
 	}		
 	public function isValid():String {
 		var flag = "ok";
-		for (var control in controls) {
+		clearValidationMsg();
+		if (controls.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Controls are defined");
+		}
+		if (name == null || name == "") {
+			flag = "warning";
+			appendValidationMsg("Name is missing");
+		}
+		if (icon == null || icon == "") {
+			flag = "warning";
+			appendValidationMsg("Icon is missing");
 		}
 		return flag;
 	}
@@ -66,5 +77,19 @@
 		controls = newData.controls;
 		name = newData.name;
 		icon = newData.icon;
+	}
+	public function getUsedKeys():Array{
+		for (var control in controls) {
+			if ((controls[control].attributes["key"] != "") && (controls[control].attributes["key"] != undefined)) {
+				addUsedKey(controls[control].attributes["key"]);
+			}
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		if (icon != "" && icon != undefined){
+			addIcon(icon);
+		}
+		return super.getIcons();
 	}
 }

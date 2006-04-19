@@ -1,9 +1,20 @@
 ﻿class Objects.BaseElement {
 	private var validationMsg="";
-	var validation:Array;
+	var icons:Array;
+	var usedKeys:Array;
 	private var errorText:String ="";
-	public function getValidation():Array{
-		return validation;
+	
+	public function getIcons():Array{
+		return icons;
+	}
+	private function addIcon(icon:String){
+		icons.push(icon);
+	}
+	public function getUsedKeys():Array{
+		return usedKeys;
+	}
+	private function addUsedKey(key:String){
+		usedKeys.push(key);
 	}
 	public function isValid():String {
 		return "ok";

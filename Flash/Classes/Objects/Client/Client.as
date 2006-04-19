@@ -18,14 +18,28 @@
 		treeNode.removeNode();
 	}		
 	public function isValid():String {
-		var flag = "ok"
-		flag = getHighestFlagValue(flag, sounds.isValid());
-		flag = getHighestFlagValue(flag, status_bar.isValid());
-		flag = getHighestFlagValue(flag, logging.isValid());
-		flag = getHighestFlagValue(flag, apps_bar.isValid());
-		flag = getHighestFlagValue(flag, control_panel_apps.isValid());
-		flag = getHighestFlagValue(flag, Property.isValid());
-		flag = getHighestFlagValue(flag, control_types.isValid());
+		var flag = "ok";
+		clearValidationMsg();
+		if (attributes.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No OverRides are defined");
+		}
+		if (description == null || description == "") {
+			flag = "warning";
+			appendValidationMsg("Description is missing");
+		}
+		if (adminPin == null || adminPin == "") {
+			flag = "error";
+			appendValidationMsg("Admin Pin is missing");
+		}
+		if (applicationXML == null || applicationXML == "") {
+			flag = "error";
+			appendValidationMsg("Application XML filename is missing");
+		}
+		if (integratorHtml == null || integratorHtml == "") {
+			flag = "empty";
+			appendValidationMsg("Integrator HTML is missing");
+		}
 		return flag;
 	}
 	public function getForm():String {
@@ -185,5 +199,27 @@
 		else{
 			trace("Found node "+newData.nodeName+", was expecting application");
 		}
+	}
+	public function getUsedKeys():Array{
+		usedKeys.concat(sounds.getUsedKeys());
+		usedKeys.concat(status_bar.getUsedKeys());
+		usedKeys.concat(logging.getUsedKeys());
+		usedKeys.concat(apps_bar.getUsedKeys());
+		usedKeys.concat(control_panel_apps.getUsedKeys());
+		usedKeys.concat(Property.getUsedKeys());
+		usedKeys.concat(control_types.getUsedKeys());
+		usedKeys.concat(calendar.getUsedKeys());
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		icons.concat(sounds.getIcons());
+		icons.concat(status_bar.getIcons());
+		icons.concat(logging.getIcons());
+		icons.concat(apps_bar.getIcons());
+		icons.concat(control_panel_apps.getIcons());
+		icons.concat(Property.getIcons());
+		icons.concat(control_types.getIcons());
+		icons.concat(calendar.getIcons());
+		return super.getIcons();
 	}
 }

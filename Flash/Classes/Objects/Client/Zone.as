@@ -13,7 +13,43 @@
 		treeNode.removeNode();
 	}		
 	public function isValid():String {
-		return "ok";
+		var flag = "ok";
+		clearValidationMsg();
+		if (rooms.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No rooms are defined");
+		}
+		if (panels.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No panels are defined");
+		}
+		
+		if (map == null || map == "") {
+			flag = "empty";
+			appendValidationMsg("Map is missing");
+		}
+		if (background == null || background == "") {
+			flag = "empty";
+			appendValidationMsg("Background is missing");
+		}
+		if (cycle == null || cycle == "") {
+			flag = "empty";
+			appendValidationMsg("Cycle is missing");
+		}
+		if (alignment == null || alignment == "") {
+			flag = "empty";
+			appendValidationMsg("Alignment is missing");
+		}
+		if (hideFromList == null || hideFromList == "") {
+			flag = "empty";
+			appendValidationMsg("HideFromList is missing");
+		}
+		if (name == null || name == "") {
+			flag = "warning";
+			appendValidationMsg("Name is missing");
+		}
+		
+		return flag;
 	}
 	public function getForm():String {
 		return "forms.project.client.zone";
@@ -209,5 +245,25 @@
 		cycle = newData.cycle;
 		alignment = newData.alignment;
 		hideFromList = newData.hideFromList;
+	}
+	public function getUsedKeys():Array{
+		usedKeys.concat(arbitrary.getUsedKeys());
+		for (var room in rooms) {
+			usedKeys.concat(rooms[room].getUsedKeys());
+		}
+		for (var panel in panels) {
+			usedKeys.concat(panels[panel].getUsedKeys());
+		}
+		return super.getUsedKeys();
+	}
+	public function getIcons():Array{
+		icons.concat(arbitrary.getIcons());
+		for (var room in rooms) {
+			icons.concat(rooms[room].getIcons());
+		}
+		for (var panel in panels) {
+			icons.concat(panels[panel].getIcons());
+		}
+		return super.getIcons();
 	}
 }

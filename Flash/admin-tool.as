@@ -38,6 +38,8 @@ _global.formDepth = 0;
 _global.projectFileName = "";
 _global.serverDesign = new Objects.Server.Server();
 _global.serverInstance = new Objects.Instances.ServerInstance();
+_global.keys = _global.serverDesign.getKeys();
+_global.usedKeys = _global.serverDesign.getClients[0].getUsedKeys;
 //_global.history = new Objects.History();
 /*Workflow tree variables and initialization*/
 var right_tree = workFlow_split.setFirstContents("Tree", "right_tree", 0);
@@ -267,6 +269,13 @@ function searchProject(treeNode:Object, object:Object):Object {
 }
 /********************************************************/
 _global.refreshTheTree = function() {
+	_global.keys = _global.serverDesign.getKeys();
+	var clientList:Array = _global.serverDesign.getClients();
+	var temp:Array = null;
+	for (var eachClient in clientList) {
+		 temp.concat(clientList[eachClient].getUsedKeys);
+	}
+	_global.usedKeys = temp;
 	//var oBackupDP = _global.left_tree.dataProvider;
 	_global.left_tree.dataProvider = null;
 	// clear
@@ -280,6 +289,25 @@ _global.refreshTheTree = function() {
 	_global.output_panel.setError(_global.left_tree.selectedNode.object.getValidationMsg());
 	_global.output_panel.draw();
 };
+/********************************************************/
+_global.isKeyValid = function(inKey:String):Boolean {
+	for (var key in _global.keys) {
+		if (_global.keys[key] == inKey){
+			return true;
+		}
+	}
+	return false;
+};
+/********************************************************/
+_global.isKeyUsed = function(inKey:String):Boolean {
+	for (var key in _global.usedKeys) {
+		if (_global.usedKeys[key] == inKey){
+			return true;
+		}
+	}
+	return false;
+};
+/********************************************************/
 function createWorkflow(inNode:Object) {
 	_global.workflow.addNode(inNode.object.getKey(), inNode);
 	for (var child in inNode.childNodes) {
