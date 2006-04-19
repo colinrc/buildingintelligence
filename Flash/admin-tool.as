@@ -1,14 +1,18 @@
 ﻿//Temp
 //mdm.Dialogs.prompt();
+import mx.managers.PopUpManager;
+import mx.containers.Window;
+import mx.utils.Delegate;
+
 mdm.Exception.enableHandler();
-mdm.Application.onMDMScriptException = function(myObject){
-  /* mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
-   mdm.Dialogs.prompt("Command: " +myObject.command);
-   mdm.Dialogs.prompt("MSG: " +myObject.message);
-   mdm.Dialogs.prompt("Form Type: " +myObject.formType);
-   mdm.Dialogs.prompt("Parameter: " +myObject.parameter);
-   mdm.Dialogs.prompt("Value: " +myObject.value);*/
-}
+mdm.Application.onMDMScriptException = function(myObject) {
+	/* mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
+	   mdm.Dialogs.prompt("Command: " +myObject.command);
+	   mdm.Dialogs.prompt("MSG: " +myObject.message);
+	   mdm.Dialogs.prompt("Form Type: " +myObject.formType);
+	   mdm.Dialogs.prompt("Parameter: " +myObject.parameter);
+	   mdm.Dialogs.prompt("Value: " +myObject.value);*/
+};
 mdm.Application.title = "eLIFE Admin Tool";
 mdm.Forms.MainForm.title = "eLIFE Admin Tool";
 historyViewer_btn._visible = false;
@@ -17,14 +21,16 @@ historyViewer_btn._visible = false;
 _global.style.setStyle("themeColor", "haloBlue");
 /********************************************************/
 // form holder placed in the correct spot
+var blocker:MovieClip;
+var libraryManager:MovieClip;
 this.createEmptyMovieClip("formContent_mc", 0);
 formContent_mc._x = 270;
 formContent_mc._y = 114;
-formContent_mc.tabChildren=true; 
-formContent_mc.tabEnabled=false;
+formContent_mc.tabChildren = true;
+formContent_mc.tabEnabled = false;
 var form_mc;
-form_mc.tabChildren=true; 
-form_mc.tabEnabled=false;
+form_mc.tabChildren = true;
+form_mc.tabEnabled = false;
 //Global variables
 _global.advanced = false;
 _global.unSaved = false;
@@ -170,8 +176,8 @@ function openFile(openType:String):Void {
 		switch (openType) {
 		case "Project" :
 			_global.projectFileName = file;
-			mdm.Application.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
-			mdm.Forms.MainForm.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
+			mdm.Application.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
+			mdm.Forms.MainForm.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
 			project_xml.load(file);
 			setButtons(true);
 			setView("project");
@@ -199,8 +205,8 @@ _global.saveFile = function(saveType:String):Void  {
 			newProjectXML.appendChild(_global.serverDesign.toProject());
 			newProjectXML.appendChild(_global.serverInstance.toXML());
 			mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
-			mdm.Application.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
-			mdm.Forms.MainForm.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
+			mdm.Application.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
+			mdm.Forms.MainForm.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
 			_global.unSaved = false;
 		} else {
 			mdm.Dialogs.BrowseFile.buttonText = "Save";
@@ -222,8 +228,8 @@ _global.saveFile = function(saveType:String):Void  {
 				newProjectXML.appendChild(_global.serverDesign.toProject());
 				newProjectXML.appendChild(_global.serverInstance.toProject());
 				mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
-				mdm.Application.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
-				mdm.Forms.MainForm.title = "eLIFE Admin Tool - ["+_global.projectFileName+"]";
+				mdm.Application.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
+				mdm.Forms.MainForm.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
 				_global.unSaved = false;
 			}
 		}
@@ -261,7 +267,6 @@ function searchProject(treeNode:Object, object:Object):Object {
 }
 /********************************************************/
 _global.refreshTheTree = function() {
-	
 	//var oBackupDP = _global.left_tree.dataProvider;
 	_global.left_tree.dataProvider = null;
 	// clear
@@ -273,7 +278,7 @@ _global.refreshTheTree = function() {
 	_global.right_tree.dataProvider = oBackupDP;
 	_global.output_panel.setDescription(_global.left_tree.selectedNode.description);
 	_global.output_panel.setError(_global.left_tree.selectedNode.object.getValidationMsg());
-	_global.output_panel.draw();	
+	_global.output_panel.draw();
 };
 function createWorkflow(inNode:Object) {
 	_global.workflow.addNode(inNode.object.getKey(), inNode);
@@ -335,7 +340,7 @@ function appExit():Void {
 	if (Result) {
 		_global.serverInstance.serverConnection.disconnect();
 		mdm.Application.exit();
-	}	
+	}
 }
 /********************************************************/
 _global.comboSetSelected = function(combo, val, field) {
@@ -553,13 +558,13 @@ tabs_tb.change = function(eventObj) {
 			break;
 		case "Publish" :
 			form_mc = formContent_mc.attachMovie("forms.control.publishserver", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
-			break;			
+			break;
 		case "Panels" :
-			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject,panels:tempObject.getPanels()});
+			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject, panels:tempObject.getPanels()});
 			break;
 		case "Rooms" :
-			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject,rooms:tempObject.getRooms()});
-			break;			
+			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject, rooms:tempObject.getRooms()});
+			break;
 		default :
 			form_mc = formContent_mc.attachMovie(tempObject.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getData());
 			break;
@@ -632,7 +637,7 @@ leftTreeListener.change = function(eventObj) {
 			break;
 			//Need to rewrite how a view is attached to a server object
 			//_global.server.attachView(form_mc);			
-			break;			
+			break;
 		default :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}];
@@ -662,7 +667,7 @@ buttonListener.click = function(eventObj) {
 		setView("control");
 		break;
 	case preview_btn :
-		if (_global.left_tree.visible) {
+		if (workFlow_split.visible) {
 			var temp_node = _global.left_tree.selectedNode;
 			var found_node_id = null;
 			while ((temp_node != null) && (found_node_id == null)) {
@@ -685,17 +690,60 @@ buttonListener.click = function(eventObj) {
 			}
 		}
 		break;
+	case library_btn :
+		if (workFlow_split.visible) {
+			if (form_mc.dataObject != undefined) {
+				eventObj.target.selected = true;
+				blocker = _root.createEmptyMovieClip("blo" + (_global.formDepth++) + "cker", 10000);
+				/*blocker._x = 0;
+				blocker._y = 0;
+				blocker.width = Stage.width;
+				blocker.height = Stage.height;*/
+				blocker.beginFill(0x000000);
+				blocker.moveTo(0, 0);
+				blocker.lineTo(Stage.width, 0);
+				blocker.lineTo(Stage.width, Stage.height);
+				blocker.lineTo(0, Stage.height);
+				blocker.lineTo(0, 0);
+				blocker.endFill();
+				blocker.onRelease = function() {
+				};
+				blocker._alpha = 20;
+				blocker.useHandCursor = false;
+				var tempObject = form_mc.dataObject;
+				//libraryManager = _root.attachMovie("forms.librarymanager","library"+ (_global.formDepth++) +"Manager",_root.getNextHighestDepth(),{dataObject:form_mc.dataObject});
+				libraryManager = PopUpManager.createPopUp(_root, Window, true, {contentPath:"forms.librarymanager"});
+				libraryManager._x = 300;
+				libraryManager._y = 50;
+				libraryManager.title = "Library";
+				libraryManager.closeButton = true;
+				var winListener:Object = new Object();
+				winListener.click = function() {
+					libraryManager.deletePopUp();
+					blocker.unloadMovie();
+				};
+				winListener.complete = function(evt_obj:Object) {
+					libraryManager.setSize(libraryManager.content._width, libraryManager.content._height + 25);
+					libraryManager.content.doLoad(tempObject);
+				};
+				libraryManager.addEventListener("click", winListener);
+				libraryManager.addEventListener("complete", Delegate.create(this,winListener.complete));
+			}
+		}
+		break;
 		/*
 		case historyViewer_btn :
 		eventObj.target.selected = true;
 		setView("history");
-		break;*/
+		break;
+		*/
 	}
 };
 home_btn.addEventListener("click", buttonListener);
 project_btn.addEventListener("click", buttonListener);
 control_btn.addEventListener("click", buttonListener);
 preview_btn.addEventListener("click", buttonListener);
+library_btn.addEventListener("click", Delegate.create(this,buttonListener.click));
 //historyViewer_btn.addEventListener("click", buttonListener);
 /****************************************************************/
 buttonListener2 = new Object();
@@ -739,6 +787,7 @@ function setButtons(enabled:Boolean) {
 	project_btn.enabled = enabled;
 	control_btn.enabled = enabled;
 	preview_btn.enabled = enabled;
+	library_btn.enabled = enabled;
 	//historyViewer_btn.enabled = enabled;
 	advanced_btn.enabled = enabled;
 	//mdm.Menu.Main.itemVisible("File", "Import Server XML", enabled);
@@ -760,6 +809,10 @@ control_btn.onRollOver = function() {
 };
 preview_btn.onRollOver = function() {
 	DisplayTip("Client Preview");
+	this.setState("highlighted");
+};
+library_btn.onRollOver = function() {
+	DisplayTip("Library");
 	this.setState("highlighted");
 };
 /*
@@ -788,6 +841,10 @@ control_btn.onRollOut = function() {
 	this.setState(false);
 };
 preview_btn.onRollOut = function() {
+	CloseTip();
+	this.setState(false);
+};
+library_btn.onRollOut = function() {
 	CloseTip();
 	this.setState(false);
 };
