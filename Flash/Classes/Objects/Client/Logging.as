@@ -123,13 +123,13 @@
 	}
 	public function getUsedKeys():Array{
 		for (var group in groups) {
-			usedKeys.concat(groups[group].getUsedKeys());
+			usedKeys=usedKeys.concat(groups[group].getUsedKeys());
 		}
 		return super.getUsedKeys();
 	}
 	public function getIcons():Array{
 		for (var group in groups) {
-			icons.concat(groups[group].getIcons());
+			icons=icons.concat(groups[group].getIcons());
 		}
 		return super.getIcons();
 	}

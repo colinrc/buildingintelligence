@@ -86,13 +86,13 @@
 	}
 	public function getUsedKeys():Array{
 		for (var control in controls) {
-			usedKeys.concat(controls[control].getUsedKeys());
+			usedKeys=usedKeys.concat(controls[control].getUsedKeys());
 		}
 		return super.getUsedKeys();
 	}
 	public function getIcons():Array{
 		for (var control in controls) {
-			icons.concat(controls[control].getIcons());
+			icons=icons.concat(controls[control].getIcons());
 		}
 		return super.getIcons();
 	}

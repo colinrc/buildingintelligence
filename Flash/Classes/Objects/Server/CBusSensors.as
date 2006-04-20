@@ -11,21 +11,32 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var sensor in sensors) {
 			if ((sensors[sensor].attributes["ACTIVE"] != "Y") && (sensors[sensor].attributes["ACTIVE"] != "N")) {
 				flag = "error";
+				appendValidationMsg("Active flag is invalid");
 			}
 			if ((sensors[sensor].attributes["KEY"] == undefined) || (sensors[sensor].attributes["KEY"] == "")) {
 				flag = "error";
+				appendValidationMsg("Key is invalid");
+			} else {
+				if (_global.isKeyUsed(sensors[sensor].attributes["KEY"]) == false) {
+					flag = "error";
+					appendValidationMsg(sensors[sensor].attributes["KEY"]+" key is not being used");
+				}
 			}
 			if ((sensors[sensor].attributes["CHANNEL"] == undefined) || (sensors[sensor].attributes["CHANNEL"] == "")) {
 				flag = "error";
+				appendValidationMsg("Channel is invalid");
 			}
 			if ((sensors[sensor].attributes["NAME"] == undefined) || (sensors[sensor].attributes["NAME"] == "")) {
 				flag = "error";
+				appendValidationMsg("Name is invalid");
 			}
 			if ((sensors[sensor].attributes["DISPLAY_NAME"] == undefined) || (sensors[sensor].attributes["DISPLAY_NAME"] == "")) {
 				flag = "error";
+				appendValidationMsg("Display Name is invalid");
 			}
 		}
 		return flag;

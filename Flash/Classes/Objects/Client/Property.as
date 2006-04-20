@@ -102,13 +102,13 @@
 	}
 	public function getUsedKeys():Array{
 		for (var zone in zones) {
-			usedKeys.concat(zones[zone].getUsedKeys());
+			usedKeys=usedKeys.concat(zones[zone].getUsedKeys());
 		}
 		return super.getUsedKeys();
 	}
 	public function getIcons():Array{
 		for (var zone in zones) {
-			icons.concat(zones[zone].getIcons());
+			icons=icons.concat(zones[zone].getIcons());
 		}
 		return super.getIcons();
 	}

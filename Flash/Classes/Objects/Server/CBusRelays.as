@@ -11,21 +11,32 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var relay in relays) {
 			if ((relays[relay].attributes["ACTIVE"] != "Y") && (relays[relay].attributes["ACTIVE"] != "N")) {
 				flag = "error";
+				appendValidationMsg("Active flag is invalid");
 			}
 			if ((relays[relay].attributes["KEY"] == undefined) || (relays[relay].attributes["KEY"] == "")) {
 				flag = "error";
+				appendValidationMsg("Key is invalid");
+			} else {
+				if (_global.isKeyUsed(relays[relay].attributes["KEY"]) == false) {
+					flag = "error";
+					appendValidationMsg(relays[relay].attributes["KEY"]+" key is not being used");
+				}
 			}
 			if ((relays[relay].attributes["CHANNEL"] == undefined) || (relays[relay].attributes["CHANNEL"] == "")) {
 				flag = "error";
+				appendValidationMsg("Channel is invalid");
 			}
 			if ((relays[relay].attributes["NAME"] == undefined) || (relays[relay].attributes["NAME"] == "")) {
 				flag = "error";
+				appendValidationMsg("Name is invalid");
 			}
 			if ((relays[relay].attributes["DISPLAY_NAME"] == undefined) || (relays[relay].attributes["DISPLAY_NAME"] == "")) {
 				flag = "error";
+				appendValidationMsg("Display Name is invalid");
 			}
 		}
 		return flag;

@@ -11,15 +11,42 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
+		if (alerts.length == 0) {
+			flag = "empty";
+			appendValidationMsg("No Alerts are defined");
+		}
 		for (var alert in alerts) {
-			if ((alerts[alert].attributes["ACTIVE"] != "Y") && (alerts[alert].attributes["ACTIVE"] != "N")) {
+			
+			if ((alerts[alert].cat == undefined) || (alerts[alert].cat == "")) {
+				flag = "warning";
+				appendValidationMsg("Client Catagory is invalid");
+			} 
+			if ((alerts[alert].message == undefined) || (alerts[alert].message == "")) {
+				flag = "warning";
+				appendValidationMsg("Message is invalid");
+			} 
+			if ((alerts[alert].type == undefined) || (alerts[alert].type == "")) {
+				flag = "warning";
+				appendValidationMsg("Alert Type is invalid");
+			} 
+			
+			if ((alerts[alert].active != "Y") && (alerts[alert].active != "N")) {
 				flag = "error";
+				appendValidationMsg("Active flag is invalid");
 			}
-			if ((alerts[alert].attributes["KEY"] == undefined) || (alerts[alert].attributes["KEY"] == "")) {
+			if ((alerts[alert].key == undefined) || (alerts[alert].key == "")) {
 				flag = "error";
+				appendValidationMsg("Key is invalid");
+			} else {
+				if (_global.isKeyUsed(alerts[alert].key) == false) {
+					flag = "error";
+					appendValidationMsg(alerts[alert].key+" key is not being used");
+				}
 			}
-			if ((alerts[alert].attributes["DISPLAY_NAME"] == undefined) || (alerts[alert].attributes["DISPLAY_NAME"] == "")) {
+			if ((alerts[alert].display_name == undefined) || (alerts[alert].display_name == "")) {
 				flag = "error";
+				appendValidationMsg("Display Name is invalid");
 			}
 		}
 		return flag;

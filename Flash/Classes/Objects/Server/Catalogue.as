@@ -7,12 +7,16 @@
 	}			
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var item in items) {
-			if ((items[item].attributes["CODE"] == undefined) || (items[item].attributes["CODE"] == "")) {
+			
+			if ((items[item].code == undefined) || (items[item].code == "")) {
 				flag = "error";
+				appendValidationMsg("Code is invalid");
 			}
-			if ((items[item].attributes["VALUE"] == undefined) || (items[item].attributes["VALUE"] == "")) {
+			if ((items[item].value == undefined) || (items[item].value == "")) {
 				flag = "error";
+				appendValidationMsg("Value is invalid");
 			}
 		}
 		return flag;

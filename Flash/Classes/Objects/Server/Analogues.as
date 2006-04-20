@@ -11,6 +11,7 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var analogue in analogues) {
 			if ((analogues[analogue].attributes["ACTIVE"] != "Y") && (analogues[analogue].attributes["ACTIVE"] != "N")) {
 				flag = "error";
@@ -23,6 +24,27 @@
 			}
 			if ((analogues[analogue].attributes["DISPLAY_NAME"] == undefined) || (analogues[analogue].attributes["DISPLAY_NAME"] == "")) {
 				flag = "error";
+			}
+			if ((analogues[analogue].active != "Y") && (analogues[analogue].active != "N")) {
+				flag = "error";
+				appendValidationMsg("Active flag is invalid");
+			}
+			if ((analogues[analogue].key == undefined) || (analogues[analogue].key == "")) {
+				flag = "error";
+				appendValidationMsg("Key is invalid");
+			} else {
+				if (_global.isKeyUsed(analogues[analogue].key) == false) {
+					flag = "error";
+					appendValidationMsg(analogues[analogue].key+" key is not being used");
+				}
+			}
+			if ((analogues[analogue].display_name == undefined) || (analogues[analogue].display_name == "")) {
+				flag = "error";
+				appendValidationMsg("Display Name is invalid");
+			}
+			if ((analogues[analogue].name == undefined) || (analogues[analogue].name == "")) {
+				flag = "error";
+				appendValidationMsg("Name is invalid");
 			}
 		}
 		return flag;

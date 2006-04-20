@@ -14,20 +14,40 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
-		if ((device_type == undefined) || (device_type == "")) {
-			flag = "error";
+		clearValidationMsg();
+		if (active = "Y"){
+			if ((description == undefined) || (description == "")) {
+				flag = "empty";
+				appendValidationMsg("Description is invalid");
+			}		
+			if ((device_type == undefined) || (device_type == "")) {
+				flag = "error";
+				appendValidationMsg("Device Type is invalid");
+			}
+			if (connection.attributes["TYPE"] == "IP") {
+				if ((connection.attributes["ADDRESS"] == "") || (connection.attributes["ADDRESS"] ==undefined)) {
+					flag = "error";
+					appendValidationMsg("Connection Address is invalid");
+				}
+				if ((connection.attributes["PORT"] == "") || (connection.attributes["PORT"] ==undefined)) {
+					flag = "error";
+					appendValidationMsg("Connection Port is invalid");
+				}
+				
+			}
+			
+			//flag = getHighestFlagValue(flag, sensors.isValid());
+			//flag = getHighestFlagValue(flag, lights.isValid());
+			//flag = getHighestFlagValue(flag, relays.isValid());
+			//flag = getHighestFlagValue(flag, temperatureSensors.isValid());
+			//need to isValid connection and parameters 
+			
+			//appendValidationMsg("CBUS is invalid");
 		}
-		if ((description == undefined) || (description == "")) {
-			flag = "error";
-		}		
-		if ((active != "Y") && (active != "N")) {
-			flag = "error";
+		else{
+			flag = "empty";
+			appendValidationMsg("CBUS is not Active");
 		}
-		flag = getHighestFlagValue(flag, sensors.isValid());
-		flag = getHighestFlagValue(flag, lights.isValid());
-		flag = getHighestFlagValue(flag, relays.isValid());
-		flag = getHighestFlagValue(flag, temperatureSensors.isValid());
-		//need to isValid connection and parameters 
 		return flag;
 	}
 	public function toXML():XMLNode {

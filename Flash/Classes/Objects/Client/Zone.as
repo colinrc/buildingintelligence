@@ -247,22 +247,22 @@
 		hideFromList = newData.hideFromList;
 	}
 	public function getUsedKeys():Array{
-		usedKeys.concat(arbitrary.getUsedKeys());
+		usedKeys=usedKeys.concat(arbitrary.getUsedKeys());
 		for (var room in rooms) {
-			usedKeys.concat(rooms[room].getUsedKeys());
+			usedKeys=usedKeys.concat(rooms[room].getUsedKeys());
 		}
 		for (var panel in panels) {
-			usedKeys.concat(panels[panel].getUsedKeys());
+			usedKeys=usedKeys.concat(panels[panel].getUsedKeys());
 		}
 		return super.getUsedKeys();
 	}
 	public function getIcons():Array{
-		icons.concat(arbitrary.getIcons());
+		icons=icons.concat(arbitrary.getIcons());
 		for (var room in rooms) {
-			icons.concat(rooms[room].getIcons());
+			icons=icons.concat(rooms[room].getIcons());
 		}
 		for (var panel in panels) {
-			icons.concat(panels[panel].getIcons());
+			icons=icons.concat(panels[panel].getIcons());
 		}
 		return super.getIcons();
 	}

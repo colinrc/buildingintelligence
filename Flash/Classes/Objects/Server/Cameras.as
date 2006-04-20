@@ -11,15 +11,24 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var camera in cameras) {
-			if ((cameras[camera].attributes["ACTIVE"] != "Y") && (cameras[camera].attributes["ACTIVE"] != "N")) {
+			if ((cameras[camera].active != "Y") && (cameras[camera].active != "N")) {
 				flag = "error";
+				appendValidationMsg("Active flag is invalid");
 			}
-			if ((cameras[camera].attributes["KEY"] == undefined) || (cameras[camera].attributes["KEY"] == "")) {
+			if ((cameras[camera].key == undefined) || (cameras[camera].key == "")) {
 				flag = "error";
+				appendValidationMsg("Key is invalid");
+			} else {
+				if (_global.isKeyUsed(cameras[camera].key) == false) {
+					flag = "error";
+					appendValidationMsg(cameras[camera].key+" key is not being used");
+				}
 			}
-			if ((cameras[camera].attributes["DISPLAY_NAME"] == undefined) || (cameras[camera].attributes["DISPLAY_NAME"] == "")) {
+			if ((cameras[camera].display_name == undefined) || (cameras[camera].display_name == "")) {
 				flag = "error";
+				appendValidationMsg("Display Name is invalid");
 			}
 			//does zoom need to be checked?  
 		}

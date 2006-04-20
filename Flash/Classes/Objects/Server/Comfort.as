@@ -34,14 +34,18 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		if ((device_type == undefined) || (device_type == "")) {
 			flag = "error";
+			appendValidationMsg("Device Type is invalid");
 		}
 		if ((description == undefined) || (description == "")) {
-			flag = "error";
+			flag = "empty";
+			appendValidationMsg("Description is empty");
 		}		
 		if ((active != "Y") && (active != "N")) {
 			flag = "error";
+			appendValidationMsg("Active flag is invalid");
 		}
 		flag = getHighestFlagValue(flag, customs.isValid());
 		flag = getHighestFlagValue(flag, raw_interfaces.isValid());
@@ -59,7 +63,7 @@
 		flag = getHighestFlagValue(flag, catalogues.isValid());
 		flag = getHighestFlagValue(flag, door_ids.isValid());
 		flag = getHighestFlagValue(flag, comfort_users.isValid());
-		//need to isValid connection and parameters  
+		appendValidationMsg("Comfort is invalid");
 		return flag;
 	}
 	public function toXML():XMLNode {

@@ -90,14 +90,14 @@
 	}
 	public function getUsedKeys():Array{
 		for (var alerts in alertgroups) {
-			usedKeys.concat(alertgroups[alerts].getUsedKeys());
+			usedKeys=usedKeys.concat(alertgroups[alerts].getUsedKeys());
 		}
 		return super.getUsedKeys();
 	}
 	public function getIcons():Array{
 		for (var alerts in alertgroups) {
 			//var newAlerts = new Objects.Client.Alerts();
-			icons.concat(alertgroups[alerts].getIcons());
+			icons=icons.concat(alertgroups[alerts].getIcons());
 		}
 		return super.getIcons();
 	}

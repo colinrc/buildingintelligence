@@ -3,9 +3,11 @@
 	private var treeNode:XMLNode;	
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var catalogue in catalogues) {
-			if (!catalogues[catalogue].isValid()) {
+			if (catalogues[catalogue].isValid()!="ok") {
 				flag = "error";
+				appendValidationMsg("Catalogue's are in error");
 			}
 		}
 		return flag;

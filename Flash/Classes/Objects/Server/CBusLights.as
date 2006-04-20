@@ -11,21 +11,32 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var light in lights) {
 			if ((lights[light].attributes["ACTIVE"] != "Y") && (lights[light].attributes["ACTIVE"] != "N")) {
 				flag = "error";
+				appendValidationMsg("Active flag is invalid");
 			}
 			if ((lights[light].attributes["KEY"] == undefined) || (lights[light].attributes["KEY"] == "")) {
 				flag = "error";
+				appendValidationMsg("Key is invalid");
+			} else {
+				if (_global.isKeyUsed(lights[light].attributes["KEY"]) == false) {
+					flag = "error";
+					appendValidationMsg(lights[light].attributes["KEY"]+" key is not being used");
+				}
 			}
 			if ((lights[light].attributes["CHANNEL"] == undefined) || (lights[light].attributes["CHANNEL"] == "")) {
 				flag = "error";
+				appendValidationMsg("Channel is invalid");
 			}
 			if ((lights[light].attributes["NAME"] == undefined) || (lights[light].attributes["NAME"] == "")) {
 				flag = "error";
+				appendValidationMsg("Name is invalid");
 			}
 			if ((lights[light].attributes["DISPLAY_NAME"] == undefined) || (lights[light].attributes["DISPLAY_NAME"] == "")) {
 				flag = "error";
+				appendValidationMsg("Display Name is invalid");
 			}
 		}
 		return flag;

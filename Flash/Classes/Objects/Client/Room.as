@@ -125,17 +125,17 @@
 		switchZone = newData.switchZone;
 	}
 	public function getUsedKeys():Array{
-		usedKeys.concat(window.getUsedKeys());
-		usedKeys.concat(doors.getUsedKeys());
-		usedKeys.concat(alerts.getUsedKeys());
-		usedKeys.concat(zone.getUsedKeys());
+		usedKeys=usedKeys.concat(window.getUsedKeys());
+		usedKeys=usedKeys.concat(doors.getUsedKeys());
+		usedKeys=usedKeys.concat(alerts.getUsedKeys());
+		usedKeys=usedKeys.concat(zone.getUsedKeys());
 		return super.getUsedKeys();
 	}
 	public function getIcons():Array{
-		icons.concat(window.getIcons());
-		icons.concat(doors.getIcons());
-		icons.concat(alerts.getIcons());
-		icons.concat(zone.getIcons());
+		icons=icons.concat(window.getIcons());
+		icons=icons.concat(doors.getIcons());
+		icons=icons.concat(alerts.getIcons());
+		icons=icons.concat(zone.getIcons());
 		return super.getIcons();
 	}
 }

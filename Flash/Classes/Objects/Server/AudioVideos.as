@@ -11,12 +11,21 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var audiovideo in audiovideos) {
-			if ((audiovideos[audiovideo].attributes["KEY"] == undefined) || (audiovideos[audiovideo].attributes["KEY"] == "")) {
+			
+			if ((audiovideos[audiovideo].key == undefined) || (audiovideos[audiovideo].key == "")) {
 				flag = "error";
+				appendValidationMsg("Key is invalid");
+			} else {
+				if (_global.isKeyUsed(audiovideos[audiovideo].key) == false) {
+					flag = "error";
+					appendValidationMsg(audiovideos[audiovideo].key+" key is not being used");
+				}
 			}
-			if ((audiovideos[audiovideo].attributes["DISPLAY_NAME"] == undefined) || (audiovideos[audiovideo].attributes["DISPLAY_NAME"] == "")) {
+			if ((audiovideos[audiovideo].display_name == undefined) || (audiovideos[audiovideo].display_name == "")) {
 				flag = "error";
+				appendValidationMsg("Display Name is invalid");
 			}
 		}
 		return flag;
