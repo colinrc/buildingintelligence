@@ -114,7 +114,7 @@
 				}
 			}
 		} else {
-			trace("Error, received "+newData.nodeName+", was expecting icon");
+			mdm.Dialogs.prompt("Error, received "+newData.nodeName+", was expecting icon");
 		}
 	}
 

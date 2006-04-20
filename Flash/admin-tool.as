@@ -3,7 +3,6 @@
 import mx.managers.PopUpManager;
 import mx.containers.Window;
 import mx.utils.Delegate;
-
 mdm.Exception.enableHandler();
 mdm.Application.onMDMScriptException = function(myObject) {
 	/* mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
@@ -126,6 +125,7 @@ project_xml.onLoad = function(success) {
 	//Append list of server designs and list of server implementations
 	_global.serverDesign = new Objects.Server.Server();
 	_global.serverInstance = new Objects.Instances.ServerInstance();
+	_global.serverInstance.serverDesign = _global.serverDesign;
 	//mdm.Dialogs.prompt(project_xml.toString());
 	for (var child in project_xml.firstChild.childNodes) {
 		switch (project_xml.firstChild.childNodes[child].nodeName) {
@@ -269,17 +269,22 @@ function searchProject(treeNode:Object, object:Object):Object {
 }
 /********************************************************/
 _global.refreshTheTree = function() {
+	if (workFlow_split.visible) {		
+		_global.left_tree.dataProvider = null;
+		// clear
+		_global.left_tree.dataProvider = _global.designTree_xml;	
+	} else{
+		_global.left_tree.dataProvider = null;
+		// clear
+		_global.left_tree.dataProvider = _global.controlTree_xml;
+	}
 	_global.keys = _global.serverDesign.getKeys();
 	var clientList:Array = _global.serverDesign.getClients();
 	var temp:Array = null;
 	for (var eachClient in clientList) {
-		 temp.concat(clientList[eachClient].getUsedKeys);
+		temp.concat(clientList[eachClient].getUsedKeys);
 	}
 	_global.usedKeys = temp;
-	//var oBackupDP = _global.left_tree.dataProvider;
-	_global.left_tree.dataProvider = null;
-	// clear
-	_global.left_tree.dataProvider = _global.designTree_xml;
 	_global.workflow.buildWorkflowTree();
 	createWorkflow(_global.designTree_xml);
 	oBackupDP = _global.right_tree.dataProvider;
@@ -290,18 +295,18 @@ _global.refreshTheTree = function() {
 	_global.output_panel.draw();
 };
 /********************************************************/
-_global.isKeyValid = function(inKey:String):Boolean {
+_global.isKeyValid = function(inKey:String):Boolean  {
 	for (var key in _global.keys) {
-		if (_global.keys[key] == inKey){
+		if (_global.keys[key] == inKey) {
 			return true;
 		}
 	}
 	return false;
 };
 /********************************************************/
-_global.isKeyUsed = function(inKey:String):Boolean {
+_global.isKeyUsed = function(inKey:String):Boolean  {
 	for (var key in _global.usedKeys) {
-		if (_global.usedKeys[key] == inKey){
+		if (_global.usedKeys[key] == inKey) {
 			return true;
 		}
 	}
@@ -402,6 +407,7 @@ mdm.Menu.Main.onMenuClick_New_Project = function() {
 	_global.project = new Object();
 	_global.serverDesign = new Objects.Server.Server();
 	_global.serverInstance = new Objects.Instances.ServerInstance();
+	_global.serverInstance.serverDesign = _global.serverDesign;
 	_global.designTree_xml = new XML();
 	_global.designTree_xml.appendChild(serverDesign.toTree());
 	var clients = _global.serverDesign.getClients();
@@ -570,7 +576,7 @@ tabs_tb.change = function(eventObj) {
 			form_mc = formContent_mc.attachMovie("forms.project.client.overrides", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {attributes:tempObject.getAttributes(), attributeGroups:tempObject.attributeGroups, dataObject:tempObject});
 			break;
 		case "Control" :
-			form_mc = formContent_mc.attachMovie("forms.control.servercontrols", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
+			form_mc = formContent_mc.attachMovie("forms."+eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
 			break;
 		case "Clients" :
 			form_mc = formContent_mc.attachMovie("forms.control.clients", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getClients());
@@ -585,7 +591,7 @@ tabs_tb.change = function(eventObj) {
 			form_mc = formContent_mc.attachMovie("forms.control.sftp", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
 			break;
 		case "Publish" :
-			form_mc = formContent_mc.attachMovie("forms.control.publishserver", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
+			form_mc = formContent_mc.attachMovie("forms."+eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
 			break;
 		case "Panels" :
 			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject, panels:tempObject.getPanels()});
@@ -658,6 +664,11 @@ leftTreeListener.change = function(eventObj) {
 			//Need to rewrite how a view is attached to a server object
 			//_global.server.attachView(form_mc);			
 			break;
+		case "clientInstance":
+			form_mc = formContent_mc.attachMovie("forms.control.clientcontrols", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getConnections());
+			tabs_tb.dataProvider = [{label:"Control", view:"control.clientcontrols"}, {label:"Publish", view:"control.publishclient"}, {label:"SFTP", view:"control.sftp"}];
+			tabs_tb.selectedIndex = 0;		
+			break;
 		case "Zone" :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"Rooms", view:"forms.project.client.rooms"}, {label:"Panels", view:"forms.project.client.panels"}, {label:"XML", view:"forms.project.xml"}];
@@ -721,41 +732,103 @@ buttonListener.click = function(eventObj) {
 	case library_btn :
 		if (workFlow_split.visible) {
 			if (form_mc.dataObject != undefined) {
-				eventObj.target.selected = true;
-				blocker = _root.createEmptyMovieClip("blo" + (_global.formDepth++) + "cker", 10000);
-				/*blocker._x = 0;
-				blocker._y = 0;
-				blocker.width = Stage.width;
-				blocker.height = Stage.height;*/
-				blocker.beginFill(0x000000);
-				blocker.moveTo(0, 0);
-				blocker.lineTo(Stage.width, 0);
-				blocker.lineTo(Stage.width, Stage.height);
-				blocker.lineTo(0, Stage.height);
-				blocker.lineTo(0, 0);
-				blocker.endFill();
-				blocker.onRelease = function() {
-				};
-				blocker._alpha = 20;
-				blocker.useHandCursor = false;
-				var tempObject = form_mc.dataObject;
-				//libraryManager = _root.attachMovie("forms.librarymanager","library"+ (_global.formDepth++) +"Manager",_root.getNextHighestDepth(),{dataObject:form_mc.dataObject});
-				libraryManager = PopUpManager.createPopUp(_root, Window, true, {contentPath:"forms.librarymanager"});
-				libraryManager._x = 300;
-				libraryManager._y = 50;
-				libraryManager.title = "Library";
-				libraryManager.closeButton = true;
-				var winListener:Object = new Object();
-				winListener.click = function() {
-					libraryManager.deletePopUp();
-					blocker.unloadMovie();
-				};
-				winListener.complete = function(evt_obj:Object) {
-					libraryManager.setSize(libraryManager.content._width, libraryManager.content._height + 25);
-					libraryManager.content.doLoad(tempObject);
-				};
-				libraryManager.addEventListener("click", winListener);
-				libraryManager.addEventListener("complete", Delegate.create(this,winListener.complete));
+				switch (form_mc.dataObject.getKey()) {
+				case "AlertGroups" :
+				case "Calendar" :
+				case "Calendar_Settings" :
+				case "Calendar_Tab" :
+				case "Client" :
+				case "ClientAlerts" :
+				case "ClientApps_Bar" :
+				case "ClientAritrary" :
+				case "ClientControl" :
+				case "ClientControl_Panel_Apps" :
+				case "ClientControl_Types" :
+				case "ClientDoors" :
+				case "ClientIcon" :
+				case "ClientRoom" :
+				case "ClientSounds" :
+				case "ClientTab" :
+				case "ClientWindow" :
+				case "Comfort" :
+				case "Dynalite" :
+				case "GC100" :
+				case "Hal" :
+				case "IRLearner" :
+				case "Kramer" :
+				case "Logging" :
+				case "LoggingGroup" :
+				case "Oregon" :
+				case "Panel" :
+				case "Pelco" :
+				case "Property" :
+				case "Raw_Connection" :
+				case "Server" :
+				case "StatusBar" :
+				case "StatusBarGroup" :
+				case "Tutondo" :
+				case "Variables" :
+				case "Zone" :
+					eventObj.target.selected = true;
+					blocker = _root.createEmptyMovieClip("blo" + (_global.formDepth++) + "cker", 10000);
+					blocker.beginFill(0x000000);
+					blocker.moveTo(0, 0);
+					blocker.lineTo(Stage.width, 0);
+					blocker.lineTo(Stage.width, Stage.height);
+					blocker.lineTo(0, Stage.height);
+					blocker.lineTo(0, 0);
+					blocker.endFill();
+					blocker.onRelease = function() {
+					};
+					blocker._alpha = 20;
+					blocker.useHandCursor = false;
+					var tempObject = form_mc.dataObject;
+					libraryManager = PopUpManager.createPopUp(_root, Window, true, {contentPath:"forms.librarymanager"});
+					libraryManager._x = 300;
+					libraryManager._y = 50;
+					libraryManager.title = "Library";
+					libraryManager.closeButton = true;
+					var winListener:Object = new Object();
+					winListener.click = function() {
+						libraryManager.deletePopUp();
+						blocker.unloadMovie();
+						var foundNode = searchProject(_global.left_tree.dataProvider, tempObject);
+						if (foundNode != undefined) {
+							left_tree.setIsOpen(foundNode, true);
+							var temp_node = foundNode.parentNode;
+							while (temp_node != null) {
+								left_tree.setIsOpen(temp_node, true);
+								temp_node = temp_node.parentNode;
+							}
+							var parentNode = foundNode.parentNode;
+							if(tempObject.getKey() == "Server"){
+								for(var node in parentNode.childNodes){
+									parentNode.childNodes[node].removeNode();
+								}
+							} else{
+								foundNode.removeNode();
+							}
+							foundNode=tempObject.toTree();
+							parentNode.appendChild(foundNode);
+							left_tree.selectedNode = foundNode;															
+							var selectNode = new Object();
+							selectNode.target = _global.left_tree;
+							selectNode.type = "change";
+							left_tree.dispatchEvent(selectNode);
+						}
+						_global.refreshTheTree();
+						_global.unSaved = true;
+					};
+					winListener.complete = function(evt_obj:Object) {
+						libraryManager.setSize(libraryManager.content._width + 7, libraryManager.content._height + 35);
+						libraryManager.content.doLoad(tempObject);
+					};
+					libraryManager.addEventListener("click", winListener);
+					libraryManager.addEventListener("complete", Delegate.create(this, winListener.complete));
+					break;
+				default :
+					break;
+				}
 			}
 		}
 		break;
@@ -771,7 +844,7 @@ home_btn.addEventListener("click", buttonListener);
 project_btn.addEventListener("click", buttonListener);
 control_btn.addEventListener("click", buttonListener);
 preview_btn.addEventListener("click", buttonListener);
-library_btn.addEventListener("click", Delegate.create(this,buttonListener.click));
+library_btn.addEventListener("click", Delegate.create(this, buttonListener.click));
 //historyViewer_btn.addEventListener("click", buttonListener);
 /****************************************************************/
 buttonListener2 = new Object();

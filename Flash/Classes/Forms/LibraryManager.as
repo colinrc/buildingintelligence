@@ -38,17 +38,17 @@ class Forms.LibraryManager extends Forms.BaseForm{
 	private function restoreItem(){
 		if(library_ls.selectedItem != undefined){
 			var tempXML = new XML();
+			tempXML.ignoreWhite = true;
 			var url = "";
 			url = mdm.Application.path+"library\\"+dataObject.getKey()+"\\"+library_ls.selectedItem.data;
-			tempXML.onLoad = function(success:Boolean){
+			tempXML.onLoad = Delegate.create(this,function(success:Boolean){
 				if(success){
-					dataObject.setXML(this.firstChild);
+					dataObject.setXML(tempXML.firstChild);
 				} else{
 					mdm.Dialogs.prompt("Error Loading: "+url);
 				}
-			}
+			});
 			tempXML.load(url);
-			_global.unSaved = true;
 		}
 	}
 	private function deleteItem(){

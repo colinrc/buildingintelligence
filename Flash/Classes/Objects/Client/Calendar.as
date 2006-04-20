@@ -23,9 +23,26 @@
 		for (var attribute in attributes) {
 			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
 		}
+		/*Categories are hard coded for time being*/
+		var newCategories = new XMLNode(1,"categories");
+		var newCategory = new XMLNode(1,"category");
+		newCategory.attributes.name = "Birthday";
+		newCategory.attributes.icon = "light-bulb";
+		newCategories.appendChild(newCategory);
+		newCategory = new XMLNode(1,"category");
+		newCategory.attributes.name = "Appointment";
+		newCategory.attributes.icon = "videocamera";
+		newCategories.appendChild(newCategory);
+		newCategory = new XMLNode(1,"category");
+		newCategory.attributes.name = "Reminder";
+		newCategory.attributes.icon = "fireplace";
+		newCategories.appendChild(newCategory);
+		newNode.appendChild(newCategories);
+		var newWindowNode = new XMLNode(1,"window");
 		for (var tab = 0; tab < tabs.length; tab++) {
-			newNode.appendChild(tabs[tab].toXML());
+			newWindowNode.appendChild(tabs[tab].toXML());
 		}
+		newNode.appendChild(newWindowNode);
 		return newNode;
 	}
 	public function toTree():XMLNode {

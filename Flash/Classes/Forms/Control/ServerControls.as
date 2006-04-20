@@ -32,14 +32,14 @@ class Forms.Control.ServerControls extends Forms.BaseForm {
 	private var userName:String;
 	private var password:String;
 	public function ServerControls() {
+	}
+	public function onLoad():Void {
 		password_ti.password = true;
 		ipAddress_ti.restrict = "0-9.";
 		ipAddress_ti.maxChars = 15;
 		sftpStatus = undefined;
 		monitorStatus = undefined;
-		serverStatus = undefined;
-	}
-	public function onLoad():Void {
+		serverStatus = undefined;		
 		password_ti.text = password;
 		ipAddress_ti.text = ipAddress;
 		userName_ti.text = userName;		

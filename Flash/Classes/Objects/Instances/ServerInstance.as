@@ -7,6 +7,7 @@
 	private var monitorConnection:Object;
 	private var treeNode:XMLNode;
 	private var sftpConnection:Object;
+	private var serverDesign:Object;
 	public function deleteSelf() {
 		serverConnection.disconnectServer();
 		monitorConnection.disconnectMonitor();
@@ -48,6 +49,7 @@
 				var newClient = new Objects.Instances.ClientInstance();
 				newClient.setXML(newData.childNodes[child]);
 				newClient.id = _global.formDepth++;
+				newClient.serverParent = this;
 				clients.push(newClient);
 			}
 		} else {
@@ -83,19 +85,18 @@
 		var newClients = new Array();
 		for (var index in newData.clients) {
 			if (newData.clients[index].id == undefined) {
-				newClients.push({description:newData.clients[index].description, client_type:newData.clients[index].client_type, ipAddress:newData.clients[index].ipAddress});
+				newClients.push({description:newData.clients[index].description, ipAddress:newData.clients[index].ipAddress});
 			}
 		}
 		for (var client in clients) {
 			var found = false;
 			for (var index in newData.clients) {
 				if (clients[client].id == newData.clients[index].id) {
-					clients[client].client_type = newData.clients[index].client_type;
 					clients[client].description = newData.clients[index].description;
 					clients[client].ipAddress = newData.clients[index].ipAddress;
 					found = true;
 				} else {
-					newClients.push({description:newData.clients[index].description, client_type:newData.clients[index].client_type});
+					newClients.push({description:newData.clients[index].description, ipAddress:newData.clients[index].ipAddress});
 				}
 			}
 			if (found == false) {
@@ -104,6 +105,15 @@
 			}
 		}
 		for (var newClient in newClients) {
+				var newClientObject = new Objects.Instances.ClientInstance();
+				var newClientXML = new XMLNode(1,"clientInstance");
+				newClientXML.attributes.description = newClients[newClient].description;
+				newClientXML.attributes.ipAddress = newClients[newClient].ipAddress;
+				newClientObject.setXML(newClientXML);
+				newClientObject.id = _global.formDepth++;
+				newClientObject.serverParent = this;				
+				clients.push(newClientObject);
+				treeNode.appendChild(newClientObject.toTree());
 		}
 		_global.left_tree.setIsOpen(treeNode, true);
 	}

@@ -138,7 +138,9 @@
 		Property = new Objects.Client.Property();
 		control_types = new Objects.Client.Control_Types();
 		if(newData.nodeName == "application") {
-			description = newData.attributes.description;
+			if(newData.attributes.description != undefined){
+				description = newData.attributes.description;
+			}
 			for(var child in newData.childNodes){
 				switch(newData.childNodes[child].nodeName){
 					case "settings":
@@ -191,13 +193,13 @@
 					calendar.setXML(newData.childNodes[child]);
 					break;
 					default:
-					trace(newData.childNodes[child]);
+					mdm.Dialogs.prompt(newData.childNodes[child]);
 					break;
 				}
 			}
 		}
 		else{
-			trace("Found node "+newData.nodeName+", was expecting application");
+			//mdm.Dialogs.prompt("Found node "+newData.nodeName+", was expecting application");
 		}
 	}
 	public function getUsedKeys():Array{

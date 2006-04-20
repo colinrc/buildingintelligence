@@ -46,15 +46,15 @@
 	public function SFTPConnection(server:Boolean) {
 		appPath = mdm.Application.path.substring(0, mdm.Application.path.length - 1);
 		localPath = appPath + "/";
+		isServer = server;		
 		if(server){
-			remotePath = "client";
+			remotePath = "server";			
 		} else{
-			remotePath = "server";
+			remotePath = "client";			
 		}
 		output = "";
 		view = undefined;
 		lastCode = "0";
-		isServer = server;
 		myActiveX = new mdm.ActiveX(0, 0, 0, 0, "WeOnlyDo.wodSFTP.1");
 		myActiveX.setProperty("LocalPath", "string", localPath);
 		myActiveX.setProperty("RemotePath", "string", remotePath);
@@ -140,7 +140,7 @@
 	public function getItem(fileName:String):Void {
 		if (fileName.length) {
 			if (lastCode != "0") {
-				myActiveX.addMethodParam(1, "string", localPath+fileName);
+				myActiveX.addMethodParam(1, "string", localPath+ "/"+fileName);
 				myActiveX.addMethodParam(2, "string", remotePath + "/" +fileName);
 				myActiveX.runMethod("GetFile", 2);
 				var lastError = myActiveX.getProperty("LastError");
@@ -163,7 +163,7 @@
 	public function putItem(fileName:String):Void {
 		if (fileName.length) {
 			if (lastCode != "0") {
-				myActiveX.addMethodParam(1, "string", localPath+fileName);
+				myActiveX.addMethodParam(1, "string", localPath+ "/"+fileName);
 				myActiveX.addMethodParam(2, "string", remotePath + "/" +fileName);
 				myActiveX.runMethod("PutFile", 2);
 				var lastError = myActiveX.getProperty("LastError");
