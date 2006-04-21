@@ -77,11 +77,12 @@
 		doors = newData.doors;
 	}
 	public function getUsedKeys():Array{
+		usedKeys = new Array();
 		for (var door in doors) {
 			if ((doors[door].attributes["key"] != "") && (doors[door].attributes["key"] != undefined)) {
 				addUsedKey(doors[door].attributes["key"]);
 			}
 		}
-		return super.getUsedKeys();
+		return usedKeys;
 	}
 }

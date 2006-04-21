@@ -203,6 +203,7 @@
 		}
 	}
 	public function getUsedKeys():Array{
+		usedKeys = new Array();
 		usedKeys=usedKeys.concat(sounds.getUsedKeys());
 		usedKeys=usedKeys.concat(status_bar.getUsedKeys());
 		usedKeys=usedKeys.concat(logging.getUsedKeys());
@@ -211,17 +212,18 @@
 		usedKeys=usedKeys.concat(Property.getUsedKeys());
 		usedKeys=usedKeys.concat(control_types.getUsedKeys());
 		usedKeys=usedKeys.concat(calendar.getUsedKeys());
-		return super.getUsedKeys();
+		return usedKeys;
 	}
 	public function getIcons():Array{
-		icons=icons.concat(sounds.getIcons());
-		icons=icons.concat(status_bar.getIcons());
-		icons=icons.concat(logging.getIcons());
-		icons=icons.concat(apps_bar.getIcons());
-		icons=icons.concat(control_panel_apps.getIcons());
-		icons=icons.concat(Property.getIcons());
-		icons=icons.concat(control_types.getIcons());
-		icons=icons.concat(calendar.getIcons());
-		return super.getIcons();
+		usedIcons = new Array();
+		//usedIcons=usedIcons.concat(sounds.getIcons());
+		usedIcons=usedIcons.concat(status_bar.getIcons());
+		usedIcons=usedIcons.concat(logging.getIcons());
+		usedIcons=usedIcons.concat(apps_bar.getIcons());
+		//usedIcons=usedIcons.concat(control_panel_apps.getIcons());
+		usedIcons=usedIcons.concat(Property.getIcons());
+		usedIcons=usedIcons.concat(control_types.getIcons());
+		usedIcons=usedIcons.concat(calendar.getIcons());
+		return usedIcons;
 	}
 }

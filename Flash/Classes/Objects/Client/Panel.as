@@ -138,19 +138,21 @@
 		height = newData.height;		
 	}
 	public function getUsedKeys():Array{
+		usedKeys = new Array();
 		for (var control in controls) {
 			if ((controls[control].attributes["key"] != "") && (controls[control].attributes["key"] != undefined)) {
 				addUsedKey(controls[control].attributes["key"]);
 			}
 		}
-		return super.getUsedKeys();
+		return usedKeys;
 	}
 	public function getIcons():Array{
+		usedIcons = new Array();
 		for (var control in controls) {
 			if ((controls[control].attributes["icons"] != "") && (controls[control].attributes["icons"] != undefined)) {
 				addIcon(controls[control].attributes["icons"]);
 			}
 		}
-		return super.getIcons();
+		return usedIcons;
 	}
 }

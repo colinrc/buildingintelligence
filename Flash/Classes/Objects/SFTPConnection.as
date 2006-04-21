@@ -171,7 +171,7 @@
 					appendOutput(processError(lastError));
 				} else {
 					appendOutput("File Transfer Successful!");
-					appendOutput("Uploaded file: " + fileName + ", from: " + localPath + fileName);
+					appendOutput("Uploaded file: " + fileName + ", from: " + localPath+ "/"+ fileName);
 					if (view != undefined) {
 						view.needRefresh();
 					}

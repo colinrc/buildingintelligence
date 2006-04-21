@@ -1,14 +1,14 @@
 ﻿class Objects.BaseElement {
 	private var validationMsg="";
-	var icons:Array;
+	public var usedIcons:Array = new Array();
 	var usedKeys:Array;
 	private var errorText:String ="";
 	
-	public function getIcons():Array{
-		return icons;
-	}
+	//public function getIcons():Array{
+	//	return usedIcons;
+	//}
 	private function addIcon(icon:String){
-		icons.push(icon);
+		usedIcons.push(icon);
 	}
 	public function getUsedKeys():Array{
 		return usedKeys;

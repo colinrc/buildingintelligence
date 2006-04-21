@@ -18,7 +18,9 @@ class Forms.Project.Client.ArbitraryLabel extends Forms.BaseForm {
 		defaultState_ti.addEventListener("change", changeListener);
 		defaultValue_ti.addEventListener("change", changeListener);		
 		fontSize_ti.addEventListener("change", changeListener);
-		fontColour_mc.setColour(dataObj.fontColour);
+		if ((dataObj.fontColour != undefined) && (dataObj.fontColour != "")) {
+			fontColour_mc.setColour(dataObj.fontColour);
+		}
 		label_ti.text = dataObj.label;
 		key_ti.text = dataObj.key;
 		fontSize_ti.text = dataObj.fontSize;

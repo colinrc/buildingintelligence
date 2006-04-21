@@ -247,6 +247,7 @@
 		hideFromList = newData.hideFromList;
 	}
 	public function getUsedKeys():Array{
+		usedKeys = new Array();
 		usedKeys=usedKeys.concat(arbitrary.getUsedKeys());
 		for (var room in rooms) {
 			usedKeys=usedKeys.concat(rooms[room].getUsedKeys());
@@ -254,16 +255,17 @@
 		for (var panel in panels) {
 			usedKeys=usedKeys.concat(panels[panel].getUsedKeys());
 		}
-		return super.getUsedKeys();
+		return usedKeys;
 	}
 	public function getIcons():Array{
-		icons=icons.concat(arbitrary.getIcons());
+		var usedIcons = new Array();
+		usedIcons = usedIcons.concat(arbitrary.getIcons());
 		for (var room in rooms) {
-			icons=icons.concat(rooms[room].getIcons());
+			usedIcons = usedIcons.concat(rooms[room].getIcons());
 		}
 		for (var panel in panels) {
-			icons=icons.concat(panels[panel].getIcons());
+			usedIcons = usedIcons.concat(panels[panel].getIcons());
 		}
-		return super.getIcons();
+		return usedIcons;
 	}
 }

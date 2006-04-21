@@ -103,11 +103,12 @@
 		_global.left_tree.setIsOpen(treeNode, true);
 	}
 	public function getIcons():Array{
+		usedIcons = new Array();
 		for (var icon in icons) {
 			if ((icons[icon].icon != "") && (icons[icon].icon != undefined)) {
 				addIcon(icons[icon].icon);
 			}
 		}
-		return super.getIcons();
+		return usedIcons;
 	}
 }

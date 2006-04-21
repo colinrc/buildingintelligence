@@ -1,4 +1,4 @@
-﻿ class Objects.Client.LoggingGroup extends Objects.BaseElement{
+﻿class Objects.Client.LoggingGroup extends Objects.BaseElement {
 	private var name:String;
 	private var icon:String;
 	private var type:String;
@@ -6,9 +6,9 @@
 	private var controls:Array;
 	private var attributes:Array;
 	private var treeNode:XMLNode;
-	public function deleteSelf(){
+	public function deleteSelf() {
 		treeNode.removeNode();
-	}			
+	}
 	public function isValid():String {
 		var flag = "ok";
 		clearValidationMsg();
@@ -16,21 +16,21 @@
 			flag = "empty";
 			appendValidationMsg("No Keys are being used");
 		}
-		if (( name == undefined) || ( name == "")) {
-				flag = "warning";
-				appendValidationMsg("Name is invalid");
+		if ((name == undefined) || (name == "")) {
+			flag = "warning";
+			appendValidationMsg("Name is invalid");
 		}
-		if (( icon == undefined) || ( icon == "")) {
-				flag = "warning";
-				appendValidationMsg("Icon is invalid");
+		if ((icon == undefined) || (icon == "")) {
+			flag = "warning";
+			appendValidationMsg("Icon is invalid");
 		}
-		if (( type == undefined) || ( type == "")) {
-				flag = "warning";
-				appendValidationMsg("Type is invalid");
+		if ((type == undefined) || (type == "")) {
+			flag = "warning";
+			appendValidationMsg("Type is invalid");
 		}
-		if (( listenTo == undefined) || ( listenTo == "")) {
-				flag = "warning";
-				appendValidationMsg("Listen to is invalid");
+		if ((listenTo == undefined) || (listenTo == "")) {
+			flag = "warning";
+			appendValidationMsg("Listen to is invalid");
 		}
 		return flag;
 	}
@@ -38,43 +38,43 @@
 		return "forms.project.client.logginggroup";
 	}
 	public function toXML():XMLNode {
-		var newNode = new XMLNode(1,"group");
-		if(name != "") {
+		var newNode = new XMLNode(1, "group");
+		if (name != "") {
 			newNode.attributes["name"] = name;
 		}
-		if(icon !="") {
+		if (icon != "") {
 			newNode.attributes["icon"] = icon;
 		}
-		if(type !="") {
+		if (type != "") {
 			newNode.attributes["type"] = type;
 		}
-		if(listenTo !="") {
+		if (listenTo != "") {
 			newNode.attributes["listenTo"] = listenTo;
 		}
-		for(var attribute in attributes){
+		for (var attribute in attributes) {
 			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
 		}
-		for(var control in controls){
+		for (var control in controls) {
 			newNode.appendChild(controls[control]);
 		}
 		return newNode;
 	}
-	public function toTree():XMLNode{
-		var newNode = new XMLNode(1,this.getKey());
+	public function toTree():XMLNode {
+		var newNode = new XMLNode(1, this.getKey());
 		newNode.object = this;
 		treeNode = newNode;
 		return newNode;
 	}
-	public function getKey():String{
+	public function getKey():String {
 		return "LoggingGroup";
-	}	
-	public function getName():String{
-		return "Group: "+name;
 	}
-	public function getData():Object{
-		return {controls:controls, icon:icon,name:name,listenTo:listenTo,type:type,attributes:attributes, dataObject:this};
+	public function getName():String {
+		return "Group: " + name;
 	}
-	public function setData(newData:Object):Void{
+	public function getData():Object {
+		return {controls:controls, icon:icon, name:name, listenTo:listenTo, type:type, attributes:attributes, dataObject:this};
+	}
+	public function setData(newData:Object):Void {
 		controls = newData.controls;
 		name = newData.name;
 		icon = newData.icon;
@@ -82,53 +82,54 @@
 		type = newData.type;
 		attributes = newData.attributes;
 	}
-	public function setXML(newData:XMLNode):Void{
-		name ="";
-		icon ="";
-		listenTo="";
-		type="";
+	public function setXML(newData:XMLNode):Void {
+		name = "";
+		icon = "";
+		listenTo = "";
+		type = "";
 		controls = new Array();
 		attributes = new Array();
-		if(newData.nodeName = "group"){
-			for(var attribute in newData.attributes){
-				switch(attribute){
-					case "name":
+		if (newData.nodeName = "group") {
+			for (var attribute in newData.attributes) {
+				switch (attribute) {
+				case "name" :
 					name = newData.attributes[attribute];
 					break;
-					case "icon":
+				case "icon" :
 					icon = newData.attributes[attribute];
 					break;
-					case "listenTo":
+				case "listenTo" :
 					listenTo = newData.attributes[attribute];
 					break;
-					case "type":
+				case "type" :
 					type = newData.attributes[attribute];
 					break;
-					default:
+				default :
 					attributes.push({name:attribute, value:newData.attributes[attribute]});
 					break;
 				}
 			}
-			for(var child in newData.childNodes){
+			for (var child in newData.childNodes) {
 				controls.push(newData.childNodes[child]);
 			}
-		}
-		else{
-			trace("Error, received "+newData.nodeName+", was expecting group");
+		} else {
+			trace("Error, received " + newData.nodeName + ", was expecting group");
 		}
 	}
-	public function getIcons():Array{
-		if (icon != "" && icon != undefined){
-			addIcon(icon);
-		}
-		return super.getIcons();
-	}
-	public function getUsedKeys():Array{
+	public function getUsedKeys():Array {
+		usedKeys = new Array();
 		for (var cont in controls) {
 			if ((controls[cont].attributes["key"] != "") && (controls[cont].attributes["key"] != undefined)) {
 				addUsedKey(controls[cont].attributes["key"]);
 			}
 		}
-		return super.getUsedKeys();
+		return usedKeys;
+	}
+	public function getIcons():Array {
+		usedIcons = new Array();
+		if (icon != "" && icon != undefined) {
+			addIcon(icon);
+		}
+		return usedIcons;
 	}
 }

@@ -36,7 +36,14 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			tempObject.label = tempKeys[key];
 			left_li.addItem(tempObject);
 		}
-		
+		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
+		var IconDP = new Array();
+		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
+			var newIcon = new Object();
+			newIcon.label = myIcons[myIcon].split(".")[0];
+			newIcon.icon = mdm.Application.path+"lib\\icons\\"+myIcons[myIcon];
+			IconDP.push(newIcon);
+		}		
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
@@ -49,7 +56,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		var attributes = new Object();
 		attributes.label = "Set Keys";
 		dataGridHandler.addTextInputColumn("name", "Alert Name", restrictions, false, 150);
-		dataGridHandler.addTextInputColumn("icon", "Icon", restrictions, false, 150);
+		dataGridHandler.addIconComboBoxColumn("icon", "Icon", IconDP, false, 150);
 		dataGridHandler.addTextInputColumn("fadeOutTime", "Fade Out Time", restrictions, false, 150);
 		dataGridHandler.addHiddenColumn("keys");
 		var DP = new Array();

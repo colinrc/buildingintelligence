@@ -27,7 +27,12 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 		}
 		roomEditor.poly = poly;
 		switchZone_cmb.addItem({label:"None"});
-		var tempZones = _global.client_test.Property.zones;
+		var foundNode = _global.searchProject(_global.left_tree.dataProvider, dataObject);
+		var tempNode = foundNode.parentNode;
+		while(tempNode.nodeName != "Client"){
+			tempNode = tempNode.parentNode;
+		}
+		var tempZones = tempNode.object.Property.zones;
 		for(var zone in tempZones){
 			switchZone_cmb.addItem({label:tempZones[zone].name});
 		}

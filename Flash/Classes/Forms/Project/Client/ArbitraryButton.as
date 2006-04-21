@@ -15,13 +15,19 @@ class Forms.Project.Client.ArbitraryButton extends Forms.BaseForm {
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
 		};
-		labels_ti.addEventListener("change", changeListener);	
-		commands_ti.addEventListener("change", changeListener);	
+		labels_ti.addEventListener("change", changeListener);
+		commands_ti.addEventListener("change", changeListener);
 		key_ti.addEventListener("change", changeListener);
-		fontSize_ti.addEventListener("change", changeListener);			
-		bgColour_mc.setColour(dataObj.bgColour);
-		borderColour_mc.setColour(dataObj.borderColour);
-		fontColour_mc.setColour(dataObj.fontColour);
+		fontSize_ti.addEventListener("change", changeListener);
+		if ((dataObj.bgColour != undefined) && (dataObj.bgColour != "")) {
+			bgColour_mc.setColour(dataObj.bgColour);
+		}
+		if ((dataObj.borderColour != undefined) && (dataObj.borderColour != "")) {
+			borderColour_mc.setColour(dataObj.borderColour);
+		}
+		if ((dataObj.fontColour != undefined) && (dataObj.fontColour != "")) {
+			fontColour_mc.setColour(dataObj.fontColour);
+		}
 		labels_ti.text = dataObj.labels;
 		commands_ti.text = dataObj.commands;
 		width_ti.text = dataObj.width;

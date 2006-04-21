@@ -122,19 +122,21 @@
 		view = newData.view;
 	}
 	public function getUsedKeys():Array{
+		usedKeys = new Array();
 		for (var zone in zones) {
 			if ((zones[zone].attributes["keys"] != "") && (zones[zone].attributes["keys"] != undefined)) {
 				addUsedKey(zones[zone].attributes["keys"]);
 			}
 		}
-		return super.getUsedKeys();
+		return usedKeys;
 	}
 	public function getIcons():Array{
+		usedIcons = new Array();
 		for (var zone in zones) {
 			if ((zones[zone].attributes["icon"] != "") && (zones[zone].attributes["icon"] != undefined)) {
 				addIcon(zones[zone].attributes["icon"]);
 			}
 		}
-		return super.getIcons();
+		return usedIcons;
 	}
 }

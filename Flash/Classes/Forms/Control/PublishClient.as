@@ -45,30 +45,48 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 				case "Icons":
 					sftpConnection.setLocalPath("/lib/icons");				
 					sftpConnection.setRemotePath("/client/lib/icons");
-					/*
-					sftpConnection.putItem("ircodes.xml");
-					*/
+					var tempIcons = dataObject.clientDesign.getIcons();
+					tempIcons = tempIcons.sort();
+					var icons = new Array();
+					var lastIcon:String;
+					for(var tempIcon in tempIcons){
+						if(tempIcons[tempIcon] != lastIcon){
+							icons.push(tempIcons[tempIcon]);
+							lastIcon = tempIcons[tempIcon];
+						}
+					}
+					var new_icons = "";
+					for(var icon in icons){
+						sftpConnection.putItem(icons[icon]+".png");
+					}
 					break;
 				case "Maps":
 					sftpConnection.setLocalPath("/lib/maps");
 					sftpConnection.setRemotePath("/client/lib/maps");
-					/*
-					sftpConnection.putItem("ircodes.xml");
-					*/
+					var tempZones = dataObject.clientDesign.Property.zones;
+					for(var zone in tempZones){
+						if((tempZones[zone].map != undefined)&&(tempZones[zone].map != "")){
+							sftpConnection.putItem(tempZones[zone].map);
+						}
+					}
 					break;
 				case "Backgrounds":
 					sftpConnection.setLocalPath("/lib/backgrounds");
 					sftpConnection.setRemotePath("/client/lib/backgrounds");
-					/*
-					sftpConnection.putItem("ircodes.xml");
-					*/	
+					var tempZones = dataObject.clientDesign.Property.zones;
+					for(var zone in tempZones){
+						if((tempZones[zone].background != undefined)&&(tempZones[zone].background != "")){
+							sftpConnection.putItem(tempZones[zone].background);
+						}
+					}
 					break;
 				case "Sounds":
-					sftpConnection.setLocalPath("/lib/sounds");
-					sftpConnection.setRemotePath("/client/lib/sounds");
-					/*
-					sftpConnection.putItem("ircodes.xml");
-					*/
+					sftpConnection.setLocalPath("/lib");
+					sftpConnection.setRemotePath("/client/lib");
+					var tempSounds = dataObject.clientDesign.sounds.sounds;
+					for(var sound in tempSounds){
+						sftpConnection.putItem(tempSounds[sound].attributes.file);
+					}					
 					break;
 				case "Objects":
 					sftpConnection.setLocalPath("/lib/objects");

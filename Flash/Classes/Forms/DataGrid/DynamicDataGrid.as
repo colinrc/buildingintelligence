@@ -155,6 +155,21 @@ class Forms.DataGrid.DynamicDataGrid {
 		columns[name].column.cellRenderer = "ComboBoxCellRenderer";
 		columns[name].column.sortable = false;
 	}
+	public function addIconComboBoxColumn(name:String, heading:String, DP:Array, advanced:Boolean, width:Number) {
+		columnCount++;
+		columns[name] = new Object();
+		columns[name].type = "iconcombo";
+		columns[name].DP = DP;
+		columns[name].heading = heading;
+		columns[name].advanced = advanced;
+		columns[name].colNo = columnCount - 1;
+		columns[name].width = width;
+		columns[name].column = new DataGridColumn(name);
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "IconComboBoxCellRenderer";
+		columns[name].column.sortable = false;
+	}
 	public function addCodeComboBoxColumn(name:String, heading:String, rawInterFaceForm:MovieClip, width:Number) {
 		columnCount++;
 		columns[name] = new Object();
@@ -263,6 +278,7 @@ class Forms.DataGrid.DynamicDataGrid {
 					break;
 				case "paramcombo" :
 				case "combo" :
+				case "iconcombo":
 					var newCombo = {label:tempDP[row][column], sel:false, DP:columns[column].DP};
 					newCombo.toString = function():String  {
 						return this.label;
@@ -351,6 +367,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				case "paramcombo" :
 				case "combo" :
 				case "cataloguecombo" :
+				case "iconcombo":
 					if (my_dg.dataProvider[row][column].label != "") {
 						newRow[column] = my_dg.dataProvider[row][column].label;
 					} else {
@@ -460,6 +477,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				newRow["value"].label = columns[column].DP[0].data;
 				break;
 			case "combo" :
+			case "iconcombo":
 				if (columns[column].DP[0].label != undefined) {
 					var label = columns[column].DP[0].label;
 				} else {
@@ -532,6 +550,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				switch (columns[column].type) {
 				case "paramcombo" :
 				case "combo" :
+				case "iconcombo":
 				case "codecombo" :
 				case "text" :
 				case "value" :
@@ -554,6 +573,7 @@ class Forms.DataGrid.DynamicDataGrid {
 			if (lastClick.itemIndex == event.itemIndex) {
 				switch (columns[my_dg.columnNames[event.columnIndex]].type) {
 				case "combo" :
+				case "iconcombo":
 				case "text" :
 				case "value" :
 				case "colour" :

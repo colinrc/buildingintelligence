@@ -129,25 +129,31 @@
 				attributes.push({name:attribute, value:newData.attributes[attribute]});
 			}
 			for (var child = 0; child < newData.childNodes.length; child++) {
-				var newTab = new Objects.Client.CalendarTab();
-				newTab.setXML(newData.childNodes[child]);
-				newTab.id = _global.formDepth++;
-				tabs.push(newTab);
+				if(newData.childNodes[child].nodeName == "window"){
+					for(var child2 = 0; child2<newData.childNodes[child].childNodes.length;child2++){
+						var newTab = new Objects.Client.CalendarTab();
+						newTab.setXML(newData.childNodes[child].childNodes[child2]);
+						newTab.id = _global.formDepth++;
+						tabs.push(newTab);
+					}
+				}
 			}
 		} else {
 			trace("Error, received " + newData.nodeName + ", was expecting calendar");
 		}
 	}
 	public function getUsedKeys():Array{
+		usedKeys = new Array();
 		for (var tab in tabs) {
 			usedKeys=usedKeys.concat(tabs[tab].getUsedKeys());
 		}
-		return super.getUsedKeys();
+		return usedKeys;
 	}
 	public function getIcons():Array{
+		usedIcons = new Array();
 		for (var tab in tabs) {
-			icons=icons.concat(tabs[tab].getIcons());
+			usedIcons=usedIcons.concat(tabs[tab].getIcons());
 		}
-		return super.getIcons();
+		return usedIcons;
 	}
 }

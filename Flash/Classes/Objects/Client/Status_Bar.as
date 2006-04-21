@@ -104,15 +104,17 @@
 		_global.left_tree.setIsOpen(treeNode, true);
 	}
 	public function getUsedKeys():Array{
+		usedKeys = new Array();
 		for (var group in groups) {
 			usedKeys=usedKeys.concat(groups[group].getUsedKeys());
 		}
-		return super.getUsedKeys();
+		return usedKeys;
 	}
 	public function getIcons():Array{
+		usedIcons = new Array();
 		for (var group in groups) {
-			icons=icons.concat(groups[group].getIcons());
+			usedIcons=usedIcons.concat(groups[group].getIcons());
 		}
-		return super.getIcons();
+		return usedIcons;
 	}
 }

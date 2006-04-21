@@ -101,15 +101,17 @@
 		_global.left_tree.setIsOpen(treeNode, true);
 	}
 	public function getUsedKeys():Array{
+		usedKeys = new Array();
 		for (var zone in zones) {
 			usedKeys=usedKeys.concat(zones[zone].getUsedKeys());
 		}
-		return super.getUsedKeys();
+		return usedKeys;
 	}
 	public function getIcons():Array{
+		usedIcons = new Array();
 		for (var zone in zones) {
-			icons=icons.concat(zones[zone].getIcons());
+			usedIcons=usedIcons.concat(zones[zone].getIcons());
 		}
-		return super.getIcons();
+		return usedIcons;
 	}
 }

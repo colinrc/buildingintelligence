@@ -119,9 +119,10 @@
 	}
 
 	public function getIcons():Array{
+		usedIcons = new Array();
 		if (icon != "" && icon != undefined){
 			addIcon(icon);
 		}
-		return super.getIcons();
+		return usedIcons;
 	}
 }

@@ -102,19 +102,21 @@
 		alerts = newData.alerts;
 	}
 	public function getUsedKeys():Array{
+		usedKeys = new Array();
 		for (var alert in alerts) {
 			if ((alerts[alert].attributes["keys"] != "") && (alerts[alert].attributes["keys"] != undefined)) {
 				addUsedKey(alerts[alert].attributes["keys"]);
 			}
 		}
-		return super.getUsedKeys();
+		return usedKeys;
 	}
 	public function getIcons():Array{
+		usedIcons = new Array();
 		for (var alert in alerts) {
 			if ((alerts[alert].attributes["icon"] != "") && (alerts[alert].attributes["icon"] != undefined)) {
 				addIcon(alerts[alert].attributes["icon"]);
 			}
 		}
-		return super.getIcons();
+		return usedIcons;
 	}
 }

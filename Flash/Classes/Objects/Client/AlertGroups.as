@@ -89,16 +89,18 @@
 		}
 	}
 	public function getUsedKeys():Array{
+		usedKeys = new Array();
 		for (var alerts in alertgroups) {
 			usedKeys=usedKeys.concat(alertgroups[alerts].getUsedKeys());
 		}
-		return super.getUsedKeys();
+		return usedKeys;
 	}
 	public function getIcons():Array{
+		usedIcons = new Array();
 		for (var alerts in alertgroups) {
 			//var newAlerts = new Objects.Client.Alerts();
-			icons=icons.concat(alertgroups[alerts].getIcons());
+			usedIcons=usedIcons.concat(alertgroups[alerts].getIcons());
 		}
-		return super.getIcons();
+		return usedIcons;
 	}
 }

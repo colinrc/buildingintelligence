@@ -124,4 +124,18 @@
 		}		
 		_global.left_tree.setIsOpen(treeNode, true);
 	}
+	public function getUsedKeys():Array{
+		usedKeys = new Array();
+		for (var tab in tabs) {
+			usedKeys=usedKeys.concat(tabs[tab].getUsedKeys());
+		}
+		return usedKeys;
+	}
+	public function getIcons():Array{
+		usedIcons = new Array();
+		for (var tab in tabs) {
+			usedIcons = usedIcons.concat(tabs[tab].getIcons());
+		}
+		return usedIcons;
+	}
 }

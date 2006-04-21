@@ -79,17 +79,19 @@
 		icon = newData.icon;
 	}
 	public function getUsedKeys():Array{
+		usedKeys = new Array();
 		for (var control in controls) {
 			if ((controls[control].attributes["key"] != "") && (controls[control].attributes["key"] != undefined)) {
 				addUsedKey(controls[control].attributes["key"]);
 			}
 		}
-		return super.getUsedKeys();
+		return usedKeys;
 	}
 	public function getIcons():Array{
+		usedIcons = new Array();
 		if (icon != "" && icon != undefined){
 			addIcon(icon);
 		}
-		return super.getIcons();
+		return usedIcons;
 	}
 }
