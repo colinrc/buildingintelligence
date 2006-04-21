@@ -57,8 +57,11 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 					}
 					var new_icons = "";
 					for(var icon in icons){
-						sftpConnection.putItem(icons[icon]+".png");
+						var iconString = icons[icon]+".png";
+						sftpConnection.putItem(iconString);
+						new_icons = iconString+"\n";
 					}
+					sftpConnection.putData(new_icons,"_icons.txt");
 					break;
 				case "Maps":
 					sftpConnection.setLocalPath("/lib/maps");

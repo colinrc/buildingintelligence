@@ -156,7 +156,12 @@
 		usedIcons = new Array();
 		for (var item in rows) {
 			if ((rows[item].attributes["icons"] != "") && (rows[item].attributes["icons"] != undefined)) {
-				addIcon(rows[item].attributes["icons"]);
+				var tempIcons = rows[item].attributes["icons"].split(",");
+				for(var tempIcon in tempIcons){
+					if(tempIcons[tempIcon].length){
+						addIcon(tempIcons[tempIcon]);
+					}
+				}
 			}
 		}
 		return usedIcons;

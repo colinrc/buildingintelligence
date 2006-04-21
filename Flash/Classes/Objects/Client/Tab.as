@@ -92,6 +92,16 @@
 		if (icon != "" && icon != undefined){
 			addIcon(icon);
 		}
+		for (var control in controls){
+			if ((controls[control].attributes["icons"] != "") && (controls[control].attributes["icons"] != undefined)) {
+				var tempIcons = controls[control].attributes["icons"].split(",");
+				for(var tempIcon in tempIcons){
+					if(tempIcons[tempIcon].length){
+						addIcon(tempIcons[tempIcon]);
+					}
+				}
+			}
+		}
 		return usedIcons;
 	}
 }

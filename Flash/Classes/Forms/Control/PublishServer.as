@@ -103,8 +103,16 @@ class Forms.Control.PublishServer extends Forms.BaseForm {
 			newDebugNode.attributes.CONSOLE = "N";
 		}
 		newDebugNode.attributes.LEVEL = level_cmb.text;
-		newDebugNode.attributes.LOGDIR = "server/log";
-		newBootstrapXML.appendChild(newDebugNode);		
+		newBootstrapXML.appendChild(newDebugNode);
+		var newRRDGraphNode = new XMLNode(1,"RRDGRAPH");
+		newRRDGraphNode.attributes.DIR = "./JRobin/Graph/";
+		newBootstrapXML.appendChild(newRRDGraphNode);
+		var newRRDDirectoryNode = new XMLNode(1,"RRDBDIRECTORY");
+		newRRDDirectoryNode.attributes.DIR = "./JRobin/";
+		newBootstrapXML.appendChild(newRRDDirectoryNode);
+		var newRRDXMLNode = new XMLNode(1,"RRDXMLDIRECTORY");
+		newRRDXMLNode.attributes.DIR = "./JRobin/RRDDefinition/";
+		newBootstrapXML.appendChild(newRRDXMLNode);
 		return _global.writeXMLFile(newBootstrapXML,0);
 	}
 	public function notifyChange():Void{
