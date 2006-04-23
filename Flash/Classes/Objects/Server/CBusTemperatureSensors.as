@@ -13,26 +13,33 @@
 		var flag = "ok";
 		clearValidationMsg();
 		for (var sensor in sensors) {
-			if ((sensors[sensor].attributes["ACTIVE"] != "Y") && (sensors[sensor].attributes["ACTIVE"] != "N")) {
+			if ((sensors[sensor].active != "Y") && (sensors[sensor].active != "N")) {
 				flag = "error";
 				appendValidationMsg("Active flag is invalid");
 			}
-			if ((sensors[sensor].attributes["KEY"] == undefined) || (sensors[sensor].attributes["KEY"] == "")) {
-				flag = "error";
-				appendValidationMsg("Key is invalid");
-			} else {
-				if (_global.isKeyUsed(sensors[sensor].attributes["KEY"]) == false) {
+			
+			if (sensors[sensor].active =="Y"){
+				if ((sensors[sensor].key == undefined) || (sensors[sensor].key == "")) {
 					flag = "error";
-					appendValidationMsg(sensors[sensor].attributes["KEY"]+" key is not being used");
+					appendValidationMsg("Unit Addr.(key) is invalid");
+				} else {
+					if (_global.isKeyUsed(sensors[sensor].key) == false) {
+						flag = "error";
+						appendValidationMsg(sensors[sensor].key+" key is not being used");
+					}
+				}
+				if ((sensors[sensor].name == undefined) || (sensors[sensor].name == "")) {
+					flag = "error";
+					appendValidationMsg("Description is invalid");
+				}
+				if ((sensors[sensor].display_name == undefined) || (sensors[sensor].display_name == "")) {
+					flag = "error";
+					appendValidationMsg("Key(display name) is invalid");
 				}
 			}
-			if ((sensors[sensor].attributes["NAME"] == undefined) || (sensors[sensor].attributes["NAME"] == "")) {
-				flag = "error";
-				appendValidationMsg("Name is invalid");
-			}
-			if ((sensors[sensor].attributes["DISPLAY_NAME"] == undefined) || (sensors[sensor].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
-				appendValidationMsg("Display Name is invalid");
+			else{
+				flag = "empty";
+				appendValidationMsg("CBUS Temp Sensors is not Active");
 			}
 		}
 		return flag;

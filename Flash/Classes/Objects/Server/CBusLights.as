@@ -13,31 +13,43 @@
 		var flag = "ok";
 		clearValidationMsg();
 		for (var light in lights) {
-			if ((lights[light].attributes["ACTIVE"] != "Y") && (lights[light].attributes["ACTIVE"] != "N")) {
+			if ((lights[light].active != "Y") && (lights[light].active != "N")) {
 				flag = "error";
 				appendValidationMsg("Active flag is invalid");
 			}
-			if ((lights[light].attributes["KEY"] == undefined) || (lights[light].attributes["KEY"] == "")) {
-				flag = "error";
-				appendValidationMsg("Key is invalid");
-			} else {
-				if (_global.isKeyUsed(lights[light].attributes["KEY"]) == false) {
+			
+			if (lights[light].active =="Y"){
+				if ((lights[light].power == undefined) || (lights[light].power == "")) {
+					flag = "empty";
+					appendValidationMsg("Power Rating is empty");
+				}
+				if ((lights[light].key == undefined) || (lights[light].key == "")) {
 					flag = "error";
-					appendValidationMsg(lights[light].attributes["KEY"]+" key is not being used");
+					appendValidationMsg("Group Addr.(key) is invalid");
+				} else {
+					if (_global.isKeyUsed(lights[light].key) == false) {
+						flag = "error";
+						appendValidationMsg(lights[light].key+" key is not being used");
+					}
+				}
+				if ((lights[light].application == undefined) || (lights[light].application == "")) {
+					flag = "error";
+					appendValidationMsg("App. is invalid");
+				}
+				if ((lights[light].name == undefined) || (lights[light].name == "")) {
+					flag = "error";
+					appendValidationMsg("Description is invalid");
+				}
+				if ((lights[light].display_name == undefined) || (lights[light].display_name == "")) {
+					flag = "error";
+					appendValidationMsg("Key is invalid");
 				}
 			}
-			if ((lights[light].attributes["CHANNEL"] == undefined) || (lights[light].attributes["CHANNEL"] == "")) {
-				flag = "error";
-				appendValidationMsg("Channel is invalid");
+			else{
+				flag = "empty";
+				appendValidationMsg("CBUS Dimmers is not Active");
 			}
-			if ((lights[light].attributes["NAME"] == undefined) || (lights[light].attributes["NAME"] == "")) {
-				flag = "error";
-				appendValidationMsg("Name is invalid");
-			}
-			if ((lights[light].attributes["DISPLAY_NAME"] == undefined) || (lights[light].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
-				appendValidationMsg("Display Name is invalid");
-			}
+			
 		}
 		return flag;
 	}

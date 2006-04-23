@@ -13,30 +13,41 @@
 		var flag = "ok";
 		clearValidationMsg();
 		for (var relay in relays) {
-			if ((relays[relay].attributes["ACTIVE"] != "Y") && (relays[relay].attributes["ACTIVE"] != "N")) {
+			if ((relays[relay].active != "Y") && (relays[relay].active != "N")) {
 				flag = "error";
 				appendValidationMsg("Active flag is invalid");
 			}
-			if ((relays[relay].attributes["KEY"] == undefined) || (relays[relay].attributes["KEY"] == "")) {
-				flag = "error";
-				appendValidationMsg("Key is invalid");
-			} else {
-				if (_global.isKeyUsed(relays[relay].attributes["KEY"]) == false) {
+			
+			if (relays[relay].active =="Y"){
+				if ((relays[relay].power == undefined) || (relays[relay].power == "")) {
+					flag = "empty";
+					appendValidationMsg("Power Rating is empty");
+				}
+				if ((relays[relay].key == undefined) || (relays[relay].key == "")) {
 					flag = "error";
-					appendValidationMsg(relays[relay].attributes["KEY"]+" key is not being used");
+					appendValidationMsg("Group Addr.(key) is invalid");
+				} else {
+					if (_global.isKeyUsed(relays[relay].key) == false) {
+						flag = "error";
+						appendValidationMsg(relays[relay].key+" key is not being used");
+					}
+				}
+				if ((relays[relay].application == undefined) || (relays[relay].application == "")) {
+					flag = "error";
+					appendValidationMsg("App. is invalid");
+				}
+				if ((relays[relay].name == undefined) || (relays[relay].name == "")) {
+					flag = "error";
+					appendValidationMsg("Description is invalid");
+				}
+				if ((relays[relay].display_name == undefined) || (relays[relay].display_name == "")) {
+					flag = "error";
+					appendValidationMsg("Key is invalid");
 				}
 			}
-			if ((relays[relay].attributes["CHANNEL"] == undefined) || (relays[relay].attributes["CHANNEL"] == "")) {
-				flag = "error";
-				appendValidationMsg("Channel is invalid");
-			}
-			if ((relays[relay].attributes["NAME"] == undefined) || (relays[relay].attributes["NAME"] == "")) {
-				flag = "error";
-				appendValidationMsg("Name is invalid");
-			}
-			if ((relays[relay].attributes["DISPLAY_NAME"] == undefined) || (relays[relay].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
-				appendValidationMsg("Display Name is invalid");
+			else{
+				flag = "empty";
+				appendValidationMsg("CBUS Dimmers is not Active");
 			}
 		}
 		return flag;

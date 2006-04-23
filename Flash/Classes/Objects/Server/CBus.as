@@ -15,7 +15,7 @@
 	public function isValid():String {
 		var flag = "ok";
 		clearValidationMsg();
-		if (active = "Y"){
+		if (active == "Y"){
 			if ((description == undefined) || (description == "")) {
 				flag = "empty";
 				appendValidationMsg("Description is invalid");
@@ -24,16 +24,46 @@
 				flag = "error";
 				appendValidationMsg("Device Type is invalid");
 			}
-			if (connection.attributes["TYPE"] == "IP") {
-				if ((connection.attributes["ADDRESS"] == "") || (connection.attributes["ADDRESS"] ==undefined)) {
+			if (connection.firstChild.nodeName == "IP") {
+				if ((connection.firstChild.attributes["IP_ADDRESS"] == "") || (connection.firstChild.attributes["IP_ADDRESS"] ==undefined)) {
 					flag = "error";
 					appendValidationMsg("Connection Address is invalid");
 				}
-				if ((connection.attributes["PORT"] == "") || (connection.attributes["PORT"] ==undefined)) {
+				if ((connection.firstChild.attributes["PORT"] == "") || (connection.firstChild.attributes["PORT"] ==undefined)) {
 					flag = "error";
 					appendValidationMsg("Connection Port is invalid");
 				}
-				
+			}
+			else{
+				//FLOW="NONE" DATA_BITS="8" STOP_BITS="1" SUPPORTS_CD="N" PARITY="NONE" BAUD="9600" ACTIVE
+				if ((connection.firstChild.attributes["PORT"] == "") || (connection.firstChild.attributes["PORT"] ==undefined)) {
+					flag = "error";
+					appendValidationMsg("Connection Port is invalid");
+				}
+				if ((connection.firstChild.attributes["FLOW"] == "") || (connection.firstChild.attributes["FLOW"] ==undefined)) {
+					flag = "error";
+					appendValidationMsg("Connection Flow is invalid");
+				}
+				if ((connection.firstChild.attributes["DATA_BITS"] == "") || (connection.firstChild.attributes["DATA_BITS"] ==undefined)) {
+					flag = "error";
+					appendValidationMsg("Connection Data Bits is invalid");
+				}
+				if ((connection.firstChild.attributes["STOP_BITS"] == "") || (connection.firstChild.attributes["STOP_BITS"] ==undefined)) {
+					flag = "error";
+					appendValidationMsg("Connection Stop Bits is invalid");
+				}
+				if ((connection.firstChild.attributes["SUPPORTS_CD"] == "") || (connection.firstChild.attributes["SUPPORTS_CD"] ==undefined)) {
+					flag = "error";
+					appendValidationMsg("Connection Supports CD is invalid");
+				}
+				if ((connection.firstChild.attributes["PARITY"] == "") || (connection.firstChild.attributes["PARITY"] ==undefined)) {
+					flag = "error";
+					appendValidationMsg("Connection Parity is invalid");
+				}
+				if ((connection.firstChild.attributes["BAUD"] == "") || (connection.firstChild.attributes["BAUD"] ==undefined)) {
+					flag = "error";
+					appendValidationMsg("Connection Baud is invalid");
+				}
 			}
 			
 			//flag = getHighestFlagValue(flag, sensors.isValid());
@@ -124,9 +154,10 @@
 			if(newData.attributes["DESCRIPTION"]!=undefined){			
 				description = newData.attributes["DESCRIPTION"];
 			}			
-			if(newData.attributes["ACTIVE"]!=undefined){			
+			if(newData.attributes["ACTIVE"]!=undefined){		
 				active = newData.attributes["ACTIVE"];
 			}
+			
 			for (var child in newData.childNodes) {
 				switch (newData.childNodes[child].nodeName) {
 				case "CBUS" :

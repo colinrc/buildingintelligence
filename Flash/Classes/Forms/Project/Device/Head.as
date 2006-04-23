@@ -21,7 +21,19 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 		    _global.unSaved = true;
 		};
 		description_ti.addEventListener("change", changeListener);
-		active_chk.addEventListener("change", changeListener);
+		
+		var checkBoxListener:Object = new Object();
+	
+		checkBoxListener.change = function(eventObject) {
+		    _global.unSaved = true;
+			if (active_chk.selected == false){
+				active = "N";
+			}else {
+				active = "Y";
+			}
+		};
+		active_chk.addEventListener("click", checkBoxListener);
+		
 		if (active == "N") {
 			active_chk.selected = false;
 		} else {
