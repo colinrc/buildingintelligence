@@ -56,6 +56,8 @@ public interface DeviceType
 	public static final int TEMPERATURE = 42;
 
 	public static final int LIGHT_DYNALITE_AREA = 43;
+	
+	public static final int NUVO_SWITCH = 44;
 
 	// Alert types
 	public static final int ALARM_SYSTEM=1;

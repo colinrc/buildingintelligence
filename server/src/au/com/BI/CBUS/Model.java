@@ -735,9 +735,9 @@ public class Model extends BaseModel implements DeviceModel {
 				for (int i = 0; i < numPairs - 2; i ++ ) {
 					pairVal = cBUSString.substring(6+i*2,8+i*2);
 	
-					byte value = 0;
+					int value = 0;
 					try {
-						value = (byte)Integer.parseInt(pairVal,16);
+						value = Integer.parseInt(pairVal,16);
 					} catch (NumberFormatException ex) {
 						logger.log (Level.FINEST,"Received invalid MMI status byte " + pairVal);
 					}
@@ -1215,7 +1215,7 @@ public class Model extends BaseModel implements DeviceModel {
 		int total = 0;
 		for (int i = 0; i < toCalc.length(); i+=2) {
 			String nextPart = toCalc.substring(i,i+1);
-			byte val = Byte.parseByte(nextPart,16);
+			int val = Integer.parseInt(nextPart,16);
 			total += val;
 		}
 		byte remainder = (byte)(total % 256);
@@ -1228,8 +1228,8 @@ public class Model extends BaseModel implements DeviceModel {
 
 	protected String buildCBUSOnOffCommand (String cBUSCommand, String appCodeStr,  String group, String key) {
 		try {
-			byte appCode = Byte.parseByte(appCodeStr,16);
-			byte remainder = (byte)(((byte)5 + appCode + Byte.parseByte(cBUSCommand,16) + Byte.parseByte(group,16)) % 256);
+			int appCode = Integer.parseInt(appCodeStr,16);
+			byte remainder = (byte)(((byte)5 + appCode + Byte.parseByte(cBUSCommand,16) + Integer.parseInt(group,16)) % 256);
 			byte twosComp = (byte)-remainder;
 
 			String hexCheck = Integer.toHexString(twosComp);
@@ -1271,7 +1271,7 @@ public class Model extends BaseModel implements DeviceModel {
 
 	protected String buildCBUSRampToCommand (String rampCodeStr, String appCodeStr, String levelStr, String group, String key)  {
 		try {
-			byte level = Byte.parseByte(levelStr);
+			int level = Integer.parseInt(levelStr);
 			//byte levelPerc = ((byte)((level / 100 ) * 255));
 			int normValue = (int)((double)level / 100.0 * 255.0);
 			if (level == 255) normValue = 100;
@@ -1281,7 +1281,7 @@ public class Model extends BaseModel implements DeviceModel {
 
 			byte appCode = Byte.parseByte(appCodeStr,16);
 
-			byte remainder = (byte)(((byte)5 + appCode + rampRate + normValue + Byte.parseByte(group,16)) % 256);
+			byte remainder = (byte)(((byte)5 + appCode + rampRate + normValue + Integer.parseInt(group,16)) % 256);
 			byte twosComp = (byte)-remainder;
 			String hexCheck = Integer.toHexString(twosComp);
 			if (hexCheck.length() == 1) hexCheck = "0" + hexCheck;

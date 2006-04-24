@@ -56,6 +56,7 @@ public class Model
                 this.setName("SCRIPT");
                 scriptFileHandler = new ScriptFileHandler();
                 scriptRunBlockList = Collections.synchronizedMap(new LinkedHashMap (30)); // 30 scripts to start with
+                this.setAutoReconnect(false);
                 try {
                         jbInit();
                 }

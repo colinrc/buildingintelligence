@@ -16,6 +16,7 @@ import au.com.BI.User.*;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Date;
 
 public class MacroEvent implements Job {
 
@@ -32,7 +33,7 @@ public class MacroEvent implements Job {
     protected String extra3 ="";
     protected String command ="";
     protected String extra5 ="";
-	protected String audible = "";
+	protected String alarm = "";
 	protected String target = "";
 	protected String target_user = "";
 	
@@ -64,7 +65,7 @@ public class MacroEvent implements Job {
 	      title = dataMap.getString("Title");
 	      id = dataMap.getString("Id");
 	      popup = dataMap.getString("Popup");
-	      audible = dataMap.getString("Audible");
+	      alarm = dataMap.getString("Alarm");
 	      target = dataMap.getString("Target");
 	      target_user = dataMap.getString("TargetUser");
 	      
@@ -75,6 +76,11 @@ public class MacroEvent implements Job {
 		  String icon =dataMap.getString ("Icon");
 		  String autoclose = dataMap.getString ("AutoClose");
 		  String hideclose = dataMap.getString ("HideClose");
+		  long interval = dataMap.getLong ("Interval");
+		  long intervalMonth = dataMap.getLong ("IntervalMonth");
+		  
+		  int startMonth = dataMap.getInt("StartMonth");
+		  
 		  if (skipDates.doISkipDate(context.getFireTime())) {
 			  return;
 		  }
@@ -92,17 +98,45 @@ public class MacroEvent implements Job {
 			  }
 
 		  }
+		  long scheduledTime = context.getScheduledFireTime().getTime();
+		  long prevStart;
+		  
+		  if (context.getPreviousFireTime() != null) {
+			prevStart = context.getPreviousFireTime().getTime();
+		  } else {
+			Date startTime = (Date)dataMap.get("StartTime");
+			prevStart = startTime.getTime();
+		      
+		  }
+		  
+		  if (interval != 1 || intervalMonth != 1){
+		      if (intervalMonth == 1){
+			  long diff = scheduledTime - prevStart;
+			  if (diff%interval != 0) {
+			      return; // some multiple of the interval
+			  }
 
-		  if (!macroName.equals ("")) {
+		      } else {
+			  Calendar execTime = Calendar.getInstance();
+			  execTime.setTimeInMillis(scheduledTime);
+			  int execMonth = execTime.get(Calendar.MONTH);
+			  int monthDif = Math.abs (execMonth - startMonth);
+			  if (monthDif % intervalMonth != 0) {
+			      return;
+			  }
+		      }
+		  }
+		  
+ 		  if (!macroName.equals ("")) {
 			  ClientCommand builtRunCommand = new ClientCommand ();
 			  builtRunCommand.setExtra2Info(extra2);
 			  builtRunCommand.setExtra3Info(extra3);
 			  builtRunCommand.setExtra4Info(command);
 			  builtRunCommand.setExtra5Info(extra);
 
-			  macroHandler.run(macroName , user,builtRunCommand);
+			  macroHandler.run(macroHandler.buildFullName(macroName,extra), user,builtRunCommand);
 		  }
-		  if (!memo.equals("") && !memo.equals("undefined") && !popup.equals ("N")) {
+		  if (alarm.equals("Y") || (!memo.equals("") && !memo.equals("undefined")  && !popup.equals ("N"))) {
 			  ClientCommand newCommand = new ClientCommand();
 			  newCommand.setTargetDeviceID(0);
 			  
@@ -113,7 +147,7 @@ public class MacroEvent implements Job {
 		        newCommand.setHideclose(hideclose);
 		        newCommand.setTarget(target);
 		        newCommand.setTargetUser(target_user);
-		        newCommand.setAudible (audible);
+		        newCommand.setAlarm (alarm);
 		        newCommand.setMessageType (CommandInterface.Message);
 				List commandList = macroHandler.getCommandList();
 				synchronized (commandList) {

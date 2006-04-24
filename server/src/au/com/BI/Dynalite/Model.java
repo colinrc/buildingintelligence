@@ -336,8 +336,10 @@ public class Model extends BaseModel implements DeviceModel {
 				Iterator i = results.decoded.iterator();
 				while (i.hasNext()){
 					CommandInterface nextCommand = (CommandInterface)i.next();
-					cache.setCachedCommand(nextCommand.getKey(),nextCommand);
-					this.sendToFlash(commandQueue,-1,nextCommand);
+					if (nextCommand != null) {
+					    cache.setCachedCommand(nextCommand.getKey(),nextCommand);
+					    this.sendToFlash(commandQueue,-1,nextCommand);
+					}
 				}
 				if (results.isRescanLevels()){
 					this.requestAllLevels(results.getRescanArea(), (byte)255);

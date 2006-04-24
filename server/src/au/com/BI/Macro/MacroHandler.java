@@ -88,6 +88,14 @@ public class MacroHandler {
                 }
             }
 	}
+	
+	public String buildFullName(String macroName, String targetDisplayName) {
+		if (targetDisplayName.equals("")){
+			return macroName;
+		} else {
+			return macroName + ":" + targetDisplayName;
+		}
+	}
 
 	public boolean run(String macroName, User user,CommandInterface origCommand) {
 		List macro;
@@ -109,25 +117,17 @@ public class MacroHandler {
 			return false;
 		}
 		else {
-		    synchronized (runningMacros) {
-		        if (runningMacros.containsKey(macroName)) 
-		            doNotRun = true;
-		    }
-		    if (doNotRun) {
-		        logger.log (Level.FINE,"User attempted to run " + macroName + " twice");
-		        return false;
-		    } else {
-				RunMacro newMacro = new RunMacro (macro, user, macroName,origCommand);
-				newMacro.setCommandList(commandList);
-				newMacro.setName("Macro:"+ macroName);
-				synchronized (runningMacros) {
-				    runningMacros.put (macroName,newMacro);
-				}
-				newMacro.setRunningMacros (runningMacros);
-				newMacro.start();
-				logger.log (Level.INFO,"Running macro " + macroName);
-				return true;
-		    }
+
+			RunMacro newMacro = new RunMacro (macro, user, macroName,origCommand);
+			newMacro.setCommandList(commandList);
+			newMacro.setName("Macro:"+ macroName);
+			synchronized (runningMacros) {
+			    runningMacros.put (macroName,newMacro);
+			}
+			newMacro.setRunningMacros (runningMacros);
+			newMacro.start();
+			logger.log (Level.INFO,"Running macro " + macroName);
+			return true;
 		}
 	}
 
@@ -156,7 +156,7 @@ public class MacroHandler {
 
 	public boolean complete(String macroName, User user) {
 	    RunMacro theMacro;
-            logger.log (Level.FINE,"Running macro "+ macroName + " to completion");
+        logger.log (Level.FINE,"Running macro "+ macroName + " to completion");
 	    synchronized (runningMacros) {
 	        theMacro = (RunMacro)runningMacros.get(macroName);
 	    }
@@ -173,6 +173,15 @@ public class MacroHandler {
 	 */
 	public Element get (String macroName, boolean integrator, boolean fullContents) {
 		Element top = new Element ("MACROS");
+		boolean complete = false;
+		
+		if (macroName.equals ("")) {
+		    top.setAttribute ("COMPLETE","Y");
+		    complete = true;
+		} else {
+		    top.setAttribute ("COMPLETE","N");	
+		    complete = false;
+		}
 		
                 Vector localMacroNames = null;
                 if (integrator){
@@ -181,18 +190,29 @@ public class MacroHandler {
                     localMacroNames = this.macroNames;
                 }
 
-		synchronized (localMacroNames) {
-                    if (macroName.equals ("")) {
-                        Iterator eachMacroName = localMacroNames.iterator();
-                        while (eachMacroName.hasNext()) {
-                            Element macroDef =  buildListElement ((String)eachMacroName.next(),integrator,fullContents);
-                            try { 
-                                if (macroDef != null) top.addContent(macroDef);
-                            } catch (NoSuchMethodError ex) {
-                                logger.log (Level.SEVERE,"Error calling jdom library " + ex.getMessage());
-                            }
-                        }
-                    }
+		if (complete) {
+		    synchronized (localMacroNames) {
+			Iterator eachMacroName = localMacroNames.iterator();
+
+			while (eachMacroName.hasNext()) {
+			    Element macroDef = null;
+			    macroDef =  buildListElement ((String)eachMacroName.next(),integrator,fullContents);
+			    try { 
+				if (macroDef != null) top.addContent(macroDef);
+			    } catch (NoSuchMethodError ex) {
+				logger.log (Level.SEVERE,"Error calling jdom library " + ex.getMessage());
+			    }
+			}
+
+		    }
+		} else {
+			Element macroDef =  buildListElement (macroName,integrator,fullContents);
+			try { 
+			    if (macroDef != null) top.addContent(macroDef);
+			} catch (NoSuchMethodError ex) {
+			    logger.log (Level.SEVERE,"Error calling jdom library " + ex.getMessage());
+			}
+		    
 		}
 		return top;
 	}

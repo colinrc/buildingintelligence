@@ -33,7 +33,6 @@ public class AdminClientHandler extends Thread
 	protected User user;
 	protected List commandList;
 	protected long ID;
-	protected boolean remoteServer = false;
 	protected boolean isAdmin = false;
 	protected HashMap modelRegistry;
 	protected Collection modelList;
@@ -465,19 +464,6 @@ public class AdminClientHandler extends Thread
 	public void setID(long id) {
 		ID = id;
 	}
-    /**
-     * @return Returns the remoteServer.
-     */
-    public boolean isRemoteServer() {
-        return remoteServer;
-    }
-    /**
-     * @param remoteServer The remoteServer to set.
-     */
-    public void setRemoteServer(boolean remoteServer) {
-        this.remoteServer = remoteServer;
-    }
-
     /**
      * @return Returns the isAdmin.
      */

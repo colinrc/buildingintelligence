@@ -35,7 +35,7 @@ public class ClientCommand extends Command implements CommandInterface {
 	protected Element messageFromFlash;
 	protected String target = AddressBook.ALL;
 	protected String targetUser = "";
-	protected String audible = "";
+	protected String alarm = "";
 	protected boolean broadcast = true;
 	
 	public ClientCommand ()
@@ -68,6 +68,26 @@ public class ClientCommand extends Command implements CommandInterface {
 		super.setExtra5Info(extra5);
 		originatingID = 0 ;
 		messageFromFlash = null;
+	}
+	
+	public Object clone () throws CloneNotSupportedException
+	{
+		ClientCommand newCopy = new ClientCommand (super.getKey(),super.getCommandCode(),super.getUser(),super.getExtraInfo(),
+				super.getExtra2Info(),super.getExtra3Info(),super.getExtra4Info(),super.getExtra5Info());
+		newCopy.setOriginatingID(originatingID);
+		newCopy.setAlarm(alarm);
+		newCopy.setAutoclose(autoclose);
+		newCopy.setBroadcast(broadcast);
+		newCopy.setContent(content);
+		newCopy.setTarget(target);
+		newCopy.setTargetUser(targetUser);
+		newCopy.setDisplayName(displayName);
+		newCopy.setHideclose(hideclose);
+		newCopy.setIcon(icon);
+		newCopy.setMessageType(messageType);
+		newCopy.setTitle(title);
+		newCopy.setAdminCommand(adminCommand);
+		return newCopy;
 	}
 
 	public boolean isUserControllerCommand() {
@@ -121,7 +141,7 @@ public class ClientCommand extends Command implements CommandInterface {
 	        this.setHideclose(element.getAttributeValue("HIDECLOSE"));
 	        this.setTarget(element.getAttributeValue("TARGET"));
 	        this.setTargetUser(element.getAttributeValue("TARGET_USER"));
-	        this.setAudible(element.getAttributeValue("AUDIBLE"));
+	        this.setAlarm(element.getAttributeValue("ALARM"));
 	        this.setMessageType (CommandInterface.Message);
 		    found = true;
 	    }
@@ -234,7 +254,7 @@ public class ClientCommand extends Command implements CommandInterface {
 			element.setAttribute ("ICON", icon);
 			element.setAttribute ("AUTOCLOSE", autoclose);
 			element.setAttribute ("HIDECLOSE", hideclose);
-			element.setAttribute ("AUDIBLE", audible);
+			element.setAttribute ("ALARM", alarm);
 	    }
 	    if (this.messageType == CommandInterface.RawElement) {
 	        element = this.element;
@@ -316,11 +336,11 @@ public class ClientCommand extends Command implements CommandInterface {
 		this.broadcast = broadcast;
 	}
 
-	public String getAudible() {
-		return audible;
+	public String getAlarm() {
+		return alarm;
 	}
 
-	public void setAudible(String audible) {
-		this.audible = audible;
+	public void setAlarm(String alarm) {
+		this.alarm = alarm;
 	}
 }

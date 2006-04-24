@@ -84,6 +84,14 @@ public interface DeviceModel {
 	 */
 	public boolean reEstablishConnection ();
 
+        /*
+         * Some devices the controller should not try to re-establish connections after comms failure 
+         * default is to enable auto reconnect (true)
+         */
+        
+        public boolean isAutoReconnect();
+
+        public void setAutoReconnect(boolean autoReconnect);
 	/**
 	 * Establishes connection based on parameters read from the config file
 	 */

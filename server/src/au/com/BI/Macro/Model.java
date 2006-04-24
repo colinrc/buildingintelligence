@@ -30,6 +30,7 @@ public class Model extends BaseModel implements DeviceModel {
 		super();
 		this.setName("Macro");
 		this.setCalendarEventFactory (new CalendarEventFactory());
+        this.setAutoReconnect(false);
 	}
 
 	public void setMacroHandler (MacroHandler macroHandler) {
@@ -100,6 +101,8 @@ public class Model extends BaseModel implements DeviceModel {
 	public void doMacroItem (CommandInterface commandIntf) throws CommsFail {
 	    ClientCommand command = (ClientCommand)commandIntf;
 	    boolean doListUpdate = false;
+	    String macroName = "";
+	    String pureMacroName = "";
 
 	    try {
 	        command = (ClientCommand)commandIntf;
@@ -113,37 +116,45 @@ public class Model extends BaseModel implements DeviceModel {
 
 		logger.log (Level.FINER, "Received macro command");
 
+		pureMacroName = command.getExtraInfo();
+		if (command.getExtra2Info().equals("")){
+			macroName = pureMacroName;
+		} else {
+			macroName = pureMacroName + ":" + command.getExtra2Info();			
+		}
+		
 		String commandStr = command.getCommandCode();
 		User currentUser = command.getUser();
 		if (commandStr.equals("run")) {
-			macroHandler.run((String)command.getExtraInfo(),currentUser,command);
-			logger.log (Level.FINER, "Run macro " + command.getExtraInfo());
+			macroHandler.run(macroName,currentUser,command);
+			logger.log (Level.FINER, "Run macro " + macroName);
 			doListUpdate = false;
 		}
 		if (commandStr.equals("abort")) {
-			macroHandler.abort((String)command.getExtraInfo(),currentUser);
+			macroHandler.abort(macroName,currentUser);
 			logger.log (Level.FINER, "Aborting macro " + command.getExtraInfo());
 			doListUpdate = false;
 		}
 		if (commandStr.equals("stop")) {
-			macroHandler.complete((String)command.getExtraInfo(),currentUser);
-			logger.log (Level.FINER, "Stopping macro " + command.getExtraInfo());
+			macroHandler.complete(macroName,currentUser);
+			logger.log (Level.FINER, "Stopping macro " + macroName);
 			doListUpdate = false;
 		}
 		if (commandStr.equals("complete")) {
-			macroHandler.complete((String)command.getExtraInfo(),currentUser);
-			logger.log (Level.FINER, "Aborting macro " + command.getExtraInfo());
+			macroHandler.complete(macroName,currentUser);
+			logger.log (Level.FINER, "Aborting macro " + macroName);
 			doListUpdate = false;
 		}
 
 		if (commandStr.equals("save")) {
-			macroHandler.put((String)command.getExtraInfo(),command.getMessageFromFlash(),false);
-			logger.log (Level.FINER, "Saving new macro " + command.getExtraInfo());
+			macroHandler.put(pureMacroName,command.getMessageFromFlash(),false);
+			logger.log (Level.FINER, "Saving new macro " + pureMacroName);
 			doListUpdate = true;
 		}
-                if (commandStr.equals("getContents")) {
-			Element macro = macroHandler.getContents((String)command.getExtraInfo(),false);
-			logger.log (Level.FINER, "Fetching contents for macro " + command.getExtraInfo());
+        if (commandStr.equals("getContents")) {
+        	// Contents is always for the pure macro name without zone appended.
+			Element macro = macroHandler.getContents(pureMacroName,false);
+			logger.log (Level.FINER, "Fetching contents for macro " + pureMacroName);
 			doListUpdate = false;
                         
 			if (macro == null)
@@ -162,8 +173,9 @@ public class Model extends BaseModel implements DeviceModel {
 			doListUpdate = true;
 		}
 		if (commandStr.equals("delete")) {
-			macroHandler.delete((String)command.getExtraInfo(),currentUser,false);
-			logger.log (Level.FINER, "Deleting macro " + command.getExtraInfo());
+        	// Delete is always for the pure macro name without zone appended.
+			macroHandler.delete(pureMacroName,currentUser,false);
+			logger.log (Level.FINER, "Deleting macro " + pureMacroName);
 			doListUpdate = true;
 		}
 		if (commandStr.equals("getList")) {
@@ -180,8 +192,8 @@ public class Model extends BaseModel implements DeviceModel {
 			}
 		}
 		if (doListUpdate) {
-                    logger.log (Level.FINER, "Fetching macro list");
-		    Element macro = macroHandler.get("",false,false);
+            logger.log (Level.FINER, "Fetching macro list");
+		    Element macro = macroHandler.get(macroName,false,false);
 
                     if (macro == null)
                             logger.log (Level.WARNING, "Could not retrieve macro list");
@@ -281,9 +293,9 @@ public class Model extends BaseModel implements DeviceModel {
 			    	CalendarEventEntry calendarEventEntry = calendarEventFactory.createEvent(nextEvent);
 			    	if (calendarEventEntry.isStillActive()){
 			    		eventCalendar.addEvent (calendarEventEntry);
-                                        eventID = eventID +','+ calendarEventEntry.getId();
 			    	}
-                                if (eventID.charAt(0) == ',')eventID = eventID.substring(1);
+			    	eventID = eventID +','+ calendarEventEntry.getId();
+                   if (eventID.length() > 0 && eventID.charAt(0) == ',')eventID = eventID.substring(1);
                  
 			    	eventCalendar.addEventXMLToStore (calendarEventEntry.getId(),nextEvent);
 			    } catch (CalendarException ex){

@@ -6,9 +6,10 @@ package au.com.BI.Flash;
 
 import java.util.logging.*;
 import java.util.regex.*;
+import org.jdom.*;
 
 public class BroadcastFormatter extends Formatter {
-
+    
 	public String format (LogRecord record) {
 		//return "<?xml version=\"1.0\"?/>\r\n<LOG LEVEL=\"" + record.getLevel().getName() + "\" TIME=\"" +  record.getMillis() + " \" SRC=\"" + record.getSourceClassName() + "." + record.getSourceMethodName() + "\" MSG=\"" + record.getMessage() + "\" />\r\n";
 		 try {
@@ -32,6 +33,7 @@ public class BroadcastFormatter extends Formatter {
 			return "";
 		}
 	}
+	
 	
 	public String getHead (Handler h) {
 		return "";

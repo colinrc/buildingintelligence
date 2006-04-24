@@ -29,6 +29,7 @@ public class BaseModel
         protected boolean logged_in = false;
 
         protected boolean connected = false;
+        private boolean autoReconnect = true;
 
         protected Map rawDefs;
         protected HashMap parameters;
@@ -699,5 +700,13 @@ public class BaseModel
 		public void setAlarmLogging(AlarmLogging alarmLogging) {
 			this.alarmLogging = alarmLogging;
 		}
+
+    public boolean isAutoReconnect() {
+        return autoReconnect;
+    }
+
+    public void setAutoReconnect(boolean autoReconnect) {
+        this.autoReconnect = autoReconnect;
+    }
 
 }

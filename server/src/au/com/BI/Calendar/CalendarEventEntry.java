@@ -12,7 +12,7 @@ public class CalendarEventEntry {
 	protected String popup = "";
 	protected String category = "";
 	protected String id = "";
-	protected String audible = "";
+	protected String alarm = "";
 	protected String target = "";
 	protected String target_user = "";
 	int eventType  = this.SINGLE_EVENT;
@@ -84,12 +84,12 @@ public class CalendarEventEntry {
 		this.id = id;
 	}
 
-	public String getAudible() {
-		return audible;
+	public String getAlarm() {
+		return alarm;
 	}
 
-	public void setAudible(String audible) {
-		this.audible = audible;
+	public void setAlarm(String alarm) {
+		this.alarm = alarm;
 	}
 
 	public String getTarget() {

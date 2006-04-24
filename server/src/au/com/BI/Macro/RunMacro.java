@@ -61,61 +61,65 @@ public class RunMacro extends Thread {
 			Iterator macroItems = macro.iterator();
 			while (!abort && macroItems.hasNext()) {
 			    commandDone = false;
-				ClientCommand clientCommand = (ClientCommand)macroItems.next();
-			    if (origCommand != null) {
-			    		if (clientCommand.getExtraInfo().startsWith("%")) {
-			    			clientCommand.setExtraInfo(readParam(clientCommand.getExtraInfo()));
-			    		}
-			    		if (clientCommand.getExtra2Info().startsWith("%")) {
-			    			clientCommand.setExtra2Info(readParam(clientCommand.getExtra2Info()));
-			    		}
-			    		if (clientCommand.getExtra3Info().startsWith("%")) {
-			    			clientCommand.setExtra3Info(readParam(clientCommand.getExtra3Info()));
-			    		}
-			    		if (clientCommand.getExtra4Info().startsWith("%")) {
-			    			clientCommand.setExtra4Info(readParam(clientCommand.getExtra4Info()));
-			    		}
-			    		if (clientCommand.getExtra5Info().startsWith("%")) {
-			    			clientCommand.setExtra5Info(readParam(clientCommand.getExtra5Info()));
-			    		}
-			    		if (clientCommand.getCommandCode().startsWith("%")) {
-			    			clientCommand.setCommand(readParam(clientCommand.getCommandCode()));
-			    		}
-			    		if (clientCommand.getKey().startsWith("%")) {
-			    			clientCommand.setKey(readParam(clientCommand.getKey()));
-			    		}
-			    }
-
-				if (clientCommand.getCommandCode().equals ("pause") && !continueToEnd) {
-					long timeToSleep = 0;
-					try {
-						timeToSleep = Long.parseLong(clientCommand.getExtraInfo()) * (long)1000;
-						logger.log(Level.FINEST,"Sleeping in macro for " + timeToSleep);
-						Thread.sleep (timeToSleep);
-						commandDone = true;
-					} catch (NumberFormatException e) {
-					} catch (InterruptedException e) {
-						
-					}
-				}
-				if (!commandDone && clientCommand.getCommandCode().equals ("enabled")) {
-
-				}
-				if (!commandDone &&  !runningInTimer &&  clientCommand.getCommandCode().equals ("goto")) {
-				    commandDone = true;
-				    if (clientCommand.getExtraInfo().equals ("start")) {
-				        repeating = true;
-				        logger.log (Level.FINE,"Repeating macro "+ macroName);
+			    try {
+					ClientCommand clientCommand = (ClientCommand)((ClientCommand)(macroItems.next())).clone();
+				    if (origCommand != null) {
+				    		if (clientCommand.getExtraInfo().startsWith("%")) {
+				    			clientCommand.setExtraInfo(readParam(clientCommand.getExtraInfo()));
+				    		}
+				    		if (clientCommand.getExtra2Info().startsWith("%")) {
+				    			clientCommand.setExtra2Info(readParam(clientCommand.getExtra2Info()));
+				    		}
+				    		if (clientCommand.getExtra3Info().startsWith("%")) {
+				    			clientCommand.setExtra3Info(readParam(clientCommand.getExtra3Info()));
+				    		}
+				    		if (clientCommand.getExtra4Info().startsWith("%")) {
+				    			clientCommand.setExtra4Info(readParam(clientCommand.getExtra4Info()));
+				    		}
+				    		if (clientCommand.getExtra5Info().startsWith("%")) {
+				    			clientCommand.setExtra5Info(readParam(clientCommand.getExtra5Info()));
+				    		}
+				    		if (clientCommand.getCommandCode().startsWith("%")) {
+				    			clientCommand.setCommand(readParam(clientCommand.getCommandCode()));
+				    		}
+				    		if (clientCommand.getKey().startsWith("%")) {
+				    			clientCommand.setKey(readParam(clientCommand.getKey()));
+				    		}
 				    }
-				}
-				
-				if (!commandDone) {
-				    commandDone = true;
-					synchronized (commandList){
-						commandList.add (clientCommand);
-						commandList.notifyAll ();
+	
+					if (clientCommand.getCommandCode().equals ("pause") && !continueToEnd) {
+						long timeToSleep = 0;
+						try {
+							timeToSleep = Long.parseLong(clientCommand.getExtraInfo()) * (long)1000;
+							logger.log(Level.FINEST,"Sleeping in macro for " + timeToSleep);
+							Thread.sleep (timeToSleep);
+							commandDone = true;
+						} catch (NumberFormatException e) {
+						} catch (InterruptedException e) {
+							
+						}
 					}
-				}
+					if (!commandDone && clientCommand.getCommandCode().equals ("enabled")) {
+	
+					}
+					if (!commandDone &&  !runningInTimer &&  clientCommand.getCommandCode().equals ("goto")) {
+					    commandDone = true;
+					    if (clientCommand.getExtraInfo().equals ("start")) {
+					        repeating = true;
+					        logger.log (Level.FINE,"Repeating macro "+ macroName);
+					    }
+					}
+						
+					if (!commandDone) {
+					    commandDone = true;
+						synchronized (commandList){
+							commandList.add (clientCommand);
+							commandList.notifyAll ();
+						}
+					}
+			    } catch (CloneNotSupportedException ex){
+			    	logger.log(Level.WARNING,"Macro execution failed, an element could not be run " + ex.getMessage());
+			    }
 			}
 		}
 		

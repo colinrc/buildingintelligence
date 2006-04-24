@@ -117,7 +117,11 @@ public class AdminControlListener extends Thread
 	}
 
 	public void addTheHandler (Socket adminConnection) throws ConnectionFail, SocketTimeoutException,IOException{
-		try {
+            if (!adminConnection.isConnected()) {
+                return ;
+            }
+            
+            try {
 			adminConnection.setKeepAlive(true);
 		    sh.setOutputStream(adminConnection.getOutputStream());
 		    if (firstConnection) {

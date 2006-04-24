@@ -210,7 +210,7 @@ public class Controller {
     }
 
 	public void setUpClients() throws CommsFail {
-		flashHandler.startListenning(bindToAddress, clientPort,bootstrap.getServerString(),bootstrap.getPort());
+		flashHandler.startListenning(bindToAddress, clientPort);
 	}
 	
 
@@ -238,16 +238,16 @@ public class Controller {
 	 *
 	 */
 	public void run() {
-	    currentUser = new User();
-	    logger = Logger.getLogger(this.getClass().getPackage().getName());
-	    logger.setLevel(Level.INFO);
-	    config = new Config();
-	    config.setSecurity(security);
-	    boolean commandDone;
+		currentUser = new User();
+		logger = Logger.getLogger(this.getClass().getPackage().getName());
+		logger.setLevel(Level.INFO);
+		config = new Config();
+		config.setSecurity(security);
+		boolean commandDone;
 
-	    logger.fine("Started the controller");
-	    Iterator deviceModelList;
-	    boolean successfulCommand = false;
+		logger.fine("Started the controller");
+		Iterator deviceModelList;
+		boolean successfulCommand = false;
 
 	    irCodeDB = new IRCodeDB();
 	    try {
@@ -994,12 +994,17 @@ public class Controller {
 					} catch (CommsFail commsFail) {
 						logger.log (Level.WARNING,"Caught a communication error to device " + deviceModel.getName() + " : "+ commsFail.getMessage());
 						deviceModel.setConnected(false);
-						connectDevice (deviceModel,this.deviceModels);
+                                                if (deviceModel.isAutoReconnect()){
+                                                    connectDevice (deviceModel,this.deviceModels);
+                                                }
 					} catch (NullPointerException ex) {
 						logger.log (Level.WARNING,"Caught a null pointer exception in device " + deviceModel.getName() + " ");
 						ex.printStackTrace();
 						deviceModel.setConnected(false);
 						connectDevice (deviceModel,this.deviceModels);
+                                                if (deviceModel.isAutoReconnect()){
+                                                    connectDevice (deviceModel,this.deviceModels);
+                                                }
 					}
                                         
 				}
@@ -1021,8 +1026,10 @@ public class Controller {
 		if (deviceModel.isTryingToConnect()) {
 			return; 
 		} else {
-			ConnectDevice connector = new ConnectDevice (deviceModel,adminModel, commandQueue,irCodeDB, bootstrap);
-			connector.start();
+			if (deviceModel.isAutoReconnect()){
+				ConnectDevice connector = new ConnectDevice (deviceModel,adminModel, commandQueue,irCodeDB, bootstrap);
+				connector.start();
+			}
 		}
 		
 	}

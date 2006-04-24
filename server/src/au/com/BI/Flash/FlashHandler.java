@@ -67,6 +67,7 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 		parameters = new HashMap (NUMBER_PARAMETERS);
 		this.security = security;
 		this.setName("Flash");
+        this.setAutoReconnect(false);
 	}
 
         public void setParameter(String name, Object value) {
@@ -103,7 +104,7 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 
 	// Ensure listening will restart after a config reload.
 
-	public void startListenning (String address, int portNumber,String masterIP, int masterPort) throws CommsFail  {
+	public void startListenning (String address, int portNumber) throws CommsFail  {
 	    if (flashControlListener != null ) {
 	        flashControlListener.stopRunning();
 	    }
@@ -114,8 +115,6 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 		flashControlListener.setMacroHandler (macroHandler);
 		flashControlListener.setServerID(serverID);
 		flashControlListener.setEventCalendar (eventCalendar);
-		if (!masterIP.equals (""))
-		    flashControlListener.addMasterServerListener(masterIP,masterPort);
 		flashControlListener.start();
 	}
 
@@ -198,11 +197,12 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 				xmlCommand = command.getXMLCommand ();
 				xmlCommand.setAttribute("KEY", command.getDisplayName());
 			}
-			XMLOutputter outputter = new XMLOutputter ();
-			String stringVersion = outputter.outputString (xmlCommand);
+
 
 			if (xmlCommand != null){
 				if (logger.isLoggable(Level.FINER)){
+					XMLOutputter outputter = new XMLOutputter ();
+					String stringVersion = outputter.outputString (xmlCommand);
 					logger.log( Level.FINER,"Sending XML to client " + stringVersion);
 				} else {
 					if (logger.isLoggable(Level.FINE)){
@@ -211,9 +211,9 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 
 				}
 				if (command.getTargetDeviceID() > 0)
-				    flashControlListener.sendToOneClient (stringVersion,command.getTargetDeviceID());
+				    flashControlListener.sendToOneClient (xmlCommand,command.getTargetDeviceID());
 				else
-				    flashControlListener.sendToAllClients (stringVersion,-1);
+				    flashControlListener.sendToAllClients (xmlCommand,-1);
 			}
 		}
 

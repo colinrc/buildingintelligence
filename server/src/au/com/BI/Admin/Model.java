@@ -55,16 +55,18 @@ public class Model extends BaseModel implements DeviceModel, ClientModel
 		rawDefs = new HashMap (NUMBER_CATALOGUES);
 		parameters = new HashMap (NUMBER_PARAMETERS);
 		this.setName("Admin");
+        this.setAutoReconnect(false);
 	}
 	
 	public boolean removeModelOnConfigReload () {
 		return false;
 	}
+        
 	public void attatchComms(List commandQueue) {
 		// meaningless for this
 	}
 	
-	
+        
 	public void setIrLearner (DeviceModel irLearner) {
 		this.irLearner = (au.com.BI.IR.Model)irLearner;
 	}
