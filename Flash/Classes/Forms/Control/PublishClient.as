@@ -113,6 +113,11 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 		newApplicationNode.attributes.value = "client.xml";
 		newBootstrapXML.appendChild(newApplicationNode);
 		
+		var newPortNode = new XMLNode(1,"setting");
+		newPortNode.attributes.name = "serverPort";
+		newPortNode.attributes.value = "10000";
+		newBootstrapXML.appendChild(newPortNode);
+		
 		var newFullScreenNode = new XMLNode(1,"setting");
 		newFullScreenNode.attributes.name = "fullScreen";
 		if(fullScreen_chk.selected){

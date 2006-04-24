@@ -82,11 +82,11 @@ class Forms.Control.PublishServer extends Forms.BaseForm {
 		var newBootstrapXML = new XMLNode(1,"BOOTSTRAP");
 		var newServerNode = new XMLNode(1,"SERVER");
 		newServerNode.attributes.IP = "";
-		newServerNode.attributes.PORT = "10001";
+		newServerNode.attributes.PORT = "10000";
 		newBootstrapXML.appendChild(newServerNode);
 		var newAdminNode = new XMLNode(1,"ADMIN");
 		newAdminNode.attributes.IP = "";
-		newAdminNode.attributes.PORT = "10002";
+		newAdminNode.attributes.PORT = "10001";
 		newBootstrapXML.appendChild(newAdminNode);
 		var newConfigNode = new XMLNode(1,"CONFIG_FILE");
 		newConfigNode.attributes.NAME = "server.xml";
