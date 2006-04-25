@@ -9,7 +9,7 @@ package au.com.BI.Nuvo;
  * @author Explorative Sofwtare Pty Ltd
  *
 */
-import au.com.BI.AV.*;
+import au.com.BI.Audio.*;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
@@ -20,14 +20,7 @@ import java.util.logging.*;
 
 public class Model extends BaseModel implements DeviceModel {
 	
-	private class NuvoCommands {
-		String avOutputString = "";
-		boolean error = false;
-		String errorDescription = "";
-		
-		int outputCommandType;
-		int paramCommandType;
-	}
+
 	
 	protected String outputAudioCommand = "";
 	protected HashMap state;
@@ -43,6 +36,7 @@ public class Model extends BaseModel implements DeviceModel {
 		nuvoHelper = new NuvoHelper();
 		state = new HashMap();
 		currentSrc = new HashMap();
+		setPadding (2); // device requires 2 character keys that are 0 padded.
 	}
 
 	public void clearItems () {
@@ -78,7 +72,7 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 		Iterator avDevices = configHelper.getAllControlledDevices();
 		while (avDevices.hasNext()) {
-			AV avDevice = (AV)avDevices.next();
+			Audio avDevice = (Audio)avDevices.next();
 		}
 
 	}
@@ -86,18 +80,18 @@ public class Model extends BaseModel implements DeviceModel {
 	public void doClientStartup (List commandQueue, long targetFlashDeviceID) {
 		Iterator audioDevices = configHelper.getAllControlledDevices();
 		while (audioDevices.hasNext()){
-			AV audioDevice =(AV)(audioDevices.next());
+			Audio audioDevice =(Audio)(audioDevices.next());
 			doClientStartup (commandQueue, targetFlashDeviceID, audioDevice);
 			
 		}
 	}
 
-	public void doClientStartup (List commandQueue, long targetFlashDeviceID, AV audioDevice) {
+	public void doClientStartup (List commandQueue, long targetFlashDeviceID, Audio audioDevice) {
 	}
 
 	
-	public void sendSrc (List commandQueue, long targetFlashDeviceID, AV audioDevice, String src) {
-		AVCommand audioCommand = (AVCommand)audioDevice.buildDisplayCommand ();
+	public void sendSrc (List commandQueue, long targetFlashDeviceID, Audio audioDevice, String src) {
+		AudioCommand audioCommand = (AudioCommand)audioDevice.buildDisplayCommand ();
 		audioCommand.setKey ("CLIENT_SEND");
 		audioCommand.setTargetDeviceID(targetFlashDeviceID);
 		audioCommand.setCommand ("src");
@@ -105,8 +99,8 @@ public class Model extends BaseModel implements DeviceModel {
 		sendToFlash (audioCommand,cache,commandQueue);	
 	}
 	
-	public void sendVolume (List commandQueue, long targetFlashDeviceID, AV audioDevice, String volume) {
-		AVCommand audioCommand = (AVCommand)audioDevice.buildDisplayCommand ();
+	public void sendVolume (List commandQueue, long targetFlashDeviceID, Audio audioDevice, String volume) {
+		AudioCommand audioCommand = (AudioCommand)audioDevice.buildDisplayCommand ();
 		audioCommand.setKey ("CLIENT_SEND");
 		audioCommand.setTargetDeviceID(targetFlashDeviceID);
 		audioCommand.setCommand ("volume");
@@ -149,8 +143,8 @@ public class Model extends BaseModel implements DeviceModel {
 
 				
 				switch (device.getDeviceType()) {
-					case DeviceType.AV :
-						toSend = buildAudioString ((AV)device,command);
+					case DeviceType.AUDIO :
+						toSend = buildAudioString ((Audio)device,command);
 						if (toSend != null && !toSend.error) {
 
 							logger.log(Level.FINER, "Audio event for zone " + device.getKey() + " received from flash");
@@ -162,7 +156,7 @@ public class Model extends BaseModel implements DeviceModel {
 								avCommsCommand.setKey (device.getKey());
 								avCommsCommand.setCommand(toSend.avOutputString);
 								avCommsCommand.setActionType(toSend.outputCommandType);
-								avCommsCommand.setExtraInfo (((AV)(device)).getOutputKey());
+								avCommsCommand.setExtraInfo (((Audio)(device)).getOutputKey());
 								avCommsCommand.setKeepForHandshake(true);
 								synchronized (comms){
 									try { 
@@ -219,7 +213,7 @@ public class Model extends BaseModel implements DeviceModel {
 		return returnVal;
 	}
 	
-	public NuvoCommands buildAudioString (AV device, CommandInterface command){
+	public NuvoCommands buildAudioString (Audio device, CommandInterface command){
 		NuvoCommands returnVal = new NuvoCommands();
 		
 		boolean commandFound = false;
@@ -279,6 +273,22 @@ public class Model extends BaseModel implements DeviceModel {
 				commandFound = false;
 			}
 		}	
+		if (theCommand.equals("on")) {
+			String key = device.getKey();
+			returnVal.avOutputString = "*Z"+key+"ON";
+			logger.log (Level.FINEST,"Switching on zone "+ key);
+			commandFound = true;
+			returnVal.outputCommandType = DeviceType.NUVO_SWITCH;
+
+		}
+		if (theCommand.equals("off")) {
+			String key = device.getKey();
+			returnVal.avOutputString = "*Z"+key+"OFF";
+			logger.log (Level.FINEST,"Switching off zone " + key);
+			commandFound = true;
+			returnVal.outputCommandType = DeviceType.NUVO_SWITCH;
+
+		}
 		if (commandFound) {
 			return returnVal;
 		}
