@@ -33,11 +33,11 @@ public class Security {
 	/* search for local and remote HASP HL key */
 	
 	
-	/*
+    	/*
 	connected = true;
 	return ;
-	*/
-	 
+*/
+	
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	 
 	InputStreamReader reader = new InputStreamReader(System.in);
@@ -82,7 +82,6 @@ public class Security {
 			fsize,
 			allowNumbers);
        }
-
 	
     }
     
@@ -99,6 +98,7 @@ public class Security {
 	} catch (NullPointerException ex){
 	    return false;
 	}
+
 	 
     }
     

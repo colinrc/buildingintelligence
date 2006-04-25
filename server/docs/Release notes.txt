@@ -1,4 +1,8 @@
+== Released [attachment:wiki:SoftwareReleases:elife-server-1.6a2.zip V1.6a2] ==
 
+''' M1 '''
+
+Incorporated M1 startup and temperature code. See [wiki:ServerDocs/ElkModel] for details.
 
 ''' General '''
 
@@ -10,6 +14,11 @@ Release is 1.5 or 1.4 compatable, when used with the included libraries.
 
 Update ant build files to include libraries on major version releases
 
+Allow for multiple configuration fiels to be specified. In the bootstrap file use a wildcard for the filename.
+
+{{{
+  <CONFIG_FILE NAME="config_.*xml" />
+}}}
 
 ''' Jetty '''
 

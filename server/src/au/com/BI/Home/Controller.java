@@ -108,6 +108,7 @@ public class Controller {
 		modelRegistry.put("PELCO", "au.com.BI.Pelco.Model");
 		modelRegistry.put("IR_LEARNER", "au.com.BI.IR.Model");
 		modelRegistry.put("M1", "au.com.BI.M1.Model");
+		modelRegistry.put("NUVO", "au.com.BI.Nuvo.Model");
 		modelRegistry.put("MACRO", "au.com.BI.Macro.Model");
 		modelRegistry.put("SCRIPT", "au.com.BI.Script.Model");
 

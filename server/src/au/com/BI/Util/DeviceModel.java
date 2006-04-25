@@ -342,6 +342,17 @@ public interface DeviceModel {
 	public AlarmLogging getAlarmLogging();
 
 	public void setAlarmLogging(AlarmLogging alarmLogging);
+	
+	/**
+	 * Padding is greater than 1 when a device requires a key of a certain length.
+	 * @return The required key length.
+	 */
+	public int getPadding();
+
+	/**
+	 * Padding is greater than 1 when a device requires a key of a certain length.
+	 */	
+	public void setPadding(int padding);
 }
 
 

@@ -102,6 +102,31 @@
                         <AV_OUTPUT KEY="3" DISPLAY_NAME="STUDY_AV"/>
                 </KRAMER>
         </DEVICE>
+        <!-- the key is the Kramer output, Display name is the flash icon name -->
+        
+        <!-- ______________________________________  Nuvo DEFS  ____________________  -->
+        <DEVICE ACTIVE="N" DEVICE_TYPE="NUVO" DESCRIPTION="Nuvo Audio Switch">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                </CONNECTION>
+                <CATALOGUE NAME="Nuvo Audio Inputs">
+                        <ITEM CODE="cd1" VALUE="1"/>
+                        <ITEM CODE="cd2" VALUE="2"/>
+                        <ITEM CODE="digital" VALUE="3"/>
+                        <ITEM CODE="tv" VALUE="4"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="AUDIO_INPUTS" VALUE="Nuvo Audio Inputs"/>
+                </PARAMETERS>
+                <KRAMER>
+                        <AV_OUTPUT KEY="0" DISPLAY_NAME="ALL"/>
+                        <AV_OUTPUT KEY="1" DISPLAY_NAME="FAMILY_AUDIO"/>
+                        <AV_OUTPUT KEY="2" DISPLAY_NAME="KITCHEN_AUDIO"/>
+                        <AV_OUTPUT KEY="3" DISPLAY_NAME="STUDY_AUDIO"/>
+                </KRAMER>
+        </DEVICE>
         <!-- the key is the Lramer output, Display name is the flash icon name -->
         <!-- ______________________________________  HAL DEFS  ____________________  -->
         <DEVICE ACTIVE="N" DEVICE_TYPE="HAL" DESCRIPTION="HAL Audio">
@@ -137,12 +162,12 @@
         <!-- the key is the HAL zone, Display name is the flash icon name -->
 
         !-- ______________________________________  DynaLite DEFS  ____________________  -->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="DYNALITE" DESCRIPTION="DynaLite Lights">
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="DYNALITE" DESCRIPTION="DynaLite Lights">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N"  FLOW="NONE"/>
-                        <SERIAL ACTIVE="Y" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="NONE" />
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="NONE" />
                         <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
-                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4999"/>
                 </CONNECTION>
                 <PARAMETERS>
                 		<ITEM NAME="PROTOCOL" VALUE="CLASSIC" />

@@ -11,6 +11,7 @@ import au.com.BI.Analogue.AnalogFactory;
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.Utility;
 
 public class AudioFactory {
 	Logger logger;
@@ -45,6 +46,11 @@ public class AudioFactory {
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
 		Audio audio = new Audio (display_name,connectionType);
 
+		int padding = targetDevice.getPadding();
+		if (padding > 1){
+			key = Utility.padString(key, padding);
+		}
+			
 		audio.setKey (key);
 		audio.setOutputKey(display_name);
 		audio.setCommand(command);

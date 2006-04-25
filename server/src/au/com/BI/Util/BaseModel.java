@@ -60,6 +60,9 @@ public class BaseModel
 		protected AddressBook addressBook = null;
 		protected AlarmLogging alarmLogging = null;
 		
+		protected int padding = 1; // Number of digits to pad the key too in the device.
+		
+		
 		public User currentUser = null;
 		
         public BaseModel() {
@@ -708,5 +711,13 @@ public class BaseModel
     public void setAutoReconnect(boolean autoReconnect) {
         this.autoReconnect = autoReconnect;
     }
+
+	public int getPadding() {
+		return padding;
+	}
+
+	public void setPadding(int padding) {
+		this.padding = padding;
+	}
 
 }
