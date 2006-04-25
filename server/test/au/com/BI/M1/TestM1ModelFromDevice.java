@@ -212,6 +212,7 @@ public class TestM1ModelFromDevice extends TestCase {
 		str = "D6CS100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000000000000000";
 		checksum = new M1Helper().calcM1Checksum(str);
 		str = str + checksum;
+		System.out.println(str);
 		m1Command = M1CommandFactory.getInstance().getM1Command(str);
 		assertEquals(m1Command.getClass(),ControlOutputStatusReport.class);
 		ControlOutputStatusReport controlOutputStatusReport = (ControlOutputStatusReport)m1Command;
@@ -224,6 +225,8 @@ public class TestM1ModelFromDevice extends TestCase {
 		str = "0CST001135005C";
 		m1Command = M1CommandFactory.getInstance().getM1Command(str);
 		assertEquals(m1Command.getClass(),RequestTemperatureReply.class);
+		
+		m1Helper.buildCompleteM1String("CC" + Utility.padString(testSwitch1.getKey(),3) + "0" + "00");
 	}
 	*/
 }
