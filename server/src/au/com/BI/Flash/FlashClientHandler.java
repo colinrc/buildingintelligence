@@ -95,22 +95,29 @@ public class FlashClientHandler extends Thread {
 		try {
 		    String nextItem = rd.readLine();
 		    if (nextItem != null) {
-			nextItem = nextItem.trim();
-			if (!nextItem.equals ("")){
-			    InputStream xmlStream = new ByteArrayInputStream(nextItem.getBytes());
+				nextItem = nextItem.trim();
+				if (!nextItem.equals ("")){
+				    InputStream xmlStream = new ByteArrayInputStream(nextItem.getBytes());
+	
+				    try {
+					xmlDoc = saxb.build(xmlStream);
+					processXML(xmlDoc); 
+				    } catch (JDOMException ex){
+					logger.log (Level.WARNING,"XML message from Flash client was invalid " + ex.getMessage());
+				    }
+				}  
+		    } else {
+	    		try {
+	    			Thread.sleep(500); // hang around for a short time
+	    		} catch (InterruptedException e) {
 
-			    try {
-				xmlDoc = saxb.build(xmlStream);
-				processXML(xmlDoc); 
-			    } catch (JDOMException ex){
-				logger.log (Level.WARNING,"XML message from Flash client was invalid " + ex.getMessage());
-			    }
-			}
+	    		}
+
 		    }
 		} catch (IOException ex){
 		    thisThreadRunning = false;
 		    logger.log(Level.FINER,"IO Exception communicating with client");
-		}
+		} 
 		    
 		Thread.yield(); // ensure another process always has a chance
 	 }

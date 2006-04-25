@@ -331,11 +331,9 @@ public class CalendarEventFactory {
 	
 	if (skipDates.doISkipDate(new Date())){
 		// Skip a macro if it is already running
-		if (!macroName.equals("")) {
+		if (!macroName.equals("") ) {
 			generateMacroCommand (macroName,"skip",extra);
 		}
-	    returnVal.setStillActive(false);
-	    return returnVal;
 	}
 	
 	if (eventType.equals("once")){
