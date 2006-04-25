@@ -11,24 +11,43 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var contact in contacts) {
-			if ((contacts[contact].attributes["ACTIVE"] != "Y") && (contacts[contact].attributes["ACTIVE"] != "N")) {
+			if ((contacts[contact].active != "Y") && (contacts[contact].active != "N")) {
 				flag = "error";
+				appendValidationMsg("Active flag is invalid");
 			}
-			if ((contacts[contact].attributes["KEY"] == undefined) || (contacts[contact].attributes["KEY"] == "")) {
-				flag = "error";
+			
+			if (contacts[contact].active =="Y"){
+				if ((contacts[contact].display_name == undefined) || (contacts[contact].display_name == "")) {
+					flag = "error";
+					appendValidationMsg("Key is invalid");
+				} else {
+					if (_global.isKeyUsed(contacts[contact].display_name) == false) {
+						flag = "error";
+						appendValidationMsg(contacts[contact].display_name +" Key is not used");
+					}
+				}
+				if ((contacts[contact].box == undefined) || (contacts[contact].box == "")) {
+					flag = "error";
+					appendValidationMsg("Box is invalid");
+				}
+				if ((contacts[contact].name == undefined) || (contacts[contact].name == "")) {
+					flag = "error";
+					appendValidationMsg("Description is invalid");
+				}
+				if ((contacts[contact].key == undefined) || (contacts[contact].key == "")) {
+					flag = "error";
+					appendValidationMsg("Input key is invalid");
+				}
 			}
-			if ((contacts[contact].attributes["BOX"] == undefined) || (contacts[contact].attributes["BOX"] == "")) {
-				flag = "error";
-			}
-			if ((contacts[contact].attributes["NAME"] == undefined) || (contacts[contact].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((contacts[contact].attributes["DISPLAY_NAME"] == undefined) || (contacts[contact].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
+			else {
+				flag = "empty";
+				appendValidationMsg("Contact Closures is not Active");
 			}
 		}
 		return flag;
+		
 	}
 	public function getForm():String {
 		return "forms.project.device.contact";

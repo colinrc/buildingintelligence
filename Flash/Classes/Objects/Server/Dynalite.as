@@ -20,21 +20,37 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
-		if ((device_type == undefined) || (device_type == "")) {
-			flag = "error";
-		}
-		if ((description == undefined) || (description == "")) {
-			flag = "error";
-		}		
+		clearValidationMsg();
+				
 		if ((active != "Y") && (active != "N")) {
 			flag = "error";
+			appendValidationMsg("Active is invalid");
 		}
-		flag = getHighestFlagValue(flag, irs.isValid());
-		flag = getHighestFlagValue(flag, lights.isValid());
-		flag = getHighestFlagValue(flag, contacts.isValid());
-		flag = getHighestFlagValue(flag, alarms.isValid());
-		flag = getHighestFlagValue(flag, lightAreas.isValid());
-		//need to isValid connection and parameters 
+		else {
+			if (active =="Y"){
+				if ((device_type == undefined) || (device_type == "")) {
+					flag = "error";
+					appendValidationMsg("Device Type is invalid");
+				}
+				if ((description == undefined) || (description == "")) {
+					flag = "warning";
+					appendValidationMsg("Description is invalid");
+				}
+				flag = getHighestFlagValue(flag, irs.isValid());
+				flag = getHighestFlagValue(flag, lights.isValid());
+				flag = getHighestFlagValue(flag, contacts.isValid());
+				flag = getHighestFlagValue(flag, alarms.isValid());
+				flag = getHighestFlagValue(flag, lightAreas.isValid());
+				appendValidationMsg("Dynalite is invalid");
+			}
+			else {
+				if (active =="N"){
+					flag = "empty";
+					appendValidationMsg("Dynalite is not active");
+				}
+			}
+			
+		}
 		return flag;
 	}
 	public function toXML():XMLNode {

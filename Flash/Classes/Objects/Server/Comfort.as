@@ -47,23 +47,32 @@
 			flag = "error";
 			appendValidationMsg("Active flag is invalid");
 		}
-		flag = getHighestFlagValue(flag, customs.isValid());
-		flag = getHighestFlagValue(flag, raw_interfaces.isValid());
-		flag = getHighestFlagValue(flag, counters.isValid());
-		flag = getHighestFlagValue(flag, toggle_monitors.isValid());
-		flag = getHighestFlagValue(flag, cbus_lights.isValid());
-		flag = getHighestFlagValue(flag, cbus_relays.isValid());
-		flag = getHighestFlagValue(flag, x10_lights.isValid());
-		flag = getHighestFlagValue(flag, pulse_outputs.isValid());
-		flag = getHighestFlagValue(flag, toggle_outputs.isValid());
-		flag = getHighestFlagValue(flag, toggle_inputs.isValid());
-		flag = getHighestFlagValue(flag, alarms.isValid());
-		flag = getHighestFlagValue(flag, alerts.isValid());
-		flag = getHighestFlagValue(flag, analogues.isValid());
-		flag = getHighestFlagValue(flag, catalogues.isValid());
-		flag = getHighestFlagValue(flag, door_ids.isValid());
-		flag = getHighestFlagValue(flag, comfort_users.isValid());
-		appendValidationMsg("Comfort is invalid");
+		else {
+			if (active =="Y"){
+				flag = getHighestFlagValue(flag, customs.isValid());
+				flag = getHighestFlagValue(flag, raw_interfaces.isValid());
+				flag = getHighestFlagValue(flag, counters.isValid());
+				flag = getHighestFlagValue(flag, toggle_monitors.isValid());
+				flag = getHighestFlagValue(flag, cbus_lights.isValid());
+				flag = getHighestFlagValue(flag, cbus_relays.isValid());
+				flag = getHighestFlagValue(flag, x10_lights.isValid());
+				flag = getHighestFlagValue(flag, pulse_outputs.isValid());
+				flag = getHighestFlagValue(flag, toggle_outputs.isValid());
+				flag = getHighestFlagValue(flag, toggle_inputs.isValid());
+				flag = getHighestFlagValue(flag, alarms.isValid());
+				flag = getHighestFlagValue(flag, alerts.isValid());
+				flag = getHighestFlagValue(flag, analogues.isValid());
+				flag = getHighestFlagValue(flag, catalogues.isValid());
+				flag = getHighestFlagValue(flag, door_ids.isValid());
+				flag = getHighestFlagValue(flag, comfort_users.isValid());
+				appendValidationMsg("Comfort is invalid");
+			}
+			else {
+				flag = "empty";
+				appendValidationMsg("Comfort is not active");
+			}
+		}
+			
 		return flag;
 	}
 	public function toXML():XMLNode {

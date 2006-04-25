@@ -23,13 +23,14 @@
 					flag = "empty";
 					appendValidationMsg("Power Rating is empty");
 				}
-				if ((relays[relay].key == undefined) || (relays[relay].key == "")) {
+				if ((relays[relay].display_name == undefined) || (relays[relay].display_name == "")) {
 					flag = "error";
-					appendValidationMsg("Group Addr.(key) is invalid");
-				} else {
-					if (_global.isKeyUsed(relays[relay].key) == false) {
+					appendValidationMsg("Key is invalid");
+				}
+				 else {
+					if (_global.isKeyUsed(relays[relay].display_name) == false) {
 						flag = "error";
-						appendValidationMsg(relays[relay].key+" key is not being used");
+						appendValidationMsg(relays[relay].display_name+" key is not used");
 					}
 				}
 				if ((relays[relay].application == undefined) || (relays[relay].application == "")) {
@@ -40,9 +41,10 @@
 					flag = "error";
 					appendValidationMsg("Description is invalid");
 				}
-				if ((relays[relay].display_name == undefined) || (relays[relay].display_name == "")) {
+				
+				if ((relays[relay].key == undefined) || (relays[relay].key == "")) {
 					flag = "error";
-					appendValidationMsg("Key is invalid");
+					appendValidationMsg("Group Addr. is invalid");
 				}
 			}
 			else{

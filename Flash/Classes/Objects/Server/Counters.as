@@ -11,18 +11,39 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var counter in counters) {
-			if ((counters[counter].attributes["ACTIVE"] != "Y") && (counters[counter].attributes["ACTIVE"] != "N")) {
+			if ((counters[counter].active != "Y") && (counters[counter].active != "N")) {
 				flag = "error";
+				appendValidationMsg("Active flag is invalid");
 			}
-			if ((counters[counter].attributes["KEY"] == undefined) || (counters[counter].attributes["KEY"] == "")) {
-				flag = "error";
+			if (counters[counter].active =="Y"){
+				if ((counters[counter].name == undefined) || (counters[counter].name == "")) {
+					flag = "warning";
+					appendValidationMsg("Description is invalid");
+				}
+				if ((counters[counter].display_name == undefined) || (counters[counter].display_name == "")) {
+					flag = "error";
+					appendValidationMsg("Key is invalid");
+				}
+				else {
+					if (_global.isKeyUsed(counters[counter].display_name) == false) {
+						flag = "error";
+						appendValidationMsg(counters[counter].display_name+" key is not used");
+					}
+				}
+				if ((counters[counter].key == undefined) || (counters[counter].key == "")) {
+					flag = "error";
+					appendValidationMsg("Counter No. is invalid");
+				}
+				if ((counters[counter].max == undefined) || (counters[counter].max == "")) {
+					flag = "error";
+					appendValidationMsg("Max is invalid");
+				}
 			}
-			if ((counters[counter].attributes["NAME"] == undefined) || (counters[counter].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((counters[counter].attributes["DISPLAY_NAME"] == undefined) || (counters[counter].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
+			else{
+				flag = "empty";
+				appendValidationMsg("Counters is not Active");
 			}
 		}
 		return flag;

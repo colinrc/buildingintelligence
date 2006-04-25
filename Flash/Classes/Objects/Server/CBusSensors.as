@@ -23,13 +23,13 @@
 					flag = "empty";
 					appendValidationMsg("Power Rating is empty");
 				}
-				if ((sensors[sensor].key == undefined) || (sensors[sensor].key == "")) {
+				if ((sensors[sensor].display_name == undefined) || (sensors[sensor].display_name == "")) {
 					flag = "error";
-					appendValidationMsg("Unit Addr.(key) is invalid");
-				} else {
-					if (_global.isKeyUsed(sensors[sensor].key) == false) {
+					appendValidationMsg("Key is invalid");
+				}else {
+					if (_global.isKeyUsed(sensors[sensor].display_name) == false) {
 						flag = "error";
-						appendValidationMsg(sensors[sensor].key+" key is not being used");
+						appendValidationMsg(sensors[sensor].display_name+" key is not being used");
 					}
 				}
 				if ((sensors[sensor].application == undefined) || (sensors[sensor].application == "")) {
@@ -40,9 +40,9 @@
 					flag = "error";
 					appendValidationMsg("Description is invalid");
 				}
-				if ((sensors[sensor].display_name == undefined) || (sensors[sensor].display_name == "")) {
+				if ((sensors[sensor].key == undefined) || (sensors[sensor].key == "")) {
 					flag = "error";
-					appendValidationMsg("Key is invalid");
+					appendValidationMsg("Unit Addr. is invalid");
 				}
 				if ((sensors[sensor].channel == undefined) || (sensors[sensor].channel == "")) {
 					flag = "error";

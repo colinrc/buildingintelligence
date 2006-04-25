@@ -1,16 +1,18 @@
 ﻿<flash_project name="eLifeAdmin" version="1">
     <project_folder name="Classes" expanded="true">
-        <project_folder name="Forms" expanded="true">
-            <project_folder name="Control" expanded="true">
+        <project_folder name="Forms" expanded="false">
+            <project_folder name="Control" expanded="false">
                 <project_file path="./Classes/Forms/Control/IR.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/ServerLog.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/Files.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/ServerControls.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/ClientControls.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/Clients.as" filetype="as" />
-                <project_file path="./Classes/Forms/Control/Publish.as" filetype="as" />
+                <project_file path="./Classes/Forms/Control/SFTP.as" filetype="as" />
+                <project_file path="./Classes/Forms/Control/PublishClient.as" filetype="as" />
+                <project_file path="./Classes/Forms/Control/PublishServer.as" filetype="as" />
             </project_folder>
-            <project_folder name="Project" expanded="true">
+            <project_folder name="Project" expanded="false">
                 <project_folder name="Device" expanded="false">
                     <project_file path="./Classes/Forms/Project/Device/Head.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Connection.as" filetype="as" />
@@ -50,12 +52,13 @@
                     <project_file path="./Classes/Forms/Project/Device/ParametersHAL.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/ParametersOregon.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/ParametersPelco.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Device/DynaliteLightAreas.as" filetype="as" />
                 </project_folder>
                 <project_folder name="JRobin" expanded="false">
                     <project_file path="./Classes/Forms/Project/JRobin/Data.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/JRobin/JRobin.as" filetype="as" />
                 </project_folder>
-                <project_folder name="Client" expanded="true">
+                <project_folder name="Client" expanded="false">
                     <project_file path="./Classes/Forms/Project/Client/BooleanEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/ColourEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/NumberEdit.as" filetype="as" />
@@ -101,19 +104,40 @@
                     <project_file path="./Classes/Forms/Project/Client/ControlTypeWebBrowser.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/Overrides.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/Panel.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/Rooms.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/CalendarTab.as" filetype="as" />
+                    <project_file path="./Classes/Forms/Project/Client/Panels.as" filetype="as" />
                 </project_folder>
                 <project_file path="./Classes/Forms/Project/Variables.as" filetype="as" />
                 <project_file path="./Classes/Forms/Project/Server.as" filetype="as" />
                 <project_file path="./Classes/Forms/Project/Xml.as" filetype="as" />
                 <project_file path="./Classes/Forms/Project/CalendarSettings.as" filetype="as" />
+                <project_file path="./Classes/Forms/Project/ClientDesigns.as" filetype="as" />
             </project_folder>
-            <project_folder name="Tree" expanded="true">
+            <project_folder name="Tree" expanded="false">
                 <project_file path="./Classes/Forms/Tree/WorkFlowTreeCellRenderer.as" filetype="as" />
+            </project_folder>
+            <project_folder name="DataGrid" expanded="false">
+                <project_file path="./Classes/Forms/DataGrid/ValueInputCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/ActiveHeaderRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/ButtonCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/CatalogueComboBoxCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/CheckCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/CodeComboBoxCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/ColourCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/ComboBoxCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/DynamicDataGrid.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/IconComboBoxCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/ImageCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/LogComboBoxCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/MultiLineHeaderRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/ParameterComboBoxCellRenderer.as" filetype="as" />
+                <project_file path="./Classes/Forms/DataGrid/TextInputCellRenderer.as" filetype="as" />
             </project_folder>
             <project_file path="./Classes/Forms/Home.as" filetype="as" />
             <project_file path="./Classes/Forms/BaseForm.as" filetype="as" />
             <project_file path="./Classes/Forms/History.as" filetype="as" />
-            <project_file path="./Classes/Forms/Publish.as" filetype="as" />
+            <project_file path="./Classes/Forms/LibraryManager.as" filetype="as" />
         </project_folder>
         <project_folder name="Objects" expanded="true">
             <project_folder name="Server" expanded="true">
@@ -158,8 +182,9 @@
                 <project_file path="./Classes/Objects/Server/DynaliteRelays.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/GC100IRs.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/GC100Toggles.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Settings.as" filetype="as" />
             </project_folder>
-            <project_folder name="Client" expanded="true">
+            <project_folder name="Client" expanded="false">
                 <project_file path="./Classes/Objects/Client/Client.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Apps_Bar.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Control_Panel_Apps.as" filetype="as" />
@@ -184,6 +209,10 @@
                 <project_file path="./Classes/Objects/Client/CalendarTab.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Doors.as" filetype="as" />
             </project_folder>
+            <project_folder name="Instances" expanded="false">
+                <project_file path="./Classes/Objects/Instances/ServerInstance.as" filetype="as" />
+                <project_file path="./Classes/Objects/Instances/ClientInstance.as" filetype="as" />
+            </project_folder>
             <project_file path="./Classes/Objects/ServerConnection.as" filetype="as" />
             <project_file path="./Classes/Objects/History.as" filetype="as" />
             <project_file path="./Classes/Objects/Library.as" filetype="as" />
@@ -191,11 +220,10 @@
             <project_file path="./Classes/Objects/WorkFlow.as" filetype="as" />
             <project_file path="./Classes/Objects/Steps.as" filetype="as" />
             <project_file path="./Classes/Objects/ClientConnection.as" filetype="as" />
-            <project_file path="./Classes/Objects/ClientDesigns.as" filetype="as" />
-            <project_file path="./Classes/Objects/ServerDesigns.as" filetype="as" />
-            <project_file path="./Classes/Objects/ServerInstances.as" filetype="as" />
+            <project_file path="./Classes/Objects/MonitorConnection.as" filetype="as" />
+            <project_file path="./Classes/Objects/SFTPConnection.as" filetype="as" />
         </project_folder>
-        <project_folder name="Utils" expanded="false">
+        <project_folder name="Utils" expanded="true">
             <project_file path="./Classes/Utils/Base64.as" filetype="as" />
             <project_file path="./Classes/Utils/XMLHighlighter.as" filetype="as" />
         </project_folder>
@@ -207,4 +235,8 @@
     </project_folder>
     <project_file path="./admin-tool.fla" filetype="fla" profile="" def_file="true" />
     <project_file path="./admin-tool.as" filetype="as" />
+    <project_file path="./window-preview.as" filetype="as" />
+    <project_file path="./mapEditor.fla" filetype="fla" profile="" />
+    <project_file path="./splitPanel.fla" filetype="fla" profile="" />
+    <project_file path="./TabBar.as" filetype="as" />
 </flash_project>

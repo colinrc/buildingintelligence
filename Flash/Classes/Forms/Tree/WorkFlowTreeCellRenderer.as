@@ -32,10 +32,14 @@
 					if (owner.node.attributes.complete == "empty") {
 						iconName = "incomplete";
 					}
-					else
-						{/*warning*/
+					else {
+						if (owner.node.attributes.complete == "warning") {
 							iconName = "warning";
 						}
+						else {
+							iconName = null;
+						}
+					}
 				}
 			}
 			icon = attachMovie("Icon:" + iconName, "icon", 100, {_x:listOwner.width - (indent+5), _y:2});

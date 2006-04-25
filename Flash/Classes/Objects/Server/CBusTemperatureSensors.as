@@ -17,24 +17,23 @@
 				flag = "error";
 				appendValidationMsg("Active flag is invalid");
 			}
-			
 			if (sensors[sensor].active =="Y"){
-				if ((sensors[sensor].key == undefined) || (sensors[sensor].key == "")) {
+				if ((sensors[sensor].display_name == undefined) || (sensors[sensor].display_name == "")) {
 					flag = "error";
-					appendValidationMsg("Unit Addr.(key) is invalid");
+					appendValidationMsg("Key is invalid");
 				} else {
-					if (_global.isKeyUsed(sensors[sensor].key) == false) {
+					if (_global.isKeyUsed(sensors[sensor].display_name) == false) {
 						flag = "error";
-						appendValidationMsg(sensors[sensor].key+" key is not being used");
+						appendValidationMsg(sensors[sensor].display_name+" key is not being used");
 					}
 				}
 				if ((sensors[sensor].name == undefined) || (sensors[sensor].name == "")) {
 					flag = "error";
 					appendValidationMsg("Description is invalid");
 				}
-				if ((sensors[sensor].display_name == undefined) || (sensors[sensor].display_name == "")) {
+				if ((sensors[sensor].key == undefined) || (sensors[sensor].key == "")) {
 					flag = "error";
-					appendValidationMsg("Key(display name) is invalid");
+					appendValidationMsg("Unit Addr. is invalid");
 				}
 			}
 			else{

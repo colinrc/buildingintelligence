@@ -284,12 +284,13 @@ _global.refreshTheTree = function() {
 		_global.left_tree.dataProvider = _global.controlTree_xml;
 	}
 	_global.keys = _global.serverDesign.getKeys();
-	/*var clientList:Array = _global.serverDesign.getClients();
-	var temp:Array = null;
+	var clientList:Array = _global.serverDesign.getClients();
+	
+	_global.usedKeys = null;
+	_global.usedKeys = new Array();
 	for (var eachClient in clientList) {
-		temp.concat(clientList[eachClient].getUsedKeys());
+		_global.usedKeys = _global.usedKeys.concat(clientList[eachClient].getUsedKeys());
 	}
-	_global.usedKeys = temp;*/
 	_global.workflow.buildWorkflowTree();
 	createWorkflow(_global.designTree_xml);
 	oBackupDP = _global.right_tree.dataProvider;
@@ -997,7 +998,7 @@ treeFilter_cb.addEventListener("change", treeFilter_cb);*/
 setView("none");
 /****************************************************************/
 _global.right_tree.setStyle("indentation", 10);
-_global.right_tree.setStyle("defaultLeafIcon", "Icon:null");
+_global.right_tree.setStyle("defaultLeafIcon", "Icon:error");
 _global.right_tree.setStyle("folderOpenIcon", "Icon:null");
 _global.right_tree.setStyle("folderClosedIcon", "Icon:null");
 _global.right_tree.setStyle("disclosureClosedIcon", "Icon:null");

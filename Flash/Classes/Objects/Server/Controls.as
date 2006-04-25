@@ -10,16 +10,35 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var child in variables.childNodes) {
-			if ((variables.childNodes[child].attributes["NAME"] == undefined) || (variables.childNodes[child].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((variables.childNodes[child].attributes["DISPLAY_NAME"] == undefined) || (variables.childNodes[child].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
-			}
 			if ((variables.childNodes[child].attributes["ACTIVE"] != "Y") && (variables.childNodes[child].attributes["ACTIVE"] != "N")) {
 				flag = "error";
+				appendValidationMsg("Active flag is invalid");
 			}
+			if (variables.childNodes[child].attributes["ACTIVE"] =="Y"){
+				if ((variables.childNodes[child].attributes["NAME"] == undefined) || (variables.childNodes[child].attributes["NAME"] == "")) {
+					flag = "warning";
+					appendValidationMsg("Description is invalid");
+				}
+				if ((variables.childNodes[child].attributes["DISPLAY_NAME"] == undefined) || (variables.childNodes[child].attributes["DISPLAY_NAME"] == "")) {
+					flag = "error";
+					appendValidationMsg("Key is invalid");
+				}
+				if ((variables.childNodes[child].attributes["INIT_EXTRA"] == undefined) || (variables.childNodes[child].attributes["INIT_EXTRA"] == "")) {
+					flag = "error";
+					appendValidationMsg("Init Extra is invalid");
+				}
+				if ((variables.childNodes[child].attributes["INIT_COMMAND"] == undefined) || (variables.childNodes[child].attributes["INIT_COMMAND"] == "")) {
+					flag = "error";
+					appendValidationMsg("Init Command is invalid");
+				}
+			}
+			else{
+				flag = "empty";
+				appendValidationMsg("Variables is not Active");
+			}
+			
 		}
 		return flag;
 	}

@@ -11,24 +11,71 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var custom in customs) {
-			if ((customs[custom].attributes["ACTIVE"] != "Y") && (customs[custom].attributes["ACTIVE"] != "N")) {
+			if ((customs[custom].active != "Y") && (customs[custom].active != "N")) {
 				flag = "error";
 			}
-			if ((customs[custom].attributes["KEY_IS_REGEX"] != "Y") && (customs[custom].attributes["KEY_IS_REGEX"] != "N")) {
-				flag = "error";
-			}
-			if ((customs[custom].attributes["KEY"] == undefined) || (customs[custom].attributes["KEY"] == "")) {
-				flag = "error";
-			}
-			if ((customs[custom].attributes["NAME"] == undefined) || (customs[custom].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((customs[custom].attributes["DISPLAY_NAME"] == undefined) || (customs[custom].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
-			}
-			if ((customs[custom].attributes["COMMAND"] == undefined) || (customs[custom].attributes["COMMAND"] == "")) {
-				flag = "error";
+			
+			if (customs[custom].active =="Y"){
+				if ((customs[custom].command == undefined) || (customs[custom].command == "")) {
+					flag = "warning";
+					appendValidationMsg("Command is empty");
+				}
+				if ((customs[custom].name == undefined) || (customs[custom].name == "")) {
+					flag = "warning";
+					appendValidationMsg("Description is empty");
+				}
+				if ((customs[custom].regex!= "Y") && (customs[custom].regex != "N")) {
+					flag = "error";
+					appendValidationMsg("Key is RegEx. is invalid");
+				}
+				if ((customs[custom].key == undefined) || (customs[custom].key == "")) {
+					flag = "error";
+					appendValidationMsg("Input Number is empty");
+				}
+				
+				if ((customs[custom].display_name == undefined) || (customs[custom].display_name == "")) {
+					flag = "error";
+					appendValidationMsg("Key is invalid");
+				}
+				else {
+					if (_global.isKeyUsed(customs[custom].display_name) == false) {
+						flag = "error";
+						appendValidationMsg(customs[custom].display_name+" key is not used");
+					}
+				}
+				
+				if ((customs[custom].extra == undefined) || (customs[custom].extra == "")) {
+					flag = "warning";
+					appendValidationMsg("Extra is not used");
+				}
+				
+				if (_global.advanced == true) {
+					if ((customs[custom].power == undefined) || (customs[custom].power == "")) {
+						flag = "empty";
+						appendValidationMsg("Power is empty");
+					}
+					if ((customs[custom].extra2 == undefined) || (customs[custom].extra2 == "")) {
+						flag = "empty";
+						appendValidationMsg("Extra2 is empty");
+					}
+					if ((customs[custom].extra3 == undefined) || (customs[custom].extra3 == "")) {
+						flag = "empty";
+						appendValidationMsg("Extra3 is empty");
+					}
+					if ((customs[custom].extra4 == undefined) || (customs[custom].extra4 == "")) {
+						flag = "empty";
+						appendValidationMsg("Extra4 is empty");
+					}
+					if ((customs[custom].extra5 == undefined) || (customs[custom].extra5 == "")) {
+						flag = "empty";
+						appendValidationMsg("Extra5 is empty");
+					}
+				}
+			} else {
+				flag = "empty";
+				appendValidationMsg("Custom Inputs is not Active");
 			}
 		}
 		return flag;
