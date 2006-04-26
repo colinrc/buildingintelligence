@@ -88,7 +88,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 					for(var icon in icons){
 						var iconString = icons[icon]+".png";
 						sftpConnection.putItem(iconString);
-						new_icons = iconString+"\n";
+						new_icons += iconString+"\n";
 					}
 					sftpConnection.putData(new_icons,"_icons.txt");
 					break;
