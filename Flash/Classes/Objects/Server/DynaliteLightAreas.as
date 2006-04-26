@@ -11,18 +11,39 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var lightArea in lightAreas) {
-			if ((lightAreas[lightArea].attributes["ACTIVE"] != "Y") && (lightAreas[lightArea].attributes["ACTIVE"] != "N")) {
+			if ((lightAreas[lightArea].active != "Y") && (lightAreas[lightArea].active != "N")) {
 				flag = "error";
-			}
-			if ((lightAreas[lightArea].attributes["KEY"] == undefined) || (lightAreas[lightArea].attributes["KEY"] == "")) {
-				flag = "error";
-			}
-			if ((lightAreas[lightArea].attributes["NAME"] == undefined) || (lightAreas[lightArea].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((lightAreas[lightArea].attributes["DISPLAY_NAME"] == undefined) || (lightAreas[lightArea].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
+				appendValidationMsg("Active Flag is invalid");
+			} 
+			else {
+				if (lightAreas[lightArea].active =="Y"){
+					if ((lightAreas[lightArea].name == undefined) || (lightAreas[lightArea].name == "")) {
+						flag = "warning";
+						appendValidationMsg("Description is invalid");
+					}
+					if ((lightAreas[lightArea].key == undefined) || (lightAreas[lightArea].key == "")) {
+						flag = "error";
+						appendValidationMsg("Dynalite Code is invalid");
+					}
+					if ((lightAreas[lightArea].display_name == undefined) || (lightAreas[lightArea].display_name == "")) {
+						flag = "error";
+						appendValidationMsg("Key is invalid");
+					}
+					else {
+						if (_global.isKeyUsed(lightAreas[lightArea].display_name) == false) {
+							flag = "error";
+							appendValidationMsg(lightAreas[lightArea].display_name+" key is not used");
+						}
+					}
+				}
+				else {
+					if (lightAreas[lightArea].active =="N"){
+						flag = "empty";
+						appendValidationMsg("Dynalite Light Areas is not active");
+					}
+				}
 			}
 		}
 		return flag;

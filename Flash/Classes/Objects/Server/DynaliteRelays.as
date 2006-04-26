@@ -11,24 +11,51 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var light in lights) {
-			if ((lights[light].attributes["ACTIVE"] != "Y") && (lights[light].attributes["ACTIVE"] != "N")) {
+			if ((lights[light].active != "Y") && (lights[light].aactive != "N")) {
 				flag = "error";
-			}
-			if ((lights[light].attributes["KEY"] == undefined) || (lights[light].attributes["KEY"] == "")) {
-				flag = "error";
-			}
-			if ((lights[light].attributes["AREA"] == undefined) || (lights[light].attributes["AREA"] == "")) {
-				flag = "error";
-			}
-			if ((lights[light].attributes["POWER_RATING"] == undefined) || (lights[light].attributes["POWER_RATING"] == "")) {
-				flag = "error";
-			}
-			if ((lights[light].attributes["NAME"] == undefined) || (lights[light].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((lights[light].attributes["DISPLAY_NAME"] == undefined) || (lights[light].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
+				appendValidationMsg("Active Flag is invalid");
+			} 
+			else {
+				if (lights[light].active =="Y"){
+					if ((lights[light].power == undefined) || (lights[light].power == "")) {
+						flag = "warning";
+						appendValidationMsg("Power Rating is invalid");
+					}
+					if ((lights[light].name == undefined) || (lights[light].name == "")) {
+						flag = "warning";
+						appendValidationMsg("Description is invalid");
+					}
+					if ((lights[light].area == undefined) || (lights[light].area == "")) {
+						flag = "error";
+						appendValidationMsg("Area is invalid");
+					}
+					if ((lights[light].key == undefined) || (lights[light].key == "")) {
+						flag = "error";
+						appendValidationMsg("Dynalite Code is invalid");
+					}
+					if ((lights[light].bla == undefined) || (lights[light].bla == "")) {
+						flag = "error";
+						appendValidationMsg("Base Link is invalid");
+					}
+					if ((lights[light].display_name == undefined) || (lights[light].display_name == "")) {
+						flag = "error";
+						appendValidationMsg("Key is invalid");
+					}
+					else {
+						if (_global.isKeyUsed(lights[light].display_name) == false) {
+							flag = "error";
+							appendValidationMsg(lights[light].display_name+" key is not used");
+						}
+					}
+				}
+				else {
+					if (lights[light].active =="N"){
+						flag = "empty";
+						appendValidationMsg("Dynalite Relays is not active");
+					}
+				}
 			}
 		}
 		return flag;

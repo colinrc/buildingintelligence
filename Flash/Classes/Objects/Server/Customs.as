@@ -15,6 +15,7 @@
 		for (var custom in customs) {
 			if ((customs[custom].active != "Y") && (customs[custom].active != "N")) {
 				flag = "error";
+				appendValidationMsg("Active Flag is invalid");
 			}
 			
 			if (customs[custom].active =="Y"){

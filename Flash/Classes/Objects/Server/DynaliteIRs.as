@@ -11,21 +11,43 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var ir in irs) {
-			if ((irs[ir].attributes["ACTIVE"] != "Y") && (irs[ir].attributes["ACTIVE"] != "N")) {
+			if ((irs[ir].active != "Y") && (irs[ir].active != "N")) {
 				flag = "error";
+				appendValidationMsg("Active Flag is invalid");
 			}
-			if ((irs[ir].attributes["KEY"] == undefined) || (irs[ir].attributes["KEY"] == "")) {
-				flag = "error";
-			}
-			if ((irs[ir].attributes["BOX"] == undefined) || (irs[ir].attributes["BOX"] == "")) {
-				flag = "error";
-			}			
-			if ((irs[ir].attributes["NAME"] == undefined) || (irs[ir].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((irs[ir].attributes["DISPLAY_NAME"] == undefined) || (irs[ir].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
+			else {
+				if (irs[ir].active =="Y"){
+					if ((irs[ir].key == undefined) || (irs[ir].key == "")) {
+						flag = "error";
+						appendValidationMsg("Dynalite Code is invalid");
+					}
+					if ((irs[ir].box == undefined) || (irs[ir].box == "")) {
+						flag = "error";
+						appendValidationMsg("Box is invalid");
+					}			
+					if ((irs[ir].name == undefined) || (irs[ir].name == "")) {
+						flag = "warning";
+						appendValidationMsg("Description is invalid");
+					}
+					if ((irs[ir].display_name == undefined) || (irs[ir].display_name == "")) {
+						flag = "error";
+						appendValidationMsg("Key is invalid");
+					}
+					else {
+						if (_global.isKeyUsed(irs[ir].display_name) == false) {
+							flag = "error";
+							appendValidationMsg(irs[ir].display_name+" key is not used");
+						}
+					}
+				}
+				else {
+					if (irs[ir].active =="N"){
+						flag = "empty";
+						appendValidationMsg("Dynalite IRs is not active");
+					}
+				}
 			}
 		}
 		return flag;
