@@ -19,6 +19,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
 		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path + "lib\\icons", "*.png");
 		var IconDP = new Array();
+		IconDP.push({label:"No Icon",icon:""});
 		for (var myIcon = 0; myIcon < myIcons.length; myIcon++) {
 			var newIcon = new Object();
 			newIcon.label = myIcons[myIcon].split(".")[0];
@@ -131,8 +132,8 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 			if (DP[index].type.length) {
 				item.attributes["type"] = DP[index].type;
 			}
-			if (DP[index].icon1.length) {
-				if (DP[index].icon2.length) {
+			if (DP[index].icon1 != "No Icon") {
+				if (DP[index].icon2 != "No Icon") {
 					var newIcons = new Array();
 					newIcons.push(DP[index].icon1);
 					newIcons.push(DP[index].icon2);
@@ -141,7 +142,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 					item.attributes["icons"] = DP[index].icon1;
 				}
 			} else {
-				if (DP[index].icon2.length) {
+				if (DP[index].icon2 != "No Icon") {
 					item.attributes["icons"] = DP[index].icon2;
 				}
 			}

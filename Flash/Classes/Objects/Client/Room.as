@@ -24,7 +24,7 @@
 	}
 	public function deleteSelf(){
 		treeNode.removeNode();
-	}		
+	}
 	public function setZone(inZone:Objects.Client.Zone){
 		zone = inZone;
 	}
@@ -61,7 +61,9 @@
 		if ((switchZone != "")&&(switchZone != "None")){
 			newNode.attributes["switchZone"] = switchZone;
 		}
-		newNode.appendChild(window.toXML());
+		if((switchZone=="")||(switchZone == "None")){
+			newNode.appendChild(window.toXML());
+		}
 		newNode.appendChild(doors.toXML());
 		var tempNode = alerts.toXML();
 		for (var alertGroup in tempNode.childNodes) {
@@ -71,9 +73,11 @@
 	}
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Room");
-		newNode.appendChild(window.toTree());
 		newNode.appendChild(doors.toTree());
 		newNode.appendChild(alerts.toTree());
+		if((switchZone=="")||(switchZone != "None")){
+			newNode.appendChild(window.toTree());
+		}
 		newNode.object = this;
 		treeNode = newNode;
 		return newNode;
@@ -123,6 +127,10 @@
 		name = newData.name;
 		poly = newData.poly;
 		switchZone = newData.switchZone;
+		window.deleteSelf();
+		if((switchZone=="")||(switchZone == "None")){
+			treeNode.appendChild(window.toTree());
+		} 
 	}
 	public function getUsedKeys():Array{
 		usedKeys = new Array();

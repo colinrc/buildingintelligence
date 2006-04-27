@@ -47,10 +47,20 @@ class Forms.Project.Client.ControlTypeMediaPlayer extends Forms.BaseForm {
 		_global.unSaved = true;
 		var newObject = new XMLNode(1, "item");
 		object.attributes["type"] = "mediaPlayer";
-		object.attributes["refreshRate"] = refreshRate_ti.text;
-		object.attributes["videoWidth"] = videoWidth_ti.text;
-		object.attributes["videoHeight"] = videoHeight_ti.text;
-		object.attributes["src"] = src_ti.text;
-		object.attributes["format"] = format_ti.text;
+		if(refreshRate_ti.text.length){
+			object.attributes["refreshRate"] = refreshRate_ti.text;
+		}
+		if(videoWidth_ti.text.length){
+			object.attributes["videoWidth"] = videoWidth_ti.text;
+		}
+		if(videoHeight_ti.text.length){
+			object.attributes["videoHeight"] = videoHeight_ti.text;
+		}
+		if(src_ti.text.length){
+			object.attributes["src"] = src_ti.text;
+		}
+		if(format_ti.text.length){
+			object.attributes["format"] = format_ti.text;
+		}
 	}
 }

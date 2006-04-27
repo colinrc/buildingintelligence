@@ -46,10 +46,20 @@ class Forms.Project.Client.ControlTypeVideo extends Forms.BaseForm {
 	public function changeListener(eventObject:Object) {
 		_global.unSaved = true;
 		object.attributes["type"] = "video";
-		object.attributes["src"] = src_ti.text;
-		object.attributes["format"] = format_ti.text;
-		object.attributes["refreshRate"] = refreshRate_ti.text;
-		object.attributes["videoWidth"] = videoWidth_ti.text;
-		object.attributes["videoHeight"] = videoHeight_ti.text;
+		if(src_ti.text.length){
+			object.attributes["src"] = src_ti.text;
+		}
+		if(format_ti.text.length){
+			object.attributes["format"] = format_ti.text;
+		}
+		if(refreshRate_ti.text.length){
+			object.attributes["refreshRate"] = refreshRate_ti.text;
+		}
+		if(videoWidth_ti.text.length){
+			object.attributes["videoWidth"] = videoWidth_ti.text;
+		}
+		if(videoHeight_ti.text.length){
+			object.attributes["videoHeight"] = videoHeight_ti.text;
+		}
 	}
 }

@@ -18,6 +18,9 @@
 		}*/
 		return flag;
 	}
+	public function deleteSelf(){
+		treeNode.removeNode();
+	}
 	public function getForm():String {
 		return "forms.project.client.window";
 	}

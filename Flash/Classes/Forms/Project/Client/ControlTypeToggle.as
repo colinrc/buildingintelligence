@@ -65,6 +65,7 @@ class Forms.Project.Client.ControlTypeToggle extends Forms.BaseForm {
 	}
 	public function changeListener(eventObject:Object) {
 		_global.unSaved = true;
+		object.attributes["type"] = "toggle";
 		if (icon1_cmb.text != "No Icon") {
 			if (icon2_cmb.text != "No Icon") {
 				var newIcons = new Array();
@@ -79,9 +80,17 @@ class Forms.Project.Client.ControlTypeToggle extends Forms.BaseForm {
 				object.attributes["icons"] = icon2_cmb.text;
 			}
 		}
-		object.attributes["extras"] = extras_ti.text;
-		object.attributes["width"] = width_ti.text;
-		object.attributes["command"] = command_ti.text;
-		object.attributes["sounds"] = sounds_ti.text;
+		if(extras_ti.text.length){
+			object.attributes["extras"] = extras_ti.text;
+		}
+		if(width_ti.text.length){
+			object.attributes["width"] = width_ti.text;
+		}
+		if(command_ti.text.length){
+			object.attributes["command"] = command_ti.text;
+		}
+		if(sounds_ti.text.length){
+			object.attributes["sounds"] = sounds_ti.text;
+		}
 	}
 }

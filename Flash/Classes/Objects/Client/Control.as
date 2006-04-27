@@ -154,13 +154,20 @@
 	}
 	public function getIcons():Array{
 		usedIcons = new Array();
-		for (var item in rows) {
-			if ((rows[item].attributes["icons"] != "") && (rows[item].attributes["icons"] != undefined)) {
-				var tempIcons = rows[item].attributes["icons"].split(",");
-				for(var tempIcon in tempIcons){
-					if(tempIcons[tempIcon].length){
-						addIcon(tempIcons[tempIcon]);
+		for (var row in rows) {
+			//mdm.Dialogs.prompt(rows[row].toString());
+			var tempArray = rows[row].childNodes;
+			for(var item in tempArray)
+			{
+				if ((tempArray[item].attributes["icons"] != "") && (tempArray[item].attributes["icons"] != undefined)) {
+					var tempIcons = tempArray[item].attributes["icons"].split(",");
+					for(var tempIcon in tempIcons){
+						if(tempIcons[tempIcon].length){
+							addIcon(tempIcons[tempIcon]);
+						}
 					}
+				} else if ((tempArray[item].attributes["icon"] != "") && (tempArray[item].attributes["icon"] != undefined)) {
+					addIcon(tempArray[item].attributes["icon"]);
 				}
 			}
 		}

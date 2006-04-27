@@ -81,15 +81,33 @@ class Forms.Project.Client.ControlTypeButton extends Forms.BaseForm {
 	public function changeListener(evtObj) {
 		_global.unSaved = true;
 		object.attributes["type"] = "button";
-		object.attributes["label"] = label_ti.text;
-		object.attributes["icon"] = icon_cmb.text;
-		object.attributes["extra"] = extra_ti.text;
-		object.attributes["extra2"] = extra2_ti.text;
-		object.attributes["extra3"] = extra3_ti.text;
-		object.attributes["width"] = width_ti.text;
-		object.attributes["command"] = command_ti.text;
-		object.attributes["repeatRate"] = repeatRate_ti.text;
-		object.attributes["showOn"] = showOn_ti.text;
+		if(label_ti.text.length){
+			object.attributes["label"] = label_ti.text;
+		}
+		if(icon_cmb.text.length){
+			object.attributes["icon"] = icon_cmb.text;
+		}
+		if(extra_ti.text.length){
+			object.attributes["extra"] = extra_ti.text;
+		}
+		if(extra2_ti.text.length){
+			object.attributes["extra2"] = extra2_ti.text;
+		}
+		if(extra3_ti.text.length){
+			object.attributes["extra3"] = extra3_ti.text;
+		}
+		if(width_ti.text.length){
+			object.attributes["width"] = width_ti.text;
+		}
+		if(command_ti.text.length){
+			object.attributes["command"] = command_ti.text;
+		}
+		if(repeatRate_ti.text.length){
+			object.attributes["repeatRate"] = repeatRate_ti.text;
+		}
+		if(showOn_ti.text.length){
+			object.attributes["showOn"] = showOn_ti.text;
+		}
 	}
 	public function deleteItem() {
 	}

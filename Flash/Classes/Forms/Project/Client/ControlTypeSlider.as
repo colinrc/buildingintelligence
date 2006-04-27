@@ -18,6 +18,8 @@ class Forms.Project.Client.ControlTypeSlider extends Forms.BaseForm {
 	public function changeListener(eventObject:Object) {
 		_global.unSaved = true;
 		object.attributes["type"] = "slider";
-		object.attributes["width"] = width_ti.text;
+		if(width_ti.text.length){
+			object.attributes["width"] = width_ti.text;
+		}
 	}
 }

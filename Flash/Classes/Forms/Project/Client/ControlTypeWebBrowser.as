@@ -32,8 +32,14 @@ class Forms.Project.Client.ControlTypeWebBrowser extends Forms.BaseForm {
 	public function changeListener(eventObject:Object) {
 		_global.unSaved = true;
 		object.attributes["type"] = "browser";
-		object.attributes["url"] = url_ti.text;
-		object.attributes["width"] = width_ti.text;
-		object.attributes["height"] = height_ti.text;
+		if(url_ti.text.length){
+			object.attributes["url"] = url_ti.text;
+		}
+		if(width_ti.text.length){
+			object.attributes["width"] = width_ti.text;
+		}
+		if(height_ti.text.length){
+			object.attributes["height"] = height_ti.text;
+		}
 	}
 }

@@ -18,6 +18,8 @@ class Forms.Project.Client.ControlTypeLabel extends Forms.BaseForm {
 	public function changeListener(eventObject:Object) {
 		_global.unSaved = true;
 		object.attributes["type"] = "label";
-		object.attributes["label"] = label_ti.text;
+		if(label_ti.text.length){
+			object.attributes["label"] = label_ti.text;
+		}
 	}
 }

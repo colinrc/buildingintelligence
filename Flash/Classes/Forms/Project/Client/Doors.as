@@ -7,7 +7,8 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 	private var roomEditor:MapEditor;
 	private var map:String;
 	private var save_btn:Button;
-	private var colour_mc:MovieClip;
+	private var colour1_mc:MovieClip;
+	private var colour2_mc:MovieClip;
 	private var thickness_ti:TextInput;
 	private var key_cmb:ComboBox;
 	private var name_ti:TextInput;
@@ -44,10 +45,15 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			} else {
 				newDoor.thickness = "";
 			}			
-			if (doors[door].attributes["colour"] != undefined) {
-				newDoor.colour = doors[door].attributes["colour"];
+			if (doors[door].attributes["colour1"] != undefined) {
+				newDoor.colour1 = doors[door].attributes["colour1"];
 			} else {
-				newDoor.colour = "";
+				newDoor.colour1 = "";
+			}
+			if (doors[door].attributes["colour2"] != undefined) {
+				newDoor.colour2 = doors[door].attributes["colour2"];
+			} else {
+				newDoor.colour2 = "";
 			}
 			DP.push(newDoor);
 		}
@@ -56,7 +62,8 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		roomEditor.poly = poly;
 		roomEditor.doors = DP;			
 		var editorListener = new Object();
-		colour_mc.setColour("0xFFFFFF");
+		colour1_mc.setColour("0xFFFFFF");
+		colour2_mc.setColour("0xFFFFFF");
 		thickness_ti.text = "";
 		thickness_ti.restrict = "0-9";
 		key_cmb.dataProvider = DPKey;
@@ -68,7 +75,18 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		roomEditor.addEventListener("doorMove", Delegate.create(this,doorMove));
 		roomEditor.addEventListener("doorDelete", Delegate.create(this,doorDelete));
 		save_btn.addEventListener("click", Delegate.create(this, save));
-		colour_mc.setCallbackObject(this);
+		var colourObjectListener = new Object();
+		colourObjectListener.onColourChange = function (newColour:Number){
+			currentDoor.colour1 = "0x"+newColour.toString(16).toUpperCase();
+			_global.unSaved = true;		
+		}	
+		var colourObjectListener2 = new Object();
+		colourObjectListener2.onColourChange = function (newColour:Number){
+			currentDoor.colour2 = "0x"+newColour.toString(16).toUpperCase();
+			_global.unSaved = true;		
+		}	
+		colour1_mc.setCallbackObject(colourObjectListener);
+		colour2_mc.setCallbackObject(colourObjectListener2);
 		key_cmb.addEventListener("change", Delegate.create(this,cmbChange));
 		name_ti.addEventListener("change", Delegate.create(this,nameChange));
 		thickness_ti.addEventListener("change", Delegate.create(this,thicknessChange));
@@ -96,8 +114,11 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			if (DP[index].door != "") {
 				item.attributes["door"] = DP[index].door;
 			}
-			if (DP[index].colour != "") {
-				item.attributes["colour"] = DP[index].colour;
+			if (DP[index].colour1 != "") {
+				item.attributes["colour1"] = DP[index].colour1;
+			}
+			if (DP[index].colour2 != "") {
+				item.attributes["colour2"] = DP[index].colour2;
 			}
 			if (DP[index].thickness != "") {
 				item.attributes["thickness"] = DP[index].thickness;
@@ -108,13 +129,10 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}
-	function onColourChange(newColour:Number) {
-		currentDoor.colour = "0x"+newColour.toString(16).toUpperCase();
-		_global.unSaved = true;		
-	}	
-		public function doorSelect(eventObj) {
+	public function doorSelect(eventObj) {
 			currentDoor = eventObj.target;			
-			colour_mc.setColour(currentDoor.colour);
+			colour1_mc.setColour(currentDoor.colour);
+			colour2_mc.setColour(currentDoor.colour);
 			thickness_ti.text = currentDoor.thickness;
 			key_cmb.text = currentDoor.key;
 			name_ti.text = currentDoor.name;
@@ -122,11 +140,13 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		}
 		public function doorAdd(eventObj) {
 			currentDoor = eventObj.target;
-			currentDoor.colour = "0xFFFFFF";
+			currentDoor.colour1 = "0xFFFFFF";
+			currentDoor.colour2 = "0xFFFFFF";
 			currentDoor.thickness = "";
 			currentDoor.key = "";
 			currentDoor.name = "";
-			colour_mc.setColour("0xFFFFFF");
+			colour1_mc.setColour("0xFFFFFF");
+			colour2_mc.setColour("0xFFFFFF");
 			thickness_ti.text = "";
 			key_cmb.text = "";
 			name_ti.text = "";
@@ -134,14 +154,16 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		}
 		public function doorMove (eventObj) {
 			currentDoor = eventObj.target;					
-			colour_mc.setColour(currentDoor.colour);
+			colour1_mc.setColour(currentDoor.colour);
+			colour2_mc.setColour(currentDoor.colour);
 			thickness_ti.text = currentDoor.thickness;
 			key_cmb.text = currentDoor.key;
 			name_ti.text = currentDoor.name;
 			_global.unSaved = true;					
 		}
 		public function doorDelete(eventObj) {
-			colour_mc.setColour("0xFFFFFF");
+			colour1_mc.setColour("0xFFFFFF");
+			colour2_mc.setColour("0xFFFFFF");
 			thickness_ti.text = "";
 			key_cmb.text = "";
 			name_ti.text = "";
