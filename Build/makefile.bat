@@ -150,7 +150,11 @@ if exist Variables goto makeZone
 mkdir Variables
 
 :makeZone
-if exist Zone goto end
+if exist Zone goto makeMacros
 mkdir Zone
+
+:makeMacros
+if exist Macros goto end
+mkdir Macros
 
 :end

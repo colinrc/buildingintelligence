@@ -11,8 +11,8 @@
 	private var clientDesign:Object;
 	private var name:String;
 	public function deleteSelf() {
-		monitorConnection.disconnectMonitor();
-		sftpConnection.disconnect();
+		//monitorConnection.disconnectMonitor();
+		//sftpConnection.disconnect();
 		treeNode.removeNode();
 	}
 	public function ClientInstance() {

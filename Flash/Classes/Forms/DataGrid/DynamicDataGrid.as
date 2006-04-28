@@ -327,14 +327,6 @@ class Forms.DataGrid.DynamicDataGrid {
 			processed_dp.push(newRow);
 		}
 		my_dg.dataProvider = processed_dp;
-		for (var name in columns) {
-			if (columns[name].column != undefined) {
-				if (((_global.advanced) && (columns[name].advanced)) || (!columns[name].advanced)) {
-					my_dg.addColumn(columns[name].column);
-					my_dg.getColumnAt(columns[name].colNo).width = columns[name].width;
-				}
-			}
-		}		
 	}
 	public function setDataGridDataProvider(new_dp:Array) {
 		/*Reverse properties of columns object*/
@@ -348,6 +340,14 @@ class Forms.DataGrid.DynamicDataGrid {
 			doOnce = false;			
 		}		
 		tempDP = new_dp;
+		for (var name in columns) {
+			if (columns[name].column != undefined) {
+				if (((_global.advanced) && (columns[name].advanced)) || (!columns[name].advanced)) {
+					my_dg.addColumn(columns[name].column);
+					my_dg.getColumnAt(columns[name].colNo).width = columns[name].width;
+				}
+			}
+		}
 		my_dg.doLater(this, "buildDG");
 		my_dg.dataProvider.updateViews("change");		
 	}

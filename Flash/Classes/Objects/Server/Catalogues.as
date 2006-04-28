@@ -53,7 +53,7 @@
 			var found = false;
 			for (var index in newData.catalogues) {
 				if (catalogues[catalogue].id == newData.catalogues[index].id) {
-					catalogues[catalogue].name == newData.catalogues[index].name;
+					catalogues[catalogue].name = newData.catalogues[index].name;
 					found = true;
 				}
 			}

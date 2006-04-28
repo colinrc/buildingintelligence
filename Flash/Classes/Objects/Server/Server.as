@@ -2,6 +2,7 @@
 	private var description:String;
 	private var controls:Objects.Server.Controls;
 	private var settings:Objects.Server.Settings;
+	private var macros:Objects.Server.Macros;
 	private var devices:Array;
 	private var treeNode:XMLNode;
 	private var clients:Array;
@@ -10,6 +11,7 @@
 		devices = new Array();
 		controls = new Objects.Server.Controls();
 		settings = new Objects.Server.Settings();
+		macros = new Objects.Server.Macros();
 		clients = new Array();
 		/**Append default client device here*/		
 		var new_client = new Objects.Client.Client();
@@ -70,6 +72,9 @@
 		}
 		return serverNode;
 	}
+	public function getMacros():XMLNode{
+		return macros.toXML();
+	}
 	public function toProject():XMLNode {
 		var serverNode = new XMLNode(1, "CONFIG");
 		var descriptionNode = new XMLNode(1, "DESC");
@@ -79,6 +84,7 @@
 		controlNode.appendChild(controls.toXML());
 		controlNode.appendChild(settings.toXML());
 		serverNode.appendChild(controlNode);
+		serverNode.appendChild(macros.toXML());
 		for (var device in devices) {
 			serverNode.appendChild(devices[device].toXML());
 		}
@@ -93,7 +99,8 @@
 		if(_global.advanced){
 			newNode.appendChild(controls.toTree());
 			newNode.appendChild(settings.toTree());			
-		}					
+		}
+		newNode.appendChild(macros.toTree());
 		for (var device in devices) {
 			newNode.appendChild(devices[device].toTree());
 		}
@@ -292,6 +299,7 @@
 	public function setXML(newData:XMLNode):Void {
 		controls = new Objects.Server.Controls();
 		settings = new Objects.Server.Settings();
+		macros = new Objects.Server.Macros();
 		devices = new Array();
 		clients = new Array();
 		if (newData.nodeName == "CONFIG") {
@@ -406,6 +414,9 @@
 					newClient.setXML(newData.childNodes[child]);
 					newClient.id = _global.formDepth++;
 					clients.push(newClient);
+					break;
+				case "MACROS":
+					macros.setXML(newData.childNodes[child]);
 					break;
 				}
 			}

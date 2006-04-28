@@ -84,6 +84,7 @@
 		//Process client changes....
 		var newClients = new Array();
 		for (var index in newData.clients) {
+			mdm.Dialogs.prompt(newData.clients[index].id);
 			if (newData.clients[index].id == undefined) {
 				newClients.push({description:newData.clients[index].description, ipAddress:newData.clients[index].ipAddress});
 			}
