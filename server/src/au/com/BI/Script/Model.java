@@ -85,7 +85,7 @@ public class Model
          * The reference to the script will be an instance of au.com.BI.Script
          *
          */
-        public void addControlledItem(String name, Object details, int controlType) {
+        public void addControlledItem(String name, DeviceType details, int controlType) {
                 String theKey = name;
                 if (configHelper.checkForControlledItem(theKey) == false) {
                         configHelper.addControlledItem(theKey, details, controlType);

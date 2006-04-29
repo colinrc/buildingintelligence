@@ -48,7 +48,7 @@ public class Model extends BaseModel implements DeviceModel, ClientModel
 	public Model (int numberClients){
 		
 		configHelper = new ConfigHelper();
-		this.addControlledItem ("RawXML_Send","DUMMY FOR HARNESS",DeviceType.MONITORED);
+		this.addControlledItem ("RawXML_Send",null,DeviceType.MONITORED);
 		
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		adminClientHandlers = new LinkedList ();
@@ -93,10 +93,7 @@ public class Model extends BaseModel implements DeviceModel, ClientModel
 		// restart everything
 	}
 	
-	public void addControlledItem (String name, Object details, int controlType) {
-		configHelper.addControlledItem (name, details, controlType);
-	}
-	
+
 	/** General hook for a device to do any final startup once the configuration is cloaded */
 	public void finishedReadingConfig () throws SetupException {
 		AdminDevice admin = new AdminDevice();

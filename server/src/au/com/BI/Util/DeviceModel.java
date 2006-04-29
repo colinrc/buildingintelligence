@@ -136,7 +136,7 @@ public interface DeviceModel {
 	 * @param details object representing details of the device
 	 * @see au.com.BI.Util.DeviceType
 	 */
-	public void addControlledItem (String name, Object details, int controlType);
+	public void addControlledItem (String name, DeviceType details, int controlType);
 
 	/**
 	 * Called by the configuration reader.
@@ -176,7 +176,7 @@ public interface DeviceModel {
 	 */
 	public void setCommandQueue (java.util.List commandQueue);
 
-	public void setParameter (String name, Object value,String groupName);
+	public void setParameter (String name, String value,String groupName);
 	public Object getParameter (String Name,String groupName);
 
 	/**
@@ -210,7 +210,7 @@ public interface DeviceModel {
 
 	public void setCache (au.com.BI.Command.Cache cache);
 
-     public void setVariableCache(HashMap variableCache);
+     public void setVariableCache(HashMap<String,Object> variableCache);
 
 	/** General hook for a device to do any final startup once the configuration is loaded and before comms is 
 	 * established */

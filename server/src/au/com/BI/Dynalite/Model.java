@@ -25,7 +25,7 @@ public class Model extends BaseModel implements DeviceModel {
 	protected DynaliteHelper dynaliteHelper;
 	protected AreaCodes areaCodes = null;
 	protected int protocol = DynaliteDevice.Linear;
-	protected HashMap areaOffset;
+	protected HashMap <String,Byte>areaOffset;
 	
 	public Model () {
 		super();
@@ -36,7 +36,7 @@ public class Model extends BaseModel implements DeviceModel {
 		areaCodes = new AreaCodes();
 		areaCodes.setConfigHelper(configHelper);
 		areaCodes.setDynaliteHelper(dynaliteHelper);
-		areaOffset = new HashMap();
+		areaOffset = new HashMap<String,Byte>();
 	}
 
 
@@ -81,7 +81,7 @@ public class Model extends BaseModel implements DeviceModel {
 		comms.sendString( vals);
 	}
 
-	public void addControlledItem (String key, Object details, int controlType) {
+	public void addControlledItem (String key, DeviceType details, int controlType) {
 
 		try {
 			String theKey = key;

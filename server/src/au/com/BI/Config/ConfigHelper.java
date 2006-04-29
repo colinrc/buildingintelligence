@@ -5,16 +5,17 @@
 package au.com.BI.Config;
 
 import java.util.*;
+
 import au.com.BI.Command.*;
 import java.util.logging.*;
 
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
 public class ConfigHelper {
-	protected HashMap controlledItems;
-	protected HashMap outputItems;
-	protected HashMap inputItems;
-	protected HashMap startupQueryItems;
+	protected HashMap <String,DeviceType> controlledItems;
+	protected HashMap <String,DeviceType> outputItems;
+	protected HashMap <String,DeviceType> inputItems;
+	protected HashMap <String,DeviceType> startupQueryItems;
 	protected String lastChecked;
 
 	
@@ -49,10 +50,10 @@ public class ConfigHelper {
 	
 
 	public void clearItems () {
-		controlledItems = new HashMap (100);
-		outputItems = new HashMap (100);
-		inputItems = new HashMap (100);	
-		startupQueryItems = new HashMap (200);
+		controlledItems = new HashMap<String,DeviceType> (100);
+		outputItems = new HashMap<String,DeviceType> (100);
+		inputItems = new HashMap<String,DeviceType> (100);	
+		startupQueryItems = new HashMap<String,DeviceType> (200);
 	}
 	
 	/**
@@ -87,7 +88,22 @@ public class ConfigHelper {
 	public Iterator getAllInputDevices(){
 		return inputItems.values().iterator();		
 	}
-
+	
+	public Collection<DeviceType> getAllInputDeviceObjects(){
+		return inputItems.values();		
+	}
+	
+	public Collection<DeviceType> getAllControlledDeviceObjects(){
+		return controlledItems.values();		
+	}
+	
+	public Collection<DeviceType> getAllOutputDeviceObjects(){
+		return outputItems.values();		
+	}
+	
+	public Collection<DeviceType> getAllStartupDeviceObjects(){
+		return startupQueryItems.values();		
+	}
 	/**
 	 * If a raw code has been specified for this command on this device. It will be returned.
 	 * @param command
@@ -133,7 +149,7 @@ public class ConfigHelper {
 		}
 	}
 
-	public void addControlledItem (String name, Object details, int controlType){
+	public void addControlledItem (String name, DeviceType details, int controlType){
 		if (controlType == DeviceType.MONITORED) {
 			controlledItems.put (name,details);
 			
@@ -141,29 +157,20 @@ public class ConfigHelper {
 		}
 		else {
 			if (controlType == DeviceType.OUTPUT) {
-				ArrayList namedItems = (ArrayList)outputItems.get(name);
-			
-				if (namedItems == null){
-					ArrayList newNamedItems = new ArrayList (5);
-					newNamedItems.add(details);
-					outputItems.put (name,newNamedItems);
-				}
-				else {
-					namedItems.add (details);
-					outputItems.put(name,namedItems);
-				}
+				outputItems.put(name,details);
+
 			} else {
 				inputItems.put (name,details);
 			}
 		}
 	}
 
-	public void addStartupQueryItem (String name, Object details, int controlType){
+	public void addStartupQueryItem (String name, DeviceType details, int controlType){
 		if (!startupQueryItems.containsKey(name))
 			startupQueryItems.put (name,details);
 	}
 
-	public Object getStartupQueryItem (String name){
+	public DeviceType getStartupQueryItem (String name){
 		return startupQueryItems.get (name);
 	}
 
@@ -228,7 +235,7 @@ public class ConfigHelper {
 		return returnCode;
 	}
 	
-	public Object getControlItem (String theKey){
+	public DeviceType getControlItem (String theKey){
 		if (!theKey.equals (lastChecked)){
 			checkForControl (theKey);
 		}
@@ -247,15 +254,15 @@ public class ConfigHelper {
 		return null;
 	}
 	
-	public final Object getInputItem (String theKey) {
+	public final DeviceType getInputItem (String theKey) {
 		return inputItems.get(theKey);
 	}
 
-	public final Object getOutputItem (String theKey) {
+	public final DeviceType getOutputItem (String theKey) {
 		return outputItems.get(theKey);
 	}
 	
-	public final Object getControlledItem (String theKey) {
+	public final DeviceType getControlledItem (String theKey) {
 		return controlledItems.get(theKey);
 	}
 

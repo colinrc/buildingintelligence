@@ -59,20 +59,20 @@ public class Model extends BaseModel implements DeviceModel {
 		command.setTargetDeviceID(targetFlashID);
 		logger.log (Level.FINEST,"Sending to flash " + theKey + ":" + command.getCommandCode() + ":" + command.getExtraInfo());
 		synchronized (this.commandQueue){
-			commandQueue.add( (command));
+			commandQueue.add( command);
 		}
 	}
 	
-	public void addStartupQueryItem (String name, Object details, int controlType){
-	    if (((String)this.getParameter("MODULE_TYPE" ,((DeviceType)details).getGroupName())).equals("IR")
+	public void addStartupQueryItem (String name, DeviceType details, int controlType){
+	    if (((String)this.getParameter("MODULE_TYPE" ,details.getGroupName())).equals("IR")
 	            && controlType == DeviceType.INPUT)
-	        configHelper.addStartupQueryItem(((DeviceType)details).getKey(),details,controlType);
+	        configHelper.addStartupQueryItem(details.getKey(),details,controlType);
 	}
 	
-	public void addControlledItem (String name, Object details, int controlType) {
+	public void addControlledItem (String name, DeviceType details, int controlType) {
 		String theKey = name;
     
-		int deviceType = ((DeviceType)details).getDeviceType();
+		int deviceType = (details).getDeviceType();
 		
 		if (controlType != DeviceType.OUTPUT) {
 		    			    

@@ -176,6 +176,7 @@ public class Model extends BaseModel implements DeviceModel {
         	// Delete is always for the pure macro name without zone appended.
 			macroHandler.delete(pureMacroName,currentUser,false);
 			logger.log (Level.FINER, "Deleting macro " + pureMacroName);
+			macroName = "";
 			doListUpdate = true;
 		}
 		if (commandStr.equals("getList")) {

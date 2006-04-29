@@ -6,7 +6,7 @@ import java.util.List;
 import au.com.BI.Command.CommandInterface;
 
 public class GeneralDynaliteResult {
-	List linkedDeviceCommands;
+	List <CommandInterface>linkedDeviceCommands;
 	boolean rescanLevels = false;
 	boolean rescanSingleChannel = false;
 	int rescanArea = 0;
@@ -16,14 +16,14 @@ public class GeneralDynaliteResult {
 	Exception ex = null;
 	
 	public GeneralDynaliteResult() {
-		 linkedDeviceCommands = new LinkedList ();	
+		 linkedDeviceCommands = new LinkedList <CommandInterface>();	
 	}
 	
 	public List getLinkedDeviceCommands() {
 		return linkedDeviceCommands;
 	}
 
-	public void setLinkedDeviceCommands(List linkdDeviceCommands) {
+	public void setLinkedDeviceCommands(List<CommandInterface> linkdDeviceCommands) {
 		this.linkedDeviceCommands = linkdDeviceCommands;
 	}
 

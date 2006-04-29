@@ -1,6 +1,7 @@
 package au.com.BI.Nuvo;
 
 import java.util.HashMap;
+import java.util.Vector;
 import java.util.Iterator;
 import java.util.List;
 
@@ -9,12 +10,15 @@ import org.jdom.Element;
 import au.com.BI.Audio.*;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Nuvo.Model;
+import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
 import junit.framework.*;
+import junitx.framework.ListAssert;
 
 public class TestCommandsFromFlash extends TestCase {
 	private Model model = null;
 	Audio audioFrontRoom = null;
+	Audio audioAll = null;
 	Audio kitchenAudio = null;
 	
 	public static void main(String[] args) {
@@ -24,6 +28,10 @@ public class TestCommandsFromFlash extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		model = new Model();
+	
+		audioAll = new Audio ("All",DeviceType.AUDIO);
+		audioAll.setKey("00");
+		audioAll.setOutputKey("ALL");
 		
 		audioFrontRoom = new Audio ("Front Audio",DeviceType.AUDIO);
 		audioFrontRoom.setKey("01");
@@ -35,17 +43,23 @@ public class TestCommandsFromFlash extends TestCase {
 
 		
 		model.addControlledItem("FRONT_AUDIO",audioFrontRoom,DeviceType.OUTPUT);
+		model.addControlledItem("ALL",audioAll,DeviceType.OUTPUT);
+		model.addControlledItem("KITCHEN_AUDIO",kitchenAudio,DeviceType.OUTPUT);
 		
-		HashMap map = new HashMap (40);
+		HashMap<String, String> map = new HashMap<String,String> (40);
+		
 		map.put("cd1", "1");
 		map.put("cd2", "2");
 		map.put("digital","3");
 		map.put("tv", "4");
 		
 		model.setCatalogueDefs("Nuvo Audio Inputs",map);
-		model.setParameter("AUDIO_INPUTS", "Nuvo Audio Inputs", "");
+		
+		model.setParameter("AUDIO_INPUTS", "Nuvo Audio Inputs", DeviceModel.MAIN_DEVICE_GROUP);
+		model.setupAudioInputs ();
 		
 		model.setPadding (2); // device requires 2 character keys that are 0 padded.
+		
 	}
 
 	protected void tearDown() throws Exception {
@@ -55,21 +69,147 @@ public class TestCommandsFromFlash extends TestCase {
 	/*
 	 * Test method for 'au.com.BI.Nuvo.Model.buildAudioString(AV, CommandInterface)'
 	 */
-	public void testBuildAudioString() {
-	}
 
 	public void testBuildAudioZoneOn() {
-		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","on",null,"FRONT_AUDIO","","","","");
+		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","on",null,"","","","","");
 		String expectedOut = "*Z01ON";
 		NuvoCommands val = model.buildAudioString(audioFrontRoom, testCommand);
-		Assert.assertEquals ("Return value for audio on failed",expectedOut,val.avOutputString);
+		Assert.assertEquals ("Return value for audio on failed",expectedOut,val.avOutputStrings.firstElement());
+	}
+	
+	public void testBuildAudioAllOff() {
+		ClientCommand testCommand = new ClientCommand("ALL","off",null,"","","","","");
+		String expectedOut = "*ALLOFF";
+		NuvoCommands val = model.buildAudioString(audioAll, testCommand);
+		Assert.assertEquals ("Return value for audio all off failed",expectedOut,val.avOutputStrings.firstElement());
 	}
 	
 	public void testBuildAudioZoneOff() {
-		ClientCommand testCommand = new ClientCommand("KITCHEN_AUDIO","off",null,"KITCHEN_AUDIO","","","","");
+		ClientCommand testCommand = new ClientCommand("KITCHEN_AUDIO","off",null,"","","","","");
 		String expectedOut = "*Z02OFF";
 		NuvoCommands val = model.buildAudioString(kitchenAudio, testCommand);
-		Assert.assertEquals ("Return value for audio off failed",expectedOut,val.avOutputString);
+		Assert.assertEquals ("Return value for audio zone off failed",expectedOut,val.avOutputStrings.firstElement());
+	}
+	
+
+	
+	public void testBuildAudioZoneMuteOn() {
+		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","mute",null,"on","","","","");
+		String expectedOut = "*Z01MTON";
+		NuvoCommands val = model.buildAudioString(audioFrontRoom, testCommand);
+		Assert.assertEquals ("Return value for audio on failed",expectedOut,val.avOutputStrings.firstElement());
+	}
+
+	public void testBuildAudioZoneMuteOff() {
+		ClientCommand testCommand = new ClientCommand("KITCHEN_AUDIO","mute",null,"off","","","","");
+		String expectedOut = "*Z02MTOFF";
+		NuvoCommands val = model.buildAudioString(kitchenAudio, testCommand);
+		Assert.assertEquals ("Return value for audio zone off failed",expectedOut,val.avOutputStrings.firstElement());
+	}
+
+	public void testBuildAudioMuteOn() {
+		ClientCommand testCommand = new ClientCommand("ALL","mute",null,"on","","","","");
+		String expectedOut = "*ALLMON";
+		NuvoCommands val = model.buildAudioString(audioAll, testCommand);
+		Assert.assertEquals ("Return value for audio all on failed",expectedOut,val.avOutputStrings.firstElement());
+	}
+
+	public void testBuildAudioMuteOff() {
+		ClientCommand testCommand = new ClientCommand("ALL","mute",null,"off","","","","");
+		String expectedOut = "*ALLMOFF";
+		NuvoCommands val = model.buildAudioString(audioAll, testCommand);
+		Assert.assertEquals ("Return value for audio all off failed",expectedOut,val.avOutputStrings.firstElement());
+	}
+
+	
+	public void testBuildAudioBass() {
+		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","bass",null,"50","","","","");
+		String expectedOut = "*Z01BASS+00";
+		NuvoCommands val = model.buildAudioString(audioFrontRoom, testCommand);
+		Assert.assertEquals ("Return value for audio bass failed",expectedOut,val.avOutputStrings.firstElement());
+	}
+ 
+	public void testBuildAudioTreble() {
+		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","treble",null,"50","","","","");
+		String expectedOut = "*Z01TREB+00";
+		NuvoCommands val = model.buildAudioString(audioFrontRoom, testCommand);
+		Assert.assertEquals ("Return value for audio treble failed",expectedOut,val.avOutputStrings.firstElement());
+	}
+
+	
+	public void testBuildAudioVolume() {
+		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","volume",null,"50","","","","");
+		String expectedOut = "*Z01VOL39";
+		NuvoCommands val = model.buildAudioString(audioFrontRoom, testCommand);
+		Assert.assertEquals ("Return value for volume failed",expectedOut,val.avOutputStrings.firstElement());
+		
+		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"100","","","","");
+		String expectedOut2 = "*Z01VOL00";
+		NuvoCommands val2 = model.buildAudioString(audioFrontRoom, testCommand2);
+		Assert.assertEquals ("Return value for volume failed",expectedOut2,val2.avOutputStrings.firstElement());
+		
+		ClientCommand testCommand3 = new ClientCommand("FRONT_AUDIO","volume",null,"0","","","","");
+		String expectedOut3 = "*Z01VOL78";
+		NuvoCommands val3 = model.buildAudioString(audioFrontRoom, testCommand3);
+		Assert.assertEquals ("Return value for volume failed",expectedOut3,val3.avOutputStrings.firstElement());
+	}
+
+	
+	public void testBuildAudioVolumeRamp() {
+		ClientCommand testCommand = new ClientCommand("ALL","volume",null,"up","","","","");
+		String expectedOut = "*ZALLV+";
+		NuvoCommands val = model.buildAudioString(this.audioAll, testCommand);
+		Assert.assertEquals ("Return value for volume all up failed",expectedOut,val.avOutputStrings.firstElement());
+		
+		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"down","","","","");
+		String expectedOut2 = "*Z01VOL-";
+		NuvoCommands val2 = model.buildAudioString(audioFrontRoom, testCommand2);
+		Assert.assertEquals ("Return value for volume zone down failed",expectedOut2,val2.avOutputStrings.firstElement());
+		
+		ClientCommand testCommand3 = new ClientCommand("FRONT_AUDIO","volume",null,"up","","","","");
+		String expectedOut3 = "*Z01VOL+";
+		NuvoCommands val3 = model.buildAudioString(audioFrontRoom, testCommand3);
+		Assert.assertEquals ("Return value for volume zone up ",expectedOut3,val3.avOutputStrings.firstElement());
+		
+		ClientCommand testCommand4 = new ClientCommand("FRONT_AUDIO","volume",null,"stop","","","","");
+		String expectedOut4 = "*Z01VHLD";
+		NuvoCommands val4 = model.buildAudioString(audioFrontRoom, testCommand4);
+		Assert.assertEquals ("Return value for volume zone stop ",expectedOut4,val4.avOutputStrings.firstElement());
+		
+		ClientCommand testCommand5 = new ClientCommand("ALL","volume",null,"stop","","","","");
+		String expectedOut5 = "*ZALLHLD";
+		NuvoCommands val5 = model.buildAudioString(audioAll, testCommand5);
+		Assert.assertEquals ("Return value for volume all stop ",expectedOut5,val5.avOutputStrings.firstElement());
+	}
+
+	public void testBuildAudioSrc() {
+		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","src",null,"cd1","","","","");
+		String expectedOut = "*Z01SRC1";
+		NuvoCommands val = model.buildAudioString(audioFrontRoom, testCommand);
+		Assert.assertEquals ("Return value for src failed",expectedOut,val.avOutputStrings.firstElement());
+		
+		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","src",null,"cd2","","","","");
+		String expectedOut2 = "*Z01SRC2";
+		NuvoCommands val2 = model.buildAudioString(audioFrontRoom, testCommand2);
+		Assert.assertEquals ("Return value for src failed",expectedOut2,val2.avOutputStrings.firstElement());
+				
+		ClientCommand testCommand4 = new ClientCommand("FRONT_AUDIO","src",null,"x","","","","");
+		String expectedOut4 = "";
+		NuvoCommands val4 = model.buildAudioString(audioFrontRoom, testCommand4);
+		Assert.assertEquals ("Return value for unknown src failed",true,val4.error);
+
+	}
+	
+	public void testBuildAudioSrcAll() {
+		
+		ClientCommand testCommand3 = new ClientCommand("ALL","src",null,"cd2","","","","");
+		Vector <String>expectedOut = new Vector<String>();
+		expectedOut.add ("*Z01SRC2");
+		expectedOut.add ("*Z02SRC2");
+
+		NuvoCommands val3 = model.buildAudioString(audioAll, testCommand3);
+		ListAssert.assertEquals ("Return value for volume failed",expectedOut,val3.avOutputStrings);
+
 	}
 	
 	/*

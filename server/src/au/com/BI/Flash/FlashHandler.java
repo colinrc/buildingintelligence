@@ -59,7 +59,7 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 	public FlashHandler (int numberClients, Security security){
 
 		configHelper = new ConfigHelper();
-		this.addControlledItem ("RawXML_Send","DUMMY FOR HARNESS",DeviceType.MONITORED);
+		this.addControlledItem ("RawXML_Send",null,DeviceType.MONITORED);
 
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		flashClientHandlers = new LinkedList ();
@@ -125,7 +125,7 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 		// restart everything
 	}
 
-	public void addControlledItem (String name, Object details, int controlType) {
+	public void addControlledItem (String name, DeviceType details, int controlType) {
 		configHelper.addControlledItem (name, details, controlType);
 	}
 
@@ -219,17 +219,12 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 
 		if (!commandFound && false) {
 			// command is input on the flash client so need to create a command for the home controller to action it
-			Object controlRaw  = configHelper.getControlItem(theKey);
+			DeviceType controlRaw  = configHelper.getControlItem(theKey);
 
 			try {
 				DeviceType control;
 
-				if (controlRaw.getClass().isInstance("au.com.BI.Util.DeviceType")) {
-					control  = (DeviceType)controlRaw;
-				} else {
-					ArrayList controlList = (ArrayList)controlRaw;
-					control = (DeviceType)(controlList.get(0));
-				}
+				control  = (DeviceType)controlRaw;
 
 				commandFound = true;
 				Command automationCommand = new Command (control.getName(),command.getCommandCode(),command.getUser(),command.getExtraInfo());

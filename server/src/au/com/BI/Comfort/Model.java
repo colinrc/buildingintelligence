@@ -74,7 +74,7 @@ public class Model extends BaseModel implements DeviceModel  {
 
 	}
 
-	public void addControlledItem (String name, Object details, int controlType) {
+	public void addControlledItem (String name, DeviceType details, int controlType) {
 		String theKey = name;
 		String secondKey = "";
 		boolean doNotAddToControlledList = false;
@@ -160,7 +160,7 @@ public class Model extends BaseModel implements DeviceModel  {
 	}
 
 
-	public void addStartupQueryItem (String name, Object details, int controlType) {
+	public void addStartupQueryItem (String name, DeviceType details, int controlType) {
 
 		startup.addStartupQueryItem (configHelper,name, details, controlType);
 	}

@@ -131,7 +131,7 @@ public class Model extends BaseModel implements DeviceModel {
 	/**
 	 * 
 	 */
-	public void addControlledItem (String key, Object details, int controlType) {
+	public void addControlledItem (String key, DeviceType details, int controlType) {
 		if (controlType == DeviceType.OUTPUT) {
 			super.addControlledItem(Utility.padString(key,3),details,controlType);			
 		} else if (controlType == DeviceType.SENSOR) {

@@ -94,7 +94,7 @@ public class Startup {
 	}
 	
 
-	public void addStartupQueryItem (ConfigHelper configHelper, String name, Object details, int controlType) {
+	public void addStartupQueryItem (ConfigHelper configHelper, String name, DeviceType details, int controlType) {
 		String theKey = name;
 		String keyToSend = "";
 

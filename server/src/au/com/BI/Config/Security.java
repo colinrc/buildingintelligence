@@ -33,12 +33,12 @@ public class Security {
 	/* search for local and remote HASP HL key */
 	
 	
-    	/*
 	connected = true;
 	return ;
-*/
-	
-		logger = Logger.getLogger(this.getClass().getPackage().getName());
+
+
+	/*
+	logger = Logger.getLogger(this.getClass().getPackage().getName());
 	 
 	InputStreamReader reader = new InputStreamReader(System.in);
 	BufferedReader in = new BufferedReader(reader);
@@ -82,12 +82,14 @@ public class Security {
 			fsize,
 			allowNumbers);
        }
+       */
 	
     }
     
     public final boolean allowClient(int clientCount) {
-	//return true;
+	return true;
 	
+	/*
 	lastFlashClients = clientCount;
 	try {
 	    if ((clientCount + lastWebCount ) > allowNumbers[0]) {
@@ -98,7 +100,7 @@ public class Security {
 	} catch (NullPointerException ex){
 	    return false;
 	}
-
+	*/
 	 
     }
     

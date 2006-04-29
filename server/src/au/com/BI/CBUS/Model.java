@@ -113,19 +113,19 @@ public class Model extends BaseModel implements DeviceModel {
 
 	}
 
-	public void addControlledItem (String name, Object details, int controlType) {
+	public void addControlledItem (String name, DeviceType details, int controlType) {
 
 		try {
 			CBUSDevice device = (CBUSDevice)details;
 
 			String theKey = name;
 			if (controlType == DeviceType.MONITORED)  {
-				if (((DeviceType)details).getDeviceType() == DeviceType.LIGHT_CBUS) {
+				if (details.getDeviceType() == DeviceType.LIGHT_CBUS) {
 					String appCode = device.getApplicationCode() ;
 					theKey = cBUSHelper.buildKey(appCode,name);
 					applicationCodes.add(appCode);
 				}
-				if (((DeviceType)details).getDeviceType() == DeviceType.SENSOR) {
+				if (details.getDeviceType() == DeviceType.SENSOR) {
 					theKey = name;
 				}
 			}

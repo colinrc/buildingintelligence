@@ -77,6 +77,32 @@ public class Utility {
 		return inp.toUpperCase();
 	}
 	
+	/**
+	 * Scales a value from the flash client to an arbitrary number range.
+	 * @param input A 0-100 value from the client. 
+	 * @param min
+	 * @param max
+	 * @return The scaled value
+	 * @throws NumberFormatException Thrown when the client value is not a number
+	 */
+	public static int scaleFromFlash (String input, int min, int max,boolean invert) throws NumberFormatException {
+		String result = "000";
+		double range = max - min + 1;
+		double inputVal = Double.parseDouble(input);
+		if (invert){
+			inputVal = 100.0 - inputVal;
+		}
+		Double returnVal = Double.valueOf(inputVal / 101.0 * range);
+		int intVal = returnVal.intValue() + min;
+		return intVal;
+	}
+	
+	/**
+	 * 0 Pads a string.
+	 * @param inp The string
+	 * @param numDigits Number of digits for the return string
+	 * @return
+	 */
 	public static String padString (String inp, int numDigits){
 		String result = "";
 		if (inp == null || inp.equals("")){

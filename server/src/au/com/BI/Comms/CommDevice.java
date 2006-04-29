@@ -30,6 +30,8 @@ public interface CommDevice {
 	public static final int BufferLength = 1;
 	public static final int KnownChars = 2;
 	
+
+	
 	// Time in milliseconds to wait for a command response from a handshake type device until the next command
 	// is sent
 	public static final int DelayUntilCommandRepeat = 60000;
@@ -96,8 +98,39 @@ public interface CommDevice {
 	public boolean acknowlegeCommand(int actionType);
 	public boolean acknowlegeCommand(String key);
 	public boolean acknowlegeCommand(int actionType,String key);
-	
+
+	/**
+	 * The ETX array is the set of possible values to indicate the end of the data string
+	 * @param etxArray
+	 */
 	public void setETXArray (int etxArray[]);
+	
+	/**
+	 * The STX array is the set of possible values to indicate the start of the data string
+	 * @param stxArray. 
+	 */
 	public void setSTXArray (int stxArray[]);
+	
+	/**
+	 * If the device uses 2 characters to specify end of data string the set can be specified here.
+	 * @param penultimateArray
+	 */
 	public void setPenultimateArray (int penultimateArray[]);
+	
+	/**
+	 * The Intercommand interval allows you to specify a guaranteed minimum time interval between commands issued to a device.
+	 * This is used to prevent buffer overrun.
+	 * @return The interval in milliseconds
+	 */
+	public int getInterCommandInterval();
+
+	/**
+	 * The Intercommand interval allows you to specify a guaranteed minimum time interval between commands issued to a device.
+	 * This is used to prevent buffer overrun.
+	 * @param interCommandInterval The interval in milliseconds
+	 */
+	public void setInterCommandInterval(int interCommandInterval);
+
+	// @TODO Implemented minimum interval in comms devices. 
+	// @TODO Move comm sending into a thread
 }

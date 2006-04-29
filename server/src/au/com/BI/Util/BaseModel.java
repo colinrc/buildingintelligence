@@ -31,9 +31,9 @@ public class BaseModel
         protected boolean connected = false;
         private boolean autoReconnect = true;
 
-        protected Map rawDefs;
-        protected HashMap parameters;
-        protected HashMap topMap; // a convienience reference to the top level map
+        protected Map <String,Map>rawDefs;
+        protected HashMap <String,HashMap> parameters;
+        protected HashMap <String,String>topMap; // a convienience reference to the top level map
 
         protected Logger logger;
 
@@ -41,7 +41,7 @@ public class BaseModel
         protected List commandQueue;
         protected ConfigHelper configHelper;
         protected au.com.BI.Command.Cache cache;
-        protected HashMap variableCache;
+        protected HashMap<String,Object> variableCache;
         protected boolean isStartupQuery = false;
         protected IRCodeDB irCodeDB;
 
@@ -68,10 +68,10 @@ public class BaseModel
         public BaseModel() {
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
                 configHelper = new ConfigHelper();
-                parameters = new HashMap(DeviceModel.NUMBER_DEVICE_GROUPS);
-                topMap = new HashMap(DeviceModel.NUMBER_PARAMETERS);
+                parameters = new HashMap<String,HashMap>(DeviceModel.NUMBER_DEVICE_GROUPS);
+                topMap = new HashMap<String,String>(DeviceModel.NUMBER_PARAMETERS);
                 parameters.put(DeviceModel.MAIN_DEVICE_GROUP, topMap);
-                rawDefs = new HashMap(DeviceModel.NUMBER_CATALOGUES);
+                rawDefs = new HashMap<String,Map>(DeviceModel.NUMBER_CATALOGUES);
         }
 
         public void setTransmitMessageOnBytes(int numberBytes) {
@@ -118,7 +118,8 @@ public class BaseModel
         public void clearItems() {
                 configHelper.clearItems();
                 parameters.clear();
-                topMap = new HashMap(DeviceModel.NUMBER_PARAMETERS);
+                topMap = new HashMap<String,String>(DeviceModel.NUMBER_PARAMETERS);
+                
                 parameters.put(DeviceModel.MAIN_DEVICE_GROUP, topMap);
         }
 
@@ -130,7 +131,7 @@ public class BaseModel
                 this.cache = cache;
         }
 
-        public void setVariableCache(HashMap variableCache) {
+        public void setVariableCache(HashMap <String,Object>variableCache) {
                 this.variableCache = variableCache;
         }
 
@@ -310,7 +311,7 @@ public class BaseModel
                 return false;
         }
 
-        public void addControlledItem(String name, Object details, int controlType) {
+        public void addControlledItem(String name, DeviceType details, int controlType) {
                 String theKey = name;
 
                 configHelper.addControlledItem(theKey, details, controlType);
@@ -517,15 +518,15 @@ public class BaseModel
                 }
         }
 
-        public void setParameter(String name, Object value, String groupName) {
-                HashMap theMap;
+        public void setParameter(String name, String value, String groupName) {
+                HashMap <String,String>theMap;
                 if (groupName.equals(DeviceModel.MAIN_DEVICE_GROUP))
                         theMap = topMap;
                 else {
                         if (parameters.containsKey(groupName))
-                                theMap = (HashMap) parameters.get(groupName);
+                                theMap = (HashMap<String,String>) parameters.get(groupName);
                         else
-                                theMap = new HashMap(DeviceModel.NUMBER_PARAMETERS);
+                                theMap = new HashMap<String,String>(DeviceModel.NUMBER_PARAMETERS);
                 }
 
                 theMap.put(name, value);

@@ -23,6 +23,7 @@ protected long timeOfLastCommand = 0;
 protected LinkedList commandQueue;	
 protected LinkedList sentQueue;
 protected int transmitMessageOnBytes = 0;
+public int interCommandInterval = 0;
 
 	public BaseComms () {
 		commandQueue = new LinkedList();
@@ -433,6 +434,15 @@ protected int transmitMessageOnBytes = 0;
 
 	public void sendString (byte[] message) throws CommsFail {
 		logger.log (Level.SEVERE,"Send String in Base Comms was not overwritten by extending class.");
+	}
+
+
+	public int getInterCommandInterval() {
+		return interCommandInterval;
+	}
+
+	public void setInterCommandInterval(int interCommandInterval) {
+		this.interCommandInterval = interCommandInterval;
 	};
 
 }

@@ -90,7 +90,7 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void addControlledItem (String name, Object details, int controlType) {
+	public void addControlledItem (String name, DeviceType details, int controlType) {
 		String theKey = name;
 		byte secondKey = 0;
 

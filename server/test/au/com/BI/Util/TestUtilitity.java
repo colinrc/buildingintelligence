@@ -57,4 +57,12 @@ public class TestUtilitity extends TestCase {
 		assertEquals (Utility.padStringTohex(255),"FF");		
 		assertEquals (Utility.padStringTohex(14),"0E");		
 	}
+	
+	public void testScaleFromFlash() {
+		assertEquals (12,Utility.scaleFromFlash("100",-12,12,false));
+		assertEquals (-12,Utility.scaleFromFlash("0",-12,12,false));
+		assertEquals (0,Utility.scaleFromFlash("50",-12,12,false));
+		assertEquals (12,Utility.scaleFromFlash("0",-12,12,true));
+		assertEquals (-12,Utility.scaleFromFlash("100",-12,12,true));
+	}
 }
