@@ -17,6 +17,8 @@ import au.com.BI.Util.*;
 import java.util.*;
 import java.util.logging.*;
 
+import org.jdom.Element;
+
 
 public class Model extends BaseModel implements DeviceModel {
 	
@@ -29,6 +31,14 @@ public class Model extends BaseModel implements DeviceModel {
 	protected List commandQueue;
 	protected HashMap audioInputs;
 	protected Logger logger = null;
+	
+	public static final String AllZones = "00";
+	
+	public static final int Switch = 0;
+	public static final int Select = 1;
+	public static final int Tone = 2;
+	public static final int Volume = 3;
+	public static final int Mute = 4;	
 	
 	public Model () {
 		super();
@@ -46,19 +56,28 @@ public class Model extends BaseModel implements DeviceModel {
 		super.clearItems();
 	}
 
-	
-	public void finishedReadingConfig () throws SetupException {
-		super.finishedReadingConfig();
-		
+	public void setupAudioInputs() throws SetupException {
 		String audioInputsDef = (String)this.getParameter("AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
 		if (audioInputsDef == null || audioInputsDef.equals ("")) {
 			throw new SetupException ("The audio source input catalogue was not specified in the device Parameter block");
 		}
-
+	
 		audioInputs = (HashMap)this.getCatalogueDef(audioInputsDef);
 		if (audioInputs == null) {
 			throw new SetupException ("The audio Source input catgalogue was not specifed in the  device Parameter block");
 		}
+	}
+
+	
+	public void finishedReadingConfig () throws SetupException {
+		super.finishedReadingConfig();
+		
+		setupAudioInputs();
+	}
+	
+	public void attatchComms(List commandList) throws ConnectionFail {
+		this.comms.setInterCommandInterval(50);
+		super.attatchComms(commandList);
 	}
 	
 	
@@ -149,12 +168,11 @@ public class Model extends BaseModel implements DeviceModel {
 
 							logger.log(Level.FINER, "Audio event for zone " + device.getKey() + " received from flash");
 
+						    for(String avOutputString : toSend.avOutputStrings) {
 			
-							if (toSend.avOutputString != null) {
-	
 								CommsCommand avCommsCommand = new CommsCommand();
 								avCommsCommand.setKey (device.getKey());
-								avCommsCommand.setCommand(toSend.avOutputString);
+								avCommsCommand.setCommand(avOutputString);
 								avCommsCommand.setActionType(toSend.outputCommandType);
 								avCommsCommand.setExtraInfo (((Audio)(device)).getOutputKey());
 								avCommsCommand.setKeepForHandshake(true);
@@ -169,7 +187,7 @@ public class Model extends BaseModel implements DeviceModel {
 
 						} else {
 							if (toSend != null){
-								logger.log (Level.WARNING,"Error processing Nuvo video message " + toSend.errorDescription);
+								logger.log (Level.WARNING,"Error processing Nuvo message " + toSend.errorDescription);
 							}
 						}
 				
@@ -222,7 +240,7 @@ public class Model extends BaseModel implements DeviceModel {
 		String rawBuiltCommand = configHelper.doRawIfPresent (command, device, this);
 		if (rawBuiltCommand != null)
 		{
-			returnVal.avOutputString = rawBuiltCommand;
+			returnVal.addAvOutputString(rawBuiltCommand);
 			commandFound = true;
 		}
 		String extra = ((String)command.getExtraInfo());
@@ -233,62 +251,153 @@ public class Model extends BaseModel implements DeviceModel {
 			return null;
 		}
 
-		if (theCommand.equals("src")) {
-			// @ TODO Complete src
+		if (!commandFound && theCommand.equals("src")) {
+			String key = device.getKey();
 			String srcCode = "";
+			commandFound = true;
+			
 			try {
-
-
-				srcCode = (String)audioInputs.get(command.getExtraInfo());
+				srcCode = (String)audioInputs.get(extra);
 				int src = Integer.parseInt(srcCode);
-				setCurrentSrc(device.getKey(),srcCode);
-				returnVal.avOutputString =nuvoHelper.buildSwitchCommand (2,device.getKey(),srcCode, command.getExtra2Info()); 
-				logger.log (Level.FINEST,"Changing audio source");
-				commandFound = true;
-				returnVal.outputCommandType = DeviceType.NUVO_SWITCH;
+				if (key.equals(Model.AllZones)){
+				    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
+						if (!audioDevice.getKey().equals(Model.AllZones)) {
+							setCurrentSrc(audioDevice.getKey(),srcCode);
+							returnVal.addAvOutputString(String.format("*Z"+audioDevice.getKey()+"SRC"+src));
+						}
+					logger.log (Level.FINEST,"Changing audio source for all zones");
+				    }
+				} else {
+					setCurrentSrc(device.getKey(),srcCode);
+					returnVal.addAvOutputString(String.format("*Z"+key+"SRC"+src));
+					logger.log (Level.FINEST,"Changing audio source");
+					
+				}
+				returnVal.outputCommandType = Model.Select;
 			} catch (NumberFormatException ex) {
-				returnVal.avOutputString = null;
+				returnVal.addAvOutputString(null);
 				returnVal.error = true;
 				returnVal.errorDescription = "Input src does not decode to an integer";
-				commandFound = false;
 			}
 		}			
-		if (theCommand.equals("vol")) {
-			// @ TODO Complete volume
-			String srcCode = "";
-			try {
 
+		if (!commandFound && theCommand.equals("volume")) {
 
-				srcCode = (String)audioInputs.get(command.getExtraInfo());
-				int src = Integer.parseInt(srcCode);
-				setCurrentSrc(device.getKey(),srcCode);
-				returnVal.avOutputString =nuvoHelper.buildSwitchCommand (2,device.getKey(),srcCode, command.getExtra2Info()); 
-				logger.log (Level.FINEST,"Changing audio source");
-				commandFound = true;
-				returnVal.outputCommandType = DeviceType.NUVO_SWITCH;
-			} catch (NumberFormatException ex) {
-				returnVal.avOutputString = null;
-				returnVal.error = true;
-				returnVal.errorDescription = "Input src does not decode to an integer";
-				commandFound = false;
-			}
-		}	
-		if (theCommand.equals("on")) {
 			String key = device.getKey();
-			returnVal.avOutputString = "*Z"+key+"ON";
+			
+			if (!commandFound && extra.equals ("up")){
+				commandFound = true;
+				if (!key.equals (Model.AllZones)){
+					returnVal.addAvOutputString(String.format("*Z"+key+"VOL+"));
+					logger.log (Level.FINEST,"Volump ramp up in zone " + key);					
+				} else {
+					returnVal.addAvOutputString("*ZALLV+");
+					logger.log (Level.FINEST,"All volume ramp up");	
+				}
+			}
+
+			if (!commandFound && extra.equals ("down")){
+				commandFound = true;
+				if (!key.equals (Model.AllZones)){
+					returnVal.addAvOutputString(String.format("*Z"+key+"VOL-"));
+					logger.log (Level.FINEST,"Volump ramp down in zone " + key);					
+				} else {
+					returnVal.addAvOutputString("*ZALLV-");
+					logger.log (Level.FINEST,"All volume ramp down");	
+				}
+			}
+			
+			if (!commandFound && extra.equals ("stop")){
+				commandFound = true;
+				if (key.equals (Model.AllZones)){
+					returnVal.addAvOutputString(String.format("*ZALLHLD"));
+					logger.log (Level.FINEST,"Volump ramp stop in all zones");					
+				} else {
+					returnVal.addAvOutputString("*Z"+key+"VHLD");
+					logger.log (Level.FINEST,"All volume ramp stop in zone " + key);	
+				}
+			}
+			if (!commandFound){
+				try {
+					int newVal = Utility.scaleFromFlash(extra,0,78,true);
+					returnVal.addAvOutputString(String.format("*Z"+key+"VOL%02d",newVal));
+					commandFound = true;
+					logger.log (Level.FINEST,"Changing tone in zone " + key);
+				} catch (NumberFormatException ex){
+					logger.log (Level.WARNING,"Illegal value for tone change " + ex.getMessage());				
+				}
+			}
+			commandFound = true;
+			returnVal.outputCommandType = Model.Tone;
+		}	
+		
+		if (!commandFound &&  theCommand.equals("on")) {
+			String key = device.getKey();
+			returnVal.addAvOutputString("*Z"+key+"ON");
 			logger.log (Level.FINEST,"Switching on zone "+ key);
 			commandFound = true;
 			returnVal.outputCommandType = DeviceType.NUVO_SWITCH;
 
 		}
-		if (theCommand.equals("off")) {
+		
+		if (!commandFound && theCommand.equals("off")) {
 			String key = device.getKey();
-			returnVal.avOutputString = "*Z"+key+"OFF";
+			if (key.equals(Model.AllZones)) {
+				returnVal.addAvOutputString("*ALLOFF");
+			} else {
+				returnVal.addAvOutputString("*Z"+key+"OFF");
+			}
 			logger.log (Level.FINEST,"Switching off zone " + key);
 			commandFound = true;
-			returnVal.outputCommandType = DeviceType.NUVO_SWITCH;
-
+			returnVal.outputCommandType = Model.Switch;
 		}
+
+		if (!commandFound && theCommand.equals("mute")) {
+			String key = device.getKey();
+			if (command.getExtraInfo().equals ("on")){
+				if (key.equals(Model.AllZones)) {
+					returnVal.addAvOutputString("*ALLMON");
+				} else {
+					returnVal.addAvOutputString("*Z"+key+"MTON");
+				} 
+			} else {
+				if (key.equals(Model.AllZones)) {
+					returnVal.addAvOutputString("*ALLMOFF");
+				} else {
+					returnVal.addAvOutputString("*Z"+key+"MTOFF");
+				} 
+			}
+			logger.log (Level.FINEST,"Muting zone " + key);
+			commandFound = true;
+			returnVal.outputCommandType = Model.Mute;
+		}
+		
+		if (!commandFound && theCommand.equals("bass")) {
+			String key = device.getKey();
+			try {
+				int newVal = Utility.scaleFromFlash(extra,-12,12,false);
+				returnVal.addAvOutputString(String.format("*Z"+key+"BASS%+03d",newVal));
+				logger.log (Level.FINEST,"Changing tone in zone " + key);
+			} catch (NumberFormatException ex){
+				logger.log (Level.WARNING,"Illegal value for tone change " + ex.getMessage());				
+			}
+			commandFound = true;
+			returnVal.outputCommandType = Model.Tone;
+		}
+		
+		if (!commandFound && theCommand.equals("treble")) {
+			String key = device.getKey();
+			try {
+				int newVal = Utility.scaleFromFlash(extra,-12,12,false);
+				returnVal.addAvOutputString(String.format("*Z"+key+"TREB%+03d",newVal));
+				logger.log (Level.FINEST,"Changing tone in zone " + key);
+			} catch (NumberFormatException ex){
+				logger.log (Level.WARNING,"Illegal value for tone change " + ex.getMessage());				
+			}
+			commandFound = true;
+			returnVal.outputCommandType = Model.Tone;
+		}
+		
 		if (commandFound) {
 			return returnVal;
 		}
@@ -315,6 +424,14 @@ public class Model extends BaseModel implements DeviceModel {
 	 */
 	public void setCurrentSrc(String zone, String currentSrcStr) {
 		currentSrc.put(zone, currentSrcStr);
+	}
+
+	public NuvoHelper getNuvoHelper() {
+		return nuvoHelper;
+	}
+
+	public void setNuvoHelper(NuvoHelper nuvoHelper) {
+		this.nuvoHelper = nuvoHelper;
 	}
 	
 }
