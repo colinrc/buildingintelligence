@@ -15,22 +15,36 @@
 		for (var camera in cameras) {
 			if ((cameras[camera].active != "Y") && (cameras[camera].active != "N")) {
 				flag = "error";
-				appendValidationMsg("Active flag is invalid");
+				appendValidationMsg("Active is invalid");
 			}
-			if ((cameras[camera].key == undefined) || (cameras[camera].key == "")) {
-				flag = "error";
-				appendValidationMsg("Key is invalid");
-			} else {
-				if (_global.isKeyUsed(cameras[camera].key) == false) {
-					flag = "error";
-					appendValidationMsg(cameras[camera].key+" key is not being used");
+			else {
+				if (cameras[camera].active =="Y"){
+					if ((cameras[camera].key == undefined) || (cameras[camera].key == "")) {
+						flag = "error";
+						appendValidationMsg("Camera Zone is invalid");
+					}
+					if ((cameras[camera].display_name == undefined) || (cameras[camera].display_name == "")) {
+						flag = "error";
+						appendValidationMsg("Key is invalid");
+					}
+					else {
+						if (_global.isKeyUsed(cameras[camera].display_name) == false) {
+							flag = "error";
+							appendValidationMsg(cameras[camera].display_name+" key is not used");
+						}
+					}
+					if ((cameras[camera].zoom == undefined) || (cameras[camera].zoom == "")) {
+						flag = "error";
+						appendValidationMsg("Camera Zoom is invalid");
+					}
+				}
+				else {
+					if (cameras[camera].active =="N"){
+						flag = "empty";
+						appendValidationMsg("Cameras is not active");
+					}
 				}
 			}
-			if ((cameras[camera].display_name == undefined) || (cameras[camera].display_name == "")) {
-				flag = "error";
-				appendValidationMsg("Display Name is invalid");
-			}
-			//does zoom need to be checked?  
 		}
 		return flag;
 	}

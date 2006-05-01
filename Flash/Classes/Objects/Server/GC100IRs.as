@@ -15,17 +15,31 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
-		/*for (var ir in irs) {
-			if ((irs[ir].attributes["KEY"] == undefined) || (irs[ir].attributes["KEY"] == "")) {
-				flag = false;
+		clearValidationMsg();
+		for (var ir in irs) {
+			if ((irs[ir].key == undefined) || (irs[ir].key == "")) {
+				flag = "error";
+				appendValidationMsg("Key is invalid");
 			}
-			if ((irs[ir].attributes["NAME"] == undefined) || (irs[ir].attributes["NAME"] == "")) {
-				flag = false;
+			if ((irs[ir].name == undefined) || (irs[ir].name == "")) {
+				flag = "error";
+				appendValidationMsg("Name is invalid");
 			}
-			if ((irs[ir].attributes["AV_NAME"] == undefined) || (irs[ir].attributes["AV_NAME"] == "")) {
-				flag = false;
+			if ((irs[ir].avname == undefined) || (irs[ir].avname == "")) {
+				flag = "error";
+				appendValidationMsg("AV Name is invalid");
 			}
-		}*/
+			if ((modules.modules == undefined) || (modules.modules.length == 0)) {
+				flag = "error";
+				appendValidationMsg("Add GC100 Modules");
+			}
+			else {
+				if ((irs[ir].module == undefined) || (irs[ir].module == "")) {
+					flag = "error";
+					appendValidationMsg("Select a GC100 Module");
+				}
+			}
+		}
 		return flag;
 	}
 	public function getForm():String {

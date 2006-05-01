@@ -11,15 +11,19 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var ir in irs) {
-			if ((irs[ir].attributes["KEY"] == undefined) || (irs[ir].attributes["KEY"] == "")) {
+			if ((irs[ir].key == undefined) || (irs[ir].key == "")) {
 				flag = "error";
+				appendValidationMsg("Key is invalid");
 			}
-			if ((irs[ir].attributes["NAME"] == undefined) || (irs[ir].attributes["NAME"] == "")) {
+			if ((irs[ir].name == undefined) || (irs[ir].name == "")) {
 				flag = "error";
+				appendValidationMsg("Description is invalid");
 			}
-			if ((irs[ir].attributes["AV_NAME"] == undefined) || (irs[ir].attributes["AV_NAME"] == "")) {
+			if ((irs[ir].avname == undefined) || (irs[ir].avname == "")) {
 				flag = "error";
+				appendValidationMsg("AV Name is invalid");
 			}
 		}
 		return flag;

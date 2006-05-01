@@ -19,20 +19,45 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
-		/*for (var toggle in toggles) {
-			if ((toggles[toggle].attributes["ACTIVE"] != "Y") && (toggles[toggle].attributes["ACTIVE"] != "N")) {
-				flag = false;
+		clearValidationMsg();
+		for (var toggle in toggles) {
+			if ((toggles[toggle].active != "Y") && (toggles[toggle].active != "N")) {
+				flag = "error";
+				appendValidationMsg("Active is invalid");
 			}
-			if ((toggles[toggle].attributes["KEY"] == undefined) || (toggles[toggle].attributes["KEY"] == "")) {
-				flag = false;
+			else {
+				if (toggles[toggle].active =="Y"){
+					if ((toggles[toggle].key == undefined) || (toggles[toggle].key == "")) {
+						flag = "error";
+						appendValidationMsg("Input/Output no. is invalid");
+					}
+					if ((toggles[toggle].name == undefined) || (toggles[toggle].name == "")) {
+						flag = "error";
+						appendValidationMsg("Description is invalid");
+					}
+					if ((toggles[toggle].display_name == undefined) || (toggles[toggle].display_name == "")) {
+						flag = "error";
+						appendValidationMsg("Key is invalid");
+					}
+					else {
+						if (_global.isKeyUsed(toggles[toggle].display_name) == false) {
+							flag = "error";
+							appendValidationMsg(toggles[toggle].display_name+" key is not used");
+						}
+					}
+					if ((toggles[toggle].module == undefined) || (toggles[toggle].module == "")) {
+						flag = "error";
+						appendValidationMsg("Module No. is invalid");
+					}
+				}
+				else {
+					if (toggles[toggle].active =="N"){
+						flag = "empty";
+						appendValidationMsg("GC100 Toggles is not active");
+					}
+				}
 			}
-			if ((toggles[toggle].attributes["NAME"] == undefined) || (toggles[toggle].attributes["NAME"] == "")) {
-				flag = false;
-			}
-			if ((toggles[toggle].attributes["DISPLAY_NAME"] == undefined) || (toggles[toggle].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
-			}
-		}*/
+		}
 		return flag;
 	}
 	public function getForm():String {

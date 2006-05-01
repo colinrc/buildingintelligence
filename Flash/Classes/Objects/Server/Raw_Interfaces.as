@@ -12,11 +12,59 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
-		/*for (var raw_interface in raw_interfaces) {
-		if (!raw_interfaces[raw_interface].isValid()) {
-		flag = false;
+		clearValidationMsg();
+		for (var raw_interface in raw_interfaces) {
+			if ((raw_interfaces[raw_interface].extra2 == undefined) || (raw_interfaces[raw_interface].extra2 == "")) {
+				flag = "empty";
+				appendValidationMsg("Extra2 is invalid");
+			}
+			if ((raw_interfaces[raw_interface].extra3 == undefined) || (raw_interfaces[raw_interface].extra3 == "")) {
+				flag = "empty";
+				appendValidationMsg("Extra2 is invalid");
+			}
+			if ((raw_interfaces[raw_interface].extra4 == undefined) || (raw_interfaces[raw_interface].extra4 == "")) {
+				flag = "empty";
+				appendValidationMsg("Extra2 is invalid");
+			}
+			if ((raw_interfaces[raw_interface].extra5 == undefined) || (raw_interfaces[raw_interface].extra5 == "")) {
+				flag = "empty";
+				appendValidationMsg("Extra2 is invalid");
+			}
+			if ((raw_interfaces[raw_interface].display_name == undefined) || (raw_interfaces[raw_interface].display_name == "")) {
+				flag = "error";
+				appendValidationMsg("Key is invalid");
+			}else {
+				if (_global.isKeyUsed(raw_interfaces[raw_interface].display_name) == false) {
+					flag = "error";
+					appendValidationMsg(raw_interfaces[raw_interface].display_name+" key is not being used");
+				}
+			}
+			if ((raw_interfaces[raw_interface].name == undefined) || (raw_interfaces[raw_interface].name == "")) {
+				flag = "error";
+				appendValidationMsg("Description is invalid");
+			}
+			if ((raw_interfaces[raw_interface].key == undefined) || (raw_interfaces[raw_interface].key == "")) {
+				flag = "error";
+				appendValidationMsg("Group Addr. is invalid");
+			}
+			if ((raw_interfaces[raw_interface].code == undefined) || (raw_interfaces[raw_interface].code == "")) {
+				flag = "error";
+				appendValidationMsg("Code is invalid");
+			}
+			if ((raw_interfaces[raw_interface].catalog == undefined) || (raw_interfaces[raw_interface].catalog == "")) {
+				flag = "error";
+				appendValidationMsg("Catalog is invalid");
+			}
+			if ((raw_interfaces[raw_interface].command == undefined) || (raw_interfaces[raw_interface].command == "")) {
+				flag = "error";
+				appendValidationMsg("Command is invalid");
+			}
+			if ((raw_interfaces[raw_interface].extra == undefined) || (raw_interfaces[raw_interface].extra == "")) {
+				flag = "error";
+				appendValidationMsg("Extra is invalid");
+			}
+			
 		}
-		}*/
 		return flag;
 	}
 	public function getForm():String {

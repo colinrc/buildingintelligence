@@ -15,18 +15,35 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var toggle in toggles) {
-			if ((toggles[toggle].attributes["ACTIVE"] != "Y") && (toggles[toggle].attributes["ACTIVE"] != "N")) {
+			if ((toggles[toggle].active != "Y") && (toggles[toggle].active != "N")) {
 				flag = "error";
+				appendValidationMsg("Active flag is invalid");
 			}
-			if ((toggles[toggle].attributes["KEY"] == undefined) || (toggles[toggle].attributes["KEY"] == "")) {
-				flag = "error";
+			
+			if (toggles[toggle].active =="Y"){
+				if ((toggles[toggle].display_name == undefined) || (toggles[toggle].display_name == "")) {
+					flag = "error";
+					appendValidationMsg("Key is invalid");
+				}else {
+					if (_global.isKeyUsed(toggles[toggle].display_name) == false) {
+						flag = "error";
+						appendValidationMsg(toggles[toggle].display_name+" key is not being used");
+					}
+				}
+				if ((toggles[toggle].name == undefined) || (toggles[toggle].name == "")) {
+					flag = "error";
+					appendValidationMsg("Description is invalid");
+				}
+				if ((toggles[toggle].key == undefined) || (toggles[toggle].key == "")) {
+					flag = "error";
+					appendValidationMsg("Input/Output No. is invalid");
+				}
 			}
-			if ((toggles[toggle].attributes["NAME"] == undefined) || (toggles[toggle].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((toggles[toggle].attributes["DISPLAY_NAME"] == undefined) || (toggles[toggle].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
+			else{
+				flag = "empty";
+				appendValidationMsg("Toggles is not Active");
 			}
 		}
 		return flag;

@@ -10,11 +10,11 @@
 		clearValidationMsg();
 		for (var item in items) {
 			
-			if ((items[item].code == undefined) || (items[item].code == "")) {
+			if ((items[item].attributes["CODE"] == undefined) || (items[item].attributes["CODE"] == "")) {
 				flag = "error";
 				appendValidationMsg("Code is invalid");
 			}
-			if ((items[item].value == undefined) || (items[item].value == "")) {
+			if ((items[item].attributes["VALUE"] == undefined) || (items[item].attributes["VALUE"] == "")) {
 				flag = "error";
 				appendValidationMsg("Value is invalid");
 			}

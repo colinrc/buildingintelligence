@@ -3,11 +3,21 @@
 	private var treeNode:XMLNode;	
 	public function isValid():String {
 		var flag = "ok";
-		/*for (var module in modules) {
-			if (!modules[module].isValid()) {
-				flag = false;
+		clearValidationMsg();
+		for (var module in modules) {
+			if ((modules[module].name == undefined) || (modules[module].name == "")) {
+				flag = "error";
+				appendValidationMsg("Name is invalid");
 			}
-		}*/
+			if ((modules[module].type == undefined) || (modules[module].type == "")) {
+				flag = "error";
+				appendValidationMsg("Type is invalid");
+			}
+			if ((modules[module].number == undefined) || (modules[module].number == "")) {
+				flag = "error";
+				appendValidationMsg("Number is invalid");
+			}
+		}
 		return flag;
 	}
 	public function getForm():String {

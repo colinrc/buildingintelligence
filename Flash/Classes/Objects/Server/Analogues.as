@@ -13,34 +13,22 @@
 		var flag = "ok";
 		clearValidationMsg();
 		for (var analogue in analogues) {
-			if ((analogues[analogue].attributes["ACTIVE"] != "Y") && (analogues[analogue].attributes["ACTIVE"] != "N")) {
-				flag = "error";
-			}
-			if ((analogues[analogue].attributes["KEY"] == undefined) || (analogues[analogue].attributes["KEY"] == "")) {
-				flag = "error";
-			}
-			if ((analogues[analogue].attributes["NAME"] == undefined) || (analogues[analogue].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((analogues[analogue].attributes["DISPLAY_NAME"] == undefined) || (analogues[analogue].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
-			}
 			if ((analogues[analogue].active != "Y") && (analogues[analogue].active != "N")) {
 				flag = "error";
 				appendValidationMsg("Active flag is invalid");
 			}
-			if ((analogues[analogue].key == undefined) || (analogues[analogue].key == "")) {
+			if ((analogues[analogue].display_name == undefined) || (analogues[analogue].display_name == "")) {
 				flag = "error";
 				appendValidationMsg("Key is invalid");
 			} else {
-				if (_global.isKeyUsed(analogues[analogue].key) == false) {
+				if (_global.isKeyUsed(analogues[analogue].display_name) == false) {
 					flag = "error";
-					appendValidationMsg(analogues[analogue].key+" key is not being used");
+					appendValidationMsg(analogues[analogue].display_name+" key is not being used");
 				}
 			}
-			if ((analogues[analogue].display_name == undefined) || (analogues[analogue].display_name == "")) {
+			if ((analogues[analogue].key == undefined) || (analogues[analogue].key == "")) {
 				flag = "error";
-				appendValidationMsg("Display Name is invalid");
+				appendValidationMsg("Input no. is invalid");
 			}
 			if ((analogues[analogue].name == undefined) || (analogues[analogue].name == "")) {
 				flag = "error";

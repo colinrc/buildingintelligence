@@ -292,13 +292,10 @@
 			 </font>
 			</description>
 		</item>
-		<item label="Add Audio/Video Inputs" key="AudioVideo" order="29">
+		<item label="Add Audio/Video Inputs" key="AudioZones" order="29">
 			<description>
 		 	 <font size="10">
-		 		<p><b>Step1 - Add HAL Inputs</b></p>
-				<p>Add HAL Audio/Video Inputs.</p>
-				<p><b>Step2 - Configure HAL Inputs</b></p>
-				<p>Configure HAL Inputs with Code and Value.</p>
+		 		<p><b>Add Key & Audio Zone</b></p>
 			 </font>
 			</description>
 		</item>
@@ -324,7 +321,14 @@
 			 </font>
 			</description>
 		</item>
-		<item label="Configure Oregon" key="Oregon" order="32">
+		<item label="Add Audio/Video Inputs" key="AVZones" order="32">
+			<description>
+		 	 <font size="10">
+		 		<p><b>Add Key & AV Zone</b></p>
+			</font>
+			</description>
+		</item>
+		<item label="Configure Oregon" key="Oregon" order="33">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Add Oregon Device</b></p>
@@ -336,7 +340,7 @@
 			 </font>
 			</description>
 		</item>
-		<item label="Add Oregon Sensors" key="OregonSensors" order="33">
+		<item label="Add Oregon Sensors" key="OregonSensors" order="34">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Add Oregon Sensors</b></p>
@@ -346,7 +350,7 @@
 			 </font>
 			</description>
 		</item>
-		<item label="Configure Pelco" key="Pelco" order="34">
+		<item label="Configure Pelco" key="Pelco" order="35">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Add Pelco Device</b></p>
@@ -358,7 +362,7 @@
 			 </font>
 			</description>
 		</item>
-		<item label="Add Pelco Cameras" key="Cameras" order="35">
+		<item label="Add Pelco Cameras" key="Cameras" order="36">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Add Pelco Cameras</b></p>
@@ -368,7 +372,7 @@
 			 </font>
 			</description>
 		</item>
-		<item label="Configure RAW Connection" key="Raw_Connection" order="36">
+		<item label="Configure RAW Connection" key="Raw_Connection" order="37">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Add RAW Device</b></p>
@@ -380,7 +384,7 @@
 			 </font>
 			</description>
 		</item>
-		<item label="Configure Catalogue" key="Catalogue" order="37">
+		<item label="Configure Catalogue" key="Catalogue" order="38">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Add Catalogue</b></p>
@@ -388,7 +392,7 @@
 			 </font>
 			</description>
 		</item>
-		<item label="Configure Catalogues" key="Catalogues" order="38">
+		<item label="Configure Catalogues" key="Catalogues" order="39">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Configure Catalogues</b></p>
@@ -398,7 +402,7 @@
 			 </font>
 			</description>
 		</item>
-		<item label="RAW Inputs" key="Customs" order="39">
+		<item label="RAW Inputs" key="Customs" order="40">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Add RAW Inputs</b></p>
@@ -408,7 +412,7 @@
 			 </font>
 			</description>
 		</item>
-		<item label="RAW Outputs" key="Raw_interfaces" order="40">
+		<item label="RAW Outputs" key="Raw_interfaces" order="41">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Add RAW Outputs</b></p>
@@ -418,7 +422,7 @@
 			 </font>
 			</description>
 		</item>
-		<item label="Configure Tutondo" key="Tutondo" order="41">
+		<item label="Configure Tutondo" key="Tutondo" order="42">
 			<description>
 		 	 <font size="10">
 		 		<p><b>Step1 - Add Tutondo Device</b></p>

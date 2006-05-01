@@ -11,21 +11,43 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var sensor in sensors) {
-			if ((sensors[sensor].attributes["ACTIVE"] != "Y") && (sensors[sensor].attributes["ACTIVE"] != "N")) {
+			if ((sensors[sensor].active != "Y") && (sensors[sensor].active != "N")) {
 				flag = "error";
+				appendValidationMsg("Active is invalid");
 			}
-			if ((sensors[sensor].attributes["KEY"] == undefined) || (sensors[sensor].attributes["KEY"] == "")) {
-				flag = "error";
-			}
-			if ((sensors[sensor].attributes["CHANNEL"] == undefined) || (sensors[sensor].attributes["CHANNEL"] == "")) {
-				flag = "error";
-			}
-			if ((sensors[sensor].attributes["NAME"] == undefined) || (sensors[sensor].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((sensors[sensor].attributes["DISPLAY_NAME"] == undefined) || (sensors[sensor].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
+			else {
+				if (sensors[sensor].active =="Y"){
+					if ((sensors[sensor].key == undefined) || (sensors[sensor].key == "")) {
+						flag = "error";
+						appendValidationMsg("Input/Output no. is invalid");
+					}
+					if ((sensors[sensor].name == undefined) || (sensors[sensor].name == "")) {
+						flag = "error";
+						appendValidationMsg("Description is invalid");
+					}
+					if ((sensors[sensor].display_name == undefined) || (sensors[sensor].display_name == "")) {
+						flag = "error";
+						appendValidationMsg("Key is invalid");
+					}
+					else {
+						if (_global.isKeyUsed(sensors[sensor].display_name) == false) {
+							flag = "error";
+							appendValidationMsg(sensors[sensor].display_name+" key is not used");
+						}
+					}
+					if ((sensors[sensor].channel == undefined) || (sensors[sensor].channel == "")) {
+						flag = "error";
+						appendValidationMsg("Channel is invalid");
+					}
+				}
+				else {
+					if (sensors[sensor].active =="N"){
+						flag = "empty";
+						appendValidationMsg("Oregon Sensors is not active");
+					}
+				}
 			}
 		}
 		return flag;

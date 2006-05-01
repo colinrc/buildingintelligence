@@ -11,18 +11,43 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var light in lights) {
-			if ((lights[light].attributes["ACTIVE"] != "Y") && (lights[light].attributes["ACTIVE"] != "N")) {
+			if ((lights[light].active != "Y") && (lights[light].active != "N")) {
 				flag = "error";
+				appendValidationMsg("Active flag is invalid");
 			}
-			if ((lights[light].attributes["KEY"] == undefined) || (lights[light].attributes["KEY"] == "")) {
-				flag = "error";
+			
+			if (lights[light].active =="Y"){
+				if ((lights[light].power == undefined) || (lights[light].power == "")) {
+					flag = "error";
+					appendValidationMsg("Power is invalid");
+				}
+				if ((lights[light].display_name == undefined) || (lights[light].display_name == "")) {
+					flag = "error";
+					appendValidationMsg("Key is invalid");
+				}else {
+					if (_global.isKeyUsed(lights[light].display_name) == false) {
+						flag = "error";
+						appendValidationMsg(lights[light].display_name+" key is not being used");
+					}
+				}
+				if ((lights[light].name == undefined) || (lights[light].name == "")) {
+					flag = "error";
+					appendValidationMsg("Description is invalid");
+				}
+				if ((lights[light].key == undefined) || (lights[light].key == "")) {
+					flag = "error";
+					appendValidationMsg("Unit No. is invalid");
+				}
+				if ((lights[light].x10 == undefined) || (lights[light].x10 == "")) {
+					flag = "error";
+					appendValidationMsg("X10 House code is invalid");
+				}
 			}
-			if ((lights[light].attributes["NAME"] == undefined) || (lights[light].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((lights[light].attributes["DISPLAY_NAME"] == undefined) || (lights[light].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
+			else{
+				flag = "empty";
+				appendValidationMsg("X10 Lights is not Active");
 			}
 		}
 		return flag;

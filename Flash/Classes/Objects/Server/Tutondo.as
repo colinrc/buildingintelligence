@@ -9,16 +9,83 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
-		if ((device_type == undefined) || (device_type == "")) {
-			flag = "error";
-		}
+		clearValidationMsg();
+				
 		if ((active != "Y") && (active != "N")) {
 			flag = "error";
+			appendValidationMsg("Active is invalid");
 		}
-		/*if (!catalogues.isValid()) {
-			flag = false;
-		}*/
-		//need to isValid connection and parameters 
+		else {
+			if (active =="Y"){
+				if ((description == undefined) || (description == "")) {
+					flag = "warning";
+					appendValidationMsg("Description is invalid");
+				}
+				if ((device_type == undefined) || (device_type == "")) {
+					flag = "error";
+					appendValidationMsg("Device Type is invalid");
+				}
+				
+				for (var param in parameters) {
+					if ((parameters[param].name == undefined) || (parameters[param].name == "")) {
+						flag = "error";
+						appendValidationMsg("Param Name is invalid");
+					}
+					if ((parameters[param].value == undefined) || (parameters[param].value == "")) {
+						flag = "error";
+						appendValidationMsg("Param Value is invalid");
+					}
+				}
+								
+				if (connection.firstChild.nodeName == "IP") {
+					if ((connection.firstChild.attributes["IP_ADDRESS"] == "") || (connection.firstChild.attributes["IP_ADDRESS"] ==undefined)) {
+						flag = "error";
+						appendValidationMsg("Connection Address is invalid");
+					}
+					if ((connection.firstChild.attributes["PORT"] == "") || (connection.firstChild.attributes["PORT"] ==undefined)) {
+						flag = "error";
+						appendValidationMsg("Connection Port is invalid");
+					}
+				}
+				else{
+					//FLOW="NONE" DATA_BITS="8" STOP_BITS="1" SUPPORTS_CD="N" PARITY="NONE" BAUD="9600" ACTIVE
+					if ((connection.firstChild.attributes["PORT"] == "") || (connection.firstChild.attributes["PORT"] ==undefined)) {
+						flag = "error";
+						appendValidationMsg("Connection Port is invalid");
+					}
+					if ((connection.firstChild.attributes["FLOW"] == "") || (connection.firstChild.attributes["FLOW"] ==undefined)) {
+						flag = "error";
+						appendValidationMsg("Connection Flow is invalid");
+					}
+					if ((connection.firstChild.attributes["DATA_BITS"] == "") || (connection.firstChild.attributes["DATA_BITS"] ==undefined)) {
+						flag = "error";
+						appendValidationMsg("Connection Data Bits is invalid");
+					}
+					if ((connection.firstChild.attributes["STOP_BITS"] == "") || (connection.firstChild.attributes["STOP_BITS"] ==undefined)) {
+						flag = "error";
+						appendValidationMsg("Connection Stop Bits is invalid");
+					}
+					if ((connection.firstChild.attributes["SUPPORTS_CD"] == "") || (connection.firstChild.attributes["SUPPORTS_CD"] ==undefined)) {
+						flag = "error";
+						appendValidationMsg("Connection Supports CD is invalid");
+					}
+					if ((connection.firstChild.attributes["PARITY"] == "") || (connection.firstChild.attributes["PARITY"] ==undefined)) {
+						flag = "error";
+						appendValidationMsg("Connection Parity is invalid");
+					}
+					if ((connection.firstChild.attributes["BAUD"] == "") || (connection.firstChild.attributes["BAUD"] ==undefined)) {
+						flag = "error";
+						appendValidationMsg("Connection Baud is invalid");
+					}
+				}
+			}
+			else {
+				if (active =="N"){
+					flag = "empty";
+					appendValidationMsg("Tutondo is not active");
+				}
+			}
+		}
 		return flag;
 	}
 	public function toXML():XMLNode {

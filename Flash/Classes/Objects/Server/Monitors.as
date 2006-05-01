@@ -11,18 +11,39 @@
 	}
 	public function isValid():String {
 		var flag = "ok";
+		clearValidationMsg();
 		for (var monitor in monitors) {
-			if ((monitors[monitor].attributes["ACTIVE"] != "Y") && (monitors[monitor].attributes["ACTIVE"] != "N")) {
+			if ((monitors[monitor].active != "Y") && (monitors[monitor].active != "N")) {
 				flag = "error";
+				appendValidationMsg("Active is invalid");
 			}
-			if ((monitors[monitor].attributes["KEY"] == undefined) || (monitors[monitor].attributes["KEY"] == "")) {
-				flag = "error";
-			}
-			if ((monitors[monitor].attributes["NAME"] == undefined) || (monitors[monitor].attributes["NAME"] == "")) {
-				flag = "error";
-			}
-			if ((monitors[monitor].attributes["DISPLAY_NAME"] == undefined) || (monitors[monitor].attributes["DISPLAY_NAME"] == "")) {
-				flag = "error";
+			else {
+				if (monitors[monitor].active =="Y"){
+					if ((monitors[monitor].key == undefined) || (monitors[monitor].key == "")) {
+						flag = "error";
+						appendValidationMsg("Output no. is invalid");
+					}
+					if ((monitors[monitor].name == undefined) || (monitors[monitor].name == "")) {
+						flag = "error";
+						appendValidationMsg("Description is invalid");
+					}
+					if ((monitors[monitor].display_name == undefined) || (monitors[monitor].display_name == "")) {
+						flag = "error";
+						appendValidationMsg("Key is invalid");
+					}
+					else {
+						if (_global.isKeyUsed(monitors[monitor].display_name) == false) {
+							flag = "error";
+							appendValidationMsg(monitors[monitor].display_name+" key is not used");
+						}
+					}
+				}
+				else {
+					if (monitors[monitor].active =="N"){
+						flag = "empty";
+						appendValidationMsg("Monitors is not active");
+					}
+				}
 			}
 		}
 		return flag;

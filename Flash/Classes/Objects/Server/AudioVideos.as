@@ -13,19 +13,32 @@
 		var flag = "ok";
 		clearValidationMsg();
 		for (var audiovideo in audiovideos) {
-			
-			if ((audiovideos[audiovideo].key == undefined) || (audiovideos[audiovideo].key == "")) {
+			if ((audiovideos[audiovideo].active != "Y") && (audiovideos[audiovideo].active != "N")) {
 				flag = "error";
-				appendValidationMsg("Key is invalid");
-			} else {
-				if (_global.isKeyUsed(audiovideos[audiovideo].key) == false) {
-					flag = "error";
-					appendValidationMsg(audiovideos[audiovideo].key+" key is not being used");
-				}
+				appendValidationMsg("Active is invalid");
 			}
-			if ((audiovideos[audiovideo].display_name == undefined) || (audiovideos[audiovideo].display_name == "")) {
-				flag = "error";
-				appendValidationMsg("Display Name is invalid");
+			else {
+				if (audiovideos[audiovideo].active =="Y"){
+					if ((audiovideos[audiovideo].display_name == undefined) || (audiovideos[audiovideo].display_name == "")) {
+						flag = "error";
+						appendValidationMsg("Key is invalid");
+					} else {
+						if (_global.isKeyUsed(audiovideos[audiovideo].display_name) == false) {
+							flag = "error";
+							appendValidationMsg(audiovideos[audiovideo].display_name+" key is not being used");
+						}
+					}
+					if ((audiovideos[audiovideo].key == undefined) || (audiovideos[audiovideo].key == "")) {
+						flag = "error";
+						appendValidationMsg("Audio/AV Zone is invalid");
+					}
+				}
+				else {
+					if (audiovideos[audiovideo].active =="N"){
+						flag = "empty";
+						appendValidationMsg("Audio/AV Zone is not active");
+					}
+				}
 			}
 		}
 		return flag;
@@ -80,7 +93,17 @@
 		return newNode;
 	}
 	public function getKey():String {
-		return "AudioVideos";
+		var itemType:String;
+		switch (container) {
+		case "HAL" :
+		case "TUTONDO" :
+			itemType = "AudioZones";
+			break;
+		case "KRAMER" :
+			itemType = "AVZones";
+			break;
+		}
+		return itemType;
 	}
 	public function getData():Object {
 		return {audiovideos:audiovideos, container:container, dataObject:this};

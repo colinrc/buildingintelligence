@@ -2,18 +2,34 @@
 	private var settings:XMLNode;
 	private var treeNode:XMLNode;	
 	public function isValid():Boolean {
-		var flag = true;
-		/*for (var child in settings.childNodes) {
-			if ((settings.childNodes[child].attributes["NAME"] == undefined) || (settings.childNodes[child].attributes["NAME"] == "")) {
-				flag = false;
+		var flag = "ok";
+		clearValidationMsg();
+		for (var child in settings.childNodes) {
+			if ((settings.childNodes[child].active != "Y") && (settings.childNodes[child].active != "N")) {
+				flag = "error";
+				appendValidationMsg("Active flag is invalid");
 			}
-			if ((settings.childNodes[child].attributes["DISPLAY_NAME"] == undefined) || (settings.childNodes[child].attributes["DISPLAY_NAME"] == "")) {
-				flag = false;
+			
+			if (settings.childNodes[child].active =="Y"){
+				if ((settings.childNodes[child].display_name == undefined) || (settings.childNodes[child].display_name == "")) {
+					flag = "error";
+					appendValidationMsg("Key is invalid");
+				}else {
+					if (_global.isKeyUsed(settings.childNodes[child].display_name) == false) {
+						flag = "error";
+						appendValidationMsg(settings.childNodes[child].display_name+" key is not being used");
+					}
+				}
+				if ((settings.childNodes[child].name == undefined) || (settings.childNodes[child].name == "")) {
+					flag = "error";
+					appendValidationMsg("Description is invalid");
+				}
 			}
-			if ((settings.childNodes[child].attributes["ACTIVE"] != "Y") && (settings.childNodes[child].attributes["ACTIVE"] != "N")) {
-				flag = false;
+			else{
+				flag = "empty";
+				appendValidationMsg("Settings is not Active");
 			}
-		}*/
+		}
 		return flag;
 	}
 	public function getForm():String {
