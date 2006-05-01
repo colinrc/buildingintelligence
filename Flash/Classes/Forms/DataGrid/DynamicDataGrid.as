@@ -155,6 +155,21 @@ class Forms.DataGrid.DynamicDataGrid {
 		columns[name].column.cellRenderer = "ComboBoxCellRenderer";
 		columns[name].column.sortable = false;
 	}
+	public function addEditableComboBoxColumn(name:String, heading:String, DP:Array, advanced:Boolean, width:Number) {
+		columnCount++;
+		columns[name] = new Object();
+		columns[name].type = "combo";
+		columns[name].DP = DP;
+		columns[name].heading = heading;
+		columns[name].advanced = advanced;
+		columns[name].colNo = columnCount - 1;
+		columns[name].width = width;
+		columns[name].column = new DataGridColumn(name);
+		columns[name].column.headerText = heading;
+		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
+		columns[name].column.cellRenderer = "EditableComboBoxCellRenderer";
+		columns[name].column.sortable = false;
+	}
 	public function addIconComboBoxColumn(name:String, heading:String, DP:Array, advanced:Boolean, width:Number) {
 		columnCount++;
 		columns[name] = new Object();

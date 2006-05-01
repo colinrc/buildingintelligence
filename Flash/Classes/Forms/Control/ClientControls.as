@@ -30,6 +30,9 @@ class Forms.Control.ClientControls extends Forms.BaseForm {
 		password_ti.password = true;
 		ipAddress_ti.restrict = "0-9.";
 		ipAddress_ti.maxChars = 15;
+		password_ti.text = password;
+		ipAddress_ti.text = ipAddress;
+		userName_ti.text = userName;
 		sftpStatus = undefined;
 		monitorStatus = undefined;		
 		name_ti.text = dataObject.description;
@@ -40,10 +43,7 @@ class Forms.Control.ClientControls extends Forms.BaseForm {
 			design_cmb.text = dataObject.clientDesign.description;
 		} else{
 			dataObject.setDetails(new Object({ipAddress:ipAddress_ti.text,userName:userName_ti.text,password:password_ti.text,description:name_ti.text,clientDesign:design_cmb.text}));
-		}
-		password_ti.text = password;
-		ipAddress_ti.text = ipAddress;
-		userName_ti.text = userName;		
+		}	
 		var listenerObject:Object = new Object();
 		listenerObject.change = function(eventObject:Object) {
 	    	dataObject.setDetails(new Object({ipAddress:ipAddress_ti.text,userName:userName_ti.text,password:password_ti.text,description:name_ti.text,clientDesign:design_cmb.text}));

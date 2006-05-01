@@ -72,8 +72,8 @@
 		}
 		return serverNode;
 	}
-	public function getMacros():XMLNode{
-		return macros.toXML();
+	public function getMacros():Array{
+		return macros.getMacros();
 	}
 	public function toProject():XMLNode {
 		var serverNode = new XMLNode(1, "CONFIG");

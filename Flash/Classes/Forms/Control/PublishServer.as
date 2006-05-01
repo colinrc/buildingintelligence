@@ -67,8 +67,21 @@ class Forms.Control.PublishServer extends Forms.BaseForm {
 					break;
 				case "Macros":
 					sftpConnection.setLocalPath("/datafiles");
-					sftpConnection.setRemotePath("/server/datafiles");
-					sftpConnection.putItem("macros.xml");
+					sftpConnection.setRemotePath("/server/datafiles");				
+					var tempMacros = new XMLNode(1,"MACROS");
+					tempMacros.attributes.COMPLETE = "Y";
+					var tempIntegratorMacros = new XMLNode(1,"MACROS");
+					tempIntegratorMacros.attributes.COMPLETE = "Y";					
+					var macros = _global.serverDesign.getMacros();
+					for(var macro = 0; macro<macros.length; macro++){
+						if(macros[macro].integrator){
+							tempIntegratorMacros.appendChild(macros[macro].publish());
+						} else{
+							tempMacros.appendChild(macros[macro].publish());
+						}
+					}
+					sftpConnection.putData(_global.writeXMLFile(tempMacros, 0),"macros.xml");
+					sftpConnection.putData(_global.writeXMLFile(tempIntegratorMacros, 0),"integrator_macros.xml");
 					break;
 				case "Calendar":
 					sftpConnection.setLocalPath("/datafiles");				

@@ -20,6 +20,9 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Macros");
 		newNode.object = this;
+		for(var macro = 0; macro < macros.length; macro++){
+			newNode.appendChild(macros[macro].toTree());
+		}
 		treeNode = newNode;
 		return newNode;
 	}
@@ -35,7 +38,6 @@
 		var newMacros = new Array();
 		for (var index in newData.macros) {
 			if (newData.macros[index].id == undefined) {
-				mdm.Dialogs.prompt(newData.macros[index].name);
 				newMacros.push({name:newData.macros[index].name});
 			}
 		}
@@ -63,13 +65,17 @@
 		}
 		_global.left_tree.setIsOpen(treeNode, true);
 	}
+	public function getMacros():Array{
+		return macros;
+	}
 	public function setXML(newData:XMLNode):Void {
 		macros = new Array();
 		if (newData.nodeName == "MACROS") {
-			for(var child = 0; child<newData.childNodes;child++){
+			for(var child = 0; child<newData.childNodes.length;child++){
 				var newMacro = new Objects.Server.Macro();
 				newMacro.setXML(newData.childNodes[child]);
 				newMacro.id = _global.formDepth++;
+				macros.push(newMacro);
 			}
 		} else {
 			//mdm.Dialogs.prompt("ERROR, found node "+newData.nodeName+", expecting MACROS");

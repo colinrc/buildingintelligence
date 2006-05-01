@@ -17,9 +17,86 @@
 		noDelete = false;
 		isSecure = false;
 		isHidden = false;
+		integrator = false;
 	}
 	public function getForm():String {
 		return "forms.project.macro";
+	}
+	public function publish():XMLNode {
+		var newMacro = new XMLNode(1, "CONTROL");
+		newMacro.attributes.KEY = "MACRO";
+		newMacro.attributes.COMMAND = "getList";
+		if(integrator){
+			newMacro.attributes.EXTRA = "_"+name;
+		} else{
+			newMacro.attributes.EXTRA = name;
+		}
+		newMacro.attributes.TYPE = "";
+		newMacro.attributes.RUNNING = "0";
+		var status = new Array();
+		if (noEdit) {
+			status.push("noEdit");
+		}
+		if (noDelete) {
+			status.push("noDelete");
+		}
+		if (isSecure) {
+			status.push("isSecure");
+		}
+		if (isHidden) {
+			status.push("isHidden");
+		}
+		newMacro.attributes.STATUS = status.join(",");
+		for (var step = 0; step < steps.length; step++) {
+			var newStep = new XMLNode(1, "CONTROL");
+			if (steps[step].key != undefined) {
+				newStep.attributes.KEY = steps[step].key;
+			} else {
+				newStep.attributes.KEY = "";
+			}
+			if (steps[step].command != undefined) {
+				newStep.attributes.COMMAND = steps[step].command;
+			} else {
+				newStep.attributes.COMMAND = "";
+			}
+			if (steps[step].extra != undefined) {
+				newStep.attributes.EXTRA = steps[step].extra;
+			} else {
+				newStep.attributes.EXTRA = "";
+			}
+			if (steps[step].extra2 != undefined) {
+				newStep.attributes.EXTRA2 = steps[step].extra2;
+			} else {
+				newStep.attributes.EXTRA2 = "";
+			}
+			if (steps[step].extra3 != undefined) {
+				newStep.attributes.EXTRA3 = steps[step].extra3;
+			} else {
+				newStep.attributes.EXTRA3 = "";
+			}
+			if (steps[step].extra4 != undefined) {
+				newStep.attributes.EXTRA4 = steps[step].extra4;
+			} else {
+				newStep.attributes.EXTRA4 = "";
+			}
+			if (steps[step].extra5 != undefined) {
+				newStep.attributes.EXTRA5 = steps[step].extra5;
+			} else {
+				newStep.attributes.EXTRA5 = "";
+			}
+			if (steps[step].target != undefined) {
+				newStep.attributes.TARGET = steps[step].target;
+			} else {
+				newStep.attributes.TARGET = "All";
+			}
+			if (steps[step].target_user != undefined) {
+				newStep.attributes.TARGET_USER = steps[step].target_user;
+			} else {
+				newStep.attributes.TARGET_USER = "";
+			}
+			newMacro.appendChild(newStep);
+		}
+		return newMacro;
 	}
 	public function toXML():XMLNode {
 		var newMacro = new XMLNode(1, "CONTROL");
@@ -28,6 +105,7 @@
 		newMacro.attributes.EXTRA = name;
 		newMacro.attributes.TYPE = "";
 		newMacro.attributes.RUNNING = "0";
+		newMacro.attributes.integrator = integrator;
 		var status = new Array();
 		if (noEdit) {
 			status.push("noEdit");
@@ -106,7 +184,7 @@
 		return "Macro";
 	}
 	public function getData():Object {
-		return {steps:steps, name:name, noEdit:noEdit, noDelete:noDelete, isSecure:isSecure, isHidden:isHidden, dataObject:this};
+		return {steps:steps, name:name, noEdit:noEdit, noDelete:noDelete, isSecure:isSecure, isHidden:isHidden, integrator:integrator, dataObject:this};
 	}
 	public function setData(newData:Object):Void {
 		steps = newData.steps;
@@ -115,6 +193,7 @@
 		noDelete = newData.noDelete;
 		isSecure = newData.isSecure;
 		isHidden = newData.isHidden;
+		integrator = newData.integrator;
 	}
 	public function setXML(newData:XMLNode):Void {
 		steps = new Array();
@@ -122,6 +201,7 @@
 		noDelete = false;
 		isSecure = false;
 		isHidden = false;
+		integrator = false;
 		if (newData.nodeName == "CONTROL") {
 			name = newData.attributes.EXTRA;
 			var tempStatus = newData.attributes.STATUS.split(",");
@@ -141,7 +221,10 @@
 					break;
 				}
 			}
-			for (var child = 0; child < newData.childNodes; child++) {
+			if(newData.attributes.integrator == "true"){
+				integrator = true;
+			}
+			for (var child = 0; child < newData.childNodes.length; child++) {
 				var newStep = new Object();
 				if (newData.childNodes[child].attributes.KEY != undefined) {
 					newStep.key = newData.childNodes[child].attributes.KEY;
@@ -188,6 +271,7 @@
 				} else {
 					newStep.target_user = "";
 				}
+				steps.push(newStep);
 			}
 		} else {
 			trace("ERROR, found node " + newData.nodeName + ", expecting CONTROL");
