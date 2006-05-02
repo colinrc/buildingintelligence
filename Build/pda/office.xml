@@ -7,7 +7,6 @@
 			<setting name="windowCornerRadius" value="0" />
 			<setting name="windowBorderWidth" value="0" />
 
-			<setting name="globalBtnClickTimer" value="0" />
 			<setting name="screenLockTimeout" value="0" />
 		</common>
 	</settings>

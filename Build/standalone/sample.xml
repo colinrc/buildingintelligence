@@ -2,20 +2,22 @@
 	<settings>
 		<common>	
 			<setting name="screenLockDisplay" value="logo" />
-			<setting name="screenLockPhotoPath" value="\\172.16.3.200\bi\client-core\lib\photos\" />
+
+			<setting name="screenLockPhotoPath" value="\\172.16.3.201\data01_d\BI\eLife Client\Build\standalone\lib\icons\" />
 			<setting name="screenLockPhotoScale" value="noscale" />
 			<setting name="screenLockPhotoRotate" value="5" />
 
-			<setting name="showDropShadows" value="true" />
+			<setting name="screenLockLogoBgPath" value="screensaver/bg-blue.jpg" />
+			<setting name="screenLockTimeout" value="300"/>
 
 			<setting name="showDropShadows" value="true" />
 
 			<setting name="integratorHtml" value="about:blank" />
-			<setting name="tabPosition" value="top" />
 		</common>
 	</settings>
 	<sounds>
 		<sound name="ding" file="sounds/ding.mp3" volume="40" />
+		<sound name="alarm" file="sounds/CTU24.mp3" volume="40" />
 	</sounds>
 	<statusBar>
 		<group name="Lights" icon="light-bulb" windowWidth="300" windowHeight="450" windowBgOpacity="60" windowBgColour1="0xFFCC00" windowBgColour2="0x990000" windowCornerRadius="30" windowBorderColour="0xCC0000" windowBorderWidth="2" windowShadowOffset="10" show="on" hide="off">
@@ -81,20 +83,28 @@
 		<group name="Test" icon="gears" type="web" url="http://www.sparkos.com/" />
 	</logging>
 	<appsBar>
+		<icon name="Reload" icon="refresh" func="init" canOpen="" />
 		<icon name="Web" icon="atom" func="openBrowser" canOpen="" />
 		<icon name="Logs" icon="notepad" func="openLogs" canOpen="" />
 		<icon name="Calendar" icon="calendar" func="openCalendar" canOpen="" />
 		<icon name="Control Panel" icon="gears" func="openControlPanel" canOpen="superuser" />
 		<icon name="Authenticate" icon="locked" func="openAuthentication" buttonBgColour="0xCC0000" buttonBorderColour="0xEE0000" />
 	</appsBar>
-	<calendar>
-		<tab label="Today" view="today" icon="calendar" />
-		<tab label="Watering" view="filtered" macro="watering" icon="sprinkler">
-			<zone key="WATER_FRONT_LAWN" label="Front lawn" />
-			<zone key="WATER_BACK_LAWN" label="Back lawn" />
-			<zone key="WATER_BACK_GARDEN" label="Back garden" />
-		</tab>
-		<tab label="Macros" view="macros" macro="*" icon="atom" />
+	<calendar tabPosition="bottom">
+		<categories>
+			<category name="Birthday" icon="light-bulb" />
+			<category name="Appointment" icon="videocamera" />
+			<category name="Reminder" icon="fireplace" />
+		</categories>
+		<window>
+			<tab label="Today" view="today" icon="calendar" />
+			<tab label="Watering" view="filtered" macro="watering" icon="sprinkler">
+				<zone key="WATER_FRONT_LAWN" label="Front lawn" />
+				<zone key="WATER_BACK_LAWN" label="Back lawn" />
+				<zone key="WATER_BACK_GARDEN" label="Back garden" />
+			</tab>
+			<tab label="Macros" view="macros" macro="*" icon="atom" />
+		</window>
 	</calendar>
 	<controlPanelApps>
 		<app label="Calculator" program="calc.exe" />
@@ -107,6 +117,7 @@
 				<room name="Ensuite" poly="443,219,443,296,579,296,579,153,477,153,477,219">
 					<window tabPosition="bottom" tabHeight="90" tabOnColour="0xFFCC00" tabBgOpacity="20" windowWidth="300" windowHeight="450" windowBgOpacity="60" windowBgColour1="0xFFCC00" windowBgColour2="0x990000" windowCornerRadius="30" windowBorderColour="0xCC0000" windowBorderWidth="2" windowShadowOffset="10">
 						<tab name="Lights &amp; Fan" icon="light-bulb">
+							<control name="Ground Floor Lights" key="ENSUITE_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
 							<control name="Main Light" key="ENSUITE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
 							<control name="LV Light" key="ENSUITE_LV_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
 							<control name="Fan" key="ENSUITE_FAN" type="onOff" icons="fan-off,fan" />
@@ -135,9 +146,12 @@
 					</alerts>
 				</room>
 				<room name="Entry" poly="165,298,328,298,328,343,396,343,396,286,377,286,377,201,310,201,310,240,214,240,214,201,165,201">
-					<window>
+					<window windowHeight="475">
 						<tab name="Lights" icon="light-bulb">
 							<control name="Entry Light" key="ENTRY_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Front Gate" icon="videocamera">
+							<control name="Front Gate Video" type="frontGateVideo" />
 						</tab>
 					</window>
 					<alerts>
@@ -243,12 +257,12 @@
 			</rooms>
 			<arbitrary>
 				<item type="label" x="650" y="5" label="Test Buttons:" fontSize="14" fontColour="0xFFFFFF" />
-				<item type="button" x="650" y="35" width="150" fontSize="12" labels="Garage open,Garage closed" commands="on,off" key="GARAGE_DOOR" />
-				<item type="button" x="650" y="70" width="150" fontSize="12" labels="Internal open,Internal closed" commands="on,off" key="GARAGE_INTERAL_DOOR" />
-				<item type="button" x="650" y="105" width="150" fontSize="12" labels="Entry open,Entry closed" commands="on,off" key="FRONT_DOOR" />
-				<item type="button" x="650" y="140" width="150" fontSize="12" labels="Back open,Back closed" commands="on,off" key="BACK_DOOR" />
-				<item type="button" x="650" y="175" width="150" fontSize="12" labels="Window open,Window closed" commands="on,off" key="LIVING_WINDOW" />
-				<item type="button" x="650" y="210" width="150" fontSize="12" labels="Car in,Car out" commands="on,off" key="GARAGE_CAR_1" />
+				<item type="button" x="650" y="35" width="150" buttonFontSize="12" labels="Garage open,Garage closed" command="state" extras="on,off" key="GARAGE_DOOR" />
+				<item type="button" x="650" y="70" width="150" buttonFontSize="12" labels="Internal open,Internal closed" command="state" extras="on,off" key="GARAGE_INTERAL_DOOR" />
+				<item type="button" x="650" y="105" width="150" buttonFontSize="12" labels="Entry open,Entry closed" command="state" extras="on,off" key="FRONT_DOOR" />
+				<item type="button" x="650" y="140" width="150" buttonFontSize="12" labels="Back open,Back closed" command="state" extras="on,off" key="BACK_DOOR" />
+				<item type="button" x="650" y="175" width="150" buttonFontSize="12" labels="Window open,Window closed" command="state" extras="on,off" key="LIVING_WINDOW" />
+				<item type="button" x="650" y="210" width="150" buttonFontSize="12" labels="Car in,Car out" command="state" extras="on,off" key="GARAGE_CAR_1" />
 				<item type="object" src="car.swf" x="415" y="345" width="205" height="75" key="GARAGE_CAR_1" show="on" hide="off" />
 				<item type="object" src="car.swf" x="415" y="435" width="205" height="75" key="GARAGE_CAR_2" show="on" hide="off" />
 			</arbitrary>
@@ -349,15 +363,15 @@
 			</rooms>
 			<arbitrary>
 				<item type="label" x="650" y="5" label="Test Buttons:" fontSize="14" fontColour="0xFFFFFF" />
-				<item type="button" x="650" y="35" width="150" fontSize="12" labels="Light 1 on,Light 1 off" commands="off,on" key="LIVING_LIGHT1" bgColour="0xCC0000" borderColour="0xEE0000" fontColour="0xFFFFFF" />
-				<item type="button" x="650" y="70" width="150" fontSize="12" labels="Light 2 on,Light 2 off" commands="off,on" key="LIVING_LIGHT2" />
-				<item type="button" x="650" y="105" width="150" fontSize="12" labels="Light 3 on,Light 3 off" commands="off,on" key="LIVING_LIGHT3" />
-				<item type="button" x="650" y="140" width="150" fontSize="12" labels="Light 4 on,Light 4 off" commands="off,on" key="LIVING_LIGHT4" />
+				<item type="button" x="650" y="35" width="150" buttonFontSize="12" labels="Light 1 on,Light 1 off" command="state" extras="off,on" key="LIVING_LIGHT1" buttonBgColour="0xCC0000" buttonBorderColour="0xEE0000" buttonFontColour="0xFFFFFF" />
+				<item type="button" x="650" y="70" width="150" buttonFontSize="12" labels="Light 2 on,Light 2 off" command="state" extras="off,on" key="LIVING_LIGHT2" />
+				<item type="button" x="650" y="105" width="150" buttonFontSize="12" labels="Light 3 on,Light 3 off" command="state" extras="off,on" key="LIVING_LIGHT3" />
+				<item type="button" x="650" y="140" width="150" buttonFontSize="12" labels="Light 4 on,Light 4 off"command="state" extras="off,on" key="LIVING_LIGHT4" />
 
-				<item type="button" x="650" y="175" width="150" fontSize="12" labels="Window open,Window closed" commands="on,off" key="LIVING_WINDOW" />
+				<item type="button" x="650" y="175" width="150" buttonFontSize="12" labels="Window open,Window closed" commands="on,off" key="LIVING_WINDOW" />
 
-				<item type="button" x="650" y="210" width="150" fontSize="12" labels="TV on,TV off" commands="off,on" key="LIVING_TV" />
-				<item type="button" x="650" y="245" width="150" fontSize="12" labels="Audio on,Audio off" commands="off,on" key="LIVING_AUDIO" />
+				<item type="button" x="650" y="210" width="150" buttonFontSize="12" labels="TV on,TV off" commands="off,on" key="LIVING_TV" />
+				<item type="button" x="650" y="245" width="150" buttonFontSize="12" labels="Audio on,Audio off" commands="off,on" key="LIVING_AUDIO" />
 
 
 				<item type="icon" x="231" y="119" icons="light-bulb-off,light-bulb" commands="on,off" key="LIVING_LIGHT1" />
@@ -374,7 +388,7 @@
 			</row>
 			<row>
 				<item type="button" label="off" command="off" extra="0" width="20" />
-				<item type="slider" width="60" />
+				<item type="slider" command="pan" extras="10,2320" width="60" />
 				<item type="button" label="on" command="on" extra="100" extra2="40" extra3="0" width="20" />
 			</row>
 		</control>
@@ -384,9 +398,6 @@
 			</row>
 			<row>
 				<item type="toggle" command="state" extras="on,off" />
-			</row>
-			<row>
-				<item type="button" icon="atom" macro="badaboom" extra="%key%" extra2="%name%" buttonBgColour="0xFFcc00" buttonBorderColour="0xFF0000" />
 			</row>
 		</control>
 		<control type="upDown">
@@ -491,6 +502,22 @@
 			</row>
 			<row>
 				<item type="picker" command="on" label="%value% deg C" valueFormat="fred.%value%" minValue="0" maxValue="100" step="5" repeatRate="200" />
+			</row>
+		</control>
+		<control type="frontGateVideo">
+			<onShow command="url.http://172.16.3.150/control.cgi?cont_2=1&ok=dummy.htm,http://172.16.3.150/control.cgi?cont_2=4&ok=dummy.htm" />
+			<onHide command="" />
+			<onClose command="" />
+			<row>
+				<item type="video" src="http://172.16.3.150/__live.jpg?&&&" format="jpg" refreshRate="500" videoWidth="320" videoHeight="240" />
+			</row>
+			<row>
+				<item type="button" label="Left" command="url.http://172.16.3.150/control.cgi?cont_2=1&ok=dummy.htm" repeatRate="500" />
+				<item type="button" label="Right" command="url.http://172.16.3.150/control.cgi?cont_2=2&ok=dummy.htm" repeatRate="500" />
+			</row>
+			<row>
+				<item type="button" label="Up" command="url.http://172.16.3.150/control.cgi?cont_2=4&ok=dummy.htm" repeatRate="500" />
+				<item type="button" label="Down" command="url.http://172.16.3.150/control.cgi?cont_2=8&ok=dummy.htm" repeatRate="500" />
 			</row>
 		</control>
 	</controlTypes>

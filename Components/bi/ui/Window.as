@@ -2,8 +2,6 @@
 import flash.geom.*
 		
 class bi.ui.Window extends bi.ui.CoreUI {
-	private var clipParameters:Object = {width:1, height:1, settings:1, title:1, hideClose:1, iconName:1, bgColour1:1, bgColour2:1, bgOpacity:1, shadowOffset:1, borderWidth:1, borderColour:1, cornerRadius:1, contentClip:1};   
-	
 	private var shadow_mc:MovieClip;
 	private var bg_mc:MovieClip;
 	private var mask_mc:MovieClip;
@@ -84,8 +82,6 @@ class bi.ui.Window extends bi.ui.CoreUI {
 	/* Constructor */
 	
 	function Window() {
-		initFromClipParameters();
-		
 		if (_font == null) _font = _global.settings.windowFont;
 		if (_borderColour == null) _borderColour = _global.settings.windowBorderColour;
 		if (_borderWidth == null) _borderWidth = _global.settings.windowBorderWidth;		
@@ -158,9 +154,15 @@ class bi.ui.Window extends bi.ui.CoreUI {
 		bg_mc.useHandCursor = false;
 
 		if (!_hideClose) {
-			close_btn._visible = true;
 			attachMovie("bi.ui.Window:windowCloseBtn","close_btn", 25);
-			close_btn.onPress = close_btn.onDragOver = function () {
+			close_btn.onRollOver = function () {
+				this.gotoAndStop(2);
+			}
+			close_btn.onRollOut = close_btn.onRelease = function () {
+				this.gotoAndStop(1);
+			}			
+			close_btn.onPress = function () {
+				this.gotoAndStop(1);
 				this._parent.close();
 			}
 			if (_global.settings.device != "pda" && _global.settings.showDropShadows) {

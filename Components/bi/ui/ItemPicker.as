@@ -50,8 +50,6 @@ class bi.ui.ItemPicker extends bi.ui.CoreUI {
 	/* Constructor */
 	
 	function ItemPicker() {
-		initFromClipParameters();
-		
 		createChildren();
 		draw();
 	}
@@ -62,9 +60,9 @@ class bi.ui.ItemPicker extends bi.ui.CoreUI {
 	}
 
 	private function createChildren():Void {
-		attachMovie("bi.ui.TextInput", "items_ti", 10, {settings:{width:__width - 100, _x:0, readOnly:true}});
-		attachMovie("bi.ui.Button", "up_btn", 40, {settings:{width:45, _x:__width - 95, iconName:"up-arrow"}});
-		attachMovie("bi.ui.Button", "down_btn", 50, {settings:{width:45, _x: __width - 45, iconName:"down-arrow"}});
+		attachMovie("bi.ui.TextInput", "items_ti", 10, {settings:{width:__width - 93, readOnly:true}});
+		attachMovie("bi.ui.Button", "up_btn", 40, {settings:{width:42, iconName:"up-arrow"}});
+		attachMovie("bi.ui.Button", "down_btn", 50, {settings:{width:42, iconName:"down-arrow"}});
 		
 		up_btn.addEventListener("press", Delegate.create(this, buttonPress));
 		down_btn.addEventListener("press", Delegate.create(this, buttonPress));
@@ -77,17 +75,17 @@ class bi.ui.ItemPicker extends bi.ui.CoreUI {
 	private function draw():Void {
 		if (!__width) return;
 		
-		items_ti.width = __width - 100;
-		up_btn._x = __width - 95;
-		down_btn._x = __width - 45;
+		items_ti.width = __width - up_btn._width - down_btn._width;
+		up_btn._x = __width - up_btn._width - down_btn._width - 4;
+		down_btn._x = __width - down_btn._width;
 	}
 		
 	private function buttonPress(eventObj):Void {
 		if (eventObj.target == up_btn) {
-			_repeatInterval = setInterval(this, "buttonAction", 250, "up");
+			_repeatInterval = setInterval(this, "buttonAction", 200, "up");
 			buttonAction("up");
 		} else {
-			_repeatInterval = setInterval(this, "buttonAction", 250, "down");
+			_repeatInterval = setInterval(this, "buttonAction", 200, "down");
 			buttonAction("down");
 		}
 	}

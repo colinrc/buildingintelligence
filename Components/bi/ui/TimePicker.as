@@ -63,7 +63,6 @@ class bi.ui.TimePicker extends bi.ui.CoreUI {
 	/* Constructor */
 	
 	function TimePicker() {
-		initFromClipParameters();
 		createChildren();
 		draw();
 	}
@@ -90,13 +89,16 @@ class bi.ui.TimePicker extends bi.ui.CoreUI {
 		
 		time = _time;
 		_currentField = hours_ti;
+		_currentField.highlight = true;
 	}
   
 	private function draw():Void {
 	}
 	
 	private function changeFocus(eventObj):Void {
+		_currentField.highlight = false;
 		_currentField = eventObj.target;
+		_currentField.highlight = true;
 	}
 	
 	private function buttonPress(eventObj):Void {

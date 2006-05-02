@@ -1,6 +1,4 @@
 ﻿class bi.ui.ScrollBar extends bi.ui.CoreUI {
-	private var clipParameters:Object = {width:1, height:1, min:1, max:1, scrollPosition:1};   
-	
 	private var mcBoundingBox:MovieClip;
 	private var scrollUp_btn:MovieClip;
 	private var scrollTrack_mc:MovieClip;
@@ -15,7 +13,6 @@
 	private var _offset:Number;
 	private var _buttonSize:Number = 40;
 
-	[Inspectable(defaultValue=0)]
 	public function set min(min:Number):Void {
 		_min = min;
 	}
@@ -24,7 +21,6 @@
 		return _min;
 	}
 	
-	[Inspectable(defaultValue=100)]
 	public function set max(max:Number):Void {
 		_max = max;
 	}
@@ -33,7 +29,6 @@
 		return _max;
 	}
 	
-	[Inspectable(defaultValue=0,type=Number)]
 	public function set scrollPosition(scrollPos:Number):Void {
 		_scrollPos = scrollPos;
 		draw();
@@ -61,17 +56,11 @@
 	}
 
 	function ScrollBar() {
-		initFromClipParameters();
-		super.init();
-		init();
 		createChildren();
 		draw();
 	}
 
 	private function init():Void {
-		mcBoundingBox._visible = false;
-		mcBoundingBox._width = 0;
-		mcBoundingBox._height = 0;
 	}
 
 	private function createChildren():Void {

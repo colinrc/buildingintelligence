@@ -1,6 +1,5 @@
 ﻿class bi.ui.Label extends bi.ui.CoreUI {
-	private var clipParameters:Object = {settings:1, width:1, height:1, text:1, align:1, fontSize:1, fontColour:1};   
-	
+
 	private var label_txt:TextField;
 	private var label_tf:TextFormat;
 		
@@ -55,8 +54,6 @@
 	/* Constructor */
 	
 	function Label() {
-		initFromClipParameters();
-		
 		if (_font == null) _font = _global.settings.labelFont;
 		if (_fontColour == null) _fontColour = _global.settings.labelFontColour;
 		if (_fontSize == null) _fontSize = _global.settings.labelFontSize;

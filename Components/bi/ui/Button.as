@@ -1,8 +1,6 @@
 ﻿import bi.ui.Icon;
 
 class bi.ui.Button extends bi.ui.CoreUI {
-	private var clipParameters:Object = {width:1, height:1, settings:1, label:1, iconName:1, highlight:1, toggle:1};   
-	
 	private var buttonBg_mc:MovieClip;
 	private var buttonHighlight_mc:MovieClip;
 	private var buttonFace_mc:MovieClip;
@@ -29,9 +27,10 @@ class bi.ui.Button extends bi.ui.CoreUI {
 	
 	public function set label(label:String):Void {
 		_label = label;
-		label_txt.text = " " + _label + " ";
-		
-		if (_label.length) {
+
+		if (_label.length && label_txt) {
+			label_txt.text = " " + _label + " ";
+			label_txt.filters = null;
 			label_txt._visible = true;
 			label_tf.size = _fontSize;
 			while (label_txt.textWidth > __width - 4) {
@@ -40,6 +39,10 @@ class bi.ui.Button extends bi.ui.CoreUI {
 			}
 			label_txt._x = Math.round((__width/2) - (label_txt._width/2));
 			label_txt._y = Math.round((__height/2) - (label_txt._height/2));
+			
+			if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
+				label_txt.filters = [_global.settings.dropShadowFilterSmall];
+			}
 		} else {
 			label_txt._visible = false;
 		}
@@ -51,8 +54,8 @@ class bi.ui.Button extends bi.ui.CoreUI {
 	
 	public function set iconName(iconName:String):Void {
 		_iconName = iconName;
+		
 		icon_mc.iconName = _iconName;
-		draw();
 	}
 
 	public function get iconName():String {
@@ -136,10 +139,8 @@ class bi.ui.Button extends bi.ui.CoreUI {
 	/* Constructor */
 	
 	function Button() {
-		initFromClipParameters();
-
-		if (_bgColour == null) _bgColour = _global.settings.buttonBgColour;
-		if (_borderColour == null) _borderColour = _global.settings.buttonBorderColour;
+		if (_bgColour == null) bgColour = _global.settings.buttonBgColour;
+		if (_borderColour == null) borderColour = _global.settings.buttonBorderColour;
 		if (_font == null) _font = _global.settings.buttonFont
 		if (_fontColour == null) _fontColour = _global.settings.buttonFontColour;
 		if (_fontSize == null) _fontSize = _global.settings.buttonFontSize;
@@ -155,16 +156,16 @@ class bi.ui.Button extends bi.ui.CoreUI {
 
 	private function createChildren():Void {
 		//this.label_txt.removeMovieClip();
-		attachMovie("bi.ui.Button:buttonBg", "buttonBg_mc", 10);
-		attachMovie("bi.ui.Button:buttonHighlight", "buttonHighlight_mc", 20);
-		attachMovie("bi.ui.Button:buttonFace", "buttonFace_mc", 30);
+		//attachMovie("bi.ui.Button:buttonBg", "buttonBg_mc", 10);
+		//attachMovie("bi.ui.Button:buttonHighlight", "buttonHighlight_mc", 20);
+		//attachMovie("bi.ui.Button:buttonFace", "buttonFace_mc", 30);
 		
-		attachMovie("bi.ui.Icon", "icon_mc", 100, {settings:{iconName:_iconName}});
-
+		attachMovie("bi.ui.Icon", "icon_mc", 100, {iconName:_iconName});
+				
 		if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
 			this.filters = [_global.settings.dropShadowFilterSmall];
 		}
-		
+
 		createTextField("label_txt", 200, 0, 0, 1, 1);
 		label_tf = new TextFormat();
 		label_tf.color = _fontColour;
@@ -175,12 +176,8 @@ class bi.ui.Button extends bi.ui.CoreUI {
 		label_txt.embedFonts = true;
 		label_txt.selectable = false;
 		label_txt.setNewTextFormat(label_tf);
-		if (_label.length) label = _label;
-		
-		if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
-			label_txt.filters = [_global.settings.dropShadowFilterSmall];
-		}
-		
+		label = label;
+				
 	    onPress2 = function():Void {
 			if (_enabled) {
 				if (!_toggle) highlight = true;
@@ -213,20 +210,18 @@ class bi.ui.Button extends bi.ui.CoreUI {
 		buttonFace_mc._x = buttonFace_mc._y = 2;
 		buttonHighlight_mc._visible = false;
 
-		new Color(buttonFace_mc).setRGB(_bgColour);
-		new Color(buttonBg_mc).setRGB(_borderColour);
+		//new Color(buttonFace_mc).setRGB(_bgColour);
+		//new Color(buttonBg_mc).setRGB(_borderColour);
 		
 		if (_iconName.length) {
-			icon_mc._visible = true;
 			if (__width < __height) {
-				icon_mc.size = __width - 10;
+				var size = __width - 10;
 			} else {
-				icon_mc.size = __height - 10;
+				var size = __height - 10;
 			}
+			icon_mc.size = size;
 			icon_mc._x = Math.round((__width / 2) - (icon_mc._height / 2));
 			icon_mc._y = Math.round((__height / 2) - (icon_mc._height / 2));
-		} else {
-			icon_mc._visible = false;
 		}
 	}
 }

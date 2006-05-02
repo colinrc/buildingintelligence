@@ -1,11 +1,10 @@
 ﻿import bi.ui.Icon;
 
 class bi.ui.List extends  bi.ui.CoreUI {
-	private var clipParameters:Object = {settings:1, width:1, height:1, label:1}; 
-
 	private var bg_mc:MovieClip;
 	private var mask_mc:MovieClip;
 	private var listItems_mc:MovieClip;
+	private var scrollBar_mc:MovieClip;
 	
 	private var _data_array:Array;
 
@@ -91,8 +90,6 @@ class bi.ui.List extends  bi.ui.CoreUI {
 	/* Constructor */
 	
 	function List() {
-		initFromClipParameters();
-
 		_data_array = new Array();
 		
 		if (_bgColour == null) _bgColour = _global.settings.listBgColour;
@@ -139,10 +136,9 @@ class bi.ui.List extends  bi.ui.CoreUI {
 	private function draw():Void {
 		if (!__width) return;
 		
-		createEmptyMovieClip("bg_mc", 10);
-		
+		createEmptyMovieClip("bg_mc", 10);	
 		bg_mc.beginFill(_bgColour, _bgOpacity);
-		bg_mc.drawRect(0, 0, __width, __height, _cornerRadius);
+		bg_mc.drawRect(0, 0, __width - 40, __height, _cornerRadius);
 		bg_mc.endFill();
 		
 		if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
@@ -154,12 +150,65 @@ class bi.ui.List extends  bi.ui.CoreUI {
 		
 		createEmptyMovieClip("mask_mc", 30);
 		mask_mc.beginFill(0xFFFFFF);
-		mask_mc.drawRect(0, 0, __width, __height, _cornerRadius);
+		mask_mc.drawRect(0, 0, __width - 40, __height, _cornerRadius);
 		mask_mc.endFill();
 		mask_mc._visible = false;
 		
 		listItems_mc.setMask(mask_mc);
-			
+		
+		// SCROLLBAR
+		var scrollBar_mc = createEmptyMovieClip("scrollBar_mc", 40);
+		scrollBar_mc._x = __width - 35;
+		scrollBar_mc.createEmptyMovieClip("bg_mc", 0);
+		scrollBar_mc.bg_mc.beginFill(0x4E75B5);
+		scrollBar_mc.bg_mc.drawRect(0, 0, 34, mask_mc._height, 5);
+		scrollBar_mc.bg_mc.endFill();
+		scrollBar_mc.bg_mc.onPress2 = function () {
+		}
+		
+		var scrollUp_mc = scrollBar_mc.attachMovie("bi.ui.Button", "scrollUp_mc", 10, {settings:{width:34, height:34, iconName:"up-arrow"}});
+		scrollUp_mc.repeatRate = 200;
+		scrollUp_mc.press = function () {
+			this.repeatID = setInterval(this, "action", this.repeatRate);
+			this.action();
+		}
+		scrollUp_mc.release = function () {
+			clearInterval(this.repeatID);
+		}
+		scrollUp_mc.addEventListener("press", scrollUp_mc);
+		scrollUp_mc.addEventListener("release", scrollUp_mc);
+		scrollUp_mc.action = function () {
+			var p = this._parent._parent.listItems_mc;
+			if (p._y < this._parent._y) {
+				p._y += this._parent._parent._itemHeight;
+			} else {
+				clearInterval(this.repeatID);
+			}
+		}	
+	
+		var scrollDown_mc = scrollBar_mc.attachMovie("bi.ui.Button", "scrollDown_mc", 20, {settings:{width:34, height:34, iconName:"down-arrow"}});
+		scrollDown_mc._y = mask_mc._height - 34;
+		
+		scrollDown_mc.repeatRate = 200;
+		scrollDown_mc.press = function () {
+			this.repeatID = setInterval(this, "action", this.repeatRate);
+			this.action();
+		}
+		scrollDown_mc.release = function () {
+			clearInterval(this.repeatID);
+		}
+		scrollDown_mc.addEventListener("press", scrollDown_mc);
+		scrollDown_mc.addEventListener("release", scrollDown_mc);
+		scrollDown_mc.action = function () {
+			var p = this._parent._parent.listItems_mc;
+			if (p._y + p._height > this._parent._y + this._parent._height) {
+				p._y -= this._parent._parent._itemHeight;
+			} else {
+				clearInterval(this.repeatID);
+			}
+		}
+		
+		
 		for (var i=0; i<_data_array.length; i++) {
 			var row_mc:MovieClip = listItems_mc.createEmptyMovieClip("row" + i + "_mc", i);
 			
@@ -169,11 +218,11 @@ class bi.ui.List extends  bi.ui.CoreUI {
 			} else {
 				listBg_mc.beginFill(_itemBgColour1, _itemBgOpacity);
 			}
-			listBg_mc.drawRect(0, 0, __width, _itemHeight);
+			listBg_mc.drawRect(0, 0, __width - 40, _itemHeight);
 			listBg_mc.endFill();
 	
 			if (_data_array[i].iconName != undefined) {
-				row_mc.attachMovie("bi.ui.Icon", "icon_mc", 10, {settings:{iconName:_data_array[i].iconName, size:_itemHeight, _x:__width - _itemHeight - 2}});
+				var icon_mc = row_mc.attachMovie("bi.ui.Icon", "icon_mc", 10, {settings:{iconName:_data_array[i].iconName, size:_itemHeight - 2, _x:__width - _itemHeight - 42, _y:1}});
 			} else {
 				row_mc.createTextField("label_txt", 20, 2, 0, bg_mc._width - 2, 0);
 			}
@@ -192,8 +241,17 @@ class bi.ui.List extends  bi.ui.CoreUI {
 			label_txt.text = _data_array[i].label;
 			label_txt._y = Math.round((listBg_mc._height / 2) - (label_txt._height / 2));
 		
-			row_mc._y = i * (_itemHeight + _itemSpacing);
-			
+			if (_data_array[i].strikeThrough) {
+				var strikeThrough_mc = row_mc.createEmptyMovieClip("strikeThrough_mc", 30);
+				strikeThrough_mc.lineStyle(1, 0xFFFFFF);
+				strikeThrough_mc.lineTo(__width - 48, 0);
+				strikeThrough_mc._x = 4;
+				strikeThrough_mc._y =  Math.round(listBg_mc._height / 2);
+				label_txt._alpha = icon_mc._alpha = 70;
+			}
+		
+			row_mc._y = i * (_itemHeight + _itemSpacing);		
+						
 			row_mc.base = this;
 			row_mc.index = i;
 		    row_mc.onPress2 = function():Void {
@@ -203,7 +261,7 @@ class bi.ui.List extends  bi.ui.CoreUI {
 			}
 			
 			if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
-				label_txt.filters = [_global.settings.dropShadowFilterSmall];
+				label_txt.filters = strikeThrough_mc.filters = [_global.settings.dropShadowFilterSmall];
 			}
 		}
 	}

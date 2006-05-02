@@ -66,8 +66,6 @@ class bi.ui.RadioButton extends bi.ui.CoreUI {
 	/* Constructor */
 	
 	function RadioButton() {
-		initFromClipParameters();
-
 		if (_font == null) _font = _global.settings.buttonFont;
 		if (_fontColour == null) _fontColour = _global.settings.buttonFontColour;
 		if (_fontSize == null) _fontSize = _global.settings.buttonFontSize;

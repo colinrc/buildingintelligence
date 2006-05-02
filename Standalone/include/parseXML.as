@@ -59,36 +59,42 @@ defineAppsBar = function (icons) {
 	}
 }
 
-defineCalendar= function (tabs) {
-	for (var tab=0; tab<tabs.length; tab++) {
-		var tabObj = new Object();
-		tabObj.view = tabs[tab].attributes.view;
-		tabObj.label = tabs[tab].attributes.label;
-		tabObj.macro = tabs[tab].attributes.macro;
-		tabObj.icon = tabs[tab].attributes.icon;
-		tabObj.zones = new Array();
-		for (var zone=0; zone<tabs[tab].childNodes.length; zone++){
-			tabObj.zones.push({key:tabs[tab].childNodes[zone].attributes.key, label:tabs[tab].childNodes[zone].attributes.label});
+defineCalendar= function (topLevel) {
+	for (var i=0; i<topLevel.length; i++) {
+		var q = topLevel[i];
+		switch (q.nodeName) {
+			case "categories":
+				_global.calendarCategories = [{label:"", value:"", icon:""}];
+				var categories = q.childNodes;
+				for (var category=0; category<categories.length; category++) {
+					_global.calendarCategories.push({label:categories[category].attributes.name, value:categories[category].attributes.name.toLowerCase(), icon:categories[category].attributes.icon});
+				}
+				break;
+			case "window":
+				var tabs = q.childNodes;
+				for (var tab=0; tab<tabs.length; tab++) {
+					var tabObj = new Object();
+					tabObj.view = tabs[tab].attributes.view;
+					tabObj.label = tabs[tab].attributes.label;
+					tabObj.macro = tabs[tab].attributes.macro;
+					tabObj.icon = tabs[tab].attributes.icon;
+					tabObj.zones = new Array();
+					for (var zone=0; zone<tabs[tab].childNodes.length; zone++){
+						tabObj.zones.push({key:tabs[tab].childNodes[zone].attributes.key, label:tabs[tab].childNodes[zone].attributes.label});
+						_global.calendarZoneLabels[tabs[tab].childNodes[zone].attributes.key] = tabs[tab].childNodes[zone].attributes.label;
+					}
+					_global.calendar.push(tabObj);
+				}
+				break;
 		}
-		_global.calendar.push(tabObj);
 	}
 }
 
-defineMacros = function (macros) {
-	_global.macros = new Array();
-	for (var macro=0; macro<macros.length; macro++) {
-		var controlsXml = macros[macro].childNodes;
-		var controls = [];
-		for (var control=0; control<controlsXml.length; control++){
-			var controlXml = controlsXml[control].attributes;
-			controls.push({key:controlXml.KEY, command:controlXml.COMMAND, extra:controlXml.EXTRA});
-		}
-		var status = macros[macro].attributes.STATUS.split(",");
-		var statusObj = new Object();
-		for (var i=0; i<status.length; i++) {
-			statusObj[status[i]] = true;
-		}
-		_global.macros.push({name:macros[macro].attributes.EXTRA, controls:controls, status:statusObj, running:macros[macro].attributes.RUNNING == 1, type:macros[macro].attributes.TYPE});
+defineMacroContent = function (controlsXml) {
+	_global.macroContents = [];
+	for (var control=0; control<controlsXml.length; control++){
+		var controlXml = controlsXml[control].attributes;
+		_global.macroContents.push({key:controlXml.KEY, command:controlXml.COMMAND, extra:controlXml.EXTRA, extra2:controlXml.EXTRA2, extra3:controlXml.EXTRA3, extra4:controlXml.EXTRA4, extra5:controlXml.EXTRA5});
 	}
 }
 
@@ -134,7 +140,7 @@ defineZones = function (zones) {
 									var keys = alerts[alert].attributes.keys.split(",");
 									for (var key=0; key<keys.length; key++) {
 										if (_global.controls[keys[key]] == undefined) {
-											_global.controls[keys[key]] = {key:keys[key], name:alerts[alert].attributes.name, icon:alerts[alert].attributes.icon, canSee:alerts[alert].attributes.canSee, zone:zones[zone].attributes.name, room:rooms[room].attributes.name};
+											_global.controls[keys[key]] = {key:keys[key], name:alerts[alert].attributes.name, icon:alerts[alert].attributes.icon, canSee:alerts[alert].attributes.canSee, zone:zones[zone].attributes.name, room:rooms[room].attributes.name, storedStates:{}};
 										}
 									}
 								}
@@ -160,7 +166,7 @@ defineZones = function (zones) {
 					_global.zones[zone].panels.push({name:panels[panel].attributes.name, x:panels[panel].attributes.x, y:panels[panel].attributes.y, width:panels[panel].attributes.width, height:panels[panel].attributes.height, controls:[]})
 					for (var i=0; i<panels[panel].childNodes.length; i++) {
 						var control = panels[panel].childNodes[i];
-						if (control.key != undefined &&  _global.controls[control.key] == undefined) _global.controls[control.key] = {key:control.key, zone:zones[zone].attributes.name, name:control.name, storedStates:new Object()};
+						if (control.key != undefined && _global.controls[control.key] == undefined) _global.controls[control.key] = {key:control.key, zone:zones[zone].attributes.name, name:control.name, storedStates:{}};
 						_global.zones[zone].panels[panel].controls[i] = new Object();
 						for (var attrib in control.attributes) {
 							_global.zones[zone].panels[panel].controls[i][attrib] = control.attributes[attrib];
@@ -170,9 +176,17 @@ defineZones = function (zones) {
 			} else if (zones[zone].childNodes[z].nodeName == "arbitrary") {
 				var items = zones[zone].childNodes[z].childNodes;
 				for (var item=0; item<items.length; item++) {
-					_global.zones[zone].arbitrary.push({})
-					for (var attrib in items[item].attributes) {
-						_global.zones[zone].arbitrary[item][attrib] = items[item].attributes[attrib];
+					var control = items[item].attributes;
+					if (control.key != undefined) {
+						if (_global.controls[control.key] == undefined) {
+							_global.controls[control.key] = {key:control.key, zone:zones[zone].attributes.name, name:control.name, storedStates:new Object()};
+						} else if (control.name != undefined) {
+							_global.controls[control.key].name = control.name;
+						}
+					}
+					_global.zones[zone].arbitrary.push({});
+					for (var attrib in control) {
+						_global.zones[zone].arbitrary[item][attrib] = control[attrib];
 					}
 				}
 			}
@@ -220,27 +234,31 @@ defineWindow = function (window_xml, zone, room) {
 	}
 }
 
-defineControlTypes =function (controlTypes) {
+defineControlTypes = function (controlTypes) {
 	for (var controlType=0; controlType<controlTypes.length; controlType++) {
 		var type = controlTypes[controlType].attributes.type;
-		_global.controlTypes[type] = new Array();
+		_global.controlTypes[type] = {rows:[]};
 		var rows = controlTypes[controlType].childNodes;
 		for (var row=0; row<rows.length; row++) {
-			_global.controlTypes[type][row] = {items:[]};
-			for (var attrib in rows[row].attributes) {
-				_global.controlTypes[type][row][attrib] = rows[row].attributes[attrib];
-			}
-			
-			var items = rows[row].childNodes;
-			for (var item=0; item<items.length; item++) {
-				_global.controlTypes[type][row].items[item] = new Object();
-				for (var attrib in items[item].attributes) {		
-					if (Number(items[item].attributes[attrib]) == items[item].attributes[attrib]) {
-						_global.controlTypes[type][row].items[item][attrib] = Number(items[item].attributes[attrib]);
-					} else if (items[item].attributes[attrib] == "true" || items[item].attributes[attrib] == "false") {
-						_global.controlTypes[type][row].items[item][attrib] = (items[item].attributes[attrib] == "true");
-					} else {
-						_global.controlTypes[type][row].items[item][attrib] = items[item].attributes[attrib];
+			if (rows[row].nodeName != "row") {
+				_global.controlTypes[type][rows[row].nodeName] = {command:rows[row].attributes.command, key:rows[row].attributes.key, extra:rows[row].attributes.extra}
+			} else {
+				var rowObj = _global.controlTypes[type].rows[row] = {items:[]};
+				for (var attrib in rows[row].attributes) {
+					rowObj[attrib] = rows[row].attributes[attrib];
+				}
+				
+				var items = rows[row].childNodes;
+				for (var item=0; item<items.length; item++) {
+					rowObj.items[item] = new Object();
+					for (var attrib in items[item].attributes) {		
+						if (Number(items[item].attributes[attrib]) == items[item].attributes[attrib]) {
+							rowObj.items[item][attrib] = Number(items[item].attributes[attrib]);
+						} else if (items[item].attributes[attrib] == "true" || items[item].attributes[attrib] == "false") {
+							rowObj.items[item][attrib] = (items[item].attributes[attrib] == "true");
+						} else {
+							rowObj.items[item][attrib] = items[item].attributes[attrib];
+						}
 					}
 				}
 			}
@@ -248,8 +266,46 @@ defineControlTypes =function (controlTypes) {
 	}
 }
 
-defineCalendarData = function (events) {
-	_global.calendarData = new Array();
+defineMacros = function (macros, partial) {
+	if (!partial) _global.macros = new Array();
+	var wasNew = false;
+	
+	for (var macro=0; macro<macros.length; macro++) {
+		var controlsXml = macros[macro].childNodes;
+		var controls = [];
+		for (var control=0; control<controlsXml.length; control++){
+			var controlXml = controlsXml[control].attributes;
+			controls.push({key:controlXml.KEY, command:controlXml.COMMAND, extra:controlXml.EXTRA, extra2:controlXml.EXTRA2, extra3:controlXml.EXTRA3, extra4:controlXml.EXTRA4, extra5:controlXml.EXTRA5});
+		}
+		var status = macros[macro].attributes.STATUS.split(",");
+		var statusObj = new Object();
+		for (var i=0; i<status.length; i++) {
+			statusObj[status[i]] = true;
+		}
+		var macroObj = {name:macros[macro].attributes.EXTRA, controls:controls, status:statusObj, running:macros[macro].attributes.RUNNING == 1, type:macros[macro].attributes.TYPE};
+
+		if (partial) {
+			var found = false;
+			for (var i=0; i<_global.macros.length; i++) {
+				if (_global.macros[i].name == macroObj.name) {
+					var found = true;
+					_global.macros[i] = macroObj;
+					break;
+				}
+			}
+			if (!found) {
+				_global.macros.push(macroObj);
+				wasNew = true;
+			}
+		} else {
+			_global.macros.push(macroObj);
+		}
+	}
+	return wasNew;
+}
+
+defineCalendarData = function (events, partial) {
+	if (!partial) _global.calendarData = new Array();
 	for (var event=0; event<events.length; event++) {
 		var d = events[event].attributes;
 		
@@ -259,10 +315,17 @@ defineCalendarData = function (events) {
 		}
 		//trace(debug);
 
+		for (var i=0; i<_global.calendarCategories.length; i++) {
+			if (d.category == _global.calendarCategories[i].value) {
+				d.iconName = _global.calendarCategories[i].icon;
+				break;
+			}
+		}
+		
 		var t = d.time.split(":");
 		d.time = new Date(1976, 8, 27, t[0], t[1], t[2]);
 		if (d.eventType == "once") {
-			_global.calendarData.push({id:d.id, title:d.title, alarm:d.alarm == "Y", memo:d.memo, category:d.category, startDate:d.date.parseDate(), endDate:d.date.parseDate(), time:d.time, runTime:d.runTime, eventType:"once", macroName:d.macroName});
+			var calendarObj = {id:d.id, title:d.title, alarm:d.alarm == "Y", memo:d.memo, iconName:d.iconName, category:d.category, startDate:d.date.parseDate(), endDate:d.date.parseDate(), time:d.time, runTime:d.runTime, eventType:"once", macroName:d.macroName, extra:d.extra, extra2:d.extra2, filter:d.filter};
 		} else {
 			var skip = new Array();
 			for (var i in events[event].childNodes) {
@@ -290,7 +353,22 @@ defineCalendarData = function (events) {
 						break;
 				}
 			}
-			_global.calendarData.push({id:d.id, title:d.title, alarm:d.alarm == "Y", memo:d.memo, category:d.category, startDate:d.startDate.parseDate(), endDate:d.endDate.parseDate(), time:d.time, runTime:d.extra2, skip:skip, eventType:d.eventType, macroName:d.macroName, filter:d.filter, pattern:pattern});
+			var calendarObj = {id:d.id, title:d.title, alarm:d.alarm == "Y", memo:d.memo, iconName:d.iconName, category:d.category, startDate:d.startDate.parseDate(), endDate:d.endDate.parseDate(), time:d.time, runTime:d.extra2, skip:skip, eventType:d.eventType, macroName:d.macroName, extra:d.extra, extra2:d.extra2, filter:d.filter, pattern:pattern};
+		}
+		if (partial) {
+			var found = false;
+			for (var i=0; i<_global.calendarData.length; i++) {
+				if (_global.calendarData[i].id == calendarObj.id) {
+					var found = true;
+					_global.calendarData[i] = calendarObj;
+					break;
+				}
+			}
+			if (!found) {
+				_global.calendarData.push(calendarObj);
+			}
+		} else {
+			_global.calendarData.push(calendarObj);
 		}
 	}
 }

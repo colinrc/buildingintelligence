@@ -31,6 +31,7 @@ createObjects = function () {
 	_global.macroStatus = new Array();
 	_global.scripts = new Array();
 	_global.calendar = new Array();
+	_global.calendarZoneLabels = new Object();
 	_global.controls = new Object();
 	_global.controlTypes = new Object();
 	_global.calendarData = new Array();
@@ -38,10 +39,11 @@ createObjects = function () {
 	_global.iconNames = new Array();
 	_global.controlPanelApps = new Array();
 	_global.tv = new Object();
+	_global.windowStack = new Object();
 }
 
 confirm = function (msg, scope, onYes, onNo, param1) {
-	var window_mc = showWindow({width:300, height:180, title:"Warning:", iconName:"warning", hideClose:msgObj.hideClose, noAutoClose:true});
+	var window_mc = showWindow({id:"confirm", width:300, height:180, title:"Warning:", iconName:"warning", hideClose:msgObj.hideClose, noAutoClose:true});
 	
 	var content_mc = window_mc.content_mc;
 	
@@ -73,7 +75,7 @@ confirm = function (msg, scope, onYes, onNo, param1) {
 	yes_mc.param = param1;
 	yes_mc.press = function () {
 		this._parent.scope[this.func](this.param);
-		this._parent.window_mc.close();
+		_global.windowStack["confirm"].close();
 	}
 	yes_mc.addEventListener("press", yes_mc);
 	var no_mc = buttons_mc.attachMovie("bi.ui.Button", "no_mc", 10, {settings:{width:60, height:35, label:"No", fontSize:14}});
@@ -81,7 +83,7 @@ confirm = function (msg, scope, onYes, onNo, param1) {
 	no_mc.func = onNo;
 	no_mc.press = function () {
 		this._parent.scope[this.func]();
-		this._parent.window_mc.close();
+		_global.windowStack["confirm"].close();
 	}
 	no_mc.addEventListener("press", no_mc);
 	buttons_mc._x = Math.round((content_mc.width / 2) - (buttons_mc._width / 2));
@@ -93,6 +95,10 @@ showMessageWindow = function (msgObj) {
 	var height = (msgObj.height == undefined) ? 300 : msgObj.height;
 	var window_mc = showWindow({width:width, height:height, title:msgObj.title, iconName:msgObj.icon, hideClose:msgObj.hideClose, noAutoClose:true, align:"center"});
 
+	if (msgObj.alarm == "Y") {
+		_global.sounds["alarm"].start();
+	}
+	
 	if (msgObj.onClose != undefined) {
 		window_mc.onClose = msgObj.onClose;
 	}
@@ -320,7 +326,16 @@ showWindow = function (windowObj) {
 	window_mc = windows_mc.attachMovie("bi.ui.Window", "window" + depth + "_mc", depth, {settings:windowObj});
 	window_mc.modal_mc = modal_mc;
 	
+	_global.windowStack[windowObj.id] = window_mc;
+	
 	window_mc.close = function () {
+		var i;
+		for (i in _global.windowStack) {
+			if (_global.windowStack[i] == this) {
+				delete _global.windowStack[i];
+				break;
+			}
+		}
 		delete window_mc.onMouseMove;
 		this.modal_mc.removeMovieClip();
 		clearInterval(this.closeWindowID);
@@ -409,7 +424,7 @@ renderStatusBar = function () {
 
 renderAppsBar = function () {
 	if (_global.settings.device == "pda") {
-		var icon_array = [{iconName:"atom", action:"showMacros"}, {iconName:"up-arrow", action:"changeZoneUp"}, {iconName:"down-arrow", action:"changeZoneDown"}];
+		var icon_array = [{iconName:"atom", action:"showMacros"}, {iconName:"up-arrow", action:"changeZoneUp"}, {iconName:"down-arrow", action:"changeZoneDown"}, {iconName:"delete", action:"exitClient"}];
 		for (var icon=0; icon<icon_array.length; icon++) {
 			var icon_mc = appsBar_mc.attachMovie("bi.ui.Button", icon_array[icon].action + "_mc", icon, {settings:{width:_global.settings.appsBarBtnWidth, height:_global.settings.appsBarBtnHeight, iconName:icon_array[icon].iconName}});
 			if (icon_array[icon].action == "changeZoneUp" || icon_array[icon].action == "changeZoneDown") {
@@ -420,7 +435,7 @@ renderAppsBar = function () {
 					zones_mc["zone" + zones_mc.currentZone + "_mc"]._visible = false;
 					zones_mc["zone" + zones_mc.currentZone + "_mc"].panels_mc.onHide();
 					
-					if (this.dir == "up") {
+					if (this.dir == "changeZoneUp") {
 						zones_mc.currentZone++;
 						if (zones_mc.currentZone == _global.zones.length) zones_mc.currentZone = 0;
 					} else {
@@ -454,6 +469,10 @@ renderAppsBar = function () {
 						overlay_mc.title_txt.text = _global.zones[zones_mc.currentZone].name;
 					}
 				}				
+			} else if (icon_array[icon].action == "exitClient") {
+				icon_mc.press = function () {
+					fscommand("mdm.exit");
+				}
 			}
 			icon_mc._x = (_global.settings.appsBarBtnWidth + _global.settings.appsBarBtnSpacing) * icon;
 			icon_mc.addEventListener("press", icon_mc);
@@ -620,7 +639,7 @@ renderMacroList = function () {
 				macro_mc._y = -(_global.settings.macroBtnHeight + _global.settings.macroBtnSpacing) * counter;
 				counter++;
 			}
-			if (counter == 16) break;
+			if (counter == 14) break;
 		}
 	}
 }
@@ -1204,9 +1223,9 @@ renderZone = function (zone, clip) {
 					
 					item_mc.extra = arbitrary[item].extra;
 					item_mc.arrayPos = 0;
-					icon_mc.size = 25;
-					item_mc._x = arbitrary[item].x;
-					item_mc._y = arbitrary[item].y;
+					icon_mc.size = (arbitrary[item].size == undefined) ? 25 : Number(arbitrary[item].size);
+					item_mc._x = Math.round(arbitrary[item].x - (icon_mc.size / 2));
+					item_mc._y = Math.round(arbitrary[item].y - (icon_mc.size / 2));
 					
 					if (arbitrary[item].label != undefined || arbitrary[item].labels != undefined) {
 						item_mc.createTextField("label_txt", 10, 0, 20, 24, 15);
@@ -1249,6 +1268,18 @@ renderZone = function (zone, clip) {
 					}
 					break;
 				case "button":
+					item_mc._x = arbitrary[item].x;
+					item_mc._y = arbitrary[item].y;
+					arbitrary[item].mode = "toggle";
+					
+					var button_mc = attachButton(item_mc, arbitrary[item].key, arbitrary[item], "button_mc", 0, arbitrary[item].width, arbitrary[item].height);
+					if (buttonObj.macro != undefined) {
+						subscribe("MACRO", button_mc);
+					} else {
+						subscribe(arbitrary[item].key, button_mc);
+					}
+					break;
+					/*
 					var button_mc = item_mc.attachMovie("bi.ui.Button", "button_mc", 0, {settings:{width:arbitrary[item].width, height:arbitrary[item].height, bgColour:arbitrary[item].bgColour, borderColour:arbitrary[item].borderColour, fontSize:arbitrary[item].fontSize, fontColour:arbitrary[item].fontColour}});
 					item_mc.key = arbitrary[item].key;
 					
@@ -1257,14 +1288,22 @@ renderZone = function (zone, clip) {
 					} else if (arbitrary[item].icons != undefined) {
 						item_mc.icons = arbitrary[item].icons.split(",");
 						button_mc.iconName = item_mc.icons[0];
-						item_mc.commands = arbitrary[item].commands.split(",");
 					}
-					
-					if (arbitrary[item].commands != undefined) {
-						item_mc.commands = arbitrary[item].commands.split(",");
-					}
-					
+										
+					item_mc.mode = arbitrary[item].mode;
+					item_mc.command = arbitrary[item].command;
+					item_mc.commands = arbitrary[item].commands.split(",");
 					item_mc.extra = arbitrary[item].extra;
+					item_mc.extras = arbitrary[item].extras.split("|");
+					item_mc.allExtras = [arbitrary[item].extra];
+					for (var i=2; i<7; i++) {
+						if (arbitrary[item]["extra" + i] != undefined) {
+							item_mc.allExtras.push(arbitrary[item]["extra" + i]);
+						} else {
+							break;
+						}
+					}
+					item_mc.repeatRate = items[item].repeatRate;
 					item_mc.arrayPos = 0;
 					item_mc._x = arbitrary[item].x;
 					item_mc._y = arbitrary[item].y;
@@ -1306,10 +1345,11 @@ renderZone = function (zone, clip) {
 						subscribe(arbitrary[item].key, item_mc);
 					}
 					button_mc.press = function () {
-						updateKey(this._parent.key, this._parent.commands[this._parent.arrayPos], this._parent.extra);
+						performAction(this._parent.key, this._parent.commands[this._parent.arrayPos], this._parent.extra);
 					}
 					button_mc.addEventListener("press", button_mc);
 					break;
+					*/
 			}
 		}
 	}
@@ -1417,8 +1457,8 @@ openStatusWindow = function (statusObj) {
 			//this._parent.close();
 		} else if (controls.length > this.itemsPerPage) {
 			this.scrollBar_mc._visible = true;
-			this.scrollBar_mc.scrollUp_mc.setEnabled(this.startRow > 0);
-			this.scrollBar_mc.scrollDown_mc.setEnabled(this.startRow + this.itemsPerPage < this.maxItems);
+			this.scrollBar_mc.scrollUp_mc.enabled = this.startRow > 0;
+			this.scrollBar_mc.scrollDown_mc.enabled = this.startRow + this.itemsPerPage < this.maxItems;
 			var labelWidth = this.width - 40;
 		} else {
 			var labelWidth = this.width;
@@ -1668,7 +1708,7 @@ openAuthentication = function () {
 }
 
 openControlPanel = function () {
-	var window_mc = showWindow({width:"full", height:"full", title:"Control Panel", iconName:"gears", autoClose:false});
+	var window_mc = showWindow({id:"controlPanel", width:"full", height:"full", title:"Control Panel", iconName:"gears", autoClose:false});
 	appsBar_mc.openControlPanel_mc.showHighlight();		
 	window_mc.onClose = function () {
 		for (var i=0; i<this.contentClip.tabs_mc.tabData.length; i++) {
@@ -1765,8 +1805,8 @@ createLogContent = function (logObj, content_mc) {
 				this.itemsPerPage = 11;
 				if (this.maxItems > this.itemsPerPage) {
 					this.scrollBar_mc._visible = true;
-					this.scrollBar_mc.scrollUp_mc.setEnabled(this.startRow > 0);
-					this.scrollBar_mc.scrollDown_mc.setEnabled(this.startRow + this.itemsPerPage < this.maxItems);
+					this.scrollBar_mc.scrollUp_mc.enabled = this.startRow > 0;
+					this.scrollBar_mc.scrollDown_mc.enabled = this.startRow + this.itemsPerPage < this.maxItems;
 					var labelWidth = this.width - this.scrollBar_mc._width - 5;
 				} else {
 					var labelWidth = this.width;
@@ -1818,8 +1858,8 @@ createLogContent = function (logObj, content_mc) {
 				this.itemsPerPage = 17;
 				if (this.maxItems > this.itemsPerPage) {
 					this.scrollBar_mc._visible = true;
-					this.scrollBar_mc.scrollUp_mc.setEnabled(this.startRow > 0);
-					this.scrollBar_mc.scrollDown_mc.setEnabled(this.startRow + this.itemsPerPage < this.maxItems);
+					this.scrollBar_mc.scrollUp_mc.enabled = this.startRow > 0;
+					this.scrollBar_mc.scrollDown_mc.enabled = this.startRow + this.itemsPerPage < this.maxItems;
 					var labelWidth = this.width - this.scrollBar_mc._width - 5;
 				} else {
 					var labelWidth = this.width;
@@ -1827,7 +1867,7 @@ createLogContent = function (logObj, content_mc) {
 				}
 				var counter = 0;
 				while (counter < this.itemsPerPage && this.startRow + counter < this.maxItems) {
-					var label_mc = this.attachMovie("bi.ui.Label", "label" + counter + "_mc", counter, {settings:{width:labelWidth, height:30, label:log[counter + this.startRow].msg}})
+					var label_mc = this.attachMovie("bi.ui.Label", "label" + counter + "_mc", counter, {settings:{width:labelWidth, height:30, text:log[counter + this.startRow].msg}})
 					label_mc._y = counter * 34;
 					label_mc.logObj = logObj;
 					label_mc.event = counter + this.startRow;
@@ -1951,12 +1991,8 @@ createVolumeControl = function (content_mc) {
 	volumeSlider_mc.icons = ["speaker","speaker"];
 	createSlider(volumeSlider_mc, {w:300, h:50});
 	volumeSlider_mc.update = function () {
-		this.setVolume = function (vol) {
-			systemVolume = vol;
-		}
-		mdm.System.getMasterVolume(this.setVolume);
 		this.onEnterFrame = function () {
-			this.setPercent(Math.round(systemVolume / 65535 * 100));
+			this.setPercent(Math.round(mdm.System.getMasterVolume() / 65535 * 100));
 			delete this.onEnterFrame;
 		}
 	}
@@ -1988,7 +2024,7 @@ createMacroAdmin = function (content_mc) {
 	label_txt.setNewTextFormat(label_tf);
 	label_txt.text = "Create Macro:";
 	
-	var createMacroBtn_mc = content_mc.attachMovie("bi.ui.Button", "createMacroBtn_mc", 2, {settings:{width:380, height:30, label:"", fontSize:12}});
+	var createMacroBtn_mc = content_mc.attachMovie("bi.ui.Button", "createMacroBtn_mc", 2, {width:380, height:30, label:"", fontSize:12});
 	createMacroBtn_mc.updateRecordingState = function () {
 		if (recordingMacro) {
 			this.label = "Stop Recording";
@@ -2003,7 +2039,7 @@ createMacroAdmin = function (content_mc) {
 		this.updateRecordingState();
 		if (recordingMacro) {
 			newMacroArray = new Array();
-			window_mc.close();
+			_global.windowStack["controlPanel"].close();
 			overlay_mc.status_txt.text = "** MACRO RECORDING **";
 			overlay_mc.startStatusBlink();
 		} else {
@@ -2011,11 +2047,7 @@ createMacroAdmin = function (content_mc) {
 			overlay_mc.stopStatusBlink();
 			this.saveMacro = function (title, caller) {
 				if (!title.length) var title = "untitled";
-				
-				_global.macros.splice(0, 0, {name:title, controls:newMacroArray});
-				saveMacro(title, newMacroArray);
-				renderMacroList();
-				caller.listMacros();
+				createMacro(title, newMacroArray);
 			}
 			showKeyboard(20, this.saveMacro, this._parent)
 		}
@@ -2029,172 +2061,245 @@ createMacroAdmin = function (content_mc) {
 	label_txt.setNewTextFormat(label_tf);
 	label_txt.text = "Current Macros:";
 	
-	content_mc.startRow = 0;
-
-	content_mc.update = function () {
-		var macroList_mc = this.createEmptyMovieClip("macroList_mc", 0)
-		macroList_mc._y = 85;
-		var label_tf = new TextFormat();
-		label_tf.color = 0xFFFFFF;
-		label_tf.size = 16;
-		label_tf.bold = true;
-		label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
-
-		this.maxItems = _global.macros.length;
-		this.itemsPerPage = 14;
-		if (this.maxItems > this.itemsPerPage) {
-			this.scrollBar_mc._visible = true;
-			this.scrollBar_mc.scrollUp_mc.setEnabled(this.startRow > 0);
-			this.scrollBar_mc.scrollDown_mc.setEnabled(this.startRow + this.itemsPerPage < this.maxItems);
-			var labelWidth = 520;
+	var rowsMask_mc = content_mc.createEmptyMovieClip("rowsMask_mc", 55);
+	rowsMask_mc._y = 95;
+	rowsMask_mc.beginFill(0xFFCC00, 20);
+	rowsMask_mc.lineTo(content_mc.width - 40, 0);
+	rowsMask_mc.lineTo(content_mc.width - 40, content_mc.height - rowsMask_mc._y);
+	rowsMask_mc.lineTo(0, content_mc.height - rowsMask_mc._y);
+	rowsMask_mc.endFill();
+	
+	// SCROLLBAR
+	var scrollBar_mc = content_mc.createEmptyMovieClip("scrollBar_mc", 60);
+	scrollBar_mc._x = content_mc.width - 35;
+	scrollBar_mc._y = rowsMask_mc._y;
+	scrollBar_mc.createEmptyMovieClip("bg_mc", 0);
+	scrollBar_mc.bg_mc.beginFill(0x4E75B5);
+	scrollBar_mc.bg_mc.drawRect(0, 0, 34, rowsMask_mc._height, 5);
+	scrollBar_mc.bg_mc.endFill();
+	scrollBar_mc.bg_mc.onPress2 = function () {
+		//var p = this._parent._parent;
+		//p.startRow = Math.floor((this._ymouse / this._height) * (p.maxItems - p.itemsPerPage + 1));
+		//p[this._parent.func]();
+	}
+	
+	var scrollUp_mc = scrollBar_mc.attachMovie("bi.ui.Button", "scrollUp_mc", 10, {width:34, height:34, iconName:"up-arrow"});
+	scrollUp_mc.repeatRate = 200;
+	scrollUp_mc.press = function () {
+		this.repeatID = setInterval(this, "action", this.repeatRate);
+		this.action();
+	}
+	scrollUp_mc.release = function () {
+		clearInterval(this.repeatID);
+	}
+	scrollUp_mc.addEventListener("press", scrollUp_mc);
+	scrollUp_mc.addEventListener("release", scrollUp_mc);
+	scrollUp_mc.action = function () {
+		var p = this._parent._parent.macroList_mc;
+		if (p._y < this._parent._y) {
+			p._y += 35;
 		} else {
-			var labelWidth = 560;
-			this.scrollBar_mc._visible = false;
+			clearInterval(this.repeatID);
 		}
+	}	
 
-		var counter = 0;
-		while (counter < this.itemsPerPage && this.startRow + counter < this.maxItems) {
-			var macro_mc = macroList_mc.createEmptyMovieClip("macro" + counter + "_mc", counter);
-			macro_mc._y = counter * 35;
-			var macroNum = macro_mc.macroNum = this.startRow + counter;
-			var macro = macro_mc.macro = _global.macros[macroNum];
-			var buttonNum = 0;
+	var scrollDown_mc = scrollBar_mc.attachMovie("bi.ui.Button", "scrollDown_mc", 20, {width:34, height:34, iconName:"down-arrow"});
+	scrollDown_mc._y = rowsMask_mc._height - 34;
+	
+	scrollDown_mc.repeatRate = 200;
+	scrollDown_mc.press = function () {
+		this.repeatID = setInterval(this, "action", this.repeatRate);
+		this.action();
+	}
+	scrollDown_mc.release = function () {
+		clearInterval(this.repeatID);
+	}
+	scrollDown_mc.addEventListener("press", scrollDown_mc);
+	scrollDown_mc.addEventListener("release", scrollDown_mc);
+	scrollDown_mc.action = function () {
+		var p = this._parent._parent.macroList_mc;
+		if (p._y + p._height > this._parent._y + this._parent._height) {
+			p._y -= 35;
+		} else {
+			clearInterval(this.repeatID);
+		}
+	}
+	// END SCROLL BAR
+	
 
-			var moveUpBtn_mc = macro_mc.attachMovie("bi.ui.Button", "moveUpBtn_mc", 30 + (buttonNum++), {settings:{width:50, height:28, iconName:"up-arrow"}});
-			moveUpBtn_mc._x = labelWidth - (buttonNum * 52);
-			moveUpBtn_mc._y = 1;
-			moveUpBtn_mc.press = function () {
-				reorderMacros("moveUp", this._parent.macroNum);
-			}
-			moveUpBtn_mc.addEventListener("press", moveUpBtn_mc);
-			if (counter == 0) moveUpBtn_mc.setEnabled(false);
-			
-			var moveDownBtn_mc = macro_mc.attachMovie("bi.ui.Button", "moveDownBtn_mc", 30 + (buttonNum++), {settings:{width:50, height:28, iconName:"down-arrow"}});
-			moveDownBtn_mc._x = labelWidth - (buttonNum * 52);
-			moveDownBtn_mc._y = 1;
-			moveDownBtn_mc.press = function () {
-				reorderMacros("moveDown", this._parent.macroNum);
-			}
-			moveDownBtn_mc.addEventListener("press", moveDownBtn_mc);
-			if (counter == this.itemsPerPage - 1 || counter == this.maxItems - 1) moveDownBtn_mc.setEnabled(false);
-				
-			if (macro.running) {
-				macro_mc.attachMovie("spinner", "spinner_mc", 5);
-				macro_mc.spinner_mc._x = 15;
-				macro_mc.spinner_mc._y = 15;
-				macro_mc.createTextField("label_txt", 20, 28, 4, labelWidth - 235, 24);
-			
-				var stopBtn_mc = macro_mc.attachMovie("bi.ui.Button", "stopBtn_mc", 30 + (buttonNum++), {settings:{width:50, height:28, iconName:"media-stop"}});
-				stopBtn_mc._x = labelWidth - (buttonNum * 52);
-				stopBtn_mc._y = 1;
-				stopBtn_mc.press = function () {
-					sendCmd("MACRO", "abort", this._parent.macro.name);
+	content_mc.update = function (key, name) {
+		var a = getTimer();
+		if (name.length && name != "new" && name != "old") {
+			// partial macro info came in, only update the affected row
+			for (var i=0; i<_global.macros.length; i++) {
+				if (_global.macros[i].name == name) {
+					var macro = _global.macros[i];
+					break;
 				}
-				stopBtn_mc.addEventListener("press", stopBtn_mc);
+			}
+			if (macro != undefined) {
+				var row_mc = this.macroList_mc["macro" + i + "_mc"];
+				row_mc.visibleBtn_mc.iconName = (macro.status.noToolbar) ? "led-red" : "led-green";
+				row_mc.secureBtn_mc.iconName = (macro.status.isSecure) ? "locked" : "unlocked";
+				row_mc.editBtn_mc.enabled = (!macro.status.noEdit);
+				row_mc.deleteBtn_mc.enabled = (!macro.status.noDelete);
+				row_mc.finishBtn_mc.enabled = (macro.running);
+				row_mc.stopPlayBtn_mc.iconName = (macro.running) ? "media-stop" : "media-play";
+				row_mc.spinner_mc._visible = macro.running;
+			}
+		} else {
+			// redraw the whole list...
+			var macroList_mc = this.createEmptyMovieClip("macroList_mc", 0);
+			macroList_mc.setMask(this.rowsMask_mc);
+			macroList_mc._y = 95;
+			var label_tf = new TextFormat();
+			label_tf.color = 0xFFFFFF;
+			label_tf.size = 16;
+			label_tf.bold = true;
+			label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
+			var labelWidth = this.width - 40;
+			
+			var counter = 0;
+			for (var i=0; i<_global.macros.length; i++) {
+				var macro_mc = macroList_mc.createEmptyMovieClip("macro" + i + "_mc", i);
+				macro_mc._y = i * 35;
+				var macroNum = macro_mc.macroNum = i;
+				var macro = macro_mc.macro = _global.macros[i];
+				var buttonNum = 0;
 				
-				var finishBtn_mc = macro_mc.attachMovie("bi.ui.Button", "finishBtn_mc", 30 + (buttonNum++), {settings:{width:50, height:28, iconName:"media-fwd"}});
+				macro_mc.createTextField("label_txt", 20, 3, 4, labelWidth - 235, 24);
+	
+				var moveUpBtn_mc = macro_mc.attachMovie("bi.ui.Button", "moveUpBtn_mc", 30 + (buttonNum++), {width:50, height:28, iconName:"up-arrow"});
+				moveUpBtn_mc._x = labelWidth - (buttonNum * 52);
+				moveUpBtn_mc._y = 1;
+				moveUpBtn_mc.press = function () {
+					reorderMacros("moveUp", this._parent.macroNum);
+				}
+				moveUpBtn_mc.addEventListener("press", moveUpBtn_mc);
+				if (i == 0) moveUpBtn_mc.enabled = false;
+				
+				var moveDownBtn_mc = macro_mc.attachMovie("bi.ui.Button", "moveDownBtn_mc", 30 + (buttonNum++), {width:50, height:28, iconName:"down-arrow"});
+				moveDownBtn_mc._x = labelWidth - (buttonNum * 52);
+				moveDownBtn_mc._y = 1;
+				moveDownBtn_mc.press = function () {
+					reorderMacros("moveDown", this._parent.macroNum);
+				}
+				moveDownBtn_mc.addEventListener("press", moveDownBtn_mc);
+				if (i == _global.macros.length - 1) moveDownBtn_mc.enabled = false;
+				
+							
+				var finishBtn_mc = macro_mc.attachMovie("bi.ui.Button", "finishBtn_mc", 30 + (buttonNum++), {width:50, height:28, iconName:"media-fwd"});
 				finishBtn_mc._x = labelWidth - (buttonNum * 52);
 				finishBtn_mc._y = 1;
 				finishBtn_mc.press = function () {
 					sendCmd("MACRO", "complete", this._parent.macro.name);
 				}
 				finishBtn_mc.addEventListener("press", finishBtn_mc);
-			} else {
-				macro_mc.createTextField("label_txt", 20, 3, 4, labelWidth - 160, 26);
-				
-				var playBtn_mc = macro_mc.attachMovie("bi.ui.Button", "playBtn_mc", 30 + (buttonNum++), {settings:{width:50, height:28, iconName:"media-play"}});
-				playBtn_mc._x = labelWidth - (buttonNum * 52);
-				playBtn_mc._y = 1;
-				playBtn_mc.press = function () {
-					sendCmd("MACRO", "run", this._parent.macro.name);
-				}
-				playBtn_mc.addEventListener("press", playBtn_mc);
-			}
-				
-			var label_txt = macro_mc["label_txt"];
-			label_txt.embedFonts = true;
-			label_txt.selectable = false;
-			label_txt.setNewTextFormat(label_tf);
-			label_txt.text = macro.name;
-	
-			var bg_mc = macro_mc.createEmptyMovieClip("bg_mc", 0);
-			bg_mc.beginFill(0x829ECB);
-			bg_mc.drawRect(0, 0, labelWidth, 30, 5);
-			bg_mc.endFill();
+				finishBtn_mc.enabled = macro.running;
 			
-			if (!_global.macros[macroNum].status.noEdit) {
-				var editBtn_mc = macro_mc.attachMovie("bi.ui.Button", "editBtn_mc", 30 + (buttonNum++), {settings:{width:50, height:28, iconName:"spanner"}});
+				var stopPlayBtn_mc = macro_mc.attachMovie("bi.ui.Button", "stopPlayBtn_mc", 30 + (buttonNum++), {width:50, height:28, iconName:"media-stop"});
+				stopPlayBtn_mc._x = labelWidth - (buttonNum * 52);
+				stopPlayBtn_mc._y = 1;
+				stopPlayBtn_mc.press = function () {
+					if (this.iconName == "media-stop") {
+						sendCmd("MACRO", "abort", this._parent.macro.name);
+					} else {
+						sendCmd("MACRO", "run", this._parent.macro.name);
+					}
+				}
+				stopPlayBtn_mc.addEventListener("press", stopPlayBtn_mc);
+								
+				if (!macro.running) {
+					stopPlayBtn_mc.iconName = "media-play";
+				}
+				
+				var label_txt = macro_mc["label_txt"];
+				label_txt.embedFonts = true;
+				label_txt.selectable = false;
+				label_txt.setNewTextFormat(label_tf);
+				label_txt.text = macro.name;
+		
+				var bg_mc = macro_mc.createEmptyMovieClip("bg_mc", 0);
+				bg_mc.beginFill(0x829ECB);
+				bg_mc.drawRect(0, 0, labelWidth, 30, 5);
+				bg_mc.endFill();
+				
+				var editBtn_mc = macro_mc.attachMovie("bi.ui.Button", "editBtn_mc", 30 + (buttonNum++), {width:50, height:28, iconName:"spanner"});
 				editBtn_mc._x = labelWidth - (buttonNum * 52);
 				editBtn_mc._y = 1;
 				editBtn_mc.press = function () {
 					openMacroEdit(this._parent.macroNum);
 				}
 				editBtn_mc.addEventListener("press", editBtn_mc);
-			}
-			if (!_global.macros[macroNum].status.noDelete) {
-				var deleteBtn_mc = macro_mc.attachMovie("bi.ui.Button", "deleteBtn_mc", 10 + (buttonNum++), {settings:{width:50, height:28, iconName:"delete2"}});
+				editBtn_mc.enabled = !_global.macros[macroNum].status.noEdit;
+				
+				var deleteBtn_mc = macro_mc.attachMovie("bi.ui.Button", "deleteBtn_mc", 10 + (buttonNum++), {width:50, height:28, iconName:"delete2"});
 				deleteBtn_mc._x = labelWidth - (buttonNum * 52);
 				deleteBtn_mc._y = 1;
 				deleteBtn_mc.press = function () {
 					this.deleteMacro = function () {
 						deleteMacro(this._parent.macro.name);
-						//_global.macros.splice(this._parent.macroNum, 1);
-						//this._parent._parent._parent.update();
-						//renderMacroList()
 					}
 					confirm("Are you sure you want to delete '" + this._parent.macro.name + "'?", this, "deleteMacro");
 				}
 				deleteBtn_mc.addEventListener("press", deleteBtn_mc);
-			}
-			
-			if (!_global.macros[macroNum].status.noToolbar) {
-				var visibleBtn_mc = macro_mc.attachMovie("bi.ui.Button", "visibleBtn_mc", 30 + (buttonNum++), {settings:{width:50, height:28, iconName:"led-green"}});
-			} else {
-				var visibleBtn_mc = macro_mc.attachMovie("bi.ui.Button", "visibleBtn_mc", 30 + (buttonNum++), {settings:{width:50, height:28, iconName:"led-red"}});
-			}
-			visibleBtn_mc._x = labelWidth - (buttonNum * 52);
-			visibleBtn_mc._y = 1;
-			visibleBtn_mc.press = function () {
-				var macroObj = _global.macros[this._parent.macroNum];
-				if (macroObj.status.noToolbar) {
-					delete macroObj.status.noToolbar;
+				deleteBtn_mc.enabled = !_global.macros[macroNum].status.noDelete;
+				
+				if (!_global.macros[macroNum].status.noToolbar) {
+					var visibleBtn_mc = macro_mc.attachMovie("bi.ui.Button", "visibleBtn_mc", 30 + (buttonNum++), {width:50, height:28, iconName:"led-green"});
 				} else {
-					macroObj.status.noToolbar = true;
+					var visibleBtn_mc = macro_mc.attachMovie("bi.ui.Button", "visibleBtn_mc", 30 + (buttonNum++), {width:50, height:28, iconName:"led-red"});
 				}
-				saveMacro(macroObj.name, macroObj.controls)
-			}
-			visibleBtn_mc.addEventListener("press", visibleBtn_mc);
-			
-			if (_global.macros[macroNum].status.isSecure) {
-				var secureBtn_mc = macro_mc.attachMovie("bi.ui.Button", "secureBtn_mc", 30 + (buttonNum++), {settings:{width:50, height:28, iconName:"locked"}});
-			} else {
-				var secureBtn_mc = macro_mc.attachMovie("bi.ui.Button", "secureBtn_mc", 30 + (buttonNum++), {settings:{width:50, height:28, iconName:"unlocked"}});
-			}
-			secureBtn_mc._x = labelWidth - (buttonNum * 52);
-			secureBtn_mc._y = 1;
-			secureBtn_mc.press = function () {
-				var macroObj = _global.macros[this._parent.macroNum];
-				if (macroObj.status.isSecure) {
-					delete macroObj.status.isSecure;
+				visibleBtn_mc._x = labelWidth - (buttonNum * 52);
+				visibleBtn_mc._y = 1;
+				visibleBtn_mc.press = function () {
+					var macroObj = _global.macros[this._parent.macroNum];
+					if (macroObj.status.noToolbar) {
+						delete macroObj.status.noToolbar;
+					} else {
+						macroObj.status.noToolbar = true;
+					}
+					saveMacro(macroObj.name, macroObj.controls)
+				}
+				visibleBtn_mc.addEventListener("press", visibleBtn_mc);
+				
+				if (_global.macros[macroNum].status.isSecure) {
+					var secureBtn_mc = macro_mc.attachMovie("bi.ui.Button", "secureBtn_mc", 30 + (buttonNum++), {width:50, height:28, iconName:"locked"});
 				} else {
-					macroObj.status.isSecure = true;
+					var secureBtn_mc = macro_mc.attachMovie("bi.ui.Button", "secureBtn_mc", 30 + (buttonNum++), {width:50, height:28, iconName:"unlocked"});
 				}
-				saveMacro(macroObj.name, macroObj.controls)
+				secureBtn_mc._x = labelWidth - (buttonNum * 52);
+				secureBtn_mc._y = 1;
+				secureBtn_mc.press = function () {
+					var macroObj = _global.macros[this._parent.macroNum];
+					if (macroObj.status.isSecure) {
+						delete macroObj.status.isSecure;
+					} else {
+						macroObj.status.isSecure = true;
+					}
+					saveMacro(macroObj.name, macroObj.controls)
+				}
+				secureBtn_mc.addEventListener("press", secureBtn_mc);
+				
+				macro_mc.attachMovie("spinner", "spinner_mc", 30 + (buttonNum++));
+				macro_mc.spinner_mc._x = labelWidth - (buttonNum * 52) + 25;
+				macro_mc.spinner_mc._y = 15;
+				macro_mc.spinner_mc._visible = macro.running;
 			}
-			secureBtn_mc.addEventListener("press", secureBtn_mc);
-			counter++;
+			if (name == "new") {
+				var scrollBar_mc = this.scrollBar_mc;
+				if (macroList_mc._height > scrollBar_mc._height) {
+					macroList_mc._y = scrollBar_mc._y - macroList_mc._height + scrollBar_mc._height;
+				}
+			}
 		}
+		//trace("macro list rendered in " + this._parent + ":" + (getTimer() - a) + " ms");
 	}
 	
-	var scrollBar_mc = content_mc.createEmptyMovieClip("scrollBar_mc", 20);
-	createScrollBar(scrollBar_mc, 485, "update");
-	scrollBar_mc._y = 85;
-	scrollBar_mc._x = 525;
-
 	subscribe("MACRO", content_mc);
 
-	content_mc._parent.onClose = function () {
-		unsubscribe("MACRO", this.tabContent_mc);
+	content_mc.onClose = function () {
+		unsubscribe("MACRO", this);
 	}
 	
 	content_mc.update();
@@ -2229,8 +2334,8 @@ createScriptsAdmin = function (content_mc) {
 		this.itemsPerPage = 14;
 		if (this.maxItems > this.itemsPerPage) {
 			this.scrollBar_mc._visible = true;
-			this.scrollBar_mc.scrollUp_mc.setEnabled(this.startRow > 0);
-			this.scrollBar_mc.scrollDown_mc.setEnabled(this.startRow + this.itemsPerPage < this.maxItems);
+			this.scrollBar_mc.scrollUp_mc.enabled = this.startRow > 0;
+			this.scrollBar_mc.scrollDown_mc.enabled = this.startRow + this.itemsPerPage < this.maxItems;
 			var labelWidth = 340;
 		} else {
 			var labelWidth = 380;
@@ -2310,8 +2415,8 @@ createScriptsAdmin = function (content_mc) {
 
 	subscribe("SCRIPT", content_mc);
 
-	content_mc._parent.onClose = function () {
-		unsubscribe("SCRIPT", this.tabContent_mc);
+	content_mc.onClose = function () {
+		unsubscribe("SCRIPT", this);
 	}
 	
 	content_mc.update();
@@ -2320,23 +2425,14 @@ createScriptsAdmin = function (content_mc) {
 openMacroEdit = function (macro) {
 	var macroObj = _global.macros[macro];
 
-	var window_mc = showWindow({width:400, height:465, title:"Edit Macro: " + macroObj.name, iconName:"gears", hideClose:true});
+	var window_mc = showWindow({id:"macroEdit", width:400, height:465, title:"Edit Macro: " + macroObj.name, iconName:"gears", hideClose:true});
 	
-	window_mc.content_mc.macroObj = macroObj;
 	window_mc.content_mc.macroName = macroObj.name;
-	window_mc.content_mc.macroControls = new Array();
 	window_mc.content_mc.startRow = 0;
-	for (var i=0; i<macroObj.controls.length; i++) {
-		var objCopy = new Object();
-		for (var q in macroObj.controls[i]) {
-			objCopy[q] = macroObj.controls[i][q];
-		}
-		window_mc.content_mc.macroControls.push(objCopy);
-	}
 
 	window_mc.content_mc.update = function () {
 		var content_mc = this.createEmptyMovieClip("content_mc", 0);
-		var macroControls = this.macroControls;
+		var macroControls = this.macroControls = _global.macroContents;
 		
 		var label_tf = new TextFormat();
 		label_tf.color = 0xFFFFFF;
@@ -2349,8 +2445,8 @@ openMacroEdit = function (macro) {
 		this.itemsPerPage = 9;
 		if (this.maxItems > this.itemsPerPage) {
 			this.scrollBar_mc._visible = true;
-			this.scrollBar_mc.scrollUp_mc.setEnabled(this.startRow > 0);
-			this.scrollBar_mc.scrollDown_mc.setEnabled(this.startRow + this.itemsPerPage < this.maxItems);
+			this.scrollBar_mc.scrollUp_mc.enabled = this.startRow > 0;
+			this.scrollBar_mc.scrollDown_mc.enabled = this.startRow + this.itemsPerPage < this.maxItems;
 			var labelWidth = 340;
 		} else {
 			var labelWidth = 380;
@@ -2468,21 +2564,24 @@ openMacroEdit = function (macro) {
 	scrollBar_mc._y = 0;
 	scrollBar_mc._x = 346;
 
-	window_mc.content_mc.update();
+	sendCmd("MACRO", "getContents", macroObj.name);
+	subscribe("MACRO_CONTENTS", window_mc.content_mc);
+	
+	window_mc.onClose = function () {
+		unsubscribe("MACRO_CONTENTS", this.content_mc);
+	}
 
 	var buttons_mc = window_mc.content_mc.createEmptyMovieClip("buttons_mc", 500);
 	var save_mc = buttons_mc.attachMovie("bi.ui.Button", "save_mc", 5, {settings:{width:80, height:35, label:"Save", fontSize:14}});
 	save_mc.press = function () {
-		this._parent._parent.macroObj.controls = this._parent._parent.macroControls;
 		saveMacro(this._parent._parent.macroName, this._parent._parent.macroControls);
-		openControlPanel();
+		_global.windowStack["macroEdit"].close();
 	}
 	save_mc.addEventListener("press", save_mc);
 	var cancel_mc = buttons_mc.attachMovie("bi.ui.Button", "cancel_mc", 10, {settings:{width:80, height:35, label:"Cancel", fontSize:14}});
 	cancel_mc._x = 90;
 	cancel_mc.press = function () {
-		window_mc.close();
-		openControlPanel();
+		_global.windowStack["macroEdit"].close();
 	}
 	cancel_mc.addEventListener("press", cancel_mc);
 	buttons_mc._x = Math.round((window_mc.content_mc.width / 2) - (buttons_mc._width / 2));
@@ -2565,25 +2664,22 @@ createSlider = function (item_mc, settings) {
 	var iconOff_mc = handle_mc.attachMovie("bi.ui.Icon", "iconOff_mc", 0, {iconName:item_mc.icons[0], size:settings.h - (padding * 2)});
 	
 	bg_mc.onPress2 = function () {
-		var value = Math.round(this._xmouse / (this._width - (this._width * 0.2)) * 10) * 10;
-		if (value >= 0 && value <= 100) updateKey(this._parent.key, "on", value);
+		if (this._xmouse < 25) {
+			var value = 0;
+		} else if (this._xmouse > this._width - 25) {
+			var value = 100;
+		} else {
+			var value = Math.floor((this._xmouse - 25) / (this._width - 50) * 11) * 10;
+		}
+		if (this._parent.extras.length) {
+			value = Math.round((this._parent.extras[1] - this._parent.extras[0]) * (value / 100));
+		}
+		updateKey(this._parent.key, this._parent.command, value);
 	}
 	
 	item_mc.setPercent = function (value) {
 		this.slider_mc.handle_mc._x = Math.round((this.slider_mc.width - this.slider_mc.handle_mc._width) * (value / 100));	
 	}
-	/*
-	slider_mc.onPress2 = function () {
-		this.onMouseMove = function () {
-			var value = Math.round(this._xmouse / (this._parent.width - 4) * 10) * 10;
-			if (value >= 0 && value <= 100) updateKey(this._parent.key, "on", value);
-		}
-		this.onMouseMove();
-	}
-	slider_mc.onRelease = slider_mc.onDragOut = function () {
-		delete this.onMouseMove;
-	}
-	*/
 }
 
 createVideoViewer = function (item_mc, settings) {
@@ -2614,7 +2710,7 @@ createVideoViewer = function (item_mc, settings) {
 		video_mc.loadJPG = function () {
 			if (!isNaN(this.videoWidth)) {
 				this.onEnterFrame = function () {
-					if (this.newLoader._width > 3) {
+					if (this.newLoader._width > 6) {
 						this.oldLoader._visible = false;
 						this.newLoader._visible = true;
 						this.newLoader._width = this.videoWidth;
@@ -2626,7 +2722,15 @@ createVideoViewer = function (item_mc, settings) {
 			var tmp = this.oldLoader;
 			this.oldLoader = this.newLoader;
 			this.newLoader = tmp;
-			this.newLoader.loadMovie(this.src);
+			var url = this.src;
+			if (this.src.substr(this.src.length - 1, 1) == "?" || this.src.substr(this.src.length - 1, 1) == "&") {
+				url += new Date().getTime();
+			} else if (this.src.split("?").length > 1) {
+				url += "&r=" + new Date().getTime();
+			} else {
+				url += "?r=" + new Date().getTime();
+			}
+			this.newLoader.loadMovie(url);
 			clearInterval(this.refreshID);
 			this.refreshID = setInterval(this, "loadJPG", this.refreshRate);
 		}
@@ -2702,7 +2806,7 @@ screenSaver = function (mode) {
 	if (mode == "start" && !screensaver_mc._visible) {
 		// start
 		screensaver_mc._visible = true;
-		if (_global.settings.screenLockDisplay == "slideshow") {
+		if (_global.settings.screenLockDisplay == "photo") {
 			var holder1_mc = screensaver_mc.createEmptyMovieClip("holder1_mc", 0);
 			var holder2_mc = screensaver_mc.createEmptyMovieClip("holder2_mc", 1);
 			holder1_mc._visible = holder2_mc._visible = false;
@@ -2754,7 +2858,10 @@ screenSaver = function (mode) {
 			}
 			screensaver_mc.loadPicture();
 		} else if (_global.settings.screenLockDisplay == "logo") {
-			var logo_mc = screensaver_mc.attachMovie("bi-logo", "logo_mc", 10);
+			var bg_mc = screensaver_mc.createEmptyMovieClip("bg_mc", 0);
+			bg_mc.loadMovie(_global.settings.libLocation + _global.settings.screenLockLogoBgPath);
+			
+			var logo_mc = screensaver_mc.attachMovie("elife-logo-large", "logo_mc", 10);
 
 			logo_mc._x = Math.round(Math.random() * (_global.settings.applicationWidth - logo_mc._width));
 			logo_mc._y = Math.round(Math.random() * (_global.settings.applicationHeight - logo_mc._height));
@@ -2813,10 +2920,12 @@ layout = function () {
 	screensaver_mc.drawRect(0, 0, _global.settings.applicationWidth, _global.settings.applicationHeight);
 	screensaver_mc.endFill();
 	screensaver_mc.useHandCursor = false;
-	screensaver_mc.onPress = function () {};
+	screensaver_mc.onPress = function () {
+		screenSaver("stop");
+	}
 	screensaver_mc._visible = false;
 	
-	if (_global.settings.screenLockDisplay == "slideshow") {
+	if (_global.settings.screenLockDisplay == "photo") {
 		screensaver_mc.imageArray = mdm.FileSystem.getFileList(_global.settings.screenLockPhotoPath, "*.jpg");
 	}
 	
@@ -2842,9 +2951,9 @@ layout = function () {
 		bg_mc.lineTo(0, _global.settings.statusBarY + _global.settings.statusBarBtnHeight + _global.settings.statusBarBtnSpacing);
 		bg_mc.endFill();		
 	} else {
-		overlay_mc.attachMovie("overlay","bg_mc", 0);
+		overlay_mc.attachMovie("overlay", "bg_mc", 0);
 		overlay_mc.bg_mc._x = _global.settings.applicationWidth - overlay_mc.bg_mc._width;
-		overlay_mc.attachMovie("elife-logo","logo_mc", 5);
+		overlay_mc.attachMovie("elife-logo-small", "logo_mc", 5);
 		overlay_mc.logo_mc._x = _global.settings.applicationWidth - 60 - Math.round(overlay_mc.logo_mc._width / 2);
 		overlay_mc.logo_mc._y = 46;
 		overlay_mc.logo_mc.onPress2 = function () {
@@ -2911,7 +3020,7 @@ layout = function () {
 	statusBar_mc._y = _global.settings.statusBarY;
 	
 	if (_global.settings.device == "pda") {
-		appsBar_mc._x = _global.settings.applicationWidth - _global.settings.appsBarX - ((_global.settings.appsBarBtnWidth + _global.settings.appsBarBtnSpacing) * 3);
+		appsBar_mc._x = _global.settings.applicationWidth - _global.settings.appsBarX - ((_global.settings.appsBarBtnWidth + _global.settings.appsBarBtnSpacing) * 4);
 	} else {
 		appsBar_mc._x = _global.settings.applicationWidth - _global.settings.appsBarX - 120 - ((_global.settings.appsBarBtnWidth + _global.settings.appsBarBtnSpacing) * _global.appsBar.length);
 	}
@@ -2923,7 +3032,6 @@ layout = function () {
 			clearInterval(screenLockID);
 			screenLockID = setInterval(screenLock, _global.settings.screenLockTimeout * 1000)
 			if (screenLocked) {
-				screenSaver("stop");
 				if (_global.settings.screenLockPin.length) {
 					openPinPad(screenUnlock);
 				}
@@ -2980,11 +3088,15 @@ unsubscribe = function (keys, movieClip) {
 	*/
 }
 
-broadcastChange = function (key) {
+broadcastChange = function (key, id) {
 	//debug("broadcasting for " + key + ":")
 	var control = _global.controls[key];
 	for (var subscriber=0; subscriber<control.subscribers.length; subscriber++) {
-		eval(control.subscribers[subscriber]).update(key, control.state, control.value);
+		if (id != undefined) {
+			eval(control.subscribers[subscriber]).update(key, id);
+		} else {
+			eval(control.subscribers[subscriber]).update(key, control.state, control.value);
+		}
 		//debug(" - " + control.subscribers[subscriber])
 	}
 }
@@ -3055,7 +3167,7 @@ loadIcons = function () {
 			mc.removeMovieClip();
 			this.loadCounter--;
 			if (this.loadCounter == 0) {
-				trace("time to load " + _global.iconNames.length + " icons: " + (getTimer() - st) + "ms");
+				//trace("time to load " + _global.iconNames.length + " icons: " + (getTimer() - st) + "ms");
 				iconLoader_mc.removeMovieClip();
 				application_xml.load(_global.settings.applicationXML);
 			}
@@ -3074,12 +3186,23 @@ loadIcons = function () {
 		}
 		
 		// load the list of icons and store them into the icon objects
-		var loadIconList = new LoadVars();
-		//trace(_global.settings.libLocation);
-		loadIconList.load(_global.settings.libLocation + "icons/_icons.txt");
-		loadIconList.onData = function (src) {
-			_global.iconNames = src.split(chr(13) + chr(10));
-			loader.loadNext();
+		if (mdm.Application.path != undefined) {
+			_global.iconNames = mdm.FileSystem.getFileList(mdm.Application.path + _global.settings.libLocation + "icons", "*.png");
+			
+			if (iconNames.length) {
+				loader.loadNext();
+			} else {
+				iconLoader_mc.removeMovieClip();
+				application_xml.load(_global.settings.applicationXML);
+			}
+		} else {
+			var loadIconList = new LoadVars();
+			//trace(_global.settings.libLocation);
+			loadIconList.load(_global.settings.libLocation + "icons/_icons.txt");
+			loadIconList.onData = function (src) {
+				_global.iconNames = src.split(chr(13) + chr(10));
+				loader.loadNext();
+			}
 		}
 	}
 }

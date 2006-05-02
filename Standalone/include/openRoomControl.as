@@ -5,7 +5,7 @@
 	
 	for (var attr in room.window) {
 		if (attr.substr(0, 6) == "window") {
-			trace(attr + ":" + room.window[attr]);
+			//trace(attr + ":" + room.window[attr]);
 			if (room.window[attr] == Number(room.window[attr])) {
 				windowObject[attr.substr(6, 1).toLowerCase() + attr.substr(7)] = Number(room.window[attr]);
 			} else if (room.window[attr] == "true" || room.window[attr] == "false") {
@@ -15,7 +15,6 @@
 			}
 		}
 	}
-	
 	
 	var window_mc = showWindow(windowObject);
 	
@@ -28,7 +27,7 @@
 
 	for (var attr in room.window) {
 		if (attr.substr(0, 3) == "tab") {
-			trace(attr + ":" + room.window[attr]);
+			//trace(attr + ":" + room.window[attr]);
 			if (room.window[attr] == Number(room.window[attr])) {
 				tabObject[attr] = Number(room.window[attr]);
 			} else if (room.window[attr] == "true" || room.window[attr] == "false") {

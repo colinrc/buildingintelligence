@@ -1,6 +1,4 @@
 ﻿class bi.ui.CheckBox extends bi.ui.CoreUI {
-	private var clipParameters:Object = {settings:1, width:1, height:1, text:1};   
-	
 	private var icon_mc:MovieClip
 	private var bg_mc:MovieClip;
 		
@@ -31,7 +29,6 @@
 	/* Constructor */
 	
 	function CheckBox() {
-		initFromClipParameters();
 		createChildren();
 		draw();
 	}

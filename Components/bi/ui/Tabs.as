@@ -2,8 +2,6 @@
 import flash.filters.ColorMatrixFilter;
 
 class bi.ui.Tabs extends bi.ui.CoreUI {
-	private var clipParameters:Object = {width:1, height:1, settings:1, tabData:1, position:1, contentClips:1, activeTab:1};  
-
 	private var tabsContent_mc:MovieClip;
 	private var	tabsForeground_mc:MovieClip;
 	private var	tabsBackground_mc:MovieClip;
@@ -22,7 +20,7 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 	
 	private var _activeTabId:Number;
 		
-	private var _tabs_array:Array = [{name:"Tab", iconName:"atom"}];
+	private var _tabs_array:Array = [];
 	private var _contentClips_array:Array;
 	
 	/* Getters and Setters */
@@ -68,7 +66,7 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		_tabSpacing = tabSpacing;
 	}
 	
-	public function set cornerRadius(cornerRadius:Number):Void {
+	public function set tabCornerRadius(cornerRadius:Number):Void {
 		_cornerRadius = cornerRadius;
 	}
 	
@@ -95,6 +93,8 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		var eventObj = new Object();
 		eventObj.type = "changeTab";
 		eventObj.target = this;
+		eventObj.oldTab = tabsContent_mc["tab" + oldId + "_mc"];
+		eventObj.newTab = tabsContent_mc["tab" + id + "_mc"];
 		eventObj.id = id;
 		eventObj.oldId = oldId;
 		for (var i in _tabs_array[id]) {
@@ -110,8 +110,6 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 	/* Constructor */
 	
 	function Tabs() {
-		initFromClipParameters();
-
 		if (_tabOpacity == null) _tabOpacity = _global.settings.tabBgOpacity;
 		if (_tabOnColour == null) _tabOnColour = _global.settings.tabOnColour;
 		if (_tabOffColour == null) _tabOffColour = _global.settings.tabOffColour;

@@ -1,15 +1,17 @@
 ﻿class bi.ui.TextInput extends bi.ui.CoreUI {
-	private var clipParameters:Object = {settings:1, width:1, height:1, text:1, readOnly:1, maxChars:1, restrict:1, inputType:1, fontColour:1, fontSize:1};   
-	
 	private var text_txt:TextField;
 	private var text_tf:TextFormat;
 	private var bg_mc:MovieClip;
+	private var highlight_mc:MovieClip;
 		
 	private var _text:String = "";
 	private var _font:String;
 	private var _fontSize:Number;
 	private var _fontColour:Number;
+	private var _maxValue:Number = 10;
+	private var _minValue:Number = 1;
 	private var _maxChars:Number = 10;
+	private var _minChars:Number = 1;
 	private var _inputType:String;
 	private var _readOnly:Boolean = false;
 	private var _password:Boolean = false;
@@ -62,6 +64,30 @@
 		return text_txt.length;
 	}
 	
+	public function get minValue():Number {
+		return _minValue;
+	}
+	
+	public function set minValue(min:Number):Void {
+		_minValue = min;
+	}
+	
+	public function get maxValue():Number {
+		return _maxValue;
+	}
+	
+	public function set maxValue(max:Number):Void {
+		_maxValue = max;
+	}
+	
+	public function get minChars():Number {
+		return _minChars;
+	}
+	
+	public function set minChars(min:Number):Void {
+		_minChars = min;
+	}
+	
 	public function get maxChars():Number {
 		return _maxChars;
 	}
@@ -99,11 +125,13 @@
 		}
 	}
 	
+	public function set highlight(highlight:Boolean):Void {
+		highlight_mc._visible = highlight;
+	}
+	
 	/* Constructor */
 	
 	function TextInput() {
-		initFromClipParameters();
-
 		if (_font == null) _font = _global.settings.buttonFont;
 		if (_fontColour == null) _fontColour = _global.settings.buttonFontColour;
 		if (_fontSize == null) _fontSize = _global.settings.buttonFontSize;
@@ -118,7 +146,7 @@
 	}
 
 	private function createChildren():Void {
-		createTextField("text_txt", 20, 2, 2, __width - 4, __height - 4);
+		createTextField("text_txt", 30, 2, 2, __width - 4, __height - 4);
 		text_txt.embedFonts = true;
 		text_txt.selectable = false;
 		text_txt.wordWrap = _wordWrap;
@@ -127,7 +155,7 @@
 		onPress2 = function () {
 			if (!_readOnly) {
 				var updateTitle = function (txt, caller) {
-					if (txt.length) {
+					if ((caller._inputType != "numeric" && txt.length >= caller._minChars) || (caller._inputType == "numeric" && Number(txt) >= caller._minValue && Number(txt) <= caller._maxValue)) {
 						caller.text = txt;
 					}
 				}
@@ -159,6 +187,12 @@
 		bg_mc.beginFill(_bgColour, _bgOpacity);
 		bg_mc.drawRect(0, 0, __width, __height, _cornerRadius);
 		bg_mc.endFill();
+		
+		createEmptyMovieClip("highlight_mc", 20);
+		highlight_mc._visible = false;
+		
+		highlight_mc.lineStyle(1, 0xFFCC00, 100, true);
+		highlight_mc.drawRect(0, 0, __width, __height, _cornerRadius);
 		
 		if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
 			text_txt.filters = [_global.settings.dropShadowFilterSmall];

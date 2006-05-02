@@ -31,7 +31,6 @@
 	/* Constructor */
 	
 	function NumberPicker() {
-		initFromClipParameters();
 	}
 
 	/* Private functions */

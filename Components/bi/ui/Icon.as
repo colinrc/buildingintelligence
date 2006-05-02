@@ -1,9 +1,6 @@
 ﻿import flash.display.BitmapData;
 
 class bi.ui.Icon extends bi.ui.CoreUI {
-	private var clipParameters:Object = {settings:1, size:1, iconName:1, overlay:1};
-	
-	private var mcBoundingBox:MovieClip;
 	private var icons_mc:MovieClip;
 	private var _txtOverlay:TextField;
 	private var _size:Number;
@@ -11,9 +8,12 @@ class bi.ui.Icon extends bi.ui.CoreUI {
 	private var _overlay:String;
 
 	public function set size(size:Number):Void {
-		_size = size;
-		setSize(_size, _size);
-		draw();
+		if (size != undefined) {
+			_size = size;
+			//setSize(_size, _size);
+			_width = _size;
+			_yscale = _xscale;
+		}		
 	}
 
 	public function get size():Number {
@@ -22,7 +22,13 @@ class bi.ui.Icon extends bi.ui.CoreUI {
 
 	public function set iconName(iconName:String):Void {
 		_iconName = iconName.split(":")[0];
-		draw();
+		
+		if (_global.settings.device == "pda" || _global.flashMajorVersion < 8) {
+			attachMovie("icons", "icons_mc", 10);
+			icons_mc.gotoAndStop(_iconName);
+		} else {
+			attachBitmap(_global.icons[_iconName], 0, "auto", true);
+		}
 	}
 
 	public function get iconName():String {
@@ -52,8 +58,6 @@ class bi.ui.Icon extends bi.ui.CoreUI {
 	}
 	
 	function Icon() {
-		initFromClipParameters();
-		if (!_size) _size = (_width < _height) ? __width : __height;
 		createChildren();
 		draw();
 	}
@@ -65,16 +69,10 @@ class bi.ui.Icon extends bi.ui.CoreUI {
 	}
   
 	private function draw():Void {
-		if (!_size || !_iconName.length) return;
-		
-		if (_global.settings.device == "pda" || _global.flashMajorVersion < 8) {
-			attachMovie("icons", "icons_mc", 10);
-			icons_mc.gotoAndStop(_iconName);
-		} else {
-			attachBitmap(_global.icons[_iconName], 0, "auto", true);
+		if (_size) {
+			//trace("drawing icon for " + this + ":" + _size);
+			_width = _size;
+			_yscale = _xscale;
 		}
-			
-		_width = _size;
-		_yscale = _xscale;
 	}
 }
