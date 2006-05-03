@@ -85,6 +85,28 @@ public class Utility {
 	 * @return The scaled value
 	 * @throws NumberFormatException Thrown when the client value is not a number
 	 */
+	public static int scaleForFlash (String input, int min, int max,boolean invert) throws NumberFormatException {
+		String result = "0";
+		double range = max - min;
+		double inputVal = Double.parseDouble(input) - min;
+
+		Double returnVal = Double.valueOf(inputVal / range * 100.0);
+		int intVal = returnVal.intValue();
+		if (invert){
+			intVal = 100 - intVal;
+		}
+		return intVal;
+	}
+	
+	
+	/**
+	 * Scales a value from the flash client to an arbitrary number range.
+	 * @param input A 0-100 value from the client. 
+	 * @param min
+	 * @param max
+	 * @return The scaled value
+	 * @throws NumberFormatException Thrown when the client value is not a number
+	 */
 	public static int scaleFromFlash (String input, int min, int max,boolean invert) throws NumberFormatException {
 		String result = "000";
 		double range = max - min + 1;

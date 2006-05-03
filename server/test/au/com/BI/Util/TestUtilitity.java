@@ -65,4 +65,12 @@ public class TestUtilitity extends TestCase {
 		assertEquals (12,Utility.scaleFromFlash("0",-12,12,true));
 		assertEquals (-12,Utility.scaleFromFlash("100",-12,12,true));
 	}
+	
+	public void testScaleForFlash() {
+		assertEquals (100,Utility.scaleForFlash("12",-12,12,false));
+		assertEquals (0,Utility.scaleForFlash("-12",-12,12,false));
+		assertEquals (50,Utility.scaleForFlash("0",-12,12,false));
+		assertEquals (0,Utility.scaleForFlash("12",-12,12,true));
+		assertEquals (100,Utility.scaleForFlash("-12",-12,12,true));
+	}
 }
