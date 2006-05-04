@@ -5,6 +5,7 @@ import au.com.BI.Admin.BIFormatter;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.*;
+
 import au.com.BI.Config.*;
 
 import au.com.BI.Comms.*;
@@ -44,16 +45,22 @@ public class eLife {
 	    String minor_version = properties.getProperty("minor_version");
 	    String eSmart_install = properties.getProperty("eSmart_install");
 
+	    String outString = "";
+	    
+	    if (minor_version.equals("")){	    	
+		    outString = major_version;	    	
+	    } else {
+	    	outString = major_version + minor_version;	    	
+	    }
+	    
 
-		System.out.println ("Launching eLife V" + major_version +  
-				minor_version);
-		logger.log (Level.INFO,"Launching eLife V" + major_version +  
-				minor_version);
+		System.out.println ("Launching eLife V" + outString);
+		logger.log (Level.INFO,"Launching eLife V" + outString);
 
 		try {
 		    String bootstrapFile = "datafiles" + File.separator + "bootstrap.xml"; 
 		    bootstrap.readBootstrap(bootstrapFile);
-			bootstrap.setVersion (major_version + "." + minor_version);
+			bootstrap.setVersion (outString);
 
 		    this.defaultLogLevel = bootstrap.getDefaultDebugging();
 		    

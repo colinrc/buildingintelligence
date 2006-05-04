@@ -120,12 +120,12 @@
                 <PARAMETERS>
                         <ITEM NAME="AUDIO_INPUTS" VALUE="Nuvo Audio Inputs"/>
                 </PARAMETERS>
-                <KRAMER>
-                        <AV_OUTPUT KEY="0" DISPLAY_NAME="ALL"/>
-                        <AV_OUTPUT KEY="1" DISPLAY_NAME="FAMILY_AUDIO"/>
-                        <AV_OUTPUT KEY="2" DISPLAY_NAME="KITCHEN_AUDIO"/>
-                        <AV_OUTPUT KEY="3" DISPLAY_NAME="STUDY_AUDIO"/>
-                </KRAMER>
+                <NUVO>
+                        <AUDIO KEY="0" DISPLAY_NAME="ALL"/>
+                        <AUDIO KEY="1" DISPLAY_NAME="FAMILY_AUDIO"/>
+                        <AUDIO KEY="2" DISPLAY_NAME="KITCHEN_AUDIO"/>
+                        <AUDIO KEY="3" DISPLAY_NAME="STUDY_AUDIO"/>
+                </NUVO>
         </DEVICE>
         <!-- the key is the Lramer output, Display name is the flash icon name -->
         <!-- ______________________________________  HAL DEFS  ____________________  -->

@@ -2,10 +2,7 @@ package au.com.BI.Nuvo;
 
 import java.util.HashMap;
 import java.util.Vector;
-import java.util.Iterator;
-import java.util.List;
 
-import org.jdom.Element;
 
 import au.com.BI.Audio.*;
 import au.com.BI.Flash.ClientCommand;
@@ -20,6 +17,7 @@ public class TestCommandsFromFlash extends TestCase {
 	Audio audioFrontRoom = null;
 	Audio audioAll = null;
 	Audio kitchenAudio = null;
+	Audio studyAudio = null;
 	
 	public static void main(String[] args) {
 		junit.swingui.TestRunner.run(TestCommandsFromFlash.class);
@@ -41,10 +39,19 @@ public class TestCommandsFromFlash extends TestCase {
 		kitchenAudio.setKey("02");
 		kitchenAudio.setOutputKey("KITCHEN_AUDIO");
 
+
+		studyAudio = new Audio ("Study Audio",DeviceType.AUDIO);
+		studyAudio.setKey("02");
+		studyAudio.setOutputKey("STUDY_AUDIO");
 		
 		model.addControlledItem("FRONT_AUDIO",audioFrontRoom,DeviceType.OUTPUT);
 		model.addControlledItem("ALL",audioAll,DeviceType.OUTPUT);
 		model.addControlledItem("KITCHEN_AUDIO",kitchenAudio,DeviceType.OUTPUT);
+		model.addControlledItem("STUDY_AUDIO",studyAudio,DeviceType.OUTPUT);
+		
+		model.addControlledItem(audioFrontRoom.getKey(),audioFrontRoom,DeviceType.MONITORED);
+		model.addControlledItem(audioAll.getKey(),audioAll,DeviceType.MONITORED);
+		model.addControlledItem(kitchenAudio.getKey(),kitchenAudio,DeviceType.MONITORED);
 		
 		HashMap<String, String> map = new HashMap<String,String> (40);
 		
@@ -57,6 +64,7 @@ public class TestCommandsFromFlash extends TestCase {
 		
 		model.setParameter("AUDIO_INPUTS", "Nuvo Audio Inputs", DeviceModel.MAIN_DEVICE_GROUP);
 		model.setupAudioInputs ();
+		model.initState();
 		
 		model.setPadding (2); // device requires 2 character keys that are 0 padded.
 		
@@ -199,6 +207,35 @@ public class TestCommandsFromFlash extends TestCase {
 		Assert.assertEquals ("Return value for unknown src failed",true,val4.error);
 
 	}
+	
+	
+	public void testSrcGroups() {
+		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","src",null,"cd1","","","","");
+		String expectedOut = "*Z01SRC1";
+		NuvoCommands val = model.buildAudioString(audioFrontRoom, testCommand);
+		Assert.assertEquals ("Return value for src failed",expectedOut,val.avOutputStrings.firstElement());
+
+		ClientCommand testCommandCache = new ClientCommand("FRONT_AUDIO","src",null,"cd1","","","","");
+		NuvoCommands valCache = model.buildAudioString(audioFrontRoom, testCommandCache);
+		Assert.assertTrue ("Return value for cached src failed, the instruction was incorrectly returned",valCache.avOutputFlash.isEmpty());
+
+		ClientCommand testCommand2 = new ClientCommand("KITCHEN_AUDIO","group",null,"on","","","","");
+		NuvoCommands val2 = model.buildAudioString(kitchenAudio, testCommand2);
+		// add kitchen audio to the source group
+		
+		Vector <AudioCommand>expectedOut2 = new Vector<AudioCommand>();
+		AudioCommand testCommand3 = new AudioCommand("CLIENT_SEND","src",null,"cd2");
+		testCommand3.setDisplayName("KITCHEN_AUDIO");
+		// evaluation command for the linked source
+		expectedOut2.add(testCommand3);
+		
+		ClientCommand sendLinkedCommand = new ClientCommand("FRONT_AUDIO","src",null,"cd2","","","","");
+		NuvoCommands commandAfterLink = model.buildAudioString(audioFrontRoom, testCommand);
+		// trigger the command for update through linked item
+		
+		ListAssert.assertEquals ("Updating of grouped src failed",expectedOut2,commandAfterLink.avOutputFlash);
+	}
+	
 	
 	public void testBuildAudioSrcAll() {
 		
