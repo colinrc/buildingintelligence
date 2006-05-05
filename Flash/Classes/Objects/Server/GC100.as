@@ -104,6 +104,7 @@
 			} else{
 				var newModule = new XMLNode(1,"GC100_Relay");				
 			}
+			newModule.attributes["NAME"] = tempModules.modules[child].name;
 			var newParameters = new XMLNode(1,"PARAMETERS");
 			var newNode = new XMLNode(1,"ITEM");
 			newNode.attributes["NAME"] = "MODULE";

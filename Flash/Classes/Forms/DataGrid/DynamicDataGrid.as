@@ -232,7 +232,7 @@ class Forms.DataGrid.DynamicDataGrid {
 		columns[name].type = "log";
 		columns[name].DP = DP;
 		columns[name].heading = heading;
-		columns[name].callBack = callBack;		
+		columns[name].callBack = callBack;
 		columns[name].advanced = false;
 		columns[name].colNo = columnCount - 1;
 		columns[name].width = width;
@@ -241,18 +241,18 @@ class Forms.DataGrid.DynamicDataGrid {
 		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
 		columns[name].column.cellRenderer = "LogComboBoxCellRenderer";
 		columns[name].column.sortable = false;
-	}	
+	}
 	public function addButtonColumn(name:String, heading:String, attributes:Object, callBack:Function, advanced:Boolean, width:Number) {
 		columnCount++;
 		buttonColumns[name] = new Object();
 		buttonColumns[name].attributes = attributes;
 		buttonColumns[name].callBack = callBack;
-		columns[name] = new Object();		
+		columns[name] = new Object();
 		columns[name].heading = heading;
 		columns[name].advanced = advanced;
 		columns[name].colNo = columnCount - 1;
 		columns[name].width = width;
-		columns[name].column = new DataGridColumn(name);		
+		columns[name].column = new DataGridColumn(name);
 		columns[name].column.headerText = heading;
 		columns[name].column.headerRenderer = "MultiLineHeaderRenderer";
 		columns[name].column.cellRenderer = "ButtonCellRenderer";
@@ -293,7 +293,7 @@ class Forms.DataGrid.DynamicDataGrid {
 					break;
 				case "paramcombo" :
 				case "combo" :
-				case "iconcombo":
+				case "iconcombo" :
 					var newCombo = {label:tempDP[row][column], sel:false, DP:columns[column].DP};
 					newCombo.toString = function():String  {
 						return this.label;
@@ -330,7 +330,7 @@ class Forms.DataGrid.DynamicDataGrid {
 						return this.label;
 					};
 					newRow[column] = newCombo;
-					break;					
+					break;
 				}
 			}
 			for (var column in buttonColumns) {
@@ -346,25 +346,25 @@ class Forms.DataGrid.DynamicDataGrid {
 	public function setDataGridDataProvider(new_dp:Array) {
 		/*Reverse properties of columns object*/
 		clearSelection();
-		if(doOnce){
+		tempDP = new_dp;
+		if (doOnce) {
 			var newColumns = new Object();
-			for(var name in columns){
+			for (var name in columns) {
 				newColumns[name] = columns[name];
 			}
 			columns = newColumns;
-			doOnce = false;			
-		}		
-		tempDP = new_dp;
-		for (var name in columns) {
-			if (columns[name].column != undefined) {
-				if (((_global.advanced) && (columns[name].advanced)) || (!columns[name].advanced)) {
-					my_dg.addColumn(columns[name].column);
-					my_dg.getColumnAt(columns[name].colNo).width = columns[name].width;
+			doOnce = false;
+			for (var name in columns) {
+				if (columns[name].column != undefined) {
+					if (((_global.advanced) && (columns[name].advanced)) || (!columns[name].advanced)) {
+						my_dg.addColumn(columns[name].column);
+						my_dg.getColumnAt(columns[name].colNo).width = columns[name].width;
+					}
 				}
 			}
 		}
 		my_dg.doLater(this, "buildDG");
-		my_dg.dataProvider.updateViews("change");		
+		my_dg.dataProvider.updateViews("change");
 	}
 	public function getDataGridDataProvider():Array {
 		clearSelection();
@@ -382,7 +382,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				case "paramcombo" :
 				case "combo" :
 				case "cataloguecombo" :
-				case "iconcombo":
+				case "iconcombo" :
 					if (my_dg.dataProvider[row][column].label != "") {
 						newRow[column] = my_dg.dataProvider[row][column].label;
 					} else {
@@ -492,7 +492,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				newRow["value"].label = columns[column].DP[0].data;
 				break;
 			case "combo" :
-			case "iconcombo":
+			case "iconcombo" :
 				if (columns[column].DP[0].label != undefined) {
 					var label = columns[column].DP[0].label;
 				} else {
@@ -565,7 +565,7 @@ class Forms.DataGrid.DynamicDataGrid {
 				switch (columns[column].type) {
 				case "paramcombo" :
 				case "combo" :
-				case "iconcombo":
+				case "iconcombo" :
 				case "codecombo" :
 				case "text" :
 				case "value" :
@@ -588,14 +588,14 @@ class Forms.DataGrid.DynamicDataGrid {
 			if (lastClick.itemIndex == event.itemIndex) {
 				switch (columns[my_dg.columnNames[event.columnIndex]].type) {
 				case "combo" :
-				case "iconcombo":
+				case "iconcombo" :
 				case "text" :
 				case "value" :
 				case "colour" :
 				case "paramcombo" :
 				case "codecombo" :
 				case "cataloguecombo" :
-				case "log":
+				case "log" :
 					my_dg.dataProvider[event.itemIndex][my_dg.columnNames[event.columnIndex]].sel = true;
 					break;
 				}

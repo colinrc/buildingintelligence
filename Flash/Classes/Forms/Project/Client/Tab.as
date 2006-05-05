@@ -132,8 +132,8 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 			if (DP[index].type.length) {
 				item.attributes["type"] = DP[index].type;
 			}
-			if (DP[index].icon1 != "No Icon") {
-				if (DP[index].icon2 != "No Icon") {
+			if ((DP[index].icon1 != "No Icon")&&(DP[index].icon1 != undefined)) {
+				if ((DP[index].icon2 != "No Icon")&&(DP[index].icon2 != undefined)) {
 					var newIcons = new Array();
 					newIcons.push(DP[index].icon1);
 					newIcons.push(DP[index].icon2);
@@ -142,7 +142,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 					item.attributes["icons"] = DP[index].icon1;
 				}
 			} else {
-				if (DP[index].icon2 != "No Icon") {
+				if ((DP[index].icon2 != "No Icon")&&(DP[index].icon2 != undefined)){
 					item.attributes["icons"] = DP[index].icon2;
 				}
 			}

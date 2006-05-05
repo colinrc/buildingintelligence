@@ -58,10 +58,10 @@
 		return "base.form";
 	}
 	public function toXML():XMLNode {
-		return new XMLNode(1,"BLAH");
+		return new XMLNode(1,"XML_UNAVAILABLE");
 	}
 	public function toTree():XMLNode{
-		return new XMLNode(1,"BLAH");
+		return new XMLNode(1,"XML_UNAVAILABLE");
 	}
 	public function getName():String{
 		return "BASE FORM";
