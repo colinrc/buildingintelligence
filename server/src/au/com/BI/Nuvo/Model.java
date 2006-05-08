@@ -17,7 +17,6 @@ import au.com.BI.Util.*;
 import java.util.*;
 import java.util.logging.*;
 
-import org.jdom.Element;
 
 
 public class Model extends BaseModel implements DeviceModel {
@@ -25,12 +24,12 @@ public class Model extends BaseModel implements DeviceModel {
 
 	
 	protected String outputAudioCommand = "";
-	protected HashMap state;
-	protected HashMap currentSrc;
+	protected HashMap <String,State>state;
 	protected NuvoHelper nuvoHelper;
 	protected List commandQueue;
 	protected HashMap audioInputs;
 	protected Logger logger = null;
+	protected Vector <String>srcGroup;
 	
 	public static final String AllZones = "00";
 	
@@ -39,19 +38,21 @@ public class Model extends BaseModel implements DeviceModel {
 	public static final int Tone = 2;
 	public static final int Volume = 3;
 	public static final int Mute = 4;	
+	public static final int Zone_Status_Request = 5;
+	public static final int Zone_Tone_Request = 6;
+	
 	
 	public Model () {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		nuvoHelper = new NuvoHelper();
-		state = new HashMap();
-		currentSrc = new HashMap();
+		state = new HashMap<String,State>();
 		setPadding (2); // device requires 2 character keys that are 0 padded.
+		srcGroup = new Vector<String>();
 	}
 
 	public void clearItems () {
 		state.clear();
-		currentSrc.clear();
 		audioInputs.clear();
 		super.clearItems();
 	}
@@ -73,59 +74,76 @@ public class Model extends BaseModel implements DeviceModel {
 		super.finishedReadingConfig();
 		
 		setupAudioInputs();
+		initState();
+	}
+	
+	public void initState () {
+	    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
+	    	String key = audioDevice.getKey();
+			if (!key.equals(Model.AllZones)) {
+				state.put(key, new State());
+			}
+	    }	
 	}
 	
 	public void attatchComms(List commandList) throws ConnectionFail {
-		this.comms.setInterCommandInterval(50);
+		setInterCommandInterval(50);
 		super.attatchComms(commandList);
-	}
+		}
 	
 	
-	public void doStartup(List commandQueue) {
+	public void doStartup(List commandQueue) throws CommsFail {
 		
 		synchronized (comms) {
 			comms.clearCommandQueue();
-		
 			this.commandQueue = commandQueue;
+		}
 		
-		}
-		Iterator avDevices = configHelper.getAllControlledDevices();
-		while (avDevices.hasNext()) {
-			Audio avDevice = (Audio)avDevices.next();
-		}
+	    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
+	    	String key = audioDevice.getKey();
+			if (!key.equals(Model.AllZones)) {
 
+				String toneRequest = "*Z"+ audioDevice.getKey()+ "SETSR\n";
+				
+				CommsCommand avCommsCommand2 = new CommsCommand();
+				avCommsCommand2.setKey (key);
+				avCommsCommand2.setCommand(toneRequest);
+				avCommsCommand2.setActionType(Model.Zone_Tone_Request);
+				avCommsCommand2.setExtraInfo (((Audio)(audioDevice)).getOutputKey());
+				avCommsCommand2.setKeepForHandshake(false);
+				synchronized (comms){
+					try { 
+						comms.addCommandToQueue (avCommsCommand2);
+					} catch (CommsFail e1) {
+						throw new CommsFail ("Communication failed communitating with Nuvo " + e1.getMessage());
+					} 
+				}
+				
+			}
+	    }
+	    
+	    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
+	    	String key = audioDevice.getKey();
+			if (!key.equals(Model.AllZones)) {
+				String zoneRequest = "*Z"+ audioDevice.getKey()+ "CONSR\n";
+				
+				CommsCommand avCommsCommand = new CommsCommand();
+				avCommsCommand.setKey (key);
+				avCommsCommand.setCommand(zoneRequest);
+				avCommsCommand.setActionType(Model.Zone_Status_Request);
+				avCommsCommand.setExtraInfo (((Audio)(audioDevice)).getOutputKey());
+				avCommsCommand.setKeepForHandshake(false);
+				synchronized (comms){
+					try { 
+						comms.addCommandToQueue (avCommsCommand);
+					} catch (CommsFail e1) {
+						throw new CommsFail ("Communication failed communitating with Nuvo " + e1.getMessage());
+					} 
+				}				
+			}
+	    }
 	}
 		
-	public void doClientStartup (List commandQueue, long targetFlashDeviceID) {
-		Iterator audioDevices = configHelper.getAllControlledDevices();
-		while (audioDevices.hasNext()){
-			Audio audioDevice =(Audio)(audioDevices.next());
-			doClientStartup (commandQueue, targetFlashDeviceID, audioDevice);
-			
-		}
-	}
-
-	public void doClientStartup (List commandQueue, long targetFlashDeviceID, Audio audioDevice) {
-	}
-
-	
-	public void sendSrc (List commandQueue, long targetFlashDeviceID, Audio audioDevice, String src) {
-		AudioCommand audioCommand = (AudioCommand)audioDevice.buildDisplayCommand ();
-		audioCommand.setKey ("CLIENT_SEND");
-		audioCommand.setTargetDeviceID(targetFlashDeviceID);
-		audioCommand.setCommand ("src");
-		audioCommand.setExtraInfo (src);
-		sendToFlash (audioCommand,cache,commandQueue);	
-	}
-	
-	public void sendVolume (List commandQueue, long targetFlashDeviceID, Audio audioDevice, String volume) {
-		AudioCommand audioCommand = (AudioCommand)audioDevice.buildDisplayCommand ();
-		audioCommand.setKey ("CLIENT_SEND");
-		audioCommand.setTargetDeviceID(targetFlashDeviceID);
-		audioCommand.setCommand ("volume");
-		audioCommand.setExtraInfo (volume);
-		sendToFlash (audioCommand,cache,commandQueue);	
-	}
 	
 	public boolean doIControl (String keyName, boolean isClientCommand)
 	{
@@ -147,42 +165,30 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {	
 		String theWholeKey = command.getKey();
-		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
+		DeviceType device  = configHelper.getOutputItem(theWholeKey);
 		NuvoCommands toSend = null;
 		
-		if (deviceList == null) {
+		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
 		}
 		else {
-			Iterator devices = deviceList.iterator();
 			cache.setCachedCommand(command.getKey(),command);
 			
-			while (devices.hasNext()) {
-				DeviceType device = (DeviceType)devices.next();
-
-				
 				switch (device.getDeviceType()) {
 					case DeviceType.AUDIO :
-						toSend = buildAudioString ((Audio)device,command);
+						Audio audioDevice = (Audio)device;
+						toSend = buildAudioString (audioDevice,command);
 						if (toSend != null && !toSend.error) {
 
 							logger.log(Level.FINER, "Audio event for zone " + device.getKey() + " received from flash");
 
-						    for(String avOutputString : toSend.avOutputStrings) {
-			
-								CommsCommand avCommsCommand = new CommsCommand();
-								avCommsCommand.setKey (device.getKey());
-								avCommsCommand.setCommand(avOutputString);
-								avCommsCommand.setActionType(toSend.outputCommandType);
-								avCommsCommand.setExtraInfo (((Audio)(device)).getOutputKey());
-								avCommsCommand.setKeepForHandshake(true);
-								synchronized (comms){
-									try { 
-										comms.addCommandToQueue (avCommsCommand);
-									} catch (CommsFail e1) {
-										throw new CommsFail ("Communication failed communitating with Nuvo " + e1.getMessage());
-									} 
-								}
+						    for(String avOutputString : toSend.avOutputStrings) {			
+						    	this.sendToSerial(avOutputString,audioDevice, audioDevice.getOutputKey(),toSend.outputCommandType);
+
+							}
+						    
+							for (CommandInterface eachCommand: toSend.avOutputFlash){
+								this.sendToFlash(eachCommand, cache, commandQueue);
 							}
 
 						} else {
@@ -194,7 +200,6 @@ public class Model extends BaseModel implements DeviceModel {
 
 						break;						
 				}
-			}
 		}
 	}
 	
@@ -205,10 +210,199 @@ public class Model extends BaseModel implements DeviceModel {
 	 */
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{
-		comms.acknowlegeCommand("");
-		comms.sendNextCommand();
+		NuvoCommands commandObject = interpretStringFromNuvo (command);
+		for (CommandInterface eachCommand: commandObject.avOutputFlash){
+			this.sendToFlash(eachCommand, cache, commandQueue);
+		}
+		for (String eachCommand: commandObject.avOutputStrings){
+			this.sendToSerial(eachCommand+"\n");
+		}
 	}
 
+	public void sendToSerial (String avOutputString,Audio device, String outputKey, int outputCommandType) throws CommsFail{
+		CommsCommand avCommsCommand = new CommsCommand();
+		avCommsCommand.setKey (device.getKey());
+		avCommsCommand.setCommand(avOutputString+"\n");
+		avCommsCommand.setActionType(outputCommandType);
+		avCommsCommand.setExtraInfo (((Audio)(device)).getOutputKey());
+		avCommsCommand.setKeepForHandshake(false);
+		synchronized (comms){
+			try { 
+				comms.addCommandToQueue (avCommsCommand);
+			} catch (CommsFail e1) {
+				throw new CommsFail ("Communication failed communitating with Nuvo " + e1.getMessage());
+			} 
+		}
+	}
+	
+	public NuvoCommands interpretStringFromNuvo (CommandInterface command){
+		NuvoCommands result = new NuvoCommands();
+		boolean commandFound = false;
+		
+		String nuvoCmd = command.getKey();
+		
+		try {
+			String key = nuvoCmd.substring(2, 4);
+			
+			DeviceType audioDevice = configHelper.getControlledItem(key);
+			
+			if (audioDevice == null){
+				commandFound = true;
+				// The zone is not configured
+			}
+			
+			if (!commandFound && nuvoCmd.contains("PWR")){
+				// #ZxxPWRppp,SRCs,GRPt,VOL-yy
+				result = interpretZoneStatus (nuvoCmd,audioDevice);			
+
+			}
+			if (!commandFound && nuvoCmd.contains("BASS")){
+				// #ZxxORp,BASSyy,TREByy,GRPq,VRSTr
+				result = interpretZoneSetStatus (nuvoCmd,audioDevice);			
+			}
+	
+		} catch (IndexOutOfBoundsException ex){
+			logger.log (Level.INFO,"Nuvo returned an incorrectly formatted string " + nuvoCmd);
+		} catch ( NumberFormatException ex2) {
+			logger.log (Level.INFO,"Nuvo returned incorrectly formatted numbers " + nuvoCmd);			
+		}
+	
+		return result;
+	}
+	
+	public void addToGroup (String newKey){
+		srcGroup.add(newKey);
+		for (String eachkey: srcGroup){
+			State stateOfGroupItem = state.get(eachkey);
+			if (stateOfGroupItem != null){
+				stateOfGroupItem.setSrc(0); 
+				// Ensure the entire group has state nulled, so that any new source selection will be sent to the new group member
+			} else {
+				logger.log (Level.WARNING,"State was not recorded correctly for zone " + eachkey);
+			}
+		}
+	}
+
+	public void removeFromGroup (String newKey){
+		srcGroup.remove(newKey);
+	}
+
+
+	public boolean isInGroup (String testKey){
+		boolean returnCode = false;
+		return returnCode;
+	}
+	
+	public NuvoCommands  interpretZoneStatus (String zoneStatus,DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
+		NuvoCommands returnCode = new NuvoCommands();
+		
+		// #ZxxPWRppp,SRCs,GRPt,VOL-yy
+		
+		String[] bits = zoneStatus.split(",");
+		
+		String power =bits[0].substring(7);
+		String srcStr = bits[1].substring(3);
+		String grp = bits[2].substring(3);
+		String volStr = bits[3].substring(4);
+
+		State currentState = state.get (audioDevice.getKey());
+		int src = Integer.parseInt(srcStr);
+		
+		if (power.equals("ON") && !currentState.isPower()) {
+			returnCode.avOutputFlash.add((buildCommand ( audioDevice, "on","")));
+			currentState.setPower(true);
+		}
+		if (power.equals("OFF") && currentState.isPower()) {
+			returnCode.avOutputFlash.add((buildCommand (audioDevice, "off","")));
+			currentState.setPower (false);
+		}
+
+		if (grp.equals("1") && !currentState.isGroup_on()) {
+			returnCode.avOutputFlash.add((buildCommand ( audioDevice, "group","on")));
+			addToGroup (audioDevice.getKey());
+			currentState.setGroup_on(true);
+		}
+		if (power.equals("0") && currentState.isGroup_on()) {
+			returnCode.avOutputFlash.add((buildCommand (audioDevice, "group","off")));
+			removeFromGroup (audioDevice.getKey());
+			currentState.setGroup_on(false);
+		}
+
+		if (src != currentState.getSrc()){
+			String newSrc = this.findAVSrc(srcStr);
+			returnCode.avOutputFlash.add((buildCommand ( audioDevice, "src",newSrc)));
+			currentState.setSrc(src);
+			if (currentState.group_on)setGroupKeys ( audioDevice, srcStr,  src,  returnCode);
+		}
+		
+		if (volStr.equals ("MT")){
+			returnCode.avOutputFlash.add((buildCommand ( audioDevice, "mute","on")));
+			currentState.setMute(true);
+			if (currentState.isExt_mute()){
+				currentState.setExt_mute(false);
+				returnCode.avOutputFlash.add((buildCommand ( audioDevice, "ext-mute","off")));					
+			}
+		} else {
+			if (volStr.equals ("XM")){
+				returnCode.avOutputFlash.add((buildCommand ( audioDevice, "ext-mute","on")));
+				currentState.setExt_mute(true);
+				if (currentState.isMute()){
+					currentState.setMute(false);
+					returnCode.avOutputFlash.add((buildCommand ( audioDevice, "mute","off")));					
+				}
+			} else {
+				if (currentState.isMute()){
+					currentState.setMute(false);
+					returnCode.avOutputFlash.add((buildCommand ( audioDevice, "mute","off")));					
+				}
+				if (currentState.isExt_mute()){
+					currentState.setExt_mute(false);
+					returnCode.avOutputFlash.add((buildCommand ( audioDevice, "ext-mute","off")));					
+				}
+				if (!currentState.testVolume(volStr)){
+					int volForFlash = Utility.scaleForFlash(volStr, 0, 79, true);
+					String volForFlashStr = String.valueOf(volForFlash);
+					currentState.setVolume (String.valueOf(volForFlashStr));
+					returnCode.avOutputFlash.add((buildCommand ( audioDevice, "volume",volForFlashStr)));					
+				}				
+			}
+			
+		}
+
+		
+		return returnCode;
+	}
+
+	public NuvoCommands  interpretZoneSetStatus (String zoneStatus,DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
+		NuvoCommands returnCode = new NuvoCommands();
+		
+		// #ZxxORp,BASSyy,TREByy,GRPq,VRSTr
+		
+		String[] bits = zoneStatus.split(",");
+	
+		String bass = bits[1].substring(5);
+		String treble = bits[2].substring(5);
+
+		int trebForFlash = Utility.scaleForFlash(treble, 0, 8, true);
+		String trebForFlashStr = String.valueOf(trebForFlash);
+		returnCode.avOutputFlash.add((buildCommand ( audioDevice, "treble",trebForFlashStr)));					
+		
+		int bassForFlash = Utility.scaleForFlash(bass, 0, 8, true);
+		String bassForFlashStr = String.valueOf(bassForFlash);
+		returnCode.avOutputFlash.add((buildCommand ( audioDevice, "bass",bassForFlashStr)));
+		
+		return returnCode;
+	}
+
+	public CommandInterface buildCommand (DeviceType audioDevice , String command, String extra){
+			AudioCommand audioCommand = (AudioCommand)audioDevice.buildDisplayCommand ();
+			audioCommand.setKey ("CLIENT_SEND");
+			audioCommand.setTargetDeviceID(0);
+			audioCommand.setCommand (command);
+			audioCommand.setExtraInfo (extra);
+			return audioCommand;
+	}
+	
 	public void sendToFlash (CommandInterface command, Cache cache ,List commandQueue) {
 		cache.setCachedCommand(command.getDisplayName(),command);
 		synchronized (commandQueue){
@@ -233,10 +427,11 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public NuvoCommands buildAudioString (Audio device, CommandInterface command){
 		NuvoCommands returnVal = new NuvoCommands();
-		
+		String key = device.getKey();
 		boolean commandFound = false;
 
-		
+		State currentState = state.get(key);
+
 		String rawBuiltCommand = configHelper.doRawIfPresent (command, device, this);
 		if (rawBuiltCommand != null)
 		{
@@ -252,7 +447,6 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 
 		if (!commandFound && theCommand.equals("src")) {
-			String key = device.getKey();
 			String srcCode = "";
 			commandFound = true;
 			
@@ -262,36 +456,58 @@ public class Model extends BaseModel implements DeviceModel {
 				if (key.equals(Model.AllZones)){
 				    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
 						if (!audioDevice.getKey().equals(Model.AllZones)) {
-							setCurrentSrc(audioDevice.getKey(),srcCode);
+							State stateForItem = state.get(audioDevice.getKey());
+							if (stateForItem != null) 
+								stateForItem.setSrc(src);
+							else
+								logger.log (Level.WARNING,"State was not correctly set up within the Nuvo system, please contact your integrator ");
 							returnVal.addAvOutputString(String.format("*Z"+audioDevice.getKey()+"SRC"+src));
 						}
+				    }	
 					logger.log (Level.FINEST,"Changing audio source for all zones");
-				    }
 				} else {
-					setCurrentSrc(device.getKey(),srcCode);
+					currentState.setSrc(src);
 					returnVal.addAvOutputString(String.format("*Z"+key+"SRC"+src));
 					logger.log (Level.FINEST,"Changing audio source");
-					
+					if (currentState.isGroup_on()){
+						setGroupKeys (device,extra,src,returnVal);
+					}
 				}
 				returnVal.outputCommandType = Model.Select;
 			} catch (NumberFormatException ex) {
-				returnVal.addAvOutputString(null);
+				returnVal.addAvOutputString("");
 				returnVal.error = true;
 				returnVal.errorDescription = "Input src does not decode to an integer";
 			}
 		}			
-
+		
+		if (!commandFound && theCommand.equals("group")) {
+			commandFound = true;
+			if (extra.equals ("on")){
+				currentState.setGroup_on(true);
+				this.addToGroup(key);
+				logger.log (Level.FINE,"Zone " + key + " added to the source group");	
+			}  else {
+				currentState.setGroup_on(false);
+				this.removeFromGroup(key);
+				logger.log (Level.FINE,"Zone " + key + " removed from the source group");	
+			}
+		}
+			
 		if (!commandFound && theCommand.equals("volume")) {
 
-			String key = device.getKey();
-			
 			if (!commandFound && extra.equals ("up")){
 				commandFound = true;
 				if (!key.equals (Model.AllZones)){
+					currentState.setVolume("");
 					returnVal.addAvOutputString(String.format("*Z"+key+"VOL+"));
 					logger.log (Level.FINEST,"Volump ramp up in zone " + key);					
 				} else {
+
 					returnVal.addAvOutputString("*ZALLV+");
+					for(State eachState : state.values()){
+						eachState.setVolume("");					
+					}
 					logger.log (Level.FINEST,"All volume ramp up");	
 				}
 			}
@@ -299,9 +515,13 @@ public class Model extends BaseModel implements DeviceModel {
 			if (!commandFound && extra.equals ("down")){
 				commandFound = true;
 				if (!key.equals (Model.AllZones)){
+					for(State eachState : state.values()){
+						eachState.setVolume("");					
+					}
 					returnVal.addAvOutputString(String.format("*Z"+key+"VOL-"));
 					logger.log (Level.FINEST,"Volump ramp down in zone " + key);					
 				} else {
+					currentState.setVolume("");
 					returnVal.addAvOutputString("*ZALLV-");
 					logger.log (Level.FINEST,"All volume ramp down");	
 				}
@@ -320,7 +540,9 @@ public class Model extends BaseModel implements DeviceModel {
 			if (!commandFound){
 				try {
 					int newVal = Utility.scaleFromFlash(extra,0,78,true);
-					returnVal.addAvOutputString(String.format("*Z"+key+"VOL%02d",newVal));
+					String volString = String.format("%02d",newVal);
+					currentState.setVolume(volString);
+					returnVal.addAvOutputString("*Z"+key+"VOL"+volString);
 					commandFound = true;
 					logger.log (Level.FINEST,"Changing tone in zone " + key);
 				} catch (NumberFormatException ex){
@@ -332,19 +554,21 @@ public class Model extends BaseModel implements DeviceModel {
 		}	
 		
 		if (!commandFound &&  theCommand.equals("on")) {
-			String key = device.getKey();
+			currentState.setPower(true);
 			returnVal.addAvOutputString("*Z"+key+"ON");
 			logger.log (Level.FINEST,"Switching on zone "+ key);
 			commandFound = true;
 			returnVal.outputCommandType = DeviceType.NUVO_SWITCH;
-
 		}
 		
 		if (!commandFound && theCommand.equals("off")) {
-			String key = device.getKey();
 			if (key.equals(Model.AllZones)) {
+				for(State eachState : state.values()){
+					eachState.setPower(false);					
+				}
 				returnVal.addAvOutputString("*ALLOFF");
 			} else {
+				currentState.setPower(false);
 				returnVal.addAvOutputString("*Z"+key+"OFF");
 			}
 			logger.log (Level.FINEST,"Switching off zone " + key);
@@ -353,17 +577,24 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 
 		if (!commandFound && theCommand.equals("mute")) {
-			String key = device.getKey();
 			if (command.getExtraInfo().equals ("on")){
 				if (key.equals(Model.AllZones)) {
+					for(State eachState : state.values()){
+						eachState.setMute(true);			
+					}
 					returnVal.addAvOutputString("*ALLMON");
 				} else {
+					currentState.setMute(true);
 					returnVal.addAvOutputString("*Z"+key+"MTON");
 				} 
 			} else {
 				if (key.equals(Model.AllZones)) {
+					for(State eachState : state.values()){
+						eachState.setMute(false);					
+					}
 					returnVal.addAvOutputString("*ALLMOFF");
 				} else {
+					currentState.setMute(false);
 					returnVal.addAvOutputString("*Z"+key+"MTOFF");
 				} 
 			}
@@ -373,7 +604,6 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 		
 		if (!commandFound && theCommand.equals("bass")) {
-			String key = device.getKey();
 			try {
 				int newVal = Utility.scaleFromFlash(extra,-12,12,false);
 				returnVal.addAvOutputString(String.format("*Z"+key+"BASS%+03d",newVal));
@@ -386,7 +616,6 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 		
 		if (!commandFound && theCommand.equals("treble")) {
-			String key = device.getKey();
 			try {
 				int newVal = Utility.scaleFromFlash(extra,-12,12,false);
 				returnVal.addAvOutputString(String.format("*Z"+key+"TREB%+03d",newVal));
@@ -403,27 +632,27 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 		else {
 			return null;
-		
 		}
 	}
-
-
-	public boolean hasState (String zone) {
-		return state.containsKey(zone);
-	}
 	
-	
-	/**
-	 * @return Returns the currentSrc for a zone
-	 */
-	public String getCurrentSrc(String zone) {
-		return (String)currentSrc.get(zone);
-	}
-	/**
-	 * @param currentSrc The currentSrc for the zone is set
-	 */
-	public void setCurrentSrc(String zone, String currentSrcStr) {
-		currentSrc.put(zone, currentSrcStr);
+	public void setGroupKeys (DeviceType audioDevice,String srcStr, int src, NuvoCommands returnVal) {
+		String keyToTest = audioDevice.getKey();
+		// Member of source group so switch any other devices in the group to the same source
+		for (String eachKey : this.srcGroup){
+			try {
+				if (!eachKey.equals (keyToTest)){
+					State stateOfLinkedDevice= state.get(eachKey);
+					if (!stateOfLinkedDevice.testSrc(src)){
+						DeviceType linkedDevice = (DeviceType)configHelper.getControlItem(eachKey);					
+						returnVal.avOutputFlash.add(buildCommand ( linkedDevice, "src",srcStr));
+						stateOfLinkedDevice.setSrc(src);
+						logger.log (Level.FINE,"Updating source of zone " + keyToTest + " due to source linkage");
+					}
+				}
+			} catch (ClassCastException ex){
+				logger.log (Level.WARNING, "A non-audio Nuvo device has been incorrectly added to the source group. Key " + keyToTest);
+			}
+		}
 	}
 
 	public NuvoHelper getNuvoHelper() {
