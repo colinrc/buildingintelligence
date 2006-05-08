@@ -41,7 +41,7 @@ public class TestCommandsFromFlash extends TestCase {
 
 
 		studyAudio = new Audio ("Study Audio",DeviceType.AUDIO);
-		studyAudio.setKey("02");
+		studyAudio.setKey("03");
 		studyAudio.setOutputKey("STUDY_AUDIO");
 		
 		model.addControlledItem("FRONT_AUDIO",audioFrontRoom,DeviceType.OUTPUT);
@@ -52,6 +52,7 @@ public class TestCommandsFromFlash extends TestCase {
 		model.addControlledItem(audioFrontRoom.getKey(),audioFrontRoom,DeviceType.MONITORED);
 		model.addControlledItem(audioAll.getKey(),audioAll,DeviceType.MONITORED);
 		model.addControlledItem(kitchenAudio.getKey(),kitchenAudio,DeviceType.MONITORED);
+		model.addControlledItem(studyAudio.getKey(),studyAudio,DeviceType.MONITORED);
 		
 		HashMap<String, String> map = new HashMap<String,String> (40);
 		
@@ -210,19 +211,20 @@ public class TestCommandsFromFlash extends TestCase {
 	
 	
 	public void testSrcGroups() {
-		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","src",null,"cd1","","","","");
-		String expectedOut = "*Z01SRC1";
+		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","src",null,"cd2","","","","");
+		String expectedOut = "*Z01SRC2";
 		NuvoCommands val = model.buildAudioString(audioFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for src failed",expectedOut,val.avOutputStrings.firstElement());
 
-		ClientCommand testCommandCache = new ClientCommand("FRONT_AUDIO","src",null,"cd1","","","","");
-		NuvoCommands valCache = model.buildAudioString(audioFrontRoom, testCommandCache);
-		Assert.assertTrue ("Return value for cached src failed, the instruction was incorrectly returned",valCache.avOutputFlash.isEmpty());
-
-		ClientCommand testCommand2 = new ClientCommand("KITCHEN_AUDIO","group",null,"on","","","","");
-		NuvoCommands val2 = model.buildAudioString(kitchenAudio, testCommand2);
+		ClientCommand frontAudioToGroup = new ClientCommand("FRONT_AUDIO","group",null,"on","","","","");
+		NuvoCommands val3 = model.buildAudioString(audioFrontRoom, frontAudioToGroup);
 		// add kitchen audio to the source group
-		
+
+		ClientCommand kitchenToGroup = new ClientCommand("KITCHEN_AUDIO","group",null,"on","","","","");
+		NuvoCommands val4 = model.buildAudioString(kitchenAudio, kitchenToGroup);
+		// add kitchen audio to the source group
+
+
 		Vector <AudioCommand>expectedOut2 = new Vector<AudioCommand>();
 		AudioCommand testCommand3 = new AudioCommand("CLIENT_SEND","src",null,"cd2");
 		testCommand3.setDisplayName("KITCHEN_AUDIO");
@@ -236,13 +238,27 @@ public class TestCommandsFromFlash extends TestCase {
 		ListAssert.assertEquals ("Updating of grouped src failed",expectedOut2,commandAfterLink.avOutputFlash);
 	}
 	
+
+	public void testSrcCache() {
+		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","src",null,"cd1","","","","");
+		String expectedOut = "*Z01SRC1";
+		NuvoCommands val = model.buildAudioString(audioFrontRoom, testCommand);
+		Assert.assertEquals ("Return value for src failed",expectedOut,val.avOutputStrings.firstElement());
+
+		ClientCommand testCommandCache = new ClientCommand("FRONT_AUDIO","src",null,"cd1","","","","");
+		NuvoCommands valCache = model.buildAudioString(audioFrontRoom, testCommandCache);
+		Assert.assertTrue ("Return value for cached src failed, the instruction was incorrectly returned",valCache.avOutputFlash.isEmpty());
+
+	}
 	
+
 	public void testBuildAudioSrcAll() {
 		
 		ClientCommand testCommand3 = new ClientCommand("ALL","src",null,"cd2","","","","");
 		Vector <String>expectedOut = new Vector<String>();
 		expectedOut.add ("*Z01SRC2");
 		expectedOut.add ("*Z02SRC2");
+		expectedOut.add ("*Z03SRC2");
 
 		NuvoCommands val3 = model.buildAudioString(audioAll, testCommand3);
 		ListAssert.assertEquals ("Return value for volume failed",expectedOut,val3.avOutputStrings);

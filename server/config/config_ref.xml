@@ -26,7 +26,7 @@
                 <IR_LEARNER/>
         </DEVICE>
        <!-- ______________________________________  PELCO DEFS  ____________________  -->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="PELCO" DESCRIPTION="Pelco Defs">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="PELCO" DESCRIPTION="Pelco Defs">
                 <CONNECTION>
                         <SERIAL ACTIVE="Y" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="4800" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
 
@@ -102,32 +102,9 @@
                         <AV_OUTPUT KEY="3" DISPLAY_NAME="STUDY_AV"/>
                 </KRAMER>
         </DEVICE>
-        <!-- the key is the Kramer output, Display name is the flash icon name -->
+
         
-        <!-- ______________________________________  Nuvo DEFS  ____________________  -->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="NUVO" DESCRIPTION="Nuvo Audio Switch">
-                <CONNECTION>
-                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
-                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
-                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
-                </CONNECTION>
-                <CATALOGUE NAME="Nuvo Audio Inputs">
-                        <ITEM CODE="cd1" VALUE="1"/>
-                        <ITEM CODE="cd2" VALUE="2"/>
-                        <ITEM CODE="digital" VALUE="3"/>
-                        <ITEM CODE="tv" VALUE="4"/>
-                </CATALOGUE>
-                <PARAMETERS>
-                        <ITEM NAME="AUDIO_INPUTS" VALUE="Nuvo Audio Inputs"/>
-                </PARAMETERS>
-                <NUVO>
-                        <AUDIO KEY="0" DISPLAY_NAME="ALL"/>
-                        <AUDIO KEY="1" DISPLAY_NAME="FAMILY_AUDIO"/>
-                        <AUDIO KEY="2" DISPLAY_NAME="KITCHEN_AUDIO"/>
-                        <AUDIO KEY="3" DISPLAY_NAME="STUDY_AUDIO"/>
-                </NUVO>
-        </DEVICE>
-        <!-- the key is the Lramer output, Display name is the flash icon name -->
+        <!-- the key is the Kramer output, Display name is the flash icon name -->
         <!-- ______________________________________  HAL DEFS  ____________________  -->
         <DEVICE ACTIVE="N" DEVICE_TYPE="HAL" DESCRIPTION="HAL Audio">
                 <CONNECTION>
@@ -162,7 +139,7 @@
         <!-- the key is the HAL zone, Display name is the flash icon name -->
 
         !-- ______________________________________  DynaLite DEFS  ____________________  -->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="DYNALITE" DESCRIPTION="DynaLite Lights">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="DYNALITE" DESCRIPTION="DynaLite Lights">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N"  FLOW="NONE"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="NONE" />
@@ -512,55 +489,7 @@
                         <TOGGLE_OUTPUT KEY="03" NAME="Output 3" DISPLAY_NAME="OUT_3"/>
                 </GC100_Relay>
         </DEVICE>	
-   <!-- _____________________________ M1 DEFS _____________________________-->
-        <DEVICE ACTIVE="Y" NAME="M1" DISPLAY_NAME="M1" PASSWORD="2378">
-                <CONNECTION>
-                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
-                          <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
-                          <IP ACTIVE="Y" IP_ADDRESS="192.168.0.251" PORT="2101"/>
-                </CONNECTION>
-                <M1>
-                        <CONTACT_CLOSURE KEY="001" AREA="001" NAME="Kitchen Hall PIR" DISPLAY_NAME="KITCHEN_HALL_PIR"/>
-                        <CONTACT_CLOSURE KEY="006" AREA="001" NAME="Dining PIR" DISPLAY_NAME="DINING_PIR"/>
- 
-                        <TOGGLE_OUTPUT KEY="012" AREA="001" NAME="Side Gate" DISPLAY_NAME="SIDE_GATE"/>
-                        <TOGGLE_OUTPUT KEY="006" AREA="001" NAME="Garage Door" DISPLAY_NAME="GARAGE_DOOR"/>
- 
- 					<!--
- 					                                               
-                        <CONTACT_CLOSURE KEY="002" AREA="001" NAME="Panel Box Tamper" DISPLAY_NAME="Panel Box Tamper"/>
-                        <CONTACT_CLOSURE KEY="003" AREA="001" NAME="Sue Garage" DISPLAY_NAME="Sue Garage"/>
-                        <CONTACT_CLOSURE KEY="004" AREA="001" NAME="Dave Garage" DISPLAY_NAME="Dave Garage"/>
-                        <CONTACT_CLOSURE KEY="005" AREA="001" NAME="West Side Gate" DISPLAY_NAME="West Side Gate"/>
-
-                        <CONTACT_CLOSURE KEY="007" AREA="001" NAME="Garage Side Door" DISPLAY_NAME="Garage Side Door"/>
-                        <CONTACT_CLOSURE KEY="008" AREA="001" NAME="Master Bed Windw" DISPLAY_NAME="Master Bed Window"/>
-                        <CONTACT_CLOSURE KEY="009" AREA="001" NAME="Lounge Window" DISPLAY_NAME="Lounge Window"/>
-                        <CONTACT_CLOSURE KEY="010" AREA="001" NAME="Study Window" DISPLAY_NAME="Study Window"/>
-                        <CONTACT_CLOSURE KEY="012" AREA="001" NAME="Garage PIR" DISPLAY_NAME="Garage PIR"/>
-                        <CONTACT_CLOSURE KEY="013" AREA="001" NAME="Study PIR" DISPLAY_NAME="Study PIR"/>
-                        <CONTACT_CLOSURE KEY="014" AREA="001" NAME="Lounge  PIR" DISPLAY_NAME="Lounge  PIR"/>
-                        <CONTACT_CLOSURE KEY="015" AREA="001" NAME="Front Hall PIR" DISPLAY_NAME="Front Hall PIR"/>
-                        <CONTACT_CLOSURE KEY="016" AREA="001" NAME="Master Bed PIR" DISPLAY_NAME="Master Bed PIR"/>
-                        <CONTACT_CLOSURE KEY="017" AREA="001" NAME="East Side Gate" DISPLAY_NAME="East Side Gate"/>
-                        <CONTACT_CLOSURE KEY="018" AREA="001" NAME="Laura Window" DISPLAY_NAME="Laura Window"/>
-                        <CONTACT_CLOSURE KEY="019" AREA="001" NAME="Family Room Wind" DISPLAY_NAME="Family Room Window"/>
-                        <CONTACT_CLOSURE KEY="020" AREA="001" NAME="Emma Window" DISPLAY_NAME="Emma Window"/>
-                        <CONTACT_CLOSURE KEY="021" AREA="001" NAME="Toilet/Bathroom" DISPLAY_NAME="Toilet/Bathroom"/>
-                        <CONTACT_CLOSURE KEY="022" AREA="001" NAME="Laundry Window" DISPLAY_NAME="Laundry Window"/>
-                        <CONTACT_CLOSURE KEY="023" AREA="001" NAME="Laundry Door" DISPLAY_NAME="Laundry Door"/>
-                        <CONTACT_CLOSURE KEY="024" AREA="001" NAME="Smoke Detectors" DISPLAY_NAME="Smoke Detectors"/>
-                        <CONTACT_CLOSURE KEY="026" AREA="001" NAME="Dining/Kit Windw" DISPLAY_NAME="Dining/Kitchen Window"/>
-                        <CONTACT_CLOSURE KEY="027" AREA="001" NAME="Family Room Door" DISPLAY_NAME="Family Room Door"/>
-                        <CONTACT_CLOSURE KEY="028" AREA="001" NAME="Dining Room" DISPLAY_NAME="Dining Room"/>
-                        <CONTACT_CLOSURE KEY="029" AREA="001" NAME="Laura Room PIR" DISPLAY_NAME="Laura Room PIR"/>
-                        <CONTACT_CLOSURE KEY="030" AREA="001" NAME="Emma Room PIR" DISPLAY_NAME="Emma Room PIR"/>
-                        <CONTACT_CLOSURE KEY="031" AREA="001" NAME="Back Hall PIR" DISPLAY_NAME="Back Hall PIR"/>
-                        <CONTACT_CLOSURE KEY="032" AREA="001" NAME="Family PIR" DISPLAY_NAME="Family PIR"/>
-                        -->
-                        
-                 </M1>
-        </DEVICE>
+  
         <!-- _____________________________ GC-100 DEFS _____________________________-->
         <DEVICE ACTIVE="N" DEVICE_TYPE="GC100" DESCRIPTION="GC100">
                 <CONNECTION>

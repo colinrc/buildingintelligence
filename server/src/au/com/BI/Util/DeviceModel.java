@@ -353,6 +353,18 @@ public interface DeviceModel {
 	 * Padding is greater than 1 when a device requires a key of a certain length.
 	 */	
 	public void setPadding(int padding);
+	
+	/**
+	 * Used to specify a minimum interval between commands sent by the server. Leave as 0 if no minimum is required.
+	 * @return The interval
+	 */
+	public int getInterCommandInterval();
+
+	/**
+	 * Used to specify a minimum interval between commands sent by the server. Leave as 0 if no minimum is required.
+	 * @param interCommandInterval
+	 */
+	public void setInterCommandInterval(int interCommandInterval);
 }
 
 

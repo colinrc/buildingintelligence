@@ -59,6 +59,7 @@ public class BaseModel
 		protected long serverID = 0;
 		protected AddressBook addressBook = null;
 		protected AlarmLogging alarmLogging = null;
+		protected int interCommandInterval = 0;
 		
 		protected int padding = 1; // Number of digits to pad the key too in the device.
 		
@@ -427,6 +428,7 @@ public class BaseModel
 						if (etxArray != null) comms.setETXArray(etxArray);
 						if (penultimateArray != null) comms.setPenultimateArray(penultimateArray);
 						if (stxArray != null) comms.setSTXArray(stxArray);
+						if (interCommandInterval != 0 ) comms.setInterCommandInterval(interCommandInterval);
                         parameters = new SerialParameters();
                         parameters.buildFromDevice(this);
                         synchronized (comms) {
@@ -450,6 +452,7 @@ public class BaseModel
                         }
 						if (etxArray != null) comms.setETXArray(etxArray);
 						if (stxArray != null) comms.setSTXArray(stxArray);
+						if (interCommandInterval != 0 ) comms.setInterCommandInterval(interCommandInterval);
 						if (penultimateArray != null) comms.setPenultimateArray(penultimateArray);
 
                         synchronized (comms) {
@@ -719,6 +722,14 @@ public class BaseModel
 
 	public void setPadding(int padding) {
 		this.padding = padding;
+	}
+
+	public int getInterCommandInterval() {
+		return interCommandInterval;
+	}
+
+	public void setInterCommandInterval(int interCommandInterval) {
+		this.interCommandInterval = interCommandInterval;
 	}
 
 }
