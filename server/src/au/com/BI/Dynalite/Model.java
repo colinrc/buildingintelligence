@@ -48,13 +48,13 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 
 
-	public void attatchComms(List commandList) 
+	public void attatchComms() 
 	throws ConnectionFail { 
 		super.setTransmitMessageOnBytes(8); // dynalite uses 8 byte packets
-		super.attatchComms( commandList);
+		super.attatchComms( );
 	}
 
-	public void doStartup (List commandQueue) throws CommsFail{
+	public void doStartup () throws CommsFail{
 		this.requestAllLevels();
 		this.requestAllAreaLinks();
 	}

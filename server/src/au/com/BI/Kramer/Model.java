@@ -79,18 +79,16 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 	
-	public void attatchComms(List commandList) 
+	public void attatchComms() 
 	throws ConnectionFail {
 		super.setTransmitMessageOnBytes(4); // kramer only sends a single non CR terminated byte.
-		super.attatchComms( commandList);
+		super.attatchComms( );
 	}
 	
-	public void doStartup(List commandQueue) {
+	public void doStartup() {
 		
 		synchronized (comms) {
 			comms.clearCommandQueue();
-		
-			this.commandQueue = commandQueue;
 		
 		}
 		Iterator avDevices = configHelper.getAllControlledDevices();
@@ -119,7 +117,7 @@ public class Model extends BaseModel implements DeviceModel {
 		audioCommand.setTargetDeviceID(targetFlashDeviceID);
 		audioCommand.setCommand ("src");
 		audioCommand.setExtraInfo (src);
-		sendToFlash (audioCommand,cache,commandQueue);	
+		sendToFlash (audioCommand,cache);	
 	}
 	
 	public void sendVolume (List commandQueue, long targetFlashDeviceID, AV audioDevice, String volume) {
@@ -128,7 +126,7 @@ public class Model extends BaseModel implements DeviceModel {
 		audioCommand.setTargetDeviceID(targetFlashDeviceID);
 		audioCommand.setCommand ("volume");
 		audioCommand.setExtraInfo (volume);
-		sendToFlash (audioCommand,cache,commandQueue);	
+		sendToFlash (audioCommand,cache);	
 	}
 	
 	public boolean doIControl (String keyName, boolean isClientCommand)
@@ -242,13 +240,6 @@ public class Model extends BaseModel implements DeviceModel {
 	{
 		comms.acknowlegeCommand("");
 		comms.sendNextCommand();
-	}
-
-	public void sendToFlash (CommandInterface command, Cache cache ,List commandQueue) {
-		cache.setCachedCommand(command.getDisplayName(),command);
-		synchronized (commandQueue){
-			commandQueue.add(command);
-		}
 	}
 
 	

@@ -81,11 +81,11 @@ public class Model extends BaseModel implements DeviceModel {
 		super.clearItems();
 	}
 
-	public void attatchComms(List commandList)
+	public void attatchComms()
 	throws ConnectionFail {
 
 		super.setETXArray (etxChars);
-		super.attatchComms(commandList);
+		super.attatchComms();
 	}
 
 	public void doClientStartup (List commandQueue, long targetFlashDeviceID) {
@@ -279,7 +279,7 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void doStartup(List commandQueue) throws CommsFail {
+	public void doStartup() throws CommsFail {
 		if (applicationCodes.isEmpty()) applicationCodes.add("38");
 
 		String pollTempStr = (String)this.getParameter("POLL_TEMP_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);

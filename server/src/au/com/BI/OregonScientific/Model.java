@@ -55,18 +55,13 @@ public class Model extends BaseModel implements DeviceModel {
 
 	}
 
-	public void doStartup (List commandQueue) throws CommsFail 
-	{
 
-	}
-
-
-	public void attatchComms(List commandList)
+	public void attatchComms()
 	throws ConnectionFail {
 
 		super.setPenultimateArray(penChars);
 		super.setETXArray (etxChars);
-		super.attatchComms(commandList);
+		super.attatchComms();
 	}
 
 	public boolean doIControl (String keyName, boolean isClientCommand)
@@ -333,22 +328,6 @@ public class Model extends BaseModel implements DeviceModel {
 			} catch (NumberFormatException ex){
 				logger.log (Level.WARNING,"Barometric sea level reference was not a valid hex number " + value);
 			}
-		}
-	}
-
-	public void sendToFlash (String displayName, String command, String value) {
-		Command flashCommand = new Command ();
-		flashCommand.setKey ("CLIENT_SEND");
-		flashCommand.setDisplayName(displayName);
-		flashCommand.setCommand(command);
-		flashCommand.setExtraInfo(value);
-		sendToFlash (flashCommand);
-	}
-	
-	public void sendToFlash (CommandInterface command) {
-		cache.setCachedCommand(command.getDisplayName(),command);
-		synchronized (commandQueue){
-			commandQueue.add(command);
 		}
 	}
 

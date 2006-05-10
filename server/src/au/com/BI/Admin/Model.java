@@ -62,7 +62,7 @@ public class Model extends BaseModel implements DeviceModel, ClientModel
 		return false;
 	}
         
-	public void attatchComms(List commandQueue) {
+	public void attatchComms() {
 		// meaningless for this
 	}
 	
@@ -71,8 +71,6 @@ public class Model extends BaseModel implements DeviceModel, ClientModel
 		this.irLearner = (au.com.BI.IR.Model)irLearner;
 	}
 	
-	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID){};
-	public void doStartup(java.util.List commandQueue){};
 	
 	// Ensure listening will restart after a config reload.
 	

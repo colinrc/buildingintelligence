@@ -72,7 +72,7 @@ public class Model extends BaseModel implements DeviceModel {
 	/**
 	 * 
 	 */
-	public void doStartup(List commandQueue) throws CommsFail {
+	public void doStartup() throws CommsFail {
 
 		// create the temperature polling service
 		String pollTempStr = (String)this.getParameter("POLL_SENSOR_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);

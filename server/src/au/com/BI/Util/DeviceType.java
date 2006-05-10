@@ -58,6 +58,7 @@ public interface DeviceType
 	public static final int LIGHT_DYNALITE_AREA = 43;
 	
 	public static final int NUVO_SWITCH = 44;
+	public static final int SIGN_VIDEO_SWITCH = 45;
 
 	// Alert types
 	public static final int ALARM_SYSTEM=1;

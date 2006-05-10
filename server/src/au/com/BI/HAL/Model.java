@@ -182,7 +182,7 @@ public class Model extends AudioModel implements DeviceModel {
 		super.clearItems();
 	}
 
-	public void doStartup(List commandQueue) {
+	public void doStartup() {
 		String startupCommand = "";
 
 		comms.clearCommandQueue();
@@ -197,7 +197,6 @@ public class Model extends AudioModel implements DeviceModel {
 		else
 			inputs = (HashMap) this.getCatalogueDef(inputsDef);
 
-		this.commandQueue = commandQueue;
 		this.startPolling();
 	}
 

@@ -38,7 +38,7 @@ public class ConnectDevice extends Thread {
 	while (deviceModel.isTryingToConnect()) {
 		try {
 			deviceModel.finishedReadingConfig();
-			deviceModel.attatchComms(commandQueue);
+			deviceModel.attatchComms();
 			if (shownWarning){
 				logger.log(Level.WARNING, "Connection restored to " + deviceModel.getName());
 			}
@@ -57,7 +57,7 @@ public class ConnectDevice extends Thread {
 			    deviceModel.setIrCodeDB(this.irCodeDB);
 			}
 			deviceModel.setBootstrap(bootstrap);
-			deviceModel.doStartup(commandQueue);
+			deviceModel.doStartup();
 			deviceModel.setConnected(true);
 			deviceModel.setTryingToConnect(false);
 		} catch (ConnectionFail fail) {

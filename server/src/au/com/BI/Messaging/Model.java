@@ -45,9 +45,6 @@ public class Model
         }
 
 
-        public void doStartup(java.util.List commandQueue) {
-
-        }
 
 
         /**
@@ -107,7 +104,7 @@ public class Model
         public void doMessage (ClientCommand command){
         		MessageCommand theMessage = buildTheMessage (command);
         		if (theMessage != null){
-					this.sendToFlash(theMessage);
+					this.sendToFlash(theMessage,cache);
         		}
         }
         
@@ -169,14 +166,7 @@ public class Model
         		}
 
         }
-        
-        public void sendToFlash(CommandInterface command) {
 
-                cache.setCachedCommand(command.getDisplayName(), command);
-                synchronized (commandQueue) {
-                        commandQueue.add(command);
-                }
-        }
  
         public void attatchComms(List commandQueue) throws au.com.BI.Comms.
           ConnectionFail {};
@@ -201,11 +191,5 @@ public class Model
                 return true;
         }
 
-		public AddressBook getAddressBook() {
-			return addressBook;
-		}
 
-		public void setAddressBook(AddressBook addressBook) {
-			this.addressBook = addressBook;
-		}
 }

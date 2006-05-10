@@ -95,7 +95,7 @@ public class Model extends BaseModel implements DeviceModel {
 		return "getversion,1\n";
 	}
 
-	public void doStartup(List commandQueue) throws CommsFail {
+	public void doStartup() throws CommsFail {
 	    Iterator startupItems = configHelper.getStartupQueryItemsList();
 	    while (startupItems.hasNext()) {
 				try { 

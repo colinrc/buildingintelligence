@@ -247,7 +247,7 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 	
 
-	public void doStartup(List commandQueue) throws CommsFail {
+	public void doStartup() throws CommsFail {
 		CommsCommand commsCommand = new CommsCommand();
 		commsCommand.setKeepForHandshake(false);
 		commsCommand.setCommand("gs\r\n");

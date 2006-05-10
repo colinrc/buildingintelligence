@@ -95,7 +95,7 @@ public interface DeviceModel {
 	/**
 	 * Establishes connection based on parameters read from the config file
 	 */
-	public void attatchComms(List commandQueue) throws au.com.BI.Comms.ConnectionFail;
+	public void attatchComms() throws au.com.BI.Comms.ConnectionFail;
 
 	/** Provides a hook to disable manual heartbeats (newline character) on IP connections
 	 *
@@ -183,7 +183,7 @@ public interface DeviceModel {
 	 * Raw definitions are used for direct serial strings
 	 * @param raw defs. A map of the definitions.
 	 */
-	public void setCatalogueDefs (String mapName, Map rawDefs);
+	public void setCatalogueDefs (String mapName, HashMap<String,String> defs);
 	public Map getCatalogueDef (String mapName);
 
 	/**
@@ -202,7 +202,7 @@ public interface DeviceModel {
 	 * Runs the overall system startup
 	 * @param commandQueue The system command queue
 	 */
-	public void doStartup(List commandQueue) throws au.com.BI.Comms.CommsFail;
+	public void doStartup() throws au.com.BI.Comms.CommsFail;
 
 	public int getInstanceID ();
 
@@ -332,7 +332,7 @@ public interface DeviceModel {
      * @param targetFlashDeviceID The target ID of the handler for the new client
      * @param serverID The server ID to process the startup. 
      */
-	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID);
+	public void doClientStartup( long targetFlashDeviceID, long serverID);
 
 
 	public AddressBook getAddressBook();
@@ -365,6 +365,21 @@ public interface DeviceModel {
 	 * @param interCommandInterval
 	 */
 	public void setInterCommandInterval(int interCommandInterval);
+
+	/**
+	 * A utility function to assist in model development
+	 * @param command
+	 * @param cache
+	 */
+	public void sendToFlash (CommandInterface command, Cache cache ) ;
+	
+	/**
+	 * A utility function to assist in model development
+	 * @param command
+	 * @param cache
+	 */
+	public void sendToFlash (String displayName, String command, String value);
+
 }
 
 

@@ -69,19 +69,14 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 	
-	public void attatchComms(List commandList) 
+	public void attatchComms() 
 	throws ConnectionFail {
 	    if (protocol == ProtocolD) { 
 			super.setTransmitMessageOnBytes(4); // tutondo only sends a single non CR terminated byte.
 	    }
-		super.attatchComms( commandList);
+		super.attatchComms( );
 	}
 	
-	public void doStartup (List commandQueue) throws CommsFail 
-	{
-
-	}
-
 
 
 	public boolean doIControl (String keyName, boolean isClientCommand)

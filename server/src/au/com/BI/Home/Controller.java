@@ -109,6 +109,7 @@ public class Controller {
 		modelRegistry.put("IR_LEARNER", "au.com.BI.IR.Model");
 		modelRegistry.put("M1", "au.com.BI.M1.Model");
 		modelRegistry.put("NUVO", "au.com.BI.Nuvo.Model");
+		modelRegistry.put("SIGN_VIDEO", "au.com.BI.SignVideo.Model");
 		modelRegistry.put("MACRO", "au.com.BI.Macro.Model");
 		modelRegistry.put("SCRIPT", "au.com.BI.Script.Model");
 
@@ -465,16 +466,16 @@ public class Controller {
     		Iterator models = deviceModels.iterator();
     		while (models.hasNext()){
     			DeviceModel nextModel = (DeviceModel)models.next();
-    			nextModel.doClientStartup(commandQueue, targetFlashDeviceID, serverID);
+    			nextModel.doClientStartup( targetFlashDeviceID, serverID);
     		}
     		
     		Iterator cl_models = clientModels.iterator();
     		while (cl_models.hasNext()){
     			DeviceModel nextModel = (DeviceModel)cl_models.next();
-    			nextModel.doClientStartup(commandQueue, targetFlashDeviceID, serverID);
+    			nextModel.doClientStartup( targetFlashDeviceID, serverID);
     		}
     		
-    		scriptModel.doClientStartup(commandQueue, targetFlashDeviceID, serverID);
+    		scriptModel.doClientStartup( targetFlashDeviceID, serverID);
     }
     
     /**

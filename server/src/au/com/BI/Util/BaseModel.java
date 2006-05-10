@@ -31,14 +31,14 @@ public class BaseModel
         protected boolean connected = false;
         private boolean autoReconnect = true;
 
-        protected Map <String,Map>rawDefs;
+        protected HashMap <String,HashMap>rawDefs;
         protected HashMap <String,HashMap> parameters;
         protected HashMap <String,String>topMap; // a convienience reference to the top level map
 
         protected Logger logger;
 
         protected String name = "Unknown";
-        protected List commandQueue;
+        protected List commandQueue = null;
         protected ConfigHelper configHelper;
         protected au.com.BI.Command.Cache cache;
         protected HashMap<String,Object> variableCache;
@@ -69,10 +69,10 @@ public class BaseModel
         public BaseModel() {
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
                 configHelper = new ConfigHelper();
-                parameters = new HashMap<String,HashMap>(DeviceModel.NUMBER_DEVICE_GROUPS);
+                parameters = new HashMap<String, HashMap>(DeviceModel.NUMBER_DEVICE_GROUPS);
                 topMap = new HashMap<String,String>(DeviceModel.NUMBER_PARAMETERS);
                 parameters.put(DeviceModel.MAIN_DEVICE_GROUP, topMap);
-                rawDefs = new HashMap<String,Map>(DeviceModel.NUMBER_CATALOGUES);
+                rawDefs = new HashMap<String,HashMap>(DeviceModel.NUMBER_CATALOGUES);
         }
 
         public void setTransmitMessageOnBytes(int numberBytes) {
@@ -97,15 +97,19 @@ public class BaseModel
 
         public void finishedReadingConfig() throws SetupException {};
 
-        public void doStartup(java.util.List commandQueue)  throws au.com.BI.Comms.CommsFail {};
+        public void doStartup()  throws au.com.BI.Comms.CommsFail {};
+
+        /**
+         * @deprecated
+         */
+        public final void doStartup(List commandList)  throws au.com.BI.Comms.CommsFail {};
 
         /** 
          * Called when a new client connects to the server
-         * @param commandQueue
          * @param targetFlashDeviceID
          * @param serverID
          */
-    		public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID){};
+    		public void doClientStartup(long targetFlashDeviceID, long serverID){};
 
     		
         /**
@@ -410,7 +414,7 @@ public class BaseModel
          * @throws ConnectionFail
          * @see au.com.BI.Comms.CommsCommand;
          */
-        public void attatchComms(List commandList) throws ConnectionFail {
+        public void attatchComms() throws ConnectionFail {
                 SerialParameters parameters = null;
                 if ( ( (String)this.getParameter("Connection_Type", DeviceModel.MAIN_DEVICE_GROUP)).equals("SERIAL")) {
 
@@ -433,7 +437,7 @@ public class BaseModel
                         parameters.buildFromDevice(this);
                         synchronized (comms) {
                                 ( (Serial) comms).connect( (String)this.getParameter("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
-                                  parameters, commandList, this.getInstanceID(),this.getName());
+                                  parameters, commandQueue, this.getInstanceID(),this.getName());
                                 comms.clearCommandQueue();
                         }
                 }
@@ -458,7 +462,7 @@ public class BaseModel
                         synchronized (comms) {
                                 ( (IP) comms).connect( (String)this.getParameter("IP_Address", DeviceModel.MAIN_DEVICE_GROUP),
                                   (String)this.getParameter("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
-                                  commandList, this.getInstanceID(), doIPHeartbeat(),getHeartbeatString(),this.getName());
+                                  commandQueue, this.getInstanceID(), doIPHeartbeat(),getHeartbeatString(),this.getName());
                                 comms.clearCommandQueue();
                         }
                 }
@@ -489,23 +493,23 @@ public class BaseModel
         /**
          * @return Returns the rawDefs.
          */
-        public final Map getCatalogueDef(String name) {
-                return (Map) rawDefs.get(name);
+        public final HashMap<String,String> getCatalogueDef(String name) {
+                return rawDefs.get(name);
         }
 
         /**
          * @param rawDefs The rawDefs to set.
          */
-        public final void setCatalogueDefs(String name, Map rawDefs) {
+        public final void setCatalogueDefs(String name, HashMap<String,String> rawDefs) {
                 this.rawDefs.put(name, rawDefs);
         }
 
         public Object getParameter(String name, String groupName) {
-                HashMap theMap;
+                HashMap <String,String>theMap;
                 if (groupName == null || groupName.equals("")) groupName = DeviceModel.MAIN_DEVICE_GROUP;
 
                 if (!groupName.equals(DeviceModel.MAIN_DEVICE_GROUP) && parameters.containsKey(groupName)) {
-                        theMap = (HashMap) parameters.get(groupName);
+                        theMap = parameters.get(groupName);
                         Object item = theMap.get(name);
                         if (item == null)
                                 return "";
@@ -527,7 +531,7 @@ public class BaseModel
                         theMap = topMap;
                 else {
                         if (parameters.containsKey(groupName))
-                                theMap = (HashMap<String,String>) parameters.get(groupName);
+                                theMap = parameters.get(groupName);
                         else
                                 theMap = new HashMap<String,String>(DeviceModel.NUMBER_PARAMETERS);
                 }
@@ -536,6 +540,19 @@ public class BaseModel
                 parameters.put(groupName, theMap);
         }
 
+    	
+    	public String findKeyForParameterValue(String srcCode, Map<String,String> inputParameters) {
+    		String returnVal = "1";
+    		int srcVal = Integer.parseInt(srcCode); 
+    		for (String eachItem: inputParameters.keySet()){
+    			int programVal = Integer.parseInt(inputParameters.get(eachItem));
+    			if (programVal == srcVal) {
+    				returnVal = eachItem;
+    			}
+    		}
+    		return returnVal;
+    	}
+    	
         /**
          * @return Returns the instanceID.
          */
@@ -731,5 +748,24 @@ public class BaseModel
 	public void setInterCommandInterval(int interCommandInterval) {
 		this.interCommandInterval = interCommandInterval;
 	}
+
+	
+	public void sendToFlash (CommandInterface command, Cache cache ) {
+		cache.setCachedCommand(command.getDisplayName(),command);
+		synchronized (commandQueue){
+			commandQueue.add(command);
+		}
+	}
+	
+
+	public void sendToFlash (String displayName, String command, String value) {
+		Command flashCommand = new Command ();
+		flashCommand.setKey ("CLIENT_SEND");
+		flashCommand.setDisplayName(displayName);
+		flashCommand.setCommand(command);
+		flashCommand.setExtraInfo(value);
+		sendToFlash (flashCommand,cache);
+	}
+	
 
 }

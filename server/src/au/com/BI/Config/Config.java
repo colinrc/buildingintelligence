@@ -270,15 +270,15 @@ public class Config {
 
 	public void parseRawDefDetails (String catalogueName, Element deviceConfig, DeviceModel deviceModel) throws JDOMException {
 		List rawItemList = deviceConfig.getChildren();
-		HashMap rawDefs = new HashMap (40);
+		HashMap<String,String>  defs= new HashMap<String,String> (40);
 		Iterator rawItemListIterator = rawItemList.iterator();
 		while (rawItemListIterator.hasNext()){
 			Element rawItem = (Element) rawItemListIterator.next();
 			String value = Utility.unEscape (rawItem.getAttributeValue("VALUE"));
-			rawDefs.put(rawItem.getAttributeValue("CODE"), value);
+			defs.put((String)rawItem.getAttributeValue("CODE"), value);
 		}
 
-		deviceModel.setCatalogueDefs (catalogueName,rawDefs);
+		deviceModel.setCatalogueDefs (catalogueName,defs);
 
 	}
 

@@ -74,10 +74,6 @@ public class Model
         }
 
 
-        public void doStartup(java.util.List commandQueue) {
-
-        }
-
         /**
          * New Devices are added via this method.
          * <P>

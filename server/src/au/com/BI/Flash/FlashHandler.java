@@ -98,10 +98,6 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 		return true;
 	}
 
-	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID){};
-
-	public void doStartup(java.util.List commandQueue){};
-
 	// Ensure listening will restart after a config reload.
 
 	public void startListenning (String address, int portNumber) throws CommsFail  {
@@ -127,11 +123,6 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 
 	public void addControlledItem (String name, DeviceType details, int controlType) {
 		configHelper.addControlledItem (name, details, controlType);
-	}
-
-	/** General hook for a device to do any final startup once the configuration is cloaded */
-	public void finishedReadingConfig () throws SetupException {
-
 	}
 
 
@@ -300,14 +291,6 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 
 	public final void setSecurity(Security security) {
 		this.security = security;
-	}
-
-	public AddressBook getAddressBook() {
-		return addressBook;
-	}
-
-	public void setAddressBook(AddressBook addressBook) {
-		this.addressBook = addressBook;
 	}
 
 	

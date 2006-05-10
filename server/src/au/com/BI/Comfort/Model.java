@@ -263,7 +263,7 @@ public class Model extends BaseModel implements DeviceModel  {
 		}
 	}
 
-	public void doStartup(List commandQueue) throws CommsFail  {
+	public void doStartup() throws CommsFail  {
 		startup.doStartup(configHelper, comms, commandQueue);
 		analogueReader.setComms(comms);
 		long analoguePoll = 30000; //default to every 30 seconds

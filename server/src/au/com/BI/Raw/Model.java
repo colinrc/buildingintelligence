@@ -45,7 +45,7 @@ public class Model extends BaseModel implements DeviceModel {
 		if (STX == null) STX = "";
 	}
 
-	public void doStartup (List commandQueue) throws CommsFail 
+	public void doStartup () throws CommsFail 
 	{
 		for (int i = 1; i < 10 ; i++) {
 			String startup = (String)this.getParameter("STARTUP"+i,DeviceModel.MAIN_DEVICE_GROUP);
@@ -258,7 +258,7 @@ public class Model extends BaseModel implements DeviceModel {
 		flashCommand.setDisplayName(key);
 		flashCommand.setCommand(commandStr);
 		flashCommand.setExtraInfo(extra);
-		sendToFlash (flashCommand);
+		sendToFlash (flashCommand,cache);
 
 	}
 
@@ -271,13 +271,6 @@ public class Model extends BaseModel implements DeviceModel {
 			str = str.replaceAll(pattern,matcher.group(i));
 		}
 		return str;
-	}
-
-	public void sendToFlash (CommandInterface command) {
-		cache.setCachedCommand(command.getDisplayName(),command);
-		synchronized (commandQueue){
-			commandQueue.add(command);
-		}
 	}
 
 

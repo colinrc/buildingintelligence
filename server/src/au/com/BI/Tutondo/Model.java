@@ -52,20 +52,19 @@ public class Model extends AudioModel implements DeviceModel {
 		currentSrc = new HashMap(40); // maximum tutondo zones		
 	}
 	
-	public void attatchComms(List commandList) 
+	public void attatchComms() 
 	throws ConnectionFail {
 	    if (!protocolB) { 
-			super.setTransmitMessageOnBytes(1); // tutondo only sends a single non CR terminated byte.
+			setTransmitMessageOnBytes(1); // tutondo only sends a single non CR terminated byte.
 	    }
-		super.attatchComms( commandList);
+		super.attatchComms( );
 	}
 	
-	public void doStartup(List commandQueue) {
+	public void doStartup() {
 		
 		synchronized (comms) {
 			comms.clearCommandQueue();
-		
-			this.commandQueue = commandQueue;
+
 		
 			if (pollDevice != null) pollDevice.setRunning(false);
 	
@@ -150,7 +149,7 @@ public class Model extends AudioModel implements DeviceModel {
 			audioCommand.setCommand ("off");
 			audioCommand.setExtraInfo ("");
 		}
-		sendToFlash (audioCommand,cache,commandQueue);
+		sendToFlash (audioCommand,cache);
 
 		AudioCommand audioMuteCommand = (AudioCommand)audioDevice.buildDisplayCommand ();
 		audioMuteCommand.setKey ("CLIENT_SEND");
@@ -164,7 +163,7 @@ public class Model extends AudioModel implements DeviceModel {
 			audioMuteCommand.setCommand ("mute");
 			audioMuteCommand.setExtraInfo ("off");
 		}
-		sendToFlash (audioMuteCommand,cache,commandQueue);
+		sendToFlash (audioMuteCommand,cache);
 	}
 	
 	public void sendSrc (List commandQueue, long targetFlashDeviceID, Audio audioDevice, String src) {
@@ -173,7 +172,7 @@ public class Model extends AudioModel implements DeviceModel {
 		audioCommand.setTargetDeviceID(targetFlashDeviceID);
 		audioCommand.setCommand ("src");
 		audioCommand.setExtraInfo (src);
-		sendToFlash (audioCommand,cache,commandQueue);	
+		sendToFlash (audioCommand,cache);	
 	}
 	
 	public void sendVolume (List commandQueue, long targetFlashDeviceID, Audio audioDevice, String volume) {
@@ -182,7 +181,7 @@ public class Model extends AudioModel implements DeviceModel {
 		audioCommand.setTargetDeviceID(targetFlashDeviceID);
 		audioCommand.setCommand ("volume");
 		audioCommand.setExtraInfo (volume);
-		sendToFlash (audioCommand,cache,commandQueue);	
+		sendToFlash (audioCommand,cache);	
 	}
 	
 	public boolean doIControl (String keyName, boolean isClientCommand)
@@ -389,12 +388,6 @@ public class Model extends AudioModel implements DeviceModel {
 		}
 	}
 
-	public void sendToFlash (CommandInterface command, Cache cache ,List commandQueue) {
-		cache.setCachedCommand(command.getDisplayName(),command);
-		synchronized (commandQueue){
-			commandQueue.add(command);
-		}
-	}
 
 	public String scaleVol (String volume){
 		try {
