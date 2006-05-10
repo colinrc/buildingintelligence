@@ -26,8 +26,7 @@ public class Model extends BaseModel implements DeviceModel {
 	protected String outputAudioCommand = "";
 	protected HashMap <String,State>state;
 	protected NuvoHelper nuvoHelper;
-	protected List commandQueue;
-	protected HashMap audioInputs;
+	protected HashMap <String,String> audioInputs;
 	protected Logger logger = null;
 	protected Vector <String>srcGroup;
 	
@@ -86,17 +85,16 @@ public class Model extends BaseModel implements DeviceModel {
 	    }	
 	}
 	
-	public void attatchComms(List commandList) throws ConnectionFail {
+	public void attatchComms() throws ConnectionFail {
 		setInterCommandInterval(50);
-		super.attatchComms(commandList);
+		super.attatchComms();
 		}
 	
 	
-	public void doStartup(List commandQueue) throws CommsFail {
+	public void doStartup() throws CommsFail {
 		
 		synchronized (comms) {
 			comms.clearCommandQueue();
-			this.commandQueue = commandQueue;
 		}
 		
 	    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
@@ -188,7 +186,7 @@ public class Model extends BaseModel implements DeviceModel {
 							}
 						    
 							for (CommandInterface eachCommand: toSend.avOutputFlash){
-								this.sendToFlash(eachCommand, cache, commandQueue);
+								this.sendToFlash(eachCommand, cache);
 							}
 
 						} else {
@@ -212,7 +210,7 @@ public class Model extends BaseModel implements DeviceModel {
 	{
 		NuvoCommands commandObject = interpretStringFromNuvo (command);
 		for (CommandInterface eachCommand: commandObject.avOutputFlash){
-			this.sendToFlash(eachCommand, cache, commandQueue);
+			this.sendToFlash(eachCommand, cache);
 		}
 		for (String eachCommand: commandObject.avOutputStrings){
 			this.sendToSerial(eachCommand+"\n");
@@ -329,7 +327,7 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 
 		if (src != currentState.getSrc()){
-			String newSrc = this.findAVSrc(srcStr);
+			String newSrc = findKeyForParameterValue(srcStr, audioInputs);
 			returnCode.avOutputFlash.add((buildCommand ( audioDevice, "src",newSrc)));
 			currentState.setSrc(src);
 			if (currentState.group_on)setGroupKeys ( audioDevice, srcStr,  src,  returnCode);
@@ -402,28 +400,7 @@ public class Model extends BaseModel implements DeviceModel {
 			audioCommand.setExtraInfo (extra);
 			return audioCommand;
 	}
-	
-	public void sendToFlash (CommandInterface command, Cache cache ,List commandQueue) {
-		cache.setCachedCommand(command.getDisplayName(),command);
-		synchronized (commandQueue){
-			commandQueue.add(command);
-		}
-	}
 
-	
-	public String findAVSrc(String srcCode) {
-		String returnVal = "1";
-		Iterator inputItems = audioInputs.keySet().iterator();
-		int srcVal = Integer.parseInt(srcCode); 
-		while (inputItems.hasNext()) {
-			String inputKey = (String)inputItems.next();
-			int programVal = Integer.parseInt((String)audioInputs.get(inputKey));
-			if (programVal == srcVal) {
-				returnVal = inputKey;
-			}
-		}
-		return returnVal;
-	}
 	
 	public NuvoCommands buildAudioString (Audio device, CommandInterface command){
 		NuvoCommands returnVal = new NuvoCommands();
