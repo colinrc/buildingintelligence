@@ -14,6 +14,8 @@ public class AudioModel extends BaseModel {
 	protected HashMap functions;
 	
 	public void finishedReadingConfig () throws SetupException {
+		super.finishedReadingConfig();
+		
 		String inputsDef = (String)this.getParameter("INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
 		String functionsDef = (String)this.getParameter("FUNCTIONS",DeviceModel.MAIN_DEVICE_GROUP);
 		if (inputsDef == null || inputsDef.equals ("")) {

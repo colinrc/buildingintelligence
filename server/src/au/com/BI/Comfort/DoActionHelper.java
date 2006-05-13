@@ -10,7 +10,7 @@ import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Alert.*;
-import au.com.BI.Analogue.*;
+import au.com.BI.Analog.*;
 
 
 /**
@@ -72,7 +72,7 @@ public class DoActionHelper {
 				if(!comfortString.theParameter.equals ((String)previousValue.get(deviceKey))){
 					int returnParam = new Integer(comfortString.theParameter).byteValue();
 	
-					AnalogueCommand analogueCommand = new AnalogueCommand ("CLIENT_SEND","on",null);
+					AnalogCommand analogueCommand = new AnalogCommand ("CLIENT_SEND","on",null);
 					analogueCommand.setDisplayName(raSent.getDisplayName());
 					analogueCommand.setExtraInfo(comfortString.theParameter);
 					previousValue.put (deviceKey,comfortString.theParameter);

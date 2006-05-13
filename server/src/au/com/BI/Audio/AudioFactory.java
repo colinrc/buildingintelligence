@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 import org.jdom.Element;
 
-import au.com.BI.Analogue.AnalogFactory;
+import au.com.BI.Analog.AnalogFactory;
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
@@ -46,10 +46,7 @@ public class AudioFactory {
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
 		Audio audio = new Audio (display_name,connectionType);
 
-		int padding = targetDevice.getPadding();
-		if (padding > 1){
-			key = Utility.padString(key, padding);
-		}
+		key = targetDevice.formatKey(key);
 			
 		audio.setKey (key);
 		audio.setOutputKey(display_name);

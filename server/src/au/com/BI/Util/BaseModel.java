@@ -60,7 +60,8 @@ public class BaseModel
 		protected AddressBook addressBook = null;
 		protected AlarmLogging alarmLogging = null;
 		protected int interCommandInterval = 0;
-		
+        protected boolean deviceKeysDecimal = false;
+        protected boolean configKeysInDecimal = false;
 		protected int padding = 1; // Number of digits to pad the key too in the device.
 		
 		
@@ -274,6 +275,9 @@ public class BaseModel
                 }
         }
 
+
+        
+        
         /**
          * Decrement the variable Value
          * @param key The key to store the value for.
@@ -766,6 +770,57 @@ public class BaseModel
 		flashCommand.setExtraInfo(value);
 		sendToFlash (flashCommand,cache);
 	}
+
+	/**
+	 * True if decimal to the device requires decimal keys (rare) 
+	 * @return True or false
+	 */
+	public boolean isDeviceKeysDecimal() {
+		return deviceKeysDecimal;
+	}
+
+	/**
+	 * True if decimal to the device requires decimal keys (rare) 
+	 */	
+	public void setDeviceKeysDecimal(boolean decimalKeys) {
+		this.deviceKeysDecimal = decimalKeys;
+	}
+
+	/**
+	 * True if the keys are specified in the configuration file in decimal
+	 * @return True or false
+	 */
+	public boolean isConfigKeysInDecimal() {
+		return configKeysInDecimal;
+	}
+
+	/**
+	 * True if the keys are specified in the configuration file in decimal
+	 * @return True or false
+	 */
+	public void setConfigKeysInDecimal(boolean configKeysInDecimal) {
+		this.configKeysInDecimal = configKeysInDecimal;
+	}
+	
+    public String formatKey(String key) throws NumberFormatException {
+		int padding = getPadding();
+		String formatSpec = "%0";
+		formatSpec += padding;
+
+		if (!this.isDeviceKeysDecimal()){
+			formatSpec += "X";
+		} else {
+			formatSpec += "d";			
+		}
+		int keyInt = 0;
+		if (isConfigKeysInDecimal()){
+			keyInt = Integer.parseInt(key);
+		} else{
+			keyInt = Integer.parseInt(key,16);
+		}
+			
+		return String.format(formatSpec,keyInt);
+    }
 	
 
 }

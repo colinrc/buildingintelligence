@@ -2,7 +2,7 @@
  * Created on Feb 12, 2004
  *
  */
-package au.com.BI.Analogue;
+package au.com.BI.Analog;
 import au.com.BI.Util.*;
 import au.com.BI.Command.*;
 
@@ -12,11 +12,11 @@ import au.com.BI.Command.*;
  * @author Colin Canfield
  *
  **/
-public class Analogue extends BaseDevice implements DeviceType
+public class Analog extends BaseDevice implements DeviceType
 {
 	protected String key;
 	
-	public Analogue (String name, int deviceType, String outputKey){
+	public Analog (String name, int deviceType, String outputKey){
 		super (name,deviceType,outputKey);
 		this.outputKey = outputKey;
 	}
@@ -33,7 +33,7 @@ public class Analogue extends BaseDevice implements DeviceType
 	 * @return
 	 */
 	public CommandInterface buildDisplayCommand () {
-		AnalogueCommand analogueCommand = new AnalogueCommand ();
+		AnalogCommand analogueCommand = new AnalogCommand ();
 		analogueCommand.setDisplayName(this.getOutputKey());
 		return analogueCommand;
 	}

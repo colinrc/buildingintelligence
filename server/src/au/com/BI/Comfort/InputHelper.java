@@ -13,7 +13,7 @@ import au.com.BI.Lights.*;
 import au.com.BI.ToggleSwitch.*;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.CustomInput.*;
-import au.com.BI.Analogue.*;
+import au.com.BI.Analog.*;
 import au.com.BI.X10.*;
 
 /**
@@ -54,7 +54,7 @@ public class InputHelper {
 					break;
 
 			case DeviceType.ANALOGUE:
-			    CommandInterface analogueCommand = (CommandInterface)((Analogue)deviceType).buildDisplayCommand ();
+			    CommandInterface analogueCommand = (CommandInterface)((Analog)deviceType).buildDisplayCommand ();
 				analogueCommand.setKey ("CLIENT_SEND");
 				analogueCommand.setUser(command.getUser());
 				

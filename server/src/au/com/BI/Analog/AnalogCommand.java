@@ -2,7 +2,7 @@
  * Created on Jan 27, 2004
  *
  */
-package au.com.BI.Analogue;
+package au.com.BI.Analog;
 import au.com.BI.Command.Command;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.User.*;
@@ -16,7 +16,7 @@ import org.jdom.*;
  * Encapsulates a command to a physical device
  *
  */
-public class AnalogueCommand extends Command implements CommandInterface {
+public class AnalogCommand extends Command implements CommandInterface {
 
 	private Map keyList;
 	
@@ -25,19 +25,19 @@ public class AnalogueCommand extends Command implements CommandInterface {
 	public String port;
 	
 	
-	public AnalogueCommand ()
+	public AnalogCommand ()
 	{
 	    super();
 	}
 
-	public AnalogueCommand (String key,String commandCode, User user)
+	public AnalogCommand (String key,String commandCode, User user)
 	{
 		super (key,commandCode,user);
 
 	}
 	
 
-	public AnalogueCommand (String key,String commandCode, User user, String extraInfo)
+	public AnalogCommand (String key,String commandCode, User user, String extraInfo)
 	{
 		super (key, commandCode,user,extraInfo);
 	}

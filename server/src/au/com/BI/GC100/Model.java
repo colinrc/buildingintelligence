@@ -430,7 +430,8 @@ public class Model extends BaseModel implements DeviceModel {
 	    return true;
 	}
 
-    public void finishedReadingConfig() {
+    public void finishedReadingConfig() throws SetupException {
+    	super.finishedReadingConfig();
     		IR iR_internal = new IR("DUMMY",DeviceType.IR,"DUMMY");
     		
         this.addControlledItem("IR_INTERNAL",iR_internal,DeviceType.OUTPUT);

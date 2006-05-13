@@ -45,7 +45,8 @@ public class Model extends BaseModel implements DeviceModel {
 		etxChars = new int[] {0xff};
 	}
 
-       	public void finishedReadingConfig () {
+    public void finishedReadingConfig () throws SetupException {
+    	super.finishedReadingConfig();
 		ETX = (String)this.getParameter("ETX",DeviceModel.MAIN_DEVICE_GROUP);
 		STX = (String)this.getParameter("STX",DeviceModel.MAIN_DEVICE_GROUP);
 		

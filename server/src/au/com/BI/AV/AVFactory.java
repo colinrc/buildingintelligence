@@ -38,17 +38,23 @@ public class AVFactory {
 	 */
 	public void addAV(DeviceModel targetDevice, List clientModels,
 			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
-		String key = element.getAttributeValue("KEY");
-		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
-		AV video = new AV (display_name,connectionType);
-
-		video.setKey (key);
-		video.setOutputKey(display_name);
-		video.setCommand(command);
-		video.setGroupName(groupName);
-		targetDevice.addStartupQueryItem(key, video, type);
-		targetDevice.addControlledItem(key, video, type);
-		targetDevice.addControlledItem(display_name, video, DeviceType.OUTPUT);
+		try  {
+			String tmpKey = element.getAttributeValue("KEY");
+			String key = targetDevice.formatKey (tmpKey);
+			
+			String command = element.getAttributeValue("COMMAND");
+			AV video = new AV (display_name,connectionType);
+	
+			video.setKey (key);
+			video.setOutputKey(display_name);
+			video.setCommand(command);
+			video.setGroupName(groupName);
+			targetDevice.addStartupQueryItem(key, video, type);
+			targetDevice.addControlledItem(key, video, type);
+			targetDevice.addControlledItem(display_name, video, DeviceType.OUTPUT);
+		} catch (NumberFormatException ex ){
+			logger.log (Level.INFO,"An illegal key was specified for the AV device " + display_name);
+		}
 	}
 }

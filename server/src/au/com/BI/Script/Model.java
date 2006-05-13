@@ -328,6 +328,7 @@ public class Model
         }
 
         public void finishedReadingConfig() throws SetupException {
+        	super.finishedReadingConfig();
 			loadScripts();
         }
 

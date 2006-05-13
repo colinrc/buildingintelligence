@@ -43,6 +43,7 @@ public class Model extends BaseModel implements DeviceModel {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		cameraState = new HashMap(10);
+		setPadding(2);
 	}
 	public void finishedReadingConfig () throws SetupException {
 		super.finishedReadingConfig();

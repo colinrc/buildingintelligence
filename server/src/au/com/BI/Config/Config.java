@@ -22,7 +22,7 @@ import au.com.BI.Camera.*;
 import au.com.BI.Command.*;
 import au.com.BI.CustomInput.*;
 import au.com.BI.Audio.*;
-import au.com.BI.Analogue.*;
+import au.com.BI.Analog.*;
 import au.com.BI.GC100.*;
 import au.com.BI.Counter.*;
 import au.com.BI.VirtualOutput.*;
@@ -557,7 +557,7 @@ public class Config {
 								DeviceType.CAMERA,groupName,rawHelper);
 					}
 					if (itemName.equals("ANALOGUE") || itemName.equals ("ANALOG")) {
-						analogFactory.addAnalogue(deviceModel, clientModels, item, DeviceType.MONITORED,
+						analogFactory.addAnalog(deviceModel, clientModels, item, DeviceType.MONITORED,
 								DeviceType.ANALOGUE,groupName,rawHelper);
 					}
 					if (itemName.equals("ALERT")) {

@@ -39,41 +39,46 @@ public class ToggleSwitchFactory {
 	public void addToggle(DeviceModel targetDevice, List clientModels,
 			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("NAME");
-		String key = element.getAttributeValue("KEY");
-		String outKey = element.getAttributeValue("DISPLAY_NAME");
-		ToggleSwitch theInput = new ToggleSwitch(name,	connectionType, outKey);
-		theInput.setKey (key);
-		theInput.setGroupName (groupName);
-		rawHelper.checkForRaw (element,theInput);
-		
-		if (targetDevice.getName().equals("DYNALITE")) {
-
-			String boxStr = element.getAttributeValue("BOX");
-			int box = 0;
-			try {
-				box = Integer.parseInt(boxStr,16);
-				theInput.setBox(box);
+		try  {
+			String tmpKey = element.getAttributeValue("KEY");
+			String key = targetDevice.formatKey (tmpKey);
+			String outKey = element.getAttributeValue("DISPLAY_NAME");
+			ToggleSwitch theInput = new ToggleSwitch(name,	connectionType, outKey);
+			theInput.setKey (key);
+			theInput.setGroupName (groupName);
+			rawHelper.checkForRaw (element,theInput);
+			
+			if (targetDevice.getName().equals("DYNALITE")) {
+	
+				String boxStr = element.getAttributeValue("BOX");
+				int box = 0;
+				try {
+					box = Integer.parseInt(boxStr,16);
+					theInput.setBox(box);
+				}
+				catch (Exception ex){
+					logger.log (Level.WARNING,"Dynalight entry was not configured correctly in the configuration file " + name); 
+							
+				}
 			}
-			catch (Exception ex){
-				logger.log (Level.WARNING,"Dynalight entry was not configured correctly in the configuration file " + name); 
-						
+			
+			if (targetDevice.getName().equals("M1")) {
+				String area = element.getAttributeValue("AREA");
+				theInput.setArea(area);
 			}
-		}
-		
-		if (targetDevice.getName().equals("M1")) {
-			String area = element.getAttributeValue("AREA");
-			theInput.setArea(area);
-		}
-		
-		targetDevice.addControlledItem(key, theInput, type);
-		targetDevice.addStartupQueryItem(key, theInput, type);
-		if (outKey != null && !outKey.equals("")) {
-			targetDevice.addControlledItem(outKey, theInput, DeviceType.OUTPUT);
-			Iterator clientModelList = clientModels.iterator();
-			while (clientModelList.hasNext()) {
-				DeviceModel clientModel = (DeviceModel) clientModelList.next();
-				clientModel.addControlledItem(outKey, theInput, type);
+			
+			targetDevice.addControlledItem(key, theInput, type);
+			targetDevice.addStartupQueryItem(key, theInput, type);
+			if (outKey != null && !outKey.equals("")) {
+				targetDevice.addControlledItem(outKey, theInput, DeviceType.OUTPUT);
+				Iterator clientModelList = clientModels.iterator();
+				while (clientModelList.hasNext()) {
+					DeviceModel clientModel = (DeviceModel) clientModelList.next();
+					clientModel.addControlledItem(outKey, theInput, type);
+				}
 			}
+		} catch (NumberFormatException ex ){
+			logger.log (Level.INFO,"An illegal key was specified for the toggle device " + name);
 		}
 
 	}

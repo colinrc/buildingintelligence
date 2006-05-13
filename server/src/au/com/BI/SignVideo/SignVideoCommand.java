@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import au.com.BI.Command.CommandInterface;
 
-public class SignAVCommands {
+public class SignVideoCommand {
 		Vector <byte[]>avOutputBytes;
 		Vector <String>avOutputStrings;
 		Vector <CommandInterface>avOutputFlash;
@@ -15,7 +15,7 @@ public class SignAVCommands {
 		int outputCommandType;
 		int paramCommandType;
 		
-		public SignAVCommands() {
+		public SignVideoCommand() {
 			avOutputBytes = new Vector<byte[]>();
 			avOutputStrings = new Vector<String>();
 			avOutputFlash = new Vector<CommandInterface>();

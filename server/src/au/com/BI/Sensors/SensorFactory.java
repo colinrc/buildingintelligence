@@ -29,34 +29,40 @@ public class SensorFactory {
 	// physical sensors, such as temperature
 	public void addSensor(DeviceModel targetDevice, List clientModels,
 		Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
-		String key = element.getAttributeValue("KEY");
 		String name = element.getAttributeValue("NAME");
-		String channel = "";
-		String units = "";
-		String group = element.getAttributeValue("GROUP");;
-		String outKey = element.getAttributeValue("DISPLAY_NAME");
-		SensorFascade theSensor = new SensorFascade(name, channel, units, group, connectionType, outKey,name);
-		theSensor.setKey(key);
-		theSensor.setGroupName(groupName);
+		try  {
+			String tmpKey = element.getAttributeValue("KEY");
+			String key = targetDevice.formatKey (tmpKey);
 
-		rawHelper.checkForRaw ( element,theSensor);
-
-		if (connectionType == DeviceType.SENSOR) {
-			theSensor.setMax("255");
-			channel = element.getAttributeValue("CHANNEL");
-			units = element.getAttributeValue("UNITS");
-			group = element.getAttributeValue("GROUP");
-		}
-		targetDevice.addControlledItem(key, theSensor, connectionType);
-		targetDevice.addStartupQueryItem(key, theSensor, connectionType);
-
-		if (outKey != null && !outKey.equals("")) {
-			targetDevice.addControlledItem(outKey, theSensor, DeviceType.OUTPUT);
-			Iterator clientModelList = clientModels.iterator();
-			while (clientModelList.hasNext()) {
-				DeviceModel clientModel = (DeviceModel) clientModelList.next();
-				clientModel.addControlledItem(outKey, theSensor, type);
+			String channel = "";
+			String units = "";
+			String group = element.getAttributeValue("GROUP");;
+			String outKey = element.getAttributeValue("DISPLAY_NAME");
+			SensorFascade theSensor = new SensorFascade(name, channel, units, group, connectionType, outKey,name);
+			theSensor.setKey(key);
+			theSensor.setGroupName(groupName);
+	
+			rawHelper.checkForRaw ( element,theSensor);
+	
+			if (connectionType == DeviceType.SENSOR) {
+				theSensor.setMax("255");
+				channel = element.getAttributeValue("CHANNEL");
+				units = element.getAttributeValue("UNITS");
+				group = element.getAttributeValue("GROUP");
 			}
+			targetDevice.addControlledItem(key, theSensor, connectionType);
+			targetDevice.addStartupQueryItem(key, theSensor, connectionType);
+	
+			if (outKey != null && !outKey.equals("")) {
+				targetDevice.addControlledItem(outKey, theSensor, DeviceType.OUTPUT);
+				Iterator clientModelList = clientModels.iterator();
+				while (clientModelList.hasNext()) {
+					DeviceModel clientModel = (DeviceModel) clientModelList.next();
+					clientModel.addControlledItem(outKey, theSensor, type);
+				}
+			}
+		} catch (NumberFormatException ex ){
+			logger.log (Level.INFO,"An illegal key was specified for the sensor device " + name);
 		}
 	}
 

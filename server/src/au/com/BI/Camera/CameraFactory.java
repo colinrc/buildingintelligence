@@ -39,25 +39,35 @@ public class CameraFactory {
 	 */
 	public void addCamera(DeviceModel targetDevice, List clientModels,
 			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
-		String key = element.getAttributeValue("KEY");
-		String fullKey = Utility.padString (key,2);
-		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
-		String zoom = element.getAttributeValue("ZOOM");
-		Camera camera = new Camera (display_name,connectionType);
-
-		camera.setKey (fullKey);
-		camera.setOutputKey(display_name);
-		camera.setCommand(command);
-		camera.setGroupName(groupName);
-		try {
-			camera.setZoom(zoom);
-		} catch (NumberFormatException ex) {
-			logger.log(Level.INFO,"Camera zoom capabilities not specified, setting absolute zoom levels will not be possible");
+		
+		try  {
+			String key = element.getAttributeValue("KEY");
+			String fullKey = targetDevice.formatKey (key);
+		
+			String command = element.getAttributeValue("COMMAND");
+	
+			String zoom = element.getAttributeValue("ZOOM");
+			Camera camera = new Camera (display_name,connectionType);
+	
+			camera.setKey (fullKey);
+			camera.setOutputKey(display_name);
+			camera.setCommand(command);
+			camera.setGroupName(groupName);
+	
+	
+			targetDevice.addStartupQueryItem(fullKey, camera, type);
+			targetDevice.addControlledItem(fullKey, camera, type);
+			targetDevice.addControlledItem(display_name, camera, DeviceType.OUTPUT);
+			
+			try {
+				camera.setZoom(zoom);
+			} catch (NumberFormatException ex) {
+				logger.log(Level.INFO,"Camera zoom capabilities not specified, setting absolute zoom levels will not be possible");
+			}
+		} catch (NumberFormatException ex ){
+			logger.log (Level.INFO,"An illegal key was specified for the camera " + display_name);
 		}
 
-		targetDevice.addStartupQueryItem(fullKey, camera, type);
-		targetDevice.addControlledItem(fullKey, camera, type);
-		targetDevice.addControlledItem(display_name, camera, DeviceType.OUTPUT);
 	}
 }

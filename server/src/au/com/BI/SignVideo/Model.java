@@ -67,20 +67,10 @@ public class Model extends BaseModel implements DeviceModel {
 		super.finishedReadingConfig();
 		
 		setupAVInputs();
-		initState();
-	}
-	
-	public void initState () {
-	    for(DeviceType avDevice : configHelper.getAllOutputDeviceObjects()) {
-	    	String key = avDevice.getKey();
-			if (!key.equals(Model.AllZones)) {
-				state.put(key, new State());
-			}
-	    }	
 	}
 	
 	public void attatchComms() throws ConnectionFail {
-		setInterCommandInterval(50);
+		setInterCommandInterval(250);
 		setTransmitMessageOnBytes(1); // tutondo only sends a single non CR terminated byte.
 		super.attatchComms();
 		}
@@ -138,7 +128,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public void doOutputItem (CommandInterface command) throws CommsFail {	
 		String theWholeKey = command.getKey();
 		DeviceType device  = configHelper.getOutputItem(theWholeKey);
-		SignAVCommands toSend = null;
+		SignVideoCommand toSend = null;
 		
 		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
@@ -182,7 +172,7 @@ public class Model extends BaseModel implements DeviceModel {
 	 */
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{
-		SignAVCommands commandObject = interpretStringFromSignAV (command);
+		SignVideoCommand commandObject = interpretStringFromSignVideo (command);
 		for (CommandInterface eachCommand: commandObject.avOutputFlash){
 			this.sendToFlash(eachCommand, cache);
 		}
@@ -210,8 +200,8 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 	
-	public SignAVCommands interpretStringFromSignAV (CommandInterface command){
-		SignAVCommands result = new SignAVCommands();
+	public SignVideoCommand interpretStringFromSignVideo (CommandInterface command){
+		SignVideoCommand result = new SignVideoCommand();
 		boolean commandFound = false;
 		
 		String signAVCmd = command.getKey();
@@ -242,8 +232,8 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 	
 	
-	public SignAVCommands  interpretZoneStatus (String zoneStatus,DeviceType avDevice) throws IndexOutOfBoundsException,NumberFormatException {
-		SignAVCommands returnCode = new SignAVCommands();
+	public SignVideoCommand  interpretZoneStatus (String zoneStatus,DeviceType avDevice) throws IndexOutOfBoundsException,NumberFormatException {
+		SignVideoCommand returnCode = new SignVideoCommand();
 		
 		// #ZxxPWRppp,SRCs,GRPt,VOL-yy
 		
@@ -288,8 +278,8 @@ public class Model extends BaseModel implements DeviceModel {
 
 
 	
-	public SignAVCommands buildAVString (AV device, CommandInterface command){
-		SignAVCommands returnVal = new SignAVCommands();
+	public SignVideoCommand buildAVString (AV device, CommandInterface command){
+		SignVideoCommand returnVal = new SignVideoCommand();
 		String key = device.getKey();
 		boolean commandFound = false;
 
@@ -374,11 +364,11 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 	
-	public SignVideoHelper getSignAVHelper() {
+	public SignVideoHelper getSignVideoHelper() {
 		return signVideoHelper;
 	}
 
-	public void setSignAVHelper(SignVideoHelper signVideoHelper) {
+	public void setSignVideoHelper(SignVideoHelper signVideoHelper) {
 		this.signVideoHelper = signVideoHelper;
 	}
 	

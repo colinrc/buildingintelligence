@@ -40,22 +40,28 @@ public class AlertFactory {
 	public void addAlert(DeviceModel targetDevice, List clientModels,
 			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("DISPLAY_NAME");
-		String active = element.getAttributeValue("ACTIVE");
-		String key = element.getAttributeValue("KEY");
-		String outKey = element.getAttributeValue("DISPLAY_NAME");
-		String alarmType = element.getAttributeValue("ALERT_TYPE");
-		String message = element.getAttributeValue("MESSAGE");
+		try  {
+			String tmpKey = element.getAttributeValue("KEY");
+			String key = targetDevice.formatKey (tmpKey);
 
-		Alert theInput = null;
-		theInput = new Alert(name, connectionType, outKey, alarmType, message,active);
-
-		theInput.setKey (key);
-		theInput.setGroupName (groupName);
-		rawHelper.checkForRaw ( element,theInput);
-		targetDevice.addControlledItem(key, theInput, type);
-		targetDevice.addStartupQueryItem(key, theInput, type);
-		if (outKey != null && !outKey.equals("")) {
-			targetDevice.addControlledItem(outKey, theInput, DeviceType.OUTPUT);
+			String active = element.getAttributeValue("ACTIVE");
+			String outKey = element.getAttributeValue("DISPLAY_NAME");
+			String alarmType = element.getAttributeValue("ALERT_TYPE");
+			String message = element.getAttributeValue("MESSAGE");
+	
+			Alert theInput = null;
+			theInput = new Alert(name, connectionType, outKey, alarmType, message,active);
+	
+			theInput.setKey (key);
+			theInput.setGroupName (groupName);
+			rawHelper.checkForRaw ( element,theInput);
+			targetDevice.addControlledItem(key, theInput, type);
+			targetDevice.addStartupQueryItem(key, theInput, type);
+			if (outKey != null && !outKey.equals("")) {
+				targetDevice.addControlledItem(outKey, theInput, DeviceType.OUTPUT);
+			}
+		} catch (NumberFormatException ex ){
+			logger.log (Level.INFO,"An illegal key was specified for the alert " + name);
 		}
 	}
 	
@@ -71,23 +77,31 @@ public class AlertFactory {
 	 */
 	public void addAlarm(DeviceModel targetDevice, List clientModels,
 			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
-		String name = element.getAttributeValue("NAME");
-		String key = element.getAttributeValue("KEY");
+		
 		String outKey = element.getAttributeValue("DISPLAY_NAME");
-		Alarm theOutput = new Alarm(name, connectionType, outKey);
-		theOutput.setKey (key);
-		theOutput.setGroupName (groupName);
-		rawHelper.checkForRaw ( element,theOutput);
-		targetDevice.addControlledItem(key, theOutput, type);
-		targetDevice.addStartupQueryItem(key, theOutput, type);
-				
-		if (outKey != null && !outKey.equals("")) {
-			targetDevice.addControlledItem(outKey, theOutput, DeviceType.OUTPUT);
-			Iterator clientModelList = clientModels.iterator();
-			while (clientModelList.hasNext()) {
-				DeviceModel clientModel = (DeviceModel) clientModelList.next();
-				clientModel.addControlledItem(outKey, theOutput, type);
+		
+		String name = element.getAttributeValue("NAME");
+		try  {
+			String tmpKey = element.getAttributeValue("KEY");
+			String key = targetDevice.formatKey (tmpKey);
+	
+			Alarm theOutput = new Alarm(name, connectionType, outKey);
+			theOutput.setKey (key);
+			theOutput.setGroupName (groupName);
+			rawHelper.checkForRaw ( element,theOutput);
+			targetDevice.addControlledItem(key, theOutput, type);
+			targetDevice.addStartupQueryItem(key, theOutput, type);
+					
+			if (outKey != null && !outKey.equals("")) {
+				targetDevice.addControlledItem(outKey, theOutput, DeviceType.OUTPUT);
+				Iterator clientModelList = clientModels.iterator();
+				while (clientModelList.hasNext()) {
+					DeviceModel clientModel = (DeviceModel) clientModelList.next();
+					clientModel.addControlledItem(outKey, theOutput, type);
+				}
 			}
+		} catch (NumberFormatException ex ){
+			logger.log (Level.INFO,"An illegal key was specified for the alarm " + name);
 		}
 	}
 

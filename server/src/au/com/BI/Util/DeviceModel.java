@@ -354,6 +354,36 @@ public interface DeviceModel {
 	 */	
 	public void setPadding(int padding);
 	
+	
+	/**
+	 * The key is formatted as required by the particular model. Currently pading and decimal/hex can be configured as 
+	 * parameters that this function will use.
+	 * @param key
+	 * @return The formatted key
+	 */
+    public String formatKey(String key);
+   
+	/**
+	 * True if decimal to the device requires decimal keys (rare) 
+	 * @return True or false
+	 */
+	public boolean isDeviceKeysDecimal() ;
+	/**
+	 * True if decimal to the device requires decimal keys (rare) 
+	 */	
+	public void setDeviceKeysDecimal(boolean decimalKeys) ;
+	/**
+	 * True if the keys are specified in the configuration file in decimal
+	 * @return True or false
+	 */
+	public boolean isConfigKeysInDecimal();
+
+	/**
+	 * True if the keys are specified in the configuration file in decimal
+	 * @return True or false
+	 */
+	public void setConfigKeysInDecimal(boolean configKeysInDecimal) ;
+	
 	/**
 	 * Used to specify a minimum interval between commands sent by the server. Leave as 0 if no minimum is required.
 	 * @return The interval
@@ -380,6 +410,7 @@ public interface DeviceModel {
 	 */
 	public void sendToFlash (String displayName, String command, String value);
 
+	
 }
 
 

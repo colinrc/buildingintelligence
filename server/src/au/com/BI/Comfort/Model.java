@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.logging.*;
 import au.com.BI.Lights.*;
 import au.com.BI.Alert.*;
-import au.com.BI.Analogue.*;
+import au.com.BI.Analog.*;
 
 // TODO set up security properly
 
@@ -32,7 +32,7 @@ public class Model extends BaseModel implements DeviceModel  {
 	protected OutputHelper outputHelper;
 	protected InputHelper inputHelper;
 	protected ControlledHelper controlledHelper;
-	protected AnalogueReader analogueReader;
+	protected AnalogReader analogueReader;
 	protected String applicationCode = "38";
 	protected String alert_zones = "";
 
@@ -43,7 +43,7 @@ public class Model extends BaseModel implements DeviceModel  {
 		outputHelper = new OutputHelper();
 		inputHelper = new InputHelper();
 		controlledHelper = new ControlledHelper();
-		analogueReader = new AnalogueReader();
+		analogueReader = new AnalogReader();
 		this.setSTX (STX);
 		this.setETX (ETX);
 
@@ -118,7 +118,7 @@ public class Model extends BaseModel implements DeviceModel  {
 
 					case DeviceType.ANALOGUE :
 						doNotAddToControlledList = true; // handled by a seperate thread
-						analogueReader.addAnalogueInput((Analogue)details);
+						analogueReader.addAnalogueInput((Analog)details);
 					break;
 
 					case DeviceType.ALERT:

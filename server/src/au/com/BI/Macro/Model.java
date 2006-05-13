@@ -65,9 +65,6 @@ public class Model extends BaseModel implements DeviceModel {
 		return true;
 	}
 	
-	public void finishedReadingConfig () {
-
-	}
 
 	public boolean doIControl (String keyName, boolean isClientCommand)
 	{

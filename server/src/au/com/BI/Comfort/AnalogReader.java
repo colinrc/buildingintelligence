@@ -4,7 +4,8 @@
 package au.com.BI.Comfort;
 import java.util.logging.*;
 
-import au.com.BI.Analogue.*;
+import au.com.BI.Analog.*;
+
 import java.util.*;
 import au.com.BI.Comms.*;
 
@@ -12,7 +13,7 @@ import au.com.BI.Comms.*;
 /**
  * @author colinc
  */
-public class AnalogueReader  extends Thread {
+public class AnalogReader  extends Thread {
 	/**
 	 * 
 	 */
@@ -36,14 +37,14 @@ public class AnalogueReader  extends Thread {
 	public void setPollValue(long pollValue) {
 		this.pollValue = pollValue;
 	}
-	public AnalogueReader() {
+	public AnalogReader() {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		analogueQueue = Collections.synchronizedList(new LinkedList());
 		this.setName( "Comfort analog value handler");
 	}
 	
-	public void addAnalogueInput (Analogue analogue) {
+	public void addAnalogueInput (Analog analogue) {
 		synchronized (analogueQueue) {
 			analogueQueue.add(analogue);
 		}
@@ -69,7 +70,7 @@ public class AnalogueReader  extends Thread {
 		while (running){
 			Iterator analogueItems = analogueQueue.iterator();
 			while (analogueItems.hasNext()){
-				Analogue analogue = (Analogue)analogueItems.next();
+				Analog analogue = (Analog)analogueItems.next();
 				try {
 					CommsCommand analogueCommand = new CommsCommand("",STX+"DA59"+analogue.getKey() + ETX,null,"Analogue Command");
 					analogueCommand.setActionType(CommDevice.AnalogueQuery);

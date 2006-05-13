@@ -94,6 +94,7 @@ public class Model extends BaseModel implements DeviceModel, ClientModel
 
 	/** General hook for a device to do any final startup once the configuration is cloaded */
 	public void finishedReadingConfig () throws SetupException {
+		super.finishedReadingConfig();
 		AdminDevice admin = new AdminDevice();
 		
 		this.addControlledItem ("ADMIN",admin,DeviceType.OUTPUT);
