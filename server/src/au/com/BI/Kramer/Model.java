@@ -45,6 +45,7 @@ public class Model extends BaseModel implements DeviceModel {
 		kramerHelper = new KramerHelper();
 		state = new HashMap();
 		currentSrc = new HashMap();
+		super.setTransmitMessageOnBytes(4); // kramer only sends a single non CR terminated byte.
 	}
 
 	public void clearItems () {
@@ -79,12 +80,11 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 	
-	public void attatchComms() 
-	throws ConnectionFail {
-		super.setTransmitMessageOnBytes(4); // kramer only sends a single non CR terminated byte.
-		super.attatchComms( );
-	}
 	
+	/*
+	 * @todo Write kramer startup
+	 * @see au.com.BI.Util.BaseModel#doStartup()
+	 */
 	public void doStartup() {
 		
 		synchronized (comms) {
@@ -96,18 +96,6 @@ public class Model extends BaseModel implements DeviceModel {
 			AV avDevice = (AV)avDevices.next();
 		}
 
-	}
-		
-	public void doClientStartup (List commandQueue, long targetFlashDeviceID) {
-		Iterator audioDevices = configHelper.getAllControlledDevices();
-		while (audioDevices.hasNext()){
-			AV audioDevice =(AV)(audioDevices.next());
-			doClientStartup (commandQueue, targetFlashDeviceID, audioDevice);
-			
-		}
-	}
-
-	public void doClientStartup (List commandQueue, long targetFlashDeviceID, AV audioDevice) {
 	}
 
 	

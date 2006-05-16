@@ -41,6 +41,8 @@ public class Model extends BaseModel implements DeviceModel {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		signVideoHelper = new SignVideoHelper();
+		setInterCommandInterval(250);
+		setTransmitMessageOnBytes(1); // tutondo only sends a single non CR terminated byte.
 		state = new HashMap<String,State>();
 	}
 
@@ -50,6 +52,16 @@ public class Model extends BaseModel implements DeviceModel {
 		super.clearItems();
 	}
 
+	
+	public void initState () {
+	    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
+	    	String key = audioDevice.getKey();
+			if (!key.equals(Model.AllZones)) {
+				state.put(key, new State());
+			}
+	    }	
+	}
+	
 	public void setupAVInputs() throws SetupException {
 		String avInputsDef = (String)this.getParameter("AV_INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
 		if (avInputsDef == null || avInputsDef.equals ("")) {
@@ -69,61 +81,19 @@ public class Model extends BaseModel implements DeviceModel {
 		setupAVInputs();
 	}
 	
-	public void attatchComms() throws ConnectionFail {
-		setInterCommandInterval(250);
-		setTransmitMessageOnBytes(1); // tutondo only sends a single non CR terminated byte.
-		super.attatchComms();
-		}
-	
 	
 	public void doStartup() throws CommsFail {
 		
-		synchronized (comms) {
+		synchronized (comms){
 			comms.clearCommandQueue();
-		}
-		
+			try { 
+		    	this.sendToSerial(new byte[]{(byte)0xA3},"","",Model.Zone_Status_Request,false);
+			} catch (CommsFail e1) {
+				throw new CommsFail ("Communication failed communitating with SignAV " + e1.getMessage());
+			} 
+		}				
+	}
 
-	    
-	    for(DeviceType avDevice : configHelper.getAllOutputDeviceObjects()) {
-	    	String key = avDevice.getKey();
-			if (!key.equals(Model.AllZones)) {
-				String zoneRequest = "*Z"+ avDevice.getKey()+ "CONSR\n";
-				
-				CommsCommand avCommsCommand = new CommsCommand();
-				avCommsCommand.setKey (key);
-				avCommsCommand.setCommand(zoneRequest);
-				avCommsCommand.setActionType(Model.Zone_Status_Request);
-				avCommsCommand.setExtraInfo (((AV)(avDevice)).getOutputKey());
-				avCommsCommand.setKeepForHandshake(false);
-				synchronized (comms){
-					try { 
-						comms.addCommandToQueue (avCommsCommand);
-					} catch (CommsFail e1) {
-						throw new CommsFail ("Communication failed communitating with SignAV " + e1.getMessage());
-					} 
-				}				
-			}
-	    }
-	}
-		
-	
-	public boolean doIControl (String keyName, boolean isClientCommand)
-	{
-		configHelper.wholeKeyChecked(keyName);
-			
-		if (configHelper.checkForOutputItem(keyName)) {
-			logger.log (Level.FINER,"Flash sent command : " +keyName);
-			return true;
-		}
-		else {
-			if (isClientCommand)
-				return false;
-			else {
-				configHelper.setLastCommandType (DeviceType.MONITORED);
-				return true;
-			}
-		}
-	}
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {	
 		String theWholeKey = command.getKey();
@@ -145,7 +115,7 @@ public class Model extends BaseModel implements DeviceModel {
 							logger.log(Level.FINER, "AV event for zone " + device.getKey() + " received from flash");
 
 						    for(byte[] avOutputString : toSend.avOutputBytes) {			
-						    	sendToSerial(avOutputString,avDevice, avDevice.getOutputKey(),toSend.outputCommandType);
+						    	sendToSerial(avOutputString,avDevice.getKey(), avDevice.getOutputKey(),toSend.outputCommandType,false);
 
 							}
 						    
@@ -184,21 +154,6 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void sendToSerial (byte avOutputString[],AV device, String outputKey, int outputCommandType) throws CommsFail{
-		CommsCommand avCommsCommand = new CommsCommand();
-		avCommsCommand.setKey (device.getKey());
-		avCommsCommand.setCommandBytes(avOutputString);
-		avCommsCommand.setActionType(outputCommandType);
-		avCommsCommand.setExtraInfo (((AV)(device)).getOutputKey());
-		avCommsCommand.setKeepForHandshake(false);
-		synchronized (comms){
-			try { 
-				comms.addCommandToQueue (avCommsCommand);
-			} catch (CommsFail e1) {
-				throw new CommsFail ("Communication failed communitating with SignAV " + e1.getMessage());
-			} 
-		}
-	}
 	
 	public SignVideoCommand interpretStringFromSignVideo (CommandInterface command){
 		SignVideoCommand result = new SignVideoCommand();
@@ -291,7 +246,7 @@ public class Model extends BaseModel implements DeviceModel {
 			returnVal.addAvOutputString(rawBuiltCommand);
 			commandFound = true;
 		}
-		String extra = ((String)command.getExtraInfo());
+		String extra = command.getExtraInfo();
 
 		String theCommand = command.getCommandCode();
 		if (!commandFound && theCommand == "") {
@@ -304,7 +259,7 @@ public class Model extends BaseModel implements DeviceModel {
 			commandFound = true;
 			
 			try {
-				srcCode = (String)avInputs.get(extra);
+				srcCode = avInputs.get(extra);
 				int src = Integer.parseInt(srcCode);
 				if (key.equals(Model.AllZones)){
 				    for(DeviceType avDevice : configHelper.getAllOutputDeviceObjects()) {

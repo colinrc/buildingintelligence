@@ -326,7 +326,7 @@ public class BaseModel
                 configHelper.addControlledItem(theKey, details, controlType);
         }
 
-        public boolean doIControl(String keyName, boolean isClientCommand) {
+       public boolean doIControl(String keyName, boolean isClientCommand) {
 
                 configHelper.wholeKeyChecked(keyName);
 
@@ -334,22 +334,13 @@ public class BaseModel
                         logger.log(Level.FINER, "Flash sent command : " + keyName);
                         return true;
                 }
-                if (isClientCommand)return false; // only are about output for client commands
+                if (isClientCommand)
+                	return false; // only are about output for client commands
+                else {
+                    logger.log(Level.FINER, "Controls : " + keyName);
+                	return true; // anything come through comms we want to look at
+                }
 
-                if (configHelper.checkForStartupItem(keyName)) {
-                        logger.log(Level.FINER, "Controls : " + keyName);
-                        isStartupQuery = true;
-                        return true;
-                }
-                if (configHelper.checkForControlledItem(keyName)) {
-                        logger.log(Level.FINER, "Controls : " + keyName);
-                        return true;
-                }
-                if (configHelper.checkForInputItem(keyName)) {
-                        logger.log(Level.FINER, "Controls : " + keyName);
-                        return true;
-                }
-                return false;
         }
 
         public void doCommand(CommandInterface command) throws CommsFail {
@@ -405,6 +396,40 @@ public class BaseModel
                         }
                 }
         }
+        
+
+    	public void sendToSerial (byte avOutputString[],String deviceKey, String outputKey, int outputCommandType,boolean keyForHandshake) throws CommsFail{
+    		CommsCommand avCommsCommand = new CommsCommand();
+    		avCommsCommand.setKey (deviceKey);
+    		avCommsCommand.setCommandBytes(avOutputString);
+    		avCommsCommand.setActionType(outputCommandType);
+    		avCommsCommand.setExtraInfo (outputKey);
+    		avCommsCommand.setKeepForHandshake(keyForHandshake);
+    		synchronized (comms){
+    			try { 
+    				comms.addCommandToQueue (avCommsCommand);
+    			} catch (CommsFail e1) {
+    				throw new CommsFail ("Communication failed communitating with SignAV " + e1.getMessage());
+    			} 
+    		}
+    	}
+    	
+
+    	public void sendToSerial (String avOutputString,String deviceKey, String outputKey, int outputCommandType,boolean keyForHandshake) throws CommsFail{
+    		CommsCommand avCommsCommand = new CommsCommand();
+    		avCommsCommand.setKey (deviceKey);
+    		avCommsCommand.setCommand(avOutputString);
+    		avCommsCommand.setActionType(outputCommandType);
+    		avCommsCommand.setExtraInfo (outputKey);
+    		avCommsCommand.setKeepForHandshake(keyForHandshake);
+    		synchronized (comms){
+    			try { 
+    				comms.addCommandToQueue (avCommsCommand);
+    			} catch (CommsFail e1) {
+    				throw new CommsFail ("Communication failed communitating with SignAV " + e1.getMessage());
+    			} 
+    		}
+    	}
 
         public boolean reEstablishConnection() {
                 return true;

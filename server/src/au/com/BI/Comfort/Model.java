@@ -201,10 +201,6 @@ public class Model extends BaseModel implements DeviceModel  {
 	public void doCommand (CommandInterface command) throws CommsFail
 	{
 		String theWholeKey = command.getKey();
-		if (!configHelper.equalsLastChecked(theWholeKey)) {
-			doIControl (theWholeKey,command.isClient());
-			// not the one we buffered so check again if it is output or controlled
-		}
 
 		if (configHelper.getLastCommandType() == DeviceType.NOT_CONTROLLED) {
 			sendNextCommandInQueue();
