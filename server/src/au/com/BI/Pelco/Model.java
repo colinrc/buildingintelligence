@@ -133,42 +133,37 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {
 		String theWholeKey = command.getKey();
-		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
+		DeviceType device = configHelper.getOutputItem(theWholeKey);
 
-		if (deviceList == null) {
+		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
 		}
 		else {
-			Iterator devices = deviceList.iterator();
 			String outputRawCommand = "";
 			PelcoOutput  pelcoOutput = null;
 			cache.setCachedCommand(command.getKey(),command);
 
-            while (devices.hasNext()) {
-				DeviceType device = (DeviceType)devices.next();
-
-				switch (device.getDeviceType()) {
-					case DeviceType.RAW_INTERFACE :
-						logger.log(Level.FINER, "Received event from flash for RAW item from " + theWholeKey);
-						if ((outputRawCommand = buildDirectConnectString (device,command)) != null)
-							sendToSerial (STX+outputRawCommand+ETX);
-						break;
-					case DeviceType.CAMERA :
-						logger.log(Level.FINER, "Received event from flash for CAMERA item from " + theWholeKey);
-						if ((pelcoOutput = buildCameraArray ((Camera)device,command)) != null) {
-							// comms.clearCommandQueue();
-							CommsCommand commsCommand = new CommsCommand ();
-							commsCommand.setCommandBytes(pelcoOutput.outputCodes);
-							commsCommand.setActionType(CommDevice.PelcoSend);
-							commsCommand.setActionCode(device.getKey());
-							commsCommand.setKeepForHandshake(false);
-							commsCommand.setKey(device.getKey());
-							comms.sendString(commsCommand.getCommandBytes());
-						}
-						break;
-				}
-
+			switch (device.getDeviceType()) {
+				case DeviceType.RAW_INTERFACE :
+					logger.log(Level.FINER, "Received event from flash for RAW item from " + theWholeKey);
+					if ((outputRawCommand = buildDirectConnectString (device,command)) != null)
+						sendToSerial (STX+outputRawCommand+ETX);
+					break;
+				case DeviceType.CAMERA :
+					logger.log(Level.FINER, "Received event from flash for CAMERA item from " + theWholeKey);
+					if ((pelcoOutput = buildCameraArray ((Camera)device,command)) != null) {
+						// comms.clearCommandQueue();
+						CommsCommand commsCommand = new CommsCommand ();
+						commsCommand.setCommandBytes(pelcoOutput.outputCodes);
+						commsCommand.setActionType(CommDevice.PelcoSend);
+						commsCommand.setActionCode(device.getKey());
+						commsCommand.setKeepForHandshake(false);
+						commsCommand.setKey(device.getKey());
+						comms.sendString(commsCommand.getCommandBytes());
+					}
+					break;
 			}
+
 		}
 	}
 

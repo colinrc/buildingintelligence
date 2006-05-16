@@ -38,22 +38,11 @@ public class OutputHelper {
 		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(comfortString.comfortKey);
 		DeviceType device = null;
 		
-		deviceList = (ArrayList)configHelper.getOutputItem(comfortString.comfortKey);
-	
-		if (deviceList == null) {
-			logger.log(Level.SEVERE, "Error in config, no output key for " + comfortString.comfortKey);
-		}
-		else {
-			Iterator devices = deviceList.iterator();
+		device = configHelper.getOutputItem(comfortString.comfortKey);
 
-			while (devices.hasNext()) {
-				 device = (DeviceType)devices.next();
-				logger.log(Level.FINER, "Monitored comfort event sending to " + comfortString.comfortKey + " :" + device.getName());
-				cache.setCachedCommand(comfortString.comfortKey,command);
-				buildAndSendOutputString ( device,  command, configHelper, comms, comfort);
-			}
-		}
-		
+		logger.log(Level.FINER, "Monitored comfort event sending to " + comfortString.comfortKey + " :" + device.getName());
+		cache.setCachedCommand(comfortString.comfortKey,command);
+		buildAndSendOutputString ( device,  command, configHelper, comms, comfort);
 	}
 	
 

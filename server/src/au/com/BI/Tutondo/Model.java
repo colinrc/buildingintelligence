@@ -204,45 +204,40 @@ public class Model extends AudioModel implements DeviceModel {
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {	
 		String theWholeKey = command.getKey();
-		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
+		DeviceType device = configHelper.getOutputItem(theWholeKey);
 		
-		if (deviceList == null) {
+		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
 		}
 		else {
-			Iterator devices = deviceList.iterator();
 			byte[] outputAudioCommand = null;
 			cache.setCachedCommand(command.getKey(),command);
 			
-			while (devices.hasNext()) {
-				DeviceType device = (DeviceType)devices.next();
-
 				
-				switch (device.getDeviceType()) {
-					case DeviceType.AUDIO :
-						if ((outputAudioCommand = buildAudioString ((Audio)device,command)) != null) {
-							if (protocolB) {
-								logger.log(Level.FINER, "Message from flash generated audio event " + outputAudioCommand + " for zone " + device.getKey());
-								comms.sendString(outputAudioCommand);
-							} else {
-								logger.log(Level.FINER, "Message from flash generated audio event for zone " + device.getKey());
-								CommsCommand audioCommsCommand = new CommsCommand();
-								audioCommsCommand.setKey (device.getKey());
-								audioCommsCommand.setCommandBytes(outputAudioCommand);
-								audioCommsCommand.setExtraInfo (((Audio)(device)).getOutputKey());
-								synchronized (comms){
-									try { 
-										comms.addCommandToQueue (audioCommsCommand);
-									} catch (CommsFail e1) {
-										throw new CommsFail ("Communication failed communitating with Tutondo " + e1.getMessage());
-									} 
-								}
-								logger.log (Level.FINEST,"Queueing audio command for " + (String)audioCommsCommand.getExtraInfo());
-								}
-						}
+			switch (device.getDeviceType()) {
+				case DeviceType.AUDIO :
+					if ((outputAudioCommand = buildAudioString ((Audio)device,command)) != null) {
+						if (protocolB) {
+							logger.log(Level.FINER, "Message from flash generated audio event " + outputAudioCommand + " for zone " + device.getKey());
+							comms.sendString(outputAudioCommand);
+						} else {
+							logger.log(Level.FINER, "Message from flash generated audio event for zone " + device.getKey());
+							CommsCommand audioCommsCommand = new CommsCommand();
+							audioCommsCommand.setKey (device.getKey());
+							audioCommsCommand.setCommandBytes(outputAudioCommand);
+							audioCommsCommand.setExtraInfo (((Audio)(device)).getOutputKey());
+							synchronized (comms){
+								try { 
+									comms.addCommandToQueue (audioCommsCommand);
+								} catch (CommsFail e1) {
+									throw new CommsFail ("Communication failed communitating with Tutondo " + e1.getMessage());
+								} 
+							}
+							logger.log (Level.FINEST,"Queueing audio command for " + (String)audioCommsCommand.getExtraInfo());
+							}
+					}
 
-						break;						
-				}
+					break;						
 			}
 		}
 	}

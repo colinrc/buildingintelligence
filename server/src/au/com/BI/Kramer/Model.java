@@ -137,84 +137,78 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {	
 		String theWholeKey = command.getKey();
-		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
+		DeviceType device = configHelper.getOutputItem(theWholeKey);
 		KramerCommands toSend = null;
 		
-		if (deviceList == null) {
+		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
 		}
 		else {
-			Iterator devices = deviceList.iterator();
 			cache.setCachedCommand(command.getKey(),command);
 			
-			while (devices.hasNext()) {
-				DeviceType device = (DeviceType)devices.next();
+			switch (device.getDeviceType()) {
+				case DeviceType.AV :
+					toSend = buildVideoString ((AV)device,command);
+					if (toSend != null && !toSend.error) {
 
-				
-				switch (device.getDeviceType()) {
-					case DeviceType.AV :
-						toSend = buildVideoString ((AV)device,command);
-						if (toSend != null && !toSend.error) {
+						logger.log(Level.FINER, "Video event for zone " + device.getKey() + " received from flash");
 
-							logger.log(Level.FINER, "Video event for zone " + device.getKey() + " received from flash");
-
-							if (toSend.avOutputParam != null) {
-								CommsCommand paramCommand = new CommsCommand();
-								paramCommand.setKey (device.getKey());
-								paramCommand.setCommandBytes(toSend.avOutputParam);
-								paramCommand.setExtraInfo (((AV)(device)).getOutputKey());
-								paramCommand.setActionType(toSend.paramCommandType);
-								paramCommand.setKeepForHandshake(true);
-								synchronized (comms){
-									try { 
-										comms.addCommandToQueue (paramCommand);
-									} catch (CommsFail e1) {
-										throw new CommsFail ("Communication failed communitating with Kramer " + e1.getMessage());
-									} 
-								}
-							}
-			
-							if (toSend.avOutputString != null) {
-	
-								CommsCommand avCommsCommand = new CommsCommand();
-								avCommsCommand.setKey (device.getKey());
-								avCommsCommand.setCommandBytes(toSend.avOutputString);
-								avCommsCommand.setActionType(toSend.outputCommandType);
-								avCommsCommand.setExtraInfo (((AV)(device)).getOutputKey());
-								avCommsCommand.setKeepForHandshake(true);
-								synchronized (comms){
-									try { 
-										comms.addCommandToQueue (avCommsCommand);
-									} catch (CommsFail e1) {
-										throw new CommsFail ("Communication failed communitating with Kramer " + e1.getMessage());
-									} 
-								}
-							}
-							if (toSend.avOutputSuffix != null) {
-								
-								CommsCommand avCommsCommand = new CommsCommand();
-								avCommsCommand.setKey (device.getKey());
-								avCommsCommand.setCommandBytes(toSend.avOutputSuffix);
-								avCommsCommand.setActionType(toSend.outputCommandType);
-								avCommsCommand.setExtraInfo (((AV)(device)).getOutputKey());
-								avCommsCommand.setKeepForHandshake(true);
-								synchronized (comms){
-									try { 
-										comms.addCommandToQueue (avCommsCommand);
-									} catch (CommsFail e1) {
-										throw new CommsFail ("Communication failed communitating with Kramer " + e1.getMessage());
-									} 
-								}
-							}
-						} else {
-							if (toSend != null){
-								logger.log (Level.WARNING,"Error processing Kramer video message " + toSend.errorDescription);
+						if (toSend.avOutputParam != null) {
+							CommsCommand paramCommand = new CommsCommand();
+							paramCommand.setKey (device.getKey());
+							paramCommand.setCommandBytes(toSend.avOutputParam);
+							paramCommand.setExtraInfo (((AV)(device)).getOutputKey());
+							paramCommand.setActionType(toSend.paramCommandType);
+							paramCommand.setKeepForHandshake(true);
+							synchronized (comms){
+								try { 
+									comms.addCommandToQueue (paramCommand);
+								} catch (CommsFail e1) {
+									throw new CommsFail ("Communication failed communitating with Kramer " + e1.getMessage());
+								} 
 							}
 						}
-				
+		
+						if (toSend.avOutputString != null) {
 
-						break;						
-				}
+							CommsCommand avCommsCommand = new CommsCommand();
+							avCommsCommand.setKey (device.getKey());
+							avCommsCommand.setCommandBytes(toSend.avOutputString);
+							avCommsCommand.setActionType(toSend.outputCommandType);
+							avCommsCommand.setExtraInfo (((AV)(device)).getOutputKey());
+							avCommsCommand.setKeepForHandshake(true);
+							synchronized (comms){
+								try { 
+									comms.addCommandToQueue (avCommsCommand);
+								} catch (CommsFail e1) {
+									throw new CommsFail ("Communication failed communitating with Kramer " + e1.getMessage());
+								} 
+							}
+						}
+						if (toSend.avOutputSuffix != null) {
+							
+							CommsCommand avCommsCommand = new CommsCommand();
+							avCommsCommand.setKey (device.getKey());
+							avCommsCommand.setCommandBytes(toSend.avOutputSuffix);
+							avCommsCommand.setActionType(toSend.outputCommandType);
+							avCommsCommand.setExtraInfo (((AV)(device)).getOutputKey());
+							avCommsCommand.setKeepForHandshake(true);
+							synchronized (comms){
+								try { 
+									comms.addCommandToQueue (avCommsCommand);
+								} catch (CommsFail e1) {
+									throw new CommsFail ("Communication failed communitating with Kramer " + e1.getMessage());
+								} 
+							}
+						}
+					} else {
+						if (toSend != null){
+							logger.log (Level.WARNING,"Error processing Kramer video message " + toSend.errorDescription);
+						}
+					}
+			
+
+					break;						
 			}
 		}
 	}

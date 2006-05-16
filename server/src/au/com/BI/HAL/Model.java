@@ -252,37 +252,34 @@ public class Model extends AudioModel implements DeviceModel {
 	public void doOutputItem(CommandInterface command) throws CommsFail {
 		String theWholeKey = command.getKey();
 		boolean findingState = false;
-		ArrayList deviceList = (ArrayList) configHelper
-				.getOutputItem(theWholeKey);
+		DeviceType device = configHelper.getOutputItem(theWholeKey);
 
-		if (deviceList == null) {
+		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for "
 					+ theWholeKey);
 		} else {
 			if (command.getCommandCode().equals("requestState"))
 				findingState = true;
 
-			Iterator devices = deviceList.iterator();
+
 			outputAudioCommand = "";
 			cache.setCachedCommand(command.getKey(), command);
 
-			while (devices.hasNext()) {
-				DeviceType device = (DeviceType) devices.next();
-				logger.log(Level.FINER,
-						"Monitored audio event sending to zone "
-								+ device.getKey());
+			logger.log(Level.FINER,
+					"Monitored audio event sending to zone "
+							+ device.getKey());
 
-				if (findingState
-						&& ((Audio) device).getOutputKey().equals(
-								command.getKey())) {
-					logger.log(Level.FINER, "State requested for "
-							+ command.getKey());
-					sendStateOfDevice(commandQueue, command.getTargetDeviceID(),
-							(Audio) device);
-					break;
-				}
+			if (findingState
+					&& ((Audio) device).getOutputKey().equals(
+							command.getKey())) {
+				logger.log(Level.FINER, "State requested for "
+						+ command.getKey());
+				sendStateOfDevice(commandQueue, command.getTargetDeviceID(),
+						(Audio) device);
+				return;
+			}
 
-				switch (device.getDeviceType()) {
+			switch (device.getDeviceType()) {
 				case DeviceType.AUDIO:
 					if ((outputAudioCommand = buildAudioString((Audio) device,
 							command)) != null)
@@ -299,7 +296,6 @@ public class Model extends AudioModel implements DeviceModel {
 					break;
 				}
 
-			}
 		}
 	}
 

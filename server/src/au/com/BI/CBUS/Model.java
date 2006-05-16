@@ -19,21 +19,21 @@ import au.com.BI.Lights.*;
 public class Model extends BaseModel implements DeviceModel {
 
 	protected String outputCBUSCommand = "";
-	protected HashMap state;
-	protected HashMap cachedMMI;
+	protected HashMap <String,StateOfGroup>state;
+	protected HashMap <String,String>cachedMMI;
 	protected char STX=' ';
 	protected char ETX='\r';
 	protected String applicationCode = "38";
 	protected byte applicationCodeByte = 0x38;
 	protected String rampCodes = ":02:0A:12:1A:22:2A:32:3A:42:4A:52:5A:62:6A:72:7A";
-	protected HashSet applicationCodes = null;
+	protected HashSet <String>applicationCodes = null;
 	protected CBUSHelper cBUSHelper;
-	protected HashMap levelMMIQueues;
-	protected HashMap sendingExtended;
+	protected HashMap <String,ArrayList<Integer>>levelMMIQueues;
+	protected HashMap <String,String>sendingExtended;
 	protected boolean receivedLevelReturn = true;
 	protected long lastSentTime = 0;
 	protected char currentChar = 'g';
-	protected LinkedList temperatureSensors = null;
+	protected LinkedList <SensorFascade>temperatureSensors = null;
 	protected PollTemperatures pollTemperatures = null;
 	protected long tempPollValue = 0L;
 
@@ -43,14 +43,14 @@ public class Model extends BaseModel implements DeviceModel {
 	public Model () {
 		super();
 
-		state = new HashMap(128);
-		applicationCodes = new HashSet(10);
+		state = new HashMap<String,StateOfGroup>(128);
+		applicationCodes = new HashSet<String>(10);
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		cachedMMI = new HashMap (128);
+		cachedMMI = new HashMap<String,String> (128);
 		cBUSHelper = new CBUSHelper();
-		sendingExtended = new HashMap (256);
-		levelMMIQueues = new HashMap (5);
-		temperatureSensors = new LinkedList();
+		sendingExtended = new HashMap<String,String> (256);
+		levelMMIQueues = new HashMap<String,ArrayList<Integer>> (5);
+		temperatureSensors = new LinkedList<SensorFascade>();
 		etxChars = new int[] {'.','$','%','#','!','\''};
 
 		etxString = new String(".$%#!\'");
@@ -133,17 +133,6 @@ public class Model extends BaseModel implements DeviceModel {
 			configHelper.addControlledItem (theKey, details, controlType);
 		} catch (ClassCastException ex) {
 			logger.log( Level.WARNING,"Attempted to add an incorrect device type to the CBUS model");
-		}
-	}
-
-	public void sendToFlash (List commandQueue, long targetFlashID, CommandInterface command) {
-
-		String theKey = command.getDisplayName();
-
-		command.setTargetDeviceID(targetFlashID);
-		logger.log (Level.INFO,"Sending to flash " + theKey + ":" + command.getCommandCode() + ":" + command.getExtraInfo());
-		synchronized (this.commandQueue){
-			commandQueue.add( (command));
 		}
 	}
 
@@ -398,51 +387,48 @@ public class Model extends BaseModel implements DeviceModel {
 
 	public void doOutputItem (CommandInterface command) throws CommsFail {
 		String theWholeKey = command.getKey();
-		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
+		DeviceType device = configHelper.getOutputItem(theWholeKey);
 
-		if (deviceList == null) {
+		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
 		}
 		else {
-			Iterator devices = deviceList.iterator();
+
 			String outputCbusCommand = null;
 			cache.setCachedCommand(command.getKey(),command);
 
-			while (devices.hasNext()) {
-				DeviceType device = (DeviceType)devices.next();
-				logger.log(Level.FINER, "Monitored CBUS event sending to group " + device.getKey());
+			logger.log(Level.FINER, "Monitored CBUS event sending to group " + device.getKey());
 
-				switch (device.getDeviceType()) {
-					case DeviceType.LIGHT_CBUS :
-						String currentChar = this.nextKey();
-						LightFascade lightDevice = (LightFascade)device;
-						String fullKey = this.cBUSHelper.buildKey(lightDevice.getApplicationCode(),lightDevice.getKey());
-						this.sendingExtended.remove(fullKey);  
-						// the build cbusstring will add a new entry if a new ramp has been sent
-						// ensure that Level CBUS returns will not be decoded, as the user has done an action since
+			switch (device.getDeviceType()) {
+				case DeviceType.LIGHT_CBUS :
+					String currentChar = this.nextKey();
+					LightFascade lightDevice = (LightFascade)device;
+					String fullKey = this.cBUSHelper.buildKey(lightDevice.getApplicationCode(),lightDevice.getKey());
+					this.sendingExtended.remove(fullKey);  
+					// the build cbusstring will add a new entry if a new ramp has been sent
+					// ensure that Level CBUS returns will not be decoded, as the user has done an action since
+					
+					if ((outputCbusCommand = buildCBUSString ((LightFascade)device,command,currentChar)) != null) {
+
 						
-						if ((outputCbusCommand = buildCBUSString ((LightFascade)device,command,currentChar)) != null) {
+						CommsCommand cbusCommsCommand = new CommsCommand();
+						cbusCommsCommand.setKey (currentChar);
+						cbusCommsCommand.setKeepForHandshake(true);
+						cbusCommsCommand.setCommand(outputCbusCommand);
+						cbusCommsCommand.setExtraInfo (((LightFascade)(device)).getOutputKey());
 
-							
-							CommsCommand cbusCommsCommand = new CommsCommand();
-							cbusCommsCommand.setKey (currentChar);
-							cbusCommsCommand.setKeepForHandshake(true);
-							cbusCommsCommand.setCommand(outputCbusCommand);
-							cbusCommsCommand.setExtraInfo (((LightFascade)(device)).getOutputKey());
+							try {
+								//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
+								comms.addCommandToQueue (cbusCommsCommand);
+							} catch (CommsFail e1) {
+								logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
+								throw new CommsFail ("Error communicating with CBUS");
+							}
+						logger.log (Level.FINEST,"Queueing cbus command " + currentChar + " for " + (String)cbusCommsCommand.getExtraInfo());
 
-								try {
-									//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
-									comms.addCommandToQueue (cbusCommsCommand);
-								} catch (CommsFail e1) {
-									logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
-									throw new CommsFail ("Error communicating with CBUS");
-								}
-							logger.log (Level.FINEST,"Queueing cbus command " + currentChar + " for " + (String)cbusCommsCommand.getExtraInfo());
+					}
 
-						}
-
-						break;
-				}
+					break;
 			}
 		}
 	}
@@ -1100,11 +1086,11 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 	
 	public void addToLevelMMIQueue (String appNumber, Integer startNumber) {
-		ArrayList appList;
+		ArrayList <Integer> appList;
 		if (this.levelMMIQueues.containsKey(appNumber)) {
-			appList = (ArrayList)levelMMIQueues.get(appNumber);
+			appList = (ArrayList <Integer>)levelMMIQueues.get(appNumber);
 		} else {
-			appList = new ArrayList (10);
+			appList = new ArrayList <Integer>(10);
 		}
 		if (!appList.contains(startNumber)) {
 			appList.add(startNumber);

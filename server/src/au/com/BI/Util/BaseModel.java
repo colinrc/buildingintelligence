@@ -17,6 +17,7 @@ import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.User.User;
 import java.util.*;
 import java.util.logging.*;
+
 import au.com.BI.Macro.MacroHandler;
 import au.com.BI.Config.Bootstrap;
 import au.com.BI.AlarmLogging.*;
@@ -779,8 +780,16 @@ public class BaseModel
 	}
 
 	
+
+	public void sendToFlash (List commandQueue, long targetFlashID, CommandInterface command) {
+		command.setTargetDeviceID(targetFlashID);
+		sendToFlash (command,cache);
+	}
+	
 	public void sendToFlash (CommandInterface command, Cache cache ) {
 		cache.setCachedCommand(command.getDisplayName(),command);
+		logger.log (Level.FINE,"Sending to flash " + command.getKey() + ":" + command.getCommandCode() + ":" + command.getExtraInfo());
+
 		synchronized (commandQueue){
 			commandQueue.add(command);
 		}

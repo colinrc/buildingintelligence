@@ -137,74 +137,70 @@ public class Model extends BaseModel implements DeviceModel {
 		String theWholeKey = command.getKey();
 
 		    
-		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
+		DeviceType device = configHelper.getOutputItem(theWholeKey);
 		String outputCommand;
 		
-		if (deviceList == null) {
+		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
 		}
 		else {
-			Iterator devices = deviceList.iterator();
+
 			String outputIRCommand = null;
 			cache.setCachedCommand(command.getKey(),command);
 			
-			while (devices.hasNext()) {
-				DeviceType device = (DeviceType)devices.next();
+			switch (device.getDeviceType()) {
+				case DeviceType.TOGGLE_OUTPUT :
+					logger.log(Level.FINEST, "GC100 toggle event being sent to connector " + device.getKey());
+					if ((outputCommand = buildRelayString ((ToggleSwitch)device,command)) != null) {
+						CommsCommand gc100CommsCommand = new CommsCommand();
+						gc100CommsCommand.setKey (device.getKey());
+						gc100CommsCommand.setCommand(outputCommand);
+						gc100CommsCommand.setExtraInfo (((ToggleSwitch)(device)).getOutputKey());
+							try { 
+								//comms.addCommandToQueue (gc100CommsCommand);
+								comms.sendString(outputCommand);
+							} catch (CommsFail e1) {
+								throw new CommsFail ("Communication failed with GC100. " + e1.getMessage());
+							} 
+						logger.log (Level.FINEST,"Queueing GC100 command for " + (String)gc100CommsCommand.getExtraInfo());
+					}
+					break;
 
-				switch (device.getDeviceType()) {
-					case DeviceType.TOGGLE_OUTPUT :
-						logger.log(Level.FINEST, "GC100 toggle event being sent to connector " + device.getKey());
-						if ((outputCommand = buildRelayString ((ToggleSwitch)device,command)) != null) {
+				case DeviceType.IR :
+					logger.log(Level.FINEST, "GC100 IR code being sent to connector " + device.getKey());
+					String eachIRName [] = command.getExtraInfo().split(",");
+					for (int i = 0; i < eachIRName.length; i++){
+						outputCommand = buildIRString ((IR)device,eachIRName[i],command.getExtra2Info());
+						if (outputCommand != null && !outputCommand.equals("")) {
+							if (logger.isLoggable(Level.FINER)) {
+								logger.log (Level.FINER, "Sending IR command for " + eachIRName[i] + " " + outputCommand);
+							}
 							CommsCommand gc100CommsCommand = new CommsCommand();
-							gc100CommsCommand.setKey (device.getKey());
+							gc100CommsCommand.setKey (lastConnectorID);
 							gc100CommsCommand.setCommand(outputCommand);
-							gc100CommsCommand.setExtraInfo (((ToggleSwitch)(device)).getOutputKey());
+							gc100CommsCommand.setExtraInfo (((IR)(device)).getOutputKey());
+							gc100CommsCommand.setExtra2Info(eachIRName[i]);
+							gc100CommsCommand.setActionCode(lastConnectorID);
+							gc100CommsCommand.setActionType(CommDevice.GC100_IRCommand);
+							gc100CommsCommand.setKeepForHandshake(true);
 								try { 
-									//comms.addCommandToQueue (gc100CommsCommand);
-									comms.sendString(outputCommand);
+									comms.addCommandToQueue (gc100CommsCommand);
+									/* if (!comms.sentQueueContainsCommand(CommDevice.GC100_IRCommand,this.lastConnectorID)) {
+									    comms.sendNextCommand(CommDevice.GC100_IRCommand,this.lastConnectorID);
+									} */
+									if (!comms.sentQueueContainsCommand(CommDevice.GC100_IRCommand)) {
+										comms.sendNextCommand(CommDevice.GC100_IRCommand,"");
+									} 
+									
 								} catch (CommsFail e1) {
 									throw new CommsFail ("Communication failed with GC100. " + e1.getMessage());
 								} 
 							logger.log (Level.FINEST,"Queueing GC100 command for " + (String)gc100CommsCommand.getExtraInfo());
+						} else {
+						    logger.log (Level.INFO, "IR Command string is null");
 						}
-						break;
-
-					case DeviceType.IR :
-						logger.log(Level.FINEST, "GC100 IR code being sent to connector " + device.getKey());
-						String eachIRName [] = command.getExtraInfo().split(",");
-						for (int i = 0; i < eachIRName.length; i++){
-							outputCommand = buildIRString ((IR)device,eachIRName[i],command.getExtra2Info());
-							if (outputCommand != null && !outputCommand.equals("")) {
-								if (logger.isLoggable(Level.FINER)) {
-									logger.log (Level.FINER, "Sending IR command for " + eachIRName[i] + " " + outputCommand);
-								}
-								CommsCommand gc100CommsCommand = new CommsCommand();
-								gc100CommsCommand.setKey (lastConnectorID);
-								gc100CommsCommand.setCommand(outputCommand);
-								gc100CommsCommand.setExtraInfo (((IR)(device)).getOutputKey());
-								gc100CommsCommand.setExtra2Info(eachIRName[i]);
-								gc100CommsCommand.setActionCode(lastConnectorID);
-								gc100CommsCommand.setActionType(CommDevice.GC100_IRCommand);
-								gc100CommsCommand.setKeepForHandshake(true);
-									try { 
-										comms.addCommandToQueue (gc100CommsCommand);
-										/* if (!comms.sentQueueContainsCommand(CommDevice.GC100_IRCommand,this.lastConnectorID)) {
-										    comms.sendNextCommand(CommDevice.GC100_IRCommand,this.lastConnectorID);
-										} */
-										if (!comms.sentQueueContainsCommand(CommDevice.GC100_IRCommand)) {
-											comms.sendNextCommand(CommDevice.GC100_IRCommand,"");
-										} 
-										
-									} catch (CommsFail e1) {
-										throw new CommsFail ("Communication failed with GC100. " + e1.getMessage());
-									} 
-								logger.log (Level.FINEST,"Queueing GC100 command for " + (String)gc100CommsCommand.getExtraInfo());
-							} else {
-							    logger.log (Level.INFO, "IR Command string is null");
-							}
-						}
-						break;						
-				}
+					}
+					break;						
 			}
 		}
 	}

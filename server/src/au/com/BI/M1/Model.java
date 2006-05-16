@@ -104,26 +104,22 @@ public class Model extends BaseModel implements DeviceModel {
 		String theWholeKey = command.getKey();
 		boolean findingState = false;
 		
-		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
+		DeviceType device = configHelper.getOutputItem(theWholeKey);
 
-		if (deviceList == null) {
+		if (device == null) {
 			logger.log(Level.INFO, "Error in config, no output key for " + theWholeKey);
 		}
 		else {
-			Iterator eachDev = deviceList.iterator();
-			while (eachDev.hasNext()){
-				 DeviceType device = (DeviceType)eachDev.next();
-				 String retCode = "";
-				 
-				 if (device.getDeviceType() == DeviceType.TOGGLE_OUTPUT) {
-					 retCode = buildToggleOutput ((DeviceType)device,command);
-				 }	
-				 
-				 logger.log(Level.FINE,retCode);
+			 String retCode = "";
+			 
+			 if (device.getDeviceType() == DeviceType.TOGGLE_OUTPUT) {
+				 retCode = buildToggleOutput ((DeviceType)device,command);
+			 }	
+			 
+			 logger.log(Level.FINE,retCode);
 
-				if (!retCode.equals ("")){
-					comms.sendString(retCode);
-				}
+			if (!retCode.equals ("")){
+				comms.sendString(retCode);
 			}
 		}
 	}

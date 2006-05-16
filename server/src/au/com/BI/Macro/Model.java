@@ -109,7 +109,7 @@ public class Model extends BaseModel implements DeviceModel {
 		ClientCommand clientCommand = null;
 
 		String theWholeKey = command.getKey();
-		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
+		DeviceType device = configHelper.getOutputItem(theWholeKey);
 
 		logger.log (Level.FINER, "Received macro command");
 

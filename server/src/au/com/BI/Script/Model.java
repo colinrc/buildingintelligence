@@ -153,39 +153,31 @@ public class Model
                         doScriptItem(command);
                 }
                 else {
-                        ArrayList deviceList = (ArrayList) configHelper.getOutputItem(theWholeKey);
+                        DeviceType device = configHelper.getOutputItem(theWholeKey);
                         logger.log(Level.FINE, "Extra Info: " + command.getExtraInfo());
-                        if (deviceList == null) {
+                        if (device == null) {
                                 logger.log(Level.WARNING,
                                   "Error in config, no output key for " + theWholeKey);
                         }
                         else {
-                                Iterator devices = deviceList.iterator();
+                                if (device.getDeviceType() == DeviceType.SCRIPT) {
 
-                                while (devices.hasNext()) {
-                                        DeviceType device = (DeviceType) devices.next();
-
-                                        if (device.getDeviceType() == DeviceType.SCRIPT) {
-
-                                                try {
-                                                        CommandInterface newCommand;
-                                                        logger.log(Level.FINE,
-                                                          "*********Running script " + ( (Script) device).getNameOfScript());
-                                                        newCommand = createInternalCommand("SCRIPT","", "run", ( (Script) device).getNameOfScript());
-                                                        newCommand.setTargetDeviceModel(DeviceType.OUTPUT);
-                                                        //  configHelper.addControlledItem("SCRIPT", newCommand, DeviceType.OUTPUT);
-                                                        doScriptItem(newCommand);
-                                                        // cache.setCachedCommand(newCommand.getKey(), newCommand);
-                                                        //   sendCommand("SCRIPT","run",( (Script) device).getNameOfScript());
-                                                }
-                                                catch (ClassCastException ex) {
-                                                        logger.log(Level.WARNING,
-                                                          "An incorrect device type was marked as a script " +
-                                                          ex.getMessage());
-                                                }
-
+                                        try {
+                                                CommandInterface newCommand;
+                                                logger.log(Level.FINE,
+                                                  "*********Running script " + ( (Script) device).getNameOfScript());
+                                                newCommand = createInternalCommand("SCRIPT","", "run", ( (Script) device).getNameOfScript());
+                                                newCommand.setTargetDeviceModel(DeviceType.OUTPUT);
+                                                //  configHelper.addControlledItem("SCRIPT", newCommand, DeviceType.OUTPUT);
+                                                doScriptItem(newCommand);
+                                                // cache.setCachedCommand(newCommand.getKey(), newCommand);
+                                                //   sendCommand("SCRIPT","run",( (Script) device).getNameOfScript());
                                         }
-
+                                        catch (ClassCastException ex) {
+                                                logger.log(Level.WARNING,
+                                                  "An incorrect device type was marked as a script " +
+                                                  ex.getMessage());
+                                        }
                                 }
                         }
                 }
@@ -193,7 +185,7 @@ public class Model
 
         public void doScriptItem(CommandInterface command) throws CommsFail {
                 String theWholeKey = command.getKey();
-                ArrayList deviceList = (ArrayList) configHelper.getOutputItem(theWholeKey);
+                DeviceType device = configHelper.getOutputItem(theWholeKey);
 
                 Command clientCommand = null;
 

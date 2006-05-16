@@ -126,18 +126,6 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-
-	void sendToFlash (List commandQueue, long targetFlashID, CommandInterface command) {
-
-		String theKey = command.getDisplayName();
-
-		command.setTargetDeviceID(targetFlashID);
-		logger.log (Level.INFO,"Sending to flash " + theKey + ":" + command.getCommandCode() + ":" + 
-				command.getExtraInfo());
-		synchronized (this.commandQueue){
-			commandQueue.add( command);
-		}
-	}
 		
 	void requestAllLevels (int area,byte join) throws CommsFail{
 		requestAllLevels (Utility.padStringTohex(area),join);
@@ -241,80 +229,76 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {
 		String theWholeKey = command.getKey();
-		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
+		DeviceType device = configHelper.getOutputItem(theWholeKey);
 
-		if (deviceList == null) {
+		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
 		}
 		else {
-			Iterator devices = deviceList.iterator();
 			DynaliteOutput outputDynaliteCommand = null;
 			cache.setCachedCommand(command.getKey(),command);
 
-			while (devices.hasNext()) {
-				DeviceType device = (DeviceType)devices.next();
-				logger.log(Level.FINER, "Monitored Dynalite event, sending it to the channel " + device.getKey());
+			logger.log(Level.FINER, "Monitored Dynalite event, sending it to the channel " + device.getKey());
 
-				switch (device.getDeviceType()) {
-					case DeviceType.LIGHT_DYNALITE :
-						//DynaliteDevice lightDevice = (DynaliteDevice)device;
-						//String fullKey = this.dynaliteHelper.buildKey('L',lightDevice.getAreaCode(),lightDevice.getKey());
-	
-						if ((outputDynaliteCommand = buildDynaliteResult ((DynaliteDevice)device,command)) != null) {
-							try {
-								this.sendToComms(outputDynaliteCommand.outputCodes);
-								if (outputDynaliteCommand.isRescanLevels()){
-									this.requestAllLevels(outputDynaliteCommand.getRescanArea(), (byte)255);
-								}
+			switch (device.getDeviceType()) {
+				case DeviceType.LIGHT_DYNALITE :
+					//DynaliteDevice lightDevice = (DynaliteDevice)device;
+					//String fullKey = this.dynaliteHelper.buildKey('L',lightDevice.getAreaCode(),lightDevice.getKey());
 
-								logger.log (Level.FINER,"Sending dynalite command " + " for " + ((LightFascade)(device)).getOutputKey());
-
-								Iterator li = outputDynaliteCommand.linkedDeviceCommands.iterator();
-								while (li.hasNext()){
-									CommandInterface nextCommand = (CommandInterface)li.next();
-									cache.setCachedCommand(nextCommand.getKey(),nextCommand);
-									this.sendToFlash(commandQueue,-1,nextCommand);
-									logger.log (Level.FINER,"Sending dynalite linked command " + " for " + nextCommand.getKey());
-								}
-							} catch (CommsFail e1) {
-								logger.log(Level.WARNING, "Communication failed communicating with Dynalite " + e1.getMessage());
-								throw new CommsFail ("Error communicating with Dynalite");
+					if ((outputDynaliteCommand = buildDynaliteResult ((DynaliteDevice)device,command)) != null) {
+						try {
+							this.sendToComms(outputDynaliteCommand.outputCodes);
+							if (outputDynaliteCommand.isRescanLevels()){
+								this.requestAllLevels(outputDynaliteCommand.getRescanArea(), (byte)255);
 							}
 
+							logger.log (Level.FINER,"Sending dynalite command " + " for " + ((LightFascade)(device)).getOutputKey());
 
-
+							Iterator li = outputDynaliteCommand.linkedDeviceCommands.iterator();
+							while (li.hasNext()){
+								CommandInterface nextCommand = (CommandInterface)li.next();
+								cache.setCachedCommand(nextCommand.getKey(),nextCommand);
+								this.sendToFlash(commandQueue,-1,nextCommand);
+								logger.log (Level.FINER,"Sending dynalite linked command " + " for " + nextCommand.getKey());
+							}
+						} catch (CommsFail e1) {
+							logger.log(Level.WARNING, "Communication failed communicating with Dynalite " + e1.getMessage());
+							throw new CommsFail ("Error communicating with Dynalite");
 						}
-						break;
-						
-					case DeviceType.LIGHT_DYNALITE_AREA :
-						//DynaliteDevice lightArea = (DynaliteDevice)device;
-						//String fullKeyStr = this.dynaliteHelper.buildKey('L',lightArea.getAreaCode(),lightArea.getKey());
-	
-						if ((outputDynaliteCommand = buildDynaliteResult ((DynaliteDevice)device,command)) != null) {
-							try {
 
-								this.sendToComms(outputDynaliteCommand.outputCodes);
-								if (outputDynaliteCommand.isRescanLevels()){
-									this.requestAllLevels(outputDynaliteCommand.getRescanArea(), (byte)255);
-								}
 
-								logger.log (Level.FINER,"Sending dynalite command " + " for " + ((LightFascade)(device)).getOutputKey());
-								Iterator li = outputDynaliteCommand.linkedDeviceCommands.iterator();
-								while (li.hasNext()){
-									CommandInterface nextCommand = (CommandInterface)li.next();
-									cache.setCachedCommand(nextCommand.getKey(),nextCommand);
-									this.sendToFlash(commandQueue,-1,nextCommand);
-									logger.log (Level.FINER,"Sending dynalite linked command " + " for " + nextCommand.getKey());
-								}
-							} catch (CommsFail e1) {
-								logger.log(Level.WARNING, "Communication failed communicating with Dynalite " + e1.getMessage());
-								throw new CommsFail ("Error communicating with Dynalite");
+
+					}
+					break;
+					
+				case DeviceType.LIGHT_DYNALITE_AREA :
+					//DynaliteDevice lightArea = (DynaliteDevice)device;
+					//String fullKeyStr = this.dynaliteHelper.buildKey('L',lightArea.getAreaCode(),lightArea.getKey());
+
+					if ((outputDynaliteCommand = buildDynaliteResult ((DynaliteDevice)device,command)) != null) {
+						try {
+
+							this.sendToComms(outputDynaliteCommand.outputCodes);
+							if (outputDynaliteCommand.isRescanLevels()){
+								this.requestAllLevels(outputDynaliteCommand.getRescanArea(), (byte)255);
 							}
 
+							logger.log (Level.FINER,"Sending dynalite command " + " for " + ((LightFascade)(device)).getOutputKey());
+							Iterator li = outputDynaliteCommand.linkedDeviceCommands.iterator();
+							while (li.hasNext()){
+								CommandInterface nextCommand = (CommandInterface)li.next();
+								cache.setCachedCommand(nextCommand.getKey(),nextCommand);
+								this.sendToFlash(commandQueue,-1,nextCommand);
+								logger.log (Level.FINER,"Sending dynalite linked command " + " for " + nextCommand.getKey());
+							}
+						} catch (CommsFail e1) {
+							logger.log(Level.WARNING, "Communication failed communicating with Dynalite " + e1.getMessage());
+							throw new CommsFail ("Error communicating with Dynalite");
 						}
 
-						break;
-				}
+					}
+
+					break;
 			}
 		}
 	}

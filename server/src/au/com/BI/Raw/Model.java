@@ -202,28 +202,25 @@ public class Model extends BaseModel implements DeviceModel {
 
 	public void doOutputItem (CommandInterface command) throws CommsFail {
 		String theWholeKey = command.getKey();
-		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(theWholeKey);
+		DeviceType device = configHelper.getOutputItem(theWholeKey);
 
-		if (deviceList == null) {
+		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
 		}
 		else {
-			Iterator devices = deviceList.iterator();
+
 			String outputRawCommand = "";
 			cache.setCachedCommand(command.getKey(),command);
 
-                        while (devices.hasNext()) {
-				DeviceType device = (DeviceType)devices.next();
-				logger.log(Level.FINER, "Received flash event for RAW from " + theWholeKey);
+			logger.log(Level.FINER, "Received flash event for RAW from " + theWholeKey);
 
-				switch (device.getDeviceType()) {
-					case DeviceType.RAW_INTERFACE :
-						if ((outputRawCommand = buildDirectConnectString (device,command)) != null)
-							sendToSerial (STX+outputRawCommand+ETX);
-						break;
-				}
-
+			switch (device.getDeviceType()) {
+				case DeviceType.RAW_INTERFACE :
+					if ((outputRawCommand = buildDirectConnectString (device,command)) != null)
+						sendToSerial (STX+outputRawCommand+ETX);
+					break;
 			}
+
 		}
 	}
 
