@@ -47,6 +47,7 @@ public class Model extends BaseModel implements DeviceModel {
 		nuvoHelper = new NuvoHelper();
 		state = new HashMap<String,State>();
 		setPadding (2); // device requires 2 character keys that are 0 padded.
+		setInterCommandInterval(50);
 		srcGroup = new Vector<String>();
 	}
 
@@ -62,7 +63,7 @@ public class Model extends BaseModel implements DeviceModel {
 			throw new SetupException ("The audio source input catalogue was not specified in the device Parameter block");
 		}
 	
-		audioInputs = (HashMap)this.getCatalogueDef(audioInputsDef);
+		audioInputs = (HashMap<String,String>)this.getCatalogueDef(audioInputsDef);
 		if (audioInputs == null) {
 			throw new SetupException ("The audio Source input catgalogue was not specifed in the  device Parameter block");
 		}
@@ -85,12 +86,6 @@ public class Model extends BaseModel implements DeviceModel {
 	    }	
 	}
 	
-	public void attatchComms() throws ConnectionFail {
-		setInterCommandInterval(50);
-		super.attatchComms();
-		}
-	
-	
 	public void doStartup() throws CommsFail {
 		
 		synchronized (comms) {
@@ -103,15 +98,9 @@ public class Model extends BaseModel implements DeviceModel {
 
 				String toneRequest = "*Z"+ audioDevice.getKey()+ "SETSR\n";
 				
-				CommsCommand avCommsCommand2 = new CommsCommand();
-				avCommsCommand2.setKey (key);
-				avCommsCommand2.setCommand(toneRequest);
-				avCommsCommand2.setActionType(Model.Zone_Tone_Request);
-				avCommsCommand2.setExtraInfo (((Audio)(audioDevice)).getOutputKey());
-				avCommsCommand2.setKeepForHandshake(false);
 				synchronized (comms){
 					try { 
-						comms.addCommandToQueue (avCommsCommand2);
+				    	this.sendToSerial(toneRequest,key,((Audio)(audioDevice)).getOutputKey(),Model.Zone_Tone_Request,false);
 					} catch (CommsFail e1) {
 						throw new CommsFail ("Communication failed communitating with Nuvo " + e1.getMessage());
 					} 
@@ -124,16 +113,10 @@ public class Model extends BaseModel implements DeviceModel {
 	    	String key = audioDevice.getKey();
 			if (!key.equals(Model.AllZones)) {
 				String zoneRequest = "*Z"+ audioDevice.getKey()+ "CONSR\n";
-				
-				CommsCommand avCommsCommand = new CommsCommand();
-				avCommsCommand.setKey (key);
-				avCommsCommand.setCommand(zoneRequest);
-				avCommsCommand.setActionType(Model.Zone_Status_Request);
-				avCommsCommand.setExtraInfo (((Audio)(audioDevice)).getOutputKey());
-				avCommsCommand.setKeepForHandshake(false);
+
 				synchronized (comms){
 					try { 
-						comms.addCommandToQueue (avCommsCommand);
+				    	this.sendToSerial(zoneRequest,key,((Audio)(audioDevice)).getOutputKey(),Model.Zone_Status_Request,false);
 					} catch (CommsFail e1) {
 						throw new CommsFail ("Communication failed communitating with Nuvo " + e1.getMessage());
 					} 
@@ -142,24 +125,6 @@ public class Model extends BaseModel implements DeviceModel {
 	    }
 	}
 		
-	
-	public boolean doIControl (String keyName, boolean isClientCommand)
-	{
-		configHelper.wholeKeyChecked(keyName);
-			
-		if (configHelper.checkForOutputItem(keyName)) {
-			logger.log (Level.FINER,"Flash sent command : " +keyName);
-			return true;
-		}
-		else {
-			if (isClientCommand)
-				return false;
-			else {
-				configHelper.setLastCommandType (DeviceType.MONITORED);
-				return true;
-			}
-		}
-	}
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {	
 		String theWholeKey = command.getKey();
@@ -181,8 +146,7 @@ public class Model extends BaseModel implements DeviceModel {
 							logger.log(Level.FINER, "Audio event for zone " + device.getKey() + " received from flash");
 
 						    for(String avOutputString : toSend.avOutputStrings) {			
-						    	this.sendToSerial(avOutputString,audioDevice, audioDevice.getOutputKey(),toSend.outputCommandType);
-
+						    	this.sendToSerial(avOutputString,device.getKey(),audioDevice.getOutputKey(),toSend.outputCommandType,false);
 							}
 						    
 							for (CommandInterface eachCommand: toSend.avOutputFlash){
@@ -217,21 +181,6 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void sendToSerial (String avOutputString,Audio device, String outputKey, int outputCommandType) throws CommsFail{
-		CommsCommand avCommsCommand = new CommsCommand();
-		avCommsCommand.setKey (device.getKey());
-		avCommsCommand.setCommand(avOutputString+"\n");
-		avCommsCommand.setActionType(outputCommandType);
-		avCommsCommand.setExtraInfo (((Audio)(device)).getOutputKey());
-		avCommsCommand.setKeepForHandshake(false);
-		synchronized (comms){
-			try { 
-				comms.addCommandToQueue (avCommsCommand);
-			} catch (CommsFail e1) {
-				throw new CommsFail ("Communication failed communitating with Nuvo " + e1.getMessage());
-			} 
-		}
-	}
 	
 	public NuvoCommands interpretStringFromNuvo (CommandInterface command){
 		NuvoCommands result = new NuvoCommands();
