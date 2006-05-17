@@ -27,34 +27,21 @@ public class UpdateServlet extends HttpServlet {
         
         HttpSession session = req.getSession(false);
         if (session == null) {
-            session = req.getSession(true);
-            resp.setContentType("text/html");
-
-            java.io.PrintWriter out = resp.getWriter();
-
-            out.println("<HTML>");
-            out.println("<BODY>");
-            out.println("<P>First test from get");
-            out.println("</BODY>");
-            out.println("</HTML>");
-            resp.flushBuffer();
-            resp.setStatus(resp.SC_OK);
-            
-        } else {
-            resp.setContentType("text/html");
-
-            java.io.PrintWriter out = resp.getWriter();
-
-            out.println("<HTML>");
-            out.println("<BODY>");
-            out.println("<P>Next test from get");
-            out.println("</BODY>");
-            out.println("</HTML>");
-            resp.flushBuffer();
-            resp.setStatus(resp.SC_OK);
-            
+            session = req.getSession(true);            
         }
         
+        
+        resp.setContentType("text/html");
+
+        java.io.PrintWriter out = resp.getWriter();
+
+        out.println("<HTML>");
+        out.println("<BODY>");
+        out.println("<P>First test from get");
+        out.println("</BODY>");
+        out.println("</HTML>");
+        resp.flushBuffer();
+        resp.setStatus(resp.SC_OK);
         
         long lastUpdate = session.getLastAccessedTime();
  

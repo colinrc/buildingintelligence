@@ -21,19 +21,18 @@ import au.com.BI.JRobin.*;
 
 public class Cache {
 
-        protected Map cachedCommands;
+        protected Map<String,CacheWrapper> cachedCommands;
         protected Logger logger;
         protected Controller controller;
         protected JRobinCacheUpdater jRobinCacheUpdater = null;
 		protected boolean jRobinActive = false;
-		protected List cacheListeners = null;
+		protected List<CacheListener> cacheListeners = null;
 
         public Cache() {
-                cachedCommands = Collections.synchronizedMap(new HashMap(
-                    DeviceModel.
-                    NUMBER_CACHE_COMMANDS));
+                cachedCommands = Collections.synchronizedMap(new HashMap<String,CacheWrapper>(
+                    DeviceModel.NUMBER_CACHE_COMMANDS));
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
-                cacheListeners = new LinkedList();
+                cacheListeners = new LinkedList<CacheListener>();
         }
 
         public Collection getSetElements(CacheWrapper cachedObject) {
@@ -113,9 +112,16 @@ public class Cache {
         public List getAllCommands (Date startTime, Date endTime){
         		long startLong = startTime.getTime();
         		long endLong = endTime.getTime();
-        		LinkedList result = new LinkedList();
+        		LinkedList<CacheWrapper> result = new LinkedList<CacheWrapper>();
         		synchronized (cachedCommands){
-        			Set commandSet = cachedCommands.entrySet();
+        			Collection <CacheWrapper> commandSet = cachedCommands.values();
+
+        			for (CacheWrapper command:commandSet){
+        				if (command.creationTime >= startLong && command.creationTime < endLong) {
+        					result.add(command.clone());
+        				}
+        			}
+        			/*
         			Iterator commandIter = commandSet.iterator();
         			while (commandIter.hasNext()){
         				CacheWrapper command = (CacheWrapper)commandIter.next();
@@ -123,6 +129,7 @@ public class Cache {
         					result.add(command.clone());
         				}
         			}
+        			*/
         		}
         		return result;	
         }
@@ -151,19 +158,19 @@ public class Cache {
 			}
 
 
-                    synchronized (cachedCommands) {
-                            if (cachedCommands.containsKey(key)) {
-                                CacheWrapper oldItem = (CacheWrapper)cachedCommands.get(key);
-								oldItem.addToMap (key,command);
-								updateListeners (key,oldItem);
-                            }
-                            else {
-								CacheWrapper newItem = new CacheWrapper (true);
-								newItem.addToMap(key,command);
-                                cachedCommands.put(key, newItem);
-  								updateListeners (key,newItem);
-                            }
-                    }
+            synchronized (cachedCommands) {
+                if (cachedCommands.containsKey(key)) {
+                    CacheWrapper oldItem = (CacheWrapper)cachedCommands.get(key);
+					oldItem.addToMap (key,command);
+					updateListeners (key,oldItem);
+                }
+                else {
+					CacheWrapper newItem = new CacheWrapper (true);
+					newItem.addToMap(key,command);
+                    cachedCommands.put(key, newItem);
+					updateListeners (key,newItem);
+                }
+            }
             String displayName;
             if (command.isClient()) {
                     displayName = key;

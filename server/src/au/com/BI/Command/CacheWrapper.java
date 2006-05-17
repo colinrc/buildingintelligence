@@ -42,16 +42,15 @@ public class CacheWrapper {
 	}
 	
     // @TODO enable clone
-    public Object clone () {
-    	return null;
-    	/*
+    public CacheWrapper clone () {
+    	//return null;
+
     		try {
-    			return super.clone();
+    			return (CacheWrapper)super.clone();
     		} catch (CloneNotSupportedException ex){
     			logger.log (Level.SEVERE,"Command object cannot be copied, web clients will not function.");
     			return null;
     		}
-*/
     }
     
 	public boolean isSet() {

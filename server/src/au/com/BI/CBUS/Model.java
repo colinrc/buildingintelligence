@@ -295,15 +295,16 @@ public class Model extends BaseModel implements DeviceModel {
 
 	public void requestAllLevels () throws CommsFail{
 		this.clearAllLevelMMIQueues();
-		Iterator eachControlledItem = configHelper.getAllControlledDevices();
-		while (eachControlledItem.hasNext()) {
+		for (DeviceType eachDevice:configHelper.getAllControlledDeviceObjects()) {
 			try {
-				CBUSDevice nextDevice = (CBUSDevice)eachControlledItem.next();
+				CBUSDevice nextDevice = (CBUSDevice)eachDevice;
+
 				if (nextDevice.getDeviceType() == DeviceType.LIGHT_CBUS && nextDevice.supportsLevelMMI()) {
 					this.sendExtendedQuery(nextDevice.getKey(),nextDevice.getApplicationCode(),null,false,"0");
 				}
-
-			}catch (ClassCastException ex) {}
+			}catch (ClassCastException ex) {
+				logger.log (Level.WARNING,"A device has been configured in the CBUS configuration area that is not a CBUS device");
+			}
 		}
 		this.sendAllLevelMMIQueues();
 	}
@@ -463,6 +464,14 @@ public class Model extends BaseModel implements DeviceModel {
 					return;
 				}
 
+				if (cBUSString.startsWith("A34")) {
+					logger.log (Level.FINER,"Received startup parameter");
+					return;
+				}
+				if (cBUSString.startsWith("A32")) {
+					logger.log (Level.FINER,"Received startup parameter");
+					return;
+				}
 				char firstChar = cBUSString.charAt(0);
 				if (cBUSString.startsWith("32")) {
 					logger.log (Level.FINER,"Received confirmation, change parameter " + cBUSString.substring(2,4));
@@ -740,7 +749,8 @@ public class Model extends BaseModel implements DeviceModel {
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
 								if (!this.hasState(fullKey)) {
-									if (receivedLevelReturn) sendExtendedQuery(key,appAddress,currentUser,false);
+									if (receivedLevelReturn && !this.sendingExtended.containsKey(fullKey)) 
+										sendExtendedQuery(key,appAddress,currentUser,false);
 								} else {
 									updateMMIState (MMIKey, key,appAddress,"on",null,currentUser);
 								}
@@ -766,7 +776,8 @@ public class Model extends BaseModel implements DeviceModel {
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
 								if (!this.hasState(fullKey)) {
-									if (receivedLevelReturn) sendExtendedQuery(key,appAddress,currentUser,false);
+									if (receivedLevelReturn && !this.sendingExtended.containsKey(fullKey)) 
+										sendExtendedQuery(key,appAddress,currentUser,false);
 								} else {
 									updateMMIState (MMIKey, key,appAddress,"on",null,currentUser);
 								}
@@ -792,7 +803,8 @@ public class Model extends BaseModel implements DeviceModel {
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
 								if (!this.hasState(fullKey)) {
-									if (receivedLevelReturn) sendExtendedQuery(key,appAddress,currentUser,false);
+									if (receivedLevelReturn&& !this.sendingExtended.containsKey(fullKey)) 
+										sendExtendedQuery(key,appAddress,currentUser,false);
 								} else {
 									updateMMIState (MMIKey, key,appAddress,"on",null,currentUser);
 								}
@@ -818,7 +830,8 @@ public class Model extends BaseModel implements DeviceModel {
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
 								if (!this.hasState(fullKey)) {
-									if (receivedLevelReturn) sendExtendedQuery(key,appAddress,currentUser,false);
+									if (receivedLevelReturn && !this.sendingExtended.containsKey(fullKey)) 
+										sendExtendedQuery(key,appAddress,currentUser,false);
 								} else {
 									updateMMIState (MMIKey, key,appAddress,"on",null,currentUser);
 								}
