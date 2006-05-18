@@ -7,13 +7,14 @@ import java.net.*;
 import java.io.*;
 import java.util.logging.*;
 import java.util.*;
+import au.com.BI.Util.TEA;
+import java.security.InvalidKeyException;
 import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 
 import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Comms.*;
 import au.com.BI.User.*;
-import au.com.BI.Command.*;
 import au.com.BI.Macro.*;
 import au.com.BI.Messaging.*;
 
@@ -41,12 +42,23 @@ public class FlashClientHandler extends Thread {
     protected List clientList; // used to remove this thread in case of disaster
     protected BufferedReader rd;
     
+    private TEA decrypter = null;
+    
     public FlashClientHandler(Socket connection,List commandList, List clientList,AddressBook addressBook) throws ConnectionFail {
 	logger = Logger.getLogger(this.getClass().getPackage().getName());
 	clientConnection = connection;
 	this.addressBook = addressBook;
 	this.commandList = commandList;
 	this.setName("Flash Client Handler");
+	
+	byte[] key = new byte[]{1,2,3,4};
+	decrypter = new TEA ();
+	try {
+		decrypter.engineInit(key,true);
+	} catch (InvalidKeyException ex){
+		logger.log (Level.SEVERE,"An invalid key has been specified for Flash communitation");
+	}
+	
 	ID = 0;
 	//try {
 	//clientConnection.setTcpNoDelay(true);
@@ -101,10 +113,33 @@ public class FlashClientHandler extends Thread {
 	
 				    try {
 					xmlDoc = saxb.build(xmlStream);
-					processXML(xmlDoc); 
-				    } catch (JDOMException ex){
-					logger.log (Level.WARNING,"XML message from Flash client was invalid " + ex.getMessage());
-				    }
+					Element rootElement = xmlDoc.getRootElement();
+					String name = rootElement.getName();
+
+					if (name.equals("encrypted")) {
+						logger.log(Level.FINER,"An encrypted packet has been received.");
+						String data = rootElement.getText();
+						byte[] decryptedPacket = null;
+						byte[] srcBytes = data.getBytes(); 
+						for (int i = 0; i < data.length() ; i +=decrypter.BLOCK_SIZE){
+								//byte[] decryptedPacket = decrypter.engineCrypt
+									//(data.substring(i * decrypter.BLOCK_SIZE, (i + 1) * decrypter.BLOCK_SIZE -1).getBytes(),i);
+								decryptedPacket = decrypter.engineCrypt (srcBytes,i);
+	
+	
+						}
+							
+						xmlDoc = saxb.build(data);
+						rootElement = xmlDoc.getRootElement(); 
+						processXML(rootElement); 
+					}
+					
+			    } catch (JDOMException ex){
+			    	logger.log (Level.WARNING,"XML message from Flash client was invalid " + ex.getMessage()); 
+			    } catch (ArrayIndexOutOfBoundsException ex){
+					logger.log (Level.WARNING,"Flash sent an invalid encrypted message"); 
+			    }
+				
 				}  
 		    } else {
 	    		try {
@@ -121,110 +156,7 @@ public class FlashClientHandler extends Thread {
 		    
 		Thread.yield(); // ensure another process always has a chance
 	 }
-    }
  
-    public void run_orig() {
-	logger.info("Client connection received. Handler started");
-	thisThreadRunning = true;
-	byte[] buf = new byte[0];  // buffer to read data off the input stream
-	int leftOverCount = 0;     // counter for any data still in "buf" after detecting "null"
-	int bufMarker = 0;         // counter to mark place in "buf"
-	int avail = 0;             // the number of bytes available to be read
-	int len = 0;               // the number of bytes actually read
-	int readBufLength = 8000;
-	
-	
-	while (thisThreadRunning) {
-	    // xml data is added to readbuffer once a full xml message
-	    // (null terminated) has been recieved
-	    // maximum message size is set below -- currently 2k
-	    byte[] readBuffer = new byte[readBufLength];
-	    int count = 0;         // number of bytes written to readBuffer
-	    
-	    // endflag is set to true when we see a "null" byte
-	    
-	    boolean endFlag = false;
-	    count = 0;
-	    do {
-		endFlag = false;
-		
-		
-		if (leftOverCount == 0) {
-		    //add available characters to byte collection
-		    try {
-			avail = i.available();
-			if (avail > 0) {
-			    buf = new byte[avail];    //size the buffer based on the number of available bytes
-			    len = i.read(buf);        //read() returns the number of bytes actually read
-			    avail = len;              //make sure we don't try to read data that isn't there
-			}
-			bufMarker = 0;
-		    } catch (IOException io){
-			logger.log(Level.WARNING,"IO Exception reading from client");
-		    }
-		} else {
-		    //read leftover data
-		    
-		    avail = leftOverCount;
-		    bufMarker = len - leftOverCount;
-		}
-		
-		if (avail > 0) {
-		    // if we found something
-		    int bufLength = bufMarker+avail;
-		    
-		    //loop from our current place to the end of "buf"
-		    for (int i=bufMarker; i<bufLength ;i++ ) {
-			if ((int) buf[i] <= 0) {
-			    
-			    leftOverCount = (bufMarker + avail - i) - 1; // compute number of extra bytes in "buf"
-			    endFlag = true; //set end of XML message flag
-			    avail = i - bufMarker; //re-compute the actual number of bytes to read since EOM was reached
-			    break; // do not continue reading "buf"
-			}
-			
-			if (i == bufLength -1) {
-			    endFlag = true;
-			}
-			
-		    }
-		    if (count + avail > readBufLength) {
-			readBufLength += readBufLength;
-			byte [] newReadBuffer = new byte[readBufLength];
-			System.arraycopy(newReadBuffer,0,readBuffer,0,readBuffer.length);
-			readBuffer = newReadBuffer;
-		    }
-		    // copy the contents we just examined from "buf" to our "readBuffer"
-		    System.arraycopy(buf,bufMarker,readBuffer,count,avail);
-		    count += avail;
-		}
-		
-		
-		if (!endFlag) {
-		    try {
-			if (i.available() == 0) {
-			    Thread.sleep(200); // give the CPU a break
-			} else {
-			    endFlag = false;
-			}
-		    } catch (InterruptedException e) {
-		    } catch (IOException e) {
-		    }
-		} else {
-		    try {
-			if (i.available() != 0) {
-			    endFlag = false; // another packet to process
-			}
-		    } catch (IOException e) {
-		    }
-		    
-		}
-		Thread.yield(); // ensure another process always has a chance
-	    } while(!endFlag && thisThreadRunning); //keep going until EOM
-	    
-	    if (count > 0 && thisThreadRunning)
-		processBuffer(readBuffer,count);
-	}
     }
     
     /**
@@ -244,8 +176,8 @@ public class FlashClientHandler extends Thread {
 	
 	try {
 	    xmlDoc = saxb.build(new StringReader(readBuffer));
-	    
-	    processXML(xmlDoc);
+	    Element rootElement = xmlDoc.getRootElement();
+	    processXML(rootElement);
 	} catch (JDOMException ex) {
 	    logger.log(Level.WARNING,"XML ERROR " + ex.getMessage());
 	    /*
@@ -282,7 +214,8 @@ public class FlashClientHandler extends Thread {
 	
 	try {
 	    xmlDoc = saxb.build(bais);
-	    processXML(xmlDoc);
+	    Element rootElement = xmlDoc.getRootElement();
+	    processXML(rootElement);
 	} catch (JDOMException ex) {
 	    logger.log(Level.WARNING,"XML ERROR " + ex.getMessage());
 	    /*
@@ -308,16 +241,15 @@ public class FlashClientHandler extends Thread {
      * Process the XML document sent from the client
      * @param xmlDoc A Sax representation of the document
      */
-    protected void processXML(Document xmlDoc){
+    protected void processXML(Element rootElement){
 	
 	String name = ""; // the name of the node
 	String key = "";
 	boolean commandBuilt = false;
 	
-	Element rootElement = xmlDoc.getRootElement();
 	name = rootElement.getName();
 	logger.log(Level.FINER,"ELEMENT "+ name);
-	
+
 	if (name.equals("CONTROL")) {
 	    key = rootElement.getAttributeValue("KEY");
 	    if (key != null){

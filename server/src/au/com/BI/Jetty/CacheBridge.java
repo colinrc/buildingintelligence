@@ -19,13 +19,13 @@ import java.io.*;
  * @author colin
  */
 public class CacheBridge implements CacheListener {
-        Hashtable commandsToSend;
+        Hashtable <String,CacheWrapper>commandsToSend;
         
     protected Logger logger = null;
     
     /** Creates a new instance of CacheBridge */
     public CacheBridge() {
-        commandsToSend = new Hashtable();
+        commandsToSend = new Hashtable<String,CacheWrapper>();
         logger = Logger.getLogger(this.getClass().getPackage().getName());
     }
     

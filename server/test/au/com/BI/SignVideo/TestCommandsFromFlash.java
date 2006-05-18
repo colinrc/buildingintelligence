@@ -1,7 +1,6 @@
 package au.com.BI.SignVideo;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 
 
@@ -34,21 +33,21 @@ public class TestCommandsFromFlash extends TestCase {
 		
 		avFrontRoom = new AV ("Front AV",DeviceType.AUDIO);
 		avFrontRoom.setKey("01");
-		avFrontRoom.setOutputKey("FRONT_AUDIO");
+		avFrontRoom.setOutputKey("FRONT_AV");
 
 		kitchenAV = new AV ("Kitchen AV",DeviceType.AUDIO);
 		kitchenAV.setKey("02");
-		kitchenAV.setOutputKey("KITCHEN_AUDIO");
+		kitchenAV.setOutputKey("KITCHEN_AV");
 
 
 		studyAV = new AV ("Study AV",DeviceType.AUDIO);
 		studyAV.setKey("03");
-		studyAV.setOutputKey("STUDY_AUDIO");
+		studyAV.setOutputKey("STUDY_AV");
 		
-		model.addControlledItem("FRONT_AUDIO",avFrontRoom,DeviceType.OUTPUT);
+		model.addControlledItem("FRONT_AV",avFrontRoom,DeviceType.OUTPUT);
 		model.addControlledItem("ALL",avAll,DeviceType.OUTPUT);
-		model.addControlledItem("KITCHEN_AUDIO",kitchenAV,DeviceType.OUTPUT);
-		model.addControlledItem("STUDY_AUDIO",studyAV,DeviceType.OUTPUT);
+		model.addControlledItem("KITCHEN_AV",kitchenAV,DeviceType.OUTPUT);
+		model.addControlledItem("STUDY_AV",studyAV,DeviceType.OUTPUT);
 		
 		model.addControlledItem(avFrontRoom.getKey(),avFrontRoom,DeviceType.MONITORED);
 		model.addControlledItem(avAll.getKey(),avAll,DeviceType.MONITORED);
@@ -62,9 +61,9 @@ public class TestCommandsFromFlash extends TestCase {
 		map.put("digital","3");
 		map.put("tv", "4");
 		
-		model.setCatalogueDefs("Nuvo AV Inputs",map);
+		model.setCatalogueDefs("Sign AV Inputs",map);
 		
-		model.setParameter("AV_INPUTS", "Nuvo AV Inputs", DeviceModel.MAIN_DEVICE_GROUP);
+		model.setParameter("AV_INPUTS", "Sign AV Inputs", DeviceModel.MAIN_DEVICE_GROUP);
 		model.setupAVInputs ();
 		model.initState();
 		
@@ -76,44 +75,32 @@ public class TestCommandsFromFlash extends TestCase {
 		super.tearDown();
 	}
 
-	/*
-	 * Test method for 'au.com.BI.Nuvo.Model.buildAVString(AV, CommandInterface)'
-	 */
-
-	public void testBuildAudioZoneOn() {
-		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","on",null,"","","","","");
-		String expectedOut = "*Z01ON";
-		SignVideoCommand val = model.buildAVString(avFrontRoom, testCommand);
-		Assert.assertEquals ("Return value for av on failed",expectedOut,val.avOutputStrings.firstElement());
-	}
-	
-	public void testBuildAudioAllOff() {
+	public void testBuildAVAllOff() {
 		ClientCommand testCommand = new ClientCommand("ALL","off",null,"","","","","");
-		String expectedOut = "*ALLOFF";
+		byte[] expectedOut = new byte[]{((byte)0xA5)};
+		SignVideoCommand val = model.buildAVString(avAll, testCommand);
+		Assert.assertEquals ("Return value for av all off failed",expectedOut,val.avOutputStrings.firstElement());
+	}
+
+	public void testBuildAVAllOn() {
+		ClientCommand testCommand = new ClientCommand("ALL","on",null,"","","","","");
+		byte[] expectedOut = new byte[]{((byte)0xA4)};
 		SignVideoCommand val = model.buildAVString(avAll, testCommand);
 		Assert.assertEquals ("Return value for av all off failed",expectedOut,val.avOutputStrings.firstElement());
 	}
 	
-	public void testBuildAudioZoneOff() {
-		ClientCommand testCommand = new ClientCommand("KITCHEN_AUDIO","off",null,"","","","","");
-		String expectedOut = "*Z02OFF";
-		SignVideoCommand val = model.buildAVString(kitchenAV, testCommand);
-		Assert.assertEquals ("Return value for av zone off failed",expectedOut,val.avOutputStrings.firstElement());
-	}
-	
-
-	public void testBuildAudioSrc() {
-		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","src",null,"DVD1","","","","");
-		String expectedOut = "*Z01SRC1";
+	public void testBuildAVSrc() {
+		ClientCommand testCommand = new ClientCommand("FRONT_AV","src",null,"DVD1","","","","");
+		byte[] expectedOut = new byte[]{((byte)0x10)};
 		SignVideoCommand val = model.buildAVString(avFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for src failed",expectedOut,val.avOutputStrings.firstElement());
 		
-		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","src",null,"DVD2","","","","");
-		String expectedOut2 = "*Z01SRC2";
+		ClientCommand testCommand2 = new ClientCommand("FRONT_AV","src",null,"DVD2","","","","");
+		byte[] expectedOut2 = new byte[]{((byte)0x11)};
 		SignVideoCommand val2 = model.buildAVString(avFrontRoom, testCommand2);
 		Assert.assertEquals ("Return value for src failed",expectedOut2,val2.avOutputStrings.firstElement());
 				
-		ClientCommand testCommand4 = new ClientCommand("FRONT_AUDIO","src",null,"x","","","","");
+		ClientCommand testCommand4 = new ClientCommand("FRONT_AV","src",null,"x","","","","");
 		String expectedOut4 = "";
 		SignVideoCommand val4 = model.buildAVString(avFrontRoom, testCommand4);
 		Assert.assertEquals ("Return value for unknown src failed",true,val4.error);
@@ -122,44 +109,30 @@ public class TestCommandsFromFlash extends TestCase {
 	
 
 	public void testSrcCache() {
-		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","src",null,"DVD1","","","","");
-		String expectedOut = "*Z01SRC1";
+		ClientCommand testCommand = new ClientCommand("FRONT_AV","src",null,"DVD1","","","","");
+		byte[] expectedOut = new byte[]{((byte)0x10)};
 		SignVideoCommand val = model.buildAVString(avFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for src failed",expectedOut,val.avOutputStrings.firstElement());
 
-		ClientCommand testCommandCache = new ClientCommand("FRONT_AUDIO","src",null,"DVD1","","","","");
+		ClientCommand testCommandCache = new ClientCommand("FRONT_AV","src",null,"DVD1","","","","");
 		SignVideoCommand valCache = model.buildAVString(avFrontRoom, testCommandCache);
 		Assert.assertTrue ("Return value for cached src failed, the instruction was incorrectly returned",valCache.avOutputFlash.isEmpty());
 
 	}
 	
 
-	public void testBuildAudioSrcAll() {
+	public void testBuildAVSrcAll() {
 		
 		ClientCommand testCommand3 = new ClientCommand("ALL","src",null,"DVD2","","","","");
-		Vector <String>expectedOut = new Vector<String>();
-		expectedOut.add ("*Z01SRC2");
-		expectedOut.add ("*Z02SRC2");
-		expectedOut.add ("*Z03SRC2");
+		Vector<byte[]> expectedOut = new Vector<byte[]>();
+		expectedOut.add(new byte[]{((byte)0x11)});
+		expectedOut.add(new byte[]{((byte)0x21)});
+		expectedOut.add(new byte[]{((byte)0x31)});
 
 		SignVideoCommand val3 = model.buildAVString(avAll, testCommand3);
-		ListAssert.assertEquals ("Return value for volume failed",expectedOut,val3.avOutputStrings);
-
+		ListAssert.assertEquals("Return value for volume failed",expectedOut,val3.avOutputBytes);
 	}
 	
-	/*
-	 * Test method for 'au.com.BI.Nuvo.Model.hasState(String)'
-	 */
-	public void testHasState() {
-
-	}
-
-	/*
-	 * Test method for 'au.com.BI.Nuvo.Model.getCurrentSrc(String)'
-	 */
-	public void testGetCurrentSrc() {
-
-	}
 	
 	/*
 	 * preset

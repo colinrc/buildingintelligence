@@ -113,9 +113,11 @@ public class Model extends BaseModel implements DeviceModel {
 						if (toSend != null && !toSend.error) {
 
 							logger.log(Level.FINER, "AV event for zone " + device.getKey() + " received from flash");
-
-						    for(byte[] avOutputString : toSend.avOutputBytes) {			
-						    	sendToSerial(avOutputString,avDevice.getKey(), avDevice.getOutputKey(),toSend.outputCommandType,false);
+							byte[] theVal = new byte[1];
+							
+						    for(byte[] avOutputString : toSend.avOutputBytes) {		
+						    	theVal[0]=avOutputString[0];
+						    	sendToSerial(theVal, avDevice.getKey(), avDevice.getOutputKey(),toSend.outputCommandType,false);
 
 							}
 						    
@@ -201,15 +203,6 @@ public class Model extends BaseModel implements DeviceModel {
 
 		State currentState = state.get (avDevice.getKey());
 		int src = Integer.parseInt(srcStr);
-		
-		if (power.equals("ON") && !currentState.isPower()) {
-			returnCode.avOutputFlash.add((buildCommand ( avDevice, "on","")));
-			currentState.setPower(true);
-		}
-		if (power.equals("OFF") && currentState.isPower()) {
-			returnCode.avOutputFlash.add((buildCommand (avDevice, "off","")));
-			currentState.setPower (false);
-		}
 
 		if (src != currentState.getSrc()){
 			String newSrc = findKeyForParameterValue(srcStr, avInputs);
@@ -288,7 +281,6 @@ public class Model extends BaseModel implements DeviceModel {
 		}			
 				
 		if (!commandFound &&  theCommand.equals("on")) {
-			currentState.setPower(true);
 			returnVal.addAvOutputString("*Z"+key+"ON");
 			logger.log (Level.FINEST,"Switching on zone "+ key);
 			commandFound = true;
@@ -297,12 +289,10 @@ public class Model extends BaseModel implements DeviceModel {
 		
 		if (!commandFound && theCommand.equals("off")) {
 			if (key.equals(Model.AllZones)) {
-				for(State eachState : state.values()){
-					eachState.setPower(false);					
+				for(State eachState : state.values()){				
 				}
 				returnVal.addAvOutputString("*ALLOFF");
 			} else {
-				currentState.setPower(false);
 				returnVal.addAvOutputString("*Z"+key+"OFF");
 			}
 			logger.log (Level.FINEST,"Switching off zone " + key);

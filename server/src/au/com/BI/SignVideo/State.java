@@ -2,7 +2,6 @@ package au.com.BI.SignVideo;
 
 public class State {
 	int src = 0;
-	boolean power = false;
 	
 	public State() {
 		
@@ -13,14 +12,6 @@ public class State {
 			return true;
 		else
 			return false;
-	}
-		
-	public boolean isPower() {
-		return power;
-	}
-	
-	public void setPower(boolean power) {
-		this.power = power;
 	}
 
 	public int getSrc() {

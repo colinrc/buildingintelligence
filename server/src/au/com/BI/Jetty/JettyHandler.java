@@ -7,6 +7,8 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.ContextHandler;
+import org.mortbay.jetty.servlet.SessionHandler;
+
 import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.jetty.handler.DefaultHandler;
 import javax.servlet.ServletException;
@@ -55,16 +57,19 @@ public class JettyHandler {
 
             // Call servlet directly
             ContextHandler updateContextHandler = new ContextHandler ();
+
             updateContextHandler.setContextPath("/webclient");
             updateContextHandler.setResourceBase(docRoot);
-           
 
             ServletHandler updateHandler = new ServletHandler ();   
             
             ServletHolder updateServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.UpdateServlet","/get");
             ServletHolder logoutServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.Logout","/logout");
             
-            updateContextHandler.setHandler(updateHandler);
+            SessionHandler sessionHandler = new SessionHandler();
+            sessionHandler.setHandler(updateHandler);
+            
+            updateContextHandler.setHandler(sessionHandler);
             updateContextHandler.setAttribute("CacheBridgeFactory",cacheBridgeFactory);
 
             /*

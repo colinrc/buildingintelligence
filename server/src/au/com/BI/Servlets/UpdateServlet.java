@@ -10,6 +10,7 @@
 package au.com.BI.Servlets;
 import javax.servlet.*;
 import javax.servlet.http.*;
+
 import au.com.BI.Jetty.*;
 /**
  *
@@ -41,9 +42,10 @@ public class UpdateServlet extends HttpServlet {
         out.println("</BODY>");
         out.println("</HTML>");
         resp.flushBuffer();
-        resp.setStatus(resp.SC_OK);
+        resp.setStatus(HttpServletResponse.SC_OK);
         
         long lastUpdate = session.getLastAccessedTime();
+        
  
     }
         
