@@ -53,8 +53,7 @@ public class TestCommandsToFlash extends TestCase {
 		
 		model.setParameter("AV_INPUTS", "SignVideo AV Inputs", DeviceModel.MAIN_DEVICE_GROUP);
 		model.setupAVInputs ();
-		model.initState();
-		model.setPadding (2); // device requires 2 character keys that are 0 padded.
+		model.setPadding (1); 
 	}
 
 	public void testInterpretStringFromSignVideo() {

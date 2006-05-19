@@ -24,13 +24,11 @@ public class Model extends BaseModel implements DeviceModel {
 
 	
 	protected String outputAVCommand = "";
-	protected HashMap <String,State>state;
-	protected SignVideoHelper signVideoHelper;
 	protected HashMap <String,String>avInputs;
 	protected Logger logger = null;
 	protected Vector <String>srcGroup;
 	
-	public static final String AllZones = "00";
+	public static final String AllZones = "0";
 	
 	public static final int Switch = 0;
 	public static final int Select = 1;
@@ -40,27 +38,16 @@ public class Model extends BaseModel implements DeviceModel {
 	public Model () {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		signVideoHelper = new SignVideoHelper();
+		this.setPadding(1);
 		setInterCommandInterval(250);
-		setTransmitMessageOnBytes(1); // tutondo only sends a single non CR terminated byte.
-		state = new HashMap<String,State>();
+		setTransmitMessageOnBytes(1); 
 	}
 
 	public void clearItems () {
-		state.clear();
 		avInputs.clear();
 		super.clearItems();
 	}
 
-	
-	public void initState () {
-	    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
-	    	String key = audioDevice.getKey();
-			if (!key.equals(Model.AllZones)) {
-				state.put(key, new State());
-			}
-	    }	
-	}
 	
 	public void setupAVInputs() throws SetupException {
 		String avInputsDef = (String)this.getParameter("AV_INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
@@ -118,7 +105,6 @@ public class Model extends BaseModel implements DeviceModel {
 						    for(byte[] avOutputString : toSend.avOutputBytes) {		
 						    	theVal[0]=avOutputString[0];
 						    	sendToSerial(theVal, avDevice.getKey(), avDevice.getOutputKey(),toSend.outputCommandType,false);
-
 							}
 						    
 							for (CommandInterface eachCommand: toSend.avOutputFlash){
@@ -130,7 +116,6 @@ public class Model extends BaseModel implements DeviceModel {
 								logger.log (Level.WARNING,"Error processing SignAV message " + toSend.errorDescription);
 							}
 						}
-				
 
 						break;						
 				}
@@ -201,37 +186,19 @@ public class Model extends BaseModel implements DeviceModel {
 		String grp = bits[2].substring(3);
 		String volStr = bits[3].substring(4);
 
-		State currentState = state.get (avDevice.getKey());
-		int src = Integer.parseInt(srcStr);
 
-		if (src != currentState.getSrc()){
-			String newSrc = findKeyForParameterValue(srcStr, avInputs);
-			returnCode.avOutputFlash.add((buildCommand ( avDevice, "src",newSrc)));
-			currentState.setSrc(src);
-		}
+		String newSrc = findKeyForParameterValue(srcStr, avInputs);
+		returnCode.avOutputFlash.add((buildCommand ( avDevice, "src",newSrc)));
 
 		
 		return returnCode;
 	}
-
-
-	public CommandInterface buildCommand (DeviceType avDevice , String command, String extra){
-			AVCommand videoCommand = (AVCommand)avDevice.buildDisplayCommand ();
-			videoCommand.setKey ("CLIENT_SEND");
-			videoCommand.setTargetDeviceID(0);
-			videoCommand.setCommand (command);
-			videoCommand.setExtraInfo (extra);
-			return videoCommand;
-	}
-
-
 	
 	public SignVideoCommand buildAVString (AV device, CommandInterface command){
 		SignVideoCommand returnVal = new SignVideoCommand();
 		String key = device.getKey();
 		boolean commandFound = false;
 
-		State currentState = state.get(key);
 
 		String rawBuiltCommand = configHelper.doRawIfPresent (command, device, this);
 		if (rawBuiltCommand != null)
@@ -240,8 +207,8 @@ public class Model extends BaseModel implements DeviceModel {
 			commandFound = true;
 		}
 		String extra = command.getExtraInfo();
-
 		String theCommand = command.getCommandCode();
+
 		if (!commandFound && theCommand == "") {
 			logger.log(Level.WARNING, "Empty command received from client "+ command.getCommandCode());
 			return null;
@@ -254,24 +221,46 @@ public class Model extends BaseModel implements DeviceModel {
 			try {
 				srcCode = avInputs.get(extra);
 				int src = Integer.parseInt(srcCode);
+				byte []pre_mode = null;
+				byte []av_mode = new byte[]{(byte)0xA0};
+				
+				if (command.getExtra3Info().equals("AUDIO_ONLY")){
+					pre_mode = new byte[]{(byte)0xA2};
+					returnVal.addAvOutputBytes(pre_mode);
+				}
+				if (command.getExtra3Info().equals("VIDEO_ONLY")){
+					pre_mode = new byte[]{(byte)0xA1};
+					returnVal.addAvOutputBytes(pre_mode);
+				}
 				if (key.equals(Model.AllZones)){
 				    for(DeviceType avDevice : configHelper.getAllOutputDeviceObjects()) {
 						if (!avDevice.getKey().equals(Model.AllZones)) {
-							State stateForItem = state.get(avDevice.getKey());
-							if (stateForItem != null) 
-								stateForItem.setSrc(src);
-							else
-								logger.log (Level.WARNING,"State was not correctly set up within the SignAV system, please contact your integrator ");
-							returnVal.addAvOutputString(String.format("*Z"+avDevice.getKey()+"SRC"+src));
+							byte[] returnLine = new byte[1];
+							try {
+								returnLine[0] = (byte)(Integer.parseInt(avDevice.getKey()) * 16 + src - 1);  
+								returnVal.addAvOutputBytes(returnLine);
+							} catch (NumberFormatException ex){
+								logger.log (Level.WARNING,"An AV device key was incorrectly formatted: " + avDevice.getName());
+							}
 						}
-				    }	
+				    }
+
 					logger.log (Level.FINEST,"Changing video source for all zones");
 				} else {
-					currentState.setSrc(src);
-					returnVal.addAvOutputString(String.format("*Z"+key+"SRC"+src));
+					byte[] returnLine = new byte[1];
+					try {
+						int intKey = Integer.parseInt(key);
+						returnLine[0] = (byte)(intKey * 16 + src - 1);  
+						returnVal.addAvOutputBytes(returnLine);
+					} catch (NumberFormatException ex){
+						logger.log (Level.WARNING,"An AV device key was incorrectly formatted: " + device.getName());
+					}
 					logger.log (Level.FINEST,"Changing video source");
 
 				}
+			    if(pre_mode != null){
+			    	returnVal.addAvOutputBytes(av_mode);
+			    }
 				returnVal.outputCommandType = Model.Select;
 			} catch (NumberFormatException ex) {
 				returnVal.addAvOutputString("");
@@ -289,8 +278,7 @@ public class Model extends BaseModel implements DeviceModel {
 		
 		if (!commandFound && theCommand.equals("off")) {
 			if (key.equals(Model.AllZones)) {
-				for(State eachState : state.values()){				
-				}
+
 				returnVal.addAvOutputString("*ALLOFF");
 			} else {
 				returnVal.addAvOutputString("*Z"+key+"OFF");
@@ -309,12 +297,12 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 	
-	public SignVideoHelper getSignVideoHelper() {
-		return signVideoHelper;
+	public CommandInterface buildCommand (DeviceType avDevice , String command, String extra){
+		AVCommand videoCommand = (AVCommand)avDevice.buildDisplayCommand ();
+		videoCommand.setKey ("CLIENT_SEND");
+		videoCommand.setTargetDeviceID(0);
+		videoCommand.setCommand (command);
+		videoCommand.setExtraInfo (extra);
+		return videoCommand;
 	}
-
-	public void setSignVideoHelper(SignVideoHelper signVideoHelper) {
-		this.signVideoHelper = signVideoHelper;
-	}
-	
 }

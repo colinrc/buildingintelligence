@@ -11,6 +11,7 @@ import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
 import junit.framework.*;
 import junitx.framework.ListAssert;
+import junitx.framework.ArrayAssert;
 
 public class TestCommandsFromFlash extends TestCase {
 	private Model model = null;
@@ -65,9 +66,7 @@ public class TestCommandsFromFlash extends TestCase {
 		
 		model.setParameter("AV_INPUTS", "Sign AV Inputs", DeviceModel.MAIN_DEVICE_GROUP);
 		model.setupAVInputs ();
-		model.initState();
-		
-		model.setPadding (2); // device requires 2 character keys that are 0 padded.
+		model.setPadding (1); 
 		
 	}
 
@@ -79,48 +78,45 @@ public class TestCommandsFromFlash extends TestCase {
 		ClientCommand testCommand = new ClientCommand("ALL","off",null,"","","","","");
 		byte[] expectedOut = new byte[]{((byte)0xA5)};
 		SignVideoCommand val = model.buildAVString(avAll, testCommand);
-		Assert.assertEquals ("Return value for av all off failed",expectedOut,val.avOutputStrings.firstElement());
+		ArrayAssert.assertEquals ("Return value for av all off failed",expectedOut,val.avOutputBytes.firstElement());
 	}
 
 	public void testBuildAVAllOn() {
 		ClientCommand testCommand = new ClientCommand("ALL","on",null,"","","","","");
 		byte[] expectedOut = new byte[]{((byte)0xA4)};
 		SignVideoCommand val = model.buildAVString(avAll, testCommand);
-		Assert.assertEquals ("Return value for av all off failed",expectedOut,val.avOutputStrings.firstElement());
+		ArrayAssert.assertEquals ("Return value for av all off failed",expectedOut,val.avOutputBytes.firstElement());
 	}
 	
 	public void testBuildAVSrc() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AV","src",null,"DVD1","","","","");
 		byte[] expectedOut = new byte[]{((byte)0x10)};
 		SignVideoCommand val = model.buildAVString(avFrontRoom, testCommand);
-		Assert.assertEquals ("Return value for src failed",expectedOut,val.avOutputStrings.firstElement());
+		ArrayAssert.assertEquals ("Return value for src failed",expectedOut,val.avOutputBytes.firstElement());
 		
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AV","src",null,"DVD2","","","","");
 		byte[] expectedOut2 = new byte[]{((byte)0x11)};
 		SignVideoCommand val2 = model.buildAVString(avFrontRoom, testCommand2);
-		Assert.assertEquals ("Return value for src failed",expectedOut2,val2.avOutputStrings.firstElement());
+		ArrayAssert.assertEquals ("Return value for src failed",expectedOut2,val2.avOutputBytes.firstElement());
 				
 		ClientCommand testCommand4 = new ClientCommand("FRONT_AV","src",null,"x","","","","");
-		String expectedOut4 = "";
 		SignVideoCommand val4 = model.buildAVString(avFrontRoom, testCommand4);
 		Assert.assertEquals ("Return value for unknown src failed",true,val4.error);
 
+		ClientCommand testCommand5 = new ClientCommand("KITCHEN_AV","src",null,"DVD1","","AUDIO_ONLY","","");
+		SignVideoCommand val5 = model.buildAVString(this.kitchenAV, testCommand5);
+		byte[] expectedOut5_audio_switch = new byte[]{((byte)0xA2)};
+		byte[] expectedOut5_src_switch = new byte[]{((byte)0x20)};
+		byte[] expectedOut5_av_switch = new byte[]{((byte)0xA0)};
+		Vector <byte[]>expectedOut5 = new Vector<byte []>();
+		expectedOut5.add(expectedOut5_audio_switch);
+		expectedOut5.add(expectedOut5_src_switch);
+		expectedOut5.add(expectedOut5_av_switch);
+		
+		ListAssert.assertEquals("Return value for audio only src failed",val5.avOutputBytes,expectedOut5);
+
 	}
 	
-
-	public void testSrcCache() {
-		ClientCommand testCommand = new ClientCommand("FRONT_AV","src",null,"DVD1","","","","");
-		byte[] expectedOut = new byte[]{((byte)0x10)};
-		SignVideoCommand val = model.buildAVString(avFrontRoom, testCommand);
-		Assert.assertEquals ("Return value for src failed",expectedOut,val.avOutputStrings.firstElement());
-
-		ClientCommand testCommandCache = new ClientCommand("FRONT_AV","src",null,"DVD1","","","","");
-		SignVideoCommand valCache = model.buildAVString(avFrontRoom, testCommandCache);
-		Assert.assertTrue ("Return value for cached src failed, the instruction was incorrectly returned",valCache.avOutputFlash.isEmpty());
-
-	}
-	
-
 	public void testBuildAVSrcAll() {
 		
 		ClientCommand testCommand3 = new ClientCommand("ALL","src",null,"DVD2","","","","");
