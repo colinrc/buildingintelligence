@@ -74,8 +74,8 @@ public class TestCommandsToFlash extends TestCase {
 		testCommand3.setDisplayName("FRONT_AV");
 		expectedOut.add(testCommand3);
 
-		SignVideoCommand val = model.interpretStringFromSignVideo(testString);
-		ListAssert.assertEquals ("Return value for interpret failed",val.avOutputFlash,expectedOut);
+		BuildReturnWrapper val = model.interpretStringFromSignVideo(testString);
+		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOut);
 	}
 	
 
@@ -86,7 +86,7 @@ public class TestCommandsToFlash extends TestCase {
 		Command testString = new Command();
 		
 		testString.setKey("#Z01PWRON,SRC2,GRP0,VOL-79");
-		SignVideoCommand val = model.interpretStringFromSignVideo(testString);
+		BuildReturnWrapper val = model.interpretStringFromSignVideo(testString);
 
 		testString.setKey("#Z01PWRON,SRC2,GRP0,VOL-00");
 		val = model.interpretStringFromSignVideo(testString);
@@ -102,11 +102,11 @@ public class TestCommandsToFlash extends TestCase {
 		testCommand3.setDisplayName("FRONT_AV");
 		expectedOut.add(testCommand3);
 		
-		ListAssert.assertContains ("Return value for interpret status volume failed",val.avOutputFlash,testCommand);
+		ListAssert.assertContains ("Return value for interpret status volume failed",val.getOutputFlash(),testCommand);
 		
-		Assert.assertFalse ("Interpret status incorrectly contained power",val.avOutputFlash.contains(testCommand2));
+		Assert.assertFalse ("Interpret status incorrectly contained power",val.getOutputFlash().contains(testCommand2));
 		
-		Assert.assertFalse ("Interpret status incorrectly contained src",val.avOutputFlash.contains(testCommand3));
+		Assert.assertFalse ("Interpret status incorrectly contained src",val.getOutputFlash().contains(testCommand3));
 		
 		testString.setKey("#Z01PWRON,SRC1,GRP0,VOL-00");
 		val = model.interpretStringFromSignVideo(testString);
@@ -115,7 +115,7 @@ public class TestCommandsToFlash extends TestCase {
 		testCommand4.setDisplayName("FRONT_AV");
 		expectedOut.add(testCommand4);
 		
-		Assert.assertFalse ("Interpret status did not detect src change",val.avOutputFlash.contains(testCommand4));
+		Assert.assertFalse ("Interpret status did not detect src change",val.getOutputFlash().contains(testCommand4));
 	}
 
 }

@@ -5,13 +5,14 @@ import java.util.Vector;
 
 
 import au.com.BI.AV.*;
+import au.com.BI.Command.BuildReturnWrapper;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.SignVideo.Model;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
 import junit.framework.*;
-import junitx.framework.ListAssert;
 import junitx.framework.ArrayAssert;
+import au.com.BI.junitx.ListOfArrayAssert;
 
 public class TestCommandsFromFlash extends TestCase {
 	private Model model = null;
@@ -29,20 +30,20 @@ public class TestCommandsFromFlash extends TestCase {
 		model = new Model();
 	
 		avAll = new AV ("All",DeviceType.AUDIO);
-		avAll.setKey("00");
+		avAll.setKey("0");
 		avAll.setOutputKey("ALL");
 		
 		avFrontRoom = new AV ("Front AV",DeviceType.AUDIO);
-		avFrontRoom.setKey("01");
+		avFrontRoom.setKey("1");
 		avFrontRoom.setOutputKey("FRONT_AV");
 
 		kitchenAV = new AV ("Kitchen AV",DeviceType.AUDIO);
-		kitchenAV.setKey("02");
+		kitchenAV.setKey("2");
 		kitchenAV.setOutputKey("KITCHEN_AV");
 
 
 		studyAV = new AV ("Study AV",DeviceType.AUDIO);
-		studyAV.setKey("03");
+		studyAV.setKey("3");
 		studyAV.setOutputKey("STUDY_AV");
 		
 		model.addControlledItem("FRONT_AV",avFrontRoom,DeviceType.OUTPUT);
@@ -77,34 +78,34 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAVAllOff() {
 		ClientCommand testCommand = new ClientCommand("ALL","off",null,"","","","","");
 		byte[] expectedOut = new byte[]{((byte)0xA5)};
-		SignVideoCommand val = model.buildAVString(avAll, testCommand);
-		ArrayAssert.assertEquals ("Return value for av all off failed",expectedOut,val.avOutputBytes.firstElement());
+		BuildReturnWrapper val = model.buildAVString(avAll, testCommand);
+		ArrayAssert.assertEquals ("Return value for av all off failed",expectedOut,val.getCommOutputBytes().firstElement());
 	}
 
 	public void testBuildAVAllOn() {
 		ClientCommand testCommand = new ClientCommand("ALL","on",null,"","","","","");
 		byte[] expectedOut = new byte[]{((byte)0xA4)};
-		SignVideoCommand val = model.buildAVString(avAll, testCommand);
-		ArrayAssert.assertEquals ("Return value for av all off failed",expectedOut,val.avOutputBytes.firstElement());
+		BuildReturnWrapper val = model.buildAVString(avAll, testCommand);
+		ArrayAssert.assertEquals ("Return value for av all off failed",expectedOut,val.getCommOutputBytes().firstElement());
 	}
 	
 	public void testBuildAVSrc() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AV","src",null,"DVD1","","","","");
 		byte[] expectedOut = new byte[]{((byte)0x10)};
-		SignVideoCommand val = model.buildAVString(avFrontRoom, testCommand);
-		ArrayAssert.assertEquals ("Return value for src failed",expectedOut,val.avOutputBytes.firstElement());
+		BuildReturnWrapper val = model.buildAVString(avFrontRoom, testCommand);
+		ArrayAssert.assertEquals ("Return value for src failed",expectedOut,val.getCommOutputBytes().firstElement());
 		
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AV","src",null,"DVD2","","","","");
 		byte[] expectedOut2 = new byte[]{((byte)0x11)};
-		SignVideoCommand val2 = model.buildAVString(avFrontRoom, testCommand2);
-		ArrayAssert.assertEquals ("Return value for src failed",expectedOut2,val2.avOutputBytes.firstElement());
+		BuildReturnWrapper val2 = model.buildAVString(avFrontRoom, testCommand2);
+		ArrayAssert.assertEquals ("Return value for src failed",expectedOut2,val2.getCommOutputBytes().firstElement());
 				
 		ClientCommand testCommand4 = new ClientCommand("FRONT_AV","src",null,"x","","","","");
-		SignVideoCommand val4 = model.buildAVString(avFrontRoom, testCommand4);
-		Assert.assertEquals ("Return value for unknown src failed",true,val4.error);
+		BuildReturnWrapper val4 = model.buildAVString(avFrontRoom, testCommand4);
+		Assert.assertEquals ("Return value for unknown src failed",true,val4.isError());
 
 		ClientCommand testCommand5 = new ClientCommand("KITCHEN_AV","src",null,"DVD1","","AUDIO_ONLY","","");
-		SignVideoCommand val5 = model.buildAVString(this.kitchenAV, testCommand5);
+		BuildReturnWrapper val5 = model.buildAVString(this.kitchenAV, testCommand5);
 		byte[] expectedOut5_audio_switch = new byte[]{((byte)0xA2)};
 		byte[] expectedOut5_src_switch = new byte[]{((byte)0x20)};
 		byte[] expectedOut5_av_switch = new byte[]{((byte)0xA0)};
@@ -113,7 +114,7 @@ public class TestCommandsFromFlash extends TestCase {
 		expectedOut5.add(expectedOut5_src_switch);
 		expectedOut5.add(expectedOut5_av_switch);
 		
-		ListAssert.assertEquals("Return value for audio only src failed",val5.avOutputBytes,expectedOut5);
+		ListOfArrayAssert.assertByteEquals("Return value for audio only src failed",val5.getCommOutputBytes(),expectedOut5);
 
 	}
 	
@@ -125,8 +126,8 @@ public class TestCommandsFromFlash extends TestCase {
 		expectedOut.add(new byte[]{((byte)0x21)});
 		expectedOut.add(new byte[]{((byte)0x31)});
 
-		SignVideoCommand val3 = model.buildAVString(avAll, testCommand3);
-		ListAssert.assertEquals("Return value for volume failed",expectedOut,val3.avOutputBytes);
+		BuildReturnWrapper val3 = model.buildAVString(avAll, testCommand3);
+		ListOfArrayAssert.assertByteEquals("Return value for src all failed",expectedOut,val3.getCommOutputBytes());
 	}
 	
 	

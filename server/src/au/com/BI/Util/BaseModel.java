@@ -20,6 +20,7 @@ import java.util.logging.*;
 
 import au.com.BI.Macro.MacroHandler;
 import au.com.BI.Config.Bootstrap;
+import au.com.BI.AV.AVCommand;
 import au.com.BI.AlarmLogging.*;
 import au.com.BI.Messaging.*;
 
@@ -805,6 +806,29 @@ public class BaseModel
 		sendToFlash (flashCommand,cache);
 	}
 
+	public void sendToFlash (String displayName, String command, String value,String extra2,String extra3,String extra4,String extra5,long setTargetDeviceID) {
+		Command flashCommand = new Command ();
+		flashCommand.setKey ("CLIENT_SEND");
+		flashCommand.setDisplayName(displayName);
+		flashCommand.setCommand(command);
+		flashCommand.setExtraInfo(value);
+		sendToFlash (flashCommand,cache);
+	}
+	
+	public CommandInterface buildCommandForFlash (DeviceType device , String command, String extra,String extra2,String extra3,String extra4,String extra5,long targetDeviceID) {
+		CommandInterface videoCommand = device.buildDisplayCommand ();
+		videoCommand.setKey ("CLIENT_SEND");
+		videoCommand.setTargetDeviceID(targetDeviceID);
+		videoCommand.setCommand (command);
+		videoCommand.setExtraInfo (extra);
+		videoCommand.setExtraInfo (extra2);
+		videoCommand.setExtraInfo (extra3);
+		videoCommand.setExtraInfo (extra4);
+		videoCommand.setExtraInfo (extra5);
+		
+		return videoCommand;
+	}
+	
 	/**
 	 * True if decimal to the device requires decimal keys (rare) 
 	 * @return True or false
