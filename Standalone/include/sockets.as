@@ -1,23 +1,84 @@
-﻿serverSetup = function () {
-	server = new XMLSocket();
-	server.onConnect = serverOnConnect;
-	server.onClose = serverOnClose;
-	server.onXML = receiveCmd;
-	serverConnect();
+﻿import com.bnm.fc.f_TEA;
+var crypto:f_TEA = new f_TEA();
+var cryptoKeys:Array=new Array();
+cryptoKeys = [1, 2, 3, 4];
+
+crypto.onEncode = function (encoded) {
+	encoded =  '<encrypted><![CDATA[' + encoded + ']]></encrypted>';
+	trace("ENCODED DATA:\n" + encoded);
+	server.send(encoded + "\n");
+}
+
+crypto.onDecode = function (decoded) {
+	trace("DECODED DATA:\n" + decoded);
+	receiveCmd(new XML(decoded).firstChild, true);
+}
+
+
+serverSetup = function () {
+	if (_global.settings.serverAddress.length) {
+		if (_global.settings.serverAddress.substr(0, 8) == "https://") {
+			setInterval(this, "getCachedData", _global.settings.webRefreshRate * 1000);
+		} else {
+			server = new XMLSocket();
+			server.onConnect = serverOnConnect;
+			server.onClose = serverOnClose;
+			server.onXML = receiveCmd;
+			serverConnect();			
+		}
+	}
+}
+
+getCachedData = function () {
+	var xml = new XML();
+	//xml.load(_global.settings.serverAddress + "/webclient/get");
+	xml.load("sampleDump.xml");
+	xml.onLoad = function (success) {
+		if (success) {
+			var packet = this.firstChild.childNodes;
+			for (var i=0; i<packet.length; i++) {
+				//trace("START\n\n" + packet[i] + "\nEND");
+				receiveCmd(packet[i], true);
+			}
+		} else {
+			// xml didn't load
+		}
+	}
+}
+
+sendAndLoadCachedData = function () {
+	
 }
 
 serverSend = function (packet) {
-	if (_global.serverVersion == "NOTJUSTYET") {
-		var packet = '<packet encrypted="N" size="' + packet.length + '">\n' + packet + '\n</packet>';
-	}
-	
 	if (_global.settings.debugMode) {
 		debug_mc.outgoing_txt.text = packet + "\n" + debug_mc.outgoing_txt.text;
 	} else {
 		trace("OUTGOING:\n" + packet + "\n--------");
 	}
 	
-	server.send(packet + "\n");
+	if (_global.settings.serverAddress.substr(0, 8) == "https://") {
+		var xmlOut:XML = new XML(packet);
+		var xmlIn:XML = new XML();
+		//xml.sendAndLoad(_global.settings.serverAddress + "/webclient/post", xmlIn);
+		xml.sendAndLoad("sampleDump.xml", xmlIn);
+		xmlIn.onLoad = function (success) {
+			if (success) {
+				var packet = this.firstChild.childNodes;
+				for (var i=0; i<packet.length; i++) {
+					receiveCmd(packet[i], true);
+				}
+			} else {
+				// xml didn't load
+			}
+		}
+	} else {
+		if (_global.settings.encryptedData) {
+			crypto.encodeString(packet, cryptoKeys[0], cryptoKeys[1], cryptoKeys[2], cryptoKeys[3]);
+		} else {
+			server.send(packet + "\n");
+		}
+	}
 }
 
 serverOnConnect = function (status) {
@@ -55,13 +116,20 @@ serverConnect = function () {
 	}
 }
 
-receiveCmd = function (xml) {
-	if (_global.serverVersion == "NOTJUSTYET" && xml.firstChild.nodeName != "connected") {
-		var msg = xml.firstChild.firstChild;
+receiveCmd = function (xml, ignoreSkip) {
+	if (xml.firstChild.nodeName == "encrypted") {
+		//var block = "1Ct68ep2;19y8087977;0a02796988;0705Qqf3;099Z86j;1k6b88083;1MEpJ84;1G86zNs;1F778j7B0;0q99L971;0Ad7PYY;0kA8Q084;";
+		//var xml = new XML('<?xml version="1.0" encoding="UTF-8"?>\n<encrypted><![CDATA[' + block + ']]></encrypted>');
+		crypto.decodeString(xml.firstChild.firstChild.nodeValue, cryptoKeys[0], cryptoKeys[1], cryptoKeys[2], cryptoKeys[3]);
+		return;
 	} else {
-		var msg = xml.firstChild;
+		if (ignoreSkip) {
+			var msg = xml;
+		} else {
+			var msg = xml.firstChild;
+		}
 	}
-
+	
 	if (msg.nodeName == "connected") {
 		_global.serverVersion = msg.attributes.version;
 	} else if (msg.nodeName == "MACROS") {

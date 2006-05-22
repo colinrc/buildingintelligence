@@ -15,6 +15,8 @@ _global.settings.scale = false;
 _global.settings.width = 1024;
 _global.settings.height = 768;
 
+_global.settings.webRefreshRate = 2; // seconds
+
 _global.sounds = new Object();
 _global.sounds["default"] = new Sound();
 _global.sounds["default"].attachSound("sfx_default");

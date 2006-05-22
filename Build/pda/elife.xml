@@ -1,6 +1,6 @@
 <client>
-	<setting name="serverAddress" value="172.16.3.201" />
-	<setting name="applicationXML" value="AES_pda.xml" />
+	<setting name="serverAddress" value="172.16.3.200" />
+	<setting name="applicationXML" value="office.xml" />
 	<setting name="hideMouseCursor" value="false" />
 	<setting name="width" value="480" />
 	<setting name="height" value="640" />
