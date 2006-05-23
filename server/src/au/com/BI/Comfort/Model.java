@@ -53,6 +53,10 @@ public class Model extends BaseModel implements DeviceModel  {
 		this.addControlledItem ("NA",null,DeviceType.MONITORED); // special item
 		this.addControlledItem ("OK",null,DeviceType.MONITORED); // special item
 		this.addControlledItem ("EV",null,DeviceType.MONITORED); // special item
+		
+		configHelper.addParameterBlock ("AV_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Comfort Users");
+		configHelper.addParameterBlock ("DOOR_IDS",DeviceModel.MAIN_DEVICE_GROUP,"Door IDS");
+
 		}
 
 
@@ -263,7 +267,7 @@ public class Model extends BaseModel implements DeviceModel  {
 		startup.doStartup(configHelper, comms, commandQueue);
 		analogueReader.setComms(comms);
 		long analoguePoll = 30000; //default to every 30 seconds
-		String analoguePollValue = (String)this.getParameter("ANALOGUE_POLL_VALUE",DeviceModel.MAIN_DEVICE_GROUP);
+		String analoguePollValue = (String)this.getParameterMapName("ANALOGUE_POLL_VALUE",DeviceModel.MAIN_DEVICE_GROUP);
 		if (analoguePollValue != null && !analoguePollValue.equals( (""))){
 			try {
 				analoguePoll = Long.parseLong(analoguePollValue);
@@ -275,7 +279,7 @@ public class Model extends BaseModel implements DeviceModel  {
 		analogueReader.setPollValue(analoguePoll);
 		analogueReader.start();
 
-		String applicationCodeParam = ((String)this.getParameter("CBUS_APPLICATION",DeviceModel.MAIN_DEVICE_GROUP));
+		String applicationCodeParam = ((String)this.getParameterMapName("CBUS_APPLICATION",DeviceModel.MAIN_DEVICE_GROUP));
 		if (applicationCodeParam == null || applicationCodeParam.equals (""))
 			applicationCode = "38";
 		else {
@@ -283,24 +287,8 @@ public class Model extends BaseModel implements DeviceModel  {
 		}
 		outputHelper.setApplicationCode(applicationCode);
 
-		String cbus_ucm = (String)this.getParameter("CBUS_UCM",DeviceModel.MAIN_DEVICE_GROUP);
+		String cbus_ucm = (String)this.getParameterMapName("CBUS_UCM",DeviceModel.MAIN_DEVICE_GROUP);
 		this.outputHelper.setCBUS_UCM(cbus_ucm);
-
-		String comfort_users = (String)this.getParameter("COMFORT_USERS",DeviceModel.MAIN_DEVICE_GROUP);
-		if (comfort_users == null || comfort_users.equals( (""))) {
-			logger.log(Level.SEVERE,"The comfort user catalogue was not specified");
-			this.controlledHelper.setComfort_users("");
-		}
-		else
-			this.controlledHelper.setComfort_users(comfort_users);
-
-		String door_ids = (String)this.getParameter("DOOR_IDS",DeviceModel.MAIN_DEVICE_GROUP);
-		if (door_ids == null || door_ids.equals( (""))) {
-			logger.log(Level.SEVERE,"The door IDs catalogue was not specified");
-			this.controlledHelper.setDoor_ids("");
-		}
-		else
-			this.controlledHelper.setDoor_ids(door_ids);
 	}
 
 	public int logout(User user)

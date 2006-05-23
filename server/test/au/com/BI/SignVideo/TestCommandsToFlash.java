@@ -3,7 +3,7 @@ package au.com.BI.SignVideo;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
-
+import au.com.BI.Comms.CommsCommand;
 import au.com.BI.AV.*;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
@@ -23,15 +23,15 @@ public class TestCommandsToFlash extends TestCase {
 		model = new Model();
 	
 		avAll = new AV ("All",DeviceType.AV);
-		avAll.setKey("00");
+		avAll.setKey("0");
 		avAll.setOutputKey("ALL");
 		
 		avFrontRoom = new AV ("Front AV",DeviceType.AV);
-		avFrontRoom.setKey("01");
+		avFrontRoom.setKey("1");
 		avFrontRoom.setOutputKey("FRONT_AV");
 
 		kitchenAV = new AV ("Kitchen AV",DeviceType.AV);
-		kitchenAV.setKey("02");
+		kitchenAV.setKey("2");
 		kitchenAV.setOutputKey("KITCHEN_AV");
 
 		model.addControlledItem(avFrontRoom.getKey(),avFrontRoom,DeviceType.MONITORED);
@@ -52,70 +52,61 @@ public class TestCommandsToFlash extends TestCase {
 		model.setCatalogueDefs("SignVideo AV Inputs",map);
 		
 		model.setParameter("AV_INPUTS", "SignVideo AV Inputs", DeviceModel.MAIN_DEVICE_GROUP);
-		model.setupAVInputs ();
+		model.setupParameterBlocks ();
 		model.setPadding (1); 
 	}
 
-	public void testInterpretStringFromSignVideo() {
+	public void testInterpretPowerOnSignVideo() {
 		
-		Command testString = new Command();
-		testString.setKey("#Z01PWRON,SRC2,GRP0,VOL-MT");
-		Vector <CommandInterface>expectedOut = new Vector<CommandInterface>();
+		CommsCommand testString = new CommsCommand();
+		testString.setCommandBytes(new byte[]{((byte)0xA4)});
 		
-		AVCommand testCommand = new AVCommand("CLIENT_SEND","on",null,"");
-		testCommand.setDisplayName("FRONT_AV");
-		expectedOut.add(testCommand);
-
-		AVCommand testCommand2 = new AVCommand("CLIENT_SEND","src",null,"DVD2");
-		testCommand2.setDisplayName("FRONT_AV");
-		expectedOut.add(testCommand2);
-
-		AVCommand testCommand3 = new AVCommand("CLIENT_SEND","mute",null,"on");
-		testCommand3.setDisplayName("FRONT_AV");
-		expectedOut.add(testCommand3);
-
-		BuildReturnWrapper val = model.interpretStringFromSignVideo(testString);
-		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOut);
-	}
-	
-
-	
-	public void testInterpretStatus() {
-
-		Vector <CommandInterface>expectedOut = new Vector<CommandInterface>();	
-		Command testString = new Command();
+		Vector <CommandInterface>expectedOutFlash = new Vector<CommandInterface>();
 		
-		testString.setKey("#Z01PWRON,SRC2,GRP0,VOL-79");
-		BuildReturnWrapper val = model.interpretStringFromSignVideo(testString);
-
-		testString.setKey("#Z01PWRON,SRC2,GRP0,VOL-00");
-		val = model.interpretStringFromSignVideo(testString);
-
-		AVCommand testCommand = new AVCommand("CLIENT_SEND","volume",null,"100");
-		testCommand.setDisplayName("FRONT_AV");
+		AVCommand testCommand1 = new AVCommand("CLIENT_SEND","on",null,"");
+		testCommand1.setDisplayName("FRONT_AV");
+		expectedOutFlash.add(testCommand1);
 		
 		AVCommand testCommand2 = new AVCommand("CLIENT_SEND","on",null,"");
-		testCommand2.setDisplayName("FRONT_AV");
-		expectedOut.add(testCommand2);
+		testCommand2.setDisplayName("STUDY_AV");
+		expectedOutFlash.add(testCommand2);
 		
-		AVCommand testCommand3 = new AVCommand("CLIENT_SEND","src",null,"DVD2");
-		testCommand3.setDisplayName("FRONT_AV");
-		expectedOut.add(testCommand3);
+		AVCommand testCommand4 = new AVCommand("CLIENT_SEND","on",null,"");
+		testCommand4.setDisplayName("KITCHEN_AV");
+		expectedOutFlash.add(testCommand4);
 		
-		ListAssert.assertContains ("Return value for interpret status volume failed",val.getOutputFlash(),testCommand);
-		
-		Assert.assertFalse ("Interpret status incorrectly contained power",val.getOutputFlash().contains(testCommand2));
-		
-		Assert.assertFalse ("Interpret status incorrectly contained src",val.getOutputFlash().contains(testCommand3));
-		
-		testString.setKey("#Z01PWRON,SRC1,GRP0,VOL-00");
-		val = model.interpretStringFromSignVideo(testString);
-		
-		AVCommand testCommand4 = new AVCommand("CLIENT_SEND","src",null,"DVD2");
-		testCommand4.setDisplayName("FRONT_AV");
-		expectedOut.add(testCommand4);
-		
-		Assert.assertFalse ("Interpret status did not detect src change",val.getOutputFlash().contains(testCommand4));
+		AVCommand testCommand5 = new AVCommand("CLIENT_SEND","on",null,"");
+		testCommand5.setDisplayName("ALL");
+		expectedOutFlash.add(testCommand5);
+
+		BuildReturnWrapper val = model.interpretBytesFromSignVideo(testString);
+		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOutFlash);
 	}
 
+	public void testInterpretPowerOffSignVideo() {
+		
+		CommsCommand testString = new CommsCommand();
+		testString.setCommandBytes(new byte[]{((byte)0xA5)});
+		
+		Vector <CommandInterface>expectedOutFlash = new Vector<CommandInterface>();
+		
+		AVCommand testCommand1 = new AVCommand("CLIENT_SEND","off",null,"");
+		testCommand1.setDisplayName("FRONT_AV");
+		expectedOutFlash.add(testCommand1);
+		
+		AVCommand testCommand2 = new AVCommand("CLIENT_SEND","off",null,"");
+		testCommand2.setDisplayName("STUDY_AV");
+		expectedOutFlash.add(testCommand2);
+		
+		AVCommand testCommand4 = new AVCommand("CLIENT_SEND","off",null,"");
+		testCommand4.setDisplayName("KITCHEN_AV");
+		expectedOutFlash.add(testCommand4);
+		
+		AVCommand testCommand5 = new AVCommand("CLIENT_SEND","off",null,"");
+		testCommand5.setDisplayName("ALL");
+		expectedOutFlash.add(testCommand5);
+
+		BuildReturnWrapper val = model.interpretBytesFromSignVideo(testString);
+		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOutFlash);
+	}
 }

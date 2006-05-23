@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 import au.com.BI.Command.BuildReturnWrapper;
+import au.com.BI.Command.CommandInterface;
 
+import au.com.BI.AV.AVCommand;
 import au.com.BI.Audio.*;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Nuvo.Model;
@@ -65,7 +67,7 @@ public class TestCommandsFromFlash extends TestCase {
 		model.setCatalogueDefs("Nuvo Audio Inputs",map);
 		
 		model.setParameter("AUDIO_INPUTS", "Nuvo Audio Inputs", DeviceModel.MAIN_DEVICE_GROUP);
-		model.setupAudioInputs ();
+		model.finishedReadingConfig();
 		model.initState();
 		
 		model.setPadding (2); // device requires 2 character keys that are 0 padded.
@@ -85,6 +87,7 @@ public class TestCommandsFromFlash extends TestCase {
 		String expectedOut = "*Z01ON";
 		BuildReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for audio on failed",expectedOut,val.getCommOutputStrings().firstElement());
+
 	}
 	
 	public void testBuildAudioAllOff() {
@@ -92,6 +95,22 @@ public class TestCommandsFromFlash extends TestCase {
 		String expectedOut = "*ALLOFF";
 		BuildReturnWrapper val = model.buildAudioString(audioAll, testCommand);
 		Assert.assertEquals ("Return value for audio all off failed",expectedOut,val.getCommOutputStrings().firstElement());
+		
+		Vector <CommandInterface>expectedOutFlash = new Vector<CommandInterface>();
+		
+		AVCommand testCommand1 = new AVCommand("CLIENT_SEND","off",null,"");
+		testCommand1.setDisplayName("FRONT_AUDIO");
+		expectedOutFlash.add(testCommand1);
+		
+		AVCommand testCommand2 = new AVCommand("CLIENT_SEND","off",null,"");
+		testCommand2.setDisplayName("STUDY_AUDIO");
+		expectedOutFlash.add(testCommand2);
+		
+		AVCommand testCommand4 = new AVCommand("CLIENT_SEND","off",null,"");
+		testCommand4.setDisplayName("KITCHEN_AUDIO");
+		expectedOutFlash.add(testCommand4);
+		
+		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOutFlash);
 	}
 	
 	public void testBuildAudioZoneOff() {
@@ -122,6 +141,22 @@ public class TestCommandsFromFlash extends TestCase {
 		String expectedOut = "*ALLMON";
 		BuildReturnWrapper val = model.buildAudioString(audioAll, testCommand);
 		Assert.assertEquals ("Return value for audio all on failed",expectedOut,val.getCommOutputStrings().firstElement());
+		
+		Vector <CommandInterface>expectedOutFlash = new Vector<CommandInterface>();
+		
+		AVCommand testCommand1 = new AVCommand("CLIENT_SEND","mute",null,"on");
+		testCommand1.setDisplayName("FRONT_AUDIO");
+		expectedOutFlash.add(testCommand1);
+		
+		AVCommand testCommand2 = new AVCommand("CLIENT_SEND","mute",null,"on");
+		testCommand2.setDisplayName("STUDY_AUDIO");
+		expectedOutFlash.add(testCommand2);
+		
+		AVCommand testCommand4 = new AVCommand("CLIENT_SEND","mute",null,"on");
+		testCommand4.setDisplayName("KITCHEN_AUDIO");
+		expectedOutFlash.add(testCommand4);
+		
+		ListAssert.assertEquals ("Return value for mute all failed",val.getOutputFlash(),expectedOutFlash);
 	}
 
 	public void testBuildAudioMuteOff() {
@@ -129,6 +164,22 @@ public class TestCommandsFromFlash extends TestCase {
 		String expectedOut = "*ALLMOFF";
 		BuildReturnWrapper val = model.buildAudioString(audioAll, testCommand);
 		Assert.assertEquals ("Return value for audio all off failed",expectedOut,val.getCommOutputStrings().firstElement());
+		
+		Vector <CommandInterface>expectedOutFlash = new Vector<CommandInterface>();
+		
+		AVCommand testCommand1 = new AVCommand("CLIENT_SEND","mute",null,"off");
+		testCommand1.setDisplayName("FRONT_AUDIO");
+		expectedOutFlash.add(testCommand1);
+		
+		AVCommand testCommand2 = new AVCommand("CLIENT_SEND","mute",null,"off");
+		testCommand2.setDisplayName("STUDY_AUDIO");
+		expectedOutFlash.add(testCommand2);
+		
+		AVCommand testCommand4 = new AVCommand("CLIENT_SEND","mute",null,"off");
+		testCommand4.setDisplayName("KITCHEN_AUDIO");
+		expectedOutFlash.add(testCommand4);
+		
+		ListAssert.assertEquals ("Return value for mute all failed",val.getOutputFlash(),expectedOutFlash);
 	}
 
 	

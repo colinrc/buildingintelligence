@@ -24,7 +24,6 @@ public class DoActionHelper {
 	protected String STX;
 	protected String ETX;
 	protected HashMap previousValue;
-	protected String comfort_users;
 	
 	public DoActionHelper() {
 		super();
@@ -55,7 +54,7 @@ public class DoActionHelper {
 							
 							String realParam = "0" + i ;
 								
-							String lookupValue = configHelper.getCatalogueValue(realParam,comfort_users,comfort);
+							String lookupValue = configHelper.getCatalogueValue(realParam,"COMFORT_USERS",phoneAlert);
 							if (lookupValue == null)
 								phoneMessage.setExtraInfo(message + "user ID " + realParam);
 							else
@@ -114,16 +113,5 @@ public class DoActionHelper {
 	public void setSTX(String stx) {
 		STX = stx;
 	}
-	/**
-	 * @return Returns the comfort_users.
-	 */
-	public String getComfort_users() {
-		return comfort_users;
-	}
-	/**
-	 * @param comfort_users The comfort_users to set.
-	 */
-	public void setComfort_users(String comfort_users) {
-		this.comfort_users = comfort_users;
-	}
+
 }

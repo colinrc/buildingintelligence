@@ -40,7 +40,6 @@ import au.com.BI.Raw.RawFactory;
 
 public class Config {
 	public Logger logger;
-	protected ConfigHelper configHelper;
         protected String scriptDirectory;
         protected Security security;
 
@@ -67,7 +66,6 @@ public class Config {
 
 	public Config() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		configHelper = new ConfigHelper();
 		rawHelper = new RawHelper();
 
 		controls = null;

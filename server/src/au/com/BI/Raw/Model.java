@@ -39,8 +39,8 @@ public class Model extends BaseModel implements DeviceModel {
 
     public void finishedReadingConfig () throws SetupException {
     	super.finishedReadingConfig();
-		ETX = (String)this.getParameter("ETX",DeviceModel.MAIN_DEVICE_GROUP);
-		STX = (String)this.getParameter("STX",DeviceModel.MAIN_DEVICE_GROUP);
+		ETX = (String)this.getParameterMapName("ETX",DeviceModel.MAIN_DEVICE_GROUP);
+		STX = (String)this.getParameterMapName("STX",DeviceModel.MAIN_DEVICE_GROUP);
 
 		if (ETX == null) ETX = "";
 		if (STX == null) STX = "";
@@ -49,7 +49,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public void doStartup () throws CommsFail 
 	{
 		for (int i = 1; i < 10 ; i++) {
-			String startup = (String)this.getParameter("STARTUP"+i,DeviceModel.MAIN_DEVICE_GROUP);
+			String startup = (String)this.getParameterMapName("STARTUP"+i,DeviceModel.MAIN_DEVICE_GROUP);
 			if (startup != null && !startup.equals ("")) {
 				try {
 					comms.sendString(startup);
@@ -61,8 +61,8 @@ public class Model extends BaseModel implements DeviceModel {
 
 		for (int i = 1; i < 10 ; i++) {
 			long poll = 30000; //default to every 30 seconds
-			String pollValue = (String)this.getParameter("POLL_VALUE"+i,DeviceModel.MAIN_DEVICE_GROUP);
-			String pollString = (String)this.getParameter("POLL_STRING"+i,DeviceModel.MAIN_DEVICE_GROUP);
+			String pollValue = (String)this.getParameterMapName("POLL_VALUE"+i,DeviceModel.MAIN_DEVICE_GROUP);
+			String pollString = (String)this.getParameterMapName("POLL_STRING"+i,DeviceModel.MAIN_DEVICE_GROUP);
 			if (pollValue != null && pollString != null && !pollValue.equals( ("")) && !pollString.equals("")){
 				try {
 					poll = Long.parseLong(pollValue) * 1000;
@@ -275,7 +275,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public String buildDirectConnectString (DeviceType device, CommandInterface command){
 		boolean commandFound = false;
 
-		String rawSerialCommand = configHelper.doRawIfPresent (command, device, this);
+		String rawSerialCommand = configHelper.doRawIfPresent (command, device);
 		if (rawSerialCommand != null)
 		{
 			commandFound = true;

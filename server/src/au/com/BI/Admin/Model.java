@@ -47,7 +47,6 @@ public class Model extends BaseModel implements DeviceModel, ClientModel
 	 */
 	public Model (int numberClients){
 		
-		configHelper = new ConfigHelper();
 		this.addControlledItem ("RawXML_Send",null,DeviceType.MONITORED);
 		
 		logger = Logger.getLogger(this.getClass().getPackage().getName());

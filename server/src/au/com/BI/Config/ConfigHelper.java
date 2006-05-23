@@ -11,23 +11,40 @@ import java.util.logging.*;
 
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
+import au.com.BI.Config.ParameterBlock;
+
 public class ConfigHelper {
 	protected HashMap <String,DeviceType> controlledItems;
 	protected HashMap <String,DeviceType> outputItems;
 	protected HashMap <String,DeviceType> inputItems;
 	protected HashMap <String,DeviceType> startupQueryItems;
 	protected String lastChecked;
-
+	protected Vector <ParameterBlock>parameterBlocks;
+	protected DeviceModel deviceModel = null;
 	
 	protected int itemList;
 	Logger logger;
 
-	public ConfigHelper () {
+	public ConfigHelper (DeviceModel deviceModel) {
+		this.deviceModel = deviceModel;
+        parameterBlocks = new Vector<ParameterBlock>();
 		clearItems ();
 		lastChecked = "";
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 
+
+	/**
+	 * Provides a simple method for models to speficy prameters they expect to find in the configuration file
+	 * @param catalogName
+	 * @param group
+	 * @param verboseName
+	 */
+    public void addParameterBlock (String catalogName,String group,String verboseName) {
+    	ParameterBlock params = new ParameterBlock( catalogName, group, verboseName);
+    	this.parameterBlocks.add(params);
+    }
+    
 	/**
 	 * For some keys the entire key may be longer than the section tested; eg. if parameters are in a COMFORT string.
 	 * @param lastChecked The entire string that was received.
@@ -54,6 +71,7 @@ public class ConfigHelper {
 		outputItems = new HashMap<String,DeviceType> (100);
 		inputItems = new HashMap<String,DeviceType> (100);	
 		startupQueryItems = new HashMap<String,DeviceType> (200);
+		parameterBlocks.clear();
 	}
 	
 	/**
@@ -110,7 +128,7 @@ public class ConfigHelper {
 	 * @param device
 	 * @return
 	 */
-	public String doRawIfPresent (CommandInterface command, DeviceType targetDevice, DeviceModel device) { 
+	public String doRawIfPresent (CommandInterface command, DeviceType targetDevice) { 
 		Map rawCodes = targetDevice.getRawCodes(); // the list specified in the config for this device line.
 
 		if (rawCodes!= null){
@@ -122,7 +140,7 @@ public class ConfigHelper {
 				rawCode = (RawItemDetails)rawCodes.get(commandName); // pull up details for the line				
 
 			if (rawCode != null){
-				Map rawCatalogue = (Map)device.getCatalogueDef(rawCode.getCatalogue());
+				Map rawCatalogue = deviceModel.getCatalogueDef(rawCode.getCatalogue());
 				if (rawCatalogue == null ) {
 					logger.log (Level.WARNING ,"Specified raw catalogue is not defined : "+rawCatalogue);	
 					return null;
@@ -136,11 +154,11 @@ public class ConfigHelper {
 		return null;
 	}
 
-	public String getCatalogueValue (String ID, String rawCatalogueName, DeviceModel device) {
+	public String getCatalogueValue (String ID, String parameterName, DeviceType device) {
 		String value = "";
-		Map rawCatalogue = (Map)device.getCatalogueDef(rawCatalogueName);
+		Map rawCatalogue = deviceModel.getCatalogueDef(deviceModel.getParameterMapName(parameterName,device.getGroupName()));
 		if (rawCatalogue == null ) {
-			logger.log (Level.WARNING ,"Catalogue " + rawCatalogueName + " not specified.");	
+			logger.log (Level.WARNING ,"Catalogue " + parameterName + " not specified.");	
 			return null;
 		}
 		else {
@@ -264,6 +282,26 @@ public class ConfigHelper {
 	
 	public final DeviceType getControlledItem (String theKey) {
 		return controlledItems.get(theKey);
+	}
+
+
+	public Vector<ParameterBlock> getParameterBlocks() {
+		return parameterBlocks;
+	}
+
+
+	public void setParameterBlocks(Vector<ParameterBlock> parameterBlocks) {
+		this.parameterBlocks = parameterBlocks;
+	}
+
+
+	public DeviceModel getDeviceModel() {
+		return deviceModel;
+	}
+
+
+	public void setDeviceModel(DeviceModel deviceModel) {
+		this.deviceModel = deviceModel;
 	}
 	
 

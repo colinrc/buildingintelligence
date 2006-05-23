@@ -177,7 +177,7 @@ public interface DeviceModel {
 	public void setCommandQueue (java.util.List commandQueue);
 
 	public void setParameter (String name, String value,String groupName);
-	public Object getParameter (String Name,String groupName);
+	public String getParameterMapName (String Name,String groupName);
 
 	/**
 	 * Raw definitions are used for direct serial strings

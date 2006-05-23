@@ -52,7 +52,7 @@ public class TestCommandsToFlash extends TestCase {
 		model.setCatalogueDefs("Nuvo Audio Inputs",map);
 		
 		model.setParameter("AUDIO_INPUTS", "Nuvo Audio Inputs", DeviceModel.MAIN_DEVICE_GROUP);
-		model.setupAudioInputs ();
+		model.finishedReadingConfig();
 		model.initState();
 		model.setPadding (2); // device requires 2 character keys that are 0 padded.
 	}

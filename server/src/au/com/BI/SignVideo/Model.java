@@ -24,7 +24,6 @@ public class Model extends BaseModel implements DeviceModel {
 
 	
 	protected String outputAVCommand = "";
-	protected HashMap <String,String>avInputs;
 	protected Logger logger = null;
 	protected Vector <String>srcGroup;
 	
@@ -41,34 +40,9 @@ public class Model extends BaseModel implements DeviceModel {
 		this.setPadding(1);
 		setInterCommandInterval(250);
 		setTransmitMessageOnBytes(1); 
+		configHelper.addParameterBlock ("AV_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Video Source");
 	}
-
-	public void clearItems () {
-		avInputs.clear();
-		super.clearItems();
-	}
-
-	
-	public void setupAVInputs() throws SetupException {
-		String avInputsDef = (String)this.getParameter("AV_INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
-		if (avInputsDef == null || avInputsDef.equals ("")) {
-			throw new SetupException ("The video source input catalogue was not specified in the device Parameter block");
-		}
-	
-		avInputs = this.getCatalogueDef(avInputsDef);
-		if (avInputs == null) {
-			throw new SetupException ("The video Source input catgalogue was not specifed in the  device Parameter block");
-		}
-	}
-
-	
-	public void finishedReadingConfig () throws SetupException {
-		super.finishedReadingConfig();
 		
-		setupAVInputs();
-	}
-	
-	
 	public void doStartup() throws CommsFail {
 		
 		synchronized (comms){
@@ -128,7 +102,7 @@ public class Model extends BaseModel implements DeviceModel {
 	 */
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{
-		BuildReturnWrapper commandObject = interpretStringFromSignVideo (command);
+		BuildReturnWrapper commandObject = interpretBytesFromSignVideo ((CommsCommand)command);
 		for (CommandInterface eachCommand: commandObject.getOutputFlash()){
 			this.sendToFlash(eachCommand, cache);
 		}
@@ -141,32 +115,26 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 
 	
-	public BuildReturnWrapper interpretStringFromSignVideo (CommandInterface command){
+	public BuildReturnWrapper interpretBytesFromSignVideo (CommsCommand command){
 		BuildReturnWrapper result = new BuildReturnWrapper();
 		boolean commandFound = false;
 		
-		String signAVCmd = command.getKey();
+		byte[] signAVCmd = command.getCommandBytes();
 		
-		try {
-			String key = signAVCmd.substring(2, 4);
-			
-			DeviceType avDevice = configHelper.getControlledItem(key);
-			
-			if (avDevice == null){
-				commandFound = true;
-				// The zone is not configured
-			}
-			
-			if (!commandFound && signAVCmd.contains("PWR")){
-				// #ZxxPWRppp,SRCs,GRPt,VOL-yy
-				result = interpretZoneStatus (signAVCmd,avDevice);			
-
-			}
-	
-		} catch (IndexOutOfBoundsException ex){
-			logger.log (Level.INFO,"SignAV returned an incorrectly formatted string " + signAVCmd);
-		} catch ( NumberFormatException ex2) {
-			logger.log (Level.INFO,"SignAV returned incorrectly formatted numbers " + signAVCmd);			
+		if (!commandFound && signAVCmd[0] == (byte)0xA4){
+			commandFound = true;
+			// power on
+		    for(DeviceType avDevice : configHelper.getAllControlledDeviceObjects()) {
+				result.addFlashCommand(this.buildCommandForFlash(avDevice, "on", "","","","","",0));
+			}	
+		}
+		
+		if (!commandFound && signAVCmd[0] == (byte)0xA5){
+			commandFound = true;
+			// power off
+		    for(DeviceType avDevice : configHelper.getAllControlledDeviceObjects()) {
+				result.addFlashCommand(this.buildCommandForFlash(avDevice, "off", "","","","","",0));
+			}	
 		}
 	
 		return result;
@@ -186,7 +154,7 @@ public class Model extends BaseModel implements DeviceModel {
 		String volStr = bits[3].substring(4);
 
 
-		String newSrc = findKeyForParameterValue(srcStr, avInputs);
+		String newSrc = findKeyForParameterValue(srcStr, "AV_INPUTS",avDevice);
 		
 		returnCode.getOutputFlash().add(this.buildCommandForFlash(avDevice, "src",newSrc,"","","","",0));
 
@@ -194,13 +162,14 @@ public class Model extends BaseModel implements DeviceModel {
 		return returnCode;
 	}
 	
+	
 	public BuildReturnWrapper buildAVString (AV device, CommandInterface command){
 		BuildReturnWrapper returnVal = new BuildReturnWrapper();
 		String key = device.getKey();
 		boolean commandFound = false;
 
 
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, device, this);
+		String rawBuiltCommand = configHelper.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			returnVal.addCommOutput(rawBuiltCommand);
@@ -220,11 +189,55 @@ public class Model extends BaseModel implements DeviceModel {
 			returnVal.addCommOutput(returnLine);
 		    for(DeviceType avDevice : configHelper.getAllOutputDeviceObjects()) {
 				if (!avDevice.getKey().equals(Model.AllZones)) {
-					this.buildCommandForFlash(avDevice, "on", extra,"","","","",0);
+					returnVal.addFlashCommand(this.buildCommandForFlash(avDevice, "on", "","","","","",0));
 				}
 		    }
 
 			logger.log (Level.FINEST,"Switching all zones off");
+		}
+		if (!commandFound && theCommand.equals("off")) {
+			commandFound = true;
+			returnVal.setOutputCommandType (DeviceType.SIGN_VIDEO_SWITCH);
+			byte[] returnLine = new byte[]{(byte)0xA5};
+			returnVal.addCommOutput(returnLine);
+		    for(DeviceType avDevice : configHelper.getAllOutputDeviceObjects()) {
+				if (!avDevice.getKey().equals(Model.AllZones)) {
+					returnVal.addFlashCommand(this.buildCommandForFlash(avDevice, "off", "","","","","",0));
+				}
+		    }
+
+			logger.log (Level.FINEST,"Switching all zones off");
+		}
+		
+		if (!commandFound && theCommand.equals("preset")) {
+			commandFound = true;
+			returnVal.setOutputCommandType (DeviceType.SIGN_VIDEO_SWITCH);
+			try { 
+				int presetNumber = Integer.parseInt(extra);
+				byte[] returnLine = new byte[]{(byte)(0x97+presetNumber)};
+				returnVal.addCommOutput(returnLine);
+				returnVal.addCommOutput(new byte[]{(byte)(0xA3)});
+
+				logger.log (Level.FINEST,"Switching preset");
+			} catch (NumberFormatException ex){
+				logger.log (Level.WARNING,"The preset number was incorrectly formatted");
+				
+			}
+		}
+
+		if (!commandFound && theCommand.equals("preset_set")) {
+			commandFound = true;
+			returnVal.setOutputCommandType (DeviceType.SIGN_VIDEO_SWITCH);
+			try { 
+				int presetNumber = Integer.parseInt(extra);
+				byte[] returnLine = new byte[]{(byte)(0x8F+presetNumber)};
+				returnVal.addCommOutput(returnLine);
+
+				logger.log (Level.FINEST,"Storing preset");
+			} catch (NumberFormatException ex){
+				logger.log (Level.WARNING,"The preset number was incorrectly formatted");
+				
+			}
 		}
 
 		if (!commandFound && theCommand.equals("src")) {
@@ -232,7 +245,7 @@ public class Model extends BaseModel implements DeviceModel {
 			commandFound = true;
 			
 			try {
-				srcCode = avInputs.get(extra);
+				srcCode = configHelper.getCatalogueValue(extra, "AV_INPUTS",device);
 				int src = Integer.parseInt(srcCode);
 				byte []pre_mode = null;
 				byte []av_mode = new byte[]{(byte)0xA0};
@@ -252,9 +265,13 @@ public class Model extends BaseModel implements DeviceModel {
 							try {
 								returnLine[0] = (byte)(Integer.parseInt(avDevice.getKey()) * 16 + src - 1);  
 								returnVal.addCommOutput(returnLine);
+								
+								returnVal.addFlashCommand(this.buildCommandForFlash(avDevice, "src", extra, "", "", "", "", 0));
+								
 							} catch (NumberFormatException ex){
 								logger.log (Level.WARNING,"An AV device key was incorrectly formatted: " + avDevice.getName());
 							}
+							
 						}
 				    }
 
@@ -265,11 +282,10 @@ public class Model extends BaseModel implements DeviceModel {
 						int intKey = Integer.parseInt(key);
 						returnLine[0] = (byte)(intKey * 16 + src - 1);  
 						returnVal.addCommOutput(returnLine);
+						logger.log (Level.FINEST,"Changing video source");
 					} catch (NumberFormatException ex){
 						logger.log (Level.WARNING,"An AV device key was incorrectly formatted: " + device.getName());
 					}
-					logger.log (Level.FINEST,"Changing video source");
-
 				}
 			    if(pre_mode != null){
 			    	returnVal.addCommOutput(av_mode);

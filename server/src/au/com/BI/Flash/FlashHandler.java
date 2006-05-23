@@ -33,7 +33,6 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 	protected String name;
 	protected Logger logger;
 	protected List commandQueue;
-	protected ConfigHelper configHelper;
 	protected HashMap parameters;
 	protected MacroHandler macroHandler;
 	protected EventCalendar eventCalendar;
@@ -58,7 +57,6 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 	 */
 	public FlashHandler (int numberClients, Security security){
 
-		configHelper = new ConfigHelper();
 		this.addControlledItem ("RawXML_Send",null,DeviceType.MONITORED);
 
 		logger = Logger.getLogger(this.getClass().getPackage().getName());

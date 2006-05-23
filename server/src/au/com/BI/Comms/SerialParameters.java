@@ -33,7 +33,7 @@ public class SerialParameters{
 	public void buildFromDevice (DeviceModel device) {
 
 		boolean flowControl = false;
-		String flow = (String)device.getParameter("Flow_Control",DeviceModel.MAIN_DEVICE_GROUP);
+		String flow = (String)device.getParameterMapName("Flow_Control",DeviceModel.MAIN_DEVICE_GROUP);
 		if (flow != null && !flow.equals("NONE")) {
 			flowControl = true;
 		}
@@ -49,10 +49,10 @@ public class SerialParameters{
 			this.setFlowControlIn(SerialPort.FLOWCONTROL_NONE);
 			this.setFlowControlOut(SerialPort.FLOWCONTROL_NONE);			
 		}
-		String baudRate = (String)device.getParameter("Baud_Rate",DeviceModel.MAIN_DEVICE_GROUP);
-		String dataBits = (String)device.getParameter("Data_Bits",DeviceModel.MAIN_DEVICE_GROUP);
-		String stopBits = (String)device.getParameter("Stop_Bits",DeviceModel.MAIN_DEVICE_GROUP); 
-		String parity = (String)device.getParameter("Parity",DeviceModel.MAIN_DEVICE_GROUP);
+		String baudRate = (String)device.getParameterMapName("Baud_Rate",DeviceModel.MAIN_DEVICE_GROUP);
+		String dataBits = (String)device.getParameterMapName("Data_Bits",DeviceModel.MAIN_DEVICE_GROUP);
+		String stopBits = (String)device.getParameterMapName("Stop_Bits",DeviceModel.MAIN_DEVICE_GROUP); 
+		String parity = (String)device.getParameterMapName("Parity",DeviceModel.MAIN_DEVICE_GROUP);
 		
 		if (baudRate == null || dataBits == null || stopBits == null || parity == null) {
 			logger.log (Level.SEVERE,"Serial parameters not specified for "  + device.getName());
@@ -64,7 +64,7 @@ public class SerialParameters{
 			this.setStopbits(stopBits); 
 			this.setParity(parity);
 		}
-		String supportsCD = (String)device.getParameter("Supports_CD",DeviceModel.MAIN_DEVICE_GROUP); 
+		String supportsCD = (String)device.getParameterMapName("Supports_CD",DeviceModel.MAIN_DEVICE_GROUP); 
 		if (supportsCD != null && supportsCD.equals("N")){
 			this.supportsCD = false;
 		} else {

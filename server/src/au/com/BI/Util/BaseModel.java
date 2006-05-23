@@ -23,6 +23,7 @@ import au.com.BI.Config.Bootstrap;
 import au.com.BI.AV.AVCommand;
 import au.com.BI.AlarmLogging.*;
 import au.com.BI.Messaging.*;
+import au.com.BI.Config.ParameterBlock;
 
 public class BaseModel
   implements DeviceModel {
@@ -33,8 +34,8 @@ public class BaseModel
         protected boolean connected = false;
         private boolean autoReconnect = true;
 
-        protected HashMap <String,HashMap>rawDefs;
-        protected HashMap <String,HashMap> parameters;
+        protected HashMap <String,HashMap<String,String>>rawDefs;
+        protected HashMap <String,HashMap<String,String>> parameters;
         protected HashMap <String,String>topMap; // a convienience reference to the top level map
 
         protected Logger logger;
@@ -65,17 +66,17 @@ public class BaseModel
         protected boolean deviceKeysDecimal = false;
         protected boolean configKeysInDecimal = false;
 		protected int padding = 1; // Number of digits to pad the key too in the device.
-		
+
 		
 		public User currentUser = null;
 		
         public BaseModel() {
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
-                configHelper = new ConfigHelper();
-                parameters = new HashMap<String, HashMap>(DeviceModel.NUMBER_DEVICE_GROUPS);
+                configHelper = new ConfigHelper(this);
+                parameters = new HashMap<String, HashMap<String,String>>(DeviceModel.NUMBER_DEVICE_GROUPS);
                 topMap = new HashMap<String,String>(DeviceModel.NUMBER_PARAMETERS);
                 parameters.put(DeviceModel.MAIN_DEVICE_GROUP, topMap);
-                rawDefs = new HashMap<String,HashMap>(DeviceModel.NUMBER_CATALOGUES);
+                rawDefs = new HashMap<String,HashMap<String,String>>(DeviceModel.NUMBER_CATALOGUES);
         }
 
         public void setTransmitMessageOnBytes(int numberBytes) {
@@ -98,10 +99,29 @@ public class BaseModel
                 return this.powerRating;
         }
 
-        public void finishedReadingConfig() throws SetupException {};
+        public void finishedReadingConfig() throws SetupException {
+        	setupParameterBlocks();
+        };
 
+    	
+    	public void setupParameterBlocks() throws SetupException {
+    		for (ParameterBlock block: configHelper.getParameterBlocks()){
+    			
+	    		String paramDef = (String)this.getParameterMapName(block.getCatalogName(),block.getGroup());
+	    		if (paramDef == null || paramDef.equals ("")) {
+	    			throw new SetupException ("The " + block.getVerboseName() + " input catalogue name was not specified in the device Parameter block");
+	    		}
+	    	
+	    		Map inputs = this.getCatalogueDef(paramDef);
+	    		if (inputs == null) {
+	    			throw new SetupException ("The " + block.getVerboseName() + " input catgalogue was not specifed in the device Parameter block");
+	    		}
+	   		}
+    	}
+    	
         public void doStartup()  throws au.com.BI.Comms.CommsFail {};
 
+        
         /**
          * @deprecated
          */
@@ -447,7 +467,7 @@ public class BaseModel
          */
         public void attatchComms() throws ConnectionFail {
                 SerialParameters parameters = null;
-                if ( ( (String)this.getParameter("Connection_Type", DeviceModel.MAIN_DEVICE_GROUP)).equals("SERIAL")) {
+                if ( ( (String)this.getParameterMapName("Connection_Type", DeviceModel.MAIN_DEVICE_GROUP)).equals("SERIAL")) {
 
                         if (comms != null) {
                                 synchronized (comms) {
@@ -467,7 +487,7 @@ public class BaseModel
                         parameters = new SerialParameters();
                         parameters.buildFromDevice(this);
                         synchronized (comms) {
-                                ( (Serial) comms).connect( (String)this.getParameter("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
+                                ( (Serial) comms).connect( (String)this.getParameterMapName("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
                                   parameters, commandQueue, this.getInstanceID(),this.getName());
                                 comms.clearCommandQueue();
                         }
@@ -491,8 +511,8 @@ public class BaseModel
 						if (penultimateArray != null) comms.setPenultimateArray(penultimateArray);
 
                         synchronized (comms) {
-                                ( (IP) comms).connect( (String)this.getParameter("IP_Address", DeviceModel.MAIN_DEVICE_GROUP),
-                                  (String)this.getParameter("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
+                                ( (IP) comms).connect( (String)this.getParameterMapName("IP_Address", DeviceModel.MAIN_DEVICE_GROUP),
+                                  (String)this.getParameterMapName("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
                                   commandQueue, this.getInstanceID(), doIPHeartbeat(),getHeartbeatString(),this.getName());
                                 comms.clearCommandQueue();
                         }
@@ -535,20 +555,20 @@ public class BaseModel
                 this.rawDefs.put(name, rawDefs);
         }
 
-        public Object getParameter(String name, String groupName) {
+        public String getParameterMapName(String name, String groupName) {
                 HashMap <String,String>theMap;
                 if (groupName == null || groupName.equals("")) groupName = DeviceModel.MAIN_DEVICE_GROUP;
 
                 if (!groupName.equals(DeviceModel.MAIN_DEVICE_GROUP) && parameters.containsKey(groupName)) {
                         theMap = parameters.get(groupName);
-                        Object item = theMap.get(name);
+                        String item = theMap.get(name);
                         if (item == null)
                                 return "";
                         else
                                 return item;
                 }
                 else {
-                        Object item = topMap.get(name);
+                        String item = topMap.get(name);
                         if (item == null)
                                 return "";
                         else
@@ -572,7 +592,11 @@ public class BaseModel
         }
 
     	
-    	public String findKeyForParameterValue(String srcCode, Map<String,String> inputParameters) {
+    	public String findKeyForParameterValue(String srcCode, String catalogName,DeviceType device) {
+    		String groupName = device.getGroupName();
+    		String paramMapName = this.getParameterMapName (catalogName,groupName);
+    		Map <String,String>inputParameters = this.getCatalogueDef(paramMapName);
+    		
     		String returnVal = "1";
     		int srcVal = Integer.parseInt(srcCode); 
     		for (String eachItem: inputParameters.keySet()){
@@ -821,10 +845,10 @@ public class BaseModel
 		videoCommand.setTargetDeviceID(targetDeviceID);
 		videoCommand.setCommand (command);
 		videoCommand.setExtraInfo (extra);
-		videoCommand.setExtraInfo (extra2);
-		videoCommand.setExtraInfo (extra3);
-		videoCommand.setExtraInfo (extra4);
-		videoCommand.setExtraInfo (extra5);
+		videoCommand.setExtra2Info (extra2);
+		videoCommand.setExtra3Info (extra3);
+		videoCommand.setExtra4Info (extra4);
+		videoCommand.setExtra5Info (extra5);
 		
 		return videoCommand;
 	}

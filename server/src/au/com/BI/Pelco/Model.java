@@ -47,7 +47,7 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 	public void finishedReadingConfig () throws SetupException {
 		super.finishedReadingConfig();
-		String protocol = (String)this.getParameter("PROTOCOL", DeviceModel.MAIN_DEVICE_GROUP);
+		String protocol = (String)this.getParameterMapName("PROTOCOL", DeviceModel.MAIN_DEVICE_GROUP);
 		this.setProtocol (protocol);
 
 	}
@@ -588,7 +588,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public String buildDirectConnectString (DeviceType device, CommandInterface command){
 		boolean commandFound = false;
 
-		String rawSerialCommand = configHelper.doRawIfPresent (command, device, this);
+		String rawSerialCommand = configHelper.doRawIfPresent (command, device);
 		if (rawSerialCommand != null)
 		{
 			commandFound = true;

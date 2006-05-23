@@ -44,7 +44,7 @@ public class Model extends AudioModel implements DeviceModel {
 	public void finishedReadingConfig () throws SetupException {
 		super.finishedReadingConfig();
 		protocolB = false;
-		String protocol = (String)this.getParameter("PROTOCOL", DeviceModel.MAIN_DEVICE_GROUP);
+		String protocol = (String)this.getParameterMapName("PROTOCOL", DeviceModel.MAIN_DEVICE_GROUP);
 		if (protocol != null && protocol.equals("B")) {
 				protocolB = true;
 		}
@@ -81,7 +81,7 @@ public class Model extends AudioModel implements DeviceModel {
 			pollDevice.setSTX(tutondoHelper.getSTX());
 			pollDevice.setETX(tutondoHelper.getETX());
 		}
-		String pollValueStr = (String)this.getParameter("POLL_INTERVAL",DeviceModel.MAIN_DEVICE_GROUP);
+		String pollValueStr = (String)this.getParameterMapName("POLL_INTERVAL",DeviceModel.MAIN_DEVICE_GROUP);
 		long pollValue = 3000;
 		if (pollValueStr != null && !pollValueStr.equals( (""))){
 			try {
@@ -421,7 +421,7 @@ public class Model extends AudioModel implements DeviceModel {
 		else
 			currentState = new StateOfZone();
 		
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, device, this);
+		String rawBuiltCommand = configHelper.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			audioOutputString = rawBuiltCommand.getBytes();

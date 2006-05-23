@@ -62,7 +62,7 @@ public class Model extends BaseModel implements DeviceModel {
 
     public void finishedReadingConfig() throws SetupException {
     	super.finishedReadingConfig();
-    		String protocolStr = (String)this.getParameter("PROTOCOL","");
+    		String protocolStr = (String)this.getParameterMapName("PROTOCOL","");
     		if (protocolStr.equals("CLASSIC")) {
     			this.protocol = DynaliteDevice.Classic;
     		}
@@ -950,7 +950,7 @@ public class Model extends BaseModel implements DeviceModel {
 		DynaliteOutput dynaliteReturn = new DynaliteOutput ();
 		boolean commandFound = false;
 
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, (DeviceType)device, this);
+		String rawBuiltCommand = configHelper.doRawIfPresent (command, (DeviceType)device);
 		if (rawBuiltCommand != null)
 		{
 			dynaliteReturn.outputCodes = rawBuiltCommand.getBytes();

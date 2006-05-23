@@ -28,8 +28,6 @@ public class ControlledHelper {
 	protected String STX;
 	protected String ETX;
 	protected DoActionHelper doActionHelper;
-	protected String comfort_users;
-	protected String door_ids;
 
 
 	public ControlledHelper() {
@@ -38,20 +36,7 @@ public class ControlledHelper {
 		doActionHelper = new DoActionHelper();
 
 	}
-	
-	/**
-	 * @return Returns the comfort_users.
-	 */
-	public String getComfort_users() {
-		return comfort_users;
-	}
-	/**
-	 * @param comfort_users The comfort_users to set.
-	 */
-	public void setComfort_users(String comfort_users) {
-		this.doActionHelper.setComfort_users(comfort_users);
-		this.comfort_users = comfort_users;
-	}
+
 	
 	public void doControlledItem (CommandInterface command, boolean isStartupQuery,ComfortString comfortString, ConfigHelper configHelper, Cache cache, List commandQueue, CommDevice comms, au.com.BI.Comfort.Model comfort) throws CommsFail
 	{
@@ -75,9 +60,9 @@ public class ControlledHelper {
 				if (comfortString.theParameter.equals ("18")) {
 					logger.info("Logged into Comfort system as engineer");					
 				} else { 
-					String userName = configHelper.getCatalogueValue(comfortUser,comfort_users, comfort);
+					String userName = configHelper.getCatalogueValue(comfortUser,"COMFORT_USERS", null);
 					if (userName == null) {
-						logger.info("Logged into Comfort. User " + comfortString.theParameter + " (not specified in " + comfort_users + " catalogue)");						
+						logger.info("Logged into Comfort. User " + comfortString.theParameter + " (not specified in the Comfort users catalogue)");						
 					}
 					else {
 						logger.info("Logged into Comfort system as " + userName);						
@@ -274,7 +259,7 @@ public class ControlledHelper {
 						if (realParam.length() == 1) realParam = "0" + realParam;
 						if (realParam.length() > 2) realParam = realParam.substring(0,2);
 						
-						String lookupValue = configHelper.getCatalogueValue(realParam,comfort_users,comfort);
+						String lookupValue = configHelper.getCatalogueValue(realParam,"COMFORT_USERS",alert);
 						if (comfortString.theParameter.equals ("5A")) lookupValue = "(unknown) on keypad.";
 						if (comfortString.theParameter.equals ("5B")) lookupValue = "(unkbown), set by comfort.";
 						if (lookupValue == null)
@@ -312,9 +297,9 @@ public class ControlledHelper {
 					logger.log(Level.FINE,"Comfort alarm " + comfortString.theParameter + " was received, but has been configured to not be reported.");
 					break;
 				}
-				String lookupValue = configHelper.getCatalogueValue(comfortString.theParameter,door_ids,comfort);
+				String lookupValue = configHelper.getCatalogueValue(comfortString.theParameter,"DOOR_IDS",alert);
 				if (lookupValue == null) {
-					logger.log (Level.WARNING,"No Door description has been defined in the " + door_ids + " catalogue for " + 
+					logger.log (Level.WARNING,"No Door description has been defined in the door IDS catalogue for " + 
 							comfortString.theParameter);
 					alertCommand.setExtraInfo((String)alert.getMessage());
 				} else {
@@ -325,7 +310,7 @@ public class ControlledHelper {
 
 			case DeviceType.ALERT_MODE_CHANGE :
 				{
-				String lookupValue = configHelper.getCatalogueValue(comfortString.theParameter2,comfort_users,comfort);
+				String lookupValue = configHelper.getCatalogueValue(comfortString.theParameter2,"COMFORT_USERS",alert);
 				if (comfortString.theParameter2.equals ("5A")) lookupValue = "(unknown) on keypad.";
 				if (comfortString.theParameter2.equals ("5B")) lookupValue = "(unknown), set by comfort.";
 
@@ -339,7 +324,7 @@ public class ControlledHelper {
 				alertCommand2.setKey ("CLIENT_SEND");
 				alertCommand2.setCommand("ModeChange");
 				alertCommand2.setExtraInfo(comfortString.theParameter);
-				String showKeypad = (String)comfort.getParameter("SHOW_KEYPAD_MODES",DeviceModel.MAIN_DEVICE_GROUP);
+				String showKeypad = (String)comfort.getParameterMapName("SHOW_KEYPAD_MODES",DeviceModel.MAIN_DEVICE_GROUP);
 				if (showKeypad == null || showKeypad.equals ("")){
 					showKeypad = "01,04";
 				}
@@ -407,17 +392,4 @@ public class ControlledHelper {
 		STX = stx;
 	}
 
-
-	/**
-	 * @return Returns the door_ids.
-	 */
-	public String getDoor_ids() {
-		return door_ids;
-	}
-	/**
-	 * @param door_ids The door_ids to set.
-	 */
-	public void setDoor_ids(String door_ids) {
-		this.door_ids = door_ids;
-	}
 }

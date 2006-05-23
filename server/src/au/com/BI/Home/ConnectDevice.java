@@ -42,8 +42,8 @@ public class ConnectDevice extends Thread {
 			if (shownWarning){
 				logger.log(Level.WARNING, "Connection restored to " + deviceModel.getName());
 			}
-			User newUser = new User ((String)deviceModel.getParameter("Username",DeviceModel.MAIN_DEVICE_GROUP),
-					(String)deviceModel.getParameter("Password",DeviceModel.MAIN_DEVICE_GROUP));
+			User newUser = new User ((String)deviceModel.getParameterMapName("Username",DeviceModel.MAIN_DEVICE_GROUP),
+					(String)deviceModel.getParameterMapName("Password",DeviceModel.MAIN_DEVICE_GROUP));
 			if (deviceModel.login(newUser) == DeviceModel.SUCCESS ) {
 					logger.log(Level.FINE, "Logged in to " + deviceModel.getName());
 			}
