@@ -35,6 +35,13 @@ parseClientXML = function (xml) {
 	// hide mouse if set in config
 	if (_global.settings.hideMouseCursor) Mouse.hide();
 
+	if (_global.settings.device == "pda") {
+		_global.settings.tabPosition = "right";
+		_global.settings.tabWidth = 80;
+		_global.settings.tabHeight = 80;
+		_global.settings.tabSpacing = 10;
+	}
+
 	_root.counter = 0;
 	_root.onEnterFrame = function () {
 		counter++;

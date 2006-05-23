@@ -3079,13 +3079,11 @@ unsubscribe = function (keys, movieClip) {
 			}
 		}
 	}
-	/*
 	var counter = 0;
 	for (var i in _global.controls) {
 		if (_global.controls[i].subscribers.length) counter++;
 	}
 	trace("subscribers: " + counter);
-	*/
 }
 
 broadcastChange = function (key, id) {

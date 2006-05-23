@@ -42,21 +42,27 @@
 
 	var tab_array = new Array();
 	for (var tab=0; tab<tabs.length; tab++) {
+		tabs[tab].rendered = false;
 		if (tabs[tab].canSee == undefined || isAuthenticated(tabs[tab].canSee)) {
 			tab_array.push({name:tabs[tab].name, iconName:tabs[tab].icon});
 		}
 	}
 	tabs_mc.tabData = tab_array;
 	
-	var tabCount = 0;
-	for (var tab=0; tab<tabs.length; tab++) {
-		if (tabs[tab].canSee == undefined || isAuthenticated(tabs[tab].canSee)) {
-			var controls = tabs[tab].controls;
+	tabs_mc.originalTitle = room.name;
+	tabs_mc.tabs = tabs;
+	tabs_mc.changeTab = function (eventObj) {
+		// set window title
+		this._parent._parent.title = this.originalTitle + ": " + eventObj.name;
+		
+		var newTab = this.tabs[eventObj.id];
+		if (!newTab.rendered) {
+			var controls = newTab.controls;
 			var lastY = 0;
 			var controlCount = 0;
 			for (var control=0; control<controls.length; control++) {
 				if (controls[control].canSee == undefined || isAuthenticated(controls[control].canSee)) {
-					var control_mc = tabs_mc.contentClips[tabCount].createEmptyMovieClip("control" + controlCount + "_mc", controlCount);
+					var control_mc = this.contentClips[eventObj.id].createEmptyMovieClip("control" + controlCount + "_mc", controlCount);
 					renderControl(controls[control], control_mc, window_mc.contentClip.tabs_mc.contentClips[0].width);
 					subscribe(controls[control].key, control_mc);
 					control_mc._y = lastY;
@@ -64,17 +70,11 @@
 					controlCount++;
 				}
 			}
-			tabCount++;
+			newTab.rendered = true;
 		}
-	}
-	
-	tabs_mc.originalTitle = room.name;
-	tabs_mc.tabs = tabs;
-	tabs_mc.changeTab = function (eventObj) {
-		// set window title
-		this._parent._parent.title = this.originalTitle + ": " + eventObj.name;
+		
 		// fire onShow event to active clip
-		var controls = this.tabs[eventObj.id].controls;
+		var controls = newTab.controls;
 		for (var control=0; control<controls.length; control++) {
 			var control_mc = this.contentClips[eventObj.id]["control" + control + "_mc"];
 			control_mc.onShow();
