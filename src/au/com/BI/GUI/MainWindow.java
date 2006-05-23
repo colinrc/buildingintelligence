@@ -5,8 +5,6 @@
  * Copyright Building Intelligence 2006
  */
 package au.com.BI.GUI;
-import java.awt.Image;
-import java.awt.LayoutManager;
 import java.util.Vector;
 
 import au.com.BI.Connection.ServerHandler;
@@ -17,11 +15,9 @@ import au.com.BI.Util.ImageLoader;
  * @author  David
  */
 public class MainWindow extends java.awt.Frame {
-	private Image image;
 	private MainWindowBG bg;
 	private ImageLoader imageLoader;
-	private LayoutManager layout;
-	private ServerHandler serverHandle;
+		private ServerHandler serverHandle;
 	/** Creates new form MainWindow */
 	public MainWindow(ServerHandler inServerHandler, Vector inImages) {
 		serverHandle = inServerHandler;
@@ -31,11 +27,9 @@ public class MainWindow extends java.awt.Frame {
 	}
 
 	private void initComponents() {
-		//myButtonLoader = new ButtonLoader(this);
 		//Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 		this.setBounds(500,500,240,320);
 		this.setTitle("Elife Test");
-		//tLayout(null);
 		bg = new MainWindowBG(imageLoader, serverHandle);
 		bg.setBounds(0,0,240,320);
 		this.add(bg);

@@ -64,6 +64,7 @@ public abstract class BIButton extends Component implements Runnable, BIListener
 	protected BIState state = null;
 	protected ServerHandler serverHandle = null;
 	public BIButton(ImageLoader inImageLoader) {
+		//this.setCursor();
 		imageLoader = inImageLoader;
 		/*Override Attributes*/
 		bgColour = Integer.parseInt("0x7C90B0".substring(2), 16);
@@ -72,8 +73,8 @@ public abstract class BIButton extends Component implements Runnable, BIListener
 		fontColour = Integer.parseInt("0xFFFFFF".substring(2), 16);
 		fontSize = 16;
 		/*Inline Attributes*/
-		width = 52;
-		height = 52;
+		width = 66;
+		height = 66;
 		highlighted = 0;
 		if (updateThread == null) {
 			updateThread = new Thread(this, "highlighter");
@@ -115,7 +116,8 @@ public abstract class BIButton extends Component implements Runnable, BIListener
 		Graphics g2 = offScreenImage == null ? graphics : offScreenImage.getGraphics();
 		graphics.setColor(new java.awt.Color(82, 104, 141));
 		graphics.fillRect(0, 0, width, height);
-		System.out.println(highlighted);
+		Graphics2D g2d = (Graphics2D)graphics;
+		g2d.setComposite(makeComposite((float)0.4));
 		//}
 		// Create an offscreen image and then get its
 		// graphics context for the drawing.
@@ -151,6 +153,7 @@ public abstract class BIButton extends Component implements Runnable, BIListener
 		graphics.drawImage(baseBottomRight, width - PNGWIDTH, height - PNGWIDTH, this);
 		if (offScreenImage != null)
 			graphics.drawImage(offScreenImage, 0, 0, this);
+		g2d.setComposite(makeComposite(1));
 		super.paint(graphics);
 	}
 	public void setServerHandler(ServerHandler inServerHandler) {

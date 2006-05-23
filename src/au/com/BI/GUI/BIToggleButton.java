@@ -82,8 +82,8 @@ public class BIToggleButton extends BIButton {
 	public void setIcons(String inString){
 		icon1 = inString.substring(0,inString.indexOf(","));
 		icon2 = inString.substring(inString.indexOf(",")+1);
-		iconImg1 = imageLoader.getImage(icon1).getScaledInstance(34,34,Image.SCALE_SMOOTH);
-		iconImg2 = imageLoader.getImage(icon2).getScaledInstance(34,34,Image.SCALE_SMOOTH);
+		iconImg1 = imageLoader.getImage(icon1).getScaledInstance(width-18,width-18,Image.SCALE_SMOOTH);
+		iconImg2 = imageLoader.getImage(icon2).getScaledInstance(width-18,width-18,Image.SCALE_SMOOTH);
 	}
 	public void setExtras(String inString){
 		extra = inString.substring(0,inString.indexOf(","));
