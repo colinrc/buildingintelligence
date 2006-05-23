@@ -23,7 +23,7 @@ public class SimulatorWindow extends Frame {
 	private ServerHandler serverHandle;
 	/**
 	 * 
-	 */
+	 **/
 	public SimulatorWindow(ServerHandler inServerHandler, Vector inImages) {
 		serverHandle = inServerHandler;
 		imageLoader = new ImageLoader(this);

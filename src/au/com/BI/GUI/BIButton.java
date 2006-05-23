@@ -36,8 +36,8 @@ public abstract class BIButton extends Component implements Runnable, BIListener
 	protected Vector keys = new Vector();
 	protected int width;
 	protected int height;
-	protected int PNGWIDTH = 9;
 	protected int highlighted;
+	protected int PNGWIDTH = 9;
 	/*Button Components*/
 	protected ImageLoader imageLoader;
 	protected Image baseTopLeft;

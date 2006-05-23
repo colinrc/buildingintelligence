@@ -5,6 +5,7 @@
  * Copyright Building Intelligence 2006
  */
 package au.com.BI.GUI;
+import java.awt.Graphics;
 import java.awt.Image;
 
 import au.com.BI.Connection.ServerHandler;
@@ -29,5 +30,10 @@ public class MainWindowBG extends java.awt.Container {
 		currentPage.setBounds(0, 80, 240, 240);
 		add(titleBar);
 		add(currentPage);
+	}
+	public void paint(Graphics graphics) {
+		graphics.setColor( new java.awt.Color(82, 104, 141));
+		graphics.fillRect(0,0,240,320);
+		super.paint(graphics);
 	}
 }

@@ -37,11 +37,7 @@ public class PNGTranslator {
 			canFilterIndexColorModel = false;
 		}
 		public int filterRGB(int x, int y, int rgb) {
-			if (rgb == m_rgbMaskColor) {
-				return 0x00FFFFFF & rgb;
-			} else {
-				return rgb;
-			}
+			return 0x00FFFFFF & rgb;
 		}
 	}
 }

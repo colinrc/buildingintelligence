@@ -8,7 +8,6 @@
         kind="src" path="resources"/>
     <classpathentry exported="true" kind="src" path="/eLife_Java_Client"/>
     <classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry exported="true" kind="lib" path="D:/BI/elife_active/lib/RXTXcomm.jar"/>
     <classpathentry kind="lib" path="D:/BI/eLife_Java_Client/ext/kxml2-2.2.2.jar"/>
     <classpathentry kind="lib" path="D:/BI/eLife_Java_Client/ext/kxml2-min-2.2.2.jar"/>
     <classpathentry kind="output" path="bin"/>

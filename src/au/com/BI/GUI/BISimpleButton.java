@@ -6,6 +6,9 @@
  */
 package au.com.BI.GUI;
 
+import java.awt.Graphics;
+import java.awt.Image;
+
 import au.com.BI.Command.Command;
 import au.com.BI.DataModel.Key;
 import au.com.BI.Util.ImageLoader;
@@ -23,6 +26,7 @@ public class BISimpleButton extends BIButton {
 	private String extra3 = "";
 	private String extra4 = "";
 	private String extra5 = "";
+	private Image iconImg;
 	/**
 	 * @param inButtonLoader
 	 */
@@ -36,7 +40,7 @@ public class BISimpleButton extends BIButton {
 			if (highlighted > 0) {
 				repaint(highlighted);
 				try {
-					updateThread.sleep(100);
+					updateThread.sleep(50);
 				} catch (InterruptedException e) {
 					System.err.println(e.getMessage());
 					e.printStackTrace();
@@ -59,7 +63,13 @@ public class BISimpleButton extends BIButton {
 		newCommand.setExtra5Info(extra5);
 		return newCommand;
 	}
-			
+	public void paint(Graphics graphics){
+		super.paint(graphics);
+		graphics.drawImage(iconImg, 9, 9, this);
+	}
+	public void setIcon(String inString){
+		iconImg = imageLoader.getImage(inString).getScaledInstance(width-18,width-18,Image.SCALE_SMOOTH);
+	}
 	public void setCommand(String inString) {
 		command = inString;
 	}

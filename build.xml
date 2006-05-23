@@ -7,10 +7,14 @@
 	<jar destfile="dist/elife_active.jar" 
 		update="false"
 		basedir="bin" 
-		manifest="manifest" />
+		manifest="manifest" 
+		includes = "**/*.class"
+		excludes = "**/*\$*.class" />
 	<jar destfile="dist/elife_active.jar" 
 		update="true"
-		basedir="d:\bi\eLife_Java_Client\bin" />
+		basedir="d:\bi\eLife_Java_Client\bin"
+		includes = "**/*.class"
+		excludes = "**/*\$*.class" />
 </target>
 	
 <target name="dist" depends="dist_clean,increment,jar" >
@@ -18,6 +22,18 @@
 		update="false"
 		basedir="dist" 
 		includes = "*.jar"  />
+	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
+		update="true"
+		basedir="bin" 
+		excludes = "**/*\$*.class"  />
+	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
+		update="true"
+		basedir="" 
+		includes= "**/*.bat"
+		/>
+  <delete>
+    <fileset dir="dist" includes="*.jar"/>
+  </delete>
 </target>
 
 <target name="dist_clean" depends="" >

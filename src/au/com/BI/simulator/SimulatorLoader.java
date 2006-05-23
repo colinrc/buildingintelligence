@@ -7,9 +7,9 @@
 package au.com.BI.simulator;
 import java.util.HashMap;
 import java.util.Vector;
+
 import au.com.BI.Connection.ServerHandler;
 import au.com.BI.DataModel.Key;
-import au.com.BI.GUI.MainWindow;
 import au.com.BI.Util.ImageLoader;
 import au.com.BI.XML.ClientLoader;
 import au.com.BI.XML.SettingsLoader;
@@ -50,7 +50,7 @@ public class SimulatorLoader {
 		Vector tempKeys = new Vector();
 		tempKeys.add(new Key("LIGHT1"));
 		tempKeys.add(new Key("LIGHT2"));
-		Vector tempImages = new Vector();
+		Vector tempImages = new Vector(); 
 		tempImages.add("images/base/button-base_01");
 		tempImages.add("images/base/button-base_02");
 		tempImages.add("images/base/button-base_03");
@@ -74,6 +74,8 @@ public class SimulatorLoader {
 		tempImages.add("images/elife_active/elife-man-white");
 		tempImages.add("images/elife_active/wheel-inner-glow");
 		tempImages.add("images/elife_active/wheel-outer-glow");
+		tempImages.add("images/elife_active/button-halo-yellow");
+		tempImages.add("images/elife_active/button-halo-green");
 		tempImages.add("lib/icons/light-bulb-off");
 		tempImages.add("lib/icons/light-bulb");
 		serverHandler = new ServerHandler(eLifeSettings, tempKeys);

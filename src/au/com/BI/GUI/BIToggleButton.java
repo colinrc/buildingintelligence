@@ -40,7 +40,7 @@ public class BIToggleButton extends BIButton {
 			if (highlighted > 0) {
 				repaint(highlighted);
 				try {
-					updateThread.sleep(100);
+					updateThread.sleep(50);
 				} catch (InterruptedException e) {
 					System.err.println(e.getMessage());
 					e.printStackTrace();
