@@ -40,6 +40,8 @@ public class MainWindowTitleBar extends Component implements Runnable{
 		}
 	}
 	public void update(Graphics graphics) {
+		try{
+		
 			// Create an offscreen image and then get its
 			// graphics context for the drawing.
 			if (offScreenImage == null){
@@ -58,6 +60,10 @@ public class MainWindowTitleBar extends Component implements Runnable{
 			// Can't unclip a graphics context so have
 			// to get a new one next time around.
 			gOffScreenImage.dispose();
+		}
+		catch(Exception e){
+			
+		}
 		}
 		public void paint(Graphics graphics) {
 			super.paint(graphics);
