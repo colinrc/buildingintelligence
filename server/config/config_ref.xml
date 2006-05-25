@@ -183,7 +183,7 @@
                 </CONNECTION>
                 <PARAMETERS>
                 	<!-- ITEM NAME="POLL_TEMP_INTERVAL" VALUE="5" / -->
-                	<ITEM NAME="DECIMAL_KEYS" VALUE="Y" />
+                	<!-- ITEM NAME="DECIMAL_KEYS" VALUE="Y" / -->
                 	
                 </PARAMETERS>
                 

@@ -3,10 +3,20 @@
 Upraded Jetty to 6b16.
 
 
+''' Config '''
+
+It is now possible to specify keys in decimal rather than hex.Include the following parameter in the device block.
+
+{{{
+   <ITEM NAME="DECIMAL_KEYS" VALUE="Y" />
+}}}
+
+
 ''' General '''
 
 Refactoring accross most of the system to help simplify model building.
 Many support methods added to simplify model building.
+
     General catalogue support
     	configHelper.addParameterBlock 
     	configHelper.getCatalogueValue

@@ -54,6 +54,7 @@ public class Model extends BaseModel implements DeviceModel {
 		etxChars = new int[] {'.','$','%','#','!','\''};
 
 		etxString = new String(".$%#!\'");
+		this.setPadding(2);
 
 	}
 
