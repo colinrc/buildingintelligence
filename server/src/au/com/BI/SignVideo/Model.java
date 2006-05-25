@@ -10,6 +10,7 @@ package au.com.BI.SignVideo;
  *
 */
 import au.com.BI.AV.*;
+import au.com.BI.Config.ParameterException;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
@@ -28,6 +29,7 @@ public class Model extends BaseModel implements DeviceModel {
 	protected Vector <String>srcGroup;
 	
 	public static final String AllZones = "0";
+
 	
 	public static final int Switch = 0;
 	public static final int Select = 1;
@@ -114,14 +116,14 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	
+
 	public BuildReturnWrapper interpretBytesFromSignVideo (CommsCommand command){
 		BuildReturnWrapper result = new BuildReturnWrapper();
 		boolean commandFound = false;
 		
-		byte[] signAVCmd = command.getCommandBytes();
+		int signAVCmd = command.getCommandBytes()[0] & 0xff;
 		
-		if (!commandFound && signAVCmd[0] == (byte)0xA4){
+		if (!commandFound && signAVCmd == 0xA4){
 			commandFound = true;
 			// power on
 		    for(DeviceType avDevice : configHelper.getAllControlledDeviceObjects()) {
@@ -129,38 +131,44 @@ public class Model extends BaseModel implements DeviceModel {
 			}	
 		}
 		
-		if (!commandFound && signAVCmd[0] == (byte)0xA5){
+		if (!commandFound && signAVCmd == 0xA5){
 			commandFound = true;
 			// power off
 		    for(DeviceType avDevice : configHelper.getAllControlledDeviceObjects()) {
 				result.addFlashCommand(this.buildCommandForFlash(avDevice, "off", "","","","","",0));
 			}	
 		}
-	
+
+		if (!commandFound && signAVCmd >= 0x10 && signAVCmd < 0x87){
+			commandFound = true;
+			int inputSrc = signAVCmd % 8 + 1;
+			int inputDev = signAVCmd / 16 ;
+			DeviceType avDevice = configHelper.getControlledItem(inputDev);
+			try {
+				String inputSrcStr = findKeyForParameterValue(inputSrc, "AV_INPUTS", avDevice);
+				result.addFlashCommand(this.buildCommandForFlash(avDevice, "src", inputSrcStr,"","","","",0));
+				result.addCommOutput(new byte[]{(byte)0xA3});
+			} catch (ParameterException ex) {
+				logger.log(Level.WARNING,ex.getMessage());
+			}
+			
+		}
+		
+		if (!commandFound && signAVCmd >= 0x98 && signAVCmd < 0x9f){
+			commandFound = true;
+			if (allDevices != null){
+				int presetNumber = signAVCmd - 0x97;
+				result.addFlashCommand(this.buildCommandForFlash(allDevices, "preset", Integer.toString(presetNumber),"","","","",0));
+			}
+			result.addCommOutput(new byte[]{(byte)0xA3});
+			
+		}
+
 		return result;
 	}
 	
 	
-	public BuildReturnWrapper  interpretZoneStatus (String zoneStatus,DeviceType avDevice) throws IndexOutOfBoundsException,NumberFormatException {
-		BuildReturnWrapper returnCode = new BuildReturnWrapper();
-		
-		// #ZxxPWRppp,SRCs,GRPt,VOL-yy
-		
-		String[] bits = zoneStatus.split(",");
-		
-		String power =bits[0].substring(7);
-		String srcStr = bits[1].substring(3);
-		String grp = bits[2].substring(3);
-		String volStr = bits[3].substring(4);
 
-
-		String newSrc = findKeyForParameterValue(srcStr, "AV_INPUTS",avDevice);
-		
-		returnCode.getOutputFlash().add(this.buildCommandForFlash(avDevice, "src",newSrc,"","","","",0));
-
-		
-		return returnCode;
-	}
 	
 	
 	public BuildReturnWrapper buildAVString (AV device, CommandInterface command){

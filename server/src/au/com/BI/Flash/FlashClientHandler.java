@@ -132,6 +132,8 @@ public class FlashClientHandler extends Thread {
 						xmlDoc = saxb.build(data);
 						rootElement = xmlDoc.getRootElement(); 
 						processXML(rootElement); 
+					}else {
+						processXML(rootElement); 						
 					}
 					
 			    } catch (JDOMException ex){

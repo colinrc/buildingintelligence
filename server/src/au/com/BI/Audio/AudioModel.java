@@ -16,8 +16,8 @@ public class AudioModel extends BaseModel {
 	public void finishedReadingConfig () throws SetupException {
 		super.finishedReadingConfig();
 		
-		String inputsDef = (String)this.getParameterMapName("INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
-		String functionsDef = (String)this.getParameterMapName("FUNCTIONS",DeviceModel.MAIN_DEVICE_GROUP);
+		String inputsDef = (String)this.getParameterValue("INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
+		String functionsDef = (String)this.getParameterValue("FUNCTIONS",DeviceModel.MAIN_DEVICE_GROUP);
 		if (inputsDef == null || inputsDef.equals ("")) {
 			throw new SetupException ("The source input catalogue was not specified in the audio device Parameter block");
 		}

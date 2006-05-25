@@ -189,7 +189,7 @@ public class Model extends AudioModel implements DeviceModel {
 		synchronized (state){
 			state.clear();
 		}
-		String inputsDef = (String) this.getParameterMapName("INPUTS",
+		String inputsDef = (String) this.getParameterValue("INPUTS",
 				DeviceModel.MAIN_DEVICE_GROUP);
 		if (inputsDef == null)
 			logger.log(Level.SEVERE,
@@ -210,7 +210,7 @@ public class Model extends AudioModel implements DeviceModel {
 		pollDevice.setComms(comms);
 
 		pollDevice.setETX(ETX);
-		String pollValueStr = (String) this.getParameterMapName("POLL_INTERVAL",
+		String pollValueStr = (String) this.getParameterValue("POLL_INTERVAL",
 				DeviceModel.MAIN_DEVICE_GROUP);
 		long pollValue = 3000;
 		if (pollValueStr != null && !pollValueStr.equals((""))) {
@@ -574,7 +574,7 @@ public class Model extends AudioModel implements DeviceModel {
 				if (srcNumber == null) {
 					logger.log(Level.SEVERE,
 							"No HAL input device specified in catalogue \""
-									+ this.getParameterMapName("INPUTS",
+									+ this.getParameterValue("INPUTS",
 											DeviceModel.MAIN_DEVICE_GROUP)
 									+ "\" for source " + srcCode);
 					commandFound = true;

@@ -324,7 +324,7 @@ public class ControlledHelper {
 				alertCommand2.setKey ("CLIENT_SEND");
 				alertCommand2.setCommand("ModeChange");
 				alertCommand2.setExtraInfo(comfortString.theParameter);
-				String showKeypad = (String)comfort.getParameterMapName("SHOW_KEYPAD_MODES",DeviceModel.MAIN_DEVICE_GROUP);
+				String showKeypad = (String)comfort.getParameterValue("SHOW_KEYPAD_MODES",DeviceModel.MAIN_DEVICE_GROUP);
 				if (showKeypad == null || showKeypad.equals ("")){
 					showKeypad = "01,04";
 				}

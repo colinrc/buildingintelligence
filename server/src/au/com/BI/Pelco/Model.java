@@ -47,7 +47,7 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 	public void finishedReadingConfig () throws SetupException {
 		super.finishedReadingConfig();
-		String protocol = (String)this.getParameterMapName("PROTOCOL", DeviceModel.MAIN_DEVICE_GROUP);
+		String protocol = (String)this.getParameterValue("PROTOCOL", DeviceModel.MAIN_DEVICE_GROUP);
 		this.setProtocol (protocol);
 
 	}

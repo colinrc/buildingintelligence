@@ -11,6 +11,7 @@ import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.Bootstrap;
 import au.com.BI.Config.ConfigHelper;
+import au.com.BI.Config.ParameterException;
 import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Macro.MacroHandler;
 import au.com.BI.Messaging.AddressBook;
@@ -177,8 +178,28 @@ public interface DeviceModel {
 	public void setCommandQueue (java.util.List commandQueue);
 
 	public void setParameter (String name, String value,String groupName);
-	public String getParameterMapName (String Name,String groupName);
+	public String getParameterValue (String Name,String groupName);
 
+	
+	/**
+	 * Finds the key for a particular catalogue value
+	 * @param srcCode The value
+	 * @param catalogName The catalog to search
+	 * @param device The device that is associated with the command being interpretted
+	 * @exception NumberFormatException,ParameterException
+	 * @return The key
+	 */
+	public String findKeyForParameterValue(String srcCode, String catalogName,DeviceType device)  throws NumberFormatException,ParameterException;
+	
+	/**
+	 * Finds the key for a particular catalogue value
+	 * @param src The value
+	 * @param catalogName The catalog to search
+	 * @param device The device that is associated with the command being interpretted
+	 * @return The key
+	 */
+	public String findKeyForParameterValue(int src, String catalogName,DeviceType device) throws ParameterException;
+		
 	/**
 	 * Raw definitions are used for direct serial strings
 	 * @param raw defs. A map of the definitions.
@@ -216,6 +237,12 @@ public interface DeviceModel {
 	 * established */
 	public void finishedReadingConfig () throws SetupException;
 
+   	/** 
+   	 * A hook which occurs after the configuration parser has read the to level parameters 
+    *	but has not yet begun the individual device entries. 
+    */
+	public void finishedReadingParameters ();
+	
 	/**
 	 * Sets a display name to be used error reporting
 	 * @param displayModel
@@ -362,6 +389,14 @@ public interface DeviceModel {
 	 * @return The formatted key
 	 */
     public String formatKey(String key);
+    
+	/**
+	 * The key is formatted as required by the particular model. Currently pading and decimal/hex can be configured as 
+	 * parameters that this function will use.
+	 * @param key
+	 * @return The formatted key
+	 */
+    public String formatKey(int key);
    
 	/**
 	 * True if decimal to the device requires decimal keys (rare) 

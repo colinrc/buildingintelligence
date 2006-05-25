@@ -156,7 +156,7 @@ public class ConfigHelper {
 
 	public String getCatalogueValue (String ID, String parameterName, DeviceType device) {
 		String value = "";
-		Map rawCatalogue = deviceModel.getCatalogueDef(deviceModel.getParameterMapName(parameterName,device.getGroupName()));
+		Map rawCatalogue = deviceModel.getCatalogueDef(deviceModel.getParameterValue(parameterName,device.getGroupName()));
 		if (rawCatalogue == null ) {
 			logger.log (Level.WARNING ,"Catalogue " + parameterName + " not specified.");	
 			return null;
@@ -272,6 +272,11 @@ public class ConfigHelper {
 		return null;
 	}
 	
+	public final DeviceType getInputItem (int theKey) {
+		String theKeyStr = deviceModel.formatKey(theKey);
+		return this.getInputItem(theKeyStr);
+	}
+	
 	public final DeviceType getInputItem (String theKey) {
 		return inputItems.get(theKey);
 	}
@@ -284,6 +289,10 @@ public class ConfigHelper {
 		return controlledItems.get(theKey);
 	}
 
+	public final DeviceType getControlledItem (int theKey) {
+		String theKeyStr = deviceModel.formatKey(theKey);
+		return this.getControlledItem(theKeyStr);
+	}
 
 	public Vector<ParameterBlock> getParameterBlocks() {
 		return parameterBlocks;

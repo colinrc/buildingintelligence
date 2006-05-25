@@ -47,8 +47,8 @@ public class Model extends BaseModel implements DeviceModel {
 
     public void finishedReadingConfig () throws SetupException {
     	super.finishedReadingConfig();
-		ETX = (String)this.getParameterMapName("ETX",DeviceModel.MAIN_DEVICE_GROUP);
-		STX = (String)this.getParameterMapName("STX",DeviceModel.MAIN_DEVICE_GROUP);
+		ETX = (String)this.getParameterValue("ETX",DeviceModel.MAIN_DEVICE_GROUP);
+		STX = (String)this.getParameterValue("STX",DeviceModel.MAIN_DEVICE_GROUP);
 		
 
 		if (ETX == null) ETX = "";

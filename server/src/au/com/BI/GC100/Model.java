@@ -64,7 +64,7 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 	
 	public void addStartupQueryItem (String name, DeviceType details, int controlType){
-	    if (((String)this.getParameterMapName("MODULE_TYPE" ,details.getGroupName())).equals("IR")
+	    if (((String)this.getParameterValue("MODULE_TYPE" ,details.getGroupName())).equals("IR")
 	            && controlType == DeviceType.INPUT)
 	        configHelper.addStartupQueryItem(details.getKey(),details,controlType);
 	}
@@ -76,7 +76,7 @@ public class Model extends BaseModel implements DeviceModel {
 		
 		if (controlType != DeviceType.OUTPUT) {
 		    			    
-		    String moduleNumber = (String)this.getParameterMapName("MODULE" ,((DeviceType)details).getGroupName());
+		    String moduleNumber = (String)this.getParameterValue("MODULE" ,((DeviceType)details).getGroupName());
 		    String connectorNumber = name;
 		    try {
 		        theKey = String.valueOf(Integer.parseInt(moduleNumber)) + ":" + String.valueOf(Integer.parseInt(connectorNumber));
@@ -241,7 +241,7 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 
 	protected String buildRelayString (ToggleSwitch outswitch, CommandInterface command) {
-		String connector = (String)this.getParameterMapName ("MODULE",outswitch.getGroupName());
+		String connector = (String)this.getParameterValue ("MODULE",outswitch.getGroupName());
 		if (connector.equals("")) {
 			logger.log(Level.SEVERE,"No module number was specified for switch " + outswitch.getName() + " in group " + outswitch.getGroupName());
 			return null;
@@ -259,7 +259,7 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 
 	protected String buildIRString (IR ir, String irName,String repCount) {
-		String module = (String)this.getParameterMapName ("MODULE",ir.getGroupName());
+		String module = (String)this.getParameterValue ("MODULE",ir.getGroupName());
 		int connector = 0;
 		if (module.equals("")) {
 			logger.log(Level.SEVERE,"No module number was specified for IR " + ir.getName() + " in group " + ir.getGroupName());

@@ -46,7 +46,7 @@ public class Config {
         protected Controls controls;
 
 
-		protected HashMap calendar_message_params;
+		protected HashMap <String,String>calendar_message_params;
 		public JRobinParser jRobinParser = null;
 		protected RawHelper rawHelper;
 		protected LightFactory lightFactory;		
@@ -86,7 +86,7 @@ public class Config {
 		this.setAnalogFactory ( AnalogFactory.getInstance());		
 		this.setIRFactory (IRFactory.getInstance());		
 		
-		calendar_message_params = new HashMap (5);
+		calendar_message_params = new HashMap<String,String> (5);
 		calendar_message_params.put ("ICON","");
 		calendar_message_params.put ("HIDECLOSE","HIDECLOSE");
 		calendar_message_params.put ("AUTOCLOSE","ON");
@@ -113,8 +113,8 @@ public class Config {
 	}
 
 
-	public void readConfig(List deviceModels, List clientModels,Cache cache,
-			HashMap variableCache, List commandQueue, Map modelRegistry,
+	public void readConfig(List <DeviceModel>deviceModels, List clientModels,Cache cache,
+			HashMap <String,Object>variableCache, List commandQueue, Map modelRegistry,
 			IRCodeDB irCodeDB, File configFile, MacroHandler macroHandler, 
 			Bootstrap bootstrap, Controls controls, AddressBook addressBook,
 			AlarmLogging alarmLogging)
@@ -133,17 +133,15 @@ public class Config {
 			Document doc = builder.build(configFile);
 			Element theConfig = doc.getRootElement();
 
-			List deviceConfigs = theConfig.getChildren("DEVICE");
-			Iterator deviceConfigList = deviceConfigs.iterator();
-			while (deviceConfigList.hasNext()) {
-				Element config = (Element) deviceConfigList.next();
+			List <Element>deviceConfigs = theConfig.getChildren("DEVICE");
+			for (Element config: deviceConfigs){
 					DeviceModel newDeviceModel = parseDeviceModel(config, deviceModels, clientModels, modelRegistry);
 					if (newDeviceModel != null){
 						logger.log (Level.INFO,"Adding device handler for " + newDeviceModel.getName());
 						parseCatalogueList (config,newDeviceModel);
 						newDeviceModel.setCommandQueue(commandQueue);
 						newDeviceModel.setCache (cache);
-                                                newDeviceModel.setVariableCache(variableCache);
+                       newDeviceModel.setVariableCache(variableCache);
 						newDeviceModel.setMacroHandler(macroHandler);
 						newDeviceModel.setModelList(deviceModels);
 						newDeviceModel.setBootstrap(bootstrap);
@@ -433,6 +431,7 @@ public class Config {
 				readParameters (deviceModel,topLevel,groupName);
 				type = DeviceType.NA;
 				foundElement = true;
+				deviceModel.finishedReadingParameters();
 			}
 			if (topLevelName.equals ("CATALOGUE") || topLevelName.equals("CONNECTION")) {
 				foundElement = true;

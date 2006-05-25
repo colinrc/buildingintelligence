@@ -13,7 +13,9 @@ package au.com.BI.Util;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
+import au.com.BI.Config.ParameterException;
 import au.com.BI.GC100.IRCodeDB;
+import au.com.BI.SignVideo.Model;
 import au.com.BI.User.User;
 import java.util.*;
 import java.util.logging.*;
@@ -66,7 +68,8 @@ public class BaseModel
         protected boolean deviceKeysDecimal = false;
         protected boolean configKeysInDecimal = false;
 		protected int padding = 1; // Number of digits to pad the key too in the device.
-
+		public DeviceType allDevices = null;
+		
 		
 		public User currentUser = null;
 		
@@ -101,13 +104,25 @@ public class BaseModel
 
         public void finishedReadingConfig() throws SetupException {
         	setupParameterBlocks();
+    		allDevices = configHelper.getControlledItem(Model.AllZones);
         };
 
+    	/** 
+       	 * A hook which occurs after the configuration parser has read the to level parameters 
+        *	but has not yet begun the individual device entries. 
+        */
+    	public void finishedReadingParameters (){
+    		if (getParameterValue("DECIMAL_KEYS", DeviceModel.MAIN_DEVICE_GROUP).equals("Y")){
+    			this.setConfigKeysInDecimal(true);
+    		} else {
+      			this.setConfigKeysInDecimal(false);  			
+    		}
+    	}
     	
     	public void setupParameterBlocks() throws SetupException {
     		for (ParameterBlock block: configHelper.getParameterBlocks()){
     			
-	    		String paramDef = (String)this.getParameterMapName(block.getCatalogName(),block.getGroup());
+	    		String paramDef = (String)this.getParameterValue(block.getCatalogName(),block.getGroup());
 	    		if (paramDef == null || paramDef.equals ("")) {
 	    			throw new SetupException ("The " + block.getVerboseName() + " input catalogue name was not specified in the device Parameter block");
 	    		}
@@ -467,7 +482,7 @@ public class BaseModel
          */
         public void attatchComms() throws ConnectionFail {
                 SerialParameters parameters = null;
-                if ( ( (String)this.getParameterMapName("Connection_Type", DeviceModel.MAIN_DEVICE_GROUP)).equals("SERIAL")) {
+                if ( ( (String)this.getParameterValue("Connection_Type", DeviceModel.MAIN_DEVICE_GROUP)).equals("SERIAL")) {
 
                         if (comms != null) {
                                 synchronized (comms) {
@@ -487,7 +502,7 @@ public class BaseModel
                         parameters = new SerialParameters();
                         parameters.buildFromDevice(this);
                         synchronized (comms) {
-                                ( (Serial) comms).connect( (String)this.getParameterMapName("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
+                                ( (Serial) comms).connect( (String)this.getParameterValue("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
                                   parameters, commandQueue, this.getInstanceID(),this.getName());
                                 comms.clearCommandQueue();
                         }
@@ -511,8 +526,8 @@ public class BaseModel
 						if (penultimateArray != null) comms.setPenultimateArray(penultimateArray);
 
                         synchronized (comms) {
-                                ( (IP) comms).connect( (String)this.getParameterMapName("IP_Address", DeviceModel.MAIN_DEVICE_GROUP),
-                                  (String)this.getParameterMapName("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
+                                ( (IP) comms).connect( (String)this.getParameterValue("IP_Address", DeviceModel.MAIN_DEVICE_GROUP),
+                                  (String)this.getParameterValue("Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
                                   commandQueue, this.getInstanceID(), doIPHeartbeat(),getHeartbeatString(),this.getName());
                                 comms.clearCommandQueue();
                         }
@@ -555,7 +570,7 @@ public class BaseModel
                 this.rawDefs.put(name, rawDefs);
         }
 
-        public String getParameterMapName(String name, String groupName) {
+        public String getParameterValue(String name, String groupName) {
                 HashMap <String,String>theMap;
                 if (groupName == null || groupName.equals("")) groupName = DeviceModel.MAIN_DEVICE_GROUP;
 
@@ -590,21 +605,26 @@ public class BaseModel
                 theMap.put(name, value);
                 parameters.put(groupName, theMap);
         }
-
-    	
-    	public String findKeyForParameterValue(String srcCode, String catalogName,DeviceType device) {
+    	    	
+ 
+       	public String findKeyForParameterValue(String srcCode, String catalogName,DeviceType device) throws NumberFormatException, ParameterException {
+       		return findKeyForParameterValue (Integer.parseInt(srcCode) ,catalogName,device);
+       	}
+       	
+        public String findKeyForParameterValue(int srcVal, String catalogName,DeviceType device) throws ParameterException {
     		String groupName = device.getGroupName();
-    		String paramMapName = this.getParameterMapName (catalogName,groupName);
+    		String paramMapName = this.getParameterValue (catalogName,groupName);
     		Map <String,String>inputParameters = this.getCatalogueDef(paramMapName);
     		
-    		String returnVal = "1";
-    		int srcVal = Integer.parseInt(srcCode); 
+    		String returnVal = "";
+    		
     		for (String eachItem: inputParameters.keySet()){
     			int programVal = Integer.parseInt(inputParameters.get(eachItem));
     			if (programVal == srcVal) {
     				returnVal = eachItem;
     			}
     		}
+    		if (returnVal.equals("")) throw new ParameterException ("An input device has been selected which has not been configured, please contact your integrator");
     		return returnVal;
     	}
     	
@@ -884,7 +904,12 @@ public class BaseModel
 		this.configKeysInDecimal = configKeysInDecimal;
 	}
 	
-    public String formatKey(String key) throws NumberFormatException {
+	/**
+	 * Formats a key into the appropriate format for interacting with the config file.
+	 * @return Formatted key
+	 */
+    public String formatKey(int key) throws NumberFormatException {
+    	
 		int padding = getPadding();
 		String formatSpec = "%0";
 		formatSpec += padding;
@@ -894,15 +919,21 @@ public class BaseModel
 		} else {
 			formatSpec += "d";			
 		}
+			
+		return String.format(formatSpec,key);
+    }
+
+	/**
+	 * Formats a key into the appropriate format for interacting with the config file.
+	 * @return Formatted key
+	 */
+    public String formatKey(String key) throws NumberFormatException {
 		int keyInt = 0;
 		if (isConfigKeysInDecimal()){
 			keyInt = Integer.parseInt(key);
 		} else{
 			keyInt = Integer.parseInt(key,16);
 		}
-			
-		return String.format(formatSpec,keyInt);
+    	return formatKey(keyInt);
     }
-	
-
 }

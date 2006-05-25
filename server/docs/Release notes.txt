@@ -1,3 +1,36 @@
+''' Jetty '''
+
+Upraded Jetty to 6b16.
+
+
+''' General '''
+
+Refactoring accross most of the system to help simplify model building.
+Many support methods added to simplify model building.
+    General catalogue support
+    	configHelper.addParameterBlock 
+    	configHelper.getCatalogueValue
+    	findKeyForParameterValue
+    	finishedReadParameters (A hook which occurs after the configuration parser has read the to level parameters 
+    	    but has not yet begun the individual device entries.)
+    	
+    Key formatting 
+        FormatKey  (called automatically as the configuration file is read, formatting is based on the following parameters)
+        setConfigKeysInDecimal    (if the keys have been specified as decimal rather than hex in the configuration file)
+        setKeysInDecimal  (if the device expects decimal keys rather than the normal hex)
+        setPadding  (the number of 0 padded characters to include with the key)
+
+    General Audio Visual state support
+        AV.State
+        
+    Command structures
+        buildCommandForFlash
+        sendToFlash
+        BuildReturnWrapper (to encapsulate the results of any command interpretation in model; either from Flash or from the device)
+        
+    Junit
+        ListOfArrayAssert (A testing class to assist with vectors of byte arrays, as used in the BuildReturnWraper object)
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a2.zip V1.6a2] ==
 
 ''' M1 '''

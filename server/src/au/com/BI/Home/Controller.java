@@ -43,10 +43,10 @@ public class Controller {
 	protected int clientPort = 10000;
 	protected String bindToAddress;
 	protected Config config;
-	protected ArrayList deviceModels;
-	protected ArrayList clientModels;
+	protected ArrayList <DeviceModel>deviceModels;
+	protected ArrayList <DeviceModel>clientModels;
 	protected boolean configLoaded;
-	protected HashMap modelRegistry;
+	protected HashMap <String,String>modelRegistry;
 	protected au.com.BI.Command.Cache cache;
 	protected MacroHandler macroHandler;
 	protected HashMap iRControllers;
@@ -61,7 +61,7 @@ public class Controller {
     protected au.com.BI.Script.Model scriptModel;
     protected JRobinQuery jrobin;
     protected Controls controls;
-    protected HashMap variableCache;
+    protected HashMap <String,Object>variableCache;
     protected HashMap jRobinRRDS;
     protected LogHandler logHandler;
     protected static String RRDBDIRECTORY = ".\\JRobin\\";
@@ -77,13 +77,13 @@ public class Controller {
 	 *
 	 */
 	public Controller() {
-		deviceModels = new ArrayList();
-		clientModels = new ArrayList();
-		modelRegistry = new HashMap (10);
+		deviceModels = new ArrayList<DeviceModel>();
+		clientModels = new ArrayList<DeviceModel>();
+		modelRegistry = new HashMap<String,String> (10);
 		commandQueue = Collections.synchronizedList(new LinkedList());
 		cache = new Cache();
         cache.setController(this);
-        variableCache = new HashMap(20);
+        variableCache = new HashMap<String,Object>(20);
         jRobinRRDS = new HashMap ();
         security = new Security();
         addressBook = new AddressBook();
@@ -141,7 +141,7 @@ public class Controller {
 		scriptModel = new au.com.BI.Script.Model();
 		scriptModel.setCommandQueue(commandQueue);
 		scriptModel.setCache (cache);
-                scriptModel.setVariableCache(variableCache);
+        scriptModel.setVariableCache(variableCache);
 		scriptModel.setMacroHandler(macroHandler);
 		scriptModel.setModelList(deviceModels);
         scriptModel.setController(this);

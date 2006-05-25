@@ -59,7 +59,7 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public void finishedReadingConfig () throws SetupException {
 		super.finishedReadingConfig();
-		String inputsDef = (String)this.getParameterMapName("AV_INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
+		String inputsDef = (String)this.getParameterValue("AV_INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
 		if (inputsDef == null || inputsDef.equals ("")) {
 			throw new SetupException ("The AV source input catalogue was not specified in the device Parameter block");
 		}
@@ -69,7 +69,7 @@ public class Model extends BaseModel implements DeviceModel {
 			throw new SetupException ("The AV Source input catgalogue was not specifed in the  device Parameter block");
 		}
 		
-		String audioInputsDef = (String)this.getParameterMapName("AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
+		String audioInputsDef = (String)this.getParameterValue("AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
 		if (audioInputsDef == null || audioInputsDef.equals ("")) {
 			throw new SetupException ("The audio source input catalogue was not specified in the device Parameter block");
 		}

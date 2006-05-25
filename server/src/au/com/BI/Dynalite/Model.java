@@ -62,7 +62,7 @@ public class Model extends BaseModel implements DeviceModel {
 
     public void finishedReadingConfig() throws SetupException {
     	super.finishedReadingConfig();
-    		String protocolStr = (String)this.getParameterMapName("PROTOCOL","");
+    		String protocolStr = (String)this.getParameterValue("PROTOCOL","");
     		if (protocolStr.equals("CLASSIC")) {
     			this.protocol = DynaliteDevice.Classic;
     		}

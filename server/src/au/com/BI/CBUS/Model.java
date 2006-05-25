@@ -271,7 +271,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public void doStartup() throws CommsFail {
 		if (applicationCodes.isEmpty()) applicationCodes.add("38");
 
-		String pollTempStr = (String)this.getParameterMapName("POLL_TEMP_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
+		String pollTempStr = (String)this.getParameterValue("POLL_TEMP_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
 
 		try {
 			tempPollValue = Long.parseLong(pollTempStr) * 1000;

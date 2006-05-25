@@ -264,7 +264,7 @@ public class OutputHelper {
 		    if (commandBits[1] != null && !commandBits[1].equals("")) {
 				String userID = command.getExtraInfo();
 				if (userID.equals("")) 
-				    userID = (String)comfort.getParameterMapName("Password",DeviceModel.MAIN_DEVICE_GROUP);
+				    userID = (String)comfort.getParameterValue("Password",DeviceModel.MAIN_DEVICE_GROUP);
 				
 			    String alarm_mode = device.getModeCode (commandBits[1]);
 			    

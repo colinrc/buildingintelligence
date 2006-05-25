@@ -267,7 +267,7 @@ public class Model extends BaseModel implements DeviceModel  {
 		startup.doStartup(configHelper, comms, commandQueue);
 		analogueReader.setComms(comms);
 		long analoguePoll = 30000; //default to every 30 seconds
-		String analoguePollValue = (String)this.getParameterMapName("ANALOGUE_POLL_VALUE",DeviceModel.MAIN_DEVICE_GROUP);
+		String analoguePollValue = (String)this.getParameterValue("ANALOGUE_POLL_VALUE",DeviceModel.MAIN_DEVICE_GROUP);
 		if (analoguePollValue != null && !analoguePollValue.equals( (""))){
 			try {
 				analoguePoll = Long.parseLong(analoguePollValue);
@@ -279,7 +279,7 @@ public class Model extends BaseModel implements DeviceModel  {
 		analogueReader.setPollValue(analoguePoll);
 		analogueReader.start();
 
-		String applicationCodeParam = ((String)this.getParameterMapName("CBUS_APPLICATION",DeviceModel.MAIN_DEVICE_GROUP));
+		String applicationCodeParam = ((String)this.getParameterValue("CBUS_APPLICATION",DeviceModel.MAIN_DEVICE_GROUP));
 		if (applicationCodeParam == null || applicationCodeParam.equals (""))
 			applicationCode = "38";
 		else {
@@ -287,7 +287,7 @@ public class Model extends BaseModel implements DeviceModel  {
 		}
 		outputHelper.setApplicationCode(applicationCode);
 
-		String cbus_ucm = (String)this.getParameterMapName("CBUS_UCM",DeviceModel.MAIN_DEVICE_GROUP);
+		String cbus_ucm = (String)this.getParameterValue("CBUS_UCM",DeviceModel.MAIN_DEVICE_GROUP);
 		this.outputHelper.setCBUS_UCM(cbus_ucm);
 	}
 

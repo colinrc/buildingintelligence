@@ -217,17 +217,17 @@ public class TestCommandsFromFlash extends TestCase {
 
 	
 	public void testBuildAudioVolumeRamp() {
-		ClientCommand testCommand = new ClientCommand("ALL","volume",null,"up","","","","");
+		ClientCommand testCommand = new ClientCommand("ALL","volume",null,"ramp_up","","","","");
 		String expectedOut = "*ZALLV+";
 		BuildReturnWrapper val = model.buildAudioString(this.audioAll, testCommand);
 		Assert.assertEquals ("Return value for volume all up failed",expectedOut,val.getCommOutputStrings().firstElement());
 		
-		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"down","","","","");
+		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"ramp_down","","","","");
 		String expectedOut2 = "*Z01VOL-";
 		BuildReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
 		Assert.assertEquals ("Return value for volume zone down failed",expectedOut2,val2.getCommOutputStrings().firstElement());
 		
-		ClientCommand testCommand3 = new ClientCommand("FRONT_AUDIO","volume",null,"up","","","","");
+		ClientCommand testCommand3 = new ClientCommand("FRONT_AUDIO","volume",null,"ramp_up","","","","");
 		String expectedOut3 = "*Z01VOL+";
 		BuildReturnWrapper val3 = model.buildAudioString(audioFrontRoom, testCommand3);
 		Assert.assertEquals ("Return value for volume zone up ",expectedOut3,val3.getCommOutputStrings().firstElement());
