@@ -1,7 +1,8 @@
 package au.com.BI.AV;
 
 public class AVState {
-	String volume = "";
+	String volume = "0";
+	int vol = 0;
 	boolean mute = false;
 	int src = 0;
 	boolean power = false;
@@ -12,10 +13,29 @@ public class AVState {
 		return volume;
 	}
 	
-	public void setVolume(String volume) {
-		this.volume = volume;
+	public int getVolumeAsInt() {
+		return vol;
 	}
 	
+	public void setVolume(String volume) {
+		this.volume = volume;
+		this.vol = Integer.parseInt(volume);
+	}
+	
+	public String volumeUp() {
+		if (vol < 100) vol += 5;
+		if (vol > 100) vol = 100;
+		volume =  String.valueOf(vol);
+		return volume;
+	}
+
+	public String volumeDown() {
+		if (vol > 4) vol -= 5;
+		if (vol < 0)vol = 0;
+		volume =  String.valueOf(vol);
+		return volume;	
+	}
+
 	public boolean testMute(String testVal) {
 		if (testVal.equals (mute))
 			return true;
@@ -30,6 +50,13 @@ public class AVState {
 			return false;
 	}
 		
+	public boolean testVolume(int testVal) {
+		if (testVal == vol)
+			return true;
+		else
+			return false;
+	}
+	
 	public boolean testVolume(String testVal) {
 		if (testVal.equals (volume))
 			return true;
