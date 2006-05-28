@@ -109,7 +109,24 @@ public class Cache {
 			}
         }
         
-        public List getAllCommands (Date startTime, Date endTime){
+
+        public Collection<CacheWrapper> getAllCommands (){
+
+        	
+    		LinkedList<CacheWrapper> result = new LinkedList<CacheWrapper>();
+    		synchronized (cachedCommands){
+    			Collection <CacheWrapper> commandSet = cachedCommands.values();
+
+    			for (CacheWrapper command:commandSet){
+    				if (!command.isSendWithStartup()) {
+    					result.add(command);
+    				}
+    			}
+    		}
+    		return result;	
+        }
+        
+        public Collection<CacheWrapper> getAllCommands (Date startTime, Date endTime){
         		long startLong = startTime.getTime();
         		long endLong = endTime.getTime();
         		LinkedList<CacheWrapper> result = new LinkedList<CacheWrapper>();
@@ -117,19 +134,11 @@ public class Cache {
         			Collection <CacheWrapper> commandSet = cachedCommands.values();
 
         			for (CacheWrapper command:commandSet){
-        				if (command.creationTime >= startLong && command.creationTime < endLong) {
-        					result.add(command.clone());
+        				if (!command.isSendWithStartup() && command.creationTime >= startLong && command.creationTime < endLong) {
+        					//result.add(command.clone());
+        					result.add(command);
         				}
         			}
-        			/*
-        			Iterator commandIter = commandSet.iterator();
-        			while (commandIter.hasNext()){
-        				CacheWrapper command = (CacheWrapper)commandIter.next();
-        				if (command.creationTime >= startLong && command.creationTime < endLong) {
-        					result.add(command.clone());
-        				}
-        			}
-        			*/
         		}
         		return result;	
         }
@@ -147,7 +156,7 @@ public class Cache {
                 }
         }
 		
-        public void setCachedCommandSet(String key, CommandInterface command) {
+        private void setCachedCommandSet(String key, CommandInterface command) {
             if (key.equals("MACRO") || key.equals("CALENDAR") ||
                 key.startsWith("AV:")) {
                     return;
@@ -194,6 +203,8 @@ public class Cache {
         }
         
 
+
+        
         /**
          * Adds a command to the cache, this represents the state of devices
          *
@@ -209,8 +220,27 @@ public class Cache {
          * @param key
          * @param command
          */
-
         public void setCachedCommand(String key, CommandInterface command) {
+        	setCachedCommand(key,  command,  true);
+        }
+
+        /**
+         * Adds a command to the cache, this represents the state of devices
+         *
+         * If the command structure has cacheAllCommands set to true, the call will store every command for a
+         * particular DISPLAY_NAME, otherwise only the most recent for each DISPLAY_NAME will be stored.
+         * <P>
+         * COMMAND=on, COMMAND=off, are exceptions, receiving one will always overwrite the other
+         * <P>
+         * The two different forms are required for different devices.
+         * For example lights only record the last event that occured; but a TV would record the state of on /off
+         * volume, channel etc.
+         *
+         * @param key
+         * @param command
+         * @param includeInStartup If the command should be sent during client startup set this true. Eg. macros
+         */
+        public void setCachedCommand(String key, CommandInterface command, boolean includeInStartup) {
                 if (key.equals("MACRO") || key.equals("CALENDAR") ||
                     key.startsWith("AV:")) {
                         return;
@@ -227,6 +257,7 @@ public class Cache {
                         synchronized (cachedCommands) {
                                 if (cachedCommands.containsKey(key)) {
                                         CacheWrapper oldItem = (CacheWrapper)cachedCommands.get(key);
+                                        if (!includeInStartup) oldItem.setSendWithStartup(includeInStartup);
                                         if (oldItem.isSet()) {
 											oldItem.addToMap (key,command);
 											updateListeners (key,oldItem);
@@ -238,8 +269,9 @@ public class Cache {
                                 }
                                 else {
 									CacheWrapper newItem = new CacheWrapper (key,command);
-                                        cachedCommands.put(key, newItem);
-        								updateListeners (key,newItem);
+                                   cachedCommands.put(key, newItem);
+                                   if (!includeInStartup) newItem.setSendWithStartup(includeInStartup);
+        							 updateListeners (key,newItem);
                                 }
                         }
                 }

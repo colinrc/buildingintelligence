@@ -9,6 +9,7 @@
 
 package au.com.BI.Jetty;
 import au.com.BI.Command.Cache;
+import au.com.BI.Command.CacheWrapper;
 import java.util.logging.*;
 /**
  *
@@ -35,6 +36,11 @@ public class CacheBridgeFactory {
         if (cache != null){
             CacheBridge theBridge = new CacheBridge();
             cache.registerCacheListener(theBridge);
+            synchronized (cache){
+	            for (CacheWrapper item: cache.getAllCommands()) {
+	            	theBridge.set(item.getKey(),item);
+	            }
+            }
             return theBridge;
         } else{
             logger.log (Level.SEVERE,"An attempt was made to create a web cache bridge but the Cache has not yet been initialised.");

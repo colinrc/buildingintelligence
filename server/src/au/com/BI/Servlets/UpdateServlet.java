@@ -25,22 +25,23 @@ public class UpdateServlet extends HttpServlet {
     
     public void doGet (HttpServletRequest req,
            HttpServletResponse resp) throws ServletException,java.io.IOException {
-        
+    	CacheBridge cacheBridge = null;
+    	
         HttpSession session = req.getSession(false);
         if (session == null) {
-            session = req.getSession(true);            
+            session = req.getSession(true);
+            cacheBridge = cacheBridgeFactory.createCacheBridge(session.getCreationTime());
+            session.setAttribute("cacheBridge", cacheBridge);
+        } else {
+        	cacheBridge = (CacheBridge)session.getAttribute("cacheBridge");
         }
         
         
         resp.setContentType("text/html");
 
         java.io.PrintWriter out = resp.getWriter();
+        cacheBridge.getCommands(out);
 
-        out.println("<HTML>");
-        out.println("<BODY>");
-        out.println("<P>First test from get");
-        out.println("</BODY>");
-        out.println("</HTML>");
         resp.flushBuffer();
         resp.setStatus(HttpServletResponse.SC_OK);
         
@@ -60,7 +61,7 @@ public class UpdateServlet extends HttpServlet {
         out.println("<P>Test from post");
         out.println("</BODY>");
         out.println("</HTML>");
-                resp.flushBuffer();
+        resp.flushBuffer();
         resp.setStatus(resp.SC_OK);
     }
     

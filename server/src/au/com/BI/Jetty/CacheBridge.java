@@ -35,8 +35,18 @@ public class CacheBridge implements CacheListener {
         }
     }
     
-    public void getCommands (PrintWriter out,long sinceTime){
-        out.println("<P>reading commands");
+    public void set(String key , CacheWrapper cacheWrapper) {
+        synchronized (commandsToSend){
+            commandsToSend.put(key,cacheWrapper);
+        }
+    }
+    
+    public void getCommands (PrintWriter out){
+        out.println("<HTML>");
+        out.println("<BODY>");
+        out.println("<P>First test from get");
+        out.println("</BODY>");
+        out.println("</HTML>");
     }
     
 }

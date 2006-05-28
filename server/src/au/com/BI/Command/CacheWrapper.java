@@ -7,9 +7,10 @@ import java.util.logging.Logger;
 public class CacheWrapper {
 	boolean isSet = false;
 	CommandInterface command = null;
-	Map map = null;
+	Map<String, CommandInterface> map = null;
 	String key;
 	long creationTime = 0;
+	boolean sendWithStartup = true;
 	protected Logger logger = null;
 	
 	public CacheWrapper (String key, CommandInterface command) {
@@ -21,7 +22,7 @@ public class CacheWrapper {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
-	public CacheWrapper (String key, Map map) {
+	public CacheWrapper (String key, Map<String,CommandInterface> map) {
 		isSet = true;
 		this.key = key;
 		this.map = map;
@@ -36,15 +37,13 @@ public class CacheWrapper {
 		Date now = new Date();
 		creationTime = now.getTime();
 		if (isSet) {
-			map = new HashMap();
+			map = new HashMap<String, CommandInterface>();
 		}
         logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
-    // @TODO enable clone
-    public CacheWrapper clone () {
-    	//return null;
 
+    public CacheWrapper clone () {
     		try {
     			return (CacheWrapper)super.clone();
     		} catch (CloneNotSupportedException ex){
@@ -78,7 +77,7 @@ public class CacheWrapper {
 	}
 	
 	private void makeNewMap () {
-		map = new HashMap();
+		map = new HashMap<String, CommandInterface>();
 		this.creationTime = new Date().getTime();
 		this.isSet = true;
 	}
@@ -111,7 +110,7 @@ public class CacheWrapper {
 		this.command = command;
 	}
 	
-	public void setMap (String key, Map map) {
+	public void setMap (String key, Map <String,CommandInterface>map) {
 		this.key = key;
 		this.creationTime = new Date().getTime();
 		this.map = map;
@@ -119,6 +118,22 @@ public class CacheWrapper {
 	
 	public Long getCreationDate() {
 		return new Long (this.creationTime);
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public boolean isSendWithStartup() {
+		return sendWithStartup;
+	}
+
+	public void setSendWithStartup(boolean sendWithStartup) {
+		this.sendWithStartup = sendWithStartup;
 	}
 
 }

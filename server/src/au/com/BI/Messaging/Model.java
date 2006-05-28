@@ -38,6 +38,7 @@ public class Model
             super();
             this.setName("MESSAGING");
         		logger = Logger.getLogger(this.getClass().getPackage().getName());
+                this.setAutoReconnect(false);
         }
 
         public boolean removeModelOnConfigReload() {
