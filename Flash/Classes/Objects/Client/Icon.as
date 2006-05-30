@@ -25,7 +25,8 @@
 				flag = "error";
 				appendValidationMsg("Function is invalid");
 		}
-		if ((func == "runexe") && param == undefined || param == "") {
+		//only for keyboards
+		if ((func == "runexe") && (param == undefined || param == "")) {
 				flag = "error";
 				appendValidationMsg("Parameter is invalid");
 		}

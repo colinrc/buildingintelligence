@@ -19,9 +19,15 @@
 			} 
 			else {
 				if (lights[light].active =="Y"){
-					if ((lights[light].power == undefined) || (lights[light].power == "")) {
-						flag = "warning";
-						appendValidationMsg("Power Rating is invalid");
+					if (_global.advanced ==true) {
+						if ((lights[light].power == undefined) || (lights[light].power == "")) {
+							flag = "warning";
+							appendValidationMsg("Power Rating is invalid");
+						}
+						if ((lights[light].bla == undefined) || (lights[light].bla == "")) {
+							flag = "warning";
+							appendValidationMsg("Base Link is invalid");
+						}
 					}
 					if ((lights[light].name == undefined) || (lights[light].name == "")) {
 						flag = "warning";
@@ -34,10 +40,6 @@
 					if ((lights[light].key == undefined) || (lights[light].key == "")) {
 						flag = "error";
 						appendValidationMsg("Dynalite Code is invalid");
-					}
-					if ((lights[light].bla == undefined) || (lights[light].bla == "")) {
-						flag = "error";
-						appendValidationMsg("Base Link is invalid");
 					}
 					if ((lights[light].display_name == undefined) || (lights[light].display_name == "")) {
 						flag = "error";

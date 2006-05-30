@@ -319,6 +319,12 @@ _global.isKeyUsed = function(inKey:String):Boolean  {
 	return false;
 };
 /********************************************************/
+_global.makeArray = function(inString:String):Array {
+	//"firstElement", "secondElement", "thirdElement"
+	var myArray:Array = Array(inString);
+	return myArray;
+};
+/********************************************************/
 function createWorkflow(inNode:Object) {
 	_global.workflow.addNode(inNode.object.getKey(), inNode);
 	for (var child in inNode.childNodes) {

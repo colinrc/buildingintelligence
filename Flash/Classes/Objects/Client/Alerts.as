@@ -10,6 +10,7 @@
 	public function isValid():String {
 		var flag = "ok";
 		clearValidationMsg();
+		
 		if (alerts.length == 0) {
 			flag = "error";
 			appendValidationMsg("No Alerts are defined");
@@ -20,14 +21,24 @@
 				appendValidationMsg("Name is invalid");
 			}
 			//keys is a string comma seperated.
+			var theKeys:Array = null;
 			if ((alerts[alert].attributes["keys"] == "") || (alerts[alert].attributes["keys"] == undefined)) {
 				flag = "error";
 				appendValidationMsg("No Keys are used");
 			}
 			else {
-				if (_global.isKeyValid(alerts[alert].attributes["keys"]) == false) {
-					flag = "error";
-					appendValidationMsg(alerts[alert].attributes["keys"]+" Key has changed and is invalid");
+				theKeys = _global.makeArray(alerts[alert].attributes["keys"]);
+				var changedKeys:String = "";
+				for (var key in theKeys) {
+					if (_global.isKeyValid(theKeys[key]) == false) {
+						flag = "error";
+						changedKeys = changedKeys +theKeys[key] + ", ";
+					}
+				}
+				if (changedKeys.length > 0) {
+					//Take off the last comma ans space
+					changedKeys = changedKeys.substring(0, changedKeys.length - 2);						
+					appendValidationMsg(changedKeys+" Key/s has changed and is invalid");
 				}
 			}
 			if ((alerts[alert].attributes["icon"] == "") || (alerts[alert].attributes["icon"] == undefined)) {
