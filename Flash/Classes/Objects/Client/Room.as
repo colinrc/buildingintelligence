@@ -32,7 +32,7 @@
 		var flag = "ok";
 		clearValidationMsg();
 		if ((switchZone == "") || (switchZone == undefined)) {
-			flag = "empty";
+			flag = "ok";
 			appendValidationMsg("SwitchZone is empty");
 		}
 		if ((name == "") || (name == undefined)) {

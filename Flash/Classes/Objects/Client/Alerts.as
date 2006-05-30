@@ -18,6 +18,7 @@
 				flag = "error";
 				appendValidationMsg("Name is invalid");
 			}
+			//keys is a string comma seperated.
 			if ((alerts[alert].attributes["keys"] == "") || (alerts[alert].attributes["keys"] == undefined)) {
 				flag = "error";
 				appendValidationMsg("No Keys are used");
@@ -25,7 +26,7 @@
 			else {
 				if (_global.isKeyValid(alerts[alert].attributes["keys"]) == false) {
 					flag = "error";
-					appendValidationMsg("Key has changed and is invalid");
+					appendValidationMsg(alerts[alert].attributes["keys"]+" Key has changed and is invalid");
 				}
 			}
 			if ((alerts[alert].attributes["icon"] == "") || (alerts[alert].attributes["icon"] == undefined)) {
@@ -33,7 +34,7 @@
 				appendValidationMsg("No Icon is used");
 			}
 			if ((alerts[alert].attributes["fadeOutTime"] == "") || (alerts[alert].attributes["fadeOutTime"] == undefined)) {
-				flag = "error";
+				flag = "empty";
 				appendValidationMsg("No Fade Out Time is used");
 			}
 			

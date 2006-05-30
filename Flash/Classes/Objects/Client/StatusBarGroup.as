@@ -30,10 +30,10 @@
 			flag = "warning";
 			appendValidationMsg("Hide is missing");
 		}
-		if (canOpen == null || canOpen == "") {
+		/*if (canOpen == null || canOpen == "") {
 			flag = "warning";
 			appendValidationMsg("Can Open is missing");
-		}
+		}*/
 		if (controls.length == 0) {
 			flag = "error";
 			appendValidationMsg("No Keys are used");
