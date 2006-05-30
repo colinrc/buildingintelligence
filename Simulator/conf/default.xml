@@ -30,7 +30,7 @@ M1 is port 5006
 	<name>Lounge LV Light</name>
 	<protocol>CBUS</protocol>
 	<type value="SLIDER" >
-		<key>10</key>
+		<key>12</key>
 	</type>
 </control>
 

@@ -71,21 +71,19 @@ public class SimulateCBUS extends SimulateDevice {
 			if (command.equals("01")) {
 				commandFound = true;
 				GUIPanel control = findControl (theKey);
-				gui.changeIcon(control,false);
 				if (control.isHasSlider()){
-					control.setUpdatingSlider(true);
 					gui.changeLevel(control,0);
-					control.setUpdatingSlider(false);
 				}
+				gui.changeIcon(control,false);
 			}
 			if (!commandFound) {
 				GUIPanel control = findControl (theKey);
 				if (control != null){
-					gui.changeIcon(control,true);
 					if (control.isHasSlider()) {
 						String theLevel = in.substring(11,13);
 						try {
 							int intLevel  = Integer.parseInt(theLevel,16);
+							if (intLevel == 0) intLevel = 255;
 							control.setUpdatingSlider(true);
 							gui.changeLevel (control,intLevel);
 							control.setUpdatingSlider(false);
@@ -93,18 +91,17 @@ public class SimulateCBUS extends SimulateDevice {
 							System.out.println ("CBUS string from server was malformed");
 						}
 					}
+					gui.changeIcon(control,true);
 				}
 			}
 		} catch (IndexOutOfBoundsException ex){}
 	}
  
 	public GUIPanel findControl (String theKey){
-		Iterator eachCon = this.gUIPanels.iterator();
-		while (eachCon.hasNext()) {
-			GUIPanel control = (GUIPanel)eachCon.next();
+		for (GUIPanel control: gUIPanels){
 			if (control.getKey().equals(theKey)) {
 				return control;
-			}
+			}			
 		}
 		return null;
 	}

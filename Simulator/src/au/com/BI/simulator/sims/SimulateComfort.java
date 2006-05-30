@@ -76,9 +76,7 @@ public class SimulateComfort extends SimulateDevice {
 		if (!commandFound && in.startsWith("I!") || in.startsWith("O!")) {
 			String theKey = in.substring(2,4);
 			String theCode = in.substring(4,6);
-			Iterator eachCon = this.controls.iterator();
-			while (eachCon.hasNext()) {
-				GUIPanel control = (GUIPanel)eachCon.next();
+			for (GUIPanel control: this.gUIPanels){
 				if (control.getKey().equals(theKey)) {
 					if (theCode.equals("00"))
 						gui.changeIcon(control,false);

@@ -141,6 +141,7 @@ public class Simulator {
 	    }
 	    controls.add(control);
 		gui.addGUIPanel(gUIPanel);
+		sim.addGUIPanel(gUIPanel);
 	}
 	gui.setSimulatorList(simulationDevices);
 	gui.redraw();

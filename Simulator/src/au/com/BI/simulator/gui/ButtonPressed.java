@@ -32,6 +32,8 @@ public class ButtonPressed implements ActionListener {
 					             	gui.setLight(false,gUIPanel);
 				            	 	gUIPanel.getSlider().setValue(0);
 				            	 	control.setUpdatingSlider(false);
+				             }else {
+					             	gui.setLight(false,gUIPanel);
 				             }
 		             } 
 		             if (buttonState == ControlStates.ON) {

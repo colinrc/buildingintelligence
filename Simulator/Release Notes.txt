@@ -1,3 +1,7 @@
+== Released [attachment:wiki:SoftwareReleases:eLife_simulator_2.10.zip V2.10] ==
+
+Corrected problem with lights not updating to off
+
 == Released [attachment:wiki:SoftwareReleases:eLife_simulator_2.7.zip V2.7] ==
 
 Simulator completely rewritten.

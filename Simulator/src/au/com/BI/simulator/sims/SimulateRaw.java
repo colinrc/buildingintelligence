@@ -28,9 +28,7 @@ public class SimulateRaw extends SimulateDevice {
 	public void parseString (String in) {
 		gui.appendToChatBox ("IN.Raw",in);
 		String theKey = in.trim();
-		Iterator eachCon = this.controls.iterator();
-		while (eachCon.hasNext()) {
-			GUIPanel control = (GUIPanel)eachCon.next();
+		for (GUIPanel control:this.gUIPanels){
 			if (control.getOnString().equals(theKey))
 				gui.changeIcon(control,true);
 			if (control.getOffString().equals(theKey))
