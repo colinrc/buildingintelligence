@@ -3014,7 +3014,8 @@ layout = function () {
 		this.date_txt.text = now.dateTimeFormat(_global.settings.clockFormat);
 	}
 	overlay_mc.updateClock();
-	setInterval(overlay_mc, "updateClock", 20000);
+	clearInterval(clockUpdateID);
+	clockUpdateID = setInterval(overlay_mc, "updateClock", 20000);
 	
 	statusBar_mc._x = _global.settings.statusBarX;
 	statusBar_mc._y = _global.settings.statusBarY;
@@ -3037,7 +3038,9 @@ layout = function () {
 				}
 			}
 		}
-		screenLockID = setInterval(screenLock, _global.settings.screenLockTimeout * 1000)
+		clearInterval(screenLockID);
+		screenLockID = setInterval(screenLock, _global.settings.screenLockTimeout * 1000);
+		screenSaver("stop");
 	}
 	
 	tv_mc.update = function (key, state, value) {
