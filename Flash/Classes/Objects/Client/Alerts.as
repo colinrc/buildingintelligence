@@ -1,4 +1,5 @@
 ﻿class Objects.Client.Alerts extends Objects.BaseElement {
+	private var name:String;
 	private var x_pos:String;
 	private var y_pos:String;
 	private var alerts:Array;
@@ -46,6 +47,9 @@
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1, "alerts");
+		if ((name != "") && (name != undefined)) {
+			newNode.attributes["name"] = name;
+		}
 		if ((x_pos != "") && (x_pos != undefined)) {
 			newNode.attributes["x"] = x_pos;
 		}
@@ -67,21 +71,23 @@
 		return "ClientAlerts";
 	}
 	public function getName():String {
-		var newString = "Alerts";
-		if ((x_pos != undefined) && (x_pos != "")) {
-			newString += " X:" + x_pos;
-		}
-		if ((y_pos != undefined) && (y_pos != "")) {
-			newString += " Y:" + y_pos;
+		var newString = "Alert : ";
+		if ((name != undefined) && (name != "")) {
+			newString += name;
 		}
 		return newString;
 	}
 	public function getData():Object {
-		return {x_pos:x_pos, y_pos:y_pos, alerts:alerts, dataObject:this};
+		return {x_pos:x_pos, y_pos:y_pos, name:name, alerts:alerts, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		if (newData.nodeName == "alerts") {
 			alerts = new Array();
+			if (newData.attributes["name"] != undefined) {
+				name = newData.attributes["name"];
+			} else {
+				name = "";
+			}
 			if (newData.attributes["x"] != undefined) {
 				x_pos = newData.attributes["x"];
 			} else {

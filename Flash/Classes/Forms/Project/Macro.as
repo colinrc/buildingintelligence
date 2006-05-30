@@ -142,6 +142,15 @@ class Forms.Project.Macro extends Forms.BaseForm {
 	}
 	private function newItem() {
 		dataGridHandler.addBlankRow();
+		dataGridHandler.addBlankRow();
+		var row = steps_dg.getItemAt(steps_dg.length - 2);
+		row.command.sel = true;
+		var row = steps_dg.getItemAt(steps_dg.length - 1);
+		row.key.sel = false;
+		row.command.label = "pause";
+		row.extra.label = "10";
+		steps_dg.selectedIndex = steps_dg.dataProvider.length - 2;
+		steps_dg.dataProvider.updateViews("change");
 	}
 	public function save():Void {
 		var newSteps = new Array();

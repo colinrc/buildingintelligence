@@ -1,6 +1,7 @@
 ﻿import mx.controls.*;
 import Controls.MapEditor;
 import mx.utils.Delegate;
+
 class Forms.Project.Client.Doors extends Forms.BaseForm {
 	private var doors:Array;
 	private var poly:String;
@@ -14,6 +15,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var dataObject:Object;	
 	private var currentDoor:Object;
+	
 	public function onLoad() {
 		var tempKeys = _global.serverDesign.getKeys();
 		var DPKey = new Array();
@@ -57,7 +59,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			}
 			DP.push(newDoor);
 		}
-		roomEditor.map = "lib/maps/"+map;
+		roomEditor.map = "lib/maps/" + map;
 		roomEditor.mapMode = "doors";
 		roomEditor.poly = poly;
 		roomEditor.doors = DP;			
@@ -76,29 +78,34 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		roomEditor.addEventListener("doorDelete", Delegate.create(this,doorDelete));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		var colourObjectListener = new Object();
+		colourObjectListener.base = this;
 		colourObjectListener.onColourChange = function (newColour:Number){
-			currentDoor.colour1 = "0x"+newColour.toString(16).toUpperCase();
-			_global.unSaved = true;		
-		}	
-		var colourObjectListener2 = new Object();
-		colourObjectListener2.onColourChange = function (newColour:Number){
-			currentDoor.colour2 = "0x"+newColour.toString(16).toUpperCase();
-			_global.unSaved = true;		
+			this.base.currentDoor.colour1 = "0x" + newColour.toString(16).toUpperCase();
+			this.base.roomEditor.refresh();
+			_global.unSaved = true;
 		}	
 		colour1_mc.setCallbackObject(colourObjectListener);
+		var colourObjectListener2 = new Object();
+		colourObjectListener2.base = this;
+		colourObjectListener2.onColourChange = function (newColour:Number){
+			this.base.currentDoor.colour2 = "0x" + newColour.toString(16).toUpperCase();
+			this.base.roomEditor.refresh();
+			_global.unSaved = true;
+		}	
 		colour2_mc.setCallbackObject(colourObjectListener2);
-		key_cmb.addEventListener("change", Delegate.create(this,cmbChange));
-		name_ti.addEventListener("change", Delegate.create(this,nameChange));
-		thickness_ti.addEventListener("change", Delegate.create(this,thicknessChange));
+		key_cmb.addEventListener("change", Delegate.create(this, cmbChange));
+		name_ti.addEventListener("change", Delegate.create(this, nameChange));
+		thickness_ti.addEventListener("change", Delegate.create(this, thicknessChange));
 	}
 	public function cmbChange(eventObj){
 		currentDoor.key = key_cmb.text;
 	}
 	public function nameChange(eventObj){
-		currentDoor.name = name_ti.text;		
+		currentDoor.name = name_ti.text;
 	}
 	public function thicknessChange(eventObj){
-		currentDoor.thickness = thickness_ti.text;		
+		currentDoor.thickness = thickness_ti.text;
+		roomEditor.refresh();
 	}
 	public function save():Void {
 		var newDoors = new Array();
@@ -130,44 +137,44 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		_global.saveFile("Project");
 	}
 	public function doorSelect(eventObj) {
-			currentDoor = eventObj.target;			
-			colour1_mc.setColour(currentDoor.colour);
-			colour2_mc.setColour(currentDoor.colour);
-			thickness_ti.text = currentDoor.thickness;
-			key_cmb.text = currentDoor.key;
-			name_ti.text = currentDoor.name;
-			_global.unSaved = true;					
-		}
-		public function doorAdd(eventObj) {
-			currentDoor = eventObj.target;
-			currentDoor.colour1 = "0xFFFFFF";
-			currentDoor.colour2 = "0xFFFFFF";
-			currentDoor.thickness = "";
-			currentDoor.key = "";
-			currentDoor.name = "";
-			colour1_mc.setColour("0xFFFFFF");
-			colour2_mc.setColour("0xFFFFFF");
-			thickness_ti.text = "";
-			key_cmb.text = "";
-			name_ti.text = "";
-			_global.unSaved = true;
-		}
-		public function doorMove (eventObj) {
-			currentDoor = eventObj.target;					
-			colour1_mc.setColour(currentDoor.colour);
-			colour2_mc.setColour(currentDoor.colour);
-			thickness_ti.text = currentDoor.thickness;
-			key_cmb.text = currentDoor.key;
-			name_ti.text = currentDoor.name;
-			_global.unSaved = true;					
-		}
-		public function doorDelete(eventObj) {
-			colour1_mc.setColour("0xFFFFFF");
-			colour2_mc.setColour("0xFFFFFF");
-			thickness_ti.text = "";
-			key_cmb.text = "";
-			name_ti.text = "";
-			currentDoor = undefined;			
-			_global.unSaved = true;		
-		}	
+		currentDoor = eventObj.target;			
+		colour1_mc.setColour(currentDoor.colour1);
+		colour2_mc.setColour(currentDoor.colour2);
+		thickness_ti.text = currentDoor.thickness;
+		key_cmb.text = currentDoor.key;
+		name_ti.text = currentDoor.name;
+		_global.unSaved = true;					
+	}
+	public function doorAdd(eventObj) {
+		currentDoor = eventObj.target;
+		currentDoor.colour1 = "0xFFFFFF";
+		currentDoor.colour2 = "0xFFFFFF";
+		currentDoor.thickness = "5";
+		currentDoor.key = "";
+		currentDoor.name = "";
+		colour1_mc.setColour("0xFFFFFF");
+		colour2_mc.setColour("0xFFFFFF");
+		thickness_ti.text = "5";
+		key_cmb.text = "";
+		name_ti.text = "";
+		_global.unSaved = true;
+	}
+	public function doorMove (eventObj) {
+		currentDoor = eventObj.target;					
+		colour1_mc.setColour(currentDoor.colour1);
+		colour2_mc.setColour(currentDoor.colour2);
+		thickness_ti.text = currentDoor.thickness;
+		key_cmb.text = currentDoor.key;
+		name_ti.text = currentDoor.name;
+		_global.unSaved = true;					
+	}
+	public function doorDelete(eventObj) {
+		colour1_mc.setColour("0xFFFFFF");
+		colour2_mc.setColour("0xFFFFFF");
+		thickness_ti.text = "";
+		key_cmb.text = "";
+		name_ti.text = "";
+		currentDoor = undefined;			
+		_global.unSaved = true;		
+	}	
 }

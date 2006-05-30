@@ -1,5 +1,6 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
+
 class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 	private var zones:Array;
 	private var zone_dg:DataGrid;
@@ -13,12 +14,14 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 	private var label:String;
 	private var view_cmb:ComboBox;
 	private var view:String;
+	private var macros:Array;
 	private var macro:String;
 	private var macro_lb:Label;
 	private var macro_cmb:ComboBox;
 	private var icon_cmb:ComboBox;
 	private var icon_ldr:Loader;
 	private var icon:String;
+	
 	public function onLoad() {
 		icon_ldr.autoLoad = true;
 		icon_ldr.scaleContent = true;
@@ -30,11 +33,13 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 			newIcon.icon = mdm.Application.path + "lib\\icons\\" + myIcons[myIcon];
 			icon_cmb.addItem(newIcon);
 		}
+		
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
-		};
+		}
 		label_ti.addEventListener("change", changeListener);
+		
 		var tempKeys = _global.serverDesign.getKeys();
 		var DPKey = new Array();
 		for (var key in tempKeys) {
@@ -43,9 +48,19 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 			DPKey.push(tempObject);
 		}
 		label_ti.text = label;
-		view_cmb.text = view;
-		macro_cmb.text = macro;
-		if (view_cmb.text == "today") {
+		for (var i=0; i<view_cmb.length; i++) {
+			if (view_cmb.getItemAt(i).label == view) {
+				view_cmb.selectedIndex = i;
+				break;
+			}
+		}
+		macros = _global.serverDesign.getMacros();
+		for (var i=0; i<macros.length; i++) {
+			macro_cmb.addItem({label:macros[i].name});
+			if (macros[i].name == macro) macro_cmb.selectedIndex = i + 1;
+		}
+		
+		if (view_cmb.selectedItem.label == "today") {
 			macro_cmb._visible = false;
 			new_btn._visible = false;
 			delete_btn._visible = false;
@@ -90,7 +105,7 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 	}
 	public function hideMacros(eventObject:Object) {
 		_global.unSaved = true;		
-		if (view_cmb.text == "today") {
+		if (view_cmb.selectedItem.label == "today") {
 			macro_cmb._visible = false;
 			new_btn._visible = false;
 			delete_btn._visible = false;
@@ -117,10 +132,10 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 	private function save():Void {
 		var newZones = new Array();
 		var newMacro = "";
-		if (view_cmb.text != "today") {
-			newMacro = macro_cmb.text;
+		if (view_cmb.selectedItem.label != "today") {
+			newMacro = macro_cmb.selectedItem.label;
 			var DP = dataGridHandler.getDataGridDataProvider();
-			for (var index = 0; index < DP.length; index++) {
+			for (var index=0; index<DP.length; index++) {
 				var zone = new XMLNode(1, "zone");
 				if (DP[index].label != undefined) {
 					zone.attributes["label"] = DP[index].label;

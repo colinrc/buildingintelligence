@@ -1,11 +1,14 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
+
 class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	private var alerts:Array;
 	private var alerts_dg:DataGrid;
 	private var save_btn:Button;
 	private var new_btn:Button;
 	private var delete_btn:Button;
+	private var name:String;
+	private var name_ti:TextInput;
 	private var x_pos:String;
 	private var x_lb:Label;
 	private var y_pos:String;
@@ -20,13 +23,15 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	//******************************//	
 	private var dataGridHandler:Object;
 	private var dataObject:Object;
+	
 	public function onLoad() {
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
-		};
-		x_lb.addEventListener("change", changeListener);
-		y_lb.addEventListener("change", changeListener);
+		}
+		name_ti.addEventListener("change", changeListener);
+		
+		name_ti.text = name;
 		x_lb.text = x_pos;
 		y_lb.text = y_pos;
 		
@@ -142,7 +147,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			}
 			newAlerts.push(item);
 		}
-		dataObject.setData({alerts:newAlerts});
+		dataObject.setData({name:name_ti.text, alerts:newAlerts});
 		_global.refreshTheTree();		
 		_global.saveFile("Project");
 	}

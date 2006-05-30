@@ -13,7 +13,7 @@
                 <project_file path="./Classes/Forms/Control/PublishServer.as" filetype="as" />
             </project_folder>
             <project_folder name="Project" expanded="true">
-                <project_folder name="Device" expanded="true">
+                <project_folder name="Device" expanded="false">
                     <project_file path="./Classes/Forms/Project/Device/Head.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Connection.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/IP.as" filetype="as" />
@@ -58,7 +58,7 @@
                     <project_file path="./Classes/Forms/Project/JRobin/Data.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/JRobin/JRobin.as" filetype="as" />
                 </project_folder>
-                <project_folder name="Client" expanded="false">
+                <project_folder name="Client" expanded="true">
                     <project_file path="./Classes/Forms/Project/Client/BooleanEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/ColourEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/NumberEdit.as" filetype="as" />
@@ -223,11 +223,11 @@
             <project_file path="./Classes/Objects/MonitorConnection.as" filetype="as" />
             <project_file path="./Classes/Objects/SFTPConnection.as" filetype="as" />
         </project_folder>
-        <project_folder name="Utils" expanded="true">
+        <project_folder name="Utils" expanded="false">
             <project_file path="./Classes/Utils/Base64.as" filetype="as" />
             <project_file path="./Classes/Utils/XMLHighlighter.as" filetype="as" />
         </project_folder>
-        <project_folder name="Controls" expanded="false">
+        <project_folder name="Controls" expanded="true">
             <project_file path="./Classes/Controls/SplitPanel.as" filetype="as" />
             <project_file path="./Classes/Controls/MapEditor.as" filetype="as" />
             <project_file path="./Classes/Controls/OutputPanel.as" filetype="as" />

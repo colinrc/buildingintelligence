@@ -408,6 +408,7 @@ mdm.Menu.Main.insertItem("File", "Save Project As..");
 mdm.Menu.Main.insertDivider("File");
 mdm.Menu.Main.insertItem("File", "Exit");
 mdm.Menu.Main.insertItem("Help", "Help");
+mdm.Menu.Main.insertItem("Help", "About");
 mdm.Menu.Main.onMenuClick_New_Project = function() {
 	_global.projectFileName = "";
 	_global.project = new Object();
@@ -470,6 +471,9 @@ mdm.Menu.Main.onMenuClick_Help = function() {
 		mdm.Process.create("", 0, 0, 500, 600, "", "hh.exe " + currentPath + "eLIFEAdminTool.chm", currentPath, 3, 4);
 	}
 };
+mdm.Menu.Main.onMenuClick_About = function() {
+	mdm.Forms.About.showModal();
+}
 mdm.Menu.Main.onMenuClick_Exit = function() {
 	appExit();
 };

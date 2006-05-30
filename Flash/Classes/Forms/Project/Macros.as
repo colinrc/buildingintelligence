@@ -1,5 +1,6 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
+
 class Forms.Project.Macros extends Forms.BaseForm {
 	private var macros:Array;
 	private var macros_dg:DataGrid;
@@ -7,7 +8,8 @@ class Forms.Project.Macros extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var save_btn:Button;
 	private var dataGridHandler:Object;
-	private var dataObject:Object;	
+	private var dataObject:Object;
+	
 	public function onLoad() {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;

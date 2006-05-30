@@ -125,7 +125,7 @@ class Controls.MapEditor extends MovieClip {
 	
 	public function set snap(snap:Boolean):Void {
 		if (snap) {
-			_snapToGrid = 5;
+			_snapToGrid = 3;
 		} else {
 			_snapToGrid = 1;
 		}
@@ -166,6 +166,13 @@ class Controls.MapEditor extends MovieClip {
 		
 		scrollPane_sp._width = __width;
 		scrollPane_sp._height = __height - scrollPane_sp._y;
+	}
+	
+	public function refresh() {
+		drawPoly();
+		if (this.mapMode == "alertGroups") drawAlerts();
+		if (this.mapMode == "roomPoly") drawHandles();
+		if (this.mapMode == "doors") drawDoors();
 	}
 	
 	/* Constructor */
@@ -476,10 +483,10 @@ class Controls.MapEditor extends MovieClip {
 		var door_mc:MovieClip = doors_mc["door" + idx + "_mc"];
 		
 		var thickness = (_doors[idx].thickness > 0) ? _doors[idx].thickness : 5;
-		var colour = (_doors[idx].colour.split(",").length > 1) ? _doors[idx].colour.split(",")[1] : _doors[idx].colour;
+		var colour = _doors[idx].colour1;
 
 		var line_mc = door_mc.createEmptyMovieClip("line_mc", 50);
-				
+		
 		line_mc.lineStyle(thickness, colour, 90, true, "normal", "none");
 		line_mc.moveTo(coords[0], coords[1]);
 		line_mc.lineTo(coords[2], coords[3]);
@@ -572,7 +579,7 @@ class Controls.MapEditor extends MovieClip {
 	private function addDoor(x:Number, y:Number):Void {
 		x = Math.round(x / _snapToGrid) * _snapToGrid;
 		y = Math.round(y / _snapToGrid) * _snapToGrid;
-		_doors.push({door:x + "," + y + "," + (x + 50) + "," + y, colour:"0xCC0000", thickness:5});
+		_doors.push({door:x + "," + y + "," + (x + 50) + "," + y, colour1:"0xCC0000", thickness:5});
 		dispatchEvent({type:"doorAdd", target:doors[doors.length - 1]});
 		drawDoors();
 	}
