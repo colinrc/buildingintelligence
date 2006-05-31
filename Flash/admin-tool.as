@@ -173,11 +173,11 @@ server_xml.onLoad = function(success) {
 /**************************************************************************************/
 function openFile(openType:String):Void {
 	mdm.Dialogs.BrowseFile.buttonText = "Open";
-	mdm.Dialogs.BrowseFile.title = "Please select a " + openType + ".xml file to open";
-	mdm.Dialogs.BrowseFile.dialogText = "Select a " + openType + ".xml to Use";
-	mdm.Dialogs.BrowseFile.defaultExtension = "xml";
-	mdm.Dialogs.BrowseFile.filterList = "XML Files|*.xml";
-	mdm.Dialogs.BrowseFile.filterText = "XML Files|*.xml";
+	mdm.Dialogs.BrowseFile.title = "Please select a " + openType + ".elp file to open";
+	mdm.Dialogs.BrowseFile.dialogText = "Select a " + openType + ".elp to Use";
+	mdm.Dialogs.BrowseFile.defaultExtension = "elp";
+	mdm.Dialogs.BrowseFile.filterList = "eLIFE Project Files|*.elp";
+	mdm.Dialogs.BrowseFile.filterText = "eLIFE Project Files|*.elp";
 	var file = mdm.Dialogs.BrowseFile.show();
 	if (file != "false") {
 		switch (openType) {
@@ -220,8 +220,8 @@ _global.saveFile = function(saveType:String):Void  {
 			mdm.Dialogs.BrowseFile.title = "Please select a location to save to";
 			mdm.Dialogs.BrowseFile.dialogText = "Please select a location to save to";
 			mdm.Dialogs.BrowseFile.defaultExtension = "xml";
-			mdm.Dialogs.BrowseFile.filterList = "XML Files|*.xml";
-			mdm.Dialogs.BrowseFile.filterText = "XML Files|*.xml";
+			mdm.Dialogs.BrowseFile.filterList = "eLIFE Project Files|*.elp";
+			mdm.Dialogs.BrowseFile.filterText = "eLIFE Project Files|*.elp";
 			var tempString = mdm.Dialogs.BrowseFile.show();
 			if (tempString != "false") {
 				_global.projectFileName = tempString;
@@ -452,9 +452,9 @@ mdm.Menu.Main.onMenuClick_Save_Project_As__ = function() {
 	mdm.Dialogs.BrowseFile.buttonText = "Save Project";
 	mdm.Dialogs.BrowseFile.title = "Please select a location to save to";
 	mdm.Dialogs.BrowseFile.dialogText = "Please select a location to save to";
-	mdm.Dialogs.BrowseFile.defaultExtension = "xml";
-	mdm.Dialogs.BrowseFile.filterList = "XML Files|*.xml";
-	mdm.Dialogs.BrowseFile.filterText = "XML Files|*.xml";
+	mdm.Dialogs.BrowseFile.defaultExtension = "elp";
+	mdm.Dialogs.BrowseFile.filterList = "eLIFE Project Files|*.elp";
+	mdm.Dialogs.BrowseFile.filterText = "eLIFE Project Files|*.elp";
 	var tempString = mdm.Dialogs.BrowseFile.show();
 	if (tempString != "false") {
 		_global.projectFileName = tempString;
@@ -1094,53 +1094,16 @@ _global.right_tree.addEventListener('nodeClose', treeListener);
 _global.right_tree.addEventListener('nodeOpen', treeListener);
 //_global.workflow.buildWorkflowTree();
 /************************************************************************/
-//create the tooltip clip 
-_root.createEmptyMovieClip("ToolTip", 15999);
-// add the tooltip background box 
-_root.ToolTip.createEmptyMovieClip("TipBackground", 1);
-with (_root.ToolTip.TipBackground) {
-	beginFill(0xCCCCCC, 100);
-	lineStyle(1, 0x666666, 100);
-	moveTo(0, 0);
-	lineTo(110, 0);
-	lineTo(110, 20);
-	lineTo(0, 20);
-	lineTo(0, 0);
-	endFill();
-}
-// add the tooltip textfield. you could easily apply a 
-// textFormat to this to customise the text more.
-_root.ToolTip.createTextField("TipText", 2, 2, 0, 100, 20);
-_root.ToolTip.TipText.type = "dynamic";
-// mouse listener for tooltips 
-TipMover = new Object();
-TipMover.onMouseMove = function() {
-	ToolTip._x = _xmouse;
-	ToolTip._y = _ymouse + 20;
-};
+//create the tooltip clip
+_root.tooltip_mc.swapDepths(15998);
 // adds a text-description of the buttons function 
 function DisplayTip(tip) {
-	Mouse.addListener(TipMover);
-	ToolTip._x = _xmouse;
-	ToolTip._y = _ymouse + 20;
-	ToolTip.swapDepths(15999);
-	ToolTip._width = 100;
-	ToolTip._height = 20;
-	ToolTip._alpha = 100;
-	ToolTip.TipText.text = tip;
-	ToolTip.TipText.width = ToolTip.TipText.textWidth;
-	ToolTip.TipBackground._width = ToolTip.TipText.textWidth + 8;
+	_root.tooltip_mc.text = tip;
+	_root.tooltip_mc.show(200, true);
 }
 // hide tip 
 function CloseTip() {
-	Mouse.removeListener(TipMover);
-	ToolTip._alpha = 100;
-	ToolTip._x = 0;
-	ToolTip._y = 0;
-	ToolTip._width = 1;
-	ToolTip._height = 1;
+	_root.tooltip_mc.hide(300);
 }
-// hide the tip initially 
-CloseTip();
 /*************************************************************************/
 stop();

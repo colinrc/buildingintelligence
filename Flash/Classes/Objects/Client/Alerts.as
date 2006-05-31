@@ -117,6 +117,7 @@
 		}
 	}
 	public function setData(newData:Object):Void {
+		name = newData.name;
 		alerts = newData.alerts;
 	}
 	public function getUsedKeys():Array{
