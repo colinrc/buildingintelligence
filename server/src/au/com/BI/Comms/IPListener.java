@@ -211,6 +211,9 @@ public class IPListener extends Thread implements CommsListener
 			}
 			if (endPrev > endPos) {
 				logger.log (Level.SEVERE,"Error in IP receiving. endPos=" + endPos + " endPrev="+endPrev + " buf="+new String(readArray));
+				endPos = 0;
+				endPrev= 0;
+				curPos = 0;
 			}
 			for (curPos = endPrev; curPos < endPos ; curPos ++) {
 				if (readArray[curPos] == '\r' || readArray[curPos] == '\n' ) {

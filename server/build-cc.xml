@@ -2,6 +2,7 @@
     <description>
         The eLife application
     </description>
+
 	
 <target name="jar"  >
 	<jar destfile="Build/eLife.jar" 

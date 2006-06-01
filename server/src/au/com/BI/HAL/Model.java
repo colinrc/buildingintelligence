@@ -18,27 +18,28 @@ import java.util.logging.*;
 
 import au.com.BI.Audio.*;
 
-public class Model extends AudioModel implements DeviceModel {
+public class Model extends BaseModel implements DeviceModel {
 
 	protected String outputAudioCommand = "";
-	protected HashMap inputs;
 	protected HashMap state;
 	protected char ETX = '\r';
 	protected String intercom;
-	protected HashMap HALMessages;
+	protected HashMap <String,String>HALMessages;
 	protected PollDevice pollDevice;
 	protected boolean intercomChanged = true;
 
 	public Model() {
 		super();
-
+		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		state = new HashMap(64);
 		intercom = "off";
 		loadHALMessages();
+		configHelper.addParameterBlock ("INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Source inputs");
+		configHelper.addParameterBlock ("FUNCTIONS",DeviceModel.MAIN_DEVICE_GROUP,"Audio functions");
 	}
 
 	public void loadHALMessages() {
-		HALMessages = new HashMap(12);
+		HALMessages = new HashMap<String,String>(12);
 		HALMessages.put("SYSTEM POWERSAVE EXECUTING", "W");
 		HALMessages.put("INTERCOM EXECUTING", "W");
 		HALMessages.put("IR MACRO SENDING - PLEASE WAIT", "W");
@@ -189,14 +190,6 @@ public class Model extends AudioModel implements DeviceModel {
 		synchronized (state){
 			state.clear();
 		}
-		String inputsDef = (String) this.getParameterValue("INPUTS",
-				DeviceModel.MAIN_DEVICE_GROUP);
-		if (inputsDef == null)
-			logger.log(Level.SEVERE,
-							"No input catalogue was specifed for HAL in the configuration file");
-		else
-			inputs = (HashMap) this.getCatalogueDef(inputsDef);
-
 		this.startPolling();
 	}
 
@@ -525,26 +518,14 @@ public class Model extends AudioModel implements DeviceModel {
 			
 			String commandSrc = command.getExtra2Info();
 			if (commandSrc != null && !commandSrc.equals("")){
-				srcForCommand = (String)inputs.get(commandSrc);
-				if (srcForCommand == null || srcForCommand.equals("")){
-					logger.log (Level.WARNING,"A send audio command was sent to HAL specifying a source " + command.getExtra2Info() + 
-							" which is not listed in the catalogue");
-				}
+				srcForCommand = configHelper.getCatalogueValue(commandSrc, "INPUTS",device);
 			} else {
 				srcForCommand = currentState.getSrc();
 				if (srcForCommand == null)
 					srcForCommand = "0";
 			}
-			
-			String functionStr = (String) functions.get((String) command
-					.getExtraInfo());
+			String functionStr = configHelper.getCatalogueValue(command.getExtraInfo(), "FUNCTIONS",device);
 			if (functionStr == null || functionStr.equals("")) {
-				logger
-						.log(
-								Level.WARNING,
-								"A command "
-										+ (String) command.getExtraInfo()
-										+ " was sent to the HAL which is not configured in the server catalogue");
 				commandFound = false;
 			} else {
 				try {
@@ -564,8 +545,8 @@ public class Model extends AudioModel implements DeviceModel {
 			commandFound = true;
 		}
 		if (theCommand.equals("src")) {
-			String srcCode = (String) command.getExtraInfo();
-			String srcNumber = (String) inputs.get(srcCode);
+			String srcCode = command.getExtraInfo();
+			String srcNumber = configHelper.getCatalogueValue(srcCode, "INPUTS",device);
 			if (srcCode == null) {
 				logger.log(Level.SEVERE,
 								"HAL source command from client did not set the parameter in the EXTRA field.");

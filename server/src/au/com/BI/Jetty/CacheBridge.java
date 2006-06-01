@@ -20,6 +20,7 @@ import java.io.*;
  */
 public class CacheBridge implements CacheListener {
         Hashtable <String,CacheWrapper>commandsToSend;
+        long ID = 0;
         
     protected Logger logger = null;
     
@@ -29,13 +30,11 @@ public class CacheBridge implements CacheListener {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
     }
     
-    public void cacheUpdated(String key, CacheWrapper cacheWrapper) {
-        synchronized (commandsToSend){
-            commandsToSend.put(key,cacheWrapper);
-        }
-    }
-    
-    public void set(String key , CacheWrapper cacheWrapper) {
+    public void addToCommandQueue(String key , CacheWrapper cacheWrapper) {
+    	if (cacheWrapper.getTargetID() > 0 && cacheWrapper.getTargetID() != this.ID){
+    		return ;
+    	}
+    	
         synchronized (commandsToSend){
             commandsToSend.put(key,cacheWrapper);
         }
@@ -45,8 +44,22 @@ public class CacheBridge implements CacheListener {
         out.println("<HTML>");
         out.println("<BODY>");
         out.println("<P>First test from get");
+        synchronized (commandsToSend){
+        	for (String key:commandsToSend.keySet()){
+        		out.println("<P>"+key);
+        	}
+        	commandsToSend.clear();
+        }
         out.println("</BODY>");
         out.println("</HTML>");
     }
+
+	public long getID() {
+		return ID;
+	}
+
+	public void setID(long id) {
+		ID = id;
+	}
     
 }

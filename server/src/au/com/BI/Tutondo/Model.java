@@ -11,6 +11,7 @@ package au.com.BI.Tutondo;
 */
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
+import au.com.BI.Config.ParameterException;
 import au.com.BI.Util.*;
 
 import java.util.*;
@@ -18,7 +19,7 @@ import java.util.logging.*;
 
 import au.com.BI.Audio.*;
 
-public class Model extends AudioModel implements DeviceModel {
+public class Model extends BaseModel implements DeviceModel {
 	
 	protected String outputAudioCommand = "";
 	protected HashMap state;
@@ -30,9 +31,12 @@ public class Model extends AudioModel implements DeviceModel {
 	
 	public Model () {
 		super();
+		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		tutondoHelper = new TutondoHelper();
 		pollDevice = null;
 		protocolB = true;
+		configHelper.addParameterBlock ("INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Source inputs");
+		configHelper.addParameterBlock ("FUNCTIONS",DeviceModel.MAIN_DEVICE_GROUP,"Audio functions");
 	}
 
 	public void clearItems () {
@@ -99,22 +103,16 @@ public class Model extends AudioModel implements DeviceModel {
 	}
 	
 	
-	public void updateClient(String zone,StateOfZone currentState) {
-		Audio audioDevice = (Audio)configHelper.getControlledItem(zone);
-		if (audioDevice == null) return;
-		sendStatus (currentState, commandQueue, -1, audioDevice);
+	public void updateClient(Audio device,StateOfZone currentState) {
+		sendStatus (currentState, commandQueue, -1, device);
 	}
 	
-	public void updateClientVolume(String zone,StateOfZone currentState) {
-		Audio audioDevice = (Audio)configHelper.getControlledItem(zone);
-		if (audioDevice == null) return;
-		sendVolume (commandQueue, -1, audioDevice, currentState.getVolume());	
+	public void updateClientVolume(Audio device,StateOfZone currentState) {
+		sendVolume (commandQueue, -1, device, currentState.getVolume());	
 	}
 	
-	public void updateClientSrc(String zone,StateOfZone currentState) {
-		Audio audioDevice = (Audio)configHelper.getControlledItem(zone);
-		if (audioDevice == null) return;
-		sendSrc (commandQueue, -1, audioDevice, currentState.getSrc());	
+	public void updateClientSrc(Audio device,StateOfZone currentState) {
+		sendSrc (commandQueue, -1, device, currentState.getSrc());	
 	}
 	
 	public void doClientStartup (List commandQueue, long targetFlashDeviceID) {
@@ -252,6 +250,7 @@ public class Model extends AudioModel implements DeviceModel {
 		boolean commandMatched = false;
 		String tutondoResponse = command.getKey();
 		CommsCommand lastCommandSent ;
+		Audio audioDevice = null;
 		
 		synchronized (comms) {
 
@@ -268,6 +267,8 @@ public class Model extends AudioModel implements DeviceModel {
 					tutondoCode = Integer.parseInt(responseParts[4]);
 					int tmpZone = Integer.parseInt(responseParts[2]);
 					zone = Integer.toString(tmpZone);
+					if (audioDevice == null) return;
+					audioDevice = (Audio)configHelper.getControlledItem(zone);
 					logger.log(Level.FINEST, "Received byte " + responseParts[4] + " from tutondo for zone " + zone);
 					respCommand = Integer.parseInt(responseParts[1]);
 					respParam = Integer.parseInt(responseParts[3]);
@@ -298,6 +299,8 @@ public class Model extends AudioModel implements DeviceModel {
 				tutondoCode = (byte)tutondoResponse.charAt(0);
 				logger.log(Level.FINEST, "Received byte " + String.valueOf(tutondoCode) + " from tutondo for zone " + lastCommandSent.getKey());
 				zone = lastCommandSent.getKey();				
+				audioDevice = (Audio)configHelper.getControlledItem(zone);
+				if (audioDevice == null) return;
 			}
 
 			StateOfZone currentState;
@@ -355,9 +358,17 @@ public class Model extends AudioModel implements DeviceModel {
 				String srcCode = String.valueOf(tutondoCode);
 				this.setCurrentSrc(zone,srcCode);
 				currentState.setSrcCode(srcCode);
-				String src = findSrc (srcCode);
-				currentState.setSrc(src);
-				this.setCurrentState(zone, currentState);
+				String src;
+				try {
+					src = findKeyForParameterValue(srcCode, "INPUTS",audioDevice);
+					currentState.setSrc(src);
+					this.setCurrentState(zone, currentState);
+				} catch (NumberFormatException e) {
+					logger.log (Level.WARNING,"An incorrect response was received from the Tutondo for the source");
+				} catch (ParameterException e) {
+					logger.log (Level.WARNING,"An input was selected from Tutondo that was not configured.");
+				} 
+
 			}
 			
 			if (!commandMatched && !protocolB){
@@ -368,17 +379,17 @@ public class Model extends AudioModel implements DeviceModel {
 			if (currentState.getIsDirty()) {
 				currentState.setIsDirty(false);
 				logger.log (Level.FINER,"Updating Tutondo information for zone " + zone);
-				updateClient (zone,currentState);
+				updateClient (audioDevice,currentState);
 			}
 			if (currentState.isVolumeDirty()) {
 				currentState.setVolumeDirty(false);
 				logger.log (Level.FINER,"Updating Tutondo volume for zone " + zone);
-				updateClientVolume (zone,currentState);
+				updateClientVolume (audioDevice,currentState);
 			}
 			if (currentState.isSrcDirty()) {
 				currentState.setSrcDirty(false);
 				logger.log (Level.FINER,"Updating Tutondo src information for zone " + zone);
-				updateClientSrc (zone,currentState);
+				updateClientSrc (audioDevice,currentState);
 			}
 		}
 	}
@@ -395,20 +406,7 @@ public class Model extends AudioModel implements DeviceModel {
 			return "";
 		}
 	}
-	
-	public String findSrc(String srcCode) {
-		String returnVal = "1";
-		Iterator inputItems = inputs.keySet().iterator();
-		int srcVal = Integer.parseInt(srcCode); 
-		while (inputItems.hasNext()) {
-			String inputKey = (String)inputItems.next();
-			int programVal = Integer.parseInt((String)inputs.get(inputKey));
-			if (programVal == srcVal) {
-				returnVal = inputKey;
-			}
-		}
-		return returnVal;
-	}
+
 	
 	public byte[] buildAudioString (Audio device, CommandInterface command){
 		byte[] audioOutputString = null;
@@ -551,7 +549,7 @@ public class Model extends AudioModel implements DeviceModel {
 		    }
 		}
 		if (theCommand.equals("send_audio_command")) {
-			String functionStr = (String)functions.get((String)command.getExtraInfo());
+			String functionStr = configHelper.getCatalogueValue(command.getExtraInfo(), "FUNCTIONS",device);
 			if (functionStr == null || functionStr.equals ("")) {
 				logger.log(Level.WARNING,"A command " +  (String)command.getExtraInfo() + " was sent to the tutondo which is not configured in the server catalogue");
 				commandFound = false;
@@ -559,7 +557,7 @@ public class Model extends AudioModel implements DeviceModel {
 			else {
 				String commandSrc = command.getExtra2Info();
 				if (commandSrc != null && !commandSrc.equals("")){
-					commandSrc = (String)inputs.get(commandSrc);
+					commandSrc = configHelper.getCatalogueValue(command.getExtraInfo(), "INPUTS",device);
 					if (commandSrc == null || commandSrc.equals("")){
 						logger.log (Level.WARNING,"A send audio command was sent to tutondo specifying a program (source) " + command.getExtra2Info() + 
 								" which is not listed in the catalogue");
@@ -578,7 +576,7 @@ public class Model extends AudioModel implements DeviceModel {
 			}
 		}
 		if (theCommand.equals("src")) {
-			String srcCode = (String)inputs.get((String)command.getExtraInfo());
+			String srcCode = configHelper.getCatalogueValue(command.getExtraInfo(), "INPUTS",device);
 			try {
 				int src = Integer.parseInt(srcCode);
 				setCurrentSrc(device.getKey(),srcCode);

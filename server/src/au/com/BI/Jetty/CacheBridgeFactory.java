@@ -35,10 +35,11 @@ public class CacheBridgeFactory {
     public CacheBridge createCacheBridge(long ID) {
         if (cache != null){
             CacheBridge theBridge = new CacheBridge();
+            theBridge.setID(ID);
             cache.registerCacheListener(theBridge);
             synchronized (cache){
 	            for (CacheWrapper item: cache.getAllCommands()) {
-	            	theBridge.set(item.getKey(),item);
+	            	theBridge.addToCommandQueue(item.getKey(),item);
 	            }
             }
             return theBridge;

@@ -173,18 +173,19 @@ public class FlashControlListener extends Thread {
 	}
 	flashConnection.setKeepAlive(true);
 	logger.info("Client connection received");
-	FlashClientHandler flashClientHandler = new FlashClientHandler(flashConnection,commandList,flashControllers,addressBook);
-	flashClientHandler.setID(System.currentTimeMillis());
+	ClientCommandFactory clientCommandFactory = new ClientCommandFactory();
+	clientCommandFactory.setID(System.currentTimeMillis());
+	clientCommandFactory.setAddressBook(addressBook);
+	FlashClientHandler flashClientHandler = new FlashClientHandler(flashConnection,commandList,flashControllers,clientCommandFactory);
 	flashClientHandler.setConnectionTime(System.currentTimeMillis());
 	flashClientHandler.setServerID(this.getServerID());
 	flashClientHandler.setMacroHandler(macroHandler);
-	flashClientHandler.setEventCalendar(eventCalendar);
 	
 	
 	synchronized (flashControllers) {
 	    flashControllers.add(flashClientHandler);
 	}
-	newClient(flashClientHandler,flashClientHandler.getID(),this.getServerID());
+	newClient(flashClientHandler,clientCommandFactory.getID(),this.getServerID());
 	doStartupCacheItems(flashClientHandler);
 	flashClientHandler.start();
 	

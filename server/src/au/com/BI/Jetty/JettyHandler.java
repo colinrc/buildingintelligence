@@ -112,7 +112,7 @@ public class JettyHandler {
             
             // Start the http server
             server.start ();
-            server.join();
+            //server.join();
         } catch (Exception ex){
             logger.log (Level.WARNING,"Problems starting web server");
             throw ex;

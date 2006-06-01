@@ -195,10 +195,9 @@ public class Cache {
     }
 		
         public void updateListeners (String key, CacheWrapper cacheWrapper) {
-        	Iterator eachListener = cacheListeners.iterator();
-        	while (eachListener.hasNext()){
-        		CacheListener cacheListener = (CacheListener)eachListener.next();
-        		cacheListener.cacheUpdated(key, (CacheWrapper)cacheWrapper.clone());
+        	for (CacheListener cacheListener:cacheListeners){
+        		//cacheListener.cacheUpdated(key, (CacheWrapper)cacheWrapper.clone());
+        		cacheListener.addToCommandQueue(key, cacheWrapper);
         	}
         }
         

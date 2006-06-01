@@ -12,6 +12,7 @@ public class CacheWrapper {
 	long creationTime = 0;
 	boolean sendWithStartup = true;
 	protected Logger logger = null;
+	protected long targetID = 0;
 	
 	public CacheWrapper (String key, CommandInterface command) {
 		isSet = false;
@@ -134,6 +135,14 @@ public class CacheWrapper {
 
 	public void setSendWithStartup(boolean sendWithStartup) {
 		this.sendWithStartup = sendWithStartup;
+	}
+
+	public long getTargetID() {
+		return targetID;
+	}
+
+	public void setTargetID(long targetID) {
+		this.targetID = targetID;
 	}
 
 }
