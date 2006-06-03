@@ -221,6 +221,7 @@ public class GUIPanel {
 	}
 
 	public void setUpdatingSlider(boolean updatingSlider) {
+		control.setUpdatingSlider(updatingSlider);
 		this.updatingSlider = updatingSlider;
 	}
 

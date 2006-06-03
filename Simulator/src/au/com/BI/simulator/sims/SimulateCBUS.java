@@ -67,6 +67,9 @@ public class SimulateCBUS extends SimulateDevice {
 				commandFound = true;
 				GUIPanel control = findControl (theKey);
 				gui.changeIcon(control,true);
+				if (control.isHasSlider()){
+					gui.changeLevel(control,254);
+				}
 			}
 			if (command.equals("01")) {
 				commandFound = true;

@@ -416,9 +416,6 @@ public class GUI extends JPanel implements ItemListener {
 	   }
 	   
 	   public void setLevel (GUIPanel control,int level) {
-		   if (control == null) {
-			   return;
-		   }
 		   if (control.isHasSlider()){
 			   control.getSlider().setValue(level);
 		   }
@@ -445,6 +442,7 @@ public class GUI extends JPanel implements ItemListener {
 
 	   // Thread-safe way to append to the chat box
 	   public  void changeLevel(GUIPanel control, int level) {
+		   if (control == null) return;
 		   UpdateLevel update = new UpdateLevel (control,level);
 		   SwingUtilities.invokeLater(update);
 	   }
