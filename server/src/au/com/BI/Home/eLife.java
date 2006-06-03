@@ -30,6 +30,7 @@ public class eLife {
 	Logger globalLogger;
 	
 	public eLife (String configName,boolean runHarness, LogHandler sh) {
+		boolean sysOutPrint =true;
 		this.sh = sh;
 		logger = Logger.getLogger("au.com.BI");
 		//this.logger = globalLogger;
@@ -59,12 +60,15 @@ public class eLife {
 
 		try {
 		    String bootstrapFile = "datafiles" + File.separator + "bootstrap.xml"; 
+		    if (sysOutPrint) System.out.println ("About to load bootstrap " + bootstrapFile);
 		    bootstrap.readBootstrap(bootstrapFile);
+		    if (sysOutPrint) System.out.println ("Bootstrap read OK");
 			bootstrap.setVersion (outString);
 
 		    this.defaultLogLevel = bootstrap.getDefaultDebugging();
 		    
 		    if (bootstrap.isFileLogging()) {
+		    	if (sysOutPrint) System.out.println ("Setting up file logging");
 				try {
 					FileHandler fileHandler = new FileHandler ("log/trace.log",10000000,10,false);
 					fileHandler.setFormatter(new SimpleFormatter());
@@ -79,6 +83,7 @@ public class eLife {
 		    }
 		    
 		    if (bootstrap.isConsoleLogging()) {
+				if (sysOutPrint) System.out.println ("Setting up console logging");
 				try {
 					ConsoleHandler consoleHandler = new ConsoleHandler();
 					consoleHandler.setFormatter(new SimpleFormatter());
@@ -90,6 +95,7 @@ public class eLife {
 				
 		    }
 			
+		    if (sysOutPrint) System.out.println ("Everything set up, launching master controller");
 			controller = new Controller ();
 			controller.setLogHandler(sh);
 			controller.setBootstrap(bootstrap);
@@ -103,6 +109,8 @@ public class eLife {
 		} catch (ConfigError be) {
 		    logger.log (Level.SEVERE,"Error in the bootstrap file, the system cannot launch "
 		            + be.getMessage());
+		    if (sysOutPrint) System.out.println ("Error in the bootstrap file, the system cannot launch "
+		            + be.getMessage());
 			System.exit(1);
 		} catch (CommsFail fail){
 			
@@ -110,6 +118,8 @@ public class eLife {
 				logger.log(Level.SEVERE,"Could not set up controller " + fail.getMessage());
 			else {
 				System.out.print("Could not set up controller " + fail.getMessage());
+			    if (sysOutPrint) System.out.println ("Error in the bootstrap file, the system cannot launch "
+			            + fail.getMessage());
 				System.exit(1);
 			}
 
@@ -118,10 +128,16 @@ public class eLife {
 			if (logger != null) {
 				logger.log(Level.SEVERE,"Exiting: Dire problems " + fail.getMessage());
 				logger.log(Level.SEVERE,"System died at : " + errors[0].toString());
-				System.exit(1);
+			    if (sysOutPrint) {
+			    	System.out.println ("Exiting: Dire problems " + fail.getMessage() 
+			    			+ fail.getMessage());
+			    	System.out.println ("System died at : " + errors[0].toString()
+			            + fail.getMessage());
+			    }
+			    System.exit(1);
 			}
 			else {
-				System.err.println ("Exiting: Dire problems " + fail.getMessage());
+				System.out.println ("Exiting: Dire problems " + fail.getMessage());
 				fail.printStackTrace();
 				System.exit(1);
 			}

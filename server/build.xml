@@ -1,0 +1,155 @@
+<?eclipse.ant.import?>
+
+    <!-- import file="build.xml"/ -->
+<project basedir="." default="build" name="eLife">
+    <description>Builds, tests, and runs the project server.</description>
+	<taskdef resource="net/sf/ant4eclipse/antlib.xml" />
+	<property name="workspace" value="${basedir}/.." />
+	
+	<property name="project.name" value="eLife" />
+	<property name="dist.jar" value="dist/eLife.jar" />
+	<userLibraries userlibraries="./libs.userlibraries" />
+	<getEclipseClasspath pathId="eLife.classpath" relative="true" workspace="${workspace}" projectName="${project.name}" />
+	<getEclipseClasspath property="eLife.jar_libs" relative="true" workspace="${workspace}" projectName="${project.name}" />
+	<available file="dist/lib" type="dir" property="lib_dir.present"/>
+	<available file="exit" type="dir" property="ext_dir.present"/>
+	<available file="dist/bin" type="dir" property="bin_dir.present"/>
+	<getOutputpath property="classes.dir" workspace="${workspace}" projectName="${project.name}" />
+
+	
+	<target name="init">
+		<delete>
+			<fileset dir="dist" includes="**/*" excludes="ext/*" followsymlinks="false" />
+		</delete>
+        <echo message="Emptied previous dist file" />
+		
+	</target>
+	
+	<target name="build-lib-dir" depends="" unless="lib_dir.present" >    	
+	   	<mkdir dir="dist/lib" />
+	</target>	
+
+    <target name="templates" >
+		<copy todir="templates">
+		    <fileset dir="./" includes="**/*.xsd"  excludes="**/templates/**" />
+		    <fileset dir="./" includes="**/*.dtd"  excludes="**/templates/**" />
+		    <fileset dir="./" includes="**/config_ref.xml" excludes="**/templates/**" />
+		    <fileset dir="./" includes="**/datafiles/*.xml" excludes="**/templates/**" />
+		</copy>
+    </target>
+	
+    <target name="compile" depends="init" >
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" >
+            <src path="src"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}">
+            <src path="test"/>
+            <classpath refid="eLife.classpath"/>
+        </javac>
+    </target>
+	
+	
+	<target name="jar" depends="compile" >
+		
+		<pathconvert property="flattended.jars" refid="eLife.classpath" pathsep=" ">
+		    <chainedmapper>
+		        <flattenmapper/>
+		        <globmapper from="*" to="../ext/*"/>
+		    </chainedmapper>
+		</pathconvert>
+		<manifest file="MANIFEST.MF" mode="update" >
+			<attribute name="Class-Path" value="${flattended.jars}" />
+		</manifest>
+		<jar destfile="${dist.jar}" 
+			update="false"
+			basedir="${classes.dir}" 
+			includes = "**/*.class" 
+			excludes = "**/Test*.class"
+			manifest="MANIFEST.MF" />
+		<jar destfile="${dist.jar}" 
+			update="true"
+			basedir="src" 
+			includes = "**/*.properties" 
+			 />
+		<echo>To run this application from the command line without Ant, try:</echo>
+		<echo>java -jar "${dist.jar}"</echo>
+	</target>
+    
+   <target name="increment" depends="" description="Increments build number and creates a zip file.">
+        <propertyfile file="src/au/com/BI/Home/my.properties" >
+          <entry  key="minor_version" type="int" operation="+" value="1" />
+        </propertyfile>
+        <property file="src/au/com/BI/Home/my.properties" />
+        <echo message="Version number now ${major_version}${minor_version}" />
+    </target>
+    
+    <target name="load-version-number" depends="" description="Loads property numbers.">
+        <property file="src/au/com/BI/Home/my.properties" />
+        <echo message="Version number now ${major_version}${minor_version}" />
+    </target>
+    	
+    <target name="build_dist" depends="templates" >
+    	 	
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="false"
+			basedir="dist" 
+			includes = "*.jar" />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "my.properties" />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "templates/**/*.xml" 	
+	    	excludes = ".." />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "config/config_*.xml" />	
+    </target>
+	
+	<target name="dist" depends="increment,build_dist" />
+	<target name="dist-no-inc" depends="load-version-number,build_dist" />
+	
+	<target name="build" depends="dist-no-inc" />
+
+    <target name="build-ext-dir" unless="ext_dir.present" >    	
+	   	<mkdir dir="ext"  />
+	</target>
+	
+	<target name="copy-libs" depends="init,build-ext-dir" >
+		<pathconvert pathsep="," property="massaged_jar_libs" refid="eLife.classpath" >
+			<map from="/Java" to="Java" />
+		</pathconvert>
+		<echo>List of jar files is ${eLife.jar_libs}</echo>
+		<echo>Massaged jar files list is ${massaged_jar_libs}</echo>
+
+		<delete  includeemptydirs="true">
+			<fileset dir="ext" includes="**/*" />
+		</delete>
+		<copy todir="ext" flatten="true" >
+		   <fileset dir="/" includes="${massaged_jar_libs}"  />
+		</copy>
+	</target>
+		
+    <target name="dist-libs"  >
+         <property file="src/au/com/BI/Home/my.properties" />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+			update="false"
+			basedir="." 
+			includes = "ext/*.jar" />
+        <!-- copy todir="dist">
+	    	<fileset dir="." includes="*.dll" />
+	    	<fileset dir="." includes="*.jnilib" />
+		</copy -->
+	<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+		update="true"
+		basedir="."
+		includes = "*.dll" />
+        <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+		update="."
+		basedir="dist"
+		includes = "*.jnilib" />
+    </target>
+</project>

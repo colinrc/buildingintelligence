@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.6.5
+Created-By: 1.5.0_06-64 ("Apple Computer, Inc.")
+Main-Class: au.com.BI.Home.eLife
+Class-Path: ../ext/classes ../ext/jrobin-1.4.0.jar ../ext/snmp-1.3.jar
+  ../ext/jdom.jar ../ext/xml-apis.jar ../ext/xalan.jar ../ext/junit.ja
+ r ../ext/jython.jar ../ext/RXTXcomm.jar ../ext/jetty.jar ../ext/jetty
+ -util.jar ../ext/servlet-api-2.5.jar ../ext/quartz-1.5.2.jar ../ext/c
+ ommons-logging.jar ../ext/commons-collections-3.1.jar ../ext/commons-
+ logging-api.jar ../ext/xmlunit1.0.jar ../ext/junit-addons-1.4.jar
+
