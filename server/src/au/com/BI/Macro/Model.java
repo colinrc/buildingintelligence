@@ -203,7 +203,6 @@ public class Model extends BaseModel implements DeviceModel {
                     }
 		}
 		if (clientCommand != null) {
-
 			synchronized (this.commandQueue){
 				commandQueue.add(clientCommand);
 			}

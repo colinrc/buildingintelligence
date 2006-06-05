@@ -13,6 +13,8 @@ import java.util.logging.*;
 import java.util.*;
 import au.com.BI.Command.*;
 import java.io.*;
+import org.jdom.Element;
+import org.jdom.output.XMLOutputter;
 
 /**
  *
@@ -40,18 +42,26 @@ public class CacheBridge implements CacheListener {
         }
     }
     
-    public void getCommands (PrintWriter out){
-        out.println("<HTML>");
-        out.println("<BODY>");
-        out.println("<P>First test from get");
+    public Element getCommands (){
+    	Element resultsDoc = new Element("a");
+    	
         synchronized (commandsToSend){
-        	for (String key:commandsToSend.keySet()){
-        		out.println("<P>"+key);
+        	for (CacheWrapper cacheWrapper:commandsToSend.values()) {
+        		if (cacheWrapper.isSet()) {
+        			for (CommandInterface command:cacheWrapper.getMapValues()){
+        				resultsDoc.addContent(command.getXMLCommand());
+        			}
+        		} else {
+        			CommandInterface command = cacheWrapper.getCommand();
+        			if (command != null) {
+        				resultsDoc.addContent(command.getXMLCommand());      
+        			}
+        		}
         	}
+	
         	commandsToSend.clear();
         }
-        out.println("</BODY>");
-        out.println("</HTML>");
+        return resultsDoc;
     }
 
 	public long getID() {

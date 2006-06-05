@@ -83,7 +83,7 @@ public class CacheWrapper {
 		this.isSet = true;
 	}
 	
-	public Collection getMapValues() {
+	public Collection<CommandInterface> getMapValues() {
 		return this.map.values();
 	}
 	

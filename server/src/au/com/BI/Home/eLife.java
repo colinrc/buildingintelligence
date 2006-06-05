@@ -30,7 +30,7 @@ public class eLife {
 	Logger globalLogger;
 	
 	public eLife (String configName,boolean runHarness, LogHandler sh) {
-		boolean sysOutPrint =true;
+		boolean sysOutPrint = false;
 		this.sh = sh;
 		logger = Logger.getLogger("au.com.BI");
 		//this.logger = globalLogger;

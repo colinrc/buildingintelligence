@@ -1,7 +1,10 @@
 package au.com.BI.Jetty;
 
 import au.com.BI.Command.*;
-import java.util.*;
+import au.com.BI.Config.Security;
+import au.com.BI.Util.BaseModel;
+import au.com.BI.Util.ClientModel;
+import au.com.BI.Util.DeviceModel;
 import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.Connector;
@@ -11,39 +14,50 @@ import org.mortbay.jetty.servlet.SessionHandler;
 
 import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.jetty.handler.DefaultHandler;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.jetty.handler.HandlerCollection;
+import org.mortbay.jetty.security.Constraint;
+import org.mortbay.jetty.security.ConstraintMapping;
 import org.mortbay.jetty.security.HashUserRealm;
+import org.mortbay.jetty.security.SecurityHandler;
 //import org.mortbay.jetty.handler.*;
+import java.util.List;
 import java.util.logging.*;
 
 
 
-public class JettyHandler {
-    int port = 8080;
-    String docRoot;
+public class JettyHandler extends BaseModel implements DeviceModel, ClientModel {
     boolean SSL = false;
-    Cache cache = null;
     CacheBridgeFactory cacheBridgeFactory = null;
     org.mortbay.jetty.Server server = null;
     Logger logger;
+    Security security = null;
     
-    public JettyHandler() {
+    public JettyHandler(Security security) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
         cacheBridgeFactory = new CacheBridgeFactory();
+        this.setName("JETTY");
+        this.setAutoReconnect(false);
+        this.security = security;
+    }
+    
+    public boolean removeModelOnConfigReload() {
+        return false;
     }
     
     public  void start()
     throws Exception {
         // Create the server
+    	if (!bootstrap.isJettyActive()){
+    		return;
+    	}
+    	
         try {
             server = new Server();
+            // jettyHandler.setSSL(bootstrap.isSSL());
+            
             org.mortbay.jetty.bio.SocketConnector connector = new SocketConnector();
-            connector.setPort(port);
+            connector.setPort(bootstrap.getJettyPort());
             connector.setMaxIdleTime(50000);
             server.setConnectors(new Connector[]{connector});
            
@@ -59,11 +73,11 @@ public class JettyHandler {
             ContextHandler updateContextHandler = new ContextHandler ();
 
             updateContextHandler.setContextPath("/webclient");
-            updateContextHandler.setResourceBase(docRoot);
+            updateContextHandler.setResourceBase(bootstrap.getDocRoot());
 
             ServletHandler updateHandler = new ServletHandler ();   
             
-            ServletHolder updateServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.UpdateServlet","/get");
+            ServletHolder updateServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.UpdateServlet","/update");
             ServletHolder logoutServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.Logout","/logout");
             
             SessionHandler sessionHandler = new SessionHandler();
@@ -71,15 +85,17 @@ public class JettyHandler {
             
             updateContextHandler.setHandler(sessionHandler);
             updateContextHandler.setAttribute("CacheBridgeFactory",cacheBridgeFactory);
+            updateContextHandler.setAttribute("AddressBook",addressBook);
+            updateContextHandler.setAttribute("CommandQueue",commandQueue);
+            updateContextHandler.setAttribute("Security",security);
 
-            /*
             // Servlet Security config
             SecurityHandler servletSec = new SecurityHandler();
             servletSec.setServer(server);
             servletSec.setAuthMethod(Constraint.__BASIC_AUTH);
             servletSec.setUserRealm(webPass);
             ConstraintMapping servletConstraintMap = new ConstraintMapping();
-            servletConstraintMap.setPathSpec("/*");
+            servletConstraintMap.setPathSpec("/webclient/*");
             Constraint servletConstraint = new Constraint();
             servletConstraint.setName("Servlet");
             servletConstraint.setRoles(new String[]{"user"});
@@ -87,12 +103,11 @@ public class JettyHandler {
             servletConstraintMap.setConstraint(servletConstraint);
             servletSec.setConstraintMappings(new ConstraintMapping[] {servletConstraintMap});
             servletSec.setHandler(updateContextHandler);
-            */
             
             // HTML static handler
             ContextHandler mainContextHandler = new ContextHandler ();
             mainContextHandler.setContextPath("/");
-            mainContextHandler.setResourceBase(docRoot);
+            mainContextHandler.setResourceBase(bootstrap.getDocRoot());
 
             ServletHandler servletHandler = new ServletHandler ();         
             ServletHolder defServlet = servletHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
@@ -102,7 +117,7 @@ public class JettyHandler {
             
             
             ContextHandlerCollection contexts = new ContextHandlerCollection();
-            contexts.setHandlers(new org.mortbay.jetty.Handler[]{updateContextHandler,mainContextHandler});
+            contexts.setHandlers(new org.mortbay.jetty.Handler[]{servletSec,mainContextHandler});
     
             HandlerCollection handlers = new HandlerCollection();
             handlers.setHandlers(new org.mortbay.jetty.Handler[]{contexts,new DefaultHandler()});
@@ -124,24 +139,16 @@ public class JettyHandler {
         this.cache = cache;
         cacheBridgeFactory.setCache(cache);
     }
-    
-    
-    public String getDocRoot() {
-        return docRoot;
-    }
-    public void setDocRoot(String docRoot) {
-        this.docRoot = docRoot;
-    }
-    public int getPort() {
-        return port;
-    }
-    public void setPort(int port) {
-        this.port = port;
-    }
-    public boolean isSSL() {
-        return SSL;
-    }
-    public void setSSL(boolean ssl) {
-        SSL = ssl;
-    }
+
+	/* (non-Javadoc)
+	 * @see au.com.BI.Util.ClientModel#broadcastCommand(au.com.BI.Command.CommandInterface)
+	 */
+	public void broadcastCommand(CommandInterface command) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+    public void attatchComms(List commandQueue) throws au.com.BI.Comms.
+    ConnectionFail {};
+
 }

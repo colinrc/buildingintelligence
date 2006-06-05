@@ -1,7 +1,34 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a5.zip V1.6a5] ==
+
+This release requires a new library set. Also download eLife-libs-1.6a5.zip
+
 ''' Jetty '''
 
-Upraded Jetty to 6b16.
+Upraded Jetty to 6b17.
+Initial jetty implementation; to retrieve a list of XML messages since the last request submit a get request to /webclient/update.
+To post a new value sumbit a post request with MESSAGE="message string" to /webclient/update 
+An username/password is required to access the update servlet, for the moment test using plain/plain.
+The jetty server must be switched on in the bootstrap.xml file
+For testing it may be useful to place a small HTML file in the www directory of the server. This will be served as the index file
+(http://127.0.0.1:8081/)
 
+{{{
+<html>
+  <head>
+    <title>test page</title>
+  </head>
+  <body>
+  <p>A test page for the update servlet.
+  
+  <FORM ACTION="http://127.0.0.1:8081/webclient/update" METHOD="POST" >
+  <INPUT NAME="MESSAGE" SIZE="80"  VALUE='<CONTROL KEY="GARAGE_LIGHT" COMMAND="on" />'/>
+  <P>
+  <INPUT TYPE="SUBMIT" />
+  </FORM>
+  
+  </body>
+</html>
+}}}
 
 ''' Config '''
 
@@ -41,6 +68,7 @@ Many support methods added to simplify model building.
     Junit
         ListOfArrayAssert (A testing class to assist with vectors of byte arrays, as used in the BuildReturnWraper object)
 
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a2.zip V1.6a2] ==
 
 ''' M1 '''
@@ -53,7 +81,7 @@ Restructured project to support netbeans or eclipse layout.
 
 Modified ant build files for netbeans or eclipse builds.
 
-Release is 1.5 or 1.4 compatable, when used with the included libraries.
+Release is Java 1.5 compatable, when used with the included libraries.
 
 Update ant build files to include libraries on major version releases
 
@@ -71,6 +99,7 @@ Incorporated Jetty webserver. Configuration is via the bootstrap file, currently
   <JETTY DOCROOT="www" PORT="8081" SSL="N" ACTIVE="Y" />
 }}}
 
+== Started 1.6 branch ==
 
 == Released [attachment:wiki:SoftwareReleases:elife-server-1.5b15.zip V1.5b15] ==
 

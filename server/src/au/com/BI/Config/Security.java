@@ -32,12 +32,12 @@ public class Security {
 	/* this default feature is available on any key */
 	/* search for local and remote HASP HL key */
 	
-	
+	/*
 	connected = true;
 	return ;
+	*/
 
-
-	/*
+	
 	logger = Logger.getLogger(this.getClass().getPackage().getName());
 	 
 	InputStreamReader reader = new InputStreamReader(System.in);
@@ -82,39 +82,40 @@ public class Security {
 			fsize,
 			allowNumbers);
        }
-       */
 	
     }
     
-    public final boolean allowClient(int clientCount) {
-	return true;
+    public final boolean allowClient(int clientCount)  throws TooManyClientsException {
+	//return true;
 	
-	/*
-	lastFlashClients = clientCount;
-	try {
-	    if ((clientCount + lastWebCount ) > allowNumbers[0]) {
-		return false;
-	    } else {
-		return true;
-	    }
-	} catch (NullPointerException ex){
-	    return false;
-	}
-	*/
+		lastFlashClients = clientCount;
+		try {
+		    if ((clientCount + lastWebCount ) > allowNumbers[0]) {
+				throw new TooManyClientsException ("You have attempted to connect to the eLife server with more clients than you have purchased, please contact your integrator");
+		    } else {
+			return true;
+		    }
+		} catch (NullPointerException ex){
+		    return false;
+		}
+
 	 
     }
     
-    public final boolean allowWebClient(int clientCount){
-	lastWebCount = clientCount;
-	try {
-	    if ((clientCount + lastFlashClients ) > allowNumbers[0]) {
-		return false;
-	    } else {
-		return true;
-	    }
-	} catch (NullPointerException ex){
-	    return false;
-	}
+    public final boolean allowWebClient(int clientCount) throws TooManyClientsException {
+    	return true; // can't update yet until I work out how to remove dead sessions
+    	/*
+		lastWebCount = clientCount;
+		try {
+		    if ((clientCount + lastFlashClients ) > allowNumbers[0]) {
+				throw new TooManyClientsException ("You have attempted to connect to the eLife server with more clients than you have purchased, please contact your integrator");
+		    } else {
+			return true;
+		    }
+		} catch (NullPointerException ex){
+		    return false;
+		}
+		*/
     }
     
     public final boolean allowModel(int modelType,int modelCount){

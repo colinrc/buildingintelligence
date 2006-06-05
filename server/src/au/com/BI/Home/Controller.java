@@ -98,6 +98,7 @@ public class Controller {
 		modelRegistry.put("FLASH_CLIENT", "au.com.BI.Flash.FlashHandler");
 		modelRegistry.put("ADMIN", "au.com.BI.Admin.Model");
 		modelRegistry.put("MESSAGING", "au.com.BI.Messaging.Model");
+		modelRegistry.put("JETTY", "au.com.BI.Jetty.JettyHandler");
 		modelRegistry.put("HAL", "au.com.BI.HAL.Model");
 		modelRegistry.put("TUTONDO", "au.com.BI.Tutondo.Model");
 		modelRegistry.put("KRAMER", "au.com.BI.Kramer.Model");
@@ -197,18 +198,24 @@ public class Controller {
 		deviceModels.add( macroModel);
 		macroModel.setInstanceID(deviceModels.size()-1);
                 
-                if (bootstrap.isJettyActive()){
-                    jettyHandler = new JettyHandler ();
-                    jettyHandler.setPort(bootstrap.getJettyPort());
-                    jettyHandler.setDocRoot(bootstrap.getDocRoot());
-                    jettyHandler.setSSL(bootstrap.isSSL());
-                    jettyHandler.setCache(cache);
-                    try {
-                            jettyHandler.start();
-                    } catch (Exception ex){
-                            logger.log (Level.SEVERE,"Could not start web server " + ex.getMessage());
-                    }
-                    }
+    
+        jettyHandler = new JettyHandler (security);
+        jettyHandler.setCommandQueue(commandQueue);
+        jettyHandler.setCache(cache);
+        jettyHandler.setAddressBook(addressBook);
+        jettyHandler.setBootstrap(bootstrap);
+        jettyHandler.setModelList(deviceModels);
+        jettyHandler.setAddressBook(addressBook);
+        jettyHandler.setAlarmLogging(alarmLogging);
+		deviceModels.add( jettyHandler);
+		jettyHandler.setInstanceID(deviceModels.size()-1);
+        
+        
+        try {
+            jettyHandler.start();
+        } catch (Exception ex){
+                logger.log (Level.SEVERE,"Could not start web server " + ex.getMessage());
+        }
     }
 
 	public void setUpClients() throws CommsFail {

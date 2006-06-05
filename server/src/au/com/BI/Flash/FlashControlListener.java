@@ -11,6 +11,8 @@ import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.Security;
+import au.com.BI.Config.TooManyClientsException;
+
 import java.util.*;
 import java.net.*;
 
@@ -132,8 +134,10 @@ public class FlashControlListener extends Thread {
 			}
 			
 		    }
-		    if (!recentConnection && !security.allowClient(numberFlashClients)) {
-			displayTooManyClients(numberFlashClients);
+		    try {
+		    	if (!recentConnection) security.allowClient(numberFlashClients);
+		    } catch (TooManyClientsException ex){
+		    	displayTooManyClients(numberFlashClients,ex);
 		    }
 		}
 	    }
@@ -148,7 +152,7 @@ public class FlashControlListener extends Thread {
 	}
     }
     
-    public void displayTooManyClients(int numberFlashClients) {
+    public void displayTooManyClients(int numberFlashClients, TooManyClientsException ex) {
 	Date currentTime = new Date();
 	//if ((currentTime.getTime() - timeOfLastLicenseMessage.getTime()) > 60*1000*2){ // 2 minute intervals
 	
@@ -159,7 +163,7 @@ public class FlashControlListener extends Thread {
 	conElement.setAttribute("HIDECLOSE", "TRUE");
 	conElement.setAttribute("TARGET", AddressBook.ALL);
 	
-	conElement.setAttribute("CONTENT", "You have connected with more clients than you have purchased licenses for, please contact your integrator");
+	conElement.setAttribute("CONTENT", ex.getMessage());
 	Document replyDoc = new Document(conElement);
 	this.sendToAllClients(replyDoc,0);
 	timeOfLastLicenseMessage =  currentTime;
@@ -202,49 +206,52 @@ public class FlashControlListener extends Thread {
 	    String key = "";
 	    CacheWrapper cachedObject = null;
 	    while (startupItemList.hasNext()){
-		try {
-		    key = (String)startupItemList.next();
-		    cachedObject = cache.getCachedObject(key);
-		    if (cachedObject == null) {
-			logger.log(Level.FINE,"Cache returned a null object for key " + key);
-			continue;
-		    }
-		} catch (ClassCastException ex) {
-		    logger.log(Level.WARNING,"Cache key object is not a string " + ex.getMessage());
-		}
-		// logger.log (Level.WARNING,"object from cache for " + key + " is " + cachedObject.toString());
-		// Cached items are sets if the device requires all instances of the command to be cached
-		// cacheAllCommands returned true.
-		// For example, on audio when mute on / off is transmitted seperately to volume up / down
-		// for the same audio device.
-		if (cachedObject.isSet()) {
-		    Collection commandList = cache.getSetElements((cachedObject));
-		    Iterator commandListIt = commandList.iterator();
-		    while (commandListIt.hasNext()){
-			Object theCommand = commandListIt.next();
 			try {
-			    if (!doCacheItem(client,(Command)theCommand)) {
-				logger.log(Level.FINE,"Client has disapeared, aborting startup");
-				break;
+			    key = (String)startupItemList.next();
+			    cachedObject = cache.getCachedObject(key);
+			    if (cachedObject == null) {
+					logger.log(Level.FINE,"Cache returned a null object for key " + key);
+					continue;
 			    }
 			} catch (ClassCastException ex) {
-			    logger.log(Level.FINE,"Cache item was marked as set, but was actually simple " + ex.getMessage());
-			} catch (Exception ex) {
-			    logger.log(Level.FINE,"An unknown error occurred running doChacheItem on " + theCommand.toString());
+			    logger.log(Level.WARNING,"Cache key object is not a string " + ex.getMessage());
 			}
-			
-		    }
-		    
-		} else {
-		    try {
-			if (!doCacheItem(client,cachedObject.getCommand())) {
-			    logger.log(Level.FINE,"Client has disapeared, aborting startup");
-			    break;
+			if (!cachedObject.isSendWithStartup()){
+				continue;
 			}
-		    } catch (ClassCastException ex) {
-			logger.log(Level.FINE,"Cache item was marked as set, but was actually simple " + ex.getMessage());
-		    }
-		}
+			// logger.log (Level.WARNING,"object from cache for " + key + " is " + cachedObject.toString());
+			// Cached items are sets if the device requires all instances of the command to be cached
+			// cacheAllCommands returned true.
+			// For example, on audio when mute on / off is transmitted seperately to volume up / down
+			// for the same audio device.
+			if (cachedObject.isSet()) {
+			    Collection commandList = cache.getSetElements((cachedObject));
+			    Iterator commandListIt = commandList.iterator();
+			    while (commandListIt.hasNext()){
+				Object theCommand = commandListIt.next();
+				try {
+				    if (!doCacheItem(client,(Command)theCommand)) {
+					logger.log(Level.FINE,"Client has disapeared, aborting startup");
+					break;
+				    }
+				} catch (ClassCastException ex) {
+				    logger.log(Level.FINE,"Cache item was marked as set, but was actually simple " + ex.getMessage());
+				} catch (Exception ex) {
+				    logger.log(Level.FINE,"An unknown error occurred running doChacheItem on " + theCommand.toString());
+				}
+				
+			    }
+			    
+			} else {
+			    try {
+				if (!doCacheItem(client,cachedObject.getCommand())) {
+				    logger.log(Level.FINE,"Client has disapeared, aborting startup");
+				    break;
+				}
+			    } catch (ClassCastException ex) {
+				logger.log(Level.FINE,"Cache item was marked as set, but was actually simple " + ex.getMessage());
+			    }
+			}
 	    }
 	} catch (Exception ex) {
 	    logger.log(Level.WARNING,"Exception on client startup " + ex.getMessage());

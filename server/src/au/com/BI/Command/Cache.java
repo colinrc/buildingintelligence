@@ -112,18 +112,18 @@ public class Cache {
 
         public Collection<CacheWrapper> getAllCommands (){
 
-        	
+
     		LinkedList<CacheWrapper> result = new LinkedList<CacheWrapper>();
     		synchronized (cachedCommands){
     			Collection <CacheWrapper> commandSet = cachedCommands.values();
 
     			for (CacheWrapper command:commandSet){
-    				if (!command.isSendWithStartup()) {
+    				if (command.isSendWithStartup()) {
     					result.add(command);
     				}
     			}
     		}
-    		return result;	
+    		return result;
         }
         
         public Collection<CacheWrapper> getAllCommands (Date startTime, Date endTime){

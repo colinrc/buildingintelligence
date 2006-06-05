@@ -196,7 +196,7 @@
                         <LIGHT_CBUS ACTIVE="N" KEY="0E" NAME="Ensuite LV Light" DISPLAY_NAME="ENSUITE_LV_LIGHT" RELAY="N" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="10" NAME="Lounge LV Lights" DISPLAY_NAME="LOUNGE_LV_LIGHT" RELAY="N" POWER_RATING="80"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="12" NAME="Dining Room Lights" DISPLAY_NAME="DINING_LIGHT" POWER_RATING="100"/>
-                        <LIGHT_CBUS ACTIVE="N" KEY="12" NAME="Lounge Light" DISPLAY_NAME="LOUNGE_LIGHT" RELAY="Y" POWER_RATING="80"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="11" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" RELAY="Y" POWER_RATING="80"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="0F" NAME="Family Light" DISPLAY_NAME="FAMILY_LIGHT" POWER_RATING="80"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="08" NAME="Hall Light" DISPLAY_NAME="HALL_LIGHT" POWER_RATING="80"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="09" RELAY="Y" NAME="Bath 1 Light" DISPLAY_NAME="BATH1_LIGHT" POWER_RATING="80"/>
