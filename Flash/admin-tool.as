@@ -331,6 +331,22 @@ function createWorkflow(inNode:Object) {
 		createWorkflow(inNode.childNodes[child]);
 	}
 }
+/********************************************************/
+function isValidIP(ip:String):Boolean {
+	var isValid = true;
+	var ip_arr:Array = ip.split(".");
+	if (ip_arr.length <> 4) {
+		isValid = false;
+	} else {
+		for (var i=0; i<4; i++) {
+			if (ip_arr[i] != Number(ip_arr[i])) {
+				isValid = false;
+				break;
+			}
+		}
+	}
+	return isValid;
+}
 /*************************************************************************
 Build xml formatted string to be written to file. This contains all the tabs
 and line feeds to ensure that the output file is human readable.
