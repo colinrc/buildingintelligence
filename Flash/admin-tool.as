@@ -325,14 +325,7 @@ _global.makeArray = function(inString:String):Array {
 	return myArray;
 };
 /********************************************************/
-function createWorkflow(inNode:Object) {
-	_global.workflow.addNode(inNode.object.getKey(), inNode);
-	for (var child in inNode.childNodes) {
-		createWorkflow(inNode.childNodes[child]);
-	}
-}
-/********************************************************/
-function isValidIP(ip:String):Boolean {
+_global.isValidIP = function(ip:String):Boolean {
 	var isValid = true;
 	var ip_arr:Array = ip.split(".");
 	if (ip_arr.length <> 4) {
@@ -346,6 +339,13 @@ function isValidIP(ip:String):Boolean {
 		}
 	}
 	return isValid;
+}
+/********************************************************/
+function createWorkflow(inNode:Object) {
+	_global.workflow.addNode(inNode.object.getKey(), inNode);
+	for (var child in inNode.childNodes) {
+		createWorkflow(inNode.childNodes[child]);
+	}
 }
 /*************************************************************************
 Build xml formatted string to be written to file. This contains all the tabs
