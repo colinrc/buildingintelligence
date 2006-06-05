@@ -4,30 +4,13 @@
 	public function isValid():Boolean {
 		var flag = "ok";
 		clearValidationMsg();
+		
 		for (var child in settings.childNodes) {
-			if ((settings.childNodes[child].active != "Y") && (settings.childNodes[child].active != "N")) {
-				flag = "error";
-				appendValidationMsg("Active flag is invalid");
-			}
-			
-			if (settings.childNodes[child].active =="Y"){
-				if ((settings.childNodes[child].display_name == undefined) || (settings.childNodes[child].display_name == "")) {
+			if (settings.childNodes[child].attributes["NAME"] == "AUTOCLOSE") {
+				if ((settings.childNodes[child].attributes["VALUE"] == undefined)||(settings.childNodes[child].attributes["VALUE"] == "")) {
 					flag = "error";
-					appendValidationMsg("Key is invalid");
-				}else {
-					if (_global.isKeyUsed(settings.childNodes[child].display_name) == false) {
-						flag = "error";
-						appendValidationMsg(settings.childNodes[child].display_name+" key is not being used");
-					}
+					appendValidationMsg("Autoclose is empty");
 				}
-				if ((settings.childNodes[child].name == undefined) || (settings.childNodes[child].name == "")) {
-					flag = "error";
-					appendValidationMsg("Description is invalid");
-				}
-			}
-			else{
-				flag = "empty";
-				appendValidationMsg("Settings is not Active");
 			}
 		}
 		return flag;

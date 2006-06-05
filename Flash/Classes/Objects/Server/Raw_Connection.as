@@ -28,11 +28,11 @@
 				}
 				
 				for (var param in parameters) {
-					if ((parameters[param].name == undefined) || (parameters[param].name == "")) {
+					if ((parameters[param].attributes["NAME"] == undefined) || (parameters[param].attributes["NAME"] == "")) {
 						flag = "error";
 						appendValidationMsg("Param Name is empty");
 					}
-					if ((parameters[param].value == undefined) || (parameters[param].value == "")) {
+					if ((parameters[param].attributes["VALUE"] == undefined) || (parameters[param].attributes["VALUE"] == "")) {
 						flag = "error";
 						appendValidationMsg("Param Value is empty");
 					}
