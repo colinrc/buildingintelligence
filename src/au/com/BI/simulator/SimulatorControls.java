@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import au.com.BI.Command.Command;
+import au.com.BI.Serial.SerialCommsObject;
 import au.com.BI.Serial.SerialHandler;
 /**
  * @author David
@@ -27,7 +27,7 @@ import au.com.BI.Serial.SerialHandler;
  * 
  * 
  */
-public class SimulatorControls extends JFrame implements ActionListener {
+public class SimulatorControls extends JFrame implements ActionListener, SerialCommsObject {
 	private JTextArea networkTraffic;
 	private JTextArea serialTraffic;
 	private JPanel outgoing;
@@ -38,16 +38,16 @@ public class SimulatorControls extends JFrame implements ActionListener {
 	private JButton Light100;
 	private JPanel incoming;
 	private JButton B1Off;
-	private JButton B1Green;
+	private JButton B1Blue;
 	private JButton B1Yellow;
 	private JButton B2Off;
-	private JButton B2Green;
+	private JButton B2Blue;
 	private JButton B2Yellow;
 	private JButton B3Off;
-	private JButton B3Green;
+	private JButton B3Blue;
 	private JButton B3Yellow;
 	private JButton B4Off;
-	private JButton B4Green;
+	private JButton B4Blue;
 	private JButton B4Yellow;
 	private JButton eManOn;
 	private JButton eManOff;
@@ -67,6 +67,8 @@ public class SimulatorControls extends JFrame implements ActionListener {
 	private JLabel serialLab;
 	private JLabel outboundLab;
 	private JLabel inboundLab;
+	private JScrollPane scrollPane;
+	private JScrollPane scrollPane2;
 	//private ServerHandler serverHandle;
 	private SerialHandler serialHandle;
 	/**
@@ -77,7 +79,6 @@ public class SimulatorControls extends JFrame implements ActionListener {
 		this.simulator = simulator;
 		this.setTitle("Control");
 		this.setBounds(0, 0, 800, 600);
-		//serverHandle = inServerHandler;
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosed(java.awt.event.WindowEvent evt) {
 				formWindowClosed(evt);
@@ -89,14 +90,18 @@ public class SimulatorControls extends JFrame implements ActionListener {
 		this.setResizable(false);
 		networkTraffic = new JTextArea(5,20);
 		networkTraffic.setEditable(false);
-		JScrollPane scrollPane = new JScrollPane(networkTraffic,
+		//networkTraffic.setAutoscrolls(true);
+		scrollPane = new JScrollPane(networkTraffic,
 									   JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 									   JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		//scrollPane.setAutoscrolls(true);
 		serialTraffic = new JTextArea(5,20);
 		serialTraffic.setEditable(false);
-		JScrollPane scrollPane2 = new JScrollPane(serialTraffic,
+		//serialTraffic.setAutoscrolls(true);
+		scrollPane2 = new JScrollPane(serialTraffic,
 									   JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 									   JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		//scrollPane2.setAutoscrolls(true);
 		outgoing = new JPanel(new GridBagLayout());
 		networkLab = new JLabel("Network Traffic:");
 		serialLab = new JLabel("Serial Traffic:");
@@ -128,36 +133,36 @@ public class SimulatorControls extends JFrame implements ActionListener {
 		B1Off = new JButton("B1 Off");
 		B1Off.setActionCommand("iB1Off");
 		B1Off.addActionListener(this);
-		B1Green = new JButton("B1 Green");
-		B1Green.setActionCommand("iB1Green");
-		B1Green.addActionListener(this);
+		B1Blue = new JButton("B1 Blue");
+		B1Blue.setActionCommand("iB1Blue");
+		B1Blue.addActionListener(this);
 		B1Yellow = new JButton("B1 Yellow");
 		B1Yellow.setActionCommand("iB1Yellow");
 		B1Yellow.addActionListener(this);
 		B2Off = new JButton("B2 Off");
 		B2Off.setActionCommand("iB2Off");
 		B2Off.addActionListener(this);
-		B2Green = new JButton("B2 Green");
-		B2Green.setActionCommand("iB2Green");
-		B2Green.addActionListener(this);
+		B2Blue = new JButton("B2 Blue");
+		B2Blue.setActionCommand("iB2Blue");
+		B2Blue.addActionListener(this);
 		B2Yellow = new JButton("B2 Yellow");
 		B2Yellow.setActionCommand("iB2Yellow");
 		B2Yellow.addActionListener(this);
 		B3Off = new JButton("B3 Off");
 		B3Off.setActionCommand("iB3Off");
 		B3Off.addActionListener(this);
-		B3Green = new JButton("B3 Green");
-		B3Green.setActionCommand("iB3Green");
-		B3Green.addActionListener(this);
+		B3Blue = new JButton("B3 Blue");
+		B3Blue.setActionCommand("iB3Blue");
+		B3Blue.addActionListener(this);
 		B3Yellow = new JButton("B3 Yellow");
 		B3Yellow.setActionCommand("iB3Yellow");
 		B3Yellow.addActionListener(this);
 		B4Off = new JButton("B4 Off");
 		B4Off.setActionCommand("iB4Off");
 		B4Off.addActionListener(this);
-		B4Green = new JButton("B4 Green");
-		B4Green.setActionCommand("iB4Green");
-		B4Green.addActionListener(this);
+		B4Blue = new JButton("B4 Blue");
+		B4Blue.setActionCommand("iB4Blue");
+		B4Blue.addActionListener(this);
 		B4Yellow = new JButton("B4 Yellow");
 		B4Yellow.setActionCommand("iB4Yellow");
 		B4Yellow.addActionListener(this);
@@ -226,20 +231,20 @@ public class SimulatorControls extends JFrame implements ActionListener {
 		c.gridwidth = 5;
 		c.gridheight = 5;
 		incoming.add(B1Off,c);
-		incoming.add(B1Green,c);
+		incoming.add(B1Blue,c);
 		incoming.add(B1Yellow,c);
 		incoming.add(B2Off,c);
 		c.gridwidth = GridBagConstraints.REMAINDER;
-		incoming.add(B2Green,c);
+		incoming.add(B2Blue,c);
 		c.gridwidth = 5;
 		incoming.add(B2Yellow,c);
 		incoming.add(B3Off,c);
-		incoming.add(B3Green,c);
+		incoming.add(B3Blue,c);
 		incoming.add(B3Yellow,c);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		incoming.add(B4Off,c);
 		c.gridwidth = 5;
-		incoming.add(B4Green,c);
+		incoming.add(B4Blue,c);
 		incoming.add(B4Yellow,c);
 		incoming.add(eManOn,c);
 		incoming.add(eManOff,c);
@@ -281,10 +286,8 @@ public class SimulatorControls extends JFrame implements ActionListener {
 			outgoingSerial(message);
 		} else if(prefix.equals("l")){
 			light = message;
-			variableSerial("LightLevel:"+message);
 		} else if(prefix.equals("t")){
 			temp = message;
-			variableSerial("Temperature:"+message);
 		}else if(e.getActionCommand().equals("getTemp")){
 			incomingSerial(e.getActionCommand());
 			outgoingSerial("Temp:"+temp);
@@ -298,20 +301,21 @@ public class SimulatorControls extends JFrame implements ActionListener {
 	}
 
 	public void outgoingSerial(String inString){
-		serialTraffic.append("Sent message: "+inString+"\n");
+		serialTraffic.append("Received message: "+inString+"\n");
+		scrollPane2.getVerticalScrollBar().setValue(scrollPane2.getVerticalScrollBar().getMaximum()-scrollPane2.getVerticalScrollBar().getVisibleAmount());
 		serialHandle.processMessage(inString);
-	}
-	public void variableSerial(String inString){
-		serialTraffic.append("Variable set: "+inString+"\n");
 	}
 	public void appendNetwork(String inString){
 		networkTraffic.append(inString+"\n");
+		scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum()-scrollPane.getVerticalScrollBar().getVisibleAmount());
 	}
 	public void incomingSerial(String inString){
-		serialTraffic.append("Received message: "+inString+"\n");
+		serialTraffic.append("Sent message: "+inString+"\n");
 		simulator.receiveMessage(inString);
+		scrollPane2.getVerticalScrollBar().setValue(scrollPane2.getVerticalScrollBar().getMaximum()-scrollPane2.getVerticalScrollBar().getVisibleAmount());
 	}
 	public void setSerialHandler(SerialHandler inSerialHandler){
 		serialHandle = inSerialHandler;
+		serialHandle.setSerialCommsObject(this);
 	}
 }

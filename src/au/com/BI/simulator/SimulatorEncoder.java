@@ -29,8 +29,47 @@ public class SimulatorEncoder extends Component {
 	private String buttonStatus = "off";
 	private String wheelStatus = "off";
 	private SimulatorControls controls;
-	private String innerGlow = "images/elife_active/wheel-inner-glow";
-	private String outerGlow = "images/elife_active/wheel-outer-glow";
+	private String innerOn = "images/elife_active/wheel-clicker-on";
+	private String outerOn = "images/elife_active/wheel-on";
+	private String outerOff = "images/elife_active/wheel-off";
+	protected int bufferWidth;
+	protected int bufferHeight;
+	protected Image bufferImage;
+	protected Graphics bufferGraphics;
+	public void paint(Graphics g) {
+		resetBuffer();
+		if (bufferGraphics != null) {
+			//this clears the offscreen image, not the onscreen one
+			bufferGraphics.clearRect(0, 0, 226, 226);
+			//super.paint(bufferGraphics);
+			//calls the paintbuffer method with 
+			//the offscreen graphics as a param
+			paintBuffer(bufferGraphics);
+			//we finaly paint the offscreen image onto the onscreen image
+			g.drawImage(bufferImage, 0, 0, this);
+		}
+	}
+	private void resetBuffer() {
+		// always keep track of the image size
+		try {
+			bufferWidth = 226;
+			bufferHeight = 226;
+			//    clean up the previous image
+			if (bufferGraphics != null) {
+				bufferGraphics.dispose();
+				bufferGraphics = null;
+			}
+			if (bufferImage != null) {
+				bufferImage.flush();
+				bufferImage = null;
+			}
+			//System.gc();
+			//    create the new image with the size of the panel
+			bufferImage = createImage(bufferWidth, bufferHeight);
+			bufferGraphics = bufferImage.getGraphics();
+		} catch (Exception e) {
+		}
+	}
 	/**
 	 * 
 	 */
@@ -60,23 +99,20 @@ public class SimulatorEncoder extends Component {
 		double th = Math.atan((1.0 * y - radius) / (x - radius));
 		int value = ((int) (th / (2 * Math.PI) * (maxValue - minValue)));
 		int newValue;
-		if (x < radius){
+		if (x < radius) {
 			newValue = value + maxValue / 2;
-		}
-		else if (y < radius){
+		} else if (y < radius) {
 			newValue = value + maxValue;
-		}
-		else{
+		} else {
 			newValue = value;
 		}
 		int sendValue = newValue - lastValue;
 		lastValue = newValue;
-		if((sendValue >0)&&(sendValue <5)){
-			sendMessage("Moved: +" + sendValue);
-		} else if((sendValue >-5)&&(sendValue <0)){
-			sendMessage("Moved: " + sendValue);
+		if ((sendValue > 0) && (sendValue < 5)) {
+			sendMessage("Moved:" + sendValue);
+		} else if ((sendValue > -5) && (sendValue < 0)) {
+			sendMessage("Moved:" + sendValue);
 		}
-		 
 	}
 	public void sendMessage(String suffix) {
 		controls.outgoingSerial("RotEnc" + suffix);
@@ -92,13 +128,17 @@ public class SimulatorEncoder extends Component {
 			buttonStatus = "off";
 		}
 	}
-	public void paint(Graphics g) {
-		super.paint(g);
-		if (buttonStatus.equals("on")) {
-			g.drawImage(imageLoader.getImage(innerGlow), (226 - 98) / 2, (226 - 92) / 2, this);
-		}
+	public void paintBuffer(Graphics g) {
 		if (wheelStatus.equals("on")) {
-			g.drawImage(imageLoader.getImage(outerGlow), 0, 0, this);
+			g.drawImage(imageLoader.getImage(outerOn), 0, 0, this);
+		} else {
+			g.drawImage(imageLoader.getImage(outerOff), 0, 0, this);
 		}
+		if (buttonStatus.equals("on")) {
+			g.drawImage(imageLoader.getImage(innerOn), ((226 - 80) / 2)-2, (226 - 80) / 2, this);
+		}
+	}
+	public void repaint() {
+		paint(this.getGraphics());
 	}
 }

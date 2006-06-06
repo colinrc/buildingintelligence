@@ -1,10 +1,11 @@
 package au.com.BI.simulator;
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.io.PrintStream;
 import java.util.Vector;
 
 import au.com.BI.Connection.ServerHandler;
+import au.com.BI.DataModel.eLifeActiveLoader;
+import au.com.BI.Serial.SerialHandler;
 import au.com.BI.Util.ImageLoader;
 /*
  * Created on 22/05/2006
@@ -19,21 +20,28 @@ import au.com.BI.Util.ImageLoader;
  * 
  */
 public class SimulatorWindow extends Frame {
-	private SimulatorWindowBG bg;
+	public SimulatorWindowBG bg;
 	private ImageLoader imageLoader;
 	private ServerHandler serverHandle;
 	private SimulatorControls controlWindow;
 	private SimulatorPrintStream print;
+	private eLifeActiveLoader client;
+	private SerialHandler serialHandle;
 	/**
 	 * 
 	 **/
-	public SimulatorWindow(ServerHandler inServerHandler, Vector inImages) {
+	public SimulatorWindow(ServerHandler inServerHandler, Vector inImages, eLifeActiveLoader client,SerialHandler serialHandle) {
 		serverHandle = inServerHandler;
+		this.serialHandle = serialHandle;
 		imageLoader = new ImageLoader(this);
+		inImages.addAll(client.getIcons());
 		imageLoader.loadImages(inImages);
 		controlWindow = new SimulatorControls(this);
-		bg = new SimulatorWindowBG(inServerHandler, imageLoader,controlWindow);
-		controlWindow.setSerialHandler(bg.getSerialHandler());
+		this.client = client;
+		controlWindow.setSerialHandler(serialHandle);
+		serialHandle.setSerialCommsObject(controlWindow);
+		bg = new SimulatorWindowBG(inServerHandler, imageLoader,controlWindow,client,serialHandle);
+		bg.init();
 		Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 		print = new SimulatorPrintStream(System.out,controlWindow);
 		System.setOut(print);
@@ -63,6 +71,6 @@ public class SimulatorWindow extends Frame {
 		this.dispose();
 	}
 	public void receiveMessage(String inMessage){
-		bg.receiveMessage(inMessage);
+		bg.receiveMessage(inMessage);		
 	}
 }
