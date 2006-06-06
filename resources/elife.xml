@@ -1,6 +1,6 @@
 <client>
-	<setting name="serverAddress" value="127.0.0.1" />
-	<setting name="applicationXML" value="office.xml" />
+	<setting name="serverAddress" value="172.16.3.101" />
+	<setting name="applicationXML" value="test.xml" />
 	<setting name="fullScreen" value="false" />
 	<setting name="debugMode" value="false" />
 </client>
