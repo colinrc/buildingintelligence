@@ -12,11 +12,11 @@
 			
 			if ((items[item].attributes["CODE"] == undefined) || (items[item].attributes["CODE"] == "")) {
 				flag = "error";
-				appendValidationMsg("Code is invalid");
+				appendValidationMsg("Code is empty");
 			}
 			if ((items[item].attributes["VALUE"] == undefined) || (items[item].attributes["VALUE"] == "")) {
 				flag = "error";
-				appendValidationMsg("Value is invalid");
+				appendValidationMsg("Value is empty");
 			}
 		}
 		return flag;
