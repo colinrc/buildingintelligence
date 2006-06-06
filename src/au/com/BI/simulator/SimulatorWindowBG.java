@@ -170,7 +170,10 @@ public class SimulatorWindowBG extends Container {
 		} else if (inMessage.equals("wheelOff")) {
 			rotoryEncoder.setStatus(inMessage);
 			rotoryEncoder.repaint();
-		} else if (inMessage.equals("wheelButtonOn")) {
+		} else if (inMessage.equals("wheelButtonBlue")) {
+			rotoryEncoder.setStatus(inMessage);
+			rotoryEncoder.repaint();
+		} else if (inMessage.equals("wheelButtonYellow")) {
 			rotoryEncoder.setStatus(inMessage);
 			rotoryEncoder.repaint();
 		} else if (inMessage.equals("wheelButtonOff")) {

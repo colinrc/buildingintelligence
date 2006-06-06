@@ -29,7 +29,8 @@ public class SimulatorEncoder extends Component {
 	private String buttonStatus = "off";
 	private String wheelStatus = "off";
 	private SimulatorControls controls;
-	private String innerOn = "images/elife_active/wheel-clicker-on";
+	private String innerBlue = "images/elife_active/wheel-clicker-on";
+	private String innerYellow = "images/elife_active/wheel-clicker-on-yellow";
 	private String outerOn = "images/elife_active/wheel-on";
 	private String outerOff = "images/elife_active/wheel-off";
 	protected int bufferWidth;
@@ -122,8 +123,10 @@ public class SimulatorEncoder extends Component {
 			wheelStatus = "on";
 		} else if (inStatus.equals("wheelOff")) {
 			wheelStatus = "off";
-		} else if (inStatus.equals("wheelButtonOn")) {
-			buttonStatus = "on";
+		} else if (inStatus.equals("wheelButtonBlue")) {
+			buttonStatus = "blue";
+		} else if (inStatus.equals("wheelButtonYellow")) {
+			buttonStatus = "yellow";
 		} else if (inStatus.equals("wheelButtonOff")) {
 			buttonStatus = "off";
 		}
@@ -134,8 +137,10 @@ public class SimulatorEncoder extends Component {
 		} else {
 			g.drawImage(imageLoader.getImage(outerOff), 0, 0, this);
 		}
-		if (buttonStatus.equals("on")) {
-			g.drawImage(imageLoader.getImage(innerOn), ((226 - 80) / 2)-2, (226 - 80) / 2, this);
+		if (buttonStatus.equals("blue")) {
+			g.drawImage(imageLoader.getImage(innerBlue), ((226 - 80) / 2)-4, (226 - 80) / 2, this);
+		}else if (buttonStatus.equals("yellow")) {
+			g.drawImage(imageLoader.getImage(innerYellow), ((226 - 80) / 2)-4, (226 - 80) / 2, this);
 		}
 	}
 	public void repaint() {

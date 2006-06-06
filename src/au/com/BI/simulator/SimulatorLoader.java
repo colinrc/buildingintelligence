@@ -92,6 +92,7 @@ public class SimulatorLoader {
 		tempImages.add("images/elife_active/eman-on");
 		tempImages.add("images/elife_active/eman-off");
 		tempImages.add("images/elife_active/wheel-clicker-on");
+		tempImages.add("images/elife_active/wheel-clicker-on-yellow");
 		tempImages.add("images/elife_active/wheel-on");
 		tempImages.add("images/elife_active/wheel-off");
 		Vector tempKeys = new Vector();
