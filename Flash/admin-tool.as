@@ -59,6 +59,7 @@ _global.left_tree = left_tree;
 _global.left_tree.vScrollPolicy = right_tree.vScrollPolicy = "auto";
 _global.left_tree.hScrollPolicy = "auto";
 _global.left_tree.setStyle("openDuration", 50);
+_global.left_tree.cellRenderer = "LeftTreeCellRenderer";
 /*************************************************************************/
 //link to required xml files
 //Load list of overrides for client objects
