@@ -5,21 +5,19 @@
  * Copyright Building Intelligence 2006
  */
 package au.com.BI.GUI;
-
 import java.awt.Graphics;
 import java.awt.Image;
-
+import java.awt.MediaTracker;
 import au.com.BI.Command.Command;
 import au.com.BI.DataModel.Key;
 import au.com.BI.Util.ImageLoader;
-
 /**
  * @author David
  *
  * 
  * 
  */
-public class BISimpleButton extends BIButton {
+public class BISimpleButton extends BIControlButton {
 	private String command = "";
 	private String extra = "";
 	private String extra2 = "";
@@ -35,27 +33,10 @@ public class BISimpleButton extends BIButton {
 		command = "";
 		// TODO Auto-generated constructor stub
 	}
-	public void run() {
-		while (updateThread == Thread.currentThread()) {
-			if (highlighted > 0) {
-				repaint(highlighted);
-				try {
-					updateThread.sleep(50);
-				} catch (InterruptedException e) {
-					System.err.println(e.getMessage());
-					e.printStackTrace();
-				}
-				highlighted = highlighted - 20;
-			} else {
-				repaint(highlighted);
-				stop();
-			}
-		}
-	}
 	public Command createMessage() {
 		Command newCommand = new Command();
-		newCommand.key = ((Key)keys.get(0)).getKey();
-		newCommand.setCommand(command); 
+		newCommand.key = ((Key) keys.get(0)).getKey();
+		newCommand.setCommand(command);
 		newCommand.setExtraInfo(extra);
 		newCommand.setExtra2Info(extra2);
 		newCommand.setExtra3Info(extra3);
@@ -63,29 +44,38 @@ public class BISimpleButton extends BIButton {
 		newCommand.setExtra5Info(extra5);
 		return newCommand;
 	}
-	public void paint(Graphics graphics){
-		super.paint(graphics);
+	public void paintBuffer(Graphics graphics) {
 		graphics.drawImage(iconImg, 9, 9, this);
 	}
-	public void setIcon(String inString){
-		iconImg = imageLoader.getImage(inString).getScaledInstance(width-18,width-18,Image.SCALE_SMOOTH);
+	public void setIcon(String inString) {
+		iconImg =
+			imageLoader.getImage(inString).getScaledInstance(
+				width - 18,
+				width - 18,
+				Image.SCALE_SMOOTH);
+		MediaTracker media = new MediaTracker(this);
+		media.addImage(iconImg, 0);
+		try {
+			media.waitForID(0);
+		} catch (Exception e) {
+		}
 	}
 	public void setCommand(String inString) {
 		command = inString;
 	}
-	public void setExtra(String inString){
+	public void setExtra(String inString) {
 		extra = inString;
 	}
-	public void setExtra2(String inString){
+	public void setExtra2(String inString) {
 		extra2 = inString;
 	}
-	public void setExtra3(String inString){
+	public void setExtra3(String inString) {
 		extra3 = inString;
 	}
-	public void setExtra4(String inString){
+	public void setExtra4(String inString) {
 		extra4 = inString;
 	}
-	public void setExtra5(String inString){
+	public void setExtra5(String inString) {
 		extra5 = inString;
 	}
 }

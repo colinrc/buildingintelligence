@@ -5,104 +5,133 @@
  * Copyright Building Intelligence 2006
  */
 package au.com.BI.GUI;
-
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
 import au.com.BI.Connection.ServerHandler;
 import au.com.BI.Util.ImageLoader;
-
 /**
  * @author David
  *
  * 
  * 
  */
-public class MainWindowTitleBar extends Component implements Runnable{
+public class MainWindowTitleBar extends Component implements Runnable {
 	private ImageLoader imageLoader;
 	private ServerHandler serverHandle;
 	protected Image offScreenImage;
 	private Calendar cal;
+	private String name;
+	private boolean showDay;
+	private int count;
 	/**
 	 * 
 	 */
 	/*Concurrent Components*/
 	protected Thread updateThread = null;
-	public MainWindowTitleBar(ImageLoader inImageLoader, ServerHandler inServerHandler) {
-		imageLoader = inImageLoader;
-		serverHandle = inServerHandler;
-		// TODO Auto-generated constructor stub
-		if (updateThread == null) {
-					updateThread = new Thread(this, "timer");
+	protected int bufferWidth;
+	protected int bufferHeight;
+	protected Image bufferImage;
+	protected Graphics bufferGraphics;
+	public void paint(Graphics g) {
+		resetBuffer();
+		if (bufferGraphics != null) {
+			//this clears the offscreen image, not the onscreen one
+			bufferGraphics.clearRect(0, 0, bufferWidth, bufferHeight);
+			//calls the paintbuffer method with 
+			//the offscreen graphics as a param
+			paintBuffer(bufferGraphics);
+			//we finaly paint the offscreen image onto the onscreen image
+			g.drawImage(bufferImage, 0, 0, this);
 		}
 	}
-	public void update(Graphics graphics) {
-		try{
-		
-			// Create an offscreen image and then get its
-			// graphics context for the drawing.
-			if (offScreenImage == null){
-				offScreenImage = createImage(240, 80);
+	public void paintBuffer(Graphics g) {
+		//in classes extended from this one, add something to paint here!
+		//always remember, g is the offscreen graphics
+		SimpleDateFormat df;
+		SimpleDateFormat df2;
+		cal = Calendar.getInstance();
+		//if (showDay) {
+			df = new SimpleDateFormat("dd MMMMMMMM yyyy");
+	/*	} else {
+			df = new SimpleDateFormat("EEEEEEEE");
+		}*/
+		df2 = new SimpleDateFormat("kk:mm");
+		g.setColor(new java.awt.Color(0, 0, 0));
+		g.fillRect(0, 0, 240, 80);
+		g.setColor(new java.awt.Color(255, 255, 255));
+		g.setFont(new java.awt.Font("helvetica", java.awt.Font.BOLD, 16));
+		g.drawString(df.format(cal.getTime()), 10, 25);
+		g.drawString(df2.format(cal.getTime()), 190, 25);
+		g.drawString(name, 10, 60);
+		if (!updateThread.isAlive()) {
+			updateThread.start();
+		}
+	}
+	private void resetBuffer() {
+		// always keep track of the image size
+		try {
+			bufferWidth = getSize().width;
+			bufferHeight = getSize().height;
+			//    clean up the previous image
+			if (bufferGraphics != null) {
+				bufferGraphics.dispose();
+				bufferGraphics = null;
 			}
-			Graphics gOffScreenImage = offScreenImage.getGraphics();
-			// Do the clipping on both the off
-			// and on screen graphics contexts.
-			// Now draw on the offscreen image.
-			paint(gOffScreenImage);
-			// Don't bother to call paint,
-			// just draw the offscreen image
-			// to the screen.
-			graphics.drawImage(offScreenImage, 0, 0, this);
-			// Get rid of the offscreen graphics context.
-			// Can't unclip a graphics context so have
-			// to get a new one next time around.
-			gOffScreenImage.dispose();
-		}
-		catch(Exception e){
-			
-		}
-		}
-		public void paint(Graphics graphics) {
-			super.paint(graphics);
-			SimpleDateFormat df;
-			SimpleDateFormat df2;
-			cal = Calendar.getInstance();
-			df = new SimpleDateFormat("EEEEEEEE, dd MMMMMMMM yyyy");
-			df2 = new SimpleDateFormat("kk:mm");
-			graphics.setColor(new java.awt.Color(0, 0, 0));
-			graphics.fillRect(0, 0, 240, 80);
-			graphics.setColor(new java.awt.Color(255, 255, 255));
-			graphics.setFont(new java.awt.Font("helvetica", java.awt.Font.PLAIN, 18));
-			graphics.drawString(df.format(cal.getTime()), 10, 25);
-			graphics.drawString(df2.format(cal.getTime()), 10, 50);
-			//graphics.setFont(new java.awt.Font("helvetica", java.awt.Font.BOLD, 12));
-			//graphics.drawString("Macros", 3, 45);
-			if(!updateThread.isAlive()){
-				updateThread.start();
+			if (bufferImage != null) {
+				bufferImage.flush();
+				bufferImage = null;
 			}
-			
+			System.gc();
+			//    create the new image with the size of the panel
+			bufferImage = createImage(bufferWidth, bufferHeight);
+			bufferGraphics = bufferImage.getGraphics();
+		} catch (Exception e) {
 		}
-		public void repaint() {
-			update(this.getGraphics());
+	}
+	public void repaint() {
+		paint(this.getGraphics());
+	}
+	public MainWindowTitleBar(
+		ImageLoader inImageLoader,
+		ServerHandler inServerHandler,
+		String current) {
+		imageLoader = inImageLoader;
+		serverHandle = inServerHandler;
+		name = current;
+		// TODO Auto-generated constructor stub
+		showDay = false;
+		count = 0;
+		if (updateThread == null) {
+			updateThread = new Thread(this, "timer");
 		}
-		public void run() {
-			while (updateThread == Thread.currentThread()) {
-				try {
-					repaint();
-					updateThread.sleep(500);			
-				} catch (Exception e) {
-					e.printStackTrace();
-					System.exit(1);
+	}
+	public void run() {
+		while (updateThread == Thread.currentThread()) {
+			try {
+				repaint();
+				count++;
+				if (count == 10) {
+					count = 0;
+					showDay = !showDay;
 				}
+				updateThread.sleep(500);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(1);
 			}
 		}
-		public void stop() {
-			if (updateThread.isAlive()) {
-				updateThread = null;
-				updateThread = new Thread(this, "highlighter");
-			}
+	}
+	public void stop() {
+		if (updateThread.isAlive()) {
+			updateThread = null;
+			updateThread = new Thread(this, "highlighter");
 		}
+	}
+	public void setTitle(String inTitle) {
+		name = inTitle;
+		repaint();
+	}
 }

@@ -6,6 +6,7 @@
  */
 package au.com.BI.GUI;
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,10 +15,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 
-import au.com.BI.Command.Command;
 import au.com.BI.Connection.ServerHandler;
 import au.com.BI.Objects.BIListener;
-import au.com.BI.Objects.BIState;
 import au.com.BI.Util.ImageLoader;
 /**
  * @author David
@@ -25,18 +24,18 @@ import au.com.BI.Util.ImageLoader;
  * 
  * 
  */
-public abstract class BIButton extends Component implements Runnable, BIListener {
+public abstract class BIButton extends Component  implements BIListener {
 	/*Override Attributes*/
 	protected int bgColour;
 	protected int borderColour;
 	protected String buttonFont;
 	protected int fontColour;
 	protected int fontSize;
+	protected boolean disabled = false;	
 	/*Inline Attributes*/
-	protected Vector keys = new Vector();
 	protected int width;
 	protected int height;
-	protected int highlighted;
+	protected boolean highlighted;
 	protected int PNGWIDTH = 9;
 	/*Button Components*/
 	protected ImageLoader imageLoader;
@@ -57,14 +56,13 @@ public abstract class BIButton extends Component implements Runnable, BIListener
 	protected Image highlightBottomLeft;
 	protected Image highlightBottom;
 	protected Image highlightBottomRight;
-	protected Image offScreenImage;
-	/*Concurrent Components*/
-	protected Thread updateThread = null;
+	protected Image bufferImage;
+	protected Graphics bufferGraphics;
+	protected int bufferWidth;
+	protected int bufferHeight;
+	protected MouseAdapter mouseListener;
 	/*BI Communication objects*/
-	protected BIState state = null;
-	protected ServerHandler serverHandle = null;
 	public BIButton(ImageLoader inImageLoader) {
-		//this.setCursor();
 		imageLoader = inImageLoader;
 		/*Override Attributes*/
 		bgColour = Integer.parseInt("0x7C90B0".substring(2), 16);
@@ -75,24 +73,13 @@ public abstract class BIButton extends Component implements Runnable, BIListener
 		/*Inline Attributes*/
 		width = 66;
 		height = 66;
-		highlighted = 0;
-		if (updateThread == null) {
-			updateThread = new Thread(this, "highlighter");
+		highlighted = false;
+		mouseListener =new MouseAdapter() {
+		public void mouseClicked(MouseEvent e) {
+			doAction();
 		}
-		this.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				if (updateThread.isAlive()) {
-					stop();
-					updateThread.start();
-					highlighted = 100;
-				} else {
-					updateThread.start();
-					highlighted = 100;
-				}
-				serverHandle.sendToServer(createMessage());
-				repaint(highlighted);
-			}
-		});
+		}; 
+		this.addMouseListener(mouseListener);
 		baseTopLeft = imageLoader.getImage("images/base/button-base_01");
 		baseTop = imageLoader.getImage("images/base/button-base_02");
 		baseTopRight = imageLoader.getImage("images/base/button-base_03");
@@ -111,139 +98,148 @@ public abstract class BIButton extends Component implements Runnable, BIListener
 		highlightBottom = imageLoader.getImage("images/highlight/button-highlight_08");
 		highlightBottomRight = imageLoader.getImage("images/highlight/button-highlight_09");
 	}
-	public abstract Command createMessage();
-	public void paint(Graphics graphics) {
-		Graphics g2 = offScreenImage == null ? graphics : offScreenImage.getGraphics();
-		graphics.setColor(new java.awt.Color(82, 104, 141));
-		graphics.fillRect(0, 0, width, height);
-		Graphics2D g2d = (Graphics2D)graphics;
-		g2d.setComposite(makeComposite((float)0.4));
-		//}
-		// Create an offscreen image and then get its
-		// graphics context for the drawing.
-		// Don't bother to call paint,
-		// just draw the offscreen image
-		// to the screen.
-		graphics.drawImage(baseTopLeft, 0, 0, this);
-		graphics.drawImage(baseTop, PNGWIDTH, 0, width - (PNGWIDTH * 2), PNGWIDTH, this);
-		graphics.drawImage(baseTopRight, width - PNGWIDTH, 0, this);
-		graphics.drawImage(baseMiddleLeft, 0, PNGWIDTH, PNGWIDTH, height - (PNGWIDTH * 2), this);
-		graphics.drawImage(
-			baseMiddle,
-			PNGWIDTH,
-			PNGWIDTH,
-			width - (PNGWIDTH * 2),
-			height - (PNGWIDTH * 2),
-			this);
-		graphics.drawImage(
-			baseMiddleRight,
-			width - PNGWIDTH,
-			PNGWIDTH,
-			PNGWIDTH,
-			height - (PNGWIDTH * 2),
-			this);
-		graphics.drawImage(baseBottomLeft, 0, height - PNGWIDTH, this);
-		graphics.drawImage(
-			baseBottom,
-			PNGWIDTH,
-			height - PNGWIDTH,
-			width - (PNGWIDTH * 2),
-			PNGWIDTH,
-			this);
-		graphics.drawImage(baseBottomRight, width - PNGWIDTH, height - PNGWIDTH, this);
-		if (offScreenImage != null)
-			graphics.drawImage(offScreenImage, 0, 0, this);
-		g2d.setComposite(makeComposite(1));
-		super.paint(graphics);
-	}
-	public void setServerHandler(ServerHandler inServerHandler) {
-		serverHandle = inServerHandler;
-	}
-	public void setKeys(Vector inVector) {
-		keys = inVector;
-	}
-	public Vector getKeys() {
-		return keys;
-	}
-	public void setState(BIState inState) {
-		state = inState;
-	}
-	public void update() {
-		repaint(highlighted);
-	}
-	public void repaint() {
-		update(this.getGraphics());
-	}
-	private AlphaComposite makeComposite(float alpha) {
+	public abstract void doAction();
+	public AlphaComposite makeComposite(float alpha) {
 		int type = AlphaComposite.SRC_OVER;
 		return (AlphaComposite.getInstance(type, alpha));
 	}
-	public void repaint(int highlighted) {
-		Graphics graphics = this.getGraphics();
-		update(graphics);
-		Graphics2D g2d = (Graphics2D)graphics;
-		g2d.setComposite(makeComposite((float)0.01*highlighted));
-		if (highlighted > 0) {			
-			graphics.drawImage(highlightTopLeft, 0, 0, this);
-			graphics.drawImage(highlightTop, PNGWIDTH, 0, width - (PNGWIDTH * 2), PNGWIDTH, this);
-			graphics.drawImage(highlightTopRight, width - PNGWIDTH, 0, this);
-			graphics.drawImage(
-				highlightMiddleLeft,
+	public void paint(Graphics g) {
+		//    checks the buffersize with the current panelsize
+		//    or initialises the image with the first paint
+		resetBuffer();
+		if (bufferGraphics != null) {
+			//this clears the offscreen image, not the onscreen one
+			Graphics2D g2d = (Graphics2D) bufferGraphics;
+			g2d.setComposite(makeComposite((float) 1));
+			bufferGraphics.clearRect(0, 0, bufferWidth, bufferHeight);
+			//calls the paintbuffer method with 
+			//the offscreen graphics as a param
+			bufferGraphics.setColor(new java.awt.Color(82, 104, 141));
+			bufferGraphics.fillRect(0, 0, this.getWidth(), height);			
+			g2d.setComposite(makeComposite((float) 0.4));
+			bufferGraphics.drawImage(baseTopLeft, 0, 0, this);
+			bufferGraphics.drawImage(baseTop, PNGWIDTH, 0, width - (PNGWIDTH * 2), PNGWIDTH, this);
+			bufferGraphics.drawImage(baseTopRight, width - PNGWIDTH, 0, this);
+			bufferGraphics.drawImage(
+				baseMiddleLeft,
 				0,
 				PNGWIDTH,
 				PNGWIDTH,
 				height - (PNGWIDTH * 2),
 				this);
-			graphics.drawImage(
-				highlightMiddleRight,
+			bufferGraphics.drawImage(
+				baseMiddle,
+				PNGWIDTH,
+				PNGWIDTH,
+				width - (PNGWIDTH * 2),
+				height - (PNGWIDTH * 2),
+				this);
+			bufferGraphics.drawImage(
+				baseMiddleRight,
 				width - PNGWIDTH,
 				PNGWIDTH,
 				PNGWIDTH,
 				height - (PNGWIDTH * 2),
 				this);
-			graphics.drawImage(highlightBottomLeft, 0, height - PNGWIDTH, this);
-			graphics.drawImage(
-				highlightBottom,
+			bufferGraphics.drawImage(baseBottomLeft, 0, height - PNGWIDTH, this);
+			bufferGraphics.drawImage(
+				baseBottom,
 				PNGWIDTH,
 				height - PNGWIDTH,
 				width - (PNGWIDTH * 2),
 				PNGWIDTH,
 				this);
-			graphics.drawImage(highlightBottomRight, width - PNGWIDTH, height - PNGWIDTH, this);
+			bufferGraphics.drawImage(baseBottomRight, width - PNGWIDTH, height - PNGWIDTH, this);
+			g2d.setComposite(makeComposite(1));
+			if (highlighted) {
+				bufferGraphics.drawImage(highlightTopLeft, 0, 0, this);
+				bufferGraphics.drawImage(
+					highlightTop,
+					PNGWIDTH,
+					0,
+					width - (PNGWIDTH * 2),
+					PNGWIDTH,
+					this);
+				bufferGraphics.drawImage(highlightTopRight, width - PNGWIDTH, 0, this);
+				bufferGraphics.drawImage(
+					highlightMiddleLeft,
+					0,
+					PNGWIDTH,
+					PNGWIDTH,
+					height - (PNGWIDTH * 2),
+					this);
+				bufferGraphics.drawImage(
+					highlightMiddleRight,
+					width - PNGWIDTH,
+					PNGWIDTH,
+					PNGWIDTH,
+					height - (PNGWIDTH * 2),
+					this);
+				bufferGraphics.drawImage(highlightBottomLeft, 0, height - PNGWIDTH, this);
+				bufferGraphics.drawImage(
+					highlightBottom,
+					PNGWIDTH,
+					height - PNGWIDTH,
+					width - (PNGWIDTH * 2),
+					PNGWIDTH,
+					this);
+				bufferGraphics.drawImage(
+					highlightBottomRight,
+					width - PNGWIDTH,
+					height - PNGWIDTH,
+					this);
+			}
+			if(disabled){
+				g2d.setComposite(makeComposite((float) 1));
+				g2d.setComposite(makeComposite((float) 0.5));
+				g2d.setColor(new Color(82, 104, 141));
+				g2d.fillRect(0,0,this.getWidth(),this.getHeight());
+			}
+			paintBuffer(bufferGraphics);
+			//we finaly paint the offscreen image onto the onscreen image
+			g.drawImage(bufferImage, 0, 0, this);
 		}
-		
 	}
-	public void update(Graphics graphics) {
-		// Create an offscreen image and then get its
-		// graphics context for the drawing.
-		if (offScreenImage == null)
-			offScreenImage = createImage(getSize().width, getSize().height);
-		Graphics gOffScreenImage = offScreenImage.getGraphics();
-		// Do the clipping on both the off
-		// and on screen graphics contexts.
-		/*		 int lastX = currentX, lastY = currentY;
-				 currentX = newX; currentY = newY;
-				 clipToAffectedArea( og, lastX, lastY,
-					 currentX, currentY, iamgeWd, imageHt );
-				 clipToAffectedArea( g, lastX, lastY,
-					 currentX, currentY, imageWd, imageHt );
-		*/
-		// Now draw on the offscreen image.
-		paint(gOffScreenImage);
-		// Don't bother to call paint,
-		// just draw the offscreen image
-		// to the screen.
-		graphics.drawImage(offScreenImage, 0, 0, this);
-		// Get rid of the offscreen graphics context.
-		// Can't unclip a graphics context so have
-		// to get a new one next time around.
-		gOffScreenImage.dispose();
+	public void setDisabled(boolean inEnabled){
+		disabled = inEnabled;
+		repaint();
 	}
-	public int getGetHighLighted() {
+	public void paintBuffer(Graphics g) {
+		//in classes extended from this one, add something to paint here!
+		//always remember, g is the offscreen graphics
+	}
+	private void resetBuffer() {
+		try {
+			// always keep track of the image size
+			bufferWidth = getSize().width;
+			bufferHeight = getSize().height;
+			//    clean up the previous image
+			if (bufferGraphics != null) {
+				bufferGraphics.dispose();
+				bufferGraphics = null;
+			}
+			if (bufferImage != null) {
+				bufferImage.flush();
+				bufferImage = null;
+			}
+			//    create the new image with the size of the panel
+			bufferImage = createImage(bufferWidth, bufferHeight);
+			bufferGraphics = bufferImage.getGraphics();
+		} catch (Exception e) {
+		}
+	}
+	public void update() {
+		repaint();
+	}
+	public void repaint() {
+		paint(this.getGraphics());
+	}
+	public boolean getGetHighLighted() {
 		return highlighted;
 	}
-	public void setHighLighted(int inHighlighted) {
+	public void setHighLighted(boolean inHighlighted) {
 		highlighted = inHighlighted;
+		repaint();
 	}
 	public void setBGColour(String inString) {
 		bgColour = Integer.parseInt(inString.substring(2), 16);
@@ -266,11 +262,23 @@ public abstract class BIButton extends Component implements Runnable, BIListener
 	public void setHeight(String inString) {
 		height = Integer.parseInt(inString);
 	}
-	abstract public void run();
-	public void stop() {
-		if (updateThread.isAlive()) {
-			updateThread = null;
-			updateThread = new Thread(this, "highlighter");
+	public void finalize() throws Throwable {
+		try {
+			bufferImage = null;
+			bufferGraphics = null;
+		} finally {
+			super.finalize();
 		}
+	}
+	protected ServerHandler serverHandle = null;
+		protected Vector keys = new Vector();
+	public void setServerHandler(ServerHandler inServerHandler) {
+		serverHandle = inServerHandler;
+	}
+	public void setKeys(Vector inVector) {
+		keys = inVector;
+	}
+	public Vector getKeys() {
+		return keys;
 	}
 }
