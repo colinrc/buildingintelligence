@@ -32,8 +32,7 @@ public class Bootstrap {
     protected String rrdGraphDir;
     protected String RRDBDIRECTORY = "." + File.separator + "JRobin" + File.separator;
     protected String RRDXMLDIRECTORY = "." + File.separator + "JRobin" + File.separator+"RRDDefinition" + File.separator;
-    protected Date startTime;
-    protected String version;
+    protected Date startTime = null;
     protected String docRoot = "";
     protected int jettyPort = 80;
     private boolean jettyActive = false;
@@ -298,15 +297,6 @@ public class Bootstrap {
      */
     public void setConsoleLogging(boolean consoleLogging) {
         this.consoleLogging = consoleLogging;
-    }
-    
-    public String getVersion() {
-        return version;
-    }
-    
-    
-    public void setVersion(String version) {
-        this.version = version;
     }
     
     public String getLogDir() {

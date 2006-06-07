@@ -12,6 +12,7 @@ import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.Security;
 import au.com.BI.Config.TooManyClientsException;
+import au.com.BI.Home.VersionManager;
 
 import java.util.*;
 import java.net.*;
@@ -28,21 +29,21 @@ import org.jdom.output.*;
  */
 public class FlashControlListener extends Thread {
     
-    protected ServerSocket iPPort;
-    protected AddressBook addressBook;
+    protected ServerSocket iPPort = null;
+    protected AddressBook addressBook = null;
     
-    protected LinkedList flashControllers;
+    protected LinkedList flashControllers = null;
     protected int portNumber;
-    protected String Address;
-    protected InetAddress iPAddress;
+    protected String Address = null;
+    protected InetAddress iPAddress = null;
     protected Logger logger;
     protected boolean running;
-    protected List commandList;
-    protected au.com.BI.Command.Cache cache;
-    protected MacroHandler macroHandler;
-    protected Document heartbeatDoc;
-    protected EventCalendar eventCalendar;
-    protected String version;
+    protected List commandList = null;
+    protected au.com.BI.Command.Cache cache = null;
+    protected MacroHandler macroHandler = null;
+    protected Document heartbeatDoc = null;
+    protected EventCalendar eventCalendar = null;
+    protected VersionManager versionManager = null;
     private int numberFlashClients = 0;
     private Security security = null;
     private Date timeOfLastLicenseMessage  = null;
@@ -50,7 +51,7 @@ public class FlashControlListener extends Thread {
     protected XMLOutputter xmlOut = null;
     
     public FlashControlListener(LinkedList flashControllers, int portNumber, String Address,List commandList,
-	    String version,Security security,AddressBook addressBook)
+	    VersionManager versionManager,Security security,AddressBook addressBook)
 	    throws CommsFail {
 	heartbeatDoc = new Document(new Element("heartbeat"));
 	
@@ -60,7 +61,7 @@ public class FlashControlListener extends Thread {
 	timeOfLastLicenseMessage = new Date();
 	
 	
-	this.version = version;
+	this.versionManager = versionManager;
 	this.addressBook = addressBook;
 	this.security = security;
 	xmlOut = new XMLOutputter();
@@ -381,20 +382,23 @@ public class FlashControlListener extends Thread {
     
     protected void newClient(FlashClientHandler flashClientHandler, long flashID, long serverID) {
 	// tell the user that they're connected
-	Element conElement = new Element("connected");
-	conElement.setAttribute("version", version);
-	Document replyDoc = new Document(conElement);
-	sendXML(flashClientHandler, replyDoc);
-	
-	Command initConnection = new Command();
-	initConnection.setKey("SYSTEM");
-	initConnection.setCommand("ClientAttach");
-	initConnection.setExtraInfo(Long.toString(flashID));
-	initConnection.setExtra2Info(Long.toString(serverID));
-	synchronized (commandList){
-	    commandList.add(initConnection);
-	    commandList.notifyAll();
-	}
+		Element conElement = new Element("connected");
+		
+		String masterVersion = versionManager.getMasterVersion();
+		conElement.setAttribute("version", masterVersion);
+
+		Document replyDoc = new Document(conElement);
+		sendXML(flashClientHandler, replyDoc);
+		
+		Command initConnection = new Command();
+		initConnection.setKey("SYSTEM");
+		initConnection.setCommand("ClientAttach");
+		initConnection.setExtraInfo(Long.toString(flashID));
+		initConnection.setExtra2Info(Long.toString(serverID));
+		synchronized (commandList){
+		    commandList.add(initConnection);
+		    commandList.notifyAll();
+		}
     }
     /**
      * @return Returns the eventCalendar.
@@ -420,6 +424,14 @@ public class FlashControlListener extends Thread {
     public void setServerID(long serverID) {
 	this.serverID = serverID;
     }
+
+	public VersionManager getVersionManager() {
+		return versionManager;
+	}
+
+	public void setVersionManager(VersionManager versionManager) {
+		this.versionManager = versionManager;
+	}
     
     
     

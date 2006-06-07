@@ -13,6 +13,7 @@ import au.com.BI.Config.Bootstrap;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Config.ParameterException;
 import au.com.BI.GC100.IRCodeDB;
+import au.com.BI.Home.VersionManager;
 import au.com.BI.Macro.MacroHandler;
 import au.com.BI.Messaging.AddressBook;
 /**
@@ -445,6 +446,9 @@ public interface DeviceModel {
 	 */
 	public void sendToFlash (String displayName, String command, String value);
 
+	public VersionManager getVersionManager() ;
+
+	public void setVersionManager(VersionManager versionManager) ;
 	
 }
 

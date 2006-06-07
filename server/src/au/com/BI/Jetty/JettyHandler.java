@@ -88,6 +88,8 @@ public class JettyHandler extends BaseModel implements DeviceModel, ClientModel 
             updateContextHandler.setAttribute("AddressBook",addressBook);
             updateContextHandler.setAttribute("CommandQueue",commandQueue);
             updateContextHandler.setAttribute("Security",security);
+            updateContextHandler.setAttribute("ServerID",new Long (this.getServerID()));
+            updateContextHandler.setAttribute("VersionManager",this.getVersionManager());
 
             // Servlet Security config
             SecurityHandler servletSec = new SecurityHandler();

@@ -29,6 +29,7 @@ import au.com.BI.VirtualOutput.*;
 import au.com.BI.PulseOutput.*;
 import au.com.BI.Macro.*;
 import au.com.BI.Home.Controls;
+import au.com.BI.Home.VersionManager;
 import au.com.BI.IR.*;
 import au.com.BI.Sensors.*;
 import au.com.BI.Raw.RawFactory;
@@ -117,7 +118,7 @@ public class Config {
 			HashMap <String,Object>variableCache, List commandQueue, Map modelRegistry,
 			IRCodeDB irCodeDB, File configFile, MacroHandler macroHandler, 
 			Bootstrap bootstrap, Controls controls, AddressBook addressBook,
-			AlarmLogging alarmLogging)
+			AlarmLogging alarmLogging,VersionManager versionManager)
 			throws ConfigError {
 		// Create an instance of the tester and test
 		try {
@@ -146,7 +147,8 @@ public class Config {
 						newDeviceModel.setModelList(deviceModels);
 						newDeviceModel.setBootstrap(bootstrap);
 						newDeviceModel.setAddressBook (addressBook);						
-						newDeviceModel.setAlarmLogging (alarmLogging);						
+						newDeviceModel.setAlarmLogging (alarmLogging);	
+						newDeviceModel.setVersionManager(versionManager);
 						deviceModels.add(newDeviceModel);
 						newDeviceModel.setInstanceID(deviceModels.size()-1);
 					}

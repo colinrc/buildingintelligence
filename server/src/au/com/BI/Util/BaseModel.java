@@ -15,6 +15,7 @@ import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Config.ParameterException;
 import au.com.BI.GC100.IRCodeDB;
+import au.com.BI.Home.VersionManager;
 import au.com.BI.SignVideo.Model;
 import au.com.BI.User.User;
 import java.util.*;
@@ -69,6 +70,7 @@ public class BaseModel
         protected boolean configKeysInDecimal = false;
 		protected int padding = 1; // Number of digits to pad the key too in the device.
 		public DeviceType allDevices = null;
+		protected VersionManager versionManager = null;
 		
 		
 		public User currentUser = null;
@@ -936,4 +938,12 @@ public class BaseModel
 		}
     	return formatKey(keyInt);
     }
+
+	public VersionManager getVersionManager() {
+		return versionManager;
+	}
+
+	public void setVersionManager(VersionManager versionManager) {
+		this.versionManager = versionManager;
+	}
 }

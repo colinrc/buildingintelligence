@@ -69,6 +69,7 @@ public class Controller {
     protected String RRDGRAPH = ".\\JRobin\\Graph\\";  // Default value for testing
     protected AddressBook addressBook = null;
     protected JettyHandler jettyHandler = null;
+    protected VersionManager versionManager = null;
 
 	// All known object representations of devices active in the system
 	/**
@@ -147,6 +148,7 @@ public class Controller {
 		scriptModel.setModelList(deviceModels);
         scriptModel.setController(this);
         scriptModel.setBootstrap(bootstrap);
+        scriptModel.setVersionManager(versionManager);
         scriptModel.setAddressBook(addressBook);
         scriptModel.setAlarmLogging (alarmLogging);
 		scriptModel.setInstanceID(deviceModels.size()-1);
@@ -162,6 +164,7 @@ public class Controller {
 		flashHandler.setEventCalendar (macroHandler.getEventCalendar());
 		flashHandler.setModelList(deviceModels);
 		flashHandler.setBootstrap(bootstrap);
+		flashHandler.setVersionManager(versionManager);
 		clientModels.add(flashHandler);
 
 		adminModel = new au.com.BI.Admin.Model(1);
@@ -170,6 +173,7 @@ public class Controller {
 		adminModel.setModelRegistry (modelRegistry);
 		adminModel.setModelList(deviceModels);
 		adminModel.setBootstrap(bootstrap);
+		adminModel.setVersionManager(versionManager);
 		adminModel.setAddressBook(addressBook);
 		adminModel.setAlarmLogging (alarmLogging);
 
@@ -184,6 +188,7 @@ public class Controller {
 		messagingModel.setModelList(deviceModels);
 		messagingModel.setAddressBook(addressBook);
 		messagingModel.setAlarmLogging(alarmLogging);
+		messagingModel.setVersionManager(versionManager);
 		deviceModels.add( messagingModel);
 		messagingModel.setInstanceID(deviceModels.size()-1);
 		
@@ -195,6 +200,7 @@ public class Controller {
 		macroModel.setModelList(deviceModels);
 		macroModel.setAddressBook(addressBook);
 		macroModel.setAlarmLogging(alarmLogging);
+		macroModel.setVersionManager(versionManager);
 		deviceModels.add( macroModel);
 		macroModel.setInstanceID(deviceModels.size()-1);
                 
@@ -207,6 +213,7 @@ public class Controller {
         jettyHandler.setModelList(deviceModels);
         jettyHandler.setAddressBook(addressBook);
         jettyHandler.setAlarmLogging(alarmLogging);
+        jettyHandler.setVersionManager(versionManager);
 		deviceModels.add( jettyHandler);
 		jettyHandler.setInstanceID(deviceModels.size()-1);
         
@@ -1186,7 +1193,7 @@ public class Controller {
 		try {
 		    config.readConfig(deviceModels, clientModels, cache, variableCache ,
 			    commandQueue, modelRegistry, irCodeDB, configFiles[i], macroHandler,
-			    bootstrap, controls, addressBook, alarmLogging);
+			    bootstrap, controls, addressBook, alarmLogging,versionManager);
 		    configLoaded = true;
 		} catch (ConfigError configError) {
 		    logger.log(Level.SEVERE, "Error in configuration file " + configFiles[i].toString() + " "
@@ -1328,6 +1335,14 @@ public class Controller {
 	 */
 	public void setLogHandler(LogHandler logHandler) {
 		this.logHandler = logHandler;
+	}
+
+	public VersionManager getVersionManager() {
+		return versionManager;
+	}
+
+	public void setVersionManager(VersionManager versionManager) {
+		this.versionManager = versionManager;
 	}
 
 }

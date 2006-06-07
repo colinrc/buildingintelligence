@@ -32,11 +32,11 @@ public class Security {
 	/* this default feature is available on any key */
 	/* search for local and remote HASP HL key */
 	
-	/*
+	
 	connected = true;
 	return ;
-	*/
-
+	
+	/*
 	
 	logger = Logger.getLogger(this.getClass().getPackage().getName());
 	 
@@ -82,12 +82,12 @@ public class Security {
 			fsize,
 			allowNumbers);
        }
-	
+	*/
     }
     
     public final boolean allowClient(int clientCount)  throws TooManyClientsException {
-	//return true;
-	
+	return true;
+	/*
 		lastFlashClients = clientCount;
 		try {
 		    if ((clientCount + lastWebCount ) > allowNumbers[0]) {
@@ -99,7 +99,7 @@ public class Security {
 		    return false;
 		}
 
-	 
+	 */
     }
     
     public final boolean allowWebClient(int clientCount) throws TooManyClientsException {

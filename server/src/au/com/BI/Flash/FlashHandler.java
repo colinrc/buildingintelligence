@@ -104,7 +104,7 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 	    }
 
 		flashControlListener = new FlashControlListener (flashClientHandlers, portNumber,address,
-				commandQueue,bootstrap.getVersion(),security,addressBook);
+				commandQueue,this.getVersionManager(),security,addressBook);
 		flashControlListener.setCache(cache);
 		flashControlListener.setMacroHandler (macroHandler);
 		flashControlListener.setServerID(serverID);

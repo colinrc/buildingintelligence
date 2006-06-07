@@ -42,8 +42,12 @@ public class CacheBridge implements CacheListener {
         }
     }
     
-    public Element getCommands (){
+    public Element getCommands (List<Element> extraElementsToInclude){
     	Element resultsDoc = new Element("a");
+    	
+    	for (Element elm:extraElementsToInclude){
+    		resultsDoc.addContent(elm);
+    	}
     	
         synchronized (commandsToSend){
         	for (CacheWrapper cacheWrapper:commandsToSend.values()) {

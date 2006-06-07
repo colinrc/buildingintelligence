@@ -63,7 +63,8 @@ public class eLife {
 		    if (sysOutPrint) System.out.println ("About to load bootstrap " + bootstrapFile);
 		    bootstrap.readBootstrap(bootstrapFile);
 		    if (sysOutPrint) System.out.println ("Bootstrap read OK");
-			bootstrap.setVersion (outString);
+		    VersionManager versionManager = new VersionManager ();
+		    versionManager.setMasterVersion(outString);
 
 		    this.defaultLogLevel = bootstrap.getDefaultDebugging();
 		    
@@ -101,6 +102,7 @@ public class eLife {
 			controller.setBootstrap(bootstrap);
 			controller.setBindToAddress(bootstrap.getServerString());
 			controller.setClientPort(bootstrap.getPort());
+			controller.setVersionManager (versionManager);
 			controller.setUp(); 
 			if (!configName.equals ("")) {
 				controller.setConfigFile (configName);
