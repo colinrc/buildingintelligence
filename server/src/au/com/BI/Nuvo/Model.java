@@ -419,7 +419,7 @@ public class Model extends BaseModel implements DeviceModel {
 				if (!key.equals (Model.AllZones)){
 					returnVal.addCommOutput(String.format("*Z"+key+"VOL%02d",newVal));
 					returnVal.addFlashCommand(buildCommandForFlash(device,"volume",newVol,"","","","",0));
-					logger.log (Level.FINEST,"Volump ramp up in zone " + key);					
+					logger.log (Level.FINEST,"Volump up in zone " + key);					
 				} else {
 				    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
 						if (!audioDevice.getKey().equals(Model.AllZones)) {
@@ -432,7 +432,7 @@ public class Model extends BaseModel implements DeviceModel {
 						}
 				    }	
 
-					logger.log (Level.FINEST,"All volume ramp up");	
+					logger.log (Level.FINEST,"All volume up");	
 				}
 			}
 
@@ -443,7 +443,7 @@ public class Model extends BaseModel implements DeviceModel {
 				if (!key.equals (Model.AllZones)){
 					returnVal.addCommOutput(String.format("*Z"+key+"VOL%02d",newVal));
 					returnVal.addFlashCommand(buildCommandForFlash(device,"volume",newVol,"","","","",0));
-					logger.log (Level.FINEST,"Volump ramp down in zone " + key);					
+					logger.log (Level.FINEST,"Volume down in zone " + key);					
 				} else {
 				    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
 						if (!audioDevice.getKey().equals(Model.AllZones)) {
