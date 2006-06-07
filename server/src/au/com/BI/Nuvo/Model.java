@@ -459,6 +459,46 @@ public class Model extends BaseModel implements DeviceModel {
 					logger.log (Level.FINEST,"All volume down");	
 				}
 			}
+			if (!commandFound && extra.equals ("rampup")){
+				commandFound = true;
+				if (!key.equals (Model.AllZones)){
+					currentState.setVolume("");
+					returnVal.addCommOutput(String.format("*Z"+key+"VOL+"));
+					logger.log (Level.FINEST,"Volump ramp up in zone " + key);					
+				} else {
+
+					returnVal.addCommOutput("*ZALLV+");
+					for(AVState eachState : state.values()){
+						eachState.setVolume("");					
+					}
+					logger.log (Level.FINEST,"All volume ramp up");	
+				}
+			}
+
+			if (!commandFound && extra.equals ("rampdown")){
+				commandFound = true;
+				if (!key.equals (Model.AllZones)){
+					for(AVState eachState : state.values()){
+						eachState.setVolume("");					
+					}
+					returnVal.addCommOutput(String.format("*Z"+key+"VOL-"));
+					logger.log (Level.FINEST,"Volump ramp down in zone " + key);					
+				} else {
+					currentState.setVolume("");
+					returnVal.addCommOutput("*ZALLV-");
+					logger.log (Level.FINEST,"All volume ramp down");	
+				}
+			}
+			if (!commandFound && extra.equals ("stop")){
+				commandFound = true;
+				if (key.equals (Model.AllZones)){
+					returnVal.addCommOutput(String.format("*ZALLHLD"));
+					logger.log (Level.FINEST,"Volump ramp stop in all zones");					
+				} else {
+					returnVal.addCommOutput("*Z"+key+"VHLD");
+					logger.log (Level.FINEST,"All volume ramp stop in zone " + key);	
+				}
+			}
 			if (!commandFound){
 				try {
 					int newVal = Utility.scaleFromFlash(extra,0,78,true);
@@ -471,51 +511,6 @@ public class Model extends BaseModel implements DeviceModel {
 					logger.log (Level.WARNING,"Illegal value for tone change " + ex.getMessage());				
 				}
 			}
-			
-			if (!commandFound && theCommand.equals("ramp")) {
-
-				if (!commandFound && extra.equals ("up")){
-					commandFound = true;
-					if (!key.equals (Model.AllZones)){
-						currentState.setVolume("");
-						returnVal.addCommOutput(String.format("*Z"+key+"VOL+"));
-						logger.log (Level.FINEST,"Volump ramp up in zone " + key);					
-					} else {
-
-						returnVal.addCommOutput("*ZALLV+");
-						for(AVState eachState : state.values()){
-							eachState.setVolume("");					
-						}
-						logger.log (Level.FINEST,"All volume ramp up");	
-					}
-				}
-
-				if (!commandFound && extra.equals ("down")){
-					commandFound = true;
-					if (!key.equals (Model.AllZones)){
-						for(AVState eachState : state.values()){
-							eachState.setVolume("");					
-						}
-						returnVal.addCommOutput(String.format("*Z"+key+"VOL-"));
-						logger.log (Level.FINEST,"Volump ramp down in zone " + key);					
-					} else {
-						currentState.setVolume("");
-						returnVal.addCommOutput("*ZALLV-");
-						logger.log (Level.FINEST,"All volume ramp down");	
-					}
-				}
-				if (!commandFound && extra.equals ("stop")){
-					commandFound = true;
-					if (key.equals (Model.AllZones)){
-						returnVal.addCommOutput(String.format("*ZALLHLD"));
-						logger.log (Level.FINEST,"Volump ramp stop in all zones");					
-					} else {
-						returnVal.addCommOutput("*Z"+key+"VHLD");
-						logger.log (Level.FINEST,"All volume ramp stop in zone " + key);	
-					}
-				}
-			}
-
 
 		}	
 		
