@@ -17,8 +17,9 @@ crypto.onDecode = function (decoded) {
 
 serverSetup = function () {
 	if (_global.settings.serverAddress.length) {
-		if (_global.settings.serverAddress.substr(0, 8) == "https://") {
+		if (_global.settings.serverAddress.substr(0, 7) == "http://") {
 			setInterval(this, "getCachedData", _global.settings.webRefreshRate * 1000);
+			getCachedData();
 		} else {
 			server = new XMLSocket();
 			server.onConnect = serverOnConnect;
@@ -31,13 +32,12 @@ serverSetup = function () {
 
 getCachedData = function () {
 	var xml = new XML();
-	//xml.load(_global.settings.serverAddress + "/webclient/get");
-	xml.load("sampleDump.xml");
+	xml.load(_global.settings.serverAddress + "/webclient/update");
 	xml.onLoad = function (success) {
 		if (success) {
 			var packet = this.firstChild.childNodes;
 			for (var i=0; i<packet.length; i++) {
-				//trace("START\n\n" + packet[i] + "\nEND");
+				//trace("START:\n" + packet[i] + "\nEND");
 				receiveCmd(packet[i], true);
 			}
 		} else {
@@ -57,17 +57,19 @@ serverSend = function (packet) {
 		trace("OUTGOING:\n" + packet + "\n--------");
 	}
 	
-	if (_global.settings.serverAddress.substr(0, 8) == "https://") {
-		var xmlOut:XML = new XML(packet);
+	if (_global.settings.serverAddress.substr(0, 7) == "http://") {
 		var xmlIn:XML = new XML();
-		//xml.sendAndLoad(_global.settings.serverAddress + "/webclient/post", xmlIn);
-		xml.sendAndLoad("sampleDump.xml", xmlIn);
+		var messageOut:LoadVars = new LoadVars();
+		messageOut.MESSAGE = packet;
+		messageOut.sendAndLoad(_global.settings.serverAddress + "/webclient/update", xmlIn);
 		xmlIn.onLoad = function (success) {
 			if (success) {
+				/*
 				var packet = this.firstChild.childNodes;
 				for (var i=0; i<packet.length; i++) {
 					receiveCmd(packet[i], true);
 				}
+				*/
 			} else {
 				// xml didn't load
 			}

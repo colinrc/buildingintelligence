@@ -3086,7 +3086,7 @@ unsubscribe = function (keys, movieClip) {
 	for (var i in _global.controls) {
 		if (_global.controls[i].subscribers.length) counter++;
 	}
-	trace("subscribers: " + counter);
+	//trace("subscribers: " + counter);
 }
 
 broadcastChange = function (key, id) {
