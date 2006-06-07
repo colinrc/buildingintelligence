@@ -1,18 +1,21 @@
-﻿class Forms.Tree.WorkFlowTreeCellRenderer extends mx.controls.treeclasses.TreeRow {
+﻿import mx.controls.Label;
+
+class Forms.Tree.WorkFlowTreeCellRenderer extends mx.core.UIComponent {
 	var owner;
 	var listOwner;
 	var cell:Object;
 	var icon:MovieClip;
+	var __label:Label;
 	
 	function WorkFlowTreeCellRenderer() {
 	}
 	
 	function createChildren() {
 		super.createChildren();
+		createClassObject(Label, "__label", this.getNextHighestDepth(), {visible:false});
 	}
 	
-	function setValue(node, state) {
-		super.setValue(node, state);
+	function setValue(label:String, node:XMLNode) {
 		var lineColor:Number = listOwner.getStyle('lineColor');
 		var indent = ((listOwner.getNodeDepth(owner.node)) + 3) * getStyle("indentation");
 		clear();
@@ -47,18 +50,13 @@
 		else{
 			icon.removeMovieClip();
 		}
-		size();
-	}
-	
-	function disclosurePress() {
-		super.disclosurePress();
+		__label.visible = (label != " ");
+		__label.text = label;
+		if (listOwner.getNodeDepth(owner.node) == 1) __label.setStyle("fontWeight", "bold");
 	}
 	
 	function size() {
 		super.size();
-	}
-	
-	function setColor(color:Number):Void {
-		cell.setColor(color);
+		__label.setSize(__width, __height);
 	}
 }
