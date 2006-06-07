@@ -8,6 +8,11 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 	private var roomEditor:MapEditor;
 	private var map:String;
 	private var save_btn:Button;
+	private var colour1_lb:Label;
+	private var colour2_lb:Label;
+	private var thickness_lb:Label;
+	private var key_lb:Label;
+	private var name_lb:Label;
 	private var colour1_mc:MovieClip;
 	private var colour2_mc:MovieClip;
 	private var thickness_ti:TextInput;
@@ -71,7 +76,8 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		key_cmb.dataProvider = DPKey;
 		key_cmb.text = "";
 		name_ti.text = "";
-		currentDoor = undefined;			
+		currentDoor = undefined;
+		toggleDetails(false);
 		roomEditor.addEventListener("doorSelect", Delegate.create(this,doorSelect));
 		roomEditor.addEventListener("doorAdd", Delegate.create(this,doorAdd));
 		roomEditor.addEventListener("doorMove", Delegate.create(this,doorMove));
@@ -137,7 +143,8 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		_global.saveFile("Project");
 	}
 	public function doorSelect(eventObj) {
-		currentDoor = eventObj.target;			
+		currentDoor = eventObj.target;
+		toggleDetails(true);
 		colour1_mc.setColour(currentDoor.colour1);
 		colour2_mc.setColour(currentDoor.colour2);
 		thickness_ti.text = currentDoor.thickness;
@@ -147,6 +154,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 	}
 	public function doorAdd(eventObj) {
 		currentDoor = eventObj.target;
+		toggleDetails(true);
 		currentDoor.colour1 = "0xFFFFFF";
 		currentDoor.colour2 = "0xFFFFFF";
 		currentDoor.thickness = "5";
@@ -160,7 +168,8 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		_global.unSaved = true;
 	}
 	public function doorMove (eventObj) {
-		currentDoor = eventObj.target;					
+		currentDoor = eventObj.target;
+		toggleDetails(true);
 		colour1_mc.setColour(currentDoor.colour1);
 		colour2_mc.setColour(currentDoor.colour2);
 		thickness_ti.text = currentDoor.thickness;
@@ -174,7 +183,20 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		thickness_ti.text = "";
 		key_cmb.text = "";
 		name_ti.text = "";
-		currentDoor = undefined;			
+		currentDoor = undefined;
+		toggleDetails(false);
 		_global.unSaved = true;		
 	}	
+	private function toggleDetails(show:Boolean):Void {
+		if (show) {
+			roomEditor.setSize(null, 515);
+		} else {
+			roomEditor.setSize(null, 565);
+		}
+		colour1_lb._visible = colour1_mc._visible = show;
+		colour2_lb._visible = colour2_mc._visible = show;
+		thickness_lb._visible = thickness_ti._visible = show;
+		key_lb._visible = key_cmb._visible = show;
+		name_lb._visible = name_ti._visible = show;
+	}
 }

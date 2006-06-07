@@ -1024,6 +1024,7 @@ break;
 treeFilter_cb.addEventListener("change", treeFilter_cb);*/
 setView("none");
 /****************************************************************/
+_global.right_tree.setStyle("openDuration", 50);
 _global.right_tree.setStyle("indentation", 10);
 _global.right_tree.setStyle("defaultLeafIcon", "Icon:error");
 _global.right_tree.setStyle("folderOpenIcon", "Icon:null");

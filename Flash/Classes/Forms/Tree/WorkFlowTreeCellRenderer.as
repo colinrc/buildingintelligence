@@ -16,12 +16,11 @@ class Forms.Tree.WorkFlowTreeCellRenderer extends mx.core.UIComponent {
 	}
 	
 	function setValue(label:String, node:XMLNode) {
-		var lineColor:Number = listOwner.getStyle('lineColor');
-		var indent = ((listOwner.getNodeDepth(owner.node)) + 3) * getStyle("indentation");
+		var lineColor:Number = listOwner.getStyle("lineColor");
 		clear();
 		if (owner.node != undefined) {
-			beginFill(lineColor, listOwner.getStyle('lineAlpha') || 100);
-			drawRect(-indent, Math.ceil(owner.height) - .25, listOwner.width, Math.ceil(owner.height) + .25);
+			beginFill(lineColor, listOwner.getStyle("lineAlpha") || 100);
+			drawRect(0, Math.ceil(owner.height) - .25, __width, Math.ceil(owner.height) + .25);
 			endFill();
 			var iconName="";
 			if (owner.node.attributes.complete == "error") {

@@ -164,8 +164,7 @@ class Controls.MapEditor extends MovieClip {
 		if (width != null) __width = width;
 		if (height != null) __height = height;
 		
-		scrollPane_sp._width = __width;
-		scrollPane_sp._height = __height - scrollPane_sp._y;
+		scrollPane_sp.setSize(__width, __height - scrollPane_sp._y);
 	}
 	
 	public function refresh() {
@@ -189,7 +188,6 @@ class Controls.MapEditor extends MovieClip {
 		__height = _height;
 		_xscale = 100;
 		_yscale = 100;
-		setSize(__width, __height);
 	}
 
 	private function onLoad():Void {		
@@ -211,7 +209,9 @@ class Controls.MapEditor extends MovieClip {
 		}
 		scrollPane_sp.addEventListener("scroll", spListener_obj);
 		*/		 
-		 
+		
+		setSize(__width, __height);
+		
 		mode = "movePoints";
 		snap = true;
 	}

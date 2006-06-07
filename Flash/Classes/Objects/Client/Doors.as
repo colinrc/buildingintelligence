@@ -26,7 +26,7 @@
 				flag = "error";
 				appendValidationMsg("Position is invalid");
 			}
-			if((doors[door].attributes["colour"] == "")||(doors[door].attributes["colour"] == undefined)){
+			if((doors[door].attributes["colour1"] == "")||(doors[door].attributes["colour1"] == undefined) || (doors[door].attributes["colour2"] == "")||(doors[door].attributes["colour2"] == undefined)){
 				flag = "error";
 				appendValidationMsg("Colour is invalid");
 			}			
