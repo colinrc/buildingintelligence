@@ -128,6 +128,12 @@ receiveCmd = function (xml, ignoreSkip) {
 		}
 	}
 	
+	if (_global.settings.debugMode) {
+		debug_mc.incoming_txt.text = msg + "\n" + debug_mc.incoming_txt.text;
+	} else {
+		trace("INCOMING:\n" + msg + "\n--------");
+	}
+	
 	if (msg.nodeName == "connected") {
 		_global.serverVersion = msg.attributes.version;
 		sendCmd("MACRO", "getList", "");
@@ -216,11 +222,6 @@ receiveCmd = function (xml, ignoreSkip) {
 
 			if (changed) broadcastChange(msg.attributes.KEY);
 		}
-	}
-	if (_global.settings.debugMode) {
-		debug_mc.incoming_txt.text = msg + "\n" + debug_mc.incoming_txt.text;
-	} else {
-		trace("INCOMING:\n" + msg + "\n--------");
 	}
 }
 
