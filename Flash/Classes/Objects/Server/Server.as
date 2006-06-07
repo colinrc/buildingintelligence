@@ -286,14 +286,14 @@
 				break;
 			case "COMFORT" :
 				var newComfort = new Objects.Server.Comfort();
-				newComfort.setXML(newNode);
+				newComfort.setXML(_global.comfort_XML.firstChild);
 				newComfort.id = _global.formDepth++;								
 				newComfort.active = "Y";				
 				treeNode.appendChild(newComfort.toTree());
 				devices.push(newComfort);
 				break;
+				}
 			}
-		}
 		_global.left_tree.setIsOpen(treeNode, true);		
 	}
 	public function setXML(newData:XMLNode):Void {

@@ -60,6 +60,9 @@
 		}
 		for (var audiovideo in audiovideos) {		
 			var newAudioVideoNode = new XMLNode(1, itemType);
+			if (audiovideos[audiovideo].name != "") {
+				newAudioVideoNode.attributes["NAME"] = audiovideos[audiovideo].name;
+			}
 			if (audiovideos[audiovideo].key != "") {
 				newAudioVideoNode.attributes["KEY"] = audiovideos[audiovideo].key;
 			}
@@ -118,7 +121,11 @@
 			var newAudiovideo = new Object();
 			newAudiovideo.key = "";
 			newAudiovideo.display_name = "";
+			newAudiovideo.name = "";
 			newAudiovideo.active = "Y";
+			if (newData.childNodes[child].attributes["NAME"] != undefined) {
+				newAudiovideo.name = newData.childNodes[child].attributes["NAME"];
+			}
 			if (newData.childNodes[child].attributes["KEY"] != undefined) {
 				newAudiovideo.key = newData.childNodes[child].attributes["KEY"];
 			}

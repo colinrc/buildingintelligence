@@ -19,9 +19,15 @@
 			}
 			
 			if (lights[light].active =="Y"){
-				if ((lights[light].power == undefined) || (lights[light].power == "")) {
-					flag = "empty";
-					appendValidationMsg("Power Rating is empty");
+				if(_global.advanced){
+					if ((lights[light].power == undefined) || (lights[light].power == "")) {
+						flag = "empty";
+						appendValidationMsg("Power Rating is empty");
+					}
+					if ((lights[light].application == undefined) || (lights[light].application == "")) {
+						flag = "empty";
+						appendValidationMsg("App. is invalid");
+					}
 				}
 				if ((lights[light].display_name == undefined) || (lights[light].display_name == "")) {
 					flag = "error";
@@ -31,10 +37,6 @@
 						flag = "error";
 						appendValidationMsg(lights[light].display_name+" Key is not used");
 					}
-				}
-				if ((lights[light].application == undefined) || (lights[light].application == "")) {
-					flag = "error";
-					appendValidationMsg("App. is invalid");
 				}
 				if ((lights[light].name == undefined) || (lights[light].name == "")) {
 					flag = "error";

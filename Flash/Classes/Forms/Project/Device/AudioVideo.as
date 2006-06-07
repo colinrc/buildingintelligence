@@ -24,6 +24,7 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(inputs_dg);
 		dataGridHandler.addActiveColumn("active", values);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);
 		var itemType:String;
 		switch (container) {

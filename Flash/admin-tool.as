@@ -3,6 +3,7 @@
 import mx.managers.PopUpManager;
 import mx.containers.Window;
 import mx.utils.Delegate;
+
 mdm.Exception.enableHandler();
 mdm.Application.onMDMScriptException = function(myObject) {
 	/* mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
@@ -39,10 +40,10 @@ _global.serverDesign = new Objects.Server.Server();
 _global.serverInstance = new Objects.Instances.ServerInstance();
 _global.keys = _global.serverDesign.getKeys();
 /*	var clientList:Array = _global.serverDesign.getClients();
-	var temp:Array = null;
-	for (var eachClient in clientList) {
-		temp.concat(clientList[eachClient].getUsedKeys());
-	}
+var temp:Array = null;
+for (var eachClient in clientList) {
+temp.concat(clientList[eachClient].getUsedKeys());
+}
 _global.usedKeys = temp;*/
 //_global.history = new Objects.History();
 /*Workflow tree variables and initialization*/
@@ -171,6 +172,16 @@ server_xml.onLoad = function(success) {
 		mdm.Dialogs.prompt("Error, server.xml file not loaded!");
 	}
 };
+var comfort_XML = new XML();
+comfort_XML.ignoreWhite = true;
+comfort_XML.onLoad = function(success) {
+	if (success) {
+	} else {
+		mdm.Dialogs.prompt("Error, 'library/Comfort/default_comfort.xml' file not loaded!");
+	}
+};
+_global.comfort_XML = comfort_XML;
+_global.comfort_XML.load("library/Comfort/default_comfort.xml");
 /**************************************************************************************/
 function openFile(openType:String):Void {
 	mdm.Dialogs.BrowseFile.buttonText = "Open";
@@ -217,15 +228,15 @@ _global.saveFile = function(saveType:String):Void  {
 			mdm.Forms.MainForm.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
 			_global.unSaved = false;
 		} else {
-			mdm.Dialogs.BrowseFile.buttonText = "Save";
-			mdm.Dialogs.BrowseFile.title = "Please select a location to save to";
-			mdm.Dialogs.BrowseFile.dialogText = "Please select a location to save to";
-			mdm.Dialogs.BrowseFile.defaultExtension = "xml";
-			mdm.Dialogs.BrowseFile.filterList = "eLIFE Project Files|*.elp";
-			mdm.Dialogs.BrowseFile.filterText = "eLIFE Project Files|*.elp";
-			var tempString = mdm.Dialogs.BrowseFile.show();
+			//mdm.Dialogs.BrowseFile.buttonText = "Save";
+			//mdm.Dialogs.BrowseFile.title = "Please select a location to save to";
+			//mdm.Dialogs.BrowseFile.dialogText = "Please select a location to save to";
+			//mdm.Dialogs.BrowseFile.defaultExtension = "xml";
+			//mdm.Dialogs.BrowseFile.filterList = "eLIFE Project Files|*.elp";
+			//mdm.Dialogs.BrowseFile.filterText = "eLIFE Project Files|*.elp";
+			var tempString = mdm.Dialogs.inputBox("Enter project file name", "Enter project file name");
 			if (tempString != "false") {
-				_global.projectFileName = tempString;
+				_global.projectFileName = _global.project.path + tempString+".elp";
 				var newProjectXML = new XMLNode(1, "project");
 				for (var attrib in _global.project) {
 					if (_global.project[attrib].length) {
@@ -260,7 +271,7 @@ _global.saveFile = function(saveType:String):Void  {
 	}
 };
 /****************************************************************/
-_global.searchProject = function(treeNode:Object, object:Object):Object {
+_global.searchProject = function(treeNode:Object, object:Object):Object  {
 	if (treeNode.object == object) {
 		return treeNode;
 	} else {
@@ -272,21 +283,20 @@ _global.searchProject = function(treeNode:Object, object:Object):Object {
 		}
 		return undefined;
 	}
-}
+};
 /********************************************************/
 _global.refreshTheTree = function() {
-	if (workFlow_split.visible) {		
+	if (workFlow_split.visible) {
 		_global.left_tree.dataProvider = null;
 		// clear
-		_global.left_tree.dataProvider = _global.designTree_xml;	
-	} else{
+		_global.left_tree.dataProvider = _global.designTree_xml;
+	} else {
 		_global.left_tree.dataProvider = null;
 		// clear
 		_global.left_tree.dataProvider = _global.controlTree_xml;
 	}
 	_global.keys = _global.serverDesign.getKeys();
 	var clientList:Array = _global.serverDesign.getClients();
-	
 	_global.usedKeys = null;
 	_global.usedKeys = new Array();
 	for (var eachClient in clientList) {
@@ -320,19 +330,19 @@ _global.isKeyUsed = function(inKey:String):Boolean  {
 	return false;
 };
 /********************************************************/
-_global.makeArray = function(inString:String):Array {
+_global.makeArray = function(inString:String):Array  {
 	//"firstElement", "secondElement", "thirdElement"
 	var myArray:Array = Array(inString);
 	return myArray;
 };
 /********************************************************/
-_global.isValidIP = function(ip:String):Boolean {
+_global.isValidIP = function(ip:String):Boolean  {
 	var isValid = true;
 	var ip_arr:Array = ip.split(".");
 	if (ip_arr.length <> 4) {
 		isValid = false;
 	} else {
-		for (var i=0; i<4; i++) {
+		for (var i = 0; i < 4; i++) {
 			if (ip_arr[i] != Number(ip_arr[i])) {
 				isValid = false;
 				break;
@@ -340,7 +350,7 @@ _global.isValidIP = function(ip:String):Boolean {
 		}
 	}
 	return isValid;
-}
+};
 /********************************************************/
 function createWorkflow(inNode:Object) {
 	_global.workflow.addNode(inNode.object.getKey(), inNode);
@@ -496,7 +506,7 @@ mdm.Menu.Main.onMenuClick_Help = function() {
 };
 mdm.Menu.Main.onMenuClick_About = function() {
 	mdm.Forms.About.showModal();
-}
+};
 mdm.Menu.Main.onMenuClick_Exit = function() {
 	appExit();
 };
@@ -605,7 +615,7 @@ tabs_tb.change = function(eventObj) {
 		case "Preview" :
 			var foundNode = _global.searchProject(_global.left_tree.dataProvider, tempObject);
 			var tempNode = foundNode.parentNode;
-			while(tempNode.nodeName != "Client"){
+			while (tempNode.nodeName != "Client") {
 				tempNode = tempNode.parentNode;
 			}
 			var tempControlTypes = tempNode.object.getControlTypes();
@@ -615,7 +625,7 @@ tabs_tb.change = function(eventObj) {
 			form_mc = formContent_mc.attachMovie("forms.project.client.overrides", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {attributes:tempObject.getAttributes(), attributeGroups:tempObject.attributeGroups, dataObject:tempObject});
 			break;
 		case "Control" :
-			form_mc = formContent_mc.attachMovie("forms."+eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
+			form_mc = formContent_mc.attachMovie("forms." + eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
 			break;
 		case "Clients" :
 			form_mc = formContent_mc.attachMovie("forms.control.clients", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getClients());
@@ -630,7 +640,7 @@ tabs_tb.change = function(eventObj) {
 			form_mc = formContent_mc.attachMovie("forms.control.sftp", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
 			break;
 		case "Publish" :
-			form_mc = formContent_mc.attachMovie("forms."+eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
+			form_mc = formContent_mc.attachMovie("forms." + eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getConnections());
 			break;
 		case "Panels" :
 			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject, panels:tempObject.getPanels()});
@@ -675,17 +685,17 @@ leftTreeListener.change = function(eventObj) {
 		case "Logging" :
 		case "ClientIcon" :
 		case "Calendar" :
+		case "Panel" :
+		case "Tab" :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"Overrides", view:"forms.project.client.overrides"}, {label:"XML", view:"forms.project.xml"}];
 			tabs_tb.selectedIndex = 0;
 			break;
-		case "Window" :
+		case "Room Control Panel" :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"Overrides", view:"forms.project.client.overrides"}, {label:"Preview", view:"forms.project.client.preview"}, {label:"XML", view:"forms.project.xml"}];
 			tabs_tb.selectedIndex = 0;
 			break;
-		case "Panel" :
-		case "Tab" :
 		case "Control" :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
 			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"XML", view:"forms.project.xml"}, {label:"Preview", view:"forms.project.client.preview"}];
@@ -703,10 +713,10 @@ leftTreeListener.change = function(eventObj) {
 			//Need to rewrite how a view is attached to a server object
 			//_global.server.attachView(form_mc);			
 			break;
-		case "clientInstance":
+		case "clientInstance" :
 			form_mc = formContent_mc.attachMovie("forms.control.clientcontrols", "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getConnections());
 			tabs_tb.dataProvider = [{label:"Control", view:"control.clientcontrols"}, {label:"Publish", view:"control.publishclient"}, {label:"SFTP", view:"control.sftp"}];
-			tabs_tb.selectedIndex = 0;		
+			tabs_tb.selectedIndex = 0;
 			break;
 		case "Zone" :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
@@ -776,6 +786,7 @@ buttonListener.click = function(eventObj) {
 				case "Calendar" :
 				case "Calendar_Settings" :
 				case "Calendar_Tab" :
+				case "CBus" :
 				case "Client" :
 				case "ClientAlerts" :
 				case "ClientApps_Bar" :
@@ -840,20 +851,20 @@ buttonListener.click = function(eventObj) {
 								temp_node = temp_node.parentNode;
 							}
 							var parentNode = foundNode.parentNode;
-							if(tempObject.getKey() == "Server"){
-								for(var node in parentNode.childNodes){
+							if (tempObject.getKey() == "Server") {
+								for (var node in parentNode.childNodes) {
 									parentNode.childNodes[node].removeNode();
 								}
-								foundNode=tempObject.toTree();
+								foundNode = tempObject.toTree();
 								parentNode.appendChild(foundNode);
 								var clients = _global.serverDesign.getClients();
 								for (var client in clients) {
 									_global.designTree_xml.appendChild(clients[client].toTree());
 								}
 								left_tree.selectedNode = foundNode;
-							} else{
+							} else {
 								foundNode.removeNode();
-								foundNode=tempObject.toTree();
+								foundNode = tempObject.toTree();
 								parentNode.appendChild(foundNode);
 								left_tree.selectedNode = foundNode;
 							}
@@ -861,7 +872,7 @@ buttonListener.click = function(eventObj) {
 							selectNode.target = _global.left_tree;
 							selectNode.type = "click";
 							left_tree.dispatchEvent(selectNode);
-						} else{
+						} else {
 							mdm.Dialogs.prompt("Could not find node");
 						}
 						_global.refreshTheTree();
@@ -928,6 +939,9 @@ buttonListener2.click = function(eventObj) {
 	}
 	_global.refreshTheTree();
 	left_tree.selectedNode = foundNode;
+	_global.output_panel.setDescription(foundNode.description);
+	_global.output_panel.setError(foundNode.object.getValidationMsg());
+	_global.output_panel.draw();
 };
 advanced_btn.addEventListener("click", buttonListener2);
 /****************************************************************/

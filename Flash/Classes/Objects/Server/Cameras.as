@@ -55,6 +55,9 @@
 		var camerasNode = new XMLNode(1, container);
 		for (var camera in cameras) {
 			var newCamera = new XMLNode(1, "CAMERA");
+			if (cameras[camera].name != "") {
+				newCamera.attributes["NAME"] = cameras[camera].name;
+			}
 			if (cameras[camera].key != "") {
 				newCamera.attributes["KEY"] = cameras[camera].key;
 			}
@@ -95,9 +98,13 @@
 		for (var child in newData.childNodes) {
 			var newCamera = new Object();
 			newCamera.active = "Y";
+			newCamera.name = "";
 			newCamera.key = "";
 			newCamera.display_name = "";
 			newCamera.zoom = "";
+			if (newData.childNodes[child].attributes["NAME"] != undefined) {
+				newCamera.name = newData.childNodes[child].attributes["NAME"];
+			}
 			if (newData.childNodes[child].attributes["KEY"] != undefined) {
 				newCamera.key = newData.childNodes[child].attributes["KEY"];
 			}

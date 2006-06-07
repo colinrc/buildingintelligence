@@ -4,11 +4,13 @@
 	private var x_pos:String;
 	private var y_pos:String;
 	private var height:String;
-	private var width:String;	
+	private var width:String;
 	private var treeNode:XMLNode;
-	public function deleteSelf(){
+	private var attributes:Array;
+	private var attributeGroups = ["Window"];
+	public function deleteSelf() {
 		treeNode.removeNode();
-	}		
+	}
 	public function isValid():String {
 		var flag = "ok";
 		clearValidationMsg();
@@ -17,20 +19,20 @@
 			appendValidationMsg("No Controls are defined");
 		}
 		if (name == undefined || name == "") {
-				flag = "error";
-				appendValidationMsg("Name is invalid");
+			flag = "error";
+			appendValidationMsg("Name is invalid");
 		}
 		if (x_pos == undefined || x_pos == "") {
-				flag = "error";
-				appendValidationMsg("X pos is invalid");
+			flag = "error";
+			appendValidationMsg("X pos is invalid");
 		}
 		if (height == undefined || height == "") {
-				flag = "error";
-				appendValidationMsg("Heigth is invalid");
+			flag = "error";
+			appendValidationMsg("Heigth is invalid");
 		}
 		if (width == undefined || width == "") {
-				flag = "error";
-				appendValidationMsg("Width is invalid");
+			flag = "error";
+			appendValidationMsg("Width is invalid");
 		}
 		for (var control in controls) {
 			if ((controls[control].attributes["name"] == "") || (controls[control].attributes["name"] == undefined)) {
@@ -40,8 +42,7 @@
 			if ((controls[control].attributes["key"] == "") || (controls[control].attributes["key"] == undefined)) {
 				flag = "error";
 				appendValidationMsg("No Keys are used");
-			}
-			else {
+			} else {
 				if (_global.isKeyValid(controls[control].attributes["key"]) == false) {
 					flag = "error";
 					appendValidationMsg("Key has changed and is invalid");
@@ -61,23 +62,32 @@
 	public function getForm():String {
 		return "forms.project.client.panel";
 	}
+	public function getAttributes():Array {
+		return attributes;
+	}
+	public function setAttributes(newAttributes:Array) {
+		attributes = newAttributes;
+	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1, "panel");
-		if(name != "") {
+		for (var attribute in attributes) {
+			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
+		}
+		if (name != "") {
 			newNode.attributes["name"] = name;
 		}
-		if(x_pos != "") {
+		if (x_pos != "") {
 			newNode.attributes["x"] = x_pos;
 		}
-		if(y_pos != "") {
+		if (y_pos != "") {
 			newNode.attributes["y"] = y_pos;
 		}
-		if(height != "") {
+		if (height != "") {
 			newNode.attributes["height"] = height;
 		}
-		if(width != "") {
+		if (width != "") {
 			newNode.attributes["width"] = width;
-		}		
+		}
 		for (var control in controls) {
 			newNode.appendChild(controls[control]);
 		}
@@ -89,44 +99,51 @@
 		treeNode = newNode;
 		return newNode;
 	}
-	public function getKey():String{
+	public function getKey():String {
 		return "Panel";
 	}
 	public function getName():String {
-		return "Panel : "+name;
+		return "Panel : " + name;
 	}
 	public function getData():Object {
-		return {controls:controls,name:name,x_pos:x_pos,y_pos:y_pos,width:width,height:height, dataObject:this};
+		return {controls:controls, name:name, x_pos:x_pos, y_pos:y_pos, width:width, height:height, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
+		attributes = new Array();
 		name = "";
 		x_pos = "";
 		y_pos = "";
 		width = "";
 		height = "";
-		if(newData.nodeName == "panel"){
-			if(newData.attributes["name"] != undefined) {
-				name = newData.attributes["name"];
+		if (newData.nodeName == "panel") {
+			for (var attribute in newData.attributes) {
+				switch (attribute) {
+				case "name" :
+					name = newData.attributes["name"];
+					break;
+				case "x" :
+					x_pos = newData.attributes["x"];
+					break;
+				case "y" :
+					y_pos = newData.attributes["y"];
+					break;
+				case "width" :
+					width = newData.attributes["width"];
+					break;
+				case "height" :
+					height = newData.attributes["height"];
+					break;
+				default :
+					attributes.push({name:attribute, value:newData.attributes[attribute]});
+					break;
+				}
 			}
-			if(newData.attributes["x"] != undefined) {
-				x_pos = newData.attributes["x"];
-			}
-			if(newData.attributes["y"] != undefined) {
-				y_pos = newData.attributes["y"];
-			}
-			if(newData.attributes["width"] != undefined) {
-				width = newData.attributes["width"];
-			}
-			if(newData.attributes["height"] != undefined) {
-				height = newData.attributes["height"];
-			}			
 			controls = new Array();
-			for(var child in newData.childNodes){
+			for (var child in newData.childNodes) {
 				controls.push(newData.childNodes[child]);
 			}
-		}
-		else{
-			trace("Error, found "+newData.nodeName+", was expecting panel");
+		} else {
+			trace("Error, found " + newData.nodeName + ", was expecting panel");
 		}
 	}
 	public function setData(newData:Object):Void {
@@ -135,9 +152,9 @@
 		x_pos = newData.x_pos;
 		y_pos = newData.y_pos;
 		width = newData.width;
-		height = newData.height;		
+		height = newData.height;
 	}
-	public function getUsedKeys():Array{
+	public function getUsedKeys():Array {
 		usedKeys = new Array();
 		for (var control in controls) {
 			if ((controls[control].attributes["key"] != "") && (controls[control].attributes["key"] != undefined)) {
@@ -146,7 +163,7 @@
 		}
 		return usedKeys;
 	}
-	public function getIcons():Array{
+	public function getIcons():Array {
 		usedIcons = new Array();
 		for (var control in controls) {
 			if ((controls[control].attributes["icons"] != "") && (controls[control].attributes["icons"] != undefined)) {

@@ -12,6 +12,7 @@ class Forms.Control.PublishServer extends Forms.BaseForm {
 	private var removeSelected_btn:Button;
 	private var removeAll_btn:Button;
 	private var publish_btn:Button;
+	private var export_btn:Button;
 	private var gui_chk:CheckBox;
 	private var file_chk:CheckBox;
 	private var console_chk:CheckBox;
@@ -29,8 +30,60 @@ class Forms.Control.PublishServer extends Forms.BaseForm {
 		removeSelected_btn.addEventListener("click", Delegate.create(this, remSel));
 		removeAll_btn.addEventListener("click", Delegate.create(this, remAll));		
 		publish_btn.addEventListener("click", Delegate.create(this, publish));
+		export_btn.addEventListener("click", Delegate.create(this, export));
 	}
 	public function SFTPdisconnected():Void{
+	}
+	public function export(){
+		mdm.FileSystem.makeFolder(_global.project.path+"/server");
+		mdm.FileSystem.makeFolder(_global.project.path+"/server/config");
+		mdm.FileSystem.makeFolder(_global.project.path+"/server/datafiles");
+		mdm.FileSystem.makeFolder(_global.project.path+"/server/script");
+		for(var publishItem in right_li.dataProvider){
+			switch(right_li.dataProvider[publishItem].label){
+				case "Server Config":
+					mdm.FileSystem.saveFile(_global.project.path+"/server/config/server.xml", _global.writeXMLFile(_global.serverDesign.toXML(), 0));
+					break;
+				case "Bootstrap Config":
+					mdm.FileSystem.saveFile(_global.project.path+"/server/datafiles/bootstrap.xml", _global.writeXMLFile(generateBootstrap(), 0));
+					break;
+				case "IR Codes":
+					mdm.FileSystem.copyFile(mdm.Application.path+"datafiles/ircodes.xml", _global.project.path+"/server/datafiles/ircodes.xml");
+					break;					
+				case "Scripts":
+					var myScripts = mdm.FileSystem.getFileList(mdm.Application.path+"script", "*.py");
+					var newScriptStatus = new XMLNode(1,"SCRIPT_STATUS");
+					for(var myScript =0; myScript <myScripts.length; myScript++){
+						var newScript = new XMLNode(1,"SCRIPT");
+						newScript.attributes.NAME = myScripts[myScript];
+						newScript.attributes.ENABLED = "enabled";
+						newScript.attributes.STATUS = "";
+						newScriptStatus.appendChild(newScript);
+						mdm.FileSystem.copyFile(mdm.Application.path+"script/"+myScripts[myScript], _global.project.path+"/server/script/"+myScripts[myScript]);
+					}
+					mdm.FileSystem.saveFile(_global.project.path+"/server/datafiles/script_status.xml", _global.writeXMLFile(newScriptStatus, 0));
+					break;
+				case "Macros":
+					var tempMacros = new XMLNode(1,"MACROS");
+					tempMacros.attributes.COMPLETE = "Y";
+					var tempIntegratorMacros = new XMLNode(1,"MACROS");
+					tempIntegratorMacros.attributes.COMPLETE = "Y";					
+					var macros = _global.serverDesign.getMacros();
+					for(var macro = 0; macro<macros.length; macro++){
+						if(macros[macro].integrator){
+							tempIntegratorMacros.appendChild(macros[macro].publish());
+						} else{
+							tempMacros.appendChild(macros[macro].publish());
+						}
+					}
+					mdm.FileSystem.saveFile(_global.project.path+"/server/datafiles/macros.xml",_global.writeXMLFile(tempMacros, 0));
+					mdm.FileSystem.saveFile(_global.project.path+"/server/datafiles/integrator_macros.xml", _global.writeXMLFile(tempIntegratorMacros, 0));
+					break;
+				case "Calendar":
+					mdm.FileSystem.copyFile(mdm.Application.path+"datafiles/calendar.xml", _global.project.path+"/server/datafiles/calendar.xml");
+					break;					
+			}
+		}
 	}
 	public function publish(){
 		for(var publishItem in right_li.dataProvider){
@@ -53,7 +106,7 @@ class Forms.Control.PublishServer extends Forms.BaseForm {
 					var newScriptStatus = new XMLNode(1,"SCRIPT_STATUS");
 					for(var myScript =0; myScript <myScripts.length; myScript++){
 						sftpConnection.setLocalPath("/script");
-						sftpConnection.setRemotePath("/script");
+						sftpConnection.setRemotePath("/server/script");
 						var newScript = new XMLNode(1,"SCRIPT");
 						newScript.attributes.NAME = myScripts[myScript];
 						newScript.attributes.ENABLED = "enabled";

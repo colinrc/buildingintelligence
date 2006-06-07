@@ -2,10 +2,12 @@
 	private var controls:Array;
 	private var name:String;
 	private var icon:String;
+	private var attributes:Array;
+	private var attributeGroups = ["tabs"];
 	private var treeNode:XMLNode;
-	public function deleteSelf(){
+	public function deleteSelf() {
 		treeNode.removeNode();
-	}		
+	}
 	public function isValid():String {
 		var flag = "ok";
 		clearValidationMsg();
@@ -28,10 +30,13 @@
 	}
 	public function toXML():XMLNode {
 		var newNode = new XMLNode(1, "tab");
-		if(name != "") {
+		for (var attribute in attributes) {
+			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
+		}
+		if (name != "") {
 			newNode.attributes["name"] = name;
 		}
-		if(icon != "") {
+		if (icon != "") {
 			newNode.attributes["icon"] = icon;
 		}
 		for (var control in controls) {
@@ -45,32 +50,45 @@
 		treeNode = newNode;
 		return newNode;
 	}
-	public function getKey():String{
+	public function getKey():String {
 		return "ClientTab";
 	}
 	public function getName():String {
-		return "Tab : "+name;
+		return "Tab : " + name;
 	}
 	public function getData():Object {
-		return {controls:controls,name:name,icon:icon, dataObject:this};
+		return {controls:controls, name:name, icon:icon, dataObject:this};
+	}
+	public function getAttributes():Array {
+		return attributes;
+	}
+	public function setAttributes(newAttributes:Array) {
+		attributes = newAttributes;
 	}
 	public function setXML(newData:XMLNode):Void {
+		attributes = new Array();
 		name = "";
 		icon = "";
-		if(newData.nodeName == "tab"){
-			if(newData.attributes["name"] != undefined) {
-				name = newData.attributes["name"];
-			}
-			if(newData.attributes["icon"] != undefined) {
-				icon = newData.attributes["icon"];
+		if (newData.nodeName == "tab") {
+			for (var attribute in newData.attributes) {
+				switch (attribute) {
+				case "name" :
+					name = newData.attributes["name"];
+					break;
+				case "icon" :
+					icon = newData.attributes["icon"];
+					break;
+				default :
+					attributes.push({name:attribute, value:newData.attributes[attribute]});
+					break;
+				}
 			}
 			controls = new Array();
-			for(var child in newData.childNodes){
+			for (var child in newData.childNodes) {
 				controls.push(newData.childNodes[child]);
 			}
-		}
-		else{
-			trace("Error, found "+newData.nodeName+", was expecting tab");
+		} else {
+			trace("Error, found " + newData.nodeName + ", was expecting tab");
 		}
 	}
 	public function setData(newData:Object):Void {
@@ -78,7 +96,7 @@
 		name = newData.name;
 		icon = newData.icon;
 	}
-	public function getUsedKeys():Array{
+	public function getUsedKeys():Array {
 		usedKeys = new Array();
 		for (var control in controls) {
 			if ((controls[control].attributes["key"] != "") && (controls[control].attributes["key"] != undefined)) {
@@ -87,16 +105,16 @@
 		}
 		return usedKeys;
 	}
-	public function getIcons():Array{
+	public function getIcons():Array {
 		usedIcons = new Array();
-		if (icon != "" && icon != undefined){
+		if (icon != "" && icon != undefined) {
 			addIcon(icon);
 		}
-		for (var control in controls){
+		for (var control in controls) {
 			if ((controls[control].attributes["icons"] != "") && (controls[control].attributes["icons"] != undefined)) {
 				var tempIcons = controls[control].attributes["icons"].split(",");
-				for(var tempIcon in tempIcons){
-					if(tempIcons[tempIcon].length){
+				for (var tempIcon in tempIcons) {
+					if (tempIcons[tempIcon].length) {
 						addIcon(tempIcons[tempIcon]);
 					}
 				}

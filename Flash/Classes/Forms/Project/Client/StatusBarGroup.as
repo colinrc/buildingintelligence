@@ -60,6 +60,8 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 				}
 			}
 		}
+		right_li.sortItemsBy("label", "ASC");
+		left_li.sortItemsBy("label", "ASC");
 		name_ti.text = name;
 		if(icon.length){
 			icon_cmb.text = icon;

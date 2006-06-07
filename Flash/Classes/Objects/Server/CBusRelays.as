@@ -19,9 +19,15 @@
 			}
 			
 			if (relays[relay].active =="Y"){
-				if ((relays[relay].power == undefined) || (relays[relay].power == "")) {
-					flag = "empty";
-					appendValidationMsg("Power Rating is empty");
+				if(_global.advanced){
+					if ((relays[relay].power == undefined) || (relays[relay].power == "")) {
+						flag = "empty";
+						appendValidationMsg("Power Rating is empty");
+					}
+					if ((relays[relay].application == undefined) || (relays[relay].application == "")) {
+						flag = "empty";
+						appendValidationMsg("App. is invalid");
+					}
 				}
 				if ((relays[relay].display_name == undefined) || (relays[relay].display_name == "")) {
 					flag = "error";
@@ -32,10 +38,6 @@
 						flag = "error";
 						appendValidationMsg(relays[relay].display_name+" key is not used");
 					}
-				}
-				if ((relays[relay].application == undefined) || (relays[relay].application == "")) {
-					flag = "error";
-					appendValidationMsg("App. is invalid");
 				}
 				if ((relays[relay].name == undefined) || (relays[relay].name == "")) {
 					flag = "error";

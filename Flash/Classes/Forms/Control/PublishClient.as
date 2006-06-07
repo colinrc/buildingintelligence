@@ -12,6 +12,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 	private var removeSelected_btn:Button;
 	private var removeAll_btn:Button;
 	private var publish_btn:Button;
+	private var export_btn:Button;
 	private var fullScreen_chk:CheckBox;
 	private var hideMouse_chk:CheckBox;
 	private var debugMode_chk:CheckBox;
@@ -28,8 +29,105 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 		removeSelected_btn.addEventListener("click", Delegate.create(this, remSel));
 		removeAll_btn.addEventListener("click", Delegate.create(this, remAll));		
 		publish_btn.addEventListener("click", Delegate.create(this, publish));
+		export_btn.addEventListener("click", Delegate.create(this, export));
 	}
 	public function SFTPdisconnected():Void{
+	}
+	public function export(){
+		mdm.FileSystem.makeFolder(_global.project.path+"/client");
+		mdm.FileSystem.makeFolder(_global.project.path+"/client/lib");
+		mdm.FileSystem.makeFolder(_global.project.path+"/client/lib/icons");
+		mdm.FileSystem.makeFolder(_global.project.path+"/client/lib/maps");
+		mdm.FileSystem.makeFolder(_global.project.path+"/client/lib/backgrounds");
+		mdm.FileSystem.makeFolder(_global.project.path+"/client/lib/sounds");
+		for(var publishItem in right_li.dataProvider){
+			switch(right_li.dataProvider[publishItem].label){
+				case "Client Config":
+					mdm.FileSystem.saveFile(_global.project.path+"/client/client.xml", _global.writeXMLFile(dataObject.clientDesign.toXML(), 0));
+					break;
+				case "Bootstrap Config":
+					mdm.FileSystem.saveFile(_global.project.path+"/client/elife.xml", _global.writeXMLFile(generateBootstrap(), 0));
+					break;
+				case "Icons":
+					var tempIcons = dataObject.clientDesign.getIcons();
+					tempIcons = tempIcons.sort();
+					tempIcons.push("warning");
+					tempIcons.push("keyboard_key");
+					tempIcons.push("atom");
+					tempIcons.push("up-arrow");
+					tempIcons.push("down-arrow");
+					tempIcons.push("delete");
+					tempIcons.push("home");
+					tempIcons.push("left-arrow");
+					tempIcons.push("right-arrow");
+					tempIcons.push("stop");
+					tempIcons.push("refresh");
+					tempIcons.push("find");
+					tempIcons.push("gears");
+					tempIcons.push("notepad");
+					tempIcons.push("speaker");
+					tempIcons.push("spanner");
+					tempIcons.push("red-pin");
+					tempIcons.push("media-stop");
+					tempIcons.push("media-fwd");
+					tempIcons.push("media-play");
+					tempIcons.push("delete2");
+					tempIcons.push("led-green");
+					tempIcons.push("led-red");
+					tempIcons.push("power-red");
+					tempIcons.push("power-green");
+					tempIcons.push("locked");
+					tempIcons.push("unlocked");
+					tempIcons.push("calendar");
+					tempIcons.push("check");
+					var icons = new Array();
+					var lastIcon:String;
+					for(var tempIcon in tempIcons){
+						if(tempIcons[tempIcon] != lastIcon){
+							icons.push(tempIcons[tempIcon]);
+							lastIcon = tempIcons[tempIcon];
+						}
+					}
+					var new_icons = "";
+					for(var icon in icons){
+						var iconString = icons[icon]+".png";
+						mdm.FileSystem.copyFile(mdm.Application.path+"/lib/icons/"+icons[icon]+".png", _global.project.path+"/client/lib/icons/"+icons[icon]+".png");
+						new_icons += iconString+"\n";
+					}
+					mdm.FileSystem.saveFile(_global.project.path+"/client/lib/icons/_icons.txt", new_icons);
+					break;
+				case "Maps":
+					var tempZones = dataObject.clientDesign.Property.zones;
+					for(var zone in tempZones){
+						if((tempZones[zone].map != undefined)&&(tempZones[zone].map != "")){
+							mdm.FileSystem.copyFile(mdm.Application.path+"/lib/maps/"+tempZones[zone].map, _global.project.path+"/client/lib/maps/"+tempZones[zone].map);
+						}
+					}
+					break;
+				case "Backgrounds":
+					var tempZones = dataObject.clientDesign.Property.zones;
+					for(var zone in tempZones){
+						if((tempZones[zone].background != undefined)&&(tempZones[zone].background != "")){
+							mdm.FileSystem.copyFile(mdm.Application.path+"/lib/backgrounds/"+tempZones[zone].background, _global.project.path+"/client/lib/backgrounds/"+tempZones[zone].background);
+						}
+					}
+					break;
+				case "Sounds":
+					var tempSounds = dataObject.clientDesign.sounds.sounds;
+					for(var sound in tempSounds){
+						mdm.FileSystem.copyFile(mdm.Application.path+"/lib/"+tempSounds[sound].attributes.file, _global.project.path+"/client/lib/"+tempSounds[sound].attributes.file);
+					}					
+					break;
+				case "Objects":
+					/*
+					sftpConnection.setLocalPath("/lib/objects");
+					sftpConnection.setRemotePath("/client/lib/objects");
+
+					sftpConnection.putItem("ircodes.xml");
+					*/
+					break;
+			}
+		}
 	}
 	public function publish(){
 		for(var publishItem in right_li.dataProvider){
