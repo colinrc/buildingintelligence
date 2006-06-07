@@ -17,7 +17,7 @@ crypto.onDecode = function (decoded) {
 
 serverSetup = function () {
 	if (_global.settings.serverAddress.length) {
-		if (_global.settings.serverAddress.substr(0, 7) == "http://") {
+		if (_global.settings.serverAddress.substr(0, 7) == "http://" || _global.settings.serverAddress.substr(0, 8) == "https://") {
 			setInterval(this, "getCachedData", _global.settings.webRefreshRate * 1000);
 			getCachedData();
 		} else {
@@ -57,7 +57,7 @@ serverSend = function (packet) {
 		trace("OUTGOING:\n" + packet + "\n--------");
 	}
 	
-	if (_global.settings.serverAddress.substr(0, 7) == "http://") {
+	if (_global.settings.serverAddress.substr(0, 7) == "http://" || _global.settings.serverAddress.substr(0, 8) == "https://") {
 		var xmlIn:XML = new XML();
 		var messageOut:LoadVars = new LoadVars();
 		messageOut.MESSAGE = packet;
@@ -87,10 +87,6 @@ serverOnConnect = function (status) {
 	clearInterval(serverConnectID);
 	clearInterval(serverTimeoutID);
 	if (status) {
-		//sendCmd("MACRO", "getList", "");
-		//sendCmd("SCRIPT", "getList", "");
-		//sendCmd("CALENDAR", "getEvents", "");
-		//sendCmd("ID", "getList", "");
 		if (commsError) {
 			window_mc.close();
 			delete commsError;
@@ -134,6 +130,10 @@ receiveCmd = function (xml, ignoreSkip) {
 	
 	if (msg.nodeName == "connected") {
 		_global.serverVersion = msg.attributes.version;
+		sendCmd("MACRO", "getList", "");
+		sendCmd("SCRIPT", "getList", "");
+		sendCmd("CALENDAR", "getEvents", "");
+		sendCmd("ID", "getList", "");
 	} else if (msg.nodeName == "MACROS") {
 		var partial = (msg.attributes.COMPLETE == "N");
 		var wasNew = defineMacros(msg.childNodes, partial);
