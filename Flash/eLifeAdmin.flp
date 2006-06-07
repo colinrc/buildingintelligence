@@ -12,7 +12,7 @@
                 <project_file path="./Classes/Forms/Control/PublishClient.as" filetype="as" />
                 <project_file path="./Classes/Forms/Control/PublishServer.as" filetype="as" />
             </project_folder>
-            <project_folder name="Project" expanded="true">
+            <project_folder name="Project" expanded="false">
                 <project_folder name="Device" expanded="false">
                     <project_file path="./Classes/Forms/Project/Device/Head.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Device/Connection.as" filetype="as" />
@@ -58,7 +58,7 @@
                     <project_file path="./Classes/Forms/Project/JRobin/Data.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/JRobin/JRobin.as" filetype="as" />
                 </project_folder>
-                <project_folder name="Client" expanded="true">
+                <project_folder name="Client" expanded="false">
                     <project_file path="./Classes/Forms/Project/Client/BooleanEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/ColourEdit.as" filetype="as" />
                     <project_file path="./Classes/Forms/Project/Client/NumberEdit.as" filetype="as" />
@@ -183,6 +183,8 @@
                 <project_file path="./Classes/Objects/Server/GC100IRs.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/GC100Toggles.as" filetype="as" />
                 <project_file path="./Classes/Objects/Server/Settings.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Macros.as" filetype="as" />
+                <project_file path="./Classes/Objects/Server/Macro.as" filetype="as" />
             </project_folder>
             <project_folder name="Client" expanded="false">
                 <project_file path="./Classes/Objects/Client/Client.as" filetype="as" />
@@ -209,7 +211,7 @@
                 <project_file path="./Classes/Objects/Client/CalendarTab.as" filetype="as" />
                 <project_file path="./Classes/Objects/Client/Doors.as" filetype="as" />
             </project_folder>
-            <project_folder name="Instances" expanded="false">
+            <project_folder name="Instances" expanded="true">
                 <project_file path="./Classes/Objects/Instances/ServerInstance.as" filetype="as" />
                 <project_file path="./Classes/Objects/Instances/ClientInstance.as" filetype="as" />
             </project_folder>

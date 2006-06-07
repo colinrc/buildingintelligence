@@ -21,11 +21,11 @@
 				if (sensors[sensor].active =="Y"){
 					if ((sensors[sensor].key == undefined) || (sensors[sensor].key == "")) {
 						flag = "error";
-						appendValidationMsg("Input/Output no. is invalid");
+						appendValidationMsg("Input/Output no. is empty");
 					}
 					if ((sensors[sensor].name == undefined) || (sensors[sensor].name == "")) {
 						flag = "error";
-						appendValidationMsg("Description is invalid");
+						appendValidationMsg("Description is empty");
 					}
 					if ((sensors[sensor].display_name == undefined) || (sensors[sensor].display_name == "")) {
 						flag = "error";
@@ -39,7 +39,7 @@
 					}
 					if ((sensors[sensor].channel == undefined) || (sensors[sensor].channel == "")) {
 						flag = "error";
-						appendValidationMsg("Channel is invalid");
+						appendValidationMsg("Channel is empty");
 					}
 				}
 				else {

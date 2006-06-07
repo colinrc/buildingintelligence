@@ -30,7 +30,7 @@
 					}
 					if ((audiovideos[audiovideo].key == undefined) || (audiovideos[audiovideo].key == "")) {
 						flag = "error";
-						appendValidationMsg("Audio/AV Zone is invalid");
+						appendValidationMsg("Audio/AV Zone is empty");
 					}
 				}
 				else {
