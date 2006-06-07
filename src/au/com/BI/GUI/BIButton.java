@@ -67,9 +67,9 @@ public abstract class BIButton extends Component  implements BIListener {
 		/*Override Attributes*/
 		bgColour = Integer.parseInt("0x7C90B0".substring(2), 16);
 		borderColour = Integer.parseInt("0x95A7C4".substring(2), 16);
-		buttonFont = "helvetica";
+		buttonFont = "Arial";
 		fontColour = Integer.parseInt("0xFFFFFF".substring(2), 16);
-		fontSize = 16;
+		fontSize = 14;
 		/*Inline Attributes*/
 		width = 66;
 		height = 66;

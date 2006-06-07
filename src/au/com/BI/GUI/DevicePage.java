@@ -40,7 +40,6 @@ public class DevicePage extends Page implements Runnable{
 					lastValue = tempValue;
 				}				
 				myThread.sleep(500);
-				
 			}
 		} catch (Exception e) {
 			//e.printStackTrace();
@@ -80,14 +79,14 @@ public class DevicePage extends Page implements Runnable{
 		wheelButtonOn = false;
 	}
 	public void setWheelButtonOn(){
-		serialHandle.sendSerialMessage("wheelButtonOn");
+		serialHandle.sendSerialMessage("wheelButtonYellow");
 		wheelButtonOn = true;
 	}
 	public void setButtonsOff(){
 		serialHandle.sendSerialMessage("B1Yellow");
 		serialHandle.sendSerialMessage("B2Off");
 		serialHandle.sendSerialMessage("B3Off");
-		serialHandle.sendSerialMessage("B4Off");
+		serialHandle.sendSerialMessage("B4Yellow");
 		serialHandle.sendSerialMessage("wheelOn");
 		serialHandle.sendSerialMessage("wheelButtonOff");
 		wheelButtonOn = false;
@@ -211,6 +210,13 @@ public class DevicePage extends Page implements Runnable{
 			((BIButton) buttons.get(highlightedButton + "")).doAction();
 		}
 	}
+	public void click(){
+		if(slider != null){
+			((BISliderButton) buttons.get(highlightedButton + "")).setValue(slider.getValue());
+			serverHandle.sendToServer(((BISliderButton) buttons.get(highlightedButton + "")).createMessage());
+			removeSlider();
+		}
+	}
 	public void addSlider(){
 		if(slider == null){
 			setButtonsOff();
@@ -257,6 +263,7 @@ public class DevicePage extends Page implements Runnable{
 				slider.setValue(inValue);
 			} else{
 				tempValue = inValue;
+				lastValue = inValue;
 				slider.setValue(inValue);
 			}
 		}

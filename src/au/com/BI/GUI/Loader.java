@@ -7,7 +7,6 @@
 package au.com.BI.GUI;
 import java.util.HashMap;
 import java.util.Vector;
-
 import au.com.BI.Connection.ServerHandler;
 import au.com.BI.DataModel.Key;
 import au.com.BI.Util.ImageLoader;
@@ -42,27 +41,11 @@ public class Loader {
 		}
 		client = new eLifeActiveLoader(eLifeSettings);
 		Vector tempKeys = new Vector();
-		tempKeys.add(new Key("LIGHT1"));
-		tempKeys.add(new Key("LIGHT2"));
-		tempKeys.add(new Key("LIGHT3"));
-		tempKeys.add(new Key("LIGHT4"));
-		tempKeys.add(new Key("LIGHT5"));
-		tempKeys.add(new Key("LIGHT6"));
-		tempKeys.add(new Key("LIGHT7"));
-		tempKeys.add(new Key("LIGHT8"));
-		tempKeys.add(new Key("LIGHT9"));
-		tempKeys.add(new Key("LIGHT10"));
-		tempKeys.add(new Key("LIGHT11"));
-		tempKeys.add(new Key("LIGHT12"));
-		tempKeys.add(new Key("LIGHT13"));
-		tempKeys.add(new Key("LIGHT14"));
-		tempKeys.add(new Key("LIGHT15"));
-		tempKeys.add(new Key("LIGHT16"));
-		tempKeys.add(new Key("LIGHT17"));
-		tempKeys.add(new Key("LIGHT18"));
-		tempKeys.add(new Key("LIGHT19"));
-		tempKeys.add(new Key("LIGHT20"));
+		for (int index = 0; index < client.getKeys().size(); index++) {
+			tempKeys.add(new Key(((String) client.getKeys().get(index))));
+		}
 		Vector tempImages = new Vector();
+		/*Core components*/
 		tempImages.add("images/base/button-base_01");
 		tempImages.add("images/base/button-base_02");
 		tempImages.add("images/base/button-base_03");
@@ -80,28 +63,14 @@ public class Loader {
 		tempImages.add("images/highlight/button-highlight_07");
 		tempImages.add("images/highlight/button-highlight_08");
 		tempImages.add("images/highlight/button-highlight_09");
-		tempImages.add("lib/icons/light-bulb-off");
-		tempImages.add("lib/icons/light-bulb");
-		tempImages.add("lib/icons/aircon-off");
-		tempImages.add("lib/icons/aircon");
-		tempImages.add("lib/icons/blinds-closed");
-		tempImages.add("lib/icons/blinds-open");
-		tempImages.add("lib/icons/door-closed");
-		tempImages.add("lib/icons/door-open");
-		tempImages.add("lib/icons/fan-off");
-		tempImages.add("lib/icons/fan");
-		tempImages.add("lib/icons/heater-off");
-		tempImages.add("lib/icons/heater");
-		tempImages.add("lib/icons/led-off");
-		tempImages.add("lib/icons/led-green");
-		tempImages.add("lib/icons/power-red");
-		tempImages.add("lib/icons/power-green");
-		tempImages.add("lib/icons/sprinkler-off");
-		tempImages.add("lib/icons/sprinkler");
-		tempImages.add("lib/icons/sprinkler2-off");
-		tempImages.add("lib/icons/sprinkler2");
-		tempImages.add("lib/icons/volume-down");
-		tempImages.add("lib/icons/volume-up");
+		tempImages.add("images/levels/box-empty");
+		tempImages.add("images/levels/box-full");
+		tempImages.add("images/levels/ramp-0");
+		tempImages.add("images/levels/ramp-20");
+		tempImages.add("images/levels/ramp-40");
+		tempImages.add("images/levels/ramp-60");
+		tempImages.add("images/levels/ramp-80");
+		tempImages.add("images/levels/ramp-full");
 		serverHandler = new ServerHandler(eLifeSettings, tempKeys);
 		myMain = new MainWindow(serverHandler, tempImages, client);
 		serverHandler.connect();

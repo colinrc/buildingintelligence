@@ -126,7 +126,9 @@ public class SerialHandler {
 		serverHandle.sendToServer(inCommand);
 	}
 	public void sendSerialMessage(String inString){
-		commsObject.incomingSerial(inString);
+		if(commsObject != null){
+			commsObject.incomingSerial(inString);
+		}		
 	}
 	public void setSerialCommsObject(SerialCommsObject inObject){
 		 commsObject = inObject;

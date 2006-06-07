@@ -98,9 +98,6 @@ public class MainWindowBG extends java.awt.Container {
 	public SerialHandler getSerialHandle() {
 		return serialHandle;
 	}
-	public void upButton() {
-		currentPage.upButton();
-	}
 	public void upPage() {
 		if (room) {
 			if (currentRoom == 0) {
@@ -112,7 +109,7 @@ public class MainWindowBG extends java.awt.Container {
 			} else {
 				currentRoom--;
 			}
-			buildRoomPage((ActiveRoom) rooms.get(currentRoom));
+			buildRoomPage((ActiveRoom) rooms.get(currentRoom));			
 		} else {
 			if (currentDevice == 0) {
 				if (currentDevice
@@ -129,9 +126,6 @@ public class MainWindowBG extends java.awt.Container {
 					.getGroups()
 					.get(currentDevice)));
 		}
-	}
-	public void downButton() {
-		currentPage.downButton();
 	}
 	public void downPage() {
 		if (room) { //
@@ -161,9 +155,6 @@ public class MainWindowBG extends java.awt.Container {
 					.get(currentDevice)));
 		}
 	}
-	public void backPage() {
-		currentPage.cancel();
-	}
 	public void goHome(){
 		if (!room) {
 			buildRoomPage((ActiveRoom) rooms.get(currentRoom));
@@ -173,9 +164,6 @@ public class MainWindowBG extends java.awt.Container {
 				buildRoomPage((ActiveRoom) rooms.get(currentRoom));
 			}
 		}
-	}
-	public void ok() {
-		//currentPage.select();
 	}
 	public void buildRoomPage(ActiveRoom currentRoom) {
 		if (currentPage != null) {
@@ -193,6 +181,11 @@ public class MainWindowBG extends java.awt.Container {
 		currentDevice = -1;
 		currentPage.repaint();
 		room = true;
+		if (this.currentRoom ==0){
+			serialHandle.sendSerialMessage("B1Off");
+		} else{
+			serialHandle.sendSerialMessage("B1Blue");
+		}
 		//currentPage.setButtonsOn();
 	}
 	public void buildDevicePage(ActiveGroup currentDevice) {
@@ -221,8 +214,20 @@ public class MainWindowBG extends java.awt.Container {
 		room = false;
 		currentPage.repaint();
 	}
-	public void select() {
+	public void upButton() {
+		currentPage.upButton();
+	}
+	public void downButton() {
+		currentPage.downButton();
+	}
+	public void backPage() {
+		currentPage.cancel();
+	}
+	public void ok() {
 		currentPage.select();
+	}
+	public void select() {
+		currentPage.click();
 	}
 	public void rotEncChange(int inValue) {
 		currentPage.encChange(inValue);

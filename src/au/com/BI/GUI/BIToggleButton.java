@@ -125,7 +125,7 @@ public class BIToggleButton extends BIControlButton {
 		}
 		/**/
 		g2d.setComposite(makeComposite((float) 1));
-		graphics.setFont(new java.awt.Font("helvetica", java.awt.Font.BOLD, 14));
+		graphics.setFont(new java.awt.Font(buttonFont, java.awt.Font.BOLD, fontSize));
 		graphics.setColor(new Color(255, 255, 255));
 		graphics.drawString(this.getName(), 75, 26);
 		if (((Key) keys.get(0)).getState().getCommand().equals("")) {

@@ -62,7 +62,7 @@ public class MainWindowTitleBar extends Component implements Runnable {
 		g.setColor(new java.awt.Color(0, 0, 0));
 		g.fillRect(0, 0, 240, 80);
 		g.setColor(new java.awt.Color(255, 255, 255));
-		g.setFont(new java.awt.Font("helvetica", java.awt.Font.BOLD, 16));
+		g.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 16));
 		g.drawString(df.format(cal.getTime()), 10, 25);
 		g.drawString(df2.format(cal.getTime()), 190, 25);
 		g.drawString(name, 10, 60);

@@ -54,7 +54,7 @@ public abstract class Page extends Container {
 		// TODO Auto-generated constructor stub
 	}
 	public void setButtonsOn(){
-		serialHandle.sendSerialMessage("B1Blue");
+		serialHandle.sendSerialMessage("B2Off");
 		serialHandle.sendSerialMessage("B2Blue");
 		serialHandle.sendSerialMessage("B3Blue");
 		serialHandle.sendSerialMessage("B4Blue");
@@ -236,6 +236,8 @@ public abstract class Page extends Container {
 	}
 	public void downButton(){
 		((MainWindowBG)this.getParent()).downPage();
+	}
+	public void click(){
 	}
 	public void finalize() throws Throwable {
 		try {
