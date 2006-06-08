@@ -36,8 +36,8 @@ _global.advanced = false;
 _global.unSaved = false;
 _global.formDepth = 0;
 _global.projectFileName = "";
-_global.serverDesign = new Objects.Server.Server();
-_global.serverInstance = new Objects.Instances.ServerInstance();
+/*_global.serverDesign = new Objects.Server.Server();
+_global.serverInstance = new Objects.Instances.ServerInstance();*/
 _global.keys = _global.serverDesign.getKeys();
 /*	var clientList:Array = _global.serverDesign.getClients();
 var temp:Array = null;
@@ -138,18 +138,18 @@ project_xml.onLoad = function(success) {
 		switch (project_xml.firstChild.childNodes[child].nodeName) {
 		case "CONFIG" :
 			_global.serverDesign.setXML(project_xml.firstChild.childNodes[child]);
-			_global.designTree_xml.appendChild(_global.serverDesign.toTree());
-			var clients = _global.serverDesign.getClients();
-			for (var client in clients) {
-				_global.designTree_xml.appendChild(clients[client].toTree());
-			}
 			break;
 		case "serverInstance" :
 			_global.serverInstance.setXML(project_xml.firstChild.childNodes[child]);
-			_global.controlTree_xml.appendChild(_global.serverInstance.toTree());
 			break;
 		}
 	}
+	_global.designTree_xml.appendChild(_global.serverDesign.toTree());
+	var clients = _global.serverDesign.getClients();
+	for (var client in clients) {
+		_global.designTree_xml.appendChild(clients[client].toTree());
+	}
+	_global.controlTree_xml.appendChild(_global.serverInstance.toTree());	
 	_global.refreshTheTree();
 };
 /**************************************************************************************/
@@ -228,12 +228,6 @@ _global.saveFile = function(saveType:String):Void  {
 			mdm.Forms.MainForm.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
 			_global.unSaved = false;
 		} else {
-			//mdm.Dialogs.BrowseFile.buttonText = "Save";
-			//mdm.Dialogs.BrowseFile.title = "Please select a location to save to";
-			//mdm.Dialogs.BrowseFile.dialogText = "Please select a location to save to";
-			//mdm.Dialogs.BrowseFile.defaultExtension = "xml";
-			//mdm.Dialogs.BrowseFile.filterList = "eLIFE Project Files|*.elp";
-			//mdm.Dialogs.BrowseFile.filterText = "eLIFE Project Files|*.elp";
 			var tempString = mdm.Dialogs.inputBox("Enter project file name", "Enter project file name");
 			if (tempString != "false") {
 				_global.projectFileName = _global.project.path + tempString+".elp";
@@ -245,7 +239,7 @@ _global.saveFile = function(saveType:String):Void  {
 				}
 				/*Append project contents to project node*/
 				newProjectXML.appendChild(_global.serverDesign.toProject());
-				newProjectXML.appendChild(_global.serverInstance.toProject());
+				newProjectXML.appendChild(_global.serverInstance.toXML());
 				mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
 				mdm.Application.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
 				mdm.Forms.MainForm.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
@@ -270,6 +264,7 @@ _global.saveFile = function(saveType:String):Void  {
 		}
 	}
 };
+//saveFile() = _global.saveFile();
 /****************************************************************/
 _global.searchProject = function(treeNode:Object, object:Object):Object  {
 	if (treeNode.object == object) {
@@ -449,6 +444,7 @@ mdm.Menu.Main.onMenuClick_New_Project = function() {
 	_global.serverInstance = new Objects.Instances.ServerInstance();
 	_global.serverInstance.serverDesign = _global.serverDesign;
 	_global.designTree_xml = new XML();
+	_global.controlTree_xml = new XML();
 	_global.designTree_xml.appendChild(serverDesign.toTree());
 	var clients = _global.serverDesign.getClients();
 	for (var client in clients) {
@@ -476,17 +472,22 @@ mdm.Menu.Main.onMenuClick_Save_Project = function() {
 	saveFile("Project");
 };
 mdm.Menu.Main.onMenuClick_Save_Project_As__ = function() {
-	mdm.Dialogs.BrowseFile.buttonText = "Save Project";
-	mdm.Dialogs.BrowseFile.title = "Please select a location to save to";
-	mdm.Dialogs.BrowseFile.dialogText = "Please select a location to save to";
-	mdm.Dialogs.BrowseFile.defaultExtension = "elp";
-	mdm.Dialogs.BrowseFile.filterList = "eLIFE Project Files|*.elp";
-	mdm.Dialogs.BrowseFile.filterText = "eLIFE Project Files|*.elp";
-	var tempString = mdm.Dialogs.BrowseFile.show();
+	var tempString = mdm.Dialogs.inputBox("Enter project file name", "Enter project file name");
 	if (tempString != "false") {
-		_global.projectFileName = tempString;
-		saveFile("Project");
-	}
+		_global.projectFileName = _global.project.path + tempString+".elp";
+		var newProjectXML = new XMLNode(1, "project");
+		for (var attrib in _global.project) {
+			if (_global.project[attrib].length) {
+				newProjectXML.attributes[attrib] = _global.project[attrib];
+			}
+		}
+		newProjectXML.appendChild(_global.serverDesign.toProject());
+		newProjectXML.appendChild(_global.serverInstance.toXML());
+		mdm.FileSystem.saveFile(_global.projectFileName, _global.writeXMLFile(newProjectXML, 0));
+		mdm.Application.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
+		mdm.Forms.MainForm.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
+		_global.unSaved = false;
+		}
 };
 mdm.Menu.Main.onMenuClick_Help = function() {
 	var windowList = mdm.System.getWindowList();

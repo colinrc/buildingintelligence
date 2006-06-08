@@ -44,7 +44,7 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function save():Void {
-		dataObject.setData({name:name_ti.text, poly:roomEditor.poly, switchZone:switchZone_cmb.text});
+		dataObject.setData({name:name_ti.text, poly:roomEditor.poly, switchZone:switchZone_cmb.selectedItem.label});
 		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}

@@ -75,7 +75,7 @@
 		var newNode = new XMLNode(1, "Room");
 		newNode.appendChild(doors.toTree());
 		newNode.appendChild(alerts.toTree());
-		if((switchZone=="")||(switchZone != "None")){
+		if((switchZone=="")||(switchZone == "None")){
 			newNode.appendChild(window.toTree());
 		}
 		newNode.object = this;

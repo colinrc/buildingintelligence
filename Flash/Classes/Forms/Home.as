@@ -18,6 +18,9 @@ class Forms.Home extends Forms.BaseForm {
 	private var save_btn:Button;
 	public function init():Void {
 		var changeListener:Object = new Object();
+		while(!_global.project.path.length){
+			selectFolder();
+		}
 		changeListener.change = function(eventObject:Object) {
 		    _global.unSaved = true;
 		};

@@ -95,11 +95,7 @@ class Objects.MonitorConnection {
 	private function commit():Void{
 		if(monitorStatus){		
 			sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="ewfmgr c: -commit" />\n'));
-			mdm.Dialogs.prompt(mdm.System.localTime);
 			appendOutput("New settings commited. Please shutdown and restart");
-			sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="time 12" />\n'));
-			mdm.Dialogs.prompt(mdm.System.localTime);
-			appendOutput("Time updated. Commit and shutdown required");
 		} else {
 			appendOutput("Error: No Connection Present");
 		}		
@@ -108,9 +104,8 @@ class Objects.MonitorConnection {
 	
 	public function setTime():Void{
 		if(monitorStatus){		
-			sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="time 12" />\n'));
-			mdm.Dialogs.prompt(mdm.System.localTime);
-			appendOutput("Time updated. Commit and shutdown required");
+			sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="runme" />\n'));
+			appendOutput("Time updated. Commit and shutdown required1");
 		} else {
 			appendOutput("Error: No Connection Present");
 		}
