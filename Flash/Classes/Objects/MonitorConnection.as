@@ -104,6 +104,8 @@ class Objects.MonitorConnection {
 			appendOutput("Error: No Connection Present");
 		}		
 	}
+	
+	
 	public function setTime():Void{
 		if(monitorStatus){		
 			sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="time 12" />\n'));
