@@ -6,6 +6,9 @@ class Forms.Control.ServerControls extends Forms.BaseForm {
 	private var start_btn:Button;
 	private var stop_btn:Button;
 	private var restart_btn:Button;
+	private var syncTime_btn:Button;
+	private var commit_btn:Button;
+	private var shutdown_btn:Button;
 	private var monitorOutput_ta:TextArea;
 	private var serverOutput_ta:TextArea;	
 	private var sftpOutput_ta:TextArea;
@@ -53,6 +56,9 @@ class Forms.Control.ServerControls extends Forms.BaseForm {
 		start_btn.addEventListener("click", Delegate.create(this, startServer));
 		stop_btn.addEventListener("click", Delegate.create(this, stopServer));
 		restart_btn.addEventListener("click", Delegate.create(this, restartServer));
+		syncTime_btn.addEventListener("click", Delegate.create(this, syncTime));
+		commit_btn.addEventListener("click", Delegate.create(this, commit));
+		shutdown_btn.addEventListener("click", Delegate.create(this, shutdown));
 		monitorConnect_btn.addEventListener("click", Delegate.create(this, monitorConnect));
 		monitorDisconnect_btn.addEventListener("click", Delegate.create(this, monitorDisconnect));
 		serverConnect_btn.addEventListener("click", Delegate.create(this, serverConnect));
@@ -127,6 +133,15 @@ class Forms.Control.ServerControls extends Forms.BaseForm {
 	}
 	private function restartServer():Void{
 		monitorConnection.restartServer();
+	}
+	private function syncTime():Void{
+		monitorConnection.setTime();
+	}
+	private function commit():Void{
+		monitorConnection.commit();
+	}
+	private function shutdown():Void{
+		monitorConnection.shutdown();
 	}
 	private function monitorConnect():Void{
 		monitorConnection.connect(ipAddress_ti.text,10002);
