@@ -5,8 +5,12 @@
 :: Author : David Gavin
 :: Building Intelligence 2006
 
-if exist library goto makeFolders
+if exist library goto makeScript
 mkdir library
+
+:makeScript
+if exist library goto makeFolders
+mkdir script
 
 :makefolders
 cd library
