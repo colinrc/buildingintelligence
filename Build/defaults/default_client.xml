@@ -61,8 +61,8 @@
 				<item type= "button" icon= "volume-down" command= "volume" extra= "DOWN" repeatRate= "200"/> 
 			</row> 
 			<row cases= "state:on"> 
-				<item type= "button" icon= "cd-music:1" command= "src" extra= "CD" showOn= "true"/> 
-				<item type= "button" icon= "cd-music:2" command= "src" extra= "CD2" showOn= "true"/> 
+				<item type= "button" icon= "cd-music" command= "src" extra= "CD" showOn= "true"/>
+				<item type= "button" icon= "cd-music" command= "src" extra= "CD2" showOn= "true"/> 
 				<item type= "button" icon= "radio" command= "src" extra= "TUNER" showOn= "true"/> 
 				<item type= "button" icon= "atom" command= "src" extra= "atom" showOn= "true"/> 
 				<item type= "button" icon= "tv" command= "src" extra= "TV" showOn= "true"/> 
