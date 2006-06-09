@@ -56,6 +56,24 @@
 			break;
 		case "KRAMER" :
 			itemType = "AV_OUTPUT";
+			var newAudioVideoNode = new XMLNode(1, itemType);
+			newAudioVideoNode.attributes["DISPLAY_NAME"] = "ALL";
+			newAudioVideoNode.attributes["KEY"] = "0";
+			audiovideosNode.appendChild(newAudioVideoNode);
+			break;
+		case "NUVO":
+			itemType = "AUDIO";
+			var newAudioVideoNode = new XMLNode(1, itemType);
+			newAudioVideoNode.attributes["DISPLAY_NAME"] = "ALL";
+			newAudioVideoNode.attributes["KEY"] = "0";
+			audiovideosNode.appendChild(newAudioVideoNode);
+			break;
+		case "SIGN_VIDEO":
+			itemType = "AV";
+			var newAudioVideoNode = new XMLNode(1, itemType);
+			newAudioVideoNode.attributes["DISPLAY_NAME"] = "ALL";
+			newAudioVideoNode.attributes["KEY"] = "0";
+			audiovideosNode.appendChild(newAudioVideoNode);
 			break;
 		}
 		for (var audiovideo in audiovideos) {		
@@ -81,8 +99,10 @@
 		switch (container) {
 		case "HAL" :
 		case "TUTONDO" :
+		case "NUVO":
 			itemType = "Audio Zones";
 			break;
+		case "SIGN_VIDEO":
 		case "KRAMER" :
 			itemType = "AV Zones";
 			break;
@@ -100,8 +120,10 @@
 		switch (container) {
 		case "HAL" :
 		case "TUTONDO" :
+		case "NUVO":
 			itemType = "AudioZones";
 			break;
+		case "SIGN_VIDEO":
 		case "KRAMER" :
 			itemType = "AVZones";
 			break;

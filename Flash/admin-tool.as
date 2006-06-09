@@ -209,9 +209,29 @@ function openFile(openType:String):Void {
 		}
 	}
 }
+_global.setPath = function():Void{
+		mdm.Dialogs.BrowseFolder.title = "Please select a Folder";
+		var tempString = mdm.Dialogs.BrowseFolder.show();
+		if (tempString != "false") {
+			project_path_ti.text = tempString;
+			//_global.history.changed("Project Details", "Project Path", "Directory of project", _global.project.path, tempString);
+			_global.project.path = tempString;
+			//_global.history.setProject(_global.project.project, _global.project.path);
+		    _global.unsaved = true;			
+		} else{
+			mdm.Dialogs.prompt("Your project cannot be saved without selecting a project directory.");
+		}
+}
 /**************************************************************************************/
 _global.saveFile = function(saveType:String):Void  {
 	if (saveType == "Project") {
+		if(!_global.project.path.length){
+			_global.setPath();
+			if(!_global.project.path.length){
+				return;
+			}
+		}
+			
 		if (_global.projectFileName.length) {
 			var newProjectXML = new XMLNode(1, "project");
 			for (var attrib in _global.project) {
@@ -806,6 +826,7 @@ buttonListener.click = function(eventObj) {
 				case "Hal" :
 				case "IRLearner" :
 				case "Kramer" :
+				case "Nuvo":
 				case "Logging" :
 				case "LoggingGroup" :
 				case "Oregon" :
@@ -814,6 +835,7 @@ buttonListener.click = function(eventObj) {
 				case "Property" :
 				case "Raw_Connection" :
 				case "Server" :
+				case "SignVideo":
 				case "StatusBar" :
 				case "StatusBarGroup" :
 				case "Tutondo" :
@@ -838,8 +860,8 @@ buttonListener.click = function(eventObj) {
 					libraryManager._y = 50;
 					libraryManager.title = "Library";
 					libraryManager.closeButton = true;
-					var winListener:Object = new Object();
-					winListener.click = function() {
+					_global.winListener = new Object();
+					_global.winListener.click = function() {
 						libraryManager.deletePopUp();
 						blocker.unloadMovie();
 						var foundNode = _global.searchProject(_global.left_tree.dataProvider, tempObject);
@@ -878,12 +900,12 @@ buttonListener.click = function(eventObj) {
 						_global.refreshTheTree();
 						//_global.unSaved = true;
 					};
-					winListener.complete = function(evt_obj:Object) {
+					_global.winListener.complete = function(evt_obj:Object) {
 						libraryManager.setSize(libraryManager.content._width + 7, libraryManager.content._height + 35);
 						libraryManager.content.doLoad(tempObject);
 					};
-					libraryManager.addEventListener("click", winListener);
-					libraryManager.addEventListener("complete", Delegate.create(this, winListener.complete));
+					libraryManager.addEventListener("click", _global.winListener);
+					libraryManager.addEventListener("complete", Delegate.create(this, _global.winListener.complete));
 					break;
 				default :
 					break;

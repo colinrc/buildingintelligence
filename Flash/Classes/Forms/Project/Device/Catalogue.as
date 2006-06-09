@@ -17,8 +17,32 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		restrictions.rescrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(items_dg);
-		dataGridHandler.addTextInputColumn("code", "Code", restrictions,false,200);
-		dataGridHandler.addTextInputColumn("value", "Value", restrictions,false,200);
+		switch(name){
+			case "Sign Video Inputs":
+				dataGridHandler.addTextInputColumn("code", "Video Device", restrictions,false,200);
+				dataGridHandler.addTextInputColumn("value", "Video Input #", restrictions,false,200);
+				break;
+			case "HAL Inputs":
+			case "Tutondo Inputs":
+			case "Kramer Audio Inputs":
+			case "Nuvo Audio Inputs":
+				dataGridHandler.addTextInputColumn("code", "Audio Device", restrictions,false,200);
+				dataGridHandler.addTextInputColumn("value", "Audio Input #", restrictions,false,200);
+				break;
+			case "Kramer AV Inputs":
+				dataGridHandler.addTextInputColumn("code", "AV Device", restrictions,false,200);
+				dataGridHandler.addTextInputColumn("value", "AV Input #", restrictions,false,200);
+				break;
+			case "Tutondo Functions":
+			case "HAL Functions":
+				dataGridHandler.addTextInputColumn("code", "Function Name", restrictions,false,200);
+				dataGridHandler.addTextInputColumn("value", "Function Number", restrictions,false,200);
+				break;
+			default:
+				dataGridHandler.addTextInputColumn("code", "Code", restrictions,false,200);
+				dataGridHandler.addTextInputColumn("value", "Value", restrictions,false,200);
+				break;
+		}
 		var DP = new Array();
 		for (var item in items) {
 			var newItem = new Object();

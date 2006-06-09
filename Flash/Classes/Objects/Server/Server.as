@@ -260,6 +260,22 @@
 				treeNode.appendChild(newCBus.toTree());				
 				devices.push(newCBus);
 				break;
+			case "NUVO" :
+				var newNuvo = new Objects.Server.Nuvo();
+				newNuvo.setXML(newNode);
+				newNuvo.id = _global.formDepth++;				
+				newNuvo.active = "Y";				
+				treeNode.appendChild(newNuvo.toTree());
+				devices.push(newNuvo);
+				break;
+			case "SIGN_VIDEO" :
+				var newSignVideo = new Objects.Server.SignVideo();
+				newSignVideo.setXML(newNode);
+				newSignVideo.id = _global.formDepth++;				
+				newSignVideo.active = "Y";				
+				treeNode.appendChild(newSignVideo.toTree());
+				devices.push(newSignVideo);
+				break;
 			case "DYNALITE" :
 				var newDynalite = new Objects.Server.Dynalite();
 				newDynalite.setXML(newNode);
@@ -283,6 +299,14 @@
 				newRaw.active = "Y";				
 				treeNode.appendChild(newRaw.toTree());		
 				devices.push(newRaw);
+				break;
+			case "COMFORT" :
+				var newM1 = new Objects.Server.M1();
+				newM1.setXML(newNode);
+				newM1.id = _global.formDepth++;								
+				newM1.active = "Y";				
+				treeNode.appendChild(newM1.toTree());
+				devices.push(newM1);
 				break;
 			case "COMFORT" :
 				var newComfort = new Objects.Server.Comfort();
@@ -376,6 +400,27 @@
 						newGC100.active = "Y";						
 						devices.push(newGC100);
 						break;
+					case "NUVO" :
+						var newNuvo = new Objects.Server.Nuvo();
+						newNuvo.setXML(newData.childNodes[child]);
+						newNuvo.id = _global.formDepth++;
+						newNuvo.active = "Y";						
+						devices.push(newNuvo);
+						break;
+					case "SIGN_VIDEO" :
+						var newSignVideo = new Objects.Server.SignVideo();
+						newSignVideo.setXML(newData.childNodes[child]);
+						newSignVideo.id = _global.formDepth++;
+						newSignVideo.active = "Y";						
+						devices.push(newSignVideo);
+						break;
+					case "M1":
+						var newM1 = new Objects.Server.M1();
+						newM1.setXML(newData.childNodes[child]);
+						newM1.id = _global.formDepth++;						
+						newM1.active = "Y";						
+						devices.push(newM1);
+						break;					
 					case "RAW_CONNECTION" :
 						var newRaw = new Objects.Server.Raw_Connection();
 						newRaw.setXML(newData.childNodes[child]);

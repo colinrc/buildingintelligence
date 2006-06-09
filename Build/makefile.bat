@@ -114,8 +114,16 @@ if exist Logging goto makeLoggingGroup
 mkdir Logging
 
 :makeLoggingGroup
-if exist LoggingGroup goto makeOregon
+if exist LoggingGroup goto makeM1
 mkdir LoggingGroup
+
+:makeM1
+if exist M1 goto makeNuvo
+mkdir M1
+
+:makeNuvo
+if exist Nuvo goto makeOregon
+mkdir Nuvo
 
 :makeOregon
 if exist Oregon goto makePanel
@@ -134,8 +142,12 @@ if exist Raw_Connection goto makeServer
 mkdir Raw_Connection
 
 :makeServer
-if exist Server goto makeStatusBar
+if exist Server goto makeSignVideo
 mkdir Server
+
+:makeSignVideo
+if exist SignVideo goto makeStatusBar
+mkdir SignVideo
 
 :makeStatusBar
 if exist StatusBar goto makeStatusBarGroup

@@ -18,8 +18,8 @@ class Forms.Home extends Forms.BaseForm {
 	private var save_btn:Button;
 	public function init():Void {
 		var changeListener:Object = new Object();
-		while(!_global.project.path.length){
-			selectFolder();
+		if(!_global.project.path.length){
+			_global.setPath();
 		}
 		changeListener.change = function(eventObject:Object) {
 		    _global.unSaved = true;
@@ -78,7 +78,7 @@ class Forms.Home extends Forms.BaseForm {
 			notes_ta.text = _global.project.notes;
 		}
 		save_btn.addEventListener("click", Delegate.create(this, save));
-		path_btn.addEventListener("click", Delegate.create(this, selectFolder));
+		path_btn.addEventListener("click", Delegate.create(this, _global.setPath));
 	}
 	public function save():Void {
 		//_global.history.changed("Project Details", "Project Name", "Name of project", _global.project.project, project_name_ti.text);
@@ -108,16 +108,5 @@ class Forms.Home extends Forms.BaseForm {
 		_global.project.notes = notes_ta.text;
 		//_global.history.changed("Project Details", "Server IP", "Sever IP address", _global.project.ipAddress, ipAddress_ti.text);
 		_global.saveFile("Project");		
-	}
-	public function selectFolder():Void {
-		mdm.Dialogs.BrowseFolder.title = "Please select a Folder";
-		var tempString = mdm.Dialogs.BrowseFolder.show();
-		if (tempString != "false") {
-			project_path_ti.text = tempString;
-			//_global.history.changed("Project Details", "Project Path", "Directory of project", _global.project.path, tempString);
-			_global.project.path = tempString;
-			//_global.history.setProject(_global.project.project, _global.project.path);
-		    _global.unsaved = true;			
-		}
 	}
 }

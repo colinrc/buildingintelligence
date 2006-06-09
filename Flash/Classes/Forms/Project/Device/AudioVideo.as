@@ -30,9 +30,11 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 		switch (container) {
 		case "HAL" :
 		case "TUTONDO" :
+		case "NUVO":
 			itemType = "Audio\nZone";
 			title_lb.text = "Audio Zones";
 			break;
+		case "SIGN_VIDEO":			
 		case "KRAMER" :
 			itemType = "AV\nZone";
 			title_lb.text = "AV Zones";

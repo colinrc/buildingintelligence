@@ -56,7 +56,8 @@
 		view = undefined;
 		lastCode = "0";
 		myActiveX = new mdm.ActiveX(0, 0, 0, 0, "WeOnlyDo.wodSFTP.1");
-		myActiveX.setProperty("LocalPath", "string", localPath);
+		myActiveX.setProperty("LicenseKey", "string", '89ZD-98LF-WF2P-G2VA');
+		myActiveX.setProperty("LocalPath", "string", localPath);		
 		myActiveX.setProperty("RemotePath", "string", remotePath);
 	}
 	public function setLocalPath(inLocalPath:String) {
@@ -103,6 +104,7 @@
 		return localList;
 	}
 	public function connect(user:String, port:Number, hostname:String, password:String):Void {
+		myActiveX.setProperty("LicenseKey", "string", '89ZD-98LF-WF2P-G2VA');
 		myActiveX.setProperty("Hostname", "string", hostname);
 		myActiveX.setProperty("Port", "integer", port);
 		myActiveX.setProperty("Blocking", "integer", 1);
