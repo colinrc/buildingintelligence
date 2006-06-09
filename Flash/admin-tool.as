@@ -51,8 +51,7 @@ var right_tree = workFlow_split.setFirstContents("Tree", "right_tree", 0);
 var output_panel = workFlow_split.setSecondContents("OutputPanel", "output_panel", 1);
 _global.right_tree = right_tree;
 _global.output_panel = output_panel;
-//_global.output_panel.setDescription("BLAH BLAH BLAH");
-//_global.output_panel.setError("YAK YAK YAK");
+
 _global.workflow = new Objects.WorkFlow();
 //Create global reference to project/design tree
 var left_tree:mx.controls.Tree;
@@ -71,7 +70,7 @@ _global.overrides_xml.onLoad = function(success) {
 		mdm.Dialogs.prompt("Error, overrides.xml file not loaded!");
 	}
 };
-_global.overrides_xml.load("overrides.xml");
+_global.overrides_xml.load("data/overrides.xml");
 //Load list of possible raw parameters
 _global.parameters_xml = new XML();
 _global.parameters_xml.ignoreWhite = true;
@@ -80,7 +79,7 @@ _global.parameters_xml.onLoad = function(success) {
 		mdm.Dialogs.prompt("Error, parameters.xml file not loaded!");
 	}
 };
-_global.parameters_xml.load("parameters.xml");
+_global.parameters_xml.load("data/parameters.xml");
 //Load default client configuration
 _global.default_client_xml = new XML();
 _global.default_client_xml.ignoreWhite = true;
@@ -89,7 +88,7 @@ _global.default_client_xml.onLoad = function(success) {
 		mdm.Dialogs.prompt("Error, client.xml file not loaded!");
 	}
 };
-_global.default_client_xml.load("default_client.xml");
+_global.default_client_xml.load("defaults/default_client.xml");
 //Load default client configuration
 _global.default_server_xml = new XML();
 _global.default_server_xml.ignoreWhite = true;
@@ -98,7 +97,7 @@ _global.default_server_xml.onLoad = function(success) {
 		mdm.Dialogs.prompt("Error, server.xml file not loaded!");
 	}
 };
-_global.default_server_xml.load("default_server.xml");
+_global.default_server_xml.load("defaults/default_server.xml");
 //Load list of possible control type attributes
 _global.controlTypeAttributes_xml = new XML();
 _global.controlTypeAttributes_xml.ignoreWhite = true;
@@ -107,7 +106,7 @@ _global.controlTypeAttributes_xml.onLoad = function(success) {
 		mdm.Dialogs.prompt("Error, controlTypeAttributes.xml file not loaded!");
 	}
 };
-_global.controlTypeAttributes_xml.load("controlTypeAttributes.xml");
+_global.controlTypeAttributes_xml.load("data/controlTypeAttributes.xml");
 /*************************************************************************/
 // load project xml data
 _global.project = new Object();
@@ -177,11 +176,11 @@ comfort_XML.ignoreWhite = true;
 comfort_XML.onLoad = function(success) {
 	if (success) {
 	} else {
-		mdm.Dialogs.prompt("Error, 'library/Comfort/default_comfort.xml' file not loaded!");
+		mdm.Dialogs.prompt("Error, 'defaults/default_comfort.xml' file not loaded!");
 	}
 };
 _global.comfort_XML = comfort_XML;
-_global.comfort_XML.load("library/Comfort/default_comfort.xml");
+_global.comfort_XML.load("defaults/default_comfort.xml");
 /**************************************************************************************/
 function openFile(openType:String):Void {
 	mdm.Dialogs.BrowseFile.buttonText = "Open";

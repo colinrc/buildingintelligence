@@ -15,7 +15,7 @@ class Objects.WorkFlow {
 		workflow_xml = new XML();
 		workflow_xml.ignoreWhite = true;
 		workflow_xml.onLoad = Delegate.create(this, loadWorkflow);
-		workflow_xml.load("workflow.xml");
+		workflow_xml.load("data/workflow.xml");
 	}
 	public function loadWorkflow(success:Boolean) {
 		if (success) {
