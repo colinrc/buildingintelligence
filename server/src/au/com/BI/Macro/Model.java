@@ -203,6 +203,9 @@ public class Model extends BaseModel implements DeviceModel {
                     }
 		}
 		if (clientCommand != null) {
+			synchronized (cache){
+				cache.setCachedCommand("MACRO", clientCommand,false);
+			}
 			synchronized (this.commandQueue){
 				commandQueue.add(clientCommand);
 			}
@@ -220,7 +223,9 @@ public class Model extends BaseModel implements DeviceModel {
                 clientCommand.setFromElement (macro);
                 clientCommand.setKey ("CLIENT_SEND");
                 clientCommand.setTargetDeviceID(0);
-
+    			synchronized (cache){
+    				cache.setCachedCommand("MACRO", clientCommand,false);
+    			}
                 synchronized (this.commandQueue){
                         commandQueue.add(clientCommand);
                         commandQueue.notifyAll();
@@ -332,7 +337,9 @@ public class Model extends BaseModel implements DeviceModel {
 			}
 		}
 		if (clientCommand != null) {
-
+			synchronized (cache){
+				cache.setCachedCommand("CALENDAR", clientCommand,false);
+			}
 			synchronized (this.commandQueue){
 				commandQueue.add(clientCommand);
                                 commandQueue.notifyAll();

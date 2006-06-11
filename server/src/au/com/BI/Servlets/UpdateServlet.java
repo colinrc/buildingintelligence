@@ -23,6 +23,7 @@ import javax.servlet.http.*;
 
 import au.com.BI.Command.ClientCommandFactory;
 import au.com.BI.Command.Command;
+import au.com.BI.Command.UnknownCommandException;
 import au.com.BI.Config.Security;
 import au.com.BI.Config.TooManyClientsException;
 import au.com.BI.Flash.ClientCommand;
@@ -44,7 +45,7 @@ public class UpdateServlet extends HttpServlet {
     CacheBridgeFactory cacheBridgeFactory = null;
     protected XMLOutputter xmlOut = null;
     protected Logger logger;
-	SAXBuilder saxb = null;
+
 	AddressBook addressBook = null;
 	VersionManager versionManager = null;
 	List commandQueue = null;
@@ -53,22 +54,30 @@ public class UpdateServlet extends HttpServlet {
     public UpdateServlet() {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
     	xmlOut = new XMLOutputter();
-    	saxb = new SAXBuilder(false); // get a SAXBuilder
+
     }
     
     public void doGet (HttpServletRequest req,
            HttpServletResponse resp) throws ServletException,java.io.IOException {
     	CacheBridge cacheBridge = null;
     	List<Element> extraStuffForStartup = null;
+    	Long ID = null;
+    	Long serverID = null;
     	
         HttpSession session = req.getSession(false);
         try {
 	        if (session == null) {
 	            session = req.getSession(true);
-	            extraStuffForStartup = setupSession(session);
+	            setupSession(session);
+	            ID = (Long)session.getAttribute("ID");
+	            serverID = (Long)session.getAttribute("ServerID");
+	            extraStuffForStartup = newClient (ID,serverID,versionManager);
+	        } else {
+	        	ID = (Long)session.getAttribute("ID");
+	        	serverID = (Long)session.getAttribute("ServerID");
 	        }
+	        
 	       	cacheBridge = (CacheBridge)session.getAttribute("CacheBridge");
-	    	Long ID = (Long)session.getAttribute("ID");
 	        long lastUpdate = session.getLastAccessedTime();  
 	        
 	        resp.setContentType("text/xml");
@@ -101,9 +110,10 @@ public class UpdateServlet extends HttpServlet {
             HttpServletResponse resp) throws ServletException,java.io.IOException {
         HttpSession session = req.getSession(false);  	
 
-
+    	SAXBuilder saxb = null;
+    	saxb = new SAXBuilder(false); // get a SAXBuilder
+    	
         if (session == null) {
-    		session.invalidate();
 			logger.log(Level.WARNING, "You must GET the current server status before posting new messages");
 			resp.setContentType("text/html");
 	        
@@ -116,9 +126,11 @@ public class UpdateServlet extends HttpServlet {
 	        out.println("</HTML>");
 	        resp.flushBuffer();
 	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
         }
 
     	Long ID = (Long)session.getAttribute("ID");
+
     	ClientCommandFactory clientCommandFactory = (ClientCommandFactory)session.getAttribute("ClientCommandFactory");
         String message = req.getParameter("MESSAGE");
 
@@ -133,15 +145,23 @@ public class UpdateServlet extends HttpServlet {
 
 		try {
 			xmlDoc = saxb.build(new StringReader(message));
+
 			Element rootElement = xmlDoc.getRootElement();
 			
 			ClientCommand  command = clientCommandFactory.processXML(rootElement);
-			command.setOriginatingID((Long)session.getAttribute("ID"));
 
-			synchronized (commandQueue){
-				commandQueue.add(command);
-				commandQueue.notifyAll();
-			}
+	    	if (command != null){
+		    	if (ID == null  ){
+		    		logger.log(Level.WARNING,"ID was null");
+		    		return;
+		    	}else {
+					command.setOriginatingID(ID);	    		
+		    	}
+		    	synchronized (commandQueue){
+					commandQueue.add(command);
+					commandQueue.notifyAll();
+				}
+	    	}
 			
 			resp.setContentType("text/html");
 	        java.io.PrintWriter out = resp.getWriter();
@@ -166,19 +186,47 @@ public class UpdateServlet extends HttpServlet {
 	        out.println("</HTML>");
 	        resp.flushBuffer();
 	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		} 
+		catch (UnknownCommandException ex) {
+			logger.log(Level.WARNING, "XML ERROR " + ex.getMessage());
+			resp.setContentType("text/html");
+	        
+	        java.io.PrintWriter out = resp.getWriter();
+	                
+	        out.println("<HTML>");
+	        out.println("<BODY>");
+	        out.println("Unkown Command Error " + ex.getMessage());
+	        out.println("</BODY>");
+	        out.println("</HTML>");
+	        resp.flushBuffer();
+	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		} catch (IllegalStateException ex) {
+			logger.log(Level.WARNING, "XML ERROR " + ex.getMessage());
+			resp.setContentType("text/html");
+	        
+	        java.io.PrintWriter out = resp.getWriter();
+	                
+	        out.println("<HTML>");
+	        out.println("<BODY>");
+	        out.println("XML Error " + ex.getMessage());
+	        out.println("</BODY>");
+	        out.println("</HTML>");
+	        resp.flushBuffer();
+	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}  
     }
 		
     
     
-    public List<Element> setupSession (HttpSession session) throws TooManyClientsException {
+    public void setupSession (HttpSession session) throws TooManyClientsException {
     	Long ID = (Long)session.getCreationTime();
     	session.setAttribute("ID",ID);
     	ServletContext context =  session.getServletContext();
  
     	Security security = (Security)context.getAttribute("Security");
     	Long serverID = (Long)context.getAttribute("ServerID");
-    
+    	session.setAttribute("ServerID",serverID);
+    	
     	Integer number = (Integer)context.getAttribute("NUMBER_WEB_CLIENTS");
     	if (number == null) number = new Integer(0);
     	synchronized (number){
@@ -195,8 +243,7 @@ public class UpdateServlet extends HttpServlet {
         session.setAttribute("CacheBridge", cacheBridge);
         session.setAttribute("ClientCommandFactory", clientCommandFactory);
         VersionManager versionManager = (VersionManager)context.getAttribute("VersionManager");
-        List<Element> extraStartupElements = newClient (ID,serverID,versionManager);
-        return extraStartupElements;
+
     }
    
     protected List<Element> newClient(Long sessionID,Long serverID,VersionManager versionManager) {

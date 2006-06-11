@@ -24,7 +24,7 @@ import au.com.BI.User.*;
 
 
 public class EventCalendar {
-    protected LinkedHashMap events = null;
+    protected LinkedHashMap <String,Element>events = null;
     protected SimpleDateFormat df = null;
     protected SimpleDateFormat tf = null;
     protected SimpleDateFormat totalDayF = null;
@@ -64,7 +64,7 @@ public class EventCalendar {
 
 		schedFact = new org.quartz.impl.StdSchedulerFactory();
 		sched = schedFact.getScheduler();
-		events = new LinkedHashMap (20);
+		events = new LinkedHashMap <String,Element>(20);
 		
 		this.setCalendarEventFactory(new CalendarEventFactory());
 		calendarEventFactory.setMacroHandler(macroHandler);		   

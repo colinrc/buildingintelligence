@@ -27,7 +27,7 @@ public class ClientCommandFactory {
 	 * @param xmlDoc
 	 *            A Sax representation of the document
 	 */
-	public ClientCommand processXML(Element rootElement) {
+	public ClientCommand processXML(Element rootElement) throws UnknownCommandException {
 
 		String name = ""; // the name of the node
 		String key = "";
@@ -91,6 +91,7 @@ public class ClientCommandFactory {
 			clientCommand.originatingID = ID;
 			clientCommand.setMessageFromFlash(rootElement);
 		}
+		if (clientCommand == null && !commandBuilt) throw new UnknownCommandException ("The message from the client is not known " + rootElement.toString());
 		return clientCommand;
 	}
 

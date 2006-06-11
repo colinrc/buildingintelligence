@@ -24,9 +24,10 @@ public class Logout extends HttpServlet {
     public void doGet (HttpServletRequest req,
            HttpServletResponse resp) throws ServletException,java.io.IOException {
         
-        HttpSession session = req.getSession(true);
-        session.invalidate();
-        long lastUpdate = session.getLastAccessedTime();
+        HttpSession session = req.getSession(false);
+        if (session != null){
+        	session.invalidate();
+        }
         
         resp.setContentType("text/html");
         

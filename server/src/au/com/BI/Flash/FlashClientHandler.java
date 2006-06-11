@@ -17,6 +17,7 @@ import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Comms.*;
 import au.com.BI.Macro.*;
 import au.com.BI.Command.ClientCommandFactory;
+import au.com.BI.Command.UnknownCommandException;
 
 /**
  * @author Colin Canfield
@@ -151,7 +152,11 @@ public class FlashClientHandler extends Thread {
 						} catch (ArrayIndexOutOfBoundsException ex) {
 							logger.log(Level.WARNING,
 									"Flash sent an invalid encrypted message");
-						}
+						} catch (UnknownCommandException ex) {
+							logger.log(Level.WARNING,
+									"XML message from Flash client was unknown "
+											+ ex.getMessage());
+						} 
 
 					}
 				} else {
@@ -210,7 +215,11 @@ public class FlashClientHandler extends Thread {
 			logger.log(Level.SEVERE, "IO failed communicating with client "
 					+ io.getMessage());
 			this.clientList.remove(this);
-		}
+		} catch (UnknownCommandException ex) {
+			logger.log(Level.WARNING,
+					"XML message from Flash client was unknown "
+							+ ex.getMessage());
+		} 
 	}
 
 	/**
@@ -251,7 +260,11 @@ public class FlashClientHandler extends Thread {
 		} catch (IOException io) {
 			logger.log(Level.SEVERE, "IO failed communicating with client");
 			this.clientList.remove(this);
-		}
+		}catch (UnknownCommandException ex) {
+			logger.log(Level.WARNING,
+					"XML message from Flash client was unknown "
+							+ ex.getMessage());
+		} 
 	}
 
 	public void setMacroHandler(MacroHandler macroHandler) {

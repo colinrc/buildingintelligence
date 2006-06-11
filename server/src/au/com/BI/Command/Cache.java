@@ -240,10 +240,14 @@ public class Cache {
          * @param includeInStartup If the command should be sent during client startup set this true. Eg. macros
          */
         public void setCachedCommand(String key, CommandInterface command, boolean includeInStartup) {
-                if (key.equals("MACRO") || key.equals("CALENDAR") ||
+                /* if (key.equals("MACRO") || key.equals("CALENDAR") ||
                     key.startsWith("AV:")) {
                         return;
+                } */
+                if (key.startsWith("AV:")) {
+                            return;
                 }
+                
 		
 				if (key.equals("CLIENT_SEND")) {
 					key = command.getDisplayName();

@@ -217,7 +217,7 @@ public class TestCommandsFromFlash extends TestCase {
 	}
 
 	
-	public void testBuildAudioVolumeRamp() {
+	public void testBuildAudioVolumeUpDown() {
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"100","","","","");
 		String expectedOut2 = "*Z01VOL00";
 		BuildReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
@@ -241,7 +241,7 @@ public class TestCommandsFromFlash extends TestCase {
 		Assert.assertEquals ("Flash update from volume set failed",volUpdateCommand,val.getOutputFlash().firstElement());
 	}
 
-	public void testBuildAudioVolumeRampUpLimit() {
+	public void testBuildAudioVolumeUpLimit() {
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"100","","","","");
 		String expectedOut2 = "*Z01VOL00";
 		BuildReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
@@ -256,7 +256,7 @@ public class TestCommandsFromFlash extends TestCase {
 		Assert.assertEquals ("Flash update from volume up past limit failed",volUpdateCommand,val.getOutputFlash().firstElement());
 	}
 	
-	public void testBuildAudioVolumeRampDownLimit() {
+	public void testBuildAudioVolumeDownLimit() {
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"0","","","","");
 		String expectedOut2 = "*Z01VOL78";
 		BuildReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);

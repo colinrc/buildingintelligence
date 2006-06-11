@@ -33,10 +33,11 @@ public class Bootstrap {
     protected String RRDBDIRECTORY = "." + File.separator + "JRobin" + File.separator;
     protected String RRDXMLDIRECTORY = "." + File.separator + "JRobin" + File.separator+"RRDDefinition" + File.separator;
     protected Date startTime = null;
-    protected String docRoot = "";
     protected int jettyPort = 80;
+    protected int jettySSLPort = 443;
     private boolean jettyActive = false;
     protected boolean SSL = false;
+    protected boolean requestUserNames = true;
     
     public Bootstrap() {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -146,17 +147,26 @@ public class Bootstrap {
             
             Element jettyConfig = theConfig.getChild("JETTY");
             if (jettyConfig != null) {
-                docRoot = jettyConfig.getAttributeValue("DOCROOT");
-                if (docRoot == null ){
-                    logger.log(Level.WARNING,"Jetty document root is not configured, please add DOCROOT to the JETTY element.");
-                }
-                String jettyPortStr = jettyConfig.getAttributeValue("PORT");
+
                 String jettyActiveStr = jettyConfig.getAttributeValue("ACTIVE");
                 if (jettyActiveStr != null && jettyActiveStr.equals ("Y")){
                 	setJettyActive(true);
                 }
+                String requestUserNames = jettyConfig.getAttributeValue("USER_NAMES");
+                if (requestUserNames != null && requestUserNames.equals ("N")){
+                	setRequestUserNames (false);
+                }
                 String SSLStr = jettyConfig.getAttributeValue("SSL");
-                if (SSLStr == null) SSL = false;
+                if (SSLStr == null) {
+                	SSL = false;
+                } else {
+                	if (SSLStr.equals("N")){
+                		SSL = false;
+                	} else {
+                		SSL = true;
+                	}
+                }
+                String jettyPortStr = jettyConfig.getAttributeValue("PORT");
                 if (jettyPortStr != null) {
                     try {
                         jettyPort = Integer.parseInt(jettyPortStr);
@@ -164,6 +174,15 @@ public class Bootstrap {
                         throw new ConfigError("Jetty port is not a number, please correct PORT entry in the JETTY element.");
                     }
                 }
+                String jettySSLPortStr = jettyConfig.getAttributeValue("SSL_PORT");
+                if (jettySSLPortStr != null) {
+                    try {
+                        jettySSLPort = Integer.parseInt(jettySSLPortStr);
+                    } catch (NumberFormatException ex){
+                        throw new ConfigError("Jetty SSL port is not a number, please correct PORT entry in the JETTY element.");
+                    }
+                }
+                
             } else {
                 logger.log(Level.WARNING,"Please add a configuration entry for JETTY to the bootstrap.xml file");
             }
@@ -307,14 +326,6 @@ public class Bootstrap {
         this.logDir = logDir;
     }
     
-    public String getDocRoot() {
-        return docRoot;
-    }
-    
-    public void setDocRoot(String docRoot) {
-        this.docRoot = docRoot;
-    }
-    
     public boolean isSSL() {
         return SSL;
     }
@@ -334,6 +345,22 @@ public class Bootstrap {
     public void setJettyActive(boolean jettyActive) {
         this.jettyActive = jettyActive;
     }
+
+	public boolean isRequestUserNames() {
+		return requestUserNames;
+	}
+
+	public void setRequestUserNames(boolean requestUserNames) {
+		this.requestUserNames = requestUserNames;
+	}
+
+	public int getJettySSLPort() {
+		return jettySSLPort;
+	}
+
+	public void setJettySSLPort(int sslPort) {
+		this.jettySSLPort = sslPort;
+	}
     
     
 }

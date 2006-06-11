@@ -36,30 +36,30 @@ public class MacroHandler {
 	protected String fileName = "";
         private String integratorFileName = "";
 	protected String calendarFileName = "";
-	protected Map macros = null;
-        protected Map integratorMacros = null;
-	protected Map macros_status = null;
+	protected Map <String,List<ClientCommand>>macros = null;
+        protected Map <String,List<ClientCommand>>integratorMacros = null;
+	protected Map <String,String>macros_status = null;
 	protected Logger logger;
 	protected List commandList = null;
-	protected Map runningMacros = null;
+	protected Map <String,RunMacro>runningMacros = null;
 	protected EventCalendar eventCalendar = null;
-	protected Map macros_type = null;
+	protected Map<String,String> macros_type = null;
 	protected Map calendar_message_params;
-	protected Vector macroNames = null;
-        protected Vector integratorMacroNames = null;
+	protected Vector <String>macroNames = null;
+        protected Vector <String>integratorMacroNames = null;
                 
 	public MacroHandler() {
 		super();
-		macroNames = new Vector(DeviceModel.NUMBER_MACROS);
-                integratorMacroNames = new Vector(DeviceModel.NUMBER_MACROS);
+		macroNames = new Vector<String>(DeviceModel.NUMBER_MACROS);
+        integratorMacroNames = new Vector<String>(DeviceModel.NUMBER_MACROS);
                 
-		macros = Collections.synchronizedMap(new HashMap(DeviceModel.NUMBER_MACROS));
-		integratorMacros = Collections.synchronizedMap(new HashMap(DeviceModel.NUMBER_MACROS));
+		macros = Collections.synchronizedMap(new HashMap<String,List<ClientCommand>>(DeviceModel.NUMBER_MACROS));
+		integratorMacros = Collections.synchronizedMap(new HashMap<String,List<ClientCommand>>(DeviceModel.NUMBER_MACROS));
 
-		macros_status =  Collections.synchronizedMap(new HashMap(DeviceModel.NUMBER_MACROS));
-		macros_type = Collections.synchronizedMap(new HashMap(DeviceModel.NUMBER_MACROS));
+		macros_status =  Collections.synchronizedMap(new HashMap<String,String>(DeviceModel.NUMBER_MACROS));
+		macros_type = Collections.synchronizedMap(new HashMap<String,String>(DeviceModel.NUMBER_MACROS));
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		runningMacros = Collections.synchronizedMap(new HashMap(DeviceModel.NUMBER_MACROS));
+		runningMacros = Collections.synchronizedMap(new HashMap<String,RunMacro>(DeviceModel.NUMBER_MACROS));
 	}
 	
 
@@ -311,7 +311,7 @@ public class MacroHandler {
 	}
 	
 	public void put (String name, Element macroElement,boolean integrator) {
-            LinkedList macro = parseElement (macroElement,name);
+            List <ClientCommand>macro = parseElement (macroElement,name);
             if (macro != null) {
                 if (integrator){
                     synchronized (integratorMacros) {
@@ -340,20 +340,18 @@ public class MacroHandler {
             this.saveMacroFile(integrator);  
 	}
 	
-	public LinkedList parseElement (Element element, String macroName) {
-		LinkedList newMacro = new LinkedList ();
-		List macroCommands = element.getChildren();
+	public List <ClientCommand> parseElement (Element element, String macroName) {
+		LinkedList <ClientCommand> newMacro = new LinkedList <ClientCommand>();
+		List <Element>macroCommands = (List<Element>)element.getChildren();
 		if (macroCommands.isEmpty()) {
 			if (macros.containsKey(macroName)) {
-				return (LinkedList) macros.get(macroName);
+				return macros.get(macroName);
 			}
 			if (integratorMacros.containsKey(macroName)) {
-				return (LinkedList) integratorMacros.get(macroName);
+				return integratorMacros.get(macroName);
 			}
 		} 
-		Iterator macroCommandList = macroCommands.iterator();
-		while (macroCommandList.hasNext()) {
-			Element macroElement = (Element)macroCommandList.next();
+		for (Element macroElement:macroCommands){
 			ClientCommand macroElementCommand = new ClientCommand ();
 			macroElementCommand.setFromElement(macroElement);
 			if (macroElementCommand != null)newMacro.add(macroElementCommand);
@@ -399,7 +397,7 @@ public class MacroHandler {
                         Element macro = (Element)eachMacro.next();
                         String macroName = macro.getAttributeValue("EXTRA");
                         if (macroName == null) macroName = "";
-                        LinkedList macroCommands = parseElement (macro,macroName);
+                        List <ClientCommand>macroCommands = parseElement (macro,macroName);
                         String macroType = macro.getAttributeValue("TYPE");
                         if (macroType == null)macroType = "";
                         String status = macro.getAttributeValue("STATUS");
