@@ -9,6 +9,7 @@ import org.jdom.Element;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Messaging.AddressBook;
 import au.com.BI.Messaging.MessageCommand;
+import au.com.BI.Messaging.AddressBook.Locations;
 import au.com.BI.User.User;
 
 public class ClientCommandFactory {
@@ -16,6 +17,7 @@ public class ClientCommandFactory {
     protected AddressBook addressBook;
     protected long ID = 0;
 	protected User user;
+    protected Locations originating_location = Locations.NOT_CONNECTED;
     
 	public ClientCommandFactory() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -50,12 +52,12 @@ public class ClientCommandFactory {
 					String extra = rootElement.getAttributeValue("EXTRA");
 					if (command.equals("name")) {
 						synchronized (addressBook) {
-							addressBook.setName(extra, ID);
+							addressBook.setName(extra, ID,originating_location);
 						}
 					}
 					if (command.equals("user")) {
 						synchronized (addressBook) {
-							addressBook.setUser(extra, ID);
+							addressBook.setUser(extra, ID,originating_location);
 						}
 					}
 					commandBuilt = true;
@@ -204,6 +206,14 @@ public class ClientCommandFactory {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Locations getOriginating_location() {
+		return originating_location;
+	}
+
+	public void setOriginating_location(Locations originating_location) {
+		this.originating_location = originating_location;
 	}
 
 

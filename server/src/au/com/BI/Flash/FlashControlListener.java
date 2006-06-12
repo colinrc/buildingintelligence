@@ -20,6 +20,8 @@ import java.net.*;
 import org.jdom.*;
 import au.com.BI.Macro.*;
 import au.com.BI.Messaging.*;
+import au.com.BI.Messaging.AddressBook.Locations;
+
 import org.jdom.output.*;
 /**
  * @author Colin Canfield
@@ -179,6 +181,7 @@ public class FlashControlListener extends Thread {
 	flashConnection.setKeepAlive(true);
 	logger.info("Client connection received");
 	ClientCommandFactory clientCommandFactory = new ClientCommandFactory();
+	clientCommandFactory.setOriginating_location(Locations.DIRECT);
 	clientCommandFactory.setID(System.currentTimeMillis());
 	clientCommandFactory.setAddressBook(addressBook);
 	FlashClientHandler flashClientHandler = new FlashClientHandler(flashConnection,commandList,flashControllers,clientCommandFactory);

@@ -10,17 +10,19 @@ public class AddressBook {
 
 	public final static long NOT_FOUND = -3;
 
-	public HashMap nameMap;
-	public HashMap userMap;
+	public HashMap <String,Long>nameMap;
+	public HashMap <String,Long>userMap;
+
+	public static enum Locations { NOT_CONNECTED,DIRECT,HTTP,GOOGLE};
 	
 	public AddressBook () {
-		nameMap = new HashMap();
-		userMap = new HashMap();
+		nameMap = new HashMap<String,Long>();
+		userMap = new HashMap<String,Long>();
 		nameMap.put(ALL_INC_SRC,new Long (ALL_INC_SRC_INT));
 		nameMap.put(ALL,new Long (ALL_INT));
 	}
 	
-	public void setName (String name, long ID){
+	public void setName (String name, long ID,Locations location){
 		nameMap.put(name,new Long (ID));		
 	}
 
@@ -31,7 +33,7 @@ public class AddressBook {
 			return AddressBook.NOT_FOUND;
 	}
 	
-	public void setUser (String user, long ID){
+	public void setUser (String user, long ID,Locations location){
 		userMap.put(user,new Long (ID));		
 	}
 

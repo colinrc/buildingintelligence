@@ -37,6 +37,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
 import au.com.BI.Messaging.AddressBook;
+import au.com.BI.Messaging.AddressBook.Locations;
 /**
  *
  * @author colinc
@@ -238,6 +239,7 @@ public class UpdateServlet extends HttpServlet {
         AddressBook addressBook = (AddressBook)context.getAttribute("AddressBook");
         
     	ClientCommandFactory clientCommandFactory = new ClientCommandFactory();
+    	clientCommandFactory.setOriginating_location(Locations.HTTP);
     	clientCommandFactory.setAddressBook(addressBook);
     	CacheBridge cacheBridge = cacheBridgeFactory.createCacheBridge(ID);
         session.setAttribute("CacheBridge", cacheBridge);
