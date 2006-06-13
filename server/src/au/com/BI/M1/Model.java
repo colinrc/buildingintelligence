@@ -21,6 +21,7 @@ import au.com.BI.M1.ControlledHelper;
 import au.com.BI.CBUS.PollTemperatures;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsFail;
+import au.com.BI.M1.Commands.ArmingStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputOff;
 import au.com.BI.M1.Commands.ControlOutputOn;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
@@ -98,6 +99,10 @@ public class Model extends BaseModel implements DeviceModel {
 		// request the states of the contol output devices.
 		ControlOutputStatusRequest statusRequest = new ControlOutputStatusRequest();
 		comms.sendString(statusRequest.buildM1String()+"\r\n");
+		
+		// request the arming states
+		ArmingStatusRequest armingStatusRequest = new ArmingStatusRequest();
+		comms.sendString(armingStatusRequest.buildM1String()+"\r\n");
 	}
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {
