@@ -74,7 +74,6 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		thickness_ti.text = "";
 		thickness_ti.restrict = "0-9";
 		key_cmb.dataProvider = DPKey;
-		key_cmb.text = "";
 		name_ti.text = "";
 		currentDoor = undefined;
 		toggleDetails(false);
@@ -104,7 +103,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		thickness_ti.addEventListener("change", Delegate.create(this, thicknessChange));
 	}
 	public function cmbChange(eventObj){
-		currentDoor.key = key_cmb.text;
+		currentDoor.key = key_cmb.selectedItem.label;
 	}
 	public function nameChange(eventObj){
 		currentDoor.name = name_ti.text;
@@ -148,7 +147,12 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		colour1_mc.setColour(currentDoor.colour1);
 		colour2_mc.setColour(currentDoor.colour2);
 		thickness_ti.text = currentDoor.thickness;
-		key_cmb.text = currentDoor.key;
+		for (var i=0; i<key_cmb.length; i++) {
+			if (key_cmb.getItemAt(i).label == currentDoor.key) {
+				key_cmb.selectedIndex = i;
+				break;
+			}
+		}
 		name_ti.text = currentDoor.name;
 		_global.unSaved = true;					
 	}
@@ -163,7 +167,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		colour1_mc.setColour("0xFFFFFF");
 		colour2_mc.setColour("0xFFFFFF");
 		thickness_ti.text = "5";
-		key_cmb.text = "";
+		key_cmb.selectedIndex = 0;
 		name_ti.text = "";
 		_global.unSaved = true;
 	}
@@ -173,7 +177,12 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		colour1_mc.setColour(currentDoor.colour1);
 		colour2_mc.setColour(currentDoor.colour2);
 		thickness_ti.text = currentDoor.thickness;
-		key_cmb.text = currentDoor.key;
+		for (var i=0; i<key_cmb.length; i++) {
+			if (key_cmb.getItemAt(i).label == currentDoor.key) {
+				key_cmb.selectedIndex = i;
+				break;
+			}
+		}
 		name_ti.text = currentDoor.name;
 		_global.unSaved = true;					
 	}
@@ -181,7 +190,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		colour1_mc.setColour("0xFFFFFF");
 		colour2_mc.setColour("0xFFFFFF");
 		thickness_ti.text = "";
-		key_cmb.text = "";
+		key_cmb.selectedIndex = 1;
 		name_ti.text = "";
 		currentDoor = undefined;
 		toggleDetails(false);
