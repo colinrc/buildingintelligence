@@ -6,12 +6,12 @@ import mx.utils.Delegate;
 
 mdm.Exception.enableHandler();
 mdm.Application.onMDMScriptException = function(myObject) {
-	/* mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
+	 mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
 	   mdm.Dialogs.prompt("Command: " +myObject.command);
 	   mdm.Dialogs.prompt("MSG: " +myObject.message);
 	   mdm.Dialogs.prompt("Form Type: " +myObject.formType);
 	   mdm.Dialogs.prompt("Parameter: " +myObject.parameter);
-	   mdm.Dialogs.prompt("Value: " +myObject.value);*/
+	   mdm.Dialogs.prompt("Value: " +myObject.value);
 };
 mdm.Application.title = "eLIFE Admin Tool";
 mdm.Forms.MainForm.title = "eLIFE Admin Tool";
@@ -668,6 +668,10 @@ tabs_tb.change = function(eventObj) {
 		case "Rooms" :
 			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject, rooms:tempObject.getRooms()});
 			break;
+		case "Arbitraries":
+			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject.getArbitrary()});
+			break;
+		
 		default :
 			form_mc = formContent_mc.attachMovie(tempObject.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getData());
 			break;
@@ -740,7 +744,7 @@ leftTreeListener.change = function(eventObj) {
 			break;
 		case "Zone" :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
-			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"Rooms", view:"forms.project.client.rooms"}, {label:"Panels", view:"forms.project.client.panels"}, {label:"XML", view:"forms.project.xml"}];
+			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"Rooms", view:"forms.project.client.rooms"}, {label:"Arbitraries", view:"forms.project.client.arbitrary"},{label:"Panels", view:"forms.project.client.panels"}, {label:"XML", view:"forms.project.xml"}];
 			tabs_tb.selectedIndex = 0;
 			break;
 			//Need to rewrite how a view is attached to a server object

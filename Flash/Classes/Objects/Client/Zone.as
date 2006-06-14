@@ -90,7 +90,7 @@
 	public function toTree():XMLNode {
 		var newNode = new XMLNode(1, "Zone");
 		newNode.object = this;
-		newNode.appendChild(arbitrary.toTree());
+		//newNode.appendChild(arbitrary.toTree());
 		for (var room in rooms) {
 			newNode.appendChild(rooms[room].toTree());
 		}
@@ -115,6 +115,13 @@
 	public function getRooms():Array{
 		return rooms;
 	}	
+	public function getArbitrary():Object{
+		return {items:arbitrary.getItems(),dataObject:this};
+	}
+	public function setArbitraryData(items:Array):Void{
+		mdm.Dialogs.prompt("WOW");
+		arbitrary.setData({items:items});
+	}
 	public function setXML(newData:XMLNode):Void {
 		rooms = new Array();
 		panels = new Array();

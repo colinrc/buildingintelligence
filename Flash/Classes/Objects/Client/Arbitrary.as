@@ -143,6 +143,10 @@
 	public function getData():Object{
 		return {items:items, dataObject:this};
 	}
+	public function getItems():Array{
+		mdm.Dialogs.prompt("WEE1");
+		return items;
+	}
 	public function setXML(newData:XMLNode):Void{
 		items = new Array();
 		if(newData.nodeName == "arbitrary"){
@@ -155,6 +159,7 @@
 		}
 	}
 	public function setData(newData:Object):Void{
+			mdm.Dialogs.prompt("WEE2");
 			items = newData.items;
 	}
 	public function getUsedKeys():Array{
