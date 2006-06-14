@@ -19,13 +19,13 @@
 			}
 			else {
 				if (sensors[sensor].active =="Y"){
+					if ((sensors[sensor].name == undefined) || (sensors[sensor].name == "")) {
+						flag = "empty";
+						appendValidationMsg("Description is empty");
+					}
 					if ((sensors[sensor].key == undefined) || (sensors[sensor].key == "")) {
 						flag = "error";
 						appendValidationMsg("Input/Output no. is empty");
-					}
-					if ((sensors[sensor].name == undefined) || (sensors[sensor].name == "")) {
-						flag = "error";
-						appendValidationMsg("Description is empty");
 					}
 					if ((sensors[sensor].display_name == undefined) || (sensors[sensor].display_name == "")) {
 						flag = "error";

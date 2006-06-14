@@ -23,18 +23,20 @@
 			}
 			if ((irs[ir].name == undefined) || (irs[ir].name == "")) {
 				flag = "error";
-				appendValidationMsg("Name is invalid");
+				appendValidationMsg("Name is empty");
 			}
 			if ((irs[ir].avname == undefined) || (irs[ir].avname == "")) {
 				flag = "error";
-				appendValidationMsg("AV Name is invalid");
+				appendValidationMsg("AV Name is empty");
 			}
-			if ((modules.modules == undefined) || (modules.modules.length == 0)) {
+			
+			var arrayTest:Array = modules.getData().modules;
+			if ((arrayTest == undefined) || (arrayTest.length == 0)) {
 				flag = "error";
-				appendValidationMsg("Add GC100 Modules");
+				appendValidationMsg("Add GC100 Modules first");
 			}
 			else {
-				if ((irs[ir].module == undefined) || (irs[ir].module == "")) {
+				if ((irs[ir].module == undefined) || (irs[ir].module.length() == 0)) {
 					flag = "error";
 					appendValidationMsg("Select a GC100 Module");
 				}

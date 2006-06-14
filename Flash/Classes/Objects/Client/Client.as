@@ -25,7 +25,7 @@
 			appendValidationMsg("No OverRides are defined");
 		}
 		if (description == null || description == "") {
-			flag = "warning";
+			flag = "empty";
 			appendValidationMsg("Description is missing");
 		}
 		if (adminPin == null || adminPin == "") {

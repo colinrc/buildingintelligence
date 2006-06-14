@@ -16,9 +16,13 @@
 			flag = "empty";
 			appendValidationMsg("No Keys are being used");
 		}
+		if ((listenTo == undefined) || (listenTo == "")) {
+			flag = "empty";
+			appendValidationMsg("Listen to is empty");
+		}
 		if ((name == undefined) || (name == "")) {
 			flag = "warning";
-			appendValidationMsg("Name is invalid");
+			appendValidationMsg("Name is empty");
 		}
 		if ((icon == undefined) || (icon == "")) {
 			flag = "warning";
@@ -27,10 +31,6 @@
 		if ((type == undefined) || (type == "")) {
 			flag = "warning";
 			appendValidationMsg("Type is invalid");
-		}
-		if ((listenTo == undefined) || (listenTo == "")) {
-			flag = "warning";
-			appendValidationMsg("Listen to is invalid");
 		}
 		return flag;
 	}

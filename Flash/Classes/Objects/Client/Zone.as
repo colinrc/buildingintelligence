@@ -46,7 +46,7 @@
 		}
 		if (name == null || name == "") {
 			flag = "warning";
-			appendValidationMsg("Name is missing");
+			appendValidationMsg("Name is empty");
 		}
 		
 		return flag;

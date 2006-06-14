@@ -7,7 +7,7 @@
 		for (var module in modules) {
 			if ((modules[module].name == undefined) || (modules[module].name == "")) {
 				flag = "error";
-				appendValidationMsg("Name is invalid");
+				appendValidationMsg("Name is empty");
 			}
 			if ((modules[module].type == undefined) || (modules[module].type == "")) {
 				flag = "error";

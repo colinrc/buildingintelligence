@@ -27,13 +27,13 @@
 			}
 			else {
 				if (toggles[toggle].active =="Y"){
+					if ((toggles[toggle].name == undefined) || (toggles[toggle].name == "")) {
+						flag = "empty";
+						appendValidationMsg("Description is empty");
+					}
 					if ((toggles[toggle].key == undefined) || (toggles[toggle].key == "")) {
 						flag = "error";
-						appendValidationMsg("Input/Output no. is invalid");
-					}
-					if ((toggles[toggle].name == undefined) || (toggles[toggle].name == "")) {
-						flag = "error";
-						appendValidationMsg("Description is invalid");
+						appendValidationMsg("Input/Output no. is empty");
 					}
 					if ((toggles[toggle].display_name == undefined) || (toggles[toggle].display_name == "")) {
 						flag = "error";
@@ -45,9 +45,17 @@
 							appendValidationMsg(toggles[toggle].display_name+" key is not used");
 						}
 					}
-					if ((toggles[toggle].module == undefined) || (toggles[toggle].module == "")) {
+					
+					var arrayTest:Array = modules.getData().modules;
+					if ((arrayTest == undefined) || (arrayTest.length == 0)) {
 						flag = "error";
-						appendValidationMsg("Module No. is invalid");
+						appendValidationMsg("Add GC100 Modules first");
+					}
+					else {
+						if ((toggles[toggle].module == undefined) || (toggles[toggle].module.length == 0)) {
+							flag = "error";
+							appendValidationMsg("Select a GC100 Module");
+						}
 					}
 				}
 				else {

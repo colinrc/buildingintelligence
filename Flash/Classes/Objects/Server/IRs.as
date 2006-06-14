@@ -13,17 +13,17 @@
 		var flag = "ok";
 		clearValidationMsg();
 		for (var ir in irs) {
+			if ((irs[ir].name == undefined) || (irs[ir].name == "")) {
+				flag = "empty";
+				appendValidationMsg("Description is empty");
+			}
 			if ((irs[ir].key == undefined) || (irs[ir].key == "")) {
 				flag = "error";
 				appendValidationMsg("Key is invalid");
 			}
-			if ((irs[ir].name == undefined) || (irs[ir].name == "")) {
-				flag = "error";
-				appendValidationMsg("Description is invalid");
-			}
 			if ((irs[ir].avname == undefined) || (irs[ir].avname == "")) {
 				flag = "error";
-				appendValidationMsg("AV Name is invalid");
+				appendValidationMsg("AV Name is empty");
 			}
 		}
 		return flag;

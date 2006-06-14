@@ -15,7 +15,7 @@
 		clearValidationMsg();
 		if (name == undefined || name == "") {
 				flag = "error";
-				appendValidationMsg("Name is invalid");
+				appendValidationMsg("Name is empty");
 		}
 		if (icon == undefined || icon == "") {
 				flag = "error";

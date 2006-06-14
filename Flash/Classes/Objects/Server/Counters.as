@@ -19,8 +19,8 @@
 			}
 			if (counters[counter].active =="Y"){
 				if ((counters[counter].name == undefined) || (counters[counter].name == "")) {
-					flag = "warning";
-					appendValidationMsg("Description is invalid");
+					flag = "empty";
+					appendValidationMsg("Description is empty");
 				}
 				if ((counters[counter].display_name == undefined) || (counters[counter].display_name == "")) {
 					flag = "error";
@@ -34,11 +34,11 @@
 				}
 				if ((counters[counter].key == undefined) || (counters[counter].key == "")) {
 					flag = "error";
-					appendValidationMsg("Counter No. is invalid");
+					appendValidationMsg("Counter No. is empty");
 				}
 				if ((counters[counter].max == undefined) || (counters[counter].max == "")) {
 					flag = "error";
-					appendValidationMsg("Max is invalid");
+					appendValidationMsg("Max is empty");
 				}
 			}
 			else{

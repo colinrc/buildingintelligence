@@ -19,8 +19,8 @@
 		else {
 			if (active =="Y"){
 				if ((description == undefined) || (description == "")) {
-					flag = "warning";
-					appendValidationMsg("Description is invalid");
+					flag = "empty";
+					appendValidationMsg("Description is empty");
 				}
 				if ((device_type == undefined) || (device_type == "")) {
 					flag = "error";
@@ -56,7 +56,7 @@
 					//FLOW="NONE" DATA_BITS="8" STOP_BITS="1" SUPPORTS_CD="N" PARITY="NONE" BAUD="9600" ACTIVE
 					if ((connection.firstChild.attributes["PORT"] == "") || (connection.firstChild.attributes["PORT"] ==undefined)) {
 						flag = "error";
-						appendValidationMsg("Connection Port is invalid");
+						appendValidationMsg("Connection Port is empty");
 					}
 					if ((connection.firstChild.attributes["FLOW"] == "") || (connection.firstChild.attributes["FLOW"] ==undefined)) {
 						flag = "error";

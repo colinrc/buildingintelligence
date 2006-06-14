@@ -5,13 +5,23 @@
 		var flag = "ok";
 		clearValidationMsg();
 		
+		var autoClose:Boolean = false;
+		var iconSet:Boolean = false;
 		for (var child in settings.childNodes) {
 			if (settings.childNodes[child].attributes["NAME"] == "AUTOCLOSE") {
-				if ((settings.childNodes[child].attributes["VALUE"] == undefined)||(settings.childNodes[child].attributes["VALUE"] == "")) {
-					flag = "error";
-					appendValidationMsg("Autoclose is empty");
-				}
+				autoClose = true;
 			}
+			if (settings.childNodes[child].attributes["NAME"] == "ICON") {
+				iconSet = true;
+			}
+		}
+		if (autoClose == false) {
+			flag = "error";
+			appendValidationMsg("Autoclose is empty");
+		}
+		if (iconSet == false) {
+			flag = "error";
+			appendValidationMsg("Icon is empty");
 		}
 		return flag;
 	}

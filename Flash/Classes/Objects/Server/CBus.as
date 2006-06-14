@@ -18,7 +18,7 @@
 		if (active == "Y"){
 			if ((description == undefined) || (description == "")) {
 				flag = "empty";
-				appendValidationMsg("Description is invalid");
+				appendValidationMsg("Description is empty");
 			}		
 			if ((device_type == undefined) || (device_type == "")) {
 				flag = "error";
@@ -27,18 +27,22 @@
 			if (connection.firstChild.nodeName == "IP") {
 				if ((connection.firstChild.attributes["IP_ADDRESS"] == "") || (connection.firstChild.attributes["IP_ADDRESS"] ==undefined)) {
 					flag = "error";
-					appendValidationMsg("Connection Address is invalid");
+					appendValidationMsg("Connection Address is empty");
+				}
+				else if (_global.isValidIP(connection.firstChild.attributes["IP_ADDRESS"])==false) {
+					flag = "error";
+					appendValidationMsg("Connection IP Address is invalid");
 				}
 				if ((connection.firstChild.attributes["PORT"] == "") || (connection.firstChild.attributes["PORT"] ==undefined)) {
 					flag = "error";
-					appendValidationMsg("Connection Port is invalid");
+					appendValidationMsg("Connection Port is empty");
 				}
 			}
 			else{
 				//FLOW="NONE" DATA_BITS="8" STOP_BITS="1" SUPPORTS_CD="N" PARITY="NONE" BAUD="9600" ACTIVE
 				if ((connection.firstChild.attributes["PORT"] == "") || (connection.firstChild.attributes["PORT"] ==undefined)) {
 					flag = "error";
-					appendValidationMsg("Connection Port is invalid");
+					appendValidationMsg("Connection Port is empty");
 				}
 				if ((connection.firstChild.attributes["FLOW"] == "") || (connection.firstChild.attributes["FLOW"] ==undefined)) {
 					flag = "error";

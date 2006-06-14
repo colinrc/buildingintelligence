@@ -20,33 +20,33 @@
 			
 			if ((alerts[alert].cat == undefined) || (alerts[alert].cat == "")) {
 				flag = "warning";
-				appendValidationMsg("Client Catagory is invalid");
+				appendValidationMsg("Client Catagory is empty");
 			} 
 			if ((alerts[alert].message == undefined) || (alerts[alert].message == "")) {
 				flag = "warning";
-				appendValidationMsg("Message is invalid");
+				appendValidationMsg("Message is empty");
 			} 
 			if ((alerts[alert].type == undefined) || (alerts[alert].type == "")) {
 				flag = "warning";
-				appendValidationMsg("Alert Type is invalid");
+				appendValidationMsg("Alert Type has not been selected");
 			} 
 			
 			if ((alerts[alert].active != "Y") && (alerts[alert].active != "N")) {
 				flag = "error";
 				appendValidationMsg("Active flag is invalid");
 			}
-			if ((alerts[alert].key == undefined) || (alerts[alert].key == "")) {
+			if ((alerts[alert].display_name == undefined) || (alerts[alert].display_name == "")) {
 				flag = "error";
 				appendValidationMsg("Key is invalid");
 			} else {
-				if (_global.isKeyUsed(alerts[alert].key) == false) {
+				if (_global.isKeyUsed(alerts[alert].display_name) == false) {
 					flag = "error";
-					appendValidationMsg(alerts[alert].key+" key is not being used");
+					appendValidationMsg(alerts[alert].display_name+" key is not being used");
 				}
 			}
-			if ((alerts[alert].display_name == undefined) || (alerts[alert].display_name == "")) {
+			if ((alerts[alert].key == undefined) || (alerts[alert].key == "")) {
 				flag = "error";
-				appendValidationMsg("Display Name is invalid");
+				appendValidationMsg("Comfort Code is empty");
 			}
 		}
 		return flag;

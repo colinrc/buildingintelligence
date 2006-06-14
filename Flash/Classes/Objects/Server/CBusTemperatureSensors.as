@@ -28,12 +28,12 @@
 					}
 				}
 				if ((sensors[sensor].name == undefined) || (sensors[sensor].name == "")) {
-					flag = "error";
-					appendValidationMsg("Description is invalid");
+					flag = "empty";
+					appendValidationMsg("Description is empty");
 				}
 				if ((sensors[sensor].key == undefined) || (sensors[sensor].key == "")) {
 					flag = "error";
-					appendValidationMsg("Unit Addr. is invalid");
+					appendValidationMsg("Unit Addr. is emtpy");
 				}
 			}
 			else{

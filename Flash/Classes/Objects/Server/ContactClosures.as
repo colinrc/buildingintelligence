@@ -19,6 +19,10 @@
 			}
 			
 			if (contacts[contact].active =="Y"){
+				if ((contacts[contact].name == undefined) || (contacts[contact].name == "")) {
+					flag = "empty";
+					appendValidationMsg("Description is empty");
+				}
 				if ((contacts[contact].display_name == undefined) || (contacts[contact].display_name == "")) {
 					flag = "error";
 					appendValidationMsg("Key is invalid");
@@ -30,15 +34,11 @@
 				}
 				if ((contacts[contact].box == undefined) || (contacts[contact].box == "")) {
 					flag = "error";
-					appendValidationMsg("Box is invalid");
-				}
-				if ((contacts[contact].name == undefined) || (contacts[contact].name == "")) {
-					flag = "error";
-					appendValidationMsg("Description is invalid");
+					appendValidationMsg("Box is empty");
 				}
 				if ((contacts[contact].key == undefined) || (contacts[contact].key == "")) {
 					flag = "error";
-					appendValidationMsg("Input key is invalid");
+					appendValidationMsg("Input key is empty");
 				}
 			}
 			else {

@@ -18,7 +18,7 @@
 		for (var alert in alerts) {
 			if ((alerts[alert].attributes["name"] == "") || (alerts[alert].attributes["name"] == undefined)) {
 				flag = "error";
-				appendValidationMsg("Name is invalid");
+				appendValidationMsg("Name is empty");
 			}
 			//keys is a string comma seperated.
 			var theKeys:Array = null;
@@ -30,15 +30,22 @@
 				theKeys = _global.makeArray(alerts[alert].attributes["keys"]);
 				var changedKeys:String = "";
 				for (var key in theKeys) {
+					//should be false
 					if (_global.isKeyValid(theKeys[key]) == false) {
 						flag = "error";
 						changedKeys = changedKeys +theKeys[key] + ", ";
 					}
 				}
-				if (changedKeys.length > 0) {
+				if (changedKeys.length > 1) {
 					//Take off the last comma ans space
 					changedKeys = changedKeys.substring(0, changedKeys.length - 2);						
-					appendValidationMsg(changedKeys+" Key/s has changed and is invalid");
+					appendValidationMsg(changedKeys+" keys has changed and is invalid");
+				} else {
+					if (changedKeys.length == 1) {
+						//Take off the last comma ans space
+						changedKeys = changedKeys.substring(0, changedKeys.length - 2);						
+						appendValidationMsg(changedKeys+" key has changed and is invalid");
+					}
 				}
 			}
 			if ((alerts[alert].attributes["icon"] == "") || (alerts[alert].attributes["icon"] == undefined)) {

@@ -7,11 +7,11 @@
 		for(var child in apps.childNodes){
 			if((apps.childNodes[child].attributes["label"] == undefined)||(apps.childNodes[child].attributes["label"] == "")){
 				flag = "warning";
-				appendValidationMsg("Label is invalid");
+				appendValidationMsg("Label is empty");
 			}
 			if((apps.childNodes[child].attributes["program"] ==undefined)||(apps.childNodes[child].attributes["program"] =="")){
 				flag = "warning";
-				appendValidationMsg("Program is invalid");
+				appendValidationMsg("Program is empty");
 			}
 		}
 		return flag;

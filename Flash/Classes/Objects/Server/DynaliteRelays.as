@@ -21,25 +21,25 @@
 				if (lights[light].active =="Y"){
 					if (_global.advanced ==true) {
 						if ((lights[light].power == undefined) || (lights[light].power == "")) {
-							flag = "warning";
-							appendValidationMsg("Power Rating is invalid");
+							flag = "empty";
+							appendValidationMsg("Power Rating is empty");
 						}
 						if ((lights[light].bla == undefined) || (lights[light].bla == "")) {
-							flag = "warning";
-							appendValidationMsg("Base Link is invalid");
+							flag = "empty";
+							appendValidationMsg("Base Link is empty");
 						}
 					}
 					if ((lights[light].name == undefined) || (lights[light].name == "")) {
-						flag = "warning";
-						appendValidationMsg("Description is invalid");
+						flag = "empty";
+						appendValidationMsg("Description is empty");
 					}
 					if ((lights[light].area == undefined) || (lights[light].area == "")) {
 						flag = "error";
-						appendValidationMsg("Area is invalid");
+						appendValidationMsg("Area is empty");
 					}
 					if ((lights[light].key == undefined) || (lights[light].key == "")) {
 						flag = "error";
-						appendValidationMsg("Dynalite Code is invalid");
+						appendValidationMsg("Dynalite Code is empty");
 					}
 					if ((lights[light].display_name == undefined) || (lights[light].display_name == "")) {
 						flag = "error";

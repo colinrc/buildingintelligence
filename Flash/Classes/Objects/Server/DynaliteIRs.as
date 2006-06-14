@@ -19,18 +19,18 @@
 			}
 			else {
 				if (irs[ir].active =="Y"){
+					if ((irs[ir].name == undefined) || (irs[ir].name == "")) {
+						flag = "empty";
+						appendValidationMsg("Description is empty");
+					}
 					if ((irs[ir].key == undefined) || (irs[ir].key == "")) {
 						flag = "error";
-						appendValidationMsg("Dynalite Code is invalid");
+						appendValidationMsg("Dynalite Code is empty");
 					}
 					if ((irs[ir].box == undefined) || (irs[ir].box == "")) {
 						flag = "error";
-						appendValidationMsg("Box is invalid");
+						appendValidationMsg("Box is empty");
 					}			
-					if ((irs[ir].name == undefined) || (irs[ir].name == "")) {
-						flag = "warning";
-						appendValidationMsg("Description is invalid");
-					}
 					if ((irs[ir].display_name == undefined) || (irs[ir].display_name == "")) {
 						flag = "error";
 						appendValidationMsg("Key is invalid");

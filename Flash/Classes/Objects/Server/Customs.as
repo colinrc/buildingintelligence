@@ -19,13 +19,13 @@
 			}
 			
 			if (customs[custom].active =="Y"){
+				if ((customs[custom].name == undefined) || (customs[custom].name == "")) {
+					flag = "empty";
+					appendValidationMsg("Description is empty");
+				}
 				if ((customs[custom].command == undefined) || (customs[custom].command == "")) {
 					flag = "warning";
 					appendValidationMsg("Command is empty");
-				}
-				if ((customs[custom].name == undefined) || (customs[custom].name == "")) {
-					flag = "warning";
-					appendValidationMsg("Description is empty");
 				}
 				if ((customs[custom].regex!= "Y") && (customs[custom].regex != "N")) {
 					flag = "error";

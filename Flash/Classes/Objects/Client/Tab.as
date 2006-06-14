@@ -17,7 +17,7 @@
 		}
 		if (name == null || name == "") {
 			flag = "warning";
-			appendValidationMsg("Name is missing");
+			appendValidationMsg("Name is empty");
 		}
 		if (icon == null || icon == "") {
 			flag = "warning";

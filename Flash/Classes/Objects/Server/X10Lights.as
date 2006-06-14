@@ -19,9 +19,15 @@
 			}
 			
 			if (lights[light].active =="Y"){
-				if ((lights[light].power == undefined) || (lights[light].power == "")) {
-					flag = "error";
-					appendValidationMsg("Power is invalid");
+				if (_global.advanced ==true) {
+					if ((lights[light].power == undefined) || (lights[light].power == "")) {
+						flag = "empty";
+						appendValidationMsg("Power is empty");
+					}
+				}
+				if ((lights[light].name == undefined) || (lights[light].name == "")) {
+					flag = "empty";
+					appendValidationMsg("Description is empty");
 				}
 				if ((lights[light].display_name == undefined) || (lights[light].display_name == "")) {
 					flag = "error";
@@ -32,17 +38,14 @@
 						appendValidationMsg(lights[light].display_name+" key is not being used");
 					}
 				}
-				if ((lights[light].name == undefined) || (lights[light].name == "")) {
-					flag = "error";
-					appendValidationMsg("Description is invalid");
-				}
+				
 				if ((lights[light].key == undefined) || (lights[light].key == "")) {
 					flag = "error";
-					appendValidationMsg("Unit No. is invalid");
+					appendValidationMsg("Unit No. is empty");
 				}
 				if ((lights[light].x10 == undefined) || (lights[light].x10 == "")) {
 					flag = "error";
-					appendValidationMsg("X10 House code is invalid");
+					appendValidationMsg("X10 House code is empty");
 				}
 			}
 			else{

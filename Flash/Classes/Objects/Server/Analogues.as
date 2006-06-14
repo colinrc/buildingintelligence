@@ -28,11 +28,11 @@
 			}
 			if ((analogues[analogue].key == undefined) || (analogues[analogue].key == "")) {
 				flag = "error";
-				appendValidationMsg("Input no. is invalid");
+				appendValidationMsg("Input no. is empty");
 			}
 			if ((analogues[analogue].name == undefined) || (analogues[analogue].name == "")) {
-				flag = "error";
-				appendValidationMsg("Name is invalid");
+				flag = "empty";
+				appendValidationMsg("Description is empty");
 			}
 		}
 		return flag;

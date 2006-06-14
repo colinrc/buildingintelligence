@@ -23,6 +23,10 @@
 			}
 			
 			if (toggles[toggle].active =="Y"){
+				if ((toggles[toggle].name == undefined) || (toggles[toggle].name == "")) {
+					flag = "empty";
+					appendValidationMsg("Description is empty");
+				}
 				if ((toggles[toggle].display_name == undefined) || (toggles[toggle].display_name == "")) {
 					flag = "error";
 					appendValidationMsg("Key is invalid");
@@ -32,13 +36,10 @@
 						appendValidationMsg(toggles[toggle].display_name+" key is not being used");
 					}
 				}
-				if ((toggles[toggle].name == undefined) || (toggles[toggle].name == "")) {
-					flag = "error";
-					appendValidationMsg("Description is invalid");
-				}
+				
 				if ((toggles[toggle].key == undefined) || (toggles[toggle].key == "")) {
 					flag = "error";
-					appendValidationMsg("Input/Output No. is invalid");
+					appendValidationMsg("Input/Output No. is empty");
 				}
 			}
 			else{

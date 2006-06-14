@@ -26,7 +26,7 @@
 					}
 					if ((relays[relay].application == undefined) || (relays[relay].application == "")) {
 						flag = "empty";
-						appendValidationMsg("App. is invalid");
+						appendValidationMsg("App. is empty");
 					}
 				}
 				if ((relays[relay].display_name == undefined) || (relays[relay].display_name == "")) {
@@ -46,7 +46,7 @@
 				
 				if ((relays[relay].key == undefined) || (relays[relay].key == "")) {
 					flag = "error";
-					appendValidationMsg("Group Addr. is invalid");
+					appendValidationMsg("Group Addr. is empty");
 				}
 			}
 			else{

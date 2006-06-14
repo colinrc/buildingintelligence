@@ -37,7 +37,7 @@
 		}
 		if ((name == "") || (name == undefined)) {
 			flag = "error";
-			appendValidationMsg("Name is invalid");
+			appendValidationMsg("Name is empty");
 		}
 		if ((poly == "") || (poly == undefined)) {
 			flag = "error";

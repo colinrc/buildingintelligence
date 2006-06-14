@@ -19,9 +19,13 @@
 			}
 			else {
 				if (cameras[camera].active =="Y"){
+					if ((cameras[camera].name == undefined) || (cameras[camera].name == "")) {
+						flag = "empty";
+						appendValidationMsg("Description is empty");
+					}
 					if ((cameras[camera].key == undefined) || (cameras[camera].key == "")) {
 						flag = "error";
-						appendValidationMsg("Camera Zone is invalid");
+						appendValidationMsg("Camera Zone is empty");
 					}
 					if ((cameras[camera].display_name == undefined) || (cameras[camera].display_name == "")) {
 						flag = "error";
@@ -35,13 +39,13 @@
 					}
 					if ((cameras[camera].zoom == undefined) || (cameras[camera].zoom == "")) {
 						flag = "error";
-						appendValidationMsg("Camera Zoom is invalid");
+						appendValidationMsg("Camera Zoom is empty");
 					}
 				}
 				else {
 					if (cameras[camera].active =="N"){
 						flag = "empty";
-						appendValidationMsg("Cameras is not active");
+						appendValidationMsg("Camera " + cameras[camera].display_name + " is not active");
 					}
 				}
 			}

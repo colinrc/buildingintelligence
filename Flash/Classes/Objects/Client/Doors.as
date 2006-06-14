@@ -10,8 +10,8 @@
 		clearValidationMsg();
 		for (var door in doors) {
 			if((doors[door].attributes["name"] == "")||(doors[door].attributes["name"] == undefined)){
-				flag = "error";
-				appendValidationMsg("Name is invalid");
+				flag = "empty";
+				appendValidationMsg("Name is empty");
 			}
 			if((doors[door].attributes["key"] == "")||(doors[door].attributes["key"] == undefined)){
 				flag = "error";

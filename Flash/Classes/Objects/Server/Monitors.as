@@ -19,13 +19,13 @@
 			}
 			else {
 				if (monitors[monitor].active =="Y"){
+					if ((monitors[monitor].name == undefined) || (monitors[monitor].name == "")) {
+						flag = "empty";
+						appendValidationMsg("Description is empty");
+					}
 					if ((monitors[monitor].key == undefined) || (monitors[monitor].key == "")) {
 						flag = "error";
-						appendValidationMsg("Output no. is invalid");
-					}
-					if ((monitors[monitor].name == undefined) || (monitors[monitor].name == "")) {
-						flag = "error";
-						appendValidationMsg("Description is invalid");
+						appendValidationMsg("Output no. is empty");
 					}
 					if ((monitors[monitor].display_name == undefined) || (monitors[monitor].display_name == "")) {
 						flag = "error";

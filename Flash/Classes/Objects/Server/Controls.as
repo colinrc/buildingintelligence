@@ -18,8 +18,8 @@
 			}
 			if (variables.childNodes[child].attributes["ACTIVE"] =="Y"){
 				if ((variables.childNodes[child].attributes["NAME"] == undefined) || (variables.childNodes[child].attributes["NAME"] == "")) {
-					flag = "warning";
-					appendValidationMsg("Description is invalid");
+					flag = "empty";
+					appendValidationMsg("Description is empty");
 				}
 				if ((variables.childNodes[child].attributes["DISPLAY_NAME"] == undefined) || (variables.childNodes[child].attributes["DISPLAY_NAME"] == "")) {
 					flag = "error";
@@ -27,16 +27,16 @@
 				}
 				if ((variables.childNodes[child].attributes["INIT_EXTRA"] == undefined) || (variables.childNodes[child].attributes["INIT_EXTRA"] == "")) {
 					flag = "error";
-					appendValidationMsg("Init Extra is invalid");
+					appendValidationMsg("Init Extra is empty");
 				}
 				if ((variables.childNodes[child].attributes["INIT_COMMAND"] == undefined) || (variables.childNodes[child].attributes["INIT_COMMAND"] == "")) {
 					flag = "error";
-					appendValidationMsg("Init Command is invalid");
+					appendValidationMsg("Init Command is empty");
 				}
 			}
 			else{
 				flag = "empty";
-				appendValidationMsg("Variables is not Active");
+				appendValidationMsg("Variable " + variables.childNodes[child].attributes["DISPLAY_NAME"] + " is not Active");
 			}
 			
 		}

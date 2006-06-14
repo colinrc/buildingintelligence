@@ -19,9 +19,15 @@
 			}
 			
 			if (sensors[sensor].active =="Y"){
-				if ((sensors[sensor].power == undefined) || (sensors[sensor].power == "")) {
-					flag = "empty";
-					appendValidationMsg("Power Rating is empty");
+				if(_global.advanced){
+					/*if ((sensors[sensor].power == undefined) || (sensors[sensor].power == "")) {
+						flag = "empty";
+						appendValidationMsg("Power Rating is empty");
+					}*/
+					if ((sensors[sensor].application == undefined) || (sensors[sensor].application == "")) {
+						flag = "empty";
+						appendValidationMsg("App. is empty");
+					}
 				}
 				if ((sensors[sensor].display_name == undefined) || (sensors[sensor].display_name == "")) {
 					flag = "error";
@@ -32,25 +38,22 @@
 						appendValidationMsg(sensors[sensor].display_name+" key is not being used");
 					}
 				}
-				if ((sensors[sensor].application == undefined) || (sensors[sensor].application == "")) {
-					flag = "error";
-					appendValidationMsg("App. is invalid");
-				}
+				
 				if ((sensors[sensor].name == undefined) || (sensors[sensor].name == "")) {
 					flag = "error";
-					appendValidationMsg("Description is invalid");
+					appendValidationMsg("Description is empty");
 				}
 				if ((sensors[sensor].key == undefined) || (sensors[sensor].key == "")) {
 					flag = "error";
-					appendValidationMsg("Unit Addr. is invalid");
+					appendValidationMsg("Unit Addr. is empty");
 				}
 				if ((sensors[sensor].channel == undefined) || (sensors[sensor].channel == "")) {
 					flag = "error";
-					appendValidationMsg("Channel is invalid");
+					appendValidationMsg("Channel is empty");
 				}
 				if ((sensors[sensor].units == undefined) || (sensors[sensor].units == "")) {
 					flag = "error";
-					appendValidationMsg("Units is invalid");
+					appendValidationMsg("Units are empty");
 				}
 			}
 			else{

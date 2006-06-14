@@ -20,24 +20,24 @@
 		}
 		if (name == undefined || name == "") {
 			flag = "error";
-			appendValidationMsg("Name is invalid");
+			appendValidationMsg("Name is empty");
 		}
 		if (x_pos == undefined || x_pos == "") {
 			flag = "error";
-			appendValidationMsg("X pos is invalid");
+			appendValidationMsg("X pos is empty");
 		}
 		if (height == undefined || height == "") {
 			flag = "error";
-			appendValidationMsg("Heigth is invalid");
+			appendValidationMsg("Heigth is empty");
 		}
 		if (width == undefined || width == "") {
 			flag = "error";
-			appendValidationMsg("Width is invalid");
+			appendValidationMsg("Width is empty");
 		}
 		for (var control in controls) {
 			if ((controls[control].attributes["name"] == "") || (controls[control].attributes["name"] == undefined)) {
 				flag = "error";
-				appendValidationMsg("Control Name is invalid");
+				appendValidationMsg("Control Name is empty");
 			}
 			if ((controls[control].attributes["key"] == "") || (controls[control].attributes["key"] == undefined)) {
 				flag = "error";

@@ -20,12 +20,12 @@
 			else {
 				if (lightAreas[lightArea].active =="Y"){
 					if ((lightAreas[lightArea].name == undefined) || (lightAreas[lightArea].name == "")) {
-						flag = "warning";
-						appendValidationMsg("Description is invalid");
+						flag = "empty";
+						appendValidationMsg("Description is empty");
 					}
 					if ((lightAreas[lightArea].key == undefined) || (lightAreas[lightArea].key == "")) {
 						flag = "error";
-						appendValidationMsg("Dynalite Code is invalid");
+						appendValidationMsg("Dynalite Code is empty");
 					}
 					if ((lightAreas[lightArea].display_name == undefined) || (lightAreas[lightArea].display_name == "")) {
 						flag = "error";

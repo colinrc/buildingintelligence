@@ -34,7 +34,7 @@
 		for (var zone in zones) {
 			if (zones[zone].attributes["label"] == null || zones[zone].attributes["label"] == "") {
 				flag = "warning";
-				appendValidationMsg("Zone Name is missing");
+				appendValidationMsg("Zone Name is empty");
 			}
 			if (zones[zone].attributes["key"] == null || zones[zone].attributes["key"] == "") {
 				flag = "error";

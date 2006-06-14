@@ -9,49 +9,49 @@
 				case "label" :
 					if((items[item].attributes["label"] == "")||(items[item].attributes["label"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Label is invalid");
+						appendValidationMsg("Label:Label is empty");
 					}
 					if((items[item].attributes["fontSize"] == "")||(items[item].attributes["fontSize"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Font size is invalid");
+						appendValidationMsg("Label:Font size is invalid");
 					}
 					if((items[item].attributes["fontColour"] == "")||(items[item].attributes["fontColour"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Font colour is invalid");
+						appendValidationMsg("Label:Font colour is invalid");
 					}				
 					break;
 				case "button" :
 					if((items[item].attributes["bgColour"] == "")||(items[item].attributes["bgColour"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Backgroung Colour is invalid");
+						appendValidationMsg("Button:Backgroung Colour is invalid");
 					}
 					if((items[item].attributes["borderColour"] == "")||(items[item].attributes["borderColour"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Border colour is invalid");
+						appendValidationMsg("Button:Border colour is invalid");
 					}
 					if((items[item].attributes["fontColour"] == "")||(items[item].attributes["fontColour"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Font colour is invalid");
+						appendValidationMsg("Button:Font colour is invalid");
 					}
 					if((items[item].attributes["labels"] == "")||(items[item].attributes["labels"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Labels are invalid");
+						appendValidationMsg("Button:Labels are invalid");
 					}
 					if((items[item].attributes["commands"] == "")||(items[item].attributes["commands"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Commands are invalid");
+						appendValidationMsg("Button:Commands are invalid");
 					}
 					if((items[item].attributes["width"] == "")||(items[item].attributes["width"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Width is invalid");
+						appendValidationMsg("Button:Width is invalid");
 					}
 					if((items[item].attributes["fontSize"] == "")||(items[item].attributes["fontSize"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Font size is invalid");
+						appendValidationMsg("Button:Font size is invalid");
 					}
 					if((items[item].attributes["key"] == "")||(items[item].attributes["key"] == undefined)){
 						flag = "error";
-						appendValidationMsg("Key is invalid");
+						appendValidationMsg("Button:Key is invalid");
 					}
 					else {
 						if (_global.isKeyValid(items[item].attributes["key"]) == false) {
@@ -64,53 +64,53 @@
 				case "icon" :
 					if((items[item].attributes["icons"] == "")||(items[item].attributes["icons"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Icons are invalid");
+						appendValidationMsg("Icon:Icons are invalid");
 					}
 					if((items[item].attributes["commands"] == "")||(items[item].attributes["commands"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Commands are invalid");
+						appendValidationMsg("Icon:Commands are invalid");
 					}
 					if((items[item].attributes["key"] == "")||(items[item].attributes["key"] == undefined)){
 						flag = "error";
-						appendValidationMsg("Key is invalid");
+						appendValidationMsg("Icon:Key is invalid");
 					}
 					else {
 						if (_global.isKeyValid(items[item].attributes["key"]) == false) {
 							flag = "error";
-							appendValidationMsg("Key has changed and is invalid");
+							appendValidationMsg("Icon:Key has changed and is invalid");
 						}
 					}
 					break;
 				case "object" :
 					if((items[item].attributes["src"] == "")||(items[item].attributes["src"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Source is invalid");
+						appendValidationMsg("Object:Source is invalid");
 					}
 					
 					if((items[item].attributes["width"] == "")||(items[item].attributes["width"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Width is invalid");
+						appendValidationMsg("Object:Width is invalid");
 					}
 					if((items[item].attributes["height"] == "")||(items[item].attributes["height"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Height is invalid");
+						appendValidationMsg("Object:Height is invalid");
 					}
 					if((items[item].attributes["show"] == "")||(items[item].attributes["show"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Show is invalid");
+						appendValidationMsg("Object:Show is invalid");
 					}
 					if((items[item].attributes["hide"] == "")||(items[item].attributes["hide"] == undefined)){
 						flag = "warning";
-						appendValidationMsg("Hide is invalid");
+						appendValidationMsg("Object:Hide is invalid");
 					}
 					if((items[item].attributes["key"] == "")||(items[item].attributes["key"] == undefined)){
 						flag = "error";
-						appendValidationMsg("Key is invalid");
+						appendValidationMsg("Object:Key is invalid");
 					}
 					else {
 						if (_global.isKeyValid(items[item].attributes["key"]) == false) {
 							flag = "error";
-							appendValidationMsg("Key has changed and is invalid");
+							appendValidationMsg("Object:Key has changed and is invalid");
 						}
 					}
 					break;

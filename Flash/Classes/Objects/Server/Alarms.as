@@ -17,18 +17,22 @@
 			appendValidationMsg("No Alarms are defined");
 		}
 		for (var alarm in alarms) {
-			if ((alarms[alarm].key == undefined) || (alarms[alarm].key == "")) {
-				flag = "error";
-				appendValidationMsg("Key is invalid");
-			} else {
-				if (_global.isKeyUsed(alarms[alarm].key) == false) {
-					flag = "error";
-					appendValidationMsg(alarms[alarm].key+" key is not being used");
-				}
+			if ((alarms[alarm].name == undefined) || (alarms[alarm].name == "")) {
+				flag = "empty";
+				appendValidationMsg("Description is empty");
 			}
 			if ((alarms[alarm].display_name == undefined) || (alarms[alarm].display_name == "")) {
 				flag = "error";
-				appendValidationMsg("Display Name is invalid");
+				appendValidationMsg("Key is invalid");
+			} else {
+				if (_global.isKeyUsed(alarms[alarm].display_name) == false) {
+					flag = "error";
+					appendValidationMsg(alarms[alarm].display_name+" key is not being used");
+				}
+			}
+			if ((alarms[alarm].key == undefined) || (alarms[alarm].key == "")) {
+				flag = "error";
+				appendValidationMsg("Alarm Code is empty");
 			}
 		}
 		return flag;

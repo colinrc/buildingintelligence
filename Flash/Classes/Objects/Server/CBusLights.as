@@ -26,7 +26,7 @@
 					}
 					if ((lights[light].application == undefined) || (lights[light].application == "")) {
 						flag = "empty";
-						appendValidationMsg("App. is invalid");
+						appendValidationMsg("App. is empty");
 					}
 				}
 				if ((lights[light].display_name == undefined) || (lights[light].display_name == "")) {
@@ -39,12 +39,12 @@
 					}
 				}
 				if ((lights[light].name == undefined) || (lights[light].name == "")) {
-					flag = "error";
-					appendValidationMsg("Description is invalid");
+					flag = "empty";
+					appendValidationMsg("Description is empty");
 				}
 				if ((lights[light].key == undefined) || (lights[light].key == "")) {
 					flag = "error";
-					appendValidationMsg("Group Addr. is invalid");
+					appendValidationMsg("Group Addr. is empty");
 				}
 			}
 			else{

@@ -14,16 +14,16 @@
 		}
 		for (var sound in sounds) {
 			if ((sounds[sound].attributes["name"] == undefined) || (sounds[sound].attributes["name"] == "")) {
-				flag = "warning";
-				appendValidationMsg("Name is invalid");
+				flag = "empty";
+				appendValidationMsg("Name is empty");
 			}
 			if ((sounds[sound].attributes["file"] == undefined) || (sounds[sound].attributes["file"] == "")) {
 				flag = "warning";
-				appendValidationMsg("File is invalid");
+				appendValidationMsg("File is empty");
 			}
 			if ((sounds[sound].attributes["volume"] == undefined) || (sounds[sound].attributes["volume"] == "")) {
 				flag = "warning";
-				appendValidationMsg("Volume is invalid");
+				appendValidationMsg("Volume is empty");
 			}
 		}
 		return flag;

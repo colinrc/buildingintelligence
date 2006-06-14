@@ -16,7 +16,7 @@
 		clearValidationMsg();
 		if (name == null || name == "") {
 			flag = "warning";
-			appendValidationMsg("Name is missing");
+			appendValidationMsg("Name is empty");
 		}
 		if (icon == null || icon == "") {
 			flag = "warning";
@@ -24,11 +24,11 @@
 		}
 		if (show == null || show == "") {
 			flag = "warning";
-			appendValidationMsg("Show is missing");
+			appendValidationMsg("Show is empty");
 		}
 		if (hide == null || hide == "") {
 			flag = "warning";
-			appendValidationMsg("Hide is missing");
+			appendValidationMsg("Hide is empty");
 		}
 		/*if (canOpen == null || canOpen == "") {
 		flag = "warning";

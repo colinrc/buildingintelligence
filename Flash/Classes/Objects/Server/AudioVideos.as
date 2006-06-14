@@ -19,6 +19,10 @@
 			}
 			else {
 				if (audiovideos[audiovideo].active =="Y"){
+					if ((audiovideos[audiovideo].name == undefined) || (audiovideos[audiovideo].name == "")) {
+						flag = "empty";
+						appendValidationMsg("Description is empty");
+					}
 					if ((audiovideos[audiovideo].display_name == undefined) || (audiovideos[audiovideo].display_name == "")) {
 						flag = "error";
 						appendValidationMsg("Key is invalid");
