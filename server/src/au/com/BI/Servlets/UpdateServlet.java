@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,7 +59,7 @@ public class UpdateServlet extends HttpServlet {
 
     }
     
-    public void doGet (HttpServletRequest req,
+    public  void doGet (HttpServletRequest req,
            HttpServletResponse resp) throws ServletException,java.io.IOException {
     	CacheBridge cacheBridge = null;
     	List<Element> extraStuffForStartup = null;
@@ -66,8 +67,10 @@ public class UpdateServlet extends HttpServlet {
     	Long serverID = null;
     	
         HttpSession session = req.getSession(false);
+        Map  params = req.getParameterMap();
+        
         try {
-	        if (session == null) {
+	        if (params != null && (session == null || params.containsKey("INIT"))) {
 	            session = req.getSession(true);
 	            setupSession(session);
 	            ID = (Long)session.getAttribute("ID");

@@ -36,7 +36,6 @@ public class Bootstrap {
     protected int jettyPort = 80;
     protected int jettySSLPort = 443;
     private boolean jettyActive = false;
-    protected boolean SSL = false;
     protected boolean requestUserNames = true;
     
     public Bootstrap() {
@@ -156,16 +155,7 @@ public class Bootstrap {
                 if (requestUserNames != null && requestUserNames.equals ("N")){
                 	setRequestUserNames (false);
                 }
-                String SSLStr = jettyConfig.getAttributeValue("SSL");
-                if (SSLStr == null) {
-                	SSL = false;
-                } else {
-                	if (SSLStr.equals("N")){
-                		SSL = false;
-                	} else {
-                		SSL = true;
-                	}
-                }
+
                 String jettyPortStr = jettyConfig.getAttributeValue("PORT");
                 if (jettyPortStr != null) {
                     try {
@@ -324,14 +314,6 @@ public class Bootstrap {
     
     public void setLogDir(String logDir) {
         this.logDir = logDir;
-    }
-    
-    public boolean isSSL() {
-        return SSL;
-    }
-    
-    public void setSSL(boolean ssl) {
-        SSL = ssl;
     }
     
     public int getJettyPort() {

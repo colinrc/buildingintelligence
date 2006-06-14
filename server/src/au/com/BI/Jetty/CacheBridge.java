@@ -14,6 +14,7 @@ import java.util.*;
 import au.com.BI.Command.*;
 import java.io.*;
 import org.jdom.Element;
+import org.jdom.IllegalAddException;
 import org.jdom.output.XMLOutputter;
 
 /**
@@ -60,7 +61,11 @@ public class CacheBridge implements CacheListener {
         		} else {
         			CommandInterface command = cacheWrapper.getCommand();
         			if (command != null) {
-        				resultsDoc.addContent(command.getXMLCommand());      
+        				try {
+        						resultsDoc.addContent((Element)command.getXMLCommand().clone());      
+        				} catch (IllegalAddException ex){
+        						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
+        				}
         			}
         		}
         	}

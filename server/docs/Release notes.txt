@@ -1,3 +1,15 @@
+''' Jetty '''
+
+Changed Jetty to HTTPS,  the certificate is placed in the datafiles directory in a file called keystore. It must have an access password of "building12".
+WWWROOT has been removed from the bootfiles configuration, instead www is hard coded, the HTML wrapper file that delivers the flash file should be provided from this location.
+A servlet to log out has been added; SERVERPATH/webclient/logout
+A flag has been added to the bootstrap file to disable user name / password challenges, this is to facilitate flash development within the flash IDE which is incapable of providing this
+information.
+Servlet startup modified to expect a parameter INIT=x (anything). The flash client should not start updating until the initial response i received, this will guarantee session handling is 
+correct.
+The address book has been expanded to understand TCP / HTTP/ jabber connections for a user or client interface, this will facilitate messaging at a future stage.
+A client redirect has been added /client will map to ../BI/client
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a5.zip V1.6a5] ==
 
 This release requires a new library set. Also download eLife-libs-1.6a5.zip

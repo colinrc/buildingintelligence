@@ -30,7 +30,7 @@ import org.mortbay.jetty.security.SslSocketConnector;
 public class JettyHandler extends BaseModel implements DeviceModel, ClientModel {
     boolean SSL = false;
     CacheBridgeFactory cacheBridgeFactory = null;
-    org.mortbay.jetty.Server server = null;
+    org.mortbay.jetty.Server server = null,client_server = null;
     Logger logger;
     Security security = null;
     
@@ -54,29 +54,53 @@ public class JettyHandler extends BaseModel implements DeviceModel, ClientModel 
     	}
     	
         try {
-            server = new Server();
-            // jettyHandler.setSSL(bootstrap.isSSL());
+        	client_server = new Server();
             
             org.mortbay.jetty.bio.SocketConnector connector = new SocketConnector();
             connector.setPort(bootstrap.getJettyPort());
             connector.setMaxIdleTime(50000);
+            connector.setName("HTTP_CONNECT");
+            client_server.setConnectors(new Connector[]{connector});
+            
+            // HTML static handler
+            ContextHandler mainContextHandler = new ContextHandler ();
+            mainContextHandler.setContextPath("/html");
+            mainContextHandler.setResourceBase("../../Bi/Client/Lib/Html");
 
-            if (bootstrap.isSSL()){
-                SslSocketConnector sslConnect = new SslSocketConnector();
+            ServletHandler servletHandler = new ServletHandler ();         
+            ServletHolder defServlet = servletHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
+            defServlet.setInitParameter("dirAllowed","false");
+            mainContextHandler.setHandler(servletHandler);
+            
+            ContextHandlerCollection contexts = new ContextHandlerCollection();
+            contexts.setHandlers(new org.mortbay.jetty.Handler[]{mainContextHandler});
+    
+            HandlerCollection handlers = new HandlerCollection();
+            handlers.setHandlers(new org.mortbay.jetty.Handler[]{contexts,new DefaultHandler()});
+            
+            client_server.setHandler(handlers);
+            client_server.setStopAtShutdown(true);
+            
+            // Start the http server
+            client_server.start ();
+        } catch (Exception ex){
+            logger.log (Level.WARNING,"Problems starting web server");
+            throw ex;
+        }
+        
+        try {
+            server = new Server();
+            // jettyHandler.setSSL(bootstrap.isSSL());
+            
+              SslSocketConnector sslConnect = new SslSocketConnector();
             	sslConnect.setPort(bootstrap.getJettySSLPort());
             	sslConnect.setMaxIdleTime(30000);
             	sslConnect.setKeystore("datafiles/keystore");
             	sslConnect.setPassword("building12");
             	sslConnect.setKeyPassword("building12");
-                server.setConnectors(new Connector[]{connector,sslConnect});
-            } else {
-                server.setConnectors(new Connector[]{connector});           	
-            }
-            
-            
-
-           
-
+            	sslConnect.setName("SSL_CONNECT");
+              server.setConnectors(new Connector[]{sslConnect});
+ 
             // HTML Security realm
 
             HashUserRealm webPass = new HashUserRealm();
@@ -89,6 +113,7 @@ public class JettyHandler extends BaseModel implements DeviceModel, ClientModel 
 
             updateContextHandler.setContextPath("/webclient");
             updateContextHandler.setResourceBase("www");
+            updateContextHandler.setConnectors(new String[]{"SSL_CONNECT"});
 
             ServletHandler updateHandler = new ServletHandler ();   
             
@@ -118,7 +143,7 @@ public class JettyHandler extends BaseModel implements DeviceModel, ClientModel 
 	            servletConstraintMap.setPathSpec("/webclient/*");
 	            Constraint servletConstraint = new Constraint();
 	            servletConstraint.setName("Servlet");
-	            servletConstraint.setRoles(new String[]{"user"});
+	            servletConstraint.setRoles(new String[]{"user","admin","integrator"});
 	            servletConstraint.setAuthenticate(true);
 	            servletConstraintMap.setConstraint(servletConstraint);
 	            servletSec.setConstraintMappings(new ConstraintMapping[] {servletConstraintMap});
@@ -133,10 +158,9 @@ public class JettyHandler extends BaseModel implements DeviceModel, ClientModel 
             ServletHandler servletHandler = new ServletHandler ();         
             ServletHolder defServlet = servletHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
             defServlet.setInitParameter("dirAllowed","false");
-            
             mainContextHandler.setHandler(servletHandler);
-            
-            
+
+         
             ContextHandlerCollection contexts = new ContextHandlerCollection();
             if (bootstrap.isRequestUserNames()){
             	contexts.setHandlers(new org.mortbay.jetty.Handler[]{servletSec,mainContextHandler});
@@ -152,7 +176,6 @@ public class JettyHandler extends BaseModel implements DeviceModel, ClientModel 
             
             // Start the http server
             server.start ();
-            //server.join();
         } catch (Exception ex){
             logger.log (Level.WARNING,"Problems starting web server");
             throw ex;
