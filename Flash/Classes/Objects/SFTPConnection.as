@@ -55,17 +55,18 @@
 		output = "";
 		view = undefined;
 		lastCode = "0";
-		var MyDll = new mdm.DLL("wodSFTP.dll");
-		//MyDll.addParameter("string","80");
-		MyDll.call("none","Connect");
-		/*myActiveX = new mdm.ActiveX(0, 0, 0, 0, "WeOnlyDo.wodSFTP.1");
-		myActiveX.setProperty("LicenseKey", "string", "89ZD-98LF-WF2P-G2VA");
+		/*var MyDll = new mdm.DLL("wodSFTP.dll");
+		MyDll.addParameter("string","80");
+		MyDll.call("none","wodSFTPComLib.wodSFTPCom.About");
+		MyDll.close();*/
+		myActiveX = new mdm.ActiveX(0, 0, 0, 0, "WeOnlyDo.wodSFTP.1");
+		//myActiveX.setProperty("LicenseKey", "string", "89ZD-98LF-WF2P-G2VA");
 		myActiveX.setProperty("LocalPath", "string", localPath);		
-		myActiveX.setProperty("RemotePath", "string", remotePath);*/
+		myActiveX.setProperty("RemotePath", "string", remotePath);
 	}
 	public function setLocalPath(inLocalPath:String) {
-		localPath = appPath + inLocalPath;
-		myActiveX.setProperty("LocalPath", "string", localPath);
+		localPath = inLocalPath;
+		myActiveX.setProperty("LocalPath", "string", inLocalPath);
 	}
 	public function setRemotePath(inRemotePath:String) {
 		if (lastCode != "0") {
@@ -107,7 +108,6 @@
 		return localList;
 	}
 	public function connect(user:String, port:Number, hostname:String, password:String):Void {
-		//myActiveX.setProperty("LicenseKey", "string", '89ZD-98LF-WF2P-G2VA');
 		myActiveX.setProperty("Hostname", "string", hostname);
 		myActiveX.setProperty("Port", "integer", port);
 		myActiveX.setProperty("Blocking", "integer", 1);

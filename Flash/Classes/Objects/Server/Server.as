@@ -3,6 +3,7 @@
 	private var controls:Objects.Server.Controls;
 	private var settings:Objects.Server.Settings;
 	private var macros:Objects.Server.Macros;
+	private var scripts:Objects.Server.Scripts;
 	private var devices:Array;
 	private var treeNode:XMLNode;
 	private var clients:Array;
@@ -12,6 +13,7 @@
 		controls = new Objects.Server.Controls();
 		settings = new Objects.Server.Settings();
 		macros = new Objects.Server.Macros();
+		scripts = new Objects.Server.Scripts();
 		clients = new Array();
 		/**Append default client device here*/		
 		var new_client = new Objects.Client.Client();
@@ -75,6 +77,9 @@
 	public function getMacros():Array{
 		return macros.getMacros();
 	}
+	public function getScripts():XMLNode{
+		return scripts.toXML();
+	}
 	public function toProject():XMLNode {
 		var serverNode = new XMLNode(1, "CONFIG");
 		var descriptionNode = new XMLNode(1, "DESC");
@@ -85,6 +90,7 @@
 		controlNode.appendChild(settings.toXML());
 		serverNode.appendChild(controlNode);
 		serverNode.appendChild(macros.toXML());
+		serverNode.appendChild(scripts.toXML());
 		for (var device in devices) {
 			serverNode.appendChild(devices[device].toXML());
 		}
@@ -101,6 +107,7 @@
 			newNode.appendChild(settings.toTree());			
 		}
 		newNode.appendChild(macros.toTree());
+		newNode.appendChild(scripts.toTree());
 		for (var device in devices) {
 			newNode.appendChild(devices[device].toTree());
 		}
@@ -300,7 +307,7 @@
 				treeNode.appendChild(newRaw.toTree());		
 				devices.push(newRaw);
 				break;
-			case "COMFORT" :
+			case "M1" :
 				var newM1 = new Objects.Server.M1();
 				newM1.setXML(newNode);
 				newM1.id = _global.formDepth++;								
@@ -324,8 +331,10 @@
 		controls = new Objects.Server.Controls();
 		settings = new Objects.Server.Settings();
 		macros = new Objects.Server.Macros();
+		scripts = new Objects.Server.Scripts();
 		devices = new Array();
 		clients = new Array();
+		description = "";
 		if (newData.nodeName == "CONFIG") {
 			for (var child in newData.childNodes) {
 				switch (newData.childNodes[child].nodeName) {
@@ -462,6 +471,9 @@
 					break;
 				case "MACROS":
 					macros.setXML(newData.childNodes[child]);
+					break;
+				case "SCRIPT_STATUS":
+					scripts.setXML(newData.childNodes[child]);
 					break;
 				}
 			}

@@ -20,10 +20,10 @@ class Forms.Control.SFTP extends Forms.BaseForm {
 		output_ta.editable = false;
 		sftpConnection.attachView(this);
 		if (sftpConnection.isServer) {
-			localDirectory_cmb.dataProvider = ["/", "/script", "/config", "/log", "/datafiles"];
+			localDirectory_cmb.dataProvider = ["/server", "/server/script", "/server/config", "/server/log", "/server/datafiles"];
 			remoteDirectory_cmb.dataProvider = ["/server", "/server/script", "/server/config", "/server/log", "/server/datafiles"];
 		} else {
-			localDirectory_cmb.dataProvider = ["/", "/lib/maps", "/lib/backgrounds", "/lib/icons", "/lib/sounds"];
+			localDirectory_cmb.dataProvider = ["/client", "/client/lib/maps", "/client/lib/backgrounds", "/client/lib/icons", "/client/lib/sounds"];
 			remoteDirectory_cmb.dataProvider = ["/client", "/client/lib/maps", "/client/lib/backgrounds", "/client/lib/icons", "/client/lib/sounds"];
 		}
 		right_li.iconFunction = function(item:Object):String  {
@@ -53,7 +53,7 @@ class Forms.Control.SFTP extends Forms.BaseForm {
 		refreshRemote();
 	}
 	public function localChange(eventObject:Object):Void {
-		sftpConnection.setLocalPath(localDirectory_cmb.text);
+		sftpConnection.setLocalPath(_global.project.path+localDirectory_cmb.text);
 		refreshLocal();
 	}
 	public function remoteChange(eventObject:Object):Void {

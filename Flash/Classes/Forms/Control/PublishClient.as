@@ -17,6 +17,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 	private var hideMouse_chk:CheckBox;
 	private var debugMode_chk:CheckBox;
 	public function PublishClient() {
+		appPath = mdm.Application.path.substring(0, mdm.Application.path.length - 1);
 	}
 	public function onUnload():Void{
 		sftpConnection.dettachView();
@@ -34,12 +35,6 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 	public function SFTPdisconnected():Void{
 	}
 	public function export(){
-		mdm.FileSystem.makeFolder(_global.project.path+"/client");
-		mdm.FileSystem.makeFolder(_global.project.path+"/client/lib");
-		mdm.FileSystem.makeFolder(_global.project.path+"/client/lib/icons");
-		mdm.FileSystem.makeFolder(_global.project.path+"/client/lib/maps");
-		mdm.FileSystem.makeFolder(_global.project.path+"/client/lib/backgrounds");
-		mdm.FileSystem.makeFolder(_global.project.path+"/client/lib/sounds");
 		for(var publishItem in right_li.dataProvider){
 			switch(right_li.dataProvider[publishItem].label){
 				case "Client Config":
@@ -120,7 +115,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 					break;
 				case "Objects":
 					/*
-					sftpConnection.setLocalPath("/lib/objects");
+					sftpConnection.setLocalPath(appPath +"/lib/objects");
 					sftpConnection.setRemotePath("/client/lib/objects");
 
 					sftpConnection.putItem("ircodes.xml");
@@ -141,7 +136,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 					sftpConnection.putData(generateBootstrap(),"elife.xml");
 					break;
 				case "Icons":
-					sftpConnection.setLocalPath("/lib/icons");				
+					sftpConnection.setLocalPath(appPath +"/lib/icons");				
 					sftpConnection.setRemotePath("/client/lib/icons");
 					var tempIcons = dataObject.clientDesign.getIcons();
 					tempIcons = tempIcons.sort();
@@ -191,7 +186,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 					sftpConnection.putData(new_icons,"_icons.txt");
 					break;
 				case "Maps":
-					sftpConnection.setLocalPath("/lib/maps");
+					sftpConnection.setLocalPath(appPath +"/lib/maps");
 					sftpConnection.setRemotePath("/client/lib/maps");
 					var tempZones = dataObject.clientDesign.Property.zones;
 					for(var zone in tempZones){
@@ -201,7 +196,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 					}
 					break;
 				case "Backgrounds":
-					sftpConnection.setLocalPath("/lib/backgrounds");
+					sftpConnection.setLocalPath(appPath +"/lib/backgrounds");
 					sftpConnection.setRemotePath("/client/lib/backgrounds");
 					var tempZones = dataObject.clientDesign.Property.zones;
 					for(var zone in tempZones){
@@ -211,7 +206,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 					}
 					break;
 				case "Sounds":
-					sftpConnection.setLocalPath("/lib");
+					sftpConnection.setLocalPath(appPath +"/lib");
 					sftpConnection.setRemotePath("/client/lib");
 					var tempSounds = dataObject.clientDesign.sounds.sounds;
 					for(var sound in tempSounds){
@@ -219,7 +214,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 					}					
 					break;
 				case "Objects":
-					sftpConnection.setLocalPath("/lib/objects");
+					sftpConnection.setLocalPath(appPath +"/lib/objects");
 					sftpConnection.setRemotePath("/client/lib/objects");
 					/*
 					sftpConnection.putItem("ircodes.xml");

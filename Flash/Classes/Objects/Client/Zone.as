@@ -119,7 +119,6 @@
 		return {items:arbitrary.getItems(),dataObject:this};
 	}
 	public function setArbitraryData(items:Array):Void{
-		mdm.Dialogs.prompt("WOW");
 		arbitrary.setData({items:items});
 	}
 	public function setXML(newData:XMLNode):Void {

@@ -10,6 +10,7 @@ class Forms.DataGrid.DynamicDataGrid {
 	private var tempDP:Array;
 	private var columnCount;
 	private var doOnce:Boolean = true;
+	private var callBack:Function;
 	public function DynamicDataGrid() {
 		columns = new Object();
 		buttonColumns = new Object();
@@ -600,9 +601,16 @@ class Forms.DataGrid.DynamicDataGrid {
 					my_dg.dataProvider[event.itemIndex][my_dg.columnNames[event.columnIndex]].sel = true;
 					break;
 				}
+			} else{
+				if(callBack != undefined){
+					callBack(event.itemIndex);
+				}
 			}
 		}
 		my_dg.dataProvider.updateViews("change");
 		lastClick = event;
+	}
+	function setChangeCallBack(inFunction:Function){
+		callBack = inFunction;
 	}
 }

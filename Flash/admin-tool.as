@@ -3,15 +3,14 @@
 import mx.managers.PopUpManager;
 import mx.containers.Window;
 import mx.utils.Delegate;
-
 mdm.Exception.enableHandler();
 mdm.Application.onMDMScriptException = function(myObject) {
-	 mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
+	/*mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
 	   mdm.Dialogs.prompt("Command: " +myObject.command);
 	   mdm.Dialogs.prompt("MSG: " +myObject.message);
 	   mdm.Dialogs.prompt("Form Type: " +myObject.formType);
 	   mdm.Dialogs.prompt("Parameter: " +myObject.parameter);
-	   mdm.Dialogs.prompt("Value: " +myObject.value);
+	   mdm.Dialogs.prompt("Value: " +myObject.value);*/
 };
 mdm.Application.title = "eLIFE Admin Tool";
 mdm.Forms.MainForm.title = "eLIFE Admin Tool";
@@ -51,7 +50,6 @@ var right_tree = workFlow_split.setFirstContents("Tree", "right_tree", 0);
 var output_panel = workFlow_split.setSecondContents("OutputPanel", "output_panel", 1);
 _global.right_tree = right_tree;
 _global.output_panel = output_panel;
-
 _global.workflow = new Objects.WorkFlow();
 //Create global reference to project/design tree
 var left_tree:mx.controls.Tree;
@@ -148,7 +146,7 @@ project_xml.onLoad = function(success) {
 	for (var client in clients) {
 		_global.designTree_xml.appendChild(clients[client].toTree());
 	}
-	_global.controlTree_xml.appendChild(_global.serverInstance.toTree());	
+	_global.controlTree_xml.appendChild(_global.serverInstance.toTree());
 	_global.refreshTheTree();
 };
 /**************************************************************************************/
@@ -209,29 +207,38 @@ function openFile(openType:String):Void {
 		}
 	}
 }
-_global.setPath = function():Void{
-		mdm.Dialogs.BrowseFolder.title = "Please select a Folder";
-		var tempString = mdm.Dialogs.BrowseFolder.show();
-		if (tempString != "false") {
-			project_path_ti.text = tempString;
-			//_global.history.changed("Project Details", "Project Path", "Directory of project", _global.project.path, tempString);
-			_global.project.path = tempString;
-			//_global.history.setProject(_global.project.project, _global.project.path);
-		    _global.unsaved = true;			
-		} else{
-			mdm.Dialogs.prompt("Your project cannot be saved without selecting a project directory.");
-		}
-}
+_global.setPath = function():Void  {
+	mdm.Dialogs.BrowseFolder.title = "Please select a Folder";
+	var tempString = mdm.Dialogs.BrowseFolder.show();
+	if (tempString != "false") {
+		project_path_ti.text = tempString;
+		//_global.history.changed("Project Details", "Project Path", "Directory of project", _global.project.path, tempString);
+		_global.project.path = tempString;
+		//_global.history.setProject(_global.project.project, _global.project.path);
+		mdm.FileSystem.makeFolder(_global.project.path + "/server");
+		mdm.FileSystem.makeFolder(_global.project.path + "/server/config");
+		mdm.FileSystem.makeFolder(_global.project.path + "/server/datafiles");
+		mdm.FileSystem.makeFolder(_global.project.path + "/server/script");
+		mdm.FileSystem.makeFolder(_global.project.path + "/client");
+		mdm.FileSystem.makeFolder(_global.project.path + "/client/lib");
+		mdm.FileSystem.makeFolder(_global.project.path + "/client/lib/icons");
+		mdm.FileSystem.makeFolder(_global.project.path + "/client/lib/maps");
+		mdm.FileSystem.makeFolder(_global.project.path + "/client/lib/backgrounds");
+		mdm.FileSystem.makeFolder(_global.project.path + "/client/lib/sounds");
+		_global.unsaved = true;
+	} else {
+		mdm.Dialogs.prompt("Your project cannot be saved without selecting a project directory.");
+	}
+};
 /**************************************************************************************/
 _global.saveFile = function(saveType:String):Void  {
 	if (saveType == "Project") {
-		if(!_global.project.path.length){
+		if (!_global.project.path.length) {
 			_global.setPath();
-			if(!_global.project.path.length){
+			if (!_global.project.path.length) {
 				return;
 			}
 		}
-			
 		if (_global.projectFileName.length) {
 			var newProjectXML = new XMLNode(1, "project");
 			for (var attrib in _global.project) {
@@ -249,7 +256,7 @@ _global.saveFile = function(saveType:String):Void  {
 		} else {
 			var tempString = mdm.Dialogs.inputBox("Enter project file name", "Enter project file name");
 			if (tempString != "false") {
-				_global.projectFileName = _global.project.path + tempString+".elp";
+				_global.projectFileName = _global.project.path + tempString + ".elp";
 				var newProjectXML = new XMLNode(1, "project");
 				for (var attrib in _global.project) {
 					if (_global.project[attrib].length) {
@@ -448,7 +455,7 @@ mdm.Menu.Main.insertItem("File", "New Project");
 mdm.Menu.Main.insertItem("File", "Open Project");
 //mdm.Menu.Main.insertDivider("File");
 //mdm.Menu.Main.insertItem("File", "Import Server XML");
-//mdm.Menu.Main.insertItem("File", "Import Client XML");
+//mdm.Menu.Main.insertItem("File", "Python Editor");
 mdm.Menu.Main.insertDivider("File");
 mdm.Menu.Main.insertItem("File", "Save Project");
 mdm.Menu.Main.insertItem("File", "Save Project As..");
@@ -487,13 +494,34 @@ mdm.Menu.Main.onMenuClick_Import_Client_XML = function() {
 openFile("Client");
 };
 */
+_global.Python_Editor = function(filename:String) {
+	var windowList = mdm.System.getWindowList();
+	var WID = "";
+	/*	for (var window in windowList) {
+	if (windowList[window][0].lastIndexOf("Sc1")!= -1) {
+	WID = windowList[window][1];
+	break;
+	}
+	}
+	if (WID.length) {
+	mdm.System.setWindowFocus(parseInt(WID));
+	} else {*/
+	filename = _global.project.path + "/server/script/" + filename;
+	var currentPath = mdm.Application.path;
+	if (mdm.FileSystem.fileExists(filename) != true) {
+		var pythonTemplate = mdm.FileSystem.loadFile(currentPath + "wscite\\template.py");
+		mdm.FileSystem.saveFile(filename, pythonTemplate);
+	}
+	mdm.Process.create("", 0, 0, 0, 0, "", currentPath + 'wscite\\SciTE.exe "' + filename + '"', currentPath, 3, 4);
+	//	}
+};
 mdm.Menu.Main.onMenuClick_Save_Project = function() {
 	saveFile("Project");
 };
 mdm.Menu.Main.onMenuClick_Save_Project_As__ = function() {
 	var tempString = mdm.Dialogs.inputBox("Enter project file name", "Enter project file name");
 	if (tempString != "false") {
-		_global.projectFileName = _global.project.path + tempString+".elp";
+		_global.projectFileName = _global.project.path + tempString + ".elp";
 		var newProjectXML = new XMLNode(1, "project");
 		for (var attrib in _global.project) {
 			if (_global.project[attrib].length) {
@@ -506,7 +534,7 @@ mdm.Menu.Main.onMenuClick_Save_Project_As__ = function() {
 		mdm.Application.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
 		mdm.Forms.MainForm.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
 		_global.unSaved = false;
-		}
+	}
 };
 mdm.Menu.Main.onMenuClick_Help = function() {
 	var windowList = mdm.System.getWindowList();
@@ -668,10 +696,9 @@ tabs_tb.change = function(eventObj) {
 		case "Rooms" :
 			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject, rooms:tempObject.getRooms()});
 			break;
-		case "Arbitraries":
-			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), {dataObject:tempObject.getArbitrary()});
+		case "Arbitraries" :
+			form_mc = formContent_mc.attachMovie(eventObj.target.selectedItem.view, "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getArbitrary());
 			break;
-		
 		default :
 			form_mc = formContent_mc.attachMovie(tempObject.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), tempObject.getData());
 			break;
@@ -744,7 +771,7 @@ leftTreeListener.change = function(eventObj) {
 			break;
 		case "Zone" :
 			form_mc = formContent_mc.attachMovie(node.object.getForm(), "form_" + (_global.formDepth++) + "_mc", formContent_mc.getNextHighestDepth(), node.object.getData());
-			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"Rooms", view:"forms.project.client.rooms"}, {label:"Arbitraries", view:"forms.project.client.arbitrary"},{label:"Panels", view:"forms.project.client.panels"}, {label:"XML", view:"forms.project.xml"}];
+			tabs_tb.dataProvider = [{label:node.object.getName(), view:node.object.getForm()}, {label:"Rooms", view:"forms.project.client.rooms"}, {label:"Arbitraries", view:"forms.project.client.arbitrary"}, {label:"Panels", view:"forms.project.client.panels"}, {label:"XML", view:"forms.project.xml"}];
 			tabs_tb.selectedIndex = 0;
 			break;
 			//Need to rewrite how a view is attached to a server object
@@ -830,7 +857,7 @@ buttonListener.click = function(eventObj) {
 				case "Hal" :
 				case "IRLearner" :
 				case "Kramer" :
-				case "Nuvo":
+				case "Nuvo" :
 				case "Logging" :
 				case "LoggingGroup" :
 				case "Oregon" :
@@ -839,7 +866,7 @@ buttonListener.click = function(eventObj) {
 				case "Property" :
 				case "Raw_Connection" :
 				case "Server" :
-				case "SignVideo":
+				case "SignVideo" :
 				case "StatusBar" :
 				case "StatusBarGroup" :
 				case "Tutondo" :
@@ -868,41 +895,6 @@ buttonListener.click = function(eventObj) {
 					_global.winListener.click = function() {
 						libraryManager.deletePopUp();
 						blocker.unloadMovie();
-						var foundNode = _global.searchProject(_global.left_tree.dataProvider, tempObject);
-						if (foundNode != undefined) {
-							left_tree.setIsOpen(foundNode, true);
-							var temp_node = foundNode.parentNode;
-							while (temp_node != null) {
-								left_tree.setIsOpen(temp_node, true);
-								temp_node = temp_node.parentNode;
-							}
-							var parentNode = foundNode.parentNode;
-							if (tempObject.getKey() == "Server") {
-								for (var node in parentNode.childNodes) {
-									parentNode.childNodes[node].removeNode();
-								}
-								foundNode = tempObject.toTree();
-								parentNode.appendChild(foundNode);
-								var clients = _global.serverDesign.getClients();
-								for (var client in clients) {
-									_global.designTree_xml.appendChild(clients[client].toTree());
-								}
-								left_tree.selectedNode = foundNode;
-							} else {
-								foundNode.removeNode();
-								foundNode = tempObject.toTree();
-								parentNode.appendChild(foundNode);
-								left_tree.selectedNode = foundNode;
-							}
-							var selectNode = new Object();
-							selectNode.target = _global.left_tree;
-							selectNode.type = "click";
-							left_tree.dispatchEvent(selectNode);
-						} else {
-							mdm.Dialogs.prompt("Could not find node");
-						}
-						_global.refreshTheTree();
-						//_global.unSaved = true;
 					};
 					_global.winListener.complete = function(evt_obj:Object) {
 						libraryManager.setSize(libraryManager.content._width + 7, libraryManager.content._height + 35);
@@ -924,6 +916,44 @@ buttonListener.click = function(eventObj) {
 		break;
 		*/
 	}
+};
+_global.updateFromLibrary = function() {
+	var foundNode = _global.searchProject(_global.left_tree.dataProvider, tempObject);
+	if (foundNode != undefined) {
+		left_tree.setIsOpen(foundNode, true);
+		var temp_node = foundNode.parentNode;
+		while (temp_node != null) {
+			left_tree.setIsOpen(temp_node, true);
+			temp_node = temp_node.parentNode;
+		}
+		var parentNode = foundNode.parentNode;
+		if (tempObject.getKey() == "Server") {
+			for (var node in parentNode.childNodes) {
+				parentNode.childNodes[node].removeNode();
+			}
+			foundNode = tempObject.toTree();
+			parentNode.appendChild(foundNode);
+			var clients = _global.serverDesign.getClients();
+			for (var client in clients) {
+				_global.designTree_xml.appendChild(clients[client].toTree());
+			}
+			left_tree.selectedNode = foundNode;
+		} else {
+			foundNode.removeNode();
+			foundNode = tempObject.toTree();
+			parentNode.appendChild(foundNode);
+			left_tree.selectedNode = foundNode;
+		}
+		var selectNode = new Object();
+		selectNode.target = _global.left_tree;
+		selectNode.type = "click";
+		left_tree.dispatchEvent(selectNode);
+	} else {
+		mdm.Dialogs.prompt("Could not find node");
+	}
+	_global.refreshTheTree();
+	_global.unSaved = true;
+	_global.winListener.click();
 };
 home_btn.addEventListener("click", buttonListener);
 project_btn.addEventListener("click", buttonListener);
