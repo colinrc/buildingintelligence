@@ -56,8 +56,7 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions, false, 150);
 		dataGridHandler.addTextInputColumn("icon1", "Icon1", restrictions, false, 150);
 		dataGridHandler.addTextInputColumn("icon2", "Icon2", restrictions, false, 150);
-		//dataGridHandler.addTextInputColumn("icons", "Icons", restrictions,false,150);
-		dataGridHandler.addComboBoxColumn("key", "Key", DPKey, false, 150);
+		dataGridHandler.addComboBoxColumn("key", "Key", DPKey, false, 200);
 		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl, false, 150);
 		var DP = new Array();
 		for (var control in controls) {
