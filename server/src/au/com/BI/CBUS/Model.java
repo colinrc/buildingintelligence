@@ -55,6 +55,7 @@ public class Model extends BaseModel implements DeviceModel {
 
 		etxString = new String(".$%#!\'");
 		this.setPadding(2);
+		this.setInterCommandInterval(10);
 
 	}
 

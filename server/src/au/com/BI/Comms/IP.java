@@ -22,9 +22,6 @@ public class IP extends BaseComms implements CommDevice
 {
 
 	protected Socket ipSocket;
-	protected boolean portOpen = false;
-	protected OutputStream os;
-	protected InputStream is;	
 	protected IPListener ipListener = null;
 	protected InetAddress ipAddress;
 	protected int port;
@@ -34,6 +31,7 @@ public class IP extends BaseComms implements CommDevice
 	protected int penultimateVals[] = null;
 	protected int transmitMessageOnBytes = 0;
 	protected String deviceName = "";
+
 	
 	public IP ()  {
 
@@ -86,13 +84,19 @@ public class IP extends BaseComms implements CommDevice
 			this.deviceName = deviceName;
 			try
 			{
-				ipListener = new IPListener();
+				commsGroup = new CommsGroup ("Comms group: " + deviceName);
+				commsGroup.setModelNumber(targetDeviceModel);
+				commsGroup.setCommandQueue(commandList);
+
+				ipListener = new IPListener(commsGroup);
+
 				if (etxArray != null) ipListener.setEndBytes(etxArray);
 				if (penultimateVals != null) ipListener.setPenultimateVals(penultimateVals);
 				if (stxArray != null) ipListener.setStartBytes(stxArray);
 				if (transmitMessageOnBytes > 0) ipListener.setTransmitMessageOnBytes(transmitMessageOnBytes);
 
 				this.ipAddress = InetAddress.getByName (ipAddressTxt);
+				
 				ipListener.setTargetDeviceModel (targetDeviceModel);
 				this.port = Integer.parseInt(portNum); 
 				SocketAddress sockaddr = new InetSocketAddress(ipAddress, port);
@@ -104,8 +108,13 @@ public class IP extends BaseComms implements CommDevice
 				os = ipSocket.getOutputStream();
 				is = ipSocket.getInputStream();
 				
+				commsSend = new CommsSend(commsGroup);
+				commsSend.setInterCommandInterval(interCommandInterval);
+				commsSend.setOs(os);
+				commsSend.start();
+				
 				if (doHeartBeat) {
-					ipHeartbeat = new IPHeartbeat ();
+					ipHeartbeat = new IPHeartbeat (commsGroup);
 					ipHeartbeat.setDeviceName(deviceName);
 					ipHeartbeat.setCommandQueue(commandList);
 					ipHeartbeat.setDeviceNumber(targetDeviceModel);
@@ -180,40 +189,5 @@ public class IP extends BaseComms implements CommDevice
 		}
 
 	}
-
-	
-	public void sendString (String message)
-		throws CommsFail 
-	{
-		try {
-			if (portOpen) {
-				logger.log (Level.FINEST,"Sending string " + message);
-				synchronized (os){
-					os.write((message).getBytes());
-					os.flush();
-				}
-			}
-		} catch (InterruptedIOException e) {
-		    throw new CommsFail ("Timeout in IP connection: ",e);
-		} catch (IOException e) {
-			throw new CommsFail ("Failure sending the information: ",e);
-		}
-	}
-
-	public void sendString (byte[] message)
-	throws CommsFail 
-	{
-	try {
-		if (portOpen) {
-			synchronized (os){
-				os.write(message);
-				os.flush();
-			}
-		}
-	} catch (IOException e) {
-		throw new CommsFail ("Failure sending the information: ",e);
-	}
-}
-	
 	
 }

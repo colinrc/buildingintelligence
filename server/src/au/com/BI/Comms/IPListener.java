@@ -37,7 +37,8 @@ public class IPListener extends Thread implements CommsListener
 	/**
 	 * The main constructor
 	 */
-	public IPListener ( ) {
+	public IPListener ( ThreadGroup threadGroup) {
+		super (threadGroup,"IP Listener");
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		startVals = new boolean[256];
 		endVals = new boolean [256];
@@ -118,7 +119,7 @@ public class IPListener extends Thread implements CommsListener
 	/**
 	 * Main run method for the class
 	 */
-	public void run () {
+	public void run () throws RuntimeException {
 		handleEvents = true;
 		int bytesRead = 0;
 		readArray =  new byte [transmitOnBytes + 1];
@@ -157,16 +158,17 @@ public class IPListener extends Thread implements CommsListener
 			} catch (SocketException e) {
 				logger.log (Level.FINE,"Received socket exception on IP stream " + e.getMessage());
 				handleEvents = false;				
+				throw new CommsFail (e.getMessage());
 			} catch (IOException e) {
 				logger.log (Level.FINE,"Received IO exception on IP stream " + e.getMessage());
 				handleEvents = false;
+				throw new CommsFail (e.getMessage());
 			}
 			
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			
 			Thread.yield(); // give other clients a chance
@@ -175,7 +177,9 @@ public class IPListener extends Thread implements CommsListener
 			if (rd != null) {
 				rd.close();
 			}
-		} catch (IOException io){}
+		} catch (IOException io){
+			throw new CommsFail (io.getMessage());
+		}
 	}
 
 	public void processKnownChars () throws IOException, SocketException {

@@ -13,6 +13,8 @@ import java.io.*;
 import java.util.List;
 import java.util.logging.*;
 
+import javax.management.RuntimeErrorException;
+
 /**
  * @author Colin Canfield
  * The main serial listener thread
@@ -45,7 +47,8 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 	/**
 	 * The main constructor
 	 */
-	public SerialListener ( ) {
+	public SerialListener ( ThreadGroup threadGroup) {
+		super (threadGroup,"Serial Listener");
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		retBuff = new byte [this.transmitOnBytes];
 		inputBuffer = new StringBuffer();
@@ -53,6 +56,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 		endVals = new boolean [256];
 		penultimateVals = new boolean [256];
 		this.setName("Serial Listener");
+
 	}
 	
 
@@ -104,7 +108,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 	/**
 	 * Main run method for the class
 	 */
-	public void run () {
+	public void run ()  throws RuntimeException {
 		handleEvents = true;
 	}
 	
@@ -210,9 +214,9 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 					}
 				}
 			} catch (IOException ex) {
-				ErrorReceiveEvent message = new ErrorReceiveEvent ("Error receiving information",ex);
-				// TODO Handle error events in serial messages.
 				sendBuffer = false;
+				this.handleEvents=false;
+				throw new CommsFail ("Error receiving information",ex);
 			}
 			if (sendBuffer){
 				if (inputBuffer.length() > 0){
@@ -276,9 +280,9 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 					}
 				}
 			} catch (IOException ex) {
-				ErrorReceiveEvent message = new ErrorReceiveEvent ("Error receiving information",ex);
-				// TODO Handle error events in serial messages.
 				sendBuffer = false;
+				this.handleEvents=false;
+				throw new CommsFail ("Error receiving information",ex);
 			}
 			if (sendBuffer){
 				if (inputBuffer.length() > 0){

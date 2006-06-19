@@ -37,6 +37,7 @@ public class Model extends BaseModel implements DeviceModel {
 		areaCodes.setConfigHelper(configHelper);
 		areaCodes.setDynaliteHelper(dynaliteHelper);
 		areaOffset = new HashMap<String,Byte>();
+		this.setInterCommandInterval(10); // Based on initial Dynalite docs.
 	}
 
 

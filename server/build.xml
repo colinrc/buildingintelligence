@@ -33,8 +33,9 @@
 		<copy todir="templates">
 		    <fileset dir="./" includes="**/*.xsd"  excludes="**/templates/**" />
 		    <fileset dir="./" includes="**/*.dtd"  excludes="**/templates/**" />
-		    <fileset dir="./" includes="**/config_ref.xml" excludes="**/templates/**" />
+		    <fileset dir="./" includes="**/config_*.xml" excludes="**/templates/**" />
 		    <fileset dir="./" includes="**/datafiles/*.xml" excludes="**/templates/**" />
+			<fileset dir="./" includes="**/datafiles/keystore" excludes="**/templates/**" />
 		</copy>
     </target>
 	
@@ -88,7 +89,7 @@
         <echo message="Version number now ${major_version}${minor_version}" />
     </target>
     	
-    <target name="build_dist" depends="templates" >
+    <target name="build_dist" depends="jar,templates" >
     	 	
 		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
 			update="false"
@@ -102,6 +103,11 @@
 			update="true"
 			basedir="."
 			includes = "templates/**/*.xml" 	
+	    	excludes = ".." />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "templates/**/keystore" 	
 	    	excludes = ".." />
 		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
 			update="true"

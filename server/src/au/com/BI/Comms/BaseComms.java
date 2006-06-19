@@ -5,6 +5,8 @@
  */
 package au.com.BI.Comms;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Iterator;
 import au.com.BI.Util.*;
 import java.util.LinkedList;
@@ -24,6 +26,11 @@ protected LinkedList commandQueue;
 protected LinkedList sentQueue;
 protected int transmitMessageOnBytes = 0;
 public int interCommandInterval = 0;
+protected OutputStream os;
+protected InputStream is;	
+protected boolean portOpen = false;
+protected CommsSend commsSend = null;
+protected CommsGroup commsGroup = null;
 
 	public BaseComms () {
 		commandQueue = new LinkedList();
@@ -421,28 +428,29 @@ public int interCommandInterval = 0;
 		return waitingForFeedback;
 	}
 	
-
-	
 	public void gotFeedback() {
 		waitingForFeedback = false;
 	}	
 	
-	
-	public void sendString (String message) throws CommsFail {
-		logger.log (Level.SEVERE,"Send String in Base Comms was not overwritten by extending class.");
-		};
-
-	public void sendString (byte[] message) throws CommsFail {
-		logger.log (Level.SEVERE,"Send String in Base Comms was not overwritten by extending class.");
-	}
-
-
 	public int getInterCommandInterval() {
 		return interCommandInterval;
 	}
 
 	public void setInterCommandInterval(int interCommandInterval) {
 		this.interCommandInterval = interCommandInterval;
-	};
+	}
+	
+	
+	public void sendString (String message)
+	{
+		logger.log (Level.FINEST,"Sending string " + message);
+		sendString (message.getBytes());
+	}
+
+	public void sendString (byte[] message)
+	{
+
+			commsSend.toSend.add(message);
+	}
 
 }

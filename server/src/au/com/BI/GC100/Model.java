@@ -31,6 +31,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public Model () {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
+		this.setInterCommandInterval(10); // May need further tuning for GC100 IR
 	}
 	
 

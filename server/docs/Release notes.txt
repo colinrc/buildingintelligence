@@ -1,3 +1,18 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a6.zip V1.6a6] ==
+
+''' Comms '''
+
+Added the ability for a model to specify the minimum time between packets to be sent to the device. This is to stop flooding device inputs. The value should be set before the 
+device connection, the constructor is a reasonable place.
+
+{{{
+		this.setInterCommandInterval(10);
+}}}
+
+
+Improved IO exception handling for both serial and IP connections, the system should catch more errors and result in a system reconnection.
+
+
 ''' Jetty '''
 
 Changed Jetty to HTTPS,  the certificate is placed in the datafiles directory in a file called keystore. It must have an access password of "building12".
@@ -8,7 +23,8 @@ information.
 Servlet startup modified to expect a parameter INIT=x (anything). The flash client should not start updating until the initial response i received, this will guarantee session handling is 
 correct.
 The address book has been expanded to understand TCP / HTTP/ jabber connections for a user or client interface, this will facilitate messaging at a future stage.
-A client redirect has been added /client will map to ../BI/client
+A client redirect has been added /html will map to ../../Bi/Client/Lib/Html
+Added an explicit logout servlet, it is mapped to /webclient/logout
 
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a5.zip V1.6a5] ==
 

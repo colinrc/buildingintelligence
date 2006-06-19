@@ -28,8 +28,8 @@ public class IPHeartbeat extends Thread {
 	/**
 	 * 
 	 */
-	public IPHeartbeat() {
-		super();
+	public IPHeartbeat(ThreadGroup threadGroup) {
+		super (threadGroup,"IP Heartbeat");
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		this.setName("IP Heartbeat");
 	}

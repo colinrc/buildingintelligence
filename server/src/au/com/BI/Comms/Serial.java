@@ -27,9 +27,6 @@ public class Serial extends BaseComms implements CommDevice
 	
 	protected CommPortIdentifier portId;
 	protected SerialPort serialPort;
-	protected boolean portOpen = false;
-	protected OutputStream os;
-	protected InputStream is;	
 	protected SerialListener serialListener;
 	protected int etxArray[] = null;
 	protected int penultimateVals[] = null;
@@ -40,7 +37,11 @@ public class Serial extends BaseComms implements CommDevice
 
 	public Serial ()  {
 		super();
-		serialListener = new SerialListener();
+		
+		commsGroup = new CommsGroup ("Comms group: " + deviceName);
+
+		
+		serialListener = new SerialListener(commsGroup);
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
@@ -78,6 +79,8 @@ public class Serial extends BaseComms implements CommDevice
 	public void connect (String portName, SerialParameters parameters, List commandList, int targetDeviceModel,String deviceName)
 		throws ConnectionFail 
 		{
+		   commsGroup.setModelNumber(targetDeviceModel);
+		   commsGroup.setCommandQueue(commandList);
 			this.deviceName = deviceName;
 			try
 			{
@@ -127,6 +130,11 @@ public class Serial extends BaseComms implements CommDevice
 						os = serialPort.getOutputStream();
 						is = serialPort.getInputStream();
 						serialListener.setInputStream (is);
+						commsSend = new CommsSend(commsGroup);
+						commsSend.setInterCommandInterval(interCommandInterval);
+						commsSend.setOs(os);
+						commsSend. start();
+						
 						// Add this object as an event listener for the serial port.
 						serialListener.setTargetDeviceModel(targetDeviceModel);
 						try {
@@ -232,25 +240,6 @@ public class Serial extends BaseComms implements CommDevice
 
 	}
 
-	
-	public void sendString (String message)
-		throws CommsFail 
-	{
-		logger.log (Level.FINEST,"Sending string " + message);
-		sendString (message.getBytes());
-	}
 
-	public void sendString (byte[] message)
-	throws CommsFail 
-	{
-	try {
-		if (portOpen) {
-			os.write(message);
-			os.flush();
-		}
-	} catch (IOException e) {
-		throw new CommsFail ("Failure sending the information",e);
-	}
-}
 	
 }
