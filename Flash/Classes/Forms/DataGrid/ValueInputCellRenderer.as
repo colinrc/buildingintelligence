@@ -36,6 +36,7 @@ class Forms.DataGrid.ValueInputCellRenderer extends UIComponent {
 				if (label._name != "TextInput") {
 					label = createObject("TextInput", "TextInput", 1, {styleName:this, owner:this});
 					label.addEventListener("enter", Delegate.create(this, enterText));
+					label.addEventListener("change", Delegate.create(this, enterText));
 					label._visible = (item != undefined);
 					rawInterFaceForm = itemObject.form;
 					for (var restriction in itemObject.restrictions) {
@@ -67,7 +68,7 @@ class Forms.DataGrid.ValueInputCellRenderer extends UIComponent {
 		var columnName = listOwner.columnNames[itemLocation.columnIndex];
 		listOwner.dataProvider[itemLocation.itemIndex][columnName].label = label.text;
 		listOwner.dataProvider.updateViews("change");
-		listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;
+		//listOwner.dataProvider[itemLocation.itemIndex][columnName].sel = false;
 		var valueName = listOwner.dataProvider[itemLocation.itemIndex].name.label;
 		var tempVars = rawInterFaceForm.interfaces_dg.dataProvider[rawInterFaceForm.interfaces_dg.selectedIndex].vars;
 		for (var child in tempVars) {
@@ -75,7 +76,7 @@ class Forms.DataGrid.ValueInputCellRenderer extends UIComponent {
 				tempVars[child].attributes.VALUE = label.text;
 			}
 		}
-		rawInterFaceForm.itemChange({});
+		rawInterFaceForm.itemUpdate({});
 		_global.unSaved = true;
 	}
 }
