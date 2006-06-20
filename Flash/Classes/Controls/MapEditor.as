@@ -17,6 +17,7 @@ class Controls.MapEditor extends MovieClip {
 	
 	private var _poly:Array;
 	private var _mode:String;
+	private var _background:String;
 	private var _mapMode:String = "roomPoly";
 	private var _snapToGrid:Number;
 	
@@ -48,6 +49,18 @@ class Controls.MapEditor extends MovieClip {
 		return _poly.join(",");
 	}
 	
+	public function set background(bgImage:String):Void {
+		_background = bgImage;
+		var bg_mc = scrollPane_sp.content.background_mc;
+		bg_mc._xscale = bg_mc._yscale = 100;
+		var image_mc = bg_mc.createEmptyMovieClip("image_mc", 0);
+		image_mc.loadMovie(bgImage);
+	}
+	
+	public function get background():String {
+		return _background;
+	}
+	
 	public function set alerts(alerts:Array):Void {
 		_alerts = alerts;
 		
@@ -73,8 +86,10 @@ class Controls.MapEditor extends MovieClip {
 		myListener.scrollPane_sp = scrollPane_sp;
 		myListener.onLoadInit = function (map) {
 			scrollPane_sp.invalidate();
-			scrollPane_sp.content.background_mc._width = map._width + 20;
-			scrollPane_sp.content.background_mc._height = map._height + 20;
+			if (!scrollPane_sp._parent.background.length) {
+				scrollPane_sp.content.background_mc._width = map._width + 20;
+				scrollPane_sp.content.background_mc._height = map._height + 20;
+			}
 			scrollPane_sp._parent.focusPoly();
 		}
 		var my_mcl = new MovieClipLoader();
@@ -86,8 +101,10 @@ class Controls.MapEditor extends MovieClip {
 		
 		var bg_mc = scrollPane_sp.content.background_mc;
 		bg_mc.obj = this;
-		bg_mc._width = 300;
-		bg_mc._height = 300;
+		if (!background.length) {
+			bg_mc._width = 300;
+			bg_mc._height = 300;
+		}
 		bg_mc.useHandCursor = false;
 		bg_mc.onPress = function () {
 			if (this.obj.mode == "addPoints") {
