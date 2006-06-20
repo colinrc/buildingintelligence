@@ -174,3 +174,5 @@ if exist Macros goto end
 mkdir Macros
 
 :end
+copy /Y ..\BIwodSFTP.ocx c:\windows\system32\
+regsvr32 c:\windows\system32\BIwodSFTP.ocx
