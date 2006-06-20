@@ -28,13 +28,18 @@
 		basedir="dist" 
 		includes = "*.jar"  
 		excludes = "**/*\*.class" />
-	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
+	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip"
 		update="true"
-		basedir="bin" 
+		basedir="bin"
 		excludes = "**/*\*.class"  />
-	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
+	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip"
 		update="true"
-		basedir="" 
+		basedir="ext"
+		includes= "**/*.jar"
+		excludes = "**/*\*.class"  />
+	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip"
+		update="true"
+		basedir=""
 		includes= "**/*.bat"
 		excludes = "**/*\*.class"  />
   <delete>
