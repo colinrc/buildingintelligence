@@ -16,6 +16,7 @@ class Forms.Tree.WorkFlowTreeCellRenderer extends mx.core.UIComponent {
 	}
 	
 	function setValue(label:String, node:XMLNode) {
+		mdm.Dialogs.prompt(node.toString());
 		var lineColor:Number = listOwner.getStyle("lineColor");
 		clear();
 		if (owner.node != undefined) {

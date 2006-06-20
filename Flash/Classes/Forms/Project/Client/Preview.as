@@ -12,15 +12,15 @@
 			var sampleWindow:XML = new XML('<window><tab name="'+previewXML.attributes.type+'" ><control name="Preview" key="PREVIEW" type="'+previewXML.attributes.type+'"  /></tab></window>');
 			var newControlTypes = new XMLNode(1, "controlTypes");
 			newControlTypes.appendChild(previewXML);
-			attachMovie("window-preview", "preview_mc", 100, {width:525, height:525, controlTypeData:new XML(newControlTypes.toString()), windowData:sampleWindow, iconPath:"lib/icons/"});
+			attachMovie("window-preview", "preview_mc", 100, {width:735, height:525, controlTypeData:new XML(newControlTypes.toString()), windowData:sampleWindow, iconPath:"lib/icons/"});
 			break;
 		case "window" :
-			attachMovie("window-preview", "preview_mc", 100, {width:525, height:525, controlTypeData:new XML(controls.toString()), windowData:new XML(previewXML.toString()), iconPath:"lib/icons/"});
+			attachMovie("window-preview", "preview_mc", 100, {width:735, height:525, controlTypeData:new XML(controls.toString()), windowData:new XML(previewXML.toString()), iconPath:"lib/icons/"});
 			break;
 		case "tab" :
 			var newXML = new XMLNode(1,"window");
 			newXML.appendChild(previewXML);
-			attachMovie("window-preview", "preview_mc", 100, {width:525, height:525, controlTypeData:new XML(controls.toString()), windowData:new XML(newXML.toString()), iconPath:"lib/icons/"});		
+			attachMovie("window-preview", "preview_mc", 100, {width:735, height:525, controlTypeData:new XML(controls.toString()), windowData:new XML(newXML.toString()), iconPath:"lib/icons/"});		
 			break;
 		case "panel" :
 			var newWindow = new XMLNode(1,"window");
@@ -30,7 +30,7 @@
 				newTab.appendChild(previewXML.childNodes[child]);
 			}
 			newWindow.appendChild(newTab);
-			attachMovie("window-preview", "preview_mc", 100, {width:525, height:525, controlTypeData:new XML(controls.toString()), windowData:new XML(newWindow.toString()), iconPath:"lib/icons/"});		
+			attachMovie("window-preview", "preview_mc", 100, {width:735, height:525, controlTypeData:new XML(controls.toString()), windowData:new XML(newWindow.toString()), iconPath:"lib/icons/"});		
 			break;
 		}
 	}

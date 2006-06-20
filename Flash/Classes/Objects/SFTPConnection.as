@@ -59,7 +59,7 @@
 		MyDll.addParameter("string","80");
 		MyDll.call("none","wodSFTPComLib.wodSFTPCom.About");
 		MyDll.close();*/
-		myActiveX = new mdm.ActiveX(0, 0, 0, 0, "WeOnlyDo.wodSFTP.1");
+		myActiveX = new mdm.ActiveX(0, 0, 0, 0, "BIwodSFTP.BiSFTP");
 		//myActiveX.setProperty("LicenseKey", "string", "89ZD-98LF-WF2P-G2VA");
 		myActiveX.setProperty("LocalPath", "string", localPath);		
 		myActiveX.setProperty("RemotePath", "string", remotePath);
