@@ -22,15 +22,11 @@
 					appendValidationMsg("Key has changed and is invalid");
 				}
 			}
-			if((doors[door].attributes["door"] == "")||(doors[door].attributes["door"] == undefined)){
-				flag = "error";
-				appendValidationMsg("Position is invalid");
-			}
 			if((doors[door].attributes["colour1"] == "")||(doors[door].attributes["colour1"] == undefined) || (doors[door].attributes["colour2"] == "")||(doors[door].attributes["colour2"] == undefined)){
 				flag = "error";
 				appendValidationMsg("Colour is invalid");
 			}			
-			if((doors[door].attributes["door"] == "")||(doors[door].attributes["door"] == undefined)){
+			if((doors[door].attributes["pos"] == "")||(doors[door].attributes["pos"] == undefined)){
 				flag = "error";
 				appendValidationMsg("Door polygon is invalid");
 			}		
@@ -60,7 +56,7 @@
 		return "Doors & Windows";
 	}
 	public function getData():Object {
-		return {doors:doors, dataObject:this,poly:room.poly,map:room.zone.map};
+		return {doors:doors, dataObject:this, poly:room.poly, map:room.zone.map};
 	}
 	public function setXML(newData:XMLNode):Void {
 		doors = new Array();

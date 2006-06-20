@@ -42,10 +42,10 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			} else {
 				newDoor.key = "";
 			}
-			if (doors[door].attributes["door"] != undefined) {
-				newDoor.door = doors[door].attributes["door"];
+			if (doors[door].attributes["pos"] != undefined) {
+				newDoor.pos = doors[door].attributes["pos"];
 			} else {
-				newDoor.door = "";
+				newDoor.pos = "";
 			}
 			if (doors[door].attributes["thickness"] != undefined) {
 				newDoor.thickness = doors[door].attributes["thickness"];
@@ -115,7 +115,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 	public function save():Void {
 		var newDoors = new Array();
 		var DP = roomEditor.doors;
-		for (var index = 0; index < DP.length; index++) {
+		for (var index = 0; index<DP.length; index++) {
 			var item = new XMLNode(1, "door");
 			if (DP[index].name != "") {
 				item.attributes["name"] = DP[index].name;
@@ -123,8 +123,8 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			if (DP[index].key != "") {
 				item.attributes["key"] = DP[index].key;
 			}
-			if (DP[index].door != "") {
-				item.attributes["door"] = DP[index].door;
+			if (DP[index].pos != "") {
+				item.attributes["pos"] = DP[index].pos;
 			}
 			if (DP[index].colour1 != "") {
 				item.attributes["colour1"] = DP[index].colour1;

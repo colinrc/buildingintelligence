@@ -406,7 +406,7 @@ class Controls.MapEditor extends MovieClip {
 		for (var i=0; i<_doors.length; i++) {
 			var door_mc = doors_mc.createEmptyMovieClip("door" + i + "_mc", doors_mc.getNextHighestDepth());
 			
-			var coords = _doors[i].door.split(",");
+			var coords = _doors[i].pos.split(",");
 			
 			var handle1_mc = door_mc.attachMovie("handle", "handle1_mc", 20);
 			handle1_mc._x = coords[0];
@@ -449,7 +449,7 @@ class Controls.MapEditor extends MovieClip {
 						_x = Math.round(_x / this.obj._snapToGrid) * this.obj._snapToGrid;
 						_y = Math.round(_y / this.obj._snapToGrid) * this.obj._snapToGrid;
 
-						var coords = this.obj._doors[this.idx].door.split(",");
+						var coords = this.obj._doors[this.idx].pos.split(",");
 											
 						if (this._name == "handle1_mc") {
 							coords[0] = _x;
@@ -459,7 +459,7 @@ class Controls.MapEditor extends MovieClip {
 							coords[3] = _y;							
 						}
 						
-						this.obj._doors[this.idx].door = coords.join(",");
+						this.obj._doors[this.idx].pos = coords.join(",");
 						
 						this.obj.drawDoor(this.idx, coords);
 					}
@@ -579,7 +579,7 @@ class Controls.MapEditor extends MovieClip {
 	private function addDoor(x:Number, y:Number):Void {
 		x = Math.round(x / _snapToGrid) * _snapToGrid;
 		y = Math.round(y / _snapToGrid) * _snapToGrid;
-		_doors.push({door:x + "," + y + "," + (x + 50) + "," + y, colour1:"0xCC0000", thickness:5});
+		_doors.push({pos:x + "," + y + "," + (x + 50) + "," + y, colour1:"0xCC0000", thickness:5});
 		dispatchEvent({type:"doorAdd", target:doors[doors.length - 1]});
 		drawDoors();
 	}
