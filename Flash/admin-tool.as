@@ -5,12 +5,12 @@ import mx.containers.Window;
 import mx.utils.Delegate;
 mdm.Exception.enableHandler();
 mdm.Application.onMDMScriptException = function(myObject) {
-	/*mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
+	mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
 	   mdm.Dialogs.prompt("Command: " +myObject.command);
 	   mdm.Dialogs.prompt("MSG: " +myObject.message);
 	   mdm.Dialogs.prompt("Form Type: " +myObject.formType);
 	   mdm.Dialogs.prompt("Parameter: " +myObject.parameter);
-	   mdm.Dialogs.prompt("Value: " +myObject.value);*/
+	   mdm.Dialogs.prompt("Value: " +myObject.value);
 };
 mdm.Application.title = "eLIFE Admin Tool";
 mdm.Forms.MainForm.title = "eLIFE Admin Tool";
@@ -35,29 +35,23 @@ _global.advanced = false;
 _global.unSaved = false;
 _global.formDepth = 0;
 _global.projectFileName = "";
-/*_global.serverDesign = new Objects.Server.Server();
-_global.serverInstance = new Objects.Instances.ServerInstance();*/
 _global.keys = _global.serverDesign.getKeys();
-/*	var clientList:Array = _global.serverDesign.getClients();
-var temp:Array = null;
-for (var eachClient in clientList) {
-temp.concat(clientList[eachClient].getUsedKeys());
-}
-_global.usedKeys = temp;*/
-//_global.history = new Objects.History();
 /*Workflow tree variables and initialization*/
-var right_tree = workFlow_split.setFirstContents("Tree", "right_tree", 0);
+var treeSwitcher = workFlow_split.setFirstContents("TreeSwitcher","treeSwitcher", 0);
 var output_panel = workFlow_split.setSecondContents("OutputPanel", "output_panel", 1);
-_global.right_tree = right_tree;
+_global.right_tree = treeSwitcher.getClip2();
 _global.output_panel = output_panel;
 _global.workflow = new Objects.WorkFlow();
 //Create global reference to project/design tree
 var left_tree:mx.controls.Tree;
-_global.left_tree = left_tree;
-_global.left_tree.vScrollPolicy = right_tree.vScrollPolicy = "auto";
+_global.left_tree = treeSwitcher.getClip1();
+_global.left_tree.vScrollPolicy = _global.right_tree.vScrollPolicy = "auto";
 _global.left_tree.hScrollPolicy = "auto";
 _global.left_tree.setStyle("openDuration", 50);
-//_global.left_tree.cellRenderer = "LeftTreeCellRenderer";
+left_tree.vScrollPolicy = _global.right_tree.vScrollPolicy = "auto";
+left_tree.hScrollPolicy = "auto";
+left_tree.setStyle("openDuration", 50);
+_global.left_tree.cellRenderer = "LeftTreeCellRenderer";
 /*************************************************************************/
 //link to required xml files
 //Load list of overrides for client objects
@@ -312,9 +306,9 @@ _global.refreshTheTree = function() {
 		// clear
 		_global.left_tree.dataProvider = _global.designTree_xml;
 	} else {
-		_global.left_tree.dataProvider = null;
+		left_tree.dataProvider = null;
 		// clear
-		_global.left_tree.dataProvider = _global.controlTree_xml;
+		left_tree.dataProvider = _global.controlTree_xml;
 	}
 	_global.keys = _global.serverDesign.getKeys();
 	var clientList:Array = _global.serverDesign.getClients();
@@ -590,15 +584,15 @@ setView = function (view, dataObj) {
 		tabs_tb._visible = true;
 		tabs_tb._x = 254;
 		tabBody_mc._x = 254;
-		tabs_tb.setSize(560, 25);
-		tabBody_mc._width = 560;
-		left_tree._visible = true;
+		tabs_tb.setSize(766, 25);
+		tabBody_mc._width = 766;
+		left_tree._visible = false;
 		workFlow_split._visible = true;
 		tabBody_mc._visible = true;
 		tabs_tb.dataProvider = [{label:"Project Design"}];
 		tabs_tb.selectedIndex = 0;
-		left_tree.dataProvider = _global.designTree_xml;
-		left_tree.labelFunction = function(item_obj:Object):String  {
+		_global.left_tree.dataProvider = _global.designTree_xml;
+		_global.left_tree.labelFunction = function(item_obj:Object):String  {
 			return item_obj.object.getName();
 		};
 		break;
@@ -720,7 +714,7 @@ leftTreeListener.change = function(eventObj) {
 	}
 	var node = eventObj.target.selectedNode;
 	form_mc.removeMovieClip();
-	right_tree.selectedNode = undefined;
+	_global.right_tree.selectedNode = undefined;
 	if (node.object == undefined) {
 		_global.output_panel.setDescription("");
 		_global.output_panel.setError("");
@@ -785,7 +779,6 @@ leftTreeListener.change = function(eventObj) {
 		}
 	}
 };
-left_tree.addEventListener("change", leftTreeListener);
 /****************************************************************/
 buttonListener = new Object();
 buttonListener.last_btn = null;
@@ -920,10 +913,10 @@ buttonListener.click = function(eventObj) {
 _global.updateFromLibrary = function() {
 	var foundNode = _global.searchProject(_global.left_tree.dataProvider, tempObject);
 	if (foundNode != undefined) {
-		left_tree.setIsOpen(foundNode, true);
+		_global.left_tree.setIsOpen(foundNode, true);
 		var temp_node = foundNode.parentNode;
 		while (temp_node != null) {
-			left_tree.setIsOpen(temp_node, true);
+			_global.left_tree.setIsOpen(temp_node, true);
 			temp_node = temp_node.parentNode;
 		}
 		var parentNode = foundNode.parentNode;
@@ -937,17 +930,17 @@ _global.updateFromLibrary = function() {
 			for (var client in clients) {
 				_global.designTree_xml.appendChild(clients[client].toTree());
 			}
-			left_tree.selectedNode = foundNode;
+			_global.left_tree.selectedNode = foundNode;
 		} else {
 			foundNode.removeNode();
 			foundNode = tempObject.toTree();
 			parentNode.appendChild(foundNode);
-			left_tree.selectedNode = foundNode;
+			_global.left_tree.selectedNode = foundNode;
 		}
 		var selectNode = new Object();
 		selectNode.target = _global.left_tree;
 		selectNode.type = "click";
-		left_tree.dispatchEvent(selectNode);
+		_global.left_tree.dispatchEvent(selectNode);
 	} else {
 		mdm.Dialogs.prompt("Could not find node");
 	}
@@ -982,10 +975,10 @@ buttonListener2.click = function(eventObj) {
 	}
 	var foundNode = _global.searchProject(_global.left_tree.dataProvider, tempObject);
 	if (foundNode != undefined) {
-		left_tree.setIsOpen(foundNode, true);
+		_global.left_tree.setIsOpen(foundNode, true);
 		var temp_node = foundNode.parentNode;
 		while (temp_node != null) {
-			left_tree.setIsOpen(temp_node, true);
+			_global.left_tree.setIsOpen(temp_node, true);
 			temp_node = temp_node.parentNode;
 		}
 		form_mc.setAdvanced();
@@ -994,7 +987,7 @@ buttonListener2.click = function(eventObj) {
 		setView("project");
 	}
 	_global.refreshTheTree();
-	left_tree.selectedNode = foundNode;
+	_global.left_tree.selectedNode = foundNode;
 	_global.output_panel.setDescription(foundNode.description);
 	_global.output_panel.setError(foundNode.object.getValidationMsg());
 	_global.output_panel.draw();
@@ -1067,31 +1060,12 @@ library_btn.onRollOut = function() {
 	CloseTip();
 	this.setState(false);
 };
-/*historyViewer_btn.onRollOut = function() {
-CloseTip();
-this.setState(false);
-};*/
 advanced_btn.onRollOut = function() {
 	CloseTip();
 	this.setState(false);
 };
 setButtons(false);
 /****************************************************************/
-/*treeFilter_cb.change = function(eventObj) {
-switch (eventObj.target.selectedItem.label) {
-case "Project" :
-left_tree.dataProvider = _global.designTree_xml;
-left_tree.labelFunction = function(item_obj:Object):String  {
-return item_obj.object.getName();
-};
-break;
-case "Library" :
-left_tree.dataProvider = new XML('<n label="Icons" /><n label="Sounds" /><n label="Windows" /><n label="Tabs" /><n label="Rooms" /><n label="Controls" />');
-left_tree.labelFunction = null;
-break;
-}
-};
-treeFilter_cb.addEventListener("change", treeFilter_cb);*/
 setView("none");
 /****************************************************************/
 _global.right_tree.setStyle("openDuration", 50);
@@ -1131,17 +1105,17 @@ treeListener.change = function(evt:Object) {
 		} else {
 			this.target.selectedNode = node;
 			this.target.dispatchEvent({type:"click", target:evt.target});
-			left_tree.setIsOpen(node.left_node, true);
+			_global.left_tree.setIsOpen(node.left_node, true);
 			var temp_node = node.left_node.parentNode;
 			while (temp_node != null) {
-				left_tree.setIsOpen(temp_node, true);
+				_global.left_tree.setIsOpen(temp_node, true);
 				temp_node = temp_node.parentNode;
 			}
-			left_tree.selectedNode = node.left_node;
+			_global.left_tree.selectedNode = node.left_node;
 			selectNode = new Object();
 			selectNode.target = _global.left_tree;
 			selectNode.type = "change";
-			left_tree.dispatchEvent(selectNode);
+			_global.left_tree.dispatchEvent(selectNode);
 		}
 		this.open_next = undefined;
 	}
@@ -1194,4 +1168,6 @@ function CloseTip() {
 	_root.tooltip_mc.hide(300);
 }
 /*************************************************************************/
+_global.left_tree.addEventListener("change", leftTreeListener);
+left_tree.addEventListener("change", leftTreeListener);
 stop();
