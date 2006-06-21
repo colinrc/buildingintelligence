@@ -12,6 +12,7 @@
 	private var Property:Objects.Client.Property;
 	private var control_types:Objects.Client.Control_Types;
 	private var calendar:Objects.Client.Calendar;
+	private var keygroups:Objects.Client.KeyGroups;
 	private var attributeGroups = ["settings","window","button","tabs"];
 	private var treeNode:XMLNode;	
 	public function deleteSelf(){
@@ -51,9 +52,6 @@
 		var newCommon = new XMLNode(1,"common");
 		var newSettings = new XMLNode(1,"settings");
 		var newSetting = new XMLNode(1,"setting");
-		//newSetting.attributes.name = "serverAddress";
-		//newSetting.attributes.value = _global.project.ipAddress;
-		//newCommon.appendChild(newSetting);
 		newSetting = new XMLNode(1,"setting");
 		newSetting.attributes.name = "applicationXML";
 		newSetting.attributes.value = applicationXML;
@@ -82,10 +80,12 @@
 		newNode.appendChild(control_panel_apps.toXML());
 		newNode.appendChild(Property.toXML());
 		newNode.appendChild(control_types.toXML());
+		newNode.appendChild(keygroups.toXML());
 		return newNode;
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,"Client");
+		newNode.appendChild(keygroups.toTree());
 		newNode.appendChild(Property.toTree());
 		if(_global.advanced){
 			newNode.appendChild(control_types.toTree());
@@ -123,6 +123,9 @@
 	public function setAttributes(newAttributes:Array){
 		attributes = newAttributes;
 	}
+	public function getKeyGroups():Object{
+		return keygroups.toXML();
+	}
 	public function getControlTypes():Object{
 		return control_types.toXML();
 	}
@@ -139,6 +142,7 @@
 		calendar = new Objects.Client.Calendar();
 		Property = new Objects.Client.Property();
 		control_types = new Objects.Client.Control_Types();
+		keygroups = new Objects.Client.KeyGroups();
 		if(newData.nodeName == "application") {
 			if(newData.attributes.description != undefined){
 				description = newData.attributes.description;
@@ -194,6 +198,9 @@
 					case "calendar":
 					calendar.setXML(newData.childNodes[child]);
 					break;
+					case "keygroups":
+					keygroups.setXML(newData.childNodes[child]);
+					break;
 					default:
 					mdm.Dialogs.prompt(newData.childNodes[child]);
 					break;
@@ -218,11 +225,9 @@
 	}
 	public function getIcons():Array{
 		usedIcons = new Array();
-		//usedIcons=usedIcons.concat(sounds.getIcons());
 		usedIcons=usedIcons.concat(status_bar.getIcons());
 		usedIcons=usedIcons.concat(logging.getIcons());
 		usedIcons=usedIcons.concat(apps_bar.getIcons());
-		//usedIcons=usedIcons.concat(control_panel_apps.getIcons());
 		usedIcons=usedIcons.concat(Property.getIcons());
 		usedIcons=usedIcons.concat(control_types.getIcons());
 		usedIcons=usedIcons.concat(calendar.getIcons());

@@ -5,12 +5,12 @@ import mx.containers.Window;
 import mx.utils.Delegate;
 mdm.Exception.enableHandler();
 mdm.Application.onMDMScriptException = function(myObject) {
-	mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
+/*	mdm.Dialogs.prompt("An error has occured on Frame " + myObject.frameNumber);
 	   mdm.Dialogs.prompt("Command: " +myObject.command);
 	   mdm.Dialogs.prompt("MSG: " +myObject.message);
 	   mdm.Dialogs.prompt("Form Type: " +myObject.formType);
 	   mdm.Dialogs.prompt("Parameter: " +myObject.parameter);
-	   mdm.Dialogs.prompt("Value: " +myObject.value);
+	   mdm.Dialogs.prompt("Value: " +myObject.value);*/
 };
 mdm.Application.title = "eLIFE Admin Tool";
 mdm.Forms.MainForm.title = "eLIFE Admin Tool";
@@ -47,7 +47,7 @@ var left_tree:mx.controls.Tree;
 _global.left_tree = treeSwitcher.getClip1();
 _global.left_tree.vScrollPolicy = _global.right_tree.vScrollPolicy = "auto";
 _global.left_tree.hScrollPolicy = "auto";
-_global.left_tree.setStyle("openDuration", 50);
+//_global.left_tree.setStyle("openDuration", 50);
 left_tree.vScrollPolicy = _global.right_tree.vScrollPolicy = "auto";
 left_tree.hScrollPolicy = "auto";
 left_tree.setStyle("openDuration", 50);
@@ -542,7 +542,7 @@ mdm.Menu.Main.onMenuClick_Help = function() {
 	if (WID.length) {
 		mdm.System.setWindowFocus(parseInt(WID));
 	} else {
-		var currentPath = mdm.FileSystem.getCurrentDir();
+		var currentPath = mdm.Application.path;
 		mdm.Process.create("", 0, 0, 500, 600, "", "hh.exe " + currentPath + "eLIFEAdminTool.chm", currentPath, 3, 4);
 	}
 };
@@ -1069,6 +1069,7 @@ setButtons(false);
 setView("none");
 /****************************************************************/
 _global.right_tree.setStyle("openDuration", 50);
+_global.left_tree.setStyle("openDuration", 50);
 _global.right_tree.setStyle("indentation", 10);
 _global.right_tree.setStyle("defaultLeafIcon", "Icon:error");
 _global.right_tree.setStyle("folderOpenIcon", "Icon:null");
@@ -1154,6 +1155,7 @@ XMLNode.prototype.getSiblings = function(cTree:mx.controls.Tree) {
 _global.right_tree.addEventListener('change', treeListener);
 _global.right_tree.addEventListener('nodeClose', treeListener);
 _global.right_tree.addEventListener('nodeOpen', treeListener);
+_global.left_tree.addEventListener('nodeOpen', treeListener);
 //_global.workflow.buildWorkflowTree();
 /************************************************************************/
 //create the tooltip clip

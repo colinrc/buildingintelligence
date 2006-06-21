@@ -19,17 +19,12 @@
 	</calendar>
 	<logging/>
 	<appsBar>
-		<icon func= "runexe" icon= "keyboard" name= "Keyboard"/>
-		<icon func= "openTV" icon= "tv" name= "TV"/>
-		<icon func= "openBrowser" icon= "atom" name= "Web"/>
 		<icon func= "openLogs" icon= "notepad" name= "Logs"/>
 		<icon func= "openCalendar" icon= "calendar" name= "Calendar"/>
 		<icon canOpen= "superuser" func= "openControlPanel" icon= "gears" name= "Control Panel"/>
 		<icon func= "openAuthentication" icon= "locked" name= "Authenticate"/>
 	</appsBar>
 	<controlPanelApps>
-		<app label= "Internet Explorer" program= "iexplore.exe /k"/>
-		<app label= "Calculator" program= "calc.exe"/>
 	</controlPanelApps>
 	<property/>
 	<controlTypes>

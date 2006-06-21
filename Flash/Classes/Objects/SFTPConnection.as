@@ -60,18 +60,17 @@
 		MyDll.call("none","wodSFTPComLib.wodSFTPCom.About");
 		MyDll.close();*/
 		myActiveX = new mdm.ActiveX(0, 0, 0, 0, "BIwodSFTP.BiSFTP");
-		//myActiveX.setProperty("LicenseKey", "string", "89ZD-98LF-WF2P-G2VA");
-		myActiveX.setProperty("LocalPath", "string", localPath);		
-		myActiveX.setProperty("RemotePath", "string", remotePath);
+		//myActiveX.setProperty("LocalPath", "string", localPath);		
+		//myActiveX.setProperty("RemotePath", "string", remotePath);
 	}
 	public function setLocalPath(inLocalPath:String) {
 		localPath = inLocalPath;
-		myActiveX.setProperty("LocalPath", "string", inLocalPath);
+		//myActiveX.setProperty("LocalPath", "string", inLocalPath);
 	}
 	public function setRemotePath(inRemotePath:String) {
 		if (lastCode != "0") {
 			remotePath = inRemotePath;
-			myActiveX.setProperty("RemotePath", "string", remotePath);
+			//myActiveX.setProperty("RemotePath", "string", remotePath);
 		} else {
 			appendOutput("Error: No Connection Present");
 		}
@@ -108,13 +107,15 @@
 		return localList;
 	}
 	public function connect(user:String, port:Number, hostname:String, password:String):Void {
-		myActiveX.setProperty("Hostname", "string", hostname);
-		myActiveX.setProperty("Port", "integer", port);
+		//myActiveX.setProperty("Hostname", "string", hostname);
+		//myActiveX.setProperty("Port", "integer", port);
 		myActiveX.setProperty("Blocking", "integer", 1);
 		myActiveX.setProperty("Timeout", "integer", 0);
 		myActiveX.setProperty("Login", "string", user);
 		myActiveX.setProperty("Password", "string", password);
-		myActiveX.runMethod("Connect", 0);
+		myActiveX.addMethodParam(1, "string", hostname);
+		myActiveX.addMethodParam(2, "string", port);
+		myActiveX.runMethod("Connect", 2);
 		var lastError = myActiveX.getProperty("LastError");
 		if (lastError != "0") {
 			appendOutput(processError(lastError));
