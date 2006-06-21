@@ -7,7 +7,6 @@ package Aladdin;
  */
 
 
-import java.nio.*;
 
 public class Hasp {
   /**

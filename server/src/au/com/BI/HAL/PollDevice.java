@@ -24,7 +24,6 @@ public class PollDevice extends Thread {
 	protected CommDevice comms;
 	protected long pollValue;
 	protected ConfigHelper configHelper;
-	protected Collection inputs;
 	protected List commandQueue;
 	protected char ETX;
 	protected int unresponsiveCounter = 0;
@@ -33,12 +32,11 @@ public class PollDevice extends Thread {
 	public boolean pausing = false;
 	protected int waitExtra = 0;
 	protected int deviceNumber = -1;
-	protected HashMap halState = null;
+	protected HashMap <String,StateOfZone>halState = null;
 	
 	public PollDevice() {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		inputs = null;
 		this.setName("HAL poll handler");
 	}
 	
@@ -164,7 +162,7 @@ public class PollDevice extends Thread {
 			
 									comms.addCommandToQueue (stateCommsCommand);
 									synchronized (halState){
-										StateOfZone zoneState = 	(StateOfZone)halState.get (device.getKey());
+										StateOfZone zoneState = 	halState.get (device.getKey());
 										if (zoneState == null) zoneState = new StateOfZone();
 										zoneState.setIgnoreNextPower(false);
 										halState.put (device.getKey(),zoneState);
@@ -225,19 +223,7 @@ public class PollDevice extends Thread {
 	public void setETX(char etx) {
 		this.ETX=etx;
 	}
-	/**
-	 * @return Returns the inputs.
-	 */
-	public Collection getInputs() {
-		return inputs;
-	}
-	/**
-	 * @param inputs The inputs to set.
-	 */
-	public void setInputs(HashMap inputMap) {
-		inputs = Collections.synchronizedSet(inputMap.keySet());
 
-	}
     /**
      * @return Returns the firstRun.
      */
@@ -272,12 +258,12 @@ public class PollDevice extends Thread {
 	}
 
 
-	public HashMap getHalState() {
+	public HashMap <String,StateOfZone>getHalState() {
 		return halState;
 	}
 
 
-	public void setHalState(HashMap state) {
+	public void setHalState(HashMap <String,StateOfZone>state) {
 		this.halState = state;
 	}
 }

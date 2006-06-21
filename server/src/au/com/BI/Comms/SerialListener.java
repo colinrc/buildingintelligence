@@ -13,7 +13,6 @@ import java.io.*;
 import java.util.List;
 import java.util.logging.*;
 
-import javax.management.RuntimeErrorException;
 
 /**
  * @author Colin Canfield

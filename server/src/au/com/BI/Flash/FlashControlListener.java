@@ -34,7 +34,7 @@ public class FlashControlListener extends Thread {
     protected ServerSocket iPPort = null;
     protected AddressBook addressBook = null;
     
-    protected LinkedList flashControllers = null;
+    protected LinkedList <FlashClientHandler>flashControllers = null;
     protected int portNumber;
     protected String Address = null;
     protected InetAddress iPAddress = null;
@@ -52,7 +52,7 @@ public class FlashControlListener extends Thread {
     protected long serverID = 0;
     protected XMLOutputter xmlOut = null;
     
-    public FlashControlListener(LinkedList flashControllers, int portNumber, String Address,List commandList,
+    public FlashControlListener(LinkedList <FlashClientHandler>flashControllers, int portNumber, String Address,List commandList,
 	    VersionManager versionManager,Security security,AddressBook addressBook)
 	    throws CommsFail {
 	heartbeatDoc = new Document(new Element("heartbeat"));
@@ -290,47 +290,37 @@ public class FlashControlListener extends Thread {
     
     
     public void sendToOneClient(Document xmlDoc, long originatingID){
-	synchronized (flashControllers) {
-	    Iterator clients = flashControllers.iterator();
-	    while (clients.hasNext()){
-		FlashClientHandler client = (FlashClientHandler)clients.next();
-		if (client.getID() == originatingID) sendXML(client,xmlDoc);
-	    }
-	}
+    	synchronized (flashControllers) {
+			for (FlashClientHandler client: flashControllers) {
+				if (client.getID() == originatingID) sendXML(client,xmlDoc);
+		    }
+    	}
     }
     
     public void sendToOneClient(Element xmlDoc, long originatingID){
 	synchronized (flashControllers) {
-	    Iterator clients = flashControllers.iterator();
-	    while (clients.hasNext()){
-		FlashClientHandler client = (FlashClientHandler)clients.next();
-		if (client.getID() == originatingID) sendXML(client,xmlDoc);
+		for (FlashClientHandler client: flashControllers) {
+			if (client.getID() == originatingID) sendXML(client,xmlDoc);
 	    }
 	}
     }
     
     public void sendToAllClients(Document xmlDoc, long originatingID){
-	Iterator clients = flashControllers.iterator();
-	while (clients.hasNext()){
-	    FlashClientHandler client = (FlashClientHandler)clients.next();
-	    if (client.getID() != originatingID) sendXML(client,xmlDoc);
-	}
+		for (FlashClientHandler client: flashControllers) {
+			if (client.getID() != originatingID) sendXML(client,xmlDoc);
+		}
     }
     
     public void sendToAllClients(String xmlDoc, long originatingID){
-	Iterator clients = flashControllers.iterator();
-	while (clients.hasNext()){
-	    FlashClientHandler client = (FlashClientHandler)clients.next();
-	    if (client.getID() != originatingID) sendXML(client,xmlDoc);
-	}
+		for (FlashClientHandler client: flashControllers) {
+			if (client.getID() != originatingID) sendXML(client,xmlDoc);
+		}
     }
        
     public void sendToAllClients(Element xmlDoc, long originatingID){
-	Iterator clients = flashControllers.iterator();
-	while (clients.hasNext()){
-	    FlashClientHandler client = (FlashClientHandler)clients.next();
-	    if (client.getID() != originatingID) sendXML(client,xmlDoc);
-	}
+		for (FlashClientHandler client: flashControllers) {
+		    if (client.getID() != originatingID) sendXML(client,xmlDoc);
+		}
     }
 	   
     public boolean sendXML(FlashClientHandler client, Element xmlDoc) {

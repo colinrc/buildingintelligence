@@ -12,10 +12,8 @@ package au.com.BI.Jetty;
 import java.util.logging.*;
 import java.util.*;
 import au.com.BI.Command.*;
-import java.io.*;
 import org.jdom.Element;
 import org.jdom.IllegalAddException;
-import org.jdom.output.XMLOutputter;
 
 /**
  *

@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import au.com.BI.User.*;
 import au.com.BI.JRobin.JRobinData;
 import org.jdom.*;
-import java.util.logging.*;
 
 /**
  * @author Colin Canfield

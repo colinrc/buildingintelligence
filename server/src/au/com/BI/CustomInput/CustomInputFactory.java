@@ -1,13 +1,10 @@
 package au.com.BI.CustomInput;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
 
-import au.com.BI.AV.AVFactory;
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;

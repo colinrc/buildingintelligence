@@ -1,6 +1,5 @@
 package au.com.BI.M1;
 
-import junitx.framework.*;
 import junit.framework.TestCase;
 
 public class TestM1Helper extends TestCase {

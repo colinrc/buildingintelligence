@@ -1,6 +1,5 @@
 package au.com.BI.Util;
-import java.util.*;
-import java.util.logging.Level;
+
 
 public class Utility {
 	public static String parseString (String str){

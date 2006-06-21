@@ -21,7 +21,7 @@ import au.com.BI.Config.ConfigHelper;
  */
 public class PollDevice extends Thread {
 	protected Logger logger;
-	protected List audioDeviceQueue;
+	protected List <Audio>audioDeviceQueue;
 	protected boolean running;
 	protected CommDevice comms;
 	protected long pollValue;
@@ -47,7 +47,7 @@ public class PollDevice extends Thread {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		tutondoHelper = new TutondoHelper();
-		audioDeviceQueue = Collections.synchronizedList(new LinkedList());
+		audioDeviceQueue = Collections.synchronizedList(new LinkedList<Audio>());
 		this.setName("Tutondo poll handler");
 	}
 	

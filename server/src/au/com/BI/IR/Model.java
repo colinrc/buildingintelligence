@@ -14,7 +14,6 @@ import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
 
-import java.util.List;
 import java.util.regex.*;
 import java.util.logging.*;
 import java.io.File;

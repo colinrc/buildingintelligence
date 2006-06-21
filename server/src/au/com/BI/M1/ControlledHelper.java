@@ -7,10 +7,8 @@ import java.util.logging.Logger;
 
 import au.com.BI.AlarmLogging.AlarmLogging;
 import au.com.BI.Alert.AlertCommand;
-import au.com.BI.Comfort.DoActionHelper;
 import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
-import au.com.BI.Comms.CommDevice;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.M1.Model;
@@ -37,9 +35,7 @@ import au.com.BI.M1.Commands.RequestTemperatureReply;
 import au.com.BI.M1.Commands.ZoneChangeUpdate;
 import au.com.BI.M1.Commands.ZoneStatus;
 import au.com.BI.Sensors.SensorFascade;
-import au.com.BI.ToggleSwitch.ToggleSwitch;
 import au.com.BI.Util.BaseDevice;
-import au.com.BI.Util.DeviceType;
 import au.com.BI.Util.Utility;
 
 public class ControlledHelper {

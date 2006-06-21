@@ -24,7 +24,7 @@ public class ScriptFileHandler {
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
         }
 
-        public void loadScripts(Model myScriptModel, String dir, Map scriptRunBlockList) {
+        public Map loadScripts(String dir, Map scriptRunBlockList) {
 
                 Integer fileNum;
                 fileNum = new Integer(0);
@@ -35,9 +35,7 @@ public class ScriptFileHandler {
 
                 logger.log(Level.FINE, "Script files loaded ");
 
-                myScriptModel.setScriptFiles(myFiles);
-                myScriptModel.setNumberOfScripts(myFiles.size());
-
+                return myFiles;
         }
 
         public ArrayList fileRead(String myFile) { //throws ConfigError {

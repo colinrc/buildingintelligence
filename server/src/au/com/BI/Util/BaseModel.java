@@ -23,7 +23,6 @@ import java.util.logging.*;
 
 import au.com.BI.Macro.MacroHandler;
 import au.com.BI.Config.Bootstrap;
-import au.com.BI.AV.AVCommand;
 import au.com.BI.AlarmLogging.*;
 import au.com.BI.Messaging.*;
 import au.com.BI.Config.ParameterBlock;

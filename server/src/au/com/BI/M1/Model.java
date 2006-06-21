@@ -8,29 +8,18 @@ package au.com.BI.M1;
  *
 */
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import au.com.BI.Alert.AlertCommand;
 import au.com.BI.M1.ControlledHelper;
-import au.com.BI.CBUS.PollTemperatures;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.M1.Commands.ArmingStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputOff;
 import au.com.BI.M1.Commands.ControlOutputOn;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
-import au.com.BI.M1.Commands.M1Command;
-import au.com.BI.M1.Commands.M1CommandFactory;
-import au.com.BI.M1.Commands.OutputChangeUpdate;
-import au.com.BI.M1.Commands.ZoneChangeUpdate;
 import au.com.BI.Sensors.SensorFascade;
-import au.com.BI.ToggleSwitch.ToggleSwitch;
 import au.com.BI.Util.BaseModel;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;

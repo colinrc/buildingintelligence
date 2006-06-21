@@ -11,6 +11,7 @@ package au.com.BI.Servlets;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+
 /**
  *
  * @author colinc
@@ -23,8 +24,9 @@ public class Logout extends HttpServlet {
     
     public void doGet (HttpServletRequest req,
            HttpServletResponse resp) throws ServletException,java.io.IOException {
+    	
+        HttpSession session = req.getSession(false);  	
         
-        HttpSession session = req.getSession(false);
         if (session != null){
         	session.invalidate();
         }
@@ -39,7 +41,7 @@ public class Logout extends HttpServlet {
         out.println("</BODY>");
         out.println("</HTML>");
         resp.flushBuffer();
-        resp.setStatus(resp.SC_OK);
+        resp.setStatus(HttpServletResponse.SC_OK);
     }
         
     

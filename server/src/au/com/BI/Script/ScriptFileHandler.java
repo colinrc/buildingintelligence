@@ -24,12 +24,12 @@ public class ScriptFileHandler {
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
         }
 
-        public void loadScripts(au.com.BI.Script.Model myScriptModel, String dir, Map scriptRunBlockList) {
+        public void loadScripts(au.com.BI.Script.Model myScriptModel, String dir, Map <String,ScriptRunBlock>scriptRunBlockList) {
 
                 Integer fileNum;
                 fileNum = new Integer(0);
                 int i = 0;
-                Map myFiles = Collections.synchronizedMap(new LinkedHashMap(30));
+                Map <String,ArrayList>myFiles = Collections.synchronizedMap(new LinkedHashMap<String,ArrayList>(30));
 
                 myFiles = loadScriptList(dir,scriptRunBlockList);
 
@@ -41,13 +41,13 @@ public class ScriptFileHandler {
         }
 
         public ArrayList fileRead(String myFile) { //throws ConfigError {
-                ArrayList scriptList;
+                ArrayList <String>scriptList;
                 String record = null;
                 int recCount = 0;
                 try {
                         FileReader fr = new FileReader(myFile);
                         BufferedReader br = new BufferedReader(fr);
-                        scriptList = new ArrayList();
+                        scriptList = new ArrayList<String>();
                         record = new String();
 
                         while ( (record = br.readLine()) != null) {
@@ -91,12 +91,12 @@ public class ScriptFileHandler {
                 return false;
         }
 
-        public HashMap loadScriptList(String directoryName, Map scriptRunBlockList) { //throws ConfigError {
+        public Map <String,ArrayList> loadScriptList(String directoryName, Map <String,ScriptRunBlock>scriptRunBlockList) { //throws ConfigError {
                 //try {
 
                 ArrayList linesOfFile;
-                HashMap files;
-                files = new HashMap();
+                HashMap <String,ArrayList> files;
+                files = new HashMap<String,ArrayList>();
                 FilenameFilter filter = new FilenameFilter() {
                         public boolean accept(File dir, String name) {
                                 return name.endsWith(".py");

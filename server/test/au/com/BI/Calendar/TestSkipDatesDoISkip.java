@@ -1,7 +1,6 @@
 package au.com.BI.Calendar;
 
 import junit.framework.TestCase;
-import junitx.framework.*;
 import java.util.*;
 
 public class TestSkipDatesDoISkip extends TestCase {

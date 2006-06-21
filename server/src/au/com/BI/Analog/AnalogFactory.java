@@ -6,8 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
-
-import au.com.BI.Alert.AlertFactory;
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;

@@ -7,7 +7,6 @@ package au.com.BI.GroovyScripts;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
-import au.com.BI.Config.*;
 
 import java.util.*;
 import java.util.logging.*;
@@ -32,26 +31,23 @@ import java.io.*;
 public class Model  extends BaseModel implements DeviceModel {
 	        public static int numberOfScripts = 0;
 
-	        public static final int numberRepeats = 4;
-	        public static final int MINUTE = 1;
-	        public static final int HOUR = 2;
-	        public static final int DAY = 3;
+
 	        protected boolean control = true;
 	        protected String parameter;
 	        protected Script deviceThatMatched;
 	        protected ScriptHandler scriptHandler;
 	        protected ScriptFileHandler scriptFileHandler;
 	        protected Controller mainController;
-			protected Map scriptRunBlockList = null;
+			protected Map <String,ScriptRunBlock>scriptRunBlockList = null;
 			protected String statusFileName = "." + File.separator + "datafiles" + File.separator + "script_status.xml";
 
 	        protected Map scriptFiles;
 
 	        public Model() {
 	                super();
-	                this.setName("SCRIPT");
+	                this.setName("GROOVY_SCRIPT");
 	                scriptFileHandler = new ScriptFileHandler();
-	                scriptRunBlockList = Collections.synchronizedMap(new LinkedHashMap (30)); // 30 scripts to start with
+	                scriptRunBlockList = Collections.synchronizedMap(new LinkedHashMap <String,ScriptRunBlock> (30)); // 30 scripts to start with
 	                this.setAutoReconnect(false);
 	                try {
 	                        jbInit();
@@ -344,7 +340,7 @@ public class Model  extends BaseModel implements DeviceModel {
 	                scripts = new ArrayList();
 
 					//get the script files and prepare for parsing
-	                scriptFileHandler.loadScripts(this, "./scripts/",this.scriptRunBlockList);
+	                setScriptFiles(scriptFileHandler.loadScripts( "./scripts/",this.scriptRunBlockList));
 
 	                //loadScripts();
 	                files = getScriptFiles();
@@ -1062,7 +1058,7 @@ public class Model  extends BaseModel implements DeviceModel {
 	        public void sendMessage(String title, String icon, String message, String autoClose, String hideClose) {
 	                ClientCommand sendMessage;
 	                sendMessage = new ClientCommand();
-	                sendMessage.setMessageType(sendMessage.Message);
+	                sendMessage.setMessageType(CommandInterface.Message);
 	                sendMessage.setTitle(title);
 	                sendMessage.setIcon(icon);
 	                sendMessage.setContent(message);
@@ -1077,7 +1073,7 @@ public class Model  extends BaseModel implements DeviceModel {
 	        public void video(String key, String command, String extra) {
 	                ClientCommand video;
 	                video = new ClientCommand();
-	                video.setMessageType(video.Video);
+	                video.setMessageType(CommandInterface.Video);
 	                video.setCommand(command);
 	                video.setExtraInfo(extra);
 	                video.setDisplayName(key);
@@ -1312,6 +1308,7 @@ public class Model  extends BaseModel implements DeviceModel {
 
 	        public void setScriptFiles(Map myScriptFiles) {
 	                this.scriptFiles = myScriptFiles;
+	                setNumberOfScripts(myScriptFiles.size());
 	        }
 
 	        public Map getScriptFiles() {

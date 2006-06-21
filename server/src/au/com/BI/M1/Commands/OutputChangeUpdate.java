@@ -1,6 +1,5 @@
 package au.com.BI.M1.Commands;
 
-import au.com.BI.Util.Utility;
 
 public class OutputChangeUpdate extends M1Command {
 

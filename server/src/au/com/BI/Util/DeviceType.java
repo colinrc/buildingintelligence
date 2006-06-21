@@ -59,6 +59,7 @@ public interface DeviceType
 	
 	public static final int NUVO_SWITCH = 44;
 	public static final int SIGN_VIDEO_SWITCH = 45;
+	public static final int GROOVY_SCRIPT = 46;
 
 	// Alert types
 	public static final int ALARM_SYSTEM=1;
@@ -72,6 +73,8 @@ public interface DeviceType
 	public static final int ALERT_DOORBELL=11;
 	public static final int ALERT_MODE_CHANGE=12;
 	public static final int ALERT_SYSTEM_ERROR=100;	
+	
+
 
 	
 	// Likely number of raw commands for device line. More is allowed.

@@ -9,6 +9,7 @@ import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.SessionManager;
 import org.mortbay.jetty.handler.ContextHandler;
 import org.mortbay.jetty.servlet.SessionHandler;
 
@@ -24,7 +25,6 @@ import org.mortbay.jetty.security.SslSocketConnector;
 //import org.mortbay.jetty.handler.*;
 import java.util.List;
 import java.util.logging.*;
-import org.mortbay.jetty.security.SslSocketConnector;
 
 
 public class JettyHandler extends BaseModel implements DeviceModel, ClientModel {
@@ -33,6 +33,7 @@ public class JettyHandler extends BaseModel implements DeviceModel, ClientModel 
     org.mortbay.jetty.Server server = null,client_server = null;
     Logger logger;
     Security security = null;
+    public static final int timeout = 60; // 1 minute timeout for a session;
     
     public JettyHandler(Security security) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -114,14 +115,17 @@ public class JettyHandler extends BaseModel implements DeviceModel, ClientModel 
             updateContextHandler.setContextPath("/webclient");
             updateContextHandler.setResourceBase("www");
             updateContextHandler.setConnectors(new String[]{"SSL_CONNECT"});
+            
 
             ServletHandler updateHandler = new ServletHandler ();   
-            
+
             ServletHolder updateServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.UpdateServlet","/update");
             ServletHolder logoutServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.Logout","/logout");
             
             SessionHandler sessionHandler = new SessionHandler();
             sessionHandler.setHandler(updateHandler);
+           SessionManager sessionManager =  sessionHandler.getSessionManager();
+           sessionManager.setMaxInactiveInterval(timeout); 
             
             updateContextHandler.setHandler(sessionHandler);
             updateContextHandler.setAttribute("CacheBridgeFactory",cacheBridgeFactory);
@@ -130,7 +134,11 @@ public class JettyHandler extends BaseModel implements DeviceModel, ClientModel 
             updateContextHandler.setAttribute("Security",security);
             updateContextHandler.setAttribute("ServerID",new Long (this.getServerID()));
             updateContextHandler.setAttribute("VersionManager",this.getVersionManager());
- 
+            updateContextHandler.setAttribute("WebClientCount",new Integer(0));
+            
+            sessionManager.addEventListener(new SessionCounter());
+
+
             SecurityHandler servletSec = null;
             
             if (bootstrap.isRequestUserNames()) {

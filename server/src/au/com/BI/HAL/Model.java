@@ -21,7 +21,7 @@ import au.com.BI.Audio.*;
 public class Model extends BaseModel implements DeviceModel {
 
 	protected String outputAudioCommand = "";
-	protected HashMap state;
+	protected HashMap <String,StateOfZone>state;
 	protected char ETX = '\r';
 	protected String intercom;
 	protected HashMap <String,String>HALMessages;
@@ -31,7 +31,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public Model() {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		state = new HashMap(64);
+		state = new HashMap<String,StateOfZone>(64);
 		intercom = "off";
 		loadHALMessages();
 		configHelper.addParameterBlock ("INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Source inputs");

@@ -5,7 +5,6 @@ package au.com.BI.Comms;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.LinkedList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;

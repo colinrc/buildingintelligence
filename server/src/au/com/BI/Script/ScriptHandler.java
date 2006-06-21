@@ -50,7 +50,7 @@ public class ScriptHandler {
 
 	public static final int maxRepeats = 4;
 
-	protected List timerListMinute, timerListHour, timerListDay;
+	protected List <String>timerListMinute, timerListHour, timerListDay;
 
 	public static final int MINUTE_INTERVAL = 60000;
 
@@ -73,9 +73,9 @@ public class ScriptHandler {
 		this.scriptModel = scriptModel;
 		scripts = scriptModel.getScriptFiles();
 
-		timerListMinute = new ArrayList();
-		timerListHour = new ArrayList();
-		timerListDay = new ArrayList();
+		timerListMinute = new ArrayList<String>();
+		timerListHour = new ArrayList<String>();
+		timerListDay = new ArrayList<String>();
 	}
 
 	public boolean finishedRunning(String scriptName) {

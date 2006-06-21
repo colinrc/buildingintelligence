@@ -15,7 +15,7 @@ public class CalendarEventEntry {
 	protected String alarm = "";
 	protected String target = "";
 	protected String target_user = "";
-	int eventType  = this.SINGLE_EVENT;
+	int eventType  = CalendarEventEntry.SINGLE_EVENT;
 
 	public CalendarEventEntry () {
 	}

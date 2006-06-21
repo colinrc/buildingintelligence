@@ -6,7 +6,6 @@ package au.com.BI.Flash;
 
 import java.util.logging.*;
 import java.util.regex.*;
-import org.jdom.*;
 
 public class BroadcastFormatter extends Formatter {
     

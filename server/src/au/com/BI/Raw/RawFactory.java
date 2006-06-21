@@ -2,13 +2,11 @@ package au.com.BI.Raw;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
-import au.com.BI.PulseOutput.PulseOutputFactory;
 import au.com.BI.ToggleSwitch.ToggleSwitch;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;

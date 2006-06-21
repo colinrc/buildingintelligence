@@ -1,7 +1,6 @@
 package au.com.BI.SignVideo;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 import au.com.BI.Comms.CommsCommand;
 import au.com.BI.AV.*;

@@ -1,17 +1,14 @@
 package au.com.BI.Audio;
 
-import java.util.Iterator;
+
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
 
-import au.com.BI.Analog.AnalogFactory;
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
-import au.com.BI.Util.Utility;
 
 public class AudioFactory {
 	Logger logger;

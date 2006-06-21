@@ -1144,7 +1144,7 @@ public class Model
         public void sendMessage(String title, String icon, String message, String autoClose, String hideClose) {
                 ClientCommand sendMessage;
                 sendMessage = new ClientCommand();
-                sendMessage.setMessageType(sendMessage.Message);
+                sendMessage.setMessageType(CommandInterface.Message);
                 sendMessage.setTitle(title);
                 sendMessage.setIcon(icon);
                 sendMessage.setContent(message);
@@ -1159,7 +1159,7 @@ public class Model
         public void video(String key, String command, String extra) {
                 ClientCommand video;
                 video = new ClientCommand();
-                video.setMessageType(video.Video);
+                video.setMessageType(ClientCommand.Video);
                 video.setCommand(command);
                 video.setExtraInfo(extra);
                 video.setDisplayName(key);

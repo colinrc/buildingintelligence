@@ -10,10 +10,9 @@
 package au.com.BI.Servlets;
 import javax.servlet.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,6 @@ import au.com.BI.Command.UnknownCommandException;
 import au.com.BI.Config.Security;
 import au.com.BI.Config.TooManyClientsException;
 import au.com.BI.Flash.ClientCommand;
-import au.com.BI.Flash.FlashClientHandler;
 import au.com.BI.Home.VersionManager;
 import au.com.BI.Jetty.*;
 
@@ -72,6 +70,7 @@ public class UpdateServlet extends HttpServlet {
         try {
 	        if (params != null && (session == null || params.containsKey("INIT"))) {
 	            session = req.getSession(true);
+	            
 	            setupSession(session);
 	            ID = (Long)session.getAttribute("ID");
 	            serverID = (Long)session.getAttribute("ServerID");
@@ -88,27 +87,37 @@ public class UpdateServlet extends HttpServlet {
 	
 	        java.io.PrintWriter out = resp.getWriter();
 	        Element respElement = cacheBridge.getCommands(extraStuffForStartup);
+
 	        xmlOut.output(respElement, out);
 	        resp.flushBuffer();
 	        resp.setStatus(HttpServletResponse.SC_OK);
         } catch (TooManyClientsException ex){
-    		session.invalidate();
+        	Date currentTime = new Date();
+        	
+
 			logger.log(Level.WARNING, "Too many clients error " + ex.getMessage());
-			resp.setContentType("text/html");
+			resp.setContentType("text/xml");
 	        
-	        java.io.PrintWriter out = resp.getWriter();
+	        PrintWriter out = resp.getWriter();
 	                
-	        out.println("<HTML>");
-	        out.println("<BODY>");
-	        out.println(ex.getMessage());
-	        out.println("</BODY>");
-	        out.println("</HTML>");
+	        Element wrapper = new Element ("a");
+	    	Element conElement = new Element("MESSAGE");
+	    	conElement.setAttribute("TITLE", "Security");
+	    	conElement.setAttribute("ICON", "warning");
+	    	conElement.setAttribute("AUTOCLOSE", "45");
+	    	conElement.setAttribute("HIDECLOSE", "TRUE");
+	    	conElement.setAttribute("TARGET", AddressBook.ALL);
+	    	
+	    	conElement.setAttribute("CONTENT", ex.getMessage());
+	    	wrapper.addContent(conElement);
+	        xmlOut.output(wrapper, out);
+	    	
 	        resp.flushBuffer();
-	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    		session.invalidate();
         }
         
     }
-
     
     public void doPost(HttpServletRequest req,
             HttpServletResponse resp) throws ServletException,java.io.IOException {
@@ -151,9 +160,10 @@ public class UpdateServlet extends HttpServlet {
 			xmlDoc = saxb.build(new StringReader(message));
 
 			Element rootElement = xmlDoc.getRootElement();
-			
-			ClientCommand  command = clientCommandFactory.processXML(rootElement);
-
+			ClientCommand  command = null;
+			if (rootElement != null){
+				 command = clientCommandFactory.processXML(rootElement);
+			}
 	    	if (command != null){
 		    	if (ID == null  ){
 		    		logger.log(Level.WARNING,"ID was null");
@@ -231,14 +241,11 @@ public class UpdateServlet extends HttpServlet {
     	Long serverID = (Long)context.getAttribute("ServerID");
     	session.setAttribute("ServerID",serverID);
     	
-    	Integer number = (Integer)context.getAttribute("NUMBER_WEB_CLIENTS");
-    	if (number == null) number = new Integer(0);
-    	synchronized (number){
-	    	security.allowWebClient(number);
-	    	number++;
-	    	context.setAttribute("NUMBER_WEB_CLIENTS",number);
+		SessionCounter sessionCounter = (SessionCounter)context.getAttribute("sessionCounter");
+    	int numberClients = sessionCounter.getCurrentSessionCount();
+    	if (!security.allowWebClient(numberClients)){
+    		throw new TooManyClientsException ("You have requested more clients than you have licenses for, please contact your integrator");
     	}
-    	
         AddressBook addressBook = (AddressBook)context.getAttribute("AddressBook");
         
     	ClientCommandFactory clientCommandFactory = new ClientCommandFactory();
