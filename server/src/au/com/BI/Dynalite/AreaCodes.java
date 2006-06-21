@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.logging.*;
 
 public class AreaCodes {
-	protected HashMap areaCodes = null;
+	protected HashMap <String,LinkedList <DynaliteDevice>> areaCodes = null;
 	public final static int AreaCommand = 0;
 	Logger logger = null;
 	ConfigHelper configHelper = null;
 	DynaliteHelper dynaliteHelper = null;
 	
 	public AreaCodes () {
-		areaCodes = new HashMap(10);
+		areaCodes = new HashMap<String,LinkedList <DynaliteDevice>>(10);
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
@@ -76,11 +76,11 @@ public class AreaCodes {
 	}
 
 	void add (String areaCode, DynaliteDevice device){
-		LinkedList keys;
+		LinkedList <DynaliteDevice>keys;
 		if (areaCodes.containsKey(areaCode)){
-			keys = (LinkedList)areaCodes.get(areaCode);
+			keys =areaCodes.get(areaCode);
 		}else {
-			keys = new LinkedList();
+			keys = new LinkedList<DynaliteDevice>();
 		}
 		synchronized (device){
 			device.incLinkCount();
@@ -92,11 +92,11 @@ public class AreaCodes {
 	}
 	
 	void remove (String areaCode, DynaliteDevice device){
-		LinkedList keys;
+		LinkedList<DynaliteDevice> keys;
 		if (!areaCodes.containsKey(areaCode)){
 			return;
 		}
-		keys = (LinkedList)areaCodes.get(areaCode);
+		keys = areaCodes.get(areaCode);
 		synchronized (device){
 			device.decLinkCount();
 		}
@@ -112,12 +112,10 @@ public class AreaCodes {
 		return findDevicesInArea (area,includeAreaControl,join);
 	}
 
-	List findDevicesInArea (String area, boolean includeAreaControl,int join) {
-		LinkedList resultList = new LinkedList();
-		LinkedList deviceList = (LinkedList)(areaCodes.get(area));
-		Iterator eachLight = deviceList.iterator();
-		while (eachLight.hasNext()){
-			DynaliteDevice nextItem = (DynaliteDevice)eachLight.next();
+	List <DynaliteDevice> findDevicesInArea (String area, boolean includeAreaControl,int join) {
+		LinkedList <DynaliteDevice>resultList = new LinkedList<DynaliteDevice>();
+		for (DynaliteDevice nextItem : areaCodes.get(area)) {
+
 			if (!includeAreaControl && nextItem.isAreaDevice()) continue;
 			resultList.add(nextItem);
 			
@@ -125,15 +123,11 @@ public class AreaCodes {
 		return resultList;
 	}
 	
-	List findAllAreas () {
-		LinkedList allAreas = new LinkedList();
-		Iterator eachArea = areaCodes.keySet().iterator();
-		while (eachArea.hasNext()){
-			String nextArea = (String)eachArea.next();
-			LinkedList deviceList = (LinkedList)(areaCodes.get(nextArea));
-			Iterator eachLight = deviceList.iterator();
-			while (eachLight.hasNext()){
-				DynaliteDevice nextItem = (DynaliteDevice)eachLight.next();
+	List <DynaliteDevice>findAllAreas () {
+		LinkedList <DynaliteDevice>allAreas = new LinkedList<DynaliteDevice>();
+		for (String nextArea:areaCodes.keySet()){
+			LinkedList <DynaliteDevice>deviceList = areaCodes.get(nextArea);
+			for (DynaliteDevice nextItem: areaCodes.get(nextArea)){
 				if (nextItem.isAreaDevice()) {
 					allAreas.add (nextItem);
 				}
@@ -142,18 +136,17 @@ public class AreaCodes {
 		return allAreas;
 	}
 	
-	List getAllEquivalentDevices (DynaliteDevice device) {
+	List <DynaliteDevice> getAllEquivalentDevices (DynaliteDevice device) {
 		
 		if (device.isLinked()){
-			List result = new LinkedList();
-			Iterator eachArea = this.areaCodes.keySet().iterator();
-			while (eachArea.hasNext()){
-				String nextAreaCode = (String)eachArea.next();
+			List<DynaliteDevice>  result = new LinkedList<DynaliteDevice> ();
+			
+			for (String nextAreaCode:areaCodes.keySet()){
 				try {
 					if (!nextAreaCode.equals(device.getAreaCode())){
-						List devsInArea = (List)areaCodes.get(nextAreaCode);
+						List <DynaliteDevice>devsInArea = areaCodes.get(nextAreaCode);
 						if (devsInArea.contains(device)){
-							DeviceType linkedDevice = (DeviceType)configHelper.getControlledItem(dynaliteHelper.buildKey('L',nextAreaCode,device.getKey()));	
+							DynaliteDevice linkedDevice = (DynaliteDevice)configHelper.getControlledItem(dynaliteHelper.buildKey('L',nextAreaCode,device.getKey()));	
 							if (linkedDevice != null) {
 								result.add (linkedDevice);
 							}
