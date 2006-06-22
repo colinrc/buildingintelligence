@@ -224,13 +224,13 @@ createToolbar = function () {
 	var toolbar_mc = this.createEmptyMovieClip("toolbar_mc", 30);
 	toolbar_mc._x = toolbar_mc._y = 10;
 	
-	var items = [{type:"Button", label:"button", width:80, xml:'<item type="button" label="button" command="" extra="" />'}, {type:"Button", label:"toggle", width:80, xml:'<item type="button" label="toggle" command="" extra="" />'}];
+	var items = [{label:"button", xml:'<item type="button" label="button" />'}, {label:"toggle", xml:'<item type="toggle" label="toggle" />'}, {label:"slider", xml:'<item type="slider" />'}];
 	var xPos = 0;
 	for (var i=0; i<items.length; i++) {
-		var item_mc = toolbar_mc.attachMovie("bi.ui." + items[i].type, "item" + i + "_mc", toolbar_mc.getNextHighestDepth(), {_x:xPos, width:items[i].width, height:30, label:items[i].label, xml:new XML(items[i].xml).firstChild});
-		item_mc.formName = items[i].type.toLowerCase() + "Form";
-		
-		xPos += items[i].width + 8;
+		var item_mc = toolbar_mc.attachMovie("bi.ui.Button", "item" + i + "_mc", toolbar_mc.getNextHighestDepth(), {_x:xPos, width:80, height:30, label:items[i].label, xml:new XML(items[i].xml).firstChild});
+		item_mc.formName = items[i].label.toLowerCase() + "Form";
+		trace(item_mc.formName);
+		xPos += 88;
 		item_mc.onPress = function () {			
 			this._alpha = 60;
 			this.startX = this._x;
