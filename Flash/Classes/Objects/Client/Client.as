@@ -123,7 +123,7 @@
 	public function setAttributes(newAttributes:Array){
 		attributes = newAttributes;
 	}
-	public function getKeyGroups():Object{
+	public function getKeyGroups():XMLNode{
 		return keygroups.toXML();
 	}
 	public function getControlTypes():Object{

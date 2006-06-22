@@ -56,7 +56,7 @@
 		return "Doors & Windows";
 	}
 	public function getData():Object {
-		return {doors:doors, dataObject:this, poly:room.poly, map:room.zone.map};
+		return {doors:doors, dataObject:this, poly:room.poly, map:room.zone.map,background:room.zone.background};
 	}
 	public function setXML(newData:XMLNode):Void {
 		doors = new Array();

@@ -10,6 +10,7 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 	private var save_btn:Button;
 	private var roomEditor:MapEditor;
 	private var map:String;
+	private var background:String;
 	private var dataObject:Object;	
 	public function onLoad() {
 		var changeListener:Object = new Object();
@@ -22,6 +23,10 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 			map = "";
 		}
 		roomEditor.map = "lib/maps/"+map;
+		if(background == undefined){
+			background = "";
+		}
+		roomEditor.background = "lib/backgrounds/"+background;
 		if(poly == undefined){
 			poly = "";
 		}

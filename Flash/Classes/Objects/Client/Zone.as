@@ -4,7 +4,7 @@
 	private var arbitrary:Objects.Client.Arbitrary;
 	private var name:String;
 	public var map:String;
-	private var background:String;
+	public var background:String;
 	private var cycle:String;
 	private var alignment:String;
 	private var hideFromList:String;

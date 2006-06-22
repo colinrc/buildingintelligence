@@ -18,7 +18,7 @@ class Controls.TreeSwitcher extends UIComponent {
 		arrange();
 	}
 	private function init():Void {
-		__width = bounds_mc._width;
+		__width = 244;//bounds_mc._width;
 		__height = bounds_mc._height;
 		bounds_mc._visible = false;
 		bounds_mc._width = 0;

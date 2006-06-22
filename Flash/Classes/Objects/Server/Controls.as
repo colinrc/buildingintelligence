@@ -1,10 +1,13 @@
 ﻿class Objects.Server.Controls extends Objects.BaseElement {
 	private var variables:XMLNode;
+	public function Controls(){
+		 variables= new XMLNode(1,"VARIABLES");
+	}
 	var treeNode:XMLNode;			
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		for(var variable in variables.childNodes){
-			tempKeys.push(variables.childNodes[variable].display_name);
+			tempKeys.push(variables.childNodes[variable].attributes.DISPLAY_NAME);
 		}
 		return tempKeys;
 	}

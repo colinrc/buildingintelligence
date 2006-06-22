@@ -85,6 +85,7 @@
 		return "Key Group: " + name;
 	}
 	public function getData():Object {
+		mdm.Dialogs.prompt(controlType);
 		return {keys:keys, icon1:icon1, name:name, icon2:icon2, controlType:controlType, dataObject:this};
 	}
 	public function setData(newData:Object):Void {

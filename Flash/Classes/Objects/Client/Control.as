@@ -125,7 +125,12 @@
 		return "Control : " + type;
 	}
 	public function getData():Object {
-		return {rows:rows, type:type, dataObject:this};
+		var newNode = new XMLNode(1, "control");
+		newNode.attributes["type"] = type;
+		for (var row in rows) {
+			newNode.appendChild(rows[row]);
+		}
+		return {controlTypeData:newNode, type:type, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		rows = new Array();
@@ -135,12 +140,13 @@
 				rows.push(newData.childNodes[child]);
 			}
 		} else {
-			trace("Error, found " + newData.nodeName + ", was expecting control");
+			mdm.Dialogs.prompt("Error, found " + newData.nodeName + ", was expecting control");
 		}
 	}
 	public function setData(newData:Object):Void {
-		type = newData.type;
-		rows = newData.rows;
+		newData.controlTypeData.attributes.type = newData.type;
+		//rows = newData.rows;
+		setXML(newData.controlTypeData);
 	}
 	public function getUsedKeys():Array{
 		usedKeys = new Array();

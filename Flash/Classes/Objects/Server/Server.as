@@ -32,6 +32,7 @@
 			tempKeys = tempKeys.concat(devices[device].getKeys());
 		}
 		tempKeys = tempKeys.concat(controls.getKeys());
+		//mdm.Dialogs.prompt(controls.getKeys());
 		tempKeys = tempKeys.sort();
 		var keys = new Array();
 		var lastKey:String;

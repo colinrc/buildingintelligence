@@ -13,7 +13,22 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 	private var delete_btn:Button;
 	private var dataGridHandler:Object;
 	private var dataObject:Object;
+	private var groups:XMLNode;
 	public function onLoad() {
+		var temp_node = _global.left_tree.selectedNode;
+		var client = null;
+		while ((temp_node != null) && (client == null)) {
+			if (temp_node.nodeName == "Client") {
+				client = temp_node.object;
+				break;
+			} else {
+				temp_node = temp_node.parentNode;
+			}
+		}
+		groups = client.getKeyGroups();
+		for(var index = 0; index<groups.childNodes.length;index++){
+			mdm.Dialogs.prompt(groups.childNodes[index].attributes.name);
+		}
 		icon_ldr.autoLoad = true;
 		icon_ldr.scaleContent = true;
 		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
@@ -61,10 +76,10 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(controls_dg);
+		dataGridHandler.addKeyBoxColumn("key", "Key", DPKey, false, 200);
 		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions, false, 100);
 		dataGridHandler.addIconComboBoxColumn("icon1", "Icon 1", IconDP, false, 150);
 		dataGridHandler.addIconComboBoxColumn("icon2", "Icon 2", IconDP, false, 150);
-		dataGridHandler.addComboBoxColumn("key", "Key", DPKey, false, 200);
 		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl, false, 100);
 		var DP = new Array();
 		for (var control in controls) {

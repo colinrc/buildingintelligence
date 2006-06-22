@@ -7,6 +7,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 	private var poly:String;
 	private var roomEditor:MapEditor;
 	private var map:String;
+	private var background:String;
 	private var save_btn:Button;
 	private var colour1_lb:Label;
 	private var colour2_lb:Label;
@@ -65,6 +66,10 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			DP.push(newDoor);
 		}
 		roomEditor.map = "lib/maps/" + map;
+		if(background == undefined){
+			background = "";
+		}
+		roomEditor.background = "lib/backgrounds/"+background;
 		roomEditor.mapMode = "doors";
 		roomEditor.poly = poly;
 		roomEditor.doors = DP;			
@@ -153,6 +158,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 				break;
 			}
 		}
+		cmbChange();
 		name_ti.text = currentDoor.name;
 		_global.unSaved = true;					
 	}
@@ -162,7 +168,7 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 		currentDoor.colour1 = "0xFFFFFF";
 		currentDoor.colour2 = "0xFFFFFF";
 		currentDoor.thickness = "5";
-		currentDoor.key = "";
+		currentDoor.key = key_cmb.getItemAt(0).label;
 		currentDoor.name = "";
 		colour1_mc.setColour("0xFFFFFF");
 		colour2_mc.setColour("0xFFFFFF");

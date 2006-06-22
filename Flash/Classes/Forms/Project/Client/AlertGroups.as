@@ -9,6 +9,7 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 	private var name_lb:Label;
 	private var name_ti:TextInput;
 	private var map:String;
+	private var background:String;
 	private var save_btn:Button;
 	private var dataObject:Object;
 	
@@ -22,6 +23,10 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 			DP.push(newAlertGroup);
 		}
 		roomEditor.map = "lib/maps/"+map;
+		if(background == undefined){
+			background = "";
+		}
+		roomEditor.background = "lib/backgrounds/"+background;
 		roomEditor.mapMode = "alertGroups";
 		roomEditor.poly = poly;
 		roomEditor.alerts = DP;

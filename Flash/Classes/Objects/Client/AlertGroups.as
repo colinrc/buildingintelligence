@@ -43,7 +43,7 @@
 		return "Alert Groups";
 	}
 	public function getData():Object {
-		return {alertgroups:alertgroups, dataObject:this, map:room.zone.map, poly:room.poly};
+		return {alertgroups:alertgroups, dataObject:this, map:room.zone.map,background:room.zone.background, poly:room.poly};
 	}
 	public function setData(newData:Object) {
 		_global.left_tree.setIsOpen(treeNode, false);

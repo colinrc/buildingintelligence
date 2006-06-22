@@ -89,7 +89,7 @@
 		return "Room : "+name;
 	}
 	public function getData():Object {
-		return {name:name, poly:poly, switchZone:switchZone, map:zone.map, dataObject:this};
+		return {name:name, poly:poly, switchZone:switchZone, map:zone.map, background:zone.background, dataObject:this};
 	}
 	public function setXML(newData:XMLNode):Void {
 		var tempAlertGroups = new XMLNode(1, "AlertGroups");		

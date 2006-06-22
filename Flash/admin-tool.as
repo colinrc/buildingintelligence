@@ -46,7 +46,9 @@ _global.workflow = new Objects.WorkFlow();
 var left_tree:mx.controls.Tree;
 _global.left_tree = treeSwitcher.getClip1();
 _global.left_tree.vScrollPolicy = _global.right_tree.vScrollPolicy = "auto";
-_global.left_tree.hScrollPolicy = "auto";
+_global.left_tree.hScrollPolicy = "on";
+_global.output_panel.hScrollPolicy = "auto";
+treeSwitcher.hScrollPolicy = "auto";
 //_global.left_tree.setStyle("openDuration", 50);
 left_tree.vScrollPolicy = _global.right_tree.vScrollPolicy = "auto";
 left_tree.hScrollPolicy = "auto";
@@ -805,6 +807,7 @@ buttonListener.click = function(eventObj) {
 			while ((temp_node != null) && (found_node_id == null)) {
 				if (temp_node.nodeName == "Client") {
 					found_node_id = temp_node.object.id;
+					break;
 				} else {
 					temp_node = temp_node.parentNode;
 				}
@@ -813,8 +816,8 @@ buttonListener.click = function(eventObj) {
 				var clients = _global.serverDesign.getClients();
 				for (var client in clients) {
 					if (clients[client].id == found_node_id) {
-						mdm.FileSystem.saveFile("client.xml", _global.writeXMLFile(clients[client].toXML(), 0));
-						mdm.Forms.Preview.callFunction("parseClient", '<client><setting name="applicationXML" value="client.xml" /><setting name="libLocation" value="lib/" /><setting name="fullScreen" value="false" /><setting name="hideMouseCursor" value="false" /></client>', "|");
+						mdm.FileSystem.saveFile(mdm.Application.path+"client.xml", _global.writeXMLFile(clients[client].toXML(), 0));
+						mdm.Forms.Preview.callFunction("parseClient", '<client><setting name="applicationXML" value="'+mdm.Application.path+'client.xml" /><setting name="libLocation" value="lib/" /><setting name="fullScreen" value="false" /><setting name="hideMouseCursor" value="false" /></client>', "|");
 						mdm.Forms.Preview.showModal();
 						break;
 					}
@@ -1172,4 +1175,8 @@ function CloseTip() {
 /*************************************************************************/
 _global.left_tree.addEventListener("change", leftTreeListener);
 left_tree.addEventListener("change", leftTreeListener);
+mdm.Forms.Preview.show();
+mdm.Forms.Preview.callFunction("parseClient", '<client><setting name="applicationXML" value="'+mdm.Application.path+'client.xml" /><setting name="libLocation" value="lib/" /><setting name="fullScreen" value="false" /><setting name="hideMouseCursor" value="false" /></client>', "|");
+mdm.Forms.Preview.visible = false;
+//mdm.Forms.Preview.hide();
 stop();
