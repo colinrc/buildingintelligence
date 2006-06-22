@@ -9,8 +9,9 @@ import gnu.io.*;
 
 import java.io.*;
 import java.util.logging.*;
-import java.util.List;
 import java.util.TooManyListenersException;
+
+import au.com.BI.Command.CommandQueue;
 
 
 /**
@@ -76,7 +77,7 @@ public class Serial extends BaseComms implements CommDevice
 	 * @see au.com.BI.Comms.SerialParameters
 	 * @throws au.com.BI.comms.ConnectionFail
 	 */
-	public void connect (String portName, SerialParameters parameters, List commandList, int targetDeviceModel,String deviceName)
+	public void connect (String portName, SerialParameters parameters, CommandQueue commandList, int targetDeviceModel,String deviceName)
 		throws ConnectionFail 
 		{
 		   commsGroup.setModelNumber(targetDeviceModel);

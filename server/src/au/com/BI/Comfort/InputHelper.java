@@ -4,7 +4,6 @@
 package au.com.BI.Comfort;
 
 import java.util.logging.*;
-import java.util.*;
 import au.com.BI.Util.*;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
@@ -26,12 +25,13 @@ public class InputHelper {
 	protected Logger logger;
 	protected String STX;
 	protected String ETX;
+	protected CommandQueue commandQueue = null;
 	
 	public InputHelper() {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
-	public void doInputItem (CommandInterface command, ComfortString comfortString, ConfigHelper configHelper, Cache cache, List commandQueue) throws CommsFail
+	public void doInputItem (CommandInterface command, ComfortString comfortString, ConfigHelper configHelper, Cache cache) throws CommsFail
 	{
 		DeviceType deviceType = (DeviceType)configHelper.getInputItem(comfortString.comfortKey);
 		int commandCode = DeviceType.UKNOWN_EVENT;
@@ -50,7 +50,7 @@ public class InputHelper {
 						toggleSwitchCommand.setCommand ("off");
 						toggleSwitchCommand.setExtraInfo ("0");
 					}					
-					sendToFlash (toggleSwitchCommand, cache,commandQueue);
+					sendToFlash (toggleSwitchCommand, cache);
 					break;
 
 			case DeviceType.ANALOGUE:
@@ -74,7 +74,7 @@ public class InputHelper {
 						analogueCommand.setExtraInfo ("100");
 					}
 				}					
-				sendToFlash (analogueCommand,cache,commandQueue);
+				sendToFlash (analogueCommand,cache);
 				break;
 
 					
@@ -89,9 +89,7 @@ public class InputHelper {
 					else 
 					    clientCommand.setExtraInfo(comfortString.getTheParameter());
 					
-					synchronized (commandQueue){
-						commandQueue.add(clientCommand);
-					}	
+					commandQueue.add(clientCommand);
 					
 					CustomInputCommand flashCommand = new CustomInputCommand ();
 					flashCommand.setKey ("CLIENT_SEND");
@@ -102,7 +100,7 @@ public class InputHelper {
 					else 
 						flashCommand.setExtraInfo(comfortString.getTheParameter());
 
-					sendToFlash (clientCommand, cache,commandQueue);
+					sendToFlash (clientCommand, cache);
 					break;
 
 		case DeviceType.	COMFORT_LIGHT_X10_UNITCODE:
@@ -122,17 +120,15 @@ public class InputHelper {
 				x10LightCommand.setCommand ("on");
 				x10LightCommand.setExtraInfo ("100");
 			} 
-			sendToFlash (x10LightCommand, cache, commandQueue);
+			sendToFlash (x10LightCommand, cache);
 			break;
 		}
 	}
 
 	
-	public void sendToFlash (CommandInterface command, Cache cache ,List commandQueue) {
+	public void sendToFlash (CommandInterface command, Cache cache ) {
 		cache.setCachedCommand(command.getDisplayName(),command);
-		synchronized (commandQueue){
-			commandQueue.add(command);
-		}		
+		commandQueue.add(command);	
 	}
 	/**
 	 * @return Returns the eTX.
@@ -157,5 +153,11 @@ public class InputHelper {
 	 */
 	public void setSTX(String stx) {
 		STX = stx;
+	}
+	public CommandQueue getCommandQueue() {
+		return commandQueue;
+	}
+	public void setCommandQueue(CommandQueue commandQueue) {
+		this.commandQueue = commandQueue;
 	}
 }

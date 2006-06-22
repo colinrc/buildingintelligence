@@ -23,15 +23,16 @@ public class DoActionHelper {
 	protected Logger logger;
 	protected String STX;
 	protected String ETX;
-	protected HashMap previousValue;
+	protected HashMap<String,String> previousValue;
+	protected CommandQueue commandQueue = null;
 	
 	public DoActionHelper() {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		previousValue = new HashMap(16);
+		previousValue = new HashMap<String,String>(16);
 	}
 
-	public void handleReturnCode (CommsCommand raSent, ComfortString comfortString, Cache cache ,List commandQueue, ConfigHelper configHelper, DeviceModel comfort) {
+	public void handleReturnCode (CommsCommand raSent, ComfortString comfortString, Cache cache ,ConfigHelper configHelper, DeviceModel comfort) {
 		switch (raSent.getActionType()) {
 			case CommDevice.MailboxQuery:
 				Alert phoneAlert = (Alert)configHelper.getControlItem("AM17");
@@ -60,7 +61,7 @@ public class DoActionHelper {
 							else
 								phoneMessage.setExtraInfo(message + lookupValue);
 								
-							sendToFlash (phoneMessage, cache, commandQueue);
+							sendToFlash (phoneMessage, cache);
 						}
 					}
 				}
@@ -76,18 +77,16 @@ public class DoActionHelper {
 					analogueCommand.setExtraInfo(comfortString.theParameter);
 					previousValue.put (deviceKey,comfortString.theParameter);
 				
-					sendToFlash (analogueCommand, cache, commandQueue);
+					sendToFlash (analogueCommand, cache);
 				}
 			break;
 	
 		}
 	}
 
-	public void sendToFlash (CommandInterface command, Cache cache ,List commandQueue) {
+	public void sendToFlash (CommandInterface command, Cache cache ) {
 		cache.setCachedCommand(command.getDisplayName(),command);
-		synchronized (commandQueue){
-			commandQueue.add(command);
-		}		
+		commandQueue.add(command);
 	}
 	/**
 	 * @return Returns the eTX.
@@ -113,5 +112,14 @@ public class DoActionHelper {
 	public void setSTX(String stx) {
 		STX = stx;
 	}
+
+	public CommandQueue getCommandQueue() {
+		return commandQueue;
+	}
+
+	public void setCommandQueue(CommandQueue commandQueue) {
+		this.commandQueue = commandQueue;
+	}
+
 
 }

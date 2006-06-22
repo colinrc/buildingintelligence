@@ -67,12 +67,12 @@ public class Model extends BaseModel implements DeviceModel {
 
 	}
 
-	public void sendStateOfAllDevices(List commandQueue, long targetFlashDeviceID) {
+	public void sendStateOfAllDevices(long targetFlashDeviceID) {
 
 		Iterator audioDevices = configHelper.getAllControlledDevices();
 		while (audioDevices.hasNext()) {
 			Audio audioDevice = (Audio) (audioDevices.next());
-			sendStateOfDevice(commandQueue, targetFlashDeviceID, audioDevice);
+			sendStateOfDevice( targetFlashDeviceID, audioDevice);
 		}
 		intercomChanged = false;
 	}
@@ -81,32 +81,32 @@ public class Model extends BaseModel implements DeviceModel {
 		return false;
 	}
 
-       public void sendStateOfDevice(List commandQueue, long targetFlashDeviceID,
+       public void sendStateOfDevice(long targetFlashDeviceID,
 			Audio audioDevice) {
 
-		if (intercomChanged) this.sendIntercom(commandQueue, targetFlashDeviceID, audioDevice);
+		if (intercomChanged) this.sendIntercom( targetFlashDeviceID, audioDevice);
 
 		if (this.hasState(audioDevice.getKey())) {
 
 			StateOfZone currentState = this.getCurrentState(audioDevice
 					.getKey());
-			this.sendState(commandQueue, targetFlashDeviceID, audioDevice);
+			this.sendState( targetFlashDeviceID, audioDevice);
 		}
 	}
 
-	public void sendDirty(List commandQueue, long targetFlashDeviceID) {
+	public void sendDirty(long targetFlashDeviceID) {
 		Iterator audioDevices = configHelper.getAllControlledDevices();
 		while (audioDevices.hasNext()) {
-			sendDirty(commandQueue, targetFlashDeviceID, (Audio) (audioDevices
+			sendDirty( targetFlashDeviceID, (Audio) (audioDevices
 					.next()));
 		}
 		intercomChanged = false;
 	}
 
-	public void sendDirty(List commandQueue, long targetFlashDeviceID,
+	public void sendDirty(long targetFlashDeviceID,
 			Audio audioDevice) {
 		if (intercomChanged) {
-			this.sendIntercom(commandQueue, targetFlashDeviceID, audioDevice);
+			this.sendIntercom( targetFlashDeviceID, audioDevice);
 		}
 
 		if (this.hasState(audioDevice.getKey())) {
@@ -114,22 +114,22 @@ public class Model extends BaseModel implements DeviceModel {
 			StateOfZone currentState = this.getCurrentState(audioDevice
 					.getKey());
 			if (!currentState.isIgnoreNextPower() && (currentState.getIsDirty()) || currentState.isSrcDirty()) {
-				this.sendState(commandQueue, targetFlashDeviceID, audioDevice);
+				this.sendState( targetFlashDeviceID, audioDevice);
 			}
 		}
 	}
 
-	public void sendIntercom(List commandQueue, long targetFlashDeviceID,
+	public void sendIntercom( long targetFlashDeviceID,
 			Audio audioDevice) {
 		if (intercom.equals("on"))
-			sendToFlash(commandQueue, targetFlashDeviceID, audioDevice
+			sendToFlash( targetFlashDeviceID, audioDevice
 					, "intercom", "on");
 		else
-			sendToFlash(commandQueue, targetFlashDeviceID, audioDevice
+			sendToFlash( targetFlashDeviceID, audioDevice
 					, "intercom", "off");
 	}
 
-	public void sendState(List commandQueue, long targetFlashDeviceID,
+	public void sendState(long targetFlashDeviceID,
 			Audio audioDevice) {
 
 		if (this.hasState(audioDevice.getKey())) {
@@ -139,10 +139,10 @@ public class Model extends BaseModel implements DeviceModel {
 
 			if (currentState.isDirty) {
 				if (currentState.getPower().equals("on"))
-					sendToFlash(commandQueue, targetFlashDeviceID, audioDevice
+					sendToFlash( targetFlashDeviceID, audioDevice
 							, "on", "");
 				else
-					sendToFlash(commandQueue, targetFlashDeviceID, audioDevice
+					sendToFlash( targetFlashDeviceID, audioDevice
 							, "off", "");
 
 				currentState.setIsDirty(false);
@@ -151,7 +151,7 @@ public class Model extends BaseModel implements DeviceModel {
 			}
 
 			if (currentState.isSrcDirty){
-				sendToFlash(commandQueue, targetFlashDeviceID, audioDevice
+				sendToFlash( targetFlashDeviceID, audioDevice
 					, "src", currentState.getSrcCode());
 				currentState.setSrcDirty(false);
 				this.setCurrentState(audioDevice.getKey(),currentState);
@@ -159,7 +159,7 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void sendToFlash(List commandQueue, long targetFlashID, Audio audioDevice,
+	public void sendToFlash( long targetFlashID, Audio audioDevice,
 			String command, String extra) {
 		AudioCommand displayStatus = (AudioCommand)audioDevice.buildDisplayCommand ();
 		displayStatus.setKey("CLIENT_SEND");
@@ -170,10 +170,8 @@ public class Model extends BaseModel implements DeviceModel {
 				+ ":" + displayStatus.getCommandCode() + ":"
 				+ displayStatus.getExtraInfo());
 		cache.setCachedCommand(displayStatus.getDisplayName(),displayStatus);
-		synchronized (this.commandQueue) {
-			commandQueue.add((displayStatus));
-			commandQueue.notifyAll();
-		}
+		commandQueue.add((displayStatus));
+
 	}
 
 	public void clearItems() {
@@ -267,7 +265,7 @@ public class Model extends BaseModel implements DeviceModel {
 							command.getKey())) {
 				logger.log(Level.FINER, "State requested for "
 						+ command.getKey());
-				sendStateOfDevice(commandQueue, command.getTargetDeviceID(),
+				sendStateOfDevice( command.getTargetDeviceID(),
 						(Audio) device);
 				return;
 			}
@@ -311,7 +309,7 @@ public class Model extends BaseModel implements DeviceModel {
 				intercom = "OFF";
 				this.intercomChanged = true;
 				didCommand = true;
-				this.sendDirty(commandQueue, -1);
+				this.sendDirty( -1);
 			}
 		}
 		if (!didCommand && HALReturn.equals("INTERCOM: ON")) {
@@ -320,7 +318,7 @@ public class Model extends BaseModel implements DeviceModel {
 				logger.log(Level.FINE, "Intercom is on");
 				didCommand = true;
 				this.intercomChanged = true;
-				this.sendDirty(commandQueue, -1);
+				this.sendDirty( -1);
 			}
 		}
 		if (!didCommand && HALReturn.startsWith("SCAN COMPLETE - ")) {
@@ -345,7 +343,7 @@ public class Model extends BaseModel implements DeviceModel {
 				    logger.log (Level.FINEST,"acknowledging zone " + zone);
 				    comms.sendNextCommand();
 				}
-				this.sendDirty(commandQueue, -1);
+				this.sendDirty( -1);
 			} else {
 				synchronized (comms) {
 				    pollDevice.setFirstRun(true);
@@ -408,7 +406,7 @@ public class Model extends BaseModel implements DeviceModel {
 		    }
 
 			didCommand = true;
-			this.sendStateOfAllDevices(commandQueue, -1);
+			this.sendStateOfAllDevices( -1);
 		}
 
 		if (!didCommand && HALReturn.startsWith("CC")) {

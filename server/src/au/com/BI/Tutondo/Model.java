@@ -22,8 +22,8 @@ import au.com.BI.Audio.*;
 public class Model extends BaseModel implements DeviceModel {
 	
 	protected String outputAudioCommand = "";
-	protected HashMap state;
-	protected HashMap currentSrc;
+	protected HashMap <String,StateOfZone>state;
+	protected HashMap <String,String>currentSrc;
 	protected TutondoHelper tutondoHelper;
 	protected PollDevice pollDevice;
 	protected List commandQueue;
@@ -37,6 +37,8 @@ public class Model extends BaseModel implements DeviceModel {
 		protocolB = true;
 		configHelper.addParameterBlock ("INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Source inputs");
 		configHelper.addParameterBlock ("FUNCTIONS",DeviceModel.MAIN_DEVICE_GROUP,"Audio functions");
+		state = new HashMap<String,StateOfZone>(12); // zones
+		currentSrc = new HashMap<String,String>(40); // maximum tutondo zones		
 	}
 
 	public void clearItems () {
@@ -52,8 +54,8 @@ public class Model extends BaseModel implements DeviceModel {
 		if (protocol != null && protocol.equals("B")) {
 				protocolB = true;
 		}
-		state = new HashMap(12); // zones
-		currentSrc = new HashMap(40); // maximum tutondo zones		
+		state.clear();
+		currentSrc.clear();
 	}
 	
 	public void attatchComms() 

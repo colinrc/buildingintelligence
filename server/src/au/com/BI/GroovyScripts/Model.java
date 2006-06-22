@@ -281,11 +281,6 @@ public class Model  extends BaseModel implements DeviceModel {
 	                }
 	        }
 
-	        public List getCommandQueue() {
-	                synchronized (commandQueue) {
-	                        return commandQueue;
-	                }
-	        }
 
 	        public String buildDirectConnectString(ToggleSwitch device,
 	          CommandInterface command) {

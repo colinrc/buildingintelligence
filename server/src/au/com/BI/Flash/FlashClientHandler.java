@@ -17,6 +17,7 @@ import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Comms.*;
 import au.com.BI.Macro.*;
 import au.com.BI.Command.ClientCommandFactory;
+import au.com.BI.Command.CommandQueue;
 import au.com.BI.Command.UnknownCommandException;
 
 /**
@@ -29,7 +30,7 @@ public class FlashClientHandler extends Thread {
 	protected boolean thisThreadRunning;
 	protected InputStream i;
 	protected OutputStream o;
-	protected List commandList;
+	protected CommandQueue commandList;
 	protected MacroHandler macroHandler = null;
 	protected EventCalendar eventCalendar;
 	protected long connectionTime;
@@ -43,7 +44,7 @@ public class FlashClientHandler extends Thread {
 
 	private TEA decrypter = null;
 
-	public FlashClientHandler(Socket connection, List commandList,
+	public FlashClientHandler(Socket connection, CommandQueue commandList,
 			List clientList,ClientCommandFactory clientCommandFactory) throws ConnectionFail {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		clientConnection = connection;
@@ -89,7 +90,7 @@ public class FlashClientHandler extends Thread {
 	 * @param commandList
 	 *            The synchronised fifo queue for ReceiveEvent objects
 	 */
-	public void setCommandList(List commandList) {
+	public void setCommandList(CommandQueue commandList) {
 		this.commandList = commandList;
 	}
 

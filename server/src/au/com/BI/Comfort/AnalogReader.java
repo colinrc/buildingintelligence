@@ -18,7 +18,7 @@ public class AnalogReader  extends Thread {
 	 * 
 	 */
 	protected Logger logger;
-	protected List analogueQueue;
+	protected List <Analog>analogueQueue;
 	protected boolean running;
 	protected String STX;
 	protected String ETX;
@@ -40,7 +40,7 @@ public class AnalogReader  extends Thread {
 	public AnalogReader() {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		analogueQueue = Collections.synchronizedList(new LinkedList());
+		analogueQueue = Collections.synchronizedList(new LinkedList<Analog>());
 		this.setName( "Comfort analog value handler");
 	}
 	

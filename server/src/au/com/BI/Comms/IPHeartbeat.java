@@ -6,10 +6,10 @@
  */
 package au.com.BI.Comms;
 import java.io.*;
-import java.util.List;
 import java.util.logging.*;
 
 import au.com.BI.Command.Command;
+import au.com.BI.Command.CommandQueue;
 /**
  * @author colinc
  *
@@ -22,7 +22,7 @@ public class IPHeartbeat extends Thread {
 	protected Logger logger;
 	protected boolean pausing = false;
 	String heartbeatString = "\n";
-	protected List commandQueue;
+	protected CommandQueue commandQueue;
 	protected int deviceNumber = -1;
 	protected String modelName = "";
 	/**
@@ -87,10 +87,8 @@ public class IPHeartbeat extends Thread {
 						command.setCommand ("Attatch");
 						command.setKey("SYSTEM");
 						command.setExtraInfo (Integer.toString(deviceNumber));
-						synchronized (commandQueue) {
-							commandQueue.add(command);
-							commandQueue.notifyAll();
-						}
+						commandQueue.add(command);
+
 					}
 					try {
 						Thread.sleep(15000);
@@ -112,12 +110,12 @@ public class IPHeartbeat extends Thread {
 	public void setHeartbeatString(String heartbeatString) {
 		this.heartbeatString = heartbeatString;
 	}
-	public List getCommandQueue() {
+	public CommandQueue getCommandQueue() {
 		return commandQueue;
 	}
 
 
-	public void setCommandQueue(List commandQueue) {
+	public void setCommandQueue(CommandQueue commandQueue) {
 		this.commandQueue = commandQueue;
 	}
 

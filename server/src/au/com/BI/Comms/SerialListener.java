@@ -5,12 +5,12 @@
 package au.com.BI.Comms;
 
 import gnu.io.*;
+import au.com.BI.Command.CommandQueue;
 import au.com.BI.Util.Utility;
 
 //import javax.comm.SerialPortEvent;
 //import javax.comm.SerialPortEventListener;
 import java.io.*;
-import java.util.List;
 import java.util.logging.*;
 
 
@@ -23,7 +23,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 {
 	protected InputStream is;
 	protected volatile boolean handleEvents = false;
-	protected List commandList;
+	protected CommandQueue commandList;
 	protected Logger logger;
 	protected StringBuffer inputBuffer ;
 	protected int targetDeviceModel = -1;
@@ -62,7 +62,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 	/**
 	* @param commandList The synchronised fifo queue for ReceiveEvent objects
 	*/
-	public void setCommandList (List commandList){
+	public void setCommandList (CommandQueue commandList){
 		this.commandList = commandList;
 	}
 	
@@ -226,10 +226,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 					CommsCommand command = new CommsCommand (stringForm,"RawText",null);
 					command.setCommandBytes(retBuff);
 					command.setTargetDeviceModel(this.targetDeviceModel);
-					synchronized (commandList){
-						commandList.add (command);
-						commandList.notifyAll (); 
-					}
+					commandList.add (command);
 					inputBuffer = new StringBuffer();
 				}
 				sendBuffer = false;
@@ -288,10 +285,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 					logger.log (Level.FINEST, "Processing serial string " + inputBuffer.toString());
 					CommsCommand command = new CommsCommand (inputBuffer.toString(),"RawText",null);
 					command.setTargetDeviceModel(this.targetDeviceModel);
-					synchronized (commandList){
-						commandList.add (command);
-						commandList.notifyAll (); 
-					}
+					commandList.add (command);
 					inputBuffer = new StringBuffer();
 				}
 				sendBuffer = false;

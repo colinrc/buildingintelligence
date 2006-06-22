@@ -1,7 +1,6 @@
 package au.com.BI.M1;
 
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,6 +8,7 @@ import au.com.BI.AlarmLogging.AlarmLogging;
 import au.com.BI.Alert.AlertCommand;
 import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
+import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.M1.Model;
@@ -61,7 +61,7 @@ public class ControlledHelper {
 	 * @throws CommsFail
 	 */
 	public void doControlledItem(CommandInterface command,
-			ConfigHelper configHelper, Cache cache, List commandQueue, Model m1)
+			ConfigHelper configHelper, Cache cache, CommandQueue commandQueue, Model m1)
 			throws CommsFail {
 
 		// Check to see if it is a comms command
@@ -373,7 +373,7 @@ public class ControlledHelper {
 		}
 	}
 
-	public void sendToFlash(List commandQueue, long targetFlashID,
+	public void sendToFlash(CommandQueue commandQueue, long targetFlashID,
 			CommandInterface command) {
 
 		/*
@@ -383,10 +383,7 @@ public class ControlledHelper {
 		 * alert if the alarm is in trouble, violated or bypassed
 		 */
 		command.setTargetDeviceID(targetFlashID);
-		synchronized (commandQueue) {
-			commandQueue.add(command);
-			commandQueue.notifyAll();
-		}
+		commandQueue.add(command);
 	}
 
 	protected CommandInterface buildCommandForFlash(CommandInterface command,

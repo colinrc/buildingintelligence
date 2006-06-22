@@ -248,9 +248,7 @@ public class Model extends BaseModel implements DeviceModel {
 		inputCommand.setCommand(commandStr);
 		inputCommand.setExtraInfo(extra);
 
-		synchronized (commandQueue){
-			commandQueue.add(inputCommand);
-		}
+		commandQueue.add(inputCommand);
 		CustomInputCommand flashCommand = new CustomInputCommand ();
 		flashCommand.setKey ("CLIENT_SEND");
 		flashCommand.setDisplayName(key);

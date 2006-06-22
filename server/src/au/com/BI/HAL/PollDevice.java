@@ -24,7 +24,7 @@ public class PollDevice extends Thread {
 	protected CommDevice comms;
 	protected long pollValue;
 	protected ConfigHelper configHelper;
-	protected List commandQueue;
+	protected CommandQueue commandQueue;
 	protected char ETX;
 	protected int unresponsiveCounter = 0;
 	protected boolean halConnectionRestored = false;
@@ -186,10 +186,7 @@ public class PollDevice extends Thread {
 			command.setCommand ("Attatch");
 			command.setKey("SYSTEM");
 			command.setExtraInfo (Integer.toString(deviceNumber));
-			synchronized (commandQueue) {
-				commandQueue.add(command);
-				commandQueue.notifyAll();
-			}
+			commandQueue.add(command);
 		}
 	}
 		/**
@@ -238,12 +235,12 @@ public class PollDevice extends Thread {
     }
 
 
-	public List getCommandQueue() {
+	public CommandQueue getCommandQueue() {
 		return commandQueue;
 	}
 
 
-	public void setCommandQueue(List commandQueue) {
+	public void setCommandQueue(CommandQueue commandQueue) {
 		this.commandQueue = commandQueue;
 	}
 

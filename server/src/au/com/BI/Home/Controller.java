@@ -33,7 +33,7 @@ import org.jrobin.core.*;
 public class Controller {
 	protected User currentUser;
 	protected Logger logger;
-	protected List commandQueue;
+	protected CommandQueue commandQueue;
 	protected boolean running;
 	protected FlashHandler flashHandler;
 	protected au.com.BI.Admin.Model adminModel;
@@ -81,7 +81,7 @@ public class Controller {
 		deviceModels = new ArrayList<DeviceModel>();
 		clientModels = new ArrayList<DeviceModel>();
 		modelRegistry = new HashMap<String,String> (10);
-		commandQueue = Collections.synchronizedList(new LinkedList());
+		commandQueue = new CommandQueue();
 		cache = new Cache();
         cache.setController(this);
         variableCache = new HashMap<String,Object>(20);
@@ -134,7 +134,7 @@ public class Controller {
 		}
                 
 		try {
-			macroHandler.startCalendar(currentUser,commandQueue);
+			macroHandler.startCalendar(currentUser);
 		}
 		catch (SchedulerException ex){
 			logger.log (Level.SEVERE,"Event scheduler failed to start, timed events will not be availlable. "+ex.getMessage());
@@ -302,7 +302,7 @@ public class Controller {
 			commandDone = false;
 			synchronized (commandQueue) {
 				if (!commandQueue.isEmpty()) {
-					item = (CommandInterface) commandQueue.get(0);
+					item = (CommandInterface) commandQueue.remove();
 					successfulCommand = false;
 				} else {
 					item = null;
@@ -429,9 +429,7 @@ public class Controller {
                 if (!item.isCommsCommand() ) {
 					doScriptCommand(item);
                 }
-                synchronized (commandQueue) {
-                  commandQueue.remove(0);
-                }
+                  commandQueue.remove();
               }
               synchronized (commandQueue) {
                 try {
@@ -1134,10 +1132,8 @@ public class Controller {
 		if (commandCode.equals("LoadIRDB")) {
 			this.irCodeDB.readIRCodesFile("datafiles" + File.separator + "ircodes.xml");
             Command irCommand = new Command ("ADMIN","List_Devices",this.currentUser);
-            synchronized (commandQueue){
-            		commandQueue.add (irCommand);
-            }
-          }
+            commandQueue.add (irCommand);
+         }
 
 		if (commandCode.equals("Keypress")) {
 			Iterator deviceModelList = deviceModels.iterator();
@@ -1227,7 +1223,7 @@ public class Controller {
 	}
 
 	
-	public List getCommandQueue() {
+	public CommandQueue getCommandQueue() {
 		return commandQueue;
 	}
 

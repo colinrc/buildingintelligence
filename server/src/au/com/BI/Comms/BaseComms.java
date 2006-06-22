@@ -22,7 +22,7 @@ protected CommsCommand nextCommand = null;
 protected Logger logger;
 protected boolean waitingForFeedback = false;
 protected long timeOfLastCommand = 0;
-protected LinkedList commandQueue;	
+protected LinkedList toSendQueue;	
 protected LinkedList sentQueue;
 protected int transmitMessageOnBytes = 0;
 public int interCommandInterval = 0;
@@ -33,7 +33,7 @@ protected CommsSend commsSend = null;
 protected CommsGroup commsGroup = null;
 
 	public BaseComms () {
-		commandQueue = new LinkedList();
+		toSendQueue = new LinkedList();
 		sentQueue = new LinkedList();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
@@ -43,8 +43,8 @@ protected CommsGroup commsGroup = null;
 	}	
 
 	public void clearCommandQueue () {
-		synchronized (commandQueue){
-			commandQueue.clear();
+		synchronized (toSendQueue){
+			toSendQueue.clear();
 		}
 		synchronized (sentQueue){
 			sentQueue.clear();
@@ -53,7 +53,7 @@ protected CommsGroup commsGroup = null;
 	}
 	
 	public boolean isCommandQueueEmpty (){
-		return commandQueue.isEmpty();
+		return toSendQueue.isEmpty();
 	}
 
 	public boolean isCommandSentQueueEmpty (){
@@ -162,21 +162,21 @@ protected CommsGroup commsGroup = null;
 	}
 	
 	public CommsCommand getFirstCommandInQueue (){
-		if (!commandQueue.isEmpty())
-			return (CommsCommand)commandQueue.getFirst();
+		if (!toSendQueue.isEmpty())
+			return (CommsCommand)toSendQueue.getFirst();
 		else
 			return null;
 	}
 
 	public CommsCommand getLastCommandInQueue (){
-		if (!commandQueue.isEmpty())
-			return (CommsCommand)commandQueue.getLast();
+		if (!toSendQueue.isEmpty())
+			return (CommsCommand)toSendQueue.getLast();
 		else return null;
 	}
 	
 	public void addCommandToQueue (CommsCommand command) throws CommsFail {
-		synchronized (commandQueue){
-			commandQueue.add(command);
+		synchronized (toSendQueue){
+			toSendQueue.add(command);
 		}
 	    if (sentQueue.isEmpty()) {
 		// Nothing currently in the queue waiting so start it rolling
@@ -206,15 +206,15 @@ protected CommsGroup commsGroup = null;
 	}
 
 	public void removeFirstCommandInQueue () {
-		synchronized (commandQueue){
-			if (!commandQueue.isEmpty()) commandQueue.removeFirst();
-			if (commandQueue.isEmpty()) this.waitingForFeedback = false;
+		synchronized (toSendQueue){
+			if (!toSendQueue.isEmpty()) toSendQueue.removeFirst();
+			if (toSendQueue.isEmpty()) this.waitingForFeedback = false;
 		}
 	}
 	
 	public void 	removeAllCommands (int actionType) {
-		synchronized (commandQueue){
-		    Iterator commandList = commandQueue.iterator();
+		synchronized (toSendQueue){
+		    Iterator commandList = toSendQueue.iterator();
 		    while (commandList.hasNext()) {
 		        CommsCommand command = (CommsCommand)commandList.next();
 		        if (command.getActionType() == actionType) commandList.remove();
@@ -362,8 +362,8 @@ protected CommsGroup commsGroup = null;
 	    boolean foundCommand = false;
 		if (isCommandQueueEmpty()) return false;
 	
-		synchronized (commandQueue){
-			Iterator commandQueueList = commandQueue.iterator();
+		synchronized (toSendQueue){
+			Iterator commandQueueList = toSendQueue.iterator();
 			
 			while (!foundCommand && commandQueueList.hasNext()) {
 				nextCommand = (CommsCommand)commandQueueList.next();
@@ -395,8 +395,8 @@ protected CommsGroup commsGroup = null;
 	    boolean foundCommand = false;
 		if (isCommandQueueEmpty()) return true;
 	
-		synchronized (commandQueue){
-			Iterator commandQueueList = commandQueue.iterator();
+		synchronized (toSendQueue){
+			Iterator commandQueueList = toSendQueue.iterator();
 			
 			while (!foundCommand && commandQueueList.hasNext()) {
 				nextCommand = (CommsCommand)commandQueueList.next();

@@ -22,7 +22,7 @@ import au.com.BI.Flash.*;
  **/
 public class Model extends BaseModel implements DeviceModel, ClientModel
 {
-	protected LinkedList adminClientHandlers;
+	protected List <AdminClientHandler>adminClientHandlers;
 	protected AdminControlListener adminControlListener;
 	
 	
@@ -49,9 +49,7 @@ public class Model extends BaseModel implements DeviceModel, ClientModel
 		this.addControlledItem ("RawXML_Send",null,DeviceType.MONITORED);
 		
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		adminClientHandlers = new LinkedList ();
-		rawDefs = new HashMap (NUMBER_CATALOGUES);
-		parameters = new HashMap (NUMBER_PARAMETERS);
+		adminClientHandlers = new LinkedList <AdminClientHandler>();
 		this.setName("Admin");
         this.setAutoReconnect(false);
 	}

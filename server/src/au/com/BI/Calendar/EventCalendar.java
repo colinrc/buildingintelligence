@@ -19,6 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.*;
 
+import au.com.BI.Command.CommandQueue;
 import au.com.BI.Macro.MacroHandler;
 import au.com.BI.User.*;
 
@@ -31,7 +32,7 @@ public class EventCalendar {
     
 	protected Logger logger;
 	protected String fileName = null;
-	protected List commandList = null;
+	protected CommandQueue commandList = null;
 	protected Scheduler sched = null;
 	
     protected int recurrance;
@@ -71,7 +72,7 @@ public class EventCalendar {
     }
 	
  	
-	public void setCommandList (List commandList){
+	public void setCommandList (CommandQueue commandList){
 		this.commandList = commandList;
 	}
     

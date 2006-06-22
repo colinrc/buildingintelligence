@@ -5,7 +5,7 @@ import java.util.Vector;
 public class StringUtils {
 
 	public static String[] split(String str, char x) {
-		Vector v = new Vector();
+		Vector<String> v = new Vector<String>();
 		String str1 = new String();
 		for (int i = 0; i < str.length(); i++) {
 			if (str.charAt(i) == x) {
@@ -25,7 +25,7 @@ public class StringUtils {
 	}
 	
 	public static String[] split(String str) {
-		Vector v = new Vector();
+		Vector<String> v = new Vector<String>();
 		for (int i = 0; i < str.length(); i++) {
 			v.add(String.valueOf(str.charAt(i)));
 		}

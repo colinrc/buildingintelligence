@@ -2,8 +2,8 @@ package au.com.BI.Home;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.List;
 
+import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Comms.ConnectionFail;
 import au.com.BI.User.User;
@@ -15,13 +15,13 @@ import au.com.BI.Util.SetupException;
 public class ConnectDevice extends Thread {
 	protected DeviceModel deviceModel;
 	protected au.com.BI.Admin.Model adminModel;
-	protected List commandQueue;
+	protected CommandQueue commandQueue;
 	protected Logger logger;
 	protected Bootstrap bootstrap;
 	protected IRCodeDB irCodeDB;
 	private boolean shownWarning = false;
 	
-	public ConnectDevice (DeviceModel deviceModel, au.com.BI.Admin.Model adminModel, List commandQueue,IRCodeDB irCodeDB, Bootstrap bootstrap) {
+	public ConnectDevice (DeviceModel deviceModel, au.com.BI.Admin.Model adminModel, CommandQueue commandQueue,IRCodeDB irCodeDB, Bootstrap bootstrap) {
 		this.deviceModel = deviceModel;
 		this.adminModel = adminModel;
 		this.commandQueue = commandQueue;

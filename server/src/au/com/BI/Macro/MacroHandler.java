@@ -15,6 +15,8 @@ import au.com.BI.Flash.*;
 import au.com.BI.Util.*;
 import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.CommandInterface;
+import au.com.BI.Command.CommandQueue;
+
 import java.util.Collections;
 import au.com.BI.User.*;
 import java.util.logging.*;
@@ -40,7 +42,7 @@ public class MacroHandler {
         protected Map <String,List<ClientCommand>>integratorMacros = null;
 	protected Map <String,String>macros_status = null;
 	protected Logger logger;
-	protected List commandList = null;
+	protected CommandQueue commandList = null;
 	protected Map <String,RunMacro>runningMacros = null;
 	protected EventCalendar eventCalendar = null;
 	protected Map<String,String> macros_type = null;
@@ -131,7 +133,7 @@ public class MacroHandler {
 		}
 	}
 
-	public void setCommandList (List commandList){
+	public void setCommandList (CommandQueue commandList){
 		this.commandList = commandList;
 	}
 	
@@ -505,10 +507,10 @@ public class MacroHandler {
         return eventCalendar;
     }
     
-    public void startCalendar (User user, List commandQueue) throws SchedulerException {
+    public void startCalendar (User user) throws SchedulerException {
             eventCalendar = new EventCalendar (this,user);
             eventCalendar.setFileName(this.calendarFileName);
-            eventCalendar.setCommandList(commandQueue);
+            eventCalendar.setCommandList(commandList);
             /* if (!eventCalendar.readCalendarFile() && logger!= null) {
                     logger.log (Level.SEVERE,"Could not read calendar file");
             } */
@@ -537,7 +539,7 @@ public class MacroHandler {
 		this.calendar_message_params = calendar_message_params;
 	}
 
-	public List getCommandList() {
+	public CommandQueue getCommandList() {
 		return commandList;
 	}
 

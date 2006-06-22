@@ -31,7 +31,7 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 
 	protected String name;
 	protected Logger logger;
-	protected List commandQueue;
+	protected CommandQueue commandQueue;
 	protected HashMap parameters;
 	protected MacroHandler macroHandler;
 	protected EventCalendar eventCalendar;
@@ -75,11 +75,11 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 		return parameters.get(name);
 	}
 
-	public void setCommandQueue (List commandQueue) {
+	public void setCommandQueue (CommandQueue commandQueue) {
 		this.commandQueue = commandQueue;
 	}
 
-	public void attatchComms(List commandQueue) {
+	public void attatchComms(CommandQueue commandQueue) {
 		// meaningless for this
 	}
 

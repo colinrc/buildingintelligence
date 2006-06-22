@@ -58,6 +58,13 @@ public class Model extends BaseModel implements DeviceModel  {
 
 		}
 
+	public void setCommandQueue (CommandQueue commandQueue){
+		super.setCommandQueue(commandQueue);
+		inputHelper.setCommandQueue(commandQueue);
+		outputHelper.setCommandQueue(commandQueue);
+		controlledHelper.setCommandQueue(commandQueue);		
+		startup.setCommandQueue(commandQueue);		
+	}
 
 	/**
 	 * Name is used by the config reader to tie a particular device to configuration
@@ -216,10 +223,10 @@ public class Model extends BaseModel implements DeviceModel  {
 		} else {
 
 			if (!isStartupQuery &&  configHelper.getLastCommandType() == DeviceType.INPUT) {
-				inputHelper.doInputItem (command,comfortString, configHelper, cache, commandQueue);
+				inputHelper.doInputItem (command,comfortString, configHelper, cache);
 			} else {
 					// For monitored and startup query items
-				controlledHelper.doControlledItem (command, isStartupQuery,comfortString, configHelper, cache, commandQueue, comms, this);
+				controlledHelper.doControlledItem (command, isStartupQuery,comfortString, configHelper, cache, comms, this);
 			}
 			sendNextCommandInQueue();
 		}
@@ -236,9 +243,7 @@ public class Model extends BaseModel implements DeviceModel  {
 
 	public void sendToFlash (CommandInterface command) {
 		cache.setCachedCommand(command.getDisplayName(),command);
-		synchronized (commandQueue){
-			commandQueue.add(command);
-		}
+		commandQueue.add(command);
 	}
 
 
@@ -263,7 +268,7 @@ public class Model extends BaseModel implements DeviceModel  {
 	}
 
 	public void doStartup() throws CommsFail  {
-		startup.doStartup(configHelper, comms, commandQueue);
+		startup.doStartup(configHelper, comms);
 		analogueReader.setComms(comms);
 		long analoguePoll = 30000; //default to every 30 seconds
 		String analoguePollValue = (String)this.getParameterValue("ANALOGUE_POLL_VALUE",DeviceModel.MAIN_DEVICE_GROUP);

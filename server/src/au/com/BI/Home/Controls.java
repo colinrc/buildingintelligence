@@ -9,10 +9,10 @@ import java.util.*;
 
 public class Controls {
 	private Cache cache;
-	private HashMap variables;
+	private Map <String,String>variables;
 	
 	public Controls (Cache cache) {
-		variables = new HashMap (20);
+		variables = new HashMap<String,String> (20);
 		this.cache = cache;
 	}
 	

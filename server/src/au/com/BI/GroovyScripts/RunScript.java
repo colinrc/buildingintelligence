@@ -6,6 +6,8 @@ import au.com.BI.Flash.*;
 
 import java.util.logging.*;
 import au.com.BI.Command.CommandInterface;
+import au.com.BI.Command.CommandQueue;
+
 import org.python.util.PythonInterpreter;
 
 
@@ -25,7 +27,7 @@ import org.python.util.PythonInterpreter;
 public class RunScript extends Thread {
 
   protected User user;
-  protected List commandList;
+  protected CommandQueue commandList;
   protected Logger logger;
   protected String scriptName;
   protected boolean enable = true;
@@ -50,7 +52,7 @@ public class RunScript extends Thread {
     setUser(user);
   }
 
-  public void setCommandList (List commandList){
+  public void setCommandList (CommandQueue commandList){
                 this.commandList = commandList;
         }
 
@@ -67,10 +69,7 @@ public class RunScript extends Thread {
       started.setKey("SCRIPT");
       started.setExtraInfo(getScriptName());
       started.setCommand("started");
-      synchronized (commandList) {
-        commandList.add(started);
-        commandList.notifyAll();
-      }
+       commandList.add(started);
 
 
       String lsLine;
@@ -116,13 +115,7 @@ public class RunScript extends Thread {
       finished.setKey("SCRIPT");
       finished.setExtraInfo(getScriptName());
       finished.setCommand("finished");
-      synchronized (commandList) {
-        commandList.add(finished);
-        commandList.notifyAll();
-
-      }
-
-
+      commandList.add(finished);
     }
   }
 

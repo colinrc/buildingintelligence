@@ -88,7 +88,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 
 	public void testFindDevicesInArea() {
 		List result = null;
-		LinkedList testRes = new LinkedList();
+		LinkedList <LightFascade>testRes = new LinkedList<LightFascade>();
 		testRes.add(testA03C03);
 		testRes.add(testA03C04);
 		result = model.areaCodes.findDevicesInArea(3,true,0xff);
@@ -101,7 +101,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 	public void testInterpretAreaOff() {
 		byte ret1[] = new byte[]{(byte)0x1C,03,(byte)0x64,(byte)0x04,(byte)0x00,(byte)0x00,(byte)0xff,(byte)0x7a};
 		InterpretResult result = new InterpretResult();
-		LinkedList testRes = new LinkedList();
+		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a3C3off = new DynaliteCommand("CLIENT_SEND","off",null,"0","2","255","","");
 		a3C3off.setDisplayName("A03C03");
 		DynaliteCommand a3C4off = new DynaliteCommand("CLIENT_SEND","off",null,"0","2","255","","");
@@ -122,7 +122,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		
 		model.addControlledItem(testA06C00.getKey(),testA06C00,DeviceType.MONITORED);		
 		InterpretResult result = new InterpretResult();
-		LinkedList testRes = new LinkedList();
+		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a10C0present = new DynaliteCommand("CLIENT_SEND","preset",null,"10","0","255","","");
 		a10C0present.setDisplayName("A06C00");
 		testRes.add(a10C0present);
@@ -140,7 +140,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		
 		model.addControlledItem("00",testA07C00,DeviceType.MONITORED);		
 		InterpretResult result = new InterpretResult();
-		LinkedList testRes = new LinkedList();
+		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a07C0ramp = new DynaliteCommand("CLIENT_SEND","on",null,"100","0","255","","");
 		a07C0ramp.setDisplayName("A07C00");
 		testRes.add(a07C0ramp);
@@ -157,7 +157,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		
 		model.addControlledItem(testA03C00.getKey(),testA03C00,DeviceType.MONITORED);		
 		InterpretResult result = new InterpretResult();
-		LinkedList testRes = new LinkedList();
+		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a03C0ramp = new DynaliteCommand("CLIENT_SEND","off",null,"0","0","255","","");
 		a03C0ramp.setDisplayName("A03C00");
 		testRes.add(a03C0ramp);
@@ -174,7 +174,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		
 		model.addControlledItem(testA02C00.getKey(),testA02C00,DeviceType.MONITORED);		
 		InterpretResult result = new InterpretResult();
-		LinkedList testRes = new LinkedList();
+		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a2C0preset = new DynaliteCommand("CLIENT_SEND","preset",null,"4","0","255","","");
 		a2C0preset.setDisplayName("A02C00");
 		testRes.add(a2C0preset);
@@ -186,7 +186,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 	public void testInterpretIR() {
 		byte ret1[] = new byte[]{(byte)0x5C,(byte)0xa7,(byte)0x06,(byte)0x49,(byte)0x07,(byte)0x00,(byte)0x00,(byte)0xa7};
 		InterpretResult result = new InterpretResult();
-		LinkedList testRes = new LinkedList();
+		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand ir7box6 = new DynaliteCommand("CLIENT_SEND","off",null,"0","0","255","","");
 		ir7box6.setDisplayName("IR7_BOX06");
 		testRes.add(ir7box6);
@@ -197,7 +197,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 	public void testInterpretSwitch() {
 		byte ret1[] = new byte[]{(byte)0x5C,(byte)0xa7,(byte)0x02,(byte)0x43,(byte)0x04,(byte)0x00,(byte)0xff,(byte)0xb5};
 		InterpretResult result = new InterpretResult();
-		LinkedList testRes = new LinkedList();
+		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand b4box2 = new DynaliteCommand("CLIENT_SEND","on",null,"100","0","255","","");
 		b4box2.setDisplayName("SWITCH4_BOX02");
 		testRes.add(b4box2);
@@ -209,7 +209,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		byte ret1[] = new byte[]{(byte)0x1C,02,(byte)0x02,(byte)0x71,(byte)0x82,(byte)0x32,(byte)0xff,(byte)0x00};
 		dynaliteHelper.addChecksum(ret1);
 		InterpretResult result = new InterpretResult();
-		LinkedList testRes = new LinkedList();
+		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a2c3_5 = new DynaliteCommand("CLIENT_SEND","on",null,"50","5","255","","");
 		a2c3_5.setDisplayName("A02C03");
 		testRes.add(a2c3_5);
@@ -219,7 +219,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		byte ret2[] = new byte[]{(byte)0x1C,02,(byte)0x02,(byte)0x72,(byte)0x82,(byte)0x32,(byte)0xff,(byte)0x00};
 		dynaliteHelper.addChecksum(ret2);
 		InterpretResult result2 = new InterpretResult();
-		LinkedList testRes2 = new LinkedList();
+		LinkedList <DynaliteCommand>testRes2 = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a2c3_50 = new DynaliteCommand("CLIENT_SEND","on",null,"50","50","255","","");
 		a2c3_50.setDisplayName("A02C03");
 		testRes2.add(a2c3_50);
@@ -229,7 +229,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		byte ret3[] = new byte[]{(byte)0x1C,02,(byte)0x02,(byte)0x73,(byte)0x82,(byte)0x0f,(byte)0xff,(byte)0xdd};
 		dynaliteHelper.addChecksum(ret3);
 		InterpretResult result3 = new InterpretResult();
-		LinkedList testRes3 = new LinkedList();
+		LinkedList<DynaliteCommand> testRes3 = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a2c3_15m = new DynaliteCommand("CLIENT_SEND","on",null,"50","900","255","","");
 		a2c3_15m.setDisplayName("A02C03");
 		testRes3.add(a2c3_15m);
@@ -239,7 +239,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 	}
 	
 	public void testInterpretClassicPresetOffset() {
-		LinkedList testRes = new LinkedList();
+		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a2cc00 = new DynaliteCommand("CLIENT_SEND","offset",null,"15","","255","","");
 		a2cc00.setDisplayName("A2CC00");
 		testRes.add(a2cc00);
@@ -265,7 +265,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 	public void testInterpretChannelLevel() {
 		byte ret1[] = new byte[]{(byte)0x1C,(byte)0x10,(byte)0x04,(byte)0x60,(byte)0x6e,(byte)0x6e,(byte)0xff,(byte)0x95};
 		InterpretResult result = new InterpretResult();
-		LinkedList testRes = new LinkedList();
+		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a16C5level = new DynaliteCommand("CLIENT_SEND","on",null,"58","0","255","","");
 		a16C5level.setDisplayName("A16C05");
 		testRes.add(a16C5level);
@@ -281,7 +281,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		
 		byte ret1[] = new byte[]{(byte)0x1C,(byte)0x04,(byte)0x82,(byte)0x79,(byte)0x64,(byte)0x0,(byte)0xff,(byte)0x82};
 		InterpretResult result = new InterpretResult();
-		LinkedList testRes = new LinkedList();
+		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a4level = new DynaliteCommand("CLIENT_SEND","on",null,"50","2","255","","");
 		a4level.setDisplayName("A04C00");
 		testRes.add(a4level);
@@ -301,7 +301,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		
 		byte ret2[] = new byte[]{(byte)0x1C,(byte)0x0c,(byte)0xe6,(byte)0x81,(byte)0x02,(byte)0x4b,(byte)0xff,(byte)0x25};
 		InterpretResult result2 = new InterpretResult();
-		LinkedList testRes2 = new LinkedList();
+		LinkedList <DynaliteCommand>testRes2 = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a12c14level = new DynaliteCommand("CLIENT_SEND","on",null,"10","1","255","","");
 		a12c14level.setDisplayName("A0CC0E");
 		testRes2.add(a12c14level);

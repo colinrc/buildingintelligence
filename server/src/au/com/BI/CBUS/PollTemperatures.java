@@ -24,7 +24,7 @@ public class PollTemperatures extends Thread {
 	protected boolean running;
 	protected CommDevice comms;
 	protected long pollValue = 60000;
-	protected List commandQueue = null;
+	protected CommandQueue commandQueue = null;
 	protected int deviceNumber = -1;
 	protected List temperatureSensors = null;
 	
@@ -93,10 +93,8 @@ public class PollTemperatures extends Thread {
 			command.setCommand ("Attatch");
 			command.setKey("SYSTEM");
 			command.setExtraInfo (Integer.toString(deviceNumber));
-			synchronized (commandQueue) {
-				commandQueue.add(command);
-				commandQueue.notifyAll();
-			}
+			commandQueue.add(command);
+
 		}
 	}
 		/**
@@ -126,12 +124,12 @@ public class PollTemperatures extends Thread {
 	public void setComms(CommDevice comms) {
 		this.comms = comms;
 	}
-	public List getCommandQueue() {
+	public CommandQueue getCommandQueue() {
 		return commandQueue;
 	}
 
 
-	public void setCommandQueue(List commandQueue) {
+	public void setCommandQueue(CommandQueue commandQueue) {
 		this.commandQueue = commandQueue;
 	}
 

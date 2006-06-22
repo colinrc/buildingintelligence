@@ -7,6 +7,8 @@
 package au.com.BI.Comfort;
 import au.com.BI.Util.*;
 import java.util.*;
+
+import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
 
@@ -25,6 +27,7 @@ public class Startup {
 	protected String STX;
 	protected String ETX;
 	protected Logger logger;
+	protected CommandQueue commandQueue = null;
 	
 	public Startup() {
 		super();
@@ -35,7 +38,7 @@ public class Startup {
 		this.STX = STX;
 	}
 
-	public void doStartup(ConfigHelper configHelper, CommDevice comms, List commandQueue) throws CommsFail {
+	public void doStartup(ConfigHelper configHelper, CommDevice comms) throws CommsFail {
 		synchronized (comms) {
 			doInitialCommands (comms); // Commands which have startup but do not have commands listed in the config
 			Iterator startupQueryItemList = configHelper.getStartupQueryItemsList();
@@ -188,5 +191,13 @@ public class Startup {
 	 */
 	public void setETX(String etx) {
 		ETX = etx;
+	}
+
+	public CommandQueue getCommandQueue() {
+		return commandQueue;
+	}
+
+	public void setCommandQueue(CommandQueue commandQueue) {
+		this.commandQueue = commandQueue;
 	}
 }

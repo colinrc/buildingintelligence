@@ -33,53 +33,25 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	protected String outputVideoCommand = "";
 	protected HashMap state;
-	protected HashMap currentSrc;
+	protected HashMap <String,String>currentSrc;
 	protected KramerHelper kramerHelper;
-	protected List commandQueue;
-	protected HashMap avInputs;
-	protected HashMap audioInputs;
 	
 	public Model () {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		kramerHelper = new KramerHelper();
 		state = new HashMap();
-		currentSrc = new HashMap();
+		currentSrc = new HashMap<String,String>();
 		super.setTransmitMessageOnBytes(4); // kramer only sends a single non CR terminated byte.
+		configHelper.addParameterBlock ("AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Audio Source");
+		configHelper.addParameterBlock ("AV_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"AV Source");
 	}
 
 	public void clearItems () {
 		state.clear();
 		currentSrc.clear();
-		avInputs.clear();
-		audioInputs.clear();
 		super.clearItems();
 	}
-
-	
-	public void finishedReadingConfig () throws SetupException {
-		super.finishedReadingConfig();
-		String inputsDef = (String)this.getParameterValue("AV_INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
-		if (inputsDef == null || inputsDef.equals ("")) {
-			throw new SetupException ("The AV source input catalogue was not specified in the device Parameter block");
-		}
-
-		avInputs = (HashMap)this.getCatalogueDef(inputsDef);
-		if (avInputs == null) {
-			throw new SetupException ("The AV Source input catgalogue was not specifed in the  device Parameter block");
-		}
-		
-		String audioInputsDef = (String)this.getParameterValue("AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP);
-		if (audioInputsDef == null || audioInputsDef.equals ("")) {
-			throw new SetupException ("The audio source input catalogue was not specified in the device Parameter block");
-		}
-
-		audioInputs = (HashMap)this.getCatalogueDef(audioInputsDef);
-		if (audioInputs == null) {
-			throw new SetupException ("The audio Source input catgalogue was not specifed in the  device Parameter block");
-		}
-	}
-	
 	
 	/*
 	 * @todo Write kramer startup
@@ -294,9 +266,9 @@ public class Model extends BaseModel implements DeviceModel {
 					returnVal.avOutputString =kramerHelper.buildSwitchCommand (2,device.getKey(),srcCode, command.getExtra2Info()); 
 				}
 				if (command.getExtra3Info().equals("AV") ||command.getExtra3Info().equals("") ){
-					srcCode = (String)avInputs.get(command.getExtraInfo());
+					srcCode = avInputs.get(command.getExtraInfo());
 					int src = Integer.parseInt(srcCode);
-					String audioSrcCode = (String)audioInputs.get(command.getExtraInfo());
+					String audioSrcCode = audioInputs.get(command.getExtraInfo());
 					int audioSrc = Integer.parseInt(srcCode);
 					setCurrentSrc(device.getKey(),srcCode);
 					returnVal.avOutputString =kramerHelper.buildSwitchCommand (1,device.getKey(),srcCode, command.getExtra2Info()); 
@@ -333,7 +305,7 @@ public class Model extends BaseModel implements DeviceModel {
 	 * @return Returns the currentSrc for a zone
 	 */
 	public String getCurrentSrc(String zone) {
-		return (String)currentSrc.get(zone);
+		return currentSrc.get(zone);
 	}
 	/**
 	 * @param currentSrc The currentSrc for the zone is set

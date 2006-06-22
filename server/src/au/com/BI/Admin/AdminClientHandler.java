@@ -31,7 +31,7 @@ public class AdminClientHandler extends Thread
 	protected InputStream i;
 	protected OutputStream o;
 	protected User user;
-	protected List commandList;
+	protected CommandQueue commandList;
 	protected long ID;
 	protected boolean isAdmin = false;
 	protected HashMap modelRegistry;
@@ -45,7 +45,7 @@ public class AdminClientHandler extends Thread
 	protected XMLOutputter xmlOut;
 	protected BufferedReader rd;
 	
-	public AdminClientHandler (Socket connection,List commandList, List clientList,
+	public AdminClientHandler (Socket connection,CommandQueue commandList, List clientList,
 			HashMap modelRegistry, Date startupTime, String startupFile,String logDir) throws ConnectionFail {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		clientConnection = connection;
@@ -98,7 +98,7 @@ public class AdminClientHandler extends Thread
 	/**
 	 * @param commandList The synchronised fifo queue for ReceiveEvent objects
 	 */
-	public void setCommandList (List commandList){
+	public void setCommandList (CommandQueue commandList){
 		this.commandList = commandList;
 	}
 	
@@ -321,53 +321,37 @@ public class AdminClientHandler extends Thread
 		}
 		if (name.equals("RELOAD_SCRIPTS")) {
             Command command = new Command ("SYSTEM","LoadScripts",user);
-            synchronized (commandList){
-            		commandList.add (command);
-            		commandList.notifyAll();
-            }
+            commandList.notifyAll();
 		}
 		if (name.equals("RELOAD_MACROS")) {
             Command command = new Command ("SYSTEM","LoadMacros",user);
-            synchronized (commandList){
-            		commandList.add (command);
-            		commandList.notifyAll();
-            }
+            commandList.add (command);
+
 		}
 		if (name.equals("RELOAD_IRDB")) {
             Command command = new Command ("SYSTEM","LoadIRDB",user);
-            synchronized (commandList){
-            		commandList.add (command);
-            		commandList.notifyAll();
-            }
+       		commandList.add (command);
+
 		}
 		if (name.equals("LIST_IR_ACTIONS")) {
 			String device = rootElement.getAttributeValue("DEVICE");
 			if (device != null){
 	            AdminCommand command = new AdminCommand ("ADMIN","List_Actions",user);
 	            command.setExtraInfo(device);
-	            synchronized (commandList){
-	            		commandList.add (command);
-	            		commandList.notifyAll();
-	            }
+          		commandList.add (command);
+
 			}
 		}
 		if (name.equals("LIST_IR_DEVICES")) {
             AdminCommand command = new AdminCommand ("ADMIN","List_Devices",user);
-            synchronized (commandList){
-            		commandList.add (command);
-            		commandList.notifyAll();
-            }
+       		commandList.add (command);
 		}
 		if (name.equals("TEST_IR")) {
             ClientCommand command = new ClientCommand ("",rootElement.getAttributeValue("TARGET"),user,
             		rootElement.getAttributeValue("DEVICE") + "."+rootElement.getAttributeValue("ACTION"));
             command.setExtra2Info(rootElement.getAttributeValue("REPEAT"));
-
-            synchronized (commandList){
-            		commandList.add (command);
-            		commandList.notifyAll();
-            }
-		}		
+            commandList.add (command);
+ 		}		
 		if (name.equals("IR_CONFIG")) {
 			String ir_command = rootElement.getAttributeValue ("EXTRA");
 		    logger.log (Level.FINE,"IR Config command received : " + ir_command);

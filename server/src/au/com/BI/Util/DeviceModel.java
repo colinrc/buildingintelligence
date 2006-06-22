@@ -176,8 +176,8 @@ public interface DeviceModel {
 	 * Any object can add commands to the queue
 	 * @param commandQueue A syncronised list to add commands
 	 */
-	public void setCommandQueue (java.util.List commandQueue);
-
+	public void setCommandQueue (CommandQueue commandQueue);
+    public CommandQueue getCommandQueue() ;
 	public void setParameter (String name, String value,String groupName);
 	public String getParameterValue (String Name,String groupName);
 

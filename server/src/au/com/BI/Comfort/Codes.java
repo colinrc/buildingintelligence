@@ -12,22 +12,22 @@ import java.util.Hashtable;
  * @updated 18-Jan-2004 08:54:53 PM
  */
 public class Codes{
-	public Hashtable alarmTypes;
-	public Hashtable commandCodes;
-	public Hashtable commandReturns;
+	public Hashtable <String,String>alarmTypes;
+	public Hashtable <String,String>commandCodes;
+	public Hashtable <String,String>commandReturns;
 			
 	public  Codes ()
 	{
-		alarmTypes = new Hashtable (32); // default alarm types
-		commandCodes = new Hashtable (41); // command codes
-		commandReturns = new Hashtable (37); // default alarm returns
+		alarmTypes = new Hashtable <String,String>(32); // default alarm types
+		commandCodes = new Hashtable <String,String>(41); // command codes
+		commandReturns = new Hashtable<String,String> (37); // default alarm returns
 
 		setAlarmTypes (alarmTypes);
 		setCommandCodes (commandCodes);
 		setCommandReturns (commandReturns);
 	}
 	
-	public void setAlarmTypes (Hashtable alarmTypes) 
+	public void setAlarmTypes (Hashtable <String,String>alarmTypes) 
 	{
 		alarmTypes.put("00", "No Alarm");
 		alarmTypes.put("01", "Intruder Alarm");
@@ -63,7 +63,7 @@ public class Codes{
 		alarmTypes.put("31", "Sign-in Tamper");
 	}
 	
-	public void setCommandCodes (Hashtable commandCodes) 
+	public void setCommandCodes (Hashtable<String,String> commandCodes) 
 	{
 		commandCodes.put("a?", "Get Current Alarm");
 		commandCodes.put("A?", "Get Analog Input Value");
@@ -107,7 +107,7 @@ public class Codes{
 		commandCodes.put("Z?", "request all zones");	
 	}
 	
-	public void setCommandReturns (Hashtable commandReturns)
+	public void setCommandReturns (Hashtable <String,String>commandReturns)
 	{
 		commandReturns.put("a?", "Current Alarm Type Reply");
 		commandReturns.put("AL", "Alarm Type Report");

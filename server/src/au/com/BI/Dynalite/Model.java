@@ -259,7 +259,7 @@ public class Model extends BaseModel implements DeviceModel {
 							while (li.hasNext()){
 								CommandInterface nextCommand = (CommandInterface)li.next();
 								cache.setCachedCommand(nextCommand.getKey(),nextCommand);
-								this.sendToFlash(commandQueue,-1,nextCommand);
+								this.sendToFlash(-1,nextCommand);
 								logger.log (Level.FINER,"Sending dynalite linked command " + " for " + nextCommand.getKey());
 							}
 						} catch (CommsFail e1) {
@@ -289,7 +289,7 @@ public class Model extends BaseModel implements DeviceModel {
 							while (li.hasNext()){
 								CommandInterface nextCommand = (CommandInterface)li.next();
 								cache.setCachedCommand(nextCommand.getKey(),nextCommand);
-								this.sendToFlash(commandQueue,-1,nextCommand);
+								this.sendToFlash(-1,nextCommand);
 								logger.log (Level.FINER,"Sending dynalite linked command " + " for " + nextCommand.getKey());
 							}
 						} catch (CommsFail e1) {
@@ -324,7 +324,7 @@ public class Model extends BaseModel implements DeviceModel {
 					CommandInterface nextCommand = (CommandInterface)i.next();
 					if (nextCommand != null) {
 					    cache.setCachedCommand(nextCommand.getKey(),nextCommand);
-					    this.sendToFlash(commandQueue,-1,nextCommand);
+					    this.sendToFlash(-1,nextCommand);
 					}
 				}
 				if (results.isRescanLevels()){
@@ -340,7 +340,7 @@ public class Model extends BaseModel implements DeviceModel {
 				while (li.hasNext()){
 					CommandInterface nextCommand = (CommandInterface)li.next();
 					cache.setCachedCommand(nextCommand.getKey(),nextCommand);
-					this.sendToFlash(commandQueue,-1,nextCommand);
+					this.sendToFlash(-1,nextCommand);
 					logger.log (Level.FINER,"Sending dynalite linked command " + " for " + nextCommand.getDisplayName());
 				}
 			}

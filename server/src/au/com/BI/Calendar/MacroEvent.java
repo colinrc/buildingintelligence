@@ -8,6 +8,7 @@ package au.com.BI.Calendar;
 import java.util.logging.*;
 
 import au.com.BI.Command.CommandInterface;
+import au.com.BI.Command.CommandQueue;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Macro.MacroHandler;
 
@@ -15,7 +16,6 @@ import org.quartz.*;
 import au.com.BI.User.*;
 
 import java.util.Calendar;
-import java.util.List;
 import java.util.Date;
 
 public class MacroEvent implements Job {
@@ -149,11 +149,8 @@ public class MacroEvent implements Job {
 		        newCommand.setTargetUser(target_user);
 		        newCommand.setAlarm (alarm);
 		        newCommand.setMessageType (CommandInterface.Message);
-				List commandList = macroHandler.getCommandList();
-				synchronized (commandList) {
-					commandList.add(newCommand);
-					commandList.notify();
-				}
+				CommandQueue commandList = macroHandler.getCommandList();
+				commandList.add(newCommand);
 		  }
 
 		   logger.log( Level.FINER, this.title + " is running.");

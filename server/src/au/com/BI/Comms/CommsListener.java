@@ -6,7 +6,7 @@
  */
 package au.com.BI.Comms;
 
-import java.util.*;
+import au.com.BI.Command.CommandQueue;
 /**
  * @author colinc
  *
@@ -18,7 +18,7 @@ public interface CommsListener {
 	/**
 	* @param commandList The synchronised fifo queue for ReceiveEvent objects
 	*/
-	public void setCommandList (List commandList);
+	public void setCommandList (CommandQueue commandList);
 	
 	public void setTargetDeviceModel (int targetDeviceModel);
 	

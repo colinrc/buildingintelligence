@@ -11,7 +11,7 @@ public class JRobinData {
         private long updateInterval;
         private String RRDName;
 
-        private ArrayList data;
+        private ArrayList <JRobinDataItem>data;
         private int numberOfData;
         private int numberOfDataAll;
         private int numberOfDataPowerConumption;
@@ -26,7 +26,7 @@ public class JRobinData {
                 this.updateInterval = updateInterval;
                 this.RRDName = RRDName;
 
-                data = new ArrayList (20);
+                data = new ArrayList <JRobinDataItem>(20);
                 numberOfData = 0;
                 numberOfDataAll = 0;
                 numberOfDataPowerConumption = 0;
@@ -144,8 +144,7 @@ public class JRobinData {
         */
        public ArrayList getJRobinDataItems(String key) {
 
-               ArrayList dataItemsAL;
-               dataItemsAL = new ArrayList(data.size());
+               ArrayList <JRobinDataItem>dataItemsAL = new ArrayList<JRobinDataItem>(data.size());
                Iterator eachItem = data.iterator();
                while (eachItem.hasNext()) {
                        JRobinDataItem jRobinDataItem = (JRobinDataItem) eachItem.next();
@@ -161,8 +160,7 @@ public class JRobinData {
 
 
        public ArrayList getJRobinDataItemVariables() {
-               ArrayList variables;
-               variables = new ArrayList(20);
+               ArrayList <String>variables = new ArrayList<String>(20);
                Iterator eachItem = data.iterator();
                int i=0;
                while (eachItem.hasNext()) {

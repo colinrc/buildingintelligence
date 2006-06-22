@@ -252,19 +252,14 @@ public class Model
 
                 if (clientCommand != null) {
                         clientCommand.setTargetDeviceID(command.getTargetDeviceID());
-                        synchronized (this.commandQueue) {
-                                commandQueue.add(clientCommand);
-                        }
+                         commandQueue.add(clientCommand);
                 }
         }
 
 		public void sendListToClient() {
 			ClientCommand clientCommand = (ClientCommand)doGetList("");
 			clientCommand.setTargetDeviceID(-1);
-            synchronized (this.commandQueue) {
-                commandQueue.add(clientCommand);
-			}
-
+            commandQueue.add(clientCommand);
 		}
 
 		public Command doGetList (String key) {
@@ -287,15 +282,11 @@ public class Model
         public void sendToFlash(CommandInterface command) {
 
                 cache.setCachedCommand(command.getDisplayName(), command);
-                synchronized (commandQueue) {
                         commandQueue.add(command);
-                }
         }
 
-        public List getCommandQueue() {
-                synchronized (commandQueue) {
+        public CommandQueue getCommandQueue() {
                         return commandQueue;
-                }
         }
 
         public String buildDirectConnectString(ToggleSwitch device,
@@ -324,15 +315,13 @@ public class Model
 			loadScripts();
         }
 
-	    	public void doClientStartup(java.util.List commandQueue, long targetFlashDeviceID, long serverID){
+	    	public void doClientStartup(CommandQueue commandQueue, long targetFlashDeviceID, long serverID){
 	    		if (scriptHandler != null) {
 		    	    ClientCommand clientCommand = new ClientCommand();
 		    	    clientCommand.setFromElement (scriptHandler.get(""));
 		    	    clientCommand.setKey ("CLIENT_SEND");
 		    	    clientCommand.setTargetDeviceID(targetFlashDeviceID);
-		    		synchronized (commandQueue){
-		    			commandQueue.add(clientCommand);
-		    		}
+		    	    commandQueue.add(clientCommand);
 	    		}
 	    	};
 	    	
@@ -1389,7 +1378,7 @@ public class Model
                 sendToFlash(macroCommand);
         }
 
-        public void attatchComms(List commandQueue) throws au.com.BI.Comms.
+        public void attatchComms(CommandQueue commandQueue) throws au.com.BI.Comms.
           ConnectionFail {};
 
         public void setScriptFiles(Map myScriptFiles) {

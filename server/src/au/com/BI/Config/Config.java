@@ -115,7 +115,7 @@ public class Config {
 
 
 	public void readConfig(List <DeviceModel>deviceModels, List clientModels,Cache cache,
-			HashMap <String,Object>variableCache, List commandQueue, Map modelRegistry,
+			HashMap <String,Object>variableCache, CommandQueue commandQueue, Map modelRegistry,
 			IRCodeDB irCodeDB, File configFile, MacroHandler macroHandler, 
 			Bootstrap bootstrap, Controls controls, AddressBook addressBook,
 			AlarmLogging alarmLogging,VersionManager versionManager)

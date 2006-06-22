@@ -7,6 +7,7 @@ package au.com.BI.Admin;
 import java.io.*;
 import java.util.logging.*;
 
+import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.*;
 import java.util.*;
 import java.net.*;
@@ -24,13 +25,13 @@ public class AdminControlListener extends Thread
 	
 	protected ServerSocket iPPort;
 	
-	protected LinkedList adminControllers;
+	protected List <AdminClientHandler>adminControllers;
 	protected int portNumber;
 	protected String Address;
 	protected InetAddress iPAddress;
 	protected Logger logger;
 	protected boolean running;
-	protected List commandList;
+	protected CommandQueue commandList;
 	protected Document heartbeatDoc;
 	protected boolean firstConnection = true;
 	protected Level defaultDebugLevel;
@@ -43,7 +44,7 @@ public class AdminControlListener extends Thread
 	protected String startupFile;
 	protected au.com.BI.IR.Model irLearner;
 	
-	public AdminControlListener (LinkedList adminControllers, int portNumber, String address,List commandList,Level defaultDebugLevel,
+	public AdminControlListener (List<AdminClientHandler> adminControllers, int portNumber, String address,CommandQueue commandList,Level defaultDebugLevel,
 			HashMap modelRegistry, Date startupTime, String startupFile,String logDir, au.com.BI.IR.Model irLearner, LogHandler sh) 
 		throws CommsFail
 	{

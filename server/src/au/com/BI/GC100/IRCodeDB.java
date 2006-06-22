@@ -25,23 +25,23 @@ import org.jdom.output.XMLOutputter;
  *This class provides the main interface for the IR database
  */
 public class IRCodeDB {
-	protected LinkedHashMap devices;
-	protected LinkedHashMap deviceItemFreqs;
+	protected Map <String,Map<String,String>> devices;
+	protected Map <String,Map<String,String>> deviceItemFreqs;
 
 	protected Logger logger;
 	protected String fileName = "";
 
 	public IRCodeDB() {
-	    devices = new LinkedHashMap (100);
-	    deviceItemFreqs = new LinkedHashMap (100);
+	    devices = new LinkedHashMap<String,Map<String,String>> (100);
+	    deviceItemFreqs = new LinkedHashMap <String,Map<String,String>>(100);
 
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		readIRCodesFile("datafiles" + File.separator + "ircodes.xml");
 	}
 	
 	private String previousDevice = "";
-	private LinkedHashMap dbItems;
-	private LinkedHashMap dbFrequencies;
+	private Map <String,String> dbItems;
+	private Map <String,String>dbFrequencies;
 	
 	public Set getDevices () {
 		return devices.keySet();
@@ -64,12 +64,12 @@ public class IRCodeDB {
 
 	    if (!deviceName.equals(previousDevice)) { 
 			if (devices.containsKey( deviceName)) {
-			    dbItems = (LinkedHashMap)devices.get(deviceName);
-			    dbFrequencies = (LinkedHashMap)deviceItemFreqs.get(deviceName);		    
+			    dbItems = devices.get(deviceName);
+			    dbFrequencies = deviceItemFreqs.get(deviceName);		    
 			}
 			else {
-			    dbItems = new LinkedHashMap (10);
-			    dbFrequencies = new LinkedHashMap (10);
+			    dbItems = new LinkedHashMap<String,String> (10);
+			    dbFrequencies = new LinkedHashMap<String,String> (10);
 			}
 	    }
 		dbItems.put(key, vals);

@@ -90,6 +90,7 @@ public class Model extends BaseModel implements DeviceModel {
 		super.attatchComms();
 	}
 
+	/*
 	public void doClientStartup (List commandQueue, long targetFlashDeviceID) {
 
 		Iterator cBUSDevices = configHelper.getAllControlledDevices();
@@ -108,12 +109,13 @@ public class Model extends BaseModel implements DeviceModel {
 			cbusCommand.setExtraInfo(String.valueOf(theState.getLevel()));
 			cbusCommand.setKey ("CLIENT_SEND");
 	
-			this.sendToFlash(commandQueue,-1,cbusCommand);
+			this.sendToFlash(-1,cbusCommand);
 		} catch (ClassCastException ex){
 			
 		}
 
 	}
+	*/
 
 	public void addControlledItem (String name, DeviceType details, int controlType) {
 
@@ -681,7 +683,7 @@ public class Model extends BaseModel implements DeviceModel {
 		cbusCommand.setUser(currentUser);
 		cache.setCachedCommand(cbusCommand.getDisplayName(),cbusCommand);
 		this.setStateClean (cbusDevice);
-		this.sendToFlash(commandQueue,-1,cbusCommand);
+		this.sendToFlash(-1,cbusCommand);
 	}
 	
 	protected void sendCommandToFlash (LightFascade cbusDevice,String command,int extra,User currentUser){
@@ -693,7 +695,7 @@ public class Model extends BaseModel implements DeviceModel {
 		cbusCommand.setUser(currentUser);
 		cache.setCachedCommand(cbusCommand.getDisplayName(),cbusCommand);
 		this.setStateClean (cbusDevice);
-		this.sendToFlash(commandQueue,-1,cbusCommand);
+		this.sendToFlash(-1,cbusCommand);
 	}
 	
 	protected void processMMI (String cBUSString, User currentUser ) throws CommsFail {
@@ -1136,7 +1138,7 @@ public class Model extends BaseModel implements DeviceModel {
 						cbusCommand.setKey ("CLIENT_SEND");
 						cbusCommand.setUser(user);
 						cache.setCachedCommand(cbusCommand.getDisplayName(),cbusCommand);
-						this.sendToFlash(commandQueue,-1,cbusCommand);
+						this.sendToFlash(-1,cbusCommand);
 						this.setStateClean (cbusDevice);
 						//logger.log (Level.FINEST,"Sending to flash " + cbusCommand.getDisplayName() + " " + command + " level " + Integer.toString(newLevel));
 				} catch (NumberFormatException ex) {

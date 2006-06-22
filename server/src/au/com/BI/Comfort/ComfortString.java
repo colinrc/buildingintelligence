@@ -22,16 +22,16 @@ public class ComfortString {
 		String theParameter2;
 		
 		
-		protected HashMap fourDigitKeys= null;
-		protected HashMap fiveDigitKeys= null;
-		protected HashMap lastHouseCode = null;
+		protected HashMap<String,String>  fourDigitKeys= null;
+		protected HashMap <String,String> fiveDigitKeys= null;
+		protected HashMap <String,String> lastHouseCode = null;
 		
 		public ComfortString (){
 			logger = Logger.getLogger(this.getClass().getPackage().getName());
 			
-			fourDigitKeys = new HashMap (10);
-			fiveDigitKeys = new HashMap (10);
-			lastHouseCode = new HashMap (26);
+			fourDigitKeys = new HashMap<String,String> (10);
+			fiveDigitKeys = new HashMap<String,String>  (10);
+			lastHouseCode = new HashMap<String,String>  (26);
 			
 			fourDigitKeys.put ("DB","");
 			fourDigitKeys.put ("LU","");

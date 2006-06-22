@@ -2,10 +2,10 @@
  * Created on Dec 14, 2004
  */
 package au.com.BI.Raw;
-import java.util.List;
 import java.util.logging.*;
 
 import au.com.BI.Command.Command;
+import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.*;
 
 
@@ -21,7 +21,7 @@ public class Poll  extends Thread {
 	protected CommDevice comms;
 	protected long pollValue;
 	protected String pollString =  "";
-	protected List commandQueue;
+	protected CommandQueue commandQueue;
 	protected int deviceNumber = -1;
 	
 	/**
@@ -66,10 +66,7 @@ public class Poll  extends Thread {
 			command.setCommand ("Attatch");
 			command.setKey("SYSTEM");
 			command.setExtraInfo (Integer.toString(deviceNumber));
-			synchronized (commandQueue) {
-				commandQueue.add(command);
-				commandQueue.notifyAll();
-			}
+			commandQueue.add(command);
 		}
 		
 	}
@@ -106,12 +103,12 @@ public class Poll  extends Thread {
 		this.pollString = pollString;
 	}
 	
-	public List getCommandQueue() {
+	public CommandQueue getCommandQueue() {
 		return commandQueue;
 	}
 
 
-	public void setCommandQueue(List commandQueue) {
+	public void setCommandQueue(CommandQueue commandQueue) {
 		this.commandQueue = commandQueue;
 	}
 

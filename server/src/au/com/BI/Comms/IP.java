@@ -6,8 +6,9 @@ package au.com.BI.Comms;
 
 import java.io.*;
 import java.util.logging.*;
-import java.util.List;
 import java.net.*;
+
+import au.com.BI.Command.CommandQueue;
 
 /**
  * @author Colin Canfield
@@ -77,7 +78,7 @@ public class IP extends BaseComms implements CommDevice
 	 * @param portNum The ip port
 	 * @throws au.com.BI.comms.ConnectionFail
 	 */
-	public void connect (String ipAddressTxt, String portNum,  List commandList, int targetDeviceModel, boolean doHeartBeat, 
+	public void connect (String ipAddressTxt, String portNum,  CommandQueue commandList, int targetDeviceModel, boolean doHeartBeat, 
 			String heartbeatString,String deviceName)
 		throws ConnectionFail 
 		{

@@ -3,9 +3,9 @@
  */
 package au.com.BI.Comms;
 
-import java.util.List;
 
 import au.com.BI.Command.Command;
+import au.com.BI.Command.CommandQueue;
 
 /**
  * @author Colin Canfield
@@ -13,7 +13,7 @@ import au.com.BI.Command.Command;
  */
 public class CommsGroup extends ThreadGroup  {
 
-	protected List commandQueue = null;
+	protected CommandQueue commandQueue = null;
 	protected int modelNumber = 0;
 	
 	/**
@@ -23,11 +23,11 @@ public class CommsGroup extends ThreadGroup  {
 		super(arg0);
 	}
 	
-	public List getCommandQueue() {
+	public CommandQueue getCommandQueue() {
 		return commandQueue;
 	}
 	
-	public void setCommandQueue(List commandQueue) {
+	public void setCommandQueue(CommandQueue commandQueue) {
 		this.commandQueue = commandQueue;
 	}
 
@@ -35,10 +35,7 @@ public class CommsGroup extends ThreadGroup  {
 		if (!(e instanceof AssertionError)){
 			Command reAttatchCommand = new Command("SYSTEM","Attatch",null,Integer.toString(modelNumber));
 			
-			synchronized (commandQueue){
-				commandQueue.add(reAttatchCommand);
-				commandQueue.notifyAll();
-			}
+			commandQueue.add(reAttatchCommand);
 		} else {
 			super.uncaughtException(t,e);
 		}

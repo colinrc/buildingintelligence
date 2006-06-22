@@ -27,6 +27,7 @@ public class OutputHelper {
 	protected String comfortSecond = "";
 	protected String cBUS_UCM = "";
 	protected String applicationCode = "38";
+	protected CommandQueue commandQueue = null;
 	
 	public OutputHelper() {
 		super();
@@ -484,5 +485,15 @@ public class OutputHelper {
 	 */
 	public void setApplicationCode(String applicationCode) {
 		this.applicationCode = applicationCode;
+	}
+
+
+	public CommandQueue getCommandQueue() {
+		return commandQueue;
+	}
+
+
+	public void setCommandQueue(CommandQueue commandQueue) {
+		this.commandQueue = commandQueue;
 	}
 }

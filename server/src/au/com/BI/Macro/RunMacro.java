@@ -6,6 +6,7 @@ package au.com.BI.Macro;
 import au.com.BI.User.*;
 import java.util.*;
 import au.com.BI.Command.CommandInterface;
+import au.com.BI.Command.CommandQueue;
 
 import au.com.BI.Flash.*;
 
@@ -15,7 +16,7 @@ public class RunMacro extends Thread {
 
 	protected List macro;
 	protected User user;
-	protected List commandList;
+	protected CommandQueue commandList;
 	protected Logger logger;
 	protected String macroName;
 	protected boolean continueToEnd;
@@ -40,7 +41,7 @@ public class RunMacro extends Thread {
 		this.setName ("Macro runner : " + macroName);
 	}
 	
-	public void setCommandList (List commandList){
+	public void setCommandList (CommandQueue commandList){
 		this.commandList = commandList;
 	}
 
@@ -52,10 +53,8 @@ public class RunMacro extends Thread {
 		started.setKey("MACRO");
 		started.setExtraInfo(macroName);
 		started.setCommand("started");
-		synchronized (commandList){
-			commandList.add (started);
-			commandList.notifyAll ();
-		}
+		commandList.notifyAll ();
+		
 		while ((doOnce || repeating) && !continueToEnd && !abort) {
 		    doOnce = false; // just run it once
 			Iterator macroItems = macro.iterator();
@@ -112,10 +111,7 @@ public class RunMacro extends Thread {
 						
 					if (!commandDone) {
 					    commandDone = true;
-						synchronized (commandList){
-							commandList.add (clientCommand);
-							commandList.notifyAll ();
-						}
+						commandList.add (clientCommand);
 					}
 			    } catch (CloneNotSupportedException ex){
 			    	logger.log(Level.WARNING,"Macro execution failed, an element could not be run " + ex.getMessage());
@@ -131,11 +127,7 @@ public class RunMacro extends Thread {
 		finished.setKey("MACRO");
 		finished.setExtraInfo(macroName);
 		finished.setCommand("finished");
-		synchronized (commandList){
-			commandList.add (finished);
-			commandList.notifyAll ();
-		}
-		
+		commandList.add (finished);		
 	}
 	
 	/*

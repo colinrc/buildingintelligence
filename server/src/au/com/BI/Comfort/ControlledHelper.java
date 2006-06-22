@@ -4,7 +4,6 @@
 package au.com.BI.Comfort;
 
 import java.util.logging.*;
-import java.util.*;
 import au.com.BI.Util.*;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
@@ -28,7 +27,7 @@ public class ControlledHelper {
 	protected String STX;
 	protected String ETX;
 	protected DoActionHelper doActionHelper;
-
+	protected CommandQueue commandQueue = null;
 
 	public ControlledHelper() {
 		super();
@@ -38,7 +37,7 @@ public class ControlledHelper {
 	}
 
 	
-	public void doControlledItem (CommandInterface command, boolean isStartupQuery,ComfortString comfortString, ConfigHelper configHelper, Cache cache, List commandQueue, CommDevice comms, au.com.BI.Comfort.Model comfort) throws CommsFail
+	public void doControlledItem (CommandInterface command, boolean isStartupQuery,ComfortString comfortString, ConfigHelper configHelper, Cache cache, CommDevice comms, au.com.BI.Comfort.Model comfort) throws CommsFail
 	{
 		if (comfortString.comfortKey.equals("LU")) {
 			String comfortUser = comfortString.theParameter;
@@ -50,10 +49,7 @@ public class ControlledHelper {
 				restCommand.setKey("SYSTEM");
 				restCommand.setExtraInfo (Integer.toString(comfort.getInstanceID()));
 
-				synchronized (commandQueue){
-					commandQueue.add(restCommand);
-					commandQueue.notifyAll();
-				}	
+				commandQueue.add(restCommand);
 			}
 			else {
 				comfort.setLoggedIn (true);
@@ -77,7 +73,7 @@ public class ControlledHelper {
 					CommsCommand raSent = comms.getLastCommandSent();
 					comms.acknowlegeCommand("");
 					logger.log (Level.FINEST,"Received DA return code " + raSent.getActionCode());
-					doActionHelper.handleReturnCode (raSent, comfortString,   cache , commandQueue,configHelper, comfort);
+					doActionHelper.handleReturnCode (raSent, comfortString,   cache ,configHelper, comfort);
 				}
 			}
 			return;
@@ -113,7 +109,7 @@ public class ControlledHelper {
 				if (comfortString.theParameter.equals("00")){
 				    toggleCommand.setCommand ("off");
 				}			
-				sendToFlash (toggleCommand,cache,commandQueue);
+				sendToFlash (toggleCommand,cache);
 				break;
 
 			case DeviceType.COUNTER:
@@ -137,7 +133,7 @@ public class ControlledHelper {
 						counterCommand.setExtraInfo ( String.valueOf(counter.getMax()));
 					}
 				}					
-				sendToFlash (counterCommand,cache,commandQueue);
+				sendToFlash (counterCommand,cache);
 				break;
 
 			case DeviceType.LIGHT_CBUS:
@@ -161,7 +157,7 @@ public class ControlledHelper {
 						cbusLightCommand.setExtraInfo ("100");
 					}
 				}					
-				sendToFlash (cbusLightCommand,cache,commandQueue);
+				sendToFlash (cbusLightCommand,cache);
 				break;
 
 			case DeviceType.ANALOGUE:
@@ -184,7 +180,7 @@ public class ControlledHelper {
 						analogueCommand.setExtraInfo ("100");
 					}
 				}					
-				sendToFlash (analogueCommand,cache,commandQueue);
+				sendToFlash (analogueCommand,cache);
 				break;
 
 			case DeviceType.COMFORT_LIGHT_X10_UNITCODE:
@@ -202,7 +198,7 @@ public class ControlledHelper {
 				if (comfortString.theParameter.equals("05") || comfortString.theParameter.equals("03") || comfortString.theParameter.equals("01")){
 					x10LightCommand.setCommand ("on");
 				} 
-				sendToFlash (x10LightCommand,cache,commandQueue);
+				sendToFlash (x10LightCommand,cache);
 				break;
 
 			case DeviceType.TOGGLE_INPUT: case DeviceType.TOGGLE_OUTPUT_MONITOR:
@@ -217,7 +213,7 @@ public class ControlledHelper {
 					if (comfortString.theParameter.equals("00")){
 						toggleSwitchCommand.setCommand ("off");
 					}					
-					sendToFlash (toggleSwitchCommand,cache,commandQueue);
+					sendToFlash (toggleSwitchCommand,cache);
 					break;
 					
 
@@ -233,7 +229,7 @@ public class ControlledHelper {
 					if (comfortString.theParameter.equals("00")){
 					    pulseOutputCommand.setCommand ("off");
 					}					
-					sendToFlash (pulseOutputCommand,cache,commandQueue);
+					sendToFlash (pulseOutputCommand,cache);
 					break;
 					
 			case DeviceType.DOORBELL : case DeviceType.ALERT :
@@ -352,20 +348,17 @@ public class ControlledHelper {
 				break;
 
 			}
-			sendToFlash (alertCommand,cache,commandQueue);
-			if (alertCommand2 != null) sendToFlash (alertCommand2,cache,commandQueue);
+			sendToFlash (alertCommand,cache);
+			if (alertCommand2 != null) sendToFlash (alertCommand2,cache);
 	}
 
 }		
 }
 	
 	
-	public void sendToFlash (CommandInterface command, Cache cache ,List commandQueue) {
+	public void sendToFlash (CommandInterface command, Cache cache ) {
 		cache.setCachedCommand(command.getDisplayName(),command);
-		synchronized (commandQueue){
-			commandQueue.add(command);
-			commandQueue.notifyAll();
-		}		
+		commandQueue.add(command);
 	}
 	/**
 	 * @return Returns the eTX.
@@ -390,6 +383,17 @@ public class ControlledHelper {
 	 */
 	public void setSTX(String stx) {
 		STX = stx;
+	}
+
+
+	public CommandQueue getCommandQueue() {
+		return commandQueue;
+	}
+
+
+	public void setCommandQueue(CommandQueue commandQueue) {
+		this.commandQueue = commandQueue;
+		this.doActionHelper.setCommandQueue(commandQueue);
 	}
 
 }

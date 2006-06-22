@@ -5,9 +5,10 @@
 package au.com.BI.Comms;
 
 import java.io.*;
-import java.util.List;
 import java.util.logging.*;
 import java.net.*;
+
+import au.com.BI.Command.CommandQueue;
 
 /**
  * @author Colin Canfield
@@ -20,7 +21,7 @@ public class IPListener extends Thread implements CommsListener
 {
 	protected InputStream is;
 	protected volatile boolean handleEvents = false;
-	protected List commandList;
+	protected CommandQueue commandList;
 	protected Logger logger;
 	protected int targetDeviceModel = -1;
 	protected int defaultTransmitOnBytes = 400; 
@@ -57,7 +58,7 @@ public class IPListener extends Thread implements CommsListener
 	/**
 	 * @param commandList The synchronised fifo queue for ReceiveEvent objects
 	 */
-	public void setCommandList (List commandList){
+	public void setCommandList (CommandQueue commandList){
 		this.commandList = commandList;
 	}
 	
@@ -235,10 +236,7 @@ public class IPListener extends Thread implements CommsListener
 					command.setCommandBytes(retArray);
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					
-					synchronized (commandList){
-						commandList.add (command);
-						commandList.notifyAll (); 
-					}
+					commandList.add (command);
 				}
 				int arrayOffset = 0;
 				int prevOffset = -1;
@@ -267,10 +265,7 @@ public class IPListener extends Thread implements CommsListener
 					command.setCommandBytes(retArray);
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					
-					synchronized (commandList){
-						commandList.add (command);
-						commandList.notifyAll (); 
-					}
+					commandList.add (command);
 					
 				}
 				if (this.endVals[arrayOffset]) {
@@ -287,10 +282,7 @@ public class IPListener extends Thread implements CommsListener
 					command.setCommandBytes(retArray);
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					
-					synchronized (commandList){
-						commandList.add (command);
-						commandList.notifyAll (); 
-					}
+					commandList.add (command);
 					
 				}
 				
@@ -311,10 +303,7 @@ public class IPListener extends Thread implements CommsListener
 					command.setCommandBytes(readArray);
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					
-					synchronized (commandList){
-						commandList.add (command);
-						commandList.notifyAll (); 
-					}
+					commandList.add (command);
 				} else {
 					// some left over characters
 					int numBytes = endPos - endPrev;
@@ -360,10 +349,7 @@ public class IPListener extends Thread implements CommsListener
 				CommsCommand command = new CommsCommand (str,"RawText",null);
 				command.setCommandBytes(retArray);
 				command.setTargetDeviceModel(this.targetDeviceModel);
-				synchronized (commandList){
-					commandList.add (command);
-					commandList.notifyAll (); 
-				}
+				commandList.add (command);
 			}
 		}
 	}
@@ -376,10 +362,7 @@ public class IPListener extends Thread implements CommsListener
 				CommsCommand command = new CommsCommand (str,"RawText",null);
 				command.setTargetDeviceModel(this.targetDeviceModel);
 				
-				synchronized (commandList){
-					commandList.add (command);
-					commandList.notifyAll (); 
-				}
+				commandList.add (command);
 			}
 		}
 	}

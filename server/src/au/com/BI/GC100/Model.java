@@ -51,18 +51,6 @@ public class Model extends BaseModel implements DeviceModel {
 	public void clearItems () {
 		super.clearItems();
 	}
-
-	
-	public void sendToFlash (List commandQueue, long targetFlashID, CommandInterface command) {
-
-		String theKey = command.getDisplayName();
-
-		command.setTargetDeviceID(targetFlashID);
-		logger.log (Level.FINEST,"Sending to flash " + theKey + ":" + command.getCommandCode() + ":" + command.getExtraInfo());
-		synchronized (this.commandQueue){
-			commandQueue.add( command);
-		}
-	}
 	
 	public void addStartupQueryItem (String name, DeviceType details, int controlType){
 	    if (((String)this.getParameterValue("MODULE_TYPE" ,details.getGroupName())).equals("IR")
@@ -399,7 +387,7 @@ public class Model extends BaseModel implements DeviceModel {
 				toggleSwitchCommand.setKey ("CLIENT_SEND");
 				toggleSwitchCommand.setUser(user);
 				cache.setCachedCommand(toggleSwitchCommand.getDisplayName(),toggleSwitchCommand);
-				this.sendToFlash(commandQueue,-1,toggleSwitchCommand);
+				this.sendToFlash(-1,toggleSwitchCommand);
 				//logger.log (Level.FINEST,"Sending to flash " + toggleSwitchCommand.getDisplayName() + " " + command;
 		}
 		else {

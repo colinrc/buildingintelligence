@@ -20,7 +20,7 @@ public class LogHandler extends StreamHandler
 	OutputStream logOutput;
 	private boolean buffering = false;
 	private boolean sentBuffer = false;
-	private Vector startupLogBuffer;
+	private Vector <LogRecord>startupLogBuffer;
 	private Calendar endOfRecording;
 
 	/**
@@ -30,7 +30,7 @@ public class LogHandler extends StreamHandler
 	public LogHandler(BIFormatter formatter) {
 		super.setFormatter(new BIFormatter());
 		buffering = true;
-		startupLogBuffer = new Vector (1000);
+		startupLogBuffer = new Vector <LogRecord>(1000);
 		endOfRecording = Calendar.getInstance();
 		
 		endOfRecording.add(Calendar.MINUTE,3); 

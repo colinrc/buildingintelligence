@@ -40,7 +40,7 @@ public class FlashControlListener extends Thread {
     protected InetAddress iPAddress = null;
     protected Logger logger;
     protected boolean running;
-    protected List commandList = null;
+    protected CommandQueue commandList = null;
     protected au.com.BI.Command.Cache cache = null;
     protected MacroHandler macroHandler = null;
     protected Document heartbeatDoc = null;
@@ -52,7 +52,7 @@ public class FlashControlListener extends Thread {
     protected long serverID = 0;
     protected XMLOutputter xmlOut = null;
     
-    public FlashControlListener(LinkedList <FlashClientHandler>flashControllers, int portNumber, String Address,List commandList,
+    public FlashControlListener(LinkedList <FlashClientHandler>flashControllers, int portNumber, String Address,CommandQueue commandList,
 	    VersionManager versionManager,Security security,AddressBook addressBook)
 	    throws CommsFail {
 	heartbeatDoc = new Document(new Element("heartbeat"));
@@ -388,10 +388,8 @@ public class FlashControlListener extends Thread {
 		initConnection.setCommand("ClientAttach");
 		initConnection.setExtraInfo(Long.toString(flashID));
 		initConnection.setExtra2Info(Long.toString(serverID));
-		synchronized (commandList){
-		    commandList.add(initConnection);
-		    commandList.notifyAll();
-		}
+	    commandList.add(initConnection);
+
     }
     /**
      * @return Returns the eventCalendar.

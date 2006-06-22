@@ -23,14 +23,14 @@ public class AlarmLogging {
 	public static final int PANIC_RELEASED = 10;
 	
 	protected Logger logger = null;
-	protected List commandQueue = null;
+	protected CommandQueue commandQueue = null;
 	protected Cache cache = null;
 	
 	public AlarmLogging () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
-	public void setCommandQueue(List commandQueue) {
+	public void setCommandQueue(CommandQueue commandQueue) {
 		this.commandQueue = commandQueue;
 	}
 	
@@ -76,11 +76,9 @@ public class AlarmLogging {
 		cache.setCachedCommand(_command.getKey(),_command);
 
 		logger.log (Level.INFO,"Sending alarm to flash " + displayName + ":" +  message);
-		synchronized (this.commandQueue){
 			
-			if (_command != null) {
-				commandQueue.add(_command);
-			}
+		if (_command != null) {
+			commandQueue.add(_command);
 		}
 	}
 		
@@ -110,13 +108,10 @@ public class AlarmLogging {
 		cache.setCachedCommand(_command.getKey(),_command);
 
 		logger.log (Level.INFO,"Sending alarm to flash " + displayName + ":" +  message);
-		synchronized (this.commandQueue){
-			
-			if (_command != null) {
-				commandQueue.add(_command);
-			}
-			commandQueue.notifyAll();
+		if (_command != null) {
+			commandQueue.add(_command);
 		}
+
 	}
 		
 	public Cache getCache() {

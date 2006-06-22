@@ -43,7 +43,7 @@ public class BaseModel
         protected Logger logger;
 
         protected String name = "Unknown";
-        protected List commandQueue = null;
+        protected CommandQueue commandQueue = null;
         protected ConfigHelper configHelper;
         protected au.com.BI.Command.Cache cache;
         protected HashMap<String,Object> variableCache;
@@ -536,8 +536,12 @@ public class BaseModel
                 //connected = true;
         }
 
-        public void setCommandQueue(List commandQueue) {
+        public void setCommandQueue(CommandQueue commandQueue) {
                 this.commandQueue = commandQueue;
+        }
+        
+        public CommandQueue getCommandQueue() {
+            return commandQueue;
         }
 
         /**
@@ -827,18 +831,17 @@ public class BaseModel
 
 	
 
-	public void sendToFlash (List commandQueue, long targetFlashID, CommandInterface command) {
+	public void sendToFlash ( long targetFlashID, CommandInterface command) {
 		command.setTargetDeviceID(targetFlashID);
+		String theKey = command.getDisplayName();
+		logger.log (Level.FINEST,"Sending to flash " + theKey + ":" + command.getCommandCode() + ":" + command.getExtraInfo());
 		sendToFlash (command,cache);
 	}
 	
 	public void sendToFlash (CommandInterface command, Cache cache ) {
 		cache.setCachedCommand(command.getDisplayName(),command);
 		logger.log (Level.FINE,"Sending to flash " + command.getKey() + ":" + command.getCommandCode() + ":" + command.getExtraInfo());
-
-		synchronized (commandQueue){
-			commandQueue.add(command);
-		}
+		commandQueue.add(command);
 	}
 	
 

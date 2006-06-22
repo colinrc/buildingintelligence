@@ -23,6 +23,7 @@ import javax.servlet.http.*;
 
 import au.com.BI.Command.ClientCommandFactory;
 import au.com.BI.Command.Command;
+import au.com.BI.Command.CommandQueue;
 import au.com.BI.Command.UnknownCommandException;
 import au.com.BI.Config.Security;
 import au.com.BI.Config.TooManyClientsException;
@@ -48,7 +49,7 @@ public class UpdateServlet extends HttpServlet {
 
 	AddressBook addressBook = null;
 	VersionManager versionManager = null;
-	List commandQueue = null;
+	CommandQueue commandQueue = null;
 	
     /** Creates a new instance of UpdateServlet */
     public UpdateServlet() {
@@ -171,10 +172,8 @@ public class UpdateServlet extends HttpServlet {
 		    	}else {
 					command.setOriginatingID(ID);	    		
 		    	}
-		    	synchronized (commandQueue){
-					commandQueue.add(command);
-					commandQueue.notifyAll();
-				}
+				commandQueue.add(command);
+
 	    	}
 			
 			resp.setContentType("text/html");
@@ -274,10 +273,7 @@ public class UpdateServlet extends HttpServlet {
     	initConnection.setCommand("ClientAttach");
     	initConnection.setExtraInfo(sessionID.toString());
     	initConnection.setExtra2Info(serverID.toString());
-    	synchronized (commandQueue){
-    		commandQueue.add(initConnection);
-    		commandQueue.notifyAll();
-    	}
+    	commandQueue.add(initConnection);
     	
     	return returnList;
     }
@@ -285,7 +281,7 @@ public class UpdateServlet extends HttpServlet {
     public void init (ServletConfig cfg) throws ServletException {
         ServletContext context = cfg.getServletContext();
         cacheBridgeFactory = (CacheBridgeFactory)context.getAttribute("CacheBridgeFactory");
-        commandQueue = (List)context.getAttribute("CommandQueue");
+        commandQueue = (CommandQueue)context.getAttribute("CommandQueue");
         versionManager = (VersionManager)context.getAttribute("VersionManager");
         
         super.init();
