@@ -1030,17 +1030,29 @@ renderZone = function (zone, clip) {
 			var room_mc = doors_mc.createEmptyMovieClip("room" + room + "_mc", room);
 			for (var door=0; door<doors.length; door++) {
 				var door_mc = room_mc.createEmptyMovieClip("door" + door + "_mc", door);
-				var pos = doors[door].pos;
-				if (doors[door].colour != undefined) {
-					door_mc.beginFill(doors[door].colour);
-				} else if (doors[door].colours != undefined) {
-					door_mc.colours = doors[door].colours;
-					door_mc.beginFill(0xFFFFFF);
+				if (doors[door].thickness == undefined) {
+					var pos = doors[door].pos;
+					if (doors[door].colour != undefined) {
+						door_mc.beginFill(doors[door].colour);
+					} else if (doors[door].colours != undefined) {
+						door_mc.colours = doors[door].colours;
+						door_mc.beginFill(0xFFFFFF);
+					} else {
+						door_mc.beginFill(_global.settings.zoneDoorColour);
+					}
+					door_mc.drawRect(pos[0], pos[1], pos[2], pos[3]);
+					door_mc.endFill();
 				} else {
-					door_mc.beginFill(_global.settings.zoneDoorColour);
+					var pos = doors[door].pos;
+					if (doors[door].colour1 != undefined) {
+						door_mc.colours = [doors[door].colour1, doors[door].colour2];
+					} else {
+						door_mc.colours = [_global.settings.zoneDoorColour, _global.settings.zoneDoorColour];
+					}
+					door_mc.moveTo(pos[0], pos[1]);
+					door_mc.lineStyle(doors[door].thickness, door_mc.colours[0], 100, true, "normal", "none");
+					door_mc.lineTo(pos[2], pos[3]);
 				}
-				door_mc.drawRect(pos[0], pos[1], pos[2], pos[3]);
-				door_mc.endFill();
 				door_mc.update = function (key, state, value) {
 					if (this.colours.length) {
 						if (state == "on") {

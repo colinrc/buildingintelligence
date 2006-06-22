@@ -149,11 +149,19 @@ defineZones = function (zones) {
 							case "doors":
 								var doors = rooms[room].childNodes[i].childNodes;
 								for (var door=0; door<doors.length; door++) {
-									var pos = doors[door].attributes.pos.split(",");
-									for (var p=0; p<pos.length; p++) {
-										pos[p] = Number(pos[p]);
+									if (doors[door].attributes.thickness == undefined) {
+										var pos = doors[door].attributes.pos.split(",");
+										for (var p=0; p<pos.length; p++) {
+											pos[p] = Number(pos[p]);
+										}
+										_global.zones[zone].rooms[room].doors.push({name:doors[door].attributes.name, pos:pos, key:doors[door].attributes.key, colour:doors[door].attributes.colour, colours:doors[door].attributes.colours.split(",")});
+									} else {
+										var pos = doors[door].attributes.pos.split(",");
+										for (var p=0; p<pos.length; p++) {
+											pos[p] = Number(pos[p]);
+										}
+										_global.zones[zone].rooms[room].doors.push({name:doors[door].attributes.name, pos:pos, key:doors[door].attributes.key, colour1:doors[door].attributes.colour1, colour2:doors[door].attributes.colour2, thickness:doors[door].attributes.thickness});										
 									}
-									_global.zones[zone].rooms[room].doors.push({name:doors[door].attributes.name, pos:pos, key:doors[door].attributes.key, colour:doors[door].attributes.colour, colours:doors[door].attributes.colours.split(",")});
 									if (_global.controls[doors[door].attributes.key] == undefined) _global.controls[doors[door].attributes.key] = {key:doors[door].attributes.key, name:doors[door].attributes.name, zone:zones[zone].attributes.name, room:rooms[room].attributes.name};
 								}
 								break;

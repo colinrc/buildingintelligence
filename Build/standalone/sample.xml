@@ -158,7 +158,7 @@
 						<alert name="Lights" keys="ENTRY_LIGHT" icon="light-bulb" />
 					</alerts>
 					<doors>
-						<door name="Front Door" pos="184,295,61,4" key="FRONT_DOOR" colour="0xDB0000,0x3383D5" />
+						<door name="Front Door" thickness="5" pos="185,297,246,297" key="FRONT_DOOR" colour1="0xDB0000" colour2="0x3383D5" />
 					</doors>
 				</room>
 				<room name="Living Room" poly="165,201,377,201,377,168,339,168,339,9,136,9,136,29,129,165" switchZone="Living Room">
