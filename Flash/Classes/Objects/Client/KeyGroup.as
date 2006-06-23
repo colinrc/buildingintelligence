@@ -2,7 +2,7 @@
 	private var name:String;
 	private var icon1:String;
 	private var icon2:String;
-	private var controlType:String;
+	private var type:String;
 	private var treeNode:XMLNode;
 	private var keys:Array;
 	public function deleteSelf() {
@@ -62,8 +62,8 @@
 		if (icon2 != "") {
 			newNode.attributes["icon2"] = icon2;
 		}
-		if (controlType != "") {
-			newNode.attributes["controlType"] = controlType;
+		if (type != "") {
+			newNode.attributes["controlType"] = type;
 		}
 		for(var key in keys){
 			var newKeyNode = new XMLNode(1,"key");
@@ -85,21 +85,20 @@
 		return "Key Group: " + name;
 	}
 	public function getData():Object {
-		mdm.Dialogs.prompt(controlType);
-		return {keys:keys, icon1:icon1, name:name, icon2:icon2, controlType:controlType, dataObject:this};
+		return {keys:keys, icon1:icon1, name:name, icon2:icon2, type:type, dataObject:this};
 	}
 	public function setData(newData:Object):Void {
 		keys = newData.keys;
 		name = newData.name;
 		icon1 = newData.icon1;
 		icon2 = newData.icon2;
-		controlType = newData.controlType;
+		type = newData.type;
 	}
 	public function setXML(newData:XMLNode):Void {
 		name = "";
 		icon1 = "";
 		icon2 = "";
-		controlType = "";
+		type = "";
 		keys = new Array();
 		if (newData.nodeName = "keygroup") {
 			for (var attribute in newData.attributes) {
@@ -121,7 +120,7 @@
 					break;
 				case "controlType" :
 					if (newData.attributes[attribute] != undefined) {
-						controlType = newData.attributes[attribute];
+						type = newData.attributes[attribute];
 					}
 					break;
 				}

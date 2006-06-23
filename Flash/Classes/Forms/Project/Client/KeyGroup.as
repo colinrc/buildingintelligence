@@ -11,7 +11,7 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 	private var icon1:String;
 	private var icon2:String;
 	private var keys:Array;
-	private var controlType:String;
+	private var type:String;
 	private var save_btn:Button;
 	private var left_li:List;
 	private var right_li:List;
@@ -21,7 +21,6 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 	private var removeAll_btn:Button;
 	private var dataObject:Object;
 	public function onLoad():Void {
-		mdm.Dialogs.prompt(controlType);
 		icon1_ldr.autoLoad = true;
 		icon1_ldr.scaleContent = true;
 		icon1_cmb.dropdown.cellRenderer = "ImageCellRenderer";
@@ -99,8 +98,15 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 			icon2_cmb.text = icon2;
 			icon2_ldr.load(mdm.Application.path + "lib\\icons\\" + icon2 + ".png");
 		}
-		if (controlType.length) {
-			control_cmb.text = controlType;
+		control_cmb.text =type;
+		if (type.length) {
+			control_cmb.text =type;
+/*			for(var control in control_cmb.dataProvider){
+				if(control_cmb.dataProvider[control].label == controlType){
+					control_cmb.text =controlType;
+					break;
+				}
+			}*/
 		}
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		addSelected_btn.addEventListener("click", Delegate.create(this, addSel));
@@ -124,7 +130,7 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 			newKeys.push(right_li.getItemAt(index).label);
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
-		dataObject.setData({keys:newKeys, name:name_ti.text, icon1:icon1_cmb.text, icon2:icon2_cmb.text, controlType:control_cmb.text});
+		dataObject.setData({keys:newKeys, name:name_ti.text, icon1:icon1_cmb.text, icon2:icon2_cmb.text, type:control_cmb.text});
 		_global.refreshTheTree();
 		_global.saveFile("Project");
 	}

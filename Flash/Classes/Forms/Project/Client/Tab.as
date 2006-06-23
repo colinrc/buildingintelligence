@@ -26,9 +26,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 			}
 		}
 		groups = client.getKeyGroups();
-		for(var index = 0; index<groups.childNodes.length;index++){
-			mdm.Dialogs.prompt(groups.childNodes[index].attributes.name);
-		}
+
 		icon_ldr.autoLoad = true;
 		icon_ldr.scaleContent = true;
 		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
@@ -76,11 +74,11 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(controls_dg);
-		dataGridHandler.addKeyBoxColumn("key", "Key", DPKey, false, 200);
+		dataGridHandler.addKeyBoxColumn("key", "Key", DPKey, this, 150);
 		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions, false, 100);
 		dataGridHandler.addIconComboBoxColumn("icon1", "Icon 1", IconDP, false, 150);
 		dataGridHandler.addIconComboBoxColumn("icon2", "Icon 2", IconDP, false, 150);
-		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl, false, 100);
+		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl, false, 150);
 		var DP = new Array();
 		for (var control in controls) {
 			var newControl = new Object();
@@ -132,6 +130,27 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 	}
 	private function newItem() {
 		dataGridHandler.addBlankRow();
+		callBack({itemIndex:controls_dg.dataProvider.length-1});
+	}
+	public function callBack(itemLocation){
+		var DP = dataGridHandler.getDataGridDataProvider();
+		var key = DP[itemLocation.itemIndex].key;
+		for(var index = 0; index<groups.childNodes.length;index++){
+			var found = false;
+			for(var tempKey = 0; tempKey<groups.childNodes[index].childNodes.length;tempKey++){
+				if(key == groups.childNodes[index].childNodes[tempKey].attributes.name){
+					var row = controls_dg.getItemAt(itemLocation.itemIndex);
+					row.icon1.label = groups.childNodes[index].attributes["icon1"];
+					row.icon2.label = groups.childNodes[index].attributes["icon2"];
+					row.type.label = groups.childNodes[index].attributes["controlType"];
+					found = true;
+					break;
+				}
+			}
+			if(found){
+				break;
+			}
+		}
 	}
 	public function save():Void {
 		var newControls = new Array();

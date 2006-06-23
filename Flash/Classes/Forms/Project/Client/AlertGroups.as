@@ -22,11 +22,13 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 			newAlertGroup.id = alertgroups[alertgroup].id;			
 			DP.push(newAlertGroup);
 		}
-		roomEditor.map = "lib/maps/"+map;
-		if(background == undefined){
-			background = "";
+		if(map == undefined){
+			map = "";
 		}
-		roomEditor.background = "lib/backgrounds/"+background;
+		roomEditor.map = "lib/maps/"+map;
+		if((background != undefined)&&(background != "")){
+			roomEditor.background = "lib/backgrounds/"+background;
+		}
 		roomEditor.mapMode = "alertGroups";
 		roomEditor.poly = poly;
 		roomEditor.alerts = DP;

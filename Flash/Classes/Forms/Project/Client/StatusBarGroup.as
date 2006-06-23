@@ -24,6 +24,7 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private var dataObject:Object;
 	private var canOpen:String;
 	private var canOpen_chk:CheckBox;	
+	private var groups:XMLNode;
 	public function onLoad():Void {
 		icon_ldr.autoLoad = true;
 		icon_ldr.scaleContent = true;		
@@ -43,6 +44,22 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		show_ti.addEventListener("change", changeListener);
 		hide_ti.addEventListener("change", changeListener);
 		var tempKeys = _global.serverDesign.getKeys();
+		var temp_node = _global.left_tree.selectedNode;
+		var client = null;
+		while ((temp_node != null) && (client == null)) {
+			if (temp_node.nodeName == "Client") {
+				client = temp_node.object;
+				break;
+			} else {
+				temp_node = temp_node.parentNode;
+			}
+		}
+		groups = client.getKeyGroups();
+		for(var index = 0; index<groups.childNodes.length;index++){
+			var tempObject = new Object();
+			tempObject.label = "Group: "+groups.childNodes[index].attributes.name;
+			left_li.addItem(tempObject);
+		}
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
@@ -106,7 +123,25 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private function addSel() {
 		_global.unSaved = true;
 		if (left_li.selectedItem != undefined) {
-			right_li.addItem(left_li.removeItemAt(left_li.selectedIndex));
+			if(left_li.getItemAt(left_li.selectedIndex).label.lastIndexOf("Group: ")!=-1){
+				for(var group in groups.childNodes){
+					if(groups.childNodes[group].attributes.name==left_li.getItemAt(left_li.selectedIndex).label.substring(left_li.getItemAt(left_li.selectedIndex).label.lastIndexOf(" ")+1)){
+						icon_cmb.text = groups.childNodes[group].attributes.icon2;
+						icon_ldr.load(mdm.Application.path+"lib\\icons\\"+groups.childNodes[group].attributes.icon2+".png");
+						for(var keyNode in groups.childNodes[group].childNodes){
+							var key = groups.childNodes[group].childNodes[keyNode].attributes.name;
+							for(var item in left_li.dataProvider){
+								if(left_li.dataProvider[item].label == key){
+									right_li.addItem(left_li.removeItemAt(item));
+									break;
+								}
+							}
+						}
+					}
+				}
+			} else{
+				right_li.addItem(left_li.removeItemAt(left_li.selectedIndex));
+			}
 		}
 		right_li.sortItemsBy("label", "ASC");
 		left_li.sortItemsBy("label", "ASC");
@@ -121,6 +156,11 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 			right_li.addItem(tempObject);
 		}
 		left_li.removeAll();
+		for(var index = 0; index<groups.childNodes.length;index++){
+			var tempObject = new Object();
+			tempObject.label = "Group: "+groups.childNodes[index].attributes.name;
+			left_li.addItem(tempObject);
+		}
 		right_li.sortItemsBy("label", "ASC");
 		left_li.sortItemsBy("label", "ASC");
 	}
@@ -140,6 +180,11 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
+			left_li.addItem(tempObject);
+		}
+		for(var index = 0; index<groups.childNodes.length;index++){
+			var tempObject = new Object();
+			tempObject.label = "Group: "+groups.childNodes[index].attributes.name;
 			left_li.addItem(tempObject);
 		}
 		right_li.sortItemsBy("label", "ASC");

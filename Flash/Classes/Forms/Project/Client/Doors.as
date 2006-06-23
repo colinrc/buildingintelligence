@@ -65,11 +65,13 @@ class Forms.Project.Client.Doors extends Forms.BaseForm {
 			}
 			DP.push(newDoor);
 		}
-		roomEditor.map = "lib/maps/" + map;
-		if(background == undefined){
-			background = "";
+		if(map == undefined){
+			map != "";
 		}
-		roomEditor.background = "lib/backgrounds/"+background;
+		roomEditor.map = "lib/maps/"+map;
+		if((background != undefined)&&(background != "")){
+			roomEditor.background = "lib/backgrounds/"+background;
+		}
 		roomEditor.mapMode = "doors";
 		roomEditor.poly = poly;
 		roomEditor.doors = DP;			

@@ -153,6 +153,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	}
 	private function addSel() {
 		if (left_li.selectedItem != undefined) {
+			
 			right_li.addItem(left_li.removeItemAt(left_li.selectedIndex));
 			right_li.sortItemsBy("label", "ASC");
 			left_li.sortItemsBy("label", "ASC");		

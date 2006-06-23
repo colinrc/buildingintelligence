@@ -23,10 +23,9 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 			map = "";
 		}
 		roomEditor.map = "lib/maps/"+map;
-		if(background == undefined){
-			background = "";
+		if((background != undefined)&&(background != "")){
+			roomEditor.background = "lib/backgrounds/"+background;
 		}
-		roomEditor.background = "lib/backgrounds/"+background;
 		if(poly == undefined){
 			poly = "";
 		}
