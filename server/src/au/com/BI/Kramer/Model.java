@@ -197,20 +197,6 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 
 	
-	public String findAVSrc(String srcCode) {
-		String returnVal = "1";
-		Iterator inputItems = avInputs.keySet().iterator();
-		int srcVal = Integer.parseInt(srcCode); 
-		while (inputItems.hasNext()) {
-			String inputKey = (String)inputItems.next();
-			int programVal = Integer.parseInt((String)avInputs.get(inputKey));
-			if (programVal == srcVal) {
-				returnVal = inputKey;
-			}
-		}
-		return returnVal;
-	}
-	
 	public KramerCommands buildVideoString (AV device, CommandInterface command){
 		KramerCommands returnVal = new KramerCommands();
 		
@@ -250,7 +236,7 @@ public class Model extends BaseModel implements DeviceModel {
 			try {
 
 				if (command.getExtra3Info().equals("VIDEO_ONLY")){
-					srcCode = (String)avInputs.get(command.getExtraInfo());
+					srcCode = configHelper.getCatalogueValue(extra, "AV_INPUTS",device);
 					int src = Integer.parseInt(srcCode);
 					setCurrentSrc(device.getKey(),srcCode);
 					returnVal.avOutputParam = kramerHelper.buildKramerCommand(8,1,1,command.getExtra2Info());
@@ -258,7 +244,7 @@ public class Model extends BaseModel implements DeviceModel {
 					returnVal.avOutputString =kramerHelper.buildSwitchCommand (1,device.getKey(),srcCode, command.getExtra2Info()); 
 				}
 				if (command.getExtra3Info().equals("AUDIO_ONLY")){
-					srcCode = (String)audioInputs.get(command.getExtraInfo());
+					srcCode = configHelper.getCatalogueValue(extra, "AUDIO_INPUTS",device);
 					int src = Integer.parseInt(srcCode);
 					setCurrentSrc(device.getKey(),srcCode);
 					returnVal.avOutputParam = kramerHelper.buildKramerCommand(8,1,1,command.getExtra2Info());
@@ -266,10 +252,12 @@ public class Model extends BaseModel implements DeviceModel {
 					returnVal.avOutputString =kramerHelper.buildSwitchCommand (2,device.getKey(),srcCode, command.getExtra2Info()); 
 				}
 				if (command.getExtra3Info().equals("AV") ||command.getExtra3Info().equals("") ){
-					srcCode = avInputs.get(command.getExtraInfo());
+					srcCode = configHelper.getCatalogueValue(extra, "AV_INPUTS",device);
 					int src = Integer.parseInt(srcCode);
-					String audioSrcCode = audioInputs.get(command.getExtraInfo());
+					
+					String audioSrcCode = configHelper.getCatalogueValue(extra, "AUDIO_INPUTS",device);
 					int audioSrc = Integer.parseInt(srcCode);
+					
 					setCurrentSrc(device.getKey(),srcCode);
 					returnVal.avOutputString =kramerHelper.buildSwitchCommand (1,device.getKey(),srcCode, command.getExtra2Info()); 
 					returnVal.avOutputSuffix =kramerHelper.buildSwitchCommand (2,device.getKey(),audioSrcCode, command.getExtra2Info());

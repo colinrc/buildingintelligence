@@ -1,3 +1,7 @@
+''' Kramer '''
+
+Updated to use common configuration catalogue support rather than model specific.
+
 ''' Jetty '''
 
 Added correct number of session count handling for HTTPS clients.
