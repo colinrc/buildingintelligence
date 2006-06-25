@@ -30,7 +30,8 @@ import au.com.BI.Config.ParameterBlock;
 public class BaseModel
   implements DeviceModel {
         protected CommDevice comms = null;
-
+        protected ModelTypes modelType = ModelTypes.Java;
+        
         protected boolean logged_in = false;
 
         protected boolean connected = false;
@@ -947,5 +948,13 @@ public class BaseModel
 
 	public void setVersionManager(VersionManager versionManager) {
 		this.versionManager = versionManager;
+	}
+
+	public ModelTypes getModelType() {
+		return modelType;
+	}
+
+	public void setModelType(ModelTypes modelType) {
+		this.modelType = modelType;
 	}
 }

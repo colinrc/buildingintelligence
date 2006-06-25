@@ -23,7 +23,8 @@ import au.com.BI.Messaging.AddressBook;
  *
 */
 public interface DeviceModel {
-
+	 enum ModelTypes { Java,Jar,GroovySource,GroovyEncrypted};
+	 
 	public static final int SUCCESS = 0;
 	public static final int FAIL = 2;
 	public static final int SECURITY_FAIL = 1;
@@ -450,6 +451,9 @@ public interface DeviceModel {
 
 	public void setVersionManager(VersionManager versionManager) ;
 	
+	public ModelTypes getModelType() ;
+
+	public void setModelType(ModelTypes modelType) ;
 }
 
 
