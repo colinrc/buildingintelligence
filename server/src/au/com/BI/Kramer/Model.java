@@ -20,7 +20,7 @@ import java.util.logging.*;
 
 public class Model extends BaseModel implements DeviceModel {
 	
-	private class KramerCommands {
+	private class KramerCommands { 
 		byte[] avOutputSuffix = null;
 		byte[] avOutputString = null;
 		byte[] avOutputParam = null;
