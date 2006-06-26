@@ -8,15 +8,45 @@
 	public function isValid():String {
 		var flag = "ok";
 		clearValidationMsg();
+		var code = "code";
+		var val = "value";
+		
+		switch(name){
+			case "Sign Video Inputs":
+				code = "Video Device";
+				val = "Video Input #";
+				break;
+			case "HAL Inputs":
+			case "Tutondo Inputs":
+			case "Kramer Audio Inputs":
+			case "Nuvo Audio Inputs":
+				code = "Audio Device";
+				val =  "Audio Input #";
+				break;
+			case "Kramer AV Inputs":
+				code = "AV Device";
+				val =  "AV Input #";
+				break;
+			case "Tutondo Functions":
+			case "HAL Functions":
+				code = "Function Name";
+				val = "Function Number";
+				break;
+			default:
+				code = "Code";
+			  	val = "Value";
+				break;
+		}
+		
 		for (var item in items) {
 			
 			if ((items[item].attributes["CODE"] == undefined) || (items[item].attributes["CODE"] == "")) {
 				flag = "error";
-				appendValidationMsg("Code is empty");
+				appendValidationMsg(code + " is empty");
 			}
 			if ((items[item].attributes["VALUE"] == undefined) || (items[item].attributes["VALUE"] == "")) {
 				flag = "error";
-				appendValidationMsg("Value is empty");
+				appendValidationMsg(val + " is empty");
 			}
 		}
 		return flag;

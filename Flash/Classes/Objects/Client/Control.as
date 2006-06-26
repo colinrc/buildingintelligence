@@ -15,85 +15,85 @@
 					case "slider" :
 						if((rows[row].childNodes[item].attributes["width"] == "")||(rows[row].childNodes[item].attributes["width"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Slider:Width is invalid");
+							appendValidationMsg("Slider:Width is empty");
 						}
 						break;
 					case "button" :
 						if((rows[row].childNodes[item].attributes["label"] == "")||(rows[row].childNodes[item].attributes["label"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Button:Label is invalid");
+							appendValidationMsg("Button:Label is empty");
 						}
 						if((rows[row].childNodes[item].attributes["icon"] == "")||(rows[row].childNodes[item].attributes["icon"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Button:Icon is invalid");
+							appendValidationMsg("Button:Icon is empty");
 						}
 						if((rows[row].childNodes[item].attributes["extra"] == "")||(rows[row].childNodes[item].attributes["extra"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Button:Extra is invalid");
+							appendValidationMsg("Button:Extra is empty");
 						}
-						if((rows[row].childNodes[item].attributes["extra2"] == "")||(rows[row].childNodes[item].attributes["extra2"] == undefined)){
+						/*if((rows[row].childNodes[item].attributes["extra2"] == "")||(rows[row].childNodes[item].attributes["extra2"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Button:Extra2 is invalid");
+							appendValidationMsg("Button:Extra2 is empty");
 						}
 						if((rows[row].childNodes[item].attributes["extra3"] == "")||(rows[row].childNodes[item].attributes["extra3"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Button:Extra3 is invalid");
-						}
+							appendValidationMsg("Button:Extra3 is empty");
+						}*/
 						if((rows[row].childNodes[item].attributes["width"] == "")||(rows[row].childNodes[item].attributes["width"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Button:Width is invalid");
+							appendValidationMsg("Button:Width is empty");
 						}
 						if((rows[row].childNodes[item].attributes["command"] == "")||(rows[row].childNodes[item].attributes["command"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Button:Command is invalid");
+							appendValidationMsg("Button:Command is empty");
 						}
 						if((rows[row].childNodes[item].attributes["repeatRate"] == "")||(rows[row].childNodes[item].attributes["repeatRate"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Button:RepeatRate is invalid");
+							appendValidationMsg("Button:RepeatRate is empty");
 						}
 						if((rows[row].childNodes[item].attributes["showOn"] == "")||(rows[row].childNodes[item].attributes["showOn"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Button:ShowOn is invalid");
+							appendValidationMsg("Button:ShowOn is empty");
 						}
 						break;
 					case "icon" :
 						if((rows[row].childNodes[item].attributes["icon"] == "")||(rows[row].childNodes[item].attributes["icon"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Icon is invalid");
+							appendValidationMsg("Icon is empty");
 						}
 						if((rows[row].childNodes[item].attributes["commands"] == "")||(rows[row].childNodes[item].attributes["commands"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Commands are invalid");
+							appendValidationMsg("Commands are empty");
 						}
 						if((rows[row].childNodes[item].attributes["key"] == "")||(rows[row].childNodes[item].attributes["key"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Key is invalid");
+							appendValidationMsg("Key is empty");
 						}
 						break;
 					case "object" :
 						if((rows[row].childNodes[item].attributes["src"] == "")||(rows[row].childNodes[item].attributes["src"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Source is invalid");
+							appendValidationMsg("Source is empty");
 						}
 						if((rows[row].childNodes[item].attributes["key"] == "")||(rows[row].childNodes[item].attributes["key"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Key is invalid");
+							appendValidationMsg("Key is empty");
 						}
 						if((rows[row].childNodes[item].attributes["width"] == "")||(rows[row].childNodes[item].attributes["width"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Width is invalid");
+							appendValidationMsg("Width is empty");
 						}
 						if((rows[row].childNodes[item].attributes["height"] == "")||(rows[row].childNodes[item].attributes["height"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Height is invalid");
+							appendValidationMsg("Height is empty");
 						}
 						if((rows[row].childNodes[item].attributes["show"] == "")||(rows[row].childNodes[item].attributes["show"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Show is invalid");
+							appendValidationMsg("Show is empty");
 						}
 						if((rows[row].childNodes[item].attributes["hide"] == "")||(rows[row].childNodes[item].attributes["hide"] == undefined)){
 							flag = "warning";
-							appendValidationMsg("Hide is invalid");
+							appendValidationMsg("Hide is empty");
 						}
 						break;
 				}
