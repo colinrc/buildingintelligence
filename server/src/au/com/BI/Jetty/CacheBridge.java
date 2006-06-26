@@ -46,7 +46,11 @@ public class CacheBridge implements CacheListener {
     	
     	if (extraElementsToInclude != null){
 	    	for (Element elm:extraElementsToInclude){
-	    		resultsDoc.addContent(elm);
+	    		try {
+	    			resultsDoc.addContent(elm);
+			    } catch (IllegalAddException ex){
+						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
+				}
 	    	}
     	}
     	
@@ -54,7 +58,11 @@ public class CacheBridge implements CacheListener {
         	for (CacheWrapper cacheWrapper:commandsToSend.values()) {
         		if (cacheWrapper.isSet()) {
         			for (CommandInterface command:cacheWrapper.getMapValues()){
-        				resultsDoc.addContent(command.getXMLCommand());
+        				try {
+        					resultsDoc.addContent((Element)command.getXMLCommand().clone());
+        				} catch (IllegalAddException ex){
+        						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
+        				}
         			}
         		} else {
         			CommandInterface command = cacheWrapper.getCommand();
