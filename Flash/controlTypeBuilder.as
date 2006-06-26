@@ -14,10 +14,11 @@ renderControlType = function () {
 	
 	var rows = controlTypeData.firstChild.childNodes;
 	
-	var marker_mc = markers_mc.attachMovie("controlTypeEditor.rowSpacer", "rowSpacers0_mc", markers_mc.getNextHighestDepth(), {_width:holderWidth - 4, _height:4, _x:22, _y:-4, _alpha:0, type:"row"});
+	var marker_mc = markers_mc.attachMovie("controlTypeEditor.rowSpacer", "rowSpacers0_mc", markers_mc.getNextHighestDepth(), {_width:holderWidth - 4, _height:15, _x:22, type:"row"});
+	marker_mc.white_mc._alpha = 40;
 	marker_mc.xmlPointer = rows[0];
 	
-	var currentY = 0;
+	var currentY = 18;
 	for (var row=0; row<rows.length; row++) {
 		//trace("new row");
 		var currentX = 0;
@@ -27,7 +28,10 @@ renderControlType = function () {
 			if (items[item].attributes.type == "button" || items[item].attributes.type == "toggle" || items[item].attributes.type == "slider") {
 				if (_global.settings.controlButtonHeight > maxHeight) maxHeight = _global.settings.controlButtonHeight;
 			} else if (items[item].attributes.type == "label") {
-				if (20 > maxHeight) maxHeight = 26;				
+				if (20 > maxHeight) maxHeight = 26;
+			} else if (items[item].attributes.type == "video") {
+				var h = Number(items[item].attributes.videoHeight) + 7;
+				if (h > maxHeight) maxHeight = h;		
 			}
 		}
 		var arrow_mc = holder_mc.attachMovie("controlTypeEditor.rowArrow", "arrow" + row + "_mc", holder_mc.getNextHighestDepth());
@@ -35,10 +39,10 @@ renderControlType = function () {
 		arrow_mc.row = rows[row];
 		
 		arrow_mc.onRelease = function () {
-			showForm("rowForm", this.row)
+			showForm("rowForm", this.row);
 		}
 		
-		var marker_mc = markers_mc.attachMovie("controlTypeEditor.rowSpacer", "itemSpacer" + row + "_0_mc", markers_mc.getNextHighestDepth(), {_width:4, _height:maxHeight, _x:18, _y:currentY, _alpha:0, type:"item"});
+		var marker_mc = markers_mc.attachMovie("controlTypeEditor.rowSpacer", "itemSpacer" + row + "_0_mc", markers_mc.getNextHighestDepth(), {_width:4, _height:maxHeight, _x:18, _y:currentY, type:"item"});
 		marker_mc.xmlPointer = items[0];
 		
 		for (var item=0; item<items.length; item++) {
@@ -52,7 +56,7 @@ renderControlType = function () {
 				var item_mc = holder_mc.attachMovie("bi.ui.Button", "button" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth(), {_x:currentX + 2 + 20, _y:currentY, width:width - 4, height:_global.settings.controlButtonHeight, label:items[item].attributes.label, iconName:items[item].attributes.icon});
 				item_mc.formName = "buttonForm";
 			} else if (items[item].attributes.type == "toggle") {
-				var item_mc = holder_mc.attachMovie("bi.ui.Button", "toggle" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth(), {_x:currentX + 2 + 20, _y:currentY, width:width - 4, height:_global.settings.controlButtonHeight, label:items[item].attributes.label, iconName:items[item].attributes.icons.split(",")[0]});
+				var item_mc = holder_mc.attachMovie("bi.ui.Button", "toggle" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth(), {_x:currentX + 2 + 20, _y:currentY, width:width - 4, height:_global.settings.controlButtonHeight, label:items[item].attributes.labels[0], iconName:items[item].attributes.icons.split(",")[0]});
 				item_mc.formName = "toggleForm";
 			} else if (items[item].attributes.type == "slider") {
 				var item_mc = holder_mc.createEmptyMovieClip("slider" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth());
@@ -63,10 +67,17 @@ renderControlType = function () {
 			} else if (items[item].attributes.type == "label") {
 				var item_mc = holder_mc.attachMovie("bi.ui.Label", "label" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth(), {_x:currentX + 2 + 20, _y:currentY, width:width - 4, text:"label"});
 				item_mc.formName = "labelForm";
+			} else if (items[item].attributes.type == "video") {
+				var item_mc = holder_mc.createEmptyMovieClip("box" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth());
+				item_mc._x = currentX + 2 + 20;
+				item_mc._y = currentY,
+				item_mc.beginFill(0x829ECB);
+				item_mc.drawRect(0, 0, width - 4, Number(items[item].attributes.videoHeight) + 7, 4);
+				item_mc.endFill();
 			}
 			
 			currentX += width;
-			var marker_mc = markers_mc.attachMovie("controlTypeEditor.rowSpacer", "itemSpacer" + row + "_" + (item + 1) + "_mc", markers_mc.getNextHighestDepth(), {_width:4, _height:maxHeight, _x:currentX + 18, _y:currentY, _alpha:0, type:"item"});
+			var marker_mc = markers_mc.attachMovie("controlTypeEditor.rowSpacer", "itemSpacer" + row + "_" + (item + 1) + "_mc", markers_mc.getNextHighestDepth(), {_width:4, _height:maxHeight, _x:currentX + 18, _y:currentY, type:"item"});
 			if (items[item].nextSibling != null) {
 				marker_mc.xmlPointer = items[item].nextSibling;
 			} else {
@@ -87,15 +98,15 @@ renderControlType = function () {
 					var markers_mc = workspace_mc.markers_mc;
 					for (var i in markers_mc) {
 						if (markers_mc[i].hitTest(_root._xmouse, _root._ymouse)) {
-							lastOver._alpha = 0;
-							markers_mc[i]._alpha = 100;
+							lastOver.yellow_mc._alpha = 0;
+							markers_mc[i].yellow_mc._alpha = 100;
 							lastOver = markers_mc[i];
 							isOver = true;
 							break;
 						}
 					}
 					if (!isOver) {
-						lastOver._alpha = 0;
+						lastOver.yellow_mc._alpha = 0;
 						delete lastOver;
 					}
 				}
@@ -139,7 +150,7 @@ renderControlType = function () {
 						}
 					}
 					renderControlType();
-					lastOver._alpha = 0;
+					lastOver.yellow_mc._alpha = 0;
 					delete lastOver;
 				} else if (this._x != this.startX || this._y != this.startY) {
 					this.enabled = false;
@@ -154,10 +165,14 @@ renderControlType = function () {
 				delete this.onMouseMove;
 			}
 		}
-		var marker_mc = markers_mc.attachMovie("controlTypeEditor.rowSpacer", "rowSpacer" + (row + 1) + "_mc", markers_mc.getNextHighestDepth(), {_width:holderWidth - 4, _height:4, _x:22, _y:currentY + maxHeight, _alpha:0, type:"row"});
 		if (rows[row].nextSibling != null) {
+			var marker_mc = markers_mc.attachMovie("controlTypeEditor.rowSpacer", "rowSpacer" + (row + 1) + "_mc", markers_mc.getNextHighestDepth(), {_width:holderWidth - 4, _height:4, _x:22, _y:currentY + maxHeight, type:"row"});
 			marker_mc.xmlPointer = rows[row].nextSibling;
 		} else {
+			var marker_mc = markers_mc.attachMovie("controlTypeEditor.rowSpacer", "rowSpacer" + (row + 1) + "_mc", markers_mc.getNextHighestDepth(), {_width:holderWidth - 4, _height:15, _x:22, _y:currentY + maxHeight + 3, type:"row"});
+			marker_mc.white_mc._alpha = 40;
+			marker_mc._yscale = -marker_mc._yscale;
+			marker_mc._y += marker_mc._height;
 			marker_mc.xmlPointer = rows[row];
 			marker_mc.isLast = true;
 		}
@@ -167,7 +182,7 @@ renderControlType = function () {
 }
 
 showForm = function (formName, xml) {
-	var form_mc = this.attachMovie("controlTypeEditor." + formName, "form_mc", 50, {_x:510, _y:10, xml:xml});
+	var form_mc = this.attachMovie("controlTypeEditor." + formName, "form_mc", 0, {_x:510, _y:10, xml:xml});
 }
 
 loadIcons = function () {
@@ -224,12 +239,11 @@ createToolbar = function () {
 	var toolbar_mc = this.createEmptyMovieClip("toolbar_mc", 30);
 	toolbar_mc._x = toolbar_mc._y = 10;
 	
-	var items = [{label:"button", xml:'<item type="button" label="button" />'}, {label:"toggle", xml:'<item type="toggle" label="toggle" />'}, {label:"slider", xml:'<item type="slider" />'}];
+	var items = [{label:"button", xml:'<item type="button" label="button" />'}, {label:"toggle", xml:'<item type="toggle" labels="toggle" />'}, {label:"slider", xml:'<item type="slider" />'}, {label:"video", xml:'<item type="video" videoWidth="320" videoHeight="240" />'}];
 	var xPos = 0;
 	for (var i=0; i<items.length; i++) {
 		var item_mc = toolbar_mc.attachMovie("bi.ui.Button", "item" + i + "_mc", toolbar_mc.getNextHighestDepth(), {_x:xPos, width:80, height:30, label:items[i].label, xml:new XML(items[i].xml).firstChild});
 		item_mc.formName = items[i].label.toLowerCase() + "Form";
-		trace(item_mc.formName);
 		xPos += 88;
 		item_mc.onPress = function () {			
 			this._alpha = 60;
@@ -241,15 +255,15 @@ createToolbar = function () {
 				var markers_mc = workspace_mc.markers_mc;
 				for (var i in markers_mc) {
 					if (markers_mc[i].hitTest(_root._xmouse, _root._ymouse)) {
-						lastOver._alpha = 0;
-						markers_mc[i]._alpha = 100;
+						lastOver.yellow_mc._alpha = 0;
+						markers_mc[i].yellow_mc._alpha = 100;
 						lastOver = markers_mc[i];
 						isOver = true;
 						break;
 					}
 				}
 				if (!isOver) {
-					lastOver._alpha = 0;
+					lastOver.yellow_mc._alpha = 0;
 					delete lastOver;
 				}
 			}
@@ -267,7 +281,9 @@ createToolbar = function () {
 					var newNode = this.xml.cloneNode(false);
 					newRow.appendChild(newNode);
 					var parent =  insertLocation.parentNode;
-					if (lastOver.isLast) {
+					if (parent == undefined) {
+						controlTypeData.firstChild.appendChild(newRow);
+					} else if (lastOver.isLast) {
 						parent.appendChild(newRow);
 					} else {
 						parent.insertBefore(newRow, insertLocation);
@@ -311,10 +327,10 @@ createSlider = function (item_mc, settings) {
 
 var windowObj = new Object()
 windowObj.width = 500;
-windowObj.height = 600;
+windowObj.height = 590;
 windowObj.title = "";
 windowObj.hideClose = true;
-this.attachMovie("bi.ui.Window", "window_mc", 0, {settings:windowObj});
+this.attachMovie("bi.ui.Window", "window_mc", 5, {settings:windowObj});
 createToolbar();
 
 setIconPath(iconPath);

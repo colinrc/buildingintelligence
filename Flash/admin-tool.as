@@ -24,7 +24,7 @@ var blocker:MovieClip;
 var libraryManager:MovieClip;
 this.createEmptyMovieClip("formContent_mc", 0);
 formContent_mc._x = 270;
-formContent_mc._y = 114;
+formContent_mc._y = 90;
 formContent_mc.tabChildren = true;
 formContent_mc.tabEnabled = false;
 var form_mc;

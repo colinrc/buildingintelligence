@@ -25,8 +25,10 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 			}
 			newRows.push(newRow);
 		}*/
+		editor.form_mc.save();
 		dataObject.setData({controlTypeData:editor.controlTypeData.firstChild, type:type_ti.text});
 		editor.controlTypeData = new XML(dataObject.getData().controlTypeData.toString());
+		editor.renderControlType();
 		_global.refreshTheTree();		
 		_global.saveFile("Project");	
 	}
