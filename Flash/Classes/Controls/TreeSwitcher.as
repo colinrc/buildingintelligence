@@ -18,7 +18,7 @@ class Controls.TreeSwitcher extends UIComponent {
 		arrange();
 	}
 	private function init():Void {
-		__width = 244;//bounds_mc._width;
+		__width = bounds_mc._width;
 		__height = bounds_mc._height;
 		bounds_mc._visible = false;
 		bounds_mc._width = 0;
@@ -34,6 +34,10 @@ class Controls.TreeSwitcher extends UIComponent {
 		tab_tb.setSize(__width, 22);		
 		clip1.setSize(__width, (__height - tab_tb.height));
 		clip2.setSize(__width, (__height - tab_tb.height));
+		clip1._x = 0;
+		clip1._y = tab_tb.height;
+		clip2._x = 0;
+		clip2._y = tab_tb.height;
 	}
 	public function getClip1():MovieClip{
 		return clip1;
@@ -51,19 +55,15 @@ class Controls.TreeSwitcher extends UIComponent {
 		}
 	}	
 	private function createChildren():Void {
+		//arrange();
 		clip1 = this.createObject("Tree", "clip1", 2);
 		clip2 = this.createObject("Tree", "clip2", 1);
-		
 		tab_tb = this.createObject("TabBar", "tab_tb", 3);
-		arrange();
 		tab_tb.addItem("Project");
 		tab_tb.addItem("Workflow");
 		clip1.setStyle("borderStyle","none");
 		clip2.setStyle("borderStyle","none");
-		clip1._x = 0;
-		clip1._y = tab_tb.height;
-		clip2._x = 0;
-		clip2._y = tab_tb.height;
+		arrange();
 		tab_tb.addEventListener("change", Delegate.create(this, tabChange));
 	}
 }

@@ -17,22 +17,27 @@ class Forms.Tree.LeftTreeCellRenderer extends mx.core.UIComponent {
 	
 	public function setValue(label:String, node:Object):Void {
 		clear();
+		icon.removeMovieClip();
 		if (node != undefined) {
 			var iconName="";
 			var valid = node.object.isValid()
 			if (valid == "error") {
 				iconName = "stop";
+				icon = attachMovie("Icon:" + iconName, "icon", 100, {_x:0, _y:2});
 			} 
 			else {
-				iconName = null;
+				iconName = undefined;
 			}
-			icon = attachMovie("Icon:" + iconName, "icon", 100, {_x:__width - 18, _y:2});
 		}
-		else{
-			icon.removeMovieClip();
+		if(iconName!= undefined){
+			__label.visible = (label != " ");
+			__label.text = label;
+			__label._x = 16;
+		} else{
+			__label.visible = (label != " ");
+			__label.text = label;
+			__label._x = 0;
 		}
-		__label.visible = (label != " ");
-		__label.text = label;
 	}
 	
 	public function size():Void {

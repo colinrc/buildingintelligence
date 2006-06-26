@@ -89,6 +89,8 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			}
 			DP.push(newAlert);
 		}
+		right_li.multipleSelection = true; 
+		left_li.multipleSelection = true; 
 		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
@@ -152,9 +154,10 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		_global.saveFile("Project");
 	}
 	private function addSel() {
-		if (left_li.selectedItem != undefined) {
-			
-			right_li.addItem(left_li.removeItemAt(left_li.selectedIndex));
+		if (left_li.selectedItems.length > 0) {
+			for(var item = left_li.selectedIndices.length-1; item>=0;item--){
+				right_li.addItem(left_li.removeItemAt(left_li.selectedIndices[item]));
+			}			
 			right_li.sortItemsBy("label", "ASC");
 			left_li.sortItemsBy("label", "ASC");		
 			var newKeys = new Array();
@@ -185,8 +188,10 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		alerts_dg.selectedItem.keys = newKeys.join(",");
 	}
 	private function remSel() {
-		if (right_li.selectedItem != undefined) {
-			left_li.addItem(right_li.removeItemAt(right_li.selectedIndex));
+		if (right_li.selectedItems.length > 0) {
+			for(var item = right_li.selectedIndices.length-1; item>=0;item--){
+				left_li.addItem(right_li.removeItemAt(right_li.selectedIndices[item]));
+			}
 			right_li.sortItemsBy("label", "ASC");
 			left_li.sortItemsBy("label", "ASC");		
 			var newKeys = new Array();

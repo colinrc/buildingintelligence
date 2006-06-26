@@ -3,7 +3,7 @@ import mx.utils.Delegate;
 class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var icon_cmb:ComboBox;
-	private var icon_ldr:Loader;	
+	private var icon_ldr:Loader;
 	private var listenTo_ti:TextInput;
 	private var type_cmb:ComboBox;
 	private var logType_ld:Loader;
@@ -25,13 +25,13 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private var groups:XMLNode;
 	public function onLoad():Void {
 		icon_ldr.autoLoad = true;
-		icon_ldr.scaleContent = true;				
+		icon_ldr.scaleContent = true;
 		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
-		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
-		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
+		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path + "lib\\icons", "*.png");
+		for (var myIcon = 0; myIcon < myIcons.length; myIcon++) {
 			var newIcon = new Object();
 			newIcon.label = myIcons[myIcon].split(".")[0];
-			newIcon.icon = mdm.Application.path+"lib\\icons\\"+myIcons[myIcon];
+			newIcon.icon = mdm.Application.path + "lib\\icons\\" + myIcons[myIcon];
 			icon_cmb.addItem(newIcon);
 		}
 		var temp_node = _global.left_tree.selectedNode;
@@ -45,9 +45,9 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			}
 		}
 		groups = client.getKeyGroups();
-		for(var index = 0; index<groups.childNodes.length;index++){
+		for (var index = 0; index < groups.childNodes.length; index++) {
 			var tempObject = new Object();
-			tempObject.label = "Group: "+groups.childNodes[index].attributes.name;
+			tempObject.label = "Group: " + groups.childNodes[index].attributes.name;
 			left_li.addItem(tempObject);
 		}
 		var tempKeys = _global.serverDesign.getKeys();
@@ -60,7 +60,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			var tempObject = new Object();
 			tempObject.label = controls[control].attributes["key"];
 			var leftLength = left_li.dataProvider.length;
-			for (var index = 0; index<leftLength;index++) {
+			for (var index = 0; index < leftLength; index++) {
 				if (controls[control].attributes["key"] == left_li.getItemAt(index).label) {
 					right_li.addItem(tempObject);
 					left_li.removeItemAt(index);
@@ -69,12 +69,12 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			}
 		}
 		right_li.sortItemsBy("label", "ASC");
-		left_li.sortItemsBy("label", "ASC");		
+		left_li.sortItemsBy("label", "ASC");
 		name_ti.text = name;
-		if(icon.length){
+		if (icon.length) {
 			icon_cmb.text = icon;
-			icon_ldr.load(mdm.Application.path+"lib\\icons\\"+icon+".png");
-		} 
+			icon_ldr.load(mdm.Application.path + "lib\\icons\\" + icon + ".png");
+		}
 		listenTo_ti.text = listenTo;
 		for (var index = 0; index < type_cmb.length; index++) {
 			if (type == type_cmb.getItemAt(index).label) {
@@ -92,15 +92,17 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
 		};
+		right_li.multipleSelection = true; 
+		left_li.multipleSelection = true; 
 		name_ti.addEventListener("change", changeListener);
 		listenTo_ti.addEventListener("change", changeListener);
 		type_cmb.addEventListener("change", changeListener);
-		icon_cmb.addEventListener("change", Delegate.create(this, loadIcon));			
+		icon_cmb.addEventListener("change", Delegate.create(this, loadIcon));
 	}
-	public function loadIcon(eventObject){
+	public function loadIcon(eventObject) {
 		_global.unSaved = true;
 		icon_ldr.load(icon_cmb.selectedItem.icon);
-	}	
+	}
 	private function typeChange() {
 		//_global.unSaved = true;
 		logType_ld.createEmptyMovieClip("form_mc", 0);
@@ -125,7 +127,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			}
 			break;
 		}
-		form_mc = logType_ld.attachMovie("forms.project.client.logging" + type_cmb.selectedItem.label, "form"+random(999)+"_mc", 0, dataObj);
+		form_mc = logType_ld.attachMovie("forms.project.client.logging" + type_cmb.selectedItem.label, "form" + random(999) + "_mc", 0, dataObj);
 	}
 	private function save() {
 		var newControls = new Array();
@@ -150,74 +152,78 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			break;
 		}
 		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_cmb.text, listenTo:listenTo_ti.text, type:type_cmb.selectedItem.label, attributes:attributes});
-		_global.refreshTheTree();		
+		_global.refreshTheTree();
 		_global.saveFile("Project");
 	}
 	private function addSel() {
 		_global.unSaved = true;
-		if (left_li.selectedItem != undefined) {
-			if(left_li.getItemAt(left_li.selectedIndex).label.lastIndexOf("Group: ")!=-1){
-				for(var group in groups.childNodes){
-					if(groups.childNodes[group].attributes.name==left_li.getItemAt(left_li.selectedIndex).label.substring(left_li.getItemAt(left_li.selectedIndex).label.lastIndexOf(" ")+1)){
-						icon_cmb.text = groups.childNodes[group].attributes.icon2;
-						icon_ldr.load(mdm.Application.path+"lib\\icons\\"+groups.childNodes[group].attributes.icon2+".png");
-						for(var keyNode in groups.childNodes[group].childNodes){
-							var key = groups.childNodes[group].childNodes[keyNode].attributes.name;
-							for(var item in left_li.dataProvider){
-								if(left_li.dataProvider[item].label == key){
-									right_li.addItem(left_li.removeItemAt(item));
-									break;
+		if (left_li.selectedItems.length > 0) {
+			for (var item = left_li.selectedIndices.length - 1; item >= 0; item--) {
+				if (left_li.getItemAt(left_li.selectedIndices[item]).label.lastIndexOf("Group: ") != -1) {
+					for (var group in groups.childNodes) {
+						if (groups.childNodes[group].attributes.name == left_li.getItemAt(left_li.selectedIndices[item]).label.substring(left_li.getItemAt(left_li.selectedIndices[item]).label.lastIndexOf(" ") + 1)) {
+							icon_cmb.text = groups.childNodes[group].attributes.icon2;
+							icon_ldr.load(mdm.Application.path + "lib\\icons\\" + groups.childNodes[group].attributes.icon2 + ".png");
+							for (var keyNode in groups.childNodes[group].childNodes) {
+								var key = groups.childNodes[group].childNodes[keyNode].attributes.name;
+								for (var item in left_li.dataProvider) {
+									if (left_li.dataProvider[item].label == key) {
+										right_li.addItem(left_li.removeItemAt(item));
+										break;
+									}
 								}
 							}
 						}
 					}
+				} else {
+					right_li.addItem(left_li.removeItemAt(left_li.selectedIndices[item]));
 				}
-			} else{
-				right_li.addItem(left_li.removeItemAt(left_li.selectedIndex));
 			}
 		}
 		right_li.sortItemsBy("label", "ASC");
-		left_li.sortItemsBy("label", "ASC");		
+		left_li.sortItemsBy("label", "ASC");
 	}
 	private function addAll() {
 		_global.unSaved = true;
 		right_li.removeAll();
-		var tempKeys = _global.serverDesign.getKeys();		
+		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
 			right_li.addItem(tempObject);
 		}
 		left_li.removeAll();
-		for(var index = 0; index<groups.childNodes.length;index++){
+		for (var index = 0; index < groups.childNodes.length; index++) {
 			var tempObject = new Object();
-			tempObject.label = "Group: "+groups.childNodes[index].attributes.name;
+			tempObject.label = "Group: " + groups.childNodes[index].attributes.name;
 			left_li.addItem(tempObject);
 		}
 		right_li.sortItemsBy("label", "ASC");
-		left_li.sortItemsBy("label", "ASC");		
+		left_li.sortItemsBy("label", "ASC");
 	}
 	private function remSel() {
 		_global.unSaved = true;
-		if (right_li.selectedItem != undefined) {
-			left_li.addItem(right_li.removeItemAt(right_li.selectedIndex));
+		if (right_li.selectedItems.length > 0) {
+			for(var item = right_li.selectedIndices.length-1; item>=0;item--){
+				left_li.addItem(right_li.removeItemAt(right_li.selectedIndices[item]));
+			}
 		}
 		right_li.sortItemsBy("label", "ASC");
-		left_li.sortItemsBy("label", "ASC");		
+		left_li.sortItemsBy("label", "ASC");
 	}
 	private function remAll() {
 		_global.unSaved = true;
-		left_li.removeAll();		
+		left_li.removeAll();
 		right_li.removeAll();
-		var tempKeys = _global.serverDesign.getKeys();		
+		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
 			left_li.addItem(tempObject);
 		}
-		for(var index = 0; index<groups.childNodes.length;index++){
+		for (var index = 0; index < groups.childNodes.length; index++) {
 			var tempObject = new Object();
-			tempObject.label = "Group: "+groups.childNodes[index].attributes.name;
+			tempObject.label = "Group: " + groups.childNodes[index].attributes.name;
 			left_li.addItem(tempObject);
 		}
 		right_li.sortItemsBy("label", "ASC");

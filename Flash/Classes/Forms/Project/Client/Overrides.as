@@ -48,6 +48,8 @@ class Forms.Project.Client.Overrides extends Forms.BaseForm {
 				}
 			}
 		}
+		right_li.multipleSelection = true; 
+		left_li.multipleSelection = true; 
 		right_li.sortItemsBy("label", "ASC");
 		left_li.sortItemsBy("label", "ASC");
 		right_li.addEventListener("change", Delegate.create(this, rightListChange));
@@ -81,15 +83,17 @@ class Forms.Project.Client.Overrides extends Forms.BaseForm {
 	}
 	private function addSel() {
 		_global.unSaved = true;
-		if (left_li.selectedItem != undefined) {
-			var newObject = new Object();
-			newObject.label = left_li.selectedItem.label;
-			newObject.def = left_li.selectedItem.def;
-			newObject.value = left_li.selectedItem.def;
-			newObject.type = left_li.selectedItem.type;
-			newObject.description = left_li.selectedItem.description;
-			left_li.removeItemAt(left_li.selectedIndex);
-			right_li.addItem(newObject);
+		if (left_li.selectedItems.length > 0) {
+			for(var item = left_li.selectedIndices.length-1; item>=0;item--){
+				var newObject = new Object();
+				newObject.label = left_li.getItemAt(left_li.selectedIndices[item]).label;
+				newObject.def = left_li.getItemAt(left_li.selectedIndices[item]).def;
+				newObject.value = left_li.getItemAt(left_li.selectedIndices[item]).def;
+				newObject.type = left_li.getItemAt(left_li.selectedIndices[item]).type;
+				newObject.description = left_li.getItemAt(left_li.selectedIndices[item]).description;
+				left_li.removeItemAt(left_li.selectedIndices[item]);
+				right_li.addItem(newObject);
+			}			
 			right_li.sortItemsBy("label", "ASC");
 		}
 	}
@@ -110,8 +114,10 @@ class Forms.Project.Client.Overrides extends Forms.BaseForm {
 	}
 	private function remSel() {
 		_global.unSaved = true;
-		if (right_li.selectedItem != undefined) {
-			left_li.addItem(right_li.removeItemAt(right_li.selectedIndex));
+		if (right_li.selectedItems.length > 0) {
+			for(var item = right_li.selectedIndices.length-1; item>=0;item--){
+				left_li.addItem(right_li.removeItemAt(right_li.selectedIndices[item]));
+			}
 			left_li.sortItemsBy("label", "ASC");
 			form_mc = this.createEmptyMovieClip("form_mc", 0);
 		}

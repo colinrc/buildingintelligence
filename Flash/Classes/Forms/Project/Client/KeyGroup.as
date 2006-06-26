@@ -79,7 +79,6 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 						break;
 					}
 				}
-				/*POPULATE LIST BASED ON CONTENTS OF OTHER GROUPS*/
 			}
 			if (found == 0) {
 				left_li.addItem(tempObject);
@@ -108,6 +107,8 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 				}
 			}*/
 		}
+		right_li.multipleSelection = true; 
+		left_li.multipleSelection = true; 
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		addSelected_btn.addEventListener("click", Delegate.create(this, addSel));
 		addAll_btn.addEventListener("click", Delegate.create(this, addAll));
@@ -136,8 +137,10 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 	}
 	private function addSel() {
 		_global.unSaved = true;
-		if (left_li.selectedItem != undefined) {
-			right_li.addItem(left_li.removeItemAt(left_li.selectedIndex));
+		if (left_li.selectedItems.length > 0) {
+			for(var item = left_li.selectedIndices.length-1; item>=0;item--){
+				right_li.addItem(left_li.removeItemAt(left_li.selectedIndices[item]));
+			}			
 		}
 		right_li.sortItemsBy("label", "ASC");
 		left_li.sortItemsBy("label", "ASC");
@@ -157,8 +160,10 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 	}
 	private function remSel() {
 		_global.unSaved = true;
-		if (right_li.selectedItem != undefined) {
-			left_li.addItem(right_li.removeItemAt(right_li.selectedIndex));
+		if (right_li.selectedItems.length > 0) {
+			for(var item = right_li.selectedIndices.length-1; item>=0;item--){
+				left_li.addItem(right_li.removeItemAt(right_li.selectedIndices[item]));
+			}
 		}
 		right_li.sortItemsBy("label", "ASC");
 		left_li.sortItemsBy("label", "ASC");

@@ -46,7 +46,7 @@ _global.workflow = new Objects.WorkFlow();
 var left_tree:mx.controls.Tree;
 _global.left_tree = treeSwitcher.getClip1();
 _global.left_tree.vScrollPolicy = _global.right_tree.vScrollPolicy = "auto";
-_global.left_tree.hScrollPolicy = "on";
+_global.left_tree.hScrollPolicy = "auto";
 _global.output_panel.hScrollPolicy = "auto";
 treeSwitcher.hScrollPolicy = "auto";
 //_global.left_tree.setStyle("openDuration", 50);

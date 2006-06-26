@@ -89,6 +89,8 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		} else {
 			canOpen_chk.selected = false;
 		}
+		right_li.multipleSelection = true; 
+		left_li.multipleSelection = true; 
 		canOpen_chk.addEventListener("change", Delegate.create(this,changeListener.change));		
 		show_ti.text = show;
 		hide_ti.text = hide;
@@ -122,25 +124,27 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	}
 	private function addSel() {
 		_global.unSaved = true;
-		if (left_li.selectedItem != undefined) {
-			if(left_li.getItemAt(left_li.selectedIndex).label.lastIndexOf("Group: ")!=-1){
-				for(var group in groups.childNodes){
-					if(groups.childNodes[group].attributes.name==left_li.getItemAt(left_li.selectedIndex).label.substring(left_li.getItemAt(left_li.selectedIndex).label.lastIndexOf(" ")+1)){
-						icon_cmb.text = groups.childNodes[group].attributes.icon2;
-						icon_ldr.load(mdm.Application.path+"lib\\icons\\"+groups.childNodes[group].attributes.icon2+".png");
-						for(var keyNode in groups.childNodes[group].childNodes){
-							var key = groups.childNodes[group].childNodes[keyNode].attributes.name;
-							for(var item in left_li.dataProvider){
-								if(left_li.dataProvider[item].label == key){
-									right_li.addItem(left_li.removeItemAt(item));
-									break;
+		if (left_li.selectedItems.length > 0) {
+			for (var item = left_li.selectedIndices.length - 1; item >= 0; item--) {
+				if (left_li.getItemAt(left_li.selectedIndices[item]).label.lastIndexOf("Group: ") != -1) {
+					for (var group in groups.childNodes) {
+						if (groups.childNodes[group].attributes.name == left_li.getItemAt(left_li.selectedIndices[item]).label.substring(left_li.getItemAt(left_li.selectedIndices[item]).label.lastIndexOf(" ") + 1)) {
+							icon_cmb.text = groups.childNodes[group].attributes.icon2;
+							icon_ldr.load(mdm.Application.path + "lib\\icons\\" + groups.childNodes[group].attributes.icon2 + ".png");
+							for (var keyNode in groups.childNodes[group].childNodes) {
+								var key = groups.childNodes[group].childNodes[keyNode].attributes.name;
+								for (var item in left_li.dataProvider) {
+									if (left_li.dataProvider[item].label == key) {
+										right_li.addItem(left_li.removeItemAt(item));
+										break;
+									}
 								}
 							}
 						}
 					}
+				} else {
+					right_li.addItem(left_li.removeItemAt(left_li.selectedIndices[item]));
 				}
-			} else{
-				right_li.addItem(left_li.removeItemAt(left_li.selectedIndex));
 			}
 		}
 		right_li.sortItemsBy("label", "ASC");
@@ -166,8 +170,10 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	}
 	private function remSel() {
 		_global.unSaved = true;
-		if (right_li.selectedItem != undefined) {
-			left_li.addItem(right_li.removeItemAt(right_li.selectedIndex));
+		if (right_li.selectedItems.length > 0) {
+			for(var item = right_li.selectedIndices.length-1; item>=0;item--){
+				left_li.addItem(right_li.removeItemAt(right_li.selectedIndices[item]));
+			}
 		}
 		right_li.sortItemsBy("label", "ASC");
 		left_li.sortItemsBy("label", "ASC");
