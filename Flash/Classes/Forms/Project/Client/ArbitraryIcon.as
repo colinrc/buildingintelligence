@@ -9,19 +9,15 @@ class Forms.Project.Client.ArbitraryIcon extends Forms.BaseForm {
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
+			dataObj.icons = icons_ti.text;
+			dataObj.commands = commands_ti.text;
+			dataObj.key = key_ti.text;
 		};
-		icons_ti.addEventListener("change", changeListener);	
-		commands_ti.addEventListener("change", changeListener);		
-		key_ti.addEventListener("change", changeListener);
 		icons_ti.text = dataObj.icons;
 		commands_ti.text = dataObj.commands;
 		key_ti.text = dataObj.key;
-	}
-	private function getData():Object {
-		var newObj = new Object();
-		newObj.icons = icons_ti.text;
-		newObj.commands = commands_ti.text;
-		newObj.key = key_ti.text;
-		return newObj;
+		icons_ti.addEventListener("change", changeListener);	
+		commands_ti.addEventListener("change", changeListener);		
+		key_ti.addEventListener("change", changeListener);
 	}
 }

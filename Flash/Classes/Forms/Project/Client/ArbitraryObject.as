@@ -12,28 +12,24 @@ class Forms.Project.Client.ArbitraryObject extends Forms.BaseForm {
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
+			dataObj.src = src_ti.text;
+			dataObj.key = key_ti.text;
+			dataObj.width = width_ti.text;
+			dataObj.height = height_ti.text;
+			dataObj.show = show_ti.text;
+			dataObj.hide = hide_ti.text;
 		};
-		src_ti.addEventListener("change", changeListener);	
-		key_ti.addEventListener("change", changeListener);		
-		width_ti.addEventListener("change", changeListener);
-		height_ti.addEventListener("change", changeListener);		
-		show_ti.addEventListener("change", changeListener);		
-		hide_ti.addEventListener("change", changeListener);				
 		src_ti.text = dataObj.src;
 		key_ti.text = dataObj.key;
 		width_ti.text = dataObj.width;
 		height_ti.text = dataObj.height;
 		show_ti.text = dataObj.show;
 		hide_ti.text = dataObj.hide;
-	}
-	private function getData():Object {
-		var newObj = new Object();
-		newObj.src = src_ti.text;
-		newObj.key = key_ti.text;
-		newObj.width = width_ti.text;
-		newObj.height = height_ti.text;
-		newObj.show = show_ti.text;
-		newObj.hide = hide_ti.text;
-		return newObj;
+		src_ti.addEventListener("change", changeListener);	
+		key_ti.addEventListener("change", changeListener);		
+		width_ti.addEventListener("change", changeListener);
+		height_ti.addEventListener("change", changeListener);		
+		show_ti.addEventListener("change", changeListener);		
+		hide_ti.addEventListener("change", changeListener);
 	}
 }

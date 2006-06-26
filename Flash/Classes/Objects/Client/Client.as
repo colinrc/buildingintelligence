@@ -85,11 +85,9 @@
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,"Client");
+		newNode.appendChild(control_types.toTree());
 		newNode.appendChild(keygroups.toTree());
 		newNode.appendChild(Property.toTree());
-		if(_global.advanced){
-			newNode.appendChild(control_types.toTree());
-		}
 		newNode.appendChild(status_bar.toTree());
 		newNode.appendChild(logging.toTree());
 		newNode.appendChild(calendar.toTree());		

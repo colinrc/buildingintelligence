@@ -12,12 +12,12 @@ class Forms.Project.Client.ArbitraryLabel extends Forms.BaseForm {
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
+			dataObj.label = label_ti.text;
+			dataObj.key = key_ti.text;
+			dataObj.fontSize = fontSize_ti.text ;
+			dataObj.defaultState = defaultState_ti.text;
+			dataObj.defaultValue = defaultValue_ti.text;
 		};
-		label_ti.addEventListener("change", changeListener);	
-		key_ti.addEventListener("change", changeListener);		
-		defaultState_ti.addEventListener("change", changeListener);
-		defaultValue_ti.addEventListener("change", changeListener);		
-		fontSize_ti.addEventListener("change", changeListener);
 		if ((dataObj.fontColour != undefined) && (dataObj.fontColour != "")) {
 			fontColour_mc.setColour(dataObj.fontColour);
 		}
@@ -26,15 +26,10 @@ class Forms.Project.Client.ArbitraryLabel extends Forms.BaseForm {
 		fontSize_ti.text = dataObj.fontSize;
 		defaultState_ti.text = dataObj.defaultState;
 		defaultValue_ti.text = dataObj.defaultValue;
-	}
-	private function getData():Object {
-		var newObj = new Object();
-		newObj.fontColour = "0x" + fontColour_mc.getColour().toString(16);
-		newObj.label = label_ti.text;
-		newObj.fontSize = fontSize_ti.text;
-		newObj.key = key_ti.text;
-		newObj.defaultState = defaultState_ti.text;
-		newObj.defaultValue = defaultValue_ti.text;
-		return newObj;
+		label_ti.addEventListener("change", changeListener);	
+		key_ti.addEventListener("change", changeListener);		
+		defaultState_ti.addEventListener("change", changeListener);
+		defaultValue_ti.addEventListener("change", changeListener);		
+		fontSize_ti.addEventListener("change", changeListener);
 	}
 }

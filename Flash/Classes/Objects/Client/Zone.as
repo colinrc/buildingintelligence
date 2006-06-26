@@ -116,7 +116,7 @@
 		return rooms;
 	}	
 	public function getArbitrary():Object{
-		return {items:arbitrary.getItems(),dataObject:this};
+		return {items:arbitrary.getItems(),map:map, background:background,dataObject:this};
 	}
 	public function setArbitraryData(items:Array):Void{
 		arbitrary.setData({items:items});
