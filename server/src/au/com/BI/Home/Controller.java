@@ -300,13 +300,11 @@ public class Controller {
 		while (running) {
 			CommandInterface item;
 			commandDone = false;
-			synchronized (commandQueue) {
-				if (!commandQueue.isEmpty()) {
-					item = (CommandInterface) commandQueue.remove();
-					successfulCommand = false;
-				} else {
-					item = null;
-				}
+			if (!commandQueue.isEmpty()) {
+				item = (CommandInterface) commandQueue.remove();
+				successfulCommand = false;
+			} else {
+				item = null;
 			}
 			if (item != null ) {
 
@@ -429,18 +427,10 @@ public class Controller {
                 if (!item.isCommsCommand() ) {
 					doScriptCommand(item);
                 }
-                  commandQueue.remove();
+
               }
-              synchronized (commandQueue) {
-                try {
-                  if (commandQueue.isEmpty())
-                    commandQueue.wait(400);
-                  // give the server some time to do something
-                }
-                catch (InterruptedException ex) {
-                };
-              }
-			  Thread.yield();
+
+			Thread.yield();
          }
     }
 

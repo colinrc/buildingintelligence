@@ -376,6 +376,7 @@ public class BaseModel
                 if (isClientCommand)
                 	return false; // only are about output for client commands
                 else {
+                	configHelper.setLastCommandType(DeviceType.MONITORED);
                     logger.log(Level.FINER, "Controls : " + keyName);
                 	return true; // anything come through comms we want to look at
                 }
