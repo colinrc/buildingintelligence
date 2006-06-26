@@ -174,5 +174,7 @@ if exist Macros goto end
 mkdir Macros
 
 :end
+copy /Y ..\wodSFTP.dll c:\windows\system32\
+regsvr32 c:\windows\system32\wodSFTP.dll
 copy /Y ..\BIwodSFTP.ocx c:\windows\system32\
 regsvr32 c:\windows\system32\BIwodSFTP.ocx
