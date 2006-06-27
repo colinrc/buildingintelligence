@@ -25,7 +25,7 @@ renderControlType = function () {
 		var items = rows[row].childNodes;
 		var maxHeight = 0;
 		for (var item=0; item<items.length; item++) {
-			if (items[item].attributes.type == "button" || items[item].attributes.type == "toggle" || items[item].attributes.type == "slider") {
+			if (items[item].attributes.type == "button" || items[item].attributes.type == "toggle" || items[item].attributes.type == "slider" || items[item].attributes.type == "picker") {
 				if (_global.settings.controlButtonHeight > maxHeight) maxHeight = _global.settings.controlButtonHeight;
 			} else if (items[item].attributes.type == "label") {
 				if (20 > maxHeight) maxHeight = 26;
@@ -52,31 +52,43 @@ renderControlType = function () {
 			} else {
 				var width = Math.round(items[item].attributes.width / 100 * holderWidth);
 			}
+			width -= 4;
 			if (items[item].attributes.type == "button") {
-				var item_mc = holder_mc.attachMovie("bi.ui.Button", "button" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth(), {_x:currentX + 2 + 20, _y:currentY, width:width - 4, height:_global.settings.controlButtonHeight, label:items[item].attributes.label, iconName:items[item].attributes.icon});
+				var item_mc = holder_mc.attachMovie("bi.ui.Button", "button" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth(), {_x:currentX + 2 + 20, _y:currentY, width:width, height:_global.settings.controlButtonHeight, label:items[item].attributes.label, iconName:items[item].attributes.icon});
 				item_mc.formName = "buttonForm";
 			} else if (items[item].attributes.type == "toggle") {
-				var item_mc = holder_mc.attachMovie("bi.ui.Button", "toggle" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth(), {_x:currentX + 2 + 20, _y:currentY, width:width - 4, height:_global.settings.controlButtonHeight, label:items[item].attributes.labels[0], iconName:items[item].attributes.icons.split(",")[0]});
+				var item_mc = holder_mc.attachMovie("bi.ui.Button", "toggle" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth(), {_x:currentX + 2 + 20, _y:currentY, width:width, height:_global.settings.controlButtonHeight, label:items[item].attributes.labels[0], iconName:items[item].attributes.icons.split(",")[0]});
 				item_mc.formName = "toggleForm";
 			} else if (items[item].attributes.type == "slider") {
 				var item_mc = holder_mc.createEmptyMovieClip("slider" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth());
-				createSlider(item_mc, {width:width - 4, height:_global.settings.controlButtonHeight, icons:items[item].attributes.icons.split(",")});
+				createSlider(item_mc, {width:width, height:_global.settings.controlButtonHeight, icons:items[item].attributes.icons.split(",")});
 				item_mc._x = currentX + 2 + 20;
 				item_mc._y = currentY;
 				item_mc.formName = "sliderForm";
 			} else if (items[item].attributes.type == "label") {
-				var item_mc = holder_mc.attachMovie("bi.ui.Label", "label" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth(), {_x:currentX + 2 + 20, _y:currentY, width:width - 4, text:"label"});
+				var item_mc = holder_mc.attachMovie("bi.ui.Label", "label" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth(), {_x:currentX + 2 + 20, _y:currentY, width:width, text:"label"});
 				item_mc.formName = "labelForm";
 			} else if (items[item].attributes.type == "video") {
 				var item_mc = holder_mc.createEmptyMovieClip("box" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth());
 				item_mc._x = currentX + 2 + 20;
 				item_mc._y = currentY,
 				item_mc.beginFill(0x829ECB);
-				item_mc.drawRect(0, 0, width - 4, Number(items[item].attributes.videoHeight) + 7, 4);
+				item_mc.drawRect(0, 0, width, Number(items[item].attributes.videoHeight) + 7, 4);
 				item_mc.endFill();
+				item_mc.formName = "videoForm";
+			} else if (items[item].attributes.type == "picker") {
+				var item_mc = holder_mc.createEmptyMovieClip("picker" + row + "_" + item + "_mc", holder_mc.getNextHighestDepth());
+				item_mc.formName = "pickerForm";
+				item_mc._x = currentX + 2 + 20;
+				item_mc._y = currentY;
+				var upButton_mc = item_mc.attachMovie("bi.ui.Button", "upButton_mc", 10, {settings:{width:50, height:_global.settings.controlButtonHeight, iconName:"up-arrow"}});
+				var label_mc = item_mc.attachMovie("bi.ui.Button", "label_mc", 20, {settings:{_x:52, width:width - 104, height:_global.settings.controlButtonHeight, label:""}});
+				if (items[item].attributes.label && items[item].attributes.minValue) label_mc.label = items[item].attributes.label.split("%value%").join(items[item].attributes.minValue); 
+				var downButton_mc = item_mc.attachMovie("bi.ui.Button", "downButton_mc", 30, {settings:{width:50, height:_global.settings.controlButtonHeight, iconName:"down-arrow"}});
+				downButton_mc._x = label_mc._x + label_mc._width + 2;
 			}
 			
-			currentX += width;
+			currentX += width + 4;
 			var marker_mc = markers_mc.attachMovie("controlTypeEditor.rowSpacer", "itemSpacer" + row + "_" + (item + 1) + "_mc", markers_mc.getNextHighestDepth(), {_width:4, _height:maxHeight, _x:currentX + 18, _y:currentY, type:"item"});
 			if (items[item].nextSibling != null) {
 				marker_mc.xmlPointer = items[item].nextSibling;
@@ -239,7 +251,7 @@ createToolbar = function () {
 	var toolbar_mc = this.createEmptyMovieClip("toolbar_mc", 30);
 	toolbar_mc._x = toolbar_mc._y = 10;
 	
-	var items = [{label:"button", xml:'<item type="button" label="button" />'}, {label:"toggle", xml:'<item type="toggle" labels="toggle" />'}, {label:"slider", xml:'<item type="slider" />'}, {label:"video", xml:'<item type="video" videoWidth="320" videoHeight="240" />'}];
+	var items = [{label:"button", xml:'<item type="button" label="button" />'}, {label:"toggle", xml:'<item type="toggle" labels="toggle" />'}, {label:"slider", xml:'<item type="slider" />'}, {label:"video", xml:'<item type="video" videoWidth="320" videoHeight="240" />'}, {label:"picker", xml:'<item type="picker" />'}];
 	var xPos = 0;
 	for (var i=0; i<items.length; i++) {
 		var item_mc = toolbar_mc.attachMovie("bi.ui.Button", "item" + i + "_mc", toolbar_mc.getNextHighestDepth(), {_x:xPos, width:80, height:30, label:items[i].label, xml:new XML(items[i].xml).firstChild});

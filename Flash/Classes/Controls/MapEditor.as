@@ -88,7 +88,7 @@ class Controls.MapEditor extends MovieClip {
 			scrollPane_sp.invalidate();
 			if (!scrollPane_sp._parent.background.length) {
 				scrollPane_sp.content.background_mc._width = map._width + 20;
-				scrollPane_sp.content.background_mc._height = map._height + 20;
+				scrollPane_sp.content.background_mc._height = map._y + map._height + 20;
 			}
 			scrollPane_sp._parent.focusPoly();
 		}
@@ -97,6 +97,7 @@ class Controls.MapEditor extends MovieClip {
 		
 		scrollPane_sp.contentPath = "MapEditor:content";
 		var map_mc = scrollPane_sp.content.createEmptyMovieClip("map_mc", 0);
+		map_mc._y = 105;
 		my_mcl.loadClip(url, map_mc);
 		
 		var bg_mc = scrollPane_sp.content.background_mc;
@@ -268,6 +269,7 @@ class Controls.MapEditor extends MovieClip {
 	
 	private function drawPoly():Void {
 		var poly_mc:MovieClip = scrollPane_sp.content.createEmptyMovieClip("poly_mc", 10);
+		poly_mc._y += 105;
 	
 		var q = 0;
 		var len = _poly.length;
