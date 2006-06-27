@@ -221,6 +221,7 @@ _global.setPath = function():Void  {
 		mdm.FileSystem.makeFolder(_global.project.path + "/client/lib/maps");
 		mdm.FileSystem.makeFolder(_global.project.path + "/client/lib/backgrounds");
 		mdm.FileSystem.makeFolder(_global.project.path + "/client/lib/sounds");
+		mdm.FileSystem.makeFolder(_global.project.path + "/client/lib/objects");
 		_global.unsaved = true;
 	} else {
 		mdm.Dialogs.prompt("Your project cannot be saved without selecting a project directory.");

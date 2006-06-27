@@ -9,34 +9,33 @@ class Forms.Project.Client.ArbitraryButton extends Forms.BaseForm {
 	private var width_ti:TextInput;
 	private var key_ti:TextInput;
 	private var fontSize_ti:TextInput;
-	private var dataObj:Object;
+	private var currentAlert:Object;
 	public function onLoad():Void {
-		var changeListener:Object = new Object();
-		changeListener.change = function(eventObject:Object) {
-			_global.unSaved = true;
-			dataObj.labels = labels_ti.text;
-			dataObj.commands = commands_ti.text;
-			dataObj.width = width_ti.text;
-			dataObj.key = key_ti.text;
-			dataObj.fontSize = fontSize_ti.text;
-		};
-		if ((dataObj.bgColour != undefined) && (dataObj.bgColour != "")) {
-			bgColour_mc.setColour(dataObj.bgColour);
+		if ((currentAlert.bgColour != undefined) && (currentAlert.bgColour != "")) {
+			bgColour_mc.setColour(currentAlert.bgColour);
 		}
-		if ((dataObj.borderColour != undefined) && (dataObj.borderColour != "")) {
-			borderColour_mc.setColour(dataObj.borderColour);
+		if ((currentAlert.borderColour != undefined) && (currentAlert.borderColour != "")) {
+			borderColour_mc.setColour(currentAlert.borderColour);
 		}
-		if ((dataObj.fontColour != undefined) && (dataObj.fontColour != "")) {
-			fontColour_mc.setColour(dataObj.fontColour);
+		if ((currentAlert.fontColour != undefined) && (currentAlert.fontColour != "")) {
+			fontColour_mc.setColour(currentAlert.fontColour);
 		}
-		labels_ti.text = dataObj.labels;
-		commands_ti.text = dataObj.commands;
-		width_ti.text = dataObj.width;
-		key_ti.text = dataObj.key;
-		fontSize_ti.text = dataObj.fontSize;
-		labels_ti.addEventListener("change", changeListener);
-		commands_ti.addEventListener("change", changeListener);
-		key_ti.addEventListener("change", changeListener);
-		fontSize_ti.addEventListener("change", changeListener);
+		labels_ti.text = currentAlert.labels;
+		commands_ti.text = currentAlert.commands;
+		width_ti.text = currentAlert.width;
+		key_ti.text = currentAlert.key;
+		fontSize_ti.text = currentAlert.fontSize;
+		labels_ti.addEventListener("change", Delegate.create(this,changeListener));
+		commands_ti.addEventListener("change", Delegate.create(this,changeListener));
+		key_ti.addEventListener("change", Delegate.create(this,changeListener));
+		fontSize_ti.addEventListener("change", Delegate.create(this,changeListener));
+	}
+	function changeListener(){
+		_global.unSaved = true;
+		currentAlert.labels = labels_ti.text;
+		currentAlert.commands = commands_ti.text;
+		currentAlert.width = width_ti.text;
+		currentAlert.key = key_ti.text;
+		currentAlert.fontSize = fontSize_ti.text;
 	}
 }

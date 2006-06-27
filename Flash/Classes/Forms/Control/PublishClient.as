@@ -117,8 +117,12 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 					/*
 					sftpConnection.setLocalPath(appPath +"/lib/objects");
 					sftpConnection.setRemotePath("/client/lib/objects");
-
-					sftpConnection.putItem("ircodes.xml");
+					var tempZones = dataObject.clientDesign.Property.zones;
+					for(var zone in tempZones){
+						if((tempZones[zone].map != undefined)&&(tempZones[zone].map != "")){
+							mdm.FileSystem.copyFile(mdm.Application.path+"/lib/objects/"+tempZones[zone].map, _global.project.path+"/client/lib/maps/"+tempZones[zone].map);
+						}
+					}
 					*/
 					break;
 			}

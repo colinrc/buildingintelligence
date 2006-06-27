@@ -80,9 +80,9 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 			currentAlert = undefined;
 		} else if (eventObj.type == "alertAdd") {
 			toggleDetails(true);
-			currentAlert = undefined;
+			//currentAlert = undefined;
 			currentAlert = eventObj.target;
-			currentAlert.type = "";
+			currentAlert.type = "label";
 			currentAlert.label = "";
 			currentAlert.key = "";
 			currentAlert.fontSize = "";
@@ -90,10 +90,10 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 			currentAlert.defaultValue = "";
 			typeChange("label");
 		} else if (eventObj.type == "alertSelect") {
-			toggleDetails(true);
-			currentAlert = undefined;
+			//currentAlert = undefined;
 			currentAlert = eventObj.target;
 			typeChange(eventObj.target.type);
+			toggleDetails(true);
 		}
 	}
 	private function toggleDetails(show:Boolean):Void {
@@ -107,6 +107,7 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 	}
 	private function comboChange(evtObj) {
 		_global.unSaved = true;		
+		currentAlert.type = type_cmb.selectedItem.label;
 		typeChange(type_cmb.selectedItem.label);
 	}
 	private function typeChange(type) {
@@ -143,7 +144,7 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 				if(!currentAlert.hide)currentAlert.hide = "";
 				break;
 		}
-		item_mc = attachMovie("forms.project.client.arbitrary"+type, "item_mc", 0, {_x:110,_y:510, dataObj:currentAlert});
+		item_mc = attachMovie("forms.project.client.arbitrary"+type, "item"+(_global.formDepth++)+"_mc", 0, {_x:110,_y:510, currentAlert:currentAlert});
 	}
 	public function save():Void {
 		var newItems = new Array();
@@ -154,32 +155,34 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 			newArbitraryNode.attributes["y"] = roomEditor.alerts[index].y;
 			switch (newArbitraryNode.attributes["type"]) {
 			case "label" :
-				newArbitraryNode.attributes["label"] = roomEditor.alerts[index].label;
-				newArbitraryNode.attributes["fontSize"] = roomEditor.alerts[index].fontSize;
-				newArbitraryNode.attributes["fontColour"] = roomEditor.alerts[index].fontColour;
+				if(roomEditor.alerts[index].label)newArbitraryNode.attributes["label"] = roomEditor.alerts[index].label;
+				if(roomEditor.alerts[index].fontSize)newArbitraryNode.attributes["fontSize"] = roomEditor.alerts[index].fontSize;
+				if(roomEditor.alerts[index].key)newArbitraryNode.attributes["key"] = roomEditor.alerts[index].key;
+				if(roomEditor.alerts[index].defaultState)newArbitraryNode.attributes["defaultState"] = roomEditor.alerts[index].defaultState;
+				if(roomEditor.alerts[index].defaultValue)newArbitraryNode.attributes["defaultValue"] = roomEditor.alerts[index].defaultValue;
 				break;
 			case "button" :
-				newArbitraryNode.attributes["bgColour"] = roomEditor.alerts[index].bgColour;
-				newArbitraryNode.attributes["borderColour"] = roomEditor.alerts[index].borderColour;
-				newArbitraryNode.attributes["fontColour"] = roomEditor.alerts[index].fontColour;
-				newArbitraryNode.attributes["labels"] = roomEditor.alerts[index].labels;
-				newArbitraryNode.attributes["commands"] = roomEditor.alerts[index].commands;
-				newArbitraryNode.attributes["width"] = roomEditor.alerts[index].width;
-				newArbitraryNode.attributes["key"] = roomEditor.alerts[index].key;
-				newArbitraryNode.attributes["fontSize"] = roomEditor.alerts[index].fontSize;
+				if(roomEditor.alerts[index].borderColour)newArbitraryNode.attributes["bgColour"] = roomEditor.alerts[index].bgColour;
+				if(roomEditor.alerts[index].borderColour)newArbitraryNode.attributes["borderColour"] = roomEditor.alerts[index].borderColour;
+				if(roomEditor.alerts[index].fontColour)newArbitraryNode.attributes["fontColour"] = roomEditor.alerts[index].fontColour;
+				if(roomEditor.alerts[index].labels)newArbitraryNode.attributes["labels"] = roomEditor.alerts[index].labels;
+				if(roomEditor.alerts[index].commands)newArbitraryNode.attributes["commands"] = roomEditor.alerts[index].commands;
+				if(roomEditor.alerts[index].width)newArbitraryNode.attributes["width"] = roomEditor.alerts[index].width;
+				if(roomEditor.alerts[index].key)newArbitraryNode.attributes["key"] = roomEditor.alerts[index].key;
+				if(roomEditor.alerts[index].fontSize)newArbitraryNode.attributes["fontSize"] = roomEditor.alerts[index].fontSize;
 				break;
 			case "icon" :
-				newArbitraryNode.attributes["icons"] = roomEditor.alerts[index].icons;
-				newArbitraryNode.attributes["commands"] = roomEditor.alerts[index].commands;
-				newArbitraryNode.attributes["key"] = roomEditor.alerts[index].key;
+				if(roomEditor.alerts[index].icons)newArbitraryNode.attributes["icons"] = roomEditor.alerts[index].icons;
+				if(roomEditor.alerts[index].commands)newArbitraryNode.attributes["commands"] = roomEditor.alerts[index].commands;
+				if(roomEditor.alerts[index].key)newArbitraryNode.attributes["key"] = roomEditor.alerts[index].key;
 				break;
 			case "object" :
-				newArbitraryNode.attributes["src"] = roomEditor.alerts[index].src;
-				newArbitraryNode.attributes["key"] = roomEditor.alerts[index].key;
-				newArbitraryNode.attributes["width"] = roomEditor.alerts[index].width;
-				newArbitraryNode.attributes["height"] = roomEditor.alerts[index].height;
-				newArbitraryNode.attributes["show"] = roomEditor.alerts[index].show;
-				newArbitraryNode.attributes["hide"] = roomEditor.alerts[index].hide;
+				if(roomEditor.alerts[index].src)newArbitraryNode.attributes["src"] = roomEditor.alerts[index].src;
+				if(roomEditor.alerts[index].key)newArbitraryNode.attributes["key"] = roomEditor.alerts[index].key;
+				if(roomEditor.alerts[index].width)newArbitraryNode.attributes["width"] = roomEditor.alerts[index].width;
+				if(roomEditor.alerts[index].height)newArbitraryNode.attributes["height"] = roomEditor.alerts[index].height;
+				if(roomEditor.alerts[index].show)newArbitraryNode.attributes["show"] = roomEditor.alerts[index].show;
+				if(roomEditor.alerts[index].hide)newArbitraryNode.attributes["hide"] = roomEditor.alerts[index].hide;
 				break;
 			}
 			newItems.push(newArbitraryNode);
