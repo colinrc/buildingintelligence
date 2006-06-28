@@ -194,7 +194,13 @@ renderControlType = function () {
 }
 
 showForm = function (formName, xml) {
-	var form_mc = this.attachMovie("controlTypeEditor." + formName, "form_mc", 0, {_x:510, _y:10, xml:xml});
+	this.formName = formName;
+	this.xml = xml;
+	this.form_mc.removeMovieClip();
+	this.onEnterFrame = function () {
+		var form_mc = this.attachMovie("controlTypeEditor." + this.formName, "form_mc", 0, {_x:510, _y:10, xml:this.xml});
+		delete this.onEnterFrame;
+	}
 }
 
 loadIcons = function () {
@@ -251,12 +257,12 @@ createToolbar = function () {
 	var toolbar_mc = this.createEmptyMovieClip("toolbar_mc", 30);
 	toolbar_mc._x = toolbar_mc._y = 10;
 	
-	var items = [{label:"button", xml:'<item type="button" label="button" />'}, {label:"toggle", xml:'<item type="toggle" labels="toggle" />'}, {label:"slider", xml:'<item type="slider" />'}, {label:"video", xml:'<item type="video" videoWidth="320" videoHeight="240" />'}, {label:"picker", xml:'<item type="picker" />'}];
+	var items = [{label:"label", xml:'<item type="label" />'}, {label:"button", xml:'<item type="button" label="button" />'}, {label:"toggle", xml:'<item type="toggle" labels="toggle" />'}, {label:"slider", xml:'<item type="slider" />'}, {label:"video", xml:'<item type="video" videoWidth="320" videoHeight="240" />'}, {label:"picker", xml:'<item type="picker" />'}];
 	var xPos = 0;
 	for (var i=0; i<items.length; i++) {
-		var item_mc = toolbar_mc.attachMovie("bi.ui.Button", "item" + i + "_mc", toolbar_mc.getNextHighestDepth(), {_x:xPos, width:80, height:30, label:items[i].label, xml:new XML(items[i].xml).firstChild});
+		var item_mc = toolbar_mc.attachMovie("bi.ui.Button", "item" + i + "_mc", toolbar_mc.getNextHighestDepth(), {_x:xPos, width:70, height:30, label:items[i].label, xml:new XML(items[i].xml).firstChild});
 		item_mc.formName = items[i].label.toLowerCase() + "Form";
-		xPos += 88;
+		xPos += 74;
 		item_mc.onPress = function () {			
 			this._alpha = 60;
 			this.startX = this._x;
@@ -333,7 +339,6 @@ createSlider = function (item_mc, settings) {
 	slider_mc._x = slider_mc._y = padding;
 		
 	var handle_mc = slider_mc.createEmptyMovieClip("handle_mc",10);
-	var iconOn_mc = handle_mc.attachMovie("bi.ui.Icon", "iconOn_mc", 10, {iconName:settings.icons[1], size:settings.height - (padding * 2)});
 	var iconOff_mc = handle_mc.attachMovie("bi.ui.Icon", "iconOff_mc", 0, {iconName:settings.icons[0], size:settings.height - (padding * 2)});
 }
 

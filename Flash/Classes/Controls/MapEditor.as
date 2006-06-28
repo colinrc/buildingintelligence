@@ -53,6 +53,7 @@ class Controls.MapEditor extends MovieClip {
 		_background = bgImage;
 		var bg_mc = scrollPane_sp.content.background_mc;
 		bg_mc._xscale = bg_mc._yscale = 100;
+		bg_mc._y = -105;
 		var image_mc = bg_mc.createEmptyMovieClip("image_mc", 0);
 		image_mc.loadMovie(bgImage);
 	}
@@ -97,7 +98,6 @@ class Controls.MapEditor extends MovieClip {
 		
 		scrollPane_sp.contentPath = "MapEditor:content";
 		var map_mc = scrollPane_sp.content.createEmptyMovieClip("map_mc", 0);
-		map_mc._y = 105;
 		my_mcl.loadClip(url, map_mc);
 		
 		var bg_mc = scrollPane_sp.content.background_mc;
@@ -269,7 +269,6 @@ class Controls.MapEditor extends MovieClip {
 	
 	private function drawPoly():Void {
 		var poly_mc:MovieClip = scrollPane_sp.content.createEmptyMovieClip("poly_mc", 10);
-		poly_mc._y += 105;
 	
 		var q = 0;
 		var len = _poly.length;

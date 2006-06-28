@@ -56,7 +56,7 @@ class Controls.TreeSwitcher extends UIComponent {
 	}	
 	private function createChildren():Void {
 		//arrange();
-		clip1 = this.createObject("Tree", "clip1", 2);
+		clip1 = this.createObject("Tree", "clip1", 2, {hScrollPolicy:"on"});
 		clip2 = this.createObject("Tree", "clip2", 1);
 		tab_tb = this.createObject("TabBar", "tab_tb", 3);
 		tab_tb.addItem("Project");

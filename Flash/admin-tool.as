@@ -43,16 +43,13 @@ _global.right_tree = treeSwitcher.getClip2();
 _global.output_panel = output_panel;
 _global.workflow = new Objects.WorkFlow();
 //Create global reference to project/design tree
-var left_tree:mx.controls.Tree;
 _global.left_tree = treeSwitcher.getClip1();
 _global.left_tree.vScrollPolicy = _global.right_tree.vScrollPolicy = "auto";
-_global.left_tree.hScrollPolicy = "auto";
+_global.right_tree.hScrollPolicy = "off";
+_global.left_tree.hScrollPolicy = "on";
+_global.left_tree.maxHPosition = 150;
 _global.output_panel.hScrollPolicy = "auto";
-treeSwitcher.hScrollPolicy = "auto";
-//_global.left_tree.setStyle("openDuration", 50);
-left_tree.vScrollPolicy = _global.right_tree.vScrollPolicy = "auto";
-left_tree.hScrollPolicy = "auto";
-left_tree.setStyle("openDuration", 50);
+_global.left_tree.setStyle("openDuration", 50);
 _global.left_tree.cellRenderer = "LeftTreeCellRenderer";
 /*************************************************************************/
 //link to required xml files

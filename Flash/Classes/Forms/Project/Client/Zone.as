@@ -121,7 +121,12 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		} else{
 			var tempBG = background_cmb.text;
 		}
-		dataObject.setData({name:name_ti.text, map:tempMap, background:tempBG, cycle:cycle, alignment:alignment_cmb.text, hideFromList:hideFromList});
+		if (alignment_cmb.text == "top left") {
+			var align = "top left";
+		} else {
+			var align = "";
+		}
+		dataObject.setData({name:name_ti.text, map:tempMap, background:tempBG, cycle:cycle, alignment:align, hideFromList:hideFromList});
 		_global.refreshTheTree();				
 		_global.saveFile("Project");
 	}
