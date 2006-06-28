@@ -4,13 +4,44 @@ class Forms.Project.Client.ArbitraryButton extends Forms.BaseForm {
 	private var bgColour_mc:MovieClip;
 	private var borderColour_mc:MovieClip;
 	private var fontColour_mc:MovieClip;
-	private var labels_ti:TextInput;
-	private var commands_ti:TextInput;
+	private var label_ti:TextInput;
+	private var label2_ti:TextInput;
+	private var command_cmb:ComboBox;
+	private var command2_cmb:ComboBox;
 	private var width_ti:TextInput;
-	private var key_ti:TextInput;
+	private var key_cmb:ComboBox;
 	private var fontSize_ti:TextInput;
 	private var currentAlert:Object;
 	public function onLoad():Void {
+		var DPControl = new Array();
+		DPControl.push({label:"channel"});
+		DPControl.push({label:"down"});
+		DPControl.push({label:"goto"});
+		DPControl.push({label:"keyPress"})
+		DPControl.push({label:"on"});
+		DPControl.push({label:"off"});
+		DPControl.push({label:"pan"});
+		DPControl.push({label:"pause"});
+		DPControl.push({label:"tilt"});
+		DPControl.push({label:"volume"});
+		DPControl.push({label:"send_audio_command"});
+		DPControl.push({label:"src"});
+//		DPControl.push({label:"state"});
+		DPControl.push({label:"up"});
+		command_cmb.dataProvider = DPControl;
+		command2_cmb.dataProvider = DPControl;
+		command_cmb.text = currentAlert.command;
+		command2_cmb.text = currentAlert.command2;
+		var tempKeys = _global.serverDesign.getKeys();
+		var DPKey = new Array();
+		DPKey.push({label:""});
+		for (var key in tempKeys) {
+			var tempObject = new Object();
+			tempObject.label = tempKeys[key];
+			DPKey.push(tempObject);
+		}
+		key_cmb.dataProvider = DPKey;
+		key_cmb.text = currentAlert.key;
 		if ((currentAlert.bgColour != undefined) && (currentAlert.bgColour != "")) {
 			bgColour_mc.setColour(currentAlert.bgColour);
 		}
@@ -20,22 +51,36 @@ class Forms.Project.Client.ArbitraryButton extends Forms.BaseForm {
 		if ((currentAlert.fontColour != undefined) && (currentAlert.fontColour != "")) {
 			fontColour_mc.setColour(currentAlert.fontColour);
 		}
-		labels_ti.text = currentAlert.labels;
-		commands_ti.text = currentAlert.commands;
+		label_ti.text = currentAlert.label;
+		label2_ti.text = currentAlert.label2;
+		width_ti.restrict = "0-9";
 		width_ti.text = currentAlert.width;
-		key_ti.text = currentAlert.key;
+		fontSize_ti.restrict = "0-9";
 		fontSize_ti.text = currentAlert.fontSize;
-		labels_ti.addEventListener("change", Delegate.create(this,changeListener));
-		commands_ti.addEventListener("change", Delegate.create(this,changeListener));
-		key_ti.addEventListener("change", Delegate.create(this,changeListener));
+		fontColour_mc.setCallbackObject(this);
+		borderColour_mc.setCallbackObject(this);
+		bgColour_mc.setCallbackObject(this);
+		label_ti.addEventListener("change", Delegate.create(this,changeListener));
+		command_cmb.addEventListener("change", Delegate.create(this,changeListener));
+		command2_cmb.addEventListener("change", Delegate.create(this,changeListener));
+		label2_ti.addEventListener("change", Delegate.create(this,changeListener));
+		key_cmb.addEventListener("change", Delegate.create(this,changeListener));
 		fontSize_ti.addEventListener("change", Delegate.create(this,changeListener));
 	}
 	function changeListener(){
 		_global.unSaved = true;
-		currentAlert.labels = labels_ti.text;
-		currentAlert.commands = commands_ti.text;
+		currentAlert.label = label_ti.text;
+		currentAlert.label2 = label2_ti.text;
+		currentAlert.command = command_cmb.text;
+		currentAlert.command2 = command2_cmb.text;
 		currentAlert.width = width_ti.text;
-		currentAlert.key = key_ti.text;
+		currentAlert.key = key_cmb.text;
 		currentAlert.fontSize = fontSize_ti.text;
+	}
+	function onColourChange(newColour:Number) {
+		currentAlert.fontColour = "0x" + fontColour_mc.getColour().toString(16).toUpperCase();
+		currentAlert.borderColour = "0x" + borderColour_mc.getColour().toString(16).toUpperCase();
+		currentAlert.bgColour = "0x" + bgColour_mc.getColour().toString(16).toUpperCase();
+		_global.unSaved = true;
 	}
 }
