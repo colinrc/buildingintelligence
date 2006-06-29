@@ -8,11 +8,12 @@ package au.com.BI.simulator;
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Image;
+
 import au.com.BI.Connection.ServerHandler;
+import au.com.BI.DataModel.eLifeActiveLoader;
 import au.com.BI.GUI.MainWindowBG;
 import au.com.BI.Serial.SerialHandler;
 import au.com.BI.Util.ImageLoader;
-import au.com.BI.DataModel.eLifeActiveLoader;
 /**
  * @author David
  *

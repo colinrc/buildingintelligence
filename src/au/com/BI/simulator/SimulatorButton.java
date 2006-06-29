@@ -5,13 +5,12 @@
  * Copyright Building Intelligence 2006
  */
 package au.com.BI.simulator;
-import java.awt.AlphaComposite;
 import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import au.com.BI.Util.ImageLoader;
 /**
  * @author David

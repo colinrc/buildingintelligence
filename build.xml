@@ -23,6 +23,9 @@
 </target>
 	
 <target name="dist" depends="dist_clean,increment,jar" >
+	 <copy todir="dist/ext">
+		<fileset dir="ext"/>
+	  </copy>
 	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
 		update="false"
 		basedir="dist" 
@@ -34,15 +37,10 @@
 		excludes = "**/*\*.class"  />
 	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip"
 		update="true"
-		basedir="ext"
-		includes= "**/*.jar"
-		excludes = "**/*\*.class"  />
-	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip"
-		update="true"
 		basedir=""
 		includes= "**/*.bat"
 		excludes = "**/*\*.class"  />
-  <delete>
+  <delete dir ="dist/ext">
     <fileset dir="dist" includes="*.jar"/>
   </delete>
 </target>
