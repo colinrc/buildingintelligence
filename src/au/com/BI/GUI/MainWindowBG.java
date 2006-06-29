@@ -8,6 +8,7 @@ package au.com.BI.GUI;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Vector;
+
 import au.com.BI.Connection.ServerHandler;
 import au.com.BI.DataModel.ActiveGroup;
 import au.com.BI.DataModel.ActiveRoom;

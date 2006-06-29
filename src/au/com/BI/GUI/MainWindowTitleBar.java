@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
 import au.com.BI.Connection.ServerHandler;
 import au.com.BI.Util.ImageLoader;
 /**

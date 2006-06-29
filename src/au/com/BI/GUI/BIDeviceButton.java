@@ -11,8 +11,8 @@ import java.awt.MediaTracker;
 import java.util.Vector;
 
 import au.com.BI.Connection.ServerHandler;
+import au.com.BI.DataModel.ActiveControl;
 import au.com.BI.DataModel.ActiveGroup;
-import au.com.BI.DataModel.Control;
 import au.com.BI.Objects.BIListener;
 import au.com.BI.Util.ImageLoader;
 /**
@@ -37,14 +37,14 @@ public class BIDeviceButton extends BIButton implements BIListener{
 		serverHandle = inHandle;
 		Vector newVector = new Vector();
 		for(int index = 0;index<group.getControls().size();index++){
-			newVector.add(((Control)group.getControls().get(index)).getKey());
+			newVector.add(((ActiveControl)group.getControls().get(index)).getKey());
 		}
 		inHandle.registerComponent(this,newVector);
 	}
 	public void paintBuffer(Graphics graphics) {
 		boolean active = false;
 		for(int index = 0;index<group.getControls().size();index++){
-			if(!(serverHandle.getState(((Control)group.getControls().get(index)).getKey()).getCommand().equals(""))&&!(serverHandle.getState(((Control)group.getControls().get(index)).getKey()).getCommand().equals(((Control)group.getControls().get(index)).getExtras().substring(0,((Control)group.getControls().get(index)).getExtras().lastIndexOf(","))))){
+			if(!(serverHandle.getState(((ActiveControl)group.getControls().get(index)).getKey()).getCommand().equals(""))&&!(serverHandle.getState(((ActiveControl)group.getControls().get(index)).getKey()).getCommand().equals(((ActiveControl)group.getControls().get(index)).getExtras().substring(0,((ActiveControl)group.getControls().get(index)).getExtras().lastIndexOf(","))))){
 				active = true;
 				break;
 			}

@@ -12,9 +12,10 @@ import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import au.com.BI.Command.Command;
-import au.com.BI.DataModel.Key;
 import au.com.BI.Objects.BIListener;
+import au.com.BI.Objects.Key;
 import au.com.BI.Util.ImageLoader;
 /**
  * @author David

@@ -11,9 +11,9 @@ import java.awt.Graphics2D;
 import java.util.Vector;
 
 import au.com.BI.Connection.ServerHandler;
+import au.com.BI.DataModel.ActiveControl;
 import au.com.BI.DataModel.ActiveGroup;
 import au.com.BI.DataModel.BIObject;
-import au.com.BI.DataModel.Control;
 import au.com.BI.Serial.SerialHandler;
 import au.com.BI.Util.ImageLoader;
 /**
@@ -94,7 +94,7 @@ public class DevicePage extends Page implements Runnable{
 	public void initComponents() {
 		int buttonCount = PageInfo.size();
 		for (int index = 0; index < PageInfo.size(); index++) {
-			buttons.put(index + "", createBIButton(((Control) PageInfo.get(index))));
+			buttons.put(index + "", createBIButton(((ActiveControl) PageInfo.get(index))));
 			((BIButton) buttons.get(index + "")).setSize(240, 66);
 		}
 		int min = Math.min(PageInfo.size(), 3);
@@ -105,7 +105,7 @@ public class DevicePage extends Page implements Runnable{
 		((BIButton) buttons.get(0 + "")).setHighLighted(true);
 	}
 	public BIButton createBIButton(BIObject inObject) {
-		Control inControl = (Control) inObject;
+		ActiveControl inControl = (ActiveControl) inObject;
 		BIButton newButton;
 		if (inControl.getType().equals("simple")) {
 			newButton = new BISimpleButton(imageLoader);

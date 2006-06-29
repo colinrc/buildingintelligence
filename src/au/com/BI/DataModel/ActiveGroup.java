@@ -6,6 +6,7 @@
  */
 package au.com.BI.DataModel;
 import java.util.Vector;
+
 import org.kxml2.kdom.Element;
 import org.kxml2.kdom.Node;
 /**
@@ -47,7 +48,7 @@ public class ActiveGroup extends BIObject {
 				}
 				Element currentNode = (Element) inNode.getElement(index);
 				if (currentNode.getName().equals("control")) {
-					Control newControl = new Control(icons, keys);
+					ActiveControl newControl = new ActiveControl(icons, keys);
 					newControl.setXML(currentNode);
 					controls.add(newControl);
 				}
