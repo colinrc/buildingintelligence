@@ -32,6 +32,7 @@ public abstract class BIButton extends Component  implements BIListener {
 	protected int fontColour;
 	protected int fontSize;
 	protected boolean disabled = false;	
+	protected String label;
 	/*Inline Attributes*/
 	protected int width;
 	protected int height;

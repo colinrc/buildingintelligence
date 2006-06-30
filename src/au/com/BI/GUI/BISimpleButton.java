@@ -8,8 +8,9 @@ package au.com.BI.GUI;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
+
 import au.com.BI.Command.Command;
-import au.com.BI.DataModel.Key;
+import au.com.BI.Objects.Key;
 import au.com.BI.Util.ImageLoader;
 /**
  * @author David
