@@ -14,33 +14,38 @@ public class CacheWrapper {
 	protected Logger logger = null;
 	protected long targetID = 0;
 	
+	public CacheWrapper () {
+        logger = Logger.getLogger(this.getClass().getPackage().getName());
+		isSet = false;
+		Date now = new Date();
+		creationTime = now.getTime();
+
+	}
+	
 	public CacheWrapper (String key, CommandInterface command) {
+        logger = Logger.getLogger(this.getClass().getPackage().getName());
 		isSet = false;
 		this.command = command;
 		this.key = key;
 		Date now = new Date();
 		creationTime = now.getTime();
-        logger = Logger.getLogger(this.getClass().getPackage().getName());
+
+		if (key == null){
+			logger.log(Level.WARNING,"A cache wrapper has been created with a null key");
+		}
 	}
 	
-	public CacheWrapper (String key, Map<String,CommandInterface> map) {
-		isSet = true;
-		this.key = key;
-		this.map = map;
-		Date now = new Date();
-		creationTime = now.getTime();
-        logger = Logger.getLogger(this.getClass().getPackage().getName());
-	}
 	
 	
 	public CacheWrapper (boolean isSet) {
+        logger = Logger.getLogger(this.getClass().getPackage().getName());		
 		this.isSet = isSet;
 		Date now = new Date();
 		creationTime = now.getTime();
 		if (isSet) {
-			map = new HashMap<String, CommandInterface>();
+			this.makeNewMap();
 		}
-        logger = Logger.getLogger(this.getClass().getPackage().getName());
+
 	}
 	
 
@@ -77,7 +82,8 @@ public class CacheWrapper {
 		}		
 	}
 	
-	private void makeNewMap () {
+	protected void makeNewMap () {
+
 		map = new HashMap<String, CommandInterface>();
 		this.creationTime = new Date().getTime();
 		this.isSet = true;
@@ -88,9 +94,17 @@ public class CacheWrapper {
 	}
 	
 	public void addToMap (String newKey, CommandInterface newCommand){
-		if (!isSet) {
+		if (newKey == null || newCommand == null) {
+			return;
+		}
+		if (key == null){
+			this.key = newKey;
+		}
+		if (map == null) {
 			makeNewMap();
-			map.put(key,command);
+			if (command != null) {
+				map.put(command.getCommandCode(),command);
+			}
 		}
 		String newCode =newCommand.getCommandCode(); 
 		map.put(newCode, newCommand);
@@ -100,7 +114,7 @@ public class CacheWrapper {
 		if (newCode.equals("off")) {
             map.remove("on");
 		}
-	
+		if (newCommand.getTargetDeviceModel() != this.getTargetID()) this.setTargetID(newCommand.getTargetDeviceModel());
 		this.creationTime = new Date().getTime();
 
 	}
@@ -111,7 +125,7 @@ public class CacheWrapper {
 		this.command = command;
 	}
 	
-	public void setMap (String key, Map <String,CommandInterface>map) {
+	protected void setMap (String key, Map <String,CommandInterface>map) {
 		this.key = key;
 		this.creationTime = new Date().getTime();
 		this.map = map;

@@ -171,13 +171,13 @@ public class Cache {
                 if (cachedCommands.containsKey(key)) {
                     CacheWrapper oldItem = (CacheWrapper)cachedCommands.get(key);
 					oldItem.addToMap (key,command);
-					updateListeners (key,oldItem);
+					updateListeners (key,command,oldItem.getTargetID(),true);
                 }
                 else {
 					CacheWrapper newItem = new CacheWrapper (true);
 					newItem.addToMap(key,command);
                     cachedCommands.put(key, newItem);
-					updateListeners (key,newItem);
+					updateListeners (key,command,command.getTargetDeviceID(),true);
                 }
             }
             String displayName;
@@ -194,10 +194,11 @@ public class Cache {
 		   }
     }
 		
-        public void updateListeners (String key, CacheWrapper cacheWrapper) {
+        public void updateListeners (String key , CommandInterface command, long targetID, boolean isSet) {
         	for (CacheListener cacheListener:cacheListeners){
         		//cacheListener.cacheUpdated(key, (CacheWrapper)cacheWrapper.clone());
-        		cacheListener.addToCommandQueue(key, cacheWrapper);
+        		cacheListener.addToCommandQueue( key ,  command,  targetID,  isSet);
+        		
         	}
         }
         
@@ -263,18 +264,18 @@ public class Cache {
                                         if (!includeInStartup) oldItem.setSendWithStartup(includeInStartup);
                                         if (oldItem.isSet()) {
 											oldItem.addToMap (key,command);
-											updateListeners (key,oldItem);
+											updateListeners (key,command,command.getTargetDeviceID(),true);
                                         }
                                         else {
 											oldItem.setCommand(key,command);
-											updateListeners (key,oldItem);
+											updateListeners (key,command,command.getTargetDeviceID(),false);
                                         }
                                 }
                                 else {
 									CacheWrapper newItem = new CacheWrapper (key,command);
                                    cachedCommands.put(key, newItem);
                                    if (!includeInStartup) newItem.setSendWithStartup(includeInStartup);
-        							 updateListeners (key,newItem);
+        							 updateListeners (key,command,command.getTargetDeviceID(),false);
                                 }
                         }
                 }

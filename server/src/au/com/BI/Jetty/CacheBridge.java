@@ -20,25 +20,63 @@ import org.jdom.IllegalAddException;
  * @author colin
  */
 public class CacheBridge implements CacheListener {
-        Hashtable <String,CacheWrapper>commandsToSend;
+        Map <String,CacheWrapper>commandsToSend;
         long ID = 0;
         
     protected Logger logger = null;
     
     /** Creates a new instance of CacheBridge */
     public CacheBridge() {
-        commandsToSend = new Hashtable<String,CacheWrapper>();
+        commandsToSend = new HashMap<String,CacheWrapper>();
         logger = Logger.getLogger(this.getClass().getPackage().getName());
     }
     
-    public void addToCommandQueue(String key , CacheWrapper cacheWrapper) {
-    	if (cacheWrapper.getTargetID() > 0 && cacheWrapper.getTargetID() != this.ID){
+    public void addToCommandQueue(String key , CommandInterface command, long targetID, boolean isSet) {
+    	if (targetID > 0 && targetID != this.ID){
     		return ;
     	}
-    	
-        synchronized (commandsToSend){
-            commandsToSend.put(key,cacheWrapper);
-        }
+    	logger.log(Level.FINEST,"Adding key from command "  + key);
+    	CacheWrapper cacheWrapper ;
+    	synchronized (commandsToSend){
+	    	try {
+		    	if (isSet){
+		    		if (commandsToSend.containsKey(key)){
+		    			cacheWrapper = commandsToSend.get(key);
+		    		} else {
+		    			cacheWrapper = new CacheWrapper();
+		    			cacheWrapper.setKey(key);
+		    			cacheWrapper.setSet(true);
+		    	   		cacheWrapper.setTargetID(targetID);
+		    	   	 }
+		    		cacheWrapper.addToMap(command.getCommandCode(),command.clone());
+		    		commandsToSend.put(key,cacheWrapper);   		
+		    	} else {
+			    	cacheWrapper = new CacheWrapper(key,command.clone());
+			    	cacheWrapper.setTargetID(targetID);
+			    	commandsToSend.put(key,cacheWrapper);   	
+		    	}
+	    	} catch (CloneNotSupportedException ex){
+				logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
+	    	}
+	    	}
+    }
+    
+    public void addToCommandQueue(String key , CacheWrapper cacheWrapper) {
+    	if (cacheWrapper.getTargetID() > 0 && cacheWrapper.getTargetID() != this.ID  ){
+    		return ;
+    	}
+    	if (key == null){
+    		logger.log (Level.SEVERE,"A command with no key was added to the startup cache");
+    		return;
+    	}
+    	/*
+    	try {
+    		commandsToSend.put(key,cacheWrapper.clone());
+    	} catch (IllegalAddException ex){
+			logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
+		}*/
+    	commandsToSend.put(key,cacheWrapper);
+    	logger.log(Level.FINEST,"Adding key "  + key);
     }
     
     public Element getCommands (List<Element> extraElementsToInclude){
@@ -54,30 +92,33 @@ public class CacheBridge implements CacheListener {
 	    	}
     	}
     	
-        synchronized (commandsToSend){
-        	for (CacheWrapper cacheWrapper:commandsToSend.values()) {
-        		if (cacheWrapper.isSet()) {
-        			for (CommandInterface command:cacheWrapper.getMapValues()){
-        				try {
-        					resultsDoc.addContent((Element)command.getXMLCommand().clone());
-        				} catch (IllegalAddException ex){
-        						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
-        				}
-        			}
-        		} else {
-        			CommandInterface command = cacheWrapper.getCommand();
-        			if (command != null) {
-        				try {
-        						resultsDoc.addContent((Element)command.getXMLCommand().clone());      
-        				} catch (IllegalAddException ex){
-        						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
-        				}
-        			}
-        		}
-        	}
-	
-        	commandsToSend.clear();
-        }
+    	synchronized (commandsToSend){
+	        	for (CacheWrapper cacheWrapper:commandsToSend.values()) {
+		        		if (cacheWrapper.isSet()) {
+		        			for (CommandInterface command:cacheWrapper.getMapValues()){
+		        				try {
+		        					resultsDoc.addContent((Element)command.getXMLCommand());
+		        				} catch (IllegalAddException ex){
+		        						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
+		        				} catch (NullPointerException ex){
+		    						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());        					
+		        				}
+		        			}
+		        		} else {
+		        			CommandInterface command = cacheWrapper.getCommand();
+		        			if (command != null) {
+		        				Element xMLCommand = null;
+		        				try {
+		        						xMLCommand = (Element)command.getXMLCommand();
+		        						resultsDoc.addContent(xMLCommand);      
+		        				} catch (IllegalAddException ex){
+		        						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
+		        				}
+		        			}
+		        		}
+	        }
+	        commandsToSend.clear();
+    	}
         return resultsDoc;
     }
 

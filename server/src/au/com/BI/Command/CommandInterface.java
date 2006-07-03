@@ -128,4 +128,6 @@ public interface CommandInterface {
         public long getCreationDate();
 
 		public boolean isAdminCommand();
+		
+		public CommandInterface clone() throws CloneNotSupportedException;
 }

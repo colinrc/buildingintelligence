@@ -70,10 +70,10 @@ public class ClientCommand extends Command implements CommandInterface {
 		messageFromFlash = null;
 	}
 	
-	public Object clone () throws CloneNotSupportedException
+	public CommandInterface clone () throws CloneNotSupportedException
 	{
-		ClientCommand newCopy = new ClientCommand (super.getKey(),super.getCommandCode(),super.getUser(),super.getExtraInfo(),
-				super.getExtra2Info(),super.getExtra3Info(),super.getExtra4Info(),super.getExtra5Info());
+		ClientCommand newCopy = new ClientCommand (this.getKey(),this.getCommandCode(),this.getUser(),this.getExtraInfo(),
+				this.getExtra2Info(),this.getExtra3Info(),this.getExtra4Info(),this.getExtra5Info());
 		newCopy.setOriginatingID(originatingID);
 		newCopy.setAlarm(alarm);
 		newCopy.setAutoclose(autoclose);
@@ -82,11 +82,16 @@ public class ClientCommand extends Command implements CommandInterface {
 		newCopy.setTarget(target);
 		newCopy.setTargetUser(targetUser);
 		newCopy.setDisplayName(displayName);
+		newCopy.setOriginatingID(this.getOriginatingID());
 		newCopy.setHideclose(hideclose);
 		newCopy.setIcon(icon);
 		newCopy.setMessageType(messageType);
 		newCopy.setTitle(title);
 		newCopy.setAdminCommand(adminCommand);
+		if (this.messageType == CommandInterface.RawElement){
+			newCopy.element  = this.element;
+		}
+		
 		return newCopy;
 	}
 
@@ -262,7 +267,7 @@ public class ClientCommand extends Command implements CommandInterface {
 	    if (element != null) {
 			element.setAttribute ("TARGET",target);
 			element.setAttribute ("TARGET_USER",targetUser);
-	    }
+	    } 
 		
 		return element;
 	}

@@ -6,6 +6,7 @@ package au.com.BI.Command;
 import java.util.logging.Logger;
 
 import au.com.BI.User.*;
+import au.com.BI.Flash.ClientCommand;
 import au.com.BI.JRobin.JRobinData;
 import org.jdom.*;
 
@@ -34,6 +35,34 @@ public class Command implements CommandInterface {
 
         public User user;
 
+
+        public CommandInterface clone() throws CloneNotSupportedException {
+        	
+        	CommandInterface newCopy;
+			try {
+				newCopy = this.getClass().newInstance();
+        		//Command newCopy = new  Command ();
+        		newCopy.setKey(this.getKey());
+        		newCopy.setCommand(this.getCommandCode());
+        		newCopy.setUser(this.getUser());
+        		newCopy.setExtraInfo(this.getExtraInfo());
+        		newCopy.setExtra2Info(this.getExtra2Info());
+        		newCopy.setExtra3Info(this.getExtra3Info());
+        		newCopy.setExtra4Info(this.getExtra4Info());
+        		newCopy.setExtra5Info(this.getExtra5Info());
+
+        		newCopy.setDisplayName(this.getDisplayName());
+        		newCopy.setTargetDeviceID(this.getTargetDeviceID());
+        		newCopy.setTargetDeviceModel(this.getTargetDeviceModel());
+        		return newCopy;			} 
+			catch (InstantiationException e) {
+				throw new CloneNotSupportedException ("Cannot create new instance");
+			} catch (IllegalAccessException e) {
+				throw new CloneNotSupportedException ("Cannot create new instance");
+			}
+
+        }
+        
         public boolean equals(Object toTest) {
         		if (toTest instanceof au.com.BI.Command.CommandInterface ){
         			CommandInterface toTestCommand = (CommandInterface)toTest;

@@ -6,6 +6,7 @@ Updated to use common configuration catalogue support rather than model specific
 
 Added correct number of session count handling for HTTPS clients.
 Added "Too Many Clients" message when appropriate
+Rewrote cache handler to support complex commands (eg. audio) as well as simple commands. Resolves issue [ticket:4]
 
 ''' System ''''
 
