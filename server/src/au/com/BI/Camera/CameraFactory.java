@@ -9,7 +9,7 @@ import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 
 public class CameraFactory {
 	Logger logger;
@@ -55,7 +55,7 @@ public class CameraFactory {
 	
 			targetDevice.addStartupQueryItem(fullKey, camera, type);
 			targetDevice.addControlledItem(fullKey, camera, type);
-			targetDevice.addControlledItem(display_name, camera, DeviceType.OUTPUT);
+			targetDevice.addControlledItem(display_name, camera, MessageDirection.FROM_FLASH);
 			
 			try {
 				camera.setZoom(zoom);

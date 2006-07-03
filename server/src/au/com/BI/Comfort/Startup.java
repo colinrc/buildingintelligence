@@ -6,6 +6,7 @@
  */
 package au.com.BI.Comfort;
 import au.com.BI.Util.*;
+
 import java.util.*;
 
 import au.com.BI.Command.CommandQueue;
@@ -106,7 +107,7 @@ public class Startup {
 		if (details != null) {
 			int deviceType = ((DeviceType)details).getDeviceType();
 
-			if (controlType == DeviceType.INPUT) {
+			if (controlType == MessageDirection.INPUT) {
 				switch (deviceType) {
 					case DeviceType.TOGGLE_INPUT:
 						keyToSend = "I?" + theKey;
@@ -130,7 +131,7 @@ public class Startup {
 				}
 			}
 
-			if (controlType == DeviceType.OUTPUT) {
+			if (controlType == MessageDirection.FROM_FLASH) {
 				switch (deviceType) {
 					case DeviceType.TOGGLE_OUTPUT: case DeviceType.TOGGLE_OUTPUT_MONITOR : case DeviceType.PULSE_OUTPUT :
 						keyToSend = "O?" + theKey;
@@ -143,7 +144,7 @@ public class Startup {
 				}
 			}
 			
-			if (controlType == DeviceType.MONITORED) {
+			if (controlType == MessageDirection.FROM_HARDWARE) {
 				switch (deviceType) {
 					
 					case DeviceType.TOGGLE_OUTPUT: case DeviceType.TOGGLE_OUTPUT_MONITOR : case DeviceType.PULSE_OUTPUT :

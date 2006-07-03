@@ -8,7 +8,7 @@ import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 
 public class AudioFactory {
 	Logger logger;
@@ -51,6 +51,6 @@ public class AudioFactory {
 		audio.setGroupName(groupName);
 		targetDevice.addStartupQueryItem(key, audio, type);
 		targetDevice.addControlledItem(key, audio, type);
-		targetDevice.addControlledItem(display_name, audio, DeviceType.OUTPUT);
+		targetDevice.addControlledItem(display_name, audio, MessageDirection.FROM_FLASH);
 	}
 }

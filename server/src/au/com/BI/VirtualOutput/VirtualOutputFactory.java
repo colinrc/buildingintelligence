@@ -9,7 +9,7 @@ import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 
 public class VirtualOutputFactory {
 	Logger logger;
@@ -58,7 +58,7 @@ public class VirtualOutputFactory {
 			targetDevice.addControlledItem(key, theOuput, type);
 			targetDevice.addStartupQueryItem(key, theOuput, type);
 			if (outKey != null && !outKey.equals("")) {
-				targetDevice.addControlledItem(outKey, theOuput, DeviceType.OUTPUT);
+				targetDevice.addControlledItem(outKey, theOuput, MessageDirection.FROM_FLASH);
 				Iterator clientModelList = clientModels.iterator();
 				while (clientModelList.hasNext()) {
 					DeviceModel clientModel = (DeviceModel) clientModelList.next();

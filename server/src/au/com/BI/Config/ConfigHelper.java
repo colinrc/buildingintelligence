@@ -11,6 +11,7 @@ import java.util.logging.*;
 
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 import au.com.BI.Config.ParameterBlock;
 
 public class ConfigHelper {
@@ -168,13 +169,13 @@ public class ConfigHelper {
 	}
 
 	public void addControlledItem (String name, DeviceType details, int controlType){
-		if (controlType == DeviceType.MONITORED) {
+		if (controlType == MessageDirection.FROM_HARDWARE) {
 			controlledItems.put (name,details);
 			
 			
 		}
 		else {
-			if (controlType == DeviceType.OUTPUT) {
+			if (controlType == MessageDirection.FROM_FLASH) {
 				outputItems.put(name,details);
 
 			} else {
@@ -224,7 +225,7 @@ public class ConfigHelper {
 		boolean returnCode = false;
 		
 		if (inputItems.containsKey(theKey)) {
-			itemList = DeviceType.INPUT;
+			itemList = MessageDirection.INPUT;
 			returnCode = true;
 		}
 		
@@ -235,7 +236,7 @@ public class ConfigHelper {
 		boolean returnCode = false;
 		
 		if (outputItems.containsKey(theKey)) {
-			itemList = DeviceType.OUTPUT;
+			itemList = MessageDirection.FROM_FLASH;
 			returnCode = true;
 		}
 		
@@ -246,7 +247,7 @@ public class ConfigHelper {
 		boolean returnCode = false;
 		
 		if (controlledItems.containsKey(theKey)) {
-			itemList = DeviceType.MONITORED;
+			itemList = MessageDirection.FROM_HARDWARE;
 			returnCode = true;
 		}
 		
@@ -257,13 +258,13 @@ public class ConfigHelper {
 		if (!theKey.equals (lastChecked)){
 			checkForControl (theKey);
 		}
-		if (itemList == DeviceType.MONITORED) {
+		if (itemList == MessageDirection.FROM_HARDWARE) {
 			return this.getControlledItem(theKey);
 		}
-		if (itemList == DeviceType.INPUT) {
+		if (itemList == MessageDirection.INPUT) {
 			return this.getInputItem(theKey);
 		}
-		if (itemList == DeviceType.OUTPUT) {
+		if (itemList == MessageDirection.FROM_FLASH) {
 			return this.getOutputItem(theKey);
 		}
 		if (itemList == DeviceType.STARTUP) {

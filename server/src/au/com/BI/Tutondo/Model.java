@@ -196,7 +196,7 @@ public class Model extends BaseModel implements DeviceModel {
 			if (isClientCommand)
 				return false;
 			else {
-				configHelper.setLastCommandType (DeviceType.MONITORED);
+				configHelper.setLastCommandType (MessageDirection.FROM_HARDWARE);
 				return true;
 			}
 		}

@@ -46,7 +46,7 @@ public class Model extends BaseModel implements DeviceModel, ClientModel
 	 */
 	public Model (int numberClients){
 		
-		this.addControlledItem ("RawXML_Send",null,DeviceType.MONITORED);
+		this.addControlledItem ("RawXML_Send",null,MessageDirection.FROM_HARDWARE);
 		
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		adminClientHandlers = new LinkedList <AdminClientHandler>();
@@ -93,7 +93,7 @@ public class Model extends BaseModel implements DeviceModel, ClientModel
 		super.finishedReadingConfig();
 		AdminDevice admin = new AdminDevice();
 		
-		this.addControlledItem ("ADMIN",admin,DeviceType.OUTPUT);
+		this.addControlledItem ("ADMIN",admin,MessageDirection.FROM_FLASH);
 	}
 	
 	

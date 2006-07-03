@@ -23,6 +23,7 @@ import au.com.BI.Sensors.SensorFascade;
 import au.com.BI.Util.BaseModel;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 import au.com.BI.Util.Utility;
 
 public class Model extends BaseModel implements DeviceModel {
@@ -104,7 +105,7 @@ public class Model extends BaseModel implements DeviceModel {
 	 * 
 	 */
 	public void addControlledItem (String key, DeviceType details, int controlType) {
-		if (controlType == DeviceType.OUTPUT) {
+		if (controlType == MessageDirection.FROM_FLASH) {
 			super.addControlledItem(Utility.padString(key,3),details,controlType);			
 		} else if (controlType == DeviceType.SENSOR) {
 			// only pad the string with 2 characters as this is the device that will be returned.
@@ -136,7 +137,7 @@ public class Model extends BaseModel implements DeviceModel {
 			if (isClientCommand)
 				return false;
 			else {
-				configHelper.setLastCommandType (DeviceType.MONITORED);
+				configHelper.setLastCommandType (MessageDirection.FROM_HARDWARE);
 				// Anything coming over the serial port I want to process
 				return true;
 			}

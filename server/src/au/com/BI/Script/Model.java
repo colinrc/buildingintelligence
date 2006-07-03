@@ -21,7 +21,6 @@ import org.jdom.Element;
 import au.com.BI.JRobin.RRDValueObject;
 import au.com.BI.Home.Controller;
 import java.io.IOException;
-import org.jrobin.core.RrdException;
 import org.jrobin.core.*;
 import java.io.*;
 
@@ -119,14 +118,14 @@ public class Model
 
                                 if (inputListKey.equals("*")) {
                                         deviceThatMatched = (Script) configHelper.getInputItem(inputListKey);
-                                        configHelper.setLastCommandType(DeviceType.INPUT);
+                                        configHelper.setLastCommandType(MessageDirection.INPUT);
                                         parameter = keyName;
                                         return true;
                                 }
                                 else {
                                         if (keyName.startsWith(inputListKey)) {
                                                 deviceThatMatched = (Script) configHelper.getInputItem(inputListKey);
-                                                configHelper.setLastCommandType(DeviceType.INPUT);
+                                                configHelper.setLastCommandType(MessageDirection.INPUT);
                                                 parameter = keyName.substring(inputListKey.length());
                                                 return true;
                                         }
@@ -167,7 +166,7 @@ public class Model
                                                 logger.log(Level.FINE,
                                                   "*********Running script " + ( (Script) device).getNameOfScript());
                                                 newCommand = createInternalCommand("SCRIPT","", "run", ( (Script) device).getNameOfScript());
-                                                newCommand.setTargetDeviceModel(DeviceType.OUTPUT);
+                                                newCommand.setTargetDeviceModel(MessageDirection.FROM_FLASH);
                                                 //  configHelper.addControlledItem("SCRIPT", newCommand, DeviceType.OUTPUT);
                                                 doScriptItem(newCommand);
                                                 // cache.setCachedCommand(newCommand.getKey(), newCommand);
@@ -398,7 +397,7 @@ public class Model
                         controlled = myScript.substring(begin, end);
                         //deviceType = getDeviceType(controlled);
                         //if (deviceType >= 0) {
-                        addControlledItem(controlled, currentScript, DeviceType.OUTPUT);
+                        addControlledItem(controlled, currentScript, MessageDirection.FROM_FLASH);
 
                         //}
                         begin = myScript.indexOf("elife.fireScriptOn", end);
@@ -418,7 +417,7 @@ public class Model
                        controlled = myScript.substring(begin, end);
                        //deviceType = getDeviceType(controlled);
                        //if (deviceType >= 0) {
-                       addControlledItem(controlled, currentScript, DeviceType.OUTPUT);
+                       addControlledItem(controlled, currentScript, MessageDirection.FROM_FLASH);
                        //}
                        begin = myScript.indexOf("elife.listenMacro", end);
                        if (begin > 0) {
@@ -436,7 +435,7 @@ public class Model
                         controlled = myScript.substring(begin, end);
                         //deviceType = getDeviceType(controlled);
                         //if (deviceType >= 0) {
-                        addControlledItem(controlled, currentScript, DeviceType.OUTPUT);
+                        addControlledItem(controlled, currentScript, MessageDirection.FROM_FLASH);
                         //}
                         begin = myScript.indexOf("elife.getValue", end);
                         if (begin > 0) {
@@ -454,7 +453,7 @@ public class Model
                         controlled = myScript.substring(begin, end);
                         //deviceType = getDeviceType(controlled);
                         //if (deviceType >= 0) {
-                        addControlledItem(controlled, currentScript, DeviceType.OUTPUT);
+                        addControlledItem(controlled, currentScript, MessageDirection.FROM_FLASH);
                         //}
                         begin = myScript.indexOf("elife.getCommand", end);
                         if (begin > 0) {
@@ -529,7 +528,7 @@ public class Model
                                 currentConfigHelper = currentModel.getConfigHelper();
                                 if (currentConfigHelper.checkForControl(key)) {
                                         logger.log(Level.FINE, "Found Key:" + key + "... Processing model ..." + showModel);
-                                        return DeviceType.OUTPUT;
+                                        return MessageDirection.FROM_FLASH;
                                 }
 
                         }

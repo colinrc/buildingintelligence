@@ -8,7 +8,7 @@ import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 
 public class AVFactory {
 	Logger logger;
@@ -49,7 +49,7 @@ public class AVFactory {
 			video.setGroupName(groupName);
 			targetDevice.addStartupQueryItem(key, video, type);
 			targetDevice.addControlledItem(key, video, type);
-			targetDevice.addControlledItem(display_name, video, DeviceType.OUTPUT);
+			targetDevice.addControlledItem(display_name, video, MessageDirection.FROM_FLASH);
 		} catch (NumberFormatException ex ){
 			logger.log (Level.INFO,"An illegal key was specified for the AV device " + display_name);
 		}

@@ -478,93 +478,93 @@ public class Config {
 					}
 
 					if (itemName.equals("TOGGLE_OUTPUT")) {
-						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, DeviceType.MONITORED,
+						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.TOGGLE_OUTPUT,groupName,rawHelper);
 					}
 					if (itemName.equals("PULSE_OUTPUT")) {
-						pulseOutputFactory.addPulse(deviceModel, clientModels, item, DeviceType.MONITORED,
+						pulseOutputFactory.addPulse(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.PULSE_OUTPUT,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_CBUS")) {
-						lightFactory.addLight( deviceModel, clientModels, item, DeviceType.MONITORED,
+						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.LIGHT_CBUS,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_DYNALITE")) {
-						lightFactory.addLight( deviceModel, clientModels, item, DeviceType.MONITORED,
+						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.LIGHT_DYNALITE,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_DYNALITE_AREA")) {
-						lightFactory.addLightArea( deviceModel, clientModels, item, DeviceType.MONITORED,
+						lightFactory.addLightArea( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.LIGHT_DYNALITE_AREA,groupName,rawHelper);
 					}
 					if (itemName.equals("SENSOR")) {
-						sensorFactory.addSensor(deviceModel, clientModels, item, DeviceType.MONITORED,
+						sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.SENSOR,groupName,rawHelper);
 					}
 					if (itemName.equals("TEMPERATURE")) {
-						sensorFactory.addSensor(deviceModel, clientModels, item, DeviceType.MONITORED,
+						sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.TEMPERATURE,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_X10")) {
-						lightFactory.addLight( deviceModel, clientModels, item, DeviceType.MONITORED,
+						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.COMFORT_LIGHT_X10_UNITCODE,groupName,rawHelper);
-						lightFactory.addLight( deviceModel, clientModels, item, DeviceType.MONITORED,
+						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.COMFORT_LIGHT_X10,groupName,rawHelper);
 					}
 					if (itemName.equals("TOGGLE_INPUT")) {
-						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, DeviceType.INPUT,
+						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.INPUT,
 								DeviceType.TOGGLE_INPUT,groupName,rawHelper);
 					}
 					if (itemName.equals("CONTACT_CLOSURE")) {
-						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, DeviceType.INPUT,
+						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.INPUT,
 								DeviceType.CONTACT_CLOSURE,groupName,rawHelper);
 					}
 					if (itemName.equals("TOGGLE_OUTPUT_MONITOR")) {
-						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, DeviceType.MONITORED,
+						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.TOGGLE_OUTPUT_MONITOR,groupName,rawHelper);
 					}
 					if (itemName.equals("COUNTER")) {
-						counterFactory.addCounter(deviceModel, clientModels, item, DeviceType.MONITORED,
+						counterFactory.addCounter(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.COUNTER,groupName,rawHelper);
 					}
 					if (itemName.equals("VIRTUAL_OUTPUT")) {
-						virtualOutputFactory.addVirtualOutput(deviceModel, clientModels, item, DeviceType.MONITORED,
+						virtualOutputFactory.addVirtualOutput(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.COUNTER,groupName,rawHelper);
 					}
 					if (itemName.equals("RAW_INTERFACE")) {
-						rawFactory.addRaw(deviceModel, clientModels, item, DeviceType.OUTPUT,
+						rawFactory.addRaw(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
 								DeviceType.RAW_INTERFACE,groupName,rawHelper);
 					}
 					if (itemName.equals("CUSTOM_INPUT")) {
-						customInputFactory.addCustomInput(deviceModel, clientModels, item, DeviceType.INPUT,
+						customInputFactory.addCustomInput(deviceModel, clientModels, item, MessageDirection.INPUT,
 								DeviceType.CUSTOM_INPUT,groupName,rawHelper);
 					}
 					if (itemName.equals("IR")) {
-						iRFactory.addIR(deviceModel, clientModels, item, DeviceType.OUTPUT,
+						iRFactory.addIR(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
 								DeviceType.IR,groupName,rawHelper);
 					}
 					if (itemName.equals("AUDIO")|| itemName.equals("AUDIO_OUTPUT")) {
-						audioFactory.addAudio(deviceModel, clientModels, item, DeviceType.MONITORED,
+						audioFactory.addAudio(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.AUDIO,groupName,rawHelper);
 					}
 					if (itemName.equals("AV") || itemName.equals("AV_OUTPUT") ) {
-						aVFactory.addAV(deviceModel, clientModels, item, DeviceType.INPUT,
+						aVFactory.addAV(deviceModel, clientModels, item, MessageDirection.INPUT,
 								DeviceType.AV,groupName,rawHelper);
 					}
 					if (itemName.equals("CAMERA_INPUT") || itemName.equals("CAMERA")) {
-						cameraFactory.addCamera(deviceModel, clientModels, item, DeviceType.OUTPUT,
+						cameraFactory.addCamera(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
 								DeviceType.CAMERA,groupName,rawHelper);
 					}
 					if (itemName.equals("ANALOGUE") || itemName.equals ("ANALOG")) {
-						analogFactory.addAnalog(deviceModel, clientModels, item, DeviceType.MONITORED,
+						analogFactory.addAnalog(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.ANALOGUE,groupName,rawHelper);
 					}
 					if (itemName.equals("ALERT")) {
-						alertFactory.addAlert(deviceModel, clientModels, item, DeviceType.MONITORED,
+						alertFactory.addAlert(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.ALERT,groupName,rawHelper);
 					}
 					if (itemName.equals("ALARM")) {
-						alertFactory.addAlarm(deviceModel, clientModels, item, DeviceType.MONITORED,
+						alertFactory.addAlarm(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.ALARM,groupName,rawHelper);
 					}
 				}

@@ -9,7 +9,7 @@ import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 
 public class AlertFactory {
 	Logger logger;
@@ -56,7 +56,7 @@ public class AlertFactory {
 			targetDevice.addControlledItem(key, theInput, type);
 			targetDevice.addStartupQueryItem(key, theInput, type);
 			if (outKey != null && !outKey.equals("")) {
-				targetDevice.addControlledItem(outKey, theInput, DeviceType.OUTPUT);
+				targetDevice.addControlledItem(outKey, theInput, MessageDirection.FROM_FLASH);
 			}
 		} catch (NumberFormatException ex ){
 			logger.log (Level.INFO,"An illegal key was specified for the alert " + name);
@@ -92,7 +92,7 @@ public class AlertFactory {
 			targetDevice.addStartupQueryItem(key, theOutput, type);
 					
 			if (outKey != null && !outKey.equals("")) {
-				targetDevice.addControlledItem(outKey, theOutput, DeviceType.OUTPUT);
+				targetDevice.addControlledItem(outKey, theOutput, MessageDirection.FROM_FLASH);
 				Iterator clientModelList = clientModels.iterator();
 				while (clientModelList.hasNext()) {
 					DeviceModel clientModel = (DeviceModel) clientModelList.next();

@@ -54,7 +54,7 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public void addStartupQueryItem (String name, DeviceType details, int controlType){
 	    if (((String)this.getParameterValue("MODULE_TYPE" ,details.getGroupName())).equals("IR")
-	            && controlType == DeviceType.INPUT)
+	            && controlType == MessageDirection.INPUT)
 	        configHelper.addStartupQueryItem(details.getKey(),details,controlType);
 	}
 	
@@ -63,7 +63,7 @@ public class Model extends BaseModel implements DeviceModel {
     
 		int deviceType = (details).getDeviceType();
 		
-		if (controlType != DeviceType.OUTPUT) {
+		if (controlType != MessageDirection.FROM_FLASH) {
 		    			    
 		    String moduleNumber = (String)this.getParameterValue("MODULE" ,((DeviceType)details).getGroupName());
 		    String connectorNumber = name;
@@ -106,7 +106,7 @@ public class Model extends BaseModel implements DeviceModel {
 		configHelper.wholeKeyChecked(keyName);
 
 		if (configHelper.checkForOutputItem(keyName)) {
-			configHelper.setLastCommandType (DeviceType.OUTPUT);
+			configHelper.setLastCommandType (MessageDirection.FROM_FLASH);
 			logger.log (Level.FINER,"Flash sent command : " +keyName);
 			return true;
 		}
@@ -114,7 +114,7 @@ public class Model extends BaseModel implements DeviceModel {
 			if (isClientCommand)
 				return false;
 			else {
-				configHelper.setLastCommandType (DeviceType.MONITORED);
+				configHelper.setLastCommandType (MessageDirection.FROM_HARDWARE);
 				// Anything coming over the serial port I want to process
 				return true;
 			}
@@ -419,7 +419,7 @@ public class Model extends BaseModel implements DeviceModel {
     	super.finishedReadingConfig();
     		IR iR_internal = new IR("DUMMY",DeviceType.IR,"DUMMY");
     		
-        this.addControlledItem("IR_INTERNAL",iR_internal,DeviceType.OUTPUT);
+        this.addControlledItem("IR_INTERNAL",iR_internal,MessageDirection.FROM_FLASH);
     }
 
 }

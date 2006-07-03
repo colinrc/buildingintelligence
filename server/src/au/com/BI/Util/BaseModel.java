@@ -376,7 +376,7 @@ public class BaseModel
                 if (isClientCommand)
                 	return false; // only are about output for client commands
                 else {
-                	configHelper.setLastCommandType(DeviceType.MONITORED);
+                	configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
                     logger.log(Level.FINER, "Controls : " + keyName);
                 	return true; // anything come through comms we want to look at
                 }
@@ -385,11 +385,11 @@ public class BaseModel
 
         public void doCommand(CommandInterface command) throws CommsFail {
 
-                if (configHelper.getLastCommandType() == DeviceType.OUTPUT) {
+                if (configHelper.getLastCommandType() == MessageDirection.FROM_FLASH) {
                         doOutputItem(command);
                 }
                 else {
-                        if (configHelper.getLastCommandType() == DeviceType.INPUT) {
+                        if (configHelper.getLastCommandType() == MessageDirection.INPUT) {
                                 doInputItem(command);
                         }
                         else {

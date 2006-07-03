@@ -9,7 +9,7 @@ import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 
 public class PulseOutputFactory {
 	Logger logger;
@@ -56,7 +56,7 @@ public class PulseOutputFactory {
 		targetDevice.addControlledItem(key, theOutput, type);
 		targetDevice.addStartupQueryItem(key, theOutput, type);
 		if (outKey != null && !outKey.equals("")) {
-			targetDevice.addControlledItem(outKey, theOutput, DeviceType.OUTPUT);
+			targetDevice.addControlledItem(outKey, theOutput, MessageDirection.FROM_FLASH);
 			Iterator clientModelList = clientModels.iterator();
 			while (clientModelList.hasNext()) {
 				DeviceModel clientModel = (DeviceModel) clientModelList.next();

@@ -9,7 +9,7 @@ import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 
 public class ToggleSwitchFactory {
 	Logger logger;
@@ -70,7 +70,7 @@ public class ToggleSwitchFactory {
 			targetDevice.addControlledItem(key, theInput, type);
 			targetDevice.addStartupQueryItem(key, theInput, type);
 			if (outKey != null && !outKey.equals("")) {
-				targetDevice.addControlledItem(outKey, theInput, DeviceType.OUTPUT);
+				targetDevice.addControlledItem(outKey, theInput, MessageDirection.FROM_FLASH);
 				Iterator clientModelList = clientModels.iterator();
 				while (clientModelList.hasNext()) {
 					DeviceModel clientModel = (DeviceModel) clientModelList.next();

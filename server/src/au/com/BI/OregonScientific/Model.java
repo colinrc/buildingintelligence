@@ -79,7 +79,7 @@ public class Model extends BaseModel implements DeviceModel {
 			if (isClientCommand)
 				return false;
 			else {
-				configHelper.setLastCommandType (DeviceType.MONITORED);
+				configHelper.setLastCommandType (MessageDirection.FROM_HARDWARE);
 				// Anything coming over the serial port I want to process
 				return true;
 			}
@@ -93,7 +93,7 @@ public class Model extends BaseModel implements DeviceModel {
 		if (details != null) {
 			int deviceType = ((DeviceType)details).getDeviceType();
 
-			if (controlType == DeviceType.MONITORED || controlType == DeviceType.INPUT) {
+			if (controlType == MessageDirection.FROM_HARDWARE || controlType == MessageDirection.INPUT) {
 
 				try {
 					secondKey = Byte.parseByte(((SensorFascade)details).getChannel(),16);
@@ -122,10 +122,10 @@ public class Model extends BaseModel implements DeviceModel {
 	public void doCommand (CommandInterface command) throws CommsFail
 	{
 
-		if ( configHelper.getLastCommandType() == DeviceType.OUTPUT) {
+		if ( configHelper.getLastCommandType() == MessageDirection.FROM_FLASH) {
 			doOutputItem (command);
 		} else {
-			if ( configHelper.getLastCommandType() == DeviceType.MONITORED) {
+			if ( configHelper.getLastCommandType() == MessageDirection.FROM_HARDWARE) {
 				byte message[] = null;
 				if (!command.isCommsCommand()) return;
 				try { 

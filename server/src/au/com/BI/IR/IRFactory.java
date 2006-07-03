@@ -9,7 +9,7 @@ import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 
 public class IRFactory {
 	Logger logger;
@@ -51,7 +51,7 @@ public class IRFactory {
 				rawHelper.checkForRaw ( element,theOutput);
 		
 				if (outKey != null && !outKey.equals("")) {
-					targetDevice.addControlledItem("AV." + outKey, theOutput, DeviceType.OUTPUT);
+					targetDevice.addControlledItem("AV." + outKey, theOutput, MessageDirection.FROM_FLASH);
 					Iterator clientModelList = clientModels.iterator();
 					while (clientModelList.hasNext()) {
 						DeviceModel clientModel = (DeviceModel) clientModelList.next();

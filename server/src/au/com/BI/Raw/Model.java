@@ -117,7 +117,7 @@ public class Model extends BaseModel implements DeviceModel {
 		        		matcherResults = customInput.getMatcher(keyName);
 		            if (matcherResults.matches()) {
 						deviceThatMatched = customInput;
-						configHelper.setLastCommandType(DeviceType.INPUT);
+						configHelper.setLastCommandType(MessageDirection.INPUT);
 						return true;
 		            }
 		        }
@@ -128,14 +128,14 @@ public class Model extends BaseModel implements DeviceModel {
 
 					if (inputListKey.equals("*")) {
 						deviceThatMatched = (CustomInput)configHelper.getInputItem(inputListKey);
-						configHelper.setLastCommandType(DeviceType.INPUT);
+						configHelper.setLastCommandType(MessageDirection.INPUT);
 						parameter = keyName;
 						return true;
 					}
 					else {
 						if (keyName.startsWith(inputListKey)) {
 							deviceThatMatched = (CustomInput)configHelper.getInputItem(inputListKey);
-							configHelper.setLastCommandType(DeviceType.INPUT);
+							configHelper.setLastCommandType(MessageDirection.INPUT);
 							parameter = keyName.substring (inputListKey.length());
 							return true;
 						}
@@ -152,10 +152,10 @@ public class Model extends BaseModel implements DeviceModel {
 	{
 		String theWholeKey = command.getKey().trim();
 
-		if ( configHelper.getLastCommandType() == DeviceType.OUTPUT) {
+		if ( configHelper.getLastCommandType() == MessageDirection.FROM_FLASH) {
 			doOutputItem (command);
 		} else {
-			if ( configHelper.getLastCommandType() == DeviceType.INPUT) {
+			if ( configHelper.getLastCommandType() == MessageDirection.INPUT) {
 			    Iterator inputDeviceList = configHelper.getAllInputDevices();
 
 				while (inputDeviceList.hasNext()){
@@ -169,7 +169,7 @@ public class Model extends BaseModel implements DeviceModel {
 			        		matcherResults = customInput.getMatcher(theWholeKey);
 			            if (matcherResults.matches()) {
 							deviceThatMatched = customInput;
-							configHelper.setLastCommandType(DeviceType.INPUT);
+							configHelper.setLastCommandType(MessageDirection.INPUT);
 							doInputItem (command, deviceThatMatched, parameter);
 			            }
 			        }
@@ -180,14 +180,14 @@ public class Model extends BaseModel implements DeviceModel {
 
 						if (inputListKey.equals("*")) {
 							deviceThatMatched = (CustomInput)configHelper.getInputItem(inputListKey);
-							configHelper.setLastCommandType(DeviceType.INPUT);
+							configHelper.setLastCommandType(MessageDirection.INPUT);
 							parameter = theWholeKey;
 							doInputItem (command, deviceThatMatched, parameter);
 						}
 						else {
 							if (theWholeKey.startsWith(inputListKey)) {
 								deviceThatMatched = (CustomInput)configHelper.getInputItem(inputListKey);
-								configHelper.setLastCommandType(DeviceType.INPUT);
+								configHelper.setLastCommandType(MessageDirection.INPUT);
 								parameter = theWholeKey.substring (inputListKey.length());
 								doInputItem (command, deviceThatMatched, parameter);
 

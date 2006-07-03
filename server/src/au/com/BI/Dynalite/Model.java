@@ -89,7 +89,7 @@ public class Model extends BaseModel implements DeviceModel {
 			String theKey = key;
 
 			
-			if (controlType == DeviceType.MONITORED)  {
+			if (controlType == MessageDirection.FROM_HARDWARE)  {
 				DynaliteDevice device = (DynaliteDevice)details;				
 				if (((DeviceType)details).getDeviceType() == DeviceType.LIGHT_DYNALITE ) {
 					theKey = dynaliteHelper.buildKey('L',device.getAreaCode(),device.getChannel());
@@ -103,7 +103,7 @@ public class Model extends BaseModel implements DeviceModel {
 					theKey = device.getKey();
 				}
 			}
-			if (controlType == DeviceType.INPUT)  {
+			if (controlType == MessageDirection.INPUT)  {
 				DynaliteInputDevice device = (DynaliteInputDevice)details;
 				if (((DeviceType)details).getDeviceType() == DeviceType.IR ) {
 					int box = device.getBox() ;
@@ -220,7 +220,7 @@ public class Model extends BaseModel implements DeviceModel {
 			if (isClientCommand)
 				return false;
 			else {
-				configHelper.setLastCommandType (DeviceType.MONITORED);
+				configHelper.setLastCommandType (MessageDirection.FROM_HARDWARE);
 				// Anything coming over the serial port I want to process
 				return true;
 			}

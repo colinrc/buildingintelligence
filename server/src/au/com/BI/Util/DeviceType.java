@@ -80,16 +80,6 @@ public interface DeviceType
 	// Likely number of raw commands for device line. More is allowed.
 	public static final int PROBABLE_NUMBER_RAW = 10;
 
-	// monitored items have the state monitored and changes are reflected
-	// in the client
-	public static final int MONITORED = 1;
-
-	// output items are controlled by the device 
-	public static final int OUTPUT = 2;
-
-	// input items are physical devices connected to a controller
-	public static final int INPUT = 3;
-
 	// startup codes are used for state queries when the system beings
 	public static final int STARTUP = 4;
 	

@@ -56,7 +56,7 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 	 */
 	public FlashHandler (int numberClients, Security security){
 
-		this.addControlledItem ("RawXML_Send",null,DeviceType.MONITORED);
+		this.addControlledItem ("RawXML_Send",null,MessageDirection.FROM_HARDWARE);
 
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		flashClientHandlers = new LinkedList ();

@@ -46,12 +46,12 @@ public class Model extends BaseModel implements DeviceModel  {
 		this.setSTX (STX);
 		this.setETX (ETX);
 
-		this.addControlledItem ("LU",null,DeviceType.MONITORED); // special item
-		this.addControlledItem  ("SERIAL",null,DeviceType.MONITORED);
-		this.addControlledItem ("RA",null,DeviceType.MONITORED); // special item
-		this.addControlledItem ("NA",null,DeviceType.MONITORED); // special item
-		this.addControlledItem ("OK",null,DeviceType.MONITORED); // special item
-		this.addControlledItem ("EV",null,DeviceType.MONITORED); // special item
+		this.addControlledItem ("LU",null,MessageDirection.FROM_HARDWARE); // special item
+		this.addControlledItem  ("SERIAL",null,MessageDirection.FROM_HARDWARE);
+		this.addControlledItem ("RA",null,MessageDirection.FROM_HARDWARE); // special item
+		this.addControlledItem ("NA",null,MessageDirection.FROM_HARDWARE); // special item
+		this.addControlledItem ("OK",null,MessageDirection.FROM_HARDWARE); // special item
+		this.addControlledItem ("EV",null,MessageDirection.FROM_HARDWARE); // special item
 		
 		configHelper.addParameterBlock ("AV_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Comfort Users");
 		configHelper.addParameterBlock ("DOOR_IDS",DeviceModel.MAIN_DEVICE_GROUP,"Door IDS");
@@ -75,12 +75,12 @@ public class Model extends BaseModel implements DeviceModel  {
 		comfortString.clear();
 		cache.clear();
 		analogueReader.clearItems();
-		this.addControlledItem ("LU",null,DeviceType.MONITORED); // special item
-		this.addControlledItem ("RA",null,DeviceType.MONITORED); // special item
-		this.addControlledItem ("OK",null,DeviceType.MONITORED); // special item
-		this.addControlledItem ("NA",null,DeviceType.MONITORED); // special item
-		this.addControlledItem ("EV",null,DeviceType.MONITORED); // special item
-		this.addControlledItem  ("SERIAL",null,DeviceType.MONITORED);
+		this.addControlledItem ("LU",null,MessageDirection.FROM_HARDWARE); // special item
+		this.addControlledItem ("RA",null,MessageDirection.FROM_HARDWARE); // special item
+		this.addControlledItem ("OK",null,MessageDirection.FROM_HARDWARE); // special item
+		this.addControlledItem ("NA",null,MessageDirection.FROM_HARDWARE); // special item
+		this.addControlledItem ("EV",null,MessageDirection.FROM_HARDWARE); // special item
+		this.addControlledItem  ("SERIAL",null,MessageDirection.FROM_HARDWARE);
 
 	}
 
@@ -92,7 +92,7 @@ public class Model extends BaseModel implements DeviceModel  {
 		if (details != null) {
 			int deviceType = ((DeviceType)details).getDeviceType();
 
-			if (controlType == DeviceType.MONITORED || controlType == DeviceType.INPUT) {
+			if (controlType == MessageDirection.FROM_HARDWARE || controlType == MessageDirection.INPUT) {
 			    secondKey = "";
 
 				switch (deviceType) {
@@ -155,7 +155,7 @@ public class Model extends BaseModel implements DeviceModel  {
 				}
 			}
 
-			if (controlType == DeviceType.OUTPUT ) {
+			if (controlType == MessageDirection.FROM_FLASH ) {
 
 			    switch (deviceType) {
 					case DeviceType.TOGGLE_OUTPUT : case DeviceType.TOGGLE_OUTPUT_MONITOR:
@@ -217,12 +217,12 @@ public class Model extends BaseModel implements DeviceModel  {
 			return;
 		}
 
-		if ( configHelper.getLastCommandType() == DeviceType.OUTPUT && this.connected == true) {
+		if ( configHelper.getLastCommandType() == MessageDirection.FROM_FLASH && this.connected == true) {
 			outputHelper.doOutputItem (command,comfortString, configHelper, cache, comms,this);
 
 		} else {
 
-			if (!isStartupQuery &&  configHelper.getLastCommandType() == DeviceType.INPUT) {
+			if (!isStartupQuery &&  configHelper.getLastCommandType() == MessageDirection.INPUT) {
 				inputHelper.doInputItem (command,comfortString, configHelper, cache);
 			} else {
 					// For monitored and startup query items
