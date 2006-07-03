@@ -72,5 +72,7 @@ public class TestUtilitity extends TestCase {
 		assertEquals (50,Utility.scaleForFlash("0",-12,12,false));
 		assertEquals (0,Utility.scaleForFlash("12",-12,12,true));
 		assertEquals (100,Utility.scaleForFlash("-12",-12,12,true));
+		assertEquals (100,Utility.scaleForFlash("00",-78,0,false));
+		assertEquals (0,Utility.scaleForFlash("-78",-78,0,false));
 	}
 }
