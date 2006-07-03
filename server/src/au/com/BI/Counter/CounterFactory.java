@@ -40,7 +40,6 @@ public class CounterFactory {
 		String name = element.getAttributeValue("NAME");
 		try  {
 			String tmpKey = element.getAttributeValue("KEY");
-			String key = targetDevice.formatKey (tmpKey);
 			String outKey = element.getAttributeValue("DISPLAY_NAME");
 			String max = element.getAttributeValue("MAX");
 			int maxInt;
@@ -51,6 +50,7 @@ public class CounterFactory {
 				maxInt = 100;
 			}
 			Counter theInput = new Counter(name,	connectionType, outKey, maxInt);
+			String key = targetDevice.formatKey (tmpKey,theInput);
 			theInput.setKey (key);
 			theInput.setGroupName (groupName);
 			rawHelper.checkForRaw ( element,theInput);

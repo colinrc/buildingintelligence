@@ -272,11 +272,6 @@ public class ConfigHelper {
 		return null;
 	}
 	
-	public final DeviceType getInputItem (int theKey) {
-		String theKeyStr = deviceModel.formatKey(theKey);
-		return this.getInputItem(theKeyStr);
-	}
-	
 	public final DeviceType getInputItem (String theKey) {
 		return inputItems.get(theKey);
 	}
@@ -289,25 +284,17 @@ public class ConfigHelper {
 		return controlledItems.get(theKey);
 	}
 
-	public final DeviceType getControlledItem (int theKey) {
-		String theKeyStr = deviceModel.formatKey(theKey);
-		return this.getControlledItem(theKeyStr);
-	}
-
 	public Vector<ParameterBlock> getParameterBlocks() {
 		return parameterBlocks;
 	}
-
 
 	public void setParameterBlocks(Vector<ParameterBlock> parameterBlocks) {
 		this.parameterBlocks = parameterBlocks;
 	}
 
-
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
 	}
-
 
 	public void setDeviceModel(DeviceModel deviceModel) {
 		this.deviceModel = deviceModel;

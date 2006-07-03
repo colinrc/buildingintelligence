@@ -38,7 +38,7 @@ public class LightFactory {
 		String outKey = element.getAttributeValue("DISPLAY_NAME");
 	
 		LightFascade theLight = new LightFascade(name, connectionType, outKey,targetDevice.getName());
-		key = targetDevice.formatKey(key);
+		key = targetDevice.formatKey(key,theLight);
 		theLight.setKey(key);
 		theLight.setGroupName(groupName);
 	

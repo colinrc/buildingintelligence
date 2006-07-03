@@ -914,7 +914,7 @@ public class BaseModel
 	 * Formats a key into the appropriate format for interacting with the config file.
 	 * @return Formatted key
 	 */
-    public String formatKey(int key) throws NumberFormatException {
+    public String formatKey(int key,DeviceType device) throws NumberFormatException {
     	
 		int padding = getPadding();
 		String formatSpec = "%0";
@@ -933,14 +933,14 @@ public class BaseModel
 	 * Formats a key into the appropriate format for interacting with the config file.
 	 * @return Formatted key
 	 */
-    public String formatKey(String key) throws NumberFormatException {
+    public String formatKey(String key,DeviceType device) throws NumberFormatException {
 		int keyInt = 0;
 		if (isConfigKeysInDecimal()){
 			keyInt = Integer.parseInt(key);
 		} else{
 			keyInt = Integer.parseInt(key,16);
 		}
-    	return formatKey(keyInt);
+    	return formatKey(keyInt,device);
     }
 
 	public VersionManager getVersionManager() {

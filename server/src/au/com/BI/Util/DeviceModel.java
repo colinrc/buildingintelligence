@@ -387,18 +387,20 @@ public interface DeviceModel {
 	/**
 	 * The key is formatted as required by the particular model. Currently pading and decimal/hex can be configured as 
 	 * parameters that this function will use.
-	 * @param key
+	 * @param key The key as specified in the configuration file
+	 * @param device The device representation
 	 * @return The formatted key
 	 */
-    public String formatKey(String key);
+    public String formatKey(String key,DeviceType device);
     
 	/**
 	 * The key is formatted as required by the particular model. Currently pading and decimal/hex can be configured as 
 	 * parameters that this function will use.
-	 * @param key
+	 * @param key The key as specified in the configuration file
+	 * @param device The device representation
 	 * @return The formatted key
 	 */
-    public String formatKey(int key);
+    public String formatKey(int key,DeviceType device);
    
 	/**
 	 * True if decimal to the device requires decimal keys (rare) 

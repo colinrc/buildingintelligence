@@ -41,7 +41,6 @@ public class AlertFactory {
 		String name = element.getAttributeValue("DISPLAY_NAME");
 		try  {
 			String tmpKey = element.getAttributeValue("KEY");
-			String key = targetDevice.formatKey (tmpKey);
 
 			String active = element.getAttributeValue("ACTIVE");
 			String outKey = element.getAttributeValue("DISPLAY_NAME");
@@ -50,7 +49,7 @@ public class AlertFactory {
 	
 			Alert theInput = null;
 			theInput = new Alert(name, connectionType, outKey, alarmType, message,active);
-	
+			String key = targetDevice.formatKey (tmpKey,theInput);
 			theInput.setKey (key);
 			theInput.setGroupName (groupName);
 			rawHelper.checkForRaw ( element,theInput);
@@ -82,9 +81,10 @@ public class AlertFactory {
 		String name = element.getAttributeValue("NAME");
 		try  {
 			String tmpKey = element.getAttributeValue("KEY");
-			String key = targetDevice.formatKey (tmpKey);
+
 	
 			Alarm theOutput = new Alarm(name, connectionType, outKey);
+			String key = targetDevice.formatKey (tmpKey,theOutput);
 			theOutput.setKey (key);
 			theOutput.setGroupName (groupName);
 			rawHelper.checkForRaw ( element,theOutput);

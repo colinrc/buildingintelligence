@@ -43,7 +43,7 @@ public class AudioFactory {
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
 		Audio audio = new Audio (display_name,connectionType);
 
-		key = targetDevice.formatKey(key);
+		key = targetDevice.formatKey(key,audio);
 			
 		audio.setKey (key);
 		audio.setOutputKey(display_name);

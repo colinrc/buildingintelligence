@@ -18,7 +18,7 @@ public class TestBaseModel extends TestCase {
 		testModel.setConfigKeysInDecimal(false);
 		testModel.setDeviceKeysDecimal(false);
 		testModel.setPadding(2);
-		String result = testModel.formatKey("a");
+		String result = testModel.formatKey("a",null);
 		assertEquals ("Format Key Hex Hex 2 padding failed","0A",result);
 	}
 
@@ -26,7 +26,7 @@ public class TestBaseModel extends TestCase {
 		testModel.setConfigKeysInDecimal(false);
 		testModel.setDeviceKeysDecimal(false);
 		testModel.setPadding(1);
-		String result = testModel.formatKey("a");
+		String result = testModel.formatKey("a",null);
 		assertEquals ("Format Key Hex Hex 1 padding failed","A",result);
 	}
 
@@ -35,7 +35,7 @@ public class TestBaseModel extends TestCase {
 		testModel.setConfigKeysInDecimal(true);
 		testModel.setDeviceKeysDecimal(false);
 		testModel.setPadding(2);
-		String result = testModel.formatKey("10");
+		String result = testModel.formatKey("10",null);
 		assertEquals ("Format Key Dec Hex 2 padding failed","0A",result);
 	}
 
@@ -43,7 +43,7 @@ public class TestBaseModel extends TestCase {
 		testModel.setConfigKeysInDecimal(true);
 		testModel.setDeviceKeysDecimal(true);
 		testModel.setPadding(3);
-		String result = testModel.formatKey("16");
+		String result = testModel.formatKey("16",null);
 		assertEquals ("Format Key Dec Hex 2 padding failed","016",result);
 	}
 

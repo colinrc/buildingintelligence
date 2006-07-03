@@ -143,7 +143,8 @@ public class Model extends BaseModel implements DeviceModel {
 			commandFound = true;
 			int inputSrc = signAVCmd % 8 + 1;
 			int inputDev = signAVCmd / 16 ;
-			DeviceType avDevice = configHelper.getControlledItem(inputDev);
+			String formatedKey = this.formatKey(inputDev,null);
+			DeviceType avDevice = configHelper.getControlledItem(formatedKey);
 			try {
 				String inputSrcStr = findKeyForParameterValue(inputSrc, "AV_INPUTS", avDevice);
 				result.addFlashCommand(this.buildCommandForFlash(avDevice, "src", inputSrcStr,"","","","",0));

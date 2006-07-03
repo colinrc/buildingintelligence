@@ -31,13 +31,14 @@ public class SensorFactory {
 		String name = element.getAttributeValue("NAME");
 		try  {
 			String tmpKey = element.getAttributeValue("KEY");
-			String key = targetDevice.formatKey (tmpKey);
+
 
 			String channel = "";
 			String units = "";
 			String group = element.getAttributeValue("GROUP");;
 			String outKey = element.getAttributeValue("DISPLAY_NAME");
 			SensorFascade theSensor = new SensorFascade(name, channel, units, group, connectionType, outKey,name);
+			String key = targetDevice.formatKey (tmpKey,theSensor);
 			theSensor.setKey(key);
 			theSensor.setGroupName(groupName);
 	

@@ -39,11 +39,10 @@ public class AVFactory {
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
 		try  {
 			String tmpKey = element.getAttributeValue("KEY");
-			String key = targetDevice.formatKey (tmpKey);
 			
 			String command = element.getAttributeValue("COMMAND");
 			AV video = new AV (display_name,connectionType);
-	
+			String key = targetDevice.formatKey (tmpKey,video);
 			video.setKey (key);
 			video.setOutputKey(display_name);
 			video.setCommand(command);

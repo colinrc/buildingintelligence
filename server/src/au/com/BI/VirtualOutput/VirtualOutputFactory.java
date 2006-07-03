@@ -40,7 +40,7 @@ public class VirtualOutputFactory {
 		String name = element.getAttributeValue("NAME");
 		try  {
 			String tmpKey = element.getAttributeValue("KEY");
-			String key = targetDevice.formatKey (tmpKey);
+
 			String outKey = element.getAttributeValue("DISPLAY_NAME");
 			String max = element.getAttributeValue("MAX");
 			int maxInt;
@@ -51,6 +51,7 @@ public class VirtualOutputFactory {
 				maxInt = 100;
 			}
 			VirtualOutput theOuput = new VirtualOutput(name, connectionType, outKey,maxInt);
+			String key = targetDevice.formatKey (tmpKey,theOuput);
 			theOuput.setKey (key);
 			theOuput.setGroupName (groupName);
 			rawHelper.checkForRaw (element,theOuput);

@@ -43,9 +43,9 @@ public class IRFactory {
 			
 			try  {
 				String tmpKey = element.getAttributeValue("KEY");
-				String key = targetDevice.formatKey (tmpKey);
 				String outKey = element.getAttributeValue("AV_NAME");
 				IR theOutput = new IR(name, connectionType, outKey);
+				String key = targetDevice.formatKey (tmpKey,theOutput);
 				theOutput.setKey (key);
 				theOutput.setGroupName (groupName);
 				rawHelper.checkForRaw ( element,theOutput);
@@ -69,10 +69,10 @@ public class IRFactory {
 			
 			try  {
 				String tmpKey = element.getAttributeValue("KEY");
-				String key = targetDevice.formatKey (tmpKey);
 				String outKey = element.getAttributeValue("DISPLAY_NAME");
 				String boxStr = element.getAttributeValue("BOX");
 				IR theIRSensor = new IR(name, connectionType, outKey);
+				String key = targetDevice.formatKey (tmpKey,theIRSensor);
 				theIRSensor.setKey (key);
 				theIRSensor.setGroupName (groupName);
 				rawHelper.checkForRaw ( element,theIRSensor);

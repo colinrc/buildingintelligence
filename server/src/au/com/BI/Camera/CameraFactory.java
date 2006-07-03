@@ -41,13 +41,12 @@ public class CameraFactory {
 		
 		try  {
 			String key = element.getAttributeValue("KEY");
-			String fullKey = targetDevice.formatKey (key);
 		
 			String command = element.getAttributeValue("COMMAND");
 	
 			String zoom = element.getAttributeValue("ZOOM");
 			Camera camera = new Camera (display_name,connectionType);
-	
+			String fullKey = targetDevice.formatKey (key,camera);
 			camera.setKey (fullKey);
 			camera.setOutputKey(display_name);
 			camera.setCommand(command);

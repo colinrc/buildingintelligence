@@ -40,9 +40,10 @@ public class ToggleSwitchFactory {
 		String name = element.getAttributeValue("NAME");
 		try  {
 			String tmpKey = element.getAttributeValue("KEY");
-			String key = targetDevice.formatKey (tmpKey);
+
 			String outKey = element.getAttributeValue("DISPLAY_NAME");
 			ToggleSwitch theInput = new ToggleSwitch(name,	connectionType, outKey);
+			String key = targetDevice.formatKey (tmpKey,theInput);
 			theInput.setKey (key);
 			theInput.setGroupName (groupName);
 			rawHelper.checkForRaw (element,theInput);

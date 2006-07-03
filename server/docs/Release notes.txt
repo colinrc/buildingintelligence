@@ -12,11 +12,15 @@ Added correct number of session count handling for HTTPS clients.
 Added "Too Many Clients" message when appropriate
 Rewrote cache handler to support complex commands (eg. audio) as well as simple commands. Resolves issue [ticket:4]
 
-''' System ''''
+''' System '''
 
 Enforced stronger type checking in many places to make use of JDK5 type checking, for compile time type validation rather than run time exceptions.
 Central command queue wrapped in an object to simplify later changes to a messaging bus, needed to support master/slave models and possible script engines running 
 in seperate JVMs.
+
+FormatKey updated to accept the device being called by the device factory.  The formatKey method in the model can be used to customise the key per device if required.
+Resolved issue [ticket:444]
+
 
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a6.zip V1.6a6] ==
 
