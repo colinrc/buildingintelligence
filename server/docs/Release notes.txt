@@ -1,3 +1,7 @@
+''' Nuvo '''
+
+Rectified issues with volume control. Complete enhancement [ticket:
+
 ''' Kramer '''
 
 Updated to use common configuration catalogue support rather than model specific.

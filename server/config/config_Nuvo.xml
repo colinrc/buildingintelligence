@@ -20,7 +20,7 @@
                         <AUDIO KEY="0" DISPLAY_NAME="ALL"/>
                         <AUDIO KEY="2" DISPLAY_NAME="FAMILY_AUDIO"/>
                         <AUDIO KEY="1" DISPLAY_NAME="KITCHEN_AUDIO"/>
-                        <AUDIO KEY="3" DISPLAY_NAME="MASTER_BED_AUDIO"/>
+                        <AUDIO KEY="4" DISPLAY_NAME="MASTER_BED_AUDIO"/>
                 </NUVO>
         </DEVICE>
         
