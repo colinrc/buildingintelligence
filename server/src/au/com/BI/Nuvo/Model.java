@@ -85,7 +85,7 @@ public class Model extends BaseModel implements DeviceModel {
 	    	String key = audioDevice.getKey();
 			if (!key.equals(Model.AllZones)) {
 
-				String toneRequest = "*Z"+ audioDevice.getKey()+ "SETSR\n";
+				String toneRequest = "*Z"+ audioDevice.getKey()+ "SETSR\r";
 				
 				synchronized (comms){
 					try { 
@@ -101,7 +101,7 @@ public class Model extends BaseModel implements DeviceModel {
 	    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
 	    	String key = audioDevice.getKey();
 			if (!key.equals(Model.AllZones)) {
-				String zoneRequest = "*Z"+ audioDevice.getKey()+ "CONSR\n";
+				String zoneRequest = "*Z"+ audioDevice.getKey()+ "CONSR\r";
 
 				synchronized (comms){
 					try { 
@@ -135,7 +135,7 @@ public class Model extends BaseModel implements DeviceModel {
 							logger.log(Level.FINER, "Audio event for zone " + device.getKey() + " received from flash");
 
 						    for(String avOutputString : toSend.getCommOutputStrings()) {			
-						    	this.sendToSerial(avOutputString,device.getKey(),audioDevice.getOutputKey(),toSend.getOutputCommandType(),false);
+						    	this.sendToSerial(avOutputString+"\r",device.getKey(),audioDevice.getOutputKey(),toSend.getOutputCommandType(),false);
 							}
 						    
 							for (CommandInterface eachCommand: toSend.getOutputFlash()){
@@ -166,7 +166,7 @@ public class Model extends BaseModel implements DeviceModel {
 			this.sendToFlash(eachCommand, cache);
 		}
 		for (String eachCommand: commandObject.getCommOutputStrings()){
-			this.sendToSerial(eachCommand+"\n");
+			this.sendToSerial(eachCommand+"\r");
 		}
 	}
 
@@ -174,8 +174,12 @@ public class Model extends BaseModel implements DeviceModel {
 	public BuildReturnWrapper interpretStringFromNuvo (CommandInterface command){
 		BuildReturnWrapper result = new BuildReturnWrapper();
 		boolean commandFound = false;
-		
+			
 		String nuvoCmd = command.getKey();
+		if (nuvoCmd.equals ("#?")) {
+			logger.log (Level.FINER,"Nuvo was sent a command it did not understand");
+			return result;
+		}
 		
 		try {
 			String key = nuvoCmd.substring(2, 4);
@@ -237,13 +241,7 @@ public class Model extends BaseModel implements DeviceModel {
 		String[] bits = zoneStatus.split(",");
 		
 		String power =bits[0].substring(7);
-		String srcStr = bits[1].substring(3);
-		String grp = bits[2].substring(3);
-		String volStr = bits[3].substring(4);
-
 		AVState currentState = state.get (audioDevice.getKey());
-		int src = Integer.parseInt(srcStr);
-		
 		if (power.equals("ON") && !currentState.isPower()) {
 			returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "on","","","","","",0));
 			currentState.setPower(true);
@@ -252,61 +250,73 @@ public class Model extends BaseModel implements DeviceModel {
 			returnCode.addFlashCommand(buildCommandForFlash (audioDevice, "off","","","","","",0));
 			currentState.setPower (false);
 		}
-
-		if (grp.equals("1") && !currentState.isGroup_on(0)) {
-			returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "group","on","","","","",0));
-			addToGroup (audioDevice.getKey());
-			currentState.setGroup_on(true,0);
-		}
-		if (power.equals("0") && currentState.isGroup_on(0)) {
-			returnCode.addFlashCommand(buildCommandForFlash (audioDevice, "group","off","","","","",0));
-			removeFromGroup (audioDevice.getKey());
-			currentState.setGroup_on(false,0);
-		}
-
-		if (src != currentState.getSrc()){
-			try {
-				String newSrc = findKeyForParameterValue(srcStr, "AUDIO_INPUTS",audioDevice);
-				returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "src",newSrc,"","","","",0));
-				currentState.setSrc(src);
-				if (currentState.isGroup_on(0))setGroupKeys ( audioDevice, srcStr,  src,  returnCode);
-			} catch (ParameterException ex){
-				logger.log (Level.WARNING,ex.getMessage());
-			}
-		}
 		
-		if (volStr.equals ("MT")){
-			returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","on","","","","",0));
-			currentState.setMute(true);
-			if (currentState.isExt_mute()){
-				currentState.setExt_mute(false);
-				returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "ext-mute","off","","","","",0));					
+		if (bits.length >1) {
+			String srcStr = bits[1].substring(3);
+			String grp = bits[2].substring(3);
+			String volStr = bits[3].substring(3);
+		
+	
+	
+			int src = Integer.parseInt(srcStr);
+			
+	
+	
+			if (grp.equals("1") && !currentState.isGroup_on(0)) {
+				returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "group","on","","","","",0));
+				addToGroup (audioDevice.getKey());
+				currentState.setGroup_on(true,0);
 			}
-		} else {
-			if (volStr.equals ("XM")){
-				returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "ext-mute","on","","","","",0));
-				currentState.setExt_mute(true);
-				if (currentState.isMute()){
-					currentState.setMute(false);
-					returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","off","","","","",0));					
+			if (power.equals("0") && currentState.isGroup_on(0)) {
+				returnCode.addFlashCommand(buildCommandForFlash (audioDevice, "group","off","","","","",0));
+				removeFromGroup (audioDevice.getKey());
+				currentState.setGroup_on(false,0);
+			}
+	
+			if (src != currentState.getSrc()){
+				try {
+					String newSrc = findKeyForParameterValue(srcStr, "AUDIO_INPUTS",audioDevice);
+					returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "src",newSrc,"","","","",0));
+					currentState.setSrc(src);
+					if (currentState.isGroup_on(0))setGroupKeys ( audioDevice, srcStr,  src,  returnCode);
+				} catch (ParameterException ex){
+					logger.log (Level.WARNING,ex.getMessage());
 				}
-			} else {
-				if (currentState.isMute()){
-					currentState.setMute(false);
-					returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","off","","","","",0));					
-				}
+			}
+			
+			if (volStr.equals ("-MT")){
+				returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","on","","","","",0));
+				currentState.setMute(true);
 				if (currentState.isExt_mute()){
 					currentState.setExt_mute(false);
 					returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "ext-mute","off","","","","",0));					
 				}
-				int volForFlash = Utility.scaleForFlash(volStr, 0, 79, true);
-				if (!currentState.testVolume(volForFlash)){				
-					String volForFlashStr = String.valueOf(volForFlash);
-					currentState.setVolume (String.valueOf(volForFlashStr));
-					returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "volume",volForFlashStr,"","","","",0));					
-				}				
+			} else {
+				if (volStr.equals ("-XM")){
+					returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "ext-mute","on","","","","",0));
+					currentState.setExt_mute(true);
+					if (currentState.isMute()){
+						currentState.setMute(false);
+						returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","off","","","","",0));					
+					}
+				} else {
+					if (currentState.isMute()){
+						currentState.setMute(false);
+						returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","off","","","","",0));					
+					}
+					if (currentState.isExt_mute()){
+						currentState.setExt_mute(false);
+						returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "ext-mute","off","","","","",0));					
+					}
+					int volForFlash = Utility.scaleForFlash(volStr, 0, 79, true);
+					if (!currentState.testVolume(volForFlash)){				
+						String volForFlashStr = String.valueOf(volForFlash);
+						currentState.setVolume (String.valueOf(volForFlashStr));
+						returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "volume",volForFlashStr,"","","","",0));					
+					}				
+				}
+				
 			}
-			
 		}
 
 		

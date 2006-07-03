@@ -6,9 +6,6 @@ package au.com.BI.Nuvo;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Formatter;
-
-import au.com.BI.Util.Utility;
 
 public class NuvoHelper {
 	protected Logger logger;
