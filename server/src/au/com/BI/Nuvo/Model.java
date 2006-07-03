@@ -308,7 +308,7 @@ public class Model extends BaseModel implements DeviceModel {
 						currentState.setExt_mute(false);
 						returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "ext-mute","off","","","","",0));					
 					}
-					int volForFlash = Utility.scaleForFlash(volStr, 0, 79, true);
+					int volForFlash = Utility.scaleForFlash(volStr, -79,0, false);
 					if (!currentState.testVolume(volForFlash)){				
 						String volForFlashStr = String.valueOf(volForFlash);
 						currentState.setVolume (String.valueOf(volForFlashStr));
