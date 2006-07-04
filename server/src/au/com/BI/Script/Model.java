@@ -80,7 +80,7 @@ public class Model
          * The reference to the script will be an instance of au.com.BI.Script
          *
          */
-        public void addControlledItem(String name, DeviceType details, int controlType) {
+        public void addControlledItem(String name, DeviceType details, MessageDirection controlType) {
                 String theKey = name;
                 if (configHelper.checkForControlledItem(theKey) == false) {
                         configHelper.addControlledItem(theKey, details, controlType);
@@ -110,29 +110,7 @@ public class Model
                         logger.log(Level.FINER, "Flash sent command : " + keyName);
                         return true;
                 }
-                else {
-                        Iterator inputItems = configHelper.getInputItemsList();
-                        int lengthSerialKey = keyName.length();
-                        while (inputItems.hasNext()) {
-                                String inputListKey = (String) inputItems.next();
-
-                                if (inputListKey.equals("*")) {
-                                        deviceThatMatched = (Script) configHelper.getInputItem(inputListKey);
-                                        configHelper.setLastCommandType(MessageDirection.INPUT);
-                                        parameter = keyName;
-                                        return true;
-                                }
-                                else {
-                                        if (keyName.startsWith(inputListKey)) {
-                                                deviceThatMatched = (Script) configHelper.getInputItem(inputListKey);
-                                                configHelper.setLastCommandType(MessageDirection.INPUT);
-                                                parameter = keyName.substring(inputListKey.length());
-                                                return true;
-                                        }
-                                }
-                        }
-                        return false;
-                }
+                return false;
         }
 
         /**
@@ -166,7 +144,7 @@ public class Model
                                                 logger.log(Level.FINE,
                                                   "*********Running script " + ( (Script) device).getNameOfScript());
                                                 newCommand = createInternalCommand("SCRIPT","", "run", ( (Script) device).getNameOfScript());
-                                                newCommand.setTargetDeviceModel(MessageDirection.FROM_FLASH);
+                                                newCommand.setTargetDeviceModel(0);
                                                 //  configHelper.addControlledItem("SCRIPT", newCommand, DeviceType.OUTPUT);
                                                 doScriptItem(newCommand);
                                                 // cache.setCachedCommand(newCommand.getKey(), newCommand);
@@ -506,7 +484,7 @@ public class Model
 	             }
         }
 
-        public int getDeviceType(String key) {
+        public MessageDirection getDeviceType(String key) {
                 /**
                  * @return The device type
                  * @deprecated
@@ -534,7 +512,7 @@ public class Model
                         }
                 }
 
-                return -1;
+                return MessageDirection.UNKNOWN;
         }
 
         /*

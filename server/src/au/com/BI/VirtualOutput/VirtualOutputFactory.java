@@ -36,7 +36,7 @@ public class VirtualOutputFactory {
 	 *            INPUT | OUTPUT | MONITORED
 	 */
 	public void addVirtualOutput(DeviceModel targetDevice, List clientModels,
-			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
+			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("NAME");
 		try  {
 			String tmpKey = element.getAttributeValue("KEY");

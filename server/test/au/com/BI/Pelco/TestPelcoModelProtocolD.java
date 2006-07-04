@@ -2,6 +2,7 @@ package au.com.BI.Pelco;
 
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 import au.com.BI.Camera.*;
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
@@ -30,9 +31,9 @@ public class TestPelcoModelProtocolD extends TestCase {
 		cameraFrontCamera10.setKey("0a");
 		cameraFrontCamera10.setOutputKey("BACK_CAMERA");
 		
-		model.addControlledItem("FRONT_CAMERA",cameraFrontCamera01,DeviceType.OUTPUT);
-		model.addControlledItem("SIDE_CAMERA",cameraFrontCamera02,DeviceType.OUTPUT);
-		model.addControlledItem("BACK_CAMERA",cameraFrontCamera10,DeviceType.OUTPUT);
+		model.addControlledItem("FRONT_CAMERA",cameraFrontCamera01,MessageDirection.FROM_FLASH);
+		model.addControlledItem("SIDE_CAMERA",cameraFrontCamera02,MessageDirection.FROM_FLASH);
+		model.addControlledItem("BACK_CAMERA",cameraFrontCamera10,MessageDirection.FROM_FLASH);
 	}
 
 

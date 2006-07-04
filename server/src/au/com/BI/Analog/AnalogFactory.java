@@ -35,7 +35,7 @@ public class AnalogFactory {
 	 *            INPUT | OUTPUT | MONITORED
 	 */
 	public void addAnalog(DeviceModel targetDevice, List clientModels,
-			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
+			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("NAME");
 		
 		try  {

@@ -21,6 +21,11 @@ in seperate JVMs.
 FormatKey updated to accept the device being called by the device factory.  The formatKey method in the model can be used to customise the key per device if required.
 Resolved issue [ticket:444]
 
+INPUT,OUTPUT,MONITORED,STARTUP types moved from the DeviceType interface to an enum, MessageDirection . This allows type checking and stops confusion with other 
+DeviceType constants.   Various bugs were found and corrected as part of this process. 
+
+Alarm type codes were moved from the DeviceType interface to their own enum; AlarmTypeCode.
+
 
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a6.zip V1.6a6] ==
 

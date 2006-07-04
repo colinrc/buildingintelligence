@@ -36,7 +36,7 @@ public class IRFactory {
 	 *            INPUT | OUTPUT | MONITORED
 	 */
 	public void addIR(DeviceModel targetDevice, List clientModels,
-			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
+			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		
 		if (targetDevice.getName().equals("GC100")) {
 			String name = element.getAttributeValue("NAME");

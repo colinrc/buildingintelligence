@@ -118,7 +118,7 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 		// restart everything
 	}
 
-	public void addControlledItem (String name, DeviceType details, int controlType) {
+	public void addControlledItem (String name, DeviceType details, MessageDirection controlType) {
 		configHelper.addControlledItem (name, details, controlType);
 	}
 

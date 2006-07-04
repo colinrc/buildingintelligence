@@ -71,13 +71,13 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		dynaliteHelper = model.getDynaliteHelper();
 		
 		//ConfigHelper configHelper = model.getConfigHelper();
-		model.addControlledItem("03",testA03C03,DeviceType.MONITORED);
-		model.addControlledItem("04",testA03C04,DeviceType.MONITORED);
-		model.addControlledItem("03",testA02C03,DeviceType.MONITORED);
-		model.addControlledItem("05",testA02C05,DeviceType.MONITORED);		
-		model.addControlledItem("05",testA16C05,DeviceType.MONITORED);		
-		model.addControlledItem("04",testB4box2,DeviceType.INPUT);		
-		model.addControlledItem("07",testir7box6,DeviceType.INPUT);	
+		model.addControlledItem("03",testA03C03,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem("04",testA03C04,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem("03",testA02C03,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem("05",testA02C05,MessageDirection.FROM_HARDWARE);		
+		model.addControlledItem("05",testA16C05,MessageDirection.FROM_HARDWARE);		
+		model.addControlledItem("04",testB4box2,MessageDirection.FROM_HARDWARE);		
+		model.addControlledItem("07",testir7box6,MessageDirection.FROM_HARDWARE);	
 	}
 
 	protected void tearDown() throws Exception {
@@ -120,7 +120,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		testA06C00.setKey("06");
 		//testA06C00.setKey(theKey);
 		
-		model.addControlledItem(testA06C00.getKey(),testA06C00,DeviceType.MONITORED);		
+		model.addControlledItem(testA06C00.getKey(),testA06C00,MessageDirection.FROM_HARDWARE);		
 		InterpretResult result = new InterpretResult();
 		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a10C0present = new DynaliteCommand("CLIENT_SEND","preset",null,"10","0","255","","");
@@ -138,7 +138,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		testA07C00.setAreaCode("07");
 		testA07C00.setKey("00");
 		
-		model.addControlledItem("00",testA07C00,DeviceType.MONITORED);		
+		model.addControlledItem("00",testA07C00,MessageDirection.FROM_HARDWARE);		
 		InterpretResult result = new InterpretResult();
 		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a07C0ramp = new DynaliteCommand("CLIENT_SEND","on",null,"100","0","255","","");
@@ -155,7 +155,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		LightFascade testA03C00 = new LightFascade("A0A300", DeviceType.LIGHT_DYNALITE_AREA ,"A03C00","DYNALITE");
 		testA03C00.setKey("03");
 		
-		model.addControlledItem(testA03C00.getKey(),testA03C00,DeviceType.MONITORED);		
+		model.addControlledItem(testA03C00.getKey(),testA03C00,MessageDirection.FROM_HARDWARE);		
 		InterpretResult result = new InterpretResult();
 		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a03C0ramp = new DynaliteCommand("CLIENT_SEND","off",null,"0","0","255","","");
@@ -172,7 +172,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		LightFascade testA02C00 = new LightFascade("A02C00", DeviceType.LIGHT_DYNALITE_AREA ,"A02C00","DYNALITE");
 		testA02C00.setKey("02");
 		
-		model.addControlledItem(testA02C00.getKey(),testA02C00,DeviceType.MONITORED);		
+		model.addControlledItem(testA02C00.getKey(),testA02C00,MessageDirection.FROM_HARDWARE);		
 		InterpretResult result = new InterpretResult();
 		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a2C0preset = new DynaliteCommand("CLIENT_SEND","preset",null,"4","0","255","","");
@@ -246,7 +246,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		
 		LightFascade testA2CC00 = new LightFascade("A2CC00", DeviceType.LIGHT_DYNALITE_AREA ,"A2CC00","DYNALITE");
 		testA2CC00.setKey("2C");
-		model.addControlledItem(testA2CC00.getKey(),testA2CC00,DeviceType.MONITORED);	
+		model.addControlledItem(testA2CC00.getKey(),testA2CC00,MessageDirection.FROM_HARDWARE);	
 
 		byte ret1[] = new byte[]{(byte)0x1C,(byte)0x2c,(byte)0x8f,(byte)0x64,(byte)0x00,(byte)0x00,(byte)0xff,(byte)0xc6};
 		InterpretResult result = new InterpretResult();
@@ -277,7 +277,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		LightFascade testA4C00 = new LightFascade("A04C00", DeviceType.LIGHT_DYNALITE ,"A04C00","DYNALITE");
 		testA4C00.setAreaCode("04");
 		testA4C00.setKey("00");
-		model.addControlledItem("00",testA4C00,DeviceType.MONITORED);	
+		model.addControlledItem("00",testA4C00,MessageDirection.FROM_HARDWARE);	
 		
 		byte ret1[] = new byte[]{(byte)0x1C,(byte)0x04,(byte)0x82,(byte)0x79,(byte)0x64,(byte)0x0,(byte)0xff,(byte)0x82};
 		InterpretResult result = new InterpretResult();
@@ -292,12 +292,12 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		LightFascade testA06C09 = new LightFascade("A06C09", DeviceType.LIGHT_DYNALITE ,"A06C09","DYNALITE");
 		testA06C09.setAreaCode("06");
 		testA06C09.setKey("09");
-		model.addControlledItem(testA06C09.getKey(),testA06C09,DeviceType.MONITORED);	
+		model.addControlledItem(testA06C09.getKey(),testA06C09,MessageDirection.FROM_HARDWARE);	
 
 		LightFascade testA12C14 = new LightFascade("A0CC0E", DeviceType.LIGHT_DYNALITE ,"A0CC0E","DYNALITE");
 		testA12C14.setAreaCode("0C");
 		testA12C14.setKey("0E");
-		model.addControlledItem(testA12C14.getKey(),testA12C14,DeviceType.MONITORED);	
+		model.addControlledItem(testA12C14.getKey(),testA12C14,MessageDirection.FROM_HARDWARE);	
 		
 		byte ret2[] = new byte[]{(byte)0x1C,(byte)0x0c,(byte)0xe6,(byte)0x81,(byte)0x02,(byte)0x4b,(byte)0xff,(byte)0x25};
 		InterpretResult result2 = new InterpretResult();

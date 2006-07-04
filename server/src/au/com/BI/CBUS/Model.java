@@ -117,7 +117,7 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 	*/
 
-	public void addControlledItem (String name, DeviceType details, int controlType) {
+	public void addControlledItem (String name, DeviceType details, MessageDirection controlType) {
 
 		try {
 			CBUSDevice device = (CBUSDevice)details;

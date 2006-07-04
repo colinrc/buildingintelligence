@@ -52,13 +52,14 @@ public class Model extends BaseModel implements DeviceModel {
 		super.clearItems();
 	}
 	
-	public void addStartupQueryItem (String name, DeviceType details, int controlType){
+	// @TODO Change this to FROM_HARDWARE after changing input toggle
+	public void addStartupQueryItem (String name, DeviceType details, MessageDirection controlType){
 	    if (((String)this.getParameterValue("MODULE_TYPE" ,details.getGroupName())).equals("IR")
-	            && controlType == MessageDirection.INPUT)
+	            && controlType == MessageDirection.FROM_HARDWARE)
 	        configHelper.addStartupQueryItem(details.getKey(),details,controlType);
 	}
 	
-	public void addControlledItem (String name, DeviceType details, int controlType) {
+	public void addControlledItem (String name, DeviceType details, MessageDirection controlType) {
 		String theKey = name;
     
 		int deviceType = (details).getDeviceType();
@@ -377,7 +378,7 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public void sendOutput (String key, String command, String extra,User user) {
 
-		ToggleSwitch toggle = (ToggleSwitch)configHelper.getInputItem(key);
+		ToggleSwitch toggle = (ToggleSwitch)configHelper.getControlledItem(key);
 		
 		if (toggle != null) {
 			

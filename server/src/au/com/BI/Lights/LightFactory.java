@@ -33,7 +33,7 @@ public class LightFactory {
 	 * @param groupName TODO
 	 * @param rawHelper TODO
 	 */
-	public void addLight(DeviceModel targetDevice, List clientModels, Element element, int type, int connectionType, String groupName, RawHelper rawHelper) {
+	public void addLight(DeviceModel targetDevice, List clientModels, Element element, MessageDirection type, int connectionType, String groupName, RawHelper rawHelper) {
 		String key = element.getAttributeValue("KEY");
 		String name = element.getAttributeValue("NAME");
 		String outKey = element.getAttributeValue("DISPLAY_NAME");
@@ -115,7 +115,7 @@ public class LightFactory {
 	 * @param groupName TODO
 	 * @param rawHelper TODO
 	 */
-	public void addLightArea(DeviceModel targetDevice, List clientModels, Element element, int type, int connectionType, String groupName, RawHelper rawHelper) {
+	public void addLightArea(DeviceModel targetDevice, List clientModels, Element element, MessageDirection type, int connectionType, String groupName, RawHelper rawHelper) {
 		String key = element.getAttributeValue("KEY");
 		String name = element.getAttributeValue("NAME");
 		String outKey = element.getAttributeValue("DISPLAY_NAME");

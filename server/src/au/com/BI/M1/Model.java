@@ -102,16 +102,16 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 	
 	/**
-	 * 
+	 * @TODO, this looks incorrect. I don't think you want from flash (previously output) here
 	 */
-	public void addControlledItem (String key, DeviceType details, int controlType) {
-		if (controlType == MessageDirection.FROM_FLASH) {
-			super.addControlledItem(Utility.padString(key,3),details,controlType);			
-		} else if (controlType == DeviceType.SENSOR) {
+	public void addControlledItem (String key, DeviceType details, MessageDirection type) {
+		if (type == MessageDirection.FROM_FLASH) {
+			super.addControlledItem(Utility.padString(key,3),details,type);			
+		} else if (details.getDeviceType() == DeviceType.SENSOR) {
 			// only pad the string with 2 characters as this is the device that will be returned.
-			super.addControlledItem(Utility.padString(key,2),details,controlType);
+			super.addControlledItem(Utility.padString(key,2),details,type);
 		} else {
-			super.addControlledItem(Utility.padString(key,3),details,controlType);
+			super.addControlledItem(Utility.padString(key,3),details,type);
 		}
 	}
 

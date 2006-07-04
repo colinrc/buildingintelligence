@@ -83,14 +83,21 @@ public class Model extends BaseModel implements DeviceModel {
 		comms.sendString( vals);
 	}
 
-	public void addControlledItem (String key, DeviceType details, int controlType) {
+	public void addControlledItem (String key, DeviceType details, MessageDirection controlType) {
 
 		try {
 			String theKey = key;
-
-			
-			if (controlType == MessageDirection.FROM_HARDWARE)  {
-				DynaliteDevice device = (DynaliteDevice)details;				
+			int box=0;
+			if (controlType == MessageDirection.FROM_HARDWARE )  {
+				DynaliteDevice device = null;	
+				
+				if (details instanceof DynaliteInputDevice){
+					DynaliteInputDevice deviceInput = (DynaliteInputDevice)details;
+					box = deviceInput.getBox() ;
+				} else {
+					device = (DynaliteDevice)details;		
+				}
+				
 				if (((DeviceType)details).getDeviceType() == DeviceType.LIGHT_DYNALITE ) {
 					theKey = dynaliteHelper.buildKey('L',device.getAreaCode(),device.getChannel());
 					areaCodes.add (device.getAreaCode(),device);
@@ -102,15 +109,11 @@ public class Model extends BaseModel implements DeviceModel {
 				if (((DeviceType)details).getDeviceType() == DeviceType.ALARM) {
 					theKey = device.getKey();
 				}
-			}
-			if (controlType == MessageDirection.INPUT)  {
-				DynaliteInputDevice device = (DynaliteInputDevice)details;
+				
 				if (((DeviceType)details).getDeviceType() == DeviceType.IR ) {
-					int box = device.getBox() ;
 					theKey = dynaliteHelper.buildKey('I',box,key);
 				}
 				if (((DeviceType)details).getDeviceType() == DeviceType.CONTACT_CLOSURE) {
-					int box = device.getBox() ;
 					theKey = dynaliteHelper.buildKey('C',box,key);
 				}
 
@@ -123,6 +126,8 @@ public class Model extends BaseModel implements DeviceModel {
 
 			configHelper.addControlledItem (theKey, details, controlType);
 		} catch (ClassCastException ex) {
+			logger.log( Level.WARNING,"Attempted to add an incorrect device type to the Dynalite model");
+		}catch (NullPointerException ex) {
 			logger.log( Level.WARNING,"Attempted to add an incorrect device type to the Dynalite model");
 		}
 	}
@@ -360,7 +365,7 @@ public class Model extends BaseModel implements DeviceModel {
 		DynaliteInputDevice result = null;
 		try {
 			String theKey = dynaliteHelper.buildKey(code,box,channel);
-			result = (DynaliteInputDevice)configHelper.getInputItem(theKey);
+			result = (DynaliteInputDevice)configHelper.getControlledItem(theKey);
 			return result;
 		} catch (ClassCastException ex){
 			logger.log(Level.WARNING,"A incorrect device was added to the dynalite control block " + ((DeviceType)result).getName());

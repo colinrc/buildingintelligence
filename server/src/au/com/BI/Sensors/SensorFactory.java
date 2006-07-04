@@ -28,7 +28,7 @@ public class SensorFactory {
 	}
 	// physical sensors, such as temperature
 	public void addSensor(DeviceModel targetDevice, List clientModels,
-		Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
+		Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("NAME");
 		try  {
 			String tmpKey = element.getAttributeValue("KEY");
@@ -51,8 +51,8 @@ public class SensorFactory {
 				units = element.getAttributeValue("UNITS");
 				group = element.getAttributeValue("GROUP");
 			}
-			targetDevice.addControlledItem(key, theSensor, connectionType);
-			targetDevice.addStartupQueryItem(key, theSensor, connectionType);
+			targetDevice.addControlledItem(key, theSensor, type);
+			targetDevice.addStartupQueryItem(key, theSensor, type);
 	
 			if (outKey != null && !outKey.equals("")) {
 				targetDevice.addControlledItem(outKey, theSensor, MessageDirection.FROM_FLASH);

@@ -139,7 +139,7 @@ public interface DeviceModel {
 	 * @param details object representing details of the device
 	 * @see au.com.BI.Util.DeviceType
 	 */
-	public void addControlledItem (String name, DeviceType details, int controlType);
+	public void addControlledItem (String name, DeviceType details, MessageDirection controlType);
 
 	/**
 	 * Called by the configuration reader.
@@ -154,7 +154,7 @@ public interface DeviceModel {
 	 * @param details object representing details of the device
 	 * @see au.com.BI.Util.DeviceType
 	 */
-	public void addStartupQueryItem (String name, Object details, int controlType);
+	public void addStartupQueryItem (String name, Object details, MessageDirection controlType);
 
 	/**
 	 * Used on restart to clear all currently known items

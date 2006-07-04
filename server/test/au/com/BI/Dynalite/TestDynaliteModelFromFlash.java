@@ -43,8 +43,8 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		area15Min = new ClientCommand("AREA03_CHANNEL02","on",null,"50","15m","","","");
 		model = new Model();
 		//ConfigHelper configHelper = model.getConfigHelper();
-		model.addControlledItem("03",testWithChannelA02C03,DeviceType.MONITORED);
-		model.addControlledItem("03",testAreaOnly,DeviceType.MONITORED);
+		model.addControlledItem("03",testWithChannelA02C03,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem("03",testAreaOnly,MessageDirection.FROM_HARDWARE);
 		dynaliteHelper = model.getDynaliteHelper();
 	}
 
@@ -143,7 +143,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		LightFascade testAreaOnly = new LightFascade("Area Only", DeviceType.LIGHT_DYNALITE_AREA ,"Area04","DYNALITE");
 		testAreaOnly.setKey("04");
 		testAreaOnly.setBLA("04");
-		model.addControlledItem("04",testAreaOnly,DeviceType.MONITORED);
+		model.addControlledItem("04",testAreaOnly,MessageDirection.FROM_HARDWARE);
 		
 		DynaliteOutput result1 = model.buildLinkToCommand("04", "1","255", true);
 		ArrayAssert.assertEquals ("Build link area failed.",ret1,result1.outputCodes);
@@ -156,7 +156,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		LightFascade testAreaOnly = new LightFascade("Area Only", DeviceType.LIGHT_DYNALITE_AREA ,"Area04","DYNALITE");
 		testAreaOnly.setKey("04");
 		testAreaOnly.setBLA("04");
-		model.addControlledItem("04",testAreaOnly,DeviceType.MONITORED);
+		model.addControlledItem("04",testAreaOnly,MessageDirection.FROM_HARDWARE);
 		
 		DynaliteOutput result1 = model.buildLinkToCommand("04", "1","255", false);
 		ArrayAssert.assertEquals ("Build link area failed.",ret1,result1.outputCodes);

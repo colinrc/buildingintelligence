@@ -359,7 +359,7 @@ public class BaseModel
                 return false;
         }
 
-        public void addControlledItem(String name, DeviceType details, int controlType) {
+        public void addControlledItem(String name, DeviceType details, MessageDirection controlType) {
                 String theKey = name;
 
                 configHelper.addControlledItem(theKey, details, controlType);
@@ -649,7 +649,7 @@ public class BaseModel
                 InstanceID = instanceID;
         }
 
-        public void addStartupQueryItem(String name, Object details, int controlType) {};
+        public void addStartupQueryItem(String name, Object details, MessageDirection controlType) {};
 
         /**
          * @return Returns the displayName.

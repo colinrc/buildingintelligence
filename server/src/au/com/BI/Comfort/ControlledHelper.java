@@ -4,6 +4,7 @@
 package au.com.BI.Comfort;
 
 import java.util.logging.*;
+
 import au.com.BI.Util.*;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
@@ -11,6 +12,9 @@ import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Lights.*;
 import au.com.BI.ToggleSwitch.*;
 import au.com.BI.Counter.*;
+import au.com.BI.CustomInput.CustomInput;
+import au.com.BI.CustomInput.CustomInputCommand;
+import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Alert.*;
 import au.com.BI.Analog.*;
 import au.com.BI.X10.*;
@@ -194,13 +198,41 @@ public class ControlledHelper {
 								
 				if (comfortString.theParameter.equals("07")){
 					x10LightCommand.setCommand ("off");
+					x10LightCommand.setExtraInfo ("0");
 				} 
 				if (comfortString.theParameter.equals("05") || comfortString.theParameter.equals("03") || comfortString.theParameter.equals("01")){
 					x10LightCommand.setCommand ("on");
+					x10LightCommand.setExtraInfo ("100");
 				} 
 				sendToFlash (x10LightCommand,cache);
 				break;
 
+				
+			case DeviceType.CUSTOM_INPUT:
+					logger.log(Level.FINEST, "Received custom command " + comfortString.comfortKey);
+					CustomInput inputFascade = (CustomInput)deviceType;
+					ClientCommand clientCommand = new ClientCommand ();
+					clientCommand.setKey(inputFascade.getOutputKey());
+					clientCommand.setCommand(inputFascade.getCommand());				
+					if (inputFascade.getExtra() != null)
+					    clientCommand.setExtraInfo(inputFascade.getExtra());
+					else 
+					    clientCommand.setExtraInfo(comfortString.getTheParameter());
+					
+					commandQueue.add(clientCommand);
+					
+					CustomInputCommand flashCommand = new CustomInputCommand ();
+					flashCommand.setKey ("CLIENT_SEND");
+					flashCommand.setDisplayName(inputFascade.getOutputKey());
+					flashCommand.setCommand(inputFascade.getCommand());
+					if (inputFascade.getExtra() != null)
+						flashCommand.setExtraInfo(inputFascade.getExtra());
+					else 
+						flashCommand.setExtraInfo(comfortString.getTheParameter());
+
+					sendToFlash (clientCommand, cache);
+					break;
+					
 			case DeviceType.TOGGLE_INPUT: case DeviceType.TOGGLE_OUTPUT_MONITOR:
 					CommandInterface toggleSwitchCommand = (CommandInterface)((ToggleSwitch)deviceType).buildDisplayCommand ();
 					toggleSwitchCommand.setUser(command.getUser());
@@ -212,6 +244,7 @@ public class ControlledHelper {
 				 	}					
 					if (comfortString.theParameter.equals("00")){
 						toggleSwitchCommand.setCommand ("off");
+						toggleSwitchCommand.setExtraInfo ("0");
 					}					
 					sendToFlash (toggleSwitchCommand,cache);
 					break;
@@ -245,9 +278,9 @@ public class ControlledHelper {
 					break;
 				}
 				
-				int alarmTypeCode = alert.getAlarmTypeCode(); 
+				AlarmTypeCode alarmTypeCode = alert.getAlarmTypeCode(); 
 				switch (alarmTypeCode) {
-				case DeviceType.ALARM_USER :
+				case ALARM_USER :
 					try {
 						int theUser = Integer.parseInt (comfortString.theParameter,16);
 						theUser &= 127; // for some reason comfort randomly sets the high bit on user alarms
@@ -267,10 +300,10 @@ public class ControlledHelper {
 					}
 					break;
 
-				case DeviceType.ALARM_ZONE :
+				case ALARM_ZONE :
 					{
 					String inputZone = comfortString.theParameter;
-					DeviceType inputDevice = (DeviceType)configHelper.getInputItem(inputZone);
+					DeviceType inputDevice = (DeviceType)configHelper.getControlledItem(inputZone);
 					String lookupValue = "";
 					if (!alert.isActive()) {
 						logger.log(Level.FINE,"Comfort alarm " + comfortString.theParameter + " was received, but has been configured to not be reported.");
@@ -287,7 +320,7 @@ public class ControlledHelper {
 					}
 					break;
 
-				case DeviceType.ALERT_DOORBELL :
+				case ALERT_DOORBELL :
 				{
 				if (!alert.isActive()) {
 					logger.log(Level.FINE,"Comfort alarm " + comfortString.theParameter + " was received, but has been configured to not be reported.");
@@ -304,7 +337,7 @@ public class ControlledHelper {
 				}
 				break;
 
-			case DeviceType.ALERT_MODE_CHANGE :
+			case ALERT_MODE_CHANGE :
 				{
 				String lookupValue = configHelper.getCatalogueValue(comfortString.theParameter2,"COMFORT_USERS",alert);
 				if (comfortString.theParameter2.equals ("5A")) lookupValue = "(unknown) on keypad.";
@@ -335,15 +368,15 @@ public class ControlledHelper {
 
 				break;
 
-			case DeviceType.ALERT_PHONE :
+			case ALERT_PHONE :
 				alertCommand.setExtraInfo((String)alert.getMessage());			
 				break;
 
-			case DeviceType.ALARM_SYSTEM :
+			case ALARM_SYSTEM :
 				alertCommand.setExtraInfo((String)alert.getMessage());			
 				break;
 
-			case DeviceType.ALARM_TYPE :
+			case ALARM_TYPE :
 				alertCommand.setExtraInfo((String)alert.getMessage());			
 				break;
 

@@ -11,6 +11,7 @@ import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Nuvo.Model;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 import au.com.BI.Util.Utility;
 import junit.framework.*;
 import junitx.framework.ListAssert;
@@ -47,15 +48,15 @@ public class TestCommandsFromFlash extends TestCase {
 		studyAudio.setKey("03");
 		studyAudio.setOutputKey("STUDY_AUDIO");
 		
-		model.addControlledItem("FRONT_AUDIO",audioFrontRoom,DeviceType.OUTPUT);
-		model.addControlledItem("ALL",audioAll,DeviceType.OUTPUT);
-		model.addControlledItem("KITCHEN_AUDIO",kitchenAudio,DeviceType.OUTPUT);
-		model.addControlledItem("STUDY_AUDIO",studyAudio,DeviceType.OUTPUT);
+		model.addControlledItem("FRONT_AUDIO",audioFrontRoom,MessageDirection.FROM_FLASH);
+		model.addControlledItem("ALL",audioAll,MessageDirection.FROM_FLASH);
+		model.addControlledItem("KITCHEN_AUDIO",kitchenAudio,MessageDirection.FROM_FLASH);
+		model.addControlledItem("STUDY_AUDIO",studyAudio,MessageDirection.FROM_FLASH);
 		
-		model.addControlledItem(audioFrontRoom.getKey(),audioFrontRoom,DeviceType.MONITORED);
-		model.addControlledItem(audioAll.getKey(),audioAll,DeviceType.MONITORED);
-		model.addControlledItem(kitchenAudio.getKey(),kitchenAudio,DeviceType.MONITORED);
-		model.addControlledItem(studyAudio.getKey(),studyAudio,DeviceType.MONITORED);
+		model.addControlledItem(audioFrontRoom.getKey(),audioFrontRoom,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem(audioAll.getKey(),audioAll,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem(kitchenAudio.getKey(),kitchenAudio,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem(studyAudio.getKey(),studyAudio,MessageDirection.FROM_HARDWARE);
 		
 		HashMap<String, String> map = new HashMap<String,String> (40);
 		

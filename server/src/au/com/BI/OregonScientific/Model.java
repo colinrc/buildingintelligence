@@ -86,14 +86,14 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void addControlledItem (String name, DeviceType details, int controlType) {
+	public void addControlledItem (String name, DeviceType details, MessageDirection controlType) {
 		String theKey = name;
 		byte secondKey = 0;
 
 		if (details != null) {
 			int deviceType = ((DeviceType)details).getDeviceType();
 
-			if (controlType == MessageDirection.FROM_HARDWARE || controlType == MessageDirection.INPUT) {
+			if (controlType == MessageDirection.FROM_HARDWARE ) {
 
 				try {
 					secondKey = Byte.parseByte(((SensorFascade)details).getChannel(),16);

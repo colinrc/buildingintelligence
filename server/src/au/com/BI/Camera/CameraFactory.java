@@ -36,7 +36,7 @@ public class CameraFactory {
 	 *            INPUT | OUTPUT | MONITORED
 	 */
 	public void addCamera(DeviceModel targetDevice, List clientModels,
-			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
+			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
 		
 		try  {

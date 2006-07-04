@@ -35,7 +35,7 @@ public class AVFactory {
 	 *            INPUT | OUTPUT | MONITORED
 	 */
 	public void addAV(DeviceModel targetDevice, List clientModels,
-			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
+			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
 		try  {
 			String tmpKey = element.getAttributeValue("KEY");

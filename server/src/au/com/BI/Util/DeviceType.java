@@ -61,28 +61,9 @@ public interface DeviceType
 	public static final int SIGN_VIDEO_SWITCH = 45;
 	public static final int GROOVY_SCRIPT = 46;
 
-	// Alert types
-	public static final int ALARM_SYSTEM=1;
-	public static final int ALARM_USER=2;
-	public static final int ALARM_ZONE=3;
-	public static final int ALARM_ID=4;	
-
-	public static final int ALARM_TYPE=8;
-
-	public static final int ALERT_PHONE=10;
-	public static final int ALERT_DOORBELL=11;
-	public static final int ALERT_MODE_CHANGE=12;
-	public static final int ALERT_SYSTEM_ERROR=100;	
-	
-
-
-	
 	// Likely number of raw commands for device line. More is allowed.
 	public static final int PROBABLE_NUMBER_RAW = 10;
 
-	// startup codes are used for state queries when the system beings
-	public static final int STARTUP = 4;
-	
 	public static final int NOT_CONTROLLED = 0;
 	
 	/**

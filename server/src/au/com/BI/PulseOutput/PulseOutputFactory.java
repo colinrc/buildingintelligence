@@ -37,7 +37,7 @@ public class PulseOutputFactory {
 	 *            INPUT | OUTPUT | MONITORED
 	 */
 	public void addPulse(DeviceModel targetDevice, List clientModels,
-			Element element, int type, int connectionType,String groupName,RawHelper rawHelper) {
+			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("NAME");
 		String key = element.getAttributeValue("KEY");
 		String outKey = element.getAttributeValue("DISPLAY_NAME");

@@ -86,7 +86,7 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 
-	public void addControlledItem (String name, DeviceType details, int controlType) {
+	public void addControlledItem (String name, DeviceType details, MessageDirection controlType) {
 		String theKey = name;
 
 		configHelper.addControlledItem (theKey, details, controlType);
@@ -104,7 +104,7 @@ public class Model extends BaseModel implements DeviceModel {
 			return true;
 		}
 		else {
-		    Iterator inputDeviceList = configHelper.getAllInputDevices();
+		    Iterator inputDeviceList = configHelper.getAllControlledDevices();
 
 			while (inputDeviceList.hasNext()){
 			    DeviceType inputListItem = (DeviceType)inputDeviceList.next();
@@ -117,7 +117,7 @@ public class Model extends BaseModel implements DeviceModel {
 		        		matcherResults = customInput.getMatcher(keyName);
 		            if (matcherResults.matches()) {
 						deviceThatMatched = customInput;
-						configHelper.setLastCommandType(MessageDirection.INPUT);
+						configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
 						return true;
 		            }
 		        }
@@ -127,15 +127,15 @@ public class Model extends BaseModel implements DeviceModel {
 			        inputListKey = inputListItem.getKey();
 
 					if (inputListKey.equals("*")) {
-						deviceThatMatched = (CustomInput)configHelper.getInputItem(inputListKey);
-						configHelper.setLastCommandType(MessageDirection.INPUT);
+						deviceThatMatched = (CustomInput)configHelper.getControlledItem(inputListKey);
+						configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
 						parameter = keyName;
 						return true;
 					}
 					else {
 						if (keyName.startsWith(inputListKey)) {
-							deviceThatMatched = (CustomInput)configHelper.getInputItem(inputListKey);
-							configHelper.setLastCommandType(MessageDirection.INPUT);
+							deviceThatMatched = (CustomInput)configHelper.getControlledItem(inputListKey);
+							configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
 							parameter = keyName.substring (inputListKey.length());
 							return true;
 						}
@@ -155,8 +155,8 @@ public class Model extends BaseModel implements DeviceModel {
 		if ( configHelper.getLastCommandType() == MessageDirection.FROM_FLASH) {
 			doOutputItem (command);
 		} else {
-			if ( configHelper.getLastCommandType() == MessageDirection.INPUT) {
-			    Iterator inputDeviceList = configHelper.getAllInputDevices();
+			if ( configHelper.getLastCommandType() == MessageDirection.FROM_HARDWARE) {
+			    Iterator inputDeviceList = configHelper.getAllControlledDevices();
 
 				while (inputDeviceList.hasNext()){
 				    DeviceType inputListItem = (DeviceType)inputDeviceList.next();
@@ -169,7 +169,7 @@ public class Model extends BaseModel implements DeviceModel {
 			        		matcherResults = customInput.getMatcher(theWholeKey);
 			            if (matcherResults.matches()) {
 							deviceThatMatched = customInput;
-							configHelper.setLastCommandType(MessageDirection.INPUT);
+							configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
 							doInputItem (command, deviceThatMatched, parameter);
 			            }
 			        }
@@ -179,15 +179,15 @@ public class Model extends BaseModel implements DeviceModel {
 				        inputListKey = inputListItem.getKey();
 
 						if (inputListKey.equals("*")) {
-							deviceThatMatched = (CustomInput)configHelper.getInputItem(inputListKey);
-							configHelper.setLastCommandType(MessageDirection.INPUT);
+							deviceThatMatched = (CustomInput)configHelper.getControlledItem(inputListKey);
+							configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
 							parameter = theWholeKey;
 							doInputItem (command, deviceThatMatched, parameter);
 						}
 						else {
 							if (theWholeKey.startsWith(inputListKey)) {
-								deviceThatMatched = (CustomInput)configHelper.getInputItem(inputListKey);
-								configHelper.setLastCommandType(MessageDirection.INPUT);
+								deviceThatMatched = (CustomInput)configHelper.getControlledItem(inputListKey);
+								configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
 								parameter = theWholeKey.substring (inputListKey.length());
 								doInputItem (command, deviceThatMatched, parameter);
 

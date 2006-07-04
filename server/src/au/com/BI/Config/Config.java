@@ -512,11 +512,11 @@ public class Config {
 								DeviceType.COMFORT_LIGHT_X10,groupName,rawHelper);
 					}
 					if (itemName.equals("TOGGLE_INPUT")) {
-						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.INPUT,
+						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.TOGGLE_INPUT,groupName,rawHelper);
 					}
 					if (itemName.equals("CONTACT_CLOSURE")) {
-						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.INPUT,
+						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.CONTACT_CLOSURE,groupName,rawHelper);
 					}
 					if (itemName.equals("TOGGLE_OUTPUT_MONITOR")) {
@@ -536,7 +536,7 @@ public class Config {
 								DeviceType.RAW_INTERFACE,groupName,rawHelper);
 					}
 					if (itemName.equals("CUSTOM_INPUT")) {
-						customInputFactory.addCustomInput(deviceModel, clientModels, item, MessageDirection.INPUT,
+						customInputFactory.addCustomInput(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.CUSTOM_INPUT,groupName,rawHelper);
 					}
 					if (itemName.equals("IR")) {
@@ -548,7 +548,7 @@ public class Config {
 								DeviceType.AUDIO,groupName,rawHelper);
 					}
 					if (itemName.equals("AV") || itemName.equals("AV_OUTPUT") ) {
-						aVFactory.addAV(deviceModel, clientModels, item, MessageDirection.INPUT,
+						aVFactory.addAV(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.AV,groupName,rawHelper);
 					}
 					if (itemName.equals("CAMERA_INPUT") || itemName.equals("CAMERA")) {

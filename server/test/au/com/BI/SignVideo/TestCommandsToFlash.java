@@ -6,6 +6,7 @@ import au.com.BI.Comms.CommsCommand;
 import au.com.BI.AV.*;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 import au.com.BI.junitx.*;
 import junitx.framework.ListAssert;
 import au.com.BI.Command.*;
@@ -40,15 +41,15 @@ public class TestCommandsToFlash extends TestCase {
 		studyAV.setKey("3");
 		studyAV.setOutputKey("STUDY_AV");
 		
-		model.addControlledItem(avFrontRoom.getKey(),avFrontRoom,DeviceType.MONITORED);
-		model.addControlledItem(avAll.getKey(),avAll,DeviceType.MONITORED);
-		model.addControlledItem(kitchenAV.getKey(),kitchenAV,DeviceType.MONITORED);
-		model.addControlledItem(studyAV.getKey(),studyAV,DeviceType.MONITORED);
+		model.addControlledItem(avFrontRoom.getKey(),avFrontRoom,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem(avAll.getKey(),avAll,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem(kitchenAV.getKey(),kitchenAV,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem(studyAV.getKey(),studyAV,MessageDirection.FROM_HARDWARE);
 		
-		model.addControlledItem("FRONT_AV",avFrontRoom,DeviceType.OUTPUT);
-		model.addControlledItem("ALL",avAll,DeviceType.OUTPUT);
-		model.addControlledItem("KITCHEN_AV",kitchenAV,DeviceType.OUTPUT);
-		model.addControlledItem("STUDY_AV",studyAV,DeviceType.OUTPUT);
+		model.addControlledItem("FRONT_AV",avFrontRoom,MessageDirection.FROM_FLASH);
+		model.addControlledItem("ALL",avAll,MessageDirection.FROM_FLASH);
+		model.addControlledItem("KITCHEN_AV",kitchenAV,MessageDirection.FROM_FLASH);
+		model.addControlledItem("STUDY_AV",studyAV,MessageDirection.FROM_FLASH);
 		
 		
 		HashMap<String, String> map = new HashMap<String,String> (40);

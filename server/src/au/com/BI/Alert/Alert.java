@@ -79,19 +79,19 @@ public class Alert extends BaseDevice implements DeviceType
 	 * Returns the Alarm type as a constant.
 	 * @return
 	 */
-	public int getAlarmTypeCode() {
+	public AlarmTypeCode getAlarmTypeCode() {
 		if (alarmType == null) {
-			return DeviceType.NA;
+			return AlarmTypeCode.NA;
 		}
-		if (alarmType.equals ("User")) return DeviceType.ALARM_USER;
-		if (alarmType.equals ("ID")) return DeviceType.ALARM_ID;
-		if (alarmType.equals ("Zone")) return DeviceType.ALARM_ZONE;
-		if (alarmType.equals ("System")) return DeviceType.ALARM_SYSTEM;
-		if (alarmType.equals ("DoorBell")) return DeviceType.ALERT_DOORBELL;
-		if (alarmType.equals ("Phone")) return DeviceType.ALERT_PHONE;
-		if (alarmType.equals ("ModeChange")) return DeviceType.ALERT_MODE_CHANGE;
-		if (alarmType.equals ("Alarm Type")) return DeviceType.ALARM_TYPE;
-		return DeviceType.NA;
+		if (alarmType.equals ("User")) return AlarmTypeCode.ALARM_USER;
+		if (alarmType.equals ("ID")) return AlarmTypeCode.ALARM_ID;
+		if (alarmType.equals ("Zone")) return AlarmTypeCode.ALARM_ZONE;
+		if (alarmType.equals ("System")) return AlarmTypeCode.ALARM_SYSTEM;
+		if (alarmType.equals ("DoorBell")) return AlarmTypeCode.ALERT_DOORBELL;
+		if (alarmType.equals ("Phone")) return AlarmTypeCode.ALERT_PHONE;
+		if (alarmType.equals ("ModeChange")) return AlarmTypeCode.ALERT_MODE_CHANGE;
+		if (alarmType.equals ("Alarm Type")) return AlarmTypeCode.ALARM_TYPE;
+		return AlarmTypeCode.NA;
 	}
 	/**
 	 * @return Returns the message.

@@ -23,7 +23,7 @@ public class ConfigHelper {
 	protected Vector <ParameterBlock>parameterBlocks;
 	protected DeviceModel deviceModel = null;
 	
-	protected int itemList;
+	protected MessageDirection itemList;
 	Logger logger;
 
 	public ConfigHelper (DeviceModel deviceModel) {
@@ -79,11 +79,11 @@ public class ConfigHelper {
 	 * Describes if the matching command is DeviceType.INPUT, DeviceType.OUTPUT or DeviceType.MONITORED
 	 * @return list type
 	 */
-	public int getLastCommandType () {
+	public MessageDirection getLastCommandType () {
 		return itemList;
 	}
 
-	public void setLastCommandType (int type) {
+	public void setLastCommandType (MessageDirection type) {
 		itemList = type;
 	}
 	
@@ -99,16 +99,16 @@ public class ConfigHelper {
 		return startupQueryItems.keySet().iterator();
 	}
 		
-	public Iterator getInputItemsList (){
+	private Iterator getInputItemsList (){
 		return inputItems.keySet().iterator();
 	}
 	
 
-	public Iterator getAllInputDevices(){
+	private Iterator getAllInputDevices(){
 		return inputItems.values().iterator();		
 	}
 	
-	public Collection<DeviceType> getAllInputDeviceObjects(){
+	private Collection<DeviceType> getAllInputDeviceObjects(){
 		return inputItems.values();		
 	}
 	
@@ -168,7 +168,7 @@ public class ConfigHelper {
 		}
 	}
 
-	public void addControlledItem (String name, DeviceType details, int controlType){
+	public void addControlledItem (String name, DeviceType details, MessageDirection controlType){
 		if (controlType == MessageDirection.FROM_HARDWARE) {
 			controlledItems.put (name,details);
 			
@@ -184,7 +184,7 @@ public class ConfigHelper {
 		}
 	}
 
-	public void addStartupQueryItem (String name, DeviceType details, int controlType){
+	public void addStartupQueryItem (String name, DeviceType details, MessageDirection controlType){
 		if (!startupQueryItems.containsKey(name))
 			startupQueryItems.put (name,details);
 	}
@@ -214,14 +214,14 @@ public class ConfigHelper {
 		boolean returnCode = false;
 		
 		if (startupQueryItems.containsKey(theKey)) {
-			itemList = DeviceType.STARTUP;
+			itemList = MessageDirection.STARTUP; 
 			returnCode = true;
 		}
 		
 		return returnCode;
 	}
 	
-	public boolean checkForInputItem (String theKey) {
+	private  boolean checkForInputItem (String theKey) {
 		boolean returnCode = false;
 		
 		if (inputItems.containsKey(theKey)) {
@@ -267,13 +267,13 @@ public class ConfigHelper {
 		if (itemList == MessageDirection.FROM_FLASH) {
 			return this.getOutputItem(theKey);
 		}
-		if (itemList == DeviceType.STARTUP) {
+		if (itemList == MessageDirection.STARTUP) {
 			return this.getStartupQueryItem(theKey);
 		}
 		return null;
 	}
 	
-	public final DeviceType getInputItem (String theKey) {
+	private final DeviceType getInputItem (String theKey) {
 		return inputItems.get(theKey);
 	}
 

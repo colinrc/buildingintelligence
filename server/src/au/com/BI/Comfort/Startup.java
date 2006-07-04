@@ -9,6 +9,7 @@ import au.com.BI.Util.*;
 
 import java.util.*;
 
+import au.com.BI.Alert.AlarmTypeCode;
 import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
@@ -98,7 +99,7 @@ public class Startup {
 	}
 	
 
-	public void addStartupQueryItem (ConfigHelper configHelper, String name, DeviceType details, int controlType) {
+	public void addStartupQueryItem (ConfigHelper configHelper, String name, DeviceType details, MessageDirection controlType) {
 		String theKey = name;
 		String keyToSend = "";
 
@@ -106,30 +107,6 @@ public class Startup {
 		
 		if (details != null) {
 			int deviceType = ((DeviceType)details).getDeviceType();
-
-			if (controlType == MessageDirection.INPUT) {
-				switch (deviceType) {
-					case DeviceType.TOGGLE_INPUT:
-						keyToSend = "I?" + theKey;
-						break;
-
-					case DeviceType.LIGHT_CBUS: case DeviceType.COUNTER:
-						keyToSend = "C?" + theKey;
-					break;
-
-					case DeviceType.ALERT:
-						int alarmTypeCode =((au.com.BI.Alert.Alert)details).getAlarmTypeCode();
-						switch (alarmTypeCode) {
-							case DeviceType.ALERT_MODE_CHANGE :
-								keyToSend = "M?";
-								break;
-							case DeviceType.ALARM_TYPE:
-								keyToSend = "a?";
-								break;
-						}
-						break;	
-				}
-			}
 
 			if (controlType == MessageDirection.FROM_FLASH) {
 				switch (deviceType) {
@@ -160,17 +137,18 @@ public class Startup {
 					break;
 
 					case DeviceType.ALERT:
-						int alarmTypeCode =((au.com.BI.Alert.Alert)details).getAlarmTypeCode();
+						AlarmTypeCode alarmTypeCode =((au.com.BI.Alert.Alert)details).getAlarmTypeCode();
 						switch (alarmTypeCode) {
-						case DeviceType.ALERT_MODE_CHANGE :
+						case ALERT_MODE_CHANGE :
 							keyToSend = "M?";
 							break;
-						case DeviceType.ALARM_TYPE : 
+						case ALARM_TYPE : 
 							keyToSend = "a?";
 							break;
 						}
 						
 					break;	
+	
 				}
 			}
 	

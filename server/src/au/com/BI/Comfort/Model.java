@@ -29,7 +29,6 @@ public class Model extends BaseModel implements DeviceModel  {
 
 	protected ComfortString comfortString = null;
 	protected OutputHelper outputHelper;
-	protected InputHelper inputHelper;
 	protected ControlledHelper controlledHelper;
 	protected AnalogReader analogueReader;
 	protected String applicationCode = "38";
@@ -40,7 +39,6 @@ public class Model extends BaseModel implements DeviceModel  {
 		comfortString = new ComfortString ();
 		startup = new Startup();
 		outputHelper = new OutputHelper();
-		inputHelper = new InputHelper();
 		controlledHelper = new ControlledHelper();
 		analogueReader = new AnalogReader();
 		this.setSTX (STX);
@@ -60,7 +58,6 @@ public class Model extends BaseModel implements DeviceModel  {
 
 	public void setCommandQueue (CommandQueue commandQueue){
 		super.setCommandQueue(commandQueue);
-		inputHelper.setCommandQueue(commandQueue);
 		outputHelper.setCommandQueue(commandQueue);
 		controlledHelper.setCommandQueue(commandQueue);		
 		startup.setCommandQueue(commandQueue);		
@@ -84,7 +81,7 @@ public class Model extends BaseModel implements DeviceModel  {
 
 	}
 
-	public void addControlledItem (String name, DeviceType details, int controlType) {
+	public void addControlledItem (String name, DeviceType details, MessageDirection controlType) {
 		String theKey = name;
 		String secondKey = "";
 		boolean doNotAddToControlledList = false;
@@ -92,7 +89,7 @@ public class Model extends BaseModel implements DeviceModel  {
 		if (details != null) {
 			int deviceType = ((DeviceType)details).getDeviceType();
 
-			if (controlType == MessageDirection.FROM_HARDWARE || controlType == MessageDirection.INPUT) {
+			if (controlType == MessageDirection.FROM_HARDWARE ) {
 			    secondKey = "";
 
 				switch (deviceType) {
@@ -131,22 +128,22 @@ public class Model extends BaseModel implements DeviceModel  {
 						analogueReader.addAnalogueInput((Analog)details);
 					break;
 
-					case DeviceType.ALERT:
-						int alarmTypeCode =((Alert)details).getAlarmTypeCode();
+					case DeviceType.ALERT: 
+						AlarmTypeCode alarmTypeCode =((Alert)details).getAlarmTypeCode();
 						switch (alarmTypeCode) {
-							case DeviceType.ALERT_DOORBELL :
+							case ALERT_DOORBELL :
 								theKey = "DB";
 								break;
-							case DeviceType.ALERT_PHONE :
+							case ALERT_PHONE :
 								theKey = "RP";
 								break;
-							case DeviceType.ALERT_MODE_CHANGE :
+							case ALERT_MODE_CHANGE :
 								theKey = "MD";
 								break;
-							case DeviceType.ALARM_ID : case DeviceType.ALARM_ZONE : case DeviceType.ALARM_USER : case DeviceType.ALARM_SYSTEM :
+							case ALARM_ID : case ALARM_ZONE : case ALARM_USER : case ALARM_SYSTEM :
 								theKey = "AM" + ((Alert)details).getKey();//
 								break;
-							case DeviceType.ALARM_TYPE :
+							case ALARM_TYPE :
 								theKey = "AL" + ((Alert)details).getKey();
 								break;
 						}
@@ -170,7 +167,7 @@ public class Model extends BaseModel implements DeviceModel  {
 	}
 
 
-	public void addStartupQueryItem (String name, DeviceType details, int controlType) {
+	public void addStartupQueryItem (String name, DeviceType details, MessageDirection controlType) {
 
 		startup.addStartupQueryItem (configHelper,name, details, controlType);
 	}
@@ -198,11 +195,7 @@ public class Model extends BaseModel implements DeviceModel  {
 				logger.log (Level.FINER,"Comfort controls : " +comfortString.comfortKey);
 				return true;
 			}
-			if (configHelper.checkForInputItem(comfortString.comfortKey)){
-				logger.log (Level.FINER,"Comfort controls : " +comfortString.comfortKey);
-				return true;
-			}
-			configHelper.setLastCommandType(DeviceType.NOT_CONTROLLED);
+			configHelper.setLastCommandType(MessageDirection.NOT_CONTROLLED);
 			return true;
 		}
 		return false;
@@ -212,7 +205,7 @@ public class Model extends BaseModel implements DeviceModel  {
 	{
 		String theWholeKey = command.getKey();
 
-		if (configHelper.getLastCommandType() == DeviceType.NOT_CONTROLLED) {
+		if (configHelper.getLastCommandType() == MessageDirection.NOT_CONTROLLED) {
 			sendNextCommandInQueue();
 			return;
 		}
@@ -222,14 +215,10 @@ public class Model extends BaseModel implements DeviceModel  {
 
 		} else {
 
-			if (!isStartupQuery &&  configHelper.getLastCommandType() == MessageDirection.INPUT) {
-				inputHelper.doInputItem (command,comfortString, configHelper, cache);
-			} else {
 					// For monitored and startup query items
 				controlledHelper.doControlledItem (command, isStartupQuery,comfortString, configHelper, cache, comms, this);
 			}
 			sendNextCommandInQueue();
-		}
 	}
 
 
@@ -329,7 +318,6 @@ public class Model extends BaseModel implements DeviceModel  {
 		this.STX = STX;
 		startup.setSTX(STX);
 		outputHelper.setSTX (STX);
-		inputHelper.setSTX (STX);
 		controlledHelper.setSTX (STX);
 		analogueReader.setSTX (STX);
 	}
@@ -339,7 +327,6 @@ public class Model extends BaseModel implements DeviceModel  {
 		this.ETX = ETX;
 		startup.setETX(ETX);
 		outputHelper.setETX (ETX);
-		inputHelper.setETX (ETX);
 		controlledHelper.setETX (ETX);
 		analogueReader.setETX (ETX);
 	}

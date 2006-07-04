@@ -6,6 +6,7 @@ import au.com.BI.Command.BuildReturnWrapper;
 import au.com.BI.Audio.*;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
+import au.com.BI.Util.MessageDirection;
 import junitx.framework.ListAssert;
 import au.com.BI.Command.*;
 import junit.framework.*;
@@ -33,13 +34,13 @@ public class TestCommandsToFlash extends TestCase {
 		kitchenAudio.setKey("02");
 		kitchenAudio.setOutputKey("KITCHEN_AUDIO");
 
-		model.addControlledItem(audioFrontRoom.getKey(),audioFrontRoom,DeviceType.MONITORED);
-		model.addControlledItem(audioAll.getKey(),audioAll,DeviceType.MONITORED);
-		model.addControlledItem(kitchenAudio.getKey(),kitchenAudio,DeviceType.MONITORED);
+		model.addControlledItem(audioFrontRoom.getKey(),audioFrontRoom,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem(audioAll.getKey(),audioAll,MessageDirection.FROM_HARDWARE);
+		model.addControlledItem(kitchenAudio.getKey(),kitchenAudio,MessageDirection.FROM_HARDWARE);
 		
-		model.addControlledItem("FRONT_AUDIO",audioFrontRoom,DeviceType.OUTPUT);
-		model.addControlledItem("ALL",audioAll,DeviceType.OUTPUT);
-		model.addControlledItem("KITCHEN_AUDIO",kitchenAudio,DeviceType.OUTPUT);
+		model.addControlledItem("FRONT_AUDIO",audioFrontRoom,MessageDirection.FROM_FLASH);
+		model.addControlledItem("ALL",audioAll,MessageDirection.FROM_FLASH);
+		model.addControlledItem("KITCHEN_AUDIO",kitchenAudio,MessageDirection.FROM_FLASH);
 		
 		HashMap<String, String> map = new HashMap<String,String> (40);
 		
