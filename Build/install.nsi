@@ -118,6 +118,13 @@ Section "Start Menu Shortcuts"
   
 SectionEnd
 
+; Optional section (can be disabled by the user)
+Section "Desktop Shortcut"
+
+  CreateShortCut "$DESKTOP\eLIFE Administration Tool.lnk" "$INSTDIR\admin-tool.exe" "" "$INSTDIR\admin-tool.exe" 0
+  
+SectionEnd
+
 ;--------------------------------
 
 ; Uninstaller
