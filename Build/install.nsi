@@ -163,6 +163,7 @@ Section "Uninstall"
 
   ; Remove shortcuts, if any
   Delete "$SMPROGRAMS\BI\eLIFE Administration Tool\*.*"
+  Delete "$DESKTOP\eLIFE Administration Tool.lnk"
 
   ; Remove directories used
   RMDir /r "$SMPROGRAMS\BI"
