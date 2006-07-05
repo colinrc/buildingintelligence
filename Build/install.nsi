@@ -2,7 +2,7 @@
 Name "eLIFE Administration Tool"
 
 ; The file to write
-OutFile "elife-admin.exe"
+OutFile "elife-admin-install.exe"
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES\BI\eLIFE Administration Tool"
@@ -34,6 +34,7 @@ Section "eLIFE Administration Tool (required)"
   File "eLIFEAdminTool.chm"
   File "wodSFTP.dll"
   File "BIwodSFTP.ocx"
+  File "haspdinst.exe"
 
   SetOutPath "$INSTDIR\wscite"
   File "wscite\*.*"
@@ -125,6 +126,13 @@ Section "Desktop Shortcut"
   
 SectionEnd
 
+; Optional section (can be disabled by the user)
+Section "HASP Key Driver"
+
+  Exec '"$INSTDIR\haspdinst.exe -install"'
+  
+SectionEnd
+
 ;--------------------------------
 
 ; Uninstaller
@@ -137,6 +145,8 @@ Section "Uninstall"
 
   Exec '"regsvr32 $INSTDIR\wodSFTP.dll /u"'
   Exec '"regsvr32 $INSTDIR\BIwodSFTP.ocx /u"'
+
+  Exec '"$EXEDIR\haspdinst.exe -remove -kp -nomsg"'
 
   ; Remove shortcuts, if any
   Delete "$SMPROGRAMS\BI\eLIFE Administration Tool\*.*"
