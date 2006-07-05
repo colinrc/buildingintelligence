@@ -1,3 +1,5 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a7.zip V1.6a7] ==
+
 ''' Nuvo '''
 
 Rectified issues with volume control. Complete enhancement [ticket:
