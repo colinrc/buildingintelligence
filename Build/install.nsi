@@ -98,6 +98,15 @@ Section "eLIFE Administration Tool (required)"
   Exec '"regsvr32 $INSTDIR\wodSFTP.dll"'
   Exec '"regsvr32 $INSTDIR\BIwodSFTP.ocx"'
 
+  ReadRegStr $R0 HKCR ".elp" ""
+  StrCmp $R0 "ELPFile" 0 +2
+    DeleteRegKey HKCR "ELPFile"
+
+  WriteRegStr HKCR ".elp" "" "eLIFE.Project"
+  WriteRegStr HKCR "eLIFE.Project" "" "eLife Project File"
+  WriteRegStr HKCR "eLIFE.Project\DefaultIcon" "" "$INSTDIR\admin-tool.exe"
+  WriteRegStr HKCR "eLIFE.Project\shell\open\command" "" '$INSTDIR\admin-tool.exe "%1"'
+
   ; Write the installation path into the registry
   WriteRegStr HKLM "SOFTWARE\BI\eLIFE Administration Tool" "Install_Dir" "$INSTDIR"
   
@@ -139,6 +148,10 @@ SectionEnd
 
 Section "Uninstall"
   
+  ReadRegStr $R0 HKCR ".elp" ""
+  StrCmp $R0 "ELPFile" 0 +2
+    DeleteRegKey HKCR "ELPFile"
+
   ; Remove registry keys
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BI\eLIFE Administration Tool"
   DeleteRegKey HKLM "SOFTWARE\BI\eLIFE Administration Tool"
