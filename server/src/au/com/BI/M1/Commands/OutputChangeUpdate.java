@@ -1,5 +1,8 @@
 package au.com.BI.M1.Commands;
 
+import au.com.BI.M1.M1Helper;
+import au.com.BI.Util.Utility;
+
 
 public class OutputChangeUpdate extends M1Command {
 
@@ -42,6 +45,12 @@ public class OutputChangeUpdate extends M1Command {
 	
 	public String toString() {
 		return (super.toString() + ";outputState=" + outputState);
+	}
+	
+	public String buildM1String() {
+		String returnString = "";
+		returnString = new M1Helper().buildCompleteM1String("CC"+Utility.padString(this.getKey(),3)+outputState+"00");
+		return returnString;
 	}
 
 }

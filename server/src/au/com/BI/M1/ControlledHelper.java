@@ -80,6 +80,8 @@ public class ControlledHelper {
 				ZoneChangeUpdate zoneChangeUpdate = (ZoneChangeUpdate) m1Command;
 				alarmLogger.setCache(cache);
 				alarmLogger.setCommandQueue(commandQueue);
+				
+				String outputKey = ((BaseDevice)configHelper.getControlItem(zoneChangeUpdate.getZone()+"CC")).getOutputKey();
 
 				if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_UNCONFIGURED) {
 
@@ -88,9 +90,7 @@ public class ControlledHelper {
 									"ALERT",
 									"Normal - Unconfigured",
 									AlarmLogging.GENERAL_MESSAGE,
-									((BaseDevice) configHelper
-											.getControlItem(zoneChangeUpdate
-													.getZone())).getOutputKey(),
+									outputKey,
 									zoneChangeUpdate.getZoneStatus()
 											.getDescription(), m1.currentUser,
 									new Date());
@@ -101,9 +101,7 @@ public class ControlledHelper {
 									"ALERT",
 									"Normal - Unconfigured",
 									AlarmLogging.GENERAL_MESSAGE,
-									((BaseDevice) configHelper
-											.getControlItem(zoneChangeUpdate
-													.getZone())).getOutputKey(),
+									outputKey,
 									zoneChangeUpdate.getZoneStatus()
 											.getDescription(), m1.currentUser,
 									new Date());
@@ -123,9 +121,7 @@ public class ControlledHelper {
 									"ALERT",
 									"Normal - Short",
 									AlarmLogging.GENERAL_MESSAGE,
-									((BaseDevice) configHelper
-											.getControlItem(zoneChangeUpdate
-													.getZone())).getOutputKey(),
+									outputKey,
 									zoneChangeUpdate.getZoneStatus()
 											.getDescription(), m1.currentUser,
 									new Date());
@@ -136,9 +132,7 @@ public class ControlledHelper {
 									"ALARM",
 									"Trouble - Open",
 									AlarmLogging.TROUBLE,
-									((BaseDevice) configHelper
-											.getControlItem(zoneChangeUpdate
-													.getZone())).getOutputKey(),
+									outputKey,
 									zoneChangeUpdate.getZoneStatus()
 											.getDescription(), m1.currentUser,
 									new Date());
@@ -149,9 +143,7 @@ public class ControlledHelper {
 									"ALARM",
 									"Trouble - EOL",
 									AlarmLogging.TROUBLE,
-									((BaseDevice) configHelper
-											.getControlItem(zoneChangeUpdate
-													.getZone())).getOutputKey(),
+									outputKey,
 									zoneChangeUpdate.getZoneStatus()
 											.getDescription(), m1.currentUser,
 									new Date());
@@ -162,9 +154,7 @@ public class ControlledHelper {
 									"ALARM",
 									"Trouble - Short",
 									AlarmLogging.TROUBLE,
-									((BaseDevice) configHelper
-											.getControlItem(zoneChangeUpdate
-													.getZone())).getOutputKey(),
+									outputKey,
 									zoneChangeUpdate.getZoneStatus()
 											.getDescription(), m1.currentUser,
 									new Date());
@@ -175,9 +165,7 @@ public class ControlledHelper {
 									"ALARM",
 									"Violated - Open",
 									AlarmLogging.VIOLATED,
-									((BaseDevice) configHelper
-											.getControlItem(zoneChangeUpdate
-													.getZone())).getOutputKey(),
+									outputKey,
 									zoneChangeUpdate.getZoneStatus()
 											.getDescription(), m1.currentUser,
 									new Date());
@@ -188,9 +176,7 @@ public class ControlledHelper {
 									"ALARM",
 									"Violated - EOL",
 									AlarmLogging.VIOLATED,
-									((BaseDevice) configHelper
-											.getControlItem(zoneChangeUpdate
-													.getZone())).getOutputKey(),
+									outputKey,
 									zoneChangeUpdate.getZoneStatus()
 											.getDescription(), m1.currentUser,
 									new Date());
@@ -210,9 +196,7 @@ public class ControlledHelper {
 									"ALARM",
 									"Bypassed - Open",
 									AlarmLogging.BYPASSED,
-									((BaseDevice) configHelper
-											.getControlItem(zoneChangeUpdate
-													.getZone())).getOutputKey(),
+									outputKey,
 									zoneChangeUpdate.getZoneStatus()
 											.getDescription(), m1.currentUser,
 									new Date());
@@ -223,9 +207,7 @@ public class ControlledHelper {
 									"ALARM",
 									"Bypassed - EOL",
 									AlarmLogging.BYPASSED,
-									((BaseDevice) configHelper
-											.getControlItem(zoneChangeUpdate
-													.getZone())).getOutputKey(),
+									outputKey,
 									zoneChangeUpdate.getZoneStatus()
 											.getDescription(), m1.currentUser,
 									new Date());
@@ -236,9 +218,7 @@ public class ControlledHelper {
 									"ALARM",
 									"Bypassed - Short",
 									AlarmLogging.BYPASSED,
-									((BaseDevice) configHelper
-											.getControlItem(zoneChangeUpdate
-													.getZone())).getOutputKey(),
+									outputKey,
 									zoneChangeUpdate.getZoneStatus()
 											.getDescription(), m1.currentUser,
 									new Date());
@@ -282,7 +262,7 @@ public class ControlledHelper {
 				// send out output change updates
 				for (int i=0; i<statusReport.getOutputStatus().length; i++) {
 					
-					BaseDevice device = (BaseDevice)configHelper.getControlItem(Utility.padString(Integer.toString(i),3));
+					BaseDevice device = (BaseDevice)configHelper.getControlledItem(Utility.padString(Integer.toString(i),3)+"TOUT");
 					
 					if (device != null) {
 						CommandInterface _command = new AlertCommand();
@@ -392,40 +372,28 @@ public class ControlledHelper {
 		
 		if (m1Command == null)
 			return null;
-		
-		Object configDevice = configHelper.getControlItem(m1Command.getKey());
 
-//		BaseDevice configDevice = ((BaseDevice) configHelper.getControlItem(m1Command.getKey()));
+		if (m1Command.getClass().equals(OutputChangeUpdate.class) && configHelper.checkForControl(m1Command.getKey()+"TOUT")) {
+			// Dave check this. the PIR triggers the Short, sort of makes
+			// sense, in other words the violate short means PIR on
+			// violate EOL means off.
 
-		if (configDevice != null) {
+			BaseDevice configDevice = (BaseDevice)configHelper.getControlledItem(m1Command.getKey()+"TOUT");
 
-			if (m1Command.getClass().equals(OutputChangeUpdate.class)) {
-				// Dave check this. the PIR triggers the Short, sort of makes
-				// sense, in other words the violate short means PIR on
-				// violate EOL means off.
-
-				if (((OutputChangeUpdate) m1Command).getOutputState().equals(
-						"0")) {
-					m1Command.setCommand("off");
-				} else {
-					m1Command.setCommand("on");
-				}
-				m1Command.setDisplayName(((BaseDevice)configDevice).getOutputKey());
-			} else if (m1Command.getClass().equals(ZoneChangeUpdate.class)) {
-				// Dave check this. the PIR triggers the Short, sort of makes
-				// sense, in other words the violate short means PIR on
-				// violate EOL means off.
-
-				if (((ZoneChangeUpdate) m1Command).getOutputState().equals("0")) {
-					m1Command.setCommand("off");
-				} else {
-					m1Command.setCommand("on");
-				}
-				m1Command.setDisplayName(((BaseDevice)configDevice).getOutputKey());
-			} else if (m1Command.getClass().equals(RequestTemperatureReply.class)) {
-				m1Command.setDisplayName(((SensorFascade)configDevice).getOutputKey());
+			if (((OutputChangeUpdate) m1Command).getOutputState().equals(
+			"0")) {
+				m1Command.setCommand("off");
+			} else {
+				m1Command.setCommand("on");
 			}
+			m1Command.setDisplayName(((BaseDevice)configDevice).getOutputKey());
 
+
+			m1Command.setKey("CLIENT_SEND");
+			m1Command.setUser(m1.currentUser);
+			return m1Command;
+		} else if (m1Command.getClass().equals(RequestTemperatureReply.class)) {
+			m1Command.setDisplayName(((SensorFascade)configHelper.getControlItem(m1Command.getKey())).getOutputKey());
 			m1Command.setKey("CLIENT_SEND");
 			m1Command.setUser(m1.currentUser);
 			return m1Command;
@@ -439,7 +407,8 @@ public class ControlledHelper {
 				   m1Command.getClass().equals(ArmToVacation.class) ||
 				   m1Command.getClass().equals(ArmStepToNextAwayMode.class) ||
 				   m1Command.getClass().equals(ArmStepToNextStayMode.class) ||
-				   m1Command.getClass().equals(ReplyArmingStatusReportData.class)) {
+				   m1Command.getClass().equals(ReplyArmingStatusReportData.class) ||
+				   m1Command.getClass().equals(ZoneChangeUpdate.class)) {
 			return m1Command;
 		} else {
 			return null;

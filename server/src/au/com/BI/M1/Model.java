@@ -43,6 +43,7 @@ public class Model extends BaseModel implements DeviceModel {
 		controlledHelper = new ControlledHelper();
 		temperatureSensors = new LinkedList();
 		outputHelper = new OutputHelper();
+		deviceKeysDecimal = true;
 	}
 
 	public void clearItems () {
@@ -105,13 +106,25 @@ public class Model extends BaseModel implements DeviceModel {
 	 * @TODO, this looks incorrect. I don't think you want from flash (previously output) here
 	 */
 	public void addControlledItem (String key, DeviceType details, MessageDirection type) {
+		
+		String deviceKeyAddition = "";
+		if (type != MessageDirection.FROM_FLASH) {
+			if (details.getDeviceType() == DeviceType.TOGGLE_INPUT) {
+				deviceKeyAddition = "TIN";
+			} else if (details.getDeviceType() == DeviceType.TOGGLE_OUTPUT) {
+				deviceKeyAddition = "TOUT";
+			} else if (details.getDeviceType() == DeviceType.CONTACT_CLOSURE) {
+				deviceKeyAddition = "CC";
+			}
+		}
+		
 		if (type == MessageDirection.FROM_FLASH) {
-			super.addControlledItem(Utility.padString(key,3),details,type);			
+			super.addControlledItem(key,details,type);			
 		} else if (details.getDeviceType() == DeviceType.SENSOR) {
 			// only pad the string with 2 characters as this is the device that will be returned.
 			super.addControlledItem(Utility.padString(key,2),details,type);
 		} else {
-			super.addControlledItem(Utility.padString(key,3),details,type);
+			super.addControlledItem(Utility.padString(key,3)+deviceKeyAddition,details,type);
 		}
 	}
 
@@ -159,5 +172,32 @@ public class Model extends BaseModel implements DeviceModel {
 	public void setM1Helper(M1Helper m1Helper) {
 		this.m1Helper = m1Helper;
 	}
+	
+	/**
+	 * Formats a key into the appropriate format for interacting with the config file.
+	 * @return Formatted key
+	 */
+    public String formatKey(int key,DeviceType device) throws NumberFormatException {
+    	
+		int padding = 3;
+    	if (device.getDeviceType() == DeviceType.SENSOR) {
+    		padding = 2;
+    	}
+		String formatSpec = "%0";
+		formatSpec += padding;
+		formatSpec += "d";			
+			
+		return String.format(formatSpec,key);
+    }
+
+	/**
+	 * Formats a key into the appropriate format for interacting with the config file.
+	 * @return Formatted key
+	 */
+    public String formatKey(String key,DeviceType device) throws NumberFormatException {
+		int keyInt = 0;
+		keyInt = Integer.parseInt(key);
+    	return formatKey(keyInt,device);
+    }
 
 }
