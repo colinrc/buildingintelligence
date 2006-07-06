@@ -2,7 +2,7 @@
 <BOOTSTRAP xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="bootstrap.xsd">
   <SERVER IP="" PORT="10000" />
   <ADMIN IP="" PORT="10001" />
-  <CONFIG_FILE NAME="config_.*xml" />
+  <CONFIG_FILE NAME="config_M1.xml" />
   <DEBUG LEVEL="INFO" FILE="N" CONSOLE="Y"  LOGDIR="server/log" />
   <RRDGRAPH DIR=".\JRobin\Graph\" />
   <RRDBDIRECTORY DIR=".\JRobin\" />
