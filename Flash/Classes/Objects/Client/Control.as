@@ -3,7 +3,7 @@
 	private var rows:Array;
 	private var treeNode:XMLNode;
 	public function deleteSelf(){
-		treeNode.removeNode();
+		treeNode.removeNode(); 
 	}
 	public function isValid():String {
 		var flag = "ok";

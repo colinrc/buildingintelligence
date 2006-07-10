@@ -53,7 +53,7 @@
 				appendValidationMsg("No Icon is used");
 			}
 			if ((alerts[alert].attributes["fadeOutTime"] == "") || (alerts[alert].attributes["fadeOutTime"] == undefined)) {
-				flag = "empty";
+				flag = "ok";
 				appendValidationMsg("No Fade Out Time is used");
 			}
 			
