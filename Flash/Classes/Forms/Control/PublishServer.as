@@ -40,15 +40,19 @@ class Forms.Control.PublishServer extends Forms.BaseForm {
 			switch(right_li.dataProvider[publishItem].label){
 				case "Server Config":
 					mdm.FileSystem.saveFile(_global.project.path+"/server/config/server.xml", _global.writeXMLFile(_global.serverDesign.toXML(), 0));
+					output_ta.text = output_ta.text+"Server Configuration exported\n";
 					break;
 				case "Bootstrap Config":
 					mdm.FileSystem.saveFile(_global.project.path+"/server/datafiles/bootstrap.xml", _global.writeXMLFile(generateBootstrap(), 0));
+					output_ta.text = output_ta.text+"Server Bootstrap exported\n";
 					break;
 				case "IR Codes":
 					mdm.FileSystem.copyFile(mdm.Application.path+"datafiles/ircodes.xml", _global.project.path+"/server/datafiles/ircodes.xml");
+					output_ta.text = output_ta.text+"Server IR Codes exported\n";
 					break;					
 				case "Scripts":
 					mdm.FileSystem.saveFile(_global.project.path+"/server/datafiles/script_status.xml", _global.writeXMLFile(_global.serverDesign.getScripts(), 0));
+					output_ta.text = output_ta.text+"Server Scripts exported\n";
 					break;
 				case "Macros":
 					var tempMacros = new XMLNode(1,"MACROS");
@@ -65,9 +69,11 @@ class Forms.Control.PublishServer extends Forms.BaseForm {
 					}
 					mdm.FileSystem.saveFile(_global.project.path+"/server/datafiles/macros.xml",_global.writeXMLFile(tempMacros, 0));
 					mdm.FileSystem.saveFile(_global.project.path+"/server/datafiles/integrator_macros.xml", _global.writeXMLFile(tempIntegratorMacros, 0));
+					output_ta.text = output_ta.text+"Server Macros exported\n";
 					break;
 				case "Calendar":
 					mdm.FileSystem.copyFile(mdm.Application.path+"datafiles/calendar.xml", _global.project.path+"/server/datafiles/calendar.xml");
+					output_ta.text = output_ta.text+"Server Calendar exported\n";
 					break;					
 			}
 		}

@@ -9,13 +9,15 @@
 	</sounds>
 	<statusBar/>
 	<calendar>
-		<tab label="Today" view="today" icon="calendar" />
-		<tab label="Watering" view="filtered" macro="watering" icon="sprinkler">
-			<zone key="WATER_FRONT_LAWN" label="Front lawn" />
-			<zone key="WATER_BACK_LAWN" label="Back lawn" />
-			<zone key="WATER_BACK_GARDEN" label="Back garden" />
-		</tab>
-		<tab label="Macros" view="macros" macro="*" icon="atom" />
+		<window>
+			<tab label="Today" view="today" icon="calendar" />
+			<tab label="Watering" view="filtered" macro="watering" icon="sprinkler">
+				<zone key="WATER_FRONT_LAWN" label="Front lawn" />
+				<zone key="WATER_BACK_LAWN" label="Back lawn" />
+				<zone key="WATER_BACK_GARDEN" label="Back garden" />
+			</tab>
+			<tab label="Macros" view="macros" macro="*" icon="atom" />
+		</window>
 	</calendar>
 	<logging/>
 	<appsBar>

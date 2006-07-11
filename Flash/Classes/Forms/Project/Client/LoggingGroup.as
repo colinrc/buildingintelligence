@@ -161,7 +161,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 			for (var item = left_li.selectedIndices.length - 1; item >= 0; item--) {
 				if (left_li.getItemAt(left_li.selectedIndices[item]).label.lastIndexOf("Group: ") != -1) {
 					for (var group in groups.childNodes) {
-						if (groups.childNodes[group].attributes.name == left_li.getItemAt(left_li.selectedIndices[item]).label.substring(left_li.getItemAt(left_li.selectedIndices[item]).label.lastIndexOf(" ") + 1)) {
+						if (groups.childNodes[group].attributes.name == left_li.getItemAt(left_li.selectedIndices[item]).label.substring(7)) {
 							icon_cmb.text = groups.childNodes[group].attributes.icon2;
 							icon_ldr.load(mdm.Application.path + "lib\\icons\\" + groups.childNodes[group].attributes.icon2 + ".png");
 							for (var keyNode in groups.childNodes[group].childNodes) {

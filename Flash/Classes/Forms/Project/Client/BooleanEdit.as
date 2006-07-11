@@ -8,7 +8,9 @@ class Forms.Project.Client.BooleanEdit extends Forms.BaseForm {
 	private var setting:Object;
 	public function onLoad():Void {
 		value_chk.addEventListener("click", Delegate.create(this, update));
-		value_chk.selected = setting.value;
+		if((setting.value == "true")||(setting.value == true)){
+			value_chk.selected = true;
+		}
 		default_lb.text = setting.def;
 		description_lb.text = setting.description;
 		name_lb.text = setting.label;

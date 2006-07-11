@@ -39,9 +39,11 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 			switch(right_li.dataProvider[publishItem].label){
 				case "Client Config":
 					mdm.FileSystem.saveFile(_global.project.path+"/client/client.xml", _global.writeXMLFile(dataObject.clientDesign.toXML(), 0));
+					output_ta.text = output_ta.text+"Client Configuration exported\n";
 					break;
 				case "Bootstrap Config":
 					mdm.FileSystem.saveFile(_global.project.path+"/client/elife.xml", _global.writeXMLFile(generateBootstrap(), 0));
+					output_ta.text = output_ta.text+"Client Bootstrap exported\n";
 					break;
 				case "Icons":
 					var tempIcons = dataObject.clientDesign.getIcons();
@@ -90,6 +92,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 						new_icons += iconString+"\n";
 					}
 					mdm.FileSystem.saveFile(_global.project.path+"/client/lib/icons/_icons.txt", new_icons);
+					output_ta.text = output_ta.text+"Client Icons exported\n";
 					break;
 				case "Maps":
 					var tempZones = dataObject.clientDesign.Property.zones;
@@ -98,6 +101,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 							mdm.FileSystem.copyFile(mdm.Application.path+"/lib/maps/"+tempZones[zone].map, _global.project.path+"/client/lib/maps/"+tempZones[zone].map);
 						}
 					}
+					output_ta.text = output_ta.text+"Client Maps exported\n";
 					break;
 				case "Backgrounds":
 					var tempZones = dataObject.clientDesign.Property.zones;
@@ -106,12 +110,14 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 							mdm.FileSystem.copyFile(mdm.Application.path+"/lib/backgrounds/"+tempZones[zone].background, _global.project.path+"/client/lib/backgrounds/"+tempZones[zone].background);
 						}
 					}
+					output_ta.text = output_ta.text+"Client Backgrounds exported\n";
 					break;
 				case "Sounds":
 					var tempSounds = dataObject.clientDesign.sounds.sounds;
 					for(var sound in tempSounds){
 						mdm.FileSystem.copyFile(mdm.Application.path+"/lib/"+tempSounds[sound].attributes.file, _global.project.path+"/client/lib/"+tempSounds[sound].attributes.file);
 					}					
+					output_ta.text = output_ta.text+"Client Sounds exported\n";
 					break;
 				case "Objects":
 					/*
@@ -123,6 +129,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 							mdm.FileSystem.copyFile(mdm.Application.path+"/lib/objects/"+tempZones[zone].map, _global.project.path+"/client/lib/maps/"+tempZones[zone].map);
 						}
 					}
+					output_ta.text = output_ta.text+"Client Objects exported\n";
 					*/
 					break;
 			}
