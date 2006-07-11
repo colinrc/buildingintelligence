@@ -9,7 +9,7 @@ class Forms.Project.Client.Control extends Forms.BaseForm {
 	private var dataObject:Object;	
 	public function onLoad() {
 		type_ti.text = type;
-		editor= attachMovie("controlTypeEditor", "controlTypeEditor_mc", 0, {_y:30,controlTypeData:new XML(controlTypeData.toString()), iconPath:mdm.Application.path+"lib/icons/"});
+		editor = attachMovie("controlTypeEditor", "controlTypeEditor_mc", 0, {_y:30,controlTypeData:new XML(controlTypeData.toString()), iconPath:mdm.Application.path + "lib\\icons\\"});
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
 	public function save():Void {

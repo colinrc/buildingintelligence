@@ -82,21 +82,24 @@ Section "eLIFE Administration Tool (required)"
   SetOutPath "$INSTDIR\library\Macros"
   SetOutPath "$INSTDIR\script"
   SetOutPath "$INSTDIR\defaults"
-  File "defaults\*.*"
+  File "defaults\*.xml"
   SetOutPath "$INSTDIR\data"
-  File "data\*.*"
+  File "data\*.xml"
   SetOutPath "$INSTDIR\datafiles"
-  File "datafiles\*.*"
+  File "datafiles\*.xml"
   SetOutPath "$INSTDIR\lib"
   SetOutPath "$INSTDIR\lib\backgrounds"
   SetOutPath "$INSTDIR\lib\icons"
-  File "lib\icons\*.*"
+  File "lib\icons\*.png"
+  File "lib\icons\*.txt"
   SetOutPath "$INSTDIR\lib\objects"
   SetOutPath "$INSTDIR\lib\maps"
+  File "lib\maps\homemap.swf"
+  File "lib\maps\downstairs.swf"
   SetOutPath "$INSTDIR\lib\sounds"
 
-  Exec '"regsvr32 $INSTDIR\wodSFTP.dll"'
-  Exec '"regsvr32 $INSTDIR\BIwodSFTP.ocx"'
+  Exec 'regsvr32 "$INSTDIR\wodSFTP.dll" /s'
+  Exec 'regsvr32 "$INSTDIR\BIwodSFTP.ocx" /s'
 
   ReadRegStr $R0 HKCR ".elp" ""
   StrCmp $R0 "ELPFile" 0 +2
@@ -138,7 +141,7 @@ SectionEnd
 ; Optional section (can be disabled by the user)
 Section "HASP Key Driver"
 
-  Exec '"$INSTDIR\haspdinst.exe -install"'
+  Exec '"$INSTDIR\haspdinst.exe" -install -nomsg'
   
 SectionEnd
 
@@ -156,10 +159,10 @@ Section "Uninstall"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\BI\eLIFE Administration Tool"
   DeleteRegKey HKLM "SOFTWARE\BI\eLIFE Administration Tool"
 
-  Exec '"regsvr32 $INSTDIR\wodSFTP.dll /u"'
-  Exec '"regsvr32 $INSTDIR\BIwodSFTP.ocx /u"'
+  Exec 'regsvr32 "$INSTDIR\wodSFTP.dll" /u /s'
+  Exec 'regsvr32 "$INSTDIR\BIwodSFTP.ocx" /u /s'
 
-  Exec '"$EXEDIR\haspdinst.exe -remove -kp -nomsg"'
+  Exec '"$EXEDIR\haspdinst.exe" -remove -kp -nomsg'
 
   ; Remove shortcuts, if any
   Delete "$SMPROGRAMS\BI\eLIFE Administration Tool\*.*"
