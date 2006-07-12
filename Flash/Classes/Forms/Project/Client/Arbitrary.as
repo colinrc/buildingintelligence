@@ -28,6 +28,7 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 				newArbitrary.label = items[item].attributes["label"];
 				newArbitrary.key = items[item].attributes["key"];
 				newArbitrary.fontSize = items[item].attributes["fontSize"];
+				newArbitrary.fontColour = items[item].attributes["fontColour"];
 				newArbitrary.defaultState = items[item].attributes["defaultState"];
 				newArbitrary.defaultValue = items[item].attributes["defaultValue"];
 				break;
@@ -183,6 +184,9 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 			if (!currentAlert.fontSize) {
 				currentAlert.fontSize = "";
 			}
+			if (!currentAlert.fontColour) {
+				currentAlert.fontColour = "";
+			}
 			if (!currentAlert.defaultState) {
 				currentAlert.defaultState = "";
 			}
@@ -276,6 +280,9 @@ class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 				}
 				if (roomEditor.alerts[index].fontSize) {
 					newArbitraryNode.attributes["fontSize"] = roomEditor.alerts[index].fontSize;
+				}
+				if (roomEditor.alerts[index].fontColour) {
+					newArbitraryNode.attributes["fontColour"] = roomEditor.alerts[index].fontColour;
 				}
 				if (roomEditor.alerts[index].key) {
 					newArbitraryNode.attributes["key"] = roomEditor.alerts[index].key;
