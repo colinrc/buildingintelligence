@@ -128,6 +128,8 @@ radio.png
 red-pin.png
 refresh.png
 right-arrow.png
+smokealarm-green.png
+smokealarm-red.png
 spanner.png
 speaker.png
 sprinkler-off.png
