@@ -20,15 +20,15 @@ class Forms.Project.Client.ControlTypes extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(controls_dg);
-		dataGridHandler.addTextInputColumn("type", "Control Type", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("type", "Control Type", restrictions, false, 150);
 		dataGridHandler.addHiddenColumn("id");
 		var DP = new Array();
-		for (var control in controls) {
+		for (var control = 0; control < controls; control++) {
 			var newControl = new Object();
 			newControl.type = "";
 			if (controls[control].type.length) {
 				newControl.type = controls[control].type;
-				newControl.id = controls[control].id;				
+				newControl.id = controls[control].id;
 			}
 			DP.push(newControl);
 		}
@@ -46,14 +46,14 @@ class Forms.Project.Client.ControlTypes extends Forms.BaseForm {
 	public function save():Void {
 		var newControls = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
-		for (var index = 0; index<DP.length; index++) {
+		for (var index = 0; index < DP.length; index++) {
 			var Control = new Object();
 			Control.type = DP[index].type;
-			Control.id = DP[index].id;							
+			Control.id = DP[index].id;
 			newControls.push(Control);
 		}
 		dataObject.setData({controls:newControls});
-		_global.refreshTheTree();				
+		_global.refreshTheTree();
 		_global.saveFile("Project");
 	}
 }

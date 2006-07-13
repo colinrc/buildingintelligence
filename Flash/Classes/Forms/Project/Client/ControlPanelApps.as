@@ -17,7 +17,7 @@ class Forms.Project.Client.ControlPanelApps extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("label", "Program Label", restrictions,false,150);
 		dataGridHandler.addTextInputColumn("program", "Program Location", restrictions,false,150);
 		var DP = new Array();
-		for (var app in apps) {
+		for (var app =0; app < apps.length;app++) {
 			var newApp = new Object();
 			newApp.label = "";
 			newApp.program = "";

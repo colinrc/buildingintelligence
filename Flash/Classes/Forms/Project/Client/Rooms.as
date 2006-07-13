@@ -17,7 +17,7 @@ class Forms.Project.Client.Rooms extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("name", "Room Name", restrictions,false,150);
 		dataGridHandler.addHiddenColumn("id");		
 		var DP = new Array();
-		for (var room in rooms) {
+		for (var room = 0; room < rooms.length;room++) {
 			var newRoom = new Object();
 			newRoom.name = rooms[room].name;
 			newRoom.id = rooms[room].id;			

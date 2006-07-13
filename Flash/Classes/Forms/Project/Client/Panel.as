@@ -41,7 +41,12 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 			tempObject.label = tempKeys[key];
 			DPKey.push(tempObject);
 		}
-		var tempControlTypes = _global.client_test.getControlTypes();
+		var foundNode = _global.searchProject(_global.left_tree.dataProvider, dataObject);
+		var tempNode = foundNode.parentNode;
+		while (tempNode.nodeName != "Client") {
+			tempNode = tempNode.parentNode;
+		}
+		var tempControlTypes = tempNode.object.getControlTypes();
 		var DPControl = new Array();
 		for (var controlType in tempControlTypes.childNodes) {
 			var tempObject = new Object();
@@ -53,10 +58,10 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 		restrictions.restrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(controls_dg);
-		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions, false, 150);
-		dataGridHandler.addTextInputColumn("icon1", "Icon1", restrictions, false, 150);
-		dataGridHandler.addTextInputColumn("icon2", "Icon2", restrictions, false, 150);
-		dataGridHandler.addComboBoxColumn("key", "Key", DPKey, false, 200);
+		dataGridHandler.addKeyBoxColumn("key", "Key", DPKey, this, 150);
+		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions, false, 100);
+		dataGridHandler.addIconComboBoxColumn("icon1", "Icon 1", IconDP, false, 150);
+		dataGridHandler.addIconComboBoxColumn("icon2", "Icon 2", IconDP, false, 150);
 		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl, false, 150);
 		var DP = new Array();
 		for (var control in controls) {

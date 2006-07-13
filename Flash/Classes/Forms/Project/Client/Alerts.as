@@ -65,7 +65,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("fadeOutTime", "Fade Out Time", restrictions, false, 150);
 		dataGridHandler.addHiddenColumn("keys");
 		var DP = new Array();
-		for (var alert in alerts) {
+		for (var alert = 0; alert< alerts;alert++) {
 			var newAlert = new Object();
 			if (alerts[alert].attributes["name"] != undefined) {
 				newAlert.name = alerts[alert].attributes["name"];

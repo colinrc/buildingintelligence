@@ -80,7 +80,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 		dataGridHandler.addIconComboBoxColumn("icon2", "Icon 2", IconDP, false, 150);
 		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl, false, 150);
 		var DP = new Array();
-		for (var control in controls) {
+		for (var control =0; control < controls.length;control++) {
 			var newControl = new Object();
 			if (controls[control].attributes["name"] != undefined) {
 				newControl.name = controls[control].attributes["name"];

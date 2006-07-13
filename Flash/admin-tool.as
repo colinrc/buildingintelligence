@@ -888,13 +888,17 @@ buttonListener.click = function(eventObj) {
 					_global.winListener = new Object();
 					_global.winListener.click = function() {
 						libraryManager.deletePopUp();
+						selectNode = new Object();
+						selectNode.target = _global.left_tree;
+						selectNode.type = "change";
+						_global.left_tree.dispatchEvent(selectNode);
 						blocker.unloadMovie();
 					};
 					_global.winListener.complete = function(evt_obj:Object) {
 						libraryManager.setSize(libraryManager.content._width + 7, libraryManager.content._height + 35);
 						libraryManager.content.doLoad(tempObject);
 					};
-					libraryManager.addEventListener("click", _global.winListener);
+					libraryManager.addEventListener("click", Delegate.create(this, _global.winListener.click));
 					libraryManager.addEventListener("complete", Delegate.create(this, _global.winListener.complete));
 					break;
 				default :

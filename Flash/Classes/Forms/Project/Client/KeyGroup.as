@@ -20,6 +20,7 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 	private var removeSelected_btn:Button;
 	private var removeAll_btn:Button;
 	private var dataObject:Object;
+	private var available_keys:Array;
 	public function onLoad():Void {
 		icon1_ldr.autoLoad = true;
 		icon1_ldr.scaleContent = true;
@@ -27,6 +28,7 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 		icon2_ldr.autoLoad = true;
 		icon2_ldr.scaleContent = true;
 		icon2_cmb.dropdown.cellRenderer = "ImageCellRenderer";
+		available_keys = new Array;
 		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path + "lib\\icons", "*.png");
 		for (var myIcon = 0; myIcon < myIcons.length; myIcon++) {
 			var newIcon = new Object();
@@ -84,6 +86,9 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 				left_li.addItem(tempObject);
 			} else if (found == 1) {
 				right_li.addItem(tempObject);
+			}
+			if (found !=2){
+				available_keys.push(tempObject);
 			}
 		}
 		right_li.sortItemsBy("label", "ASC");
@@ -148,11 +153,8 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 	private function addAll() {
 		_global.unSaved = true;
 		right_li.removeAll();
-		var tempKeys = _global.serverDesign.getKeys();
-		for (var key in tempKeys) {
-			var tempObject = new Object();
-			tempObject.label = tempKeys[key];
-			right_li.addItem(tempObject);
+		for (var key in available_keys) {
+			right_li.addItem(available_keys[key]);
 		}
 		left_li.removeAll();
 		right_li.sortItemsBy("label", "ASC");
@@ -172,11 +174,8 @@ class Forms.Project.Client.KeyGroup extends Forms.BaseForm {
 		_global.unSaved = true;
 		left_li.removeAll();
 		right_li.removeAll();
-		var tempKeys = _global.serverDesign.getKeys();
-		for (var key in tempKeys) {
-			var tempObject = new Object();
-			tempObject.label = tempKeys[key];
-			left_li.addItem(tempObject);
+		for (var key in available_keys) {
+			left_li.addItem(available_keys[key]);
 		}
 		right_li.sortItemsBy("label", "ASC");
 		left_li.sortItemsBy("label", "ASC");

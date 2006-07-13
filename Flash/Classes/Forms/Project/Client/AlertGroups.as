@@ -57,7 +57,11 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 			toggleDetails(true);
 		}
 		currentAlert = undefined;
-		name_ti.text = eventObj.target.name;
+		if(eventObj.target.name != undefined){
+			name_ti.text = eventObj.target.name;
+		} else{
+			name_ti.text = "";
+		}
 		currentAlert = eventObj.target;
 	}
 		

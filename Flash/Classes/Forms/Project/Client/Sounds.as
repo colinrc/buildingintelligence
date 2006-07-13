@@ -31,7 +31,7 @@ class Forms.Project.Client.Sounds extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("volume", "Volume", volRestrictions,false,60);
 		dataGridHandler.addButtonColumn("Play", "Play", attributes, Delegate.create(this, previewItem),false,150);
 		var DP = new Array();
-		for (var sound in sounds) {
+		for (var sound =0; sound< sounds.length;sound++) {
 			var newSound = new Object();
 			newSound.name = "";
 			newSound.file = "";
