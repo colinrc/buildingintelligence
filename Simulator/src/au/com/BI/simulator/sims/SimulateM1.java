@@ -55,9 +55,7 @@ public class SimulateM1 extends SimulateDevice {
 		}
 		if (!commandFound && cmd.equals ("cn") ) {
 			String theKey = in.substring(4,7);
-			Iterator eachCon = this.controls.iterator();
-			while (eachCon.hasNext()) {
-				GUIPanel control = (GUIPanel)eachCon.next();
+			for (GUIPanel control:this.gUIPanels){
 				if (control.getKey().equals(theKey)) {
 						gui.changeIcon(control,true);
 				}

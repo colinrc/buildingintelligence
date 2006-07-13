@@ -1,4 +1,9 @@
-== Released [attachment:wiki:SoftwareReleases:eLife_simulator_2.12.zip V2.10] ==
+== Released [attachment:wiki:SoftwareReleases:eLife_simulator_2.13.zip V2.13] ==
+
+Corrected problem with M1 causing the Sim to partially hang but appear to be fully functional
+
+
+== Released [attachment:wiki:SoftwareReleases:eLife_simulator_2.12.zip V2.12] ==
 
 Corrected problem with lights not updating to off
 Corrected issue with off and slider interacting incorrectly
