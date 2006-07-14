@@ -7,6 +7,7 @@ package au.com.BI.Util;
 import java.util.*;
 
 import au.com.BI.AlarmLogging.AlarmLogging;
+import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.Bootstrap;
@@ -79,6 +80,29 @@ public interface DeviceModel {
 	 * @param command The command object off the command queue
 	 */
 	public void doCommand (CommandInterface command) throws au.com.BI.Comms.CommsFail ;
+
+
+	public CommandInterface buildCommandForFlash (DeviceType device , String command, String extra,String extra2,String extra3,String extra4,String extra5,long targetDeviceID);
+
+
+	/**
+	 * A utility function to assist in model development
+	 * @param command
+	 * @param cache
+	 */
+	public void sendToFlash (CommandInterface command, Cache cache ) ;
+	
+	/**
+	 * A utility function to assist in model development
+	 * @param The Display Name
+	 * @param The command to send
+	 * @param The value field
+	 */
+	public void sendToFlash (String displayName, String command, String value);
+
+	public void sendToFlash (String displayName, String command, String value,String extra2,String extra3,String extra4,String extra5,long targetDeviceID);
+	
+	public void sendMessage (String title, String content, String autoclose, String icon,String hideclose,String targetUser, String target, long targetDeviceID);
 
 	/**
 	 * Every device should know how to restablish connections with itself
@@ -434,21 +458,7 @@ public interface DeviceModel {
 	 * @param interCommandInterval
 	 */
 	public void setInterCommandInterval(int interCommandInterval);
-
-	/**
-	 * A utility function to assist in model development
-	 * @param command
-	 * @param cache
-	 */
-	public void sendToFlash (CommandInterface command, Cache cache ) ;
 	
-	/**
-	 * A utility function to assist in model development
-	 * @param command
-	 * @param cache
-	 */
-	public void sendToFlash (String displayName, String command, String value);
-
 	public VersionManager getVersionManager() ;
 
 	public void setVersionManager(VersionManager versionManager) ;
@@ -456,6 +466,13 @@ public interface DeviceModel {
 	public ModelTypes getModelType() ;
 
 	public void setModelType(ModelTypes modelType) ;
+	
+	public EventCalendar getEventCalendar() ;
+	
+	/**
+	 * @param eventCalendar The eventCalendar to set.
+	 */
+	public void setEventCalendar(EventCalendar eventCalendar) ;
 }
 
 

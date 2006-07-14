@@ -31,11 +31,7 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 
 	protected String name;
 	protected Logger logger;
-	protected CommandQueue commandQueue;
 	protected HashMap parameters;
-	protected MacroHandler macroHandler;
-	protected EventCalendar eventCalendar;
-	protected AddressBook addressBook;
 	private Security security;
 
 	public int connectionType = DeviceModel.IP;
@@ -263,19 +259,6 @@ public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
 	}
 
 	public void addStartupQueryItem (String name, Object details, int controlType){};
-
-	/**
-	 * @return Returns the eventCalendar.
-	 */
-	public EventCalendar getEventCalendar() {
-		return eventCalendar;
-	}
-	/**
-	 * @param eventCalendar The eventCalendar to set.
-	 */
-	public void setEventCalendar(EventCalendar eventCalendar) {
-		this.eventCalendar = eventCalendar;
-	}
 	
 
 	public boolean isConnected () {

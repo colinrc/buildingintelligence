@@ -141,79 +141,33 @@ public class Controller {
 		}
 
 		scriptModel = new au.com.BI.Script.Model();
-		scriptModel.setCommandQueue(commandQueue);
-		scriptModel.setCache (cache);
-        scriptModel.setVariableCache(variableCache);
-		scriptModel.setMacroHandler(macroHandler);
-		scriptModel.setModelList(deviceModels);
-        scriptModel.setController(this);
-        scriptModel.setBootstrap(bootstrap);
-        scriptModel.setVersionManager(versionManager);
-        scriptModel.setAddressBook(addressBook);
-        scriptModel.setAlarmLogging (alarmLogging);
+		scriptModel.setController(this);
+		this.setupModel(scriptModel);
 		scriptModel.setInstanceID(deviceModels.size()-1);
 
 		flashHandler = new FlashHandler(DeviceModel.PROBABLE_FLASH_CLIENTS,security);
-		flashHandler.setName("FLASH_CLIENT");
-		flashHandler.setCommandQueue(commandQueue);
-		flashHandler.setCache(cache);
-		flashHandler.setAddressBook (addressBook);
-		flashHandler.setAlarmLogging (alarmLogging);
-        flashHandler.setVariableCache(variableCache);
-		flashHandler.setMacroHandler(macroHandler);
+		this.setupModel (flashHandler);
 		flashHandler.setEventCalendar (macroHandler.getEventCalendar());
-		flashHandler.setModelList(deviceModels);
-		flashHandler.setBootstrap(bootstrap);
-		flashHandler.setVersionManager(versionManager);
 		clientModels.add(flashHandler);
 
 		adminModel = new au.com.BI.Admin.Model(1);
-		adminModel.setLogHandler (logHandler);
-		adminModel.setCommandQueue(commandQueue);
-		adminModel.setModelRegistry (modelRegistry);
-		adminModel.setModelList(deviceModels);
-		adminModel.setBootstrap(bootstrap);
-		adminModel.setVersionManager(versionManager);
-		adminModel.setAddressBook(addressBook);
-		adminModel.setAlarmLogging (alarmLogging);
-
+		this.setupModel(adminModel);
 		deviceModels.add( adminModel);
 		adminModel.setInstanceID(deviceModels.size()-1);
 
 		messagingModel = new au.com.BI.Messaging.Model();
-		messagingModel.setCommandQueue(commandQueue);
-		messagingModel.setCache (cache);
-		messagingModel.setMacroHandler(macroHandler);
-		messagingModel.setBootstrap(bootstrap);
-		messagingModel.setModelList(deviceModels);
-		messagingModel.setAddressBook(addressBook);
-		messagingModel.setAlarmLogging(alarmLogging);
-		messagingModel.setVersionManager(versionManager);
+		this.setupModel (messagingModel);
 		deviceModels.add( messagingModel);
 		messagingModel.setInstanceID(deviceModels.size()-1);
 		
 		macroModel = new au.com.BI.Macro.Model();
-		macroModel.setCommandQueue(commandQueue);
-		macroModel.setCache (cache);
-		macroModel.setMacroHandler(macroHandler);
-		macroModel.setBootstrap(bootstrap);
-		macroModel.setModelList(deviceModels);
-		macroModel.setAddressBook(addressBook);
-		macroModel.setAlarmLogging(alarmLogging);
-		macroModel.setVersionManager(versionManager);
+		this.setupModel(macroModel);
 		deviceModels.add( macroModel);
 		macroModel.setInstanceID(deviceModels.size()-1);
                 
     
         jettyHandler = new JettyHandler (security);
-        jettyHandler.setCommandQueue(commandQueue);
-        jettyHandler.setCache(cache);
-        jettyHandler.setAddressBook(addressBook);
-        jettyHandler.setBootstrap(bootstrap);
-        jettyHandler.setModelList(deviceModels);
-        jettyHandler.setAddressBook(addressBook);
-        jettyHandler.setAlarmLogging(alarmLogging);
-        jettyHandler.setVersionManager(versionManager);
+        this.setupModel(jettyHandler);
 		deviceModels.add( jettyHandler);
 		jettyHandler.setInstanceID(deviceModels.size()-1);
         
@@ -225,6 +179,20 @@ public class Controller {
         }
     }
 
+	public void setupModel (DeviceModel model){
+		model.setCommandQueue(commandQueue);
+		model.setCache (cache);
+		model.setVariableCache(variableCache);
+		model.setMacroHandler(macroHandler);
+		model.setModelList(deviceModels);
+		model.setBootstrap(bootstrap);
+		model.setVersionManager(versionManager);
+		model.setAddressBook(addressBook);
+		model.setAlarmLogging (alarmLogging);
+		model.setEventCalendar (macroHandler.getEventCalendar());
+		model.setInstanceID(deviceModels.size()-1);
+	}
+	
 	public void setUpClients() throws CommsFail {
 		flashHandler.startListenning(bindToAddress, clientPort);
 	}

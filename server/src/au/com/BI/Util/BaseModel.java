@@ -10,10 +10,12 @@ package au.com.BI.Util;
  *
  */
 
+import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Config.ParameterException;
+import au.com.BI.Flash.ClientCommand;
 import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Home.VersionManager;
 import au.com.BI.SignVideo.Model;
@@ -64,6 +66,7 @@ public class BaseModel
 		protected boolean tryingToConnect = false;
 		protected long serverID = 0;
 		protected AddressBook addressBook = null;
+		protected EventCalendar eventCalendar;
 		protected AlarmLogging alarmLogging = null;
 		protected int interCommandInterval = 0;
         protected boolean deviceKeysDecimal = false;
@@ -856,13 +859,35 @@ public class BaseModel
 		sendToFlash (flashCommand,cache);
 	}
 
-	public void sendToFlash (String displayName, String command, String value,String extra2,String extra3,String extra4,String extra5,long setTargetDeviceID) {
+	public void sendToFlash (String displayName, String command, String value,String extra2,String extra3,String extra4,String extra5,long targetDeviceID) {		
 		Command flashCommand = new Command ();
 		flashCommand.setKey ("CLIENT_SEND");
 		flashCommand.setDisplayName(displayName);
 		flashCommand.setCommand(command);
 		flashCommand.setExtraInfo(value);
+		flashCommand.setExtra2Info(extra2);
+		flashCommand.setExtra3Info(extra3);
+		flashCommand.setExtra4Info(extra4);
+		flashCommand.setExtra5Info(extra5);
+		flashCommand.setTargetDeviceID(targetDeviceID);
+
 		sendToFlash (flashCommand,cache);
+	}
+	
+	public void sendMessage (String title, String content, String autoclose, String icon,String hideclose,String targetUser, String target, long targetDeviceID) {		
+		ClientCommand flashMessage = new ClientCommand ();
+		flashMessage.setMessageType(ClientCommand.Message);
+		flashMessage.setTitle(title);
+		flashMessage.setAutoclose(autoclose);
+		flashMessage.setIcon(icon);
+		flashMessage.setHideclose(hideclose);
+		flashMessage.setTargetUser(targetUser);
+		flashMessage.setContent(content);
+		flashMessage.setTarget(target);
+		flashMessage.setKey ("MESSAGE");
+		flashMessage.setDisplayName("MESSAGE");
+		flashMessage.setOriginatingID(this.getInstanceID());
+		commandQueue.add(flashMessage);
 	}
 	
 	public CommandInterface buildCommandForFlash (DeviceType device , String command, String extra,String extra2,String extra3,String extra4,String extra5,long targetDeviceID) {
@@ -957,5 +982,18 @@ public class BaseModel
 
 	public void setModelType(ModelTypes modelType) {
 		this.modelType = modelType;
+	}
+	
+	/**
+	 * @return Returns the eventCalendar.
+	 */
+	public EventCalendar getEventCalendar() {
+		return eventCalendar;
+	}
+	/**
+	 * @param eventCalendar The eventCalendar to set.
+	 */
+	public void setEventCalendar(EventCalendar eventCalendar) {
+		this.eventCalendar = eventCalendar;
 	}
 }

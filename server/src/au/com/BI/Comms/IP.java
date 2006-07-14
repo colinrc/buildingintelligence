@@ -109,6 +109,10 @@ public class IP extends BaseComms implements CommDevice
 				os = ipSocket.getOutputStream();
 				is = ipSocket.getInputStream();
 				
+				if (commsSend != null){
+					commsSend.setHandleEvents(false);
+					commsSend.notify();
+				}
 				commsSend = new CommsSend(commsGroup);
 				commsSend.setInterCommandInterval(interCommandInterval);
 				commsSend.setOs(os);

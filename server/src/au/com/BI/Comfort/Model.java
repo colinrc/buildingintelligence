@@ -65,7 +65,7 @@ public class Model extends BaseModel implements DeviceModel  {
 
 	/**
 	 * Name is used by the config reader to tie a particular device to configuration
-	 * @param name The identifying string for this device handler
+	 * @param fileName The identifying string for this device handler
 	 */
 	public void clearItems () {
 		configHelper.clearItems();
