@@ -47,7 +47,7 @@ class Forms.LibraryManager extends Forms.BaseForm{
 			tempXML.onLoad = Delegate.create(this,function(success:Boolean){
 				if(success){
 					dataObject.setXML(tempXML.firstChild);
-					_global.winListener.click();
+					_global.updateFromLibrary(dataObject);
 				} else{
 					mdm.Dialogs.prompt("Error Loading: "+url);
 				}

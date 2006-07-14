@@ -888,7 +888,7 @@ buttonListener.click = function(eventObj) {
 					_global.winListener = new Object();
 					_global.winListener.click = function() {
 						libraryManager.deletePopUp();
-						_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
+						/*_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
 						selectNode = new Object();
 						selectNode.target = _global.left_tree;
 						selectNode.type = "change";
@@ -897,10 +897,10 @@ buttonListener.click = function(eventObj) {
 							_global.left_tree.selectedNode.childNodes[child].removeNode();
 						}
 						var tempXML = tempObject.toTree();
-						for(var child in tempXML.childNodes){
+						for(var child = 0; client < tempXML.childNodes.length;child++){
 							_global.left_tree.selectedNode.appendChild(tempXML.childNodes[child]);
 						}
-						_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
+						_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);*/
 						blocker.unloadMovie();
 					};
 					_global.winListener.complete = function(evt_obj:Object) {
@@ -924,7 +924,7 @@ buttonListener.click = function(eventObj) {
 		*/
 	}
 };
-_global.updateFromLibrary = function() {
+_global.updateFromLibrary = function(tempObject) {
 	var foundNode = _global.searchProject(_global.left_tree.dataProvider, tempObject);
 	if (foundNode != undefined) {
 		_global.left_tree.setIsOpen(foundNode, true);

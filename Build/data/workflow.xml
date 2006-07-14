@@ -2,67 +2,73 @@
 	<step label="Server" stepOrder="1">
 		<item label="Configure Server" key="Server" order="1">
 			<description>
-		 	 <font size="10">
-		 		<p><b>Step1 - Add Device Types</b></p>
-				<p>Add the Device subsystems to the Server that required for this Project.</p>
-				<p><b>Step2 - Configure Connection settings</b></p>
+		 	 <font size="12">
+		 		<p><b>Step1 - <br/>Add Device Types</b></p>
+				<p>Add the Device subsystems to the Server that are required for this Project.</p>
+				<br/>
+				<p><b>Step2 - <br/>Configure Connection settings</b></p>
 				<p>Configure the connection settings for each subsystem.</p>
-				<p><b>Step3 - Configure devices</b></p>
-				<p>Ensure each device is setup and configured correctly for this Project.</p>
+				<br/>
+				<p><b>Step3 - <br/>Configure devices</b></p>
+				<p>Ensure each device is setup and configured correctly in the Server for this Project.</p>
 				</font>
 			</description>
 		</item>
-		<item label="Server Variables" key="Variables" order="2">
+		<item label="Server Variables" key="Controls" order="2">
 			<description>
-		 	 <font size="10">
-		 		<p><b>Step1 - Add Server Variables</b></p>
+		 	 <font size="12">
+		 		<p><b>Step1 - <br/>Add Server Variables</b></p>
 				<p>Add Variables and configure.</p>
 				</font>
 			</description>
 		</item>
 		<item label="Configure Calendar" key="Calendar_Settings" order="3">
 			<description>
-		 	 <font size="10">
-		 		<p><b>Step1 - Configure Calendar Settings</b></p>
-				<p>Set the correct IP or serial settings for the device.</p>
+		 	 <font size="12">
+		 		<p><b>Step1 - <br/>Configure Calendar Settings</b></p>
+				<p>Configure the Calendar Tabs and filtered views.</p>
 				</font>
 			</description>
 		</item>
 		<item label="Configure CBUS" key="CBus" order="4">
 			<description>
-		 	 <font size="10">
-		 		<p><b>Step1 - Configure Connection Settings</b></p>
+		 	 <font size="12">
+		 		<p><b>Step1 - <br/>Configure Connection Settings</b></p>
 				<p>Set the correct IP or serial settings for the device.</p>
-				<p><b>Step2 - Add Lights or Sensors</b></p>
+				<br/>
+				<p><b>Step2 - <br/>Add Lights or Sensors</b></p>
 				<p>Configure the Lights and Sensors.</p>
 				</font>
 			</description>
 		</item>
 		<item label="Configure CBUS Relays" key="CBusRelays" order="5">
 			<description>
-		 	 <font size="10">
-		 		<p><b>Step1 - Add relay Lights</b></p>
+		 	 <font size="12">
+		 		<p><b>Step1 - <br/>Add relay Lights</b></p>
 				<p>Add your CBUS relay Lights.</p>
-				<p><b>Step2 - Configure Lights</b></p>
+				<br/>
+				<p><b>Step2 - <br/>Configure Lights</b></p>
 				<p>Configure the relay Lights.</p>
 				</font>
 			</description>
 		</item>
 		<item label="Configure CBUS Dimmers" key="CBusLights" order="6">
 			<description>
-		 	 <font size="10">
-		 		<p><b>Step1 - Add dimmer Lights</b></p>
+		 	 <font size="12">
+		 		<p><b>Step1 - <br/>Add dimmer Lights</b></p>
 				<p>Add your CBUS dimmer Lights.</p>
-				<p><b>Step2 - Configure Lights</b></p>
+				<br/>
+				<p><b>Step2 - <br/>Configure Lights</b></p>
 				<p>Configure the dimmer Lights.</p>
 				</font>
 			</description>
 		</item>
 		<item label="Configure CBUS Sensors" key="CBusSensors" order="7">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add CBUS Sensors</b></p>
 				<p>Add your CBUS Sensors.</p>
+				<br/>
 				<p><b>Step2 - Configure Sensors</b></p>
 				<p>Configure the CBUS Sensors.</p>
 				</font>
@@ -70,9 +76,10 @@
 		</item>
 		<item label="Configure CBUS Temperature Sensor" key="CBusTemperatures" order="8">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add CBUS Temperature Sensors</b></p>
 				<p>Add your CBUS Temperature Sensors.</p>
+				<br/>
 				<p><b>Step2 - Configure Temperature Sensors</b></p>
 				<p>Configure the CBUS Temperature Sensors.</p>
 				</font>
@@ -80,13 +87,16 @@
 		</item>
 		<item label="Configure Comfort" key="Comfort" order="9">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Connection Settings</b></p>
 				<p>Set the correct IP or serial settings for the device.</p>
+				<br/>
 				<p><b>Step2 - Add Toggle Inputs and Outputs</b></p>
 				<p>Add Toggle Inputs and Outputs.</p>
+				<br/>
 				<p><b>Step3 - Add Alarms and Alerts</b></p>
 				<p>Add Comfort Alarms and Alerts.</p>
+				<br/>
 				<p><b>Step4 - Add Door ID's and Users</b></p>
 				<p>Add Door ID's and setup Comfort Users.</p>
 			 </font>
@@ -94,11 +104,13 @@
 		</item>
 		<item label="Configure Input/Output Toggles" key="Toggles" order="10">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Toggle</b></p>
 				<p>Add Toggle Key for the Server.</p>
+				<br/>
 				<p><b>Step2 - Add Input/Output number</b></p>
 				<p>Add the Input or Output number from Comfigurator.</p>
+				<br/>
 				<p><b>Step3 - Add Description</b></p>
 				<p>Add Description for Toggle.</p>
 			 </font>
@@ -106,11 +118,13 @@
 		</item>
 		<item label="Add Comfort Alarms" key="Alarms" order="11">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Alarms</b></p>
 				<p>Add Alarm Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Alarm Codes</b></p>
 				<p>Add Alarm Code numbers.</p>
+				<br/>
 				<p><b>Step3 - Add Description</b></p>
 				<p>Add Description for Alarm.</p>
 			 </font>
@@ -118,9 +132,10 @@
 		</item>
 		<item label="Add Comfort Alerts" key="Alerts" order="12">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Alerts</b></p>
 				<p>Add Alert Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Alerts</b></p>
 				<p>Configure the Alert Code, Category, Type and Message.</p>
 			 </font>
@@ -128,9 +143,10 @@
 		</item>
 		<item label="Add Comfort Analogues" key="Analogues" order="13">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Analogues</b></p>
 				<p>Add Analogue Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Analogues</b></p>
 				<p>Configure the Input No. and Description.</p>
 			 </font>
@@ -138,9 +154,10 @@
 		</item>
 		<item label="Add Comfort Counters" key="Counters" order="14">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Comfort Counters</b></p>
 				<p>Add Counter Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Counters</b></p>
 				<p>Configure the Description, Counter Number and Max.</p>
 			 </font>
@@ -148,9 +165,10 @@
 		</item>
 		<item label="Add Comfort IR's" key="IRs" order="15">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add IR's</b></p>
 				<p>Add IR Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure IR's</b></p>
 				<p>Configure IR's.</p>
 			 </font>
@@ -158,9 +176,10 @@
 		</item>
 		<item label="Add Comfort Output Monitors" key="Monitors" order="16">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Output Monitors</b></p>
 				<p>Add Output Monitor Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Output Monitors</b></p>
 				<p>Configure the Output Monitor Description and Output No.</p>
 			 </font>
@@ -168,9 +187,10 @@
 		</item>
 		<item label="Add X10 Lights" key="X10Lights" order="17">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add X10 Lights</b></p>
 				<p>Add X10 Light Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure X10 Lights</b></p>
 				<p>Configure Description, Key, House Code, Unit Number and Power Rating.</p>
 			 </font>
@@ -178,9 +198,10 @@
 		</item>
 		<item label="Configure Dynalite" key="Dynalite" order="18">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Dynalight</b></p>
 				<p>Add Dynalite Device.</p>
+				<br/>
 				<p><b>Step2 - Configure Dynalite</b></p>
 				<p>Configure the Dynalite connection settings.</p>
 			 </font>
@@ -188,9 +209,10 @@
 		</item>
 		<item label="Add Dynalite Light Areas" key="DynaliteLightAreas" order="19">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Dynalite Areas</b></p>
 				<p>Add Dynalite Area Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Areas</b></p>
 				<p>Configure the Description and Code.</p>
 			 </font>
@@ -198,19 +220,22 @@
 		</item>
 		<item label="Add Dynalite Relays" key="DynaliteRelays" order="20">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Dynalite Relays</b></p>
 				<p>Add Dynalite Relay Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Relays</b></p>
+
 				<p>Configure the Relay Description, Code, Area and Base Link.</p>
 			 </font>
 			</description>
 		</item>
 		<item label="Add Dynalite Dimmers" key="DynaliteLights" order="21">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Dynalite Dimmers</b></p>
 				<p>Add Dynalite Dimmer Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Dimmers</b></p>
 				<p>Configure the Dimmer Description, Code, Area and Base Link.</p>
 			 </font>
@@ -218,9 +243,10 @@
 		</item>
 		<item label="Add Dynalite IR's" key="DynaliteIRs" order="22">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Dynalite IR's</b></p>
 				<p>Add Dynalite IR Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Dynalite IR's</b></p>
 				<p>Configure the IR Inputs with Description, Code and Box.</p>
 			 </font>
@@ -228,9 +254,10 @@
 		</item>
 		<item label="Add Dynalite Contact Closures" key="ContactClosures" order="23">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Dynalite Contact Closures</b></p>
 				<p>Add Contact Closure Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Contact Closures</b></p>
 				<p>Configure Contact Closure Descriptions, Input Keys and Box.</p>
 			 </font>
@@ -238,13 +265,16 @@
 		</item>
 		<item label="Configure GC100" key="GC100" order="24">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add GC100 Device</b></p>
 				<p>Add GC100 Device Type.</p>
+				<br/>
 				<p><b>Step2 - Configure Device Connection</b></p>
 				<p>Configure the device connection settings.</p>
+				<br/>
 				<p><b>Step3 - Configure Modules</b></p>
 				<p>Add and Configure GC100 Modules.</p>
+				<br/>
 				<p><b>Step4 - Configure Inputs and Outputs</b></p>
 				<p>Add and Configure Toggle and IR inputs/outputs.</p>
 			 </font>
@@ -252,9 +282,10 @@
 		</item>
 		<item label="Add GC100 Modules" key="GC100Modules" order="25">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add GC100 Modules</b></p>
 				<p>Add GC100 Modules.</p>
+				<br/>
 				<p><b>Step2 - Configure Modules</b></p>
 				<p>Configure the Module Name, Type and Number.</p>
 			 </font>
@@ -262,9 +293,10 @@
 		</item>
 		<item label="Add GC100 IR's" key="GC100_IRs" order="26">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add GC100 IR Inputs</b></p>
 				<p>Add GC100 IR Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure IR's</b></p>
 				<p>Configure IR's with Name, AV Name, and Module Number.</p>
 			 </font>
@@ -272,9 +304,10 @@
 		</item>
 		<item label="Add GC100 Toggles" key="GC100_Toggles" order="27">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add GC100 Toggles</b></p>
 				<p>Add GC100 Toggle Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Toggles</b></p>
 				<p>Configure the Toggle Description, Input/Output No. and Module Number.</p>
 			 </font>
@@ -282,11 +315,13 @@
 		</item>
 		<item label="Configure HAL" key="Hal" order="28">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add HAL Device</b></p>
 				<p>Add HAL Device Type.</p>
+				<br/>
 				<p><b>Step2 - Configure HAL Connection</b></p>
 				<p>Configure the HAL connection settings.</p>
+				<br/>
 				<p><b>Step3 - Configure HAL</b></p>
 				<p>Configure the HAL keys.</p>
 			 </font>
@@ -294,16 +329,17 @@
 		</item>
 		<item label="Add Audio/Video Inputs" key="AudioZones" order="29">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Add Key & Audio Zone</b></p>
 			 </font>
 			</description>
 		</item>
 		<item label="Configure IR Learner" key="IRLearner" order="30">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add IR Learner Device</b></p>
 				<p>Add IR Learner Device Type.</p>
+				<br/>
 				<p><b>Step2 - Configure IR Learner</b></p>
 				<p>Configure IR Learner connection settings.</p>
 			 </font>
@@ -311,11 +347,13 @@
 		</item>
 		<item label="Configure Kramer" key="Kramer" order="31">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Kramer Device</b></p>
 				<p>Add Kramer Device Type.</p>
+				<br/>
 				<p><b>Step2 - Configure Connection Settings</b></p>
 				<p>Configure the Kramer connection settings.</p>
+				<br/>
 				<p><b>Step3 - Configure Kramer</b></p>
 				<p>Configure Kramer Keys, Zones, Audio Inputs and AV Inputs.</p>
 			 </font>
@@ -323,18 +361,20 @@
 		</item>
 		<item label="Add Audio/Video Inputs" key="AVZones" order="32">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Add Key & AV Zone</b></p>
 			</font>
 			</description>
 		</item>
 		<item label="Configure Oregon" key="Oregon" order="33">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Oregon Device</b></p>
 				<p>Add Oregon Device Type.</p>
+				<br/>
 				<p><b>Step2 - Configure Oregon Connection</b></p>
 				<p>Configure the Oregon connection settings.</p>
+				<br/>
 				<p><b>Step3 - Configure Oregon Sensors</b></p>
 				<p>Configure the Oregon Sensors.</p>
 			 </font>
@@ -342,9 +382,10 @@
 		</item>
 		<item label="Add Oregon Sensors" key="OregonSensors" order="34">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Oregon Sensors</b></p>
 				<p>Add Oregon Sensor Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Sensors</b></p>
 				<p>Configure the Sensor Descriptions, Measurement Types and Channels.</p>
 			 </font>
@@ -352,11 +393,13 @@
 		</item>
 		<item label="Configure Pelco" key="Pelco" order="35">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Pelco Device</b></p>
 				<p>Add Pelco Device Type.</p>
+				<br/>
 				<p><b>Step2 - Configure Pelco Connection</b></p>
 				<p>Confifgure the Pelco conneciton settings.</p>
+				<br/>
 				<p><b>Step3 - Configure Pelco Cameras</b></p>
 				<p>Configure the Pelco Cameras.</p>
 			 </font>
@@ -364,9 +407,10 @@
 		</item>
 		<item label="Add Pelco Cameras" key="Cameras" order="36">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Pelco Cameras</b></p>
 				<p>Add Pelco Camera Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Cameras</b></p>
 				<p>Configure the Camera Zone and Zoom values.</p>
 			 </font>
@@ -374,11 +418,13 @@
 		</item>
 		<item label="Configure RAW Connection" key="Raw_Connection" order="37">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add RAW Device</b></p>
 				<p>Add RAW Device Type.</p>
+				<br/>
 				<p><b>Step2 - Configure RAW Connection</b></p>
 				<p>Configure the RAW connection settings.</p>
+				<br/>
 				<p><b>Step3 - Add Parameters</b></p>
 				<p>Add Parameters below the connection settings for the RAW device.</p>
 			 </font>
@@ -386,7 +432,7 @@
 		</item>
 		<item label="Configure Catalogue" key="Catalogue" order="38">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Catalogue</b></p>
 				<p>Add RAW Catalogues.</p>
 			 </font>
@@ -394,9 +440,10 @@
 		</item>
 		<item label="Configure Catalogues" key="Catalogues" order="39">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Catalogues</b></p>
 				<p>Configure the RAW Catalogues.</p>
+				<br/>
 				<p><b>Step2 - Configure Codes and Values</b></p>
 				<p>Configure the Catalogue Codes and Values for the RAW device.</p>
 			 </font>
@@ -404,9 +451,10 @@
 		</item>
 		<item label="RAW Inputs" key="Customs" order="40">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add RAW Inputs</b></p>
 				<p>Add RAW Input Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Inputs</b></p>
 				<p>Configure the Description, Input Number, Command and Extras.</p>
 			 </font>
@@ -414,9 +462,10 @@
 		</item>
 		<item label="RAW Outputs" key="Raw_interfaces" order="41">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add RAW Outputs</b></p>
 				<p>Add RAW Output Keys.</p>
+				<br/>
 				<p><b>Step2 - Configure Outputs</b></p>
 				<p>Configure the Description, Catalogue, Code, Command and Extras.</p>
 			 </font>
@@ -424,11 +473,13 @@
 		</item>
 		<item label="Configure Tutondo" key="Tutondo" order="42">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Tutondo Device</b></p>
 				<p>Add Tutondo Device Type.</p>
+				<br/>
 				<p><b>Step2 - Configure Tutondo Connection</b></p>
 				<p>Configure the Tutondo Connection Settings.</p>
+				<br/>
 				<p><b>Step3 - Configure Tutondo</b></p>
 				<p>Configure the Tutondo Inputs, Functions and Zones.</p>
 			 </font>
@@ -438,9 +489,10 @@
 	<step label="Client" stepOrder="2">
 		<item label="Configure Property" key="Property" order="1">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Property</b></p>
 				<p>Name your Property and configure settings.</p>
+				<br/>
 				<p><b>Step2 - Add Zones</b></p>
 				<p>Add Zones to the Property.</p>
 				</font>
@@ -448,9 +500,10 @@
 		</item>
 		<item label="Configure Zone" key="Zone" order="2">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Zones</b></p>
 				<p>Add Zones to the Property and name the Zones.</p>
+				<br/>
 				<p><b>Step2 - Configure Zone</b></p>
 				<p>Select a Map and add all the required Rooms and Panels.</p>
 				</font>
@@ -458,9 +511,10 @@
 		</item>
 		<item label="Configure Rooms" key="ClientRoom" order="3">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Rooms</b></p>
 				<p>Add Rooms to the Zone.</p>
+				<br/>
 				<p><b>Step2 - Configure Room</b></p>
 				<p>Each room requires a name and a polygon to be drawn.</p>
 				</font>
@@ -468,9 +522,10 @@
 		</item>
 		<item label="Configure Window" key="ClientWindow" order="4">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure the Rooms Windows</b></p>
 				<p>Each Room requires a Window, within the window are Tabs.</p>
+				<br/>
 				<p><b>Step2 - Add Tabs</b></p>
 				<p>Add Tabs to the Window.</p>
 				</font>
@@ -478,9 +533,10 @@
 		</item>
 		<item label="Add Tabs" key="ClientTab" order="5">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Tabs</b></p>
 				<p>Configure each Tab in the Window.</p>
+				<br/>
 				<p><b>Step2 - Configure Icon and Controls</b></p>
 				<p>Each Tab requires an Icon and the Controls for the device it's operating.</p>
 				</font>
@@ -488,9 +544,10 @@
 		</item>
 		<item label="Add Doors" key="ClientDoors" order="6">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Doors</b></p>
 				<p>Where needed, add Doors to the Rooms.</p>
+				<br/>
 				<p><b>Step2 - Configure Doors</b></p>
 				<p>Configure the Door Colour, Thickness, Name and Key</p>
 				</font>
@@ -498,7 +555,7 @@
 		</item>
 		<item label="Add Alert Groups" key="AlertGroups" order="7">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Alert Groups</b></p>
 				<p>In each room, add an Alert Group for each type of device being used.</p>
 				</font>
@@ -506,7 +563,7 @@
 		</item>
 		<item label="Configure Alert Groups" key="ClientAlerts" order="8">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Alert Groups</b></p>
 				<p>Name the Alert Groups appropriately with each device and configure the Icon.</p>
 				</font>
@@ -514,9 +571,10 @@
 		</item>
 		<item label="Add Arbitraries" key="ClientArbitrary" order="9">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Arbitraries</b></p>
 				<p>When needed, add Arbitrary controls in each zone.</p>
+				<br/>
 				<p><b>Step2 - Configure Arbitraries</b></p>
 				<p>Configure the Arbitrary Name, Icon, Key and control states.</p>
 				</font>
@@ -524,9 +582,10 @@
 		</item>
 		<item label="Add Panels" key="Panel" order="10">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Panels</b></p>
 				<p>Add Panels to a Zone if needed.</p>
+				<br/>
 				<p><b>Step2 - Configure Panels</b></p>
 				<p>Configure each Panels Name, Icons and Controls.</p>
 				</font>
@@ -534,9 +593,10 @@
 		</item>
 		<item label="Add Status Bar Group" key="StatusBar" order="11">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Status Bar Groups</b></p>
 				<p>Add a Status Bar Group for each type of device.</p>
+				<br/>
 				<p><b>Step2 - Configure Status Bar</b></p>
 				<p>Configure the Status Bar Groups for each type of device.</p>
 				</font>
@@ -544,7 +604,7 @@
 		</item>
 		<item label="Configure Status Bar Group" key="StatusBarGroup" order="12">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Status Bar Groups</b></p>
 				<p>Configure the Name, Icon and Keys for each group.</p>
 				</font>
@@ -552,7 +612,7 @@
 		</item>
 		<item label="Add Logging Groups" key="Logging" order="13">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Logging Groups</b></p>
 				<p>Add a Logging Group for each type of device to be logged.</p>
 				</font>
@@ -560,7 +620,7 @@
 		</item>
 		<item label="Configure Logging Group" key="LoggingGroup" order="14">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Logging Groups</b></p>
 				<p>Configure the Name, Icon, Keys, Time Format and the Name string for each group.</p>
 				</font>
@@ -568,7 +628,7 @@
 		</item>
 		<item label="Add Control Types" key="ClientControl_Types" order="15">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Control Types</b></p>
 				<p>If a standard control type isn't suited to a device, add a new Control Type.</p>
 				</font>
@@ -576,18 +636,19 @@
 		</item>
 		<item label="Configure Control Types" key="ClientControl" order="16">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Control Types</b></p>
 				<p>Configuring a Control Type is like creating a table of rows and columns.</p>
+				<br/>
 				<p>Add a new Row for each row of buttons on the controller.</p>
 				<p>Each Column is the button in that row.</p>
-				<p>Ensure each button has an Icon or Label and a valid Command and Extras.</p>
+				<p>Ensure each button has an Icon or Label and a valid Command and Extra.</p>
 				</font>
 			</description>
 		</item>
 		<item label="Configure Calendar" key="Calendar" order="17">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Calendar</b></p>
 				<p>Add Tabs to the Calendar, such as "watering", "garbage truck" etc etc.</p>
 				</font>
@@ -595,7 +656,7 @@
 		</item>
 		<item label="Configure Calendar Tabs" key="Calendar_Tab" order="18">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Calendar Tabs</b></p>
 				<p>Configure each Calendar Tab with a Name, Icon and filter event.</p>
 				</font>
@@ -603,9 +664,10 @@
 		</item>
 		<item label="Configure Sounds" key="ClientSounds" order="19">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Sounds</b></p>
 				<p>Add extra sounds to the client.</p>
+				<br/>
 				<p><b>Step2 - Configure Sounds</b></p>
 				<p>Select the sound and configure the Name and Volume</p>
 				</font>
@@ -613,7 +675,7 @@
 		</item>
 		<item label="Add Client Apps" key="ClientIcon" order="20">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Client Apps</b></p>
 				<p>Add Client Apps to the Apps Bar</p>
 				</font>
@@ -621,7 +683,7 @@
 		</item>
 		<item label="Configure Client Apps" key="ClientApps_Bar" order="21">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Client Apps</b></p>
 				<p>Configure the Apps Bar Icon, Name and function.</p>
 				</font>
@@ -629,7 +691,7 @@
 		</item>
 		<item label="Add Control Panel Apps" key="ClientControl_Panel_Apps" order="22">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Add Control Panel Apps</b></p>
 				<p>Add extra applications to the Admin Control Panel.</p>
 				</font>
@@ -637,7 +699,7 @@
 		</item>
 		<item label="Configure Base Client Settings" key="Client" order="23">
 			<description>
-		 	 <font size="10">
+		 	 <font size="12">
 		 		<p><b>Step1 - Configure Base Client Overrides</b></p>
 				<p>Configure the base client override settings for the project.</p>
 				</font>
