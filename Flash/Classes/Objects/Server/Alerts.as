@@ -35,7 +35,7 @@
 				flag = "error";
 				appendValidationMsg("Active flag is invalid");
 			}
-			/*if ((alerts[alert].display_name == undefined) || (alerts[alert].display_name == "")) {
+			if ((alerts[alert].display_name == undefined) || (alerts[alert].display_name == "")) {
 				flag = "error";
 				appendValidationMsg("Key is invalid");
 			} else {
@@ -43,7 +43,7 @@
 					flag = "error";
 					appendValidationMsg(alerts[alert].display_name+" key is not being used");
 				}
-			}*/
+			}
 			if ((alerts[alert].key == undefined) || (alerts[alert].key == "")) {
 				flag = "error";
 				appendValidationMsg("Comfort Code is empty");

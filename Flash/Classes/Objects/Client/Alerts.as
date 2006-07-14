@@ -21,13 +21,14 @@
 				appendValidationMsg("Name is empty");
 			}
 			//keys is a string comma seperated.
-			var theKeys:Array = null;
+			var theKeys:Array = undefined;
 			if ((alerts[alert].attributes["keys"] == "") || (alerts[alert].attributes["keys"] == undefined)) {
 				flag = "error";
 				appendValidationMsg("No Keys are used");
 			}
 			else {
-				theKeys = _global.makeArray(alerts[alert].attributes["keys"]);
+				//theKeys = _global.makeArray(alerts[alert].attributes["keys"]);
+				theKeys = alerts[alert].attributes["keys"].split(",");
 				var changedKeys:String = "";
 				for (var key in theKeys) {
 					//should be false
@@ -131,7 +132,10 @@
 		usedKeys = new Array();
 		for (var alert in alerts) {
 			if ((alerts[alert].attributes["keys"] != "") && (alerts[alert].attributes["keys"] != undefined)) {
-				addUsedKey(alerts[alert].attributes["keys"]);
+				var TempKeys = alerts[alert].attributes["keys"].split(",");
+				for(var tempkey in TempKeys){
+					addUsedKey(TempKeys[tempkey]);
+				}
 			}
 		}
 		return usedKeys;
