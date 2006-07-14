@@ -888,10 +888,19 @@ buttonListener.click = function(eventObj) {
 					_global.winListener = new Object();
 					_global.winListener.click = function() {
 						libraryManager.deletePopUp();
+						_global.left_tree.setIsOpen(_global.left_tree.selectedNode, false);
 						selectNode = new Object();
 						selectNode.target = _global.left_tree;
 						selectNode.type = "change";
 						_global.left_tree.dispatchEvent(selectNode);
+						for(var child in _global.left_tree.selectedNode.childNodes){
+							_global.left_tree.selectedNode.childNodes[child].removeNode();
+						}
+						var tempXML = tempObject.toTree();
+						for(var child in tempXML.childNodes){
+							_global.left_tree.selectedNode.appendChild(tempXML.childNodes[child]);
+						}
+						_global.left_tree.setIsOpen(_global.left_tree.selectedNode, true);
 						blocker.unloadMovie();
 					};
 					_global.winListener.complete = function(evt_obj:Object) {

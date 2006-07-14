@@ -23,7 +23,7 @@ class Forms.Project.Client.ControlTypes extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("type", "Control Type", restrictions, false, 150);
 		dataGridHandler.addHiddenColumn("id");
 		var DP = new Array();
-		for (var control = 0; control < controls; control++) {
+		for (var control = 0; control < controls.length; control++) {
 			var newControl = new Object();
 			newControl.type = "";
 			if (controls[control].type.length) {
