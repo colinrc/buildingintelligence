@@ -53,6 +53,15 @@ class Forms.Project.Client.Panel extends Forms.BaseForm {
 			tempObject.label = tempControlTypes.childNodes[controlType].attributes["type"];
 			DPControl.push(tempObject);
 		}
+		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path + "lib\\icons", "*.png");
+		var IconDP = new Array();
+		IconDP.push({label:"No Icon",icon:""});
+		for (var myIcon = 0; myIcon < myIcons.length; myIcon++) {
+			var newIcon = new Object();
+			newIcon.label = myIcons[myIcon].split(".")[0];
+			newIcon.icon = mdm.Application.path + "lib\\icons\\" + myIcons[myIcon];
+			IconDP.push(newIcon);
+		}
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
