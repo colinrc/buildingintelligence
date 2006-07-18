@@ -168,13 +168,15 @@ public class Model
 						throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
 				} catch (ClassCastException e) {
 						throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
+				} catch (Exception e){
+						throw new GroovyModelError ("Weird stuff happened " + e.getMessage());
 				}
         }
         
         public GroovyModel setupGroovyModel(GroovyRunBlock groovyRunBlock, String description)  throws IllegalAccessException,InstantiationException {
 			Object model = groovyRunBlock.getClass().newInstance();
 			GroovyModel myModel = (GroovyModel) model;
-			myModel.setLogger (Logger.getLogger(myModel.getName()));
+			// myModel.setLogger (Logger.getLogger(myModel.getName()));
 			return myModel;
         }
         

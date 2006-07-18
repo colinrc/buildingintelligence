@@ -7,6 +7,7 @@ import au.com.BI.Alert.Alarm;
 import au.com.BI.Alert.Alert;
 import au.com.BI.Analog.Analog;
 import au.com.BI.Audio.Audio;
+import au.com.BI.Camera.Camera;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Lights.LightFascade;
@@ -59,6 +60,10 @@ public class GroovyModel extends BaseModel implements DeviceModel {
 					case DeviceType.PULSE_OUTPUT: 
 						outputArray = buildPulseOutputControlString ((PulseOutput)device,command);
 						break;
+						
+					case DeviceType.CAMERA: 
+						outputArray = buildCameraControlString ((Camera)device,command);
+						break;
 			}
 			
 			if (outputArray != null){
@@ -100,6 +105,10 @@ public class GroovyModel extends BaseModel implements DeviceModel {
 	}
 	
 	public byte[] buildPulseOutputControlString (PulseOutput  device, CommandInterface command){
+		return "".getBytes();
+	}
+	
+	public byte[] buildCameraControlString (Camera  device, CommandInterface command){
 		return "".getBytes();
 	}
 }
