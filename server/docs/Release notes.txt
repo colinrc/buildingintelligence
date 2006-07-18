@@ -1,8 +1,38 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a8.zip V1.6a8] [attachment:wiki:SoftwareReleases:eLife-libs-1.6a8.zip Libs-V1.6a8 ==
+
+''' Groovy '''
+ 
+Initial groovy model support. Place .groovy model files into ''' models ''' directory.
+
+''' Jetty '''
+
+Jetty upgraded to 6 RC0.
+
+Ensure macro status information is sent to web clients.
+Ensure script status information is sent to web clients.
+
+''' Macros '''
+
+Fixed problem running macros.
+Fixed various thread issues with macro update messages.
+Resolved issues [ticket:460],[ticket:461]
+
+''' Scripts '''
+
+Fixed concurrent modification error for web clients with script messages.
+Fixed 'element already has parent error'
+Resolved issue [ticket:467],[ticket:468]
+
+''' Comms '''
+
+Fixed threadlock when sending 'complex' commands.
+
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a7.zip V1.6a7] ==
 
 ''' Nuvo '''
 
-Rectified issues with volume control. Complete enhancement [ticket:
+Rectified issues with volume control. Complete enhancement [ticket:354]
 
 ''' Kramer '''
 
