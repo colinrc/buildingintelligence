@@ -75,7 +75,9 @@ public class CacheBridge implements CacheListener {
     	} catch (IllegalAddException ex){
 			logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
 		}*/
-    	commandsToSend.put(key,cacheWrapper);
+    	synchronized (commandsToSend){
+    		commandsToSend.put(key,cacheWrapper);
+    	}
     	logger.log(Level.FINEST,"Adding key "  + key);
     }
     
@@ -85,6 +87,7 @@ public class CacheBridge implements CacheListener {
     	if (extraElementsToInclude != null){
 	    	for (Element elm:extraElementsToInclude){
 	    		try {
+					elm.detach();
 	    			resultsDoc.addContent(elm);
 			    } catch (IllegalAddException ex){
 						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
@@ -110,6 +113,7 @@ public class CacheBridge implements CacheListener {
 		        				Element xMLCommand = null;
 		        				try {
 		        						xMLCommand = (Element)command.getXMLCommand();
+		        						xMLCommand.detach();
 		        						resultsDoc.addContent(xMLCommand);      
 		        				} catch (IllegalAddException ex){
 		        						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());

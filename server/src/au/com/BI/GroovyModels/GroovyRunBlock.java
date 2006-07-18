@@ -1,11 +1,11 @@
 package au.com.BI.GroovyModels;
-import java.io.File;
 import java.util.*;
 
 public class GroovyRunBlock {
-	boolean enabled = true;
-	public Date lastUpdated = null;
-	public String fileName = null;
+	protected boolean enabled = true;
+	protected Date lastUpdated = null;
+	protected String fileName = null;
+	protected Class theClass = null;
 	
 	public GroovyRunBlock () {
 		lastUpdated = new Date();
@@ -36,6 +36,16 @@ public class GroovyRunBlock {
 
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+
+
+	public Class getTheClass() {
+		return theClass;
+	}
+
+
+	public void setTheClass(Class theClass) {
+		this.theClass = theClass;
 	}
 	
 }

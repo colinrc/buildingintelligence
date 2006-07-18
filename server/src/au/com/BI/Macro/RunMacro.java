@@ -5,6 +5,8 @@
 package au.com.BI.Macro;
 import au.com.BI.User.*;
 import java.util.*;
+
+import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
 
@@ -24,6 +26,7 @@ public class RunMacro extends Thread {
 	protected boolean abort = false;
 	protected boolean runningInTimer = false;
 	protected CommandInterface origCommand;
+	protected Cache cache = null;
 	
 
 	public RunMacro() {
@@ -53,7 +56,10 @@ public class RunMacro extends Thread {
 		started.setKey("MACRO");
 		started.setExtraInfo(macroName);
 		started.setCommand("started");
-		commandList.notifyAll ();
+		synchronized (cache){
+			cache.setCachedCommand("MACRO",started);
+		}
+		commandList.add (started);
 		
 		while ((doOnce || repeating) && !continueToEnd && !abort) {
 		    doOnce = false; // just run it once
@@ -127,6 +133,9 @@ public class RunMacro extends Thread {
 		finished.setKey("MACRO");
 		finished.setExtraInfo(macroName);
 		finished.setCommand("finished");
+		synchronized (cache){
+			cache.setCachedCommand("MACRO",finished);
+		}
 		commandList.add (finished);		
 	}
 	
@@ -191,4 +200,12 @@ public class RunMacro extends Thread {
     public void setAbort(boolean abort) {
         this.abort = abort;
     }
+
+	public Cache getCache() {
+		return cache;
+	}
+
+	public void setCache(Cache cache) {
+		this.cache = cache;
+	}
 }

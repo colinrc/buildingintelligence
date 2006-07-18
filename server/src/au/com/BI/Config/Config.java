@@ -24,6 +24,7 @@ import au.com.BI.CustomInput.*;
 import au.com.BI.Audio.*;
 import au.com.BI.Analog.*;
 import au.com.BI.GC100.*;
+import au.com.BI.GroovyModels.GroovyRunBlock;
 import au.com.BI.Counter.*;
 import au.com.BI.VirtualOutput.*;
 import au.com.BI.PulseOutput.*;
@@ -64,7 +65,15 @@ public class Config {
 		protected RawFactory rawFactory;		
 		protected AnalogFactory analogFactory;		
 		protected IRFactory iRFactory;		
-
+		protected Map <String,String>modelRegistry = null;
+		protected Map <String,GroovyRunBlock>groovyModels = null;
+		protected MacroHandler macroHandler = null;
+		protected Bootstrap bootstrap = null;
+		protected  AddressBook addressBook = null;
+		protected VersionManager versionManager = null;
+		protected  AlarmLogging alarmLogging = null;
+		protected au.com.BI.GroovyModels.Model groovyModelHandler  = null;
+		
 	public Config() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		rawHelper = new RawHelper();
@@ -94,7 +103,7 @@ public class Config {
 		calendar_message_params.put ("TARGET","All");
 	}
 
-        public void prepareToReadConfigs (List deviceModels,Controls controls,MacroHandler macroHandler) {
+        public void prepareToReadConfigs (List deviceModels,Controls controls) {
             jRobinParser.clearRRDS();
             removeModels (deviceModels);
             macroHandler.setCalendar_message_params (this.calendar_message_params);
@@ -115,10 +124,8 @@ public class Config {
 
 
 	public void readConfig(List <DeviceModel>deviceModels, List clientModels,Cache cache,
-			HashMap <String,Object>variableCache, CommandQueue commandQueue, Map modelRegistry,
-			IRCodeDB irCodeDB, File configFile, MacroHandler macroHandler, 
-			Bootstrap bootstrap, Controls controls, AddressBook addressBook,
-			AlarmLogging alarmLogging,VersionManager versionManager)
+			HashMap <String,Object>variableCache, CommandQueue commandQueue, 
+			IRCodeDB irCodeDB, File configFile,Controls controls)
 			throws ConfigError {
 		// Create an instance of the tester and test
 		try {
@@ -136,7 +143,7 @@ public class Config {
 
 			List <Element>deviceConfigs = theConfig.getChildren("DEVICE");
 			for (Element config: deviceConfigs){
-					DeviceModel newDeviceModel = parseDeviceModel(config, deviceModels, clientModels, modelRegistry);
+					DeviceModel newDeviceModel = parseDeviceModel(config, deviceModels, clientModels);
 					if (newDeviceModel != null){
 						logger.log (Level.INFO,"Adding device handler for " + newDeviceModel.getName());
 						parseCatalogueList (config,newDeviceModel);
@@ -283,8 +290,7 @@ public class Config {
 
         public DeviceModel parseDeviceModel(Element deviceConfig,
                                             List deviceModels,
-                                            List clientModels,
-                                            Map modelRegistry) throws
+                                            List clientModels) throws
             JDOMException {
                 int intPowerRating = 0;
                 String deviceActive = deviceConfig.getAttributeValue("ACTIVE");
@@ -319,16 +325,30 @@ public class Config {
                 jRobinParser.addPowerRating(description, intPowerRating);
 
                 DeviceModel deviceModel = null;
-
-                String modelClass = (String) modelRegistry.get(deviceConfigName);
-                if (modelClass == null)return null;
-                if (modelClass.equals(""))return null;
-
+                String modelClass = "";
                 try {
-                        Class deviceModelClass = java.lang.Class.forName(
-                            modelClass);
-                        deviceModel = (DeviceModel) deviceModelClass.
-                            newInstance();
+                	 
+                	if (modelRegistry.containsKey(deviceConfigName)){
+			                modelClass =  modelRegistry.get(deviceConfigName);
+			                if (modelClass == null)return null;
+			                if (modelClass.equals(""))return null;
+		                    Class deviceModelClass = java.lang.Class.forName(
+		                            modelClass);
+		                        deviceModel = (DeviceModel) deviceModelClass.
+		                            newInstance();
+			          } else {
+			        	  if (this.groovyModels.containsKey(deviceConfigName)){
+			        		  logger.log(Level.SEVERE, "Setup groovy device . "+ deviceConfigName);
+			        		  GroovyRunBlock groovyRunBlock = groovyModels.get(deviceConfigName);
+			        		  if (groovyRunBlock == null) return null;
+			        		  deviceModel = groovyModelHandler.setupGroovyModel(groovyRunBlock,description);
+			        	  } else {
+			        		  logger.log(Level.SEVERE, "Device support was requested that has not been implemented yet. "+ deviceConfigName);
+			        	  }
+			          }
+                	if (deviceModel == null) {
+                		return null;
+                	}
                 }
                 catch (ClassNotFoundException e) {
                         logger.log(Level.SEVERE,
@@ -484,6 +504,10 @@ public class Config {
 					if (itemName.equals("PULSE_OUTPUT")) {
 						pulseOutputFactory.addPulse(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.PULSE_OUTPUT,groupName,rawHelper);
+					}
+					if (itemName.equals("LIGHT")) {
+						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+								DeviceType.LIGHT,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_CBUS")) {
 						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
@@ -664,6 +688,71 @@ public class Config {
 
 	public void setVirtualOutputFactory(VirtualOutputFactory virtualOutputFactory) {
 		this.virtualOutputFactory = virtualOutputFactory;
+	}
+
+	public Map getModelRegistry() {
+		return modelRegistry;
+	}
+
+	public void setModelRegistry(Map <String,String>modelRegistry) {
+		this.modelRegistry = modelRegistry;
+	}
+
+	public Map getGroovyModels() {
+		return groovyModels;
+	}
+
+	public void setGroovyModels(Map <String,GroovyRunBlock>groovyModels) {
+		this.groovyModels = groovyModels;
+	}
+
+	public MacroHandler getMacroHandler() {
+		return macroHandler;
+	}
+
+	public void setMacroHandler(MacroHandler macroHandler) {
+		this.macroHandler = macroHandler;
+	}
+
+	public Bootstrap getBootstrap() {
+		return bootstrap;
+	}
+
+	public void setBootstrap(Bootstrap bootstrap) {
+		this.bootstrap = bootstrap;
+	}
+
+	public AddressBook getAddressBook() {
+		return addressBook;
+	}
+
+	public void setAddressBook(AddressBook addressBook) {
+		this.addressBook = addressBook;
+	}
+
+	public AlarmLogging getAlarmLogging() {
+		return alarmLogging;
+	}
+
+	public void setAlarmLogging(AlarmLogging alarmLogging) {
+		this.alarmLogging = alarmLogging;
+	}
+
+	public VersionManager getVersionManager() {
+		return versionManager;
+	}
+
+	public void setVersionManager(VersionManager versionManager) {
+		this.versionManager = versionManager;
+	}
+
+	public au.com.BI.GroovyModels.Model getGroovyModelHandler() {
+		return groovyModelHandler;
+	}
+
+	public void setGroovyModelHandler(
+			au.com.BI.GroovyModels.Model groovyModelHandler) {
+		this.groovyModelHandler = groovyModelHandler;
 	}
 	
 }

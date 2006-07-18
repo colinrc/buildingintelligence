@@ -20,6 +20,8 @@ import org.jdom.*;
 import org.jdom.output.Format;
 import org.jdom.input.*;
 import org.jdom.output.XMLOutputter;
+
+import au.com.BI.Command.Cache;
 import au.com.BI.Flash.*;
 import au.com.BI.User.*;
 import java.util.logging.*;
@@ -36,7 +38,8 @@ public class ScriptHandler {
 	protected Map scripts, abortingScript;
 
 	protected Logger logger;
-
+	protected Cache cache;
+	
 	//  protected List commandList;
 	protected Map runningScripts, scriptRunBlockList;
 
@@ -57,6 +60,7 @@ public class ScriptHandler {
 	public static final int HOUR_INTERVAL = 3600000;
 
 	public static final int DAY_INTERVAL = 86400000;
+
 
 	public ScriptHandler(int numberOfScripts,
 			au.com.BI.Script.Model scriptModel, Map scriptRunBlockList,
@@ -174,6 +178,7 @@ public class ScriptHandler {
 			abortingScript.put(scriptName, new Integer(0)); // Why ?????? CC
 			RunScript newScript = new RunScript(scriptName, user,
 					linesOfScript, scriptModel);
+			newScript.setCache(cache);
 			newScript.setCommandList(scriptModel.getCommandQueue());
 			newScript.setName("Script:" + scriptName);
 			synchronized (runningScripts) {
@@ -640,6 +645,14 @@ public class ScriptHandler {
 
 	public void setStatusFileName(String statusFileName) {
 		this.statusFileName = statusFileName;
+	}
+
+	public Cache getCache() {
+		return cache;
+	}
+
+	public void setCache(Cache cache) {
+		this.cache = cache;
 	}
 
 }

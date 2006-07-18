@@ -14,6 +14,7 @@ import java.util.*;
 import au.com.BI.Flash.*;
 import au.com.BI.Util.*;
 import au.com.BI.Calendar.EventCalendar;
+import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
 
@@ -49,6 +50,7 @@ public class MacroHandler {
 	protected Map calendar_message_params;
 	protected Vector <String>macroNames = null;
         protected Vector <String>integratorMacroNames = null;
+        protected Cache cache = null;
                 
 	public MacroHandler() {
 		super();
@@ -121,6 +123,7 @@ public class MacroHandler {
 		else {
 
 			RunMacro newMacro = new RunMacro (macro, user, macroName,origCommand);
+			newMacro.setCache(cache);
 			newMacro.setCommandList(commandList);
 			newMacro.setName("Macro:"+ macroName);
 			synchronized (runningMacros) {
@@ -550,4 +553,14 @@ public class MacroHandler {
     public void setIntegratorFileName(String integratorFileName) {
         this.integratorFileName = "datafiles" + File.separator + integratorFileName;
     }
+
+
+	public Cache getCache() {
+		return cache;
+	}
+
+
+	public void setCache(Cache cache) {
+		this.cache = cache;
+	}
 }

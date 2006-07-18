@@ -43,7 +43,7 @@ public class BaseModel
         protected HashMap <String,HashMap<String,String>> parameters;
         protected HashMap <String,String>topMap; // a convienience reference to the top level map
 
-        protected Logger logger;
+        protected Logger logger = null;
 
         protected String name = "Unknown";
         protected CommandQueue commandQueue = null;
@@ -995,5 +995,13 @@ public class BaseModel
 	 */
 	public void setEventCalendar(EventCalendar eventCalendar) {
 		this.eventCalendar = eventCalendar;
+	}
+
+	public Logger getLogger() {
+		return logger;
+	}
+
+	public void setLogger(Logger logger) {
+		this.logger = logger;
 	}
 }

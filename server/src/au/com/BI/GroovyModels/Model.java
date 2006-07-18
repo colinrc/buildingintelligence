@@ -20,6 +20,8 @@ import au.com.BI.Flash.*;
 
 import au.com.BI.Script.ScriptHandler;
 import au.com.BI.User.User;
+
+import org.codehaus.groovy.control.CompilationFailedException;
 import org.jdom.Element;
 import au.com.BI.JRobin.RRDValueObject;
 import au.com.BI.Home.Controller;
@@ -42,7 +44,8 @@ public class Model
         protected boolean control = true;
         protected String parameter;
         protected GroovyModelFileHandler groovyModelFileHandler;
-		protected ConcurrentHashMap<String,GroovyRunBlock> groovyRunBlockList = null;
+		protected ConcurrentHashMap<String,GroovyRunBlock> groovyModelFiles = null;
+		protected ConcurrentHashMap<String,GroovyRunBlock> groovyModelClasses = null;
 		protected GroovyClassLoader gcl;
 
         protected Map scriptFiles = null;
@@ -51,7 +54,8 @@ public class Model
                 super();
                 this.setName("GROOVY_MODEL_HANDLER");
                 groovyModelFileHandler = new GroovyModelFileHandler();
-                groovyRunBlockList = new ConcurrentHashMap <String,GroovyRunBlock>(30); 
+                groovyModelFiles = new ConcurrentHashMap <String,GroovyRunBlock>(30); 
+                groovyModelClasses = new ConcurrentHashMap <String,GroovyRunBlock>(30); 
                 this.setConnected(true);
                 this.setAutoReconnect(false);
                 gcl = new GroovyClassLoader();
@@ -118,22 +122,21 @@ public class Model
                 logger.log(Level.INFO,"Loading scripts");
 
                 String lsLine, lsCheck;
-                ArrayList linesOfFile, scripts;
-                Object hashKey;
+                ArrayList  scripts;
 
                 scripts = new ArrayList();
 
 				//get the script files and prepare for parsing
                 try {
-	                groovyModelFileHandler.loadGroovyModelList( "./models/",this.groovyRunBlockList);
+	                groovyModelFileHandler.loadGroovyModelList( "./models/",this.groovyModelFiles);
 	
-	                for (String fileName: groovyRunBlockList.keySet()) {
+	                for (GroovyRunBlock runBlock: groovyModelFiles.values()) {
 	                	try {
-	                		launchGroovyModel (fileName);
+	                		registerGroovyModel (runBlock);
 	                	} catch (ConfigError ex){
-	                		logger.log(Level.WARNING, "There was an error loading configuration for " + fileName + " " + ex.getMessage());
+	                		logger.log(Level.WARNING, "There was an error loading configuration for " + runBlock.getFileName() + " " + ex.getMessage());
 	                	} catch (GroovyModelError ex){
-	                		logger.log(Level.WARNING, "There was an error setting up support for " + fileName + " " + ex.getMessage());               		
+	                		logger.log(Level.WARNING, "There was an error setting up support for " + runBlock.getFileName() + " " + ex.getMessage());               		
 	                	}
 	                }
 	                	logger.log(Level.INFO,"Groovy models loaded");
@@ -142,8 +145,37 @@ public class Model
                 }
         }
 
-        public void launchGroovyModel (String fileName) throws ConfigError, GroovyModelError{
-        	
+        public void registerGroovyModel (GroovyRunBlock groovyRunBlock) throws ConfigError, GroovyModelError{
+        		String completeFile = "";
+        		String fileName = groovyRunBlock.getFileName();
+        		try {
+						Class groovyClass = gcl.parseClass(new File(fileName));
+						groovyRunBlock.setTheClass(groovyClass);
+						Object aScript = groovyClass.newInstance();
+						GroovyModel myModel = (GroovyModel) aScript;
+						String modelName = myModel.getName();
+						logger.log(Level.INFO, "Registering model " + modelName);
+						this.groovyModelClasses.put(modelName, groovyRunBlock);
+						
+
+				} catch (CompilationFailedException e) {
+						throw new GroovyModelError ("Compilation error in the model " + fileName + " " + e.getMessage());
+				} catch (IOException e) {
+						throw new GroovyModelError ("File error in the model " + fileName + " " + e.getMessage());
+				} catch (InstantiationException e) {
+						throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
+				} catch (IllegalAccessException e) {
+						throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
+				} catch (ClassCastException e) {
+						throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
+				}
+        }
+        
+        public GroovyModel setupGroovyModel(GroovyRunBlock groovyRunBlock, String description)  throws IllegalAccessException,InstantiationException {
+			Object model = groovyRunBlock.getClass().newInstance();
+			GroovyModel myModel = (GroovyModel) model;
+			myModel.setLogger (Logger.getLogger(myModel.getName()));
+			return myModel;
         }
         
          public void attatchComms(CommandQueue commandQueue) throws au.com.BI.Comms.
@@ -163,4 +195,26 @@ public class Model
         public void setNumberOfScripts(int numberOfScripts) {
                 this.numberOfScripts = numberOfScripts;
         }
+
+
+		public ConcurrentHashMap<String, GroovyRunBlock> getGroovyModelFiles() {
+			return groovyModelFiles;
+		}
+
+
+		public void setGroovyModelFiles(
+				ConcurrentHashMap<String, GroovyRunBlock> groovyModels) {
+			this.groovyModelFiles = groovyModels;
+		}
+
+
+		public ConcurrentHashMap<String, GroovyRunBlock> getGroovyModelClasses() {
+			return groovyModelClasses;
+		}
+
+
+		public void setGroovyModelClasses(
+				ConcurrentHashMap<String, GroovyRunBlock> groovyModelClasses) {
+			this.groovyModelClasses = groovyModelClasses;
+		}
 }

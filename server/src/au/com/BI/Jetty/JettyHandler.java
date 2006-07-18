@@ -114,8 +114,8 @@ public class JettyHandler extends BaseModel implements DeviceModel, ClientModel 
 
             updateContextHandler.setContextPath("/webclient");
             updateContextHandler.setResourceBase("www");
-            updateContextHandler.setConnectors(new String[]{"SSL_CONNECT"});
-            
+            // updateContextHandler.setConnectors(new String[]{"SSL_CONNECT"});
+            updateContextHandler.setConnectorNames(new String[]{"SSL_CONNECT"});
 
             ServletHandler updateHandler = new ServletHandler ();   
 

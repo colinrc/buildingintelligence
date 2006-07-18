@@ -60,7 +60,8 @@ public interface DeviceType
 	public static final int NUVO_SWITCH = 44;
 	public static final int SIGN_VIDEO_SWITCH = 45;
 	public static final int GROOVY_SCRIPT = 46;
-
+	public static final int LIGHT = 47;
+	
 	// Likely number of raw commands for device line. More is allowed.
 	public static final int PROBABLE_NUMBER_RAW = 10;
 

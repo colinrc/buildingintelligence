@@ -229,6 +229,7 @@ public class Model
 
                 if (clientCommand != null) {
                         clientCommand.setTargetDeviceID(command.getTargetDeviceID());
+                        cache.setCachedCommand("SCRIPT", clientCommand);
                          commandQueue.add(clientCommand);
                 }
         }
@@ -236,6 +237,7 @@ public class Model
 		public void sendListToClient() {
 			ClientCommand clientCommand = (ClientCommand)doGetList("");
 			clientCommand.setTargetDeviceID(-1);
+            cache.setCachedCommand("SCRIPT", clientCommand);
             commandQueue.add(clientCommand);
 		}
 
@@ -298,6 +300,7 @@ public class Model
 		    	    clientCommand.setFromElement (scriptHandler.get(""));
 		    	    clientCommand.setKey ("CLIENT_SEND");
 		    	    clientCommand.setTargetDeviceID(targetFlashDeviceID);
+                    //cache.setCachedCommand("CLIENT_SEND", clientCommand);
 		    	    commandQueue.add(clientCommand);
 	    		}
 	    	};
@@ -332,6 +335,7 @@ public class Model
 
                 setNumberOfScripts(files.size());
                 scriptHandler = new ScriptHandler(getNumberOfScripts(), this, scriptRunBlockList,statusFileName); //,this.commandQueue);
+                scriptHandler.setCache (cache);
 
 				scriptHandler.loadScriptFile();
 

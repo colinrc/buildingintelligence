@@ -27,24 +27,20 @@ public class GroovyModelFileHandler {
                 Integer fileNum;
                 fileNum = new Integer(0);
                 int i = 0;
-                Map <String,ArrayList>myFiles = Collections.synchronizedMap(new LinkedHashMap<String,ArrayList>(30));
 
-                myFiles = loadGroovyModelList(dir,GroovyModelRunBlockList);
+               loadGroovyModelList(dir,GroovyModelRunBlockList);
 
                 logger.log(Level.FINE, "Groovy Models loaded ");
 
-                myScriptModel.setScriptFiles(myFiles);
-                myScriptModel.setNumberOfScripts(myFiles.size());
+                myScriptModel.setScriptFiles(GroovyModelRunBlockList);
+                myScriptModel.setNumberOfScripts(GroovyModelRunBlockList.size());
 
         }
 
   
-        public Map <String,ArrayList> loadGroovyModelList(String directoryName, Map <String,GroovyRunBlock>GroovyModelRunBlockList) throws ConfigError {
+        public void loadGroovyModelList(String directoryName, Map <String,GroovyRunBlock>GroovyModelRunBlockList) throws ConfigError {
                 // try {
 
-	                ArrayList linesOfFile;
-	                HashMap <String,ArrayList> files;
-	                files = new HashMap<String,ArrayList>();
 	                
 	                FilenameFilter filter = new FilenameFilter() {
 	                        public boolean accept(File dir, String name) {
@@ -58,7 +54,8 @@ public class GroovyModelFileHandler {
 	                stFiles = dir.list(filter);
 	
 	                for (int i = 0; i < stFiles.length; i += 1) {
-						String name = stFiles[i].substring(0, stFiles[i].length() - 3);
+	                	String name = directoryName + stFiles[i];
+						// String name = stFiles[i].substring(0, stFiles[i].length() - 3);
 						synchronized (GroovyModelRunBlockList) {
 							GroovyRunBlock GroovyModelRunBlock = null;
 							if (!GroovyModelRunBlockList.containsKey(name)){
@@ -68,7 +65,6 @@ public class GroovyModelFileHandler {
 							}
 						}
 	                }
-	                return files;
 	
                 }/*
                 catch (IOException e){

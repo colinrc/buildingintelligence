@@ -59,6 +59,7 @@ public class Controller {
     protected static org.jrobin.core.RrdDbPool rrdbPool;
     protected au.com.BI.JRobin.RRDGraph rrdGraph;
     protected au.com.BI.Script.Model scriptModel;
+    protected au.com.BI.GroovyModels.Model groovyModelHandler; 
     protected JRobinQuery jrobin;
     protected Controls controls;
     protected HashMap <String,Object>variableCache;
@@ -100,6 +101,7 @@ public class Controller {
 		modelRegistry.put("ADMIN", "au.com.BI.Admin.Model");
 		modelRegistry.put("MESSAGING", "au.com.BI.Messaging.Model");
 		modelRegistry.put("JETTY", "au.com.BI.Jetty.JettyHandler");
+		modelRegistry.put("GROOVY", "au.com.BI.GroovyModels.Model");
 		modelRegistry.put("HAL", "au.com.BI.HAL.Model");
 		modelRegistry.put("TUTONDO", "au.com.BI.Tutondo.Model");
 		modelRegistry.put("KRAMER", "au.com.BI.Kramer.Model");
@@ -123,6 +125,7 @@ public class Controller {
 
 		macroHandler = new MacroHandler();
 		macroHandler.setFileName("macros");
+		macroHandler.setCache(cache);
                 macroHandler.setIntegratorFileName("integrator_macros");
 		macroHandler.setCalendarFileName("calendar");
 		macroHandler.setCommandList(commandQueue);
@@ -170,6 +173,11 @@ public class Controller {
         this.setupModel(jettyHandler);
 		deviceModels.add( jettyHandler);
 		jettyHandler.setInstanceID(deviceModels.size()-1);
+		
+        groovyModelHandler =  new au.com.BI.GroovyModels.Model();
+        this.setupModel(groovyModelHandler);
+		deviceModels.add( groovyModelHandler);
+		groovyModelHandler.setInstanceID(deviceModels.size()-1);
         
         
         try {
@@ -227,6 +235,14 @@ public class Controller {
 		logger.setLevel(Level.INFO);
 		config = new Config();
 		config.setSecurity(security);
+		config.setModelRegistry(modelRegistry);
+		config.setMacroHandler(macroHandler);
+		config.setBootstrap(bootstrap);
+		config.setVersionManager(versionManager);
+		config.setAlarmLogging(alarmLogging);
+		config.setAddressBook(addressBook);
+		config.setGroovyModels(this.groovyModelHandler.getGroovyModelClasses());
+		config.setGroovyModelHandler(groovyModelHandler);
 		boolean commandDone;
 
 		logger.fine("Started the controller");
@@ -1135,7 +1151,7 @@ public class Controller {
 		    model.clearItems();
 		}
 	    }
-	    config.prepareToReadConfigs(deviceModels,controls,macroHandler);
+	    config.prepareToReadConfigs(deviceModels,controls);
 
 	    File theDir = new File(dir);
 	    AcceptConfig acceptConfig = new AcceptConfig();
@@ -1146,8 +1162,7 @@ public class Controller {
 	    for (int i = 0; i < configFiles.length; i ++){
 		try {
 		    config.readConfig(deviceModels, clientModels, cache, variableCache ,
-			    commandQueue, modelRegistry, irCodeDB, configFiles[i], macroHandler,
-			    bootstrap, controls, addressBook, alarmLogging,versionManager);
+			    commandQueue, irCodeDB, configFiles[i], controls);
 		    configLoaded = true;
 		} catch (ConfigError configError) {
 		    logger.log(Level.SEVERE, "Error in configuration file " + configFiles[i].toString() + " "

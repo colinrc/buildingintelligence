@@ -44,9 +44,7 @@ public class Model extends BaseModel implements DeviceModel {
 		    clientCommand.setFromElement (macroHandler.get("",false,false));
 		    clientCommand.setKey ("CLIENT_SEND");
 		    clientCommand.setTargetDeviceID(targetFlashDeviceID);
-			synchronized (commandQueue){
-				commandQueue.add(clientCommand);
-			}
+			commandQueue.add(clientCommand);
 		
 			EventCalendar eventCalendar = macroHandler.getEventCalendar();
 			if (eventCalendar != null){
@@ -54,9 +52,7 @@ public class Model extends BaseModel implements DeviceModel {
 			    calCommand.setFromElement (eventCalendar.get(""));
 			    calCommand.setKey ("CLIENT_SEND");
 			    calCommand.setTargetDeviceID(targetFlashDeviceID);
-				synchronized (commandQueue){
 					commandQueue.add(calCommand);
-				}
 			}
 		}
 	};
@@ -206,9 +202,7 @@ public class Model extends BaseModel implements DeviceModel {
 			synchronized (cache){
 				cache.setCachedCommand("MACRO", clientCommand,false);
 			}
-			synchronized (this.commandQueue){
-				commandQueue.add(clientCommand);
-			}
+			commandQueue.add(clientCommand);
 		}
 	}
 	
@@ -226,10 +220,7 @@ public class Model extends BaseModel implements DeviceModel {
     			synchronized (cache){
     				cache.setCachedCommand("MACRO", clientCommand,false);
     			}
-                synchronized (this.commandQueue){
-                        commandQueue.add(clientCommand);
-                        commandQueue.notifyAll();
-                }
+                 commandQueue.add(clientCommand);
             }
 	}
 
@@ -340,10 +331,7 @@ public class Model extends BaseModel implements DeviceModel {
 			synchronized (cache){
 				cache.setCachedCommand("CALENDAR", clientCommand,false);
 			}
-			synchronized (this.commandQueue){
-				commandQueue.add(clientCommand);
-                                commandQueue.notifyAll();
-			}
+			commandQueue.add(clientCommand);
 		}
 
 	}

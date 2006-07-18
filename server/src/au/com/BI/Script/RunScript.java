@@ -5,6 +5,8 @@ import java.util.*;
 import au.com.BI.Flash.*;
 
 import java.util.logging.*;
+
+import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
 
@@ -34,6 +36,7 @@ public class RunScript extends Thread {
   protected boolean runningInTimer = false;
   protected ArrayList linesOfScript;
   protected Model scriptModel;
+  protected Cache cache;
 
   public RunScript() {
     super();
@@ -69,6 +72,7 @@ public class RunScript extends Thread {
       started.setKey("SCRIPT");
       started.setExtraInfo(getScriptName());
       started.setCommand("started");
+      cache.setCachedCommand("SCRIPT",started);
        commandList.add(started);
 
 
@@ -116,6 +120,7 @@ public class RunScript extends Thread {
       finished.setKey("SCRIPT");
       finished.setExtraInfo(getScriptName());
       finished.setCommand("finished");
+      cache.setCachedCommand ("SCRIPT",finished);
       commandList.add(finished);
 
     }
@@ -198,5 +203,13 @@ public class RunScript extends Thread {
   public void setEnable(boolean enable) {
     this.enable = enable;
   }
+
+public Cache getCache() {
+	return cache;
+}
+
+public void setCache(Cache cache) {
+	this.cache = cache;
+}
 
  }
