@@ -19,6 +19,9 @@ historyViewer_btn._visible = false;
 //Global style
 _global.style.setStyle("themeColor", "haloBlue");
 /********************************************************/
+
+_focusrect = false;
+
 // form holder placed in the correct spot
 var blocker:MovieClip;
 var libraryManager:MovieClip;

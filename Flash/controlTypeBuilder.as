@@ -100,6 +100,7 @@ renderControlType = function () {
 			item_mc.xmlPointer = items[item];
 			
 			item_mc.onPress = function () {
+				Selection.setFocus(this);
 				this.swapDepths(9999);
 				this.startX = this._x;
 				this.startY = this._y;
