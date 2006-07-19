@@ -91,7 +91,7 @@ class Controls.MapEditor extends MovieClip {
 				scrollPane_sp.content.background_mc._width = map._width + 20;
 				scrollPane_sp.content.background_mc._height = map._y + map._height + 20;
 			}
-			scrollPane_sp._parent.focusPoly();
+			//scrollPane_sp._parent.focusPoly();
 		}
 		var my_mcl = new MovieClipLoader();
 		my_mcl.addListener(myListener);
