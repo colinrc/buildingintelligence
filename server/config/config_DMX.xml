@@ -1,0 +1,20 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+        <DESC>Demonstration configuration for DMX</DESC>
+         <!-- ______________________________________  DMX DEFS  ____________________  -->
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="DMX" DESCRIPTION="DMX Light Controller">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="5000"/>
+                </CONNECTION>
+
+                <PARAMETERS>
+                </PARAMETERS>
+                
+                <DMX>
+                        <LIGHT KEY="1" DISPLAY_NAME="GARAGE_LIGHT" NAME="Garage Light" />
+                </DMX>
+        </DEVICE>
+        
+ 
+</CONFIG>
