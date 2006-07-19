@@ -79,7 +79,17 @@ public class BaseModel
 		public User currentUser = null;
 		
         public BaseModel() {
-                logger = Logger.getLogger(this.getClass().getPackage().getName());
+	        	Package thisPackage = this.getClass().getPackage();
+	        	if (thisPackage != null) {
+	                logger = Logger.getLogger(thisPackage.getName());
+	        	} else {
+	        		String name = this.getName();
+	        	   	if (name != null) {
+		                logger = Logger.getLogger(name);
+	        	   	} else {
+	        	   		logger = Logger.getLogger("Unknown model");
+	        	   	}
+	        	}
                 configHelper = new ConfigHelper(this);
                 parameters = new HashMap<String, HashMap<String,String>>(DeviceModel.NUMBER_DEVICE_GROUPS);
                 topMap = new HashMap<String,String>(DeviceModel.NUMBER_PARAMETERS);

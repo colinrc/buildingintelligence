@@ -338,7 +338,7 @@ public class Config {
 		                            newInstance();
 			          } else {
 			        	  if (this.groovyModels.containsKey(deviceConfigName)){
-			        		  logger.log(Level.SEVERE, "Setup groovy device . "+ deviceConfigName);
+			        		  logger.log(Level.INFO, "Setup groovy device . "+ deviceConfigName);
 			        		  GroovyRunBlock groovyRunBlock = groovyModels.get(deviceConfigName);
 			        		  if (groovyRunBlock == null) return null;
 			        		  deviceModel = groovyModelHandler.setupGroovyModel(groovyRunBlock,description);

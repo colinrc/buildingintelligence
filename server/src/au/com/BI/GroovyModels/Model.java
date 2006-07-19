@@ -10,6 +10,7 @@ import au.com.BI.Util.*;
 import au.com.BI.Config.*;
 
 import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyObject;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +25,7 @@ import au.com.BI.User.User;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.jdom.Element;
 import au.com.BI.JRobin.RRDValueObject;
+import au.com.BI.Lights.LightFascade;
 import au.com.BI.Home.Controller;
 import java.io.IOException;
 import org.jrobin.core.*;
@@ -119,7 +121,7 @@ public class Model
 
         public void loadGroovyModels() {
                 int j = 0;
-                logger.log(Level.INFO,"Loading scripts");
+                logger.log(Level.INFO,"Loading Groovy Models");
 
                 String lsLine, lsCheck;
                 ArrayList  scripts;
@@ -152,6 +154,7 @@ public class Model
 						Class groovyClass = gcl.parseClass(new File(fileName));
 						groovyRunBlock.setTheClass(groovyClass);
 						Object aScript = groovyClass.newInstance();
+						
 						GroovyModel myModel = (GroovyModel) aScript;
 						String modelName = myModel.getName();
 						logger.log(Level.INFO, "Registering model " + modelName);
@@ -174,9 +177,11 @@ public class Model
         }
         
         public GroovyModel setupGroovyModel(GroovyRunBlock groovyRunBlock, String description)  throws IllegalAccessException,InstantiationException {
-			Object model = groovyRunBlock.getClass().newInstance();
+			Object model = groovyRunBlock.getTheClass().newInstance();
 			GroovyModel myModel = (GroovyModel) model;
-			// myModel.setLogger (Logger.getLogger(myModel.getName()));
+			//String loggerName = myModel.getClass().getPackage().getName();
+			//Logger newLogger = Logger.getLogger(loggerName);
+			myModel.setLogger (Logger.getLogger(myModel.getClass().getName()));
 			return myModel;
         }
         
