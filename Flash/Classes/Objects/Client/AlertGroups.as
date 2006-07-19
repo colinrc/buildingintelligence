@@ -43,7 +43,7 @@
 		return "Alert Groups";
 	}
 	public function getData():Object {
-		return {alertgroups:alertgroups, dataObject:this, map:room.zone.map,background:room.zone.background, poly:room.poly};
+		return {alertgroups:alertgroups, dataObject:this, map:room.zone.map, background:room.zone.background, poly:room.poly};
 	}
 	public function setData(newData:Object) {
 		_global.left_tree.setIsOpen(treeNode, false);
@@ -51,13 +51,14 @@
 		var newAlertGroups = new Array();
 		for (var index in newData.alertgroups) {
 			if (newData.alertgroups[index].id == undefined) {
-				newAlertGroups.push({x_pos:newData.alertgroups[index].x_pos, y_pos:newData.alertgroups[index].y_pos});
+				newAlertGroups.push({name:newData.alertgroups[index].name, x_pos:newData.alertgroups[index].x_pos, y_pos:newData.alertgroups[index].y_pos});
 			}
 		}
 		for (var alertGroup in alertgroups) {
 			var found = false;
 			for (var index in newData.alertgroups) {
 				if (alertgroups[alertGroup].id == newData.alertgroups[index].id) {
+					alertgroups[alertGroup].name = newData.alertgroups[index].name;
 					alertgroups[alertGroup].x_pos = newData.alertgroups[index].x_pos;
 					alertgroups[alertGroup].y_pos = newData.alertgroups[index].y_pos;
 					found = true;
@@ -70,6 +71,7 @@
 		}
 		for (var AlertGroup in newAlertGroups) {
 			var newNode = new XMLNode(1, "alerts");
+			newNode.attributes["name"] = newAlertGroups[AlertGroup].name;
 			newNode.attributes["x"] = newAlertGroups[AlertGroup].x_pos;
 			newNode.attributes["y"] = newAlertGroups[AlertGroup].y_pos;
 			var newAlertGroup = new Objects.Client.Alerts();

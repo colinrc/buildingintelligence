@@ -36,10 +36,11 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 		toggleDetails(false);
 		currentAlert = undefined;
 		var changeListener:Object = new Object();
+		changeListener.base = this;
 		changeListener.change = function(eventObject:Object) {
-			currentAlert.name = name_ti.text;
+			this.base.currentAlert.name = this.base.name_ti.text;
 			_global.unSaved = true;
-		};
+		}
 		name_ti.addEventListener("change", changeListener);
 		roomEditor.addEventListener("alertSelect", Delegate.create(this, alertEvent));
 		roomEditor.addEventListener("alertAdd", Delegate.create(this, alertEvent));
@@ -56,7 +57,6 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 		} else {
 			toggleDetails(true);
 		}
-		currentAlert = undefined;
 		if(eventObj.target.name != undefined){
 			name_ti.text = eventObj.target.name;
 		} else{
@@ -70,12 +70,12 @@ class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 		var DP = roomEditor.alerts;
 		for (var index = 0; index<DP.length; index++) {
 			var AlertGroup = new Object();
+			AlertGroup.name = DP[index].name;
 			AlertGroup.x_pos = DP[index].x;
 			AlertGroup.y_pos = DP[index].y;
 			if(DP[index].id != "0"){
 				AlertGroup.id = DP[index].id;
 			}
-			AlertGroup.name = DP[index].name;
 			newAlertGroup.push(AlertGroup);
 		}
 		dataObject.setData({alertgroups:newAlertGroup});
