@@ -15,7 +15,7 @@ import au.com.BI.AV.AVState;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
-import au.com.BI.Command.BuildReturnWrapper;
+import au.com.BI.Command.ReturnWrapper;
 import java.util.*;
 import java.util.logging.*;
 
@@ -68,7 +68,7 @@ public class Model extends BaseModel implements DeviceModel {
 	
 	public void initState () {
 	    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
-	    	String key = audioDevice.getKey();
+	    	String key = audioDevice.getKey(); 
 			if (!key.equals(Model.AllZones)) {
 				state.put(key, new AVState());
 			}
@@ -118,7 +118,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public void doOutputItem (CommandInterface command) throws CommsFail {	
 		String theWholeKey = command.getKey();
 		DeviceType device  = configHelper.getOutputItem(theWholeKey);
-		BuildReturnWrapper toSend = null;
+		ReturnWrapper toSend = null;
 		
 		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
@@ -161,7 +161,7 @@ public class Model extends BaseModel implements DeviceModel {
 	 */
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{
-		BuildReturnWrapper commandObject = interpretStringFromNuvo (command);
+		ReturnWrapper commandObject = interpretStringFromNuvo (command);
 		for (CommandInterface eachCommand: commandObject.getOutputFlash()){
 			this.sendToFlash(eachCommand, cache);
 		}
@@ -171,8 +171,8 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 
 	
-	public BuildReturnWrapper interpretStringFromNuvo (CommandInterface command){
-		BuildReturnWrapper result = new BuildReturnWrapper();
+	public ReturnWrapper interpretStringFromNuvo (CommandInterface command){
+		ReturnWrapper result = new ReturnWrapper();
 		boolean commandFound = false;
 			
 		String nuvoCmd = command.getKey();
@@ -233,8 +233,8 @@ public class Model extends BaseModel implements DeviceModel {
 		return returnCode;
 	}
 	
-	public BuildReturnWrapper  interpretZoneStatus (String zoneStatus,DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
-		BuildReturnWrapper returnCode = new BuildReturnWrapper();
+	public ReturnWrapper  interpretZoneStatus (String zoneStatus,DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
+		ReturnWrapper returnCode = new ReturnWrapper();
 		
 		// #ZxxPWRppp,SRCs,GRPt,VOL-yy
 		
@@ -323,8 +323,8 @@ public class Model extends BaseModel implements DeviceModel {
 		return returnCode;
 	}
 
-	public BuildReturnWrapper  interpretZoneSetStatus (String zoneStatus,DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
-		BuildReturnWrapper returnCode = new BuildReturnWrapper();
+	public ReturnWrapper  interpretZoneSetStatus (String zoneStatus,DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
+		ReturnWrapper returnCode = new ReturnWrapper();
 		
 		// #ZxxORp,BASSyy,TREByy,GRPq,VRSTr
 		
@@ -346,8 +346,8 @@ public class Model extends BaseModel implements DeviceModel {
 
 
 	
-	public BuildReturnWrapper buildAudioString (Audio device, CommandInterface command){
-		BuildReturnWrapper returnVal = new BuildReturnWrapper();
+	public ReturnWrapper buildAudioString (Audio device, CommandInterface command){
+		ReturnWrapper returnVal = new ReturnWrapper();
 		String key = device.getKey();
 		boolean commandFound = false;
 
@@ -622,7 +622,7 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 	}
 	
-	public void setGroupKeys (DeviceType audioDevice,String srcStr, int src, BuildReturnWrapper returnVal) {
+	public void setGroupKeys (DeviceType audioDevice,String srcStr, int src, ReturnWrapper returnVal) {
 		String keyToTest = audioDevice.getKey();
 		// Member of source group so switch any other devices in the group to the same source
 		for (String eachKey : this.srcGroup){
