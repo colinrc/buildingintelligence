@@ -1,3 +1,9 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a9.zip V1.6a9] [attachment:wiki:SoftwareReleases:eLife-libs-1.6a9.zip Libs-V1.6a9 ==
+
+''' General '''
+
+General code updates to assist Groovy models
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a8.zip V1.6a8] [attachment:wiki:SoftwareReleases:eLife-libs-1.6a8.zip Libs-V1.6a8 ==
 
 ''' Groovy '''
