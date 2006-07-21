@@ -3,7 +3,7 @@ package au.com.BI.Command;
 import java.util.Vector;
 
 
-public class BuildReturnWrapper {
+public class ReturnWrapper {
 		private Vector <byte[]>outputBytes;
 		private Vector <String>outputStrings;
 		private Vector <CommandInterface>outputFlash;
@@ -16,7 +16,7 @@ public class BuildReturnWrapper {
 		int outputCommandType;
 		int paramCommandType;
 		
-		public BuildReturnWrapper() {
+		public ReturnWrapper() {
 			outputBytes = new Vector<byte[]>();
 			outputStrings = new Vector<String>();
 			outputFlash = new Vector<CommandInterface>();

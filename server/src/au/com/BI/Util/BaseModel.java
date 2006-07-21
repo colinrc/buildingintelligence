@@ -74,6 +74,7 @@ public class BaseModel
 		protected int padding = 1; // Number of digits to pad the key too in the device.
 		public DeviceType allDevices = null;
 		protected VersionManager versionManager = null;
+		protected String version = "0";
 		
 		
 		public User currentUser = null;
@@ -1013,5 +1014,13 @@ public class BaseModel
 
 	public void setLogger(Logger logger) {
 		this.logger = logger;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 }

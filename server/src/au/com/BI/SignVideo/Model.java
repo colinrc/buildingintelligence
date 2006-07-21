@@ -61,7 +61,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public void doOutputItem (CommandInterface command) throws CommsFail {	
 		String theWholeKey = command.getKey();
 		DeviceType device  = configHelper.getOutputItem(theWholeKey);
-		BuildReturnWrapper toSend = null;
+		ReturnWrapper toSend = null;
 		
 		if (device == null) {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
@@ -104,7 +104,7 @@ public class Model extends BaseModel implements DeviceModel {
 	 */
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{
-		BuildReturnWrapper commandObject = interpretBytesFromSignVideo ((CommsCommand)command);
+		ReturnWrapper commandObject = interpretBytesFromSignVideo ((CommsCommand)command);
 		for (CommandInterface eachCommand: commandObject.getOutputFlash()){
 			this.sendToFlash(eachCommand, cache);
 		}
@@ -117,8 +117,8 @@ public class Model extends BaseModel implements DeviceModel {
 	}
 
 
-	public BuildReturnWrapper interpretBytesFromSignVideo (CommsCommand command){
-		BuildReturnWrapper result = new BuildReturnWrapper();
+	public ReturnWrapper interpretBytesFromSignVideo (CommsCommand command){
+		ReturnWrapper result = new ReturnWrapper();
 		boolean commandFound = false;
 		
 		int signAVCmd = command.getCommandBytes()[0] & 0xff;
@@ -172,8 +172,8 @@ public class Model extends BaseModel implements DeviceModel {
 
 	
 	
-	public BuildReturnWrapper buildAVString (AV device, CommandInterface command){
-		BuildReturnWrapper returnVal = new BuildReturnWrapper();
+	public ReturnWrapper buildAVString (AV device, CommandInterface command){
+		ReturnWrapper returnVal = new ReturnWrapper();
 		String key = device.getKey();
 		boolean commandFound = false;
 

@@ -473,6 +473,17 @@ public interface DeviceModel {
 	 * @param eventCalendar The eventCalendar to set.
 	 */
 	public void setEventCalendar(EventCalendar eventCalendar) ;
+	
+	/**
+	 * Used by the version manager to display details to the client.
+	 * @return The version
+	 */
+	public String getVersion();
+
+	/**
+	 * Used by the version manager to display details to the client.
+	 */
+	public void setVersion(String version) ;
 }
 
 
