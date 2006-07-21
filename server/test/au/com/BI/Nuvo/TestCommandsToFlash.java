@@ -2,7 +2,7 @@ package au.com.BI.Nuvo;
 
 import java.util.HashMap;
 import java.util.Vector;
-import au.com.BI.Command.BuildReturnWrapper;
+import au.com.BI.Command.ReturnWrapper;
 import au.com.BI.Audio.*;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.DeviceType;
@@ -75,7 +75,7 @@ public class TestCommandsToFlash extends TestCase {
 		testCommand3.setDisplayName("FRONT_AUDIO");
 		expectedOut.add(testCommand3);
 
-		BuildReturnWrapper val = model.interpretStringFromNuvo(testString);
+		ReturnWrapper val = model.interpretStringFromNuvo(testString);
 		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOut);
 	}
 	
@@ -88,7 +88,7 @@ public class TestCommandsToFlash extends TestCase {
 		AudioCommand testCommand = new AudioCommand("CLIENT_SEND","volume",null,"0");
 		testCommand.setDisplayName("FRONT_AUDIO");
 
-		BuildReturnWrapper val = model.interpretStringFromNuvo(testString);
+		ReturnWrapper val = model.interpretStringFromNuvo(testString);
 		ListAssert.assertContains ("Return value for interpret volume failed",val.getOutputFlash(),testCommand);
 	}
 	
@@ -98,7 +98,7 @@ public class TestCommandsToFlash extends TestCase {
 		Command testString = new Command();
 		
 		testString.setKey("#Z01PWRON,SRC2,GRP0,VOL-79");
-		BuildReturnWrapper val = model.interpretStringFromNuvo(testString);
+		ReturnWrapper val = model.interpretStringFromNuvo(testString);
 
 		testString.setKey("#Z01PWRON,SRC2,GRP0,VOL-00");
 		val = model.interpretStringFromNuvo(testString);
@@ -136,7 +136,7 @@ public class TestCommandsToFlash extends TestCase {
 		Command testString = new Command();
 		
 		testString.setKey("#Z01OR0,BASS00,TREB08,GRPq,VRSTr");
-		BuildReturnWrapper val = model.interpretStringFromNuvo(testString);
+		ReturnWrapper val = model.interpretStringFromNuvo(testString);
 
 
 		AudioCommand testCommand = new AudioCommand("CLIENT_SEND","treble",null,"0");

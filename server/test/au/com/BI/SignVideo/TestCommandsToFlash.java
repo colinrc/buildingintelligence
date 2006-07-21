@@ -89,7 +89,7 @@ public class TestCommandsToFlash extends TestCase {
 		testCommand5.setDisplayName("ALL");
 		expectedOutFlash.add(testCommand5);
 
-		BuildReturnWrapper val = model.interpretBytesFromSignVideo(testString);
+		ReturnWrapper val = model.interpretBytesFromSignVideo(testString);
 		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOutFlash);
 	}
 
@@ -116,7 +116,7 @@ public class TestCommandsToFlash extends TestCase {
 		testCommand5.setDisplayName("ALL");
 		expectedOutFlash.add(testCommand5);
 
-		BuildReturnWrapper val = model.interpretBytesFromSignVideo(testString);
+		ReturnWrapper val = model.interpretBytesFromSignVideo(testString);
 		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOutFlash);
 	}
 	
@@ -138,7 +138,7 @@ public class TestCommandsToFlash extends TestCase {
 		expectedOutFlash.add(testCommand1);
 
 
-		BuildReturnWrapper val = model.interpretBytesFromSignVideo(testString);
+		ReturnWrapper val = model.interpretBytesFromSignVideo(testString);
 		ListAssert.assertEquals ("Return value for preset failed",val.getOutputFlash(),expectedOutFlash);
 
 		ListOfArrayAssert.assertByteEquals("State query after preset failed",val.getCommOutputBytes(),expectedOutBytes);
@@ -155,7 +155,7 @@ public class TestCommandsToFlash extends TestCase {
 		testCommand1.setDisplayName("KITCHEN_AV");
 		expectedOutFlash.add(testCommand1);
 		
-		BuildReturnWrapper val = model.interpretBytesFromSignVideo(testString);
+		ReturnWrapper val = model.interpretBytesFromSignVideo(testString);
 		ListAssert.assertEquals ("Return value for src failed",val.getOutputFlash(),expectedOutFlash);
 	}
 	
@@ -165,7 +165,7 @@ public void testInterpretIncorrectSrc() {
 		testString.setCommandBytes(new byte[]{((byte)0x26)});
 
 		
-		BuildReturnWrapper val = model.interpretBytesFromSignVideo(testString);
+		ReturnWrapper val = model.interpretBytesFromSignVideo(testString);
 		Assert.assertEquals ("Return value for incorrect src failed",val.getOutputFlash().size(),0);
 	}
 	

@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.AV.*;
-import au.com.BI.Command.BuildReturnWrapper;
+import au.com.BI.Command.ReturnWrapper;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.SignVideo.Model;
 import au.com.BI.Util.DeviceModel;
@@ -80,7 +80,7 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAVAllOff() {
 		ClientCommand testCommand = new ClientCommand("ALL","off",null,"","","","","");
 		byte[] expectedOut = new byte[]{((byte)0xA5)};
-		BuildReturnWrapper val = model.buildAVString(avAll, testCommand);
+		ReturnWrapper val = model.buildAVString(avAll, testCommand);
 		ArrayAssert.assertEquals ("Return value for av all off failed",expectedOut,val.getCommOutputBytes().firstElement());
 
 		
@@ -104,7 +104,7 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAVAllOn() {
 		ClientCommand testCommand = new ClientCommand("ALL","on",null,"","","","","");
 		byte[] expectedOut = new byte[]{((byte)0xA4)};
-		BuildReturnWrapper val = model.buildAVString(avAll, testCommand);
+		ReturnWrapper val = model.buildAVString(avAll, testCommand);
 		ArrayAssert.assertEquals ("Return value for av all off failed",expectedOut,val.getCommOutputBytes().firstElement());
 		
 		Vector <CommandInterface>expectedOutFlash = new Vector<CommandInterface>();
@@ -127,20 +127,20 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAVSrc() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AV","src",null,"DVD1","","","","");
 		byte[] expectedOut = new byte[]{((byte)0x10)};
-		BuildReturnWrapper val = model.buildAVString(avFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAVString(avFrontRoom, testCommand);
 		ArrayAssert.assertEquals ("Return value for src failed",expectedOut,val.getCommOutputBytes().firstElement());
 		
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AV","src",null,"DVD2","","","","");
 		byte[] expectedOut2 = new byte[]{((byte)0x11)};
-		BuildReturnWrapper val2 = model.buildAVString(avFrontRoom, testCommand2);
+		ReturnWrapper val2 = model.buildAVString(avFrontRoom, testCommand2);
 		ArrayAssert.assertEquals ("Return value for src failed",expectedOut2,val2.getCommOutputBytes().firstElement());
 				
 		ClientCommand testCommand4 = new ClientCommand("FRONT_AV","src",null,"x","","","","");
-		BuildReturnWrapper val4 = model.buildAVString(avFrontRoom, testCommand4);
+		ReturnWrapper val4 = model.buildAVString(avFrontRoom, testCommand4);
 		Assert.assertEquals ("Return value for unknown src failed",true,val4.isError());
 
 		ClientCommand testCommand5 = new ClientCommand("KITCHEN_AV","src",null,"DVD1","","AUDIO_ONLY","","");
-		BuildReturnWrapper val5 = model.buildAVString(this.kitchenAV, testCommand5);
+		ReturnWrapper val5 = model.buildAVString(this.kitchenAV, testCommand5);
 		byte[] expectedOut5_audio_switch = new byte[]{((byte)0xA2)};
 		byte[] expectedOut5_src_switch = new byte[]{((byte)0x20)};
 		byte[] expectedOut5_av_switch = new byte[]{((byte)0xA0)};
@@ -161,7 +161,7 @@ public class TestCommandsFromFlash extends TestCase {
 		expectedOutVec.add(new byte[]{((byte)0x99)});
 		expectedOutVec.add(new byte[]{((byte)0xA3)});
 		
-		BuildReturnWrapper val = model.buildAVString(avFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAVString(avFrontRoom, testCommand);
 		ListOfArrayAssert.assertByteEquals("Return value for av preset failed",val.getCommOutputBytes(),expectedOutVec);	
 	}
 
@@ -169,7 +169,7 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAVPresetSet() {
 		ClientCommand testCommand = new ClientCommand("ALL","preset_set",null,"2","","","","");
 		byte[] expectedOut = new byte[]{((byte)0x91)};
-		BuildReturnWrapper val = model.buildAVString(avFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAVString(avFrontRoom, testCommand);
 		ArrayAssert.assertEquals ("Return value for preset store failed",expectedOut,val.getCommOutputBytes().firstElement());
 	}
 	
@@ -195,7 +195,7 @@ public class TestCommandsFromFlash extends TestCase {
 		testCommand4.setDisplayName("KITCHEN_AV");
 		expectedOutFlash.add(testCommand4);
 
-		BuildReturnWrapper val3 = model.buildAVString(avAll, testCommand3);
+		ReturnWrapper val3 = model.buildAVString(avAll, testCommand3);
 		ListOfArrayAssert.assertByteEquals("Return value for src all failed",expectedOut,val3.getCommOutputBytes());
 		
 		ListAssert.assertEquals ("Return value for interpret failed",val3.getOutputFlash(),expectedOutFlash);

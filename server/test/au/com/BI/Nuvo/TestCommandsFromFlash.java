@@ -2,7 +2,7 @@ package au.com.BI.Nuvo;
 
 import java.util.HashMap;
 import java.util.Vector;
-import au.com.BI.Command.BuildReturnWrapper;
+import au.com.BI.Command.ReturnWrapper;
 import au.com.BI.Command.CommandInterface;
 
 import au.com.BI.AV.AVCommand;
@@ -86,7 +86,7 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAudioZoneOn() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","on",null,"","","","","");
 		String expectedOut = "*Z01ON";
-		BuildReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for audio on failed",expectedOut,val.getCommOutputStrings().firstElement());
 
 	}
@@ -94,7 +94,7 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAudioAllOff() {
 		ClientCommand testCommand = new ClientCommand("ALL","off",null,"","","","","");
 		String expectedOut = "*ALLOFF";
-		BuildReturnWrapper val = model.buildAudioString(audioAll, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioAll, testCommand);
 		Assert.assertEquals ("Return value for audio all off failed",expectedOut,val.getCommOutputStrings().firstElement());
 		
 		Vector <CommandInterface>expectedOutFlash = new Vector<CommandInterface>();
@@ -117,7 +117,7 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAudioZoneOff() {
 		ClientCommand testCommand = new ClientCommand("KITCHEN_AUDIO","off",null,"","","","","");
 		String expectedOut = "*Z02OFF";
-		BuildReturnWrapper val = model.buildAudioString(kitchenAudio, testCommand);
+		ReturnWrapper val = model.buildAudioString(kitchenAudio, testCommand);
 		Assert.assertEquals ("Return value for audio zone off failed",expectedOut,val.getCommOutputStrings().firstElement());
 	}
 	
@@ -126,21 +126,21 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAudioZoneMuteOn() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","mute",null,"on","","","","");
 		String expectedOut = "*Z01MTON";
-		BuildReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for audio on failed",expectedOut,val.getCommOutputStrings().firstElement());
 	}
 
 	public void testBuildAudioZoneMuteOff() {
 		ClientCommand testCommand = new ClientCommand("KITCHEN_AUDIO","mute",null,"off","","","","");
 		String expectedOut = "*Z02MTOFF";
-		BuildReturnWrapper val = model.buildAudioString(kitchenAudio, testCommand);
+		ReturnWrapper val = model.buildAudioString(kitchenAudio, testCommand);
 		Assert.assertEquals ("Return value for audio zone off failed",expectedOut,val.getCommOutputStrings().firstElement());
 	}
 
 	public void testBuildAudioMuteOn() {
 		ClientCommand testCommand = new ClientCommand("ALL","mute",null,"on","","","","");
 		String expectedOut = "*ALLMON";
-		BuildReturnWrapper val = model.buildAudioString(audioAll, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioAll, testCommand);
 		Assert.assertEquals ("Return value for audio all on failed",expectedOut,val.getCommOutputStrings().firstElement());
 		
 		Vector <CommandInterface>expectedOutFlash = new Vector<CommandInterface>();
@@ -163,7 +163,7 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAudioMuteOff() {
 		ClientCommand testCommand = new ClientCommand("ALL","mute",null,"off","","","","");
 		String expectedOut = "*ALLMOFF";
-		BuildReturnWrapper val = model.buildAudioString(audioAll, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioAll, testCommand);
 		Assert.assertEquals ("Return value for audio all off failed",expectedOut,val.getCommOutputStrings().firstElement());
 		
 		Vector <CommandInterface>expectedOutFlash = new Vector<CommandInterface>();
@@ -187,14 +187,14 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAudioBass() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","bass",null,"50","","","","");
 		String expectedOut = "*Z01BASS+00";
-		BuildReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for audio bass failed",expectedOut,val.getCommOutputStrings().firstElement());
 	}
  
 	public void testBuildAudioTreble() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","treble",null,"50","","","","");
 		String expectedOut = "*Z01TREB+00";
-		BuildReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for audio treble failed",expectedOut,val.getCommOutputStrings().firstElement());
 	}
 
@@ -202,17 +202,17 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAudioVolume() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","volume",null,"50","","","","");
 		String expectedOut = "*Z01VOL39";
-		BuildReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for volume failed",expectedOut,val.getCommOutputStrings().firstElement());
 		
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"100","","","","");
 		String expectedOut2 = "*Z01VOL00";
-		BuildReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
+		ReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
 		Assert.assertEquals ("Return value for volume failed",expectedOut2,val2.getCommOutputStrings().firstElement());
 		
 		ClientCommand testCommand3 = new ClientCommand("FRONT_AUDIO","volume",null,"0","","","","");
 		String expectedOut3 = "*Z01VOL78";
-		BuildReturnWrapper val3 = model.buildAudioString(audioFrontRoom, testCommand3);
+		ReturnWrapper val3 = model.buildAudioString(audioFrontRoom, testCommand3);
 		Assert.assertEquals ("Return value for volume failed",expectedOut3,val3.getCommOutputStrings().firstElement());
 	}
 
@@ -220,13 +220,13 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAudioVolumeUpDown() {
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"100","","","","");
 		String expectedOut2 = "*Z01VOL00";
-		BuildReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
+		ReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
 		Assert.assertEquals ("Return value for volume failed",expectedOut2,val2.getCommOutputStrings().firstElement());
 		
 		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","volume",null,"down","","","","");
 		int TestVal = Utility.scaleFromFlash("95",0,78,true);
 		String expectedOut = String.format("*Z"+audioFrontRoom.getKey()+"VOL%02d",TestVal);;
-		BuildReturnWrapper val = model.buildAudioString(this.audioFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAudioString(this.audioFrontRoom, testCommand);
 		Assert.assertEquals ("Control value for volume front down failed",expectedOut,val.getCommOutputStrings().firstElement());
 		AudioCommand volUpdateCommand = new AudioCommand("CLIENT_SEND","volume",null,"95");		
 		volUpdateCommand.setDisplayName("FRONT_AUDIO");
@@ -234,7 +234,7 @@ public class TestCommandsFromFlash extends TestCase {
 		
 		ClientCommand testCommand4 = new ClientCommand("FRONT_AUDIO","volume",null,"up","","","","");
 		String expectedOut4 = "*Z01VOL00";
-		BuildReturnWrapper val4 = model.buildAudioString(audioFrontRoom, testCommand4);
+		ReturnWrapper val4 = model.buildAudioString(audioFrontRoom, testCommand4);
 		Assert.assertEquals ("Control value for volume up failed ",expectedOut4,val4.getCommOutputStrings().firstElement());
 		AudioCommand volUpdateCommand2 = new AudioCommand("CLIENT_SEND","volume",null,"100");		
 		volUpdateCommand2.setDisplayName("FRONT_AUDIO");
@@ -244,12 +244,12 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAudioVolumeUpLimit() {
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"100","","","","");
 		String expectedOut2 = "*Z01VOL00";
-		BuildReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
+		ReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
 		Assert.assertEquals ("Return value for volume set failed",expectedOut2,val2.getCommOutputStrings().firstElement());
 		
 		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","volume",null,"up","","","","");
 		String expectedOut = "*Z01VOL00";
-		BuildReturnWrapper val = model.buildAudioString(this.audioFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAudioString(this.audioFrontRoom, testCommand);
 		Assert.assertEquals ("Control value for volume up past limit failed",expectedOut,val.getCommOutputStrings().firstElement());
 		AudioCommand volUpdateCommand = new AudioCommand("CLIENT_SEND","volume",null,"100");		
 		volUpdateCommand.setDisplayName("FRONT_AUDIO");
@@ -259,12 +259,12 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAudioVolumeDownLimit() {
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"0","","","","");
 		String expectedOut2 = "*Z01VOL78";
-		BuildReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
+		ReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
 		Assert.assertEquals ("Return value for volume set failed",expectedOut2,val2.getCommOutputStrings().firstElement());
 		
 		ClientCommand testCommand = new ClientCommand("audioFrontRoom","volume",null,"down","","","","");
 		String expectedOut = "*Z01VOL78";
-		BuildReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
 		Assert.assertEquals ("Control value for volume down past limit failed",expectedOut,val.getCommOutputStrings().firstElement());
 		AudioCommand volUpdateCommand = new AudioCommand("CLIENT_SEND","volume",null,"0");		
 		volUpdateCommand.setDisplayName("FRONT_AUDIO");
@@ -274,29 +274,29 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testBuildAudioVolumeRampStop() {
 		ClientCommand testCommand4 = new ClientCommand("FRONT_AUDIO","volume",null,"stop","","","","");
 		String expectedOut4 = "*Z01VHLD";
-		BuildReturnWrapper val4 = model.buildAudioString(audioFrontRoom, testCommand4);
+		ReturnWrapper val4 = model.buildAudioString(audioFrontRoom, testCommand4);
 		Assert.assertEquals ("Return value for volume zone stop ",expectedOut4,val4.getCommOutputStrings().firstElement());
 		
 		ClientCommand testCommand5 = new ClientCommand("ALL","volume",null,"stop","","","","");
 		String expectedOut5 = "*ZALLHLD";
-		BuildReturnWrapper val5 = model.buildAudioString(audioAll, testCommand5);
+		ReturnWrapper val5 = model.buildAudioString(audioAll, testCommand5);
 		Assert.assertEquals ("Return value for volume all stop ",expectedOut5,val5.getCommOutputStrings().firstElement());
 	}
 
 	public void testBuildAudioSrc() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","src",null,"cd1","","","","");
 		String expectedOut = "*Z01SRC1";
-		BuildReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for src failed",expectedOut,val.getCommOutputStrings().firstElement());
 		
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","src",null,"cd2","","","","");
 		String expectedOut2 = "*Z01SRC2";
-		BuildReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
+		ReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
 		Assert.assertEquals ("Return value for src failed",expectedOut2,val2.getCommOutputStrings().firstElement());
 				
 		ClientCommand testCommand4 = new ClientCommand("FRONT_AUDIO","src",null,"x","","","","");
 		String expectedOut4 = "";
-		BuildReturnWrapper val4 = model.buildAudioString(audioFrontRoom, testCommand4);
+		ReturnWrapper val4 = model.buildAudioString(audioFrontRoom, testCommand4);
 		Assert.assertEquals ("Return value for unknown src failed",true,val4.isError());
 
 	}
@@ -305,15 +305,15 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testSrcGroups() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","src",null,"cd2","","","","");
 		String expectedOut = "*Z01SRC2";
-		BuildReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for src failed",expectedOut,val.getCommOutputStrings().firstElement());
 
 		ClientCommand frontAudioToGroup = new ClientCommand("FRONT_AUDIO","group",null,"on","","","","");
-		BuildReturnWrapper val3 = model.buildAudioString(audioFrontRoom, frontAudioToGroup);
+		ReturnWrapper val3 = model.buildAudioString(audioFrontRoom, frontAudioToGroup);
 		// add kitchen audio to the source group
 
 		ClientCommand kitchenToGroup = new ClientCommand("KITCHEN_AUDIO","group",null,"on","","","","");
-		BuildReturnWrapper val4 = model.buildAudioString(kitchenAudio, kitchenToGroup);
+		ReturnWrapper val4 = model.buildAudioString(kitchenAudio, kitchenToGroup);
 		// add kitchen audio to the source group
 
 
@@ -324,7 +324,7 @@ public class TestCommandsFromFlash extends TestCase {
 		expectedOut2.add(testCommand3);
 		
 		ClientCommand sendLinkedCommand = new ClientCommand("FRONT_AUDIO","src",null,"cd2","","","","");
-		BuildReturnWrapper commandAfterLink = model.buildAudioString(audioFrontRoom, testCommand);
+		ReturnWrapper commandAfterLink = model.buildAudioString(audioFrontRoom, testCommand);
 		// trigger the command for update through linked item
 		
 		ListAssert.assertEquals ("Updating of grouped src failed",expectedOut2,commandAfterLink.getOutputFlash());
@@ -334,11 +334,11 @@ public class TestCommandsFromFlash extends TestCase {
 	public void testSrcCache() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AUDIO","src",null,"cd1","","","","");
 		String expectedOut = "*Z01SRC1";
-		BuildReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
+		ReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
 		Assert.assertEquals ("Return value for src failed",expectedOut,val.getCommOutputStrings().firstElement());
 
 		ClientCommand testCommandCache = new ClientCommand("FRONT_AUDIO","src",null,"cd1","","","","");
-		BuildReturnWrapper valCache = model.buildAudioString(audioFrontRoom, testCommandCache);
+		ReturnWrapper valCache = model.buildAudioString(audioFrontRoom, testCommandCache);
 		Assert.assertTrue ("Return value for cached src failed, the instruction was incorrectly returned",valCache.getOutputFlash().isEmpty());
 
 	}
@@ -352,7 +352,7 @@ public class TestCommandsFromFlash extends TestCase {
 		expectedOut.add ("*Z02SRC2");
 		expectedOut.add ("*Z03SRC2");
 
-		BuildReturnWrapper val3 = model.buildAudioString(audioAll, testCommand3);
+		ReturnWrapper val3 = model.buildAudioString(audioAll, testCommand3);
 		ListAssert.assertEquals ("Return value for volume failed",expectedOut,val3.getCommOutputStrings());
 
 	}
