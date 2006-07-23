@@ -44,13 +44,16 @@ public class GroovyModelFileHandler {
 	                
 	                FilenameFilter filter = new FilenameFilter() {
 	                        public boolean accept(File dir, String name) {
-	                                return name.endsWith(".groovy");
+	                        	if (name.endsWith(".groovy")) return true;	                        	
+	                        	if (name.endsWith(".jar")) return true;
+	                            return false;
 	                        };
 	                };
 	
 	                File dir = new File(directoryName);
 	                String[] stFiles;
-	                stFiles = new String[dir.list(filter).length];
+	                if (!dir.isDirectory()) return;
+	                //stFiles = new String[dir.list(filter).length];
 	                stFiles = dir.list(filter);
 	
 	                for (int i = 0; i < stFiles.length; i += 1) {

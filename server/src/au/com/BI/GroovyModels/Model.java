@@ -130,7 +130,7 @@ public class Model
 
 				//get the script files and prepare for parsing
                 try {
-	                groovyModelFileHandler.loadGroovyModelList( "./models/",this.groovyModelFiles);
+	                groovyModelFileHandler.loadGroovyModelList( "./models/au/com/BI/models/",this.groovyModelFiles);
 	
 	                for (GroovyRunBlock runBlock: groovyModelFiles.values()) {
 	                	try {
