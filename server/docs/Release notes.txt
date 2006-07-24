@@ -1,4 +1,4 @@
-== Released [attachment:wiki:SoftwareReleases:eLife-1.6a10.zip V1.6a10]
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a10.zip V1.6a10] ==
 
 ''' Groovy '''
 
