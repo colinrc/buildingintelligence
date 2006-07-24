@@ -4,7 +4,7 @@
 
 Ensure the models directory not existing will not crash the server on startup.
 
-== Released [attachment:wiki:SoftwareReleases:eLife-1.6a9.zip V1.6a9] [attachment:wiki:SoftwareReleases:eLife-libs-1.6a9.zip Libs-V1.6a9 ] ==
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a9.zip V1.6a9] [attachment:wiki:SoftwareReleases:eLife-1.6a9-libs.zip Libs-V1.6a9 ] ==
 
 ''' General '''
 
