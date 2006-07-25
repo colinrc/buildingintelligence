@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import au.com.BI.M1.ControlledHelper;
+import au.com.BI.Alert.Alarm;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.M1.Commands.ArmingStatusRequest;
@@ -96,6 +97,9 @@ public class Model extends BaseModel implements DeviceModel {
 		// request the arming states
 		ArmingStatusRequest armingStatusRequest = new ArmingStatusRequest();
 		comms.sendString(armingStatusRequest.buildM1String()+"\r\n");
+		
+		// add a device to do arming messages
+		super.addControlledItem("ARM",new Alarm("ARM",DeviceType.VIRTUAL_OUTPUT,"ARM"),MessageDirection.FROM_FLASH);
 	}
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {
