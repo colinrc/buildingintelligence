@@ -37,6 +37,10 @@ public class Model extends BaseModel implements DeviceModel {
 	protected PollTemperatureSensors pollTemperatures;
 	protected OutputHelper outputHelper;
 	
+	/**
+	 * M1 Model. 
+	 *
+	 */
 	public Model() {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -47,6 +51,9 @@ public class Model extends BaseModel implements DeviceModel {
 		deviceKeysDecimal = true;
 	}
 
+	/**
+	 * Clears items.
+	 */
 	public void clearItems () {
 		super.clearItems();
 	}
@@ -54,18 +61,25 @@ public class Model extends BaseModel implements DeviceModel {
 	/**
 	 * Adds the startup query items. This will add all the temperature sensors that have been specified in the config.
 	 */
-	public void addStartupQueryItem (String name, Object details, int controlType){
+	public void addStartupQueryItem (String name, Object details, MessageDirection controlType){
 		try {
 			if (((DeviceType)details).getDeviceType() == DeviceType.SENSOR ){
 				temperatureSensors.add ((SensorFascade)details);
 			}
 		} catch (ClassCastException ex) {
-			logger.log (Level.FINE,"A temperature sennssor was added that was not the expected type " + ex.getMessage());
+			logger.log (Level.FINE,"A temperature sensor was added that was not the expected type " + ex.getMessage());
 		}
 	}
 	
 	/**
-	 * 
+	 * Performs the startup commands. This will:
+	 * <ul>
+	 * <li>Create the polling class to monitor the named temperature sensors.</li>
+	 * <li>Request the status of all the control outputs.</li>
+	 * <li>Request the arming states of all monitored devices.</li>
+	 * <li>Create an ARM virtual device to handle requests from the client to arm the M1.</li>
+	 * <li>Create a REQUEST virtual device to handle various requests for reports from the M1.</li>
+	 * </ul>
 	 */
 	public void doStartup() throws CommsFail {
 
@@ -100,14 +114,20 @@ public class Model extends BaseModel implements DeviceModel {
 		
 		// add a device to do arming messages
 		super.addControlledItem("ARM",new Alarm("ARM",DeviceType.VIRTUAL_OUTPUT,"ARM"),MessageDirection.FROM_FLASH);
+		
+		// add a device to do request messages
+		super.addControlledItem("REQUEST",new Alarm("REQUEST",DeviceType.VIRTUAL_OUTPUT,"REQUEST"),MessageDirection.FROM_FLASH);
 	}
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {
 		outputHelper.doOutputItem(command, configHelper, cache, comms,this);
 	}
 	
+
+
+	
 	/**
-	 * @TODO, this looks incorrect. I don't think you want from flash (previously output) here
+	 * @see au.com.BI.Util.BaseModel#addControlledItem(java.lang.String, au.com.BI.Util.DeviceType, au.com.BI.Util.MessageDirection)
 	 */
 	public void addControlledItem (String key, DeviceType details, MessageDirection type) {
 		
