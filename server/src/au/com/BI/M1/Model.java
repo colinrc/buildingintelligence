@@ -16,6 +16,7 @@ import au.com.BI.M1.ControlledHelper;
 import au.com.BI.Alert.Alarm;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsFail;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.M1.Commands.ArmingStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputOff;
 import au.com.BI.M1.Commands.ControlOutputOn;
@@ -23,7 +24,6 @@ import au.com.BI.M1.Commands.ControlOutputStatusRequest;
 import au.com.BI.Sensors.SensorFascade;
 import au.com.BI.Util.BaseModel;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
 import au.com.BI.Util.MessageDirection;
 import au.com.BI.Util.Utility;
 
