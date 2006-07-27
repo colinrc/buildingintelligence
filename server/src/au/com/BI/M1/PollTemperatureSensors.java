@@ -10,10 +10,10 @@ import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.CommDevice;
 import au.com.BI.Comms.CommsCommand;
 import au.com.BI.Comms.CommsFail;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.M1.Commands.Group;
 import au.com.BI.M1.Commands.RequestTemperature;
 import au.com.BI.Sensors.SensorFascade;
-import au.com.BI.Util.DeviceType;
 
 public class PollTemperatureSensors extends Thread {
 
