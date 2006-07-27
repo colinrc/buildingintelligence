@@ -1,0 +1,48 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+        <DESC>My demonstration configuration</DESC>
+        <!-- _____________________________ M1 DEFS _____________________________-->
+        <DEVICE ACTIVE="N" NAME="M1" DISPLAY_NAME="M1" PASSWORD="1234">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                          <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5006"/>
+                </CONNECTION>
+                <M1>
+                        
+                        
+                    <TOGGLE_OUTPUT ACTIVE="Y" KEY="011" AREA="001" NAME="Garage Door Opener" DISPLAY_NAME="GARAGE_DOOR_OPENER" />
+					<TOGGLE_OUTPUT ACTIVE="Y" KEY="012" AREA="001" NAME="Front Gate Strike" DISPLAY_NAME="FRONT_GATE" />
+                	<TOGGLE_OUTPUT ACTIVE="Y" KEY="018" AREA="001" NAME="Sprinkler Side Garden" DISPLAY_NAME="SPRINKLER_SIDE_GARDEN" />
+                	<TOGGLE_OUTPUT ACTIVE="Y" KEY="014" AREA="001" NAME="Sprinkler Back Grass" DISPLAY_NAME="SPRINKLER_BACK_GRASS" />
+                	<TOGGLE_OUTPUT ACTIVE="Y" KEY="016" AREA="001" NAME="Sprinkler Back Garden" DISPLAY_NAME="SPRINKLER_BACK_GARDEN" />
+					<TOGGLE_OUTPUT ACTIVE="Y" KEY="017" AREA="001" NAME="Sprinkler Front Garden" DISPLAY_NAME="SPRINKLER_FRONT_GARDEN" />
+                	<TOGGLE_OUTPUT ACTIVE="Y" KEY="015" AREA="001" NAME="Sprinkler Front Lawn" DISPLAY_NAME="SPRINKLER_FRONT_GRASS" />
+			
+					<!-- PIRs - (IP) -->
+					<CONTACT_CLOSURE ACTIVE="N" KEY="001" AREA="001" NAME="Entry PIR" DISPLAY_NAME="ENTRY_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="006" AREA="001" NAME="Dining Room PIR" DISPLAY_NAME="DINING_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="007" AREA="001" NAME="Lounge Room PIR" DISPLAY_NAME="LOUNGE_PIR"/>
+                	<CONTACT_CLOSURE ACTIVE="Y" KEY="002" AREA="001" NAME="Family Room PIR"  DISPLAY_NAME="FAMILY_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="001" AREA="001" NAME="Downstairs Hall PIR"  DISPLAY_NAME="HALL_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="008" AREA="001" NAME="Laundry Door Reed"  DISPLAY_NAME="LAUNDRY_DOOR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="003" AREA="001" NAME="Master Bedroom PIR"  DISPLAY_NAME="MASTERBED_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="012" AREA="001" NAME="Downstairs Smoke Detector"  DISPLAY_NAME="DOWNSTAIRS_SMOKE"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="005" AREA="001" NAME="Office PIR"  DISPLAY_NAME="STUDY_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="017" AREA="001" NAME="Downstairs Hall PIR"  DISPLAY_NAME="HALL_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="016" AREA="001" NAME="Garage PIR"  DISPLAY_NAME="GARAGE_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="004" AREA="001" NAME="Landing PIR"  DISPLAY_NAME="LANDING_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="015" AREA="001" NAME="Theatre PIR"  DISPLAY_NAME="THEATRE_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="011" AREA="001" NAME="Upstairs Smoke Detector"  DISPLAY_NAME="UPSTAIRS_SMOKE"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="013" AREA="001" NAME="Tessa's Room PIR"  DISPLAY_NAME="BED3_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="014" AREA="001" NAME="Ainslee's Room PIR"  DISPLAY_NAME="BED4_PIR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="022" AREA="001" NAME="Front Gate Reed"  DISPLAY_NAME="FRONT_GATE_REED"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="021" AREA="001" NAME="Garage Door Reed"  DISPLAY_NAME="GARAGE_DOOR"/>
+					<CONTACT_CLOSURE ACTIVE="Y" KEY="030" AREA="001" NAME="Door Bell"  DISPLAY_NAME="DOOR_BELL"/>
+					
+					<!-- Thermostats -->
+                       <SENSOR ACTIVE="Y" KEY="01" GROUP="0" NAME="Probe 1" DISPLAY_NAME="Probe 1" UNITS="C"/> 
+                       <SENSOR ACTIVE="Y" KEY="01" GROUP="1" NAME="Keypad 1" DISPLAY_NAME="Keypad 1" UNITS="C"/> 
+                       <SENSOR ACTIVE="Y" KEY="01" GROUP="2" NAME="Thermostat 1" DISPLAY_NAME="Thermostat 1" UNITS="C"/> 
+                 </M1>
+        </DEVICE>
+         
+</CONFIG>
