@@ -16,6 +16,8 @@ import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
 import au.com.BI.Command.ReturnWrapper;
+import au.com.BI.Device.DeviceType;
+
 import java.util.*;
 import java.util.logging.*;
 
