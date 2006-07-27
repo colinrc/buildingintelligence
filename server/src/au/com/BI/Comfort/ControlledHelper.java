@@ -14,6 +14,7 @@ import au.com.BI.ToggleSwitch.*;
 import au.com.BI.Counter.*;
 import au.com.BI.CustomInput.CustomInput;
 import au.com.BI.CustomInput.CustomInputCommand;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Alert.*;
 import au.com.BI.Analog.*;

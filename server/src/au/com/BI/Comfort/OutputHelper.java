@@ -12,6 +12,7 @@ import au.com.BI.Counter.*;
 import au.com.BI.ToggleSwitch.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.PulseOutput.*;
 import au.com.BI.Alert.*;
 /**

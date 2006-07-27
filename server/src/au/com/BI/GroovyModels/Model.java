@@ -8,6 +8,7 @@ import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
 import au.com.BI.Config.*;
+import au.com.BI.Device.DeviceType;
 
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;

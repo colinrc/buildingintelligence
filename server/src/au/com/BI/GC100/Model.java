@@ -12,6 +12,7 @@ package au.com.BI.GC100;
 
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.IR.IR;
 import au.com.BI.Util.*;
 import au.com.BI.User.*;

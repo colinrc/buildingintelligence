@@ -21,6 +21,7 @@ import java.util.logging.*;
 
 import au.com.BI.Lights.LightFascade;
 import au.com.BI.CustomInput.CustomInput;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.AV.AV;
 import au.com.BI.Alert.Alarm;
 import au.com.BI.Alert.Alert;

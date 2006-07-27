@@ -7,6 +7,7 @@ package au.com.BI.Admin;
 
 
 import au.com.BI.Command.CommandInterface;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.*;
 
 

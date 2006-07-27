@@ -7,6 +7,7 @@ import au.com.BI.Util.*;
 import au.com.BI.X10.*;
 import au.com.BI.CBUS.*;
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Dynalite.*;
 import java.util.*;
 

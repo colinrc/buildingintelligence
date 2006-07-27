@@ -2,7 +2,7 @@
  * Created on Feb 12, 2004
  *
  */
-package au.com.BI.Util;
+package au.com.BI.Device;
 import java.util.*;
 import au.com.BI.Command.*;
 

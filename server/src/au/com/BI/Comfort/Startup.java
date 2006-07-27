@@ -13,6 +13,7 @@ import au.com.BI.Alert.AlarmTypeCode;
 import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
+import au.com.BI.Device.DeviceType;
 
 import java.util.logging.*;
 

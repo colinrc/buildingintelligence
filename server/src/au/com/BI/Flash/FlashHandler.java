@@ -8,6 +8,7 @@ import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
 import au.com.BI.Config.Security;
 import au.com.BI.Comms.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.User.User;
 import au.com.BI.Util.*;
 import au.com.BI.Macro.*;

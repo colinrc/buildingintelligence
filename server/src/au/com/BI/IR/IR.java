@@ -4,6 +4,7 @@
  */
 package au.com.BI.IR;
 import au.com.BI.Util.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Dynalite.*;
 import au.com.BI.Command.*;
 import au.com.BI.GC100.IRCommand;

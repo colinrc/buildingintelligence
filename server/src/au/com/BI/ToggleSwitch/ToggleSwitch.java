@@ -5,6 +5,7 @@
 package au.com.BI.ToggleSwitch;
 import au.com.BI.M1.M1Device;
 import au.com.BI.Util.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Dynalite.*;
 
 

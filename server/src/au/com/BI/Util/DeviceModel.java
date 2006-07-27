@@ -13,6 +13,7 @@ import au.com.BI.Comms.*;
 import au.com.BI.Config.Bootstrap;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Config.ParameterException;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Home.VersionManager;
 import au.com.BI.Macro.MacroHandler;
@@ -161,7 +162,7 @@ public interface DeviceModel {
 	 * user interaction on the item. At this stage only the flash client generates these
 	 * @param name non unique key name for physical device
 	 * @param details object representing details of the device
-	 * @see au.com.BI.Util.DeviceType
+	 * @see au.com.BI.Device.DeviceType
 	 */
 	public void addControlledItem (String name, DeviceType details, MessageDirection controlType);
 
@@ -176,7 +177,7 @@ public interface DeviceModel {
 	 * user interaction on the item. At this stage only the flash client generates these
 	 * @param name non unique key name for physical device
 	 * @param details object representing details of the device
-	 * @see au.com.BI.Util.DeviceType
+	 * @see au.com.BI.Device.DeviceType
 	 */
 	public void addStartupQueryItem (String name, Object details, MessageDirection controlType);
 

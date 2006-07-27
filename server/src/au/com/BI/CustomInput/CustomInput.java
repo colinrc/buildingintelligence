@@ -4,6 +4,8 @@
  */
 package au.com.BI.CustomInput;
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
+
 import java.util.regex.*;
 import au.com.BI.Util.*;
 import java.util.logging.*;

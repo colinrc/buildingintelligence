@@ -26,6 +26,7 @@ import au.com.BI.Analog.*;
 import au.com.BI.GC100.*;
 import au.com.BI.GroovyModels.GroovyRunBlock;
 import au.com.BI.Counter.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.VirtualOutput.*;
 import au.com.BI.PulseOutput.*;
 import au.com.BI.Macro.*;

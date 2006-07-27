@@ -29,6 +29,7 @@ import au.com.BI.Config.Bootstrap;
 import au.com.BI.AlarmLogging.*;
 import au.com.BI.Messaging.*;
 import au.com.BI.Config.ParameterBlock;
+import au.com.BI.Device.DeviceType;
 
 public class BaseModel
   implements DeviceModel {

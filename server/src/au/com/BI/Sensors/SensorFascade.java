@@ -6,6 +6,8 @@ package au.com.BI.Sensors;
 import au.com.BI.Util.*;
 import au.com.BI.CBUS.*;
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
+
 import java.util.*;
 
 /**

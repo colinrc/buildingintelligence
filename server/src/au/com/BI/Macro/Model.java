@@ -16,6 +16,7 @@ import java.util.logging.*;
 import org.jdom.Element;
 
 import au.com.BI.CustomInput.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Flash.*;
 
 public class Model extends BaseModel implements DeviceModel {

@@ -5,6 +5,7 @@
 package au.com.BI.Analog;
 import au.com.BI.Util.*;
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
 
 
 

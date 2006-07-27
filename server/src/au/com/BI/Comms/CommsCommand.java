@@ -5,6 +5,7 @@
 package au.com.BI.Comms;
 import au.com.BI.Command.Command;
 import au.com.BI.Command.CommandInterface;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.User.*;
 import au.com.BI.Util.*;
 

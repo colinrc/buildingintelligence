@@ -10,9 +10,9 @@ import au.com.BI.Command.*;
 import java.util.logging.*;
 
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
 import au.com.BI.Util.MessageDirection;
 import au.com.BI.Config.ParameterBlock;
+import au.com.BI.Device.DeviceType;
 
 public class ConfigHelper {
 	protected HashMap <String,DeviceType> controlledItems;

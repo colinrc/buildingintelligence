@@ -12,6 +12,7 @@ package au.com.BI.Kramer;
 import au.com.BI.AV.*;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.*;
 
 import java.util.*;

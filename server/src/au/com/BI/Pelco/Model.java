@@ -13,6 +13,7 @@ package au.com.BI.Pelco;
 import au.com.BI.Camera.Camera;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.User.User;
 import au.com.BI.Util.*;
 

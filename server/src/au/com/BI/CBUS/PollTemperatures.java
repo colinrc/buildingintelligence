@@ -4,7 +4,6 @@
  */
 package au.com.BI.CBUS;
 
-import au.com.BI.Util.DeviceType;
 import au.com.BI.Util.Utility;
 import java.util.logging.Level;
 import java.util.*;
@@ -12,6 +11,7 @@ import java.util.logging.Logger;
 
 import au.com.BI.Comms.*;
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Sensors.*;
 
 /**

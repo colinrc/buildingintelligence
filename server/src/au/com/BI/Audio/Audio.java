@@ -5,6 +5,7 @@
 package au.com.BI.Audio;
 import au.com.BI.Util.*;
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
 
 
 

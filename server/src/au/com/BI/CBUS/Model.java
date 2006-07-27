@@ -7,6 +7,7 @@ package au.com.BI.CBUS;
 
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.*;
 import au.com.BI.User.*;
 

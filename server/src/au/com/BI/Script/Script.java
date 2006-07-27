@@ -4,6 +4,7 @@
  */
 package au.com.BI.Script;
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.*;
 
 

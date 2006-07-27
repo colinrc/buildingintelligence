@@ -1,5 +1,6 @@
 package au.com.BI.Config;
 
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.Utility;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,7 +8,6 @@ import java.util.List;
 
 import org.jdom.Element;
 
-import au.com.BI.Util.DeviceType;
 
 public class RawHelper {
 
