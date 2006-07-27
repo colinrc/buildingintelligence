@@ -131,24 +131,25 @@
 		<echo>List of jar files is ${eLife.jar_libs}</echo>
 		<echo>Massaged jar files list is ${massaged_jar_libs}</echo>
 
-		<delete  includeemptydirs="true">
-			<fileset dir="ext" includes="**/*" />
+		<delete  includeemptydirs="true" quiet="true" >
+			<fileset dir="dist/ext" includes="**/*" />
 		</delete>
-		<delete  includeemptydirs="true">
-			<fileset dir="lib" includes="**/*" />
+		<delete  includeemptydirs="true" quiet="true" >
+			<fileset dir="dist/lib" includes="**/*" />
 		</delete>
-		<copy todir="ext" flatten="true" >
+		<copy todir="dist/ext" flatten="true" >
 		   <fileset dir="/" includes="${massaged_jar_libs}"  />
 		</copy>
-		<delete  includeemptydirs="true">
-		    	<fileset dir="." >
+		<delete  includeemptydirs="true" quiet="true" >
+		    	<fileset dir="dist/ext" >
 		    		<include name="junit*" />
 		    		<include name="nbunit*" />
 		    		<include name="xmlunit*" />
 	    		</fileset>
 		</delete>
-		<copy todir="lib" flatten="true" >
-				   <fileset dir="/" includes="*.dll"  />
+		<copy todir="dist/lib" flatten="true" >
+				<fileset dir="." includes="*.dll"  />
+			   	<fileset dir="." includes="*.jnilib"  />
 		</copy>
 	</target>
 		
@@ -165,10 +166,10 @@
 	<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
 		update="true"
 		basedir="."
-		includes = "*.dll" />
+		includes = "lib/*.dll" />
         <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
 		update="."
 		basedir="dist"
-		includes = "*.jnilib" />
+		includes = "lib/*.jnilib" />
     </target>
 </project>
