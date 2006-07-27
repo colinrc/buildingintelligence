@@ -7,6 +7,7 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommDevice;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.M1.Commands.ArmToAway;
 import au.com.BI.M1.Commands.ArmToNight;
 import au.com.BI.M1.Commands.ArmToNightInstant;
@@ -18,7 +19,7 @@ import au.com.BI.M1.Commands.ArmToVacation;
 import au.com.BI.M1.Commands.ControlOutputOff;
 import au.com.BI.M1.Commands.ControlOutputOn;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
+
 
 public class OutputHelper {
 
