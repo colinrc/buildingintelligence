@@ -5,10 +5,10 @@ import java.util.Vector;
 import au.com.BI.Command.ReturnWrapper;
 import au.com.BI.Audio.*;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
 import au.com.BI.Util.MessageDirection;
 import junitx.framework.ListAssert;
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
 import junit.framework.*;
 
 public class TestCommandsToFlash extends TestCase {

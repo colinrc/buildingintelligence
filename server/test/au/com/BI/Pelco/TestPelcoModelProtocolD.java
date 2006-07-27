@@ -1,9 +1,9 @@
 package au.com.BI.Pelco;
 
 import au.com.BI.Flash.ClientCommand;
-import au.com.BI.Util.DeviceType;
 import au.com.BI.Util.MessageDirection;
 import au.com.BI.Camera.*;
+import au.com.BI.Device.DeviceType;
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
 

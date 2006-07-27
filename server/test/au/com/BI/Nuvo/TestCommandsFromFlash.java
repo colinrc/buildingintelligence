@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Vector;
 import au.com.BI.Command.ReturnWrapper;
 import au.com.BI.Command.CommandInterface;
+import au.com.BI.Device.DeviceType;
 
 import au.com.BI.AV.AVCommand;
 import au.com.BI.Audio.*;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Nuvo.Model;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
 import au.com.BI.Util.MessageDirection;
 import au.com.BI.Util.Utility;
 import junit.framework.*;

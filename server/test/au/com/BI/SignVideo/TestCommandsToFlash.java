@@ -5,11 +5,11 @@ import java.util.Vector;
 import au.com.BI.Comms.CommsCommand;
 import au.com.BI.AV.*;
 import au.com.BI.Util.DeviceModel;
-import au.com.BI.Util.DeviceType;
 import au.com.BI.Util.MessageDirection;
 import au.com.BI.junitx.*;
 import junitx.framework.ListAssert;
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
 import junit.framework.*;
 
 public class TestCommandsToFlash extends TestCase {

@@ -1,6 +1,7 @@
 package au.com.BI.Dynalite;
 
 import junit.framework.TestCase;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Dynalite.DynaliteDevice;
 import au.com.BI.Dynalite.DynaliteHelper;
 import au.com.BI.Dynalite.DynaliteOutput;
