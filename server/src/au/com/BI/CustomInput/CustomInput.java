@@ -18,9 +18,14 @@ public class CustomInput extends BaseDevice implements DeviceType
 {
 	protected String inKey="";
 	protected String extra = null;
+	protected String extra2 = null;
+	protected String extra3 = null;
+	protected String extra4 = null;
+	protected String extra5 = null;
 	protected Pattern p;
 	protected boolean hasPattern = false;
 	protected Logger logger;
+	protected String match  = "";
 
 	public CustomInput (){
 	    p = Pattern.compile ("");
@@ -109,4 +114,44 @@ public class CustomInput extends BaseDevice implements DeviceType
     public void setHasPattern(boolean hasPattern) {
         this.hasPattern = hasPattern;
     }
+
+	public String getMatch() {
+		return match;
+	}
+
+	public void setMatch(String match) {
+		this.match = match;
+	}
+
+	public String getExtra2() {
+		return extra2;
+	}
+
+	public void setExtra2(String extra2) {
+		this.extra2 = extra2;
+	}
+
+	public String getExtra3() {
+		return extra3;
+	}
+
+	public void setExtra3(String extra3) {
+		this.extra3 = extra3;
+	}
+
+	public String getExtra4() {
+		return extra4;
+	}
+
+	public void setExtra4(String extra4) {
+		this.extra4 = extra4;
+	}
+
+	public String getExtra5() {
+		return extra5;
+	}
+
+	public void setExtra5(String extra5) {
+		this.extra5 = extra5;
+	}
 }

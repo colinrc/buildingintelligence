@@ -41,7 +41,12 @@ public class CustomInputFactory {
 		String command = element.getAttributeValue("COMMAND");
 		String outKey = element.getAttributeValue("DISPLAY_NAME");
 		String extra = element.getAttributeValue("EXTRA");
+		String extra2 = element.getAttributeValue("EXTRA2");
+		String extra3 = element.getAttributeValue("EXTRA3");
+		String extra4 = element.getAttributeValue("EXTRA4");
+		String extra5 = element.getAttributeValue("EXTRA5");
 		String isRegEx = element.getAttributeValue("KEY_IS_REGEX");
+		String match = element.getAttributeValue("MATCH");
 		CustomInput theInput = new CustomInput ();
 
 

@@ -12,6 +12,8 @@ import au.com.BI.Command.*;
  **/
 public interface DeviceType
 {
+	public enum FieldTypes {Unknown,String, Integer};
+	
 	public static final int NA = -1;
 	public static final int UKNOWN_EVENT = -1;
 

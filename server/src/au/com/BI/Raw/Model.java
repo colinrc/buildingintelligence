@@ -106,8 +106,9 @@ public class Model extends BaseModel implements DeviceModel {
 		else {
 		    Iterator inputDeviceList = configHelper.getAllControlledDevices();
 
-			while (inputDeviceList.hasNext()){
-			    DeviceType inputListItem = (DeviceType)inputDeviceList.next();
+		    for (DeviceType inputListItem: configHelper.getAllControlledDeviceObjects()) {
+		    	if (inputListItem.getDeviceType() != DeviceType.CUSTOM_INPUT) 
+		    		continue;
 			    String inputListKey = "";
 			    	matched = false;
 
@@ -156,23 +157,22 @@ public class Model extends BaseModel implements DeviceModel {
 			doOutputItem (command);
 		} else {
 			if ( configHelper.getLastCommandType() == MessageDirection.FROM_HARDWARE) {
-			    Iterator inputDeviceList = configHelper.getAllControlledDevices();
 
-				while (inputDeviceList.hasNext()){
-				    DeviceType inputListItem = (DeviceType)inputDeviceList.next();
+				for (DeviceType inputListItem: configHelper.getAllControlledDeviceObjects()) {
+
 				    String inputListKey = "";
 				    	matched = false;
-
+				    	if (inputListItem.getDeviceType() != DeviceType.CUSTOM_INPUT) continue;
 
 			        CustomInput customInput = (CustomInput)inputListItem;
 			        if (customInput.isHasPattern()){
 			        		matcherResults = customInput.getMatcher(theWholeKey);
-			            if (matcherResults.matches()) {
-							deviceThatMatched = customInput;
-							configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
-							doInputItem (command, deviceThatMatched, parameter);
-			            }
-			        }
+				            if (matcherResults.matches()) {
+								deviceThatMatched = customInput;
+								configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
+								doInputItem (command, deviceThatMatched, parameter);
+				            }
+				        }
 
 				    if (!matched) {
 

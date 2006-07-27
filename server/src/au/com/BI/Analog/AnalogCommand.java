@@ -17,12 +17,6 @@ import org.jdom.*;
  *
  */
 public class AnalogCommand extends Command implements CommandInterface {
-
-	private Map keyList;
-	
-	public static int RawText = 1;
-	
-	public String port;
 	
 	
 	public AnalogCommand ()
@@ -43,26 +37,5 @@ public class AnalogCommand extends Command implements CommandInterface {
 	}
 
 
-
-	/** 
-	 * Returns the XML representation of this command 
-	 */
-	public Element getXMLCommand () {
-		if (displayName == null || commandCode == null){ 
-			return null;
-		}
-		
-		Element element = new Element ("CONTROL");
-		element.setAttribute ("KEY", displayName);
-		element.setAttribute ("COMMAND", commandCode);
-		if (extraInfo != null) {
-			element.setAttribute ("EXTRA", extraInfo.toString());
-		}
-		else {
-			element.setAttribute ("EXTRA", "");
-		}
-			
-		return element;
-	}
 	
 }

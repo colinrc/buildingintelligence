@@ -214,18 +214,22 @@
                 <CONNECTION>
                         <IP IP_ADDRESS="127.0.0.1" ACTIVE="Y" PORT="5003"/>
                 </CONNECTION>
+                
                 <CATALOGUE NAME="Test List 1">
                         <ITEM CODE="all_fs" VALUE="HEX1313401030504"/>
                         <ITEM CODE="all_0s" VALUE="000000\r"/>
                 </CATALOGUE>
+                
                 <CATALOGUE NAME="Audio stuff">
                         <ITEM CODE="right" VALUE="Stuff to make right happen: should r :%ASDF%: this should R :%ZONE2%:"/>
                         <ITEM CODE="left" VALUE="Stuff to make left happen: should be l :%ASDF%: and L :%ZONE2%:"/>
                 </CATALOGUE>
+                
                 <CATALOGUE NAME="Light Settings">
                         <ITEM CODE="on" VALUE="Extra = %EXTRA%"/>
                         <ITEM CODE="full" VALUE="255"/>
                 </CATALOGUE>
+                
                 <PARAMETERS>
                         <ITEM NAME="STX" VALUE=""/>
                         <ITEM NAME="ETX" VALUE="\n"/>
@@ -239,12 +243,18 @@
                         <ITEM NAME="POLL_VALUE2" VALUE="270"/>
                         <ITEM NAME="POLL_STRING2" VALUE="Second poll\n"/>
                 </PARAMETERS>
+                
                 <RAW_CONNECTION>
+                
                         <CUSTOM_INPUT KEY="*" ACTIVE="N" NAME="Temperature" DISPLAY_NAME="LOUNGE_LV_LIGHT" COMMAND="on"/>
                         <CUSTOM_INPUT KEY="(lounge|all)=(\d+)" KEY_IS_REGEX="Y" NAME="Lounge Light" DISPLAY_NAME="LOUNGE_LIGHT" COMMAND="on" EXTRA="@2"/>
                         <CUSTOM_INPUT KEY="(kitchen|all)=(\d+)" KEY_IS_REGEX="Y" NAME="Kitchen Light" DISPLAY_NAME="KITCHEN_BENCH_LIGHT" COMMAND="on" EXTRA="@2"/>
                         <CUSTOM_INPUT KEY="(PWR)=(ON|OFF)" KEY_IS_REGEX="Y" NAME="Pool Heater" DISPLAY_NAME="POOL_HEATER" COMMAND="@2"/>
                         <CUSTOM_INPUT KEY="PWR" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="on"/>
+                                                
+                         <CUSTOM_OUTPUT KEY="01" DISPLAY_NAME="LOUNGE" />
+                         
+                        
                         <RAW_INTERFACE NAME="LOUNGE_LIGHT" DISPLAY_NAME="LOUNGE_LIGHT">
                                 <RAW_ITEMS CATALOGUE="Light Settings">
                                         <!--
@@ -273,9 +283,11 @@
                                                 <VARS NAME="ZONE2" VALUE="\x52"/>
                                         </RAW>
                                 </RAW_ITEMS>
+                                
                                 <RAW_ITEMS CATALOGUE="Test List 1">
                                         <RAW COMMAND="up" CODE="all_fs"/>
                                 </RAW_ITEMS>
+                                
                                 <RAW_ITEMS CATALOGUE="Test List 1">
                                         <RAW COMMAND="down" CODE="all_0s"/>
                                 </RAW_ITEMS>

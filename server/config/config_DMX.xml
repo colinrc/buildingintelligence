@@ -12,7 +12,7 @@
                 </PARAMETERS>
                 
                 <DMX>
-                        <LIGHT KEY="1" DISPLAY_NAME="GARAGE_LIGHT" NAME="Garage Light" />
+                        <LIGHT KEY="A" DISPLAY_NAME="GARAGE_LIGHT" NAME="Garage Light" />
                 </DMX>
         </DEVICE>
         

@@ -6,6 +6,7 @@ package au.com.BI.Command;
 import java.util.logging.Logger;
 
 import au.com.BI.User.*;
+import au.com.BI.Command.CommandInterface.Fields;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.JRobin.JRobinData;
 import org.jdom.*;
@@ -112,6 +113,37 @@ public class Command implements CommandInterface {
             setUser (user);
         }
 
+        /**
+         * Returns any of the fields from the command object
+         * @return The requested field
+         */
+        public String getValue (Fields commandField) {
+        		switch (commandField){
+        			case COMMAND_CODE:
+        				return this.getCommandCode();
+        				
+           			case KEY:
+        				return this.getKey();
+ 
+          			case EXTRA:
+        				return this.getExtraInfo();
+ 
+          			case EXTRA2:
+        				return this.getExtra2Info();
+
+          			case EXTRA3:
+        				return this.getExtra3Info();
+
+          			case EXTRA4:
+        				return this.getExtra4Info();
+
+          			case EXTRA5:
+        				return this.getExtra5Info();
+        				
+        			default: 
+        				return "Unknown Field Requested";
+        		}
+        }
         
 		public boolean isCommsCommand () {
 			return false;

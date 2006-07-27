@@ -29,8 +29,8 @@ public class eLife {
 	LogHandler sh;
 	Logger globalLogger;
 	
-	public eLife (String configName,boolean runHarness, LogHandler sh) {
-		boolean sysOutPrint = false;
+	public eLife (String configName,boolean runHarness, LogHandler sh,  boolean sysOutPrint ) {
+
 		this.sh = sh;
 		logger = Logger.getLogger("au.com.BI");
 		//this.logger = globalLogger;
@@ -164,6 +164,12 @@ public class eLife {
 	public static void main(String[] args)
 	{
 		boolean runHarness = true;
+		boolean verbose = false;
+		
+		if (args.length > 0) {
+			String verboseStr = args[0];
+			if (verboseStr  != null && verboseStr.equals ("-vvv")) verbose = true;
+		}			
 		
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 	        public void run() {
@@ -179,19 +185,8 @@ public class eLife {
 		Logger logger = Logger.getLogger("au.com.BI");
 		logger.setLevel (Level.FINEST);
 		logger.addHandler(sh);
-		
-		if (args.length > 1) {
-			if (args.length != 2) {
-				System.out.println ("Usage:  ConfigFile GUI[Y-N]");
-				System.exit(0);
-			}
-			String configName = args[0];
 					
-			System.out.println ("Launching system with config " + args[0]);
-			helloHouse = new eLife(args[0],runHarness,sh);
-		} else {
-			System.out.println ("Launching system");
-			helloHouse = new eLife("",true,sh);
-		}
+		System.out.println ("Launching system");
+		helloHouse = new eLife("",true,sh,verbose);
 	}
 }

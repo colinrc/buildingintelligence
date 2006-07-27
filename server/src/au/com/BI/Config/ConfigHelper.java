@@ -47,6 +47,15 @@ public class ConfigHelper {
     }
     
 	/**
+	 * Provides a simple method for models to speficy prameters they expect to find in the configuration file
+	 * @param catalogName
+	 * @param verboseName
+	 */
+    public void addParameterBlock (String catalogName, String verboseName) {
+    	addParameterBlock (catalogName, DeviceModel.MAIN_DEVICE_GROUP, verboseName);
+    }
+    
+	/**
 	 * For some keys the entire key may be longer than the section tested; eg. if parameters are in a COMFORT string.
 	 * @param lastChecked The entire string that was received.
 	 */

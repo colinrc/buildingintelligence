@@ -134,8 +134,21 @@
 		<delete  includeemptydirs="true">
 			<fileset dir="ext" includes="**/*" />
 		</delete>
+		<delete  includeemptydirs="true">
+			<fileset dir="lib" includes="**/*" />
+		</delete>
 		<copy todir="ext" flatten="true" >
 		   <fileset dir="/" includes="${massaged_jar_libs}"  />
+		</copy>
+		<delete  includeemptydirs="true">
+		    	<fileset dir="." >
+		    		<include name="junit*" />
+		    		<include name="nbunit*" />
+		    		<include name="xmlunit*" />
+	    		</fileset>
+		</delete>
+		<copy todir="lib" flatten="true" >
+				   <fileset dir="/" includes="*.dll"  />
 		</copy>
 	</target>
 		

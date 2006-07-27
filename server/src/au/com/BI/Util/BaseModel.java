@@ -12,6 +12,7 @@ package au.com.BI.Util;
 
 import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
+import au.com.BI.Command.CommandInterface.Fields;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Config.ParameterException;
@@ -33,7 +34,7 @@ public class BaseModel
   implements DeviceModel {
         protected CommDevice comms = null;
         protected ModelTypes modelType = ModelTypes.Java;
-        
+    	protected String appendToSentStrings = "";
         protected boolean logged_in = false;
 
         protected boolean connected = false;
@@ -207,6 +208,37 @@ public class BaseModel
                 return "None";
         }
 
+        
+  
+
+
+    	public void sendWrapperItems (ReturnWrapper returnWrapper ){
+    		if ( !returnWrapper.isError()) {
+    			if (returnWrapper.isMessageIsBytes()){
+    			    for(byte[] avOutputString : returnWrapper.getCommOutputBytes()) {			
+    			    		this.sendToSerial(avOutputString);
+    				}
+    			} else {
+    			    for(String avOutputString : returnWrapper.getCommOutputStrings()) {			
+    			    	this.sendToSerial(avOutputString + this.getAppendToSentStrings());
+    					if (logger.isLoggable(Level.FINE)){
+    						logger.log(Level.FINE,"Sending a command to the device controlled by " + this.getName() + " " + avOutputString);
+    					}
+    				}					
+    			}
+    		    
+    			for (CommandInterface eachCommand: returnWrapper.getOutputFlash()){
+    				this.sendToFlash(eachCommand, cache);
+    			}
+
+    		} else {
+    			if (returnWrapper != null){
+    				logger.log (Level.WARNING,"There was error processing the message in the " + this.getName() + " support module." + returnWrapper.getErrorDescription());
+    			}
+    		}
+
+    	}
+    	
 
         /**
          * @return Returns the value stored in variable.
@@ -845,6 +877,24 @@ public class BaseModel
 		this.interCommandInterval = interCommandInterval;
 	}
 
+	public int paramToInt (CommandInterface command, Fields commandField, int minVal, int maxVal, String errorMessage) throws ParameterException  {
+		String value = command.getValue (commandField);
+		String exceptionMessage = errorMessage + " "+ value;
+		try {
+			Integer intVal = Integer.parseInt(value);
+			if (intVal < minVal || intVal > maxVal){
+					throw new ParameterException (exceptionMessage);
+			}
+			return intVal;
+			
+		} catch (NullPointerException ex){
+			logger.log (Level.FINER,exceptionMessage);
+			throw new ParameterException (exceptionMessage);
+		} catch (NumberFormatException ex){
+			logger.log (Level.FINER,exceptionMessage);		
+			throw new ParameterException (exceptionMessage);
+		}
+	}
 	
 
 	public void sendToFlash ( long targetFlashID, CommandInterface command) {
@@ -914,7 +964,31 @@ public class BaseModel
 		
 		return videoCommand;
 	}
+
+	public CommandInterface buildOffCommandForFlash (DeviceType device) {
+		return buildCommandForFlash (device,"off","","","","","", 0);
+	}
+
+	public CommandInterface buildCommandForFlash (DeviceType device , String command, String extra) {
+		return buildCommandForFlash (device,command,extra,"","","","", 0);
+	}
+
+	public CommandInterface buildCommandForFlash (DeviceType device , String command, String extra, String extra2) {
+		return buildCommandForFlash (device,command,extra,extra2,"","","", 0);
+	}
 	
+	public CommandInterface buildCommandForFlash (DeviceType device , String command, String extra, String extra2, String extra3) {
+		return buildCommandForFlash (device,command,extra,extra2,extra3,"","", 0);
+	}
+
+	public CommandInterface buildCommandForFlash (DeviceType device , String command, String extra, String extra2,String extra3,String extra4) {
+		return buildCommandForFlash (device,command,extra,extra2,extra3,extra4,"", 0);
+	}
+
+	public CommandInterface buildCommandForFlash (DeviceType device , String command, String extra, String extra2,String extra3,String extra4,String extra5) {
+		return buildCommandForFlash (device,command,extra,extra2,extra3,extra4,extra5, 0);
+	}
+
 	/**
 	 * True if decimal to the device requires decimal keys (rare) 
 	 * @return True or false
@@ -1022,5 +1096,15 @@ public class BaseModel
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+	
+
+
+	public String getAppendToSentStrings() {
+		return appendToSentStrings;
+	}
+
+	public void setAppendToSentStrings(String endString) {
+		this.appendToSentStrings = endString;
 	}
 }
