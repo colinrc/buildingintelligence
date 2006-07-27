@@ -63,6 +63,7 @@ public interface DeviceType
 	public static final int SIGN_VIDEO_SWITCH = 45;
 	public static final int GROOVY_SCRIPT = 46;
 	public static final int LIGHT = 47;
+	public static final int SMS = 48;
 	
 	// Likely number of raw commands for device line. More is allowed.
 	public static final int PROBABLE_NUMBER_RAW = 10;

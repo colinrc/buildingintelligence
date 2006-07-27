@@ -591,6 +591,10 @@ public class Config {
 						alertFactory.addAlarm(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.ALARM,groupName,rawHelper);
 					}
+					if (itemName.equals("SMS")) {
+						sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+								DeviceType.SMS,groupName,rawHelper);
+					}
 				}
 			}
 		}

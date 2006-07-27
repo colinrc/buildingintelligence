@@ -14,6 +14,7 @@ import au.com.BI.Camera.Camera;
 import au.com.BI.Command.*;
 import au.com.BI.GroovyModels.GroovyModelException;
 import au.com.BI.PulseOutput.PulseOutput;
+import au.com.BI.SMS.SMS;
 import au.com.BI.Sensors.Sensor;
 import au.com.BI.ToggleSwitch.ToggleSwitch;
 import java.util.logging.*;
@@ -86,6 +87,11 @@ public class SimplifiedModel  extends BaseModel
     						logger.log (Level.INFO, "A command for an Output Toggle device was issued from " + device.getName() + " for the model " + this.getName());
     						buildToggleOutputControlString ((ToggleSwitch)device,command,returnWrapper);
     						break;
+    						
+    					case DeviceType.SMS: 
+    						logger.log (Level.INFO, "A command for an SMS device was issued from " + device.getName() + " for the model " + this.getName());
+    						buildSMSControlString ((SMS)device,command,returnWrapper);
+    						break;
     			}
     			
 
@@ -154,5 +160,7 @@ public class SimplifiedModel  extends BaseModel
 	public void buildToggleOutputControlString (ToggleSwitch  device, CommandInterface command, ReturnWrapper returnWrapper) throws GroovyModelException{
 	}
 
+	public void buildSMSControlString (SMS  device, CommandInterface command, ReturnWrapper returnWrapper) throws GroovyModelException{
+	}
 
 }

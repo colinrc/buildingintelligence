@@ -59,7 +59,7 @@ public class DeviceFactory {
 				}
 			}
 		} catch (NumberFormatException ex ){
-			logger.log (Level.INFO,"An illegal key was specified for the analog input " + name);
+			logger.log (Level.INFO,"An illegal key was specified for the device input " + name);
 		}
 	}
 
