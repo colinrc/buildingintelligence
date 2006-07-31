@@ -47,7 +47,6 @@ public class AnalogFactory {
 			String key = targetDevice.formatKey (tmpKey,theInput);
 			theInput.setKey (key);
 			theInput.setGroupName(groupName);
-			rawHelper.checkForRaw ( element,theInput);
 			targetDevice.addControlledItem(key, theInput, type);
 			targetDevice.addStartupQueryItem(key, theInput, type);
 			if (outKey != null && !outKey.equals("")) {

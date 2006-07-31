@@ -52,7 +52,6 @@ public class PulseOutputFactory {
 		PulseOutput theOutput = new PulseOutput(name,	connectionType, outKey,maxInt);
 		theOutput.setKey (key);
 		theOutput.setGroupName (groupName);
-		rawHelper.checkForRaw (element,theOutput);
 		targetDevice.addControlledItem(key, theOutput, type);
 		targetDevice.addStartupQueryItem(key, theOutput, type);
 		if (outKey != null && !outKey.equals("")) {

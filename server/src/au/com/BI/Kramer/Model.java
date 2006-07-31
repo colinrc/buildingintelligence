@@ -204,7 +204,7 @@ public class Model extends BaseModel implements DeviceModel {
 		boolean commandFound = false;
 
 		
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, device);
+		String rawBuiltCommand = doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			returnVal.avOutputString = rawBuiltCommand.getBytes();

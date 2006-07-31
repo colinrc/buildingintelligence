@@ -422,7 +422,7 @@ public class Model extends BaseModel implements DeviceModel {
 		else
 			currentState = new StateOfZone();
 		
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, device);
+		String rawBuiltCommand = doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			audioOutputString = rawBuiltCommand.getBytes();

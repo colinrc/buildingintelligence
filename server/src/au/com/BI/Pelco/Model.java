@@ -589,7 +589,7 @@ public class Model extends BaseModel implements DeviceModel {
 	public String buildDirectConnectString (DeviceType device, CommandInterface command){
 		boolean commandFound = false;
 
-		String rawSerialCommand = configHelper.doRawIfPresent (command, device);
+		String rawSerialCommand = doRawIfPresent (command, device);
 		if (rawSerialCommand != null)
 		{
 			commandFound = true;

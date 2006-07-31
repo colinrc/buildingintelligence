@@ -39,7 +39,7 @@ public class Model extends BaseModel implements DeviceModel  {
 		super();
 		comfortString = new ComfortString ();
 		startup = new Startup();
-		outputHelper = new OutputHelper();
+		outputHelper = new OutputHelper(this);
 		controlledHelper = new ControlledHelper();
 		analogueReader = new AnalogReader();
 		this.setSTX (STX);

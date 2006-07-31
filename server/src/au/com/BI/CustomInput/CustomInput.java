@@ -25,9 +25,8 @@ public class CustomInput extends BaseDevice implements DeviceType
 	protected String extra4 = null;
 	protected String extra5 = null;
 	protected Pattern p;
-	protected boolean hasPattern = false;
+	protected boolean hasPattern = true;
 	protected Logger logger;
-	protected String match  = "";
 
 	public CustomInput (){
 	    p = Pattern.compile ("");
@@ -116,14 +115,6 @@ public class CustomInput extends BaseDevice implements DeviceType
     public void setHasPattern(boolean hasPattern) {
         this.hasPattern = hasPattern;
     }
-
-	public String getMatch() {
-		return match;
-	}
-
-	public void setMatch(String match) {
-		this.match = match;
-	}
 
 	public String getExtra2() {
 		return extra2;

@@ -16,6 +16,7 @@ import au.com.BI.Command.CommandInterface.Fields;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Config.ParameterException;
+import au.com.BI.Config.RawItemDetails;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Home.VersionManager;
@@ -1107,5 +1108,37 @@ public class BaseModel
 
 	public void setAppendToSentStrings(String endString) {
 		this.appendToSentStrings = endString;
+	}
+	
+	/**
+	 * If a raw code has been specified for this command on this device. It will be returned.
+	 * @param command
+	 * @param device
+	 * @return
+	 */
+	public String doRawIfPresent (CommandInterface command, DeviceType targetDevice) { 
+		Map rawCodes = targetDevice.getRawCodes(); // the list specified in the config for this device line.
+
+		if (rawCodes!= null){
+			String commandName = command.getCommandCode();
+			String extraFromClient = (String)command.getExtraInfo();
+			RawItemDetails rawCode = (RawItemDetails)rawCodes.get(commandName+":"+extraFromClient); // pull up details for the line
+			
+			if (rawCode == null) 
+				rawCode = (RawItemDetails)rawCodes.get(commandName); // pull up details for the line				
+
+			if (rawCode != null){
+				Map rawCatalogue = getCatalogueDef(rawCode.getCatalogue());
+				if (rawCatalogue == null ) {
+					logger.log (Level.WARNING ,"Specified raw catalogue is not defined : "+rawCatalogue);	
+					return null;
+				}
+				else {
+					String catalogueValue = (String)rawCatalogue.get(rawCode.getCode());
+					return rawCode.populateVariables (catalogueValue,command);
+				}
+			}
+		}
+		return null;
 	}
 }

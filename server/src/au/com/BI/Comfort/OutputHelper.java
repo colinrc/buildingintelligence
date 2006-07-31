@@ -29,10 +29,12 @@ public class OutputHelper {
 	protected String cBUS_UCM = "";
 	protected String applicationCode = "38";
 	protected CommandQueue commandQueue = null;
+	protected Model model;
 	
-	public OutputHelper() {
+	public OutputHelper(Model model) {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
+		this.model= model;
 	}
 	
 
@@ -111,7 +113,7 @@ public class OutputHelper {
 		String comfortCommand = "";
 		boolean commandFound = false;
 		
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, device);
+		String rawBuiltCommand = model.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			comfortCommand = STX + rawBuiltCommand;
@@ -252,7 +254,7 @@ public class OutputHelper {
 		String comfortCommand = "";
 		boolean commandFound = false;
 		
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, device);
+		String rawBuiltCommand = model.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			comfortCommand = STX + rawBuiltCommand;
@@ -287,7 +289,7 @@ public class OutputHelper {
 		String comfortCommand = "";
 		boolean commandFound = false;
 		
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, device);
+		String rawBuiltCommand = model.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			comfortCommand = STX + rawBuiltCommand;
@@ -322,7 +324,7 @@ public class OutputHelper {
 		String comfortCommand = "";
 		boolean commandFound = false;
 		
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, device);
+		String rawBuiltCommand = model.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			comfortCommand = STX + rawBuiltCommand;
@@ -358,7 +360,7 @@ public class OutputHelper {
 		String comfortCommand = "";
 		boolean commandFound = false;
 		
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, device);
+		String rawBuiltCommand = model.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			comfortCommand = STX + rawBuiltCommand;
@@ -393,7 +395,7 @@ public class OutputHelper {
 		String comfortCommand = "";
 		boolean commandFound = false;
 		
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, device);
+		String rawBuiltCommand = model.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			comfortCommand = STX + rawBuiltCommand;

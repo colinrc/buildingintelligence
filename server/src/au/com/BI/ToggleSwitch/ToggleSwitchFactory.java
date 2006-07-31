@@ -46,7 +46,6 @@ public class ToggleSwitchFactory {
 			String key = targetDevice.formatKey (tmpKey,theInput);
 			theInput.setKey (key);
 			theInput.setGroupName (groupName);
-			rawHelper.checkForRaw (element,theInput);
 			
 			if (targetDevice.getName().equals("DYNALITE")) {
 	

@@ -43,7 +43,6 @@ public class LightFactory {
 		theLight.setKey(key);
 		theLight.setGroupName(groupName);
 	
-		rawHelper.checkForRaw (element,theLight);
 	
 		if (connectionType == DeviceType.LIGHT_CBUS) {
 			String applicationCode = element.getAttributeValue("CBUS_APPLICATION");
@@ -123,9 +122,6 @@ public class LightFactory {
 		LightFascade theLight = new LightFascade(name, connectionType, outKey,targetDevice.getName());
 		theLight.setKey(key);
 		theLight.setGroupName(groupName);
-	
-		rawHelper.checkForRaw (element,theLight);
-		
 
 		if (connectionType == DeviceType.LIGHT_DYNALITE_AREA) {
 			theLight.setAreaCode(key);

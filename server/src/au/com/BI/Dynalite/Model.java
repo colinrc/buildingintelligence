@@ -957,7 +957,7 @@ public class Model extends BaseModel implements DeviceModel {
 		DynaliteOutput dynaliteReturn = new DynaliteOutput ();
 		boolean commandFound = false;
 
-		String rawBuiltCommand = configHelper.doRawIfPresent (command, (DeviceType)device);
+		String rawBuiltCommand = doRawIfPresent (command, (DeviceType)device);
 		if (rawBuiltCommand != null)
 		{
 			dynaliteReturn.outputCodes = rawBuiltCommand.getBytes();

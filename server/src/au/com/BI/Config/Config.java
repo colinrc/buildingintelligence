@@ -20,6 +20,7 @@ import au.com.BI.AV.*;
 import au.com.BI.Alert.*;
 import au.com.BI.Camera.*;
 import au.com.BI.Command.*;
+import au.com.BI.CustomConnect.CustomConnectFactory;
 import au.com.BI.CustomInput.*;
 import au.com.BI.Audio.*;
 import au.com.BI.Analog.*;
@@ -33,6 +34,7 @@ import au.com.BI.Macro.*;
 import au.com.BI.Home.Controls;
 import au.com.BI.Home.VersionManager;
 import au.com.BI.IR.*;
+import au.com.BI.SMS.SMSFactory;
 import au.com.BI.Sensors.*;
 import au.com.BI.Raw.RawFactory;
 
@@ -54,7 +56,9 @@ public class Config {
 		protected RawHelper rawHelper;
 		protected LightFactory lightFactory;		
 		protected SensorFactory sensorFactory;		
+		protected SMSFactory smsFactory;		
 		protected ToggleSwitchFactory toggleSwitchFactory;		
+		protected CustomConnectFactory customConnectFactory;
 		protected AVFactory aVFactory;		
 		protected AudioFactory audioFactory;		
 		protected PulseOutputFactory pulseOutputFactory;		
@@ -96,6 +100,8 @@ public class Config {
 		this.setRawFactory (RawFactory.getInstance());		
 		this.setAnalogFactory ( AnalogFactory.getInstance());		
 		this.setIRFactory (IRFactory.getInstance());		
+		this.setSmsFactory(SMSFactory.getInstance());
+		this.setCustomConnectFactory(CustomConnectFactory.getInstance());
 		
 		calendar_message_params = new HashMap<String,String> (5);
 		calendar_message_params.put ("ICON","");
@@ -124,6 +130,7 @@ public class Config {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public void readConfig(List <DeviceModel>deviceModels, List clientModels,Cache cache,
 			HashMap <String,Object>variableCache, CommandQueue commandQueue, 
 			IRCodeDB irCodeDB, File configFile,Controls controls)
@@ -142,7 +149,7 @@ public class Config {
 			Document doc = builder.build(configFile);
 			Element theConfig = doc.getRootElement();
 
-			List <Element>deviceConfigs = theConfig.getChildren("DEVICE");
+			List <Element>deviceConfigs = (List<Element>)theConfig.getChildren("DEVICE");
 			for (Element config: deviceConfigs){
 					DeviceModel newDeviceModel = parseDeviceModel(config, deviceModels, clientModels);
 					if (newDeviceModel != null){
@@ -596,6 +603,10 @@ public class Config {
 						sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.SMS,groupName,rawHelper);
 					}
+					if (itemName.equals("CUSTOM_CONNECT")) {
+						customConnectFactory.addCustomConnect(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
+								DeviceType.CUSTOM_CONNECT,groupName,rawHelper);
+					}
 				}
 			}
 		}
@@ -758,6 +769,22 @@ public class Config {
 	public void setGroovyModelHandler(
 			au.com.BI.GroovyModels.Model groovyModelHandler) {
 		this.groovyModelHandler = groovyModelHandler;
+	}
+
+	public CustomConnectFactory getCustomConnectFactory() {
+		return customConnectFactory;
+	}
+
+	public void setCustomConnectFactory(CustomConnectFactory customConnectFactory) {
+		this.customConnectFactory = customConnectFactory;
+	}
+
+	public SMSFactory getSmsFactory() {
+		return smsFactory;
+	}
+
+	public void setSmsFactory(SMSFactory smsFactory) {
+		this.smsFactory = smsFactory;
 	}
 	
 }

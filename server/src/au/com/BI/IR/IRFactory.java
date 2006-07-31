@@ -48,7 +48,6 @@ public class IRFactory {
 				String key = targetDevice.formatKey (tmpKey,theOutput);
 				theOutput.setKey (key);
 				theOutput.setGroupName (groupName);
-				rawHelper.checkForRaw ( element,theOutput);
 		
 				if (outKey != null && !outKey.equals("")) {
 					targetDevice.addControlledItem("AV." + outKey, theOutput, MessageDirection.FROM_FLASH);
@@ -75,7 +74,6 @@ public class IRFactory {
 				String key = targetDevice.formatKey (tmpKey,theIRSensor);
 				theIRSensor.setKey (key);
 				theIRSensor.setGroupName (groupName);
-				rawHelper.checkForRaw ( element,theIRSensor);
 				int box = 0;
 				try {
 					box = Integer.parseInt(boxStr,16);

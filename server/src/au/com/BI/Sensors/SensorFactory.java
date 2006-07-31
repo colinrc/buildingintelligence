@@ -43,8 +43,6 @@ public class SensorFactory {
 			theSensor.setKey(key);
 			theSensor.setGroupName(groupName);
 	
-			rawHelper.checkForRaw ( element,theSensor);
-	
 			if (connectionType == DeviceType.SENSOR) {
 				theSensor.setMax("255");
 				channel = element.getAttributeValue("CHANNEL");

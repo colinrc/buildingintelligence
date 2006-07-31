@@ -52,7 +52,6 @@ public class AlertFactory {
 			String key = targetDevice.formatKey (tmpKey,theInput);
 			theInput.setKey (key);
 			theInput.setGroupName (groupName);
-			rawHelper.checkForRaw ( element,theInput);
 			targetDevice.addControlledItem(key, theInput, type);
 			targetDevice.addStartupQueryItem(key, theInput, type);
 			if (outKey != null && !outKey.equals("")) {
@@ -87,7 +86,6 @@ public class AlertFactory {
 			String key = targetDevice.formatKey (tmpKey,theOutput);
 			theOutput.setKey (key);
 			theOutput.setGroupName (groupName);
-			rawHelper.checkForRaw ( element,theOutput);
 			targetDevice.addControlledItem(key, theOutput, type);
 			targetDevice.addStartupQueryItem(key, theOutput, type);
 					

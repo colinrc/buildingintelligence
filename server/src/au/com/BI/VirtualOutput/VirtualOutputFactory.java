@@ -54,7 +54,6 @@ public class VirtualOutputFactory {
 			String key = targetDevice.formatKey (tmpKey,theOuput);
 			theOuput.setKey (key);
 			theOuput.setGroupName (groupName);
-			rawHelper.checkForRaw (element,theOuput);
 			targetDevice.addControlledItem(key, theOuput, type);
 			targetDevice.addStartupQueryItem(key, theOuput, type);
 			if (outKey != null && !outKey.equals("")) {
