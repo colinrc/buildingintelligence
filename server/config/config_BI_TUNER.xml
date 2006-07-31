@@ -13,12 +13,12 @@
                 
                 <BI_TUNER>
                            <!-- This line matches a string from the device for the volume in one 1, the Garage Audio.   -->                           
-                         <CUSTOM_INPUT KEY="AU_VOL 01=(\d+)" KEY_IS_REGEX="Y" NAME="All Zones" DISPLAY_NAME="GARAGE_AUDIO"  COMMAND="on" EXTRA="@1"/>
+                         <CUSTOM_INPUT KEY="AU_VOL 01=(\d+)" NAME="Garage Audio" DISPLAY_NAME="GARAGE_AUDIO"  COMMAND="on" EXTRA="@1"/>
                          
                           <!-- Look for the zone name corresponding to the first field in the list of all configured devices (apart from CUSTOM_INPUT devices ) -->
                            <!-- This line with match a string from the device such as the following for a volume of 10 for the Study Audio      VOL 02 10  -->                           
-                       	<CUSTOM_INPUT KEY="AU_VOL (\d+)=(\d+)" KEY_IS_REGEX="Y" MATCH="@1"  NAME="Volume For Zone" 
-                         														DISPLAY_NAME="%Match_DisplayName%" COMMAND="on" EXTRA="@2"/>
+                       	<CUSTOM_INPUT KEY="AU_VOL (\d+)=(\d+)"  NAME="Volume For Zone" 
+                         														DISPLAY_NAME="%Match(@1,"AUDIO","DisplayName")%" COMMAND="on" EXTRA="@2"/>
 
  						<!-- Any string from the device which has not been processed by the CUSTOM_INPUT instructions will be sent to the  
  										processCommsString method in the Groovy Model specified by the DEVICE_TYPE parameter for this configuration block  -->
@@ -26,14 +26,14 @@
  					
  					
  						<!-- If a command has been received from flash for Garage audio, send it through to the device -->
-                        <CONNECT KEY="1" DISPLAY_NAME="GARAGE_AUDIO" NAME="Garage Audio" >
+                        <CUSTOM_CONNECT KEY="1" DISPLAY_NAME="GARAGE_AUDIO" NAME="Garage Audio" >
                         		<OUTSTRING VALUE="AU_VOL %KEY% on %COMMAND.EXTRA%" IF_COMMAND="on" />
                         		<OUTSTRING VALUE="AU_VOL %KEY% off %COMMAND.EXTRA%" IF_COMMAND="off" />
-                          </CONNECT>
+                          </CUSTOM_CONNECT>
                         
  						<!-- If a command has been received from flash for sudio audio, do not process it here. It will be processed by the buildAudioString method in the 
  						         Groovy Model refered to in the DEVICE_TYPE parameter for this configuration block   -->
-                        <CONNECT KEY="2" DISPLAY_NAME="STUDY_AUDIO" NAME="Study Audio" />
+                        <AUDIO KEY="2" DISPLAY_NAME="STUDY_AUDIO" NAME="Study Audio" />
                 </BI_TUNER>
         </DEVICE>
         
