@@ -38,6 +38,7 @@ public class RawFactory {
 	 */
 	public void addRaw(DeviceModel targetDevice, List clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
+		targetDevice.setHasRawCodes(true);
 		String name = element.getAttributeValue("NAME");
 		String outKey = element.getAttributeValue("DISPLAY_NAME");
 		ToggleSwitch theInput = new ToggleSwitch(name,

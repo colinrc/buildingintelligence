@@ -78,6 +78,7 @@ public class BaseModel
 		public DeviceType allDevices = null;
 		protected VersionManager versionManager = null;
 		protected String version = "0";
+		protected boolean hasRawCodes = false;
 		
 		
 		public User currentUser = null;
@@ -1140,5 +1141,13 @@ public class BaseModel
 			}
 		}
 		return null;
+	}
+
+	public boolean isHasRawCodes() {
+		return hasRawCodes;
+	}
+
+	public void setHasRawCodes(boolean hasRawCodes) {
+		this.hasRawCodes = hasRawCodes;
 	}
 }

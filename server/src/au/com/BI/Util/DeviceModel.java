@@ -485,6 +485,17 @@ public interface DeviceModel {
 	 * Used by the version manager to display details to the client.
 	 */
 	public void setVersion(String version) ;
+	
+	/**
+	 * True if the device has some raw codes in the configuration file.
+	 * @return true/false
+	 */
+	public boolean isHasRawCodes() ;
+
+	/**
+	 * True if the device has some raw codes in the configuration file.
+	 */
+	public void setHasRawCodes(boolean hasRawCodes) ;
 }
 
 

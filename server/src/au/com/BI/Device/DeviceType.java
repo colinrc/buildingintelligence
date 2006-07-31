@@ -136,6 +136,8 @@ public interface DeviceType
 	 * @return
 	 */
 	public CommandInterface buildDisplayCommand();
+	
+
 
 }
 	

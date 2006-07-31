@@ -36,6 +36,7 @@ public class CustomInputFactory {
 	 */
 	public void addCustomInput(DeviceModel targetDevice, List clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
+		targetDevice.setHasRawCodes(true);
 		String name = element.getAttributeValue("NAME");
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
