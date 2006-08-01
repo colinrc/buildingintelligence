@@ -8,6 +8,7 @@ import au.com.BI.Comms.CommDevice;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Device.DeviceType;
+import au.com.BI.M1.Commands.AlarmByZoneRequest;
 import au.com.BI.M1.Commands.ArmToAway;
 import au.com.BI.M1.Commands.ArmToNight;
 import au.com.BI.M1.Commands.ArmToNightInstant;
@@ -16,10 +17,10 @@ import au.com.BI.M1.Commands.ArmToStayInstant;
 import au.com.BI.M1.Commands.ArmStepToNextAwayMode;
 import au.com.BI.M1.Commands.ArmStepToNextStayMode;
 import au.com.BI.M1.Commands.ArmToVacation;
+import au.com.BI.M1.Commands.ArmingStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputOff;
 import au.com.BI.M1.Commands.ControlOutputOn;
 import au.com.BI.Util.DeviceModel;
-
 
 public class OutputHelper {
 
@@ -41,47 +42,72 @@ public class OutputHelper {
 		if (device != null) {
 
 			String retCode = "";
-			
+
 			if (device.getDeviceType() == DeviceType.TOGGLE_OUTPUT) {
 				retCode = buildToggleOutput((DeviceType) device, command);
-			} else if (command.getKey().equals("ARM") && (device.getDeviceType() == DeviceType.VIRTUAL_OUTPUT)) {
+			} else if (command.getKey().equals("ARM")
+					&& (device.getDeviceType() == DeviceType.VIRTUAL_OUTPUT)) {
 				if (command.getCommandCode().equals("ARM_TO_AWAY")) {
 					ArmToAway m1Command = new ArmToAway();
 					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel().getParameterValue("Password", DeviceModel.MAIN_DEVICE_GROUP));
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equals("ARM_TO_STAY_HOME")) {
 					ArmToStayHome m1Command = new ArmToStayHome();
 					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel().getParameterValue("Password", DeviceModel.MAIN_DEVICE_GROUP));
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equals(
 						"ARM_TO_STAY_INSTANT")) {
 					ArmToStayInstant m1Command = new ArmToStayInstant();
 					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel().getParameterValue("Password", DeviceModel.MAIN_DEVICE_GROUP));
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equals("ARM_TO_NIGHT")) {
 					ArmToNight m1Command = new ArmToNight();
 					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel().getParameterValue("Password", DeviceModel.MAIN_DEVICE_GROUP));
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equals("ARM_TO_VACATION")) {
 					ArmToVacation m1Command = new ArmToVacation();
 					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel().getParameterValue("Password", DeviceModel.MAIN_DEVICE_GROUP));
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equals(
 						"ARM_STEP_TO_NEXT_AWAY_MODE")) {
 					ArmStepToNextAwayMode m1Command = new ArmStepToNextAwayMode();
 					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel().getParameterValue("Password", DeviceModel.MAIN_DEVICE_GROUP));
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equals(
 						"ARM_STEP_TO_NEXT_STAY_MODE")) {
 					ArmStepToNextStayMode m1Command = new ArmStepToNextStayMode();
 					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel().getParameterValue("Password", DeviceModel.MAIN_DEVICE_GROUP));
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
+					retCode = m1Command.buildM1String() + "\r\n";
+				}
+			} else if (command.getKey().equals("REQUEST")
+					&& (device.getDeviceType() == DeviceType.VIRTUAL_OUTPUT)) {
+				if (command.getCommandCode().equals("ARMING_STATUS_REQUEST")) {
+					ArmingStatusRequest m1Command = new ArmingStatusRequest();
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals(
+						"ALARM_BY_ZONE_REQUEST")) {
+					AlarmByZoneRequest m1Command = new AlarmByZoneRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
 			}

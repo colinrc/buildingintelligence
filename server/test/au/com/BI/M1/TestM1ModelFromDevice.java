@@ -1,7 +1,7 @@
 package au.com.BI.M1;
 
 import junit.framework.TestCase;
-/*
+import au.com.BI.M1.Commands.AlarmByZoneRequest;
 import au.com.BI.M1.Commands.ArmStepToNextAwayMode;
 import au.com.BI.M1.Commands.ArmStepToNextStayMode;
 import au.com.BI.M1.Commands.ArmToAway;
@@ -21,6 +21,7 @@ import au.com.BI.M1.Commands.Disarm;
 import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
+import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
 import au.com.BI.M1.Commands.ReplyWithBypassedZoneState;
 import au.com.BI.M1.Commands.RequestTemperature;
@@ -28,6 +29,7 @@ import au.com.BI.M1.Commands.RequestTemperatureReply;
 import au.com.BI.M1.Commands.ZoneBypassRequest;
 import au.com.BI.M1.Commands.ZoneBypassState;
 import au.com.BI.M1.Commands.ZoneChangeUpdate;
+import au.com.BI.M1.Commands.ZoneDefinition;
 import au.com.BI.M1.Commands.ZonePartition;
 import au.com.BI.M1.Commands.ZonePartitionReport;
 import au.com.BI.M1.Commands.ZonePartitionRequest;
@@ -35,12 +37,11 @@ import au.com.BI.M1.Commands.ZoneStatus;
 import au.com.BI.M1.Commands.ZoneStatusReport;
 import au.com.BI.M1.Commands.ZoneStatusRequest;
 import au.com.BI.ToggleSwitch.ToggleSwitch;
-import au.com.BI.Util.DeviceType;
 import au.com.BI.Util.Utility;
-*/
+
 
 public class TestM1ModelFromDevice extends TestCase {
-/*
+
 	private Model model = null;
 	private ToggleSwitch testSwitch1 = null;
 	private M1Helper m1Helper = null;
@@ -49,13 +50,13 @@ public class TestM1ModelFromDevice extends TestCase {
 		super.setUp();
 		
 		model = new Model();
-		testSwitch1 = new ToggleSwitch("testM1Switch",DeviceType.TOGGLE_OUTPUT);
-		testSwitch1.setKey("001");
-		testSwitch1.setGroupName("M1PIR");
-		
+//		testSwitch1 = new ToggleSwitch("testM1Switch",MessageDirection);
+//		testSwitch1.setKey("001");
+//		testSwitch1.setGroupName("M1PIR");
+//		
 		m1Helper = model.getM1Helper();
-		
-		model.addControlledItem("M1PIR",testSwitch1,DeviceType.TOGGLE_OUTPUT);
+//		
+//		model.addControlledItem("M1PIR",testSwitch1,DeviceType.TOGGLE_OUTPUT);
 	}
 	
 	protected void tearDown() throws Exception { 
@@ -64,7 +65,7 @@ public class TestM1ModelFromDevice extends TestCase {
 	
 
 	public void testM1CommandFactory() {
-		String str = m1Helper.buildCompleteM1String("CC" + Utility.padString(testSwitch1.getKey(),3) + "0" + "00"); // off command for the output change control
+		String str = m1Helper.buildCompleteM1String("CC" + Utility.padString("001",3) + "0" + "00"); // off command for the output change control
 		M1Command m1Command = M1CommandFactory.getInstance().getM1Command(str);
 		assertEquals(m1Command.getClass(),OutputChangeUpdate.class);
 		
@@ -121,6 +122,7 @@ public class TestM1ModelFromDevice extends TestCase {
 		str = "D6ZS01235679ABDEF00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
 		String checksum = new M1Helper().calcM1Checksum(str);
 		str = str + checksum;
+		System.out.println(str);
 		m1Command = M1CommandFactory.getInstance().getM1Command(str);
 		assertEquals(m1Command.getClass(),ZoneStatusReport.class);
 		ZoneStatusReport zoneStatus = (ZoneStatusReport)m1Command;
@@ -185,6 +187,11 @@ public class TestM1ModelFromDevice extends TestCase {
 		assertEquals(zoneChangeUpdate.getZoneStatus(),ZoneStatus.NORMAL_EOL);
 		assertEquals(zoneChangeUpdate.getFutureUse(),"00");
 		
+		ZoneChangeUpdate _zone = new ZoneChangeUpdate();
+		_zone.setZone("006");
+		_zone.setZoneStatus(ZoneStatus.TROUBLE_OPEN);
+		System.out.println(_zone.buildM1String());
+		
 		ControlOutputOn controlOutputOn = new ControlOutputOn();
 		controlOutputOn.setOutputNumber("001");
 		controlOutputOn.setSeconds(10);
@@ -209,6 +216,13 @@ public class TestM1ModelFromDevice extends TestCase {
 		m1Command = M1CommandFactory.getInstance().getM1Command(controlOutputStatusRequest.buildM1String());
 		assertEquals(m1Command.getClass(),controlOutputStatusRequest.getClass());
 		
+		OutputChangeUpdate update = new OutputChangeUpdate();
+		update.setCommand("CC");
+		update.setKey("011");
+		update.setOutputState("1");
+		update.setFutureUse("00");
+		System.out.println(update.buildM1String());
+		
 		str = "D6CS100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000000000000000";
 		checksum = new M1Helper().calcM1Checksum(str);
 		str = str + checksum;
@@ -226,7 +240,43 @@ public class TestM1ModelFromDevice extends TestCase {
 		m1Command = M1CommandFactory.getInstance().getM1Command(str);
 		assertEquals(m1Command.getClass(),RequestTemperatureReply.class);
 		
-		m1Helper.buildCompleteM1String("CC" + Utility.padString(testSwitch1.getKey(),3) + "0" + "00");
+		str = "06az005F";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),AlarmByZoneRequest.class);
+		
+		str = "D6AZ0123456789:;<=>?@ABDEFGHIJ0000010000000001000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000001000000000100000000010000000000000000000";
+		checksum = new M1Helper().calcM1Checksum(str);
+		str = str + checksum;
+		System.out.println(str);
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),ReplyAlarmByZoneReportData.class);
+		ReplyAlarmByZoneReportData zoneByAlarmReport = (ReplyAlarmByZoneReportData)m1Command;
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[0],ZoneDefinition.DISABLED);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[1],ZoneDefinition.BURGLAR_ENTRY_EXIT_1);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[2],ZoneDefinition.BURGLAR_ENTRY_EXIT_2);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[3],ZoneDefinition.BURGLAR_PERIMETER_INSTANT);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[4],ZoneDefinition.BURGLAR_INTERIOR);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[5],ZoneDefinition.BURGLAR_INTERIOR_FOLLOWER);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[6],ZoneDefinition.BURGLAR_INTERIOR_NIGHT);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[7],ZoneDefinition.BURGLAR_INTERIOR_NIGHT_DELAY);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[8],ZoneDefinition.BURGLAR_24_HOUR);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[9],ZoneDefinition.BURGLAR_BOX_TAMPER);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[10],ZoneDefinition.FIRE_ALARM);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[11],ZoneDefinition.FIRE_VERIFIED);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[12],ZoneDefinition.FIRE_SUPERVISORY);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[13],ZoneDefinition.AUX_ALARM_1);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[14],ZoneDefinition.AUX_ALARM_2);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[15],ZoneDefinition.KEY_FOB);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[16],ZoneDefinition.NON_ALARM);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[17],ZoneDefinition.CARBON_MONOXIDE);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[18],ZoneDefinition.EMERGENCY_ALARM);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[19],ZoneDefinition.FREEZE_ALARM);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[20],ZoneDefinition.GAS_ALARM);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[21],ZoneDefinition.HEAT_ALARM);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[22],ZoneDefinition.MEDICAL_ALARM);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[23],ZoneDefinition.POLICE_ALARM);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[24],ZoneDefinition.POLICE_NO_INDICATION);	
+		assertEquals(zoneByAlarmReport.getZoneDefinition()[25],ZoneDefinition.WATER_ALARM);	
 	}
-	*/
+	
 }

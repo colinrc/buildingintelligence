@@ -44,6 +44,8 @@ public class M1CommandFactory {
 	 *   <li>CS - Control Output Status Report Message</li>
 	 *   <li>st - Request Temperature Message</li>
 	 *   <li>ST - Request Temperature Reply Message</li>
+	 *   <li>az - Alarm by Zone Request Message</li>
+	 *   <li>AZ - Reply Alarm by Zone Report Data Message</li>
 	 * </ul>
 	 * @param unparsedCommand
 	 * @return
@@ -87,6 +89,10 @@ public class M1CommandFactory {
 			m1Command = parseRequestTemperature(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("ST")) {
 			m1Command = parseRequestTemperatureReply(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("az")) {
+			m1Command = parseAlarmByZoneRequest(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("AZ")) {
+			m1Command = parseReplyAlarmByZoneReportData(unparsedCommand);
 		}
 		
 		if (m1Command == null) {
@@ -166,6 +172,11 @@ public class M1CommandFactory {
 		return null;
 	}
 	
+	/**
+	 * Parse a request for arming status.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseArmingStatusRequest(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -189,6 +200,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message that contains the arming status report data.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseReplyArmingStatusReportData(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -232,6 +248,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message for a zone status request.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseZoneStatusRequest(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -255,6 +276,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message for a zone status report.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseZoneStatusReport(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -283,6 +309,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message for a zone partition request.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseZonePartitionRequest(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -306,6 +337,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message with a zone partition report.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseZonePartitionReport(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -334,6 +370,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message with the zone bypass request.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseZoneBypassRequest(String command) {
 		
 		String hexLength = command.substring(0,2);
@@ -344,7 +385,6 @@ public class M1CommandFactory {
 		}
 		ZoneBypassRequest _command = new ZoneBypassRequest();
 		_command.setCommand(command);
-//		_command.setKey(command.substring(2,4));
 		_command.setCheckSum(command.substring(command.length()-2));
 		String zone = command.substring(4,7);
 		_command.setZone(zone);
@@ -367,6 +407,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message for a reply with the bypassed zone's state.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseReplyWithBypassedZoneState(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -376,7 +421,6 @@ public class M1CommandFactory {
 		}
 		ReplyWithBypassedZoneState _command = new ReplyWithBypassedZoneState();
 		_command.setCommand(command);
-//		_command.setKey(command.substring(2,4));
 		_command.setCheckSum(command.substring(command.length()-2));
 		_command.setZone(command.substring(4,7));
 		_command.setKey(command.substring(4,7));
@@ -390,6 +434,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message for a zone change update.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseZoneChangeUpdate(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -423,6 +472,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message to turn a control output on.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseControlOutputOn(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -446,6 +500,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message to turn a control output off.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseControlOutputOff(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -468,6 +527,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message to toggle a control output.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseControlOutputToggle(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -490,6 +554,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message that contains the request for the states of control output devices in the system.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseControlOutputStatusRequest(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -510,6 +579,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a message that contains the states of the control outputs in the system.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseControlOutputStatusReport(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -543,6 +617,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Construct a message to request the temperature for a given device/group.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseRequestTemperature(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -567,6 +646,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Construct a message to parse replies to the temperature requests.
+	 * @param command
+	 * @return The temperature reply message
+	 */
 	private M1Command parseRequestTemperatureReply(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -582,6 +666,68 @@ public class M1CommandFactory {
 		_command.setGroup(Group.getByValue(command.substring(4,5)));
 		_command.setDevice(command.substring(5,7));
 		_command.setTemperature(command.substring(7,10));
+		_command.setCheckSum(command.substring(command.length()-2));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * Construct a message to request alarms by the zone.
+	 * @param command
+	 * @return The request for alarms by zone message
+	 */
+	private M1Command parseAlarmByZoneRequest(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length()-2) {
+			return (null);
+		}
+		
+		AlarmByZoneRequest _command = new AlarmByZoneRequest();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setFutureUse(command.substring(4,6));
+		_command.setCheckSum(command.substring(6));
+		
+		// Get checksum and compare
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,6));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * Parse a reply with the alarms by zones report.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parseReplyAlarmByZoneReportData(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ReplyAlarmByZoneReportData _command = new ReplyAlarmByZoneReportData();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(0,command.length()-2));
+		ZoneDefinition[] zoneDefinitions = new ZoneDefinition[208];
+		for (int i=0;i<208;i++) {
+			String zoneDefinition = command.substring(i+4,i+5);
+			
+			zoneDefinitions[i] = ZoneDefinition.getByValue(zoneDefinition);
+		}
+		_command.setZoneDefinition(zoneDefinitions);
 		_command.setCheckSum(command.substring(command.length()-2));
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
