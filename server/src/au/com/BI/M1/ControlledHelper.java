@@ -30,9 +30,11 @@ import au.com.BI.M1.Commands.Group;
 import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
+import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
 import au.com.BI.M1.Commands.RequestTemperatureReply;
 import au.com.BI.M1.Commands.ZoneChangeUpdate;
+import au.com.BI.M1.Commands.ZoneDefinition;
 import au.com.BI.M1.Commands.ZoneStatus;
 import au.com.BI.Sensors.SensorFascade;
 import au.com.BI.Util.BaseDevice;
@@ -294,9 +296,10 @@ public class ControlledHelper {
 					_command.setTargetDeviceID(-1);
 					_command.setUser(m1.currentUser);
 					_command.setCommand("ARMING STATUS");
-					_command.setExtraInfo(armedStatus.getDescription());
-					_command.setExtra2Info(armUpState.getDescription());
-					_command.setExtra3Info(areaAlarmState.getDescription());
+					_command.setExtraInfo(Integer.toString(i));
+					_command.setExtra2Info(armedStatus.getDescription());
+					_command.setExtra3Info(armUpState.getDescription());
+					_command.setExtra4Info(areaAlarmState.getDescription());
 					_command.setKey("CLIENT_SEND");
 					cache.setCachedCommand(_command.getKey(),_command);
 
@@ -347,6 +350,28 @@ public class ControlledHelper {
 
 				logger.log (Level.INFO,"Sending " + _command.getCommandCode());
 				sendToFlash(commandQueue, -1, _command);
+			} else if (m1Command.getClass().equals(ReplyAlarmByZoneReportData.class)) {
+				ReplyAlarmByZoneReportData zoneReport = (ReplyAlarmByZoneReportData)m1Command;
+				
+				for (int i=0;i<zoneReport.getZoneDefinition().length;i++) {
+					ZoneDefinition zoneDefinition = zoneReport.getZoneDefinition()[i];
+					
+					CommandInterface _command = new AlertCommand();
+					_command.setDisplayName("Zone Definition");
+					_command.setTargetDeviceID(-1);
+					_command.setUser(m1.currentUser);
+					_command.setCommand("ZONE DEFINITION");
+					_command.setExtraInfo(Integer.toString(i));
+					_command.setExtra2Info(zoneDefinition.getDescription());
+					_command.setKey("CLIENT_SEND");
+					cache.setCachedCommand(_command.getKey(),_command);
+
+					logger.log (Level.INFO,"Sending " + _command.getCommandCode() + " ArmedStatus=" + 
+							    _command.getExtraInfo() + 
+							    " ArmUpState=" + _command.getExtra2Info() + 
+							    " AreaAlarmState=" + _command.getExtra3Info());
+					sendToFlash(commandQueue, -1, _command);
+				}
 			}
 
 			sendToFlash(commandQueue, -1, m1Command);
@@ -408,7 +433,8 @@ public class ControlledHelper {
 				   m1Command.getClass().equals(ArmStepToNextAwayMode.class) ||
 				   m1Command.getClass().equals(ArmStepToNextStayMode.class) ||
 				   m1Command.getClass().equals(ReplyArmingStatusReportData.class) ||
-				   m1Command.getClass().equals(ZoneChangeUpdate.class)) {
+				   m1Command.getClass().equals(ZoneChangeUpdate.class) ||
+				   m1Command.getClass().equals(ReplyAlarmByZoneReportData.class)) {
 			return m1Command;
 		} else {
 			return null;
