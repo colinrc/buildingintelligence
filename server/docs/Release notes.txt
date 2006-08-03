@@ -1,3 +1,9 @@
+''' Raw '''
+
+Added a much simpler method for Raw processing using a new command CUSTOM_CONNECT. see [ServerDocs/RawModel] for details. 
+
+Resolves issue [ticket:473]
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a11.zip V1.6a11] ==
 
 ''' General '''
