@@ -1,4 +1,4 @@
-<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
         <DESC>Demonstration configuration for an audio system called BI_TUNER</DESC>
          <!-- ______________________________________  BI_TUNER DEFS  ____________________  -->
         <DEVICE ACTIVE="Y" DEVICE_TYPE="BI_TUNER" DESCRIPTION="Audio Tuner">
@@ -18,17 +18,17 @@
                           <!-- Look for the zone name corresponding to the first field in the list of all configured devices (apart from CUSTOM_INPUT devices ) -->
                            <!-- This line with match a string from the device such as the following for a volume of 10 for the Study Audio      VOL 02 10  -->                           
                        	<CUSTOM_INPUT KEY="AU_VOL (\d+)=(\d+)"  NAME="Volume For Zone" 
-                         														DISPLAY_NAME="%Match(@1,"AUDIO","DisplayName")%" COMMAND="on" EXTRA="@2"/>
+                         														DISPLAY_NAME="%Match(@1,AUDIO,DisplayName)%" COMMAND="on" EXTRA="@2"/>
 
  						<!-- Any string from the device which has not been processed by the CUSTOM_INPUT instructions will be sent to the  
  										processCommsString method in the Groovy Model specified by the DEVICE_TYPE parameter for this configuration block  -->
  					
  					
  					
- 						<!-- If a command has been received from flash for Garage audio, send it through to the device -->
-                        <CUSTOM_CONNECT KEY="1" DISPLAY_NAME="GARAGE_AUDIO" NAME="Garage Audio" >
-                        		<OUTSTRING VALUE="AU_VOL %KEY% on %COMMAND.EXTRA%" IF_COMMAND="on" />
-                        		<OUTSTRING VALUE="AU_VOL %KEY% off %COMMAND.EXTRA%" IF_COMMAND="off" />
+ 						<!-- If a command has been received from flash for Mater bedroom audio, send it through to the device -->
+                        <CUSTOM_CONNECT KEY="1" DISPLAY_NAME="MASTER_BED_AUDIO" NAME="Master Bedroom Audio" >
+                        		<OUTSTRING VALUE="AU_VOL %THIS.KEY% on %COMMAND.EXTRA%&#13;" IF_COMMAND="on" />
+                        		<OUTSTRING VALUE="AU_VOL %THIS.KEY% off %COMMAND.EXTRA%&#13;" IF_COMMAND="off" />
                           </CUSTOM_CONNECT>
                         
  						<!-- If a command has been received from flash for sudio audio, do not process it here. It will be processed by the buildAudioString method in the 
