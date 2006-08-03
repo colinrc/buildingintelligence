@@ -8,10 +8,11 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
-class RawTest {
+class RawTest extends GroovyModel {
 
 	// Our audio device expects 2 characters to specify the zone 
 	int keyPadding = 2;
+	String name = "BI_TUNER"
 	
 	RawTest() {
 		super()
