@@ -6,7 +6,6 @@ package au.com.BI.Config;
 
 import java.util.*;
 
-import au.com.BI.Command.*;
 import java.util.logging.*;
 
 import au.com.BI.Util.DeviceModel;
@@ -128,6 +127,7 @@ public class ConfigHelper {
 	public Collection<DeviceType> getAllOutputDeviceObjects(){
 		return outputItems.values();		
 	}
+	
 	
 	public Collection<DeviceType> getAllStartupDeviceObjects(){
 		return startupQueryItems.values();		

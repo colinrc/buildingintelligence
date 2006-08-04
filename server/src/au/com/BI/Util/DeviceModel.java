@@ -486,16 +486,7 @@ public interface DeviceModel {
 	 */
 	public void setVersion(String version) ;
 	
-	/**
-	 * True if the device has some raw codes in the configuration file.
-	 * @return true/false
-	 */
-	public boolean isHasRawCodes() ;
 
-	/**
-	 * True if the device has some raw codes in the configuration file.
-	 */
-	public void setHasRawCodes(boolean hasRawCodes) ;
 }
 
 

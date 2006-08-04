@@ -220,6 +220,11 @@ public class Model extends BaseModel implements DeviceModel {
 					if ((outputRawCommand = buildDirectConnectString (device,command)) != null)
 						sendToSerial (STX+outputRawCommand+ETX);
 					break;
+
+				case DeviceType.CUSTOM_CONNECT :
+					if ((outputRawCommand = buildDirectConnectString (device,command)) != null)
+						sendToSerial (outputRawCommand);
+					break;
 			}
 
 		}
@@ -285,7 +290,7 @@ public class Model extends BaseModel implements DeviceModel {
 			return null;
 		}
 		else {
-			logger.log(Level.FINER, "Build comms string "+ rawSerialCommand);
+			logger.log(Level.FINER, "Build custom string "+ rawSerialCommand);
 
 			return rawSerialCommand;
 		}

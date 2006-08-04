@@ -7,8 +7,17 @@
                         <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
                         <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="5000"/>
                 </CONNECTION>
-
+                
+                <CATALOGUE NAME="Main Rack Audio">
+                        <ITEM CODE="cd1" VALUE="1"/>
+                        <ITEM CODE="cd2" VALUE="2"/>
+                        <ITEM CODE="digital" VALUE="3"/>
+                        <ITEM CODE="tv" VALUE="4"/>
+                </CATALOGUE>
+                
                 <PARAMETERS>
+                     <ITEM NAME="AUDIO_INPUTS" VALUE="Main Rack Audio" />
+                     <ITEM NAME="APPEND_TO_SENT_STRINGS" VALUE="&#13;" />
                 </PARAMETERS>
                 
                 <BI_TUNER>
@@ -25,15 +34,28 @@
  					
  					
  					
- 						<!-- If a command has been received from flash for Mater bedroom audio, send it through to the device -->
-                        <CUSTOM_CONNECT KEY="1" DISPLAY_NAME="MASTER_BED_AUDIO" NAME="Master Bedroom Audio" >
-                        		<OUTSTRING VALUE="AU_VOL %THIS.KEY% on %COMMAND.EXTRA%&#13;" IF_COMMAND="on" />
-                        		<OUTSTRING VALUE="AU_VOL %THIS.KEY% off %COMMAND.EXTRA%&#13;" IF_COMMAND="off" />
+ 						<!-- If a command has been received from flash for the Mater bedroom audio or the dining room audio, process it here -->
+                        <CUSTOM_CONNECT NAME="Audio Processor" >
+                        		<KEY VALUE="1" DISPLAY_NAME="MASTER_BED_AUDIO" NAME="Master Bedroom Audio" />
+                        		 <KEY VALUE="2" DISPLAY_NAME="DINING_AUDIO" NAME="Dining Room Audio" />
+                        		                       		
+                        		<OUTSTRING IF_COMMAND="src"  VALUE="AU_VOL %THIS.KEY% src  %LOOKUP AUDIO_INPUTS COMMAND.EXTRA %"  />
+  
+                        		<OUTSTRING IF_COMMAND="volume" IF_EXTRA="up"  VALUE="AU_VOL %THIS.KEY% vol +"  />
+                        		<OUTSTRING IF_COMMAND="volume" IF_EXTRA="down"  VALUE="AU_VOL %THIS.KEY% vol -"  />
+                        		
+                        		<OUTSTRING IF_COMMAND="on"  VALUE="AU_PWR %THIS.KEY% on %COMMAND.EXTRA%"  />
+                        		<OUTSTRING IF_COMMAND="off"  VALUE="AU_PWR %THIS.KEY% off %COMMAND.EXTRA%" />
+                        		
                           </CUSTOM_CONNECT>
                         
- 						<!-- If a command has been received from flash for sudio audio, do not process it here. It will be processed by the buildAudioString method in the 
- 						         Groovy Model refered to in the DEVICE_TYPE parameter for this configuration block   -->
-                        <AUDIO KEY="2" DISPLAY_NAME="STUDY_AUDIO" NAME="Study Audio" />
+ 						<!-- If a command has been received from flash for sudio audio, do not process it here. It will be processed by the buildCustomConnectString method in the 
+ 						         Groovy Model refered to in the DEVICE_TYPE parameter for this configuration block, BI_TUNER   -->
+                        <CUSTOM_CONNECT KEY="6" DISPLAY_NAME="STUDY_AUDIO" NAME="Study Audio" />
+                        
+                         <!-- If a command has been received from flash for sudio audio, do not process it here. It will be processed by the buildAudioString method in the 
+ 						         Groovy Model refered to in the DEVICE_TYPE parameter for this configuration block, BI_TUNER   -->
+                        <AUDIO KEY="5" DISPLAY_NAME="KITCHEN_AUDIO" NAME="Kitchen Audio" />
                 </BI_TUNER>
         </DEVICE>
         

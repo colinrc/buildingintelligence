@@ -6,7 +6,6 @@ package au.com.BI.Command;
 import java.util.logging.Logger;
 
 import au.com.BI.User.*;
-import au.com.BI.Command.CommandInterface.Fields;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.JRobin.JRobinData;
 import org.jdom.*;
@@ -119,7 +118,7 @@ public class Command implements CommandInterface {
          */
         public String getValue (Fields commandField) {
         		switch (commandField){
-        			case COMMAND_CODE:
+        			case COMMAND:
         				return this.getCommandCode();
         				
            			case KEY:

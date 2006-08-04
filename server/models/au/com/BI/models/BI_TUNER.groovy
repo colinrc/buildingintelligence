@@ -4,6 +4,7 @@ import au.com.BI.Util.*
 import au.com.BI.Command.*
 import au.com.BI.GroovyModels.*
 import au.com.BI.CustomInput.CustomInput 
+import au.com.BI.CustomConnect.CustomConnect
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -60,7 +61,7 @@ class RawTest extends GroovyModel {
 	}
 
 	
-	void buildCustomInputString (CustomInput device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+	void buildCustomConnectString (CustomConnect device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 				// receives a message from flash and builds the appropriate string for the audio device
 				
 				// To switch on the audio device it requieres a string of this format      AU_PWR:zone:on or AW_PWR:zone:off

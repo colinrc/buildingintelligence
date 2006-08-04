@@ -1,8 +1,23 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a12.zip V1.6a12] ==
+
 ''' Raw '''
 
-Added a much simpler method for Raw processing using a new command CUSTOM_CONNECT. see [ServerDocs/RawModel] for details. 
+Added a much simpler method for Raw processing using a new command CUSTOM_CONNECT. see [ServerDocs/CustomConnect] for details. This has been integrated 
+into all Java models, Groovy model support and into the Java Raw model.  For all models, if the raw strings match from CUSTOM_CONNECT the model will not 
+attempt to further process the message from the flash client. If the raw processing does not produce a result the model is called for more advanced processing.
 
-Resolves issue [ticket:473]
+LOOKUP does not yet function correctly 
+
+Implementing issue [ticket:473]
+
+''' General '''
+
+Added a utility method to simplify reading Command object parameters, includes range checking and error messages. 
+ * paramToInt
+
+''' Build system '''
+
+The build system has been updated to ensure the produced directory structure matches the structure used in client machines
 
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a11.zip V1.6a11] ==
 

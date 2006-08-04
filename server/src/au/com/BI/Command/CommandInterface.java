@@ -16,9 +16,7 @@ import au.com.BI.User.User;
 
 public interface CommandInterface {
 	
-	public enum Fields {COMMAND_CODE,EXTRA,EXTRA2,EXTRA3,EXTRA4,EXTRA5, KEY };
-	
-        public final int Control = 0;
+	public final int Control = 0;
         public final int Message = 1;
         public final int Video = 2;
         public final int RawElement = 3;

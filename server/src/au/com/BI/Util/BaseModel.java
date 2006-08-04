@@ -12,7 +12,6 @@ package au.com.BI.Util;
 
 import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
-import au.com.BI.Command.CommandInterface.Fields;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Config.ParameterException;
@@ -20,16 +19,18 @@ import au.com.BI.Config.RawItemDetails;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Home.VersionManager;
-import au.com.BI.SignVideo.Model;
 import au.com.BI.User.User;
 import java.util.*;
 import java.util.logging.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import au.com.BI.Macro.MacroHandler;
 import au.com.BI.Config.Bootstrap;
 import au.com.BI.AlarmLogging.*;
 import au.com.BI.Messaging.*;
 import au.com.BI.Config.ParameterBlock;
+import au.com.BI.CustomConnect.CustomConnect;
 import au.com.BI.Device.DeviceType;
 
 public class BaseModel
@@ -78,8 +79,8 @@ public class BaseModel
 		public DeviceType allDevices = null;
 		protected VersionManager versionManager = null;
 		protected String version = "0";
-		protected boolean hasRawCodes = false;
-		
+		protected Pattern customScanLookupString = null;
+		protected Pattern customScanCommandString = null;
 		
 		public User currentUser = null;
 		
@@ -100,6 +101,8 @@ public class BaseModel
                 topMap = new HashMap<String,String>(DeviceModel.NUMBER_PARAMETERS);
                 parameters.put(DeviceModel.MAIN_DEVICE_GROUP, topMap);
                 rawDefs = new HashMap<String,HashMap<String,String>>(DeviceModel.NUMBER_CATALOGUES);
+           		customScanLookupString = Pattern.compile("%LOOKUP (\\w+) (\\w+)");
+           		customScanCommandString = Pattern.compile("%COMMAND\\.(\\w+)%");
         }
 
         public void setTransmitMessageOnBytes(int numberBytes) {
@@ -124,8 +127,7 @@ public class BaseModel
 
         public void finishedReadingConfig() throws SetupException {
         	setupParameterBlocks();
-    		allDevices = configHelper.getControlledItem(Model.AllZones);
-        };
+        }
 
     	/** 
        	 * A hook which occurs after the configuration parser has read the to level parameters 
@@ -137,7 +139,11 @@ public class BaseModel
     		} else {
       			this.setConfigKeysInDecimal(false);  			
     		}
-    	}
+  
+      		if (!getParameterValue("APPEND_TO_SENT_STRINGS", DeviceModel.MAIN_DEVICE_GROUP).equals("")){
+    			this.setAppendToSentStrings(getParameterValue("APPEND_TO_SENT_STRINGS", DeviceModel.MAIN_DEVICE_GROUP));
+    		}
+  }
     	
     	public void setupParameterBlocks() throws SetupException {
     		for (ParameterBlock block: configHelper.getParameterBlocks()){
@@ -1118,6 +1124,11 @@ public class BaseModel
 	 * @return
 	 */
 	public String doRawIfPresent (CommandInterface command, DeviceType targetDevice) { 
+		
+		String returnCode = doCustomConnectIfPresent(command,targetDevice);
+		
+		if (returnCode != null) return returnCode;
+		
 		Map rawCodes = targetDevice.getRawCodes(); // the list specified in the config for this device line.
 
 		if (rawCodes!= null){
@@ -1139,15 +1150,56 @@ public class BaseModel
 					return rawCode.populateVariables (catalogueValue,command);
 				}
 			}
-		}
+		} 
+		
 		return null;
 	}
 
-	public boolean isHasRawCodes() {
-		return hasRawCodes;
-	}
+	/**
+	 * If a raw code has been specified for this command on this device. It will be returned.
+	 * @param command
+	 * @param device
+	 * @return
+	 */
+	public String doCustomConnectIfPresent (CommandInterface command, DeviceType device) { 
+		if (device == null || device.getDeviceType() != DeviceType.CUSTOM_CONNECT ) return "";
+			
+		CustomConnect customConnect = (CustomConnect) device;
 
-	public void setHasRawCodes(boolean hasRawCodes) {
-		this.hasRawCodes = hasRawCodes;
+		String outValue = customConnect.getValue(command.getCommandCode(),command.getExtraInfo());
+		outValue = scanCustomString (command, outValue, device);
+		return outValue;
 	}
+	
+	public String scanCustomString (CommandInterface command, String value,DeviceType device ) {
+		try {
+			StringBuffer sb = new StringBuffer();		
+			Matcher resultLookup = customScanLookupString.matcher(value);
+			while (resultLookup.find()) {
+				// Lookup the parameter value from the catalogue
+				this.findKeyForParameterValue( resultLookup.group(2),
+						command.getValue(Fields.valueOf(resultLookup.group(1))),
+						device);
+			}
+			resultLookup.appendTail(sb);
+			value = sb.toString();
+
+			sb = new StringBuffer();		
+			
+			Matcher resultCmd = customScanCommandString.matcher(value);
+			while (resultCmd.find()){
+				resultCmd.appendReplacement(sb,command.getValue(Fields.valueOf(resultCmd.group(1))) );
+			}
+			resultCmd.appendTail(sb);
+	
+			return sb.toString();
+		} catch (IllegalArgumentException ex){
+			logger.log (Level.WARNING,"There was a problem processing the custom instruction for " + device.getName() + " in the model " + this.getName() + " " + ex.getMessage());
+			return "";
+		}catch (ParameterException ex){
+			logger.log (Level.WARNING,"There was a problem processing the custom instruction for " + device.getName() + " in the model " + this.getName() + " " + ex.getMessage());
+			return "";
+		}
+	}
+	
 }

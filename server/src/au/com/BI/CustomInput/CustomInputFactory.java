@@ -36,7 +36,6 @@ public class CustomInputFactory {
 	 */
 	public void addCustomInput(DeviceModel targetDevice, List clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
-		targetDevice.setHasRawCodes(true);
 		String name = element.getAttributeValue("NAME");
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
@@ -64,9 +63,7 @@ public class CustomInputFactory {
 		    theInput.setExtra (extra);
 
 		targetDevice.addControlledItem(key, theInput, type);
-		if (outKey != null && !outKey.equals("")) {
-			targetDevice.addControlledItem(outKey, theInput, MessageDirection.FROM_FLASH);
-		}
+
 	}
 
 }
