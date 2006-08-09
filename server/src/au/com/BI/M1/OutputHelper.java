@@ -20,6 +20,9 @@ import au.com.BI.M1.Commands.ArmToVacation;
 import au.com.BI.M1.Commands.ArmingStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputOff;
 import au.com.BI.M1.Commands.ControlOutputOn;
+import au.com.BI.M1.Commands.ControlOutputStatusRequest;
+import au.com.BI.M1.Commands.Group;
+import au.com.BI.M1.Commands.RequestTemperature;
 import au.com.BI.Util.DeviceModel;
 
 public class OutputHelper {
@@ -108,6 +111,24 @@ public class OutputHelper {
 				} else if (command.getCommandCode().equals(
 						"ALARM_BY_ZONE_REQUEST")) {
 					AlarmByZoneRequest m1Command = new AlarmByZoneRequest();
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals(
+						"CONTROL_OUTPUT_STATUS_REQUEST")) {
+					ControlOutputStatusRequest m1Command = new ControlOutputStatusRequest();
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals(
+						"REQUEST_TEMPERATURE")) {
+					RequestTemperature m1Command = new RequestTemperature();
+					Group group = Group.getByValue(command.getExtraInfo());
+					if (group == null) {
+
+						logger.log(Level.WARNING,
+								"A command to request temperature was sent with an unknown group code of "
+										+ command.getExtraInfo());
+						return;
+					}
+					m1Command.setGroup(group);
+					m1Command.setDevice(command.getExtra2Info());
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
 			}
