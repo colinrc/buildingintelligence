@@ -30,7 +30,7 @@ import au.com.BI.Config.Bootstrap;
 import au.com.BI.AlarmLogging.*;
 import au.com.BI.Messaging.*;
 import au.com.BI.Config.ParameterBlock;
-import au.com.BI.CustomConnect.CustomConnect;
+import au.com.BI.CustomConnect.*;
 import au.com.BI.Device.DeviceType;
 
 public class BaseModel
@@ -80,6 +80,7 @@ public class BaseModel
 		protected VersionManager versionManager = null;
 		protected String version = "0";
 		protected Pattern customScanLookupString = null;
+		protected Pattern customScaleString = null;
 		protected Pattern customScanCommandString = null;
 		
 		public User currentUser = null;
@@ -101,7 +102,8 @@ public class BaseModel
                 topMap = new HashMap<String,String>(DeviceModel.NUMBER_PARAMETERS);
                 parameters.put(DeviceModel.MAIN_DEVICE_GROUP, topMap);
                 rawDefs = new HashMap<String,HashMap<String,String>>(DeviceModel.NUMBER_CATALOGUES);
-           		customScanLookupString = Pattern.compile("%LOOKUP (\\w+) (\\w+)");
+           		customScanLookupString = Pattern.compile("%LOOKUP\\s+(\\w+)\\s+COMMAND\\.(\\w+)\\s*%");
+           		customScaleString = Pattern.compile("%SCALE\\s+(\\d+)\\s+(\\d+)\\s*%");
            		customScanCommandString = Pattern.compile("%COMMAND\\.(\\w+)%");
         }
 
@@ -1165,21 +1167,43 @@ public class BaseModel
 		if (device == null || device.getDeviceType() != DeviceType.CUSTOM_CONNECT ) return "";
 			
 		CustomConnect customConnect = (CustomConnect) device;
-
-		String outValue = customConnect.getValue(command.getCommandCode(),command.getExtraInfo());
-		outValue = scanCustomString (command, outValue, device);
-		return outValue;
+		Boolean isNumber = false;
+		CustomExtraValueReturn outValue = customConnect.getValue(command.getCommandCode(),command.getExtraInfo());
+		String finalStr = scanCustomString (command, outValue.getValue(), device, outValue.isNumber);
+		return finalStr;
 	}
 	
-	public String scanCustomString (CommandInterface command, String value,DeviceType device ) {
+	public String scanCustomString (CommandInterface command, String value,DeviceType device, boolean isNumber ) {
 		try {
-			StringBuffer sb = new StringBuffer();		
+			StringBuffer sb;
+
+			if (isNumber){
+				sb = new StringBuffer();
+				// extra is a number so look for a scale command
+
+				Matcher scaleLookup = customScaleString.matcher(value);
+				while (scaleLookup.find()) {
+					// Lookup the parameter value from the catalogue
+					String minVal = scaleLookup.group(1);
+					String maxVal = scaleLookup.group(2);
+					String scaledVal = String.valueOf(Utility.scaleFromFlash(command.getExtraInfo(), minVal, maxVal));
+					
+					scaleLookup.appendReplacement(sb,scaledVal);
+					 
+				}
+				scaleLookup.appendTail(sb);
+				value = sb.toString();
+			}
+			
+			sb = new StringBuffer();
 			Matcher resultLookup = customScanLookupString.matcher(value);
 			while (resultLookup.find()) {
 				// Lookup the parameter value from the catalogue
-				this.findKeyForParameterValue( resultLookup.group(2),
-						command.getValue(Fields.valueOf(resultLookup.group(1))),
-						device);
+				String theCatalog = resultLookup.group(1);
+				Fields  theCommandFieldField = Fields.valueOf(resultLookup.group(2));
+				String srcVal = configHelper.getCatalogueValue(command.getValue(theCommandFieldField), theCatalog, device);
+				resultLookup.appendReplacement(sb,srcVal);
+				 
 			}
 			resultLookup.appendTail(sb);
 			value = sb.toString();
@@ -1194,9 +1218,6 @@ public class BaseModel
 	
 			return sb.toString();
 		} catch (IllegalArgumentException ex){
-			logger.log (Level.WARNING,"There was a problem processing the custom instruction for " + device.getName() + " in the model " + this.getName() + " " + ex.getMessage());
-			return "";
-		}catch (ParameterException ex){
 			logger.log (Level.WARNING,"There was a problem processing the custom instruction for " + device.getName() + " in the model " + this.getName() + " " + ex.getMessage());
 			return "";
 		}

@@ -76,11 +76,33 @@ public class Utility {
 		return inp.toUpperCase();
 	}
 	
+	
 	/**
-	 * Scales a value from the flash client to an arbitrary number range.
+	 * Scales a value from the device to a 0 - 100 number for flash. 
+	 * If 100  should be considered 0 from the client list the larger value first, otherwise list the minimum first.
+	 * @param input A 0-100 value from the client. 
+	 * @param first val
+	 * @param second val
+	 * @return The scaled value
+	 * @throws NumberFormatException Thrown when the client value is not a number
+	 */
+	public static int scaleForFlash (String input, String val1,String val2) throws NumberFormatException {
+		int intVal1 = Integer.parseInt(val1);
+		int intVal2 = Integer.parseInt(val2);
+		if (intVal1 > intVal2){
+			return scaleForFlash (input, intVal2, intVal1, true);
+		} else {
+			return scaleForFlash (input, intVal1, intVal2, false);			
+		}
+
+	}	
+	
+	/**
+	 * Scales a value from the device to a 0 - 100 number for flash. 
 	 * @param input A 0-100 value from the client. 
 	 * @param min
 	 * @param max
+	 * @param invert whether 0 or 100 should be considered the maximum
 	 * @return The scaled value
 	 * @throws NumberFormatException Thrown when the client value is not a number
 	 */
@@ -95,8 +117,27 @@ public class Utility {
 			intVal = 100 - intVal;
 		}
 		return intVal;
-	}
+	}	
 	
+	/**
+	 * Scales a value from from flash to a value for the client. 
+	 * If 100  should be considered 0 from the client list the larger value first, otherwise list the minimum first.
+	 * @param input A 0-100 value from the client. 
+	 * @param first val
+	 * @param second val
+	 * @return The scaled value
+	 * @throws NumberFormatException Thrown when the client value is not a number
+	 */
+	public static int scaleFromFlash (String input, String val1,String val2) throws NumberFormatException {
+		int intVal1 = Integer.parseInt(val1);
+		int intVal2 = Integer.parseInt(val2);
+		if (intVal1 > intVal2){
+			return scaleFromFlash (input, intVal2, intVal1, true);
+		} else {
+			return scaleFromFlash (input, intVal1, intVal2, false);			
+		}
+
+	}	
 	
 	/**
 	 * Scales a value from the flash client to an arbitrary number range.

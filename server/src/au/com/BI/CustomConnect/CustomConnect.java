@@ -21,13 +21,13 @@ import java.util.logging.*;
 public class CustomConnect extends BaseDevice implements DeviceType
 {
 	protected Logger logger;
-	protected Map <String,Map<String,String>>conditions;
+	protected Map <String,Map<String,CustomExtraValue>>conditions;
 	private boolean onlyOneExtra = true;
-	
+
 	public CustomConnect (){
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		conditions = new HashMap <String,Map<String,String>>();
+		conditions = new HashMap <String,Map<String,CustomExtraValue>>();
 	}
 	
 	public boolean keepStateForStartup () {
@@ -43,44 +43,65 @@ public class CustomConnect extends BaseDevice implements DeviceType
 		return DeviceType.NA;
 	}
 		
-	public Map <String,Map<String,String>>getConditions() {
+	public Map <String,Map<String,CustomExtraValue>>getConditions() {
 		return conditions;
 	}
 	
-	public void 	addCondition (String commandCondition, String extraVal, String value) {
+	public void 	addCondition (String commandCondition, String extraVal, String value, String eachLineName) {
 		if (extraVal == null || extraVal.equals("")){
-			Map <String,String>extraValues = new HashMap<String,String>();
-			extraValues.put("*", value);
+			Map <String,CustomExtraValue>extraValues = new HashMap<String,CustomExtraValue>();
+			
+			extraValues.put("*", new CustomExtraValue (value,eachLineName));
 			conditions.put(commandCondition, extraValues);
 		} else {
-			Map <String,String>extraValues;
+			Map <String,CustomExtraValue>extraValues;
 			if (conditions.containsKey(commandCondition)){
 				extraValues = conditions.get(commandCondition);
 				onlyOneExtra = false;
 			} else {
-				extraValues = new HashMap<String,String>();
+				extraValues = new HashMap<String,CustomExtraValue>();
 			}
-			extraValues.put(extraVal, value);
+			extraValues.put(extraVal, new CustomExtraValue (value,eachLineName));
 			conditions.put(commandCondition, extraValues);			
 		}
 	}
 	
-	public String getValue (String commandCondition, String extraVal) {
-		Map <String,String>extraValues = conditions.get(commandCondition);
+	public CustomExtraValueReturn getValue (String commandCondition, String extraVal) {
+		CustomExtraValueReturn returnValue = new CustomExtraValueReturn();
 		
+		Map <String,CustomExtraValue>extraValues = conditions.get(commandCondition);
 		if (onlyOneExtra || extraVal == null || extraVal.equals("") ){
-			return extraValues.get("*");
-		} else {
-			if (extraValues.containsKey(extraVal)){
-				return extraValues.get(extraVal);
-			} else {
-				if (extraValues.size() ==1){
-					return extraValues.get("*");
-				} else {
-					return null;
-				}
-			} 
+			CustomExtraValue theVal = extraValues.get("*");
+			returnValue.setValue (theVal.getConfigValue());
+			returnValue.setName(theVal.getName());
+			return returnValue;
 		}
+		
+		if (extraValues.containsKey("%NUMBER%") ){
+			try {
+				int intVal = Integer.parseInt(extraVal);
+				returnValue.isNumber = true;
+				CustomExtraValue theVal = extraValues.get("%NUMBER%");
+				returnValue.setValue (theVal.getConfigValue());
+				returnValue.setName(theVal.getName());
+				return returnValue;
+			} catch (NumberFormatException ex){}
+		}
+		
+		if (extraValues.containsKey(extraVal)){
+			CustomExtraValue theVal = extraValues.get(extraVal);
+			returnValue.setValue (theVal.getConfigValue());
+			returnValue.setName(theVal.getName());
+			return returnValue;
+		}
+		
+		if (extraValues.size() ==1){
+			CustomExtraValue theVal = extraValues.get("*");
+			returnValue.setValue (theVal.getConfigValue());
+			returnValue.setName(theVal.getName());
+			return returnValue;
+		} 
+		return null;
 	}
 
 	/**

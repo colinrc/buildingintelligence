@@ -61,10 +61,12 @@ public class CustomConnectFactory {
 			String value = eachCondition.getAttributeValue("VALUE");
 			String commandCondition = eachCondition.getAttributeValue("IF_COMMAND");
 			String extraCondition = eachCondition.getAttributeValue("IF_EXTRA");
+			String eachLineName = eachCondition.getAttributeValue("NAME");
 			if (value != null  && commandCondition != null || !value.equals ("") && !commandCondition.equals ("") ) {
 				for (CustomConnect customConnect:deviceList){
-					value = value.replaceAll("%THIS.KEY%", customConnect.getKey());
-					customConnect.addCondition(commandCondition, extraCondition,value);
+					value = value.replaceAll("%KEY%", customConnect.getKey());
+					customConnect.addCondition(commandCondition, extraCondition, value, eachLineName);
+					logger.log (Level.FINER, "Adding processing condition " + eachLineName + " for the key " + customConnect.getName() + " in the custom device " + overallName );
 				}
 			} else {
 				logger.log (Level.WARNING,"The custom connection configuration " + overallName + " in the model "+ targetDevice.getName() + " is incorrect, check the OUTSTRING conditions");
