@@ -59,15 +59,19 @@ public class TestBaseModel extends TestCase {
 			connection.setDeviceType(DeviceType.CUSTOM_CONNECT);
 			connection.setKey("1");
 			connection.setOutputKey("TEST_CONNECTION");
-			connection.addCondition("pure_string","","Test_pure");
-			connection.addCondition("replace_command_extra","", "Test_commandExtra_%COMMAND.EXTRA%");
-			connection.addCondition("replace_command_extra2","up", "Test_commandExtra_%COMMAND.EXTRA2% up");
-			connection.addCondition("replace_command_extra2","down", "Test_commandExtra_%COMMAND.EXTRA2% down");
-			connection.addCondition("replace_command_extra3", "","Test_commandExtra_%COMMAND.EXTRA3%");
-			connection.addCondition("replace_command_extra_extra4","", "Test_commandExtra_%COMMAND.EXTRA% %COMMAND.EXTRA4%_Fin");
+			connection.addOutputCondition("replace_number_extra","%NUMBER%", "Test_Scaled_%SCALE 0 60 %","Test replace number");
+			connection.addOutputCondition("replace_number_inverted_extra","%NUMBER%", "Test_Scaled_%SCALE 60 0 %", " Test inverted replace number");
+			connection.addOutputCondition("replace_command_extra","", "Test_commandExtra_%COMMAND.EXTRA%", "Test replace extra");
+			connection.addOutputCondition("pure_string","","Test_pure" , "Test simpe replacement");
+			connection.addOutputCondition("replace_command_extra2","up", "Test_commandExtra_%COMMAND.EXTRA2% up","Test extra2 value test 1");
+			connection.addOutputCondition("replace_command_extra2","down", "Test_commandExtra_%COMMAND.EXTRA2% down","Test extra2 value test 2");
+			connection.addOutputCondition("replace_command_extra3", "","Test_commandExtra_%COMMAND.EXTRA3%","Test extra3 replacement");
+			connection.addOutputCondition("replace_command_extra_extra4","", "Test_commandExtra_%COMMAND.EXTRA% %COMMAND.EXTRA4%_Fin","Test extra4 replacement");
 			
 			runCustomCommandString(connection, "pure_string", "extraVal" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val", "Test_pure");
 			runCustomCommandString(connection, "replace_command_extra", "extraVal" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extraVal");
+			runCustomCommandString(connection, "replace_number_extra", "100" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_Scaled_60");
+			runCustomCommandString(connection, "replace_number_inverted_extra", "100" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_Scaled_0");
 			runCustomCommandString(connection, "replace_command_extra2", "up" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extra2Val up");
 			runCustomCommandString(connection, "replace_command_extra2", "down" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extra2Val down");
 			runCustomCommandString(connection, "replace_command_extra3", "extraVal" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extra3Val");
