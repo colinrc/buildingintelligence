@@ -3,7 +3,7 @@
  */
 package au.com.BI.CustomConnect;
 
-public class CustomExtraValueReturn {
+public class CustomOutputExtraValueReturn {
 	private String value = "";
 	public boolean isNumber  = false;
 	private String name = "";

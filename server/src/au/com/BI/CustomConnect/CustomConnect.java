@@ -9,6 +9,8 @@ import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.*;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.*;
 
@@ -21,13 +23,15 @@ import java.util.logging.*;
 public class CustomConnect extends BaseDevice implements DeviceType
 {
 	protected Logger logger;
-	protected Map <String,Map<String,CustomExtraValue>>conditions;
+	protected Map <String,Map<String,CustomOutputExtraValue>>outConditions;
+	protected List <CustomInputDetails>inputDetails;
 	private boolean onlyOneExtra = true;
 
 	public CustomConnect (){
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		conditions = new HashMap <String,Map<String,CustomExtraValue>>();
+		outConditions = new HashMap <String,Map<String,CustomOutputExtraValue>>();
+		inputDetails = new LinkedList<CustomInputDetails>();
 	}
 	
 	public boolean keepStateForStartup () {
@@ -43,35 +47,39 @@ public class CustomConnect extends BaseDevice implements DeviceType
 		return DeviceType.NA;
 	}
 		
-	public Map <String,Map<String,CustomExtraValue>>getConditions() {
-		return conditions;
+	public Map <String,Map<String,CustomOutputExtraValue>>getOutConditions() {
+		return outConditions;
 	}
 	
-	public void 	addCondition (String commandCondition, String extraVal, String value, String eachLineName) {
+	public void addInputCondition(  String toMatch, String name, String command, String key, String extra, String extra2, String extra3, String extra4, String extra5) {
+		
+	}
+	
+	public void 	addOutputCondition (String commandCondition, String extraVal, String value, String eachLineName) {
 		if (extraVal == null || extraVal.equals("")){
-			Map <String,CustomExtraValue>extraValues = new HashMap<String,CustomExtraValue>();
+			Map <String,CustomOutputExtraValue>extraValues = new HashMap<String,CustomOutputExtraValue>();
 			
-			extraValues.put("*", new CustomExtraValue (value,eachLineName));
-			conditions.put(commandCondition, extraValues);
+			extraValues.put("*", new CustomOutputExtraValue (value,eachLineName));
+			outConditions.put(commandCondition, extraValues);
 		} else {
-			Map <String,CustomExtraValue>extraValues;
-			if (conditions.containsKey(commandCondition)){
-				extraValues = conditions.get(commandCondition);
+			Map <String,CustomOutputExtraValue>extraValues;
+			if (outConditions.containsKey(commandCondition)){
+				extraValues = outConditions.get(commandCondition);
 				onlyOneExtra = false;
 			} else {
-				extraValues = new HashMap<String,CustomExtraValue>();
+				extraValues = new HashMap<String,CustomOutputExtraValue>();
 			}
-			extraValues.put(extraVal, new CustomExtraValue (value,eachLineName));
-			conditions.put(commandCondition, extraValues);			
+			extraValues.put(extraVal, new CustomOutputExtraValue (value,eachLineName));
+			outConditions.put(commandCondition, extraValues);			
 		}
 	}
 	
-	public CustomExtraValueReturn getValue (String commandCondition, String extraVal) {
-		CustomExtraValueReturn returnValue = new CustomExtraValueReturn();
+	public CustomOutputExtraValueReturn getValue (String commandCondition, String extraVal) {
+		CustomOutputExtraValueReturn returnValue = new CustomOutputExtraValueReturn();
 		
-		Map <String,CustomExtraValue>extraValues = conditions.get(commandCondition);
+		Map <String,CustomOutputExtraValue>extraValues = outConditions.get(commandCondition);
 		if (onlyOneExtra || extraVal == null || extraVal.equals("") ){
-			CustomExtraValue theVal = extraValues.get("*");
+			CustomOutputExtraValue theVal = extraValues.get("*");
 			returnValue.setValue (theVal.getConfigValue());
 			returnValue.setName(theVal.getName());
 			return returnValue;
@@ -81,7 +89,7 @@ public class CustomConnect extends BaseDevice implements DeviceType
 			try {
 				int intVal = Integer.parseInt(extraVal);
 				returnValue.isNumber = true;
-				CustomExtraValue theVal = extraValues.get("%NUMBER%");
+				CustomOutputExtraValue theVal = extraValues.get("%NUMBER%");
 				returnValue.setValue (theVal.getConfigValue());
 				returnValue.setName(theVal.getName());
 				return returnValue;
@@ -89,14 +97,14 @@ public class CustomConnect extends BaseDevice implements DeviceType
 		}
 		
 		if (extraValues.containsKey(extraVal)){
-			CustomExtraValue theVal = extraValues.get(extraVal);
+			CustomOutputExtraValue theVal = extraValues.get(extraVal);
 			returnValue.setValue (theVal.getConfigValue());
 			returnValue.setName(theVal.getName());
 			return returnValue;
 		}
 		
 		if (extraValues.size() ==1){
-			CustomExtraValue theVal = extraValues.get("*");
+			CustomOutputExtraValue theVal = extraValues.get("*");
 			returnValue.setValue (theVal.getConfigValue());
 			returnValue.setName(theVal.getName());
 			return returnValue;

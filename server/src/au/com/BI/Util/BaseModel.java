@@ -1168,7 +1168,7 @@ public class BaseModel
 			
 		CustomConnect customConnect = (CustomConnect) device;
 		Boolean isNumber = false;
-		CustomExtraValueReturn outValue = customConnect.getValue(command.getCommandCode(),command.getExtraInfo());
+		CustomOutputExtraValueReturn outValue = customConnect.getValue(command.getCommandCode(),command.getExtraInfo());
 		String finalStr = scanCustomString (command, outValue.getValue(), device, outValue.isNumber);
 		return finalStr;
 	}

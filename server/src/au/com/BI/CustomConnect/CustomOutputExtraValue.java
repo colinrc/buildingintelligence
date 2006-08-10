@@ -7,11 +7,11 @@ package au.com.BI.CustomConnect;
  * @author colin
  *
  */
-public class CustomExtraValue {
+public class CustomOutputExtraValue {
 	String configValue = "";
 	String name = "";
 	
-	public CustomExtraValue (String configValue, String name){
+	public CustomOutputExtraValue (String configValue, String name){
 		this.configValue = configValue;
 		this.name = name;
 	}
