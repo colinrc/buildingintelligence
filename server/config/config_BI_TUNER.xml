@@ -37,15 +37,28 @@
  						<!-- If a command has been received from flash for the Mater bedroom audio or the dining room audio, process it here -->
                         <CUSTOM_CONNECT NAME="Audio Processor" >
                         		<KEY VALUE="1" DISPLAY_NAME="MASTER_BED_AUDIO" NAME="Master Bedroom Audio" />
-                        		 <KEY VALUE="2" DISPLAY_NAME="DINING_AUDIO" NAME="Dining Room Audio" />
-                        		                       		
-                        		<OUTSTRING IF_COMMAND="src"  VALUE="AU_VOL %THIS.KEY% src  %LOOKUP AUDIO_INPUTS COMMAND.EXTRA %"  />
+                        		<KEY VALUE="2" DISPLAY_NAME="DINING_AUDIO" NAME="Dining Room Audio" />
+   
+                           		<OUTSTRING IF_COMMAND="on"  NAME="Power On" VALUE="AU_PWR %KEY% on"  />
+                        		<OUTSTRING IF_COMMAND="off"  NAME="Power Off" VALUE="AU_PWR %KEY% off" />
+ 
+                       		   <OUTSTRING IF_COMMAND="bass"  NAME="Set Bass" VALUE="AU_PWR %KEY% basee %COMMAND.EXTRA%" />
+                        		                        		
+                        		                     		                       		
+                       			<OUTSTRING IF_COMMAND="src"  IF_EXTRA="cd1"  NAME="Select source 1" VALUE="AU_SRC %KEY% 1"  />
+                        		<OUTSTRING IF_COMMAND="src"  NAME="Select source"  VALUE="AU_SRC %KEY% %LOOKUP AUDIO_INPUTS COMMAND.EXTRA %"  />
   
-                        		<OUTSTRING IF_COMMAND="volume" IF_EXTRA="up"  VALUE="AU_VOL %THIS.KEY% vol +"  />
-                        		<OUTSTRING IF_COMMAND="volume" IF_EXTRA="down"  VALUE="AU_VOL %THIS.KEY% vol -"  />
-                        		
-                        		<OUTSTRING IF_COMMAND="on"  VALUE="AU_PWR %THIS.KEY% on %COMMAND.EXTRA%"  />
-                        		<OUTSTRING IF_COMMAND="off"  VALUE="AU_PWR %THIS.KEY% off %COMMAND.EXTRA%" />
+                        		<OUTSTRING IF_COMMAND="volume" IF_EXTRA="up"  NAME="Volume Up" VALUE="AU_VOL %KEY% vol +"  />
+                        		<OUTSTRING IF_COMMAND="volume" IF_EXTRA="down"  NAME="Volume Down" VALUE="AU_VOL %KEY% vol -"  />
+                        		<OUTSTRING IF_COMMAND="volume" IF_EXTRA="%NUMBER%"  NAME="Set Volume" VALUE="AU_VOL %KEY% vol %SCALE 0 60 %"  />
+                       		
+                        		<INSTRING TO_MATCH="AU_VOL (\d+)=\+"  NAME="Volume Up" KEY="@1" COMMAND="volume" EXTRA="up" />
+                        		<INSTRING TO_MATCH="AU_VOL (\d+)=\-"  NAME="Volume Down" KEY="@1" COMMAND="volume" EXTRA="up" />
+                           		<INSTRING TO_MATCH="AU_VOL (\d+)=(\d+)"  NAME="Set Volume" KEY="@1" COMMAND="volume" EXTRA="%SCALE @2 0 60%" />
+  
+                             	<INSTRING TO_MATCH="AU_SRC (\d+) (\d+)"  NAME="Set Input Source" KEY="@1" COMMAND="src" EXTRA="%LOOKUP AUDIO_INPUTS @2 %" />
+                             		                      		
+                        		<INSTRING TO_MATCH="AU_PWR (\d+) on " NAME="Power on" KEY="@1" COMMAND="on" />
                         		
                           </CUSTOM_CONNECT>
                         
