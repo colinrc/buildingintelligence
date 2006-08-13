@@ -134,18 +134,6 @@ public class ConfigHelper {
 	}
 
 
-	public String getCatalogueValue (String ID, String parameterName, DeviceType device) {
-		String value = "";
-		Map rawCatalogue = deviceModel.getCatalogueDef(deviceModel.getParameterValue(parameterName,device.getGroupName()));
-		if (rawCatalogue == null ) {
-			logger.log (Level.WARNING ,"Catalogue " + parameterName + " not specified.");	
-			return null;
-		}
-		else {
-			value = (String)rawCatalogue.get(ID);
-			return value;
-		}
-	}
 
 	public void addControlledItem (String name, DeviceType details, MessageDirection controlType){
 		if (controlType == MessageDirection.FROM_HARDWARE) {

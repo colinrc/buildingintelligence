@@ -9,6 +9,7 @@ import au.com.BI.Util.*;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
+import au.com.BI.Config.ParameterException;
 import au.com.BI.Lights.*;
 import au.com.BI.ToggleSwitch.*;
 import au.com.BI.Counter.*;
@@ -61,12 +62,12 @@ public class ControlledHelper {
 				if (comfortString.theParameter.equals ("18")) {
 					logger.info("Logged into Comfort system as engineer");					
 				} else { 
-					String userName = configHelper.getCatalogueValue(comfortUser,"COMFORT_USERS", null);
-					if (userName == null) {
+					String userName;
+					try {
+						userName = comfort.getCatalogueValue(comfortUser,"COMFORT_USERS", null);
+						logger.info("Logged into Comfort system as " + userName);					
+					} catch (ParameterException e) {
 						logger.info("Logged into Comfort. User " + comfortString.theParameter + " (not specified in the Comfort users catalogue)");						
-					}
-					else {
-						logger.info("Logged into Comfort system as " + userName);						
 					}
 				}
 			}
@@ -289,13 +290,19 @@ public class ControlledHelper {
 						if (realParam.length() == 1) realParam = "0" + realParam;
 						if (realParam.length() > 2) realParam = realParam.substring(0,2);
 						
-						String lookupValue = configHelper.getCatalogueValue(realParam,"COMFORT_USERS",alert);
+						String lookupValue = "";
+						try {
+							lookupValue = comfort.getCatalogueValue(realParam,"COMFORT_USERS",alert);
+							alertCommand.setExtraInfo((String)alert.getMessage() + " by " + lookupValue);
+						} catch (ParameterException e) {
+
+						}
 						if (comfortString.theParameter.equals ("5A")) lookupValue = "(unknown) on keypad.";
 						if (comfortString.theParameter.equals ("5B")) lookupValue = "(unkbown), set by comfort.";
-						if (lookupValue == null)
+						if (lookupValue == null){
 							alertCommand.setExtraInfo((String)alert.getMessage() + " user ID " + realParam);
-						else
-							alertCommand.setExtraInfo((String)alert.getMessage() + " by " + lookupValue);
+						}
+
 					} catch (NumberFormatException ex) {
 						logger.log(Level.SEVERE,"Comfort alarm user was not a number : " + comfortString.theParameter);
 					}
@@ -327,28 +334,31 @@ public class ControlledHelper {
 					logger.log(Level.FINE,"Comfort alarm " + comfortString.theParameter + " was received, but has been configured to not be reported.");
 					break;
 				}
-				String lookupValue = configHelper.getCatalogueValue(comfortString.theParameter,"DOOR_IDS",alert);
-				if (lookupValue == null) {
+				String lookupValue;
+				try {
+					lookupValue = comfort.getCatalogueValue(comfortString.theParameter,"DOOR_IDS",alert);
+					alertCommand.setExtraInfo((String)alert.getMessage() + lookupValue);
+				} catch (ParameterException e) {
 					logger.log (Level.WARNING,"No Door description has been defined in the door IDS catalogue for " + 
 							comfortString.theParameter);
 					alertCommand.setExtraInfo((String)alert.getMessage());
-				} else {
-					alertCommand.setExtraInfo((String)alert.getMessage() + lookupValue);
 				}
 				}
 				break;
 
 			case ALERT_MODE_CHANGE :
 				{
-				String lookupValue = configHelper.getCatalogueValue(comfortString.theParameter2,"COMFORT_USERS",alert);
+				String lookupValue;
+				try {
+					lookupValue = comfort.getCatalogueValue(comfortString.theParameter2,"COMFORT_USERS",alert);
+					alertCommand.setExtraInfo(alert.getModeStr(comfortString.theParameter) + " " + (String)alert.getMessage() + " " + lookupValue);
+				} catch (ParameterException e) {
+					alertCommand.setExtraInfo(alert.getModeStr(comfortString.theParameter) + " " + (String)alert.getMessage() + " user ID " + comfortString.theParameter2);
+
+				}
 				if (comfortString.theParameter2.equals ("5A")) lookupValue = "(unknown) on keypad.";
 				if (comfortString.theParameter2.equals ("5B")) lookupValue = "(unknown), set by comfort.";
 
-				if (lookupValue == null)
-					alertCommand.setExtraInfo(alert.getModeStr(comfortString.theParameter) + " " + (String)alert.getMessage() + " user ID " + comfortString.theParameter2);
-				else
-					alertCommand.setExtraInfo(alert.getModeStr(comfortString.theParameter) + " " + (String)alert.getMessage() + " " + lookupValue);
-				}
 				alertCommand2 = (AlertCommand)alert.buildDisplayCommand ();
 				alertCommand2.setUser(command.getUser());
 				alertCommand2.setKey ("CLIENT_SEND");
@@ -366,7 +376,7 @@ public class ControlledHelper {
 					alertCommand2.setExtra2Info("SHOW_SCREENLOCK");					
 					logger.log (Level.INFO,"Security mode cleared, switching client to screenlock mode");
 				}
-
+				}
 				break;
 
 			case ALERT_PHONE :

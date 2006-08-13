@@ -9,6 +9,7 @@ import au.com.BI.Util.*;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
+import au.com.BI.Config.ParameterException;
 import au.com.BI.Alert.*;
 import au.com.BI.Analog.*;
 
@@ -48,6 +49,7 @@ public class DoActionHelper {
 					String message = phoneAlert.getMessage();
 					byte returnParam = new Integer(comfortString.theParameter).byteValue();
 					for (int i=1; i <= 8; i++) {
+
 						if ((returnParam & (1 << (i-1))) != 0) {
 							logger.log (Level.FINE,"Phone message received for user " + i);
 							AlertCommand phoneMessage = new AlertCommand ("CLIENT_SEND","on",null);
@@ -55,11 +57,12 @@ public class DoActionHelper {
 							
 							String realParam = "0" + i ;
 								
-							String lookupValue = configHelper.getCatalogueValue(realParam,"COMFORT_USERS",phoneAlert);
-							if (lookupValue == null)
-								phoneMessage.setExtraInfo(message + "user ID " + realParam);
-							else
+							try {
+								String lookupValue = comfort.getCatalogueValue(realParam,"COMFORT_USERS",phoneAlert);
 								phoneMessage.setExtraInfo(message + lookupValue);
+							} catch (ParameterException ex){
+								phoneMessage.setExtraInfo(message + "user ID " + realParam);
+							} 
 								
 							sendToFlash (phoneMessage, cache);
 						}

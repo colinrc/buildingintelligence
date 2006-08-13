@@ -24,7 +24,7 @@ import java.io.*;
  * @author Colin Canfield
  *
  **/
-public class FlashHandler extends BaseModel implements DeviceModel, ClientModel
+public class FlashHandler extends SimplifiedModel implements DeviceModel, ClientModel
 {
 	protected LinkedList flashClientHandlers; 
 	protected FlashControlListener flashControlListener;

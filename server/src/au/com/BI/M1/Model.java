@@ -18,16 +18,14 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.M1.Commands.ArmingStatusRequest;
-import au.com.BI.M1.Commands.ControlOutputOff;
-import au.com.BI.M1.Commands.ControlOutputOn;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
 import au.com.BI.Sensors.SensorFascade;
-import au.com.BI.Util.BaseModel;
+import au.com.BI.Util.SimplifiedModel;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
 import au.com.BI.Util.Utility;
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 
 	protected String outputM1Command = "";
 	protected M1Helper m1Helper;
@@ -127,7 +125,7 @@ public class Model extends BaseModel implements DeviceModel {
 
 	
 	/**
-	 * @see au.com.BI.Util.BaseModel#addControlledItem(java.lang.String, au.com.BI.Util.DeviceType, au.com.BI.Util.MessageDirection)
+	 * @see au.com.BI.Util.ModelParameters#addControlledItem(java.lang.String, au.com.BI.Util.DeviceType, au.com.BI.Util.MessageDirection)
 	 */
 	public void addControlledItem (String key, DeviceType details, MessageDirection type) {
 		

@@ -1,3 +1,8 @@
+Parameter handling changed to be the similar for processing catalogues from flash or from devices. HAL, Comfort, Nuvo, SignVideo and Kramer updated. Changes
+should be transparent.
+Added CUSTOM_CONNECT input methods
+Base model refactored into two classes to improve readability, there will be no visible consequences.
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a12.zip V1.6a12] ==
 
 ''' Raw '''

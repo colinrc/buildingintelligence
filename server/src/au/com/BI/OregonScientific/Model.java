@@ -22,7 +22,7 @@ import java.util.logging.*;
 
 import au.com.BI.Sensors.*;
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 
 	protected String parameter;
 	protected SensorFascade deviceThatMatched;

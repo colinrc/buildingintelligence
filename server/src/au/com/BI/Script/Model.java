@@ -32,7 +32,7 @@ import java.io.*;
  * @see DeviceModel for methods level documentation and methods availlable for hooking into functionality
  */
 public class Model
-  extends BaseModel implements DeviceModel {
+  extends SimplifiedModel implements DeviceModel {
 
         public static int numberOfScripts = 0;
 

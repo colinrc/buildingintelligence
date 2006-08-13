@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.logging.*;
 
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 	
 	protected char STX=' ';
 	protected char ETX='\r';

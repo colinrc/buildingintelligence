@@ -11,6 +11,7 @@ package au.com.BI.HAL;
  */
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
+import au.com.BI.Config.ParameterException;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.*;
 
@@ -19,7 +20,7 @@ import java.util.logging.*;
 
 import au.com.BI.Audio.*;
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 
 	protected String outputAudioCommand = "";
 	protected HashMap <String,StateOfZone>state;
@@ -517,25 +518,28 @@ public class Model extends BaseModel implements DeviceModel {
 			
 			String commandSrc = command.getExtra2Info();
 			if (commandSrc != null && !commandSrc.equals("")){
-				srcForCommand = configHelper.getCatalogueValue(commandSrc, "INPUTS",device);
-			} else {
-				srcForCommand = currentState.getSrc();
-				if (srcForCommand == null)
-					srcForCommand = "0";
-			}
-			String functionStr = configHelper.getCatalogueValue(command.getExtraInfo(), "FUNCTIONS",device);
-			if (functionStr == null || functionStr.equals("")) {
-				commandFound = false;
-			} else {
 				try {
-					int function = Integer.parseInt(functionStr);
-					audioOutputString = "IR " + srcForCommand + " "
-							+ functionStr;
-					commandFound = true;
-				} catch (NumberFormatException ex) {
-					audioOutputString = null;
-					commandFound = false;
+					srcForCommand = getCatalogueValue(commandSrc, "INPUTS",device);
+				} catch (ParameterException e) {
+					srcForCommand = currentState.getSrc();
+					if (srcForCommand == null)
+						srcForCommand = "0";
 				}
+			}
+			String functionStr = "";
+			try {
+				functionStr = getCatalogueValue(command.getExtraInfo(), "FUNCTIONS",device);
+				int function = Integer.parseInt(functionStr);
+				audioOutputString = "IR " + srcForCommand + " "
+						+ functionStr;
+				commandFound = true;
+			} catch (ParameterException e) {
+				logger.log(Level.WARNING,e.getMessage());
+				commandFound = false;
+			} catch (NumberFormatException ex) {
+				logger.log(Level.WARNING,"The Comfort function was incorrectly formatted " + ex.getMessage() + "  a number is expected");
+				audioOutputString = null;
+				commandFound = false;
 			}
 			commandFound = true;
 		}
@@ -545,20 +549,12 @@ public class Model extends BaseModel implements DeviceModel {
 		}
 		if (theCommand.equals("src")) {
 			String srcCode = command.getExtraInfo();
-			String srcNumber = configHelper.getCatalogueValue(srcCode, "INPUTS",device);
 			if (srcCode == null) {
-				logger.log(Level.SEVERE,
-								"HAL source command from client did not set the parameter in the EXTRA field.");
-				commandFound = true;
-			} else {
-				if (srcNumber == null) {
-					logger.log(Level.SEVERE,
-							"No HAL input device specified in catalogue \""
-									+ this.getParameterValue("INPUTS",
-											DeviceModel.MAIN_DEVICE_GROUP)
-									+ "\" for source " + srcCode);
-					commandFound = true;
-				} else {
+				logger.log (Level.WARNING,"The command from the Flash client has been incorrectly formatted. No src selection was passed");
+			}  else {
+				String srcNumber= "";
+				try {
+					srcNumber = getCatalogueValue(srcCode, "INPUTS",device);
 					logger.log (Level.FINE,"Selected new HAL input " + srcCode + ", input number " + srcNumber);
 					audioOutputString = "SS " + device.getKey() + " "
 							+ srcNumber;
@@ -566,9 +562,12 @@ public class Model extends BaseModel implements DeviceModel {
 					currentState.setSrcCode(srcCode);
 					currentState.setSrcDirty(true); // always force client actions through to the HAL
 
-					commandFound = true;
+				} catch (ParameterException e) {
+					logger.log (Level.WARNING,e.getMessage());
 				}
 			}
+			commandFound = true;
+			
 		}
 
 		if (commandFound && currentState.isSrcDirty()) {

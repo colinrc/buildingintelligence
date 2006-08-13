@@ -2,7 +2,7 @@ package au.com.BI.Jetty;
 
 import au.com.BI.Command.*;
 import au.com.BI.Config.Security;
-import au.com.BI.Util.BaseModel;
+import au.com.BI.Util.SimplifiedModel;
 import au.com.BI.Util.ClientModel;
 import au.com.BI.Util.DeviceModel;
 import org.mortbay.jetty.bio.SocketConnector;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.logging.*;
 
 
-public class JettyHandler extends BaseModel implements DeviceModel, ClientModel {
+public class JettyHandler extends SimplifiedModel implements DeviceModel, ClientModel {
     boolean SSL = false;
     CacheBridgeFactory cacheBridgeFactory = null;
     org.mortbay.jetty.Server server = null,client_server = null;

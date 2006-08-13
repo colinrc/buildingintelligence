@@ -42,7 +42,7 @@
                            		<OUTSTRING IF_COMMAND="on"  NAME="Power On" VALUE="AU_PWR %KEY% on"  />
                         		<OUTSTRING IF_COMMAND="off"  NAME="Power Off" VALUE="AU_PWR %KEY% off" />
  
-                       		   <OUTSTRING IF_COMMAND="bass"  NAME="Set Bass" VALUE="AU_PWR %KEY% basee %COMMAND.EXTRA%" />
+                       		   <OUTSTRING IF_COMMAND="bass"  NAME="Set Bass" VALUE="AU_PWR %KEY% bass %COMMAND.EXTRA%" />
                         		                        		
                         		                     		                       		
                        			<OUTSTRING IF_COMMAND="src"  IF_EXTRA="cd1"  NAME="Select source 1" VALUE="AU_SRC %KEY% 1"  />

@@ -12,6 +12,7 @@ package au.com.BI.Kramer;
 import au.com.BI.AV.*;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
+import au.com.BI.Config.ParameterException;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.*;
 
@@ -19,7 +20,7 @@ import java.util.*;
 import java.util.logging.*;
 
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 	
 	private class KramerCommands { 
 		byte[] avOutputSuffix = null;
@@ -237,26 +238,28 @@ public class Model extends BaseModel implements DeviceModel {
 			try {
 
 				if (command.getExtra3Info().equals("VIDEO_ONLY")){
-					srcCode = configHelper.getCatalogueValue(extra, "AV_INPUTS",device);
-					int src = Integer.parseInt(srcCode);
-					setCurrentSrc(device.getKey(),srcCode);
-					returnVal.avOutputParam = kramerHelper.buildKramerCommand(8,1,1,command.getExtra2Info());
-					//returnVal.avOutputSuffix = kramerHelper.buildKramerCommand(8,1,0,command.getExtra2Info());
-					returnVal.avOutputString =kramerHelper.buildSwitchCommand (1,device.getKey(),srcCode, command.getExtra2Info()); 
+						srcCode = getCatalogueValue(extra, "AV_INPUTS",device);
+						int src = Integer.parseInt(srcCode);
+						setCurrentSrc(device.getKey(),srcCode);
+						returnVal.avOutputParam = kramerHelper.buildKramerCommand(8,1,1,command.getExtra2Info());
+						//returnVal.avOutputSuffix = kramerHelper.buildKramerCommand(8,1,0,command.getExtra2Info());
+						returnVal.avOutputString =kramerHelper.buildSwitchCommand (1,device.getKey(),srcCode, command.getExtra2Info()); 
+
 				}
 				if (command.getExtra3Info().equals("AUDIO_ONLY")){
-					srcCode = configHelper.getCatalogueValue(extra, "AUDIO_INPUTS",device);
-					int src = Integer.parseInt(srcCode);
-					setCurrentSrc(device.getKey(),srcCode);
-					returnVal.avOutputParam = kramerHelper.buildKramerCommand(8,1,1,command.getExtra2Info());
-					//returnVal.avOutputSuffix = kramerHelper.buildKramerCommand(8,0,0,command.getExtra2Info());
-					returnVal.avOutputString =kramerHelper.buildSwitchCommand (2,device.getKey(),srcCode, command.getExtra2Info()); 
+						srcCode = getCatalogueValue(extra, "AUDIO_INPUTS",device);
+						int src = Integer.parseInt(srcCode);
+						setCurrentSrc(device.getKey(),srcCode);
+						returnVal.avOutputParam = kramerHelper.buildKramerCommand(8,1,1,command.getExtra2Info());
+						//returnVal.avOutputSuffix = kramerHelper.buildKramerCommand(8,0,0,command.getExtra2Info());
+						returnVal.avOutputString =kramerHelper.buildSwitchCommand (2,device.getKey(),srcCode, command.getExtra2Info()); 
+
 				}
 				if (command.getExtra3Info().equals("AV") ||command.getExtra3Info().equals("") ){
-					srcCode = configHelper.getCatalogueValue(extra, "AV_INPUTS",device);
+					srcCode = getCatalogueValue(extra, "AV_INPUTS",device);
 					int src = Integer.parseInt(srcCode);
 					
-					String audioSrcCode = configHelper.getCatalogueValue(extra, "AUDIO_INPUTS",device);
+					String audioSrcCode = getCatalogueValue(extra, "AUDIO_INPUTS",device);
 					int audioSrc = Integer.parseInt(srcCode);
 					
 					setCurrentSrc(device.getKey(),srcCode);
@@ -271,6 +274,11 @@ public class Model extends BaseModel implements DeviceModel {
 				returnVal.avOutputString = null;
 				returnVal.error = true;
 				returnVal.errorDescription = "Input src does not decode to an integer";
+				commandFound = false;
+			} catch (ParameterException e) {
+				returnVal.avOutputString = null;
+				returnVal.error = true;
+				returnVal.errorDescription = e.getMessage();
 				commandFound = false;
 			}
 		}			

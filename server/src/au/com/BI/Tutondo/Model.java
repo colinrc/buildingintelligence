@@ -20,7 +20,7 @@ import java.util.logging.*;
 
 import au.com.BI.Audio.*;
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 	
 	protected String outputAudioCommand = "";
 	protected HashMap <String,StateOfZone>state;
@@ -552,18 +552,15 @@ public class Model extends BaseModel implements DeviceModel {
 		    }
 		}
 		if (theCommand.equals("send_audio_command")) {
-			String functionStr = configHelper.getCatalogueValue(command.getExtraInfo(), "FUNCTIONS",device);
-			if (functionStr == null || functionStr.equals ("")) {
-				logger.log(Level.WARNING,"A command " +  (String)command.getExtraInfo() + " was sent to the tutondo which is not configured in the server catalogue");
-				commandFound = false;
-			}
-			else {
+			String functionStr;
+			try {
+				functionStr = getCatalogueValue(command.getExtraInfo(), "FUNCTIONS",device);
 				String commandSrc = command.getExtra2Info();
 				if (commandSrc != null && !commandSrc.equals("")){
-					commandSrc = configHelper.getCatalogueValue(command.getExtraInfo(), "INPUTS",device);
-					if (commandSrc == null || commandSrc.equals("")){
-						logger.log (Level.WARNING,"A send audio command was sent to tutondo specifying a program (source) " + command.getExtra2Info() + 
-								" which is not listed in the catalogue");
+					try {
+						commandSrc = getCatalogueValue(command.getExtraInfo(), "INPUTS",device);
+					} catch (ParameterException e) {
+						logger.log (Level.WARNING,e.getMessage());
 					}
 				} else {
 					commandSrc = getCurrentSrc(device.getKey());
@@ -576,11 +573,15 @@ public class Model extends BaseModel implements DeviceModel {
 					audioOutputString = null;
 					commandFound = false;
 				}
+			} catch (ParameterException e1) {
+				logger.log(Level.WARNING,"A command " +  (String)command.getExtraInfo() + " was sent to the tutondo which is not configured in the server catalogue");
+				commandFound = false;
 			}
 		}
 		if (theCommand.equals("src")) {
-			String srcCode = configHelper.getCatalogueValue(command.getExtraInfo(), "INPUTS",device);
+
 			try {
+				String srcCode = getCatalogueValue(command.getExtraInfo(), "INPUTS",device);
 				int src = Integer.parseInt(srcCode);
 				setCurrentSrc(device.getKey(),srcCode);
 				currentState.setSrc(srcCode);
@@ -589,6 +590,9 @@ public class Model extends BaseModel implements DeviceModel {
 				commandFound = true;
 			} catch (NumberFormatException ex) {
 				audioOutputString = null;
+				commandFound = false;
+			} catch (ParameterException ex){
+				logger.log (Level.WARNING,ex.getMessage());
 				commandFound = false;
 			}
 		}			

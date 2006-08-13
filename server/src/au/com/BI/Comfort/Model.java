@@ -21,7 +21,7 @@ import au.com.BI.Analog.*;
 
 // TODO set up security properly
 
-public class Model extends BaseModel implements DeviceModel  {
+public class Model extends SimplifiedModel implements DeviceModel  {
 
 	protected String STX = "\003";
 	protected String ETX = "\r";

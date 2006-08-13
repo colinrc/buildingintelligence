@@ -21,7 +21,7 @@ import java.util.logging.*;
 
 
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 	
 
 	
@@ -255,7 +255,7 @@ public class Model extends BaseModel implements DeviceModel {
 			commandFound = true;
 			
 			try {
-				srcCode = configHelper.getCatalogueValue(extra, "AV_INPUTS",device);
+				srcCode = getCatalogueValue(extra, "AV_INPUTS",device);
 				int src = Integer.parseInt(srcCode);
 				byte []pre_mode = null;
 				byte []av_mode = new byte[]{(byte)0xA0};
@@ -304,7 +304,9 @@ public class Model extends BaseModel implements DeviceModel {
 			} catch (NumberFormatException ex) {
 				returnVal.addCommOutput("");
 				returnVal.setError (true);
-				returnVal.setErrorDescription ( "Input src does not decode to an integer");
+				returnVal.setErrorDescription ( "Input src does not decode to a number");
+			} catch (ParameterException e) {
+				logger.log (Level.WARNING,e.getMessage());
 			}
 		}			
 		

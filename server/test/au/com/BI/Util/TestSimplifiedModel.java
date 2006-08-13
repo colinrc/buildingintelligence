@@ -7,13 +7,13 @@ import au.com.BI.CustomConnect.CustomConnect;
 import au.com.BI.Device.DeviceType;
 import junit.framework.TestCase;
 
-public class TestBaseModel extends TestCase {
+public class TestSimplifiedModel extends TestCase {
 
-	BaseModel testModel = null;
+	SimplifiedModel testModel = null;
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		testModel = new BaseModel();
+		testModel = new SimplifiedModel();
 		testModel.setName("Test model");
 	}
 	

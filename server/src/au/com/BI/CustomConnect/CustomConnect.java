@@ -52,6 +52,16 @@ public class CustomConnect extends BaseDevice implements DeviceType
 	}
 	
 	public void addInputCondition(  String toMatch, String name, String command, String key, String extra, String extra2, String extra3, String extra4, String extra5) {
+		CustomInputDetails condition = new CustomInputDetails();
+		condition.setCommand(command);
+		condition.setExtra(extra);
+		condition.setExtra2(extra2);
+		condition.setExtra3(extra3);
+		condition.setExtra4(extra4);
+		condition.setExtra5(extra5);
+		condition.setName(name);
+		condition.setToMatch(toMatch);
+		inputDetails.add(condition);
 		
 	}
 	

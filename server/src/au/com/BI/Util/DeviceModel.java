@@ -7,6 +7,7 @@ package au.com.BI.Util;
 import java.util.*;
 
 import au.com.BI.AlarmLogging.AlarmLogging;
+import au.com.BI.Alert.Alert;
 import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
@@ -227,6 +228,15 @@ public interface DeviceModel {
 	 */
 	public String findKeyForParameterValue(int src, String catalogName,DeviceType device) throws ParameterException;
 		
+	/**
+	 * @param realParam
+	 * @param string
+	 * @param phoneAlert
+	 * @return
+	 */
+	public String getCatalogueValue(String realParam, String string, DeviceType device) throws ParameterException;
+	
+
 	/**
 	 * Raw definitions are used for direct serial strings
 	 * @param raw defs. A map of the definitions.
@@ -485,7 +495,7 @@ public interface DeviceModel {
 	 * Used by the version manager to display details to the client.
 	 */
 	public void setVersion(String version) ;
-	
+
 
 }
 

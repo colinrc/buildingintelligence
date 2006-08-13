@@ -23,7 +23,7 @@ import java.util.logging.*;
 
 
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 
 	protected String parameter;
 	protected boolean matched;

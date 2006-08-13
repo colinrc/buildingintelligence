@@ -17,7 +17,7 @@ import au.com.BI.Sensors.*;
 
 import au.com.BI.Lights.*;
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 
 	protected String outputCBUSCommand = "";
 	protected HashMap <String,StateOfGroup>state;

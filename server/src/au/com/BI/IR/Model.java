@@ -19,7 +19,7 @@ import java.util.logging.*;
 import java.io.File;
 
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 
 	protected String parameter;
 	protected String nextIRName = "";

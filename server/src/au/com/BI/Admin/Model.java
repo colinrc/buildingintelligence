@@ -20,7 +20,7 @@ import au.com.BI.Flash.*;
  * @author Colin Canfield
  *
  **/
-public class Model extends BaseModel implements DeviceModel, ClientModel
+public class Model extends SimplifiedModel implements DeviceModel, ClientModel
 {
 	protected List <AdminClientHandler>adminClientHandlers;
 	protected AdminControlListener adminControlListener;

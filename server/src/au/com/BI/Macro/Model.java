@@ -19,7 +19,7 @@ import au.com.BI.CustomInput.*;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Flash.*;
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 
 	protected String STX;
 	protected String ETX;
