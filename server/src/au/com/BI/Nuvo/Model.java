@@ -23,7 +23,7 @@ import java.util.logging.*;
 
 
 
-public class Model extends BaseModel implements DeviceModel {
+public class Model extends SimplifiedModel implements DeviceModel {
 	
 
 	
@@ -378,7 +378,7 @@ public class Model extends BaseModel implements DeviceModel {
 			commandFound = true;
 			
 			try {
-				srcCode = configHelper.getCatalogueValue(extra, "AUDIO_INPUTS",device);
+				srcCode = getCatalogueValue(extra, "AUDIO_INPUTS",device);
 				int src = Integer.parseInt(srcCode);
 				
 				if (key.equals(Model.AllZones)){
@@ -406,6 +406,10 @@ public class Model extends BaseModel implements DeviceModel {
 				returnVal.addCommOutput("");
 				returnVal.setError( true);
 				returnVal.setErrorDescription ( "Input src does not decode to an integer");
+			} catch (ParameterException e) {
+				returnVal.addCommOutput("");
+				returnVal.setError( true);
+				returnVal.setErrorDescription ( e.getMessage());
 			}
 		}			
 		
