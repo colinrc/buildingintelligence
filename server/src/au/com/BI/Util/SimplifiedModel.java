@@ -1013,6 +1013,17 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		try {
 			StringBuffer sb;
 
+			if (input){
+	            if (matcherResults.matches()) {
+					deviceThatMatched = customInput;
+					configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
+					doInputItem (command, deviceThatMatched, parameter);
+	            }
+				key = replacePattern (key,this.matcherResults);
+				commandStr = replacePattern (commandStr,this.matcherResults);
+				extra = replacePattern (extra,this.matcherResults);
+			}
+			
 			if (isNumber) {
 				sb = new StringBuffer();
 				// extra is a number so look for a scale command
@@ -1079,6 +1090,17 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		}
 	}
 
+	public String replacePattern (String str,Matcher matcher) {
+		if (str == null) return "";
+		int numberPatterns = matcher.groupCount();
+		if (numberPatterns > 9) numberPatterns = 0;
+		for (int i = 0; i <= numberPatterns ; i ++ ) {
+			String pattern = "@" + i;
+			str = str.replaceAll(pattern,matcher.group(i));
+		}
+		return str;
+	}
+	
 	public void buildAnalogControlString(Analog device,
 			CommandInterface command, ReturnWrapper returnWrapper)
 			throws GroovyModelException {
