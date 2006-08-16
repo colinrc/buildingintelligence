@@ -31,14 +31,14 @@ import au.com.BI.ToggleSwitch.ToggleSwitch;
 import au.com.BI.User.User;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import au.com.BI.Lights.LightFascade;
-import au.com.BI.CustomConnect.CustomConnect;
-import au.com.BI.CustomConnect.CustomOutputExtraValueReturn;
+import au.com.BI.CustomConnect.*;
 import au.com.BI.CustomInput.CustomInput;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.AV.AV;
@@ -51,13 +51,16 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
 	protected Pattern customScanLookupString = null;
 	protected Pattern customScaleString = null;
+	protected Pattern customInputScaleString = null;
 	protected Pattern customScanCommandString = null;
-    protected ConfigHelper configHelper;
+	protected ConfigHelper configHelper;
+
     
 	public SimplifiedModel () {
         configHelper = new ConfigHelper(this);
    		customScanLookupString = Pattern.compile("%LOOKUP\\s+(\\w+)\\s+COMMAND\\.(\\w+)\\s*%");
    		customScaleString = Pattern.compile("%SCALE\\s+(\\d+)\\s+(\\d+)\\s*%");
+   		customInputScaleString = Pattern.compile("%SCALE\\s+(\\S+)\\s+(\\d+)\\s+(\\d+)\\s*%");
    		customScanCommandString = Pattern.compile("%COMMAND\\.(\\w+)%");
 	}
 	
@@ -375,6 +378,15 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		}
 	}
 
+	/**
+	 * Called by the configuration reader
+	 * user interaction on the item. At this stage only the flash client generates these
+	 * @param customConnectInput non unique key name for physical device
+	 */
+	public void addCustomConnectInput (CustomConnectInput customConnectInput){
+		configHelper.addCustomConnectInput(customConnectInput);
+	}
+	
 	public int login(User user) throws CommsFail {
 		logged_in = true;
 		return DeviceModel.SUCCESS;
@@ -953,7 +965,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	public String doRawIfPresent(CommandInterface command,
 			DeviceType targetDevice) {
 
-		String returnCode = doCustomConnectIfPresent(command, targetDevice);
+		String returnCode = doCustomConnectOutputIfPresent(command, targetDevice);
 
 		if (returnCode != null)
 			return returnCode;
@@ -993,7 +1005,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	 * @param device
 	 * @return
 	 */
-	public String doCustomConnectIfPresent(CommandInterface command,
+	public String doCustomConnectOutputIfPresent(CommandInterface command,
 			DeviceType device) {
 		if (device == null
 				|| device.getDeviceType() != DeviceType.CUSTOM_CONNECT)
@@ -1001,76 +1013,107 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
 		CustomConnect customConnect = (CustomConnect) device;
 		Boolean isNumber = false;
-		CustomOutputExtraValueReturn outValue = customConnect.getValue(command
-				.getCommandCode(), command.getExtraInfo());
-		String finalStr = scanCustomString(command, outValue.getValue(),
-				device, outValue.isNumber,false);
-		return finalStr;
+
+		try {
+				CustomOutputExtraValueReturn outValue = customConnect.getValue(command
+						.getCommandCode(), command.getExtraInfo());
+				String finalStr = scanCustomOutputString(command, outValue.getValue(),
+						device, outValue.isNumber);
+				return finalStr;
+		} catch (CustomConnectException ex){
+			logger.log(Level.WARNING, ex.getMessage());
+			return "";
+		}
 	}
 
-	protected String scanCustomString(CommandInterface command, String value,
-			DeviceType device, boolean isNumber, boolean input) {
+	/**
+	 * If a raw code has been specified for this command on this device. It will be returned.
+	 * @param command
+	 * @param device
+	 * @return
+	 */
+	public CommandInterface doCustomConnectInputIfPresent(CommsCommand command,
+			DeviceType device) {
+		if (device == null
+				|| device.getDeviceType() != DeviceType.CUSTOM_CONNECT )
+			return null;
+
+	    for (CustomConnectInput customInput: configHelper.getCustomConnectInputList()) {
+	    	for (CustomConnectInputDetails customInputDetails: customInput.getCustomConnectInputDetails()){
+		    	try {
+			    	String inputListKey = "";
+				    boolean matched = false;
+			        
+			    	Matcher matcherResults;
+			    	if (command.hasByteArray()){
+			    		matcherResults = customInputDetails.getMatcher(command.getCommandCode().toString());			    		
+			    	} else {
+			    		matcherResults = customInputDetails.getMatcher(command.getCommandCode());
+			    	}
+		            if (matcherResults.matches()) {
+						configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
+						String deviceKey = replacePattern (customInputDetails.getKey(), matcherResults);
+						CustomConnect deviceMatched =  (CustomConnect)configHelper.getControlItem(deviceKey);
+						String commandStr = this.scanCustomInputString(customInputDetails.getCommand(),deviceMatched);
+						String extra = this.scanCustomInputString(customInputDetails.getExtra(),deviceMatched);
+						String extra2 = this.scanCustomInputString(customInputDetails.getExtra2(),deviceMatched);
+						String extra3 = this.scanCustomInputString(customInputDetails.getExtra3(),deviceMatched);
+						String extra4 = this.scanCustomInputString(customInputDetails.getExtra4(),deviceMatched);
+						String extra5 = this.scanCustomInputString(customInputDetails.getExtra5(),deviceMatched);
+
+						CommandInterface displayCommand = this.buildCommandForFlash(deviceMatched, commandStr, extra, extra2, extra3,extra4,extra5);
+						return displayCommand;	
+			        } 
+				} catch (ClassCastException ex) {
+					logger.log(Level.WARNING, "An internal error has occured, please contact your integrator");
+				}
+		    }
+	    }
+	    return null;
+	}
+	
+	protected String scanCustomOutputString(CommandInterface command, String stringToBeScanned,
+			DeviceType device, boolean isNumber) {
 		try {
 			StringBuffer sb;
 
-			if (input){
-	            if (matcherResults.matches()) {
-					deviceThatMatched = customInput;
-					configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
-					doInputItem (command, deviceThatMatched, parameter);
-	            }
-				key = replacePattern (key,this.matcherResults);
-				commandStr = replacePattern (commandStr,this.matcherResults);
-				extra = replacePattern (extra,this.matcherResults);
-			}
-			
 			if (isNumber) {
 				sb = new StringBuffer();
 				// extra is a number so look for a scale command
 
-				Matcher scaleLookup = customScaleString.matcher(value);
+				Matcher scaleLookup = customScaleString.matcher(stringToBeScanned);
 				while (scaleLookup.find()) {
 					// Lookup the parameter value from the catalogue
 					String minVal = scaleLookup.group(1);
 					String maxVal = scaleLookup.group(2);
 					String scaledVal;
-					if (input) {
-						scaledVal = String.valueOf(Utility.scaleForFlash(
-							command.getExtraInfo(), minVal, maxVal));
-					} else {
-						scaledVal = String.valueOf(Utility.scaleFromFlash(
-								command.getExtraInfo(), minVal, maxVal));					
-					}
+					scaledVal = String.valueOf(Utility.scaleFromFlash(
+							command.getExtraInfo(), minVal, maxVal));					
 
 					scaleLookup.appendReplacement(sb, scaledVal);
 
 				}
 				scaleLookup.appendTail(sb);
-				value = sb.toString();
+				stringToBeScanned = sb.toString();
 			}
-
 			sb = new StringBuffer();
-			Matcher resultLookup = customScanLookupString.matcher(value);
+			Matcher resultLookup = customScanLookupString.matcher(stringToBeScanned);
 			while (resultLookup.find()) {
 				// Lookup the parameter value from the catalogue
 				String theCatalog = resultLookup.group(1);
 				Fields theCommandFieldField = Fields.valueOf(resultLookup
 						.group(2));
 				String srcVal;
-				if (input) {
-					srcVal = this.findKeyForParameterValue(command.getValue(theCommandFieldField), theCatalog, device);
-				} else {
-					srcVal = this.getCatalogueValue(command.getValue(theCommandFieldField), theCatalog, device);
-				}
+				srcVal = this.getCatalogueValue(command.getValue(theCommandFieldField), theCatalog, device);
 				resultLookup.appendReplacement(sb, srcVal);
-
+	
+				resultLookup.appendTail(sb);
+				stringToBeScanned = sb.toString();
 			}
-			resultLookup.appendTail(sb);
-			value = sb.toString();
 
 			sb = new StringBuffer();
 
-			Matcher resultCmd = customScanCommandString.matcher(value);
+			Matcher resultCmd = customScanCommandString.matcher(stringToBeScanned);
 			while (resultCmd.find()) {
 				resultCmd.appendReplacement(sb, command.getValue(Fields
 						.valueOf(resultCmd.group(1))));
@@ -1090,6 +1133,61 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		}
 	}
 
+	protected String scanCustomInputString(String stringToBeScanned, DeviceType device) {
+		if (stringToBeScanned == null || stringToBeScanned.equals ("")) return "";
+		
+		try {
+			StringBuffer sb;
+
+			sb = new StringBuffer();
+			// extra is a number so look for a scale command
+
+			Matcher scaleLookup = customInputScaleString.matcher(stringToBeScanned);
+			while (scaleLookup.find()) {
+				// Lookup the parameter value from the catalogue
+				String valToScale = scaleLookup.group(1);
+				String minVal = scaleLookup.group(2);
+				String maxVal = scaleLookup.group(3);
+				String scaledVal;
+				scaledVal = String.valueOf(Utility.scaleForFlash(
+						valToScale, minVal, maxVal));
+
+				scaleLookup.appendReplacement(sb, scaledVal);
+
+			}
+			scaleLookup.appendTail(sb);
+			stringToBeScanned = sb.toString();
+
+			sb = new StringBuffer();
+			Matcher resultLookup = customScanLookupString.matcher(stringToBeScanned);
+			while (resultLookup.find()) {
+				// Lookup the parameter value from the catalogue
+				String theCatalog = resultLookup.group(1);
+				String srcVal;
+
+				srcVal = this.findKeyForParameterValue(resultLookup.group(2), theCatalog, device);
+				
+				resultLookup.appendReplacement(sb, srcVal);
+
+			}
+			resultLookup.appendTail(sb);
+			stringToBeScanned = sb.toString();
+
+
+			return sb.toString();
+		} catch (IllegalArgumentException ex) {
+			logger.log(Level.WARNING,
+					"There was a problem processing the custom instruction for "
+							+ device.getName() + " in the model "
+							+ this.getName() + " " + ex.getMessage());
+			return "";
+		} catch (ParameterException ex){
+			logger.log(Level.WARNING,ex.getMessage());
+			return "";
+		}
+	}
+
+	
 	public String replacePattern (String str,Matcher matcher) {
 		if (str == null) return "";
 		int numberPatterns = matcher.groupCount();

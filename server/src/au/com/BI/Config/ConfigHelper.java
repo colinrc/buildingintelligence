@@ -11,6 +11,7 @@ import java.util.logging.*;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
 import au.com.BI.Config.ParameterBlock;
+import au.com.BI.CustomConnect.CustomConnectInput;
 import au.com.BI.Device.DeviceType;
 
 public class ConfigHelper {
@@ -18,6 +19,7 @@ public class ConfigHelper {
 	protected HashMap <String,DeviceType> outputItems;
 	protected HashMap <String,DeviceType> inputItems;
 	protected HashMap <String,DeviceType> startupQueryItems;
+	protected List <CustomConnectInput>customConnectInputList;
 	protected String lastChecked;
 	protected Vector <ParameterBlock>parameterBlocks;
 	protected DeviceModel deviceModel = null;
@@ -80,6 +82,7 @@ public class ConfigHelper {
 		outputItems = new HashMap<String,DeviceType> (100);
 		inputItems = new HashMap<String,DeviceType> (100);	
 		startupQueryItems = new HashMap<String,DeviceType> (200);
+		customConnectInputList = new LinkedList<CustomConnectInput>();
 		parameterBlocks.clear();
 	}
 	
@@ -267,7 +270,21 @@ public class ConfigHelper {
 	public void setDeviceModel(DeviceModel deviceModel) {
 		this.deviceModel = deviceModel;
 	}
-	
 
+
+	public List<CustomConnectInput> getCustomConnectInputList() {
+		return customConnectInputList;
+	}
+
+
+	public void setCustomConnectInputList(
+			List<CustomConnectInput> customConnectInputList) {
+		this.customConnectInputList = customConnectInputList;
+	}
+	
+	public void addCustomConnectInput(CustomConnectInput customConnectInput) {
+			customConnectInputList.add(customConnectInput);
+	}
+	
 
 }

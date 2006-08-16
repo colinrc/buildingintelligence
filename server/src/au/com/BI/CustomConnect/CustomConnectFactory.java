@@ -73,22 +73,32 @@ public class CustomConnectFactory {
 			}
 		}
 		
+		CustomConnectInput customConnectInput = new CustomConnectInput();
 		List <Element> inConditions = (List<Element>)element.getChildren("INSTRING");
 		for (Element eachCondition: inConditions){
-			String value = eachCondition.getAttributeValue("VALUE");
-			String commandCondition = eachCondition.getAttributeValue("IF_COMMAND");
-			String extraCondition = eachCondition.getAttributeValue("IF_EXTRA");
+			String toMatch = eachCondition.getAttributeValue("TO_MATCH");
+			String key = eachCondition.getAttributeValue("KEY");
+			String command = eachCondition.getAttributeValue("COMMAND");
 			String eachLineName = eachCondition.getAttributeValue("NAME");
-			if (value != null  && commandCondition != null || !value.equals ("") && !commandCondition.equals ("") ) {
-				for (CustomConnect customConnect:deviceList){
-					value = value.replaceAll("%KEY%", customConnect.getKey());
-					customConnect.addOutputCondition(commandCondition, extraCondition, value, eachLineName);
-					logger.log (Level.FINER, "Adding processing condition " + eachLineName + " for the key " + customConnect.getName() + " in the custom device " + overallName );
-				}
-			} else {
-				logger.log (Level.WARNING,"The custom connection configuration " + overallName + " in the model "+ targetDevice.getName() + " is incorrect, check the OUTSTRING conditions");
-			}
+			String extra = eachCondition.getAttributeValue("EXTRA");
+			String extra2 = eachCondition.getAttributeValue("EXTRA2");
+			String extra3 = eachCondition.getAttributeValue("EXTRA3");
+			String extra4 = eachCondition.getAttributeValue("EXTRA4");
+			String extra5 = eachCondition.getAttributeValue("EXTRA5");
+			CustomConnectInputDetails customConnectInputDetails = new CustomConnectInputDetails();
+			customConnectInputDetails.setExtra5(extra5);
+			customConnectInputDetails.setExtra4(extra4);
+			customConnectInputDetails.setExtra3(extra3);
+			customConnectInputDetails.setExtra2(extra2);
+			customConnectInputDetails.setName(eachLineName);
+			customConnectInputDetails.setExtra(extra);
+			customConnectInputDetails.setKey(key);
+			customConnectInputDetails.setToMatch(toMatch);
+			customConnectInputDetails.setCommand(command);
+			customConnectInput.addCustomConnectInputDetails(customConnectInputDetails);
 		}
+		customConnectInput.setCustomConnectList(deviceList);
+		targetDevice.addCustomConnectInput (customConnectInput);
 		
 	}
 

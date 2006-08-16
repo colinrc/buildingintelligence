@@ -14,6 +14,7 @@ import au.com.BI.Comms.*;
 import au.com.BI.Config.Bootstrap;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Config.ParameterException;
+import au.com.BI.CustomConnect.CustomConnectInput;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Home.VersionManager;
@@ -182,6 +183,13 @@ public interface DeviceModel {
 	 */
 	public void addStartupQueryItem (String name, Object details, MessageDirection controlType);
 
+	/**
+	 * Called by the configuration reader
+	 * user interaction on the item. At this stage only the flash client generates these
+	 * @param customConnectInput non unique key name for physical device
+	 */
+	public void addCustomConnectInput (CustomConnectInput customConnectInput);
+	
 	/**
 	 * Used on restart to clear all currently known items
 	 */

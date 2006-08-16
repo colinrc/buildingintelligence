@@ -39,6 +39,7 @@ public class ModelParameters  {
         protected HashMap <String,HashMap<String,String>> parameters;
         protected HashMap <String,String>topMap; // a convienience reference to the top level map
 
+
         protected Logger logger = null;
 
         protected String name = "Unknown";

@@ -1,9 +1,8 @@
 package au.com.BI.Util;
 
-import au.com.BI.AV.AV;
 import au.com.BI.Command.Command;
 import au.com.BI.Command.CommandInterface;
-import au.com.BI.CustomConnect.CustomConnect;
+import au.com.BI.CustomConnect.*;
 import au.com.BI.Device.DeviceType;
 import junit.framework.TestCase;
 
@@ -53,7 +52,7 @@ public class TestSimplifiedModel extends TestCase {
 		assertEquals ("Format Key Dec Hex 2 padding failed","016",result);
 	}
 	
-	public void testCustomCommandString () {
+	public void testCustomCommandOutputString () {
 			CustomConnect connection = new CustomConnect();
 			connection.setName("Test Connection");
 			connection.setDeviceType(DeviceType.CUSTOM_CONNECT);
@@ -74,6 +73,7 @@ public class TestSimplifiedModel extends TestCase {
 			runCustomCommandString(connection, "replace_number_inverted_extra", "100" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_Scaled_0");
 			runCustomCommandString(connection, "replace_command_extra2", "up" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extra2Val up");
 			runCustomCommandString(connection, "replace_command_extra2", "down" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extra2Val down");
+			runCustomCommandString(connection, "replace_command_extra2", "fail" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "");
 			runCustomCommandString(connection, "replace_command_extra3", "extraVal" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extra3Val");
 			runCustomCommandString(connection, "replace_command_extra_extra4", "extraVal" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extraVal extra4Val_Fin");
 	}
@@ -87,8 +87,49 @@ public class TestSimplifiedModel extends TestCase {
 			command.setExtra3Info(extra3);
 			command.setExtra4Info(extra4);
 			command.setExtra5Info(extra5);
-			String result = testModel.doCustomConnectIfPresent(command,  connection);
+			String result = testModel.doCustomConnectOutputIfPresent(command,  connection);
 			assertEquals("Custom Connection failed " ,  expected, result);
 	}
+	
+	public void testCustomCommandInputString () {
+		CustomConnect connection = new CustomConnect();
+		connection.setName("Test Connection");
+		connection.setDeviceType(DeviceType.CUSTOM_CONNECT);
+		connection.setKey("1");
+		connection.setOutputKey("TEST_CONNECTION1");
+		
+		CustomConnect connection2 = new CustomConnect();
+		connection2.setName("Test Connection");
+		connection2.setDeviceType(DeviceType.CUSTOM_CONNECT);
+		connection2.setKey("2");
+		connection2.setOutputKey("TEST_CONNECTION2");
+		
+		CustomConnectInput customConnectInput = new CustomConnectInput();
+		customConnectInput.addCustomConnectInputDetails(new CustomConnectInputDetails("AU_PWR (\\d+) on ", "@1", "Power on","on","", "", "", "", ""));
+
+		customConnectInput.addCustomConnectInputDetails(new CustomConnectInputDetails("AU_PWR (\\d+) on ","Power on", "on", "@1", "", "", "", "", ""));
+		runCustomCommandString(connection, "pure_string", "extraVal" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val", "Test_pure");
+		runCustomCommandString(connection, "replace_command_extra", "extraVal" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extraVal");
+		runCustomCommandString(connection, "replace_number_extra", "100" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_Scaled_60");
+		runCustomCommandString(connection, "replace_number_inverted_extra", "100" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_Scaled_0");
+		runCustomCommandString(connection, "replace_command_extra2", "up" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extra2Val up");
+		runCustomCommandString(connection, "replace_command_extra2", "down" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extra2Val down");
+		runCustomCommandString(connection, "replace_command_extra2", "fail" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "");
+		runCustomCommandString(connection, "replace_command_extra3", "extraVal" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extra3Val");
+		runCustomCommandString(connection, "replace_command_extra_extra4", "extraVal" , "extra2Val" , "extra3Val" ,"extra4Val","extra5Val",  "Test_commandExtra_extraVal extra4Val_Fin");
+}
+
+public void runCustomCommandInputString(CustomConnect connection, String commandCode, String extra, String extra2, String extra3, String extra4, String extra5,  String expected) {
+		CommandInterface command = new Command();
+		command.setCommand(commandCode);
+		command.setDisplayName("TEST_CONNECTION");
+		command.setExtraInfo(extra);
+		command.setExtra2Info(extra2);
+		command.setExtra3Info(extra3);
+		command.setExtra4Info(extra4);
+		command.setExtra5Info(extra5);
+		String result = testModel.doCustomConnectOutputIfPresent(command,  connection);
+		assertEquals("Custom Connection failed " ,  expected, result);
+}
 
 }
