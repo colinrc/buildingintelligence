@@ -8,6 +8,7 @@ public class ReturnWrapper {
 		private Vector <String>outputStrings;
 		private Vector <CommandInterface>outputFlash;
 		boolean messageIsBytes = false;
+		boolean populated = false;
 		
 		boolean error = false;
 		String errorDescription = "";
@@ -25,15 +26,18 @@ public class ReturnWrapper {
 		public void addCommOutput (byte[] newItem){
 			this.messageIsBytes = true;
 			outputBytes.add(newItem);
+			populated = true;
 		}
 		
 		public void addCommOutput (String newItem){
 			this.messageIsBytes = false;
 			outputStrings.add(newItem);
+			populated = true;
 		}
 		
 		public void addFlashCommand (CommandInterface newItem){
 			outputFlash.add(newItem);
+			populated = true;
 		}
 
 		public boolean isMessageIsBytes() {
@@ -66,6 +70,7 @@ public class ReturnWrapper {
 
 		public void setException(Exception exception) {
 			this.exception = exception;
+			populated = true;
 		}
 
 		public boolean isError() {
@@ -74,6 +79,7 @@ public class ReturnWrapper {
 
 		public void setError(boolean error) {
 			this.error = error;
+			populated = true;
 		}
 
 		public String getErrorDescription() {
@@ -98,6 +104,42 @@ public class ReturnWrapper {
 
 		public void setParamCommandType(int paramCommandType) {
 			this.paramCommandType = paramCommandType;
+		}
+
+		public boolean isPopulated() {
+			return populated;
+		}
+
+		public void setPopulated(boolean populated) {
+			this.populated = populated;
+		}
+		
+		public boolean equals (Object toTestWrapper){
+    		if (toTestWrapper instanceof au.com.BI.Command.ReturnWrapper ){
+    			ReturnWrapper toTest = (ReturnWrapper)toTestWrapper;
+    			
+				if (toTest.isError() != this.error) return false;
+				if (toTest.isPopulated() != this.populated) return false;
+				if (toTest.isMessageIsBytes() != this.messageIsBytes) return false;
+				if (toTest.getOutputCommandType() != this.getOutputCommandType()) return false;
+				if (toTest.getCommOutput().size() != this.getCommOutput().size()) return false;
+				if (toTest.getCommOutputBytes().size() != this.getCommOutputBytes().size()) return false;
+				if (toTest.getOutputFlash().size() != this.getOutputFlash().size()) return false;
+				int index = 0;
+				for (String i:toTest.getCommOutputStrings() ) {
+					if (!this.outputStrings.get(index).equals(i)) return false;
+				}
+				index = 0;
+				for (byte[] i:toTest.getCommOutputBytes() ) {
+					if (!this.outputBytes.get(index).equals(i)) return false;
+				}
+				index = 0;
+				for (CommandInterface i:toTest.getOutputFlash() ) {
+					if (!this.getOutputFlash().get(index).equals(i)) return false;
+				}
+				return true;
+    		}
+			return false;
 		}
 
 }

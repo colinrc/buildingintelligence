@@ -43,15 +43,5 @@ public class CustomConnectCommand extends Command implements CommandInterface{
 	}
 
 
-
-	/** 
-	 * Returns the XML representation of this command 
-	 */
-	public Element getXMLCommand () {
-		Element elm = super.getXMLCommand();
-		elm.setAttribute ("KEY", displayName);
-		elm.setAttribute ("COMMAND", commandCode);
-		return elm;
-	}
 	
 }

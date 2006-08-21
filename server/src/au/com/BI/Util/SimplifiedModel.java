@@ -23,7 +23,6 @@ import au.com.BI.Config.ParameterBlock;
 import au.com.BI.Config.ParameterException;
 import au.com.BI.Config.RawItemDetails;
 import au.com.BI.Flash.ClientCommand;
-import au.com.BI.GroovyModels.GroovyModelException;
 import au.com.BI.PulseOutput.PulseOutput;
 import au.com.BI.SMS.SMS;
 import au.com.BI.Sensors.Sensor;
@@ -50,6 +49,7 @@ import au.com.BI.Audio.Audio;
 public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
 	protected Pattern customScanLookupString = null;
+	protected Pattern customInputLookupString = null;
 	protected Pattern customScaleString = null;
 	protected Pattern customInputScaleString = null;
 	protected Pattern customScanCommandString = null;
@@ -59,6 +59,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	public SimplifiedModel () {
         configHelper = new ConfigHelper(this);
    		customScanLookupString = Pattern.compile("%LOOKUP\\s+(\\w+)\\s+COMMAND\\.(\\w+)\\s*%");
+   		customInputLookupString = Pattern.compile("%LOOKUP\\s+(\\w+)\\s+(\\w+)\\s*%");
    		customScaleString = Pattern.compile("%SCALE\\s+(\\d+)\\s+(\\d+)\\s*%");
    		customInputScaleString = Pattern.compile("%SCALE\\s+(\\S+)\\s+(\\d+)\\s+(\\d+)\\s*%");
    		customScanCommandString = Pattern.compile("%COMMAND\\.(\\w+)%");
@@ -76,7 +77,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			addCheckSums(returnWrapper);
 			sendWrapperItems(returnWrapper);
 
-		} catch (GroovyModelException ex) {
+		} catch (ModelException ex) {
 			logger.log(Level.WARNING, "An error occured in " + this.getName()
 					+ " support " + ex.getMessage());
 		}
@@ -756,14 +757,13 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 
 	public void decodeOutputItem(CommandInterface command,
-			ReturnWrapper returnWrapper) throws GroovyModelException {
+			ReturnWrapper returnWrapper) throws ModelException {
 
 		DeviceType device = configHelper.getOutputItem(command.getKey());
 		String rawStr = this.doRawIfPresent(command, device);
 		if (rawStr != null) {
 			returnWrapper.addCommOutput(rawStr);
 		} else {
-
 			try {
 				switch (device.getDeviceType()) {
 				case DeviceType.ANALOGUE:
@@ -881,12 +881,18 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		ReturnWrapper returnWrapper = new ReturnWrapper();
 
 		try {
-			processStringFromComms(command.getCommandCode(), returnWrapper);
+			this.doCustomConnectInputIfPresent((CommsCommand)command,returnWrapper);
+			if (!returnWrapper.isPopulated()){
+				processStringFromComms(command.getCommandCode(), returnWrapper);
+			}
 			addCheckSums(returnWrapper);
 			sendWrapperItems(returnWrapper);
 
 		} catch (CommsProcessException ex) {
 			logger.log(Level.WARNING, "An error occured in " + this.getName()
+					+ " support " + ex.getMessage());
+		} catch (ClassCastException ex) {
+			logger.log(Level.WARNING, "An class cast error occured in " + this.getName()
 					+ " support " + ex.getMessage());
 		}
 
@@ -965,10 +971,6 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	public String doRawIfPresent(CommandInterface command,
 			DeviceType targetDevice) {
 
-		String returnCode = doCustomConnectOutputIfPresent(command, targetDevice);
-
-		if (returnCode != null)
-			return returnCode;
 
 		Map rawCodes = targetDevice.getRawCodes(); // the list specified in the config for this device line.
 
@@ -1005,11 +1007,12 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	 * @param device
 	 * @return
 	 */
-	public String doCustomConnectOutputIfPresent(CommandInterface command,
-			DeviceType device) {
+	public void doCustomConnectOutputIfPresent(CommandInterface command,
+			DeviceType device, ReturnWrapper returnWrapper) throws ModelException  {
+		
 		if (device == null
 				|| device.getDeviceType() != DeviceType.CUSTOM_CONNECT)
-			return "";
+			return ;
 
 		CustomConnect customConnect = (CustomConnect) device;
 		Boolean isNumber = false;
@@ -1019,10 +1022,12 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 						.getCommandCode(), command.getExtraInfo());
 				String finalStr = scanCustomOutputString(command, outValue.getValue(),
 						device, outValue.isNumber);
-				return finalStr;
+				returnWrapper.addCommOutput(finalStr);
 		} catch (CustomConnectException ex){
 			logger.log(Level.WARNING, ex.getMessage());
-			return "";
+			returnWrapper.setException( ex);
+			returnWrapper.setError(true);
+			return;
 		}
 	}
 
@@ -1032,11 +1037,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	 * @param device
 	 * @return
 	 */
-	public CommandInterface doCustomConnectInputIfPresent(CommsCommand command,
-			DeviceType device) {
-		if (device == null
-				|| device.getDeviceType() != DeviceType.CUSTOM_CONNECT )
-			return null;
+	public void doCustomConnectInputIfPresent(CommsCommand  command, ReturnWrapper returnWrapper) throws CommsProcessException  {
 
 	    for (CustomConnectInput customInput: configHelper.getCustomConnectInputList()) {
 	    	for (CustomConnectInputDetails customInputDetails: customInput.getCustomConnectInputDetails()){
@@ -1054,22 +1055,24 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 						configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
 						String deviceKey = replacePattern (customInputDetails.getKey(), matcherResults);
 						CustomConnect deviceMatched =  (CustomConnect)configHelper.getControlItem(deviceKey);
-						String commandStr = this.scanCustomInputString(customInputDetails.getCommand(),deviceMatched);
-						String extra = this.scanCustomInputString(customInputDetails.getExtra(),deviceMatched);
-						String extra2 = this.scanCustomInputString(customInputDetails.getExtra2(),deviceMatched);
-						String extra3 = this.scanCustomInputString(customInputDetails.getExtra3(),deviceMatched);
-						String extra4 = this.scanCustomInputString(customInputDetails.getExtra4(),deviceMatched);
-						String extra5 = this.scanCustomInputString(customInputDetails.getExtra5(),deviceMatched);
-
-						CommandInterface displayCommand = this.buildCommandForFlash(deviceMatched, commandStr, extra, extra2, extra3,extra4,extra5);
-						return displayCommand;	
+						if (deviceMatched != null) {
+							String commandStr = this.scanCustomInputString(replacePattern (customInputDetails.getCommand(),matcherResults),deviceMatched);
+							String extra = this.scanCustomInputString(replacePattern (customInputDetails.getExtra(),matcherResults),deviceMatched);
+							String extra2 = this.scanCustomInputString(replacePattern (customInputDetails.getExtra2(),matcherResults),deviceMatched);
+							String extra3 = this.scanCustomInputString(replacePattern (customInputDetails.getExtra3(),matcherResults),deviceMatched);
+							String extra4 = this.scanCustomInputString(replacePattern (customInputDetails.getExtra4(),matcherResults),deviceMatched);
+							String extra5 = this.scanCustomInputString(replacePattern (customInputDetails.getExtra5(),matcherResults),deviceMatched);
+	
+							CommandInterface displayCommand = this.buildCommandForFlash(deviceMatched, commandStr, extra, extra2, extra3,extra4,extra5);
+							returnWrapper.addFlashCommand(displayCommand);
+							return ;	
+						}
 			        } 
 				} catch (ClassCastException ex) {
 					logger.log(Level.WARNING, "An internal error has occured, please contact your integrator");
 				}
 		    }
 	    }
-	    return null;
 	}
 	
 	protected String scanCustomOutputString(CommandInterface command, String stringToBeScanned,
@@ -1159,7 +1162,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			stringToBeScanned = sb.toString();
 
 			sb = new StringBuffer();
-			Matcher resultLookup = customScanLookupString.matcher(stringToBeScanned);
+			Matcher resultLookup = customInputLookupString.matcher(stringToBeScanned);
 			while (resultLookup.find()) {
 				// Lookup the parameter value from the catalogue
 				String theCatalog = resultLookup.group(1);
@@ -1201,61 +1204,63 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	
 	public void buildAnalogControlString(Analog device,
 			CommandInterface command, ReturnWrapper returnWrapper)
-			throws GroovyModelException {
+			throws ModelException {
 	}
 
 	public void buildAudioControlString(Audio device, CommandInterface command,
-			ReturnWrapper returnWrapper) throws GroovyModelException {
+			ReturnWrapper returnWrapper) throws ModelException {
 	}
 
 	public void buildCustomInputString(CustomInput device,
 			CommandInterface command, ReturnWrapper returnWrapper)
-			throws GroovyModelException {
+			throws ModelException {
 	}
 
 	public void buildAVControlString(AV device, CommandInterface command,
-			ReturnWrapper returnWrapper) throws GroovyModelException {
+			ReturnWrapper returnWrapper) throws ModelException {
 	}
 
 	public void buildLightString(LightFascade device, CommandInterface command,
-			ReturnWrapper returnWrapper) throws GroovyModelException {
+			ReturnWrapper returnWrapper) throws ModelException {
 	}
 
 	public void buildSensorControlString(Sensor device,
 			CommandInterface command, ReturnWrapper returnWrapper)
-			throws GroovyModelException {
+			throws ModelException {
 	}
 
 	public void buildAlarmControlString(Alarm device, CommandInterface command,
-			ReturnWrapper returnWrapper) throws GroovyModelException {
+			ReturnWrapper returnWrapper) throws ModelException {
 	}
 
 	public void buildAlertControlString(Alert device, CommandInterface command,
-			ReturnWrapper returnWrapper) throws GroovyModelException {
+			ReturnWrapper returnWrapper) throws ModelException {
 	}
 
 	public void buildPulseOutputControlString(PulseOutput device,
 			CommandInterface command, ReturnWrapper returnWrapper)
-			throws GroovyModelException {
+			throws ModelException {
 	}
 
 	public void buildCameraControlString(Camera device,
 			CommandInterface command, ReturnWrapper returnWrapper)
-			throws GroovyModelException {
+			throws ModelException {
 	}
 
 	public void buildToggleOutputControlString(ToggleSwitch device,
 			CommandInterface command, ReturnWrapper returnWrapper)
-			throws GroovyModelException {
+			throws ModelException {
 	}
 
 	public void buildSMSControlString(SMS device, CommandInterface command,
-			ReturnWrapper returnWrapper) throws GroovyModelException {
+			ReturnWrapper returnWrapper) throws ModelException {
 	}
 
 	public void buildCustomConnectControlString(CustomConnect device,
 			CommandInterface command, ReturnWrapper returnWrapper)
-			throws GroovyModelException {
+			throws ModelException {
+		
+			this.doCustomConnectOutputIfPresent(command, device, returnWrapper);
 	}
 	
 

@@ -52,7 +52,7 @@ public class CustomConnectFactory {
 
 			if (displayName != null && !displayName.equals("")) {
 				targetDevice.addControlledItem(displayName, theConnection, MessageDirection.FROM_FLASH);
-				// All commands must come from Flash so only add the device to the Flash processing collection
+				targetDevice.addControlledItem(key, theConnection, MessageDirection.FROM_HARDWARE);				
 			}
 		}
 		

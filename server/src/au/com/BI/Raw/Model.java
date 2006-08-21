@@ -95,57 +95,16 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	public boolean doIControl (String keyName, boolean isClientCommand)
 	{
-		keyName = keyName.trim();
-		configHelper.wholeKeyChecked(keyName);
-		matched = false;
-
-
-		if (configHelper.checkForOutputItem(keyName)) {
-			logger.log (Level.FINER,"Flash sent command : " +keyName);
-			return true;
+		if (isClientCommand && configHelper.checkForOutputItem(keyName) ) {
+				logger.log (Level.FINER,"Flash sent command : " +keyName);
+				return true;
 		}
 		else {
-		    Iterator inputDeviceList = configHelper.getAllControlledDevices();
-
-		    for (DeviceType inputListItem: configHelper.getAllControlledDeviceObjects()) {
-		    	if (inputListItem.getDeviceType() != DeviceType.CUSTOM_INPUT) 
-		    		continue;
-			    String inputListKey = "";
-			    	matched = false;
-
-
-		        CustomInput customInput = (CustomInput)inputListItem;
-		        if (customInput.isHasPattern()){
-		        		matcherResults = customInput.getMatcher(keyName);
-		            if (matcherResults.matches()) {
-						deviceThatMatched = customInput;
-						configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
-						return true;
-		            }
-		        }
-
-			    if (!matched) {
-
-			        inputListKey = inputListItem.getKey();
-
-					if (inputListKey.equals("*")) {
-						deviceThatMatched = (CustomInput)configHelper.getControlledItem(inputListKey);
-						configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
-						parameter = keyName;
-						return true;
-					}
-					else {
-						if (keyName.startsWith(inputListKey)) {
-							deviceThatMatched = (CustomInput)configHelper.getControlledItem(inputListKey);
-							configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
-							parameter = keyName.substring (inputListKey.length());
-							return true;
-						}
-					}
-				}
-			}
-			return false;
-		}
+			if (!isClientCommand)
+				return true;
+			else 
+				return false;
+		} 
 	}
 
 
