@@ -63,15 +63,16 @@ public class ControlledHelper {
 	 * @throws CommsFail
 	 */
 	public void doControlledItem(CommandInterface command,
-			ConfigHelper configHelper, Cache cache, CommandQueue commandQueue, Model m1)
-			throws CommsFail {
+			ConfigHelper configHelper, Cache cache, CommandQueue commandQueue,
+			Model m1) throws CommsFail {
 
 		// Check to see if it is a comms command
 		if (command.isCommsCommand()) {
 
 			// create the command object and cache it
 			String theKey = command.getKey();
-			CommandInterface m1Command = buildCommandForFlash(command,configHelper, m1);
+			CommandInterface m1Command = buildCommandForFlash(command,
+					configHelper, m1);
 			if (m1Command == null)
 				return;
 
@@ -82,31 +83,23 @@ public class ControlledHelper {
 				ZoneChangeUpdate zoneChangeUpdate = (ZoneChangeUpdate) m1Command;
 				alarmLogger.setCache(cache);
 				alarmLogger.setCommandQueue(commandQueue);
-				
-				String outputKey = ((BaseDevice)configHelper.getControlItem(zoneChangeUpdate.getZone()+"CC")).getOutputKey();
+
+				String outputKey = ((BaseDevice) configHelper
+						.getControlItem(zoneChangeUpdate.getZone() + "CC"))
+						.getOutputKey();
 
 				if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_UNCONFIGURED) {
 
-					alarmLogger
-							.addAlertLog(
-									"ALERT",
-									"Normal - Unconfigured",
-									AlarmLogging.GENERAL_MESSAGE,
-									outputKey,
-									zoneChangeUpdate.getZoneStatus()
-											.getDescription(), m1.currentUser,
-									new Date());
+					alarmLogger.addAlertLog("ALERT", "Normal - Unconfigured",
+							AlarmLogging.GENERAL_MESSAGE, outputKey,
+							zoneChangeUpdate.getZoneStatus().getDescription(),
+							m1.currentUser, new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_OPEN) {
 
-					alarmLogger
-							.addAlertLog(
-									"ALERT",
-									"Normal - Unconfigured",
-									AlarmLogging.GENERAL_MESSAGE,
-									outputKey,
-									zoneChangeUpdate.getZoneStatus()
-											.getDescription(), m1.currentUser,
-									new Date());
+					alarmLogger.addAlertLog("ALERT", "Normal - Unconfigured",
+							AlarmLogging.GENERAL_MESSAGE, outputKey,
+							zoneChangeUpdate.getZoneStatus().getDescription(),
+							m1.currentUser, new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_EOL) {
 					/*
 					 * Dave this is just normal PIR strigger
@@ -118,70 +111,40 @@ public class ControlledHelper {
 					 */
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_SHORT) {
 
-					alarmLogger
-							.addAlertLog(
-									"ALERT",
-									"Normal - Short",
-									AlarmLogging.GENERAL_MESSAGE,
-									outputKey,
-									zoneChangeUpdate.getZoneStatus()
-											.getDescription(), m1.currentUser,
-									new Date());
+					alarmLogger.addAlertLog("ALERT", "Normal - Short",
+							AlarmLogging.GENERAL_MESSAGE, outputKey,
+							zoneChangeUpdate.getZoneStatus().getDescription(),
+							m1.currentUser, new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.TROUBLE_OPEN) {
 
-					alarmLogger
-							.addAlarmLog(
-									"ALARM",
-									"Trouble - Open",
-									AlarmLogging.TROUBLE,
-									outputKey,
-									zoneChangeUpdate.getZoneStatus()
-											.getDescription(), m1.currentUser,
-									new Date());
+					alarmLogger.addAlarmLog("ALARM", "Trouble - Open",
+							AlarmLogging.TROUBLE, outputKey, zoneChangeUpdate
+									.getZoneStatus().getDescription(),
+							m1.currentUser, new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.TROUBLE_EOL) {
 
-					alarmLogger
-							.addAlarmLog(
-									"ALARM",
-									"Trouble - EOL",
-									AlarmLogging.TROUBLE,
-									outputKey,
-									zoneChangeUpdate.getZoneStatus()
-											.getDescription(), m1.currentUser,
-									new Date());
+					alarmLogger.addAlarmLog("ALARM", "Trouble - EOL",
+							AlarmLogging.TROUBLE, outputKey, zoneChangeUpdate
+									.getZoneStatus().getDescription(),
+							m1.currentUser, new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.TROUBLE_SHORT) {
 
-					alarmLogger
-							.addAlarmLog(
-									"ALARM",
-									"Trouble - Short",
-									AlarmLogging.TROUBLE,
-									outputKey,
-									zoneChangeUpdate.getZoneStatus()
-											.getDescription(), m1.currentUser,
-									new Date());
+					alarmLogger.addAlarmLog("ALARM", "Trouble - Short",
+							AlarmLogging.TROUBLE, outputKey, zoneChangeUpdate
+									.getZoneStatus().getDescription(),
+							m1.currentUser, new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_OPEN) {
 
-					alarmLogger
-							.addAlarmLog(
-									"ALARM",
-									"Violated - Open",
-									AlarmLogging.VIOLATED,
-									outputKey,
-									zoneChangeUpdate.getZoneStatus()
-											.getDescription(), m1.currentUser,
-									new Date());
+					alarmLogger.addAlarmLog("ALARM", "Violated - Open",
+							AlarmLogging.VIOLATED, outputKey, zoneChangeUpdate
+									.getZoneStatus().getDescription(),
+							m1.currentUser, new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_EOL) {
 
-					alarmLogger
-							.addAlarmLog(
-									"ALARM",
-									"Violated - EOL",
-									AlarmLogging.VIOLATED,
-									outputKey,
-									zoneChangeUpdate.getZoneStatus()
-											.getDescription(), m1.currentUser,
-									new Date());
+					alarmLogger.addAlarmLog("ALARM", "Violated - EOL",
+							AlarmLogging.VIOLATED, outputKey, zoneChangeUpdate
+									.getZoneStatus().getDescription(),
+							m1.currentUser, new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_SHORT) {
 					/*
 					 * Dave this is just normal PIR strigger
@@ -193,42 +156,27 @@ public class ControlledHelper {
 					 */
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.BYPASSED_OPEN) {
 
-					alarmLogger
-							.addAlarmLog(
-									"ALARM",
-									"Bypassed - Open",
-									AlarmLogging.BYPASSED,
-									outputKey,
-									zoneChangeUpdate.getZoneStatus()
-											.getDescription(), m1.currentUser,
-									new Date());
+					alarmLogger.addAlarmLog("ALARM", "Bypassed - Open",
+							AlarmLogging.BYPASSED, outputKey, zoneChangeUpdate
+									.getZoneStatus().getDescription(),
+							m1.currentUser, new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.BYPASSED_EOL) {
 
-					alarmLogger
-							.addAlarmLog(
-									"ALARM",
-									"Bypassed - EOL",
-									AlarmLogging.BYPASSED,
-									outputKey,
-									zoneChangeUpdate.getZoneStatus()
-											.getDescription(), m1.currentUser,
-									new Date());
+					alarmLogger.addAlarmLog("ALARM", "Bypassed - EOL",
+							AlarmLogging.BYPASSED, outputKey, zoneChangeUpdate
+									.getZoneStatus().getDescription(),
+							m1.currentUser, new Date());
 				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.BYPASSED_SHORT) {
 
-					alarmLogger
-							.addAlarmLog(
-									"ALARM",
-									"Bypassed - Short",
-									AlarmLogging.BYPASSED,
-									outputKey,
-									zoneChangeUpdate.getZoneStatus()
-											.getDescription(), m1.currentUser,
-									new Date());
+					alarmLogger.addAlarmLog("ALARM", "Bypassed - Short",
+							AlarmLogging.BYPASSED, outputKey, zoneChangeUpdate
+									.getZoneStatus().getDescription(),
+							m1.currentUser, new Date());
 				}
 			} else if (m1Command.getClass().equals(
 					RequestTemperatureReply.class)) {
 				RequestTemperatureReply requestTemperatureReply = (RequestTemperatureReply) m1Command;
-				
+
 				int adjustedTemperature = Integer
 						.parseInt(requestTemperatureReply.getTemperature());
 
@@ -241,31 +189,56 @@ public class ControlledHelper {
 						Group.KEYPAD)) {
 					adjustedTemperature = adjustedTemperature - 40;
 				}
-				
-				SensorFascade sensor = (SensorFascade) configHelper.getControlItem(requestTemperatureReply.getDevice());
-				
-				// send the alert command, the structure is 
+
+				SensorFascade sensor = (SensorFascade) configHelper
+						.getControlItem(requestTemperatureReply.getDevice());
+
+				// send the alert command.
 				CommandInterface _command = new AlertCommand();
 				_command.setDisplayName(sensor.getOutputKey());
 				_command.setTargetDeviceID(-1);
 				_command.setUser(m1.currentUser);
 				_command.setExtraInfo(Integer.toString(adjustedTemperature));
-				_command.setExtra2Info(requestTemperatureReply.getGroup().getDescription());
-				_command.setKey ("CLIENT_SEND");
+				_command.setExtra2Info(requestTemperatureReply.getGroup()
+						.getDescription());
+				_command.setKey("CLIENT_SEND");
 				_command.setCommand("on");
 
-				cache.setCachedCommand(_command.getKey(),_command);
+				CommandInterface existingSensor = (CommandInterface) cache
+						.getCachedObject(_command.getKey());
+				if (existingSensor != null
+						&& !existingSensor.getExtraInfo().equals(
+								_command.getExtraInfo())) {
 
-				logger.log (Level.INFO,"Sending temperature to flash for group:" + requestTemperatureReply.getGroup().toString() + ":device:" + requestTemperatureReply.getDevice() + ":" +  adjustedTemperature);
-				sendToFlash(commandQueue, -1, _command);
-			} else if (m1Command.getClass().equals(ControlOutputStatusReport.class)) {
+					cache.setCachedCommand(_command.getKey(), _command);
+
+					logger.log(Level.INFO,
+							"Sending temperature to flash for group:"
+									+ requestTemperatureReply.getGroup()
+											.toString() + ":device:"
+									+ requestTemperatureReply.getDevice() + ":"
+									+ adjustedTemperature);
+					sendToFlash(commandQueue, -1, _command);
+				} else {
+					logger.log(Level.INFO,
+							"Did not send temperature to flash for group:"
+									+ requestTemperatureReply.getGroup()
+											.toString() + ":device:"
+									+ requestTemperatureReply.getDevice()
+									+ " as the temperature has not changed");
+				}
+			} else if (m1Command.getClass().equals(
+					ControlOutputStatusReport.class)) {
 				ControlOutputStatusReport statusReport = (ControlOutputStatusReport) m1Command;
-				
+
 				// send out output change updates
-				for (int i=0; i<statusReport.getOutputStatus().length; i++) {
-					
-					BaseDevice device = (BaseDevice)configHelper.getControlledItem(Utility.padString(Integer.toString(i),3)+"TOUT");
-					
+				for (int i = 0; i < statusReport.getOutputStatus().length; i++) {
+
+					BaseDevice device = (BaseDevice) configHelper
+							.getControlledItem(Utility.padString(Integer
+									.toString(i), 3)
+									+ "TOUT");
+
 					if (device != null) {
 						CommandInterface _command = new AlertCommand();
 						_command.setDisplayName(device.getOutputKey());
@@ -277,20 +250,24 @@ public class ControlledHelper {
 							_command.setCommand("off");
 						}
 						_command.setKey("CLIENT_SEND");
-						cache.setCachedCommand(_command.getKey(),_command);
+						cache.setCachedCommand(_command.getKey(), _command);
 
-						logger.log (Level.INFO,"Sending " + _command.getCommandCode() + " command to " + device.getOutputKey());
+						logger.log(Level.INFO, "Sending "
+								+ _command.getCommandCode() + " command to "
+								+ device.getOutputKey());
 						sendToFlash(commandQueue, -1, _command);
 					}
 				}
-			} else if (m1Command.getClass().equals(ReplyArmingStatusReportData.class)) {
-				ReplyArmingStatusReportData statusReport = (ReplyArmingStatusReportData)m1Command;
-				
-				for (int i=0;i<statusReport.getAreaAlarmState().length;i++) {
+			} else if (m1Command.getClass().equals(
+					ReplyArmingStatusReportData.class)) {
+				ReplyArmingStatusReportData statusReport = (ReplyArmingStatusReportData) m1Command;
+
+				for (int i = 0; i < statusReport.getAreaAlarmState().length; i++) {
 					ArmedStatus armedStatus = statusReport.getArmedStatus()[i];
 					ArmUpState armUpState = statusReport.getArmUpState()[i];
-					AreaAlarmState areaAlarmState = statusReport.getAreaAlarmState()[i];
-					
+					AreaAlarmState areaAlarmState = statusReport
+							.getAreaAlarmState()[i];
+
 					CommandInterface _command = new AlertCommand();
 					_command.setDisplayName("Arming Status");
 					_command.setTargetDeviceID(-1);
@@ -301,30 +278,31 @@ public class ControlledHelper {
 					_command.setExtra3Info(armUpState.getDescription());
 					_command.setExtra4Info(areaAlarmState.getDescription());
 					_command.setKey("CLIENT_SEND");
-					cache.setCachedCommand(_command.getKey(),_command);
+					cache.setCachedCommand(_command.getKey(), _command);
 
-					logger.log (Level.INFO,"Sending " + _command.getCommandCode() + " ArmedStatus=" + 
-							    _command.getExtraInfo() + 
-							    " ArmUpState=" + _command.getExtra2Info() + 
-							    " AreaAlarmState=" + _command.getExtra3Info());
+					logger.log(Level.INFO, "Sending "
+							+ _command.getCommandCode() + " ArmedStatus="
+							+ _command.getExtraInfo() + " ArmUpState="
+							+ _command.getExtra2Info() + " AreaAlarmState="
+							+ _command.getExtra3Info());
 					sendToFlash(commandQueue, -1, _command);
 				}
-			} else if (m1Command.getClass().equals(Disarm.class) ||
-					   m1Command.getClass().equals(ArmToAway.class) ||
-					   m1Command.getClass().equals(ArmToStayHome.class) ||
-					   m1Command.getClass().equals(ArmToStayInstant.class) ||
-					   m1Command.getClass().equals(ArmToNight.class) ||
-					   m1Command.getClass().equals(ArmToNightInstant.class) ||
-					   m1Command.getClass().equals(ArmToVacation.class) ||
-					   m1Command.getClass().equals(ArmStepToNextAwayMode.class) ||
-					   m1Command.getClass().equals(ArmStepToNextStayMode.class)) {
-				
-				ArmAndDisarmMessage armDisarm = (ArmAndDisarmMessage)m1Command;
+			} else if (m1Command.getClass().equals(Disarm.class)
+					|| m1Command.getClass().equals(ArmToAway.class)
+					|| m1Command.getClass().equals(ArmToStayHome.class)
+					|| m1Command.getClass().equals(ArmToStayInstant.class)
+					|| m1Command.getClass().equals(ArmToNight.class)
+					|| m1Command.getClass().equals(ArmToNightInstant.class)
+					|| m1Command.getClass().equals(ArmToVacation.class)
+					|| m1Command.getClass().equals(ArmStepToNextAwayMode.class)
+					|| m1Command.getClass().equals(ArmStepToNextStayMode.class)) {
+
+				ArmAndDisarmMessage armDisarm = (ArmAndDisarmMessage) m1Command;
 				CommandInterface _command = new AlertCommand();
 				_command.setDisplayName("Arm/Disarm");
 				_command.setTargetDeviceID(-1);
 				_command.setUser(m1.currentUser);
-				
+
 				if (m1Command.getClass().equals(Disarm.class)) {
 					_command.setCommand("DISARM");
 				} else if (m1Command.getClass().equals(ArmToAway.class)) {
@@ -339,23 +317,27 @@ public class ControlledHelper {
 					_command.setCommand("ARMED NIGHT INSTANT");
 				} else if (m1Command.getClass().equals(ArmToVacation.class)) {
 					_command.setCommand("ARMED VACATION");
-				} else if (m1Command.getClass().equals(ArmStepToNextAwayMode.class)) {
+				} else if (m1Command.getClass().equals(
+						ArmStepToNextAwayMode.class)) {
 					_command.setCommand("ARM TO NEXT AWAY MODE");
-				} else if (m1Command.getClass().equals(ArmStepToNextStayMode.class)) {
+				} else if (m1Command.getClass().equals(
+						ArmStepToNextStayMode.class)) {
 					_command.setCommand("ARM TO NEXT STAY MODE");
 				}
 				_command.setExtraInfo(armDisarm.getPartition());
 				_command.setKey("CLIENT_SEND");
-				cache.setCachedCommand(_command.getKey(),_command);
+				cache.setCachedCommand(_command.getKey(), _command);
 
-				logger.log (Level.INFO,"Sending " + _command.getCommandCode());
+				logger.log(Level.INFO, "Sending " + _command.getCommandCode());
 				sendToFlash(commandQueue, -1, _command);
-			} else if (m1Command.getClass().equals(ReplyAlarmByZoneReportData.class)) {
-				ReplyAlarmByZoneReportData zoneReport = (ReplyAlarmByZoneReportData)m1Command;
-				
-				for (int i=0;i<zoneReport.getZoneDefinition().length;i++) {
-					ZoneDefinition zoneDefinition = zoneReport.getZoneDefinition()[i];
-					
+			} else if (m1Command.getClass().equals(
+					ReplyAlarmByZoneReportData.class)) {
+				ReplyAlarmByZoneReportData zoneReport = (ReplyAlarmByZoneReportData) m1Command;
+
+				for (int i = 0; i < zoneReport.getZoneDefinition().length; i++) {
+					ZoneDefinition zoneDefinition = zoneReport
+							.getZoneDefinition()[i];
+
 					CommandInterface _command = new AlertCommand();
 					_command.setDisplayName("Zone Definition");
 					_command.setTargetDeviceID(-1);
@@ -364,12 +346,13 @@ public class ControlledHelper {
 					_command.setExtraInfo(Integer.toString(i));
 					_command.setExtra2Info(zoneDefinition.getDescription());
 					_command.setKey("CLIENT_SEND");
-					cache.setCachedCommand(_command.getKey(),_command);
+					cache.setCachedCommand(_command.getKey(), _command);
 
-					logger.log (Level.INFO,"Sending " + _command.getCommandCode() + " ArmedStatus=" + 
-							    _command.getExtraInfo() + 
-							    " ArmUpState=" + _command.getExtra2Info() + 
-							    " AreaAlarmState=" + _command.getExtra3Info());
+					logger.log(Level.INFO, "Sending "
+							+ _command.getCommandCode() + " ArmedStatus="
+							+ _command.getExtraInfo() + " ArmUpState="
+							+ _command.getExtra2Info() + " AreaAlarmState="
+							+ _command.getExtra3Info());
 					sendToFlash(commandQueue, -1, _command);
 				}
 			}
@@ -393,48 +376,53 @@ public class ControlledHelper {
 
 	protected CommandInterface buildCommandForFlash(CommandInterface command,
 			ConfigHelper configHelper, Model m1) {
-		M1Command m1Command = M1CommandFactory.getInstance().getM1Command(command.getKey());
-		
+		M1Command m1Command = M1CommandFactory.getInstance().getM1Command(
+				command.getKey());
+
 		if (m1Command == null)
 			return null;
 
-		if (m1Command.getClass().equals(OutputChangeUpdate.class) && configHelper.checkForControl(m1Command.getKey()+"TOUT")) {
+		if (m1Command.getClass().equals(OutputChangeUpdate.class)
+				&& configHelper.checkForControl(m1Command.getKey() + "TOUT")) {
 			// Dave check this. the PIR triggers the Short, sort of makes
 			// sense, in other words the violate short means PIR on
 			// violate EOL means off.
 
-			BaseDevice configDevice = (BaseDevice)configHelper.getControlledItem(m1Command.getKey()+"TOUT");
+			BaseDevice configDevice = (BaseDevice) configHelper
+					.getControlledItem(m1Command.getKey() + "TOUT");
 
-			if (((OutputChangeUpdate) m1Command).getOutputState().equals(
-			"0")) {
+			if (((OutputChangeUpdate) m1Command).getOutputState().equals("0")) {
 				m1Command.setCommand("off");
 			} else {
 				m1Command.setCommand("on");
 			}
-			m1Command.setDisplayName(((BaseDevice)configDevice).getOutputKey());
-
+			m1Command
+					.setDisplayName(((BaseDevice) configDevice).getOutputKey());
 
 			m1Command.setKey("CLIENT_SEND");
 			m1Command.setUser(m1.currentUser);
 			return m1Command;
 		} else if (m1Command.getClass().equals(RequestTemperatureReply.class)) {
-			m1Command.setDisplayName(((SensorFascade)configHelper.getControlItem(m1Command.getKey())).getOutputKey());
+			m1Command.setDisplayName(((SensorFascade) configHelper
+					.getControlItem(m1Command.getKey())).getOutputKey());
 			m1Command.setKey("CLIENT_SEND");
 			m1Command.setUser(m1.currentUser);
 			return m1Command;
-		} else if (m1Command.getClass().equals(ControlOutputStatusReport.class) ||
-				   m1Command.getClass().equals(Disarm.class) ||
-				   m1Command.getClass().equals(ArmToAway.class) ||
-				   m1Command.getClass().equals(ArmToStayHome.class) ||
-				   m1Command.getClass().equals(ArmToStayInstant.class) ||
-				   m1Command.getClass().equals(ArmToNight.class) ||
-				   m1Command.getClass().equals(ArmToNightInstant.class) ||
-				   m1Command.getClass().equals(ArmToVacation.class) ||
-				   m1Command.getClass().equals(ArmStepToNextAwayMode.class) ||
-				   m1Command.getClass().equals(ArmStepToNextStayMode.class) ||
-				   m1Command.getClass().equals(ReplyArmingStatusReportData.class) ||
-				   m1Command.getClass().equals(ZoneChangeUpdate.class) ||
-				   m1Command.getClass().equals(ReplyAlarmByZoneReportData.class)) {
+		} else if (m1Command.getClass().equals(ControlOutputStatusReport.class)
+				|| m1Command.getClass().equals(Disarm.class)
+				|| m1Command.getClass().equals(ArmToAway.class)
+				|| m1Command.getClass().equals(ArmToStayHome.class)
+				|| m1Command.getClass().equals(ArmToStayInstant.class)
+				|| m1Command.getClass().equals(ArmToNight.class)
+				|| m1Command.getClass().equals(ArmToNightInstant.class)
+				|| m1Command.getClass().equals(ArmToVacation.class)
+				|| m1Command.getClass().equals(ArmStepToNextAwayMode.class)
+				|| m1Command.getClass().equals(ArmStepToNextStayMode.class)
+				|| m1Command.getClass().equals(
+						ReplyArmingStatusReportData.class)
+				|| m1Command.getClass().equals(ZoneChangeUpdate.class)
+				|| m1Command.getClass()
+						.equals(ReplyAlarmByZoneReportData.class)) {
 			return m1Command;
 		} else {
 			return null;
