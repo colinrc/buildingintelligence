@@ -1,7 +1,27 @@
+''' General '''
+
+Added daily maintenance task. An entry should be added to the bootstrap file specifying the time to run, if it is not specified the default time is 11:30PM
+{{{
+  <MAINTENANCE TIME="12:10" />
+}}}
+
+''' Calendar '''
+
+Added active="Y|N" flag to calendar entries. The default is active="Y" if it is not specified.
+
+
+''' Raw '''
+
 Parameter handling changed to be the similar for processing catalogues from flash or from devices. HAL, Comfort, Nuvo, SignVideo and Kramer updated. Changes
 should be transparent.
 Added CUSTOM_CONNECT input methods
 Base model refactored into two classes to improve readability, there will be no visible consequences.
+
+Lookup and Scale abilities added for both INPUT and OUTPUT directions for CUSTOM_CONNECT items.
+
+New Raw form is available to configuration with device type=Raw_Connection  or any model derived from the SimpleModel base type and using the 
+updated methods. Currently only DMX uses these methods.
+
 
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a12.zip V1.6a12] ==
 
