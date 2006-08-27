@@ -1,8 +1,8 @@
 <events COMPLETE="Y">
-  <event id="1140582252964" title="james" alarm="Y" memo="rrfhh" category="" startDate="2006-02-22" endDate="2007-02-22" time="15:25:00" eventType="yearly" macroName="" filter="undefined">
+  <event id="1140582252964" title="james" alarm="Y" active="Y" memo="rrfhh" category="" startDate="2006-02-22" endDate="2007-02-22" time="15:25:00" eventType="yearly" macroName="" filter="undefined">
     <pattern date="22" month="1" recur="2" />
   </event>
-  <event id="1140582660186" title="more test" alarm="Y" memo="a message" category="" startDate="2006-02-22" endDate="2007-02-22" time="13:5:00" eventType="hourly" macroName="" filter="undefined">
+  <event id="1140582660186" title="more test" alarm="Y" active="N" memo="a message" category="" startDate="2006-02-22" endDate="2007-02-22" time="13:50:00" eventType="hourly" macroName="" filter="undefined">
     <pattern recur="2" />
   </event>
   <event id="1150020837090" title="sa" alarm="Y" memo="ryu" category="reminder" startDate="2004-02-22" endDate="2005-02-22" time="16:34:00" eventType="yearly" macroName="" filter="undefined">
@@ -15,4 +15,7 @@
     <pattern date="22" month="1" recur="2" />
   </event>
   <event id="1150022367228" title="rew" alarm="Y" memo="tu:" category="" date="2006-06-11" time="20:41:00" eventType="once" macroName="" extra="" extra2="" filter="" />
+  <event id="1" title="Should fire" alarm="Y" active="Y" memo="should see" category="" date="2006-08-23"  time="19:56:00" eventType="once" macroName="" filter="undefined" />
+
+    <event id="2" title="shouldn't fire" alarm="Y" active="N" memo="should not see" category="" date="2006-08-23"  time="19:56:30" eventType="once" macroName="" filter="undefined" />
 </events>
