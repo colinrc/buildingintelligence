@@ -375,7 +375,7 @@ public class MacroHandler {
 
 	public boolean readCalendarFile() {
 		eventCalendar.setCalendar_message_params(calendar_message_params) ;
-		return eventCalendar.readCalendarFile();
+		return eventCalendar.readCalendarFile(false);
 	}
 	
 	public boolean readMacroFile(boolean integrator)  {

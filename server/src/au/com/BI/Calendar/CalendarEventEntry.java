@@ -14,6 +14,7 @@ public class CalendarEventEntry {
 	protected String id = "";
 	protected String alarm = "";
 	protected String target = "";
+	protected boolean  active = true;
 	protected String target_user = "";
 	int eventType  = CalendarEventEntry.SINGLE_EVENT;
 
@@ -106,6 +107,14 @@ public class CalendarEventEntry {
 
 	public void setTarget_user(String target_user) {
 		this.target_user = target_user;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	
 }

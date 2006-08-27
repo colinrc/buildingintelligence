@@ -76,17 +76,19 @@ public class EventCalendar {
 		this.commandList = commandList;
 	}
     
-	public boolean parseCalendar (Element calendar) {
+	public boolean parseCalendar (Element calendar,boolean cleanup) {
 	
 		Iterator eachEvent = calendar.getChildren().iterator();
 		while (eachEvent.hasNext()) {
 		    Element nextEvent = (Element)eachEvent.next();
 		    try {
 		    	CalendarEventEntry calendarEventEntry = calendarEventFactory.createEvent(nextEvent);
-		    	if (calendarEventEntry.isStillActive()){
+		    	if (calendarEventEntry.isStillActive() && calendarEventEntry.isActive()){
 		    		addEvent (calendarEventEntry);
 		    	}
-		    	addEventXMLToStore (calendarEventEntry.getId(),nextEvent);
+		    	if (calendarEventEntry.isStillActive() && !cleanup){
+		    		addEventXMLToStore (calendarEventEntry.getId(),nextEvent);
+		    	}
 		    } catch (CalendarException ex){
 		    }	    	
 		}
@@ -153,7 +155,7 @@ public class EventCalendar {
 	}
 	
 	
-	public boolean readCalendarFile()  {
+	public boolean readCalendarFile(boolean deleteOldEvents)  {
 		SAXBuilder builder = null;
 		Element macrosElement;
 		
@@ -163,7 +165,7 @@ public class EventCalendar {
 		try {
 			doc = builder.build(fileName+".xml");
 			Element calendar = doc.getRootElement();
-			this.parseCalendar(calendar);
+			this.parseCalendar(calendar,deleteOldEvents);
 			sched.start();
 			
 		} catch (SchedulerException e) {

@@ -113,6 +113,12 @@ public class CalendarEventFactory {
 	String title = nextEvent.getAttributeValue("title");
 	if (title == null)  title = "";
 	
+	String active = nextEvent.getAttributeValue("active");
+	if (active != null && active.equals("N")) {
+		returnVal.setActive(false);
+		return returnVal;
+	}
+
 	String popup = nextEvent.getAttributeValue("popup");
 	if (popup == null)  popup = "";
 	
@@ -228,14 +234,14 @@ public class CalendarEventFactory {
 	    
 	    recur = (String)patternXML.getAttributeValue("recur");
 	    if (recur == null ) {
-		recurVal = 1L;
+	    	recurVal = 1L;
 	    } else {
-		try {
-		    recurVal = Integer.parseInt(recur);
-		} catch (NumberFormatException ex){
-		    recurVal = 1L;
-		    logger.log (Level.WARNING,"An invalid recurrance was sent with a calendar event " + recur);
-		}
+			try {
+			    recurVal = Integer.parseInt(recur);
+			} catch (NumberFormatException ex){
+			    recurVal = 1L;
+			    logger.log (Level.WARNING,"An invalid recurrance was sent with a calendar event " + recur);
+			}
 	    }
 
 	    

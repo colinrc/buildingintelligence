@@ -37,6 +37,7 @@ public class Bootstrap {
     protected int jettySSLPort = 443;
     private boolean jettyActive = false;
     protected boolean requestUserNames = true;
+    protected String  maintenanceTime = "";
     
     public Bootstrap() {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -77,6 +78,11 @@ public class Bootstrap {
                 RRDXMLDIRECTORY = dirElement.getAttributeValue("DIR");
             } else {
                 RRDXMLDIRECTORY = "." + File.separator + "JRobin" + File.separator + "RRDXMLDIRECTORY"+ File.separator;
+            }
+    
+            Element maintenanceElm = theConfig.getChild("MAINTENANCE");
+            if (maintenanceElm != null) {
+            	this.setMaintenanceTime(maintenanceElm.getAttributeValue("TIME")) ;
             }
             
             Element serverConfigs = theConfig.getChild("SERVER");
@@ -342,6 +348,14 @@ public class Bootstrap {
 
 	public void setJettySSLPort(int sslPort) {
 		this.jettySSLPort = sslPort;
+	}
+
+	public String getMaintenanceTime() {
+		return maintenanceTime;
+	}
+
+	public void setMaintenanceTime(String maintenanceTime) {
+		this.maintenanceTime = maintenanceTime;
 	}
     
     

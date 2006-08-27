@@ -71,7 +71,8 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	 */
 	public void doOutputItem(CommandInterface command) throws CommsFail {
 		ReturnWrapper returnWrapper = new ReturnWrapper();
-
+		cache.setCachedCommand(command.getKey(),command);
+		
 		try {
 			decodeOutputItem(command, returnWrapper);
 			addCheckSums(returnWrapper);
@@ -379,6 +380,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		}
 	}
 
+    
 	/**
 	 * Called by the configuration reader
 	 * user interaction on the item. At this stage only the flash client generates these
@@ -767,7 +769,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			try {
 				switch (device.getDeviceType()) {
 				case DeviceType.ANALOGUE:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for an analog device was issued from "
 									+ device.getName());
 					buildAnalogControlString((Analog) device, command,
@@ -775,7 +777,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					break;
 
 				case DeviceType.AUDIO:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for an Audio device was issued from "
 									+ device.getName());
 					buildAudioControlString((Audio) device, command,
@@ -783,14 +785,14 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					break;
 
 				case DeviceType.AV:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for an AV device was issued from "
 									+ device.getName());
 					buildAVControlString((AV) device, command, returnWrapper);
 					break;
 
 				case DeviceType.LIGHT:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for a Lighting device was issued from "
 									+ device.getName() + " for the model "
 									+ this.getName());
@@ -799,7 +801,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					break;
 
 				case DeviceType.SENSOR:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for a Sensor device was issued from "
 									+ device.getName());
 					buildSensorControlString((Sensor) device, command,
@@ -807,7 +809,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					break;
 
 				case DeviceType.ALARM:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for an Alarm  was issued from "
 									+ device.getName());
 					buildAlarmControlString((Alarm) device, command,
@@ -815,7 +817,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					break;
 
 				case DeviceType.ALERT:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for an Alert device was issued from "
 									+ device.getName());
 					buildAlertControlString((Alert) device, command,
@@ -823,7 +825,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					break;
 
 				case DeviceType.PULSE_OUTPUT:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for a Pulse Output  was issued from "
 									+ device.getName());
 					buildPulseOutputControlString((PulseOutput) device,
@@ -831,7 +833,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					break;
 
 				case DeviceType.CAMERA:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for a Camera device was issued from "
 									+ device.getName() + " for the model "
 									+ this.getName());
@@ -840,7 +842,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					break;
 
 				case DeviceType.TOGGLE_OUTPUT:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for an Output Toggle device was issued from "
 									+ device.getName() + " for the model "
 									+ this.getName());
@@ -849,15 +851,23 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					break;
 
 				case DeviceType.SMS:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for an SMS device was issued from "
 									+ device.getName() + " for the model "
 									+ this.getName());
 					buildSMSControlString((SMS) device, command, returnWrapper);
 					break;
 
+				case DeviceType.RAW_INTERFACE:
+					logger.log(Level.FINE,
+							"A command for an Custom device was issued from "
+									+ device.getName() + " for the model "
+									+ this.getName());
+					buildRAWControlString(device, command, returnWrapper);
+					break;
+					
 				case DeviceType.CUSTOM_CONNECT:
-					logger.log(Level.INFO,
+					logger.log(Level.FINE,
 							"A command for an Custom device was issued from "
 									+ device.getName() + " for the model "
 									+ this.getName());
@@ -898,9 +908,35 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
 	}
 
-	public Object processStringFromComms(String command,
+	/**
+	 * @deprecated
+	 * @param command
+	 * @throws CommsFail
+	 */
+	public void doInputItem(CommandInterface command) throws CommsFail {
+		ReturnWrapper returnWrapper = new ReturnWrapper();
+
+		try {
+			this.doCustomConnectInputIfPresent((CommsCommand)command,returnWrapper);
+			if (!returnWrapper.isPopulated()){
+				processStringFromComms(command.getCommandCode(), returnWrapper);
+			}
+			addCheckSums(returnWrapper);
+			sendWrapperItems(returnWrapper);
+
+		} catch (CommsProcessException ex) {
+			logger.log(Level.WARNING, "An error occured in " + this.getName()
+					+ " support " + ex.getMessage());
+		} catch (ClassCastException ex) {
+			logger.log(Level.WARNING, "An class cast error occured in " + this.getName()
+					+ " support " + ex.getMessage());
+		}
+
+	}
+	
+	public void  processStringFromComms(String command,
 			ReturnWrapper returnWrapper) throws CommsProcessException {
-		return null;
+
 	}
 
 	public void addCheckSums(ReturnWrapper returnWrapper) {
@@ -1047,9 +1083,9 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			        
 			    	Matcher matcherResults;
 			    	if (command.hasByteArray()){
-			    		matcherResults = customInputDetails.getMatcher(command.getCommandCode().toString());			    		
+			    		matcherResults = customInputDetails.getMatcher(command.getKey().toString());			    		
 			    	} else {
-			    		matcherResults = customInputDetails.getMatcher(command.getCommandCode());
+			    		matcherResults = customInputDetails.getMatcher(command.getKey());
 			    	}
 		            if (matcherResults.matches()) {
 						configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
@@ -1256,6 +1292,10 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			ReturnWrapper returnWrapper) throws ModelException {
 	}
 
+	public void buildRAWControlString(DeviceType device, CommandInterface command,
+			ReturnWrapper returnWrapper) throws ModelException {
+	}
+	
 	public void buildCustomConnectControlString(CustomConnect device,
 			CommandInterface command, ReturnWrapper returnWrapper)
 			throws ModelException {

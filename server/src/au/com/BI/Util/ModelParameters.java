@@ -158,14 +158,6 @@ public class ModelParameters  {
         }
 
 
-        public void doOutputItem(CommandInterface command) throws CommsFail {
-        }
-
-        public void doControlledItem(CommandInterface command) throws CommsFail {
-        }
-
-        public void doInputItem(CommandInterface command) throws CommsFail {
-        }
 
   
 

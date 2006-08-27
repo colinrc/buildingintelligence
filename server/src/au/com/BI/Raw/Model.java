@@ -100,99 +100,72 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				return true;
 		}
 		else {
-			if (!isClientCommand)
+			if (!isClientCommand){
+				configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
 				return true;
+			}
 			else 
 				return false;
 		} 
 	}
 
 
+	public void processStringFromComms(String command,
+			ReturnWrapper returnWrapper) throws CommsProcessException {
+		
+		for (DeviceType inputListItem: configHelper.getAllControlledDeviceObjects()) {
+			String theWholeKey = command.trim();
+		    String inputListKey = "";
+	    	matched = false;
+	    	if (inputListItem.getDeviceType() != DeviceType.CUSTOM_INPUT) continue;
 
-	public void doCommand (CommandInterface command) throws CommsFail
-	{
-		String theWholeKey = command.getKey().trim();
+	        CustomInput customInput = (CustomInput)inputListItem;
+	        if (customInput.isHasPattern()){
+	        		matcherResults = customInput.getMatcher(theWholeKey);
+		            if (matcherResults.matches()) {
+						deviceThatMatched = customInput;
+						configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
+						doInputItem (command, deviceThatMatched, parameter);
+		            }
+		        }
 
-		if ( configHelper.getLastCommandType() == MessageDirection.FROM_FLASH) {
-			doOutputItem (command);
-		} else {
-			if ( configHelper.getLastCommandType() == MessageDirection.FROM_HARDWARE) {
+		    if (!matched) {
 
-				for (DeviceType inputListItem: configHelper.getAllControlledDeviceObjects()) {
+		        inputListKey = inputListItem.getKey();
 
-				    String inputListKey = "";
-				    	matched = false;
-				    	if (inputListItem.getDeviceType() != DeviceType.CUSTOM_INPUT) continue;
+				if (inputListKey.equals("*")) {
+					deviceThatMatched = (CustomInput)configHelper.getControlledItem(inputListKey);
+					configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
+					parameter = theWholeKey;
+					doInputItem (command, deviceThatMatched, parameter);
+				}
+				else {
+					if (theWholeKey.startsWith(inputListKey)) {
+						deviceThatMatched = (CustomInput)configHelper.getControlledItem(inputListKey);
+						configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
+						parameter = theWholeKey.substring (inputListKey.length());
+						doInputItem (command, deviceThatMatched, parameter);
 
-			        CustomInput customInput = (CustomInput)inputListItem;
-			        if (customInput.isHasPattern()){
-			        		matcherResults = customInput.getMatcher(theWholeKey);
-				            if (matcherResults.matches()) {
-								deviceThatMatched = customInput;
-								configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
-								doInputItem (command, deviceThatMatched, parameter);
-				            }
-				        }
-
-				    if (!matched) {
-
-				        inputListKey = inputListItem.getKey();
-
-						if (inputListKey.equals("*")) {
-							deviceThatMatched = (CustomInput)configHelper.getControlledItem(inputListKey);
-							configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
-							parameter = theWholeKey;
-							doInputItem (command, deviceThatMatched, parameter);
-						}
-						else {
-							if (theWholeKey.startsWith(inputListKey)) {
-								deviceThatMatched = (CustomInput)configHelper.getControlledItem(inputListKey);
-								configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);
-								parameter = theWholeKey.substring (inputListKey.length());
-								doInputItem (command, deviceThatMatched, parameter);
-
-							}
-						}
 					}
 				}
-
 			}
 		}
 	}
 
-	public void doOutputItem (CommandInterface command) throws CommsFail {
-		String theWholeKey = command.getKey();
-		DeviceType device = configHelper.getOutputItem(theWholeKey);
 
-		if (device == null) {
-			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
-		}
-		else {
 
-			String outputRawCommand = "";
-			cache.setCachedCommand(command.getKey(),command);
+	public void buildRAWControlString(DeviceType device, CommandInterface command,
+			ReturnWrapper returnWrapper) throws ModelException {
 
-			logger.log(Level.FINER, "Received flash event for RAW from " + theWholeKey);
-
-			switch (device.getDeviceType()) {
-				case DeviceType.RAW_INTERFACE :
-					if ((outputRawCommand = buildDirectConnectString (device,command)) != null)
-						sendToSerial (STX+outputRawCommand+ETX);
-					break;
-
-				case DeviceType.CUSTOM_CONNECT :
-					if ((outputRawCommand = buildDirectConnectString (device,command)) != null)
-						sendToSerial (outputRawCommand);
-					break;
-			}
-
-		}
+		String outputRawCommand = "";
+		if ((outputRawCommand = buildDirectConnectString (device,command)) != null)
+			returnWrapper.addCommOutput(STX+outputRawCommand+ETX);
 	}
-
-	public void doInputItem (CommandInterface command, CustomInput inputFascade, String parameter) throws CommsFail
+	
+	public void doInputItem (String command, CustomInput inputFascade, String parameter) throws CommsFail
 	{
 		boolean isPattern = inputFascade.isHasPattern();
-		logger.log(Level.FINEST, "Received custom command " + command.getKey());
+		logger.log(Level.FINEST, "Received custom command " + command);
 		ClientCommand inputCommand = new ClientCommand ();
 		String key = inputFascade.getOutputKey();
 		String commandStr = inputFascade.getCommand();

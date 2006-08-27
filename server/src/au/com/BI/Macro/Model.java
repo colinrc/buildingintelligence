@@ -254,7 +254,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			Element original_message = command.getMessageFromFlash();
 			if (original_message == null) return;
 			Element calendar = original_message.getChild("events");
-			successfullyParsed = eventCalendar.parseCalendar (calendar);
+			successfullyParsed = eventCalendar.parseCalendar (calendar,false);
 			if (successfullyParsed) {
 				eventCalendar.saveCalendarFile();
 				logger.log (Level.FINE, "Activating new events calendar");

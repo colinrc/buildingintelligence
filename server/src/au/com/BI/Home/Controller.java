@@ -11,6 +11,7 @@ import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Macro.*;
+import au.com.BI.Maintainance.DailyTaskFactory;
 import au.com.BI.Messaging.*;
 
 import java.util.logging.*;
@@ -71,7 +72,9 @@ public class Controller {
     protected AddressBook addressBook = null;
     protected JettyHandler jettyHandler = null;
     protected VersionManager versionManager = null;
-
+    
+    protected DailyTaskFactory dailyTasks = null;
+    
 	// All known object representations of devices active in the system
 	/**
 	 * Creates a new controller class. A logger called au.com.BI.House should be
@@ -167,8 +170,7 @@ public class Controller {
 		this.setupModel(macroModel);
 		deviceModels.add( macroModel);
 		macroModel.setInstanceID(deviceModels.size()-1);
-                
-    
+ 
         jettyHandler = new JettyHandler (security);
         this.setupModel(jettyHandler);
 		deviceModels.add( jettyHandler);
@@ -179,6 +181,11 @@ public class Controller {
 		deviceModels.add( groovyModelHandler);
 		groovyModelHandler.setInstanceID(deviceModels.size()-1);
         
+		dailyTasks = new DailyTaskFactory();
+		dailyTasks.setSched(macroModel.getEventCalendar().getSched());
+		dailyTasks.setStartTime (bootstrap.getMaintenanceTime());
+		dailyTasks.setMacroModel(macroModel);
+		
         
         try {
             jettyHandler.start();
