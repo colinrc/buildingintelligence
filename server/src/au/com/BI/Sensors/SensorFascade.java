@@ -271,4 +271,12 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	public String getGroup() {
 		return sensor.getGroup();
 	}
+	
+	public String getTemperature() {
+		return sensor.getTemperature();
+	}
+	
+	public void setTemperature(String temperature) {
+		sensor.setTemperature(temperature);
+	}
 }

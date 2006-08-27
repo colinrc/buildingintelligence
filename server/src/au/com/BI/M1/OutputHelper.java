@@ -2,6 +2,7 @@ package au.com.BI.M1;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommDevice;
@@ -9,13 +10,12 @@ import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.M1.Commands.AlarmByZoneRequest;
-import au.com.BI.M1.Commands.ArmToAway;
-import au.com.BI.M1.Commands.ArmToNight;
-import au.com.BI.M1.Commands.ArmToNightInstant;
-import au.com.BI.M1.Commands.ArmToStayHome;
-import au.com.BI.M1.Commands.ArmToStayInstant;
 import au.com.BI.M1.Commands.ArmStepToNextAwayMode;
 import au.com.BI.M1.Commands.ArmStepToNextStayMode;
+import au.com.BI.M1.Commands.ArmToAway;
+import au.com.BI.M1.Commands.ArmToNight;
+import au.com.BI.M1.Commands.ArmToStayHome;
+import au.com.BI.M1.Commands.ArmToStayInstant;
 import au.com.BI.M1.Commands.ArmToVacation;
 import au.com.BI.M1.Commands.ArmingStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputOff;

@@ -20,6 +20,7 @@ public class Sensor extends BaseDevice
 	protected String applicationCode = "38";
 	protected String units = "";
 	protected String relay = "N";
+	protected String temperature;
 	
 	public Sensor (String name, String channel, String units, int deviceType){
 		this.name = name;
@@ -118,7 +119,13 @@ public class Sensor extends BaseDevice
 	public void setGroup(String group) {
 		this.group = group;
 	}
-	
-	
+
+	public String getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(String temperature) {
+		this.temperature = temperature;
+	}
 	
 }

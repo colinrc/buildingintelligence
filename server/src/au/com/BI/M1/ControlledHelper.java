@@ -65,6 +65,8 @@ public class ControlledHelper {
 	public void doControlledItem(CommandInterface command,
 			ConfigHelper configHelper, Cache cache, CommandQueue commandQueue,
 			Model m1) throws CommsFail {
+		
+		boolean sendCommandToFlash = true;
 
 		// Check to see if it is a comms command
 		if (command.isCommsCommand()) {
@@ -76,7 +78,7 @@ public class ControlledHelper {
 			if (m1Command == null)
 				return;
 
-			cache.setCachedCommand(m1Command.getDisplayName(), m1Command);
+//			cache.setCachedCommand(m1Command.getDisplayName(), m1Command);
 
 			// Check the command class
 			if (m1Command.getClass().equals(ZoneChangeUpdate.class)) {
@@ -203,13 +205,10 @@ public class ControlledHelper {
 						.getDescription());
 				_command.setKey("CLIENT_SEND");
 				_command.setCommand("on");
-
-				CommandInterface existingSensor = (CommandInterface) cache
-						.getCachedObject(_command.getKey());
-				if (existingSensor != null
-						&& !existingSensor.getExtraInfo().equals(
-								_command.getExtraInfo())) {
-
+				
+				// we need to store the current state of the temperature - it is not getting cached properly
+				
+				if (sensor.getTemperature() == null || !sensor.getTemperature().equals(_command.getExtraInfo())) {
 					cache.setCachedCommand(_command.getKey(), _command);
 
 					logger.log(Level.INFO,
@@ -218,8 +217,11 @@ public class ControlledHelper {
 											.toString() + ":device:"
 									+ requestTemperatureReply.getDevice() + ":"
 									+ adjustedTemperature);
+					sensor.setTemperature(_command.getExtraInfo());
+					
 					sendToFlash(commandQueue, -1, _command);
 				} else {
+					sendCommandToFlash = false;
 					logger.log(Level.INFO,
 							"Did not send temperature to flash for group:"
 									+ requestTemperatureReply.getGroup()
@@ -357,7 +359,10 @@ public class ControlledHelper {
 				}
 			}
 
-			sendToFlash(commandQueue, -1, m1Command);
+			if (sendCommandToFlash) {
+				cache.setCachedCommand(m1Command.getDisplayName(), m1Command);
+				sendToFlash(commandQueue, -1, m1Command);
+			}
 		}
 	}
 
