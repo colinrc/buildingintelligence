@@ -182,9 +182,9 @@ public class Controller {
 		groovyModelHandler.setInstanceID(deviceModels.size()-1);
         
 		dailyTasks = new DailyTaskFactory();
-		dailyTasks.setSched(macroModel.getEventCalendar().getSched());
 		dailyTasks.setStartTime (bootstrap.getMaintenanceTime());
-		dailyTasks.setMacroModel(macroModel);
+		dailyTasks.setMacroHandler(macroHandler);
+		dailyTasks.start();
 		
         
         try {

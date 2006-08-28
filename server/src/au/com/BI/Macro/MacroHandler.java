@@ -378,6 +378,16 @@ public class MacroHandler {
 		return eventCalendar.readCalendarFile(false);
 	}
 	
+	public boolean cleanCalendarFile() {
+		eventCalendar.setCalendar_message_params(calendar_message_params) ;
+		if ( eventCalendar.readCalendarFile(true)) {
+			eventCalendar.saveCalendarFile();
+			return true;
+		}
+		return false;
+		
+	}
+	
 	public boolean readMacroFile(boolean integrator)  {
             String localFileName = "";
             this.clearAll(integrator);

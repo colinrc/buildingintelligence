@@ -54,6 +54,7 @@ public class CalendarEventFactory {
     public CalendarEventEntry createEvent(Element nextEvent) throws CalendarException {
 	boolean success = true;
 	CalendarEventEntry returnVal = new CalendarEventEntry();
+	boolean eventTypeOnce = false;
 	
 	String id = nextEvent.getAttributeValue("id");
 	if (id == null || id.equals("")) {
@@ -61,12 +62,13 @@ public class CalendarEventFactory {
 	}
 	returnVal.setId(id);
 	String eventType = nextEvent.getAttributeValue("eventType");
-	if (eventType == null || eventType.equals("")) {
+	if (eventType == null || eventType.equals("") || eventType.equals ("once")) {
 	    eventType = "once";
-	}
+	    eventTypeOnce = true;
+	} 
 	
 	String startDate = "";
-	if (eventType.equals("once")) {
+	if (eventTypeOnce ) {
 	    startDate = nextEvent.getAttributeValue("date");
 	} else {
 	    startDate = nextEvent.getAttributeValue("startDate");
@@ -112,12 +114,6 @@ public class CalendarEventFactory {
 	
 	String title = nextEvent.getAttributeValue("title");
 	if (title == null)  title = "";
-	
-	String active = nextEvent.getAttributeValue("active");
-	if (active != null && active.equals("N")) {
-		returnVal.setActive(false);
-		return returnVal;
-	}
 
 	String popup = nextEvent.getAttributeValue("popup");
 	if (popup == null)  popup = "";
@@ -162,9 +158,14 @@ public class CalendarEventFactory {
 		logger.log(Level.WARNING,errorMessage);
 		throw new CalendarException(errorMessage,ex);	        }
 	}
-	if (endDateDecoded.before( new Date())) {
+	if (endDateDecoded.before( new Date()) || (eventTypeOnce && startDateDecoded.before(new Date()))) {
 	    returnVal.setStillActive(false);
 	    return returnVal;
+	}
+	String active = nextEvent.getAttributeValue("active");
+	if (active != null && active.equals("N")) {
+		returnVal.setActive(false);
+		return returnVal;
 	}
 	
 	JobDetail jobDetail = new JobDetail(id,
@@ -338,7 +339,7 @@ public class CalendarEventFactory {
 		}
 	}
 	
-	if (eventType.equals("once")){
+	if (eventTypeOnce){
 	    if (success) {
 		SimpleTrigger trigger = new SimpleTrigger("ID:"+id,
 			Scheduler.DEFAULT_GROUP,
