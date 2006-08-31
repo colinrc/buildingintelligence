@@ -14,6 +14,17 @@ crypto.onDecode = function (decoded) {
 	receiveCmd(new XML(decoded).firstChild, true);
 }
 
+mdm.COMPort.open(1, 19200, 8, "N", 1, "OFF");
+mdm.COMPort.useLineMode(true, chr(13));
+mdm.COMPort.onCOMPortData = function (dataObj){
+	var data = dataObj.data.substr(0, dataObj.data.length - 1);
+	var command = data.split(" ")[0];
+	var extra = data.split(" ")[1];
+	if (extra == "+") extra = "on";
+	if (extra == "-") extra = "off";
+	if (command == "W0")  return;
+	receiveCmd(new XML('<CONTROL KEY="COM_PORT" COMMAND="' + command + '" EXTRA="' + extra + '" />'));
+}
 
 serverSetup = function () {
 	if (_global.settings.serverAddress.length) {
@@ -231,36 +242,41 @@ sendXml = function (xmlMsg) {
 }
 	
 sendCmd = function (key, command, extra, extras) {
-	var xmlMsg = '<CONTROL KEY="' + key + '"';
-	if (command != undefined) xmlMsg += ' COMMAND="' + command + '"';
-	if (extra != undefined) xmlMsg += ' EXTRA="' + extra + '"';
-	if (extras != undefined) {
-		for (var i=0; i<extras.length; i++) {
-			xmlMsg += ' EXTRA' + (i + 2) + '="' + extras[i] + '"';
+	if (key != "COM_PORT") {
+		var xmlMsg = '<CONTROL KEY="' + key + '"';
+		if (command != undefined) xmlMsg += ' COMMAND="' + command + '"';
+		if (extra != undefined) xmlMsg += ' EXTRA="' + extra + '"';
+		if (extras != undefined) {
+			for (var i=0; i<extras.length; i++) {
+				xmlMsg += ' EXTRA' + (i + 2) + '="' + extras[i] + '"';
+			}
 		}
-	}
-	xmlMsg += " />"
-	
-	serverSend(xmlMsg);
-
-	if (recordingMacro) {
-		if (newMacroArray[newMacroArray.length - 1].key == key && newMacroArray[newMacroArray.length - 1].command == command) {
-			// if previous macro in list was the same key and command as we are about to store, discard it
-			newMacroArray.pop();
-		} else if (newMacroArray.length) {
-			// pad macros in list with "pause" commands
-			newMacroArray.push({key:"", command:"pause", extra:"0", extra2:"", extra3:"", extra4:"", extra5:""})
-		}
-		var macroObj = new Object();
-		macroObj.key = key;
-		macroObj.command = command;
-		macroObj.extra = (extra != undefined) ? extra : ""; 
-		macroObj.extra2 = (extra2 != undefined) ? extra2 : "";
-		macroObj.extra3 = (extra3 != undefined) ? extra3 : "";
-		macroObj.extra4 = (extra4 != undefined) ? extra4 : "";
-		macroObj.extra5 = (extra5 != undefined) ? extra5 : "";
+		xmlMsg += " />"
 		
-		newMacroArray.push(macroObj);
+		serverSend(xmlMsg);
+	
+		if (recordingMacro) {
+			if (newMacroArray[newMacroArray.length - 1].key == key && newMacroArray[newMacroArray.length - 1].command == command) {
+				// if previous macro in list was the same key and command as we are about to store, discard it
+				newMacroArray.pop();
+			} else if (newMacroArray.length) {
+				// pad macros in list with "pause" commands
+				newMacroArray.push({key:"", command:"pause", extra:"0", extra2:"", extra3:"", extra4:"", extra5:""})
+			}
+			var macroObj = new Object();
+			macroObj.key = key;
+			macroObj.command = command;
+			macroObj.extra = (extra != undefined) ? extra : ""; 
+			macroObj.extra2 = (extra2 != undefined) ? extra2 : "";
+			macroObj.extra3 = (extra3 != undefined) ? extra3 : "";
+			macroObj.extra4 = (extra4 != undefined) ? extra4 : "";
+			macroObj.extra5 = (extra5 != undefined) ? extra5 : "";
+			
+			newMacroArray.push(macroObj);
+		}
+	} else {
+		debug_mc.outgoing_txt.text = "COMPORT: " + command + " " + extra + "\n" + debug_mc.outgoing_txt.text;
+		mdm.COMPort.send(command + " " + extra + "\n");
 	}
 }
 

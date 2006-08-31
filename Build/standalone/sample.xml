@@ -158,7 +158,7 @@
 						<alert name="Lights" keys="ENTRY_LIGHT" icon="light-bulb" />
 					</alerts>
 					<doors>
-						<door name="Front Door" thickness="5" pos="185,297,246,297" key="FRONT_DOOR" colour1="0xDB0000" colour2="0x3383D5" />
+						<door name="Front Door" thickness="5" pos="185,297,246,297" key="FRONT_GATE" colour1="0xDB0000" colour2="0x3383D5" />
 					</doors>
 				</room>
 				<room name="Living Room" poly="165,201,377,201,377,168,339,168,339,9,136,9,136,29,129,165" switchZone="Living Room">
@@ -244,6 +244,9 @@
 					<window>
 						<tab name="Lights" icon="light-bulb">
 							<control name="Garage Light" key="GARAGE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Test COM Port" icon="atom">
+							<control name="Test" key="COM_PORT" type="testComPort" />
 						</tab>
 					</window>
 					<alerts x="360" y="420">
@@ -518,6 +521,25 @@
 			<row>
 				<item type="button" label="Up" command="url.http://172.16.3.150/control.cgi?cont_2=4&ok=dummy.htm" repeatRate="500" />
 				<item type="button" label="Down" command="url.http://172.16.3.150/control.cgi?cont_2=8&ok=dummy.htm" repeatRate="500" />
+			</row>
+		</control>
+		<control type="testComPort">
+			<row>
+				<item type="toggle" labels="K1:off,K1:on" command="K1" extras="on,off" />
+				<item type="toggle" labels="K2:off,K2:on" command="K2" extras="on,off" />
+				<item type="toggle" labels="K3:off,K3:on" command="K3" extras="on,off" />
+				<item type="toggle" labels="K4:off,K4:on" command="K4" extras="on,off" />
+				<item type="toggle" labels="K5:off,K5:on" command="K5" extras="on,off" />
+
+
+			</row>
+			<row>
+				<item type="toggle" labels="L1:off,L1:on" command="L1" extras="Y,O" />
+				<item type="toggle" labels="L2:off,L2:on" command="L2" extras="Y,O" />
+				<item type="toggle" labels="L3:off,L3:on" command="L3" extras="Y,O" />
+				<item type="toggle" labels="L4:off,L4:on" command="L4" extras="Y,O" />
+				<item type="toggle" labels="L5:off,L5:on" command="L5" extras="Y,O" />
+				<item type="toggle" labels="L6:off,L6:on" command="L6" extras="Y,O" />
 			</row>
 		</control>
 	</controlTypes>
