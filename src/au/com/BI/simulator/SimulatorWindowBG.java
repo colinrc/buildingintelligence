@@ -9,11 +9,10 @@ import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Image;
 
-import au.com.BI.Connection.ServerHandler;
-import au.com.BI.DataModel.eLifeActiveLoader;
+import au.com.BI.DataModel.ElifeActiveClientModel;
 import au.com.BI.GUI.MainWindowBG;
 import au.com.BI.Serial.SerialHandler;
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -22,8 +21,7 @@ import au.com.BI.Util.ImageLoader;
  */
 public class SimulatorWindowBG extends Container {
 	private MainWindowBG bg;
-	private ServerHandler serverHandle;
-	private ImageLoader imageLoader;
+	private ImageHandler imageLoader;
 	private Image offScreenImage;
 	private SimulatorButton b1;
 	private SimulatorButton b2;
@@ -32,7 +30,7 @@ public class SimulatorWindowBG extends Container {
 	private SimulatorEncoder rotoryEncoder;
 	private SimulatorEMan eMan;
 	private SimulatorControls controls;
-	private eLifeActiveLoader client;
+	private ElifeActiveClientModel client;
 	private SerialHandler serialHandle;
 	protected int bufferWidth;
 	protected int bufferHeight;
@@ -83,14 +81,12 @@ public class SimulatorWindowBG extends Container {
 	 * 
 	 */
 	public SimulatorWindowBG(
-		ServerHandler inServerHandler,
-		ImageLoader imageLoader,
+	ImageHandler imageLoader,
 		SimulatorControls controls,
-		eLifeActiveLoader client,
+		ElifeActiveClientModel client,
 		SerialHandler serialHandle) {
 		this.imageLoader = imageLoader;
 		this.controls = controls;
-		serverHandle = inServerHandler;
 		this.client = client;
 		this.serialHandle = serialHandle;
 		b1 = new SimulatorButton(imageLoader, "b1", controls);
@@ -113,7 +109,7 @@ public class SimulatorWindowBG extends Container {
 		this.add(rotoryEncoder);
 	}
 	public void init() {
-		bg = new MainWindowBG(imageLoader, serverHandle, client, serialHandle);
+		bg = new MainWindowBG(imageLoader, client, serialHandle);
 		bg.setBounds(180, 59, 240, 320);
 		this.add(bg);
 	}

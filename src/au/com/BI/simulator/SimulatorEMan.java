@@ -9,7 +9,7 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
 
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -18,7 +18,7 @@ import au.com.BI.Util.ImageLoader;
  */
 public class SimulatorEMan extends Component {
 	private Image offScreenImage;
-	private ImageLoader imageLoader;
+	private ImageHandler imageLoader;
 	private int width;
 	private int height;
 	private int x;
@@ -66,7 +66,7 @@ public class SimulatorEMan extends Component {
 	/**
 	 * 
 	 */
-	public SimulatorEMan(ImageLoader inImageLoader, SimulatorControls controls) {
+	public SimulatorEMan(ImageHandler inImageLoader, SimulatorControls controls) {
 		super();
 		this.controls = controls;
 		this.imageLoader = inImageLoader;

@@ -5,15 +5,13 @@
  * Copyright Building Intelligence 2006
  */
 package au.com.BI.simulator;
-import java.util.HashMap;
 import java.util.Vector;
-
 import au.com.BI.Connection.ServerHandler;
-import au.com.BI.DataModel.eLifeActiveLoader;
+import au.com.BI.DataModel.ElifeActiveClientModel;
 import au.com.BI.Objects.Key;
 import au.com.BI.Serial.SerialHandler;
-import au.com.BI.Util.ImageLoader;
-import au.com.BI.XML.SettingsLoader;
+import au.com.BI.Util.ImageHandler;
+import au.com.BI.XML.ClientSettings;
 /**
  * @author David
  *
@@ -21,11 +19,8 @@ import au.com.BI.XML.SettingsLoader;
  * 
  */
 public class SimulatorLoader {
-	public static ServerHandler serverHandler = null;
 	public static SimulatorWindow myMain;
-	public static SettingsLoader setLoad = null;
-	public static eLifeActiveLoader client = null;
-	public static ImageLoader imageLoader = null;
+	public static ImageHandler imageLoader = null;
 	public static SerialHandler serialHandle = null;
 	/**
 	 * 
@@ -35,20 +30,44 @@ public class SimulatorLoader {
 		// TODO Auto-generated constructor stub
 	}
 	public static void main(String[] args) {
-		setLoad = new SettingsLoader();
-		HashMap eLifeSettings = new HashMap();
-		eLifeSettings = setLoad.loadSettings(eLifeSettings);
-		if (eLifeSettings.get("serverAddress") == null) {
-			System.err.println("elife.xml must contain attribute 'serverAddress'");
-			System.err.println("Exiting");
-			System.exit(1);
+		ClientSettings.getInstance().loadSettings();
+		Vector requiredAttributes = new Vector();
+		requiredAttributes.add("serverAddress");
+		requiredAttributes.add("applicationXML");
+		for (int index = 0; index < requiredAttributes.size(); index++) {
+			if (ClientSettings
+				.getInstance()
+				.getSettings()
+				.get((String) requiredAttributes.get(index))
+				== null) {
+				System.err.println(
+					"elife.xml must contain attribute '"
+						+ (String) requiredAttributes.get(index)
+						+ "'");
+				System.err.println("Exiting");
+				System.exit(1);
+			}
 		}
-		if (eLifeSettings.get("applicationXML") == null) {
-			System.err.println("elife.xml must contain attribute 'applicationXML'");
-			System.err.println("Exiting");
-			System.exit(1);
+		ElifeActiveClientModel.getInstance().loadClient(ClientSettings.getInstance().getSettings());
+		Vector tempKeys = new Vector();
+		for (int index = 0;
+			index < ElifeActiveClientModel.getInstance().getKeys().size();
+			index++) {
+			tempKeys.add(
+				new Key(((String) ElifeActiveClientModel.getInstance().getKeys().get(index))));
 		}
-		client = new eLifeActiveLoader(eLifeSettings);
+		Vector keys = new Vector();
+		Vector keyStrings = new Vector();
+		Vector tempClientKeys = ElifeActiveClientModel.getInstance().getKeys();
+		for (int index = 0; index < tempClientKeys.size(); index++) {
+			if (!keyStrings.contains(tempClientKeys.get(index))) {
+				keyStrings.add(tempClientKeys.get(index));
+			}
+		}
+		for (int index = 0; index < keyStrings.size(); index++) {
+			keys.add(new Key((String) keyStrings.get(index)));
+		}
+		ServerHandler.getInstance().setKeys(keys);
 		Vector tempImages = new Vector();
 		/*Core components*/
 		tempImages.add("images/base/button-base_01");
@@ -95,14 +114,8 @@ public class SimulatorLoader {
 		tempImages.add("images/elife_active/wheel-clicker-on-yellow");
 		tempImages.add("images/elife_active/wheel-on");
 		tempImages.add("images/elife_active/wheel-off");
-		Vector tempKeys = new Vector();
-		for(int index=0;index<client.getKeys().size();index++){
-			tempKeys.add(new Key(((String)client.getKeys().get(index))));
-		}
-		serverHandler = new ServerHandler(eLifeSettings, tempKeys);
-		serialHandle = new SerialHandler(serverHandler);
-		myMain = new SimulatorWindow(serverHandler, tempImages, client,serialHandle);
-		serverHandler.connect();
+		serialHandle = new SerialHandler(ServerHandler.getInstance());
+		myMain = new SimulatorWindow(tempImages,serialHandle);
 		myMain.setVisible(true);
 	}
 }

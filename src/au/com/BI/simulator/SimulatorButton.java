@@ -11,7 +11,7 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -36,7 +36,7 @@ public class SimulatorButton extends Component {
 	private String button4Halo1 = "images/elife_active/ok-on";
 	private String button4Halo2 = "images/elife_active/ok-on-yellow";
 	private String button4HaloOff = "images/elife_active/ok-off";
-	private ImageLoader imageLoader;
+	private ImageHandler imageLoader;
 	private int width;
 	private int height;
 	private int x;
@@ -121,7 +121,7 @@ public class SimulatorButton extends Component {
 	public void repaint() {
 		paint(this.getGraphics());
 	}
-	public SimulatorButton(ImageLoader inImageLoader, String command, SimulatorControls controls) {
+	public SimulatorButton(ImageHandler inImageLoader, String command, SimulatorControls controls) {
 		super();
 		this.controls = controls;
 		this.command = command;

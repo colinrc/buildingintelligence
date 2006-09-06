@@ -3,10 +3,9 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.util.Vector;
 
-import au.com.BI.Connection.ServerHandler;
-import au.com.BI.DataModel.eLifeActiveLoader;
+import au.com.BI.DataModel.ElifeActiveClientModel;
 import au.com.BI.Serial.SerialHandler;
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /*
  * Created on 22/05/2006
  *
@@ -21,26 +20,24 @@ import au.com.BI.Util.ImageLoader;
  */
 public class SimulatorWindow extends Frame {
 	public SimulatorWindowBG bg;
-	private ImageLoader imageLoader;
-	private ServerHandler serverHandle;
+	private ImageHandler imageLoader;
 	private SimulatorControls controlWindow;
 	private SimulatorPrintStream print;
-	private eLifeActiveLoader client;
+	private ElifeActiveClientModel client;
 	private SerialHandler serialHandle;
 	/**
 	 * 
 	 **/
-	public SimulatorWindow(ServerHandler inServerHandler, Vector inImages, eLifeActiveLoader client,SerialHandler serialHandle) {
-		serverHandle = inServerHandler;
+	public SimulatorWindow(Vector inImages, SerialHandler serialHandle) {
 		this.serialHandle = serialHandle;
-		imageLoader = new ImageLoader(this);
+		imageLoader = new ImageHandler(this);
+		this.client = ElifeActiveClientModel.getInstance();
 		inImages.addAll(client.getIcons());
 		imageLoader.loadImages(inImages);
-		controlWindow = new SimulatorControls(this);
-		this.client = client;
+		controlWindow = new SimulatorControls(this);		
 		controlWindow.setSerialHandler(serialHandle);
 		serialHandle.setSerialCommsObject(controlWindow);
-		bg = new SimulatorWindowBG(inServerHandler, imageLoader,controlWindow,client,serialHandle);
+		bg = new SimulatorWindowBG(imageLoader,controlWindow,client,serialHandle);
 		bg.init();
 		Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 		print = new SimulatorPrintStream(System.out,controlWindow);

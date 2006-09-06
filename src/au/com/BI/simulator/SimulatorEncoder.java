@@ -11,8 +11,7 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -21,7 +20,7 @@ import au.com.BI.Util.ImageLoader;
  */
 public class SimulatorEncoder extends Component {
 	private Image offScreenImage;
-	private ImageLoader imageLoader;
+	private ImageHandler imageLoader;
 	private int width;
 	private int height;
 	private int x;
@@ -75,7 +74,7 @@ public class SimulatorEncoder extends Component {
 	/**
 	 * 
 	 */
-	public SimulatorEncoder(ImageLoader inImageLoader, SimulatorControls controls) {
+	public SimulatorEncoder(ImageHandler inImageLoader, SimulatorControls controls) {
 		super();
 		this.controls = controls;
 		this.imageLoader = inImageLoader;
@@ -139,9 +138,17 @@ public class SimulatorEncoder extends Component {
 			g.drawImage(imageLoader.getImage(outerOff), 0, 0, this);
 		}
 		if (buttonStatus.equals("blue")) {
-			g.drawImage(imageLoader.getImage(innerBlue), ((226 - 80) / 2)-4, (226 - 80) / 2, this);
-		}else if (buttonStatus.equals("yellow")) {
-			g.drawImage(imageLoader.getImage(innerYellow), ((226 - 80) / 2)-4, (226 - 80) / 2, this);
+			g.drawImage(
+				imageLoader.getImage(innerBlue),
+				((226 - 80) / 2) - 4,
+				(226 - 80) / 2,
+				this);
+		} else if (buttonStatus.equals("yellow")) {
+			g.drawImage(
+				imageLoader.getImage(innerYellow),
+				((226 - 80) / 2) - 4,
+				(226 - 80) / 2,
+				this);
 		}
 	}
 	public void repaint() {
