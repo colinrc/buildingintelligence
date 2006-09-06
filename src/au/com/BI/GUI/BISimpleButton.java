@@ -11,7 +11,7 @@ import java.awt.MediaTracker;
 
 import au.com.BI.Command.Command;
 import au.com.BI.Objects.Key;
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -29,7 +29,7 @@ public class BISimpleButton extends BIControlButton {
 	/**
 	 * @param inButtonLoader
 	 */
-	public BISimpleButton(ImageLoader inImageLoader) {
+	public BISimpleButton(ImageHandler inImageLoader) {
 		super(inImageLoader);
 		command = "";
 		// TODO Auto-generated constructor stub

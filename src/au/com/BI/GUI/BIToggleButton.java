@@ -13,7 +13,7 @@ import java.awt.MediaTracker;
 
 import au.com.BI.Command.Command;
 import au.com.BI.Objects.Key;
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -31,12 +31,12 @@ public class BIToggleButton extends BIControlButton {
 	/**
 	 * @param inButtonLoader
 	 */
-	public BIToggleButton(ImageLoader inImageLoader) {
+	public BIToggleButton(ImageHandler inImageLoader) {
 		super(inImageLoader);
 		// TODO Auto-generated constructor stub
 	}
 	public void paintBuffer(Graphics graphics) {
-		if (((Key) keys.get(0)).getState().getCommand().equals(extra2)) {
+		if (((Key) keys.get(0)).getState("state").getCommand().equals(extra2)) {
 			graphics.drawImage(iconImg2, 9, 9, this);
 		} else {
 			graphics.drawImage(iconImg1, 9, 9, this);
@@ -129,10 +129,10 @@ public class BIToggleButton extends BIControlButton {
 		graphics.setFont(new java.awt.Font(buttonFont, java.awt.Font.BOLD, fontSize));
 		graphics.setColor(new Color(255, 255, 255));
 		graphics.drawString(this.getName(), 75, 26);
-		if (((Key) keys.get(0)).getState().getCommand().equals("")) {
+		if (((Key) keys.get(0)).getState("state").getCommand().equals("")) {
 			graphics.drawString("(" + extra + ")", 75, 46);
 		} else {
-			graphics.drawString("(" + ((Key) keys.get(0)).getState().getCommand() + ")", 75, 46);
+			graphics.drawString("(" + ((Key) keys.get(0)).getState("state").getCommand() + ")", 75, 46);
 		}
 		if (disabled) {
 			g2d.setComposite(makeComposite((float) 1));
@@ -144,13 +144,13 @@ public class BIToggleButton extends BIControlButton {
 	public Command createMessage() {
 		Command newCommand = new Command();
 		newCommand.key = ((Key) keys.get(0)).getKey();
-		if (((Key) keys.get(0)).getState().getCommand().equals(extra2)) {
+		if (((Key) keys.get(0)).getState("state").getCommand().equals(extra2)) {
 			newCommand.setCommand(extra);
-			((Key) keys.get(0)).getState().setCommand(extra);
+			((Key) keys.get(0)).getState("state").setCommand(extra);
 			newCommand.setExtraInfo("0");
 		} else {
 			newCommand.setCommand(extra2);
-			((Key) keys.get(0)).getState().setCommand(extra2);
+			((Key) keys.get(0)).getState("state").setCommand(extra2);
 			newCommand.setExtraInfo("100");
 		}
 		return newCommand;

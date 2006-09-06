@@ -14,9 +14,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import au.com.BI.Command.Command;
+import au.com.BI.Connection.ServerHandler;
 import au.com.BI.Objects.BIListener;
 import au.com.BI.Objects.Key;
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -49,7 +50,7 @@ public class BISliderButton extends BIButton implements BIListener {
 	/**
 	 * @param inImageLoader
 	 */
-	public BISliderButton(ImageLoader inImageLoader) {
+	public BISliderButton(ImageHandler inImageLoader) {
 		super(inImageLoader);
 		// TODO Auto-generated constructor stub
 		rampFull = inImageLoader.getImage(FULL);
@@ -76,7 +77,7 @@ public class BISliderButton extends BIButton implements BIListener {
 	public void paintBuffer(Graphics graphics) {
 		int tempInt;
 		try {
-			tempInt = Integer.parseInt(((Key) keys.get(0)).getState().getExtra());
+			tempInt = Integer.parseInt(((Key) keys.get(0)).getState("state").getExtra());
 		} catch (NumberFormatException e) {
 			tempInt = 0;
 		}
@@ -195,15 +196,15 @@ public class BISliderButton extends BIButton implements BIListener {
 		graphics.setFont(new java.awt.Font(buttonFont, java.awt.Font.BOLD, fontSize));
 		graphics.setColor(new Color(255, 255, 255));
 		graphics.drawString(this.getName(), 75, 26);
-		if ((((Key) keys.get(0)).getState().getExtra().equals(""))
-			|| (((Key) keys.get(0)).getState().getExtra().equals("0"))
+		if ((((Key) keys.get(0)).getState("state").getExtra().equals(""))
+			|| (((Key) keys.get(0)).getState("state").getExtra().equals("0"))
 			|| ((value == 0) && (active))) {
 			graphics.drawString("(" + extra + ")", 75, 46);
 		} else {
 			if (active) {
 				graphics.drawString("(" + value + "%)", 75, 46);
 			} else {
-				graphics.drawString("(" + ((Key) keys.get(0)).getState().getExtra() + "%)", 75, 46);
+				graphics.drawString("(" + ((Key) keys.get(0)).getState("state").getExtra() + "%)", 75, 46);
 			}
 		}
 		if (!((DevicePage) this.getParent()).sliderActive()) {
@@ -382,7 +383,7 @@ public class BISliderButton extends BIButton implements BIListener {
 	public void setActive(boolean inActive) {
 		active = inActive;
 		try {
-			value = Integer.parseInt(((Key) keys.get(0)).getState().getExtra());
+			value = Integer.parseInt(((Key) keys.get(0)).getState("state").getExtra());
 		} catch (NumberFormatException e) {
 			value = 0;
 		}
@@ -403,7 +404,7 @@ public class BISliderButton extends BIButton implements BIListener {
 			if (((DevicePage) this.getParent()).sliderActive()) {
 				((DevicePage) this.getParent()).setSliderLevel(value);
 			}
-			serverHandle.sendToServer(createMessage());
+			ServerHandler.getInstance().sendToServer(createMessage());
 			repaint();
 		}
 	}
@@ -420,14 +421,14 @@ public class BISliderButton extends BIButton implements BIListener {
 		newCommand.key = ((Key) keys.get(0)).getKey();
 		if (value > 0) {
 			newCommand.setCommand(extra2);
-			((Key) keys.get(0)).getState().setCommand(extra2);
+			((Key) keys.get(0)).getState("state").setCommand(extra2);
 			newCommand.setExtraInfo("" + value);
-			((Key) keys.get(0)).getState().setExtra("" + value);
+			((Key) keys.get(0)).getState("state").setExtra("" + value);
 		} else {
 			newCommand.setCommand(extra);
-			((Key) keys.get(0)).getState().setCommand(extra);
+			((Key) keys.get(0)).getState("state").setCommand(extra);
 			newCommand.setExtraInfo("" + value);
-			((Key) keys.get(0)).getState().setExtra("" + value);
+			((Key) keys.get(0)).getState("state").setExtra("" + value);
 		}
 		return newCommand;
 	}
@@ -456,7 +457,7 @@ public class BISliderButton extends BIButton implements BIListener {
 	}
 	public int getValue() {
 		try {
-			int tempValue = Integer.parseInt(((Key) keys.get(0)).getState().getExtra());
+			int tempValue = Integer.parseInt(((Key) keys.get(0)).getState("state").getExtra());
 			return tempValue;
 		} catch (NumberFormatException e) {
 			return 0;
@@ -479,7 +480,7 @@ public class BISliderButton extends BIButton implements BIListener {
 	public void update() {
 		if (active) {
 			try {
-				value = Integer.parseInt(((Key) keys.get(0)).getState().getExtra());
+				value = Integer.parseInt(((Key) keys.get(0)).getState("state").getExtra());
 			} catch (NumberFormatException e) {
 				value = 0;
 			}

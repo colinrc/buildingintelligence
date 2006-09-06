@@ -23,7 +23,8 @@ import org.kxml2.kdom.Node;
  * 
  * 
  */
-public class eLifeActiveLoader {
+public class ElifeActiveClientModel {
+	static private ElifeActiveClientModel _instance;
 	private HashMap globalOverrides;
 	private Vector icons;
 	private Vector keys;
@@ -31,7 +32,16 @@ public class eLifeActiveLoader {
 	/**
 	 * 
 	 */
-	public eLifeActiveLoader(HashMap inHashMap) {
+	private ElifeActiveClientModel() {
+		// TODO Auto-generated constructor stub
+	}
+	static public ElifeActiveClientModel getInstance() {
+		if (_instance == null) {
+			_instance = new ElifeActiveClientModel();
+		}
+		return _instance;
+	}
+	public void loadClient(HashMap inHashMap) {
 		File configFile = null;
 		globalOverrides = new HashMap();
 		rooms = new Vector();

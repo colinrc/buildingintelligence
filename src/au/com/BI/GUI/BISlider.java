@@ -11,7 +11,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -30,9 +30,8 @@ public class BISlider extends Component {
 	private String EMPTY = "images/levels/box-empty";
 	private Image full;
 	private Image empty;
-	private ImageLoader imageHandle;
+	private ImageHandler imageHandle;
 	private BISliderButton sliderButton;
-	protected ImageLoader imageLoader;
 	protected Image baseTopLeft;
 	protected Image baseTop;
 	protected Image baseTopRight;
@@ -43,7 +42,7 @@ public class BISlider extends Component {
 	protected Image baseBottom;
 	protected Image baseBottomRight;
 	protected int PNGWIDTH = 9;
-	public BISlider(ImageLoader imageHandle, BISliderButton sliderButton) {
+	public BISlider(ImageHandler imageHandle, BISliderButton sliderButton) {
 		super();
 		height = 240;
 		width = 38;

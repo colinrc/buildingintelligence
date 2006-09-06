@@ -15,9 +15,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 
-import au.com.BI.Connection.ServerHandler;
 import au.com.BI.Objects.BIListener;
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -38,8 +37,9 @@ public abstract class BIButton extends Component  implements BIListener {
 	protected int height;
 	protected boolean highlighted;
 	protected int PNGWIDTH = 9;
+	protected Vector keys = new Vector();
 	/*Button Components*/
-	protected ImageLoader imageLoader;
+	protected ImageHandler imageLoader;
 	protected Image baseTopLeft;
 	protected Image baseTop;
 	protected Image baseTopRight;
@@ -63,7 +63,7 @@ public abstract class BIButton extends Component  implements BIListener {
 	protected int bufferHeight;
 	protected MouseAdapter mouseListener;
 	/*BI Communication objects*/
-	public BIButton(ImageLoader inImageLoader) {
+	public BIButton(ImageHandler inImageLoader) {
 		imageLoader = inImageLoader;
 		/*Override Attributes*/
 		bgColour = Integer.parseInt("0x7C90B0".substring(2), 16);
@@ -270,11 +270,6 @@ public abstract class BIButton extends Component  implements BIListener {
 		} finally {
 			super.finalize();
 		}
-	}
-	protected ServerHandler serverHandle = null;
-		protected Vector keys = new Vector();
-	public void setServerHandler(ServerHandler inServerHandler) {
-		serverHandle = inServerHandler;
 	}
 	public void setKeys(Vector inVector) {
 		keys = inVector;

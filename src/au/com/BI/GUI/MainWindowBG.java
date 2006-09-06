@@ -12,9 +12,9 @@ import java.util.Vector;
 import au.com.BI.Connection.ServerHandler;
 import au.com.BI.DataModel.ActiveGroup;
 import au.com.BI.DataModel.ActiveRoom;
-import au.com.BI.DataModel.eLifeActiveLoader;
+import au.com.BI.DataModel.ElifeActiveClientModel;
 import au.com.BI.Serial.SerialHandler;
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  *
  * @author David
@@ -22,10 +22,10 @@ import au.com.BI.Util.ImageLoader;
 public class MainWindowBG extends java.awt.Container {
 	private Page currentPage;
 	private MainWindowTitleBar titleBar;
-	private ImageLoader imageLoader;
+	private ImageHandler imageLoader;
 	private ServerHandler serverHandle;
 	private SerialHandler serialHandle;
-	private eLifeActiveLoader client;
+	private ElifeActiveClientModel client;
 	private Vector rooms;
 	private int currentRoom;
 	private int currentDevice;
@@ -77,15 +77,13 @@ public class MainWindowBG extends java.awt.Container {
 	}
 	/** Creates a new instance of MainWindowBG */
 	public MainWindowBG(
-		ImageLoader inImageLoader,
-		ServerHandler inServerHandler,
-		eLifeActiveLoader client, SerialHandler serialHandle) {
+	ImageHandler inImageLoader,
+		ElifeActiveClientModel client, SerialHandler serialHandle) {
 		imageLoader = inImageLoader;
-		serverHandle = inServerHandler;
 		this.serialHandle = serialHandle;
 		serialHandle.setWindowBG(this);
 		this.client = client;
-		titleBar = new MainWindowTitleBar(inImageLoader, inServerHandler, "Main");
+		titleBar = new MainWindowTitleBar(inImageLoader, "Main");
 		titleBar.setBounds(0, 0, 240, 80);
 		rooms = client.getRooms();
 		currentRoom = 0;
@@ -175,7 +173,7 @@ public class MainWindowBG extends java.awt.Container {
 			}
 			currentPage = null;
 		}
-		currentPage = new RoomPage(imageLoader, serverHandle,serialHandle, currentRoom.getGroups());
+		currentPage = new RoomPage(imageLoader, serialHandle, currentRoom.getGroups());
 		currentPage.setBounds(0, 80, 240, 240);
 		add(currentPage);
 		titleBar.setTitle(currentRoom.getName());
@@ -199,7 +197,7 @@ public class MainWindowBG extends java.awt.Container {
 			currentPage = null;
 		}
 		currentPage =
-			new DevicePage(imageLoader, serverHandle,serialHandle, currentDevice.getControls(), currentDevice);
+			new DevicePage(imageLoader, serialHandle, currentDevice.getControls(), currentDevice);
 		currentPage.setBounds(0, 80, 240, 240);
 		add(currentPage);
 		titleBar.setTitle(

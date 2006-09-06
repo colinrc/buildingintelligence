@@ -18,7 +18,7 @@ import au.com.BI.Connection.ServerHandler;
 import au.com.BI.DataModel.BIObject;
 import au.com.BI.Objects.BIListener;
 import au.com.BI.Serial.SerialHandler;
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -26,8 +26,7 @@ import au.com.BI.Util.ImageLoader;
  * 
  */
 public abstract class Page extends Container {
-	protected ImageLoader imageLoader;
-	protected ServerHandler serverHandle;
+	protected ImageHandler imageLoader;
 	protected int bufferWidth;
 	protected int bufferHeight;
 	protected Image bufferImage;
@@ -97,9 +96,8 @@ public abstract class Page extends Container {
 	/**
 	 * 
 	 */
-	public Page(ImageLoader inImageLoader, ServerHandler inServerHandler,SerialHandler serialHandle, Vector PageInfo) {
+	public Page(ImageHandler inImageLoader, SerialHandler serialHandle, Vector PageInfo) {
 		imageLoader = inImageLoader;
-		serverHandle = inServerHandler;
 		this.serialHandle =serialHandle;
 		this.PageInfo = PageInfo;
 		int rows = PageInfo.size() / 3;
@@ -246,7 +244,7 @@ public abstract class Page extends Container {
 			for (int index = 0; index < PageInfo.size(); index++) {
 				BIButton tempButton = ((BIButton) buttons.remove(index + ""));
 				if (tempButton instanceof BIListener) {
-					serverHandle.unRegisterComponent(((BIListener) tempButton));
+					ServerHandler.getInstance().unRegisterComponent(((BIListener) tempButton));
 				}
 			}
 		} catch (Exception e) {

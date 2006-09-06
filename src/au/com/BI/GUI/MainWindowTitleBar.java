@@ -11,8 +11,7 @@ import java.awt.Image;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import au.com.BI.Connection.ServerHandler;
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -20,8 +19,7 @@ import au.com.BI.Util.ImageLoader;
  * 
  */
 public class MainWindowTitleBar extends Component implements Runnable {
-	private ImageLoader imageLoader;
-	private ServerHandler serverHandle;
+	private ImageHandler imageLoader;
 	protected Image offScreenImage;
 	private Calendar cal;
 	private String name;
@@ -96,11 +94,9 @@ public class MainWindowTitleBar extends Component implements Runnable {
 		paint(this.getGraphics());
 	}
 	public MainWindowTitleBar(
-		ImageLoader inImageLoader,
-		ServerHandler inServerHandler,
+	ImageHandler inImageLoader,
 		String current) {
 		imageLoader = inImageLoader;
-		serverHandle = inServerHandler;
 		name = current;
 		// TODO Auto-generated constructor stub
 		showDay = false;
@@ -118,7 +114,7 @@ public class MainWindowTitleBar extends Component implements Runnable {
 					count = 0;
 					showDay = !showDay;
 				}
-				updateThread.sleep(500);
+				Thread.sleep(500);
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(1);

@@ -7,7 +7,8 @@
 package au.com.BI.GUI;
 
 import au.com.BI.Command.Command;
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Connection.ServerHandler;
+import au.com.BI.Util.ImageHandler;
 
 /**
  * @author David
@@ -19,7 +20,7 @@ public abstract class BIControlButton extends BIButton{
 	/**
 	 * @param inImageLoader
 	 */
-	public BIControlButton(ImageLoader inImageLoader) {
+	public BIControlButton(ImageHandler inImageLoader) {
 		super(inImageLoader);
 		// TODO Auto-generated constructor stub
 	}
@@ -30,7 +31,7 @@ public abstract class BIControlButton extends BIButton{
 	public void doAction(){
 		if(!disabled){
 			((Page)getParent()).setSelected(this);
-			serverHandle.sendToServer(createMessage());
+			ServerHandler.getInstance().sendToServer(createMessage());
 			repaint();
 		}
 	}

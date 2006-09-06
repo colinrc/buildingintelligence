@@ -15,7 +15,7 @@ import au.com.BI.DataModel.ActiveControl;
 import au.com.BI.DataModel.ActiveGroup;
 import au.com.BI.DataModel.BIObject;
 import au.com.BI.Serial.SerialHandler;
-import au.com.BI.Util.ImageLoader;
+import au.com.BI.Util.ImageHandler;
 /**
  * @author David
  *
@@ -36,10 +36,10 @@ public class DevicePage extends Page implements Runnable{
 				if(lastValue != tempValue){
 					slider.setValue(tempValue);
 					((BISliderButton) buttons.get(highlightedButton + "")).setValue(tempValue);
-					serverHandle.sendToServer(((BISliderButton) buttons.get(highlightedButton + "")).createMessage());
+					ServerHandler.getInstance().sendToServer(((BISliderButton) buttons.get(highlightedButton + "")).createMessage());
 					lastValue = tempValue;
 				}				
-				myThread.sleep(500);
+				Thread.sleep(500);
 			}
 		} catch (Exception e) {
 			//e.printStackTrace();
@@ -53,11 +53,11 @@ public class DevicePage extends Page implements Runnable{
 	 * @param inServerHandler
 	 */
 	public DevicePage(
-		ImageLoader inImageLoader,
-		ServerHandler inServerHandler,SerialHandler serialHandle,
+	ImageHandler inImageLoader,
+		SerialHandler serialHandle,
 		Vector PageInfo,
 		ActiveGroup inGroup) {
-		super(inImageLoader, inServerHandler,serialHandle, PageInfo);
+		super(inImageLoader, serialHandle, PageInfo);
 		int rows = PageInfo.size() / 3;
 		if ((PageInfo.size() % 3) != 0) {
 			rows = rows + 1;
@@ -119,7 +119,7 @@ public class DevicePage extends Page implements Runnable{
 			simpleButton.setExtra4(inControl.getExtra4());
 			simpleButton.setExtra5(inControl.getExtra5());
 			simpleButton.setIcon(group.getIcons());
-			serverHandle.registerComponent(simpleButton, newVector);
+			ServerHandler.getInstance().registerComponent(simpleButton, newVector);
 		} else if (inControl.getType().equals("toggle")) {
 			newButton = new BIToggleButton(imageLoader);
 			BIToggleButton toggleButton = (BIToggleButton) newButton;
@@ -129,7 +129,7 @@ public class DevicePage extends Page implements Runnable{
 			toggleButton.setCommand(inControl.getCommand());
 			toggleButton.setExtras(inControl.getExtras());
 			toggleButton.setIcons(group.getIcons());
-			serverHandle.registerComponent(toggleButton, newVector);
+			ServerHandler.getInstance().registerComponent(toggleButton, newVector);
 		} else if (inControl.getType().equals("slider")) {
 			newButton = new BISliderButton(imageLoader);
 			BISliderButton sliderButton = (BISliderButton) newButton;
@@ -138,7 +138,7 @@ public class DevicePage extends Page implements Runnable{
 			sliderButton.setName(inControl.getName());
 			sliderButton.setExtras(inControl.getExtras());
 			sliderButton.setIcons(group.getIcons());
-			serverHandle.registerComponent(sliderButton, newVector);
+			ServerHandler.getInstance().registerComponent(sliderButton, newVector);
 			sliderButton.setValue(sliderButton.getValue());
 			sliderButton.setInteractive(inControl.getInteractive());
 		} else {
@@ -204,7 +204,7 @@ public class DevicePage extends Page implements Runnable{
 	public void select() {
 		if(slider != null){
 			((BISliderButton) buttons.get(highlightedButton + "")).setValue(slider.getValue());
-			serverHandle.sendToServer(((BISliderButton) buttons.get(highlightedButton + "")).createMessage());
+			ServerHandler.getInstance().sendToServer(((BISliderButton) buttons.get(highlightedButton + "")).createMessage());
 			removeSlider();
 		} else{
 			((BIButton) buttons.get(highlightedButton + "")).doAction();
@@ -213,7 +213,7 @@ public class DevicePage extends Page implements Runnable{
 	public void click(){
 		if(slider != null){
 			((BISliderButton) buttons.get(highlightedButton + "")).setValue(slider.getValue());
-			serverHandle.sendToServer(((BISliderButton) buttons.get(highlightedButton + "")).createMessage());
+			ServerHandler.getInstance().sendToServer(((BISliderButton) buttons.get(highlightedButton + "")).createMessage());
 			removeSlider();
 		}
 	}
