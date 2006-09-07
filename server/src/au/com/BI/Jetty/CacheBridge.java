@@ -81,8 +81,8 @@ public class CacheBridge implements CacheListener {
     	logger.log(Level.FINEST,"Adding key "  + key);
     }
     
-    public Element getCommands (List<Element> extraElementsToInclude){
-    	Element resultsDoc = new Element("a");
+    public boolean getCommands (List<Element> extraElementsToInclude, Element resultsDoc){
+    	boolean values = false;
     	
     	if (extraElementsToInclude != null){
 	    	for (Element elm:extraElementsToInclude){
@@ -101,6 +101,7 @@ public class CacheBridge implements CacheListener {
 		        			for (CommandInterface command:cacheWrapper.getMapValues()){
 		        				try {
 		        					resultsDoc.addContent((Element)command.getXMLCommand());
+		        					values = true;
 		        				} catch (IllegalAddException ex){
 		        						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
 		        				} catch (NullPointerException ex){
@@ -115,6 +116,7 @@ public class CacheBridge implements CacheListener {
 		        						xMLCommand = (Element)command.getXMLCommand();
 		        						xMLCommand.detach();
 		        						resultsDoc.addContent(xMLCommand);      
+		        						values = true;
 		        				} catch (IllegalAddException ex){
 		        						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
 		        				}
@@ -123,7 +125,7 @@ public class CacheBridge implements CacheListener {
 	        }
 	        commandsToSend.clear();
     	}
-        return resultsDoc;
+        return values;
     }
 
 	public long getID() {

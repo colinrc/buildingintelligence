@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <eclipse-userlibraries version="2">
-<library name="Groovy1.0-jsr05" systemlibrary="false">
-<archive javadoc="file:/Java/groovy-1.0-jsr-05-dist/docs/xref/" path="/Java/groovy-1.0-jsr-05-dist/embeddable/groovy-all-1.0-jsr-05.jar" source="/Java/groovy-1.0-jsr-05/src/main"/>
-</library>
 <library name="Groovy1.0-jsr06" systemlibrary="false">
 <archive javadoc="file:/Java/groovy-1.0-JSR-06/docs/xref/" path="/Java/groovy-1.0-JSR-06/embeddable/groovy-all-1.0-JSR-06.jar"/>
 </library>
@@ -15,6 +12,11 @@
 <archive path="/Java/jetty-6.0.0rc0/lib/jetty-util-6.0.0rc0.jar"/>
 <archive path="/Java/jetty-6.0.0rc0/lib/servlet-api-2.5-6.0.0rc0.jar"/>
 <archive path="/Java/jetty-6.0.0rc0/lib/jetty-6.0.0rc0.jar"/>
+</library>
+<library name="Jetty6RC3" systemlibrary="false">
+<archive path="/Java/jetty-6.0.0rc3/lib/jetty-util-6.0.0rc3.jar"/>
+<archive path="/Java/jetty-6.0.0rc3/lib/jetty-6.0.0rc3.jar"/>
+<archive path="/Java/jetty-6.0.0rc3/lib/servlet-api-2.5-6.0.0rc3.jar"/>
 </library>
 <library name="JRobin1.4.0" systemlibrary="false">
 <archive path="/Java/jrobin-1.4.0/lib/jrobin-1.4.0.jar"/>

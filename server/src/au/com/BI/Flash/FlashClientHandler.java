@@ -225,6 +225,7 @@ public class FlashClientHandler extends Thread {
 
 	/**
 	 * @TODO properly return a message block
+	 * @deprecated
 	 */
 
 	public void processBuffer(byte[] readBuffer, int count)

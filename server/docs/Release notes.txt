@@ -1,3 +1,18 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a14.zip V1.6a14] ==
+
+''' Jetty '''
+
+Ensure that multiple http get calls from the same session cannot conflict. if the session from a previous call is not yet complete the following call
+will return an empty record set. Resolves Issue [ticket:490]
+
+When there is no new instructions for the client to process the http return code will be set to SC_NOCONTENT. If there is content present it will be SC_OK.
+In this way the get call can be processed extremely effeciently by the client. Completes enhancement [ticket:493]
+
+''' Flash '''
+
+Increased heartbeat speed to every 10 seconds. Need feedback from James if this is to fast for flash.
+
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a13.zip V1.6a13] ==
 
 ''' General '''

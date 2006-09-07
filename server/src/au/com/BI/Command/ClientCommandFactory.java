@@ -9,6 +9,7 @@ import org.jdom.Element;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Messaging.AddressBook;
 import au.com.BI.Messaging.MessageCommand;
+import au.com.BI.Messaging.AddressBook.ClientTypes;
 import au.com.BI.Messaging.AddressBook.Locations;
 import au.com.BI.User.User;
 
@@ -50,6 +51,11 @@ public class ClientCommandFactory {
 				if (!commandBuilt && key.equals("ID")) {
 					String command = rootElement.getAttributeValue("COMMAND");
 					String extra = rootElement.getAttributeValue("EXTRA");
+					if (extra.equals("Java_PDA")){
+						synchronized (addressBook) {
+							addressBook.setClientType(ClientTypes.JAVA_PDA);
+						}					
+					}
 					if (command.equals("name")) {
 						synchronized (addressBook) {
 							addressBook.setName(extra, ID,originating_location);
@@ -61,6 +67,7 @@ public class ClientCommandFactory {
 						}
 					}
 					commandBuilt = true;
+					reportAllClients (clientCommand);
 				}
 				if (!commandBuilt && clientCommand == null) {
 					clientCommand = buildCommand(key, rootElement);
@@ -97,6 +104,13 @@ public class ClientCommandFactory {
 		return clientCommand;
 	}
 
+	public void reportAllClients (ClientCommand clientCommand){
+			 for (String name:addressBook.getAllNames()) {
+				 //clientCommand.
+			 }
+			
+	}
+	
 	public ClientCommand buildKeyPress(String key, Element rootElement) {
 		String name = ""; // the name of the node
 		String extra = "";

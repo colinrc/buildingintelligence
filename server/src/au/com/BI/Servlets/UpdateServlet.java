@@ -67,31 +67,57 @@ public class UpdateServlet extends HttpServlet {
     	
         HttpSession session = req.getSession(false);
         Map  params = req.getParameterMap();
+        boolean emptyResponse = true;
         
         try {
 	        if (params != null && (session == null || params.containsKey("INIT"))) {
 	            session = req.getSession(true);
-	            
+	            setHandlingSession(session,true);
 	            setupSession(session);
 	            ID = (Long)session.getAttribute("ID");
 	            serverID = (Long)session.getAttribute("ServerID");
 	            extraStuffForStartup = newClient (ID,serverID,versionManager);
+	            emptyResponse = false;
 	        } else {
 	        	ID = (Long)session.getAttribute("ID");
 	        	serverID = (Long)session.getAttribute("ServerID");
+
+		        if (isHandlingSession(session)){
+					resp.setContentType("text/xml");
+			        
+			        PrintWriter out = resp.getWriter();
+			                
+			        Element wrapper = new Element ("a");
+	
+			        xmlOut.output(wrapper, out);
+			    	
+			        resp.flushBuffer();
+			        resp.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+			        return;
+		        }
+		        setHandlingSession(session,true);
 	        }
-	        
+
 	       	cacheBridge = (CacheBridge)session.getAttribute("CacheBridge");
 	        long lastUpdate = session.getLastAccessedTime();  
 	        
 	        resp.setContentType("text/xml");
 	
 	        java.io.PrintWriter out = resp.getWriter();
-	        Element respElement = cacheBridge.getCommands(extraStuffForStartup);
-
-	        xmlOut.output(respElement, out);
+	        
+	    	Element resultsDoc = new Element("a");
+	        if ( cacheBridge.getCommands(extraStuffForStartup,resultsDoc)) {
+	        	emptyResponse = false;
+	        }
+	        xmlOut.output(resultsDoc, out);
 	        resp.flushBuffer();
-	        resp.setStatus(HttpServletResponse.SC_OK);
+	        if (!emptyResponse){
+
+		        resp.setStatus(HttpServletResponse.SC_OK);
+	        } else {
+		        resp.setStatus(HttpServletResponse.SC_NO_CONTENT);	        	
+	        }
+	        setHandlingSession(session,false);
         } catch (TooManyClientsException ex){
         	Date currentTime = new Date();
         	
@@ -120,6 +146,16 @@ public class UpdateServlet extends HttpServlet {
         
     }
     
+    public void setHandlingSession(HttpSession session , boolean handling) {
+    	Boolean handlingVal = new Boolean (handling);
+    	session.setAttribute("Lock", handlingVal);
+    }
+    
+    public boolean isHandlingSession(HttpSession session ) {
+    	Boolean handlingVal = (Boolean)session.getAttribute("Lock");
+    	return handlingVal.booleanValue();
+    }
+
     public void doPost(HttpServletRequest req,
             HttpServletResponse resp) throws ServletException,java.io.IOException {
         HttpSession session = req.getSession(false);  	

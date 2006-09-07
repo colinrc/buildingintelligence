@@ -1,6 +1,8 @@
 package au.com.BI.Messaging;
 import java.util.*;
 public class AddressBook {
+	public static enum Locations { NOT_CONNECTED,DIRECT,HTTP,JABBER};
+	public static enum ClientTypes { FLASH, JAVA_PDA };
 	
 	public final static String ALL = "All";
 	public final static long  ALL_INT = -1;
@@ -9,11 +11,12 @@ public class AddressBook {
 	public final static long ALL_INC_SRC_INT = -2;
 
 	public final static long NOT_FOUND = -3;
+	protected ClientTypes clientType = ClientTypes.FLASH;
 
 	public HashMap <String,Long>nameMap;
 	public HashMap <String,Long>userMap;
 
-	public static enum Locations { NOT_CONNECTED,DIRECT,HTTP,GOOGLE};
+
 	
 	public AddressBook () {
 		nameMap = new HashMap<String,Long>();
@@ -43,6 +46,18 @@ public class AddressBook {
 		else
 			return AddressBook.NOT_FOUND;
 
+	}
+
+	public ClientTypes getClientType() {
+		return clientType;
+	}
+
+	public void setClientType(ClientTypes clientType) {
+		this.clientType = clientType;
+	}
+	
+	public Set <String>getAllNames () {
+		return this.nameMap.keySet();
 	}
 
 }
