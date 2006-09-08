@@ -319,10 +319,19 @@
 			case "COMFORT" :
 				var newComfort = new Objects.Server.Comfort();
 				newComfort.setXML(_global.comfort_XML.firstChild);
+				//newComfort.setXML(newNode);
 				newComfort.id = _global.formDepth++;								
 				newComfort.active = "Y";				
 				treeNode.appendChild(newComfort.toTree());
 				devices.push(newComfort);
+				break;
+			case "CUSTOM_CONNECT":
+				var newCustomConnect = new Objects.Server.CustomConnect();
+				newCustomConnect.setXML(newNode);
+				newCustomConnect.id = _global.formDepth++;								
+				newCustomConnect.active = "Y";				
+				treeNode.appendChild(newCustomConnect.toTree());
+				devices.push(newCustomConnect);
 				break;
 				}
 			}
@@ -444,6 +453,13 @@
 						newComfort.id = _global.formDepth++;
 						newComfort.active = "Y";						
 						devices.push(newComfort);
+						break;
+					case "CUSTOM_CONNECT":
+						var newCustomConnect = new Objects.Server.CustomConnect();
+						newCustomConnect.setXML(newData.childNodes[child]);
+						newCustomConnect.id = _global.formDepth++;
+						newCustomConnect.active = "Y";		
+						devices.push(newCustomConnect);
 						break;
 					}
 					break;

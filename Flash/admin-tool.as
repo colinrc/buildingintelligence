@@ -392,13 +392,19 @@ _global.writeXMLFile = function(inNode:XMLNode, depth:Number):String  {
 	tempString += "<";
 	tempString += inNode.nodeName;
 	for (attribute in inNode.attributes) {
-		tempString += " " + attribute + '="' + inNode.attributes[attribute] + '"';
+		var tempAtt = inNode.attributes[attribute];
+		tempAtt=(tempAtt.split("&")).join("&amp;");
+		tempAtt=(tempAtt.split("<")).join("&lt;");
+		tempAtt=(tempAtt.split(">")).join("&gt;");
+		tempAtt=(tempAtt.split("'")).join("&apos;");
+		tempAtt=(tempAtt.split('"')).join("&quot;");
+		tempString += " " + attribute + '="' + tempAtt + '"';
 	}
 	if (inNode.hasChildNodes()) {
 		if (inNode.firstChild.nodeType == 3) {
 			tempString += ">";
 			tempString += _global.writeXMLFile(inNode.firstChild, 0);
-			return tempString + "</" + inNode.nodeName + "> \n";
+			tempString += "</" + inNode.nodeName + "> \n";
 		} else {
 			tempString += "> \n";
 			for (var child = 0; child < inNode.childNodes.length; child++) {
@@ -407,11 +413,12 @@ _global.writeXMLFile = function(inNode:XMLNode, depth:Number):String  {
 			for (index = 0; index < depth; index++) {
 				tempString += "\t";
 			}
-			return tempString + "</" + inNode.nodeName + "> \n";
+			tempString += "</" + inNode.nodeName + "> \n";
 		}
 	} else {
-		return tempString + "/> \n";
+		tempString += "/> \n";
 	}
+	return tempString;
 };
 /****************************************************************************/
 //Application exit handling

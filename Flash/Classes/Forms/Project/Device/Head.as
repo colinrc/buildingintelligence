@@ -43,13 +43,17 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 		description_ti.text = description;
 		connection_mc.node = connection;
 		save_btn.addEventListener("click", Delegate.create(this, save));	
-		parameters_mc = this.attachMovie("forms.project.device.parameters"+device_type.toLowerCase(),"parameters_"+getNextHighestDepth()+"_mc",0,{parameters:parameters,device_type:device_type});
+		if(device_type.toLowerCase()!="custom_connection"){
+			parameters_mc = this.attachMovie("forms.project.device.parameters"+device_type.toLowerCase(),"parameters_"+getNextHighestDepth()+"_mc",0,{parameters:parameters,device_type:device_type});
+		} else{		
+			parameters_mc = this.attachMovie("forms.project.device.parametersraw_connection","parameters_"+getNextHighestDepth()+"_mc",0,{parameters:parameters,device_type:device_type});
+		}
 		parameters_mc._x = 0;
 		parameters_mc._y = 170;		
 		setAdvanced();
 	}
 	public function setAdvanced(){
-		if(device_type.toLowerCase()!= "raw_connection"){
+		if((device_type.toLowerCase()!= "raw_connection")||(device_type.toLowerCase()!= "custom_connection")){
 			parameters_mc._visible = _global.advanced;
 		}
 	}			
