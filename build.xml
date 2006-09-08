@@ -1,0 +1,61 @@
+<project name="eLife_Integral" default="dist" basedir=".">
+    <description>
+        The elife active for the eLife
+    </description>
+	
+<target name="jar"  >
+	<jar destfile="dist/elife_integral_sim.jar" 
+		update="false"
+		basedir="bin" 
+		manifest="manifest" 
+		includes = "**/*.class"
+		excludes = "**/*\$*.class" />
+</target>
+	
+<target name="dist" depends="dist_clean,increment,jar" >
+	 <copy todir="dist/ext">
+		<fileset dir="ext"/>
+	  </copy>
+  	 <copy todir="dist/lib">
+		<fileset dir="resources"/>
+	  </copy>
+	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
+		update="false"
+		basedir="dist" 
+		includes = "*.jar *.dll *.bat"  
+		excludes = "**/*\*.class" />
+	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
+		update="true"
+		basedir="dist/ext" 
+		includes = "*.jar"  />
+	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
+		update="true"
+		basedir="dist/lib" 
+		includes = "*.dll"  />
+
+	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip"
+		update="true"
+		basedir=""
+		includes= "**/*.bat"
+		excludes = "**/*\*.class"  />
+  <delete dir ="dist/ext">
+    <fileset dir="dist" includes="*.jar"/>
+  </delete>
+    <delete dir ="dist/lib">
+    <fileset dir="dist" includes="*.dll"/>
+  </delete>
+</target>
+
+<target name="dist_clean" depends="" >
+	  <delete>
+	    <fileset dir="dist" includes="*.zip"/>
+	  </delete>
+</target>
+<target name="increment" depends="" description="Increments build number and creates a zip file.">
+<propertyfile file="my.properties" >
+  <entry  key="minor_version" type="int" operation="+" value="1" />
+</propertyfile>
+<property file="my.properties" />
+	<echo message="Version number now ${major_version}.${minor_version}" />
+</target>
+</project>
