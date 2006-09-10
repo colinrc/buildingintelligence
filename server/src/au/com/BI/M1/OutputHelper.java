@@ -23,6 +23,7 @@ import au.com.BI.M1.Commands.ControlOutputOn;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
 import au.com.BI.M1.Commands.Group;
 import au.com.BI.M1.Commands.RequestTemperature;
+import au.com.BI.M1.Commands.TaskActivation;
 import au.com.BI.Util.DeviceModel;
 
 public class OutputHelper {
@@ -130,6 +131,11 @@ public class OutputHelper {
 					m1Command.setGroup(group);
 					m1Command.setDevice(command.getExtra2Info());
 					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals("TASK_ACTIVATION_REQUEST")) {
+					TaskActivation m1Command = new TaskActivation();
+					m1Command.setTask(command.getExtraInfo());
+					retCode = m1Command.buildM1String() + "\r\n";
+					
 				}
 			}
 

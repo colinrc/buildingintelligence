@@ -46,6 +46,7 @@ public class M1CommandFactory {
 	 *   <li>ST - Request Temperature Reply Message</li>
 	 *   <li>az - Alarm by Zone Request Message</li>
 	 *   <li>AZ - Reply Alarm by Zone Report Data Message</li>
+	 *   <li>tn - Task Activation</li>
 	 * </ul>
 	 * @param unparsedCommand
 	 * @return
@@ -93,6 +94,8 @@ public class M1CommandFactory {
 			m1Command = parseAlarmByZoneRequest(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("AZ")) {
 			m1Command = parseReplyAlarmByZoneReportData(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("tn")) {
+			m1Command = parseTaskActivation(unparsedCommand);
 		}
 		
 		if (m1Command == null) {
@@ -729,6 +732,28 @@ public class M1CommandFactory {
 		}
 		_command.setZoneDefinition(zoneDefinitions);
 		_command.setCheckSum(command.substring(command.length()-2));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseTaskActivation(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		TaskActivation _command = new TaskActivation();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setTask(command.substring(4,7));
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
 		if (checkSum.equals(_command.getCheckSum())) {
