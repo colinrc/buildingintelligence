@@ -47,6 +47,7 @@ public class M1CommandFactory {
 	 *   <li>az - Alarm by Zone Request Message</li>
 	 *   <li>AZ - Reply Alarm by Zone Report Data Message</li>
 	 *   <li>tn - Task Activation</li>
+	 *   <li>TC - Tasks Change Update</li>
 	 * </ul>
 	 * @param unparsedCommand
 	 * @return
@@ -96,6 +97,8 @@ public class M1CommandFactory {
 			m1Command = parseReplyAlarmByZoneReportData(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("tn")) {
 			m1Command = parseTaskActivation(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("TC")) {
+			m1Command = parseTasksChangeUpdate(unparsedCommand);
 		}
 		
 		if (m1Command == null) {
@@ -741,6 +744,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Tasks Change Update
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseTaskActivation(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -750,6 +758,33 @@ public class M1CommandFactory {
 		}
 		
 		TaskActivation _command = new TaskActivation();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setTask(command.substring(4,7));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param command
+	 * @return
+	 */
+	private M1Command parseTasksChangeUpdate(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		TasksChangeUpdate _command = new TasksChangeUpdate();
 		_command.setCommand(command);
 		_command.setKey(command.substring(2,4));
 		_command.setCheckSum(command.substring(command.length()-2));

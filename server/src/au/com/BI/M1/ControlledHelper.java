@@ -33,6 +33,7 @@ import au.com.BI.M1.Commands.OutputChangeUpdate;
 import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
 import au.com.BI.M1.Commands.RequestTemperatureReply;
+import au.com.BI.M1.Commands.TasksChangeUpdate;
 import au.com.BI.M1.Commands.ZoneChangeUpdate;
 import au.com.BI.M1.Commands.ZoneDefinition;
 import au.com.BI.M1.Commands.ZoneStatus;
@@ -357,6 +358,21 @@ public class ControlledHelper {
 							+ _command.getExtra3Info());
 					sendToFlash(commandQueue, -1, _command);
 				}
+			} else if (m1Command.getClass().equals(TasksChangeUpdate.class)) {
+				TasksChangeUpdate tasksChangeUpdate = (TasksChangeUpdate)m1Command;
+				CommandInterface _command = new AlertCommand();
+				_command.setDisplayName("Tasks Change Update");
+				_command.setTargetDeviceID(-1);
+				_command.setUser(m1.currentUser);
+				_command.setCommand("TASKS CHANGE UPDATE");
+				_command.setExtraInfo(tasksChangeUpdate.getTask());
+				_command.setKey("CLIENT_SEND");
+				cache.setCachedCommand(_command.getKey(), _command);
+
+				logger.log(Level.INFO, "Sending "
+						+ _command.getCommandCode() + " task="
+						+ _command.getExtraInfo());
+				sendToFlash(commandQueue, -1, _command);
 			}
 
 			if (sendCommandToFlash) {
@@ -427,7 +443,8 @@ public class ControlledHelper {
 						ReplyArmingStatusReportData.class)
 				|| m1Command.getClass().equals(ZoneChangeUpdate.class)
 				|| m1Command.getClass()
-						.equals(ReplyAlarmByZoneReportData.class)) {
+						.equals(ReplyAlarmByZoneReportData.class)
+				|| m1Command.getClass().equals(TasksChangeUpdate.class)) {
 			return m1Command;
 		} else {
 			return null;
