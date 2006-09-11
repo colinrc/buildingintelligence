@@ -13,13 +13,14 @@
                 </CONNECTION>
                 <PARAMETERS>
                 	<!-- ITEM NAME="POLL_TEMP_INTERVAL" VALUE="5" / -->
+                	 <ITEM NAME="DECIMAL_KEYS" VALUE="Y" />
                 </PARAMETERS>
                 
                 <CBUS>
                         <SENSOR ACTIVE="N" KEY="00" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
                         <TEMPERATURE ACTIVE="N" KEY="42" NAME="Temp Sensor2" DISPLAY_NAME="TEMP_SENSOR2" />
                         <LIGHT_CBUS ACTIVE="Y" KEY="06" NAME="Test light" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>
-                   
+
                </CBUS>
         </DEVICE>
 </CONFIG>
