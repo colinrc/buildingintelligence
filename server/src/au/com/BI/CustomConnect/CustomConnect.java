@@ -39,11 +39,7 @@ public class CustomConnect extends BaseDevice implements DeviceType
 	public final int getDeviceType () {
 		return DeviceType.CUSTOM_CONNECT;
 	}
-	
-	public int getClientCommand ()
-	{
-		return DeviceType.NA;
-	}
+
 		
 	public Map <String,Map<String,CustomOutputExtraValue>>getOutConditions() {
 		return outConditions;

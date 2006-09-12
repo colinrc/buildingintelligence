@@ -35,9 +35,9 @@ public class IR extends BaseDevice implements DeviceType,DynaliteInputDevice
 	public boolean keepStateForStartup () {
 		return false;
 	}
-	public int getClientCommand ()
+	public int getDeviceType ()
 	{
-		return DeviceType.NA;
+		return DeviceType.IR;
 	}
 
 

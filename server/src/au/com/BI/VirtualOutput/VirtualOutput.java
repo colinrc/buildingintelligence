@@ -30,9 +30,9 @@ public class VirtualOutput extends BaseDevice implements  DeviceType
 	 * Return the client display command for the toggleSwitch.
 	 * For a counter this is the same as the interpretted command
 	 */
-	public int getClientCommand ()
+	public int getDeviceType ()
 	{
-		return DeviceType.NA;
+		return DeviceType.VIRTUAL_OUTPUT;
 	}
 
 

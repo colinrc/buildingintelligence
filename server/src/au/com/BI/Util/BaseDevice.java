@@ -6,6 +6,7 @@ package au.com.BI.Util;
 import java.util.*;
 
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
 
 
 /**
@@ -143,4 +144,5 @@ public class BaseDevice {
 	public void setGroupName(String groupName) {
 		this.groupName = groupName;
 	}
+
 }

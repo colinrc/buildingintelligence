@@ -26,9 +26,9 @@ public class SMS extends BaseDevice implements DeviceType
 	public boolean keepStateForStartup () {
 		return false;
 	}
-	public int getClientCommand ()
+	public int getDeviceType ()
 	{
-		return DeviceType.NA;
+		return DeviceType.SMS;
 	}
 
 	public String getCommand () {

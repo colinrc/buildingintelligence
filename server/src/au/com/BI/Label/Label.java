@@ -2,7 +2,7 @@
  * Created on Feb 12, 2004
  *
  */
-package au.com.BI.AV;
+package au.com.BI.Label;
 import au.com.BI.Util.*;
 import au.com.BI.Command.*;
 import au.com.BI.Device.DeviceType;
@@ -13,12 +13,12 @@ import au.com.BI.Device.DeviceType;
  * @author Colin Canfield
  *
  **/
-public class AV extends BaseDevice implements DeviceType
+public class Label extends BaseDevice implements DeviceType
 {
 	protected String name="";
 	protected String command="";
 	
-	public AV (String name, int deviceType){
+	public Label (String name, int deviceType){
 		super (name,deviceType);
 		this.command = "";
 		this.outputKey = "";
@@ -28,7 +28,7 @@ public class AV extends BaseDevice implements DeviceType
 	}
 	public int getDeviceType ()
 	{
-		return DeviceType.AV;
+		return DeviceType.LABEL;
 	}
 
 	public String getCommand () {
@@ -40,7 +40,7 @@ public class AV extends BaseDevice implements DeviceType
 	 * @return
 	 */
 	public CommandInterface buildDisplayCommand () {
-		AVCommand alertCommand = new AVCommand ();
+		LabelCommand alertCommand = new LabelCommand ();
 		alertCommand.setDisplayName(this.getOutputKey());
 		return alertCommand;
 	}

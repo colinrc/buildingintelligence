@@ -34,10 +34,6 @@ public class Script extends BaseDevice implements DeviceType
 		return DeviceType.SCRIPT;
 	}
 
-	public int getClientCommand ()
-	{
-		return DeviceType.NA;
-	}
 
 	public String getInKey (){
 		return inKey;

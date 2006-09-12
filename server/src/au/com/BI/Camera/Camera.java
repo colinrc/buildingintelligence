@@ -28,9 +28,9 @@ public class Camera extends BaseDevice implements DeviceType
 	public boolean keepStateForStartup () {
 		return false;
 	}
-	public int getClientCommand ()
+	public int getDeviceType ()
 	{
-		return DeviceType.NA;
+		return DeviceType.CAMERA;
 	}
 
 	public String getCommand () {

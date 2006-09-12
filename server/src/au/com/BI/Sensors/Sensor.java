@@ -5,6 +5,7 @@
 package au.com.BI.Sensors;
 import au.com.BI.Util.*;
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
 
 
 /**
@@ -50,6 +51,10 @@ public class Sensor extends BaseDevice
 		SensorCommand lightCommand = new SensorCommand ();
 		lightCommand.setDisplayName(getOutputKey());
 		return lightCommand;
+	}
+	
+	public int getDeviceType () {
+		return DeviceType.SENSOR;
 	}
 	/**
 	 * @return Returns the max.

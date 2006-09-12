@@ -7,6 +7,7 @@ import java.util.*;
 
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Util.*;
+import au.com.BI.Label.LabelFactory;
 import au.com.BI.Lights.LightFactory;
 import au.com.BI.ToggleSwitch.*;
 import java.io.*;
@@ -64,6 +65,7 @@ public class Config {
 		protected PulseOutputFactory pulseOutputFactory;		
 		protected VirtualOutputFactory virtualOutputFactory;		
 		protected CameraFactory cameraFactory;		
+		protected LabelFactory labelFactory;
 		protected CustomInputFactory customInputFactory;		
 		protected CounterFactory counterFactory;		
 		protected AlertFactory alertFactory;		
@@ -101,6 +103,7 @@ public class Config {
 		this.setAnalogFactory ( AnalogFactory.getInstance());		
 		this.setIRFactory (IRFactory.getInstance());		
 		this.setSmsFactory(SMSFactory.getInstance());
+		this.setLabelFactory (LabelFactory.getInstance());
 		this.setCustomConnectFactory(CustomConnectFactory.getInstance());
 		
 		calendar_message_params = new HashMap<String,String> (5);
@@ -563,6 +566,9 @@ public class Config {
 						virtualOutputFactory.addVirtualOutput(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.COUNTER,groupName,rawHelper);
 					}
+					if (itemName.equals("LABEL")) {
+						labelFactory.addlabel(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE, DeviceType.LABEL, groupName, rawHelper);
+					}
 					if (itemName.equals("RAW_INTERFACE")) {
 						rawFactory.addRaw(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
 								DeviceType.RAW_INTERFACE,groupName,rawHelper);
@@ -785,6 +791,14 @@ public class Config {
 
 	public void setSmsFactory(SMSFactory smsFactory) {
 		this.smsFactory = smsFactory;
+	}
+
+	public LabelFactory getLabelFactory() {
+		return labelFactory;
+	}
+
+	public void setLabelFactory(LabelFactory labelFactory) {
+		this.labelFactory = labelFactory;
 	}
 	
 }

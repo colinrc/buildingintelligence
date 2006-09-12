@@ -66,6 +66,8 @@ public interface DeviceType
 	public static final int SMS = 48;
 	public static final int CUSTOM_CONNECT = 49;
 	
+	public static final int LABEL = 50;
+	
 	// Likely number of raw commands for device line. More is allowed.
 	public static final int PROBABLE_NUMBER_RAW = 10;
 
@@ -88,14 +90,6 @@ public interface DeviceType
 	 * @return The name
 	 */
 	public String getName ();
-	
-	/**
-	 * After the command has been interperetted this returns
-	 * the client action to display this command
-	 * @return The client display command
-	 * @deprecated
-	 */
-	 public int getClientCommand ();
 
 	/**
 	 * The original key from the config file is sometimes useful to know.

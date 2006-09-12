@@ -35,9 +35,9 @@ public class ToggleSwitch extends BaseDevice implements DeviceType,DynaliteInput
 	 * Return the client display command for the toggleSwitch.
 	 * For a toggleSwitch this is the same as the interpretted command
 	 */
-	public int getClientCommand ()
+	public int getDeviceType ()
 	{
-		return DeviceType.NA;
+		return DeviceType.TOGGLE_INPUT;
 	}
 
 	public int getBox() {

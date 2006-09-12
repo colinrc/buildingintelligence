@@ -38,10 +38,6 @@ public class AdminDevice extends BaseDevice implements DeviceType {
 		return false;
 	}
 	
-	public int getClientCommand ()
-	{
-		return DeviceType.NA;
-	}
 
 
 }

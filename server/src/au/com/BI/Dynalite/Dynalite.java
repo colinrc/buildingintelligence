@@ -105,9 +105,12 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 	 * Return the client display command for the light.
 	 * For a light this is the same as the interpretted command
 	 */
-	public int getClientCommand ()
+	public int getDeviceType ()
 	{
-		return DeviceType.NA;
+		if (this.isAreaDevice())
+			return DeviceType.LIGHT_DYNALITE_AREA;
+		else
+			return DeviceType.LIGHT_DYNALITE;
 	}
 	
 	public boolean keepStateForStartup () {

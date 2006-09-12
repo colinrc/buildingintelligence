@@ -45,11 +45,6 @@ public class CustomInput extends BaseDevice implements DeviceType
 		return DeviceType.CUSTOM_INPUT;
 	}
 	
-	public int getClientCommand ()
-	{
-		return DeviceType.NA;
-	}
-	
 	/**
 	 * If a key is to be interpretted as a regex pattern; hasPattern must be set true before setKey is called
 	 */

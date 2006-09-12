@@ -34,6 +34,10 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 		}
 	}
 
+	public int getClientCommand() {
+		return DeviceType.NA;
+	}
+	
 	public SensorFascade (String name, String channel, String units, int deviceType, String outputKey, String deviceName){
 
 		this (name, channel, units, deviceType,deviceName);
@@ -203,15 +207,7 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	{
 		this.setName(name);
 	}
-	
-	/**
-	 * Return the client display command for the light.
-	 * For a light this is the same as the interpretted command
-	 */
-	public int getClientCommand ()
-	{
-		return DeviceType.NA;
-	}
+
 	
 	/**
 	 * @return Returns the applicationCode.

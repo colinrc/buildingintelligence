@@ -118,6 +118,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 	*/
 
+	
 	public void addControlledItem (String name, DeviceType details, MessageDirection controlType) {
 
 		try {
