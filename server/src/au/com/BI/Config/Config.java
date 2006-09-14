@@ -541,8 +541,10 @@ public class Config {
 								DeviceType.TEMPERATURE,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_X10")) {
-						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
-								DeviceType.COMFORT_LIGHT_X10_UNITCODE,groupName,rawHelper);
+						if (deviceModel.getName().equals("COMFORT")){
+							lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+									DeviceType.COMFORT_LIGHT_X10_UNITCODE,groupName,rawHelper);
+						}
 						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.COMFORT_LIGHT_X10,groupName,rawHelper);
 					}
