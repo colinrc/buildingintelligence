@@ -48,6 +48,7 @@ public class M1CommandFactory {
 	 *   <li>AZ - Reply Alarm by Zone Report Data Message</li>
 	 *   <li>tn - Task Activation</li>
 	 *   <li>TC - Tasks Change Update</li>
+	 *   <li>PC - PLC Change Update</li>
 	 * </ul>
 	 * @param unparsedCommand
 	 * @return
@@ -99,6 +100,8 @@ public class M1CommandFactory {
 			m1Command = parseTaskActivation(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("TC")) {
 			m1Command = parseTasksChangeUpdate(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("PC")) {
+			m1Command = parsePLCChangeUpdate(unparsedCommand);
 		}
 		
 		if (m1Command == null) {
@@ -789,6 +792,44 @@ public class M1CommandFactory {
 		_command.setKey(command.substring(2,4));
 		_command.setCheckSum(command.substring(command.length()-2));
 		_command.setTask(command.substring(4,7));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parsePLCChangeUpdate(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		PLCChangeUpdate _command = new PLCChangeUpdate();
+		_command.setCommand(command);
+		_command.setKey(command.substring(2,4));
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setHouseCode(command.substring(4,5));
+		_command.setUnitCode(command.substring(5,7));
+		
+		String levelStatus = command.substring(7,9);
+		if (_command.getUnitCode().equals("00") && levelStatus.equals("01")) {
+			_command.setLevelStatus(PLCLevelStatus.X10_ALL_UNITS_OFF);
+		} else if (_command.getUnitCode().equals("00") && levelStatus.equals("02")) {
+			_command.setLevelStatus(PLCLevelStatus.X10_ALL_LIGHTS_ON);
+		} else if (_command.getUnitCode().equals("00") && levelStatus.equals("07")) {
+			_command.setLevelStatus(PLCLevelStatus.X10_ALL_LIGHTS_OFF);
+		} else if (levelStatus.equals("00")) {
+			_command.setLevelStatus(PLCLevelStatus.OFF);
+		} else if (levelStatus.equals("01")) {
+			_command.setLevelStatus(PLCLevelStatus.ON);
+		} else {
+			_command.setLevelStatus(PLCLevelStatus.getByValue(levelStatus));
+		}
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
 		if (checkSum.equals(_command.getCheckSum())) {

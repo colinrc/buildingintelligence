@@ -30,6 +30,7 @@ import au.com.BI.M1.Commands.Group;
 import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
+import au.com.BI.M1.Commands.PLCChangeUpdate;
 import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
 import au.com.BI.M1.Commands.RequestTemperatureReply;
@@ -373,6 +374,27 @@ public class ControlledHelper {
 						+ _command.getCommandCode() + " task="
 						+ _command.getExtraInfo());
 				sendToFlash(commandQueue, -1, _command);
+			} else if (m1Command.getClass().equals(PLCChangeUpdate.class)) {
+				PLCChangeUpdate plcChangeUpdate = (PLCChangeUpdate)m1Command;
+				CommandInterface _command = new AlertCommand();
+				_command.setDisplayName("PLC Change Update");
+				_command.setTargetDeviceID(-1);
+				_command.setUser(m1.currentUser);
+				_command.setCommand("PLC CHANGE UPDATE");
+				_command.setExtraInfo(plcChangeUpdate.getHouseCode());
+				if (plcChangeUpdate.getUnitCode().equals("00")) {
+					_command.setExtra2Info("All Command");
+				} else {
+					_command.setExtra2Info(plcChangeUpdate.getUnitCode());
+				}
+				_command.setExtra3Info(plcChangeUpdate.getLevelStatus().getValue());
+				_command.setKey("CLIENT_SEND");
+				cache.setCachedCommand(_command.getKey(), _command);
+
+				logger.log(Level.INFO, "Sending "
+						+ _command.getCommandCode() + " task="
+						+ _command.getExtraInfo());
+				sendToFlash(commandQueue, -1, _command);
 			}
 
 			if (sendCommandToFlash) {
@@ -444,7 +466,8 @@ public class ControlledHelper {
 				|| m1Command.getClass().equals(ZoneChangeUpdate.class)
 				|| m1Command.getClass()
 						.equals(ReplyAlarmByZoneReportData.class)
-				|| m1Command.getClass().equals(TasksChangeUpdate.class)) {
+				|| m1Command.getClass().equals(TasksChangeUpdate.class)
+				|| m1Command.getClass().equals(PLCChangeUpdate.class)) {
 			return m1Command;
 		} else {
 			return null;

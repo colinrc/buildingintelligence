@@ -18,14 +18,19 @@ import au.com.BI.M1.Commands.ControlOutputStatusReport;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputToggle;
 import au.com.BI.M1.Commands.Disarm;
+import au.com.BI.M1.Commands.Group;
 import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
+import au.com.BI.M1.Commands.PLCChangeUpdate;
+import au.com.BI.M1.Commands.PLCLevelStatus;
 import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
 import au.com.BI.M1.Commands.ReplyWithBypassedZoneState;
 import au.com.BI.M1.Commands.RequestTemperature;
 import au.com.BI.M1.Commands.RequestTemperatureReply;
+import au.com.BI.M1.Commands.TaskActivation;
+import au.com.BI.M1.Commands.TasksChangeUpdate;
 import au.com.BI.M1.Commands.ZoneBypassRequest;
 import au.com.BI.M1.Commands.ZoneBypassState;
 import au.com.BI.M1.Commands.ZoneChangeUpdate;
@@ -277,6 +282,56 @@ public class TestM1ModelFromDevice extends TestCase {
 		assertEquals(zoneByAlarmReport.getZoneDefinition()[23],ZoneDefinition.POLICE_ALARM);	
 		assertEquals(zoneByAlarmReport.getZoneDefinition()[24],ZoneDefinition.POLICE_NO_INDICATION);	
 		assertEquals(zoneByAlarmReport.getZoneDefinition()[25],ZoneDefinition.WATER_ALARM);	
+		
+		RequestTemperatureReply otherTemp = new RequestTemperatureReply();
+		otherTemp.setGroup(Group.TEMPERATURE_PROBE);
+		otherTemp.setDevice("01");
+		otherTemp.setTemperature("130");
+		System.out.println(otherTemp.buildM1String());
+		
+		str = "09tn00100C4";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),TaskActivation.class);
+		System.out.println(((TaskActivation)m1Command).getTask());
+		
+		str = "0ATC001000D7";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),TasksChangeUpdate.class);
+		System.out.println(((TasksChangeUpdate)m1Command).getTask());
+		
+		str = "0BPCA01000099";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),PLCChangeUpdate.class);
+		
+		str = "PCA010100";
+		m1Command = M1CommandFactory.getInstance().getM1Command(new M1Helper().buildCompleteM1String(str));
+		System.out.println(m1Command.getCommandCode());
+		assertEquals(((PLCChangeUpdate)m1Command).getLevelStatus(),PLCLevelStatus.ON);
+		
+		str = "PCA010000";
+		m1Command = M1CommandFactory.getInstance().getM1Command(new M1Helper().buildCompleteM1String(str));
+		System.out.println(m1Command.getCommandCode());
+		assertEquals(((PLCChangeUpdate)m1Command).getLevelStatus(),PLCLevelStatus.OFF);
+		
+		str = "PCA000100";
+		m1Command = M1CommandFactory.getInstance().getM1Command(new M1Helper().buildCompleteM1String(str));
+		System.out.println(m1Command.getCommandCode());
+		assertEquals(((PLCChangeUpdate)m1Command).getLevelStatus(),PLCLevelStatus.X10_ALL_UNITS_OFF);
+		
+		str = "PCA000200";
+		m1Command = M1CommandFactory.getInstance().getM1Command(new M1Helper().buildCompleteM1String(str));
+		System.out.println(m1Command.getCommandCode());
+		assertEquals(((PLCChangeUpdate)m1Command).getLevelStatus(),PLCLevelStatus.X10_ALL_LIGHTS_ON);
+		
+		str = "PCA000700";
+		m1Command = M1CommandFactory.getInstance().getM1Command(new M1Helper().buildCompleteM1String(str));
+		System.out.println(m1Command.getCommandCode());
+		assertEquals(((PLCChangeUpdate)m1Command).getLevelStatus(),PLCLevelStatus.X10_ALL_LIGHTS_OFF);
+		
+		str = "PCA013000";
+		m1Command = M1CommandFactory.getInstance().getM1Command(new M1Helper().buildCompleteM1String(str));
+		System.out.println(m1Command.getCommandCode());
+		assertEquals(((PLCChangeUpdate)m1Command).getLevelStatus(),PLCLevelStatus.L30);
 	}
 	
 }
