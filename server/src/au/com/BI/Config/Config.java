@@ -7,7 +7,6 @@ import java.util.*;
 
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Util.*;
-import au.com.BI.Label.LabelFactory;
 import au.com.BI.Lights.LightFactory;
 import au.com.BI.ToggleSwitch.*;
 import java.io.*;
@@ -29,6 +28,7 @@ import au.com.BI.GC100.*;
 import au.com.BI.GroovyModels.GroovyRunBlock;
 import au.com.BI.Counter.*;
 import au.com.BI.Device.DeviceType;
+import au.com.BI.Label.LabelFactory;
 import au.com.BI.VirtualOutput.*;
 import au.com.BI.PulseOutput.*;
 import au.com.BI.Macro.*;
@@ -567,7 +567,7 @@ public class Config {
 								DeviceType.COUNTER,groupName,rawHelper);
 					}
 					if (itemName.equals("LABEL")) {
-						labelFactory.addlabel(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE, DeviceType.LABEL, groupName, rawHelper);
+						labelFactory.addLabel(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE, DeviceType.LABEL, groupName, rawHelper);
 					}
 					if (itemName.equals("RAW_INTERFACE")) {
 						rawFactory.addRaw(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
