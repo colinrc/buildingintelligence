@@ -11,6 +11,10 @@
 			<setting name="screenLockTimeout" value="300"/>
 
 			<setting name="showDropShadows" value="true" />
+			<setting name="modelBlur" value="true" />
+
+			<setting name="vlcOpen" value="c:/progra~1/videolan/vlc/vlc.exe --one-instance c:/test.avi --width 320 --height 240 --video-x 800 --video-y 600 --video-on-top --no-video-deco --intf dummy --dummy-quiet --loop"/>
+			<setting name="vlcClose" value="c:/progra~1/videolan/vlc/vlc.exe --one-instance vlc:quit"/>
 
 			<setting name="integratorHtml" value="about:blank" />
 		</common>
@@ -83,7 +87,7 @@
 		<group name="Test" icon="gears" type="web" url="http://www.sparkos.com/" />
 	</logging>
 	<appsBar>
-		<icon name="Reload" icon="refresh" func="init" canOpen="" />
+		<icon name="TV" icon="tv" func="toggleTV" canOpen="" />
 		<icon name="Web" icon="atom" func="openBrowser" canOpen="" />
 		<icon name="Logs" icon="notepad" func="openLogs" canOpen="" />
 		<icon name="Calendar" icon="calendar" func="openCalendar" canOpen="" />
@@ -108,6 +112,21 @@
 	</calendar>
 	<controlPanelApps>
 		<app label="Calculator" program="calc.exe" />
+		<app label="Fan On" command="E3" extra="I" />
+		<app label="Fan Off" command="E3" extra="O" />
+		<app label="Button 1 Blue" command="L1" extra="B" />
+		<app label="Button 1 Yellow" command="L1" extra="Y" />
+		<app label="Button 1 Off" command="L1" extra="0" />
+		<app label="Button 2 Blue" command="L2" extra="B" />
+		<app label="Button 2 Yellow" command="L2" extra="Y" />
+		<app label="Button 2 Off" command="L3" extra="0" />
+		<app label="Button 3 Blue" command="L3" extra="B" />
+		<app label="Button 3 Yellow" command="L3" extra="Y" />
+		<app label="Button 3 Off" command="L3" extra="0" />
+		<app label="Halo Bright" command="B1" extra="9" />
+		<app label="Halo Dim" command="B1" extra="5" />
+		<app label="Audio On" command="A" extra="I" />
+		<app label="Audio Off" command="A" extra="O" />
 	</controlPanelApps>
 	<property>
 		<zone name="Home" background="home.jpg" cycle="false" alignment="center">

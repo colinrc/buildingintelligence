@@ -506,6 +506,8 @@ renderAppsBar = function () {
 				} else {
 					if (this.func == "runexe") {
 						mdm.System.exec(this.program);
+					} else if (this.func == "toggleTV") {
+						toggleTV();
 					} else {
 						_root[this.func]();
 					}
@@ -1557,59 +1559,17 @@ openAbout = function () {
 	}
 }
 
-openTV = function (setTo) {
-	if (setTo != undefined) {
-		tvStatus = setTo;
-	} else if (tvStatus == "off") {
-		tvStatus = "inset";
-	} else if (tvStatus == "inset") {
-		tvStatus = "fullscreen";
-	} else if (tvStatus == "fullscreen") {
-		tvStatus = "off";
-	}
-	if (tvStatus == "inset") {
-		updateKey(_global.tv.inset.key, _global.tv.inset.command, _global.tv.inset.extra, true);
-		var width = _global.tv.controlGrid.width;
-		var height = _global.tv.controlGrid.height;
-		var x = _global.tv.controlGrid.x;
-		var y = _global.tv.controlGrid.y;
-	} else if (tvStatus == "fullscreen") {
-		updateKey(_global.tv.fullscreen.key, _global.tv.fullscreen.command, _global.tv.fullscreen.extra, true);
-		var width = Stage.width;
-		var height = Stage.height;
-		var x = 0;
-		var y = 0;
-	} else if (tvStatus == "off") {
-		updateKey(_global.tv.close.key, _global.tv.close.command, _global.tv.close.extra, true);
-	}
-	if (tvStatus == "inset" || tvStatus == "fullscreen") {
-		tv_mc._visible = true;
-		var depth = 0;
-		var rows = _global.tv.controlGrid.rows;
-		var cellHeight = Math.round(height / rows.length);
-		for (var row=0; row<rows.length; row++) {
-			var cells = rows[row];
-			var cellWidth = Math.round(width / cells.length);
-			for (var cell=0; cell<cells.length; cell++) {
-				var cell_mc = tv_mc.createEmptyMovieClip("cell" + depth + "_mc", depth++);
-				cell_mc.beginFill(_global.tv.controlGrid.bgColour, 90);
-				cell_mc.lineTo(cellWidth, 0);
-				cell_mc.lineTo(cellWidth, cellHeight);
-				cell_mc.lineTo(0, cellHeight);
-				cell_mc.lineTo(0, 0);
-				cell_mc.endFill();
-				cell_mc._x = cell * cellWidth;
-				cell_mc._y = row * cellHeight;
-				cell_mc.control_obj = cells[cell];
-				cell_mc.onPress2 = function () {
-					updateKey(this.control_obj.key, this.control_obj.command, this.control_obj.extra, true);
-				}
-			}
-		}
-		tv_mc._x = x;
-		tv_mc._y = y;
+toggleTV = function () {
+	if (tvStatus == "open") {
+		_root.tvHolder_mc.removeMovieClip();
+		var tmp = mdm.System.execStdOut(_global.settings.vlcClose);
+		tvStatus = "closed";
 	} else {
-		tv_mc._visible = false;
+		_root.attachMovie("tvHolder", "tvHolder_mc", 6000);
+		_root.tvHolder_mc._x = 570;
+		_root.tvHolder_mc._y = 510;
+		mdm.Process.create("VLC", 0, 0, 0, 0, "", _global.settings.vlcOpen, "c:\\", 2, 4);
+		tvStatus = "open";
 	}
 }
 
@@ -1976,9 +1936,16 @@ createAppsPanel = function (content_mc) {
 	for (var app=0; app<_global.controlPanelApps.length; app++) {
 		var app_btn = btns_mc.attachMovie("bi.ui.Button", "app" + app + "_btn", app, {settings:{width:180, height:30, label:_global.controlPanelApps[app].label, fontSize:12}});
 		app_btn.press = function () {
-			mdm.System.exec(this.program);
+			if (this.program.length) {
+				mdm.System.exec(this.program);
+			} else {
+				sendCmd("COM_PORT", this.command, this.extra);
+			}
 		}
 		app_btn.program = _global.controlPanelApps[app].program;
+		app_btn.command = _global.controlPanelApps[app].command;
+		trace(app_btn.command);
+		app_btn.extra = _global.controlPanelApps[app].extra;
 		app_btn._y = app * 35;
 		app_btn.addEventListener("press", app_btn);
 	}

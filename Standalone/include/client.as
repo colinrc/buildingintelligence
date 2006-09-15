@@ -17,6 +17,7 @@ parseClientXML = function (xml) {
 
 	Stage.align = "TL";
 	Stage.scaleMode = (_global.settings.scale) ? "showAll" : "noScale";
+	mdm.Application.sendToBack();
 
 	if (_global.settings.fullScreen) {
 		if (mdm == undefined) {

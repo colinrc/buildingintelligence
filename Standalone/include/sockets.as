@@ -14,7 +14,7 @@ crypto.onDecode = function (decoded) {
 	receiveCmd(new XML(decoded).firstChild, true);
 }
 
-mdm.COMPort.open(1, 19200, 8, "N", 1, "OFF");
+mdm.COMPort.open(3, 19200, 8, "N", 1, "OFF");
 mdm.COMPort.useLineMode(true, chr(13));
 mdm.COMPort.onCOMPortData = function (dataObj){
 	var data = dataObj.data.substr(0, dataObj.data.length - 1);
@@ -22,7 +22,8 @@ mdm.COMPort.onCOMPortData = function (dataObj){
 	var extra = data.split(" ")[1];
 	if (extra == "+") extra = "on";
 	if (extra == "-") extra = "off";
-	if (command == "W0")  return;
+	//if (command == "W0") return;
+	if (command == "K2" && extra == "off") toggleTV();
 	receiveCmd(new XML('<CONTROL KEY="COM_PORT" COMMAND="' + command + '" EXTRA="' + extra + '" />'));
 }
 
