@@ -5,12 +5,14 @@
 	private var contacts:Objects.Server.ContactClosures;
 	private var toggle_outputs:Objects.Server.Toggles;
 	private var sensors: Objects.Server.M1Sensors;
+	private var x10_lights:Objects.Server.X10Lights;
 
 	public function getKeys():Array{
 		var tempKeys = new Array();
 		tempKeys = tempKeys.concat(contacts.getKeys());
 		tempKeys = tempKeys.concat(toggle_outputs.getKeys());
 		tempKeys = tempKeys.concat(sensors.getKeys());
+		tempKeys = tempKeys.concat(x10_lights.getKeys());
 		return tempKeys;
 	}
 	public function isValid():String {
@@ -35,6 +37,7 @@
 				newFlag = getHighestFlagValue(flag, contacts.isValid());
 				newFlag = getHighestFlagValue(flag, toggle_outputs.isValid());
 				newFlag = getHighestFlagValue(flag, sensors.isValid());
+				newFlag = getHighestFlagValue(flag, x10_lights.isValid());
 				if (newFlag != "ok") {
 					appendValidationMsg("M1 is invalid");
 				}
@@ -122,6 +125,10 @@
 		for (var child in tempSensors.childNodes) {
 			newM1.appendChild(tempSensors.childNodes[child]);
 		}
+		var tempX10Lights = x10_lights.toXML();
+		for(var child in tempX10Lights.childNodes){
+			newM1.appendChild(tempX10Lights.childNodes[child]);
+		}
 		newDevice.appendChild(newM1);
 		return newDevice;
 	}
@@ -130,6 +137,7 @@
 		newNode.appendChild(contacts.toTree());
 		newNode.appendChild(toggle_outputs.toTree());
 		newNode.appendChild(sensors.toTree());
+		newNode.appendChild(x10_lights.toTree());
 		newNode.object = this;
 		treeNode = newNode;		
 		return newNode;
@@ -144,6 +152,7 @@
 		parameters = new Array();		
 		contacts = new Objects.Server.ContactClosures();
 		sensors = new Objects.Server.M1Sensors();
+		x10_lights = new Objects.Server.X10Lights();
 		toggle_outputs = new Objects.Server.Toggles("TOGGLE_OUTPUT");
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
@@ -167,9 +176,13 @@
 					var tempContacts = new XMLNode(1, "contact closures");
 					var tempToggleOutputs = new XMLNode(1,device_type);
 					var tempSensors = new XMLNode(1,"sensors");
+					var tempX10Lights = new XMLNode(1,device_type);
 					var tempNode = newData.childNodes[child];
 					for (var M1Device in tempNode.childNodes) {
-						switch (tempNode.childNodes[M1Device].nodeName) {
+					switch (tempNode.childNodes[M1Device].nodeName) {
+						case "LIGHT_X10":
+							tempX10Lights.appendChild(tempNode.childNodes[M1Device]);
+							break;
 						case "CONTACT_CLOSURE" :
 							tempContacts.appendChild(tempNode.childNodes[M1Device]);
 							break;
@@ -184,6 +197,7 @@
 					contacts.setXML(tempContacts);
 					toggle_outputs.setXML(tempToggleOutputs);
 					sensors.setXML(tempSensors);
+					x10_lights.setXML(tempX10Lights);
 					break;
 				case "CONNECTION" :
 					connection = newData.childNodes[child];

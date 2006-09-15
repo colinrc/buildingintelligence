@@ -292,6 +292,14 @@
 				treeNode.appendChild(newDynalite.toTree());
 				devices.push(newDynalite);
 				break;
+			case "DMX" :
+				var newDMX = new Objects.Server.DMX();
+				newDMX.setXML(newNode);
+				newDMX.id = _global.formDepth++;				
+				newDMX.active = "Y";				
+				treeNode.appendChild(newDMX.toTree());
+				devices.push(newDMX);
+				break;
 			case "GC100" :
 				var newGC100 = new Objects.Server.GC100();
 				newGC100.setXML(newNode);
@@ -411,6 +419,13 @@
 						newDynalite.id = _global.formDepth++;
 						newDynalite.active = "Y";						
 						devices.push(newDynalite);
+						break;
+					case "DMX" :
+						var newDMX = new Objects.Server.DMX();
+						newDMX.setXML(newData.childNodes[child]);
+						newDMX.id = _global.formDepth++;
+						newDMX.active = "Y";						
+						devices.push(newDMX);
 						break;
 					case "GC100" :
 						var newGC100 = new Objects.Server.GC100();

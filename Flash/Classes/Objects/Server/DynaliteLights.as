@@ -124,6 +124,7 @@
 			newLight.active = "Y";
 			newLight.power = "";
 			newLight.bla = "";
+			newLight.area = "";
 			if (newData.childNodes[child].attributes["NAME"] != undefined) {
 				newLight.name = newData.childNodes[child].attributes["NAME"];
 			}
