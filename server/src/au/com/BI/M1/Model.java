@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import au.com.BI.Lights.LightFascade;
 import au.com.BI.M1.ControlledHelper;
 import au.com.BI.Alert.Alarm;
 import au.com.BI.Command.CommandInterface;
@@ -137,6 +138,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				deviceKeyAddition = "TOUT";
 			} else if (details.getDeviceType() == DeviceType.CONTACT_CLOSURE) {
 				deviceKeyAddition = "CC";
+			} else if (details.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
+				LightFascade light = (LightFascade)details;
+				deviceKeyAddition = "X10" + light.getX10HouseCode();
 			}
 		}
 		
@@ -145,6 +149,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		} else if (details.getDeviceType() == DeviceType.SENSOR) {
 			// only pad the string with 2 characters as this is the device that will be returned.
 			super.addControlledItem(Utility.padString(key,2),details,type);
+		} else if (details.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
+			super.addControlledItem(Utility.padString(key, 2) + deviceKeyAddition,details,type);
 		} else {
 			super.addControlledItem(Utility.padString(key,3)+deviceKeyAddition,details,type);
 		}

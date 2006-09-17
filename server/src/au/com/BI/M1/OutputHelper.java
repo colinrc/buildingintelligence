@@ -135,7 +135,6 @@ public class OutputHelper {
 					TaskActivation m1Command = new TaskActivation();
 					m1Command.setTask(command.getExtraInfo());
 					retCode = m1Command.buildM1String() + "\r\n";
-					
 				}
 			}
 

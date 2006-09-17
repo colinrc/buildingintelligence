@@ -1,6 +1,7 @@
 package au.com.BI.M1;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,6 +12,8 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
+import au.com.BI.Device.DeviceType;
+import au.com.BI.Lights.LightFascade;
 import au.com.BI.M1.Model;
 import au.com.BI.M1.Commands.AreaAlarmState;
 import au.com.BI.M1.Commands.ArmAndDisarmMessage;
@@ -31,6 +34,7 @@ import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
 import au.com.BI.M1.Commands.PLCChangeUpdate;
+import au.com.BI.M1.Commands.PLCLevelStatus;
 import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
 import au.com.BI.M1.Commands.RequestTemperatureReply;
@@ -67,7 +71,7 @@ public class ControlledHelper {
 	public void doControlledItem(CommandInterface command,
 			ConfigHelper configHelper, Cache cache, CommandQueue commandQueue,
 			Model m1) throws CommsFail {
-		
+
 		boolean sendCommandToFlash = true;
 
 		// Check to see if it is a comms command
@@ -79,8 +83,6 @@ public class ControlledHelper {
 					configHelper, m1);
 			if (m1Command == null)
 				return;
-
-//			cache.setCachedCommand(m1Command.getDisplayName(), m1Command);
 
 			// Check the command class
 			if (m1Command.getClass().equals(ZoneChangeUpdate.class)) {
@@ -207,10 +209,13 @@ public class ControlledHelper {
 						.getDescription());
 				_command.setKey("CLIENT_SEND");
 				_command.setCommand("on");
-				
-				// we need to store the current state of the temperature - it is not getting cached properly
-				
-				if (sensor.getTemperature() == null || !sensor.getTemperature().equals(_command.getExtraInfo())) {
+
+				// we need to store the current state of the temperature - it is
+				// not getting cached properly
+
+				if (sensor.getTemperature() == null
+						|| !sensor.getTemperature().equals(
+								_command.getExtraInfo())) {
 					cache.setCachedCommand(_command.getKey(), _command);
 
 					logger.log(Level.INFO,
@@ -220,7 +225,7 @@ public class ControlledHelper {
 									+ requestTemperatureReply.getDevice() + ":"
 									+ adjustedTemperature);
 					sensor.setTemperature(_command.getExtraInfo());
-					
+
 					sendToFlash(commandQueue, -1, _command);
 				} else {
 					sendCommandToFlash = false;
@@ -360,41 +365,148 @@ public class ControlledHelper {
 					sendToFlash(commandQueue, -1, _command);
 				}
 			} else if (m1Command.getClass().equals(TasksChangeUpdate.class)) {
-				TasksChangeUpdate tasksChangeUpdate = (TasksChangeUpdate)m1Command;
+				TasksChangeUpdate tasksChangeUpdate = (TasksChangeUpdate) m1Command;
 				CommandInterface _command = new AlertCommand();
-				_command.setDisplayName("Tasks Change Update");
+				_command.setDisplayName("TASK_ACTIVATION_REQUEST");
 				_command.setTargetDeviceID(-1);
 				_command.setUser(m1.currentUser);
-				_command.setCommand("TASKS CHANGE UPDATE");
+				_command.setCommand("TASK_ACTIVATION_REQUEST");
 				_command.setExtraInfo(tasksChangeUpdate.getTask());
 				_command.setKey("CLIENT_SEND");
 				cache.setCachedCommand(_command.getKey(), _command);
 
-				logger.log(Level.INFO, "Sending "
-						+ _command.getCommandCode() + " task="
-						+ _command.getExtraInfo());
+				logger.log(Level.INFO, "Sending " + _command.getCommandCode()
+						+ " task=" + _command.getExtraInfo());
 				sendToFlash(commandQueue, -1, _command);
 			} else if (m1Command.getClass().equals(PLCChangeUpdate.class)) {
-				PLCChangeUpdate plcChangeUpdate = (PLCChangeUpdate)m1Command;
-				CommandInterface _command = new AlertCommand();
-				_command.setDisplayName("PLC Change Update");
-				_command.setTargetDeviceID(-1);
-				_command.setUser(m1.currentUser);
-				_command.setCommand("PLC CHANGE UPDATE");
-				_command.setExtraInfo(plcChangeUpdate.getHouseCode());
-				if (plcChangeUpdate.getUnitCode().equals("00")) {
-					_command.setExtra2Info("All Command");
-				} else {
-					_command.setExtra2Info(plcChangeUpdate.getUnitCode());
-				}
-				_command.setExtra3Info(plcChangeUpdate.getLevelStatus().getValue());
-				_command.setKey("CLIENT_SEND");
-				cache.setCachedCommand(_command.getKey(), _command);
 
-				logger.log(Level.INFO, "Sending "
-						+ _command.getCommandCode() + " task="
-						+ _command.getExtraInfo());
-				sendToFlash(commandQueue, -1, _command);
+				PLCChangeUpdate plcChangeUpdate = (PLCChangeUpdate) m1Command;
+
+				if (plcChangeUpdate.getLevelStatus() == PLCLevelStatus.X10_ALL_LIGHTS_OFF) {
+					// turn all X10 lights off
+					Iterator iterator = configHelper.getAllControlledDevices();
+
+					while (iterator.hasNext()) {
+						Object obj = iterator.next();
+
+						if (obj.getClass().equals(LightFascade.class)) {
+							LightFascade light = (LightFascade) obj;
+
+							if (light.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
+								CommandInterface _command = new AlertCommand();
+								_command.setDisplayName(light.getOutputKey());
+								_command.setTargetDeviceID(-1);
+								_command.setUser(m1.currentUser);
+								_command.setCommand("off");
+								_command.setExtraInfo("0");
+								_command.setKey("CLIENT_SEND");
+								cache.setCachedCommand(_command.getKey(),
+										_command);
+
+								logger
+										.log(Level.INFO, "Sending "
+												+ _command.getCommandCode()
+												+ " command to "
+												+ light.getOutputKey());
+								sendToFlash(commandQueue, -1, _command);
+							}
+						}
+					}
+				} else if (plcChangeUpdate.getLevelStatus() == PLCLevelStatus.X10_ALL_LIGHTS_ON) {
+					// turn all X10 lights on
+					Iterator iterator = configHelper.getAllControlledDevices();
+
+					while (iterator.hasNext()) {
+						Object obj = iterator.next();
+
+						if (obj.getClass().equals(LightFascade.class)) {
+							LightFascade light = (LightFascade) obj;
+
+							if (light.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
+								CommandInterface _command = new AlertCommand();
+								_command.setDisplayName(light.getOutputKey());
+								_command.setTargetDeviceID(-1);
+								_command.setUser(m1.currentUser);
+								_command.setCommand("on");
+								_command.setExtraInfo("100");
+								_command.setKey("CLIENT_SEND");
+								cache.setCachedCommand(_command.getKey(),
+										_command);
+
+								logger
+										.log(Level.INFO, "Sending "
+												+ _command.getCommandCode()
+												+ " command to "
+												+ light.getOutputKey());
+								sendToFlash(commandQueue, -1, _command);
+							}
+						}
+					}
+				} else if (plcChangeUpdate.getLevelStatus() == PLCLevelStatus.X10_ALL_UNITS_OFF) {
+					// turn all X10 units off
+					Iterator iterator = configHelper.getAllControlledDevices();
+
+					while (iterator.hasNext()) {
+						Object obj = iterator.next();
+
+						if (obj.getClass().equals(LightFascade.class)) {
+							LightFascade light = (LightFascade) obj;
+
+							if (light.getDeviceType() == DeviceType.COMFORT_LIGHT_X10
+									|| light.getDeviceType() == DeviceType.COMFORT_LIGHT_SWITCH_X10
+									|| light.getDeviceType() == DeviceType.COMFORT_LIGHT_X10_UNITCODE) {
+								CommandInterface _command = new AlertCommand();
+								_command.setDisplayName(light.getOutputKey());
+								_command.setTargetDeviceID(-1);
+								_command.setUser(m1.currentUser);
+								_command.setCommand("off");
+								_command.setExtraInfo("0");
+								_command.setKey("CLIENT_SEND");
+								cache.setCachedCommand(_command.getKey(),
+										_command);
+
+								logger
+										.log(Level.INFO, "Sending "
+												+ _command.getCommandCode()
+												+ " command to "
+												+ light.getOutputKey());
+								sendToFlash(commandQueue, -1, _command);
+							}
+						}
+					}
+				} else {
+
+					String outputKey = ((LightFascade) configHelper
+							.getControlItem(plcChangeUpdate.getUnitCode()
+									+ "X10" + plcChangeUpdate.getHouseCode()))
+							.getOutputKey();
+
+					if (outputKey != null) {
+						CommandInterface _command = new AlertCommand();
+						_command.setDisplayName(outputKey);
+						_command.setTargetDeviceID(-1);
+						_command.setUser(m1.currentUser);
+						if (plcChangeUpdate.getLevelStatus() == PLCLevelStatus.ON) {
+							_command.setCommand("on");
+							_command.setExtraInfo("100");
+						} else if (plcChangeUpdate.getLevelStatus() == PLCLevelStatus.OFF) {
+							_command.setCommand("off");
+							_command.setExtraInfo("0");
+						} else {
+							_command.setCommand("on");
+							_command.setExtraInfo(plcChangeUpdate
+									.getLevelStatus().getValue());
+						}
+						_command.setKey("CLIENT_SEND");
+						cache.setCachedCommand(_command.getKey(), _command);
+
+						logger.log(Level.INFO, "Sending "
+								+ _command.getCommandCode() + " command to "
+								+ outputKey);
+						sendToFlash(commandQueue, -1, _command);
+					}
+				}
+
 			}
 
 			if (sendCommandToFlash) {
