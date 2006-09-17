@@ -1,5 +1,5 @@
 <CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
-        <DESC>Demonstration configuration for a Jandi pool controller</DESC>
+        <DESC>Demonstration configuration for an Advantage Air conditioning controller</DESC>
          <!-- ______________________________________  Jandi DEFS  ____________________  -->
         <DEVICE ACTIVE="N" DEVICE_TYPE="ADVANTAGE" DESCRIPTION="Advantage Air controller">
                 <CONNECTION>
@@ -14,8 +14,8 @@
                 </PARAMETERS>
  
                 <ADVANTAGE>
-
-						 
+						<AIR KEY="1" DISPLAY_NAME="KITCHEN_AIR" NAME="Kitchen Air" />						 
+						<AIR KEY="2" DISPLAY_NAME="STUDY_AIR" NAME="Study Air" />
                 </ADVANTAGE>
         </DEVICE>
         
