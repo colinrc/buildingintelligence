@@ -14,15 +14,20 @@
                 </PARAMETERS>
  
                 <JANDI>
-                      <OUTPUT KEY="PoolPump" ACTIVE="y" NAME="Front Pool Pump" DISPLAY_NAME="FRONT_POOL_PUMP"/>
-                      <OUTPUT KEY="PoolCleaner" ACTIVE="y" NAME="Pool cleaner"  DISPLAY_NAME="POOLS_CLEANER"/>               
-                      <OUTPUT KEY="SpaPump" ACTIVE="Y" DISPLAY_NAME="SPA" NAME="Spa" />
+                      <OUTPUT KEY="PoolPump" ACTIVE="Y" NAME="Pool Pump" DISPLAY_NAME="POOL_PUMP"/>
+                      <OUTPUT KEY="PoolCleaner" ACTIVE="Y" NAME="Pool Cleaner"  DISPLAY_NAME="POOL_CLEANER"/>               
+                      <OUTPUT KEY="PoolHeater" ACTIVE="Y" NAME="Pool Heater"  DISPLAY_NAME="POOL_HEATER"/>               
+                      
+                      <OUTPUT KEY="SpaPump" ACTIVE="Y" DISPLAY_NAME="SPA_PUMP" NAME="Spa Pump" />
+					  <OUTPUT KEY="SpaCleaner" ACTIVE="Y" DISPLAY_NAME="SPA_CLEANER" NAME="Spa Cleaner" />
+					  <OUTPUT KEY="SpaHeater" ACTIVE="Y" DISPLAY_NAME="SPA_HEATER" NAME="Spa Heater" />
  
-                    <SENSOR KEY="4" NAME="Air temperature" DISPLAY_NAME="AIR" TYPE="AIR" />
-                    
-                     <SENSOR KEY="5" NAME="Solar temperature and heater" DISPLAY_NAME="SOLAR" TYPE="SOLAR" />						
+                     <SENSOR KEY="AirTemp" NAME="Air temperature" DISPLAY_NAME="AIR_TEMP"  />
+                     <SENSOR KEY="SolarTemp" NAME="Solar temperature and heater" DISPLAY_NAME="SOLAR_TEMP" />						
+                     <SENSOR KEY="PoolTemp" NAME="Air temperature" DISPLAY_NAME="POOL_TEMP"  />
+                     <SENSOR KEY="SpaTemp" NAME="Solar temperature and heater" DISPLAY_NAME="SPA_TEMP" />						
  
-					  <!-- The key numbers here are magic, they are purely used to tie Jandi functions to particular display names -->
+					  <!-- The key names here are magic, they are purely used to tie Jandi functions to particular display names -->
 						 
                 </JANDI>
         </DEVICE>
