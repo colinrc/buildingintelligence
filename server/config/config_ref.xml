@@ -367,6 +367,8 @@
                         <ITEM NAME="SHOW_KEYPAD_MODES" VALUE="01,04"/>
                 </PARAMETERS>
                 <COMFORT>
+                		<KEYPAD KEY="" NAME="Target virtual keypad and disarm commands" DISPLAY_NAME="MAIN_KEYPAD" />
+                
                         <!-- All codes are in hex -->
                         <!-- The first 2 chars are the key, the last two are a parameter to be passed to the flash client in the EXTRA field -->
                         <CUSTOM_INPUT KEY="BI01" NAME="FRONTCOURT_AUDIO" DISPLAY_NAME="FRONTCOURT_AUDIO" COMMAND="on"/>
