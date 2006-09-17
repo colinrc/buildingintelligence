@@ -23,6 +23,9 @@ import au.com.BI.M1.Commands.M1Command;
 import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
 import au.com.BI.M1.Commands.PLCChangeUpdate;
+import au.com.BI.M1.Commands.PLCDeviceOff;
+import au.com.BI.M1.Commands.PLCDeviceOn;
+import au.com.BI.M1.Commands.PLCDeviceToggle;
 import au.com.BI.M1.Commands.PLCLevelStatus;
 import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
@@ -332,6 +335,18 @@ public class TestM1ModelFromDevice extends TestCase {
 		m1Command = M1CommandFactory.getInstance().getM1Command(new M1Helper().buildCompleteM1String(str));
 		System.out.println(m1Command.getCommandCode());
 		assertEquals(((PLCChangeUpdate)m1Command).getLevelStatus(),PLCLevelStatus.L30);
+		
+		str = "09pnA0100B7";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),PLCDeviceOn.class);
+		
+		str = "09pfA0100BF";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),PLCDeviceOff.class);
+		
+		str = "09ptA0100B1";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),PLCDeviceToggle.class);
 	}
 	
 }
