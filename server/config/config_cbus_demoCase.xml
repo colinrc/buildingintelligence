@@ -39,14 +39,14 @@
                         <LIGHT_CBUS ACTIVE="Y" KEY="21"   NAME="Dimmer 7" DISPLAY_NAME="DIMMER7" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="24"   NAME="Dimmer 8" DISPLAY_NAME="DIMMER8" POWER_RATING="100"/>
                         
-                        <LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" POWER_RATING="100"/>
-                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT2" POWER_RATING="100"/>
-                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3" POWER_RATING="100"/>
-                        <LABEL ACTIVE="Y" KEY="3"   NAME="DLT 4"  DISPLAY_NAME="DLT4" POWER_RATING="100"/>
-                        <LABEL ACTIVE="Y" KEY="200"   NAME="DLT 5" DISPLAY_NAME="DLT5" POWER_RATING="100"/>
-                        <LABEL ACTIVE="Y" KEY="201"   NAME="DLT 6" DISPLAY_NAME="DLT6" POWER_RATING="100"/>
-                        <LABEL ACTIVE="Y" KEY="202"   NAME="DLT 7"  DISPLAY_NAME="DLT7" POWER_RATING="100"/>
-                        <LABEL ACTIVE="Y" KEY="220"   NAME="DLT 8" CBUS_APPLICATION="37"  DISPLAY_NAME="DLT8" POWER_RATING="100"/>
+                        <LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" />
+                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT2" />
+                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3" />
+                        <LABEL ACTIVE="Y" KEY="3"   NAME="DLT 4"  DISPLAY_NAME="DLT4"  />
+                        <LABEL ACTIVE="Y" KEY="200"   NAME="DLT 5" DISPLAY_NAME="DLT5"  />
+                        <LABEL ACTIVE="Y" KEY="201"   NAME="DLT 6" DISPLAY_NAME="DLT6" />
+                        <LABEL ACTIVE="Y" KEY="202"   NAME="DLT 7"  DISPLAY_NAME="DLT7"  />
+                        <LABEL ACTIVE="Y" KEY="220"   NAME="DLT 8" CBUS_APPLICATION="37"  DISPLAY_NAME="DLT8"  />
 
                        <SENSOR ACTIVE="N" KEY="25" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
                         <SENSOR ACTIVE="N" KEY="4" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
