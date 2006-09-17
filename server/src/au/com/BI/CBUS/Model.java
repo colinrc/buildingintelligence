@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.logging.*;
 import au.com.BI.Sensors.*;
 
+import au.com.BI.Label.Label;
 import au.com.BI.Lights.*;
 
 public class Model extends SimplifiedModel implements DeviceModel {
@@ -415,7 +416,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					// the build cbusstring will add a new entry if a new ramp has been sent
 					// ensure that Level CBUS returns will not be decoded, as the user has done an action since
 					
-					if ((outputCbusCommand = buildCBUSString ((LightFascade)device,command,currentChar)) != null) {
+					if ((outputCbusCommand = buildCBUSLightString ((LightFascade)device,command,currentChar)) != null) {
 
 						
 						CommsCommand cbusCommsCommand = new CommsCommand();
@@ -436,6 +437,30 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					}
 
 					break;
+					
+				case DeviceType.LABEL: 
+					String currentCbusKey = this.nextKey();
+					Label label = (Label)device;
+					String fullKeyLabel = this.cBUSHelper.buildKey(label.getApplicationCode(),label.getKey());
+					if ((outputCbusCommand = buildCBUSLabelString (label,command,currentCbusKey)) != null) {
+	
+							
+							CommsCommand cbusCommsCommand = new CommsCommand();
+							cbusCommsCommand.setKey (currentCbusKey);
+							cbusCommsCommand.setKeepForHandshake(true);
+							cbusCommsCommand.setCommand(outputCbusCommand);
+							cbusCommsCommand.setExtraInfo (label.getOutputKey());
+	
+								try {
+									//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
+									comms.addCommandToQueue (cbusCommsCommand);
+								} catch (CommsFail e1) {
+									logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
+									throw new CommsFail ("Error communicating with CBUS");
+								}
+							logger.log (Level.FINEST,"Queueing cbus command " + currentCbusKey + " for " + (String)cbusCommsCommand.getExtraInfo());
+					}
+
 			}
 		}
 	}
@@ -1152,7 +1177,36 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	}
 
-	public String buildCBUSString (LightFascade device, CommandInterface command,String currentChar) throws CommsFail {
+	public String buildCBUSLabelString (Label device, CommandInterface command,String currentChar) throws CommsFail {
+		String cBUSOutputString = null;
+		boolean commandFound = false;
+
+		String rawBuiltCommand = doRawIfPresent (command, device);
+		if (rawBuiltCommand != null)
+		{
+			cBUSOutputString = rawBuiltCommand;
+			commandFound = true;
+		}
+		String theCommand = command.getCommandCode();
+		if (!commandFound && theCommand == "") {
+			logger.log(Level.WARNING, "Empty command received from client "+ command.getCommandCode());
+			return null;
+		}
+
+		StateOfGroup stateOfGroup =this.getCurrentState(device.getApplicationCode(),device.getKey());
+
+		if (theCommand.equals("label") ) {
+			String labelStr = command.getExtraInfo();
+
+			// cBUSOutputString =buildCBUSLabelStrCommand (device.getApplicationCode(), device.getKey(),currentChar);
+			// labelState.set (device.getOutputKey(),command.getExtra2Info());
+			stateOfGroup.setPower("on",false);
+			stateOfGroup.setLevel(100,false);
+		}
+		return cBUSOutputString;
+	}
+			
+	public String buildCBUSLightString (LightFascade device, CommandInterface command,String currentChar) throws CommsFail {
 		String cBUSOutputString = null;
 		boolean commandFound = false;
 

@@ -2,6 +2,7 @@ package au.com.BI.DynamicDevice;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
@@ -27,7 +28,7 @@ public class DynamicDeviceFactory {
 	}
 	
 	/**
-	 * Parses an label device
+	 * Parses a device that has previously been configured with addSpec
 	 *
 	 * @param targetDevices
 	 *            The list of DeviceModels of this type
@@ -36,7 +37,7 @@ public class DynamicDeviceFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addlabel(DeviceModel targetDevice, List clientModels,
+	public void addDynamicDevice(DeviceModel targetDevice, List clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
@@ -46,15 +47,15 @@ public class DynamicDeviceFactory {
 		key = targetDevice.formatKey(key,dynamicDevice);
 			
 		dynamicDevice.setKey (key);
-		label.setOutputKey(display_name);
-		label.setCommand(command);
-		label.setGroupName(groupName);
-		targetDevice.addStartupQueryItem(key, label, type);
-		targetDevice.addControlledItem(key, label, type);
-		targetDevice.addControlledItem(display_name, label, MessageDirection.FROM_FLASH);
+		dynamicDevice.setOutputKey(display_name);
+		dynamicDevice.setCommand(command);
+		dynamicDevice.setGroupName(groupName);
+		targetDevice.addStartupQueryItem(key, dynamicDevice, type);
+		targetDevice.addControlledItem(key, dynamicDevice, type);
+		targetDevice.addControlledItem(display_name, dynamicDevice, MessageDirection.FROM_FLASH);
 	}
 	
-	public void addSpec (DeviceModel model, String parsingLabel, Map parameters){
+	public void addDeviceSpec (DeviceModel model, String xmlName, Map <String,DynamicDeviceField>parameters){
 		
 	}
 }

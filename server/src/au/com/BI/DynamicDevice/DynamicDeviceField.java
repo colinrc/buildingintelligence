@@ -19,29 +19,33 @@ public class DynamicDeviceField {
 	int intVal = 0;
 	String defaultVal = "";
 	int defaultIntVersion = 0;
+	String errorMessage = "";
 	
 	public DynamicDeviceField () {
 		
 	}
 	
-	public DynamicDeviceField (String key, String defaultVal, boolean mandatory) {
+	public DynamicDeviceField (String key, String defaultVal, boolean mandatory,String errorIfInvalid) {
 		this.fieldType = FieldType.STRING;
 		this.defaultVal = defaultVal;
 		this.mandatory = mandatory;
+		this.errorMessage = errorIfInvalid;
 	}
 	
-	public DynamicDeviceField (String key, int defaultVal, boolean mandatory) {
+	public DynamicDeviceField (String key, int defaultVal, boolean mandatory,String errorIfInvalid) {
 		this.fieldType = FieldType.INT;
 		this.defaultIntVersion = defaultVal;
 		this.mandatory = mandatory;
+		this.errorMessage = errorIfInvalid;
 	}
 	
-	public DynamicDeviceField (String key, int defaultVal, int minVal, int maxVal, boolean mandatory) {
+	public DynamicDeviceField (String key, int defaultVal, int minVal, int maxVal, boolean mandatory,String errorIfInvalid) {
 		this.fieldType = FieldType.INT;
 		this.defaultIntVersion = defaultVal;
 		this.min = minVal;
 		this.max = maxVal;
 		this.mandatory = mandatory;
+		this.errorMessage = errorIfInvalid;
 	}
 	
 	public String getKey() {
