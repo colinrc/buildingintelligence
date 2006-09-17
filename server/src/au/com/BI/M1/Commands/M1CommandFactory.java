@@ -49,6 +49,9 @@ public class M1CommandFactory {
 	 *   <li>tn - Task Activation</li>
 	 *   <li>TC - Tasks Change Update</li>
 	 *   <li>PC - PLC Change Update</li>
+	 *   <li>pf - Turn Off PLC Device</li>
+	 *   <li>pn - Turn On PLC Device</li>
+	 *   <li>pt - Toggle PLC Device</li>
 	 * </ul>
 	 * @param unparsedCommand
 	 * @return
@@ -102,7 +105,14 @@ public class M1CommandFactory {
 			m1Command = parseTasksChangeUpdate(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("PC")) {
 			m1Command = parsePLCChangeUpdate(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("pn")) {
+			m1Command = parsePLCDeviceOn(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("pf")) {
+			m1Command = parsePLCDeviceOff(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("pt")) {
+			m1Command = parsePLCDeviceToggle(unparsedCommand);
 		}
+		
 		
 		if (m1Command == null) {
 			logger.log(Level.FINEST,"m1Command was not found for: " + unparsedCommand);
@@ -830,6 +840,87 @@ public class M1CommandFactory {
 		} else {
 			_command.setLevelStatus(PLCLevelStatus.getByValue(levelStatus));
 		}
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * Parse a message to turn a PLC Device on.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parsePLCDeviceOn(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		PLCDeviceOn _command = new PLCDeviceOn();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setHouseCode(command.substring(4,5));
+		_command.setUnitCode(command.substring(5,7));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * Parse a message to turn a PLC Device off.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parsePLCDeviceOff(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		PLCDeviceOff _command = new PLCDeviceOff();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setHouseCode(command.substring(4,5));
+		_command.setUnitCode(command.substring(5,7));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * Parse a message to toggle a PLC Device.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parsePLCDeviceToggle(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		PLCDeviceToggle _command = new PLCDeviceToggle();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setHouseCode(command.substring(4,5));
+		_command.setUnitCode(command.substring(5,7));
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
 		if (checkSum.equals(_command.getCheckSum())) {

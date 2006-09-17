@@ -9,6 +9,7 @@ import au.com.BI.Comms.CommDevice;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Device.DeviceType;
+import au.com.BI.Lights.LightFascade;
 import au.com.BI.M1.Commands.AlarmByZoneRequest;
 import au.com.BI.M1.Commands.ArmStepToNextAwayMode;
 import au.com.BI.M1.Commands.ArmStepToNextStayMode;
@@ -22,6 +23,9 @@ import au.com.BI.M1.Commands.ControlOutputOff;
 import au.com.BI.M1.Commands.ControlOutputOn;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
 import au.com.BI.M1.Commands.Group;
+import au.com.BI.M1.Commands.PLCDeviceOff;
+import au.com.BI.M1.Commands.PLCDeviceOn;
+import au.com.BI.M1.Commands.PLCDeviceToggle;
 import au.com.BI.M1.Commands.RequestTemperature;
 import au.com.BI.M1.Commands.TaskActivation;
 import au.com.BI.Util.DeviceModel;
@@ -136,6 +140,8 @@ public class OutputHelper {
 					m1Command.setTask(command.getExtraInfo());
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
+			} else if (device.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
+				retCode = buildX10Light((LightFascade) device, command);
 			}
 
 			logger.log(Level.FINE, retCode);
@@ -176,6 +182,34 @@ public class OutputHelper {
 			controlOutputOff.setKey(device.getKey());
 			controlOutputOff.setOutputNumber(device.getKey());
 			returnString = controlOutputOff.buildM1String() + "\r\n";
+		}
+		return (returnString);
+	}
+	
+	/**
+	 * 
+	 * @param device
+	 * @param command
+	 * @return
+	 */
+	public String buildX10Light(LightFascade device, CommandInterface command) {
+		String returnString = "";
+
+		if (command.getCommandCode().equals("on")) {
+			PLCDeviceOn plcDeviceOn = new PLCDeviceOn();
+			plcDeviceOn.setUnitCode(device.getKey());
+			plcDeviceOn.setHouseCode(device.getX10HouseCode());
+			returnString = plcDeviceOn.buildM1String() + "\r\n";
+		} else if (command.getCommandCode().equals("toggle")) {
+			PLCDeviceToggle plcDeviceToggle = new PLCDeviceToggle();
+			plcDeviceToggle.setUnitCode(device.getKey());
+			plcDeviceToggle.setHouseCode(device.getX10HouseCode());
+			returnString = plcDeviceToggle.buildM1String() + "\r\n";
+		} else if (command.getCommandCode().equals("off")) {
+			PLCDeviceOff plcDeviceOff = new PLCDeviceOff();
+			plcDeviceOff.setUnitCode(device.getKey());
+			plcDeviceOff.setHouseCode(device.getX10HouseCode());
+			returnString = plcDeviceOff.buildM1String() + "\r\n";
 		}
 		return (returnString);
 	}
