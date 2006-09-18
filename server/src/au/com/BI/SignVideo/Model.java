@@ -146,6 +146,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			int inputDev = signAVCmd / 16 ;
 			String formatedKey = this.formatKey(inputDev,null);
 			DeviceType avDevice = configHelper.getControlledItem(formatedKey);
+			if (avDevice == null){
+				logger.log (Level.INFO,"A Sign video command was received for a zone that has not been configured");
+				return result;
+			}
 			try {
 				String inputSrcStr = findKeyForParameterValue(inputSrc, "AV_INPUTS", avDevice);
 				result.addFlashCommand(this.buildCommandForFlash(avDevice, "src", inputSrcStr,"","","","",0));

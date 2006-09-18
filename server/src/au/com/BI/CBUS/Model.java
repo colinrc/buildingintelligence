@@ -58,7 +58,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		etxString = new String(".$%#!\'");
 		this.setPadding(2);
 		this.setInterCommandInterval(10);
-
+		
+		configHelper.addParameterBlock ("LABELS",DeviceModel.MAIN_DEVICE_GROUP, "DLT Labels");
 	}
 
 
@@ -1196,7 +1197,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		StateOfGroup stateOfGroup =this.getCurrentState(device.getApplicationCode(),device.getKey());
 
 		if (theCommand.equals("label") ) {
-			String labelStr = command.getExtraInfo();
+			String catalogueStr = command.getExtraInfo();
+			String flavour = command.getExtra2Info();
+			if (flavour.equals("")) flavour = "1";
 
 			// cBUSOutputString =buildCBUSLabelStrCommand (device.getApplicationCode(), device.getKey(),currentChar);
 			// labelState.set (device.getOutputKey(),command.getExtra2Info());
@@ -1206,6 +1209,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		return cBUSOutputString;
 	}
 			
+	
 	public String buildCBUSLightString (LightFascade device, CommandInterface command,String currentChar) throws CommsFail {
 		String cBUSOutputString = null;
 		boolean commandFound = false;

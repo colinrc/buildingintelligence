@@ -2,7 +2,7 @@
         <DESC>The BI demonstration CBUS system</DESC>
  
         !-- ______________________________________  CBUS DEFS  ____________________  -->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Lights">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Lights">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
@@ -11,8 +11,18 @@
                         <IP ACTIVE="Y" IP_ADDRESS="172.16.3.215" PORT="4999"/>
                         <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
                 </CONNECTION>
+                
+                <CATALOGUE NAME="Button Labels">
+                                        <ITEM CODE="LIGHT_ON" VALUE="Light On"/>
+                                        <ITEM CODE="LIGHT_OFF" VALUE="Light Off"/>
+                                        <ITEM CODE="VOLUME_UP" VALUE="Volume Up"/>
+                                       <ITEM CODE="VOLUME_DOWN" VALUE="Volume  Down"/>
+                                        <ITEM CODE="SPRINKLERS" VALUE="Sprinklers"/>
+                </CATALOGUE>
+                
                 <PARAMETERS>
                 	<!-- ITEM NAME="POLL_TEMP_INTERVAL" VALUE="5" / -->
+                	<ITEM NAME="LABELS" VALUE="Button Labels" />
                 </PARAMETERS>
                 
                 <CBUS>
