@@ -1468,7 +1468,7 @@ openStatusWindow = function (statusObj) {
 		this.maxItems = controls.length;
 		this.itemsPerPage = 10;
 		if (this.maxItems == 0) {
-			//this._parent.close();
+			this._parent.close();
 		} else if (controls.length > this.itemsPerPage) {
 			this.scrollBar_mc._visible = true;
 			this.scrollBar_mc.scrollUp_mc.enabled = this.startRow > 0;

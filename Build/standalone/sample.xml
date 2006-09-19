@@ -145,6 +145,9 @@
 							<control name="1st Heat Lamp" key="ENSUITE_1_HEAT" type="onOff" icons="heater-off,heater" />
 							<control name="2nd Heat Lamp" key="ENSUITE_2_HEAT" type="onOff" icons="heater-off,heater" />
 						</tab>
+						<tab>
+							<control name="test" key="asd" type="rawKeyPad"/>
+						</tab>
 					</window>
 					<alerts x="520" y="190">
 						<alert name="Lights" keys="ENSUITE_LIGHT,ENSUITE_LV_LIGHT" icon="light-bulb" />
@@ -540,25 +543,6 @@
 			<row>
 				<item type="button" label="Up" command="url.http://172.16.3.150/control.cgi?cont_2=4&ok=dummy.htm" repeatRate="500" />
 				<item type="button" label="Down" command="url.http://172.16.3.150/control.cgi?cont_2=8&ok=dummy.htm" repeatRate="500" />
-			</row>
-		</control>
-		<control type="testComPort">
-			<row>
-				<item type="toggle" labels="K1:off,K1:on" command="K1" extras="on,off" />
-				<item type="toggle" labels="K2:off,K2:on" command="K2" extras="on,off" />
-				<item type="toggle" labels="K3:off,K3:on" command="K3" extras="on,off" />
-				<item type="toggle" labels="K4:off,K4:on" command="K4" extras="on,off" />
-				<item type="toggle" labels="K5:off,K5:on" command="K5" extras="on,off" />
-
-
-			</row>
-			<row>
-				<item type="toggle" labels="L1:off,L1:on" command="L1" extras="Y,O" />
-				<item type="toggle" labels="L2:off,L2:on" command="L2" extras="Y,O" />
-				<item type="toggle" labels="L3:off,L3:on" command="L3" extras="Y,O" />
-				<item type="toggle" labels="L4:off,L4:on" command="L4" extras="Y,O" />
-				<item type="toggle" labels="L5:off,L5:on" command="L5" extras="Y,O" />
-				<item type="toggle" labels="L6:off,L6:on" command="L6" extras="Y,O" />
 			</row>
 		</control>
 	</controlTypes>

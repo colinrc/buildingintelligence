@@ -31,7 +31,7 @@ serverSetup = function () {
 	if (_global.settings.serverAddress.length) {
 		if (_global.settings.serverAddress.substr(0, 7) == "http://" || _global.settings.serverAddress.substr(0, 8) == "https://") {
 			setInterval(this, "getCachedData", _global.settings.webRefreshRate * 1000);
-			getCachedData();
+			getCachedData(true);
 		} else {
 			server = new XMLSocket();
 			server.onConnect = serverOnConnect;
@@ -42,9 +42,13 @@ serverSetup = function () {
 	}
 }
 
-getCachedData = function () {
+getCachedData = function (init) {
 	var xml = new XML();
-	xml.load(_global.settings.serverAddress + "/webclient/update");
+	if (init) {
+		xml.load(_global.settings.serverAddress + "/webclient/update?INIT=Y");
+	} else {
+		xml.load(_global.settings.serverAddress + "/webclient/update");
+	}
 	xml.onLoad = function (success) {
 		if (success) {
 			var packet = this.firstChild.childNodes;
