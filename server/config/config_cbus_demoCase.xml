@@ -13,10 +13,8 @@
                 </CONNECTION>
                 
                 <CATALOGUE NAME="Button Labels">
-                                        <ITEM CODE="LIGHT_ON" VALUE="Light On"/>
-                                        <ITEM CODE="LIGHT_OFF" VALUE="Light Off"/>
-                                        <ITEM CODE="VOLUME_UP" VALUE="Volume Up"/>
-                                       <ITEM CODE="VOLUME_DOWN" VALUE="Volume  Down"/>
+                                        <ITEM CODE="FRONT_LIGHT" VALUE="Front Light"/>
+                                        <ITEM CODE="VOLUME" VALUE="Volume Level"/>
                                         <ITEM CODE="SPRINKLERS" VALUE="Sprinklers"/>
                 </CATALOGUE>
                 
@@ -49,9 +47,9 @@
                         <LIGHT_CBUS ACTIVE="Y" KEY="21"   NAME="Dimmer 7" DISPLAY_NAME="DIMMER7" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="24"   NAME="Dimmer 8" DISPLAY_NAME="DIMMER8" POWER_RATING="100"/>
                         
-                        <LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" />
-                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT2" />
-                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3" />
+                        <LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT = "FRONT_LIGHT" />
+                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT2" DEFAULT="VOLUME"  />
+                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3" DEFAULT="SPRINKLERS" />
                         <LABEL ACTIVE="Y" KEY="3"   NAME="DLT 4"  DISPLAY_NAME="DLT4"  />
                         <LABEL ACTIVE="Y" KEY="200"   NAME="DLT 5" DISPLAY_NAME="DLT5"  />
                         <LABEL ACTIVE="Y" KEY="201"   NAME="DLT 6" DISPLAY_NAME="DLT6" />
