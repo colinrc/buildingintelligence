@@ -18,8 +18,8 @@ class Forms.Project.Device.CustomKeys extends Forms.BaseForm {
 		customs_dg.hScrollPolicy = "auto";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(customs_dg);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,200);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,200);
 		dataGridHandler.addTextInputColumn("value", "Input\nNumber", restrictions,false,100);
 		dataGridHandler.setDataGridDataProvider(customs);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

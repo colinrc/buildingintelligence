@@ -15,12 +15,15 @@ class Forms.Project.Device.Alarm extends Forms.BaseForm {
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
+		var keyRestrictions = new Object();
+		keyRestrictions.maxChars = 2;
+		keyRestrictions.restrict = "0-9";			
 		//alarms_dg.hScrollPolicy = "off";		
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(alarms_dg);
-		dataGridHandler.addTextInputColumn("display_name","Key",restrictions,false,150);		
-		dataGridHandler.addTextInputColumn("name","Description",restrictions,false,150);				
-		dataGridHandler.addTextInputColumn("key","Alarm\nCode",restrictions,false,100);
+		dataGridHandler.addTextInputColumn("display_name","Key",restrictions,false,200);		
+		dataGridHandler.addTextInputColumn("name","Description",restrictions,false,200);				
+		dataGridHandler.addTextInputColumn("key","Alarm\nCode (DEC)",keyRestrictions,false,100);
 		dataGridHandler.setDataGridDataProvider(alarms);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));

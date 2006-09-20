@@ -18,20 +18,30 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(items_dg);
 		switch(name){
+			case "Comfort Users":
+				var newArray = [{label:"1"},{label:"2"},{label:"3"},{label:"4"},{label:"5"},{label:"6"},{label:"7"},{label:"8"},{label:"9"},{label:"10"},{label:"11"},{label:"12"},{label:"13"},{label:"14"},{label:"15"},{label:"16"},{label:"17"},{label:"18"}];
+				dataGridHandler.addComboBoxColumn("code", "Sign in Code\nNumber (DEC)", newArray,false,300);
+				dataGridHandler.addTextInputColumn("value", "User Name", restrictions,false,300);
+				break;			
+			case "Door IDs":
+				var newArray = [{label:"49"},{label:"50"},{label:"51"}];
+				dataGridHandler.addTextInputColumn("code", "Door Station\nNumber (DEC)", restrictions,false,300);
+				dataGridHandler.addTextInputColumn("value", "Door Station Description", restrictions,false,300);
+				break;
 			case "Sign Video Inputs":
 				dataGridHandler.addTextInputColumn("code", "Video Device", restrictions,false,200);
-				dataGridHandler.addTextInputColumn("value", "Video Input #", restrictions,false,200);
+				dataGridHandler.addTextInputColumn("value", "Video Input Number", restrictions,false,200);
 				break;
 			case "HAL Inputs":
 			case "Tutondo Inputs":
 			case "Kramer Audio Inputs":
 			case "Nuvo Audio Inputs":
 				dataGridHandler.addTextInputColumn("code", "Audio Device", restrictions,false,200);
-				dataGridHandler.addTextInputColumn("value", "Audio Input #", restrictions,false,200);
+				dataGridHandler.addTextInputColumn("value", "Audio Input Number", restrictions,false,200);
 				break;
 			case "Kramer AV Inputs":
 				dataGridHandler.addTextInputColumn("code", "AV Device", restrictions,false,200);
-				dataGridHandler.addTextInputColumn("value", "AV Input #", restrictions,false,200);
+				dataGridHandler.addTextInputColumn("value", "AV Input Number", restrictions,false,200);
 				break;
 			case "Tutondo Functions":
 			case "HAL Functions":
@@ -49,7 +59,11 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 			newItem.code = "";
 			newItem.value = "";
 			if (items[item].attributes["CODE"] != undefined) {
-				newItem.code = items[item].attributes["CODE"];
+				if((name=="Door IDs")||("Comfort Users"==name)){
+					newItem.code = 	parseInt("0x"+items[item].attributes["CODE"]);
+				} else{
+					newItem.code = items[item].attributes["CODE"];
+				}
 			}
 			if (items[item].attributes["VALUE"] != undefined) {
 				newItem.value = items[item].attributes["VALUE"];
@@ -77,7 +91,12 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 		for (var index = 0; index<DP.length; index++) {
 			var item = new XMLNode(1, "ITEM");
 			if (DP[index].code != undefined) {
-				item.attributes["CODE"] = DP[index].code;
+				if((name=="Door IDs")||("Comfort Users"==name)){
+					item.attributes["CODE"] = parseInt(DP[index].code,16);
+				}
+				else{
+					item.attributes["CODE"] = DP[index].code;
+				}
 			}
 			if (DP[index].value != undefined) {
 				item.attributes["VALUE"] = DP[index].value;

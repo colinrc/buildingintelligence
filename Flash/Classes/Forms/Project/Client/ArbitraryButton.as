@@ -17,7 +17,7 @@ class Forms.Project.Client.ArbitraryButton extends Forms.BaseForm {
 		DPControl.push({label:"channel"});
 		DPControl.push({label:"down"});
 		DPControl.push({label:"goto"});
-		DPControl.push({label:"keyPress"})
+		DPControl.push({label:"keyPress"});
 		DPControl.push({label:"on"});
 		DPControl.push({label:"off"});
 		DPControl.push({label:"pan"});
@@ -26,12 +26,22 @@ class Forms.Project.Client.ArbitraryButton extends Forms.BaseForm {
 		DPControl.push({label:"volume"});
 		DPControl.push({label:"send_audio_command"});
 		DPControl.push({label:"src"});
-//		DPControl.push({label:"state"});
+		//		DPControl.push({label:"state"});
 		DPControl.push({label:"up"});
 		command_cmb.dataProvider = DPControl;
 		command2_cmb.dataProvider = DPControl;
-		command_cmb.text = currentAlert.command;
-		command2_cmb.text = currentAlert.command2;
+		for (var tempIcon = 0; tempIcon < command_cmb.dataProvider.length; tempIcon++) {
+			if (command_cmb.dataProvider[tempIcon].label == currentAlert.command) {
+				command_cmb.selectedIndex = tempIcon;
+				break;
+			}
+		}
+		for (var tempIcon = 0; tempIcon < command2_cmb.dataProvider.length; tempIcon++) {
+			if (command2_cmb.dataProvider[tempIcon].label == currentAlert.command2) {
+				command2_cmb.selectedIndex = tempIcon;
+				break;
+			}
+		}
 		var tempKeys = _global.serverDesign.getKeys();
 		var DPKey = new Array();
 		DPKey.push({label:""});
@@ -60,14 +70,14 @@ class Forms.Project.Client.ArbitraryButton extends Forms.BaseForm {
 		fontColour_mc.setCallbackObject(this);
 		borderColour_mc.setCallbackObject(this);
 		bgColour_mc.setCallbackObject(this);
-		label_ti.addEventListener("change", Delegate.create(this,changeListener));
-		command_cmb.addEventListener("change", Delegate.create(this,changeListener));
-		command2_cmb.addEventListener("change", Delegate.create(this,changeListener));
-		label2_ti.addEventListener("change", Delegate.create(this,changeListener));
-		key_cmb.addEventListener("change", Delegate.create(this,changeListener));
-		fontSize_ti.addEventListener("change", Delegate.create(this,changeListener));
+		label_ti.addEventListener("change", Delegate.create(this, changeListener));
+		command_cmb.addEventListener("change", Delegate.create(this, changeListener));
+		command2_cmb.addEventListener("change", Delegate.create(this, changeListener));
+		label2_ti.addEventListener("change", Delegate.create(this, changeListener));
+		key_cmb.addEventListener("change", Delegate.create(this, changeListener));
+		fontSize_ti.addEventListener("change", Delegate.create(this, changeListener));
 	}
-	function changeListener(){
+	function changeListener() {
 		_global.unSaved = true;
 		currentAlert.label = label_ti.text;
 		currentAlert.label2 = label2_ti.text;

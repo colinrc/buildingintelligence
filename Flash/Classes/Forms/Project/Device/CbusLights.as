@@ -26,10 +26,10 @@ class Forms.Project.Device.CbusLights extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(lights_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "Group\nAddr.", keyRestrictions,false,60);
-		dataGridHandler.addTextInputColumn("application", "CBUS\nApp.", keyRestrictions,true,60);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,200);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,200);
+		dataGridHandler.addTextInputColumn("key", "Group\nAddr. (HEX)", keyRestrictions,false,60);
+		dataGridHandler.addTextInputColumn("application", "CBUS\nApp. (HEX)", keyRestrictions,true,60);
 		dataGridHandler.addTextInputColumn("power", "Power\nRating", powerRestrictions,true,60);
 		dataGridHandler.setDataGridDataProvider(lights);	
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

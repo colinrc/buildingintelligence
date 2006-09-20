@@ -7,7 +7,7 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var icon:String;
 	private var icon_cmb:ComboBox;
-	private var icon_ldr:Loader;	
+	private var icon_ldr:Loader;
 	private var func:String;
 	private var func_cmb:ComboBox;
 	private var canOpen:String;
@@ -18,13 +18,13 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 	private var param_lb:Label;
 	public function onLoad():Void {
 		icon_ldr.autoLoad = true;
-		icon_ldr.scaleContent = true;				
+		icon_ldr.scaleContent = true;
 		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
-		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
-		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
+		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path + "lib\\icons", "*.png");
+		for (var myIcon = 0; myIcon < myIcons.length; myIcon++) {
 			var newIcon = new Object();
 			newIcon.label = myIcons[myIcon].split(".")[0];
-			newIcon.icon = mdm.Application.path+"lib\\icons\\"+myIcons[myIcon];
+			newIcon.icon = mdm.Application.path + "lib\\icons\\" + myIcons[myIcon];
 			icon_cmb.addItem(newIcon);
 		}
 		var changeListener:Object = new Object();
@@ -49,27 +49,37 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 			param_ti.text = "";
 		}
 		name_ti.text = name;
-		if(icon.length){
-			icon_cmb.text = icon;
-			icon_ldr.load(mdm.Application.path+"lib\\icons\\"+icon+".png");
-		} 
-		func_cmb.text = func;
+		if (icon.length) {
+			for (var tempIcon = 0; tempIcon < icon_cmb.dataProvider.length; tempIcon++) {
+				if (icon_cmb.dataProvider[tempIcon].label == icon) {
+					icon_cmb.selectedIndex = tempIcon;
+					icon_ldr.load(mdm.Application.path + "lib\\icons\\" + icon + ".png");
+					break;
+				}
+			}
+		}
+		for (var tempIcon = 0; tempIcon < func_cmb.dataProvider.length; tempIcon++) {
+			if (func_cmb.dataProvider[tempIcon].label == func) {
+				func_cmb.selectedIndex = tempIcon;
+				break;
+			}
+		}
 		if (canOpen == "superuser") {
 			canOpen_chk.selected = true;
 		} else {
 			canOpen_chk.selected = false;
 		}
-		name_ti.addEventListener("change", Delegate.create(this,changeListener.change));
-		func_cmb.addEventListener("change", Delegate.create(this,changeListener.change));
-		canOpen_chk.addEventListener("change", Delegate.create(this,changeListener.change));
-		param_ti.addEventListener("change", Delegate.create(this,changeListener.change));		
+		name_ti.addEventListener("change", Delegate.create(this, changeListener.change));
+		func_cmb.addEventListener("change", Delegate.create(this, changeListener.change));
+		canOpen_chk.addEventListener("change", Delegate.create(this, changeListener.change));
+		param_ti.addEventListener("change", Delegate.create(this, changeListener.change));
 		save_btn.addEventListener("click", Delegate.create(this, save));
-		icon_cmb.addEventListener("change", Delegate.create(this, loadIcon));			
+		icon_cmb.addEventListener("change", Delegate.create(this, loadIcon));
 	}
-	public function loadIcon(eventObject){
+	public function loadIcon(eventObject) {
 		_global.unSaved = true;
 		icon_ldr.load(icon_cmb.selectedItem.icon);
-	}	
+	}
 	private function save() {
 		if (canOpen_chk.selected) {
 			var newCanOpen = "superuser";
@@ -77,7 +87,7 @@ class Forms.Project.Client.Icon extends Forms.BaseForm {
 			var newCanOpen = "";
 		}
 		dataObject.setData({name:name_ti.text, icon:icon_cmb.text, func:func_cmb.text, param:param_ti.text, canOpen:newCanOpen});
-		_global.refreshTheTree();		
-		_global.saveFile("Project");	
+		_global.refreshTheTree();
+		_global.saveFile("Project");
 	}
 }

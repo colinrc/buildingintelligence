@@ -14,9 +14,9 @@ class Forms.Project.Device.IR extends Forms.BaseForm {
 		restrictions.rescrict = "";
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(ir_dg);
-		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "Key", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("avname", "AV Name", restrictions,false,150);		
+		dataGridHandler.addTextInputColumn("name", "Name", restrictions,false,200);
+		dataGridHandler.addTextInputColumn("key", "Key", restrictions,false,200);
+		dataGridHandler.addTextInputColumn("avname", "AV Name", restrictions,false,200);
 		var DP = new Array();		
 		for (var ir in irs) {
 			var newIr = new Object();

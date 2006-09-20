@@ -25,7 +25,7 @@
 					flag = "error";
 					appendValidationMsg("Device Type is invalid");
 				}
-				
+				/*
 				for (var param in parameters) {
 					if ((parameters[param].name == undefined) || (parameters[param].name == "")) {
 						flag = "error";
@@ -35,7 +35,7 @@
 						flag = "error";
 						appendValidationMsg("Param Value is empty");
 					}
-				}
+				}*/
 								
 				if (connection.firstChild.nodeName == "IP") {
 					if ((connection.firstChild.attributes["IP_ADDRESS"] == "") || (connection.firstChild.attributes["IP_ADDRESS"] ==undefined)) {

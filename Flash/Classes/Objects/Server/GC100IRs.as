@@ -48,7 +48,7 @@
 		return "forms.project.device.gc100ir";
 	}
 	public function getName():String {
-		return "IR Inputs";
+		return "IR Outputs";
 	}
 	public function toTree():XMLNode{
 		var newNode = new XMLNode(1,this.getName());

@@ -21,10 +21,10 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(contacts_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,150);
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,150);
-		dataGridHandler.addTextInputColumn("key", "Input\nKey", keyRestrictions, false,60);
-		dataGridHandler.addTextInputColumn("box", "Box", keyRestrictions, false,60);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,200);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,200);
+		dataGridHandler.addTextInputColumn("key", "Input\nKey (HEX)", keyRestrictions, false,80);
+		dataGridHandler.addTextInputColumn("box", "Box (HEX)", keyRestrictions, false,80);
 		dataGridHandler.setDataGridDataProvider(contacts);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));

@@ -14,7 +14,7 @@ class Forms.Project.Device.Counter extends Forms.BaseForm {
 		restrictions.restrict = "";
 		var keyRestrictions = new Object();		
 		keyRestrictions.maxChars = 2;
-		keyRestrictions.restrict = "0-9A-Fa-f";
+		keyRestrictions.restrict = "0-9";
 		var maxRestrictions = new Object();		
 		maxRestrictions.maxChars = 3;
 		maxRestrictions.restrict = "0-9";		
@@ -24,9 +24,9 @@ class Forms.Project.Device.Counter extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(counters_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,150);
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,150);
-		dataGridHandler.addTextInputColumn("key", "Counter\nNo.", keyRestrictions, false,60);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,200);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,200);
+		dataGridHandler.addTextInputColumn("key", "Counter\nNo. (DEC)", keyRestrictions, false,200);
 		dataGridHandler.addTextInputColumn("max", "Max", maxRestrictions, false,60);
 		dataGridHandler.setDataGridDataProvider(counters);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

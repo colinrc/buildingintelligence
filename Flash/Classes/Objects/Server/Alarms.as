@@ -4,9 +4,9 @@
 	var treeNode:XMLNode;
 	public function getKeys():Array{
 		var tempKeys = new Array();
-		for(var alarm in alarms){
+/*		for(var alarm in alarms){
 			tempKeys.push(alarms[alarm].display_name);
-		}
+		}*/
 		return tempKeys;
 	}
 	public function isValid():String {
@@ -45,7 +45,7 @@
 		for (var alarm in alarms) {
 			var newAlarm = new XMLNode(1, "ALARM");
 			if(alarms[alarm].key != ""){
-				newAlarm.attributes["KEY"] = alarms[alarm].key;
+				newAlarm.attributes["KEY"] = parseInt(alarms[alarm].key).toString(16);
 			}
 			if(alarms[alarm].display_name != ""){
 				newAlarm.attributes["DISPLAY_NAME"] = alarms[alarm].display_name;
@@ -84,7 +84,7 @@
 			newAlarm.display_name = "";
 			newAlarm.name = "";
 			if(newData.childNodes[child].attributes["KEY"]!=undefined){
-				newAlarm.key = newData.childNodes[child].attributes["KEY"];
+				newAlarm.key = parseInt(newData.childNodes[child].attributes["KEY"],16);
 			}
 			if(newData.childNodes[child].attributes["DISPLAY_NAME"]!=undefined){
 				newAlarm.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];

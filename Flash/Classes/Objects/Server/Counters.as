@@ -62,7 +62,7 @@
 				newCounter.attributes["DISPLAY_NAME"] = counters[counter].display_name;
 			}
 			if (counters[counter].key != "") {
-				newCounter.attributes["KEY"] = counters[counter].key;
+				newCounter.attributes["KEY"] = parseInt(counters[counter].key).toString(16);
 			}
 			if (counters[counter].active != "") {
 				newCounter.attributes["ACTIVE"] = counters[counter].active;
@@ -113,7 +113,7 @@
 				newCounter.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
 			}
 			if (newData.childNodes[child].attributes["KEY"] != undefined) {
-				newCounter.key = newData.childNodes[child].attributes["KEY"];
+				newCounter.key = parseInt(newData.childNodes[child].attributes["KEY"],16);
 			}
 			if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
 				newCounter.active = newData.childNodes[child].attributes["ACTIVE"];

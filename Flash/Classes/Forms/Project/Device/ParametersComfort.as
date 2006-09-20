@@ -27,23 +27,23 @@ class Forms.Project.Device.ParametersComfort extends Forms.BaseForm {
 		cbus_chk.selected = false;
 		setOn();
 		for (var parameter in parameters) {
-			switch (parameters[parameters].attributes["NAME"]) {
+			switch (parameters[parameter].attributes["NAME"]) {
 			case "POLL_INTERVAL" :
-				poll_ti.text = parameters[parameters].attributes["VALUE"];
+				poll_ti.text = parameters[parameter].attributes["VALUE"];
 				break;
 			case "ANALOGUE_POLL_INTERVAL" :
-				analog_poll_ti.text = parameters[parameters].attributes["VALUE"];
+				analog_poll_ti.text = parameters[parameter].attributes["VALUE"];
 				break;
 			case "SHOW_KEYPAD_MODES" :
-				keypad_ti.text = parameters[parameters].attributes["VALUE"];
+				keypad_ti.text = parameters[parameter].attributes["VALUE"];
 				break;
 			case "CBUS_APPLICATION" :
-				cbus_app_ti.text = parameters[parameters].attributes["VALUE"];
+				cbus_app_ti.text = parameters[parameter].attributes["VALUE"];
 				cbus_chk.selected = true;
 				setOn();
 				break;
 			case "CBUS_UCM" :
-				cbus_ucm_ti.text = parameters[parameters].attributes["VALUE"];
+				cbus_ucm_ti.text = parameters[parameter].attributes["VALUE"];
 				cbus_chk.selected = true;
 				setOn();
 				break;

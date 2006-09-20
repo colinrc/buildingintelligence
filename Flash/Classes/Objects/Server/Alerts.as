@@ -4,9 +4,9 @@
 	var treeNode:XMLNode;
 	public function getKeys():Array {
 		var tempKeys = new Array();
-		for (var alert in alerts) {
+/*		for (var alert in alerts) {
 			tempKeys.push(alerts[alert].display_name);
-		}
+		}*/
 		return tempKeys;
 	}
 	public function isValid():String {
@@ -18,10 +18,10 @@
 		}
 		for (var alert in alerts) {
 			
-			if ((alerts[alert].cat == undefined) || (alerts[alert].cat == "")) {
+/*			if ((alerts[alert].cat == undefined) || (alerts[alert].cat == "")) {
 				flag = "warning";
 				appendValidationMsg("Client Catagory is empty");
-			} 
+			} */
 			if ((alerts[alert].message == undefined) || (alerts[alert].message == "")) {
 				flag = "warning";
 				appendValidationMsg("Message is empty");
@@ -59,7 +59,7 @@
 		for (var alert in alerts) {
 			var alertNode = new XMLNode(1, "ALERT");
 			if (alerts[alert].key != "") {
-				alertNode.attributes["KEY"] = alerts[alert].key;
+				alertNode.attributes["KEY"] = parseInt(alerts[alert].key).toString(16);
 			}
 			if (alerts[alert].display_name != "") {
 				alertNode.attributes["DISPLAY_NAME"] = alerts[alert].display_name;
@@ -110,7 +110,7 @@
 			newAlert.type = "";
 			newAlert.cat = "";
 			if (newData.childNodes[child].attributes["KEY"] != undefined) {
-				newAlert.key = newData.childNodes[child].attributes["KEY"];
+				newAlert.key = parseInt(newData.childNodes[child].attributes["KEY"],16);
 			}
 			if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
 				newAlert.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];

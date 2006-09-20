@@ -60,7 +60,7 @@
 				toggleNode.attributes["NAME"] = toggles[toggle].name;
 			}
 			if (toggles[toggle].key != "") {
-				toggleNode.attributes["KEY"] = toggles[toggle].key;
+				toggleNode.attributes["KEY"] = parseInt(toggles[toggle].key).toString(16);
 			}
 			if (toggles[toggle].display_name != "") {
 				toggleNode.attributes["DISPLAY_NAME"] = toggles[toggle].display_name;
@@ -117,7 +117,7 @@
 				newToggle.name = newData.childNodes[child].attributes["NAME"];
 			}
 			if (newData.childNodes[child].attributes["KEY"] != undefined) {
-				newToggle.key = newData.childNodes[child].attributes["KEY"];
+				newToggle.key = parseInt(newData.childNodes[child].attributes["KEY"],16);
 			}
 			if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
 				newToggle.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];

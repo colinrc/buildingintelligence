@@ -14,7 +14,7 @@ class Forms.Project.Client.ArbitraryIcon extends Forms.BaseForm {
 		DPControl.push({label:"channel"});
 		DPControl.push({label:"down"});
 		DPControl.push({label:"goto"});
-		DPControl.push({label:"keyPress"})
+		DPControl.push({label:"keyPress"});
 		DPControl.push({label:"on"});
 		DPControl.push({label:"off"});
 		DPControl.push({label:"pan"});
@@ -23,7 +23,6 @@ class Forms.Project.Client.ArbitraryIcon extends Forms.BaseForm {
 		DPControl.push({label:"volume"});
 		DPControl.push({label:"send_audio_command"});
 		DPControl.push({label:"src"});
-//		DPControl.push({label:"state"});
 		DPControl.push({label:"up"});
 		command_cmb.dataProvider = DPControl;
 		command2_cmb.dataProvider = DPControl;
@@ -36,8 +35,8 @@ class Forms.Project.Client.ArbitraryIcon extends Forms.BaseForm {
 		icon2_ldr.scaleContent = true;
 		icon2_cmb.dropdown.cellRenderer = "ImageCellRenderer";
 		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path + "lib\\icons", "*.png");
-		icon1_cmb.addItem({label:"No Icon",icon:""});
-		icon2_cmb.addItem({label:"No Icon",icon:""});
+		icon1_cmb.addItem({label:"No Icon", icon:""});
+		icon2_cmb.addItem({label:"No Icon", icon:""});
 		for (var myIcon = 0; myIcon < myIcons.length; myIcon++) {
 			var newIcon = new Object();
 			newIcon.label = myIcons[myIcon].split(".")[0];
@@ -46,12 +45,22 @@ class Forms.Project.Client.ArbitraryIcon extends Forms.BaseForm {
 			icon2_cmb.addItem(newIcon);
 		}
 		if (currentAlert.icon1.length) {
-			icon1_cmb.text = currentAlert.icon1;
-			icon1_ldr.load(mdm.Application.path + "lib\\icons\\" + currentAlert.icon1 + ".png");
+			for (var tempIcon = 0; tempIcon < icon1_cmb.dataProvider.length; tempIcon++) {
+				if (icon1_cmb.dataProvider[tempIcon].label == currentAlert.icon1) {
+					icon1_cmb.selectedIndex = tempIcon;
+					icon1_ldr.load(mdm.Application.path + "lib\\icons\\" + currentAlert.icon1 + ".png");
+					break;
+				}
+			}
 		}
 		if (currentAlert.icon2.length) {
-			icon2_cmb.text = currentAlert.icon2;
-			icon2_ldr.load(mdm.Application.path + "lib\\icons\\" + currentAlert.icon2 + ".png");
+			for (var tempIcon = 0; tempIcon < icon2_cmb.dataProvider.length; tempIcon++) {
+				if (icon2_cmb.dataProvider[tempIcon].label == currentAlert.icon2) {
+					icon2_cmb.selectedIndex = tempIcon;
+					icon2_ldr.load(mdm.Application.path + "lib\\icons\\" + currentAlert.icon2 + ".png");
+					break;
+				}
+			}
 		}
 		var tempKeys = _global.serverDesign.getKeys();
 		var DPKey = new Array();
@@ -62,12 +71,17 @@ class Forms.Project.Client.ArbitraryIcon extends Forms.BaseForm {
 			DPKey.push(tempObject);
 		}
 		key_cmb.dataProvider = DPKey;
-		key_cmb.text = currentAlert.key;
+		for (var tempIcon = 0; tempIcon < key_cmb.dataProvider.length; tempIcon++) {
+			if (key_cmb.dataProvider[tempIcon].label == currentAlert.key) {
+				key_cmb.selectedIndex = tempIcon;
+				break;
+			}
+		}
 		icon1_cmb.addEventListener("change", Delegate.create(this, loadIcon1));
 		icon2_cmb.addEventListener("change", Delegate.create(this, loadIcon2));
-		command_cmb.addEventListener("change", Delegate.create(this,changeListener));
-		command2_cmb.addEventListener("change", Delegate.create(this,changeListener));
-		key_cmb.addEventListener("change",Delegate.create(this, changeListener));
+		command_cmb.addEventListener("change", Delegate.create(this, changeListener));
+		command2_cmb.addEventListener("change", Delegate.create(this, changeListener));
+		key_cmb.addEventListener("change", Delegate.create(this, changeListener));
 	}
 	function changeListener() {
 		_global.unSaved = true;

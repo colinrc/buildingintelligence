@@ -13,6 +13,9 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 	private var save_btn:mx.controls.Button;
 	private var active_chk:mx.controls.CheckBox;
 	private var dataObject:Object;		
+	private var comfortLabel:Label;
+	private var comfortPassword:TextInput;
+	private var password;
 	public function Head() {
 	}
 	public function onLoad():Void {
@@ -21,7 +24,7 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 		    _global.unSaved = true;
 		};
 		description_ti.addEventListener("change", changeListener);
-		
+		comfortPassword.addEventListener("change", changeListener);
 		var checkBoxListener:Object = new Object();
 	
 		checkBoxListener.change = function(eventObject) {
@@ -40,8 +43,17 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 			active_chk.selected = true;
 		}
 		device_type_lb.text = device_type;
+		if(device_type.toLowerCase()=="comfort"){
+			comfortLabel.visible=true;
+			comfortPassword.text = password;
+			comfortPassword.visible=true;
+		} else{
+			comfortLabel.visible=false;
+			comfortPassword.visible=false;
+		}
 		description_ti.text = description;
 		connection_mc.node = connection;
+		connection_mc.setGC100((device_type.toLowerCase()!="gc100"));
 		save_btn.addEventListener("click", Delegate.create(this, save));	
 		if(device_type.toLowerCase()!="custom_connection"){
 			parameters_mc = this.attachMovie("forms.project.device.parameters"+device_type.toLowerCase(),"parameters_"+getNextHighestDepth()+"_mc",0,{parameters:parameters,device_type:device_type});
@@ -68,6 +80,7 @@ class Forms.Project.Device.Head extends Forms.BaseForm {
 		}
 		newData.parameters = parameters_mc.getData();
 		newData.connection = connection_mc.getData();
+		newData.password = comfortPassword.text;
 		dataObject.setData(newData);
 		_global.refreshTheTree();		
 		_global.saveFile("Project");				

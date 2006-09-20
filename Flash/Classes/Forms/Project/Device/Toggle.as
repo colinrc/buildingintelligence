@@ -14,15 +14,15 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 		switch (toggle_type) {
 		case "TOGGLE_INPUT" :
 			title_lb.text = "Toggle Inputs:";
-			var keyType = "Input\nNo.";
+			var keyType = "Input\nNo. (DEC)";
 			break;
 		case "TOGGLE_OUTPUT" :
 			title_lb.text = "Toggle Outputs:";
-			var keyType = "Output\nNo.";
+			var keyType = "Output\nNo. (DEC)";
 			break;
 		case "PULSE_OUTPUT" :
 			title_lb.text = "Pulse Outputs:";
-			var keyType = "Output\nNo.";
+			var keyType = "Output\nNo. (DEC)";
 			break;
 		}
 		var restrictions = new Object();
@@ -30,7 +30,7 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 		restrictions.restrict = "";
 		var keyRestrictions = new Object();
 		keyRestrictions.maxChars = 2;
-		keyRestrictions.restrict = "0-9A-Fa-f";
+		keyRestrictions.restrict = "0-9";
 		var powerRestrictions = new Object();
 		powerRestrictions.maxChars = 3;
 		powerRestrictions.restrict = "0-9";		

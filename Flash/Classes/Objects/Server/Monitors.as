@@ -56,7 +56,7 @@
 		for (var monitor in monitors) {
 			var monitorNode = new XMLNode(1, "TOGGLE_OUTPUT_MONITOR");
 			if (monitors[monitor].key != "") {
-				monitorNode.attributes["KEY"] = monitors[monitor].key;
+				monitorNode.attributes["KEY"] = parseInt(monitors[monitor].key).toString(16);
 			}
 			if (monitors[monitor].name != "") {
 				monitorNode.attributes["NAME"] = monitors[monitor].name;
@@ -99,7 +99,7 @@
 			newMonitor.display_name = "";
 			newMonitor.active = "Y";
 			if (newData.childNodes[child].attributes["KEY"] != undefined) {
-				newMonitor.key = newData.childNodes[child].attributes["KEY"];
+				newMonitor.key = parseInt(newData.childNodes[child].attributes["KEY"],16);
 			}
 			if (newData.childNodes[child].attributes["NAME"] != undefined) {
 				newMonitor.name = newData.childNodes[child].attributes["NAME"];

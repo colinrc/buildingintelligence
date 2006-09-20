@@ -26,13 +26,12 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 			}
 		}
 		groups = client.getKeyGroups();
-
 		icon_ldr.autoLoad = true;
 		icon_ldr.scaleContent = true;
 		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
 		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path + "lib\\icons", "*.png");
 		var IconDP = new Array();
-		IconDP.push({label:"No Icon",icon:""});
+		IconDP.push({label:"No Icon", icon:""});
 		for (var myIcon = 0; myIcon < myIcons.length; myIcon++) {
 			var newIcon = new Object();
 			newIcon.label = myIcons[myIcon].split(".")[0];
@@ -47,8 +46,13 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 		name_ti.addEventListener("change", changeListener);
 		name_ti.text = name;
 		if (icon.length) {
-			icon_cmb.text = icon;
-			icon_ldr.load(mdm.Application.path + "lib\\icons\\" + icon + ".png");
+			for (var tempIcon = 0; tempIcon < icon_cmb.dataProvider.length; tempIcon++) {
+				if (icon_cmb.dataProvider[tempIcon].label == icon) {
+					icon_cmb.selectedIndex = tempIcon;
+					icon_ldr.load(mdm.Application.path + "lib\\icons\\" + icon + ".png");
+					break;
+				}
+			}
 		}
 		var tempKeys = _global.serverDesign.getKeys();
 		var DPKey = new Array();
@@ -80,7 +84,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 		dataGridHandler.addIconComboBoxColumn("icon2", "Icon 2", IconDP, false, 150);
 		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl, false, 150);
 		var DP = new Array();
-		for (var control =0; control < controls.length;control++) {
+		for (var control = 0; control < controls.length; control++) {
 			var newControl = new Object();
 			if (controls[control].attributes["name"] != undefined) {
 				newControl.name = controls[control].attributes["name"];
@@ -130,15 +134,15 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 	}
 	private function newItem() {
 		dataGridHandler.addBlankRow();
-		callBack({itemIndex:controls_dg.dataProvider.length-1});
+		callBack({itemIndex:controls_dg.dataProvider.length - 1});
 	}
-	public function callBack(itemLocation){
+	public function callBack(itemLocation) {
 		var DP = dataGridHandler.getDataGridDataProvider();
 		var key = DP[itemLocation.itemIndex].key;
-		for(var index = 0; index<groups.childNodes.length;index++){
+		for (var index = 0; index < groups.childNodes.length; index++) {
 			var found = false;
-			for(var tempKey = 0; tempKey<groups.childNodes[index].childNodes.length;tempKey++){
-				if(key == groups.childNodes[index].childNodes[tempKey].attributes.name){
+			for (var tempKey = 0; tempKey < groups.childNodes[index].childNodes.length; tempKey++) {
+				if (key == groups.childNodes[index].childNodes[tempKey].attributes.name) {
 					var row = controls_dg.getItemAt(itemLocation.itemIndex);
 					row.icon1.label = groups.childNodes[index].attributes["icon1"];
 					row.icon2.label = groups.childNodes[index].attributes["icon2"];
@@ -147,7 +151,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 					break;
 				}
 			}
-			if(found){
+			if (found) {
 				break;
 			}
 		}
@@ -166,8 +170,8 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 			if (DP[index].type.length) {
 				item.attributes["type"] = DP[index].type;
 			}
-			if ((DP[index].icon1 != "No Icon")&&(DP[index].icon1 != undefined)) {
-				if ((DP[index].icon2 != "No Icon")&&(DP[index].icon2 != undefined)) {
+			if ((DP[index].icon1 != "No Icon") && (DP[index].icon1 != undefined)) {
+				if ((DP[index].icon2 != "No Icon") && (DP[index].icon2 != undefined)) {
 					var newIcons = new Array();
 					newIcons.push(DP[index].icon1);
 					newIcons.push(DP[index].icon2);
@@ -176,7 +180,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 					item.attributes["icons"] = DP[index].icon1;
 				}
 			} else {
-				if ((DP[index].icon2 != "No Icon")&&(DP[index].icon2 != undefined)){
+				if ((DP[index].icon2 != "No Icon") && (DP[index].icon2 != undefined)) {
 					item.attributes["icons"] = DP[index].icon2;
 				}
 			}

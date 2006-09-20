@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	private var alerts:Array;
 	private var alerts_dg:DataGrid;
@@ -14,8 +13,8 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	private var y_pos:String;
 	private var y_lb:Label;
 	//******************************//	
-	private var left_li:ComboBox;
-	private var right_li:ComboBox;
+	private var left_li:List;
+	private var right_li:List;
 	private var addSelected_btn:Button;
 	private var addAll_btn:Button;
 	private var removeSelected_btn:Button;
@@ -23,32 +22,29 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	//******************************//	
 	private var dataGridHandler:Object;
 	private var dataObject:Object;
-	
 	public function onLoad() {
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
-		}
+		};
 		name_ti.addEventListener("change", changeListener);
-		
 		name_ti.text = name;
 		x_lb.text = x_pos;
 		y_lb.text = y_pos;
-		
 		var tempKeys = _global.serverDesign.getKeys();
 		for (var key in tempKeys) {
 			var tempObject = new Object();
 			tempObject.label = tempKeys[key];
 			left_li.addItem(tempObject);
 		}
-		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
+		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path + "lib\\icons", "*.png");
 		var IconDP = new Array();
-		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
+		for (var myIcon = 0; myIcon < myIcons.length; myIcon++) {
 			var newIcon = new Object();
 			newIcon.label = myIcons[myIcon].split(".")[0];
-			newIcon.icon = mdm.Application.path+"lib\\icons\\"+myIcons[myIcon];
+			newIcon.icon = mdm.Application.path + "lib\\icons\\" + myIcons[myIcon];
 			IconDP.push(newIcon);
-		}		
+		}
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
@@ -65,7 +61,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("fadeOutTime", "Fade Out Time", restrictions, false, 150);
 		dataGridHandler.addHiddenColumn("keys");
 		var DP = new Array();
-		for (var alert = 0; alert< alerts.length;alert++) {
+		for (var alert = 0; alert < alerts.length; alert++) {
 			var newAlert = new Object();
 			if (alerts[alert].attributes["name"] != undefined) {
 				newAlert.name = alerts[alert].attributes["name"];
@@ -89,8 +85,8 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			}
 			DP.push(newAlert);
 		}
-		right_li.multipleSelection = true; 
-		left_li.multipleSelection = true; 
+		right_li.multipleSelection = true;
+		left_li.multipleSelection = true;
 		dataGridHandler.setDataGridDataProvider(DP);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
@@ -116,10 +112,10 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		hideButtons(true);
 		var alertKeys:Array = alerts_dg.selectedItem.keys.split(",");
 		for (var key in alertKeys) {
-			if(alertKeys[key].length){
+			if (alertKeys[key].length) {
 				var leftLength = left_li.dataProvider.length;
-				for(var index = 0; index < leftLength;index++){
-					if(alertKeys[key] == left_li.getItemAt(index).label){
+				for (var index = 0; index < leftLength; index++) {
+					if (alertKeys[key] == left_li.getItemAt(index).label) {
 						right_li.addItem(left_li.removeItemAt(index));
 						break;
 					}
@@ -127,9 +123,9 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			}
 		}
 		right_li.sortItemsBy("label", "ASC");
-		left_li.sortItemsBy("label", "ASC");		
+		left_li.sortItemsBy("label", "ASC");
 		_global.unSaved = true;
-}
+	}
 	public function save():Void {
 		var newAlerts = new Array();
 		var DP = dataGridHandler.getDataGridDataProvider();
@@ -151,16 +147,16 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 		}
 		dataObject.setData({name:name_ti.text, alerts:newAlerts});
 		hideButtons(false);
-		_global.refreshTheTree();		
+		_global.refreshTheTree();
 		_global.saveFile("Project");
 	}
 	private function addSel() {
 		if (left_li.selectedItems.length > 0) {
-			for(var item = left_li.selectedIndices.length-1; item>=0;item--){
+			for (var item = left_li.selectedIndices.length - 1; item >= 0; item--) {
 				right_li.addItem(left_li.removeItemAt(left_li.selectedIndices[item]));
-			}			
+			}
 			right_li.sortItemsBy("label", "ASC");
-			left_li.sortItemsBy("label", "ASC");		
+			left_li.sortItemsBy("label", "ASC");
 			var newKeys = new Array();
 			for (var item in right_li.dataProvider) {
 				newKeys.push(right_li.dataProvider[item].label);
@@ -180,7 +176,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			right_li.addItem(tempObject);
 		}
 		right_li.sortItemsBy("label", "ASC");
-		left_li.sortItemsBy("label", "ASC");		
+		left_li.sortItemsBy("label", "ASC");
 		var newKeys = new Array();
 		for (var item in right_li.dataProvider) {
 			newKeys.push(right_li.dataProvider[item].label);
@@ -190,11 +186,11 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 	}
 	private function remSel() {
 		if (right_li.selectedItems.length > 0) {
-			for(var item = right_li.selectedIndices.length-1; item>=0;item--){
+			for (var item = right_li.selectedIndices.length - 1; item >= 0; item--) {
 				left_li.addItem(right_li.removeItemAt(right_li.selectedIndices[item]));
 			}
 			right_li.sortItemsBy("label", "ASC");
-			left_li.sortItemsBy("label", "ASC");		
+			left_li.sortItemsBy("label", "ASC");
 			var newKeys = new Array();
 			for (var item in right_li.dataProvider) {
 				newKeys.push(right_li.dataProvider[item].label);
@@ -213,7 +209,7 @@ class Forms.Project.Client.Alerts extends Forms.BaseForm {
 			left_li.addItem(tempObject);
 		}
 		right_li.sortItemsBy("label", "ASC");
-		left_li.sortItemsBy("label", "ASC");		
+		left_li.sortItemsBy("label", "ASC");
 		var newKeys = new Array();
 		for (var item in right_li.dataProvider) {
 			newKeys.push(right_li.dataProvider[item].label);

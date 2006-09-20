@@ -1,6 +1,5 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-
 class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 	private var zones:Array;
 	private var zone_dg:DataGrid;
@@ -21,7 +20,6 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 	private var icon_cmb:ComboBox;
 	private var icon_ldr:Loader;
 	private var icon:String;
-	
 	public function onLoad() {
 		icon_ldr.autoLoad = true;
 		icon_ldr.scaleContent = true;
@@ -33,13 +31,11 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 			newIcon.icon = mdm.Application.path + "lib\\icons\\" + myIcons[myIcon];
 			icon_cmb.addItem(newIcon);
 		}
-		
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
-		}
+		};
 		label_ti.addEventListener("change", changeListener);
-		
 		var tempKeys = _global.serverDesign.getKeys();
 		var DPKey = new Array();
 		for (var key in tempKeys) {
@@ -48,18 +44,19 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 			DPKey.push(tempObject);
 		}
 		label_ti.text = label;
-		for (var i=0; i<view_cmb.length; i++) {
+		for (var i = 0; i < view_cmb.length; i++) {
 			if (view_cmb.getItemAt(i).label == view) {
 				view_cmb.selectedIndex = i;
 				break;
 			}
 		}
 		macros = _global.serverDesign.getMacros();
-		for (var i=0; i<macros.length; i++) {
+		for (var i = 0; i < macros.length; i++) {
 			macro_cmb.addItem({label:macros[i].name});
-			if (macros[i].name == macro) macro_cmb.selectedIndex = i + 1;
+			if (macros[i].name == macro) {
+				macro_cmb.selectedIndex = i + 1;
+			}
 		}
-		
 		if (view_cmb.selectedItem.label == "today") {
 			macro_cmb._visible = false;
 			new_btn._visible = false;
@@ -69,8 +66,13 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 			macro_lb._visible = false;
 		}
 		if (icon.length) {
-			icon_cmb.text = icon;
-			icon_ldr.load(mdm.Application.path + "lib\\icons\\" + icon + ".png");
+			for (var tempIcon = 0; tempIcon < icon_cmb.dataProvider.length; tempIcon++) {
+				if (icon_cmb.dataProvider[tempIcon].label == icon) {
+					icon_cmb.selectedIndex = tempIcon;
+					icon_ldr.load(mdm.Application.path + "lib\\icons\\" + icon + ".png");
+					break;
+				}
+			}
 		}
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -97,14 +99,14 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 		icon_cmb.addEventListener("change", Delegate.create(this, loadIcon));
-		view_cmb.addEventListener("change", Delegate.create(this, hideMacros));		
+		view_cmb.addEventListener("change", Delegate.create(this, hideMacros));
 	}
 	public function loadIcon(eventObject) {
 		_global.unSaved = true;
 		icon_ldr.load(icon_cmb.selectedItem.icon);
 	}
 	public function hideMacros(eventObject:Object) {
-		_global.unSaved = true;		
+		_global.unSaved = true;
 		if (view_cmb.selectedItem.label == "today") {
 			macro_cmb._visible = false;
 			new_btn._visible = false;
@@ -112,15 +114,13 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 			zone_dg._visible = false;
 			zones_lb._visible = false;
 			macro_lb._visible = false;
-		}
-		else{
+		} else {
 			macro_cmb._visible = true;
 			new_btn._visible = true;
 			delete_btn._visible = true;
 			zone_dg._visible = true;
 			zones_lb._visible = true;
 			macro_lb._visible = true;
-			
 		}
 	}
 	private function deleteItem() {
@@ -135,7 +135,7 @@ class Forms.Project.Client.CalendarTab extends Forms.BaseForm {
 		if (view_cmb.selectedItem.label != "today") {
 			newMacro = macro_cmb.selectedItem.label;
 			var DP = dataGridHandler.getDataGridDataProvider();
-			for (var index=0; index<DP.length; index++) {
+			for (var index = 0; index < DP.length; index++) {
 				var zone = new XMLNode(1, "zone");
 				if (DP[index].label != undefined) {
 					zone.attributes["label"] = DP[index].label;

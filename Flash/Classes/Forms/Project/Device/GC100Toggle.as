@@ -15,11 +15,11 @@ class Forms.Project.Device.GC100Toggle extends Forms.BaseForm {
 		switch (toggle_type) {
 		case "TOGGLE_INPUT" :
 			title_lb.text = "Toggle Inputs:";
-			var keyType = "Input\nNo.";
+			var keyType = "Input\nNo. (HEX)";
 			break;
 		case "TOGGLE_OUTPUT" :
 			title_lb.text = "Toggle Outputs:";
-			var keyType = "Output\nNo.";			
+			var keyType = "Output\nNo. (HEX)";			
 			break;
 		}
 		var DP = new Array();
@@ -42,10 +42,10 @@ class Forms.Project.Device.GC100Toggle extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(toggle_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,150);
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,150);
-		dataGridHandler.addTextInputColumn("key", keyType, keyRestrictions, false,50);
-		dataGridHandler.addComboBoxColumn("module", "Module No.", DP,false,100);		
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,200);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,200);
+		dataGridHandler.addTextInputColumn("key", keyType, keyRestrictions, false,80);
+		dataGridHandler.addComboBoxColumn("module", "Module No.", DP,false,80);		
 		dataGridHandler.setDataGridDataProvider(toggles);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));

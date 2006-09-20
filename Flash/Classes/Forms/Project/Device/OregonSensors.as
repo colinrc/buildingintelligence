@@ -23,9 +23,9 @@ class Forms.Project.Device.OregonSensors extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(sensors_dg);
 		dataGridHandler.addActiveColumn("active", values);			
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("channel", "Channel", keyRestrictions,false,50);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,200);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,200);
+		dataGridHandler.addTextInputColumn("channel", "Channel (HEX)", keyRestrictions,false,80);
 		dataGridHandler.addTextInputColumn("key", "Measurement\nType", restrictions,false,100);
 		dataGridHandler.setDataGridDataProvider(sensors);		
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

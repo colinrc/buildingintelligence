@@ -24,12 +24,12 @@ class Forms.Project.Device.DynaliteLights extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(lights_dg);
 		dataGridHandler.addActiveColumn("active", values);	
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
-		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false,60);
-		dataGridHandler.addTextInputColumn("area", "Area", keyRestrictions,false,60);		
-		dataGridHandler.addTextInputColumn("bla", "Base\nLink\nArea", keyRestrictions, true,60);		
-		dataGridHandler.addTextInputColumn("power", "Power\nRating", powerRestrictions,true,60);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,200);		
+		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false,200);
+		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode (HEX)", keyRestrictions,false,80);
+		dataGridHandler.addTextInputColumn("area", "Area (HEX)", keyRestrictions,false,80);		
+		dataGridHandler.addTextInputColumn("bla", "Base Link\nArea (HEX)", keyRestrictions, true,80);		
+		dataGridHandler.addTextInputColumn("power", "Power\nRating", powerRestrictions,true,80);
 		dataGridHandler.setDataGridDataProvider(lights);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));

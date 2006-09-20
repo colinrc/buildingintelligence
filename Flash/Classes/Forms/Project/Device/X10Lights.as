@@ -21,10 +21,10 @@ class Forms.Project.Device.X10Lights extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(lights_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false, 150);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false, 150);
-		dataGridHandler.addComboBoxColumn("x10", "Housecode", [{label:"A"}, {label:"B"}, {label:"C"}, {label:"D"}, {label:"E"}, {label:"F"}, {label:"G"}, {label:"H"}, {label:"I"}, {label:"J"}, {label:"K"}, {label:"L"}, {label:"M"}, {label:"N"}, {label:"O"}, {label:"P"}], false, 60);
-		dataGridHandler.addComboBoxColumn("key", "Unit\nNumber", [{label:"1"}, {label:"2"}, {label:"3"}, {label:"4"}, {label:"5"}, {label:"6"}, {label:"7"}, {label:"8"}, {label:"9"}, {label:"10"}, {label:"11"}, {label:"12"}, {label:"13"}, {label:"14"}, {label:"15"}, {label:"16"}], false, 60);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false, 200);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false, 200);
+		dataGridHandler.addComboBoxColumn("x10", "Housecode (HEX)", [{label:"A"}, {label:"B"}, {label:"C"}, {label:"D"}, {label:"E"}, {label:"F"}, {label:"G"}, {label:"H"}, {label:"I"}, {label:"J"}, {label:"K"}, {label:"L"}, {label:"M"}, {label:"N"}, {label:"O"}, {label:"P"}], false, 80);
+		dataGridHandler.addComboBoxColumn("key", "Unit\nNumber (HEX)", [{label:"1"}, {label:"2"}, {label:"3"}, {label:"4"}, {label:"5"}, {label:"6"}, {label:"7"}, {label:"8"}, {label:"9"}, {label:"10"}, {label:"11"}, {label:"12"}, {label:"13"}, {label:"14"}, {label:"15"}, {label:"16"}], false, 80);
 		dataGridHandler.addTextInputColumn("power", "Power\nRating", powerRestrictions, true, 100);
 		dataGridHandler.setDataGridDataProvider(lights);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));

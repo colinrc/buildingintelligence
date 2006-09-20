@@ -26,14 +26,14 @@ class Forms.Project.Device.M1Sensors extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(sensors_dg);
 		dataGridHandler.addActiveColumn("active", values);			
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,200);		
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,200);
 /*		dataGridHandler.addTextInputColumn("key", "Device Number", keyRestrictions,false,100);
 		dataGridHandler.addTextInputColumn("group", "Group", groupRestrictions,false,50); //decimal
 		dataGridHandler.addTextInputColumn("units", "Units", keyRestrictions,false,50); //*/
-		dataGridHandler.addComboBoxColumn("key", "Device\nNumber", [{label:"01"}, {label:"02"}, {label:"03"}, {label:"04"}, {label:"05"}, {label:"06"}, {label:"07"}, {label:"08"}, {label:"09"}, {label:"10"}, {label:"11"}, {label:"12"}, {label:"13"}, {label:"14"}, {label:"15"}, {label:"16"}],false,100);
-		dataGridHandler.addComboBoxColumn("group", "Group", [{label:"0"}, {label:"1"}, {label:"2"}],false,100);
-		dataGridHandler.addComboBoxColumn("units", "Units", [{label:"C"}, {label:"F"}],false,100);
+		dataGridHandler.addComboBoxColumn("key", "Device\nNumber (HEX)", [{label:"01"}, {label:"02"}, {label:"03"}, {label:"04"}, {label:"05"}, {label:"06"}, {label:"07"}, {label:"08"}, {label:"09"}, {label:"10"}, {label:"11"}, {label:"12"}, {label:"13"}, {label:"14"}, {label:"15"}, {label:"16"}],false,120);
+		dataGridHandler.addComboBoxColumn("group", "Group (HEX)", [{label:"0"}, {label:"1"}, {label:"2"}],false,80);
+		dataGridHandler.addComboBoxColumn("units", "Units (HEX)", [{label:"C"}, {label:"F"}],false,80);
 		dataGridHandler.setDataGridDataProvider(sensors);		
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));

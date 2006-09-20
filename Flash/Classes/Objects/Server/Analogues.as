@@ -45,7 +45,7 @@
 		for (var analogue in analogues) {
 			var newAnalogue = new XMLNode(1, "ANALOG");
 			if (analogues[analogue].key != "") {
-				newAnalogue.attributes["KEY"] = analogues[analogue].key;
+				newAnalogue.attributes["KEY"] = parseInt(analogues[analogue].key).toString(16);
 			}
 			if (analogues[analogue].name != "") {
 				newAnalogue.attributes["NAME"] = analogues[analogue].name;
@@ -88,7 +88,7 @@
 			newAnalogue.display_name = "";
 			newAnalogue.active = "Y";			
 			if (newData.childNodes[child].attributes["KEY"] != undefined) {
-				newAnalogue.key = newData.childNodes[child].attributes["KEY"];
+				newAnalogue.key = parseInt(newData.childNodes[child].attributes["KEY"],16);
 			}
 			if (newData.childNodes[child].attributes["NAME"] != undefined) {
 				newAnalogue.name = newData.childNodes[child].attributes["NAME"];

@@ -21,10 +21,10 @@ class Forms.Project.Device.DynaliteIRs extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(irs_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
-		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode", keyRestrictions,false,60);
-		dataGridHandler.addTextInputColumn("box", "Box", keyRestrictions, false,50);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,200);		
+		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false,200);
+		dataGridHandler.addTextInputColumn("key", "Dynalite\nCode (HEX)", keyRestrictions,false,80);
+		dataGridHandler.addTextInputColumn("box", "Box (HEX)", keyRestrictions, false,80);
 		dataGridHandler.setDataGridDataProvider(irs);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));

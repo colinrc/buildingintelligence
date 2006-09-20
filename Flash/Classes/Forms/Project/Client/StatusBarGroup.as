@@ -3,7 +3,7 @@ import mx.utils.Delegate;
 class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private var name_ti:TextInput;
 	private var icon_cmb:ComboBox;
-	private var icon_ldr:Loader;	
+	private var icon_ldr:Loader;
 	private var show_ti:TextInput;
 	private var hide_ti:TextInput;
 	private var name:String;
@@ -23,17 +23,17 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private var variable_mc:MovieClip;
 	private var dataObject:Object;
 	private var canOpen:String;
-	private var canOpen_chk:CheckBox;	
+	private var canOpen_chk:CheckBox;
 	private var groups:XMLNode;
 	public function onLoad():Void {
 		icon_ldr.autoLoad = true;
-		icon_ldr.scaleContent = true;		
+		icon_ldr.scaleContent = true;
 		icon_cmb.dropdown.cellRenderer = "ImageCellRenderer";
-		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\icons", "*.png");
-		for(var myIcon =0; myIcon <myIcons.length; myIcon++){
+		var myIcons = mdm.FileSystem.getFileList(mdm.Application.path + "lib\\icons", "*.png");
+		for (var myIcon = 0; myIcon < myIcons.length; myIcon++) {
 			var newIcon = new Object();
 			newIcon.label = myIcons[myIcon].split(".")[0];
-			newIcon.icon = mdm.Application.path+"lib\\icons\\"+myIcons[myIcon];
+			newIcon.icon = mdm.Application.path + "lib\\icons\\" + myIcons[myIcon];
 			icon_cmb.addItem(newIcon);
 		}
 		var changeListener:Object = new Object();
@@ -55,9 +55,9 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 			}
 		}
 		groups = client.getKeyGroups();
-		for(var index = 0; index<groups.childNodes.length;index++){
+		for (var index = 0; index < groups.childNodes.length; index++) {
 			var tempObject = new Object();
-			tempObject.label = "Group: "+groups.childNodes[index].attributes.name;
+			tempObject.label = "Group: " + groups.childNodes[index].attributes.name;
 			left_li.addItem(tempObject);
 		}
 		for (var key in tempKeys) {
@@ -80,18 +80,23 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		right_li.sortItemsBy("label", "ASC");
 		left_li.sortItemsBy("label", "ASC");
 		name_ti.text = name;
-		if(icon.length){
-			icon_cmb.text = icon;
-			icon_ldr.load(mdm.Application.path+"lib\\icons\\"+icon+".png");
-		} 
+		if (icon.length) {
+			for (var tempIcon = 0; tempIcon < icon_cmb.dataProvider.length; tempIcon++) {
+				if (icon_cmb.dataProvider[tempIcon].label == icon) {
+					icon_cmb.selectedIndex = tempIcon;
+					icon_ldr.load(mdm.Application.path + "lib\\icons\\" + icon + ".png");
+					break;
+				}
+			}
+		}
 		if (canOpen == "superuser") {
 			canOpen_chk.selected = true;
 		} else {
 			canOpen_chk.selected = false;
 		}
-		right_li.multipleSelection = true; 
-		left_li.multipleSelection = true; 
-		canOpen_chk.addEventListener("change", Delegate.create(this,changeListener.change));		
+		right_li.multipleSelection = true;
+		left_li.multipleSelection = true;
+		canOpen_chk.addEventListener("change", Delegate.create(this, changeListener.change));
 		show_ti.text = show;
 		hide_ti.text = hide;
 		save_btn.addEventListener("click", Delegate.create(this, save));
@@ -99,18 +104,18 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		addAll_btn.addEventListener("click", Delegate.create(this, addAll));
 		removeSelected_btn.addEventListener("click", Delegate.create(this, remSel));
 		removeAll_btn.addEventListener("click", Delegate.create(this, remAll));
-		icon_cmb.addEventListener("change", Delegate.create(this, loadIcon));			
+		icon_cmb.addEventListener("change", Delegate.create(this, loadIcon));
 	}
-	public function loadIcon(eventObject){
+	public function loadIcon(eventObject) {
 		_global.unSaved = true;
 		icon_ldr.load(icon_cmb.selectedItem.icon);
-	}	
+	}
 	private function save() {
 		if (canOpen_chk.selected) {
 			var newCanOpen = "superuser";
 		} else {
 			var newCanOpen = "";
-		}		
+		}
 		var newControls = new Array();
 		for (var index = 0; index < right_li.length; index++) {
 			var newControl = new XMLNode(1, "control");
@@ -119,7 +124,7 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 		}
 		var tempIndex = _global.left_tree.selectedIndex;
 		dataObject.setData({controls:newControls, name:name_ti.text, icon:icon_cmb.text, show:show_ti.text, hide:hide_ti.text, canOpen:newCanOpen});
-		_global.refreshTheTree();		
+		_global.refreshTheTree();
 		_global.saveFile("Project");
 	}
 	private function addSel() {
@@ -160,9 +165,9 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 			right_li.addItem(tempObject);
 		}
 		left_li.removeAll();
-		for(var index = 0; index<groups.childNodes.length;index++){
+		for (var index = 0; index < groups.childNodes.length; index++) {
 			var tempObject = new Object();
-			tempObject.label = "Group: "+groups.childNodes[index].attributes.name;
+			tempObject.label = "Group: " + groups.childNodes[index].attributes.name;
 			left_li.addItem(tempObject);
 		}
 		right_li.sortItemsBy("label", "ASC");
@@ -171,7 +176,7 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 	private function remSel() {
 		_global.unSaved = true;
 		if (right_li.selectedItems.length > 0) {
-			for(var item = right_li.selectedIndices.length-1; item>=0;item--){
+			for (var item = right_li.selectedIndices.length - 1; item >= 0; item--) {
 				left_li.addItem(right_li.removeItemAt(right_li.selectedIndices[item]));
 			}
 		}
@@ -188,9 +193,9 @@ class Forms.Project.Client.StatusBarGroup extends Forms.BaseForm {
 			tempObject.label = tempKeys[key];
 			left_li.addItem(tempObject);
 		}
-		for(var index = 0; index<groups.childNodes.length;index++){
+		for (var index = 0; index < groups.childNodes.length; index++) {
 			var tempObject = new Object();
-			tempObject.label = "Group: "+groups.childNodes[index].attributes.name;
+			tempObject.label = "Group: " + groups.childNodes[index].attributes.name;
 			left_li.addItem(tempObject);
 		}
 		right_li.sortItemsBy("label", "ASC");

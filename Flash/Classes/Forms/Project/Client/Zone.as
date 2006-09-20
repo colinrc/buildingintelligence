@@ -16,7 +16,7 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 	private var hideFromList_chk:CheckBox;
 	private var hideFromList:String;
 	private var save_btn:Button;
-	private var dataObject:Object;	
+	private var dataObject:Object;
 	public function onLoad() {
 		map_ldr.autoLoad = true;
 		map_ldr.scaleContent = true;
@@ -25,58 +25,73 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		bg_ldr.scaleContent = true;
 		bg_ldr.opaqueBackground = 0x0099CC;
 		map_cmb.dropdown.cellRenderer = "ImageCellRenderer";
-		var myMaps = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\maps", "*.png");
-		myMaps = myMaps.concat(mdm.FileSystem.getFileList(mdm.Application.path+"lib\\maps", "*.swf"));
+		var myMaps = mdm.FileSystem.getFileList(mdm.Application.path + "lib\\maps", "*.png");
+		myMaps = myMaps.concat(mdm.FileSystem.getFileList(mdm.Application.path + "lib\\maps", "*.swf"));
 		myMaps.sort();
-		map_cmb.addItem({label:"No Map",icon:""});
-		for(var myMap =0; myMap <myMaps.length; myMap++){
+		map_cmb.addItem({label:"No Map", icon:""});
+		for (var myMap = 0; myMap < myMaps.length; myMap++) {
 			var newMap = new Object();
 			newMap.label = myMaps[myMap];
-			newMap.icon = mdm.Application.path+"lib\\maps\\"+myMaps[myMap];
+			newMap.icon = mdm.Application.path + "lib\\maps\\" + myMaps[myMap];
 			map_cmb.addItem(newMap);
 		}
 		background_cmb.dropdown.cellRenderer = "ImageCellRenderer";
-		var myBGs = mdm.FileSystem.getFileList(mdm.Application.path+"lib\\backgrounds", "*.jpg");
-		myBGs = myBGs.concat(mdm.FileSystem.getFileList(mdm.Application.path+"lib\\backgrounds", "*.png"));
-		myBGs = myBGs.concat(mdm.FileSystem.getFileList(mdm.Application.path+"lib\\backgrounds", "*.swf"));		
+		var myBGs = mdm.FileSystem.getFileList(mdm.Application.path + "lib\\backgrounds", "*.jpg");
+		myBGs = myBGs.concat(mdm.FileSystem.getFileList(mdm.Application.path + "lib\\backgrounds", "*.png"));
+		myBGs = myBGs.concat(mdm.FileSystem.getFileList(mdm.Application.path + "lib\\backgrounds", "*.swf"));
 		myBGs.sort();
-		background_cmb.addItem({label:"No Background",icon:""});
-		for(var myBG =0; myBG <myBGs.length; myBG++){
+		background_cmb.addItem({label:"No Background", icon:""});
+		for (var myBG = 0; myBG < myBGs.length; myBG++) {
 			var newBG = new Object();
 			newBG.label = myBGs[myBG];
-			newBG.icon = mdm.Application.path+"lib\\backgrounds\\"+myBGs[myBG];
+			newBG.icon = mdm.Application.path + "lib\\backgrounds\\" + myBGs[myBG];
 			background_cmb.addItem(newBG);
-		}		
+		}
 		var changeListener:Object = new Object();
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
 		};
-		name_ti.addEventListener("change", changeListener);	
-		alignment_cmb.addEventListener("change", changeListener);			
-		cycle_chk.addEventListener("change", changeListener);	
-		hideFromList_chk.addEventListener("change", changeListener);			
+		name_ti.addEventListener("change", changeListener);
+		alignment_cmb.addEventListener("change", changeListener);
+		cycle_chk.addEventListener("change", changeListener);
+		hideFromList_chk.addEventListener("change", changeListener);
 		name_ti.text = name;
-		if(map.length){
-			map_cmb.text = map;
-			map_ldr.load(mdm.Application.path+"lib\\maps\\"+map);
-		} else{
+		if (map.length) {
+			for (var tempIcon = 0; tempIcon < map_cmb.dataProvider.length; tempIcon++) {
+				if (map_cmb.dataProvider[tempIcon].label == map) {
+					map_cmb.selectedIndex = tempIcon;
+					map_ldr.load(mdm.Application.path + "lib\\maps\\" + map);
+					break;
+				}
+			}
+		} else {
 			map_cmb.text = "No Map";
 		}
-		if(background.length){
-			background_cmb.text = background;
-			bg_ldr.load(mdm.Application.path+"lib\\backgrounds\\"+background);
-		} else{
+		if (background.length) {
+			for (var tempIcon = 0; tempIcon < background_cmb.dataProvider.length; tempIcon++) {
+				if (background_cmb.dataProvider[tempIcon].label == background) {
+					background_cmb.selectedIndex = tempIcon;
+					bg_ldr.load(mdm.Application.path + "lib\\backgrounds\\" + background);
+					break;
+				}
+			}
+		} else {
 			background_cmb.text = "No Background";
 		}
 		/*********************************/
-		if(alignment.length){
-			alignment_cmb.text = alignment;
+		if (alignment.length) {
+			for (var tempIcon = 0; tempIcon < alignment_cmb.dataProvider.length; tempIcon++) {
+				if (alignment_cmb.dataProvider[tempIcon].label == alignment) {
+					alignment_cmb.selectedIndex = tempIcon;
+					break;
+				}
+			}
 		}
 		/*for (var align in alignment_cmb.dataProvider) {
-			if (alignment_cmb.dataProvider[align].label == alignment) {
-				alignment_cmb.selectedIndex = parseInt(align);
-			}
-		}*/
+		if (alignment_cmb.dataProvider[align].label == alignment) {
+		alignment_cmb.selectedIndex = parseInt(align);
+		}
+		}*/ 
 		/********************************/
 		if (cycle == "true") {
 			cycle_chk.selected = true;
@@ -88,18 +103,18 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		} else {
 			hideFromList_chk.selected = false;
 		}
-		map_cmb.addEventListener("change", Delegate.create(this, loadMap));	
+		map_cmb.addEventListener("change", Delegate.create(this, loadMap));
 		background_cmb.addEventListener("change", Delegate.create(this, loadBG));
 		save_btn.addEventListener("click", Delegate.create(this, save));
 	}
-	public function loadMap(eventObject){
+	public function loadMap(eventObject) {
 		_global.unSaved = true;
 		map_ldr.load(map_cmb.selectedItem.icon);
 	}
-	public function loadBG(eventObject){
+	public function loadBG(eventObject) {
 		_global.unSaved = true;
-		bg_ldr.load(background_cmb.selectedItem.icon);		
-	}	
+		bg_ldr.load(background_cmb.selectedItem.icon);
+	}
 	public function save():Void {
 		if (cycle_chk.selected) {
 			cycle = "true";
@@ -111,23 +126,23 @@ class Forms.Project.Client.Zone extends Forms.BaseForm {
 		} else {
 			hideFromList = "false";
 		}
-		if(map_cmb.text == "No Map"){
+		if (map_cmb.text == "No Map") {
 			var tempMap = "";
-		} else{
+		} else {
 			var tempMap = map_cmb.text;
 		}
-		if(background_cmb.text == "No Background"){
+		if (background_cmb.text == "No Background") {
 			var tempBG = "";
-		} else{
+		} else {
 			var tempBG = background_cmb.text;
 		}
 		if (alignment_cmb.text == "top left") {
 			var align = "top left";
 		} else {
-			var align = "";
+			var align = "center";
 		}
 		dataObject.setData({name:name_ti.text, map:tempMap, background:tempBG, cycle:cycle, alignment:align, hideFromList:hideFromList});
-		_global.refreshTheTree();				
+		_global.refreshTheTree();
 		_global.saveFile("Project");
 	}
 }

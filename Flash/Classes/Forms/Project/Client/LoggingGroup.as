@@ -72,8 +72,13 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		left_li.sortItemsBy("label", "ASC");
 		name_ti.text = name;
 		if (icon.length) {
-			icon_cmb.text = icon;
-			icon_ldr.load(mdm.Application.path + "lib\\icons\\" + icon + ".png");
+			for (var tempIcon = 0; tempIcon < icon_cmb.dataProvider.length; tempIcon++) {
+				if (icon_cmb.dataProvider[tempIcon].label == icon) {
+					icon_cmb.selectedIndex = tempIcon;
+					icon_ldr.load(mdm.Application.path + "lib\\icons\\" + icon + ".png");
+					break;
+				}
+			}
 		}
 		listenTo_ti.text = listenTo;
 		for (var index = 0; index < type_cmb.length; index++) {
@@ -92,8 +97,8 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 		changeListener.change = function(eventObject:Object) {
 			_global.unSaved = true;
 		};
-		right_li.multipleSelection = true; 
-		left_li.multipleSelection = true; 
+		right_li.multipleSelection = true;
+		left_li.multipleSelection = true;
 		name_ti.addEventListener("change", changeListener);
 		listenTo_ti.addEventListener("change", changeListener);
 		type_cmb.addEventListener("change", changeListener);
@@ -204,7 +209,7 @@ class Forms.Project.Client.LoggingGroup extends Forms.BaseForm {
 	private function remSel() {
 		_global.unSaved = true;
 		if (right_li.selectedItems.length > 0) {
-			for(var item = right_li.selectedIndices.length-1; item>=0;item--){
+			for (var item = right_li.selectedIndices.length - 1; item >= 0; item--) {
 				left_li.addItem(right_li.removeItemAt(right_li.selectedIndices[item]));
 			}
 		}

@@ -4,18 +4,24 @@ class Forms.Project.Device.Connection extends Forms.BaseForm {
 	private var node:XMLNode;
 	private var type_cb:ComboBox;
 	private var details_mc:MovieClip;
+	private var gc100:Boolean;
 	public function Connection() {
+		gc100 = false;
+	}
+	public function setGC100(inGC100:Boolean):Void{
+		gc100 = inGC100;
+		type_cb.enabled = gc100;
 	}
 	public function onLoad():Void {
 		var dataObj = {node:node.firstChild};
-		if (node.firstChild.nodeName == "IP") {
-			details_mc = this.attachMovie("forms.project.device.ip", "connection_" +(_global.formDepth++) + "mc", 0, dataObj);
-			details_mc.dataObj = dataObj;
-			type_cb.selectedIndex = 0;
-		} else {
+		if (node.firstChild.nodeName == "SERIAL") {
 			details_mc = this.attachMovie("forms.project.device.serial", "connection_" + (_global.formDepth++) + "mc", 0, dataObj);
 			details_mc.dataObj = dataObj;
 			type_cb.selectedIndex = 1;
+		} else {
+			details_mc = this.attachMovie("forms.project.device.ip", "connection_" +(_global.formDepth++) + "mc", 0, dataObj);
+			details_mc.dataObj = dataObj;
+			type_cb.selectedIndex = 0;
 		}
 		details_mc._x = 0;
 		details_mc._y = 50;

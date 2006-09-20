@@ -24,19 +24,19 @@ class Forms.Project.Device.AudioVideo extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(inputs_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions,false,200);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,200);
 		var itemType:String;
 		switch (container) {
 		case "HAL" :
 		case "TUTONDO" :
 		case "NUVO":
-			itemType = "Audio\nZone";
+			itemType = "Audio\nZone (HEX)";
 			title_lb.text = "Audio Zones";
 			break;
 		case "SIGN_VIDEO":			
 		case "KRAMER" :
-			itemType = "AV\nZone";
+			itemType = "AV\nZone (HEX)";
 			title_lb.text = "AV Zones";
 			break;
 		}

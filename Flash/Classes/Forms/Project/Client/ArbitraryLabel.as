@@ -23,21 +23,26 @@ class Forms.Project.Client.ArbitraryLabel extends Forms.BaseForm {
 			DPKey.push(tempObject);
 		}
 		key_cmb.dataProvider = DPKey;
-		key_cmb.text = currentAlert.key;
+		for (var tempIcon = 0; tempIcon < key_cmb.dataProvider.length; tempIcon++) {
+			if (key_cmb.dataProvider[tempIcon].label == currentAlert.key) {
+				key_cmb.selectedIndex = tempIcon;
+				break;
+			}
+		}
 		fontSize_ti.text = currentAlert.fontSize;
 		defaultState_ti.text = currentAlert.defaultState;
 		defaultValue_ti.text = currentAlert.defaultValue;
-		label_ti.addEventListener("change", Delegate.create(this,changeListener));
-		key_cmb.addEventListener("change", Delegate.create(this,changeListener));		
-		defaultState_ti.addEventListener("change", Delegate.create(this,changeListener));
-		defaultValue_ti.addEventListener("change", Delegate.create(this,changeListener));
-		fontSize_ti.addEventListener("change", Delegate.create(this,changeListener));
+		label_ti.addEventListener("change", Delegate.create(this, changeListener));
+		key_cmb.addEventListener("change", Delegate.create(this, changeListener));
+		defaultState_ti.addEventListener("change", Delegate.create(this, changeListener));
+		defaultValue_ti.addEventListener("change", Delegate.create(this, changeListener));
+		fontSize_ti.addEventListener("change", Delegate.create(this, changeListener));
 	}
-	function changeListener(){
+	function changeListener() {
 		_global.unSaved = true;
 		currentAlert.label = label_ti.text;
 		currentAlert.key = key_cmb.text;
-		currentAlert.fontSize = fontSize_ti.text ;
+		currentAlert.fontSize = fontSize_ti.text;
 		currentAlert.defaultState = defaultState_ti.text;
 		currentAlert.defaultValue = defaultValue_ti.text;
 	}

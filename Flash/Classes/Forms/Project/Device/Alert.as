@@ -14,7 +14,7 @@ class Forms.Project.Device.Alert extends Forms.BaseForm {
 		restrictions.restrict = "";
 		var keyRestrictions = new Object();		
 		keyRestrictions.maxChars = 2;
-		keyRestrictions.restrict = "0-9A-Fa-f";				
+		keyRestrictions.restrict = "0-9";				
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -22,11 +22,11 @@ class Forms.Project.Device.Alert extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(alerts_dg);
 		dataGridHandler.addActiveColumn("active", values);
-		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "Comfort\nCode", keyRestrictions,false,50);
-		dataGridHandler.addTextInputColumn("cat", "Client\nCatagory", restrictions,false,100);
-		dataGridHandler.addComboBoxColumn("type", "Alert\nType", [{label:"Alarm Type"}, {label:"DoorBell"}, {label:"ID"}, {label:"ModeChange"}, {label:"Phone"}, {label:"System"}, {label:"User"}, {label:"Zone"}],false,100);
-		dataGridHandler.addTextInputColumn("message", "Message", restrictions,false,100);
+		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,200);
+		dataGridHandler.addTextInputColumn("key", "Comfort\nCode (DEC)", keyRestrictions,false,80);
+		dataGridHandler.addTextInputColumn("cat", "Client\nCatagory", restrictions,false,150);
+		dataGridHandler.addComboBoxColumn("type", "Alert\nType", [{label:"Alarm Type"}, {label:"DoorBell"}, {label:"ID"}, {label:"ModeChange"}, {label:"Phone"}, {label:"System"}, {label:"User"}, {label:"Zone"}],false,150);
+		dataGridHandler.addTextInputColumn("message", "Message", restrictions,false,200);
 		dataGridHandler.setDataGridDataProvider(alerts);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));

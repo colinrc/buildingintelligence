@@ -18,9 +18,9 @@ class Forms.Project.Device.GC100_Modules extends Forms.BaseForm {
 		}
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(modules_dg);
-		dataGridHandler.addTextInputColumn("name", "Module\nName", restrictions,false,150);
-		dataGridHandler.addComboBoxColumn("type", "Module\nType", [{label:"IR"}, {label:"RELAY"}],false,100);
-		dataGridHandler.addComboBoxColumn("number", "Module\nNo.", moduleNos,false,50);
+		dataGridHandler.addTextInputColumn("name", "Module\nName", restrictions,false,200);
+		dataGridHandler.addComboBoxColumn("type", "Module\nType", [{label:"IR"}, {label:"RELAY"}],false,150);
+		dataGridHandler.addComboBoxColumn("number", "Module\nNo.", moduleNos,false,60);
 		dataGridHandler.setDataGridDataProvider(modules);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		save_btn.addEventListener("click", Delegate.create(this, save));

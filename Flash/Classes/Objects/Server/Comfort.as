@@ -14,6 +14,18 @@
 	private var analogues:Objects.Server.Analogues;
 	private var door_ids:Objects.Server.Catalogue;
 	private var comfort_users:Objects.Server.Catalogue;
+	private var password:String;
+	public function getData():Object {
+		return {device_type:device_type, description:description, active:active, connection:connection, parameters:parameters, password:password, dataObject:this};
+	}
+	public function setData(newData:Object) {
+		device_type = newData.device_type;
+		description = newData.description;
+		active = newData.active;
+		connection = newData.connection;
+		parameters = newData.parameters;
+		password = newData.password;
+	}
 	var treeNode:XMLNode;			
 	public function getKeys():Array{
 		var tempKeys = new Array();
@@ -137,6 +149,9 @@
 		if(active != "") {
 			newDevice.attributes["ACTIVE"] = active;
 		}
+		if(password!=""){
+			newDevice.attributes["PASSWORD"] = password;
+		}
 		newDevice.appendChild(connection);
 		var newParameters = new XMLNode(1,"PARAMETERS");
 		for(var parameter in parameters){
@@ -244,6 +259,7 @@
 		device_type = "";
 		description ="";
 		active = "Y";		
+		password = "1234";
 		parameters = new Array();		
 		raw_interfaces = new Objects.Server.Raw_Interfaces();
 		customs = new Objects.Server.Customs();
@@ -283,6 +299,9 @@
 			}			
 			if(newData.attributes["ACTIVE"]!=undefined){			
 				active = newData.attributes["ACTIVE"];
+			}
+			if(newData.attributes["PASSWORD"]!=undefined){			
+				password = newData.attributes["PASSWORD"];
 			}
 			for (var child in newData.childNodes) {
 				switch (newData.childNodes[child].nodeName) {

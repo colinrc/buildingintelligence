@@ -26,7 +26,7 @@ class Forms.Project.Device.DMXLights extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);	
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions,false,150);		
 		dataGridHandler.addTextInputColumn("name", "Descriptions", restrictions,false,150);
-		dataGridHandler.addTextInputColumn("key", "DMX\nCode", keyRestrictions,false,60);
+		dataGridHandler.addTextInputColumn("key", "DMX\nCode (HEX)", keyRestrictions,false,60);
 		dataGridHandler.setDataGridDataProvider(lights);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));

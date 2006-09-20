@@ -10,12 +10,17 @@ class Forms.Project.Client.LoggingLog extends Forms.BaseForm {
 			_global.unSaved = true;
 		};
 		timeformat_cmb.addEventListener("change", changeListener);
-		label_ta.addEventListener("change", changeListener);		
-		if(label.length)	{
+		label_ta.addEventListener("change", changeListener);
+		if (label.length) {
 			label_ta.text = label;
-		} 
-		if(timeformat.length){
-			timeformat_cmb.text = timeformat;
+		}
+		if (timeformat.length) {
+			for (var tempIcon = 0; tempIcon < timeformat_cmb.dataProvider.length; tempIcon++) {
+				if (timeformat_cmb.dataProvider[tempIcon].label == timeformat) {
+					timeformat_cmb.selectedIndex = tempIcon;
+					break;
+				}
+			}
 		}
 	}
 }
