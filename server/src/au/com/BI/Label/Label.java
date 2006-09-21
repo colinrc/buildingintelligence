@@ -17,7 +17,7 @@ public class Label extends BaseDevice implements DeviceType
 {
 	protected String name="";
 	protected String command="";
-	protected String applicationCode = "";
+	protected String defaultLabel = "";
 	
 	public Label (String name, int deviceType){
 		super (name,deviceType);
@@ -45,11 +45,11 @@ public class Label extends BaseDevice implements DeviceType
 		alertCommand.setDisplayName(this.getOutputKey());
 		return alertCommand;
 	}
-	public String getApplicationCode() {
-		return applicationCode;
+	public String getDefaultLabel() {
+		return defaultLabel;
 	}
-	public void setApplicationCode(String application) {
-		applicationCode = application;
+	public void setDefaultLabel(String defaultLabel) {
+		this.defaultLabel = defaultLabel;
 	}
 	
 

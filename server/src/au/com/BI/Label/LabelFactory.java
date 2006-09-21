@@ -41,19 +41,16 @@ public class LabelFactory {
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
-		String cBUSApplication = "";
-		if (targetDevice.getName().equals("CBUS")){
-			cBUSApplication = element.getAttributeValue("CBUS_APPLICATION");
-		}
+		String defaultLabel  = element.getAttributeValue("DEFAULT");
 		Label label = new Label (display_name,connectionType);
 
 		key = targetDevice.formatKey(key,label);
 			
 		label.setKey (key);
+		label.setDefaultLabel (defaultLabel);
 		label.setOutputKey(display_name);
 		label.setCommand(command);
 		label.setGroupName(groupName);
-		label.setApplicationCode (cBUSApplication);
 		targetDevice.addStartupQueryItem(key, label, type);
 		targetDevice.addControlledItem(key, label, type);
 		targetDevice.addControlledItem(display_name, label, MessageDirection.FROM_FLASH);
