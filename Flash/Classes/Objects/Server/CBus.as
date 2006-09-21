@@ -3,6 +3,8 @@
 	private var temperatureSensors:Objects.Server.CBusTemperatureSensors;
 	private var lights:Objects.Server.CBusLights;
 	private var relays:Objects.Server.CBusRelays;
+	private var labelNames:Objects.Server.Catalogue;
+	private var labels:Objects.Server.CBusLabels;
 	var treeNode:XMLNode;	
 	public function getKeys():Array{
 		var tempKeys = new Array();
@@ -10,6 +12,7 @@
 		tempKeys = tempKeys.concat(lights.getKeys());
 		tempKeys = tempKeys.concat(relays.getKeys());
 		tempKeys = tempKeys.concat(temperatureSensors.getKeys());		
+		tempKeys = tempKeys.concat(labels.getKeys());		
 		return tempKeys;
 	}
 	public function isValid():String {
@@ -100,7 +103,12 @@
 		for(var parameter in parameters){
 			newParameters.appendChild(parameters[parameter]);
 		}
+		var newParameter = new XMLNode(1,"ITEM");
+		newParameter.attributes["NAME"] = "LABELS";
+		newParameter.attributes["VALUE"] = "Button Labels";
+		newParameters.appendChild(newParameter);		
 		newDevice.appendChild(newParameters);
+		newDevice.appendChild(labelNames.toXML());
 		var newCBus = new XMLNode(1, device_type);
 		var tempSensors = sensors.toXML();
 		for (var child in tempSensors.childNodes) {
@@ -118,6 +126,10 @@
 		for (var child in tempTemperatureSensors.childNodes) {
 			newCBus.appendChild(tempTemperatureSensors.childNodes[child]);
 		}		
+		var tempLabels = labels.toXML();
+		for(var child in tempLabels.childNodes){
+			newCBus.appendChild(tempLabels.childNodes[child]);
+		}
 		newDevice.appendChild(newCBus);
 		return newDevice;
 	}
@@ -129,6 +141,8 @@
 			newNode.appendChild(sensors.toTree());		
 			newNode.appendChild(temperatureSensors.toTree());
 		}
+		newNode.appendChild(labelNames.toTree());
+		newNode.appendChild(labels.toTree());
 		newNode.object = this;
 		treeNode = newNode;		
 		return newNode;
@@ -144,7 +158,12 @@
 		sensors = new Objects.Server.CBusSensors();
 		lights = new Objects.Server.CBusLights();
 		relays = new Objects.Server.CBusRelays();
+		var newLabelNames = new XMLNode(1, "CATALOGUE");
+		newLabelNames.attributes["NAME"] = "Button Labels";
+		labelNames = new Objects.Server.Catalogue();
+		labelNames.setXML(newLabelNames);		
 		temperatureSensors = new Objects.Server.CBusTemperatureSensors();
+		labels = new Objects.Server.CBusLabels();
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
 				device_type = newData.attributes["NAME"];
@@ -169,6 +188,7 @@
 					var tempLights = new XMLNode(1, "lights");
 					var tempRelays = new XMLNode (1, "relays");
 					var tempTemperatureSensors = new XMLNode(1,"temperatureSensors");
+					var tempLabels = new XMLNode(1,"labels");
 					var tempNode = newData.childNodes[child];
 					for (var cbusDevice in tempNode.childNodes) {
 						switch (tempNode.childNodes[cbusDevice].nodeName) {
@@ -186,13 +206,22 @@
 						case "TEMPERATURE":
 							tempTemperatureSensors.appendChild(tempNode.childNodes[cbusDevice]);
 							break;
+						case "LABEL":
+							tempLabels.appendChild(tempNode.childNodes[cbusDevice]);
+							break;
 						}
 					}
 					sensors.setXML(tempSensors);
 					lights.setXML(tempLights);
 					relays.setXML(tempRelays);
 					temperatureSensors.setXML(tempTemperatureSensors);
+					labels.setXML(tempLabels);
 					break;
+				case "CATALOGUE" :
+					if(newData.childNodes[child].attributes["NAME"] == "Button Labels"){
+						labelNames.setXML(newData.childNodes[child]);
+					}
+					break;					
 				case "CONNECTION" :
 					connection = newData.childNodes[child];
 					break;

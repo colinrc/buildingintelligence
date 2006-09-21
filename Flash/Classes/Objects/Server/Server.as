@@ -6,6 +6,7 @@
 	private var scripts:Objects.Server.Scripts;
 	private var devices:Array;
 	private var treeNode:XMLNode;
+	private var JROBIN:XMLNode;
 	private var clients:Array;
 	public function Server(){
 		description = "";
@@ -19,6 +20,7 @@
 		var new_client = new Objects.Client.Client();
 		new_client.setXML(_global.default_client_xml.firstChild);
 		//mdm.Dialogs.prompt(_global.default_client_xml);
+		JROBIN = new XMLNode(1,"JROBIN");
 		new_client.description = "Client-1";
 		new_client.id = _global.formDepth++;
 		clients.push(new_client);		
@@ -70,6 +72,7 @@
 		controlNode.appendChild(controls.toXML());
 		controlNode.appendChild(settings.toXML());
 		serverNode.appendChild(controlNode);
+		serverNode.appendChild(JROBIN);
 		for (var device in devices) {
 			serverNode.appendChild(devices[device].toXML());
 		}
@@ -92,6 +95,7 @@
 		serverNode.appendChild(controlNode);
 		serverNode.appendChild(macros.toXML());
 		serverNode.appendChild(scripts.toXML());
+		serverNode.appendChild(JROBIN);
 		for (var device in devices) {
 			serverNode.appendChild(devices[device].toXML());
 		}
@@ -371,6 +375,8 @@
 						newPelco.active = "Y";						
 						devices.push(newPelco);
 						break;
+					case "OREGON_SCIENTIFIC":
+						newData.childNodes[child].attributes["DEVICE_TYPE"] = "OREGON";
 					case "OREGON" :
 						var newOregon = new Objects.Server.Oregon();
 						newOregon.setXML(newData.childNodes[child]);
@@ -494,6 +500,7 @@
 					description = newData.childNodes[child].firstChild;
 					break;
 				case "JROBIN" :
+					JROBIN = newData.childNodes[child];
 					break;
 				case "application":
 					var newClient = new Objects.Client.Client();
@@ -510,7 +517,8 @@
 				}
 			}
 		} else {
-			trace("ERROR, found node "+newData.nodeName+", expecting CONFIG");
+			mdm.Dialogs.prompt("ERROR, found node "+newData.nodeName+", expecting CONFIG");
+			mdm.Dialogs.prompt(newData.toString());
 		}
 	}
 }

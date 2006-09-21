@@ -48,6 +48,10 @@ class Forms.Project.Device.Catalogue extends Forms.BaseForm {
 				dataGridHandler.addTextInputColumn("code", "Function Name", restrictions,false,200);
 				dataGridHandler.addTextInputColumn("value", "Function Number", restrictions,false,200);
 				break;
+			case "Button Labels":
+				dataGridHandler.addTextInputColumn("code", "Internal Name", restrictions,false,200);
+				dataGridHandler.addTextInputColumn("value", "Display String", restrictions,false,200);
+				break;
 			default:
 				dataGridHandler.addTextInputColumn("code", "Code", restrictions,false,200);
 				dataGridHandler.addTextInputColumn("value", "Value", restrictions,false,200);

@@ -954,6 +954,7 @@ _global.updateFromLibrary = function(tempObject) {
 			for (var client in clients) {
 				_global.designTree_xml.appendChild(clients[client].toTree());
 			}
+			form_mc.dataObject = tempObject;
 			_global.left_tree.selectedNode = foundNode;
 		} else {
 			foundNode.removeNode();
@@ -968,8 +969,11 @@ _global.updateFromLibrary = function(tempObject) {
 	} else {
 		mdm.Dialogs.prompt("Could not find node");
 	}
+	form_mc.removeMovieClip();
 	_global.refreshTheTree();
-	_global.unSaved = true;
+	_global.unSaved = false;
+	_global.saveFile("Project");
+	setView("project");
 	_global.winListener.click();
 };
 home_btn.addEventListener("click", buttonListener);

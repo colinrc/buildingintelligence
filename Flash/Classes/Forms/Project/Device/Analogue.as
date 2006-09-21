@@ -43,6 +43,6 @@ class Forms.Project.Device.Analogue extends Forms.BaseForm {
 		dataGridHandler.clearSelection();		
 		dataObject.setData({analogues:dataGridHandler.getDataGridDataProvider()});
 		_global.refreshTheTree();		
-		_global.saveFile();		
+		_global.saveFile("Project");		
 	}
 }
