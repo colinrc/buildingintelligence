@@ -6,6 +6,7 @@
 	private var toggle_outputs:Objects.Server.Toggles;
 	private var sensors: Objects.Server.M1Sensors;
 	private var x10_lights:Objects.Server.X10Lights;
+	private var keypad:Objects.Server.Keypad;
 
 	public function getKeys():Array{
 		var tempKeys = new Array();
@@ -13,6 +14,7 @@
 		tempKeys = tempKeys.concat(toggle_outputs.getKeys());
 		tempKeys = tempKeys.concat(sensors.getKeys());
 		tempKeys = tempKeys.concat(x10_lights.getKeys());
+		tempKeys = tempKeys.concat(keypad.getKeys());
 		return tempKeys;
 	}
 	public function isValid():String {
@@ -111,6 +113,11 @@
 		for(var parameter in parameters){
 			newParameters.appendChild(parameters[parameter]);
 		}
+		//<ITEM NAME="POLL_SENSOR_INTERVAL" VALUE="10"/>
+		var newItem = new XMLNode(1,"ITEM");
+		newItem.attributes["NAME"]="POLL_SENSOR_INTERVAL";
+		newItem.attributes["VALUE"]="10";
+		newParameters.appendChild(newItem);
 		newDevice.appendChild(newParameters);
 		var newM1 = new XMLNode(1, device_type);
 		var tempToggleOutputs = toggle_outputs.toXML();
@@ -129,6 +136,10 @@
 		for(var child in tempX10Lights.childNodes){
 			newM1.appendChild(tempX10Lights.childNodes[child]);
 		}
+		var tempKeypad = keypad.toXML();
+		for (var child in tempKeypad.childNodes){
+			newM1.appendChild(tempKeypad.childNodes[child]);
+		}
 		newDevice.appendChild(newM1);
 		return newDevice;
 	}
@@ -138,6 +149,7 @@
 		newNode.appendChild(toggle_outputs.toTree());
 		newNode.appendChild(sensors.toTree());
 		newNode.appendChild(x10_lights.toTree());
+		newNode.appendChild(keypad.toTree());
 		newNode.object = this;
 		treeNode = newNode;		
 		return newNode;
@@ -153,6 +165,7 @@
 		contacts = new Objects.Server.ContactClosures();
 		sensors = new Objects.Server.M1Sensors();
 		x10_lights = new Objects.Server.X10Lights();
+		keypad = new Objects.Server.Keypad();
 		toggle_outputs = new Objects.Server.Toggles("TOGGLE_OUTPUT");
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
@@ -177,6 +190,7 @@
 					var tempToggleOutputs = new XMLNode(1,device_type);
 					var tempSensors = new XMLNode(1,"sensors");
 					var tempX10Lights = new XMLNode(1,device_type);
+					var tempKeypad = new XMLNode(1,device_type);
 					var tempNode = newData.childNodes[child];
 					for (var M1Device in tempNode.childNodes) {
 					switch (tempNode.childNodes[M1Device].nodeName) {
@@ -189,8 +203,11 @@
 						case "TOGGLE_OUTPUT":
 							tempToggleOutputs.appendChild(tempNode.childNodes[M1Device]);
 							break;
-						case "TOGGLE_OUTPUT":
+						case "SENSOR":
 							tempSensors.appendChild(tempNode.childNodes[M1Device]);
+							break;
+						case "KEYPAD":
+							tempKeypad.appendChild(tempNode.childNodes[M1Device]);
 							break;
 						}
 					}
@@ -198,6 +215,7 @@
 					toggle_outputs.setXML(tempToggleOutputs);
 					sensors.setXML(tempSensors);
 					x10_lights.setXML(tempX10Lights);
+					keypad.setXML(tempKeypad);
 					break;
 				case "CONNECTION" :
 					connection = newData.childNodes[child];

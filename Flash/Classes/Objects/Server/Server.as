@@ -345,6 +345,14 @@
 				treeNode.appendChild(newCustomConnect.toTree());
 				devices.push(newCustomConnect);
 				break;
+			case "JANDI":
+				var newJandy = new Objects.Server.Jandy();
+				newJandy.setXML(newNode);
+				newJandy.id = _global.formDepth++;								
+				newJandy.active = "Y";				
+				treeNode.appendChild(newJandy.toTree());
+				devices.push(newJandy);
+				break;
 				}
 			}
 		_global.left_tree.setIsOpen(treeNode, true);		
@@ -481,6 +489,13 @@
 						newCustomConnect.id = _global.formDepth++;
 						newCustomConnect.active = "Y";		
 						devices.push(newCustomConnect);
+						break;
+					case "JANDI":
+						var newJandy = new Objects.Server.Jandy();
+						newJandy.setXML(newData.childNodes[child]);
+						newJandy.id = _global.formDepth++;
+						newJandy.active = "Y";		
+						devices.push(newJandy);
 						break;
 					}
 					break;

@@ -87,13 +87,19 @@
 	public function getName():String {
 		switch(toggle_type){
 			case"TOGGLE_INPUT":
-			return "Toggle Inputs";
+				return "Toggle Inputs";
 			break;
 			case"TOGGLE_OUTPUT":
-			return "Toggle Outputs";
+				return "Toggle Outputs";
 			break;
 			case"PULSE_OUTPUT":
-			return "Pulse Outputs";
+				return "Pulse Outputs";
+			break;
+			case"OUTPUT":
+				return "Outputs";
+			break;
+			case"SENSOR":
+				return "Sensors";
 			break;
 		}
 	}

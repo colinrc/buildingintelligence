@@ -48,8 +48,8 @@ class Forms.Project.Script extends Forms.BaseForm {
 		mdm.Dialogs.BrowseFile.title = "Please select a Script file to open";
 		mdm.Dialogs.BrowseFile.dialogText = "Select a Script file to Use";
 		mdm.Dialogs.BrowseFile.defaultExtension = "py";
-		mdm.Dialogs.BrowseFile.filterList = "Python|*.py";
-		mdm.Dialogs.BrowseFile.filterText = "Python files";
+		mdm.Dialogs.BrowseFile.filterList = "Python|*.py|Groovy|*.groovy";
+		mdm.Dialogs.BrowseFile.filterText = "Python files|*.py|Groovy files|*.groovy";
 		var file = mdm.Dialogs.BrowseFile.show();
 		if (file != "false") {
 			//file
@@ -60,7 +60,11 @@ class Forms.Project.Script extends Forms.BaseForm {
 			dataGridHandler.addBlankRow();
 			var script = scripts_dg.getItemAt(scripts_dg.length - 1);
 			script.sel = false;
-			script.name.label = file.substring(file.lastIndexOf("\\") + 1, file.lastIndexOf(".py"));
+			if(file.lastIndexOf(".py")!=-1){
+				script.name.label = file.substring(file.lastIndexOf("\\") + 1, file.lastIndexOf(".py"));
+			} else if(file.lastIndexOf(".groovy")!=-1){
+				script.name.label = file.substring(file.lastIndexOf("\\") + 1, file.lastIndexOf(".groovy"));
+			}
 			scripts_dg.selectedIndex = scripts_dg.dataProvider.length - 1;
 			scripts_dg.dataProvider.updateViews("change");
 		}

@@ -14,6 +14,7 @@
 	private var analogues:Objects.Server.Analogues;
 	private var door_ids:Objects.Server.Catalogue;
 	private var comfort_users:Objects.Server.Catalogue;
+	private var keypad:Objects.Server.Keypad;
 	private var password:String;
 	public function getData():Object {
 		return {device_type:device_type, description:description, active:active, connection:connection, parameters:parameters, password:password, dataObject:this};
@@ -42,6 +43,7 @@
 		tempKeys = tempKeys.concat(alarms.getKeys());
 		tempKeys = tempKeys.concat(alerts.getKeys());
 		tempKeys = tempKeys.concat(analogues.getKeys());
+		tempKeys = tempKeys.concat(keypad.getKeys());
 		return tempKeys;
 	}
 	public function isValid():String {
@@ -225,6 +227,10 @@
 		for (var child in tempAnalogues.childNodes){
 			newComfort.appendChild(tempAnalogues.childNodes[child]);
 		}
+		var tempKeypad = keypad.toXML();
+		for (var child in tempKeypad.childNodes){
+			newComfort.appendChild(tempKeypad.childNodes[child]);
+		}
 		newDevice.appendChild(newComfort);	
 		return newDevice;
 	}
@@ -237,6 +243,7 @@
 			newNode.appendChild(alarms.toTree());
 			newNode.appendChild(alerts.toTree());			
 		}		
+		newNode.appendChild(keypad.toTree());
 		newNode.appendChild(door_ids.toTree());
 		newNode.appendChild(comfort_users.toTree());
 		newNode.appendChild(counters.toTree());
@@ -275,6 +282,7 @@
 		alerts = new Objects.Server.Alerts();
 		analogues = new Objects.Server.Analogues();
 		catalogues = new Objects.Server.Catalogues();
+		keypad = new Objects.Server.Keypad();
 		door_ids = new Objects.Server.Catalogue();
 		comfort_users = new Objects.Server.Catalogue();
 		var newDoors = new XMLNode(1,"CATALOGUE");
@@ -339,6 +347,7 @@
 					var tempAlerts = new XMLNode(1,device_type);
 					var tempAlarms = new XMLNode(1,device_type);
 					var tempAnalogues = new XMLNode(1,device_type);
+					var tempKeypad = new XMLNode(1,device_type);
 					for (var rawDevice in tempNode.childNodes) {
 						switch (tempNode.childNodes[rawDevice].nodeName) {
 						case "CUSTOM_INPUT" :
@@ -378,6 +387,9 @@
 						case "ALERT":
 							tempAlerts.appendChild(tempNode.childNodes[rawDevice]);
 							break;
+						case "KEYPAD":
+							tempKeypad.appendChild(tempNode.childNodes[rawDevice]);
+							break;
 						case "ANALOG":
 						case "ANALOGUE":
 							tempAnalogues.appendChild(tempNode.childNodes[rawDevice]);
@@ -397,6 +409,7 @@
 					alarms.setXML(tempAlarms);
 					alerts.setXML(tempAlerts);
 					analogues.setXML(tempAnalogues);
+					keypad.setXML(tempKeypad);
 					break;
 				}
 			}
