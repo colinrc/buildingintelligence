@@ -6,7 +6,5 @@ public interface LightDevice {
 	
 	public void setMax (int max);
 	
-	public void setRelay (String relay);
-	
-	public String getRelay();
+	public boolean isRelay();
 }

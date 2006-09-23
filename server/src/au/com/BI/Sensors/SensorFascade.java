@@ -68,15 +68,16 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 			sensor.setMax (255);
 		}
 	}
-	
-	
 
-	public String getRelay() {
-		return sensor.getRelay();
+	public boolean isRelay() {
+		return sensor.isRelay();
 	}
 
 	public void setRelay(String relay) {
-		sensor.setRelay(relay);
+		if (relay.equals ("Y"))
+			sensor.setRelay(true);
+		else
+			sensor.setRelay(false);
 	}
 
 	public boolean isAreaDevice () {

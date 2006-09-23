@@ -72,7 +72,7 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 	 */
 	public void setAreaDevice( boolean areaFlag) {
 		if (light.getDeviceType() == DeviceType.LIGHT_CBUS ){
-			((CBUSDevice)light).setAreaDevice(areaFlag);
+			((CBUS)light).setAreaDevice(areaFlag);
 		}
 	
 		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE ){
@@ -86,7 +86,7 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 	}
 	
 	public boolean supportsLevelMMI () {
-		if (light.getDeviceType() == DeviceType.LIGHT_CBUS && !((CBUSDevice)light).getRelay().equals ("Y")) 
+		if (light.getDeviceType() == DeviceType.LIGHT_CBUS && !((CBUSDevice)light).isRelay()) 
 			return ((CBUSDevice)light).supportsLevelMMI();
 		else 
 			return false;
@@ -225,18 +225,30 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 	public String getApplicationCode() {
 		return ((CBUSDevice)light).getApplicationCode();
 	}
-	/**
-	 * @param applicationCode The applicationCode to set.
-	 */
+
+	
 	public void setRelay(String relay) {
-		if (relay == null) relay = "N";
-		((LightDevice)light).setRelay(relay);
+		boolean relayVal = false;
+		if (relay == null || relay.equals("N"))
+			relayVal = false;
+		else
+			relayVal = true;
+				
+		if (light.getDeviceType() == DeviceType.LIGHT_CBUS ){
+			((CBUS)light).setRelay(relayVal);
+		}
+	
+		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE  || light.getDeviceType() == DeviceType.LIGHT_DYNALITE_AREA){
+			((Dynalite)light).setRelay(relayVal);
+		}
+
 	}
+	
 	/**
 	 * @return Returns the relay value
 	 */
-	public String getRelay() {
-		return ((LightDevice)light).getRelay();
+	public boolean  isRelay() {
+		return ((LightDevice)light).isRelay();
 	}
 	/**
 	 * @param areaCode The areaCode to set.

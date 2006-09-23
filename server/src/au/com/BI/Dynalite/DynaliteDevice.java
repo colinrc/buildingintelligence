@@ -33,8 +33,7 @@ public interface DynaliteDevice {
 	
 	public int getMax ();
 	
-	public String getRelay ();
-	public void setRelay (String relay);
+	public boolean isRelay ();
 	
 	public int getDeviceType ();
 	

@@ -13,7 +13,7 @@ import au.com.BI.Command.*;
  **/
 public class Light extends BaseDevice implements LightDevice
 {
-	protected String relay;
+	protected boolean relay = false;
 
 	protected int max = 255;
 	
@@ -34,14 +34,6 @@ public class Light extends BaseDevice implements LightDevice
 		lightCommand.setDisplayName(getOutputKey());
 		return lightCommand;
 	}
-
-	public void setRelay(String relay) {
-		this.relay = relay;
-	}
-
-	public String getRelay() {
-		return relay;
-	}
 	
 	public int getMax() {
 		return max;
@@ -51,5 +43,11 @@ public class Light extends BaseDevice implements LightDevice
 		this.max = max;
 	}
 
+	public void setRelay(boolean relay) {
+		this.relay = relay;
+	}
 
+	public boolean isRelay() {
+		return relay;
+	}
 }

@@ -15,7 +15,8 @@ public class X10 extends BaseDevice implements LightDevice
 {
 
 	protected String X10HouseCode="";
-	protected String relay  = "";
+	protected boolean relay= false;
+	
 	public X10 () {
 		super();
 	}
@@ -56,12 +57,13 @@ public class X10 extends BaseDevice implements LightDevice
 		X10HouseCode = houseCode;
 	}
 
-	public String getRelay() {
+	public boolean isRelay() {
 		return relay;
 	}
 
-	public void setRelay(String relay) {
+	public void setRelay(boolean relay) {
 		this.relay = relay;
 	}
+
 
 }

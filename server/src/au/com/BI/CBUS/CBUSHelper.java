@@ -4,6 +4,8 @@
  */
 package au.com.BI.CBUS;
 
+import au.com.BI.Device.DeviceType;
+
 
 /**
  * @author colinc
@@ -12,14 +14,17 @@ package au.com.BI.CBUS;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class CBUSHelper {
-	public String buildKey (String appCode, String groupCode) {
+
+	
+	public String buildKey (String appCode, String groupCode, int deviceType) {
 		if (groupCode.length() == 1 ) groupCode = "0" + groupCode;
 		String resultKey = appCode + ":" + groupCode;
+		if (deviceType == DeviceType.LABEL) resultKey = "L:" + resultKey;
 		return resultKey.toUpperCase();
 	}
 	
-	public String buildKey (String appCode, int groupCode) {
-		return buildKey (appCode,Integer.toHexString(groupCode));
+	public String buildKey (String appCode, int groupCode, int deviceType) {
+		return buildKey (appCode,Integer.toHexString(groupCode), deviceType);
 	}
 
 }

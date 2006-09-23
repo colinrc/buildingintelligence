@@ -83,13 +83,8 @@ public class Alarm extends BaseDevice implements DeviceType,DynaliteDevice
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	public String getRelay() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public void setRelay(String relay) {
-		// TODO Auto-generated method stub
-		
+	public boolean isRelay() {
+		return false;
 	}
 	public int getChannel() {
 		// TODO Auto-generated method stub

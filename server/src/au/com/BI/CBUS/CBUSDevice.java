@@ -22,15 +22,15 @@ public interface CBUSDevice {
 
 	
 	public int getMax ();
-	public void setMax (int max);
+	//public void setMax (int max);
 	
-	public String getRelay ();
+	public boolean isRelay();
 	
 	public int getDeviceType ();
 	
 	public String getKey ();
 	
-	public void setGroupName (String groupName);
+	//public void setGroupName (String groupName);
 
 	public String getGroupName ();
 	
@@ -40,6 +40,6 @@ public interface CBUSDevice {
 	/**
 	 * @return Sets if the device represents an area instead of a channel
 	 */
-	public void setAreaDevice( boolean area);
+	//public void setAreaDevice( boolean area);
 
 }

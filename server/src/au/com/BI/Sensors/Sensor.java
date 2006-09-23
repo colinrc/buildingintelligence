@@ -20,7 +20,7 @@ public class Sensor extends BaseDevice
 	protected int max;
 	protected String applicationCode = "38";
 	protected String units = "";
-	protected String relay = "N";
+	protected boolean relay = false;
 	protected String temperature;
 	
 	public Sensor (String name, String channel, String units, int deviceType){
@@ -106,17 +106,6 @@ public class Sensor extends BaseDevice
 		this.units = units;
 	}
 
-
-	public String getRelay() {
-		return relay;
-	}
-	
-
-
-	public void setRelay(String relay) {
-		this.relay = relay;
-	}
-
 	public String getGroup() {
 		return group;
 	}
@@ -132,5 +121,12 @@ public class Sensor extends BaseDevice
 	public void setTemperature(String temperature) {
 		this.temperature = temperature;
 	}
+
+	public void setRelay(boolean relay) {
+		this.relay = relay;
+	}
 	
+	public boolean isRelay() {
+		return relay;
+	}
 }

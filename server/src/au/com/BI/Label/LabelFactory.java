@@ -42,12 +42,17 @@ public class LabelFactory {
 		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
 		String defaultLabel  = element.getAttributeValue("DEFAULT");
+		String cbusApplication = "";
+		if (targetDevice.getName().equals("CBUS")){
+			cbusApplication = element.getAttributeValue("CBUS_APPLICATION");
+		}
 		Label label = new Label (display_name,connectionType);
 
 		key = targetDevice.formatKey(key,label);
 			
 		label.setKey (key);
 		label.setDefaultLabel (defaultLabel);
+		label.setApplicationCode(cbusApplication);
 		label.setOutputKey(display_name);
 		label.setCommand(command);
 		label.setGroupName(groupName);

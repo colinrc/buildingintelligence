@@ -130,11 +130,17 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			if (controlType == MessageDirection.FROM_HARDWARE)  {
 				if (details.getDeviceType() == DeviceType.LIGHT_CBUS) {
 					String appCode = device.getApplicationCode() ;
-					theKey = cBUSHelper.buildKey(appCode,name);
+					theKey = cBUSHelper.buildKey(appCode,name, details.getDeviceType() );
+					
 					applicationCodes.add(appCode);
 				}
 				if (details.getDeviceType() == DeviceType.SENSOR) {
 					theKey = name;
+				}
+				if (details.getDeviceType() == DeviceType.LABEL) {
+					String appCode = device.getApplicationCode() ;
+					theKey = cBUSHelper.buildKey(appCode,name,DeviceType.LABEL);
+					applicationCodes.add(appCode);
 				}
 			}
 
@@ -153,7 +159,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 	public boolean setState (CBUSDevice cbusDevice, String command, int extra){
-		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey());
+		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(),cbusDevice.getDeviceType());
 		StateOfGroup cBusState = null;
 		if (state.containsKey(theKey)) {
 			cBusState = (StateOfGroup)state.get(theKey);
@@ -186,7 +192,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 	public boolean setStateFromFlash (CBUSDevice cbusDevice, boolean flashControl){
-		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey());
+		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(),cbusDevice.getDeviceType());
 		StateOfGroup cBusState = null;
 		if (state.containsKey(theKey)) {
 			cBusState = (StateOfGroup)state.get(theKey);
@@ -200,7 +206,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 	
 	public boolean setStateFromWallPanel(CBUSDevice cbusDevice, boolean wallControl){
-		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey());
+		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(), cbusDevice.getDeviceType());
 		StateOfGroup cBusState = null;
 		if (state.containsKey(theKey)) {
 			cBusState = (StateOfGroup)state.get(theKey);
@@ -214,7 +220,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 	
 	public boolean getStateFromFlash (CBUSDevice cbusDevice){
-		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey());
+		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(), cbusDevice.getDeviceType());
 		StateOfGroup cBusState = (StateOfGroup)state.get(theKey);
 		if (cBusState != null) {
 			return cBusState.isFromClient();
@@ -224,14 +230,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 	public boolean setState (CBUSDevice cbusDevice, StateOfGroup cBusState){
-		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey());
+		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(),cbusDevice.getDeviceType());
 
 		state.put(theKey,cBusState);
 		return cBusState.isDirty;
 	}
 	
 	public boolean testState (CBUSDevice cbusDevice,String power, String level) {
-		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey());
+		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(), cbusDevice.getDeviceType());
 		return testState (theKey,power,level);
 	}
 		
@@ -257,7 +263,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		 
 
 	public void setStateClean (CBUSDevice cbusDevice) {
-		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey());
+		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(),cbusDevice.getDeviceType());
 		if (state.containsKey(theKey)) {
 			StateOfGroup cBusState = (StateOfGroup)state.get(theKey);
 			cBusState.isDirty = false;
@@ -412,7 +418,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				case DeviceType.LIGHT_CBUS :
 					String currentChar = this.nextKey();
 					LightFascade lightDevice = (LightFascade)device;
-					String fullKey = this.cBUSHelper.buildKey(lightDevice.getApplicationCode(),lightDevice.getKey());
+					String fullKey = this.cBUSHelper.buildKey(lightDevice.getApplicationCode(),lightDevice.getKey(),lightDevice.getDeviceType());
 					this.sendingExtended.remove(fullKey);  
 					// the build cbusstring will add a new entry if a new ramp has been sent
 					// ensure that Level CBUS returns will not be decoded, as the user has done an action since
@@ -442,7 +448,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				case DeviceType.LABEL: 
 					String currentCbusKey = this.nextKey();
 					Label label = (Label)device;
-					String fullKeyLabel = this.cBUSHelper.buildKey(label.getApplicationCode(),label.getKey());
+					String fullKeyLabel = this.cBUSHelper.buildKey(label.getApplicationCode(),label.getKey(),device.getDeviceType());
 					if ((outputCbusCommand = buildCBUSLabelString (label,command,currentCbusKey)) != null) {
 	
 							
@@ -609,7 +615,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 					
 					if (!didCommand && commandCode.equals ("09")) {
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup));
+						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
 						if (cbusDevice != null) {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
@@ -627,7 +633,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 					if (!didCommand && commandCode.equals("79") ) {
 
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup));
+						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
 						if (cbusDevice == null) {
 							didCommand = true;
 						}
@@ -639,7 +645,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						}
 					}
 					if (!didCommand && commandCode.equals("01")) {
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode, cBusGroup));
+						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode, cBusGroup,DeviceType.LIGHT_CBUS));
 
 						if (cbusDevice == null) {
 							didCommand = true;
@@ -653,7 +659,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					}
 					if (!didCommand && rampCodes.indexOf(commandCode) > -1) {
 						try {
-							LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup));
+							LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
 
 							if (cbusDevice == null ) {
 								didCommand = true;
@@ -781,7 +787,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	
 					if (testValue1 == 1) { 
 						int key = firstKey + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key);
+						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
 						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
@@ -798,9 +804,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					}
 					if (testValue1 == 2) { 
 						int key = firstKey + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key);
+						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
 						if (!this.hasState(fullKey)) {
-							sendOutput (key,appAddress,"off","0",currentUser);
+							sendOutput (fullKey,"off","0",currentUser);
 						} else {
 							updateMMIState (MMIKey,firstKey + i * 4,appAddress,"off","0",currentUser); 
 						}
@@ -808,7 +814,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	
 					if (testValue2 == 4) {
 						int key = firstKey + 1 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key);
+						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
 						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
@@ -825,9 +831,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					}
 					if (testValue2 == 8) { 
 						int key = firstKey + 1 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key);
+						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
 						if (!this.hasState(fullKey)) {
-							sendOutput (key,appAddress,"off","0",currentUser);
+							sendOutput (fullKey,"off","0",currentUser);
 						} else {
 							updateMMIState (MMIKey,firstKey + 1 + i * 4,appAddress,"off","0",currentUser); 
 						}
@@ -835,7 +841,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	
 					if (testValue3 == 16) { 
 						int key = firstKey + 2 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key);
+						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
 						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
@@ -852,9 +858,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					}
 					if (testValue3 == 32) { 
 						int key = firstKey + 2 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key);
+						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
 						if (!this.hasState(fullKey)) {
-							sendOutput (key,appAddress,"off","0",currentUser);
+							sendOutput (fullKey,"off","0",currentUser);
 						} else {
 							updateMMIState (MMIKey,firstKey + 2 + i * 4,appAddress,"off","0",currentUser); 
 						}
@@ -862,7 +868,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	
 					if (testValue4 == 64) { 
 						int key = firstKey + 3 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key);
+						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
 						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
@@ -880,9 +886,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					}
 					if (testValue4 == 128) { 
 						int key = firstKey + 3 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key);
+						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
 						if (!this.hasState(fullKey)) {
-							sendOutput (key,appAddress,"off","0",currentUser);
+							sendOutput (fullKey,"off","0",currentUser);
 						} else {
 							updateMMIState (MMIKey,firstKey + 3 + i * 4,appAddress,"off","0",currentUser);
 						}
@@ -926,7 +932,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			// pair 0 is used to show the start group code. 
 			for (int i = 0; i <= numPairs ; i ++ ) {
 				int keyVal = firstKey + i;
-				String fullKey = cBUSHelper.buildKey(appAddress , keyVal);
+				String fullKey = cBUSHelper.buildKey(appAddress , keyVal,DeviceType.LIGHT_CBUS);
 				
 				if (!this.sendingExtended.containsKey(fullKey))
 					continue;
@@ -959,21 +965,21 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				if (normValue == 0) normValue =1;
 				String valStr = Integer.toString(normValue);
 				CBUSDevice cBUSDevice = (CBUSDevice)configHelper.getControlledItem(fullKey);
-				if (cBUSDevice == null || cBUSDevice.getRelay().equals ("Y")){
+				if (cBUSDevice == null || cBUSDevice.isRelay()){
 					continue;
 				}
 				if (value == 0) {
 					if (logger.isLoggable(Level.FINEST)){
 						logger.log (Level.FINEST,"Sending CBUS off to flash for key "+keyVal + "(0x"+Integer.toHexString(keyVal)+")");
 					}
-					sendOutput (firstKey + i ,appAddress,"off","00",currentUser);
+					sendOutput (fullKey,"off","00",currentUser);
 					this.sendingExtended.remove(fullKey);
 				} else {
 					if (!this.testState(fullKey,"on",valStr)) {
 						if (logger.isLoggable(Level.FINEST)) {
 								logger.log (Level.FINEST,"Sending CBUS on to flash for key "+keyVal + "(0x"+Integer.toHexString(keyVal)+") Lvl=" + valStr + " boolean="+fullBoolean);
 						}
-						sendOutput (firstKey + i ,appAddress,"on",valStr,currentUser);
+						sendOutput (fullKey,"on",valStr,currentUser);
 					}
 					this.sendingExtended.remove(fullKey);
 				}
@@ -982,7 +988,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 	
 	protected void updateMMIState (String MMIKey, int key , String appAddress,String command ,String extra,User currentUser) throws CommsFail {
-		String fullKey = this.cBUSHelper.buildKey(appAddress,key);
+		String fullKey = this.cBUSHelper.buildKey(appAddress,key,DeviceType.LIGHT_CBUS);
 		StateOfGroup currentState = this.getCurrentState(fullKey);
 		boolean fromMMI = currentState.isFromMMI();
 		currentState.setPower(command,true);
@@ -1007,7 +1013,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						if (extra == null){
 							sendExtendedQuery(key,appAddress,currentUser,true);
 						} else {
-							this.sendOutput(key,appAddress,command,extra,currentUser);
+							this.sendOutput(fullKey,command,extra,currentUser);
 						}
 					} else {
 						this.cachedMMI.remove(MMIKey);
@@ -1056,7 +1062,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	public void sendExtendedQuery (int key, String appCode, User user, boolean immediate,String targetLevel) throws CommsFail {
 		
-		String keyStr = cBUSHelper.buildKey(appCode,key);
+		String keyStr = cBUSHelper.buildKey(appCode,key,DeviceType.LIGHT_CBUS);
 		//logger.log (Level.FINEST,"Sending MMI output App Code : "  + appCode + " command " + command + " group " + keyStr);
 		try {
 			CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(keyStr);
@@ -1080,7 +1086,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					}
 				}
 				else {
-					sendOutput (key,appCode,"on","100",user);
+					sendOutput (keyStr,"on","100",user);
 				}
 			}
 		} catch (ClassCastException ex) {
@@ -1148,9 +1154,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		levelMMIQueues.put(appNumber,appList);
 	}
 
-	public void sendOutput (int key, String appCode, String command, String extra,User user) {
+	public void sendOutput (String keyStr, String command, String extra,User user) {
 
-		String keyStr = cBUSHelper.buildKey(appCode,key);
 		//logger.log (Level.FINEST,"Sending MMI output App Code : "  + appCode + " command " + command + " group " + keyStr);
 		try {
 			CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(keyStr);
@@ -1194,7 +1199,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return null;
 		}
 
-		StateOfGroup stateOfGroup =this.getCurrentState(device.getApplicationCode(),device.getKey());
+		StateOfGroup stateOfGroup =this.getCurrentState(device.getApplicationCode(),device.getKey(),device.getDeviceType());
 
 		if (theCommand.equals("label") ) {
 			String catalogueStr = command.getExtraInfo();
@@ -1226,7 +1231,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return null;
 		}
 
-		StateOfGroup stateOfGroup =this.getCurrentState(device.getApplicationCode(),device.getKey());
+		StateOfGroup stateOfGroup =this.getCurrentState(device.getApplicationCode(),device.getKey(), device.getDeviceType());
 
 		if (theCommand.equals("on") ) {
 			String levelStr = command.getExtraInfo();
@@ -1414,16 +1419,16 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 
-	public boolean hasState (String appCode, String group) {
-		return hasState(cBUSHelper.buildKey(appCode,group));
+	public boolean hasState (String appCode, String group,int deviceType) {
+		return hasState(cBUSHelper.buildKey(appCode,group, deviceType));
 	}
 	
 	public boolean hasState (String fullKey) {
 		return state.containsKey(fullKey);		
 	}
 
-	public StateOfGroup getCurrentState (String appCode, String group) {
-		return getCurrentState (cBUSHelper.buildKey(appCode,group));
+	public StateOfGroup getCurrentState (String appCode, String group, int deviceType) {
+		return getCurrentState (cBUSHelper.buildKey(appCode,group,deviceType));
 	}
 
 	public StateOfGroup getCurrentState (String fullKey) {
@@ -1433,8 +1438,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 
-	public void setCurrentState (String appCode, String group, StateOfGroup currentState) {
-		setCurrentState (cBUSHelper.buildKey(appCode,group),currentState);
+	public void setCurrentState (String appCode, String group, StateOfGroup currentState,int deviceType) {
+		setCurrentState (cBUSHelper.buildKey(appCode,group, deviceType),currentState);
 	}
 	
 	public void setCurrentState (String fullKey, StateOfGroup currentState) {

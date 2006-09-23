@@ -22,7 +22,6 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 	protected String areaCode = "01"; 
 	protected int max = 255;
 	protected String rampRate = "4";
-	protected String relay = "N";
 	protected int channel = 0;
 	protected int box = 0;
 	protected String BLA = "";
@@ -30,6 +29,7 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 	protected boolean devFromLink = false;
 	protected int linkCount = 0;
 	protected boolean areaDevice = false;
+	protected boolean relay = false;
 	
 	public Dynalite (String name, int deviceType){
 		this.name = name;
@@ -91,16 +91,6 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 	}
 
 
-
-	public String getRelay() {
-		return relay;
-	}
-	
-
-
-	public void setRelay(String relay) {
-		this.relay = relay;
-	}
 	/**
 	 * Return the client display command for the light.
 	 * For a light this is the same as the interpretted command
@@ -185,6 +175,16 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 	
 	public void decLinkCount () {
 		if (linkCount > 0 ) linkCount --;
+	}
+
+
+	public boolean isRelay() {
+		return relay;
+	}
+
+
+	public void setRelay(boolean relay) {
+		this.relay = relay;
 	}
 
 }
