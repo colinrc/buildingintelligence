@@ -1187,12 +1187,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String cBUSOutputString = null;
 		boolean commandFound = false;
 
-		String rawBuiltCommand = doRawIfPresent (command, device);
-		if (rawBuiltCommand != null)
-		{
-			cBUSOutputString = rawBuiltCommand;
-			commandFound = true;
-		}
 		String theCommand = command.getCommandCode();
 		if (!commandFound && theCommand == "") {
 			logger.log(Level.WARNING, "Empty command received from client "+ command.getCommandCode());
@@ -1206,14 +1200,30 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			String flavour = command.getExtra2Info();
 			if (flavour.equals("")) flavour = "1";
 
-			// cBUSOutputString =buildCBUSLabelStrCommand (device.getApplicationCode(), device.getKey(),currentChar);
+			cBUSOutputString =buildCBUSLabelCommand (device.getApplicationCode(), device.getKey(), catalogueStr, flavour, currentChar,device);
 			// labelState.set (device.getOutputKey(),command.getExtra2Info());
-			stateOfGroup.setPower("on",false);
-			stateOfGroup.setLevel(100,false);
 		}
 		return cBUSOutputString;
 	}
 			
+	protected String buildCBUSLabelCommand (String appCodeStr, String key, String catalogueStr, String flavour, String currentChar, DeviceType device) {
+/*
+		try {
+			String theLabel = this.getCatalogueValue(catalogueStr, "LABELS", device);
+
+			String hexCheck = Integer.toHexString(twosComp);
+			if (hexCheck.length() == 1) hexCheck = "0" + hexCheck;
+			if (hexCheck.length() > 2) hexCheck = hexCheck.substring(hexCheck.length() - 2);
+			String returnString = "\\05FF007307" + appCodeStr + numStr + hexCheck ;
+			returnString = returnString.toUpperCase();
+			return returnString + key + ETX;
+		} catch (NumberFormatException er) {
+			logger.log (Level.FINE, "Application code is in error for level request : " + appCodeStr);
+			return null;
+		}
+		*/
+		return "";
+	}
 	
 	public String buildCBUSLightString (LightFascade device, CommandInterface command,String currentChar) throws CommsFail {
 		String cBUSOutputString = null;
