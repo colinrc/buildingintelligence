@@ -7,7 +7,9 @@ package au.com.BI.CBUS;
 
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
+import au.com.BI.Config.ParameterException;
 import au.com.BI.Device.DeviceType;
+import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Util.*;
 import au.com.BI.User.*;
 
@@ -36,6 +38,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected long lastSentTime = 0;
 	protected char currentChar = 'g';
 	protected LinkedList <SensorFascade>temperatureSensors = null;
+	protected LinkedList <Label>labels = null;
 	protected PollTemperatures pollTemperatures = null;
 	protected long tempPollValue = 0L;
 
@@ -53,6 +56,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		sendingExtended = new HashMap<String,String> (256);
 		levelMMIQueues = new HashMap<String,ArrayList<Integer>> (5);
 		temperatureSensors = new LinkedList<SensorFascade>();
+		labels = new LinkedList<Label>();
 		etxChars = new int[] {'.','$','%','#','!','\''};
 
 		etxString = new String(".$%#!\'");
@@ -82,6 +86,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		applicationCodes.clear();
 		synchronized (temperatureSensors) {
 			temperatureSensors.clear();
+		}
+		synchronized (labels) {
+			labels.clear();
 		}
 		super.clearItems();
 	}
@@ -276,6 +283,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			if (((DeviceType)details).getDeviceType() == DeviceType.TEMPERATURE ){
 				temperatureSensors.add ((SensorFascade)details);
 			}
+			if (((DeviceType)details).getDeviceType() == DeviceType.LABEL ){
+				labels.add ((Label)details);
+			}
 			
 		} catch (ClassCastException ex) {
 			logger.log (Level.FINE,"A temperature sennssor was added that was not the expected type " + ex.getMessage());
@@ -304,6 +314,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			pollTemperatures.start();
 		} else {
 			logger.log(Level.INFO,"Not starting temperature polls");
+		}
+		
+		for (Label label: labels){
+			String currentChar = this.nextKey();
+			String toSend = this.buildCBUSLabelString(label, new ClientCommand(label.getOutputKey(),"label",null,label.getDefaultLabel(),"","","",""), currentChar);
 		}
 	}
 
@@ -1193,7 +1208,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return null;
 		}
 
-		StateOfGroup stateOfGroup =this.getCurrentState(device.getApplicationCode(),device.getKey(),device.getDeviceType());
 
 		if (theCommand.equals("label") ) {
 			String catalogueStr = command.getExtraInfo();
@@ -1206,23 +1220,29 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		return cBUSOutputString;
 	}
 			
-	protected String buildCBUSLabelCommand (String appCodeStr, String key, String catalogueStr, String flavour, String currentChar, DeviceType device) {
-/*
+	protected String buildCBUSLabelCommand (String appCodeStr, String key, String catalogueStr, String flavour, String currentChar, Label device) {
+		String returnString = "";
 		try {
 			String theLabel = this.getCatalogueValue(catalogueStr, "LABELS", device);
-
+			/*
+			int appCode = Integer.parseInt(appCodeStr,16);
+			byte remainder = (byte)(((byte)5 + appCode + Byte.parseByte(cBUSCommand,16) + Integer.parseInt(group,16)) % 256);
+			byte twosComp = (byte)-remainder;
+			
 			String hexCheck = Integer.toHexString(twosComp);
 			if (hexCheck.length() == 1) hexCheck = "0" + hexCheck;
 			if (hexCheck.length() > 2) hexCheck = hexCheck.substring(hexCheck.length() - 2);
-			String returnString = "\\05FF007307" + appCodeStr + numStr + hexCheck ;
-			returnString = returnString.toUpperCase();
+			returnString = "\\05" + appCodeStr + theLabel + hexCheck ;
 			return returnString + key + ETX;
+			*/
+			return "";
 		} catch (NumberFormatException er) {
-			logger.log (Level.FINE, "Application code is in error for level request : " + appCodeStr);
+			logger.log (Level.INFO, "Application code is in error for level request : " + appCodeStr);
 			return null;
-		}
-		*/
-		return "";
+		}catch (ParameterException ex) {
+			logger.log (Level.INFO,"A label was requested that has not been configured, "  + catalogueStr);
+			return null;
+		} 
 	}
 	
 	public String buildCBUSLightString (LightFascade device, CommandInterface command,String currentChar) throws CommsFail {
