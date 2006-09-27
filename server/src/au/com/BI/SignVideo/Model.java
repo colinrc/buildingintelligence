@@ -28,6 +28,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected String outputAVCommand = "";
 	protected Logger logger = null;
 	protected Vector <String>srcGroup;
+	protected boolean readingStatus = false;
+	protected int statusCount = 0;
 	
 	public static final String AllZones = "0";
 
@@ -53,7 +55,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			try { 
 		    	this.sendToSerial(new byte[]{(byte)0xA3},"","",Model.Zone_Status_Request,false);
 			} catch (CommsFail e1) {
-				throw new CommsFail ("Communication failed communitating with SignAV " + e1.getMessage());
+				throw new CommsFail ("Communication failed communitafting with SignAV " + e1.getMessage());
 			} 
 		}				
 	}
@@ -121,27 +123,59 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public ReturnWrapper interpretBytesFromSignVideo (CommsCommand command){
 		ReturnWrapper result = new ReturnWrapper();
 		boolean commandFound = false;
+		boolean audioOnly = false;
 		
+
+
 		int signAVCmd = command.getCommandBytes()[0] & 0xff;
 		
 		if (signAVCmd == 3) return result; // confirmation of previous message
-			
+		if (readingStatus){
+			// process the next 17 bytes differently
+			if (this.statusCount > 10){
+				audioOnly = true;
+				// only do video for now
+			}
+			if (statusCount == 18) {
+				statusCount = 0;
+				readingStatus = false;
+			}else {
+				statusCount ++;
+			}
+		}
 		if (!commandFound && signAVCmd == 0xA4){
 			commandFound = true;
 			// power on
 		    for(DeviceType avDevice : configHelper.getAllControlledDeviceObjects()) {
 				result.addFlashCommand(this.buildCommandForFlash(avDevice, "on", "","","","","",0));
 			}	
+		    result.addCommOutput(new byte[]{(byte)0xA3});
 		}
 		
+		if (!commandFound && signAVCmd == 0xFF){
+			readingStatus = true;
+			statusCount = 1;
+			commandFound = true;
+
+		}
 		if (!commandFound && signAVCmd == 0xA5){
 			commandFound = true;
 			// power off
 		    for(DeviceType avDevice : configHelper.getAllControlledDeviceObjects()) {
 				result.addFlashCommand(this.buildCommandForFlash(avDevice, "off", "","","","","",0));
 			}	
-		}
 
+		}
+		if (!commandFound && signAVCmd >= 0x98  && signAVCmd <= 0x9f){
+			commandFound = true;
+			// recall mode so request status of all channels
+		    result.addCommOutput(new byte[]{(byte)0xA3});
+		}
+		if (!commandFound && signAVCmd >= 184  && signAVCmd <= 191){
+			commandFound = true;
+			// recall mode so request status of all channels
+		    result.addCommOutput(new byte[]{(byte)0xA3});
+		}
 		if (!commandFound && signAVCmd >= 0x10 && signAVCmd < 0x87){
 			commandFound = true;
 			int inputSrc = signAVCmd % 8 + 1;
@@ -155,7 +189,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			try {
 				String inputSrcStr = findKeyForParameterValue(inputSrc, "AV_INPUTS", avDevice);
 				result.addFlashCommand(this.buildCommandForFlash(avDevice, "src", inputSrcStr,"","","","",0));
-				result.addCommOutput(new byte[]{(byte)0xA3});
 			} catch (ParameterException ex) {
 				logger.log(Level.WARNING,ex.getMessage());
 			}
