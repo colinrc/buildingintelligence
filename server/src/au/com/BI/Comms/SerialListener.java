@@ -228,6 +228,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					commandList.add (command);
 					inputBuffer = new StringBuffer();
+					retBuff = new byte[this.transmitOnBytes];
 				}
 				sendBuffer = false;
 				newDataCounter = 0;
