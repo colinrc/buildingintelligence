@@ -124,6 +124,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		
 		int signAVCmd = command.getCommandBytes()[0] & 0xff;
 		
+		if (signAVCmd == 3) return result; // confirmation of previous message
+			
 		if (!commandFound && signAVCmd == 0xA4){
 			commandFound = true;
 			// power on
