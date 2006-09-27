@@ -1,3 +1,9 @@
+''' Comms '''
+
+Fixed bug where comms would not properly queue multiple serial 
+messages if the system did not attend quickly enough to the 
+message. Will impact many devices 
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a14.zip V1.6a14] ==
 
 ''' Jetty '''
