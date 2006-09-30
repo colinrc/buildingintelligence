@@ -35,6 +35,7 @@ import au.com.BI.M1.Commands.M1CommandFactory;
 import au.com.BI.M1.Commands.OutputChangeUpdate;
 import au.com.BI.M1.Commands.PLCChangeUpdate;
 import au.com.BI.M1.Commands.PLCLevelStatus;
+import au.com.BI.M1.Commands.PLCStatusReturned;
 import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
 import au.com.BI.M1.Commands.RequestTemperatureReply;
@@ -77,8 +78,6 @@ public class ControlledHelper {
 		// Check to see if it is a comms command
 		if (command.isCommsCommand()) {
 
-			// create the command object and cache it
-			String theKey = command.getKey();
 			CommandInterface m1Command = buildCommandForFlash(command,
 					configHelper, m1);
 			if (m1Command == null)
@@ -507,6 +506,49 @@ public class ControlledHelper {
 					}
 				}
 
+			} else if (m1Command.getClass().equals(PLCStatusReturned.class)) {
+				PLCStatusReturned statusReport = (PLCStatusReturned) m1Command;
+
+				// send out PLC change updates
+				for (int i = 0; i < statusReport.getLevels().length; i++) {
+
+					int bank = Integer.parseInt(statusReport.getBank());
+					char[] houseCodeChar = new char[1];
+					houseCodeChar[0] = (char) ((65+(bank*4)+(i / 16)));
+					
+					String houseCode = new String(houseCodeChar);
+					String unitCode = Integer.toString(i%16+1);
+					String level = Integer.toString(statusReport.getLevels()[i]);
+					
+					LightFascade light = ((LightFascade) configHelper
+							.getControlItem(Utility.padString(unitCode,2)
+									+ "X10" + houseCode));
+
+					if (light != null) {
+						String outputKey = light.getOutputKey();
+						CommandInterface _command = new AlertCommand();
+						_command.setDisplayName(outputKey);
+						_command.setTargetDeviceID(-1);
+						_command.setUser(m1.currentUser);
+						if (level.equals("1")) {
+							_command.setCommand("on");
+							_command.setExtraInfo("100");
+						} else if (level.equals("0")) {
+							_command.setCommand("off");
+							_command.setExtraInfo("0");
+						} else {
+							_command.setCommand("on");
+							_command.setExtraInfo(level);
+						}
+						_command.setKey("CLIENT_SEND");
+						cache.setCachedCommand(_command.getKey(), _command);
+
+						logger.log(Level.INFO, "Sending "
+								+ _command.getCommandCode() + " command to "
+								+ outputKey);
+						sendToFlash(commandQueue, -1, _command);
+					}
+				}
 			}
 
 			if (sendCommandToFlash) {
@@ -579,9 +621,10 @@ public class ControlledHelper {
 				|| m1Command.getClass()
 						.equals(ReplyAlarmByZoneReportData.class)
 				|| m1Command.getClass().equals(TasksChangeUpdate.class)
-				|| m1Command.getClass().equals(PLCChangeUpdate.class)) {
+				|| m1Command.getClass().equals(PLCChangeUpdate.class)
+				|| m1Command.getClass().equals(PLCStatusReturned.class)) {
 			return m1Command;
-		} else {
+		}  else {
 			return null;
 		}
 	}

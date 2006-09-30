@@ -20,6 +20,7 @@ import au.com.BI.Comms.CommsFail;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.M1.Commands.ArmingStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
+import au.com.BI.M1.Commands.PLCStatusRequest;
 import au.com.BI.Sensors.SensorFascade;
 import au.com.BI.Util.SimplifiedModel;
 import au.com.BI.Util.DeviceModel;
@@ -110,6 +111,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		// request the arming states
 		ArmingStatusRequest armingStatusRequest = new ArmingStatusRequest();
 		comms.sendString(armingStatusRequest.buildM1String()+"\r\n");
+		
+		// request PLC states
+		PLCStatusRequest plcStatusRequest = new PLCStatusRequest();
+		comms.sendString(plcStatusRequest.buildM1String()+"\r\n");
 		
 		// add a device to do arming messages
 		super.addControlledItem("ARM",new Alarm("ARM",DeviceType.VIRTUAL_OUTPUT,"ARM"),MessageDirection.FROM_FLASH);

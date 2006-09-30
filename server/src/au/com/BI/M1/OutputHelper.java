@@ -26,6 +26,7 @@ import au.com.BI.M1.Commands.Group;
 import au.com.BI.M1.Commands.PLCDeviceOff;
 import au.com.BI.M1.Commands.PLCDeviceOn;
 import au.com.BI.M1.Commands.PLCDeviceToggle;
+import au.com.BI.M1.Commands.PLCStatusRequest;
 import au.com.BI.M1.Commands.RequestTemperature;
 import au.com.BI.M1.Commands.TaskActivation;
 import au.com.BI.Util.DeviceModel;
@@ -138,6 +139,9 @@ public class OutputHelper {
 				} else if (command.getCommandCode().equals("TASK_ACTIVATION_REQUEST")) {
 					TaskActivation m1Command = new TaskActivation();
 					m1Command.setTask(command.getExtraInfo());
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals("PLC_STATUS")) {
+					PLCStatusRequest m1Command = new PLCStatusRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
 			} else if (device.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
