@@ -166,17 +166,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}	
 
 		}
-		if (!commandFound && signAVCmd >= 0x98  && signAVCmd <= 0x9f){
-			commandFound = true;
-			// recall mode so request status of all channels
-		    result.addCommOutput(new byte[]{(byte)0xA3});
-		}
-		if (!commandFound && signAVCmd >= 184  && signAVCmd <= 191){
-			commandFound = true;
-			// actual recall mode values - not what is sign documentation
-		    result.addCommOutput(new byte[]{(byte)0xA3});
-		}
-		if (!commandFound && !audioOnly &&  signAVCmd >= 0x10 && signAVCmd < 0x87){
+
+		if (!commandFound && !audioOnly &&  signAVCmd >= 0x10 && signAVCmd <= 0x87){
 			commandFound = true;
 			int inputSrc = signAVCmd % 8 + 1;
 			int inputDev = signAVCmd / 16 ;
@@ -195,8 +186,21 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			
 		}
 		
+		if (!commandFound && signAVCmd >= 0xb8  && signAVCmd <= 0xbf){
+			commandFound = true;
+			String formatedKey = this.formatKey(0,null);
+			DeviceType allDevices = configHelper.getControlledItem(formatedKey);
+			if (allDevices != null){
+				int presetNumber = signAVCmd - 0xb7;
+				result.addFlashCommand(this.buildCommandForFlash(allDevices, "preset", Integer.toString(presetNumber),"","","","",0));
+			}
+			result.addCommOutput(new byte[]{(byte)0xA3});
+			
+		}
 		if (!commandFound && signAVCmd >= 0x98 && signAVCmd < 0x9f){
 			commandFound = true;
+			String formatedKey = this.formatKey(0,null);
+			DeviceType allDevices = configHelper.getControlledItem(formatedKey);
 			if (allDevices != null){
 				int presetNumber = signAVCmd - 0x97;
 				result.addFlashCommand(this.buildCommandForFlash(allDevices, "preset", Integer.toString(presetNumber),"","","","",0));
