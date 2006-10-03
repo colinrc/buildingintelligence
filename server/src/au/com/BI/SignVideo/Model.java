@@ -173,10 +173,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		if (!commandFound && signAVCmd >= 184  && signAVCmd <= 191){
 			commandFound = true;
-			// recall mode so request status of all channels
+			// actual recall mode values - not what is sign documentation
 		    result.addCommOutput(new byte[]{(byte)0xA3});
 		}
-		if (!commandFound && signAVCmd >= 0x10 && signAVCmd < 0x87){
+		if (!commandFound && !audioOnly &&  signAVCmd >= 0x10 && signAVCmd < 0x87){
 			commandFound = true;
 			int inputSrc = signAVCmd % 8 + 1;
 			int inputDev = signAVCmd / 16 ;

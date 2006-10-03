@@ -1224,6 +1224,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String returnString = "";
 		try {
 			String theLabel = this.getCatalogueValue(catalogueStr, "LABELS", device);
+			int theCommand = 160 + 3 + theLabel.length();
+			int groupAddress = Integer.parseInt(key,16);
+			int options = 0; // only supporting flavour 0 for now
+			int language = 2; // australian english
 			/*
 			int appCode = Integer.parseInt(appCodeStr,16);
 			byte remainder = (byte)(((byte)5 + appCode + Byte.parseByte(cBUSCommand,16) + Integer.parseInt(group,16)) % 256);
