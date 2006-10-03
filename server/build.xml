@@ -153,11 +153,11 @@
 		</copy>
 	</target>
 		
-    <target name="dist-libs"  >
+    <target name="dist-libs"  depends="copy-libs" >
          <property file="src/au/com/BI/Home/my.properties" />
 		<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
 			update="false"
-			basedir="." 
+			basedir="dist" 
 			includes = "ext/*.jar" />
         <!-- copy todir="dist">
 	    	<fileset dir="." includes="*.dll" />
@@ -165,10 +165,10 @@
 		</copy -->
 	<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
 		update="true"
-		basedir="."
+		basedir="dist"
 		includes = "lib/*.dll" />
         <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
-		update="."
+		update="true"
 		basedir="dist"
 		includes = "lib/*.jnilib" />
     </target>
