@@ -1,3 +1,7 @@
+''' Sign Video '''
+
+Many bug fixes
+
 ''' Comms '''
 
 Fixed bug where comms would not properly queue multiple serial 
