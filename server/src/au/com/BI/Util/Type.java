@@ -3,6 +3,9 @@ package au.com.BI.Util;
 import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 public class Type implements Serializable, Cloneable {
 
@@ -67,6 +70,26 @@ public class Type implements Serializable, Cloneable {
 
 		return (type);
 	}
+	
+	public static Type getByDescription(Class classRef, String description) {
+		Type type = null;
+		
+		String className = classRef.getName();
+		
+		Hashtable values = (Hashtable) types.get(className);
+		
+		Iterator iterator = values.keySet().iterator();
+		
+		while (iterator.hasNext()) {
+			type = (Type)values.get(iterator.next());
+			if (type.getDescription().equals(description)) {
+				return(type);
+			}
+		}
+		
+		return null;
+	}
+	
 
 	public static Enumeration elements(Class classRef) {
 		String className = classRef.getName();

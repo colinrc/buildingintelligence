@@ -23,9 +23,11 @@ import au.com.BI.M1.Commands.ControlOutputOff;
 import au.com.BI.M1.Commands.ControlOutputOn;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
 import au.com.BI.M1.Commands.Group;
+import au.com.BI.M1.Commands.PLCDeviceControl;
 import au.com.BI.M1.Commands.PLCDeviceOff;
 import au.com.BI.M1.Commands.PLCDeviceOn;
 import au.com.BI.M1.Commands.PLCDeviceToggle;
+import au.com.BI.M1.Commands.PLCFunction;
 import au.com.BI.M1.Commands.PLCStatusRequest;
 import au.com.BI.M1.Commands.RequestTemperature;
 import au.com.BI.M1.Commands.TaskActivation;
@@ -214,6 +216,14 @@ public class OutputHelper {
 			plcDeviceOff.setUnitCode(device.getKey());
 			plcDeviceOff.setHouseCode(device.getX10HouseCode());
 			returnString = plcDeviceOff.buildM1String() + "\r\n";
+		} else if (command.getCommandCode().equals("control")) {
+			PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
+			plcDeviceControl.setUnitCode(device.getKey());
+			plcDeviceControl.setHouseCode(device.getX10HouseCode());
+			plcDeviceControl.setFunctionCode(PLCFunction.getByDescription(command.getExtraInfo()));
+			plcDeviceControl.setExtendedCode(command.getExtra2Info());
+			plcDeviceControl.setTime(command.getExtra3Info());
+			returnString = plcDeviceControl.buildM1String() + "\r\n";
 		}
 		return (returnString);
 	}

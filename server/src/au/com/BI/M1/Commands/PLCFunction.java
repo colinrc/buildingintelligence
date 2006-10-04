@@ -1,7 +1,6 @@
 package au.com.BI.M1.Commands;
 
 import au.com.BI.Util.Type;
-import java.util.Enumeration;
 
 public class PLCFunction extends Type {
 	public static final PLCFunction X10_ALL_UNITS_OFF = new PLCFunction("01","X10_ALL_UNITS_OFF");
@@ -26,5 +25,9 @@ public class PLCFunction extends Type {
 	
 	public static PLCFunction getByValue(String value) {
 		return((PLCFunction)PLCFunction.getByValue(PLCFunction.class,value));
+	}
+	
+	public static PLCFunction getByDescription(String description) {
+		return((PLCFunction)PLCFunction.getByDescription(PLCFunction.class,description));
 	}
 }
