@@ -52,7 +52,12 @@ public class SimulateCBUS extends SimulateDevice {
 	
 	public void parseString (String in) {
 		gui.appendToChatBox ("IN.CBUS.",in);
-		if (in.startsWith("~~~") || in.startsWith ("A3")) return;
+		if (in.startsWith("~~~") || in.startsWith ("A3")) {
+			synchronized (out){
+				out.println("~~~\n");
+			}
+			return;
+		}
 		char lastChar = in.charAt(in.length()-1);
 
 		synchronized (out){
