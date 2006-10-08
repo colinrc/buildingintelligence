@@ -68,6 +68,7 @@ _global.settings.tabGreyWhenOff = true;
 _global.settings.buttonBgColour = 0x7C90B0;
 _global.settings.buttonBorderColour = 0x95A7C4;
 _global.settings.buttonFont = "helvetica";
+_global.settings.buttonAlign = "center";
 _global.settings.buttonFontColour = 0xFFFFFF;
 _global.settings.buttonFontSize = 16;
 

@@ -12,6 +12,7 @@ class bi.ui.Button extends bi.ui.CoreUI {
 	private var _enabled:Boolean = true;
 	private var _label:String;
 	private var _font:String;
+	private var _align:String;
 	private var _fontSize:Number;
 	private var _fontColour:Number;
 	private var _iconName:String;
@@ -33,12 +34,16 @@ class bi.ui.Button extends bi.ui.CoreUI {
 			label_txt.filters = null;
 			label_txt._visible = true;
 			label_tf.size = _fontSize;
+			label_tf.align
 			while (label_txt.textWidth > __width - 4) {
 				label_tf.size--;
 				label_txt.setTextFormat(label_tf);
 			}
-			label_txt._x = Math.round((__width/2) - (label_txt._width/2));
+			if (_align == "center") {
+				label_txt._x = Math.round((__width/2) - (label_txt._width/2));
+			}
 			label_txt._y = Math.round((__height/2) - (label_txt._height/2));
+
 			
 			if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
 				label_txt.filters = [_global.settings.dropShadowFilterSmall];
@@ -110,6 +115,12 @@ class bi.ui.Button extends bi.ui.CoreUI {
 		}
 	}
 	
+	public function set align(align:String):Void {
+		if (align != undefined) {
+			_align = align;
+		}
+	}
+	
 	public function set fontSize(fontSize:Number):Void {
 		if (fontSize != undefined) {
 			_fontSize = fontSize;
@@ -141,7 +152,8 @@ class bi.ui.Button extends bi.ui.CoreUI {
 	function Button() {
 		if (_bgColour == null) bgColour = _global.settings.buttonBgColour;
 		if (_borderColour == null) borderColour = _global.settings.buttonBorderColour;
-		if (_font == null) _font = _global.settings.buttonFont
+		if (_font == null) _font = _global.settings.buttonFont;
+		if (_align == null) _align = _global.settings.buttonAlign;
 		if (_fontColour == null) _fontColour = _global.settings.buttonFontColour;
 		if (_fontSize == null) _fontSize = _global.settings.buttonFontSize;
 		
@@ -171,6 +183,7 @@ class bi.ui.Button extends bi.ui.CoreUI {
 		label_tf.color = _fontColour;
 		label_tf.size = _fontSize;
 		label_tf.bold = true;
+		label_tf.align = _align;
 		label_tf.font = "bi.ui.Fonts:" + _font;
 		label_txt.autoSize = true;
 		label_txt.embedFonts = true;

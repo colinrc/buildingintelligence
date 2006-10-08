@@ -333,7 +333,7 @@ defineCalendarData = function (events, partial) {
 		var t = d.time.split(":");
 		d.time = new Date(1976, 8, 27, t[0], t[1], t[2]);
 		if (d.eventType == "once") {
-			var calendarObj = {id:d.id, title:d.title, alarm:d.alarm == "Y", memo:d.memo, iconName:d.iconName, category:d.category, startDate:d.date.parseDate(), endDate:d.date.parseDate(), time:d.time, runTime:d.runTime, eventType:"once", macroName:d.macroName, extra:d.extra, extra2:d.extra2, filter:d.filter};
+			var calendarObj = {id:d.id, title:d.title, active:d.active == "Y", alarm:d.alarm == "Y", memo:d.memo, iconName:d.iconName, category:d.category, startDate:d.date.parseDate(), endDate:d.date.parseDate(), time:d.time, runTime:d.runTime, eventType:"once", macroName:d.macroName, extra:d.extra, extra2:d.extra2, filter:d.filter};
 		} else {
 			var skip = new Array();
 			for (var i in events[event].childNodes) {
@@ -361,7 +361,7 @@ defineCalendarData = function (events, partial) {
 						break;
 				}
 			}
-			var calendarObj = {id:d.id, title:d.title, alarm:d.alarm == "Y", memo:d.memo, iconName:d.iconName, category:d.category, startDate:d.startDate.parseDate(), endDate:d.endDate.parseDate(), time:d.time, runTime:d.extra2, skip:skip, eventType:d.eventType, macroName:d.macroName, extra:d.extra, extra2:d.extra2, filter:d.filter, pattern:pattern};
+			var calendarObj = {id:d.id, title:d.title, active:d.active == "Y", alarm:d.alarm == "Y", memo:d.memo, iconName:d.iconName, category:d.category, startDate:d.startDate.parseDate(), endDate:d.endDate.parseDate(), time:d.time, runTime:d.extra2, skip:skip, eventType:d.eventType, macroName:d.macroName, extra:d.extra, extra2:d.extra2, filter:d.filter, pattern:pattern};
 		}
 		if (partial) {
 			var found = false;

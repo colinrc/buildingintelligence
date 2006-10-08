@@ -88,76 +88,79 @@ openCalendar = function () {
 						context.macroEvents_mc.removeAll();
 						eventsData.sortOn("time");
 						for (var i=0; i<eventsData.length; i++) {
-							var eventObj = new Object();
-							eventObj.eventType = eventsData[i].eventType;
-							eventObj.id = eventsData[i].id;
-							eventObj.title = eventsData[i].title;
-							eventObj.alarm = eventsData[i].alarm;
-							eventObj.memo = eventsData[i].memo;
-							eventObj.iconName = eventsData[i].iconName;
-							eventObj.category = eventsData[i].category;
-							eventObj.time = eventsData[i].time;
-							eventObj.macroName = eventsData[i].macroName;
-							eventObj.extra = eventsData[i].extra;
-							eventObj.extra2 = eventsData[i].extra2;
-							eventObj.startDate = eventsData[i].startDate;
-							eventObj.endDate = eventsData[i].endDate;
-							eventObj.filter = eventsData[i].filter;
-							eventObj.skip = eventsData[i].skip;
-							eventObj.pattern = new Object();
-							for (var q in eventsData[i].pattern) {
-								eventObj.pattern[q] = eventsData[i].pattern[q];
-							}
-
-							var title = "";
-							
-							if (eventObj.extra.length) {
-								var zone = _global.calendarZoneLabels[eventObj.extra];
-								if (eventObj.title.length) {
-									title = eventObj.title + " (" + zone + ")";
-								} else {
-									title = "(" + zone + ")";
+							// only render active (enabled) events
+							if (eventsData[i].active) {
+								var eventObj = new Object();
+								eventObj.eventType = eventsData[i].eventType;
+								eventObj.id = eventsData[i].id;
+								eventObj.title = eventsData[i].title;
+								eventObj.alarm = eventsData[i].alarm;
+								eventObj.memo = eventsData[i].memo;
+								eventObj.iconName = eventsData[i].iconName;
+								eventObj.category = eventsData[i].category;
+								eventObj.time = eventsData[i].time;
+								eventObj.macroName = eventsData[i].macroName;
+								eventObj.extra = eventsData[i].extra;
+								eventObj.extra2 = eventsData[i].extra2;
+								eventObj.startDate = eventsData[i].startDate;
+								eventObj.endDate = eventsData[i].endDate;
+								eventObj.filter = eventsData[i].filter;
+								eventObj.skip = eventsData[i].skip;
+								eventObj.pattern = new Object();
+								for (var q in eventsData[i].pattern) {
+									eventObj.pattern[q] = eventsData[i].pattern[q];
 								}
-							} else if (eventObj.macroName.length) {
-								if (eventObj.title.length) {
-									title = eventObj.title + " (" + eventObj.macroName + ")";
+	
+								var title = "";
+								
+								if (eventObj.extra.length) {
+									var zone = _global.calendarZoneLabels[eventObj.extra];
+									if (eventObj.title.length) {
+										title = eventObj.title + " (" + zone + ")";
+									} else {
+										title = "(" + zone + ")";
+									}
+								} else if (eventObj.macroName.length) {
+									if (eventObj.title.length) {
+										title = eventObj.title + " (" + eventObj.macroName + ")";
+									} else {
+										title = "(" + eventObj.macroName + ")";
+									}								
 								} else {
-									title = "(" + eventObj.macroName + ")";
-								}								
-							} else {
-								title = eventObj.title;
-							}
-							
-							title = eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat)  +"\t" + title;
-							
-							if (eventObj.eventType == "hourly") {
-								if (eventObj.pattern.recur == 1) {
-									title += " [Every hour]";
-								} else {
-									title += " [Every " + eventObj.pattern.recur + " hours]";
+									title = eventObj.title;
 								}
-							}
-													
-							if (eventObj.macroName.length) {					
-								for (var d=0; d<_global.calendar.length; d++) {
-									if (eventObj.macroName == _global.calendar[d].macro || _global.calendar[d].macro == "*") {
-										var iconName = _global.calendar[d].icon;
-										break;
+								
+								title = eventObj.time.dateTimeFormat(_global.settings.shortTimeFormat)  +"\t" + title;
+								
+								if (eventObj.eventType == "hourly") {
+									if (eventObj.pattern.recur == 1) {
+										title += " [Every hour]";
+									} else {
+										title += " [Every " + eventObj.pattern.recur + " hours]";
 									}
 								}
-								var skip = false;
-								var skipData = eventObj.skip;
-								for (var p=0; p<skipData.length; p++) {
-									if (dateObj.getTime() == skipData[p]) {
-										skip = true;
-										break;
-									} else if (dateObj.getTime() < skipData[0] || dateObj.getTime() > skipData[skipData.length - 1]) {
-										break;
+														
+								if (eventObj.macroName.length) {					
+									for (var d=0; d<_global.calendar.length; d++) {
+										if (eventObj.macroName == _global.calendar[d].macro || _global.calendar[d].macro == "*") {
+											var iconName = _global.calendar[d].icon;
+											break;
+										}
 									}
+									var skip = false;
+									var skipData = eventObj.skip;
+									for (var p=0; p<skipData.length; p++) {
+										if (dateObj.getTime() == skipData[p]) {
+											skip = true;
+											break;
+										} else if (dateObj.getTime() < skipData[0] || dateObj.getTime() > skipData[skipData.length - 1]) {
+											break;
+										}
+									}
+									macroEvents_mc.addItem({label:title, value:eventObj, iconName:iconName, strikeThrough:skip});
+								} else {
+									standardEvents_mc.addItem({label:title, value:eventObj, iconName:eventObj.iconName});
 								}
-								macroEvents_mc.addItem({label:title, value:eventObj, iconName:iconName, strikeThrough:skip});
-							} else {
-								standardEvents_mc.addItem({label:title, value:eventObj, iconName:eventObj.iconName});
 							}
 						}
 					}
@@ -429,6 +432,9 @@ renderRow = function (rowData, row_mc, rowWidth, colWidth, colStart, odd, curren
 	
 	var label_txt = row_mc.attachMovie("bi.ui.Label", "label_txt", 10, {settings:{width:colStart, text:rowData.label, fontSize:14, _x:4}});
 	label_txt._y = Math.round((bg_mc._height / 2) - (label_txt._height / 2));
+	if (!rowData.calendarObj.active) {
+		label_txt._alpha = 60;
+	}
 	
 	var calendarObj = rowData.calendarObj;
 	var dayObj = {sun:0, mon:1, tue:2, wed:3, thu:4, fri:5, sat:6};
@@ -592,6 +598,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 		calendarObj.id = "";
 		calendarObj.eventType = "once";
 		calendarObj.title = "";
+		calendarObj.active = true;
 		calendarObj.alarm = false;
 		calendarObj.memo = "";
 		calendarObj.category = "";
@@ -615,16 +622,19 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	content_mc.attachMovie("bi.ui.TimePicker", "time_tp", 25, {settings:{width:180, time:calendarObj.time, _x:90, _y:35}});
 	
 	content_mc.attachMovie("bi.ui.Label", "msg_lb", 40, {settings:{width:80, text:"Message:", _y:70}});
-	content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 45, {settings:{width:180, height:210, text:calendarObj.memo, _x:90, _y:70, minChars:0, maxChars:200}});
+	content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 45, {settings:{width:180, height:175, text:calendarObj.memo, _x:90, _y:70, minChars:0, maxChars:200}});
 
-	content_mc.attachMovie("bi.ui.Label", "alarm_lb", 30, {settings:{width:80, text:"Alarm:", _y:285}});
-	content_mc.attachMovie("bi.ui.CheckBox", "alarm_cb", 35, {settings:{_x:90, _y:285, selected:calendarObj.alarm}});
+	content_mc.attachMovie("bi.ui.Label", "alarm_lb", 30, {settings:{width:80, text:"Alarm:", _y:250}});
+	content_mc.attachMovie("bi.ui.CheckBox", "alarm_cb", 35, {settings:{_x:90, _y:250, selected:calendarObj.alarm}});
 	
-	content_mc.attachMovie("bi.ui.Label", "category_lb", 50, {settings:{width:80, text:"Category:", _y:320}});
-	content_mc.attachMovie("bi.ui.ItemPicker", "category_ip", 55, {settings:{width:180, items:_global.calendarCategories, _x:90, _y:320}});
+	content_mc.attachMovie("bi.ui.Label", "category_lb", 50, {settings:{width:80, text:"Category:", _y:285}});
+	content_mc.attachMovie("bi.ui.ItemPicker", "category_ip", 55, {settings:{width:180, items:_global.calendarCategories, _x:90, _y:285}});
 	content_mc.category_ip.selectedValue = calendarObj.category;
+
+	content_mc.attachMovie("bi.ui.Label", "active_lb", 60, {settings:{width:80, text:"Active:", _y:320}});
+	content_mc.attachMovie("bi.ui.CheckBox", "active_cb", 65, {settings:{_x:90, _y:320, selected:calendarObj.active}});
 	
-	content_mc.attachMovie("bi.ui.Label", "recurrence_lb", 60, {settings:{width:100, text:"Recurrence:", _x:280}});
+	content_mc.attachMovie("bi.ui.Label", "recurrence_lb", 69, {settings:{width:100, text:"Recurrence:", _x:280}});
 	
 	content_mc.attachMovie("bi.ui.RadioButton", "once_rb", 70, {settings:{width:110, label:"Once", data:"once", _x:280, _y:35, groupName:"period"}});
 	content_mc.attachMovie("bi.ui.RadioButton", "hourly_rb", 71, {settings:{width:110, label:"Hourly", data:"hourly", _x:420, _y:35, groupName:"period"}});
@@ -904,6 +914,7 @@ editRecurringEvent = newRecurringEvent = function (calendarObj, dateObj, macroNa
 		calendarObj.id = "";
 		calendarObj.eventType = "weekly";
 		calendarObj.title = "";
+		calendarObj.active = true;
 		calendarObj.alarm = false;
 		calendarObj.memo = "";
 		calendarObj.category = "";
@@ -938,13 +949,19 @@ editRecurringEvent = newRecurringEvent = function (calendarObj, dateObj, macroNa
 		content_mc.runTime_np.selectedValue = Number(calendarObj.extra2) / 60;
 		
 		content_mc.attachMovie("bi.ui.Label", "msg_lb", 40, {settings:{width:80, text:"Message:", _y:105}});
-		content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 45, {settings:{width:180, height:245, text:calendarObj.memo, _x:90, _y:105, maxChars:200}});
+		content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 45, {settings:{width:180, height:210, text:calendarObj.memo, _x:90, _y:105, maxChars:200}});
+
+		content_mc.attachMovie("bi.ui.Label", "active_lb", 50, {settings:{width:80, text:"Active:", _y:320}});
+		content_mc.attachMovie("bi.ui.CheckBox", "active_cb", 55, {settings:{_x:90, _y:320, selected:calendarObj.active}});
 	} else {
 		content_mc.attachMovie("bi.ui.Label", "msg_lb", 30, {settings:{width:80, text:"Message:", _y:70}});
-		content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 35, {settings:{width:180, height:245, text:calendarObj.memo, _x:90, _y:70, maxChars:200}});
+		content_mc.attachMovie("bi.ui.TextInput", "msg_ti", 35, {settings:{width:180, height:210, text:calendarObj.memo, _x:90, _y:70, maxChars:200}});
 	
-		content_mc.attachMovie("bi.ui.Label", "alarm_lb", 40, {settings:{width:80, text:"Alarm:", _y:320}});
-		content_mc.attachMovie("bi.ui.CheckBox", "alarm_cb", 45, {settings:{_x:90, _y:320, selected:calendarObj.alarm}});
+		content_mc.attachMovie("bi.ui.Label", "alarm_lb", 40, {settings:{width:80, text:"Alarm:", _y:285}});
+		content_mc.attachMovie("bi.ui.CheckBox", "alarm_cb", 45, {settings:{_x:90, _y:285, selected:calendarObj.alarm}});
+
+		content_mc.attachMovie("bi.ui.Label", "active_lb", 50, {settings:{width:80, text:"Active:", _y:320}});
+		content_mc.attachMovie("bi.ui.CheckBox", "active_cb", 55, {settings:{_x:90, _y:320, selected:calendarObj.active}});
 	}
 			
 	content_mc.attachMovie("bi.ui.Label", "recurrence_lb", 60, {settings:{width:100, text:"Recurrence:", _x:280}});

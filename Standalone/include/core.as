@@ -1688,7 +1688,7 @@ openControlPanel = function () {
 		}
 	}
 	var tabs_mc = window_mc.contentClip.attachMovie("bi.ui.Tabs", "tabs_mc", 0, {settings:{width:window_mc.contentClip.width, height:window_mc.contentClip.height}});
-	tabs_mc.tabData = [{name:"Macros", iconName:"atom", func:"createMacroAdmin"}, {name:"Scripts", iconName:"notepad", func:"createScriptsAdmin"}, {name:"Volume Control", iconName:"speaker", func:"createVolumeControl"}, {name:"Clean Screen", iconName:"spanner", func:"createCleanScreen"}, {name:"External Applications", iconName:"red-pin", func:"createAppsPanel"}];
+	tabs_mc.tabData = [{name:"Macros", iconName:"atom", func:"createMacroAdmin"}, {name:"Scripts", iconName:"notepad", func:"createScriptsAdmin"}, {name:"Volume Control", iconName:"speaker", func:"createVolumeControl"}, {name:"Clean Screen", iconName:"spanner", func:"createCleanScreen"}, {name:"Screen Saver", iconName:"power-green", func:"createScreenSaverPanel"}, {name:"External Applications", iconName:"red-pin", func:"createAppsPanel"}, {name:"Users", iconName:"people", func:"createUsersPanel"}];
 	
 	for (var i=0; i<tabs_mc.tabData.length; i++) {
 		_root[tabs_mc.tabData[i].func](tabs_mc.contentClips[i]);
@@ -1839,12 +1839,29 @@ createLogContent = function (logObj, content_mc) {
 				}
 				var counter = 0;
 				while (counter < this.itemsPerPage && this.startRow + counter < this.maxItems) {
-					var label_mc = this.attachMovie("bi.ui.Label", "label" + counter + "_mc", counter, {settings:{width:labelWidth, height:30, text:log[counter + this.startRow].msg}})
+					var label_mc = this.labels_mc.attachMovie("bi.ui.Button", "label" + counter + "_mc", counter, {settings:{width:labelWidth, height:30, label:log[counter + this.startRow].msg, align:"left"}})
 					label_mc._y = counter * 34;
 					label_mc.logObj = logObj;
 					label_mc.event = counter + this.startRow;
+					label_mc.tab = this;
+
+					label_mc.press = function () {
+						this.logObj.log.splice(this.event, 1);
+						trace(this.tab);
+						this.tab.update();
+					}
+					label_mc.addEventListener("press", label_mc);
+					
 					counter++;
 				}
+				var clear_mc = this.labels_mc.attachMovie("bi.ui.Button", "clear_mc", 200, {settings:{width:100, height:30, _y:content_mc.height - 30, label:"Clear"}})
+				clear_mc.press = function () {
+					this.logObj.log = new Array();
+					this.tab.update();
+				}
+				clear_mc.logObj = logObj;
+				clear_mc.tab = this;
+				clear_mc.addEventListener("press", clear_mc);
 			}
 		}
 	
@@ -1882,7 +1899,7 @@ createLogContent = function (logObj, content_mc) {
 	}
 }
 
-createUsasgeGraphs = function (content_mc) {
+createUsageGraphs = function (content_mc) {
 	var graphs_array = ["Power", "Water", "Gas"];
 	for (var i=0; i<graphs_array.length; i++) {
 		var graph_mc = content_mc.createEmptyMovieClip("graph" + i + "_mc", i);
@@ -1944,13 +1961,20 @@ createAppsPanel = function (content_mc) {
 		}
 		app_btn.program = _global.controlPanelApps[app].program;
 		app_btn.command = _global.controlPanelApps[app].command;
-		trace(app_btn.command);
 		app_btn.extra = _global.controlPanelApps[app].extra;
 		app_btn._y = app * 35;
 		app_btn.addEventListener("press", app_btn);
 	}
 	btns_mc._x = Math.round((content_mc.width / 2) - (btns_mc._width / 2));
 	btns_mc._y = Math.round((content_mc.height / 2) - (btns_mc._height / 2));	
+}
+
+createScreenSaverPanel = function (content_mc) {
+	
+}
+
+createUsersPanel = function (content_mc) {
+
 }
 
 createCleanScreen = function (content_mc) {
@@ -3081,6 +3105,17 @@ broadcastChange = function (key, id) {
 	}
 }
 
+loadPersistent = function () {
+	var dataObj = SharedObject.getLocal("elife_client");
+	if (!dataObj.data.settings || _global.settings.clearPersistentData) {
+		dataObj.data.settings = new Object()
+	} else {
+		for (var i in dataObj.data.settings) {
+			_global.settings[i] = dataObj.data.settings[i];
+		}
+	}
+}
+
 application_xml = new XML();
 application_xml.onLoad = function () {
 	var lastUpdated = this.firstChild.attributes.lastUpdated;
@@ -3119,6 +3154,7 @@ application_xml.onLoad = function () {
 				break;
 		}
 	}
+	loadPersistent();
 	layout();
 	renderStatusBar();
 	renderAppsBar();

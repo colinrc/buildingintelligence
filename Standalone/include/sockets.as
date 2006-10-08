@@ -1,7 +1,9 @@
-﻿import com.bnm.fc.f_TEA;
+﻿/*
+import com.bnm.fc.f_TEA;
 var crypto:f_TEA = new f_TEA();
 var cryptoKeys:Array=new Array();
 cryptoKeys = [1, 2, 3, 4];
+*/
 
 crypto.onEncode = function (encoded) {
 	encoded =  '<encrypted><![CDATA[' + encoded + ']]></encrypted>';
@@ -14,17 +16,26 @@ crypto.onDecode = function (decoded) {
 	receiveCmd(new XML(decoded).firstChild, true);
 }
 
-mdm.COMPort.open(3, 19200, 8, "N", 1, "OFF");
-mdm.COMPort.useLineMode(true, chr(13));
-mdm.COMPort.onCOMPortData = function (dataObj){
-	var data = dataObj.data.substr(0, dataObj.data.length - 1);
-	var command = data.split(" ")[0];
-	var extra = data.split(" ")[1];
-	if (extra == "+") extra = "on";
-	if (extra == "-") extra = "off";
-	//if (command == "W0") return;
-	if (command == "K2" && extra == "off") toggleTV();
-	receiveCmd(new XML('<CONTROL KEY="COM_PORT" COMMAND="' + command + '" EXTRA="' + extra + '" />'));
+var availablePorts = mdm.COMPorts.ports.split(",");
+isCOMAvailabe = false;
+for (var i=0; i<availablePorts.length; i++) {
+	if (Number(availablePorts) == _global.settings.COMPort) {
+		isCOMAvailabe = true;
+	}
+}
+if (isCOMAvailabe) {
+	mdm.COMPort.open(_global.settings.COMPort, 19200, 8, "N", 1, "OFF");
+	mdm.COMPort.useLineMode(true, chr(13));
+	mdm.COMPort.onCOMPortData = function (dataObj){
+		var data = dataObj.data.substr(0, dataObj.data.length - 1);
+		var command = data.split(" ")[0];
+		var extra = data.split(" ")[1];
+		if (extra == "+") extra = "on";
+		if (extra == "-") extra = "off";
+		//if (command == "W0") return;
+		if (command == "K2" && extra == "off") toggleTV();
+		receiveCmd(new XML('<CONTROL KEY="COM_PORT" COMMAND="' + command + '" EXTRA="' + extra + '" />'));
+	}
 }
 
 serverSetup = function () {
@@ -107,6 +118,7 @@ serverOnConnect = function (status) {
 			window_mc.close();
 			delete commsError;
 		}
+		serverSend('<clientName value="' + _global.settings.clientName + '" />')
 	} else {
 		if (!_global.settings.debugMode) {
 			showCommsError();
@@ -279,7 +291,7 @@ sendCmd = function (key, command, extra, extras) {
 			
 			newMacroArray.push(macroObj);
 		}
-	} else {
+	} else if (isCOMAvailabe) {
 		debug_mc.outgoing_txt.text = "COMPORT: " + command + " " + extra + "\n" + debug_mc.outgoing_txt.text;
 		mdm.COMPort.send(command + " " + extra + "\n");
 	}
@@ -362,9 +374,9 @@ deleteMacro = function (macroName) {
 saveEvent = function (event) {
 	var xmlMsg = '<CONTROL KEY="CALENDAR" COMMAND="save" EXTRA="">';
 	if (event.eventType == "once") {
-		xmlMsg += '<event id="' + event.id + '" title="' + event.title + '" alarm="' + (event.alarm?"Y":"N") + '" memo="' + event.memo + '" category="' + event.category + '" date="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time.dateTimeFormat("HH:nn:ss") + '" eventType="' + event.eventType + '" macroName="' + event.macroName + '"  extra="' + event.extra + '"  extra2="' + event.extra2 + '" filter="' + event.filter + '" />';
+		xmlMsg += '<event id="' + event.id + '" title="' + event.title + '" active="' + (event.active?"Y":"N") + '" alarm="' + (event.alarm?"Y":"N") + '" memo="' + event.memo + '" category="' + event.category + '" date="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time.dateTimeFormat("HH:nn:ss") + '" eventType="' + event.eventType + '" macroName="' + event.macroName + '"  extra="' + event.extra + '"  extra2="' + event.extra2 + '" filter="' + event.filter + '" />';
 	} else {
-		xmlMsg += '<event id="' + event.id + '" title="' + event.title + '" alarm="' + (event.alarm?"Y":"N") + '" memo="' + event.memo + '" category="' + event.category + '" startDate="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" endDate="' + event.endDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time.dateTimeFormat("HH:nn:ss") + '" eventType="' + event.eventType + '"  macroName="' + event.macroName + '"  extra="' + event.extra + '"  extra2="' + event.extra2 + '" filter="' + event.filter + '">';		
+		xmlMsg += '<event id="' + event.id + '" title="' + event.title + '" active="' + (event.active?"Y":"N") + '" alarm="' + (event.alarm?"Y":"N") + '" memo="' + event.memo + '" category="' + event.category + '" startDate="' + event.startDate.dateTimeFormat("yyyy-mm-dd") + '" endDate="' + event.endDate.dateTimeFormat("yyyy-mm-dd") + '" time="' + event.time.dateTimeFormat("HH:nn:ss") + '" eventType="' + event.eventType + '"  macroName="' + event.macroName + '"  extra="' + event.extra + '"  extra2="' + event.extra2 + '" filter="' + event.filter + '">';		
 		xmlMsg += "<pattern";
 		for (var attrib in event.pattern) {
 			xmlMsg += " " + attrib + '="' + event.pattern[attrib] + '"';
