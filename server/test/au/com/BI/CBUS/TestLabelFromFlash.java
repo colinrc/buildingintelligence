@@ -36,10 +36,10 @@ public class TestLabelFromFlash extends TestCase {
 		testLabel = new Label( "Volume Test", DeviceType.LABEL );
 		testLabel.setApplicationCode("38");
 		testLabel.setDefaultLabel("VOLUME");
-		testLabel.setKey("01");
+		testLabel.setKey("22");
 		
 		HashMap<String, String> map = new HashMap<String,String> (40);
-		
+		map.put("Test", "Testt");
 		map.put("FRONT_LIGHT", "Front Light");
 		map.put("VOLUME_CONTROL", "Volume Level");
 		map.put("SPRINKLERS","Sprinklers");
@@ -54,9 +54,9 @@ public class TestLabelFromFlash extends TestCase {
 	 * Test method for {@link au.com.BI.CBUS.Model#buildCBUSLabelString(au.com.BI.Label.Label, au.com.BI.Command.CommandInterface, java.lang.String)}.
 	 */
 	public void testBuildCBUSLabelString() {
-		ClientCommand testCommand = new ClientCommand("VOLUME","label",null,"VOLUME_CONTROL","","","","");
-		String expectedOut = "\\05";
-		String val = model.buildCBUSLabelString(testLabel, testCommand, "a");
+		ClientCommand testCommand = new ClientCommand("VOLUME","label",null,"Test","","","","");
+		String expectedOut = '\05'+"3800A81600015465737474F0g";
+		String val = model.buildCBUSLabelString(testLabel, testCommand, "g");
 		assertEquals ("Return value for label failed",expectedOut,val);
 	}
 
