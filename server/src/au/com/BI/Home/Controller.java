@@ -10,6 +10,7 @@ import au.com.BI.Util.*;
 import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
+import au.com.BI.LabelMgr.LabelMgr;
 import au.com.BI.Macro.*;
 import au.com.BI.Maintainance.DailyTaskFactory;
 import au.com.BI.Messaging.*;
@@ -56,6 +57,7 @@ public class Controller {
 	protected Bootstrap bootstrap;
 	private Security security = null;
 	protected AlarmLogging alarmLogging = null;
+	protected LabelMgr labelMgr = null;
 	
     protected static org.jrobin.core.RrdDbPool rrdbPool;
     protected au.com.BI.JRobin.RRDGraph rrdGraph;
@@ -93,6 +95,7 @@ public class Controller {
         security = new Security();
         addressBook = new AddressBook();
         alarmLogging = new AlarmLogging();
+        labelMgr = new LabelMgr();
         alarmLogging.setCache(cache);
         alarmLogging.setCommandQueue(commandQueue);
 
@@ -204,6 +207,7 @@ public class Controller {
 		model.setVersionManager(versionManager);
 		model.setAddressBook(addressBook);
 		model.setAlarmLogging (alarmLogging);
+		model.setLabelMgr(labelMgr);
 		model.setEventCalendar (macroHandler.getEventCalendar());
 		model.setInstanceID(deviceModels.size()-1);
 	}

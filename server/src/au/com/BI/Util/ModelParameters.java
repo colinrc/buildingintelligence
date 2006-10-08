@@ -17,6 +17,7 @@ import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Home.VersionManager;
 import au.com.BI.User.User;
 import au.com.BI.Util.DeviceModel.ModelTypes;
+import au.com.BI.LabelMgr.LabelMgr;
 import au.com.BI.Macro.MacroHandler;
 import au.com.BI.Config.Bootstrap;
 import au.com.BI.AlarmLogging.*;
@@ -72,6 +73,7 @@ public class ModelParameters  {
 		public DeviceType allDevices = null;
 		protected VersionManager versionManager = null;
 		protected String version = "0";
+		protected LabelMgr labelMgr = null;
 		
 		public User currentUser = null;
 		
@@ -461,7 +463,12 @@ public class ModelParameters  {
 	public void setAppendToSentStrings(String endString) {
 		this.appendToSentStrings = endString;
 	}
-	
 
-	
+	public LabelMgr getLabelMgr() {
+		return labelMgr;
+	}
+
+	public void setLabelMgr(LabelMgr labelMgr) {
+		this.labelMgr = labelMgr;
+	}
 }

@@ -18,6 +18,7 @@ import au.com.BI.CustomConnect.CustomConnectInput;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Home.VersionManager;
+import au.com.BI.LabelMgr.LabelMgr;
 import au.com.BI.Macro.MacroHandler;
 import au.com.BI.Messaging.AddressBook;
 /**
@@ -504,6 +505,9 @@ public interface DeviceModel {
 	 */
 	public void setVersion(String version) ;
 
+	public void setLabelMgr (LabelMgr labelMgr);
+	
+	public LabelMgr getLabelMgr ();
 
 }
 

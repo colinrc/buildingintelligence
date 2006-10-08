@@ -1212,7 +1212,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (theCommand.equals("label") ) {
 			String catalogueStr = command.getExtraInfo();
 			String flavour = command.getExtra2Info();
-			if (flavour.equals("")) flavour = "1";
+			if (flavour.equals("")) flavour = "0";
 
 			cBUSOutputString =buildCBUSLabelCommand (device.getApplicationCode(), device.getKey(), catalogueStr, flavour, currentChar,device);
 			// labelState.set (device.getOutputKey(),command.getExtra2Info());
@@ -1224,22 +1224,35 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String returnString = "";
 		try {
 			String theLabel = this.getCatalogueValue(catalogueStr, "LABELS", device);
-			int theCommand = 160 + 3 + theLabel.length();
-			int groupAddress = Integer.parseInt(key,16);
-			int options = 0; // only supporting flavour 0 for now
-			int language = 2; // australian english
-			/*
-			int appCode = Integer.parseInt(appCodeStr,16);
-			byte remainder = (byte)(((byte)5 + appCode + Byte.parseByte(cBUSCommand,16) + Integer.parseInt(group,16)) % 256);
-			byte twosComp = (byte)-remainder;
+			Vector <Integer> retCodes = new Vector<Integer>();
+			retCodes.add( 5);
+			retCodes.add(Integer.parseInt(appCodeStr,16));
+			retCodes.add(0); // options
 			
-			String hexCheck = Integer.toHexString(twosComp);
-			if (hexCheck.length() == 1) hexCheck = "0" + hexCheck;
-			if (hexCheck.length() > 2) hexCheck = hexCheck.substring(hexCheck.length() - 2);
-			returnString = "\\05" + appCodeStr + theLabel + hexCheck ;
-			return returnString + key + ETX;
-			*/
-			return "";
+			int theCommand = 160 + 3 + theLabel.length() ;
+			retCodes.add(theCommand);
+			retCodes.add(Integer.parseInt(key)); // group address
+			retCodes.add(0); 
+			retCodes.add(1); // language english
+
+			for (int i = 0; i < theLabel.length(); i ++){
+				char eachChar = theLabel.charAt(i);
+				retCodes.add((int)eachChar);
+			}
+			byte checkSum = calcChecksum(retCodes);
+			boolean firstChar = true; // first is different
+			for (int i:retCodes){
+				if (firstChar) {
+					returnString += (char)i;
+					firstChar = false;
+				}
+				else
+					returnString += String.format("%02X", i);
+			}
+			returnString += String.format("%02X",checkSum);
+			returnString += currentChar;
+			return returnString;
+
 		} catch (NumberFormatException er) {
 			logger.log (Level.INFO, "Application code is in error for level request : " + appCodeStr);
 			return null;
@@ -1316,6 +1329,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return null;
 
 		}
+	}
+	
+	
+	public byte calcChecksum(Vector<Integer> vals) {
+		int total = 0;
+
+		for (int i: vals){
+			total += i;
+		}
+		int remainder = total % 256;
+		byte twosComp = (byte)((~remainder + 1)&0xff);
+		return twosComp;			
 	}
 	
 	protected String calcChecksum (String toCalc) {
@@ -1430,6 +1455,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return false;
 		}
 	}
+
+	
 
 	public String findRampCode (String rampRate) {
 		String retCode = "";
