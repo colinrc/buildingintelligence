@@ -130,6 +130,8 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		}
 	}
 
+    public void addStartupQueryItem(String name, Object details, MessageDirection controlType) {};
+    
 	public void clearItems() {
 		configHelper.clearItems();
 		parameters.clear();

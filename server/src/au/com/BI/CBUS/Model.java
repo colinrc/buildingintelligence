@@ -278,18 +278,25 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 	}
 
-	public void addStartupQueryItem (String name, Object details, int controlType){
+	public void addStartupQueryItem (String name, Object details, MessageDirection controlType){
 		try {
 			if (((DeviceType)details).getDeviceType() == DeviceType.TEMPERATURE ){
 				temperatureSensors.add ((SensorFascade)details);
 			}
+			
+		} catch (ClassCastException ex) {
+			logger.log (Level.FINE,"A temperature sensor was added that was not the expected type " + ex.getMessage());
+		}
+
+		try {
 			if (((DeviceType)details).getDeviceType() == DeviceType.LABEL ){
 				labels.add ((Label)details);
 			}
 			
 		} catch (ClassCastException ex) {
-			logger.log (Level.FINE,"A temperature sennssor was added that was not the expected type " + ex.getMessage());
+			logger.log (Level.FINE,"A label was added that was not the expected type " + ex.getMessage());
 		}
+
 	}
 
 	public void doStartup() throws CommsFail {

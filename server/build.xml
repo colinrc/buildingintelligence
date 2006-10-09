@@ -19,7 +19,10 @@
 	
 	<target name="init">
 		<delete>
-			<fileset dir="dist" includes="**/*" excludes="ext/*" followsymlinks="false" />
+			<fileset dir="dist" includes="**/*" excludes="ext/*" followsymlinks="false" >
+				<exclude name="ext/*" />
+				<exclude name="*.zip" />
+			</fileset>
 		</delete>
         <echo message="Emptied previous dist file" />
 		

@@ -206,7 +206,6 @@ public class ModelParameters  {
                 InstanceID = instanceID;
         }
 
-        public void addStartupQueryItem(String name, Object details, MessageDirection controlType) {};
 
         /**
          * @return Returns the displayName.

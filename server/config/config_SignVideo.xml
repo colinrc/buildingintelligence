@@ -1,7 +1,7 @@
 <CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
         <DESC>Demonstration configuration for Sign Video</DESC>
          <!-- ______________________________________  Sign Video DEFS  ____________________  -->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="SIGN_VIDEO" DESCRIPTION="Sign Video Switch">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="SIGN_VIDEO" DESCRIPTION="Sign Video Switch">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
                         <SERIAL ACTIVE="Y" PORT="COM3" SUPPORTS_CD="N" BAUD="1200" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>

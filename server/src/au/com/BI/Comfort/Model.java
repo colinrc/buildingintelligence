@@ -168,9 +168,9 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 	}
 
 
-	public void addStartupQueryItem (String name, DeviceType details, MessageDirection controlType) {
+	public void addStartupQueryItem (String name, Object  details, MessageDirection controlType) {
 
-		startup.addStartupQueryItem (configHelper,name, details, controlType);
+		startup.addStartupQueryItem (configHelper,name, (DeviceType)details, controlType);
 	}
 
 	public boolean doIControl (String keyName, boolean isClientCommand)
