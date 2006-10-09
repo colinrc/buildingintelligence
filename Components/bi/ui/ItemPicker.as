@@ -106,5 +106,7 @@ class bi.ui.ItemPicker extends bi.ui.CoreUI {
 		if (index < 0) index = _items.length - 1;
 		
 		selectedIndex = index;
+		
+		dispatchEvent({type:"change", target:this});
 	}
 }

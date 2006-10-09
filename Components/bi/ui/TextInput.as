@@ -157,6 +157,7 @@
 				var updateTitle = function (txt, caller) {
 					if ((caller._inputType != "numeric" && txt.length >= caller._minChars) || (caller._inputType == "numeric" && Number(txt) >= caller._minValue && Number(txt) <= caller._maxValue)) {
 						caller.text = txt;
+						caller.dispatchEvent({type:"change", target:caller});
 					}
 				}
 				_root.showKeyboard(_maxChars, updateTitle, this, _text, false, _inputType);

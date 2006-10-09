@@ -169,6 +169,10 @@ showKeyboard = function (limit, onClose, callerObj, initial, password, type) {
 		var keyboard = "1,2,3,4,5,6,7,8,9,0,/;q,w,e,r,t,y,u,i,o,p,';http://,a,s,d,f,g,h,j,k,l,:;www.,z,x,c,v,b,n,m,.,clear,del;.com,.au,shift,space,ok";
 		var cols = 11;
 		var title = "Address:";
+	} else if (type == "path") {
+		var keyboard = "1,2,3,4,5,6,7,8,9,0,-;q,w,e,r,t,y,u,i,o,p,_;a,s,d,f,g,h,j,k,l,:;\\\\,\\,z,x,c,v,b,n,m,.;clear,del,space,ok";
+		var cols = 11;
+		var title = "Address:";
 	} else {
 		var keyboard = "1,2,3,4,5,6,7,8,9,0,!;q,w,e,r,t,y,u,i,o,p,';a,s,d,f,g,h,j,k,l,:;clear,z,x,c,v,b,n,m,.,del;shift,space,ok";
 		var cols = 11;
@@ -1970,11 +1974,84 @@ createAppsPanel = function (content_mc) {
 }
 
 createScreenSaverPanel = function (content_mc) {
+	content_mc.attachMovie("bi.ui.Label", "timeout_lb", 10, {settings:{width:140, text:"Time out:"}});
+	content_mc.attachMovie("bi.ui.NumberPicker", "timeout_np", 15, {settings:{width:160, minValue:1, maxValue:180, step:1, _x:150}});
+	content_mc.timeout_np.selectedValue = _global.settings.screenLockTimeout / 60;
+	content_mc.timeout_np.change = function () {
+		_global.persistentData.data.settings.screenLockTimeout = _global.settings.screenLockTimeout = this.selectedItem.value * 60;
+	}
+	content_mc.timeout_np.addEventListener("change", content_mc.timeout_np);
+	content_mc.attachMovie("bi.ui.Label", "minutes_lb", 16, {settings:{width:60, text:"mins", _x:320}});
 	
+	content_mc.attachMovie("bi.ui.Label", "screensaver_lb", 20, {settings:{width:140, text:"Screen saver:"}, _y:35});
+	content_mc.attachMovie("bi.ui.ItemPicker", "screensaver_ip", 25, {settings:{width:300, items:[{label:"Logo", value:"logo"}, {label:"Slideshow", value:"photo"}], _x:150}, _y:35});
+	content_mc.screensaver_ip.selectedValue = _global.settings.screenLockDisplay;
+	
+	var logoSettings_mc = content_mc.createEmptyMovieClip("logoSettings_mc", 30);
+	logoSettings_mc._y = 70;
+	if (mdm.Application.path != undefined) {
+		var tmp = mdm.FileSystem.getFileList(mdm.Application.path + _global.settings.libLocation + "screensaver", "*.jpg");
+		var availableBackgrounds = new Array();
+		for (var i=0; i<tmp.length; i++) {
+			availableBackgrounds.push({label:tmp[i], value:tmp[i]});
+		}
+	} else {
+		var availableBackgrounds = new Array({label:"bg-blue.jpg", value:"bg-blue.jpg"}, {label:"bg-green.jpg", value:"bg-green.jpg"}, {label:"bg-orange.jpg", value:"bg-orange.jpg"});
+	}
+	logoSettings_mc.attachMovie("bi.ui.Label", "bg_lb", 10, {settings:{width:140, text:"Background:"}});
+	logoSettings_mc.attachMovie("bi.ui.ItemPicker", "bg_ip", 15, {settings:{width:300, items:availableBackgrounds, _x:150}});
+	logoSettings_mc.bg_ip.selectedValue = _global.settings.screenLockLogoBg;
+	logoSettings_mc.bg_ip.change = function () {
+		_global.persistentData.data.settings.screenLockLogoBg = _global.settings.screenLockLogoBg = this.selectedItem.value;
+		_global.persistentData.flush();
+	}
+	logoSettings_mc.bg_ip.addEventListener("change", logoSettings_mc.bg_ip);
+	
+	var photoSettings_mc = content_mc.createEmptyMovieClip("photoSettings_mc", 40);
+	photoSettings_mc._y = 70;
+	photoSettings_mc.attachMovie("bi.ui.Label", "rotate_lb", 10, {settings:{width:140, text:"Time per photo:"}});
+	photoSettings_mc.attachMovie("bi.ui.NumberPicker", "rotate_np", 15, {settings:{width:160, minValue:5, maxValue:60, step:1, _x:150}});
+	photoSettings_mc.rotate_np.selectedValue = _global.settings.screenLockPhotoRotate;
+	photoSettings_mc.rotate_np.change = function () {
+		_global.persistentData.data.settings.screenLockPhotoRotate = _global.settings.screenLockPhotoRotate = this.selectedItem.value;
+		_global.persistentData.flush();
+	}
+	photoSettings_mc.rotate_np.addEventListener("change", photoSettings_mc.rotate_np);
+	photoSettings_mc.attachMovie("bi.ui.Label", "seconds_lb", 16, {settings:{width:80, text:"seconds", _x:320}});
+	photoSettings_mc.attachMovie("bi.ui.Label", "scale_lb", 20, {settings:{width:140, text:"Scale:", _y:35}});
+	photoSettings_mc.attachMovie("bi.ui.ItemPicker", "scale_ip", 25, {settings:{width:300, items:[{label:"No scale", value:"noscale"}, {label:"Scale to fit", value:"fullscreen"}], _x:150, _y:35}});
+	photoSettings_mc.scale_ip.selectedValue = _global.settings.screenLockPhotoScale;
+	photoSettings_mc.scale_ip.change = function () {
+		_global.persistentData.data.settings.screenLockPhotoScale = _global.settings.screenLockPhotoScale = this.selectedItem.value;
+		_global.persistentData.flush();
+	}
+	photoSettings_mc.scale_ip.addEventListener("change", photoSettings_mc.scale_ip);
+	photoSettings_mc.attachMovie("bi.ui.Label", "path_lb", 30, {settings:{width:140, text:"Photo path:", _y:70}});
+	photoSettings_mc.attachMovie("bi.ui.TextInput", "path_ti", 35, {settings:{width:300, text:_global.settings.screenLockPhotoPath, _x:150, _y:70, maxChars:150, inputType:"path"}});
+	photoSettings_mc.path_ti.change = function () {
+		_global.persistentData.data.settings.screenLockPhotoPath = _global.settings.screenLockPhotoPath = this.text;
+		_global.persistentData.flush();
+	}
+	photoSettings_mc.path_ti.addEventListener("change", photoSettings_mc.path_ti);
+	
+	content_mc.screensaver_ip.change = function () {
+		this._parent.logoSettings_mc._visible = false;
+		this._parent.photoSettings_mc._visible = false;
+		if (this.selectedItem.value == "logo") {
+			this._parent.logoSettings_mc._visible = true;
+		} else if (this.selectedItem.value == "photo") {
+			this._parent.photoSettings_mc._visible = true;
+		}
+		_global.persistentData.data.settings.screenLockDisplay = _global.settings.screenLockDisplay = this.selectedItem.value;
+		_global.persistentData.flush();
+	}
+	content_mc.screensaver_ip.addEventListener("change", content_mc.screensaver_ip);
+	
+	content_mc.screensaver_ip.change();
 }
 
 createUsersPanel = function (content_mc) {
-
+	
 }
 
 createCleanScreen = function (content_mc) {
@@ -2862,7 +2939,7 @@ screenSaver = function (mode) {
 			screensaver_mc.loadPicture();
 		} else if (_global.settings.screenLockDisplay == "logo") {
 			var bg_mc = screensaver_mc.createEmptyMovieClip("bg_mc", 0);
-			bg_mc.loadMovie(_global.settings.libLocation + _global.settings.screenLockLogoBgPath);
+			bg_mc.loadMovie(_global.settings.libLocation + "screensaver/" + _global.settings.screenLockLogoBg);
 			
 			var logo_mc = screensaver_mc.attachMovie("elife-logo-large", "logo_mc", 10);
 
@@ -2896,7 +2973,7 @@ screenSaver = function (mode) {
 	} else {
 		// stop
 		screensaver_mc._visible = false;
-		if (_global.settings.screenLockDisplay == "photos") clearInterval(this.loaderId);
+		if (_global.settings.screenLockDisplay == "photo") clearInterval(this.loaderId);
 	}
 }
 
@@ -3106,11 +3183,12 @@ broadcastChange = function (key, id) {
 }
 
 loadPersistent = function () {
-	var dataObj = SharedObject.getLocal("elife_client");
+	var dataObj = _global.persistentData = SharedObject.getLocal("elife_client", "/");
 	if (!dataObj.data.settings || _global.settings.clearPersistentData) {
 		dataObj.data.settings = new Object()
 	} else {
 		for (var i in dataObj.data.settings) {
+			//trace("persistent: " + i + " = " + dataObj.data.settings[i]);
 			_global.settings[i] = dataObj.data.settings[i];
 		}
 	}
