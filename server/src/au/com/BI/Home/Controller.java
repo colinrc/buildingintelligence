@@ -10,6 +10,7 @@ import au.com.BI.Util.*;
 import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
+import au.com.BI.LabelMgr.LabelError;
 import au.com.BI.LabelMgr.LabelMgr;
 import au.com.BI.Macro.*;
 import au.com.BI.Maintainance.DailyTaskFactory;
@@ -95,7 +96,6 @@ public class Controller {
         security = new Security();
         addressBook = new AddressBook();
         alarmLogging = new AlarmLogging();
-        labelMgr = new LabelMgr();
         alarmLogging.setCache(cache);
         alarmLogging.setCommandQueue(commandQueue);
 
@@ -149,6 +149,13 @@ public class Controller {
 			logger.log (Level.SEVERE,"Event scheduler failed to start, timed events will not be availlable. "+ex.getMessage());
 		}
 
+		labelMgr = new LabelMgr();        
+		try {
+			labelMgr.readLabelFile("datafiles"  , "labels.xml");
+		} catch (LabelError e){
+			logger.log(Level.SEVERE,"Label setup has failed " + e.getMessage());
+		}
+		
 		scriptModel = new au.com.BI.Script.Model();
 		scriptModel.setController(this);
 		this.setupModel(scriptModel);
@@ -183,7 +190,7 @@ public class Controller {
         this.setupModel(groovyModelHandler);
 		deviceModels.add( groovyModelHandler);
 		groovyModelHandler.setInstanceID(deviceModels.size()-1);
-        
+		
 		dailyTasks = new DailyTaskFactory();
 		dailyTasks.setStartTime (bootstrap.getMaintenanceTime());
 		dailyTasks.setMacroHandler(macroHandler);
@@ -210,6 +217,8 @@ public class Controller {
 		model.setLabelMgr(labelMgr);
 		model.setEventCalendar (macroHandler.getEventCalendar());
 		model.setInstanceID(deviceModels.size()-1);
+		// If adding items to here remember to also add them to config.readConfig. 
+		// These should be fixed to both use the same method CC
 	}
 	
 	public void setUpClients() throws CommsFail {
@@ -252,6 +261,7 @@ public class Controller {
 		config.setVersionManager(versionManager);
 		config.setAlarmLogging(alarmLogging);
 		config.setAddressBook(addressBook);
+		config.setLabelMgr(labelMgr);
 		config.setGroovyModels(this.groovyModelHandler.getGroovyModelClasses());
 		config.setGroovyModelHandler(groovyModelHandler);
 		boolean commandDone;

@@ -63,7 +63,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		this.setPadding(2);
 		this.setInterCommandInterval(10);
 		
-		configHelper.addParameterBlock ("LABELS",DeviceModel.MAIN_DEVICE_GROUP, "DLT Labels");
 	}
 
 
@@ -300,6 +299,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 	public void doStartup() throws CommsFail {
+		super.doStartup();
 		if (applicationCodes.isEmpty()) applicationCodes.add("38");
 
 		String pollTempStr = (String)this.getParameterValue("POLL_TEMP_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
@@ -326,6 +326,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		for (Label label: labels){
 			String currentChar = this.nextKey();
 			String toSend = this.buildCBUSLabelString(label, new ClientCommand(label.getOutputKey(),"label",null,label.getDefaultLabel(),"","","",""), currentChar);
+			
+			CommsCommand cbusCommsCommand = new CommsCommand();
+			cbusCommsCommand.setKey (label.getKey());
+			cbusCommsCommand.setKeepForHandshake(true);
+			cbusCommsCommand.setCommand(toSend);
+			cbusCommsCommand.setExtraInfo (label.getOutputKey());
+
+			comms.addCommandToQueue (cbusCommsCommand);
 		}
 	}
 
@@ -1220,6 +1228,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			String catalogueStr = command.getExtraInfo();
 			String flavour = command.getExtra2Info();
 			if (flavour.equals("")) flavour = "0";
+			labelMgr.setLabelState(device.getOutputKey(), catalogueStr);
 
 			cBUSOutputString =buildCBUSLabelCommand (device.getApplicationCode(), device.getKey(), catalogueStr, flavour, currentChar,device);
 			// labelState.set (device.getOutputKey(),command.getExtra2Info());
@@ -1230,7 +1239,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected String buildCBUSLabelCommand (String appCodeStr, String key, String catalogueStr, String flavour, String currentChar, Label device) {
 		String returnString = "";
 		try {
-			String theLabel = this.getCatalogueValue(catalogueStr, "LABELS", device);
+			String theLabel = labelMgr.getLabelText(catalogueStr);
 			Vector <Integer> retCodes = new Vector<Integer>();
 			retCodes.add( 5);
 			retCodes.add(Integer.parseInt(appCodeStr,16));
@@ -1250,23 +1259,21 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			boolean firstChar = true; // first is different
 			for (int i:retCodes){
 				if (firstChar) {
-					returnString += (char)i;
+					returnString = "\\05";
 					firstChar = false;
 				}
 				else
 					returnString += String.format("%02X", i);
 			}
 			returnString += String.format("%02X",checkSum);
-			returnString += currentChar;
+			returnString += currentChar + ETX;
+
 			return returnString;
 
 		} catch (NumberFormatException er) {
 			logger.log (Level.INFO, "Application code is in error for level request : " + appCodeStr);
 			return null;
-		}catch (ParameterException ex) {
-			logger.log (Level.INFO,"A label was requested that has not been configured, "  + catalogueStr);
-			return null;
-		} 
+		}
 	}
 	
 	public String buildCBUSLightString (LightFascade device, CommandInterface command,String currentChar) throws CommsFail {

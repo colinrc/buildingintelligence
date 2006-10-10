@@ -1,0 +1,9 @@
+<LABELS>
+
+	<TEXT>
+	            <LABEL KEY="FRONT_LIGHT" VALUE="Front Light"/>
+	            <LABEL KEY="VOLUME" VALUE="Volume Level"/>
+	            <LABEL KEY="SPRINKLERS" VALUE="Sprinklers"/>
+	</TEXT>
+
+</LABELS>

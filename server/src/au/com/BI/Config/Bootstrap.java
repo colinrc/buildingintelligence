@@ -38,6 +38,7 @@ public class Bootstrap {
     private boolean jettyActive = false;
     protected boolean requestUserNames = true;
     protected String  maintenanceTime = "";
+    protected boolean integratorMode = false;
     
     public Bootstrap() {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -129,6 +130,19 @@ public class Bootstrap {
                 
             } else {
                 adminPort = 10001;
+            }
+            
+            Element integratorModeElm = theConfig.getChild("INTEGRATOR_MODE");
+            if (integratorModeElm != null) {
+                String valueStr = integratorModeElm.getAttributeValue("ACTIVE");
+
+                if (valueStr != null && valueStr.equals("Y")) {
+                	this.setIntegratorMode( true);
+                	logger.log(Level.INFO,"Integrator mode activated");
+                }
+                else {
+                	this.setIntegratorMode(false);
+                }
             }
             
             Element debugConfig = theConfig.getChild("DEBUG");
@@ -356,6 +370,14 @@ public class Bootstrap {
 
 	public void setMaintenanceTime(String maintenanceTime) {
 		this.maintenanceTime = maintenanceTime;
+	}
+
+	public boolean isIntegratorMode() {
+		return integratorMode;
+	}
+
+	public void setIntegratorMode(boolean integratorMode) {
+		this.integratorMode = integratorMode;
 	}
     
     

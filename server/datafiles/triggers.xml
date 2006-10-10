@@ -1,39 +1,46 @@
                <!-- _____________________________ Trigger Sequences _____________________________-->
         <TRIGGERS>
                 
-                <TRIGGER NAME="ENSUITE_LIGHT" >
-	                <EVENT>
-	                		<TEST>
-	                			<EQ KEY="COMMAND" VALUE="on" />
-	                			<GE KEY="EXTRA" VALUE="50" />	                			
+                <TRIGGER NAME="DLT1" >
+                
+	                <EVENT NAME="Front gate open at night" >
+	                		<TEST >
+	                			 <LABEL VALUE="FRONT_GATE" />
+	                			<EQ COMPARE="COMMAND" VALUE="on" />
+	                			<GL_OTHER KEY="LIGHT_LEVEL"  COMPARE="EXTRA" VALUE="50" />
+	                			<TIME_TRUE="60" />  must be true for a minute to trigger the event    			
 	                		</TEST>
 	                		<ACTION_SEQ>
-	                			<CONTROL COMMAND="on" EXTRA="%EXTRA%" KEY="GARAGE_LIGHT" />
-	                			<CONTROL COMMAND="on" EXTRA="%EXTRA%" KEY="POOL_LIGHT" />
+	                			<CONTROL COMMAND="on" EXTRA="100" KEY="GATE_CONTROL" />
+	                			<CONTROL COMMAND="on" EXTRA="100" KEY="FRONT_LIGHT" />
+	                			<PAUSE EXTRA"600" />  
+	                			<CONTROL COMMAND="off" EXTRA="0" KEY="GATE_CONTROL" />
+	                			<CONTROL COMMAND="off" EXTRA="0" KEY="FRONT_LIGHT" />	                			
 	                		</ ACTION_SEQ>
 	                	</EVENT>
 	                	
-	                <EVENT>
-	                		<TEST>
-	                			<EQ KEY="COMMAND" VALUE="on" />
-	                			<LE KEY="EXTRA" VALUE="49" />	                			
-	                		</TEST>
-	                		<ACTION_RET_ORIGINAL TIME="5" > 
-	                		<!-- runs the sequence then returns all items mentioned in the sequence to their original 
-	                		     value after 5 seconds -->
-	                		
-	                			<CONTROL COMMAND="on" EXTRA="%EXTRA%" KEY="GARAGE_LIGHT" />
-	                			<CONTROL COMMAND="on" EXTRA="%EXTRA%" KEY="POOL_OUTSIDE_LIGHT" />
-	                		</ ACTION_SEQ>
-	                	</EVENT>
-	                	
-	                <EVENT>
-	                		<TEST>
-	                			<EQ KEY="COMMAND" VALUE="off" />
+	                	<EVENT NAME="Front gate open in daylight>
+	                		<TEST >
+	                			 <LABEL VALUE="FRONT_GATE" />
+	                			<EQ COMPARE="COMMAND" VALUE="on" />
+	                			<GT_OTHER KEY="LIGHT_LEVEL"  COMPARE="EXTRA" VALUE="50" />
+	                			<TIME_TRUE="60" />  must be true for a minute to trigger the event    			
 	                		</TEST>
 	                		<ACTION_SEQ>
-	                			<CONTROL COMMAND="off" EXTRA="0" KEY="GARAGE_LIGHT" />
-	                			<CONTROL COMMAND="off" EXTRA="0" KEY="POOL_LIGHT" />
+	                			<CONTROL COMMAND="on" EXTRA="100" KEY="GATE_CONTROL" />
+	                			<PAUSE EXTRA"600" />  
+	                			<CONTROL COMMAND="off" EXTRA="0" KEY="GATE_CONTROL" />       			
+	                		</ ACTION_SEQ>
+	                	</EVENT>
+	             
+	                	
+	                <EVENT NAME="Volume Control" >
+	                		<TEST>
+	                			<LABEL VALUE="VOLUME" />
+	                			<TIME_TRUE="0" />  fire immediately
+	                		</TEST>
+	                		<ACTION_SEQ>
+	                			<CONTROL COMMAND="volume" EXTRA="%EXTRA%" KEY="KITCHEN_AUDIO" />
 	                		<ACTION_SEQ />
 	                	</EVENT>
 	             </TRIGGER>

@@ -29,6 +29,7 @@ import au.com.BI.GroovyModels.GroovyRunBlock;
 import au.com.BI.Counter.*;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Label.LabelFactory;
+import au.com.BI.LabelMgr.LabelMgr;
 import au.com.BI.VirtualOutput.*;
 import au.com.BI.PulseOutput.*;
 import au.com.BI.Macro.*;
@@ -80,6 +81,7 @@ public class Config {
 		protected VersionManager versionManager = null;
 		protected  AlarmLogging alarmLogging = null;
 		protected au.com.BI.GroovyModels.Model groovyModelHandler  = null;
+		protected LabelMgr labelMgr = null;
 		
 	public Config() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -167,6 +169,7 @@ public class Config {
 						newDeviceModel.setAddressBook (addressBook);						
 						newDeviceModel.setAlarmLogging (alarmLogging);	
 						newDeviceModel.setVersionManager(versionManager);
+						newDeviceModel.setLabelMgr(labelMgr);
 						deviceModels.add(newDeviceModel);
 						newDeviceModel.setInstanceID(deviceModels.size()-1);
 					}
@@ -801,6 +804,14 @@ public class Config {
 
 	public void setLabelFactory(LabelFactory labelFactory) {
 		this.labelFactory = labelFactory;
+	}
+
+	public LabelMgr getLabelMgr() {
+		return labelMgr;
+	}
+
+	public void setLabelMgr(LabelMgr labelMgr) {
+		this.labelMgr = labelMgr;
 	}
 	
 }

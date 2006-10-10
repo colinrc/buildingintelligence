@@ -12,7 +12,7 @@
 	<getEclipseClasspath pathId="eLife.classpath" relative="true" workspace="${workspace}" projectName="${project.name}" />
 	<getEclipseClasspath property="eLife.jar_libs" relative="true" workspace="${workspace}" projectName="${project.name}" />
 	<available file="dist/lib" type="dir" property="lib_dir.present"/>
-	<available file="exit" type="dir" property="ext_dir.present"/>
+	<available file="ext" type="dir" property="ext_dir.present"/>
 	<available file="dist/bin" type="dir" property="bin_dir.present"/>
 	<getOutputpath property="classes.dir" workspace="${workspace}" projectName="${project.name}" />
 

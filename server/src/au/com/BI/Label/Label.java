@@ -19,7 +19,7 @@ public class Label extends BaseDevice implements DeviceType, CBUSDevice
 	protected String name="";
 	protected String command="";
 	protected String defaultLabel = "";
-	protected String applicationCode = "";
+	protected String applicationCode = "38";
 	protected int max = 100;
 	
 	public Label (String name, int deviceType){
@@ -58,7 +58,9 @@ public class Label extends BaseDevice implements DeviceType, CBUSDevice
 		return applicationCode;
 	}
 	public void setApplicationCode(String cbusApplication) {
-		this.applicationCode = cbusApplication;
+		if (cbusApplication != null && cbusApplication.equals("")){
+			this.applicationCode = cbusApplication;
+		}
 	}
 	public int getMax() {
 		return max;
