@@ -1,3 +1,5 @@
+CBUS startup enhanced ,. allows connection from the CBUS devkit.
+
 == Released [attachment:wiki:SoftwareReleases:eLife_simulator_2.13.zip V2.13] ==
 
 Corrected problem with M1 causing the Sim to partially hang but appear to be fully functional
