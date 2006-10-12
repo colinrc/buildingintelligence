@@ -293,6 +293,7 @@ protected CommsGroup commsGroup = null;
 						sendString((String)lastCommand.getCommandCode());
 					}
 				}
+				break; 
 			}
 		}
 		

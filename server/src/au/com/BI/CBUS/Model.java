@@ -328,7 +328,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			String toSend = this.buildCBUSLabelString(label, new ClientCommand(label.getOutputKey(),"label",null,label.getDefaultLabel(),"","","",""), currentChar);
 			
 			CommsCommand cbusCommsCommand = new CommsCommand();
-			cbusCommsCommand.setKey (label.getKey());
+			cbusCommsCommand.setKey (currentChar);
 			cbusCommsCommand.setKeepForHandshake(true);
 			cbusCommsCommand.setCommand(toSend);
 			cbusCommsCommand.setExtraInfo (label.getOutputKey());

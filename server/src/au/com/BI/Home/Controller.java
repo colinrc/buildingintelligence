@@ -168,6 +168,7 @@ public class Controller {
 
 		adminModel = new au.com.BI.Admin.Model(1);
 		this.setupModel(adminModel);
+		adminModel.setLogHandler(logHandler);
 		deviceModels.add( adminModel);
 		adminModel.setInstanceID(deviceModels.size()-1);
 

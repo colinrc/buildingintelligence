@@ -34,7 +34,7 @@ public interface CommDevice {
 	
 	// Time in milliseconds to wait for a command response from a handshake type device until the next command
 	// is sent
-	public static final int DelayUntilCommandRepeat = 60000;
+	public static final int DelayUntilCommandRepeat = 5000;
 
 	public void close () throws ConnectionFail ;
 	
