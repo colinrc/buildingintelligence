@@ -1,3 +1,5 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a17.zip V1.6a17] 
+
 ''' Bootstrap '''
 
 Added INTEGRATOR_MODE ACTIVE="Y|N"  (default N) to the bootstrap file. This will later be used to provide extra debugging of running triggers and integrator macros.
@@ -16,8 +18,39 @@ Mods to build scripts to ensure Groovy libraries are included
 ''' CBUS '''
 
 Fixed bug with startup synchronizing
+Split startup to wait until response from CBUS
 
+A file labels.xml must be created in the datafiles directory as follows.
 
+{{{
+
+<LABELS>
+	<TEXT>
+	            <LABEL KEY="FRONT_LIGHT" VALUE="Front Light"/>
+	            <LABEL KEY="VOLUME" VALUE="Volume Level"/>
+	            <LABEL KEY="SPRINKLERS" VALUE="Sprinklers"/>
+	</TEXT>
+</LABELS>
+
+}}}
+
+Configuration of each DLT is within a CBUS block as follows
+
+<LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT = "SPRINKLERS" />
+
+The label can be changed dynamically by a CONTROL message within a script or macro.
+
+For example
+
+{{{
+
+  <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="DLT1 front light" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
+    <CONTROL KEY="DLT1" COMMAND="label" EXTRA="FRONT_LIGHT" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" TARGET="All" TARGET_USER="" />
+  </CONTROL>
+  
+ }}}
+  
+  
 ''' Comfort '''
 
 Fixed bug with comfort startup synchronizing

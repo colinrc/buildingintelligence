@@ -22,8 +22,8 @@ protected CommsCommand nextCommand = null;
 protected Logger logger;
 protected boolean waitingForFeedback = false;
 protected long timeOfLastCommand = 0;
-protected LinkedList toSendQueue;	
-protected LinkedList sentQueue;
+protected LinkedList <CommsCommand>toSendQueue;	
+protected LinkedList <CommsCommand>sentQueue;
 protected int transmitMessageOnBytes = 0;
 public int interCommandInterval = 0;
 protected OutputStream os;
@@ -33,8 +33,8 @@ protected CommsSend commsSend = null;
 protected CommsGroup commsGroup = null;
 
 	public BaseComms () {
-		toSendQueue = new LinkedList();
-		sentQueue = new LinkedList();
+		toSendQueue = new LinkedList<CommsCommand>();
+		sentQueue = new LinkedList<CommsCommand>();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 
@@ -182,8 +182,13 @@ protected CommsGroup commsGroup = null;
 		// Nothing currently in the queue waiting so start it rolling
 	        sendNextCommand();
 	    } else {
+	    	if (logger.isLoggable(Level.FINEST)){
+		    	for (CommsCommand i: sentQueue){
+		    		logger.log (Level.FINEST,"Item in sent queue : " + i.getKey());
+		    	}
+	    	}
 			if ((System.currentTimeMillis() - this.timeOfLastCommand) > CommDevice.DelayUntilCommandRepeat) {
-				logger.log(Level.INFO,"Commands not actioned in " + CommDevice.DelayUntilCommandRepeat + " ms, repeating");
+				logger.log(Level.INFO,"Commands not actioned in " + CommDevice.DelayUntilCommandRepeat + " ms, repeating. Time since request " + Long.toString(System.currentTimeMillis() - this.timeOfLastCommand)   );
 				this.resendAllSentCommands();
 			}
 	    }

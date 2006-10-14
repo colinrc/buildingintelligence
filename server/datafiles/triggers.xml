@@ -10,6 +10,7 @@
 	                			<GL_OTHER KEY="LIGHT_LEVEL"  COMPARE="EXTRA" VALUE="50" />
 	                			<TIME_TRUE="60" />  must be true for a minute to trigger the event    			
 	                		</TEST>
+	                		<STATUS HIDDEN="N" ADMINISTRATOR="N" /> 
 	                		<ACTION_SEQ>
 	                			<CONTROL COMMAND="on" EXTRA="100" KEY="GATE_CONTROL" />
 	                			<CONTROL COMMAND="on" EXTRA="100" KEY="FRONT_LIGHT" />
@@ -26,6 +27,7 @@
 	                			<GT_OTHER KEY="LIGHT_LEVEL"  COMPARE="EXTRA" VALUE="50" />
 	                			<TIME_TRUE="60" />  must be true for a minute to trigger the event    			
 	                		</TEST>
+	                		<STATUS HIDDEN="Y" ADMINISTRATOR="N" /> 
 	                		<ACTION_SEQ>
 	                			<CONTROL COMMAND="on" EXTRA="100" KEY="GATE_CONTROL" />
 	                			<PAUSE EXTRA"600" />  
@@ -39,6 +41,7 @@
 	                			<LABEL VALUE="VOLUME" />
 	                			<TIME_TRUE="0" />  fire immediately
 	                		</TEST>
+	                		<STATUS HIDDEN="Y" ADMINISTRATOR="N" /> 
 	                		<ACTION_SEQ>
 	                			<CONTROL COMMAND="volume" EXTRA="%EXTRA%" KEY="KITCHEN_AUDIO" />
 	                		<ACTION_SEQ />

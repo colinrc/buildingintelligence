@@ -41,6 +41,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected LinkedList <Label>labels = null;
 	protected PollTemperatures pollTemperatures = null;
 	protected long tempPollValue = 0L;
+	protected int tildeCount = 0;
 
 	int []etxChars;
 	String etxString = "";
@@ -57,7 +58,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		levelMMIQueues = new HashMap<String,ArrayList<Integer>> (5);
 		temperatureSensors = new LinkedList<SensorFascade>();
 		labels = new LinkedList<Label>();
-		etxChars = new int[] {'.','$','%','#','!','\''};
+		etxChars = new int[] {'.','$','%','#','!','\'','~'};
 
 		etxString = new String(".$%#!\'");
 		this.setPadding(2);
@@ -299,8 +300,15 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 	public void doStartup() throws CommsFail {
+		tildeCount = 0;
 		super.doStartup();
 		if (applicationCodes.isEmpty()) applicationCodes.add("38");
+		CommsCommand cbusCommsCommand = new CommsCommand();
+		cbusCommsCommand.setCommand("~~~"+ETX);
+		comms.addCommandToQueue (cbusCommsCommand);
+	}
+
+	public void doRestOfStartup () throws CommsFail {
 
 		String pollTempStr = (String)this.getParameterValue("POLL_TEMP_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
 
@@ -336,7 +344,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			comms.addCommandToQueue (cbusCommsCommand);
 		}
 	}
-
+	
 	public void requestAllLevels () throws CommsFail{
 		this.clearAllLevelMMIQueues();
 		for (DeviceType eachDevice:configHelper.getAllControlledDeviceObjects()) {
@@ -356,9 +364,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public boolean enableMMI (boolean enable) throws CommsFail{
 		// Ensure MMI messages are switched on
 		try {
-			CommsCommand cbusCommsCommand = new CommsCommand();
-			cbusCommsCommand.setCommand("~~~"+ETX);
-			comms.addCommandToQueue (cbusCommsCommand);
 	
 			CommsCommand cbusCommsCommand1 = new CommsCommand();
 			String toSend = "A32100FF";
@@ -516,12 +521,17 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		User currentUser = command.getUser();
 
 			try {
-				if (cBUSString.indexOf("~~") > 0 ) {
-					this.cachedMMI.clear();
-					this.levelMMIQueues.clear();
-					this.sendingExtended.clear();
-					didCommand = true;
-					comms.sendNextCommand(); // I THINK!!!!
+				if (cBUSString.indexOf("~") >= 0 ) {
+					tildeCount ++;
+					if (tildeCount == 3) {
+						this.cachedMMI.clear();
+						this.levelMMIQueues.clear();
+						this.sendingExtended.clear();
+						this.clearAllLevelMMIQueues();
+						this.comms.clearCommandQueue();
+						didCommand = true;
+						doRestOfStartup();
+					}
 					// should be covered by next line     requestAllLevels();
 					return;
 				}
@@ -1240,20 +1250,22 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String returnString = "";
 		try {
 			String theLabel = labelMgr.getLabelText(catalogueStr);
-			Vector <Integer> retCodes = new Vector<Integer>();
-			retCodes.add( 5);
-			retCodes.add(Integer.parseInt(appCodeStr,16));
-			retCodes.add(0); // options
+			Vector <Byte> retCodes = new Vector<Byte>();
+			retCodes.add( (byte)5);
+			retCodes.add(Byte.parseByte(appCodeStr,16));
+			retCodes.add((byte)0); // options
 			
-			int theCommand = 160 + 3 + theLabel.length() ;
-			retCodes.add(theCommand);
-			retCodes.add(Integer.parseInt(key)); // group address
-			retCodes.add(0); 
-			retCodes.add(1); // language english
+			int  theCommand = 160 +3 + theLabel.length();
+			byte tCommand = (byte)theCommand;
+			retCodes.add((byte)theCommand);
+			int intGroup = Integer.parseInt(key);
+			retCodes.add((byte)intGroup); // group address
+			retCodes.add((byte)0); 
+			retCodes.add((byte)1); // language english
 
 			for (int i = 0; i < theLabel.length(); i ++){
 				char eachChar = theLabel.charAt(i);
-				retCodes.add((int)eachChar);
+				retCodes.add((byte)eachChar);
 			}
 			byte checkSum = calcChecksum(retCodes);
 			boolean firstChar = true; // first is different
@@ -1263,7 +1275,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					firstChar = false;
 				}
 				else
-					returnString += String.format("%02X", i);
+					returnString += String.format("%02X", i&0xff);
 			}
 			returnString += String.format("%02X",checkSum);
 			returnString += currentChar + ETX;
@@ -1271,7 +1283,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return returnString;
 
 		} catch (NumberFormatException er) {
-			logger.log (Level.INFO, "Application code is in error for level request : " + appCodeStr);
+			logger.log (Level.INFO, "Group address is in error for CBUS Label command : "+ er.getMessage());
 			return null;
 		}
 	}
@@ -1346,7 +1358,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 	
 	
-	public byte calcChecksum(Vector<Integer> vals) {
+	public byte calcChecksum(Vector<Byte> vals) {
 		int total = 0;
 
 		for (int i: vals){

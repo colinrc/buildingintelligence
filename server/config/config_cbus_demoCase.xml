@@ -7,10 +7,10 @@
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
                         <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
-                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.6" PORT="10001"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.6" PORT="10001"/>
                         <IP ACTIVE="N" IP_ADDRESS="172.16.3.204" PORT="10001"/>
                         <IP ACTIVE="N" IP_ADDRESS="172.16.3.215" PORT="4999"/>
-                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5004"/>
                 </CONNECTION>
                 
                 <PARAMETERS>
@@ -41,9 +41,9 @@
                         <LIGHT_CBUS ACTIVE="Y" KEY="21"   NAME="Dimmer 7" DISPLAY_NAME="DIMMER7" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="24"   NAME="Dimmer 8" DISPLAY_NAME="DIMMER8" POWER_RATING="100"/>
                         
-                        <LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT = "FRONT_LIGHT" />
-                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT2" DEFAULT="SPRINKLERS"  />
-                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3" DEFAULT="VOLUME" />
+                        <LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT = "SPRINKLERS" />
+                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT2" DEFAULT="VOLUME"  />
+                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3" DEFAULT="FRONT_LIGHT" />
                         <LABEL ACTIVE="Y" KEY="3"   NAME="DLT 4"  DISPLAY_NAME="DLT4"  />
                         <LABEL ACTIVE="Y" KEY="200"   NAME="DLT 5" DISPLAY_NAME="DLT5"  />
                         <LABEL ACTIVE="Y" KEY="201"   NAME="DLT 6" DISPLAY_NAME="DLT6" />

@@ -33,11 +33,11 @@ public class Security {
 
     logger = Logger.getLogger(this.getClass().getPackage().getName());
 
-    //*
+    /*
     
 	connected = true;
 	return ;
-    /*
+    */
       
      
 	InputStreamReader reader = new InputStreamReader(System.in);
@@ -82,7 +82,7 @@ public class Security {
 			fsize,
 			allowNumbers);
        }
-*/
+
     }
     
     public final boolean allowClient(int clientCount)  throws TooManyClientsException {

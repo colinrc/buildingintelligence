@@ -40,7 +40,15 @@ public class ClientCommandFactory {
 		name = rootElement.getName();
 		logger.log(Level.FINER, "ELEMENT " + name);
 
-		if (name.equals("CONTROL")) {
+		if (name.equals("clientName")) {
+			String extra = rootElement.getAttributeValue("EXTRA");
+				synchronized (addressBook) {
+					addressBook.setName(extra, ID,originating_location);
+				}
+				commandBuilt = true;
+				clientCommand = reportAllClients();
+		}
+		if (name.equals("CONTROL") && !commandBuilt) {
 			key = rootElement.getAttributeValue("KEY");
 			if (key != null) {
 
@@ -60,14 +68,18 @@ public class ClientCommandFactory {
 						synchronized (addressBook) {
 							addressBook.setName(extra, ID,originating_location);
 						}
+						commandBuilt = true;
+						clientCommand = reportAllClients();
 					}
 					if (command.equals("user")) {
 						synchronized (addressBook) {
 							addressBook.setUser(extra, ID,originating_location);
 						}
+						commandBuilt = true;
+						clientCommand = reportAllClients();
 					}
 					commandBuilt = true;
-					reportAllClients (clientCommand);
+					clientCommand = reportAllClients ();
 				}
 				if (!commandBuilt && clientCommand == null) {
 					clientCommand = buildCommand(key, rootElement);
@@ -104,11 +116,16 @@ public class ClientCommandFactory {
 		return clientCommand;
 	}
 
-	public void reportAllClients (ClientCommand clientCommand){
-			 for (String name:addressBook.getAllNames()) {
-				 //clientCommand.
-			 }
-			
+	public ClientCommand reportAllClients ( ){
+		ClientCommand clientCommand = new ClientCommand();
+		clientCommand.setKey("NAMES");
+		clientCommand.setCommand("getList");
+		clientCommand.setBroadcast(true);
+		 for (String name:addressBook.getAllNames()) {
+			 String userName = addressBook.getUserAtClientName(name);
+			 clientCommand.addNameIdentifier(name,userName);
+		}
+		 return clientCommand;
 	}
 	
 	public ClientCommand buildKeyPress(String key, Element rootElement) {
