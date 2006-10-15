@@ -327,40 +327,44 @@ public class Model
                         //continue
                 }
 				//get the script files and prepare for parsing
-                scriptFileHandler.loadScripts(this, "./script/",this.scriptRunBlockList);
-
-                //loadScripts();
-                files = getScriptFiles();
-                Set sFiles = files.keySet();
-                Iterator iteratorHash = sFiles.iterator();
-
-                setNumberOfScripts(files.size());
-                scriptHandler = new ScriptHandler(getNumberOfScripts(), this, scriptRunBlockList,statusFileName); //,this.commandQueue);
-                scriptHandler.setCache (cache);
-
-				scriptHandler.loadScriptFile();
-
-                scriptHandler.initTimerLists();
-                while (iteratorHash.hasNext()) {
-                        hashKey = iteratorHash.next();
-                        linesOfFile = (ArrayList) files.get(hashKey);
-                        scripts.add(new Script());
-                        currentScript = (Script) scripts.get(j);
-                        currentScript.setNameOfScript( (String) hashKey);
-
-                        int i = 0;
-                        lsLine = "";
-
-                        // Now collect the lines looking for items to remove.
-                        while (i < linesOfFile.size()) {
-                                lsLine = lsLine + linesOfFile.get(i);
-                                i++;
-                        }
-                        parseScript(lsLine, currentScript);
-                        j++;
+                try {
+	                scriptFileHandler.loadScripts(this, "./script/",this.scriptRunBlockList);
+	
+	                //loadScripts();
+	                files = getScriptFiles();
+	                Set sFiles = files.keySet();
+	                Iterator iteratorHash = sFiles.iterator();
+	
+	                setNumberOfScripts(files.size());
+	                scriptHandler = new ScriptHandler(getNumberOfScripts(), this, scriptRunBlockList,statusFileName); //,this.commandQueue);
+	                scriptHandler.setCache (cache);
+	
+					scriptHandler.loadScriptFile();
+	
+	                scriptHandler.initTimerLists();
+	                while (iteratorHash.hasNext()) {
+	                        hashKey = iteratorHash.next();
+	                        linesOfFile = (ArrayList) files.get(hashKey);
+	                        scripts.add(new Script());
+	                        currentScript = (Script) scripts.get(j);
+	                        currentScript.setNameOfScript( (String) hashKey);
+	
+	                        int i = 0;
+	                        lsLine = "";
+	
+	                        // Now collect the lines looking for items to remove.
+	                        while (i < linesOfFile.size()) {
+	                                lsLine = lsLine + linesOfFile.get(i);
+	                                i++;
+	                        }
+	                        parseScript(lsLine, currentScript);
+	                        j++;
+	                }
+	                scriptHandler.addTimerControls();
+	                logger.log(Level.INFO,"Scripts loaded");
+                } catch (ConfigError ex){
+                	logger.log(Level.WARNING,"Scripts system could not be set up " + ex.getMessage());
                 }
-                scriptHandler.addTimerControls();
-                logger.log(Level.INFO,"Scripts loaded");
         }
 
         public void parseScript(String myScript, Script currentScript) {

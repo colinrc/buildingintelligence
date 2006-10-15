@@ -47,6 +47,7 @@ public class ClientCommandFactory {
 				}
 				commandBuilt = true;
 				clientCommand = reportAllClients();
+				// @TODO Change this to generate a get list message to be handled by the messaging model.
 		}
 		if (name.equals("CONTROL") && !commandBuilt) {
 			key = rootElement.getAttributeValue("KEY");

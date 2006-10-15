@@ -359,7 +359,7 @@ public class ClientCommand extends Command implements CommandInterface {
 		this.alarm = alarm;
 	}
 	
-	
+	 
 	public void addNameIdentifier(String clientName, String userName) {
 		names.add(new NameIdentifier(clientName, userName));
 	}

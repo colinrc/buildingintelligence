@@ -85,7 +85,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             // Start the http server
             client_server.start ();
         } catch (Exception ex){
-            logger.log (Level.WARNING,"Problems starting web server");
+            logger.log (Level.WARNING,"Problems starting web server " + ex.getMessage());
             throw ex;
         }
         
@@ -185,7 +185,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             // Start the http server
             server.start ();
         } catch (Exception ex){
-            logger.log (Level.WARNING,"Problems starting web server");
+            logger.log (Level.WARNING,"Problems starting web server " + ex.getMessage());
             throw ex;
         }
     }

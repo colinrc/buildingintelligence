@@ -19,8 +19,13 @@ import org.jdom.input.SAXBuilder;
 import au.com.BI.Config.ConfigError;
 
 /**
- * @author colin
- *
+ * @author Colin Canfield
+ * The Label Manager provides a common interface for all models, scripts, triggers etc. to set and query the current label on devices capable of displaying vairable text or images.
+ * For example. CBUS DLT switches, or Dynalite switches.
+ * 
+ * Currently this manager only supports text labels, in the future images will also be supported.
+ * 
+ * The label file will expect a file called labels.xml in the datafiles directory containing the actual text to be displayed.
  */
 public class LabelMgr {
     Logger logger;

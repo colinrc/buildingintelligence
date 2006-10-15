@@ -12,8 +12,11 @@ import au.com.BI.Device.DeviceType;
 
 /**
  * @author Colin Canfield
- *
+ * Labels are used to represent devices that can dynamically change their displayed text or image.
+ * For example CBUS DLT switches.
+ * 
  **/
+
 public class Label extends BaseDevice implements DeviceType, CBUSDevice
 {
 	protected String name="";

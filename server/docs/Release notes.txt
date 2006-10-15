@@ -1,3 +1,17 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a18.zip V1.6a18] 
+
+''' Jetty '''
+
+Feed jetty startup errors to the logging system to assist debugging startup problems
+
+''' Script '''
+
+Ensure missing script directory will not kill the system on startup
+
+''' Templates '''
+
+Added Jetty user / password template   realm.properties   to the templates captured in the release file
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a17.zip V1.6a17] 
 
 ''' Bootstrap '''

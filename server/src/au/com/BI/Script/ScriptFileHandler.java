@@ -8,10 +8,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import au.com.BI.Config.ConfigError;
 
 /**
  * @author colinc
@@ -24,7 +25,7 @@ public class ScriptFileHandler {
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
         }
 
-        public void loadScripts(au.com.BI.Script.Model myScriptModel, String dir, Map <String,ScriptRunBlock>scriptRunBlockList) {
+        public void loadScripts(au.com.BI.Script.Model myScriptModel, String dir, Map <String,ScriptRunBlock>scriptRunBlockList) throws ConfigError {
 
                 Integer fileNum;
                 fileNum = new Integer(0);
@@ -91,40 +92,47 @@ public class ScriptFileHandler {
                 return false;
         }
 
-        public Map <String,ArrayList> loadScriptList(String directoryName, Map <String,ScriptRunBlock>scriptRunBlockList) { //throws ConfigError {
-                //try {
+        public Map <String,ArrayList> loadScriptList(String directoryName, Map <String,ScriptRunBlock>scriptRunBlockList)  throws ConfigError {
+                try {
 
-                ArrayList linesOfFile;
-                HashMap <String,ArrayList> files;
-                files = new HashMap<String,ArrayList>();
-                FilenameFilter filter = new FilenameFilter() {
-                        public boolean accept(File dir, String name) {
-                                return name.endsWith(".py");
-                        };
-                };
+		                ArrayList linesOfFile;
+		                HashMap <String,ArrayList> files;
+		                files = new HashMap<String,ArrayList>();
+		                FilenameFilter filter = new FilenameFilter() {
+		                        public boolean accept(File dir, String name) {
+		                                return name.endsWith(".py");
+		                        };
+		                };
+		
+		                File dir = new File(directoryName);
+		                /*
+		                String[] stFiles;
+		                stFiles = new String[dir.list(filter).length];
+		                stFiles = dir.list(filter);
+					*/
+		                 String[] stFiles = dir.list(filter);
+		                
+		                if (stFiles == null) throw new ConfigError("Could not read the script directory " + directoryName);
+		
+		                for (int i = 0; i < stFiles.length; i += 1) {
+							String name = stFiles[i].substring(0, stFiles[i].length() - 3);
+							synchronized (scriptRunBlockList) {
+								ScriptRunBlock scriptRunBlock = null;
+								if (!scriptRunBlockList.containsKey(name)){
+									scriptRunBlock = new ScriptRunBlock();
+									scriptRunBlock.setName(name);
+									scriptRunBlockList.put(name,scriptRunBlock);
+								}
+							}
+		                     linesOfFile = fileRead(directoryName + stFiles[i].toString());
+		                     files.put(name, linesOfFile);
+		
+		                }
+		                return files;
+		        } catch (SecurityException e){
 
-                File dir = new File(directoryName);
-                String[] stFiles;
-                stFiles = new String[dir.list(filter).length];
-                stFiles = dir.list(filter);
-
-                for (int i = 0; i < stFiles.length; i += 1) {
-					String name = stFiles[i].substring(0, stFiles[i].length() - 3);
-					synchronized (scriptRunBlockList) {
-						ScriptRunBlock scriptRunBlock = null;
-						if (!scriptRunBlockList.containsKey(name)){
-							scriptRunBlock = new ScriptRunBlock();
-							scriptRunBlock.setName(name);
-							scriptRunBlockList.put(name,scriptRunBlock);
-						}
-					}
-                     linesOfFile = fileRead(directoryName + stFiles[i].toString());
-                     files.put(name, linesOfFile);
-
-                }
-                //catch (IOException e)
-                return files;
-                // throw new ConfigError(e);
+		        	throw new ConfigError(e);
+		        }
 
         }
 }

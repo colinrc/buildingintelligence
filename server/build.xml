@@ -38,6 +38,7 @@
 		    <fileset dir="./" includes="**/*.dtd"  excludes="**/templates/**" />
 		    <fileset dir="./" includes="**/config_*.xml" excludes="**/templates/**" />
 		    <fileset dir="./" includes="**/datafiles/*.xml" excludes="**/templates/**" />
+		    <fileset dir="./" includes="**/datafiles/*.properties" excludes="**/templates/**" />
 			<fileset dir="./" includes="**/datafiles/keystore" excludes="**/templates/**" />
 		</copy>
     </target>
@@ -108,6 +109,11 @@
 			includes = "templates/**/*.xml" 	
 	    	excludes = ".." />
 		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "templates/**/*.properties" 	
+	    	excludes = ".." />
+    	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
 			update="true"
 			basedir="."
 			includes = "templates/**/keystore" 	

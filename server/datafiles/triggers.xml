@@ -7,7 +7,7 @@
 	                		<TEST >
 	                			 <LABEL VALUE="FRONT_GATE" />
 	                			<EQ COMPARE="COMMAND" VALUE="on" />
-	                			<GL_OTHER KEY="LIGHT_LEVEL"  COMPARE="EXTRA" VALUE="50" />
+	                			<LE_OTHER KEY="LIGHT_LEVEL"  COMPARE="EXTRA" VALUE="50" />
 	                			<TIME_TRUE="60" />  must be true for a minute to trigger the event    			
 	                		</TEST>
 	                		<STATUS HIDDEN="N" ADMINISTRATOR="N" /> 
@@ -16,7 +16,7 @@
 	                			<CONTROL COMMAND="on" EXTRA="100" KEY="FRONT_LIGHT" />
 	                			<PAUSE EXTRA"600" />  
 	                			<CONTROL COMMAND="off" EXTRA="0" KEY="GATE_CONTROL" />
-	                			<CONTROL COMMAND="off" EXTRA="0" KEY="FRONT_LIGHT" />	                			
+	                			<CONTROL COMMAND="off" EXTRA="0" KEY="FRONT_LIGHT" />	
 	                		</ ACTION_SEQ>
 	                	</EVENT>
 	                	
