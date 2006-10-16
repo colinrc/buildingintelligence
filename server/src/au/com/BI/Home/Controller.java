@@ -435,6 +435,9 @@ public class Controller {
                 }
 
               }
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException ex){};
 
 			Thread.yield();
          }
