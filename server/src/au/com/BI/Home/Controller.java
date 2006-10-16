@@ -315,6 +315,8 @@ public class Controller {
 			if (item != null ) {
 
 				String itemKey = item.getKey();
+
+				
 				controls.doCommand (item);
 				//if (!commandDone && item.getClass().getName().equals("au.com.BI.Flash.ClientCommand")) {
 				//	flashHandler.broadcastCommand(item);

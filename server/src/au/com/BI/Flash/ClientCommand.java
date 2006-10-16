@@ -10,7 +10,6 @@ import org.jdom.Element;
 
 import au.com.BI.Command.Command;
 import au.com.BI.Command.CommandInterface;
-import au.com.BI.Command.NameIdentifier;
 import au.com.BI.Messaging.*;
 import au.com.BI.User.*;
 
@@ -41,14 +40,12 @@ public class ClientCommand extends Command implements CommandInterface {
 	protected String targetUser = "";
 	protected String alarm = "";
 	protected boolean broadcast = true;
-	protected List <NameIdentifier>names;
 	
 	public ClientCommand ()
 	{
 	    super();
 		originatingID = 0 ;
 		messageFromFlash = null;
-		names = new LinkedList <NameIdentifier>();
 		
 	}
 
@@ -57,7 +54,6 @@ public class ClientCommand extends Command implements CommandInterface {
 		super (key,commandCode, user);
 		originatingID = 0 ;
 		messageFromFlash = null;
-		names = new LinkedList <NameIdentifier>();
 	}
 	
 
@@ -66,8 +62,8 @@ public class ClientCommand extends Command implements CommandInterface {
 		super (key, commandCode,user,extraInfo);
 		originatingID = 0 ;
 		messageFromFlash = null;
-		names = new LinkedList <NameIdentifier>();
 	}
+	
 	public ClientCommand (String key,String commandCode, User user,String extraInfo, String extra2, String extra3, String extra4, String extra5)
 	{
 		super (key, commandCode,user,extraInfo);
@@ -77,7 +73,6 @@ public class ClientCommand extends Command implements CommandInterface {
 		super.setExtra5Info(extra5);
 		originatingID = 0 ;
 		messageFromFlash = null;
-		names = new LinkedList <NameIdentifier>();
 	}
 	
 	public CommandInterface clone () throws CloneNotSupportedException
@@ -359,8 +354,4 @@ public class ClientCommand extends Command implements CommandInterface {
 		this.alarm = alarm;
 	}
 	
-	 
-	public void addNameIdentifier(String clientName, String userName) {
-		names.add(new NameIdentifier(clientName, userName));
-	}
 }

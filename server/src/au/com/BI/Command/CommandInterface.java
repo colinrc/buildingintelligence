@@ -20,6 +20,7 @@ public interface CommandInterface {
         public final int Message = 1;
         public final int Video = 2;
         public final int RawElement = 3;
+        public final int ID = 4;
 
         public void setJRobinData(au.com.BI.JRobin.JRobinData jRobinData);
 

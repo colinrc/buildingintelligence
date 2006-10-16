@@ -3,6 +3,9 @@
  *
  */
 package au.com.BI.Messaging;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.jdom.Element;
 
 import au.com.BI.Command.Command;
@@ -28,13 +31,15 @@ public class MessageCommand extends Command implements CommandInterface {
 	protected Element messageFromFlash;
 	protected String target = AddressBook.ALL;
 	protected String targetUser = "";
+	protected List <NameIdentifier>nameIdentifier = null;
 	
 	public MessageCommand ()
 	{
 	    super();
 		originatingID = 0 ;
 		messageFromFlash = null;
-	}
+		nameIdentifier = new LinkedList<NameIdentifier>();
+	} 
 
 
 	public boolean isUserControllerCommand() {
@@ -65,6 +70,12 @@ public class MessageCommand extends Command implements CommandInterface {
 		return false;
 	}
 	
+	public void addNameIdentifier(String user, String client){
+		NameIdentifier name = new NameIdentifier(user,client);
+		this.nameIdentifier.add(name);
+		
+	}
+	
 	/**
 	 * Used to populate a command from an XML element.
 	 * @param element
@@ -72,6 +83,19 @@ public class MessageCommand extends Command implements CommandInterface {
 	public void setFromElement (Element element){
 	    String messageType = element.getName();
 	    boolean found = false;
+
+	    if (messageType.equals ("MESSAGE")) {
+	        this.setTitle(element.getAttributeValue("TITLE"));
+	        this.setIcon(element.getAttributeValue("ICON"));
+	        this.setContent(element.getAttributeValue("CONTENT"));
+	        this.setAutoclose(element.getAttributeValue("AUTOCLOSE"));
+	        this.setHideclose(element.getAttributeValue("HIDECLOSE"));
+	        this.setTarget(element.getAttributeValue("TARGET"));
+	        this.setTargetUser(element.getAttributeValue("TARGET_USER"));
+	        this.setMessageType (CommandInterface.Message);
+		    found = true;
+	    }
+	    
 
 	    if (messageType.equals ("MESSAGE")) {
 	        this.setTitle(element.getAttributeValue("TITLE"));
@@ -165,6 +189,19 @@ public class MessageCommand extends Command implements CommandInterface {
 			element.setAttribute ("TARGET",target);
 			element.setAttribute ("TARGET_USER",targetUser);
 	    }
+	    
+	    if (this.messageType == CommandInterface.ID) {
+			element = new Element ("CLIENT_IDS");
+			for (NameIdentifier i: nameIdentifier){
+				Element elm = new Element ("CLIENT_ID");
+				elm.setAttribute("KEY", "ID");			
+				elm.setAttribute("NAME", i.getClientName());
+				elm.setAttribute("USER", i.getUserName());
+				element.addContent(elm);
+			}
+	
+	    }
+	    
 	    if (this.messageType == CommandInterface.RawElement) {
 	        element = this.element;
 	    }

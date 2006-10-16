@@ -1,7 +1,7 @@
 /**
  * 
  */
-package au.com.BI.Command;
+package au.com.BI.Messaging;
 
 /**
  * @author colin

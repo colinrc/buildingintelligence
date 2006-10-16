@@ -7,8 +7,6 @@ public class AddressBook {
 	public final static String ALL = "All";
 	public final static long  ALL_INT = -1;
 	
-	public final static String ALL_INC_SRC = "All_Inc_Src";
-	public final static long ALL_INC_SRC_INT = -2;
 
 	public final static long NOT_FOUND = -3;
 	protected ClientTypes clientType = ClientTypes.FLASH;
@@ -25,7 +23,6 @@ public class AddressBook {
 		userMap = new HashMap<String,Long>();
 		nameMapReverse = new HashMap<Long,String>();
 		userMapReverse = new HashMap<Long,String>();
-		nameMap.put(ALL_INC_SRC,new Long (ALL_INC_SRC_INT));
 		nameMap.put(ALL,new Long (ALL_INT));
 	}
 	

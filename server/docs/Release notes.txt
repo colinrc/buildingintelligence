@@ -1,3 +1,14 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a19.zip V1.6a19] 
+
+''' General '''
+
+Solved CPU high usage problem. Resolves ticket [ticket:541]
+
+''' Messaging '''
+
+Added listing of currently known clients to each client for use with named messages. [ticket:6]
+Details are at [ServerDocs/ClientCommunication]
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a18.zip V1.6a18] 
 
 ''' Jetty '''

@@ -40,15 +40,7 @@ public class ClientCommandFactory {
 		name = rootElement.getName();
 		logger.log(Level.FINER, "ELEMENT " + name);
 
-		if (name.equals("clientName")) {
-			String extra = rootElement.getAttributeValue("EXTRA");
-				synchronized (addressBook) {
-					addressBook.setName(extra, ID,originating_location);
-				}
-				commandBuilt = true;
-				clientCommand = reportAllClients();
-				// @TODO Change this to generate a get list message to be handled by the messaging model.
-		}
+
 		if (name.equals("CONTROL") && !commandBuilt) {
 			key = rootElement.getAttributeValue("KEY");
 			if (key != null) {
@@ -63,24 +55,23 @@ public class ClientCommandFactory {
 					if (extra.equals("Java_PDA")){
 						synchronized (addressBook) {
 							addressBook.setClientType(ClientTypes.JAVA_PDA);
-						}					
+						}
+						commandBuilt = true;
 					}
 					if (command.equals("name")) {
 						synchronized (addressBook) {
 							addressBook.setName(extra, ID,originating_location);
 						}
 						commandBuilt = true;
-						clientCommand = reportAllClients();
+						clientCommand = buildListNamesCommand();
 					}
 					if (command.equals("user")) {
 						synchronized (addressBook) {
 							addressBook.setUser(extra, ID,originating_location);
 						}
+						clientCommand = buildListNamesCommand();
 						commandBuilt = true;
-						clientCommand = reportAllClients();
 					}
-					commandBuilt = true;
-					clientCommand = reportAllClients ();
 				}
 				if (!commandBuilt && clientCommand == null) {
 					clientCommand = buildCommand(key, rootElement);
@@ -117,16 +108,14 @@ public class ClientCommandFactory {
 		return clientCommand;
 	}
 
-	public ClientCommand reportAllClients ( ){
+	
+	public ClientCommand 	buildListNamesCommand() {
 		ClientCommand clientCommand = new ClientCommand();
-		clientCommand.setKey("NAMES");
+		clientCommand.setBroadcast(false);
+		clientCommand.setDisplayName("ID");
 		clientCommand.setCommand("getList");
-		clientCommand.setBroadcast(true);
-		 for (String name:addressBook.getAllNames()) {
-			 String userName = addressBook.getUserAtClientName(name);
-			 clientCommand.addNameIdentifier(name,userName);
-		}
-		 return clientCommand;
+		clientCommand.setKey("ID");
+		return clientCommand;
 	}
 	
 	public ClientCommand buildKeyPress(String key, Element rootElement) {
