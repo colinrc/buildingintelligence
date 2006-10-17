@@ -1,5 +1,6 @@
 package au.com.BI.Messaging;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 public class AddressBook {
 	public static enum Locations { NOT_CONNECTED,DIRECT,HTTP,JABBER};
 	public static enum ClientTypes { FLASH, JAVA_PDA };
@@ -11,18 +12,18 @@ public class AddressBook {
 	public final static long NOT_FOUND = -3;
 	protected ClientTypes clientType = ClientTypes.FLASH;
 
-	public HashMap <String,Long>nameMap;
-	public HashMap <String,Long>userMap;
-	public HashMap <Long,String>nameMapReverse;
-	public HashMap <Long,String>userMapReverse;
+	public ConcurrentHashMap <String,Long>nameMap;
+	public ConcurrentHashMap <String,Long>userMap;
+	public ConcurrentHashMap <Long,String>nameMapReverse;
+	public ConcurrentHashMap <Long,String>userMapReverse;
 
 
 	
 	public AddressBook () {
-		nameMap = new HashMap<String,Long>();
-		userMap = new HashMap<String,Long>();
-		nameMapReverse = new HashMap<Long,String>();
-		userMapReverse = new HashMap<Long,String>();
+		nameMap = new ConcurrentHashMap<String,Long>();
+		userMap = new ConcurrentHashMap<String,Long>();
+		nameMapReverse = new ConcurrentHashMap<Long,String>();
+		userMapReverse = new ConcurrentHashMap<Long,String>();
 		nameMap.put(ALL,new Long (ALL_INT));
 	}
 	
@@ -61,6 +62,22 @@ public class AddressBook {
 	
 	public Set <String>getAllNames () {
 		return this.nameMap.keySet();
+	}
+	
+	public void removeByID (long ID){
+			String name = nameMapReverse.get(ID);
+			if (name != null){
+				if (nameMap.containsKey(name)) {
+					nameMap.remove(name);
+				}
+				nameMapReverse.remove(ID);
+			}
+			
+			String user = userMapReverse.get(ID);
+			if (user != null){
+				if (userMap.containsKey(user)) userMap.remove(user);
+				userMapReverse.remove(ID);
+			}
 	}
 	
 	public String getUserAtClientName(String clientName){

@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
+import au.com.BI.Camera.CameraFactory;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Messaging.AddressBook;
 import au.com.BI.Messaging.MessageCommand;
@@ -22,6 +23,10 @@ public class ClientCommandFactory {
     
 	public ClientCommandFactory() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
+	}
+	
+	public static ClientCommandFactory getInstance () {
+		return new ClientCommandFactory();
 	}
 	
 	/**

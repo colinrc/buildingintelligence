@@ -8,8 +8,20 @@
  */
 
 package au.com.BI.Servlets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import org.jdom.output.XMLOutputter;
+
+import au.com.BI.Command.ClientCommandFactory;
+import au.com.BI.Command.CommandQueue;
+import au.com.BI.Flash.ClientCommand;
+import au.com.BI.Home.VersionManager;
+import au.com.BI.Jetty.CacheBridgeFactory;
+import au.com.BI.Messaging.AddressBook;
 
 
 /**
@@ -17,7 +29,11 @@ import javax.servlet.http.*;
  * @author colinc
  */
 public class Logout extends HttpServlet {
-    
+    CacheBridgeFactory cacheBridgeFactory = null;
+    AddressBook  addressBook = null;
+
+	CommandQueue commandQueue = null;
+	
     /** Creates a new instance of UpdateServlet */
     public Logout() {
     }
@@ -28,6 +44,21 @@ public class Logout extends HttpServlet {
         HttpSession session = req.getSession(false);  	
         
         if (session != null){
+        	Long ID = (Long)session.getAttribute("ID");
+        	ClientCommandFactory clientCommandFactory = (ClientCommandFactory)session.getAttribute("ClientCommandFactory");
+        	clientCommandFactory.setID(ID);
+        	if (clientCommandFactory != null && ID != null && commandQueue  != null && addressBook != null){
+
+			    	addressBook.removeByID(ID);
+					ClientCommand clientCommand = clientCommandFactory.buildListNamesCommand();
+					if (clientCommand != null) {
+						synchronized (commandQueue) {
+							commandQueue.add(clientCommand);
+							commandQueue.notifyAll();
+						}
+					}
+			    	
+        	}
         	session.invalidate();
         }
         
@@ -46,6 +77,10 @@ public class Logout extends HttpServlet {
         
     
     public void init (ServletConfig cfg) throws ServletException {
+        ServletContext context = cfg.getServletContext();
+        cacheBridgeFactory = (CacheBridgeFactory)context.getAttribute("CacheBridgeFactory");
+        commandQueue = (CommandQueue)context.getAttribute("CommandQueue");
+         addressBook = (AddressBook)context.getAttribute("AddressBook");
         super.init();
     }
     

@@ -45,12 +45,12 @@ public class FlashClientHandler extends Thread {
 	private TEA decrypter = null;
 
 	public FlashClientHandler(Socket connection, CommandQueue commandList,
-			List clientList,ClientCommandFactory clientCommandFactory) throws ConnectionFail {
+			List clientList, ClientCommandFactory clientCommandFactory ) throws ConnectionFail {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		clientConnection = connection;
 		this.commandList = commandList;
-		this.ID = clientCommandFactory.getID();
 		this.clientCommandFactory = clientCommandFactory;
+		this.ID = clientCommandFactory.getID();
 		this.setName("Flash Client Handler");
 
 		byte[] key = new byte[] { 1, 2, 3, 4 };
@@ -223,6 +223,14 @@ public class FlashClientHandler extends Thread {
 		} 
 	}
 
+	public void close() {
+		thisThreadRunning = false;
+		try {
+			rd.close();
+			i.close();
+		} catch (IOException ex){};
+	}
+	
 	/**
 	 * @TODO properly return a message block
 	 * @deprecated

@@ -51,6 +51,7 @@ public class FlashControlListener extends Thread {
     private Date timeOfLastLicenseMessage  = null;
     protected long serverID = 0;
     protected XMLOutputter xmlOut = null;
+	protected ClientCommandFactory clientCommandFactory;
     
     public FlashControlListener(LinkedList <FlashClientHandler>flashControllers, int portNumber, String Address,CommandQueue commandList,
 	    VersionManager versionManager,Security security,AddressBook addressBook)
@@ -61,7 +62,7 @@ public class FlashControlListener extends Thread {
 
 	this.setName("Flash Control Listener");
 	timeOfLastLicenseMessage = new Date();
-	
+	clientCommandFactory = ClientCommandFactory.getInstance();
 	
 	this.versionManager = versionManager;
 	this.addressBook = addressBook;
@@ -126,13 +127,23 @@ public class FlashControlListener extends Thread {
 			while (keepGoing && allControllers.hasNext() ){
 			    FlashClientHandler flashClientHandler = (FlashClientHandler)allControllers.next();
 			    if (!sendXML(flashClientHandler,heartbeatDoc)) {
-				allControllers.remove();
-				logger.log(Level.INFO,"Client went away, removing the handler");
+			    	flashClientHandler.close();
+			    	addressBook.removeByID(flashClientHandler.getID());
+			    	allControllers.remove();
+					ClientCommand clientCommand = clientCommandFactory.buildListNamesCommand();
+					if (clientCommand != null) {
+						synchronized (commandList) {
+							commandList.add(clientCommand);
+							commandList.notifyAll();
+						}
+					}
+			    	
+			    	logger.log(Level.INFO,"Client went away, removing the handler");
 			    } else {
-				if (System.currentTimeMillis() - flashClientHandler.getConnectionTime()  < 60*1000*3) {
-				    recentConnection = true;
-				}
-				numberFlashClients ++;
+			    	if (System.currentTimeMillis() - flashClientHandler.getConnectionTime()  < 60*1000*3) {
+			    		recentConnection = true;
+					}
+					numberFlashClients ++;
 			    }
 			}
 			
@@ -180,11 +191,11 @@ public class FlashControlListener extends Thread {
 	}
 	flashConnection.setKeepAlive(true);
 	logger.info("Client connection received");
-	ClientCommandFactory clientCommandFactory = new ClientCommandFactory();
+	ClientCommandFactory clientCommandFactory =   ClientCommandFactory.getInstance();
 	clientCommandFactory.setOriginating_location(Locations.DIRECT);
 	clientCommandFactory.setID(System.currentTimeMillis());
 	clientCommandFactory.setAddressBook(addressBook);
-	FlashClientHandler flashClientHandler = new FlashClientHandler(flashConnection,commandList,flashControllers,clientCommandFactory);
+	FlashClientHandler flashClientHandler = new FlashClientHandler(flashConnection,commandList,flashControllers, clientCommandFactory);
 	flashClientHandler.setConnectionTime(System.currentTimeMillis());
 	flashClientHandler.setServerID(this.getServerID());
 	flashClientHandler.setMacroHandler(macroHandler);

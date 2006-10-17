@@ -1,3 +1,16 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b1.zip V1.6b1]  [attachment:wiki:SoftwareReleases:eLife-1.6b1-libs.zip Libs-V1.6b1] ==
+
+''' General '''
+
+Released beta 1
+
+''' Messaging '''
+
+When a tcp client connection is dropped the list of current names will be updated and sent to all clients.
+When a HTTP client calls /webclient/logout the list will also be updated and sent.
+
+Resolves [ticket:6]
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6a19.zip V1.6a19] 
 
 ''' General '''

@@ -283,7 +283,8 @@ public class UpdateServlet extends HttpServlet {
     	}
         AddressBook addressBook = (AddressBook)context.getAttribute("AddressBook");
         
-    	ClientCommandFactory clientCommandFactory = new ClientCommandFactory();
+    	ClientCommandFactory clientCommandFactory =  ClientCommandFactory.getInstance();
+    	clientCommandFactory.setID(ID);
     	clientCommandFactory.setOriginating_location(Locations.HTTP);
     	clientCommandFactory.setAddressBook(addressBook);
     	CacheBridge cacheBridge = cacheBridgeFactory.createCacheBridge(ID);
