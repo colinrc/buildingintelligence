@@ -14,8 +14,20 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_0914E2E0C3BC43BC8526909F3D7AC558"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_206FB5AC5F8B773ADFBE0A252F49A9FE"
         "OwnerKey" = "8:_FC91574478BD71CD1842FEDB98171D3B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_206FB5AC5F8B773ADFBE0A252F49A9FE"
+        "OwnerKey" = "8:_EAC129745F16487D8797182596BB0832"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -28,6 +40,12 @@
         {
         "MsmKey" = "8:_25BB0D64C27CB4809DEA4F644744D73B"
         "OwnerKey" = "8:_FC91574478BD71CD1842FEDB98171D3B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_25BB0D64C27CB4809DEA4F644744D73B"
+        "OwnerKey" = "8:_EAC129745F16487D8797182596BB0832"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -46,6 +64,12 @@
         {
         "MsmKey" = "8:_74D76231B15C58D9F068CB2D908D389E"
         "OwnerKey" = "8:_FC91574478BD71CD1842FEDB98171D3B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_74D76231B15C58D9F068CB2D908D389E"
+        "OwnerKey" = "8:_EAC129745F16487D8797182596BB0832"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -74,8 +98,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_75BCC707688D4A65824F886A1A718C68"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C9320015DF8ECAFD314E33ECF6F9841D"
         "OwnerKey" = "8:_DA63093997474371BC2E24F36CC7A8CE"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C9320015DF8ECAFD314E33ECF6F9841D"
+        "OwnerKey" = "8:_EAC129745F16487D8797182596BB0832"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -88,6 +124,12 @@
         {
         "MsmKey" = "8:_DA6D6CA148FC47E7B4DECF6CABDF4138"
         "OwnerKey" = "8:_FC91574478BD71CD1842FEDB98171D3B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DA6D6CA148FC47E7B4DECF6CABDF4138"
+        "OwnerKey" = "8:_EAC129745F16487D8797182596BB0832"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -128,8 +170,20 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_EAC129745F16487D8797182596BB0832"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_EFE54579DD1D96C2CE5ECC269D294DA1"
         "OwnerKey" = "8:_C9320015DF8ECAFD314E33ECF6F9841D"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_EFE54579DD1D96C2CE5ECC269D294DA1"
+        "OwnerKey" = "8:_EAC129745F16487D8797182596BB0832"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -142,6 +196,12 @@
         {
         "MsmKey" = "8:_FC91574478BD71CD1842FEDB98171D3B"
         "OwnerKey" = "8:_DA63093997474371BC2E24F36CC7A8CE"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FC91574478BD71CD1842FEDB98171D3B"
+        "OwnerKey" = "8:_EAC129745F16487D8797182596BB0832"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -176,6 +236,24 @@
     {
         "File"
         {
+            "{BA458234-9B71-4F46-8107-E91156377184}:_0914E2E0C3BC43BC8526909F3D7AC558"
+            {
+            "SourcePath" = "8:..\\Switcher\\Resources\\j9-ppro10-wm2003-arm_22.CAB"
+            "TargetName" = "8:j9-ppro10-wm2003-arm_22.CAB"
+            "Tag" = "8:"
+            "Folder" = "8:_9B582E9B41454D1BAC00F20487500265"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_206FB5AC5F8B773ADFBE0A252F49A9FE"
             {
             "AssemblyIsInGAC" = "11:FALSE"
@@ -258,6 +336,24 @@
             "Register" = "3:0"
             "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{BA458234-9B71-4F46-8107-E91156377184}:_75BCC707688D4A65824F886A1A718C68"
+            {
+            "SourcePath" = "8:..\\..\\java_pda\\dist\\eLife_PDA.jar"
+            "TargetName" = "8:eLife_PDA.jar"
+            "Tag" = "8:"
+            "Folder" = "8:_0208985A9D0D438E923611A62F02B22D"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{E4F2F62A-3940-4BF5-A031-F7FA98CAAFFA}:_C9320015DF8ECAFD314E33ECF6F9841D"
@@ -391,11 +487,38 @@
             "Property" = "8:%CE1%"
                 "Folders"
                 {
+                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_0208985A9D0D438E923611A62F02B22D"
+                    {
+                    "Name" = "8:eLifejava"
+                    "Condition" = "8:"
+                    "Property" = "8:_F546884C26F8455D9D19BC68BA435BDA"
+                        "Folders"
+                        {
+                        }
+                    }
+                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_1877F93BEB8F41E2914A79FA527A0588"
+                    {
+                    "Name" = "8:eLifeTerminate"
+                    "Condition" = "8:"
+                    "Property" = "8:_D2E17FED25A946359B922DEECAEA1119"
+                        "Folders"
+                        {
+                        }
+                    }
                     "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_50A2CE487D824A3997D5656FB6E093A3"
                     {
                     "Name" = "8:Switcher"
                     "Condition" = "8:"
                     "Property" = "8:_954C1399D2214758A2E1A40FB581C29D"
+                        "Folders"
+                        {
+                        }
+                    }
+                    "{5943FCFD-5B64-4EE4-96C9-4618EC95352A}:_9B582E9B41454D1BAC00F20487500265"
+                    {
+                    "Name" = "8:J9"
+                    "Condition" = "8:"
+                    "Property" = "8:_81B80C3A82414449B962B6CBB37774FA"
                         "Folders"
                         {
                         }
@@ -452,6 +575,32 @@
                 {
                 }
             }
+            "{605BE39E-5046-48BD-AEC0-63C3A46626D5}:_EAC129745F16487D8797182596BB0832"
+            {
+            "SourcePath" = "8:..\\..\\eLifeTerminate\\eLifeTerminate\\obj\\Release\\eLifeTerminate.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_1877F93BEB8F41E2914A79FA527A0588"
+            "Condition" = "8:"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "Register" = "3:0"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:0"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{DAFE1AFF-532B-4F75-AC70-C307BA971EB9}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
         }
         "Registry"
         {
@@ -497,6 +646,16 @@
             "Target" = "8:_DA63093997474371BC2E24F36CC7A8CE"
             "Folder" = "8:_2E2B5F805B9D4468ADCD8B8DD3D90227"
             "WorkingFolder" = "8:_50A2CE487D824A3997D5656FB6E093A3"
+            }
+            "{971D45E9-E38C-49AC-B36E-4C5BEA533350}:_5C9F8ED1A31E4715A65E34CDCDC8CCE1"
+            {
+            "Name" = "8:eLifeTerminate"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "Target" = "8:_EAC129745F16487D8797182596BB0832"
+            "Folder" = "8:_2E2B5F805B9D4468ADCD8B8DD3D90227"
+            "WorkingFolder" = "8:_1877F93BEB8F41E2914A79FA527A0588"
             }
         }
     }
