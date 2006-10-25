@@ -1,15 +1,6 @@
 <application lastUpdated="2005-10-31">
 	<settings>
 		<common>	
-			<setting name="screenLockDisplay" value="photo" />
-
-			<setting name="screenLockPhotoPath" value="\\172.16.3.201\data01_d\BI\eLife Client\Build\standalone\lib\icons\" />
-			<setting name="screenLockPhotoScale" value="noscale" />
-			<setting name="screenLockPhotoRotate" value="5" />
-
-			<setting name="screenLockLogoBg" value="bg-blue.jpg" />
-			<setting name="screenLockTimeout" value="5"/>
-
 			<setting name="showDropShadows" value="true" />
 			<setting name="modelBlur" value="true" />
 
@@ -91,7 +82,7 @@
 		<icon name="Web" icon="atom" func="openBrowser" canOpen="" />
 		<icon name="Logs" icon="notepad" func="openLogs" canOpen="" />
 		<icon name="Calendar" icon="calendar" func="openCalendar" canOpen="" />
-		<icon name="Control Panel" icon="gears" func="openControlPanel" canOpen="superuser" />
+		<icon name="Control Panel" icon="gears" func="openControlPanel" canOpen="" />
 		<icon name="Authenticate" icon="locked" func="openAuthentication" buttonBgColour="0xCC0000" buttonBorderColour="0xEE0000" />
 	</appsBar>
 	<calendar tabPosition="bottom">

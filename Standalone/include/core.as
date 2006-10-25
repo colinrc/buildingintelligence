@@ -1974,20 +1974,33 @@ createAppsPanel = function (content_mc) {
 }
 
 createScreenSaverPanel = function (content_mc) {
-	content_mc.attachMovie("bi.ui.Label", "timeout_lb", 10, {settings:{width:140, text:"Time out:"}});
-	content_mc.attachMovie("bi.ui.NumberPicker", "timeout_np", 15, {settings:{width:160, minValue:1, maxValue:180, step:1, _x:150}});
-	content_mc.timeout_np.selectedValue = _global.settings.screenLockTimeout / 60;
-	content_mc.timeout_np.change = function () {
+	content_mc.attachMovie("bi.ui.Label", "enabled_lb", 10, {settings:{width:140, text:"Enable:"}});
+	content_mc.attachMovie("bi.ui.CheckBox", "enabled_cb", 15, {settings:{_x:150, selected:_global.settings.screenLockEnabled}});
+	
+	content_mc.enabled_cb.change = function () {
+		this._parent.screensaver_mc._visible = this.selected;
+		_global.persistentData.data.settings.screenLockEnabled = _global.settings.screenLockEnabled = this.selected;
+		setupScreenSaver();
+	}
+	content_mc.enabled_cb.addEventListener("change", content_mc.enabled_cb);
+	
+	var screensaver_mc = content_mc.createEmptyMovieClip("screensaver_mc", 30);
+	screensaver_mc._y = 35;
+	
+	screensaver_mc.attachMovie("bi.ui.Label", "timeout_lb", 10, {settings:{width:140, text:"Time out:"}});
+	screensaver_mc.attachMovie("bi.ui.NumberPicker", "timeout_np", 15, {settings:{width:160, minValue:1, maxValue:180, step:1, _x:150}});
+	screensaver_mc.timeout_np.selectedValue = _global.settings.screenLockTimeout / 60;
+	screensaver_mc.timeout_np.change = function () {
 		_global.persistentData.data.settings.screenLockTimeout = _global.settings.screenLockTimeout = this.selectedItem.value * 60;
 	}
-	content_mc.timeout_np.addEventListener("change", content_mc.timeout_np);
-	content_mc.attachMovie("bi.ui.Label", "minutes_lb", 16, {settings:{width:60, text:"mins", _x:320}});
+	screensaver_mc.timeout_np.addEventListener("change", screensaver_mc.timeout_np);
+	screensaver_mc.attachMovie("bi.ui.Label", "minutes_lb", 16, {settings:{width:60, text:"mins", _x:320}});
 	
-	content_mc.attachMovie("bi.ui.Label", "screensaver_lb", 20, {settings:{width:140, text:"Screen saver:"}, _y:35});
-	content_mc.attachMovie("bi.ui.ItemPicker", "screensaver_ip", 25, {settings:{width:300, items:[{label:"Logo", value:"logo"}, {label:"Slideshow", value:"photo"}], _x:150}, _y:35});
-	content_mc.screensaver_ip.selectedValue = _global.settings.screenLockDisplay;
+	screensaver_mc.attachMovie("bi.ui.Label", "screensaver_lb", 20, {settings:{width:140, text:"Screen saver:"}, _y:35});
+	screensaver_mc.attachMovie("bi.ui.ItemPicker", "screensaver_ip", 25, {settings:{width:300, items:[{label:"Logo", value:"logo"}, {label:"Slideshow", value:"photo"}], _x:150}, _y:35});
+	screensaver_mc.screensaver_ip.selectedValue = _global.settings.screenLockDisplay;
 	
-	var logoSettings_mc = content_mc.createEmptyMovieClip("logoSettings_mc", 30);
+	var logoSettings_mc = screensaver_mc.createEmptyMovieClip("logoSettings_mc", 30);
 	logoSettings_mc._y = 70;
 	if (mdm.Application.path != undefined) {
 		var tmp = mdm.FileSystem.getFileList(mdm.Application.path + _global.settings.libLocation + "screensaver", "*.jpg");
@@ -2007,7 +2020,7 @@ createScreenSaverPanel = function (content_mc) {
 	}
 	logoSettings_mc.bg_ip.addEventListener("change", logoSettings_mc.bg_ip);
 	
-	var photoSettings_mc = content_mc.createEmptyMovieClip("photoSettings_mc", 40);
+	var photoSettings_mc = screensaver_mc.createEmptyMovieClip("photoSettings_mc", 40);
 	photoSettings_mc._y = 70;
 	photoSettings_mc.attachMovie("bi.ui.Label", "rotate_lb", 10, {settings:{width:140, text:"Time per photo:"}});
 	photoSettings_mc.attachMovie("bi.ui.NumberPicker", "rotate_np", 15, {settings:{width:160, minValue:5, maxValue:60, step:1, _x:150}});
@@ -2034,7 +2047,7 @@ createScreenSaverPanel = function (content_mc) {
 	}
 	photoSettings_mc.path_ti.addEventListener("change", photoSettings_mc.path_ti);
 	
-	content_mc.screensaver_ip.change = function () {
+	screensaver_mc.screensaver_ip.change = function () {
 		this._parent.logoSettings_mc._visible = false;
 		this._parent.photoSettings_mc._visible = false;
 		if (this.selectedItem.value == "logo") {
@@ -2045,9 +2058,10 @@ createScreenSaverPanel = function (content_mc) {
 		_global.persistentData.data.settings.screenLockDisplay = _global.settings.screenLockDisplay = this.selectedItem.value;
 		_global.persistentData.flush();
 	}
-	content_mc.screensaver_ip.addEventListener("change", content_mc.screensaver_ip);
+	screensaver_mc.screensaver_ip.addEventListener("change", screensaver_mc.screensaver_ip);
 	
-	content_mc.screensaver_ip.change();
+	content_mc.enabled_cb.change();
+	screensaver_mc.screensaver_ip.change();
 }
 
 createUsersPanel = function (content_mc) {
@@ -2125,11 +2139,21 @@ createMacroAdmin = function (content_mc) {
 		} else {
 			overlay_mc.status_txt.text = "";
 			overlay_mc.stopStatusBlink();
-			this.saveMacro = function (title, caller) {
-				if (!title.length) var title = "untitled";
-				createMacro(title, newMacroArray);
+			if (insertMacroObj != undefined) {
+				var insert = insertMacroObj.pos;
+				for (var i=0; i<newMacroArray.length; i++) {
+					insertMacroObj.contents.splice(insert++, 0, newMacroArray[i]);
+				}
+				createMacro(insertMacroObj.name, insertMacroObj.contents);
+				delete insertMacroObj;
+			} else {
+				this.saveMacro = function (title, caller) {
+					if (!title.length) var title = "untitled";
+					createMacro(title, newMacroArray);
+					delete newMacroArray
+				}
+				showKeyboard(20, this.saveMacro, this._parent)
 			}
-			showKeyboard(20, this.saveMacro, this._parent)
 		}
 	}
 	createMacroBtn_mc.addEventListener("press", createMacroBtn_mc);
@@ -2505,7 +2529,7 @@ createScriptsAdmin = function (content_mc) {
 openMacroEdit = function (macro) {
 	var macroObj = _global.macros[macro];
 
-	var window_mc = showWindow({id:"macroEdit", width:400, height:465, title:"Edit Macro: " + macroObj.name, iconName:"gears", hideClose:true});
+	var window_mc = showWindow({id:"macroEdit", width:500, height:470, title:"Edit Macro: " + macroObj.name, iconName:"gears", hideClose:true});
 	
 	window_mc.content_mc.macroName = macroObj.name;
 	window_mc.content_mc.startRow = 0;
@@ -2527,17 +2551,20 @@ openMacroEdit = function (macro) {
 			this.scrollBar_mc._visible = true;
 			this.scrollBar_mc.scrollUp_mc.enabled = this.startRow > 0;
 			this.scrollBar_mc.scrollDown_mc.enabled = this.startRow + this.itemsPerPage < this.maxItems;
-			var labelWidth = 340;
+			var labelWidth = this.width - this.scrollBar_mc._width - 5;
 		} else {
-			var labelWidth = 380;
+			var labelWidth = this.width;
 			this.scrollBar_mc._visible = false;
 		}
+		
+		if (this.insertMode) labelWidth -= 35;
 
 		var counter = 0;
 		while (counter < this.itemsPerPage && this.startRow + counter < this.maxItems) {
 			var control = this.startRow + counter;
 			var controlObj = macroControls[control];
-			var control_mc = content_mc.createEmptyMovieClip("control" + control + "_mc", control);
+			var control_mc = content_mc.createEmptyMovieClip("control" + control + "_mc", control * 10);
+			if (this.insertMode) control_mc._x = 35;
 			control_mc._y = counter * 40;
 			control_mc.controlObj = controlObj;
 			control_mc.control = control;
@@ -2553,7 +2580,7 @@ openMacroEdit = function (macro) {
 			label_txt.selectable = false;
 			label_txt.setNewTextFormat(label_tf);
 				
-			if (controlObj.key == "" && controlObj.command == "pause") {
+			if (controlObj.key == "" && controlObj.command == "pause") {			
 				controlObj.extra = Number(controlObj.extra);
 				
 				control_mc.updateLabel = function () {
@@ -2567,6 +2594,37 @@ openMacroEdit = function (macro) {
 				}
 				control_mc.updateLabel()
 				
+				control_mc.onPress = function () {
+					var window_mc = showWindow({id:"macroPause", width:173, height:165, title:"Pause:", iconName:"media-pause", hideClose:true});
+					window_mc.content_mc.parentObj = this;
+					var pause_np = window_mc.content_mc.attachMovie("bi.ui.NumberPicker", "pause_np", 10, {settings:{width:160, minValue:0, maxValue:100, step:1}});
+					var unit_ip = window_mc.content_mc.attachMovie("bi.ui.ItemPicker", "unit_ip", 20, {settings:{width:160, items:[{label:"secs", value:"secs"}, {label:"mins", value:"mins"}, {label:"hours", value:"hours"}], _y:35}});
+					if (this.controlObj.extra < 60) {
+						pause_np.selectedValue = this.controlObj.extra;
+						unit_ip.selectedValue = "secs";
+					} else if (this.controlObj.extra < 3600) {
+						pause_np.selectedValue = this.controlObj.extra / 60;
+						unit_ip.selectedValue = "mins";
+					} else {
+						pause_np.selectedValue = this.controlObj.extra / 3600;
+						unit_ip.selectedValue = "hours";
+					}
+					var set_btn = window_mc.content_mc.attachMovie("bi.ui.Button", "set_btn", 30, {settings:{width:160, label:"Set", _y:70}});
+					set_btn.addEventListener("press", set_btn);
+					set_btn.press = function () {
+						if (this._parent.unit_ip.selectedItem.value == "secs")  {
+							var pause = this._parent.pause_np.selectedItem.value;
+						} else if (this._parent.unit_ip.selectedItem.value == "mins") {
+							var pause = this._parent.pause_np.selectedItem.value * 60;							
+						} else {
+							var pause = this._parent.pause_np.selectedItem.value * 3600;
+						}
+						this._parent.parentObj.controlObj.extra = pause;
+						this._parent.parentObj.updateLabel();
+						_global.windowStack["macroPause"].close();
+					}
+				}
+				/*
 				var downArrow_mc = control_mc.attachMovie("bi.ui.Button", "downArrow_mc", 1, {settings:{width:50, height:28, iconName:"down-arrow"}});
 				downArrow_mc._x = 1;
 				downArrow_mc._y = 1;
@@ -2621,7 +2679,8 @@ openMacroEdit = function (macro) {
 						this._parent.controlObj.extra += 60;
 					}
 					this._parent.updateLabel();
-				}				
+				}			
+				*/
 			} else {				
 				label_txt.text = controlObj.key + " [" + controlObj.command;
 				if (controlObj.extra != "") label_txt.text += " : " + controlObj.extra;
@@ -2631,10 +2690,27 @@ openMacroEdit = function (macro) {
 				deleteBtn_mc._x = labelWidth - 51;
 				deleteBtn_mc._y = 1;
 				deleteBtn_mc.press = function () {
-					window_mc.content_mc.macroControls.splice(this._parent.control, 2);
+					if (this._parent.control) {
+						window_mc.content_mc.macroControls.splice(this._parent.control - 1, 2);
+					} else {
+						window_mc.content_mc.macroControls.splice(this._parent.control, 2);
+					}
 					window_mc.content_mc.update();
 				}
 				deleteBtn_mc.addEventListener("press", deleteBtn_mc);
+			}
+			if (this.insertMode && ((controlObj.command != "pause") || control == this.maxItems - 1)) {
+				var insert_btn = content_mc.attachMovie("bi.ui.Icon", "insert_" + control + "_mc", control * 10 + 5, {settings:{iconName:"right-arrow", size:35, _y:counter * 40 + 20}});
+				insert_btn.index = control;
+				insert_btn.onPress = function () {
+					recordingMacro = true;
+					newMacroArray = new Array();
+					insertMacroObj = {name:this._parent._parent.macroName, contents:_global.macroContents, pos:this.index + 1};
+					_global.windowStack["macroEdit"].close();
+					_global.windowStack["controlPanel"].close();
+					overlay_mc.status_txt.text = "** MACRO RECORDING **";
+					overlay_mc.startStatusBlink();
+				}
 			}
 			counter++;
 		}
@@ -2642,7 +2718,7 @@ openMacroEdit = function (macro) {
 	var scrollBar_mc = window_mc.content_mc.createEmptyMovieClip("scrollBar_mc", 20);
 	createScrollBar(scrollBar_mc, 350, "update");
 	scrollBar_mc._y = 0;
-	scrollBar_mc._x = 346;
+	scrollBar_mc._x = window_mc.content_mc.width - scrollBar_mc._width;
 
 	sendCmd("MACRO", "getContents", macroObj.name);
 	subscribe("MACRO_CONTENTS", window_mc.content_mc);
@@ -2658,14 +2734,19 @@ openMacroEdit = function (macro) {
 		_global.windowStack["macroEdit"].close();
 	}
 	save_mc.addEventListener("press", save_mc);
-	var cancel_mc = buttons_mc.attachMovie("bi.ui.Button", "cancel_mc", 10, {settings:{width:80, height:35, label:"Cancel", fontSize:14}});
-	cancel_mc._x = 90;
+	var insert_btn = buttons_mc.attachMovie("bi.ui.Button", "insert_btn", 10, {settings:{width:80, height:35, label:"Insert Mode", fontSize:14}, _x:85});
+	insert_btn.press = function () {
+		this._parent._parent.insertMode = !this._parent._parent.insertMode;
+		this._parent._parent.update();
+	}
+	insert_btn.addEventListener("press", insert_btn);
+	var cancel_mc = buttons_mc.attachMovie("bi.ui.Button", "cancel_mc", 15, {settings:{width:80, height:35, label:"Cancel", fontSize:14}, _x:170});
 	cancel_mc.press = function () {
 		_global.windowStack["macroEdit"].close();
 	}
 	cancel_mc.addEventListener("press", cancel_mc);
 	buttons_mc._x = Math.round((window_mc.content_mc.width / 2) - (buttons_mc._width / 2));
-	buttons_mc._y = 360;
+	buttons_mc._y = 370;
 }
 
 screenUnlock = function (pin) {
@@ -2874,7 +2955,7 @@ updateKey = function (key, state, value, force) {
 }
 
 screenLock = function () {
-	if (_global.settings.screenLockScreenSaver != "") {
+	if (_global.settings.screenLockDisplay != "") {
 		screenSaver("start");
 	}
 	clearInterval(screenLockID);
@@ -3107,8 +3188,18 @@ layout = function () {
 	}
 	appsBar_mc._y = _global.settings.appsBarY;
 
+	setupScreenSaver();
+	
+	tv_mc.update = function (key, state, value) {
+		openTV(state);
+	}
+	subscribe("TV", tv_mc);
+	tvStatus = "off";
+}
+
+setupScreenSaver = function () {
 	// setup timer to start screenlock on no mouse movement
-	if (_global.settings.screenLockTimeout > 0) {
+	if (_global.settings.screenLockTimeout > 0 && _global.settings.screenLockEnabled) {
 		_root.onMouseMove = _root.onMouseDown = function () {
 			clearInterval(screenLockID);
 			screenLockID = setInterval(screenLock, _global.settings.screenLockTimeout * 1000)
@@ -3121,13 +3212,10 @@ layout = function () {
 		clearInterval(screenLockID);
 		screenLockID = setInterval(screenLock, _global.settings.screenLockTimeout * 1000);
 		screenSaver("stop");
+	} else {
+		clearInterval(screenLockID);
+		_root.onMouseMove = _root.onMouseDown = null;
 	}
-	
-	tv_mc.update = function (key, state, value) {
-		openTV(state);
-	}
-	subscribe("TV", tv_mc);
-	tvStatus = "off";
 }
 
 subscribe = function (keys, movieClip, sendCurrentState) {

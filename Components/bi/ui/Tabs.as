@@ -18,6 +18,10 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 	private var _cornerRadius:Number;
 	private var _contentPadding:Number;
 	
+	private var _font:String;
+	private var _fontSize:Number;
+	private var _fontColour:Number;
+	
 	private var _activeTabId:Number;
 		
 	private var _tabs_array:Array = [];
@@ -121,6 +125,10 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		if (_cornerRadius == null) _cornerRadius = _global.settings.tabCornerRadius;
 		if (_contentPadding == null) _contentPadding = _global.settings.tabContentPadding;
 		
+		if (_font == null) _font = _global.settings.tabFont;
+		if (_fontColour == null) _fontColour = _global.settings.tabFontColour;
+		if (_fontSize == null) _fontSize = _global.settings.tabFontSize;
+		
 		createChildren();
 		draw();
 	}
@@ -156,6 +164,7 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		}
 		
 		_contentClips_array = new Array();
+		var lastPos = _cornerRadius;
 		
 		for (var i=0; i<_tabs_array.length; i++) {
 			var tabContent_mc:MovieClip = tabsContent_mc.createEmptyMovieClip("tab" + i + "_mc", i + 100);
@@ -176,22 +185,61 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 					var tab_mc:MovieClip = tabsBackground_mc.createEmptyMovieClip("tab" + i + "_mc", i);
 				}
 				
-				var bg_mc = tab_mc.createEmptyMovieClip("bg_mc", 0);
-				bg_mc.beginFill(_tabOnColour, _tabOpacity);
-				if (_position == "left") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:_cornerRadius,tr:0,bl:_cornerRadius,br:0});
-				if (_position == "top") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:_cornerRadius,tr:_cornerRadius,bl:0,br:0});
-				if (_position == "right") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:0,tr:_cornerRadius,bl:0,br:_cornerRadius});
-				if (_position == "bottom") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:0,tr:0,bl:_cornerRadius,br:_cornerRadius});
-				bg_mc.endFill();
-	
-				var iconSize:Number = (_tabWidth < _tabHeight) ? _tabWidth : _tabHeight;
-				iconSize = Math.round(iconSize * .8);
-				var icon_mc:MovieClip = tab_mc.attachMovie("bi.ui.Icon", "icon_mc", 10, {settings:{size:iconSize, iconName:_tabs_array[i].iconName}});
-				icon_mc._x = Math.round((_tabWidth / 2) - (iconSize / 2));
-				icon_mc._y = Math.round((_tabHeight / 2) - (iconSize / 2));;
+				if (_global.settings.tabDisplayAs == "icons") {
+					var bg_mc = tab_mc.createEmptyMovieClip("bg_mc", 0);
+					bg_mc.beginFill(_tabOnColour, _tabOpacity);
+					if (_position == "left") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:_cornerRadius,tr:0,bl:_cornerRadius,br:0});
+					if (_position == "top") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:_cornerRadius,tr:_cornerRadius,bl:0,br:0});
+					if (_position == "right") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:0,tr:_cornerRadius,bl:0,br:_cornerRadius});
+					if (_position == "bottom") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:0,tr:0,bl:_cornerRadius,br:_cornerRadius});
+					bg_mc.endFill();					
+					
+					var iconSize:Number = (_tabWidth < _tabHeight) ? _tabWidth : _tabHeight;
+					iconSize = Math.round(iconSize * .8);
+					var icon_mc:MovieClip = tab_mc.attachMovie("bi.ui.Icon", "icon_mc", 10, {settings:{size:iconSize, iconName:_tabs_array[i].iconName}});
+					icon_mc._x = Math.round((_tabWidth / 2) - (iconSize / 2));
+					icon_mc._y = Math.round((_tabHeight / 2) - (iconSize / 2));
+				} else {
+					var label_txt = tab_mc.createTextField("label_txt", 200, 0, 0, 1, 1);
+					var label_tf = new TextFormat();
+					label_tf.color = _fontColour;
+					label_tf.size = _fontSize;
+					label_tf.bold = true;
+					label_tf.align = (_position == "left" || _position == "right") ? _position : "center";
+					label_tf.font = "bi.ui.Fonts:" + _font;
+					label_txt.autoSize = true;
+					label_txt.embedFonts = true;
+					label_txt.selectable = false;
+					label_txt.setNewTextFormat(label_tf);
+					if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
+						label_txt.filters = [_global.settings.dropShadowFilterSmall];
+					}
+					label_txt.text = _tabs_array[i].name;
+					
+					_tabWidth =  (_position == "left" || _position == "right") ? _tabWidth : label_txt._width + 20;
+					var bg_mc = tab_mc.createEmptyMovieClip("bg_mc", 0);
+					bg_mc.beginFill(_tabOnColour, _tabOpacity);
+					if (_position == "left") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:_cornerRadius,tr:0,bl:_cornerRadius,br:0});
+					if (_position == "top") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:_cornerRadius,tr:_cornerRadius,bl:0,br:0});
+					if (_position == "right") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:0,tr:_cornerRadius,bl:0,br:_cornerRadius});
+					if (_position == "bottom") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:0,tr:0,bl:_cornerRadius,br:_cornerRadius});
+					bg_mc.endFill();
+					
+					if (_position == "top" || _position == "bottom") {
+						label_txt._x = Math.round((bg_mc._width/2) - (label_txt._width/2));
+					} else if (_position == "left") {
+						label_txt._x = 2;
+					} else if (_position == "right") {
+						label_txt._x = bg_mc._width - 2;
+					}
+					label_txt._y = Math.round((bg_mc._height/2) - (label_txt._height/2));
+				}
 				
 				if (_position == "left" || _position == "right") tab_mc._y = i * (_tabHeight + _tabSpacing) + _cornerRadius;
-				if (_position == "top" || _position == "bottom") tab_mc._x = i * (_tabWidth + _tabSpacing) + _cornerRadius;
+				if (_position == "top" || _position == "bottom") {
+					tab_mc._x = Math.round(lastPos);
+					if (q != 0) lastPos += _tabWidth + _tabSpacing;
+				}
 				if (_position == "right") tab_mc._x = __width - _tabWidth;
 				if (_position == "bottom") tab_mc._y = __height - _tabHeight;
 					

@@ -72,7 +72,7 @@ class bi.ui.Button extends bi.ui.CoreUI {
 		this._alpha = (_enabled) ? 100 : 30;
 		this.useHandCursor = _enabled;
 		if (!enabled && buttonHighlight_mc._visible) {
-			//if (!this.showOn) showHighlight();
+			highlight = false;
 		}
 	}
 

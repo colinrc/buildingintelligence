@@ -44,8 +44,9 @@
 		
 		onPress2 = function():Void {
 			if (_enabled) {
-				dispatchEvent({type:"click", target:this});
 				selected = !selected;
+				dispatchEvent({type:"click", target:this});
+				dispatchEvent({type:"change", target:this});
 			}
 		}
 	}

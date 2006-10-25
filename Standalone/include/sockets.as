@@ -276,7 +276,7 @@ sendCmd = function (key, command, extra, extras) {
 			if (newMacroArray[newMacroArray.length - 1].key == key && newMacroArray[newMacroArray.length - 1].command == command) {
 				// if previous macro in list was the same key and command as we are about to store, discard it
 				newMacroArray.pop();
-			} else if (newMacroArray.length) {
+			} else if (newMacroArray.length || insertMacroObj.contents.length) {
 				// pad macros in list with "pause" commands
 				newMacroArray.push({key:"", command:"pause", extra:"0", extra2:"", extra3:"", extra4:"", extra5:""})
 			}
