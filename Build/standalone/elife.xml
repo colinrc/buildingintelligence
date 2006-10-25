@@ -1,8 +1,8 @@
 <client>
 	<setting name="clientName" value="testClient"/>
-	<setting name="serverAddress" value="http://172.16.3.202:8081" />
-	<setting name="serverAddress" value="127.0.0.1" />
-	<!--setting name="serverAddress" value="172.16.3.101"/--> 
+	<setting name="serverAddress" value="https://172.16.3.210:8443" />
+	<!--setting name="serverAddress" value="127.0.0.1" /-->
+	<setting name="serverAddress" value="172.16.3.210"/> 
 	<!--setting name="serverAddress" value=""/-->
 	<setting name="encryptedData" value="false" />
 	<setting name="applicationXML" value="sample.xml" />

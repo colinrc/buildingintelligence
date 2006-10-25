@@ -118,7 +118,7 @@ serverOnConnect = function (status) {
 			window_mc.close();
 			delete commsError;
 		}
-		serverSend('<clientName value="' + _global.settings.clientName + '" />')
+		serverSend('<CONTROL KEY="ID" COMMAND="name" EXTRA="' + _global.settings.clientName + '" />')
 	} else {
 		if (!_global.settings.debugMode) {
 			showCommsError();
@@ -131,7 +131,7 @@ serverOnConnect = function (status) {
 serverOnClose = function () {
 	showCommsError();
 	commsError = true;
-	serverConnect();
+	serverConnectID = setInterval(_root, "serverConnect", _global.settings.serverRetryTime * 1000);
 }
 
 serverConnect = function () {

@@ -2145,6 +2145,13 @@ createMacroAdmin = function (content_mc) {
 					insertMacroObj.contents.splice(insert++, 0, newMacroArray[i]);
 				}
 				createMacro(insertMacroObj.name, insertMacroObj.contents);
+				for (var i=0; i<_global.macros.length; i++) {
+					if (_global.macros[i].name == insertMacroObj.name) {
+						var macroNum = i;
+						break;
+					}
+				}
+				openMacroEdit(macroNum);
 				delete insertMacroObj;
 			} else {
 				this.saveMacro = function (title, caller) {
