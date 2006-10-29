@@ -35,7 +35,6 @@ public class Model
   extends SimplifiedModel implements DeviceModel {
 
         public static int numberOfScripts = 0;
-
         public static final int numberRepeats = 4;
         public static final int MINUTE = 1;
         public static final int HOUR = 2;

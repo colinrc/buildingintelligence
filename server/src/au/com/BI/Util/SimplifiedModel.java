@@ -943,18 +943,28 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
 	public void addCheckSums(ReturnWrapper returnWrapper) {
 		if (returnWrapper.isMessageIsBytes()) {
-			for (byte[] avOutputString : returnWrapper.getCommOutputBytes()) {
-				addCheckSum(avOutputString);
+			for (int i = 0; i <  returnWrapper.getCommOutputBytes().capacity(); i++) {
+				byte newArray [] = addCheckSum(returnWrapper.getCommOutputBytes().elementAt(i));
+				if (newArray != null){
+					returnWrapper.getCommOutputBytes().setElementAt(newArray,i);
+				}
 			}
 		} else {
+			for (int i = 0; i <  returnWrapper.getCommOutputStrings().capacity();i++) {
+				byte newArray [] = addCheckSum(returnWrapper.getCommOutputStrings().elementAt(i).getBytes());
+				if (newArray != null){
+					returnWrapper.getCommOutputStrings().setElementAt(new String(newArray),i);
+				}
+			}
+			
 			for (String avOutputString : returnWrapper.getCommOutputStrings()) {
-				addCheckSum(avOutputString.getBytes());
+				byte newArray [] = addCheckSum(avOutputString.getBytes());
 			}
 		}
 	}
 
-	public void addCheckSum(byte returnVal[]) {
-
+	public byte[] addCheckSum(byte returnVal[]) {
+		return null;
 	}
 
 

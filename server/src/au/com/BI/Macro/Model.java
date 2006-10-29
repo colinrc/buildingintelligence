@@ -293,7 +293,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
                  
 			    	eventCalendar.addEventXMLToStore (calendarEventEntry.getId(),nextEvent);
 			    } catch (CalendarException ex){
-			    	
+			    	logger.log (Level.WARNING,ex.getMessage());
 			    }
 			}
 			eventCalendar.saveCalendarFile();

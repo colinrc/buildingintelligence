@@ -90,6 +90,7 @@ public class EventCalendar {
 		    		addEventXMLToStore (calendarEventEntry.getId(),nextEvent);
 		    	}
 		    } catch (CalendarException ex){
+		    	logger.log (Level.WARNING,ex.getMessage());
 		    }	    	
 		}
 	
@@ -101,28 +102,29 @@ public class EventCalendar {
 		events.put( id,xml);		
 	}
 
-	public boolean addEvent (CalendarEventEntry calendarEventEntry){
+	public void  addEvent (CalendarEventEntry calendarEventEntry) throws CalendarException {
     	if (calendarEventEntry.getEventType() == CalendarEventEntry.SINGLE_EVENT){
     		try {
 				sched.deleteJob(calendarEventEntry.getId(),Scheduler.DEFAULT_GROUP);
 				sched.scheduleJob(calendarEventEntry.getJobDetail(), (SimpleTrigger)calendarEventEntry.getTrigger());
-				return true;
     		} catch (SchedulerException e) {
-				logger.log (Level.WARNING,"Unable to add timed macro " + calendarEventEntry.getTitle() + " " + e.getMessage());
+				throw new CalendarException ("Unable to add timed macro " + calendarEventEntry.getTitle() + " " + e.getMessage());
+			} catch (NullPointerException e){
+				throw new CalendarException ("Major problem adding timed macro " + calendarEventEntry.getTitle() + " " + e.getMessage());
 			}
 
     	} else {
     		try {
 				sched.deleteJob(calendarEventEntry.getId(),Scheduler.DEFAULT_GROUP);
 				sched.scheduleJob(calendarEventEntry.getJobDetail(), (CronTrigger)calendarEventEntry.getTrigger());
-				return true;
 			} catch (SchedulerException e) {
-				logger.log (Level.WARNING,"An internal scheduler error occured adding the job " + calendarEventEntry.getTitle() + " " + e.getMessage());
+				throw new CalendarException ("An internal scheduler error occured adding the job " + calendarEventEntry.getTitle() + " " + e.getMessage());
 			} catch (StringIndexOutOfBoundsException e){
-				logger.log (Level.WARNING,"An internal scheduler error occured adding the job " + calendarEventEntry.getTitle() + " " + e.getMessage());				
+				throw new CalendarException ("An internal scheduler error occured adding the job " + calendarEventEntry.getTitle() + " " + e.getMessage());			
+			}catch (NullPointerException e){
+				throw new CalendarException ("Major problem adding timed macro " + calendarEventEntry.getTitle() + " " + e.getMessage());		
 			}
     	}
-    	return false;
 	}
 	
 	public void setFileName (String fileName){
