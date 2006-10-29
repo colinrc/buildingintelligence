@@ -1,33 +1,79 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<project name="Admin_Standalone" default="default" basedir=".">
+    <description>Builds, tests, and runs the project Admin_Standalone.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <!--
 
-<project name="eLife_Admin" default="dist" basedir=".">
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
 
-	<property file="build.properties"/>
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-compile-test-single:  called before javac compilation of single JUnit test
+      -post-compile-test-single: called after javac compilation of single JUunit test
+      -pre-jar:                  called before JAR building
+      -post-jar:                 called after JAR building
+      -post-clean:               called after cleaning build products
 
-	
-	<property name="jar.name"  value="eLife_Admin.jar"/>
+    (Targets beginning with '-' are not intended to be called on their own.)
 
-	<path id="project.class.path">
-		<pathelement location="."/>
-	</path>
+    Example of inserting an obfuscator after compilation could look like this:
+
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
+
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
 
 
+    Another way to customize the build is by overriding existing main targets.
+    The targets of interest are: 
 
-	<target name="compile">
-		<javac
-			srcdir="src"
-			destdir = "bin"
-			deprecation="on"
-			includeJavaRuntime="yes"
-		>
-			<classpath refid="project.class.path"/>
-		</javac>
+      -init-macrodef-javac:     defines macro for javac compilation
+      -init-macrodef-junit:     defines macro for junit execution
+      -init-macrodef-debug:     defines macro for class debugging
+      -init-macrodef-java:      defines macro for class execution
+      -do-jar-with-manifest:    JAR building (if you are using a manifest)
+      -do-jar-without-manifest: JAR building (if you are not using a manifest)
+      run:                      execution of project 
+      -javadoc-build:           Javadoc generation
+      test-report:              JUnit report generation
+
+    An example of overriding the target for project execution could look like this:
+
+        <target name="run" depends="Admin_Standalone-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
+
+    Notice that the overridden target depends on the jar target and not only on 
+    the compile target as the regular run target does. Again, for a list of available 
+    properties which you can use, check the target you are overriding in the
+    nbproject/build-impl.xml file. 
+
+    -->
+    	<target name="increment" depends="" description="Increments build number and creates a zip file.">
+		<propertyfile file="src/my.properties" >
+		<entry  key="minor_version" type="int" operation="+" value="1" />
+	</propertyfile>
+	<property file="src/my.properties" />
+		<echo message="Version number now ${major_version}.${minor_version}" />
 	</target>
-
-
-
-	
-	<target name="jar" >
+    	<target name="dist" depends="increment,jar" >
 		<jar destfile="dist/${app_name}.jar" 
 			update="false"
 			basedir="bin" 
@@ -46,42 +92,23 @@
 			includes = "images/*" 
 			 />
 	</target>
-	
-
-	<target name="clean" depends="">
-		<delete>
-			<fileset dir="bin">
-				<include name="**/*.class"/>
-			</fileset>
-		</delete>
-	</target>
-
-
-	<target name="clean-dist" depends="clean">
-		<delete file="${install.dir}/${jar.name}" />
-	</target>
-	<target name="increment" depends="" description="Increments build number and creates a zip file.">
-		<propertyfile file="src/my.properties" >
-		<entry  key="minor_version" type="int" operation="+" value="1" />
-	</propertyfile>
-	<property file="src/my.properties" />
-		<echo message="Version number now ${major_version}.${minor_version}" />
-	</target>
-
-	<target name="dist_clean" depends="" >
-		  <delete>
-		    <fileset dir="dist" includes="*.zip"/>
-		  </delete>
-	</target>
-		    	
-	<target name="dist" depends="dist_clean,increment,jar" >
-		<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
-			update="false"
-			basedir="dist" 
-			includes = "*.jar"  />
-	</target>
-	
-	
-
-	
+        <target name="dist-libs"  >
+         <property file="src/au/com/BI/Home/my.properties" />
+	<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+		update="false"
+		basedir="dist" 
+		includes = "ext/*.jar" />
+        <copy todir="dist">
+	    <fileset dir="." includes="*.dll" />
+	    <fileset dir="." includes="*.jnilib" />
+	</copy>
+	<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+		update="true"
+		basedir="dist"
+		includes = "*.dll" />
+        <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+		update="true"
+		basedir="dist"
+		includes = "*.jnilib" />
+    </target>
 </project>
