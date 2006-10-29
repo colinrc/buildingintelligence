@@ -155,7 +155,7 @@ public class Controller {
 		} catch (LabelError e){
 			logger.log(Level.SEVERE,"Label setup has failed " + e.getMessage());
 		}
-		
+
 		scriptModel = new au.com.BI.Script.Model();
 		scriptModel.setController(this);
 		this.setupModel(scriptModel);
@@ -165,7 +165,7 @@ public class Controller {
 		this.setupModel (flashHandler);
 		flashHandler.setEventCalendar (macroHandler.getEventCalendar());
 		clientModels.add(flashHandler);
-
+		
 		adminModel = new au.com.BI.Admin.Model(1);
 		this.setupModel(adminModel);
 		adminModel.setLogHandler(logHandler);

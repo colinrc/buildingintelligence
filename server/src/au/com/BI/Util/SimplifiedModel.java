@@ -54,7 +54,6 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	protected Pattern customInputScaleString = null;
 	protected Pattern customScanCommandString = null;
 	protected ConfigHelper configHelper;
-
     
 	public SimplifiedModel () {
         configHelper = new ConfigHelper(this);
