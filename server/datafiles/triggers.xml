@@ -3,14 +3,16 @@
                 
                 <TRIGGER NAME="DLT1" >
                 
-	                <EVENT NAME="Front gate open at night" >
+	                <ACTION NAME="Front gate open at night" >
 	                		<TEST >
 	                			 <LABEL VALUE="FRONT_GATE" />
 	                			<EQ COMPARE="COMMAND" VALUE="on" />
 	                			<LE_OTHER KEY="LIGHT_LEVEL"  COMPARE="EXTRA" VALUE="50" />
 	                			<TIME_TRUE="60" />  must be true for a minute to trigger the event    			
 	                		</TEST>
-	                		<STATUS HIDDEN="N" ADMINISTRATOR="N" /> 
+	                		<STATUS>
+	                			 HIDDEN="N" ADMINISTRATOR="N" /> 
+	                		</STATUS>
 	                		<ACTION_SEQ>
 	                			<CONTROL COMMAND="on" EXTRA="100" KEY="GATE_CONTROL" />
 	                			<CONTROL COMMAND="on" EXTRA="100" KEY="FRONT_LIGHT" />
@@ -18,9 +20,9 @@
 	                			<CONTROL COMMAND="off" EXTRA="0" KEY="GATE_CONTROL" />
 	                			<CONTROL COMMAND="off" EXTRA="0" KEY="FRONT_LIGHT" />	
 	                		</ ACTION_SEQ>
-	                	</EVENT>
+	                	</ACTION>
 	                	
-	                	<EVENT NAME="Front gate open in daylight>
+	                	<ACTION NAME="Front gate open in daylight>
 	                		<TEST >
 	                			 <LABEL VALUE="FRONT_GATE" />
 	                			<EQ COMPARE="COMMAND" VALUE="on" />
@@ -28,23 +30,25 @@
 	                			<TIME_TRUE="60" />  must be true for a minute to trigger the event    			
 	                		</TEST>
 	                		<STATUS HIDDEN="Y" ADMINISTRATOR="N" /> 
+	                		</STATUS>
 	                		<ACTION_SEQ>
 	                			<CONTROL COMMAND="on" EXTRA="100" KEY="GATE_CONTROL" />
 	                			<PAUSE EXTRA"600" />  
 	                			<CONTROL COMMAND="off" EXTRA="0" KEY="GATE_CONTROL" />       			
 	                		</ ACTION_SEQ>
-	                	</EVENT>
+	                	</ACTION>
 	             
 	                	
-	                <EVENT NAME="Volume Control" >
+	                <ACTION NAME="Volume Control" >
 	                		<TEST>
 	                			<LABEL VALUE="VOLUME" />
 	                			<TIME_TRUE="0" />  fire immediately
 	                		</TEST>
-	                		<STATUS HIDDEN="Y" ADMINISTRATOR="N" /> 
+	                		<STATUS HIDDEN="Y" ADMINISTRATOR="N" />
+	                		</STATUS> 
 	                		<ACTION_SEQ>
 	                			<CONTROL COMMAND="volume" EXTRA="%EXTRA%" KEY="KITCHEN_AUDIO" />
 	                		<ACTION_SEQ />
-	                	</EVENT>
+	                	</ACTION>
 	             </TRIGGER>
         </TRIGGERS>
