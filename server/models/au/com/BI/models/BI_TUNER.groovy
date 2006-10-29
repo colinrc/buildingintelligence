@@ -95,5 +95,11 @@ class RawTest extends GroovyModel {
 						returnWrapper.addCommsString ("AU_SRC:" + device.getKey() + ":" + newSrc + "\n"			)		 
 				}
 	}
+	
+	/*
+	void addCheckSum(byte returnVal[]) {
+
+	}
+	*/
 
 }
