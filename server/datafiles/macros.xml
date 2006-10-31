@@ -2,7 +2,7 @@
   <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="DLT1 front light" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
     <CONTROL KEY="DLT1" COMMAND="label" EXTRA="FRONT_LIGHT" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" TARGET="All" TARGET_USER="" />
   </CONTROL>
-    <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="DLT1 volume" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
+  <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="DLT1 volume" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
     <CONTROL KEY="DLT1" COMMAND="label" EXTRA="VOLUME" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" TARGET="All" TARGET_USER="" />
   </CONTROL>
   <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="Camera test" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
@@ -53,7 +53,7 @@
   <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="Dyn A2 -&gt; 4 unlink" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
     <CONTROL KEY="BBQ_LIGHT" COMMAND="unlink" EXTRA="3" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" TARGET="All" TARGET_USER="" />
   </CONTROL>
-  <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="Dyn A1 pres 2" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
+  <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="Dyn A1 pres 2" TYPE="" STATUS="isSecure,noEdit,noDelete" RUNNING="0">
     <CONTROL KEY="GARAGE_LIGHT" COMMAND="preset" EXTRA="2" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" TARGET="All" TARGET_USER="" />
   </CONTROL>
   <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="Ofs A1 1" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
