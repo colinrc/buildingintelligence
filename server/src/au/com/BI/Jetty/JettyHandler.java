@@ -66,7 +66,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             // HTML static handler
             ContextHandler mainContextHandler = new ContextHandler ();
             mainContextHandler.setContextPath("/html");
-            mainContextHandler.setResourceBase("../../Bi/Client/Lib/Html");
+            mainContextHandler.setResourceBase("../client/lib/html");
 
             ServletHandler servletHandler = new ServletHandler ();         
             ServletHolder defServlet = servletHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
@@ -113,7 +113,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             ContextHandler updateContextHandler = new ContextHandler ();
 
             updateContextHandler.setContextPath("/webclient");
-            updateContextHandler.setResourceBase("www");
+            updateContextHandler.setResourceBase("../www");
             // updateContextHandler.setConnectors(new String[]{"SSL_CONNECT"});
             updateContextHandler.setConnectorNames(new String[]{"SSL_CONNECT"});
 
