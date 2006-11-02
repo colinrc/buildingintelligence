@@ -18,25 +18,31 @@ crypto.onDecode = function (decoded) {
 
 comPortSetup = function () {
 	var availablePorts = mdm.COMPort.ports.split(",");
-	_global.isCOMAvailable = false;
-	for (var i=0; i<availablePorts.length; i++) {
-		if (availablePorts[i] == "COM" + _global.settings.COMPort) {
-			_global.isCOMAvailable = true;
-			break;
+	if (!availablePorts.length) {
+		debug("No available COM Ports");
+		return;
+	} else {
+		debug("Available COM Ports: " + availablePorts);
+		_global.isCOMAvailable = false;
+		for (var i=0; i<availablePorts.length; i++) {
+			if (availablePorts[i] == "COM" + _global.settings.COMPort) {
+				_global.isCOMAvailable = true;
+				break;
+			}
 		}
-	}
-	if (_global.isCOMAvailable) {
-		mdm.COMPort.open(_global.settings.COMPort, 19200, 8, "N", 1, "OFF");
-		mdm.COMPort.useLineMode(true, chr(13));
-		mdm.COMPort.onCOMPortData = function (dataObj){
-			var data = dataObj.data.substr(0, dataObj.data.length - 1);
-			var command = data.split(" ")[0];
-			var extra = data.split(" ")[1];
-			if (extra == "+") extra = "on";
-			if (extra == "-") extra = "off";
-			//if (command == "W0") return;
-			if (command == "K2" && extra == "off") toggleTV();
-			receiveCmd(new XML('<CONTROL KEY="COM_PORT" COMMAND="' + command + '" EXTRA="' + extra + '" />'));
+		if (_global.isCOMAvailable) {
+			mdm.COMPort.open(_global.settings.COMPort, 19200, 8, "N", 1, "OFF");
+			mdm.COMPort.useLineMode(true, chr(13));
+			mdm.COMPort.onCOMPortData = function (dataObj){
+				var data = dataObj.data.substr(0, dataObj.data.length - 1);
+				var command = data.split(" ")[0];
+				var extra = data.split(" ")[1];
+				if (extra == "+") extra = "on";
+				if (extra == "-") extra = "off";
+				//if (command == "W0") return;
+				if (command == "K2" && extra == "off") toggleTV();
+				receiveCmd(new XML('<CONTROL KEY="COM_PORT" COMMAND="' + command + '" EXTRA="' + extra + '" />'));
+			}
 		}
 	}
 }

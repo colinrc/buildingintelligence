@@ -777,6 +777,7 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 				var saveObj = new Object();
 				saveObj.id = calendarObj.id;
 				saveObj.title = content_mc.title_ti.text;
+				saveObj.active = content_mc.active_cb.selected;
 				saveObj.alarm = content_mc.alarm_cb.selected;
 				saveObj.memo = content_mc.msg_ti.text;
 				saveObj.category = content_mc.category_ip.selectedItem.value;
@@ -1125,6 +1126,7 @@ editRecurringEvent = newRecurringEvent = function (calendarObj, dateObj, macroNa
 				saveObj.category = "";
 				saveObj.time = content_mc.time_tp.time;
 				saveObj.macroName = calendarObj.macroName;
+				saveObj.active = content_mc.active_cb.selected;
 				if (content_mc.runTime_np.selectedItem) {
 					saveObj.alarm = false;
 					saveObj.extra = calendarObj.extra;

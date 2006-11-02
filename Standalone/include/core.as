@@ -1556,10 +1556,10 @@ openAbout = function () {
 	about_txt.text = _global.systemInformation + "\nClient: v" + _global.clientVersion + "  Server: v" + _global.serverVersion + " Uptime: " + upTime;
 	about_txt._y = content_mc.height - about_txt._height;
 	
-	aboutBrowser = new mdm.Browser(Math.round((window_mc._x + content_mc._x) / _global.screenRatio), Math.round((window_mc._y + content_mc._y) / _global.screenRatio), Math.round(content_mc.width / _global.screenRatio), Math.round((content_mc.height - about_txt._height) / _global.screenRatio), _global.settings.integratorHtml, "false");
+	//aboutBrowser = new mdm.Browser(Math.round((window_mc._x + content_mc._x) / _global.screenRatio), Math.round((window_mc._y + content_mc._y) / _global.screenRatio), Math.round(content_mc.width / _global.screenRatio), Math.round((content_mc.height - about_txt._height) / _global.screenRatio), _global.settings.integratorHtml, "false");
 
 	window_mc.onClose = function () {
-		aboutBrowser.close();
+		//aboutBrowser.close();
 	}
 }
 
