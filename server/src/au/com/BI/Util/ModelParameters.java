@@ -179,14 +179,14 @@ public class ModelParameters  {
         /**
          * @return Returns the rawDefs.
          */
-        public final HashMap<String,String> getCatalogueDef(String name) {
+        public  HashMap<String,String> getCatalogueDef(String name) {
                 return rawDefs.get(name);
         }
 
         /**
          * @param rawDefs The rawDefs to set.
          */
-        public final void setCatalogueDefs(String name, HashMap<String,String> rawDefs) {
+        public  void setCatalogueDefs(String name, HashMap<String,String> rawDefs) {
                 this.rawDefs.put(name, rawDefs);
         }
 

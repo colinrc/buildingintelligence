@@ -1,3 +1,9 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b4.zip V1.6b4]   ==
+
+''' Jetty ''' 
+
+Ensure HTTPS server can deliver static HTML from address ../www. resolves [ticket:553]
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b3.zip V1.6b3]   ==
 
 ''' Jetty ''' 
