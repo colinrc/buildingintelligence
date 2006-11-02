@@ -16,25 +16,28 @@ crypto.onDecode = function (decoded) {
 	receiveCmd(new XML(decoded).firstChild, true);
 }
 
-var availablePorts = mdm.COMPorts.ports.split(",");
-isCOMAvailabe = false;
-for (var i=0; i<availablePorts.length; i++) {
-	if (Number(availablePorts) == _global.settings.COMPort) {
-		isCOMAvailabe = true;
+comPortSetup = function () {
+	var availablePorts = mdm.COMPort.ports.split(",");
+	_global.isCOMAvailable = false;
+	for (var i=0; i<availablePorts.length; i++) {
+		if (availablePorts[i] == "COM" + _global.settings.COMPort) {
+			_global.isCOMAvailable = true;
+			break;
+		}
 	}
-}
-if (isCOMAvailabe) {
-	mdm.COMPort.open(_global.settings.COMPort, 19200, 8, "N", 1, "OFF");
-	mdm.COMPort.useLineMode(true, chr(13));
-	mdm.COMPort.onCOMPortData = function (dataObj){
-		var data = dataObj.data.substr(0, dataObj.data.length - 1);
-		var command = data.split(" ")[0];
-		var extra = data.split(" ")[1];
-		if (extra == "+") extra = "on";
-		if (extra == "-") extra = "off";
-		//if (command == "W0") return;
-		if (command == "K2" && extra == "off") toggleTV();
-		receiveCmd(new XML('<CONTROL KEY="COM_PORT" COMMAND="' + command + '" EXTRA="' + extra + '" />'));
+	if (_global.isCOMAvailable) {
+		mdm.COMPort.open(_global.settings.COMPort, 19200, 8, "N", 1, "OFF");
+		mdm.COMPort.useLineMode(true, chr(13));
+		mdm.COMPort.onCOMPortData = function (dataObj){
+			var data = dataObj.data.substr(0, dataObj.data.length - 1);
+			var command = data.split(" ")[0];
+			var extra = data.split(" ")[1];
+			if (extra == "+") extra = "on";
+			if (extra == "-") extra = "off";
+			//if (command == "W0") return;
+			if (command == "K2" && extra == "off") toggleTV();
+			receiveCmd(new XML('<CONTROL KEY="COM_PORT" COMMAND="' + command + '" EXTRA="' + extra + '" />'));
+		}
 	}
 }
 
@@ -291,7 +294,7 @@ sendCmd = function (key, command, extra, extras) {
 			
 			newMacroArray.push(macroObj);
 		}
-	} else if (isCOMAvailabe) {
+	} else if (_global.isCOMAvailable) {
 		debug_mc.outgoing_txt.text = "COMPORT: " + command + " " + extra + "\n" + debug_mc.outgoing_txt.text;
 		mdm.COMPort.send(command + " " + extra + "\n");
 	}

@@ -3333,6 +3333,7 @@ application_xml.onLoad = function () {
 	renderAppsBar();
 	renderZones();
 	setUpLogging();
+	comPortSetup();
 	serverSetup();
 	setAuthenticated(isAuthenticated("superuser"));
 	if (Stage.width != _global.settings.width) {
