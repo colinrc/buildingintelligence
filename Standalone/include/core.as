@@ -1534,27 +1534,48 @@ openStatusWindow = function (statusObj) {
 openAbout = function () {
 	var window_mc = showWindow({width:600, height:500, title:"About eLIFE", iconName:"home"});
 	var content_mc = window_mc.content_mc;
-	
+
 	var about_tf = new TextFormat();
 	about_tf.color = 0xFFFFFF;
 	about_tf.size = 12;
 	about_tf.bold = true;
 	about_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
-	about_tf.align = "center";
 	
-	var upTime = getTimer() - _global.clientStartTime; 
-	upTime = upTime.timeFormat();
-
-	content_mc.createTextField("about_txt", 10, 0, 0, content_mc.width, 20);
-	var about_txt = content_mc.about_txt;
+	var about_txt = content_mc.createTextField("about_txt", 5, 0, 0, content_mc.width, content_mc.width - 30);
 	about_txt.embedFonts = true;
 	about_txt.selectable = false;
 	about_txt.wordWrap = true;
 	about_txt.multiline = true;
-	about_txt.autoSize = true;
+	about_txt.html = true;
 	about_txt.setNewTextFormat(about_tf);
-	about_txt.text = _global.systemInformation + "\nClient: v" + _global.clientVersion + "  Server: v" + _global.serverVersion + " Uptime: " + upTime;
-	about_txt._y = content_mc.height - about_txt._height;
+	about_txt.htmlText = "This is a test. hello world.";
+	
+	var loadAboutText = new LoadVars();
+	loadAboutText.onData = function (src) {
+		about_txt.htmlText = src;
+	}
+	loadAboutText.load(_global.settings.integratorHtml);
+	
+	var info_tf = new TextFormat();
+	info_tf.color = 0xFFFFFF;
+	info_tf.size = 12;
+	info_tf.bold = true;
+	info_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
+	info_tf.align = "center";
+	
+	var info_txt = content_mc.createTextField("info_txt", 10, 0, 0, content_mc.width, 20);
+	info_txt.embedFonts = true;
+	info_txt.selectable = false;
+	info_txt.wordWrap = true;
+	info_txt.multiline = true;
+	info_txt.autoSize = true;
+	info_txt.setNewTextFormat(about_tf);
+	
+	var upTime = getTimer() - _global.clientStartTime; 
+	upTime = upTime.timeFormat();
+	
+	info_txt.text = _global.systemInformation + "\nClient: v" + _global.clientVersion + "  Server: v" + _global.serverVersion + " Uptime: " + upTime;
+	info_txt._y = content_mc.height - info_txt._height;	
 	
 	//aboutBrowser = new mdm.Browser(Math.round((window_mc._x + content_mc._x) / _global.screenRatio), Math.round((window_mc._y + content_mc._y) / _global.screenRatio), Math.round(content_mc.width / _global.screenRatio), Math.round((content_mc.height - about_txt._height) / _global.screenRatio), _global.settings.integratorHtml, "false");
 
