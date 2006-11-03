@@ -433,7 +433,9 @@ renderRow = function (rowData, row_mc, rowWidth, colWidth, colStart, odd, curren
 	var label_txt = row_mc.attachMovie("bi.ui.Label", "label_txt", 10, {settings:{width:colStart, text:rowData.label, fontSize:14, _x:4}});
 	label_txt._y = Math.round((bg_mc._height / 2) - (label_txt._height / 2));
 	if (!rowData.calendarObj.active) {
-		label_txt._alpha = 60;
+		row_mc._alpha = 50;
+		var myColorMatrix_filter = new ColorMatrixFilter([0.3, 0.59, 0.11, 0, 0, 0.3, 0.59, 0.11, 0, 0, 0.3, 0.59, 0.11, 0, 0, 0, 0, 0, 1, 0]);
+		row_mc.filters = [myColorMatrix_filter];
 	}
 	
 	var calendarObj = rowData.calendarObj;
