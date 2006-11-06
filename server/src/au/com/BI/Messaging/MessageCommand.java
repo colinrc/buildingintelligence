@@ -20,13 +20,13 @@ import au.com.BI.Command.CommandInterface;
 public class MessageCommand extends Command implements CommandInterface {
 
 
-    public int messageType = CommandInterface.Message;
+    private int messageType = CommandInterface.Message;
 	public long	originatingID;
-	protected String title;
-	protected String icon;
-	protected String autoclose;
-	protected String hideclose;
-	protected String content;
+	protected String title = "";
+	protected String icon = "";
+	protected String autoclose = "";
+	protected String hideclose = "";
+	protected String content = "";
 	protected Element element;
 	protected Element messageFromFlash;
 	protected String target = AddressBook.ALL;
@@ -76,6 +76,90 @@ public class MessageCommand extends Command implements CommandInterface {
 		
 	}
 	
+    public MessageCommand clone() throws CloneNotSupportedException {
+    	
+    	MessageCommand newCopy;
+			boolean madeCopy = false;
+			try {
+				newCopy = this.getClass().newInstance();
+	    		//Command newCopy = new  Command ();
+		    	
+				if (this.messageType == CommandInterface.Message){
+					madeCopy = true;
+					newCopy.setMessageType(CommandInterface.Message);
+					newCopy.setDisplayName(displayName);
+					newCopy.setTitle(title);
+					newCopy.setIcon(icon);
+					newCopy.setContent(content);
+					newCopy.setAutoclose(autoclose);
+					newCopy.setHideclose(hideclose);
+					newCopy.setTarget(target);
+					newCopy.setTargetUser(targetUser);
+					newCopy.setKey(key);
+				}
+	
+				if (this.messageType == CommandInterface.ID){
+					madeCopy = true;
+	    			MessageCommand newCommand = new MessageCommand();
+	    			newCommand.setMessageType(CommandInterface.ID);
+					
+					for (NameIdentifier j : nameIdentifier ){
+						String clientName = j.getClientName();
+						String userName = j.getUserName();
+						newCopy.addNameIdentifier(userName, clientName);
+					}
+	    		} 
+	  
+				if (madeCopy){
+					return newCopy;    		
+				}else {
+					return null;
+				}
+			} catch (InstantiationException ex){
+				throw new CloneNotSupportedException (ex.getMessage());
+			} catch (IllegalAccessException e) {
+				throw new CloneNotSupportedException (e.getMessage());
+			}
+    }
+    
+    public boolean equals(Object toTest) {
+    	
+    		if (toTest instanceof au.com.BI.Messaging.MessageCommand ){
+    			if (this.messageType == CommandInterface.Message){
+	    			MessageCommand toTestCommand = (MessageCommand)toTest;
+	    				        
+	    			if (!key.equals(toTestCommand.getKey())) return false;
+		          	if (!displayName.equals(toTestCommand.getDisplayName())) return false;
+		          	if (!title.equals(toTestCommand.getTitle())) return false;
+		          	if (!icon.equals(toTestCommand.getIcon())) return false;
+		          	if (!content.equals(toTestCommand.getContent())) return false;
+		          	if (!autoclose.equals(toTestCommand.getAutoclose())) return false;
+		          	if (!this.hideclose.equals(toTestCommand.getHideclose())) return false;
+		          	if (!this.target.equals(toTestCommand.getTarget())) return false;
+		          	if (!this.targetUser.equals(toTestCommand.getTargetUser())) return false;
+    			}
+
+    			if (this.messageType == CommandInterface.ID){
+    				
+    				int i = 0;
+    				for (NameIdentifier j : nameIdentifier ){
+    					String clientName = j.getClientName();
+    					String userName = j.getUserName();
+    					NameIdentifier id = nameIdentifier.get(i);
+    					if (!(clientName.equals(id.getClientName()) && userName.equals(id.getUserName()) )){
+    							return false;
+    					}
+    					i ++;
+    				}
+     			}
+
+	         	return true;
+    		} 
+  
+    		else {     		
+    			return super.equals (toTest);
+    		}
+    }
 	/**
 	 * Used to populate a command from an XML element.
 	 * @param element
@@ -83,18 +167,6 @@ public class MessageCommand extends Command implements CommandInterface {
 	public void setFromElement (Element element){
 	    String messageType = element.getName();
 	    boolean found = false;
-
-	    if (messageType.equals ("MESSAGE")) {
-	        this.setTitle(element.getAttributeValue("TITLE"));
-	        this.setIcon(element.getAttributeValue("ICON"));
-	        this.setContent(element.getAttributeValue("CONTENT"));
-	        this.setAutoclose(element.getAttributeValue("AUTOCLOSE"));
-	        this.setHideclose(element.getAttributeValue("HIDECLOSE"));
-	        this.setTarget(element.getAttributeValue("TARGET"));
-	        this.setTargetUser(element.getAttributeValue("TARGET_USER"));
-	        this.setMessageType (CommandInterface.Message);
-		    found = true;
-	    }
 	    
 
 	    if (messageType.equals ("MESSAGE")) {

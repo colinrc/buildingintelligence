@@ -119,6 +119,8 @@ public class CacheBridge implements CacheListener {
 		        						values = true;
 		        				} catch (IllegalAddException ex){
 		        						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
+		        				} catch (NullPointerException ex) {
+		    						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());        							        					
 		        				}
 		        			}
 		        		}

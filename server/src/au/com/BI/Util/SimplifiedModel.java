@@ -941,29 +941,39 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 
 	public void addCheckSums(ReturnWrapper returnWrapper) {
+		Byte calcValue = new Byte((byte)0);
 		if (returnWrapper.isMessageIsBytes()) {
 			for (int i = 0; i <  returnWrapper.getCommOutputBytes().capacity(); i++) {
-				byte newArray [] = addCheckSum(returnWrapper.getCommOutputBytes().elementAt(i));
-				if (newArray != null){
+				byte [] arrayToCheck = returnWrapper.getCommOutputBytes().elementAt(i);
+				if (addCheckSum(arrayToCheck,  calcValue)) {
+					byte []newArray = new byte[arrayToCheck.length+1];
+					System.arraycopy(arrayToCheck, 0, newArray, 0, arrayToCheck.length);
+					newArray [arrayToCheck.length + 1] = calcValue;
 					returnWrapper.getCommOutputBytes().setElementAt(newArray,i);
 				}
 			}
 		} else {
 			for (int i = 0; i <  returnWrapper.getCommOutputStrings().capacity();i++) {
-				byte newArray [] = addCheckSum(returnWrapper.getCommOutputStrings().elementAt(i).getBytes());
-				if (newArray != null){
+				byte [] arrayToCheck = returnWrapper.getCommOutputStrings().elementAt(i).getBytes();
+				if (addCheckSum(arrayToCheck,  calcValue)) {
+					byte []newArray = new byte[arrayToCheck.length+1];
+					System.arraycopy(arrayToCheck, 0, newArray, 0, arrayToCheck.length);
+					newArray [arrayToCheck.length + 1] = calcValue;
 					returnWrapper.getCommOutputStrings().setElementAt(new String(newArray),i);
 				}
-			}
-			
-			for (String avOutputString : returnWrapper.getCommOutputStrings()) {
-				byte newArray [] = addCheckSum(avOutputString.getBytes());
 			}
 		}
 	}
 
-	public byte[] addCheckSum(byte returnVal[]) {
-		return null;
+		/**
+		 * This method should be implemented if the model needs to calculate a checksum value
+		 * @param returnVal The array of bytes to calculcate the checksum over
+		 * @param checksumValue The caclulcated byte value of the checksum if needed
+		 * @return True if checksum is needed, false if not. The default is false if the method has not been overwritten
+		 */
+	public boolean addCheckSum(byte returnVal[], Byte checksumValue) {
+		return false;
+		
 	}
 
 
