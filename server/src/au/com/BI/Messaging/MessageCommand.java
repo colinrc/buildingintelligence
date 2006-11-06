@@ -100,8 +100,7 @@ public class MessageCommand extends Command implements CommandInterface {
 	
 				if (this.messageType == CommandInterface.ID){
 					madeCopy = true;
-	    			MessageCommand newCommand = new MessageCommand();
-	    			newCommand.setMessageType(CommandInterface.ID);
+	    			newCopy.setMessageType(CommandInterface.ID);
 					
 					for (NameIdentifier j : nameIdentifier ){
 						String clientName = j.getClientName();
