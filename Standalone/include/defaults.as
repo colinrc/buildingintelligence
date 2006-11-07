@@ -170,3 +170,5 @@ _global.settings.longDateFormat = "d-mmm-yyyy";
 _global.settings.clockFormat = "H:nn dddd, d mmmm yyyy";
 
 _global.settings.defaultBrowserURL = "http://www.google.com/";
+
+_global.settings.enableTVButton = true;

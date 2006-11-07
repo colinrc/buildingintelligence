@@ -40,7 +40,10 @@ comPortSetup = function () {
 				if (extra == "+") extra = "on";
 				if (extra == "-") extra = "off";
 				//if (command == "W0") return;
-				if (command == "K2" && extra == "off") toggleTV();
+				if (command == "K2" && extra == "off") {
+					if (_global.settings.enableTVButton) 
+						toggleTV();
+				}
 				receiveCmd(new XML('<CONTROL KEY="COM_PORT" COMMAND="' + command + '" EXTRA="' + extra + '" />'));
 			}
 		}
