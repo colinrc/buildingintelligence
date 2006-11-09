@@ -1,3 +1,25 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b6.zip V1.6b6]   ==
+
+''' Script '''
+
+Added the ability for a jython script to find the state of a label using the getLabelState call.  
+The returned value is the key from the list of strings configured for use for the label device.
+The pseudocode to use this would be 
+  * listen for an event from a DLT
+  * call getLabelState
+  * execute parts of the script as appropriate based on the label return value. 
+
+''' General '''
+
+Added hooks for models to more easily add checksums to outgoing messages.
+Override the  following method.
+
+{{{
+	Byte addCheckSum(byte [] rawMessage) 
+	
+	Store the resulting checksum from teh bytes of rawMessage into result and return it, return null for no checksum.
+}}}	
+	
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b5.zip V1.6b5]   ==
 
 ''' Jetty '''

@@ -1072,6 +1072,14 @@ public class Model
                 sendCommand.setKey("RRDGRAPH");
                 sendToFlash(sendCommand);
         }
+        
+        /**
+         * @param dipslayName
+         * getLabelState is used to find the state of a particular label. The returned string is the key from the lookup table.
+         */
+        public String getLabelState(String displayName) {
+        	return labelMgr.getLabelState(displayName);
+        }
 
         /**
          * @param graphName, graphTemplate, width, height

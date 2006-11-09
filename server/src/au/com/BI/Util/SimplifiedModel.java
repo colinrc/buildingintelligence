@@ -941,24 +941,25 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 
 	public void addCheckSums(ReturnWrapper returnWrapper) {
-		Byte calcValue = new Byte((byte)0);
 		if (returnWrapper.isMessageIsBytes()) {
-			for (int i = 0; i <  returnWrapper.getCommOutputBytes().capacity(); i++) {
+			for (int i = 0; i <  returnWrapper.getCommOutputBytes().size(); i++) {
 				byte [] arrayToCheck = returnWrapper.getCommOutputBytes().elementAt(i);
-				if (addCheckSum(arrayToCheck,  calcValue)) {
+				Byte returnCheck = addCheckSum(arrayToCheck);
+				if (returnCheck != null) {
 					byte []newArray = new byte[arrayToCheck.length+1];
 					System.arraycopy(arrayToCheck, 0, newArray, 0, arrayToCheck.length);
-					newArray [arrayToCheck.length + 1] = calcValue;
+					newArray [arrayToCheck.length ] = returnCheck;
 					returnWrapper.getCommOutputBytes().setElementAt(newArray,i);
 				}
 			}
 		} else {
-			for (int i = 0; i <  returnWrapper.getCommOutputStrings().capacity();i++) {
+			for (int i = 0; i <  returnWrapper.getCommOutputStrings().size();i++) {
 				byte [] arrayToCheck = returnWrapper.getCommOutputStrings().elementAt(i).getBytes();
-				if (addCheckSum(arrayToCheck,  calcValue)) {
+				Byte returnCheck = addCheckSum(arrayToCheck);
+				if (returnCheck != null) {
 					byte []newArray = new byte[arrayToCheck.length+1];
 					System.arraycopy(arrayToCheck, 0, newArray, 0, arrayToCheck.length);
-					newArray [arrayToCheck.length + 1] = calcValue;
+					newArray [arrayToCheck.length ] = returnCheck;
 					returnWrapper.getCommOutputStrings().setElementAt(new String(newArray),i);
 				}
 			}
@@ -971,8 +972,8 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		 * @param checksumValue The caclulcated byte value of the checksum if needed
 		 * @return True if checksum is needed, false if not. The default is false if the method has not been overwritten
 		 */
-	public boolean addCheckSum(byte returnVal[], Byte checksumValue) {
-		return false;
+	public Byte addCheckSum(byte returnVal[]) {
+		return null;
 		
 	}
 

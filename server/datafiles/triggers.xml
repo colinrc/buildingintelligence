@@ -1,5 +1,5 @@
                <!-- _____________________________ Trigger Sequences _____________________________-->
-        <TRIGGERS>
+        <EVENTS>
                 
                 <TRIGGER NAME="DLT1" >
                 
@@ -11,7 +11,8 @@
 	                			<TIME_TRUE="60" />  must be true for a minute to trigger the event    			
 	                		</TEST>
 	                		<STATUS>
-	                			 HIDDEN="N" ADMINISTRATOR="N" /> 
+	                			 <ATTRIB NAME="HIDDEN" VALUE="N" />
+             			  		<ATTRIB NAME="ADMINISTRATOR" VALUE="N" /> 
 	                		</STATUS>
 	                		<ACTION_SEQ>
 	                			<CONTROL COMMAND="on" EXTRA="100" KEY="GATE_CONTROL" />
@@ -29,7 +30,9 @@
 	                			<GT_OTHER KEY="LIGHT_LEVEL"  COMPARE="EXTRA" VALUE="50" />
 	                			<TIME_TRUE="60" />  must be true for a minute to trigger the event    			
 	                		</TEST>
-	                		<STATUS HIDDEN="Y" ADMINISTRATOR="N" /> 
+	                		<STATUS>
+	                			 <ATTRIB NAME="HIDDEN" VALUE="Y" />
+             			  		<ATTRIB NAME="ADMINISTRATOR" VALUE="Y" /> 
 	                		</STATUS>
 	                		<ACTION_SEQ>
 	                			<CONTROL COMMAND="on" EXTRA="100" KEY="GATE_CONTROL" />
@@ -44,11 +47,13 @@
 	                			<LABEL VALUE="VOLUME" />
 	                			<TIME_TRUE="0" />  fire immediately
 	                		</TEST>
-	                		<STATUS HIDDEN="Y" ADMINISTRATOR="N" />
-	                		</STATUS> 
+	                		<STATUS>
+	                			 <ATTRIB NAME="HIDDEN" VALUE="N" />
+             			  		<ATTRIB NAME="ADMINISTRATOR" VALUE="Y" /> 
+	                		</STATUS>
 	                		<ACTION_SEQ>
 	                			<CONTROL COMMAND="volume" EXTRA="%EXTRA%" KEY="KITCHEN_AUDIO" />
 	                		<ACTION_SEQ />
 	                	</ACTION>
 	             </TRIGGER>
-        </TRIGGERS>
+        </EVENTS>

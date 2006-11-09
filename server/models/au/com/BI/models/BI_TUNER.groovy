@@ -96,16 +96,14 @@ class RawTest extends GroovyModel {
 				}
 	}
 	
-	boolean addCheckSum(byte [] calcValue,Byte result) {
-/*
+	public Byte addCheckSum(byte [] calcValue) {
+
 		byte checksum = 0;
-		for (int i = 0; i < calcValue.length; i ++){
-			checksum += calcValue[i];
+		for (int i in calcValue){ 
+			checksum += i;
 		}
-		result.set(checksum);
-		return true;
-		*/
-		return false;
+
+		return new Byte((byte)(checksum&0xff));
 	}
 
 }
