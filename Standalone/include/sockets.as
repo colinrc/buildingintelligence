@@ -68,12 +68,19 @@ serverSetup = function () {
 getCachedData = function (init) {
 	var xml = new XML();
 	if (init) {
+		debug("HTTPS: init + update");
 		xml.load(_global.settings.serverAddress + "/webclient/update?INIT=Y");
+		xml.init = true;
 	} else {
+		debug("HTTPS: update");
 		xml.load(_global.settings.serverAddress + "/webclient/update");
 	}
 	xml.onLoad = function (success) {
 		if (success) {
+			trace(this.init)
+			if (init) {
+				serverSend('<CONTROL KEY="ID" COMMAND="name" EXTRA="' + _global.settings.clientName + '" />');
+			}
 			var packet = this.firstChild.childNodes;
 			for (var i=0; i<packet.length; i++) {
 				//trace("START:\n" + packet[i] + "\nEND");
@@ -97,6 +104,7 @@ serverSend = function (packet) {
 	}
 	
 	if (_global.settings.serverAddress.substr(0, 7) == "http://" || _global.settings.serverAddress.substr(0, 8) == "https://") {
+		debug("HTTPS: sendAndLoad");
 		var xmlIn:XML = new XML();
 		var messageOut:LoadVars = new LoadVars();
 		messageOut.MESSAGE = packet;
@@ -130,7 +138,7 @@ serverOnConnect = function (status) {
 			window_mc.close();
 			delete commsError;
 		}
-		serverSend('<CONTROL KEY="ID" COMMAND="name" EXTRA="' + _global.settings.clientName + '" />')
+		serverSend('<CONTROL KEY="ID" COMMAND="name" EXTRA="' + _global.settings.clientName + '" />');
 	} else {
 		if (!_global.settings.debugMode) {
 			showCommsError();
