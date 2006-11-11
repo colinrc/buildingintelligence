@@ -437,10 +437,10 @@ namespace Switcher
             Process myProcess = new Process();
             String path = Environment.GetFolderPath(Environment.SpecialFolder.Programs);
 
-            ProcessStartInfo myProcessStartInfo = new ProcessStartInfo("\\Program Files\\J9\\PPRO10\\bin\\" + ourProcess, "\"-Djava.library.path=/Program Files/eLifejava\" \"-jcl:ppro10\" \"-classpath\" \"\\Program Files\\eLifejava\\eLife_PDA.jar\" \"au.com.BI.GUI.Loader\" \"/Program Files/eLifejava\"");
+            ProcessStartInfo myProcessStartInfo = new ProcessStartInfo("\\Program Files\\J9\\PPRO10\\bin\\" + ourProcess, "\"-Djava.library.path=/Program Files/eLifeJava\" \"-jcl:ppro10\" \"-classpath\" \"\\Program Files\\eLifeJava\\eLife_PDA.jar\" \"au.com.BI.GUI.Loader\" \"/Program Files/eLifeJava\"");
             myProcessStartInfo.WorkingDirectory = "\\Program Files\\J9\\PPRO10\\bin\\";
             // Assign 'StartInfo' of notepad to 'StartInfo' of 'myProcess' object.
-            myProcessStartInfo.Arguments = "\"-Djava.library.path=/Program Files/eLifejava\" \"-jcl:ppro10\" \"-classpath\" \"\\Program Files\\eLifejava\\eLife_PDA.jar\" \"au.com.BI.GUI.Loader\" \"/Program Files/eLifejava\"";
+            myProcessStartInfo.Arguments = "\"-Djava.library.path=/Program Files/eLifeJava\" \"-jcl:ppro10\" \"-classpath\" \"\\Program Files\\eLifejava\\eLife_PDA.jar;\\Program Files\\eLifeJava\\ext\\kxml2-2.2.2.jar\" \"au.com.BI.GUI.Loader\" \"/Program Files/eLifeJava\"";
 
             myProcessStartInfo.UseShellExecute = false;
             myProcess.StartInfo = myProcessStartInfo;
