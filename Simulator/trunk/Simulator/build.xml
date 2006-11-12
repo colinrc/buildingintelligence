@@ -1,0 +1,159 @@
+<?eclipse.ant.import?>
+
+    <!-- import file="build.xml"/ -->
+<project basedir="." default="build" name="Simulator">
+    <description>Builds, tests, and runs the project server.</description>
+	<taskdef resource="net/sf/ant4eclipse/antlib.xml" />
+	<property name="workspace" value="${basedir}/.." />
+	
+	<property name="project.name" value="Simulator" />
+	<property name="dist.jar" value="dist/Simulator.jar" />
+	<userLibraries userlibraries="./libs.userlibraries" />
+	<getEclipseClasspath pathId="Simulator.classpath" relative="true" workspace="${workspace}" projectName="${project.name}" />
+	<getEclipseClasspath property="Simulator.jar_libs" relative="true" workspace="${workspace}" projectName="${project.name}" />
+	<available file="dist/lib" type="dir" property="lib_dir.present"/>
+	<available file="ext" type="dir" property="ext_dir.present"/>
+	<available file="dist/bin" type="dir" property="bin_dir.present"/>
+	<getOutputpath property="classes.dir" workspace="${workspace}" projectName="${project.name}" />
+
+	
+	<target name="init">
+		<delete>
+			<fileset dir="dist" includes="**/*" excludes="ext/*" followsymlinks="false" >
+				<exclude name="ext/*" />
+				<exclude name="*.zip" />
+			</fileset>
+		</delete>
+        <echo message="Emptied previous dist file" />
+		
+	</target>
+	
+	<target name="build-lib-dir" depends="" unless="lib_dir.present" >    	
+	   	<mkdir dir="dist/lib" />
+	</target>	
+
+	
+    <target name="compile" depends="init" >
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" >
+            <src path="src"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}">
+            <src path="test"/>
+            <classpath refid="Simulator.classpath"/>
+        </javac>
+    </target>
+	
+	
+	<target name="jar" depends="compile" >
+		
+		<pathconvert property="flattended.jars" refid="Simulator.classpath" pathsep=" ">
+		    <chainedmapper>
+		        <flattenmapper/>
+		        <globmapper from="*" to="../ext/*"/>
+		    </chainedmapper>
+		</pathconvert>
+		<manifest file="MANIFEST.MF" mode="update" >
+			<attribute name="Class-Path" value="${flattended.jars}" />
+		</manifest>
+		<jar destfile="${dist.jar}" 
+			update="false"
+			basedir="${classes.dir}" 
+			includes = "**/*.class" 
+			excludes = "**/Test*.class"
+			manifest="MANIFEST.MF" />
+		<jar destfile="${dist.jar}" 
+			update="true"
+			basedir="src" 
+			includes = "**/*.properties" 
+			 />
+		<echo>To run this application from the command line without Ant, try:</echo>
+		<echo>java -jar "${dist.jar}"</echo>
+	</target>
+    
+   <target name="increment" depends="" description="Increments build number and creates a zip file.">
+        <propertyfile file="src/my.properties" >
+          <entry  key="minor_version" type="int" operation="+" value="1" />
+        </propertyfile>
+        <property file="src/my.properties" />
+        <echo message="Version number now ${major_version}${minor_version}" />
+    </target>
+    
+    <target name="load-version-number" depends="" description="Loads property numbers.">
+        <property file="src/my.properties" />
+        <echo message="Version number now ${major_version}${minor_version}" />
+    </target>
+    	
+    <target name="build_dist" depends="jar" >
+    	 	
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="false"
+			basedir="dist" 
+			includes = "*.jar" />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "my.properties" />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "config/*" />	
+    </target>
+	
+	<target name="dist" depends="increment,build_dist" />
+	<target name="dist-no-inc" depends="load-version-number,build_dist" />
+	
+	<target name="build" depends="dist-no-inc" />
+
+    <target name="build-ext-dir" unless="ext_dir.present" >    	
+	   	<mkdir dir="ext"  />
+	</target>
+	
+	<target name="copy-libs" depends="init,build-ext-dir" >
+		<pathconvert pathsep="," property="massaged_jar_libs" refid="Simulator.classpath" >
+			<map from="/Java" to="Java" />
+		</pathconvert>
+		<echo>List of jar files is ${Simulator.jar_libs}</echo>
+		<echo>Massaged jar files list is ${massaged_jar_libs}</echo>
+
+		<delete  includeemptydirs="true" quiet="true" >
+			<fileset dir="dist/ext" includes="**/*" />
+		</delete>
+		<delete  includeemptydirs="true" quiet="true" >
+			<fileset dir="dist/lib" includes="**/*" />
+		</delete>
+		<copy todir="dist/ext" flatten="true" >
+		   <fileset dir="/" includes="${massaged_jar_libs}"  />
+		</copy>
+		<delete  includeemptydirs="true" quiet="true" >
+		    	<fileset dir="dist/ext" >
+		    		<include name="junit*" />
+		    		<include name="nbunit*" />
+		    		<include name="xmlunit*" />
+	    		</fileset>
+		</delete>
+		<copy todir="dist/lib" flatten="true" >
+				<fileset dir="." includes="*.dll"  />
+			   	<fileset dir="." includes="*.jnilib"  />
+		</copy>
+	</target>
+		
+    <target name="dist-libs"  depends="copy-libs" >
+         <property file="src/my.properties" />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+			update="false"
+			basedir="dist" 
+			includes = "ext/*.jar" />
+        <!-- copy todir="dist">
+	    	<fileset dir="." includes="*.dll" />
+	    	<fileset dir="." includes="*.jnilib" />
+		</copy -->
+	<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+		update="true"
+		basedir="dist"
+		includes = "lib/*.dll" />
+        <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+		update="true"
+		basedir="dist"
+		includes = "lib/*.jnilib" />
+    </target>
+</project>
