@@ -1,0 +1,11 @@
+body {
+	margin: 0;
+	overflow: none;
+	background-color: pink;
+}
+
+div#elife {
+	font-family: arial, sans-serif, helvetica;
+	font-size: 11px;
+	color: #FFFFFF;
+}
