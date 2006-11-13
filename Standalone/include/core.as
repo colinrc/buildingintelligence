@@ -1535,13 +1535,17 @@ openAbout = function () {
 	var window_mc = showWindow({width:600, height:500, title:"About eLIFE", iconName:"home"});
 	var content_mc = window_mc.content_mc;
 
+	var aboutTxt_mc = content_mc.createEmptyMovieClip("aboutTxt_mc", 50);
+	var bg_mc = aboutTxt_mc.createEmptyMovieClip("bg_mc", 0);
+	bg_mc.beginFill(0xA6B4C9);
+	bg_mc.drawRect(0, 0, content_mc.width, content_mc.height - 40);
+	bg_mc.endFill();
 	var about_tf = new TextFormat();
-	about_tf.color = 0xFFFFFF;
+	about_tf.color = 0x000000;
 	about_tf.size = 12;
 	about_tf.bold = true;
 	about_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
-	
-	var about_txt = content_mc.createTextField("about_txt", 5, 0, 0, content_mc.width, content_mc.width - 30);
+	var about_txt = aboutTxt_mc.createTextField("about_txt", 10, 10, 10, bg_mc._width - 20, bg_mc._height - 20);
 	about_txt.embedFonts = true;
 	about_txt.selectable = false;
 	about_txt.wordWrap = true;
@@ -1549,6 +1553,13 @@ openAbout = function () {
 	about_txt.html = true;
 	about_txt.setNewTextFormat(about_tf);
 	about_txt.htmlText = "This is a test. hello world.";
+	
+	var aboutMask_mc = content_mc.createEmptyMovieClip("aboutMask_mc", 100);
+	aboutMask_mc.beginFill(0xFFCC00);
+	aboutMask_mc.drawRect(0, 0, bg_mc._width, bg_mc._height);
+	aboutMask_mc.endFill();
+	
+	aboutTxt_mc.setMask(aboutMask_mc);
 	
 	var loadAboutText = new LoadVars();
 	loadAboutText.onData = function (src) {
@@ -1569,7 +1580,7 @@ openAbout = function () {
 	info_txt.wordWrap = true;
 	info_txt.multiline = true;
 	info_txt.autoSize = true;
-	info_txt.setNewTextFormat(about_tf);
+	info_txt.setNewTextFormat(info_tf);
 	
 	var upTime = getTimer() - _global.clientStartTime; 
 	upTime = upTime.timeFormat();

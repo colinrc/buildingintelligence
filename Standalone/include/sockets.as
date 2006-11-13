@@ -17,8 +17,12 @@ crypto.onDecode = function (decoded) {
 }
 
 comPortSetup = function () {
+	if (_global.settings.COMPort == 0) {
+		debug("COM Ports disabled");
+		return;
+	}
 	var availablePorts = mdm.COMPort.ports.split(",");
-	if (!availablePorts.length) {
+	if(!availablePorts.length) {
 		debug("No available COM Ports");
 		return;
 	} else {
@@ -52,9 +56,10 @@ comPortSetup = function () {
 
 serverSetup = function () {
 	if (_global.settings.serverAddress.length) {
-		if (_global.settings.serverAddress.substr(0, 7) == "http://" || _global.settings.serverAddress.substr(0, 8) == "https://") {
+		if (_global.settings.serverProtocol == "https") {
+			isConnected = false;
 			setInterval(this, "getCachedData", _global.settings.webRefreshRate * 1000);
-			getCachedData(true);
+			getCachedData();
 		} else {
 			server = new XMLSocket();
 			server.onConnect = serverOnConnect;
@@ -65,35 +70,38 @@ serverSetup = function () {
 	}
 }
 
-getCachedData = function (init) {
+getCachedData = function () {
 	var xml = new XML();
-	if (init) {
+	if (!isConnected) {
 		debug("HTTPS: init + update");
-		xml.load(_global.settings.serverAddress + "/webclient/update?INIT=Y");
-		xml.init = true;
+		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update?INIT=Y");
 	} else {
 		debug("HTTPS: update");
-		xml.load(_global.settings.serverAddress + "/webclient/update");
+		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update");
 	}
+	xml.timeoutID = setTimeout(this, "serverOnClose", 3000);
 	xml.onLoad = function (success) {
+		clearTimeout(this.timeoutID);
 		if (success) {
-			trace(this.init)
-			if (init) {
-				serverSend('<CONTROL KEY="ID" COMMAND="name" EXTRA="' + _global.settings.clientName + '" />');
+			if (commsError) {
+				window_mc.close();
+				delete commsError;
 			}
-			var packet = this.firstChild.childNodes;
-			for (var i=0; i<packet.length; i++) {
-				//trace("START:\n" + packet[i] + "\nEND");
-				receiveCmd(packet[i], true);
+			
+			if (this.httpStatus == 200 || this.httpStatus == 0) { //SC_OK = 200 SC_NOCONTENT = 204
+				var packet = this.firstChild.childNodes;
+				for (var i=0; i<packet.length; i++) {
+					//debug("START:\n" + packet[i] + "\nEND");
+					receiveCmd(packet[i], true);
+				}
 			}
 		} else {
-			// xml didn't load
+			serverOnClose();
 		}
 	}
-}
-
-sendAndLoadCachedData = function () {
-	
+	xml.onHTTPStatus = function (httpStatus:Number) {
+		this.httpStatus = httpStatus;
+	}
 }
 
 serverSend = function (packet) {
@@ -103,12 +111,12 @@ serverSend = function (packet) {
 		trace("OUTGOING:\n" + packet + "\n--------");
 	}
 	
-	if (_global.settings.serverAddress.substr(0, 7) == "http://" || _global.settings.serverAddress.substr(0, 8) == "https://") {
+	if (_global.settings.serverProtocol == "https") {
 		debug("HTTPS: sendAndLoad");
 		var xmlIn:XML = new XML();
 		var messageOut:LoadVars = new LoadVars();
 		messageOut.MESSAGE = packet;
-		messageOut.sendAndLoad(_global.settings.serverAddress + "/webclient/update", xmlIn);
+		messageOut.sendAndLoad("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update", xmlIn);
 		xmlIn.onLoad = function (success) {
 			if (success) {
 				/*
@@ -118,7 +126,7 @@ serverSend = function (packet) {
 				}
 				*/
 			} else {
-				// xml didn't load
+				serverOnClose();
 			}
 		}
 	} else {
@@ -138,20 +146,24 @@ serverOnConnect = function (status) {
 			window_mc.close();
 			delete commsError;
 		}
-		serverSend('<CONTROL KEY="ID" COMMAND="name" EXTRA="' + _global.settings.clientName + '" />');
 	} else {
 		if (!_global.settings.debugMode) {
 			showCommsError();
 			commsError = true;
 		}
-		serverConnectID = setInterval(_root, "serverConnect", _global.settings.serverRetryTime * 1000);
+		if (_global.settings.serverProtocol == "sockets") {
+			serverConnectID = setInterval(_root, "serverConnect", _global.settings.serverRetryTime * 1000);
+		}
 	}
 }
 
 serverOnClose = function () {
 	showCommsError();
 	commsError = true;
-	serverConnectID = setInterval(_root, "serverConnect", _global.settings.serverRetryTime * 1000);
+	isConnected = false;
+	if (_global.settings.serverProtocol == "sockets") {
+		serverConnectID = setInterval(_root, "serverConnect", _global.settings.serverRetryTime * 1000);
+	}
 }
 
 serverConnect = function () {
@@ -183,7 +195,9 @@ receiveCmd = function (xml, ignoreSkip) {
 	}
 	
 	if (msg.nodeName == "connected") {
+		isConnected = true;
 		_global.serverVersion = msg.attributes.version;
+		sendCmd("ID", "name", _global.settings.clientName);
 		sendCmd("MACRO", "getList", "");
 		sendCmd("SCRIPT", "getList", "");
 		sendCmd("CALENDAR", "getEvents", "");

@@ -3,6 +3,7 @@ import flash.filters.ColorMatrixFilter;
 
 class bi.ui.Tabs extends bi.ui.CoreUI {
 	private var tabsContent_mc:MovieClip;
+	private var tabsMask_mc:MovieClip;
 	private var	tabsForeground_mc:MovieClip;
 	private var	tabsBackground_mc:MovieClip;
 	
@@ -149,15 +150,28 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		createEmptyMovieClip("tabsBackground_mc", 10);
 		createEmptyMovieClip("tabsForeground_mc", 20);
 		createEmptyMovieClip("tabsContent_mc", 30);
-		
+		createEmptyMovieClip("tabsMask_mc", 40);
+				
 		var bg_mc:MovieClip = tabsForeground_mc.createEmptyMovieClip("bg_mc", -1);
 		if (_position == "left") bg_mc._x = _tabWidth;
 		if (_position == "top") bg_mc._y = _tabHeight;
 		bg_mc.beginFill(_tabOnColour, _tabOpacity);
-		if (_position == "left" || _position == "right") bg_mc.drawRect(0, 0, __width - _tabWidth, __height, _cornerRadius);
-		if (_position == "top" || _position == "bottom") bg_mc.drawRect(0, 0, __width, __height - _tabHeight, _cornerRadius);
+		if (_position == "left" || _position == "right") {
+			bg_mc.drawRect(0, 0, __width - _tabWidth, __height, _cornerRadius);
+		}
+		if (_position == "top" || _position == "bottom") {
+			bg_mc.drawRect(0, 0, __width, __height - _tabHeight, _cornerRadius);
+		}
 		bg_mc.endFill();
 
+		if (_position == "left") tabsContent_mc._x = _tabWidth;
+		if (_position == "top") tabsContent_mc._y = _tabHeight;
+		
+		tabsMask_mc.beginFill(0xFFCC00);
+		tabsMask_mc.drawRect(tabsContent_mc._x, tabsContent_mc._y, bg_mc._width, bg_mc._height, _cornerRadius);
+		tabsMask_mc.endFill();
+		tabsContent_mc.setMask(tabsMask_mc);
+		
 		if (_global.settings.device != "pda" && _global.settings.showDropShadows) {
 			tabsForeground_mc.filters = [_global.settings.dropShadowFilterMedium];
 			tabsBackground_mc.filters = [_global.settings.dropShadowFilterMedium];
@@ -169,8 +183,6 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		for (var i=0; i<_tabs_array.length; i++) {
 			var tabContent_mc:MovieClip = tabsContent_mc.createEmptyMovieClip("tab" + i + "_mc", i + 100);
 			tabContent_mc._x = tabContent_mc._y = _contentPadding;
-			if (_position == "left") tabContent_mc._x = _tabWidth + _contentPadding;
-			if (_position == "top") tabContent_mc._y = _tabHeight + _contentPadding;
 			tabContent_mc.width = __width - (_contentPadding * 2);
 			tabContent_mc.height = __height - (_contentPadding * 2);
 			if (_position == "left" || _position == "right") tabContent_mc.width -= _tabWidth;
