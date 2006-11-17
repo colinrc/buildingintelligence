@@ -211,7 +211,7 @@ public class UpdateServlet extends HttpServlet {
 
         Long  localSessionID = null;
         try {
-            String jSession = (String)params.get("SESSION_ID");
+            String jSession = (String)req.getParameter("SESSION_ID");
     		 localSessionID = Long.parseLong(jSession);
     		 localSessions = (ConcurrentHashMap<Long,LocalSession>)session.getAttribute("LocalSessions");
         } catch (NumberFormatException ex){
