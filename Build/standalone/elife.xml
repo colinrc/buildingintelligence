@@ -1,13 +1,13 @@
 <client>
 	<setting name="clientName" value="standaloneClient"/>
 	<setting name="serverAddress" value="127.0.0.1" />
-	<setting name="serverProtocol" value="https" />
-	<setting name="serverPort" value="8443" />
-	<setting name="encryptedData" value="false" />
+	<!--setting name="serverProtocol" value="https" />
+	<setting name="serverPort" value="8443" /-->
 	<setting name="applicationXML" value="sample.xml" />
 	<setting name="fullScreen" value="false" />
 	<setting name="hideMouseCursor" value="false" />
 	<setting name="debugMode" value="true" />
 	<setting name="COMPort" value="0" />
 	<setting name="webRefreshRate" value="5" />
+	<setting name="securityID" value="09du3q23487" />
 </client>

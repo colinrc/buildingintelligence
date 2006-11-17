@@ -73,11 +73,11 @@ serverSetup = function () {
 getCachedData = function () {
 	var xml = new XML();
 	if (!isConnected) {
-		debug("HTTPS: init + update");
-		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update?INIT=Y");
+		debug("HTTPS: /webclient/update?INIT=Y&ID=" + _global.settings.securityID);
+		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update?INIT=Y&ID=" + _global.settings.securityID);
 	} else {
-		debug("HTTPS: update");
-		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update");
+		debug("HTTPS: /webclient/update?JSESSION=" + _global.sessionID);
+		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update?JSESSION=" + _global.sessionID);
 	}
 	xml.timeoutID = setTimeout(this, "serverOnClose", 3000);
 	xml.onLoad = function (success) {
@@ -116,6 +116,7 @@ serverSend = function (packet) {
 		var xmlIn:XML = new XML();
 		var messageOut:LoadVars = new LoadVars();
 		messageOut.MESSAGE = packet;
+		messageOut.JSESSION = _global.sessionID;
 		messageOut.sendAndLoad("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update", xmlIn);
 		xmlIn.onLoad = function (success) {
 			if (success) {
@@ -197,6 +198,7 @@ receiveCmd = function (xml, ignoreSkip) {
 	if (msg.nodeName == "connected") {
 		isConnected = true;
 		_global.serverVersion = msg.attributes.version;
+		_global.sessionID = msg.attributes.session;
 		sendCmd("ID", "name", _global.settings.clientName);
 		sendCmd("MACRO", "getList", "");
 		sendCmd("SCRIPT", "getList", "");
