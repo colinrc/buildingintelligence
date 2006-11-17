@@ -58,6 +58,10 @@ public class eLife {
 		System.out.println ("Launching eLife V" + outString);
 		logger.log (Level.INFO,"Launching eLife V" + outString);
 
+		if (sysOutPrint){
+			System.setProperty("DEBUG","true");
+		}
+		
 		try {
 		    String bootstrapFile = "datafiles" + File.separator + "bootstrap.xml"; 
 		    if (sysOutPrint) System.out.println ("About to load bootstrap " + bootstrapFile);

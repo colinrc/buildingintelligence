@@ -1,3 +1,9 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b7.zip V1.6b7]   ==
+
+''' Jetty '''
+
+Updated sessions to be explicitly sent via GET or POST parameters, rather than relying on cookies. To support ticket [ticket:567]
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b6.zip V1.6b6]   ==
 
 ''' Script '''

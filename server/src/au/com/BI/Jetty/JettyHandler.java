@@ -112,15 +112,18 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             // Call servlet directly
             ContextHandler updateContextHandler = new ContextHandler ();
 
-            updateContextHandler.setContextPath("/webclient");
+            //updateContextHandler.setContextPath("/webclient");
+            updateContextHandler.setContextPath("/");
+                       
             updateContextHandler.setResourceBase("../www");
-            // updateContextHandler.setConnectors(new String[]{"SSL_CONNECT"});
             updateContextHandler.setConnectorNames(new String[]{"SSL_CONNECT"});
 
             ServletHandler updateHandler = new ServletHandler ();   
 
-            ServletHolder updateServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.UpdateServlet","/update");
-            ServletHolder logoutServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.Logout","/logout");
+            ServletHolder updateServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.UpdateServlet","/webclient/update");
+            ServletHolder logoutServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.Logout","/webclient/logout");
+            
+            ServletHolder defServlet = updateHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
             
             SessionHandler sessionHandler = new SessionHandler();
             sessionHandler.setHandler(updateHandler);
@@ -148,7 +151,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 	            servletSec.setAuthMethod(Constraint.__BASIC_AUTH);
 	            servletSec.setUserRealm(webPass);
 	            ConstraintMapping servletConstraintMap = new ConstraintMapping();
-	            servletConstraintMap.setPathSpec("/webclient/*");
+	            servletConstraintMap.setPathSpec("/*");
 	            Constraint servletConstraint = new Constraint();
 	            servletConstraint.setName("Servlet");
 	            servletConstraint.setRoles(new String[]{"user","admin","integrator"});
@@ -156,32 +159,40 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 	            servletConstraintMap.setConstraint(servletConstraint);
 	            servletSec.setConstraintMappings(new ConstraintMapping[] {servletConstraintMap});
 	            servletSec.setHandler(updateContextHandler);
+	            //servletSec.addHandler(updateContextHandler);
 	        }
             
             // HTML static handler
+            /*
             ContextHandler mainContextHandler = new ContextHandler ();
             mainContextHandler.setContextPath("/");
             mainContextHandler.setResourceBase("../www");
-
+            
             ServletHandler servletHandler = new ServletHandler ();         
             ServletHolder defServlet = servletHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
             defServlet.setInitParameter("dirAllowed","false");
             mainContextHandler.setHandler(servletHandler);
-
+            */
          
             ContextHandlerCollection contexts = new ContextHandlerCollection();
+            /*
             if (bootstrap.isRequestUserNames()){
             	contexts.setHandlers(new org.mortbay.jetty.Handler[]{servletSec,mainContextHandler});
             } else {
             	contexts.setHandlers(new org.mortbay.jetty.Handler[]{updateContextHandler,mainContextHandler});
-            }
+            }*/
+            if (bootstrap.isRequestUserNames()){
+            	contexts.setHandlers(new org.mortbay.jetty.Handler[]{servletSec});
+            } else {
+            	contexts.setHandlers(new org.mortbay.jetty.Handler[]{updateContextHandler});
+            }           
     
             HandlerCollection handlers = new HandlerCollection();
             handlers.setHandlers(new org.mortbay.jetty.Handler[]{contexts,new DefaultHandler()});
             
             server.setHandler(handlers);
             server.setStopAtShutdown(true);
-            
+
             // Start the http server
             server.start ();
         } catch (Exception ex){
