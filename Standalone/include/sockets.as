@@ -76,8 +76,8 @@ getCachedData = function () {
 		debug("HTTPS: /webclient/update?INIT=Y&ID=" + _global.settings.securityID);
 		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update?INIT=Y&ID=" + _global.settings.securityID);
 	} else {
-		debug("HTTPS: /webclient/update?JSESSION=" + _global.sessionID);
-		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update?JSESSION=" + _global.sessionID);
+		debug("HTTPS: /webclient/update?SESSION_ID=" + _global.sessionID);
+		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update?SESSION_ID=" + _global.sessionID);
 	}
 	xml.timeoutID = setTimeout(this, "serverOnClose", 3000);
 	xml.onLoad = function (success) {
@@ -116,7 +116,7 @@ serverSend = function (packet) {
 		var xmlIn:XML = new XML();
 		var messageOut:LoadVars = new LoadVars();
 		messageOut.MESSAGE = packet;
-		messageOut.JSESSION = _global.sessionID;
+		messageOut.SESSION_ID = _global.sessionID;
 		messageOut.sendAndLoad("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update", xmlIn);
 		xmlIn.onLoad = function (success) {
 			if (success) {
