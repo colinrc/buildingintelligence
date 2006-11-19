@@ -142,12 +142,16 @@ public class FlashHandler extends SimplifiedModel implements DeviceModel, Client
 		String key = command.getKey();
 		String commandCode = command.getCommandCode();
 
-		if (command.getTargetDeviceID() != 0)
-		    flashControlListener.sendToOneClient (new Document (message),command.getTargetDeviceID());
-		else {
-		    if (key.startsWith("AV:") || (key.equals ("MACRO") && commandCode.equals ("getList"))||
-		            key.equals ("CALENDAR") && commandCode.equals("getEvents"))  return;
-		    flashControlListener.sendToAllClients (new Document (message),((ClientCommand)command).getOriginatingID());
+		try {
+			if (command.getTargetDeviceID() != 0)
+			    flashControlListener.sendToOneClient (new Document (message),command.getTargetDeviceID());
+			else {
+			    if (key.startsWith("AV:") || (key.equals ("MACRO") && commandCode.equals ("getList"))||
+			            key.equals ("CALENDAR") && commandCode.equals("getEvents"))  return;
+			    flashControlListener.sendToAllClients (new Document (message),((ClientCommand)command).getOriginatingID());
+			}
+		} catch (IllegalAddException ex){
+			logger.log (Level.WARNING,"Content was attempted to be sent to two clients rather than local copies made." + ex.getMessage());
 		}
 	}
 

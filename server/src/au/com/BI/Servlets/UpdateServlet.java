@@ -94,7 +94,7 @@ public class UpdateServlet extends HttpServlet {
 	            emptyResponse = false;
 	        } else {
 	        	try {
-		        	Long  localSessionID = Long.parseLong((String)params.get("SESSION_ID"));
+		        	Long  localSessionID = Long.parseLong(req.getParameter("SESSION_ID"));
 		        	if (localSessionID == null ){
 				        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 				        logger.log (Level.WARNING,"Session parameter was not passed to the server");

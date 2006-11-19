@@ -7,6 +7,7 @@ package au.com.BI.Command;
 
 import au.com.BI.Util.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.*;
 import au.com.BI.Home.Controller;
 import au.com.BI.JRobin.*;
@@ -26,13 +27,13 @@ public class Cache {
         protected Controller controller;
         protected JRobinCacheUpdater jRobinCacheUpdater = null;
 		protected boolean jRobinActive = false;
-		protected List<CacheListener> cacheListeners = null;
+		protected Queue<CacheListener> cacheListeners = null;
 
         public Cache() {
                 cachedCommands = Collections.synchronizedMap(new HashMap<String,CacheWrapper>(
                     DeviceModel.NUMBER_CACHE_COMMANDS));
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
-                cacheListeners = new LinkedList<CacheListener>();
+                cacheListeners = new ConcurrentLinkedQueue<CacheListener>();
         }
 
         public Collection getSetElements(CacheWrapper cachedObject) {
