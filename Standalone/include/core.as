@@ -2720,10 +2720,30 @@ openMacroEdit = function (macro) {
 					this._parent.updateLabel();
 				}			
 				*/
-			} else {				
-				label_txt.text = controlObj.key + " [" + controlObj.command;
-				if (controlObj.extra != "") label_txt.text += " : " + controlObj.extra;
-				label_txt.text += "]";				
+			} else {
+				control_mc.updateLabel = function () {
+					this.label_txt.text = this.controlObj.key + " [" + this.controlObj.command;
+					if (controlObj.extra != "") this.label_txt.text += " : " + this.controlObj.extra;
+					this.label_txt.text += "]";
+				}
+				control_mc.updateLabel();
+				
+				if (controlObj.extra == Number(controlObj.extra) && controlObj.extra >= 0 && controlObj.extra <= 100) {
+					bg_mc.onPress = function () {
+						var window_mc = showWindow({id:"macroExtraChange", width:173, height:130, title:"Edit:", iconName:"atom", hideClose:true});
+						window_mc.content_mc.parentObj = this._parent;
+						var extra_np = window_mc.content_mc.attachMovie("bi.ui.NumberPicker", "extra_np", 10, {settings:{width:160, minValue:0, maxValue:2000, step:1}});
+						extra_np.selectedValue = this._parent.controlObj.extra;
+						
+						var set_btn = window_mc.content_mc.attachMovie("bi.ui.Button", "set_btn", 30, {settings:{width:160, label:"Set", _y:35}});
+						set_btn.addEventListener("press", set_btn);
+						set_btn.press = function () {
+							this._parent.parentObj.controlObj.extra = this._parent.extra_np.selectedItem.value;
+							this._parent.parentObj.updateLabel();
+							_global.windowStack["macroExtraChange"].close();
+						}
+					}
+				}
 
 				var deleteBtn_mc = control_mc.attachMovie("bi.ui.Button", "upArrow_mc", 2, {settings:{width:50, height:28, iconName:"delete2"}});
 				deleteBtn_mc._x = labelWidth - 51;
