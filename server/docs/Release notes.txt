@@ -1,4 +1,10 @@
-== Released [attachment:wiki:SoftwareReleases:eLife-1.6b9.zip V1.6b0]   ==
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b10.zip V1.6b10]   ==
+
+''' M1 '''
+
+Fixed null pointers in M1 when events occur that a device has not configured.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b9.zip V1.6b9]   ==
 
 ''' Jetty '''
 

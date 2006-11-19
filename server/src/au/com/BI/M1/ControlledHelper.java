@@ -89,9 +89,9 @@ public class ControlledHelper {
 				alarmLogger.setCache(cache);
 				alarmLogger.setCommandQueue(commandQueue);
 
-				String outputKey = ((BaseDevice) configHelper
-						.getControlItem(zoneChangeUpdate.getZone() + "CC"))
-						.getOutputKey();
+				BaseDevice theDevice = (BaseDevice) configHelper.getControlledItem(zoneChangeUpdate.getZone() + "CC"); 
+				if (theDevice == null) return;
+				String outputKey = theDevice.getOutputKey();
 
 				if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_UNCONFIGURED) {
 
@@ -196,10 +196,10 @@ public class ControlledHelper {
 				}
 
 				SensorFascade sensor = (SensorFascade) configHelper
-						.getControlItem(requestTemperatureReply.getDevice());
+						.getControlledItem(requestTemperatureReply.getDevice());
 
 				// send the alert command.
-				CommandInterface _command = new AlertCommand();
+				CommandInterface _command = new M1FlashCommand();
 				_command.setDisplayName(sensor.getOutputKey());
 				_command.setTargetDeviceID(-1);
 				_command.setUser(m1.currentUser);
@@ -248,7 +248,7 @@ public class ControlledHelper {
 									+ "TOUT");
 
 					if (device != null) {
-						CommandInterface _command = new AlertCommand();
+						CommandInterface _command = new M1FlashCommand();
 						_command.setDisplayName(device.getOutputKey());
 						_command.setTargetDeviceID(-1);
 						_command.setUser(m1.currentUser);
@@ -392,7 +392,7 @@ public class ControlledHelper {
 							LightFascade light = (LightFascade) obj;
 
 							if (light.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
-								CommandInterface _command = new AlertCommand();
+								CommandInterface _command = new M1FlashCommand();
 								_command.setDisplayName(light.getOutputKey());
 								_command.setTargetDeviceID(-1);
 								_command.setUser(m1.currentUser);
@@ -422,7 +422,7 @@ public class ControlledHelper {
 							LightFascade light = (LightFascade) obj;
 
 							if (light.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
-								CommandInterface _command = new AlertCommand();
+								CommandInterface _command = new M1FlashCommand();
 								_command.setDisplayName(light.getOutputKey());
 								_command.setTargetDeviceID(-1);
 								_command.setUser(m1.currentUser);
@@ -454,7 +454,7 @@ public class ControlledHelper {
 							if (light.getDeviceType() == DeviceType.COMFORT_LIGHT_X10
 									|| light.getDeviceType() == DeviceType.COMFORT_LIGHT_SWITCH_X10
 									|| light.getDeviceType() == DeviceType.COMFORT_LIGHT_X10_UNITCODE) {
-								CommandInterface _command = new AlertCommand();
+								CommandInterface _command = new M1FlashCommand();
 								_command.setDisplayName(light.getOutputKey());
 								_command.setTargetDeviceID(-1);
 								_command.setUser(m1.currentUser);
@@ -475,13 +475,16 @@ public class ControlledHelper {
 					}
 				} else {
 
-					String outputKey = ((LightFascade) configHelper
-							.getControlItem(plcChangeUpdate.getUnitCode()
-									+ "X10" + plcChangeUpdate.getHouseCode()))
-							.getOutputKey();
+					LightFascade theLight = (LightFascade) configHelper.getControlledItem(plcChangeUpdate.getUnitCode()
+							+ "X10" + plcChangeUpdate.getHouseCode());
+					if (theLight == null) {
+						logger.log (Level.FINEST,"Received M1 event for a PLC light has not been configured");
+						return;
+					}
+					String outputKey = theLight.getOutputKey();
 
 					if (outputKey != null) {
-						CommandInterface _command = new AlertCommand();
+						CommandInterface _command = new M1FlashCommand();
 						_command.setDisplayName(outputKey);
 						_command.setTargetDeviceID(-1);
 						_command.setUser(m1.currentUser);
@@ -521,12 +524,12 @@ public class ControlledHelper {
 					String level = Integer.toString(statusReport.getLevels()[i]);
 					
 					LightFascade light = ((LightFascade) configHelper
-							.getControlItem(Utility.padString(unitCode,2)
+							.getControlledItem(Utility.padString(unitCode,2)
 									+ "X10" + houseCode));
 
 					if (light != null) {
 						String outputKey = light.getOutputKey();
-						CommandInterface _command = new AlertCommand();
+						CommandInterface _command = new M1FlashCommand();
 						_command.setDisplayName(outputKey);
 						_command.setTargetDeviceID(-1);
 						_command.setUser(m1.currentUser);
@@ -587,7 +590,10 @@ public class ControlledHelper {
 
 			BaseDevice configDevice = (BaseDevice) configHelper
 					.getControlledItem(m1Command.getKey() + "TOUT");
-
+			if (configDevice == null){
+				logger.log(Level.FINEST, "M1 command request was received for a device that has not been configured " + m1Command.getKey());
+				return null;
+			}
 			if (((OutputChangeUpdate) m1Command).getOutputState().equals("0")) {
 				m1Command.setCommand("off");
 			} else {
@@ -600,8 +606,12 @@ public class ControlledHelper {
 			m1Command.setUser(m1.currentUser);
 			return m1Command;
 		} else if (m1Command.getClass().equals(RequestTemperatureReply.class)) {
-			m1Command.setDisplayName(((SensorFascade) configHelper
-					.getControlItem(m1Command.getKey())).getOutputKey());
+			SensorFascade sensor = (SensorFascade) configHelper.getControlledItem(m1Command.getKey());
+			if (sensor == null ){
+				logger.log (Level.FINEST,"Received temperature request for a device that has not been configured ");
+				return null;
+			}
+			m1Command.setDisplayName(sensor.getOutputKey());
 			m1Command.setKey("CLIENT_SEND");
 			m1Command.setUser(m1.currentUser);
 			return m1Command;
