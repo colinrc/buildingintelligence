@@ -26,14 +26,7 @@ public class VirtualOutput extends BaseDevice implements  DeviceType
 	public boolean keepStateForStartup () {
 		return false;
 	}
-	/**
-	 * Return the client display command for the toggleSwitch.
-	 * For a counter this is the same as the interpretted command
-	 */
-	public int getDeviceType ()
-	{
-		return DeviceType.VIRTUAL_OUTPUT;
-	}
+
 
 
 	/**

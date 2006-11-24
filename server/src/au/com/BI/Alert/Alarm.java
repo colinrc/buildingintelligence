@@ -15,7 +15,7 @@ import au.com.BI.Dynalite.DynaliteDevice;
  **/
 public class Alarm extends BaseDevice implements DeviceType,DynaliteDevice
 {
-	
+
 	public Alarm (String name, int deviceType, String outputKey){
 		this.name = name;
 		this.deviceType = deviceType;
@@ -43,14 +43,6 @@ public class Alarm extends BaseDevice implements DeviceType,DynaliteDevice
 		return "";
 	}
 	
-	/**
-	 * Return the client display command for the alarm.
-	 * For a alarm this is the same as the interpretted command
-	 */
-	public int getDeviceType ()
-	{
-		return DeviceType.ALARM;
-	}
 	
 	/**
 	 * Returns a display command represented by the Alarm object

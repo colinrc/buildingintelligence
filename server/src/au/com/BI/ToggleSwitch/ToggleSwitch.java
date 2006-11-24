@@ -31,14 +31,6 @@ public class ToggleSwitch extends BaseDevice implements DeviceType,DynaliteInput
 	public boolean keepStateForStartup () {
 		return false;
 	}
-	/**
-	 * Return the client display command for the toggleSwitch.
-	 * For a toggleSwitch this is the same as the interpretted command
-	 */
-	public int getDeviceType ()
-	{
-		return DeviceType.TOGGLE_INPUT;
-	}
 
 	public int getBox() {
 		return box;
