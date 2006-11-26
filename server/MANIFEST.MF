@@ -8,5 +8,6 @@ Class-Path: ../ext/build ../ext/groovy-all-1.0-JSR-06.jar ../ext/jdom.
  -1.4.0.jar ../ext/snmp-1.3.jar ../ext/junit.jar ../ext/junit-addons-1
  .4.jar ../ext/jython.jar ../ext/quartz-1.5.2.jar ../ext/commons-loggi
  ng.jar ../ext/commons-collections-3.1.jar ../ext/commons-logging-api.
- jar ../ext/RXTXcomm.jar ../ext/xmlunit1.0.jar ../ext/bin-groovy
+ jar ../ext/RXTXcomm.jar ../ext/xmlunit1.0.jar ../ext/bin-groovy ../ex
+ t/hcframe.jar
 

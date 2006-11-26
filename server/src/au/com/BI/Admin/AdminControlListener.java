@@ -95,7 +95,9 @@ public class AdminControlListener extends Thread
 					try {
 	
 						Socket adminConnection = iPPort.accept();
-						addTheHandler (adminConnection);
+                                                if (adminConnection.isConnected()){
+                                                    addTheHandler (adminConnection);
+                                                }
 
 					} catch (ConnectionFail conn){
 						logger.log(Level.SEVERE,"Could not attatch handler to client request");

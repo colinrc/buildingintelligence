@@ -138,33 +138,35 @@ public class Model
         }
 
         public void registerGroovyModel (GroovyRunBlock groovyRunBlock) throws ConfigError, GroovyModelError{
-        		String completeFile = "";
-        		String fileName = groovyRunBlock.getFileName();
-        		try {
-						Class groovyClass = gcl.parseClass(new File(fileName));
-						groovyRunBlock.setTheClass(groovyClass);
-						Object aScript = groovyClass.newInstance();
-						
-						GroovyModel myModel = (GroovyModel) aScript;
-						String modelName = myModel.getName();
-						logger.log(Level.INFO, "Registering model " + modelName);
-						this.groovyModelClasses.put(modelName, groovyRunBlock);
-						
+        String completeFile = "";
+        String fileName = groovyRunBlock.getFileName();
+        try {
+            File theGroovyFile = new File(fileName);
+            if (!theGroovyFile.canRead()) throw new GroovyModelError("Error reading the file " + fileName);
+            Class groovyClass = gcl.parseClass(theGroovyFile);
+            groovyRunBlock.setTheClass(groovyClass);
+            Object aScript = groovyClass.newInstance();
 
-				} catch (CompilationFailedException e) {
-						throw new GroovyModelError ("Compilation error in the model " + fileName + " " + e.getMessage());
-				} catch (IOException e) {
-						throw new GroovyModelError ("File error in the model " + fileName + " " + e.getMessage());
-				} catch (InstantiationException e) {
-						throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
-				} catch (IllegalAccessException e) {
-						throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
-				} catch (ClassCastException e) {
-						throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
-				} catch (Exception e){
-						throw new GroovyModelError ("Weird stuff happened " + e.getMessage());
-				}
+            GroovyModel myModel = (GroovyModel) aScript;
+            String modelName = myModel.getName();
+            logger.log(Level.INFO, "Registering model " + modelName);
+            this.groovyModelClasses.put(modelName, groovyRunBlock);
+
+
+        } catch (CompilationFailedException e) {
+                        throw new GroovyModelError ("Compilation error in the model " + fileName + " " + e.getMessage());
+        } catch (IOException e) {
+                        throw new GroovyModelError ("File error in the model " + fileName + " " + e.getMessage());
+        } catch (InstantiationException e) {
+                        throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
+        } catch (IllegalAccessException e) {
+                        throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
+        } catch (ClassCastException e) {
+                        throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
+        } catch (Exception e){
+                        throw new GroovyModelError ("Weird stuff happened " + e.getMessage());
         }
+    }
         
         public GroovyModel setupGroovyModel(GroovyRunBlock groovyRunBlock, String description)  throws IllegalAccessException,InstantiationException {
 			Object model = groovyRunBlock.getTheClass().newInstance();
