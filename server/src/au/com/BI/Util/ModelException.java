@@ -1,7 +1,6 @@
 package au.com.BI.Util;
 
 
-
 /**
  * @author Colin Canfield
  * @version 1.0
