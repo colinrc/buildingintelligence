@@ -2024,6 +2024,7 @@ createScreenSaverPanel = function (content_mc) {
 	screensaver_mc.timeout_np.selectedValue = _global.settings.screenLockTimeout / 60;
 	screensaver_mc.timeout_np.change = function () {
 		_global.persistentData.data.settings.screenLockTimeout = _global.settings.screenLockTimeout = this.selectedItem.value * 60;
+		_global.persistentData.flush();
 	}
 	screensaver_mc.timeout_np.addEventListener("change", screensaver_mc.timeout_np);
 	screensaver_mc.attachMovie("bi.ui.Label", "minutes_lb", 16, {settings:{width:60, text:"mins", _x:320}});
