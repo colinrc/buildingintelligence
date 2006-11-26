@@ -1,8 +1,8 @@
 <client>
 	<setting name="clientName" value="standaloneClient"/>
 	<setting name="serverAddress" value="127.0.0.1" />
-	<!--setting name="serverProtocol" value="https" />
-	<setting name="serverPort" value="8443" /-->
+	<setting name="serverProtocol" value="sockets" />
+	<setting name="serverPort" value="10000" />
 	<setting name="applicationXML" value="sample.xml" />
 	<setting name="fullScreen" value="false" />
 	<setting name="hideMouseCursor" value="false" />

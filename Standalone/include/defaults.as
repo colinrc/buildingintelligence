@@ -24,9 +24,11 @@ _global.sounds["default"].attachSound("sfx_default");
 _global.sounds["alarm"] = new Sound();
 _global.sounds["alarm"].attachSound("sfx_alarm");
 
+_global.settings.screenLockEnabled = true;
 _global.settings.screenLockTimeout = 300;
 _global.settings.screenLockPin = "";
-			
+
+_global.settings.screenLockLogoBg = "bg-blue.jpg";
 _global.settings.screenLockDisplay = "logo";
 _global.settings.screenLockPhotoPath = "";
 _global.settings.screenLockPhotoScale = "noscale";
