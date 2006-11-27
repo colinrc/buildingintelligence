@@ -3,6 +3,8 @@
     <!-- import file="build.xml"/ -->
 <project basedir="." default="build" name="eLife">
     <description>Builds, tests, and runs the project server.</description>
+     <import  file="ant_stubs/util_stubs.xml"/>
+        
 	<taskdef resource="net/sf/ant4eclipse/antlib.xml" />
 	<property name="workspace" value="${basedir}/.." />
 	
@@ -32,16 +34,7 @@
 	   	<mkdir dir="dist/lib" />
 	</target>	
 
-    <target name="templates" >
-		<copy todir="templates">
-		    <fileset dir="./" includes="**/*.xsd"  excludes="**/templates/**" />
-		    <fileset dir="./" includes="**/*.dtd"  excludes="**/templates/**" />
-		    <fileset dir="./" includes="**/config_*.xml" excludes="**/templates/**" />
-		    <fileset dir="./" includes="**/datafiles/*.xml" excludes="**/templates/**" />
-		    <fileset dir="./" includes="**/datafiles/*.properties" excludes="**/templates/**" />
-			<fileset dir="./" includes="**/datafiles/keystore" excludes="**/templates/**" />
-		</copy>
-    </target>
+
 	
     <target name="compile" depends="init" >
         <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" >
@@ -79,60 +72,12 @@
 		<echo>To run this application from the command line without Ant, try:</echo>
 		<echo>java -jar "${dist.jar}"</echo>
 	</target>
-    
-   <target name="increment" depends="" description="Increments build number and creates a zip file.">
-        <propertyfile file="src/au/com/BI/Home/my.properties" >
-          <entry  key="minor_version" type="int" operation="+" value="1" />
-        </propertyfile>
-        <property file="src/au/com/BI/Home/my.properties" />
-        <echo message="Version number now ${major_version}${minor_version}" />
-    </target>
-    
-    <target name="load-version-number" depends="" description="Loads property numbers.">
-        <property file="src/au/com/BI/Home/my.properties" />
-        <echo message="Version number now ${major_version}${minor_version}" />
-    </target>
     	
-    <target name="build_dist" depends="jar,templates" >
-    	 	
-		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
-			update="false"
-			basedir="dist" 
-			includes = "*.jar" />
-		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
-			update="true"
-			basedir="."
-			includes = "my.properties" />
-		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
-			update="true"
-			basedir="."
-			includes = "templates/**/*.xml" 	
-	    	excludes = ".." />
-		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
-			update="true"
-			basedir="."
-			includes = "templates/**/*.properties" 	
-	    	excludes = ".." />
-    	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
-			update="true"
-			basedir="."
-			includes = "templates/**/keystore" 	
-	    	excludes = ".." />
-		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
-			update="true"
-			basedir="."
-			includes = "config/config_*.xml" />	
-    </target>
 	
 	<target name="dist" depends="increment,build_dist" />
 	<target name="dist-no-inc" depends="load-version-number,build_dist" />
-	
 	<target name="build" depends="dist-no-inc" />
 
-    <target name="build-ext-dir" unless="ext_dir.present" >    	
-	   	<mkdir dir="ext"  />
-	</target>
-	
 	<target name="copy-libs" depends="init,build-ext-dir" >
 		<pathconvert pathsep="," property="massaged_jar_libs" refid="eLife.classpath" >
 			<map from="/Java" to="Java" />

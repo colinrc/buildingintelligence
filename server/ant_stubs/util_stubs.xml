@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bi_stuff" default="all" basedir="..">
+   <target name="increment" depends="" description="Increments build number and creates a zip file.">
+        <propertyfile file="src/au/com/BI/Home/my.properties" >
+          <entry  key="minor_version" type="int" operation="+" value="1" />
+        </propertyfile>
+        <property file="src/au/com/BI/Home/my.properties" />
+        <echo message="Version number now ${major_version}${minor_version}" />
+    </target>
+    
+    <target name="load-version-number" depends="" description="Loads property numbers.">
+        <property file="src/au/com/BI/Home/my.properties" />
+        <echo message="Version number now ${major_version}${minor_version}" />
+    </target>
+    
+        <target name="build_dist" depends="jar,templates" >
+    	 	
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="false"
+			basedir="dist" 
+			includes = "*.jar" />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "my.properties" />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "templates/**/*.xml" 	
+	    	excludes = ".." />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "templates/**/*.properties" 	
+	    	excludes = ".." />
+    	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "templates/**/keystore" 	
+	    	excludes = ".." />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "config/config_*.xml" />	
+    </target>
+    
+    <target name="build-ext-dir" unless="ext_dir.present" >    	
+	   	<mkdir dir="ext"  />
+    </target>
+    
+    <target name="templates" >
+		<copy todir="templates">
+		    <fileset dir="./" includes="**/*.xsd"  excludes="**/templates/**" />
+		    <fileset dir="./" includes="**/*.dtd"  excludes="**/templates/**" />
+		    <fileset dir="./" includes="**/config_*.xml" excludes="**/templates/**" />
+		    <fileset dir="./" includes="**/datafiles/*.xml" excludes="**/templates/**" />
+		    <fileset dir="./" includes="**/datafiles/*.properties" excludes="**/templates/**" />
+			<fileset dir="./" includes="**/datafiles/keystore" excludes="**/templates/**" />
+		</copy>
+    </target>
+	
+</project>
