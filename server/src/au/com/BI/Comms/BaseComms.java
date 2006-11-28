@@ -94,7 +94,11 @@ protected CommsGroup commsGroup = null;
 					CommsCommand item = (CommsCommand)sentListIter.next();
 					if (item.key.equals (key)){
 					    sentListIter.remove();
-						returnCode = true;
+					    if (logger.isLoggable(Level.FINEST)){
+						logger.log(Level.FINEST,"Received acknowledgement for key " + key + " time diff (ms) " + 
+						    (System.currentTimeMillis() - item.getCreationDate()));
+					    }
+					    returnCode = true;
 					}
 				}
 			}
@@ -119,7 +123,11 @@ protected CommsGroup commsGroup = null;
 					CommsCommand item = (CommsCommand)sentListIter.next();
 					if (item.getActionType() == actionType &&  item.getActionCode().equals (key)){
 					    sentListIter.remove();
-						return true;
+					    if (logger.isLoggable(Level.FINEST)){
+						logger.log(Level.FINEST,"Received acknowledgement for key " + key + " time diff (ms) " + 
+						    (System.currentTimeMillis() - item.getCreationDate()));
+					    }
+					    return true;
 					}
 				}
 			}
@@ -140,7 +148,11 @@ protected CommsGroup commsGroup = null;
 				CommsCommand item = (CommsCommand)sentListIter.next();
 				if (item.getActionType() == actionType ){
 				    sentListIter.remove();
-					returnCode = true;
+				    if (logger.isLoggable(Level.FINEST)){
+					logger.log(Level.FINEST,"Received acknowledgement for action type " + actionType + " time diff (ms) " + 
+					    (System.currentTimeMillis() - item.getCreationDate()));
+				    }
+				    returnCode = true;
 				}
 			}
 		}
@@ -199,13 +211,15 @@ protected CommsGroup commsGroup = null;
 		this.addCommandToSentQueue(command);
 		if (command.hasByteArray()) {
 			if (logger.isLoggable(Level.FINEST)){
-				logger.log (Level.FINEST,"Sending command to comms port "+ Utility.allBytesToHex(command.getCommandBytes()));
+				logger.log (Level.FINEST,"Sending command at time " + System.currentTimeMillis() + " to comms port "+ Utility.allBytesToHex(command.getCommandBytes()));
 			}
 			this.sendString(command.getCommandBytes());
 		}
 		else {
-			logger.log (Level.FINEST,"Sending command to comms port " + (String)command.getCommandCode());
-			this.sendString(command.getCommandCode());
+		    if (logger.isLoggable(Level.FINEST)){
+			logger.log (Level.FINEST,"Sending command at time " + System.currentTimeMillis() + " to comms port " + (String)command.getCommandCode());
+		    }
+		    this.sendString(command.getCommandCode());
 		}
 			
 	}
@@ -262,11 +276,11 @@ protected CommsGroup commsGroup = null;
 		waitingForFeedback = true;
 		if (nextCommand.hasByteArray()) {
 			if (logger.isLoggable(Level.FINEST)){
-				logger.log (Level.FINEST,"Sending command to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
+				logger.log (Level.FINEST,"Sending command at time " + timeOfLastCommand + " to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
 			}
 			sendString(nextCommand.getCommandBytes());
 		} else {
-			logger.log (Level.FINEST,"Sending command to comms port " + (String)nextCommand.getCommandCode());
+			logger.log (Level.FINEST,"Sending command at time " + timeOfLastCommand + " to comms port " + (String)nextCommand.getCommandCode());
 			sendString((String)nextCommand.getCommandCode());
 		}
 		return true;

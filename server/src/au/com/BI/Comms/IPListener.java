@@ -229,8 +229,10 @@ public class IPListener extends Thread implements CommsListener
 					}
 					endPrev = curPos;
 					//logger.log (Level.INFO,"Found a newline setting endPrev = " + endPrev);
-					str = new String (retArray);
-					logger.log (Level.FINEST,"Received ip packet : " + str);
+                                        if (logger.isLoggable(Level.FINEST)){
+                                            str = new String (retArray);
+                                            logger.log (Level.FINEST,"Received ip packet : " + str);
+                                        }
 					
 					CommsCommand command = new CommsCommand (str,"RawText",null);
 					command.setCommandBytes(retArray);

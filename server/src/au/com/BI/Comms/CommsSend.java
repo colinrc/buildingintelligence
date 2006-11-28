@@ -43,16 +43,18 @@ public class CommsSend extends Thread implements Runnable{
 					long currentTimeDiff = System.currentTimeMillis() - lastSendTime;
 					try {
 						if (currentTimeDiff < interCommandInterval){
-							try {
-								sleep (interCommandInterval - currentTimeDiff);
-							} catch (InterruptedException e) {
-	
-							}
+                                                logger.log (Level.FINEST,"The next command to be sent is being delayed to meet minimum reponse time requirements for the device");
+                                                    try {
+                                                            sleep (interCommandInterval - currentTimeDiff);
+                                                    } catch (InterruptedException e) {
+
+                                                    }
 						}
 						lastSendTime = System.currentTimeMillis();
 						synchronized (os){
-							os.write(nextMessage);
-							os.flush();
+						    os.write(nextMessage);
+						    os.flush();
+
 						}
 					} catch (IOException e) {
 						logger.log (Level.FINE,"Received IO exception on communication stream " + e.getMessage());
