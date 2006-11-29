@@ -172,7 +172,7 @@ public class IPListener extends Thread implements CommsListener
 				// TODO Auto-generated catch block
 			}
 			
-			Thread.yield(); // give other clients a chance
+			// Thread.yield(); // give other clients a chance
 		}
 		try {
 			if (rd != null) {
@@ -239,6 +239,7 @@ public class IPListener extends Thread implements CommsListener
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					
 					commandList.add (command);
+					// commandList.notifyAll();
 				}
 				int arrayOffset = 0;
 				int prevOffset = -1;
@@ -268,6 +269,7 @@ public class IPListener extends Thread implements CommsListener
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					
 					commandList.add (command);
+					commandList.notifyAll();
 					
 				}
 				if (this.endVals[arrayOffset]) {
@@ -277,6 +279,7 @@ public class IPListener extends Thread implements CommsListener
 					byte retArray [] = new byte[curPos - endPrev + 1];
 					System.arraycopy (readArray,endPrev,retArray,0,curPos-endPrev+1);
 					endPrev = curPos + 1;
+
 					str = new String (retArray);
 					logger.log (Level.FINEST,"Received ip packet : " + str);
 					
@@ -285,6 +288,7 @@ public class IPListener extends Thread implements CommsListener
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					
 					commandList.add (command);
+					// commandList.notifyAll();
 					
 				}
 				
@@ -306,6 +310,7 @@ public class IPListener extends Thread implements CommsListener
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					
 					commandList.add (command);
+					// commandList.notifyAll();
 				} else {
 					// some left over characters
 					int numBytes = endPos - endPrev;
@@ -352,6 +357,7 @@ public class IPListener extends Thread implements CommsListener
 				command.setCommandBytes(retArray);
 				command.setTargetDeviceModel(this.targetDeviceModel);
 				commandList.add (command);
+				// commandList.notifyAll();
 			}
 		}
 	}
@@ -365,6 +371,7 @@ public class IPListener extends Thread implements CommsListener
 				command.setTargetDeviceModel(this.targetDeviceModel);
 				
 				commandList.add (command);
+				// commandList.notifyAll();
 			}
 		}
 	}

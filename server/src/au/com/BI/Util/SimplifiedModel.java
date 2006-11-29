@@ -624,7 +624,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
 	public void sendToFlash(CommandInterface command, Cache cache) {
 		cache.setCachedCommand(command.getDisplayName(), command);
-		logger.log(Level.FINE, "Sending to flash " + command.getKey() + ":"
+		logger.log(Level.FINE, "Sending to flash " + command.getDisplayName() + ":"
 				+ command.getCommandCode() + ":" + command.getExtraInfo());
 		commandQueue.add(command);
 	}

@@ -94,8 +94,8 @@ protected CommsGroup commsGroup = null;
 					CommsCommand item = (CommsCommand)sentListIter.next();
 					if (item.key.equals (key)){
 					    sentListIter.remove();
-					    if (logger.isLoggable(Level.FINEST)){
-						logger.log(Level.FINEST,"Received acknowledgement for key " + key + " time diff (ms) " + 
+					    if (logger.isLoggable(Level.FINER)){
+						logger.log(Level.FINER,"Received acknowledgement for key " + key + " time diff (ms) " + 
 						    (System.currentTimeMillis() - item.getCreationDate()));
 					    }
 					    returnCode = true;
@@ -123,8 +123,8 @@ protected CommsGroup commsGroup = null;
 					CommsCommand item = (CommsCommand)sentListIter.next();
 					if (item.getActionType() == actionType &&  item.getActionCode().equals (key)){
 					    sentListIter.remove();
-					    if (logger.isLoggable(Level.FINEST)){
-						logger.log(Level.FINEST,"Received acknowledgement for key " + key + " time diff (ms) " + 
+					    if (logger.isLoggable(Level.FINER)){
+						logger.log(Level.FINER,"Received acknowledgement for key " + key + " time diff (ms) " + 
 						    (System.currentTimeMillis() - item.getCreationDate()));
 					    }
 					    return true;
@@ -148,8 +148,8 @@ protected CommsGroup commsGroup = null;
 				CommsCommand item = (CommsCommand)sentListIter.next();
 				if (item.getActionType() == actionType ){
 				    sentListIter.remove();
-				    if (logger.isLoggable(Level.FINEST)){
-					logger.log(Level.FINEST,"Received acknowledgement for action type " + actionType + " time diff (ms) " + 
+				    if (logger.isLoggable(Level.FINER)){
+					logger.log(Level.FINER,"Received acknowledgement for action type " + actionType + " time diff (ms) " + 
 					    (System.currentTimeMillis() - item.getCreationDate()));
 				    }
 				    returnCode = true;
@@ -210,14 +210,14 @@ protected CommsGroup commsGroup = null;
 	public void sendCommandAndKeepInSentQueue (CommsCommand command) throws CommsFail {
 		this.addCommandToSentQueue(command);
 		if (command.hasByteArray()) {
-			if (logger.isLoggable(Level.FINEST)){
-				logger.log (Level.FINEST,"Sending command at time " + System.currentTimeMillis() + " to comms port "+ Utility.allBytesToHex(command.getCommandBytes()));
+			if (logger.isLoggable(Level.FINER)){
+				logger.log (Level.FINER,"Sending command at time " + System.currentTimeMillis() + " lag from queue ms " + (System.currentTimeMillis() - command.getCreationDate()) + " to comms port "+ Utility.allBytesToHex(command.getCommandBytes()));
 			}
 			this.sendString(command.getCommandBytes());
 		}
 		else {
-		    if (logger.isLoggable(Level.FINEST)){
-			logger.log (Level.FINEST,"Sending command at time " + System.currentTimeMillis() + " to comms port " + (String)command.getCommandCode());
+		    if (logger.isLoggable(Level.FINER)){
+			logger.log (Level.FINER,"Sending command at time " + System.currentTimeMillis() + " lag from queue ms " + (System.currentTimeMillis() - command.getCreationDate()) + " to comms port " + (String)command.getCommandCode());
 		    }
 		    this.sendString(command.getCommandCode());
 		}
@@ -275,12 +275,14 @@ protected CommsGroup commsGroup = null;
 		timeOfLastCommand = System.currentTimeMillis();
 		waitingForFeedback = true;
 		if (nextCommand.hasByteArray()) {
-			if (logger.isLoggable(Level.FINEST)){
-				logger.log (Level.FINEST,"Sending command at time " + timeOfLastCommand + " to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
+			if (logger.isLoggable(Level.FINER)){
+				logger.log (Level.FINER,"Sending command at time " + timeOfLastCommand + " (lag from queue ms " + (timeOfLastCommand - nextCommand.getCreationDate()) + ") to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
 			}
 			sendString(nextCommand.getCommandBytes());
 		} else {
-			logger.log (Level.FINEST,"Sending command at time " + timeOfLastCommand + " to comms port " + (String)nextCommand.getCommandCode());
+		    	if (logger.isLoggable(Level.FINER)){
+			    logger.log (Level.FINER,"Sending command at time " + timeOfLastCommand + " (lag from queue ms " + (timeOfLastCommand - nextCommand.getCreationDate()) + ") to comms port " + (String)nextCommand.getCommandCode());
+			}
 			sendString((String)nextCommand.getCommandCode());
 		}
 		return true;
@@ -299,16 +301,18 @@ protected CommsGroup commsGroup = null;
 				waitingForFeedback = true;
 				lastCommand.incRepeatCount();
 				if (lastCommand.getRepeatCount() > 3) {
-					logger.log(Level.FINER,"Comms command was sent 3 times without reply, deleting");
+					logger.log(Level.INFO,"Comms command was sent 3 times without reply, deleting");
 					eachSentCommand.remove();
 				} else {
 					if (nextCommand.hasByteArray()) {
-						if (logger.isLoggable(Level.FINEST)){
-							logger.log (Level.FINEST,"Resending command to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
+						if (logger.isLoggable(Level.FINE)){
+							logger.log (Level.FINE,"Resending command to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
 						}
 						sendString(lastCommand.getCommandBytes());
 					} else {
-						logger.log (Level.FINEST,"ReSending command to comms port " + (String)lastCommand.getCommandCode());
+					    	if (logger.isLoggable(Level.FINE)){
+						    logger.log (Level.FINE,"ReSending command to comms port " + (String)lastCommand.getCommandCode());
+						}
 						sendString((String)lastCommand.getCommandCode());
 					}
 				}
@@ -367,10 +371,10 @@ protected CommsGroup commsGroup = null;
 		timeOfLastCommand = System.currentTimeMillis();
 		waitingForFeedback = true;
 		if (nextCommand.hasByteArray()) {
-			logger.log (Level.FINEST,"Repeating command to comms port ");
+			logger.log (Level.FINER,"Repeating command to comms port ");
 			sendString(nextCommand.getCommandBytes());
 		} else {
-			logger.log (Level.FINEST,"Repeating command to comms port " + (String)nextCommand.getCommandCode());
+			logger.log (Level.FINER,"Repeating command to comms port " + (String)nextCommand.getCommandCode());
 			sendString((String)nextCommand.getCommandCode());
 		}
 		return true;
@@ -396,12 +400,12 @@ protected CommsGroup commsGroup = null;
 					timeOfLastCommand = System.currentTimeMillis();
 					waitingForFeedback = true;
 					if (nextCommand.hasByteArray()) {
-						if (logger.isLoggable(Level.FINEST)){
-							logger.log (Level.FINEST,"Sending command to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
+						if (logger.isLoggable(Level.FINER)){
+							logger.log (Level.FINER,"Sending command to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
 						}
 						sendString(nextCommand.getCommandBytes());
 					} else {
-						logger.log (Level.FINEST,"Sending command to comms port " + (String)nextCommand.getCommandCode());
+						logger.log (Level.FINER,"Sending command to comms port " + (String)nextCommand.getCommandCode());
 						sendString((String)nextCommand.getCommandCode());
 					}
 					foundCommand = true;
@@ -429,12 +433,12 @@ protected CommsGroup commsGroup = null;
 					timeOfLastCommand = System.currentTimeMillis();
 					waitingForFeedback = true;
 					if (nextCommand.hasByteArray()) {
-						if (logger.isLoggable(Level.FINEST)){
-							logger.log (Level.FINEST,"Sending command to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
+						if (logger.isLoggable(Level.FINER)){
+							logger.log (Level.FINER,"Sending command to comms port "+ Utility.allBytesToHex(nextCommand.getCommandBytes()));
 						}
 						sendString(nextCommand.getCommandBytes());
 					} else {
-						logger.log (Level.FINEST,"Sending command to comms port " + (String)nextCommand.getCommandCode());
+						logger.log (Level.FINER,"Sending command to comms port " + (String)nextCommand.getCommandCode());
 						sendString((String)nextCommand.getCommandCode());
 					}
 					foundCommand = true;
@@ -463,14 +467,13 @@ protected CommsGroup commsGroup = null;
 	
 	public void sendString (String message)
 	{
-		logger.log (Level.FINEST,"Sending string " + message);
+		logger.log (Level.FINER,"Sending string " + message);
 		sendString (message.getBytes());
 	}
 
 	public void sendString (byte[] message)
 	{
-
-			commsSend.toSend.add(message);
+		commsSend.toSend.add(message);
 	}
 
 }

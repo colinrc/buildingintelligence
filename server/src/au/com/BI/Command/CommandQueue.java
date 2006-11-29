@@ -18,24 +18,18 @@ public class CommandQueue   {
 	}
 	
 	public void add (CommandInterface command){
-		synchronized (queue){
-			queue.add(command);
-		}
+		queue.add(command);
 	}
 	
 	public boolean isEmpty (){
-		synchronized (queue){
-			return queue.isEmpty();
-		}
+		return queue.isEmpty();
 	}
 	
 	public CommandInterface remove (){
-		synchronized (queue){
-			if (queue.isEmpty())
-				return null;
-			else
-				return queue.remove();
-		}
+		if (queue.isEmpty())
+			return null;
+		else
+			return queue.remove();
 	}
 	
 }
