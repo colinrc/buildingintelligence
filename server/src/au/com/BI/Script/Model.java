@@ -942,7 +942,7 @@ public class Model
 
 
                 try {
-                        rrdDb = mainController.useRrd(mainController.getRRDBDIRECTORY() + rrd + ".rrd");
+                        rrdDb = mainController.jRobinSupport.useRrd(mainController.jRobinSupport.getRRDBDIRECTORY() + rrd + ".rrd");
                         FetchRequest fetchRequest = rrdDb.createFetchRequest(dataSource, lstart, lend);
                         fetchData = fetchRequest.fetchData();
                 }
@@ -956,7 +956,7 @@ public class Model
                 }
                 finally {
                         try {
-                                mainController.releaseRrd(rrdDb);
+                                mainController.jRobinSupport.releaseRrd(rrdDb);
                         }
                         catch (IOException e) {
                                 logger.log(Level.SEVERE,

@@ -12,7 +12,7 @@ import au.com.BI.JRobin.JRobinData;
 import au.com.BI.JRobin.JRobinDataItem;
 
 public class JRobinQuery extends Thread {
-        protected Controller controller;
+        protected JRobinSupport jRobinSupport;
         protected long testInterval;
         private boolean isRunning = false;
         protected Logger logger;
@@ -23,8 +23,8 @@ public class JRobinQuery extends Thread {
         final int DATAALLTYPE = 2;
         final int DATAPOWERCONSUMPTIONTYPE = 3;
 
-        public JRobinQuery (JRobinData jRobinData , Controller controller) {
-                this.controller = controller;
+        public JRobinQuery (JRobinData jRobinData , JRobinSupport jRobinSupport) {
+                this.jRobinSupport = jRobinSupport;
                 testInterval = jRobinData.getUpdateInterval();
                 this.jRobinData = jRobinData;
                 RRDName = jRobinData.getRRDName();
@@ -43,7 +43,7 @@ public class JRobinQuery extends Thread {
                           " RRD every " + Long.toString(testInterval) +
                           " seconds.");
                         // potenial performance problem CHECK THIS
-                        dataSources = controller.getRRDDataSources(RRDName);
+                        dataSources = jRobinSupport.getRRDDataSources(RRDName);
 
                         if (dataSources == null ) {
                         	   isRunning = false;
@@ -74,19 +74,19 @@ public class JRobinQuery extends Thread {
                                         double valuesPower[] = new double[numOfDataItems];
 
                                         try {
-                                                oldConsume = controller.getDoubleVariable(jRobinDataItem.getVariable() + "_~CONSUME").doubleValue();
+                                                oldConsume = jRobinSupport.getDoubleVariable(jRobinDataItem.getVariable() + "_~CONSUME").doubleValue();
                                         }
                                         catch (NullPointerException ex) {
                                                 oldConsume = 0;
                                         }
                                         try {
-                                                startTime = controller.getLongVariable(jRobinDataItem.getVariable() + "_~TIME").longValue();
+                                                startTime = jRobinSupport.getLongVariable(jRobinDataItem.getVariable() + "_~TIME").longValue();
                                         }
                                         catch (NullPointerException ex) {
                                                 startTime = 0;
                                         }
                                         try {
-                                                lastQuerytTime = controller.getLongVariable(jRobinData.getRRDName() + "_~LASTQTIME").longValue();
+                                                lastQuerytTime = jRobinSupport.getLongVariable(jRobinData.getRRDName() + "_~LASTQTIME").longValue();
                                         }
                                         catch (NullPointerException ex) {
                                                 lastQuerytTime = 0;
@@ -97,7 +97,7 @@ public class JRobinQuery extends Thread {
 
 
                                         try {
-                                                value = controller.getDoubleVariable(jRobinDataItem.getVariable()).doubleValue();
+                                                value = jRobinSupport.getDoubleVariable(jRobinDataItem.getVariable()).doubleValue();
                                         }
                                         catch (NullPointerException ex) {
                                                 value = 0;
@@ -124,7 +124,7 @@ public class JRobinQuery extends Thread {
 
 
                                         try {
-                                                value = controller.getDoubleVariable(jRobinDataItem.getVariable()).doubleValue();
+                                                value = jRobinSupport.getDoubleVariable(jRobinDataItem.getVariable()).doubleValue();
                                         }
                                         catch (NullPointerException ex) {
                                                 value = 0;
@@ -132,7 +132,7 @@ public class JRobinQuery extends Thread {
 
                                         if (jRobinDataItem.getFunction().equals("AVG")) {
                                                 try {
-                                                        countValue = controller.getDoubleVariable(jRobinDataItem.getVariable() + "_~COUNT").doubleValue();
+                                                        countValue = jRobinSupport.getDoubleVariable(jRobinDataItem.getVariable() + "_~COUNT").doubleValue();
                                                 }
                                                 catch (NullPointerException ex) {
                                                         countValue = 0;
@@ -155,12 +155,12 @@ public class JRobinQuery extends Thread {
                                 i++;
                         }
                         logger.log(Level.FINE, "update rrd with " + values.toString());
-                        controller.rrdUpdate(RRDName, values);
+                        jRobinSupport.rrdUpdate(RRDName, values);
 
                         ArrayList variables;
                         variables = jRobinData.getJRobinDataItemVariables();
-                        controller.clearVariables(variables);
-                        controller.setLongVariable(jRobinData.getRRDName() + "_~LASTQTIME", endTime);
+                        jRobinSupport.clearVariables(variables);
+                        jRobinSupport.setLongVariable(jRobinData.getRRDName() + "_~LASTQTIME", endTime);
 
                         try {
                                 Thread.sleep(testInterval * 1000);

@@ -1,4 +1,4 @@
-package au.com.BI.Config;
+package au.com.BI.JRobin;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -8,17 +8,18 @@ import java.util.logging.Logger;
 
 import org.jdom.Element;
 
-import au.com.BI.JRobin.JRobinData;
+import au.com.BI.Config.Config;
+import au.com.BI.Config.ConfigError;
 
 public class JRobinParser {
 	Logger logger;
-    protected HashMap jRobinRRDS;
+    protected HashMap <String, JRobinData>jRobinRRDS;
 	protected boolean JRobinActive = false;
-    protected HashMap powerRating;
+    protected HashMap <String, Object>powerRating;
 	
 	public JRobinParser () {
-		jRobinRRDS = new HashMap (40);
-        powerRating = new HashMap (20);
+		jRobinRRDS = new HashMap <String, JRobinData>(40);
+        powerRating = new HashMap <String,Object>(20);
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	

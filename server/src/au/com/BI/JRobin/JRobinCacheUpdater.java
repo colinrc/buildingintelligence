@@ -1,7 +1,6 @@
 package au.com.BI.JRobin;
 
 import au.com.BI.Command.CommandInterface;
-import au.com.BI.Home.Controller;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.logging.*;
@@ -27,11 +26,11 @@ public class JRobinCacheUpdater {
         final int DATAALLTYPE = 2;
         final int DATAPOWERCONSUMPTIONTYPE = 3;
         protected Logger logger;
-        protected Controller controller;
+        protected JRobinSupport jRobinSupport;
 
-        public JRobinCacheUpdater(Controller controller) {
+        public JRobinCacheUpdater(JRobinSupport jRobinSupport) {
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
-                setController(controller);
+                setJRobinSupport(jRobinSupport);
         }
 
         public void doCommandForJRobin(CommandInterface command) {
@@ -80,12 +79,12 @@ public class JRobinCacheUpdater {
                                 if (jRobinDataItem.getSource().equals("USAGE")) {
                                         if (search.length() > 0) {
                                                 if (search.equals(command.getCommandCode())) {
-                                                        controller.incrementVariable(jRobinDataItem.getVariable());
+                                                        jRobinSupport.incrementVariable(jRobinDataItem.getVariable());
                                                         continue;
                                                 }
                                         }
                                         else {
-                                                controller.incrementVariable(jRobinDataItem.getVariable());
+                                                jRobinSupport.incrementVariable(jRobinDataItem.getVariable());
                                                 continue;
                                         }
                                 }
@@ -131,7 +130,7 @@ public class JRobinCacheUpdater {
                                 String sOldValue;
                                 sOldValue = new String();
                                 try {
-                                        oldVal = controller.getDoubleVariable(jRobinDataItem.getVariable()).doubleValue();
+                                        oldVal = jRobinSupport.getDoubleVariable(jRobinDataItem.getVariable()).doubleValue();
                                 }
                                 catch (NullPointerException ex) {
                                         oldVal = 0;
@@ -139,31 +138,31 @@ public class JRobinCacheUpdater {
 
                                 if (jRobinDataItem.getFunction().equals("TOTAL")) {
                                         oldVal = oldVal + value;
-                                        controller.setVariable(jRobinDataItem.getVariable(), oldVal);
+                                        jRobinSupport.setVariable(jRobinDataItem.getVariable(), oldVal);
                                 }
                                 else if (jRobinDataItem.getFunction().equals("MIN")) {
                                         if (sOldValue.equals("None")) {
                                                 //First time
-                                                controller.setVariable(jRobinDataItem.getVariable(), value);
+                                                jRobinSupport.setVariable(jRobinDataItem.getVariable(), value);
                                         }
                                         else if (value < oldVal) {
-                                                controller.setVariable(jRobinDataItem.getVariable(), value);
+                                                jRobinSupport.setVariable(jRobinDataItem.getVariable(), value);
                                         }
                                 }
                                 else if (jRobinDataItem.getFunction().equals("MAX")) {
                                         if (sOldValue.equals("None")) {
                                                 //First time
-                                                controller.setVariable(jRobinDataItem.getVariable(), value);
+                                                jRobinSupport.setVariable(jRobinDataItem.getVariable(), value);
                                         }
                                         else if (value > oldVal) {
-                                                controller.setVariable(jRobinDataItem.getVariable(), value);
+                                                jRobinSupport.setVariable(jRobinDataItem.getVariable(), value);
                                         }
 
                                 }
                                 else if (jRobinDataItem.getFunction().equals("AVG")) {
                                         oldVal = oldVal + value;
-                                        controller.setVariable(jRobinDataItem.getVariable(), oldVal);
-                                        controller.incrementVariable(jRobinDataItem.getVariable() + "_~COUNT");
+                                        jRobinSupport.setVariable(jRobinDataItem.getVariable(), oldVal);
+                                        jRobinSupport.incrementVariable(jRobinDataItem.getVariable() + "_~COUNT");
                                 }
                         } // end of DATATYPE
                         //Power time
@@ -205,7 +204,7 @@ public class JRobinCacheUpdater {
                                 double oldVal, consume, oldConsume;
 
                                 try {
-                                        oldVal = controller.getDoubleVariable(jRobinDataItem.getVariable()).doubleValue();
+                                        oldVal = jRobinSupport.getDoubleVariable(jRobinDataItem.getVariable()).doubleValue();
                                 }
                                 catch (NullPointerException ex) {
                                         oldVal = value; //use current
@@ -220,14 +219,14 @@ public class JRobinCacheUpdater {
                                 sLastQueryTime = new String();
 
                                 try {
-                                        oldtime = controller.getLongVariable(jRobinDataItem.getVariable() + "_~TIME").longValue();
+                                        oldtime = jRobinSupport.getLongVariable(jRobinDataItem.getVariable() + "_~TIME").longValue();
                                 }
                                 catch (NullPointerException ex) {
                                         oldtime = 0;
                                 }
 
                                 try {
-                                        lastQueryTime = controller.getLongVariable(jRobinData.getRRDName() + "_~LASTQTIME").longValue();
+                                        lastQueryTime = jRobinSupport.getLongVariable(jRobinData.getRRDName() + "_~LASTQTIME").longValue();
                                 }
                                 catch (NullPointerException ex) {
                                         lastQueryTime = 0;
@@ -252,31 +251,31 @@ public class JRobinCacheUpdater {
                                 consume = (oldVal / 100d * powerRating) / elapsedTime * ratio; //wattt's per second
 
                                 try {
-                                        oldConsume = controller.getDoubleVariable(jRobinDataItem.getVariable() + "_~CONSUME").doubleValue();
+                                        oldConsume = jRobinSupport.getDoubleVariable(jRobinDataItem.getVariable() + "_~CONSUME").doubleValue();
                                 }
                                 catch (NullPointerException ex) {
                                         oldConsume = 0;
                                 }
                                 oldConsume = oldConsume + consume;
 
-                                controller.setVariable(jRobinDataItem.getVariable() + "_~POWERRATING", powerRating);
+                                jRobinSupport.setVariable(jRobinDataItem.getVariable() + "_~POWERRATING", powerRating);
 
-                                controller.setVariable(jRobinDataItem.getVariable() + "_~CONSUME", oldConsume);
+                                jRobinSupport.setVariable(jRobinDataItem.getVariable() + "_~CONSUME", oldConsume);
 
-                                controller.setLongVariable(jRobinDataItem.getVariable() + "_~TIME", endTime);
+                                jRobinSupport.setLongVariable(jRobinDataItem.getVariable() + "_~TIME", endTime);
 
-                                controller.setVariable(jRobinDataItem.getVariable(), value);
+                                jRobinSupport.setVariable(jRobinDataItem.getVariable(), value);
 
                         }
                 }
         }
 
-        public void setController(Controller controller) {
-                this.controller = controller;
+        public void setJRobinSupport(JRobinSupport jRobinSupport) {
+                this.jRobinSupport = jRobinSupport;
         }
 
-        public Controller getController() {
-                return this.controller;
+        public JRobinSupport getJRobinSupport() {
+                return this.jRobinSupport;
         }
 
 }

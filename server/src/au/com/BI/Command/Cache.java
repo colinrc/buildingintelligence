@@ -28,12 +28,14 @@ public class Cache {
         protected JRobinCacheUpdater jRobinCacheUpdater = null;
 		protected boolean jRobinActive = false;
 		protected Queue<CacheListener> cacheListeners = null;
+		protected JRobinSupport jRobinSupport;
 
-        public Cache() {
+        public Cache(JRobinSupport jRobinSupport) {
                 cachedCommands = Collections.synchronizedMap(new HashMap<String,CacheWrapper>(
                     DeviceModel.NUMBER_CACHE_COMMANDS));
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
                 cacheListeners = new ConcurrentLinkedQueue<CacheListener>();
+                this.jRobinSupport = jRobinSupport;
         }
 
         public Collection getSetElements(CacheWrapper cachedObject) {
@@ -190,7 +192,7 @@ public class Cache {
             }
 
 		   if (this.jRobinActive) {
-			   command.setJRobinData(controller.getJrobinDataObject(displayName));
+			   command.setJRobinData(jRobinSupport.getJrobinDataObject(displayName));
 			   jRobinCacheUpdater.doCommandForJRobin(command);
 		   }
     }
@@ -289,7 +291,7 @@ public class Cache {
                 }
 
 			   if (this.jRobinActive) {
-				   command.setJRobinData(controller.getJrobinDataObject(displayName));
+				   command.setJRobinData(jRobinSupport.getJrobinDataObject(displayName));
 				   jRobinCacheUpdater.doCommandForJRobin(command);
 			   }
         }
@@ -306,7 +308,7 @@ public class Cache {
                 this.controller = controller;
                 //must be set at instantiation
 				if (this.jRobinActive) {
-					jRobinCacheUpdater = new JRobinCacheUpdater(controller);
+					jRobinCacheUpdater = new JRobinCacheUpdater(jRobinSupport);
 				}
         }
 
@@ -322,7 +324,7 @@ public class Cache {
 		public void setJRobinActive(boolean robinActive) {
 			jRobinActive = robinActive;
 			if (robinActive && jRobinCacheUpdater == null) {
-				jRobinCacheUpdater = new JRobinCacheUpdater(controller);
+				jRobinCacheUpdater = new JRobinCacheUpdater(jRobinSupport);
 			}
 		}
 

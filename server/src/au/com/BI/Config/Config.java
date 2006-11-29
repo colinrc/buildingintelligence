@@ -36,6 +36,7 @@ import au.com.BI.Macro.*;
 import au.com.BI.Home.Controls;
 import au.com.BI.Home.VersionManager;
 import au.com.BI.IR.*;
+import au.com.BI.JRobin.JRobinParser;
 import au.com.BI.SMS.SMSFactory;
 import au.com.BI.Sensors.*;
 import au.com.BI.Raw.RawFactory;
