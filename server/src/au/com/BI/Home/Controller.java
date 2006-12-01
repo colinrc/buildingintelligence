@@ -485,7 +485,7 @@ public class Controller {
 				do {
 						Thread.sleep(100);
 						i ++;
-				} while (!commandQueue.isEmpty() && i < 5);
+				} while (commandQueue.isEmpty() && i < 5);
 			} catch (InterruptedException ex) {
 			}
 			;
