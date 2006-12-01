@@ -288,7 +288,7 @@ public class ControlledHelper {
 					_command.setKey("CLIENT_SEND");
 					cache.setCachedCommand(_command.getKey(), _command);
 
-					logger.log(Level.INFO, "Sending "
+					logger.log(Level.FINER, "Sending "
 							+ _command.getCommandCode() + " ArmedStatus="
 							+ _command.getExtraInfo() + " ArmUpState="
 							+ _command.getExtra2Info() + " AreaAlarmState="
@@ -336,7 +336,7 @@ public class ControlledHelper {
 				_command.setKey("CLIENT_SEND");
 				cache.setCachedCommand(_command.getKey(), _command);
 
-				logger.log(Level.INFO, "Sending " + _command.getCommandCode());
+				logger.log(Level.FINER, "Sending " + _command.getCommandCode());
 				sendToFlash(commandQueue, -1, _command);
 			} else if (m1Command.getClass().equals(
 					ReplyAlarmByZoneReportData.class)) {
@@ -356,7 +356,7 @@ public class ControlledHelper {
 					_command.setKey("CLIENT_SEND");
 					cache.setCachedCommand(_command.getKey(), _command);
 
-					logger.log(Level.INFO, "Sending "
+					logger.log(Level.FINER, "Sending "
 							+ _command.getCommandCode() + " ArmedStatus="
 							+ _command.getExtraInfo() + " ArmUpState="
 							+ _command.getExtra2Info() + " AreaAlarmState="
@@ -374,7 +374,7 @@ public class ControlledHelper {
 				_command.setKey("CLIENT_SEND");
 				cache.setCachedCommand(_command.getKey(), _command);
 
-				logger.log(Level.INFO, "Sending " + _command.getCommandCode()
+				logger.log(Level.FINER, "Sending " + _command.getCommandCode()
 						+ " task=" + _command.getExtraInfo());
 				sendToFlash(commandQueue, -1, _command);
 			} else if (m1Command.getClass().equals(PLCChangeUpdate.class)) {
@@ -403,7 +403,7 @@ public class ControlledHelper {
 										_command);
 
 								logger
-										.log(Level.INFO, "Sending "
+										.log(Level.FINER, "Sending "
 												+ _command.getCommandCode()
 												+ " command to "
 												+ light.getOutputKey());
@@ -433,7 +433,7 @@ public class ControlledHelper {
 										_command);
 
 								logger
-										.log(Level.INFO, "Sending "
+										.log(Level.FINER, "Sending "
 												+ _command.getCommandCode()
 												+ " command to "
 												+ light.getOutputKey());
@@ -465,7 +465,7 @@ public class ControlledHelper {
 										_command);
 
 								logger
-										.log(Level.INFO, "Sending "
+										.log(Level.FINER, "Sending "
 												+ _command.getCommandCode()
 												+ " command to "
 												+ light.getOutputKey());
@@ -502,7 +502,7 @@ public class ControlledHelper {
 						_command.setKey("CLIENT_SEND");
 						cache.setCachedCommand(_command.getKey(), _command);
 
-						logger.log(Level.INFO, "Sending "
+						logger.log(Level.FINER, "Sending "
 								+ _command.getCommandCode() + " command to "
 								+ outputKey);
 						sendToFlash(commandQueue, -1, _command);
@@ -546,7 +546,7 @@ public class ControlledHelper {
 						_command.setKey("CLIENT_SEND");
 						cache.setCachedCommand(_command.getKey(), _command);
 
-						logger.log(Level.INFO, "Sending "
+						logger.log(Level.FINER, "Sending "
 								+ _command.getCommandCode() + " command to "
 								+ outputKey);
 						sendToFlash(commandQueue, -1, _command);
