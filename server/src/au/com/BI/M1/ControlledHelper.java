@@ -217,7 +217,7 @@ public class ControlledHelper {
 								_command.getExtraInfo())) {
 					cache.setCachedCommand(_command.getKey(), _command);
 
-					logger.log(Level.INFO,
+					logger.log(Level.FINER,
 							"Sending temperature to flash for group:"
 									+ requestTemperatureReply.getGroup()
 											.toString() + ":device:"
@@ -228,7 +228,7 @@ public class ControlledHelper {
 					sendToFlash(commandQueue, -1, _command);
 				} else {
 					sendCommandToFlash = false;
-					logger.log(Level.INFO,
+					logger.log(Level.FINER,
 							"Did not send temperature to flash for group:"
 									+ requestTemperatureReply.getGroup()
 											.toString() + ":device:"
@@ -260,7 +260,7 @@ public class ControlledHelper {
 						_command.setKey("CLIENT_SEND");
 						cache.setCachedCommand(_command.getKey(), _command);
 
-						logger.log(Level.INFO, "Sending "
+						logger.log(Level.FINER, "Sending "
 								+ _command.getCommandCode() + " command to "
 								+ device.getOutputKey());
 						sendToFlash(commandQueue, -1, _command);
