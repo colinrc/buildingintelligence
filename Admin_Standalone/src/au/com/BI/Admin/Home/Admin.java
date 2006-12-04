@@ -5,18 +5,11 @@ package au.com.BI.Admin.Home;
  */
 
 // from Java:
-import au.com.BI.Admin.GUI.ClientCorePanel;
-import au.com.BI.Admin.GUI.ClientPanel;
-import au.com.BI.Admin.GUI.ConfigsPanel;
+
 import au.com.BI.Admin.GUI.ControlsPanel;
-import au.com.BI.Admin.GUI.DataFilesPanel;
 import au.com.BI.Admin.GUI.DebugLevelsPanel;
 import au.com.BI.Admin.GUI.IRPanel;
-import au.com.BI.Admin.GUI.JRobinGraphPanel;
-import au.com.BI.Admin.GUI.JRobinRRDPanel;
 import au.com.BI.Admin.GUI.LogPanel;
-import au.com.BI.Admin.GUI.ScriptsPanel;
-import au.com.BI.Admin.GUI.ServerLogPanel;
 import au.com.BI.Admin.GUI.eLifeOptionPane;
 import au.com.BI.Admin.GUI.eLife_AdminTabbedPane;
 import au.com.BI.Admin.GUI.eLife_AdminToolPanel;
@@ -46,10 +39,8 @@ public class Admin extends JPanel
 	protected Logger logger;
 	private IP ip;
 	private String irName;
-	protected String logDir = "log";
 	protected boolean shownAdminConnectError = false;
 	protected Properties properties = null;
-	private String workingDir = "";
 	protected Project project;
 	//
 	// Constructor
@@ -100,18 +91,6 @@ public class Admin extends JPanel
 		connection.start();
 	}
 	
-	public void createWorkingDir (String workDir,String serverIP) {
-		if (workDir.equals ("")) {
-			// setCWD();
-			// @TODO make option window popup instead
-		}
-		Calendar now = Calendar.getInstance();
-		String timeStamp = now.get(Calendar.DATE) + "." + now.get (Calendar.MONTH) + "." + now.get (Calendar.YEAR);
-		workingDir = workDir + "/" + serverIP;
-		File newDir = new File (workingDir);
-		newDir.mkdirs();
-	}
-	
 	public void showOptions () {
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JFrame frame = new JFrame ("Options");
@@ -120,66 +99,6 @@ public class Admin extends JPanel
 		optionPane.pack();
 		optionPane.setVisible(true);
 
-	}
-	
-	public void createFileBuffer (String theFile,String dir, String sourceName,boolean load) {
-		if (theFile != null) {
-
-			/*
-			newBuffer.writeLock();
-			if (dir.endsWith("script")) {
-				newBuffer.setMode ("py");
-			} else {
-				newBuffer.setMode ("xml");
-			}
-			newBuffer.writeUnlock();
-			*/
-			
-			String dirParts[] = dir.split("[/\\\\]");
-			int numberParts = dirParts.length;
-			String dirToWrite = "";
-			if (numberParts > 0) {
-				dirToWrite = dirParts[numberParts - 1];
-				if (numberParts > 1) {
-					dirToWrite = dirParts[numberParts - 2] + "/" + dirToWrite;
-				}
-			}
-			
-			String newDirStr = workingDir+"/" + dirToWrite;
-			File newDir = new File (newDirStr);
-			newDir.mkdirs();
-
-			String nameParts[] = sourceName.split("[/\\\\]");
-			String nameOnly = nameParts[nameParts.length-1];
-			
-			String fullPath = newDir + File.separator + nameOnly;
-			
-			try {
-				File newFile = new File (fullPath);
-				if (!newFile.exists () || newFile.canWrite()) {
-					FileWriter outFile = new FileWriter (newFile);
-					outFile.write(theFile);
-					outFile.close();
-				}
-				if (!project.getEditCMD().equals("")) {
-					String toRun [] = new String[2];
-					toRun [0] = project.getEditCMD();
-					toRun [1]  = fullPath;
-					Process p = Runtime.getRuntime().exec (toRun);		
-				}
-			} catch (IOException ex) {
-				logger.log (Level.WARNING,"Could not write file " + fullPath);
-			}
-		}
-	}
-	
-	public void 	setStartupFile(String startupFile) {
-		this.getConfigsPanel().setStartupFile(startupFile);
-	}
-
-	public void 	setLogDir(String logDir) {
-		this.getServerLogPanel().setLogDir(logDir);
-		this.ip.setLogDir(logDir);
 	}
 	
 	public void learnIR(String irName){
@@ -206,39 +125,6 @@ public class Admin extends JPanel
 		this.tabPanel.getControlsPanel().setExecResult (execString);
 	}
 
-	public void setDataFilesResult (String resultsString) {
-		this.tabPanel.getDataFilesPanel().setResults (resultsString);
-	}
-	
-	public void setConfigResult (String resultsString) {
-		this.tabPanel.getConfigsPanel().setResults (resultsString);
-	}
-
-	public void setJRobinRRDResult (String resultsString) {
-		this.tabPanel.getJRobinRRDPanel().setResults (resultsString);
-	}
-
-	public void setJRobinGraphResult (String resultsString) {
-		this.tabPanel.getJRobinGraphPanel().setResults (resultsString);
-	}
-
-
-	public void setClientResult (String resultsString) {
-		this.tabPanel.getClientPanel().setResults (resultsString);
-	}
-
-	public void setServerLogResult (String resultsString) {
-		this.tabPanel.getServerLogPanel().setResults (resultsString);		
-	}
-
-	public void setClientCoreResult (String resultsString) {
-		this.tabPanel.getClientCorePanel().setResults (resultsString);
-	}
-	
-	public void setScriptsResult (String resultsString) {
-		this.tabPanel.getScriptsPanel().setResults (resultsString);
-	}
-
 	public DebugLevelsPanel getDebugLevelsPanel () {
 		return this.tabPanel.getDebugLevelsPanel();
 	}
@@ -246,39 +132,6 @@ public class Admin extends JPanel
 	public ControlsPanel getControlsPanel () {
 		return this.tabPanel.getControlsPanel();
 	}
-
-	public ServerLogPanel getServerLogPanel () {
-		return this.tabPanel.getServerLogPanel();
-	}
-	
-	public ClientCorePanel getClientCorePanel () {
-		return this.tabPanel.getClientCorePanel();
-	}
-	
-	public JRobinRRDPanel getJRobinRRDPanel () {
-		return this.tabPanel.getJRobinRRDPanel();
-	}
-
-	public JRobinGraphPanel getJRobinGraphPanel () {
-		return this.tabPanel.getJRobinGraphPanel();
-	}
-	
-	public ConfigsPanel getConfigsPanel () {
-		return this.tabPanel.getConfigsPanel();
-	}
-
-	public ScriptsPanel getScriptsPanel () {
-		return this.tabPanel.getScriptsPanel();
-	}
-
-	public DataFilesPanel getDataFilesPanel () {
-		return this.tabPanel.getDataFilesPanel();
-	}
-
-	public ClientPanel getClientPanel () {
-		return this.tabPanel.getClientPanel();
-	}
-
 
 	public IRPanel getIRPanel () {
 		return this.tabPanel.getIRPanel();
@@ -301,15 +154,6 @@ public class Admin extends JPanel
 	public void setAdminConnectionStatus (boolean connected) {
 
 		tabPanel.getControlsPanel().setAdminConnectionStatus (connected);
-		if (connected == false) {
-			tabPanel.getConfigsPanel().clear();
-			tabPanel.getScriptsPanel().clear();
-			tabPanel.getDataFilesPanel().clear();
-			tabPanel.getJRobinGraphPanel().clear();
-			tabPanel.getJRobinRRDPanel().clear();
-			tabPanel.getClientPanel().clear();
-			tabPanel.getClientCorePanel().clear();
-		}
 	}
 
 	public void setIP (IP ip) {
@@ -351,7 +195,6 @@ public class Admin extends JPanel
 	}
 	
 	public void doAdminConnectionStartup () {
-		this.createWorkingDir(project.getWorkDir(),project.getServerIP());
 	}
 	
 	public void sendArbitraryCommand (String command ) {
@@ -419,61 +262,7 @@ public class Admin extends JPanel
 		}		
 	}
 	
-	public void downloadFile (String dir, String fileName) {
-		try {
-			if (ip != null)
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"DOWNLOAD\" DIR=\"" + dir + "\" EXTRA=\"" + fileName + "\" />\n");
-		} catch (IOException e) {
-			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
-		}		
-	}
-	
-	public void setStartup (String configFile) {
-		try {
-			if (ip != null)
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"SELECT\" EXTRA=\"" + configFile + "\" />\n");
-		} catch (IOException e) {
-			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
-		}
-	}
-	
-	public void deleteFile (String dir, String configFile) {
-		try {
-			if (ip != null)
-				ip.sendAdminMessage ("<ADMIN COMMAND=\"DELETE\" DIR=\"" + dir + "\" EXTRA=\"" + configFile + "\" />\n");
-		} catch (IOException e) {
-			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
-		}
-	}
-	
-	public void uploadFile(String dir, String fileName) {
-
-		if (fileName.equals("")) {
-			JFileChooser newChooser = new JFileChooser (dir);			
-			int returnVal = newChooser.showOpenDialog(this);
-			if (returnVal != JFileChooser.APPROVE_OPTION)
-				return;
-			fileName = newChooser.getName();
-		}
-		File fileToSend = new File(fileName);		
-		FileReader reader = null;
-		try {
-			reader = new FileReader (fileToSend);
-		} catch (FileNotFoundException ex){
-			logger.log (Level.WARNING,"File not found in uploading the file " + fileName);								
-		}
-		int fileLength = (int)fileToSend.length();
-		char fileContents[] = new char [fileLength];
-
-		try {
-			reader.read(fileContents,0,fileLength);
-			ip.sendAdminMessage ("<ADMIN COMMAND=\"UPLOAD\" NAME=\"" + fileName + "\" DIR=\"" + dir + "\" ><![CDATA[" + fileContents + " ]]></ADMIN>\n");
-		}
-		catch (IOException e) {
-			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());					
-		}
-	}
-	
+		
 	public void uploadClientXML(String dir, String fileName) {
 
 		if (fileName.equals("")) {
@@ -639,10 +428,6 @@ public class Admin extends JPanel
 	 */
 	public ConnectionManager getConnection() {
 		return connection;
-	}
-
-	public String getLogDir() {
-		return logDir;
 	}
 
 }

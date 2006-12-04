@@ -20,7 +20,6 @@ import java.io.File;
 public class eLifeOptionPane extends JDialog
 {
 	protected JTextField serverIPField;
-	protected JTextField workDirField;
 	protected JTextField editCMDField;
 	protected JFormattedTextField monitorPortField;
 	protected JFormattedTextField eLifePortField;
@@ -93,30 +92,6 @@ public class eLifeOptionPane extends JDialog
 		this.getContentPane().add (eLifeBox);
 		
 		
-		workDirPanel = new JPanel();
-		JLabel workLabel = new JLabel ("eLife Working Directory");
-		workDirPanel.add (workLabel);
-		String currentWorkDir = properties.getProperty(
-				"WorkDir");
-		if (currentWorkDir == null) currentWorkDir = "";
-		workDirField = new JTextField(currentWorkDir);
-		workDirField.setColumns(10);
-		workDirField.setEditable(false);
-		
-		workDirPanel.add (workDirField);
-		
-		JButton setCWD = new JButton("Set");
-		setCWD.addActionListener(
-			new ActionListener() {
-				public void actionPerformed(ActionEvent evt) {
-					setCWD(workDirField.getText());
-				}
-			});
-		workDirPanel.add (setCWD);
-		workDirPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-		workDirPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-		this.getContentPane().add (workDirPanel);
-		
 		JPanel editCMDBox = new JPanel();
 		JLabel ediCMDLabel = new JLabel ("Edit Command");
 		editCMDBox.add (ediCMDLabel);
@@ -158,41 +133,14 @@ public class eLifeOptionPane extends JDialog
 		this.setVisible(false);
 	}
 	
-	public void setCWD (String workDir) {
 
-	    JFileChooser chooser = new JFileChooser(workDir);
-	    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-
-	    int returnVal = chooser.showOpenDialog(this);
-	    if(returnVal == JFileChooser.APPROVE_OPTION) {
-	    		File result = chooser.getSelectedFile();
-			properties.setProperty(
-					"WorkDir",
-					result.getName());
-			UpdateWorkDirMessage updater = new UpdateWorkDirMessage (result.getName());
-			SwingUtilities.invokeLater(updater);			
-		}
-	}
 	
 	
-	private class UpdateWorkDirMessage implements Runnable {
-		String message;
-		public UpdateWorkDirMessage  (String message) {
-			this.message = message;
-		}
-		    public void run() { 
-		    	workDirField.setText(message);
-		    	workDirPanel.invalidate();
-		    }
-	}
 	
 	public void _save()
 	{
 		properties.setProperty(
 				"ServerIP",serverIPField.getText());
-		
-		properties.setProperty(
-				"WorkDir",workDirField.getText());
 
 		properties.setProperty(
 				"EditCmd",editCMDField.getText());

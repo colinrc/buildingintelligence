@@ -216,42 +216,7 @@ public class AdminListener extends Thread
 			logger.log (Level.WARNING,"Error " + errorString);
 			eLife.alreadyInUse (errorString,JOptionPane.ERROR_MESSAGE);
 		}
-		if (name.equals("SELECT")) {
-			String resultsString = rootElement.getText();
-			synchronized (eLife) {
-				eLife.setConfigResult (resultsString);
-			}
-		}
-		if (name.equals("FILE")) {
-			String sourceDir = rootElement.getAttributeValue("DIR");
-			String sourceName = rootElement.getAttributeValue ("NAME");
-			String base64 = rootElement.getAttributeValue ("BASE64");
-			String theFile = rootElement.getText();
-			if (base64 != null && base64.equals("Y")) {
-				theFile = Base64Coder.decode(theFile);
-			}
-			synchronized (eLife) {
-				eLife.createFileBuffer (theFile,sourceDir,sourceName,true);
-			}
-		}
-		if (name.equals("FILE_TRANSFER")) {
-			String sourceDir = rootElement.getAttributeValue("DIR");
-			String sourceName = rootElement.getAttributeValue ("NAME");
-			String base64 = rootElement.getAttributeValue ("BASE64");
-			String theFile = rootElement.getText();
-			if (base64 != null && base64.equals("Y")) {
-				theFile = Base64Coder.decode(theFile);
-			}
-			synchronized (eLife) {
-				eLife.createFileBuffer (theFile,sourceDir,sourceName,false);
-			}
-		}
-		if (name.equals("STARTUP_FILE")) {
-			String startupFile = rootElement.getAttributeValue ("NAME");
-			synchronized (eLife) {
-				eLife.setStartupFile(startupFile);
-			}
-		}		
+	
 		if (name.equals("DELETE")) {
 			String resultsString = rootElement.getText();
 			String dir = rootElement.getAttributeValue ("DIR");
@@ -286,62 +251,11 @@ public class AdminListener extends Thread
 					String desc = file.getAttributeValue ("DESC");
 					fileList.addItem(fileName,desc,timestamp);	
 				}
-				if (dir.endsWith("config")) {
-					eLife.getConfigsPanel ().setFileList (fileList);
-				}
-				if (dir.endsWith("script")) {
-					eLife.getScriptsPanel ().setFileList (fileList);
-				}			
-				if (dir.endsWith("datafiles")) {
-					eLife.getDataFilesPanel ().setFileList (fileList);
-				}
-				if (dir.endsWith("client-core")) {
-					eLife.getClientCorePanel ().setFileList (fileList);
-				}
-				if (dir.endsWith("client")) {
-					eLife.getClientPanel ().setFileList (fileList);
-				}
-				if (dir.endsWith("RRDDefinition")) {
-					eLife.getJRobinRRDPanel ().setFileList (fileList);
-				}
-				if (dir.endsWith("GraphDefinition")) {
-					eLife.getJRobinGraphPanel ().setFileList (fileList);
-				}		
-				if (dir.endsWith("log")) {
-					eLife.getServerLogPanel ().setFileList (fileList);
-				}	
 			}
 		}
 	}
 
 	public void setResults (String dir, String resultsString) {
-		synchronized (eLife) {
-
-			if (dir.endsWith("config")) {
-				eLife.setConfigResult (resultsString);
-			}
-			if (dir.endsWith("script")) {
-				eLife.setScriptsResult (resultsString);
-			}			
-			if (dir.endsWith("datafiles")) {
-				eLife.setDataFilesResult (resultsString);
-			}
-			if (dir.endsWith("client-core")) {
-				eLife.setClientCoreResult (resultsString);
-			}
-			if (dir.endsWith("client")) {
-				eLife.setClientResult (resultsString);
-			}
-			if (dir.endsWith("RRDDefinition")) {
-				eLife.setJRobinRRDResult (resultsString);
-			}
-			if (dir.endsWith("GraphDefinition")) {
-				eLife.setJRobinGraphResult (resultsString);
-			}
-			if (dir.equals(logDir)) {
-				eLife.setServerLogResult (resultsString);
-			}
-		}
 	}
 
 	

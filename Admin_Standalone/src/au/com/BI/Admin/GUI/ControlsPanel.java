@@ -40,11 +40,11 @@ public class ControlsPanel extends JPanel
          mDateFormatter = new SimpleDateFormat("dd/MM/yyyy H:mm:ss");
 		this.setLayout(new BorderLayout());
 
-		JPanel serviceButtons = new JPanel();
-		serviceButtons.setLayout (new BorderLayout());
+		// JPanel serviceButtons = new JPanel();
+		// serviceButtons.setLayout (new BorderLayout());
 		
 		JPanel serviceButtonsGroup = new JPanel();
-		serviceButtonsGroup.setLayout (new FlowLayout (FlowLayout.LEADING));
+		serviceButtonsGroup.setLayout (new FlowLayout (FlowLayout.LEFT));
 		//serviceButtons.setLayout (new BoxLayout (serviceButtons,BoxLayout.X_AXIS));
 		
 		JButton start = new JButton("Start");
@@ -110,6 +110,40 @@ public class ControlsPanel extends JPanel
 		serviceButtonsGroup.add (options);
 		serviceButtonsGroup.add(Box.createRigidArea(new Dimension(5, 0)));
 
+		
+		JPanel extraControls = new JPanel();
+		extraControls.setLayout (new FlowLayout (FlowLayout.LEADING));
+		
+		JButton loadMacros = new JButton("Reload Macros");
+		loadMacros.addActionListener(
+			new ActionListener() {
+				public void actionPerformed(ActionEvent evt) {
+					// status.setText ("Reloading macro database");
+					ControlsPanel.this.eLife.reloadMacros();
+				}
+			});
+		extraControls.add (loadMacros);
+		
+		JButton loadScripts = new JButton("Reload Scripts");
+		loadScripts.addActionListener(
+			new ActionListener() {
+				public void actionPerformed(ActionEvent evt) {
+					ControlsPanel.this.eLife.reloadScripts();
+				}
+			});
+		extraControls.add (loadScripts);
+		
+
+		JButton reloadIR = new JButton("Reload IR database");
+		reloadIR.addActionListener(
+				new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						systemStatusLabel.setText ("Reloading IR database");
+						ControlsPanel.this.eLife.reloadIRDB();
+					}
+				});
+		extraControls.add(reloadIR);	
+		
 		/*
 		arbitrary = new JTextField();
 		arbitrary.setText("Arbitrary Command");
@@ -121,7 +155,7 @@ public class ControlsPanel extends JPanel
 			});
 			*/
 		
-		serviceButtons.add (serviceButtonsGroup,BorderLayout.WEST);
+		// serviceButtons.add (serviceButtonsGroup,BorderLayout.WEST);
 		//serviceButtons.add (arbitrary,BorderLayout.CENTER);
 
 		
@@ -133,7 +167,8 @@ public class ControlsPanel extends JPanel
 			
 		JPanel allButtons = new JPanel();
 		allButtons.setLayout (new BoxLayout (allButtons, BoxLayout.Y_AXIS));
-		allButtons.add(serviceButtons);		
+		allButtons.add(serviceButtonsGroup);		
+		allButtons.add(extraControls);
 		allButtons.add(systemStatus);		
 		add(allButtons,BorderLayout.NORTH);
 		

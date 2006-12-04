@@ -40,10 +40,8 @@ public class IRPanel extends JPanel
 		learntActions = new Vector();
 		learntDevices = new Vector();
 		
-		JPanel extraControls = new JPanel();
-		extraControls.setLayout (new FlowLayout (FlowLayout.LEADING));
-
-
+		JPanel deviceSelect = new JPanel();
+		deviceSelect.setLayout (new FlowLayout (FlowLayout.LEADING));
 		
 		JPanel devicePanel = new JPanel ();
 		devicePanel.setLayout (new BoxLayout (devicePanel, BoxLayout.Y_AXIS));
@@ -73,9 +71,9 @@ public class IRPanel extends JPanel
 					}					
 				});
 		devicePanel.add(irDevice);
-		extraControls.add(devicePanel);
+		deviceSelect.add(devicePanel);
 
-		extraControls.add (Box.createHorizontalStrut(5));
+		deviceSelect.add (Box.createHorizontalStrut(5));
 
 
 		JPanel actionPanel = new JPanel ();
@@ -101,10 +99,11 @@ public class IRPanel extends JPanel
 					}					
 				});
 		actionPanel.add(irName);
-		extraControls.add(actionPanel);
-		extraControls.add (Box.createHorizontalStrut(5));
+		deviceSelect.add(actionPanel);
+		deviceSelect.add (Box.createHorizontalStrut(5));
 
-
+		JPanel extraControls = new JPanel();
+		extraControls.setLayout (new FlowLayout (FlowLayout.LEADING));
 		
 		JPanel buttons1 = new JPanel();
 		buttons1.setLayout (new BoxLayout (buttons1, BoxLayout.Y_AXIS));
@@ -128,16 +127,6 @@ public class IRPanel extends JPanel
 				});
 		buttons1.add(cancelIR);	
 		
-
-		JButton reloadIR = new JButton("Reload IR database");
-		reloadIR.addActionListener(
-				new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						systemStatusLabel.setText ("Reloading IR database");
-						IRPanel.this.eLife.reloadIRDB();
-					}
-				});
-		buttons1.add(reloadIR);	
 
 		extraControls.add(buttons1);
 
@@ -227,6 +216,7 @@ public class IRPanel extends JPanel
 			
 		JPanel allButtons = new JPanel();
 		allButtons.setLayout (new BoxLayout (allButtons, BoxLayout.Y_AXIS));
+		allButtons.add(deviceSelect);		
 		allButtons.add(extraControls);		
 		allButtons.add(systemStatus);		
 		add(allButtons,BorderLayout.NORTH);
