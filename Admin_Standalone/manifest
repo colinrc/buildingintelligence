@@ -2,4 +2,4 @@ Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.6.5
 Created-By: Colin Canfield
 Main-Class: au.com.BI.Admin.Home.eLife_Admin
-Class-Path: ../lib/jdom.jar
+Class-Path: ../ext/jdom.jar
