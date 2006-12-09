@@ -1,3 +1,8 @@
+2006/12/9
+Fixed various bugs.
+The  library requirement are to have jdom.jar, xalan.jar, xml-apis.jar  in ../ext relative to the eLife_Admin.jar file.
+== Released  [attachment:wiki:SoftwareReleases:eLife_Admin_1.3.zip eLife_AdminV1.3]   ==
+
 2006/12/5
 Built standalone version
 The only library requirement is to have jdom.jar in ../ext relative to the eLife_Admin.jar file.

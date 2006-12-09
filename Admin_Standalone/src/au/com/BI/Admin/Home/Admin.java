@@ -75,16 +75,13 @@ public class Admin extends JPanel
 
 		this.tabPanel = new eLife_AdminTabbedPane(this);
 		contentsPane.add(this.tabPanel,BorderLayout.CENTER);
-		view.pack();
-		view.setVisible(true);
 
-		if (!project.getWorkDir().equals ("")) {
-			tabPanel.getControlsPanel().updateSystemStatus("eLife V" + major_version + "." + minor_version + " Work Dir : " + project.getWorkDir());
-		} else {
-			tabPanel.getControlsPanel().updateSystemStatus("eLife V" + major_version + "." + minor_version + " Please set work directory");			
-		}
+		tabPanel.getControlsPanel().updateSystemStatus("eLife V" + major_version + "." + minor_version );			
 		add(this.tabPanel,BorderLayout.CENTER);
 		contentsPane.add(this);
+		
+		view.pack();
+		view.setVisible(true);
 
 		connection = new ConnectionManager (this);
 		connection.connect(project.getServerIP(),project.getMonitorPort(),project.getAdminPort());

@@ -26,6 +26,7 @@ public class eLife_Admin extends JFrame {
 	public eLife_Admin() {
 		super ();
 	    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    this.setPreferredSize(new Dimension(800,520));
 	    this.pack();
 	    this.setVisible(true);
 		Admin eLife = new Admin(this);
