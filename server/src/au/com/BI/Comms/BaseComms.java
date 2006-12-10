@@ -92,7 +92,7 @@ protected CommsGroup commsGroup = null;
 				Iterator sentListIter = sentQueue.iterator();
 				while (sentListIter.hasNext() && !returnCode) {
 					CommsCommand item = (CommsCommand)sentListIter.next();
-					if (item.key.equals (key)){
+					if (item.actionCode.equals (key)){
 					    sentListIter.remove();
 					    if (logger.isLoggable(Level.FINER)){
 						logger.log(Level.FINER,"Received acknowledgement for key " + key + " time diff (ms) " + 
@@ -195,9 +195,11 @@ protected CommsGroup commsGroup = null;
 	        sendNextCommand();
 	    } else {
 	    	if (logger.isLoggable(Level.FINEST)){
+	    		String sentKeySet = "";
 		    	for (CommsCommand i: sentQueue){
-		    		logger.log (Level.FINEST,"Item in sent queue : " + i.getKey());
+		    		sentKeySet +=  i.actionCode + ":";
 		    	}
+		    	logger.log (Level.FINEST,"Items in sent queue : " + sentKeySet);
 	    	}
 			if ((System.currentTimeMillis() - this.timeOfLastCommand) > CommDevice.DelayUntilCommandRepeat) {
 				logger.log(Level.INFO,"Commands not actioned in " + CommDevice.DelayUntilCommandRepeat + " ms, repeating. Time since request " + Long.toString(System.currentTimeMillis() - this.timeOfLastCommand)   );

@@ -24,7 +24,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	protected String outputCBUSCommand = "";
 	protected HashMap <String,StateOfGroup>state;
-	protected HashMap <String,String>cachedMMI;
 	protected char STX=' ';
 	protected char ETX='\r';
 	protected String applicationCode = "38";
@@ -32,9 +31,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected String rampCodes = ":02:0A:12:1A:22:2A:32:3A:42:4A:52:5A:62:6A:72:7A";
 	protected HashSet <String>applicationCodes = null;
 	protected CBUSHelper cBUSHelper;
-	protected HashMap <String,ArrayList<Integer>>levelMMIQueues;
-	protected HashMap <String,String>sendingExtended;
-	protected boolean receivedLevelReturn = true;
+
 	protected long lastSentTime = 0;
 	protected char currentChar = 'g';
 	protected LinkedList <SensorFascade>temperatureSensors = null;
@@ -42,7 +39,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected PollTemperatures pollTemperatures = null;
 	protected long tempPollValue = 0L;
 	protected int tildeCount = 0;
-
+	protected boolean finishedStartup = false;
+	protected MMIHelpers mMIHelpers;
 	int []etxChars;
 	String etxString = "";
 
@@ -52,17 +50,16 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		state = new HashMap<String,StateOfGroup>(128);
 		applicationCodes = new HashSet<String>(10);
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		cachedMMI = new HashMap<String,String> (128);
 		cBUSHelper = new CBUSHelper();
-		sendingExtended = new HashMap<String,String> (256);
-		levelMMIQueues = new HashMap<String,ArrayList<Integer>> (5);
+
 		temperatureSensors = new LinkedList<SensorFascade>();
 		labels = new LinkedList<Label>();
-		etxChars = new int[] {'.','$','%','#','!','\'','~'};
+		mMIHelpers = new MMIHelpers(cBUSHelper, configHelper, comms, state, this);
+		etxChars = new int[] {'.','$','%','#','!','\''};
 
 		etxString = new String(".$%#!\'");
 		this.setPadding(2);
-		this.setInterCommandInterval(10);
+		this.setInterCommandInterval(0);
 		
 	}
 
@@ -303,9 +300,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		tildeCount = 0;
 		super.doStartup();
 		if (applicationCodes.isEmpty()) applicationCodes.add("38");
-		CommsCommand cbusCommsCommand = new CommsCommand();
-		cbusCommsCommand.setCommand("~~~"+ETX);
-		comms.addCommandToQueue (cbusCommsCommand);
+		// CommsCommand cbusCommsCommand = new CommsCommand();
+		//   cbusCommsCommand.setCommand("~~"+ETX);
+		// set basic at first , don't bother queueing for this.
+		comms.sendString("~~"+ETX);
+
 	}
 
 	public void doRestOfStartup () throws CommsFail {
@@ -317,9 +316,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		} catch (NumberFormatException ex) {
 			tempPollValue = 0L;
 		}
-		enableMMI (true);
+		setCBUSParameters ();
 
 		if (!temperatureSensors.isEmpty() && tempPollValue != 0L) {
+			if  (pollTemperatures != null) pollTemperatures.setRunning(false); // switch off any which may have already existed
 			pollTemperatures = new PollTemperatures();
 			pollTemperatures.setPollValue(tempPollValue);
 			pollTemperatures.setTemperatureSensors(temperatureSensors);
@@ -336,7 +336,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			String toSend = this.buildCBUSLabelString(label, new ClientCommand(label.getOutputKey(),"label",null,label.getDefaultLabel(),"","","",""), currentChar);
 			
 			CommsCommand cbusCommsCommand = new CommsCommand();
-			cbusCommsCommand.setKey (currentChar);
+			cbusCommsCommand.setActionCode (currentChar);
 			cbusCommsCommand.setKeepForHandshake(true);
 			cbusCommsCommand.setCommand(toSend);
 			cbusCommsCommand.setExtraInfo (label.getOutputKey());
@@ -346,62 +346,71 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 	
 	public void requestAllLevels () throws CommsFail{
-		this.clearAllLevelMMIQueues();
+		mMIHelpers.clearAllLevelMMIQueues();
 		for (DeviceType eachDevice:configHelper.getAllControlledDeviceObjects()) {
 			try {
 				CBUSDevice nextDevice = (CBUSDevice)eachDevice;
 
 				if (nextDevice.getDeviceType() == DeviceType.LIGHT_CBUS && nextDevice.supportsLevelMMI()) {
-					this.sendExtendedQuery(nextDevice.getKey(),nextDevice.getApplicationCode(),null,false,"0");
+					mMIHelpers.sendExtendedQuery(nextDevice.getKey(),nextDevice.getApplicationCode(),null,false,"0");
 				}
 			}catch (ClassCastException ex) {
 				logger.log (Level.WARNING,"A device has been configured in the CBUS configuration area that is not a CBUS device");
 			}
 		}
-		this.sendAllLevelMMIQueues();
+		mMIHelpers.sendAllLevelMMIQueues();
 	}
 
-	public boolean enableMMI (boolean enable) throws CommsFail{
+	public boolean setCBUSParameters () throws CommsFail{
 		// Ensure MMI messages are switched on
 		try {
 	
 			CommsCommand cbusCommsCommand1 = new CommsCommand();
-			String toSend = "A32100FF";
-			String checkSum = this.calcChecksum(toSend);
-			cbusCommsCommand1.setCommand(toSend+checkSum +ETX);
+			String toSend = "A32100FF"; // param 21 = FF = control all app numbers
+			// String checkSum = this.calcChecksum(toSend);
+			String actionCode = this.nextKey();
+			cbusCommsCommand1.setActionCode(actionCode);
+			cbusCommsCommand1.setKeepForHandshake(true);
+			cbusCommsCommand1.setCommand("@"+toSend + actionCode +ETX);  // interface should be in basic mode at this stage, so no checksum should be sent.
 			//new byte [] {(byte)0xA3,(byte)0x21,(byte)00, applicationCode,'g',(byte)ETX});
-				comms.addCommandToQueue (cbusCommsCommand1);
-	
-			CommsCommand cbusCommsCommand2 = new CommsCommand();
-			toSend = "A3420002";
-			checkSum = this.calcChecksum(toSend);
-			cbusCommsCommand2.setCommand(toSend+checkSum + ETX);
-			//new byte [] {(byte)0xA3,(byte)0x42,(byte)00, (byte)02,'h',(byte)ETX});
-			CommsCommand cbusCommsCommand3 = new CommsCommand();
-			CommsCommand cbusCommsCommand4 = new CommsCommand();
-			if (enable) {
-				toSend = "A3300029";
-				checkSum = this.calcChecksum(toSend);
-				cbusCommsCommand3.setCommand(toSend+checkSum + ETX);
-				toSend = "A3410029";
-				checkSum = this.calcChecksum(toSend);
-						//new byte [] {(byte)0xA3,(byte)0x30,(byte)00, (byte)0x59,'i',(byte)ETX});
-				cbusCommsCommand4.setCommand(toSend+checkSum + ETX);
-			}
-			else {
-				toSend = "A3300009";
-				checkSum = this.calcChecksum(toSend);
-				cbusCommsCommand3.setCommand(toSend+checkSum + ETX);
-						//new byte [] {(byte)0xA3,(byte)0x30,(byte)00, (byte)0x79,'i',(byte)ETX});
-				toSend = "A3410009";
-				checkSum = this.calcChecksum(toSend);
-				cbusCommsCommand4.setCommand(toSend+checkSum + ETX);
-			}
-	
 
+			CommsCommand cbusCommsCommand2 = new CommsCommand();
+			String toSend2 = "A32200FF"; // param 22 = FF = unused
+			cbusCommsCommand2.setKeepForHandshake(true);
+			actionCode = this.nextKey();
+			cbusCommsCommand2.setActionCode(actionCode);
+			// String checkSum = this.calcChecksum(toSend);
+			cbusCommsCommand2.setCommand("@"+toSend2 + actionCode+ETX);  // interface should be in basic mode at this stage, so no checksum should be sent.
+	
+			
+			CommsCommand cbusCommsCommand3 = new CommsCommand();
+			String toSend3 = "A3300029"; // 30 = option 1; CONNECT|SRCHK|MONITOR
+			actionCode = this.nextKey();
+			cbusCommsCommand3.setActionCode(actionCode);
+			cbusCommsCommand3.setCommand("@"+toSend3 + actionCode+ ETX);
+			cbusCommsCommand3.setKeepForHandshake(true);
+
+			CommsCommand cbusCommsCommand4 = new CommsCommand();
+			String toSend4 = "A3410029";  // Set power up mode to teh same as current operation mode
+			String checkSum = this.calcChecksum(toSend4);
+			actionCode = this.nextKey();
+			cbusCommsCommand4.setActionCode(actionCode);
+			cbusCommsCommand4.setCommand("@"+toSend4 + checkSum+  actionCode+ETX);
+			cbusCommsCommand4.setKeepForHandshake(true);
+				
+			CommsCommand cbusCommsCommand5 = new CommsCommand();
+			String toSend5 = "A3420006"; // power up notification on , LOCAL_SAL on
+			checkSum = this.calcChecksum(toSend5);
+			actionCode = this.nextKey();
+			cbusCommsCommand5.setActionCode(actionCode);
+			cbusCommsCommand5.setCommand("@"+ toSend5  +checkSum + actionCode+ ETX);
+			cbusCommsCommand5.setKeepForHandshake(true);
+
+			comms.addCommandToQueue (cbusCommsCommand1);
 			comms.addCommandToQueue (cbusCommsCommand2);
 			comms.addCommandToQueue (cbusCommsCommand3);
 			comms.addCommandToQueue (cbusCommsCommand4);
+			comms.addCommandToQueue (cbusCommsCommand5);
 			return true;
 		} catch (CommsFail e1) {
 			throw new CommsFail ("Communication failed communicating with CBUS " + e1.getMessage());
@@ -454,7 +463,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					String currentChar = this.nextKey();
 					LightFascade lightDevice = (LightFascade)device;
 					String fullKey = this.cBUSHelper.buildKey(lightDevice.getApplicationCode(),lightDevice.getKey(),lightDevice.getDeviceType());
-					this.sendingExtended.remove(fullKey);  
+					mMIHelpers.sendingExtended.remove(fullKey);  
 					// the build cbusstring will add a new entry if a new ramp has been sent
 					// ensure that Level CBUS returns will not be decoded, as the user has done an action since
 					
@@ -462,7 +471,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 						
 						CommsCommand cbusCommsCommand = new CommsCommand();
-						cbusCommsCommand.setKey (currentChar);
+						cbusCommsCommand.setActionCode (currentChar);
 						cbusCommsCommand.setKeepForHandshake(true);
 						cbusCommsCommand.setCommand(outputCbusCommand);
 						cbusCommsCommand.setExtraInfo (((LightFascade)(device)).getOutputKey());
@@ -488,7 +497,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	
 							
 							CommsCommand cbusCommsCommand = new CommsCommand();
-							cbusCommsCommand.setKey (currentCbusKey);
+							cbusCommsCommand.setActionCode (currentCbusKey);
 							cbusCommsCommand.setKeepForHandshake(true);
 							cbusCommsCommand.setCommand(outputCbusCommand);
 							cbusCommsCommand.setExtraInfo (label.getOutputKey());
@@ -513,49 +522,35 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	 * ie. It is from the serial port.
 	 */
 
+	
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{
 		boolean didCommand=false;
 		String cBUSString = command.getKey().trim();
 			//logger.log(Level.FINER, "Parsing : " + cBUSString );
 		User currentUser = command.getUser();
-
+		
 			try {
 				if (cBUSString.indexOf("~") >= 0 ) {
 					tildeCount ++;
-					if (tildeCount == 3) {
-						this.cachedMMI.clear();
-						this.levelMMIQueues.clear();
-						this.sendingExtended.clear();
-						this.clearAllLevelMMIQueues();
-						this.comms.clearCommandQueue();
+					if (tildeCount > 0) {
+						clearAllQueues();
 						didCommand = true;
 						doRestOfStartup();
 					}
 					// should be covered by next line     requestAllLevels();
 					return;
 				}
-				if (cBUSString.startsWith("++")) {
+				if (cBUSString.endsWith("+")) {
+					// Power up notification received so reset all parameters.
+					clearAllQueues();
 					didCommand = true;
-					comms.sendNextCommand();
-					requestAllLevels();
+					comms.sendString("~~"+ETX); // force the interface back into basic mode
 					return;
 				}
 
-				if (cBUSString.startsWith("A34")) {
-					logger.log (Level.FINER,"Received startup parameter");
-					return;
-				}
-				if (cBUSString.startsWith("A32")) {
-					logger.log (Level.FINER,"Received startup parameter");
-					return;
-				}
-				char firstChar = cBUSString.charAt(0);
-				if (cBUSString.startsWith("32")) {
-					logger.log (Level.FINER,"Received confirmation, change parameter " + cBUSString.substring(2,4));
-					return;
-				}
-				if (firstChar == '!')  {
+				if (cBUSString.contains("!")) {
+					
 					logger.log (Level.FINER,"CBUS buffer overflow or checksum failure");
 					try {
 						comms.resendAllSentCommands();
@@ -564,11 +559,27 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					}
 					return;
 				}
+
+				if (cBUSString.startsWith("@A3420")) {
+					logger.log (Level.FINER,"CBUS startup complete, starting normal MMI processing.");
+					finishedStartup = true;
+					didCommand = true;
+				}
+				if (cBUSString.startsWith("@A32")) {
+					logger.log (Level.FINER,"Received confirmation, change parameter " + cBUSString.substring(3,5));
+					didCommand = true;
+				}
+				if (cBUSString.startsWith("@A34")) {
+					logger.log (Level.FINER,"Received confirmation, change parameter " + cBUSString.substring(3,5));
+					didCommand = true;
+				}
+				
 				char lastChar = cBUSString.charAt(cBUSString.length()-1);
 				if ( etxString.indexOf(lastChar) >= 0) {
 					char secondLastChar = cBUSString.charAt(cBUSString.length()-2);
 					if (lastChar == '.') {
 						logger.log (Level.FINEST,"Received confirmation for command " + secondLastChar);
+
 						comms.acknowlegeCommand(""+secondLastChar);
 						comms.sendNextCommand();
 					} else {
@@ -577,12 +588,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					}
 					return;
 				}
+				if (didCommand)return ; // shortcut for processing of startup parameter changes, ensure they don't flow into the normal command handling.
 
 				int cbusStartByte = 0;
 				try {
 					cbusStartByte = Integer.parseInt(cBUSString.substring(0,2),16);
 				} catch (NumberFormatException ex) {
-					logger.log (Level.FINEST,"First offset byte is not hex " + ex.getMessage());
+					logger.log (Level.FINEST,"Trying to parse MMI message but the first byte is not hex " + ex.getMessage());
 					return;
 				}
 				if (!didCommand && cbusStartByte == 134) {
@@ -660,7 +672,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
 							if (cbusDevice.supportsLevelMMI()) {
-								sendExtendedQuery (cBusGroup,retApplicationCode, currentUser, true,"");
+								mMIHelpers.sendExtendedQuery (cBusGroup,retApplicationCode, currentUser, true,"");
 								// Main point to trigger a ramp up sequence from a cbus button press
 								// Test this to see if it stops sending once 0 or 255 has been reached.
 							} else {
@@ -731,14 +743,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				}
 
 
-				if (!didCommand  && cbusStartByte >= 192 && cbusStartByte < 224 ) {
-					processMMI (cBUSString, currentUser); 
+				if (!didCommand  && cbusStartByte >= 192 && cbusStartByte < 224 && finishedStartup ) {
+					mMIHelpers.processMMI (cBUSString, currentUser); 
 					didCommand = true;
 				}
 
 				if (!didCommand  && cbusStartByte >= 224 && cbusStartByte < 255 ) {
 
-					processLevelMMI (cBUSString,currentUser);
+					mMIHelpers.processLevelMMI (cBUSString,currentUser);
 					didCommand = true;
 				}
 
@@ -748,6 +760,15 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 	}
 
+
+	public void clearAllQueues(){
+		comms.clearCommandQueue();
+		mMIHelpers.cachedMMI.clear();
+		mMIHelpers.levelMMIQueues.clear();
+		mMIHelpers.sendingExtended.clear();
+		mMIHelpers.clearAllLevelMMIQueues();
+	}
+	
 	protected void sendCommandToFlash (SensorFascade cbusDevice,String command,int extra,User currentUser){
 		this.setState ((CBUSDevice)cbusDevice,command,extra);
 		CommandInterface cbusCommand = ((SensorFascade)cbusDevice).buildDisplayCommand ();
@@ -772,427 +793,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		this.sendToFlash(-1,cbusCommand);
 	}
 	
-	protected void processMMI (String cBUSString, User currentUser ) throws CommsFail {
-		String MMIKey = cBUSString.substring(0,6);
-		String lastMMI = (String)cachedMMI.get (MMIKey);
-		String numCharsStr = cBUSString.substring(0,2);
-		int numPairs = 0;
-
-		try {
-			numPairs = Integer.parseInt(numCharsStr,16) - 192;
-		} catch (NumberFormatException ex) {
-			logger.log (Level.FINEST,"Received invalid pair count from Cbus MMI " + numCharsStr);
-		}
-		String appAddress = cBUSString.substring(2,4);
-		int firstKey = 0;
-		String firstKeyStr = cBUSString.substring(4,6);
-		try {
-			firstKey = Integer.parseInt(firstKeyStr,16);
-		} catch (NumberFormatException ex) {
-			logger.log (Level.FINEST,"Received invalid MMI group start address " + firstKeyStr);
-		}
-		if (firstKey == 0) {
-			sendMMIQueue(appAddress);
-			clearLevelMMIQueue(appAddress);
-		}
-		if (lastMMI == null || !lastMMI.equals(cBUSString) ) {
-		    logger.log (Level.FINEST,"MMI command not cached, evaluating");
-
-		    cachedMMI.put (MMIKey,cBUSString);
-
-			if (numPairs >=  1) {
 
 
-				String pairVal = "";
-				int testValue1 = 0;
-				int testValue2 = 0;
-				int testValue3 = 0;
-				int testValue4 = 0;
-
-				// pair 0 is used to show the start group code.
-				for (int i = 0; i < numPairs - 2; i ++ ) {
-					pairVal = cBUSString.substring(6+i*2,8+i*2);
 	
-					int value = 0;
-					try {
-						value = Integer.parseInt(pairVal,16);
-					} catch (NumberFormatException ex) {
-						logger.log (Level.FINEST,"Received invalid MMI status byte " + pairVal);
-					}
-	
-					testValue1 = value & 3;
-					testValue2 = value & 12;
-					testValue3 = value & 48;
-					testValue4 = value & 192;
-	
-					if (testValue1 == 1) { 
-						int key = firstKey + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
-						if (cbusDevice != null) {
-							if (cbusDevice.supportsLevelMMI()) {
-								if (!this.hasState(fullKey)) {
-									if (receivedLevelReturn && !this.sendingExtended.containsKey(fullKey)) 
-										sendExtendedQuery(key,appAddress,currentUser,false);
-								} else {
-									updateMMIState (MMIKey, key,appAddress,"on",null,currentUser);
-								}
-							} else {									
-								updateMMIState (MMIKey, key,appAddress,"on","100",currentUser);
-							}
-						}
-					}
-					if (testValue1 == 2) { 
-						int key = firstKey + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						if (!this.hasState(fullKey)) {
-							sendOutput (fullKey,"off","0",currentUser);
-						} else {
-							updateMMIState (MMIKey,firstKey + i * 4,appAddress,"off","0",currentUser); 
-						}
-					}
-	
-					if (testValue2 == 4) {
-						int key = firstKey + 1 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
-						if (cbusDevice != null) {
-							if (cbusDevice.supportsLevelMMI()) {
-								if (!this.hasState(fullKey)) {
-									if (receivedLevelReturn && !this.sendingExtended.containsKey(fullKey)) 
-										sendExtendedQuery(key,appAddress,currentUser,false);
-								} else {
-									updateMMIState (MMIKey, key,appAddress,"on",null,currentUser);
-								}
-							} else {									
-								updateMMIState (MMIKey,key,appAddress,"on","100",currentUser); 
-							}
-						}
-					}
-					if (testValue2 == 8) { 
-						int key = firstKey + 1 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						if (!this.hasState(fullKey)) {
-							sendOutput (fullKey,"off","0",currentUser);
-						} else {
-							updateMMIState (MMIKey,firstKey + 1 + i * 4,appAddress,"off","0",currentUser); 
-						}
-					}
-	
-					if (testValue3 == 16) { 
-						int key = firstKey + 2 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
-						if (cbusDevice != null) {
-							if (cbusDevice.supportsLevelMMI()) {
-								if (!this.hasState(fullKey)) {
-									if (receivedLevelReturn&& !this.sendingExtended.containsKey(fullKey)) 
-										sendExtendedQuery(key,appAddress,currentUser,false);
-								} else {
-									updateMMIState (MMIKey, key,appAddress,"on",null,currentUser);
-								}
-							} else {									
-								updateMMIState (MMIKey,key,appAddress,"on","100",currentUser); 
-							}
-						}
-					}
-					if (testValue3 == 32) { 
-						int key = firstKey + 2 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						if (!this.hasState(fullKey)) {
-							sendOutput (fullKey,"off","0",currentUser);
-						} else {
-							updateMMIState (MMIKey,firstKey + 2 + i * 4,appAddress,"off","0",currentUser); 
-						}
-					}
-	
-					if (testValue4 == 64) { 
-						int key = firstKey + 3 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
-						if (cbusDevice != null) {
-							if (cbusDevice.supportsLevelMMI()) {
-								if (!this.hasState(fullKey)) {
-									if (receivedLevelReturn && !this.sendingExtended.containsKey(fullKey)) 
-										sendExtendedQuery(key,appAddress,currentUser,false);
-								} else {
-									updateMMIState (MMIKey, key,appAddress,"on",null,currentUser);
-								}
-
-							} else {									
-								updateMMIState (MMIKey,key,appAddress,"on","100",currentUser); 
-							}
-						}
-					}
-					if (testValue4 == 128) { 
-						int key = firstKey + 3 + i * 4;
-						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						if (!this.hasState(fullKey)) {
-							sendOutput (fullKey,"off","0",currentUser);
-						} else {
-							updateMMIState (MMIKey,firstKey + 3 + i * 4,appAddress,"off","0",currentUser);
-						}
-					}
-				}
-			}
-		}
-	}
-		
-	protected void processLevelMMI (String cBUSString,User currentUser) throws CommsFail {
-		String numCharsStr = cBUSString.substring(0,2);
-		int numPairs = 0;
-
-		try {
-			numPairs = ((Integer.parseInt(numCharsStr,16) - 224) - 4) / 2;
-		} catch (NumberFormatException ex) {
-			logger.log (Level.FINER,"Received invalid pair count from Cbus MMI " + numCharsStr);
-		}
-
-		if (numPairs >=  1) {
-			String appAddress = cBUSString.substring(4,6);
-			int firstKey = 0;
-			String firstKeyStr = cBUSString.substring(6,8);
-			try {
-				firstKey = Integer.parseInt(firstKeyStr,16);
-			} catch (NumberFormatException ex) {
-				logger.log (Level.WARNING,"Received invalid MMI group start address " + firstKeyStr);
-			}
-			logger.log (Level.FINEST,"Received Level MMI request. Start key="+firstKeyStr + " #pairs=" + numPairs + " Str:"+ cBUSString);
-			if (!receivedLevelReturn) {
-				receivedLevelReturn = true;
-				logger.log (Level.FINER,"Received Level return string, will now start processing MMI");
-			}
-
-			char nibbleVal1 = ' ';
-			char nibbleVal2 = ' ';
-			char nibbleVal3 = ' ';
-			char nibbleVal4 = ' ';
-
-
-			// pair 0 is used to show the start group code. 
-			for (int i = 0; i <= numPairs ; i ++ ) {
-				int keyVal = firstKey + i;
-				String fullKey = cBUSHelper.buildKey(appAddress , keyVal,DeviceType.LIGHT_CBUS);
-				
-				if (!this.sendingExtended.containsKey(fullKey))
-					continue;
-
-				nibbleVal1 = cBUSString.charAt(8+i*4);
-				nibbleVal2 = cBUSString.charAt(9+i*4);
-				nibbleVal3 = cBUSString.charAt(10+i*4);
-				nibbleVal4 = cBUSString.charAt(11+i*4);
-
-				if (nibbleVal1 == '0' && nibbleVal2 == '0' && nibbleVal3 == '0' && nibbleVal4 == '0') {
-					continue; //group address not present so skip processing
-				}
-
-				String realValue1 = findVal (nibbleVal1);
-				String realValue2 = findVal (nibbleVal2);
-				String realValue3 = findVal (nibbleVal3);
-				String realValue4 = findVal (nibbleVal4);
-
-
-				if (realValue1 == null || realValue2 == null || realValue3 == null || realValue4 == null) {
-					logger.log (Level.FINER,"Noise was present in level request, polling again");
-					this.sendExtendedQuery(firstKey + i,appAddress, currentUser,true);
-					continue;
-				}
-
-				String fullBoolean = realValue3 + realValue4 + realValue1 + realValue2;
-				int value = Integer.parseInt (fullBoolean,2);
-				int normValue = (int)((double)value / 255.0 * 100.0);
-				if (value == 255) normValue = 100;
-				if (normValue == 0) normValue =1;
-				String valStr = Integer.toString(normValue);
-				CBUSDevice cBUSDevice = (CBUSDevice)configHelper.getControlledItem(fullKey);
-				if (cBUSDevice == null || cBUSDevice.isRelay()){
-					continue;
-				}
-				if (value == 0) {
-					if (logger.isLoggable(Level.FINEST)){
-						logger.log (Level.FINEST,"Sending CBUS off to flash for key "+keyVal + "(0x"+Integer.toHexString(keyVal)+")");
-					}
-					sendOutput (fullKey,"off","00",currentUser);
-					this.sendingExtended.remove(fullKey);
-				} else {
-					if (!this.testState(fullKey,"on",valStr)) {
-						if (logger.isLoggable(Level.FINEST)) {
-								logger.log (Level.FINEST,"Sending CBUS on to flash for key "+keyVal + "(0x"+Integer.toHexString(keyVal)+") Lvl=" + valStr + " boolean="+fullBoolean);
-						}
-						sendOutput (fullKey,"on",valStr,currentUser);
-					}
-					this.sendingExtended.remove(fullKey);
-				}
-			}
-		}
-	}
-	
-	protected void updateMMIState (String MMIKey, int key , String appAddress,String command ,String extra,User currentUser) throws CommsFail {
-		String fullKey = this.cBUSHelper.buildKey(appAddress,key,DeviceType.LIGHT_CBUS);
-		StateOfGroup currentState = this.getCurrentState(fullKey);
-		boolean fromMMI = currentState.isFromMMI();
-		currentState.setPower(command,true);
-		try {
-			if (extra != null) {
-				int level = Integer.parseInt(extra);
-				currentState.setLevel(level,true);
-			}
-
-			if (currentState.getIsDirty() &&   currentState.countConflict == 0) {
-				currentState.countConflict++;
-				this.cachedMMI.remove(MMIKey);					
-				currentState.setIsDirty(false);
-				this.setCurrentState(fullKey,currentState);
-			} else {
-				if (!currentState.getIsDirty() && fromMMI &&  currentState.countConflict > 0) {
-					currentState.countConflict++;
-					if (currentState.countConflict >= 3) {
-						currentState.setIsDirty(false);
-						currentState.countConflict = 0;
-						this.setCurrentState(fullKey,currentState);
-						if (extra == null){
-							sendExtendedQuery(key,appAddress,currentUser,true);
-						} else {
-							this.sendOutput(fullKey,command,extra,currentUser);
-						}
-					} else {
-						this.cachedMMI.remove(MMIKey);
-						currentState.setIsDirty(false);
-						this.setCurrentState(fullKey,currentState);
-					}
-				}
-			}
-		} catch (NumberFormatException ex) {
-			
-		} catch (NullPointerException ex) {}
-	}
-
-	public String findVal (char value) {
-		if (value == '5') return "11";
-		if (value == '6') return "10";
-		if (value == '9') return "01";
-		if (value == 'A') return "00";
-		return null;
-	}
-
-
-	public void sendExtendedQuery (String key, String appCode, User user, boolean immediate,String targetLevel) throws CommsFail{
-		try {
-			sendExtendedQuery (Integer.parseInt(key,16),appCode, user,immediate,targetLevel);
-		} catch (NumberFormatException ex) {}
-	}
-
-	public void sendExtendedQuery (int key, String appCode, User user, boolean immediate) throws CommsFail{
-		try {
-			sendExtendedQuery (key,appCode, user,immediate,"");
-		} catch (NumberFormatException ex) {}
-	}
-
-
-	public void sendMMIQueue (String appNumber) throws CommsFail {
-		List items = (List)this.levelMMIQueues.get(appNumber);
-		if (items != null) {
-			Iterator eachItem = items.iterator();
-			while (eachItem.hasNext()) {
-				Integer nextItem = (Integer)eachItem.next();
-				sendLevelMMIQuery (appNumber,nextItem.intValue());
-			}
-		}
-	}
-
-	public void sendExtendedQuery (int key, String appCode, User user, boolean immediate,String targetLevel) throws CommsFail {
-		
-		String keyStr = cBUSHelper.buildKey(appCode,key,DeviceType.LIGHT_CBUS);
-		//logger.log (Level.FINEST,"Sending MMI output App Code : "  + appCode + " command " + command + " group " + keyStr);
-		try {
-			CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(keyStr);
-			if (cbusDevice != null) {
-				if (cbusDevice.supportsLevelMMI()) { 
-					int startNumber = (int)(key / 32) * 32;
-					Integer startNumberInt = new Integer (startNumber);
-					
-					if (!targetLevel.equals("")) {
-						this.sendingExtended.put(keyStr,targetLevel);
-					} else {
-						if (!this.sendingExtended.containsKey(keyStr) )
-							this.sendingExtended.put(keyStr,"");
-					}
-					//if (immediate && ((new Date().getTime() - lastSentTime ) > 3000)) {
-					if (immediate) {
-						sendLevelMMIQuery(appCode,startNumber);
-						logger.log (Level.FINEST,"Sending level MMI query for App="+appCode + " Start=" + startNumber);
-					} else {
-						addToLevelMMIQueue(appCode,startNumberInt);
-					}
-				}
-				else {
-					sendOutput (keyStr,"on","100",user);
-				}
-			}
-		} catch (ClassCastException ex) {
-			logger.log (Level.WARNING,"Cbus extended Level MMI requested for a non-bus object. Key:" + keyStr + " App:" + appCode + " " + ex.getMessage());
-		}
-
-	}
-
-	public void clearLevelMMIQueue (String appNumber){
-		this.levelMMIQueues.remove (appNumber);
-	}
-
-	public void clearAllLevelMMIQueues () {
-		this.levelMMIQueues.clear();
-	}
-
-	public void sendAllLevelMMIQueues () throws CommsFail  {
-
-		Iterator eachQueue = levelMMIQueues.keySet().iterator();
-		while (eachQueue.hasNext()) {
-			this.sendMMIQueue((String)eachQueue.next());
-		}
-	}
-
-	public void sendLevelMMIQuery (String appNumber, int number) throws CommsFail {
-		// code is 7308 + app Code + 00 ; 20 ; 40 ;60 ;80 ; A0 ;C0 ; E0 (ie. each start of groups to return)
-		
-		String currentChar = this.nextKey();
-		
-		String outputCbusCommand = this.buildCBUSLevelRequestCommand(appNumber, number,currentChar);
-
-		
-		if (outputCbusCommand == null || outputCbusCommand.trim().equals("")){
-			logger.log (Level.FINE,"Build CBUS Level request returned an empty string for App " + appNumber + " key " + number);
-		} else {
-			logger.log (Level.FINEST,"Sending Level CBUS request handshake key " + currentChar + " " + outputCbusCommand);
-			CommsCommand cbusCommsCommand = new CommsCommand();
-			cbusCommsCommand.setCommand(outputCbusCommand);
-			cbusCommsCommand.setKey(currentChar);
-			cbusCommsCommand.setKeepForHandshake(true);
-
-
-			try {
-				comms.addCommandToQueue (cbusCommsCommand);
-				
-				lastSentTime = new Date().getTime();
-			} catch (CommsFail e1) {
-				throw new CommsFail ("Communication failed communicating with CBUS " + e1.getMessage());
-			}
-		
-			logger.log (Level.FINEST,"Queueing cbus command " + currentChar + " for " + outputCbusCommand);
-		}
-	}
-	
-	public void addToLevelMMIQueue (String appNumber, Integer startNumber) {
-		ArrayList <Integer> appList;
-		if (this.levelMMIQueues.containsKey(appNumber)) {
-			appList = (ArrayList <Integer>)levelMMIQueues.get(appNumber);
-		} else {
-			appList = new ArrayList <Integer>(10);
-		}
-		if (!appList.contains(startNumber)) {
-			appList.add(startNumber);
-		}
-		levelMMIQueues.put(appNumber,appList);
-	}
 
 	public void sendOutput (String keyStr, String command, String extra,User user) {
 
@@ -1558,6 +1161,16 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			currentChar ++;			
 		}
 		return String.valueOf(currentChar);
+	}
+
+
+	public long getLastSentTime() {
+		return lastSentTime;
+	}
+
+
+	public void setLastSentTime(long lastSentTime) {
+		this.lastSentTime = lastSentTime;
 	}
 
 }

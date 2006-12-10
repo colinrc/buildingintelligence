@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  */
 public class CommsSend extends Thread implements Runnable{
 	
-	int interCommandInterval;
+	int interCommandInterval = 0;
 	BlockingQueue <byte[]>toSend = null;
 	boolean handleEvents = true;
 	protected OutputStream os = null;
