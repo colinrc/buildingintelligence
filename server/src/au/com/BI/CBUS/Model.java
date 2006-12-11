@@ -384,14 +384,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	
 			
 			CommsCommand cbusCommsCommand3 = new CommsCommand();
-			String toSend3 = "A3300029"; // 30 = option 1; CONNECT|SRCHK|MONITOR
+			String toSend3 = "A3300069"; // 30 = option 1; CONNECT|SRCHK|MONITOR
 			actionCode = this.nextKey();
 			cbusCommsCommand3.setActionCode(actionCode);
 			cbusCommsCommand3.setCommand("@"+toSend3 + actionCode+ ETX);
 			cbusCommsCommand3.setKeepForHandshake(true);
 
 			CommsCommand cbusCommsCommand4 = new CommsCommand();
-			String toSend4 = "A3410029";  // Set power up mode to teh same as current operation mode
+			String toSend4 = "A3410069";  // Set power up mode to teh same as current operation mode
 			String checkSum = this.calcChecksum(toSend4);
 			actionCode = this.nextKey();
 			cbusCommsCommand4.setActionCode(actionCode);
@@ -975,7 +975,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected String calcChecksum (String toCalc) {
 		int total = 0;
 		for (int i = 0; i < toCalc.length(); i+=2) {
-			String nextPart = toCalc.substring(i,i+1);
+			String nextPart = toCalc.substring(i,i+2);
 			int val = Integer.parseInt(nextPart,16);
 			total += val;
 		}
@@ -984,7 +984,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String hexCheck = Integer.toHexString(twosComp); 
 		if (hexCheck.length() == 1) hexCheck = "0" + hexCheck;
 		if (hexCheck.length() > 2) hexCheck = hexCheck.substring(hexCheck.length() - 2);
-		return hexCheck;
+		return hexCheck.toUpperCase();
 	}
 
 	protected String buildCBUSOnOffCommand (String cBUSCommand, String appCodeStr,  String group, String key) {

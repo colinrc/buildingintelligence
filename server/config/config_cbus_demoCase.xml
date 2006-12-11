@@ -21,7 +21,7 @@
                     
                         <LIGHT_CBUS ACTIVE="Y" KEY="1" RELAY="Y"  NAME="Relay 1" DISPLAY_NAME="DINING_LIGHT" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="2" RELAY="Y"  NAME="Relay 2" DISPLAY_NAME="RELAY2" POWER_RATING="100"/>
-                        <LIGHT_CBUS ACTIVE="Y" KEY="3" RELAY="Y"  NAME="Relay 3" DISPLAY_NAME="RELAY3" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="3" RELAY="Y"  NAME="Relay 3" DISPLAY_NAME="RELAY3" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="4" RELAY="Y"  NAME="Relay 4" DISPLAY_NAME="RELAY4" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="5" RELAY="Y"  NAME="Relay 5" DISPLAY_NAME="RELAY5" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="7" RELAY="Y"  NAME="Relay 6" DISPLAY_NAME="RELAY6" POWER_RATING="100"/>
@@ -40,9 +40,14 @@
                         <LIGHT_CBUS ACTIVE="Y" KEY="20"   NAME="Dimmer 6" DISPLAY_NAME="DIMMER6" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="21"   NAME="Dimmer 7" DISPLAY_NAME="DIMMER7" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="24"   NAME="Dimmer 8" DISPLAY_NAME="DIMMER8" POWER_RATING="100"/>
-                        
-                        <LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT = "SPRINKLERS" />
-                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT2" DEFAULT="VOLUME"  />
+
+                        <LIGHT_CBUS ACTIVE="Y" KEY="2"   NAME="Reflection 1" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>                      
+                        <LIGHT_CBUS ACTIVE="Y" KEY="3"   NAME="Reflection 2" DISPLAY_NAME="REFLECTION2" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="4"   NAME="Reflection 3" DISPLAY_NAME="REFLECTION3" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="5"   NAME="Reflection 4" DISPLAY_NAME="REFLECTION4" POWER_RATING="100"/>
+                                                
+                        <LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT = "MASTER_BED_LIGHT" />
+                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT2" DEFAULT="KITCHEN_VOLUME"  />
                         <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3" DEFAULT="FRONT_LIGHT" />
                         <LABEL ACTIVE="Y" KEY="3"   NAME="DLT 4"  DISPLAY_NAME="DLT4"  />
                         <LABEL ACTIVE="Y" KEY="200"   NAME="DLT 5" DISPLAY_NAME="DLT5"  />

@@ -189,6 +189,7 @@ protected CommsGroup commsGroup = null;
 	public void addCommandToQueue (CommsCommand command) throws CommsFail {
 		synchronized (toSendQueue){
 			toSendQueue.add(command);
+			logger.finest("Queueing command " + command.getActionCode());
 		}
 	    if (sentQueue.isEmpty()) {
 		// Nothing currently in the queue waiting so start it rolling

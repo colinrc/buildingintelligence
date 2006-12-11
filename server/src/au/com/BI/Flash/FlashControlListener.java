@@ -98,7 +98,7 @@ public class FlashControlListener extends Thread {
     
     public void run() {
 	
-	logger.info("Openning port " + portNumber);
+	logger.fine("Openning port " + portNumber);
 	running = true;
 	
 	try {
