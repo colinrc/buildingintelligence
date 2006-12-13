@@ -8,10 +8,12 @@ package au.com.BI.M1;
  *
 */
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import au.com.BI.Lights.Light;
 import au.com.BI.Lights.LightFascade;
 import au.com.BI.M1.ControlledHelper;
 import au.com.BI.Alert.Alarm;
@@ -36,6 +38,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected long tempPollValue = 0L;
 	protected PollTemperatureSensors pollTemperatures;
 	protected OutputHelper outputHelper;
+	protected HashMap armingStates;
+	protected HashMap armUpStates;
 	
 	/**
 	 * M1 Model. 
@@ -49,6 +53,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		temperatureSensors = new LinkedList();
 		outputHelper = new OutputHelper();
 		deviceKeysDecimal = true;
+		armingStates = new HashMap();
+		armUpStates = new HashMap();
 	}
 
 	/**
@@ -83,6 +89,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	 */
 	public void doStartup() throws CommsFail {
 
+		logger.log(Level.INFO, "Starting M1");
 		// create the temperature polling service
 		String pollTempStr = (String)this.getParameterValue("POLL_SENSOR_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
 
@@ -93,6 +100,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 
 		if (!temperatureSensors.isEmpty() && tempPollValue != 0L) {
+			logger.log(Level.INFO,"Starting temperature polls");
 			pollTemperatures = new PollTemperatureSensors();
 			pollTemperatures.setPollValue(tempPollValue);
 			pollTemperatures.setTemperatureSensors(temperatureSensors);
@@ -117,10 +125,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		comms.sendString(plcStatusRequest.buildM1String()+"\r\n");
 		
 		// add a device to do arming messages
-		super.addControlledItem("ARM",new Alarm("ARM",DeviceType.VIRTUAL_OUTPUT,"ARM"),MessageDirection.FROM_FLASH);
+		addControlledItem("ARM",new Alarm("ARM",DeviceType.VIRTUAL_OUTPUT,"ARM"),MessageDirection.FROM_FLASH);
 		
 		// add a device to do request messages
-		super.addControlledItem("REQUEST",new Alarm("REQUEST",DeviceType.VIRTUAL_OUTPUT,"REQUEST"),MessageDirection.FROM_FLASH);
+		addControlledItem("REQUEST",new Alarm("REQUEST",DeviceType.VIRTUAL_OUTPUT,"REQUEST"),MessageDirection.FROM_FLASH);
+		
+		// generic X10 device to capture requests - 
+		// @todo Need to check that using a generic X10 device with no house or unit code will actually work with a real M1.
+		addControlledItem("ALL", new LightFascade("ALL",DeviceType.COMFORT_LIGHT_X10, "ALL"), MessageDirection.FROM_FLASH);
 	}
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {
@@ -232,5 +244,23 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		keyInt = Integer.parseInt(key);
     	return formatKey(keyInt,device);
     }
+
+	public HashMap getArmingStates() {
+		return armingStates;
+	}
+
+	public void setArmingStates(HashMap armingStates) {
+		this.armingStates = armingStates;
+	}
+
+	public HashMap getArmUpStates() {
+		return armUpStates;
+	}
+
+	public void setArmUpStates(HashMap armUpStates) {
+		this.armUpStates = armUpStates;
+	}
+    
+    
 
 }

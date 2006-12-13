@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommDevice;
+import au.com.BI.Comms.CommsCommand;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Device.DeviceType;
@@ -154,6 +155,12 @@ public class OutputHelper {
 
 			if (!retCode.equals("")) {
 				comms.sendString(retCode);
+				CommsCommand _commsCommand = new CommsCommand(theWholeKey,retCode,null);
+				comms.addCommandToQueue(_commsCommand);
+				
+				if (!comms.sendNextCommand()) {
+					throw new CommsFail("Failed to send command:" + retCode);
+				}
 			}
 		}
 
@@ -201,7 +208,24 @@ public class OutputHelper {
 	public String buildX10Light(LightFascade device, CommandInterface command) {
 		String returnString = "";
 
-		if (command.getCommandCode().equals("on")) {
+		if (device.getName().equals("ALL")) {
+			PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
+			plcDeviceControl.setUnitCode(device.getKey());
+			plcDeviceControl.setHouseCode(device.getX10HouseCode());
+			
+			// assumes that we are only doing lights?
+			if (command.getCommandCode().equals("on")) {
+				plcDeviceControl.setFunctionCode(PLCFunction.X10_ALL_LIGHTS_ON);
+				plcDeviceControl.setTime(command.getExtraInfo());
+				returnString = plcDeviceControl.buildM1String() + "\r\n";
+			} else if (command.getCommandCode().equals("off")) {
+				plcDeviceControl.setFunctionCode(PLCFunction.X10_ALL_LIGHTS_OFF);
+				plcDeviceControl.setTime(command.getExtraInfo());
+				returnString = plcDeviceControl.buildM1String() + "\r\n";
+			} else {
+				returnString = "";
+			}
+		} else if (command.getCommandCode().equals("on")) {
 			PLCDeviceOn plcDeviceOn = new PLCDeviceOn();
 			plcDeviceOn.setUnitCode(device.getKey());
 			plcDeviceOn.setHouseCode(device.getX10HouseCode());
@@ -216,6 +240,22 @@ public class OutputHelper {
 			plcDeviceOff.setUnitCode(device.getKey());
 			plcDeviceOff.setHouseCode(device.getX10HouseCode());
 			returnString = plcDeviceOff.buildM1String() + "\r\n";
+		} else if (command.getCommandCode().equals("dim")) {
+			PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
+			plcDeviceControl.setUnitCode(device.getKey());
+			plcDeviceControl.setHouseCode(device.getX10HouseCode());
+			plcDeviceControl.setFunctionCode(PLCFunction.X10_DIM);
+			plcDeviceControl.setExtendedCode(command.getExtraInfo());
+			plcDeviceControl.setTime(command.getExtra2Info());
+			returnString = plcDeviceControl.buildM1String() + "\r\n";
+		} else if (command.getCommandCode().equals("bright")) {
+			PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
+			plcDeviceControl.setUnitCode(device.getKey());
+			plcDeviceControl.setHouseCode(device.getX10HouseCode());
+			plcDeviceControl.setFunctionCode(PLCFunction.X10_BRIGHT);
+			plcDeviceControl.setExtendedCode(command.getExtraInfo());
+			plcDeviceControl.setTime(command.getExtra2Info());
+			returnString = plcDeviceControl.buildM1String() + "\r\n";
 		} else if (command.getCommandCode().equals("control")) {
 			PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
 			plcDeviceControl.setUnitCode(device.getKey());

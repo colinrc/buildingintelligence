@@ -86,6 +86,7 @@ public class ControlledHelper {
 			// Check the command class
 			if (m1Command.getClass().equals(ZoneChangeUpdate.class)) {
 				ZoneChangeUpdate zoneChangeUpdate = (ZoneChangeUpdate) m1Command;
+				
 				alarmLogger.setCache(cache);
 				alarmLogger.setCommandQueue(commandQueue);
 
@@ -275,25 +276,41 @@ public class ControlledHelper {
 					ArmUpState armUpState = statusReport.getArmUpState()[i];
 					AreaAlarmState areaAlarmState = statusReport
 							.getAreaAlarmState()[i];
+					ArmedStatus oldArmedStatus;
+					ArmUpState oldArmUpState;
+					
+					Integer zone = new Integer(i);
+					if (m1.getArmingStates().containsKey(zone)) {
+						oldArmedStatus = (ArmedStatus)m1.getArmingStates().get(zone);
+					} else {
+						oldArmedStatus = (ArmedStatus)m1.getArmingStates().put(zone, armedStatus);
+					}
+					if (m1.getArmUpStates().containsKey(zone)) {
+						oldArmUpState = (ArmUpState)m1.getArmUpStates().get(zone);
+					} else {
+						oldArmUpState = (ArmUpState)m1.getArmUpStates().put(zone, armUpState);
+					}
+					
+					if (!oldArmedStatus.equals(armedStatus)) {
+						CommandInterface _command = new AlertCommand();
+						_command.setDisplayName("Arming Status");
+						_command.setTargetDeviceID(-1);
+						_command.setUser(m1.currentUser);
+						_command.setCommand("ARMING STATUS");
+						_command.setExtraInfo(Integer.toString(i));
+						_command.setExtra2Info(armedStatus.getDescription());
+						_command.setExtra3Info(armUpState.getDescription());
+						_command.setExtra4Info(areaAlarmState.getDescription());
+						_command.setKey("CLIENT_SEND");
+						cache.setCachedCommand(_command.getKey(), _command);
 
-					CommandInterface _command = new AlertCommand();
-					_command.setDisplayName("Arming Status");
-					_command.setTargetDeviceID(-1);
-					_command.setUser(m1.currentUser);
-					_command.setCommand("ARMING STATUS");
-					_command.setExtraInfo(Integer.toString(i));
-					_command.setExtra2Info(armedStatus.getDescription());
-					_command.setExtra3Info(armUpState.getDescription());
-					_command.setExtra4Info(areaAlarmState.getDescription());
-					_command.setKey("CLIENT_SEND");
-					cache.setCachedCommand(_command.getKey(), _command);
-
-					logger.log(Level.FINER, "Sending "
-							+ _command.getCommandCode() + " ArmedStatus="
-							+ _command.getExtraInfo() + " ArmUpState="
-							+ _command.getExtra2Info() + " AreaAlarmState="
-							+ _command.getExtra3Info());
-					sendToFlash(commandQueue, -1, _command);
+						logger.log(Level.FINER, "Sending "
+								+ _command.getCommandCode() + " ArmedStatus="
+								+ _command.getExtraInfo() + " ArmUpState="
+								+ _command.getExtra2Info() + " AreaAlarmState="
+								+ _command.getExtra3Info());
+						sendToFlash(commandQueue, -1, _command);
+					}
 				}
 			} else if (m1Command.getClass().equals(Disarm.class)
 					|| m1Command.getClass().equals(ArmToAway.class)
