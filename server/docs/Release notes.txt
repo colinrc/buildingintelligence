@@ -1,3 +1,10 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b13.zip V1.6b13]   ==
+
+''' CBUS '''
+
+Recognize CBUS startup even if MMI corrupts the startup string.
+Correct CBUS startup handshaking to use correct protocol information.
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b12.zip V1.6b12]   ==
 
 ''' CBUS '''

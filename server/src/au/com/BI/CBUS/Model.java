@@ -384,14 +384,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	
 			
 			CommsCommand cbusCommsCommand3 = new CommsCommand();
-			String toSend3 = "A3300069"; // 30 = option 1; CONNECT|SRCHK|MONITOR
+			String toSend3 = "A3300029"; // 30 = option 1; CONNECT|SRCHK|MONITOR
 			actionCode = this.nextKey();
 			cbusCommsCommand3.setActionCode(actionCode);
 			cbusCommsCommand3.setCommand("@"+toSend3 + actionCode+ ETX);
 			cbusCommsCommand3.setKeepForHandshake(true);
 
 			CommsCommand cbusCommsCommand4 = new CommsCommand();
-			String toSend4 = "A3410069";  // Set power up mode to teh same as current operation mode
+			String toSend4 = "A3410029";  // Set power up mode to teh same as current operation mode
 			String checkSum = this.calcChecksum(toSend4);
 			actionCode = this.nextKey();
 			cbusCommsCommand4.setActionCode(actionCode);
@@ -536,6 +536,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					if (tildeCount > 0) {
 						clearAllQueues();
 						didCommand = true;
+						logger.log (Level.FINE,"Received confirmation of CBUS ~~~ init, sending initial parameters");
 						doRestOfStartup();
 					}
 					// should be covered by next line     requestAllLevels();
