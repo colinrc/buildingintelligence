@@ -41,6 +41,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected int tildeCount = 0;
 	protected boolean finishedStartup = false;
 	protected MMIHelpers mMIHelpers;
+	protected char  lastCharOfHandshake = 'a';
+	
 	int []etxChars;
 	String etxString = "";
 
@@ -405,6 +407,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			cbusCommsCommand5.setActionCode(actionCode);
 			cbusCommsCommand5.setCommand("@"+ toSend5  +checkSum + actionCode+ ETX);
 			cbusCommsCommand5.setKeepForHandshake(true);
+			lastCharOfHandshake = actionCode.charAt(0);
 
 			comms.addCommandToQueue (cbusCommsCommand1);
 			comms.addCommandToQueue (cbusCommsCommand2);
@@ -561,7 +564,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					return;
 				}
 
-				if (cBUSString.startsWith("@A3420")) {
+				if (cBUSString.startsWith("@A3420")  ) {
 					logger.log (Level.FINER,"CBUS startup complete, starting normal MMI processing.");
 					finishedStartup = true;
 					didCommand = true;
@@ -580,6 +583,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					char secondLastChar = cBUSString.charAt(cBUSString.length()-2);
 					if (lastChar == '.') {
 						logger.log (Level.FINEST,"Received confirmation for command " + secondLastChar);
+						if (!finishedStartup && secondLastChar == lastCharOfHandshake) {
+							logger.log (Level.FINER,"CBUS startup complete, starting normal MMI processing.");
+							finishedStartup = true;
+						}
 
 						comms.acknowlegeCommand(""+secondLastChar);
 						comms.sendNextCommand();
