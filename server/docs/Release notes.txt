@@ -1,3 +1,9 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b15.zip V1.6b15]   ==
+
+''' CBUS '''
+
+Ensure MMI helper does not get comms reference before comms is properly set up in master model.
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b14.zip V1.6b14]   ==
 
 ''' CBUS '''

@@ -402,6 +402,8 @@ public class MMIHelpers {
 				model.setLastSentTime (new Date().getTime());
 			} catch (CommsFail e1) {
 				throw new CommsFail ("Communication failed communicating with CBUS " + e1.getMessage());
+			} catch (NullPointerException ex){
+				logger.log(Level.WARNING,"Comms has not been properly set up for MMI processor in CBUS");
 			}
 		
 			logger.log (Level.FINEST,"Queueing cbus command " + currentChar + " for " + outputCbusCommand);

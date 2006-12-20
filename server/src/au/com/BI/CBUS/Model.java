@@ -300,6 +300,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	public void doStartup() throws CommsFail {
 		tildeCount = 0;
+		this.mMIHelpers.comms = comms; //just to be sure.
 		super.doStartup();
 		if (applicationCodes.isEmpty()) applicationCodes.add("38");
 		// CommsCommand cbusCommsCommand = new CommsCommand();
