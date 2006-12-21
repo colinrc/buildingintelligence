@@ -285,7 +285,9 @@ public class TestM1ModelFromDevice extends TestCase {
 		assertEquals(zoneByAlarmReport.getZoneDefinition()[23],ZoneDefinition.POLICE_ALARM);	
 		assertEquals(zoneByAlarmReport.getZoneDefinition()[24],ZoneDefinition.POLICE_NO_INDICATION);	
 		assertEquals(zoneByAlarmReport.getZoneDefinition()[25],ZoneDefinition.WATER_ALARM);	
-		
+
+//		System.out.println("0CST00113000" + new M1Helper().calcM1Checksum("0CST00113500"));
+
 		RequestTemperatureReply otherTemp = new RequestTemperatureReply();
 		otherTemp.setGroup(Group.TEMPERATURE_PROBE);
 		otherTemp.setDevice("01");
@@ -347,6 +349,7 @@ public class TestM1ModelFromDevice extends TestCase {
 		str = "09ptA0100B1";
 		m1Command = M1CommandFactory.getInstance().getM1Command(str);
 		assertEquals(m1Command.getClass(),PLCDeviceToggle.class);
+
 	}
 	
 }
