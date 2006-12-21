@@ -93,92 +93,50 @@ public class ControlledHelper {
 				BaseDevice theDevice = (BaseDevice) configHelper.getControlledItem(zoneChangeUpdate.getZone() + "CC"); 
 				if (theDevice == null) return;
 				String outputKey = theDevice.getOutputKey();
+				
+				if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_EOL ||
+						zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_OPEN ||
+						zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_SHORT ||
+						zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_UNCONFIGURED) {
+					
+					// send an off command
+					CommandInterface _command = new M1FlashCommand();
+					_command.setDisplayName(theDevice.getOutputKey());
+					_command.setTargetDeviceID(-1);
+					_command.setUser(m1.currentUser);
+					_command.setCommand("off");
+					_command.setKey("CLIENT_SEND");
+					cache.setCachedCommand(_command.getKey(), _command);
 
-				if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_UNCONFIGURED) {
+					logger.log(Level.FINER, "Sending "
+							+ _command.getCommandCode() + " command to "
+							+ theDevice.getOutputKey());
+					sendToFlash(commandQueue, -1, _command);
+					
+				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_EOL ||
+						zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_OPEN ||
+						zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_SHORT) {
+					// send an on command
+					CommandInterface _command = new M1FlashCommand();
+					_command.setDisplayName(theDevice.getOutputKey());
+					_command.setTargetDeviceID(-1);
+					_command.setUser(m1.currentUser);
+					_command.setCommand("on");
+					_command.setKey("CLIENT_SEND");
+					cache.setCachedCommand(_command.getKey(), _command);
 
-					alarmLogger.addAlertLog("ALERT", "Normal - Unconfigured",
+					logger.log(Level.FINER, "Sending "
+							+ _command.getCommandCode() + " command to "
+							+ theDevice.getOutputKey());
+					sendToFlash(commandQueue, -1, _command);
+				} else {
+					// send an alarm message (fault)
+					alarmLogger.addAlertLog("FAULT", zoneChangeUpdate.getZoneStatus().getDescription(),
 							AlarmLogging.GENERAL_MESSAGE, outputKey,
 							zoneChangeUpdate.getZoneStatus().getDescription(),
-							m1.currentUser, new Date());
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_OPEN) {
-
-					alarmLogger.addAlertLog("ALERT", "Normal - Unconfigured",
-							AlarmLogging.GENERAL_MESSAGE, outputKey,
-							zoneChangeUpdate.getZoneStatus().getDescription(),
-							m1.currentUser, new Date());
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_EOL) {
-					/*
-					 * Dave this is just normal PIR strigger
-					 * alarmLogger.addAlertLog("ALERT", "Normal - EOL",
-					 * AlarmLogging.GENERAL_MESSAGE,
-					 * ((BaseDevice)configHelper.getControlItem(zoneChangeUpdate.getZone())).getOutputKey(),
-					 * zoneChangeUpdate.getZoneStatus().getDescription(),
-					 * m1.currentUser, new Date());
-					 */
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_SHORT) {
-
-					alarmLogger.addAlertLog("ALERT", "Normal - Short",
-							AlarmLogging.GENERAL_MESSAGE, outputKey,
-							zoneChangeUpdate.getZoneStatus().getDescription(),
-							m1.currentUser, new Date());
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.TROUBLE_OPEN) {
-
-					alarmLogger.addAlarmLog("ALARM", "Trouble - Open",
-							AlarmLogging.TROUBLE, outputKey, zoneChangeUpdate
-									.getZoneStatus().getDescription(),
-							m1.currentUser, new Date());
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.TROUBLE_EOL) {
-
-					alarmLogger.addAlarmLog("ALARM", "Trouble - EOL",
-							AlarmLogging.TROUBLE, outputKey, zoneChangeUpdate
-									.getZoneStatus().getDescription(),
-							m1.currentUser, new Date());
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.TROUBLE_SHORT) {
-
-					alarmLogger.addAlarmLog("ALARM", "Trouble - Short",
-							AlarmLogging.TROUBLE, outputKey, zoneChangeUpdate
-									.getZoneStatus().getDescription(),
-							m1.currentUser, new Date());
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_OPEN) {
-
-					alarmLogger.addAlarmLog("ALARM", "Violated - Open",
-							AlarmLogging.VIOLATED, outputKey, zoneChangeUpdate
-									.getZoneStatus().getDescription(),
-							m1.currentUser, new Date());
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_EOL) {
-
-					alarmLogger.addAlarmLog("ALARM", "Violated - EOL",
-							AlarmLogging.VIOLATED, outputKey, zoneChangeUpdate
-									.getZoneStatus().getDescription(),
-							m1.currentUser, new Date());
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_SHORT) {
-					/*
-					 * Dave this is just normal PIR strigger
-					 * alarmLogger.addAlarmLog("ALARM", "Violated - Short",
-					 * AlarmLogging.VIOLATED,
-					 * ((BaseDevice)configHelper.getControlItem(zoneChangeUpdate.getZone())).getOutputKey(),
-					 * zoneChangeUpdate.getZoneStatus().getDescription(),
-					 * m1.currentUser, new Date());
-					 */
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.BYPASSED_OPEN) {
-
-					alarmLogger.addAlarmLog("ALARM", "Bypassed - Open",
-							AlarmLogging.BYPASSED, outputKey, zoneChangeUpdate
-									.getZoneStatus().getDescription(),
-							m1.currentUser, new Date());
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.BYPASSED_EOL) {
-
-					alarmLogger.addAlarmLog("ALARM", "Bypassed - EOL",
-							AlarmLogging.BYPASSED, outputKey, zoneChangeUpdate
-									.getZoneStatus().getDescription(),
-							m1.currentUser, new Date());
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.BYPASSED_SHORT) {
-
-					alarmLogger.addAlarmLog("ALARM", "Bypassed - Short",
-							AlarmLogging.BYPASSED, outputKey, zoneChangeUpdate
-									.getZoneStatus().getDescription(),
 							m1.currentUser, new Date());
 				}
+				
 			} else if (m1Command.getClass().equals(
 					RequestTemperatureReply.class)) {
 				RequestTemperatureReply requestTemperatureReply = (RequestTemperatureReply) m1Command;
