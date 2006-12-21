@@ -154,7 +154,7 @@ public class OutputHelper {
 			logger.log(Level.FINE, retCode);
 
 			if (!retCode.equals("")) {
-				comms.sendString(retCode);
+				// comms.sendString(retCode); When using the queue you should not also explicitly send the string. CC 
 				CommsCommand _commsCommand = new CommsCommand(theWholeKey,retCode,null);
 				comms.addCommandToQueue(_commsCommand);
 				
