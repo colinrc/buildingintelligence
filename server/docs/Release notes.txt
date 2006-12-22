@@ -1,3 +1,13 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b16.zip V1.6b16]   ==
+
+''' M1 '''
+
+Rolled in PIR changes.
+
+''' Calendar '''
+
+Fixed problem with ACTIVE="N" on repeating events. Solves ticket [ticket:575]
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b15.zip V1.6b15]   ==
 
 ''' CBUS '''
