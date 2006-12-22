@@ -43,6 +43,7 @@ import au.com.BI.M1.Commands.TasksChangeUpdate;
 import au.com.BI.M1.Commands.ZoneChangeUpdate;
 import au.com.BI.M1.Commands.ZoneDefinition;
 import au.com.BI.M1.Commands.ZoneStatus;
+import au.com.BI.M1.Commands.ZoneStatusReport;
 import au.com.BI.Sensors.SensorFascade;
 import au.com.BI.Util.BaseDevice;
 import au.com.BI.Util.Utility;
@@ -86,57 +87,27 @@ public class ControlledHelper {
 			// Check the command class
 			if (m1Command.getClass().equals(ZoneChangeUpdate.class)) {
 				ZoneChangeUpdate zoneChangeUpdate = (ZoneChangeUpdate) m1Command;
-				
-				alarmLogger.setCache(cache);
-				alarmLogger.setCommandQueue(commandQueue);
 
 				BaseDevice theDevice = (BaseDevice) configHelper.getControlledItem(zoneChangeUpdate.getZone() + "CC"); 
 				if (theDevice == null) return;
 				String outputKey = theDevice.getOutputKey();
 				
-				if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_EOL ||
-						zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_OPEN ||
-						zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_SHORT ||
-						zoneChangeUpdate.getZoneStatus() == ZoneStatus.NORMAL_UNCONFIGURED) {
-					
-					// send an off command
-					CommandInterface _command = new M1FlashCommand();
-					_command.setDisplayName(theDevice.getOutputKey());
-					_command.setTargetDeviceID(-1);
-					_command.setUser(m1.currentUser);
-					_command.setCommand("off");
-					_command.setKey("CLIENT_SEND");
-					cache.setCachedCommand(_command.getKey(), _command);
-
-					logger.log(Level.FINER, "Sending "
-							+ _command.getCommandCode() + " command to "
-							+ theDevice.getOutputKey());
-					sendToFlash(commandQueue, -1, _command);
-					
-				} else if (zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_EOL ||
-						zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_OPEN ||
-						zoneChangeUpdate.getZoneStatus() == ZoneStatus.VIOLATED_SHORT) {
-					// send an on command
-					CommandInterface _command = new M1FlashCommand();
-					_command.setDisplayName(theDevice.getOutputKey());
-					_command.setTargetDeviceID(-1);
-					_command.setUser(m1.currentUser);
-					_command.setCommand("on");
-					_command.setKey("CLIENT_SEND");
-					cache.setCachedCommand(_command.getKey(), _command);
-
-					logger.log(Level.FINER, "Sending "
-							+ _command.getCommandCode() + " command to "
-							+ theDevice.getOutputKey());
-					sendToFlash(commandQueue, -1, _command);
-				} else {
-					// send an alarm message (fault)
-					alarmLogger.addAlertLog("FAULT", zoneChangeUpdate.getZoneStatus().getDescription(),
-							AlarmLogging.GENERAL_MESSAGE, outputKey,
-							zoneChangeUpdate.getZoneStatus().getDescription(),
-							m1.currentUser, new Date());
-				}
+				handleZoneState(cache, commandQueue, m1, zoneChangeUpdate.getZoneStatus(), theDevice);
 				
+			} else if (m1Command.getClass().equals(ZoneStatusReport.class)) {
+				ZoneStatusReport zoneStatusReport = (ZoneStatusReport)m1Command;
+				
+				for (int i=0;i<zoneStatusReport.getZoneStatus().length; i++) {
+					ZoneStatus zoneStatus = zoneStatusReport.getZoneStatus()[i];
+					
+					BaseDevice theDevice = (BaseDevice) configHelper.getControlledItem(Utility.padString(Integer.toString(i), 3) + "CC"); 
+					
+					// See if the input is a controlled device
+					if (theDevice != null) {
+						// if it is then send the command
+						handleZoneState (cache, commandQueue, m1, zoneStatus, theDevice);
+					}
+				}
 			} else if (m1Command.getClass().equals(
 					RequestTemperatureReply.class)) {
 				RequestTemperatureReply requestTemperatureReply = (RequestTemperatureReply) m1Command;
@@ -536,6 +507,88 @@ public class ControlledHelper {
 		}
 	}
 
+	/**
+	 * Handles the zone status of an input. 
+	 * If an input is violated then it will send a "on" command for the device to the flash client. 
+	 * If it is normal then it will send an "off" command for the device to the flash client.
+	 * If the zone is unconfigured then it will do nothing.
+	 * If the zone is bypassed or in trouble then it will send a message to the security log.
+	 * Of the ZoneStatus defined the mapping is:
+	 * NORMAL_UNCONFIGURED = do nothing
+	 * NORMAL_EOL = off
+	 * NORMAL_OPEN = off
+	 * NORMAL_SHORT = off
+	 * VIOLATED_EOL = on
+	 * VIOLATED_OPEN = on
+	 * VIOLATED_SHORT = off
+	 * BYPASSED_EOL = security log
+	 * BYPASSED_OPEN = security log
+	 * BYPASSED_SHORT = security log
+	 * TROUBLE_EOL = security log
+	 * TROUBLE_OPEN = security log
+	 * TROUBLE_SHORT = security log
+	 * @param cache
+	 * @param commandQueue
+	 * @param m1
+	 * @param zoneStatus
+	 * @param theDevice
+	 * @see au.com.BI.M1.Commands.ZoneStatus
+	 */
+	private void handleZoneState(Cache cache, 
+			CommandQueue commandQueue, 
+			Model m1, 
+			ZoneStatus zoneStatus, 
+			BaseDevice theDevice) {
+		if (zoneStatus == ZoneStatus.NORMAL_EOL ||
+				zoneStatus == ZoneStatus.NORMAL_OPEN ||
+				zoneStatus == ZoneStatus.NORMAL_SHORT) {
+			
+			// send an off command
+			CommandInterface _command = new M1FlashCommand();
+			_command.setDisplayName(theDevice.getOutputKey());
+			_command.setTargetDeviceID(-1);
+			_command.setUser(m1.currentUser);
+			_command.setCommand("off");
+			_command.setKey("CLIENT_SEND");
+			cache.setCachedCommand(_command.getKey(), _command);
+
+			logger.log(Level.FINER, "Sending "
+					+ _command.getCommandCode() + " command to "
+					+ theDevice.getOutputKey());
+			sendToFlash(commandQueue, -1, _command);
+			
+		} else if (zoneStatus == ZoneStatus.VIOLATED_EOL ||
+				zoneStatus == ZoneStatus.VIOLATED_OPEN ||
+				zoneStatus == ZoneStatus.VIOLATED_SHORT) {
+			// send an on command
+			CommandInterface _command = new M1FlashCommand();
+			_command.setDisplayName(theDevice.getOutputKey());
+			_command.setTargetDeviceID(-1);
+			_command.setUser(m1.currentUser);
+			_command.setCommand("on");
+			_command.setKey("CLIENT_SEND");
+			cache.setCachedCommand(_command.getKey(), _command);
+
+			logger.log(Level.FINER, "Sending "
+					+ _command.getCommandCode() + " command to "
+					+ theDevice.getOutputKey());
+			sendToFlash(commandQueue, -1, _command);
+		} else if (zoneStatus == ZoneStatus.BYPASSED_EOL ||
+				zoneStatus == ZoneStatus.BYPASSED_OPEN ||
+				zoneStatus == ZoneStatus.BYPASSED_SHORT ||
+				zoneStatus == ZoneStatus.TROUBLE_EOL ||
+				zoneStatus == ZoneStatus.TROUBLE_OPEN ||
+				zoneStatus == ZoneStatus.TROUBLE_SHORT) {
+			// send an alarm message (fault)
+			alarmLogger.setCache(cache);
+			alarmLogger.setCommandQueue(commandQueue);
+			alarmLogger.addAlertLog("FAULT", zoneStatus.getDescription(),
+					AlarmLogging.GENERAL_MESSAGE, theDevice.getOutputKey(),
+					zoneStatus.getDescription(),
+					m1.currentUser, new Date());
+		}
+	}
+
 	public void sendToFlash(CommandQueue commandQueue, long targetFlashID,
 			CommandInterface command) {
 
@@ -607,7 +660,8 @@ public class ControlledHelper {
 						.equals(ReplyAlarmByZoneReportData.class)
 				|| m1Command.getClass().equals(TasksChangeUpdate.class)
 				|| m1Command.getClass().equals(PLCChangeUpdate.class)
-				|| m1Command.getClass().equals(PLCStatusReturned.class)) {
+				|| m1Command.getClass().equals(PLCStatusReturned.class)
+				|| m1Command.getClass().equals(ZoneStatusReport.class)) {
 			return m1Command;
 		}  else {
 			return null;
