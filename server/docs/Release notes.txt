@@ -1,3 +1,10 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b18.zip V1.6b18]   ==
+
+''' M1 '''
+
+Ensure null state variables do not break start up.
+Set cache correctly for the web client.
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b16.zip V1.6b16]   ==
 
 ''' M1 '''
