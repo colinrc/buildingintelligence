@@ -36,7 +36,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected ControlledHelper controlledHelper;
 	protected LinkedList temperatureSensors;
 	protected long tempPollValue = 0L;
+	protected long outputPollValue = 0L;
 	protected PollTemperatureSensors pollTemperatures;
+	protected PollOutputs pollOutputs;
 	protected OutputHelper outputHelper;
 	protected HashMap armingStates;
 	protected HashMap armUpStates;
@@ -92,11 +94,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		logger.log(Level.INFO, "Starting M1");
 		// create the temperature polling service
 		String pollTempStr = (String)this.getParameterValue("POLL_SENSOR_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
+		String outputTempStr = (String)this.getParameterValue("POLL_OUTPUT_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
 
 		try {
 			tempPollValue = Long.parseLong(pollTempStr) * 1000;
 		} catch (NumberFormatException ex) {
 			tempPollValue = 0L;
+		}
+		
+		try {
+			outputPollValue = Long.parseLong(outputTempStr) * 1000;
+		} catch (NumberFormatException ex) {
+			outputPollValue = 0L;
 		}
 
 		if (!temperatureSensors.isEmpty() && tempPollValue != 0L) {
@@ -112,9 +121,21 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			logger.log(Level.INFO,"Not starting temperature polls");
 		}
 		
+		if (outputPollValue != 0L) {
+			logger.log(Level.INFO,"Starting output polls");
+			pollOutputs = new PollOutputs();
+			pollOutputs.setPollValue(outputPollValue);
+			pollOutputs.setCommandQueue(commandQueue);
+			pollOutputs.setDeviceNumber(InstanceID);
+			pollOutputs.setComms(comms);
+			pollOutputs.start();
+		} else {
+			logger.log(Level.INFO,"Not starting output polls");
+		}
+		
 		// request the states of the contol output devices.
-		ControlOutputStatusRequest statusRequest = new ControlOutputStatusRequest();
-		comms.sendString(statusRequest.buildM1String()+"\r\n");
+//		ControlOutputStatusRequest statusRequest = new ControlOutputStatusRequest();
+//		comms.sendString(statusRequest.buildM1String()+"\r\n");
 		
 		// request the arming states
 		ArmingStatusRequest armingStatusRequest = new ArmingStatusRequest();
