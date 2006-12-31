@@ -52,54 +52,61 @@ public class SimulateCBUS extends SimulateDevice {
 	
 	public void parseString (String in) {
 		gui.appendToChatBox ("IN.CBUS.",in);
-		if (in.startsWith("~~~") || in.startsWith ("A3")) {
+		if (in.startsWith("~~") ) {
 			synchronized (out){
-				out.println("~~~\n");
+				out.println("~~\n");
 			}
 			return;
 		}
 		char lastChar = in.charAt(in.length()-1);
-
-		synchronized (out){
-			out.println(lastChar+".");
+		if (lastChar >= 'g' && lastChar <= 'z'){
+			synchronized (out){
+				out.println(lastChar+".");
+			}
 		}
 		try {
-			String command = in.substring(7,9);
-			String theKey = "";
-			theKey = in.substring(9,11);
-			boolean commandFound = false;
-			if (command.equals ("79")) {
-				commandFound = true;
-				GUIPanel control = findControl (theKey);
-				gui.changeIcon(control,true);
-				if (control.isHasSlider()){
-					gui.changeLevel(control,254);
+			if (in.startsWith("@A3")) {
+				synchronized (out){
+					out.println(in.substring(0,6));
 				}
-			}
-			if (command.equals("01")) {
-				commandFound = true;
-				GUIPanel control = findControl (theKey);
-				if (control.isHasSlider()){
-					gui.changeLevel(control,0);
-				}
-				gui.changeIcon(control,false);
-			}
-			if (!commandFound) {
-				GUIPanel control = findControl (theKey);
-				if (control != null){
-					if (control.isHasSlider()) {
-						String theLevel = in.substring(11,13);
-						try {
-							int intLevel  = Integer.parseInt(theLevel,16);
-							if (intLevel == 0) intLevel = 255;
-							control.setUpdatingSlider(true);
-							gui.changeLevel (control,intLevel);
-							control.setUpdatingSlider(false);
-						} catch (NumberFormatException ex) {
-							System.out.println ("CBUS string from server was malformed");
-						}
-					}
+			} else {
+				String command = in.substring(7,9);
+				String theKey = "";
+				theKey = in.substring(9,11);
+				boolean commandFound = false;
+				if (command.equals ("79")) {
+					commandFound = true;
+					GUIPanel control = findControl (theKey);
 					gui.changeIcon(control,true);
+					if (control.isHasSlider()){
+						gui.changeLevel(control,254);
+					}
+				}
+				if (command.equals("01")) {
+					commandFound = true;
+					GUIPanel control = findControl (theKey);
+					if (control.isHasSlider()){
+						gui.changeLevel(control,0);
+					}
+					gui.changeIcon(control,false);
+				}
+				if (!commandFound) {
+					GUIPanel control = findControl (theKey);
+					if (control != null){
+						if (control.isHasSlider()) {
+							String theLevel = in.substring(11,13);
+							try {
+								int intLevel  = Integer.parseInt(theLevel,16);
+								if (intLevel == 0) intLevel = 255;
+								control.setUpdatingSlider(true);
+								gui.changeLevel (control,intLevel);
+								control.setUpdatingSlider(false);
+							} catch (NumberFormatException ex) {
+								System.out.println ("CBUS string from server was malformed");
+							}
+						}
+						gui.changeIcon(control,true);
+					}
 				}
 			}
 		} catch (IndexOutOfBoundsException ex){}

@@ -219,7 +219,7 @@ public class Simulator {
 	   if (args.length > 0) {
 		   configLoaded = simulator.loadConfig(args[0]);
 	   } else {
-		   configLoaded = simulator.loadConfig("conf/default.xml");
+		   configLoaded = simulator.loadConfig("../conf/default.xml");
 	   }
 	   if (configLoaded) simulator.start();
    }
