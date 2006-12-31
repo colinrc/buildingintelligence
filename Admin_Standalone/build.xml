@@ -51,7 +51,7 @@
 			update="false"
 			basedir="bin" 
 			includes = "**/*.class" 
-			manifest="manifest"
+			manifest="MANIFEST.MF"
 		/>
 		<jar destfile="dist/${app_name}.jar" 
 			update="true"
