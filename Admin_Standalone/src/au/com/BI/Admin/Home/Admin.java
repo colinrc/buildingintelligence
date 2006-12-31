@@ -35,7 +35,7 @@ public class Admin extends JPanel
 
 	private eLife_AdminToolPanel toolPanel;
 	private eLife_AdminTabbedPane tabPanel;
-	private ConnectionManager connection;
+	public ConnectionManager connection;
 	protected Logger logger;
 	private IP ip;
 	private String irName;
@@ -70,6 +70,7 @@ public class Admin extends JPanel
 	    try {
 			project.getParameters ("","proj.properties");
 		} catch (IOException e) {
+			logger.log(Level.WARNING,"Error reading project properties file " + e.getMessage());
 		}
 		
 
@@ -92,7 +93,8 @@ public class Admin extends JPanel
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JFrame frame = new JFrame ("Options");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		eLifeOptionPane optionPane = new eLifeOptionPane (project,frame);
+		connection.setUpdatingParams(true);
+		eLifeOptionPane optionPane = new eLifeOptionPane (project,frame,this);
 		optionPane.pack();
 		optionPane.setVisible(true);
 
@@ -322,7 +324,7 @@ public class Admin extends JPanel
 
 
 
-	protected void propertiesChanged() {
+	public void propertiesChanged() {
 		boolean anyChange = true;
 		// @TODO , make this actually a properties change listener
 		if (anyChange) {
@@ -331,7 +333,9 @@ public class Admin extends JPanel
 			}
 			this.disconnect();
 			shownAdminConnectError = false;
-				
+			if (connection != null){
+				this.disconnect(false);
+			}
 			connection = new ConnectionManager (this);
 			connection.connect(project.getServerIP(),project.getAdminPort(),project.getMonitorPort());
 			connection.start();

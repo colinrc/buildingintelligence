@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Project extends Properties {
+public class Project {
 	
 	private String serverIP = "127.0.0.1";
 	private int defaultMonitorPort = 10002;
@@ -13,10 +13,12 @@ public class Project extends Properties {
 	private int adminPort = defaultAdminPort;
 	protected Logger logger;
 	protected String fileName = "";
-
+	protected Properties properties;
+	
 	public Project () {
 		super();
 		logger = Logger.getLogger("Log");
+		properties = new Properties();
 	}
 	
 	public int getAdminPort() {
@@ -47,24 +49,24 @@ public class Project extends Properties {
 		this.fileName = fileName;
 		
 		try {
-			load(this.getClass().getResourceAsStream(fileName));
+			properties.load(this.getClass().getResourceAsStream(fileName));
 	
-			this.serverIP = this.getProperty(
+			this.serverIP = properties.getProperty(
 				"ServerIP");
 			if(this.serverIP == null || this.serverIP.length() == 0)
 			{
 				this.serverIP = "127.0.0.1";
-				this.setProperty(
+				properties.setProperty(
 					"ServerIP",
 					this.serverIP);
 			}
-			String adminPortStr = this.getProperty(
+			String adminPortStr = properties.getProperty(
 					"eLifePort");
 			if(adminPortStr == null || adminPortStr.length() == 0)
 			{
 				adminPort = defaultAdminPort;
 				adminPortStr = String.valueOf(adminPort);
-				this.setProperty(
+				properties.setProperty(
 					"eLifePort",
 					adminPortStr);
 			}
@@ -77,13 +79,13 @@ public class Project extends Properties {
 	
 			
 			
-			String monitorPortStr = this.getProperty(
+			String monitorPortStr = properties.getProperty(
 					"MonitorPort");
 			if(monitorPortStr == null || monitorPortStr.length() == 0)
 			{
 				monitorPort = defaultMonitorPort;
 				monitorPortStr = String.valueOf(monitorPort);
-				this.setProperty(
+				properties.setProperty(
 					"MonitorPort",
 					monitorPortStr);
 			}

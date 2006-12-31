@@ -3,14 +3,16 @@ package au.com.BI.Admin.GUI;
  * eLife_AdminOptionPane.java
  */
 
+import au.com.BI.Admin.Home.Admin;
 import au.com.BI.Admin.Home.Project;
+import au.com.BI.Admin.comms.ConnectionManager;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Component;
 
 import javax.swing.*;
-import javax.swing.JDialog;
 
 import java.text.NumberFormat;
 import java.util.logging.*;
@@ -20,7 +22,6 @@ import java.io.File;
 public class eLifeOptionPane extends JDialog
 {
 	protected JTextField serverIPField;
-	protected JTextField editCMDField;
 	protected JFormattedTextField monitorPortField;
 	protected JFormattedTextField eLifePortField;
 	protected NumberFormat portFormat;
@@ -29,21 +30,24 @@ public class eLifeOptionPane extends JDialog
 	protected Project properties;
 	protected boolean updated = false;
 	protected JFrame jFrame;
+	protected Admin admin  = null;
 
-	public eLifeOptionPane(Project properties,JFrame frame)
+	public eLifeOptionPane(Project properties,JFrame frame, Admin admin)
 	{
 		super (frame,"Options",true);
+		this.admin = admin;
 		super.getContentPane().setLayout(new BoxLayout (super.getContentPane(),BoxLayout.Y_AXIS));
 		logger = Logger.getLogger("Log");
-		portFormat = NumberFormat.getIntegerInstance();
+		portFormat = NumberFormat.getNumberInstance();
+		portFormat.setGroupingUsed(false);
 		this.properties = properties;
 		this.jFrame = frame;
 
 		JPanel ipBox = new JPanel();
 		JLabel ipLabel = new JLabel ("eLife Server IP");
 		ipBox.add (ipLabel);
-		serverIPField = new JTextField(properties.getProperty(
-				"ServerIP"));
+		String serverIP = properties.getServerIP();
+		serverIPField = new JTextField(serverIP);
 		serverIPField.setColumns(15);
 		ipBox.add (serverIPField);
 		ipBox.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -56,12 +60,11 @@ public class eLifeOptionPane extends JDialog
 		monitorPortField.setColumns(8);
 
 		try {
-			monitorPortField.setValue(Integer.decode(properties.getProperty(
-				"MonitorPort")));
+			monitorPortField.setText(Integer.toString(properties.getMonitorPort()));
 		} catch (NullPointerException ex) {
-			monitorPortField.setValue(new Integer(10002));
+			monitorPortField. setValue(10002);
 		} catch (NumberFormatException ex) {
-			monitorPortField.setValue(new Integer(10002));
+			monitorPortField.setValue(10002);
 		} catch (IllegalArgumentException ex) {
 			logger.log (Level.WARNING,"Could not set monitor port option " + ex.getMessage());
 		}
@@ -76,8 +79,7 @@ public class eLifeOptionPane extends JDialog
 		eLifePortField = new JFormattedTextField(portFormat);
 		eLifePortField.setColumns(8);
 		try {
-			eLifePortField.setValue(Integer.decode(properties.getProperty(
-				"eLifePort")));
+			eLifePortField.setText(Integer.toString(properties.getAdminPort()));
 		} catch (NullPointerException ex) {
 			logger.log (Level.WARNING,"eLife port property is incorrect " + ex.getMessage());
 			eLifePortField.setValue(new Integer(10001));
@@ -91,16 +93,6 @@ public class eLifeOptionPane extends JDialog
 		eLifeBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		this.getContentPane().add (eLifeBox);
 		
-		
-		JPanel editCMDBox = new JPanel();
-		JLabel ediCMDLabel = new JLabel ("Edit Command");
-		editCMDBox.add (ediCMDLabel);
-		String editCmd = properties.getProperty("EditCMD");
-		if (editCmd == null) editCmd = "";
-		editCMDField = new JTextField();
-		editCMDBox.add (editCMDField);
-		editCMDBox.setAlignmentX(Component.LEFT_ALIGNMENT);
-		this.getContentPane().add (editCMDBox);
 		
 		JPanel confirmBox = new JPanel();
 		JButton confirmButton = new JButton("Apply");
@@ -127,10 +119,12 @@ public class eLifeOptionPane extends JDialog
 	public void applyChanges () {
 		this._save();
 		this.setVisible(false);		
+		admin.propertiesChanged();
 	}
 	
 	public void cancelChanges () {
 		this.setVisible(false);
+		admin.connection.setUpdatingParams(false);
 	}
 	
 
@@ -139,19 +133,13 @@ public class eLifeOptionPane extends JDialog
 	
 	public void _save()
 	{
-		properties.setProperty(
-				"ServerIP",serverIPField.getText());
+		properties.setServerIP(serverIPField.getText());
 
-		properties.setProperty(
-				"EditCmd",editCMDField.getText());
-
-		int monitorValue = ((Number)monitorPortField.getValue()).intValue();
+		int monitorValue = (Integer.parseInt(monitorPortField.getText()));
+		properties.setMonitorPort(monitorValue);
 		int eLifeValue = ((Number)eLifePortField.getValue()).intValue();
-		properties.setProperty(
-				"MonitorPort",Integer.toString(monitorValue));
-
-		properties.setProperty(
-				"eLifePort",Integer.toString(eLifeValue));
+		properties.setAdminPort(eLifeValue);
+		updated = true;
 
 
 	}
