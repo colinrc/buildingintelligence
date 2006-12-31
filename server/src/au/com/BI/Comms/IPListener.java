@@ -229,10 +229,8 @@ public class IPListener extends Thread implements CommsListener
 					}
 					endPrev = curPos;
 					//logger.log (Level.INFO,"Found a newline setting endPrev = " + endPrev);
-                                        if (logger.isLoggable(Level.FINEST)){
-                                            str = new String (retArray);
-                                            logger.log (Level.FINEST,"Received ip packet : " + str);
-                                        }
+                    str = new String (retArray);
+                    logger.log (Level.FINEST,"Received ip packet : " + str);
 					
 					CommsCommand command = new CommsCommand (str,"RawText",null);
 					command.setCommandBytes(retArray);
@@ -269,7 +267,7 @@ public class IPListener extends Thread implements CommsListener
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					
 					commandList.add (command);
-					commandList.notifyAll();
+					//commandList.notifyAll();
 					
 				}
 				if (this.endVals[arrayOffset]) {
@@ -305,7 +303,7 @@ public class IPListener extends Thread implements CommsListener
 					startPos = 0;
 					endPos = 0;
 					
-					CommsCommand command = new CommsCommand (str,"RawText",null);
+					CommsCommand command = new CommsCommand ("RawText","RawText",null);
 					command.setCommandBytes(readArray);
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					
