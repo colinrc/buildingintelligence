@@ -100,7 +100,9 @@ public class CacheBridge implements CacheListener {
 		        		if (cacheWrapper.isSet()) {
 		        			for (CommandInterface command:cacheWrapper.getMapValues()){
 		        				try {
-		        					resultsDoc.addContent((Element)command.getXMLCommand());
+		        					Element xmlCommand = (Element)command.getXMLCommand();
+		        					xmlCommand.setAttribute("KEY", command.getDisplayName());
+		        					resultsDoc.addContent(xmlCommand);
 		        					values = true;
 		        				} catch (IllegalAddException ex){
 		        						logger.log(Level.WARNING,"There was an error sending the commands to the web client." + ex.getMessage());
@@ -114,6 +116,7 @@ public class CacheBridge implements CacheListener {
 		        				Element xMLCommand = null;
 		        				try {
 		        						xMLCommand = (Element)command.getXMLCommand();
+		        						xMLCommand.setAttribute("KEY", command.getDisplayName());
 		        						xMLCommand.detach();
 		        						resultsDoc.addContent(xMLCommand);      
 		        						values = true;

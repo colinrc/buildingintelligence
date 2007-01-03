@@ -131,6 +131,16 @@ public interface CommDevice {
 	 */
 	public void setInterCommandInterval(int interCommandInterval);
 
-	// @TODO Implemented minimum interval in comms devices. 
-	// @TODO Move comm sending into a thread
+	
+	/**
+	 * The model name is used to assist debugging.
+	 * @param modelName The name
+	 */
+	public void setModelName(String modelName);
+	
+	/**
+	 * The model name is used to assist debugging.
+	 * @return The name
+	 */
+	public String getModelName();
 }

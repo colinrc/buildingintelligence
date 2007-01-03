@@ -1,3 +1,13 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b20.zip V1.6b20]   ==
+
+''' M1 '''
+
+Incorporated fixes.
+
+''' Web '''
+
+Ensure all XML packets to be sent to the web browser have a correct target display name. Resolves [ticket:580]
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b19.zip V1.6b19]   ==
 
 ''' CBUS '''

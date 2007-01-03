@@ -31,6 +31,7 @@ protected InputStream is;
 protected boolean portOpen = false;
 protected CommsSend commsSend = null;
 protected CommsGroup commsGroup = null;
+protected String modelName = "";
 
 	public BaseComms () {
 		toSendQueue = new LinkedList<CommsCommand>();
@@ -470,13 +471,32 @@ protected CommsGroup commsGroup = null;
 	
 	public void sendString (String message)
 	{
-		logger.log (Level.FINER,"Sending string " + message);
-		sendString (message.getBytes());
+		if (message == null){
+			logger.log (Level.INFO,"A null message was attempted to be sent from the model " + this.getModelName());
+		} else {
+			logger.log (Level.FINER,"Sending string " + message);
+			sendString (message.getBytes());
+		}
 	}
 
 	public void sendString (byte[] message)
 	{
-		commsSend.toSend.add(message);
+		if (message == null){
+			logger.log (Level.INFO,"A null message was attempted to be sent from the model " + this.getModelName());
+		} else {
+			if (logger.isLoggable(Level.FINER)){
+				logger.log (Level.FINER,"Sending string " + message);
+			}
+			commsSend.toSend.add(message);
+		}
+	}
+
+	public String getModelName() {
+		return modelName;
+	}
+
+	public void setModelName(String modelName) {
+		this.modelName = modelName;
 	}
 
 }

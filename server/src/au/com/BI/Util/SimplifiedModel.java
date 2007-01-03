@@ -488,6 +488,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 				}
 			} else
 				comms = new Serial();
+			comms.setModelName(this.getName());
 
 			if (this.transmitOnBytes > 0) {
 				comms.setTransmitMessageOnBytes(transmitOnBytes);
@@ -519,6 +520,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			}
 
 			comms = new IP();
+			comms.setModelName(this.getName());
 			if (this.transmitOnBytes > 0) {
 				comms.setTransmitMessageOnBytes(transmitOnBytes);
 			}
