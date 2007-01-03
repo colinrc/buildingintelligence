@@ -507,7 +507,7 @@ public class ControlledHelper {
 			}
 
 			if (sendCommandToFlash) {
-				cache.setCachedCommand(m1Command.getDisplayName(), m1Command);
+//				cache.setCachedCommand(m1Command.getDisplayName(), m1Command);
 				sendToFlash(commandQueue, -1, m1Command);
 			}
 		}
