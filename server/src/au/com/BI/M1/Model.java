@@ -23,6 +23,7 @@ import au.com.BI.Device.DeviceType;
 import au.com.BI.M1.Commands.ArmingStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
 import au.com.BI.M1.Commands.PLCStatusRequest;
+import au.com.BI.M1.Commands.ZoneStatusRequest;
 import au.com.BI.Sensors.SensorFascade;
 import au.com.BI.Util.SimplifiedModel;
 import au.com.BI.Util.DeviceModel;
@@ -134,8 +135,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		
 		// request the states of the contol output devices.
-//		ControlOutputStatusRequest statusRequest = new ControlOutputStatusRequest();
-//		comms.sendString(statusRequest.buildM1String()+"\r\n");
+		ControlOutputStatusRequest statusRequest = new ControlOutputStatusRequest();
+		comms.sendString(statusRequest.buildM1String()+"\r\n");
 		
 		// request the arming states
 		ArmingStatusRequest armingStatusRequest = new ArmingStatusRequest();
@@ -144,6 +145,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		// request PLC states
 		PLCStatusRequest plcStatusRequest = new PLCStatusRequest();
 		comms.sendString(plcStatusRequest.buildM1String()+"\r\n");
+		
+		// request the status of the zones
+		ZoneStatusRequest zoneRequest = new ZoneStatusRequest();
+		comms.sendString(zoneRequest.buildM1String() + "\r\n");
 		
 		// add a device to do arming messages
 		addControlledItem("ARM",new Alarm("ARM",DeviceType.VIRTUAL_OUTPUT,"ARM"),MessageDirection.FROM_FLASH);
