@@ -86,6 +86,7 @@ public class ControlledHelper {
 
 			// Check the command class
 			if (m1Command.getClass().equals(ZoneChangeUpdate.class)) {
+				sendCommandToFlash = false;
 				ZoneChangeUpdate zoneChangeUpdate = (ZoneChangeUpdate) m1Command;
 
 				BaseDevice theDevice = (BaseDevice) configHelper.getControlledItem(zoneChangeUpdate.getZone() + "CC"); 
@@ -95,6 +96,7 @@ public class ControlledHelper {
 				handleZoneState(cache, commandQueue, m1, zoneChangeUpdate.getZoneStatus(), theDevice);
 				
 			} else if (m1Command.getClass().equals(ZoneStatusReport.class)) {
+				sendCommandToFlash = false;
 				ZoneStatusReport zoneStatusReport = (ZoneStatusReport)m1Command;
 				
 				for (int i=0;i<zoneStatusReport.getZoneStatus().length; i++) {
@@ -110,6 +112,7 @@ public class ControlledHelper {
 				}
 			} else if (m1Command.getClass().equals(
 					RequestTemperatureReply.class)) {
+				sendCommandToFlash = false;
 				RequestTemperatureReply requestTemperatureReply = (RequestTemperatureReply) m1Command;
 
 				int adjustedTemperature = Integer
@@ -154,7 +157,8 @@ public class ControlledHelper {
 									+ requestTemperatureReply.getDevice() + ":"
 									+ adjustedTemperature);
 					sensor.setTemperature(_command.getExtraInfo());
-
+					
+					cache.setCachedCommand(_command.getDisplayName(), _command);
 					sendToFlash(commandQueue, -1, _command);
 				} else {
 					sendCommandToFlash = false;
@@ -168,7 +172,7 @@ public class ControlledHelper {
 			} else if (m1Command.getClass().equals(
 					ControlOutputStatusReport.class)) {
 				ControlOutputStatusReport statusReport = (ControlOutputStatusReport) m1Command;
-
+				sendCommandToFlash = false;
 				// send out output change updates
 				for (int i = 0; i < statusReport.getOutputStatus().length; i++) {
 
@@ -193,11 +197,13 @@ public class ControlledHelper {
 						logger.log(Level.FINER, "Sending "
 								+ _command.getCommandCode() + " command to "
 								+ device.getOutputKey());
+						cache.setCachedCommand(_command.getDisplayName(), _command);
 						sendToFlash(commandQueue, -1, _command);
 					}
 				}
 			} else if (m1Command.getClass().equals(
 					ReplyArmingStatusReportData.class)) {
+				sendCommandToFlash = false;
 				ReplyArmingStatusReportData statusReport = (ReplyArmingStatusReportData) m1Command;
 
 				for (int i = 0; i < statusReport.getAreaAlarmState().length; i++) {
@@ -244,6 +250,7 @@ public class ControlledHelper {
 								+ _command.getExtraInfo() + " ArmUpState="
 								+ _command.getExtra2Info() + " AreaAlarmState="
 								+ _command.getExtra3Info());
+						cache.setCachedCommand(_command.getDisplayName(), _command);
 						sendToFlash(commandQueue, -1, _command);
 					}
 				}
@@ -256,7 +263,7 @@ public class ControlledHelper {
 					|| m1Command.getClass().equals(ArmToVacation.class)
 					|| m1Command.getClass().equals(ArmStepToNextAwayMode.class)
 					|| m1Command.getClass().equals(ArmStepToNextStayMode.class)) {
-
+				sendCommandToFlash = false;
 				ArmAndDisarmMessage armDisarm = (ArmAndDisarmMessage) m1Command;
 				CommandInterface _command = new AlertCommand();
 				_command.setDisplayName("Arm/Disarm");
@@ -289,9 +296,12 @@ public class ControlledHelper {
 				cache.setCachedCommand(_command.getDisplayName(), _command);
 
 				logger.log(Level.FINER, "Sending " + _command.getCommandCode());
+				cache.setCachedCommand(_command.getDisplayName(), _command);
 				sendToFlash(commandQueue, -1, _command);
 			} else if (m1Command.getClass().equals(
 					ReplyAlarmByZoneReportData.class)) {
+				
+				sendCommandToFlash = false;
 				ReplyAlarmByZoneReportData zoneReport = (ReplyAlarmByZoneReportData) m1Command;
 
 				for (int i = 0; i < zoneReport.getZoneDefinition().length; i++) {
@@ -313,9 +323,11 @@ public class ControlledHelper {
 							+ _command.getExtraInfo() + " ArmUpState="
 							+ _command.getExtra2Info() + " AreaAlarmState="
 							+ _command.getExtra3Info());
+					cache.setCachedCommand(_command.getDisplayName(), _command);
 					sendToFlash(commandQueue, -1, _command);
 				}
 			} else if (m1Command.getClass().equals(TasksChangeUpdate.class)) {
+				sendCommandToFlash = false;
 				TasksChangeUpdate tasksChangeUpdate = (TasksChangeUpdate) m1Command;
 				CommandInterface _command = new AlertCommand();
 				_command.setDisplayName("TASK_ACTIVATION_REQUEST");
@@ -328,8 +340,11 @@ public class ControlledHelper {
 
 				logger.log(Level.FINER, "Sending " + _command.getCommandCode()
 						+ " task=" + _command.getExtraInfo());
+				cache.setCachedCommand(_command.getDisplayName(), _command);
 				sendToFlash(commandQueue, -1, _command);
 			} else if (m1Command.getClass().equals(PLCChangeUpdate.class)) {
+				
+				sendCommandToFlash = false;
 
 				PLCChangeUpdate plcChangeUpdate = (PLCChangeUpdate) m1Command;
 
@@ -359,6 +374,7 @@ public class ControlledHelper {
 												+ _command.getCommandCode()
 												+ " command to "
 												+ light.getOutputKey());
+								cache.setCachedCommand(_command.getDisplayName(), _command);
 								sendToFlash(commandQueue, -1, _command);
 							}
 						}
@@ -389,6 +405,7 @@ public class ControlledHelper {
 												+ _command.getCommandCode()
 												+ " command to "
 												+ light.getOutputKey());
+								cache.setCachedCommand(_command.getDisplayName(), _command);
 								sendToFlash(commandQueue, -1, _command);
 							}
 						}
@@ -421,6 +438,7 @@ public class ControlledHelper {
 												+ _command.getCommandCode()
 												+ " command to "
 												+ light.getOutputKey());
+								cache.setCachedCommand(_command.getDisplayName(), _command);
 								sendToFlash(commandQueue, -1, _command);
 							}
 						}
@@ -457,12 +475,14 @@ public class ControlledHelper {
 						logger.log(Level.FINER, "Sending "
 								+ _command.getCommandCode() + " command to "
 								+ outputKey);
+						cache.setCachedCommand(_command.getDisplayName(), _command);
 						sendToFlash(commandQueue, -1, _command);
 					}
 				}
 
 			} else if (m1Command.getClass().equals(PLCStatusReturned.class)) {
 				PLCStatusReturned statusReport = (PLCStatusReturned) m1Command;
+				sendCommandToFlash = false;
 
 				// send out PLC change updates
 				for (int i = 0; i < statusReport.getLevels().length; i++) {
@@ -501,13 +521,14 @@ public class ControlledHelper {
 						logger.log(Level.FINER, "Sending "
 								+ _command.getCommandCode() + " command to "
 								+ outputKey);
+						cache.setCachedCommand(_command.getDisplayName(), _command);
 						sendToFlash(commandQueue, -1, _command);
 					}
 				}
 			}
 
 			if (sendCommandToFlash) {
-//				cache.setCachedCommand(m1Command.getDisplayName(), m1Command);
+				cache.setCachedCommand(m1Command.getDisplayName(), m1Command);
 				sendToFlash(commandQueue, -1, m1Command);
 			}
 		}
