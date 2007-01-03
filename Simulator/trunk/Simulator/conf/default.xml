@@ -61,7 +61,7 @@ M1 is port 5006
 </control>
 
 <control>
-	<name>Lawn Sprinkler (key 1)</name>
+	<name>Lawn Sprinkler (key 3)</name>
 	<protocol>M1</protocol>
 	<protocol_detail>OUTPUT</protocol_detail>
 	<type value="BUTTONS" >
