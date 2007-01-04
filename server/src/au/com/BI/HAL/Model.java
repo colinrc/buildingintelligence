@@ -312,6 +312,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				this.intercomChanged = true;
 				didCommand = true;
 				this.sendDirty( -1);
+			} else  {
+				didCommand = true; // no change in intercom
 			}
 		}
 		if (!didCommand && HALReturn.equals("INTERCOM: ON")) {
@@ -321,6 +323,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				didCommand = true;
 				this.intercomChanged = true;
 				this.sendDirty( -1);
+			} else  {
+				didCommand = true; // no change in intercom
 			}
 		}
 		if (!didCommand && HALReturn.startsWith("SCAN COMPLETE - ")) {
@@ -355,6 +359,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 
 			didCommand = true;
+		}
+		if (!didCommand && HALReturn.equals("SCAN COMPLETE")) {
+			didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
 		}
 		/*
 		00  PWR SAVE    16  NO DATA     32  NO DATA     48  NO DATA
