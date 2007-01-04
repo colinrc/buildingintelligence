@@ -35,6 +35,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 	protected boolean endVals[];
 	protected boolean twoByteFinish = false;
 	protected boolean penultimateVals[];
+	protected 	String debugName = "";
 
 
 	protected int defaultTransmitOnBytes = 100000; 
@@ -58,7 +59,11 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 
 	}
 	
-
+	public void setDeviceName (String deviceName) {
+		super.setName("Serial Listener - " + deviceName);
+		debugName = deviceName  + ":";
+	}
+	
 	/**
 	* @param commandList The synchronised fifo queue for ReceiveEvent objects
 	*/
@@ -221,7 +226,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 				if (inputBuffer.length() > 0){
 					String stringForm = inputBuffer.toString();
 					if (logger.isLoggable(Level.FINEST)) {
-						logger.log (Level.FINEST, "Processing serial string " + Utility.allBytesToHex(stringForm.getBytes()));
+						logger.log (Level.FINEST, debugName + "Received serial string " + Utility.allBytesToHex(stringForm.getBytes()));
 					}
 					CommsCommand command = new CommsCommand (stringForm,"RawText",null);
 					command.setCommandBytes(retBuff);
@@ -283,7 +288,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 			}
 			if (sendBuffer){
 				if (inputBuffer.length() > 0){
-					logger.log (Level.FINEST, "Processing serial string " + inputBuffer.toString());
+					logger.log (Level.FINEST, debugName + "Received serial string " + inputBuffer.toString());
 					CommsCommand command = new CommsCommand (inputBuffer.toString(),"RawText",null);
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					commandList.add (command);

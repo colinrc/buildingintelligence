@@ -32,6 +32,7 @@ public class IPListener extends Thread implements CommsListener
 	protected boolean penultimateVals[];
 	protected boolean twoByteFinish = false;
 	protected String deviceName = "";
+	String debugName = "";
 	
 	protected BufferedReader rd = null;
 	
@@ -49,6 +50,7 @@ public class IPListener extends Thread implements CommsListener
 	
 	public void setDeviceName (String deviceName) {
 		super.setName("IP Listener - " + deviceName);
+		debugName = deviceName  + ":";
 	}
 	
 	public void setTargetDeviceModel (int targetDeviceModel) {
@@ -157,11 +159,11 @@ public class IPListener extends Thread implements CommsListener
 					processFullLine (rd);
 				}
 			} catch (SocketException e) {
-				logger.log (Level.FINE,"Received socket exception on IP stream " + e.getMessage());
+				logger.log (Level.FINE, debugName + "Received socket exception on IP stream " + e.getMessage());
 				handleEvents = false;				
 				throw new CommsFail (e.getMessage());
 			} catch (IOException e) {
-				logger.log (Level.FINE,"Received IO exception on IP stream " + e.getMessage());
+				logger.log (Level.FINE,debugName + "Received IO exception on IP stream " + e.getMessage());
 				handleEvents = false;
 				throw new CommsFail (e.getMessage());
 			}
@@ -230,7 +232,7 @@ public class IPListener extends Thread implements CommsListener
 					endPrev = curPos;
 					//logger.log (Level.INFO,"Found a newline setting endPrev = " + endPrev);
                     str = new String (retArray);
-                    logger.log (Level.FINEST,"Received ip packet : " + str);
+                    logger.log (Level.FINEST, debugName + "Received ip packet : " + str);
 					
 					CommsCommand command = new CommsCommand (str,"RawText",null);
 					command.setCommandBytes(retArray);
@@ -260,7 +262,7 @@ public class IPListener extends Thread implements CommsListener
 					// copy from 1 place before curPos
 					endPrev = curPos;
 					str = new String (retArray);
-					logger.log (Level.FINEST,"Received ip packet : " + str);
+					logger.log (Level.FINEST, debugName + "Received ip packet : " + str);
 					
 					CommsCommand command = new CommsCommand (str,"RawText",null);
 					command.setCommandBytes(retArray);
@@ -279,7 +281,7 @@ public class IPListener extends Thread implements CommsListener
 					endPrev = curPos + 1;
 
 					str = new String (retArray);
-					logger.log (Level.FINEST,"Received ip packet : " + str);
+					logger.log (Level.FINEST, debugName + "Received ip packet : " + str);
 					
 					CommsCommand command = new CommsCommand (str,"RawText",null);
 					command.setCommandBytes(retArray);
@@ -302,9 +304,14 @@ public class IPListener extends Thread implements CommsListener
 					// special case , the entire buffer
 					startPos = 0;
 					endPos = 0;
-					
+					byte retArray [] = new byte[endPos];
+					System.arraycopy (readArray,endPrev,retArray,0,endPos);
+					endPrev = endPos;
+
+					str = new String (retArray);
+					logger.log (Level.FINEST, debugName + "Received ip packet : " + str);
 					CommsCommand command = new CommsCommand ("RawText","RawText",null);
-					command.setCommandBytes(readArray);
+					command.setCommandBytes(retArray);
 					command.setTargetDeviceModel(this.targetDeviceModel);
 					
 					commandList.add (command);
@@ -349,7 +356,7 @@ public class IPListener extends Thread implements CommsListener
 				System.arraycopy (readArray,0,retArray,0,transmitOnBytes);
 				
 				str = new String (retArray);
-				logger.log (Level.FINEST,"Received ip packet : " + str);
+				logger.log (Level.FINEST, debugName +  "Received ip packet : " + str);
 				
 				CommsCommand command = new CommsCommand (str,"RawText",null);
 				command.setCommandBytes(retArray);
@@ -364,7 +371,7 @@ public class IPListener extends Thread implements CommsListener
 		String str = "";
 		while (rd.ready() && ((str = rd.readLine()) != null )) {
 			if (str.trim().length() != 0) {
-				logger.log (Level.FINEST,"Received ip packet : " + str);
+				logger.log (Level.FINEST, debugName +  "Received ip packet : " + str);
 				CommsCommand command = new CommsCommand (str,"RawText",null);
 				command.setTargetDeviceModel(this.targetDeviceModel);
 				

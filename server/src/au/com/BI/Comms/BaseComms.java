@@ -474,7 +474,7 @@ protected String modelName = "";
 		if (message == null){
 			logger.log (Level.INFO,"A null message was attempted to be sent from the model " + this.getModelName());
 		} else {
-			logger.log (Level.FINER,"Sending string " + message);
+			logger.log (Level.FINER, modelName + ":Sending string " + message);
 			sendString (message.getBytes());
 		}
 	}
@@ -485,7 +485,7 @@ protected String modelName = "";
 			logger.log (Level.INFO,"A null message was attempted to be sent from the model " + this.getModelName());
 		} else {
 			if (logger.isLoggable(Level.FINER)){
-				logger.log (Level.FINER,"Sending string " + message);
+				logger.log (Level.FINER, modelName + ":Sending string " + message);
 			}
 			commsSend.toSend.add(message);
 		}

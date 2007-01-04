@@ -259,7 +259,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			cache.setCachedCommand(command.getKey(), command);
 
 			logger.log(Level.FINER,
-					"Monitored audio event sending to zone "
+					"An audio command was received from the client,  sending it to HAL zone "
 							+ device.getKey());
 
 			if (findingState
@@ -283,7 +283,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 								comms.clearCommandQueue();
 							}
 						}
-						logger.log(Level.FINE,"Received autio command from client, sending it to HAL");
+						logger.log(Level.FINE,"Received audio command from client, sending it to HAL");
 						sendToSerial(outputAudioCommand + ETX);
 						pollDevice.setRunning(true);
 					break;

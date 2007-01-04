@@ -131,6 +131,7 @@ public class Serial extends BaseComms implements CommDevice
 						os = serialPort.getOutputStream();
 						is = serialPort.getInputStream();
 						serialListener.setInputStream (is);
+						serialListener.setDeviceName(deviceName);
 						if (commsSend != null){
 							commsSend.setHandleEvents(false);
 							commsSend.notify();
