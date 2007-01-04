@@ -74,8 +74,6 @@ public class ControlledHelper {
 			ConfigHelper configHelper, Cache cache, CommandQueue commandQueue,
 			Model m1) throws CommsFail {
 
-		boolean sendCommandToFlash = true;
-
 		// Check to see if it is a comms command
 		if (command.isCommsCommand()) {
 
@@ -86,7 +84,6 @@ public class ControlledHelper {
 
 			// Check the command class
 			if (m1Command.getClass().equals(ZoneChangeUpdate.class)) {
-				sendCommandToFlash = false;
 				ZoneChangeUpdate zoneChangeUpdate = (ZoneChangeUpdate) m1Command;
 
 				BaseDevice theDevice = (BaseDevice) configHelper.getControlledItem(zoneChangeUpdate.getZone() + "CC"); 
@@ -96,7 +93,6 @@ public class ControlledHelper {
 				handleZoneState(cache, commandQueue, m1, zoneChangeUpdate.getZoneStatus(), theDevice);
 				
 			} else if (m1Command.getClass().equals(ZoneStatusReport.class)) {
-				sendCommandToFlash = false;
 				ZoneStatusReport zoneStatusReport = (ZoneStatusReport)m1Command;
 				
 				for (int i=0;i<zoneStatusReport.getZoneStatus().length; i++) {
@@ -112,7 +108,6 @@ public class ControlledHelper {
 				}
 			} else if (m1Command.getClass().equals(
 					RequestTemperatureReply.class)) {
-				sendCommandToFlash = false;
 				RequestTemperatureReply requestTemperatureReply = (RequestTemperatureReply) m1Command;
 
 				int adjustedTemperature = Integer
@@ -142,15 +137,12 @@ public class ControlledHelper {
 				_command.setKey("CLIENT_SEND");
 				_command.setCommand("on");
 
-				// we need to store the current state of the temperature - it is
-				// not getting cached properly
-
 				if (sensor.getTemperature() == null
 						|| !sensor.getTemperature().equals(
 								_command.getExtraInfo())) {
 					cache.setCachedCommand(_command.getDisplayName(), _command);
 
-					logger.log(Level.FINER,
+					logger.log(Level.INFO,
 							"Sending temperature to flash for group:"
 									+ requestTemperatureReply.getGroup()
 											.toString() + ":device:"
@@ -158,11 +150,9 @@ public class ControlledHelper {
 									+ adjustedTemperature);
 					sensor.setTemperature(_command.getExtraInfo());
 					
-					cache.setCachedCommand(_command.getDisplayName(), _command);
-					sendToFlash(commandQueue, -1, _command);
+					sendCommand(cache, commandQueue, _command);
 				} else {
-					sendCommandToFlash = false;
-					logger.log(Level.FINER,
+					logger.log(Level.INFO,
 							"Did not send temperature to flash for group:"
 									+ requestTemperatureReply.getGroup()
 											.toString() + ":device:"
@@ -172,7 +162,6 @@ public class ControlledHelper {
 			} else if (m1Command.getClass().equals(
 					ControlOutputStatusReport.class)) {
 				ControlOutputStatusReport statusReport = (ControlOutputStatusReport) m1Command;
-				sendCommandToFlash = false;
 				// send out output change updates
 				for (int i = 0; i < statusReport.getOutputStatus().length; i++) {
 
@@ -192,18 +181,11 @@ public class ControlledHelper {
 							_command.setCommand("off");
 						}
 						_command.setKey("CLIENT_SEND");
-						cache.setCachedCommand(_command.getDisplayName(), _command);
-
-						logger.log(Level.FINER, "Sending "
-								+ _command.getCommandCode() + " command to "
-								+ device.getOutputKey());
-						cache.setCachedCommand(_command.getDisplayName(), _command);
-						sendToFlash(commandQueue, -1, _command);
+						sendCommand(cache, commandQueue, _command);
 					}
 				}
 			} else if (m1Command.getClass().equals(
 					ReplyArmingStatusReportData.class)) {
-				sendCommandToFlash = false;
 				ReplyArmingStatusReportData statusReport = (ReplyArmingStatusReportData) m1Command;
 
 				for (int i = 0; i < statusReport.getAreaAlarmState().length; i++) {
@@ -243,15 +225,7 @@ public class ControlledHelper {
 						_command.setExtra3Info(armUpState.getDescription());
 						_command.setExtra4Info(areaAlarmState.getDescription());
 						_command.setKey("CLIENT_SEND");
-						cache.setCachedCommand(_command.getDisplayName(), _command);
-
-						logger.log(Level.FINER, "Sending "
-								+ _command.getCommandCode() + " ArmedStatus="
-								+ _command.getExtraInfo() + " ArmUpState="
-								+ _command.getExtra2Info() + " AreaAlarmState="
-								+ _command.getExtra3Info());
-						cache.setCachedCommand(_command.getDisplayName(), _command);
-						sendToFlash(commandQueue, -1, _command);
+						sendCommand(cache, commandQueue, _command);
 					}
 				}
 			} else if (m1Command.getClass().equals(Disarm.class)
@@ -263,7 +237,6 @@ public class ControlledHelper {
 					|| m1Command.getClass().equals(ArmToVacation.class)
 					|| m1Command.getClass().equals(ArmStepToNextAwayMode.class)
 					|| m1Command.getClass().equals(ArmStepToNextStayMode.class)) {
-				sendCommandToFlash = false;
 				ArmAndDisarmMessage armDisarm = (ArmAndDisarmMessage) m1Command;
 				CommandInterface _command = new AlertCommand();
 				_command.setDisplayName("Arm/Disarm");
@@ -293,15 +266,9 @@ public class ControlledHelper {
 				}
 				_command.setExtraInfo(armDisarm.getPartition());
 				_command.setKey("CLIENT_SEND");
-				cache.setCachedCommand(_command.getDisplayName(), _command);
-
-				logger.log(Level.FINER, "Sending " + _command.getCommandCode());
-				cache.setCachedCommand(_command.getDisplayName(), _command);
-				sendToFlash(commandQueue, -1, _command);
+				sendCommand(cache, commandQueue, _command);
 			} else if (m1Command.getClass().equals(
 					ReplyAlarmByZoneReportData.class)) {
-				
-				sendCommandToFlash = false;
 				ReplyAlarmByZoneReportData zoneReport = (ReplyAlarmByZoneReportData) m1Command;
 
 				for (int i = 0; i < zoneReport.getZoneDefinition().length; i++) {
@@ -316,18 +283,9 @@ public class ControlledHelper {
 					_command.setExtraInfo(Integer.toString(i));
 					_command.setExtra2Info(zoneDefinition.getDescription());
 					_command.setKey("CLIENT_SEND");
-					cache.setCachedCommand(_command.getDisplayName(), _command);
-
-					logger.log(Level.FINER, "Sending "
-							+ _command.getCommandCode() + " ArmedStatus="
-							+ _command.getExtraInfo() + " ArmUpState="
-							+ _command.getExtra2Info() + " AreaAlarmState="
-							+ _command.getExtra3Info());
-					cache.setCachedCommand(_command.getDisplayName(), _command);
-					sendToFlash(commandQueue, -1, _command);
+					sendCommand(cache, commandQueue, _command);
 				}
 			} else if (m1Command.getClass().equals(TasksChangeUpdate.class)) {
-				sendCommandToFlash = false;
 				TasksChangeUpdate tasksChangeUpdate = (TasksChangeUpdate) m1Command;
 				CommandInterface _command = new AlertCommand();
 				_command.setDisplayName("TASK_ACTIVATION_REQUEST");
@@ -336,15 +294,8 @@ public class ControlledHelper {
 				_command.setCommand("TASK_ACTIVATION_REQUEST");
 				_command.setExtraInfo(tasksChangeUpdate.getTask());
 				_command.setKey("CLIENT_SEND");
-				cache.setCachedCommand(_command.getDisplayName(), _command);
-
-				logger.log(Level.FINER, "Sending " + _command.getCommandCode()
-						+ " task=" + _command.getExtraInfo());
-				cache.setCachedCommand(_command.getDisplayName(), _command);
-				sendToFlash(commandQueue, -1, _command);
+				sendCommand(cache, commandQueue, _command);
 			} else if (m1Command.getClass().equals(PLCChangeUpdate.class)) {
-				
-				sendCommandToFlash = false;
 
 				PLCChangeUpdate plcChangeUpdate = (PLCChangeUpdate) m1Command;
 
@@ -366,16 +317,7 @@ public class ControlledHelper {
 								_command.setCommand("off");
 								_command.setExtraInfo("0");
 								_command.setKey("CLIENT_SEND");
-								cache.setCachedCommand(_command.getDisplayName(),
-										_command);
-
-								logger
-										.log(Level.FINER, "Sending "
-												+ _command.getCommandCode()
-												+ " command to "
-												+ light.getOutputKey());
-								cache.setCachedCommand(_command.getDisplayName(), _command);
-								sendToFlash(commandQueue, -1, _command);
+								sendCommand(cache, commandQueue, _command);
 							}
 						}
 					}
@@ -397,16 +339,7 @@ public class ControlledHelper {
 								_command.setCommand("on");
 								_command.setExtraInfo("100");
 								_command.setKey("CLIENT_SEND");
-								cache.setCachedCommand(_command.getDisplayName(),
-										_command);
-
-								logger
-										.log(Level.FINER, "Sending "
-												+ _command.getCommandCode()
-												+ " command to "
-												+ light.getOutputKey());
-								cache.setCachedCommand(_command.getDisplayName(), _command);
-								sendToFlash(commandQueue, -1, _command);
+								sendCommand(cache, commandQueue, _command);
 							}
 						}
 					}
@@ -430,16 +363,8 @@ public class ControlledHelper {
 								_command.setCommand("off");
 								_command.setExtraInfo("0");
 								_command.setKey("CLIENT_SEND");
-								cache.setCachedCommand(_command.getDisplayName(),
-										_command);
-
-								logger
-										.log(Level.FINER, "Sending "
-												+ _command.getCommandCode()
-												+ " command to "
-												+ light.getOutputKey());
-								cache.setCachedCommand(_command.getDisplayName(), _command);
-								sendToFlash(commandQueue, -1, _command);
+								
+								sendCommand(cache, commandQueue, _command);
 							}
 						}
 					}
@@ -448,7 +373,7 @@ public class ControlledHelper {
 					LightFascade theLight = (LightFascade) configHelper.getControlledItem(plcChangeUpdate.getUnitCode()
 							+ "X10" + plcChangeUpdate.getHouseCode());
 					if (theLight == null) {
-						logger.log (Level.FINEST,"Received M1 event for a PLC light has not been configured");
+						logger.log (Level.INFO,"Received M1 event for a PLC light has not been configured");
 						return;
 					}
 					String outputKey = theLight.getOutputKey();
@@ -470,19 +395,12 @@ public class ControlledHelper {
 									.getLevelStatus().getValue());
 						}
 						_command.setKey("CLIENT_SEND");
-						cache.setCachedCommand(_command.getDisplayName(), _command);
-
-						logger.log(Level.FINER, "Sending "
-								+ _command.getCommandCode() + " command to "
-								+ outputKey);
-						cache.setCachedCommand(_command.getDisplayName(), _command);
-						sendToFlash(commandQueue, -1, _command);
+						sendCommand(cache, commandQueue, _command);
 					}
 				}
 
 			} else if (m1Command.getClass().equals(PLCStatusReturned.class)) {
 				PLCStatusReturned statusReport = (PLCStatusReturned) m1Command;
-				sendCommandToFlash = false;
 
 				// send out PLC change updates
 				for (int i = 0; i < statusReport.getLevels().length; i++) {
@@ -516,20 +434,12 @@ public class ControlledHelper {
 							_command.setExtraInfo(level);
 						}
 						_command.setKey("CLIENT_SEND");
-						cache.setCachedCommand(_command.getDisplayName(), _command);
-
-						logger.log(Level.FINER, "Sending "
-								+ _command.getCommandCode() + " command to "
-								+ outputKey);
-						cache.setCachedCommand(_command.getDisplayName(), _command);
-						sendToFlash(commandQueue, -1, _command);
+						sendCommand(cache, commandQueue, _command);
 					}
 				}
-			}
-
-			if (sendCommandToFlash) {
-				cache.setCachedCommand(m1Command.getDisplayName(), m1Command);
-				sendToFlash(commandQueue, -1, m1Command);
+			} else {
+				// Command has been built or handled already.
+				sendCommand(cache, commandQueue, m1Command);
 			}
 		}
 	}
@@ -577,12 +487,7 @@ public class ControlledHelper {
 			_command.setUser(m1.currentUser);
 			_command.setCommand("off");
 			_command.setKey("CLIENT_SEND");
-			cache.setCachedCommand(_command.getDisplayName(), _command);
-
-			logger.log(Level.FINER, "Sending "
-					+ _command.getCommandCode() + " command to "
-					+ theDevice.getOutputKey());
-			sendToFlash(commandQueue, -1, _command);
+			sendCommand(cache, commandQueue, _command);
 			
 		} else if (zoneStatus == ZoneStatus.VIOLATED_EOL ||
 				zoneStatus == ZoneStatus.VIOLATED_OPEN ||
@@ -594,12 +499,7 @@ public class ControlledHelper {
 			_command.setUser(m1.currentUser);
 			_command.setCommand("on");
 			_command.setKey("CLIENT_SEND");
-			cache.setCachedCommand(_command.getDisplayName(), _command);
-
-			logger.log(Level.FINER, "Sending "
-					+ _command.getCommandCode() + " command to "
-					+ theDevice.getOutputKey());
-			sendToFlash(commandQueue, -1, _command);
+			sendCommand(cache, commandQueue, _command);
 		} else if (zoneStatus == ZoneStatus.BYPASSED_EOL ||
 				zoneStatus == ZoneStatus.BYPASSED_OPEN ||
 				zoneStatus == ZoneStatus.BYPASSED_SHORT ||
@@ -616,7 +516,34 @@ public class ControlledHelper {
 		}
 	}
 
-	public void sendToFlash(CommandQueue commandQueue, long targetFlashID,
+	/**
+	 * Send the command. First cache the command and then send to flash.
+	 * @param cache
+	 * @param commandQueue
+	 * @param command
+	 */
+	public void sendCommand (Cache cache, 
+			CommandQueue commandQueue, 
+			CommandInterface command) {
+		logger.log(Level.INFO, "Sending " + command.getCommandCode() + " command for " +
+				command.getDisplayName() + "; extraInfo=" + 
+				command.getExtraInfo() + "; extra2Info=" + 
+				command.getExtra2Info() + "; extra3Info=" + 
+				command.getExtra3Info() + "; extra4Info=" + 
+				command.getExtra4Info() + "; extra5Info=" + 
+				command.getExtra5Info());
+		cache.setCachedCommand(command.getDisplayName(), command);
+		sendToFlash(commandQueue, -1, command);
+	}
+
+	/**
+	 * 
+	 * @param commandQueue
+	 * @param targetFlashID
+	 * @param command
+	 */
+	public void sendToFlash(CommandQueue commandQueue, 
+			long targetFlashID,
 			CommandInterface command) {
 
 		/*
@@ -646,7 +573,7 @@ public class ControlledHelper {
 			BaseDevice configDevice = (BaseDevice) configHelper
 					.getControlledItem(m1Command.getKey() + "TOUT");
 			if (configDevice == null){
-				logger.log(Level.FINEST, "M1 command request was received for a device that has not been configured " + m1Command.getKey());
+				logger.log(Level.INFO, "M1 command request was received for a device that has not been configured " + m1Command.getKey());
 				return null;
 			}
 			if (((OutputChangeUpdate) m1Command).getOutputState().equals("0")) {
@@ -663,7 +590,7 @@ public class ControlledHelper {
 		} else if (m1Command.getClass().equals(RequestTemperatureReply.class)) {
 			SensorFascade sensor = (SensorFascade) configHelper.getControlledItem(m1Command.getKey());
 			if (sensor == null ){
-				logger.log (Level.FINEST,"Received temperature request for a device that has not been configured ");
+				logger.log (Level.INFO,"Received temperature request for a device that has not been configured ");
 				return null;
 			}
 			m1Command.setDisplayName(sensor.getOutputKey());
