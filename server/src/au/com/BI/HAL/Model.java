@@ -435,7 +435,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (!didCommand) {
 			logger.log(Level.WARNING,
 					"HAL returned a code I do not understand : "
-							+ HALReturn);
+							+ HALReturn + ":" + Utility.allBytesToHex(HALReturn.getBytes()));
 		}
 
 	}
