@@ -164,7 +164,7 @@ public class IP
 	 * @param port The ip monitorPort
 	 * @throws au.com.BI.comms.ConnectionFail
 	 */
-	public boolean connectAdmin (String ipAddressTxt, int monitorPort )
+	public boolean connectMonitor (String ipAddressTxt, int monitorPort )
 		throws ConnectionFail 
 		{
 			try

@@ -85,7 +85,7 @@ public class Admin extends JPanel
 		view.setVisible(true);
 
 		connection = new ConnectionManager (this);
-		connection.connect(project.getServerIP(),project.getMonitorPort(),project.getAdminPort());
+		connection.connect(project.getServerIP(),project.getAdminPort(),project.getMonitorPort());
 		connection.start();
 	}
 	

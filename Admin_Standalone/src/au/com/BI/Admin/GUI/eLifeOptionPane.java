@@ -137,7 +137,7 @@ public class eLifeOptionPane extends JDialog
 
 		int monitorValue = (Integer.parseInt(monitorPortField.getText()));
 		properties.setMonitorPort(monitorValue);
-		int eLifeValue = ((Number)eLifePortField.getValue()).intValue();
+		int eLifeValue = (Integer.parseInt(eLifePortField.getText()));
 		properties.setAdminPort(eLifeValue);
 		updated = true;
 

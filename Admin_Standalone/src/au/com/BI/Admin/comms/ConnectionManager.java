@@ -12,7 +12,7 @@ public class ConnectionManager extends Thread {
 	private String IPaddress;
 	private IP ip;
 	private int adminPort;
-	private int logPort;
+	private int monitorPort;
 	private boolean tryToConnect = true;
 	private Admin eLife;
 	private Logger logger;
@@ -28,8 +28,8 @@ public class ConnectionManager extends Thread {
 		eLife.setIP (ip);
 	}
 	
-	public void connect (String IPaddress, int adminPort, int logPort) {
-		logger.info("Openning debug IP " + IPaddress + " port " + logPort);
+	public void connect (String IPaddress, int adminPort, int monitorPort) {
+		logger.info("Openning monitor IP " + IPaddress + " port " + monitorPort);
 		logger.info("Openning admin IP " + IPaddress + " port " + adminPort);
 		
 		updatingParams = true;
@@ -46,7 +46,7 @@ public class ConnectionManager extends Thread {
 		
 		this.IPaddress = IPaddress;
 		this.adminPort = adminPort;
-		this.logPort = logPort;
+		this.monitorPort = monitorPort;
 		updatingParams = false;
 	}
 	
@@ -80,7 +80,7 @@ public class ConnectionManager extends Thread {
 				//synchronized (ip){
 					if (!ip.isAdminConnected()) {
 						try {
-							if (ip.connectAdmin(IPaddress,adminPort) ) {
+							if (ip.connectMonitor(IPaddress,monitorPort) ) {
 								synchronized (eLife) {
 									eLife.setAdminConnectionStatus(true);
 									eLife.doAdminConnectionStartup();
@@ -90,7 +90,7 @@ public class ConnectionManager extends Thread {
 					}
 					if (!ip.isDebugConnected()) {
 						try {
-							if (ip.connectDebug(IPaddress,logPort) ) {
+							if (ip.connectDebug(IPaddress,adminPort) ) {
 								synchronized (eLife) {
 									eLife.setELifeConnectionStatus(true);
 									eLife.doELifeConnectionStartup();
