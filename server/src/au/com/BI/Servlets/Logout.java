@@ -54,7 +54,6 @@ public class Logout extends HttpServlet {
 					if (clientCommand != null) {
 						synchronized (commandQueue) {
 							commandQueue.add(clientCommand);
-							commandQueue.notifyAll();
 						}
 					}
 			    	

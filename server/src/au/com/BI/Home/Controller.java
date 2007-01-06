@@ -113,6 +113,9 @@ public class Controller {
 	 * 
 	 */
 	public Controller() {
+		logger = Logger.getLogger(this.getClass().getPackage().getName());
+		logger.setLevel(Level.INFO);
+		
 		deviceModels = new ArrayList<DeviceModel>();
 		clientModels = new ArrayList<DeviceModel>();
 		modelRegistry = new HashMap<String, String>(10);
@@ -121,6 +124,7 @@ public class Controller {
 		cache = new Cache(jRobinSupport);
 		cache.setController(this);
 		security = new Security();
+		
 		addressBook = new AddressBook();
 		alarmLogging = new AlarmLogging();
 		alarmLogging.setCache(cache);
@@ -149,10 +153,18 @@ public class Controller {
 		modelRegistry.put("SIGN_VIDEO", "au.com.BI.SignVideo.Model");
 		modelRegistry.put("MACRO", "au.com.BI.Macro.Model");
 		modelRegistry.put("SCRIPT", "au.com.BI.Script.Model");
+		
 
 	}
 
 	public void setUp() throws CommsFail {
+		if (security != null){
+			logger.log (Level.INFO,"Licensing intialised,  number of clients allowed is "  + security.getNumberClientsAllowed());
+		} else {
+			logger.log (Level.SEVERE, "Licensing failed, system shutting down");			
+			System.exit(0);
+		}
+		
 		controls = new Controls(cache);
 
 		macroHandler = new MacroHandler();
@@ -285,8 +297,6 @@ public class Controller {
 	 */
 	public void run() {
 		currentUser = new User();
-		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		logger.setLevel(Level.INFO);
 		config = new Config();
 		config.setSecurity(security);
 		config.setModelRegistry(modelRegistry);

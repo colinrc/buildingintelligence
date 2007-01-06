@@ -190,9 +190,30 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		synchronized (state){
 			state.clear();
 		}
-		this.startPolling();
+		this.sendStartupCommand(true);
 	}
 
+	
+	public void sendStartupCommand(boolean rescan) throws CommsFail {
+		try {
+
+		    comms.clearCommandQueue();
+			comms.sendString("E0" + ETX); //switch off echo
+			if (rescan)comms.sendString("SC" + ETX); //reset tutondo
+			CommsCommand startupCommsCommand = new CommsCommand();
+			startupCommsCommand.setKey("");
+			startupCommsCommand.setCommand("ST" + ETX);
+			startupCommsCommand.setExtraInfo("HAL startup");
+			startupCommsCommand.setActionType(CommDevice.HalStartup);
+			startupCommsCommand.setKeepForHandshake(true);
+	
+			comms.addCommandToQueue (startupCommsCommand);
+		} catch (CommsFail e1) {
+			logger.log(Level.WARNING, "Communication failed polling HAL " + e1.getMessage());
+			throw new CommsFail ("Communication failed polling HAL " + e1.getMessage());
+		} 
+	}
+	
 	public void startPolling () {
 		if (pollDevice != null)
 			pollDevice.setRunning(false);
@@ -361,6 +382,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			didCommand = true;
 		}
 		if (!didCommand && HALReturn.equals("SCAN COMPLETE")) {
+			comms.acknowlegeCommand(CommDevice.HalStartup);
+		    logger.log (Level.FINEST,"acknowledging startup ");
+			this.startPolling();
 			didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
 		}
 		/*

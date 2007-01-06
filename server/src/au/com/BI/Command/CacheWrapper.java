@@ -25,13 +25,11 @@ public class CacheWrapper {
 	public CacheWrapper (String key, CommandInterface command) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
 		isSet = false;
-		this.command = command;
-		this.key = key;
-		Date now = new Date();
-		creationTime = now.getTime();
 
 		if (key == null){
 			logger.log(Level.WARNING,"A cache wrapper has been created with a null key");
+		} else {
+			this.setCommand(key,command);
 		}
 	}
 	
@@ -100,6 +98,7 @@ public class CacheWrapper {
 		if (key == null){
 			this.key = newKey;
 		}
+		if (command.getDisplayName().equals ("")) command.setDisplayName(key);
 		if (map == null) {
 			makeNewMap();
 			if (command != null) {
@@ -122,6 +121,7 @@ public class CacheWrapper {
 	public void setCommand (String key, CommandInterface command) {
 		this.creationTime = new Date().getTime();
 		this.key = key;
+		if (command.getDisplayName().equals ("")) command.setDisplayName(key);
 		this.command = command;
 	}
 	

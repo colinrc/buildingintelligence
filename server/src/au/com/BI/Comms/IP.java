@@ -88,6 +88,8 @@ public class IP extends BaseComms implements CommDevice
 				commsGroup = new CommsGroup ("Comms group: " + deviceName);
 				commsGroup.setModelNumber(targetDeviceModel);
 				commsGroup.setCommandQueue(commandList);
+				
+				this.clearCommandQueue(); // if this is a reconnect make sure nothing is left over from the previous connection.
 
 				ipListener = new IPListener(commsGroup);
 

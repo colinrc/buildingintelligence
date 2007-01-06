@@ -82,6 +82,8 @@ public class Serial extends BaseComms implements CommDevice
 		{
 		   commsGroup.setModelNumber(targetDeviceModel);
 		   commsGroup.setCommandQueue(commandList);
+			this.clearCommandQueue(); // if this is a reconnect make sure nothing is left over from the previous connection.
+
 			this.deviceName = deviceName;
 			try
 			{

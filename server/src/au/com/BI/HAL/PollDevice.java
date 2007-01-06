@@ -65,8 +65,8 @@ public class PollDevice extends Thread {
 	public void incrementResponseCounter (int causeDevice) {
         this.unresponsiveCounter ++;
         if (this.unresponsiveCounter % 3 == 0) {
-            logger.log (Level.WARNING,"HAL is not responding, please check cabling.");
-            comms.removeAllCommands (causeDevice);
+            logger.log (Level.WARNING,"HAL is not responding, reconnecting.");
+            throw new CommsFail ("HAL is not responding");
         }
 	    
 	}
@@ -74,26 +74,7 @@ public class PollDevice extends Thread {
 	public void pause () {
 		waitExtra = 10000;
 	}
-	
-	public void sendStartupCommand(boolean rescan) throws CommsFail {
-		try {
 
-		    comms.clearCommandQueue();
-			comms.sendString("E0" + ETX); //switch off echo
-			if (rescan)comms.sendString("SC" + ETX); //reset tutondo
-			CommsCommand startupCommsCommand = new CommsCommand();
-			startupCommsCommand.setKey("");
-			startupCommsCommand.setCommand("ST" + ETX);
-			startupCommsCommand.setExtraInfo("HAL startup");
-			startupCommsCommand.setActionType(CommDevice.HalStartup);
-			startupCommsCommand.setKeepForHandshake(true);
-	
-			comms.addCommandToQueue (startupCommsCommand);
-		} catch (CommsFail e1) {
-			logger.log(Level.WARNING, "Communication failed polling HAL " + e1.getMessage());
-			throw new CommsFail ("Communication failed polling HAL " + e1.getMessage());
-		} 
-	}
 	
 	
 	public void run ()  {
@@ -103,7 +84,7 @@ public class PollDevice extends Thread {
 		boolean containsStartup = false;
 		CommsCommand lastCommandSent;
 		boolean commandSent = false;
-		try {
+		
 			while (running) {
 			    commandSent = false;
 			    synchronized (this) {
@@ -116,19 +97,16 @@ public class PollDevice extends Thread {
 			        }
 			    }
 				synchronized (comms) {
-				    if (firstRun) {
-				        sendStartupCommand(true);
-				        firstRun = false;
-				        commandSent = true;
-				    } else {
 					    if (comms.sentQueueContainsCommand (CommDevice.HalStartup)) {
 					        incrementResponseCounter(CommDevice.HalStartup);
 					        // sendStartupCommand();
 					        // THink it should not retry until 3 increment has been finalised
+					        logger.log (Level.WARNING,"HAL polling has begun when the startup has not yet been processed.");
 					        commandSent = true;
 					    } else {
 					        if (comms.sentQueueContainsCommand (CommDevice.HalState)) { 
 					            incrementResponseCounter(CommDevice.HalState);
+					            commandSent = true;
 					        }
 					        else {
 					            if (this.unresponsiveCounter > 3) this.halConnectionRestored = true;
@@ -137,13 +115,8 @@ public class PollDevice extends Thread {
 						    }
 					    }
 				    }
-				    	if (!commandSent) {
-					    if (this.halConnectionRestored) {
-					        logger.log(Level.INFO,"Connection restored to HAL");
-					        sendStartupCommand(false);
-					        this.halConnectionRestored = false;
-							
-					    } else {
+				    if (!commandSent) {
+
 				            comms.removeAllCommands (CommDevice.HalState);
 
 							Iterator activeInputs = configHelper.getAllControlledDevices();
@@ -173,21 +146,10 @@ public class PollDevice extends Thread {
 						    }
 					    }
 				    }
-				}
 				try {
 					Thread.sleep (pollValue + waitExtra);
 				} catch (InterruptedException ie) {}
 				waitExtra = 0;
-			}
-		} catch (CommsFail e1) {
-			running = false;
-			logger.log(Level.WARNING, "Communication failed polling HAL " + e1.getMessage());
-			Command command = new Command();
-			command.setCommand ("Attatch");
-			command.setKey("SYSTEM");
-			command.setExtraInfo (Integer.toString(deviceNumber));
-			commandQueue.add(command);
-		}
 	}
 		/**
 	 * @return Returns the running.
