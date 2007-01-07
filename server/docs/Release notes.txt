@@ -1,3 +1,17 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b23.zip V1.6b23]   ==
+
+''' Cbus '''
+
+Changed default label key selector tag for DLT from DEFAULT to DEFAULT_LABEL_KEY
+
+''' Cache '''
+ 
+Ensure commands sent to the cache with a null display name do not cause a null pointer exception.
+
+''' Comms '''
+
+Changed thread locking method for comms send. Should resolve thread not owner issue
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b22.zip V1.6b22]   ==
 
 ''' Security '''

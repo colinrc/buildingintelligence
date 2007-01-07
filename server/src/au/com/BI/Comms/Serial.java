@@ -135,8 +135,10 @@ public class Serial extends BaseComms implements CommDevice
 						serialListener.setInputStream (is);
 						serialListener.setDeviceName(deviceName);
 						if (commsSend != null){
-							commsSend.setHandleEvents(false);
-							commsSend.notify();
+							synchronized (commsSend){
+								commsSend.setHandleEvents(false);
+								commsSend.notify();
+							}
 						}
 						commsSend = new CommsSend(commsGroup);
 						commsSend.setInterCommandInterval(interCommandInterval);

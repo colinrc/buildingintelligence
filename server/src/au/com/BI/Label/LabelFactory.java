@@ -41,7 +41,7 @@ public class LabelFactory {
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
-		String defaultLabel  = element.getAttributeValue("DEFAULT");
+		String defaultLabel  = element.getAttributeValue("DEFAULT_LABEL_KEY");
 		String cbusApplication = "";
 		if (targetDevice.getName().equals("CBUS")){
 			cbusApplication = element.getAttributeValue("CBUS_APPLICATION");

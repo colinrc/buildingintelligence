@@ -98,7 +98,10 @@ public class CacheWrapper {
 		if (key == null){
 			this.key = newKey;
 		}
-		if (command.getDisplayName().equals ("")) command.setDisplayName(key);
+		if (command.getDisplayName() == null ||command.getDisplayName().equals ("")) {
+			logger.log(Level.WARNING,"A command was attempted to be sent to the cache with a null display name");
+			command.setDisplayName(newKey);
+		}
 		if (map == null) {
 			makeNewMap();
 			if (command != null) {

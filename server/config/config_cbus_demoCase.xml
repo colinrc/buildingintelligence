@@ -47,9 +47,9 @@
                         <LIGHT_CBUS ACTIVE="Y" KEY="4"   NAME="Reflection 3" DISPLAY_NAME="REFLECTION3" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="5"   NAME="Reflection 4" DISPLAY_NAME="REFLECTION4" POWER_RATING="100"/>
                                                 
-                        <LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT = "MASTER_BED_LIGHT" />
-                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT2" DEFAULT="KITCHEN_VOLUME"  />
-                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3" DEFAULT="FRONT_LIGHT" />
+                        <LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT_LABEL_KEY = "MASTER_BED_LIGHT" />
+                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT2" DEFAULT_LABEL_KEY="KITCHEN_VOLUME"  />
+                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3" DEFAULT_LABEL_KEY="FRONT_LIGHT" />
                         <LABEL ACTIVE="Y" KEY="3"   NAME="DLT 4"  DISPLAY_NAME="DLT4"  />
                         <LABEL ACTIVE="Y" KEY="200"   NAME="DLT 5" DISPLAY_NAME="DLT5"  />
                         <LABEL ACTIVE="Y" KEY="201"   NAME="DLT 6" DISPLAY_NAME="DLT6" />
