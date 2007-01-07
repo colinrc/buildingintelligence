@@ -112,10 +112,8 @@ public class IP extends BaseComms implements CommDevice
 				is = ipSocket.getInputStream();
 				
 				if (commsSend != null){
-					synchronized (commsSend){
 						commsSend.setHandleEvents(false);
 						commsSend.notify();
-					}
 				}
 				commsSend = new CommsSend(commsGroup);
 				commsSend.setInterCommandInterval(interCommandInterval);

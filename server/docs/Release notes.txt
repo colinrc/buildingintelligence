@@ -1,3 +1,9 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b25.zip V1.6b25]   ==
+
+''' Comms '''
+
+Removed synchronization which may have been hanging startup. Thread not owner exception may return as a result.
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b24.zip V1.6b24]   ==
 
 ''' Cbus '''
