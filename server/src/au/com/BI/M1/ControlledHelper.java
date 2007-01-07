@@ -142,7 +142,7 @@ public class ControlledHelper {
 								_command.getExtraInfo())) {
 					cache.setCachedCommand(_command.getDisplayName(), _command);
 
-					logger.log(Level.INFO,
+					logger.log(Level.FINER,
 							"Sending temperature to flash for group:"
 									+ requestTemperatureReply.getGroup()
 											.toString() + ":device:"
@@ -152,7 +152,7 @@ public class ControlledHelper {
 					
 					sendCommand(cache, commandQueue, _command);
 				} else {
-					logger.log(Level.INFO,
+					logger.log(Level.FINER,
 							"Did not send temperature to flash for group:"
 									+ requestTemperatureReply.getGroup()
 											.toString() + ":device:"
@@ -209,10 +209,10 @@ public class ControlledHelper {
 					}
 					
 					if (oldArmedStatus == null){
-						logger.log (Level.INFO,"Old arm status is null");
+						logger.log (Level.FINER,"Old arm status is null");
 					}
 					if (armedStatus == null){
-						logger.log (Level.INFO,"Armed status is null");
+						logger.log (Level.FINER,"Armed status is null");
 					}
 					if ((oldArmedStatus != null && armedStatus == null )  && !oldArmedStatus.equals(armedStatus)) {
 						CommandInterface _command = new AlertCommand();
@@ -373,7 +373,7 @@ public class ControlledHelper {
 					LightFascade theLight = (LightFascade) configHelper.getControlledItem(plcChangeUpdate.getUnitCode()
 							+ "X10" + plcChangeUpdate.getHouseCode());
 					if (theLight == null) {
-						logger.log (Level.INFO,"Received M1 event for a PLC light has not been configured");
+						logger.log (Level.FINER,"Received M1 event for a PLC light has not been configured");
 						return;
 					}
 					String outputKey = theLight.getOutputKey();
@@ -525,7 +525,7 @@ public class ControlledHelper {
 	public void sendCommand (Cache cache, 
 			CommandQueue commandQueue, 
 			CommandInterface command) {
-		logger.log(Level.INFO, "Sending " + command.getCommandCode() + " command for " +
+		logger.log(Level.FINER, "Sending " + command.getCommandCode() + " command for " +
 				command.getDisplayName() + "; extraInfo=" + 
 				command.getExtraInfo() + "; extra2Info=" + 
 				command.getExtra2Info() + "; extra3Info=" + 
@@ -573,7 +573,7 @@ public class ControlledHelper {
 			BaseDevice configDevice = (BaseDevice) configHelper
 					.getControlledItem(m1Command.getKey() + "TOUT");
 			if (configDevice == null){
-				logger.log(Level.INFO, "M1 command request was received for a device that has not been configured " + m1Command.getKey());
+				logger.log(Level.FINER, "M1 command request was received for a device that has not been configured " + m1Command.getKey());
 				return null;
 			}
 			if (((OutputChangeUpdate) m1Command).getOutputState().equals("0")) {
@@ -590,7 +590,7 @@ public class ControlledHelper {
 		} else if (m1Command.getClass().equals(RequestTemperatureReply.class)) {
 			SensorFascade sensor = (SensorFascade) configHelper.getControlledItem(m1Command.getKey());
 			if (sensor == null ){
-				logger.log (Level.INFO,"Received temperature request for a device that has not been configured ");
+				logger.log (Level.FINER,"Received temperature request for a device that has not been configured ");
 				return null;
 			}
 			m1Command.setDisplayName(sensor.getOutputKey());
