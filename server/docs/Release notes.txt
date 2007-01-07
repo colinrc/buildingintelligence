@@ -1,3 +1,5 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b22.zip V1.6b22]   ==
+
 ''' Security '''
 
 Added number of clients to startup messages
@@ -13,6 +15,8 @@ Simplified HAL model
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b21.zip V1.6b21]   ==
 
 ''' HAL '''
+
+Simplified HAL model
 
 IAdded debugging statements.
 
