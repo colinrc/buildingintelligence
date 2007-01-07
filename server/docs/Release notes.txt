@@ -1,3 +1,13 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b24.zip V1.6b24]   ==
+
+''' Cbus '''
+
+Added further label debug statements.
+
+''' M1 '''
+
+Incorporated changes
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b23.zip V1.6b23]   ==
 
 ''' Cbus '''

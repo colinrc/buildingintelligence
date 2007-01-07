@@ -88,8 +88,10 @@ public class LabelMgr {
 	public String getLabelText (String labelKey) {
 		if (labels.containsKey(labelKey))
 			return labels.get(labelKey);
-		else
+		else {
+			logger.log(Level.FINE,"The label string was not found for the key " + labelKey);
 			return "";
+		}
 	}
 	
 	

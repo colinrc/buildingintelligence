@@ -337,6 +337,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		for (Label label: labels){
 			String currentChar = this.nextKey();
 			String toSend = this.buildCBUSLabelString(label, new ClientCommand(label.getOutputKey(),"label",null,label.getDefaultLabel(),"","","",""), currentChar);
+			logger.log (Level.FINER, "Setting default label for " + label.getOutputKey() + ":" + label.getDefaultLabel());
 			
 			CommsCommand cbusCommsCommand = new CommsCommand();
 			cbusCommsCommand.setActionCode (currentChar);
@@ -862,6 +863,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String returnString = "";
 		try {
 			String theLabel = labelMgr.getLabelText(catalogueStr);
+			logger.log(Level.FINEST,"Building a CBUS label string " + theLabel + " for device "+ device.getOutputKey());
 			Vector <Byte> retCodes = new Vector<Byte>();
 			retCodes.add( (byte)5);
 			retCodes.add(Byte.parseByte(appCodeStr,16));
