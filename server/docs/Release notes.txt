@@ -1,3 +1,9 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b28.zip V1.6b28]   ==
+
+''' HAL '''
+
+Changed polling to hopefully resolve all null pointers in HAL
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b27.zip V1.6b27]   ==
 
 ''' HAL '''

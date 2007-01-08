@@ -36,6 +36,33 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		state = new HashMap<String,StateOfZone>(64);
 		intercom = "off";
 		loadHALMessages();
+		pollDevice = new PollDevice();
+		pollDevice.setCommandQueue(commandQueue);
+		pollDevice.setDeviceNumber(this.InstanceID);
+		pollDevice.setComms(comms);
+
+		pollDevice.setETX(ETX);
+		String pollValueStr = (String) this.getParameterValue("POLL_INTERVAL",
+				DeviceModel.MAIN_DEVICE_GROUP);
+		long pollValue = 3000;
+		if (pollValueStr != null && !pollValueStr.equals((""))) {
+			try {
+				pollValue = Long.parseLong(pollValueStr) * 1000;
+			} catch (NumberFormatException ex) {
+				pollValue = 3000;
+			}
+		}
+
+		if (pollValue > 1000) {
+			pollDevice.setPollValue(pollValue);
+			pollDevice.setConfigHelper(configHelper);
+			pollDevice.setHalState(state);
+			logger.log(Level.FINE, "Starting HAL polling, interval = "
+				+ pollValueStr);
+
+		}
+
+		
 		configHelper.addParameterBlock ("INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Source inputs");
 		configHelper.addParameterBlock ("FUNCTIONS",DeviceModel.MAIN_DEVICE_GROUP,"Audio functions");
 	}
@@ -218,32 +245,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (pollDevice != null)
 			pollDevice.setRunning(false);
 
-		pollDevice = new PollDevice();
-		pollDevice.setCommandQueue(commandQueue);
-		pollDevice.setDeviceNumber(this.InstanceID);
-		pollDevice.setComms(comms);
-
-		pollDevice.setETX(ETX);
-		String pollValueStr = (String) this.getParameterValue("POLL_INTERVAL",
-				DeviceModel.MAIN_DEVICE_GROUP);
-		long pollValue = 3000;
-		if (pollValueStr != null && !pollValueStr.equals((""))) {
-			try {
-				pollValue = Long.parseLong(pollValueStr) * 1000;
-			} catch (NumberFormatException ex) {
-				pollValue = 3000;
-			}
-		}
-
-		if (pollValue > 1000) {
-			pollDevice.setPollValue(pollValue);
-			pollDevice.setConfigHelper(configHelper);
-			pollDevice.setHalState(state);
-			logger.log(Level.FINE, "Starting HAL polling, interval = "
-				+ pollValueStr);
-			pollDevice.start();
-		}
-
+		pollDevice.start();
 	}
 
 	public boolean doIControl(String keyName, boolean isClientCommand) {
@@ -403,9 +405,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (!didCommand && HALReturn.matches("^\\d.*")) {
 
 			logger.log(Level.FINE, "Zone status line");
-		    synchronized (pollDevice) {
-		        pollDevice.pausing = true;
-		    }
+			if (pollDevice != null){
+			    synchronized (pollDevice) {
+			        pollDevice.pausing = true;
+			    }
+			}
 
 		    synchronized (comms) {
 			    comms.acknowlegeCommand(CommDevice.HalStartup);
@@ -430,6 +434,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		        pollDevice.setInputs(inputs);
 			}
 			*/
+
 			synchronized (state) {
 		        pollDevice.setHalState(state);
 			}
