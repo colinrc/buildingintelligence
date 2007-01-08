@@ -98,14 +98,14 @@ public class CacheWrapper {
 		if (key == null){
 			this.key = newKey;
 		}
-		if (command.getDisplayName() == null ||command.getDisplayName().equals ("")) {
+		if (newCommand.getDisplayName() == null ||newCommand.getDisplayName().equals ("")) {
 			logger.log(Level.WARNING,"A command was attempted to be sent to the cache with a null display name");
-			command.setDisplayName(newKey);
+			newCommand.setDisplayName(newKey);
 		}
 		if (map == null) {
 			makeNewMap();
 			if (command != null) {
-				map.put(command.getCommandCode(),command);
+				map.put(newCommand.getCommandCode(),command);
 			}
 		}
 		String newCode =newCommand.getCommandCode(); 

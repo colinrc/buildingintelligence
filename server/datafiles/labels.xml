@@ -4,6 +4,7 @@
 	            <LABEL KEY="FRONT_LIGHT" VALUE="Front Light"/>
 	            <LABEL KEY="VOLUME" VALUE="Volume Level"/>
 	            <LABEL KEY="SPRINKLERS" VALUE="Sprinklers"/>
+	            <LABEL KEY="DLT_LABEL_1" VALUE="Test 1"/>
 	</TEXT>
 
 </LABELS>
