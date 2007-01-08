@@ -298,7 +298,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					if ((outputAudioCommand = buildAudioString((Audio) device,
 							command)) != null)
 						if (logger.isLoggable(Level.INFO)){
-							if (!comms.isCommandSentQueueEmpty()) {
+							if (!comms.isCommandSentQueueEmpty() && pollDevice != null) {
 								logger.log(Level.FINER,"Sending new audio command while poll was active, clearing");
 								pollDevice.setRunning(false);
 								comms.clearCommandQueue();
@@ -306,7 +306,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						}
 						logger.log(Level.FINE,"Received audio command from client, sending it to HAL");
 						sendToSerial(outputAudioCommand + ETX);
-						pollDevice.setRunning(true);
+						if (pollDevice != null ) pollDevice.setRunning(true);
 					break;
 				}
 

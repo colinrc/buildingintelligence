@@ -90,7 +90,7 @@ public class Security {
 		lastFlashClients = clientCount;
 		try {
 		    if ((clientCount + lastWebCount ) > allowNumbers[0]) {
-				throw new TooManyClientsException ("You have attempted to connect to the eLife server with more clients than you have purchased, please contact your integrator");
+				throw new TooManyClientsException ("You have probably attempted to connect to the eLife server with more clients than you have purchased, if this problem persists please contact your integrator");
 		    } else {
 			return true;
 		    }
@@ -104,7 +104,7 @@ public class Security {
 		lastWebCount = clientCount;
 		try {
 		    if ((clientCount + lastFlashClients ) > allowNumbers[0]) {
-				throw new TooManyClientsException ("You have attempted to connect to the eLife server with more clients than you have purchased, please contact your integrator");
+				throw new TooManyClientsException ("You have probably attempted to connect to the eLife server with more clients than you have purchased, if this problem persists please contact your integrator");
 		    } else {
 			return true;
 		    }
