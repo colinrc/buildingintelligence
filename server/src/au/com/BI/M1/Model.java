@@ -17,6 +17,7 @@ import au.com.BI.Lights.Light;
 import au.com.BI.Lights.LightFascade;
 import au.com.BI.M1.ControlledHelper;
 import au.com.BI.Alert.Alarm;
+import au.com.BI.Analog.Analog;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Device.DeviceType;
@@ -35,11 +36,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected String outputM1Command = "";
 	protected M1Helper m1Helper;
 	protected ControlledHelper controlledHelper;
-	protected LinkedList temperatureSensors;
+	protected LinkedList<SensorFascade> temperatureSensors;
+	protected LinkedList<Analog> analogSensors;
 	protected long tempPollValue = 0L;
 	protected long outputPollValue = 0L;
+	protected long analogueInputsPollValue = 0L;
 	protected PollTemperatureSensors pollTemperatures;
 	protected PollOutputs pollOutputs;
+	protected PollAnalogueInputs pollAnalogueInputs;
 	protected OutputHelper outputHelper;
 	protected HashMap armingStates;
 	protected HashMap armUpStates;
@@ -53,7 +57,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		m1Helper = new M1Helper();
 		controlledHelper = new ControlledHelper();
-		temperatureSensors = new LinkedList();
+		temperatureSensors = new LinkedList<SensorFascade>();
+		analogSensors = new LinkedList<Analog>();
 		outputHelper = new OutputHelper();
 		deviceKeysDecimal = true;
 		armingStates = new HashMap();
@@ -78,6 +83,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		} catch (ClassCastException ex) {
 			logger.log (Level.FINE,"A temperature sensor was added that was not the expected type " + ex.getMessage());
 		}
+		
+		try {
+			if (((DeviceType)details).getDeviceType() == DeviceType.ANALOGUE ){
+				analogSensors.add ((Analog)details);
+			}
+		} catch (ClassCastException ex) {
+			logger.log (Level.FINE,"An analog sensor was added that was not the expected type " + ex.getMessage());
+		}
 	}
 	
 	/**
@@ -94,19 +107,26 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 		logger.log(Level.INFO, "Starting M1");
 		// create the temperature polling service
-		String pollTempStr = (String)this.getParameterValue("POLL_SENSOR_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
-		String outputTempStr = (String)this.getParameterValue("POLL_OUTPUT_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
+		String tempPollStr = (String)this.getParameterValue("POLL_SENSOR_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
+		String outputPollStr = (String)this.getParameterValue("POLL_OUTPUT_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
+		String analogInputsPollStr = (String)this.getParameterValue("POLL_OUTPUT_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
 
 		try {
-			tempPollValue = Long.parseLong(pollTempStr) * 1000;
+			tempPollValue = Long.parseLong(tempPollStr) * 1000;
 		} catch (NumberFormatException ex) {
 			tempPollValue = 0L;
 		}
 		
 		try {
-			outputPollValue = Long.parseLong(outputTempStr) * 1000;
+			outputPollValue = Long.parseLong(outputPollStr) * 1000;
 		} catch (NumberFormatException ex) {
 			outputPollValue = 0L;
+		}
+		
+		try {
+			analogueInputsPollValue = Long.parseLong(analogInputsPollStr) * 1000;
+		} catch (NumberFormatException ex) {
+			analogueInputsPollValue = 0L;
 		}
 
 		if (!temperatureSensors.isEmpty() && tempPollValue != 0L) {
@@ -132,6 +152,19 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			pollOutputs.start();
 		} else {
 			logger.log(Level.INFO,"Not starting output polls");
+		}
+		
+		if (!analogSensors.isEmpty() && analogueInputsPollValue != 0L) {
+			logger.log(Level.INFO,"Starting analogue input polls");
+			pollAnalogueInputs = new PollAnalogueInputs();
+			pollAnalogueInputs.setPollValue(analogueInputsPollValue);
+			pollAnalogueInputs.setAnalogueInputs(analogSensors);
+			pollAnalogueInputs.setCommandQueue(commandQueue);
+			pollAnalogueInputs.setDeviceNumber(InstanceID);
+			pollAnalogueInputs.setComms(comms);
+			pollAnalogueInputs.start();
+		} else {
+			logger.log(Level.INFO,"Not starting analogue input polls");
 		}
 		
 		// request the states of the contol output devices.
@@ -184,6 +217,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			} else if (details.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
 				LightFascade light = (LightFascade)details;
 				deviceKeyAddition = "X10" + light.getX10HouseCode();
+			} else if (details.getDeviceType() == DeviceType.ANALOGUE) {
+				deviceKeyAddition = "ALG";
 			}
 		}
 		

@@ -53,6 +53,8 @@ public class M1CommandFactory {
 	 *   <li>pn - Turn On PLC Device</li>
 	 *   <li>pt - Toggle PLC Device</li>
 	 *   <li>pc - Control any PLC Device</li>
+	 *   <li>zv - Request Zone Voltage</li>
+	 *   <li>ZV - Reply Zone Analog Voltage Data</li>
 	 * </ul>
 	 * @param unparsedCommand
 	 * @return
@@ -118,6 +120,10 @@ public class M1CommandFactory {
 			m1Command = parsePLCStatusRequest(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("PS")) {
 			m1Command = parsePLCStatusReturned(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("zv")) {
+			m1Command = parseRequestZoneVoltage(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("ZV")) {
+			m1Command = parseReplyZoneAnalogVoltageData(unparsedCommand);
 		}
 		
 		
@@ -1017,6 +1023,60 @@ public class M1CommandFactory {
 			lightLevels[i] = levels.charAt(i) - 48;
 		}
 		_command.setLevels(lightLevels);
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * Parse a message to interpret the request for zone voltage for a given zone.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parseRequestZoneVoltage(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		RequestZoneVoltage _command = new RequestZoneVoltage();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setZone(command.substring(4,7));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * Parse a message to interpret the reply to the request for the voltage data for a zone.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parseReplyZoneAnalogVoltageData(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ReplyZoneAnalogVoltageData _command = new ReplyZoneAnalogVoltageData();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setZone(command.substring(4,7));
+		_command.setKey(command.substring(4,7));
+		_command.setRawVoltageData(command.substring(7,10));
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
 		if (checkSum.equals(_command.getCheckSum())) {

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import au.com.BI.AlarmLogging.AlarmLogging;
 import au.com.BI.Alert.AlertCommand;
+import au.com.BI.Analog.Analog;
 import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
@@ -38,6 +39,7 @@ import au.com.BI.M1.Commands.PLCLevelStatus;
 import au.com.BI.M1.Commands.PLCStatusReturned;
 import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
+import au.com.BI.M1.Commands.ReplyZoneAnalogVoltageData;
 import au.com.BI.M1.Commands.RequestTemperatureReply;
 import au.com.BI.M1.Commands.TasksChangeUpdate;
 import au.com.BI.M1.Commands.ZoneChangeUpdate;
@@ -77,13 +79,63 @@ public class ControlledHelper {
 		// Check to see if it is a comms command
 		if (command.isCommsCommand()) {
 
-			CommandInterface m1Command = buildCommandForFlash(command,
-					configHelper, m1);
+//			CommandInterface m1Command = buildCommandForFlash(command,
+//					configHelper, m1);
+			
+			M1Command m1Command = M1CommandFactory.getInstance().getM1Command(
+					command.getKey());
+			
 			if (m1Command == null)
 				return;
 
 			// Check the command class
-			if (m1Command.getClass().equals(ZoneChangeUpdate.class)) {
+			if (m1Command.getClass().equals(OutputChangeUpdate.class)
+					&& configHelper.checkForControl(m1Command.getKey() + "TOUT")) {
+				// Dave check this. the PIR triggers the Short, sort of makes
+				// sense, in other words the violate short means PIR on
+				// violate EOL means off.
+
+				BaseDevice configDevice = (BaseDevice) configHelper
+						.getControlledItem(m1Command.getKey() + "TOUT");
+				if (configDevice == null){
+					logger.log(Level.FINER, "M1 command request was received for a device that has not been configured " + m1Command.getKey());
+					return;
+				}
+				if (((OutputChangeUpdate) m1Command).getOutputState().equals("0")) {
+					m1Command.setCommand("off");
+				} else {
+					m1Command.setCommand("on");
+				}
+				m1Command
+						.setDisplayName(((BaseDevice) configDevice).getOutputKey());
+
+				m1Command.setKey("CLIENT_SEND");
+				m1Command.setUser(m1.currentUser);
+				sendCommand(cache, commandQueue, m1Command);
+			} else if (m1Command.getClass().equals(RequestTemperatureReply.class)) {
+				SensorFascade sensor = (SensorFascade) configHelper.getControlledItem(m1Command.getKey());
+				if (sensor == null ){
+					logger.log (Level.FINER,"Received temperature request for a device that has not been configured ");
+					return;
+				}
+				m1Command.setDisplayName(sensor.getOutputKey());
+				m1Command.setKey("CLIENT_SEND");
+				m1Command.setUser(m1.currentUser);
+				sendCommand(cache, commandQueue, m1Command);
+			} else if (m1Command.getClass().equals(ReplyZoneAnalogVoltageData.class)) {
+				Analog analogDevice = (Analog)configHelper.getControlledItem(m1Command.getKey() + "ALG");
+				
+				if (analogDevice == null) {
+					logger.log(Level.FINER,"M1 command request for an analog device that has not been configured " + m1Command.getKey());
+					return;
+				}
+				m1Command.setDisplayName(analogDevice.getOutputKey());
+				m1Command.setExtraInfo(((ReplyZoneAnalogVoltageData) m1Command).getVoltageData());
+				m1Command.setCommand("on");
+				m1Command.setKey("CLIENT_SEND");
+				m1Command.setUser(m1.currentUser);
+				sendCommand(cache, commandQueue, m1Command);
+			} else if (m1Command.getClass().equals(ZoneChangeUpdate.class)) {
 				ZoneChangeUpdate zoneChangeUpdate = (ZoneChangeUpdate) m1Command;
 
 				BaseDevice theDevice = (BaseDevice) configHelper.getControlledItem(zoneChangeUpdate.getZone() + "CC"); 
@@ -140,7 +192,6 @@ public class ControlledHelper {
 				if (sensor.getTemperature() == null
 						|| !sensor.getTemperature().equals(
 								_command.getExtraInfo())) {
-					cache.setCachedCommand(_command.getDisplayName(), _command);
 
 					logger.log(Level.FINER,
 							"Sending temperature to flash for group:"
@@ -594,6 +645,19 @@ public class ControlledHelper {
 				return null;
 			}
 			m1Command.setDisplayName(sensor.getOutputKey());
+			m1Command.setKey("CLIENT_SEND");
+			m1Command.setUser(m1.currentUser);
+			return m1Command;
+		} else if (m1Command.getClass().equals(ReplyZoneAnalogVoltageData.class)) {
+			Analog analogDevice = (Analog)configHelper.getControlledItem(m1Command.getKey() + "ALG");
+			
+			if (analogDevice == null) {
+				logger.log(Level.FINER,"M1 command request for an analog device that has not been configured " + m1Command.getKey());
+				return null;
+			}
+			m1Command.setDisplayName(analogDevice.getOutputKey());
+			m1Command.setExtraInfo(((ReplyZoneAnalogVoltageData) m1Command).getVoltageData());
+			m1Command.setCommand("on");
 			m1Command.setKey("CLIENT_SEND");
 			m1Command.setUser(m1.currentUser);
 			return m1Command;

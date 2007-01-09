@@ -31,8 +31,10 @@ import au.com.BI.M1.Commands.PLCDeviceToggle;
 import au.com.BI.M1.Commands.PLCFunction;
 import au.com.BI.M1.Commands.PLCStatusRequest;
 import au.com.BI.M1.Commands.RequestTemperature;
+import au.com.BI.M1.Commands.RequestZoneVoltage;
 import au.com.BI.M1.Commands.TaskActivation;
 import au.com.BI.Util.DeviceModel;
+import au.com.BI.Util.Utility;
 
 public class OutputHelper {
 
@@ -145,6 +147,10 @@ public class OutputHelper {
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equals("PLC_STATUS")) {
 					PLCStatusRequest m1Command = new PLCStatusRequest();
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals("REQUEST_ZONE_VOLTAGE")) {
+					RequestZoneVoltage m1Command = new RequestZoneVoltage();
+					m1Command.setZone(Utility.padString(command.getExtraInfo(),3));
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
 			} else if (device.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
