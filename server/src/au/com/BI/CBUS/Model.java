@@ -498,15 +498,41 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					String currentCbusKey = this.nextKey();
 					Label label = (Label)device;
 					String fullKeyLabel = this.cBUSHelper.buildKey(label.getApplicationCode(),label.getKey(),device.getDeviceType());
-					if ((outputCbusCommand = buildCBUSLabelString (label,command,currentCbusKey)) != null) {
-	
+					String commandCode = command.getCommandCode();
+					if (commandCode.equals ("label")) {
+						if ((outputCbusCommand = buildCBUSLabelString (label,command,currentCbusKey)) != null) {
+		
+								
+								CommsCommand cbusCommsCommand = new CommsCommand();
+								cbusCommsCommand.setActionCode (currentCbusKey);
+								cbusCommsCommand.setKeepForHandshake(true);
+								cbusCommsCommand.setCommand(outputCbusCommand);
+								cbusCommsCommand.setExtraInfo (label.getOutputKey());
+		
+									try {
+										//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
+										comms.addCommandToQueue (cbusCommsCommand);
+									} catch (CommsFail e1) {
+										logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
+										throw new CommsFail ("Error communicating with CBUS");
+									}
+								logger.log (Level.FINEST,"Queueing cbus command " + currentCbusKey + " for " + (String)cbusCommsCommand.getExtraInfo());
+						}
+					} 
+					if (commandCode.equals ("on") || commandCode.equals("off")) {
+						mMIHelpers.sendingExtended.remove(fullKeyLabel);  
+						// the build cbusstring will add a new entry if a new ramp has been sent
+						// ensure that Level CBUS returns will not be decoded, as the user has done an action since
+						
+						if ((outputCbusCommand = buildCBUSLightString (label,command,currentCbusKey)) != null) {
+
 							
 							CommsCommand cbusCommsCommand = new CommsCommand();
 							cbusCommsCommand.setActionCode (currentCbusKey);
 							cbusCommsCommand.setKeepForHandshake(true);
 							cbusCommsCommand.setCommand(outputCbusCommand);
 							cbusCommsCommand.setExtraInfo (label.getOutputKey());
-	
+
 								try {
 									//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
 									comms.addCommandToQueue (cbusCommsCommand);
@@ -515,6 +541,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 									throw new CommsFail ("Error communicating with CBUS");
 								}
 							logger.log (Level.FINEST,"Queueing cbus command " + currentCbusKey + " for " + (String)cbusCommsCommand.getExtraInfo());
+
+						}
 					}
 
 			}
@@ -902,11 +930,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 	}
 	
-	public String buildCBUSLightString (LightFascade device, CommandInterface command,String currentChar) throws CommsFail {
+	public String buildCBUSLightString (CBUSDevice device, CommandInterface command,String currentChar) throws CommsFail {
 		String cBUSOutputString = null;
 		boolean commandFound = false;
 
-		String rawBuiltCommand = doRawIfPresent (command, device);
+		String rawBuiltCommand = doRawIfPresent (command, (DeviceType)device);
 		if (rawBuiltCommand != null)
 		{
 			cBUSOutputString = rawBuiltCommand;

@@ -1,12 +1,11 @@
-package Aladdin;
 /*
- *  $Id: HaspStatus.java,v 1.1 2005/10/24 14:01:09 colinc Exp $
+ *  $Id: HaspStatus.java,v 1.2 2004/06/03 10:25:56 horatiu Exp $
  *
  *  Copyright 2004 Aladdin Knowledge Systems Ltd. All rights reserved.
  *  Use is subject to license terms.
  */
 
-
+package Aladdin;
 
 public class HaspStatus{
   /**

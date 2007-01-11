@@ -7,7 +7,6 @@ package au.com.BI.HAL;
 /**
  * @author Colin Canfield
  * @author Explorative Sofwtare Pty Ltd
- *
  */
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;

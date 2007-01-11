@@ -896,7 +896,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		try {
 			this.doCustomConnectInputIfPresent((CommsCommand)command,returnWrapper);
 			if (!returnWrapper.isPopulated()){
-				processStringFromComms(command.getCommandCode(), returnWrapper);
+				processStringFromComms(command.getKey(), returnWrapper);
 			}
 			addCheckSums(returnWrapper);
 			sendWrapperItems(returnWrapper);
@@ -912,7 +912,6 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 
 	/**
-	 * @deprecated
 	 * @param command
 	 * @throws CommsFail
 	 */

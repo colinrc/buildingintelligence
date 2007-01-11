@@ -99,7 +99,8 @@ public class CacheWrapper {
 			this.key = newKey;
 		}
 		if (newCommand.getDisplayName() == null ||newCommand.getDisplayName().equals ("")) {
-			logger.log(Level.WARNING,"A command was attempted to be sent to the cache with a null display name");
+			logger.log(Level.WARNING,"A command was attempted to be sent to the cache with a null or empty display name. Calling method: " + 
+					new Throwable().fillInStackTrace().getStackTrace()[1].getMethodName());
 			newCommand.setDisplayName(newKey);
 		}
 		if (map == null) {

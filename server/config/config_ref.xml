@@ -106,7 +106,7 @@
         
         <!-- the key is the Kramer output, Display name is the flash icon name -->
         <!-- ______________________________________  HAL DEFS  ____________________  -->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="HAL" DESCRIPTION="HAL Audio">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="HAL" DESCRIPTION="HAL Audio">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="4800" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
                         <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5003"/>

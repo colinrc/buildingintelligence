@@ -1,13 +1,13 @@
-package Aladdin;
 /*
- *  $Id: HaspTime.java,v 1.1 2005/10/24 14:01:09 colinc Exp $
+ *  $Id: HaspTime.java,v 1.3 2004/06/03 10:26:30 horatiu Exp $
  *
  *  Copyright 2004 Aladdin Knowledge Systems Ltd. All rights reserved.
  *  Use is subject to license terms.
  */
 
+package Aladdin;
 
-
+import Aladdin.HaspStatus;
 
 public class HaspTime{
    private long time[]={0};

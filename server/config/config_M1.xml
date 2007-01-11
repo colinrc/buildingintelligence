@@ -1,7 +1,7 @@
 <CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
         <DESC>My demonstration configuration</DESC>
         <!-- _____________________________ M1 DEFS _____________________________ -->
-        <DEVICE ACTIVE="N" NAME="M1" DISPLAY_NAME="M1" PASSWORD="1234">
+        <DEVICE ACTIVE="Y" NAME="M1" DISPLAY_NAME="M1" PASSWORD="1234">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                           <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5006"/>
@@ -15,7 +15,7 @@
                 	<LIGHT_X10 KEY="01" ACTIVE="Y" X10HOUSE_CODE="A" NAME="Family Room" DISPLAY_NAME="FAMILY_LIGHTS1"/>
                 	<LIGHT_X10 KEY="02" ACTIVE="Y" X10HOUSE_CODE="A" NAME="Family Room" DISPLAY_NAME="FAMILY_LIGHTS2"/>
                 
-                    <TOGGLE_OUTPUT ACTIVE="Y" KEY="011" AREA="001" NAME="Garage Door Opener" DISPLAY_NAME="GARAGE_DOOR_OPENER" />
+                    <TOGGLE_OUTPUT ACTIVE="Y" KEY="011" AREA="001" NAME="Garage Door Opener" DISPLAY_NAME="GARAGE_LIGHT" />
 					<TOGGLE_OUTPUT ACTIVE="Y" KEY="003" AREA="001" NAME="Front Gate Strike" DISPLAY_NAME="FRONT_GATE" />
                 	<TOGGLE_OUTPUT ACTIVE="Y" KEY="018" AREA="001" NAME="Sprinkler Side Garden" DISPLAY_NAME="SPRINKLER_SIDE_GARDEN" />
                 	<TOGGLE_OUTPUT ACTIVE="Y" KEY="014" AREA="001" NAME="Sprinkler Back Grass" DISPLAY_NAME="SPRINKLER_BACK_GRASS" />

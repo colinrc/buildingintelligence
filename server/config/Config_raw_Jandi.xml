@@ -1,0 +1,63 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+        <DESC>My demonstration configuration</DESC>
+        <!-- ______________________________________  RAW DEFS _____________________________ -->
+        <!-- flow may be NONE, RTSCTS" -->
+        <DEVICE ACTIVE="Y" NAME="RAW_CONNECTION" DISPLAY_NAME="Raw Input">
+                <CONNECTION>
+			<SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+			<IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5003"/>
+                </CONNECTION>
+                <CATALOGUE NAME="SpaBlower">
+                        <ITEM CODE="on" VALUE="#aux2 = 1\r"/>
+                        <ITEM CODE="off" VALUE="#aux2 = 0\r"/>
+                </CATALOGUE>
+                <CATALOGUE NAME="WaterFall">
+                        <ITEM CODE="on" VALUE="#auxx = 1\r"/>
+                        <ITEM CODE="off" VALUE="#auxx = 0\r"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="STX" VALUE=""/>
+                        <ITEM NAME="ETX" VALUE="\n"/>
+                        <!-- <ITEM NAME="STARTUP1" VALUE="#RSPFMT=0\r"/> -->
+                        <ITEM NAME="POLL_VALUE1" VALUE="15"/>
+                        <ITEM NAME="POLL_VALUE2" VALUE="15"/>
+                        <ITEM NAME="POLL_VALUE3" VALUE="15"/>
+                        <ITEM NAME="POLL_STRING1" VALUE="#pooltmp?\r"/>
+                        <ITEM NAME="POLL_STRING2" VALUE="#airtmp?\r"/>
+                        <ITEM NAME="POLL_STRING3" VALUE="#auxx?\r"/>
+                </PARAMETERS>
+                <RAW_CONNECTION>
+                        <CUSTOM_INPUT KEY="!00 POOLTMP = (\d+)" KEY_IS_REGEX="Y" NAME="Pool Temp" DISPLAY_NAME="POOL_TEMP" COMMAND="on" EXTRA="@1"/>
+                        <CUSTOM_INPUT KEY="!00 PUMP = 1" KEY_IS_REGEX="N" NAME="Filter Pump On" DISPLAY_NAME="FILTER_PUMP" COMMAND="on" EXTRA="100"/>
+                        <CUSTOM_INPUT KEY="!00 PUMP = 0" KEY_IS_REGEX="N" NAME="Filter Pump Off" DISPLAY_NAME="FILTER_PUMP" COMMAND="off" EXTRA="0"/>
+  
+                        <RAW_INTERFACE NAME="SPA_BLOWER" DISPLAY_NAME="SPA_BLOWER">
+                                <RAW_ITEMS CATALOGUE="SpaBlower">
+                                        <RAW COMMAND="on" CODE="on"/>
+                                        <RAW COMMAND="off" CODE="off"/>
+                                </RAW_ITEMS>
+                        </RAW_INTERFACE>
+  
+                        <RAW_INTERFACE NAME="WATER_FALL" DISPLAY_NAME="WATER_FALL">
+                                <RAW_ITEMS CATALOGUE="WaterFall">
+                                        <RAW COMMAND="on" CODE="on"/>
+                                        <RAW COMMAND="off" CODE="off"/>
+                                </RAW_ITEMS>
+                        </RAW_INTERFACE>
+                </RAW_CONNECTION>
+        </DEVICE>
+        <!-- _____________________________ Controls _____________________________-->
+        <CONTROLS>
+                <VARIABLES>
+                        <VARIABLE ACTIVE="N" NAME="Master Bedroom Light" DISPLAY_NAME="MASTERBED_LIGHT"/>
+                        <VARIABLE ACTIVE="N" NAME="Bedroom 4 light" DISPLAY_NAME="BED4_LIGHT"/>
+                        <VARIABLE ACTIVE="N" NAME="Lattitude" DISPLAY_NAME="LATTITUDE" INIT_COMMAND="on" INIT_EXTRA="24.1" />
+                        <VARIABLE ACTIVE="N" NAME="Longitude" DISPLAY_NAME="Longitude" INIT_COMMAND="on" INIT_EXTRA="12" />
+                </VARIABLES>
+                <CALENDAR_MESSAGES>
+                		   <ITEM NAME="AUTOCLOSE" VALUE="5" />
+                		   <ITEM NAME="ICON" VALUE="" />
+                		   <ITEM NAME="HIDECLOSE" VALUE="Y" />
+		</CALENDAR_MESSAGES>
+        </CONTROLS>
+</CONFIG>

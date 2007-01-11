@@ -1,12 +1,15 @@
-package Aladdin;
 /*
- *  $Id: Hasp.java,v 1.1 2005/10/24 14:01:09 colinc Exp $
+ *  $Id: Hasp.java,v 1.6 2004/06/03 10:25:21 horatiu Exp $
  *
  *  Copyright 2004 Aladdin Knowledge Systems Ltd. All rights reserved.
  *  Use is subject to license terms.
  */
 
+package Aladdin;
 
+import java.nio.*;
+import Aladdin.HaspStatus;
+import Aladdin.HaspTime;
 
 public class Hasp {
   /**
