@@ -1,3 +1,17 @@
+''' CBUS '''
+
+Ensure Labels also support general light type levels.
+
+''' Jython Scripts '''
+
+Ensure messages created in scripts are sent to both other flash clients and to physical devices.
+
+Allow access to the cache for scripts  elife.getCache().
+
+Allow access to the command that caused a script to fire within the script  triggeringEvent.getCommandCode() triggeringEvent.getExtraValue() triggeringEvent.getExtra2Value()  etc.
+
+Refactored message creation methods to use a single method rather than repeating the content 6 times (Jeff what were you thinking :-)  )
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b28.zip V1.6b28]   ==
 
 ''' HAL '''
