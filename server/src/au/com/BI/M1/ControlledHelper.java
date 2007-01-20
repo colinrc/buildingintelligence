@@ -267,7 +267,7 @@ public class ControlledHelper {
 					}
 					if ((oldArmedStatus != null && armedStatus == null )  && !oldArmedStatus.equals(armedStatus)) {
 						CommandInterface _command = new AlertCommand();
-						_command.setDisplayName("Arming Status");
+						_command.setDisplayName("ARMING STATUS");
 						_command.setTargetDeviceID(-1);
 						_command.setUser(m1.currentUser);
 						_command.setCommand("ARMING STATUS");
@@ -276,7 +276,16 @@ public class ControlledHelper {
 						_command.setExtra3Info(armUpState.getDescription());
 						_command.setExtra4Info(areaAlarmState.getDescription());
 						_command.setKey("CLIENT_SEND");
+						
+						// set the armedStatus to the new armed status
+						m1.getArmingStates().put(zone, armedStatus);
 						sendCommand(cache, commandQueue, _command);
+					}
+					
+					
+					// set the arm up state if it has changed.
+					if ((oldArmUpState != null && armUpState == null )  && !oldArmUpState.equals(armUpState)) {
+						m1.getArmUpStates().put(zone, armUpState);
 					}
 				}
 			} else if (m1Command.getClass().equals(Disarm.class)
@@ -297,23 +306,23 @@ public class ControlledHelper {
 				if (m1Command.getClass().equals(Disarm.class)) {
 					_command.setCommand("DISARM");
 				} else if (m1Command.getClass().equals(ArmToAway.class)) {
-					_command.setCommand("ARMED AWAY");
+					_command.setCommand("ARMED_AWAY");
 				} else if (m1Command.getClass().equals(ArmToStayHome.class)) {
-					_command.setCommand("ARMED STAY");
+					_command.setCommand("ARMED_STAY");
 				} else if (m1Command.getClass().equals(ArmToStayInstant.class)) {
-					_command.setCommand("ARMED STAY INSTANT");
+					_command.setCommand("ARMED_STAY_INSTANT");
 				} else if (m1Command.getClass().equals(ArmToNight.class)) {
-					_command.setCommand("ARMED NIGHT");
+					_command.setCommand("ARMED_NIGHT");
 				} else if (m1Command.getClass().equals(ArmToNightInstant.class)) {
-					_command.setCommand("ARMED NIGHT INSTANT");
+					_command.setCommand("ARMED_NIGHT_INSTANT");
 				} else if (m1Command.getClass().equals(ArmToVacation.class)) {
-					_command.setCommand("ARMED VACATION");
+					_command.setCommand("ARMED_VACATION");
 				} else if (m1Command.getClass().equals(
 						ArmStepToNextAwayMode.class)) {
-					_command.setCommand("ARM TO NEXT AWAY MODE");
+					_command.setCommand("ARM_TO_NEXT_AWAY_MODE");
 				} else if (m1Command.getClass().equals(
 						ArmStepToNextStayMode.class)) {
-					_command.setCommand("ARM TO NEXT STAY MODE");
+					_command.setCommand("ARM_TO_NEXT_STAY_MODE");
 				}
 				_command.setExtraInfo(armDisarm.getPartition());
 				_command.setKey("CLIENT_SEND");
@@ -327,10 +336,10 @@ public class ControlledHelper {
 							.getZoneDefinition()[i];
 
 					CommandInterface _command = new AlertCommand();
-					_command.setDisplayName("Zone Definition");
+					_command.setDisplayName("ZONE_DEFINITION");
 					_command.setTargetDeviceID(-1);
 					_command.setUser(m1.currentUser);
-					_command.setCommand("ZONE DEFINITION");
+					_command.setCommand("ZONE_DEFINITION");
 					_command.setExtraInfo(Integer.toString(i));
 					_command.setExtra2Info(zoneDefinition.getDescription());
 					_command.setKey("CLIENT_SEND");

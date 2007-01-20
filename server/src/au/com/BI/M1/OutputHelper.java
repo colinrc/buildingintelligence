@@ -32,7 +32,10 @@ import au.com.BI.M1.Commands.PLCFunction;
 import au.com.BI.M1.Commands.PLCStatusRequest;
 import au.com.BI.M1.Commands.RequestTemperature;
 import au.com.BI.M1.Commands.RequestZoneVoltage;
+import au.com.BI.M1.Commands.SpeakPhrase;
+import au.com.BI.M1.Commands.SpeakWord;
 import au.com.BI.M1.Commands.TaskActivation;
+import au.com.BI.M1.Commands.ZoneStatusRequest;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.Utility;
 
@@ -151,6 +154,17 @@ public class OutputHelper {
 				} else if (command.getCommandCode().equals("REQUEST_ZONE_VOLTAGE")) {
 					RequestZoneVoltage m1Command = new RequestZoneVoltage();
 					m1Command.setZone(Utility.padString(command.getExtraInfo(),3));
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals("ZONE_STATUS_REQUEST")) {
+					ZoneStatusRequest m1Command = new ZoneStatusRequest();
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals("SPEAK_WORD")) {
+					SpeakWord m1Command = new SpeakWord();
+					m1Command.setWord(command.getExtraInfo());
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals("SPEAK_PHRASE")) {
+					SpeakPhrase m1Command = new SpeakPhrase();
+					m1Command.setPhrase(command.getExtraInfo());
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
 			} else if (device.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {

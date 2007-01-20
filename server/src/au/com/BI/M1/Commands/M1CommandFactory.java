@@ -55,6 +55,10 @@ public class M1CommandFactory {
 	 *   <li>pc - Control any PLC Device</li>
 	 *   <li>zv - Request Zone Voltage</li>
 	 *   <li>ZV - Reply Zone Analog Voltage Data</li>
+	 *   <li>XK/xk - Ethernet Module Test and Reply - no action required.</li>
+	 *   <li>sw - Speak Word</li>
+	 *   <li>sp - Speak Phrase</li>
+	 *   
 	 * </ul>
 	 * @param unparsedCommand
 	 * @return
@@ -124,7 +128,15 @@ public class M1CommandFactory {
 			m1Command = parseRequestZoneVoltage(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("ZV")) {
 			m1Command = parseReplyZoneAnalogVoltageData(unparsedCommand);
-		}
+		} else if (unparsedCommand.substring(2,4).equals("XK")) {
+			logger.log(Level.FINEST,"Ethernet Module Test command received");
+		} else if (unparsedCommand.substring(2,4).equals("xk")) {
+			logger.log(Level.FINEST,"Ethernet Module Test Acknowledge received");
+		} else if (unparsedCommand.substring(2,4).equals("sw")) {
+			m1Command = parseSpeakWord(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("sp")) {
+			m1Command = parseSpeakPhrase(unparsedCommand);
+		} 
 		
 		
 		if (m1Command == null) {
@@ -1077,6 +1089,58 @@ public class M1CommandFactory {
 		_command.setZone(command.substring(4,7));
 		_command.setKey(command.substring(4,7));
 		_command.setRawVoltageData(command.substring(7,10));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * Parse a message to interpret the request speak a system word.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parseSpeakWord(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		SpeakWord _command = new SpeakWord();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setWord(command.substring(4,7));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * Parse a message to interpret the request speak a system phrase.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parseSpeakPhrase(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		SpeakPhrase _command = new SpeakPhrase();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setPhrase(command.substring(4,7));
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
 		if (checkSum.equals(_command.getCheckSum())) {
