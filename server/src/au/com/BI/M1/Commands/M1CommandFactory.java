@@ -136,7 +136,9 @@ public class M1CommandFactory {
 			m1Command = parseSpeakWord(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("sp")) {
 			m1Command = parseSpeakPhrase(unparsedCommand);
-		} 
+		} else if (unparsedCommand.substring(2,4).equals("LD")) {
+			m1Command = parseSystemLogDataUpdate(unparsedCommand);
+		}
 		
 		
 		if (m1Command == null) {
@@ -1141,6 +1143,36 @@ public class M1CommandFactory {
 		_command.setCommand(command);
 		_command.setCheckSum(command.substring(command.length()-2));
 		_command.setPhrase(command.substring(4,7));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseSystemLogDataUpdate(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		SystemLogDataUpdate _command = new SystemLogDataUpdate();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setEvent(command.substring(4,8));
+		_command.setEventNumberData(command.substring(8,11));
+		_command.setArea(command.substring(11,12));
+		_command.setHour(command.substring(12,14));
+		_command.setMinute(command.substring(14,16));
+		_command.setMonth(command.substring(16,18));
+		_command.setDay(command.substring(18,20));
+		_command.setIndex(command.substring(20,23));
+		_command.setDayOfWeek(command.substring(23,24));
+		_command.setYear(command.substring(24,26));
 		
 		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
 		if (checkSum.equals(_command.getCheckSum())) {
