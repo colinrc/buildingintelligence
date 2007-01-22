@@ -6,8 +6,6 @@ package au.com.BI.CBUS;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -352,13 +350,12 @@ public class MMIHelpers {
 	}
 
 	public void sendMMIQueue (String appNumber) throws CommsFail {
-		List items = (List)this.levelMMIQueues.get(appNumber);
-		if (items != null) {
-			Iterator eachItem = items.iterator();
-			while (eachItem.hasNext()) {
-				Integer nextItem = (Integer)eachItem.next();
-				sendLevelMMIQuery (appNumber,nextItem.intValue());
+		try {
+			for (Integer i: levelMMIQueues.get(appNumber)){
+				sendLevelMMIQuery (appNumber,i);			
 			}
+		} catch (NullPointerException ex ){
+			// no queue exsists for the app number
 		}
 	}
 	
@@ -368,13 +365,12 @@ public class MMIHelpers {
 
 	public void clearAllLevelMMIQueues () {
 		this.levelMMIQueues.clear();
+		this.sendingExtended.clear();
 	}
 
 	public void sendAllLevelMMIQueues () throws CommsFail  {
-
-		Iterator eachQueue = levelMMIQueues.keySet().iterator();
-		while (eachQueue.hasNext()) {
-			sendMMIQueue((String)eachQueue.next());
+		for (String i: levelMMIQueues.keySet()) {
+			sendMMIQueue(i);
 		}
 	}
 

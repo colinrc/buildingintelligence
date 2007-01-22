@@ -80,7 +80,7 @@ public class TimedScript extends TimerTask {
 
         logger.log(Level.FINE, "Running timed event " + lsScript);
 
-        scriptHandler.run(lsScript,"", null);
+        scriptHandler.run(lsScript,"", null, null);
 
         }
 

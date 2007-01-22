@@ -187,6 +187,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	
 	public boolean doIControl (String keyName, boolean isClientCommand)
 	{
+
 		configHelper.wholeKeyChecked(keyName);
 			
 		if (configHelper.checkForOutputItem(keyName)) {
@@ -270,8 +271,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					tutondoCode = Integer.parseInt(responseParts[4]);
 					int tmpZone = Integer.parseInt(responseParts[2]);
 					zone = Integer.toString(tmpZone);
-					if (audioDevice == null) return;
 					audioDevice = (Audio)configHelper.getControlledItem(zone);
+					if (audioDevice == null) return;
 					logger.log(Level.FINEST, "Received byte " + responseParts[4] + " from tutondo for zone " + zone);
 					respCommand = Integer.parseInt(responseParts[1]);
 					respParam = Integer.parseInt(responseParts[3]);

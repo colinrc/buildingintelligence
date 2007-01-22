@@ -15,6 +15,7 @@
                 
                 <PARAMETERS>
                 	<!-- ITEM NAME="POLL_TEMP_INTERVAL" VALUE="5" / -->
+                	<ITEM NAME="DECIMAL_KEYS" VALUE="Y" />
                 </PARAMETERS>
                 
                 <CBUS>
@@ -31,10 +32,10 @@
                         <LIGHT_CBUS ACTIVE="Y" KEY="10" RELAY="Y"  NAME="Relay 9" DISPLAY_NAME="RELAY9" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="11" RELAY="Y"  NAME="Relay 10" DISPLAY_NAME="RELAY10" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="13" RELAY="Y"  NAME="Relay 11" DISPLAY_NAME="RELAY11" POWER_RATING="100"/>
-                        <LIGHT_CBUS ACTIVE="Y" KEY="16" RELAY="Y"  NAME="Relay 12" DISPLAY_NAME="RELAY12" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="16" RELAY="Y"  NAME="Relay 12" DISPLAY_NAME="RELAY12" POWER_RATING="100"/>
      
                         <LIGHT_CBUS ACTIVE="Y" KEY="17"   NAME="Dimmer 1" DISPLAY_NAME="DIMMER1" POWER_RATING="100"/>                      
-                        <LIGHT_CBUS ACTIVE="Y" KEY="22"   NAME="Dimmer 2" DISPLAY_NAME="DIMMER2" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="22"   NAME="Dimmer 2" DISPLAY_NAME="DIMMER2" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="23"   NAME="Dimmer 3" DISPLAY_NAME="DIMMER3" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="18"   NAME="Dimmer 4" DISPLAY_NAME="DIMMER4" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="19"   NAME="Dimmer 5" DISPLAY_NAME="DIMMER5" POWER_RATING="100"/>

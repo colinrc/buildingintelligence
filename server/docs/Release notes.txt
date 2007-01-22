@@ -1,14 +1,29 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b29.zip V1.6b29]   ==
+
+''' General '''
+
+Added error messages if two devices with the same key are added to a model.
+
+Tuned cache error message to display calling method trace, if no display_name is provided. Resovles [ticket:592]
+
 ''' CBUS '''
 
-Ensure Labels also support general light type levels.
+Ensure state is correctly cleared dring startup, to ensure correct MMI processing. Resolves [ticket:591]
+
+Ensure CBUS properly attends to decimal strings in the config file.
+
+Ensure DLT devices can send and receive levels.  Resolves [ticket:14]
 
 ''' Jython Scripts '''
 
-Ensure messages created in scripts are sent to both other flash clients and to physical devices.
+Ensure messages created in scripts are sent to both other flash clients and to physical devices. Resolves [ticket:589]
 
 Allow access to the cache for scripts  elife.getCache().
 
-Allow access to the command that caused a script to fire within the script  triggeringEvent.getCommandCode() triggeringEvent.getExtraValue() triggeringEvent.getExtra2Value()  etc.
+Allow access to the command that caused a script to fire within the script  
+ *  triggeringEvent.getCommandCode() 
+ * triggeringEvent.getExtraValue()
+  * triggeringEvent.getExtra2Value()  etc.
 
 Refactored message creation methods to use a single method rather than repeating the content 6 times (Jeff what were you thinking :-)  )
 

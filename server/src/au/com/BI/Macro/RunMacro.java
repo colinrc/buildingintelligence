@@ -56,6 +56,7 @@ public class RunMacro extends Thread {
 		started.setKey("MACRO");
 		started.setExtraInfo(macroName);
 		started.setCommand("started");
+		started.setDisplayName("MACRO");
 		synchronized (cache){
 			cache.setCachedCommand("MACRO",started);
 		}
@@ -68,6 +69,7 @@ public class RunMacro extends Thread {
 			    commandDone = false;
 			    try {
 					ClientCommand clientCommand = (ClientCommand)((ClientCommand)(macroItems.next())).clone();
+					clientCommand.setDisplayName(clientCommand.getKey());
 				    if (origCommand != null) {
 				    		if (clientCommand.getExtraInfo().startsWith("%")) {
 				    			clientCommand.setExtraInfo(readParam(clientCommand.getExtraInfo()));
@@ -133,6 +135,7 @@ public class RunMacro extends Thread {
 		finished.setKey("MACRO");
 		finished.setExtraInfo(macroName);
 		finished.setCommand("finished");
+		finished.setDisplayName("MACRO");
 		synchronized (cache){
 			cache.setCachedCommand("MACRO",finished);
 		}

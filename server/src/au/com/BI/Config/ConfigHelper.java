@@ -140,16 +140,33 @@ public class ConfigHelper {
 
 	public void addControlledItem (String name, DeviceType details, MessageDirection controlType){
 		if (controlType == MessageDirection.FROM_HARDWARE) {
-			controlledItems.put (name,details);
-			
+			if (controlledItems.containsKey(name)){
+				logger.log (Level.WARNING,"Attempted to add the device: " + name + " " + details.getName() + 
+						" when a device with the same key already exists: " + controlledItems.get(name).getName());
+				
+			} else {
+				controlledItems.put (name,details);
+			}
 			
 		}
 		else {
 			if (controlType == MessageDirection.FROM_FLASH) {
-				outputItems.put(name,details);
+				if (outputItems.containsKey(name)){
+					logger.log (Level.WARNING,"Attempted to add the device: " + name + " " + details.getName() + 
+							" when a device with the same key already exists: " + outputItems.get(name).getName());
+					
+				} else {
+					outputItems.put(name,details);
+				}
 
 			} else {
-				inputItems.put (name,details);
+				if (inputItems.containsKey(name)){
+					logger.log (Level.WARNING,"Attempted to add the device: " + name + " " + details.getName() + 
+							" when a device with the same key already exists: " + inputItems.get(name).getName());
+					
+				} else {
+					inputItems.put (name,details);
+				}
 			}
 		}
 	}

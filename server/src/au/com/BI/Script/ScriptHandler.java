@@ -22,6 +22,7 @@ import org.jdom.input.*;
 import org.jdom.output.XMLOutputter;
 
 import au.com.BI.Command.Cache;
+import au.com.BI.Command.CommandInterface;
 import au.com.BI.Flash.*;
 import au.com.BI.User.*;
 import java.util.logging.*;
@@ -101,19 +102,19 @@ public class ScriptHandler {
 		return returnCode;
 	}
 
-	public boolean run(String scriptName) {
+	public boolean run(String scriptName, CommandInterface triggeringCommand) {
 		ScriptRunBlock scriptRunBlock = (ScriptRunBlock) scriptRunBlockList
 				.get(scriptName);
 		ScriptParams params = scriptRunBlock.nextRun();
 		if (scriptRunBlock != null) {
-			return runScript(scriptName,  params.getUser(),scriptModel);
+			return runScript(scriptName,  params.getUser(),scriptModel, triggeringCommand);
 		} else {
 			return false;
 		}
 
 	}
 
-	public boolean run(String scriptName, String parameter, User user) {
+	public boolean run(String scriptName, String parameter, User user, CommandInterface triggeringCommand) {
 		boolean doNotRun = false;
 
 		synchronized (this.scriptRunBlockList) {
@@ -158,11 +159,11 @@ public class ScriptHandler {
 			// Do not run at this stage, instead queue to be run after completion
 		}
 
-		return runScript(scriptName, user, scriptModel);
+		return runScript(scriptName, user, scriptModel,  triggeringCommand);
 
 	}
 
-	public boolean runScript(String scriptName, User user, Model scriptModel) {
+	public boolean runScript(String scriptName, User user, Model scriptModel, CommandInterface triggeringCommand) {
 		ArrayList linesOfScript = null;
 		synchronized (scripts) {
 			linesOfScript = (ArrayList) scripts.get(scriptName);
@@ -177,7 +178,7 @@ public class ScriptHandler {
 		} else {
 			abortingScript.put(scriptName, new Integer(0)); // Why ?????? CC
 			RunScript newScript = new RunScript(scriptName, user,
-					linesOfScript, scriptModel);
+					linesOfScript, scriptModel, triggeringCommand);
 			newScript.setCache(cache);
 			newScript.setCommandList(scriptModel.getCommandQueue());
 			newScript.setName("Script:" + scriptName);

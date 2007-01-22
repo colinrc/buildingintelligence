@@ -149,6 +149,10 @@ public class ModelParameters  {
         public void setCache(au.com.BI.Command.Cache cache) {
                 this.cache = cache;
         }
+        
+        public au.com.BI.Command.Cache getCache() {
+           return  cache;
+        }
 
         public void setVariableCache(HashMap <String,Object>variableCache) {
                 this.variableCache = variableCache;

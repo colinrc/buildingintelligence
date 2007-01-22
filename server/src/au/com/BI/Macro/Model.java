@@ -183,6 +183,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			    clientCommand = new ClientCommand();
 			    clientCommand.setFromElement (macro);
 			    clientCommand.setKey ("CLIENT_SEND");
+			    clientCommand.setDisplayName ("MACRO");
 				clientCommand.setTargetDeviceID(command.getOriginatingID());
 			}
 		}
@@ -196,6 +197,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
                         clientCommand = new ClientCommand();
                         clientCommand.setFromElement (macro);
                         clientCommand.setKey ("CLIENT_SEND");
+                        clientCommand.setDisplayName ("MACRO");
                             clientCommand.setTargetDeviceID(0);
                     }
 		}
@@ -330,6 +332,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		if (clientCommand != null) {
 			synchronized (cache){
+				clientCommand.setDisplayName("CALENDAR");
 				cache.setCachedCommand("CALENDAR", clientCommand,false);
 			}
 			commandQueue.add(clientCommand);

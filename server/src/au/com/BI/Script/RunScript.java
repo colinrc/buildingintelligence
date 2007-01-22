@@ -37,6 +37,7 @@ public class RunScript extends Thread {
   protected ArrayList linesOfScript;
   protected Model scriptModel;
   protected Cache cache;
+  protected CommandInterface triggeringEvent;
 
   public RunScript() {
     super();
@@ -44,13 +45,14 @@ public class RunScript extends Thread {
   }
 
   public RunScript(String scriptName, User user, ArrayList linesOfScript,
-                   Model scriptModel) {
+                   Model scriptModel, CommandInterface triggeringEvent) {
     super();
     logger = Logger.getLogger(this.getClass().getPackage().getName());
 
     setScriptName(scriptName);
     setLinesOfScript(linesOfScript);
     setScriptModel(scriptModel);
+    this.triggeringEvent = triggeringEvent;
 	this.setName("Sript runner : " + scriptName);
     setUser(user);
   }
@@ -86,6 +88,7 @@ public class RunScript extends Thread {
         logger.log(Level.FINEST, "Running Jython Script: " + scriptName);
 
         interp.set("elife", scriptModel);
+        interp.set("triggeringEvent",triggeringEvent);
         CommandInterface client;
         client = new ClientCommand();
         interp.set("client", client);

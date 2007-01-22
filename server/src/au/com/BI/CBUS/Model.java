@@ -83,6 +83,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void clearItems () {
 		state.clear();
 		applicationCodes.clear();
+		mMIHelpers.clearAllLevelMMIQueues();
 		synchronized (temperatureSensors) {
 			temperatureSensors.clear();
 		}
@@ -568,6 +569,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					tildeCount ++;
 					if (tildeCount > 0) {
 						clearAllQueues();
+						this.state.clear();
 						didCommand = true;
 						logger.log (Level.FINE,"Received confirmation of CBUS ~~~ init, sending initial parameters");
 						doRestOfStartup();
@@ -578,6 +580,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				if (cBUSString.endsWith("+")) {
 					// Power up notification received so reset all parameters.
 					clearAllQueues();
+					this.state.clear();
 					didCommand = true;
 					comms.sendString("~~"+ETX); // force the interface back into basic mode
 					return;
@@ -705,7 +708,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 					
 					if (!didCommand && commandCode.equals ("09")) {
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
+						CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
 						if (cbusDevice != null) {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
@@ -723,7 +726,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 					if (!didCommand && commandCode.equals("79") ) {
 
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
+						CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
 						if (cbusDevice == null) {
 							didCommand = true;
 						}
@@ -735,7 +738,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						}
 					}
 					if (!didCommand && commandCode.equals("01")) {
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode, cBusGroup,DeviceType.LIGHT_CBUS));
+						CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode, cBusGroup,DeviceType.LIGHT_CBUS));
 
 						if (cbusDevice == null) {
 							didCommand = true;
@@ -749,7 +752,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					}
 					if (!didCommand && rampCodes.indexOf(commandCode) > -1) {
 						try {
-							LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
+							CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
 
 							if (cbusDevice == null ) {
 								didCommand = true;
@@ -807,9 +810,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		mMIHelpers.clearAllLevelMMIQueues();
 	}
 	
-	protected void sendCommandToFlash (SensorFascade cbusDevice,String command,int extra,User currentUser){
+	protected void sendCommandToFlash (CBUSDevice cbusDevice,String command,int extra,User currentUser){
 		this.setState ((CBUSDevice)cbusDevice,command,extra);
-		CommandInterface cbusCommand = ((SensorFascade)cbusDevice).buildDisplayCommand ();
+		CommandInterface cbusCommand = null;
+		if (cbusDevice  instanceof SensorFascade){
+			cbusCommand = ((SensorFascade)cbusDevice).buildDisplayCommand ();
+		}
+		if (cbusDevice instanceof LightFascade){
+			cbusCommand = (CBUSCommand)((LightFascade)cbusDevice).buildDisplayCommand ();
+		}
+		if (cbusDevice instanceof Label){
+			cbusCommand = ((Label)cbusDevice).buildDisplayCommand ();
+		}
 		cbusCommand.setCommand (command);
 		cbusCommand.setExtraInfo(Integer.toString(extra));
 		cbusCommand.setKey ("CLIENT_SEND");
@@ -818,21 +830,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		this.setStateClean (cbusDevice);
 		this.sendToFlash(-1,cbusCommand);
 	}
-	
-	protected void sendCommandToFlash (LightFascade cbusDevice,String command,int extra,User currentUser){
-		this.setState ((CBUSDevice)cbusDevice,command,extra);
-		CBUSCommand cbusCommand = (CBUSCommand)((LightFascade)cbusDevice).buildDisplayCommand ();
-		cbusCommand.setCommand (command);
-		cbusCommand.setExtraInfo(Integer.toString(extra));
-		cbusCommand.setKey ("CLIENT_SEND");
-		cbusCommand.setUser(currentUser);
-		cache.setCachedCommand(cbusCommand.getDisplayName(),cbusCommand);
-		this.setStateClean (cbusDevice);
-		this.sendToFlash(-1,cbusCommand);
-	}
-	
-
-
 	
 
 	public void sendOutput (String keyStr, String command, String extra,User user) {
@@ -900,7 +897,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			int  theCommand = 160 +3 + theLabel.length();
 			byte tCommand = (byte)theCommand;
 			retCodes.add((byte)theCommand);
-			int intGroup = Integer.parseInt(key);
+			int intGroup = Integer.parseInt(key,16);
 			retCodes.add((byte)intGroup); // group address
 			retCodes.add((byte)0); 
 			retCodes.add((byte)1); // language english

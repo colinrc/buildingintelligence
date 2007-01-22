@@ -98,6 +98,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void sendAddressList(ClientCommand command) {
 		MessageCommand theMessage = new MessageCommand();
 		theMessage.setKey("CLIENT_SEND");
+		theMessage.setDisplayName("MESSAGE");
 		theMessage.setTargetDeviceID(0);
 		theMessage.setMessageType(CommandInterface.ID);
 		for (String i: addressBook.getAllNames()) {

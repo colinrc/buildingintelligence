@@ -37,6 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import au.com.BI.Lights.LightFascade;
+import au.com.BI.Messaging.MessageCommand;
 import au.com.BI.CustomConnect.*;
 import au.com.BI.CustomInput.CustomInput;
 import au.com.BI.Device.DeviceType;
@@ -625,9 +626,11 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 
 	public void sendToFlash(CommandInterface command, Cache cache) {
-		cache.setCachedCommand(command.getDisplayName(), command);
-		logger.log(Level.FINE, "Sending to flash " + command.getDisplayName() + ":"
+		if (!(command instanceof MessageCommand)){
+			cache.setCachedCommand(command.getDisplayName(), command);
+			logger.log(Level.FINE, "Sending to flash " + command.getDisplayName() + ":"
 				+ command.getCommandCode() + ":" + command.getExtraInfo());
+		}
 		commandQueue.add(command);
 	}
 

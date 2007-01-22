@@ -127,7 +127,7 @@ public class Model
 				}
 
                 if (theWholeKey.equals("SCRIPT")) {
-                        doScriptItem(command);
+                        doScriptItem(command, null); // script called via an explicit run command
                 }
                 else {
                         DeviceType device = configHelper.getOutputItem(theWholeKey);
@@ -146,7 +146,7 @@ public class Model
                                                 newCommand = createInternalCommand("SCRIPT","", "run", ( (Script) device).getNameOfScript());
                                                 newCommand.setTargetDeviceModel(0);
                                                 //  configHelper.addControlledItem("SCRIPT", newCommand, DeviceType.OUTPUT);
-                                                doScriptItem(newCommand);
+                                                doScriptItem(newCommand, command); // called via a trigger
                                                 // cache.setCachedCommand(newCommand.getKey(), newCommand);
                                                 //   sendCommand("SCRIPT","run",( (Script) device).getNameOfScript());
                                         }
@@ -160,7 +160,7 @@ public class Model
                 }
         }
 
-        public void doScriptItem(CommandInterface command) throws CommsFail {
+        public void doScriptItem(CommandInterface command, CommandInterface triggeringCommand) throws CommsFail {
                 String theWholeKey = command.getKey();
                 DeviceType device = configHelper.getOutputItem(theWholeKey);
 
@@ -172,7 +172,7 @@ public class Model
                 String extra2 = command.getExtra2Info();
                 User currentUser = command.getUser();
                 if (commandStr.equals("run")) {
-                        scriptHandler.run( (String) command.getExtraInfo(),command.getExtra2Info(), currentUser);
+                        scriptHandler.run( (String) command.getExtraInfo(),command.getExtra2Info(), currentUser,triggeringCommand);
                         logger.log(Level.FINER, "Run script request received " + command.getExtraInfo());
                 }
 	            if (commandStr.equals("finished")) {
@@ -183,7 +183,7 @@ public class Model
                        }
                        else
                        {
-                           scriptHandler.run(scriptName);
+                           scriptHandler.run(scriptName, triggeringCommand);
                            logger.log(Level.FINER, "Run queued script " + command.getExtraInfo());
                        }
                     	   
@@ -229,6 +229,7 @@ public class Model
 
                 if (clientCommand != null) {
                         clientCommand.setTargetDeviceID(command.getTargetDeviceID());
+                        clientCommand.setDisplayName("SCRIPT");
                         cache.setCachedCommand("SCRIPT", clientCommand);
                          commandQueue.add(clientCommand);
                 }
@@ -259,9 +260,8 @@ public class Model
 		} 
 
         public void sendToFlash(CommandInterface command) {
-
                 cache.setCachedCommand(command.getDisplayName(), command);
-                        commandQueue.add(command);
+                commandQueue.add(command);
         }
 
         public CommandQueue getCommandQueue() {
@@ -594,6 +594,7 @@ public class Model
                 return "None";
         }
 
+        
         /**
          * @return Returns the last accessed time of a device.
          */
@@ -703,58 +704,28 @@ public class Model
          * @param key,command,extra Send a command to the client screens.
          */
         public void sendCommand(String key, String display, String command, String extra) {
-                CommandInterface sendCommand;
-                sendCommand = new Command();
-                sendCommand.setCommand(command);
-                sendCommand.setExtraInfo(extra);
-                sendCommand.setDisplayName(display);
-                sendCommand.setKey(key);
-                sendToFlash(sendCommand);
+       	 sendCommand (key,display,command,extra,"","","","");
         }
 
         /**
         * @param key,command,extra Send a command to the client screens.
         */
        public void sendCommand(String key, String display, String command, String extra, String extra2) {
-               CommandInterface sendCommand;
-               sendCommand = new Command();
-               sendCommand.setCommand(command);
-               sendCommand.setExtraInfo(extra);
-               sendCommand.setExtra2Info(extra2);
-               sendCommand.setDisplayName(display);
-               sendCommand.setKey(key);
-               sendToFlash(sendCommand);
+        	 sendCommand (key,display,command,extra,extra2,"","","");
        }
 
        /**
         * @param key,command,extra Send a command to the client screens.
         */
        public void sendCommand(String key, String display, String command, String extra, String extra2, String extra3) {
-               CommandInterface sendCommand;
-               sendCommand = new Command();
-               sendCommand.setCommand(command);
-               sendCommand.setExtraInfo(extra);
-               sendCommand.setExtra2Info(extra2);
-               sendCommand.setExtra3Info(extra3);
-               sendCommand.setDisplayName(display);
-               sendCommand.setKey(key);
-               sendToFlash(sendCommand);
+      	 sendCommand (key,display,command,extra,extra2,extra3,"","");
        }
 
        /**
       * @param key,command,extra Send a command to the client screens.
       */
      public void sendCommand(String key, String display, String command, String extra, String extra2, String extra3, String extra4) {
-             CommandInterface sendCommand;
-             sendCommand = new Command();
-             sendCommand.setCommand(command);
-             sendCommand.setExtraInfo(extra);
-             sendCommand.setExtra2Info(extra2);
-             sendCommand.setExtra3Info(extra3);
-             sendCommand.setExtra4Info(extra4);
-             sendCommand.setDisplayName(display);
-             sendCommand.setKey(key);
-             sendToFlash(sendCommand);
+    	 sendCommand (key,display,command,extra,extra2,extra3,extra4,"");
      }
 
      /**
@@ -772,6 +743,20 @@ public class Model
              sendCommand.setDisplayName(display);
              sendCommand.setKey(key);
              sendToFlash(sendCommand);
+             // Send it to the device side
+             
+             CommandInterface sendCommandFlash;
+             sendCommandFlash = new Command();
+             sendCommandFlash.setCommand(command);
+             sendCommandFlash.setExtraInfo(extra);
+             sendCommandFlash.setExtra2Info(extra2);
+             sendCommandFlash.setExtra3Info(extra3);
+             sendCommandFlash.setExtra4Info(extra4);
+             sendCommandFlash.setExtra5Info(extra5);
+             sendCommandFlash.setDisplayName(display);
+             sendCommandFlash.setKey("CLIENT_SEND");
+             sendToFlash(sendCommandFlash);
+             // Send it to the other flash clients
      }
 
      /**

@@ -19,7 +19,7 @@ public class CBUSHelper {
 	public String buildKey (String appCode, String groupCode, int deviceType) {
 		if (groupCode.length() == 1 ) groupCode = "0" + groupCode;
 		String resultKey = appCode + ":" + groupCode;
-		if (deviceType == DeviceType.LABEL) resultKey = "L:" + resultKey;
+		// if (deviceType == DeviceType.LABEL) resultKey = "L:" + resultKey;
 		return resultKey.toUpperCase();
 	}
 	

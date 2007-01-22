@@ -22,8 +22,9 @@ public class Label extends BaseDevice implements DeviceType, CBUSDevice
 	protected String name="";
 	protected String command="";
 	protected String defaultLabel = "";
-	protected String applicationCode = "38";
-	protected int max = 100;
+	protected String applicationCode = "38";	
+	protected boolean relay = false;
+	protected int max = 255;
 	
 	public Label (String name, int deviceType){
 		super (name,deviceType);
@@ -77,7 +78,7 @@ public class Label extends BaseDevice implements DeviceType, CBUSDevice
 	}
 	
 	public boolean supportsLevelMMI() {
-		return false;
+		return true;
 	}
 	
 	public boolean isAreaDevice () {
