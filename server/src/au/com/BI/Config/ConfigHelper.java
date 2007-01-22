@@ -8,6 +8,7 @@ import java.util.*;
 
 import java.util.logging.*;
 
+import au.com.BI.Script.Script;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
 import au.com.BI.Config.ParameterBlock;
@@ -151,13 +152,12 @@ public class ConfigHelper {
 		}
 		else {
 			if (controlType == MessageDirection.FROM_FLASH) {
-				if (outputItems.containsKey(name)){
-					logger.log (Level.WARNING,"Attempted to add the device: " + name + " " + details.getName() + 
+				if (outputItems.containsKey(name) && !(details instanceof Script)){
+					logger.log (Level.INFO,"Attempted to add the device: " + name + " " + details.getName() + 
 							" when a device with the same key already exists: " + outputItems.get(name).getName());
 					
-				} else {
-					outputItems.put(name,details);
-				}
+				} 
+				outputItems.put(name,details);
 
 			} else {
 				if (inputItems.containsKey(name)){

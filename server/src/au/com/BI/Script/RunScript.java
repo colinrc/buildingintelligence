@@ -74,6 +74,7 @@ public class RunScript extends Thread {
       started.setKey("SCRIPT");
       started.setExtraInfo(getScriptName());
       started.setCommand("started");
+      started.setDisplayName("SCRIPT");
       cache.setCachedCommand("SCRIPT",started);
        commandList.add(started);
 
@@ -122,6 +123,7 @@ public class RunScript extends Thread {
       ClientCommand finished = new ClientCommand();
       finished.setKey("SCRIPT");
       finished.setExtraInfo(getScriptName());
+      finished.setDisplayName("SCRIPT");
       finished.setCommand("finished");
       cache.setCachedCommand ("SCRIPT",finished);
       commandList.add(finished);

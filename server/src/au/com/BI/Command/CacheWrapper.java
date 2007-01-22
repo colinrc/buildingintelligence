@@ -99,10 +99,8 @@ public class CacheWrapper {
 			this.key = newKey;
 		}
 		if (newCommand.getDisplayName() == null ||newCommand.getDisplayName().equals ("")) {
-			logger.log(Level.WARNING,"A command was attempted to be sent to the cache with a null or empty display name. Calling method: " + 
-					new Throwable().fillInStackTrace().getStackTrace()[1].getMethodName() + ":" + 
-					new Throwable().fillInStackTrace().getStackTrace()[2].getMethodName() + ":" + 
-					new Throwable().fillInStackTrace().getStackTrace()[3].getMethodName());
+			logger.log(Level.INFO,"A command was attempted to be sent to the cache with a null or empty display name. Calling method: " + 
+					showStackTrace());
 			newCommand.setDisplayName(newKey);
 		}
 		if (map == null) {
@@ -124,14 +122,21 @@ public class CacheWrapper {
 
 	}
 	
+	public String showStackTrace () {
+		String outString = "";
+		StackTraceElement [] methods = new Throwable().fillInStackTrace().getStackTrace();
+		for (int i = 2; i < methods.length; i ++ ) {
+			outString += methods[i] + ":";
+		}
+		return outString;
+	}
+	
 	public void setCommand (String key, CommandInterface command) {
 		this.creationTime = new Date().getTime();
 		this.key = key;
 		if (command.getDisplayName().equals ("")){
 			logger.log(Level.WARNING,"A command was attempted to be sent to the cache with a null or empty display name. Calling method: " + 
-					new Throwable().fillInStackTrace().getStackTrace()[1].getMethodName() + ":" + 
-					new Throwable().fillInStackTrace().getStackTrace()[2].getMethodName() + ":" + 
-					new Throwable().fillInStackTrace().getStackTrace()[3].getMethodName());
+					showStackTrace());
 			command.setDisplayName(key);
 		}
 		this.command = command;

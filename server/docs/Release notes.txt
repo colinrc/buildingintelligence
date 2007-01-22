@@ -1,3 +1,15 @@
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b30.zip V1.6b30]   ==
+
+''' General '''
+
+Show full stack trace for a command added to the cache with no display name, move to INFO so it does not display on the client.
+
+Allow multiple scripts to be added keyed to the same Display name.
+
+''' Script '''
+
+Ensure script communication messages have correct display names
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b29.zip V1.6b29]   ==
 
 ''' General '''
