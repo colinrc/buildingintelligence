@@ -99,7 +99,7 @@ public class CacheWrapper {
 			this.key = newKey;
 		}
 		if (newCommand.getDisplayName() == null ||newCommand.getDisplayName().equals ("")) {
-			logger.log(Level.INFO,"A command was attempted to be sent to the cache with a null or empty display name. Calling method: " + 
+			logger.log(Level.INFO,"A command was attempted to be sent to the cache with a null or empty display name.  " + command.toString() + " .Calling method: " + 
 					showStackTrace());
 			newCommand.setDisplayName(newKey);
 		}
@@ -135,7 +135,7 @@ public class CacheWrapper {
 		this.creationTime = new Date().getTime();
 		this.key = key;
 		if (command.getDisplayName().equals ("")){
-			logger.log(Level.WARNING,"A command was attempted to be sent to the cache with a null or empty display name. Calling method: " + 
+			logger.log(Level.INFO,"A command was attempted to be sent to the cache with a null or empty display name. Command " + command.toString() + " .Calling method: " + 
 					showStackTrace());
 			command.setDisplayName(key);
 		}
