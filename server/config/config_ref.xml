@@ -41,7 +41,7 @@
                 </PELCO>
         </DEVICE>
         <!-- ______________________________________  TUTONDO DEFS  ____________________  -->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="TUTONDO" DESCRIPTION="Tutondo Audio">
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="TUTONDO" DESCRIPTION="Tutondo Audio">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
                         <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5003"/>

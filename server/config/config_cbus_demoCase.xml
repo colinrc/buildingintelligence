@@ -36,7 +36,7 @@
      
                         <LIGHT_CBUS ACTIVE="Y" KEY="17"   NAME="Dimmer 1" DISPLAY_NAME="DIMMER1" POWER_RATING="100"/>                      
                         <LIGHT_CBUS ACTIVE="N" KEY="22"   NAME="Dimmer 2" DISPLAY_NAME="DIMMER2" POWER_RATING="100"/>
-                        <LIGHT_CBUS ACTIVE="Y" KEY="23"   NAME="Dimmer 3" DISPLAY_NAME="DIMMER3" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="23"   NAME="Dimmer 3" DISPLAY_NAME="DIMMER3" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="18"   NAME="Dimmer 4" DISPLAY_NAME="DIMMER4" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="19"   NAME="Dimmer 5" DISPLAY_NAME="DIMMER5" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="20"   NAME="Dimmer 6" DISPLAY_NAME="DIMMER6" POWER_RATING="100"/>
@@ -48,10 +48,10 @@
                         <LIGHT_CBUS ACTIVE="Y" KEY="4"   NAME="Reflection 3" DISPLAY_NAME="REFLECTION3" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="5"   NAME="Reflection 4" DISPLAY_NAME="REFLECTION4" POWER_RATING="100"/>
                                                 
-                        <LABEL ACTIVE="N" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT_LABEL_KEY = "MASTER_BED_LIGHT" />
-                        <LABEL ACTIVE="Y" KEY="22" NAME="DLT 1"  DISPLAY_NAME="DLT_1" DEFAULT_LABEL_KEY="DLT_LABEL_1" />
+                        <LABEL ACTIVE="N" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT_LABEL_KEY = "ON" />
+                        <LABEL ACTIVE="Y" KEY="22" NAME="DLT 1"  DISPLAY_NAME="DLT_1" DEFAULT_LABEL_KEY="ON" />
                         
-                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT2" DEFAULT_LABEL_KEY="KITCHEN_VOLUME"  />
+                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT_2" DEFAULT_LABEL_KEY="CD1"  />
                         <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3" DEFAULT_LABEL_KEY="FRONT_LIGHT" />
                         <LABEL ACTIVE="Y" KEY="3"   NAME="DLT 4"  DISPLAY_NAME="DLT4"  />
                         <LABEL ACTIVE="Y" KEY="200"   NAME="DLT 5" DISPLAY_NAME="DLT5"  />

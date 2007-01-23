@@ -5,6 +5,14 @@
 	            <LABEL KEY="VOLUME" VALUE="Volume Level"/>
 	            <LABEL KEY="SPRINKLERS" VALUE="Sprinklers"/>
 	            <LABEL KEY="DLT_LABEL_1" VALUE="Test 1"/>
+	            
+	            <LABEL KEY="ON" VALUE="on"/>
+	            <LABEL KEY="OFF" VALUE="off"/>
+	            
+	            <LABEL KEY="CD1" VALUE="cd1"/>
+	            <LABEL KEY="CD2" VALUE="cd2"/>
+	            <LABEL KEY="DVD" VALUE="dvd"/>
+	            <LABEL KEY="TV" VALUE="tv"/>
 	</TEXT>
 
 </LABELS>
