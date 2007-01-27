@@ -11,7 +11,7 @@ public class TestScriptHandler extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		Model scriptModel = new Model();
-		scriptModel.loadScripts();
+		scriptModel.loadJythonScripts();
 		sciptHandler = scriptModel.getScriptHandler();
 		scriptRunBlockList = scriptModel.scriptRunBlockList;
 	}
@@ -42,7 +42,7 @@ public class TestScriptHandler extends TestCase {
 	public void testSetStatus() {
 		// TODO Auto-generated method stub
 		scriptModel.getScriptHandler().setStatus("test","HIDDEN,OTHER,SOME");
-		scriptModel.loadScripts();
+		scriptModel.loadJythonScripts();
 		ScriptRunBlock scriptRunBlock = (ScriptRunBlock)scriptRunBlockList.get("test");
 		assertEquals("HIDDEN,OTHER,SOME",scriptRunBlock.getStatusString());
 
