@@ -18,6 +18,8 @@ public class Script extends BaseDevice implements DeviceType
   	protected String inKey="";
 	protected String extra = null;
 	protected String nameOfScript = "";
+	public enum ScriptType {Jython,Groovy};
+	protected  ScriptType scriptType =ScriptType. Jython;
 
 	public Script (){
 	}
@@ -54,18 +56,6 @@ public class Script extends BaseDevice implements DeviceType
 
 
     /**
-     * @return Returns the extra.
-     */
-    public String getExtra() {
-        return extra;
-    }
-    /**
-     * @param extra The extra to set.
-     */
-    public void setExtra(String extra) {
-        this.extra = extra;
-    }
-    /**
      * @return Returns the nameOfScript.
      */
     public String getNameOfScript() {
@@ -77,4 +67,12 @@ public class Script extends BaseDevice implements DeviceType
     public void setNameOfScript(String nameOfScript) {
         this.nameOfScript = nameOfScript;
     }
+
+	public ScriptType getScriptType() {
+		return scriptType;
+	}
+
+	public void setScriptType(ScriptType scriptType) {
+		this.scriptType = scriptType;
+	}
 }
