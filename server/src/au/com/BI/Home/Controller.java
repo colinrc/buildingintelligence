@@ -87,7 +87,6 @@ public class Controller {
 	protected LabelMgr labelMgr = null;
 
 	protected au.com.BI.Script.Model scriptModel;
-	protected au.com.BI.GroovyScripts.Model groovyScriptModel;
 
 	protected au.com.BI.GroovyModels.Model groovyModelHandler;
 
@@ -153,8 +152,7 @@ public class Controller {
 		modelRegistry.put("NUVO", "au.com.BI.Nuvo.Model");
 		modelRegistry.put("SIGN_VIDEO", "au.com.BI.SignVideo.Model");
 		modelRegistry.put("MACRO", "au.com.BI.Macro.Model");
-		modelRegistry.put("JY_SCRIPT", "au.com.BI.Script.Model");
-		modelRegistry.put("SCRIPT", "au.com.BI.GroovyScript.Model");
+		modelRegistry.put("SCRIPT", "au.com.BI.Script.Model");
 
 	}
 
@@ -202,11 +200,6 @@ public class Controller {
 		scriptModel.setController(this);
 		this.setupModel(scriptModel);
 		scriptModel.setInstanceID(deviceModels.size() - 1);
-		
-		groovyScriptModel = new au.com.BI.GroovyScripts.Model();
-		groovyScriptModel.setController(this);
-		this.setupModel(groovyScriptModel);
-		groovyScriptModel.setInstanceID(deviceModels.size() - 1);
 
 		flashHandler = new FlashHandler(DeviceModel.PROBABLE_FLASH_CLIENTS,
 				security);
