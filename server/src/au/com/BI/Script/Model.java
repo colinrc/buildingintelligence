@@ -11,12 +11,14 @@ import au.com.BI.Config.*;
 import au.com.BI.Device.DeviceType;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.*;
 
 import au.com.BI.ToggleSwitch.*;
 import au.com.BI.Flash.*;
 
 import au.com.BI.Script.ScriptHandler;
+import au.com.BI.Script.Script.ScriptType;
 import au.com.BI.User.User;
 import org.jdom.Element;
 import au.com.BI.JRobin.RRDValueObject;
@@ -47,13 +49,18 @@ public class Model
         protected Controller mainController;
 		protected Map scriptRunBlockList = null;
 		protected String statusFileName = "." + File.separator + "datafiles" + File.separator + "script_status.xml";
-
+        protected GroovyScriptHandler groovyScriptHandler;
+        protected GroovyScriptFileHandler groovyScriptFileHandler;
+		protected ConcurrentHashMap <String, GroovyScriptRunBlock>groovyScriptRunBlockList = null;
+        
         protected Map scriptFiles;
 
         public Model() {
                 super();
                 this.setName("SCRIPT");
                 scriptFileHandler = new ScriptFileHandler();
+                groovyScriptFileHandler = new GroovyScriptFileHandler();
+                groovyScriptRunBlockList = new ConcurrentHashMap <String, GroovyScriptRunBlock>(30);
                 scriptRunBlockList = Collections.synchronizedMap(new LinkedHashMap (30)); // 30 scripts to start with
                 this.setAutoReconnect(false);
                 try {
@@ -305,7 +312,33 @@ public class Model
 	    		}
 	    	};
 	    	
-        public void loadScripts() {
+	    	public void loadScripts (){
+	    		loadGroovyScripts();
+	    		loadJythonScripts();
+	    	}
+	    	
+	    	public void loadGroovyScripts () {
+	        	try {
+	        		groovyScriptFileHandler.loadScripts(this, "./script", groovyScriptRunBlockList);
+	        		for (String scriptName :groovyScriptRunBlockList.keySet()){
+	        			Script newScript = new Script();
+	        			GroovyScriptRunBlock scriptRunBlock = groovyScriptRunBlockList.get (scriptName);
+	        			newScript.setName(scriptName);
+	        			newScript.setScriptType (ScriptType.Groovy);
+	        			registerGroovyScript (scriptName, newScript,  scriptRunBlock);
+	        		}
+	        	} catch (ConfigError ex){
+	        		logger.log (Level.INFO,"Problem reading the script files " + ex.getMessage());
+	        	}
+	    	}
+
+	    	public void registerGroovyScript (String myScript, Script currentScript,GroovyScriptRunBlock scriptRunBlock){
+	    		for (String triggerTags :scriptRunBlock.getFireOnChange()){
+	    		  addControlledItem(triggerTags, currentScript, MessageDirection.FROM_FLASH);
+	    		}
+	    	}
+	    	
+        public void loadJythonScripts() {
                 int j = 0;
                 logger.log(Level.INFO,"Loading scripts");
 
