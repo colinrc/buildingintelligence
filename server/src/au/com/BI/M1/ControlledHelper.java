@@ -112,16 +112,6 @@ public class ControlledHelper {
 				m1Command.setKey("CLIENT_SEND");
 				m1Command.setUser(m1.currentUser);
 				sendCommand(cache, commandQueue, m1Command);
-			} else if (m1Command.getClass().equals(RequestTemperatureReply.class)) {
-				SensorFascade sensor = (SensorFascade) configHelper.getControlledItem(m1Command.getKey());
-				if (sensor == null ){
-					logger.log (Level.FINER,"Received temperature request for a device that has not been configured ");
-					return;
-				}
-				m1Command.setDisplayName(sensor.getOutputKey());
-				m1Command.setKey("CLIENT_SEND");
-				m1Command.setUser(m1.currentUser);
-				sendCommand(cache, commandQueue, m1Command);
 			} else if (m1Command.getClass().equals(ReplyZoneAnalogVoltageData.class)) {
 				Analog analogDevice = (Analog)configHelper.getControlledItem(m1Command.getKey() + "ALG");
 				
