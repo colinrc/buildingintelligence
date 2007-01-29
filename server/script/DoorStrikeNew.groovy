@@ -5,13 +5,13 @@ import au.com.BI.Command.*
 
 
    // true if the script can be run multiple times in parallel
-    def ableToRunMultiple = false
+    boolean ableToRunMultiple = false
     
     // List the variables that will cause the script to run when they change
-    def fireOnChange =   ["GARAGE_LIGHT"]
+    String[]  fireOnChange =   ["GARAGE_LIGHT"]
     
     // If the script is able to be stopped before completion, generally no
-    def  stoppable = false;
+    boolean  stoppable = false;
  
     
 	def elife  = "${elife}"
@@ -19,17 +19,7 @@ import au.com.BI.Command.*
 	def  cache = "${cache}"
 	def labelMgr = "{labelMgr}"
 	
-	boolean isAbleToRunMultiple () {
-		return false;
-	}
-	
-	boolean isStoppable () {
-		return false;
-	}
-	
-	String [] getFireOnChange() {
-	 	return [ "GARAGE_LIGHT"]
-	}
+
 	
 	
 	def main (String[] argv) {
