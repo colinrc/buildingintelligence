@@ -383,9 +383,6 @@ public class ScriptHandler {
 					scriptRunBlock.setStatusString(status);
 					scriptRunBlockList.put(name, scriptRunBlock);
 				} else {
-					logger.log(Level.WARNING,
-							"A script status update was received for a script that does not exist "
-									+ name);
 					return false;
 				}
 			}
@@ -399,8 +396,6 @@ public class ScriptHandler {
 	protected boolean setScriptEnable(String scriptName, User user,
 			boolean enabled) {
 		if (scriptName == null && !scriptName.equals("")) {
-			logger.log(Level.WARNING,
-					"Enable/Disable script was called with no script name");
 			return false;
 		}
 		RunScript theScript;
@@ -418,11 +413,6 @@ public class ScriptHandler {
 				scriptRunBlock.setEnabled(enabled);
 				scriptRunBlockList.put(scriptName, scriptRunBlock);
 			} else {
-				logger
-						.log(
-								Level.WARNING,
-								"A script enable/disable request was received for a script that does not exist "
-										+ scriptName);
 				return false;
 			}
 		}
@@ -477,31 +467,24 @@ public class ScriptHandler {
 	 * @param scriptName Empty string for all scripts or the name of a script
 	 * @return
 	 */
-	public Element get(String scriptName) {
-		Element top = new Element("SCRIPT");
+	public List<Element> get(String scriptName) {
+		List <Element>returnList = new LinkedList<Element>();
 
+		
 		synchronized (scripts) {
 			if (scriptName.equals("")) {
 				Iterator scriptNames = scripts.keySet().iterator();
 				while (scriptNames.hasNext()) {
 					Element scriptDef = buildListElement((String) scriptNames
 							.next());
-					try {
-						if (scriptDef != null)
-							top.addContent(scriptDef);
-					} catch (NoSuchMethodError ex) {
-						logger.log(Level.SEVERE, "Error calling jdom library "
-								+ ex.getMessage());
-					}
+					returnList.add( scriptDef);
 				}
 			} else {
 				Element scriptDef = buildListElement(scriptName);
-				if (scriptDef != null)
-					top.addContent(scriptDef);
-
+				returnList.add (scriptDef);
 			}
 		}
-		return top;
+		return returnList;
 	}
 
 	public Element buildListElement(String scriptName) {
@@ -638,14 +621,6 @@ public class ScriptHandler {
 			}
 			return false;
 		}
-	}
-
-	public String getStatusFileName() {
-		return statusFileName;
-	}
-
-	public void setStatusFileName(String statusFileName) {
-		this.statusFileName = statusFileName;
 	}
 
 	public Cache getCache() {

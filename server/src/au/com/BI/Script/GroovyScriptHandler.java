@@ -49,12 +49,12 @@ public class GroovyScriptHandler {
 	public static final int DAY_INTERVAL = 86400000;
 
 
-	public GroovyScriptHandler(int numberOfScripts,
-			Model scriptModel, ConcurrentHashMap <String, GroovyScriptRunBlock>scriptRunBlockList,
-			String statusFileName) { 
+	public GroovyScriptHandler(Model scriptModel, ConcurrentHashMap <String, GroovyScriptRunBlock>scriptRunBlockList,
+			String statusFileName, GroovyScriptEngine gse) { 
 		super();
 
 		this.statusFileName = statusFileName;
+		this.gse = gse;
 
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		runningScripts = new ConcurrentHashMap<String, RunGroovyScript>();
@@ -72,18 +72,14 @@ public class GroovyScriptHandler {
 	public boolean finishedRunning(String scriptName) {
 		boolean returnCode = true;
 		
-		synchronized (this.scriptRunBlockList) {
 			GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
 					.get(scriptName);
 			if (scriptRunBlock.moreToRun()) {
 				returnCode = false; // don't flag it as finished; and run enxt one.
 				scriptRunBlockList.put(scriptName, scriptRunBlock);
 			}
-		}
 		if (returnCode) {
-			synchronized (runningScripts) {
 				runningScripts.remove(scriptName);
-			}
 		}
 		return returnCode;
 	}
@@ -102,7 +98,6 @@ public class GroovyScriptHandler {
 	public boolean run(String scriptName, String parameter, User user, CommandInterface triggeringCommand) {
 		boolean doNotRun = false;
 
-		synchronized (this.scriptRunBlockList) {
 			GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
 					.get(scriptName);
 			if (scriptRunBlock == null) {
@@ -115,17 +110,15 @@ public class GroovyScriptHandler {
 						+ " was sent, but script is disabled");
 				return false;
 			}
-		}
 
 		boolean scriptAlreadyRunning = false;
 		boolean noQueue = false; // DEFAULT SHOULD BE FALSE CC
 		if (parameter.equals("no_queue"))
 			noQueue = true;
-		synchronized (runningScripts) {
-			if (runningScripts.containsKey(scriptName)) {
-				scriptAlreadyRunning = true;
-			}
+		if (runningScripts.containsKey(scriptName)) {
+			scriptAlreadyRunning = true;
 		}
+
 		if (scriptAlreadyRunning && noQueue) {
 			logger.log(Level.FINE, "User attempted to run " + scriptName
 					+ " twice");
@@ -133,12 +126,10 @@ public class GroovyScriptHandler {
 		}
 		if (scriptAlreadyRunning && !noQueue) {
 			ScriptParams params = new ScriptParams(parameter, user);
-			synchronized (scriptRunBlockList) {
-				GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
-						.get(scriptName);
-				scriptRunBlock.addRun(params);
-				scriptRunBlockList.put(scriptName, scriptRunBlock);
-			}
+			GroovyScriptRunBlock groovyScriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
+					.get(scriptName);
+			groovyScriptRunBlock.addRun(params);
+			scriptRunBlockList.put(scriptName, groovyScriptRunBlock);
 			logger.log(Level.FINER, "Queued script " + scriptName);
 			return true;
 			// Do not run at this stage, instead queue to be run after completion
@@ -158,6 +149,10 @@ public class GroovyScriptHandler {
 			newScript.start();
 			logger.log(Level.FINE, "Started script " + scriptName);
 			return true;
+	}
+	
+	public boolean ownsScript (String scriptName){
+		return scriptRunBlockList.containsKey(scriptName);
 	}
 
 	public void loadScriptFile() {
@@ -233,7 +228,6 @@ public class GroovyScriptHandler {
 	}
 
 	public void saveScriptFile() {
-		synchronized (scriptRunBlockList) {
 			try {
 				Element scriptStatusElm = new Element("SCRIPT_STATUS");
 				for (GroovyScriptRunBlock scriptRunBlock : scriptRunBlockList.values()){
@@ -267,92 +261,19 @@ public class GroovyScriptHandler {
 						"System failed writing script status file "
 								+ statusFileName + " " + e.getMessage());
 			}
-		}
 	}
 
-	public void addTimerControls() {
-
-		if (timerListMinute.isEmpty() == false) {
-			timedScriptMinute = new TimedGroovyScript(timerListMinute);
-			timedScriptMinute.setScriptHandler(this);
-			logger.log(Level.FINE, "Launching script Minute Timer:");
-			timerMinute = new Timer();
-			timerMinute.schedule(timedScriptMinute, MINUTE_INTERVAL,
-					MINUTE_INTERVAL);
-		} else if (timerListHour.isEmpty() == false) {
-			timedScriptHour = new TimedGroovyScript(timerListHour);
-			timedScriptHour.setScriptHandler(this);
-			logger.log(Level.FINE, "Launching script Hour Timer:");
-			timerHour = new Timer();
-			timerHour.schedule(timedScriptHour, HOUR_INTERVAL, HOUR_INTERVAL);
-		} else if (timerListDay.isEmpty() == false) {
-			timedScriptDay = new TimedGroovyScript(timerListDay);
-			timedScriptDay.setScriptHandler(this);
-			logger.log(Level.FINE, "Launching script Day Timer:");
-			timerDay = new Timer();
-			timerDay.schedule(timedScriptDay, DAY_INTERVAL, DAY_INTERVAL);
-		}
-
-	}
-
-	public void removeAllTimers() {
-		timerMinute.cancel();
-		timerHour.cancel();
-		timerDay.cancel();
-	}
-
-	public String getTimerListType(String script) {
-		if (timerListMinute.contains(script) == true) {
-			return "minute";
-		} else if (timerListHour.contains(script) == true) {
-			return "hour";
-		} else {
-			if (timerListDay.contains(script) == true) {
-				return "day";
-			}
-		}
-		return "";
-	}
-
-	public void addTimerListMinute(String script) {
-		if (timerListMinute.contains(script) == false) {
-			timerListMinute.add(script);
-		}
-	}
-
-	public void addTimerListHour(String script) {
-		if (timerListHour.contains(script) == false) {
-			timerListHour.add(script);
-		}
-	}
-
-	public void addTimerListDay(String script) {
-		if (timerListDay.contains(script) == false) {
-			timerListDay.add(script);
-		}
-	}
-
-	public void initTimerLists() {
-		timerListMinute.clear();
-		timerListMinute.clear();
-		timerListDay.clear();
-	}
-
+	
 	public boolean setStatus(String name, String status) {
 		if (name != null && status != null && !name.equals("")) {
-			synchronized (this.scriptRunBlockList) {
 				GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
 						.get(name);
 				if (scriptRunBlock != null) {
 					scriptRunBlock.setStatusString(status);
 					scriptRunBlockList.put(name, scriptRunBlock);
 				} else {
-					logger.log(Level.WARNING,
-							"A script status update was received for a script that does not exist "
-									+ name);
 					return false;
 				}
-			}
 			saveScriptFile();
 			return true;
 		} else {
@@ -361,34 +282,25 @@ public class GroovyScriptHandler {
 	}
 
 	protected boolean setScriptEnable(String scriptName, User user,
-			boolean enabled) {
+			boolean enabled)  {
 		if (scriptName == null && !scriptName.equals("")) {
-			logger.log(Level.WARNING,
-					"Enable/Disable script was called with no script name");
 			return false;
 		}
 		RunGroovyScript theScript;
 		logger.log(Level.FINE, "Disable script " + scriptName);
-		synchronized (runningScripts) {
-			theScript = (RunGroovyScript) runningScripts.get(scriptName);
-			if (theScript != null) {
-				theScript.setEnable(enabled);
-			}
+		theScript = (RunGroovyScript) runningScripts.get(scriptName);
+		if (theScript != null) {
+			theScript.setEnable(enabled);
 		}
-		synchronized (this.scriptRunBlockList) {
-			GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
-					.get(scriptName);
-			if (scriptRunBlock != null) {
-				scriptRunBlock.setEnabled(enabled);
-				scriptRunBlockList.put(scriptName, scriptRunBlock);
-			} else {
-				logger
-						.log(
-								Level.WARNING,
-								"A script enable/disable request was received for a script that does not exist "
-										+ scriptName);
-				return false;
-			}
+
+		GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
+				.get(scriptName);
+		if (scriptRunBlock != null) {
+			scriptRunBlock.setEnabled(enabled);
+			scriptRunBlockList.put(scriptName, scriptRunBlock);
+		} else {
+
+			return false;
 		}
 		this.saveScriptFile();
 
@@ -420,45 +332,26 @@ public class GroovyScriptHandler {
 			return true;
 	}
 
-	/*   public boolean complete(String scriptName, User user) {
-	 RunScript theScript;
-	 logger.log (Level.FINE,"Running script "+ scriptName + " to completion");
-	 synchronized (runningScripts) {
-	 theScript = (RunScript)runningScripts.get(scriptName);
-	 }
-	 if (theScript != null) {
-	 theScript.setContinueToEnd(true);
-	 }
-	 return true;
-	 } */
 
 	/**
 	 * Returns the script list as an XML element,or a specific script.
 	 * @param scriptName Empty string for all scripts or the name of a script
 	 * @return
 	 */
-	public Element get(String scriptName) {
-		
-		Element top = new Element("SCRIPT");
+	public List<Element> get(String scriptName) {
+		List <Element>returnList = new LinkedList<Element>();
 
 			if (scriptName.equals("")) {
 				for (String theName:scriptRunBlockList.keySet()){
 					Element scriptDef = buildListElement(theName);
-					try {
-						if (scriptDef != null)
-							top.addContent(scriptDef);
-					} catch (NoSuchMethodError ex) {
-						logger.log(Level.SEVERE, "Error calling jdom library "
-								+ ex.getMessage());
-					}
+					returnList.add(scriptDef);
 				}
 			} else {
 				Element scriptDef = buildListElement(scriptName);
-				if (scriptDef != null)
-					top.addContent(scriptDef);
+				returnList.add (scriptDef);
 
 			}
-		return top;
+		return returnList;
 	}
 
 	public Element buildListElement(String scriptName) {
@@ -499,23 +392,11 @@ public class GroovyScriptHandler {
 		} else {
 			scriptDef.setAttribute("RUNNING", "0");
 		}
-		myTimer = getTimerListType(scriptName);
-		scriptDef.setAttribute("TIMER", myTimer);
 
 		return scriptDef;
 	}
 
-	/*
-	public void put(String name, Element scriptElement) {
-		LinkedList script = parseElement(scriptElement);
-		if (script != null) {
-			synchronized (scripts) {
-				scripts.put(name, script);
-			}
-		}
-		this.saveScriptFile();
-	}
-	*/
+
 
 	
 	public LinkedList <ClientCommand>parseElement(Element element) {
@@ -577,14 +458,6 @@ public class GroovyScriptHandler {
 				return true;
 			}
 			return false;
-	}
-
-	public String getStatusFileName() {
-		return statusFileName;
-	}
-
-	public void setStatusFileName(String statusFileName) {
-		this.statusFileName = statusFileName;
 	}
 
 	public Cache getCache() {

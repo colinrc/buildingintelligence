@@ -83,8 +83,9 @@ public class RunGroovyScript extends Thread {
         binding.setVariable("cache", scriptModel.getCache());
         binding.setVariable("triggeringEvent", triggeringEvent);
         binding.setVariable("client", client);
+        binding.setVariable("labelMgr", scriptModel.getLabelMgr());
        
-        gse.run(scriptName, binding);
+        gse.run(scriptName+".groovy", binding);
 
 
 

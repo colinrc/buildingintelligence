@@ -49,6 +49,7 @@ public class Model
         protected Controller mainController;
 		protected Map scriptRunBlockList = null;
 		protected String statusFileName = "." + File.separator + "datafiles" + File.separator + "script_status.xml";
+		protected String groovyStatusFileName = "." + File.separator + "datafiles" + File.separator + "script_status.xml";
         protected GroovyScriptHandler groovyScriptHandler;
         protected GroovyScriptFileHandler groovyScriptFileHandler;
 		protected ConcurrentHashMap <String, GroovyScriptRunBlock>groovyScriptRunBlockList = null;
@@ -179,40 +180,70 @@ public class Model
                 String extra2 = command.getExtra2Info();
                 User currentUser = command.getUser();
                 if (commandStr.equals("run")) {
-                        scriptHandler.run( (String) command.getExtraInfo(),command.getExtra2Info(), currentUser,triggeringCommand);
-                        logger.log(Level.FINER, "Run script request received " + command.getExtraInfo());
+                	String scriptName = command.getExtraInfo();
+	                   if (groovyScriptHandler.ownsScript (scriptName)){
+	                        groovyScriptHandler.run(scriptName,command.getExtra2Info(), currentUser,triggeringCommand);
+	                        logger.log(Level.FINER, "Run Groovy script request received " + command.getExtraInfo());
+	                   } else {
+	                        scriptHandler.run( scriptName,command.getExtra2Info(), currentUser,triggeringCommand);
+	                        logger.log(Level.FINER, "Run Jython script request received " + command.getExtraInfo());	                	   
+	                   }
                 }
 	            if (commandStr.equals("finished")) {
 	            		String scriptName = command.getExtraInfo();
-                       logger.log(Level.FINER, "Finished script " + scriptName );
-                       if (scriptHandler.finishedRunning(scriptName)) {
-                    	   	clientCommand = doGetList ("");  // no more to run, so update the client
-                       }
-                       else
-                       {
-                           scriptHandler.run(scriptName, triggeringCommand);
-                           logger.log(Level.FINER, "Run queued script " + command.getExtraInfo());
-                       }
-                    	   
+	                    logger.log(Level.FINER, "Finished script " + scriptName );
+	                   if (groovyScriptHandler.ownsScript (scriptName)){
+	                       if (groovyScriptHandler.finishedRunning(scriptName)) {
+	                    	   	clientCommand = doGetList ("");  // no more to run, so update the client
+	                       }
+	                       else
+	                       {
+	                           groovyScriptHandler.run(scriptName, triggeringCommand);
+	                           logger.log(Level.FINER, "Running queued script " + command.getExtraInfo());
+	                       }
+	                       
+	                   } else {
+	                       if (scriptHandler.finishedRunning(scriptName)) {
+	                    	   	clientCommand = doGetList ("");  // no more to run, so update the client
+	                       }
+	                       else
+	                       {
+	                           scriptHandler.run(scriptName, triggeringCommand);
+	                           logger.log(Level.FINER, "Running queued script " + command.getExtraInfo());
+	                       }
+	                   }
+	                    	   
                }
 				if (commandStr.equals("save")) {
 	                if (extra2.equals("enabled")) {
-	                        scriptHandler.enableScript( (String) command.getExtraInfo(), currentUser);
+	                	if (!groovyScriptHandler.enableScript( (String) command.getExtraInfo(), currentUser) && 
+	                			!scriptHandler.enableScript( (String) command.getExtraInfo(), currentUser)  ){
+	                		logger.log (Level.WARNING,"Enable was called for a script that does not exist");
+	                }
+	                else {
 							clientCommand = doGetList ("");
 	                        logger.log(Level.FINER, "Enable script " + command.getExtraInfo());
 	                }
+	                }
 	                if (extra2.equals("disabled")) {
-	                        scriptHandler.disableScript( (String) command.getExtraInfo(), currentUser);
-							clientCommand = doGetList ("");
-	                        logger.log(Level.FINER, "Disable script " + command.getExtraInfo());
+	                	if (!scriptHandler.disableScript( (String) command.getExtraInfo(), currentUser) &&
+	                        !groovyScriptHandler.disableScript( (String) command.getExtraInfo(), currentUser) ) {
+	                			logger.log (Level.WARNING,"Disable was called for a script that does not exist");
+	                        } else {
+								clientCommand = doGetList ("");
+		                        logger.log(Level.FINER, "Disable script " + command.getExtraInfo());
+		                    }
 	                }
 	                if (extra2.equals("enableAll")) {
 	                        scriptHandler.enableAll();
+	                        groovyScriptHandler.enableAll();
+	                        
 							clientCommand = doGetList ("");
 	                        logger.log(Level.FINER, "Enable All scripts " + command.getExtraInfo());
 	                }
 	                if (extra2.equals("disableAll")) {
 	                        scriptHandler.disableAll();
+	                        groovyScriptHandler.disableAll();
 							clientCommand = doGetList ("");
 	                        logger.log(Level.FINER, "Disable All scripts " + command.getExtraInfo());
 	                }
@@ -223,12 +254,20 @@ public class Model
                 }
 
                 if (commandStr.equals("setStatus")) {
-					scriptHandler.setStatus(command.getExtraInfo(),command.getExtra2Info());
-					clientCommand = doGetList ("");
-                    logger.log(Level.FINER, "Setting status for " + command.getExtraInfo() + "=" + command.getExtra2Info());
+					if (!groovyScriptHandler.setStatus(command.getExtraInfo(),command.getExtra2Info()) && 
+							!scriptHandler.setStatus(command.getExtraInfo(),command.getExtra2Info())) {
+			
+						logger.log(Level.WARNING,
+							"A script status update was received for a script that does not exist "
+									+ name);
+                	} else {
+                		clientCommand = doGetList ("");
+                		logger.log(Level.FINER, "Setting status for " + command.getExtraInfo() + "=" + command.getExtra2Info());
+                	}
                 }
 
                 if (commandStr.equals("abort")) {
+                	groovyScriptHandler.abort(command.getExtraInfo());
 					scriptHandler.abort(command.getExtraInfo());
 					clientCommand = doGetList ("");
                     logger.log(Level.FINER, "Aborting script " + command.getExtraInfo());
@@ -249,22 +288,38 @@ public class Model
             commandQueue.add(clientCommand);
 		}
 
-		public Command doGetList (String key) {
+		public ClientCommand doGetList (String key) {
             logger.log(Level.FINER, "Fetching script list");
-            if (scriptHandler == null) return null;
-            Element script = scriptHandler.get(key);
-
-            if (script == null) {
-                    logger.log(Level.WARNING, "Could not retrieve script list");
-					return null;
+            if (scriptHandler == null  || groovyScriptHandler == null){
+            	logger.log (Level.WARNING,"The list of scripts was requested before it has been loaded");
+            	return null;
             }
-            else {
-                    ClientCommand clientCommand = new ClientCommand();
-                    clientCommand.setFromElement(script);
-                    clientCommand.setKey("CLIENT_SEND");
-					return clientCommand;
-            }
-		} 
+    		Element top = new Element("SCRIPT");
+    		List <Element>eachScript = scriptHandler.get(key);
+    		for (Element i : eachScript){    			
+				try {
+						top.addContent(i);
+				} catch (NoSuchMethodError ex) {
+					logger.log(Level.SEVERE, "Error calling jdom library "
+							+ ex.getMessage());
+				}
+    		}
+    		
+    		List <Element>eachGroovyScript = groovyScriptHandler.get(key);
+    		for (Element i : eachGroovyScript){    			
+				try {
+						top.addContent(i);
+				} catch (NoSuchMethodError ex) {
+					logger.log(Level.SEVERE, "Error calling jdom library "
+							+ ex.getMessage());
+				}
+    		}
+				
+          ClientCommand clientCommand = new ClientCommand();
+            clientCommand.setFromElement(top);
+            clientCommand.setKey("CLIENT_SEND");
+			return clientCommand;
+	} 
 
         public void sendToFlash(CommandInterface command) {
                 cache.setCachedCommand(command.getDisplayName(), command);
@@ -303,11 +358,9 @@ public class Model
 
 	    	public void doClientStartup(CommandQueue commandQueue, long targetFlashDeviceID, long serverID){
 	    		if (scriptHandler != null) {
-		    	    ClientCommand clientCommand = new ClientCommand();
-		    	    clientCommand.setFromElement (scriptHandler.get(""));
+		    	    ClientCommand clientCommand = this.doGetList("");
 		    	    clientCommand.setKey ("CLIENT_SEND");
 		    	    clientCommand.setTargetDeviceID(targetFlashDeviceID);
-                    //cache.setCachedCommand("CLIENT_SEND", clientCommand);
 		    	    commandQueue.add(clientCommand);
 	    		}
 	    	};
@@ -320,13 +373,15 @@ public class Model
 	    	public void loadGroovyScripts () {
 	        	try {
 	        		groovyScriptFileHandler.loadScripts(this, "./script", groovyScriptRunBlockList);
+	                groovyScriptHandler = new GroovyScriptHandler(this, groovyScriptRunBlockList, groovyStatusFileName,groovyScriptFileHandler.getGse());
 	        		for (String scriptName :groovyScriptRunBlockList.keySet()){
 	        			Script newScript = new Script();
 	        			GroovyScriptRunBlock scriptRunBlock = groovyScriptRunBlockList.get (scriptName);
-	        			newScript.setName(scriptName);
+	        			newScript.setNameOfScript(scriptName);
 	        			newScript.setScriptType (ScriptType.Groovy);
 	        			registerGroovyScript (scriptName, newScript,  scriptRunBlock);
 	        		}
+	        		logger.log(Level.INFO,"Loaded Groovy scripts");
 	        	} catch (ConfigError ex){
 	        		logger.log (Level.INFO,"Problem reading the script files " + ex.getMessage());
 	        	}
@@ -595,8 +650,9 @@ public class Model
                         Command retCommand;
                         retCommand = (Command) cachedValue.getCommand();
                         return retCommand.getExtraInfo();
+                }else {
+                	return "isSet";
                 }
-                return "None";
         }
 
         /**
@@ -623,8 +679,9 @@ public class Model
                                         return retCommand.getExtra5Info();
                         }
                         return retCommand.getExtraInfo();
+                }else {
+                	return "isSet";
                 }
-                return "None";
         }
 
         
@@ -729,68 +786,12 @@ public class Model
                         Command retCommand;
                         retCommand = (Command) cachedValue.getCommand();
                         return retCommand.getCommandCode();
+                } else {
+                	return "isSet";
                 }
-                return "None";
         }
 
-        /**
-         * @param key,command,extra Send a command to the client screens.
-         */
-        public void sendCommand(String key, String display, String command, String extra) {
-       	 sendCommand (key,display,command,extra,"","","","");
-        }
 
-        /**
-        * @param key,command,extra Send a command to the client screens.
-        */
-       public void sendCommand(String key, String display, String command, String extra, String extra2) {
-        	 sendCommand (key,display,command,extra,extra2,"","","");
-       }
-
-       /**
-        * @param key,command,extra Send a command to the client screens.
-        */
-       public void sendCommand(String key, String display, String command, String extra, String extra2, String extra3) {
-      	 sendCommand (key,display,command,extra,extra2,extra3,"","");
-       }
-
-       /**
-      * @param key,command,extra Send a command to the client screens.
-      */
-     public void sendCommand(String key, String display, String command, String extra, String extra2, String extra3, String extra4) {
-    	 sendCommand (key,display,command,extra,extra2,extra3,extra4,"");
-     }
-
-     /**
-      * @param key,command,extra Send a command to the client screens.
-      */
-     public void sendCommand(String key, String display, String command, String extra, String extra2, String extra3, String extra4, String extra5) {
-             CommandInterface sendCommand;
-             sendCommand = new Command();
-             sendCommand.setCommand(command);
-             sendCommand.setExtraInfo(extra);
-             sendCommand.setExtra2Info(extra2);
-             sendCommand.setExtra3Info(extra3);
-             sendCommand.setExtra4Info(extra4);
-             sendCommand.setExtra5Info(extra5);
-             sendCommand.setDisplayName(display);
-             sendCommand.setKey(key);
-             sendToFlash(sendCommand);
-             // Send it to the device side
-             
-             CommandInterface sendCommandFlash;
-             sendCommandFlash = new Command();
-             sendCommandFlash.setCommand(command);
-             sendCommandFlash.setExtraInfo(extra);
-             sendCommandFlash.setExtra2Info(extra2);
-             sendCommandFlash.setExtra3Info(extra3);
-             sendCommandFlash.setExtra4Info(extra4);
-             sendCommandFlash.setExtra5Info(extra5);
-             sendCommandFlash.setDisplayName(display);
-             sendCommandFlash.setKey("CLIENT_SEND");
-             sendToFlash(sendCommandFlash);
-             // Send it to the other flash clients
-     }
 
      /**
            * @param key,command,extra Create a command system command.
@@ -810,13 +811,7 @@ public class Model
       */
      public void createCommand(String key, String command, String extra) {
 
-             ClientCommand myCommand;
-             myCommand = new ClientCommand();
-             myCommand.setCommand(command);
-             myCommand.setExtraInfo(extra);
-             myCommand.setKey(key);
-             sendToFlash(myCommand);
-             return;
+         createCommand ( key,  command,  extra,  "",  "",  "","");
      }
 
      /**
@@ -824,30 +819,14 @@ public class Model
       */
      public void createCommand(String key, String command, String extra1, String extra2) {
 
-             ClientCommand myCommand;
-             myCommand = new ClientCommand();
-             myCommand.setCommand(command);
-             myCommand.setExtraInfo(extra1);
-             myCommand.setExtra2Info(extra2);
-             myCommand.setKey(key);
-             sendToFlash(myCommand);
-             return;
+         createCommand ( key,  command,  extra1,  extra2,  "",  "","");
      }
 
        /**
         * @param key,command,extra1,extra2,extra3 Create a command system command.
         */
        public void createCommand(String key, String command, String extra1, String extra2, String extra3) {
-
-               ClientCommand myCommand;
-               myCommand = new ClientCommand();
-               myCommand.setCommand(command);
-               myCommand.setExtraInfo(extra1);
-               myCommand.setExtra2Info(extra2);
-               myCommand.setExtra3Info(extra3);
-               myCommand.setKey(key);
-               sendToFlash(myCommand);
-               return;
+           createCommand ( key,  command,  extra1,  extra2,  extra3,  "","");
        }
 
        /**
@@ -855,16 +834,7 @@ public class Model
         */
        public void createCommand(String key, String command, String extra1, String extra2, String extra3, String extra4) {
 
-               ClientCommand myCommand;
-               myCommand = new ClientCommand();
-               myCommand.setCommand(command);
-               myCommand.setExtraInfo(extra1);
-               myCommand.setExtra2Info(extra2);
-               myCommand.setExtra3Info(extra3);
-               myCommand.setExtra4Info(extra4);
-               myCommand.setKey(key);
-               sendToFlash(myCommand);
-               return;
+              createCommand ( key,  command,  extra1,  extra2,  extra3,  extra4,"");
        }
 
        /**
@@ -880,8 +850,10 @@ public class Model
                myCommand.setExtra3Info(extra3);
                myCommand.setExtra4Info(extra4);
                myCommand.setExtra5Info(extra5);
+               myCommand.setTargetDeviceID(0);
                myCommand.setKey(key);
                sendToFlash(myCommand);
+               
                return;
        }
 
@@ -1173,200 +1145,85 @@ public class Model
          * @param String,String Turn on the device to the passed in value.
          */
         public void on(String key, String extra) {
-                CommandInterface sendCommand;
-                sendCommand = new Command();
-                sendCommand.setCommand("on");
-                sendCommand.setExtraInfo(extra);
-                sendCommand.setDisplayName(key);
-                sendCommand.setTargetDeviceID(0);
-                sendCommand.setKey(key);
-                sendToFlash(sendCommand);
+        	this.createCommand(key,"on", extra,"","","","");
+
         }
 
         /**
          * @param String,String Turn on the device to the passed in value.
          */
         public void on(String key, String extra, String extra2) {
-                CommandInterface sendCommand;
-                sendCommand = new Command();
-                sendCommand.setCommand("on");
-                sendCommand.setExtraInfo(extra);
-                sendCommand.setExtra2Info(extra2);
-                sendCommand.setDisplayName(key);
-                sendCommand.setTargetDeviceID(-1);
-                sendCommand.setKey("CLIENT_SEND");
-                sendToFlash(sendCommand);
+        	this.createCommand(key,"on", extra, extra2,"","","");
         }
 
         /**
          * @param String,String Turn on the device to the passed in value.
          */
         public void on(String key, String extra, String extra2, String extra3) {
-                CommandInterface sendCommand;
-                sendCommand = new ClientCommand();
-                sendCommand.setCommand("on");
-                sendCommand.setExtraInfo(extra);
-                sendCommand.setExtra2Info(extra2);
-                sendCommand.setExtra3Info(extra3);
-                sendCommand.setDisplayName(key);
-                sendCommand.setTargetDeviceID(0);
-                sendCommand.setKey(key);
-                sendToFlash(sendCommand);
+        	this.createCommand(key,"on", extra, extra2,extra3,"","");
         }
 
         /**
          * @param String,String Turn on the device to the passed in value.
          */
         public void on(String key, String extra, String extra2, String extra3, String extra4) {
-                CommandInterface sendCommand;
-                sendCommand = new ClientCommand();
-                sendCommand.setCommand("on");
-                sendCommand.setExtraInfo(extra);
-                sendCommand.setExtra2Info(extra2);
-                sendCommand.setExtra3Info(extra3);
-                sendCommand.setExtra4Info(extra4);
-                sendCommand.setDisplayName(key);
-                sendCommand.setTargetDeviceID(0);
-                sendCommand.setKey(key);
-                sendToFlash(sendCommand);
+        	this.createCommand(key,"on", extra, extra2,extra3,extra4,"");
         }
 
         /**
          * @param String,String Turn on the device to the passed in value.
          */
         public void on(String key, String extra, String extra2, String extra3, String extra4, String extra5) {
-                CommandInterface sendCommand;
-                sendCommand = new ClientCommand();
-                sendCommand.setCommand("on");
-                sendCommand.setExtraInfo(extra);
-                sendCommand.setExtra2Info(extra2);
-                sendCommand.setExtra3Info(extra3);
-                sendCommand.setExtra4Info(extra4);
-                sendCommand.setExtra5Info(extra5);
-                sendCommand.setDisplayName(key);
-                sendCommand.setTargetDeviceID(0);
-                sendCommand.setKey(key);
-                sendToFlash(sendCommand);
+        	this.createCommand(key,"on", extra, extra2,extra3,extra4,extra5);
         }
 
         /**
          * @param String Turn on the device to 100.
          */
         public void on(String key) {
-                CommandInterface sendCommand;
-                sendCommand = new ClientCommand();
-                sendCommand.setCommand("on");
-                sendCommand.setExtraInfo("100");
-                sendCommand.setDisplayName(key);
-                sendCommand.setTargetDeviceID(0);
-                sendCommand.setKey(key);
-                sendToFlash(sendCommand);
+        	this.createCommand(key,"on", "100", "","","","");
         }
 
         /**
          * @param String Turn off the device to 0.
          */
         public void off(String key) {
-
-                CommandInterface sendCommand;
-                sendCommand = new ClientCommand();
-                sendCommand.setTargetDeviceID(0);
-                sendCommand.setCommand("off");
-                sendCommand.setExtraInfo("0");
-                sendCommand.setDisplayName(key);
-                sendCommand.setKey(key);
-                sendToFlash(sendCommand);
+        	this.createCommand(key,"off", "0", "","","","");
         }
 
         /**
            * @param String Turn off the device and set extra values as passed in.
            */
           public void off(String key, String extra) {
-
-                  CommandInterface sendCommand;
-
-
-                  sendCommand = new ClientCommand();
-                  sendCommand.setCommand("off");
-                  sendCommand.setExtraInfo(extra);
-                  sendCommand.setDisplayName(key);
-                  sendCommand.setTargetDeviceID(0);
-                  sendCommand.setKey(key);
-                  sendToFlash(sendCommand);
+          	this.createCommand(key,"off", extra,"","","","");
           }
 
           /**
            * @param String Turn off the device and set extra values as passed in.
            */
           public void off(String key, String extra, String extra2) {
-
-                  CommandInterface sendCommand;
-
-                  sendCommand = new ClientCommand();
-                  sendCommand.setCommand("off");
-                  sendCommand.setExtraInfo(extra);
-                  sendCommand.setExtra2Info(extra2);
-                  sendCommand.setDisplayName(key);
-                  sendCommand.setTargetDeviceID(0);
-                  sendCommand.setKey(key);
-                  sendToFlash(sendCommand);
+          	this.createCommand(key,"off", extra, extra2,"","","");
           }
 
           /**
            * @param String Turn off the device and set extra values as passed in.
            */
           public void off(String key, String extra, String extra2, String extra3) {
-
-                  CommandInterface sendCommand;
-
-                  sendCommand = new ClientCommand();
-                  sendCommand.setCommand("off");
-                  sendCommand.setExtraInfo(extra);
-                  sendCommand.setExtra2Info(extra2);
-                  sendCommand.setExtra3Info(extra3);
-                  sendCommand.setDisplayName(key);
-                  sendCommand.setTargetDeviceID(0);
-                  sendCommand.setKey(key);
-                  sendToFlash(sendCommand);
+          	this.createCommand(key,"off", extra, extra2,extra3,"","");
           }
 
           /**
            * @param String Turn off the device and set extra values as passed in.
            */
           public void off(String key, String extra, String extra2, String extra3, String extra4) {
-
-                  CommandInterface sendCommand;
-
-                  sendCommand = new ClientCommand();
-                  sendCommand.setCommand("off");
-                  sendCommand.setExtraInfo(extra);
-                  sendCommand.setExtra2Info(extra2);
-                  sendCommand.setExtra3Info(extra3);
-                  sendCommand.setExtra4Info(extra4);
-                  sendCommand.setDisplayName(key);
-                  sendCommand.setTargetDeviceID(0);
-                  sendCommand.setKey(key);
-                  sendToFlash(sendCommand);
+          	this.createCommand(key,"off", extra, extra2,extra3,extra4,"");
           }
 
           /**
            * @param String Turn off the device and set extra values as passed in.
            */
           public void off(String key, String extra, String extra2, String extra3, String extra4, String extra5) {
-
-                  CommandInterface sendCommand;
-
-                  sendCommand = new ClientCommand();
-                  sendCommand.setCommand("off");
-                  sendCommand.setExtraInfo(extra);
-                  sendCommand.setExtra2Info(extra2);
-                  sendCommand.setExtra3Info(extra3);
-                  sendCommand.setExtra4Info(extra4);
-                  sendCommand.setExtra5Info(extra5);
-                  sendCommand.setDisplayName(key);
-                  sendCommand.setTargetDeviceID(0);
-                  sendCommand.setKey(key);
-                  sendToFlash(sendCommand);
+          	this.createCommand(key,"off", extra, extra2,extra3,extra4,extra5);
           }
 
         public void listenMacro(String macro) {

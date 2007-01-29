@@ -3,6 +3,7 @@
  */
 package au.com.BI.Script;
 
+import groovy.lang.GroovyRuntimeException;
 import groovy.util.GroovyScriptEngine;
 import groovy.util.ResourceException;
 import groovy.util.ScriptException;
@@ -14,6 +15,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.codehaus.groovy.runtime.typehandling.GroovyCastException;
 
 import au.com.BI.Config.ConfigError;
 
@@ -71,11 +74,11 @@ public class GroovyScriptFileHandler {
 		                if (stFiles == null) throw new ConfigError("Could not read the script directory " + directoryName);
 		
 		                for (int i = 0; i < stFiles.length; i += 1) {
-							String name = stFiles[i].substring(0, stFiles[i].length() - 3);
+							String name = stFiles[i].substring(0, stFiles[i].length() - 7);
 
 							
 								try {
-									Class  script = gse.loadScriptByName(stFiles[i]);
+									Class  script = gse.loadScriptByName( name);
 									Object aScript = script.newInstance();
 
 									BIScript ifc = (BIScript) aScript;
@@ -93,13 +96,17 @@ public class GroovyScriptFileHandler {
 									scriptRunBlockList.put(name,scriptRunBlock);
 									
 								} catch (ResourceException e) {
-									logger.log (Level.WARNING,"A problem occured reading the script " + stFiles[i] + " " + e.getMessage());
+									logger.log (Level.WARNING,"A problem occured reading the script " + name + " " + e.getMessage());
 								} catch (ScriptException e) {
-									logger.log (Level.WARNING,"A problem occured reading the script " + stFiles[i] + " " + e.getMessage());
+									logger.log (Level.WARNING,"A problem occured parsing the script " + name + " " + e.getCause().getMessage());
 								} catch (InstantiationException e) {
-									logger.log (Level.WARNING,"A problem occured instantiating the script " + stFiles[i] + " " + e.getMessage());
+									logger.log (Level.WARNING,"A problem occured instantiating the script " + name + " " + e.getMessage());
 								} catch (IllegalAccessException e) {
-									logger.log (Level.WARNING,"An illegal access occured from the script " + stFiles[i] + " " + e.getMessage());
+									logger.log (Level.WARNING,"An illegal access occured from the script " + name + " " + e.getMessage());
+								}catch (GroovyRuntimeException e) {
+									logger.log (Level.WARNING,"A problem occured loading the script " + name + " " + e.getMessage());
+								}catch (GroovyCastException e){
+									logger.log (Level.WARNING,"A problem occured loading the script " + name + " " + e.getMessage());									
 								}
 			                }
 							

@@ -19,7 +19,6 @@ public class CacheWrapper {
 		isSet = false;
 		Date now = new Date();
 		creationTime = now.getTime();
-
 	}
 	
 	public CacheWrapper (String key, CommandInterface command) {
@@ -66,7 +65,7 @@ public class CacheWrapper {
 	
 	public CommandInterface getCommand() {
 		if (!isSet) {
-			return command;
+				return command;
 		} else { 
 			return null;
 		}
@@ -99,7 +98,7 @@ public class CacheWrapper {
 			this.key = newKey;
 		}
 		if (newCommand.getDisplayName() == null ||newCommand.getDisplayName().equals ("")) {
-			logger.log(Level.INFO,"A command was attempted to be sent to the cache with a null or empty display name.  " + command.toString() + " .Calling method: " + 
+			logger.log(Level.FINEST,"A command was attempted to be sent to the cache with a null or empty display name.  " + newCommand.toString() + " .Calling method: " + 
 					showStackTrace());
 			newCommand.setDisplayName(newKey);
 		}
@@ -135,8 +134,6 @@ public class CacheWrapper {
 		this.creationTime = new Date().getTime();
 		this.key = key;
 		if (command.getDisplayName().equals ("")){
-			logger.log(Level.INFO,"A command was attempted to be sent to the cache with a null or empty display name. Command " + command.toString() + " .Calling method: " + 
-					showStackTrace());
 			command.setDisplayName(key);
 		}
 		this.command = command;
