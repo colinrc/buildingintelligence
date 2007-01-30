@@ -30,6 +30,7 @@ import au.com.BI.Util.SimplifiedModel;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
 import au.com.BI.Util.Utility;
+import au.com.BI.VirtualOutput.VirtualOutput;
 
 public class Model extends SimplifiedModel implements DeviceModel {
 
@@ -109,7 +110,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		// create the temperature polling service
 		String tempPollStr = (String)this.getParameterValue("POLL_SENSOR_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
 		String outputPollStr = (String)this.getParameterValue("POLL_OUTPUT_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
-		String analogInputsPollStr = (String)this.getParameterValue("POLL_OUTPUT_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
+		String analogInputsPollStr = (String)this.getParameterValue("POLL_ANALOG_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
 
 		try {
 			tempPollValue = Long.parseLong(tempPollStr) * 1000;
@@ -187,7 +188,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		addControlledItem("ARM",new Alarm("ARM",DeviceType.VIRTUAL_OUTPUT,"ARM"),MessageDirection.FROM_FLASH);
 		
 		// add a device to do request messages
-		addControlledItem("REQUEST",new Alarm("REQUEST",DeviceType.VIRTUAL_OUTPUT,"REQUEST"),MessageDirection.FROM_FLASH);
+//		addControlledItem("REQUEST",new Alarm("REQUEST",DeviceType.VIRTUAL_OUTPUT,"REQUEST"),MessageDirection.FROM_FLASH);
+		addControlledItem(this.getName(),new VirtualOutput(this.getName(),DeviceType.VIRTUAL_OUTPUT,this.getDescription(),0),MessageDirection.FROM_FLASH);
 		
 		// generic X10 device to capture requests - 
 		// @todo Need to check that using a generic X10 device with no house or unit code will actually work with a real M1.

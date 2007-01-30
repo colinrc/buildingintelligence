@@ -61,11 +61,6 @@ public class ToggleSwitchFactory {
 				}
 			}
 			
-			if (targetDevice.getName().equals("M1")) {
-				String area = element.getAttributeValue("AREA");
-				theInput.setArea(area);
-			}
-			
 			targetDevice.addControlledItem(key, theInput, type);
 			targetDevice.addStartupQueryItem(key, theInput, type);
 			if (outKey != null && !outKey.equals("")) {

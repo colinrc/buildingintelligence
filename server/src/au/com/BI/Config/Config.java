@@ -271,6 +271,13 @@ public class Config {
 			Element config = (Element) catalogueList.next();
 			parseRawDefs(config,deviceModel);
 		}
+		
+		List catalogConfigs = element.getChildren("CATALOG");
+		Iterator catalogList = catalogConfigs.iterator();
+		while (catalogList.hasNext()) {
+			Element config = (Element) catalogList.next();
+			parseRawDefs(config,deviceModel);
+		}
 
 		List comfortUsers = element.getChildren("COMFORT_USERS");
 		Iterator comfortUserList = comfortUsers.iterator();
@@ -512,7 +519,7 @@ public class Config {
 						type = DeviceType.NA;
 					}
 
-					if (itemName.equals("TOGGLE_OUTPUT")) {
+					if (itemName.equals("TOGGLE_OUTPUT") || itemName.equals("OUTPUT")) {
 						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.TOGGLE_OUTPUT,groupName,rawHelper);
 					}
@@ -556,7 +563,7 @@ public class Config {
 						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.TOGGLE_INPUT,groupName,rawHelper);
 					}
-					if (itemName.equals("CONTACT_CLOSURE")) {
+					if (itemName.equals("CONTACT_CLOSURE") || itemName.equals("INPUT")) {
 						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.CONTACT_CLOSURE,groupName,rawHelper);
 					}

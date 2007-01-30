@@ -23,6 +23,7 @@ import au.com.BI.M1.Commands.ArmingStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputOff;
 import au.com.BI.M1.Commands.ControlOutputOn;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
+import au.com.BI.M1.Commands.ControlOutputToggle;
 import au.com.BI.M1.Commands.Group;
 import au.com.BI.M1.Commands.PLCDeviceControl;
 import au.com.BI.M1.Commands.PLCDeviceOff;
@@ -117,7 +118,7 @@ public class OutputHelper {
 									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
-			} else if (command.getKey().equals("REQUEST")
+			} else if (command.getKey().equals(m1.getName())
 					&& (device.getDeviceType() == DeviceType.VIRTUAL_OUTPUT)) {
 				if (command.getCommandCode().equals("ARMING_STATUS_REQUEST")) {
 					ArmingStatusRequest m1Command = new ArmingStatusRequest();
@@ -144,9 +145,21 @@ public class OutputHelper {
 					m1Command.setGroup(group);
 					m1Command.setDevice(command.getExtra2Info());
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("TASK_ACTIVATION_REQUEST")) {
+				} else if (command.getCommandCode().equals("TASK_ACTIVATION")) {
 					TaskActivation m1Command = new TaskActivation();
-					m1Command.setTask(command.getExtraInfo());
+					
+					try {
+						Integer value = Integer.valueOf(command.getExtraInfo());
+						m1Command.setTask(command.getExtraInfo());
+					} catch (NumberFormatException e) {
+						String taskValue = (String)m1.getCatalogueDef("TASKS").get(command.getExtraInfo());
+						
+						if (taskValue == null || taskValue == "") {
+							return;
+						} else {
+							m1Command.setTask(taskValue);
+						}
+					}
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equals("PLC_STATUS")) {
 					PLCStatusRequest m1Command = new PLCStatusRequest();
@@ -160,11 +173,34 @@ public class OutputHelper {
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equals("SPEAK_WORD")) {
 					SpeakWord m1Command = new SpeakWord();
-					m1Command.setWord(command.getExtraInfo());
+					
+					try {
+						Integer value = Integer.valueOf(command.getExtraInfo());
+						m1Command.setWord(command.getExtraInfo());
+					} catch (NumberFormatException e) {
+						String wordValue = (String)m1.getCatalogueDef("WORDS").get(command.getExtraInfo());
+						
+						if (wordValue == null || wordValue == "") {
+							return;
+						} else {
+							m1Command.setWord(wordValue);
+						}
+					}
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equals("SPEAK_PHRASE")) {
 					SpeakPhrase m1Command = new SpeakPhrase();
-					m1Command.setPhrase(command.getExtraInfo());
+					try {
+						Integer value = Integer.valueOf(command.getExtraInfo());
+						m1Command.setPhrase(command.getExtraInfo());
+					} catch (NumberFormatException e) {
+						String phraseValue = (String)m1.getCatalogueDef("PHRASES").get(command.getExtraInfo());
+						
+						if (phraseValue == null || phraseValue == "") {
+							return;
+						} else {
+							m1Command.setPhrase(phraseValue);
+						}
+					}
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
 			} else if (device.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
@@ -198,18 +234,18 @@ public class OutputHelper {
 	public String buildToggleOutput(DeviceType device, CommandInterface command) {
 		String returnString = "";
 
-		if (command.getCommandCode().equals("on")) {
+		if (command.getCommandCode().equalsIgnoreCase("on")) {
 			ControlOutputOn controlOutputOn = new ControlOutputOn();
 			controlOutputOn.setKey(device.getKey());
 			controlOutputOn.setOutputNumber(device.getKey());
+			controlOutputOn.setSeconds(command.getExtraInfo());			
 			returnString = controlOutputOn.buildM1String() + "\r\n";
-		} else if (command.getCommandCode().equals("pulse")) {
-			ControlOutputOn controlOutputOn = new ControlOutputOn();
-			controlOutputOn.setKey(device.getKey());
-			controlOutputOn.setOutputNumber(device.getKey());
-			controlOutputOn.setSeconds(command.getExtraInfo());
-			returnString = controlOutputOn.buildM1String() + "\r\n";
-		} else if (command.getCommandCode().equals("off")) {
+		} else if (command.getCommandCode().equalsIgnoreCase("toggle")) {
+			ControlOutputToggle controlOutputToggle = new ControlOutputToggle();
+			controlOutputToggle.setKey(device.getKey());
+			controlOutputToggle.setOutputNumber(device.getKey());
+			returnString = controlOutputToggle.buildM1String() + "\r\n";
+		} else if (command.getCommandCode().equalsIgnoreCase("off")) {
 			ControlOutputOff controlOutputOff = new ControlOutputOff();
 			controlOutputOff.setKey(device.getKey());
 			controlOutputOff.setOutputNumber(device.getKey());
@@ -233,33 +269,33 @@ public class OutputHelper {
 			plcDeviceControl.setHouseCode(device.getX10HouseCode());
 			
 			// assumes that we are only doing lights?
-			if (command.getCommandCode().equals("on")) {
+			if (command.getCommandCode().equalsIgnoreCase("on")) {
 				plcDeviceControl.setFunctionCode(PLCFunction.X10_ALL_LIGHTS_ON);
 				plcDeviceControl.setTime(command.getExtraInfo());
 				returnString = plcDeviceControl.buildM1String() + "\r\n";
-			} else if (command.getCommandCode().equals("off")) {
+			} else if (command.getCommandCode().equalsIgnoreCase("off")) {
 				plcDeviceControl.setFunctionCode(PLCFunction.X10_ALL_LIGHTS_OFF);
 				plcDeviceControl.setTime(command.getExtraInfo());
 				returnString = plcDeviceControl.buildM1String() + "\r\n";
 			} else {
 				returnString = "";
 			}
-		} else if (command.getCommandCode().equals("on")) {
+		} else if (command.getCommandCode().equalsIgnoreCase("on")) {
 			PLCDeviceOn plcDeviceOn = new PLCDeviceOn();
 			plcDeviceOn.setUnitCode(device.getKey());
 			plcDeviceOn.setHouseCode(device.getX10HouseCode());
 			returnString = plcDeviceOn.buildM1String() + "\r\n";
-		} else if (command.getCommandCode().equals("toggle")) {
+		} else if (command.getCommandCode().equalsIgnoreCase("toggle")) {
 			PLCDeviceToggle plcDeviceToggle = new PLCDeviceToggle();
 			plcDeviceToggle.setUnitCode(device.getKey());
 			plcDeviceToggle.setHouseCode(device.getX10HouseCode());
 			returnString = plcDeviceToggle.buildM1String() + "\r\n";
-		} else if (command.getCommandCode().equals("off")) {
+		} else if (command.getCommandCode().equalsIgnoreCase("off")) {
 			PLCDeviceOff plcDeviceOff = new PLCDeviceOff();
 			plcDeviceOff.setUnitCode(device.getKey());
 			plcDeviceOff.setHouseCode(device.getX10HouseCode());
 			returnString = plcDeviceOff.buildM1String() + "\r\n";
-		} else if (command.getCommandCode().equals("dim")) {
+		} else if (command.getCommandCode().equalsIgnoreCase("dim")) {
 			PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
 			plcDeviceControl.setUnitCode(device.getKey());
 			plcDeviceControl.setHouseCode(device.getX10HouseCode());
@@ -267,7 +303,7 @@ public class OutputHelper {
 			plcDeviceControl.setExtendedCode(command.getExtraInfo());
 			plcDeviceControl.setTime(command.getExtra2Info());
 			returnString = plcDeviceControl.buildM1String() + "\r\n";
-		} else if (command.getCommandCode().equals("bright")) {
+		} else if (command.getCommandCode().equalsIgnoreCase("bright")) {
 			PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
 			plcDeviceControl.setUnitCode(device.getKey());
 			plcDeviceControl.setHouseCode(device.getX10HouseCode());
@@ -275,7 +311,7 @@ public class OutputHelper {
 			plcDeviceControl.setExtendedCode(command.getExtraInfo());
 			plcDeviceControl.setTime(command.getExtra2Info());
 			returnString = plcDeviceControl.buildM1String() + "\r\n";
-		} else if (command.getCommandCode().equals("control")) {
+		} else if (command.getCommandCode().equalsIgnoreCase("control")) {
 			PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
 			plcDeviceControl.setUnitCode(device.getKey());
 			plcDeviceControl.setHouseCode(device.getX10HouseCode());
