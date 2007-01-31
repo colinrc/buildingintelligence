@@ -37,11 +37,13 @@ public class ConnectDevice extends Thread {
 	
 	while (deviceModel.isTryingToConnect()) {
 		try {
-			deviceModel.finishedReadingConfig();
+
+			deviceModel.prepareToAttatchComms();
 			deviceModel.attatchComms();
 			if (shownWarning){
 				logger.log(Level.WARNING, "Connection restored to " + deviceModel.getName());
 			}
+			shownWarning = false ; // can be reset now ready for next disconnect
 			User newUser = new User ((String)deviceModel.getParameterValue("Username",DeviceModel.MAIN_DEVICE_GROUP),
 					(String)deviceModel.getParameterValue("Password",DeviceModel.MAIN_DEVICE_GROUP));
 			if (deviceModel.login(newUser) == DeviceModel.SUCCESS ) {
@@ -72,15 +74,6 @@ public class ConnectDevice extends Thread {
 				logger.log (Level.FINEST, "Wait before device restart was interrupted");
 			}
 		} catch (CommsFail fail) {
-			try {
-				Thread.sleep(30000);
-			} catch (InterruptedException ex) {
-			} catch (IllegalMonitorStateException ex) {
-				logger.log (Level.FINEST, "Wait before device restart was interrupted");
-			}
-		} catch (SetupException fail) {
-			logger.log(Level.SEVERE, "Error configuring " + deviceModel.getName() + ". "
-					+ fail.getMessage());
 			try {
 				Thread.sleep(30000);
 			} catch (InterruptedException ex) {

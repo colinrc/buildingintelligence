@@ -14,13 +14,17 @@ import au.com.BI.Command.*
     String[]  fireOnChange =  ["KITCHEN_LIGHT" , "GARAGE_LIGHT"]
     
     // If the script is able to be stopped before completion, generally no
-    boolean   stoppable = false;
+    boolean   stoppable = false
  
+    boolean hidden = false
     
+    // ---------------------------------------------------------------
+    // Include this block in every script
 	def elife  = "${elife}"
 	def   triggeringEvent = "${triggeringEvent}"
 	def  cache = "${cache}"
 	def labelMgr = "{labelMgr}"
+	// ---------------------------------------------------------------
 	
 
 	
@@ -28,7 +32,7 @@ import au.com.BI.Command.*
 	// The action contents of the script go here
 	
 			elife.on "DINING_LIGHT","100"
-			elife.sendCommand "AV.GC100_IR1","NEC.On","2"
+			elife.sendCommand "","AV.GC100_IR1","NEC.on","2"
 	}
  
 }

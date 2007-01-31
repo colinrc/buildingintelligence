@@ -171,7 +171,7 @@ public class IPListener extends Thread implements CommsListener
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+
 			}
 			
 			// Thread.yield(); // give other clients a chance

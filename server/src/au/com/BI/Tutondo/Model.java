@@ -55,6 +55,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (protocol != null && protocol.equals("B")) {
 				protocolB = true;
 		}
+
+	}
+	
+	public void prepareToAttatchComms() {
 		state.clear();
 		currentSrc.clear();
 	}

@@ -355,8 +355,8 @@ public class Model
         	super.finishedReadingConfig();
 			loadScripts();
         }
-
-	    	public void doClientStartup(CommandQueue commandQueue, long targetFlashDeviceID, long serverID){
+        
+ 	    	public void doClientStartup(CommandQueue commandQueue, long targetFlashDeviceID, long serverID){
 	    		if (scriptHandler != null) {
 		    	    ClientCommand clientCommand = this.doGetList("");
 		    	    clientCommand.setKey ("CLIENT_SEND");
@@ -858,6 +858,58 @@ public class Model
        }
 
 
+       /**
+        * @param key,command,extra Create a command system command.
+        */
+       public void sendCommand(String key, String command, String extra) {
+
+    	   sendCommand ( key,  command,  extra,  "",  "",  "","");
+       }
+
+       /**
+        * @param key,command,extra1,extra2 Create a command system command.
+        */
+       public void sendCommand(String key, String command, String extra1, String extra2) {
+
+    	   sendCommand ( key,  command,  extra1,  extra2,  "",  "","");
+       }
+
+         /**
+          * @param key,command,extra1,extra2,extra3 Create a command system command.
+          */
+         public void sendCommand(String key, String command, String extra1, String extra2, String extra3) {
+        	 sendCommand ( key,  command,  extra1,  extra2,  extra3,  "","");
+         }
+
+         /**
+          * @param key,command,extra1,extra2,extra3,extra4 Create a command system command.
+          */
+         public void sendCommand(String key, String command, String extra1, String extra2, String extra3, String extra4) {
+
+        	 sendCommand ( key,  command,  extra1,  extra2,  extra3,  extra4,"");
+         }
+
+         /**
+          * @param key,command,extra1,extra2,extra3,extra4,extra5 Create a command system command.
+          */
+         public void sendCommand(String key, String command, String extra1, String extra2, String extra3, String extra4, String extra5) {
+
+                 CommandInterface myCommand;
+                 myCommand = new Command();
+                 myCommand.setCommand(command);
+                 myCommand.setExtraInfo(extra1);
+                 myCommand.setExtra2Info(extra2);
+                 myCommand.setExtra3Info(extra3);
+                 myCommand.setExtra4Info(extra4);
+                 myCommand.setExtra5Info(extra5);
+                 myCommand.setTargetDeviceID(0);
+                 myCommand.setKey(key);
+                 commandQueue.add(myCommand);
+                 
+                 return;
+         }
+         
+         
        /**
         * @param rrd,dataSource, value Update an rrd named rrd.
         */

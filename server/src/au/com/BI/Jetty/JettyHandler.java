@@ -211,7 +211,6 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 	 * @see au.com.BI.Util.ClientModel#broadcastCommand(au.com.BI.Command.CommandInterface)
 	 */
 	public void broadcastCommand(CommandInterface command) {
-		// TODO Auto-generated method stub
 		
 	}
 	

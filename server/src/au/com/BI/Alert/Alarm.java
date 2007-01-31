@@ -56,62 +56,62 @@ public class Alarm extends BaseDevice implements DeviceType,DynaliteDevice
 	}
 	
 	public boolean isAreaDevice() {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
 	public void setAreaDevice(boolean area) {
-		// TODO Auto-generated method stub
+
 		
 	}
 	public String getAreaCode() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 	public void setAreaCode(String areaCode) {
-		// TODO Auto-generated method stub
+
 		
 	}
 	public int getMax() {
-		// TODO Auto-generated method stub
+
 		return 0;
 	}
 	public boolean isRelay() {
 		return false;
 	}
 	public int getChannel() {
-		// TODO Auto-generated method stub
+
 		return 0;
 	}
 	public void setChannel(int channel) {
-		// TODO Auto-generated method stub
+
 		
 	}
 	public String getMaxStr() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 	public String getBLA() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 	public void setBLA(String bLA) {
-		// TODO Auto-generated method stub
+
 		
 	}
 	public int listensToLinkArea(int linkOffset) {
-		// TODO Auto-generated method stub
+
 		return 0;
 	}
 	public boolean isLinked() {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
 	public void incLinkCount() {
-		// TODO Auto-generated method stub
+
 		
 	}
 	public void decLinkCount() {
-		// TODO Auto-generated method stub
+
 		
 	}
 

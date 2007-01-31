@@ -11,7 +11,6 @@ import au.com.BI.Config.*;
 import au.com.BI.Device.DeviceType;
 
 import groovy.lang.GroovyClassLoader;
-import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.*;
 import au.com.BI.Flash.*;
@@ -40,7 +39,6 @@ public class Model
 		protected ConcurrentHashMap<String,GroovyRunBlock> groovyModelClasses = null;
 		protected GroovyClassLoader gcl;
 
-        protected Map scriptFiles = null;
 
         public Model() {
                 super();
@@ -105,21 +103,15 @@ public class Model
 				return clientCommand; 
 		} 
 
-		public void finishedReadingConfig() throws SetupException {
-        	super.finishedReadingConfig();
-        }
 
         public void loadGroovyModels() {
                 int j = 0;
                 logger.log(Level.INFO,"Loading Groovy Models");
 
                 String lsLine, lsCheck;
-                ArrayList  scripts;
-
-                scripts = new ArrayList();
 
 				//get the script files and prepare for parsing
-                try {
+       try {
 	                groovyModelFileHandler.loadGroovyModelList( "./models/au/com/BI/models/",this.groovyModelFiles);
 	
 	                for (GroovyRunBlock runBlock: groovyModelFiles.values()) {

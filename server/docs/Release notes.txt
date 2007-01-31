@@ -1,3 +1,25 @@
+== 1/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b32.zip V1.6bb32]  [attachment:wiki:SoftwareReleases:eLife-1.6b32-libs.zip Libs-V1.6b32] ==
+
+''' Scripting '''
+
+Implemented initial groovy script system. See [http://groovy.codehause.org] for Groovy language documentation, and [ServerDocs/GroovyScripting] for details 
+of the scripting implementation. Issue [ticket:464]
+
+Refactored Jython scripting to allow integrated support of Groovy and Jython scripts (eg. on list of scripts sent to the client).
+
+''' Admin '''
+
+Fixed issue on reloading scripts.
+
+''' General '''
+
+Split finishedLoadingConfig into two methods, one which is called before every comms connect (prepareToAttatchComms) , and one which is called once (finishedReadingConfig). 
+Removes excessive adding of internal devices. Resolves [ticket:594],[ticket:597]
+
+''' M1 '''
+
+Merged in latest changes.
+
 == Released [attachment:wiki:SoftwareReleases:eLife-1.6b31.zip V1.6b31]   ==
 
 ''' General '''

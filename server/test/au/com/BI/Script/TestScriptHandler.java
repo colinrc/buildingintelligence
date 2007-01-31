@@ -24,7 +24,7 @@ public class TestScriptHandler extends TestCase {
 	 * Test method for 'au.com.BI.Script.ScriptHandler.loadScriptFile()'
 	 */
 	public void testLoadScriptFile() {
-		// TODO Auto-generated method stub
+		// 
 
 	}
 
@@ -32,7 +32,7 @@ public class TestScriptHandler extends TestCase {
 	 * Test method for 'au.com.BI.Script.ScriptHandler.saveScriptFile()'
 	 */
 	public void testSaveScriptFile() {
-		// TODO Auto-generated method stub
+		// 
 
 	}
 
@@ -40,7 +40,7 @@ public class TestScriptHandler extends TestCase {
 	 * Test method for 'au.com.BI.Script.ScriptHandler.setStatus(String, String)'
 	 */
 	public void testSetStatus() {
-		// TODO Auto-generated method stub
+		// 
 		scriptModel.getScriptHandler().setStatus("test","HIDDEN,OTHER,SOME");
 		scriptModel.loadJythonScripts();
 		ScriptRunBlock scriptRunBlock = (ScriptRunBlock)scriptRunBlockList.get("test");
@@ -52,7 +52,7 @@ public class TestScriptHandler extends TestCase {
 	 * Test method for 'au.com.BI.Script.ScriptHandler.setScriptEnable(String, User, boolean)'
 	 */
 	public void testSetScriptEnable() {
-		// TODO Auto-generated method stub
+		// 
 
 	}
 
@@ -60,7 +60,7 @@ public class TestScriptHandler extends TestCase {
 	 * Test method for 'au.com.BI.Script.ScriptHandler.isScriptStillRunning(String)'
 	 */
 	public void testIsScriptStillRunning() {
-		// TODO Auto-generated method stub
+		// 
 
 	}
 
@@ -68,7 +68,7 @@ public class TestScriptHandler extends TestCase {
 	 * Test method for 'au.com.BI.Script.ScriptHandler.buildListElement(String)'
 	 */
 	public void testBuildListElement() {
-		// TODO Auto-generated method stub
+		// 
 
 	}
 
@@ -76,7 +76,7 @@ public class TestScriptHandler extends TestCase {
 	 * Test method for 'au.com.BI.Script.ScriptHandler.parseElement(Element)'
 	 */
 	public void testParseElement() {
-		// TODO Auto-generated method stub
+		// 
 
 	}
 
@@ -84,7 +84,7 @@ public class TestScriptHandler extends TestCase {
 	 * Test method for 'au.com.BI.Script.ScriptHandler.isScriptRunning(String)'
 	 */
 	public void testIsScriptRunning() {
-		// TODO Auto-generated method stub
+		// 
 
 	}
 

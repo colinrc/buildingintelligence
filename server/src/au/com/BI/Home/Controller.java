@@ -27,7 +27,6 @@ import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Config.*;
 import au.com.BI.AlarmLogging.*;
 import au.com.BI.JRobin.*;
-import org.jrobin.core.*;
 
 /**
  * @author Colin Canfield
@@ -71,8 +70,6 @@ public class Controller {
 	protected au.com.BI.Command.Cache cache;
 
 	protected MacroHandler macroHandler;
-
-	protected HashMap iRControllers;
 
 	protected IRCodeDB irCodeDB;
 
@@ -310,7 +307,7 @@ public class Controller {
 		boolean commandDone;
 
 		logger.fine("Started the controller");
-		Iterator deviceModelList;
+
 		boolean successfulCommand = false;
 
 		irCodeDB = new IRCodeDB();
@@ -337,13 +334,17 @@ public class Controller {
 			System.err.println("Could not set up flash interface");
 
 			logger.log(Level.SEVERE, "Could not set up flash interface");
+			running = false;
 			try {
 				this.closeDownClients();
 			} catch (CommsFail ex2) {
 
-			}
-			running = false;
+			} 
+		}catch (SetupException e) {
+				logger.log(Level.SEVERE, "Configuration could not be loaded " );
+				running = false;
 		}
+
 
 		while (running) {
 			CommandInterface item;
@@ -427,10 +428,7 @@ public class Controller {
 				if (!commandDone && !item.isCommsCommand()
 						&& (item.getCommandCode().startsWith("AV."))) {
 					commandDone = true;
-					deviceModelList = deviceModels.iterator();
-					while (deviceModelList.hasNext()) {
-						DeviceModel deviceModel = (DeviceModel) deviceModelList
-								.next();
+					for (DeviceModel deviceModel: deviceModels){
 						if (deviceModel.doIControlIR())
 							successfulCommand = doDeviceCommand(deviceModel,
 									item);
@@ -447,10 +445,7 @@ public class Controller {
 								.get(item.getTargetDeviceModel());
 						successfulCommand = doClientCommand(clientModel, item);
 					} else {
-						Iterator clientModelList = clientModels.iterator();
-						while (clientModelList.hasNext()) {
-							DeviceModel clientModel = (DeviceModel) clientModelList
-									.next();
+						for (DeviceModel clientModel: clientModels){		
 							try {
 								if (((ClientCommand) item).isBroadcast())
 									((ClientModel) clientModel)
@@ -477,10 +472,7 @@ public class Controller {
 					// comms commands always go to their specific target device
 					// flash commands only get sent to client handlers
 					commandDone = true;
-					deviceModelList = deviceModels.iterator();
-					while (deviceModelList.hasNext()) {
-						DeviceModel deviceModel = (DeviceModel) deviceModelList
-								.next();
+					for (DeviceModel deviceModel:deviceModels){
 						successfulCommand = doDeviceCommand(deviceModel, item);
 					}
 				}
@@ -508,15 +500,11 @@ public class Controller {
 	 * This method is called when a new client connects
 	 */
 	public void doClientStartup(long targetFlashDeviceID, long serverID) {
-		Iterator models = deviceModels.iterator();
-		while (models.hasNext()) {
-			DeviceModel nextModel = (DeviceModel) models.next();
-			nextModel.doClientStartup(targetFlashDeviceID, serverID);
+		for (DeviceModel deviceModel: deviceModels){
+			deviceModel.doClientStartup(targetFlashDeviceID, serverID);
 		}
 
-		Iterator cl_models = clientModels.iterator();
-		while (cl_models.hasNext()) {
-			DeviceModel nextModel = (DeviceModel) cl_models.next();
+		for (DeviceModel nextModel: clientModels){		
 			nextModel.doClientStartup(targetFlashDeviceID, serverID);
 		}
 
@@ -633,12 +621,13 @@ public class Controller {
 
 	}
 
-	public void connectDevice(DeviceModel deviceModel, List deviceModelList) {
+	public void connectDevice(DeviceModel deviceModel, List <DeviceModel>deviceModelList) {
 
 		if (deviceModel.isTryingToConnect()) {
 			return;
 		} else {
 			if (deviceModel.isAutoReconnect()) {
+
 				ConnectDevice connector = new ConnectDevice(deviceModel,
 						adminModel, commandQueue, irCodeDB, bootstrap);
 				connector.start();
@@ -665,9 +654,7 @@ public class Controller {
 
 	public void doSendCommand(CommandInterface command) {
 		String commandCode = command.getCommandCode();
-		Iterator clientModelList = clientModels.iterator();
-		while (clientModelList.hasNext()) {
-			DeviceModel theClientModel = (DeviceModel) clientModelList.next();
+		for (DeviceModel theClientModel: clientModels){
 			try {
 				theClientModel.doCommand(command);
 			} catch (CommsFail fail) {
@@ -717,17 +704,20 @@ public class Controller {
 			login((User) ((CommsCommand) command).getUser());
 		}
 		if (commandCode.equals("ReadConfig")) {
-			if (doReadConfig("config", (String) command.getExtraInfo())) {
-				doSystemStartup(deviceModels);
+			try {
+				if (doReadConfig("config", (String) command.getExtraInfo())) {
+					doSystemStartup(deviceModels);
+				}
+			} catch (SetupException e) {
+				logger.log(Level.WARNING, "Configuration could not be loaded " );
 			}
-
 		}
 		if (commandCode.equals("LoadScripts")) {
 			try {
 				this.scriptModel.loadScripts();
 				this.scriptModel.sendListToClient();
 			} catch (Exception e) {
-				logger.log(Level.WARNING, "Scripts could not be loaded");
+				logger.log(Level.WARNING, "Scripts could not be loaded ");
 			}
 		}
 		if (commandCode.equals("LoadMacros")) {
@@ -747,9 +737,7 @@ public class Controller {
 		}
 
 		if (commandCode.equals("Keypress")) {
-			Iterator deviceModelList = deviceModels.iterator();
-			while (deviceModelList.hasNext()) {
-				DeviceModel deviceModel = (DeviceModel) deviceModelList.next();
+			for (DeviceModel deviceModel: deviceModels){
 				if (deviceModel.getName().equals("COMFORT")) {
 					try {
 						((au.com.BI.Comfort.Model) deviceModel)
@@ -763,7 +751,7 @@ public class Controller {
 		}
 	}
 
-	public void doSystemStartup(List deviceModels) {
+	public void doSystemStartup(List<DeviceModel> deviceModels) {
 		scriptModel.setIrCodeDB(irCodeDB);
 		flashHandler.setIrCodeDB(irCodeDB);
 		adminModel.setIrCodeDB(irCodeDB);
@@ -773,12 +761,11 @@ public class Controller {
 
 	}
 
-	public boolean doReadConfig(String dir, String configPattern) {
+	public boolean doReadConfig(String dir, String configPattern) throws SetupException {
 
-		Iterator deviceModelClearList = deviceModels.iterator();
 		// clear all model information
-		while (deviceModelClearList.hasNext()) {
-			DeviceModel model = (DeviceModel) deviceModelClearList.next();
+
+		for (DeviceModel model:deviceModels){
 			if (!model.removeModelOnConfigReload()) {
 				try {
 					model.close();
@@ -816,13 +803,13 @@ public class Controller {
 		this.setBindToAddress(bootstrap.getServerString());
 		this.setClientPort(bootstrap.getPort());
 
-		Iterator deviceModelList = deviceModels.iterator();
 		int deviceCounter = 0;
-		while (deviceModelList.hasNext()) {
-			DeviceModel deviceModel = (DeviceModel) deviceModelList.next();
+
+		for (DeviceModel deviceModel : deviceModels){
 			deviceModel.setInstanceID(deviceCounter); // update it in case the
 														// position has changed.
 			deviceCounter++;
+			deviceModel.finishedReadingConfig();
 			this.connectDevice(deviceModel, deviceModels);
 		}
 		try {
@@ -840,9 +827,7 @@ public class Controller {
 	}
 
 	public void doShutdown() {
-		Iterator deviceModelList = deviceModels.iterator();
-		while (deviceModelList.hasNext()) {
-			DeviceModel deviceModel = (DeviceModel) deviceModelList.next();
+		for (DeviceModel deviceModel: deviceModels){
 			try {
 				deviceModel.closeComms();
 			} catch (ConnectionFail e) {
@@ -861,9 +846,7 @@ public class Controller {
 	 */
 	public int login(User user) {
 		int result = DeviceModel.SUCCESS;
-		Iterator deviceModelList = deviceModels.iterator();
-		while (deviceModelList.hasNext()) {
-			DeviceModel deviceModel = (DeviceModel) deviceModelList.next();
+		for (DeviceModel deviceModel: deviceModels){
 			try {
 				result = deviceModel.login(user);
 			} catch (CommsFail fail) {

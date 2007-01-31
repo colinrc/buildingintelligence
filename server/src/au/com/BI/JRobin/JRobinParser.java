@@ -230,7 +230,7 @@ public class JRobinParser {
 	}
 
 	/**
-	 * @param config TODO
+	 * @param config 
 	 * @param robinDataSources The jRobinDataSources to set.
 	 */
 	public void setJRobinDataSources( HashMap robinDataSources) {
@@ -238,7 +238,7 @@ public class JRobinParser {
 	}
 
 	/**
-	 * @param config TODO
+	 * @param config 
 	 * @return Returns the jRobinRRDs.
 	 */
 	public HashMap getJRobinRRDs() {

@@ -321,7 +321,7 @@ public class AdminClientHandler extends Thread
 		}
 		if (name.equals("RELOAD_SCRIPTS")) {
             Command command = new Command ("SYSTEM","LoadScripts",user);
-            commandList.notifyAll();
+            commandList.add (command);
 		}
 		if (name.equals("RELOAD_MACROS")) {
             Command command = new Command ("SYSTEM","LoadMacros",user);

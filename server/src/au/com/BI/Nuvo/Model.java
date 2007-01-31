@@ -60,12 +60,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		super.clearItems();
 	}
 
-
 	
-	public void finishedReadingConfig () throws SetupException {
-		super.finishedReadingConfig();
-		
-		initState();
+	public void prepareToAttatchComms() {
+		initState ();
 	}
 	
 	public void initState () {

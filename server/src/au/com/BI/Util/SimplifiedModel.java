@@ -30,7 +30,6 @@ import au.com.BI.ToggleSwitch.ToggleSwitch;
 import au.com.BI.User.User;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.*;
 import java.util.regex.Matcher;
@@ -1344,4 +1343,8 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
             this.configHelper = configHelper;
     }
 
+	/**
+	 * Called every time a model disconnects, just before the comms layer is attatched.
+	 */
+	public void prepareToAttatchComms(){};
 }

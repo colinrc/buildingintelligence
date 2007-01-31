@@ -508,6 +508,11 @@ public interface DeviceModel {
 	
 	public LabelMgr getLabelMgr ();
 
+	/**
+	 * Called every time a model disconnects, just before the comms layer is attatched.
+	 */
+	public void prepareToAttatchComms();
+
 }
 
 

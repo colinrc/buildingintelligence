@@ -16,7 +16,6 @@ public class TestSkipDatesAddDate extends TestCase {
 	 * Test method for 'au.com.BI.Calendar.SkipDates.parseEvent(Element)'
 	 */
 	public void testParseEvent() {
-		// TODO Auto-generated method stub
 
 	}
 

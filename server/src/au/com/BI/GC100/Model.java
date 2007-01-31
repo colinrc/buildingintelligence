@@ -87,6 +87,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 	public void doStartup() throws CommsFail {
+		logger.warning("Connecting to the GC100");
 	    Iterator startupItems = configHelper.getStartupQueryItemsList();
 	    while (startupItems.hasNext()) {
 				try { 

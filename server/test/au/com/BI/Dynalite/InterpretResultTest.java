@@ -43,7 +43,6 @@ public class InterpretResultTest extends TestCase {
         String result = instance.getFullKey();
         assertEquals(expResult, result);
         
-        // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
 
@@ -58,7 +57,6 @@ public class InterpretResultTest extends TestCase {
         
         instance.setFullKey(fullKey);
         
-        // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
     

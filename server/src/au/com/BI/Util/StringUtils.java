@@ -39,7 +39,6 @@ public class StringUtils {
 
 	public StringUtils() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 }

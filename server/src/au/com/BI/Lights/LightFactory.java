@@ -23,15 +23,15 @@ public class LightFactory {
 	 *
 	 * @param targetDevices
 	 *            The list of DeviceModels of this type
-	 * @param targetDevice TODO
-	 * @param clientModels TODO
+	 * @param targetDevice 
+	 * @param clientModels 
 	 * @param element
 	 *            The element
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
-	 * @param connectionType TODO
-	 * @param groupName TODO
-	 * @param rawHelper TODO
+	 * @param connectionType 
+	 * @param groupName
+	 * @param rawHelper 
 	 */
 	public void addLight(DeviceModel targetDevice, List clientModels, Element element, MessageDirection type, int connectionType, String groupName, RawHelper rawHelper) {
 		String key = element.getAttributeValue("KEY");
@@ -104,15 +104,15 @@ public class LightFactory {
 	 *
 	 * @param targetDevices
 	 *            The list of DeviceModels of this type
-	 * @param targetDevice TODO
-	 * @param clientModels TODO
+	 * @param targetDevice 
+	 * @param clientModels 
 	 * @param element
 	 *            The element
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
-	 * @param connectionType TODO
-	 * @param groupName TODO
-	 * @param rawHelper TODO
+	 * @param connectionType 
+	 * @param groupName 
+	 * @param rawHelper 
 	 */
 	public void addLightArea(DeviceModel targetDevice, List clientModels, Element element, MessageDirection type, int connectionType, String groupName, RawHelper rawHelper) {
 		String key = element.getAttributeValue("KEY");
