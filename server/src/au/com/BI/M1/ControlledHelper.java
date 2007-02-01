@@ -39,9 +39,11 @@ import au.com.BI.M1.Commands.PLCLevelStatus;
 import au.com.BI.M1.Commands.PLCStatusReturned;
 import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
+import au.com.BI.M1.Commands.ReplyWithBypassedZoneState;
 import au.com.BI.M1.Commands.ReplyZoneAnalogVoltageData;
 import au.com.BI.M1.Commands.RequestTemperatureReply;
 import au.com.BI.M1.Commands.TasksChangeUpdate;
+import au.com.BI.M1.Commands.ZoneBypassState;
 import au.com.BI.M1.Commands.ZoneChangeUpdate;
 import au.com.BI.M1.Commands.ZoneDefinition;
 import au.com.BI.M1.Commands.ZoneStatus;
@@ -487,6 +489,26 @@ public class ControlledHelper {
 						sendCommand(cache, commandQueue, _command);
 					}
 				}
+			} else if (m1Command.getClass().equals(ReplyWithBypassedZoneState.class)) {
+				ReplyWithBypassedZoneState zoneState = (ReplyWithBypassedZoneState)m1Command;
+				alarmLogger.setCache(cache);
+				alarmLogger.setCommandQueue(commandQueue);
+				
+				int state;
+				
+				if (zoneState.getBypassState().equals(ZoneBypassState.BYPASSED)) {
+					state = AlarmLogging.BYPASSED;
+				} else {
+					state = AlarmLogging.UNBYPASSED;
+				}
+				alarmLogger.addAlarmLog("ALARM", 
+						Utility.padString(zoneState.getZone(),3), 
+						state, 
+						Utility.padString(zoneState.getZone(),3), 
+						"", 
+						m1.currentUser, 
+						new Date());
+				
 			} else {
 				// Command has been built or handled already.
 				sendCommand(cache, commandQueue, m1Command);
@@ -552,17 +574,30 @@ public class ControlledHelper {
 			sendCommand(cache, commandQueue, _command);
 		} else if (zoneStatus == ZoneStatus.BYPASSED_EOL ||
 				zoneStatus == ZoneStatus.BYPASSED_OPEN ||
-				zoneStatus == ZoneStatus.BYPASSED_SHORT ||
-				zoneStatus == ZoneStatus.TROUBLE_EOL ||
+				zoneStatus == ZoneStatus.BYPASSED_SHORT) {
+			// send an alarm message (fault)
+			alarmLogger.setCache(cache);
+			alarmLogger.setCommandQueue(commandQueue);
+			alarmLogger.addAlarmLog("ALARM", 
+					theDevice.getOutputKey() + " is reporting state " + zoneStatus.getDescription(), 
+					AlarmLogging.BYPASSED, 
+					theDevice.getOutputKey(), 
+					zoneStatus.getValue(), 
+					m1.currentUser, 
+					new Date());
+		} else if (zoneStatus == ZoneStatus.TROUBLE_EOL ||
 				zoneStatus == ZoneStatus.TROUBLE_OPEN ||
 				zoneStatus == ZoneStatus.TROUBLE_SHORT) {
 			// send an alarm message (fault)
 			alarmLogger.setCache(cache);
 			alarmLogger.setCommandQueue(commandQueue);
-			alarmLogger.addAlertLog("FAULT", zoneStatus.getDescription(),
-					AlarmLogging.GENERAL_MESSAGE, theDevice.getOutputKey(),
-					zoneStatus.getDescription(),
-					m1.currentUser, new Date());
+			alarmLogger.addAlarmLog("ALARM", 
+					theDevice.getOutputKey() + " is reporting state " + zoneStatus.getDescription(), 
+					AlarmLogging.TROUBLE, 
+					theDevice.getOutputKey(), 
+					zoneStatus.getValue(), 
+					m1.currentUser, 
+					new Date());
 		}
 	}
 
