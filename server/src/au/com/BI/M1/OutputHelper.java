@@ -36,6 +36,7 @@ import au.com.BI.M1.Commands.RequestZoneVoltage;
 import au.com.BI.M1.Commands.SpeakPhrase;
 import au.com.BI.M1.Commands.SpeakWord;
 import au.com.BI.M1.Commands.TaskActivation;
+import au.com.BI.M1.Commands.ZoneBypassRequest;
 import au.com.BI.M1.Commands.ZoneStatusRequest;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.Utility;
@@ -120,18 +121,18 @@ public class OutputHelper {
 				}
 			} else if (command.getKey().equals(m1.getName())
 					&& (device.getDeviceType() == DeviceType.VIRTUAL_OUTPUT)) {
-				if (command.getCommandCode().equals("ARMING_STATUS_REQUEST")) {
+				if (command.getCommandCode().equalsIgnoreCase("ARMING_STATUS_REQUEST")) {
 					ArmingStatusRequest m1Command = new ArmingStatusRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals(
+				} else if (command.getCommandCode().equalsIgnoreCase(
 						"ALARM_BY_ZONE_REQUEST")) {
 					AlarmByZoneRequest m1Command = new AlarmByZoneRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals(
+				} else if (command.getCommandCode().equalsIgnoreCase(
 						"CONTROL_OUTPUT_STATUS_REQUEST")) {
 					ControlOutputStatusRequest m1Command = new ControlOutputStatusRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals(
+				} else if (command.getCommandCode().equalsIgnoreCase(
 						"REQUEST_TEMPERATURE")) {
 					RequestTemperature m1Command = new RequestTemperature();
 					Group group = Group.getByValue(command.getExtraInfo());
@@ -145,62 +146,73 @@ public class OutputHelper {
 					m1Command.setGroup(group);
 					m1Command.setDevice(command.getExtra2Info());
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("TASK_ACTIVATION")) {
+				} else if (command.getCommandCode().equalsIgnoreCase("TASK_ACTIVATION")) {
 					TaskActivation m1Command = new TaskActivation();
 					
-					try {
-						Integer value = Integer.valueOf(command.getExtraInfo());
-						m1Command.setTask(command.getExtraInfo());
-					} catch (NumberFormatException e) {
-						String taskValue = (String)m1.getCatalogueDef("TASKS").get(command.getExtraInfo());
-						
-						if (taskValue == null || taskValue == "") {
+					String taskValue = (String)m1.getCatalogueDef("TASKS").get(command.getExtraInfo());
+					
+					if (taskValue == null || taskValue == "") {
+						try {
+							Integer value = Integer.valueOf(command.getExtraInfo());
+							m1Command.setTask(command.getExtraInfo());
+						} catch (NumberFormatException e) {
 							return;
-						} else {
-							m1Command.setTask(taskValue);
 						}
+					} else {
+						m1Command.setTask(taskValue);
 					}
+					
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("PLC_STATUS")) {
+				} else if (command.getCommandCode().equalsIgnoreCase("PLC_STATUS")) {
 					PLCStatusRequest m1Command = new PLCStatusRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("REQUEST_ZONE_VOLTAGE")) {
+				} else if (command.getCommandCode().equalsIgnoreCase("REQUEST_ZONE_VOLTAGE")) {
 					RequestZoneVoltage m1Command = new RequestZoneVoltage();
 					m1Command.setZone(Utility.padString(command.getExtraInfo(),3));
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("ZONE_STATUS_REQUEST")) {
+				} else if (command.getCommandCode().equalsIgnoreCase("ZONE_STATUS_REQUEST")) {
 					ZoneStatusRequest m1Command = new ZoneStatusRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("SPEAK_WORD")) {
+				} else if (command.getCommandCode().equalsIgnoreCase("SPEAK_WORD")) {
 					SpeakWord m1Command = new SpeakWord();
 					
-					try {
-						Integer value = Integer.valueOf(command.getExtraInfo());
-						m1Command.setWord(command.getExtraInfo());
-					} catch (NumberFormatException e) {
-						String wordValue = (String)m1.getCatalogueDef("WORDS").get(command.getExtraInfo());
-						
-						if (wordValue == null || wordValue == "") {
+					String wordValue = (String)m1.getCatalogueDef("WORDS").get(command.getExtraInfo());
+					
+					if (wordValue == null || wordValue == "") {
+						try {
+							Integer value = Integer.valueOf(command.getExtraInfo());
+							m1Command.setWord(command.getExtraInfo());
+						} catch (NumberFormatException e) {
 							return;
-						} else {
-							m1Command.setWord(wordValue);
 						}
+					} else {
+						m1Command.setWord(wordValue);
 					}
+					
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("SPEAK_PHRASE")) {
+				} else if (command.getCommandCode().equalsIgnoreCase("SPEAK_PHRASE")) {
 					SpeakPhrase m1Command = new SpeakPhrase();
-					try {
-						Integer value = Integer.valueOf(command.getExtraInfo());
-						m1Command.setPhrase(command.getExtraInfo());
-					} catch (NumberFormatException e) {
-						String phraseValue = (String)m1.getCatalogueDef("PHRASES").get(command.getExtraInfo());
-						
-						if (phraseValue == null || phraseValue == "") {
+					
+					String phraseValue = (String)m1.getCatalogueDef("PHRASES").get(command.getExtraInfo());
+					
+					if (phraseValue == null || phraseValue == "") {
+						try {
+							Integer value = Integer.valueOf(command.getExtraInfo());
+							m1Command.setPhrase(command.getExtraInfo());
+						} catch (NumberFormatException e) {
 							return;
-						} else {
-							m1Command.setPhrase(phraseValue);
 						}
+					} else {
+						m1Command.setPhrase(phraseValue);
 					}
+					
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equalsIgnoreCase("ZONE_BYPASS")) {
+					ZoneBypassRequest m1Command = new ZoneBypassRequest();
+					
+					m1Command.setPinCode(command.getExtraInfo());
+					m1Command.setZone(command.getExtra2Info());
+					m1Command.setArea(command.getExtra3Info());
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
 			} else if (device.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {

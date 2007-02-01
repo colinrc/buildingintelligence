@@ -1,5 +1,8 @@
 package au.com.BI.M1.Commands;
 
+import au.com.BI.M1.M1Helper;
+import au.com.BI.Util.Utility;
+
 public class ZoneBypassRequest extends M1Command {
 	
 	private String zone;
@@ -63,7 +66,16 @@ public class ZoneBypassRequest extends M1Command {
 	public void setZone(String zone) {
 		this.zone = zone;
 	}
-	
-	
+
+	@Override
+	public String buildM1String() {
+		String returnString = "";
+		returnString = new M1Helper().buildCompleteM1String("zb" + 
+				Utility.padString(zone,3) +
+				Utility.padString(area,1) +
+				Utility.padString(pinCode,6) +
+				"00");
+		return returnString;
+	}
 
 }

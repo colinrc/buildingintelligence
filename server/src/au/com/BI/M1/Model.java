@@ -200,9 +200,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		outputHelper.doOutputItem(command, configHelper, cache, comms,this);
 	}
 	
-
-
-	
 	/**
 	 * @see au.com.BI.Util.ModelParameters#addControlledItem(java.lang.String, au.com.BI.Util.DeviceType, au.com.BI.Util.MessageDirection)
 	 */
