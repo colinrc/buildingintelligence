@@ -4,7 +4,7 @@
 <project basedir="." default="build" name="eLife">
     <description>Builds, tests, and runs the project server.</description>
      <import  file="ant_stubs/util_stubs.xml"/>
-        
+       
 	<taskdef resource="net/sf/ant4eclipse/antlib.xml" />
 	<property name="workspace" value="${basedir}/.." />
 	
@@ -46,7 +46,7 @@
         </javac>
     </target>
 	
-	
+
 	<target name="jar" depends="compile" >
 		
 		<pathconvert property="flattended.jars" refid="eLife.classpath" pathsep=" ">
@@ -94,6 +94,9 @@
 		<copy todir="dist/ext" flatten="true" >
 		   <fileset dir="/" includes="${massaged_jar_libs}"  />
 		</copy>
+		<copy todir="dist/ext" flatten="true" >
+		   <fileset dir="./wrapper" includes="*.jar"  />
+		</copy>
 		<delete  includeemptydirs="true" quiet="true" >
 		    	<fileset dir="dist/ext" >
 		    		<include name="junit*" />
@@ -105,6 +108,9 @@
 				<fileset dir="." includes="*.dll"  />
 			   	<fileset dir="." includes="*.jnilib"  />
 		</copy>
+	<copy todir="dist/lib" flatten="true" >
+			<fileset dir="./wrapper" includes="*.dll"  />
+	</copy>	
 	</target>
 		
     <target name="dist-libs"  depends="copy-libs" >

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="bi_stuff" default="all" basedir="..">
+<project name="bi_stuff" default="build_dist" basedir=".." >
+
    <target name="increment" depends="" description="Increments build number and creates a zip file.">
         <propertyfile file="src/au/com/BI/Home/my.properties" >
           <entry  key="minor_version" type="int" operation="+" value="1" />
@@ -13,6 +14,7 @@
         <echo message="Version number now ${major_version}${minor_version}" />
     </target>
     
+	<target name="jar" />
         <target name="build_dist" depends="jar,templates" >
     	 	
 		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
@@ -59,4 +61,4 @@
 		</copy>
     </target>
 	
-</project>
+</project >

@@ -74,7 +74,10 @@ public class LabelMgr {
 	
 
 	public String getLabelState (String displayName){
-		return labelState.get(displayName);
+		if (labelState.containsKey(displayName))
+			return labelState.get(displayName);
+		else
+			return "";
 	}
 
 	public void addLabel (String key, String value){
