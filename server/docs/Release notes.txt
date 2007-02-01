@@ -1,3 +1,9 @@
+== 1/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b33.zip V1.6bb33]  ==
+
+''' Scripting '''
+
+Updating scripting to only use the elife.sendCommand function. Removed first parameter of sendCommand call.
+
 == 1/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b32.zip V1.6bb32]  [attachment:wiki:SoftwareReleases:eLife-1.6b32-libs.zip Libs-V1.6b32] ==
 
 ''' Scripting '''

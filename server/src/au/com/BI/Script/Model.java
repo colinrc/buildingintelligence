@@ -806,56 +806,7 @@ public class Model
                       return sendCommand;
      }
 
-     /**
-      * @param key,command,extra Create a command system command.
-      */
-     public void createCommand(String key, String command, String extra) {
 
-         createCommand ( key,  command,  extra,  "",  "",  "","");
-     }
-
-     /**
-      * @param key,command,extra1,extra2 Create a command system command.
-      */
-     public void createCommand(String key, String command, String extra1, String extra2) {
-
-         createCommand ( key,  command,  extra1,  extra2,  "",  "","");
-     }
-
-       /**
-        * @param key,command,extra1,extra2,extra3 Create a command system command.
-        */
-       public void createCommand(String key, String command, String extra1, String extra2, String extra3) {
-           createCommand ( key,  command,  extra1,  extra2,  extra3,  "","");
-       }
-
-       /**
-        * @param key,command,extra1,extra2,extra3,extra4 Create a command system command.
-        */
-       public void createCommand(String key, String command, String extra1, String extra2, String extra3, String extra4) {
-
-              createCommand ( key,  command,  extra1,  extra2,  extra3,  extra4,"");
-       }
-
-       /**
-        * @param key,command,extra1,extra2,extra3,extra4,extra5 Create a command system command.
-        */
-       public void createCommand(String key, String command, String extra1, String extra2, String extra3, String extra4, String extra5) {
-
-               ClientCommand myCommand;
-               myCommand = new ClientCommand();
-               myCommand.setCommand(command);
-               myCommand.setExtraInfo(extra1);
-               myCommand.setExtra2Info(extra2);
-               myCommand.setExtra3Info(extra3);
-               myCommand.setExtra4Info(extra4);
-               myCommand.setExtra5Info(extra5);
-               myCommand.setTargetDeviceID(0);
-               myCommand.setKey(key);
-               sendToFlash(myCommand);
-               
-               return;
-       }
 
 
        /**
@@ -894,19 +845,20 @@ public class Model
           */
          public void sendCommand(String key, String command, String extra1, String extra2, String extra3, String extra4, String extra5) {
 
-                 CommandInterface myCommand;
-                 myCommand = new Command();
-                 myCommand.setCommand(command);
-                 myCommand.setExtraInfo(extra1);
-                 myCommand.setExtra2Info(extra2);
-                 myCommand.setExtra3Info(extra3);
-                 myCommand.setExtra4Info(extra4);
-                 myCommand.setExtra5Info(extra5);
-                 myCommand.setTargetDeviceID(0);
-                 myCommand.setKey(key);
-                 commandQueue.add(myCommand);
-                 
-                 return;
+             ClientCommand myCommand;
+             myCommand = new ClientCommand();
+             myCommand.setCommand(command);
+             myCommand.setExtraInfo(extra1);
+             myCommand.setExtra2Info(extra2);
+             myCommand.setExtra3Info(extra3);
+             myCommand.setExtra4Info(extra4);
+             myCommand.setExtra5Info(extra5);
+             myCommand.setTargetDeviceID(0);
+             myCommand.setKey(key);
+             sendToFlash(myCommand);
+             
+             return;
+
          }
          
          
@@ -1197,7 +1149,7 @@ public class Model
          * @param String,String Turn on the device to the passed in value.
          */
         public void on(String key, String extra) {
-        	this.createCommand(key,"on", extra,"","","","");
+        	this.sendCommand(key,"on", extra,"","","","");
 
         }
 
@@ -1205,77 +1157,77 @@ public class Model
          * @param String,String Turn on the device to the passed in value.
          */
         public void on(String key, String extra, String extra2) {
-        	this.createCommand(key,"on", extra, extra2,"","","");
+        	this.sendCommand(key,"on", extra, extra2,"","","");
         }
 
         /**
          * @param String,String Turn on the device to the passed in value.
          */
         public void on(String key, String extra, String extra2, String extra3) {
-        	this.createCommand(key,"on", extra, extra2,extra3,"","");
+        	this.sendCommand(key,"on", extra, extra2,extra3,"","");
         }
 
         /**
          * @param String,String Turn on the device to the passed in value.
          */
         public void on(String key, String extra, String extra2, String extra3, String extra4) {
-        	this.createCommand(key,"on", extra, extra2,extra3,extra4,"");
+        	this.sendCommand(key,"on", extra, extra2,extra3,extra4,"");
         }
 
         /**
          * @param String,String Turn on the device to the passed in value.
          */
         public void on(String key, String extra, String extra2, String extra3, String extra4, String extra5) {
-        	this.createCommand(key,"on", extra, extra2,extra3,extra4,extra5);
+        	this.sendCommand(key,"on", extra, extra2,extra3,extra4,extra5);
         }
 
         /**
          * @param String Turn on the device to 100.
          */
         public void on(String key) {
-        	this.createCommand(key,"on", "100", "","","","");
+        	this.sendCommand(key,"on", "100", "","","","");
         }
 
         /**
          * @param String Turn off the device to 0.
          */
         public void off(String key) {
-        	this.createCommand(key,"off", "0", "","","","");
+        	this.sendCommand(key,"off", "0", "","","","");
         }
 
         /**
            * @param String Turn off the device and set extra values as passed in.
            */
           public void off(String key, String extra) {
-          	this.createCommand(key,"off", extra,"","","","");
+          	this.sendCommand(key,"off", extra,"","","","");
           }
 
           /**
            * @param String Turn off the device and set extra values as passed in.
            */
           public void off(String key, String extra, String extra2) {
-          	this.createCommand(key,"off", extra, extra2,"","","");
+          	this.sendCommand(key,"off", extra, extra2,"","","");
           }
 
           /**
            * @param String Turn off the device and set extra values as passed in.
            */
           public void off(String key, String extra, String extra2, String extra3) {
-          	this.createCommand(key,"off", extra, extra2,extra3,"","");
+          	this.sendCommand(key,"off", extra, extra2,extra3,"","");
           }
 
           /**
            * @param String Turn off the device and set extra values as passed in.
            */
           public void off(String key, String extra, String extra2, String extra3, String extra4) {
-          	this.createCommand(key,"off", extra, extra2,extra3,extra4,"");
+          	this.sendCommand(key,"off", extra, extra2,extra3,extra4,"");
           }
 
           /**
            * @param String Turn off the device and set extra values as passed in.
            */
           public void off(String key, String extra, String extra2, String extra3, String extra4, String extra5) {
-          	this.createCommand(key,"off", extra, extra2,extra3,extra4,extra5);
+          	this.sendCommand(key,"off", extra, extra2,extra3,extra4,extra5);
           }
 
         public void listenMacro(String macro) {
