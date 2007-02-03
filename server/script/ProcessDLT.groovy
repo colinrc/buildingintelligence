@@ -1,7 +1,7 @@
 import au.com.BI.Script.*
 import au.com.BI.Command.*
 
- public class DoorStrikeNew  implements BIScript  {
+ public class ProcessDLT  implements BIScript  {
  
    // true if the script can be run multiple times in parallel
     boolean ableToRunMultiple = false
@@ -27,68 +27,60 @@ import au.com.BI.Command.*
 			// Just in case the script was run from the Flash control plan, rather than picking up a message change.
 		}
 		
-		currentLabel = labelMgr.getLabelState (triggeringEvent.getDisplayName ())
+		// to read something from the label manager in groovy
+		def currentLabel = labelMgr.getLabelState (triggeringEvent.getDisplayName ())
 		elife.log ("Label " + currentLabel)
 		
-		switch (triggeringEvent.getDisplayName()) {
-			case None:
+		switch (triggeringEvent.getDisplayName ()) {
+		case "DLT_1": 
+			if (currentLabel == "ON") {
+				elife.sendCommand ("KITCHENAV","on")
+				 elife.sendCommand("DLT_1","label","OFF")
+			}
+			if (currentLabel == "OFF") {
+				elife.sendCommand ("KITCHENAV","off")
+				 elife.sendCommand("DLT_1","label","ON")
+			}
+			break
+			
+		case "DLT_2":
+			switch (currentLabel){
+			case "": 
+				// The currently displayed text on the DLT is not known to eLife, so set it to something we can handle
+				elife.sendCommand("DLT_2","label","CD1")
+				break
 				
-
-				   // to read something from the label manager in groovy
-				   currentLabel = labelMgr.getLabelState (triggeringEvent.getDisplayName ())
-				   
-				   if (currentLabel == "ON""){
-							 // do something
-							 elife.sendCommand(""DLT_1","label","OFF")
-				   } 
-				   
+			case "CD1":
+				// The label on DLT 2 is currently CD1
+				elife.sendCommand( "KITCHEN_AV","KITCHEN_AV","src","cd1")
+				elife.sendCommand("DLT_2","label","CD2")
+				break
 				
+			case "CD2":
+				elife.sendCommand("KITCHEN_AV","src","cd2")
+				elife.sendCommand("DLT_2","label","DVD")
+				break
+				
+			case "DVD":
+				elife.sendCommand( "KITCHEN_AV","KITCHEN_AV","src","dvd")
+				elife.sendCommand("DLT_2","label","TV")
+				break
+
+			case "TV":
+				elife.sendCommand( "KITCHEN_AV","KITCHEN_AV","src","tv")
+				elife.sendCommand("DLT_2","label","CD1")
+				break
+
+			}
+			break
+			
+		case "DLT_3" :
+			// third button send volume
+			elife.sendCommand( "KITCHEN_AV","volume",triggeringEvent.getExtraInfo())
+			break
+
+			
+		}
 				   
-// original jython code
-
-if triggeringEvent != None:
-	currentLabel = labelMgr.getLabelState (triggeringEvent.getDisplayName ())
-	elife.log ("Label " + currentLabel)
-
-	#First button
-	
-	if triggeringEvent.getDisplayName () == "DLT_1":
-		if currentLabel == "ON":
-			elife.sendCommand( "KITCHEN_AV","KITCHEN_AV","on","")
-			elife.sendCommand("DLT_1","DLT_1","label","OFF")
-	
-		elif currentLabel == "OFF":
-			elife.sendCommand( "KITCHEN_AV","KITCHEN_AV","off","")
-			elife.sendCommand("DLT_1","DLT_1","label","ON")
-	
-  
-    # Second button, select source
-    
-	if triggeringEvent.getDisplayName () == "DLT_2":
-		if currentLabel == None:
-			# Unknown label
-			elife.sendCommand("DLT_2","DLT_2","label","CD1")
-			
-			
-		elif currentLabel == "CD1":
-			elife.sendCommand( "KITCHEN_AV","KITCHEN_AV","src","cd1")
-			elife.sendCommand("DLT_2","DLT_2","label","CD2")
-
-		elif currentLabel == "CD2":
-			elife.sendCommand( "KITCHEN_AV","KITCHEN_AV","src","cd2")
-			elife.sendCommand("DLT_2","DLT_2","label","DVD")
-			
-		elif currentLabel == "DVD":
-			elife.sendCommand( "KITCHEN_AV","KITCHEN_AV","src","dvd")
-			elife.sendCommand("DLT_2","DLT_2","label","TV")
-			
-		elif currentLabel == "TV":
-			elife.sendCommand( "KITCHEN_AV","KITCHEN_AV","src","tv")
-			elife.sendCommand("DLT_2","DLT_2","label","CD1")
-
-
-    # Third button, volume
-    
-	if triggeringEvent.getDisplayName () == "DLT_3":
-		elife.sendCommand( "KITCHEN_AV","KITCHEN_AV","volume",triggerEvent.getExtraInfo())
-
+	}
+}
