@@ -807,7 +807,13 @@ public class Model
      }
 
 
+          /**
+           * @param key,command,extra Create a command system command.
+           */
+          public void sendCommand(String key, String command) {
 
+       	   sendCommand ( key,  command,  "",  "",  "",  "","");
+          }
 
        /**
         * @param key,command,extra Create a command system command.

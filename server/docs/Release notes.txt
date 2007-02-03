@@ -1,3 +1,14 @@
+== 1/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b34.zip V1.6bb34]  ==
+
+''' Scripting '''
+
+Added a sendCommand method for no command only with no extra,extra2....  parameters
+
+
+''' M1 '''
+
+Updates for consistency 
+
 == 1/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b33.zip V1.6bb33]  ==
 
 ''' Scripting '''
