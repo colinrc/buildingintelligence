@@ -34,11 +34,11 @@ import au.com.BI.Command.*
 		switch (triggeringEvent.getDisplayName ()) {
 		case "DLT_1": 
 			if (currentLabel == "ON") {
-				elife.sendCommand ("KITCHENAV","on")
+				elife.sendCommand ("KITCHENAV","on","100")
 				 elife.sendCommand("DLT_1","label","OFF")
 			}
 			if (currentLabel == "OFF") {
-				elife.sendCommand ("KITCHENAV","off")
+				elife.sendCommand ("KITCHENAV","off","0")
 				 elife.sendCommand("DLT_1","label","ON")
 			}
 			break
