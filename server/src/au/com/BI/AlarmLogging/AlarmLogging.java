@@ -21,6 +21,7 @@ public class AlarmLogging {
 	public static final int VIOLATED = 8;
 	public static final int BYPASSED = 9;
 	public static final int PANIC_RELEASED = 10;
+	public static final int UNBYPASSED = 11;
 	
 	protected Logger logger = null;
 	protected CommandQueue commandQueue = null;
@@ -46,6 +47,7 @@ public class AlarmLogging {
 			case TROUBLE: return "TROUBLE";
 			case VIOLATED: return "VIOLATED";
 			case BYPASSED: return "BYPASSED";
+			case UNBYPASSED: return "UNBYPASSED";
 		}
 		return "";
 	}
