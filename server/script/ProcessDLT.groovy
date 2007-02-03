@@ -15,8 +15,8 @@ import au.com.BI.Command.*
     
    // Include these lines as they are in every script
 	def elife  = "${elife}"
-	def   triggeringEvent = "${triggeringEvent}"
-	def  cache = "${cache}"
+	def triggeringEvent = "${triggeringEvent}"
+	def cache = "${cache}"
 	def labelMgr = "{labelMgr}"
 	
 	def main (String[] argv) {
