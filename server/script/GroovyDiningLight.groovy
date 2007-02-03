@@ -1,7 +1,7 @@
 import au.com.BI.Script.*
 import au.com.BI.Command.*
 
- public class DoorStrikeNew  implements BIScript  {
+ public class GroovyDiningLight  implements BIScript  {
 
 
    // true if the script can be run multiple times in parallel
