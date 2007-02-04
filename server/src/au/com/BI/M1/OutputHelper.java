@@ -64,9 +64,29 @@ public class OutputHelper {
 
 			if (device.getDeviceType() == DeviceType.TOGGLE_OUTPUT) {
 				retCode = buildToggleOutput((DeviceType) device, command);
-			} else if (command.getKey().equals(m1.getName())
+			} else if (command.getKey().equals(m1.getDescription())
 					&& (device.getDeviceType() == DeviceType.VIRTUAL_OUTPUT)) {
-				if (command.getCommandCode().equalsIgnoreCase("ARMING_STATUS_REQUEST")) {
+				if (command.getCommandCode().equalsIgnoreCase("ALL_X10_ON")) {
+					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
+						logger.log(Level.WARNING,"For ALL_X10_ON command the extra info (for house code) cannot be null");
+					}
+					PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
+					plcDeviceControl.setFunctionCode(PLCFunction.X10_ALL_LIGHTS_OFF);
+					plcDeviceControl.setHouseCode(command.getExtraInfo());
+					plcDeviceControl.setUnitCode("");
+					plcDeviceControl.setTime(command.getExtra2Info());
+					retCode = plcDeviceControl.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equalsIgnoreCase("ALL_X10_OFF")) {
+					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
+						logger.log(Level.WARNING,"For ALL_X10_OFF command the extra info (for house code) cannot be null");
+					}
+					PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
+					plcDeviceControl.setFunctionCode(PLCFunction.X10_ALL_LIGHTS_OFF);
+					plcDeviceControl.setHouseCode(command.getExtraInfo());
+					plcDeviceControl.setUnitCode("");
+					plcDeviceControl.setTime(command.getExtra2Info());
+					retCode = plcDeviceControl.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equalsIgnoreCase("ARMING_STATUS_REQUEST")) {
 					ArmingStatusRequest m1Command = new ArmingStatusRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equalsIgnoreCase(
@@ -287,24 +307,7 @@ public class OutputHelper {
 	public String buildX10Light(LightFascade device, CommandInterface command) {
 		String returnString = "";
 
-		if (device.getName().equals("ALL")) {
-			PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
-			plcDeviceControl.setUnitCode(device.getKey());
-			plcDeviceControl.setHouseCode(device.getX10HouseCode());
-			
-			// assumes that we are only doing lights?
-			if (command.getCommandCode().equalsIgnoreCase("on")) {
-				plcDeviceControl.setFunctionCode(PLCFunction.X10_ALL_LIGHTS_ON);
-				plcDeviceControl.setTime(command.getExtraInfo());
-				returnString = plcDeviceControl.buildM1String() + "\r\n";
-			} else if (command.getCommandCode().equalsIgnoreCase("off")) {
-				plcDeviceControl.setFunctionCode(PLCFunction.X10_ALL_LIGHTS_OFF);
-				plcDeviceControl.setTime(command.getExtraInfo());
-				returnString = plcDeviceControl.buildM1String() + "\r\n";
-			} else {
-				returnString = "";
-			}
-		} else if (command.getCommandCode().equalsIgnoreCase("on")) {
+		if (command.getCommandCode().equalsIgnoreCase("on")) {
 			PLCDeviceOn plcDeviceOn = new PLCDeviceOn();
 			plcDeviceOn.setUnitCode(device.getKey());
 			plcDeviceOn.setHouseCode(device.getX10HouseCode());

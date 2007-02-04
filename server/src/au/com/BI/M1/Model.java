@@ -188,12 +188,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		addControlledItem("ARM",new Alarm("ARM",DeviceType.VIRTUAL_OUTPUT,"ARM"),MessageDirection.FROM_FLASH);
 		
 		// add a device to do request messages
-//		addControlledItem("REQUEST",new Alarm("REQUEST",DeviceType.VIRTUAL_OUTPUT,"REQUEST"),MessageDirection.FROM_FLASH);
-		addControlledItem(this.getName(),new VirtualOutput(this.getName(),DeviceType.VIRTUAL_OUTPUT,this.getDescription(),0),MessageDirection.FROM_FLASH);
-		
-		// generic X10 device to capture requests - 
-		// @todo Need to check that using a generic X10 device with no house or unit code will actually work with a real M1.
-		addControlledItem("ALL", new LightFascade("ALL",DeviceType.COMFORT_LIGHT_X10, "ALL"), MessageDirection.FROM_FLASH);
+		addControlledItem(this.getDescription(),new VirtualOutput(this.getDescription(),DeviceType.VIRTUAL_OUTPUT,this.getDescription(),0),MessageDirection.FROM_FLASH);
 	}
 	
 	public void doOutputItem (CommandInterface command) throws CommsFail {
