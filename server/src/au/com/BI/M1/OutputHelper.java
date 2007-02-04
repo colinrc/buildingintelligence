@@ -64,61 +64,6 @@ public class OutputHelper {
 
 			if (device.getDeviceType() == DeviceType.TOGGLE_OUTPUT) {
 				retCode = buildToggleOutput((DeviceType) device, command);
-			} else if (command.getKey().equals("ARM")
-					&& (device.getDeviceType() == DeviceType.VIRTUAL_OUTPUT)) {
-				if (command.getCommandCode().equals("ARM_TO_AWAY")) {
-					ArmToAway m1Command = new ArmToAway();
-					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel()
-							.getParameterValue("Password",
-									DeviceModel.MAIN_DEVICE_GROUP));
-					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("ARM_TO_STAY_HOME")) {
-					ArmToStayHome m1Command = new ArmToStayHome();
-					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel()
-							.getParameterValue("Password",
-									DeviceModel.MAIN_DEVICE_GROUP));
-					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals(
-						"ARM_TO_STAY_INSTANT")) {
-					ArmToStayInstant m1Command = new ArmToStayInstant();
-					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel()
-							.getParameterValue("Password",
-									DeviceModel.MAIN_DEVICE_GROUP));
-					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("ARM_TO_NIGHT")) {
-					ArmToNight m1Command = new ArmToNight();
-					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel()
-							.getParameterValue("Password",
-									DeviceModel.MAIN_DEVICE_GROUP));
-					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("ARM_TO_VACATION")) {
-					ArmToVacation m1Command = new ArmToVacation();
-					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel()
-							.getParameterValue("Password",
-									DeviceModel.MAIN_DEVICE_GROUP));
-					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals(
-						"ARM_STEP_TO_NEXT_AWAY_MODE")) {
-					ArmStepToNextAwayMode m1Command = new ArmStepToNextAwayMode();
-					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel()
-							.getParameterValue("Password",
-									DeviceModel.MAIN_DEVICE_GROUP));
-					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals(
-						"ARM_STEP_TO_NEXT_STAY_MODE")) {
-					ArmStepToNextStayMode m1Command = new ArmStepToNextStayMode();
-					m1Command.setPartition(command.getExtraInfo());
-					m1Command.setUserCode(configHelper.getDeviceModel()
-							.getParameterValue("Password",
-									DeviceModel.MAIN_DEVICE_GROUP));
-					retCode = m1Command.buildM1String() + "\r\n";
-				}
 			} else if (command.getKey().equals(m1.getName())
 					&& (device.getDeviceType() == DeviceType.VIRTUAL_OUTPUT)) {
 				if (command.getCommandCode().equalsIgnoreCase("ARMING_STATUS_REQUEST")) {
@@ -213,6 +158,58 @@ public class OutputHelper {
 					m1Command.setPinCode(command.getExtraInfo());
 					m1Command.setZone(command.getExtra2Info());
 					m1Command.setArea(command.getExtra3Info());
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals("ARM_TO_AWAY")) {
+					ArmToAway m1Command = new ArmToAway();
+					m1Command.setPartition(command.getExtraInfo());
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals("ARM_TO_STAY_HOME")) {
+					ArmToStayHome m1Command = new ArmToStayHome();
+					m1Command.setPartition(command.getExtraInfo());
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals(
+						"ARM_TO_STAY_INSTANT")) {
+					ArmToStayInstant m1Command = new ArmToStayInstant();
+					m1Command.setPartition(command.getExtraInfo());
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals("ARM_TO_NIGHT")) {
+					ArmToNight m1Command = new ArmToNight();
+					m1Command.setPartition(command.getExtraInfo());
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals("ARM_TO_VACATION")) {
+					ArmToVacation m1Command = new ArmToVacation();
+					m1Command.setPartition(command.getExtraInfo());
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals(
+						"ARM_STEP_TO_NEXT_AWAY_MODE")) {
+					ArmStepToNextAwayMode m1Command = new ArmStepToNextAwayMode();
+					m1Command.setPartition(command.getExtraInfo());
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals(
+						"ARM_STEP_TO_NEXT_STAY_MODE")) {
+					ArmStepToNextStayMode m1Command = new ArmStepToNextStayMode();
+					m1Command.setPartition(command.getExtraInfo());
+					m1Command.setUserCode(configHelper.getDeviceModel()
+							.getParameterValue("Password",
+									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
 			} else if (device.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
@@ -322,14 +319,6 @@ public class OutputHelper {
 			plcDeviceControl.setFunctionCode(PLCFunction.X10_BRIGHT);
 			plcDeviceControl.setExtendedCode(command.getExtraInfo());
 			plcDeviceControl.setTime(command.getExtra2Info());
-			returnString = plcDeviceControl.buildM1String() + "\r\n";
-		} else if (command.getCommandCode().equalsIgnoreCase("control")) {
-			PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
-			plcDeviceControl.setUnitCode(device.getKey());
-			plcDeviceControl.setHouseCode(device.getX10HouseCode());
-			plcDeviceControl.setFunctionCode(PLCFunction.getByDescription(command.getExtraInfo()));
-			plcDeviceControl.setExtendedCode(command.getExtra2Info());
-			plcDeviceControl.setTime(command.getExtra3Info());
 			returnString = plcDeviceControl.buildM1String() + "\r\n";
 		}
 		return (returnString);
