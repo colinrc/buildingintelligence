@@ -94,6 +94,11 @@ public class OutputHelper {
 				} else if (command.getCommandCode().equalsIgnoreCase("TASK_ACTIVATION")) {
 					TaskActivation m1Command = new TaskActivation();
 					
+					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
+						logger.log(Level.WARNING, "Task activation command received with no extra information");
+						return;
+					}
+					
 					String taskValue = (String)m1.getCatalogueDef("TASKS").get(command.getExtraInfo());
 					
 					if (taskValue == null || taskValue == "") {
@@ -121,6 +126,11 @@ public class OutputHelper {
 				} else if (command.getCommandCode().equalsIgnoreCase("SPEAK_WORD")) {
 					SpeakWord m1Command = new SpeakWord();
 					
+					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
+						logger.log(Level.WARNING, "Speak word command received with no extra information");
+						return;
+					}
+					
 					String wordValue = (String)m1.getCatalogueDef("WORDS").get(command.getExtraInfo());
 					
 					if (wordValue == null || wordValue == "") {
@@ -137,6 +147,11 @@ public class OutputHelper {
 					retCode = m1Command.buildM1String() + "\r\n";
 				} else if (command.getCommandCode().equalsIgnoreCase("SPEAK_PHRASE")) {
 					SpeakPhrase m1Command = new SpeakPhrase();
+					
+					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
+						logger.log(Level.WARNING, "Speak phrase command received with no extra information");
+						return;
+					}
 					
 					String phraseValue = (String)m1.getCatalogueDef("PHRASES").get(command.getExtraInfo());
 					
