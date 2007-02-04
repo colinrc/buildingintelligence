@@ -399,6 +399,17 @@ public class ControlledHelper {
 						m1.currentUser, 
 						new Date());
 				
+			} else if (m1Command.getClass().equals(TasksChangeUpdate.class)) {
+				TasksChangeUpdate taskUpdate = (TasksChangeUpdate)m1Command;
+				alarmLogger.setCache(cache);
+				alarmLogger.setCommandQueue(commandQueue);
+				alarmLogger.addAlarmLog("ALARM", 
+						"Task change update for task " + taskUpdate.getTask(), 
+						AlarmLogging.TASK_UPDATE, 
+						taskUpdate.getTask(), 
+						taskUpdate.getTask(), 
+						m1.currentUser, 
+						new Date());
 			} else {
 				// Command has been built or handled already.
 				sendCommand(cache, commandQueue, m1Command);
