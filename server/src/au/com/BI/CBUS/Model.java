@@ -835,15 +835,25 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void sendOutput (String keyStr, String command, String extra,User user) {
 
 		//logger.log (Level.FINEST,"Sending MMI output App Code : "  + appCode + " command " + command + " group " + keyStr);
+		DeviceType rawDevice = configHelper.getControlledItem(keyStr);
 		try {
-			CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(keyStr);
+			CBUSDevice cbusDevice = (CBUSDevice)rawDevice;
 
 			if (cbusDevice != null) {
 				int newLevel;
 				try {
 					newLevel = Integer.parseInt(extra);
 					this.setState (cbusDevice,command, newLevel);
-						CBUSCommand cbusCommand = (CBUSCommand)((LightFascade)cbusDevice).buildDisplayCommand ();
+					CommandInterface cbusCommand = null;
+					if (cbusDevice  instanceof SensorFascade){
+						cbusCommand = ((SensorFascade)cbusDevice).buildDisplayCommand ();
+					}
+					if (cbusDevice instanceof LightFascade){
+						cbusCommand = (CBUSCommand)((LightFascade)cbusDevice).buildDisplayCommand ();
+					}
+					if (cbusDevice instanceof Label){
+						cbusCommand = ((Label)cbusDevice).buildDisplayCommand ();
+					}
 						cbusCommand.setCommand (command);
 						cbusCommand.setExtraInfo(Integer.toString(newLevel));
 						cbusCommand.setKey ("CLIENT_SEND");
@@ -856,7 +866,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				}
 			}
 		} catch (ClassCastException ex) {
-			logger.log (Level.WARNING,"Non CBUS device reported a CBUS level " + ex.getMessage());
+			logger.log (Level.WARNING,"Non CBUS device reported a CBUS level " +rawDevice.getName() + " " +  ex.getMessage());
 		}
 
 	}

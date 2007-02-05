@@ -120,7 +120,7 @@ public class GroovyScriptHandler {
 		}
 
 		if (scriptAlreadyRunning && noQueue) {
-			logger.log(Level.FINE, "User attempted to run " + scriptName
+			logger.log(Level.INFO, "User attempted to run " + scriptName
 					+ " twice");
 			return false;
 		}

@@ -1,4 +1,14 @@
-== 1/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b35.zip V1.6bb35]  ==
+== 5/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b36.zip V1.6b36]  ==
+
+''' CBUS '''
+
+Fixed issue with incorrect data type on sending to flash.
+
+''' Scripting '''
+
+Raised log level if running twice
+
+== 5/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b35.zip V1.6bb35]  ==
 
 ''' CBUS '''
 
