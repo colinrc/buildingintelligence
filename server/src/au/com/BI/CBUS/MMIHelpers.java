@@ -14,7 +14,6 @@ import au.com.BI.Comms.CommsCommand;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Device.DeviceType;
-import au.com.BI.Lights.LightFascade;
 import au.com.BI.User.User;
 
 /**
@@ -102,7 +101,7 @@ public class MMIHelpers {
 					if (testValue1 == 1) { 
 						int key = firstKey + i * 4;
 						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
+						CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(fullKey);
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
 								if (!model.hasState(fullKey)) {
@@ -129,7 +128,7 @@ public class MMIHelpers {
 					if (testValue2 == 4) {
 						int key = firstKey + 1 + i * 4;
 						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
+						CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(fullKey);
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
 								if (!model.hasState(fullKey)) {
@@ -156,7 +155,7 @@ public class MMIHelpers {
 					if (testValue3 == 16) { 
 						int key = firstKey + 2 + i * 4;
 						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
+						CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(fullKey);
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
 								if (!model.hasState(fullKey)) {
@@ -183,7 +182,7 @@ public class MMIHelpers {
 					if (testValue4 == 64) { 
 						int key = firstKey + 3 + i * 4;
 						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
-						LightFascade cbusDevice = (LightFascade)configHelper.getControlledItem(fullKey);
+						CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(fullKey);
 						if (cbusDevice != null) {
 							if (cbusDevice.supportsLevelMMI()) {
 								if (!model.hasState(fullKey)) {

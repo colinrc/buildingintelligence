@@ -1,7 +1,7 @@
 import au.com.BI.Script.*
 import au.com.BI.Command.*
 
- public class ProcessDLT  implements BIScript  {
+ public class dlt_merik  implements BIScript  {
  
    // true if the script can be run multiple times in parallel
     boolean ableToRunMultiple = false

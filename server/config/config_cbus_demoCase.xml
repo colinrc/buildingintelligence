@@ -42,7 +42,7 @@
                         <LIGHT_CBUS ACTIVE="Y" KEY="24"   NAME="Dimmer 8" DISPLAY_NAME="DIMMER8" POWER_RATING="100"/>
 
                         <LIGHT_CBUS ACTIVE="N" KEY="2"   NAME="Reflection 1" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>                      
-                        <LIGHT_CBUS ACTIVE="Y" KEY="3"   NAME="Reflection 2" DISPLAY_NAME="REFLECTION2" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="3"   NAME="Reflection 2" DISPLAY_NAME="REFLECTION2" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="4"   NAME="Reflection 3" DISPLAY_NAME="REFLECTION3" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="Y" KEY="5"   NAME="Reflection 4" DISPLAY_NAME="REFLECTION4" POWER_RATING="100"/>
                                                 

@@ -27,7 +27,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected HashMap <String,String>currentSrc;
 	protected TutondoHelper tutondoHelper;
 	protected PollDevice pollDevice;
-	protected List commandQueue;
+	protected CommandQueue commandQueue;
 	protected boolean protocolB;
 	
 	public Model () {
@@ -83,11 +83,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			pollDevice.setComms(comms);
 			pollDevice.setProtocol(protocolB);
 		}
-		Iterator audioDevices = configHelper.getAllControlledDevices();
-		while (audioDevices.hasNext()) {
-			Audio audioDevice = (Audio)audioDevices.next();
-			pollDevice.addAudioDevice(audioDevice);
+		for (DeviceType audioDevice: configHelper.getAllControlledDeviceObjects()){
+			try {
+				pollDevice.addAudioDevice((Audio)audioDevice);
+			} catch (ClassCastException ex){
+				logger.log(Level.WARNING,"A non-audio device was added to the Tutondo model " + audioDevice.getName());
+			}
 		}
+			
 		if (!protocolB) {
 			pollDevice.setSTX(tutondoHelper.getSTX());
 			pollDevice.setETX(tutondoHelper.getETX());
@@ -106,7 +109,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		logger.log (Level.FINE,"Starting tutondo polling, interval = " + pollValueStr);
 		pollDevice.start();
 		
-
 	}
 	
 	
@@ -122,16 +124,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		sendSrc (commandQueue, -1, device, currentState.getSrc());	
 	}
 	
-	public void doClientStartup (List commandQueue, long targetFlashDeviceID) {
-		Iterator audioDevices = configHelper.getAllControlledDevices();
-		while (audioDevices.hasNext()){
-			Audio audioDevice =(Audio)(audioDevices.next());
-			doClientStartup (commandQueue, targetFlashDeviceID, audioDevice);
+	public void doClientStartup (CommandQueue commandQueue, long targetFlashDeviceID) {
+		for (DeviceType audioDevice: configHelper.getAllControlledDeviceObjects()){
+			try {
+				doClientStartup (commandQueue, targetFlashDeviceID, (Audio)audioDevice);
+			} catch (ClassCastException ex){
+				logger.log(Level.WARNING,"A non-audio device was added to the Tutondo model " + audioDevice.getName());
+			}
 			
 		}
 	}
 
-	public void doClientStartup (List commandQueue, long targetFlashDeviceID, Audio audioDevice) {
+	public void doClientStartup (CommandQueue commandQueue, long targetFlashDeviceID, Audio audioDevice) {
 		if (this.hasState (audioDevice.getKey())) {
 	
 			StateOfZone currentState = this.getCurrentState(audioDevice.getKey());
@@ -140,7 +144,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 	}
 
-	public void sendStatus (StateOfZone currentState, List commandQueue, long targetFlashDeviceID, Audio audioDevice) {
+	public void sendStatus (StateOfZone currentState, CommandQueue commandQueue, long targetFlashDeviceID, Audio audioDevice) {
 		if (audioDevice == null) return;
 		AudioCommand audioCommand = (AudioCommand)audioDevice.buildDisplayCommand ();
 		audioCommand.setKey ("CLIENT_SEND");
@@ -171,7 +175,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		sendToFlash (audioMuteCommand,cache);
 	}
 	
-	public void sendSrc (List commandQueue, long targetFlashDeviceID, Audio audioDevice, String src) {
+	public void sendSrc (CommandQueue commandQueue, long targetFlashDeviceID, Audio audioDevice, String src) {
 		AudioCommand audioCommand = (AudioCommand)audioDevice.buildDisplayCommand ();
 		audioCommand.setKey ("CLIENT_SEND");
 		audioCommand.setTargetDeviceID(targetFlashDeviceID);
@@ -180,7 +184,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		sendToFlash (audioCommand,cache);	
 	}
 	
-	public void sendVolume (List commandQueue, long targetFlashDeviceID, Audio audioDevice, String volume) {
+	public void sendVolume (CommandQueue commandQueue, long targetFlashDeviceID, Audio audioDevice, String volume) {
 		AudioCommand audioCommand = (AudioCommand)audioDevice.buildDisplayCommand ();
 		audioCommand.setKey ("CLIENT_SEND");
 		audioCommand.setTargetDeviceID(targetFlashDeviceID);
