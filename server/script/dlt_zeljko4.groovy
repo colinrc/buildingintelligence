@@ -21,20 +21,20 @@ import au.com.BI.Command.*
     
     def setLabelRADIO () {
 		elife.sendCommand("AUDIO_2","label","AUDIOKISS")
-		elife.sendcommand("AUDIO_3","label","RADIONEXT")
-		elife.sendcommand("AUDIO_4","label","RADIOPREV")
+		elife.sendCommand("AUDIO_3","label","RADIONEXT")
+		elife.sendCommand("AUDIO_4","label","RADIOPREV")
     }
     
     def setLabelKISS () {
 		elife.sendCommand("AUDIO_2","label","AUDIOTV")
-		elife.sendcommand("AUDIO_3","label","KISSNEXT")
-		elife.sendcommand("AUDIO_4","label","KISSPREV")
+		elife.sendCommand("AUDIO_3","label","KISSNEXT")
+		elife.sendCommand("AUDIO_4","label","KISSPREV")
     }
     
     def setLabelTV () {
 		elife.sendCommand("AUDIO_2","label","AUDIODVD")
-		elife.sendcommand("AUDIO_3","label","TVUP")
-		elife.sendcommand("AUDIO_4","label","TVDN")
+		elife.sendCommand("AUDIO_3","label","TVUP")
+		elife.sendCommand("AUDIO_4","label","TVDN")
     }
     
    def main (String[] argv){
