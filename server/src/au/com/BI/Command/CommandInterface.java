@@ -43,6 +43,10 @@ public interface CommandInterface {
         public String getExtra5Info();
 
 		public boolean isCommsCommand();
+		
+		public boolean isScriptCommand();
+		
+		public void setScriptCommand(boolean scriptCommand);
 
         public Object getRrdValueObject();
 

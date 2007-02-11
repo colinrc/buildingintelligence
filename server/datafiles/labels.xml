@@ -13,6 +13,22 @@
 	            <LABEL KEY="CD2" VALUE="cd2"/>
 	            <LABEL KEY="DVD" VALUE="dvd"/>
 	            <LABEL KEY="TV" VALUE="tv"/>
+	            
+	            <LABEL KEY="AUDIO" VALUE="Audio"/>
+		    <LABEL KEY="UNKNOWN" VALUE=" "/>
+		    <LABEL KEY="AUDIODVD" VALUE="DVD"/>
+		    <LABEL KEY="AUDIORADIO" VALUE="Radio"/>
+		    <LABEL KEY="AUDIOKISS" VALUE="Kiss"/>
+		    <LABEL KEY="AUDIOTV" VALUE="TV"/>
+		    
+		    <LABEL KEY="DVDPLAY" VALUE="Play"/>
+		    <LABEL KEY="DVDSTOP" VALUE="Stop"/>
+		    <LABEL KEY="RADIONEXT" VALUE="Next"/>
+		    <LABEL KEY="RADIOPREV" VALUE="Prev"/>
+		    <LABEL KEY="KISSNEXT" VALUE="Next"/>
+		    <LABEL KEY="KISSNEXT" VALUE="Prev"/>
+		    <LABEL KEY="TVUP" VALUE="Chan Up"/>
+		    <LABEL KEY="TVDN" VALUE="Chan Dn"/>
 	</TEXT>
 
 </LABELS>

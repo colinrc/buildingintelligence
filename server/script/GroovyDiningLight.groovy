@@ -1,7 +1,7 @@
 import au.com.BI.Script.*
 import au.com.BI.Command.*
 
- public class GroovyDiningLight  implements BIScript  {
+ public class GroovyDiningLight  extends BIScript  {
 
 
    // true if the script can be run multiple times in parallel
@@ -19,14 +19,7 @@ import au.com.BI.Command.*
     // hidden sets that the script will by default not be visible in the list sent to the flash client. This can be overwritten in the script_status file
     boolean hidden = false
     
-    // ---------------------------------------------------------------
-    // Include this block in every script
-	def elife  = "${elife}"
-	def   triggeringEvent = "${triggeringEvent}"
-	def  cache = "${cache}"
-	def labelMgr = "{labelMgr}"
-	// ---------------------------------------------------------------
-	
+
 
 	
 	def main (String[] argv) {

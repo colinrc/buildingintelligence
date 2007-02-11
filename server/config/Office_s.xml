@@ -1,0 +1,155 @@
+<CONFIG lastUpdated="2005-10-22" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+        <DESC>My demonstration configuration</DESC>
+        <!-- ______________________________________  IR LEARNER _____________________________ -->
+        <!-- flow may be NONE, RTSCTS" -->
+        <DEVICE ACTIVE="N" NAME="IR_LEARNER" DISPLAY_NAME="IR LEARNER">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.135" PORT="4999"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5003"/>
+                </CONNECTION>
+                <PARAMETERS>
+                        <ITEM NAME="STX" VALUE=""/>
+                        <ITEM NAME="ETX" VALUE="\n"/>
+                </PARAMETERS>
+                <IR_LEARNER/>
+        </DEVICE>
+     
+        <!-- ______________________________________  TUTONDO DEFS  ____________________  -->
+        <DEVICE ACTIVE="Y" NAME="TUTONDO" DISPLAY_NAME="Tutondo Audio">
+                <CONNECTION>
+		         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial"  BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                         <SERIAL ACTIVE="Y" PORT="COM3" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.0.135" PORT="4999"/>
+                </CONNECTION>
+                <CATALOGUE NAME="Tutondo Inputs">
+                        <ITEM CODE="dvd" VALUE="1"/>
+                        <ITEM CODE="radio" VALUE="2"/>
+                        <ITEM CODE="kiss" VALUE="3"/>
+			<ITEM CODE="tv" VALUE="4"/>
+			<ITEM CODE="cd" VALUE="5"/>
+			
+                </CATALOGUE>
+                <CATALOGUE NAME="Tutondo Functions">
+                        <ITEM CODE="cd-rw" VALUE="1"/>
+                        <ITEM CODE="cd-play" VALUE="4"/>
+                        <ITEM CODE="cd-ff" VALUE="5"/>
+                        <ITEM CODE="cd-stop" VALUE="3"/>
+                        <ITEM CODE="cd-pause" VALUE="9"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="INPUTS" VALUE="Tutondo Inputs"/>
+                        <ITEM NAME="FUNCTIONS" VALUE="Tutondo Functions"/>
+                        <ITEM NAME="POLL_INTERVAL" VALUE="10"/>
+                        <ITEM NAME="PROTOCOL" VALUE="B" />
+                </PARAMETERS>
+                <TUTONDO>
+                        <AUDIO KEY="2" DISPLAY_NAME="SHOWROOM_AUDIO"/>
+			<AUDIO KEY="1" DISPLAY_NAME="DISPLAY_AUDIO"/>
+                </TUTONDO>
+        </DEVICE>
+        <!-- the key is the Tutondo zone, Display name is the flash icon name -->
+        
+        <!-- ______________________________________  KRAMER DEFS  ____________________  -->
+        <DEVICE ACTIVE="N" NAME="KRAMER" DISPLAY_NAME="Kramer Matrix">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.133" PORT="10001"/>
+                </CONNECTION>
+                <CATALOGUE NAME="Kramer Audio Inputs">
+                        <ITEM CODE="DB1" VALUE="1"/>
+                         <ITEM CODE="DVD"  VALUE="2"/>
+                </CATALOGUE>
+                <CATALOGUE NAME="Kramer Video Inputs">
+                       <ITEM CODE="DB1" VALUE="1"/>
+                       <ITEM CODE="DVD"  VALUE="2"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="AUDIO_INPUTS" VALUE="Kramer Audio Inputs"/>
+                        <ITEM NAME="AV_INPUTS" VALUE="Kramer Video Inputs"/>
+                </PARAMETERS>
+                <KRAMER>
+                     
+                        <AV KEY="1" DISPLAY_NAME="SHOWROOM_LCD"/>
+                        <AV KEY="2" DISPLAY_NAME="WF_PLASMA"/>   
+                </KRAMER>
+        </DEVICE>
+        <!-- the key is the Kramer output, Display name is the flash icon name -->
+   
+
+        !-- ______________________________________  CBUS DEFS  ____________________  -->
+        <DEVICE ACTIVE="Y" NAME="CBUS" DISPLAY_NAME="CBUS Lights">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.130" PORT="10001"/>
+                       
+                </CONNECTION>
+                <CBUS>
+               
+                        <LIGHT_CBUS ACTIVE="Y" KEY="02" NAME="Display Light" DISPLAY_NAME="DISPLAY_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="05" NAME="Centre light" DISPLAY_NAME="CENTRE_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="06" NAME="Reception Light" DISPLAY_NAME="RECEPTION_LIGHT" POWER_RATING="100"/>
+			<LIGHT_CBUS ACTIVE="Y" KEY="07" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT" POWER_RATING="100"/>
+			<LIGHT_CBUS ACTIVE="Y" KEY="04" NAME="Wf Light" DISPLAY_NAME="WF_LIGHT" POWER_RATING="100"/>
+			<LIGHT_CBUS ACTIVE="Y" KEY="08" NAME="Toilet Light" DISPLAY_NAME="TOILET_LIGHT" POWER_RATING="100"/>
+			<!-- 			DLT				 -->
+			<LABEL ACTIVE="Y" KEY="13" NAME="Audio 1"  DISPLAY_NAME="AUDIO_1" DEFAULT_LABEL_KEY="AUDIO" />
+			<LABEL ACTIVE="Y" KEY="11" NAME="Audio 2"  DISPLAY_NAME="AUDIO_2" DEFAULT_LABEL_KEY="AUDIODVD" />
+			<LABEL ACTIVE="Y" KEY="12" NAME="Audio 3"  DISPLAY_NAME="AUDIO_3" DEFAULT_LABEL_KEY="DVDPLAY" />
+			<LABEL ACTIVE="Y" KEY="10" NAME="Audio 4"  DISPLAY_NAME="AUDIO_4" DEFAULT_LABEL_KEY="DVDSTOP" />
+                       </CBUS>
+        </DEVICE>
+   
+        <!-- _____________________________ GC-100 DEFS _____________________________-->
+        <DEVICE ACTIVE="N" NAME="GC100" DISPLAY_NAME="GC100">
+                <CONNECTION>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.135" PORT="4998"/>
+                       
+                </CONNECTION>
+	         <GC100_IR NAME="IR1">
+                        <PARAMETERS>
+                                <ITEM NAME="MODULE" VALUE="2"/>
+                                <ITEM NAME="MODULE_TYPE" VALUE="IR"/>
+                                <!-- Valid types are serial, IR or relay -->
+                        </PARAMETERS>
+                        <IR KEY="01" NAME="IR PORT1" AV_NAME="GC100_IR1"/>
+                        <IR KEY="02" NAME="IR PORT2" AV_NAME="GC100_IR2"/>
+			<IR KEY="03" NAME="IR PORT3" AV_NAME="GC100_IR3"/>
+                </GC100_IR>
+		
+             
+        </DEVICE>
+	<DEVICE ACTIVE="N" NAME="M1" DISPLAY_NAME="M1" PASSWORD="1234">
+        <CONNECTION>
+                <IP ACTIVE="Y" IP_ADDRESS="192.168.0.140" PORT="2101"/>
+        </CONNECTION>
+        <M1>
+        	<TOGGLE_OUTPUT ACTIVE="N" KEY="017" AREA="01" NAME="Garage Door Opener" DISPLAY_NAME="GARAGE_DOOR_OPENER" />
+			
+		<!-- PIRs - (IP) -->
+		<CONTACT_CLOSURE ACTIVE="Y" KEY="001" AREA="01" NAME="Office PIR" DISPLAY_NAME="OFFICE_PIR"/>
+		<CONTACT_CLOSURE ACTIVE="Y" KEY="002" AREA="01" NAME="Store Room PIR" DISPLAY_NAME="STORE_PIR"/>
+		<CONTACT_CLOSURE ACTIVE="Y" KEY="003" AREA="01" NAME="Office 360 PIR" DISPLAY_NAME="OFFICE_360_PIR"/>
+                <CONTACT_CLOSURE ACTIVE="Y" KEY="004" AREA="01" NAME="Showroom 360 PIR"  DISPLAY_NAME="SHOWROOM_360_PIR"/>
+		<CONTACT_CLOSURE ACTIVE="Y" KEY="005" AREA="01" NAME="Showroom PIR"  DISPLAY_NAME="SHOWROOM_PIR"/>
+		<CONTACT_CLOSURE ACTIVE="Y" KEY="006" AREA="01" NAME="Glass Break"  DISPLAY_NAME="GLASS_BREAK"/>
+		<CONTACT_CLOSURE ACTIVE="Y" KEY="007" AREA="01" NAME="Storeroom 360 PIR"  DISPLAY_NAME="STORE_360_PIR"/>
+	</M1>
+</DEVICE>
+               <!-- _____________________________ Controls _____________________________-->
+        <CONTROLS>
+                <VARIABLES>
+                        <VARIABLE ACTIVE="N" NAME="Master Bedroom Light" DISPLAY_NAME="MASTERBED_LIGHT"/>
+                   
+                 </VARIABLES>
+                <CALENDAR_MESSAGES>
+                		   <ITEM NAME="AUTOCLOSE" VALUE="60" />
+                		   <ITEM NAME="ICON" VALUE="calendar" />
+                		   <ITEM NAME="HIDECLOSE" VALUE="FALSE" />
+                </CALENDAR_MESSAGES>
+        </CONTROLS>
+         
+</CONFIG> 

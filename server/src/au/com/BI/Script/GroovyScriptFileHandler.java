@@ -3,6 +3,8 @@
  */
 package au.com.BI.Script;
 
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyObject;
 import groovy.lang.GroovyRuntimeException;
 import groovy.util.GroovyScriptEngine;
 import groovy.util.ResourceException;
@@ -16,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.runtime.typehandling.GroovyCastException;
 
 import au.com.BI.Config.ConfigError;
@@ -27,7 +30,8 @@ import au.com.BI.Config.ConfigError;
 public class GroovyScriptFileHandler {
         Logger logger;
         protected GroovyScriptEngine gse;
-
+        protected GroovyClassLoader groovyClassLoader;
+        
         public GroovyScriptFileHandler() {
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
         }
@@ -35,8 +39,13 @@ public class GroovyScriptFileHandler {
         public void loadScripts(Model myScriptModel, String dir, ConcurrentHashMap <String,GroovyScriptRunBlock>scriptRunBlockList) throws ConfigError {
 
                 Integer fileNum;
+
+                
                 try {
-					gse = new GroovyScriptEngine (dir);
+                	CompilerConfiguration cfg = new CompilerConfiguration();
+                	cfg.setScriptBaseClass("au.com.BI.Script.BIScript");
+                	groovyClassLoader =new GroovyClassLoader (this.getClass().getClassLoader(),cfg);
+					gse = new GroovyScriptEngine (dir,groovyClassLoader);
 
 	                fileNum = new Integer(0);
 	                int i = 0;
@@ -78,10 +87,15 @@ public class GroovyScriptFileHandler {
 
 							
 								try {
-									Class  script = gse.loadScriptByName( name);
-									Object aScript = script.newInstance();
+									Class  script = gse.loadScriptByName( name, groovyClassLoader);
+									GroovyObject aScript = (GroovyObject)script.newInstance();
 
+									/*
+									java.lang.Class biScript = BIScript.class;
+									String superName = aScript.getClass().getSuperclass().getName();
+									*/
 									BIScript ifc = (BIScript) aScript;
+									
 									GroovyScriptRunBlock scriptRunBlock;
 									if (!scriptRunBlockList.containsKey(name)){
 										 scriptRunBlock = new GroovyScriptRunBlock();
@@ -89,10 +103,17 @@ public class GroovyScriptFileHandler {
 										scriptRunBlock = scriptRunBlockList.get(name);
 									}
 									scriptRunBlock.setName(name);
+									
 									scriptRunBlock.setAbleToRunMultiple(ifc.isAbleToRunMultiple());
 									scriptRunBlock.setStoppable(ifc.isStoppable());
 									scriptRunBlock.setFireOnChange(ifc.getFireOnChange());
 									
+
+									/*
+									scriptRunBlock.setAbleToRunMultiple ((Boolean)aScript.invokeMethod( "isAbleToRunMultiple", null));
+									scriptRunBlock.setStoppable ((Boolean)aScript.invokeMethod( "isStoppable",null) );
+									scriptRunBlock.setFireOnChange ((String[])aScript.invokeMethod( "getFireOnChange",null) );
+									*/
 									scriptRunBlockList.put(name,scriptRunBlock);
 									
 								} catch (ResourceException e) {

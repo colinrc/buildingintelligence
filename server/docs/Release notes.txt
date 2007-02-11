@@ -1,3 +1,13 @@
+== 5/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b37.zip V1.6b37]  ==
+
+''' Scripting '''
+
+Simplified groovy scripting, ProcessDLT.groovy demonstrates these capabilities.
+
+''' M1 '''
+
+Roll in updates
+
 == 5/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b36.zip V1.6b36]  ==
 
 ''' CBUS '''

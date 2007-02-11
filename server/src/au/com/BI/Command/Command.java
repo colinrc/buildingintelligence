@@ -32,6 +32,7 @@ public class Command implements CommandInterface {
         protected JRobinData jRobinData;
 		protected boolean adminCommand = false;
         protected Logger logger;
+        protected boolean scriptCommand = false;
 
         public User user;
 
@@ -50,11 +51,13 @@ public class Command implements CommandInterface {
         		newCopy.setExtra3Info(this.getExtra3Info());
         		newCopy.setExtra4Info(this.getExtra4Info());
         		newCopy.setExtra5Info(this.getExtra5Info());
-
+        		newCopy.setScriptCommand(this.isScriptCommand());
+        		
         		newCopy.setDisplayName(this.getDisplayName());
         		newCopy.setTargetDeviceID(this.getTargetDeviceID());
         		newCopy.setTargetDeviceModel(this.getTargetDeviceModel());
-        		return newCopy;			} 
+        		return newCopy;			
+        		} 
 			catch (InstantiationException e) {
 				throw new CloneNotSupportedException ("Cannot create new instance");
 			} catch (IllegalAccessException e) {
@@ -387,6 +390,14 @@ public class Command implements CommandInterface {
 
 		public void setAdminCommand(boolean adminCommand) {
 			this.adminCommand = adminCommand;
+		}
+
+		public boolean isScriptCommand() {
+			return scriptCommand;
+		}
+
+		public void setScriptCommand(boolean scriptCommand) {
+			this.scriptCommand = scriptCommand;
 		}
 		
 }

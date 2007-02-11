@@ -1,7 +1,7 @@
 import au.com.BI.Script.*
 import au.com.BI.Command.*
 
- public class dlt_merik  implements BIScript  {
+ public class dlt_merik  extends BIScript  {
  
    // true if the script can be run multiple times in parallel
     boolean ableToRunMultiple = false
@@ -13,11 +13,6 @@ import au.com.BI.Command.*
     boolean  stoppable = false;
  
     
-   // Include these lines as they are in every script
-	def elife  = "${elife}"
-	def triggeringEvent = "${triggeringEvent}"
-	def cache = "${cache}"
-	def labelMgr = "{labelMgr}"
 	
 	def main (String[] argv) {
 	// The action contents of the script go here

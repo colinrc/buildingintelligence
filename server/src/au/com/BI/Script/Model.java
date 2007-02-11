@@ -860,6 +860,7 @@ public class Model
              myCommand.setExtra4Info(extra4);
              myCommand.setExtra5Info(extra5);
              myCommand.setTargetDeviceID(0);
+             myCommand.setScriptCommand(true);
              myCommand.setKey(key);
              sendToFlash(myCommand);
              
