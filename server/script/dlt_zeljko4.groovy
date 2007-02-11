@@ -13,7 +13,6 @@ import au.com.BI.Command.*
     boolean  stoppable = false;
  
 	
-	
     def setLabelDVD () {
 		elife.sendCommand("AUDIO_2","label","AUDIORADIO")
 		elife.sendCommand("AUDIO_3","label","DVDPLAY")
