@@ -68,6 +68,8 @@ public interface DeviceType
 	
 	public static final int LABEL = 50;
 	
+	public static final int THERMOSTAT = 51;
+	
 	// Likely number of raw commands for device line. More is allowed.
 	public static final int PROBABLE_NUMBER_RAW = 10;
 

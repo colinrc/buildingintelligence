@@ -8,6 +8,7 @@ import java.util.*;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Util.*;
 import au.com.BI.Lights.LightFactory;
+import au.com.BI.Thermostat.ThermostatFactory;
 import au.com.BI.ToggleSwitch.*;
 import java.io.*;
 import org.jdom.*;
@@ -73,7 +74,8 @@ public class Config {
 		protected AlertFactory alertFactory;		
 		protected RawFactory rawFactory;		
 		protected AnalogFactory analogFactory;		
-		protected IRFactory iRFactory;		
+		protected IRFactory iRFactory;
+		protected ThermostatFactory thermostatFactory;
 		protected Map <String,String>modelRegistry = null;
 		protected Map <String,GroovyRunBlock>groovyModels = null;
 		protected MacroHandler macroHandler = null;
@@ -108,6 +110,7 @@ public class Config {
 		this.setSmsFactory(SMSFactory.getInstance());
 		this.setLabelFactory (LabelFactory.getInstance());
 		this.setCustomConnectFactory(CustomConnectFactory.getInstance());
+		this.setThermostatFactory(ThermostatFactory.getInstance());
 		
 		calendar_message_params = new HashMap<String,String> (5);
 		calendar_message_params.put ("ICON","");
@@ -626,6 +629,10 @@ public class Config {
 						customConnectFactory.addCustomConnect(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
 								DeviceType.CUSTOM_CONNECT,groupName,rawHelper);
 					}
+					if (itemName.equals("THERMOSTAT")) {
+						thermostatFactory.addThermostat(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+								DeviceType.THERMOSTAT,groupName,rawHelper);
+					}
 				}
 			}
 		}
@@ -796,6 +803,14 @@ public class Config {
 
 	public void setCustomConnectFactory(CustomConnectFactory customConnectFactory) {
 		this.customConnectFactory = customConnectFactory;
+	}
+
+	public ThermostatFactory getThermostatFactory() {
+		return thermostatFactory;
+	}
+
+	public void setThermostatFactory(ThermostatFactory thermostatFactory) {
+		this.thermostatFactory = thermostatFactory;
 	}
 
 	public SMSFactory getSmsFactory() {

@@ -58,7 +58,9 @@ public class M1CommandFactory {
 	 *   <li>XK/xk - Ethernet Module Test and Reply - no action required.</li>
 	 *   <li>sw - Speak Word</li>
 	 *   <li>sp - Speak Phrase</li>
-	 *   
+	 *   <li>tr - Request Thermostat Data</li>
+	 *   <li>TR - Reply Thermostat Data</li>
+	 *   <li>ts - Set Thermostat Data</li>
 	 * </ul>
 	 * @param unparsedCommand
 	 * @return
@@ -138,6 +140,12 @@ public class M1CommandFactory {
 			m1Command = parseSpeakPhrase(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("LD")) {
 			m1Command = parseSystemLogDataUpdate(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("tr")) {
+			m1Command = parseRequestThermostatData(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("TR")) {
+			m1Command = parseReplyThermostatData(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("ts")) {
+			m1Command = parseSetThermostatData(unparsedCommand);
 		}
 		
 		
@@ -1180,6 +1188,97 @@ public class M1CommandFactory {
 		} else {
 			return(null);
 		}
+	}
+	
+	/**
+	 * Parse a command to request thermostat data for a particular thermostat.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parseRequestThermostatData(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		RequestThermostatData _command = new RequestThermostatData();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setThermostat(command.substring(4,6));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * Parses the thermostat data reply.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parseReplyThermostatData(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ReplyThermostatData _command = new ReplyThermostatData();
+		
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setKey(command.substring(4,6));
+		_command.setThermostat(command.substring(4,6));
+		_command.setMode(ThermostatMode.getByValue(command.substring(6,7)));
+		_command.setHoldString(command.substring(7,8));
+		
+		if (command.substring(8,9).equals("1")) {
+			_command.setFan(ThermostatFan.FAN_ON);
+		} else {
+			_command.setFan(ThermostatFan.FAN_AUTO);
+		}
+		
+		_command.setCurrentTemperature(command.substring(9,11));
+		_command.setHeatSetPoint(command.substring(11,13));
+		_command.setCoolSetPoint(command.substring(13,15));
+		_command.setCurrentHumidity(command.substring(15,17));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseSetThermostatData(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		SetThermostatData _command = new SetThermostatData();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setThermostat(command.substring(4,6));
+		_command.setValue(command.substring(6,8));
+		_command.setElement(ThermostatElement.getByValue(command.substring(8,9)));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+		
 	}
 	
 }

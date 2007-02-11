@@ -185,7 +185,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		comms.sendString(zoneRequest.buildM1String() + "\r\n");
 		
 		// add a device to do arming messages
-		addControlledItem("ARM",new Alarm("ARM",DeviceType.VIRTUAL_OUTPUT,"ARM"),MessageDirection.FROM_FLASH);
+//		addControlledItem("ARM",new Alarm("ARM",DeviceType.VIRTUAL_OUTPUT,"ARM"),MessageDirection.FROM_FLASH);
 		
 		// add a device to do request messages
 		addControlledItem(this.getDescription(),new VirtualOutput(this.getDescription(),DeviceType.VIRTUAL_OUTPUT,this.getDescription(),0),MessageDirection.FROM_FLASH);
@@ -213,14 +213,21 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				deviceKeyAddition = "X10" + light.getX10HouseCode();
 			} else if (details.getDeviceType() == DeviceType.ANALOGUE) {
 				deviceKeyAddition = "ALG";
+			} else if (details.getDeviceType() == DeviceType.THERMOSTAT) {
+				deviceKeyAddition = "THERM";
+			} else if (details.getDeviceType() == DeviceType.SENSOR) {
+				SensorFascade sensor = (SensorFascade)details;				
+				deviceKeyAddition = "SENSORGRP" + sensor.getGroup();
 			}
 		}
 		
 		if (type == MessageDirection.FROM_FLASH) {
 			super.addControlledItem(key,details,type);			
 		} else if (details.getDeviceType() == DeviceType.SENSOR) {
+			super.addControlledItem(Utility.padString(key,2) + deviceKeyAddition, details,type);
+		} else if (details.getDeviceType() == DeviceType.THERMOSTAT) {
 			// only pad the string with 2 characters as this is the device that will be returned.
-			super.addControlledItem(Utility.padString(key,2),details,type);
+			super.addControlledItem(Utility.padString(key,2) + deviceKeyAddition,details,type);
 		} else if (details.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
 			super.addControlledItem(Utility.padString(key, 2) + deviceKeyAddition,details,type);
 		} else {

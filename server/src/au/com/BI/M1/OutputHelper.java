@@ -32,10 +32,13 @@ import au.com.BI.M1.Commands.PLCDeviceToggle;
 import au.com.BI.M1.Commands.PLCFunction;
 import au.com.BI.M1.Commands.PLCStatusRequest;
 import au.com.BI.M1.Commands.RequestTemperature;
+import au.com.BI.M1.Commands.RequestThermostatData;
 import au.com.BI.M1.Commands.RequestZoneVoltage;
+import au.com.BI.M1.Commands.SetThermostatData;
 import au.com.BI.M1.Commands.SpeakPhrase;
 import au.com.BI.M1.Commands.SpeakWord;
 import au.com.BI.M1.Commands.TaskActivation;
+import au.com.BI.M1.Commands.ThermostatElement;
 import au.com.BI.M1.Commands.ZoneBypassRequest;
 import au.com.BI.M1.Commands.ZoneStatusRequest;
 import au.com.BI.Util.DeviceModel;
@@ -69,6 +72,7 @@ public class OutputHelper {
 				if (command.getCommandCode().equalsIgnoreCase("ALL_X10_ON")) {
 					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
 						logger.log(Level.WARNING,"For ALL_X10_ON command the extra info (for house code) cannot be null");
+						return;
 					}
 					PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
 					plcDeviceControl.setFunctionCode(PLCFunction.X10_ALL_LIGHTS_OFF);
@@ -79,6 +83,7 @@ public class OutputHelper {
 				} else if (command.getCommandCode().equalsIgnoreCase("ALL_X10_OFF")) {
 					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
 						logger.log(Level.WARNING,"For ALL_X10_OFF command the extra info (for house code) cannot be null");
+						return;
 					}
 					PLCDeviceControl plcDeviceControl = new PLCDeviceControl();
 					plcDeviceControl.setFunctionCode(PLCFunction.X10_ALL_LIGHTS_OFF);
@@ -114,14 +119,14 @@ public class OutputHelper {
 				} else if (command.getCommandCode().equalsIgnoreCase("TASK_ACTIVATION")) {
 					TaskActivation m1Command = new TaskActivation();
 					
-					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
+					if (command.getExtraInfo() == null || command.getExtraInfo().equals("")) {
 						logger.log(Level.WARNING, "Task activation command received with no extra information");
 						return;
 					}
 					
 					String taskValue = (String)m1.getCatalogueDef("TASKS").get(command.getExtraInfo());
 					
-					if (taskValue == null || taskValue == "") {
+					if (taskValue == null || taskValue.equals("")) {
 						try {
 							Integer value = Integer.valueOf(command.getExtraInfo());
 							m1Command.setTask(command.getExtraInfo());
@@ -146,14 +151,14 @@ public class OutputHelper {
 				} else if (command.getCommandCode().equalsIgnoreCase("SPEAK_WORD")) {
 					SpeakWord m1Command = new SpeakWord();
 					
-					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
+					if (command.getExtraInfo() == null || command.getExtraInfo().equals("")) {
 						logger.log(Level.WARNING, "Speak word command received with no extra information");
 						return;
 					}
 					
 					String wordValue = (String)m1.getCatalogueDef("WORDS").get(command.getExtraInfo());
 					
-					if (wordValue == null || wordValue == "") {
+					if (wordValue == null || wordValue.equals("")) {
 						try {
 							Integer value = Integer.valueOf(command.getExtraInfo());
 							m1Command.setWord(command.getExtraInfo());
@@ -168,14 +173,14 @@ public class OutputHelper {
 				} else if (command.getCommandCode().equalsIgnoreCase("SPEAK_PHRASE")) {
 					SpeakPhrase m1Command = new SpeakPhrase();
 					
-					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
+					if (command.getExtraInfo() == null || command.getExtraInfo().equals("")) {
 						logger.log(Level.WARNING, "Speak phrase command received with no extra information");
 						return;
 					}
 					
 					String phraseValue = (String)m1.getCatalogueDef("PHRASES").get(command.getExtraInfo());
 					
-					if (phraseValue == null || phraseValue == "") {
+					if (phraseValue == null || phraseValue.equals("")) {
 						try {
 							Integer value = Integer.valueOf(command.getExtraInfo());
 							m1Command.setPhrase(command.getExtraInfo());
@@ -249,6 +254,98 @@ public class OutputHelper {
 				}
 			} else if (device.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
 				retCode = buildX10Light((LightFascade) device, command);
+			} else if (device.getDeviceType() == DeviceType.THERMOSTAT) {
+				if (command.getCommandCode().equals("REQUEST")) {
+					RequestThermostatData m1Command = new RequestThermostatData();
+					m1Command.setKey(device.getKey());
+					m1Command.setThermostat(device.getKey());
+					retCode = m1Command.buildM1String() + "\r\n";
+					logger.log(Level.FINER, "Requesting thermostat data for " + device.getKey());
+				} else if (command.getCommandCode().equals("SET")) {
+					if (command.getExtraInfo() == null || command.getExtraInfo().equals("")) {
+						logger.log(Level.WARNING, "Setting thermostat will require the element in extra information");
+						return;
+					}
+					if (command.getExtra2Info() == null || command.getExtra2Info().equals("")) {
+						logger.log(Level.WARNING, "Setting thermostat will require the value in extra2 information");
+						return;
+					}
+					SetThermostatData m1Command = new SetThermostatData();
+					m1Command.setThermostat(device.getKey());
+					
+					if (command.getExtraInfo().equals("MODE")) {
+						m1Command.setElement(ThermostatElement.MODE);
+						if (command.getExtra2Info().equals("OFF")) {
+							m1Command.setValue("00");
+						} else if (command.getExtra2Info().equals("HEAT")) {
+							m1Command.setValue("01");
+						} else if (command.getExtra2Info().equals("COOL")) {
+							m1Command.setValue("02");
+						} else if (command.getExtra2Info().equals("AUTO")) {
+							m1Command.setValue("03");
+						} else if (command.getExtra2Info().equals("EMERGENCY_HEAT")) {
+							m1Command.setValue("04");
+						} else {
+							logger.log(Level.WARNING, "Thermostat element set to MODE but invalid value encountered " + command.getExtra2Info());
+							return;
+						}
+					} else if (command.getExtraInfo().equals("HOLD")) {
+						m1Command.setElement(ThermostatElement.HOLD);
+						if (command.getExtra2Info().equals("FALSE")) {
+							m1Command.setValue("00");
+						} else if (command.getExtra2Info().equals("TRUE")) {
+							m1Command.setValue("01");
+						} else {
+							logger.log(Level.WARNING, "Thermostat element set to HOLD but invalid value encountered " + command.getExtra2Info());
+							return;
+						}
+					} else if (command.getExtraInfo().equals("FAN")) {
+						m1Command.setElement(ThermostatElement.FAN);
+						if (command.getExtra2Info().equals("FAN_AUTO")) {
+							m1Command.setValue("00");
+						} else if (command.getExtra2Info().equals("FAN_TURNED_ON")) {
+							m1Command.setValue("01");
+						} else {
+							logger.log(Level.WARNING, "Thermostat element set to FAN but invalid value encountered " + command.getExtra2Info());
+							return;
+						}
+					} else if (command.getExtraInfo().equals("COOLSETPOINT")) {
+						m1Command.setElement(ThermostatElement.COOLSETPOINT);
+						try {
+							Integer value = Integer.valueOf(command.getExtraInfo());
+							if (value.intValue() == 0) {
+								logger.log(Level.WARNING, "Thermostat element set to COOLSETPOINT but invalid value encountered " + command.getExtra2Info());
+								return;
+							}
+							m1Command.setValue(command.getExtra2Info());
+						} catch (NumberFormatException e) {
+							logger.log(Level.WARNING, "Thermostat element set to COOLSETPOINT but invalid value encountered " + command.getExtra2Info());
+							return;
+						}
+						
+					} else if (command.getExtraInfo().equals("HEATSETPOINT")) {
+						m1Command.setElement(ThermostatElement.HEATSETPOINT);
+						try {
+							Integer value = Integer.valueOf(command.getExtraInfo());
+							if (value.intValue() == 0) {
+								logger.log(Level.WARNING, "Thermostat element set to COOLSETPOINT but invalid value encountered " + command.getExtra2Info());
+								return;
+							}
+							m1Command.setValue(command.getExtra2Info());
+						} catch (NumberFormatException e) {
+							logger.log(Level.WARNING, "Thermostat element set to COOLSETPOINT but invalid value encountered " + command.getExtra2Info());
+							return;
+						}
+					} else {
+						logger.log(Level.WARNING, "Invalid element in extra information " + command.getExtraInfo());
+						return;
+					}
+					retCode = m1Command.buildM1String() + "\r\n";
+					logger.log(Level.FINER, "Setting thermostat data");
+				} else {
+					logger.log(Level.WARNING, "Received a command code for a thermostat that was not REQUEST or SET. Command code was: " + command.getCommandCode());
+					return;
+				}
 			}
 
 			if (!retCode.equals("")) {

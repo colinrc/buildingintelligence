@@ -39,10 +39,12 @@ import au.com.BI.M1.Commands.PLCLevelStatus;
 import au.com.BI.M1.Commands.PLCStatusReturned;
 import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
+import au.com.BI.M1.Commands.ReplyThermostatData;
 import au.com.BI.M1.Commands.ReplyWithBypassedZoneState;
 import au.com.BI.M1.Commands.ReplyZoneAnalogVoltageData;
 import au.com.BI.M1.Commands.RequestTemperatureReply;
 import au.com.BI.M1.Commands.TasksChangeUpdate;
+import au.com.BI.M1.Commands.ThermostatMode;
 import au.com.BI.M1.Commands.ZoneBypassState;
 import au.com.BI.M1.Commands.ZoneChangeUpdate;
 import au.com.BI.M1.Commands.ZoneDefinition;
@@ -80,9 +82,6 @@ public class ControlledHelper {
 
 		// Check to see if it is a comms command
 		if (command.isCommsCommand()) {
-
-//			CommandInterface m1Command = buildCommandForFlash(command,
-//					configHelper, m1);
 			
 			M1Command m1Command = M1CommandFactory.getInstance().getM1Command(
 					command.getKey());
@@ -168,7 +167,12 @@ public class ControlledHelper {
 				}
 
 				SensorFascade sensor = (SensorFascade) configHelper
-						.getControlledItem(requestTemperatureReply.getDevice());
+						.getControlledItem(requestTemperatureReply.getDevice() + "SENSORGRP" + requestTemperatureReply.getGroup().getValue());
+				
+				// Can we find the sensor?
+				if (sensor == null) {
+					return;
+				}
 
 				// send the alert command.
 				CommandInterface _command = new M1FlashCommand();
@@ -410,7 +414,106 @@ public class ControlledHelper {
 						taskUpdate.getTask(), 
 						m1.currentUser, 
 						new Date());
+			} else if (m1Command.getClass().equals(ReplyThermostatData.class)
+					&& configHelper.checkForControl(m1Command.getKey() + "THERM")) {
+				ReplyThermostatData thermostatData = (ReplyThermostatData)m1Command;
+				BaseDevice configDevice = (BaseDevice) configHelper.getControlledItem(m1Command.getKey() + "THERM");
+				if (configDevice == null){
+					logger.log(Level.FINER, "M1 command request was received for a device that has not been configured " + m1Command.getKey());
+					return;
+				}
+				String displayName = configDevice.getOutputKey();
+				
+				// Send the Thermostat Mode
+				CommandInterface mode = new AlertCommand();
+				mode.setDisplayName(displayName);
+				mode.setTargetDeviceID(-1);
+				mode.setUser(m1.currentUser);
+				mode.setExtraInfo("MODE");
+				mode.setExtra2Info(thermostatData.getMode().getDescription());
+				mode.setKey ("CLIENT_SEND");
+				sendCommand(cache, commandQueue, mode);
+				logger.log (Level.INFO,"Sending mode for thermostat " + displayName + ":" +  thermostatData.getMode().getDescription());
+				
+				// Send the HOLD status
+				CommandInterface hold = new AlertCommand();
+				hold.setDisplayName(displayName);
+				hold.setTargetDeviceID(-1);
+				hold.setUser(m1.currentUser);
+				hold.setExtraInfo("HOLD");
+				if (thermostatData.isHold()) {
+					hold.setExtra2Info("TRUE");
+				} else {
+					hold.setExtra2Info("FALSE");
+				}
+				hold.setKey ("CLIENT_SEND");
+				sendCommand(cache, commandQueue, hold);
+				logger.log (Level.INFO,"Sending hold for thermostat " + displayName + ":" +  hold.getExtra2Info());
+				
+				// Send the FAN status
+				CommandInterface fan = new AlertCommand();
+				fan.setDisplayName(displayName);
+				fan.setTargetDeviceID(-1);
+				fan.setUser(m1.currentUser);
+				fan.setExtraInfo("FAN");
+				fan.setExtra2Info(thermostatData.getFan().getDescription());
+				fan.setKey ("CLIENT_SEND");
+				sendCommand(cache, commandQueue, fan);
+				logger.log (Level.INFO,"Sending fan for thermostat " + displayName + ":" +  thermostatData.getFan().getDescription());
+				
+				// Send current temperature if it is not 00
+				if (!thermostatData.getCurrentTemperature().equals("00")) {
+					CommandInterface currentTemp = new AlertCommand();
+					currentTemp.setDisplayName(displayName);
+					currentTemp.setTargetDeviceID(-1);
+					currentTemp.setUser(m1.currentUser);
+					currentTemp.setExtraInfo("CURRENT_TEMPERATURE");
+					currentTemp.setExtra2Info(thermostatData.getCurrentTemperature());
+					currentTemp.setKey ("CLIENT_SEND");
+					sendCommand(cache, commandQueue, currentTemp);
+					logger.log (Level.INFO,"Sending current temperature for thermostat " + displayName + ":" +  thermostatData.getCurrentTemperature());
+				}
+				
+				// if the mode is in heat or auto then send the current heat point
+				if (thermostatData.getMode() == ThermostatMode.HEAT || thermostatData.getMode() == ThermostatMode.AUTO) {
+					CommandInterface heatSetPoint = new AlertCommand();
+					heatSetPoint.setDisplayName(displayName);
+					heatSetPoint.setTargetDeviceID(-1);
+					heatSetPoint.setUser(m1.currentUser);
+					heatSetPoint.setExtraInfo("HEATSETPOINT");
+					heatSetPoint.setExtra2Info(thermostatData.getHeatSetPoint());
+					heatSetPoint.setKey ("CLIENT_SEND");
+					sendCommand(cache, commandQueue, heatSetPoint);
+					logger.log (Level.INFO,"Sending heat set point for thermostat " + displayName + ":" +  thermostatData.getHeatSetPoint());
+				}
+				
+				// if the mode is in heat or auto then send the current cool point
+				if (thermostatData.getMode() == ThermostatMode.COOL || thermostatData.getMode() == ThermostatMode.AUTO) {
+					CommandInterface coolSetPoint = new AlertCommand();
+					coolSetPoint.setDisplayName(displayName);
+					coolSetPoint.setTargetDeviceID(-1);
+					coolSetPoint.setUser(m1.currentUser);
+					coolSetPoint.setExtraInfo("COOLSETPOINT");
+					coolSetPoint.setExtra2Info(thermostatData.getCoolSetPoint());
+					coolSetPoint.setKey ("CLIENT_SEND");
+					sendCommand(cache, commandQueue, coolSetPoint);
+					logger.log (Level.INFO,"Sending cool set point for thermostat " + displayName + ":" +  thermostatData.getCoolSetPoint());
+				}
+				
+				// Send current humidity if it is not 00
+				if (!thermostatData.getCurrentHumidity().equals("00")) {
+					CommandInterface currentHumidity = new AlertCommand();
+					currentHumidity.setDisplayName(displayName);
+					currentHumidity.setTargetDeviceID(-1);
+					currentHumidity.setUser(m1.currentUser);
+					currentHumidity.setExtraInfo("CURRENT_HUMIDITY");
+					currentHumidity.setExtra2Info(thermostatData.getCurrentHumidity());
+					currentHumidity.setKey ("CLIENT_SEND");
+					sendCommand(cache, commandQueue, currentHumidity);
+					logger.log (Level.INFO,"Sending current temperature for thermostat " + displayName + ":" +  thermostatData.getCurrentHumidity());
+				}
 			} else {
+			
 				// Command has been built or handled already.
 				sendCommand(cache, commandQueue, m1Command);
 			}

@@ -72,6 +72,9 @@
                     
                     <!-- Analog inputs -->
                     <ANALOG ACTIVE="Y" KEY="123" NAME="Pool" DISPLAY_NAME="POOL"/>
+                    
+                    <!-- Thermostat -->
+                    <THERMOSTAT ACTIVE="Y" KEY="01" NAME="Test Thermostat" DISPLAY_NAME="TEST_THERMOSTAT"/>
                  </M1>
         </DEVICE>
          
