@@ -27,7 +27,7 @@ public class AreaAlarmState extends Type {
 	
 	private AreaAlarmState(String value, String desc) {
 		super(value, desc);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public static AreaAlarmState getByValue(String value) {

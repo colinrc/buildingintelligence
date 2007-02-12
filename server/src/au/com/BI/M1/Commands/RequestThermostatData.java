@@ -10,14 +10,14 @@ public class RequestThermostatData extends M1Command {
 	public RequestThermostatData() {
 		super();
 		super.setCommand("tr");
-		// TODO Auto-generated constructor stub
+
 	}
 
 
 	public RequestThermostatData(String sum, String use) {
 		super(sum, use);
 		super.setCommand("tr");
-		// TODO Auto-generated constructor stub
+
 	}
 
 

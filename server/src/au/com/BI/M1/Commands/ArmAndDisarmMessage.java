@@ -10,12 +10,12 @@ public class ArmAndDisarmMessage extends M1Command {
 	public ArmAndDisarmMessage() {
 		super();
 		this.setCommand("a");
-		// TODO Auto-generated constructor stub
+
 	}
 	
 	public ArmAndDisarmMessage(String level, String partition, String code) {
 		super();
-		// TODO Auto-generated constructor stub
+
 		armingLevel = level;
 		this.partition = partition;
 		userCode = code;

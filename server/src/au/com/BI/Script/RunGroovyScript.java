@@ -13,7 +13,6 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
 
 
- // TODO Ensure parallel runs are handled properly
 
 public class RunGroovyScript extends Thread {
 

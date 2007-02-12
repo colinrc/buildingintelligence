@@ -15,7 +15,7 @@ public class ZonePartition extends Type {
 
 	private ZonePartition(String value, String desc) {
 		super(value, desc);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public static ZonePartition getByValue(String value) {

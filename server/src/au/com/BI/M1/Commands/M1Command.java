@@ -13,7 +13,7 @@ public class M1Command extends Command {
 
 	public M1Command(String sum, String use) {
 		super();
-		// TODO Auto-generated constructor stub
+
 		checkSum = sum;
 		futureUse = use;
 	}

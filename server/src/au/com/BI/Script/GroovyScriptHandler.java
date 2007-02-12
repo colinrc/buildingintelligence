@@ -88,6 +88,9 @@ public class GroovyScriptHandler {
 		GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
 				.get(scriptName);
 		ScriptParams params = scriptRunBlock.nextRun();
+		if (triggeringCommand == null){
+			triggeringCommand = params.getTriggeringCommand();
+		}
 		if (scriptRunBlock != null) {
 			return runScript(scriptName,  params.getUser(),scriptModel, triggeringCommand);
 		} else {
@@ -128,6 +131,7 @@ public class GroovyScriptHandler {
 			ScriptParams params = new ScriptParams(parameter, user);
 			GroovyScriptRunBlock groovyScriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
 					.get(scriptName);
+			params.setTriggeringCommand (triggeringCommand);
 			groovyScriptRunBlock.addRun(params);
 			scriptRunBlockList.put(scriptName, groovyScriptRunBlock);
 			logger.log(Level.FINER, "Queued script " + scriptName);

@@ -13,13 +13,13 @@ public class ReplyZoneAnalogVoltageData extends M1Command {
 	public ReplyZoneAnalogVoltageData() {
 		super();
 		this.setCommand("ZV");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public ReplyZoneAnalogVoltageData(String sum, String use) {
 		super(sum, use);
 		this.setCommand("ZV");
-		// TODO Auto-generated constructor stub
+
 	}
 	
 	public String getZone() {

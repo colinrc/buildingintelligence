@@ -14,7 +14,7 @@ public class ArmUpState extends Type {
 	
 	private ArmUpState(String value, String desc) {
 		super(value, desc);
-		// TODO Auto-generated constructor stub
+
 	}
 	
 	public static ArmUpState getByValue(String value) {

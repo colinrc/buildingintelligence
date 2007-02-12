@@ -14,7 +14,7 @@ public class ArmedStatus extends Type {
 	
 	private ArmedStatus(String value, String desc) {
 		super(value, desc);
-		// TODO Auto-generated constructor stub
+
 	}
 	
 	public static ArmedStatus getByValue(String value) {

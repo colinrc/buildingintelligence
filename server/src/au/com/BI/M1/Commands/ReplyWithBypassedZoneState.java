@@ -8,13 +8,13 @@ public class ReplyWithBypassedZoneState extends M1Command {
 	public ReplyWithBypassedZoneState() {
 		super();
 		this.setCommand("ZB");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public ReplyWithBypassedZoneState(String sum, String use) {
 		super(sum, use);
 		this.setCommand("ZB");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public ZoneBypassState getBypassState() {

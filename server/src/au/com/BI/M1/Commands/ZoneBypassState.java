@@ -9,7 +9,7 @@ public class ZoneBypassState extends Type {
 
 	private ZoneBypassState(String value, String desc) {
 		super(value, desc);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public static ZoneBypassState getByValue(String value) {

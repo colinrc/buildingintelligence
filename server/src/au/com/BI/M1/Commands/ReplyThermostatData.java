@@ -18,13 +18,13 @@ public class ReplyThermostatData extends M1Command {
 	public ReplyThermostatData() {
 		super();
 		this.setCommand("TR");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public ReplyThermostatData(String sum, String use) {
 		super(sum, use);
 		this.setCommand("TR");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public String getCurrentTemperature() {

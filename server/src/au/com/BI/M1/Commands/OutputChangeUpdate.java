@@ -11,17 +11,17 @@ public class OutputChangeUpdate extends M1Command {
 	public OutputChangeUpdate() {
 		super();
 		this.setCommand("CC");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public OutputChangeUpdate(String sum, String use) {
 		super(sum, use);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public OutputChangeUpdate(String outputNumber, String state, String futureUse) {
 		super();
-		// TODO Auto-generated constructor stub
+
 		outputState = state;
 		setKey(outputNumber);
 		setFutureUse(futureUse);

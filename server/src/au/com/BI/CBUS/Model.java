@@ -1218,5 +1218,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void setLastSentTime(long lastSentTime) {
 		this.lastSentTime = lastSentTime;
 	}
+	
 
 }

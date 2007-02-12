@@ -19,7 +19,7 @@ public class GroovyScriptRunBlock {
 	
 	public void addRun (ScriptParams param) {
 		synchronized (runs){
-			if (runs.size() < 4 ) runs.add( param);
+			runs.add( param);
 		}
 	}
 	

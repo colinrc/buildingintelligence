@@ -20,7 +20,7 @@ public class ZoneStatus extends Type {
 	
 	private ZoneStatus(String value, String desc) {
 		super(value, desc);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public static ZoneStatus getByValue(String value) {

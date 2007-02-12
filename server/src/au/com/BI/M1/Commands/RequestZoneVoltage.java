@@ -10,13 +10,13 @@ public class RequestZoneVoltage extends M1Command {
 	public RequestZoneVoltage() {
 		super();
 		this.setCommand("zv");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public RequestZoneVoltage(String sum, String use) {
 		super(sum, use);
 		this.setCommand("zv");
-		// TODO Auto-generated constructor stub
+
 	}
 	
 	public String getZone() {

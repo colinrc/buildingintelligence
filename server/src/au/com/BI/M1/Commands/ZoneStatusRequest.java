@@ -8,13 +8,13 @@ public class ZoneStatusRequest extends M1Command {
 	public ZoneStatusRequest() {
 		super();
 		this.setCommand("zs");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public ZoneStatusRequest(String sum, String use) {
 		super(sum, use);
 		this.setCommand("zs");
-		// TODO Auto-generated constructor stub
+
 	}
 	
 	public String buildM1String() {

@@ -11,13 +11,13 @@ public class SetThermostatData extends M1Command {
 	public SetThermostatData() {
 		super();
 		this.setCommand("ts");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public SetThermostatData(String sum, String use) {
 		super(sum, use);
 		this.setCommand("ts");
-		// TODO Auto-generated constructor stub
+
 	}
 	
 	public ThermostatElement getElement() {

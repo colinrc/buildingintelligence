@@ -189,6 +189,7 @@ public class Model
 	                        logger.log(Level.FINER, "Run Jython script request received " + command.getExtraInfo());	                	   
 	                   }
                 }
+                // TODO  changed finished script to be a direct message, not via the controller
 	            if (commandStr.equals("finished")) {
 	            		String scriptName = command.getExtraInfo();
 	                    logger.log(Level.FINER, "Finished script " + scriptName );
@@ -1336,4 +1337,6 @@ public class Model
         public boolean isConnected() {
                 return true;
         }
+        
+    	// TODO Performance tune groovy 
 }

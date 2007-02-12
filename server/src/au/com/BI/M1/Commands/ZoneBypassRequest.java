@@ -16,7 +16,7 @@ public class ZoneBypassRequest extends M1Command {
 		bypassAllZones = false;
 		bypassAllViolatedZones = false;
 		this.setCommand("zb");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public ZoneBypassRequest(String sum, String use) {
@@ -24,7 +24,7 @@ public class ZoneBypassRequest extends M1Command {
 		this.setCommand("zb");
 		bypassAllZones = false;
 		bypassAllViolatedZones = false;
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public String getArea() {

@@ -33,7 +33,7 @@ public class ZoneDefinition extends Type {
 	
 	private ZoneDefinition(String value, String desc) {
 		super(value, desc);
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public static ZoneDefinition getByValue(String value) {

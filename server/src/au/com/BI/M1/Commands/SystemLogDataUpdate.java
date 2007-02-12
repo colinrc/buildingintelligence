@@ -23,13 +23,13 @@ public class SystemLogDataUpdate extends M1Command {
 	public SystemLogDataUpdate() {
 		super();
 		this.setCommand("LD");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public SystemLogDataUpdate(String sum, String use) {
 		super(sum, use);
 		this.setCommand("LD");
-		// TODO Auto-generated constructor stub
+
 	}
 	
 	public String getArea() {

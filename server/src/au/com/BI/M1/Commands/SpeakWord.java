@@ -9,13 +9,13 @@ public class SpeakWord extends M1Command {
 	public SpeakWord() {
 		super();
 		this.setCommand("sw");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public SpeakWord(String sum, String use) {
 		super(sum, use);
 		this.setCommand("sw");
-		// TODO Auto-generated constructor stub
+
 	}
 	
 	public String getWord() {

@@ -9,13 +9,13 @@ public class ReplyArmingStatusReportData extends M1Command {
 	public ReplyArmingStatusReportData() {
 		super();
 		this.setCommand("AS");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public ReplyArmingStatusReportData(String sum, String use) {
 		super(sum, use);
 		this.setCommand("AS");
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public AreaAlarmState[] getAreaAlarmState() {
