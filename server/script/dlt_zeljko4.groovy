@@ -14,25 +14,25 @@ import au.com.BI.Command.*
  
 	
     def setLabelDVD () {
-		elife.sendCommand("AUDIO_2","label","AUDIORADIO")
+		elife.sendCommand("AUDIO_2","label","AUDIODVD")
 		elife.sendCommand("AUDIO_3","label","DVDPLAY")
 		elife.sendCommand("AUDIO_4","label","DVDSTOP")
     }
     
     def setLabelRADIO () {
-		elife.sendCommand("AUDIO_2","label","AUDIOKISS")
+		elife.sendCommand("AUDIO_2","label","AUDIORADIO")
 		elife.sendCommand("AUDIO_3","label","RADIONEXT")
 		elife.sendCommand("AUDIO_4","label","RADIOPREV")
     }
     
     def setLabelKISS () {
-		elife.sendCommand("AUDIO_2","label","AUDIOTV")
+		elife.sendCommand("AUDIO_2","label","AUDIOKISS")
 		elife.sendCommand("AUDIO_3","label","KISSNEXT")
 		elife.sendCommand("AUDIO_4","label","KISSPREV")
     }
     
     def setLabelTV () {
-		elife.sendCommand("AUDIO_2","label","AUDIODVD")
+		elife.sendCommand("AUDIO_2","label","AUDIOTV")
 		elife.sendCommand("AUDIO_3","label","TVUP")
 		elife.sendCommand("AUDIO_4","label","TVDN")
     }
