@@ -66,40 +66,37 @@ import au.com.BI.Command.*
 		break
 				
 		case "AUDIO_2":
-			elife.log( "Got to AUDIO_2 before off check")
 			if (triggerCommand == "off") {
 				return
 			}
-			elife.log( "Got to AUDIO_2 after off check")
 			switch (currentLabel){
 			case "": 
 				// The currently displayed text on the DLT is not known to eLife, so set it to something we can handle
-				elife.sendCommand("AUDIO_2","label","AUDIODVD")
-				break
+				setLabelDVD()
+			break
 				
 			case "AUDIODVD":
-				elife.sendCommand( "SHOWROOM_AUDIO","src","dvd")
-				elife.log( "Got to DVD Send Command")
-				setLabelDVD()
-				break
+				elife.sendCommand( "SHOWROOM_AUDIO","src","radio")
+				setLabelRADIO()
+			break
 				
 			case "AUDIORADIO":
-				elife.sendCommand("SHOWROOM_AUDIO","src","radio")
-				setLabelRADIO()
-				break
+				elife.sendCommand("SHOWROOM_AUDIO","src","kiss")
+				setLabelKISS()
+			break
 				
 			case "AUDIOKISS":
-				elife.sendCommand( "SHOWROOM_AUDIO","src","kiss")
-				setLabelKISS()
-				break
-
-			case "AUDIOTV":
 				elife.sendCommand( "SHOWROOM_AUDIO","src","tv")
 				setLabelTV()
-				break
+			break
+
+			case "AUDIOTV":
+				elife.sendCommand( "SHOWROOM_AUDIO","src","dvd")
+				setLabelDVD()
+			break
 				
 			}
-			break
+		break
 			
 		case "AUDIO_3" :
 			// third button sends commands depending on source
@@ -107,25 +104,25 @@ import au.com.BI.Command.*
 			case "": 
 				// The currently displayed text on the DLT is not known to eLife, so set it to something we can handle
 				elife.sendCommand("AUDIO_3","label","UNKNOWN")
-				break
+			break
 				
 			case "DVDPLAY":
 				elife.sendCommand( "AV.DVDPlayer","DVD.play")
-				break
+			break
 				
 			case "TVUP":
 				elife.sendCommand( "AV.TV","TV.chanup")
-				break
+			break
 
 			case "RADIONEXT":
 				elife.sendCommand( "AV.RADIO","RADIO.next")
-				break
+			break
 				
 			case "KISSNEXT":
 				elife.sendCommand( "AV.KISS","KISS.next")
-				break
-			}
 			break
+			}
+		break
 		
 		case "AUDIO_4" :
 			// forth button sends commands depending on source
@@ -133,60 +130,60 @@ import au.com.BI.Command.*
 			case "": 
 				// The currently displayed text on the DLT is not known to eLife, so set it to something we can handle
 				elife.sendCommand("AUDIO_3","label","UNKNOWN")
-				break
+			break
 				
 			case "DVDSTOP":
 				elife.sendCommand("AV.DVDPlayer","DVD.stop")
-				break
+			break
 
 			case "TVDN":
 				elife.sendCommand( "AV.TV","TV.chandn")
-				break
+			break
 
 			case "RADIOPREV":
 				elife.sendCommand( "AV.RADIO","RADIO.prev")
-				break
+			break
 				
 			case "KISSPREV":
 				elife.sendCommand( "AV.KISS","KISS.prev")
-				break
-			}
 			break
+			}
+		break
 
 		case "SHOWROOM_AUDIO":
 			
 			switch (triggerCommand){
 			case "on":
 				elife.sendCommand("AUDIO_1","on",triggerExtra)
-				break
+			break
 				
 			case "off":
 				elife.sendCommand("AUDIO_1","off")
-				break
+			break
 				
 			case "src":
 				switch (triggerExtra){
 		
 				case "dvd":
 					setLabelDVD()
-					break
+				break
 				case "radio":
 					setLabelRADIO()
-					break
+				break
 				case "kiss":
 					setLabelKISS()
-					break
+				break
 				case "tv":
 					setLabelTV()
-					break
+				break
 				}
 				
 				// End of case src
-				break
+			break
 			}
 			// end of case SHOWROOM_AUDIO
-			break
+		break
 			
-			}
 		}
+	}
 }
