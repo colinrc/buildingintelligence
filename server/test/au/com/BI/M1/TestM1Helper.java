@@ -32,7 +32,6 @@ public class TestM1Helper extends TestCase {
 	 * Test method for 'M1Helper.buildCompleteM1String(String)'
 	 */
 	public void testBuildCompleteM1String() {
-		// TODO Auto-generated method stub
 
 	}
 
