@@ -441,9 +441,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		int scaledVal = -1;
 		try {
 			double val = Double.parseDouble(extra);
-			if (val >= 0.0 && val <= 48.0) {
-				scaledVal = (new Double(val / 48.0 * 100.0)).intValue();
-			}
+			//if (val >= 0.0 && val <= 48.0) {
+				scaledVal = (new Double(val / 100.0 * 48.0)).intValue();
+			//}
 		} catch (NumberFormatException ex){
 			
 		}

@@ -51,6 +51,7 @@ public class CommsSend extends Thread implements Runnable{
                                                     }
 						}
 						lastSendTime = System.currentTimeMillis();
+
 						synchronized (os){
 						    os.write(nextMessage);
 						    os.flush();
