@@ -78,6 +78,7 @@ public  class BIScript extends groovy.lang.Script {
 			triggerExtra5 = triggeringEvent.getExtra5Info();
 			triggerTime = triggeringEvent.getCreationDate();
 			triggerDisplayName = triggeringEvent.getDisplayName();
+			if (triggerDisplayName.equals ("")) triggerDisplayName = triggeringEvent.getKey();
 		}
 		
 		return main (dummyArgs);

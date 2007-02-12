@@ -1,4 +1,14 @@
-== 5/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b38.zip V1.6b38]  ==
+== 12/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b38.zip V1.6b38]  ==
+
+''' Scripting '''
+
+Make messages from flash handled properly
+
+''' M1 '''
+
+Roll in updates
+
+== 11/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b38.zip V1.6b38]  ==
 
 ''' Scripting '''
 
@@ -8,7 +18,7 @@ Ensure multiple script runs are handled correctly
 
 Roll in updates
 
-== 5/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b37.zip V1.6b37]  ==
+== 11/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b37.zip V1.6b37]  ==
 
 ''' Scripting '''
 
