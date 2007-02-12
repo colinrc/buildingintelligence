@@ -1,5 +1,6 @@
 package au.com.BI.M1;
 
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -124,7 +125,13 @@ public class OutputHelper {
 						return;
 					}
 					
-					String taskValue = (String)m1.getCatalogueDef("TASKS").get(command.getExtraInfo());
+					HashMap<String, String> tasks = m1.getCatalogueDef("WORDS");
+					
+					String taskValue = "";
+					
+					if (tasks != null) {
+						taskValue = (String)tasks.get(command.getExtraInfo());
+					}
 					
 					if (taskValue == null || taskValue.equals("")) {
 						try {
@@ -156,7 +163,13 @@ public class OutputHelper {
 						return;
 					}
 					
-					String wordValue = (String)m1.getCatalogueDef("WORDS").get(command.getExtraInfo());
+					HashMap<String, String> words = m1.getCatalogueDef("WORDS");
+					
+					String wordValue = "";
+					
+					if (words != null) {
+						wordValue = (String)words.get(command.getExtraInfo());
+					}
 					
 					if (wordValue == null || wordValue.equals("")) {
 						try {
@@ -178,7 +191,13 @@ public class OutputHelper {
 						return;
 					}
 					
-					String phraseValue = (String)m1.getCatalogueDef("PHRASES").get(command.getExtraInfo());
+					HashMap<String, String> phrases = m1.getCatalogueDef("PHRASES");
+					
+					String phraseValue = "";
+					
+					if (phrases != null) {
+						phraseValue = (String)phrases.get(command.getExtraInfo());
+					}
 					
 					if (phraseValue == null || phraseValue.equals("")) {
 						try {
