@@ -3,17 +3,32 @@ package au.com.BI.Script;
 import junit.framework.TestCase;
 import java.util.*;
 
-public class TestScriptHandler extends TestCase {
+import au.com.BI.Command.Cache;
+import au.com.BI.Command.Command;
+import au.com.BI.Command.CommandInterface;
+import au.com.BI.Command.CommandQueue;
+import au.com.BI.LabelMgr.LabelMgr;
+
+public class TestGroovyHandling extends TestCase {
 	Model scriptModel = null;
 	ScriptHandler sciptHandler = null;
 	Map scriptRunBlockList = null;
+	LabelMgr labelMgr = null;
+	Cache cache = null;
+	
 
 	protected void setUp() throws Exception {
 		super.setUp();
 		scriptModel = new Model();
-		scriptModel.loadJythonScripts();
+		labelMgr = new LabelMgr();
+		CommandQueue commandQueue = new CommandQueue();
+		cache = new Cache(null);
+		scriptModel.setCommandQueue(commandQueue);
+		scriptModel.setCache(cache);
+		scriptModel.setLabelMgr(labelMgr);
+		scriptModel.loadGroovyScripts();
 		sciptHandler = scriptModel.getScriptHandler();
-		scriptRunBlockList = scriptModel.scriptRunBlockList;
+		scriptRunBlockList = scriptModel.groovyScriptRunBlockList;
 	}
 
 	protected void tearDown() throws Exception {
@@ -41,9 +56,9 @@ public class TestScriptHandler extends TestCase {
 	 */
 	public void testSetStatus() {
 		// 
-		scriptModel.getScriptHandler().setStatus("test","HIDDEN,OTHER,SOME");
-		scriptModel.loadJythonScripts();
-		ScriptRunBlock scriptRunBlock = (ScriptRunBlock)scriptRunBlockList.get("test");
+		scriptModel.getGroovyScriptHandler().setStatus("TimeTest","HIDDEN,OTHER,SOME");
+		scriptModel.loadGroovyScripts();
+		GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock)scriptRunBlockList.get("TimeTest");
 		assertEquals("HIDDEN,OTHER,SOME",scriptRunBlock.getStatusString());
 
 	}
@@ -87,5 +102,16 @@ public class TestScriptHandler extends TestCase {
 		// 
 
 	}
+	
+
+	public void testRunScript() {
+		// 
+		CommandInterface triggeringCommand = new Command();
+		triggeringCommand.setDisplayName("DLT_1");
+		triggeringCommand.setCommand("on");
+		labelMgr.setLabelState("DLT_1", "ON");
+		scriptModel.groovyScriptHandler.runScript("TimeTest",null, scriptModel, triggeringCommand);
+	}
+	
 
 }

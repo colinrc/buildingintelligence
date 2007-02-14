@@ -32,4 +32,8 @@ public class CommandQueue   {
 			return queue.remove();
 	}
 	
+	public int size (){
+		return queue.size();
+	}
+	
 }

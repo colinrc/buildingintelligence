@@ -463,7 +463,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 			if (!commandFound ) {
 				if (scaledVal >= 0 ) {
-					audioOutputString =tutondoHelper.buildTutondoCommand (7, scaledVal, device.getKey(),protocolB); 
+					audioOutputString =tutondoHelper.buildTutondoCommand (15, scaledVal, device.getKey(),protocolB); 
 					currentState.setVolume(scaledVal);
 					commandFound = true;
 				}

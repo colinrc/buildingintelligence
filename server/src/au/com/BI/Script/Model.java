@@ -47,7 +47,7 @@ public class Model
         protected ScriptHandler scriptHandler;
         protected ScriptFileHandler scriptFileHandler;
         protected Controller mainController;
-		protected Map scriptRunBlockList = null;
+		protected Map <String,ScriptRunBlock>scriptRunBlockList = null;
 		protected String statusFileName = "." + File.separator + "datafiles" + File.separator + "script_status.xml";
 		protected String groovyStatusFileName = "." + File.separator + "datafiles" + File.separator + "script_status.xml";
         protected GroovyScriptHandler groovyScriptHandler;
@@ -62,7 +62,7 @@ public class Model
                 scriptFileHandler = new ScriptFileHandler();
                 groovyScriptFileHandler = new GroovyScriptFileHandler();
                 groovyScriptRunBlockList = new ConcurrentHashMap <String, GroovyScriptRunBlock>(30);
-                scriptRunBlockList = Collections.synchronizedMap(new LinkedHashMap (30)); // 30 scripts to start with
+                scriptRunBlockList = Collections.synchronizedMap(new LinkedHashMap<String,ScriptRunBlock> (30)); // 30 scripts to start with
                 this.setAutoReconnect(false);
                 try {
                         jbInit();
@@ -193,17 +193,17 @@ public class Model
 	            if (commandStr.equals("finished")) {
 	            		String scriptName = command.getExtraInfo();
 	                    logger.log(Level.FINER, "Finished script " + scriptName );
-	                   if (groovyScriptHandler.ownsScript (scriptName)){
-	                       if (groovyScriptHandler.finishedRunning(scriptName)) {
-	                    	   	clientCommand = doGetList ("");  // no more to run, so update the client
-	                       }
-	                       else
-	                       {
-	                           groovyScriptHandler.run(scriptName, triggeringCommand);
-	                           logger.log(Level.FINER, "Running queued script " + command.getExtraInfo());
-	                       }
 	                       
-	                   } else {
+	                    if (groovyScriptHandler.ownsScript (scriptName)){
+	                        if (groovyScriptHandler.finishedRunning(scriptName)) {
+	                     	   	clientCommand = doGetList ("");  // no more to run, so update the client
+	                        }
+	                        else
+	                        {
+	                            groovyScriptHandler.run(scriptName, triggeringCommand);
+	                            logger.log(Level.FINER, "Running queued script " + command.getExtraInfo());
+	                        }
+	                    } else { 
 	                       if (scriptHandler.finishedRunning(scriptName)) {
 	                    	   	clientCommand = doGetList ("");  // no more to run, so update the client
 	                       }
@@ -281,7 +281,33 @@ public class Model
                          commandQueue.add(clientCommand);
                 }
         }
-
+	        /*    
+	    public void scriptFinished (long ID){
+	    	Command clientCommand = null;
+	    	
+        		String scriptName = command.getExtraInfo();
+                logger.log(Level.FINER, "Finished script " + scriptName );
+               if (groovyScriptHandler.ownsScript (scriptName)){
+                   if (groovyScriptHandler.finishedRunning(scriptName)) {
+                	   	clientCommand = doGetList ("");  // no more to run, so update the client
+                   }
+                   else
+                   {
+                       groovyScriptHandler.run(scriptName, triggeringCommand);
+                       logger.log(Level.FINER, "Running queued script " + command.getExtraInfo());
+                   }
+               }
+               
+               if (clientCommand != null ) {
+            	   Command clientCommand = doGetList ("");
+               }
+                clientCommand.setTargetDeviceID(command.getTargetDeviceID());
+                clientCommand.setDisplayName("SCRIPT");
+                cache.setCachedCommand("SCRIPT", clientCommand);
+                 commandQueue.add(clientCommand);
+	    }
+	    */
+                   
 		public void sendListToClient() {
 			ClientCommand clientCommand = (ClientCommand)doGetList("");
 			clientCommand.setTargetDeviceID(-1);
@@ -1337,6 +1363,14 @@ public class Model
         public boolean isConnected() {
                 return true;
         }
+
+		public GroovyScriptHandler getGroovyScriptHandler() {
+			return groovyScriptHandler;
+		}
+
+		public void setGroovyScriptHandler(GroovyScriptHandler groovyScriptHandler) {
+			this.groovyScriptHandler = groovyScriptHandler;
+		}
         
     	// TODO Performance tune groovy 
 }

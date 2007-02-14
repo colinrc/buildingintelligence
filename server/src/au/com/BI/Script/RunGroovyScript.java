@@ -104,6 +104,7 @@ public class RunGroovyScript extends Thread {
       finished.setCommand("finished");
       cache.setCachedCommand ("SCRIPT",finished);
       commandList.add(finished);
+      // scriptModel.scriptFinished (this.getId()) ;
 
     }
   }
