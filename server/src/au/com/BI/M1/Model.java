@@ -8,8 +8,10 @@ package au.com.BI.M1;
  *
 */
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,6 +26,7 @@ import au.com.BI.Device.DeviceType;
 import au.com.BI.M1.Commands.ArmingStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
 import au.com.BI.M1.Commands.PLCStatusRequest;
+import au.com.BI.M1.Commands.WriteRealTimeClockData;
 import au.com.BI.M1.Commands.ZoneStatusRequest;
 import au.com.BI.Sensors.SensorFascade;
 import au.com.BI.Util.SimplifiedModel;
@@ -111,7 +114,26 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String tempPollStr = (String)this.getParameterValue("POLL_SENSOR_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
 		String outputPollStr = (String)this.getParameterValue("POLL_OUTPUT_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
 		String analogInputsPollStr = (String)this.getParameterValue("POLL_ANALOG_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
+		String synchroniseSystemTime = (String)this.getParameterValue("SYNCHRONISE_SYSTEM_TIME", DeviceModel.MAIN_DEVICE_GROUP);
 
+		if (synchroniseSystemTime != null) {
+			if (synchroniseSystemTime.equalsIgnoreCase("Y")) {
+				WriteRealTimeClockData writeClock = new WriteRealTimeClockData();
+				Calendar cal = Calendar.getInstance(TimeZone.getDefault());
+				writeClock.setDayOfMonth(Integer.toString((cal.get(Calendar.MONTH) +1)));
+				writeClock.setDayOfWeek(Integer.toString(cal.get(Calendar.DAY_OF_WEEK)));
+				writeClock.setHour(Integer.toString(cal.get(Calendar.HOUR)));
+				writeClock.setMinute(Integer.toString(cal.get(Calendar.MINUTE)));
+				writeClock.setMonth(Integer.toString(cal.get(Calendar.MONTH)));
+				String year = Integer.toString(cal.get(Calendar.YEAR));
+				if (year.length() == 4) {
+					writeClock.setYear(year.substring(year.length()-2));
+				} else if (year.length() == 2) {
+					writeClock.setYear(year);
+				}
+				comms.sendString(writeClock.buildM1String()+"\r\n");
+			}
+		}
 		try {
 			tempPollValue = Long.parseLong(tempPollStr) * 1000;
 		} catch (NumberFormatException ex) {

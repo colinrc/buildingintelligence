@@ -32,6 +32,7 @@ import au.com.BI.M1.Commands.PLCDeviceOn;
 import au.com.BI.M1.Commands.PLCDeviceToggle;
 import au.com.BI.M1.Commands.PLCFunction;
 import au.com.BI.M1.Commands.PLCStatusRequest;
+import au.com.BI.M1.Commands.RequestRealTimeClockData;
 import au.com.BI.M1.Commands.RequestTemperature;
 import au.com.BI.M1.Commands.RequestThermostatData;
 import au.com.BI.M1.Commands.RequestZoneVoltage;

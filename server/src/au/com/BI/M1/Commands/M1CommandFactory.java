@@ -61,6 +61,9 @@ public class M1CommandFactory {
 	 *   <li>tr - Request Thermostat Data</li>
 	 *   <li>TR - Reply Thermostat Data</li>
 	 *   <li>ts - Set Thermostat Data</li>
+	 *   <li>rr - Request Real Time Clock Data</li>
+	 *   <li>RR - Reply Real Time Clock Data</li>
+	 *   <li>rw - Write Real Time Clock Data</li>
 	 * </ul>
 	 * @param unparsedCommand
 	 * @return
@@ -146,6 +149,12 @@ public class M1CommandFactory {
 			m1Command = parseReplyThermostatData(unparsedCommand);
 		} else if (unparsedCommand.substring(2,4).equals("ts")) {
 			m1Command = parseSetThermostatData(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("rr")) {
+			m1Command = parseRequestRealTimeClockData(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("RR")) {
+			m1Command = parseReplyRealTimeClockData(unparsedCommand);
+		} else if (unparsedCommand.substring(2,4).equals("rw")) {
+			m1Command = parseWriteRealTimeClockData(unparsedCommand);
 		}
 		
 		
@@ -1257,6 +1266,11 @@ public class M1CommandFactory {
 		}
 	}
 	
+	/**
+	 * Parse a command to set thermostat data.
+	 * @param command
+	 * @return
+	 */
 	private M1Command parseSetThermostatData(String command) {
 		String hexLength = command.substring(0,2);
 		int length = Integer.parseInt(hexLength,16);
@@ -1281,4 +1295,90 @@ public class M1CommandFactory {
 		
 	}
 	
+	/**
+	 * Parse a command to request real time clock data.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parseRequestRealTimeClockData(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		RequestRealTimeClockData _command = new RequestRealTimeClockData();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	/**
+	 * Parse the reply with the real time clock data.
+	 * @param command
+	 * @return
+	 */
+	private M1Command parseReplyRealTimeClockData(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		ReplyRealTimeClockData _command = new ReplyRealTimeClockData();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setSecond(command.substring(4,6));
+		_command.setMinute(command.substring(6,8));
+		_command.setHour(command.substring(8,10));
+		_command.setDayOfWeek(command.substring(10,11));
+		_command.setDayOfMonth(command.substring(11,13));
+		_command.setMonth(command.substring(13,15));
+		_command.setYear(command.substring(15,17));
+		_command.setDaylightSavingsTimeString(command.substring(17,18));
+		_command.setTwentyFourHourClockString(command.substring(18,19));
+		_command.setDateDisplayMode(command.substring(19,20));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
+	
+	private M1Command parseWriteRealTimeClockData(String command) {
+		String hexLength = command.substring(0,2);
+		int length = Integer.parseInt(hexLength,16);
+		
+		if (length != command.length() -2) {
+			return (null);
+		}
+		
+		WriteRealTimeClockData _command = new WriteRealTimeClockData();
+		_command.setCommand(command);
+		_command.setCheckSum(command.substring(command.length()-2));
+		_command.setSecond(command.substring(4,6));
+		_command.setMinute(command.substring(6,8));
+		_command.setHour(command.substring(8,10));
+		_command.setDayOfWeek(command.substring(10,11));
+		_command.setDayOfMonth(command.substring(11,13));
+		_command.setMonth(command.substring(13,15));
+		_command.setYear(command.substring(15,17));
+		
+		String checkSum = new M1Helper().calcM1Checksum(command.substring(0,command.length()-2));
+		if (checkSum.equals(_command.getCheckSum())) {
+			return(_command);
+		} else {
+			return(null);
+		}
+	}
 }
