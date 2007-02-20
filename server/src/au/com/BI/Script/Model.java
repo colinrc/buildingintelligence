@@ -168,6 +168,7 @@ public class Model
                 }
         }
 
+    	
         public void doScriptItem(CommandInterface command, CommandInterface triggeringCommand) throws CommsFail {
                 String theWholeKey = command.getKey();
                 DeviceType device = configHelper.getOutputItem(theWholeKey);

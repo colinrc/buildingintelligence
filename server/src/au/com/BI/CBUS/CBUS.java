@@ -23,6 +23,7 @@ public class CBUS extends BaseDevice implements LightDevice,CBUSDevice
 	protected String rampRate = "4";
 	protected boolean areaDevice = false;
 	protected boolean relay = false;
+	protected boolean generateDimmerVals = true;
 
 	
 	public CBUS (String name, int deviceType){
@@ -85,7 +86,6 @@ public class CBUS extends BaseDevice implements LightDevice,CBUSDevice
 		this.max = max;
 	}
 
-
 	public boolean isAreaDevice() {
 		return areaDevice;
 	}
@@ -100,6 +100,14 @@ public class CBUS extends BaseDevice implements LightDevice,CBUSDevice
 
 	public void setRelay(boolean relay) {
 		this.relay = relay;
+	}
+
+	public boolean isGenerateDimmerVals() {
+		return generateDimmerVals;
+	}
+
+	public void setGenerateDimmerVals(boolean generateDimmerVals) {
+		this.generateDimmerVals = generateDimmerVals;
 	}
 	
 

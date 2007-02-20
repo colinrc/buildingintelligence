@@ -159,6 +159,14 @@ public class MacroHandler {
 		}
 	}
 
+	public boolean isRunning (String macroName) {
+		if (runningMacros.containsKey(macroName)){
+			return false;
+		} else  {
+			return true;
+		}
+	}
+	
 	public boolean complete(String macroName, User user) {
 	    RunMacro theMacro;
         logger.log (Level.FINE,"Running macro "+ macroName + " to completion");

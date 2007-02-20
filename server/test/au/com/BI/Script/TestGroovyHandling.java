@@ -110,7 +110,7 @@ public class TestGroovyHandling extends TestCase {
 		triggeringCommand.setDisplayName("DLT_1");
 		triggeringCommand.setCommand("on");
 		labelMgr.setLabelState("DLT_1", "ON");
-		scriptModel.groovyScriptHandler.runScript("TimeTest",null, scriptModel, triggeringCommand);
+		scriptModel.groovyScriptHandler.runScript("TimeTest",null, scriptModel, triggeringCommand,false);
 	}
 	
 

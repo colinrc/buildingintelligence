@@ -44,6 +44,11 @@ public class LightFactory {
 		theLight.setGroupName(groupName);
 	
 	
+		String generateDimmerVals  = element.getAttributeValue("GENERATE_DIMMER_VALS");
+		if (generateDimmerVals != null && generateDimmerVals.equals("N")){
+			theLight.setGenerateDimmerVals (false);
+		}
+		
 		if (connectionType == DeviceType.LIGHT_CBUS) {
 			String applicationCode = element.getAttributeValue("CBUS_APPLICATION");
 			String relay = element.getAttributeValue("RELAY");

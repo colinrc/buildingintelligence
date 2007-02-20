@@ -22,6 +22,7 @@ public class Sensor extends BaseDevice
 	protected String units = "";
 	protected boolean relay = false;
 	protected String temperature;
+
 	
 	public Sensor (String name, String channel, String units, int deviceType){
 		this.name = name;
@@ -129,4 +130,6 @@ public class Sensor extends BaseDevice
 	public boolean isRelay() {
 		return relay;
 	}
+
+
 }

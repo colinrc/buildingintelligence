@@ -276,4 +276,12 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	public void setTemperature(String temperature) {
 		sensor.setTemperature(temperature);
 	}
+	
+	public boolean isGenerateDimmerVals() {
+		return false;
+	}
+
+	public void setGenerateDimmerVals(boolean generateDimmerVals) {
+			// Meaningless for sensors
+	}
 }

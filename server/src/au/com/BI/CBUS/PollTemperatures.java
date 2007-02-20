@@ -26,7 +26,7 @@ public class PollTemperatures extends Thread {
 	protected long pollValue = 60000;
 	protected CommandQueue commandQueue = null;
 	protected int deviceNumber = -1;
-	protected List temperatureSensors = null;
+	protected List <SensorFascade>temperatureSensors = null;
 	
 	public PollTemperatures() {
 		super();
@@ -63,9 +63,8 @@ public class PollTemperatures extends Thread {
 			    }*/
 
 			    synchronized (temperatureSensors) {
-			    		Iterator eachTemp = temperatureSensors.iterator();
-			    		while (eachTemp.hasNext()){
-			    			SensorFascade device = (SensorFascade)eachTemp.next();
+			    		for (SensorFascade device: temperatureSensors) {
+
 			    			String outputCbusCommand = buildTempString (device);
 						CommsCommand cbusCommsCommand = new CommsCommand();
 						cbusCommsCommand.setKey (device.getKey());
@@ -144,12 +143,12 @@ public class PollTemperatures extends Thread {
 	}
 
 
-	public List getTemperatureSensors() {
+	public List <SensorFascade>getTemperatureSensors() {
 		return temperatureSensors;
 	}
 
 
-	public void setTemperatureSensors(List temperatureSensors) {
+	public void setTemperatureSensors(List <SensorFascade> temperatureSensors) {
 		this.temperatureSensors = temperatureSensors;
 	}
 

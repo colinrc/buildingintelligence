@@ -46,10 +46,14 @@ public class LabelFactory {
 		if (targetDevice.getName().equals("CBUS")){
 			cbusApplication = element.getAttributeValue("CBUS_APPLICATION");
 		}
+		String generateDimmerVals  = element.getAttributeValue("GENERATE_DIMMER_VALS");
+		
 		Label label = new Label (display_name,connectionType);
 
 		key = targetDevice.formatKey(key,label);
-			
+		if (generateDimmerVals != null && generateDimmerVals.equals("N")){
+			label.setGenerateDimmerVals (false);
+		}
 		label.setKey (key);
 		label.setDefaultLabel (defaultLabel);
 		label.setApplicationCode(cbusApplication);

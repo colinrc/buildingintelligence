@@ -84,10 +84,11 @@ public class RunGroovyScript extends Thread {
         binding.setVariable("triggeringEvent", triggeringEvent);
         binding.setVariable("client", client);
         binding.setVariable("labelMgr", scriptModel.getLabelMgr());
+        binding.setVariable("scriptHandler", scriptModel.getScriptHandler());
+        binding.setVariable("macroHandler", scriptModel.getMacroHandler());
+               
        
         gse.run(scriptName+".groovy", binding);
-
-
 
         logger.log(Level.FINEST, "Completed Groovy Script: " + scriptName);
       }

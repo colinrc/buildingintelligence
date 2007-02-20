@@ -40,30 +40,48 @@ public class TestGroovyTimingTest extends TestCase {
 
 	public void testScriptPerformance2Commands() {
 		// 
-		long startTime = System.currentTimeMillis();
-		
-		CommandInterface triggeringCommand = new Command();
-		triggeringCommand.setDisplayName("DLT_1");
-		triggeringCommand.setCommand("on");
-		labelMgr.setLabelState("DLT_1", "ON");
-		scriptModel.groovyScriptHandler.runScript("TimeTest",null, scriptModel, triggeringCommand);
-		
-		long endTime1 = System.currentTimeMillis();
-		
-		 triggeringCommand = new Command();
-		triggeringCommand.setDisplayName("DLT_1");
-		triggeringCommand.setCommand("on");
-		labelMgr.setLabelState("DLT_1", "OFF");
-		scriptModel.groovyScriptHandler.runScript("TimeTest",null, scriptModel, triggeringCommand);
-		assertEquals("Script did not create the correct number of command objects",6,commandQueue.size());
-		
-		
-		long endTime2 = System.currentTimeMillis();
-		
-		System.out.println("Time to run 2 commands created (ms) "  + (endTime1  -  startTime));
-		System.out.println("Time to run 4 commands created (ms) "  + (endTime2  -  endTime1));
-			
-	}
-	
 
+		int numberRuns = 10;
+		long twoCommands[] = new long[numberRuns];
+		long fourCommands[] = new long[numberRuns];
+		
+		for (int i= 0; i < numberRuns; i ++) {
+			long startTime = System.currentTimeMillis();
+			CommandInterface triggeringCommand = new Command();
+			triggeringCommand.setDisplayName("DLT_1");
+			triggeringCommand.setCommand("on");
+			labelMgr.setLabelState("DLT_1", "ON");
+			scriptModel.groovyScriptHandler.runScript("TimeTest",null, scriptModel, triggeringCommand,false);
+			
+			long endTime1 = System.currentTimeMillis() ;
+
+					
+			 triggeringCommand = new Command();
+			triggeringCommand.setDisplayName("DLT_1");
+			triggeringCommand.setCommand("on");
+			labelMgr.setLabelState("DLT_1", "OFF");
+			scriptModel.groovyScriptHandler.runScript("TimeTest",null, scriptModel, triggeringCommand,false);
+			long timeToRun2 = System.currentTimeMillis() - endTime1;
+			long timeToRun1 = endTime1 - startTime;
+			
+			twoCommands [i] = timeToRun1;
+			fourCommands[i] = timeToRun2;
+			
+		}
+		long total1 = 0;
+		long total2 = 0;
+		
+		for (int i = 0 ; i < numberRuns; i ++){
+		
+			System.out.println("Time to run 2 commands created (ms) "  + twoCommands[i]);
+			total1 += twoCommands[i];
+			System.out.println("Time to run 4 commands created (ms) "  + fourCommands[i]);
+			total2 += fourCommands[i];
+		}
+		System.out.println ("Average 2 (ms) " + total1 / numberRuns);
+		System.out.println ("Average 4 (ms) " + total2 / numberRuns);
+		
+		assertFalse("Script did not create any objects",commandQueue.isEmpty());
+	
+	}
 }

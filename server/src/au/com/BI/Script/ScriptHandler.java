@@ -101,7 +101,7 @@ public class ScriptHandler {
 		}
 		return returnCode;
 	}
-
+	
 	public boolean run(String scriptName, CommandInterface triggeringCommand) {
 		ScriptRunBlock scriptRunBlock = (ScriptRunBlock) scriptRunBlockList
 				.get(scriptName);

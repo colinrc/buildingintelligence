@@ -1,3 +1,15 @@
+== 20/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b42.zip V1.6b42]  ==
+
+''' Script '''
+
+Added  isRunning(scriptName) and isRunning(macroName) to the scriptHandler and macroHandler respectively. 
+
+Both handles are now present in the script binding bock and can be called using    macroHandler.isRunning (macroName)  or scriptHandler.isRunning(scriptName). Resolves ticket [ticket:607]
+
+''' M1 '''
+
+Merged in changeset 1367
+
 == 14/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b41.zip V1.6b41]  ==
 
 ''' Tutundo '''

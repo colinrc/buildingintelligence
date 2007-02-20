@@ -92,10 +92,19 @@ public class GroovyScriptHandler {
 			triggeringCommand = params.getTriggeringCommand();
 		}
 		if (scriptRunBlock != null) {
-			return runScript(scriptName,  params.getUser(),scriptModel, triggeringCommand);
+			return runScript(scriptName,  params.getUser(),scriptModel, triggeringCommand,true);
 		} else {
 			return false;
 		} 
+	}
+	
+
+	public boolean isRunning (String scriptName) {
+		if (runningScripts.containsKey(scriptName) ){
+			return true;
+		} else  {
+			return false;
+		}
 	}
 
 	public boolean run(String scriptName, String parameter, User user, CommandInterface triggeringCommand) {
@@ -139,18 +148,22 @@ public class GroovyScriptHandler {
 			// Do not run at this stage, instead queue to be run after completion
 		}
 
-		return runScript(scriptName, user, scriptModel,  triggeringCommand);
+		return runScript(scriptName, user, scriptModel,  triggeringCommand,true);
 
 	}
 
-	public boolean runScript(String scriptName, User user, Model scriptModel, CommandInterface triggeringCommand) {
+	public boolean runScript(String scriptName, User user, Model scriptModel, CommandInterface triggeringCommand, boolean asThread) {
 
 			abortingScript.put(scriptName, 0); // Why ?????? CC
 			RunGroovyScript newScript = new RunGroovyScript(scriptName, user,
 					 scriptModel, triggeringCommand, gse);
 
 			runningScripts.put(scriptName, newScript);
-			newScript.start();
+			if (asThread) {
+				newScript.start();				
+			} else {
+				newScript.run();								
+			}
 			logger.log(Level.FINE, "Started script " + scriptName);
 			return true;
 	}

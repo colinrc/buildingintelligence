@@ -25,6 +25,7 @@ public class Label extends BaseDevice implements DeviceType, CBUSDevice
 	protected String applicationCode = "38";	
 	protected boolean relay = false;
 	protected int max = 255;
+	protected boolean  generateDimmerVals = true;
 	
 	public Label (String name, int deviceType){
 		super (name,deviceType);
@@ -83,6 +84,12 @@ public class Label extends BaseDevice implements DeviceType, CBUSDevice
 	
 	public boolean isAreaDevice () {
 		return false;
+	}
+	public boolean isGenerateDimmerVals() {
+		return generateDimmerVals;
+	}
+	public void setGenerateDimmerVals(boolean generateDimmerVals) {
+		this.generateDimmerVals = generateDimmerVals;
 	}
 
 }

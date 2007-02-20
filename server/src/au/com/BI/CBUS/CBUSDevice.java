@@ -41,5 +41,8 @@ public interface CBUSDevice {
 	 * @return Sets if the device represents an area instead of a channel
 	 */
 	//public void setAreaDevice( boolean area);
+	
+	public boolean isGenerateDimmerVals() ;
 
+	public void setGenerateDimmerVals(boolean generateDimmerVals) ;
 }

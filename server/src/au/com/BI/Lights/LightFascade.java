@@ -21,6 +21,7 @@ import java.util.*;
 public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,DynaliteDevice {
 	protected BaseDevice light = null;
 	protected String deviceName;
+	protected boolean generateDimmerVals = false;
 
 	public LightFascade (String name, int deviceType,String deviceName){
 		if (deviceName == null)
@@ -362,11 +363,23 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 		}		
 	}
 
-
 	public void decLinkCount() {
 		if (light.getDeviceType() == DeviceType.LIGHT_DYNALITE ){
 			((Dynalite)light).decLinkCount ( );
 		}		
+	}
+
+	public boolean isGenerateDimmerVals() {
+		if (light.getDeviceType() == DeviceType.LIGHT_CBUS ){
+			return ((CBUS)light).isGenerateDimmerVals();
+		}
+		return false;
+	}
+
+	public void  setGenerateDimmerVals(boolean generateDimmerVals) {
+		if (light.getDeviceType() == DeviceType.LIGHT_CBUS ){
+			 ((CBUS)light).setGenerateDimmerVals(generateDimmerVals);
+		}
 	}
 
 }

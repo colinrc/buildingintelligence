@@ -6,6 +6,7 @@ package au.com.BI.Script;
 import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.LabelMgr.LabelMgr;
+import au.com.BI.Macro.MacroHandler;
 import groovy.lang.Binding;
 
 /**
@@ -29,6 +30,8 @@ public  class BIScript extends groovy.lang.Script {
 	protected String triggerDisplayName = "";
 	
 	protected LabelMgr labelMgr;
+	protected ScriptHandler scriptHandler;
+	protected MacroHandler macroHandler;
 	protected Cache cache;
 	protected CommandInterface triggeringEvent;
 	protected Model elife;
@@ -64,6 +67,8 @@ public  class BIScript extends groovy.lang.Script {
 	public Object run () {
 		Binding binding = this.getBinding();
 		labelMgr = (LabelMgr)binding.getVariable("labelMgr");
+		scriptHandler = (ScriptHandler)binding.getVariable("scriptHandler");
+		macroHandler = (MacroHandler)binding.getVariable("macroHandler");
 		cache = (Cache)binding.getVariable("cache");
 		triggeringEvent = (CommandInterface)binding.getVariable("triggeringEvent");
 		elife = (Model)binding.getVariable("elife");

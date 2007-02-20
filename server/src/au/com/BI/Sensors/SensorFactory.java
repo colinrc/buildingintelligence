@@ -38,11 +38,13 @@ public class SensorFactory {
 			String units = "";
 			String group = element.getAttributeValue("GROUP");;
 			String outKey = element.getAttributeValue("DISPLAY_NAME");
+
 			SensorFascade theSensor = new SensorFascade(name, channel, units, group, connectionType, outKey,name);
 			String key = targetDevice.formatKey (tmpKey,theSensor);
 			theSensor.setKey(key);
 			theSensor.setGroupName(groupName);
-	
+
+			
 			if (connectionType == DeviceType.SENSOR) {
 				theSensor.setMax("255");
 				channel = element.getAttributeValue("CHANNEL");
