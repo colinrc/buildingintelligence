@@ -55,14 +55,14 @@ public class dlt_zeljko4 extends BIScript  {
 			switch (triggerCommand) {
 				case "on":
 				// TODO Add if test to check if off macro is running
-				if (isRunning("SHOWROOM SCENE OFF") == true ) {
+				if (isRunning("SHOWROOM SCENE OFF")  ) {
 					elife.sendCommand ("MACRO","abort","SHOWROOM SCENE OFF")
 				}
 				elife.sendCommand ("MACRO","run","SHOWROOM SCENE ON")
 				break
 
 				case "off":
-				if (isRunning("SHOWROOM SCENE ON") == true ) {
+				if (isRunning("SHOWROOM SCENE ON") ) {
 					elife.sendCommand ("MACRO","abort","SHOWROOM SCENE ON")
 				}
 				elife.sendCommand ("MACRO","run","SHOWROOM SCENE OFF")
