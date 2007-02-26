@@ -4,17 +4,8 @@
 
 Dynamically generates messages when ramping buttons are being pressed. Resolves ticket [ticket:605]
 
-While a button is being held the system will generate levels around every 500ms, these are based on an estimation for how long it takes a slider button to go from 0 to 100,
-this enables the system to attempt to 'track' the real CBUS levels.
+See [ServerDocs/CBUSModel] for details.
 
-The estimated time can be set in a parameter to the CBUS model,       COMPLETE_DIM_TIME . The value is in seconds, 5 is the default.
-
-All CBUS devices now have the optional config parameter GENERATE_DIMMER_VALS="Y", if present, the system will not generate dimmer levels for the device, 
-instead the normal CBUS behaviour for the device will be sent to Flash.  
-
-{{{
-                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3"  GENERATE_DIMMER_VALS="N"   DEFAULT_LABEL_KEY="FRONT_LIGHT" />
-}}}
 
 
 == 20/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b42.zip V1.6b42]  ==
