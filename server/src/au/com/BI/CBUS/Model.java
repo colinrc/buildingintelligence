@@ -7,7 +7,6 @@ package au.com.BI.CBUS;
 
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
-import au.com.BI.Config.ParameterException;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Util.*;
@@ -42,6 +41,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected boolean finishedStartup = false;
 	protected MMIHelpers mMIHelpers;
 	protected char  lastCharOfHandshake = 'a';
+	protected SliderPulse sliderPulse = null;
 	
 	int []etxChars;
 	String etxString = "";
@@ -56,6 +56,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 		temperatureSensors = new LinkedList<SensorFascade>();
 		labels = new LinkedList<Label>();
+		sliderPulse = new SliderPulse();
 		mMIHelpers = new MMIHelpers(cBUSHelper, configHelper, comms, state, this);
 		etxChars = new int[] {'.','$','%','#','!','\''};
 
@@ -157,7 +158,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 	}
 
-	public int getStateLevel (String theKey) {
+	public int getStateLevel (CBUSDevice cbusDevice) {
+		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(),cbusDevice.getDeviceType());
 		if (!state.containsKey(theKey)) return 100;
 
 		StateOfGroup  cBusState = (StateOfGroup)state.get(theKey);
@@ -303,6 +305,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		tildeCount = 0;
 		this.mMIHelpers.comms = comms; //just to be sure.
 		super.doStartup();
+		
 		if (applicationCodes.isEmpty()) applicationCodes.add("38");
 		// CommsCommand cbusCommsCommand = new CommsCommand();
 		//   cbusCommsCommand.setCommand("~~"+ETX);
@@ -315,6 +318,25 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 		String pollTempStr = (String)this.getParameterValue("POLL_TEMP_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
 
+		if (sliderPulse != null) sliderPulse.setRunning (false);
+
+		String completeDimTimeStr = this.getParameterValue("COMPLETE_DIM_TIME", DeviceModel.MAIN_DEVICE_GROUP);
+
+		if (completeDimTimeStr != null ){
+			try {
+				int completeDimTime = Integer.parseInt(completeDimTimeStr);
+				sliderPulse.setDelayInterval(completeDimTime);
+			} catch (NumberFormatException ex){
+				logger.log (Level.WARNING,"The complete dim time was incorrectly specified " + ex.getMessage());
+			}
+		}
+			
+		sliderPulse.setCommandQueue(commandQueue);
+		sliderPulse.setDeviceNumber(InstanceID);
+		sliderPulse.setCBUSModel(this);
+		sliderPulse.setCache(cache);
+		sliderPulse.start();
+		
 		try {
 			tempPollValue = Long.parseLong(pollTempStr) * 1000;
 		} catch (NumberFormatException ex) {
@@ -712,6 +734,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						if (cbusDevice != null) {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
+							sliderPulse.removeFromQueues(((BaseDevice)cbusDevice).getOutputKey());
 							if (cbusDevice.supportsLevelMMI()) {
 								mMIHelpers.sendExtendedQuery (cBusGroup,retApplicationCode, currentUser, true,"");
 								// Main point to trigger a ramp up sequence from a cbus button press
@@ -733,6 +756,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						else {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
+							sliderPulse.removeFromQueues(((BaseDevice)cbusDevice).getOutputKey());
 							sendCommandToFlash (cbusDevice,"on",100,currentUser);
 							didCommand = true;
 						}
@@ -746,6 +770,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						else {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
+							sliderPulse.removeFromQueues(((BaseDevice)cbusDevice).getOutputKey());
 							sendCommandToFlash (cbusDevice,"off",0,currentUser);
 							didCommand = true;
 						}
@@ -767,12 +792,28 @@ public class Model extends SimplifiedModel implements DeviceModel {
 								} catch (NumberFormatException ex) {
 									logger.log (Level.FINEST,"Received invalid ramp level for Cbus " + rampLevel);
 								}
-
+								
 								int percLevel = 100 * (x + 2) / cbusDevice.getMax();
 								if (percLevel < DeviceModel.FLASH_SLIDER_RES) percLevel = FLASH_SLIDER_RES;
 
-								if (this.setState (cbusDevice,"on",percLevel)) {
-									sendCommandToFlash (cbusDevice,"on",percLevel,currentUser);
+								if (x == 1 || x == cbusDevice.getMax()  && cbusDevice.isGenerateDimmerVals()){
+									// indicates start of a fade  while the button is pressed.
+									int oldLevel = this.getStateLevel(cbusDevice);
+									
+									if (x == 1) 	
+										sliderPulse.addToDecreasingQueue(((BaseDevice)cbusDevice).getOutputKey(), oldLevel);
+									else
+										sliderPulse.addToIncreasingQueue(((BaseDevice)cbusDevice).getOutputKey(), oldLevel);
+										
+									this.setState (cbusDevice,"on",percLevel); 
+									// set the state, but don't send the level to the user, this will occur from sliderPulse
+									
+								} else {
+									sliderPulse.removeFromQueues(((BaseDevice)cbusDevice).getOutputKey());
+	
+									if (this.setState (cbusDevice,"on",percLevel)) {
+										sendCommandToFlash (cbusDevice,"on",percLevel,currentUser);
+									}
 								}
 
 								didCommand = true;
@@ -845,11 +886,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					newLevel = Integer.parseInt(extra);
 					this.setState (cbusDevice,command, newLevel);
 					CommandInterface cbusCommand = null;
+					if (command.equals ("off"))  sliderPulse.removeFromQueues(((DeviceType)cbusDevice).getOutputKey());
 					if (cbusDevice  instanceof SensorFascade){
 						cbusCommand = ((SensorFascade)cbusDevice).buildDisplayCommand ();
 					}
 					if (cbusDevice instanceof LightFascade){
-						cbusCommand = (CBUSCommand)((LightFascade)cbusDevice).buildDisplayCommand ();
+						cbusCommand = ((LightFascade)cbusDevice).buildDisplayCommand ();
 					}
 					if (cbusDevice instanceof Label){
 						cbusCommand = ((Label)cbusDevice).buildDisplayCommand ();

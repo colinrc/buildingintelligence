@@ -15,6 +15,7 @@ import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.User.User;
+import au.com.BI.Util.BaseDevice;
 
 /**
  * @author colin
@@ -118,10 +119,11 @@ public class MMIHelpers {
 					if (testValue1 == 2) { 
 						int key = firstKey + i * 4;
 						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
+
 						if (!model.hasState(fullKey)) {
 							model.sendOutput (fullKey,"off","0",currentUser);
 						} else {
-							updateMMIState (MMIKey,firstKey + i * 4,appAddress,"off","0",currentUser); 
+							updateMMIState (MMIKey,key,appAddress,"off","0",currentUser); 
 						}
 					}
 	
@@ -145,6 +147,7 @@ public class MMIHelpers {
 					if (testValue2 == 8) { 
 						int key = firstKey + 1 + i * 4;
 						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
+
 						if (!model.hasState(fullKey)) {
 							model.sendOutput (fullKey,"off","0",currentUser);
 						} else {
@@ -172,6 +175,7 @@ public class MMIHelpers {
 					if (testValue3 == 32) { 
 						int key = firstKey + 2 + i * 4;
 						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
+
 						if (!model.hasState(fullKey)) {
 							model.sendOutput (fullKey,"off","0",currentUser);
 						} else {
@@ -200,6 +204,7 @@ public class MMIHelpers {
 					if (testValue4 == 128) { 
 						int key = firstKey + 3 + i * 4;
 						String fullKey = cBUSHelper.buildKey(appAddress , key,DeviceType.LIGHT_CBUS);
+
 						if (!model.hasState(fullKey)) {
 							model.sendOutput (fullKey,"off","0",currentUser);
 						} else {

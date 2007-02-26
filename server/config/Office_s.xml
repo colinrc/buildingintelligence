@@ -19,8 +19,8 @@
         <DEVICE ACTIVE="Y" NAME="TUTONDO" DISPLAY_NAME="Tutondo Audio">
                 <CONNECTION>
 		         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial"  BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
-                         <SERIAL ACTIVE="Y" PORT="COM3" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
-                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                         <SERIAL ACTIVE="N" PORT="COM3" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
                         <IP ACTIVE="N" IP_ADDRESS="192.168.0.135" PORT="4999"/>
                 </CONNECTION>
                 <CATALOGUE NAME="Tutondo Inputs">
@@ -84,9 +84,14 @@
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
-                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.130" PORT="10001"/>
-                       
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.0.130" PORT="10001"/>
+                       <IP ACTIVE="Y" IP_ADDRESS="192.168.1.6" PORT="10001"/>
                 </CONNECTION>
+                          <PARAMETERS>
+                	<!-- ITEM NAME="POLL_TEMP_INTERVAL" VALUE="5" / -->
+                	<ITEM NAME="DECIMAL_KEYS" VALUE="Y" />
+                </PARAMETERS>
+                
                 <CBUS>
                
                         <LIGHT_CBUS ACTIVE="Y" KEY="02" NAME="Display Light" DISPLAY_NAME="DISPLAY_LIGHT" POWER_RATING="100"/>
@@ -96,10 +101,10 @@
 			<LIGHT_CBUS ACTIVE="Y" KEY="04" NAME="Wf Light" DISPLAY_NAME="WF_LIGHT" POWER_RATING="100"/>
 			<LIGHT_CBUS ACTIVE="Y" KEY="08" NAME="Toilet Light" DISPLAY_NAME="TOILET_LIGHT" POWER_RATING="100"/>
 			<!-- 			DLT				 -->
-			<LABEL ACTIVE="Y" KEY="13" NAME="Audio 1"  DISPLAY_NAME="AUDIO_1" DEFAULT_LABEL_KEY="AUDIO" />
-			<LABEL ACTIVE="Y" KEY="11" NAME="Audio 2"  DISPLAY_NAME="AUDIO_2" DEFAULT_LABEL_KEY="AUDIODVD" />
-			<LABEL ACTIVE="Y" KEY="12" NAME="Audio 3"  DISPLAY_NAME="AUDIO_3" DEFAULT_LABEL_KEY="DVDPLAY" />
-			<LABEL ACTIVE="Y" KEY="10" NAME="Audio 4"  DISPLAY_NAME="AUDIO_4" DEFAULT_LABEL_KEY="DVDSTOP" />
+			<LABEL ACTIVE="Y" KEY="22" NAME="Audio 1"  DISPLAY_NAME="AUDIO_1" DEFAULT_LABEL_KEY="AUDIO" />
+			<LABEL ACTIVE="Y" KEY="23" NAME="Audio 2"  DISPLAY_NAME="AUDIO_2" DEFAULT_LABEL_KEY="AUDIODVD" />
+			<LABEL ACTIVE="Y" KEY="2" NAME="Audio 3"  DISPLAY_NAME="AUDIO_3" DEFAULT_LABEL_KEY="DVDPLAY" />
+			<LABEL ACTIVE="Y" KEY="3" NAME="Audio 4"  DISPLAY_NAME="AUDIO_4" DEFAULT_LABEL_KEY="DVDSTOP" />
                        </CBUS>
         </DEVICE>
    

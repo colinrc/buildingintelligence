@@ -13,6 +13,7 @@
                 
                 <PARAMETERS>
                 	<!-- ITEM NAME="POLL_TEMP_INTERVAL" VALUE="5" / -->
+                	<ITEM NAME="COMPLETE_DIM_TIME" VALUE="5" />
                 	<ITEM NAME="DECIMAL_KEYS" VALUE="Y" />
                 </PARAMETERS>
                 
@@ -50,11 +51,11 @@
                         <LABEL ACTIVE="Y" KEY="22" NAME="DLT 1"  DISPLAY_NAME="DLT_1" DEFAULT_LABEL_KEY="ON" />
                         
                         <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT_2" DEFAULT_LABEL_KEY="CD1"  />
-                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3" DEFAULT_LABEL_KEY="FRONT_LIGHT" />
+                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3"  GENERATE_DIMMER_VALS="N"   DEFAULT_LABEL_KEY="FRONT_LIGHT" />
                         <LABEL ACTIVE="Y" KEY="3"   NAME="DLT 4"  DISPLAY_NAME="DLT4"  />
                         <LABEL ACTIVE="Y" KEY="200"   NAME="DLT 5" DISPLAY_NAME="DLT5"  />
                         <LABEL ACTIVE="Y" KEY="201"   NAME="DLT 6" DISPLAY_NAME="DLT6" />
-                        <LABEL ACTIVE="Y" KEY="202"   NAME="DLT 7"  DISPLAY_NAME="DLT7"  />
+                        <LABEL ACTIVE="Y" KEY="202"   NAME="DLT 7"  DISPLAY_NAME="DLT7" GENERATE_DIMMER_VALS="N"  />
                         <LABEL ACTIVE="Y" KEY="220"   NAME="DLT 8" CBUS_APPLICATION="37"  DISPLAY_NAME="DLT8"  />
 
                        <SENSOR ACTIVE="N" KEY="25" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />

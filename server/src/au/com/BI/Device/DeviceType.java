@@ -133,7 +133,7 @@ public interface DeviceType
 	 */
 	public CommandInterface buildDisplayCommand();
 	
-
+	public String getOutputKey();
 
 }
 	

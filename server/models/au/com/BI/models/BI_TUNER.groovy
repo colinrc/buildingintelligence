@@ -9,13 +9,13 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
-class RawTest extends GroovyModel {
+class BI_TUNER extends GroovyModel {
 
 	// Our audio device expects 2 characters to specify the zone 
 	int keyPadding = 2;
 	String name = "BI_TUNER"
 	
-	RawTest() {
+	BI_TUNER () {
 		super()
 		configHelper.addParameterBlock  "AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Audio Source"
 	}
