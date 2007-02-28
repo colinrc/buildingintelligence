@@ -106,7 +106,7 @@ public class FlashControlListener extends Thread {
 	    
 	    //iPPort = new ServerSocket (portNumber,0,iPAddress);
 	    iPPort = new ServerSocket(portNumber);
-	    iPPort.setSoTimeout(20000);
+	    iPPort.setSoTimeout(60000);
 	    while (running) {
 		
 		//Block until I get a connection then go

@@ -40,6 +40,7 @@ public class CommsSend extends Thread implements Runnable{
 				nextMessage = toSend.take();
 	
 				if (nextMessage != null){
+				    if (interCommandInterval != 0){
 					long currentTimeDiff = System.currentTimeMillis() - lastSendTime;
 					try {
 						if (currentTimeDiff < interCommandInterval){
@@ -62,6 +63,22 @@ public class CommsSend extends Thread implements Runnable{
 						handleEvents = false;
 						throw new CommsFail ("Error sending information",e);
 					}
+				    } else {
+					try {
+					    
+						synchronized (os){
+						    os.write(nextMessage);
+						    os.flush();
+
+						}
+					} catch (IOException e) {
+						logger.log (Level.FINE,"Received IO exception on communication stream " + e.getMessage());
+						handleEvents = false;
+						throw new CommsFail ("Error sending information",e);
+
+					}
+					
+				    }
 				}
 
 			} catch (InterruptedException e) {
