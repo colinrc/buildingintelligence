@@ -11,6 +11,9 @@ public class dlt_zeljko4 extends BIScript  {
 
 	// If the script is able to be stopped before completion, generally no
 	boolean  stoppable = false;
+	
+	// If hidden is set to true then the script will not be visible to the client
+	boolean hidden = true
 
 
 	def setLabelDVD () {
@@ -54,17 +57,12 @@ public class dlt_zeljko4 extends BIScript  {
 			case "SCENE_1": 
 			switch (triggerCommand) {
 				case "on":
-				// TODO Add if test to check if off macro is running
-				if (isRunning("SHOWROOM SCENE OFF")  ) {
-					elife.sendCommand ("MACRO","abort","SHOWROOM SCENE OFF")
-				}
+				elife.sendCommand ("MACRO","abort","SHOWROOM SCENE OFF")
 				elife.sendCommand ("MACRO","run","SHOWROOM SCENE ON")
 				break
 
 				case "off":
-				if (isRunning("SHOWROOM SCENE ON") ) {
-					elife.sendCommand ("MACRO","abort","SHOWROOM SCENE ON")
-				}
+				elife.sendCommand ("MACRO","abort","SHOWROOM SCENE ON")
 				elife.sendCommand ("MACRO","run","SHOWROOM SCENE OFF")
 				break
 			}
@@ -75,9 +73,6 @@ public class dlt_zeljko4 extends BIScript  {
 			switch (triggerCommand) {
 				case "on":
 				elife.sendCommand ("SHOWROOM_AUDIO","on")
-				if (triggerExtra == "100") {
-					return
-				}
 				elife.sendCommand ("SHOWROOM_AUDIO","volume",triggerExtra)
 				break
 
