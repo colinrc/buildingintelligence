@@ -734,7 +734,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						if (cbusDevice != null) {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
-							sliderPulse.removeFromQueues(((BaseDevice)cbusDevice).getOutputKey());
+							sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
 							if (cbusDevice.supportsLevelMMI()) {
 								mMIHelpers.sendExtendedQuery (cBusGroup,retApplicationCode, currentUser, true,"");
 								// Main point to trigger a ramp up sequence from a cbus button press
@@ -756,7 +756,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						else {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
-							sliderPulse.removeFromQueues(((BaseDevice)cbusDevice).getOutputKey());
+							sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
 							sendCommandToFlash (cbusDevice,"on",100,currentUser);
 							didCommand = true;
 						}
@@ -770,7 +770,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						else {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
-							sliderPulse.removeFromQueues(((BaseDevice)cbusDevice).getOutputKey());
+							sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
 							sendCommandToFlash (cbusDevice,"off",0,currentUser);
 							didCommand = true;
 						}

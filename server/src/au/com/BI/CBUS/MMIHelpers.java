@@ -15,7 +15,6 @@ import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.User.User;
-import au.com.BI.Util.BaseDevice;
 
 /**
  * @author colin
