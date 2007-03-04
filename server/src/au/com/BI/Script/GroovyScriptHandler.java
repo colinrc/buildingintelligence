@@ -27,25 +27,17 @@ public class GroovyScriptHandler {
 	protected Cache cache;
 	
 	//  protected List commandList;
-	protected ConcurrentHashMap <String, RunGroovyScript>runningScripts;
 	protected ConcurrentHashMap <String, GroovyScriptRunBlock>scriptRunBlockList;
 	protected GroovyScriptEngine gse = null;
 	protected Timer timerMinute, timerHour, timerDay;
 
 	protected TimedGroovyScript timedScriptMinute, timedScriptHour, timedScriptDay;
-
 	protected Model scriptModel;
-
 	protected String statusFileName;
-
 	public static final int maxRepeats = 4;
-
 	protected List <String>timerListMinute, timerListHour, timerListDay;
-
 	public static final int MINUTE_INTERVAL = 60000;
-
 	public static final int HOUR_INTERVAL = 3600000;
-
 	public static final int DAY_INTERVAL = 86400000;
 
 
@@ -57,7 +49,6 @@ public class GroovyScriptHandler {
 		this.gse = gse;
 
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		runningScripts = new ConcurrentHashMap<String, RunGroovyScript>();
 		
 		abortingScript = new ConcurrentHashMap<String,Integer>();
 		this.scriptRunBlockList = scriptRunBlockList;
@@ -69,44 +60,28 @@ public class GroovyScriptHandler {
 		timerListDay = new ArrayList<String>();
 	}
 
-	public boolean finishedRunning(String scriptName) {
-		boolean returnCode = true;
-		
-			GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
-					.get(scriptName);
-			if (scriptRunBlock.moreToRun()) {
-				returnCode = false; // don't flag it as finished; and run enxt one.
-				scriptRunBlockList.put(scriptName, scriptRunBlock);
-			}
-		if (returnCode) {
-				runningScripts.remove(scriptName);
-		}
-		return returnCode;
-	}
-
 	public boolean run(String scriptName, CommandInterface triggeringCommand) {
 		GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
 				.get(scriptName);
 		ScriptParams params = scriptRunBlock.nextRun();
-		if (triggeringCommand == null){
-			triggeringCommand = params.getTriggeringCommand();
-		}
+
 		if (scriptRunBlock != null) {
-			return runScript(scriptName,  params.getUser(),scriptModel, triggeringCommand,true);
+			return runScript(scriptRunBlock,  scriptModel, params,true);
 		} else {
 			return false;
 		} 
 	}
-	
 
-	public boolean isRunning (String scriptName) {
-		if (runningScripts.containsKey(scriptName) ){
-			return true;
-		} else  {
-			return false;
+	/**
+	 * @param id
+	 */
+	public void scriptFinished(GroovyScriptRunBlock groovyScriptRunBlock, long id) {
+		groovyScriptRunBlock.scriptFinished(id);
+		if (groovyScriptRunBlock.moreToRun()){
+			runScript (   groovyScriptRunBlock,  scriptModel, groovyScriptRunBlock.nextRun(),  true) ;
 		}
 	}
-
+	
 	public boolean run(String scriptName, String parameter, User user, CommandInterface triggeringCommand) {
 		boolean doNotRun = false;
 
@@ -127,7 +102,7 @@ public class GroovyScriptHandler {
 		boolean noQueue = false; // DEFAULT SHOULD BE FALSE CC
 		if (parameter.equals("no_queue"))
 			noQueue = true;
-		if (runningScripts.containsKey(scriptName)) {
+		if (scriptRunBlock.isRunning()) {
 			scriptAlreadyRunning = true;
 		}
 
@@ -136,29 +111,30 @@ public class GroovyScriptHandler {
 					+ " twice");
 			return false;
 		}
-		if (scriptAlreadyRunning && !noQueue) {
-			ScriptParams params = new ScriptParams(parameter, user);
-			GroovyScriptRunBlock groovyScriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
-					.get(scriptName);
-			params.setTriggeringCommand (triggeringCommand);
+		GroovyScriptRunBlock groovyScriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
+		.get(scriptName);
+		ScriptParams params = new ScriptParams(parameter, user);
+		params.setTriggeringCommand (triggeringCommand);
+		if (groovyScriptRunBlock.isRunning()  && !noQueue) {
 			groovyScriptRunBlock.addRun(params);
+
 			scriptRunBlockList.put(scriptName, groovyScriptRunBlock);
 			logger.log(Level.FINER, "Queued script " + scriptName);
 			return true;
 			// Do not run at this stage, instead queue to be run after completion
 		}
 
-		return runScript(scriptName, user, scriptModel,  triggeringCommand,true);
+		return runScript(groovyScriptRunBlock, scriptModel,  params,true);
 
 	}
 
-	public boolean runScript(String scriptName, User user, Model scriptModel, CommandInterface triggeringCommand, boolean asThread) {
-
+	public boolean runScript(GroovyScriptRunBlock groovyScriptRunBlock,  Model scriptModel, ScriptParams scriptParams, boolean asThread) {
+			String scriptName = groovyScriptRunBlock.getName();
 			abortingScript.put(scriptName, 0); // Why ?????? CC
-			RunGroovyScript newScript = new RunGroovyScript(scriptName, user,
-					 scriptModel, triggeringCommand, gse);
+			RunGroovyScript newScript = new RunGroovyScript(groovyScriptRunBlock, 
+					 scriptModel, scriptParams, gse);
 
-			runningScripts.put(scriptName, newScript);
+			groovyScriptRunBlock.addRunningInfo(newScript.getId(), newScript);
 			if (asThread) {
 				newScript.start();				
 			} else {
@@ -200,13 +176,12 @@ public class GroovyScriptHandler {
 					if (scriptRunBlockList.containsKey(name)) {
 						Object item = scriptRunBlockList.get(name);
 						 scriptRunBlock = (GroovyScriptRunBlock)item;
+						 scriptRunBlock.clearRunningInfo();
 					} else {
-						if (!this.runningScripts.containsKey(name)) {
-							// If not on the file system, and not running. Delete it from memory.
-							toRemove.add(name);
-							updated = true;
-							continue;
-						}
+
+						toRemove.add(name);
+						updated = true;
+						continue;
 					}
 					scriptRunBlock.setStatusString(status);
 					scriptRunBlock.setLastUpdated(now);
@@ -223,7 +198,7 @@ public class GroovyScriptHandler {
 
 				for (GroovyScriptRunBlock item: scriptRunBlockList.values()){
 
-					if (scriptRunBlock.getLastUpdated().before(now)) {
+					if (item.getLastUpdated().before(now)) {
 						// Script on the file system but not yet in the status file.
 						updated = true;
 					}
@@ -257,8 +232,13 @@ public class GroovyScriptHandler {
 						scriptElement.setAttribute("ENABLED", "enabled");
 					else
 						scriptElement.setAttribute("ENABLED", "disabled");
-					scriptElement.setAttribute("STATUS", scriptRunBlock
-							.getStatusString());
+					String statusString = scriptRunBlock.getStatusString();
+					if (scriptRunBlock.isHidden()){
+						scriptElement.setAttribute("FORCED_HIDDEN", "true");
+					} else {
+						scriptElement.setAttribute("FORCED_HIDDEN", "false");						
+					}
+					scriptElement.setAttribute("STATUS", statusString);
 					scriptStatusElm.addContent(scriptElement);
 				}
 				XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
@@ -303,18 +283,10 @@ public class GroovyScriptHandler {
 		if (scriptName == null && !scriptName.equals("")) {
 			return false;
 		}
-		RunGroovyScript theScript;
-		logger.log(Level.FINE, "Disable script " + scriptName);
-		theScript = (RunGroovyScript) runningScripts.get(scriptName);
-		if (theScript != null) {
-			theScript.setEnable(enabled);
-		}
 
-		GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
-				.get(scriptName);
+		GroovyScriptRunBlock scriptRunBlock =scriptRunBlockList.get(scriptName);
 		if (scriptRunBlock != null) {
 			scriptRunBlock.setEnabled(enabled);
-			scriptRunBlockList.put(scriptName, scriptRunBlock);
 		} else {
 
 			return false;
@@ -359,32 +331,35 @@ public class GroovyScriptHandler {
 		List <Element>returnList = new LinkedList<Element>();
 
 			if (scriptName.equals("")) {
-				for (String theName:scriptRunBlockList.keySet()){
-					Element scriptDef = buildListElement(theName);
-					returnList.add(scriptDef);
+				for (GroovyScriptRunBlock theScript:scriptRunBlockList.values()){
+					if (!theScript.isHidden()){
+						Element scriptDef = buildListElement(theScript);
+						returnList.add(scriptDef);
+					}
 				}
 			} else {
-				Element scriptDef = buildListElement(scriptName);
+				GroovyScriptRunBlock scriptRunBlock = scriptRunBlockList.get(scriptName);
+				Element scriptDef = buildListElement(scriptRunBlock);
 				returnList.add (scriptDef);
 
 			}
 		return returnList;
 	}
 
-	public Element buildListElement(String scriptName) {
+	public Element buildListElement(GroovyScriptRunBlock scriptRunBlock) {
 		String myTimer;
-		GroovyScriptRunBlock scriptRunBlock= scriptRunBlockList.get(scriptName);
-		if (scriptRunBlock == null)
-			return null;
+
 
 		Element scriptDef = new Element("CONTROL");
 		scriptDef.setAttribute("KEY", "SCRIPT");
 		scriptDef.setAttribute("COMMAND", "getList");
-		scriptDef.setAttribute("EXTRA", scriptName);
+		scriptDef.setAttribute("EXTRA", scriptRunBlock.getName());
 		
 		if (scriptRunBlock == null) {
+			// I don't think this can ever be reached
+			logger.info("This line should never be reached, please report to BI");
 			scriptRunBlock = new GroovyScriptRunBlock();
-			scriptRunBlock.setName(scriptName);
+			scriptRunBlock.setName("NEW");
 		}
 
 
@@ -404,7 +379,7 @@ public class GroovyScriptHandler {
 			scriptDef.setAttribute("STOPPABLE", "N");
 		}
 
-		if (this.runningScripts.containsKey(scriptName)) {
+		if (scriptRunBlock.isRunning()) {
 			scriptDef.setAttribute("RUNNING", "1");
 		} else {
 			scriptDef.setAttribute("RUNNING", "0");
@@ -431,16 +406,13 @@ public class GroovyScriptHandler {
 	public void disableAll() {
 		RunGroovyScript theScript;
 
-		for (String scriptName: runningScripts.keySet()){
+		for (String scriptName: scriptRunBlockList.keySet()){
 			logger.log(Level.FINE, "Disable script " + scriptName);
-			theScript = (RunGroovyScript) runningScripts.get(scriptName);
-			if (theScript != null) {
-				theScript.setEnable(false);
-			}
-				GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock)scriptRunBlockList.get(scriptName);
-				if (scriptRunBlock != null) {
-					scriptRunBlock.setEnabled(false);
-					scriptRunBlockList.put(scriptName,scriptRunBlock);
+
+			GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock)scriptRunBlockList.get(scriptName);
+			if (scriptRunBlock != null) {
+				scriptRunBlock.setEnabled(false);
+				scriptRunBlockList.put(scriptName,scriptRunBlock);
 			}
 
 		}
@@ -449,14 +421,10 @@ public class GroovyScriptHandler {
 
 	public void enableAll() {
 		RunGroovyScript theScript;
-		for (String scriptName: runningScripts.keySet()){
+		for (String scriptName: scriptRunBlockList.keySet()){
 			logger.log(Level.FINE, "Enable script " + scriptName);
-			theScript = (RunGroovyScript) runningScripts.get(scriptName);
-			if (theScript != null) {
-				theScript.setEnable(true);
-			}
 
-			GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock)scriptRunBlockList.get(scriptName);
+			GroovyScriptRunBlock scriptRunBlock = scriptRunBlockList.get(scriptName);
 			if (scriptRunBlock != null) {
 				scriptRunBlock.setEnabled(false);
 				scriptRunBlockList.put(scriptName,scriptRunBlock);
@@ -465,17 +433,6 @@ public class GroovyScriptHandler {
 		this.saveScriptFile();
 	}
 
-	public void removeRunningScript(String scriptName) {
-			runningScripts.remove(scriptName);
-	}
-
-
-	public boolean isScriptRunning(String scriptName) {
-			if (runningScripts.containsKey(scriptName)) {
-				return true;
-			}
-			return false;
-	}
 
 	public Cache getCache() {
 		return cache;
@@ -483,6 +440,21 @@ public class GroovyScriptHandler {
 
 	public void setCache(Cache cache) {
 		this.cache = cache;
+	}
+
+	/**
+	 * @param scriptName
+	 * @return
+	 */
+	public boolean isHidden(String scriptName) {
+		GroovyScriptRunBlock groovyScriptRunBlock = scriptRunBlockList.get(scriptName);
+		if (groovyScriptRunBlock == null) return false;
+		if (groovyScriptRunBlock.isHidden() || groovyScriptRunBlock.getStatusString().contains("hidden")){ 
+			return true;
+		}
+		
+		return false;
+		
 	}
 
 }

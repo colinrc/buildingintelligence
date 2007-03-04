@@ -129,6 +129,7 @@ public class Controller {
 
 		configLoaded = false;
 
+		// TODO convert this to an enum, and have it dynamicaly buil by scanning available model files
 		modelRegistry.put("COMFORT", "au.com.BI.Comfort.Model");
 		modelRegistry.put("RAW_CONNECTION", "au.com.BI.Raw.Model");
 		modelRegistry.put("FLASH_CLIENT", "au.com.BI.Flash.FlashHandler");

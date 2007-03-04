@@ -44,6 +44,10 @@ public class TestGroovyTimingTest extends TestCase {
 		int numberRuns = 10;
 		long twoCommands[] = new long[numberRuns];
 		long fourCommands[] = new long[numberRuns];
+		scriptModel.loadGroovyScripts();
+		GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock)scriptRunBlockList.get("TimeTest");
+
+
 		
 		for (int i= 0; i < numberRuns; i ++) {
 			long startTime = System.currentTimeMillis();
@@ -51,7 +55,9 @@ public class TestGroovyTimingTest extends TestCase {
 			triggeringCommand.setDisplayName("DLT_1");
 			triggeringCommand.setCommand("on");
 			labelMgr.setLabelState("DLT_1", "ON");
-			scriptModel.groovyScriptHandler.runScript("TimeTest",null, scriptModel, triggeringCommand,false);
+			ScriptParams params = new ScriptParams("", null);
+			params.setTriggeringCommand(triggeringCommand);
+			scriptModel.groovyScriptHandler.runScript(scriptRunBlock , scriptModel, params,false);
 			
 			long endTime1 = System.currentTimeMillis() ;
 
@@ -60,7 +66,10 @@ public class TestGroovyTimingTest extends TestCase {
 			triggeringCommand.setDisplayName("DLT_1");
 			triggeringCommand.setCommand("on");
 			labelMgr.setLabelState("DLT_1", "OFF");
-			scriptModel.groovyScriptHandler.runScript("TimeTest",null, scriptModel, triggeringCommand,false);
+			ScriptParams params2 = new ScriptParams("", null);
+			params.setTriggeringCommand(triggeringCommand);
+			
+			scriptModel.groovyScriptHandler.runScript(scriptRunBlock, scriptModel, params2,false);
 			long timeToRun2 = System.currentTimeMillis() - endTime1;
 			long timeToRun1 = endTime1 - startTime;
 			

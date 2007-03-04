@@ -49,7 +49,7 @@ public class Model
         protected Controller mainController;
 		protected Map <String,ScriptRunBlock>scriptRunBlockList = null;
 		protected String statusFileName = "." + File.separator + "datafiles" + File.separator + "script_status.xml";
-		protected String groovyStatusFileName = "." + File.separator + "datafiles" + File.separator + "script_status.xml";
+		protected String groovyStatusFileName = "." + File.separator + "datafiles" + File.separator + "groovy_script_status.xml";
         protected GroovyScriptHandler groovyScriptHandler;
         protected GroovyScriptFileHandler groovyScriptFileHandler;
 		protected ConcurrentHashMap <String, GroovyScriptRunBlock>groovyScriptRunBlockList = null;
@@ -195,16 +195,9 @@ public class Model
 	            		String scriptName = command.getExtraInfo();
 	                    logger.log(Level.FINER, "Finished script " + scriptName );
 	                       
-	                    if (groovyScriptHandler.ownsScript (scriptName)){
-	                        if (groovyScriptHandler.finishedRunning(scriptName)) {
-	                     	   	clientCommand = doGetList ("");  // no more to run, so update the client
-	                        }
-	                        else
-	                        {
-	                            groovyScriptHandler.run(scriptName, triggeringCommand);
-	                            logger.log(Level.FINER, "Running queued script " + command.getExtraInfo());
-	                        }
-	                    } else { 
+	                    if (!groovyScriptHandler.ownsScript (scriptName)){
+	                    	// Old jython stuff
+	                    	
 	                       if (scriptHandler.finishedRunning(scriptName)) {
 	                    	   	clientCommand = doGetList ("");  // no more to run, so update the client
 	                       }
@@ -298,6 +291,7 @@ public class Model
                        logger.log(Level.FINER, "Running queued script " + command.getExtraInfo());
                    }
                }
+               
                
                if (clientCommand != null ) {
             	   Command clientCommand = doGetList ("");
@@ -410,6 +404,7 @@ public class Model
 	        			registerGroovyScript (scriptName, newScript,  scriptRunBlock);
 	        		}
 	        		logger.log(Level.INFO,"Loaded Groovy scripts");
+	        		groovyScriptHandler.loadScriptFile();
 	        	} catch (ConfigError ex){
 	        		logger.log (Level.INFO,"Problem reading the script files " + ex.getMessage());
 	        	}

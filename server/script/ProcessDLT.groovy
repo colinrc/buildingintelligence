@@ -13,6 +13,8 @@ String[]  fireOnChange =   ["DLT_1", "DLT_2","DLT_3","DLT_4"]
 // If the script is able to be stopped before completion, generally not
 boolean  stoppable = false;
 
+   
+boolean hidden = true
 
 	def main (String[] argv) {
 	// The action contents of the script go here
@@ -29,11 +31,17 @@ boolean  stoppable = false;
 		switch (triggerDisplayName) {
 		case "DLT_1": 
 			if (currentLabel == "ON") {
-				elife.sendCommand ("KITCHENAV","on","100")
-				 elife.sendCommand("DLT_1","label","OFF")
+				if (triggerCommand == "on"){
+					// label is on, and DLT is still on so send volume
+					elife.sendCommand( "MASTER_BED_LIGHT","on",triggerExtra)
+				} else {
+					// trigger command is off
+					elife.sendCommand ("MASTER_BED_LIGHT","on","100")
+				 	elife.sendCommand("DLT_1","label","OFF")					
+				}
 			}
 			if (currentLabel == "OFF") {
-				elife.sendCommand ("KITCHENAV","off","0")
+				elife.sendCommand ("MASTER_BED_LIGHT","off","0")
 				 elife.sendCommand("DLT_1","label","ON")
 			}
 			break

@@ -26,24 +26,26 @@ public class RunGroovyScript extends Thread {
   protected Cache cache;
   protected CommandInterface triggeringEvent;
   protected GroovyScriptEngine gse;
+  protected GroovyScriptRunBlock groovyScriptRunBlock;
 
   public RunGroovyScript() {
     super();
     logger = Logger.getLogger(this.getClass().getPackage().getName());
   }
 
-  public RunGroovyScript(String scriptName, User user, Model scriptModel, CommandInterface triggeringEvent, GroovyScriptEngine gse) {
+  public RunGroovyScript(GroovyScriptRunBlock groovyScriptRunBlock,  Model scriptModel, ScriptParams scriptParams, GroovyScriptEngine gse) {
     super();
     logger = Logger.getLogger(this.getClass().getPackage().getName());
     this.gse = gse;
-
+    this.groovyScriptRunBlock = groovyScriptRunBlock;
+    scriptName = groovyScriptRunBlock.getName();
     setScriptName(scriptName);
     setScriptModel(scriptModel);
     setCache(scriptModel.getCache());
     setCommandList (scriptModel.getCommandQueue());
-    this.triggeringEvent = triggeringEvent;
+    this.triggeringEvent = scriptParams.getTriggeringCommand();
 	this.setName("Sript runner : " + scriptName);
-    setUser(user);
+    setUser(scriptParams.getUser());
   }
 
   public void setCommandList (CommandQueue commandList){
@@ -59,15 +61,15 @@ public class RunGroovyScript extends Thread {
     while ( (doOnce || repeating) && enable) {
       doOnce = false; // just run it once
 
-      ClientCommand started = new ClientCommand();
-      started.setKey("SCRIPT");
-      started.setExtraInfo(getScriptName());
-      started.setCommand("started");
-      started.setDisplayName("SCRIPT");
-      cache.setCachedCommand("SCRIPT",started);
-       commandList.add(started);
-
-
+      if (!groovyScriptRunBlock.isHidden()){
+	      ClientCommand started = new ClientCommand();
+	      started.setKey("SCRIPT");
+	      started.setExtraInfo(getScriptName());
+	      started.setCommand("started");
+	      started.setDisplayName("SCRIPT");
+	      cache.setCachedCommand("SCRIPT",started);
+	       commandList.add(started);
+	   }
 
       String lsLine;
       lsLine = new String();
@@ -98,14 +100,16 @@ public class RunGroovyScript extends Thread {
 
       }
 
-      ClientCommand finished = new ClientCommand();
-      finished.setKey("SCRIPT");
-      finished.setExtraInfo(getScriptName());
-      finished.setDisplayName("SCRIPT");
-      finished.setCommand("finished");
-      cache.setCachedCommand ("SCRIPT",finished);
-      commandList.add(finished);
-      // scriptModel.scriptFinished (this.getId()) ;
+      groovyScriptRunBlock.scriptFinished (this.getId()) ;
+      if (!groovyScriptRunBlock.isHidden()){
+	      ClientCommand finished = new ClientCommand();
+	      finished.setKey("SCRIPT");
+	      finished.setExtraInfo(getScriptName());
+	      finished.setDisplayName("SCRIPT");
+	      finished.setCommand("finished");
+	      cache.setCachedCommand ("SCRIPT",finished);
+	      commandList.add(finished);
+      }
 
     }
   }

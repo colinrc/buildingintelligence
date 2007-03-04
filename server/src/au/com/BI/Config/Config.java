@@ -732,7 +732,7 @@ public class Config {
 		this.virtualOutputFactory = virtualOutputFactory;
 	}
 
-	public Map getModelRegistry() {
+	public Map <String,String>getModelRegistry() {
 		return modelRegistry;
 	}
 
@@ -740,7 +740,7 @@ public class Config {
 		this.modelRegistry = modelRegistry;
 	}
 
-	public Map getGroovyModels() {
+	public Map <String,GroovyRunBlock>getGroovyModels() {
 		return groovyModels;
 	}
 

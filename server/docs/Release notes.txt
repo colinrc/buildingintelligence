@@ -1,3 +1,15 @@
+== 4/Mar/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b44.zip V1.6b44]  ==
+
+''' Script '''
+
+Ensured groovy_script_status file is written, in a similar way to the jython script_status_file in datafiles.
+If a script is hidden it will not be included in lists sent to the client or generate start / stop messages. Resolves ticket [ticket:610]
+If groovy scripts contain a hidden=true line they will never be sent to the client, this overrides STATUS string values.
+
+''' CBUS '''
+
+Solve type cast issue when processing Level MMI requests. Resolves ticket [ticket:617]
+
 == 26/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b43.zip V1.6b43]  ==
 
 ''' CBUS '''

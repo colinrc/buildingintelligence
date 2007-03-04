@@ -19,8 +19,6 @@ import au.com.BI.Device.DeviceType;
 
 public class Label extends BaseDevice implements DeviceType, CBUSDevice
 {
-	protected String name="";
-	protected String command="";
 	protected String defaultLabel = "";
 	protected String applicationCode = "38";	
 	protected boolean relay = false;
@@ -38,10 +36,6 @@ public class Label extends BaseDevice implements DeviceType, CBUSDevice
 	public int getDeviceType ()
 	{
 		return DeviceType.LABEL;
-	}
-
-	public String getCommand () {
-		return command;
 	}
 
 	/**

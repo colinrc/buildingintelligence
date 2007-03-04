@@ -105,6 +105,7 @@ public class GroovyScriptFileHandler {
 									scriptRunBlock.setName(name);
 									
 									scriptRunBlock.setAbleToRunMultiple(ifc.isAbleToRunMultiple());
+									scriptRunBlock.setHidden(ifc.isHidden());
 									scriptRunBlock.setStoppable(ifc.isStoppable());
 									scriptRunBlock.setFireOnChange(ifc.getFireOnChange());
 									

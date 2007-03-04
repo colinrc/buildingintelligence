@@ -327,7 +327,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				int completeDimTime = Integer.parseInt(completeDimTimeStr);
 				sliderPulse.setDelayInterval(completeDimTime);
 			} catch (NumberFormatException ex){
-				logger.log (Level.WARNING,"The complete dim time was incorrectly specified " + ex.getMessage());
+				logger.log (Level.WARNING,"The complete dim time (parameter COMPLETE_DIM_TIME was incorrectly specified, a default of 5 seconds will be used. " + ex.getMessage());
 			}
 		}
 			
@@ -801,15 +801,15 @@ public class Model extends SimplifiedModel implements DeviceModel {
 									int oldLevel = this.getStateLevel(cbusDevice);
 									
 									if (x == 1) 	
-										sliderPulse.addToDecreasingQueue(((BaseDevice)cbusDevice).getOutputKey(), oldLevel);
+										sliderPulse.addToDecreasingQueue(cbusDevice.getOutputKey(), oldLevel);
 									else
-										sliderPulse.addToIncreasingQueue(((BaseDevice)cbusDevice).getOutputKey(), oldLevel);
+										sliderPulse.addToIncreasingQueue(cbusDevice.getOutputKey(), oldLevel);
 										
 									this.setState (cbusDevice,"on",percLevel); 
 									// set the state, but don't send the level to the user, this will occur from sliderPulse
 									
 								} else {
-									sliderPulse.removeFromQueues(((BaseDevice)cbusDevice).getOutputKey());
+									sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
 	
 									if (this.setState (cbusDevice,"on",percLevel)) {
 										sendCommandToFlash (cbusDevice,"on",percLevel,currentUser);

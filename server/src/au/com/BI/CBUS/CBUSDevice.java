@@ -45,4 +45,6 @@ public interface CBUSDevice {
 	public boolean isGenerateDimmerVals() ;
 
 	public void setGenerateDimmerVals(boolean generateDimmerVals) ;
+	
+	public String getOutputKey();
 }

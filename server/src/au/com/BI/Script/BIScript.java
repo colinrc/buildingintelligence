@@ -14,8 +14,9 @@ import groovy.lang.Binding;
  *
  */
 public  class BIScript extends groovy.lang.Script {
-	boolean isAbleToRunMultiple = false;
-	boolean isStoppable = false;
+	boolean ableToRunMultiple = false;
+	boolean stoppable = false;
+	boolean hidden = false;
 	String [] fireOnChange = new String[0];
 	String dummyArgs [] ;
 	
@@ -41,19 +42,19 @@ public  class BIScript extends groovy.lang.Script {
 	}
 	
 	public boolean isAbleToRunMultiple() {
-		return isAbleToRunMultiple;
+		return ableToRunMultiple;
 	}
 	
 	public void setAbleToRunMultiple(boolean isAbleToRunMultiple) {
-		this.isAbleToRunMultiple = isAbleToRunMultiple;
+		this.ableToRunMultiple = isAbleToRunMultiple;
 	}
 	
 	public boolean isStoppable() {
-		return isStoppable;
+		return stoppable;
 	}
 	
 	public void setStoppable(boolean isStoppable) {
-		this.isStoppable = isStoppable;
+		this.stoppable = isStoppable;
 	}
 	
 	public String[] getFireOnChange() {
@@ -91,6 +92,14 @@ public  class BIScript extends groovy.lang.Script {
 	
 	public Object main (String [] arg){
 		return null;
+	}
+
+	public boolean isHidden() {
+		return hidden;
+	}
+
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
 	}
 
 }

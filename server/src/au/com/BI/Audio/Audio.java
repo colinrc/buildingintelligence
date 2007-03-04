@@ -14,10 +14,7 @@ import au.com.BI.Device.DeviceType;
  *
  **/
 public class Audio extends BaseDevice implements DeviceType
-{
-	protected String name="";
-	protected String command="";
-	
+{	
 	public Audio (String name, int deviceType){
 		super (name,deviceType);
 		this.command = "";
@@ -31,9 +28,6 @@ public class Audio extends BaseDevice implements DeviceType
 		return DeviceType.AUDIO;
 	}
 
-	public String getCommand () {
-		return command;
-	}
 
 	/**
 	 * Returns a display command represented by the alert object
