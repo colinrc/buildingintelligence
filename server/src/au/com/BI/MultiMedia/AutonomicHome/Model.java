@@ -52,10 +52,10 @@ public class Model extends SimplifiedModel implements DeviceModel, MultiMediaInt
 	public void doStartup() throws CommsFail {
 		logger.log(Level.INFO,"Starting Autonomic Home");
 		StartMediaCenter startMCE = new StartMediaCenter();
-		comms.sendString(startMCE.buildAutonomicHomeString() + "\r\n");
+		comms.sendString(startMCE.buildCommandString() + "\r\n");
 		GetStatus getStatus = new GetStatus();
-		comms.sendString(getStatus.buildAutonomicHomeString() + "\r\n");
-		logger.log(Level.INFO,"Sent command " + getStatus.buildAutonomicHomeString());
+		comms.sendString(getStatus.buildCommandString() + "\r\n");
+		logger.log(Level.INFO,"Sent command " + getStatus.buildCommandString());
 	}
 	
 	/**

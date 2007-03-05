@@ -4,7 +4,7 @@ import au.com.BI.Command.Command;
 
 public class AutonomicHomeCommand extends Command {
 
-	public String buildAutonomicHomeString() {
+	public String buildCommandString() {
 		return "";
 	}
 }
