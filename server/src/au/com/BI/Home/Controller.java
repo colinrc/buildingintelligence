@@ -151,6 +151,7 @@ public class Controller {
 		modelRegistry.put("SIGN_VIDEO", "au.com.BI.SignVideo.Model");
 		modelRegistry.put("MACRO", "au.com.BI.Macro.Model");
 		modelRegistry.put("SCRIPT", "au.com.BI.Script.Model");
+		modelRegistry.put("AUTONOMIC_HOME", "au.com.BI.MultiMedia.AutonomicHome.Model");
 
 	}
 
