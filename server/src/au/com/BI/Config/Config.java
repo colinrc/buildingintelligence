@@ -17,6 +17,7 @@ import java.util.logging.*;
 
 import au.com.BI.AlarmLogging.*;
 import au.com.BI.Messaging.*;
+import au.com.BI.MultiMedia.AutonomicHome.Device.WindowsMediaExtenderFactory;
 import au.com.BI.AV.*;
 import au.com.BI.Alert.*;
 import au.com.BI.Camera.*;
@@ -76,6 +77,7 @@ public class Config {
 		protected AnalogFactory analogFactory;		
 		protected IRFactory iRFactory;
 		protected ThermostatFactory thermostatFactory;
+		protected WindowsMediaExtenderFactory windowsMediaExtenderFactory;
 		protected Map <String,String>modelRegistry = null;
 		protected Map <String,GroovyRunBlock>groovyModels = null;
 		protected MacroHandler macroHandler = null;
@@ -111,6 +113,7 @@ public class Config {
 		this.setLabelFactory (LabelFactory.getInstance());
 		this.setCustomConnectFactory(CustomConnectFactory.getInstance());
 		this.setThermostatFactory(ThermostatFactory.getInstance());
+		this.setWindowsMediaExtenderFactory(WindowsMediaExtenderFactory.getInstance());
 		
 		calendar_message_params = new HashMap<String,String> (5);
 		calendar_message_params.put ("ICON","");
@@ -633,6 +636,15 @@ public class Config {
 						thermostatFactory.addThermostat(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.THERMOSTAT,groupName,rawHelper);
 					}
+					if (itemName.equals("MEDIA_EXTENDER")) {
+						windowsMediaExtenderFactory.addMediaExtender(deviceModel, 
+								clientModels, 
+								item, 
+								MessageDirection.FROM_HARDWARE, 
+								DeviceType.WINDOWS_MEDIA_EXTENDER, 
+								groupName, 
+								rawHelper);
+					}
 				}
 			}
 		}
@@ -835,6 +847,15 @@ public class Config {
 
 	public void setLabelMgr(LabelMgr labelMgr) {
 		this.labelMgr = labelMgr;
+	}
+
+	public WindowsMediaExtenderFactory getWindowsMediaExtenderFactory() {
+		return windowsMediaExtenderFactory;
+	}
+
+	public void setWindowsMediaExtenderFactory(
+			WindowsMediaExtenderFactory windowsMediaExtenderFactory) {
+		this.windowsMediaExtenderFactory = windowsMediaExtenderFactory;
 	}
 	
 }

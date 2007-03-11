@@ -70,6 +70,9 @@ public interface DeviceType
 	
 	public static final int THERMOSTAT = 51;
 	
+	public static final int WINDOWS_MEDIA_CENTRE = 52;
+	public static final int WINDOWS_MEDIA_EXTENDER = 53;
+	
 	// Likely number of raw commands for device line. More is allowed.
 	public static final int PROBABLE_NUMBER_RAW = 10;
 

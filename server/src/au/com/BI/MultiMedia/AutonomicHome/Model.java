@@ -5,10 +5,12 @@ package au.com.BI.MultiMedia.AutonomicHome;
  * Implements the Autonomic Home device.
  */
 
+import java.util.LinkedList;
 import java.util.logging.Level;
 
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsFail;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.MultiMedia.MultiMediaInterface;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.GetStatus;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.StartMediaCenter;
@@ -35,15 +37,6 @@ public class Model extends SimplifiedModel implements DeviceModel, MultiMediaInt
 	}
 	
 	/**
-	 * Adds a startup query item.
-	 */
-	public void addStartupQueryItem (String name, 
-			Object details, 
-			MessageDirection controlType){
-		
-	}
-	
-	/**
 	 * Starts AutonomicHome model.
 	 * <ul>
 	 * 	<li>Start the MCE Media Center</li>
@@ -62,8 +55,8 @@ public class Model extends SimplifiedModel implements DeviceModel, MultiMediaInt
 	 * Handle output items.
 	 */
 	public void doOutputItem (CommandInterface command) throws CommsFail {
-		logger.log(Level.INFO,command.getKey());
-		outputHelper.doOutputItem(command, configHelper, cache, comms,this);
+		logger.log(Level.INFO,"Output " + command.getKey());
+		outputHelper.doOutputItem(command, configHelper, cache, comms, this);
 	}
 	
 	/**
@@ -71,7 +64,7 @@ public class Model extends SimplifiedModel implements DeviceModel, MultiMediaInt
 	 */
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{	
-		logger.log(Level.INFO,command.getKey());
+		logger.log(Level.INFO,"Controlled " + command.getKey());
 		controlledHelper.doControlledItem(command, configHelper, cache, commandQueue, this);
 	}
 }
