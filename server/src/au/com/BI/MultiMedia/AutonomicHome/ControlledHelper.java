@@ -12,7 +12,9 @@ import au.com.BI.Config.ConfigHelper;
 import au.com.BI.M1.Model;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.AutonomicHomeCommand;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.AutonomicHomeCommandFactory;
+import au.com.BI.MultiMedia.AutonomicHome.Commands.SetInstanceReply;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.ReportState;
+import au.com.BI.MultiMedia.AutonomicHome.Commands.SetInstance;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.StateType;
 import au.com.BI.MultiMedia.AutonomicHome.Device.WindowsMediaExtender;
 
@@ -29,11 +31,20 @@ public class ControlledHelper {
 		currentCommand = null;
 	}
 	
+	/**
+	 * Parse commands from the Windows Media Center.
+	 * @param command
+	 * @param configHelper
+	 * @param cache
+	 * @param commandQueue
+	 * @param m1
+	 * @throws CommsFail
+	 */
 	public void doControlledItem(CommandInterface command,
 			ConfigHelper configHelper, 
 			Cache cache, 
 			CommandQueue commandQueue,
-			au.com.BI.MultiMedia.AutonomicHome.Model m1) throws CommsFail {
+			au.com.BI.MultiMedia.AutonomicHome.Model model) throws CommsFail {
 		
 		boolean commandFinished = false;
 		
@@ -47,6 +58,11 @@ public class ControlledHelper {
 		if (_command.getClass().equals(ReportState.class)) {
 			ReportState state = (ReportState)_command;
 			WindowsMediaExtender extender = (WindowsMediaExtender)configHelper.getControlledItem(state.getInstance());
+			
+			if (extender == null) {
+				logger.log(Level.WARNING, "Attempting to report state on an extender that is not configured: " + state.getInstance());
+				return;
+			}
 			if (state.getType() == StateType.VOLUME) {
 				try {
 					int volume = Integer.parseInt(state.getValue());
@@ -69,6 +85,19 @@ public class ControlledHelper {
 				// TODO send session start to the client
 				logger.log(Level.INFO, "Setting session start for " + extender.getKey() + " to " + state.getValue());
 			}
+		} else if (_command.getClass().equals(SetInstanceReply.class)) {
+			SetInstanceReply setInstanceReply = (SetInstanceReply)_command;
+			
+			WindowsMediaExtender extender = (WindowsMediaExtender)configHelper.getControlledItem(setInstanceReply.getInstance());
+			if (extender == null) {
+				logger.log(Level.WARNING, "Attempting to report instance on an extender that is not configured: " + setInstanceReply.getInstance());
+				return;
+			}
+			
+			logger.log(Level.INFO, "Setting current instance to " + extender.getKey());
+			model.setCurrentInstance(extender);
+			
+			// TODO send current instance selected to the client.
 		}
 		
 		if (commandFinished) {

@@ -36,6 +36,8 @@ public class AutonomicHomeCommandFactory {
 			
 			if (words[0].equalsIgnoreCase("ReportState")) {
 				command = parseReportState(words);
+			} else if (words[0].equalsIgnoreCase("Instance")) {
+				command = parseInstance(words);
 			}
 			
 			if (command == null) {
@@ -64,7 +66,7 @@ public class AutonomicHomeCommandFactory {
 		throws AutonomicHomeCommandNotFoundException {
 		
 		if (words.length != 3) {
-			throw new AutonomicHomeCommandNotFoundException("ReportState command identified but did not have enough arguments.");
+			throw new AutonomicHomeCommandNotFoundException("ReportState command identified but did not have enough arguments. 3 expected but " + words.length + " returned.");
 		}
 		
 		ReportState command = new ReportState();
@@ -80,6 +82,23 @@ public class AutonomicHomeCommandFactory {
 		
 		command.setType(type);
 		command.setValue(value[1]);
+		
+		return command;
+	}
+	
+	public AutonomicHomeCommand parseInstance(String[] words)
+		throws AutonomicHomeCommandNotFoundException {
+		
+		if (words.length != 2) {
+			throw new AutonomicHomeCommandNotFoundException("Instance command identified but did not have enough arguments.  2 expected but " + words.length + " returned.");
+		}
+		
+		SetInstanceReply command = new SetInstanceReply();
+		
+		// remove any double quotes
+		words[1] = words[1].replaceAll("\"", "");
+		logger.log(Level.INFO, "Report instance is " + words[1]);
+		command.setInstance(words[1]);
 		
 		return command;
 	}

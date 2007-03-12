@@ -14,6 +14,7 @@ import au.com.BI.Device.DeviceType;
 import au.com.BI.MultiMedia.MultiMediaInterface;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.GetStatus;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.StartMediaCenter;
+import au.com.BI.MultiMedia.AutonomicHome.Device.WindowsMediaExtender;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
 import au.com.BI.Util.SimplifiedModel;
@@ -22,6 +23,7 @@ public class Model extends SimplifiedModel implements DeviceModel, MultiMediaInt
 
 	private ControlledHelper controlledHelper;
 	private OutputHelper outputHelper;
+	private WindowsMediaExtender currentInstance;
 	
 	/**
 	 * Constructor for the model.
@@ -66,5 +68,21 @@ public class Model extends SimplifiedModel implements DeviceModel, MultiMediaInt
 	{	
 		logger.log(Level.INFO,"Controlled " + command.getKey());
 		controlledHelper.doControlledItem(command, configHelper, cache, commandQueue, this);
+	}
+
+	/**
+	 * Gets the current selected Windows Media Extender instance.
+	 * @return The current selected Windows Media Extender instance
+	 */
+	public WindowsMediaExtender getCurrentInstance() {
+		return currentInstance;
+	}
+
+	/**
+	 * Sets the current instance of Windows Media Extender.
+	 * @param currentInstance
+	 */
+	public void setCurrentInstance(WindowsMediaExtender currentInstance) {
+		this.currentInstance = currentInstance;
 	}
 }
