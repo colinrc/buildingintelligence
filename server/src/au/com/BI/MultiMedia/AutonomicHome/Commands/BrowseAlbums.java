@@ -1,10 +1,10 @@
 package au.com.BI.MultiMedia.AutonomicHome.Commands;
 
 
-public class BrowseInstances extends AutonomicHomeCommand {
+public class BrowseAlbums extends AutonomicHomeCommand {
 	
 	@Override
 	public String buildCommandString() {
-		return "BrowseInstances";
+		return "BrowseAlbums";
 	}
 }

@@ -10,6 +10,7 @@ import au.com.BI.Comms.CommsCommand;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Device.DeviceType;
+import au.com.BI.MultiMedia.AutonomicHome.Commands.BrowseAlbums;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.SetInstance;
 import au.com.BI.MultiMedia.AutonomicHome.Device.WindowsMediaExtender;
 
@@ -21,6 +22,7 @@ import au.com.BI.MultiMedia.AutonomicHome.Device.WindowsMediaExtender;
 public class OutputHelper {
 
 	protected Logger logger;
+	private CommandInterface currentCommand;
 
 	public OutputHelper() {
 		super();
@@ -42,16 +44,53 @@ public class OutputHelper {
 			if (device.getDeviceType() == DeviceType.WINDOWS_MEDIA_EXTENDER) {
 				WindowsMediaExtender extender = (WindowsMediaExtender)device;
 				
-				if (command.getCommandCode().equals("SET_INSTANCE")) {
+				if (model.getCurrentInstance() == null || !model.getCurrentInstance().getName().equals(extender.getName())) {
+					// set the instance
 					SetInstance setInstance = new SetInstance();
 					setInstance.setInstance(extender.getKey());
-					retCode = setInstance.buildCommandString() + "\r\n";
+					logger.log(Level.FINER, "Sending command to Autonomic Home: " + setInstance.buildCommandString());
+					CommsCommand _commsCommand = new CommsCommand(key,setInstance.buildCommandString() + "\r\n",null);
+					comms.addCommandToQueue(_commsCommand);
+					
+					if (!comms.sendNextCommand()) {
+						throw new CommsFail("Failed to send command:" + setInstance.buildCommandString());
+					}
+				}
+				
+				if (command.getCommandCode().equalsIgnoreCase("BROWSE")) {
+					// <CONTROL KEY="<extender>" COMMAND="BROWSE" EXTRA="<type>" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+					// type can be
+					// ALBUMS
+					// ARTISTS
+					// GENRES
+					// NOWPLAYING
+					// PLAYLISTS
+					if (command.getExtraInfo().equalsIgnoreCase("ALBUMS")) {
+						BrowseAlbums browseAlbums = new BrowseAlbums();
+						retCode = browseAlbums.buildCommandString() + "\r\n";
+					} else if (command.getExtraInfo().equalsIgnoreCase("ARTISTS")) {
+						
+					} else if (command.getExtraInfo().equalsIgnoreCase("GENRES")) {
+						
+					} else if (command.getExtraInfo().equalsIgnoreCase("NOWPLAYING")) {
+						
+					} else if (command.getExtraInfo().equalsIgnoreCase("PLAYLISTS")) {
+						
+					}
+					
+					// what are we browsing?
+					
+					// 
+				} else if (command.getCommandCode().equalsIgnoreCase("PLAY")) {
+					
+				} else if (command.getCommandCode().equalsIgnoreCase("TRANSPORT")) {
+					// transport commands
+					// play, pause, stop, fast forward, rewind
 				}
 			}
 		}
 		
-		if (!retCode.equals("")) {
-			// comms.sendString(retCode); When using the queue you should not also explicitly send the string. CC 
+		if (!retCode.equals("")) { 
 			logger.log(Level.FINER, "Sending command to Autonomic Home: " + retCode);
 			CommsCommand _commsCommand = new CommsCommand(key,retCode,null);
 			comms.addCommandToQueue(_commsCommand);
@@ -61,4 +100,14 @@ public class OutputHelper {
 			}
 		}
 	}
+
+	public CommandInterface getCurrentCommand() {
+		return currentCommand;
+	}
+
+	public void setCurrentCommand(CommandInterface currentCommand) {
+		this.currentCommand = currentCommand;
+	}
+	
+	
 }

@@ -12,6 +12,7 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.MultiMedia.MultiMediaInterface;
+import au.com.BI.MultiMedia.AutonomicHome.Commands.AutonomicHomeCommandException;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.GetStatus;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.StartMediaCenter;
 import au.com.BI.MultiMedia.AutonomicHome.Device.WindowsMediaExtender;
@@ -67,7 +68,11 @@ public class Model extends SimplifiedModel implements DeviceModel, MultiMediaInt
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{	
 		logger.log(Level.INFO,"Controlled " + command.getKey());
-		controlledHelper.doControlledItem(command, configHelper, cache, commandQueue, this);
+		try {
+			controlledHelper.doControlledItem(command, configHelper, cache, commandQueue, this);
+		} catch (AutonomicHomeCommandException e) {
+			logger.log(Level.INFO, "Autonomic home command exception encountered " + e.getMessage());
+		}
 	}
 
 	/**

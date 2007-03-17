@@ -1,5 +1,6 @@
 package au.com.BI.MultiMedia.AutonomicHome.Commands;
 
+
 public class SetInstance extends AutonomicHomeCommand {
 	private String instance;
 	

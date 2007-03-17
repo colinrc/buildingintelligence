@@ -1,5 +1,6 @@
 package au.com.BI.MultiMedia.AutonomicHome.Commands;
 
+
 public class GetStatus extends AutonomicHomeCommand {
 
 	@Override

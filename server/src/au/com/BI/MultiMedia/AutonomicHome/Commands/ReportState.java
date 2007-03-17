@@ -1,5 +1,6 @@
 package au.com.BI.MultiMedia.AutonomicHome.Commands;
 
+
 public class ReportState extends AutonomicHomeCommand {
 	private String instance;
 	private StateType type;
