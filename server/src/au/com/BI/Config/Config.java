@@ -122,7 +122,7 @@ public class Config {
 		calendar_message_params.put ("TARGET","All");
 	}
 
-        public void prepareToReadConfigs (List deviceModels,Controls controls) {
+        public void prepareToReadConfigs (List <DeviceModel>deviceModels,Controls controls) {
             jRobinParser.clearRRDS();
             removeModels (deviceModels);
             macroHandler.setCalendar_message_params (this.calendar_message_params);
@@ -130,10 +130,10 @@ public class Config {
             controls.clearVariables();
         }
         
-	public void removeModels (List deviceModels) {
-		Iterator eachDeviceModel = deviceModels.iterator();
+	public void removeModels (List <DeviceModel>deviceModels) {
+		Iterator <DeviceModel>eachDeviceModel = deviceModels.iterator();
 		while (eachDeviceModel.hasNext()) {
-			DeviceModel theModel = (DeviceModel)eachDeviceModel.next();
+			DeviceModel theModel = eachDeviceModel.next();
 			if (theModel.removeModelOnConfigReload()) {
 				eachDeviceModel.remove();
 			}
@@ -317,8 +317,8 @@ public class Config {
 
 
         public DeviceModel parseDeviceModel(Element deviceConfig,
-                                            List deviceModels,
-                                            List clientModels) throws
+                                            List <DeviceModel>deviceModels,
+                                            List <DeviceModel>clientModels) throws
             JDOMException {
                 int intPowerRating = 0;
                 String deviceActive = deviceConfig.getAttributeValue("ACTIVE");
