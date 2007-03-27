@@ -1368,5 +1368,4 @@ public class Model
 			this.groovyScriptHandler = groovyScriptHandler;
 		}
         
-    	// TODO Performance tune groovy 
 }

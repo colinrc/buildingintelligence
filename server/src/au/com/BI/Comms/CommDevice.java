@@ -29,6 +29,8 @@ public interface CommDevice {
 	public static final int FullLine = 0;
 	public static final int BufferLength = 1;
 	public static final int KnownChars = 2;
+	public static final int NaturalPacket = 3;
+	
 	
 
 	
@@ -143,4 +145,10 @@ public interface CommDevice {
 	 * @return The name
 	 */
 	public String getModelName();
+	
+
+	/**
+	 * Data packets will be transmitted to models in exactly the format they have arived at the communications port.
+	 */
+	public void setNaturalPackets(boolean b) ;
 }

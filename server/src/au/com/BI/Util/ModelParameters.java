@@ -74,6 +74,7 @@ public class ModelParameters  {
 		protected VersionManager versionManager = null;
 		protected String version = "0";
 		protected LabelMgr labelMgr = null;
+		protected boolean naturalPackets = false;
 		
 		public User currentUser = null;
 		
@@ -473,5 +474,13 @@ public class ModelParameters  {
 
 	public void setLabelMgr(LabelMgr labelMgr) {
 		this.labelMgr = labelMgr;
+	}
+
+	public boolean isNaturalPackets() {
+		return naturalPackets;
+	}
+
+	public void setNaturalPackets(boolean naturalPackets) {
+		this.naturalPackets = naturalPackets;
 	}
 }

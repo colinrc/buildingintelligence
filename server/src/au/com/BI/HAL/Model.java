@@ -22,50 +22,65 @@ import au.com.BI.Audio.*;
 public class Model extends SimplifiedModel implements DeviceModel {
 
 	protected String outputAudioCommand = "";
-	protected HashMap <String,StateOfZone>state;
+	protected HashMap <String,StateOfZone>state = null;
 	protected char ETX = '\r';
 	protected String intercom;
 	protected HashMap <String,String>HALMessages;
-	protected PollDevice pollDevice;
+	protected PollDevice pollDevice = null;
 	protected boolean intercomChanged = true;
+	protected boolean protocolB = true;
 
 	public Model() {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		state = new HashMap<String,StateOfZone>(64);
 		intercom = "off";
 		loadHALMessages();
-		pollDevice = new PollDevice();
-		pollDevice.setCommandQueue(commandQueue);
-		pollDevice.setDeviceNumber(this.InstanceID);
-		pollDevice.setComms(comms);
-
-		pollDevice.setETX(ETX);
-		String pollValueStr = (String) this.getParameterValue("POLL_INTERVAL",
-				DeviceModel.MAIN_DEVICE_GROUP);
-		long pollValue = 3000;
-		if (pollValueStr != null && !pollValueStr.equals((""))) {
-			try {
-				pollValue = Long.parseLong(pollValueStr) * 1000;
-			} catch (NumberFormatException ex) {
-				pollValue = 3000;
-			}
-		}
-
-		if (pollValue > 1000) {
-			pollDevice.setPollValue(pollValue);
-			pollDevice.setConfigHelper(configHelper);
-			pollDevice.setHalState(state);
-			logger.log(Level.FINE, "Starting HAL polling, interval = "
-				+ pollValueStr);
-
-		}
-
-		
 		configHelper.addParameterBlock ("INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Source inputs");
 		configHelper.addParameterBlock ("FUNCTIONS",DeviceModel.MAIN_DEVICE_GROUP,"Audio functions");
 	}
 
+	
+	public void finishedReadingConfig () throws SetupException {
+		super.finishedReadingConfig();
+		protocolB = true;
+
+		String protocol = (String)this.getParameterValue("PROTOCOL", DeviceModel.MAIN_DEVICE_GROUP);
+		state = new HashMap<String,StateOfZone>(64);
+		if (protocol != null && protocol.equals("A")) {
+				protocolB = false;
+
+
+				String pollValueStr = (String) this.getParameterValue("POLL_INTERVAL",
+						DeviceModel.MAIN_DEVICE_GROUP);
+				long pollValue = 3000;
+				if (pollValueStr != null && !pollValueStr.equals((""))) {
+					try {
+						pollValue = Long.parseLong(pollValueStr) * 1000;
+					} catch (NumberFormatException ex) {
+						pollValue = 3000;
+					}
+				}
+				pollDevice = new PollDevice();
+				pollDevice.setCommandQueue(commandQueue);
+				pollDevice.setDeviceNumber(this.InstanceID);
+				pollDevice.setComms(comms);
+
+				pollDevice.setETX(ETX);
+				
+				if (pollValue > 1000) {
+					pollDevice.setPollValue(pollValue);
+					pollDevice.setConfigHelper(configHelper);
+					pollDevice.setHalState(state);
+					logger.log(Level.FINE, "Starting HAL polling, interval = "
+						+ pollValueStr);
+		
+				}
+		}
+	    if (protocolB) { 
+	    	this.setNaturalPackets(true);
+	    }
+	}
+	
 	public void loadHALMessages() {
 		HALMessages = new HashMap<String,String>(12);
 		HALMessages.put("SYSTEM POWERSAVE EXECUTING", "W");
@@ -97,16 +112,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	public void sendStateOfAllDevices(long targetFlashDeviceID) {
 
-		Iterator audioDevices = configHelper.getAllControlledDevices();
-		while (audioDevices.hasNext()) {
-			Audio audioDevice = (Audio) (audioDevices.next());
-			sendStateOfDevice( targetFlashDeviceID, audioDevice);
+		for (DeviceType audio: configHelper.getAllControlledDeviceObjects()){
+			sendStateOfDevice( targetFlashDeviceID, (Audio)audio);
 		}
 		intercomChanged = false;
 	}
 	
 	public boolean doIPHeartbeat() {
-		return false;
+		if (protocolB){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
        public void sendStateOfDevice(long targetFlashDeviceID,
@@ -123,16 +140,20 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 	public void sendDirty(long targetFlashDeviceID) {
-		Iterator audioDevices = configHelper.getAllControlledDevices();
-		while (audioDevices.hasNext()) {
-			sendDirty( targetFlashDeviceID, (Audio) (audioDevices
-					.next()));
+
+		for (DeviceType audio:configHelper.getAllControlledDeviceObjects()){
+			sendDirty( targetFlashDeviceID, (Audio)audio);
 		}
 		intercomChanged = false;
 	}
-
+	
+	public int getPadding() {
+		return 2;
+	}
+	
 	public void sendDirty(long targetFlashDeviceID,
 			Audio audioDevice) {
+		
 		if (intercomChanged) {
 			this.sendIntercom( targetFlashDeviceID, audioDevice);
 		}
@@ -141,12 +162,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 			StateOfZone currentState = this.getCurrentState(audioDevice
 					.getKey());
-			if (!currentState.isIgnoreNextPower() && (currentState.getIsDirty()) || currentState.isSrcDirty()) {
+			if (!currentState.isIgnoreNextPower() && (currentState.getDirty()) || currentState.isSrcDirty() || currentState.isVolumeDirty()) {
 				this.sendState( targetFlashDeviceID, audioDevice);
 			}
 		}
 	}
 
+	public void sendIntercom (long targetFlashID) {
+		for (DeviceType audio:configHelper.getAllControlledDeviceObjects()){
+			sendDirty( targetFlashID, (Audio)audio);
+		}		
+	}
+	
 	public void sendIntercom( long targetFlashDeviceID,
 			Audio audioDevice) {
 		if (intercom.equals("on"))
@@ -160,12 +187,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void sendState(long targetFlashDeviceID,
 			Audio audioDevice) {
 
+
 		if (this.hasState(audioDevice.getKey())) {
 
 			StateOfZone currentState = this.getCurrentState(audioDevice
 					.getKey());
 
-			if (currentState.isDirty) {
+			if (currentState.dirty) {
 				if (currentState.getPower().equals("on"))
 					sendToFlash( targetFlashDeviceID, audioDevice
 							, "on", "");
@@ -173,21 +201,31 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					sendToFlash( targetFlashDeviceID, audioDevice
 							, "off", "");
 
-				currentState.setIsDirty(false);
-				this.setCurrentState(audioDevice.getKey(),currentState);
+				currentState.setDirty(false);
 
 			}
 
-			if (currentState.isSrcDirty){
+			if (currentState.srcDirty){
 				sendToFlash( targetFlashDeviceID, audioDevice
 					, "src", currentState.getSrcCode());
 				currentState.setSrcDirty(false);
-				this.setCurrentState(audioDevice.getKey(),currentState);
+			}
+			
+			if (currentState.volumeDirty){
+				sendToFlash( targetFlashDeviceID, audioDevice
+					, "volume", String.valueOf(currentState.getVolume()));
+				currentState.setVolumeDirty(false);
+			}
+
+			if (currentState.muteDirty){
+				sendToFlash( targetFlashDeviceID, audioDevice
+					, "mute", currentState.getMute());
+				currentState.setMuteDirty(false);
 			}
 		}
 	}
 
-	public void sendToFlash( long targetFlashID, Audio audioDevice,
+	public void sendToFlash( long targetFlashID, DeviceType audioDevice,
 			String command, String extra) {
 		AudioCommand displayStatus = (AudioCommand)audioDevice.buildDisplayCommand ();
 		displayStatus.setKey("CLIENT_SEND");
@@ -213,9 +251,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String startupCommand = "";
 
 		comms.clearCommandQueue();
+
 		synchronized (state){
 			state.clear();
 		}
+
 		this.sendStartupCommand(true);
 	}
 
@@ -270,21 +310,17 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		DeviceType device = configHelper.getOutputItem(theWholeKey);
 
 		if (device == null) {
-			logger.log(Level.SEVERE, "Error in config, no output key for "
+			logger.log(Level.SEVERE, "Error in config, no Audio device is present for "
 					+ theWholeKey);
 		} else {
-			if (command.getCommandCode().equals("requestState"))
+			if (command.getCommandCode().equals("requestState")) {
 				findingState = true;
-
+			}
 
 			outputAudioCommand = "";
 			cache.setCachedCommand(command.getKey(), command);
 
-			logger.log(Level.FINER,
-					"An audio command was received from the client,  sending it to HAL zone "
-							+ device.getKey());
-
-			if (findingState
+			if ( findingState
 					&& ((Audio) device).getOutputKey().equals(
 							command.getKey())) {
 				logger.log(Level.FINER, "State requested for "
@@ -293,23 +329,39 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						(Audio) device);
 				return;
 			}
-
-			switch (device.getDeviceType()) {
+			
+			if (!protocolB) {
+	
+				switch (device.getDeviceType()) {
+					case DeviceType.AUDIO:
+						if ((outputAudioCommand = buildAudioString((Audio) device,
+								command)) != null)
+							if (logger.isLoggable(Level.INFO)){
+								if (!comms.isCommandSentQueueEmpty() && pollDevice != null) {
+									logger.log(Level.FINER,"Sending new audio command while poll was active, clearing");
+									pollDevice.setRunning(false);
+									comms.clearCommandQueue();
+								}
+							}
+							logger.log(Level.FINE,"Received audio command from client, sending it to HAL");
+							sendToSerial(outputAudioCommand + ETX);
+							if (pollDevice != null ) pollDevice.setRunning(true);
+						break;
+					}
+			} else {
+				
+				// Protocol B
+				
+				switch (device.getDeviceType()) {
 				case DeviceType.AUDIO:
 					if ((outputAudioCommand = buildAudioString((Audio) device,
 							command)) != null)
-						if (logger.isLoggable(Level.INFO)){
-							if (!comms.isCommandSentQueueEmpty() && pollDevice != null) {
-								logger.log(Level.FINER,"Sending new audio command while poll was active, clearing");
-								pollDevice.setRunning(false);
-								comms.clearCommandQueue();
-							}
-						}
+
 						logger.log(Level.FINE,"Received audio command from client, sending it to HAL");
 						sendToSerial(outputAudioCommand + ETX);
-						if (pollDevice != null ) pollDevice.setRunning(true);
 					break;
 				}
+			}
 
 		}
 	}
@@ -323,9 +375,32 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String HALReturn = command.getKey().trim();
 		logger.log(Level.FINER, "Parsing : " + HALReturn);
 
+		// TODO process IR comamnds
+		// TODO ensure volume is correctly tested.
+		
 		if (HALReturn.equals("E0")) {
 			logger.log(Level.FINER, "Received E0, ignoring");
 			didCommand = true;
+		}
+		if (HALReturn.startsWith("IR")) {
+			logger.log(Level.FINER, "Received IR, ignoring");
+			didCommand = true;
+		}
+		if (!didCommand && HALReturn.startsWith("SEN")) {
+			// Scan complete
+
+			if (!protocolB) {
+				comms.acknowlegeCommand(CommDevice.HalStartup);
+			    logger.log (Level.FINEST,"Received startup status, acknowleding and starting poll ");
+			    this.startPolling();
+				didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
+			}
+			else {
+				comms.acknowlegeCommand(CommDevice.HalStartup);
+			    logger.log (Level.FINEST,"Received startup status ");
+				didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
+			}
+			
 		}
 		if (!didCommand && HALReturn.equals("INTERCOM: OFF")) {
 			if (!intercom.equals("OFF")) {
@@ -333,7 +408,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				intercom = "OFF";
 				this.intercomChanged = true;
 				didCommand = true;
-				this.sendDirty( -1);
+				if (this.protocolB){
+					this.sendIntercom(-1);
+				} else {
+					this.sendDirty( -1);
+				}
 			} else  {
 				didCommand = true; // no change in intercom
 			}
@@ -344,12 +423,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				logger.log(Level.FINE, "Intercom is on");
 				didCommand = true;
 				this.intercomChanged = true;
-				this.sendDirty( -1);
+				if (this.protocolB){
+					this.sendIntercom(-1);
+				} else {
+					this.sendDirty( -1);
+				}
 			} else  {
 				didCommand = true; // no change in intercom
 			}
 		}
-		if (!didCommand && HALReturn.startsWith("SCAN COMPLETE - ")) {
+		if (!didCommand && HALReturn.startsWith("SCAN COMPLETE - ") && !protocolB) {
+			// This occurs as a result of the protocol A scan, it should not occur from protocol B
+			
 			logger.log(Level.FINE, "Individual zone status line");
 			String zone;
 			CommsCommand lastSent;
@@ -382,11 +467,32 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 			didCommand = true;
 		}
+		
+		if (!didCommand && HALReturn.startsWith("SE ")) {
+			// This occurs as a result of the user carrying at an action with a HAL capable of the newer protocol
+			
+			logger.log(Level.FINE, "Zone activity has occured");
+			parseHALAction(HALReturn);
+			
+		    this.sendStateOfAllDevices( -1);
+			didCommand = true;
+		}
+		
+
 		if (!didCommand && HALReturn.equals("SCAN COMPLETE")) {
+			// Scan complete
+
+			if (!protocolB) {
+				comms.acknowlegeCommand(CommDevice.HalStartup);
+			    logger.log (Level.FINEST,"Received startup status, acknowleding and starting poll ");
+			    this.startPolling();
+				didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
+			}
+		} else {
 			comms.acknowlegeCommand(CommDevice.HalStartup);
-		    logger.log (Level.FINEST,"acknowledging startup ");
-			this.startPolling();
+		    logger.log (Level.FINEST,"Received startup status ");
 			didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
+			
 		}
 		/*
 		00  PWR SAVE    16  NO DATA     32  NO DATA     48  NO DATA
@@ -404,7 +510,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (!didCommand && HALReturn.matches("^\\d.*")) {
 
 			logger.log(Level.FINE, "Zone status line");
-			if (pollDevice != null){
+			if (pollDevice != null && !protocolB){
 			    synchronized (pollDevice) {
 			        pollDevice.pausing = true;
 			    }
@@ -434,16 +540,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 			*/
 
-			synchronized (state) {
-		        pollDevice.setHalState(state);
-			}
-		    synchronized (pollDevice) {
-		        pollDevice.pausing = false;
-			    pollDevice.notify();
-		    }
+			if (!protocolB){
+				synchronized (state) {
+			        pollDevice.setHalState(state);
+				}
+			    synchronized (pollDevice) {
+			        pollDevice.pausing = false;
+				    pollDevice.notify();
+			    }
 
+			} 
+		    this.sendStateOfAllDevices( -1);
 			didCommand = true;
-			this.sendStateOfAllDevices( -1);
 		}
 
 		if (!didCommand && HALReturn.startsWith("CC")) {
@@ -463,12 +571,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (!didCommand && HALReturn.equals("INVALID COMMAND")) {
 			logger.log(Level.FINER, "HAL became confused, clearing command queue. Possibly from : " + this.outputAudioCommand);
 			comms.clearCommandQueue();
-			pollDevice.pause();
+			if (!protocolB) pollDevice.pause();
 			didCommand = true;
 		}		
 
 		if (!didCommand) {
-			logger.log(Level.WARNING,
+			logger.log(Level.INFO,
 					"HAL returned a code I do not understand : "
 							+ HALReturn + ":" + Utility.allBytesToHex(HALReturn.getBytes()));
 		}
@@ -477,18 +585,82 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	public int parseEntry(String zone, String entry) {
 		logger.log(Level.FINE, "Parsing zone " + zone + " entry " + entry);
-		StateOfZone currentState = this.getCurrentState(zone);
-		if (entry.equals("NO DATA")) {
-		    deleteCurrentState (zone);
-		} else {
-			if (entry.equals("NORMAL")) {
-				currentState.setPower("on");
+		if (!protocolB){
+			// protocol A
+			StateOfZone currentState = this.getCurrentState(zone);
+			if (entry.equals("NO DATA")) {
+			    deleteCurrentState (zone);
 			} else {
-				currentState.setPower("off");
+				if (entry.equals("NORMAL")) {
+					currentState.setPower("on");
+				} else {
+					currentState.setPower("off");
+				}
 			}
-			this.setCurrentState(zone, currentState);
+		}
+		else {
+			
+			// protocol B
+			DeviceType audio = configHelper.getControlledItem(zone);
+			if (audio != null){
+				if (entry.equals("NORMAL")) {
+					this.sendToFlash(-1,audio,"on","");
+				} else {
+					this.sendToFlash(-1,audio,"off","");
+				}
+			}
 		}
 		return 0;
+	}
+	
+	public void parseHALAction(String HALReturn){
+		String parts[] = HALReturn.split(" ");
+		if (parts.length != 6){
+			logger.log(Level.WARNING,"HAL announcement was misformed " + HALReturn);
+			return;
+		}
+		String zone = parts[1];
+		String power = parts[2];
+		String src = parts[3];
+		String vol = parts[4];
+		String mute = parts[5];
+
+		logger.log(Level.FINE, "Parsing zone " + zone );
+			
+			// protocol B
+			DeviceType audio = configHelper.getControlledItem(zone);
+			StateOfZone currentState = getCurrentState(audio.getKey()); 
+			if (audio != null){
+				if (power.equals ("0")) {
+					currentState.setPower("off");
+				} else {
+					currentState.setPower("on");
+				}
+
+				try {
+					String srcText = findKeyForParameterValue(src, "INPUTS", audio);
+					currentState.setSrcCode(srcText);
+					currentState.setSrc(src);
+				} catch (ParameterException ex){
+					logger.log(Level.WARNING,"A source was selected for HAL that has not been configured, please contact your integrator " + ex.getMessage());
+				}
+				
+				try {
+					int volume = Utility.scaleForFlash(vol, 0, 31,false);
+					currentState.setVolume(volume);
+
+				} catch (NumberFormatException e) {
+					logger.log(Level.WARNING,"HAL did not return a correct volume " + e.getMessage());
+					currentState.setVolume(StateOfZone.VOL_INVALID);
+					 
+				 }
+				if (mute.equals ("0")) {
+					currentState.setMute("off");
+				} else {
+					currentState.setMute("on");
+				}
+
+			}
 	}
 
 	public String buildAudioString(Audio device, CommandInterface command) {
@@ -506,12 +678,29 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					+ command.getCommandCode());
 			return null;
 		}
-		StateOfZone currentState = getCurrentState(device.getKey());
+		StateOfZone currentState = null;
+		currentState = getCurrentState(device.getKey());
 		if (theCommand.equals("volume")) {
-			if (((String) command.getExtraInfo()).equals("up"))
+			if ( command.getExtraInfo().equals("up")){
 				audioOutputString = "VR " + device.getKey() + " 1";
-			else
-				audioOutputString = "VR " + device.getKey() + " 0";
+				currentState.setVolume(StateOfZone.VOL_INVALID);
+			}
+			else { 
+				if (command.getExtraInfo().equals("down")){
+					audioOutputString = "VR " + device.getKey() + " 0";
+					currentState.setVolume(StateOfZone.VOL_INVALID);
+				} else {
+					try {
+						int scaledVal = Utility.scaleFromFlash(command.getExtraInfo(), 0, 31, false);
+
+						currentState.setVolume(scaledVal);
+						audioOutputString = "VA " + device.getKey() + " " + String.valueOf(scaledVal);
+					} catch (NumberFormatException ex){
+						logger.log (Level.INFO,"An invalid volume command was sent to HAL " + ex.getMessage());
+					}
+				}
+			}
+			
 			commandFound = true;
 		}
 
@@ -528,14 +717,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 		if (theCommand.equals("on")) {
 			audioOutputString = "PW " + device.getKey() + " 1";
-			currentState.setPower("on");
-			currentState.setIgnoreNextPower(true);
+				currentState.setPower("on");
+				if (!protocolB) {
+					currentState.setIgnoreNextPower(true);
+				}	
 			commandFound = true;
 		}
 		if (theCommand.equals("off") || theCommand.equals("standby")) {
 			audioOutputString = "PW " + device.getKey() + " 0";
 			currentState.setPower("off");
-			currentState.setIgnoreNextPower(true);
+			if (!protocolB) {
+				currentState.setIgnoreNextPower(true);
+			}
 			commandFound = true;
 		}
 		if (theCommand.equals("intercom")) {
@@ -550,7 +743,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		if (theCommand.equals("send_audio_command")) {
 			String srcForCommand = "";
-			
 			String commandSrc = command.getExtra2Info();
 			if (commandSrc != null && !commandSrc.equals("")){
 				try {
@@ -560,8 +752,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					if (srcForCommand == null)
 						srcForCommand = "0";
 				}
-			}
-			String functionStr = "";
+			} 			String functionStr = "";
 			try {
 				functionStr = getCatalogueValue(command.getExtraInfo(), "FUNCTIONS",device);
 				int function = Integer.parseInt(functionStr);
@@ -593,6 +784,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					logger.log (Level.FINE,"Selected new HAL input " + srcCode + ", input number " + srcNumber);
 					audioOutputString = "SS " + device.getKey() + " "
 							+ srcNumber;
+
 					currentState.setSrc(srcNumber);
 					currentState.setSrcCode(srcCode);
 					currentState.setSrcDirty(true); // always force client actions through to the HAL
@@ -605,17 +797,15 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			
 		}
 
-		if (commandFound && currentState.isSrcDirty()) {
-			currentState.setSrcDirty(false);
-			logger.log(Level.FINER, "Built HAL src string " + audioOutputString);
-			this.setCurrentState(device.getKey(), currentState);
+		if (commandFound && currentState.isAnyDirty()) {
+			currentState.setAllDirty(false);
+			logger.log(Level.FINER, "Built HAL string " + audioOutputString);
 			return audioOutputString;
 		}
 
 		if (commandFound) {
 			logger.log(Level.FINER, "Built HAL string " + audioOutputString);
-			currentState.setIsDirty(true); // always force client actions through to the HAL
-			this.setCurrentState(device.getKey(), currentState);
+			currentState.setDirty(true); // always force client actions through to the HAL
 			return audioOutputString;
 		} else {
 			return null;
@@ -630,8 +820,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public StateOfZone getCurrentState(String zone) {
 		synchronized (state){
 			StateOfZone currentState = (StateOfZone) state.get(zone);
-			if (currentState == null)
+			if (currentState == null){
 				currentState = new StateOfZone();
+				state.put (zone,currentState);
+			}
 			return currentState;
 		}
 	}
@@ -649,7 +841,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 	public void close() throws ConnectionFail {
-	    if (pollDevice != null) pollDevice.setRunning(false);
+	    if (!protocolB && pollDevice != null) pollDevice.setRunning(false);
 	    super.close();
 	}
 }

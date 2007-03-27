@@ -16,21 +16,27 @@ public class StateOfZone {
 	protected String srcCode = "";
 	protected String mute = "";
 	protected String power = "";
-	protected boolean isDirty = false;
-	protected boolean isSrcDirty = false;
+	protected int volume = VOL_INVALID;
+	protected boolean dirty = false;
+	protected boolean srcDirty = false;
+	protected boolean muteDirty = false;
 	protected boolean ignoreNextPower = false;
+	protected boolean volumeDirty = false;
+	
+	
+	public static final int VOL_INVALID = -1;
 	
 	/**
 	 * @return Returns the isDirty.
 	 */
-	public boolean getIsDirty() {
-		return isDirty;
+	public boolean getDirty() {
+		return dirty;
 	}
 	/**
 	 * @param isDirty The isDirty to set.
 	 */
-	public void setIsDirty(boolean isDirty) {
-		this.isDirty = isDirty;
+	public void setDirty(boolean dirty) {
+		this.dirty = dirty;
 	}
 	public StateOfZone() {
 		super();
@@ -47,7 +53,7 @@ public class StateOfZone {
 	public void setMute(String mute) {
 		if (!this.mute.equals(mute)) {
 			this.mute = mute;
-			isDirty=true;
+			this.muteDirty = true;
 		}
 	}
 	/**
@@ -62,7 +68,7 @@ public class StateOfZone {
 	public void setPower(String power) {
 		if (!this.power.equals (power)) {
 			this.power = power;
-			isDirty=true;
+			dirty=true;
 		}
 	}
 	/**
@@ -97,18 +103,59 @@ public class StateOfZone {
 	 * @return Returns the isSrcDirty.
 	 */
 	public boolean isSrcDirty() {
-		return isSrcDirty;
+		return srcDirty;
 	}
 	/**
 	 * @param isSrcDirty The isSrcDirty to set.
 	 */
-	public void setSrcDirty(boolean isSrcDirty) {
-		this.isSrcDirty = isSrcDirty;
+	public void setSrcDirty(boolean srcDirty) {
+		this.srcDirty = srcDirty;
 	}
 	public boolean isIgnoreNextPower() {
 		return ignoreNextPower;
 	}
 	public void setIgnoreNextPower(boolean ignoreNextPower) {
 		this.ignoreNextPower = ignoreNextPower;
+	}
+	/**
+	 * @return Returns the volume.
+	 */
+	public int getVolume() {
+		return volume;
+	}
+	/**
+	 * @param power The power to set.
+	 */
+	public void setVolume(int volume) {
+		if (this.volume !=  volume) {
+			this.volume = volume;
+			if (volume != VOL_INVALID) volumeDirty=true;
+		}
+	}
+	public boolean isVolumeDirty () {
+		return volumeDirty;
+	}
+	public void setVolumeDirty(boolean volumeDirty) {
+		this.volumeDirty = volumeDirty;
+	}
+	public boolean isMuteDirty() {
+		return muteDirty;
+	}
+	public void setMuteDirty(boolean muteDirty) {
+		this.muteDirty = muteDirty;
+	}
+	public boolean isAnyDirty() {
+		return muteDirty || volumeDirty || srcDirty || dirty;
+	}
+	
+	/**
+	 * @param b
+	 */
+	public void setAllDirty(boolean b) {
+		setVolumeDirty (b);
+		setMuteDirty(b);
+		setSrcDirty(b);
+		setDirty(b);
+		
 	}
 }

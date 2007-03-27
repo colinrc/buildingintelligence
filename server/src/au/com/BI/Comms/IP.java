@@ -92,6 +92,7 @@ public class IP extends BaseComms implements CommDevice
 				this.clearCommandQueue(); // if this is a reconnect make sure nothing is left over from the previous connection.
 
 				ipListener = new IPListener(commsGroup);
+				if (naturalPackets) ipListener.setNaturalPackets(true) ;
 
 				if (etxArray != null) ipListener.setEndBytes(etxArray);
 				if (penultimateVals != null) ipListener.setPenultimateVals(penultimateVals);

@@ -493,6 +493,9 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			if (this.transmitOnBytes > 0) {
 				comms.setTransmitMessageOnBytes(transmitOnBytes);
 			}
+			if (this.naturalPackets){
+				comms.setNaturalPackets(true);
+			}
 			if (etxArray != null)
 				comms.setETXArray(etxArray);
 			if (penultimateArray != null)
@@ -523,6 +526,9 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			comms.setModelName(this.getName());
 			if (this.transmitOnBytes > 0) {
 				comms.setTransmitMessageOnBytes(transmitOnBytes);
+			}
+			if (this.naturalPackets){
+				comms.setNaturalPackets(true);
 			}
 			if (etxArray != null)
 				comms.setETXArray(etxArray);

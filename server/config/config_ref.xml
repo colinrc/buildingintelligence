@@ -105,38 +105,7 @@
 
         
         <!-- the key is the Kramer output, Display name is the flash icon name -->
-        <!-- ______________________________________  HAL DEFS  ____________________  -->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="HAL" DESCRIPTION="HAL Audio">
-                <CONNECTION>
-                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="4800" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
-                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5003"/>
-                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="5000"/>
-                </CONNECTION>
-                <CATALOGUE NAME="HAL Inputs">
-                        <ITEM CODE="cd1" VALUE="01"/>
-                        <ITEM CODE="cd2" VALUE="02"/>
-                        <ITEM CODE="digital" VALUE="03"/>
-                        <ITEM CODE="tv" VALUE="04"/>
-                </CATALOGUE>
-                <CATALOGUE NAME="HAL Functions">
-                        <ITEM CODE="cd-rw" VALUE="1"/>
-                        <ITEM CODE="cd-play" VALUE="4"/>
-                        <ITEM CODE="cd-ff" VALUE="5"/>
-                        <ITEM CODE="cd-stop" VALUE="3"/>
-                        <ITEM CODE="cd-pause" VALUE="9"/>
-                </CATALOGUE>
-                <PARAMETERS>
-                        <ITEM NAME="INPUTS" VALUE="HAL Inputs"/>
-                        <ITEM NAME="FUNCTIONS" VALUE="HAL Functions"/>
-                        <ITEM NAME="POLL_INTERVAL" VALUE="10"/>
-                </PARAMETERS>
-                <HAL>
-                        <AUDIO_OUTPUT KEY="00" DISPLAY_NAME="FAMILY_AUDIO"/>
-                        <AUDIO_OUTPUT KEY="01" DISPLAY_NAME="LOUNGE_AUDIO"/>
-                        <AUDIO_OUTPUT KEY="16" DISPLAY_NAME="PATIO_AUDIO"/>
-                </HAL>
-        </DEVICE>
-        <!-- the key is the HAL zone, Display name is the flash icon name -->
+
 
         !-- ______________________________________  DynaLite DEFS  ____________________  -->
         <DEVICE ACTIVE="N" DEVICE_TYPE="DYNALITE" DESCRIPTION="DynaLite Lights">
@@ -476,6 +445,7 @@
                 </CONNECTION>
                 <PARAMETERS>                
                 </PARAMETERS>
+                
                 <GC100_IR NAME="IR1">
                         <PARAMETERS>
                                 <ITEM NAME="MODULE" VALUE="4"/>
@@ -486,6 +456,7 @@
                         <IR KEY="01" NAME="Study IR" AV_NAME="STUDY_IR2"/>
                         <IR KEY="02" NAME="Lounge IR" AV_NAME="LOUNGE_IR2"/>
                 </GC100_IR>
+                
                 <GC100_IR NAME="IR2">
                         <PARAMETERS>
                                 <ITEM NAME="MODULE" VALUE="5"/>
@@ -497,6 +468,7 @@
                         <IR KEY="02" NAME="Porch IR" AV_NAME="PORCH_IR2"/>
                         <TOGGLE_INPUT KEY="3" NAME="Switch 2" DISPLAY_NAME="SWITCH_TWO" />
                 </GC100_IR>
+                
                 <GC100_Relay NAME="Relay">
                         <PARAMETERS>
                                 <ITEM NAME="MODULE" VALUE="3"/>

@@ -16,24 +16,20 @@
 <archive path="/Java/jetty-6.0.0/lib/jetty-util-6.0.0.jar"/>
 <archive path="/Java/jetty-6.0.0/lib/jetty-6.0.0.jar"/>
 </library>
-<library name="Jetty6.0.1" systemlibrary="false">
-<archive path="/Java/jetty-6.0.1/lib/servlet-api-2.5-6.0.1.jar"/>
-<archive path="/Java/jetty-6.0.1/lib/jetty-util-6.0.1.jar"/>
-<archive path="/Java/jetty-6.0.1/lib/jetty-6.0.1.jar"/>
-</library>
 <library name="Jetty6.1" systemlibrary="false">
 <archive javadoc="file:/Java/jetty-6.1.0/javadoc/" path="/Java/jetty-6.1.0/lib/jetty-util-6.1.0.jar"/>
 <archive javadoc="file:/Java/jetty-6.1.0/javadoc/" path="/Java/jetty-6.1.0/lib/jetty-6.1.0.jar"/>
 <archive path="/Java/jetty-6.1.0/lib/servlet-api-2.5.jar"/>
-</library>
-<library name="Jetty6b14" systemlibrary="false">
-<archive path="/Java/jetty-6.0.0beta14/lib/servlet-api-2.5.jar"/>
-<archive path="/Java/jetty-6.0.0beta14/lib/jetty.jar"/>
-<archive path="/Java/jetty-6.0.0beta14/lib/jetty-util.jar"/>
+<archive path="/Java/jetty-6.1.0/lib/ext/jetty-html-6.1.0.jar"/>
+<archive path="/Java/jetty-6.1.0/lib/ext/jetty-ajp-6.1.0.jar"/>
+<archive path="/Java/jetty-6.1.0/lib/ext/jetty-sslengine-6.1.0.jar"/>
 </library>
 <library name="JRobin1.4.0" systemlibrary="false">
 <archive path="/Java/jrobin-1.4.0/lib/jrobin-1.4.0.jar"/>
 <archive path="/Java/jrobin-1.4.0/lib/snmp-1.3.jar"/>
+</library>
+<library name="JSon2.0" systemlibrary="false">
+<archive path="/Java/restlet-1.0rc4/lib/org.json_2.0/org.json.jar" source="/Java/restlet-1.0rc4/src/org.restlet.ext.json_2.0"/>
 </library>
 <library name="JUnit" systemlibrary="false">
 <archive javadoc="file:/Java/junit3.8.1/javadoc/" path="/Java/junit3.8.1/junit.jar" source="/Java/junit3.8.1/src.jar"/>
@@ -49,6 +45,33 @@
 <archive path="/Java/quartz-1.5.2/lib/core/commons-logging.jar"/>
 <archive path="/Java/quartz-1.5.2/lib/core/commons-collections-3.1.jar"/>
 <archive path="/Java/quartz-1.5.2/lib/core/commons-logging-api.jar"/>
+</library>
+<library name="Restlet 1.0b4" systemlibrary="false">
+<archive path="/Java/restlet-1.0rc4/lib/com.noelios.restlet.ext.httpclient_3.1.jar" source="/Java/restlet-1.0rc4/src/com.noelios.restlet.ext.httpclient_3.1"/>
+<archive path="/Java/restlet-1.0rc4/lib/com.noelios.restlet.ext.jdbc_3.0.jar" source="/Java/restlet-1.0rc4/src/com.noelios.restlet.ext.jdbc_3.0"/>
+<archive path="/Java/restlet-1.0rc4/lib/com.noelios.restlet.ext.asyncweb_0.8.jar" source="/Java/restlet-1.0rc4/src/com.noelios.restlet.ext.asyncweb_0.8"/>
+<archive path="/Java/restlet-1.0rc4/lib/com.noelios.restlet.jar" source="/Java/restlet-1.0rc4/src/com.noelios.restlet"/>
+<archive path="/Java/restlet-1.0rc4/lib/com.noelios.restlet.ext.servlet_2.4.jar" source="/Java/restlet-1.0rc4/src/com.noelios.restlet.ext.servlet_2.4"/>
+<archive path="/Java/restlet-1.0rc4/lib/com.noelios.restlet.ext.jetty_6.1.jar" source="/Java/restlet-1.0rc4/src/com.noelios.restlet.ext.jetty_6.1"/>
+<archive path="/Java/restlet-1.0rc4/lib/com.noelios.restlet.ext.net.jar" source="/Java/restlet-1.0rc4/src/com.noelios.restlet.ext.net"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.restlet.jar" source="/Java/restlet-1.0rc4/src/org.restlet"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.restlet.ext.velocity_1.4.jar" source="/Java/restlet-1.0rc4/src/org.restlet.ext.velocity_1.4"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.restlet.ext.freemarker_2.3.jar" source="/Java/restlet-1.0rc4/src/org.restlet.ext.freemarker_2.3"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.restlet.ext.fileupload_1.1.jar" source="/Java/restlet-1.0rc4/src/org.restlet.ext.fileupload_1.1"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.restlet.ext.spring_2.0.jar" source="/Java/restlet-1.0rc4/src/org.restlet.ext.spring_2.0"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.restlet.ext.json_2.0.jar" source="/Java/restlet-1.0rc4/src/org.restlet.ext.json_2.0"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.apache.commons.dbcp_1.2/org.apache.commons.dbcp.jar"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.apache.commons.pool_1.3/org.apache.commons.pool.jar"/>
+<archive path="/Java/restlet-1.0rc4/lib/javax.mail_1.4/mail.jar"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.safehaus.asyncweb_0.8/org.safehaus.asyncweb.jar"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.apache.commons.logging_1.1/org.apache.commons.logging.jar"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.apache.commons.codec_1.3/org.apache.commons.codec.jar"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.apache.commons.httpclient_3.1/org.apache.commons.httpclient.jar"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.apache.commons.fileupload_1.1/org.apache.commons.fileupload.jar"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.apache.commons.collections_3.2/org.apache.commons.collections.jar"/>
+<archive path="/Java/restlet-1.0rc4/lib/javax.servlet_2.5/javax.servlet.jar"/>
+<archive path="/Java/restlet-1.0rc4/lib/javax.servlet_2.4/javax.servlet.jar"/>
+<archive path="/Java/restlet-1.0rc4/lib/org.freemarker_2.3/freemarker.jar"/>
 </library>
 <library name="RXTX2.1-7" systemlibrary="false">
 <archive path="/Java/rxtx-2.1-7r2/RXTXcomm.jar" source="/Java/rxtx-2.1-7r2/src"/>

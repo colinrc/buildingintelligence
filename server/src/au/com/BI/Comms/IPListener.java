@@ -146,6 +146,11 @@ public class IPListener extends Thread implements CommsListener
 		while (handleEvents)
 		{
 			try {
+				
+				if (bufferHandle == CommDevice.NaturalPacket) {
+					processNaturalPacket ();
+				}
+				
 				if (bufferHandle == CommDevice.BufferLength) {
 					processKnownLength ();
 				}
@@ -381,4 +386,31 @@ public class IPListener extends Thread implements CommsListener
 		}
 	}
 	
+	protected boolean processNaturalPacket ()  {
+		boolean sendBuffer = false;
+		byte [] buffer  = null;
+		
+		try { 
+			int numBytes = is.available();
+			buffer = new byte[numBytes];
+			is.read(buffer,0,numBytes);
+			String toSend = new String (buffer);
+
+			logger.log (Level.FINEST, debugName + "Received serial string " + toSend);
+			CommsCommand command = new CommsCommand (toSend,"RawText",null);
+			command.setTargetDeviceModel(this.targetDeviceModel);
+			commandList.add (command);
+
+		} catch (IOException ex) {
+			sendBuffer = false;
+			this.handleEvents=false;
+			throw new CommsFail ("Error receiving information",ex);
+		}
+
+		return false;
+	}
+
+	public void setNaturalPackets(boolean naturalPackets) {
+		if (naturalPackets) bufferHandle = CommDevice.NaturalPacket;
+	}
 }

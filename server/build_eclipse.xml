@@ -1,6 +1,5 @@
 <?eclipse.ant.import?>
 
-    <!-- import file="build.xml"/ -->
 <project basedir="." default="build" name="eLife">
     <description>Builds, tests, and runs the project server.</description>
      <import  file="ant_stubs/util_stubs.xml"/>
@@ -74,7 +73,7 @@
 	</target>
     	
 	
-	<target name="dist" depends="increment,build_dist" />
+	<target name="dist" depends="build_dist,update_xml,increment" />
 	<target name="dist-no-inc" depends="load-version-number,build_dist" />
 	<target name="build" depends="dist-no-inc" />
 

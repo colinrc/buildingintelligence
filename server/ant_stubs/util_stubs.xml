@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="bi_stuff" default="build_dist" basedir=".." >
-
-   <target name="increment" depends="" description="Increments build number and creates a zip file.">
+<project name="bi_stuff" basedir=".." >
+	<taskdef name="xmltask" 
+	            classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
+	
+	<target name="update_xml" depends="" description="updates the xml layout file">
+		<xmltask source="layout.xml" dest="layout.xml"> 
+		   <replace path='version="@id"' 
+		         withText="${app_name}-${major_version}${minor_version}" /> 
+		</xmltask> 
+	</target>
+	   	
+   <target name="increment" depends="" description="Increments build number and updates properties file">
         <propertyfile file="src/au/com/BI/Home/my.properties" >
           <entry  key="minor_version" type="int" operation="+" value="1" />
         </propertyfile>
         <property file="src/au/com/BI/Home/my.properties" />
+	   	
         <echo message="Version number now ${major_version}${minor_version}" />
     </target>
     

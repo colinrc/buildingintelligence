@@ -36,6 +36,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 	protected boolean twoByteFinish = false;
 	protected boolean penultimateVals[];
 	protected 	String debugName = "";
+	protected boolean naturalPackets = false;
 
 
 	protected int defaultTransmitOnBytes = 100000; 
@@ -146,10 +147,14 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 		// Read data until -1 is returned. 
 		case SerialPortEvent.DATA_AVAILABLE:
 			
-			if (this.transmitOnBytes != this.defaultTransmitOnBytes || this.hasETXArray)
-				readSingleByteAtATime ();
-			else 
-				readLineAtATime ();
+			if (this.naturalPackets){
+				readNaturalPacket();				
+			} else {
+				if (this.transmitOnBytes != this.defaultTransmitOnBytes || this.hasETXArray)
+					readSingleByteAtATime ();
+				else 
+					readLineAtATime ();
+			}
 				
 
 			break;
@@ -301,6 +306,37 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 		}
 		return false;
 
+	}
+
+	protected boolean readNaturalPacket ()  {
+		boolean sendBuffer = false;
+		byte [] buffer  = null;
+		
+		try { 
+			int numBytes = is.available();
+			buffer = new byte[numBytes];
+			is.read(buffer,0,numBytes);
+			String toSend = new String (buffer);
+
+			logger.log (Level.FINEST, debugName + "Received serial string " + toSend);
+			CommsCommand command = new CommsCommand (toSend,"RawText",null);
+			command.setTargetDeviceModel(this.targetDeviceModel);
+			commandList.add (command);
+		} catch (IOException ex) {
+			sendBuffer = false;
+			this.handleEvents=false;
+			throw new CommsFail ("Error receiving information",ex);
+		}
+
+		return false;
+	}
+	
+	public boolean isNaturalPackets() {
+		return naturalPackets;
+	}
+
+	public void setNaturalPackets(boolean naturalPackets) {
+		this.naturalPackets = naturalPackets;
 	}
 
 }

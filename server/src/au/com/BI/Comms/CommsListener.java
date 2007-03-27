@@ -36,5 +36,6 @@ public interface CommsListener {
 	public void setPenultimateVals(int penultimateVals[]);
 
 	public void setStartBytes(int startVals[]);
-	
+
+	public void setNaturalPackets(boolean naturalPackets) ;
 }

@@ -25,6 +25,7 @@ protected long timeOfLastCommand = 0;
 protected LinkedList <CommsCommand>toSendQueue;	
 protected LinkedList <CommsCommand>sentQueue;
 protected int transmitMessageOnBytes = 0;
+protected boolean naturalPackets = false;
 public int interCommandInterval = 0;
 protected OutputStream os;
 protected InputStream is;	
@@ -32,6 +33,7 @@ protected boolean portOpen = false;
 protected CommsSend commsSend = null;
 protected CommsGroup commsGroup = null;
 protected String modelName = "";
+
 
 	public BaseComms () {
 		toSendQueue = new LinkedList<CommsCommand>();
@@ -497,6 +499,14 @@ protected String modelName = "";
 
 	public void setModelName(String modelName) {
 		this.modelName = modelName;
+	}
+
+	public boolean isNaturalPackets() {
+		return naturalPackets;
+	}
+
+	public void setNaturalPackets(boolean naturalPackets) {
+		this.naturalPackets = naturalPackets;
 	}
 
 }
