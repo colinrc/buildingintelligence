@@ -386,7 +386,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			logger.log(Level.FINER, "Received IR, ignoring");
 			didCommand = true;
 		}
-		if (!didCommand && HALReturn.startsWith("SEN")) {
+		if (!didCommand && HALReturn.startsWith("SCA")) {
 			// Scan complete
 
 			if (!protocolB) {
