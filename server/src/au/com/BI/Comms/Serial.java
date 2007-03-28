@@ -190,7 +190,7 @@ public class Serial extends BaseComms implements CommDevice
 						  + portName + " not found!");
 
 			}catch (UnsatisfiedLinkError e) {
-				serialPort.close();
+				// serialPort.close();
 				throw new ConnectionFail ("Cannot load serial library",e);
 			}
 		}

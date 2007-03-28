@@ -1,7 +1,19 @@
+== 28/Mar/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b46.zip V1.6b46]  ==
+
 ''' HAL '''
 
 Implemented new HAL protocol
 
+
+''' Comms '''
+
+Added natural packet protocol, in this mode the system will send packets as they are received on serial or IP conections, no processing occurs.
+
+
+''' General '''
+
+Added layout.xml file describing directories that the admin tool will manage.
+ 
 == 4/Mar/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b45.zip V1.6b45]  ==
 
 ''' CBUS '''

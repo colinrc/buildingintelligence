@@ -73,8 +73,8 @@
 	</target>
     	
 	
-	<target name="dist" depends="build_dist,update_xml,increment" />
-	<target name="dist-no-inc" depends="load-version-number,build_dist" />
+	<target name="dist" depends="load-version-number,update_xml,build_dist,increment" />
+	<target name="dist-no-inc" depends="load-version-number,update_xml,build_dist" />
 	<target name="build" depends="dist-no-inc" />
 
 	<target name="copy-libs" depends="init,build-ext-dir" >
