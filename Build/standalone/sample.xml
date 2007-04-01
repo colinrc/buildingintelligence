@@ -404,7 +404,7 @@
 			</row>
 			<row>
 				<item type="button" label="off" command="off" extra="0" width="20" />
-				<item type="slider" command="pan" extras="10,2320" width="60" />
+				<item type="slider" command="on" extras="0,100" width="60" />
 				<item type="button" label="on" command="on" extra="100" extra2="40" extra3="0" width="20" />
 			</row>
 		</control>

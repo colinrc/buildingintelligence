@@ -169,7 +169,7 @@ class bi.ui.Window extends bi.ui.CoreUI {
 				close_btn.filters = [_global.settings.dropShadowFilterMedium];
 			}
 			close_btn._y = 8;
-			close_btn._x = __width - close_btn._width - close_btn._y;
+			close_btn._x = __width - close_btn._width + 4;
 		} else {
 			close_btn._visible = false;
 		}
