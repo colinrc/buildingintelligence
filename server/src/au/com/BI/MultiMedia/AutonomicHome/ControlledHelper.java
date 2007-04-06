@@ -12,6 +12,7 @@ import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.M1.M1FlashCommand;
 import au.com.BI.M1.Model;
+import au.com.BI.MultiMedia.MultiMediaFlashCommand;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.Album;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.AutonomicHomeCommand;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.AutonomicHomeCommandException;
@@ -140,11 +141,10 @@ public class ControlledHelper {
 				throw new AutonomicHomeCommandException("Albums received did not equal the count");
 			}
 			
-			// TODO send the album to the client
 			Iterator<Album> it = albums.getAlbums().iterator();
 			while (it.hasNext()) {
 				Album album = (Album)it.next();
-				CommandInterface flashCommand = new AutonomicHomeFlashCommand();
+				CommandInterface flashCommand = new MultiMediaFlashCommand();
 				flashCommand.setDisplayName(model.getCurrentInstance().getKey());
 				flashCommand.setTargetDeviceID(-1);
 				flashCommand.setUser(model.currentUser);
@@ -194,12 +194,6 @@ public class ControlledHelper {
 			long targetFlashID,
 			CommandInterface command) {
 
-		/*
-		 * todo change the PIR's to ToggleSwitches and the others to alarms todo
-		 * check the device type - if toggle switch then send on/off signal and
-		 * an alert todo if it is a alarm then send an alert todo only do an
-		 * alert if the alarm is in trouble, violated or bypassed
-		 */
 		command.setTargetDeviceID(targetFlashID);
 		commandQueue.add(command);
 	}

@@ -857,5 +857,4 @@ public class Config {
 			WindowsMediaExtenderFactory windowsMediaExtenderFactory) {
 		this.windowsMediaExtenderFactory = windowsMediaExtenderFactory;
 	}
-	
 }

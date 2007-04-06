@@ -29,11 +29,14 @@ import au.com.BI.M1.Commands.PLCDeviceToggle;
 import au.com.BI.M1.Commands.PLCLevelStatus;
 import au.com.BI.M1.Commands.ReplyAlarmByZoneReportData;
 import au.com.BI.M1.Commands.ReplyArmingStatusReportData;
+import au.com.BI.M1.Commands.ReplyRealTimeClockData;
 import au.com.BI.M1.Commands.ReplyWithBypassedZoneState;
+import au.com.BI.M1.Commands.RequestRealTimeClockData;
 import au.com.BI.M1.Commands.RequestTemperature;
 import au.com.BI.M1.Commands.RequestTemperatureReply;
 import au.com.BI.M1.Commands.TaskActivation;
 import au.com.BI.M1.Commands.TasksChangeUpdate;
+import au.com.BI.M1.Commands.WriteRealTimeClockData;
 import au.com.BI.M1.Commands.ZoneBypassRequest;
 import au.com.BI.M1.Commands.ZoneBypassState;
 import au.com.BI.M1.Commands.ZoneChangeUpdate;
@@ -349,7 +352,41 @@ public class TestM1ModelFromDevice extends TestCase {
 		str = "09ptA0100B1";
 		m1Command = M1CommandFactory.getInstance().getM1Command(str);
 		assertEquals(m1Command.getClass(),PLCDeviceToggle.class);
-
+		
+		str = "06rr0056";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		assertEquals(m1Command.getClass(),RequestRealTimeClockData.class);
+		
+		str = "16RR0059107251205110006E";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		ReplyRealTimeClockData replyClockData = new ReplyRealTimeClockData();
+		replyClockData.setSecond("00");
+		replyClockData.setMinute("59");
+		replyClockData.setHour("10");
+		replyClockData.setDayOfWeek("7");
+		replyClockData.setDayOfMonth("25");
+		replyClockData.setMonth("12");
+		replyClockData.setYear("05");
+		replyClockData.setDaylightSavingsTime(true);
+		replyClockData.setTwentyFourHourClock(false);
+		replyClockData.setDateDisplayMode("0");
+		System.out.println(replyClockData.buildM1String());
+		assertEquals(m1Command.getClass(),ReplyRealTimeClockData.class);
+		assertEquals(replyClockData.buildM1String(),str);
+		
+		str = "13rw305923111050500C0";
+		m1Command = M1CommandFactory.getInstance().getM1Command(str);
+		WriteRealTimeClockData writeClockData = new WriteRealTimeClockData();
+		writeClockData.setSecond("30");
+		writeClockData.setMinute("59");
+		writeClockData.setHour("23");
+		writeClockData.setDayOfWeek("1");
+		writeClockData.setDayOfMonth("11");
+		writeClockData.setMonth("05");
+		writeClockData.setYear("05");
+		System.out.println(writeClockData.buildM1String());
+		assertEquals(m1Command.getClass(),WriteRealTimeClockData.class);
+		assertEquals(writeClockData.buildM1String(),str);
 	}
 	
 }

@@ -152,6 +152,7 @@ public class Controller {
 		modelRegistry.put("MACRO", "au.com.BI.Macro.Model");
 		modelRegistry.put("SCRIPT", "au.com.BI.Script.Model");
 		modelRegistry.put("AUTONOMIC_HOME", "au.com.BI.MultiMedia.AutonomicHome.Model");
+		modelRegistry.put("SLIM_SERVER", "au.com.BI.MultiMedia.SlimServer.Model");
 
 	}
 

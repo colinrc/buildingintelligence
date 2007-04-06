@@ -9,11 +9,9 @@ public class AutonomicHomeCommandFactory {
 
 	private static AutonomicHomeCommandFactory _singleton = null;
 	private Logger logger;
-	private HashMap<String,AutonomicHomeCommand> commands;
-
+	
 	private AutonomicHomeCommandFactory() {
 		super();
-		commands = new HashMap();
 		logger = Logger.getLogger(AutonomicHomeCommandFactory.class.getPackage().getName());
 	}
 	
