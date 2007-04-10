@@ -107,6 +107,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		HALMessages.put("EXITED INTERCOM MODE", "R");
 		HALMessages.put("INTERCOM EXECUTED", "R");
 		HALMessages.put("SYSTEM POWERSAVE EXECUTED", "R");
+		HALMessages.put("MASTER MODE", "R");
+		HALMessages.put("SLAVE MODE", "R");
 
 	}
 
@@ -371,13 +373,24 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	 * function if it is not from flash. ie. It is from the serial port.
 	 */
 	public void doControlledItem(CommandInterface command) throws CommsFail {
-		boolean didCommand = false;
 		String HALReturn = command.getKey().trim();
-		logger.log(Level.FINER, "Parsing : " + HALReturn);
+		logger.log(Level.FINER, "HAL Raw Buffer : " + HALReturn);
 
-		// TODO process IR comamnds
-		// TODO ensure volume is correctly tested.
-		
+		String items[] = HALReturn.split("\n\r");
+
+		for (int i = 0; i < items.length; i ++){
+			logger.log (Level.FINEST, "Processing Buffer " + items[i]);
+			processBuffer (items[i]);
+		}
+	}
+	
+
+	public void processBuffer(String HALReturn) throws CommsFail {
+			boolean didCommand = false;
+
+			if (HALReturn.contains(",")){
+				logger.log(Level.SEVERE,"Found a comma");
+			}
 		if (HALReturn.equals("E0")) {
 			logger.log(Level.FINER, "Received E0, ignoring");
 			didCommand = true;
@@ -386,22 +399,15 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			logger.log(Level.FINER, "Received IR, ignoring");
 			didCommand = true;
 		}
-		if (!didCommand && HALReturn.startsWith("SCA")) {
-			// Scan complete
-
-			if (!protocolB) {
-				comms.acknowlegeCommand(CommDevice.HalStartup);
-			    logger.log (Level.FINEST,"Received startup status, acknowleding and starting poll ");
-			    this.startPolling();
-				didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
-			}
-			else {
-				comms.acknowlegeCommand(CommDevice.HalStartup);
-			    logger.log (Level.FINEST,"Received startup status ");
-				didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
-			}
-			
+		if (HALReturn.startsWith("INVALID")) {
+			logger.log(Level.INFO, "HAL received an instruction it did not understand");
+			didCommand = true;
 		}
+		if (HALReturn.startsWith("SCANNING NODES")) {
+			logger.log(Level.FINE, "HAL is scanning nodes");
+			didCommand = true;
+		}
+
 		if (!didCommand && HALReturn.equals("INTERCOM: OFF")) {
 			if (!intercom.equals("OFF")) {
 				logger.log(Level.FINE, "Intercom is off");
@@ -459,7 +465,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				this.sendDirty( -1);
 			} else {
 				synchronized (comms) {
-				    pollDevice.setFirstRun(true);
+				   if (!protocolB) pollDevice.setFirstRun(true);
 				    logger.log (Level.WARNING,"Handshaking failed with HAL, re-synchronizing. HAL Return="+HALReturn+".");
 				}
 
@@ -488,11 +494,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			    this.startPolling();
 				didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
 			}
-		} else {
-			comms.acknowlegeCommand(CommDevice.HalStartup);
-		    logger.log (Level.FINEST,"Received startup status ");
-			didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
+			else {
+				comms.acknowlegeCommand(CommDevice.HalStartup);
+				logger.log (Level.FINEST,"Received startup status ");
+				didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
 			
+			}
 		}
 		/*
 		00  PWR SAVE    16  NO DATA     32  NO DATA     48  NO DATA
@@ -574,6 +581,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			if (!protocolB) pollDevice.pause();
 			didCommand = true;
 		}		
+		if (!didCommand && HALReturn.startsWith("AM6")) {
+
+			didCommand = true;
+		}
 
 		if (!didCommand) {
 			logger.log(Level.INFO,

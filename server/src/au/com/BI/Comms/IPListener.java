@@ -392,14 +392,16 @@ public class IPListener extends Thread implements CommsListener
 		
 		try { 
 			int numBytes = is.available();
-			buffer = new byte[numBytes];
-			is.read(buffer,0,numBytes);
-			String toSend = new String (buffer);
-
-			logger.log (Level.FINEST, debugName + "Received serial string " + toSend);
-			CommsCommand command = new CommsCommand (toSend,"RawText",null);
-			command.setTargetDeviceModel(this.targetDeviceModel);
-			commandList.add (command);
+			if (numBytes > 0){
+				buffer = new byte[numBytes];
+				is.read(buffer,0,numBytes);
+				String toSend = new String (buffer);
+	
+				logger.log (Level.FINEST, debugName + "Received serial string " + toSend);
+				CommsCommand command = new CommsCommand (toSend,"RawText",null);
+				command.setTargetDeviceModel(this.targetDeviceModel);
+				commandList.add (command);
+			}
 
 		} catch (IOException ex) {
 			sendBuffer = false;

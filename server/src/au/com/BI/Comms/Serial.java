@@ -247,7 +247,10 @@ public class Serial extends BaseComms implements CommDevice
 		}
 
 	}
-
+	public void setNaturalPackets(boolean naturalPackets) {
+		super.setNaturalPackets(naturalPackets);
+		if (serialListener != null) serialListener.setNaturalPackets(naturalPackets);
+	}
 
 	
 }
