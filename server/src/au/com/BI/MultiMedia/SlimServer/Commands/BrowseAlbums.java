@@ -1,7 +1,11 @@
 package au.com.BI.MultiMedia.SlimServer.Commands;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import au.com.BI.Util.StringUtils;
 
@@ -16,6 +20,7 @@ public class BrowseAlbums extends SlimServerCommand {
 	boolean compilation;
 	SortOrder sort;
 	LinkedList<AlbumTag> tags;
+	Logger logger;
 	
 	public BrowseAlbums() {
 		start = -1;
@@ -28,6 +33,7 @@ public class BrowseAlbums extends SlimServerCommand {
 		compilation = false;
 		sort = SortOrder.NONE;
 		tags = new LinkedList<AlbumTag>();
+		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
 	public int getArtist() {
@@ -115,7 +121,12 @@ public class BrowseAlbums extends SlimServerCommand {
 		String commandString = "albums " + start + " " + itemsPerResponse;
 		
 		if (!StringUtils.isNullOrEmpty(search)) {
-			commandString += " search:" + search;
+			commandString += " search:";
+			try {
+				commandString += URLEncoder.encode(search, "UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				logger.log(Level.INFO, "UTF-8 not supported");
+			}
 		}
 		
 		if (genre != -1) {
