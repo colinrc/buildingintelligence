@@ -3,10 +3,10 @@ package au.com.BI.MultiMedia.SlimServer.Commands;
 import java.util.LinkedList;
 
 public class BrowseAlbumsReply extends SlimServerCommand {
-	int count;
-	boolean rescan;
-	LinkedList<Album> albums;
-	boolean compilation;
+	private int count;
+	private boolean rescan;
+	private LinkedList<Album> albums;
+	private boolean compilation;
 	
 	public BrowseAlbumsReply() {
 		count = -1;

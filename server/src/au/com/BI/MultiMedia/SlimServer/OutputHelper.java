@@ -12,6 +12,8 @@ import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseAlbums;
+import au.com.BI.MultiMedia.SlimServer.Commands.BrowseArtists;
+import au.com.BI.MultiMedia.SlimServer.Commands.BrowseGenres;
 import au.com.BI.MultiMedia.SlimServer.Commands.Pause;
 import au.com.BI.MultiMedia.SlimServer.Commands.Play;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListCommand;
@@ -44,9 +46,7 @@ public class OutputHelper {
 			model.setCurrentPlayer((Audio)device);
 			
 			if (command.getCommandCode().equalsIgnoreCase("BROWSE")) {
-				// <CONTROL KEY="<extender>" COMMAND="BROWSE" EXTRA="<type>" EXTRA2="<start>" EXTRA3="<searchString>" EXTRA4="<artistId>" EXTRA5="<genre>" />
-				// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="ALBUMS" EXTRA2="0" EXTRA3="" EXTRA4="" EXTRA5="" />
-				// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="ALBUMS" EXTRA2="10" EXTRA3="trance" EXTRA4="" EXTRA5="" />
+				// <CONTROL KEY="<extender>" COMMAND="BROWSE" EXTRA="<type>" EXTRA2="<start>" EXTRA3="<searchString>" EXTRA4="<extra>" EXTRA5="<extra>" />
 				// type can be
 				// ALBUMS
 				// ARTISTS
@@ -54,6 +54,9 @@ public class OutputHelper {
 				// NOWPLAYING
 				// PLAYLISTS
 				if (command.getExtraInfo().equalsIgnoreCase("ALBUMS")) {
+					// <CONTROL KEY="<extender>" COMMAND="BROWSE" EXTRA="ALBUMS" EXTRA2="<start>" EXTRA3="<searchString>" EXTRA4="<artistId>" EXTRA5="<genre>" />
+					// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="ALBUMS" EXTRA2="0" EXTRA3="" EXTRA4="" EXTRA5="" />
+					// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="ALBUMS" EXTRA2="10" EXTRA3="trance" EXTRA4="" EXTRA5="" />
 					BrowseAlbums browseAlbums = new BrowseAlbums();
 					int start = 0;
 					String searchString = command.getExtra3Info();
@@ -98,9 +101,101 @@ public class OutputHelper {
 					
 					retCode = browseAlbums.buildCommandString() + "\r\n";
 				} else if (command.getExtraInfo().equalsIgnoreCase("ARTISTS")) {
+					// <CONTROL KEY="<extender>" COMMAND="BROWSE" EXTRA="ARTISTS" EXTRA2="<start>" EXTRA3="<searchString>" EXTRA4="<genreId>" EXTRA5="<albumId>" />
+					// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="ARTISTS" EXTRA2="0" EXTRA3="" EXTRA4="1" EXTRA5="" />
+					// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="ARTISTS" EXTRA2="10" EXTRA3="trance" EXTRA4="" EXTRA5="" />
+					BrowseArtists browseArtists = new BrowseArtists();
+					
+					int start = 0;
+					String searchString = command.getExtra3Info();
+					int albumId = -1;
+					int genreId = -1;
+					
+					browseArtists.setItemsPerResponse(this.getDefaultSearchResults());
+					
+					try {
+						start = Integer.parseInt(command.getExtra2Info());
+					} catch (NumberFormatException e) {
+						logger.log(Level.WARNING, "Start parameter was not a number for command: " + command.toString());
+					}
+					browseArtists.setStart(start);
+					
+					if (!StringUtils.isNullOrEmpty(searchString)) {
+						browseArtists.setSearch(searchString);
+					}
+					
+					try {
+						if (!StringUtils.isNullOrEmpty(command.getExtra4Info())) {
+							genreId = Integer.parseInt(command.getExtra4Info());
+						}
+					} catch (NumberFormatException e) {
+						logger.log(Level.INFO, "artistId parameter was not a number for command: " + command.toString());
+					}
+					
+					if (genreId != -1) {
+						browseArtists.setGenre(genreId);
+					}
+					
+					try {
+						if (!StringUtils.isNullOrEmpty(command.getExtra5Info())) {
+							albumId = Integer.parseInt(command.getExtra5Info());
+						}
+					} catch (NumberFormatException e) {
+						logger.log(Level.INFO, "albumId parameter was not a number for command: " + command.toString());
+					}
+					if (albumId != -1) {
+						browseArtists.setAlbum(albumId);
+					}
+					
+					retCode = browseArtists.buildCommandString() + "\r\n";
 					
 				} else if (command.getExtraInfo().equalsIgnoreCase("GENRES")) {
+					// <CONTROL KEY="<extender>" COMMAND="BROWSE" EXTRA="GENRES" EXTRA2="<start>" EXTRA3="<searchString>" EXTRA4="<artistId>" EXTRA5="<albumId>" />
+					// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="GENRES" EXTRA2="0" EXTRA3="" EXTRA4="" EXTRA5="" />
+					// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="GENRES" EXTRA2="10" EXTRA3="trance" EXTRA4="" EXTRA5="" />
+					BrowseGenres browseGenres = new BrowseGenres();
+					int start = 0;
+					String searchString = command.getExtra3Info();
+					int artistId = -1;
+					int albumId = -1;
 					
+					browseGenres.setItemsPerResponse(this.getDefaultSearchResults());
+					
+					try {
+						start = Integer.parseInt(command.getExtra2Info());
+					} catch (NumberFormatException e) {
+						logger.log(Level.WARNING, "Start parameter was not a number for command: " + command.toString());
+					}
+					browseGenres.setStart(start);
+					
+					if (!StringUtils.isNullOrEmpty(searchString)) {
+						browseGenres.setSearch(searchString);
+					}
+					
+					try {
+						if (!StringUtils.isNullOrEmpty(command.getExtra4Info())) {
+							artistId = Integer.parseInt(command.getExtra4Info());
+						}
+					} catch (NumberFormatException e) {
+						logger.log(Level.INFO, "artistId parameter was not a number for command: " + command.toString());
+					}
+					
+					if (artistId != -1) {
+						browseGenres.setArtist(artistId);
+					}
+					
+					try {
+						if (!StringUtils.isNullOrEmpty(command.getExtra5Info())) {
+							albumId = Integer.parseInt(command.getExtra5Info());
+						}
+					} catch (NumberFormatException e) {
+						logger.log(Level.INFO, "albumId parameter was not a number for command: " + command.toString());
+					}
+					if (albumId != -1) {
+						browseGenres.setAlbum(albumId);
+					}
+					
+					retCode = browseGenres.buildCommandString() + "\r\n";
 				} else if (command.getExtraInfo().equalsIgnoreCase("PLAYLISTS")) {
 					
 				}
@@ -132,6 +227,8 @@ public class OutputHelper {
 				// <CONTROL KEY="LAPTOP" COMMAND="LOAD" EXTRA="325" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				// <CONTROL KEY="LAPTOP" COMMAND="LOAD" EXTRA="" EXTRA2="1999" EXTRA3="" EXTRA4="" EXTRA5="" />
 				// <CONTROL KEY="LAPTOP" COMMAND="INSERT" EXTRA="325" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				// <CONTROL KEY="SQUEEZEBOX" COMMAND="ADD" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="18" EXTRA5="" />
+				// <CONTROL KEY="LAPTOP" COMMAND="ADD" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="18" EXTRA5="" />
 				int album_id = -1;
 				int year_id = -1;
 				int track_id = -1;

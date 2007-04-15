@@ -34,6 +34,10 @@ public class SlimServerCommandFactory {
 			if (!StringUtils.isNullOrEmpty(words[0])) {
 				if (words[0].equals("albums")) {
 					command = parseBrowseAlbumsReply(words);
+				} else if (words[0].equals("artists")) {
+					command = parseBrowseArtistsReply(words);
+				} else if (words[0].equals("genres")) {
+					command = parseBrowseGenresReply(words);
 				}
 			}
 			
@@ -110,11 +114,156 @@ public class SlimServerCommandFactory {
 				} catch (NumberFormatException e) {
 					throw new SlimServerCommandException("Tried to set the total count of albums but could not parse " + value + " to an integer.");
 				}
+			} else if (tag.equals("rescan")) {
+				
+				if (value.equals("1")) {
+					command.setRescan(true);
+				} else {
+					command.setRescan(false);
+				}
 			}
 		}
 		
 		if (album != null) {
 			command.getAlbums().add(album);
+		}
+		
+		return command;
+	}
+	
+	public SlimServerCommand parseBrowseArtistsReply(String[] words)
+		throws SlimServerCommandException {
+		BrowseArtistsReply command = new BrowseArtistsReply();
+		int positionOfColon = 0;
+		String tag = "";
+		String value = "";
+	
+		// first should be the start
+		try {
+			Integer.parseInt(words[1]);
+		} catch (NumberFormatException e) {
+			throw new SlimServerCommandException("Expected an integer",e);
+		}
+		
+		int expectedCount = 0;
+		// second should be the how many is returned
+		try {
+			expectedCount = Integer.parseInt(words[2]);
+		} catch (NumberFormatException e) {
+			throw new SlimServerCommandException("Expected an integer",e);
+		}
+		
+		Artist artist = null;
+		for (int i=3; i< words.length; i++) {
+			String word = words[i];
+			try {
+				word = URLDecoder.decode(word,"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new SlimServerCommandException("Cannot use UTF-8 encoding", e);
+			}
+			
+			positionOfColon = word.indexOf(":");
+			tag = word.substring(0,positionOfColon);
+			value = word.substring(positionOfColon+1);
+			
+			if (tag.equals("id")) {
+				if (artist != null) {
+					command.getArtists().add(artist);
+				}
+				artist = new Artist();
+				artist.setId(value);
+			} else if (tag.equals("artist")) {
+				if (artist == null) {
+					throw new SlimServerCommandException("Expected id tag first but got " + tag + " instead");
+				}
+				artist.setArtist(value);
+			} else if (tag.equals("rescan")) {
+				
+				if (value.equals("1")) {
+					command.setRescan(true);
+				} else {
+					command.setRescan(false);
+				}
+			}  else if (tag.equals("count")) {
+				try {
+					command.setCount(Integer.parseInt(value));
+				} catch (NumberFormatException e) {
+					throw new SlimServerCommandException("Tried to set the total count of artists but could not parse " + value + " to an integer.");
+				}
+			}
+		}
+		
+		if (artist != null) {
+			command.getArtists().add(artist);
+		}
+		
+		return command;
+	}
+	
+	public SlimServerCommand parseBrowseGenresReply(String[] words)
+		throws SlimServerCommandException {
+		BrowseGenresReply command = new BrowseGenresReply();
+		int positionOfColon = 0;
+		String tag = "";
+		String value = "";
+	
+		// first should be the start
+		try {
+			Integer.parseInt(words[1]);
+		} catch (NumberFormatException e) {
+			throw new SlimServerCommandException("Expected an integer",e);
+		}
+		
+		int expectedCount = 0;
+		// second should be the how many is returned
+		try {
+			expectedCount = Integer.parseInt(words[2]);
+		} catch (NumberFormatException e) {
+			throw new SlimServerCommandException("Expected an integer",e);
+		}
+		
+		Genre genre = null;
+		for (int i=3; i< words.length; i++) {
+			String word = words[i];
+			try {
+				word = URLDecoder.decode(word,"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new SlimServerCommandException("Cannot use UTF-8 encoding", e);
+			}
+			
+			positionOfColon = word.indexOf(":");
+			tag = word.substring(0,positionOfColon);
+			value = word.substring(positionOfColon+1);
+			
+			if (tag.equals("id")) {
+				if (genre != null) {
+					command.getGenres().add(genre);
+				}
+				genre = new Genre();
+				genre.setId(value);
+			} else if (tag.equals("genre")) {
+				if (genre == null) {
+					throw new SlimServerCommandException("Expected id tag first but got " + tag + " instead");
+				}
+				genre.setGenre(value);
+			} else if (tag.equals("rescan")) {
+				
+				if (value.equals("1")) {
+					command.setRescan(true);
+				} else {
+					command.setRescan(false);
+				}
+			}  else if (tag.equals("count")) {
+				try {
+					command.setCount(Integer.parseInt(value));
+				} catch (NumberFormatException e) {
+					throw new SlimServerCommandException("Tried to set the total count of artists but could not parse " + value + " to an integer.");
+				}
+			}
+		}
+		
+		if (genre != null) {
+			command.getGenres().add(genre);
 		}
 		
 		return command;
