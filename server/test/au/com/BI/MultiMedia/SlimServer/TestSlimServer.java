@@ -7,7 +7,12 @@ import org.junit.Test;
 
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseAlbums;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseAlbumsReply;
+import au.com.BI.MultiMedia.SlimServer.Commands.BrowseArtists;
+import au.com.BI.MultiMedia.SlimServer.Commands.BrowseArtistsReply;
+import au.com.BI.MultiMedia.SlimServer.Commands.BrowseGenres;
 import au.com.BI.MultiMedia.SlimServer.Commands.Login;
+import au.com.BI.MultiMedia.SlimServer.Commands.PlayListCommand;
+import au.com.BI.MultiMedia.SlimServer.Commands.PlayListControl;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommandFactory;
 
@@ -53,4 +58,47 @@ public class TestSlimServer {
 		assertEquals(reply.getAlbums().size(),5);
 		assertEquals(reply.getAlbums().get(0).getAlbum(),"003 Nick Warren - Live In Prague Disk 1");
 	}
+	
+	@Test
+	public void playListControl() {
+		PlayListControl control = new PlayListControl();
+		control.setCommand(PlayListCommand.ADD);
+		control.setPlayerId("65:4a:5e:d9:df:91");
+		assertEquals(control.buildCommandString(),"65%3A4a%3A5e%3Ad9%3Adf%3A91 playlistcontrol cmd:add");
+		
+		control.setAlbum_id(325);
+		assertEquals(control.buildCommandString(),"65%3A4a%3A5e%3Ad9%3Adf%3A91 playlistcontrol cmd:add album_id:325");
+	}
+	
+	@Test
+	public void browseArtists() {
+		BrowseArtists browse = new BrowseArtists();
+		browse.setStart(0);
+		browse.setItemsPerResponse(20);
+		browse.setAlbum(20);
+		assertEquals(browse.buildCommandString(),"artists 0 20 album_id:20");
+	}
+	
+	@Test
+	public void browseArtistsReply() {
+		String commandReply = "artists 0 5 count%3A7 id%3A2 artist%3AAnastacia id%3A3 artist%3ACalogero id%3A4 artist%3AEvanescence id%3A5 artist%3ALeftfield%20%26%20Lydon id%3A18 artist%3ALlorca";
+		SlimServerCommand command = factory.getCommand(commandReply);
+		assertEquals(command.getClass(), BrowseArtistsReply.class);
+		
+		BrowseArtistsReply reply = (BrowseArtistsReply)command;
+		assertEquals(reply.getCount(),7);
+		assertEquals(reply.getArtists().get(0).getId(),"2");
+		assertEquals(reply.getArtists().get(0).getArtist(),"Anastacia");
+	}
+
+	@Test
+	public void browseGenres() {
+		BrowseGenres browse = new BrowseGenres();
+		browse.setStart(0);
+		browse.setItemsPerResponse(20);
+		browse.setAlbum(20);
+		browse.setArtist(2);
+		assertEquals(browse.buildCommandString(),"genres 0 20 artist_id:2 album_id:20");
+	}
+	
 }
