@@ -18,7 +18,7 @@ import au.com.BI.User.*;
 
 
 public class CalendarEventFactory {
-    protected Map events = null;
+    // protected Map events = null;
     protected SimpleDateFormat df = null;
     protected SimpleDateFormat tf = null;
     protected SimpleDateFormat totalDayF = null;
@@ -35,7 +35,7 @@ public class CalendarEventFactory {
     
     protected MacroHandler macroHandler = null;
     protected User user = null;
-    protected Map calendar_message_params;
+    protected Map <String,String>calendar_message_params;
     
     public CalendarEventFactory() {
 	logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -249,80 +249,82 @@ public class CalendarEventFactory {
 	    Iterator attributeList = patternXML.getAttributes().iterator();
 	    while (attributeList.hasNext()) {
 		Attribute patternElement = (Attribute)attributeList.next();
-		String name = patternElement.getName();
-		String value = patternElement.getValue();
-		if (eventType.equals("cron") ) {
-		    rawCronString = value;
-		}
-		if (eventType.equals("weekly") && value.equals("1")) {
-		    if (name.equals("sun")) daysOfWeek += ",1" ;
-		    if (name.equals("mon")) daysOfWeek += ",2" ;
-		    if (name.equals("tue")) daysOfWeek += ",3" ;
-		    if (name.equals("wed")) daysOfWeek += ",4" ;
-		    if (name.equals("thu")) daysOfWeek += ",5" ;
-		    if (name.equals("fri")) daysOfWeek += ",6" ;
-		    if (name.equals("sat")) daysOfWeek += ",7" ;
-		    if (name.equals("month")){
-			month = value;
-		    }
-		    if (recurVal != 1){
-			interval = recurVal * dayMs * 7L;
-		    }
-		    
-		}
-		if (eventType.equals("monthly")) {
-		    
-		    if (name.equals("day")) {
-			daysOfWeek = value.toUpperCase();
-		    }
-		    if (name.equals("month")){
-			month = value;
-		    }
-		    if (name.equals("week")){
-			weekOfMonth = value;
-		    }
-		    if (name.equals("date")){
-			dateOfMonth = value;
-		    }
-		    intervalMonth = recurVal;
-		    map.put ("IntervalMonth",intervalMonth);
-		}
-		if (eventType.equals("daily")) {
-		    if (recurVal != 1){
-			interval = recurVal * dayMs;
-		    }
-		}
-		if (eventType.equals("hourly")) {
-		    if (recurVal != 1){
-			interval = recurVal * hourMs;
-		    }
-		}
-		if (eventType.equals("yearly")) {
-		    
-		    if (name.equals("recur")) {
-			year = orig_year+"/" + value.toUpperCase();
-		    }
-		    if (name.equals("date")){
-				dateOfMonth = value;
+
+			String name = patternElement.getName();
+			String value = patternElement.getValue();
+			if (eventType.equals("cron") ) {
+			    rawCronString = value;
 			}
-		    if (name.equals("month")){
-	    		month = value;
+			if (eventType.equals("weekly") && value.equals("1")) {
+			    if (name.equals("sun")) daysOfWeek += ",1" ;
+			    if (name.equals("mon")) daysOfWeek += ",2" ;
+			    if (name.equals("tue")) daysOfWeek += ",3" ;
+			    if (name.equals("wed")) daysOfWeek += ",4" ;
+			    if (name.equals("thu")) daysOfWeek += ",5" ;
+			    if (name.equals("fri")) daysOfWeek += ",6" ;
+			    if (name.equals("sat")) daysOfWeek += ",7" ;
+			    if (name.equals("month")){
+				month = value;
+			    }
+			    if (recurVal != 1){
+				interval = recurVal * dayMs * 7L;
+			    }
+			    
+			}
+			if (eventType.equals("monthly")) {
+			    
+			    if (name.equals("day")) {
+				daysOfWeek = value.toUpperCase();
+			    }
+			    if (name.equals("month")){
+				month = value;
+			    }
+			    if (name.equals("week")){
+				weekOfMonth = value;
+			    }
+			    if (name.equals("date")){
+				dateOfMonth = value;
+			    }
+			    intervalMonth = recurVal;
+			    map.put ("IntervalMonth",intervalMonth);
+			}
+			if (eventType.equals("daily")) {
+			    if (recurVal != 1 && !filter.contains("odd") && !filter.contains("even")){
+			    	interval = recurVal * dayMs;
+			    }
+			}
+			if (eventType.equals("hourly")) {
+			    if (recurVal != 1){
+			    	interval = recurVal * hourMs;
+			    }
+			}
+			if (eventType.equals("yearly")) {
+			    
+			    if (name.equals("recur")) {
+			    	year = orig_year+"/" + value.toUpperCase();
+			    }
+			    if (name.equals("date")){
+					dateOfMonth = value;
+				}
+			    if (name.equals("month")){
+		    		month = value;
+			    }
+			}
+			
+			map.put ("Interval",interval);
+			map.put("RecurVal",recurVal);
 		    }
-		}
-		
-		map.put ("Interval",interval);
-	    }
-	    if (daysOfWeek.equals("")) {
-		daysOfWeek = "?";
-		if (dateOfMonth.equals("?")){
-		    
-		    dateOfMonth = "*";
-		}
-		    
-	    }  else {
-		if (daysOfWeek.charAt(0)==','){
-		    daysOfWeek = daysOfWeek.substring(1);
-		}
+		    if (daysOfWeek.equals("")) {
+			daysOfWeek = "?";
+			if (dateOfMonth.equals("?")){
+			    
+			    dateOfMonth = "*";
+			}
+			    
+		    }  else {
+			if (daysOfWeek.charAt(0)==','){
+			    daysOfWeek = daysOfWeek.substring(1);
+			}
 	    }
 	}
 	
@@ -406,12 +408,12 @@ public class CalendarEventFactory {
 	}
 
     
-    public Map getCalendar_message_params() {
+    public Map <String,String> getCalendar_message_params() {
     	return calendar_message_params;
     }
     
     
-    public void setCalendar_message_params(Map calendar_message_params) {
+    public void setCalendar_message_params(Map <String,String> calendar_message_params) {
     	this.calendar_message_params = calendar_message_params;
     }
     

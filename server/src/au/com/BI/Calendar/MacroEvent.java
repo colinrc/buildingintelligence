@@ -76,6 +76,7 @@ public class MacroEvent implements Job {
 		  String icon =dataMap.getString ("Icon");
 		  String autoclose = dataMap.getString ("AutoClose");
 		  String hideclose = dataMap.getString ("HideClose");
+		  long recurVal = dataMap.getInt ("RecurVal");
 		  long interval = dataMap.getLong ("Interval");
 		  long intervalMonth = dataMap.getLong ("IntervalMonth");
 		  
@@ -88,13 +89,46 @@ public class MacroEvent implements Job {
 		  filter = (String)dataMap.get("Filter");
 		  if (filter != null && !filter.equals( "")){
 			  int dayNumber = java.util.Calendar.getInstance().get(Calendar.DATE);
-			  int value = (new Double((double)dayNumber/2.0)).intValue() * 2;
+			  boolean isOdd = false;
 			  
-			  if (filter.equals("even") && dayNumber != value){
-				  return;
+			  if (dayNumber % 2 == 1){
+				  isOdd = true;
 			  }
-			  if (filter.equals("odd") && dayNumber == value){
-				  return;
+			  
+			  if (filter.equals("odd")) {
+				  if (!isOdd ){
+					  // Filter is odd , but day is even so do not continue
+					  return ;
+				  } else {
+					  // day is odd, now check for recurring value
+				  
+					  if (recurVal != 1){
+						  int firstDay = (int)recurVal * 2 -  1;
+						  // recurVal * 2 due to odd + even
+						  
+						  if ((dayNumber - firstDay) % (recurVal * 2) != 0) 
+							  return;
+						  		// Not correct interval so return
+					  } 
+				  }
+			  }
+
+			  if (filter.equals("even")) {
+				  if (isOdd ){
+					  // Filter is even , but day is odd so do not continue
+					  return ;
+				  } else {
+					  // day is odd, now check for recurring value
+				  
+					  if (recurVal != 1){
+						  int firstDay = (int)recurVal * 2 ;
+						  // recurVal * 2 due to odd + even
+						  
+						  if ((dayNumber - firstDay) % (recurVal * 2) != 0) 
+							  return;
+						  		// Not correct interval so return
+					  } 
+				  }
 			  }
 
 		  }
