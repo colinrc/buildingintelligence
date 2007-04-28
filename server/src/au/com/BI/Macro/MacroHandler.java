@@ -38,16 +38,13 @@ public class MacroHandler {
 	 */
 	protected String fileName = "";
         private String integratorFileName = "";
-	protected String calendarFileName = "";
 	protected Map <String,List<ClientCommand>>macros = null;
         protected Map <String,List<ClientCommand>>integratorMacros = null;
 	protected Map <String,String>macros_status = null;
 	protected Logger logger;
 	protected CommandQueue commandList = null;
 	protected Map <String,RunMacro>runningMacros = null;
-	protected EventCalendar eventCalendar = null;
 	protected Map<String,String> macros_type = null;
-	protected Map calendar_message_params;
 	protected Vector <String>macroNames = null;
         protected Vector <String>integratorMacroNames = null;
         protected Cache cache = null;
@@ -376,25 +373,7 @@ public class MacroHandler {
 	public void setFileName (String fileName){
 		this.fileName = "datafiles" + File.separator + fileName;
 	}
-	
-	public void setCalendarFileName (String fileName){
-		this.calendarFileName = fileName;
-	}
 
-	public boolean readCalendarFile() {
-		eventCalendar.setCalendar_message_params(calendar_message_params) ;
-		return eventCalendar.readCalendarFile(false);
-	}
-	
-	public boolean cleanCalendarFile() {
-		eventCalendar.setCalendar_message_params(calendar_message_params) ;
-		if ( eventCalendar.readCalendarFile(true)) {
-			eventCalendar.saveCalendarFile();
-			return true;
-		}
-		return false;
-		
-	}
 	
 	public boolean readMacroFile(boolean integrator)  {
             String localFileName = "";
@@ -521,21 +500,6 @@ public class MacroHandler {
 		return saveMacroList (theList,integrator);
 	}
 
-    /**
-     * @return Returns the eventCalendar.
-     */
-    public EventCalendar getEventCalendar() {
-        return eventCalendar;
-    }
-    
-    public void startCalendar (User user) throws SchedulerException {
-            eventCalendar = new EventCalendar (this,user);
-            eventCalendar.setFileName(this.calendarFileName);
-            eventCalendar.setCommandList(commandList);
-            /* if (!eventCalendar.readCalendarFile() && logger!= null) {
-                    logger.log (Level.SEVERE,"Could not read calendar file");
-            } */
-    }
 
     public void abortAll() {
 	    RunMacro theMacro;
@@ -551,14 +515,6 @@ public class MacroHandler {
 		    }
 	    }
     }
-
-    public Map getCalendar_message_params() {
-		return calendar_message_params;
-	}
-
-	public void setCalendar_message_params(Map calendar_message_params) {
-		this.calendar_message_params = calendar_message_params;
-	}
 
 	public CommandQueue getCommandList() {
 		return commandList;

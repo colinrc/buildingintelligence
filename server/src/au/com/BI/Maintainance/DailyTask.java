@@ -9,7 +9,6 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import au.com.BI.Macro.MacroHandler;
 
 /**
  * @author colin
@@ -27,8 +26,8 @@ public class DailyTask implements Job {
 	throws JobExecutionException
 	{
 	      JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-	      MacroHandler  macroHandler = (MacroHandler)dataMap.get("MACRO");
-	      macroHandler.cleanCalendarFile();
+	      au.com.BI.Calendar.Model  calendarModel = (au.com.BI.Calendar.Model)dataMap.get("CALENDAR");
+	      calendarModel.getCalendarHandler().cleanCalendarFile();
 	      logger.log (Level.FINE,"Maintenance completed");
 	}
 }

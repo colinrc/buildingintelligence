@@ -4,7 +4,6 @@
  */
 package au.com.BI.Flash;
 
-import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
 import au.com.BI.Config.Security;
 import au.com.BI.Comms.*;
@@ -26,7 +25,7 @@ import java.io.*;
  **/
 public class FlashHandler extends SimplifiedModel implements DeviceModel, ClientModel
 {
-	protected LinkedList flashClientHandlers; 
+	protected LinkedList <FlashClientHandler>flashClientHandlers; 
 	protected FlashControlListener flashControlListener;
 
 
@@ -56,7 +55,7 @@ public class FlashHandler extends SimplifiedModel implements DeviceModel, Client
 		this.addControlledItem ("RawXML_Send",null,MessageDirection.FROM_HARDWARE);
 
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		flashClientHandlers = new LinkedList ();
+		flashClientHandlers = new LinkedList <FlashClientHandler> ();
 		rawDefs = new HashMap (NUMBER_CATALOGUES);
 		parameters = new HashMap (NUMBER_PARAMETERS);
 		this.security = security;
@@ -104,7 +103,6 @@ public class FlashHandler extends SimplifiedModel implements DeviceModel, Client
 		flashControlListener.setCache(cache);
 		flashControlListener.setMacroHandler (macroHandler);
 		flashControlListener.setServerID(serverID);
-		flashControlListener.setEventCalendar (eventCalendar);
 		flashControlListener.start();
 	}
 

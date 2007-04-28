@@ -55,7 +55,7 @@ public class ModelParameters  {
         protected String description;
         protected int transmitOnBytes = 0;
         protected MacroHandler macroHandler;
-        protected Collection modelList;
+        protected Collection <DeviceModel>modelList;
         protected Bootstrap bootstrap;
         protected int powerRating;
 		protected int etxArray[] = null;
@@ -125,7 +125,7 @@ public class ModelParameters  {
         /**
          * @deprecated
          */
-        public final void doStartup(List commandList)  throws au.com.BI.Comms.CommsFail {};
+        public final void doStartup(CommandQueue commandList)  throws au.com.BI.Comms.CommsFail {};
 
         /** 
          * Called when a new client connects to the server
@@ -269,14 +269,14 @@ public class ModelParameters  {
         /**
          * @return Returns the modelList.
          */
-        public Collection getModelList() {
+        public Collection <DeviceModel> getModelList() {
                 return modelList;
         }
 
         /**
          * @param modelList The modelList to set.
          */
-        public void setModelList(Collection modelList) {
+        public void setModelList(Collection<DeviceModel> modelList) {
                 this.modelList = modelList;
         }
 
@@ -429,19 +429,6 @@ public class ModelParameters  {
 		this.modelType = modelType;
 	}
 	
-	/**
-	 * @return Returns the eventCalendar.
-	 */
-	public EventCalendar getEventCalendar() {
-		return eventCalendar;
-	}
-	/**
-	 * @param eventCalendar The eventCalendar to set.
-	 */
-	public void setEventCalendar(EventCalendar eventCalendar) {
-		this.eventCalendar = eventCalendar;
-	}
-
 	public Logger getLogger() {
 		return logger;
 	}

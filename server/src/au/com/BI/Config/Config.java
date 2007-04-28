@@ -20,6 +20,7 @@ import au.com.BI.Messaging.*;
 import au.com.BI.MultiMedia.AutonomicHome.Device.WindowsMediaExtenderFactory;
 import au.com.BI.AV.*;
 import au.com.BI.Alert.*;
+import au.com.BI.Calendar.CalendarHandler;
 import au.com.BI.Camera.*;
 import au.com.BI.Command.*;
 import au.com.BI.CustomConnect.CustomConnectFactory;
@@ -55,7 +56,6 @@ public class Config {
 
         protected Controls controls;
 
-
 		protected HashMap <String,String>calendar_message_params;
 		public JRobinParser jRobinParser = null;
 		protected RawHelper rawHelper;
@@ -81,6 +81,7 @@ public class Config {
 		protected Map <String,String>modelRegistry = null;
 		protected Map <String,GroovyRunBlock>groovyModels = null;
 		protected MacroHandler macroHandler = null;
+		protected au.com.BI.Calendar.Model calendarModel = null;
 		protected Bootstrap bootstrap = null;
 		protected  AddressBook addressBook = null;
 		protected VersionManager versionManager = null;
@@ -125,7 +126,7 @@ public class Config {
         public void prepareToReadConfigs (List <DeviceModel>deviceModels,Controls controls) {
             jRobinParser.clearRRDS();
             removeModels (deviceModels);
-            macroHandler.setCalendar_message_params (this.calendar_message_params);
+            calendarModel.getCalendarHandler().setCalendar_message_params (this.calendar_message_params);
             this.controls = controls;
             controls.clearVariables();
         }
@@ -856,5 +857,13 @@ public class Config {
 	public void setWindowsMediaExtenderFactory(
 			WindowsMediaExtenderFactory windowsMediaExtenderFactory) {
 		this.windowsMediaExtenderFactory = windowsMediaExtenderFactory;
+	}
+
+	public au.com.BI.Calendar.Model getCalendarModel() {
+		return calendarModel;
+	}
+
+	public void setCalendarModel(au.com.BI.Calendar.Model calendarModel) {
+		this.calendarModel = calendarModel;
 	}
 }

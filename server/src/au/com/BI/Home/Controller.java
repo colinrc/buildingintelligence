@@ -8,6 +8,7 @@ import au.com.BI.User.*;
 import au.com.BI.Jetty.*;
 import org.quartz.*;
 import au.com.BI.Util.*;
+import au.com.BI.Calendar.CalendarHandler;
 import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
@@ -44,11 +45,9 @@ public class Controller {
 	protected boolean running;
 
 	protected FlashHandler flashHandler;
-
 	protected au.com.BI.Admin.Model adminModel;
-
 	protected au.com.BI.Macro.Model macroModel;
-
+	protected au.com.BI.Calendar.Model calendarModel;
 	protected au.com.BI.Messaging.Model messagingModel;
 
 	protected String configFile = "";
@@ -170,7 +169,7 @@ public class Controller {
 		macroHandler.setFileName("macros");
 		macroHandler.setCache(cache);
 		macroHandler.setIntegratorFileName("integrator_macros");
-		macroHandler.setCalendarFileName("calendar");
+
 		macroHandler.setCommandList(commandQueue);
 		if (!macroHandler.readMacroFile(false) && logger != null) {
 			logger.log(Level.WARNING, "Could not read user macro file");
@@ -179,13 +178,6 @@ public class Controller {
 			logger.log(Level.WARNING, "Could not read integrator macro file");
 		}
 
-		try {
-			macroHandler.startCalendar(currentUser);
-		} catch (SchedulerException ex) {
-			logger.log(Level.SEVERE,
-					"Event scheduler failed to start, timed events will not be availlable. "
-							+ ex.getMessage());
-		}
 
 		labelMgr = new LabelMgr();
 		try {
@@ -204,7 +196,6 @@ public class Controller {
 		flashHandler = new FlashHandler(DeviceModel.PROBABLE_FLASH_CLIENTS,
 				security);
 		this.setupModel(flashHandler);
-		flashHandler.setEventCalendar(macroHandler.getEventCalendar());
 		clientModels.add(flashHandler);
 
 		adminModel = new au.com.BI.Admin.Model(1);
@@ -222,6 +213,20 @@ public class Controller {
 		this.setupModel(macroModel);
 		deviceModels.add(macroModel);
 		macroModel.setInstanceID(deviceModels.size() - 1);
+		
+		calendarModel = new au.com.BI.Calendar.Model();
+		this.setupModel(calendarModel);
+		deviceModels.add(calendarModel);
+		calendarModel.setInstanceID(deviceModels.size() - 1);
+
+		calendarModel.getCalendarHandler().setCalendarFileName("calendar");
+		try {
+			calendarModel.getCalendarHandler().startCalendar(currentUser);
+		} catch (SchedulerException ex) {
+			logger.log(Level.SEVERE,
+					"Event scheduler failed to start, timed events will not be availlable. "
+							+ ex.getMessage());
+		}
 
 		jettyHandler = new JettyHandler(security);
 		this.setupModel(jettyHandler);
@@ -235,7 +240,7 @@ public class Controller {
 
 		dailyTasks = new DailyTaskFactory();
 		dailyTasks.setStartTime(bootstrap.getMaintenanceTime());
-		dailyTasks.setMacroHandler(macroHandler);
+		dailyTasks.setCalendarModel(calendarModel);
 		dailyTasks.start();
 
 		try {
@@ -257,7 +262,6 @@ public class Controller {
 		model.setAddressBook(addressBook);
 		model.setAlarmLogging(alarmLogging);
 		model.setLabelMgr(labelMgr);
-		model.setEventCalendar(macroHandler.getEventCalendar());
 		model.setInstanceID(deviceModels.size() - 1);
 		// If adding items to here remember to also add them to
 		// config.readConfig.
@@ -300,6 +304,7 @@ public class Controller {
 		config.setSecurity(security);
 		config.setModelRegistry(modelRegistry);
 		config.setMacroHandler(macroHandler);
+		config.setCalendarModel(calendarModel);
 		config.setBootstrap(bootstrap);
 		config.setVersionManager(versionManager);
 		config.setAlarmLogging(alarmLogging);
@@ -758,7 +763,7 @@ public class Controller {
 		scriptModel.setIrCodeDB(irCodeDB);
 		flashHandler.setIrCodeDB(irCodeDB);
 		adminModel.setIrCodeDB(irCodeDB);
-		if (!macroHandler.readCalendarFile() && logger != null) {
+		if (!calendarModel.getCalendarHandler().readCalendarFile() && logger != null) {
 			logger.log(Level.SEVERE, "Could not read calendar file");
 		}
 

@@ -7,7 +7,6 @@ package au.com.BI.Flash;
 import java.io.*;
 import java.util.logging.*;
 
-import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.Security;
@@ -44,7 +43,6 @@ public class FlashControlListener extends Thread {
     protected au.com.BI.Command.Cache cache = null;
     protected MacroHandler macroHandler = null;
     protected Document heartbeatDoc = null;
-    protected EventCalendar eventCalendar = null;
     protected VersionManager versionManager = null;
     private int numberFlashClients = 0;
     private Security security = null;
@@ -403,18 +401,6 @@ public class FlashControlListener extends Thread {
 		initConnection.setExtra2Info(Long.toString(serverID));
 	    commandList.add(initConnection);
 
-    }
-    /**
-     * @return Returns the eventCalendar.
-     */
-    public EventCalendar getEventCalendar() {
-	return eventCalendar;
-    }
-    /**
-     * @param eventCalendar The eventCalendar to set.
-     */
-    public void setEventCalendar(EventCalendar eventCalendar) {
-	this.eventCalendar = eventCalendar;
     }
     
     public int getNumberFlashClients() {

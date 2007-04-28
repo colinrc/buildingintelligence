@@ -327,12 +327,12 @@ public interface DeviceModel {
      * Returns the list of models in the application
      * @return
      */
-	public Collection getModelList();
+	public Collection <DeviceModel>getModelList();
 
 	/**
 	 * @param modelList The modelList to set.
 	 */
-	public void setModelList(Collection modelList) ;
+	public void setModelList(Collection<DeviceModel> modelList) ;
 
 	/**
 	 * @return Returns the configHelper.
@@ -486,12 +486,6 @@ public interface DeviceModel {
 
 	public void setModelType(ModelTypes modelType) ;
 	
-	public EventCalendar getEventCalendar() ;
-	
-	/**
-	 * @param eventCalendar The eventCalendar to set.
-	 */
-	public void setEventCalendar(EventCalendar eventCalendar) ;
 	
 	/**
 	 * Used by the version manager to display details to the client.

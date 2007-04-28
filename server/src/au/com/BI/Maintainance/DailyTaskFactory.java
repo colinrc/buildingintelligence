@@ -14,7 +14,6 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 
-import au.com.BI.Macro.MacroHandler;
 
 /**
  * @author colin
@@ -22,7 +21,7 @@ import au.com.BI.Macro.MacroHandler;
  */
 public class DailyTaskFactory  {
 	protected Logger logger = null;
-	protected MacroHandler macroHandler = null;
+	protected au.com.BI.Calendar.Model calendarModel = null;
 	protected String startTime = "23:30";
 	protected JobDetail jobDetail = null;
 	final String MAINTENANCE_GROUP = "Maintenance";
@@ -46,7 +45,7 @@ public class DailyTaskFactory  {
 		jobDetail.setName("Maintenance");
 		jobDetail.setGroup(MAINTENANCE_GROUP);
 		JobDataMap map = jobDetail.getJobDataMap();
-		map.put("MACRO", macroHandler);
+		map.put("CALENDAR", calendarModel);
 		jobDetail.setJobClass(DailyTask.class);
 
 
@@ -93,12 +92,12 @@ public class DailyTaskFactory  {
 		this.sched = sched;
 	}
 
-	public MacroHandler getMacroHandler() {
-		return macroHandler;
+	public au.com.BI.Calendar.Model getCalendarModel() {
+		return calendarModel;
 	}
 
-	public void setMacroHandler(MacroHandler macroHandler) {
-		this.macroHandler = macroHandler;
+	public void setCalendarModel(au.com.BI.Calendar.Model calendarModel) {
+		this.calendarModel = calendarModel;
 	}
 	
 }

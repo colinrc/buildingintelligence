@@ -46,7 +46,7 @@ public class EventCalendar {
 	protected MacroHandler macroHandler = null;
 	protected User user = null;
     protected SchedulerFactory schedFact = null;
-	protected CalendarEventFactory calendarEventFactory = null;
+	protected CalendarEventFactory calendarEventFactory = null; 
 	
     public EventCalendar (MacroHandler macroHandler, User user) throws SchedulerException {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
