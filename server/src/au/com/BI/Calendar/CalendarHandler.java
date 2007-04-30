@@ -29,7 +29,7 @@ public class CalendarHandler {
 	 * 
 	 */
 	protected String fileName = "";
-        private String integratorFileName = "";
+    private String integratorFileName = "";
 	protected String calendarFileName = "";
 	protected Logger logger;
 	protected CommandQueue commandList = null;

@@ -227,7 +227,9 @@ public class CalendarEventFactory {
 	long intervalMonth = 1L;
 	map.put ("Interval",interval);
 	map.put ("IntervalMonth",intervalMonth);
+
 	long recurVal = 1;
+    map.put("RecurVal", recurVal);
 	
 	Element patternXML = nextEvent.getChild("pattern");
 	if (patternXML != null) {
@@ -244,7 +246,8 @@ public class CalendarEventFactory {
 			    logger.log (Level.WARNING,"An invalid recurrance was sent with a calendar event " + recur);
 			}
 	    }
-
+	    map.put("RecurVal", recurVal);
+	    
 	    
 	    Iterator attributeList = patternXML.getAttributes().iterator();
 	    while (attributeList.hasNext()) {

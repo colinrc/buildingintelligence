@@ -76,9 +76,18 @@ public class MacroEvent implements Job {
 		  String icon =dataMap.getString ("Icon");
 		  String autoclose = dataMap.getString ("AutoClose");
 		  String hideclose = dataMap.getString ("HideClose");
-		  long recurVal = dataMap.getInt ("RecurVal");
-		  long interval = dataMap.getLong ("Interval");
-		  long intervalMonth = dataMap.getLong ("IntervalMonth");
+		  long recurVal = 1L;
+		  long interval = 1L;
+		  long intervalMonth = 1L;
+		  try {
+			  recurVal = dataMap.getLong("RecurVal");
+			  interval = dataMap.getLong ("Interval");
+			  intervalMonth = dataMap.getLong ("IntervalMonth");
+		  } catch (NumberFormatException ex) {
+			  throw new JobExecutionException (ex.getMessage());
+		  }catch (NullPointerException  ex) {
+			  throw new JobExecutionException (ex.getMessage());
+		  }
 		  
 		  int startMonth = dataMap.getInt("StartMonth");
 		  

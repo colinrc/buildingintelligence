@@ -83,7 +83,7 @@ public class EventCalendar {
 		    Element nextEvent = (Element)eachEvent.next();
 		    try {
 		    	CalendarEventEntry calendarEventEntry = calendarEventFactory.createEvent(nextEvent);
-		    	if (calendarEventEntry.isStillActive() && calendarEventEntry.isActive()){
+		    	if (calendarEventEntry.isStillActive()){
 		    		addEvent (calendarEventEntry);
 		    	}
 		    	if (calendarEventEntry.isStillActive() && !cleanup){
