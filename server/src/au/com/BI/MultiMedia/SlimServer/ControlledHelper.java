@@ -10,8 +10,8 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
-import au.com.BI.MultiMedia.MultiMediaFlashCommand;
-import au.com.BI.MultiMedia.SlimServer.Commands.Album;
+import au.com.BI.MultiMedia.Album;
+import au.com.BI.MultiMedia.AlbumCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.Artist;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseAlbumsReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseArtistsReply;
@@ -58,26 +58,28 @@ public class ControlledHelper {
 		if (_command.getClass().equals(BrowseAlbumsReply.class)) {
 			BrowseAlbumsReply reply = (BrowseAlbumsReply)_command;
 			
+			AlbumCommand flashCommand = new AlbumCommand();
+			
 			Iterator<Album> it = reply.getAlbums().iterator();
 			while (it.hasNext()) {
 				Album album = (Album)it.next();
-				CommandInterface flashCommand = new MultiMediaFlashCommand();
-				flashCommand.setDisplayName(model.getCurrentPlayer().getOutputKey());
-				flashCommand.setTargetDeviceID(-1);
-				flashCommand.setUser(model.currentUser);
-				flashCommand.setExtraInfo(album.getId());
-				flashCommand.setExtra2Info(album.getAlbum());
-				flashCommand.setKey("CLIENT_SEND");
-				flashCommand.setCommand("ALBUM");
-				sendCommand(cache, commandQueue, flashCommand);
+				album.setUrlPath(model.getURLPath());
+				
+				flashCommand.getAlbums().add(album);
 			}
+			flashCommand.setDisplayName(model.getCurrentPlayer().getOutputKey());
+			flashCommand.setTargetDeviceID(-1);
+			flashCommand.setUser(model.currentUser);
+			flashCommand.setKey("CLIENT_SEND");
+			flashCommand.setCommand("ALBUM");
+			sendCommand(cache, commandQueue, flashCommand);
 		} else if (_command.getClass().equals(BrowseArtistsReply.class)) {
 			BrowseArtistsReply reply = (BrowseArtistsReply)_command;
 			
 			Iterator<Artist> it = reply.getArtists().iterator();
 			while (it.hasNext()) {
 				Artist artist = (Artist)it.next();
-				CommandInterface flashCommand = new MultiMediaFlashCommand();
+				CommandInterface flashCommand = new AlbumCommand();
 				flashCommand.setDisplayName(model.getCurrentPlayer().getOutputKey());
 				flashCommand.setTargetDeviceID(-1);
 				flashCommand.setUser(model.currentUser);
@@ -93,7 +95,7 @@ public class ControlledHelper {
 			Iterator<Genre> it = reply.getGenres().iterator();
 			while (it.hasNext()) {
 				Genre genre = (Genre)it.next();
-				CommandInterface flashCommand = new MultiMediaFlashCommand();
+				CommandInterface flashCommand = new AlbumCommand();
 				flashCommand.setDisplayName(model.getCurrentPlayer().getOutputKey());
 				flashCommand.setTargetDeviceID(-1);
 				flashCommand.setUser(model.currentUser);
@@ -115,13 +117,7 @@ public class ControlledHelper {
 	public void sendCommand (Cache cache, 
 			CommandQueue commandQueue, 
 			CommandInterface command) {
-		logger.log(Level.FINER, "Sending " + command.getCommandCode() + " command for " +
-				command.getDisplayName() + "; extraInfo=" + 
-				command.getExtraInfo() + "; extra2Info=" + 
-				command.getExtra2Info() + "; extra3Info=" + 
-				command.getExtra3Info() + "; extra4Info=" + 
-				command.getExtra4Info() + "; extra5Info=" + 
-				command.getExtra5Info());
+		logger.log(Level.FINER, "Sending " + command.getXMLCommand().toString());
 		cache.setCachedCommand(command.getDisplayName(), command);
 		sendToFlash(commandQueue, -1, command);
 	}

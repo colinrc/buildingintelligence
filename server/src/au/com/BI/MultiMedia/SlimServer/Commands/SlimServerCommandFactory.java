@@ -5,6 +5,7 @@ import java.net.URLDecoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import au.com.BI.MultiMedia.Album;
 import au.com.BI.Util.StringUtils;
 
 public class SlimServerCommandFactory {
@@ -121,6 +122,28 @@ public class SlimServerCommandFactory {
 				} else {
 					command.setRescan(false);
 				}
+			} else if (tag.equals("artwork_track_id")) {
+				album.setArtworkTrackId(value);
+			} else if (tag.equals("disccount")) {
+				try {
+					album.setDisccount(Integer.parseInt(value));
+				} catch (NumberFormatException e) {
+					throw new SlimServerCommandException("Tried to set the disccount of albums but could not parse " + value + " to an integer.");
+				}
+			} else if (tag.equals("disc")) {
+				try {
+					album.setDisc(Integer.parseInt(value));
+				} catch (NumberFormatException e) {
+					throw new SlimServerCommandException("Tried to set the disc of albums but could not parse " + value + " to an integer.");
+				}
+			} else if (tag.equals("year")) {
+				try {
+					album.setYear(Integer.parseInt(value));
+				} catch (NumberFormatException e) {
+					throw new SlimServerCommandException("Tried to set the year of album but could not parse " + value + " to an integer.");
+				}
+			} else if (tag.equals("title")) {
+				album.setTitle(value);
 			}
 		}
 		

@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import au.com.BI.MultiMedia.Album;
 import au.com.BI.Util.StringUtils;
 
 public class BrowseAlbums extends SlimServerCommand {
@@ -33,6 +34,15 @@ public class BrowseAlbums extends SlimServerCommand {
 		compilation = false;
 		sort = SortOrder.NONE;
 		tags = new LinkedList<AlbumTag>();
+		
+		// always get the artwork track id
+		tags.add(AlbumTag.ALBUM);
+		tags.add(AlbumTag.ARTWORK_TRACK_ID);
+		tags.add(AlbumTag.COMPILATION);
+		tags.add(AlbumTag.DISC);
+		tags.add(AlbumTag.DISCCOUNT);
+		tags.add(AlbumTag.TITLE);
+		tags.add(AlbumTag.YEAR);
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 	
@@ -155,9 +165,11 @@ public class BrowseAlbums extends SlimServerCommand {
 			commandString += " sort:" + sort.getValue();
 		}
 		
-		Iterator<AlbumTag> albumTagsIter = tags.iterator();
-		while(albumTagsIter.hasNext()) {
-			commandString += " tags:" + albumTagsIter.next().getValue();
+		if (tags.size() > 0) {
+			commandString += " tags:";
+			for (AlbumTag tag: tags) {
+				commandString += tag.getValue();
+			}
 		}
 		
 		return commandString;

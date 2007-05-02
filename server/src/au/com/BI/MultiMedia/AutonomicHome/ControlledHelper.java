@@ -12,7 +12,7 @@ import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.M1.M1FlashCommand;
 import au.com.BI.M1.Model;
-import au.com.BI.MultiMedia.MultiMediaFlashCommand;
+import au.com.BI.MultiMedia.AlbumCommand;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.Album;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.AutonomicHomeCommand;
 import au.com.BI.MultiMedia.AutonomicHome.Commands.AutonomicHomeCommandException;
@@ -144,7 +144,7 @@ public class ControlledHelper {
 			Iterator<Album> it = albums.getAlbums().iterator();
 			while (it.hasNext()) {
 				Album album = (Album)it.next();
-				CommandInterface flashCommand = new MultiMediaFlashCommand();
+				CommandInterface flashCommand = new AlbumCommand();
 				flashCommand.setDisplayName(model.getCurrentInstance().getKey());
 				flashCommand.setTargetDeviceID(-1);
 				flashCommand.setUser(model.currentUser);
