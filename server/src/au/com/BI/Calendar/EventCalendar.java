@@ -83,10 +83,16 @@ public class EventCalendar {
 		    Element nextEvent = (Element)eachEvent.next();
 		    try {
 		    	CalendarEventEntry calendarEventEntry = calendarEventFactory.createEvent(nextEvent);
-		    	if (calendarEventEntry.isStillActive()){
+		    	if (calendarEventEntry.isStillActive() && calendarEventEntry.isActive()){
+	    			// Still active means the events end date has not been passed; isActive means the ACTIVE flag is set to Y
 		    		addEvent (calendarEventEntry);
 		    	}
-		    	if (calendarEventEntry.isStillActive() && !cleanup){
+		    	if (cleanup){
+		    		if (calendarEventEntry.isStillActive()){
+
+			    		addEventXMLToStore (calendarEventEntry.getId(),nextEvent);
+		    		}
+		    	} else {
 		    		addEventXMLToStore (calendarEventEntry.getId(),nextEvent);
 		    	}
 		    } catch (CalendarException ex){

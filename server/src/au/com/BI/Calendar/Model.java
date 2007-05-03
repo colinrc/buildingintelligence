@@ -147,7 +147,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			    Element nextEvent = (Element)eachEvent.next();
 			    try {
 			    	CalendarEventEntry calendarEventEntry = calendarEventFactory.createEvent(nextEvent);
-			    	if (calendarEventEntry.isStillActive() ){
+			    	if (calendarEventEntry.isStillActive()  && calendarEventEntry.isActive()){
 			    		eventCalendar.addEvent (calendarEventEntry);
 			    	}
 			    	eventID = eventID +','+ calendarEventEntry.getId();
