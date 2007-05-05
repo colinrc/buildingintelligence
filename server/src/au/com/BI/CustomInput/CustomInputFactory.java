@@ -34,7 +34,7 @@ public class CustomInputFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addCustomInput(DeviceModel targetDevice, List clientModels,
+	public void addCustomInput(DeviceModel targetDevice, List <DeviceModel>clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("NAME");
 		String key = element.getAttributeValue("KEY");

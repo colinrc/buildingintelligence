@@ -34,7 +34,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 	
 	protected String outputVideoCommand = "";
-	protected HashMap state;
+
 	protected HashMap <String,String>currentSrc;
 	protected KramerHelper kramerHelper;
 	
@@ -42,7 +42,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		kramerHelper = new KramerHelper();
-		state = new HashMap();
 		currentSrc = new HashMap<String,String>();
 		super.setTransmitMessageOnBytes(4); // kramer only sends a single non CR terminated byte.
 		configHelper.addParameterBlock ("AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Audio Source");
@@ -50,7 +49,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 	public void clearItems () {
-		state.clear();
 		currentSrc.clear();
 		super.clearItems();
 	}
@@ -65,15 +63,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			comms.clearCommandQueue();
 		
 		}
-		Iterator avDevices = configHelper.getAllControlledDevices();
-		while (avDevices.hasNext()) {
-			AV avDevice = (AV)avDevices.next();
-		}
 
 	}
 
 	
-	public void sendSrc (List commandQueue, long targetFlashDeviceID, AV audioDevice, String src) {
+	public void sendSrc (CommandQueue commandQueue, long targetFlashDeviceID, AV audioDevice, String src) {
 		AVCommand audioCommand = (AVCommand)audioDevice.buildDisplayCommand ();
 		audioCommand.setKey ("CLIENT_SEND");
 		audioCommand.setTargetDeviceID(targetFlashDeviceID);
@@ -82,7 +76,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		sendToFlash (audioCommand,cache);	
 	}
 	
-	public void sendVolume (List commandQueue, long targetFlashDeviceID, AV audioDevice, String volume) {
+	public void sendVolume (CommandQueue commandQueue, long targetFlashDeviceID, AV audioDevice, String volume) {
 		AVCommand audioCommand = (AVCommand)audioDevice.buildDisplayCommand ();
 		audioCommand.setKey ("CLIENT_SEND");
 		audioCommand.setTargetDeviceID(targetFlashDeviceID);
@@ -290,11 +284,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return null;
 		
 		}
-	}
-
-
-	public boolean hasState (String zone) {
-		return state.containsKey(zone);
 	}
 	
 	

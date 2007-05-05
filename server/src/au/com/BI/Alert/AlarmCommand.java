@@ -5,7 +5,6 @@
 package au.com.BI.Alert;
 import au.com.BI.Command.Command;
 import au.com.BI.Command.CommandInterface;
-import java.util.*;
 import org.jdom.*;
 
 
@@ -16,8 +15,6 @@ import org.jdom.*;
  *
  */
 public class AlarmCommand extends Command implements CommandInterface {
-
-	private Map keyList;
 	
 	public static int RawText = 1;
 	

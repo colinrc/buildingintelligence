@@ -36,7 +36,7 @@ public class AudioFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addAudio(DeviceModel targetDevice, List clientModels,
+	public void addAudio(DeviceModel targetDevice, List <DeviceModel>clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");

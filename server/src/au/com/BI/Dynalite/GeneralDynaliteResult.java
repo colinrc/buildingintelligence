@@ -19,7 +19,7 @@ public class GeneralDynaliteResult {
 		 linkedDeviceCommands = new LinkedList <CommandInterface>();	
 	}
 	
-	public List getLinkedDeviceCommands() {
+	public List <CommandInterface>getLinkedDeviceCommands() {
 		return linkedDeviceCommands;
 	}
 

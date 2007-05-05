@@ -1,7 +1,5 @@
 package au.com.BI.Thermostat;
 
-import java.util.Map;
-
 import org.jdom.Element;
 
 import au.com.BI.Command.Command;
@@ -9,8 +7,7 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.User.User;
 
 public class ThermostatCommand extends Command implements CommandInterface {
-	
-	private Map keyList;
+
 	
 	public static int RawText = 1;
 	

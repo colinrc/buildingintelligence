@@ -37,7 +37,7 @@ public class FlashClientHandler extends Thread {
 	protected ClientCommandFactory clientCommandFactory;
 	protected long serverID;
 	protected long ID;
-	protected List clientList; // used to remove this thread in case of
+	protected List <FlashClientHandler>clientList; // used to remove this thread in case of
 								// disaster
 
 	protected BufferedReader rd;
@@ -45,7 +45,7 @@ public class FlashClientHandler extends Thread {
 	private TEA decrypter = null;
 
 	public FlashClientHandler(Socket connection, CommandQueue commandList,
-			List clientList, ClientCommandFactory clientCommandFactory ) throws ConnectionFail {
+			List <FlashClientHandler>clientList, ClientCommandFactory clientCommandFactory ) throws ConnectionFail {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		clientConnection = connection;
 		this.commandList = commandList;
@@ -141,10 +141,7 @@ public class FlashClientHandler extends Thread {
 								clientCommand = clientCommandFactory.processXML(rootElement);
 							}
 							if (clientCommand != null) {
-								synchronized (commandList) {
-									commandList.add(clientCommand);
-									commandList.notifyAll();
-								}
+								commandList.add(clientCommand);
 							}
 						} catch (JDOMException ex) {
 							logger.log(Level.WARNING,
@@ -200,10 +197,8 @@ public class FlashClientHandler extends Thread {
 			Element rootElement = xmlDoc.getRootElement();
 			ClientCommand clientCommand = clientCommandFactory.processXML(rootElement);
 			if (clientCommand != null) {
-				synchronized (commandList) {
 					commandList.add(clientCommand);
-					commandList.notifyAll();
-				}
+
 			}
 		} catch (JDOMException ex) {
 			logger.log(Level.WARNING, "XML ERROR " + ex.getMessage());

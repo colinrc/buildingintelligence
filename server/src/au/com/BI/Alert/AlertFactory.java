@@ -1,6 +1,5 @@
 package au.com.BI.Alert;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +35,7 @@ public class AlertFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addAlert(DeviceModel targetDevice, List clientModels,
+	public void addAlert(DeviceModel targetDevice, List <DeviceModel>clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("DISPLAY_NAME");
 		try  {
@@ -72,7 +71,7 @@ public class AlertFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addAlarm(DeviceModel targetDevice, List clientModels,
+	public void addAlarm(DeviceModel targetDevice, List <DeviceModel>clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		
 		String outKey = element.getAttributeValue("DISPLAY_NAME");
@@ -91,9 +90,7 @@ public class AlertFactory {
 					
 			if (outKey != null && !outKey.equals("")) {
 				targetDevice.addControlledItem(outKey, theOutput, MessageDirection.FROM_FLASH);
-				Iterator clientModelList = clientModels.iterator();
-				while (clientModelList.hasNext()) {
-					DeviceModel clientModel = (DeviceModel) clientModelList.next();
+				for (DeviceModel clientModel :clientModels){
 					clientModel.addControlledItem(outKey, theOutput, type);
 				}
 			}

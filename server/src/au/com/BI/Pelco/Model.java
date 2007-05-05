@@ -38,12 +38,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	static final int ProtocolD = 2;
 	static final int ProtocolG = 2;
 
-	protected Map cameraState = null;
+	protected Map<String,PelcoState>cameraState = null;
 	
 	public Model () {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		cameraState = new HashMap(10);
+		cameraState = new HashMap<String,PelcoState>(10);
 		setPadding(2);
 	}
 	public void finishedReadingConfig () throws SetupException {

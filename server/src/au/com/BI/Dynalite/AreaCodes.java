@@ -3,7 +3,6 @@ package au.com.BI.Dynalite;
 import au.com.BI.Util.*;
 import au.com.BI.Config.*;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.*;
@@ -36,11 +35,9 @@ public class AreaCodes {
 		String paddedKey = Utility.padString (areaCode,2);
 		
 		if (areaCodes.containsKey(paddedKey)){
-			LinkedList devs = (LinkedList)areaCodes.get (paddedKey);
-			Iterator devsIter = devs.iterator();
-			while (devsIter.hasNext()){
+			for (DynaliteDevice dev:areaCodes.get (paddedKey)){
 				try {
-					DynaliteDevice dev = (DynaliteDevice)devsIter.next();
+
 					int newArea = dev.listensToLinkArea(toAreaOffset);
 					if (newArea < 255){
 						String paddedToKey = Utility.padStringTohex(newArea);
@@ -59,11 +56,9 @@ public class AreaCodes {
 	void removeJoin ( String areaCode,int toAreaOffset){
 		String paddedKey = Utility.padString (areaCode,2);
 		if (areaCodes.containsKey(paddedKey)){
-			LinkedList devs = (LinkedList)areaCodes.get (paddedKey);
-			Iterator devsIter = devs.iterator();
-			while (devsIter.hasNext()){
+
+			for (DynaliteDevice dev: areaCodes.get (paddedKey)){
 				try {
-					DynaliteDevice dev = (DynaliteDevice)devsIter.next();
 					int newArea = dev.listensToLinkArea(toAreaOffset);
 					if (newArea < 255){
 						String paddedToKey = Utility.padStringTohex(newArea);
@@ -107,7 +102,7 @@ public class AreaCodes {
 	}
 	
 
-	List findDevicesInArea (int areaInt, boolean includeAreaControl,int join) {
+	List <DynaliteDevice>findDevicesInArea (int areaInt, boolean includeAreaControl,int join) {
 		String area = Utility.padStringTohex(areaInt);
 		return findDevicesInArea (area,includeAreaControl,join);
 	}
@@ -137,9 +132,9 @@ public class AreaCodes {
 	}
 	
 	List <DynaliteDevice> getAllEquivalentDevices (DynaliteDevice device) {
+		List<DynaliteDevice>  result = new LinkedList<DynaliteDevice> ();
 		
 		if (device.isLinked()){
-			List<DynaliteDevice>  result = new LinkedList<DynaliteDevice> ();
 			
 			for (String nextAreaCode:areaCodes.keySet()){
 				try {
@@ -157,10 +152,8 @@ public class AreaCodes {
 					logger.log (Level.WARNING,"A non dynalite device was recorded in the area link map");
 				}
 			}
-			return result;
-		} else {
-			return null;
 		}
+		return result;
 	}
 
 	public ConfigHelper getConfigHelper() {

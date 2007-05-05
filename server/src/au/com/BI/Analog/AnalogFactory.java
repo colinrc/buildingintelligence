@@ -1,6 +1,5 @@
 package au.com.BI.Analog;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +33,7 @@ public class AnalogFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addAnalog(DeviceModel targetDevice, List clientModels,
+	public void addAnalog(DeviceModel targetDevice, List <DeviceModel>clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("NAME");
 		
@@ -51,9 +50,7 @@ public class AnalogFactory {
 			targetDevice.addStartupQueryItem(key, theInput, type);
 			if (outKey != null && !outKey.equals("")) {
 				targetDevice.addControlledItem(outKey, theInput, MessageDirection.FROM_FLASH);
-				Iterator clientModelList = clientModels.iterator();
-				while (clientModelList.hasNext()) {
-					DeviceModel clientModel = (DeviceModel) clientModelList.next();
+				for (DeviceModel clientModel :clientModels){
 					clientModel.addControlledItem(outKey, theInput, type);
 				}
 			}

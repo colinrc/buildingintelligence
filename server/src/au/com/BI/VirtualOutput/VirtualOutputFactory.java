@@ -1,6 +1,5 @@
 package au.com.BI.VirtualOutput;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +34,7 @@ public class VirtualOutputFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addVirtualOutput(DeviceModel targetDevice, List clientModels,
+	public void addVirtualOutput(DeviceModel targetDevice, List <DeviceModel>clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("NAME");
 		try  {
@@ -58,9 +57,7 @@ public class VirtualOutputFactory {
 			targetDevice.addStartupQueryItem(key, theOuput, type);
 			if (outKey != null && !outKey.equals("")) {
 				targetDevice.addControlledItem(outKey, theOuput, MessageDirection.FROM_FLASH);
-				Iterator clientModelList = clientModels.iterator();
-				while (clientModelList.hasNext()) {
-					DeviceModel clientModel = (DeviceModel) clientModelList.next();
+				for (DeviceModel clientModel:clientModels){
 					clientModel.addControlledItem(outKey, theOuput, type);
 				}
 			}

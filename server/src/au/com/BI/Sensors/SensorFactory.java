@@ -1,6 +1,5 @@
 package au.com.BI.Sensors;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +26,7 @@ public class SensorFactory {
 		return (_singleton);
 	}
 	// physical sensors, such as temperature
-	public void addSensor(DeviceModel targetDevice, List clientModels,
+	public void addSensor(DeviceModel targetDevice, List <DeviceModel>clientModels,
 		Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("NAME");
 		try  {
@@ -56,9 +55,7 @@ public class SensorFactory {
 	
 			if (outKey != null && !outKey.equals("")) {
 				targetDevice.addControlledItem(outKey, theSensor, MessageDirection.FROM_FLASH);
-				Iterator clientModelList = clientModels.iterator();
-				while (clientModelList.hasNext()) {
-					DeviceModel clientModel = (DeviceModel) clientModelList.next();
+				for (DeviceModel clientModel: clientModels){
 					clientModel.addControlledItem(outKey, theSensor, type);
 				}
 			}

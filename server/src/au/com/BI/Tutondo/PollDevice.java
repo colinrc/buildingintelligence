@@ -5,7 +5,6 @@
 package au.com.BI.Tutondo;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -88,9 +87,8 @@ public class PollDevice extends Thread {
 
 				}
 				else {
-					Iterator audioDevices = audioDeviceQueue.iterator(); 
-					while (audioDevices.hasNext()){
-						Audio nextDevice =(Audio)(audioDevices.next()); 
+
+					for (Audio nextDevice:audioDeviceQueue){
 						String zoneKey = (nextDevice).getKey();
 						String zoneName = (nextDevice).getOutputKey();
 

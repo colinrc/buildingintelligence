@@ -7,8 +7,6 @@
 package au.com.BI.Comfort;
 import au.com.BI.Util.*;
 
-import java.util.*;
-
 import au.com.BI.Alert.AlarmTypeCode;
 import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.*;
@@ -44,10 +42,9 @@ public class Startup {
 	public void doStartup(ConfigHelper configHelper, CommDevice comms) throws CommsFail {
 		synchronized (comms) {
 			doInitialCommands (comms); // Commands which have startup but do not have commands listed in the config
-			Iterator startupQueryItemList = configHelper.getStartupQueryItemsList();
-			while (startupQueryItemList.hasNext()) {
-				String key = (String)startupQueryItemList.next();
-				DeviceType deviceLine = (DeviceType)configHelper.getStartupQueryItem(key); 
+
+			for (String key: configHelper.getAllStartupDeviceKeys()){
+				DeviceType deviceLine = configHelper.getStartupQueryItem(key); 
 				if (deviceLine != null){
 					startupDevice (key,deviceLine.getName(),comms);
 				}

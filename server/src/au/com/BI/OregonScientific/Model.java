@@ -32,7 +32,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected String STX;
 	protected String ETX;
 	protected Logger logger;
-	protected HashMap weatherCache;
+	protected HashMap <Byte,String>weatherCache;
 
 	protected int []penChars;
 	protected int []etxChars;
@@ -41,7 +41,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		pollReaders = new Poll[10];
-		weatherCache = new HashMap(10);
+		weatherCache = new HashMap<Byte,String>(10);
 		penChars = new int[] {0xff};
 		etxChars = new int[] {0xff};
 	}
@@ -174,10 +174,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (this.weatherCache.containsKey(key)){
 			if (!value.equals ((String)weatherCache.get(key))){
 				returnVal = true;
-				weatherCache.put(key,value);
+				weatherCache.put(key,String.valueOf(value));
 			}
 		} else {
-			weatherCache.put(key,value);
+			weatherCache.put(key,String.valueOf(value));
 			returnVal = true;
 		}
 		return returnVal;

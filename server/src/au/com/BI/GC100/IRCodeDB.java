@@ -43,13 +43,13 @@ public class IRCodeDB {
 	private Map <String,String> dbItems;
 	private Map <String,String>dbFrequencies;
 	
-	public Set getDevices () {
+	public Set <String>getDevices () {
 		return devices.keySet();
 	}
 	
-	public Set getActions (String device) {
+	public Set <String> getActions (String device) {
 		if (devices.containsKey( device)) {
-		    LinkedHashMap dbItems = (LinkedHashMap)devices.get(device);
+		    LinkedHashMap<String,String> dbItems = (LinkedHashMap<String,String>)devices.get(device);
 		    if (dbItems != null) {
 			    return dbItems.keySet();		    	
 		    } else {
@@ -130,25 +130,23 @@ public class IRCodeDB {
 	}
 
 	public void addIRElements (Element topElement) {
-		Iterator eachDevice = devices.keySet().iterator();
-		while (eachDevice.hasNext()) {
-		    String device = (String)eachDevice.next();
-		    
-			Map dbItems = (LinkedHashMap)devices.get(device);
-			Map dbFrequencies = (LinkedHashMap)deviceItemFreqs.get(device);		
+
+		for (String device:devices.keySet()){
+				
+			Map <String,String>dbItems = (LinkedHashMap<String,String>)devices.get(device);
+
+			Map <String,String>dbFrequencies = (LinkedHashMap <String,String>)deviceItemFreqs.get(device);		
 
 			Element deviceElement = new Element ("IR_DEVICE");
 	        deviceElement.setAttribute ("NAME",device);
 	        deviceElement.setAttribute ("DESCRIPTION","");
 	        topElement.addContent(deviceElement);
 			    
-		    Iterator eachCode = dbItems.keySet().iterator();
-			while (eachCode.hasNext()) {
-			    String nextKey = (String)eachCode.next();
+			for (String nextKey: dbItems.keySet()){
 
 			    Element nextCode = new Element ("IR_CODE");
 			    nextCode.setAttribute("KEY",nextKey);
-			    if (deviceElement != null) deviceElement.addContent(nextCode);
+			    if (deviceElement != null) deviceElement.addContent(dbItems.get(nextKey));
 			}
 		}		
 	}
@@ -159,21 +157,17 @@ public class IRCodeDB {
 		Element topElement = new Element ("IRCODES"); 
 		doc.addContent(topElement);
 		
-		Iterator eachDevice = devices.keySet().iterator();
-		while (eachDevice.hasNext()) {
-		    String device = (String)eachDevice.next();
+		for (String device:devices.keySet()){
 		    
-			Map dbItems = (LinkedHashMap)devices.get(device);
-			Map dbFrequencies = (LinkedHashMap)deviceItemFreqs.get(device);		
+			Map <String,String>dbItems = (LinkedHashMap<String,String>)devices.get(device);
+			Map <String,String>dbFrequencies = (LinkedHashMap<String,String>)deviceItemFreqs.get(device);		
 
 			Element deviceElement = new Element ("DEVICE");
 	        deviceElement.setAttribute ("NAME",device);
 	        deviceElement.setAttribute ("DESCRIPTION","");
 	        topElement.addContent(deviceElement);
-			    
-		    Iterator eachCode = dbItems.keySet().iterator();
-			while (eachCode.hasNext()) {
-			    String nextKey = (String)eachCode.next();
+
+			for (String nextKey: dbItems.keySet()){
 
 			    Element nextCode = new Element ("CODE");
 			    nextCode.setAttribute("KEY",nextKey);
@@ -253,7 +247,7 @@ public class IRCodeDB {
 		        return "";
 
 			if (devices.containsKey( deviceName)) {
-			    Map dbItems = (LinkedHashMap)devices.get(deviceName);
+			    Map<String,String> dbItems = (LinkedHashMap<String,String>)devices.get(deviceName);
 			    if (dbItems == null) {
 			        logger.log(Level.INFO,"GC100 IR code DB inconsistent.");
 			        return "";

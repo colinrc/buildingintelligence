@@ -132,10 +132,7 @@ public class FlashControlListener extends Thread {
 			    	allControllers.remove();
 					ClientCommand clientCommand = clientCommandFactory.buildListNamesCommand();
 					if (clientCommand != null) {
-						synchronized (commandList) {
 							commandList.add(clientCommand);
-							commandList.notifyAll();
-						}
 					}
 			    	
 			    	logger.log(Level.INFO,"Client went away, removing the handler");

@@ -52,9 +52,7 @@ public class Logout extends HttpServlet {
 			    	addressBook.removeByID(ID);
 					ClientCommand clientCommand = clientCommandFactory.buildListNamesCommand();
 					if (clientCommand != null) {
-						synchronized (commandQueue) {
-							commandQueue.add(clientCommand);
-						}
+						commandQueue.add(clientCommand);
 					}
 			    	
         	}

@@ -2,7 +2,7 @@
  * Created on May 2, 2004
  */
 package au.com.BI.Comfort;
-import java.util.*;
+
 import java.util.logging.*;
 
 import au.com.BI.Command.*;
@@ -39,10 +39,8 @@ public class OutputHelper {
 	
 
 	public void doOutputItem (CommandInterface command, ComfortString comfortString, ConfigHelper configHelper, Cache cache, CommDevice comms, au.com.BI.Comfort.Model comfort) throws CommsFail {	
-		ArrayList deviceList = (ArrayList)configHelper.getOutputItem(comfortString.comfortKey);
-		DeviceType device = null;
-		
-		device = configHelper.getOutputItem(comfortString.comfortKey);
+
+		DeviceType device = configHelper.getOutputItem(comfortString.comfortKey);
 
 		logger.log(Level.FINER, "Monitored comfort event sending to " + comfortString.comfortKey + " :" + device.getName());
 		cache.setCachedCommand(comfortString.comfortKey,command);

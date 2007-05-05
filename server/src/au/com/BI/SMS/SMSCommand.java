@@ -5,9 +5,6 @@
 package au.com.BI.SMS;
 import au.com.BI.Command.*;
 import au.com.BI.User.*;
-import java.util.*;
-import org.jdom.*;
-
 
 /**
  * @author Colin Canfield

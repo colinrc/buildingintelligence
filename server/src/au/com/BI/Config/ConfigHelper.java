@@ -100,25 +100,27 @@ public class ConfigHelper {
 	}
 	
 
-	public Iterator getAllControlledDevices(){
+	/**
+	 * @deprecated
+	 */
+	public Iterator <DeviceType>getAllControlledDevices(){
 		return controlledItems.values().iterator();		
 	}
 	
-	public Iterator getControlledItemsList (){
+	/**
+	 * @deprecated
+	 */
+	public Iterator <String>getControlledItemsList (){
 		return controlledItems.keySet().iterator();
 	}
-	public Iterator getStartupQueryItemsList (){
+	
+	/**
+	 * @deprecated
+	 */
+	public Iterator <String>getStartupQueryItemsList (){
 		return startupQueryItems.keySet().iterator();
 	}
-		
-	private Iterator getInputItemsList (){
-		return inputItems.keySet().iterator();
-	}
-	
 
-	private Iterator getAllInputDevices(){
-		return inputItems.values().iterator();		
-	}
 	
 	private Collection<DeviceType> getAllInputDeviceObjects(){
 		return inputItems.values();		
@@ -138,6 +140,22 @@ public class ConfigHelper {
 	}
 
 
+	private Collection<String> getAllInputDeviceKeys(){
+		return inputItems.keySet();		
+	}
+	
+	public Collection<String> getAllControlledDeviceKeys(){
+		return controlledItems.keySet();		
+	}
+	
+	public Collection<String> getAllOutputDeviceKeyss(){
+		return outputItems.keySet();		
+	}
+	
+	
+	public Collection<String> getAllStartupDeviceKeys(){
+		return startupQueryItems.keySet();		
+	}
 
 	public void addControlledItem (String name, DeviceType details, MessageDirection controlType){
 		if (controlType == MessageDirection.FROM_HARDWARE) {

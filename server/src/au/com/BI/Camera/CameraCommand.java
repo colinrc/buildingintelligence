@@ -5,7 +5,6 @@
 package au.com.BI.Camera;
 import au.com.BI.Command.*;
 import au.com.BI.User.*;
-import java.util.*;
 import org.jdom.*;
 
 
@@ -16,8 +15,6 @@ import org.jdom.*;
  *
  */
 public class CameraCommand extends Command implements CommandInterface {
-
-	private Map keyList;
 	
 	public static int RawText = 1;
 	

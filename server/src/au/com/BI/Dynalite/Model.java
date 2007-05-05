@@ -22,7 +22,6 @@ import au.com.BI.Lights.*;
 public class Model extends SimplifiedModel implements DeviceModel {
 
 	protected String outputDynaliteCommand = "";
-	protected HashMap state;
 	protected DynaliteHelper dynaliteHelper;
 	protected AreaCodes areaCodes = null;
 	protected int protocol = DynaliteDevice.Linear;
@@ -31,7 +30,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public Model () {
 		super();
 
-		state = new HashMap(128);
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		dynaliteHelper = new DynaliteHelper();	
 		areaCodes = new AreaCodes();
@@ -44,7 +42,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 
 	public void clearItems () {
-		state.clear();
 		areaCodes.clear();
 		super.clearItems();
 	}
@@ -154,21 +151,15 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 	
 	void requestAllLevels (String area,byte join) throws CommsFail{
-		List allLights = areaCodes.findDevicesInArea (area,false,join);
-		Iterator eachLight = allLights.iterator();
-		while (eachLight.hasNext()){
-			DynaliteDevice nextItem = (DynaliteDevice)eachLight.next();
+
+		for (DynaliteDevice nextItem:areaCodes.findDevicesInArea (area,false,join)){
 			requestLevel (nextItem.getAreaCode(),nextItem.getChannel(),nextItem.getOutputKey());				
 		}
 	}
 	
 	void requestAllLevels () throws CommsFail{
-		Iterator eachLight = configHelper.getControlledItemsList();
-		while (eachLight.hasNext()){
-			String nextKey = (String)eachLight.next();
-			try {
-				Object tempDevice = configHelper.getControlledItem(nextKey);
-				DeviceType nextDevice = (DeviceType)tempDevice;
+		for (DeviceType nextDevice: configHelper.getAllControlledDeviceObjects()){
+			try {			
 				if (nextDevice.getDeviceType() == DeviceType.LIGHT_DYNALITE )  {
 					DynaliteDevice nextItem = (DynaliteDevice)nextDevice;
 					String fullKey = dynaliteHelper.buildKey('L',nextItem.getAreaCode(),nextItem.getChannel());
@@ -190,12 +181,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 
 	void requestAllAreaLinks () throws CommsFail{
-		List areaDeviceList = areaCodes.findAllAreas();
-		Iterator eachArea = areaDeviceList.iterator();
-		while (eachArea.hasNext()){
+
+		for (DynaliteDevice nextItem: areaCodes.findAllAreas()){
 			try {
-				DynaliteDevice nextItem = (DynaliteDevice)eachArea.next();
 				if (nextItem.getDeviceType() == DeviceType.LIGHT_DYNALITE_AREA )  {
+					
 					String fullKey = dynaliteHelper.buildKey('L',nextItem.getAreaCode(),nextItem.getChannel());
 					if (	nextItem.isAreaDevice()) continue; 
 					DynaliteOutput result = this.buildDynaliteLinkRequestCommand(nextItem.getAreaCode(),nextItem.getOutputKey(),255);
@@ -261,9 +251,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 							logger.log (Level.FINER,"Sending dynalite command " + " for " + ((LightFascade)(device)).getOutputKey());
 
-							Iterator li = outputDynaliteCommand.linkedDeviceCommands.iterator();
-							while (li.hasNext()){
-								CommandInterface nextCommand = (CommandInterface)li.next();
+							for (CommandInterface nextCommand: outputDynaliteCommand.getLinkedDeviceCommands()){
 								cache.setCachedCommand(nextCommand.getKey(),nextCommand);
 								this.sendToFlash(-1,nextCommand);
 								logger.log (Level.FINER,"Sending dynalite linked command " + " for " + nextCommand.getKey());
@@ -291,9 +279,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 							}
 
 							logger.log (Level.FINER,"Sending dynalite command " + " for " + ((LightFascade)(device)).getOutputKey());
-							Iterator li = outputDynaliteCommand.linkedDeviceCommands.iterator();
-							while (li.hasNext()){
-								CommandInterface nextCommand = (CommandInterface)li.next();
+								
+							for (CommandInterface nextCommand : outputDynaliteCommand.getLinkedDeviceCommands()){
 								cache.setCachedCommand(nextCommand.getKey(),nextCommand);
 								this.sendToFlash(-1,nextCommand);
 								logger.log (Level.FINER,"Sending dynalite linked command " + " for " + nextCommand.getKey());
@@ -325,9 +312,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				logger.log (Level.WARNING,"Error in serial handler for dynalite.");
 			} else {
 				results = interperetDynaliteCode (returnVal);	
-				Iterator i = results.decoded.iterator();
-				while (i.hasNext()){
-					CommandInterface nextCommand = (CommandInterface)i.next();
+					
+				for (CommandInterface nextCommand: results.decoded){
 					if (nextCommand != null) {
 					    cache.setCachedCommand(nextCommand.getKey(),nextCommand);
 					    this.sendToFlash(-1,nextCommand);
@@ -342,9 +328,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						this.requestLevel(dev.getAreaCode(),dev.getChannel(),dev.getOutputKey());
 					}
 				}
-				Iterator li = results.linkedDeviceCommands.iterator();
-				while (li.hasNext()){
-					CommandInterface nextCommand = (CommandInterface)li.next();
+									
+				for (CommandInterface nextCommand:results.getLinkedDeviceCommands()){
 					cache.setCachedCommand(nextCommand.getKey(),nextCommand);
 					this.sendToFlash(-1,nextCommand);
 					logger.log (Level.FINER,"Sending dynalite linked command " + " for " + nextCommand.getDisplayName());
@@ -454,7 +439,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		int level = dynaliteHelper.scaleLevelForFlash(msg[2]);
 		int area = msg[1];
 		int rate = (int)((msg[5] * 256 + msg[4]) * 0.02);
-		DynaliteDevice dev = null;
 		String commandStr;
 		if (level == 0) {
 			commandStr = "off"; 
@@ -462,10 +446,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			commandStr = "on";
 		}
 		
-		List devList = areaCodes.findDevicesInArea(area,true,msg[6]);
-		Iterator eachDev = devList.iterator();
-		while (eachDev.hasNext()){
-			dev = (DynaliteDevice)eachDev.next();
+		for (DynaliteDevice dev: areaCodes.findDevicesInArea(area,true,msg[6])){
+			
 			dynResult = buildCommandForFlash ((DeviceType)dev,commandStr,level,rate,msg[6],this.currentUser);			
 			result.decoded.add(dynResult);
 			addJoinedDeviceUpdates (result,(DynaliteDevice)dev,"on",level,"0",Byte.toString(msg[6]));
@@ -595,7 +577,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			int level = dynaliteHelper.scaleLevelForFlash(msg[4]);
 			int channel = msg[2];
 			int area = msg[1];
-			DynaliteDevice dev = null;
+
 			int rate = 0;
 			switch (msg[3]){
 				case 0x71:
@@ -610,17 +592,15 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 			}
 			if (channel == 0xff){
-				List devList = areaCodes.findDevicesInArea(area,true,msg[6]);
-				Iterator eachDev = devList.iterator();
-				while (eachDev.hasNext()){
-					dev = (DynaliteDevice)eachDev.next();
+
+				for (DynaliteDevice dev: areaCodes.findDevicesInArea(area,true,msg[6])){
 					dynResult = buildCommandForFlash ((DeviceType)dev,"on",level,rate,msg[6],this.currentUser);			
 					result.decoded.add(dynResult);
 					addJoinedDeviceUpdates (result,(DynaliteDevice)dev,"on",level,"0",Byte.toString(msg[6]));
 				}
 				
 			} else {
-				dev = findSingleDevice (DynaliteHelper.Light,area,channel,true);
+				DynaliteDevice dev = findSingleDevice (DynaliteHelper.Light,area,channel,true);
 				if (dev != null){
 					dynResult = buildCommandForFlash ((DeviceType)dev,"on",level,rate,msg[6],this.currentUser);		
 					result.decoded.add(dynResult);
@@ -652,19 +632,16 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		int level = 100;
 		byte channel = msg[2];
 		byte area = msg[1];
-		DynaliteDevice dev = null;
 		if (channel == (byte)0xff){
-			List devList = areaCodes.findDevicesInArea(area,true,msg[6]);
-			Iterator eachDev = devList.iterator();
-			while (eachDev.hasNext()){
-				dev = (DynaliteDevice)eachDev.next();
+			
+			for (DynaliteDevice dev: areaCodes.findDevicesInArea(area,true,msg[6])){
 				dynResult = buildCommandForFlash ((DeviceType)dev,"on",level,0,msg[6],this.currentUser);			
 				result.decoded.add(dynResult);
 				addJoinedDeviceUpdates (result,(DynaliteDevice)dev,"on",level,"0",Byte.toString(msg[6]));
 			}
 			
 		} else {
-			dev = findSingleDevice (DynaliteHelper.Light,area,channel,true);
+			DynaliteDevice dev = findSingleDevice (DynaliteHelper.Light,area,channel,true);
 			if (dev != null){
 				dynResult = buildCommandForFlash ((DeviceType)dev,"on",level,0,msg[6],this.currentUser);		
 				result.decoded.add(dynResult);
@@ -680,19 +657,16 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			int level = 0;
 			byte channel = msg[2];
 			byte area = msg[1];
-			DynaliteDevice dev = null;
 			if (channel == 0xff){
-				List devList = areaCodes.findDevicesInArea(area,true,msg[6]);
-				Iterator eachDev = devList.iterator();
-				while (eachDev.hasNext()){
-					dev = (DynaliteDevice)eachDev.next();
+
+				for (DynaliteDevice dev: areaCodes.findDevicesInArea(area,true,msg[6])){
 					dynResult = buildCommandForFlash ((DeviceType)dev,"off",level,0,255,this.currentUser);			
 					result.decoded.add(dynResult);
 					addJoinedDeviceUpdates (result,(DynaliteDevice)dev,"off",0,"0",Byte.toString(msg[6]));
 				}
 				
 			} else {
-				dev = findSingleDevice (DynaliteHelper.Light,area,channel,true);
+				DynaliteDevice dev = findSingleDevice (DynaliteHelper.Light,area,channel,true);
 				if (dev != null){
 					dynResult = buildCommandForFlash ((DeviceType)dev,"off",level,0,255,this.currentUser);		
 					result.decoded.add(dynResult);
@@ -706,14 +680,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	{
 		CommandInterface dynResult = null;
 		int area = msg[1];
-		DynaliteDevice dev = null;
+		
 		int rate = (int)((msg[4] * 256 + msg[2]) * .02);
 		// CC complete
 		
-		List devList = areaCodes.findDevicesInArea(area,true,msg[6]);
-		Iterator eachDev = devList.iterator();
-		while (eachDev.hasNext()){
-			dev = (DynaliteDevice)eachDev.next();
+		for (DynaliteDevice dev: areaCodes.findDevicesInArea(area,true,msg[6])){
 			dynResult = buildCommandForFlash ((DeviceType)dev,"off",0,rate,255,this.currentUser);		
 			result.decoded.add(dynResult);
 		}
@@ -1084,15 +1055,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	void addJoinedDeviceUpdates (GeneralDynaliteResult dynaliteReturn,
 			DynaliteDevice device,String command,int level,String rate,String join){
 
-		List devices = areaCodes.getAllEquivalentDevices(device);
-		if (devices != null) {
-			Iterator eachLinkedDevice = devices.iterator();
-			while (eachLinkedDevice.hasNext()){
-				Object nextDevice = eachLinkedDevice.next();
-				CommandInterface linkedCommand = buildCommandForFlash ((DeviceType)nextDevice,command,Integer.toString(level),
-						rate,join,this.currentUser);
-				dynaliteReturn.addLinkedDeviceCommand(linkedCommand);
-			}
+			
+		for (DynaliteDevice nextDevice: areaCodes.getAllEquivalentDevices(device)){
+			CommandInterface linkedCommand = buildCommandForFlash ((DeviceType)nextDevice,command,Integer.toString(level),
+					rate,join,this.currentUser);
+			dynaliteReturn.addLinkedDeviceCommand(linkedCommand);
 		}
 	}
 

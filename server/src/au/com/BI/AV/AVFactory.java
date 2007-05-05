@@ -34,7 +34,7 @@ public class AVFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addAV(DeviceModel targetDevice, List clientModels,
+	public void addAV(DeviceModel targetDevice, List <DeviceModel>clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
 		try  {

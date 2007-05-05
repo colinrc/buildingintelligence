@@ -60,11 +60,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			irLearnt.setCommand ("EndInit");
 			irLearnt.setExtraInfo(startVal);
 			irLearnt.setAdminCommand(true);
-			synchronized (this.commandQueue) {
-				commandQueue.add((irLearnt));
-				commandQueue.notifyAll();
-			}
-	    		commandDone = true;
+			commandQueue.add((irLearnt));
+    		commandDone = true;
 	    } 
 	    
 	    if (!commandDone && theWholeKey.startsWith("IRend,")) {
@@ -215,10 +212,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			commandRec.setCommand ("Attatch");
 			commandRec.setKey("SYSTEM");
 			commandRec.setExtraInfo (Integer.toString(this.InstanceID));
-			synchronized (commandQueue) {
-				commandQueue.add(commandRec);
-				commandQueue.notifyAll();
-			}
+			commandQueue.add(commandRec);
 		}
 	}
 	
@@ -237,10 +231,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				command.setCommand ("Attatch");
 				command.setKey("SYSTEM");
 				command.setExtraInfo (Integer.toString(this.InstanceID));
-				synchronized (commandQueue) {
-					commandQueue.add(command);
-					commandQueue.notifyAll();
-				}
+				commandQueue.add(command);
 
 			}
 	}

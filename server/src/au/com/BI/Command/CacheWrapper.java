@@ -71,7 +71,7 @@ public class CacheWrapper {
 		}
 	}
 	
-	public Map getMap () {
+	public Map <String,CommandInterface>getMap () {
 		if (isSet) {
 			return map;
 		} else { 

@@ -6,7 +6,6 @@ package au.com.BI.ToggleSwitch;
 import au.com.BI.Command.Command;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.User.*;
-import java.util.*;
 import org.jdom.*;
 
 
@@ -18,7 +17,6 @@ import org.jdom.*;
  */
 public class ToggleSwitchCommand extends Command implements CommandInterface{
 
-	private Map keyList;
 	
 	public static int RawText = 1;
 	

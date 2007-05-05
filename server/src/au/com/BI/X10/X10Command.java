@@ -5,7 +5,6 @@
 package au.com.BI.X10;
 import au.com.BI.Command.Command;
 import au.com.BI.User.*;
-import java.util.*;
 import org.jdom.*;
 
 
@@ -16,8 +15,6 @@ import org.jdom.*;
  *
  */
 public class X10Command extends Command {
-
-	private Map keyList;
 	
 	public static int RawText = 1;
 	

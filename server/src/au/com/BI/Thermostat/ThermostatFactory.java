@@ -1,6 +1,5 @@
 package au.com.BI.Thermostat;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -8,8 +7,6 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
-import au.com.BI.ToggleSwitch.ToggleSwitch;
-import au.com.BI.ToggleSwitch.ToggleSwitchFactory;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
 
@@ -40,7 +37,7 @@ public class ThermostatFactory {
 	 * @param rawHelper
 	 */
 	public void addThermostat(DeviceModel targetDevice, 
-			List clientModels,
+			List <DeviceModel>clientModels,
 			Element element, 
 			MessageDirection type,
 			int connectionType,
@@ -60,9 +57,7 @@ public class ThermostatFactory {
 			targetDevice.addStartupQueryItem(key, theInput, type);
 			if (outKey != null && !outKey.equals("")) {
 				targetDevice.addControlledItem(outKey, theInput, MessageDirection.FROM_FLASH);
-				Iterator clientModelList = clientModels.iterator();
-				while (clientModelList.hasNext()) {
-					DeviceModel clientModel = (DeviceModel) clientModelList.next();
+				for (DeviceModel clientModel:clientModels){
 					clientModel.addControlledItem(outKey, theInput, type);
 				}
 			}

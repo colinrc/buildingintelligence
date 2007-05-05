@@ -68,9 +68,8 @@ public class AnalogReader  extends Thread {
 		running  = true;
 		
 		while (running){
-			Iterator analogueItems = analogueQueue.iterator();
-			while (analogueItems.hasNext()){
-				Analog analogue = (Analog)analogueItems.next();
+
+			for (Analog analogue:analogueQueue){
 				try {
 					CommsCommand analogueCommand = new CommsCommand("",STX+"DA59"+analogue.getKey() + ETX,null,"Analogue Command");
 					analogueCommand.setActionType(CommDevice.AnalogueQuery);

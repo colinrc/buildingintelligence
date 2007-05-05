@@ -57,9 +57,7 @@ public class RunMacro extends Thread {
 		started.setExtraInfo(macroName);
 		started.setCommand("started");
 		started.setDisplayName("MACRO");
-		synchronized (cache){
-			cache.setCachedCommand("MACRO",started);
-		}
+		cache.setCachedCommand("MACRO",started);
 		commandList.add (started);
 		
 		while ((doOnce || repeating) && !continueToEnd && !abort) {

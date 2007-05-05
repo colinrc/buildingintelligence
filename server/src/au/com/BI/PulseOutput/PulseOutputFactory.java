@@ -1,6 +1,5 @@
 package au.com.BI.PulseOutput;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +35,7 @@ public class PulseOutputFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addPulse(DeviceModel targetDevice, List clientModels,
+	public void addPulse(DeviceModel targetDevice, List <DeviceModel>clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("NAME");
 		String key = element.getAttributeValue("KEY");
@@ -56,9 +55,7 @@ public class PulseOutputFactory {
 		targetDevice.addStartupQueryItem(key, theOutput, type);
 		if (outKey != null && !outKey.equals("")) {
 			targetDevice.addControlledItem(outKey, theOutput, MessageDirection.FROM_FLASH);
-			Iterator clientModelList = clientModels.iterator();
-			while (clientModelList.hasNext()) {
-				DeviceModel clientModel = (DeviceModel) clientModelList.next();
+			for (DeviceModel clientModel:clientModels){
 				clientModel.addControlledItem(outKey, theOutput, type);
 			}
 		}

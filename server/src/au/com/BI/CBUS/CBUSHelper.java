@@ -4,8 +4,6 @@
  */
 package au.com.BI.CBUS;
 
-import au.com.BI.Device.DeviceType;
-
 
 /**
  * @author colinc

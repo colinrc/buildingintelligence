@@ -38,7 +38,7 @@ public class Cache {
                 this.jRobinSupport = jRobinSupport;
         }
 
-        public Collection getSetElements(CacheWrapper cachedObject) {
+        public Collection<CommandInterface> getSetElements(CacheWrapper cachedObject) {
 			if (cachedObject.isSet()) {
                 return cachedObject.getMapValues();
 			} else {
@@ -296,7 +296,7 @@ public class Cache {
 			   }
         }
 		
-        public Iterator getStartupItemList() {
+        public Iterator <String>getStartupItemList() {
                 return cachedCommands.keySet().iterator();
         }
 		
