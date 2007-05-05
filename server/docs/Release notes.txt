@@ -1,3 +1,27 @@
+== 5/May/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b47.zip V1.6b47]  ==
+
+''' Calendar '''
+
+Added recur value for odd/even events. This can be used with daily events; and will give the recurring interval from the start of the month; 
+eg. every second odd day will start with the 3rd, then the 7th etc.  Ticket [ticket:682]
+
+Added ACTIVE="N" events back into the calendar event list sent to the client, this will allow events to be temporarily swiched off then switched back on. etc. 
+Old events will be cleaned up by the maintenance task.
+
+Refactored calendar model out of the macro model into it's own model; debugging was becoming too complex.
+
+Ensure non recurring events are always correctly executed 
+
+Ensure ACTIVE="N" events are saved when editted.
+
+''' General '''
+
+Lots more Java5 type checking
+
+Added more Java5 type collection handling to the config handler
+
+Ensure no extraneous synchronising on the command list that could slow down operations.
+
 == 28/Mar/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b46.zip V1.6b46]  ==
 
 ''' HAL '''
