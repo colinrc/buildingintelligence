@@ -1,3 +1,9 @@
+== 14/May/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b48.zip V1.6b48]  ==
+
+''' HAL '''
+
+Further work in buffer processing of the new HAL protocol.
+
 == 5/May/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b47.zip V1.6b47]  ==
 
 ''' Calendar '''
