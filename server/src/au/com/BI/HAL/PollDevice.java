@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import au.com.BI.Comms.*;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Command.*;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Audio.*;
 
 /**
@@ -25,7 +26,7 @@ public class PollDevice extends Thread {
 	protected long pollValue;
 	protected ConfigHelper configHelper;
 	protected CommandQueue commandQueue;
-	protected char ETX;
+	protected String ETX;
 	protected int unresponsiveCounter = 0;
 	protected boolean halConnectionRestored = false;
 	protected boolean firstRun = true;
@@ -116,13 +117,10 @@ public class PollDevice extends Thread {
 					    }
 				    }
 				    if (!commandSent) {
-
 				            comms.removeAllCommands (CommDevice.HalState);
-
-							Iterator activeInputs = configHelper.getAllControlledDevices();
-							while (activeInputs.hasNext()) {
+							for (DeviceType activeInput: configHelper.getAllControlledDeviceObjects()){
 								try {
-									Audio device  = (Audio)activeInputs.next();
+									Audio device  = (Audio)activeInput;
 			
 									CommsCommand stateCommsCommand = new CommsCommand();
 									stateCommsCommand.setKey(device.getKey());
@@ -173,13 +171,13 @@ public class PollDevice extends Thread {
 	/**
 	 * @return Returns the ETX.
 	 */
-	public char getETX() {
+	public String getETX() {
 		return ETX;
 	}
 	/**
 	 * @param stx The sTX to set.
 	 */
-	public void setETX(char etx) {
+	public void setETX(String etx) {
 		this.ETX=etx;
 	}
 

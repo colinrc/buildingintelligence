@@ -23,13 +23,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	protected String outputAudioCommand = "";
 	protected HashMap <String,StateOfZone>state = null;
-	protected char ETX = '\r';
+	protected String ETX = "\r";
 	protected String intercom;
 	protected HashMap <String,String>HALMessages;
 	protected PollDevice pollDevice = null;
 	protected boolean intercomChanged = true;
 	protected boolean protocolB = true;
-
+	private String leftOverBuffer = "";
+	
 	public Model() {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -258,6 +259,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			state.clear();
 		}
 
+		this.leftOverBuffer = "";
 		this.sendStartupCommand(true);
 	}
 
@@ -270,7 +272,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			if (rescan)comms.sendString("SC" + ETX); //reset tutondo
 			CommsCommand startupCommsCommand = new CommsCommand();
 			startupCommsCommand.setKey("");
-			startupCommsCommand.setCommand("ST" + ETX);
+			startupCommsCommand.setCommand("ST"+ETX );
+			
 			startupCommsCommand.setExtraInfo("HAL startup");
 			startupCommsCommand.setActionType(CommDevice.HalStartup);
 			startupCommsCommand.setKeepForHandshake(true);
@@ -373,61 +376,69 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	 * function if it is not from flash. ie. It is from the serial port.
 	 */
 	public void doControlledItem(CommandInterface command) throws CommsFail {
-		String HALReturn = command.getKey().trim();
-		logger.log(Level.FINER, "HAL Raw Buffer : " + HALReturn);
+		String HALReturn = command.getKey(); // don't trim as trailing and leading space can be important
+		logger.log(Level.FINEST, "HAL Raw Buffer : " + HALReturn);
 
-		String items[] = HALReturn.split("\n\r");
+		String items[] = HALReturn.split("\n|\r");
+		int numItems = items.length;
 
-		for (int i = 0; i < items.length; i ++){
-			logger.log (Level.FINEST, "Processing Buffer " + items[i]);
-			processBuffer (items[i]);
+		for (int i = 0; i < numItems; i ++){
+			if (i == 0){
+				String tmpBuffer = leftOverBuffer + items[0]; // process anything left over from the previous call if only half a data packet was sent
+				leftOverBuffer = "";
+				
+				if (!tmpBuffer.equals ("")){
+					logger.log (Level.FINEST, "Processing Buffer " + tmpBuffer);
+					processBuffer (tmpBuffer,(i ==  (numItems - 1)) ?  true : false, (i == 0) ?  true : false);
+				}
+			} else {
+
+				if (!items[i].equals("")){
+					logger.log (Level.FINEST, "Processing Buffer " + items[i]);
+					processBuffer (items[i],(i ==  (numItems - 1)) ?  true : false,(i == 0) ?  true : false);
+				}
+			}
 		}
 	}
+
 	
+	public void processBuffer(String HALReturn,boolean lastStringFromSplit, boolean firstStringFromSplit) throws CommsFail {
+			boolean foundCommand = false;
+			boolean 	processingFailed = false; 
 
-	public void processBuffer(String HALReturn) throws CommsFail {
-			boolean didCommand = false;
-
-			if (HALReturn.contains(",")){
-				logger.log(Level.SEVERE,"Found a comma");
-			}
-		if (HALReturn.equals("E0")) {
+		if (!foundCommand && HALReturn.equals("E0")) {
 			logger.log(Level.FINER, "Received E0, ignoring");
-			didCommand = true;
+			foundCommand = true;
 		}
-		if (HALReturn.startsWith("IR")) {
+		if (!foundCommand && HALReturn.startsWith("IR")) {
 			logger.log(Level.FINER, "Received IR, ignoring");
-			didCommand = true;
+			foundCommand = true;
 		}
-		if (HALReturn.startsWith("INVALID")) {
-			logger.log(Level.INFO, "HAL received an instruction it did not understand");
-			didCommand = true;
-		}
-		if (HALReturn.startsWith("SCANNING NODES")) {
+		if (!foundCommand && HALReturn.startsWith("SCANNING NODES")) {
 			logger.log(Level.FINE, "HAL is scanning nodes");
-			didCommand = true;
+			foundCommand = true;
 		}
 
-		if (!didCommand && HALReturn.equals("INTERCOM: OFF")) {
+		if (!foundCommand && HALReturn.equals("INTERCOM: OFF")) {
 			if (!intercom.equals("OFF")) {
 				logger.log(Level.FINE, "Intercom is off");
 				intercom = "OFF";
 				this.intercomChanged = true;
-				didCommand = true;
+				foundCommand = true;
 				if (this.protocolB){
 					this.sendIntercom(-1);
 				} else {
 					this.sendDirty( -1);
 				}
 			} else  {
-				didCommand = true; // no change in intercom
+				foundCommand = true; // no change in intercom
 			}
 		}
-		if (!didCommand && HALReturn.equals("INTERCOM: ON")) {
+		if (!foundCommand && HALReturn.equals("INTERCOM: ON")) {
 			if (!intercom.equals("ON")) {
 				intercom = "ON";
 				logger.log(Level.FINE, "Intercom is on");
-				didCommand = true;
+				foundCommand = true;
 				this.intercomChanged = true;
 				if (this.protocolB){
 					this.sendIntercom(-1);
@@ -435,10 +446,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					this.sendDirty( -1);
 				}
 			} else  {
-				didCommand = true; // no change in intercom
+				foundCommand = true; // no change in intercom
 			}
 		}
-		if (!didCommand && HALReturn.startsWith("SCAN COMPLETE - ") && !protocolB) {
+		if (!foundCommand && HALReturn.startsWith("SCAN COMPLETE - ") && !protocolB) {
 			// This occurs as a result of the protocol A scan, it should not occur from protocol B
 			
 			logger.log(Level.FINE, "Individual zone status line");
@@ -450,56 +461,67 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			if (lastSent != null) {
 				zone = lastSent.getKey();
 				if (HALReturn.length() < 16) {
-					logger.log(Level.WARNING,"HAL SCAN Complete return was incorrectly formatted " + HALReturn);
-					return;
+					if (!lastStringFromSplit){
+						logger.log(Level.WARNING,"HAL SCAN Complete return was incorrectly formatted " + HALReturn);
+					}
+					processingFailed = true;
+				} else  {
+					String information = HALReturn.substring(16);
+	
+					logger.log(Level.FINEST, "Zone : " + zone + " Value from HAL : " + information);
+					try {
+						parseEntry(zone, information);
+					} catch (HALZoneStatusException ex) {
+						logger.log (Level.INFO,"An incorrect HAL status line was received, some startup synchronisation may have been missed");
+					}
+					synchronized (comms) {
+					    comms.acknowlegeCommand(CommDevice.HalState,zone);
+					    logger.log (Level.FINEST,"acknowledging zone " + zone);
+					    comms.sendNextCommand();
+					}
+					this.sendDirty( -1);
 				}
-				String information = HALReturn.substring(16);
-
-				logger.log(Level.FINEST, "Zone : " + zone + " Value from HAL : " + information);
-			    parseEntry(zone, information);
-				synchronized (comms) {
-				    comms.acknowlegeCommand(CommDevice.HalState,zone);
-				    logger.log (Level.FINEST,"acknowledging zone " + zone);
-				    comms.sendNextCommand();
-				}
-				this.sendDirty( -1);
 			} else {
-				synchronized (comms) {
-				   if (!protocolB) pollDevice.setFirstRun(true);
-				    logger.log (Level.WARNING,"Handshaking failed with HAL, re-synchronizing. HAL Return="+HALReturn+".");
-				}
+				   if (!protocolB) {
+						synchronized (comms) {
+							pollDevice.setFirstRun(true);
+						    logger.log (Level.WARNING,"Handshaking failed with HAL, re-synchronizing. HAL Return="+HALReturn+".");
 
+						}
+				   }
 			}
 
-			didCommand = true;
-		}
-		
-		if (!didCommand && HALReturn.startsWith("SE ")) {
-			// This occurs as a result of the user carrying at an action with a HAL capable of the newer protocol
-			
-			logger.log(Level.FINE, "Zone activity has occured");
-			parseHALAction(HALReturn);
-			
-		    this.sendStateOfAllDevices( -1);
-			didCommand = true;
+			foundCommand = true;
 		}
 		
 
-		if (!didCommand && HALReturn.equals("SCAN COMPLETE")) {
+		if (!foundCommand && HALReturn.equals("SCAN COMPLETE")) {
 			// Scan complete
 
 			if (!protocolB) {
 				comms.acknowlegeCommand(CommDevice.HalStartup);
 			    logger.log (Level.FINEST,"Received startup status, acknowleding and starting poll ");
 			    this.startPolling();
-				didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
+				foundCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
 			}
 			else {
 				comms.acknowlegeCommand(CommDevice.HalStartup);
 				logger.log (Level.FINEST,"Received startup status ");
-				didCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
+				foundCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
 			
 			}
+		}
+		if (!foundCommand && HALReturn.startsWith("SE ")) {
+			// This occurs as a result of the user carrying at an action with a HAL capable of the newer protocol
+			
+			logger.log(Level.FINE, "Zone activity has occured");
+			if (parseHALAction(HALReturn)) {
+			
+				this.sendStateOfAllDevices( -1);
+			} else {
+				processingFailed = true;
+			}
+			foundCommand = true;
 		}
 		/*
 		00  PWR SAVE    16  NO DATA     32  NO DATA     48  NO DATA
@@ -513,32 +535,39 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		04  PWR SAVE    20  NO DATA     36  NO DATA     52  NO DATA
 		*/
 
+		if (pollDevice != null && !protocolB){
+		    synchronized (pollDevice) {
+		        pollDevice.pausing = true;
+		    }
+		}
 
-		if (!didCommand && HALReturn.matches("^\\d.*")) {
-
-			logger.log(Level.FINE, "Zone status line");
-			if (pollDevice != null && !protocolB){
-			    synchronized (pollDevice) {
-			        pollDevice.pausing = true;
-			    }
-			}
-
-		    synchronized (comms) {
-			    comms.acknowlegeCommand(CommDevice.HalStartup);
-			}
-
+		synchronized (comms) {
+		    comms.acknowlegeCommand(CommDevice.HalStartup);
+		}
+		if (!foundCommand && HALReturn.matches("^\\d.*")) {
 		    try {
 			    String zoneLine[] = HALReturn.split("\\s{2,}+");
 				if (zoneLine.length == 8) {
+					logger.log(Level.FINE, "Zone status line");
+
 					parseEntry(zoneLine[0], zoneLine[1]);
 					parseEntry(zoneLine[2], zoneLine[3]);
 					parseEntry(zoneLine[4], zoneLine[5]);
 					parseEntry(zoneLine[6], zoneLine[7]);
 				}else {
-					logger.log (Level.WARNING,"HAL Zone response line was incorrect " + HALReturn);
+					// may not have the full line yet.
+					throw new HALZoneStatusException();
+					
 				}
 			} catch (ArrayIndexOutOfBoundsException ex) {
 				logger.log (Level.WARNING,"HAL Zone status response was not correctly formed " + HALReturn);
+		    	
+		    } catch (HALZoneStatusException ex) {
+				if (!lastStringFromSplit) {
+					logger.log (Level.WARNING,"HAL Zone response line was incorrect " + HALReturn);						
+				} else {
+					processingFailed = true;
+				}
 		    	
 		    }
 			/*
@@ -558,43 +587,56 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 			} 
 		    this.sendStateOfAllDevices( -1);
-			didCommand = true;
+			foundCommand = true;
 		}
 
-		if (!didCommand && HALReturn.startsWith("CC")) {
+		if (!foundCommand && HALReturn.startsWith("CC")) {
 			logger.log(Level.FINER, "Line started with CC, ignoring");
-			didCommand = true;
+			foundCommand = true;
 		}
-		if (!didCommand && HALMessages.containsKey(HALReturn)) {
+		if (!foundCommand && HALMessages.containsKey(HALReturn)) {
 			String execState = (String) HALMessages.get(HALReturn);
 			if (execState.equals("R")) {
 				logger.log(Level.FINEST, "HAL command completed");
-				didCommand = true;
+				foundCommand = true;
 			} else {
 				logger.log(Level.FINEST, "HAL command executing");
-				didCommand = true;
+				foundCommand = true;
 			}
 		}
-		if (!didCommand && HALReturn.equals("INVALID COMMAND")) {
+		if (!foundCommand && HALReturn.equals("INVALID COMMAND")) {
 			logger.log(Level.FINER, "HAL became confused, clearing command queue. Possibly from : " + this.outputAudioCommand);
 			comms.clearCommandQueue();
 			if (!protocolB) pollDevice.pause();
-			didCommand = true;
+			foundCommand = true;
 		}		
-		if (!didCommand && HALReturn.startsWith("AM6")) {
+		if (!foundCommand && HALReturn.startsWith("AM6")) {
 
-			didCommand = true;
+			foundCommand = true;
+		}
+		if (!foundCommand && HALReturn.trim().equals ("")){
+			if (lastStringFromSplit) {
+				processingFailed = true;
+				foundCommand = true;
+			} else {
+				return;
+			}
+
+		}
+		if (processingFailed  || (foundCommand == false && lastStringFromSplit)) {			
+			leftOverBuffer = HALReturn;
+			return;
 		}
 
-		if (!didCommand) {
+		if (!foundCommand) {
 			logger.log(Level.INFO,
 					"HAL returned a code I do not understand : "
-							+ HALReturn + ":" + Utility.allBytesToHex(HALReturn.getBytes()));
+							+ HALReturn + ":" + HALReturn);
 		}
 
 	}
 
-	public int parseEntry(String zone, String entry) {
+	public int parseEntry(String zone, String entry) throws HALZoneStatusException {
 		logger.log(Level.FINE, "Parsing zone " + zone + " entry " + entry);
 		if (!protocolB){
 			// protocol A
@@ -605,7 +647,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				if (entry.equals("NORMAL")) {
 					currentState.setPower("on");
 				} else {
-					currentState.setPower("off");
+					if (entry.equals("PWR SAVE")){
+						currentState.setPower("off");
+					} else {
+						throw new HALZoneStatusException ();
+					}
 				}
 			}
 		}
@@ -613,22 +659,34 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			
 			// protocol B
 			DeviceType audio = configHelper.getControlledItem(zone);
-			if (audio != null){
-				if (entry.equals("NORMAL")) {
-					this.sendToFlash(-1,audio,"on","");
+
+			if (entry.equals("NORMAL")) {
+				if (audio != null ) this.sendToFlash(-1,audio,"on","");
+			} 
+			else {
+				if (entry.equals("NO DATA")){
+					// do nothing, no input connected. but need to parse it to ensure exception are correctly thrown if the whole string has not yet been sent.
 				} else {
-					this.sendToFlash(-1,audio,"off","");
+					
+					if (entry.equals("PWR SAVE")){
+
+						if (audio != null) this.sendToFlash(-1,audio,"off","");
+					} else {
+
+						throw new HALZoneStatusException ();
+					}
 				}
 			}
+
 		}
 		return 0;
 	}
 	
-	public void parseHALAction(String HALReturn){
+	public boolean parseHALAction(String HALReturn){
 		String parts[] = HALReturn.split(" ");
 		if (parts.length != 6){
-			logger.log(Level.WARNING,"HAL announcement was misformed " + HALReturn);
-			return;
+			logger.log(Level.INFO,"Did not receive a full buffer " + HALReturn);
+			return false;
 		}
 		String zone = parts[1];
 		String power = parts[2];
@@ -672,6 +730,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				}
 
 			}
+			return true;
 	}
 
 	public String buildAudioString(Audio device, CommandInterface command) {
