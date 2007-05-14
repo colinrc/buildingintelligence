@@ -30,6 +30,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected boolean intercomChanged = true;
 	protected boolean protocolB = true;
 	private String leftOverBuffer = "";
+	protected Vector <String> poweredOnAtStartup;
 	
 	public Model() {
 		super();
@@ -38,6 +39,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		loadHALMessages();
 		configHelper.addParameterBlock ("INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Source inputs");
 		configHelper.addParameterBlock ("FUNCTIONS",DeviceModel.MAIN_DEVICE_GROUP,"Audio functions");
+		poweredOnAtStartup =new Vector <String>();
 	}
 
 	
@@ -90,6 +92,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		HALMessages.put("IR SENDING - PLEASE WAIT", "W");
 		HALMessages.put("MUTE SENDING - PLEASE WAIT", "W");
 		HALMessages.put("PWR STATE SEND-PLEASE WAIT", "W");
+		HALMessages.put("POWER STATE SEND-PLEASE WAIT", "W");
 		HALMessages.put("SOURCE SEND - PLEASE WAIT", "W");
 		HALMessages.put("VOLUME SEND - PLEASE WAIT", "W");
 		HALMessages.put("SCANNING NODES - PLEASE WAIT", "W");
@@ -377,7 +380,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	 */
 	public void doControlledItem(CommandInterface command) throws CommsFail {
 		String HALReturn = command.getKey(); // don't trim as trailing and leading space can be important
-		logger.log(Level.FINEST, "HAL Raw Buffer : " + HALReturn);
+		logger.log(Level.INFO, "HAL Raw Buffer : " + HALReturn);
 
 		String items[] = HALReturn.split("\n|\r");
 		int numItems = items.length;
@@ -414,7 +417,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			logger.log(Level.FINER, "Received IR, ignoring");
 			foundCommand = true;
 		}
-		if (!foundCommand && HALReturn.startsWith("SCANNING NODES")) {
+		if (!foundCommand && HALReturn.equals("SCANNING NODES - PLEASE WAIT")) {
 			logger.log(Level.FINE, "HAL is scanning nodes");
 			foundCommand = true;
 		}
@@ -495,7 +498,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		
 
-		if (!foundCommand && HALReturn.equals("SCAN COMPLETE")) {
+		if (!foundCommand && (HALReturn.equals("SCAN COMPLETE") || HALReturn.equals("POWER STATE SEND COMPLETE"))) {
 			// Scan complete
 
 			if (!protocolB) {
@@ -507,6 +510,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			else {
 				comms.acknowlegeCommand(CommDevice.HalStartup);
 				logger.log (Level.FINEST,"Received startup status ");
+
 				foundCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
 			
 			}
@@ -515,10 +519,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			// This occurs as a result of the user carrying at an action with a HAL capable of the newer protocol
 			
 			logger.log(Level.FINE, "Zone activity has occured");
-			if (parseHALAction(HALReturn)) {
-			
-				this.sendStateOfAllDevices( -1);
-			} else {
+			try {
+				Audio audio = parseHALAction(HALReturn);
+				if ( audio != null) {
+				
+					this.sendStateOfDevice( -1,audio);
+				} 
+			} catch (HALActionException ex){
 				processingFailed = true;
 			}
 			foundCommand = true;
@@ -554,6 +561,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					parseEntry(zoneLine[2], zoneLine[3]);
 					parseEntry(zoneLine[4], zoneLine[5]);
 					parseEntry(zoneLine[6], zoneLine[7]);
+					
+					for (String eachKey: poweredOnAtStartup){
+						comms.sendString("PW " + eachKey + " 1"+ETX); 
+						// each input that is already on, switch it on again to fool the HAL into sending a status string including current source
+					}
+					poweredOnAtStartup.clear();
 				}else {
 					// may not have the full line yet.
 					throw new HALZoneStatusException();
@@ -661,11 +674,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			DeviceType audio = configHelper.getControlledItem(zone);
 
 			if (entry.equals("NORMAL")) {
-				if (audio != null ) this.sendToFlash(-1,audio,"on","");
+				if (audio != null ) {
+					this.sendToFlash(-1,audio,"on","");
+					poweredOnAtStartup.add(audio.getKey());
+				}
 			} 
 			else {
 				if (entry.equals("NO DATA")){
-					// do nothing, no input connected. but need to parse it to ensure exception are correctly thrown if the whole string has not yet been sent.
+					if (audio != null) this.sendToFlash(-1,audio,"off","");
 				} else {
 					
 					if (entry.equals("PWR SAVE")){
@@ -682,13 +698,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		return 0;
 	}
 	
-	public boolean parseHALAction(String HALReturn){
+	public Audio parseHALAction(String HALReturn) throws HALActionException {
 		String parts[] = HALReturn.split(" ");
 		if (parts.length != 6){
 			logger.log(Level.INFO,"Did not receive a full buffer " + HALReturn);
-			return false;
+			throw new HALActionException();
 		}
-		String zone = parts[1];
+		String zone = parts[1]; 
 		String power = parts[2];
 		String src = parts[3];
 		String vol = parts[4];
@@ -696,8 +712,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 		logger.log(Level.FINE, "Parsing zone " + zone );
 			
+		try {
 			// protocol B
-			DeviceType audio = configHelper.getControlledItem(zone);
+			DeviceType device = configHelper.getControlledItem(zone);
+			Audio audio = (Audio)device; 
+				
+			
 			StateOfZone currentState = getCurrentState(audio.getKey()); 
 			if (audio != null){
 				if (power.equals ("0")) {
@@ -728,9 +748,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				} else {
 					currentState.setMute("on");
 				}
-
+				return audio;
+			} else {
+				return null;
 			}
-			return true;
+		} catch (ClassCastException ex){
+			logger.log (Level.WARNING,"A non-audio device was configured for the HAL, please contact your integrator");
+			return null;
+		}
 	}
 
 	public String buildAudioString(Audio device, CommandInterface command) {
