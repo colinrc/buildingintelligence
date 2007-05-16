@@ -29,7 +29,7 @@ public class M1_CBUS_Example extends BIScript  {
 		    elife.sendCommand ("MACRO","abort","EXTRA STUFF TO RUN WHEN M1 OUTPUT ON")
 			elife.sendCommand ("MACRO","run","EXTRA STUFF TO RUN WHEN M1 OUTPUT ON")
 		}
-		else if (getvalue ("DISPLAY_NAME_OF_M1_OUTPUT") == "off") {
+		else  {
 			elife.sendCommand ("MACRO","abort","EXTRA STUFF TO RUN WHEN M1 OUTPUT OFF")
 			elife.sendCommand ("MACRO","run","EXTRA STUFF TO RUN WHEN M1 OUTPUT OFF")
 		} 
