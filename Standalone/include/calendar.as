@@ -681,16 +681,26 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 	// daily tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("daily_mc", 10);
 	tab_mc._y = 70;
-	tab_mc.attachMovie("bi.ui.RadioButton", "everyXdays_rb", 0, {settings:{width:200, label:"Every         day(s)",  data:"", groupName:"every"}});
-	tab_mc.attachMovie("bi.ui.TextInput", "numDays_ti", 5, {settings:{width:30, text:"1", _x:85, minValue:1, maxValue:7, maxChars:1, inputType:"numeric"}});	
-	tab_mc.attachMovie("bi.ui.RadioButton", "everyOddDay_rb", 10, {settings:{width:200, label:"Every odd day",  data:"odd", _y:35, groupName:"every"}});
-	tab_mc.attachMovie("bi.ui.RadioButton", "everyEvenDay_rb", 20, {settings:{width:200, label:"Every even day",  data:"even", _y:70, groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyXdays_rb", 0, {settings:{width:300, label:"Every                                day",  data:"", groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "numDays_ip", 5, {settings:{width:135, items:[{label:"", value:"1"}, {label:"2nd", value:2}, {label:"3rd", value:3}, {label:"4th", value:4}, {label:"5th", value:5}], _x:85}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyOddDay_rb", 10, {settings:{width:300, label:"Every                                odd day",  data:"odd", _y:35, groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "oddDay_ip", 15, {settings:{width:135, items:[{label:"", value:"1"}, {label:"2nd", value:2}, {label:"3rd", value:3}, {label:"4th", value:4}, {label:"5th", value:5}], _x:85, _y:35}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyEvenDay_rb", 20, {settings:{width:300, label:"Every                                even day",  data:"even", _y:70, groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "evenDay_ip", 25, {settings:{width:135, items:[{label:"", value:"1"}, {label:"2nd", value:2}, {label:"3rd", value:3}, {label:"4th", value:4}, {label:"5th", value:5}], _x:85, _y:70}});
+
 	if (calendarObj.eventType == "daily") {
 		if (calendarObj.filter == "odd" || calendarObj.filter == "even") {
 			tab_mc.every.data = calendarObj.filter;
+			if (calendarObj.filter == "odd") {
+				tab_mc.oddDay_ip.selectedValue = calendarObj.pattern.recur;
+			} else {
+				tab_mc.evenDay_ip.selectedValue = calendarObj.pattern.recur;
+			}
 		} else {
 			tab_mc.every.data = "";
-			tab_mc.numDays_ti.text = calendarObj.pattern.recur;
+			tab_mc.oddDay_ip.selectedValue = 1;
+			tab_mc.evenDay_ip.selectedValue = 1;
+			tab_mc.numDays_ip.selectedValue = calendarObj.pattern.recur;
 		}
 	} else {
 		tab_mc.every.data = "";
@@ -820,7 +830,11 @@ editCalendarEvent = newCalendarEvent = function (calendarObj, dateObj) {
 						case "daily":
 							saveObj.filter = tab_mc.every.data;
 							if (tab_mc.every.data == "") {
-								saveObj.pattern.recur = tab_mc.numDays_ti.text;
+								saveObj.pattern.recur = tab_mc.numDays_ip.selectedItem.value;
+							} else if (tab_mc.every.data == "odd") {
+								saveObj.pattern.recur = tab_mc.oddDay_ip.selectedItem.value;
+							} else if (tab_mc.every.data == "even") {
+								saveObj.pattern.recur = tab_mc.evenDay_ip.selectedItem.value;
 							}
 							break;
 						case "weekly":
@@ -1040,16 +1054,26 @@ editRecurringEvent = newRecurringEvent = function (calendarObj, dateObj, macroNa
 	// daily tab
 	var tab_mc = tabs_mc.createEmptyMovieClip("daily_mc", 10);
 	tab_mc._y = 70;
-	tab_mc.attachMovie("bi.ui.RadioButton", "everyXdays_rb", 0, {settings:{width:200, label:"Every         day(s)",  data:"", groupName:"every"}});
-	tab_mc.attachMovie("bi.ui.TextInput", "numDays_ti", 5, {settings:{width:30, text:"1", _x:85, maxChars:1, minValue:1, maxValue:7, inputType:"numeric"}});	
-	tab_mc.attachMovie("bi.ui.RadioButton", "everyOddDay_rb", 10, {settings:{width:200, label:"Every odd day",  data:"odd", _y:35, groupName:"every"}});
-	tab_mc.attachMovie("bi.ui.RadioButton", "everyEvenDay_rb", 20, {settings:{width:200, label:"Every even day",  data:"even", _y:70, groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyXdays_rb", 0, {settings:{width:300, label:"Every                                day",  data:"", groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "numDays_ip", 5, {settings:{width:135, items:[{label:"", value:"1"}, {label:"2nd", value:2}, {label:"3rd", value:3}, {label:"4th", value:4}, {label:"5th", value:5}], _x:85}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyOddDay_rb", 10, {settings:{width:300, label:"Every                                odd day",  data:"odd", _y:35, groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "oddDay_ip", 15, {settings:{width:135, items:[{label:"", value:"1"}, {label:"2nd", value:2}, {label:"3rd", value:3}, {label:"4th", value:4}, {label:"5th", value:5}], _x:85, _y:35}});
+	tab_mc.attachMovie("bi.ui.RadioButton", "everyEvenDay_rb", 20, {settings:{width:300, label:"Every                                even day",  data:"even", _y:70, groupName:"every"}});
+	tab_mc.attachMovie("bi.ui.ItemPicker", "evenDay_ip", 25, {settings:{width:135, items:[{label:"", value:"1"}, {label:"2nd", value:2}, {label:"3rd", value:3}, {label:"4th", value:4}, {label:"5th", value:5}], _x:85, _y:70}});
+	
 	if (calendarObj.eventType == "daily") {
 		if (calendarObj.filter == "odd" || calendarObj.filter == "even") {
 			tab_mc.every.data = calendarObj.filter;
+			if (calendarObj.filter == "odd") {
+				tab_mc.oddDay_ip.selectedValue = calendarObj.pattern.recur;
+			} else {
+				tab_mc.evenDay_ip.selectedValue = calendarObj.pattern.recur;
+			}
 		} else {
 			tab_mc.every.data = "";
-			tab_mc.numDays_ti.text = calendarObj.pattern.recur;
+			tab_mc.oddDay_ip.selectedValue = 1;
+			tab_mc.evenDay_ip.selectedValue = 1;
+			tab_mc.numDays_ip.selectedValue = calendarObj.pattern.recur;
 		}
 	} else {
 		tab_mc.every.data = "";
@@ -1192,7 +1216,11 @@ editRecurringEvent = newRecurringEvent = function (calendarObj, dateObj, macroNa
 					case "daily":
 						saveObj.filter = tab_mc.every.data;
 						if (tab_mc.every.data == "") {
-							saveObj.pattern.recur = tab_mc.numDays_ti.text;
+							saveObj.pattern.recur = tab_mc.numDays_ip.selectedItem.value;
+						} else if (tab_mc.every.data == "odd") {
+							saveObj.pattern.recur = tab_mc.oddDay_ip.selectedItem.value;
+						} else if (tab_mc.every.data == "even") {
+							saveObj.pattern.recur = tab_mc.evenDay_ip.selectedItem.value;
 						}
 						break;
 					case "weekly":

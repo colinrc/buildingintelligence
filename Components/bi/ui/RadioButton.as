@@ -115,8 +115,9 @@ class bi.ui.RadioButton extends bi.ui.CoreUI {
 		}
 		
 		label_txt._x = bg_mc._width + 5;
+		label_txt._y = 2;
 		label_txt._width = __width - label_txt._x;
-		label_txt._height = __height;
+		label_txt._height = __height - 2;
 
 		label_tf = new TextFormat();
 		label_tf.color = _fontColour;
