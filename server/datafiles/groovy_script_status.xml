@@ -1,7 +1,8 @@
 <SCRIPT_STATUS>
   <SCRIPT NAME="TimeTest" ENABLED="enabled" FORCED_HIDDEN="false" STATUS="" />
+  <SCRIPT NAME="M1_CBUS_Example" ENABLED="enabled" FORCED_HIDDEN="true" STATUS="" />
   <SCRIPT NAME="GroovyDiningLight" ENABLED="enabled" FORCED_HIDDEN="false" STATUS="" />
   <SCRIPT NAME="dlt_merik" ENABLED="enabled" FORCED_HIDDEN="false" STATUS="" />
-  <SCRIPT NAME="dlt_zeljko4" ENABLED="enabled" FORCED_HIDDEN="false" STATUS="" />
+  <SCRIPT NAME="dlt_zeljko4" ENABLED="enabled" FORCED_HIDDEN="true" STATUS="" />
   <SCRIPT NAME="ProcessDLT" ENABLED="enabled" FORCED_HIDDEN="true" STATUS="" />
 </SCRIPT_STATUS>

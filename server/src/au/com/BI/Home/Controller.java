@@ -49,6 +49,7 @@ public class Controller {
 	protected au.com.BI.Macro.Model macroModel;
 	protected au.com.BI.Calendar.Model calendarModel;
 	protected au.com.BI.Messaging.Model messagingModel;
+	protected au.com.BI.Patterns.Model patterns;
 
 	protected String configFile = "";
 
@@ -150,6 +151,7 @@ public class Controller {
 		modelRegistry.put("SIGN_VIDEO", "au.com.BI.SignVideo.Model");
 		modelRegistry.put("MACRO", "au.com.BI.Macro.Model");
 		modelRegistry.put("SCRIPT", "au.com.BI.Script.Model");
+		modelRegistry.put("PATTERN", "au.com.BI.Pattern.Model");
 		modelRegistry.put("AUTONOMIC_HOME", "au.com.BI.MultiMedia.AutonomicHome.Model");
 		modelRegistry.put("SLIM_SERVER", "au.com.BI.MultiMedia.SlimServer.Model");
 
@@ -187,11 +189,11 @@ public class Controller {
 					.log(Level.SEVERE, "Label setup has failed "
 							+ e.getMessage());
 		}
-
-		scriptModel = new au.com.BI.Script.Model();
-		scriptModel.setController(this);
-		this.setupModel(scriptModel);
-		scriptModel.setInstanceID(deviceModels.size() - 1);
+		
+		patterns = new au.com.BI.Patterns.Model();
+		this.setupModel(patterns);
+		deviceModels.add(patterns);
+		patterns.setInstanceID(deviceModels.size() - 1);
 
 		flashHandler = new FlashHandler(DeviceModel.PROBABLE_FLASH_CLIENTS,
 				security);
@@ -228,6 +230,11 @@ public class Controller {
 							+ ex.getMessage());
 		}
 
+		scriptModel = new au.com.BI.Script.Model();
+		scriptModel.setController(this);
+		this.setupModel(scriptModel);
+		scriptModel.setInstanceID(deviceModels.size() - 1);
+		
 		jettyHandler = new JettyHandler(security);
 		this.setupModel(jettyHandler);
 		deviceModels.add(jettyHandler);
@@ -262,6 +269,7 @@ public class Controller {
 		model.setAddressBook(addressBook);
 		model.setAlarmLogging(alarmLogging);
 		model.setLabelMgr(labelMgr);
+		model.setPatterns (patterns);
 		model.setInstanceID(deviceModels.size() - 1);
 		// If adding items to here remember to also add them to
 		// config.readConfig.
@@ -485,6 +493,7 @@ public class Controller {
 					}
 				}
 				if (!item.isCommsCommand()) {
+					testForPattern (item);
 					doScriptCommand(item);
 				}
 
@@ -521,6 +530,26 @@ public class Controller {
 
 
 
+	public boolean testForPattern(CommandInterface item) {
+		boolean successfulCommand = false;
+		String itemKey;
+		if (item.isClient()) {
+			itemKey = item.getKey();
+		} else {
+			itemKey = item.getDisplayName();
+		}
+		if (itemKey != null && !itemKey.equals("")) {
+			if (patterns.doIControl(itemKey, item.isUserControllerCommand())) {
+				try {
+					patterns.doCommand(item);
+					successfulCommand = true;
+				} catch (CommsFail commsFail) {
+				}
+			}
+		}
+		return successfulCommand;
+	}
+	
 	public boolean doScriptCommand(CommandInterface item) {
 		boolean successfulCommand = false;
 		String itemKey;

@@ -4,11 +4,6 @@
 */
 package au.com.BI.Pelco;
 
-/**
- * @author Merik Karman
- * @author Building Intelligence Pty Ltd
- *
-*/
 
 import au.com.BI.Camera.Camera;
 import au.com.BI.Command.*;

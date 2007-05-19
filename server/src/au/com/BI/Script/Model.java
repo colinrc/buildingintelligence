@@ -394,7 +394,7 @@ public class Model
 	    	
 	    	public void loadGroovyScripts () {
 	        	try {
-	        		groovyScriptFileHandler.loadScripts(this, "./script", groovyScriptRunBlockList);
+	        		groovyScriptFileHandler.loadScripts(this, "./script", groovyScriptRunBlockList, patterns,labelMgr);
 	                groovyScriptHandler = new GroovyScriptHandler(this, groovyScriptRunBlockList, groovyStatusFileName,groovyScriptFileHandler.getGse());
 	        		for (String scriptName :groovyScriptRunBlockList.keySet()){
 	        			Script newScript = new Script();
@@ -871,6 +871,7 @@ public class Model
 
          /**
           * @param key,command,extra1,extra2,extra3,extra4,extra5 Create a command system command.
+          * The same structure is used in the pattern module
           */
          public void sendCommand(String key, String command, String extra1, String extra2, String extra3, String extra4, String extra5) {
 

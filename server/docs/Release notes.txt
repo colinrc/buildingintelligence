@@ -1,3 +1,23 @@
+''' General '''
+
+Added a concept of integrator patterns to represent standard things integrators would otherwise put into script
+
+''' Groovy '''
+
+Provided a hook to the OnOffVolume pattern.
+
+See [ServerDocs/IntegratorPatterns] for details
+
+Provided a hook for scripts to do activity when they are first started. The method registerScript () will be called.
+
+See [ServerDocs/IntegratorPatterns] for details
+
+''' Patterns '''
+
+Implemented a pattern to execute on / off / volume  
+
+See [ServerDocs/IntegratorPatterns] for details
+
 ''' HAL '''
 
 HAL implementation complete. Resolves ticket [ticket:618]

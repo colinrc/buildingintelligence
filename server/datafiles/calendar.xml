@@ -1,11 +1,8 @@
 <events COMPLETE="Y">
-  <event id="1162291009102" title="hj" active="N" alarm="N" memo="" category="" startDate="2006-10-29" endDate="2007-10-29" time="21:36:00" eventType="weekly" macroName="watering" extra="WATER_FRONT_LAWN" extra2="1800" filter="">
-    <pattern sun="0" sat="0" fri="0" thu="0" wed="0" tue="0" mon="0" recur="1" />
+  <event id="1177317926388" title="mnb" active="N" alarm="Y" memo="rew" category="" startDate="2007-04-28" endDate="2008-04-23" time="22:47:00" eventType="daily" macroName="" extra="" extra2="" filter="even">
+    <pattern />
   </event>
-  <event id="1162291052626" title="h" active="N" alarm="N" memo="tu" category="" startDate="2006-10-29" endDate="2007-10-29" time="21:37:00" eventType="weekly" macroName="watering" extra="WATER_FRONT_LAWN" extra2="1800" filter="">
-    <pattern sun="0" sat="0" fri="0" thu="0" wed="0" tue="0" mon="0" recur="1" />
-  </event>
-  <event id="1166793541160" title="rt" active="N" alarm="N" memo="u" category="" startDate="2006-12-17" endDate="2007-12-17" time="00:18:00" eventType="weekly" macroName="watering" extra="WATER_FRONT_LAWN" extra2="1800" filter="">
-    <pattern sun="0" sat="0" fri="0" thu="0" wed="0" tue="0" mon="0" recur="1" />
+  <event id="1178111027675" title="r" active="Y" alarm="Y" memo="fh" category="" startDate="2007-05-01" endDate="2009-05-03" time="09:52:00" eventType="daily" macroName="" extra="" extra2="" filter="odd">
+    <pattern recur="3" />
   </event>
 </events>

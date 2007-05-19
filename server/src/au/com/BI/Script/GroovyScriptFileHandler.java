@@ -22,6 +22,7 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.runtime.typehandling.GroovyCastException;
 
 import au.com.BI.Config.ConfigError;
+import au.com.BI.LabelMgr.LabelMgr;
 
 /**
  * @author colinc
@@ -36,7 +37,8 @@ public class GroovyScriptFileHandler {
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
         }
 
-        public void loadScripts(Model myScriptModel, String dir, ConcurrentHashMap <String,GroovyScriptRunBlock>scriptRunBlockList) throws ConfigError {
+        public void loadScripts(Model myScriptModel, String dir, ConcurrentHashMap <String,GroovyScriptRunBlock>scriptRunBlockList, 
+        		au.com.BI.Patterns.Model patterns, LabelMgr labelMgr) throws ConfigError {
 
                 Integer fileNum;
 
@@ -49,7 +51,7 @@ public class GroovyScriptFileHandler {
 
 	                fileNum = new Integer(0);
 	                int i = 0;
-	               loadScriptList(dir,scriptRunBlockList);
+	               loadScriptList(dir,scriptRunBlockList, patterns,labelMgr);
 	
 	                logger.log(Level.FINE, "Script files loaded ");
 	
@@ -63,7 +65,7 @@ public class GroovyScriptFileHandler {
         }
 
 
-        public void loadScriptList(String directoryName, Map <String,GroovyScriptRunBlock>scriptRunBlockList)  throws ConfigError {
+        public void loadScriptList(String directoryName, Map <String,GroovyScriptRunBlock>scriptRunBlockList, au.com.BI.Patterns.Model patterns,LabelMgr labelMgr)  throws ConfigError {
                 try {
 
 		                FilenameFilter filter = new FilenameFilter() {
@@ -108,6 +110,7 @@ public class GroovyScriptFileHandler {
 									scriptRunBlock.setHidden(ifc.isHidden());
 									scriptRunBlock.setStoppable(ifc.isStoppable());
 									scriptRunBlock.setFireOnChange(ifc.getFireOnChange());
+									ifc.doRegisterScript(labelMgr, patterns);
 									
 
 									/*

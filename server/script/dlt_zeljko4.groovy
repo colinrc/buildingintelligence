@@ -15,7 +15,16 @@ public class dlt_zeljko4 extends BIScript  {
 	// If hidden is set to true then the script will not be visible to the client
 	boolean hidden = true
 
+	def registerScript () {
+		// this method is called when the script is first launched
+		
+		patterns.addOnOffVolume ("MASTER_BED_LIGHT", "KITCHEN_AV", false)		
+			// Item to listen for events from
+			// item to send the changed level to
+			// run the pattern if the trigger came from a script event Y/N ?
 
+	}
+	
 	def setLabelDVD () {
 		elife.sendCommand("AUDIO_2","label","AUDIODVD")
 		elife.sendCommand("AUDIO_3","label","DVDPLAY")

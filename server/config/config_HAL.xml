@@ -4,11 +4,12 @@
         <!-- ______________________________________  HAL DEFS  ____________________  -->
         <DEVICE ACTIVE="Y" DEVICE_TYPE="HAL" DESCRIPTION="HAL Audio">
                 <CONNECTION>
-                        <SERIAL ACTIVE="Y" PORT="/dev/tty" BAUD="19200" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE" />
-                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="4800" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE" />
+                        <SERIAL ACTIVE="Y" PORT="/dev/tty.usbserial" BAUD="19200" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE" SUPPORTS_CD="N" />
                         <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5003"/>
                         <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="5000"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5003"/>
                 </CONNECTION>
+                
                 <CATALOGUE NAME="HAL Inputs">
                         <ITEM CODE="cd1" VALUE="09"/>
                         <ITEM CODE="cd2" VALUE="02"/>
@@ -29,8 +30,8 @@
                          <ITEM NAME="PROTOCOL" VALUE="B" />
                 </PARAMETERS>
                 <HAL>
-                        <AUDIO_OUTPUT KEY="01" DISPLAY_NAME="KITCHEN_AV"/>
-                        <AUDIO_OUTPUT KEY="02" DISPLAY_NAME="DINING_AUDIO"/>
+                        <AUDIO KEY="01" DISPLAY_NAME="KITCHEN_AV"/>
+                        <AUDIO KEY="02" DISPLAY_NAME="DINING_AUDIO"/>
                 </HAL>
         </DEVICE>
         <!-- the key is the HAL zone, Display name is the flash icon name -->

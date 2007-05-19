@@ -507,6 +507,9 @@ public interface DeviceModel {
 	 */
 	public void prepareToAttatchComms();
 
+	public au.com.BI.Patterns.Model getPatterns() ;
+
+	public void setPatterns(au.com.BI.Patterns.Model patterns) ;
 }
 
 

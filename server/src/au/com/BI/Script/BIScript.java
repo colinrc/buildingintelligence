@@ -36,6 +36,7 @@ public  class BIScript extends groovy.lang.Script {
 	protected Cache cache;
 	protected CommandInterface triggeringEvent;
 	protected Model elife;
+	protected au.com.BI.Patterns.Model patterns;
 		
 	public BIScript (){
 		dummyArgs =new String [0];
@@ -65,6 +66,20 @@ public  class BIScript extends groovy.lang.Script {
 		this.fireOnChange = fireOnChange;
 	}
 	
+	public void doRegisterScript (LabelMgr labelMgr, au.com.BI.Patterns.Model patterns ){
+		Binding binding = this.getBinding();
+		this.labelMgr = labelMgr;
+		this.patterns = patterns;
+
+		// can't rely on anything else yet being set up in the system.
+		registerScript();
+	}
+	
+	public Object  registerScript () {
+		// this method is called when the script is first launched
+		return null;
+	}
+	
 	public Object run () {
 		Binding binding = this.getBinding();
 		labelMgr = (LabelMgr)binding.getVariable("labelMgr");
@@ -73,6 +88,7 @@ public  class BIScript extends groovy.lang.Script {
 		cache = (Cache)binding.getVariable("cache");
 		triggeringEvent = (CommandInterface)binding.getVariable("triggeringEvent");
 		elife = (Model)binding.getVariable("elife");
+		patterns = (au.com.BI.Patterns.Model)binding.getVariable("patterns");
 		
 		if (triggeringEvent != null){
 			triggerWasScript = triggeringEvent.isScriptCommand();

@@ -75,6 +75,7 @@ public class ModelParameters  {
 		protected String version = "0";
 		protected LabelMgr labelMgr = null;
 		protected boolean naturalPackets = false;
+		protected au.com.BI.Patterns.Model patterns = null;
 		
 		public User currentUser = null;
 		
@@ -469,5 +470,13 @@ public class ModelParameters  {
 
 	public void setNaturalPackets(boolean naturalPackets) {
 		this.naturalPackets = naturalPackets;
+	}
+
+	public au.com.BI.Patterns.Model getPatterns() {
+		return patterns;
+	}
+
+	public void setPatterns(au.com.BI.Patterns.Model patterns) {
+		this.patterns = patterns;
 	}
 }

@@ -8,5 +8,6 @@ Class-Path: ../ext/build ../ext/jdom.jar ../ext/xml-apis.jar ../ext/xa
   ../ext/commons-logging.jar ../ext/commons-collections-3.1.jar ../ext
  /commons-logging-api.jar ../ext/RXTXcomm.jar ../ext/xmlunit1.0.jar ..
  /ext/bin-groovy ../ext/groovy-all-1.0.jar ../ext/jetty-util-6.1.0.jar
-  ../ext/jetty-6.1.0.jar ../ext/servlet-api-2.5.jar
+  ../ext/jetty-6.1.0.jar ../ext/servlet-api-2.5.jar ../ext/jetty-html-
+ 6.1.0.jar ../ext/jetty-ajp-6.1.0.jar ../ext/jetty-sslengine-6.1.0.jar
 

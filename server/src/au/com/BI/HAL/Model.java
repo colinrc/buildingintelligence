@@ -380,7 +380,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	 */
 	public void doControlledItem(CommandInterface command) throws CommsFail {
 		String HALReturn = command.getKey(); // don't trim as trailing and leading space can be important
-		logger.log(Level.INFO, "HAL Raw Buffer : " + HALReturn);
+		logger.log(Level.FINEST, "HAL Raw Buffer : " + HALReturn);
 
 		String items[] = HALReturn.split("\n|\r");
 		int numItems = items.length;
