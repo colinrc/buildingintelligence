@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import au.com.BI.MultiMedia.Album;
+import au.com.BI.MultiMedia.Artist;
+import au.com.BI.MultiMedia.Genre;
 import au.com.BI.Util.StringUtils;
 
 public class SlimServerCommandFactory {

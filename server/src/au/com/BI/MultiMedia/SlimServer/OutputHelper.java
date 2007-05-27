@@ -46,7 +46,7 @@ public class OutputHelper {
 
 			if (command.getCommandCode().equalsIgnoreCase("getAlbums")) {
 				/*
-				  <CONTROL KEY="lounge_music" COMMAND="getAlbums" EXTRA="1" EXTRA2="10" EXTRA3="genre:chillout" EXTRA4="<search>" EXTRA5=""/>
+				  <CONTROL KEY="lounge_music" COMMAND="getAlbums" EXTRA="1" EXTRA2="10" EXTRA3="genre:<genre id>" EXTRA4="<search>" EXTRA5=""/>
 					- extra = page
 					- extra2 = items per page
 					- extra3 = optional filter [genre/artist/year etc] - separated by semi colons
@@ -137,120 +137,176 @@ public class OutputHelper {
 
 				retCode = browseAlbums.buildCommandString() + "\r\n";
 			} else if (command.getCommandCode().equalsIgnoreCase("getArtists")) {
-				// <CONTROL KEY="<extender>" COMMAND="BROWSE"
-				// EXTRA="ARTISTS" EXTRA2="<start>" EXTRA3="<searchString>"
-				// EXTRA4="<genreId>" EXTRA5="<albumId>" />
-				// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="ARTISTS"
-				// EXTRA2="0" EXTRA3="" EXTRA4="1" EXTRA5="" />
-				// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="ARTISTS"
-				// EXTRA2="10" EXTRA3="trance" EXTRA4="" EXTRA5="" />
+				
+				/*
+				  <CONTROL KEY="lounge_music" COMMAND="getArtists" EXTRA="1" EXTRA2="10" EXTRA3="genre:<genre id>" EXTRA4="<search>" EXTRA5=""/>
+					- extra = page
+					- extra2 = items per page
+					- extra3 = optional filter [genre/album] - separated by semi colons
+					- extra4 = search string
+					- extra5 = 
+					
+					<CONTROL KEY="LAPTOP" COMMAND="getArtists" EXTRA="0" EXTRA2="20" EXTRA3="genre:1" EXTRA4="" EXTRA5=""/>
+					<CONTROL KEY="LAPTOP" COMMAND="getArtists" EXTRA="0" EXTRA2="20" EXTRA3="album:104" EXTRA4="" EXTRA5=""/>
+					<CONTROL KEY="LAPTOP" COMMAND="getArtists" EXTRA="0" EXTRA2="1" EXTRA3="" EXTRA4="Love" EXTRA5=""/>
+					
+					returns
+					<artists KEY="LAPTOP">
+						<item id="15" artist="50 cents" />
+					</artists>
+
+					returns:
+					<albums>
+						<item album="" coverArt="" />
+					</albums>
+				 */
 				BrowseArtists browseArtists = new BrowseArtists();
-
+				
 				int start = 0;
-				String searchString = command.getExtra3Info();
-				int albumId = -1;
-				int genreId = -1;
-
-				browseArtists.setItemsPerResponse(this
-						.getDefaultSearchResults());
+				int numberOfResults = 0;
+				String filter = command.getExtra3Info();
+				String searchString = command.getExtra4Info();
 
 				try {
-					start = Integer.parseInt(command.getExtra2Info());
+					start = Integer.parseInt(command.getExtraInfo());
 				} catch (NumberFormatException e) {
 					logger.log(Level.WARNING,
 							"Start parameter was not a number for command: "
 									+ command.toString());
 				}
 				browseArtists.setStart(start);
+				
+				try {
+					numberOfResults = Integer.parseInt(command.getExtra2Info());
+				} catch (NumberFormatException e) {
+					logger.log(Level.WARNING,
+							"number of results parameter was not a number for command: "
+									+ command.toString());
+				}
+				browseArtists.setItemsPerResponse(numberOfResults);
 
 				if (!StringUtils.isNullOrEmpty(searchString)) {
 					browseArtists.setSearch(searchString);
 				}
-
-				try {
-					if (!StringUtils.isNullOrEmpty(command.getExtra4Info())) {
-						genreId = Integer.parseInt(command.getExtra4Info());
+				
+				if (!StringUtils.isNullOrEmpty(filter)) {
+					String[] filters = filter.split(";");
+					int positionOfColon = -1;
+					String tag = "";
+					String value = "";
+					
+					for (int i=0;i<filters.length;i++) {
+						positionOfColon = filters[i].indexOf(":");
+						tag = filters[i].substring(0,positionOfColon);
+						value = filters[i].substring(positionOfColon+1);
+						
+						if (tag.equalsIgnoreCase("genre")) {
+							try {
+								browseArtists.setGenre(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"genre found but is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("album")) {
+							try {
+								browseArtists.setAlbum(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"album found but is not an integer");
+							}
+						}
 					}
-				} catch (NumberFormatException e) {
-					logger.log(Level.INFO,
-							"artistId parameter was not a number for command: "
-									+ command.toString());
-				}
-
-				if (genreId != -1) {
-					browseArtists.setGenre(genreId);
-				}
-
-				try {
-					if (!StringUtils.isNullOrEmpty(command.getExtra5Info())) {
-						albumId = Integer.parseInt(command.getExtra5Info());
-					}
-				} catch (NumberFormatException e) {
-					logger.log(Level.INFO,
-							"albumId parameter was not a number for command: "
-									+ command.toString());
-				}
-				if (albumId != -1) {
-					browseArtists.setAlbum(albumId);
 				}
 
 				retCode = browseArtists.buildCommandString() + "\r\n";
 
-			} else if (command.getCommandCode().equalsIgnoreCase("getGenres")) {
-				// <CONTROL KEY="<extender>" COMMAND="BROWSE" EXTRA="GENRES"
-				// EXTRA2="<start>" EXTRA3="<searchString>"
-				// EXTRA4="<artistId>" EXTRA5="<albumId>" />
-				// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="GENRES"
-				// EXTRA2="0" EXTRA3="" EXTRA4="" EXTRA5="" />
-				// <CONTROL KEY="LAPTOP" COMMAND="BROWSE" EXTRA="GENRES"
-				// EXTRA2="10" EXTRA3="trance" EXTRA4="" EXTRA5="" />
+			} else if (command.getCommandCode().equalsIgnoreCase("getGenres")) {				
+				/*
+				  <CONTROL KEY="lounge_music" COMMAND="getArtists" EXTRA="1" EXTRA2="10" EXTRA3="album:<album id>" EXTRA4="<search>" EXTRA5=""/>
+					- extra = page
+					- extra2 = items per page
+					- extra3 = optional filter [artist/album/track/year] - separated by semi colons
+					- extra4 = search string
+					- extra5 = 
+					
+					<CONTROL KEY="LAPTOP" COMMAND="getGenres" EXTRA="0" EXTRA2="20" EXTRA3="artist:1" EXTRA4="" EXTRA5=""/>
+					<CONTROL KEY="LAPTOP" COMMAND="getGenres" EXTRA="0" EXTRA2="20" EXTRA3="album:104" EXTRA4="" EXTRA5=""/>
+					<CONTROL KEY="LAPTOP" COMMAND="getGenres" EXTRA="0" EXTRA2="1" EXTRA3="" EXTRA4="Love" EXTRA5=""/>
+					
+					returns
+					<genres KEY="LAPTOP">
+						<item id="13" genre="Electronica" />
+					</genres>
+				 */
 				BrowseGenres browseGenres = new BrowseGenres();
 				int start = 0;
-				String searchString = command.getExtra3Info();
-				int artistId = -1;
-				int albumId = -1;
-
-				browseGenres
-						.setItemsPerResponse(this.getDefaultSearchResults());
+				int numberOfResults = 0;
+				String filter = command.getExtra3Info();
+				String searchString = command.getExtra4Info();
 
 				try {
-					start = Integer.parseInt(command.getExtra2Info());
+					start = Integer.parseInt(command.getExtraInfo());
 				} catch (NumberFormatException e) {
 					logger.log(Level.WARNING,
 							"Start parameter was not a number for command: "
 									+ command.toString());
 				}
 				browseGenres.setStart(start);
+				
+				try {
+					numberOfResults = Integer.parseInt(command.getExtra2Info());
+				} catch (NumberFormatException e) {
+					logger.log(Level.WARNING,
+							"number of results parameter was not a number for command: "
+									+ command.toString());
+				}
+				browseGenres.setItemsPerResponse(numberOfResults);
 
 				if (!StringUtils.isNullOrEmpty(searchString)) {
 					browseGenres.setSearch(searchString);
 				}
-
-				try {
-					if (!StringUtils.isNullOrEmpty(command.getExtra4Info())) {
-						artistId = Integer.parseInt(command.getExtra4Info());
+				
+				if (!StringUtils.isNullOrEmpty(filter)) {
+					String[] filters = filter.split(";");
+					int positionOfColon = -1;
+					String tag = "";
+					String value = "";
+					
+					for (int i=0;i<filters.length;i++) {
+						positionOfColon = filters[i].indexOf(":");
+						tag = filters[i].substring(0,positionOfColon);
+						value = filters[i].substring(positionOfColon+1);
+						
+						if (tag.equalsIgnoreCase("album")) {
+							try {
+								browseGenres.setAlbum(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"album found but is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("year")) {
+							try {
+								browseGenres.setYear(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"year found but is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("artist")) {
+							try {
+								browseGenres.setArtist(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"artist found but is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("track")) {
+							try {
+								browseGenres.setTrack(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"track found but is not an integer");
+							}
+						}
 					}
-				} catch (NumberFormatException e) {
-					logger.log(Level.INFO,
-							"artistId parameter was not a number for command: "
-									+ command.toString());
-				}
-
-				if (artistId != -1) {
-					browseGenres.setArtist(artistId);
-				}
-
-				try {
-					if (!StringUtils.isNullOrEmpty(command.getExtra5Info())) {
-						albumId = Integer.parseInt(command.getExtra5Info());
-					}
-				} catch (NumberFormatException e) {
-					logger.log(Level.INFO,
-							"albumId parameter was not a number for command: "
-									+ command.toString());
-				}
-				if (albumId != -1) {
-					browseGenres.setAlbum(albumId);
 				}
 
 				retCode = browseGenres.buildCommandString() + "\r\n";
@@ -302,6 +358,7 @@ public class OutputHelper {
 				// EXTRA3="" EXTRA4="18" EXTRA5="" />
 				// <CONTROL KEY="LAPTOP" COMMAND="ADD" EXTRA="" EXTRA2=""
 				// EXTRA3="" EXTRA4="18" EXTRA5="" />
+				// <CONTROL KEY="LAPTOP" COMMAND="LOAD" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="2" EXTRA5="" />
 				int album_id = -1;
 				int year_id = -1;
 				int track_id = -1;

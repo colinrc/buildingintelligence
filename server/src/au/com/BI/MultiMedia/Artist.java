@@ -1,4 +1,6 @@
-package au.com.BI.MultiMedia.SlimServer.Commands;
+package au.com.BI.MultiMedia;
+
+import org.jdom.Element;
 
 public class Artist {
 	private String id;
@@ -20,5 +22,12 @@ public class Artist {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public Element getElement() {
+		Element artist = new Element("item");
+		artist.setAttribute("id", this.getId());
+		artist.setAttribute("artist", this.getArtist());
+		return(artist);
 	}
 }

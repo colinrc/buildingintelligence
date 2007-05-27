@@ -2,6 +2,8 @@ package au.com.BI.MultiMedia.SlimServer.Commands;
 
 import java.util.LinkedList;
 
+import au.com.BI.MultiMedia.Genre;
+
 public class BrowseGenresReply extends SlimServerCommand {
 	private int count;
 	private boolean rescan;

@@ -1,4 +1,6 @@
-package au.com.BI.MultiMedia.SlimServer.Commands;
+package au.com.BI.MultiMedia;
+
+import org.jdom.Element;
 
 public class Genre {
 	private String id;
@@ -12,13 +14,23 @@ public class Genre {
 	public String getGenre() {
 		return genre;
 	}
+	
 	public void setGenre(String genre) {
 		this.genre = genre;
 	}
+	
 	public String getId() {
 		return id;
 	}
+	
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public Element getElement() {
+		Element artist = new Element("item");
+		artist.setAttribute("id", this.getId());
+		artist.setAttribute("genre", this.getGenre());
+		return(artist);
 	}
 }

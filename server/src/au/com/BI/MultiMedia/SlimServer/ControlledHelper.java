@@ -12,11 +12,13 @@ import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.MultiMedia.Album;
 import au.com.BI.MultiMedia.AlbumCommand;
-import au.com.BI.MultiMedia.SlimServer.Commands.Artist;
+import au.com.BI.MultiMedia.Artist;
+import au.com.BI.MultiMedia.ArtistCommand;
+import au.com.BI.MultiMedia.Genre;
+import au.com.BI.MultiMedia.GenreCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseAlbumsReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseArtistsReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseGenresReply;
-import au.com.BI.MultiMedia.SlimServer.Commands.Genre;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommandException;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommandFactory;
@@ -76,35 +78,36 @@ public class ControlledHelper {
 		} else if (_command.getClass().equals(BrowseArtistsReply.class)) {
 			BrowseArtistsReply reply = (BrowseArtistsReply)_command;
 			
+			ArtistCommand flashCommand = new ArtistCommand();
 			Iterator<Artist> it = reply.getArtists().iterator();
 			while (it.hasNext()) {
 				Artist artist = (Artist)it.next();
-				CommandInterface flashCommand = new AlbumCommand();
-				flashCommand.setDisplayName(model.getCurrentPlayer().getOutputKey());
-				flashCommand.setTargetDeviceID(-1);
-				flashCommand.setUser(model.currentUser);
-				flashCommand.setExtraInfo(artist.getId());
-				flashCommand.setExtra2Info(artist.getArtist());
-				flashCommand.setKey("CLIENT_SEND");
-				flashCommand.setCommand("ARTIST");
-				sendCommand(cache, commandQueue, flashCommand);
+				
+				flashCommand.getArtists().add(artist);
 			}
+			flashCommand.setDisplayName(model.getCurrentPlayer().getOutputKey());
+			flashCommand.setTargetDeviceID(-1);
+			flashCommand.setUser(model.currentUser);
+			flashCommand.setKey("CLIENT_SEND");
+			flashCommand.setCommand("ARTIST");
+			sendCommand(cache, commandQueue, flashCommand);
+			
 		} else if (_command.getClass().equals(BrowseGenresReply.class)) {
 			BrowseGenresReply reply = (BrowseGenresReply)_command;
 			
+			GenreCommand flashCommand = new GenreCommand();
 			Iterator<Genre> it = reply.getGenres().iterator();
 			while (it.hasNext()) {
 				Genre genre = (Genre)it.next();
-				CommandInterface flashCommand = new AlbumCommand();
-				flashCommand.setDisplayName(model.getCurrentPlayer().getOutputKey());
-				flashCommand.setTargetDeviceID(-1);
-				flashCommand.setUser(model.currentUser);
-				flashCommand.setExtraInfo(genre.getId());
-				flashCommand.setExtra2Info(genre.getGenre());
-				flashCommand.setKey("CLIENT_SEND");
-				flashCommand.setCommand("GENRE");
-				sendCommand(cache, commandQueue, flashCommand);
+				
+				flashCommand.getGenres().add(genre);
 			}
+			flashCommand.setDisplayName(model.getCurrentPlayer().getOutputKey());
+			flashCommand.setTargetDeviceID(-1);
+			flashCommand.setUser(model.currentUser);
+			flashCommand.setKey("CLIENT_SEND");
+			flashCommand.setCommand("GENRE");
+			sendCommand(cache, commandQueue, flashCommand);
 		}
 	}
 	
