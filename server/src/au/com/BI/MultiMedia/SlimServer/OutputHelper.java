@@ -324,8 +324,7 @@ public class OutputHelper {
 			} else if (command.getCommandCode().equalsIgnoreCase("STOP")) {
 				// <CONTROL KEY="<extender>" COMMAND="STOP" EXTRA="<type>"
 				// EXTRA2="<id>" EXTRA3="" EXTRA4="" EXTRA5="" />
-				// <CONTROL KEY="LAPTOP" COMMAND="STOP" EXTRA="" EXTRA2=""
-				// EXTRA3="" EXTRA4="" EXTRA5="" />
+				// <CONTROL KEY="LAPTOP" COMMAND="STOP" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				Pause pause = new Pause();
 				pause.setPlayerId(device.getKey());
 				retCode = pause.buildCommandString() + "\r\n";
