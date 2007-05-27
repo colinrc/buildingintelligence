@@ -69,7 +69,7 @@ public class Label extends BaseDevice implements DeviceType, CBUSDevice
 	}
 	
 	public boolean isRelay() {
-		return false;
+		return relay;
 	}
 	
 	public boolean supportsLevelMMI() {

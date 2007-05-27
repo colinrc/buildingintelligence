@@ -4,6 +4,7 @@
 package au.com.BI.CBUS;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import au.com.BI.Command.Cache;
@@ -107,12 +108,8 @@ public class SliderPulse extends Thread {
 	public void removeFromQueues (String key){
 		this.increasingActions.remove(key);
 		this.decreasingActions.remove(key);
+		 logger.log(Level.INFO,"Removing from queues key " + key );
 	}
-	
-	
-	
-	
-	
 	
 	public void run() {
 		int currentVal;
@@ -131,6 +128,7 @@ public class SliderPulse extends Thread {
 						 sendToFlash (key, "on" , 100);
 					 }else {
 						 increasingActions.put(key, currentVal);
+						 logger.log(Level.INFO,"Recording increase in level for key " + key + " to value "+ currentVal);
 						 sendToFlash (key, "on" , currentVal);					 
 					 }
 				}
@@ -146,6 +144,7 @@ public class SliderPulse extends Thread {
 						 sendToFlash (key, "on" , 0);
 					 } else {
 						 decreasingActions.put(key, currentVal);
+						 logger.log(Level.INFO,"Recording increase in level for key " + key + " to value "+ currentVal);
 						 sendToFlash (key, "on" , currentVal);	
 					 }
 

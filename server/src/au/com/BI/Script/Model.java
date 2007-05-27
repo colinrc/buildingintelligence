@@ -660,7 +660,50 @@ public class Model
         // Used by the script by elife.method
 
 
+        // TODO Add isOn isOff commands, which know about set commands.
 
+        /**
+         * @return Returns the current value for a device from a specified key.
+         */
+        public boolean isOn(String key) {
+                CacheWrapper cachedValue = cache.getCachedObject(key);
+                if (cachedValue == null) {
+                        return false;
+                }
+                CommandInterface lastValue;
+                if (cachedValue.isSet() == true) {
+                	lastValue = (cachedValue.getMap()).get("on");
+                } else {
+					lastValue = cachedValue.getCommand();
+                }
+    			if (lastValue != null && lastValue.getCommandCode().equals ("on")) {
+    				return true;
+    			} else {
+    				return false;
+    			}
+        }
+        
+        /**
+         * @return Returns the current value for a device from a specified key.
+         */
+        public boolean isOff(String key) {
+                CacheWrapper cachedValue = cache.getCachedObject(key);
+                if (cachedValue == null) {
+                        return false;
+                }
+                CommandInterface lastValue;
+                if (cachedValue.isSet() == true) {
+                	lastValue = (cachedValue.getMap()).get("off");
+                } else {
+					lastValue = cachedValue.getCommand();
+                }
+    			if (lastValue != null && lastValue.getCommandCode().equals ("off")) {
+    				return true;
+    			} else {
+    				return false;
+    			}
+        }
+        
         /**
          * @return Returns the current value for a device from a specified key.
          */

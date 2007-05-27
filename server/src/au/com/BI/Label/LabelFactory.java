@@ -42,6 +42,8 @@ public class LabelFactory {
 		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
 		String defaultLabel  = element.getAttributeValue("DEFAULT_LABEL_KEY");
+		String relay  = element.getAttributeValue("RELAY");
+		
 		String cbusApplication = "";
 		if (targetDevice.getName().equals("CBUS")){
 			cbusApplication = element.getAttributeValue("CBUS_APPLICATION");
@@ -54,6 +56,7 @@ public class LabelFactory {
 		if (generateDimmerVals != null && generateDimmerVals.equals("N")){
 			label.setGenerateDimmerVals (false);
 		}
+		if (relay != null && relay.equals("Y")) label.relay = true;
 		label.setKey (key);
 		label.setDefaultLabel (defaultLabel);
 		label.setApplicationCode(cbusApplication);

@@ -734,7 +734,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						if (cbusDevice != null) {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
-							sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
+							if (!cbusDevice.isRelay())sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
 							if (cbusDevice.supportsLevelMMI()) {
 								mMIHelpers.sendExtendedQuery (cBusGroup,retApplicationCode, currentUser, true,"");
 								// Main point to trigger a ramp up sequence from a cbus button press
@@ -756,7 +756,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						else {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
-							sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
+							if (!cbusDevice.isRelay())sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
 							sendCommandToFlash (cbusDevice,"on",100,currentUser);
 							didCommand = true;
 						}
@@ -770,7 +770,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						else {
 							this.setStateFromFlash(cbusDevice,false);
 							this.setStateFromWallPanel(cbusDevice,true);
-							sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
+							if (!cbusDevice.isRelay())sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
 							sendCommandToFlash (cbusDevice,"off",0,currentUser);
 							didCommand = true;
 						}
@@ -792,27 +792,37 @@ public class Model extends SimplifiedModel implements DeviceModel {
 								} catch (NumberFormatException ex) {
 									logger.log (Level.FINEST,"Received invalid ramp level for Cbus " + rampLevel);
 								}
-								
-								int percLevel = 100 * (x + 2) / cbusDevice.getMax();
-								if (percLevel < DeviceModel.FLASH_SLIDER_RES) percLevel = FLASH_SLIDER_RES;
-
-								if (x == 1 || x == cbusDevice.getMax()  && cbusDevice.isGenerateDimmerVals()){
-									// indicates start of a fade  while the button is pressed.
-									int oldLevel = this.getStateLevel(cbusDevice);
-									
-									if (x == 1) 	
-										sliderPulse.addToDecreasingQueue(cbusDevice.getOutputKey(), oldLevel);
-									else
-										sliderPulse.addToIncreasingQueue(cbusDevice.getOutputKey(), oldLevel);
-										
-									this.setState (cbusDevice,"on",percLevel); 
-									// set the state, but don't send the level to the user, this will occur from sliderPulse
-									
-								} else {
-									sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
+								if (cbusDevice.isRelay()){
+									if (x == 0){
+										this.setState (cbusDevice,"off",0); 
+										sendCommandToFlash (cbusDevice,"off",0,currentUser);
+									} else {
+										this.setState (cbusDevice,"on",100); 
+										sendCommandToFlash (cbusDevice,"on",100,currentUser);									
+									}
+								}
+								else {
+									int percLevel = 100 * (x + 2) / cbusDevice.getMax();
+									if (percLevel < DeviceModel.FLASH_SLIDER_RES) percLevel = FLASH_SLIDER_RES;
 	
-									if (this.setState (cbusDevice,"on",percLevel)) {
-										sendCommandToFlash (cbusDevice,"on",percLevel,currentUser);
+									if (x == 1 || x == cbusDevice.getMax()  && cbusDevice.isGenerateDimmerVals()){
+										// indicates start of a fade  while the button is pressed.
+										int oldLevel = this.getStateLevel(cbusDevice);
+										
+										if (x == 1) 	
+											sliderPulse.addToDecreasingQueue(cbusDevice.getOutputKey(), oldLevel);
+										else
+											sliderPulse.addToIncreasingQueue(cbusDevice.getOutputKey(), oldLevel);
+											
+										this.setState (cbusDevice,"on",percLevel); 
+										// set the state, but don't send the level to the user, this will occur from sliderPulse
+										
+									} else {
+										sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
+		
+										if (this.setState (cbusDevice,"on",percLevel)) {
+											sendCommandToFlash (cbusDevice,"on",percLevel,currentUser);
+										}
 									}
 								}
 
@@ -886,7 +896,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					newLevel = Integer.parseInt(extra);
 					this.setState (cbusDevice,command, newLevel);
 					CommandInterface cbusCommand = null;
-					if (command.equals ("off"))  sliderPulse.removeFromQueues(((DeviceType)cbusDevice).getOutputKey());
+					if (command.equals ("off") && !cbusDevice.isRelay())  sliderPulse.removeFromQueues(((DeviceType)cbusDevice).getOutputKey());
 					if (cbusDevice  instanceof SensorFascade){
 						cbusCommand = ((SensorFascade)cbusDevice).buildDisplayCommand ();
 					}
