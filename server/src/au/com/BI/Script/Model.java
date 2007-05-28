@@ -660,7 +660,6 @@ public class Model
         // Used by the script by elife.method
 
 
-        // TODO Add isOn isOff commands, which know about set commands.
 
         /**
          * @return Returns the current value for a device from a specified key.
@@ -1304,6 +1303,25 @@ public class Model
           	this.sendCommand(key,"off", extra, extra2,extra3,extra4,extra5);
           }
 
+          public String getSource (String key)   {
+              CacheWrapper cachedValue = cache.getCachedObject(key);
+              if (cachedValue == null) {
+                      return "unknown";
+              }
+              CommandInterface lastValue;
+              if (cachedValue.isSet() == true) {
+              	lastValue = (cachedValue.getMap()).get("src");
+              } else {
+					lastValue = cachedValue.getCommand();
+              }
+  			if (lastValue == null || lastValue.getExtraInfo().equals("")) {
+  				return "unknown";
+  			} else {
+  				return lastValue.getExtraInfo();
+ 
+  			}
+          }
+          
         public void listenMacro(String macro) {
                 //do nothing
         }

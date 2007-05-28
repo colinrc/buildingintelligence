@@ -53,10 +53,10 @@
                         <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT_2" DEFAULT_LABEL_KEY="CD1"  />
                         <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3"  GENERATE_DIMMER_VALS="N"   DEFAULT_LABEL_KEY="FRONT_LIGHT" />
                         <LABEL ACTIVE="Y" KEY="3"   NAME="DLT 4"  DISPLAY_NAME="DLT4"  />
-                        <LABEL ACTIVE="Y" KEY="200"   NAME="DLT 5" DISPLAY_NAME="DLT5"  />
-                        <LABEL ACTIVE="Y" KEY="201"   NAME="DLT 6" DISPLAY_NAME="DLT6" />
-                        <LABEL ACTIVE="Y" KEY="202"   NAME="DLT 7"  DISPLAY_NAME="MASTER_BED_LIGHT"   />
-                        <LABEL ACTIVE="Y" KEY="220"   NAME="DLT 8" CBUS_APPLICATION="37"  DISPLAY_NAME="DLT8"  />
+                        <LABEL ACTIVE="Y" KEY="200"   NAME="DLT 5" RELAY="Y" DISPLAY_NAME="DLT5"  />
+                        <LABEL ACTIVE="Y" KEY="201"   NAME="DLT 6" RELAY="Y" DISPLAY_NAME="DLT6" />
+                        <LABEL ACTIVE="Y" KEY="202"   NAME="DLT 7"  RELAY="Y" DISPLAY_NAME="DLT7" DEFAULT_LABEL_KEY="VOLUP"  />
+                        <LABEL ACTIVE="Y" KEY="220"   NAME="DLT 8"   RELAY="Y" DISPLAY_NAME="DLT8"  DEFAULT_LABEL_KEY="VOLDN" />
 
                        <SENSOR ACTIVE="N" KEY="25" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
                         <SENSOR ACTIVE="N" KEY="4" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />

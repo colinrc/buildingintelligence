@@ -12,7 +12,7 @@
                 
                 <CATALOGUE NAME="HAL Inputs">
                         <ITEM CODE="cd1" VALUE="09"/>
-                        <ITEM CODE="cd2" VALUE="02"/>
+                        <ITEM CODE="radio" VALUE="02"/>
                         <ITEM CODE="dvd" VALUE="03"/>
                         <ITEM CODE="tv" VALUE="04"/>
                 </CATALOGUE>

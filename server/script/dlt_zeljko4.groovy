@@ -3,8 +3,26 @@ import au.com.BI.Command.*
 
 public class dlt_zeljko4 extends BIScript  {
 
-   // All DLT's should be configured to produce an "on" message when pressed normally, and an "off" mesage when held for a long time.
-    
+   /*
+      The following behaviour occurs
+     
+             DLT1        long press    on / off                    short press   cycle input
+             DLT2        long press    channel down         short press   channel up
+             DLT3        long press    mute off                   short press   volume up
+             DLT4        long press    mute on                   short press   volume down
+      
+      
+       All DLTs used by this script must be configured as follows
+           Short release -> recall 1
+           Long press - > recall 2
+
+           recall level 1 -> set to 100%
+           recall level 2 -> set to 0%
+           
+           
+           Ensure the DLTs are configured with RELAY="Y" in the server configuration file.
+  */  
+  
 	// true if the script can be run multiple times in parallel
 	boolean ableToRunMultiple = false
 
@@ -18,9 +36,24 @@ public class dlt_zeljko4 extends BIScript  {
 	String DLT3 = "DLT7"
 	String DLT4 = "DLT8"
 	
+	// Set this to the name of the audio zone that the script is controlling.
 	// String AUDIO_NAME = "SHOWROOM_AUDIO''
 	String AUDIO_NAME = "KITCHEN_AV"
 
+	/*
+	 Ensure the labels.xml file contains the following entries.
+             <LABEL KEY="ON" VALUE="on"/>
+             <LABEL KEY="OFF" VALUE="off"/>
+        
+            <LABEL KEY="BLANK" VALUE=" "/>
+     
+			<LABEL KEY="PLAY/STOP" VALUE="Play/Stop"/>  
+		    <LABEL KEY="NEXT/PREV" VALUE="Next/Prev"/>
+		    <LABEL KEY="UP/DOWN" VALUE="Up/Down"/>
+		    
+		    <LABEL KEY="VOLUP" VALUE="Vol up"/>  
+		    <LABEL KEY="VOLDN" VALUE="Vol down"/>  
+	*/
 	
 	// List the variables that will cause the script to run when they change
 	String[]  fireOnChange =   [AUDIO_NAME,DLT1, DLT2,DLT3,DLT4,"SCENE_1"]
@@ -37,44 +70,61 @@ public class dlt_zeljko4 extends BIScript  {
 	
 	def registerScript () {
 		// this method is called when the script is first launched
-		
-		// patterns.addOnOffVolume ("MASTER_BED_LIGHT", "KITCHEN_AV", false)		
-			// Item to listen for events from
-			// item to send the changed level to
-			// run the pattern if the trigger came from a script event Y/N ?
-
 	}
 	
 	def setLabelDVD () {
 		elife.sendCommand(DLT1,"label","AUDIODVD")
-		elife.sendCommand(DLT3,"label","DVDPLAY")
-		elife.sendCommand(DLT4,"label","DVDSTOP")
+		elife.sendCommand(DLT2,"label","PLAY/STOP")
 	}
 
 	def setLabelRADIO () {
 		elife.sendCommand(DLT1,"label","AUDIORADIO")
-		elife.sendCommand(DLT3,"label","RADIONEXT")
-		elife.sendCommand(DLT4,"label","RADIOPREV")
+		elife.sendCommand(DLT2,"label","NEXT/PREV")
 	}
 
 	def setLabelKISS () {
 		elife.sendCommand(DLT1,"label","AUDIOKISS")
-		elife.sendCommand(DLT3,"label","KISSNEXT")
-		elife.sendCommand(DLT4,"label","KISSPREV")
+		elife.sendCommand(DLT2,"label","NEXT/PREV")
 	}
 
 	def setLabelTV () {
 		elife.sendCommand(DLT1,"label","AUDIOTV")
-		elife.sendCommand(DLT3,"label","TVUP")
-		elife.sendCommand(DLT4,"label","TVDN")
+		elife.sendCommand(DLT2,"label","UP/DOWN")
 	}
 	
-	def setLabelOn() {
+	def setLabelOff() {
 		elife.sendCommand(DLT1,"label","ON")
+		elife.sendCommand(DLT2,"label","BLANK")
 		elife.sendCommand(DLT3,"label","BLANK")
 		elife.sendCommand(DLT4,"label","BLANK")
 	}
+	
+	def setLabelOn() {
+		switch (elife.getSource (AUDIO_NAME)){
+			case "radio":
+				setLabelRADIO()
+			break
+	
+			case "kiss":
+				setLabelKISS()
+			break
+	
+			case "tv":
+				setLabelTV()
+			break
+	
+			case "dvd":
+				setLabelDVD()
+			break
 
+			case "unknown":
+				setLabelDVD()
+			break
+		}
+		elife.sendCommand(DLT3,"label","VOLUP")
+		elife.sendCommand(DLT4,"label","VOLDN")
+	}
+	
 	def main (String[] argv){
 
 		// The action contents of the script go here
@@ -92,24 +142,60 @@ public class dlt_zeljko4 extends BIScript  {
 			case "SCENE_1": 
 			switch (triggerCommand) {
 				case "on":
-				elife.sendCommand ("MACRO","abort","SHOWROOM SCENE OFF")
-				elife.sendCommand ("MACRO","run","SHOWROOM SCENE ON")
+					elife.sendCommand ("MACRO","abort","SHOWROOM SCENE OFF")
+					elife.sendCommand ("MACRO","run","SHOWROOM SCENE ON")
 				break
 
 				case "off":
-				elife.sendCommand ("MACRO","abort","SHOWROOM SCENE ON")
-				elife.sendCommand ("MACRO","run","SHOWROOM SCENE OFF")
+					elife.sendCommand ("MACRO","abort","SHOWROOM SCENE ON")
+					elife.sendCommand ("MACRO","run","SHOWROOM SCENE OFF")
 				break
+				
+
 			}
 
 			break
 			
+			case AUDIO_NAME: 
+				// The user changed the audio on the device
+				
+				switch (triggerCommand) {
+					case "on":
+						setLabelOn();
+					break
 
+					case "off":
+						setLabelOff();
+					break
+					
+					case "src":
+						
+						switch (triggerExtra) {
+								case "radio":
+									setLabelRADIO()
+								break
+					
+								case "kiss":
+									setLabelKISS()
+								break
+					
+								case "tv":
+									setLabelTV()
+								break
+					
+								case "dvd":
+									setLabelDVD()
+								break
+						}
+						break
+				}
+
+				break
 
 			case DLT1:
 			if (triggerCommand == "off") {
 				elife.sendCommand (AUDIO_NAME,"off")
-				setLabelOn()
+				setLabelOff()
 				return
 			}
 			if (triggerCommand == "on") {
@@ -117,11 +203,13 @@ public class dlt_zeljko4 extends BIScript  {
 				if (elife.isOff(AUDIO_NAME)){
 					elife.sendCommand (AUDIO_NAME,"on")
 					// it was previously off, so switch the audio on, and label the DLT with the first label of the sequence.
-						setLabelDVD()
+					setLabelOn()
 					
 				} else {
-					switch (currentLabel){
 					
+					switch (currentLabel){
+					   // case will always be switched by the previous entry in the cycle
+					   
 						case "": 
 							// The currently displayed text on the DLT is not known to eLife, so set it to something we can handle
 						setLabelDVD()
