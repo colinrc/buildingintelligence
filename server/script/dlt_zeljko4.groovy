@@ -40,6 +40,10 @@ public class dlt_zeljko4 extends BIScript  {
 	// String AUDIO_NAME = "SHOWROOM_AUDIO''
 	String AUDIO_NAME = "KITCHEN_AV"
 
+	// Volume level 1 is set when the third dlt is pressed for a long time. Volume 2 is set when the fourth DLT is held for a long press
+	String VolumeLevel1 = "40"
+	String VolumeLevel2 = "50"
+	
 	/*
 	 Ensure the labels.xml file contains the following entries.
              <LABEL KEY="ON" VALUE="on"/>
@@ -305,7 +309,7 @@ public class dlt_zeljko4 extends BIScript  {
 					elife.sendCommand(AUDIO_NAME,"volume","up")
 				}
 				if (triggerCommand == "off"){
-					elife.sendCommand(AUDIO_NAME,"mute","off")
+					elife.sendCommand(AUDIO_NAME,"volume",VolumeLevel1)
 				}
 
 			break // DLT3
@@ -316,7 +320,7 @@ public class dlt_zeljko4 extends BIScript  {
 					elife.sendCommand(AUDIO_NAME,"volume","down")
 				}
 				if (triggerCommand == "off"){
-					elife.sendCommand(AUDIO_NAME,"mute","on")
+					elife.sendCommand(AUDIO_NAME,"volume",VolumeLevel2)
 				}
 
 			break // DLT4
