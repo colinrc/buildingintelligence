@@ -483,8 +483,8 @@
         <!-- _____________________________ GC-100 DEFS _____________________________-->
         <DEVICE ACTIVE="Y" DEVICE_TYPE="GC100" DESCRIPTION="GC100">
                 <CONNECTION>
-                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4998"/>
-                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5005"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="4998"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5005"/>
                         <IP ACTIVE="N" IP_ADDRESS="172.16.3.215" PORT="4998"/>
                 </CONNECTION>
                 <PARAMETERS>                
@@ -497,7 +497,7 @@
                         </PARAMETERS>
                         <TOGGLE_INPUT ACTIVE="N" KEY="02" NAME="Switch 1" DISPLAY_NAME="LOUNGE_AUDIO" />
                         <TOGGLE_INPUT KEY="03" NAME="Switch 2" DISPLAY_NAME="SWITCH_TWO" />
-                        <IR KEY="01" NAME="Study IR" AV_NAME="GC100_IR1"/>
+                        <IR KEY="01" NAME="Study IR" AV_NAME="STUDY_IR"/>
                         <IR KEY="02" NAME="Lounge IR" AV_NAME="LOUNGE_IR"/>
                 </GC100_IR>
                 <GC100_IR NAME="IR2">

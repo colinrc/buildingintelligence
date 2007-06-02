@@ -1,8 +1,25 @@
+== 3/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b51.zip V1.6b51]  ==
+
+''' Groovy '''
+
+Added a command to attempt to determine the current volume for an AV device.   elife.getVolume (audio_zone_name)   
+either the current volume or "unknown" will be returned.
+Resolves ticket [ticket:632]
+
+Added access to sending IR commands for scripts.  Resolves ticket [ticket:608]
+elife.sendIR ("Device Name of GC100 IR output",  "key from IR code database")   
+elife.sendIR ("Device Name of GC100 IR output",  "key from IR code database","number of repeats")   
+
+For example
+
+elife.sendIR ("STUDY_IR","Philips MC-200.VOLUP")
+
+					
 == 28/May/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b50.zip V1.6b50]  ==
 
 ''' Groovy '''
 
-Added a command to attempt to determine the current source for a script.   elife.getSource (audio_zone_name)   
+Added a command to attempt to determine the current source for an AV device.   elife.getSource (audio_zone_name)   
 either the name or "unknown" will be returned.
 
 == 27/May/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b49.zip V1.6b49]  ==
