@@ -1302,6 +1302,20 @@ public class Model
           public void off(String key, String extra, String extra2, String extra3, String extra4, String extra5) {
           	this.sendCommand(key,"off", extra, extra2,extra3,extra4,extra5);
           }
+          
+          /**
+           * Send an IR instruction.
+           */
+          public void sendIR (String AVDevice, String IR_Key, String numberRepeats) {
+          	this.sendCommand(AVDevice, "AV." + AVDevice ,IR_Key, numberRepeats);
+          }
+
+          /**
+           * Send an IR instruction.
+           */
+          public void sendIR (String AVDevice, String IR_Key) {
+          	this.sendCommand(AVDevice, "AV." + AVDevice ,IR_Key, "1");
+          }
 
           public String getSource (String key)   {
               CacheWrapper cachedValue = cache.getCachedObject(key);
@@ -1321,6 +1335,24 @@ public class Model
  
   			}
           }
+          
+          public String getVolume (String key)   {
+              CacheWrapper cachedValue = cache.getCachedObject(key);
+              if (cachedValue == null) {
+                      return "unknown";
+              }
+              CommandInterface lastValue;
+              if (cachedValue.isSet() == true) {
+              	lastValue = (cachedValue.getMap()).get("volume");
+              } else {
+					lastValue = cachedValue.getCommand();
+              }
+  			if (lastValue == null || lastValue.getExtraInfo().equals("") || lastValue.getExtraInfo().equals("up") || lastValue.getExtraInfo().equals("down")) {
+  				return "unknown";
+  			} else {
+  				return lastValue.getExtraInfo();
+  			}
+        }
           
         public void listenMacro(String macro) {
                 //do nothing
