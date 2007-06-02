@@ -43,6 +43,7 @@ public class dlt_zeljko4 extends BIScript  {
 	// Volume level 1 is set when the third dlt is pressed for a long time. Volume 2 is set when the fourth DLT is held for a long press
 	String VolumeLevel1 = "40"
 	String VolumeLevel2 = "50"
+
 	
 	/*
 	 Ensure the labels.xml file contains the following entries.
@@ -140,7 +141,8 @@ public class dlt_zeljko4 extends BIScript  {
 
 		// to read something from the label manager in groovy
 		def currentLabel = labelMgr.getLabelState (triggerDisplayName)
-
+	    def currentVolume = elife.getVolume (AUDIO_NAME)
+	    
 		switch (triggerDisplayName) {
 
 			case "SCENE_1": 
@@ -208,7 +210,7 @@ public class dlt_zeljko4 extends BIScript  {
 					elife.sendCommand (AUDIO_NAME,"on")
 					// it was previously off, so switch the audio on, and label the DLT with the first label of the sequence.
 					setLabelOn()
-					
+										
 				} else {
 					
 					switch (currentLabel){
@@ -309,7 +311,20 @@ public class dlt_zeljko4 extends BIScript  {
 					elife.sendCommand(AUDIO_NAME,"volume","up")
 				}
 				if (triggerCommand == "off"){
-					elife.sendCommand(AUDIO_NAME,"volume",VolumeLevel1)
+					// elife.sendCommand(AUDIO_NAME,"volume",VolumeLevel1)
+					// sets an absolute level of VolumeLevel1
+					
+					if (currentVolume != "unknown"){
+						// If we know the current volume of the AV device raise it by 20%s
+						newVolume = currentVolume.toInteger() + 20
+						if (newVolume > 100) {newVolume = 100 }
+						elife.sendCommand(AUDIO_NAME,"volume",newVolume.toString())
+					} else {
+						
+						// if we don't know it just send an up instruction instead
+						elife.sendCommand(AUDIO_NAME,"volume","up")
+					}
+					
 				}
 
 			break // DLT3
@@ -320,7 +335,21 @@ public class dlt_zeljko4 extends BIScript  {
 					elife.sendCommand(AUDIO_NAME,"volume","down")
 				}
 				if (triggerCommand == "off"){
-					elife.sendCommand(AUDIO_NAME,"volume",VolumeLevel2)
+					
+					// elife.sendCommand(AUDIO_NAME,"volume",VolumeLevel2)
+					// sets an absolute level of VolumeLevel2
+
+					if (currentVolume != "unknown"){
+						// If we know the current volume of the AV device lower it by 20%s
+						newVolume = currentVolume.toInteger() - 20
+						if (newVolume < 0) { newVolume = 0 }
+						elife.sendCommand(AUDIO_NAME,"volume",newVolume.toString())
+					} else {
+						
+						// if we don't know it just send a down instruction instead
+						elife.sendCommand(AUDIO_NAME,"volume","down")
+					}
+
 				}
 
 			break // DLT4
