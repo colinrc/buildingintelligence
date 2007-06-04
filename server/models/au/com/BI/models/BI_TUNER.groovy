@@ -20,6 +20,12 @@ class BI_TUNER extends GroovyModel {
 		configHelper.addParameterBlock  "AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Audio Source"
 	}
 	
+	public void doStartup() {
+		// Any instructions that should be sent for start up should be put in. 
+		// This method is called after connection is made to the device
+	}
+
+	
 	void processStringFromComms (String command , ReturnWrapper returnWrapper) {
 		def matcher = command =~ /(AU_PWR|AU_VOL|AU_SRC):(\d+):(\d+)/
 
