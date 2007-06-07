@@ -18,6 +18,7 @@ import au.com.BI.MultiMedia.SlimServer.Commands.Pause;
 import au.com.BI.MultiMedia.SlimServer.Commands.Play;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListControl;
+import au.com.BI.MultiMedia.SlimServer.Commands.PlayListIndex;
 import au.com.BI.MultiMedia.SlimServer.Commands.Stop;
 import au.com.BI.Util.StringUtils;
 
@@ -154,11 +155,6 @@ public class OutputHelper {
 					<artists KEY="LAPTOP">
 						<item id="15" artist="50 cents" />
 					</artists>
-
-					returns:
-					<albums>
-						<item album="" coverArt="" />
-					</albums>
 				 */
 				BrowseArtists browseArtists = new BrowseArtists();
 				
@@ -222,7 +218,7 @@ public class OutputHelper {
 
 			} else if (command.getCommandCode().equalsIgnoreCase("getGenres")) {				
 				/*
-				  <CONTROL KEY="lounge_music" COMMAND="getArtists" EXTRA="1" EXTRA2="10" EXTRA3="album:<album id>" EXTRA4="<search>" EXTRA5=""/>
+				  <CONTROL KEY="lounge_music" COMMAND="getGenres" EXTRA="1" EXTRA2="10" EXTRA3="album:<album id>" EXTRA4="<search>" EXTRA5=""/>
 					- extra = page
 					- extra2 = items per page
 					- extra3 = optional filter [artist/album/track/year] - separated by semi colons
@@ -316,8 +312,7 @@ public class OutputHelper {
 			} else if (command.getCommandCode().equalsIgnoreCase("PLAY")) {
 				// <CONTROL KEY="<extender>" COMMAND="PLAY" EXTRA="<type>"
 				// EXTRA2="<id>" EXTRA3="" EXTRA4="" EXTRA5="" />
-				// <CONTROL KEY="LAPTOP" COMMAND="PLAY" EXTRA="" EXTRA2=""
-				// EXTRA3="" EXTRA4="" EXTRA5="" />
+				// <CONTROL KEY="LAPTOP" COMMAND="PLAY" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				Play play = new Play();
 				play.setPlayerId(device.getKey());
 				retCode = play.buildCommandString() + "\r\n";
@@ -331,8 +326,7 @@ public class OutputHelper {
 			} else if (command.getCommandCode().equalsIgnoreCase("PAUSE")) {
 				// <CONTROL KEY="<extender>" COMMAND="PAUSE" EXTRA="<type>"
 				// EXTRA2="<id>" EXTRA3="" EXTRA4="" EXTRA5="" />
-				// <CONTROL KEY="LAPTOP" COMMAND="PAUSE" EXTRA="" EXTRA2=""
-				// EXTRA3="" EXTRA4="" EXTRA5="" />
+				// <CONTROL KEY="LAPTOP" COMMAND="PAUSE" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				Stop stop = new Stop();
 				stop.setPlayerId(device.getKey());
 				retCode = stop.buildCommandString() + "\r\n";
@@ -340,23 +334,15 @@ public class OutputHelper {
 					|| command.getCommandCode().equalsIgnoreCase("DELETE")
 					|| command.getCommandCode().equalsIgnoreCase("INSERT")
 					|| command.getCommandCode().equalsIgnoreCase("LOAD")) {
-				// <CONTROL KEY="<extender>" COMMAND="<command>"
-				// EXTRA="<ALBUM_ID>" EXTRA2="<YEAR_ID>" EXTRA3="<TRACK_ID>"
-				// EXTRA4="<GENRE_ID>" EXTRA5="<ARTIST_ID>" />
-				// <CONTROL KEY="LAPTOP" COMMAND="ADD" EXTRA="325" EXTRA2=""
-				// EXTRA3="" EXTRA4="" EXTRA5="" />
-				// <CONTROL KEY="LAPTOP" COMMAND="DELETE" EXTRA="325" EXTRA2=""
-				// EXTRA3="" EXTRA4="" EXTRA5="" />
-				// <CONTROL KEY="LAPTOP" COMMAND="LOAD" EXTRA="325" EXTRA2=""
-				// EXTRA3="" EXTRA4="" EXTRA5="" />
-				// <CONTROL KEY="LAPTOP" COMMAND="LOAD" EXTRA="" EXTRA2="1999"
-				// EXTRA3="" EXTRA4="" EXTRA5="" />
+				// <CONTROL KEY="<extender>" COMMAND="<command>" EXTRA="<ALBUM_ID>" EXTRA2="<YEAR_ID>" EXTRA3="<TRACK_ID>" EXTRA4="<GENRE_ID>" EXTRA5="<ARTIST_ID>" />
+				// <CONTROL KEY="LAPTOP" COMMAND="ADD" EXTRA="324" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				// <CONTROL KEY="LAPTOP" COMMAND="DELETE" EXTRA="325" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				// <CONTROL KEY="LAPTOP" COMMAND="LOAD" EXTRA="325" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				// <CONTROL KEY="LAPTOP" COMMAND="LOAD" EXTRA="" EXTRA2="1999" EXTRA3="" EXTRA4="" EXTRA5="" />
 				// <CONTROL KEY="LAPTOP" COMMAND="INSERT" EXTRA="325" EXTRA2=""
 				// EXTRA3="" EXTRA4="" EXTRA5="" />
-				// <CONTROL KEY="SQUEEZEBOX" COMMAND="ADD" EXTRA="" EXTRA2=""
-				// EXTRA3="" EXTRA4="18" EXTRA5="" />
-				// <CONTROL KEY="LAPTOP" COMMAND="ADD" EXTRA="" EXTRA2=""
-				// EXTRA3="" EXTRA4="18" EXTRA5="" />
+				// <CONTROL KEY="SQUEEZEBOX" COMMAND="ADD" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="18" EXTRA5="" />
+				// <CONTROL KEY="LAPTOP" COMMAND="ADD" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="18" EXTRA5="" />
 				// <CONTROL KEY="LAPTOP" COMMAND="LOAD" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="2" EXTRA5="" />
 				int album_id = -1;
 				int year_id = -1;
@@ -434,6 +420,110 @@ public class OutputHelper {
 					control.setArtist_id(artist_id);
 				}
 
+				retCode = control.buildCommandString() + "\r\n";
+			} else if (command.getCommandCode().equalsIgnoreCase("queueItem")) {
+				/*
+				 * <control key="<squeeze box key>" command="queueItem" extra="<tag>:<item>" />
+				 * Where tag can be:
+				 *  - genre
+				 *  - year
+				 *  - album
+				 *  - artist
+				 *  - playlistname
+				 *  - playlist
+				 *  - track
+				 * And the item is either an id (integer) for everything other than the playlist name
+				 * 
+				 * Will add to the current playlist
+				 *  
+				 *  <CONTROL KEY="LAPTOP" COMMAND="queueItem" EXTRA="artist:1" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5=""/>
+				 *  <CONTROL KEY="LAPTOP" COMMAND="queueItem" EXTRA="album:1" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5=""/>
+				 */
+				PlayListControl control = new PlayListControl();
+				control.setPlayerId(device.getKey());
+				control.setCommand(PlayListCommand.ADD);
+				
+				String filter = command.getExtraInfo();
+				
+				if (!StringUtils.isNullOrEmpty(filter)) {
+					String[] filters = filter.split(";");
+					int positionOfColon = -1;
+					String tag = "";
+					String value = "";
+					
+					for (int i=0;i<filters.length;i++) {
+						positionOfColon = filters[i].indexOf(":");
+						tag = filters[i].substring(0,positionOfColon);
+						value = filters[i].substring(positionOfColon+1);
+						
+						if (tag.equalsIgnoreCase("year")) {
+							try {
+								control.setYear_id(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"year found but is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("genre")) {
+							try {
+								control.setGenre_id(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"genre found but is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("album")) {
+							try {
+								control.setAlbum_id(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"album found but is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("artist")) {
+							try {
+								control.setArtist_id(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"artist found but is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("playlist")) {
+							try {
+								control.setPlaylist_id(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"playlist found but it is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("track")) {
+							try {
+								control.setTrack_id(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"track found but it is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("playlistname")) {
+							control.setPlaylist_name(value);
+						}
+					}
+					
+					retCode = control.buildCommandString() + "\r\n";
+				} else {
+					retCode = "";
+				}
+			} else if (command.getCommandCode().equalsIgnoreCase("nextItem")) {
+				/*
+				 * <control key="lounge_music" command="nextItem" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="nextItem" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5=""/>
+				 */
+				PlayListIndex control = new PlayListIndex();
+				control.setPlayerId(device.getKey());
+				control.setPositiveIndex(1);
+				retCode = control.buildCommandString() + "\r\n";
+			} else if (command.getCommandCode().equalsIgnoreCase("previousItem")) {
+				/*
+				 * <control key="lounge_music" command="previousItem" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="previousItem" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5=""/>
+				 */
+				PlayListIndex control = new PlayListIndex();
+				control.setPlayerId(device.getKey());
+				control.setNegativeIndex(1);
 				retCode = control.buildCommandString() + "\r\n";
 			}
 		}

@@ -61,6 +61,8 @@ public class Model extends SimplifiedModel implements DeviceModel, MultiMediaInt
 		logger.log(Level.INFO,"Sent command " + login.buildCommandString());
 		
 		urlPath = (String)this.getParameterValue("COVER_ART_URL", DeviceModel.MAIN_DEVICE_GROUP);
+		
+		// get current state of players
 	}
 	
 	/**
