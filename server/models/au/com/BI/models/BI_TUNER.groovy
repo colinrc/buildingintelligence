@@ -8,6 +8,8 @@ import au.com.BI.Config.ParameterException
 import au.com.BI.CustomInput.CustomInput 
 import au.com.BI.Device.DeviceType
 import au.com.BI.CustomConnect.CustomConnect
+import au.com.BI.Thermostat.Thermostat
+import au.com.BI.ToggleSwitch.ToggleSwitch
 import au.com.BI.Audio.Audio
 import au.com.BI.AV.AV
 import java.util.regex.Matcher
@@ -267,8 +269,19 @@ class BI_TUNER extends GroovyModel {
 			
 				returnWrapper.addCommOutput ("AU_SRC:" + device.getKey() + ":" + newSrc		)		 
 		}
-}
+	}
 
+	void buildThermostatControlString (Thermostat device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+		// receives a message from flash and builds the appropriate string for the audio device
+		
+
+	}
+	
+	void buildToggleOutputControlString (ToggleSwitch device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+		// receives a message from flash and builds the appropriate string for the audio device
+		
+
+	}
 	
 	public Byte addCheckSum(byte [] calcValue) {
 
