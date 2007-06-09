@@ -27,6 +27,7 @@ import au.com.BI.PulseOutput.PulseOutput;
 import au.com.BI.SMS.SMS;
 import au.com.BI.Sensors.Sensor;
 import au.com.BI.ToggleSwitch.ToggleSwitch;
+import au.com.BI.Thermostat.Thermostat;
 import au.com.BI.User.User;
 
 import java.util.HashMap;
@@ -821,6 +822,14 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					buildAudioControlString((Audio) device, command,
 							returnWrapper);
 					break;
+					
+				case DeviceType.THERMOSTAT:
+					logger.log(Level.FINE,
+							"A command for an Audio device was issued from "
+									+ device.getName());
+					buildThermostatControlString((Thermostat) device, command,
+							returnWrapper);
+					break;
 
 				case DeviceType.AV:
 					logger.log(Level.FINE,
@@ -1302,6 +1311,10 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 
 	public void buildAudioControlString(Audio device, CommandInterface command,
+			ReturnWrapper returnWrapper) throws ModelException {
+	}
+	
+	public void buildThermostatControlString(Thermostat  device, CommandInterface command,
 			ReturnWrapper returnWrapper) throws ModelException {
 	}
 

@@ -1,3 +1,12 @@
+== 9/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b53.zip V1.6b53]  ==
+
+''' Groovy Modes '''
+
+Added thermostats to simplified model.  Override the buildThermostatControlString method.
+
+Added dummy stubs for thermostats and sensors to the example groove model.
+
+
 == 9/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b52.zip V1.6b52]  ==
 
 ''' Groovy Models'''
