@@ -65,7 +65,31 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 	
 	/*
-	 * This function is called on model startup. The pattern will be similar to the doOutputItem below, and will contain a hook for a general whole of device sartup
+	 * A stub hook to which will be overwritten by actual models
+	 */
+	protected void doStartup (ReturnWrapper returnWrapper){}
+	
+	/*
+	 * This function is called when the system starts up
+	 * @see au.com.BI.Util.BaseModel#doStartup()
+	 */
+	public void doStartup() throws CommsFail {
+		ReturnWrapper returnWrapper = new ReturnWrapper();
+
+		try {
+			doStartup( returnWrapper);
+			addCheckSums(returnWrapper);
+			sendWrapperItems(returnWrapper);
+
+		} catch (ClassCastException ex) {
+			logger.log(Level.WARNING, "An class cast error occured in " + this.getName()
+					+ " support " + ex.getMessage());
+		}
+
+	}
+	
+	/*
+	 * This function is called when instructions are received from flash.
 	 * @see au.com.BI.Util.BaseModel#doOutputItem()
 	 */
 	public void doOutputItem(CommandInterface command) throws CommsFail {
@@ -159,10 +183,8 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					this.sendToSerial(avOutputString);
 				}
 			} else {
-				for (String avOutputString : returnWrapper
-						.getCommOutputStrings()) {
-					this.sendToSerial(avOutputString
-							+ this.getAppendToSentStrings());
+				for (String avOutputString : returnWrapper.getCommOutputStrings()) {
+					this.sendToSerial(avOutputString + this.getAppendToSentStrings());
 					if (logger.isLoggable(Level.FINE)) {
 						logger
 								.log(Level.FINE,
@@ -443,7 +465,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 				comms.addCommandToQueue(avCommsCommand);
 			} catch (CommsFail e1) {
 				throw new CommsFail(
-						"Communication failed communitating with SignAV "
+						"Communication failed with the device "
 								+ e1.getMessage());
 			}
 		}
@@ -463,7 +485,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 				comms.addCommandToQueue(avCommsCommand);
 			} catch (CommsFail e1) {
 				throw new CommsFail(
-						"Communication failed communitating with SignAV "
+						"Communication failed with the device "
 								+ e1.getMessage());
 			}
 		}
@@ -703,6 +725,11 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		return buildCommandForFlash(device, "off", "", "", "", "", "", 0);
 	}
 
+	public CommandInterface buildCommandForFlash(DeviceType device,
+			String command) {
+		return buildCommandForFlash(device, command, "", "", "", "", "", 0);
+	}
+	
 	public CommandInterface buildCommandForFlash(DeviceType device,
 			String command, String extra) {
 		return buildCommandForFlash(device, command, extra, "", "", "", "", 0);

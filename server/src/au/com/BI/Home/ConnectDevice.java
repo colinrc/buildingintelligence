@@ -59,8 +59,8 @@ public class ConnectDevice extends Thread {
 			    deviceModel.setIrCodeDB(this.irCodeDB);
 			}
 			deviceModel.setBootstrap(bootstrap);
-			deviceModel.doStartup();
 			deviceModel.setConnected(true);
+			deviceModel.doStartup();
 			deviceModel.setTryingToConnect(false);
 		} catch (ConnectionFail fail) {
 			if (!shownWarning) { 

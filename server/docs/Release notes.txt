@@ -1,3 +1,16 @@
+== 9/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b52.zip V1.6b52]  ==
+
+''' Groovy Models'''
+
+Added a hook to send initialisation commands to a device every time it connects
+
+elife.doStartup (ReturnWrapper returnWrapper)
+
+See the demonstration groovy model, BI_Tuner, for usage.
+
+Significant enhancements were made to the BI_Tuner groovy model
+
+
 == 3/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b51.zip V1.6b51]  ==
 
 ''' Groovy '''

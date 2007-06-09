@@ -162,25 +162,10 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 	            //servletSec.addHandler(updateContextHandler);
 	        }
             
-            // HTML static handler
-            /*
-            ContextHandler mainContextHandler = new ContextHandler ();
-            mainContextHandler.setContextPath("/");
-            mainContextHandler.setResourceBase("../www");
-            
-            ServletHandler servletHandler = new ServletHandler ();         
-            ServletHolder defServlet = servletHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
-            defServlet.setInitParameter("dirAllowed","false");
-            mainContextHandler.setHandler(servletHandler);
-            */
+
          
             ContextHandlerCollection contexts = new ContextHandlerCollection();
-            /*
-            if (bootstrap.isRequestUserNames()){
-            	contexts.setHandlers(new org.mortbay.jetty.Handler[]{servletSec,mainContextHandler});
-            } else {
-            	contexts.setHandlers(new org.mortbay.jetty.Handler[]{updateContextHandler,mainContextHandler});
-            }*/
+
             if (bootstrap.isRequestUserNames()){
             	contexts.setHandlers(new org.mortbay.jetty.Handler[]{servletSec});
             } else {

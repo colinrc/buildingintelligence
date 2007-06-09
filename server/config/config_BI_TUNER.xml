@@ -1,7 +1,7 @@
 <CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
         <DESC>Demonstration configuration for an audio system called BI_TUNER</DESC>
          <!-- ______________________________________  BI_TUNER DEFS  ____________________  -->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="BI_TUNER" DESCRIPTION="Audio Tuner">
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="BI_TUNER" DESCRIPTION="Audio Tuner">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                         <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
@@ -17,7 +17,7 @@
                 
                 <PARAMETERS>
                      <ITEM NAME="AUDIO_INPUTS" VALUE="Main Rack Audio" />
-                     <ITEM NAME="APPEND_TO_SENT_STRINGS" VALUE="&#13;" />
+                     <!-- ITEM NAME="APPEND_TO_SENT_STRINGS" VALUE="&#13;" /   not needed as it is in the model itself. -->
                 </PARAMETERS>
                 
                 <BI_TUNER>
@@ -68,7 +68,7 @@
                         
                          <!-- If a command has been received from flash for sudio audio, do not process it here. It will be processed by the buildAudioString method in the 
  						         Groovy Model refered to in the DEVICE_TYPE parameter for this configuration block, BI_TUNER   -->
-                        <AUDIO KEY="5" DISPLAY_NAME="KITCHEN_AUDIO" NAME="Kitchen Audio" />
+                        <AUDIO KEY="5" DISPLAY_NAME="KITCHEN_AV" NAME="Kitchen Audio" />
                 </BI_TUNER>
         </DEVICE>
         

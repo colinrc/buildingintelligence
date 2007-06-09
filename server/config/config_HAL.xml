@@ -2,12 +2,11 @@
         <DESC>The BI demonstration CBUS system</DESC>
  
         <!-- ______________________________________  HAL DEFS  ____________________  -->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="HAL" DESCRIPTION="HAL Audio">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="HAL" DESCRIPTION="HAL Audio">
                 <CONNECTION>
-                        <SERIAL ACTIVE="Y" PORT="/dev/tty.usbserial" BAUD="19200" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE" SUPPORTS_CD="N" />
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.usbserial" BAUD="19200" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE" SUPPORTS_CD="N" />
                         <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5003"/>
-                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="5000"/>
-                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5003"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.1.70" PORT="5000"/>
                 </CONNECTION>
                 
                 <CATALOGUE NAME="HAL Inputs">
