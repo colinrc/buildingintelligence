@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" initialize="init()" width="100%" height="100%" xmlns:Forms="Forms.*" xmlns:fx="Controls.*">
+	<mx:states>
+		<mx:State name="ip">
+			<mx:AddChild relativeTo="{hrule1}" position="before">
+				<mx:HBox width="100%" height="33">
+					<mx:HBox width="20%" height="100%">
+						<mx:Label text="Port:"/>
+						<mx:TextInput id="port" text="{dataHolder.connection.port}" editable="true"  change="mod(event)" enabled="true" width="79"/>
+					</mx:HBox>
+					<mx:HBox width="20%" height="100%">
+						<mx:Label text="Address:"/>
+						<mx:TextInput id="address" text="{dataHolder.connection.address}" editable="true" change="mod(event)" enabled="true" width="131"/>
+					</mx:HBox>
+					<mx:HBox width="20%" height="100%">
+					</mx:HBox>
+				</mx:HBox>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="serial">
+			<mx:AddChild relativeTo="{hrule1}" position="before">
+				<mx:HBox width="100%" height="33">
+					<mx:HBox width="15%" height="100%">
+						<mx:Label text="Port:" width="41"/>
+						<mx:TextInput id="sPort" text="{dataHolder.connection.port}" change="mod(event)" editable="true" enabled="true" width="79"/>
+					</mx:HBox>
+					<mx:HBox width="15%" height="100%">
+						<mx:Label text="Baud:"/>
+						<fx:ComboBox id="baud" width="110" value="{dataHolder.connection.baud}" change="mod(event)" dataProvider="{baudDD}" />
+					</mx:HBox>
+					<mx:HBox width="16%" height="100%">
+						<mx:Label text="Data Bits:"/>
+						<fx:ComboBox id="dataBits" width="71" value="{dataHolder.connection.dataBits}" change="mod(event)" dataProvider="{dataBitsDD}" />
+					</mx:HBox>
+					<mx:CheckBox creationComplete="supportsCDCreated()" id="supportsCD"  click="mod(event)" label="Supports CD"/>
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{hrule1}" position="before">
+				<mx:HBox width="100%" height="33">
+					<mx:HBox width="19%" height="100%">
+						<mx:Label text="Parity:"/>
+						<fx:ComboBox id="parity" width="116" value="{dataHolder.connection.parity}" change="mod(event)" dataProvider="{parityDD}" />
+					</mx:HBox>
+					<mx:HBox width="15%" height="100%">
+						<mx:Label text="Flow:" width="33"/>
+						<fx:ComboBox id="flow" width="71" value="{dataHolder.connection.flow}" change="mod(event)" dataProvider="{flowDD}" />
+					</mx:HBox>
+					<mx:HBox width="20%" height="100%">
+						<mx:Label text="Stop Bits:"/>
+						<fx:ComboBox id="stopBits" creationComplete="stopBitsCreated()" width="71" value="{dataHolder.connection.stopBits}" change="mod(event)" dataProvider="{stopBitsDD}" />
+					</mx:HBox>
+				</mx:HBox>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	<mx:HBox  label="Device Connection" width="100%" height="94%" verticalAlign="top" horizontalGap="10" horizontalAlign="left">
+		<mx:Form width="100%" height="100%" id="form1">
+			<mx:FormHeading label="Device Type: {dataHolder.device_type}" id="dt"/>
+			<mx:FormItem label="Description:" width="443">
+				
+				<mx:HBox width="343" height="10%">
+					<mx:HBox width="222" height="10%">
+						<mx:TextInput width="219" id="desc" change="mod(event)" text="{dataHolder.description}"/>
+					</mx:HBox>
+					<mx:CheckBox id ="check" creationComplete="checkCreated()" label="Active" click="mod(event)" width="65"/>
+				</mx:HBox>
+			</mx:FormItem>
+			<mx:HRule width="100%" height="5"/>
+			<mx:FormItem label="Connection:" fontWeight="bold" fontSize="12">
+				<mx:HBox width="100%" height="33">
+					<mx:HBox width="20%" height="100%">
+						<fx:ComboBox id="type" width="155" value="{dataHolder.connection.type}" initialize="initType()" change="typeChange()" dataProvider="{deviceTypeDD}" />
+					</mx:HBox>
+				</mx:HBox>
+			</mx:FormItem>
+			<mx:HRule width="100%" height="5" id="hrule1"/>
+			<mx:FormItem >
+				<Forms:AdvancedParam id="adv" enabled="{Application.application.advancedOn}" visible="{Application.application.advancedOn}">
+				</Forms:AdvancedParam>
+			</mx:FormItem>
+						
+		</mx:Form>
+			
+	</mx:HBox>
+	
+	<mx:Metadata>
+				[DefaultProperty("addForm")]
+	</mx:Metadata>
+	<mx:HBox width="100%" height="6%"  verticalAlign="bottom" horizontalGap="5" horizontalAlign="right">
+		<mx:Button label="Undo Changes" id="undo"  enabled="{modifiedFlag}" width="108" height="28" fontSize="11" click="undo_click(event)"/>
+	</mx:HBox>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.Application;
+			import Forms.modifiedFlag;
+			import mx.core.UIComponent;
+			import mx.utils.ObjectProxy;
+			import mx.utils.ObjectUtil;
+			import Objects.Server.Connection;
+			
+			[Bindable]
+			public var dataHolder:ObjectProxy;
+			
+			[Bindable]
+			public var deviceTypeDD:Array = [{label:"IP", data:0}, {label:"SERIAL", data:1}];
+			
+			[Bindable]
+			public var baudDD:Array = [{label:"4800", data:0}, {label:"9600", data:1}, {label:"19200", data:2}];
+			
+			[Bindable]
+			public var dataBitsDD:Array = [{label:"7", data:0}, {label:"8", data:1}];
+			
+			[Bindable]
+			public var parityDD:Array = [{label:"NONE", data:0}, {label:"EVEN", data:1}, {label:"ODD", data:2}, {label:"MARK", data:3}];
+			
+			[Bindable]
+			public var flowDD:Array = [{label:"NONE", data:0}, {label:"RTSCTS", data:1}];
+			
+			[Bindable]
+			public var stopBitsDD:Array = [{label:"0", data:0}, {label:"1", data:1}, {label:"2", data:2}];
+			
+						
+			private var undoObj:Object;
+			[Bindable]
+			private var modifiedFlag:Boolean;
+			
+			private function getDDIndex(search:String):int {
+				returndeviceTypeDD.indexOf(search)
+			}
+			private function init():void {
+				undoObj = ObjectUtil.copy(dataHolder);
+				modifiedFlag = false;	
+			}
+			private function supportsCDCreated():void {
+				if (dataHolder.connection.supportsCD == "Y") {
+					supportsCD.selected = true;
+				} else {
+					supportsCD.selected = false;
+				}
+				modifiedFlag = false;
+			}
+			private function checkCreated():void {
+				if (dataHolder.active == "Y") {
+					check.selected = true;
+				} else {
+					check.selected = false;
+				}
+				modifiedFlag = false;
+			}
+			
+			public function set modifed(value:Boolean):void {
+				modifiedFlag = value;
+			}
+			
+			public function get modified():Boolean {
+				return modifiedFlag;
+			}
+			
+			public function set undoObject(value:Object):void {
+				undoObj = value;
+			}
+			public function get undoObject():Object {
+				return undoObj;
+			}
+			public function stopBitsCreated():void {
+				modifiedFlag = false;
+			}
+			
+			public function mod(event:Event):void {
+				if (type != null) {  // this is needed for stopping the modified event on itit.
+					modifiedFlag= true;
+					
+					var act:String = "";
+					dataHolder.connection.type = type.text;
+					if (type.text == "IP") {
+						if (address != null) {
+							dataHolder.connection.port = port.text;
+							dataHolder.connection.address = address.text;
+							dataHolder.connection.baud = "";
+							dataHolder.connection.parity = "";
+							dataHolder.connection.flow = "";
+							dataHolder.connection.dataBits = "";
+							dataHolder.connection.stopBits = "";
+							dataHolder.connection.supportsCD = "";
+						}
+					} else { 
+						if (stopBits != null) {
+							dataHolder.connection.address = "";
+							dataHolder.connection.port = sPort.text;
+							dataHolder.connection.baud = baud.text;
+							dataHolder.connection.parity = parity.text;
+							dataHolder.connection.flow = flow.text;
+							dataHolder.connection.dataBits = dataBits.text;
+							dataHolder.connection.stopBits = stopBits.text;
+							if (supportsCD.selected == true) {
+								act = "Y";
+							} else {
+								act = "N";
+							}
+							dataHolder.connection.supportsCD = act;
+						}
+					}
+					dataHolder.description = desc.text;
+					
+					if (check.selected == true) {
+							act = "Y";
+						} else {
+							act = "N";
+						}
+					dataHolder.active = act;
+				}
+				
+			}
+			
+			public function set addForm(value:Array):void {
+				try {
+					removeAllChildren();
+				}
+				catch (err:Error)
+				{
+					trace("error in base form:"+err.message);
+				}
+				if( value == null ) return;
+				for(var i:int=0; i < value.length; i++) {
+					addChild( value[i] );
+				}
+			}
+			
+			public function typeChange():void {
+				
+				if (type.selectedLabel == "IP") {
+					currentState = "ip";
+				} else {
+					currentState = "serial";
+				}
+			}
+			public function initType():void {
+				if (dataHolder.connection.type == "IP") {
+					currentState = "ip";
+				} else {
+					currentState = "serial";
+				}
+			}
+						
+			public function undo_click(event:Event):void {
+				//override this method
+				dataHolder = ObjectUtil.copy(undoObj);
+				supportsCDCreated();
+				checkCreated();
+				modifed = false;		
+			}
+			public function advanced(func:Boolean):void {
+				//override
+			}
+
+		]]>
+	</mx:Script>
+</mx:VBox>

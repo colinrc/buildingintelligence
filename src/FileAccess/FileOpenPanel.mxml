@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+		width="400"
+        title="Open Project"
+        showCloseButton="true"
+        paddingLeft="10" paddingTop="10"
+        paddingRight="10" paddingBottom="10"
+        close="closeHandler(event)">
+
+    <mx:Script>
+    <![CDATA[
+    	import mx.core.ApolloApplication;        
+        import flash.filesystem.File;
+        import mx.core.Application;
+        import mx.events.CloseEvent;
+        import mx.events.FileEvent;
+        import mx.events.MenuEvent;
+        import mx.managers.PopUpManager;
+        import flash.events.IOErrorEvent;
+
+        [Bindable]
+        public var extensionFilterInfo:Array =
+            [
+                { label: "All files", data: null },
+                { label: "eLifeAdmin project files", data: [ ".elp" ]}
+            ];             // Used to filter filetypes in the FileSystemList component.
+
+        [Bindable]
+        public var cancelButtonLabel:String = "Cancel";
+
+        [Bindable]
+        public var openDirectoryButtonLabel:String = "Open";
+
+        [Bindable]
+        public var openFileButtonLabel:String = "Open";
+
+        /**
+        * Initializes the UI.
+        */
+        public static function show(directory:File = null):FileOpenPanel
+        {
+            var panel:FileOpenPanel = FileOpenPanel(PopUpManager.createPopUp(
+                DisplayObject(mx.core.Application.application) , FileOpenPanel, true));
+            PopUpManager.centerPopUp(panel);
+            panel.setup(directory);        
+            return panel;
+        }
+
+       /**
+        * Displays the correct directory in the UI controls.
+        */
+         public function setup(directory:File = null):void
+        {
+            if (!directory)
+                directory = FileSystemList.COMPUTER;
+            fileSystemList.directory = directory;
+            fileSystemList.resetHistory(directory);
+            showFilesComboBox.selectedIndex = 1;
+            fileSystemList.extensions = showFilesComboBox.selectedItem.data;
+        }
+
+        /**
+        * Called when the user clicks the Cancel button. The method closes the pop-up window.
+        */
+        private function closeHandler(event:CloseEvent):void
+        {
+            dispatchEvent(new Event(Event.CANCEL));
+            PopUpManager.removePopUp(this);
+        }
+
+        /**
+        * Called when the user clicks the Back button. The method navigates 
+        * the fileSystemList component back to the previous directory.
+        */
+        private function backButton_clickHandler(event:MouseEvent):void
+        {
+            fileSystemList.navigateBack();
+        }
+
+        /**
+        * Called when the user selects an item from the Back button history list. 
+        * The method navigates the fileSystemList component back to the previous directory.
+        */
+        private function backButton_itemClickHandler(event:MenuEvent):void
+        {
+            fileSystemList.navigateBack(event.index);
+        }
+
+        /**
+        * Called when the user clicks the Forward button. The method navigates 
+        * the fileSystemList component back to the previous directory.
+        */
+        private function forwardButton_clickHandler(event:MouseEvent):void
+        {
+            fileSystemList.navigateForward();
+        }
+        
+         /**
+        * Called when the user selects an item from the Forward button history list. 
+        * The method navigates the fileSystemList component back to the previous directory.
+        */
+       private function forwardButton_itemClickHandler(event:MenuEvent):void
+        {
+            fileSystemList.navigateForward(event.index);
+        }
+
+         /**
+        * Called when the user selects an item in the FileSystemComboBox component. 
+        * The method navigates the fileSystemList component to the selected directory.
+        */
+        private function fileSystemComboBox_changeHandler(event:Event):void
+        {
+            fileSystemList.navigateTo(File(fileSystemComboBox.selectedItem));
+        }
+
+        /**
+        * Called when the user clicks the Up button. The method navigates the  
+        * fileSystemList component to the parent directory.
+        */
+        private function upButton_clickHandler(event:MouseEvent):void
+        {
+            fileSystemList.navigateUp();
+        }
+        
+         /**
+        * Called when the user selects an item in the fileSystemList component. 
+        * The method dispatches an event to the main application and removes 
+        * the pop-up window.
+        */
+       private function fileSystemList_selectHandler(event:Event):void
+        {
+            dispatchEvent(event);
+            PopUpManager.removePopUp(this);
+        }
+        
+        /**
+        * Called when the showFilesComboBox component selection changes. 
+        * The method filters the files in the fileSystemList component to 
+        * the extensions specified in the showFilesComboBox selection.
+        */
+        private function showFilesComboBox_changeHandler(event:Event):void
+        {
+            fileSystemList.extensions = showFilesComboBox.selectedItem.data;
+        }
+        
+        private function ioErrorHandler(event:IOErrorEvent):void {
+        	trace ("ioerror: "+ event.toString());
+        }
+        
+        /**
+        * Called when the user clicks the Select button. The method causes the 
+        * fileSystemList component to either (A) drill down into a directory
+        * (if a directory is selected) or (B) dispatch an FileEvent.SELECT event to 
+        * the main application and close the pop-up window.
+        */
+        private function selectButton_clickHandler(event:MouseEvent):void
+        {
+            var selectedFile:File = File(fileSystemList.selectedItem);
+            if (selectedFile.isDirectory)
+            {
+                fileSystemList.navigateDown()
+            }
+            else
+            {
+                var selectEvent:FileEvent = new FileEvent(FileEvent.SELECT);
+                selectEvent.file = selectedFile;
+                dispatchEvent(selectEvent);
+                PopUpManager.removePopUp(this);
+            }
+        }
+
+        /**
+        * Called when the user clicks the Cancel button. The method dispatches a
+        * cancel event to the main application and removes the pop-up window.
+        */
+        private function cancelButton_clickHandler(event:MouseEvent):void
+        {
+            dispatchEvent(new Event(Event.CANCEL)); 
+            PopUpManager.removePopUp(this);
+        }
+    ]]>
+    </mx:Script>
+
+    <mx:HBox width="100%">
+        <mx:FileSystemHistoryButton id="backButton" width="40" label="&lt;" toolTip="Back"
+                                    enabled="{fileSystemList.canNavigateBack}"
+                                    dataProvider="{fileSystemList.backHistory}"
+                                    click="backButton_clickHandler(event)"
+                                    itemClick="backButton_itemClickHandler(event)"/>
+        <mx:FileSystemHistoryButton id="forwardButton" width="40" label="&gt;" toolTip="Forward"
+                                    enabled="{fileSystemList.canNavigateForward}"
+                                    dataProvider="{fileSystemList.forwardHistory}"
+                                    click="forwardButton_clickHandler(event)"
+                                    itemClick="forwardButton_itemClickHandler(event)"/>
+        <mx:FileSystemComboBox id="fileSystemComboBox" width="100%" toolTip="Current Directory"
+                               directory="{fileSystemList.directory}"
+                               change="fileSystemComboBox_changeHandler(event)"/>
+        <mx:Button id="upButton" width="22" label="^" toolTip="Up"
+                   enabled="{fileSystemList.canNavigateUp}"
+                   click="upButton_clickHandler(event)"/>
+    </mx:HBox>
+    <mx:FileSystemList id = "fileSystemList" width="100%" rowCount="8" select="fileSystemList_selectHandler(event)" />
+    <mx:HBox width="100%" horizontalAlign="center">
+        <mx:Label text="Show files:"/>
+        <mx:ComboBox id="showFilesComboBox" width="100%"
+                     dataProvider="{extensionFilterInfo}" labelField="label"
+                     change="showFilesComboBox_changeHandler(event)"/>
+    </mx:HBox>
+    <mx:HBox width="100%" horizontalAlign="center">
+        <mx:Button id="cancelButton" width="80" label="{cancelButtonLabel}"
+                   click="cancelButton_clickHandler(event)"/>
+        <mx:Button id="selectButton" width="80" enabled="{fileSystemList.selectedItem}"
+                   label="{fileSystemList.canNavigateDown ? openDirectoryButtonLabel : openFileButtonLabel}"
+                   click="selectButton_clickHandler(event)"/>
+    </mx:HBox>
+</mx:TitleWindow>
