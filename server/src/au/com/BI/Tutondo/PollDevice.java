@@ -81,9 +81,9 @@ public class PollDevice extends Thread {
 						        lastCommandSent.getActionType() == CommDevice.TutondoPrograms ||
 						        lastCommandSent.getActionType() == CommDevice.TutondoVolume)){
 					logger.log (Level.WARNING,"Tutondo is not responding, please check cabling.");
-					comms.acknowlegeCommand(CommDevice.TutondoState);
-					comms.acknowlegeCommand(CommDevice.TutondoPrograms);
-					comms.acknowlegeCommand(CommDevice.TutondoVolume);
+					comms.acknowledgeCommand(CommDevice.TutondoState);
+					comms.acknowledgeCommand(CommDevice.TutondoPrograms);
+					comms.acknowledgeCommand(CommDevice.TutondoVolume);
 
 				}
 				else {

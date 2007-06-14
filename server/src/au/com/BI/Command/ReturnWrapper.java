@@ -13,6 +13,7 @@ public class ReturnWrapper {
 		boolean error = false;
 		String errorDescription = "";
 		public Exception exception = null;
+		public boolean queueCommands = false;
 		
 		int outputCommandType;
 		int paramCommandType;
@@ -140,6 +141,14 @@ public class ReturnWrapper {
 				return true;
     		}
 			return false;
+		}
+
+		public boolean isQueueCommands() {
+			return queueCommands;
+		}
+
+		public void setQueueCommands(boolean queueCommands) {
+			this.queueCommands = queueCommands;
 		}
 
 }

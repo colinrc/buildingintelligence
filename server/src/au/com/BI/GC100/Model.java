@@ -313,7 +313,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		    	    String deviceAddress =  gc100StringParts[1];
 				
 		    	    // comms.acknowlegeCommand(CommDevice.GC100_IRCommand,deviceAddress);
-		    	    comms.acknowlegeCommand(CommDevice.GC100_IRCommand,"");
+		    	    comms.acknowledgeCommand(CommDevice.GC100_IRCommand,"");
 		    	    CommsCommand lastCommandSent;
 		    	    if (comms.sendNextCommand(CommDevice.GC100_IRCommand)) {
 		    	    //if (comms.sendNextCommand(CommDevice.GC100_IRCommand,deviceAddress)) {
@@ -351,10 +351,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					if (lastCommandSent != null) {
 						String deviceAddress = lastCommandSent.getActionCode();
 		    	       		logger.log (Level.WARNING,"The GC100 received a command it did not understand " + lastCommandSent.getExtra2Info());
-		    	       		comms.acknowlegeCommand(CommDevice.GC100_IRCommand,deviceAddress);
+		    	       		comms.acknowledgeCommand(CommDevice.GC100_IRCommand,deviceAddress);
 		    	       		comms.sendNextCommand(CommDevice.GC100_IRCommand,deviceAddress);
 					} else {
-	    	       			comms.acknowlegeCommand(CommDevice.GC100_IRCommand);
+	    	       			comms.acknowledgeCommand(CommDevice.GC100_IRCommand);
 					}
 
 		    	    }

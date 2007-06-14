@@ -88,11 +88,11 @@ protected String modelName = "";
 	 * @param key If empty or null the last command sent is removed else the key is searched for in the sent queue
 	 * @return success if the key is found or not specified
 	 */
-	public boolean acknowlegeCommand (String key) {
+	public boolean acknowledgeCommand (String key) {
 		boolean returnCode = false;
 		if (key != null && !key.equals("")) {
 			synchronized (sentQueue){
-				Iterator sentListIter = sentQueue.iterator();
+				Iterator <CommsCommand> sentListIter = sentQueue.iterator();
 				while (sentListIter.hasNext() && !returnCode) {
 					CommsCommand item = (CommsCommand)sentListIter.next();
 					if (item.actionCode.equals (key)){
@@ -118,10 +118,10 @@ protected String modelName = "";
 	 * @param key If empty or null the last command sent is removed else the key is searched for in the sent queue
 	 * @return success if the key is found or not specified
 	 */
-	public boolean acknowlegeCommand (int actionType,String key) {
+	public boolean acknowledgeCommand (int actionType,String key) {
 		if (key != null && !key.equals("")) {
 			synchronized (sentQueue){
-				Iterator sentListIter = sentQueue.iterator();
+				Iterator <CommsCommand>sentListIter = sentQueue.iterator();
 				while (sentListIter.hasNext()) {
 					CommsCommand item = (CommsCommand)sentListIter.next();
 					if (item.getActionType() == actionType &&  item.getActionCode().equals (key)){
@@ -142,11 +142,11 @@ protected String modelName = "";
 		}
 	}
 
-	public boolean acknowlegeCommand (int actionType) {
+	public boolean acknowledgeCommand (int actionType) {
 		boolean returnCode = false;
 		synchronized (sentQueue){
 	
-			Iterator sentListIter = sentQueue.iterator();
+			Iterator <CommsCommand>sentListIter = sentQueue.iterator();
 			while (sentListIter.hasNext()) {
 				CommsCommand item = (CommsCommand)sentListIter.next();
 				if (item.getActionType() == actionType ){
@@ -239,7 +239,7 @@ protected String modelName = "";
 	
 	public void 	removeAllCommands (int actionType) {
 		synchronized (toSendQueue){
-		    Iterator commandList = toSendQueue.iterator();
+		    Iterator <CommsCommand>commandList = toSendQueue.iterator();
 		    while (commandList.hasNext()) {
 		        CommsCommand command = (CommsCommand)commandList.next();
 		        if (command.getActionType() == actionType) commandList.remove();
@@ -249,7 +249,7 @@ protected String modelName = "";
 
 	public boolean sentQueueContainsCommand (int actionType, String key) {
 		synchronized (sentQueue){
-		    Iterator commandList = sentQueue.iterator();
+		    Iterator <CommsCommand>commandList = sentQueue.iterator();
 		    while (commandList.hasNext()) {
 		        CommsCommand command = (CommsCommand)commandList.next();
 		        if (command.getActionType() == actionType && command.getKey().equals (key)) return true;
@@ -260,7 +260,7 @@ protected String modelName = "";
 	
 	public boolean sentQueueContainsCommand (int actionType) {
 		synchronized (sentQueue){
-		    Iterator commandList = sentQueue.iterator();
+		    Iterator <CommsCommand>commandList = sentQueue.iterator();
 		    while (commandList.hasNext()) {
 		        CommsCommand command = (CommsCommand)commandList.next();
 		        if (command.getActionType() == actionType) return true;
@@ -299,7 +299,7 @@ protected String modelName = "";
 		if (this.isCommandSentQueueEmpty()) return false;
 		
 		synchronized (this.sentQueue){
-			Iterator eachSentCommand = sentQueue.iterator();
+			Iterator <CommsCommand>eachSentCommand = sentQueue.iterator();
 			while (eachSentCommand.hasNext()){
 				CommsCommand lastCommand = (CommsCommand)eachSentCommand.next();
 
@@ -354,7 +354,7 @@ protected String modelName = "";
 	public CommsCommand getCommandInQueue (String key) {
 		if (key != null && !key.equals("")) {
 			synchronized (sentQueue){
-				Iterator sentListIter = sentQueue.iterator();
+				Iterator <CommsCommand>sentListIter = sentQueue.iterator();
 				while (sentListIter.hasNext()) {
 					CommsCommand item = (CommsCommand)sentListIter.next();
 					if (item.key.equals (key)){
@@ -393,7 +393,7 @@ protected String modelName = "";
 		if (isCommandQueueEmpty()) return false;
 	
 		synchronized (toSendQueue){
-			Iterator commandQueueList = toSendQueue.iterator();
+			Iterator <CommsCommand>commandQueueList = toSendQueue.iterator();
 			
 			while (!foundCommand && commandQueueList.hasNext()) {
 				nextCommand = (CommsCommand)commandQueueList.next();
@@ -426,7 +426,7 @@ protected String modelName = "";
 		if (isCommandQueueEmpty()) return true;
 	
 		synchronized (toSendQueue){
-			Iterator commandQueueList = toSendQueue.iterator();
+			Iterator <CommsCommand>commandQueueList = toSendQueue.iterator();
 			
 			while (!foundCommand && commandQueueList.hasNext()) {
 				nextCommand = (CommsCommand)commandQueueList.next();

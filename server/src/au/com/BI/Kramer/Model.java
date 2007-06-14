@@ -188,7 +188,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	 */
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{
-		comms.acknowlegeCommand("");
+		comms.acknowledgeCommand("");
 		comms.sendNextCommand();
 	}
 

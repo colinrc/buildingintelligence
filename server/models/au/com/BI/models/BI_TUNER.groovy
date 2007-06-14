@@ -41,13 +41,17 @@ class BI_TUNER extends GroovyModel {
 	
 	BI_TUNER () {
 		super()
+		
+		setQueueCommands(true) 
+		// Set the default behaviour for comms commands to be queued before sending. Can be overridden for a returnWrapper object
+
 		configHelper.addParameterBlock  "AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Audio Source"
 	}
 	
 	public void doStartup(ReturnWrapper returnWrapper) {
 		// Any instructions that should be set up the device for communication should be included here.
 		// This method is called after connection is made to the device
-		
+
 		returnWrapper.addCommOutput ("AU_STARTUP_FIRST")
 		returnWrapper.addCommOutput ("AU_STARTUP_SECOND")
 	}
@@ -84,7 +88,8 @@ class BI_TUNER extends GroovyModel {
 	}
 	
 	void processStringFromComms (String command , ReturnWrapper returnWrapper) {
-		def matcher = command =~ /(AU_PWR|AU_VOL|AU_SRC|AU_STARTED):?(\d*):?(\d*)/
+
+		def matcher = command =~ /(OK|AU_PWR|AU_VOL|AU_SRC|AU_STARTED):?(\d*):?(\d*)/
 		 //  For details on groovy regular expressions see   http://groovy.codehaus.org/Tutorial+4+-+Regular+expressions+basics
 		
 		// Process string from the device that looks like  AU_VOL:zone:level  , AU_PWR:zone:0|1,   AU_SRC:zone:src,  AU_STARTED
@@ -94,6 +99,17 @@ class BI_TUNER extends GroovyModel {
 				def theCommand = matcher[0][1]  // For a pattern match that has only captured one line, each capture group i reffered to by matcher[0][group]
 	
 				switch (theCommand) {
+					case "OK":
+						// The last command has been acknowledged by the device so now send the next one
+						comms.acknowledgeCommand("")
+						comms.sendNextCommand()
+						break;
+
+					case "ERROR":
+						// The last command has been acknowledged by the device so now send the next one
+						comms.resendAllSentCommands()
+						break;
+
 					case "AU_STARTED" :
 						// received confirmation from the device that the initial setup is complete, now query the state of each item from the configuration file
 						doRestOfStartup(returnWrapper)
@@ -167,6 +183,7 @@ class BI_TUNER extends GroovyModel {
 
 	
 	void buildCustomConnectString (CustomConnect device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+
 				// receives a message from flash and builds the appropriate string for the audio device
 				
 				// To switch on the audio device it requieres a string of this format      AU_PWR:zone:on or AW_PWR:zone:off

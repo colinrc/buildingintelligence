@@ -55,6 +55,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	protected Pattern customInputScaleString = null;
 	protected Pattern customScanCommandString = null;
 	protected ConfigHelper configHelper;
+	protected boolean queueCommands  = false;
     
 	public SimplifiedModel () {
         configHelper = new ConfigHelper(this);
@@ -76,6 +77,8 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	 */
 	public void doStartup() throws CommsFail {
 		ReturnWrapper returnWrapper = new ReturnWrapper();
+		returnWrapper.setQueueCommands(this.isQueueCommands());
+
 
 		try {
 			doStartup( returnWrapper);
@@ -95,6 +98,8 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	 */
 	public void doOutputItem(CommandInterface command) throws CommsFail {
 		ReturnWrapper returnWrapper = new ReturnWrapper();
+		returnWrapper.setQueueCommands(this.isQueueCommands());
+
 		cache.setCachedCommand(command.getKey(),command);
 		
 		try {
@@ -181,11 +186,19 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		if (!returnWrapper.isError()) {
 			if (returnWrapper.isMessageIsBytes()) {
 				for (byte[] avOutputString : returnWrapper.getCommOutputBytes()) {
-					this.sendToSerial(avOutputString);
+					if (returnWrapper.isQueueCommands()) {
+						this.sendToSerialQueue (avOutputString);
+					} else {
+						this.sendToSerial(avOutputString);
+					}
 				}
 			} else {
 				for (String avOutputString : returnWrapper.getCommOutputStrings()) {
-					this.sendToSerial(avOutputString + this.getAppendToSentStrings());
+					if ( returnWrapper.isQueueCommands()) {
+						this.sendToSerialQueue(avOutputString + this.getAppendToSentStrings());
+					} else {
+						this.sendToSerial(avOutputString + this.getAppendToSentStrings());						
+					}
 					if (logger.isLoggable(Level.FINE)) {
 						logger
 								.log(Level.FINE,
@@ -435,6 +448,16 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		}
 	}
 
+	public void sendToSerialQueue(String outputRawCommand) throws CommsFail {
+		if (this.connected == true) {
+			CommsCommand command = new CommsCommand();
+			command.setKey("");
+			command.setCommand(outputRawCommand);
+			command.setKeepForHandshake(true);
+			comms.addCommandToQueue(command);
+		}
+	}
+	
 	public void sendToSerial(byte[] outputRawCommand) throws CommsFail {
 		if (this.connected == true) {
 			synchronized (comms) {
@@ -443,6 +466,15 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		}
 	}
 
+	public void sendToSerialQueue(byte[] outputRawCommand) throws CommsFail {
+		if (this.connected == true) {
+			CommsCommand command = new CommsCommand();
+			command.setKey("");
+			command.setKeepForHandshake(true);
+			command.setCommandBytes(outputRawCommand);
+			comms.addCommandToQueue(command);
+			}
+	}
 
     /**
      Finishes operations, closing down any other threads it is responsible for
@@ -936,6 +968,8 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
 	public void doControlledItem(CommandInterface command) throws CommsFail {
 		ReturnWrapper returnWrapper = new ReturnWrapper();
+		returnWrapper.setQueueCommands(this.isQueueCommands());
+
 
 		try {
 			this.doCustomConnectInputIfPresent((CommsCommand)command,returnWrapper);
@@ -961,6 +995,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	 */
 	public void doInputItem(CommandInterface command) throws CommsFail {
 		ReturnWrapper returnWrapper = new ReturnWrapper();
+		returnWrapper.setQueueCommands(this.isQueueCommands());
 
 		try {
 			this.doCustomConnectInputIfPresent((CommsCommand)command,returnWrapper);
@@ -1392,5 +1427,13 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	/**
 	 * Called every time a model disconnects, just before the comms layer is attatched.
 	 */
-	public void prepareToAttatchComms(){};
+	public void prepareToAttatchComms(){}
+
+	public boolean isQueueCommands() {
+		return queueCommands;
+	}
+
+	public void setQueueCommands(boolean queueCommands) {
+		this.queueCommands = queueCommands;
+	};
 }

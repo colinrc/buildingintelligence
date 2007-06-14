@@ -323,7 +323,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				currentState = new StateOfZone();
 			
 			if (lastActionType == CommDevice.TutondoState ) {
-				comms.acknowlegeCommand(CommDevice.TutondoState,zone);
+				comms.acknowledgeCommand(CommDevice.TutondoState,zone);
 				comms.gotFeedback();
 				if (!protocolB) comms.sendNextCommand();
 				commandMatched = true;
@@ -343,7 +343,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 			
 			if (lastActionType == CommDevice.TutondoVolume) {
-				comms.acknowlegeCommand(CommDevice.TutondoVolume,zone);
+				comms.acknowledgeCommand(CommDevice.TutondoVolume,zone);
 				comms.gotFeedback();
 				if (!protocolB) comms.sendNextCommand();
 				logger.log(Level.FINEST,"Received feedback for tutondo volume");
@@ -362,7 +362,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 
 			if (lastActionType == CommDevice.TutondoPrograms) {
-				comms.acknowlegeCommand(CommDevice.TutondoPrograms,zone);
+				comms.acknowledgeCommand(CommDevice.TutondoPrograms,zone);
 				comms.gotFeedback();
 				if (!protocolB) comms.sendNextCommand();
 				logger.log(Level.FINEST,"Received feedback for tutondo src");
@@ -384,7 +384,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 			
 			if (!commandMatched && !protocolB){
-				comms.acknowlegeCommand("");
+				comms.acknowledgeCommand("");
 				comms.gotFeedback();
 				comms.sendNextCommand();
 			}

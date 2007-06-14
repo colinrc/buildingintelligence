@@ -1,3 +1,33 @@
+== 14/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b54.zip V1.6b54]  ==
+
+''' Groovy Models '''
+
+Exposed the comms command queue interface to groovy models as well as the simple comms sending methods.
+During the groovy model initialisation call
+
+	setQueueCommands(true)  
+
+The model will queue commands instead of immediately sending them. 
+
+On receiving the acknowledge from the device to send the next command the model must acknowledge the previous command then send the next comamnd
+This will be in the processStringFromComms method.
+
+comms.acknowledgeCommand("")
+comms.sendNextCommand()
+
+It is also possible to resend all sent commands that have not yet been acknowledged if an error is received
+
+comms.resendAllSentCommands()
+
+The example groovy model shows this is operation.
+
+
+It is possible to override the model default for an particular method populating a returnWrapper 
+(usually this would only be in the doStartup method for initialisation where devices often behave differently to normal operations),
+
+     call returnWrapper.setQueueCommands (true | false)
+
+
 == 9/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b53.zip V1.6b53]  ==
 
 ''' Groovy Modes '''

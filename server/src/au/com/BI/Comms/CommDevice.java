@@ -97,9 +97,9 @@ public interface CommDevice {
 	 * @param key If empty or null the last command sent is removed else the key is searched for in the sent queue
 	 * @return success if the key is found or not specified
 	 */
-	public boolean acknowlegeCommand(int actionType);
-	public boolean acknowlegeCommand(String key);
-	public boolean acknowlegeCommand(int actionType,String key);
+	public boolean acknowledgeCommand(int actionType);
+	public boolean acknowledgeCommand(String key);
+	public boolean acknowledgeCommand(int actionType,String key);
 
 	/**
 	 * The ETX array is the set of possible values to indicate the end of the data string
