@@ -11,7 +11,11 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/junit-addons-1.4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jython"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Quartz1.5.2"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/RXTX2.1-7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/RXTX2.1-7">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Java/rxtx-2.1-7r2/MACOSX_IDE/ForPackageMaker/Install/Library/Java/Extensions"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xmlunit1.0"/>
 	<classpathentry exported="true" kind="lib" path="bin-groovy"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Groovy1.0"/>

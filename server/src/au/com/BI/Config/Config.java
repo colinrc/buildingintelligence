@@ -26,6 +26,7 @@ import au.com.BI.Command.*;
 import au.com.BI.CustomConnect.CustomConnectFactory;
 import au.com.BI.CustomInput.*;
 import au.com.BI.Audio.*;
+import au.com.BI.Pump.*;
 import au.com.BI.Analog.*;
 import au.com.BI.GC100.*;
 import au.com.BI.GroovyModels.GroovyRunBlock;
@@ -75,6 +76,7 @@ public class Config {
 		protected AlertFactory alertFactory;		
 		protected RawFactory rawFactory;		
 		protected AnalogFactory analogFactory;		
+		protected PumpFactory pumpFactory;		
 		protected IRFactory iRFactory;
 		protected ThermostatFactory thermostatFactory;
 		protected WindowsMediaExtenderFactory windowsMediaExtenderFactory;
@@ -109,6 +111,7 @@ public class Config {
 		this.setAlertFactory (AlertFactory.getInstance());		
 		this.setRawFactory (RawFactory.getInstance());		
 		this.setAnalogFactory ( AnalogFactory.getInstance());		
+		this.setPumpFactory ( PumpFactory.getInstance());	
 		this.setIRFactory (IRFactory.getInstance());		
 		this.setSmsFactory(SMSFactory.getInstance());
 		this.setLabelFactory (LabelFactory.getInstance());
@@ -144,7 +147,7 @@ public class Config {
 
 
 	@SuppressWarnings("unchecked")
-	public void readConfig(List <DeviceModel>deviceModels, List clientModels,Cache cache,
+	public void readConfig(List <DeviceModel>deviceModels, List <DeviceModel>clientModels,Cache cache,
 			HashMap <String,Object>variableCache, CommandQueue commandQueue, 
 			IRCodeDB irCodeDB, File configFile,Controls controls)
 			throws ConfigError {
@@ -466,7 +469,7 @@ public class Config {
 	}
 
 	protected void parseDevices(Element deviceConfig, DeviceModel deviceModel,
-				List clientModels, String groupName) throws JDOMException {
+				List <DeviceModel>clientModels, String groupName) throws JDOMException {
 		int type;
 		int groupNumber = 1; // used if a name is not specified; group 0 is reserved for overall device confuration
 
@@ -557,6 +560,10 @@ public class Config {
 					if (itemName.equals("TEMPERATURE")) {
 						sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.TEMPERATURE,groupName,rawHelper);
+					}
+					if (itemName.equals("PUMP")) {
+						pumpFactory.addPump(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+								DeviceType.PUMP,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_X10")) {
 						if (deviceModel.getName().equals("COMFORT")){
@@ -865,5 +872,13 @@ public class Config {
 
 	public void setCalendarModel(au.com.BI.Calendar.Model calendarModel) {
 		this.calendarModel = calendarModel;
+	}
+
+	public PumpFactory getPumpFactory() {
+		return pumpFactory;
+	}
+
+	public void setPumpFactory(PumpFactory pumpFactory) {
+		this.pumpFactory = pumpFactory;
 	}
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layout>
-	<elife version="eLife-1.6b54"/>
+	<elife version="eLife-1.6b55"/>
 	<dirs>
 		<dir desc="System data files" name="./datafiles"/>
 		<dir desc="System configuration" name="./config"/>

@@ -75,6 +75,8 @@ public interface DeviceType
 	
 	public static final int SQUEEZE_BOX = 54;
 	
+	public static final int PUMP = 55;
+	
 	// Likely number of raw commands for device line. More is allowed.
 	public static final int PROBABLE_NUMBER_RAW = 10;
 

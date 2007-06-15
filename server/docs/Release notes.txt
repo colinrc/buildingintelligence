@@ -1,3 +1,14 @@
+== 15/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b55.zip V1.6b55]  ==
+
+''' Groovy Models '''
+
+Added another demonstration model, BI_PUMP
+
+''' General '''
+
+Added a pump type
+
+
 == 14/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b54.zip V1.6b54]  ==
 
 ''' Groovy Models '''
