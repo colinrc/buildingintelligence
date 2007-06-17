@@ -10,15 +10,18 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.CommsFail;
 import au.com.BI.Config.ConfigHelper;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.MultiMedia.Album;
 import au.com.BI.MultiMedia.AlbumCommand;
 import au.com.BI.MultiMedia.Artist;
 import au.com.BI.MultiMedia.ArtistCommand;
 import au.com.BI.MultiMedia.Genre;
 import au.com.BI.MultiMedia.GenreCommand;
+import au.com.BI.MultiMedia.PlayerStatusCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseAlbumsReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseArtistsReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseGenresReply;
+import au.com.BI.MultiMedia.SlimServer.Commands.PlayerStatusReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommandException;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommandFactory;
@@ -108,6 +111,19 @@ public class ControlledHelper {
 			flashCommand.setKey("CLIENT_SEND");
 			flashCommand.setCommand("GENRE");
 			sendCommand(cache, commandQueue, flashCommand);
+		} else if (_command.getClass().equals(PlayerStatusReply.class)) {
+			PlayerStatusReply reply = (PlayerStatusReply)_command;
+			DeviceType device = model.getConfigHelper().getControlledItem(reply.getPlayerId()); 
+			reply.setPlayerKey(device.getOutputKey());
+			
+			PlayerStatusCommand flashCommand = new PlayerStatusCommand();
+			flashCommand.setPlayerstatus(reply);
+			flashCommand.setDisplayName(device.getOutputKey());
+			flashCommand.setTargetDeviceID(-1);
+			flashCommand.setUser(model.currentUser);
+			flashCommand.setKey("CLIENT_SEND");
+			flashCommand.setCommand("PLAYER_STATUS");
+			sendCommand(cache,commandQueue,flashCommand);
 		}
 	}
 	

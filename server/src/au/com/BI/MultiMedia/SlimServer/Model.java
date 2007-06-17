@@ -1,5 +1,6 @@
 package au.com.BI.MultiMedia.SlimServer;
 
+import java.util.Collection;
 import java.util.logging.Level;
 
 import au.com.BI.Audio.Audio;
@@ -8,6 +9,7 @@ import au.com.BI.Comms.CommsFail;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.MultiMedia.MultiMediaInterface;
 import au.com.BI.MultiMedia.SlimServer.Commands.Login;
+import au.com.BI.MultiMedia.SlimServer.Commands.PlayerStatus;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommandException;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.SimplifiedModel;
@@ -59,6 +61,14 @@ public class Model extends SimplifiedModel implements DeviceModel, MultiMediaInt
 		
 		comms.sendString(login.buildCommandString() + "\r\n");
 		logger.log(Level.INFO,"Sent command " + login.buildCommandString());
+		
+		Collection<DeviceType> devices = this.getConfigHelper().getAllOutputDeviceObjects();
+		for (DeviceType device: devices) {
+			PlayerStatus status = new PlayerStatus();
+			status.setPlayerId(device.getKey());
+			comms.sendString(status.buildCommandString() + "\r\n");
+			logger.log(Level.INFO,"Sent command " + status.buildCommandString());
+		}
 		
 		urlPath = (String)this.getParameterValue("COVER_ART_URL", DeviceModel.MAIN_DEVICE_GROUP);
 		

@@ -2,12 +2,14 @@ package au.com.BI.MultiMedia.SlimServer.Commands;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import au.com.BI.MultiMedia.Album;
 import au.com.BI.MultiMedia.Artist;
 import au.com.BI.MultiMedia.Genre;
+import au.com.BI.MultiMedia.Track;
 import au.com.BI.Util.StringUtils;
 
 public class SlimServerCommandFactory {
@@ -41,6 +43,10 @@ public class SlimServerCommandFactory {
 					command = parseBrowseArtistsReply(words);
 				} else if (words[0].equals("genres")) {
 					command = parseBrowseGenresReply(words);
+				} else if (words[0].equals("login")) {
+					command = new SlimServerCommand(); // empty command
+				} else if (words[1].equals("status")) {
+					command = parsePlayerStatusReply(words);
 				}
 			}
 			
@@ -89,7 +95,7 @@ public class SlimServerCommandFactory {
 			
 			positionOfColon = word.indexOf(":");
 			tag = word.substring(0,positionOfColon);
-			value = word.substring(positionOfColon+1);
+			value = word.substring(positionOfColon+1); 
 			
 			if (tag.equals("id")) {
 				if (album != null) {
@@ -289,6 +295,183 @@ public class SlimServerCommandFactory {
 		
 		if (genre != null) {
 			command.getGenres().add(genre);
+		}
+		
+		return command;
+	}
+	
+	/**
+	 * Parse a player status message.
+	 * @param words
+	 * @return
+	 * @throws SlimServerCommandException
+	 */
+	public SlimServerCommand parsePlayerStatusReply(String[] words)
+		throws SlimServerCommandException {
+		PlayerStatusReply command = new PlayerStatusReply();
+		
+		int positionOfColon = 0;
+		String tag = "";
+		String value = "";
+		
+		try {
+			command.setPlayerId(URLDecoder.decode(words[0], "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			logger.log(Level.INFO, "UTF-8 not supported");
+		}
+		
+		int expectedCount = 0;
+		// second should be the how many is returned
+		try {
+			expectedCount = Integer.parseInt(words[3]);
+		} catch (NumberFormatException e) {
+			throw new SlimServerCommandException("Expected an integer",e);
+		}
+		
+		Track track = null;
+		for (int i=4; i < words.length; i++) {
+			String word = words[i];
+			try {
+				word = URLDecoder.decode(word,"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new SlimServerCommandException("Cannot use UTF-8 encoding", e);
+			}
+			
+			positionOfColon = word.indexOf(":");
+			tag = word.substring(0,positionOfColon);
+			value = word.substring(positionOfColon+1);
+			
+			if (tag.equals("tag")) {
+				// ignore - this tells whomever is subscribed what tags to expect in the tracks
+			} else if (tag.equals("rescan")) {
+				if (value.equals("1")) {
+					command.setRescan(true);
+				} else {
+					command.setRescan(false);
+				}
+			} else if (tag.equals("subscribe")) {
+				command.setSubscribe(value);
+			} else if (tag.equals("player_name")) {
+				command.setPlayerName(value);
+			} else if (tag.equals("player_connected")) {
+				command.setPlayerConnected(value);
+			} else if (tag.equals("power")) {
+				command.setPower(value);
+			} else if (tag.equals("signalstrength")) {
+				command.setSignalStrength(value);
+			} else if (tag.equals("mode")) {
+				command.setMode(value);
+			} else if (tag.equals("remote")) {
+				command.setRemote(value);
+			} else if (tag.equals("current_title")) {
+				command.setCurrentTitle(value);
+			} else if (tag.equals("time")) {
+				command.setTime(value);
+			} else if (tag.equals("rate")) {
+				command.setRate(value);
+			} else if (tag.equals("duration")) {
+				if (track == null) {
+					command.setDuration(value);
+				} else {
+					track.setDuration(value);
+				}
+			} else if (tag.equals("sleep")) {
+				command.setSleep(value);
+			} else if (tag.equals("will_sleep_in")) {
+				command.setWillSleepIn(value);
+			} else if (tag.equals("mixer volume")) {
+				command.setMixerVolume(value);
+			} else if (tag.equals("mixer treble")) {
+				command.setMixerTreble(value);
+			} else if (tag.equals("mixer bass")) {
+				command.setMixerBass(value);
+			} else if (tag.equals("mixer pitch")) {
+				command.setMixerPitch(value);
+			} else if (tag.equals("playlist repeat")) {
+				command.setPlaylistRepeat(value);
+			} else if (tag.equals("playlist shuffle")) {
+				command.setPlaylistShuffle(value);
+			} else if (tag.equals("playlist_id")) {
+				command.setPlaylistId(value);
+			} else if (tag.equals("playlist_name")) {
+				command.setPlaylistName(value);
+			} else if (tag.equals("playlist_modified")) {
+				command.setPlaylistModified(value);
+			} else if (tag.equals("playlist_cur_index")) {
+				command.setPlaylistCurrentIndex(value);
+			} else if (tag.equals("playlist_tracks")) {
+				command.setPlaylistTracks(value);
+			} else if (tag.equals("playlist index")) {
+				if (track != null) {
+					command.getTracks().add(track);
+				}
+				track = new Track();
+				track.setPlaylistIndex(value);
+			} else if (tag.equals("id")) {
+				track.setId(value);
+			} else if (tag.equals("genre")) {
+				track.setGenre(value);
+			} else if (tag.equals("genre_id")) {
+				track.setGenreId(value);
+			} else if (tag.equals("artist")) {
+				track.setArtist(value);
+			} else if (tag.equals("artist_id")) {
+				track.setArtistId(value);
+			} else if (tag.equals("composer")) {
+				track.setComposer(value);
+			} else if (tag.equals("composer")) {
+				track.setComposer(value);
+			} else if (tag.equals("band")) {
+				track.setBand(value);
+			} else if (tag.equals("conductor")) {
+				track.setConductor(value);
+			} else if (tag.equals("album")) {
+				track.setAlbum(value);
+			} else if (tag.equals("album_id")) {
+				track.setAlbumId(value);
+			} else if (tag.equals("disc_number")) {
+				track.setDiscNumber(value);
+			} else if (tag.equals("disccount")) {
+				track.setDiscCount(value);
+			} else if (tag.equals("tracknum")) {
+				track.setTrackNumber(value);
+			} else if (tag.equals("year")) {
+				track.setYear(value);
+			} else if (tag.equals("bpm")) {
+				track.setBpm(value);
+			} else if (tag.equals("comment")) {
+				track.setComment(value);
+			} else if (tag.equals("type")) {
+				track.setType(value);
+			} else if (tag.equals("tagversion")) {
+				track.setTagVersion(value);
+			} else if (tag.equals("bitrate")) {
+				track.setBitRate(value);
+			} else if (tag.equals("filesize")) {
+				track.setFileSize(value);
+			} else if (tag.equals("drm")) {
+				track.setDrm(value);
+			} else if (tag.equals("coverart")) {
+				track.setCoverArt(value);
+			} else if (tag.equals("modificationTime")) {
+				track.setModificationTime(value);
+			} else if (tag.equals("url")) {
+				track.setUrl(value);
+			} else if (tag.equals("lyrics")) {
+				track.setLyrics(value);
+			} else if (tag.equals("remote")) {
+				track.setRemote(value);
+			} else if (tag.equals("title")) {
+				track.setTitle(value);
+			}
+		}
+		
+		if (track != null) {
+			command.getTracks().add(track);
+		}
+		
+		if (command.getTracks().size() != expectedCount) {
+			logger.log(Level.INFO,"Subscribe command expected " + expectedCount + " records but only received " + command.getTracks().size());
 		}
 		
 		return command;

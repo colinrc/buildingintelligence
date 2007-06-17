@@ -438,6 +438,7 @@ public class OutputHelper {
 				 *  
 				 *  <CONTROL KEY="LAPTOP" COMMAND="queueItem" EXTRA="artist:1" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5=""/>
 				 *  <CONTROL KEY="LAPTOP" COMMAND="queueItem" EXTRA="album:1" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5=""/>
+				 *  <CONTROL KEY="LAPTOP" COMMAND="queueItem" EXTRA="playlistname:Chillout" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5=""/>
 				 */
 				PlayListControl control = new PlayListControl();
 				control.setPlayerId(device.getKey());
@@ -525,6 +526,21 @@ public class OutputHelper {
 				control.setPlayerId(device.getKey());
 				control.setNegativeIndex(1);
 				retCode = control.buildCommandString() + "\r\n";
+			} else if (command.getCommandCode().equalsIgnoreCase("jumpToPosition")) {
+				/*
+				 * <CONTROL KEY="LAPTOP" COMMAND="jumpToPosition" EXTRA="<position>" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 */
+				PlayListIndex control = new PlayListIndex();
+				control.setPlayerId(device.getKey());
+				try {
+					control.setIndex(Integer.parseInt(command.getExtraInfo()));
+				} catch (NumberFormatException e) {
+					logger.log(Level.WARNING,
+							"index found but it is not an integer");
+				}
+				if (control.getIndex() != -1) {
+					retCode = control.buildCommandString() + "\r\n";
+				}
 			}
 		}
 
