@@ -94,6 +94,7 @@ openCalendar = function () {
 								eventObj.eventType = eventsData[i].eventType;
 								eventObj.id = eventsData[i].id;
 								eventObj.title = eventsData[i].title;
+								eventObj.active = eventsData[i].active;
 								eventObj.alarm = eventsData[i].alarm;
 								eventObj.memo = eventsData[i].memo;
 								eventObj.iconName = eventsData[i].iconName;

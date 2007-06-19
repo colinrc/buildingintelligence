@@ -34,7 +34,10 @@ parseClientXML = function (xml) {
 	}
 	
 	// hide mouse if set in config
-	if (_global.settings.hideMouseCursor) Mouse.hide();
+	if (_global.settings.hideMouseCursor) {
+		Mouse.hide();
+		mdm.Input.Mouse.hide("MainForm");
+	}
 
 	if (_global.settings.device == "pda") {
 		_global.settings.tabPosition = "right";
