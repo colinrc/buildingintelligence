@@ -1,3 +1,12 @@
+== 25/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b57zip V1.6b57]  ==
+
+''' GroovyModels '''
+
+Added enablePoll (time interval), and disablePoll()
+
+When polling is enabled the doPoll (returnWrapper) method will be called at every poll interval.
+
+
 == 18/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b56.zip V1.6b56]  ==
 
 ''' Squeezebox '''

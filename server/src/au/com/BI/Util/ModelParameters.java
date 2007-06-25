@@ -76,6 +76,7 @@ public class ModelParameters  {
 		protected LabelMgr labelMgr = null;
 		protected boolean naturalPackets = false;
 		protected au.com.BI.Patterns.Model patterns = null;
+		protected boolean IPHeartbeat = true;;
 		
 		public User currentUser = null;
 		
@@ -227,9 +228,6 @@ public class ModelParameters  {
                 this.description = description;
         }
 
-        public boolean doIPHeartbeat() {
-                return true;
-        }
 
         public boolean doIControlIR() {
                 return false;
@@ -478,5 +476,14 @@ public class ModelParameters  {
 
 	public void setPatterns(au.com.BI.Patterns.Model patterns) {
 		this.patterns = patterns;
+	}
+
+
+    public boolean doIPHeartbeat() {
+            return IPHeartbeat;
+    }
+
+	public void setIPHeartbeat(boolean heartbeat) {
+		IPHeartbeat = heartbeat;
 	}
 }

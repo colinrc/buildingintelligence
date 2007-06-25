@@ -1,6 +1,6 @@
 <CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
 	<DESC>Autonomic Home configuration</DESC>
-	<DEVICE ACTIVE="Y" NAME="SLIM_SERVER" DISPLAY_NAME="SLIM_SERVER" PASSWORD="admin">
+	<DEVICE ACTIVE="N" NAME="SLIM_SERVER" DISPLAY_NAME="SLIM_SERVER" PASSWORD="admin">
 		<CONNECTION>
 			<IP ACTIVE="Y" IP_ADDRESS="192.168.0.3" PORT="9090"/>
 		</CONNECTION>

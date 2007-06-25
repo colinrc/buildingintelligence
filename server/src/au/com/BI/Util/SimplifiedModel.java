@@ -6,7 +6,6 @@ package au.com.BI.Util;
 
 /**
  * @author Colin Canfield
- * @author Explorative Sofwtare Pty Ltd
  *
  */
 
@@ -57,6 +56,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	protected Pattern customScanCommandString = null;
 	protected ConfigHelper configHelper;
 	protected boolean queueCommands  = false;
+	protected SimplifiedModelPoll simplifiedModelPoll = null;
     
 	public SimplifiedModel () {
         configHelper = new ConfigHelper(this);
@@ -91,6 +91,55 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					+ " support " + ex.getMessage());
 		}
 
+	}
+	
+	/*
+	 * A stub hook to which will be overwritten by actual models
+	 */
+	protected void doPoll (ReturnWrapper returnWrapper){}
+	
+	/*
+	 * This function is called when the system runs a poll
+	 */
+	public void doPoll() throws CommsFail {
+		ReturnWrapper returnWrapper = new ReturnWrapper();
+		returnWrapper.setQueueCommands(this.isQueueCommands());
+
+
+		try {
+			doPoll( returnWrapper);
+			addCheckSums(returnWrapper);
+			sendWrapperItems(returnWrapper);
+
+		} catch (ClassCastException ex) {
+			logger.log(Level.WARNING, "An class cast error occured in " + this.getName()
+					+ " support " + ex.getMessage());
+		}
+
+	}
+
+	/*
+	 * Activate the polling system (remember to set IPHeartbeat(false) as well
+	 */
+	public void enablePoll (int pollSeconds) {
+		if (simplifiedModelPoll == null){
+			simplifiedModelPoll = new SimplifiedModelPoll();
+			simplifiedModelPoll.setModel (this);
+		} else {
+			simplifiedModelPoll.setPolling(false);
+		}
+		simplifiedModelPoll.setDelay (pollSeconds * 1000L);
+		simplifiedModelPoll.start();
+		
+	}
+	
+	/*
+	 * Disables the polling system
+	 */
+	public void disablePoll() {
+		if (simplifiedModelPoll != null){
+			simplifiedModelPoll.setPolling(false);
+		}
 	}
 	
 	/*

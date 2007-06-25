@@ -48,11 +48,14 @@ class BI_PUMP extends GroovyModel {
 	String appendToSentStrings = "\n"
 
 	
-		BI_PUMP () {
+	BI_PUMP () {
 		super()
+		setIPHeartbeat(false)
+		// We will be polling so do not need an artificial heartbeat to keep IP connections alive
 		
 		setQueueCommands(true) 
-		// Set the default behaviour for comms commands to be queued before sending. Can be overridden for a returnWrapper object
+		// Set the default behaviour for comms commands to be queued before sending. 
+		// Can be overridden for each returnWrapper object by calling returnWrapper.setQueueCommands(true|false)
 
 	}
 	
@@ -62,8 +65,18 @@ class BI_PUMP extends GroovyModel {
 
 		returnWrapper.addCommOutput ("AU_STARTUP_FIRST")
 		returnWrapper.addCommOutput ("AU_STARTUP_SECOND")
+
 	}
 
+
+	public void doPoll(ReturnWrapper returnWrapper) {
+		// This method is called each time the poll time occurs
+		// At the simplest this method may just send a known string, for more complex polling the system may iterate through all configured items and query each one
+		// independantly.
+		
+		returnWrapper.addCommOutput ("AU_GET_STATE");
+	}
+	
 	public void doRestOfStartup(ReturnWrapper returnWrapper) {
 		// This method is called by the script, after receiving confirmation that the initial startup has been successful.
 		// Typically this would be where each device line from the configuration file is queried for its initial state.
@@ -86,6 +99,10 @@ class BI_PUMP extends GroovyModel {
 			
 
 		}
+		
+		// Usually polling is started once startup has been completed
+		enablePoll (3) 
+		// The string will be sent every 3 seconds. Times less than around 3-5 seconds should not be used as most devices take around that long to respond, particularly if they are busy
 	}
 	
 	void processStringFromComms (String command , ReturnWrapper returnWrapper) {
@@ -189,18 +206,6 @@ class BI_PUMP extends GroovyModel {
 			def scaledVal =  Utility.scaleFromFlash(command.getExtraInfo(),-20,60,false)
 			returnWrapper.addCommOutput  ("TEMP_SET" + device.getKey() + ":" + scaledVal)
 		}
-	}
-
-	
-	public Byte addCheckSum(byte [] calcValue) {
-		// emulates a device with a checksome of all the values added up then anded with 255.
-		
-		byte checksum = 0;
-		for (int i in calcValue){ 
-			checksum += i;
-		}
-
-		return new Byte((byte)(checksum&0xff));
 	}
 
 }
