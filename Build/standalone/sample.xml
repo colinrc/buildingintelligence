@@ -125,7 +125,7 @@
 		<zone name="Downstairs" map="downstairs.swf" cycle="false" alignment="center">
 			<rooms>
 				<room name="Ensuite" poly="443,219,443,296,579,296,579,153,477,153,477,219">
-					<window tabPosition="bottom" tabHeight="90" tabOnColour="0xFFCC00" tabBgOpacity="20" windowWidth="300" windowHeight="450" windowBgOpacity="60" windowBgColour1="0xFFCC00" windowBgColour2="0x990000" windowCornerRadius="30" windowBorderColour="0xCC0000" windowBorderWidth="2" windowShadowOffset="10">
+					<window>
 						<tab name="Lights &amp; Fan" icon="light-bulb">
 							<control name="Ground Floor Lights" key="ENSUITE_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
 							<control name="Main Light" key="ENSUITE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
@@ -136,8 +136,11 @@
 							<control name="1st Heat Lamp" key="ENSUITE_1_HEAT" type="onOff" icons="heater-off,heater" />
 							<control name="2nd Heat Lamp" key="ENSUITE_2_HEAT" type="onOff" icons="heater-off,heater" />
 						</tab>
-						<tab>
-							<control name="test" key="asd" type="rawKeyPad"/>
+						<tab name="Raw Key Pad">
+							<control name="test" key="asd" type="rawKeyPad" />
+						</tab>
+						<tab name="Squeeze Control" icon="music-note">
+							<control name="Squeeze Control" key="Desktop" type="squeezePanel" />
 						</tab>
 					</window>
 					<alerts x="520" y="190">
@@ -534,6 +537,23 @@
 			<row>
 				<item type="button" label="Up" command="url.http://172.16.3.150/control.cgi?cont_2=4&ok=dummy.htm" repeatRate="500" />
 				<item type="button" label="Down" command="url.http://172.16.3.150/control.cgi?cont_2=8&ok=dummy.htm" repeatRate="500" />
+			</row>
+		</control>
+		<control type="squeezePanel">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="50" />
+				<item type="button" icon="volume-up" command="volume" extra="up" repeatRate="200" />
+				<item type="button" icon="volume-down" command="volume" extra="down" repeatRate="200" />
+			</row>
+			<row>
+				<item type="button" icon="media-play" command="PLAY" extra="" extra2="" />
+				<item type="button" icon="media-stop" command="STOP" extra="" extra2="" />
+				<item type="button" icon="media-pause" command="PAUSE" extra="" extra2="" />
+				<item type="button" icon="media-step-rwd" command="previousItem" extra="" extra2="" repeatRate="200" />
+				<item type="button" icon="media-step-fwd" command="nextItem" extra="" extra2="" repeatRate="200" />
 			</row>
 		</control>
 	</controlTypes>
