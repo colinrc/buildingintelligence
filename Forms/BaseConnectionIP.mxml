@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" initialize="init()" width="100%" height="100%">
+	<mx:HBox  label="Device Connection" width="100%" height="100%" verticalAlign="top" horizontalGap="10" horizontalAlign="left">
+		<mx:Form width="100%" height="100%">
+			<mx:HBox width="100%" height="33">
+				<mx:HBox width="20%" height="100%">
+					<mx:Label text="Port:"/>
+					<mx:TextInput id="port" text="{dataHolder.connection.port}" editable="true" enabled="true" width="79"/>
+				</mx:HBox>
+				<mx:HBox width="20%" height="100%">
+					<mx:Label text="Address:"/>
+					<mx:TextInput id="address" text="{dataHolder.connection.address}" editable="true" enabled="true" width="131"/>
+				</mx:HBox>
+				<mx:HBox width="20%" height="100%">
+				</mx:HBox>
+			</mx:HBox>
+			<mx:FormItem width="674">
+			</mx:FormItem>
+		</mx:Form>
+	</mx:HBox>
+	<mx:Metadata>
+		[DefaultProperty("addForm")]
+	</mx:Metadata>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.core.UIComponent;
+			import mx.utils.ObjectProxy;
+			import mx.utils.ObjectUtil;
+			[Bindable]
+			public var dataHolder:ObjectProxy;
+			
+			private function getDDIndex(search:String):int {
+				returndeviceTypeDD.indexOf(search)
+			}
+			private function init():void {
+				//undoObj = ObjectUtil.copy(dataHolder);
+				//modifiedFlag = false;
+			}
+			public function set addForm(value:Array):void {
+				try {
+					removeAllChildren();
+				}
+				catch (err:Error)
+				{
+					trace("error in base form:"+err.message);
+				}
+				if( value == null ) return;
+				for(var i:int=0; i < value.length; i++) {
+					addChild( value[i] );
+				}
+			}
+
+		]]>
+	</mx:Script>
+</mx:VBox>

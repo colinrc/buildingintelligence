@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseForm label="Macros" xmlns="Forms.*"  initialize="init()" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:Controls="Controls.*">
+	<addForm>
+		<mx:DataGrid  dataProvider="{dataHolder.Data.macros}" id="dataG" width="100%" height="100%" editable="false" itemEditEnd="itemEnd(event)" itemEditBegin="itemBegin(event)" itemClick="single_click(event)" itemDoubleClick="double_click(event)" doubleClickEnabled="true">
+			<mx:columns>
+  				<mx:DataGridColumn id="macroName" editable="false" headerText="Name" dataField="name"/>
+			</mx:columns>
+		</mx:DataGrid>	
+	</addForm>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import Utils.FixType;
+			import mx.utils.ObjectProxy;
+			import Objects.Server.*;
+			import Utils.Cellrenderers.MultilineComboBox;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.utils.ObjectUtil;
+			import mx.utils.object_proxy;
+			import flash.utils.IDataOutput;
+			import mx.core.Application;
+		
+			private function init():void {
+				var bytes:ByteArray = new ByteArray();
+				bytes.writeObject(dataHolder);
+				bytes.position = 0;
+				//var temp = bytes.readObject();
+				undoObject =bytes.readObject();	
+			}
+				
+			override public function new_click():void {
+				
+				var newMacro:Macro = new Objects.Server.Macro();
+				newMacro.id = Application.application.formDepth++;
+				
+				dataHolder.Data.macros.push(newMacro);
+				
+				callLater(focusNewRow);
+			}
+			
+			override public function delete_click():void {
+				if (data != null && data.selectedItem != null) {
+					Alert.show("Are you sure, press OK to delete " +data.selectedItem.name, "Delete", (Alert.OK | Alert.CANCEL), this, alertHandler);
+            	}
+  			}
+        
+            // Event handler function for displaying the selected Alert button.
+            private function alertHandler(event:CloseEvent):void {
+                if (event.detail==Alert.OK) {
+                    dataHolder.Data.macros.removeItemAt(data.selectedIndex);
+                    dataG.dataProvider = dataHolder.Data.macros;
+                    modifed = true;
+	            }
+	                else {
+	                    trace("delete cancelled");
+				}
+            }
+			
+			public function focusNewRow():void {
+				dataG.dataProvider = dataHolder.Data.macros;
+				dataG.editedItemPosition = {columnIndex:1,rowIndex:dataG.dataProvider.length-1};
+				dataG.editable=true;
+				modifed = true;
+				
+			}
+			public function itemBegin(event:Event):void {
+				modifed = true;
+				trace (event.toString());
+			}
+			public function itemEnd(event:Event):void {
+				dataG.editable = false;
+			}
+			private function fixProvider():void {
+				dataG.dataProvider = dataHolder.Data.macros;
+			}
+			override public function undo_click(event:Event):void {			
+				dataHolder.Data.macros = ObjectUtil.copy(undoObject.macros);
+				dataG.dataProvider = dataHolder.Data.macros;
+				modifed = false;	
+			}
+			public function single_click(event:Event):void {
+				if (event.columnIndex >= 1) { 
+					dataG.editedItemPosition = {columnIndex:event.columnIndex,rowIndex:dataG.selectedIndex};
+					dataG.editable=true;
+					modifed = true;
+				}
+				else {
+					modifed = true;
+				}
+			}
+			
+			public function double_click(event:Event):void {
+				//open next screen
+				trace ("open "+data.selectedItem.macros);
+			}
+
+		]]>
+	</mx:Script>
+</BaseForm>

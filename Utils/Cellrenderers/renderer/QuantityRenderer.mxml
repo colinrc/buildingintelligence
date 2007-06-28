@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" horizontalAlign="center">
+   <mx:Script>
+        <![CDATA[
+            // Define a property for returning the new value to the cell.
+            public var result:Number;
+        ]]>
+    </mx:Script>
+    <mx:Binding source="editor.value" destination="result" />
+	<mx:NumericStepper id="editor"  minimum="1" maximum="10" value="{data.quantity}" />
+</mx:VBox>
