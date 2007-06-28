@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml"
+        width="416"
+        title="Create eLife Project"
+        showCloseButton="true"
+        paddingLeft="10" paddingTop="10"
+        paddingRight="10" paddingBottom="10"
+        close="closeHandler(event)">
+
+    <mx:Script>
+    <![CDATA[
+        import mx.events.FileEvent;
+            
+        import flash.filesystem.File;
+        import mx.core.Application;
+        import mx.events.CloseEvent;
+        import mx.events.MenuEvent;
+        import mx.managers.PopUpManager;
+        import mx.controls.Alert;
+        
+        [Bindable]
+        public var cancelButtonLabel:String = "Cancel";
+
+        [Bindable]
+        public var openDirectoryButtonLabel:String = "Open";
+
+        [Bindable]
+        public var saveFileButtonLabel:String = "Create Project";
+        
+        [Bindable] 
+		[Embed (source="../../bin/icons/createFolder.png")]
+		public var createFolder:Class;
+        
+        /**
+        * Initializes the UI.
+        */
+        public static function show(directory:File = null,
+                                     name:String = null):FileCreateDirPanel
+        {
+            var panel:FileCreateDirPanel =
+                FileCreateDirPanel(PopUpManager.createPopUp(
+                DisplayObject(mx.core.Application.application),
+                FileCreateDirPanel, true));
+            PopUpManager.centerPopUp(panel);
+            panel.setup(directory, name);
+            return panel;
+        }
+
+       /**
+        * Displays the correct directory in the UI controls.
+        */
+        public function setup(directory:File = null,
+                              name:String = null):void
+        {
+            if (!directory) {
+                directory = File.appResourceDirectory.resolve(File.appResourceDirectory.nativePath + "\\projects");
+            }
+            fileSystemList.directory = directory;
+            fileSystemList.resetHistory(directory);
+            if (name)
+                fileNameTextInput.text = name;
+        }
+        
+        /**
+        * Updates the label of the saveButton component, based on the 
+        * type of object (file or directory) selected in the list.
+        */
+        private function updateSaveButton():void
+        {
+        	trace("updatesavebutton before:"+ saveButton.label+":"+saveButton.enabled.toString()+":"+fileSystemList.canNavigateDown.toString());
+            var listHasFocus:Boolean = fileSystemList.focusManager.getFocus() == fileSystemList;
+            if (listHasFocus && fileSystemList.canNavigateDown) {
+            	saveButton.label = openDirectoryButtonLabel;
+            } 
+			else {
+				saveButton.label = saveFileButtonLabel;
+			}
+                               openDirectoryButtonLabel :
+                               saveFileButtonLabel;
+            saveButton.enabled = fileSystemList.directory != FileSystemList.COMPUTER && fileNameTextInput.text != "";
+            trace("updatesavebutton after:"+ saveButton.label+":"+saveButton.enabled.toString());
+        }
+        
+        /**
+        * Dispatches a FileEvent.SELECT event object, with its file property
+        * set to the selected file.
+        */
+        private function dispatchSelectEvent():void
+        {
+        	trace("dispatchSelectEvent:");
+        	var fileName:String = fileNameTextInput.text;
+        	
+        	if (fileNameTextInput.text.indexOf(".elp",0)<= 0) {
+        		fileName = fileNameTextInput.text+".elp";
+        	}
+            var selectEvent:FileEvent = new FileEvent(FileEvent.SELECT);
+            selectEvent.file =
+                fileSystemList.directory.resolve(fileName);
+            dispatchEvent(selectEvent);
+        }
+
+        /**
+        * Called when the user clicks the Cancel button. The method closes the pop-up window.
+        */
+        private function closeHandler(event:CloseEvent):void
+        {
+            dispatchEvent(new Event(Event.CANCEL));
+            PopUpManager.removePopUp(this);
+        }
+
+        /**
+        * Called when the user clicks the Back button. The method navigates 
+        * the fileSystemList component back to the previous directory.
+        */
+        private function backButton_clickHandler(event:MouseEvent):void
+        {
+            fileSystemList.navigateBack();
+        }
+
+        /**
+        * Called when the user selects an item from the Back button history list. 
+        * The method navigates the fileSystemList component back to the previous directory.
+        */
+        private function backButton_itemClickHandler(event:MenuEvent):void
+        {
+            fileSystemList.navigateBack(event.index);
+        }
+
+        /**
+        * Called when the user clicks the Forward button. The method navigates 
+        * the fileSystemList component back to the previous directory.
+        */
+        private function forwardButton_clickHandler(event:MouseEvent):void
+        {
+            fileSystemList.navigateForward();
+        }
+
+         /**
+        * Called when the user selects an item from the Forward button history list. 
+        * The method navigates the fileSystemList component back to the previous directory.
+        */
+        private function forwardButton_itemClickHandler(event:MenuEvent):void
+        {
+            fileSystemList.navigateForward(event.index);
+            
+        }
+
+         /**
+        * Called when the user selects an item in the FileSystemComboBox component. 
+        * The method navigates the fileSystemList component to the selected directory.
+        */
+        private function fileSystemComboBox_changeHandler(event:Event):void
+        {
+            fileSystemList.navigateTo(File(fileSystemComboBox.selectedItem));
+        }
+
+		private function isFileNameTextInputSet():Boolean
+        {
+            if (fileNameTextInput.text == null || fileNameTextInput.text.length==0) {
+            	return false;
+            }
+            return true;
+        }
+		
+        /**
+        * Called when the user clicks the Up button. The method navigates the  
+        * fileSystemList component to the parent directory.
+        */
+        private function upButton_clickHandler(event:MouseEvent):void
+        {
+            fileSystemList.navigateUp();
+        }
+
+        /**
+        * Updates the Save button when the directory in the FileSystemList component changes.
+        */
+        private function fileSystemList_directoryChangeHandler(event:FileEvent):void
+        {
+        	trace("directory change:"+event.toString());
+            updateSaveButton();
+        }
+
+        /**
+        * Updates the Save button when the FileSystemList component gets focus.
+        */
+        private function fileSystemList_focusInHandler(event:FocusEvent):void
+        {
+        	trace("focusIn:"+event.toString());
+            updateSaveButton();
+        }
+        
+        /**
+        * Updates the Save button when FileSystemList component loses focus.
+        */
+        private function fileSystemList_focusOutHandler(event:FocusEvent):void
+        {
+        	trace("focusOut:"+event.toString());
+            //updateSaveButton();
+            
+        }
+        
+        /**
+        * Updates the Save button when the filename changes.
+        */
+        private function fileNameTextInput_changeHandler(event:Event):void
+        {
+        	trace("filename text change:"+event.toString());
+            updateSaveButton();
+        }
+        
+        /**
+        * Called when the user presses the Enter key. This method dispatches an
+        * event to the main application and closes the pop-up window.
+        */
+        private function fileNameTextInput_enterHandler(event:Event):void
+        {
+        	trace("filename enter:"+event.toString());
+            dispatchSelectEvent();
+            PopUpManager.removePopUp(this);
+        }
+        
+        /**
+        * Called when the user clicks the Save button. The method dispatches 
+        * an event to the main application and removes the pop-up window.
+        */
+        private function saveButton_clickHandler(event:MouseEvent):void
+        {
+        	trace("savebutton click:"+event.toString());
+        	if (saveButton.label == openDirectoryButtonLabel) {
+        		var dir:File = fileSystemList.directory.resolve(fileNameTextInput.text);
+        		fileSystemList.navigateTo(dir);
+        		fileSystemList.refresh();
+        		fileNameTextInput.text = ""; 
+        	}
+        	else {
+        		var pos:int = fileNameTextInput.text.indexOf(".elp",0);
+        		var fileName:String;
+        		if (pos>0) {
+        			fileName = fileNameTextInput.text.substr(0,pos);
+        		} else {
+        			fileName = fileNameTextInput.text;
+        		}
+        		//does dir exist?
+        		var checkDir:File = fileSystemList.directory.resolve(fileName);
+        		if ( !checkDir.exists) {
+        			checkDir.createDirectory();
+        			fileSystemList.navigateTo(checkDir);
+        		}
+	            dispatchSelectEvent();
+	            PopUpManager.removePopUp(this);
+	         }
+        }
+ 
+ 		private function create_clickHandler(event:MouseEvent):void {
+ 			var newDir:File = fileSystemList.directory.resolve(fileNameTextInput.text);
+ 			if (newDir.exists==true) {
+ 				Alert.show("The directory already exists","Error cannot create directory");
+ 			}
+ 			else {
+ 				newDir.createDirectory();
+ 				fileSystemList.refresh();
+ 			}
+ 		}
+ 
+        /**
+        * Called when the user clicks the Cancel button. The method dispatches a
+        * cancel event to the main application and removes the pop-up window.
+        */
+        private function cancelButton_clickHandler(event:MouseEvent):void
+        {
+            dispatchEvent(new Event(Event.CANCEL));
+            PopUpManager.removePopUp(this);
+        }
+        
+        /**
+        * Updates the filename in the TextInput control to the name of the file clicked.
+        */
+        private function fileSelected():void {
+            if (fileSystemList.selectedItem && fileSystemList.selectedItem.exists && fileSystemList.selectedItem.isDirectory)
+            {
+               fileNameTextInput.text = fileSystemList.selectedItem.name; 
+            }
+            else
+            {
+                fileNameTextInput.text = "";
+            }
+            updateSaveButton();
+        }
+    ]]>
+    </mx:Script>
+    <mx:Text text="Select or create a folder where you want the project and its folders created" width="100%" fontFamily="Arial" fontWeight="bold"/>
+    
+    <mx:HBox width="100%">
+        <mx:FileSystemHistoryButton id="backButton" width="40" label="&lt;" toolTip="Back"
+                                    enabled="{fileSystemList.canNavigateBack}"
+                                    dataProvider="{fileSystemList.backHistory}"
+                                    click="backButton_clickHandler(event)"
+                                    itemClick="backButton_itemClickHandler(event)"/>
+        <mx:FileSystemHistoryButton id="forwardButton" width="40" label="&gt;" toolTip="Forward"
+                                    enabled="{fileSystemList.canNavigateForward}"
+                                    dataProvider="{fileSystemList.forwardHistory}"
+                                    click="forwardButton_clickHandler(event)"
+                                    itemClick="forwardButton_itemClickHandler(event)"/>
+        <mx:FileSystemComboBox id="fileSystemComboBox" width="100%" toolTip="Current Directory"
+                               directory="{fileSystemList.directory}"
+                               change="fileSystemComboBox_changeHandler(event)"/>
+        <mx:Button id="createDirect" width="22" toolTip="Create Directory"
+                   enabled="{isFileNameTextInputSet()}"
+                   click="create_clickHandler(event)" >
+            <mx:icon>createFolder</mx:icon>
+        </mx:Button>          
+        <mx:Button id="upButton0" width="22" label="^" toolTip="Up"
+                   enabled="{fileSystemList.canNavigateUp}"
+                   click="upButton_clickHandler(event)"/>
+    </mx:HBox>
+    <mx:FileSystemList id="fileSystemList" extensions="['.elp']" width="100%" rowCount="10"
+                       directoryChange="fileSystemList_directoryChangeHandler(event)"
+                       focusIn="fileSystemList_focusInHandler(event)"
+                       focusOut="fileSystemList_focusOutHandler(event)"
+                       click="fileSelected()" />
+    <mx:HBox width="100%">
+        <mx:Label text="Project name:" width="83"/>
+        <mx:TextInput id="fileNameTextInput" width="285"
+                      change="fileNameTextInput_changeHandler(event)"
+                      enter="fileNameTextInput_enterHandler(event)"/>
+    </mx:HBox>
+    <mx:HBox width="100%" horizontalAlign="center">
+        <mx:Button id="cancelButton" width="80" label="{cancelButtonLabel}"
+                   click="cancelButton_clickHandler(event)"/>
+        <mx:Button id="saveButton" width="106" label="{saveFileButtonLabel}"
+                   click="saveButton_clickHandler(event)"/>
+    </mx:HBox>
+</mx:TitleWindow>

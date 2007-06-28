@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" applicationComplete="init()"  width="1080" height="1000" xmlns:ns1="Forms.Server.*" xmlns:ns2="Forms.*">
+    <mx:states>
+        <mx:State name="project">
+            <mx:AddChild relativeTo="{dockedMenuBar}" position="lastChild">
+                <mx:ToggleButtonBar  tabIndex="5" borderStyle="solid" horizontalGap="10" width="555" id="buttonBar" itemClick="buttonClick(event)">
+                <mx:dataProvider>
+                    <mx:Array>
+                        <mx:String>Project Details</mx:String>
+                        <mx:String>Design</mx:String>
+                        <mx:String>Server Controls</mx:String>
+                        <mx:String>Library</mx:String>
+                        <mx:String>Preview</mx:String>
+                        <mx:String>History</mx:String>
+                    </mx:Array>
+                </mx:dataProvider>
+                </mx:ToggleButtonBar>
+            </mx:AddChild>
+            <mx:AddChild relativeTo="{dockedMenuBar}" position="lastChild">
+                <mx:Button  tabIndex="6" id="advanced"  width="100" label="To Advanced" click="advancedClick(event)" enabled="true" labelPlacement="left"/>
+            </mx:AddChild>
+            <mx:AddChild relativeTo="{advanced}" position="before">
+                <mx:ButtonBar  tabEnabled="false" width="92">
+                </mx:ButtonBar>
+            </mx:AddChild>
+            <mx:AddChild relativeTo="{buttonBar}" position="before">
+                <mx:ButtonBar tabEnabled="false" width="127">
+                </mx:ButtonBar>
+            </mx:AddChild>
+        </mx:State>
+       
+        <mx:State name="projectDetails" basedOn="project">
+            <mx:AddChild relativeTo="{dockedMenuBar}" position="after">
+                <mx:Canvas   tabIndex="1" width="928"  height="680" borderStyle="inset" id="projectDetails" label="projectDetails">
+                    <mx:Text x="150" y="74" text="Project Path:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:Text x="150" y="117" text="Project Name:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:Text x="150" y="159" text="Job Number:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:Text x="150" y="202" text="Client Name:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:Text x="150" y="244" text="Address:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                 
+                    <mx:TextInput x="266" y="76" id="projectPath"  text="{project.path}" editable="true"  change="fixProjectBindings()" tabIndex="10" enabled="true" width="532"/>
+                    <mx:TextInput x="266" y="119" id="projectName" editable="false" tabIndex="20" enabled="true" change="fixProjectBindings()" text="{project.project}"/>
+                    <mx:TextInput x="266" y="161" id="jobNumber" editable="false" tabIndex="30" enabled="true" change="fixProjectBindings()" text="{project.job}"/>
+                    <mx:TextInput x="266" y="204" id="clientName" editable="false" tabIndex="40" enabled="true" change="fixProjectBindings()" text="{project.client_name}"/>
+                    <mx:TextInput x="266" y="246" id="propertyAddress" editable="false" tabIndex="50" enabled="true" change="fixProjectBindings()" text="{project.client_address}"/>
+                    <mx:Text x="522" y="160" text="Company:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:Text x="522" y="117" text="Integrator:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:Text x="522" y="287" text="Fax:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:Text x="522" y="245" text="Phone:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:Text x="522" y="202" text="Address:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:TextInput x="638" y="119" id="integrator" editable="false" tabIndex="60" enabled="true" change="fixProjectBindings()" text="{project.integrator}"/>
+                    <mx:TextInput x="638" y="162" id="company" editable="false" tabIndex="70" enabled="true" change="fixProjectBindings()" text="{project.company}"/>
+                    <mx:TextInput x="638" y="204" id="address" editable="false" tabIndex="80" enabled="true" change="fixProjectBindings()" text="{project.company_address}"/>
+                    <mx:TextInput x="638" y="247" id="phone" editable="false" tabIndex="90" enabled="true" change="fixProjectBindings()" text="{project.phone}"/>
+                    <mx:TextInput x="638" y="289" id="fax" editable="false" tabIndex="100" enabled="true" change="fixProjectBindings()" text="{project.fax}"/>
+                    <mx:Text x="522" y="373" text="Email:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:Text x="150" y="390" text="Notes:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:Text x="522" y="331" text="Mobile:" width="119" height="25" fontSize="14" fontWeight="bold"/>
+                    <mx:TextInput x="638" y="333" id="mobile" editable="false" tabIndex="110" enabled="true" change="fixProjectBindings()" text="{project.mobile}"/>
+                    <mx:TextInput x="638" y="375" id="email" editable="false" tabIndex="120" enabled="true" change="fixProjectBindings()" text="{project.email}"/>
+                    <mx:Text x="402" y="10" text="Project Details" width="174" height="35" fontSize="18" fontWeight="bold"/>
+                    <mx:TextArea x="150" y="423" width="648" height="171" id="notes" wordWrap="true" tabIndex="120" change="fixProjectBindings()" editable="false" enabled="true" text="{project.notes}"/>
+                    <mx:Button x="713" y="637" label="Apply" id="apply" width="79" height="29" fontSize="12" click="saveFile(&quot;project&quot;)"/>
+                    <mx:Button x="806" y="76" width="22" id="selectPath" click="selectPath_event(event)">
+                        <mx:icon>folder</mx:icon>
+                    </mx:Button>
+                </mx:Canvas>
+            </mx:AddChild>
+        </mx:State>
+        <mx:State name="projectOpen" basedOn="project">
+            <mx:AddChild relativeTo="{dockedMenuBar}" position="after">
+                <mx:HDividedBox height="100%" width="100%" id="hdividedbox" >
+                    <mx:VDividedBox height="100%" id="vDivBox"  width="{vDivBoxWidth}">
+                        <mx:Canvas width="100%" height="{hDivBoxHeight}" id="can1"  >
+                            <mx:TabNavigator  tabIndex="2" borderStyle="outset" width="100%" height="100%" horizontalAlign="left" id="tabnav" borderColor="#400040" x="1" y="1">
+                                <mx:Canvas label="Project" width="100%" height="100%">
+                                    <mx:Tree x="0" y="0" width="100%" height="100%" render="renderTree()" click="changeTreeEvt(event)" dataTipField="dataTip" showDataTips="true" showRoot="false" iconFunction="getIcon" labelField="@name" id="projectTree"></mx:Tree>
+                                </mx:Canvas>
+                                <mx:Canvas label="Workflow" width="100%" height="100%" id="workFlowTree">
+                                    <mx:Accordion x="1" y="1" width="100%" height="100%">
+                                        <mx:Canvas label="Server" width="100%" height="100%">
+                                            <mx:List x="0" y="0" width="100%" alternatingItemColors="[#FFFFFF, #DBEAF1]" dataTipField="dataTip" showDataTips="true" change="changeEvt(event)" iconField="icon" height="100%" dataProvider="{workFlow.serverList}" id="srvList"></mx:List>
+                                        </mx:Canvas>
+                                        <mx:Canvas label="Client" width="100%" height="100%">
+                                            <mx:List x="0" y="0" width="100%" alternatingItemColors="[#FFFFFF, #DBEAF1]" dataTipField="dataTip" showDataTips="true" change="changeEvt(event)" iconField="icon" height="100%" dataProvider="{workFlow.clientList}" id="cltList"></mx:List>
+                                        </mx:Canvas>
+                                    </mx:Accordion>
+                                </mx:Canvas>
+                            </mx:TabNavigator>
+                        </mx:Canvas>
+                        <mx:Canvas width="100%" height="239" id="c2">
+	                        <mx:TabNavigator  tabIndex="3" width="100%" height="100%" borderStyle="outset" borderColor="#400040" left="1" top="1" id="output_panel">
+	                            <mx:Canvas label="Help" width="100%" height="100%" id="help">
+	                                <mx:TextArea x="0" y="0" width="100%" height="100%"  condenseWhite="true" htmlText="{data.description}" id="TextDescription" editable="false"/>
+	                            </mx:Canvas>
+	                            <mx:Canvas label="Error" width="100%" height="100%" id="error">
+	                                <mx:TextArea x="0" y="0" width="100%" height="100%" id="errorDescription" editable="false" wordWrap="true"/>
+	                            </mx:Canvas>
+	                        </mx:TabNavigator>
+                        </mx:Canvas>
+                    </mx:VDividedBox>
+                        <mx:Canvas width="100%" height="100%">
+                            <mx:TabNavigator  tabIndex="4" borderStyle="outset" width="100%" height="100%" horizontalAlign="left" id="main" borderColor="#400040" x="0" y="0">
+                                <mx:VBox id="body" label="body" width="100%" height="100%">
+                                </mx:VBox>
+                           
+                                <mx:Canvas label="XML" width="100%" height="100%" id="xml">
+                                    <ns2:XMLDrawer x="0" y="0" id="bodyXML">
+                                    </ns2:XMLDrawer>
+                                </mx:Canvas>
+                                
+                            </mx:TabNavigator>
+                        </mx:Canvas>                 
+                </mx:HDividedBox>
+            </mx:AddChild>
+            <mx:SetProperty name="width" value="100%"/>
+            <mx:SetProperty name="height" value="100%"/>
+        </mx:State>
+    </mx:states>
+
+    <mx:ApplicationControlBar id="dockedMenuBar" dock="true">
+        <mx:MenuBar id="menuBar" height="100%"  tabEnabled="false"  itemClick="itemClickInfo(event)" dataProvider="{menuXML}" 
+            labelField="@label" showRoot="true" width="100%"/>
+    </mx:ApplicationControlBar>
+    
+    <mx:XMLList id="menuXML">
+        <menuitem label="File">
+            <menuitem label="New Project" data="New"/>
+            <menuitem label="Open Project" data="Open"/>
+            <menuitem type="separator"/>
+            <menuitem label="Exit" data="Exit"/>
+        </menuitem>
+        <menuitem label="Help">
+            <menuitem label="Help" data="Help"/>
+            <menuitem label="About" data="About"/>
+        </menuitem>
+    </mx:XMLList>
+    
+    <mx:XMLList id="menuXMLOpenProject">
+        <menuitem label="File">
+            <menuitem label="New Project" data="New"/>
+            <menuitem label="Open Project" data="Open"/>
+            <menuitem type="separator"/>
+            <menuitem label="Save Project" id="openPro1" data="Save"/>
+            <menuitem label="Save Project As.." id="openPro2" data="SaveAs"/>
+            <menuitem type="separator" id="openPro3"/>
+            <menuitem label="Exit" data="Exit"/>
+        </menuitem>
+        <menuitem label="Help">
+            <menuitem label="Help" data="Help"/>
+            <menuitem label="About" data="About"/>
+        </menuitem>
+    </mx:XMLList>
+    <mx:Script source="elifeAdmin.as"/>
+    <mx:Script source="elifeAdminInit.as"/>
+</mx:WindowedApplication>
