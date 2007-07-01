@@ -320,16 +320,16 @@ public class OutputHelper {
 				// <CONTROL KEY="<extender>" COMMAND="STOP" EXTRA="<type>"
 				// EXTRA2="<id>" EXTRA3="" EXTRA4="" EXTRA5="" />
 				// <CONTROL KEY="LAPTOP" COMMAND="STOP" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
-				Pause pause = new Pause();
-				pause.setPlayerId(device.getKey());
-				retCode = pause.buildCommandString() + "\r\n";
+				Stop stop = new Stop();
+				stop.setPlayerId(device.getKey());
+				retCode = stop.buildCommandString() + "\r\n";
 			} else if (command.getCommandCode().equalsIgnoreCase("PAUSE")) {
 				// <CONTROL KEY="<extender>" COMMAND="PAUSE" EXTRA="<type>"
 				// EXTRA2="<id>" EXTRA3="" EXTRA4="" EXTRA5="" />
 				// <CONTROL KEY="LAPTOP" COMMAND="PAUSE" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
-				Stop stop = new Stop();
-				stop.setPlayerId(device.getKey());
-				retCode = stop.buildCommandString() + "\r\n";
+				Pause pause = new Pause();
+				pause.setPlayerId(device.getKey());
+				retCode = pause.buildCommandString() + "\r\n";
 			} else if (command.getCommandCode().equalsIgnoreCase("ADD")
 					|| command.getCommandCode().equalsIgnoreCase("DELETE")
 					|| command.getCommandCode().equalsIgnoreCase("INSERT")
