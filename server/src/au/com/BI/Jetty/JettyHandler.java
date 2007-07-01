@@ -123,24 +123,12 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             ServletHolder updateServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.UpdateServlet","/webclient/update");
             ServletHolder userManager = updateHandler.addServletWithMapping("au.com.BI.Servlets.UserManagerServlet","/UserManager");
             ServletHolder logoutServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.Logout","/webclient/logout");
-            
-            /*
-             * JSP container
-             
-            ServletHolder jspServletHolder = updateHandler.addServletWithMapping ("org.apache.jasper.servlet.JspServlet","/*");
-            jspServletHolder.setInitParameter("id","jsp");
-            jspServletHolder.setInitParameter("logVerbosityLevel","INFO");
-            jspServletHolder.setInitParameter("fork","false");
-            jspServletHolder.setInitParameter("xpoweredBy","false");
-            jspServletHolder.setInitParameter("classpath","?");
-            jspServletHolder.setInitParameter("load-on-startup","0");
- 			*/
             ServletHolder defServlet = updateHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
             
             SessionHandler sessionHandler = new SessionHandler();
             sessionHandler.setHandler(updateHandler);
            SessionManager sessionManager =  sessionHandler.getSessionManager();
-           sessionManager.setMaxInactiveInterval(timeout); 
+           sessionManager.setMaxInactiveInterval(timeout);
             
             updateContextHandler.setHandler(sessionHandler);
             updateContextHandler.setAttribute("CacheBridgeFactory",cacheBridgeFactory);
@@ -149,6 +137,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             updateContextHandler.setAttribute("Security",security);
             updateContextHandler.setAttribute("ServerID",new Long (this.getServerID()));
             updateContextHandler.setAttribute("VersionManager",this.getVersionManager());
+            updateContextHandler.setAttribute("UserManager",webPass);
             updateContextHandler.setAttribute("WebClientCount",new Integer(0));
             
             sessionManager.addEventListener(new SessionCounter());

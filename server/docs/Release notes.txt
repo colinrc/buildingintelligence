@@ -1,3 +1,12 @@
+== 1/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b58zip V1.6b58]  ==
+
+''' Jetty '''
+
+Added user manager
+
+https://ELIFE_SERVER:8443/UserManager
+
+
 == 25/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b57zip V1.6b57]  ==
 
 ''' GroovyModels '''
