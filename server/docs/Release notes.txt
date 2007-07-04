@@ -1,3 +1,17 @@
+== 4/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b60zip V1.6b60]  [attachment:wiki:SoftwareReleases:eLife-1.6b60-libs.zip Libs-V1.6b60] ==
+
+''' Jetty '''
+
+Changed permission on the user admin utility.
+Non-admin users can only change their own passwords; where admin users have the full add/ change/ delete functionality.
+Resolves ticket [ticket:638]
+
+== 2/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b59zip V1.6b59]  ==
+
+''' Jetty '''
+
+Fixed problem with adding a user.
+
 == 1/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b58zip V1.6b58]  ==
 
 ''' Jetty '''

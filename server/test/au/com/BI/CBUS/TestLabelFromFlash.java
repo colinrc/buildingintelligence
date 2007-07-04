@@ -25,7 +25,7 @@ public class TestLabelFromFlash extends TestCase {
 	private Model model = null;
 	
 	public static void main(String[] args) {
-		junit.swingui.TestRunner.run(TestLabelFromFlash.class);
+
 	}
 	
 	/* (non-Javadoc)

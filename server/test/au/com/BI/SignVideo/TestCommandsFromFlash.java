@@ -24,7 +24,6 @@ public class TestCommandsFromFlash extends TestCase {
 	AV studyAV = null;
 	
 	public static void main(String[] args) {
-		junit.swingui.TestRunner.run(TestCommandsFromFlash.class);
 	}
 
 	protected void setUp() throws Exception {
