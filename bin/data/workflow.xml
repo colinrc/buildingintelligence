@@ -499,6 +499,54 @@
 			 </font>
 			</description>
 		</item>
+		<item label="Configure Jandi" key="Jandy" order="44">
+			<description>
+		 	 <font size="12">
+		 		<p><b>Step1 - Add Jandi Device</b></p>
+				<p>Add Jandi Device Type.</p>
+				<br/>
+				<p><b>Step2 - Configure Jandi Connection</b></p>
+				<p>Configure the Jandi Connection Settings.</p>
+				<br/>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure M1" key="M1" order="45">
+			<description>
+		 	 <font size="12">
+		 		<p><b>Step1 - Add M1 Device</b></p>
+				<p>Add M1 Device Type.</p>
+				<br/>
+				<p><b>Step2 - Configure M1 Connection</b></p>
+				<p>Configure the M1 Connection Settings.</p>
+				<br/>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure Nuvo" key="Nuvo" order="46">
+			<description>
+		 	 <font size="12">
+		 		<p><b>Step1 - Add Nuvo Device</b></p>
+				<p>Add Nuvo Device Type.</p>
+				<br/>
+				<p><b>Step2 - Configure Nuvo Connection</b></p>
+				<p>Configure the Nuvo Connection Settings.</p>
+				<br/>
+			 </font>
+			</description>
+		</item>
+		<item label="Configure Sign Video" key="SignVideo" order="47">
+			<description>
+		 	 <font size="12">
+		 		<p><b>Step1 - Add Sign Video Device</b></p>
+				<p>Add Sign Video Device Type.</p>
+				<br/>
+				<p><b>Step2 - Configure Sign Video Connection</b></p>
+				<p>Configure the Sign Video Connection Settings.</p>
+				<br/>
+			 </font>
+			</description>
+		</item>
 		<item label="Configure Macros" key="Macros" order="0">
 			<description>
 		 	 <font size="12">
