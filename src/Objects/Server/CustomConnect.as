@@ -157,10 +157,11 @@
 						var tempNode = newData.children()[child];
 						var tempCustomKeys = new XML("<CUSTOM_CONNECT />");
 						var tempInStrings = new XML("<CUSTOM_CONNECT />");
-						var tempOutStrings = new XML("<CUSTOM_CONNECT >");
+						var tempOutStrings = new XML("<CUSTOM_CONNECT />");
 						
 						for (var rawDevice:int=0 ; rawDevice < tempNode.children().length() ; rawDevice++) {
-							switch (tempNode.children()[rawDevice].name()) {
+							var keyName:String = tempNode.children()[rawDevice].name();
+							switch (keyName) {
 							case "KEY" :
 								tempCustomKeys.appendChild(tempNode.children()[rawDevice]);
 								break;

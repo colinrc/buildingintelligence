@@ -91,16 +91,18 @@
 		}
 		
 		public function setXML(newData:XML):void {
-			type = newData.children()[0].name();
-			port = newData.children()[0].@PORT;
-			baud = newData.children()[0].@BAUD;
-			parity = newData.children()[0].@PARITY;
-			flow = newData.children()[0].@FLOW;
-			dataBits = newData.children()[0].@DATA_BITS;
-			stopBits = newData.children()[0].@STOP_BITS;
-			supportsCD = newData.children()[0].@SUPPORTS_CD;
-			address = newData.children()[0].@IP_ADDRESS;
-			//active = newData.children()[0].@ACTIVE;
+			if (newData.children().length() > 0) {
+				type = newData.children()[0].name();
+				port = newData.children()[0].@PORT;
+				baud = newData.children()[0].@BAUD;
+				parity = newData.children()[0].@PARITY;
+				flow = newData.children()[0].@FLOW;
+				dataBits = newData.children()[0].@DATA_BITS;
+				stopBits = newData.children()[0].@STOP_BITS;
+				supportsCD = newData.children()[0].@SUPPORTS_CD;
+				address = newData.children()[0].@IP_ADDRESS;
+				//active = newData.children()[0].@ACTIVE;
+			}
 		}
 	}
 }

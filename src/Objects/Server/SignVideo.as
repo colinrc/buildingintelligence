@@ -4,6 +4,7 @@
 	import flash.utils.IExternalizable;
 	import flash.utils.IDataOutput;
 	import flash.utils.IDataInput;
+	import Forms.Server.SignVideo_frm;
 	
 	[Bindable("SignVideo")]
 	[RemoteClass(alias="elifeAdmin.objects.server.signVideo")]
@@ -40,10 +41,13 @@
 			if(active != "") {
 				newDevice.@ACTIVE = active;
 			}
-			newDevice.appendChild(connection);
+			newDevice.appendChild(connection.toXML());
 			var newParameters:XML = new XML("<PARAMETERS />");
 			for(var parameter in parameters){
-				newParameters.appendChild(parameters[parameter]);
+				var x1:XML = new XML("<ITEM />");
+				x1.@NAME = parameter;
+				x1.@VALUE = parameters[parameter];
+				newParameters.appendChild(x1);
 			}
 			var newParameter:XML = new XML("<ITEM />");
 			newParameter.@NAME = "AV_INPUTS";
@@ -55,7 +59,7 @@
 			for (var child:int = 0; child<tempCatalogues.children().length;child++){	
 				newDevice.appendChild(tempCatalogues.children()[child]);
 			}
-			var newSignVideo:XML = new XML(device_type);
+			var newSignVideo:XML = new XML("<"+device_type+" />");
 			var tempAudioVideos:XML = audiovideos.toXML();
 			for (var child:int = 0; child<tempAudioVideos.children().length;child++){	
 				newSignVideo.appendChild(tempAudioVideos.children()[child]);
@@ -75,6 +79,10 @@
 		public function getKey():String {
 			return "SignVideo";
 		}
+		public function getClassForm():Class {
+			var className:Class = Forms.Server.SignVideo_frm;
+			return className;		
+		}
 		
 		public override function newObject():void {
 			super.newObject();
@@ -91,7 +99,7 @@
 		}
 		
 		public override function setXML(newData:XML):void {
-			device_type = "";
+			device_type = "SIGN_VIDEO";
 			description ="";
 			active = "Y";
 			parameters = new HashMap();		
@@ -117,15 +125,14 @@
 					active = newData.@ACTIVE;
 				}
 				for (var child:int = 0; child<newData.children().length();child++){
-					switch (newData.children()[child].name()) {
+					var myType:String = newData.children()[child].name();
+					switch (myType) {
 					case "CONNECTION" :
-						connection = newData.children()[child];
+						connection.setXML(newData.children()[child]);
 						break;
 					case "PARAMETERS" :
-						for (var parameter:int = 0; parameter<newData.children()[child].length();parameter++){
-							if((newData.children()[child].children()[parameter].@NAME != "AV_INPUTS")){						
-								parameters.push(newData.children()[child].children()[parameter]);
-							}
+						for (var parameter:int=0 ; parameter < newData.children()[child].children().length() ; parameter++) {
+							parameters.put(newData.children()[child].children()[parameter].@NAME.toString(), newData.children()[child].children()[parameter].@VALUE.toString());
 						}
 						break;
 					case "CATALOGUE" :
