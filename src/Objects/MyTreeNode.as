@@ -19,8 +19,8 @@ package Objects
 		
 		public function readExternal(input:IDataInput):void {
 			childObject = input.readObject() as Array;
-			object = input.readObject()as Object;
-			myXML = input.readObject()as XML;		
+			object = input.readObject() as Object;
+			myXML = input.readObject() as XML;		
 		}
 		
 		public function MyTreeNode():void{

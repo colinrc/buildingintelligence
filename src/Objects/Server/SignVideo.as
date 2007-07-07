@@ -28,77 +28,7 @@
 			tempKeys = tempKeys.concat(audiovideos.getKeys());
 			return tempKeys;
 		}
-		public override function isValid():String {
-			var flag = "ok";
-			clearValidationMsg();
-					
-			if ((active != "Y") && (active != "N")) {
-				flag = "error";
-				appendValidationMsg("Active is invalid");
-			}
-			else {
-				if (active =="Y"){
-					if ((description == undefined) || (description == "")) {
-						flag = "warning";
-						appendValidationMsg("Description is invalid");
-					}
-					if ((device_type == undefined) || (device_type == "")) {
-						flag = "error";
-						appendValidationMsg("Device Type is invalid");
-					}
-									
-					if (connection.children()[0].name() == "IP") {
-						if ((connection.@IP_ADDRESS == "") || (connection.@IP_ADDRESS ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Address is invalid");
-						}
-						if ((connection.@PORT == "") || (connection.@PORT ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Port is invalid");
-						}
-					}
-					else{
-						//FLOW="NONE" DATA_BITS="8" STOP_BITS="1" SUPPORTS_CD="N" PARITY="NONE" BAUD="9600" ACTIVE
-						if ((connection.@PORT == "") || (connection.@PORT ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Port is invalid");
-						}
-						if ((connection.@FLOW == "") || (connection.@FLOW ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Flow is invalid");
-						}
-						if ((connection.@DATA_BITS == "") || (connection.@DATA_BITS ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Data Bits is invalid");
-						}
-						if ((connection.@STOP_BITS == "") || (connection.@STOP_BITS ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Stop Bits is invalid");
-						}
-						if ((connection.@SUPPORTS_CD == "") || (connection.@SUPPORTS_CD ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Supports CD is invalid");
-						}
-						if ((connection.@PARITY == "") || (connection.@PARITY ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Parity is invalid");
-						}
-						if ((connection.@BAUD == "") || (connection.@BAUD ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Baud is invalid");
-						}
-					}
-				}
-				else {
-					if (active =="N"){
-						flag = "empty";
-						appendValidationMsg("Sign is not active");
-					}
-				}
-				
-			}
-			return flag;
-		}
+	
 		public override function toXML():XML {
 			var newDevice:XML = new XML("<DEVICE />");
 			if(device_type != ""){

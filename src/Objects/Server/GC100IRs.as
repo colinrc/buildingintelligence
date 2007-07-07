@@ -91,7 +91,7 @@
 			if (modules==null) {
 				tempMod = null;
 			} else {
-				tempMod = modules.getData().modules;
+				tempMod = modules.Data.modules;
 			}
 			var ob:ObjectProxy = new ObjectProxy( {irs:irs, modules:tempMod, dataObject:this})
 			return ob;

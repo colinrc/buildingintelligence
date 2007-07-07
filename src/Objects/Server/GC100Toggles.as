@@ -10,7 +10,7 @@
 	[RemoteClass(alias="elifeAdmin.server.gc100Toggles")] 
 	public class GC100Toggles extends BaseElement {
 		private var container:String="";
-		private var toggle_type:String="";
+		public var toggle_type:String="";
 		private var toggles:Array;
 		private var modules:Object;
 		
@@ -37,7 +37,7 @@
 			}
 			return tempKeys;
 		}
-		public function GC100Toggles(inToggle_type:String) {
+		public function setToggleType(inToggle_type:*) {
 			toggle_type = inToggle_type;
 		}
 		public function setModules(inModules:Object){
@@ -122,7 +122,7 @@
 			if (modules==null) {
 				tempMod = null;
 			} else {
-				tempMod = modules.getData().modules;
+				tempMod = modules.Data.modules;
 			}
 			var ob:ObjectProxy = new ObjectProxy( {toggles:toggles,toggle_type:toggle_type,modules:tempMod, dataObject:this})
 			return ob;

@@ -6,6 +6,8 @@
 	import flash.utils.IDataInput;
 	import mx.core.Application;
 	import Forms.Server.GC100_frm;
+	import mx.utils.ObjectProxy;
+	
 	[Bindable("GC100")]
 	[RemoteClass(alias="elifeAdmin.server.gc100")] 
 	public class GC100 extends Device {
@@ -52,9 +54,9 @@
 			newDevice.appendChild(connection.toXML());
 			//newDevice.appendChild(parameters);
 			var tempModules =  modules.Data;
-			var tempInputs = toggle_inputs.Dat;
-			var tempOutputs = toggle_outputs.Data();
-			var tempIRs = irs.Data();
+			var tempInputs = toggle_inputs.Data;
+			var tempOutputs = toggle_outputs.Data;
+			var tempIRs = irs.Data;
 			for (var child in tempModules.modules) {
 				if(tempModules.modules[child].type == "IR"){
 					var newModule = new XML("<GC100_IR />");				
@@ -137,8 +139,10 @@
 			
 			modules = new Objects.Server.GC100Modules();
 			irs = new Objects.Server.GC100IRs();
-			toggle_inputs = new Objects.Server.GC100Toggles("TOGGLE_INPUT");
-			toggle_outputs = new Objects.Server.GC100Toggles("TOGGLE_OUTPUT");
+			toggle_inputs = new Objects.Server.GC100Toggles();
+			toggle_inputs.setToggleType("TOGGLE_INPUT");
+			toggle_outputs = new Objects.Server.GC100Toggles();
+			toggle_inputs.setToggleType("TOGGLE_OUTPUT");
 			var tempModules:Array = new Array();
 			var tempIRs:Array = new Array();
 			var tempToggle_Inputs:Array = new Array();
@@ -152,8 +156,10 @@
 			catalogues = new Objects.Server.Catalogues();
 			modules = new Objects.Server.GC100Modules();
 			irs = new Objects.Server.GC100IRs();
-			toggle_inputs = new Objects.Server.GC100Toggles("TOGGLE_INPUT");
-			toggle_outputs = new Objects.Server.GC100Toggles("TOGGLE_OUTPUT");
+			toggle_inputs = new Objects.Server.GC100Toggles();
+			toggle_inputs.setToggleType("TOGGLE_INPUT");
+			toggle_outputs = new Objects.Server.GC100Toggles();
+			toggle_inputs.setToggleType("TOGGLE_OUTPUT");
 			var tempModules:Array = new Array();
 			var tempIRs:Array = new Array();
 			var tempToggle_Inputs:Array = new Array();
@@ -267,12 +273,16 @@
 						break;
 					}
 				}
-				modules.setData({modules:tempModules});
-				irs.setData({irs:tempIRs});
+				var ob:ObjectProxy = new ObjectProxy( {modules:tempModules});
+				modules.Data = ob;
+				var ob2:ObjectProxy = new ObjectProxy( {irs:tempIRs});
+				irs.Data = ob2;
 				irs.setModules(modules);
-				toggle_inputs.setData({toggles:tempToggle_Inputs});
+				var ob3:ObjectProxy = new ObjectProxy({toggles:tempToggle_Inputs});
+				toggle_inputs.Data = ob3;
 				toggle_inputs.setModules(modules);
-				toggle_outputs.setData({toggles:tempToggle_Outputs});
+				var ob4:ObjectProxy = new ObjectProxy({toggles:tempToggle_Outputs})
+				toggle_outputs.Data = ob4;
 				toggle_outputs.setModules(modules);			
 			} else {
 				trace("ERROR, found node "+newData.name()+", expecting DEVICE");

@@ -7,7 +7,7 @@
             public var result:Object;
             
             [Bindable]
-            public var dpValue:Array = mx.core.Application.application.deviceTypes;
+            public var dpValue:Array = mx.core.Application.application.rawConfigNames;
                     
 			// Override the set method for the data property.
 			override public function set data(value:Object):void 

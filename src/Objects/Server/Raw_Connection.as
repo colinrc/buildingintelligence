@@ -5,6 +5,7 @@
 	import flash.utils.IExternalizable;
 	import flash.utils.IDataOutput;
 	import flash.utils.IDataInput;
+	import Forms.Server.Raw_Connection_frm;
 	
 	[Bindable("Raw_Connection")]
 	[RemoteClass(alias="elifeAdmin.objects.server.raw_Connection")]
@@ -33,86 +34,19 @@
 		public override function isValid():String {
 			var flag = "ok";
 			clearValidationMsg();
-					
-			if ((active != "Y") && (active != "N")) {
+			flag = super.isValid();		
+			if (parameters.isEmpty() == true) {
 				flag = "error";
-				appendValidationMsg("Active is invalid");
+				appendValidationMsg("Parameters are empty");
 			}
-			else {
-				if (active =="Y"){
-					if ((description == undefined) || (description == "")) {
-						flag = "empty";
-						appendValidationMsg("Description is empty");
-					}
-					if ((device_type == undefined) || (device_type == "")) {
-						flag = "error";
-						appendValidationMsg("Device Type is invalid");
-					}
-					
-					for (var param in parameters) {
-						if ((parameters[param].@NAME == undefined) || (parameters[param].@NAME == "")) {
-							flag = "error";
-							appendValidationMsg("Param Name is empty");
-						}
-						if ((parameters[param].@VALUE == undefined) || (parameters[param].@VALUE == "")) {
-							flag = "error";
-							appendValidationMsg("Param Value is empty");
-						}
-					}
+			for (var param in parameters) {
+				if ((parameters[param] == undefined) || (parameters[param] == "")) {
+					flag = "error";
+					appendValidationMsg("Param ("+param+") Value is empty");
+				}
+			}
 									
-					if (connection.children()[0].name() == "IP") {
-						if ((connection.children()[0].@IP_ADDRESS == "") || (connection.children()[0].@IP_ADDRESS ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Address is empty");
-						}
-						else if (Application.application.isValidIP(connection.children()[0].@IP_ADDRESS)==false) {
-							flag = "error";
-							appendValidationMsg("Connection IP Address is invalid");
-						}
-						if ((connection.children()[0].@PORT == "") || (connection.children()[0].@PORT ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Port is empty");
-						}
-					}
-					else{
-						//FLOW="NONE" DATA_BITS="8" STOP_BITS="1" SUPPORTS_CD="N" PARITY="NONE" BAUD="9600" ACTIVE
-						if ((connection.children()[0].@PORT == "") || (connection.children()[0].@PORT ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Port is empty");
-						}
-						if ((connection.children()[0].@FLOW == "") || (connection.children()[0].@FLOW ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Flow is invalid");
-						}
-						if ((connection.children()[0].@DATA_BITS == "") || (connection.children()[0].@DATA_BITS ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Data Bits is invalid");
-						}
-						if ((connection.children()[0].@STOP_BITS == "") || (connection.children()[0].@STOP_BITS ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Stop Bits is invalid");
-						}
-						if ((connection.children()[0].@SUPPORTS_CD == "") || (connection.children()[0].@SUPPORTS_CD ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Supports CD is invalid");
-						}
-						if ((connection.children()[0].@PARITY == "") || (connection.children()[0].@PARITY ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Parity is invalid");
-						}
-						if ((connection.children()[0].@BAUD == "") || (connection.children()[0].@BAUD ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Baud is invalid");
-						}
-					}
-				}
-				else {
-					if (active =="N"){
-						flag = "empty";
-						appendValidationMsg("Raw Connection is not active");
-					}
-				}
-			}
+		
 			return flag;
 		}
 		public override function toXML():XML {
@@ -126,17 +60,21 @@
 			if(active != "") {
 				newDevice.@ACTIVE = active;
 			}
-			newDevice.appendChild(connection);
-			var newParameters:XML = new XML("<PARAMETERS />");
+			newDevice.appendChild(connection.toXML());
+			var newParameters = new XML("<PARAMETERS />");
 			for(var parameter in parameters){
-				newParameters.appendChild(parameters[parameter]);
+				var x1:XML = new XML("<ITEM />");
+				x1.@NAME = parameter;
+				x1.@VALUE = parameters[parameter];
+				newParameters.appendChild(x1);
 			}
 			newDevice.appendChild(newParameters);
+			
 			var tempCatalogues = catalogues.toXML();
 			for (var child:int = 0; child<tempCatalogues.children().length;child++){
 				newDevice.appendChild(tempCatalogues.children()[child]);
 			}
-			var newRawConnection:XML = new XML(device_type);
+			var newRawConnection:XML = new XML("<"+device_type+" />");
 			var tempCustoms:XML = customs.toXML();
 			for (var child:int = 0; child<tempCustoms.children().length;child++){
 				newRawConnection.appendChild(tempCustoms.children()[child]);
@@ -158,6 +96,10 @@
 		public function getKey():String {
 			return "Raw_Connection";
 		}
+		public function getClassForm():Class {
+			var className:Class = Forms.Server.Raw_Connection_frm;
+			return className;		
+		}
 		
 		public override function newObject():void {
 			super.newObject();
@@ -171,7 +113,7 @@
 		}
 		
 		public override function setXML(newData:XML):void {
-			device_type = "";
+			device_type = "RAW_CONNECTION";
 			description ="";
 			active = "Y";		
 			parameters = new HashMap();		
@@ -179,7 +121,7 @@
 			customs = new Objects.Server.Customs();
 			catalogues = new Objects.Server.Catalogues();
 			var tempCatalogues:XML = new XML("<Catalogues />");
-			if (newData.name() == "<DEVICE />") {
+			if (newData.name() == "DEVICE") {
 				if(newData.@NAME!=undefined){
 					device_type = newData.@NAME;
 				}
@@ -196,13 +138,14 @@
 					active = newData.@ACTIVE;
 				}
 				for (var child:int = 0; child<newData.children().length;child++){
-					switch (newData.children()[child].name()) {
+					var myType:String = newData.children()[child].name();
+					switch (myType) {
 					case "CONNECTION" :
-						connection = newData.children()[child];
+						connection.setXML(newData.children()[child]);
 						break;
 					case "PARAMETERS" :
-						for (var parameter:int = 0; parameter<newData.children()[child].children().length;parameter++){
-							parameters.push(newData.children()[child].children()[parameter]);
+						for (var parameter:int=0 ; parameter < newData.children()[child].children().length() ; parameter++) {
+							parameters.put(newData.children()[child].children()[parameter].@NAME.toString(), newData.children()[child].children()[parameter].@VALUE.toString());
 						}
 						break;
 					case "CATALOGUE" :
@@ -210,10 +153,11 @@
 						break;
 					case "RAW_CONNECTION" :
 						var tempNode:XML = newData.children()[child];
-						var tempCustomInputs:XML = new XML(device_type);
-						var tempRawInterfaces:XML = new XML(device_type);
+						var tempCustomInputs:XML = new XML("<"+device_type+" />");
+						var tempRawInterfaces:XML = new XML("<"+device_type+" />");
 						for (var rawDevice:int = 0; rawDevice<tempNode.children().length;rawDevice++){
-							switch (tempNode.children()[rawDevice].name()) {
+							var myRaw:String = tempNode.children()[rawDevice].name();
+							switch (myRaw) {
 							case "CUSTOM_INPUT" :
 								tempCustomInputs.appendChild(tempNode.children()[rawDevice]);
 								break;

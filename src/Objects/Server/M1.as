@@ -5,6 +5,7 @@
 	import flash.utils.IExternalizable;
 	import flash.utils.IDataOutput;
 	import flash.utils.IDataInput;
+	import Forms.Server.M1_frm;
 	
 	[Bindable("m1")]
 	[RemoteClass(alias="elifeAdmin.objects.server.m1")]
@@ -49,81 +50,13 @@
 		public override function isValid():String {
 			var flag = "ok";
 			clearValidationMsg();
-					
-			if ((active != "Y") && (active != "N")) {
-				flag = "error";
-				appendValidationMsg("Active is invalid");
-			}
-			else {
-				if (active =="Y"){
-					if ((description == undefined) || (description == "")) {
-						flag = "warning";
-						appendValidationMsg("Description is invalid");
-					}
-					if ((device_type == undefined) || (device_type == "")) {
-						flag = "error";
-						appendValidationMsg("Device Type is invalid");
-					}
-					var newFlag:String;				
-					newFlag = getHighestFlagValue(flag, contacts.isValid());
-					newFlag = getHighestFlagValue(flag, toggle_outputs.isValid());
-					newFlag = getHighestFlagValue(flag, sensors.isValid());
-					newFlag = getHighestFlagValue(flag, x10_lights.isValid());
-					if (newFlag != "ok") {
-						appendValidationMsg("M1 is invalid");
-					}
-					flag = getHighestFlagValue(flag, newFlag);
-					
-					if (connection.children()[0].name() == "IP") {
-						if ((connection.children()[0].@IP_ADDRESS == "") || (connection.children()[0].@IP_ADDRESS ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Address is invalid");
-						}
-						if ((connection.children()[0].@PORT == "") || (connection.children()[0].@PORT ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Port is invalid");
-						}
-					}
-					else{
-						//FLOW="NONE" DATA_BITS="8" STOP_BITS="1" SUPPORTS_CD="N" PARITY="NONE" BAUD="9600" ACTIVE
-						if ((connection.children()[0].@PORT == "") || (connection.children()[0].@PORT ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Port is invalid");
-						}
-						if ((connection.children()[0].@FLOW == "") || (connection.children()[0].@FLOW ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Flow is invalid");
-						}
-						if ((connection.children()[0].@DATA_BITS == "") || (connection.children()[0].@DATA_BITS ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Data Bits is invalid");
-						}
-						if ((connection.children()[0].@STOP_BITS == "") || (connection.children()[0].@STOP_BITS ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Stop Bits is invalid");
-						}
-						if ((connection.children()[0].@SUPPORTS_CD == "") || (connection.children()[0].@SUPPORTS_CD ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Supports CD is invalid");
-						}
-						if ((connection.children()[0].@PARITY == "") || (connection.children()[0].@PARITY ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Parity is invalid");
-						}
-						if ((connection.children()[0].@BAUD == "") || (connection.children()[0].@BAUD ==undefined)) {
-							flag = "error";
-							appendValidationMsg("Connection Baud is invalid");
-						}
-					}
-				}
-				else {
-					if (active =="N"){
-						flag = "empty";
-						appendValidationMsg("M1 is not active");
-					}
-				}
-				
-			}
+			flag = super.isValid();		
+						
+			flag = getHighestFlagValue(flag, contacts.isValid());
+			flag = getHighestFlagValue(flag, toggle_outputs.isValid());
+			flag = getHighestFlagValue(flag, sensors.isValid());
+			flag = getHighestFlagValue(flag, x10_lights.isValid());
+			
 			return flag;
 		}
 		public override function toXML():XML {
@@ -137,18 +70,22 @@
 			if(active != "") {
 				newDevice.@ACTIVE = active;
 			}
-			newDevice.appendChild(connection);
-			var newParameters = new XML("<PARAMETERS />");
+			newDevice.appendChild(connection.toXML());
+			
+			var newParameters:XML = new XML("<PARAMETERS />");
 			for(var parameter in parameters){
-				newParameters.appendChild(parameters[parameter]);
+				var x1:XML = new XML("<ITEM />");
+				x1.@NAME = parameter;
+				x1.@VALUE = parameters[parameter];
+				newParameters.appendChild(x1);
 			}
-			//<ITEM NAME="POLL_SENSOR_INTERVAL" VALUE="10"/>
-			var newItem = new XML("<ITEM />");
+			var newItem:XML = new XML("<ITEM />");
 			newItem.@NAME="POLL_SENSOR_INTERVAL";
 			newItem.@VALUE="10";
 			newParameters.appendChild(newItem);
+			
 			newDevice.appendChild(newParameters);
-			var newM1:XML = new XML(device_type);
+			var newM1:XML = new XML("<"+device_type+" />");
 			var tempToggleOutputs:XML = toggle_outputs.toXML();
 			for (var child:int=0 ; child < tempToggleOutputs.children().length() ; child++) {
 				newM1.appendChild(tempToggleOutputs.children()[child]);
@@ -187,7 +124,10 @@
 		public function getKey():String {
 			return "M1";
 		}
-		
+		public function getClassForm():Class {
+			var className:Class = Forms.Server.M1_frm;
+			return className;		
+		}
 		public override function newObject():void {
 			super.newObject();
 			device_type = "M1";
@@ -198,11 +138,12 @@
 			sensors = new Objects.Server.M1Sensors();
 			x10_lights = new Objects.Server.X10Lights();
 			keypad = new Objects.Server.Keypad();
-			toggle_outputs = new Objects.Server.Toggles("TOGGLE_OUTPUT");
+			toggle_outputs = new Objects.Server.Toggles();
+			toggle_outputs.setType("TOGGLE_OUTPUT");
 		}
 			
 		public override function setXML(newData:XML):void {
-			device_type = "";
+			device_type = "M1";
 			description ="";
 			active = "Y";		
 			parameters = new HashMap();		
@@ -210,7 +151,8 @@
 			sensors = new Objects.Server.M1Sensors();
 			x10_lights = new Objects.Server.X10Lights();
 			keypad = new Objects.Server.Keypad();
-			toggle_outputs = new Objects.Server.Toggles("TOGGLE_OUTPUT");
+			toggle_outputs = new Objects.Server.Toggles();
+			toggle_outputs.setType("TOGGLE_OUTPUT");
 			if (newData.name() == "DEVICE") {
 				if(newData.@NAME!=undefined){
 					device_type = newData.@NAME;
@@ -228,13 +170,14 @@
 					active = newData.@ACTIVE;
 				}
 				for (var child:int=0 ; child < newData.children().length() ; child++) {
-					switch (newData.children()[child].name()) {
+					var myType:String = newData.children()[child].name();
+					switch (myType) {
 					case "M1" :
 						var tempContacts:XML = new XML("<contact_closures />");
-						var tempToggleOutputs:XML = new XML(device_type);
+						var tempToggleOutputs:XML = new XML("<"+device_type+" />");
 						var tempSensors:XML = new XML("<sensors />");
-						var tempX10Lights:XML = new XML(device_type);
-						var tempKeypad:XML = new XML(device_type);
+						var tempX10Lights:XML = new XML("<"+device_type+" />");
+						var tempKeypad:XML = new XML("<"+device_type+" />");
 						var tempNode = newData.children()[child];
 						for (var M1Device:int=0 ; M1Device < tempNode.children().length() ; M1Device++) {
 						switch (tempNode.children()[M1Device].name()) {
@@ -262,11 +205,11 @@
 						keypad.setXML(tempKeypad);
 						break;
 					case "CONNECTION" :
-						connection = newData.children()[child];
+						connection.setXML(newData.children()[child]);
 						break;
 					case "PARAMETERS" :
 						for (var parameter:int=0 ; parameter < newData.children()[child].children().length() ; parameter++) {
-							parameters.push(newData.children()[child].children()[parameter]);
+							parameters.put(newData.children()[child].children()[parameter].@NAME.toString(), newData.children()[child].children()[parameter].@VALUE.toString());
 						}
 						break;
 					}
