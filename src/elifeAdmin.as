@@ -109,10 +109,27 @@
 			{label:"TUTONDO",data:Objects.Server.Tutondo}
 		];
 			
+		static public var rawConfigNames:Array = [
+			{label:"POLL_STRING2",data:"POLL_STRING2", value:"Second poll\n"},
+			{label:"POLL_STRING1",data:"POLL_STRING1", value:"First poll\x20World\r\n"},
+			{label:"POLL_VALUE2",data:"POLL_VALUE2", value:"270"},
+			{label:"POLL_VALUE1",data:"POLL_VALUE1", value:"180"},
+			{label:"STARTUP5",data:"STARTUP5", value:"Starup string 5\n"},
+			{label:"STARTUP4",data:"STARTUP4", value:"Starup string 4\n"},
+			{label:"STARTUP3",data:"STARTUP3", value:"Starup string 3\n"},
+			{label:"STARTUP2",data:"STARTUP2", value:"Starup string 2\n"},
+			{label:"STARTUP1",data:"STARTUP1", value:"Starup string 1\n"},
+			{label:"ETX",data:"ETX", value:"\n"},
+			{label:"STX",data:"STX", value:""}
+		];
+			
 		
 		public function get deviceTypes():Array {
-				return devTypes;
-			}
+			return devTypes;
+		}
+		public function get rawConnections():Array {
+			return rawConfigNames;
+		}
 		
 		public var projName:String;
 		[Bindable]
