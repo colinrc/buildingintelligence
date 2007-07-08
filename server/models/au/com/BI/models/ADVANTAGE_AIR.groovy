@@ -61,14 +61,20 @@ class ADVANTAGE_AIR extends GroovyModel {
 							def zonePosition = ""
 							
 							if (parameters[1] == "1") zoneMode = "auto" else zoneMode = "manual"
-							def setPoint = (parameters[2].toInteger()).intdiv(100)
+							
+							def setPointStr = parameters[2]
+							def setPoint = setPointStr.toInteger() / 100
+							
 							if (parameters[3] == "1") zonePosition = "open" else zonePosition = "closed"
-							def currentTemp = (parameters[4].toInteger()).intdiv(100)
-							//returnWrapper.addFlashCommand(buildCommandForFLash(temperatureSensor,"on",currentTemp.toString(),zoneMode,zonePosition,setPoint.toString()))
-							returnWrapper.addFlashCommand (buildCommandForFlash (temperatureSensor,  "mode", zoneMode ))
-							returnWrapper.addFlashCommand (buildCommandForFlash (temperatureSensor,  "position", zonePosition ))
-							returnWrapper.addFlashCommand (buildCommandForFlash (temperatureSensor,  "set", setPoint.toString() ))
-							returnWrapper.addFlashCommand (buildCommandForFlash (temperatureSensor,  "on", currentTemp.toString() ))
+							
+							def currentTempStr = parameters[4]
+							def currentTemp = currentTempStr.toInteger() / 100
+							
+							//returnWrapper.addFlashCommand(temperatureSensor,"on",currentTemp.toString(),zoneMode,zonePosition,setPoint.toString())
+							returnWrapper.addFlashCommand (temperatureSensor,  "mode", zoneMode )
+							returnWrapper.addFlashCommand (temperatureSensor,  "position", zonePosition )
+							returnWrapper.addFlashCommand (temperatureSensor,  "set", setPoint )
+							returnWrapper.addFlashCommand (temperatureSensor,  "on", currentTemp )
 						}
 						break
 						
