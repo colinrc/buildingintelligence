@@ -425,6 +425,7 @@
 					newJandy.active = "Y";				
 					treeNode.appendChild(newJandy.toTree());
 					devices.addItem(newJandy);
+					
 					break;
 					}
 				}

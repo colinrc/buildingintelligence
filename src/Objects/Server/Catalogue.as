@@ -5,6 +5,7 @@
 	import flash.utils.IExternalizable;
 	import flash.utils.IDataOutput;
 	import flash.utils.IDataInput;
+	import Forms.Server.Catalogue_frm;
 	[Bindable("catalogue")]
 	[RemoteClass(alias="elifeAdmin.objects.server.catalogue")]
 	public class Catalogue extends BaseElement {
@@ -26,6 +27,10 @@
 			items = input.readObject()as Array;
 		}
 		
+		public function getClassForm():Class {
+			var className:Class = Forms.Server.Catalogue_frm;
+			return className;		
+		}
 		
 		public override function isValid():String {
 			var flag = "ok";

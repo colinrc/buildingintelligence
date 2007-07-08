@@ -101,7 +101,7 @@
 		}
 			
 		public override function setXML(newData:XML):void {
-			device_type = "";
+			device_type = "JANDI";
 			description ="";
 			active = "Y";		
 			parameters = new HashMap();		
