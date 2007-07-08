@@ -2,6 +2,8 @@ package au.com.BI.Command;
 
 import java.util.Vector;
 
+import au.com.BI.Device.DeviceType;
+
 
 public class ReturnWrapper {
 		private Vector <byte[]>outputBytes;
@@ -150,5 +152,67 @@ public class ReturnWrapper {
 		public void setQueueCommands(boolean queueCommands) {
 			this.queueCommands = queueCommands;
 		}
+		
 
+		public void addFlashCommand(DeviceType device,
+				String command) {
+			 addFlashCommand(device, command, "", "", "", "", "", 0);
+		}
+		
+		public void addFlashCommand(DeviceType device,
+				String command, String extra) {
+			 addFlashCommand(device, command, extra, "", "", "", "", 0);
+		}
+
+		public void addFlashCommand(DeviceType device,
+				String command, Integer extra) {
+			 addFlashCommand(device, command, extra.toString(), "", "", "", "", 0);
+		}
+		
+		public void addFlashCommand(DeviceType device,
+				String command, Double extra) {
+			Integer truncVal = new Integer( extra.intValue());
+			 addFlashCommand(device, command, truncVal.toString() , "", "", "", "", 0);
+		}
+		
+		public void addFlashCommand(DeviceType device,
+				String command, String extra, String extra2) {
+			 addFlashCommand(device, command, extra, extra2, "", "", "",
+					0);
+		}
+
+		public void addFlashCommand(DeviceType device,
+				String command, String extra, String extra2, String extra3) {
+			 addFlashCommand(device, command, extra, extra2, extra3, "",
+					"", 0);
+		}
+
+		public void addFlashCommand(DeviceType device,
+				String command, String extra, String extra2, String extra3,
+				String extra4) {
+			 addFlashCommand(device, command, extra, extra2, extra3,
+					extra4, "", 0);
+		}
+
+		public void addFlashCommand(DeviceType device,
+				String command, String extra, String extra2, String extra3,
+				String extra4, String extra5) {
+			 addFlashCommand(device, command, extra, extra2, extra3,
+					extra4, extra5, 0);
+		}
+
+		public void  addFlashCommand(DeviceType device,
+				String command, String extra, String extra2, String extra3,
+				String extra4, String extra5, long targetDeviceID) {
+			CommandInterface flCommand = device.buildDisplayCommand();
+			flCommand.setKey("CLIENT_SEND");
+			flCommand.setTargetDeviceID(targetDeviceID);
+			flCommand.setCommand(command);
+			flCommand.setExtraInfo(extra);
+			flCommand.setExtra2Info(extra2);
+			flCommand.setExtra3Info(extra3);
+			flCommand.setExtra4Info(extra4);
+			flCommand.setExtra5Info(extra5);
+			addFlashCommand (flCommand);
+		}
 }

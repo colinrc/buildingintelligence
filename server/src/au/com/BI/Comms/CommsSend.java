@@ -46,7 +46,7 @@ public class CommsSend extends Thread implements Runnable{
 						if (currentTimeDiff < interCommandInterval){
                                                 logger.log (Level.FINEST,"The next command to be sent is being delayed to meet minimum reponse time requirements for the device");
                                                     try {
-                                                            this.wait(interCommandInterval - currentTimeDiff);
+                                                            Thread.sleep(interCommandInterval - currentTimeDiff);
                                                     } catch (InterruptedException e) {
 
                                                     }

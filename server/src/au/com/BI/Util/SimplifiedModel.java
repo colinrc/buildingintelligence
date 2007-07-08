@@ -819,6 +819,11 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 
 	public CommandInterface buildCommandForFlash(DeviceType device,
+			String command, Integer extra) {
+		return buildCommandForFlash(device, command, extra.toString(), "", "", "", "", 0);
+	}
+	
+	public CommandInterface buildCommandForFlash(DeviceType device,
 			String command, String extra, String extra2) {
 		return buildCommandForFlash(device, command, extra, extra2, "", "", "",
 				0);
