@@ -17,6 +17,7 @@ import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
 import au.com.BI.Command.ReturnWrapper;
 import au.com.BI.Device.DeviceType;
+import au.com.BI.Nuvo.Protocols;
 
 import java.util.*;
 import java.util.logging.*;
@@ -42,6 +43,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public static final int Mute = 4;	
 	public static final int Zone_Status_Request = 5;
 	public static final int Zone_Tone_Request = 6;
+	public static final int Control = 7;	
+	
+	public Protocols protocol = Protocols.Standard;
 	
 	
 	public Model () {
@@ -72,6 +76,16 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				state.put(key, new AVState());
 			}
 	    }	
+	}
+	
+	public void finishedReadingParameters () {
+		super.finishedReadingParameters();
+		String protocolStr = getParameterValue ("PROTOCOL", DeviceModel.MAIN_DEVICE_GROUP);
+		if (protocolStr.equals ("GC")){
+			protocol = Protocols.GrandConcerto;
+			nuvoHelper.setProtocol (Protocols.GrandConcerto);
+		}
+
 	}
 	
 	public void doStartup() throws CommsFail {
@@ -228,8 +242,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 
 	public boolean isInGroup (String testKey){
-		boolean returnCode = false;
-		return returnCode;
+		if (srcGroup.contains(testKey)){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public ReturnWrapper  interpretZoneStatus (String zoneStatus,DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
@@ -371,6 +388,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 
 		if (!commandFound && theCommand.equals("src")) {
+			// functionality is the same for both protocols
 			String srcCode = "";
 			commandFound = true;
 			
@@ -427,21 +445,38 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 			if (!commandFound && extra.equals ("up")){
 				commandFound = true;
-				String newVol = currentState.volumeUp();
-				int newVal = Utility.scaleFromFlash(newVol,0,78,true);
 				if (!key.equals (Model.AllZones)){
-					returnVal.addCommOutput(String.format("*Z"+key+"VOL%02d",newVal));
-					returnVal.addFlashCommand(buildCommandForFlash(device,"volume",newVol,"","","","",0));
+					if (protocol == Protocols.Standard){
+						String newVol = currentState.volumeUp();
+						int newVal = Utility.scaleFromFlash(newVol,0,79,true);
+						
+						returnVal.addCommOutput(String.format("*Z"+key+"VOL%02d",newVal));
+						returnVal.addFlashCommand(buildCommandForFlash(device,"volume",newVol,"","","","",0));
+					} else {
+						returnVal.addCommOutput(String.format("*Z"+key+"VOL+"));						
+					}
 					logger.log (Level.FINEST,"Volump up in zone " + key);					
 				} else {
 				    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
-						if (!audioDevice.getKey().equals(Model.AllZones)) {
-							AVState stateForItem = state.get(audioDevice.getKey());
-							if (stateForItem != null) 
+				    	if (!audioDevice.getKey().equals(Model.AllZones)) {
+							if (protocol == Protocols.Standard){
+								AVState stateForItem = state.get(audioDevice.getKey());
+								if (stateForItem != null){ 
+									String newVol = currentState.volumeUp();
+									int newVal = Utility.scaleFromFlash(newVol,0,79,true);
+									stateForItem.setVolume(newVol);
+								}
+								else{
+									logger.log (Level.WARNING,"AVState was not correctly set up within the Nuvo system, please contact your integrator ");
+								}
+								String newVol = currentState.volumeUp();
+								int newVal = Utility.scaleFromFlash(newVol,0,79,true);
 								stateForItem.setVolume(newVol);
-							else
-								logger.log (Level.WARNING,"AVState was not correctly set up within the Nuvo system, please contact your integrator ");
-							returnVal.addCommOutput("*Z"+audioDevice.getKey()+"VOL"+newVol);
+	
+								returnVal.addCommOutput("*Z"+audioDevice.getKey()+"VOL"+newVol);
+							} else {
+								returnVal.addCommOutput(String.format("*Z"+audioDevice.getKey()+"VOL+"));														
+							}
 						}
 				    }	
 
@@ -451,21 +486,31 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 			if (!commandFound && extra.equals ("down")){
 				commandFound = true;
-				String newVol = currentState.volumeDown();
-				int newVal = Utility.scaleFromFlash(newVol,0,78,true);
 				if (!key.equals (Model.AllZones)){
-					returnVal.addCommOutput(String.format("*Z"+key+"VOL%02d",newVal));
-					returnVal.addFlashCommand(buildCommandForFlash(device,"volume",newVol,"","","","",0));
+					if (protocol == Protocols.Standard){
+						String newVol = currentState.volumeDown();
+						int newVal = Utility.scaleFromFlash(newVol,0,79,true);
+						returnVal.addCommOutput(String.format("*Z"+key+"VOL%02d",newVal));
+						returnVal.addFlashCommand(buildCommandForFlash(device,"volume",newVol,"","","","",0));
+					} else {
+						returnVal.addCommOutput(String.format("*Z"+key+"VOL-"));												
+					}
 					logger.log (Level.FINEST,"Volume down in zone " + key);					
 				} else {
 				    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
 						if (!audioDevice.getKey().equals(Model.AllZones)) {
-							AVState stateForItem = state.get(audioDevice.getKey());
-							if (stateForItem != null) 
-								stateForItem.setVolume(newVol);
-							else
-								logger.log (Level.WARNING,"AVState was not correctly set up within the Nuvo system, please contact your integrator ");
-							returnVal.addCommOutput("*Z"+audioDevice.getKey()+"VOL"+newVol);
+							if (protocol == Protocols.Standard){
+								String newVol = currentState.volumeDown();
+								int newVal = Utility.scaleFromFlash(newVol,0,79,true);
+								AVState stateForItem = state.get(audioDevice.getKey());
+								if (stateForItem != null) 
+									stateForItem.setVolume(newVol);
+								else
+									logger.log (Level.WARNING,"AVState was not correctly set up within the Nuvo system, please contact your integrator ");
+								returnVal.addCommOutput("*Z"+audioDevice.getKey()+"VOL"+newVol);
+							} else {
+								returnVal.addCommOutput(String.format("*Z"+audioDevice.getKey()+"VOL-"));																				
+							}
 						}
 				    }	
 
@@ -473,48 +518,57 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				}
 			}
 			if (!commandFound && extra.equals ("rampup")){
+				// functionality was removed from Grand concerto.	
 				commandFound = true;
-				if (!key.equals (Model.AllZones)){
-					currentState.setVolume("");
-					returnVal.addCommOutput(String.format("*Z"+key+"VOL+"));
-					logger.log (Level.FINEST,"Volump ramp up in zone " + key);					
-				} else {
-
-					returnVal.addCommOutput("*ZALLV+");
-					for(AVState eachState : state.values()){
-						eachState.setVolume("");					
+				if (protocol == Protocols.Standard){
+					if (!key.equals (Model.AllZones)){
+						currentState.setVolume("");
+						returnVal.addCommOutput(String.format("*Z"+key+"VOL+"));
+						logger.log (Level.FINEST,"Volump ramp up in zone " + key);					
+					} else {
+	
+						returnVal.addCommOutput("*ZALLV+");
+						for(AVState eachState : state.values()){
+							eachState.setVolume("");					
+						}
+						logger.log (Level.FINEST,"All volume ramp up");	
 					}
-					logger.log (Level.FINEST,"All volume ramp up");	
-				}
+				} 				
 			}
 
 			if (!commandFound && extra.equals ("rampdown")){
+				// functionality was removed from Grand concerto.
 				commandFound = true;
-				if (!key.equals (Model.AllZones)){
-					for(AVState eachState : state.values()){
-						eachState.setVolume("");					
+				if (protocol == Protocols.Standard){
+					if (!key.equals (Model.AllZones)){
+						for(AVState eachState : state.values()){
+							eachState.setVolume("");					
+						}
+						returnVal.addCommOutput(String.format("*Z"+key+"VOL-"));
+						logger.log (Level.FINEST,"Volump ramp down in zone " + key);					
+					} else {
+						currentState.setVolume("");
+						returnVal.addCommOutput("*ZALLV-");
+						logger.log (Level.FINEST,"All volume ramp down");	
 					}
-					returnVal.addCommOutput(String.format("*Z"+key+"VOL-"));
-					logger.log (Level.FINEST,"Volump ramp down in zone " + key);					
-				} else {
-					currentState.setVolume("");
-					returnVal.addCommOutput("*ZALLV-");
-					logger.log (Level.FINEST,"All volume ramp down");	
-				}
+				} 
 			}
 			if (!commandFound && extra.equals ("stop")){
+				 // functionality was removed from Grand concerto.
 				commandFound = true;
-				if (key.equals (Model.AllZones)){
-					returnVal.addCommOutput(String.format("*ZALLHLD"));
-					logger.log (Level.FINEST,"Volump ramp stop in all zones");					
-				} else {
-					returnVal.addCommOutput("*Z"+key+"VHLD");
-					logger.log (Level.FINEST,"All volume ramp stop in zone " + key);	
+				if (protocol == Protocols.Standard){
+					if (key.equals (Model.AllZones)){
+						returnVal.addCommOutput(String.format("*ZALLHLD"));
+						logger.log (Level.FINEST,"Volump ramp stop in all zones");					
+					} else {
+						returnVal.addCommOutput("*Z"+key+"VHLD");
+						logger.log (Level.FINEST,"All volume ramp stop in zone " + key);	
+					}
 				}
 			}
 			if (!commandFound){
 				try {
-					int newVal = Utility.scaleFromFlash(extra,0,78,true);
+					int newVal = Utility.scaleFromFlash(extra,0,79,true);
 					String volString = String.format("%02d",newVal);
 					currentState.setVolume(extra);
 					returnVal.addCommOutput("*Z"+key+"VOL"+volString);
@@ -528,6 +582,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}	
 		
 		if (!commandFound &&  theCommand.equals("on")) {
+			// ON is the same for both protocols
 			currentState.setPower(true);
 			returnVal.addCommOutput("*Z"+key+"ON");
 			logger.log (Level.FINEST,"Switching on zone "+ key);
@@ -536,6 +591,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		
 		if (!commandFound && theCommand.equals("off")) {
+	    	// Zone off is the same for both protocols
 			if (key.equals(Model.AllZones)) {
 				for(AVState eachState : state.values()){
 					eachState.setPower(false);					
@@ -545,11 +601,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 							returnVal.addFlashCommand(this.buildCommandForFlash(audioDevice, "off", "", "", "", "", "", 0));
 					}
 			    }
+		    	returnVal.addCommOutput("*ALLOFF");
 
-				returnVal.addCommOutput("*ALLOFF");
 			} else {
 				currentState.setPower(false);
-				returnVal.addCommOutput("*Z"+key+"OFF");
+		    	returnVal.addCommOutput("*Z"+key+"OFF");
 			}
 			logger.log (Level.FINEST,"Switching off zone " + key);
 			commandFound = true;
@@ -567,10 +623,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 								returnVal.addFlashCommand(this.buildCommandForFlash(audioDevice, "mute", "on", "", "", "", "", 0));
 						}
 				    }
-					returnVal.addCommOutput("*ALLMON");
+				    if (protocol == Protocols.Standard) {
+				    	returnVal.addCommOutput("*ALLMON");
+				    } else {
+				    	returnVal.addCommOutput("*MUTE1");				    	
+				    }
 				} else {
 					currentState.setMute(true);
-					returnVal.addCommOutput("*Z"+key+"MTON");
+				    if (protocol == Protocols.Standard) {
+				    	returnVal.addCommOutput("*Z"+key+"MTON");
+				    } else {
+				    	returnVal.addCommOutput("*Z"+key+"MUTEON");				    	
+				    }
 				} 
 			} else {
 				if (key.equals(Model.AllZones)) {
@@ -582,10 +646,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 								returnVal.addFlashCommand(this.buildCommandForFlash(audioDevice, "mute", "off", "", "", "", "", 0));
 						}
 				    }
-					returnVal.addCommOutput("*ALLMOFF");
+				    if (protocol == Protocols.Standard) {
+				    	returnVal.addCommOutput("*ALLMOFF");
+				    } else {
+				    	returnVal.addCommOutput("*MUTE0");				    					    	
+				    }
 				} else {
 					currentState.setMute(false);
-					returnVal.addCommOutput("*Z"+key+"MTOFF");
+				    if (protocol == Protocols.Standard) {
+				    	returnVal.addCommOutput("*Z"+key+"MTOFF");
+				    } else {
+				    	returnVal.addCommOutput("*Z"+key+"MUTEOFF");				    	
+				    }
 				} 
 			}
 			logger.log (Level.FINEST,"Muting zone " + key);
@@ -595,8 +667,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		
 		if (!commandFound && theCommand.equals("bass")) {
 			try {
-				int newVal = Utility.scaleFromFlash(extra,-12,12,false);
-				returnVal.addCommOutput(String.format("*Z"+key+"BASS%+03d",newVal));
+			    if (protocol == Protocols.Standard) {
+					int newVal = Utility.scaleFromFlash(extra,-12,12,false);
+					returnVal.addCommOutput(String.format("*Z"+key+"BASS%+03d",newVal));
+			    } else {
+					int newVal = Utility.scaleFromFlash(extra,-18,18,false);
+					returnVal.addCommOutput(String.format("*ZCFG"+key+"BASS%+03d",newVal));			    	
+			    }
 				logger.log (Level.FINEST,"Changing tone in zone " + key);
 			} catch (NumberFormatException ex){
 				logger.log (Level.WARNING,"Illegal value for tone change " + ex.getMessage());				
@@ -607,8 +684,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		
 		if (!commandFound && theCommand.equals("treble")) {
 			try {
-				int newVal = Utility.scaleFromFlash(extra,-12,12,false);
-				returnVal.addCommOutput(String.format("*Z"+key+"TREB%+03d",newVal));
+			    if (protocol == Protocols.Standard) {
+					int newVal = Utility.scaleFromFlash(extra,-12,12,false);
+					returnVal.addCommOutput(String.format("*Z"+key+"TREB%+03d",newVal));
+			    } else {
+					int newVal = Utility.scaleFromFlash(extra,-18,18,false);
+					returnVal.addCommOutput(String.format("*ZCFG"+key+"TREB%+03d",newVal));			    				    	
+			    }
 				logger.log (Level.FINEST,"Changing tone in zone " + key);
 			} catch (NumberFormatException ex){
 				logger.log (Level.WARNING,"Illegal value for tone change " + ex.getMessage());				
@@ -617,12 +699,42 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			returnVal.setOutputCommandType ( Model.Tone);
 		}
 		
+		if (!commandFound && theCommand.equals("play/pause")) {
+			commandFound = true;
+		    if (protocol == Protocols.GrandConcerto) {
+
+				returnVal.addCommOutput(String.format("*Z"+key+"PLAYPAUSE"));
+				logger.log (Level.FINEST,"Simulating play/pause in zone " + key);
+				returnVal.setOutputCommandType ( Model.Control);
+		    }
+		}
+		if (!commandFound && theCommand.equals("prev")) {
+			commandFound = true;
+		    if (protocol == Protocols.GrandConcerto) {
+
+				returnVal.addCommOutput(String.format("*Z"+key+"PREV"));
+				logger.log (Level.FINEST,"Simulating previous in zone " + key);
+				returnVal.setOutputCommandType ( Model.Control);
+		    }
+		}
+		if (!commandFound && theCommand.equals("next")) {
+			commandFound = true;
+		    if (protocol == Protocols.GrandConcerto) {
+
+				returnVal.addCommOutput(String.format("*Z"+key+"NEXT"));
+				logger.log (Level.FINEST,"Simulating next in zone " + key);
+				returnVal.setOutputCommandType ( Model.Control);
+		    }
+		}
+		
 		if (commandFound) {
 			return returnVal;
 		}
 		else {
 			return null;
 		}
+		
+
 	}
 	
 	public void setGroupKeys (DeviceType audioDevice,String srcStr, int src, ReturnWrapper returnVal) {
