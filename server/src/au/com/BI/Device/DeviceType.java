@@ -77,6 +77,8 @@ public interface DeviceType
 	
 	public static final int PUMP = 55;
 	
+	public static final int UNIT = 56;
+	
 	// Likely number of raw commands for device line. More is allowed.
 	public static final int PROBABLE_NUMBER_RAW = 10;
 

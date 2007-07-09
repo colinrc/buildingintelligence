@@ -1,3 +1,23 @@
+''' Nuvo '''
+
+Simple Grand Concerto support added.
+The protocol should be set in the parameters; the default if this is not present is to use the Essentia protocol.
+
+<ITEM NAME="PROTOCOL" VALUE="GC"/>
+
+Groups are not directly supported, however the status should ensure all zones that have been added to groups are correctly displayed.
+
+Concerto commands for audio control have been added;
+   COMMAND="play/pause" | "prev"  | "next"
+No playlist support is present.
+
+
+''' Models  '''
+
+Added convenience methods addCommandForFlash to the ReturnWrapper object. 
+Added a general type to handle units...   buildUnitControlString ()    the type is DeviceType.UNIT
+
+
 == 4/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b60zip V1.6b60]  [attachment:wiki:SoftwareReleases:eLife-1.6b60-libs.zip Libs-V1.6b60] ==
 
 ''' Jetty '''

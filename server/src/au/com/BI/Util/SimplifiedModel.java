@@ -1016,6 +1016,14 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					buildCustomConnectControlString((CustomConnect) device,
 							command, returnWrapper);
 					break;
+					
+				case DeviceType.UNIT:
+					logger.log(Level.FINE,
+							"A command for an unit device was issued from "
+									+ device.getName() + " for the model "
+									+ this.getName());
+					buildUnitControlString((SMS) device, command, returnWrapper);
+					break;
 				}
 
 			} catch (ClassCastException ex) {
@@ -1462,6 +1470,10 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 
 	public void buildSMSControlString(SMS device, CommandInterface command,
+			ReturnWrapper returnWrapper) throws ModelException {
+	}
+	
+	public void buildUnitControlString(SMS device, CommandInterface command,
 			ReturnWrapper returnWrapper) throws ModelException {
 	}
 

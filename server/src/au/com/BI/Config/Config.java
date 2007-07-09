@@ -6,6 +6,7 @@ package au.com.BI.Config;
 import java.util.*;
 
 import au.com.BI.Flash.ClientCommand;
+import au.com.BI.Unit.UnitFactory;
 import au.com.BI.Util.*;
 import au.com.BI.Lights.LightFactory;
 import au.com.BI.Thermostat.ThermostatFactory;
@@ -77,6 +78,7 @@ public class Config {
 		protected RawFactory rawFactory;		
 		protected AnalogFactory analogFactory;		
 		protected PumpFactory pumpFactory;		
+		protected UnitFactory unitFactory;		
 		protected IRFactory iRFactory;
 		protected ThermostatFactory thermostatFactory;
 		protected WindowsMediaExtenderFactory windowsMediaExtenderFactory;
@@ -117,6 +119,7 @@ public class Config {
 		this.setLabelFactory (LabelFactory.getInstance());
 		this.setCustomConnectFactory(CustomConnectFactory.getInstance());
 		this.setThermostatFactory(ThermostatFactory.getInstance());
+		this.setUnitFactory(UnitFactory.getInstance());
 		this.setWindowsMediaExtenderFactory(WindowsMediaExtenderFactory.getInstance());
 		
 		calendar_message_params = new HashMap<String,String> (5);
@@ -644,6 +647,10 @@ public class Config {
 						thermostatFactory.addThermostat(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.THERMOSTAT,groupName,rawHelper);
 					}
+					if (itemName.equals("UNIT")) {
+						unitFactory.addUnit(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+								DeviceType.UNIT,groupName,rawHelper);
+					}
 					if (itemName.equals("MEDIA_EXTENDER")) {
 						windowsMediaExtenderFactory.addMediaExtender(deviceModel, 
 								clientModels, 
@@ -880,5 +887,13 @@ public class Config {
 
 	public void setPumpFactory(PumpFactory pumpFactory) {
 		this.pumpFactory = pumpFactory;
+	}
+
+	public UnitFactory getUnitFactory() {
+		return unitFactory;
+	}
+
+	public void setUnitFactory(UnitFactory unitFactory) {
+		this.unitFactory = unitFactory;
 	}
 }

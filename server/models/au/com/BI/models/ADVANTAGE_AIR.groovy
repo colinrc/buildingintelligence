@@ -7,6 +7,7 @@ import java.util.logging.Level
 import au.com.BI.Config.ParameterException
 import au.com.BI.Device.DeviceType
 import au.com.BI.Pump.Pump
+import au.com.BI.Unit.Unit
 import au.com.BI.Thermostat.Thermostat
 import java.util.regex.Matcher
 import java.util.regex.Pattern
