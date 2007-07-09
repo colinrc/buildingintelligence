@@ -32,7 +32,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 		def theDeviceList = configHelper.getAllControlledDeviceObjects ()
 		for (i in theDeviceList){
 			
-			if (i.getDeviceType() == DeviceType.THERMOSTAT){
+			if (i.getDeviceType() == DeviceType.THERMOSTAT && i.getKey() != 0){
 				returnWrapper.addCommOutput  ("ZST=" + i.getKey() )
 			}
 		}
