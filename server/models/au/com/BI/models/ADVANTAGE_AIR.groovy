@@ -53,21 +53,21 @@ class ADVANTAGE_AIR extends GroovyModel {
 
 					case "+ZST" :
 						logger.log (Level.FINE,"ZST received " + command )
-						def parameters = partsOfCommand[1].split(",")
-						def temperatureSensor = configHelper.getControlledItem (parameters[0])
+						def zstParm = partsOfCommand[1].split(",")
+						def temperatureSensor = configHelper.getControlledItem (zstParm[0])
 						if (temperatureSensor != null )
 						{	
 							def zoneMode = ""
 							def zonePosition = ""
 							
-							if (parameters[1] == "1") zoneMode = "auto" else zoneMode = "manual"
+							if (zstParm[1] == "1") zoneMode = "auto" else zoneMode = "manual"
 							
-							def setPointStr = parameters[2]
+							def setPointStr = zstParm[2]
 							def setPoint = setPointStr.toInteger() / 100
 							
-							if (parameters[3] == "1") zonePosition = "open" else zonePosition = "closed"
+							if (zstParm[3] == "1") zonePosition = "open" else zonePosition = "closed"
 							
-							def currentTempStr = parameters[4]
+							def currentTempStr = zstParm[4]
 							def currentTemp = currentTempStr.toInteger() / 100
 							
 							//returnWrapper.addFlashCommand(temperatureSensor,"on",currentTemp.toString(),zoneMode,zonePosition,setPoint.toString())
@@ -78,6 +78,86 @@ class ADVANTAGE_AIR extends GroovyModel {
 						}
 						break
 						
+					case "+SYS" :
+						logger.log (Level.FINE,"SYS received " + command )
+						def sysParm = partsOfCommand[1].split(",")
+						def hvacUnit = configHelper.getControlledItem (zstParm[0])
+						if (hvacUnit != null )
+						{	
+							def sysStatus = ""
+							def sysFan = ""
+							def sysMode = ""
+							def sysFresh = ""
+							def sysFilter = ""
+							def sysIoniser = ""
+							def sysUV = ""
+							
+							// Deal with System Status
+							if (sysParm[1] == "1") sysStatus = "on" else sysStatus = "off"
+							
+							// Deal with the Fan Modes
+							def sysFanModes = sysParm[2]
+							switch (sysFanModes) {
+							case "1" :
+								sysFan = "low"
+								break;
+							case "2" :
+								sysFan = "medium"
+								break;
+							case "3" :
+								sysFan = "high"
+								break;
+							}
+							
+							// Deal with the System Mode
+							def sysModeModes = sysParm[3]
+							switch (sysModeModes) {
+							case "1" :
+								sysMode = "cool"
+								break;
+							case "2" :
+								sysMode = "heat"
+								break;
+							case "3" :
+								sysMode = "vent"
+								break;
+							case "4" :
+								sysMode = "auto"
+								break;
+							}
+							
+							// Deal with the Fresh Air Modes
+							def sysFreshModes = sysParm[4]
+							switch (sysFreshModes) {
+							case "1" :
+								sysFresh = "outside"
+								break;
+							case "2" :
+								sysFresh = "recirc"
+								break;
+							case "3" :
+								sysFresh = "auto"
+								break;
+							}
+							
+							// Deal with the Filter Modes
+							if (sysParm[5] == "1") sysFilter = "on" else sysFilter = "off"
+							
+							// Deal with the Ioniser Modes
+							if (sysParm[6] == "1") sysIoniser = "on" else sysIoniser = "off"
+							
+							// Deal with the UV Modes
+							if (sysParm[7] == "1") sysUV = "on" else sysUV = "off"
+							
+							returnWrapper.addFlashCommand (hvacUnit,  "status", sysStatus )
+							returnWrapper.addFlashCommand (hvacUnit,  "mode", sysMode )
+							returnWrapper.addFlashCommand (hvacUnit,  "fan", sysFan )
+							returnWrapper.addFlashCommand (hvacUnit,  "fresh", sysFresh )
+							returnWrapper.addFlashCommand (hvacUnit,  "filter", sysFilter )
+							returnWrapper.addFlashCommand (hvacUnit,  "ioniser", sysIoniser )
+							returnWrapper.addFlashCommand (hvacUnit,  "uv", sysUV )
+						}
+						break
 					default:
 						logger.log (Level.WARNING,"An unknown command was sent from the Advantage Air controller" )
 				}			
