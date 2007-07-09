@@ -60,13 +60,17 @@ class ADVANTAGE_AIR extends GroovyModel {
 							def zoneMode = ""
 							def zonePosition = ""
 							
+							// Deal with the Zone Mode
 							if (zstParm[1] == "1") zoneMode = "auto" else zoneMode = "manual"
 							
+							// Deal with the Zone Set Point
 							def setPointStr = zstParm[2]
 							def setPoint = setPointStr.toInteger() / 100
 							
+							// Deal with the Zone Position
 							if (zstParm[3] == "1") zonePosition = "open" else zonePosition = "closed"
 							
+							// Deal with the Current Zone Temperature
 							def currentTempStr = zstParm[4]
 							def currentTemp = currentTempStr.toInteger() / 100
 							
@@ -149,7 +153,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 							// Deal with the UV Modes
 							if (sysParm[7] == "1") sysUV = "on" else sysUV = "off"
 							
-							returnWrapper.addFlashCommand (hvacUnit,  "status", sysStatus )
+							returnWrapper.addFlashCommand (hvacUnit,  sysStatus )
 							returnWrapper.addFlashCommand (hvacUnit,  "mode", sysMode )
 							returnWrapper.addFlashCommand (hvacUnit,  "fan", sysFan )
 							returnWrapper.addFlashCommand (hvacUnit,  "fresh", sysFresh )
@@ -169,10 +173,19 @@ class ADVANTAGE_AIR extends GroovyModel {
 	}
 
 
-	void buildPumpControlString (Pump device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+	void buildHvacControlString (Hvac device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 		// receives a message from flash and builds the appropriate string for the audio device
 		
-		// To switch on the pump  device it requieres a string of this format      PUMP_PWR:zone:on or PUMP_PWR:zone:off
+		// To switch on the HVAC system requires a string "SRU=1"
+		if (command.getCommandCode() == "on") {
+			returnWrapper.addCommOutput ("SRU=1")
+		}
+		
+		// To switch off the HVAC system requires a string "SRU=0"
+		if (command.getCommandCode() == "off") {
+			returnWrapper.addCommOutput ("SRU=0")
+		}
+		
 		if (command.getCommandCode() ==  "on") {
 			returnWrapper.addCommOutput  ("PUMP_PWR:" + device.getKey() + ":1")
 		}
@@ -184,13 +197,26 @@ class ADVANTAGE_AIR extends GroovyModel {
 	}
 
 	void buildThermostatControlString (Thermostat device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
-		// receives a message from flash and builds the appropriate string for the audio device
 		
-		// To switch on the audio device it requieres a string of this format      AU_PWR:zone:on or AW_PWR:zone:off
+		// Zone Temperature Set Point requires a string "ZSE=[ZoneNumber],[ZoneMode],[Setting]"
 		if (command.getCommandCode() ==  "set") {
-			def scaledVal =  Utility.scaleFromFlash(command.getExtraInfo(),-20,60,false)
-			returnWrapper.addCommOutput  ("TEMP_SET" + device.getKey() + ":" + scaledVal)
+			def setPoint = setPointStr.toInteger() * 100
+			returnWrapper.addCommOutput  ("ZSE" + device.getKey() + ",1," + setPoint)
+		}
+		
+		// Zone set to Manual and Open requires a string "ZSE=[ZoneNumber],2,1"
+		if (command.getCommandCode() ==  "position") {
+			switch (command.getExtraInfo() ) {
+			case "open" :
+				returnWrapper.addCommOutput ("ZSE" + device.getKey() + ",2,1")
+				break;
+			case "closed" :
+				returnWrapper.addCommOutput ("ZSE" + device.getKey() + ",2,0")
+				break;
+			case "*" :
+				logger.log (Level.WARNING,"Invalid HVAC zone position " + command )
+				break;
+			}
 		}
 	}
-
 }
