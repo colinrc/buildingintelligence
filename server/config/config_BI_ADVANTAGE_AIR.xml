@@ -12,10 +12,9 @@
                 </PARAMETERS>
                 
                 <ADVANTAGE_AIR>
-                      <THERMOSTAT  KEY="4" DISPLAY_NAME="POOL_TEMP" NAME="Pool Temp" />
+                	<UNIT KEY="0" DISPLAY_NAME="AC_SYSTEM" NAME="AC System" />
+                    <THERMOSTAT KEY="4" DISPLAY_NAME="LOUNGE_AIR" NAME="Lounge Room AC Zone" />
 
                 </ADVANTAGE_AIR>
         </DEVICE>
-        
- 
 </CONFIG>
