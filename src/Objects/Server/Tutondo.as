@@ -150,8 +150,11 @@
 						}
 						break;
 					case "CATALOGUE" :
-						if(newData.children()[child].@NAME == "Sign Video Inputs"){
+						if(newData.children()[child].@NAME == "Tutondo Inputs"){
 							inputs.setXML(newData.children()[child]);
+						}
+						if(newData.children()[child].@NAME == "Tutondo Functions"){
+							functions.setXML(newData.children()[child]);
 						}
 						break;
 					case "SIGN_VIDEO":

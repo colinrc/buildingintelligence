@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<BaseConnectionForm  initialize="init()" updateComplete="{mainUpdateComplete()}" creationPolicy="auto" xmlns:fx="Controls.*" xmlns="Forms.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+<BaseConnectionForm  updateComplete="{addForm(advArray);}" creationPolicy="auto" xmlns:fx="Controls.*" xmlns="Forms.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
 	<mx:Script>
 		<![CDATA[
-			import Events.ComboSelectedEvent;
 			import mx.collections.ArrayCollection;
 			import Forms.AdvancedParam;
 			import HashMap;
@@ -10,55 +9,31 @@
 			import mx.controls.Alert;
 			
 			public var newForms:Array = new Array;
-			public var DontAddAgain:Boolean = false;
-						
+			
 			[Bindable]
 			public var param:ArrayCollection= new ArrayCollection();
 			
-			public function init():void {
-				this.addEventListener(ComboSelectedEvent.COMBOSELECTEDEVENT,comboSelected);
-			}
-			
-			public function mainUpdateComplete():void {
-				addForm(advArray);
-				paramInit()
-			}
-			
-			public function paramChanged():void{
-				trace("paramchanged");
-				DontAddAgain = true;
+			public function paramChanged(event:Event):void{
 				dataHolder.parameters.clear();
 				for (var parameter in param) {
 					dataHolder.parameters.put(param[parameter].name, param[parameter].value);
 				}
 			}
 			public function paramInit():void {
-				trace("paraminit");
-			
-				//if (DontAddAgain == false) {
-				if (dataHolder !=null){
-					var parameters:HashMap = dataHolder.parameters;
-					for (var parameter in parameters) {
-						param.addItem({"name":parameter, "value":parameters[parameter]});
-					}
+				var parameters:HashMap = dataHolder.parameters;
+				for (var parameter in parameters) {
+					param.addItem({"name":parameter, "value":parameters[parameter]});
 				}
-				//}
 			}
 
 			public function new_click():void {
+				var newDev:Object = new Object();
+				newDev.name = "";
+				newDev.value = "";
+							
+				param.addItem({"name":"POLL_STRING2", "value":"Second poll\n"});
 				
-				param.addItem(getNextName());
 				callLater(focusNewRow);
-			}
-			public function getNextName():Object {
-				
-				for (n1 in mx.core.Application.application.rawConnections) {
-					if (dataHolder.parameters.containsKey(mx.core.Application.application.rawConnections[n1].label) == false) {
-						var ret:Object = {"name":mx.core.Application.application.rawConnections[n1].label, "value":mx.core.Application.application.rawConnections[n1].value};	
-						return ret;				
-					}
-				}
-				return {"name":"", "value":""};
 			}
 		
 			public function delete_click():void {
@@ -89,23 +64,17 @@
 			}
 			public function itemBegin(event:Event):void {
 				modifed = true;
-				trace ("begin:"+event.dataField+":"+event.toString());	
-			}
-			
-			public function comboSelected(event:ComboSelectedEvent):void {
-				param[dataG.selectedIndex].value = event.value;	
-				dataG.dataProvider = param;
-			}
-			
-			public function itemEnd(event:Event):void {
-				trace ("end"+event.toString());
+				trace ("begin:"+event.dataField+":"+event.toString());
+					
 				
+			}
+			public function itemEnd(event:Event):void {
+				trace (event.toString());
 				dataG.editable = false;	
-				//if (event.dataField == "name") {
-				//	param[dataG.selectedIndex].value = event.target.itemEditorInstance.dpValue[dataG.selectedIndex].value;
-				//	trace(event.target.itemEditorInstance.dpValue[dataG.selectedIndex].value);
-				//}	
-				trace(dataG.itemEditorInstance.data.value);	
+				if (event.dataField == "name") {
+					param[dataG.selectedIndex].value = event.target.itemEditorInstance.dpValue[dataG.selectedIndex].value;
+					trace("end"+ event.target.itemEditorInstance.dpValue[dataG.selectedIndex].value);
+				}
 					
 			}
 			private function fixProvider():void {
@@ -131,7 +100,7 @@
 		<mx:Label text="Parameters:"/>
 		<mx:VBox>
 			<mx:HBox  >
-				<mx:DataGrid change="paramChanged()" initialize="paramInit()" dataProvider="{param}" id="dataG" width="100%" height="100%" editable="false" itemEditEnd="itemEnd(event)" itemEditBegin="itemBegin(event)" itemClick="single_click(event)" itemDoubleClick="double_click(event)" doubleClickEnabled="true">
+				<mx:DataGrid updateComplete="paramInit()" dataProvider="{param}" id="dataG" width="100%" height="100%" editable="false" itemEditEnd="itemEnd(event)" itemEditBegin="itemBegin(event)" itemClick="single_click(event)" itemDoubleClick="double_click(event)" doubleClickEnabled="true">
 					<mx:columns>
 						<mx:DataGridColumn id="DDDT" dataField="name" headerText="Name" width="140" minWidth="130" editable="false"
 	                      itemEditor="Utils.Cellrenderers.RawConnectionMultilineComboBox" rendererIsEditor="false"  editorDataField="result" />   
