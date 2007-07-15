@@ -17,7 +17,10 @@ class ADVANTAGE_AIR extends GroovyModel {
 
 	String name = "ADVANTAGE_AIR"
 	String appendToSentStrings = "\n"
-
+	def FRESH = ""
+	def FILTER = ""
+	def IONISER = ""
+	def UV = ""
 	
 	ADVANTAGE_AIR () {
 		super()
@@ -56,24 +59,25 @@ class ADVANTAGE_AIR extends GroovyModel {
 
 					case "+FRE" :
 						logger.log (Level.FINE,"FRE received " + command )
-						def FRESH = ""
+
 						def freParm = partsOfCommand[1]
 						if (freParm == "NOT INSTALLED") FRESH = "NO" else FRESH = "YES"
 						// Colin: The above line needs to set a variable that can be checked for later to ensure
 						// we don't send commands to a non existing feature.
+						// CC:Moved to model wide scope; ie. not inside a particular method.
 					
 					case "+FIL" :
 						logger.log (Level.FINE,"FIL received " + command )
-						def FILTER = ""
-						def IONISER = ""
-						def UV = ""
+
 						def filParm = partsOfCommand[1].split(",")
 						// Check to see if the various things are installed
 						if (filParm[1] == "NOT INSTALLED") FILTER = "NO" else FILTER = "YES"
 						if (filParm[2] == "NOT INSTALLED") IONISER = "NO" else IONISER = "YES"
 						if (filParm[3] == "NOT INSTALLED") UV = "NO" else UV = "YES"
+						
 						// Colin: The above 3 lines needs to set a variable that can be checked for later to ensure
 						// we don't send commands to a non existing feature.
+						// Same principle as FRESH, it needs to be declared model wide.
 						
 					case "+ZST" :
 						logger.log (Level.FINE,"ZST received " + command )
@@ -246,8 +250,9 @@ class ADVANTAGE_AIR extends GroovyModel {
 		
 		// To set the HVAC fresh air mode requires a string "FRE=[MODE]"
 		if (command.getCommandCode() ==  "fresh") {
-			if (FRESH == YES) {
+			if (FRESH == "YES") {
 			// COLIN: Is this correct? Can I check a model wide variable like this?	
+			// CC: the var needs to be defined globally; ie. at the start.
 				switch (command.getExtraInfo() ) {
 				case "outside" :
 					returnWrapper.addCommOutput ("FRE=1")
@@ -271,45 +276,68 @@ class ADVANTAGE_AIR extends GroovyModel {
 		// with three seperatly controlled functions
 		// Also check if those functions are installed via the variables above
 		// Help required
+		// You're right, very complex - this is basically not possible, for obvious reasons, if you don't know if something exists you can't decide whether to send it info.
+		// the only way to do it; any time you receive one of the commands , run through a process similar to below.
+		def tryToSendFilter = false
 		
 		if (command.getCommandCode() ==  "filter") {
+			tryToSendFilter = true
+			
 			switch (command.getExtraInfo() ) {
 			case "filter" :
 				returnWrapper.addCommOutput ("FIL=1")
+				FILTER = "YES"
 				break;
+				
 			case "ioniser" :
 				returnWrapper.addCommOutput ("FIL=2")
+				IONISER = "YES"
 				break;
+				
 			case "uv" :
 				returnWrapper.addCommOutput ("FIL=4")
+				UV = "YES"
 				break;
 			default :
 				logger.log (Level.WARNING,"Invalid filter air HVAC Mode " + command )
+			}
+		}
+		
+		if (tryToSendFilter ){
+			if (FIL != "" && IONISER != "" && UV != ""){
+				// all have been defined, so build and send the string. Otherwise can't send anything until we know all the states.
+				// 				returnWrapper.addCommOutput ("Filter=" + FIL + ",Ioniser" ....
+				// can't tell from the logic above how you can tell if each filter (uv,ion,filter) is on or off.
+				
 			}
 		}
 
 	}
 
 	void buildThermostatControlString (Thermostat device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
-		
-		// Zone Temperature Set Point requires a string "ZSE=[ZoneNumber],[ZoneMode],[Setting]"
-		if (command.getCommandCode() ==  "set") {
-			def setPoint = setPointStr.toInteger() * 100
-			returnWrapper.addCommOutput  ("ZSE" + device.getKey() + ",1," + setPoint)
-		}
-		
-		// Zone set to Manual and Open requires a string "ZSE=[ZoneNumber],2,1"
-		if (command.getCommandCode() ==  "position") {
-			switch (command.getExtraInfo() ) {
-			case "open" :
-				returnWrapper.addCommOutput ("ZSE" + device.getKey() + ",2,1")
-				break;
-			case "closed" :
-				returnWrapper.addCommOutput ("ZSE" + device.getKey() + ",2,0")
-				break;
-			default :
-				logger.log (Level.WARNING,"Invalid HVAC zone position " + command )
+		try {
+			// Zone Temperature Set Point requires a string "ZSE=[ZoneNumber],[ZoneMode],[Setting]"
+			if (command.getCommandCode() ==  "set") {
+				def setPointStr = command.getExtraInfo()
+				def setPoint = setPointStr.toInteger() * 100
+				returnWrapper.addCommOutput  ("ZSE" + device.getKey() + ",1," + setPoint)
 			}
+			
+			// Zone set to Manual and Open requires a string "ZSE=[ZoneNumber],2,1"
+			if (command.getCommandCode() ==  "position") {
+				switch (command.getExtraInfo() ) {
+				case "open" :
+					returnWrapper.addCommOutput ("ZSE" + device.getKey() + ",2,1")
+					break;
+				case "closed" :
+					returnWrapper.addCommOutput ("ZSE" + device.getKey() + ",2,0")
+					break;
+				default :
+					logger.log (Level.WARNING,"Invalid HVAC zone position " + command )
+				}
+			}
+		} catch (NumberFormatException ex){
+			logger.log (Level.WARNING,"An invalid temperature was received " + command.getExtraInfo())
 		}
 	}
 }
