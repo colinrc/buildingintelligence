@@ -61,6 +61,26 @@ class ADVANTAGE_AIR extends GroovyModel {
 						logger.log (Level.FINE,"FRE received " + command )
 
 						def freParm = partsOfCommand[1]
+						
+						switch (freParm) {
+						case "NOT INSTALLED" :
+							FRESH = "NO"
+							break;
+						case "1" :
+						    FRESH = "YES"
+						    returnWrapper.addFlashCommand (hvacUnit,  "fresh", "outside" )
+						    break;
+						case "2" :
+						    FRESH = "YES"
+						    returnWrapper.addFlashCommand (hvacUnit,  "fresh", "recirc" )
+						    break;
+						case "4" :
+						    FRESH = "YES"
+						    returnWrapper.addFlashCommand (hvacUnit,  "fresh", "auto" )
+						    break;
+						}                             
+						                             
+						                             
 						if (freParm == "NOT INSTALLED") FRESH = "NO" else FRESH = "YES"
 						// Colin: The above line needs to set a variable that can be checked for later to ensure
 						// we don't send commands to a non existing feature.
@@ -71,13 +91,48 @@ class ADVANTAGE_AIR extends GroovyModel {
 
 						def filParm = partsOfCommand[1].split(",")
 						// Check to see if the various things are installed
-						if (filParm[1] == "NOT INSTALLED") FILTER = "NO" else FILTER = "YES"
-						if (filParm[2] == "NOT INSTALLED") IONISER = "NO" else IONISER = "YES"
-						if (filParm[3] == "NOT INSTALLED") UV = "NO" else UV = "YES"
 						
-						// Colin: The above 3 lines needs to set a variable that can be checked for later to ensure
-						// we don't send commands to a non existing feature.
-						// Same principle as FRESH, it needs to be declared model wide.
+						switch (filParm[1]) {
+						case "NOT INSTALLED" :
+							FILTER = "NO"
+							break;
+						case "1" :
+							FILTER = "YES"
+							returnWrapper.addFlashCommand (hvacUnit,  "filter", "on" )
+							break;
+						case "0" :
+							FILTER = "YES"
+							returnWrapper.addFlashCommand (hvacUnit,  "filter", "off" )
+							break;
+						}
+						
+						switch (filParm[2]) {
+						case "NOT INSTALLED" :
+							IONISER = "NO"
+							break;
+						case "1" :
+							IONISER = "YES"
+							returnWrapper.addFlashCommand (hvacUnit,  "ioniser", "on" )
+							break;
+						case "0" :
+							IONISER = "YES"
+							returnWrapper.addFlashCommand (hvacUnit,  "ioniser", "off" )
+							break;
+						}
+						
+						switch (filParm[3]) {
+						case "NOT INSTALLED" :
+							UV = "NO"
+							break;
+						case "1" :
+							UV = "YES"
+							returnWrapper.addFlashCommand (hvacUnit,  "uv", "on" )
+							break;
+						case "0" :
+							UV = "YES"
+							returnWrapper.addFlashCommand (hvacUnit,  "uv", "off" )
+							break;
+						}
 						
 					case "+ZST" :
 						logger.log (Level.FINE,"ZST received " + command )
