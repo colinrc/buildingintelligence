@@ -52,4 +52,5 @@ class RTI_IR extends GroovyModel {
 				logger.log (Level.WARNING,"The string from RTI was incorrectly formatted " + command)
 			}
 	}
+}
 
