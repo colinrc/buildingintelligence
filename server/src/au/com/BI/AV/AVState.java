@@ -8,6 +8,7 @@ public class AVState {
 	boolean power = false;
 	boolean ext_mute = false;
 	boolean group_on = false;
+	boolean loudness = false;
 	
 	public String getVolume() {
 		return volume;
@@ -111,5 +112,13 @@ public class AVState {
 
 	public void setGroup_on(boolean group_on,int groupNumber) {
 		this.group_on = group_on;
+	}
+
+	public boolean isLoudness() {
+		return loudness;
+	}
+
+	public void setLoudness(boolean loudness) {
+		this.loudness = loudness;
 	}
 }

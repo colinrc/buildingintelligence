@@ -114,7 +114,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
 	    	String key = audioDevice.getKey();
 			if (!key.equals(Model.AllZones)) {
-				String zoneRequest = "*Z"+ audioDevice.getKey()+ "CONSR\r";
+				String zoneRequest = "";
+				if (protocol == Protocols.Standard){
+					 zoneRequest = "*Z"+ audioDevice.getKey()+ "CONSR\r";
+				} else {
+					 zoneRequest = "*Z"+ audioDevice.getKey()+ "STATUS?\r";					
+				}
 
 				synchronized (comms){
 					try { 
@@ -195,25 +200,70 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		
 		try {
-			String key = nuvoCmd.substring(2, 4);
-			
-			DeviceType audioDevice = configHelper.getControlledItem(key);
-			
-			if (audioDevice == null){
-				commandFound = true;
-				// The zone is not configured
-			}
-			
-			if (!commandFound && nuvoCmd.contains("PWR")){
-				// #ZxxPWRppp,SRCs,GRPt,VOL-yy
-				result = interpretZoneStatus (nuvoCmd,audioDevice);			
 
+			
+			if (!commandFound && nuvoCmd.contains("PWR")  ){
+				// standard = #ZxxPWRppp,SRCs,GRPt,VOL-yy
+				 String key = nuvoCmd.substring(2, 4);
+			
+				 DeviceType audioDevice = configHelper.getControlledItem(key);
+					commandFound = true;
+				if (audioDevice == null){
+					logger.log (Level.INFO,"A command was issued from NuVo for a zone that has not been configured " + key);
+						// The zone is not configured
+					} else {					
+
+						result = interpretZoneStatus (nuvoCmd,audioDevice);			
+					}
 			}
-			if (!commandFound && nuvoCmd.contains("BASS")){
-				// #ZxxORp,BASSyy,TREByy,GRPq,VRSTr
-				result = interpretZoneSetStatus (nuvoCmd,audioDevice);			
+			
+			if (!commandFound && protocol == Protocols.GrandConcerto && nuvoCmd.contains("LOCK")   ){
+				// gc= RSP #Z1,ON,SRC4,VOL60,DND0,LOCK0 Ð POWER ON   or 
+				//                 #Z1,OFF                      - POWER OFF 
+				String []partsOfCmd = nuvoCmd.split (",");
+				String key = partsOfCmd[0].substring(2);
+					
+				 DeviceType audioDevice = configHelper.getControlledItem(key);
+				if (audioDevice == null){
+					result = interpretGCZoneStatus (partsOfCmd, audioDevice);					
+				} else {
+					logger.log (Level.INFO,"A command was issued from NuVo for a zone that has not been configured " + key);					
+				}
 			}
-	
+			
+			if (!commandFound && protocol == Protocols.Standard && nuvoCmd.contains("BASS")){
+				// standard =  #ZxxORp,BASSyy,TREByy,GRPq,VRSTr
+				
+				 String key = nuvoCmd.substring(2, 4);
+					
+				 DeviceType audioDevice = configHelper.getControlledItem(key);
+				commandFound = true;
+				if (audioDevice == null){
+						logger.log (Level.INFO,"A command was issued from NuVo for a zone that has not been configured " + key);
+						// The zone is not configured
+					} else {					
+
+							result = interpretZoneSetStatus (nuvoCmd,audioDevice);			
+					}
+			}
+
+			if (!commandFound && protocol == Protocols.GrandConcerto && nuvoCmd.contains("BASS")){
+				// gc = #ZCFG1,BASS0,TREB0,BALC,LOUDCMP0 
+				
+				String []partsOfCmd = nuvoCmd.split (",");
+				String key = partsOfCmd[0].substring(5);
+					
+				 DeviceType audioDevice = configHelper.getControlledItem(key);
+				if (audioDevice == null){
+					logger.log (Level.INFO,"A command was issued from NuVo for a zone that has not been configured " + key);
+						// The zone is not configured
+				} else {					
+
+							result = interpretGCEQStatus (partsOfCmd,audioDevice);			
+				}
+				commandFound = true;
+			}
+			
 		} catch (IndexOutOfBoundsException ex){
 			logger.log (Level.INFO,"Nuvo returned an incorrectly formatted string " + nuvoCmd);
 		} catch ( NumberFormatException ex2) {
@@ -252,8 +302,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public ReturnWrapper  interpretZoneStatus (String zoneStatus,DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
 		ReturnWrapper returnCode = new ReturnWrapper();
 		
-		// #ZxxPWRppp,SRCs,GRPt,VOL-yy
-		
+		// standard = #ZxxPWRppp,SRCs,GRPt,VOL-yy
 		String[] bits = zoneStatus.split(",");
 		
 		String power =bits[0].substring(7);
@@ -339,6 +388,60 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		return returnCode;
 	}
 
+	
+	public ReturnWrapper  interpretGCZoneStatus (String zoneStatus[],DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
+		ReturnWrapper returnCode = new ReturnWrapper();
+		
+		// gc = #Z1,ON,SRC4,VOL60,DND0,LOCK0 
+		
+		
+		String power =zoneStatus[1];
+		AVState currentState = state.get (audioDevice.getKey());
+		if (power.equals("ON") && !currentState.isPower()) {
+			returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "on","","","","","",0));
+			currentState.setPower(true);
+		}
+		if (power.equals("OFF") && currentState.isPower()) {
+			returnCode.addFlashCommand(buildCommandForFlash (audioDevice, "off","","","","","",0));
+			currentState.setPower (false);
+		}
+		
+		if (zoneStatus.length >1) {
+			String srcStr = zoneStatus[2].substring(3);
+			String volStr = zoneStatus[3].substring(3);
+	
+			int src = Integer.parseInt(srcStr);
+				
+			if (src != currentState.getSrc()){
+				try {
+					String newSrc = findKeyForParameterValue(srcStr, "AUDIO_INPUTS",audioDevice);
+					returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "src",newSrc,"","","","",0));
+					currentState.setSrc(src);
+				} catch (ParameterException ex){
+					logger.log (Level.WARNING,ex.getMessage());
+				}
+			}
+			if (volStr.equals ("MUTE")){
+				returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","on","","","","",0));
+				currentState.setMute(true);
+			} else {
+					if (currentState.isMute()){
+						currentState.setMute(false);
+						returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","off","","","","",0));					
+					}
+					int volForFlash = Utility.scaleForFlash(volStr, -79,0, false);
+					if (!currentState.testVolume(volForFlash)){				
+						String volForFlashStr = String.valueOf(volForFlash);
+						currentState.setVolume (String.valueOf(volForFlashStr));
+						returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "volume",volForFlashStr,"","","","",0));					
+					}				
+			}				
+		}
+		
+		return returnCode;
+	}
+	
+	
 	public ReturnWrapper  interpretZoneSetStatus (String zoneStatus,DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
 		ReturnWrapper returnCode = new ReturnWrapper();
 		
@@ -360,8 +463,42 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		return returnCode;
 	}
 
+	public ReturnWrapper  interpretGCEQStatus (String zoneStatus[],DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
+		ReturnWrapper returnCode = new ReturnWrapper();
+		
+		// #ZCFG1,BASS0,TREB0,BALC,LOUDCMP0 
 
-	
+		String bass = zoneStatus[1].substring(4);
+		String treble = zoneStatus[2].substring(4);
+		String loud = zoneStatus[4].substring(7);
+
+		int trebForFlash = Utility.scaleForFlash(treble, -18, 18, true);
+		String trebForFlashStr = String.valueOf(trebForFlash);
+		returnCode.addFlashCommand(buildCommandForFlash( audioDevice, "treble",trebForFlashStr,"","","","",0));					
+		
+		int bassForFlash = Utility.scaleForFlash(bass, -18, 18, true);
+		String bassForFlashStr = String.valueOf(bassForFlash);
+		returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "bass",bassForFlashStr,"","","","",0));
+
+		AVState currentState = state.get(audioDevice.getKey());
+		boolean alwaysUpdateState = false;
+		if (currentState == null){
+			currentState = new AVState();
+			state.put(audioDevice.getKey(), currentState);
+			alwaysUpdateState = true;
+		}
+
+		if (loud.equals ("0") && (alwaysUpdateState || currentState.isLoudness())){
+			currentState.setLoudness(false);
+			returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "loud","off","","","","",0));			
+		}
+		if (loud.equals ("1") && (alwaysUpdateState || !currentState.isLoudness())){
+			currentState.setLoudness(true);
+			returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "loud","on","","","","",0));			
+		}
+		return returnCode;
+	}
+
 	public ReturnWrapper buildAudioString (Audio device, CommandInterface command){
 		ReturnWrapper returnVal = new ReturnWrapper();
 		String key = device.getKey();
@@ -438,6 +575,20 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				currentState.setGroup_on(false,0);
 				this.removeFromGroup(key);
 				logger.log (Level.FINE,"Zone " + key + " removed from the source group");	
+			}
+		}
+		
+		
+		if (!commandFound && theCommand.equals("loud")) {
+			commandFound = true;
+			if (extra.equals ("on")){
+				currentState.setLoudness(true);
+				returnVal.addCommOutput(String.format("*ZCFG"+key+"LOUDCMP1"));				
+				logger.log (Level.FINE,"Zone " + key + " had loudness set on");	
+			}  else {
+				currentState.setLoudness(false);
+				returnVal.addCommOutput(String.format("*ZCFG"+key+"LOUDCMP0"));				
+				logger.log (Level.FINE,"Zone " + key + " had loudness set on");	
 			}
 		}
 			

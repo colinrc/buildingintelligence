@@ -25,7 +25,7 @@ public class Unit extends BaseDevice implements DeviceType
 	}
 	public int getDeviceType ()
 	{
-		return DeviceType.AUDIO;
+		return DeviceType.UNIT;
 	}
 
 
