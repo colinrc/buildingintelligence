@@ -5,11 +5,16 @@ The protocol should be set in the parameters; the default if this is not present
 
 <ITEM NAME="PROTOCOL" VALUE="GC"/>
 
-Groups are not directly supported, however the status should ensure all zones that have been added to groups are correctly displayed.
+Groups and joined zones are not directly supported, however status updates should ensure all zones are correctly displayed.
 
 Concerto commands for audio control have been added;
    COMMAND="play/pause" | "prev"  | "next"
+
+Commands for loudness has been added
+   COMMAND="loud" EXTRA="on|off"
+   
 No playlist support is present.
+
 
 
 ''' Models  '''
@@ -17,6 +22,13 @@ No playlist support is present.
 Added convenience methods addCommandForFlash to the ReturnWrapper object. 
 Added a general type to handle units...   buildUnitControlString ()    the type is DeviceType.UNIT
 
+Added access methods for the cache
+
+* Object getCommand(String key)
+* Object getValue(String key)
+* Object getValue(int extraVal, String key)
+* Object getLastAccessTime(String key)   (time in ms since epoch)
+* Object getLastAccessTimeDuration(String key, String interval)   interval = minute | hour | day 
 
 == 4/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b60zip V1.6b60]  [attachment:wiki:SoftwareReleases:eLife-1.6b60-libs.zip Libs-V1.6b60] ==
 
