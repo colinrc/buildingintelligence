@@ -38,7 +38,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 		def theDeviceList = configHelper.getAllControlledDeviceObjects ()
 		for (i in theDeviceList){
 			
-			if (i.getDeviceType() == DeviceType.THERMOSTAT && i.getKey() != 0){
+			if (i.getDeviceType() == DeviceType.THERMOSTAT) {
 				returnWrapper.addCommOutput  ("ZST=" + i.getKey() )
 			}
 		}
@@ -50,15 +50,16 @@ class ADVANTAGE_AIR extends GroovyModel {
 
 			try {
 				def theCommand = partsOfCommand[0]
+				def hvacUnit = configHelper.getControlledItem (0)
 				switch (theCommand) {
 					case "OK":
-						// The last command has been acknowledged by the device so now send the next one
+						logger.log (Level.FINE,"OK received " + command )
 						comms.acknowledgeCommand("")
 						comms.sendNextCommand()
 						break;
 
 					case "+FRE" :
-						logger.log (Level.FINE,"FRE received " + command )
+						logger.log (Level.FINE,"+FRE received " + command )
 
 						def freParm = partsOfCommand[1]
 						
@@ -80,17 +81,13 @@ class ADVANTAGE_AIR extends GroovyModel {
 						    break;
 						}                             
 						                             
-						                             
-						if (freParm == "NOT INSTALLED") FRESH = "NO" else FRESH = "YES"
-						// Colin: The above line needs to set a variable that can be checked for later to ensure
-						// we don't send commands to a non existing feature.
-						// CC:Moved to model wide scope; ie. not inside a particular method.
-					
+
 					case "+FIL" :
-						logger.log (Level.FINE,"FIL received " + command )
+						logger.log (Level.FINE,"+FIL received " + command )
 
 						def filParm = partsOfCommand[1].split(",")
 						// Check to see if the various things are installed
+						// Populate cache if they are present
 						
 						switch (filParm[1]) {
 						case "NOT INSTALLED" :
@@ -135,7 +132,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 						}
 						
 					case "+ZST" :
-						logger.log (Level.FINE,"ZST received " + command )
+						logger.log (Level.FINE,"+ZST received " + command )
 						def zstParm = partsOfCommand[1].split(",")
 						def temperatureSensor = configHelper.getControlledItem (zstParm[0])
 						if (temperatureSensor != null )
@@ -157,7 +154,6 @@ class ADVANTAGE_AIR extends GroovyModel {
 							def currentTempStr = zstParm[4]
 							def currentTemp = currentTempStr.toInteger() / 100
 							
-							//returnWrapper.addFlashCommand(temperatureSensor,"on",currentTemp.toString(),zoneMode,zonePosition,setPoint.toString())
 							returnWrapper.addFlashCommand (temperatureSensor,  "mode", zoneMode )
 							returnWrapper.addFlashCommand (temperatureSensor,  "position", zonePosition )
 							returnWrapper.addFlashCommand (temperatureSensor,  "set", setPoint )
@@ -166,7 +162,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 						break
 						
 					case "+SYS" :
-						logger.log (Level.FINE,"SYS received " + command )
+						logger.log (Level.FINE,"+SYS received " + command )
 						def sysParm = partsOfCommand[1].split(",")
 						
 						def sysStatus = ""
@@ -224,7 +220,8 @@ class ADVANTAGE_AIR extends GroovyModel {
 							sysFresh = "auto"
 							break;
 						}
-							
+						
+						// TODO: Check what comes back if these options are not present
 						// Deal with the Filter Modes
 						if (sysParm[5] == "1") sysFilter = "on" else sysFilter = "off"
 							
@@ -243,7 +240,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 						returnWrapper.addFlashCommand (hvacUnit,  "uv", sysUV )
 						break
 					default:
-					logger.log (Level.WARNING,"An unknown command was sent from the Advantage Air controller" )
+					logger.log (Level.WARNING,"An unknown command was sent from the Advantage Air controller " + command)
 				}			
 			} catch (IndexOutOfBoundsException ex) {
 				logger.log (Level.WARNING,"The string from Advantage Air was incorrectly formatted " + command)
@@ -254,8 +251,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 
 
 	void buildUnitControlString (Unit device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
-	// Colin: As discussed can we add a generic UNIT item to allow for system wide settings and control
-	
+
 		// To switch on the HVAC system requires a string "SRU=1"
 		if (command.getCommandCode() == "on") {
 			returnWrapper.addCommOutput ("SRU=1")
@@ -306,8 +302,6 @@ class ADVANTAGE_AIR extends GroovyModel {
 		// To set the HVAC fresh air mode requires a string "FRE=[MODE]"
 		if (command.getCommandCode() ==  "fresh") {
 			if (FRESH == "YES") {
-			// COLIN: Is this correct? Can I check a model wide variable like this?	
-			// CC: the var needs to be defined globally; ie. at the start.
 				switch (command.getExtraInfo() ) {
 				case "outside" :
 					returnWrapper.addCommOutput ("FRE=1")
@@ -325,48 +319,58 @@ class ADVANTAGE_AIR extends GroovyModel {
 			else
 				logger.log (Level.WARNING,"Command for non-installed Fresh Air Unit received " + command )
 			}
-		
 		// To set the HVAC filter mode requires a string "FIL=[FilterON/OFF],[IoniserON/OFF],[UVLightON/OFF]"
-		// Colin: This following system is very complex. We need to send a single command to the HVAC
-		// with three seperatly controlled functions
-		// Also check if those functions are installed via the variables above
-		// Help required
-		// You're right, very complex - this is basically not possible, for obvious reasons, if you don't know if something exists you can't decide whether to send it info.
-		// the only way to do it; any time you receive one of the commands , run through a process similar to below.
-		def tryToSendFilter = false
-		
 		if (command.getCommandCode() ==  "filter") {
-			tryToSendFilter = true
-			
-			switch (command.getExtraInfo() ) {
-			case "filter" :
-				returnWrapper.addCommOutput ("FIL=1")
-				FILTER = "YES"
-				break;
-				
-			case "ioniser" :
-				returnWrapper.addCommOutput ("FIL=2")
-				IONISER = "YES"
-				break;
-				
-			case "uv" :
-				returnWrapper.addCommOutput ("FIL=4")
-				UV = "YES"
-				break;
-			default :
-				logger.log (Level.WARNING,"Invalid filter air HVAC Mode " + command )
+			if (FILTER == "YES") {
+				switch (command.getExtraInfo() ) {
+				case "on" :
+					returnWrapper.addCommOutput ("FIL=1,getcacheIon,getcacheUV")
+					break;
+				case "off" :
+					returnWrapper.addCommOutput ("FIL=0,getcacheIon,getcacheUV")
+					break;
+				default :
+					logger.log (Level.WARNING,"Invalid filter command " + command )
+				}
 			}
-		}
+			else
+				logger.log (Level.WARNING,"Command for non-installed Filter Unit received " + command )
+			}
 		
-		if (tryToSendFilter ){
-			if (FIL != "" && IONISER != "" && UV != ""){
-				// all have been defined, so build and send the string. Otherwise can't send anything until we know all the states.
-				// 				returnWrapper.addCommOutput ("Filter=" + FIL + ",Ioniser" ....
-				// can't tell from the logic above how you can tell if each filter (uv,ion,filter) is on or off.
-				
+		if (command.getCommandCode() ==  "ioniser") {
+			if (IONISER == "YES") {
+				switch (command.getExtraInfo() ) {
+				case "on" :
+					returnWrapper.addCommOutput ("FIL=getcacheFIL,1,getcacheUV")
+					break;
+				case "off" :
+					returnWrapper.addCommOutput ("FIL=getcacheFIL,0,getcacheUV")
+					break;
+				default :
+					logger.log (Level.WARNING,"Invalid ioniser command " + command )
+				}
+			}
+			else
+				logger.log (Level.WARNING,"Command for non-installed Ioniser Unit received " + command )
+			}
+		
+		if (command.getCommandCode() ==  "uv") {
+			if (UV == "YES") {
+				switch (command.getExtraInfo() ) {
+				case "on" :
+					returnWrapper.addCommOutput ("FIL=getcacheFIL,getcacheIon,1")
+					break;
+				case "off" :
+					returnWrapper.addCommOutput ("FIL=getcacheFIL,getcacheIon,0")
+					break;
+				default :
+					logger.log (Level.WARNING,"Invalid uv command " + command )
+				}
+			}
+			else
+				logger.log (Level.WARNING,"Command for non-installed UV Unit received " + command )
 			}
 		}
-
 	}
 
 	void buildThermostatControlString (Thermostat device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
@@ -394,5 +398,4 @@ class ADVANTAGE_AIR extends GroovyModel {
 		} catch (NumberFormatException ex){
 			logger.log (Level.WARNING,"An invalid temperature was received " + command.getExtraInfo())
 		}
-	}
 }
