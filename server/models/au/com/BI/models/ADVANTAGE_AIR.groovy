@@ -12,9 +12,8 @@ import au.com.BI.Thermostat.Thermostat
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-
 class ADVANTAGE_AIR extends GroovyModel {
-
+	
 	String name = "ADVANTAGE_AIR"
 	String appendToSentStrings = "\n"
 	def FRESH = ""
@@ -250,6 +249,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 	}
 
 
+
 	void buildUnitControlString (Unit device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 
 		// To switch on the HVAC system requires a string "SRU=1"
@@ -371,7 +371,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 				logger.log (Level.WARNING,"Command for non-installed UV Unit received " + command )
 			}
 		}
-	}
+
 
 	void buildThermostatControlString (Thermostat device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 		try {
@@ -398,4 +398,5 @@ class ADVANTAGE_AIR extends GroovyModel {
 		} catch (NumberFormatException ex){
 			logger.log (Level.WARNING,"An invalid temperature was received " + command.getExtraInfo())
 		}
+	}
 }
