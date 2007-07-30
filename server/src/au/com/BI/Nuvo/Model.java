@@ -69,6 +69,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		initState ();
 	}
 	
+	public boolean doIPHeartbeat () { 
+		return false; 
+	}
+	
 	public void initState () {
 	    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
 	    	String key = audioDevice.getKey(); 
@@ -98,7 +102,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	    	String key = audioDevice.getKey();
 			if (!key.equals(Model.AllZones)) {
 
-				String toneRequest = "*Z"+ audioDevice.getKey()+ "SETSR\r";
+				String toneRequest = "";
+				
+				if (protocol == Protocols.GrandConcerto){ 
+					toneRequest = "*ZCFG"+ audioDevice.getKey()+ "EQ\r";
+				} else {
+					toneRequest = "*Z"+ audioDevice.getKey()+ "SETSR\r";					
+				}
 				
 				synchronized (comms){
 					try { 
@@ -206,7 +216,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				// standard = #ZxxPWRppp,SRCs,GRPt,VOL-yy
 				 String key = nuvoCmd.substring(2, 4);
 			
-				 DeviceType audioDevice = configHelper.getControlledItem(key);
+				 DeviceType audioDevice = configHelper.getControlledItem(formatKey(key,null));
 					commandFound = true;
 				if (audioDevice == null){
 					logger.log (Level.INFO,"A command was issued from NuVo for a zone that has not been configured " + key);
@@ -217,14 +227,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					}
 			}
 			
-			if (!commandFound && protocol == Protocols.GrandConcerto && nuvoCmd.contains("LOCK")   ){
+			if (!commandFound && protocol == Protocols.GrandConcerto && ( nuvoCmd.contains("LOCK")  || nuvoCmd.contains(",OFF" ))){
 				// gc= RSP #Z1,ON,SRC4,VOL60,DND0,LOCK0 Ð POWER ON   or 
 				//                 #Z1,OFF                      - POWER OFF 
 				String []partsOfCmd = nuvoCmd.split (",");
 				String key = partsOfCmd[0].substring(2);
 					
-				 DeviceType audioDevice = configHelper.getControlledItem(key);
-				if (audioDevice == null){
+				 DeviceType audioDevice = configHelper.getControlledItem(formatKey(key,null));
+				if (audioDevice != null){
 					result = interpretGCZoneStatus (partsOfCmd, audioDevice);					
 				} else {
 					logger.log (Level.INFO,"A command was issued from NuVo for a zone that has not been configured " + key);					
@@ -236,7 +246,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				
 				 String key = nuvoCmd.substring(2, 4);
 					
-				 DeviceType audioDevice = configHelper.getControlledItem(key);
+				 DeviceType audioDevice = configHelper.getControlledItem(formatKey(key,null));
 				commandFound = true;
 				if (audioDevice == null){
 						logger.log (Level.INFO,"A command was issued from NuVo for a zone that has not been configured " + key);
@@ -253,7 +263,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				String []partsOfCmd = nuvoCmd.split (",");
 				String key = partsOfCmd[0].substring(5);
 					
-				 DeviceType audioDevice = configHelper.getControlledItem(key);
+				 DeviceType audioDevice = configHelper.getControlledItem(formatKey(key,null));
 				if (audioDevice == null){
 					logger.log (Level.INFO,"A command was issued from NuVo for a zone that has not been configured " + key);
 						// The zone is not configured
@@ -276,7 +286,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void addToGroup (String newKey){
 		srcGroup.add(newKey);
 		for (String eachkey: srcGroup){
-			AVState stateOfGroupItem = state.get(eachkey);
+			AVState stateOfGroupItem = getState(eachkey);
 			if (stateOfGroupItem != null){
 				stateOfGroupItem.setSrc(0); 
 				// Ensure the entire group has state nulled, so that any new source selection will be sent to the new group member
@@ -306,7 +316,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String[] bits = zoneStatus.split(",");
 		
 		String power =bits[0].substring(7);
-		AVState currentState = state.get (audioDevice.getKey());
+		AVState currentState = getState (audioDevice.getKey());
 		if (power.equals("ON") && !currentState.isPower()) {
 			returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "on","","","","","",0));
 			currentState.setPower(true);
@@ -338,7 +348,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				currentState.setGroup_on(false,0);
 			}
 	
-			if (src != currentState.getSrc()){
+			if (!currentState.testSrc( src)) {
 				try {
 					String newSrc = findKeyForParameterValue(srcStr, "AUDIO_INPUTS",audioDevice);
 					returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "src",newSrc,"","","","",0));
@@ -392,50 +402,54 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public ReturnWrapper  interpretGCZoneStatus (String zoneStatus[],DeviceType audioDevice) throws IndexOutOfBoundsException,NumberFormatException {
 		ReturnWrapper returnCode = new ReturnWrapper();
 		
-		// gc = #Z1,ON,SRC4,VOL60,DND0,LOCK0 
+		// gc = #Z1,ON,SRC4,VOL60,DND0,LOCK0 ,  #Z1,OFF 
 		
 		
 		String power =zoneStatus[1];
-		AVState currentState = state.get (audioDevice.getKey());
-		if (power.equals("ON") && !currentState.isPower()) {
-			returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "on","","","","","",0));
-			currentState.setPower(true);
-		}
-		if (power.equals("OFF") && currentState.isPower()) {
-			returnCode.addFlashCommand(buildCommandForFlash (audioDevice, "off","","","","","",0));
-			currentState.setPower (false);
-		}
-		
-		if (zoneStatus.length >1) {
-			String srcStr = zoneStatus[2].substring(3);
-			String volStr = zoneStatus[3].substring(3);
-	
-			int src = Integer.parseInt(srcStr);
-				
-			if (src != currentState.getSrc()){
-				try {
-					String newSrc = findKeyForParameterValue(srcStr, "AUDIO_INPUTS",audioDevice);
-					returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "src",newSrc,"","","","",0));
-					currentState.setSrc(src);
-				} catch (ParameterException ex){
-					logger.log (Level.WARNING,ex.getMessage());
-				}
+		AVState currentState = getState (audioDevice.getKey());
+		if (power.equals("OFF")) {
+			if (!currentState.testPower(false)) {
+				returnCode.addFlashCommand(buildCommandForFlash (audioDevice, "off","","","","","",0));
+				currentState.setPower (false);
 			}
-			if (volStr.equals ("MUTE")){
-				returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","on","","","","",0));
-				currentState.setMute(true);
-			} else {
-					if (currentState.isMute()){
-						currentState.setMute(false);
-						returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","off","","","","",0));					
+		} else {
+			if (power.equals("ON") && !currentState.testPower(true)) {
+				returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "on","","","","","",0));
+				currentState.setPower(true);
+			}
+	
+			
+			if (zoneStatus.length >1) {
+				String srcStr = zoneStatus[2].substring(3);
+				String volStr = zoneStatus[3].substring(3);
+		
+				int src = Integer.parseInt(srcStr);
+					
+				if (!currentState.testSrc( src)){
+					try {
+						String newSrc = findKeyForParameterValue(srcStr, "AUDIO_INPUTS",audioDevice);
+						returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "src",newSrc,"","","","",0));
+						currentState.setSrc(src);
+					} catch (ParameterException ex){
+						logger.log (Level.WARNING,ex.getMessage());
 					}
-					int volForFlash = Utility.scaleForFlash(volStr, -79,0, false);
-					if (!currentState.testVolume(volForFlash)){				
-						String volForFlashStr = String.valueOf(volForFlash);
-						currentState.setVolume (String.valueOf(volForFlashStr));
-						returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "volume",volForFlashStr,"","","","",0));					
-					}				
-			}				
+				}
+				if (volStr.equals ("MUTE")){
+					returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","on","","","","",0));
+					currentState.setMute(true);
+				} else {
+						if (currentState.isMute()){
+							currentState.setMute(false);
+							returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "mute","off","","","","",0));					
+						}
+						int volForFlash = Utility.scaleForFlash(volStr, 0,79, true);
+						if (!currentState.testVolume(volForFlash)){				
+							String volForFlashStr = String.valueOf(volForFlash);
+							currentState.setVolume (String.valueOf(volForFlashStr));
+							returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "volume",volForFlashStr,"","","","",0));					
+						}				
+				}				
+			}
 		}
 		
 		return returnCode;
@@ -471,40 +485,50 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String bass = zoneStatus[1].substring(4);
 		String treble = zoneStatus[2].substring(4);
 		String loud = zoneStatus[4].substring(7);
-
-		int trebForFlash = Utility.scaleForFlash(treble, -18, 18, true);
-		String trebForFlashStr = String.valueOf(trebForFlash);
-		returnCode.addFlashCommand(buildCommandForFlash( audioDevice, "treble",trebForFlashStr,"","","","",0));					
 		
-		int bassForFlash = Utility.scaleForFlash(bass, -18, 18, true);
-		String bassForFlashStr = String.valueOf(bassForFlash);
-		returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "bass",bassForFlashStr,"","","","",0));
+		AVState currentState = getState (audioDevice.getKey()); 
 
-		AVState currentState = state.get(audioDevice.getKey());
-		boolean alwaysUpdateState = false;
-		if (currentState == null){
-			currentState = new AVState();
-			state.put(audioDevice.getKey(), currentState);
-			alwaysUpdateState = true;
+		int trebForFlash = Utility.scaleForFlash(treble, -18, 18, false);
+		if (!currentState.testTreble(trebForFlash)) {
+			String trebForFlashStr = String.valueOf(trebForFlash);
+			returnCode.addFlashCommand(buildCommandForFlash( audioDevice, "treble",trebForFlashStr,"","","","",0));					
+			currentState.setTreble(trebForFlash);
 		}
 
-		if (loud.equals ("0") && (alwaysUpdateState || currentState.isLoudness())){
+		int bassForFlash = Utility.scaleForFlash(bass, -18, 18, false);
+		if (!currentState.testBass(bassForFlash)) {
+			String bassForFlashStr = String.valueOf(bassForFlash);
+			currentState.setBass(bassForFlash);
+			returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "bass",bassForFlashStr,"","","","",0));
+		}
+
+		if (loud.equals ("0") && !currentState.testLoudness (false)){
 			currentState.setLoudness(false);
 			returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "loud","off","","","","",0));			
 		}
-		if (loud.equals ("1") && (alwaysUpdateState || !currentState.isLoudness())){
+		if (loud.equals ("1") && !currentState.testLoudness(true)){
 			currentState.setLoudness(true);
 			returnCode.addFlashCommand(buildCommandForFlash ( audioDevice, "loud","on","","","","",0));			
 		}
 		return returnCode;
 	}
 
+	public AVState getState(String key) {
+		AVState currentState = state.get(key);
+		boolean alwaysUpdateState = false;
+		if (currentState == null){
+			currentState = new AVState();
+			state.put(key, currentState);
+		}
+		return currentState;
+	}
+	
 	public ReturnWrapper buildAudioString (Audio device, CommandInterface command){
 		ReturnWrapper returnVal = new ReturnWrapper();
 		String key = device.getKey();
 		boolean commandFound = false;
 
-		AVState currentState = state.get(key);
+		AVState currentState = getState(key);
 		if (currentState == null){
 			currentState = new AVState();
 			state.put(key, currentState);
@@ -536,7 +560,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				if (key.equals(Model.AllZones)){
 				    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
 						if (!audioDevice.getKey().equals(Model.AllZones)) {
-							AVState stateForItem = state.get(audioDevice.getKey());
+							AVState stateForItem = getState(audioDevice.getKey());
 							if (stateForItem != null) 
 								stateForItem.setSrc(src);
 							else
@@ -611,7 +635,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				    for(DeviceType audioDevice : configHelper.getAllOutputDeviceObjects()) {
 				    	if (!audioDevice.getKey().equals(Model.AllZones)) {
 							if (protocol == Protocols.Standard){
-								AVState stateForItem = state.get(audioDevice.getKey());
+								AVState stateForItem = getState(audioDevice.getKey());
 								if (stateForItem != null){ 
 									String newVol = currentState.volumeUp();
 									int newVal = Utility.scaleFromFlash(newVol,0,79,true);
@@ -653,7 +677,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 							if (protocol == Protocols.Standard){
 								String newVol = currentState.volumeDown();
 								int newVal = Utility.scaleFromFlash(newVol,0,79,true);
-								AVState stateForItem = state.get(audioDevice.getKey());
+								AVState stateForItem = getState(audioDevice.getKey());
 								if (stateForItem != null) 
 									stateForItem.setVolume(newVol);
 								else
@@ -823,7 +847,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					returnVal.addCommOutput(String.format("*Z"+key+"BASS%+03d",newVal));
 			    } else {
 					int newVal = Utility.scaleFromFlash(extra,-18,18,false);
-					returnVal.addCommOutput(String.format("*ZCFG"+key+"BASS%+03d",newVal));			    	
+					returnVal.addCommOutput(String.format("*ZCFG"+key+"BASS%d",newVal));			    	
 			    }
 				logger.log (Level.FINEST,"Changing tone in zone " + key);
 			} catch (NumberFormatException ex){
@@ -840,7 +864,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					returnVal.addCommOutput(String.format("*Z"+key+"TREB%+03d",newVal));
 			    } else {
 					int newVal = Utility.scaleFromFlash(extra,-18,18,false);
-					returnVal.addCommOutput(String.format("*ZCFG"+key+"TREB%+03d",newVal));			    				    	
+					returnVal.addCommOutput(String.format("*ZCFG"+key+"TREB%d",newVal));			    				    	
 			    }
 				logger.log (Level.FINEST,"Changing tone in zone " + key);
 			} catch (NumberFormatException ex){
@@ -894,7 +918,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		for (String eachKey : this.srcGroup){
 			try {
 				if (!eachKey.equals (keyToTest)){
-					AVState stateOfLinkedDevice= state.get(eachKey);
+					AVState stateOfLinkedDevice= getState(eachKey);
 					if (!stateOfLinkedDevice.testSrc(src)){
 						DeviceType linkedDevice = (DeviceType)configHelper.getControlItem(eachKey);					
 						returnVal.addFlashCommand(buildCommandForFlash ( linkedDevice, "src",srcStr,"","","","",0));

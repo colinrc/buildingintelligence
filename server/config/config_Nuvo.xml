@@ -1,7 +1,7 @@
 <CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
         <DESC>Demonstration configuration for Nuvo</DESC>
          <!-- ______________________________________  Nuvo DEFS  ____________________  -->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="NUVO" DESCRIPTION="Nuvo Audio Switch">
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="NUVO" DESCRIPTION="Nuvo Audio Switch">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                         <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
@@ -21,7 +21,7 @@
                         <AUDIO KEY="0" DISPLAY_NAME="ALL"/>
                         <AUDIO KEY="2" DISPLAY_NAME="FAMILY_AUDIO"/>
                         <AUDIO KEY="1" DISPLAY_NAME="KITCHEN_AUDIO"/>
-                        <AUDIO KEY="4" DISPLAY_NAME="MASTER_BED_AUDIO"/>
+                        <AUDIO KEY="15" DISPLAY_NAME="MASTER_BED_AUDIO"/>
                 </NUVO>
         </DEVICE>
         
