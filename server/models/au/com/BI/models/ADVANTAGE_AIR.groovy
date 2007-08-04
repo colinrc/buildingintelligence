@@ -20,6 +20,9 @@ class ADVANTAGE_AIR extends GroovyModel {
 	def FILTER = ""
 	def IONISER = ""
 	def UV = ""
+	def FILTER_STATE = ""
+	def IONISER_STATE = ""
+	def UV_STATE = ""
 	
 	ADVANTAGE_AIR () {
 		super()
@@ -95,10 +98,12 @@ class ADVANTAGE_AIR extends GroovyModel {
 						case "1" :
 							FILTER = "YES"
 							returnWrapper.addFlashCommand (hvacUnit,  "filter", "on" )
+							FILTER_STATE = "1"
 							break;
 						case "0" :
 							FILTER = "YES"
 							returnWrapper.addFlashCommand (hvacUnit,  "filter", "off" )
+							FILTER_STATE = "0"
 							break;
 						}
 						
@@ -109,10 +114,12 @@ class ADVANTAGE_AIR extends GroovyModel {
 						case "1" :
 							IONISER = "YES"
 							returnWrapper.addFlashCommand (hvacUnit,  "ioniser", "on" )
+							IONISER_STATE = "1"
 							break;
 						case "0" :
 							IONISER = "YES"
 							returnWrapper.addFlashCommand (hvacUnit,  "ioniser", "off" )
+							IONISER_STATE = "0"
 							break;
 						}
 						
@@ -123,10 +130,12 @@ class ADVANTAGE_AIR extends GroovyModel {
 						case "1" :
 							UV = "YES"
 							returnWrapper.addFlashCommand (hvacUnit,  "uv", "on" )
+							UV_STATE = "1"
 							break;
 						case "0" :
 							UV = "YES"
 							returnWrapper.addFlashCommand (hvacUnit,  "uv", "off" )
+							UV_STATE = "0"
 							break;
 						}
 						
@@ -222,13 +231,43 @@ class ADVANTAGE_AIR extends GroovyModel {
 						
 						// TODO: Check what comes back if these options are not present
 						// Deal with the Filter Modes
-						if (sysParm[5] == "1") sysFilter = "on" else sysFilter = "off"
+						def sysFilterModes = sysParm[5]
+						switch (sysFilterModes) {
+						case "1" :
+							sysFilter = "on"
+							FILTER_STATE = "1"
+							break;
+						case "0" :
+							sysFilter = "off"
+							FILTER_STATE = "0"
+							break;
+						}
 							
 						// Deal with the Ioniser Modes
-						if (sysParm[6] == "1") sysIoniser = "on" else sysIoniser = "off"
+						def sysIoniserModes = sysParm[6]
+						switch (sysIoniserModes) {
+						case "1" :
+							sysIoniser = "on"
+							IONISER_STATE = "1"
+							break;
+						case "0" :
+							sysIoniser = "off"
+							IONISER_STATE = "0"
+							break;
+						}
 							
 						// Deal with the UV Modes
-						if (sysParm[7] == "1") sysUV = "on" else sysUV = "off"
+						def sysUVModes = sysParm[7]
+						switch (sysUVModes) {
+						case "1" :
+							sysUV = "on"
+							UV_STATE = "1"
+							break;
+						case "0" :
+							sysUV = "off"
+							UV_STATE = "0"
+							break;
+						}
 							
 						returnWrapper.addFlashCommand (hvacUnit,  sysStatus )
 						returnWrapper.addFlashCommand (hvacUnit,  "mode", sysMode )
@@ -319,56 +358,57 @@ class ADVANTAGE_AIR extends GroovyModel {
 			else
 				logger.log (Level.WARNING,"Command for non-installed Fresh Air Unit received " + command )
 			}
+		
 		// To set the HVAC filter mode requires a string "FIL=[FilterON/OFF],[IoniserON/OFF],[UVLightON/OFF]"
 		if (command.getCommandCode() ==  "filter") {
-			if (FILTER == "YES") {
+			if ( FILTER == "YES" || FILTER_STATE != "" ) {
 				switch (command.getExtraInfo() ) {
 				case "on" :
-					returnWrapper.addCommOutput ("FIL=1,getcacheIon,getcacheUV")
+					returnWrapper.addCommOutput ( "FIL=1," + IONISER_STATE + "," + UV_STATE )
 					break;
 				case "off" :
-					returnWrapper.addCommOutput ("FIL=0,getcacheIon,getcacheUV")
+					returnWrapper.addCommOutput ("FIL=0," + IONISER_STATE + "," + UV_STATE )
 					break;
 				default :
 					logger.log (Level.WARNING,"Invalid filter command " + command )
 				}
 			}
 			else
-				logger.log (Level.WARNING,"Command for non-installed Filter Unit received " + command )
+				logger.log (Level.WARNING,"Command for non-installed Filter Unit received or unknown state " + command )
 			}
 		
 		if (command.getCommandCode() ==  "ioniser") {
-			if (IONISER == "YES") {
+			if ( IONISER == "YES" || IOSISER_STATE != "" ) {
 				switch (command.getExtraInfo() ) {
 				case "on" :
-					returnWrapper.addCommOutput ("FIL=getcacheFIL,1,getcacheUV")
+					returnWrapper.addCommOutput ( "FIL=" + FILTER_STATE + ",1," + UV_STATE )
 					break;
 				case "off" :
-					returnWrapper.addCommOutput ("FIL=getcacheFIL,0,getcacheUV")
+					returnWrapper.addCommOutput ( "FIL=" + FILTER_STATE + ",0," + UV_STATE )
 					break;
 				default :
 					logger.log (Level.WARNING,"Invalid ioniser command " + command )
 				}
 			}
 			else
-				logger.log (Level.WARNING,"Command for non-installed Ioniser Unit received " + command )
+				logger.log (Level.WARNING,"Command for non-installed Ioniser Unit received or unknown state " + command )
 			}
 		
 		if (command.getCommandCode() ==  "uv") {
-			if (UV == "YES") {
+			if ( UV == "YES" || UV_STATE != "" ) {
 				switch (command.getExtraInfo() ) {
 				case "on" :
-					returnWrapper.addCommOutput ("FIL=getcacheFIL,getcacheIon,1")
+					returnWrapper.addCommOutput ( "FIL=" + FILTER_STATE + "," + IONISER_STATE + ",1" )
 					break;
 				case "off" :
-					returnWrapper.addCommOutput ("FIL=getcacheFIL,getcacheIon,0")
+					returnWrapper.addCommOutput ( "FIL=" + FILTER_STATE + "," + IONISER_STATE + ",0" )
 					break;
 				default :
 					logger.log (Level.WARNING,"Invalid uv command " + command )
 				}
 			}
 			else
-				logger.log (Level.WARNING,"Command for non-installed UV Unit received " + command )
+				logger.log (Level.WARNING,"Command for non-installed UV Unit received or unknown state " + command )
 			}
 		}
 
