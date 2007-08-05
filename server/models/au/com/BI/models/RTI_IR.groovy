@@ -20,23 +20,26 @@ class RTI_IR extends GroovyModel {
 
 	}
 	
+
 	void processStringFromComms (String command , ReturnWrapper returnWrapper) {
-		
+
 		def partsOfCommand = command.split("=")
 
 			try {
+
 				def theCommand = partsOfCommand[0]
 				def rtiUnit = configHelper.getControlledItem (0)
 				switch (theCommand) {
 					
 				case "BIRTI" :
+
 					logger.log (Level.FINE,"BIRTI received " + command )
 
 					def birtiParm = partsOfCommand[1].split(",")
 					def rtiCommand = birtiParm[1]
 					def rtiExtra = birtiParm[2]
 					if (rtiCommand.strlen() > 100) zoneMode = "auto" else zoneMode = "manual"
-					if (rtiCommand.strlen() > 100) !! (rtiExtra.strlen() > 100) {
+					if (rtiCommand.strlen() > 100 || rtiExtra.strlen() > 100) {
 						logger.log (Level.WARNING,"String Length too large")
 					}
 					else {
@@ -46,11 +49,13 @@ class RTI_IR extends GroovyModel {
 				default :
 					logger.log (Level.WARNING,"Unexpected string received " + command )
 				}
+
 			} catch (IndexOutOfBoundsException ex) {
 				logger.log (Level.WARNING,"The string from RTI was incorrectly formatted " + command)
 			} catch (NumberFormatException ex) {
 				logger.log (Level.WARNING,"The string from RTI was incorrectly formatted " + command)
 			}
+
 	}
 }
 
