@@ -28,6 +28,7 @@ import au.com.BI.SMS.SMS;
 import au.com.BI.Sensors.Sensor;
 import au.com.BI.ToggleSwitch.ToggleSwitch;
 import au.com.BI.Thermostat.Thermostat;
+import au.com.BI.Unit.Unit;
 import au.com.BI.User.User;
 
 import java.util.HashMap;
@@ -1022,7 +1023,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 							"A command for an unit device was issued from "
 									+ device.getName() + " for the model "
 									+ this.getName());
-					buildUnitControlString((SMS) device, command, returnWrapper);
+					buildUnitControlString((Unit) device, command, returnWrapper);
 					break;
 				}
 
@@ -1578,7 +1579,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			ReturnWrapper returnWrapper) throws ModelException {
 	}
 	
-	public void buildUnitControlString(SMS device, CommandInterface command,
+	public void buildUnitControlString(Unit device, CommandInterface command,
 			ReturnWrapper returnWrapper) throws ModelException {
 	}
 
