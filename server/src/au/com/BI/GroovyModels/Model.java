@@ -17,7 +17,6 @@ import au.com.BI.Flash.*;
 import au.com.BI.User.User;
 
 import org.codehaus.groovy.control.CompilationFailedException;
-import java.io.IOException;
 import java.io.*;
 
 /**
