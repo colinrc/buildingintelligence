@@ -28,7 +28,7 @@ class RTI_IR extends GroovyModel {
 			try {
 
 				def theCommand = partsOfCommand[0]
-				def rtiUnit = configHelper.getControlledItem (0)
+				def rtiUnit = configHelper.getControlledItem ("0")
 				switch (theCommand) {
 					
 				case "BIRTI" :
@@ -38,13 +38,12 @@ class RTI_IR extends GroovyModel {
 					def birtiParm = partsOfCommand[1].split(",")
 					def rtiCommand = birtiParm[1]
 					def rtiExtra = birtiParm[2]
-					if (rtiCommand.strlen() > 100) zoneMode = "auto" else zoneMode = "manual"
-					if (rtiCommand.strlen() > 100 || rtiExtra.strlen() > 100) {
-						logger.log (Level.WARNING,"String Length too large")
-					}
-					else {
+					//if (rtiCommand.strlen() > 100 || rtiExtra.strlen() > 100) {
+					//	logger.log (Level.WARNING,"String Length too large")
+					//}
+					//else {
 						returnWrapper.addFlashCommand (rtiUnit, "RTI", birtiParm[1], birtiParm[2])
-					}	
+					//}	
 					break;
 				default :
 					logger.log (Level.WARNING,"Unexpected string received " + command )
