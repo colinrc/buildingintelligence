@@ -30,19 +30,19 @@ class RTI_IR extends GroovyModel {
 				def theCommand = partsOfCommand[0]
 				def rtiUnit = configHelper.getControlledItem ("0")
 				switch (theCommand) {
-					
+					// BIRTI=on,3 
 				case "BIRTI" :
 
 					logger.log (Level.FINE,"BIRTI received " + command )
 
 					def birtiParm = partsOfCommand[1].split(",")
-					def rtiCommand = birtiParm[1]
-					def rtiExtra = birtiParm[2]
+					def rtiCommand = birtiParm[0]
+					def rtiExtra = birtiParm[1]
 					//if (rtiCommand.strlen() > 100 || rtiExtra.strlen() > 100) {
 					//	logger.log (Level.WARNING,"String Length too large")
 					//}
 					//else {
-						returnWrapper.addFlashCommand (rtiUnit, "RTI", birtiParm[1], birtiParm[2])
+						returnWrapper.addFlashCommand (rtiUnit,  rtiCommand, rtiExtra)
 					//}	
 					break;
 				default :
