@@ -34,7 +34,7 @@ class bi.ui.Button extends bi.ui.CoreUI {
 			label_txt.filters = null;
 			label_txt._visible = true;
 			label_tf.size = _fontSize;
-			label_tf.align
+			//label_tf.align
 			while (label_txt.textWidth > __width - 4) {
 				label_tf.size--;
 				label_txt.setTextFormat(label_tf);

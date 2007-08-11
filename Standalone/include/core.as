@@ -1717,7 +1717,7 @@ openAuthentication = function () {
 
 openControlPanel = function () {
 	var window_mc = showWindow({id:"controlPanel", width:"full", height:"full", title:"Control Panel", iconName:"gears", autoClose:false});
-	appsBar_mc.openControlPanel_mc.showHighlight();		
+	appsBar_mc.openControlPanel_mc.showHighlight();
 	window_mc.onClose = function () {
 		for (var i=0; i<this.contentClip.tabs_mc.tabData.length; i++) {
 			this.contentClip.tabs_mc.contentClips[i].onClose();

@@ -83,6 +83,13 @@ _global.settings.labelFont = "helvetica";
 _global.settings.labelFontColour = 0xFFFFFF;
 _global.settings.labelFontSize = 16;
 
+_global.settings.iconOverlayBgColour = 0x000000;
+_global.settings.iconOverlayBgAlpha = 60;
+_global.settings.iconOverlayFont = "helvetica";
+_global.settings.iconOverlayFontColour = 0xFFFFFF;
+_global.settings.iconOverlayFontSize = 14;
+_global.settings.iconOverlayAlign = "BL";
+
 _global.settings.listBgOpacity = 100;
 _global.settings.listBgColour = 0x6E82A6;
 _global.settings.listCornerRadius = 10;
