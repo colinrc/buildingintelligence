@@ -143,6 +143,15 @@ public interface DeviceType
 	public CommandInterface buildDisplayCommand();
 	
 	public String getOutputKey();
+	
+	/**
+	 * Handles dynamically added extra attributes that are created by groovy models
+	 * @param name
+	 * @param value
+	 */
+	public void setAttributeValue (String name, String value);
+	public void clearAttributeValues (); 
+	public String getAttributeValue (String name);
 
 }
 	

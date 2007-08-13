@@ -21,8 +21,10 @@ public class BaseDevice {
 	protected String key="";
 	protected String groupName;
 	protected Map rawCodes;
+	protected Map <String, String>extraAttributes;
 
 	public BaseDevice () {
+		extraAttributes = new HashMap<String,String>();
 
 	}
 
@@ -145,4 +147,16 @@ public class BaseDevice {
 		this.groupName = groupName;
 	}
 
+	public void setAttributeValue (String name, String value) {
+		extraAttributes.put (name,value);
+	}
+	
+	public String getAttributeValue (String name) {
+		return extraAttributes.get (name);
+	}
+	
+	public void clearAttributeValues (){
+		extraAttributes.clear();
+	}
+	
 }

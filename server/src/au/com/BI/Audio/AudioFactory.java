@@ -7,10 +7,11 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
+import au.com.BI.Device.DeviceFactory;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
 
-public class AudioFactory {
+public class AudioFactory extends DeviceFactory {
 	Logger logger;
 	
 	private AudioFactory () {
@@ -44,6 +45,7 @@ public class AudioFactory {
 		Audio audio = new Audio (display_name,connectionType);
 
 		key = targetDevice.formatKey(key,audio);
+		this.parseExtraAttributes(display_name , targetDevice, audio,  element);
 			
 		audio.setKey (key);
 		audio.setOutputKey(display_name);

@@ -20,9 +20,10 @@ import au.com.BI.Util.DeviceModel.ModelTypes;
 import au.com.BI.LabelMgr.LabelMgr;
 import au.com.BI.Macro.MacroHandler;
 import au.com.BI.Config.Bootstrap;
+import au.com.BI.Device.DeviceFactories;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.AlarmLogging.*;
 import au.com.BI.Messaging.*;
-import au.com.BI.Device.DeviceType;
 
 import java.util.*;
 import java.util.logging.*;
@@ -40,6 +41,7 @@ public class ModelParameters  {
         protected HashMap <String,HashMap<String,String>> parameters;
         protected HashMap <String,String>topMap; // a convienience reference to the top level map
 
+        protected DeviceFactories deviceFactories;
 
         protected Logger logger = null;
 
@@ -485,5 +487,13 @@ public class ModelParameters  {
 
 	public void setIPHeartbeat(boolean heartbeat) {
 		IPHeartbeat = heartbeat;
+	}
+
+	public DeviceFactories getDeviceFactories() {
+		return deviceFactories;
+	}
+
+	public void setDeviceFactories(DeviceFactories deviceFactories) {
+		this.deviceFactories = deviceFactories;
 	}
 }

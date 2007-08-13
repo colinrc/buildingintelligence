@@ -7,6 +7,8 @@ package au.com.BI.Home;
 import au.com.BI.User.*;
 import au.com.BI.Jetty.*;
 import org.quartz.*;
+
+
 import au.com.BI.Util.*;
 import au.com.BI.Calendar.CalendarHandler;
 import au.com.BI.Calendar.EventCalendar;
@@ -52,55 +54,30 @@ public class Controller {
 	protected au.com.BI.Patterns.Model patterns;
 
 	protected String configFile = "";
-
 	protected int clientPort = 10000;
-
 	protected String bindToAddress;
-
 	protected Config config;
-
 	protected ArrayList<DeviceModel> deviceModels;
-
 	protected ArrayList<DeviceModel> clientModels;
-
 	protected boolean configLoaded;
-
 	protected HashMap<String, String> modelRegistry;
-
 	protected au.com.BI.Command.Cache cache;
-
 	protected MacroHandler macroHandler;
-
 	protected IRCodeDB irCodeDB;
-
 	protected EventCalendar eventCalendar;
-
 	protected Bootstrap bootstrap;
-
 	private Security security = null;
-
 	protected AlarmLogging alarmLogging = null;
-
 	protected LabelMgr labelMgr = null;
-
 	protected au.com.BI.Script.Model scriptModel;
-
 	protected au.com.BI.GroovyModels.Model groovyModelHandler;
-
 	protected JRobinQuery jrobin;
-
 	public JRobinSupport jRobinSupport;
-
 	protected Controls controls;
-
 	protected LogHandler logHandler;
-
 	protected AddressBook addressBook = null;
-
 	protected JettyHandler jettyHandler = null;
-
 	protected VersionManager versionManager = null;
-
 	protected DailyTaskFactory dailyTasks = null;
 
 	// All known object representations of devices active in the system
@@ -164,6 +141,7 @@ public class Controller {
 			logger.log (Level.SEVERE, "Licensing failed, system shutting down");			
 			System.exit(0);
 		}
+		config = new Config();
 		
 		controls = new Controls(cache);
 
@@ -244,6 +222,7 @@ public class Controller {
 		this.setupModel(groovyModelHandler);
 		deviceModels.add(groovyModelHandler);
 		groovyModelHandler.setInstanceID(deviceModels.size() - 1);
+		groovyModelHandler.loadGroovyModels(this, deviceModels);
 
 		dailyTasks = new DailyTaskFactory();
 		dailyTasks.setStartTime(bootstrap.getMaintenanceTime());
@@ -260,6 +239,7 @@ public class Controller {
 
 	public void setupModel(DeviceModel model) {
 		model.setCommandQueue(commandQueue);
+		model.setDeviceFactories(config.getDeviceFactories());
 		model.setCache(cache);
 		model.setVariableCache(jRobinSupport.variableCache);
 		model.setMacroHandler(macroHandler);
@@ -308,7 +288,6 @@ public class Controller {
 	 */
 	public void run() {
 		currentUser = new User();
-		config = new Config();
 		config.setSecurity(security);
 		config.setModelRegistry(modelRegistry);
 		config.setMacroHandler(macroHandler);
@@ -357,7 +336,7 @@ public class Controller {
 
 			} 
 		}catch (SetupException e) {
-				logger.log(Level.SEVERE, "Configuration could not be loaded " );
+				logger.log(Level.SEVERE, "Configuration could not be loaded " + e.getMessage() );
 				running = false;
 		}
 
@@ -746,7 +725,7 @@ public class Controller {
 					doSystemStartup(deviceModels);
 				}
 			} catch (SetupException e) {
-				logger.log(Level.WARNING, "Configuration could not be loaded " );
+				logger.log(Level.WARNING, "Configuration could not be loaded "  + e.getMessage());
 			}
 		}
 		if (commandCode.equals("LoadScripts")) {

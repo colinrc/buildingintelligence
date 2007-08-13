@@ -8,9 +8,9 @@ import java.util.*;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Unit.UnitFactory;
 import au.com.BI.Util.*;
-import au.com.BI.Lights.LightFactory;
-import au.com.BI.Thermostat.ThermostatFactory;
+
 import au.com.BI.ToggleSwitch.*;
+
 import java.io.*;
 import org.jdom.*;
 import org.jdom.input.*;
@@ -18,13 +18,12 @@ import java.util.logging.*;
 
 import au.com.BI.AlarmLogging.*;
 import au.com.BI.Messaging.*;
-import au.com.BI.MultiMedia.AutonomicHome.Device.WindowsMediaExtenderFactory;
+
 import au.com.BI.AV.*;
 import au.com.BI.Alert.*;
 import au.com.BI.Calendar.CalendarHandler;
 import au.com.BI.Camera.*;
 import au.com.BI.Command.*;
-import au.com.BI.CustomConnect.CustomConnectFactory;
 import au.com.BI.CustomInput.*;
 import au.com.BI.Audio.*;
 import au.com.BI.Pump.*;
@@ -32,8 +31,8 @@ import au.com.BI.Analog.*;
 import au.com.BI.GC100.*;
 import au.com.BI.GroovyModels.GroovyRunBlock;
 import au.com.BI.Counter.*;
+import au.com.BI.Device.DeviceFactories;
 import au.com.BI.Device.DeviceType;
-import au.com.BI.Label.LabelFactory;
 import au.com.BI.LabelMgr.LabelMgr;
 import au.com.BI.VirtualOutput.*;
 import au.com.BI.PulseOutput.*;
@@ -42,9 +41,7 @@ import au.com.BI.Home.Controls;
 import au.com.BI.Home.VersionManager;
 import au.com.BI.IR.*;
 import au.com.BI.JRobin.JRobinParser;
-import au.com.BI.SMS.SMSFactory;
 import au.com.BI.Sensors.*;
-import au.com.BI.Raw.RawFactory;
 
 /**
  * @author Colin Canfield
@@ -61,27 +58,6 @@ public class Config {
 		protected HashMap <String,String>calendar_message_params;
 		public JRobinParser jRobinParser = null;
 		protected RawHelper rawHelper;
-		protected LightFactory lightFactory;		
-		protected SensorFactory sensorFactory;		
-		protected SMSFactory smsFactory;		
-		protected ToggleSwitchFactory toggleSwitchFactory;		
-		protected CustomConnectFactory customConnectFactory;
-		protected AVFactory aVFactory;		
-		protected AudioFactory audioFactory;		
-		protected PulseOutputFactory pulseOutputFactory;		
-		protected VirtualOutputFactory virtualOutputFactory;		
-		protected CameraFactory cameraFactory;		
-		protected LabelFactory labelFactory;
-		protected CustomInputFactory customInputFactory;		
-		protected CounterFactory counterFactory;		
-		protected AlertFactory alertFactory;		
-		protected RawFactory rawFactory;		
-		protected AnalogFactory analogFactory;		
-		protected PumpFactory pumpFactory;		
-		protected UnitFactory unitFactory;		
-		protected IRFactory iRFactory;
-		protected ThermostatFactory thermostatFactory;
-		protected WindowsMediaExtenderFactory windowsMediaExtenderFactory;
 		protected Map <String,String>modelRegistry = null;
 		protected Map <String,GroovyRunBlock>groovyModels = null;
 		protected MacroHandler macroHandler = null;
@@ -92,6 +68,7 @@ public class Config {
 		protected  AlarmLogging alarmLogging = null;
 		protected au.com.BI.GroovyModels.Model groovyModelHandler  = null;
 		protected LabelMgr labelMgr = null;
+		protected DeviceFactories deviceFactories;
 		
 	public Config() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -99,29 +76,8 @@ public class Config {
 
 		controls = null;
 		jRobinParser = new JRobinParser();
-		lightFactory = new LightFactory() ;
 
-		this.setSensorFactory ( SensorFactory.getInstance()) ;		
-		this.setToggleSwitchFactory ( ToggleSwitchFactory.getInstance()) ;		
-		this.setAVFactory(AVFactory.getInstance()) ;		
-		this.setAudioFactory(AudioFactory.getInstance());		
-		this.setPulseOutputFactory(PulseOutputFactory.getInstance());		
-		this.setVirtualOutputFactory ( VirtualOutputFactory.getInstance());	
-		this.setCameraFactory ( CameraFactory.getInstance());		
-		this.setCustomInputFactory ( CustomInputFactory.getInstance());		
-		this.setCounterFactory (  CounterFactory.getInstance());	
-		this.setAlertFactory (AlertFactory.getInstance());		
-		this.setRawFactory (RawFactory.getInstance());		
-		this.setAnalogFactory ( AnalogFactory.getInstance());		
-		this.setPumpFactory ( PumpFactory.getInstance());	
-		this.setIRFactory (IRFactory.getInstance());		
-		this.setSmsFactory(SMSFactory.getInstance());
-		this.setLabelFactory (LabelFactory.getInstance());
-		this.setCustomConnectFactory(CustomConnectFactory.getInstance());
-		this.setThermostatFactory(ThermostatFactory.getInstance());
-		this.setUnitFactory(UnitFactory.getInstance());
-		this.setWindowsMediaExtenderFactory(WindowsMediaExtenderFactory.getInstance());
-		
+		deviceFactories = new DeviceFactories();
 		calendar_message_params = new HashMap<String,String> (5);
 		calendar_message_params.put ("ICON","");
 		calendar_message_params.put ("HIDECLOSE","HIDECLOSE");
@@ -175,10 +131,12 @@ public class Config {
 						logger.log (Level.INFO,"Adding device handler for " + newDeviceModel.getName());
 						parseCatalogueList (config,newDeviceModel);
 						newDeviceModel.setCommandQueue(commandQueue);
+						newDeviceModel.setDeviceFactories(deviceFactories);
 						newDeviceModel.setCache (cache);
                        newDeviceModel.setVariableCache(variableCache);
 						newDeviceModel.setMacroHandler(macroHandler);
 						newDeviceModel.setModelList(deviceModels);
+						
 						newDeviceModel.setBootstrap(bootstrap);
 						newDeviceModel.setAddressBook (addressBook);						
 						newDeviceModel.setAlarmLogging (alarmLogging);	
@@ -207,7 +165,7 @@ public class Config {
 		}
 	}
 
-
+	@SuppressWarnings("unchecked")
         public void parseControl (Element controlElement) {
 		synchronized (controls) {
 			List controlSectionList = controlElement.getChildren("VARIABLES");
@@ -270,7 +228,7 @@ public class Config {
 		logger.log (Level.FINE,"Configured control section");
 	}
 
-
+	@SuppressWarnings("unchecked")
 	public void parseCatalogueList (Element element, DeviceModel deviceModel) throws JDOMException{
 		List rawConfigs = element.getChildren("RAW_DEFS");
 		Iterator rawConfigList = rawConfigs.iterator();
@@ -308,6 +266,7 @@ public class Config {
 		parseRawDefDetails (name, deviceConfig, deviceModel);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void parseRawDefDetails (String catalogueName, Element deviceConfig, DeviceModel deviceModel) throws JDOMException {
 		List rawItemList = deviceConfig.getChildren();
 		HashMap<String,String>  defs= new HashMap<String,String> (40);
@@ -418,7 +377,7 @@ public class Config {
                 return deviceModel;
         }
 
-
+    @SuppressWarnings("unchecked")
 	protected void parseConnection (Element deviceSpec, DeviceModel deviceModel ) {
 		String baudRate="";
 		String stopBits = "";
@@ -471,6 +430,7 @@ public class Config {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void parseDevices(Element deviceConfig, DeviceModel deviceModel,
 				List <DeviceModel>clientModels, String groupName) throws JDOMException {
 		int type;
@@ -533,126 +493,127 @@ public class Config {
 					}
 
 					if (itemName.equals("TOGGLE_OUTPUT") || itemName.equals("OUTPUT")) {
-						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.TOGGLE_OUTPUT,groupName,rawHelper);
 					}
 					if (itemName.equals("PULSE_OUTPUT")) {
-						pulseOutputFactory.addPulse(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.pulseOutputFactory.addPulse(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.PULSE_OUTPUT,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT")) {
-						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.LIGHT,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_CBUS")) {
-						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.LIGHT_CBUS,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_DYNALITE")) {
-						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.LIGHT_DYNALITE,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_DYNALITE_AREA")) {
-						lightFactory.addLightArea( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.lightFactory.addLightArea( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.LIGHT_DYNALITE_AREA,groupName,rawHelper);
 					}
 					if (itemName.equals("SENSOR")) {
-						sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.SENSOR,groupName,rawHelper);
 					}
 					if (itemName.equals("TEMPERATURE")) {
-						sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.TEMPERATURE,groupName,rawHelper);
 					}
 					if (itemName.equals("PUMP")) {
-						pumpFactory.addPump(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.pumpFactory.addPump(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.PUMP,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_X10")) {
 						if (deviceModel.getName().equals("COMFORT")){
-							lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+							deviceFactories.lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 									DeviceType.COMFORT_LIGHT_X10_UNITCODE,groupName,rawHelper);
 						}
-						lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.COMFORT_LIGHT_X10,groupName,rawHelper);
 					}
 					if (itemName.equals("TOGGLE_INPUT")) {
-						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.TOGGLE_INPUT,groupName,rawHelper);
 					}
 					if (itemName.equals("CONTACT_CLOSURE") || itemName.equals("INPUT")) {
-						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.CONTACT_CLOSURE,groupName,rawHelper);
 					}
 					if (itemName.equals("TOGGLE_OUTPUT_MONITOR")) {
-						toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.toggleSwitchFactory.addToggle(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.TOGGLE_OUTPUT_MONITOR,groupName,rawHelper);
 					}
 					if (itemName.equals("COUNTER")) {
-						counterFactory.addCounter(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.counterFactory.addCounter(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.COUNTER,groupName,rawHelper);
 					}
 					if (itemName.equals("VIRTUAL_OUTPUT")) {
-						virtualOutputFactory.addVirtualOutput(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
-								DeviceType.COUNTER,groupName,rawHelper);
+						deviceFactories.virtualOutputFactory.addVirtualOutput(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+								DeviceType.VIRTUAL_OUTPUT,groupName,rawHelper);
 					}
 					if (itemName.equals("LABEL")) {
-						labelFactory.addLabel(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE, DeviceType.LABEL, groupName, rawHelper);
+						deviceFactories.labelFactory.addLabel(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE, 
+								DeviceType.LABEL, groupName, rawHelper);
 					}
 					if (itemName.equals("RAW_INTERFACE")) {
-						rawFactory.addRaw(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
+						deviceFactories.rawFactory.addRaw(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
 								DeviceType.RAW_INTERFACE,groupName,rawHelper);
 					}
 					if (itemName.equals("CUSTOM_INPUT")) {
-						customInputFactory.addCustomInput(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.customInputFactory.addCustomInput(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.CUSTOM_INPUT,groupName,rawHelper);
 					}
 					if (itemName.equals("IR")) {
-						iRFactory.addIR(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
+						deviceFactories.iRFactory.addIR(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
 								DeviceType.IR,groupName,rawHelper);
 					}
 					if (itemName.equals("AUDIO")|| itemName.equals("AUDIO_OUTPUT")) {
-						audioFactory.addAudio(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.audioFactory.addAudio(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.AUDIO,groupName,rawHelper);
 					}
 					if (itemName.equals("AV") || itemName.equals("AV_OUTPUT") ) {
-						aVFactory.addAV(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.aVFactory.addAV(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.AV,groupName,rawHelper);
 					}
 					if (itemName.equals("CAMERA_INPUT") || itemName.equals("CAMERA")) {
-						cameraFactory.addCamera(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
+						deviceFactories.cameraFactory.addCamera(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
 								DeviceType.CAMERA,groupName,rawHelper);
 					}
 					if (itemName.equals("ANALOGUE") || itemName.equals ("ANALOG")) {
-						analogFactory.addAnalog(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.analogFactory.addAnalog(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.ANALOGUE,groupName,rawHelper);
 					}
 					if (itemName.equals("ALERT")) {
-						alertFactory.addAlert(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.alertFactory.addAlert(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.ALERT,groupName,rawHelper);
 					}
 					if (itemName.equals("ALARM")) {
-						alertFactory.addAlarm(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.alertFactory.addAlarm(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.ALARM,groupName,rawHelper);
 					}
 					if (itemName.equals("SMS")) {
-						sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.SMS,groupName,rawHelper);
 					}
 					if (itemName.equals("CUSTOM_CONNECT")) {
-						customConnectFactory.addCustomConnect(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
+						deviceFactories.customConnectFactory.addCustomConnect(deviceModel, clientModels, item, MessageDirection.FROM_FLASH,
 								DeviceType.CUSTOM_CONNECT,groupName,rawHelper);
 					}
 					if (itemName.equals("THERMOSTAT")) {
-						thermostatFactory.addThermostat(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.thermostatFactory.addThermostat(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.THERMOSTAT,groupName,rawHelper);
 					}
 					if (itemName.equals("UNIT")) {
-						unitFactory.addUnit(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.unitFactory.addUnit(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.UNIT,groupName,rawHelper);
 					}
 					if (itemName.equals("MEDIA_EXTENDER")) {
-						windowsMediaExtenderFactory.addMediaExtender(deviceModel, 
+						deviceFactories.windowsMediaExtenderFactory.addMediaExtender(deviceModel, 
 								clientModels, 
 								item, 
 								MessageDirection.FROM_HARDWARE, 
@@ -664,6 +625,7 @@ public class Config {
 			}
 		}
 	}
+
 
 	/**
 	 * Generic parameters to all devices
@@ -703,61 +665,6 @@ public class Config {
 		this.security = security;
 	}
 
-	public void setAlertFactory(AlertFactory alertFactory) {
-		this.alertFactory = alertFactory;
-	}
-
-	public void setAnalogFactory(AnalogFactory analogFactory) {
-		this.analogFactory = analogFactory;
-	}
-
-	public void setAudioFactory(AudioFactory audioFactory) {
-		this.audioFactory = audioFactory;
-	}
-
-	public void setAVFactory(AVFactory factory) {
-		aVFactory = factory;
-	}
-
-	public void setCameraFactory(CameraFactory cameraFactory) {
-		this.cameraFactory = cameraFactory;
-	}
-
-	public void setCounterFactory(CounterFactory counterFactory) {
-		this.counterFactory = counterFactory;
-	}
-
-	public void setCustomInputFactory(CustomInputFactory customInputFactory) {
-		this.customInputFactory = customInputFactory;
-	}
-
-	public void setIRFactory(IRFactory factory) {
-		iRFactory = factory;
-	}
-
-	public void setLightFactory(LightFactory lightFactory) {
-		this.lightFactory = lightFactory;
-	}
-
-	public void setPulseOutputFactory(PulseOutputFactory pulseOutputFactory) {
-		this.pulseOutputFactory = pulseOutputFactory;
-	}
-
-	public void setRawFactory(RawFactory rawFactory) {
-		this.rawFactory = rawFactory;
-	}
-
-	public void setSensorFactory(SensorFactory sensorFactory) {
-		this.sensorFactory = sensorFactory;
-	}
-
-	public void setToggleSwitchFactory(ToggleSwitchFactory toggleSwitchFactory) {
-		this.toggleSwitchFactory = toggleSwitchFactory;
-	}
-
-	public void setVirtualOutputFactory(VirtualOutputFactory virtualOutputFactory) {
-		this.virtualOutputFactory = virtualOutputFactory;
-	}
 
 	public Map <String,String>getModelRegistry() {
 		return modelRegistry;
@@ -824,37 +731,6 @@ public class Config {
 		this.groovyModelHandler = groovyModelHandler;
 	}
 
-	public CustomConnectFactory getCustomConnectFactory() {
-		return customConnectFactory;
-	}
-
-	public void setCustomConnectFactory(CustomConnectFactory customConnectFactory) {
-		this.customConnectFactory = customConnectFactory;
-	}
-
-	public ThermostatFactory getThermostatFactory() {
-		return thermostatFactory;
-	}
-
-	public void setThermostatFactory(ThermostatFactory thermostatFactory) {
-		this.thermostatFactory = thermostatFactory;
-	}
-
-	public SMSFactory getSmsFactory() {
-		return smsFactory;
-	}
-
-	public void setSmsFactory(SMSFactory smsFactory) {
-		this.smsFactory = smsFactory;
-	}
-
-	public LabelFactory getLabelFactory() {
-		return labelFactory;
-	}
-
-	public void setLabelFactory(LabelFactory labelFactory) {
-		this.labelFactory = labelFactory;
-	}
 
 	public LabelMgr getLabelMgr() {
 		return labelMgr;
@@ -864,14 +740,7 @@ public class Config {
 		this.labelMgr = labelMgr;
 	}
 
-	public WindowsMediaExtenderFactory getWindowsMediaExtenderFactory() {
-		return windowsMediaExtenderFactory;
-	}
 
-	public void setWindowsMediaExtenderFactory(
-			WindowsMediaExtenderFactory windowsMediaExtenderFactory) {
-		this.windowsMediaExtenderFactory = windowsMediaExtenderFactory;
-	}
 
 	public au.com.BI.Calendar.Model getCalendarModel() {
 		return calendarModel;
@@ -881,19 +750,13 @@ public class Config {
 		this.calendarModel = calendarModel;
 	}
 
-	public PumpFactory getPumpFactory() {
-		return pumpFactory;
+	public DeviceFactories getDeviceFactories() {
+		return deviceFactories;
 	}
 
-	public void setPumpFactory(PumpFactory pumpFactory) {
-		this.pumpFactory = pumpFactory;
+	public void setDeviceFactories(DeviceFactories deviceFactories) {
+		this.deviceFactories = deviceFactories;
 	}
 
-	public UnitFactory getUnitFactory() {
-		return unitFactory;
-	}
 
-	public void setUnitFactory(UnitFactory unitFactory) {
-		this.unitFactory = unitFactory;
-	}
 }

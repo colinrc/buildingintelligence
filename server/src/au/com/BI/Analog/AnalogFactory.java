@@ -6,10 +6,11 @@ import java.util.logging.Logger;
 
 import org.jdom.Element;
 import au.com.BI.Config.RawHelper;
+import au.com.BI.Device.DeviceFactory;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
 
-public class AnalogFactory {
+public class AnalogFactory  extends DeviceFactory {
 	Logger logger;
 	
 	private AnalogFactory () {

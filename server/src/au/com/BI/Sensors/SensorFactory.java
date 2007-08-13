@@ -7,11 +7,12 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
+import au.com.BI.Device.DeviceFactory;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
 
-public class SensorFactory {
+public class SensorFactory  extends DeviceFactory {
 	Logger logger;
 	
 	private SensorFactory () {

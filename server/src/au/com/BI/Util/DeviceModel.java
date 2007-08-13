@@ -14,6 +14,7 @@ import au.com.BI.Config.Bootstrap;
 import au.com.BI.Config.ConfigHelper;
 import au.com.BI.Config.ParameterException;
 import au.com.BI.CustomConnect.CustomConnectInput;
+import au.com.BI.Device.DeviceFactories;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.GC100.IRCodeDB;
 import au.com.BI.Home.VersionManager;
@@ -510,6 +511,10 @@ public interface DeviceModel {
 	public au.com.BI.Patterns.Model getPatterns() ;
 
 	public void setPatterns(au.com.BI.Patterns.Model patterns) ;
+	
+	public DeviceFactories getDeviceFactories() ;
+
+	public void setDeviceFactories(DeviceFactories deviceFactories);
 }
 
 

@@ -9,6 +9,7 @@ import au.com.BI.CBUS.*;
 import au.com.BI.Command.*;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Dynalite.*;
+
 import java.util.*;
 
 /**
@@ -380,6 +381,29 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 		if (light.getDeviceType() == DeviceType.LIGHT_CBUS ){
 			 ((CBUS)light).setGenerateDimmerVals(generateDimmerVals);
 		}
+	}
+
+	/* 
+	 * @see au.com.BI.Device.DeviceType#clearAttributeValues()
+	 */
+	public void clearAttributeValues() {
+		light.clearAttributeValues();
+		
+	}
+
+	/* 
+	 * @see au.com.BI.Device.DeviceType#getAttributeValue(java.lang.String)
+	 */
+	public String getAttributeValue(String name) {
+		return light.getAttributeValue(name);
+	}
+
+	/*
+	 * @see au.com.BI.Device.DeviceType#setAttributeValue(java.lang.String, java.lang.String)
+	 */
+	public void setAttributeValue(String name, String value) {
+		light.setAttributeValue(name, value);
+		
 	}
 
 }

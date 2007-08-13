@@ -283,4 +283,26 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	public void setGenerateDimmerVals(boolean generateDimmerVals) {
 			// Meaningless for sensors
 	}
+	
+	/* 
+	 * @see au.com.BI.Device.DeviceType#clearAttributeValues()
+	 */
+	public void clearAttributeValues() {
+		sensor.clearAttributeValues();
+		
+	}
+
+	/*
+	 * @see au.com.BI.Device.DeviceType#getAttributeValue(java.lang.String)
+	 */
+	public String getAttributeValue(String name) {
+		return sensor.getAttributeValue(name);
+	}
+
+	/*
+	 * @see au.com.BI.Device.DeviceType#setAttributeValue(java.lang.String, java.lang.String)
+	 */
+	public void setAttributeValue(String name, String value) {
+		sensor.setAttributeValue(name, value);
+	}
 }

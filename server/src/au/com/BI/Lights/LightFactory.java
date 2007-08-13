@@ -8,14 +8,16 @@ import java.util.logging.Logger;
 import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
+import au.com.BI.Device.DeviceFactory;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
 
-public class LightFactory {
+public class LightFactory extends DeviceFactory {
 	Logger logger;
 	
 	public LightFactory () {
+
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
 	}
 
@@ -33,7 +35,7 @@ public class LightFactory {
 	 * @param groupName
 	 * @param rawHelper 
 	 */
-	public void addLight(DeviceModel targetDevice, List clientModels, Element element, MessageDirection type, int connectionType, String groupName, RawHelper rawHelper) {
+	public void addLight(DeviceModel targetDevice, List <DeviceModel>clientModels, Element element, MessageDirection type, int connectionType, String groupName, RawHelper rawHelper) {
 		String key = element.getAttributeValue("KEY");
 		String name = element.getAttributeValue("NAME");
 		String outKey = element.getAttributeValue("DISPLAY_NAME");
@@ -119,7 +121,7 @@ public class LightFactory {
 	 * @param groupName 
 	 * @param rawHelper 
 	 */
-	public void addLightArea(DeviceModel targetDevice, List clientModels, Element element, MessageDirection type, int connectionType, String groupName, RawHelper rawHelper) {
+	public void addLightArea(DeviceModel targetDevice, List <DeviceModel>clientModels, Element element, MessageDirection type, int connectionType, String groupName, RawHelper rawHelper) {
 		String key = element.getAttributeValue("KEY");
 		String name = element.getAttributeValue("NAME");
 		String outKey = element.getAttributeValue("DISPLAY_NAME");

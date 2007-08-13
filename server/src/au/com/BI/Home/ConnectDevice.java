@@ -64,7 +64,7 @@ public class ConnectDevice extends Thread {
 			deviceModel.setTryingToConnect(false);
 		} catch (ConnectionFail fail) {
 			if (!shownWarning) { 
-				logger.log(Level.WARNING, "Connection failed to " + deviceModel.getName() +" please check cabling.");
+				logger.log(Level.WARNING, "Connection failed to " + deviceModel.getName() +" please check cabling. " + fail.getMessage());
 				shownWarning = true;
 			}
 			try {

@@ -14,7 +14,9 @@ import groovy.lang.GroovyClassLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.*;
 import au.com.BI.Flash.*;
+import au.com.BI.Home.Controller;
 import au.com.BI.User.User;
+import java.util.*;
 
 import org.codehaus.groovy.control.CompilationFailedException;
 import java.io.*;
@@ -48,14 +50,11 @@ public class Model
                 this.setConnected(true);
                 this.setAutoReconnect(false);
                 gcl = new GroovyClassLoader();
-    			loadGroovyModels();
           }
-
 
         public boolean removeModelOnConfigReload() {
                 return false;
         }
-
  
         public boolean doIControl(String keyName, boolean isCommand) {
                 configHelper.wholeKeyChecked(keyName);
@@ -103,19 +102,19 @@ public class Model
 		} 
 
 
-        public void loadGroovyModels() {
+        public void loadGroovyModels(Controller controller,List<DeviceModel>deviceModels) {
                 int j = 0;
                 logger.log(Level.INFO,"Loading Groovy Models");
 
                 String lsLine, lsCheck;
 
 				//get the script files and prepare for parsing
-       try {
+                try {
 	                groovyModelFileHandler.loadGroovyModelList( "./models/au/com/BI/models/",this.groovyModelFiles);
 	
 	                for (GroovyRunBlock runBlock: groovyModelFiles.values()) {
 	                	try {
-	                		registerGroovyModel (runBlock);
+	                		registerGroovyModel ( controller,runBlock, deviceModels);
 	                	} catch (ConfigError ex){
 	                		logger.log(Level.WARNING, "There was an error loading configuration for " + runBlock.getFileName() + " " + ex.getMessage());
 	                	} catch (GroovyModelError ex){
@@ -128,7 +127,7 @@ public class Model
                 }
         }
 
-        public void registerGroovyModel (GroovyRunBlock groovyRunBlock) throws ConfigError, GroovyModelError{
+        public void registerGroovyModel (Controller controller, GroovyRunBlock groovyRunBlock, List <DeviceModel>deviceModels) throws ConfigError, GroovyModelError{
         String completeFile = "";
         String fileName = groovyRunBlock.getFileName();
         try {
@@ -136,9 +135,11 @@ public class Model
             if (!theGroovyFile.canRead()) throw new GroovyModelError("Error reading the file " + fileName);
             Class groovyClass = gcl.parseClass(theGroovyFile);
             groovyRunBlock.setTheClass(groovyClass);
-            Object aScript = groovyClass.newInstance();
+            Object aModel = groovyClass.newInstance();
 
-            GroovyModel myModel = (GroovyModel) aScript;
+            GroovyModel myModel = (GroovyModel) aModel;
+            controller.setupModel(myModel);
+            deviceModels.add(myModel);
             String modelName = myModel.getName();
             logger.log(Level.INFO, "Registering model " + modelName);
             this.groovyModelClasses.put(modelName, groovyRunBlock);
@@ -155,7 +156,7 @@ public class Model
         } catch (ClassCastException e) {
                         throw new GroovyModelError ("Instantiation error in the model " + fileName + " " + e.getMessage());
         } catch (Exception e){
-                        throw new GroovyModelError ("Weird stuff happened " + e.getMessage());
+                        throw new GroovyModelError ("Unknown error in the groovy model  " + e.getMessage());
         }
     }
         
