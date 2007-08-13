@@ -208,8 +208,9 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			this.setAppendToSentStrings(getParameterValue(
 					"APPEND_TO_SENT_STRINGS", DeviceModel.MAIN_DEVICE_GROUP));
 		}
+		
 	}
-
+	
     public void addStartupQueryItem(String name, Object details, MessageDirection controlType) {};
     
 	public void clearItems() {
@@ -1621,4 +1622,9 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	public void setQueueCommands(boolean queueCommands) {
 		this.queueCommands = queueCommands;
 	};
+	
+	public void addStringAttribute (int deviceType, String name){
+		deviceFactories.addStringAttribute (this,deviceType,name);
+	}
+	
 }
