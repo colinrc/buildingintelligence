@@ -6,11 +6,11 @@ package au.com.BI.CBUS;
 import java.util.HashMap;
 
 import au.com.BI.Command.ReturnWrapper;
-import au.com.BI.Device.DeviceType;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Label.Label;
 import au.com.BI.LabelMgr.LabelMgr;
 import au.com.BI.CBUS.Model;
+import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.DeviceModel;
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;

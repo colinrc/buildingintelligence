@@ -7,8 +7,8 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommsProcessException;
 import au.com.BI.Command.ReturnWrapper;
 import au.com.BI.Comms.CommsCommand;
-import au.com.BI.Util.*;
 import au.com.BI.Device.DeviceType;
+import au.com.BI.Util.*;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
