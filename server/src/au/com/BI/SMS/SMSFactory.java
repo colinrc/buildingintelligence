@@ -42,16 +42,17 @@ public class SMSFactory extends DeviceFactory  {
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
-		SMS audio = new SMS (display_name,connectionType);
+		SMS sms = new SMS (display_name,connectionType);
 
-		key = targetDevice.formatKey(key,audio);
+		key = targetDevice.formatKey(key,sms);
 			
-		audio.setKey (key);
-		audio.setOutputKey(display_name);
-		audio.setCommand(command);
-		audio.setGroupName(groupName);
-		targetDevice.addStartupQueryItem(key, audio, type);
-		targetDevice.addControlledItem(key, audio, type);
-		targetDevice.addControlledItem(display_name, audio, MessageDirection.FROM_FLASH);
+		sms.setKey (key);
+		sms.setOutputKey(display_name);
+		this.parseExtraAttributes(display_name , targetDevice, sms,  element);
+		sms.setCommand(command);
+		sms.setGroupName(groupName);
+		targetDevice.addStartupQueryItem(key, sms, type);
+		targetDevice.addControlledItem(key, sms, type);
+		targetDevice.addControlledItem(display_name, sms, MessageDirection.FROM_FLASH);
 	}
 }

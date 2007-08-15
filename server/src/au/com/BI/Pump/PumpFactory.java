@@ -48,6 +48,7 @@ public class PumpFactory extends DeviceFactory {
 			
 		pump.setKey (key);
 		pump.setOutputKey(display_name);
+		this.parseExtraAttributes(display_name , targetDevice, pump,  element);
 		pump.setCommand(command);
 		pump.setGroupName(groupName);
 		targetDevice.addStartupQueryItem(key, pump, type);

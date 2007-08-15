@@ -53,7 +53,7 @@ public class ThermostatFactory  extends DeviceFactory {
 			String key = targetDevice.formatKey (tmpKey,theInput);
 			theInput.setKey (key);
 			theInput.setGroupName (groupName);
-			
+			this.parseExtraAttributes(outKey , targetDevice, theInput,  element);
 			targetDevice.addControlledItem(key, theInput, type);
 			targetDevice.addStartupQueryItem(key, theInput, type);
 			if (outKey != null && !outKey.equals("")) {

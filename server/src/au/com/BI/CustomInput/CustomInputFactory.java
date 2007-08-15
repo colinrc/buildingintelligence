@@ -58,6 +58,7 @@ public class CustomInputFactory  extends DeviceFactory {
 
 		theInput.setKey (key);
 		theInput.setOutputKey(outKey);
+		this.parseExtraAttributes(outKey , targetDevice, theInput,  element);
 		theInput.setCommand(command);
 		theInput.setGroupName (groupName);
 		if (extra != null)

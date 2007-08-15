@@ -46,6 +46,7 @@ public class ToggleSwitchFactory extends DeviceFactory {
 			String key = targetDevice.formatKey (tmpKey,theInput);
 			theInput.setKey (key);
 			theInput.setGroupName (groupName);
+			this.parseExtraAttributes(outKey , targetDevice, theInput,  element);
 			
 			if (targetDevice.getName().equals("DYNALITE")) {
 	

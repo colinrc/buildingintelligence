@@ -51,6 +51,7 @@ public class PulseOutputFactory  extends DeviceFactory {
 		}
 		PulseOutput theOutput = new PulseOutput(name,	connectionType, outKey,maxInt);
 		theOutput.setKey (key);
+		this.parseExtraAttributes(outKey , targetDevice, theOutput,  element);
 		theOutput.setGroupName (groupName);
 		targetDevice.addControlledItem(key, theOutput, type);
 		targetDevice.addStartupQueryItem(key, theOutput, type);

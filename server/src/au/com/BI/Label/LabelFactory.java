@@ -62,6 +62,7 @@ public class LabelFactory  extends DeviceFactory {
 		label.setDefaultLabel (defaultLabel);
 		label.setApplicationCode(cbusApplication);
 		label.setOutputKey(display_name);
+		this.parseExtraAttributes(display_name , targetDevice, label,  element);
 		label.setCommand(command);
 		label.setGroupName(groupName);
 		targetDevice.addStartupQueryItem(key, label, type);

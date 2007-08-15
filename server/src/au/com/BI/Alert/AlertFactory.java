@@ -51,6 +51,7 @@ public class AlertFactory extends DeviceFactory{
 			theInput = new Alert(name, connectionType, outKey, alarmType, message,active);
 			String key = targetDevice.formatKey (tmpKey,theInput);
 			theInput.setKey (key);
+			this.parseExtraAttributes(outKey , targetDevice, theInput,  element);
 			theInput.setGroupName (groupName);
 			targetDevice.addControlledItem(key, theInput, type);
 			targetDevice.addStartupQueryItem(key, theInput, type);

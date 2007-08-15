@@ -41,6 +41,7 @@ public class SensorFactory  extends DeviceFactory {
 
 			SensorFascade theSensor = new SensorFascade(name, channel, units, group, connectionType, outKey,name);
 			String key = targetDevice.formatKey (tmpKey,theSensor);
+			this.parseExtraAttributes(outKey , targetDevice, theSensor,  element);
 			theSensor.setKey(key);
 			theSensor.setGroupName(groupName);
 

@@ -46,6 +46,7 @@ public class AnalogFactory  extends DeviceFactory {
 					connectionType, outKey);
 			String key = targetDevice.formatKey (tmpKey,theInput);
 			theInput.setKey (key);
+			this.parseExtraAttributes(outKey , targetDevice, theInput,  element);
 			theInput.setGroupName(groupName);
 			targetDevice.addControlledItem(key, theInput, type);
 			targetDevice.addStartupQueryItem(key, theInput, type);

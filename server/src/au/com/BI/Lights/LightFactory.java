@@ -42,6 +42,7 @@ public class LightFactory extends DeviceFactory {
 	
 		LightFascade theLight = new LightFascade(name, connectionType, outKey,targetDevice.getName());
 		key = targetDevice.formatKey(key,theLight);
+		this.parseExtraAttributes(outKey , targetDevice, theLight,  element);
 		theLight.setKey(key);
 		theLight.setGroupName(groupName);
 	
@@ -137,6 +138,7 @@ public class LightFactory extends DeviceFactory {
 
 		targetDevice.addControlledItem(key, theLight, type);
 		targetDevice.addStartupQueryItem(key, theLight, type);
+		this.parseExtraAttributes(outKey , targetDevice, theLight,  element);
 	
 		if (outKey != null && !outKey.equals("")) {
 			targetDevice.addControlledItem(outKey, theLight, MessageDirection.FROM_FLASH);

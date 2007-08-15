@@ -46,6 +46,7 @@ public class CustomConnectFactory  extends DeviceFactory {
 			String key = targetDevice.formatKey (tmpKey,theConnection);
 			
 			theConnection.setKey (key);
+			this.parseExtraAttributes(displayName , targetDevice, theConnection,  element);
 			theConnection.setGroupName(groupName);
 			theConnection.setOutputKey(displayName);
 			theConnection.setName(name);

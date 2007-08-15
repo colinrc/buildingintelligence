@@ -49,6 +49,7 @@ public class CameraFactory  extends DeviceFactory {
 			Camera camera = new Camera (display_name,connectionType);
 			String fullKey = targetDevice.formatKey (key,camera);
 			camera.setKey (fullKey);
+			this.parseExtraAttributes(display_name , targetDevice, camera,  element);
 			camera.setOutputKey(display_name);
 			camera.setCommand(command);
 			camera.setGroupName(groupName);

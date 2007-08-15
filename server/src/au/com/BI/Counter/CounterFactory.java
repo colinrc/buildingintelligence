@@ -53,6 +53,7 @@ public class CounterFactory extends DeviceFactory {
 			Counter theInput = new Counter(name,	connectionType, outKey, maxInt);
 			String key = targetDevice.formatKey (tmpKey,theInput);
 			theInput.setKey (key);
+			this.parseExtraAttributes(outKey , targetDevice, theInput,  element);
 			theInput.setGroupName (groupName);
 			targetDevice.addControlledItem(key, theInput, type);
 			targetDevice.addStartupQueryItem(key, theInput, type);

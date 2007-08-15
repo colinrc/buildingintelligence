@@ -45,6 +45,7 @@ public class AVFactory  extends DeviceFactory {
 			AV video = new AV (display_name,connectionType);
 			String key = targetDevice.formatKey (tmpKey,video);
 			video.setKey (key);
+			this.parseExtraAttributes(display_name , targetDevice, video,  element);
 			video.setOutputKey(display_name);
 			video.setCommand(command);
 			video.setGroupName(groupName);

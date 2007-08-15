@@ -50,16 +50,17 @@ public class VirtualOutputFactory  extends DeviceFactory {
 				logger.log (Level.WARNING, "Max level not set to a number for counter " + name);
 				maxInt = 100;
 			}
-			VirtualOutput theOuput = new VirtualOutput(name, connectionType, outKey,maxInt);
-			String key = targetDevice.formatKey (tmpKey,theOuput);
-			theOuput.setKey (key);
-			theOuput.setGroupName (groupName);
-			targetDevice.addControlledItem(key, theOuput, type);
-			targetDevice.addStartupQueryItem(key, theOuput, type);
+			VirtualOutput theOutput = new VirtualOutput(name, connectionType, outKey,maxInt);
+			String key = targetDevice.formatKey (tmpKey,theOutput);
+			theOutput.setKey (key);
+			theOutput.setGroupName (groupName);
+			this.parseExtraAttributes(outKey , targetDevice, theOutput,  element);
+			targetDevice.addControlledItem(key, theOutput, type);
+			targetDevice.addStartupQueryItem(key, theOutput, type);
 			if (outKey != null && !outKey.equals("")) {
-				targetDevice.addControlledItem(outKey, theOuput, MessageDirection.FROM_FLASH);
+				targetDevice.addControlledItem(outKey, theOutput, MessageDirection.FROM_FLASH);
 				for (DeviceModel clientModel:clientModels){
-					clientModel.addControlledItem(outKey, theOuput, type);
+					clientModel.addControlledItem(outKey, theOutput, type);
 				}
 			}
 			

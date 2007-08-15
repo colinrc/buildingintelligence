@@ -48,6 +48,7 @@ public class UnitFactory  extends DeviceFactory {
 			
 		unit.setKey (key);
 		unit.setOutputKey(display_name);
+		this.parseExtraAttributes(display_name , targetDevice, unit,  element);
 		unit.setCommand(command);
 		unit.setGroupName(groupName);
 		targetDevice.addStartupQueryItem(key, unit, type);
