@@ -142,6 +142,9 @@
 						<tab name="Squeeze Control" icon="music-note">
 							<control name="Squeeze Control" key="Desktop" type="squeezePanel" />
 						</tab>
+						<tab name="Test A/C" icon="aircon">
+							<control name="A/C" key="fred" type="acRoomPanel" />
+						</tab>
 					</window>
 					<alerts x="520" y="190">
 						<alert name="Lights" keys="ENSUITE_LIGHT,ENSUITE_LV_LIGHT" icon="light-bulb" />
@@ -554,6 +557,25 @@
 				<item type="button" icon="media-pause" command="PAUSE" extra="" extra2="" />
 				<item type="button" icon="media-step-rwd" command="previousItem" extra="" extra2="" repeatRate="200" />
 				<item type="button" icon="media-step-fwd" command="nextItem" extra="" extra2="" repeatRate="200" />
+			</row>
+		</control>
+		<control type="acRoomPanel">
+			<row cases="mode:auto">
+				<item type="label" format="%name% (%mode%): %set% deg C" />
+			</row>
+			<row cases="mode:manual">
+				<item type="label" format="%name% (%mode%): %set% deg C [%position%]" />
+			</row>
+			<row>
+				<item type="button" label="auto" command="mode" extra="auto" showOn="true" />
+				<item type="button" label="manual" command="mode" extra="manual" showOn="true" />
+			</row>
+			<row cases="mode:auto">
+				<item type="picker" command="set" label="%value% deg C" minValue="16" maxValue="25" step="1" repeatRate="200" />
+			</row>
+			<row cases="mode:manual">
+				<item type="button" label="open" command="position" extra="open" showOn="true" />
+				<item type="button" label="closed" command="position" extra="closed" showOn="true" />
 			</row>
 		</control>
 	</controlTypes>

@@ -72,10 +72,11 @@
 					item_mc.defaultState = items[item].defaultState;
 					item_mc.defaultValue = items[item].defaultValue;
 					item_mc.states = items[item].states.split(",");
+					item_mc.format = items[item].format;
 					item_mc.formats = items[item].formats.split(",");
 					//createLabel(item_mc, {w:width, label:control.name});
 					item_mc.attachMovie("bi.ui.Label", "label_lb", 0, {settings:{width:width, label:control.name}});
-					
+										
 					item_mc.update = function (key) {
 						var state = _global.controls[key].storedStates["state"];
 						var value = _global.controls[key].storedStates["on"];
@@ -93,6 +94,12 @@
 								var label = this.formats[1];
 							} else {
 								var label = "%name% ";
+							}
+						} else if (this.format.length) {
+							var label = this.format;
+							for (var i in _global.controls[key].storedStates) {
+								label = label.split("%" + i + "%").join(_global.controls[key].storedStates[i]);
+								trace("%" + i + "% == " + _global.controls[key].storedStates[i]);
 							}
 						} else {
 							var label = "%name% ";
