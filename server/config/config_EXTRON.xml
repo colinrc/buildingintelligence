@@ -8,7 +8,15 @@
                         <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="5000"/>
                 </CONNECTION>
                 
+                <CATALOGUE NAME="Main Rack AV">
+                        <ITEM CODE="dvd1" VALUE="1"/>
+                        <ITEM CODE="dvd2" VALUE="2"/>
+                        <ITEM CODE="foxtel" VALUE="3"/>
+                        <ITEM CODE="tv" VALUE="4"/>
+                </CATALOGUE>
+                
                 <PARAMETERS>
+                     <ITEM NAME="AV_INPUTS" VALUE="Main Rack AV" />
                 </PARAMETERS>
                 
                 <EXTRON>
