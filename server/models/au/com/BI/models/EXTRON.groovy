@@ -115,36 +115,65 @@ class EXTRON extends GroovyModel {
 		try {
 			// Create ties
 			if (command.getCommandCode() ==  "src") {
+				String newSrc = getCatalogueValue (command.getExtraInfo(), "AV_INPUTS", device )
 				if (device.getKey() != ("0") ) {
 					switch (command.getExtra2Info() ) {
 					case "AV" :
-						returnWrapper.addCommOutput  (command.getExtraInfo() + "*" + device.getKey() + "!" )
+						returnWrapper.addCommOutput  (newSrc + "*" + device.getKey() + "!" )
 						break;
 				
 					case "AUDIO_ONLY" :
-						returnWrapper.addCommOutput  (command.getExtraInfo() + "*" + device.getKey() + "\$" )
+						returnWrapper.addCommOutput  (newSrc + "*" + device.getKey() + "\$" )
 						break;
 					
 					case "VIDEO_ONLY" :
-						returnWrapper.addCommOutput  (command.getExtraInfo() + "*" + device.getKey() + "%" )
+						returnWrapper.addCommOutput  (newSrc + "*" + device.getKey() + "%" )
 						break;
 						}
 				} else {
 					switch (command.getExtra2Info() ) {
 					case "AV" :
-						returnWrapper.addCommOutput  (command.getExtraInfo() + "*!" )
+						returnWrapper.addCommOutput  (newSrc + "*!" )
 						break;
 					
 					case "AUDIO_ONLY" :
-						returnWrapper.addCommOutput  (command.getExtraInfo() + "*\$" )
+						returnWrapper.addCommOutput  (newSrc + "*\$" )
 						break;
 						
 					case "VIDEO_ONLY" :
-						returnWrapper.addCommOutput  (command.getExtraInfo() + "*%" )
+						returnWrapper.addCommOutput  (newSrc + "*%" )
 						break;
 						}
 					}
 				}
+			
+			//Mute zone Audio or Video
+			if (command.getCommandCode() == "mute") {
+				switch (command.getExtraInfo() ) {
+				case "video" :
+					returnWrapper.addCommOutput (device.getKey() + "*1B")
+					break;
+					
+				case "audio" :
+					returnWrapper.addCommOutput (device.getKey() + "*1Z")
+					break;
+					
+				}
+			}
+			
+			//Unmute zone Audio or Video
+			if (command.getCommandCode() == "unmute") {
+				switch (command.getExtraInfo() ) {
+				case "video" :
+					returnWrapper.addCommOutput (device.getKey() + "*0B")
+					break;
+					
+				case "audio" :
+					returnWrapper.addCommOutput (device.getKey() + "*0Z")
+					break;
+					
+				}
+			}
 			
 		} catch (NumberFormatException ex){
 			logger.log (Level.WARNING,"An invalid input was received " + command.getExtraInfo())
