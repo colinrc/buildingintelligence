@@ -1,4 +1,4 @@
-== 24/Aug/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b62zip V1.6-b62]  ==
+== 24/Aug/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b62.zip V1.6-b62]  ==
 
 ''' General '''
 
@@ -19,12 +19,12 @@ To access these attributes call
 }}}
 
 This method throws an au.com.BI.Device.UnknownFieldException if you request a field that has not been added.
-
+Resolves [ticket:644],[ticket:643]
 
 Added more detailed exception reporting for configuration file loading failures and for communication failures.
 Ensured groovy models go through the same startup procedures as ordinary models.
 
-== 4/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b61zip V1.6-b61]  ==
+== 4/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b61.zip V1.6-b61]  ==
 
 ''' Nuvo '''
 
@@ -67,13 +67,13 @@ Changed permission on the user admin utility.
 Non-admin users can only change their own passwords; where admin users have the full add/ change/ delete functionality.
 Resolves ticket [ticket:638]
 
-== 2/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b59zip V1.6b59]  ==
+== 2/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b59.zip V1.6b59]  ==
 
 ''' Jetty '''
 
 Fixed problem with adding a user.
 
-== 1/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b58zip V1.6b58]  ==
+== 1/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b58.zip V1.6b58]  ==
 
 ''' Jetty '''
 
@@ -82,7 +82,7 @@ Added user manager
 https://ELIFE_SERVER:8443/UserManager
 
 
-== 25/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b57zip V1.6b57]  ==
+== 25/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b57.zip V1.6b57]  ==
 
 ''' GroovyModels '''
 
