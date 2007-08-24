@@ -26,6 +26,7 @@ import au.com.BI.Flash.ClientCommand;
 import au.com.BI.PulseOutput.PulseOutput;
 import au.com.BI.SMS.SMS;
 import au.com.BI.Sensors.Sensor;
+import au.com.BI.Sensors.SensorFascade;
 import au.com.BI.ToggleSwitch.ToggleSwitch;
 import au.com.BI.Thermostat.Thermostat;
 import au.com.BI.Unit.Unit;
@@ -208,6 +209,14 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			this.setAppendToSentStrings(getParameterValue(
 					"APPEND_TO_SENT_STRINGS", DeviceModel.MAIN_DEVICE_GROUP));
 		}
+		
+	}
+	
+	/** 
+	 * A hook which occurs before the system starts reading any model parameter details.
+	 * Use this to set any values that require the model to have been setup , eg. with the label hander, macro handler etc. but before parsing the details.
+	 */
+	public void aboutToReadModelDetails() {
 		
 	}
 	
@@ -932,7 +941,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 							"A command for a Lighting device was issued from "
 									+ device.getName() + " for the model "
 									+ this.getName());
-					buildLightString((LightFascade) device, command,
+					buildLightControlString((LightFascade) device, command,
 							returnWrapper);
 					break;
 
@@ -940,7 +949,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					logger.log(Level.FINE,
 							"A command for a Sensor device was issued from "
 									+ device.getName());
-					buildSensorControlString((Sensor) device, command,
+					buildSensorControlString((SensorFascade) device, command,
 							returnWrapper);
 					break;
 
@@ -1544,11 +1553,11 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			ReturnWrapper returnWrapper) throws ModelException {
 	}
 
-	public void buildLightString(LightFascade device, CommandInterface command,
+	public void buildLightControlString(LightFascade device, CommandInterface command,
 			ReturnWrapper returnWrapper) throws ModelException {
 	}
 
-	public void buildSensorControlString(Sensor device,
+	public void buildSensorControlString(SensorFascade device,
 			CommandInterface command, ReturnWrapper returnWrapper)
 			throws ModelException {
 	}
@@ -1625,6 +1634,10 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	
 	public void addStringAttribute (int deviceType, String name){
 		deviceFactories.addStringAttribute (this,deviceType,name);
+	}
+	
+	public void addStringAttribute (Object object, String name){
+		deviceFactories.addStringAttribute (this,((au.com.BI.Device.Device)object).getDeviceType(), name);
 	}
 	
 }

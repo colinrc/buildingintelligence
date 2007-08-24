@@ -77,7 +77,7 @@ public class DeviceFactory {
 	
 	public void addDeviceAttribute (DeviceModel model, String name){
 		logger.log (Level.FINEST, "Adding extra attribute " +name + " to support model " + model.getName());
-		List<String> nameList = extraAttributes.get (name);
+		List<String> nameList = extraAttributes.get (model);
 		if (nameList == null){
 			nameList = new LinkedList <String>();
 			extraAttributes.put (model ,nameList);

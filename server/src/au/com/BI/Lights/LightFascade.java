@@ -8,6 +8,7 @@ import au.com.BI.X10.*;
 import au.com.BI.CBUS.*;
 import au.com.BI.Command.*;
 import au.com.BI.Device.DeviceType;
+import au.com.BI.Device.UnknownFieldException;
 import au.com.BI.Dynalite.*;
 
 import java.util.*;
@@ -394,7 +395,7 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 	/* 
 	 * @see au.com.BI.Device.DeviceType#getAttributeValue(java.lang.String)
 	 */
-	public String getAttributeValue(String name) {
+	public String getAttributeValue(String name) throws UnknownFieldException {
 		return light.getAttributeValue(name);
 	}
 

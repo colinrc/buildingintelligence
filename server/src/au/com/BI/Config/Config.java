@@ -142,6 +142,7 @@ public class Config {
 						newDeviceModel.setAlarmLogging (alarmLogging);	
 						newDeviceModel.setVersionManager(versionManager);
 						newDeviceModel.setLabelMgr(labelMgr);
+						parseModelDeviceLines(newDeviceModel, clientModels, config);
 						deviceModels.add(newDeviceModel);
 						newDeviceModel.setInstanceID(deviceModels.size()-1);
 					}
@@ -371,11 +372,16 @@ public class Config {
                                          DeviceModel.MAIN_DEVICE_GROUP);
 
                 parseConnection(deviceConfig, deviceModel);
-
-                parseDevices(deviceConfig, deviceModel, clientModels,
-                             DeviceModel.MAIN_DEVICE_GROUP);
                 return deviceModel;
         }
+    
+    public void parseModelDeviceLines(DeviceModel deviceModel, List <DeviceModel> clientModels, Element deviceConfig) throws
+    JDOMException {
+        deviceModel.aboutToReadModelDetails(); // CC check location
+
+        parseDevices(deviceConfig, deviceModel, clientModels,
+                     DeviceModel.MAIN_DEVICE_GROUP);
+    }
 
     @SuppressWarnings("unchecked")
 	protected void parseConnection (Element deviceSpec, DeviceModel deviceModel ) {
@@ -434,7 +440,7 @@ public class Config {
 	protected void parseDevices(Element deviceConfig, DeviceModel deviceModel,
 				List <DeviceModel>clientModels, String groupName) throws JDOMException {
 		int type;
-		int groupNumber = 1; // used if a name is not specified; group 0 is reserved for overall device confuration
+		int groupNumber = 1; // used if a name is not specified; group 0 is reserved for overall device configuration
 
 		// An item is the next level
 		List itemList = deviceConfig.getChildren();

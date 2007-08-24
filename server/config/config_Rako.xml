@@ -1,0 +1,25 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+        <DESC>The BI demonstration CBUS system</DESC>
+ 
+        !-- ______________________________________  RAKO DEFS  ____________________  -->
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="RAKO" DESCRIPTION="Rako Lights">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                </CONNECTION>
+                
+                <CATALOGUE NAME="Rako Scenes">
+                </CATALOGUE>
+                
+                <PARAMETERS>
+                	<ITEM NAME="SCENES" VALUE="Rako Scenes"/>
+                	 <ITEM NAME="DECIMAL_KEYS" VALUE="Y" />
+                </PARAMETERS>
+                
+                <RAKO>
+                        <LIGHT ACTIVE="Y" KEY="06" NAME="Test light" DISPLAY_NAME="GARAGE_LIGHT" UNIT="5" CHANNEL="2" POWER_RATING="100"/>
+               </RAKO>
+        </DEVICE>
+</CONFIG>

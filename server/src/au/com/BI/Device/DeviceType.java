@@ -151,7 +151,7 @@ public interface DeviceType
 	 */
 	public void setAttributeValue (String name, String value);
 	public void clearAttributeValues (); 
-	public String getAttributeValue (String name);
+	public String getAttributeValue (String name) throws UnknownFieldException;
 
 }
 	

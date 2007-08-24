@@ -1,4 +1,30 @@
-== 4/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b61zip V1.6b61]  ==
+== 24/Aug/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b62zip V1.6-b62]  ==
+
+''' General '''
+
+Added the ability for models to add custom attributes to device lines in the configuration files.
+
+{{{
+   For example to expect lights to have an attribute called UNIT include this method in your model.
+   
+   void finishedReadingModelParameters() {
+	    addStringAttribute (DeviceType.Light, "UNIT" )
+	}
+	
+}}}
+
+To access these attributes call
+{{{	
+	getAttributeValue (name)  
+}}}
+
+This method throws an au.com.BI.Device.UnknownFieldException if you request a field that has not been added.
+
+
+Added more detailed exception reporting for configuration file loading failures and for communication failures.
+Ensured groovy models go through the same startup procedures as ordinary models.
+
+== 4/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b61zip V1.6-b61]  ==
 
 ''' Nuvo '''
 
@@ -33,7 +59,7 @@ Added access methods for the cache
 * Object getLastAccessTime(String key)   (time in ms since epoch)
 * Object getLastAccessTimeDuration(String key, String interval)   interval = minute | hour | day 
 
-== 4/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b60zip V1.6b60]  [attachment:wiki:SoftwareReleases:eLife-1.6b60-libs.zip Libs-V1.6b60] ==
+== 4/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b60zip V1.6b60]  [attachment:wiki:SoftwareReleases:eLife-1.6-b60-libs.zip Libs-V1.6b60] ==
 
 ''' Jetty '''
 

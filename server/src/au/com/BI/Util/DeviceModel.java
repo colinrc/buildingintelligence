@@ -286,8 +286,16 @@ public interface DeviceModel {
    	/** 
    	 * A hook which occurs after the configuration parser has read the to level parameters 
     *	but has not yet begun the individual device entries. 
+    *
+    * Note this is only called if top level parameters are present.
     */
 	public void finishedReadingParameters ();
+	
+	/** 
+	 * A hook which occurs before the system starts reading any model parameter details.
+	 * Use this to set any values that require the model to have been setup , eg. with the label hander, macro handler etc. but before parsing the details.
+	 */
+	public void aboutToReadModelDetails();
 	
 	/**
 	 * Sets a display name to be used error reporting

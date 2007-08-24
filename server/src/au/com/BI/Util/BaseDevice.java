@@ -7,6 +7,7 @@ import java.util.*;
 
 import au.com.BI.Command.*;
 import au.com.BI.Device.DeviceType;
+import au.com.BI.Device.UnknownFieldException;
 
 
 /**
@@ -151,8 +152,12 @@ public class BaseDevice {
 		extraAttributes.put (name,value);
 	}
 	
-	public String getAttributeValue (String name) {
-		return extraAttributes.get (name);
+	public String getAttributeValue (String name) throws UnknownFieldException {
+		if (extraAttributes.containsKey(name)){
+			return extraAttributes.get (name);
+		} else {
+			throw new UnknownFieldException ("Unknown field requested " + name);
+		}
 	}
 	
 	public void clearAttributeValues (){

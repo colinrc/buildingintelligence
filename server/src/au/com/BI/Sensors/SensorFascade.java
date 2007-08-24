@@ -6,6 +6,7 @@ package au.com.BI.Sensors;
 import au.com.BI.CBUS.*;
 import au.com.BI.Command.*;
 import au.com.BI.Device.DeviceType;
+import au.com.BI.Device.UnknownFieldException;
 
 import java.util.*;
 
@@ -295,7 +296,7 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	/*
 	 * @see au.com.BI.Device.DeviceType#getAttributeValue(java.lang.String)
 	 */
-	public String getAttributeValue(String name) {
+	public String getAttributeValue(String name) throws UnknownFieldException {
 		return sensor.getAttributeValue(name);
 	}
 
