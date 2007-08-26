@@ -51,11 +51,13 @@ class RTI_IR extends GroovyModel {
 					// control is used to send eLIFE commands
 					case "control" :
 						if (birtiParm.length == 4 ) {
+							// Example BIRTI=control,LOUNGE_AUDIO,volume,up
 							def rtiPart3 = birtiParm[2]
 							def rtiPart4 = birtiParm[3]
 							returnWrapper.addFlashCommand (rtiPart1, rtiPart2, rtiPart3, rtiPart4)
 							break;
 						} else {
+							// Example BIRTI=control,LOUNGE_LIGHT,on
 							def rtiPart3 = birtiParm[2]
 							def rtiPart4 = birtiParm[3]
 							returnWrapper.addFlashCommand (rtiPart1, rtiPart2, rtiPart3)
@@ -64,10 +66,12 @@ class RTI_IR extends GroovyModel {
 						
 					// runmacro is used to start eLIFE macros
 					case "runmacro" :
+						// Example BIRTI=runmacro,fred
 						returnWrapper.addFlashCommand ("MACRO" , "run" , rtiPart2 )
 						break;
 						
 					case "stopmacro" :
+						//Example BIRTI=stopmacro,fred
 						returnWrapper.addFlashCommand ("MACRO" , "stop" , rtiPart2 )
 						break;
 					}
