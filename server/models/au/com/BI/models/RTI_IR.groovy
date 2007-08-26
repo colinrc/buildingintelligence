@@ -31,15 +31,47 @@ class RTI_IR extends GroovyModel {
 				def rtiUnit = configHelper.getControlledItem ("0")
 				switch (theCommand) {
 				
-				// Deal with the standard BIRTI commands - eg: BIRTI=on,3 
+				// Deal with the standard BIRTI commands - eg: BIRTI=command,LOUNGE_LIGHT,on 
 				case "BIRTI" :
 
 					logger.log (Level.FINE,"BIRTI received " + command )
-
+					
+					// Deal with the RTI commands [control|runmacro|stopmacro]
 					def birtiParm = partsOfCommand[1].split(",")
-					def rtiCommand = birtiParm[0]
-					def rtiExtra = birtiParm[1]
-					def rtiExtra2 = birtiParm[2]
+					def rtiPart1 = birtiParm[0]
+					def rtiPart2 = birtiParm[1]
+					
+					if (birtiParm.length > 4 ) {
+						logger.log (Level.WARNING,"Too many parameters for RTI model " + command )
+						break;
+					}	
+					
+					switch (rtiPart1) {
+					
+					// control is used to send eLIFE commands
+					case "control" :
+						if (birtiParm.length == 4 ) {
+							def rtiPart3 = birtiParm[2]
+							def rtiPart4 = birtiParm[3]
+							returnWrapper.addFlashCommand (rtiPart1, rtiPart2, rtiPart3, rtiPart4)
+							break;
+						} else {
+							def rtiPart3 = birtiParm[2]
+							def rtiPart4 = birtiParm[3]
+							returnWrapper.addFlashCommand (rtiPart1, rtiPart2, rtiPart3)
+						}
+						break;
+						
+					// runmacro is used to start eLIFE macros
+					case "runmacro" :
+						returnWrapper.addFlashCommand ("MACRO" , "run" , rtiPart2 )
+						break;
+						
+					case "stopmacro" :
+						returnWrapper.addFlashCommand ("MACRO" , "stop" , rtiPart2 )
+						break;
+					}
+
 					returnWrapper.addFlashCommand (rtiUnit,  rtiCommand, rtiExtra, rtiExtra2)	
 					break;
 				default :
