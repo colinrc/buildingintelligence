@@ -46,8 +46,8 @@ class RAKO extends GroovyModel {
 	}
 
 	void aboutToReadModelDetails() {
-		addStringAttribute (DeviceType.LIGHT, "CHANNEL")
-		addStringAttribute (DeviceType.LIGHT, "UNIT" )
+		addStringAttribute (DeviceType.LIGHT, "ROOM" )
+		// The channel is considered the key hence does not need an extra field
 	}
 	
 	void processStringFromComms (String command , ReturnWrapper returnWrapper) {
@@ -61,8 +61,7 @@ class RAKO extends GroovyModel {
 		try {
 			// To switch on the audio device it requieres a string of this format      AU_PWR:zone:on or AW_PWR:zone:off
 			if (command.getCommandCode() ==  "on") {
-				def newChannel = device.getAttributeValue ("CHANNEL")
-				def newUnit = device.getAttributeValue ("UNIT")
+				def room = device.getAttributeValue ("ROOM")
 					
 				returnWrapper.addCommOutput  ("AU_PWR:" + device.getKey() + ":1")
 			}
