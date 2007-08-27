@@ -52,32 +52,38 @@ class RTI_IR extends GroovyModel {
 					case "control" :
 						if (birtiParm.length == 4 ) {
 							// Example BIRTI=control,LOUNGE_AUDIO,volume,up
-							def rtiPart3 = birtiParm[2]
-							def rtiPart4 = birtiParm[3]
-							returnWrapper.addFlashCommand (rtiPart1, rtiPart2, rtiPart3, rtiPart4)
-							break;
+							def commandStr = birtiParm[2]
+							def extraStr = birtiParm[3]
+							returnWrapper.addFlashCommand (rtiPart2, commandStr, extraStr)
 						} else {
 							// Example BIRTI=control,LOUNGE_LIGHT,on
-							def rtiPart3 = birtiParm[2]
-							def rtiPart4 = birtiParm[3]
-							returnWrapper.addFlashCommand (rtiPart1, rtiPart2, rtiPart3)
+							def commandStr = birtiParm[2]
+							returnWrapper.addFlashCommand (rtiPart2, commandStr)
 						}
 						break;
 						
 					// runmacro is used to start eLIFE macros
 					case "runmacro" :
 						// Example BIRTI=runmacro,fred
-						returnWrapper.addFlashCommand ("MACRO" , "run" , rtiPart2 )
+						// returnWrapper.addFlashCommand ("MACRO" , "run" , rtiPart2 )
+						
+						// Fill this command structure in if you want to pass any parameters to the macro being run.
+						Command commandForMacro = new Command();
+						// commandForMacro.setCommand("");
+						//   commandForMacro.setExtraInfo(""");
+
+						macroHandler.run (rtiPart2,null, commandForMacro)
 						break;
 						
 					case "stopmacro" :
 						//Example BIRTI=stopmacro,fred
-						returnWrapper.addFlashCommand ("MACRO" , "stop" , rtiPart2 )
+						//returnWrapper.addFlashCommand ("MACRO" , "stop" , rtiPart2 )
+						macroHandler.abort (rtiPart2,null)
 						break;
 					}
 
-					returnWrapper.addFlashCommand (rtiUnit,  rtiCommand, rtiExtra, rtiExtra2)	
 					break;
+
 				default :
 					logger.log (Level.WARNING,"Unexpected string received " + command )
 				}
