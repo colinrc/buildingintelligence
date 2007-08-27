@@ -159,14 +159,29 @@ public class ReturnWrapper {
 			 addFlashCommand(device, command, "", "", "", "", "", 0);
 		}
 		
+		public void addFlashCommand(String displayName,
+				String command) {
+			 addFlashCommand(displayName, command, "", "", "", "", "", 0);
+		}
+		
 		public void addFlashCommand(DeviceType device,
 				String command, String extra) {
 			 addFlashCommand(device, command, extra, "", "", "", "", 0);
+		}
+		
+		public void addFlashCommand(String displayName,
+				String command, String extra) {
+			 addFlashCommand(displayName, command, extra, "", "", "", "", 0);
 		}
 
 		public void addFlashCommand(DeviceType device,
 				String command, Integer extra) {
 			 addFlashCommand(device, command, extra.toString(), "", "", "", "", 0);
+		}
+		
+		public void addFlashCommand(String displayName,
+				String command, Integer extra) {
+			 addFlashCommand(displayName, command, extra.toString(), "", "", "", "", 0);
 		}
 		
 		public void addFlashCommand(DeviceType device,
@@ -175,9 +190,21 @@ public class ReturnWrapper {
 			 addFlashCommand(device, command, truncVal.toString() , "", "", "", "", 0);
 		}
 		
+		public void addFlashCommand(String displayName,
+				String command, Double extra) {
+			Integer truncVal = new Integer( extra.intValue());
+			 addFlashCommand(displayName, command, truncVal.toString() , "", "", "", "", 0);
+		}
+		
 		public void addFlashCommand(DeviceType device,
 				String command, String extra, String extra2) {
 			 addFlashCommand(device, command, extra, extra2, "", "", "",
+					0);
+		}
+		
+		public void addFlashCommand(String displayName,
+				String command, String extra, String extra2) {
+			 addFlashCommand(displayName, command, extra, extra2, "", "", "",
 					0);
 		}
 
@@ -187,10 +214,23 @@ public class ReturnWrapper {
 					"", 0);
 		}
 
+		public void addFlashCommand(String displayName,
+				String command, String extra, String extra2, String extra3) {
+			 addFlashCommand(displayName, command, extra, extra2, extra3, "",
+					"", 0);
+		}
+		
 		public void addFlashCommand(DeviceType device,
 				String command, String extra, String extra2, String extra3,
 				String extra4) {
 			 addFlashCommand(device, command, extra, extra2, extra3,
+					extra4, "", 0);
+		}
+
+		public void addFlashCommand(String displayName,
+				String command, String extra, String extra2, String extra3,
+				String extra4) {
+			 addFlashCommand(displayName, command, extra, extra2, extra3,
 					extra4, "", 0);
 		}
 
@@ -200,11 +240,34 @@ public class ReturnWrapper {
 			 addFlashCommand(device, command, extra, extra2, extra3,
 					extra4, extra5, 0);
 		}
+		
+		public void addFlashCommand(String displayName,
+				String command, String extra, String extra2, String extra3,
+				String extra4, String extra5) {
+			 addFlashCommand(displayName, command, extra, extra2, extra3,
+					extra4, extra5, 0);
+		}
 
 		public void  addFlashCommand(DeviceType device,
 				String command, String extra, String extra2, String extra3,
 				String extra4, String extra5, long targetDeviceID) {
 			CommandInterface flCommand = device.buildDisplayCommand();
+			flCommand.setKey("CLIENT_SEND");
+			flCommand.setTargetDeviceID(targetDeviceID);
+			flCommand.setCommand(command);
+			flCommand.setExtraInfo(extra);
+			flCommand.setExtra2Info(extra2);
+			flCommand.setExtra3Info(extra3);
+			flCommand.setExtra4Info(extra4);
+			flCommand.setExtra5Info(extra5);
+			addFlashCommand (flCommand);
+		}
+		
+		public void  addFlashCommand(String displayName,
+				String command, String extra, String extra2, String extra3,
+				String extra4, String extra5, long targetDeviceID) {
+			Command flCommand = new Command();
+			flCommand.setDisplayName(displayName);
 			flCommand.setKey("CLIENT_SEND");
 			flCommand.setTargetDeviceID(targetDeviceID);
 			flCommand.setCommand(command);
