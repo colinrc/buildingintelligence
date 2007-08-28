@@ -78,6 +78,20 @@
 		<group name="Test" icon="gears" type="web" url="http://www.sparkos.com/" />
 	</logging>
 	<appsBar>
+		<icon name="Air Con" icon="aircon" func="openWindow" canOpen="">
+			<window>
+				<tab name="Lights &amp; Fan" icon="light-bulb">
+					<control name="Ground Floor Lights" key="ENSUITE_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
+					<control name="Main Light" key="ENSUITE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+					<control name="LV Light" key="ENSUITE_LV_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+					<control name="Fan" key="ENSUITE_FAN" type="onOff" icons="fan-off,fan" />
+				</tab>
+				<tab name="Heaters" icon="heater">
+					<control name="1st Heat Lamp" key="ENSUITE_1_HEAT" type="onOff" icons="heater-off,heater" />
+					<control name="2nd Heat Lamp" key="ENSUITE_2_HEAT" type="onOff" icons="heater-off,heater" />
+				</tab>
+			</window>
+		</icon>
 		<icon name="TV" icon="tv" func="toggleTV" canOpen="" />
 		<icon name="Web" icon="atom" func="openBrowser" canOpen="" />
 		<icon name="Logs" icon="notepad" func="openLogs" canOpen="" />
