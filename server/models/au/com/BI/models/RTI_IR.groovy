@@ -14,7 +14,8 @@ import java.util.regex.Pattern
 class RTI_IR extends GroovyModel {
 
 	String name = "RTI_IR"
-	
+	String version = "1"
+		
 	RTI_IR () {
 		super()
 
