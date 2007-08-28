@@ -21,7 +21,7 @@ import au.com.BI.Util.DeviceModel
 		String name = "DMX"
 		// This name corresponds with the DEVICE name in the configuration file
 		
-		String version="1.0"
+		String version="1"
 		// The version will be reported back to the Flash client to assist in debugging model problems
 
 		// DevicesControlled = [LightFascade:List]
