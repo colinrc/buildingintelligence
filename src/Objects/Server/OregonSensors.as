@@ -6,12 +6,15 @@
 	import flash.utils.IExternalizable;
 	import flash.utils.IDataOutput;
 	import flash.utils.IDataInput;
+	import Forms.Server.OregonSensors_frm;
+	import mx.collections.ArrayCollection;
 	
 	[Bindable("OregonSensors")]
 	[RemoteClass(alias="elifeAdmin.objects.server.oregonSensors")]
 	public class OregonSensors extends BaseElement {
 		private var container:String="";
-		private var sensors:Array;
+		[Bindable]
+		public var sensors:ArrayCollection;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -22,7 +25,7 @@
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
 			container = input.readUTF()as String;
-			sensors = input.readObject()as Array;
+			sensors = input.readObject()as ArrayCollection;
 		}
 		
 		public function getKeys():Array {
@@ -83,9 +86,9 @@
 				return XML();
 			}
 			
-			var sensorsNode:XML = new XML(container);
+			var sensorsNode:XML = new XML("<"+container+" />");
 			for (var sensor in sensors) {
-				var newSensor:XML = new XML("SENSOR");
+				var newSensor:XML = new XML("<SENSOR />");
 				if (sensors[sensor].name != "") {
 					newSensor.@NAME = sensors[sensor].name;
 				}
@@ -115,20 +118,30 @@
 			treeNode = newNode;				
 			return newNode;
 		}
+		public function getClassForm():Class {
+			var className:Class = Forms.Server.OregonSensors_frm;
+			return className;		
+		}
+		
+		[Bindable]
+		public  function set Data(newData:ObjectProxy):void {
+			cameras = newData.cameras;
+		}
+		public  function get Data():ObjectProxy {
+			var ob:ObjectProxy = new ObjectProxy({sensors:sensors, dataObject:this});
+			return ob;
+		}
+		
+		
+		
 		public function getKey():String {
 			return "OregonSensors";
 		}
-		[Bindable]
-		public  function set Data(newData:ObjectProxy):void {
-			sensors = newData.sensors;
-		}
-		public  function get Data():ObjectProxy {
-			return {sensors:sensors, dataObject:this};
-		}
+		
 		public override function setXML(newData:XML):void {
-			sensors = new Array();
+			sensors = new ArrayCollection();
 			container = newData.name();
-			for (var child:int = 0; child<newData.children().length;child++){	
+			for (var child:int = 0; child<newData.children().length();child++){	
 				var newSensor = new Object();
 				newSensor.name = "";
 				newSensor.display_name = "";
@@ -150,7 +163,7 @@
 				if (newData.children()[child].@CHANNEL != undefined) {
 					newSensor.channel = newData.children()[child].@CHANNEL;
 				}
-				sensors.push(newSensor);
+				sensors.addItem(newSensor);
 			}
 		}
 	}

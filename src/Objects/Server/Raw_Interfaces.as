@@ -6,12 +6,17 @@
 	import flash.utils.IExternalizable;
 	import flash.utils.IDataOutput;
 	import flash.utils.IDataInput;
+	import Forms.Server.Raw_Interfaces_frm;
+	import mx.collections.ArrayCollection;
 	
 	[Bindable("Raw_Interfaces")]
 	[RemoteClass(alias="elifeAdmin.objects.server.raw_Interfaces")]
 	public class Raw_Interfaces extends BaseElement {
-		public var raw_interfaces:Array = new Array();
+		[Bindable]
+		public var raw_interfaces:ArrayCollection = new ArrayCollection();
+		[Bindable]
 		public var container:String = "";
+		[Bindable]
 		public var catalogues:Catalogues = new Catalogues();
 		
 		public override function writeExternal(output:IDataOutput):void {
@@ -23,7 +28,7 @@
 		
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
-			raw_interfaces = input.readObject() as Array;
+			raw_interfaces = input.readObject() as ArrayCollection;
 			container = input.readUTF() as String;
 			catalogues = input.readObject() as Catalogues;
 		}
@@ -79,7 +84,7 @@
 					flag = "error";
 					appendValidationMsg("Code is empty");
 				}
-				if ((raw_interfaces[raw_interface].catalog == undefined) || (raw_interfaces[raw_interface].catalog == "")) {
+				if ((raw_interfaces[raw_interface].catalogue == undefined) || (raw_interfaces[raw_interface].catalogue == "")) {
 					flag = "error";
 					appendValidationMsg("Catalog has not been created");
 				}
@@ -95,12 +100,18 @@
 		public override function getForm():String {
 			return "forms.project.device.raw_interfaces";
 		}
+		
+		public function getClassForm():Class {
+			var className:Class = Forms.Server.Raw_Interfaces_frm;
+			return className;		
+		}
+		
 		public override function toXML():XML {
 			if (container.length == 0) {
 				return XML();
 			}
 			
-			var newRaw_Interfaces:XML = new XML(container);
+			var newRaw_Interfaces:XML = new XML("<"+container+" />");
 			//raw_interfaces.sortOn(["display_name", "name", "catalogue", "code", "command"]);
 			for (var index:int = 0; index < raw_interfaces.length; index++) {
 				var foundInterface:Boolean = false;
@@ -108,7 +119,7 @@
 					if ((newRaw_Interfaces[rawInterface].@NAME == raw_interfaces[index].name) && (newRaw_Interfaces[rawInterface].@DISPLAY_NAME == raw_interfaces[index].display_name)) {
 						foundInterface = true;
 						var foundItems:Boolean = false;
-						for (var rawItem:int = 0; rawItem<newRaw_Interfaces[rawInterface].children().length;rawItem++){
+						for (var rawItem:int = 0; rawItem<newRaw_Interfaces[rawInterface].children().length();rawItem++){
 							if (newRaw_Interfaces[rawInterface].children()[rawItem].@CATALOGUE == raw_interfaces[index].catalogue) {
 								foundItems = true;
 								var Raw:XML = new XML("<RAW />");
@@ -134,7 +145,10 @@
 									Raw.@EXTRA5 = raw_interfaces[index].extra5;
 								}
 								for (var variable in raw_interfaces[index].vars) {
-									Raw.appendChild(raw_interfaces[index].vars[variable]);
+									var newVar:XML = new XML("<VARS />");
+									newVar.@NAME = raw_interfaces[index].vars[variable].NAME;
+									newVar.@VALUE = raw_interfaces[index].vars[variable].VALUE;
+									Raw.appendChild(newVar);
 								}
 								newRaw_Interfaces[rawInterface].children()[rawItem].appendChild(Raw);
 							}
@@ -167,7 +181,10 @@
 								Raw.@EXTRA5 = raw_interfaces[index].extra5;
 							}
 							for (var variable in raw_interfaces[index].vars) {
-								Raw.appendChild(raw_interfaces[index].vars[variable]);
+								var newVar:XML = new XML("<VARS />");
+								newVar.@NAME = raw_interfaces[index].vars[variable].NAME;
+								newVar.@VALUE = raw_interfaces[index].vars[variable].VALUE;
+								Raw.appendChild(newVar);
 							}
 							Raw_Items.appendChild(Raw);
 							newRaw_Interfaces[rawInterface].appendChild(Raw_Items);
@@ -187,8 +204,8 @@
 						Raw_Items.@CATALOGUE = raw_interfaces[index].catalogue;
 					}
 					var Raw:XML = new XML("<RAW />");
-					if (raw_interfaces[index].code.label.length) {
-						Raw.@CODE = raw_interfaces[index].code.label;
+					if (raw_interfaces[index].code.length) {
+						Raw.@CODE = raw_interfaces[index].code;
 					}
 					if (raw_interfaces[index].command.length) {
 						Raw.@COMMAND = raw_interfaces[index].command;
@@ -209,7 +226,10 @@
 						Raw.@EXTRA5 = raw_interfaces[index].extra5;
 					}
 					for (var variable in raw_interfaces[index].vars) {
-						Raw.appendChild(raw_interfaces[index].vars[variable]);
+						var newVar:XML = new XML("<VARS />");
+						newVar.@NAME = raw_interfaces[index].vars[variable].NAME;
+						newVar.@VALUE = raw_interfaces[index].vars[variable].VALUE;
+						Raw.appendChild(newVar);
 					}
 					Raw_Items.appendChild(Raw);
 					Raw_Interface.appendChild(Raw_Items);
@@ -232,16 +252,18 @@
 			return "Custom Outputs";
 		}
 		public  function get Data():ObjectProxy {
-			return {raw_interfaces:raw_interfaces, cataloguesNode:catalogues.toXML(), dataObject:this};
+			
+			var ob:ObjectProxy = new ObjectProxy({raw_interfaces:raw_interfaces, cataloguesNode:catalogues.toXML(), dataObject:this})
+			return ob;
 		}
 		[Bindable]
 		public  function set Data(newData:ObjectProxy):void {
 			raw_interfaces = newData.raw_interfaces;
 		}
 		public override function setXML(newData:XML):void {
-			raw_interfaces = new Array();
+			raw_interfaces = new ArrayCollection();
 			container = newData.name();
-			for (var child:int = 0; child<newData.children().length;child++){	
+			for (var child:int = 0; child<newData.children().length();child++){	
 				var newRaw_interface:Object = new Object();
 				newRaw_interface.display_name = "";
 				newRaw_interface.name = "";
@@ -251,14 +273,14 @@
 				if (newData.children()[child].@NAME != undefined) {
 					newRaw_interface.name = newData.children()[child].@NAME;
 				}
-				var raw_items:XML = newData.children()[child].children();
-				for (var raw_item:int = 0; raw_item<raw_items.children().length;raw_item++){
+				var raw_items:XMLList = newData.children()[child].children();
+				for (var raw_item:int = 0; raw_item<raw_items.length();raw_item++){
 					newRaw_interface.catalogue = "";
 					if (raw_items[raw_item].@CATALOGUE != undefined) {
 						newRaw_interface.catalogue = raw_items[raw_item].@CATALOGUE;
 					}
-					var raws:XML = raw_items[raw_item].children();
-					for (var raw:int = 0; raw<raws.children().length;raw++){
+					var raws:XMLList = raw_items[raw_item].children();
+					for (var raw:int = 0; raw<raws.length();raw++){
 						newRaw_interface.code = new Object();
 						newRaw_interface.command = "";
 						newRaw_interface.extra = "";
@@ -267,7 +289,7 @@
 						newRaw_interface.extra4 = "";
 						newRaw_interface.extra5 = "";
 						if (raws[raw].@CODE != undefined) {
-							newRaw_interface.code.label = raws[raw].@CODE;
+							newRaw_interface.code = raws[raw].@CODE;
 						}
 						if (raws[raw].@COMMAND != undefined) {
 							newRaw_interface.command = raws[raw].@COMMAND;
@@ -292,7 +314,7 @@
 							newRaw_interface.vars = new Array();
 							
 							for (var variable:int=0 ; variable<raws[raw].children().length();variable++) {
-								newRaw_interface.vars.push(raws[raw].children()[variable]);
+								newRaw_interface.vars.push({"NAME":raws[raw].VARS[variable].@NAME, "VALUE":raws[raw].VARS[variable].@VALUE})
 							}
 						}
 						var actualInterface = new Object();

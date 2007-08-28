@@ -50,7 +50,7 @@
 			newDevice.appendChild(newParameters);
 			var newPelco:XML = new XML("<"+device_type+" />");
 			var tempCameras:XML = cameras.toXML();
-			for (var child:int = 0; child<tempCameras.children().length;child++){
+			for (var child:int = 0; child<tempCameras.children().length();child++){
 				newPelco.appendChild(tempCameras.children()[child]);
 			}
 			newDevice.appendChild(newPelco);

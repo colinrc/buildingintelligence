@@ -82,7 +82,7 @@
 			return newNode;
 		}
 		public function getKey():String {
-			return "Jandy";
+			return "JANDI";
 		}
 		public function getClassForm():Class {
 			var className:Class = Forms.Server.Jandy_frm;

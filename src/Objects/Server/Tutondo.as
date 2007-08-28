@@ -157,7 +157,7 @@
 							functions.setXML(newData.children()[child]);
 						}
 						break;
-					case "SIGN_VIDEO":
+					case "TUTONDO":
 						audiovideos.setXML(newData.children()[child]);
 						break;
 					}

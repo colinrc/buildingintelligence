@@ -6,11 +6,13 @@
 	import flash.utils.IExternalizable;
 	import flash.utils.IDataOutput;
 	import flash.utils.IDataInput;
+	import mx.collections.ArrayCollection;
+	import Forms.Server.CustomInput_frm;
 	[Bindable("Customs")]
 	[RemoteClass(alias="elifeAdmin.server.customs")] 
 	public class Customs extends BaseElement {
-		private var container:String="";
-		private var customs:Array;
+		public var container:String="";
+		public var customs:ArrayCollection;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -21,7 +23,7 @@
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
 			container = input.readUTF()as String;
-			customs = input.readObject()as Array;
+			customs = input.readObject()as ArrayCollection;
 		}
 		
 		public function getKeys():Array{
@@ -107,12 +109,18 @@
 		public override function getForm():String {
 			return "forms.project.device.custom";
 		}
+		
+		public function getClassForm():Class {
+			var className:Class = Forms.Server.CustomInput_frm;
+			return className;		
+		}
+		
 		public override function toXML():XML {
 			if (container.length == 0) {
 				return XML();
 			}
 			
-			var customsNode = new XML(container);
+			var customsNode = new XML("<"+container+" />");
 			for (var custom in customs) {
 				var newCustom = new XML("<CUSTOM_INPUT />");
 				if (customs[custom].name != "") {
@@ -168,24 +176,25 @@
 			return "Custom Inputs";
 		}
 		public  function get Data():ObjectProxy {
-			return {customs:customs, dataObject:this};
+			var ob:ObjectProxy = new ObjectProxy({customs:customs, dataObject:this})
+			return ob;
 		}
 		[Bindable]
 		public  function set Data(newData:ObjectProxy):void {
 			customs = newData.customs;
 		}
 		public override function setXML(newData:XML):void {
-			customs = new Array();
+			customs = new ArrayCollection();
 			container = newData.name();
 			for (var child:int=0 ; child < newData.children().length() ; child++) {
 				var newCustom = new Object();
 				newCustom.name = "";
 				newCustom.display_name = "";
 				newCustom.key = "";
-				newCustom.active = "Y";
+				newCustom.active = "";
 				newCustom.command = "";
 				newCustom.power = "";
-				newCustom.regex = "Y";
+				newCustom.regex = "";
 				newCustom.extra = "";
 				newCustom.extra2 = "";
 				newCustom.extra3 = "";
@@ -227,7 +236,7 @@
 				if (newData.children()[child].@EXTRA5 != undefined) {
 					newCustom.extra5 = newData.children()[child].@EXTRA5;
 				}			
-				customs.push(newCustom);
+				customs.addItem(newCustom);
 			}
 		}
 	}

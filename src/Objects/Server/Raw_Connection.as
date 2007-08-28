@@ -71,16 +71,16 @@
 			newDevice.appendChild(newParameters);
 			
 			var tempCatalogues = catalogues.toXML();
-			for (var child:int = 0; child<tempCatalogues.children().length;child++){
+			for (var child:int = 0; child<tempCatalogues.children().length();child++){
 				newDevice.appendChild(tempCatalogues.children()[child]);
 			}
 			var newRawConnection:XML = new XML("<"+device_type+" />");
 			var tempCustoms:XML = customs.toXML();
-			for (var child:int = 0; child<tempCustoms.children().length;child++){
+			for (var child:int = 0; child<tempCustoms.children().length();child++){
 				newRawConnection.appendChild(tempCustoms.children()[child]);
 			}
 			var tempRaw_Interfaces:XML = raw_interfaces.toXML();
-			for (var child:int = 0; child<tempRaw_Interfaces.children().length;child++){
+			for (var child:int = 0; child<tempRaw_Interfaces.children().length();child++){
 				newRawConnection.appendChild(tempRaw_Interfaces.children()[child]);
 			}
 			newDevice.appendChild(newRawConnection);
@@ -88,8 +88,10 @@
 		}
 		public override function toTree():MyTreeNode{
 			var newNode:MyTreeNode = new MyTreeNode();
-			newNode.make(1,"Raw Connection",this);
-			
+			newNode.make(1,getName(),this);
+			newNode.appendChild(catalogues.toTree());
+			newNode.appendChild(customs.toTree());
+			newNode.appendChild(raw_interfaces.toTree());
 			treeNode = newNode;
 			return newNode;
 		}
@@ -115,7 +117,7 @@
 		public override function setXML(newData:XML):void {
 			device_type = "RAW_CONNECTION";
 			description ="";
-			active = "Y";		
+			active = "";		
 			parameters = new HashMap();		
 			raw_interfaces = new Objects.Server.Raw_Interfaces();
 			customs = new Objects.Server.Customs();
@@ -137,7 +139,7 @@
 				if(newData.@ACTIVE!=undefined){			
 					active = newData.@ACTIVE;
 				}
-				for (var child:int = 0; child<newData.children().length;child++){
+				for (var child:int = 0; child<newData.children().length();child++){
 					var myType:String = newData.children()[child].name();
 					switch (myType) {
 					case "CONNECTION" :
@@ -155,7 +157,7 @@
 						var tempNode:XML = newData.children()[child];
 						var tempCustomInputs:XML = new XML("<"+device_type+" />");
 						var tempRawInterfaces:XML = new XML("<"+device_type+" />");
-						for (var rawDevice:int = 0; rawDevice<tempNode.children().length;rawDevice++){
+						for (var rawDevice:int = 0; rawDevice<tempNode.children().length();rawDevice++){
 							var myRaw:String = tempNode.children()[rawDevice].name();
 							switch (myRaw) {
 							case "CUSTOM_INPUT" :

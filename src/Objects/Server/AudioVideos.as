@@ -6,12 +6,16 @@
 	import flash.utils.IDataOutput;
 	import flash.utils.IDataInput;
 	import mx.core.Application;
+	import Forms.Server.AudioVideos_frm;
+	import mx.collections.ArrayCollection;
 	
 	[Bindable("audioVideos")]
 	[RemoteClass(alias="elifeAdmin.objects.server.audioVideos")]
 	public class AudioVideos extends BaseElement {
 		private var container:String="";
-		private var audiovideos:Array;
+		[Bindable]
+		public var audiovideos:ArrayCollection;
+		private var zoneHeader:String = "";
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -23,7 +27,7 @@
 			
 			super.readExternal(input);
 			container = input.readUTF()as String;
-			audiovideos = input.readObject()as Array;
+			audiovideos = input.readObject()as ArrayCollection;
 		}
 		
 		
@@ -75,12 +79,18 @@
 		public override function getForm():String {
 			return "forms.project.device.audiovideo";
 		}
+		
+		public function getClassForm():Class {
+			var className:Class = Forms.Server.AudioVideos_frm;
+			return className;		
+		}
+
 		public override function toXML():XML {
 			if (container.length == 0) {
 				return XML();
 			}
 			
-			var audiovideosNode = new XML(container);
+			var audiovideosNode = new XML("<"+container+ " />");
 			var itemType:String;
 			switch (container) {
 			case "HAL" :
@@ -89,28 +99,28 @@
 				break;
 			case "KRAMER" :
 				itemType = "AV_OUTPUT";
-				var newAudioVideoNode = new XML(itemType);
+				var newAudioVideoNode = new XML("<"+itemType+" />");
 				newAudioVideoNode.@DISPLAY_NAME = "ALL";
 				newAudioVideoNode.@KEY = "0";
 				audiovideosNode.appendChild(newAudioVideoNode);
 				break;
 			case "NUVO":
 				itemType = "AUDIO";
-				var newAudioVideoNode = new XML(itemType);
+				var newAudioVideoNode = new XML("<"+itemType+" />");
 				newAudioVideoNode.@DISPLAY_NAME = "ALL";
 				newAudioVideoNode.@KEY = "0";
 				audiovideosNode.appendChild(newAudioVideoNode);
 				break;
 			case "SIGN_VIDEO":
 				itemType = "AV";
-				var newAudioVideoNode = new XML(itemType);
+				var newAudioVideoNode = new XML("<"+itemType+" />");
 				newAudioVideoNode.@DISPLAY_NAME = "ALL";
 				newAudioVideoNode.@KEY = "0";
 				audiovideosNode.appendChild(newAudioVideoNode);
 				break;
 			}
 			for (var audiovideo in audiovideos) {		
-				var newAudioVideoNode = new XML(itemType);
+				var newAudioVideoNode = new XML("<"+itemType + " />");
 				if (audiovideos[audiovideo].name != "") {
 					newAudioVideoNode.@NAME = audiovideos[audiovideo].name;
 				}
@@ -164,34 +174,47 @@
 			return itemType;
 		}
 		public  function get Data():ObjectProxy {
-			return {audiovideos:audiovideos, container:container, dataObject:this};
+			var ob:ObjectProxy = new ObjectProxy({audiovideos:audiovideos, container:container, zoneHeader:zoneHeader, dataObject:this});
+			return ob;
 		}
 		[Bindable]
 		public  function set Data(newData:ObjectProxy):void {
 			audiovideos = newData.audiovideos;
 		}
 		public override function setXML(newData:XML):void {
-			audiovideos = new Array();
-			container = newData.nodeName;
-			for (var child in newData.childNodes) {
+			audiovideos = new ArrayCollection();
+			container = newData.name();
+			for (var child:int=0 ; child < newData.children().length() ; child++) {
+			
 				var newAudiovideo = new Object();
 				newAudiovideo.key = "";
 				newAudiovideo.display_name = "";
 				newAudiovideo.name = "";
 				newAudiovideo.active = "Y";
-				if (newData.childNodes[child].attributes["NAME"] != undefined) {
-					newAudiovideo.name = newData.childNodes[child].attributes["NAME"];
+				if (newData.children()[child].@NAME != undefined) {
+					newAudiovideo.name = newData.children()[child].@NAME;
 				}
-				if (newData.childNodes[child].attributes["KEY"] != undefined) {
-					newAudiovideo.key = newData.childNodes[child].attributes["KEY"];
+				if (newData.children()[child].@KEY != undefined) {
+					newAudiovideo.key = newData.children()[child].@KEY;
 				}
-				if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
-					newAudiovideo.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+				if (newData.children()[child].@DISPLAY_NAME != undefined) {
+					newAudiovideo.display_name = newData.children()[child].@DISPLAY_NAME;
 				}
-				if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
-					newAudiovideo.active = newData.childNodes[child].attributes["ACTIVE"];
+				if (newData.children()[child].@ACTIVE != undefined) {
+					newAudiovideo.active = newData.children()[child].@ACTIVE;
 				}
-				audiovideos.push(newAudiovideo);
+				audiovideos.addItem(newAudiovideo);
+			}
+			switch (container) {
+			case "HAL" :
+			case "TUTONDO" :
+			case "NUVO":
+				zoneHeader = "Audio Zone (HEX)";
+				break;
+			case "SIGN_VIDEO":
+			case "KRAMER" :
+				zoneHeader = "AV Zone (HEX)";
+				break;
 			}
 		}
 	}

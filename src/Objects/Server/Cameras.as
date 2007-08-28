@@ -6,12 +6,15 @@
 	import flash.utils.IDataOutput;
 	import flash.utils.IDataInput;
 	import mx.core.Application;
+	import mx.collections.ArrayCollection;
+	import Forms.Server.Cameras_frm;
 	
 	[Bindable("cameras")]
 	[RemoteClass(alias="elifeAdmin.objects.server.cameras")]
 		public class Cameras extends BaseElement {
 		private var container:String="";
-		private var cameras:Array;
+		[Bindable]
+		public var cameras:ArrayCollection;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -22,7 +25,7 @@
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
 			container = input.readUTF()as String;
-			cameras = input.readObject()as Array;
+			cameras = input.readObject()as ArrayCollection;
 		}
 		
 		public function getKeys():Array {
@@ -83,7 +86,7 @@
 				return XML();
 			}
 			
-			var camerasNode:XML = new XML(container);
+			var camerasNode:XML = new XML("<"+container+" />");
 			for (var camera in cameras) {
 				var newCamera = new XML("<CAMERA />");
 				if (cameras[camera].name != "") {
@@ -117,39 +120,45 @@
 		public function getKey():String {
 			return "Cameras";
 		}
+		public function getClassForm():Class {
+			var className:Class = Forms.Server.Cameras_frm;
+			return className;		
+		}
+		
 		[Bindable]
 		public  function set Data(newData:ObjectProxy):void {
 			cameras = newData.cameras;
 		}
 		public  function get Data():ObjectProxy {
-			return {cameras:cameras, dataObject:this};
+			var ob:ObjectProxy = new ObjectProxy({cameras:cameras, dataObject:this});
+			return ob;
 		}
 		public override function setXML(newData:XML):void {
-			cameras = new Array();
-			container = newData.nodeName;
-			for (var child in newData.childNodes) {
+			cameras = new ArrayCollection();
+			container = newData.name().toString();
+			for (var child in newData.children()) {
 				var newCamera = new Object();
 				newCamera.active = "Y";
 				newCamera.name = "";
 				newCamera.key = "";
 				newCamera.display_name = "";
 				newCamera.zoom = "";
-				if (newData.childNodes[child].attributes["NAME"] != undefined) {
-					newCamera.name = newData.childNodes[child].attributes["NAME"];
+				if (newData.children()[child].@NAME != undefined) {
+					newCamera.name = newData.children()[child].@NAME;
 				}
-				if (newData.childNodes[child].attributes["KEY"] != undefined) {
-					newCamera.key = newData.childNodes[child].attributes["KEY"];
+				if (newData.children()[child].@KEY != undefined) {
+					newCamera.key = newData.children()[child].@KEY;
 				}
-				if (newData.childNodes[child].attributes["DISPLAY_NAME"] != undefined) {
-					newCamera.display_name = newData.childNodes[child].attributes["DISPLAY_NAME"];
+				if (newData.children()[child].@DISPLAY_NAME != undefined) {
+					newCamera.display_name = newData.children()[child].@DISPLAY_NAME;
 				}
-				if (newData.childNodes[child].attributes["ZOOM"] != undefined) {
-					newCamera.zoom = newData.childNodes[child].attributes["ZOOM"];
+				if (newData.children()[child].@ZOOM != undefined) {
+					newCamera.zoom = newData.children()[child].@ZOOM;
 				}
-				if (newData.childNodes[child].attributes["ACTIVE"] != undefined) {
-					newCamera.active = newData.childNodes[child].attributes["ACTIVE"];
+				if (newData.children()[child].@ACTIVE != undefined) {
+					newCamera.active = newData.children()[child].@ACTIVE;
 				}
-				cameras.push(newCamera);
+				cameras.addItem(newCamera);
 			}
 		}
 	}

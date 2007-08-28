@@ -8,9 +8,9 @@
 	[Bindable("CustomConnect")]
 	[RemoteClass(alias="elifeAdmin.server.customConnect")] 
 	public class CustomConnect extends Device {
-		private var customKeys:CustomConnectKeys;
-		private var inStrings:CustomConnectInStrings;
-		private var outStrings:CustomConnectOutStrings;
+		public var customKeys:CustomConnectKeys;
+		public var inStrings:CustomConnectInStrings;
+		public var outStrings:CustomConnectOutStrings;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -114,7 +114,7 @@
 		public override function setXML(newData:XML):void {
 			device_type = "CUSTOM_CONNECT";
 			description ="";
-			active = "Y";		
+			active = "";		
 			parameters = new HashMap();		
 			customKeys = new Objects.Server.CustomConnectKeys();
 			inStrings = new Objects.Server.CustomConnectInStrings();

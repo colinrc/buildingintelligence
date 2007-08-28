@@ -130,6 +130,11 @@
 		public function get rawConnections():Array {
 			return rawConfigNames;
 		}
+		[Bindable]
+		public var catalogsMulti:Array;
+		
+		[Bindable]
+		public var codesMulti:Array;
 		
 		public var projName:String;
 		[Bindable]

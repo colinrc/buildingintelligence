@@ -10,8 +10,8 @@
 	[Bindable("catalogue")]
 	[RemoteClass(alias="elifeAdmin.objects.server.catalogue")]
 	public class Catalogue extends BaseElement {
-		private var name:String="";
-		private var items:ArrayCollection;
+		public var name:String="";
+		public var items:ArrayCollection;
 		public var code:String = "";
 		public var val:String = "";
 		
@@ -152,8 +152,8 @@
 		}
 		public override function setXML(newData:XML):void {
 			name = "";
-			if (newData.attribute("NAME") != undefined) {
-				name = newData.attribute("NAME");
+			if (newData.@NAME != undefined) {
+				name = newData.@NAME;
 			}
 			items = new ArrayCollection();
 			var len:int = newData.children().length();
