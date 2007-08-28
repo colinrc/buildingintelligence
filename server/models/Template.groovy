@@ -34,7 +34,7 @@ public class Template  extends GroovyModel  {
 	// Any characters that should be appended to the end of strings sent to devices, generally this is used for carriage return and/or linefeed
 	// This is only applicable for devices controlled by text strings, models that build numeric byte arrays to send to the device gernaly do not require this.
 	
-	String version="1.0"
+	String version="1"
 	// The version will be reported back to the Flash client to assist in debugging model problems
 
 	
