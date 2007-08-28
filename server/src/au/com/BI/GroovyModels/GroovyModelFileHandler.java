@@ -46,6 +46,7 @@ public class GroovyModelFileHandler {
 	                        public boolean accept(File dir, String name) {
 	                        	if (name.endsWith(".groovy")) return true;	                        	
 	                        	if (name.endsWith(".jar")) return true;
+	                        	if (name.endsWith(".bi")) return true;
 	                            return false;
 	                        };
 	                };

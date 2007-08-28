@@ -1,3 +1,18 @@
+== 24/Aug/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b63.zip V1.6-b63]  ==
+
+''' Models '''
+
+Added to ReturnWrapper addFlashCommand versions that accept a String for the display name rather than the device object. 
+The device object is always preferable as it contains other information as well, however the string versions can be used when an underlying
+device is not present. Enhancement [ticket:649]
+
+Groovy models can now be packaged in jar files. The full path must be present to the package.
+For example to create a jar file from the a groovy  au.com.BI.models.template change directory to the models directory then 
+{{{
+      jar cf template.jar au/com/BI/models/template.groovy
+}}}
+Enhancement [ticket:648]
+
 == 24/Aug/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b62.zip V1.6-b62]  ==
 
 ''' General '''

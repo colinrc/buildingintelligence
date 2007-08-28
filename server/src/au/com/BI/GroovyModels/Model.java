@@ -12,6 +12,7 @@ import au.com.BI.Device.DeviceType;
 
 import groovy.lang.GroovyClassLoader;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.jar.*;
 import java.util.logging.*;
 import au.com.BI.Flash.*;
 import au.com.BI.Home.Controller;
@@ -110,6 +111,18 @@ public class Model
 
 				//get the script files and prepare for parsing
                 try {
+	                groovyModelFileHandler.loadGroovyModelList( "./models/",this.groovyModelFiles);
+	            	
+	                for (GroovyRunBlock runBlock: groovyModelFiles.values()) {
+	                	try {
+	                		registerGroovyModel ( controller,runBlock, deviceModels);
+	                	} catch (ConfigError ex){
+	                		logger.log(Level.WARNING, "There was an error loading configuration for " + runBlock.getFileName() + " " + ex.getMessage());
+	                	} catch (GroovyModelError ex){
+	                		logger.log(Level.WARNING, "There was an error setting up support for " + runBlock.getFileName() + " " + ex.getMessage());               		
+	                	}
+	                }
+	                
 	                groovyModelFileHandler.loadGroovyModelList( "./models/au/com/BI/models/",this.groovyModelFiles);
 	
 	                for (GroovyRunBlock runBlock: groovyModelFiles.values()) {
@@ -121,10 +134,11 @@ public class Model
 	                		logger.log(Level.WARNING, "There was an error setting up support for " + runBlock.getFileName() + " " + ex.getMessage());               		
 	                	}
 	                }
-	                	logger.log(Level.INFO,"Groovy models loaded");
-	                } catch (ConfigError ex){
-                	
-                }
+
+	                logger.log(Level.INFO,"Groovy models loaded");
+	            } catch (ConfigError ex){
+	                	logger.log (Level.WARNING, " There was an error loading the groovy model " + ex.getMessage());
+	            }
         }
 
         public void registerGroovyModel (Controller controller, GroovyRunBlock groovyRunBlock, List <DeviceModel>deviceModels) throws ConfigError, GroovyModelError{
@@ -133,16 +147,41 @@ public class Model
         try {
             File theGroovyFile = new File(fileName);
             if (!theGroovyFile.canRead()) throw new GroovyModelError("Error reading the file " + fileName);
-            Class groovyClass = gcl.parseClass(theGroovyFile);
+            
+            Class groovyClass = null;;
+            
+            if (fileName.endsWith(".jar") || fileName.endsWith (".bi")){
+            	JarFile jarFile = new JarFile (theGroovyFile);
+            	Enumeration <JarEntry>eachFileList = jarFile.entries();
+            	
+            	while  (eachFileList.hasMoreElements()){
+            		JarEntry jarEntry = eachFileList.nextElement();
+            		String theName = jarEntry.getName();
+            		if (theName.endsWith(".groovy")){
+            		       InputStream input = jarFile.getInputStream(jarEntry);
+            		       groovyClass = gcl.parseClass(input);
+            		       input.close();
+            		}
+            	}   
+            } else {
+                	groovyClass = gcl.parseClass(theGroovyFile);            	
+            }
+            
+            if (groovyClass == null) throw new GroovyModelError ("Error registering the groovy model " + fileName);
             groovyRunBlock.setTheClass(groovyClass);
             Object aModel = groovyClass.newInstance();
 
             GroovyModel myModel = (GroovyModel) aModel;
-            controller.setupModel(myModel);
-            deviceModels.add(myModel);
             String modelName = myModel.getName();
-            logger.log(Level.INFO, "Registering model " + modelName);
-            this.groovyModelClasses.put(modelName, groovyRunBlock);
+            if (groovyModelClasses.containsKey(modelName)){
+            	logger.log (Level.INFO,"Not registering groovy model " + fileName + " as a model by that name already exists, check for a the same name from a jar file to Groovy source");
+            } else {
+	            controller.setupModel(myModel);
+	            deviceModels.add(myModel);
+	            versionManager.setVersion(modelName,  myModel.getVersion());
+	            logger.log(Level.INFO, "Registering model " + modelName + " version " + myModel.getVersion() );
+	            this.groovyModelClasses.put(modelName, groovyRunBlock);
+            }
 
 
         } catch (CompilationFailedException e) {
