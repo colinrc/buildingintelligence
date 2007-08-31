@@ -123,6 +123,8 @@ public class Model
 	                	}
 	                }
 	                
+	                groovyModelFiles.clear();
+	                
 	                groovyModelFileHandler.loadGroovyModelList( "./models/au/com/BI/models/",this.groovyModelFiles);
 	
 	                for (GroovyRunBlock runBlock: groovyModelFiles.values()) {
@@ -225,17 +227,6 @@ public class Model
         public void setNumberOfScripts(int numberOfScripts) {
                 this.numberOfScripts = numberOfScripts;
         }
-
-
-		public ConcurrentHashMap<String, GroovyRunBlock> getGroovyModelFiles() {
-			return groovyModelFiles;
-		}
-
-
-		public void setGroovyModelFiles(
-				ConcurrentHashMap<String, GroovyRunBlock> groovyModels) {
-			this.groovyModelFiles = groovyModels;
-		}
 
 
 		public ConcurrentHashMap<String, GroovyRunBlock> getGroovyModelClasses() {
