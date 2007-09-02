@@ -55,11 +55,21 @@ class RTI_IR extends GroovyModel {
 							// Example BIRTI=control,LOUNGE_AUDIO,volume,up
 							def commandStr = birtiParm[2]
 							def extraStr = birtiParm[3]
-							returnWrapper.addFlashCommand (rtiPart2, commandStr, extraStr)
+							
+							// Injects a command into the queue as if it came from a flash client.
+							// Do not use this command to send to a DISPLAY_NAME that this model is processing in doOutputItems, or else a loop will result.
+							returnWrapper.injectCommand (rtiPart2,commandStr,extraStr)
+							
+							// sends this command to flash; normally used after processing information from comms.
+							//returnWrapper.addFlashCommand (rtiPart2, commandStr, extraStr)
+							
 						} else {
 							// Example BIRTI=control,LOUNGE_LIGHT,on
 							def commandStr = birtiParm[2]
-							returnWrapper.addFlashCommand (rtiPart2, commandStr)
+							
+							// returnWrapper.addFlashCommand (rtiPart2, commandStr)
+							returnWrapper.injectCommand (rtiPart2,commandStr)
+							
 						}
 						break;
 						
