@@ -544,7 +544,6 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
             closeComms();
     }
     
-    
 	public void sendToSerial(byte avOutputString[], String deviceKey,
 			String outputKey, int outputCommandType, boolean keyForHandshake)
 			throws CommsFail {

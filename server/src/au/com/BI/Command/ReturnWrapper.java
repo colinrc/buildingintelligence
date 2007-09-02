@@ -3,6 +3,7 @@ package au.com.BI.Command;
 import java.util.Vector;
 
 import au.com.BI.Device.DeviceType;
+import au.com.BI.Flash.ClientCommand;
 
 
 public class ReturnWrapper {
@@ -278,4 +279,68 @@ public class ReturnWrapper {
 			flCommand.setExtra5Info(extra5);
 			addFlashCommand (flCommand);
 		}
+		
+
+        /**
+         * @param key,command,extra Create a command system command.
+         */
+        public void injectCommand(String key, String command) {
+
+        	injectCommand ( key,  command,  "",  "",  "",  "","");
+        }
+
+     /**
+      * @param key,command,extra Create a command system command.
+      */
+     public void injectCommand(String key, String command, String extra) {
+
+    	 injectCommand ( key,  command,  extra,  "",  "",  "","");
+     }
+
+     /**
+      * @param key,command,extra1,extra2 Create a command system command.
+      */
+     public void injectCommand(String key, String command, String extra1, String extra2) {
+
+    	 injectCommand ( key,  command,  extra1,  extra2,  "",  "","");
+     }
+
+       /**
+        * @param key,command,extra1,extra2,extra3 Create a command system command.
+        */
+       public void injectCommand(String key, String command, String extra1, String extra2, String extra3) {
+    	   injectCommand ( key,  command,  extra1,  extra2,  extra3,  "","");
+       }
+
+       /**
+        * @param key,command,extra1,extra2,extra3,extra4 Create a command system command.
+        */
+       public void injectCommand(String key, String command, String extra1, String extra2, String extra3, String extra4) {
+
+    	   injectCommand ( key,  command,  extra1,  extra2,  extra3,  extra4,"");
+       }
+
+       /**
+        * @param key,command,extra1,extra2,extra3,extra4,extra5 Create a command system command.
+        * The same structure is used in the pattern module
+        */
+       public void injectCommand(String key, String command, String extra1, String extra2, String extra3, String extra4, String extra5) {
+
+           ClientCommand myCommand;
+           myCommand = new ClientCommand();
+           myCommand.setCommand(command);
+           myCommand.setExtraInfo(extra1);
+           myCommand.setExtra2Info(extra2);
+           myCommand.setExtra3Info(extra3);
+           myCommand.setExtra4Info(extra4);
+           myCommand.setExtra5Info(extra5);
+           myCommand.setTargetDeviceID(0);
+           myCommand.setScriptCommand(false);
+           myCommand.setKey(key);
+           this.addFlashCommand(myCommand);
+           
+           return;
+
+       }
+       
 }
