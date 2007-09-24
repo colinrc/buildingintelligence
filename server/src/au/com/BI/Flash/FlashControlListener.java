@@ -68,7 +68,7 @@ public class FlashControlListener extends Thread {
 	xmlOut = new XMLOutputter();
 	
 	try {
-	    logger.info("Listening for clients on port " + portNumber + " IP " + Address);
+	    logger.fine("Listening for clients on port " + portNumber + " IP " + Address);
 	    this.flashControllers = flashControllers;
 	    this.portNumber = portNumber;
 	    this.iPAddress = InetAddress.getByName(Address);
@@ -135,7 +135,7 @@ public class FlashControlListener extends Thread {
 							commandList.add(clientCommand);
 					}
 			    	
-			    	logger.log(Level.INFO,"Client went away, removing the handler");
+			    	logger.log(Level.FINE,"Client went away, removing the handler");
 			    } else {
 			    	if (System.currentTimeMillis() - flashClientHandler.getConnectionTime()  < 60*1000*3) {
 			    		recentConnection = true;
@@ -187,7 +187,7 @@ public class FlashControlListener extends Thread {
 	    return;
 	}
 	flashConnection.setKeepAlive(true);
-	logger.info("Client connection received");
+	logger.fine("Client connection received");
 	ClientCommandFactory clientCommandFactory =   ClientCommandFactory.getInstance();
 	clientCommandFactory.setOriginating_location(Locations.DIRECT);
 	clientCommandFactory.setID(System.currentTimeMillis());

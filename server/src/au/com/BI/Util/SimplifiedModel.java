@@ -1631,12 +1631,12 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		this.queueCommands = queueCommands;
 	};
 	
-	public void addStringAttribute (int deviceType, String name){
-		deviceFactories.addStringAttribute (this,deviceType,name);
+	public void addStringAttribute (int deviceType, String name, boolean mandatory){
+		deviceFactories.addStringAttribute (this,deviceType,name, mandatory);
 	}
 	
-	public void addStringAttribute (Object object, String name){
-		deviceFactories.addStringAttribute (this,((au.com.BI.Device.Device)object).getDeviceType(), name);
+	public void addStringAttribute (Object object, String name, boolean mandatory){
+		deviceFactories.addStringAttribute (this,((au.com.BI.Device.Device)object).getDeviceType(), name, mandatory);
 	}
 	
 }

@@ -15,11 +15,11 @@ import au.com.BI.Util.MessageDirection;
 public class DeviceFactory {
 	Logger logger;
 	
-	protected Map <DeviceModel, List<String>>extraAttributes;
+	protected Map <DeviceModel, Map<String, ExtraAttribute>>extraAttributes;
 	
 	public DeviceFactory () {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());	
-		extraAttributes = new HashMap<DeviceModel, List<String>>();
+		extraAttributes = new HashMap<DeviceModel, Map<String, ExtraAttribute>>();
 	}
 	private static DeviceFactory _singleton = null;
 	
@@ -75,29 +75,33 @@ public class DeviceFactory {
 		
 	}
 	
-	public void addDeviceAttribute (DeviceModel model, String name){
+	public void addDeviceAttribute (DeviceModel model, String name, boolean mandatory){
 		logger.log (Level.FINEST, "Adding extra attribute " +name + " to support model " + model.getName());
-		List<String> nameList = extraAttributes.get (model);
+		Map <String, ExtraAttribute> nameList = extraAttributes.get (model);
 		if (nameList == null){
-			nameList = new LinkedList <String>();
+			nameList = new HashMap <String, ExtraAttribute>();
 			extraAttributes.put (model ,nameList);
 		}
-		if (!nameList.contains("name")){
-			nameList.add (name);
+		if (!nameList.containsKey(name)){
+			ExtraAttribute extraAttribute = new ExtraAttribute(name, mandatory);
+			nameList.put(name, extraAttribute);
 		}
 	}
 
 
 	public void parseExtraAttributes (String key, DeviceModel targetDevice , DeviceType deviceType, Element element) {
-			List <String> attribs = extraAttributes.get(targetDevice);
+			Map <String, ExtraAttribute> attribs = extraAttributes.get(targetDevice);
 			if (attribs != null && !attribs.isEmpty()){
-				for (String attrib: attribs){
-					String value = element.getAttributeValue(attrib);
+				for (String attribName: attribs.keySet()){
+					String value = element.getAttributeValue(attribName);
+					ExtraAttribute attributeDetails = attribs.get(attribName);
 					if (value == null) {
-						deviceType.setAttributeValue(attrib,"");
-						logger.log (Level.WARNING, "In device " + key + " the attribute " + attrib + " expected for " + deviceType.getName() + " in a model " + targetDevice.getName() + " was not present in the configuration file");
+						deviceType.setAttributeValue(attribName,"");
+						if (attributeDetails.isMandatory() == true ) {
+							logger.log (Level.WARNING, "In device " + key + " the attribute " + attribName+ " expected for " + deviceType.getName() + " in a model " + targetDevice.getName() + " was not present in the configuration file");
+						}
 					}else {
-						deviceType.setAttributeValue(attrib,value);						
+						deviceType.setAttributeValue(attribName,value);						
 					}
 				}
 			}

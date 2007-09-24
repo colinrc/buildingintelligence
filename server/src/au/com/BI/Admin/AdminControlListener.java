@@ -60,7 +60,7 @@ public class AdminControlListener extends Thread
 		this.sh = sh;
 
 		try {
-			logger.info("Listening for clients on port " + portNumber + " IP " + address);
+			logger.fine("Listening for clients on port " + portNumber + " IP " + address);
 			this.adminControllers = adminControllers;
 			this.portNumber = portNumber;
 			this.iPAddress = InetAddress.getByName (address);
@@ -82,7 +82,7 @@ public class AdminControlListener extends Thread
 	{
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 
-		logger.info("Openning port " + portNumber);
+		logger.fine("Openning port " + portNumber);
 		running = true;
 		
 		try {
@@ -111,7 +111,7 @@ public class AdminControlListener extends Thread
 							}
 					    }
 					}catch (IOException io){
-						logger.log(Level.INFO, "Could not add client handler " +io.getMessage());
+						logger.log(Level.WARNING, "Could not add admin handler " +io.getMessage());
 					}
 				}
 			} catch (IOException ex) {
@@ -128,10 +128,10 @@ public class AdminControlListener extends Thread
 			adminConnection.setKeepAlive(true);
 		    sh.setOutputStream(adminConnection.getOutputStream());
 		    if (firstConnection) {
-			    logger.info("Admin connection received");
+			    logger.fine("Admin connection received");
 			}
 			else {
-			    logger.info("Admin connection received,closing existing admin connections");
+			    logger.fine("Admin connection received,closing existing admin connections");
 			    if (currentAdminController != null) {
 			        currentAdminController.kill();
 			    }

@@ -79,126 +79,126 @@ public class DeviceFactories {
 		this.setWindowsMediaExtenderFactory(WindowsMediaExtenderFactory.getInstance());
 	}
 	
-	public void addStringAttribute ( DeviceModel deviceModel, int deviceType, String attributeName){
+	public void addStringAttribute ( DeviceModel deviceModel, int deviceType, String attributeName, boolean mandatory){
 		switch (deviceType){
 		case DeviceType.TOGGLE_OUTPUT : 
-			toggleSwitchFactory.addDeviceAttribute(deviceModel, attributeName);
+			toggleSwitchFactory.addDeviceAttribute(deviceModel, attributeName, mandatory);
 			break;
 
 		case DeviceType.PULSE_OUTPUT : 
-			pulseOutputFactory.addDeviceAttribute(deviceModel, attributeName);
+			pulseOutputFactory.addDeviceAttribute(deviceModel, attributeName, mandatory);
 			break;
 
 		case DeviceType.LIGHT : 
-			lightFactory.addDeviceAttribute(deviceModel, attributeName);
+			lightFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.LIGHT_CBUS : 
-			lightFactory.addDeviceAttribute(deviceModel, attributeName);
+			lightFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.LIGHT_DYNALITE : 
-			lightFactory.addDeviceAttribute(deviceModel, attributeName);
+			lightFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.LIGHT_DYNALITE_AREA : 
-			lightFactory.addDeviceAttribute(deviceModel, attributeName);
+			lightFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.COMFORT_LIGHT_X10_UNITCODE : 
-			lightFactory.addDeviceAttribute(deviceModel, attributeName);
+			lightFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.SENSOR : 
-			sensorFactory.addDeviceAttribute(deviceModel, attributeName);
+			sensorFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.TEMPERATURE : 
-			sensorFactory.addDeviceAttribute(deviceModel, attributeName);
+			sensorFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.PUMP : 
-			pumpFactory.addDeviceAttribute(deviceModel, attributeName);
+			pumpFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.TOGGLE_INPUT : 
-			toggleSwitchFactory.addDeviceAttribute(deviceModel, attributeName);
+			toggleSwitchFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.CONTACT_CLOSURE : 
-			toggleSwitchFactory.addDeviceAttribute(deviceModel, attributeName);
+			toggleSwitchFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.TOGGLE_OUTPUT_MONITOR : 
-			toggleSwitchFactory.addDeviceAttribute(deviceModel, attributeName);
+			toggleSwitchFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.COUNTER : 
-			counterFactory.addDeviceAttribute(deviceModel, attributeName);
+			counterFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.VIRTUAL_OUTPUT : 
-			virtualOutputFactory.addDeviceAttribute(deviceModel, attributeName);
+			virtualOutputFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.LABEL : 
-			labelFactory.addDeviceAttribute(deviceModel, attributeName);
+			labelFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.RAW_INTERFACE : 
-			rawFactory.addDeviceAttribute(deviceModel, attributeName);
+			rawFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.CUSTOM_INPUT : 
-			customInputFactory.addDeviceAttribute(deviceModel, attributeName);
+			customInputFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.IR : 
-			iRFactory.addDeviceAttribute(deviceModel, attributeName);
+			iRFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.AUDIO : 
-			audioFactory.addDeviceAttribute(deviceModel, attributeName);
+			audioFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.AV : 
-			aVFactory.addDeviceAttribute(deviceModel, attributeName);
+			aVFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.CAMERA : 
-			cameraFactory.addDeviceAttribute(deviceModel, attributeName);
+			cameraFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.ANALOGUE : 
-			analogFactory.addDeviceAttribute(deviceModel, attributeName);
+			analogFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.ALERT : 
-			alertFactory.addDeviceAttribute(deviceModel, attributeName);
+			alertFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.ALARM : 
-			alertFactory.addDeviceAttribute(deviceModel, attributeName);
+			alertFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.SMS : 
-			smsFactory.addDeviceAttribute(deviceModel, attributeName);
+			smsFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 			
 		case DeviceType.CUSTOM_CONNECT : 
-			customConnectFactory.addDeviceAttribute(deviceModel, attributeName);
+			customConnectFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.THERMOSTAT : 
-			thermostatFactory.addDeviceAttribute(deviceModel, attributeName);
+			thermostatFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 			
 		case DeviceType.UNIT : 
-			unitFactory.addDeviceAttribute(deviceModel, attributeName);
+			unitFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
 		case DeviceType.WINDOWS_MEDIA_EXTENDER : 
-			windowsMediaExtenderFactory.addDeviceAttribute(deviceModel, attributeName);
+			windowsMediaExtenderFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 		}
 	}

@@ -403,10 +403,10 @@ public class Model
 	        			newScript.setScriptType (ScriptType.Groovy);
 	        			registerGroovyScript (scriptName, newScript,  scriptRunBlock);
 	        		}
-	        		logger.log(Level.INFO,"Loaded Groovy scripts");
+	        		logger.log(Level.FINE,"Loaded Groovy scripts");
 	        		groovyScriptHandler.loadScriptFile();
 	        	} catch (ConfigError ex){
-	        		logger.log (Level.INFO,"Problem reading the script files " + ex.getMessage());
+	        		logger.log (Level.WARNING,"Problem reading the script files " + ex.getMessage());
 	        	}
 	    	}
 
@@ -418,7 +418,7 @@ public class Model
 	    	
         public void loadJythonScripts() {
                 int j = 0;
-                logger.log(Level.INFO,"Loading scripts");
+                logger.log(Level.FINE,"Loading scripts");
 
                 String lsLine, lsCheck;
                 ArrayList linesOfFile, scripts;
@@ -471,7 +471,7 @@ public class Model
 	                        j++;
 	                }
 	                scriptHandler.addTimerControls();
-	                logger.log(Level.INFO,"Scripts loaded");
+	                logger.log(Level.FINE,"Scripts loaded");
                 } catch (ConfigError ex){
                 	logger.log(Level.WARNING,"Scripts system could not be set up " + ex.getMessage());
                 }
@@ -1440,13 +1440,13 @@ public class Model
 
         public void log(String message) {
                 if (control == true) {
-                         logger.log(Level.INFO, message);
+                         logger.log(Level.FINE, message);
                 }
         }
 
         public void log(String message, boolean use) {
                 if (use==true) {
-                        logger.log(Level.INFO, message);
+                        logger.log(Level.FINE, message);
                 }
         }
 

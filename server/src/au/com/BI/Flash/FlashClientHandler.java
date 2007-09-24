@@ -95,7 +95,7 @@ public class FlashClientHandler extends Thread {
 	}
 
 	public void run() {
-		logger.info("Client connection received. Handler started");
+		logger.fine("Client connection received. Handler started");
 		thisThreadRunning = true;
 		Document xmlDoc = null;
 

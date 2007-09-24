@@ -105,7 +105,7 @@ public class Model
 
         public void loadGroovyModels(Controller controller,List<DeviceModel>deviceModels) {
                 int j = 0;
-                logger.log(Level.INFO,"Loading Groovy Models");
+                logger.log(Level.FINE,"Loading Groovy Models");
 
                 String lsLine, lsCheck;
 
@@ -137,7 +137,7 @@ public class Model
 	                	}
 	                }
 
-	                logger.log(Level.INFO,"Groovy models loaded");
+	                logger.log(Level.FINE,"Groovy models loaded");
 	            } catch (ConfigError ex){
 	                	logger.log (Level.WARNING, " There was an error loading the groovy model " + ex.getMessage());
 	            }
@@ -181,7 +181,7 @@ public class Model
 	            controller.setupModel(myModel);
 	            deviceModels.add(myModel);
 	            versionManager.setVersion(modelName,  myModel.getVersion());
-	            logger.log(Level.INFO, "Registering model " + modelName + " version " + myModel.getVersion() );
+	            logger.log(Level.FINE, "Registering model " + modelName + " version " + myModel.getVersion() );
 	            this.groovyModelClasses.put(modelName, groovyRunBlock);
             }
 

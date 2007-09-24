@@ -814,6 +814,9 @@ public class Controller {
 
 		if (configLoaded) {
 			logger.log(Level.FINER, "Read configuration file correctly.");
+		} else {
+			logger.log (Level.SEVERE,"No configuration files were loaded, the system will exit");
+			System.exit(0);
 		}
 
 		this.setBindToAddress(bootstrap.getServerString());

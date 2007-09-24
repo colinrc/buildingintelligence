@@ -22,6 +22,7 @@ import org.mortbay.jetty.security.ConstraintMapping;
 import org.mortbay.jetty.security.HashUserRealm;
 import org.mortbay.jetty.security.SecurityHandler;
 import org.mortbay.jetty.security.SslSocketConnector;
+import org.mortbay.jetty.security.UserRealm;
 //import org.mortbay.jetty.handler.*;
 import java.util.List;
 import java.util.logging.*;
@@ -47,6 +48,40 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         return false;
     }
     
+    public void startHTMLServer () throws Exception {
+    	
+    	client_server = new Server();
+        
+        org.mortbay.jetty.bio.SocketConnector connector = new SocketConnector();
+        connector.setPort(bootstrap.getJettyPort());
+        connector.setMaxIdleTime(50000);
+        connector.setName("HTTP_CONNECT");
+        client_server.setConnectors(new Connector[]{connector});
+        
+        // HTML static handler
+        ContextHandler mainContextHandler = new ContextHandler ();
+        mainContextHandler.setContextPath("/html");
+        mainContextHandler.setResourceBase("../client/lib/html");
+
+        ServletHandler servletHandler = new ServletHandler ();         
+        ServletHolder defServlet = servletHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
+        defServlet.setInitParameter("dirAllowed","false");
+        mainContextHandler.setHandler(servletHandler);
+        
+        ContextHandlerCollection contexts = new ContextHandlerCollection();
+        contexts.setHandlers(new org.mortbay.jetty.Handler[]{mainContextHandler});
+
+        HandlerCollection handlers = new HandlerCollection();
+        handlers.setHandlers(new org.mortbay.jetty.Handler[]{contexts,new DefaultHandler()});
+        
+        client_server.setHandler(handlers);
+        client_server.setStopAtShutdown(true);
+        
+        // Start the http server
+        client_server.start ();
+    }
+    
+    
     public  void start()
     throws Exception {
         // Create the server
@@ -55,35 +90,8 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     	}
     	
         try {
-        	client_server = new Server();
-            
-            org.mortbay.jetty.bio.SocketConnector connector = new SocketConnector();
-            connector.setPort(bootstrap.getJettyPort());
-            connector.setMaxIdleTime(50000);
-            connector.setName("HTTP_CONNECT");
-            client_server.setConnectors(new Connector[]{connector});
-            
-            // HTML static handler
-            ContextHandler mainContextHandler = new ContextHandler ();
-            mainContextHandler.setContextPath("/html");
-            mainContextHandler.setResourceBase("../client/lib/html");
+        	startHTMLServer ();
 
-            ServletHandler servletHandler = new ServletHandler ();         
-            ServletHolder defServlet = servletHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
-            defServlet.setInitParameter("dirAllowed","false");
-            mainContextHandler.setHandler(servletHandler);
-            
-            ContextHandlerCollection contexts = new ContextHandlerCollection();
-            contexts.setHandlers(new org.mortbay.jetty.Handler[]{mainContextHandler});
-    
-            HandlerCollection handlers = new HandlerCollection();
-            handlers.setHandlers(new org.mortbay.jetty.Handler[]{contexts,new DefaultHandler()});
-            
-            client_server.setHandler(handlers);
-            client_server.setStopAtShutdown(true);
-            
-            // Start the http server
-            client_server.start ();
         } catch (Exception ex){
             logger.log (Level.WARNING,"Problems starting web server " + ex.getMessage());
             throw ex;
@@ -146,25 +154,10 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             SecurityHandler servletSec = null;
             
             if (bootstrap.isRequestUserNames()) {
-            // Servlet Security config
-	            servletSec = new SecurityHandler();
-	            servletSec.setServer(server);
-	            servletSec.setAuthMethod(Constraint.__BASIC_AUTH);
-	            servletSec.setUserRealm(webPass);
-	            ConstraintMapping servletConstraintMap = new ConstraintMapping();
-	            servletConstraintMap.setPathSpec("/*");
-	            Constraint servletConstraint = new Constraint();
-	            servletConstraint.setName("Servlet");
-	            servletConstraint.setRoles(new String[]{"user","admin","integrator"});
-	            servletConstraint.setAuthenticate(true);
-	            servletConstraintMap.setConstraint(servletConstraint);
-	            servletSec.setConstraintMappings(new ConstraintMapping[] {servletConstraintMap});
-	            servletSec.setHandler(updateContextHandler);
-	            //servletSec.addHandler(updateContextHandler);
+            	servletSec= addUserNameSecurity(updateContextHandler, webPass);
+            	
 	        }
-            
-
-         
+      
             ContextHandlerCollection contexts = new ContextHandlerCollection();
 
             if (bootstrap.isRequestUserNames()){
@@ -187,6 +180,26 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         }
     }
     
+    
+    public SecurityHandler  addUserNameSecurity (ContextHandler updateContextHandler, UserRealm webPass) {
+        // Servlet Security config
+        SecurityHandler servletSec = new SecurityHandler();
+        
+        servletSec.setServer(server);
+        servletSec.setAuthMethod(Constraint.__BASIC_AUTH);
+        servletSec.setUserRealm(webPass);
+        ConstraintMapping servletConstraintMap = new ConstraintMapping();
+        servletConstraintMap.setPathSpec("/*");
+        Constraint servletConstraint = new Constraint();
+        servletConstraint.setName("Servlet");
+        servletConstraint.setRoles(new String[]{"user","admin","integrator"});
+        servletConstraint.setAuthenticate(true);
+        servletConstraintMap.setConstraint(servletConstraint);
+        servletSec.setConstraintMappings(new ConstraintMapping[] {servletConstraintMap});
+        servletSec.setHandler(updateContextHandler);
+        //servletSec.addHandler(updateContextHandler);
+        return servletSec;
+    }
     
     public void setCache(Cache cache){
         this.cache = cache;

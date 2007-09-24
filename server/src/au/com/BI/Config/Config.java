@@ -128,7 +128,7 @@ public class Config {
 			for (Element config: deviceConfigs){
 					DeviceModel newDeviceModel = parseDeviceModel(config, deviceModels, clientModels);
 					if (newDeviceModel != null){
-						logger.log (Level.FINE,"Adding device handler for " + newDeviceModel.getName());
+						logger.log (Level.FINE,"Registering model  " + newDeviceModel.getName());
 						parseCatalogueList (config,newDeviceModel);
 						newDeviceModel.setCommandQueue(commandQueue);
 						newDeviceModel.setDeviceFactories(deviceFactories);

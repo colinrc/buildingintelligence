@@ -47,6 +47,7 @@ public class UpdateServlet extends HttpServlet {
     CacheBridgeFactory cacheBridgeFactory = null;
     protected XMLOutputter xmlOut = null;
     protected Logger logger;
+    int MaxTimeOut= 360; // 360 seconds of inactivity before sessions are invalidated.
 
 	AddressBook addressBook = null;
 	VersionManager versionManager = null;
@@ -65,52 +66,26 @@ public class UpdateServlet extends HttpServlet {
     	List<Element> extraStuffForStartup = null;
     	Long ID = null;
     	Long serverID = null;
-    	ConcurrentHashMap<Long,LocalSession> localSessions = null;
         HttpSession session = req.getSession(false);
         Map  params = req.getParameterMap();
         boolean emptyResponse = true;
-        LocalSession localSession = null;
         
-        if (session == null){
-        	localSessions = new ConcurrentHashMap<Long,LocalSession>();
-            session = req.getSession(true);
-            session.setAttribute("LocalSessions", localSessions);
-        } else {
-        	localSessions = (ConcurrentHashMap<Long,LocalSession>)session.getAttribute("LocalSessions");
-        }
-        
-    	if (params == null){
-		        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		        logger.log (Level.WARNING,"HTTP request contains no parameters ");
-		        return;
-    	}
         try {
-	        if (params != null && params.containsKey("INIT")) {
+        	if (session == null){
+        		session = req.getSession(true);       
+                session.setAttribute("HANLDING_REQUEST", "Y");
 	            ID = System.currentTimeMillis();
-	        	localSession = new LocalSession();
-	            setupSession(localSession,ID,session);
-	            localSessions.put(ID,localSession);
-	            extraStuffForStartup = newClient (ID,localSession.getServerID(),versionManager);
+	            
+	            setupSession(ID, session, req.getRemoteUser());
+	            serverID = (Long)session.getAttribute("ServerID");
+	            extraStuffForStartup = newClient (ID, serverID, versionManager);
 	            emptyResponse = false;
 	        } else {
+	        	
 	        	try {
-		        	Long  localSessionID = Long.parseLong(req.getParameter("SESSION_ID"));
-		        	if (localSessionID == null ){
-				        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				        logger.log (Level.WARNING,"Session parameter was not passed to the server");
-				        return;
-		        	}
-		        	
-		        	localSession = localSessions.get(localSessionID);
-		        	if (localSession == null ){
-				        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				        logger.log (Level.WARNING,"Server get was called before INIT=Y was called");
-				        return;
-				        // get was called before INIT was called.
-		        	}
-		        	serverID = localSession.getServerID();
-	
-			        if (localSession.isHandlingSession()){
+		        	serverID = (Long)session.getAttribute("ServerID");
+		        	String handlingSession = (String)session.getAttribute("HANLDING_REQUEST") ;
+			        if (handlingSession == null || handlingSession.equals("Y")){
 						resp.setContentType("text/xml");
 				        
 				        PrintWriter out = resp.getWriter();
@@ -127,17 +102,21 @@ public class UpdateServlet extends HttpServlet {
 	        	} catch (NullPointerException ex) {
 			        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			        return;
+	        	} catch (IllegalStateException  ex) {
+			        resp.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+			        return;
 	        	}
 		        //setHandlingSession(session,true);
 	        }
 
-	       	cacheBridge = localSession.getCacheBridge();
 	        
 	        resp.setContentType("text/xml");
 	
 	        java.io.PrintWriter out = resp.getWriter();
 	        
 	    	Element resultsDoc = new Element("a");
+	    	cacheBridge = (CacheBridge)session.getAttribute("CacheBridge");
+	    	
 	        if ( cacheBridge.getCommands(extraStuffForStartup,resultsDoc)) {
 	        	emptyResponse = false;
 	        }
@@ -149,41 +128,21 @@ public class UpdateServlet extends HttpServlet {
 	        } else {
 		        resp.setStatus(HttpServletResponse.SC_NO_CONTENT);	        	
 	        }
-	        localSession.setHandlingSession(false);
+	        session.setAttribute("HANLDING_REQUEST", "N");
         } catch (TooManyClientsException ex){
-        	Date currentTime = new Date();
-        	
-
-			logger.log(Level.WARNING, "Too many clients error " + ex.getMessage());
-			resp.setContentType("text/xml");
-	        
-	        PrintWriter out = resp.getWriter();
-	                
-	        Element wrapper = new Element ("a");
-	    	Element conElement = new Element("MESSAGE");
-	    	conElement.setAttribute("TITLE", "Security");
-	    	conElement.setAttribute("ICON", "warning");
-	    	conElement.setAttribute("AUTOCLOSE", "45");
-	    	conElement.setAttribute("HIDECLOSE", "TRUE");
-	    	conElement.setAttribute("TARGET", AddressBook.ALL);
-	    	
-	    	conElement.setAttribute("CONTENT", ex.getMessage());
-	    	wrapper.addContent(conElement);
-	        xmlOut.output(wrapper, out);
-	    	
-	        resp.flushBuffer();
-	        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
-    		session.invalidate();
+        	returnTooManyClients (req, resp, session, ex);
+        } catch (NullPointerException ex){
+        	logger.log (Level.WARNING,"There was an error setting up a web client");
         }
         
     }
-    
+
+
 
     public void doPost(HttpServletRequest req,
             HttpServletResponse resp) throws ServletException,java.io.IOException {
         HttpSession session = req.getSession(false);  	
 
-    	ConcurrentHashMap<Long,LocalSession> localSessions = null;
         Map  params = req.getParameterMap();
         boolean emptyResponse = true;
         LocalSession localSession = null;
@@ -198,46 +157,16 @@ public class UpdateServlet extends HttpServlet {
 	        
 	        java.io.PrintWriter out = resp.getWriter();
 	                
-	        out.println("<HTML>");
-	        out.println("<BODY>");
+	        out.println("<HTML><BODY>");
 	        out.println("<P>You must GET the current server status before posting new messages");
-	        out.println("</BODY>");
-	        out.println("</HTML>");
+	        out.println("</BODY></HTML>");
 	        resp.flushBuffer();
 	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 	        return;
         }
         
-
-        Long  localSessionID = null;
-        try {
-            String jSession = (String)req.getParameter("SESSION_ID");
-    		 localSessionID = Long.parseLong(jSession);
-    		 localSessions = (ConcurrentHashMap<Long,LocalSession>)session.getAttribute("LocalSessions");
-        } catch (NumberFormatException ex){
-	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-	        logger.log (Level.WARNING,"Session parameter was not passed to the server");
-	        return;        	
-        }catch (NullPointerException  ex){
-	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-	        logger.log (Level.WARNING,"Session parameter was not passed to the server");
-	        return;        	
-        }
-        
-        if (localSessionID == null ){
-	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-	        logger.log (Level.WARNING,"Session parameter was not passed to the server");
-	        return;
-    	}
- 
-    	localSession = localSessions.get(localSessionID);
-    	if (localSession == null ){
-	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-	        logger.log (Level.WARNING,"Server post was called before INIT=Y was called");
-	        return;
-    	}
-
-    	ClientCommandFactory clientCommandFactory = localSession.getClientCommandFactory();
+        Long sessionID = (Long)session.getAttribute("SessionID");
+    	ClientCommandFactory clientCommandFactory = (ClientCommandFactory)session.getAttribute("ClientCommandFactory");
         String message = req.getParameter("MESSAGE");
 
         if (message == null) return;
@@ -258,11 +187,11 @@ public class UpdateServlet extends HttpServlet {
 				 command = clientCommandFactory.processXML(rootElement);
 			}
 	    	if (command != null){
-		    	if (localSessionID == null  ){
+		    	if (sessionID == null  ){
 		    		logger.log(Level.WARNING,"ID was null");
 		    		return;
 		    	}else {
-					command.setOriginatingID(localSessionID);	    		
+					command.setOriginatingID(sessionID);	    		
 		    	}
 				commandQueue.add(command);
 
@@ -270,11 +199,9 @@ public class UpdateServlet extends HttpServlet {
 			
 			resp.setContentType("text/html");
 	        java.io.PrintWriter out = resp.getWriter();
-	        out.println("<HTML>");
-	        out.println("<BODY>");
+	        out.println("<HTML><BODY>");
 	        out.println("<P>Post successful");
-	        out.println("</BODY>");
-	        out.println("</HTML>");
+	        out.println("</BODY></HTML>");
 	        resp.flushBuffer();
 	        resp.setStatus(HttpServletResponse.SC_OK);
 		 
@@ -284,11 +211,9 @@ public class UpdateServlet extends HttpServlet {
 	        
 	        java.io.PrintWriter out = resp.getWriter();
 	                
-	        out.println("<HTML>");
-	        out.println("<BODY>");
+	        out.println("<HTML><BODY>");
 	        out.println("XML Error " + ex.getMessage());
-	        out.println("</BODY>");
-	        out.println("</HTML>");
+	        out.println("</BODY></HTML>");
 	        resp.flushBuffer();
 	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		} 
@@ -298,11 +223,9 @@ public class UpdateServlet extends HttpServlet {
 	        
 	        java.io.PrintWriter out = resp.getWriter();
 	                
-	        out.println("<HTML>");
-	        out.println("<BODY>");
+	        out.println("<HTML><BODY>");
 	        out.println("Unkown Command Error " + ex.getMessage());
-	        out.println("</BODY>");
-	        out.println("</HTML>");
+	        out.println("</BODY></HTML>");
 	        resp.flushBuffer();
 	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		} catch (IllegalStateException ex) {
@@ -311,27 +234,50 @@ public class UpdateServlet extends HttpServlet {
 	        
 	        java.io.PrintWriter out = resp.getWriter();
 	                
-	        out.println("<HTML>");
-	        out.println("<BODY>");
+	        out.println("<HTML><BODY>");
 	        out.println("<P>XML Error " + ex.getMessage());
-	        out.println("</BODY>");
-	        out.println("</HTML>");
+	        out.println("</BODY></HTML>");
 	        resp.flushBuffer();
 	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		}  
     }
 		
-    
-    
-    public void setupSession (LocalSession localSession, Long ID, HttpSession session) throws TooManyClientsException {
-    	localSession.setHandlingSession(true);
-    	localSession.setID(ID);
+    public void returnTooManyClients (HttpServletRequest req,
+            HttpServletResponse resp, HttpSession session, TooManyClientsException ex )
+    {
+    	Date currentTime = new Date();
+    	
 
+		logger.log(Level.WARNING, "Too many clients error " + ex.getMessage());
+		resp.setContentType("text/xml");
+        try {
+	        PrintWriter out = resp.getWriter();
+	                
+	        Element wrapper = new Element ("a");
+	    	Element conElement = new Element("MESSAGE");
+	    	conElement.setAttribute("TITLE", "Security");
+	    	conElement.setAttribute("ICON", "warning");
+	    	conElement.setAttribute("AUTOCLOSE", "45");
+	    	conElement.setAttribute("HIDECLOSE", "TRUE");
+	    	conElement.setAttribute("TARGET", AddressBook.ALL);
+	    	
+	    	conElement.setAttribute("CONTENT", ex.getMessage());
+	    	wrapper.addContent(conElement);
+	        xmlOut.output(wrapper, out);
+		    resp.flushBuffer();
+        } catch (java.io.IOException ex2){
+        	logger.log (Level.INFO,"Was not able to create an IO channel to return to display too many clients exception on the browser. "+ ex2.getMessage());
+        }
+
+        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		session.invalidate();
+    }
+    
+    public void setupSession (Long ID,  HttpSession session, String user) throws TooManyClientsException {
+        
     	ServletContext context =  session.getServletContext();
  
     	Security security = (Security)context.getAttribute("Security");
-    	Long serverID = (Long)context.getAttribute("ServerID");
-    	localSession.setServerID(serverID);
     	
 		SessionCounter sessionCounter = (SessionCounter)context.getAttribute("sessionCounter");
     	int numberClients = sessionCounter.getCurrentSessionCount();
@@ -344,10 +290,15 @@ public class UpdateServlet extends HttpServlet {
     	clientCommandFactory.setID(ID);
     	clientCommandFactory.setOriginating_location(Locations.HTTP);
     	clientCommandFactory.setAddressBook(addressBook);
-    	CacheBridge cacheBridge = cacheBridgeFactory.createCacheBridge(ID);
-        localSession.setCacheBridge(cacheBridge);
-        localSession.setClientCommandFactory(clientCommandFactory);
+    	
         VersionManager versionManager = (VersionManager)context.getAttribute("VersionManager");
+        Long serverID = (Long)context.getAttribute("ServerID");
+        
+        session.setAttribute("CacheBridge",cacheBridgeFactory.createCacheBridge(ID));
+        session.setAttribute("ClientCommandFactory",clientCommandFactory);
+        session.setAttribute("ServerID",serverID);
+        session.setAttribute("User", user);
+        session.setMaxInactiveInterval(MaxTimeOut);
 
     }
    
