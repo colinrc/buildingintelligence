@@ -128,7 +128,7 @@ public class Config {
 			for (Element config: deviceConfigs){
 					DeviceModel newDeviceModel = parseDeviceModel(config, deviceModels, clientModels);
 					if (newDeviceModel != null){
-						logger.log (Level.INFO,"Adding device handler for " + newDeviceModel.getName());
+						logger.log (Level.FINE,"Adding device handler for " + newDeviceModel.getName());
 						parseCatalogueList (config,newDeviceModel);
 						newDeviceModel.setCommandQueue(commandQueue);
 						newDeviceModel.setDeviceFactories(deviceFactories);
@@ -333,7 +333,7 @@ public class Config {
 		                            newInstance();
 			          } else {
 			        	  if (this.groovyModels.containsKey(deviceConfigName)){
-			        		  logger.log(Level.INFO, "Setup groovy device . "+ deviceConfigName);
+			        		  logger.log(Level.FINE, "Setting up groovy device . "+ deviceConfigName);
 			        		  GroovyRunBlock groovyRunBlock = groovyModels.get(deviceConfigName);
 			        		  if (groovyRunBlock == null) return null;
 			        		  deviceModel = groovyModelHandler.setupGroovyModel(groovyRunBlock,description);
@@ -370,6 +370,7 @@ public class Config {
                                          DeviceModel.MAIN_DEVICE_GROUP);
                 deviceModel.setParameter("Password", password,
                                          DeviceModel.MAIN_DEVICE_GROUP);
+                logger.log (Level.INFO,"Adding device handler " + description);
 
                 parseConnection(deviceConfig, deviceModel);
                 return deviceModel;
