@@ -108,7 +108,7 @@ public class SliderPulse extends Thread {
 	public void removeFromQueues (String key){
 		this.increasingActions.remove(key);
 		this.decreasingActions.remove(key);
-		 logger.log(Level.INFO,"Removing from queues key " + key );
+		 logger.log(Level.FINEST,"Removing from queues key " + key );
 	}
 	
 	public void run() {
