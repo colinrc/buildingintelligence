@@ -354,7 +354,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			pollTemperatures.setComms(comms);
 			pollTemperatures.start();
 		} else {
-			logger.log(Level.INFO,"Not starting temperature polls");
+			logger.log(Level.FINE,"Not starting temperature polls");
 		}
 		
 		for (Label label: labels){
