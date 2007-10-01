@@ -1,3 +1,5 @@
+== 2/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b65.zip V1.6-b65]  ==
+
 ''' General '''
 
 Removed amount of logging at info level when the system is starting up.
@@ -31,7 +33,7 @@ can now determine if it is a new session.
 
 ''' Comfort '''
 
-Issue 656
+Comfort startup issue resolved. [ticket: 656] (alarm notification issue still outstanding)
 
 == 2/Sep/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b64.zip V1.6-b64]  ==
 
