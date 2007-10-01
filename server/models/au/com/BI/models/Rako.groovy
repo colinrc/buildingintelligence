@@ -34,24 +34,39 @@ class RAKO extends GroovyModel {
 	int keyPadding = 2;
 	String name = "RAKO"
 	String appendToSentStrings = "\n"
-
+	String version = "1.0"
 	
 	RAKO () {
 		super()
 		
 		setQueueCommands(false) 
 		// Set the default behaviour for comms commands to be queued before sending. Can be overridden for a returnWrapper object
-
+		setDeviceKeysDecimal  (true) // the Rako expects keys passed to it to be in decimal
 		configHelper.addParameterBlock  "SCENES",DeviceModel.MAIN_DEVICE_GROUP,"Scene Levels"
 	}
 
 	void aboutToReadModelDetails() {
-		addStringAttribute (DeviceType.LIGHT, "ROOM" )
-		// The channel is considered the key hence does not need an extra field
+		addStringAttribute (DeviceType.LIGHT, "ROOM" , true)
+		// The Room is needed as well as the channel (key) in order to build a unique identifier for the light. The element is mandatory.
+				
+		addStringAttribute (DeviceType.TOGGLE_INPUT, "MASTER", false )
+		// A button can be a controller for the next four rooms as well as itself, this is an optional attribute.
 	}
 	
 	void processStringFromComms (String command , ReturnWrapper returnWrapper) {
+		if (command == "OK") return
 		
+		// command pattern   RRR:CC:IN 
+		if (command.startsWith ("<")){
+			def String[] parts = command.split (":")
+			if (parts.length == 3){
+				def room = parts[0]
+				def channel = parts[1]
+				def instruction = parts[2]
+			}
+		} else {
+			logger.log (Level.WARNING,"The instruction from the Rako was not correctly formatted " + command)
+		}
 	
 	}
 
@@ -62,37 +77,36 @@ class RAKO extends GroovyModel {
 			// To switch on the audio device it requieres a string of this format      AU_PWR:zone:on or AW_PWR:zone:off
 			if (command.getCommandCode() ==  "on") {
 				def room = device.getAttributeValue ("ROOM")
-					
-				returnWrapper.addCommOutput  ("AU_PWR:" + device.getKey() + ":1")
+				returnWrapper.addCommOutput  ("ROOM " + room)	
+				returnWrapper.addCommOutput  ("CHANNEL " + device.getKey())
+				def levelForRako = Utility.scaleFromFlash (command.getExtraInfo(), 0,255,false) // false indicates the value does not need to be inverted, ie. 0 is the min level for the Rako
+				returnWrapper.addCommOutput  ("LEVEL " + levelForRako)
 			}
 			
 			if (command.getCommandCode() == "off") {
-				returnWrapper.addCommOutput ("AU_PWR:" + device.getKey() + ":0")
-			}
-	
-			// To change the volume the format will be AU_VOL:zone:- or AU_VOL:zone:+ 
-			if (command.getCommandCode() == "volume") {
-				
-				if (command.getExtraInfo() == "up" )  {
-					returnWrapper.addCommOutput  ("AU_VOL:" + device.getKey() + ":+"	)					
-	
-				} else { 
-					returnWrapper.addCommOutput  ("AU_VOL:" + device.getKey() + ":-")
-				}
+				def room = device.getAttributeValue ("ROOM")
+				returnWrapper.addCommOutput  ("ROOM " + room)	
+				returnWrapper.addCommOutput  ("CHANNEL " + device.getKey())
+				returnWrapper.addCommOutput  ("OFF")
 			}
 			
-			
-			// To change the input source the format will be AU_SRC:zone:src_val
-			// The names of each input channel are listed in a catalogue that has been tied to AUDIO_INPUTS at the start of the model
-			
-			if (command.getCommandCode() == "src") {
-				
-					String newSrc = getCatalogueValue (command.getExtraInfo(), "AUDIO_INPUTS", device )
-				
-					returnWrapper.addCommOutput ("AU_SRC:" + device.getKey() + ":" + newSrc		)		 
+			if (command.getCommandCode() == "scene") {
+				def room = device.getAttributeValue ("ROOM")
+				returnWrapper.addCommOutput  ("ROOM " + room)	
+				returnWrapper.addCommOutput  ("CHANNEL " + device.getKey())
+				returnWrapper.addCommOutput  ("SCENE " + command.getExtraInfo())
+				decodeScene (returnWrapper,command.getExtraInfo())
 			}
+			
 		} catch (UnknownFieldException ex){
 			logger.log (Level.WARNING,ex.getMessage());
 		}
 	}
+
+	
+
+	void decodeScene (ReturnWrapper returnWrapper , String sceneNumber){
+		
+	}
+	
 }
