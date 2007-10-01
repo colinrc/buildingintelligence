@@ -1,3 +1,38 @@
+''' General '''
+
+Removed amount of logging at info level when the system is starting up.
+
+Added severe error if no configuration files are loaded when the system starts up, the system will hard exit in this situation.
+
+
+''' Groovy models '''
+
+Added the ability for the extra attribute to be optional.  
+
+{{{
+   For example to expect lights to have an optional attribute called UNIT include this method in your model.
+   
+   void finishedReadingModelParameters() {
+	    addStringAttribute (DeviceType.Light, "UNIT" ,false )
+	}
+	
+}}}
+
+
+''' Cbus '''
+
+Removed extraneous notifications for devices that do not have generated slider pulses.
+
+''' Web '''
+
+Moved eLife web session handling to use normal web session handling rather than custom. 
+Maintenance is greatly simplified as is the requirements for http client protocols; the INIT process is no longer required from a web client as the system
+can now determine if it is a new session.
+
+''' Comfort '''
+
+Issue 656
+
 == 2/Sep/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b64.zip V1.6-b64]  ==
 
 ''' Groovy models '''
