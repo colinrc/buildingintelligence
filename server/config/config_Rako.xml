@@ -19,7 +19,8 @@
                 </PARAMETERS>
                 
                 <RAKO>
-                        <LIGHT ACTIVE="Y" KEY="06"  ROOM="2" NAME="Test light" DISPLAY_NAME="GARAGE_LIGHT"  POWER_RATING="100"/>
+                        <LIGHT ACTIVE="Y" KEY="00"  ROOM="0" NAME="All Lights" DISPLAY_NAME="ALL"  POWER_RATING="100"/>
+                        <LIGHT ACTIVE="Y" KEY="06"  ROOM="2" NAME="Garage light" DISPLAY_NAME="GARAGE_LIGHT"  POWER_RATING="100"/>
                </RAKO>
         </DEVICE>
 </CONFIG>
