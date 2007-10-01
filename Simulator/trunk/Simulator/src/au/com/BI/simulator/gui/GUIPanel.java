@@ -41,9 +41,7 @@ public class GUIPanel {
 		   JPanel eachBox = new JPanel();
 		   Dimension size = new Dimension (125,150);
 		   eachBox.setPreferredSize(size);
-		   JLabel simName = new JLabel (sim.getDeviceName());
-		   simName.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-		   eachBox.add(simName);
+
 		   
 		   JLabel name = new JLabel (getTitle());
 		   name.setAlignmentX(JComponent.CENTER_ALIGNMENT);
@@ -101,6 +99,10 @@ public class GUIPanel {
 			   buttonOff.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 			   buttonOff.addActionListener(new ButtonPressed(ControlStates.OFF,helper,simulator,gui,this,control));
 			   eachBox.add(buttonOff);
+			   
+			    JLabel simName = new JLabel (sim.getDeviceName());
+			    simName.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+			    eachBox.add(simName);
 		   }
 
 		   return eachBox;

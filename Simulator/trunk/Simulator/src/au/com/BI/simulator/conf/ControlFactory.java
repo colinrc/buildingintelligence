@@ -34,20 +34,25 @@ public class ControlFactory {
 		control.setDisplayType(type);
 
 		switch (control.getDisplayType()) {
-			case BUTTONS: case SLIDER: case SLIDER_RAW:
+		    case BUTTONS: case SLIDER: case SLIDER_RAW: 
 				String key = typeXML.getChildText("key");
 				control.setKey(key);
 				break;
+				
+		    case DLT:
+				String dlt_key = typeXML.getChildText("key");
+				control.setKey(dlt_key);
+				break;
 
-			case BUTTONS_RAW:
+		    case BUTTONS_RAW:
 				String on = typeXML.getChildText("key_on");
 				String off = typeXML.getChildText("key_off");
 				control.setKeyOn(on);
 				control.setKeyOff(off);
 				break;
 
-			case CONTROLS:
-				List<Element> keys = (List<Element>)typeXML.getChildren("key");
+		    case CONTROLS:
+			    List<Element> keys = (List<Element>)typeXML.getChildren("key");
 			    for(Element keyElm : keys) {
 			    		String value = keyElm.getText();
 			    		String label = keyElm.getAttributeValue("label");
@@ -55,8 +60,21 @@ public class ControlFactory {
 			    		control.addControlKeyPair (label,parseString);
 			    }
 			    break;
+			    
+		    case AV:
+			    String av_key = typeXML.getChildText("key");
+			    control.setKey(av_key);
+
+			    List<Element> srcs = (List<Element>)typeXML.getChildren("src");
+			    for(Element keyElm : srcs) {
+			    		String value = keyElm.getText();
+			    		String label = keyElm.getAttributeValue("label");
+			    		String parseString = Utility.parseString (value);
+			    		control.addControlKeyPair (label,parseString);
+			    }
+			    break;
 				
-			case NONE:
+		    case NONE:
 
 		}
 

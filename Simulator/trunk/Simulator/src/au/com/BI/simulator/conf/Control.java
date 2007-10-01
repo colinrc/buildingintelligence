@@ -5,9 +5,9 @@ import java.util.logging.*;
 import java.util.*;
 
 public class Control {
-	   public static enum DisplayTypes {UNKNOWN,BUTTONS,SLIDER,CONTROLS,SLIDER_RAW,BUTTONS_RAW,NONE}
+	   public static enum DisplayTypes {UNKNOWN,BUTTONS,SLIDER,CONTROLS,SLIDER_RAW,BUTTONS_RAW,DLT,AV,NONE}
 
-	   public static enum SimTypes {ALL,UNKNOWN,CBUS,RAW,COMFORT,GC100,M1}
+	   public static enum SimTypes {ALL,UNKNOWN,CBUS,RAW,COMFORT,GC100,M1,TUTONDO}
 	   public static enum SimSubTypes {UNKNOWN, INPUT,OUTPUT,COUNTER,CONTROLS,TEMP}
 	   
 	   
@@ -21,6 +21,7 @@ public class Control {
 	   private String keyOff;
 	   private String selectList = "";
 	   private String title;
+	   private String label;
 	   private boolean updatingSlider = false;
 	   private DisplayTypes displayType = DisplayTypes.BUTTONS;
 
@@ -99,7 +100,8 @@ public class Control {
 
 
 	public boolean isHasSlider() {
-		if (getDisplayType() == DisplayTypes.SLIDER || getDisplayType() == DisplayTypes.SLIDER_RAW)
+		if (this.getDisplayType() == DisplayTypes.SLIDER || this.getDisplayType() == DisplayTypes.SLIDER_RAW || 
+		    this.getDisplayType() == DisplayTypes.DLT || this.getDisplayType() == DisplayTypes.AV)
 			return true;
 		else 
 			return false;
@@ -179,6 +181,14 @@ public class Control {
 			return true;
 		else 
 			return false;	
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 	
    }

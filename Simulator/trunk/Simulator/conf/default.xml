@@ -29,8 +29,9 @@ M1 is port 5006
 <control>
 	<name>Lounge LV Light</name>
 	<protocol>CBUS</protocol>
-	<type value="SLIDER" >
+	<type value="DLT" >
 		<key>12</key>
+		<label>None</label>
 	</type>
 </control>
 
@@ -78,7 +79,6 @@ M1 is port 5006
 	</type>
 </control>
 
-
 <control>
 	<name>Controls</name>
 	<protocol>COMFORT</protocol>
@@ -89,6 +89,16 @@ M1 is port 5006
 		<key label="Doorbell">DB01#0A</key>
 	</type>
 </control>
+
+<control>
+	<name>Tutondo Src</name>
+	<protocol>RAW</protocol>
+	<type value="CONTROLS">
+		<key label="cd1">!S,52,2,0,1#0A</key>
+		<key label="cd2">!S,52,2,0,2#0A</key>
+	</type>
+</control>
+
 
 <control>
 	<name>Test</name>
