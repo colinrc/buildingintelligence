@@ -297,6 +297,7 @@ public class UpdateServlet extends HttpServlet {
         session.setAttribute("CacheBridge",cacheBridgeFactory.createCacheBridge(ID));
         session.setAttribute("ClientCommandFactory",clientCommandFactory);
         session.setAttribute("ServerID",serverID);
+        session.setAttribute("ID",ID);
         session.setAttribute("User", user);
         session.setMaxInactiveInterval(MaxTimeOut);
 

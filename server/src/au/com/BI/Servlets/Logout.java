@@ -46,9 +46,9 @@ public class Logout extends HttpServlet {
         if (session != null){
         	Long ID = (Long)session.getAttribute("ID");
         	ClientCommandFactory clientCommandFactory = (ClientCommandFactory)session.getAttribute("ClientCommandFactory");
-        	clientCommandFactory.setID(ID);
-        	if (clientCommandFactory != null && ID != null && commandQueue  != null && addressBook != null){
 
+        	if (clientCommandFactory != null && ID != null && commandQueue  != null && addressBook != null){
+            	clientCommandFactory.setID(ID);
 			    	addressBook.removeByID(ID);
 					ClientCommand clientCommand = clientCommandFactory.buildListNamesCommand();
 					if (clientCommand != null) {

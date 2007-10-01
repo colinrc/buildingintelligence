@@ -16,7 +16,7 @@ import javax.servlet.http.*;
 
  */
 
-public class SessionCounter implements HttpSessionListener {
+public class SessionCounter implements HttpSessionListener  {
 
 	private int currentSessionCount = 0;
 

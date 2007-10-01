@@ -52,7 +52,7 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 		this.addControlledItem ("OK",null,MessageDirection.FROM_HARDWARE); // special item
 		this.addControlledItem ("EV",null,MessageDirection.FROM_HARDWARE); // special item
 		
-		configHelper.addParameterBlock ("AV_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Comfort Users");
+		configHelper.addParameterBlock ("COMFORT_USERS",DeviceModel.MAIN_DEVICE_GROUP,"Comfort Users");
 		configHelper.addParameterBlock ("DOOR_IDS",DeviceModel.MAIN_DEVICE_GROUP,"Door IDS");
 
 		}

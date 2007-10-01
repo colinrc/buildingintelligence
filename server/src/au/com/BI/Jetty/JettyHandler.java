@@ -34,7 +34,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     org.mortbay.jetty.Server server = null,client_server = null;
     Logger logger;
     Security security = null;
-    public static final int timeout = 60; // 1 minute timeout for a session;
+    public static final int timeout = 30; // 1 minute timeout for a session;
     
     public JettyHandler(Security security) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -137,7 +137,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             sessionHandler.setHandler(updateHandler);
            SessionManager sessionManager =  sessionHandler.getSessionManager();
            sessionManager.setMaxInactiveInterval(timeout);
-            
+           
             updateContextHandler.setHandler(sessionHandler);
             updateContextHandler.setAttribute("CacheBridgeFactory",cacheBridgeFactory);
             updateContextHandler.setAttribute("AddressBook",addressBook);
