@@ -15,7 +15,7 @@
 		<sound name="alarm" file="sounds/CTU24.mp3" volume="40" />
 	</sounds>
 	<statusBar>
-		<group name="Lights" icon="light-bulb" windowWidth="300" windowHeight="450" windowBgOpacity="60" windowBgColour1="0xFFCC00" windowBgColour2="0x990000" windowCornerRadius="30" windowBorderColour="0xCC0000" windowBorderWidth="2" windowShadowOffset="10" show="on" hide="off">
+		<group name="Lights" icon="light-bulb" windowWidth="300" windowHeight="300" windowBgOpacity="60" windowBgColour1="0xFFCC00" windowBgColour2="0x990000" windowCornerRadius="10" windowBorderColour="0xCC0000" windowBorderWidth="2" windowShadowOffset="10" show="on" hide="off">
 			<control key="ENSUITE_LIGHT" />
 			<control key="ENSUITE_LV_LIGHT" />
 			<control key="LAUNDRY_LIGHT" />
