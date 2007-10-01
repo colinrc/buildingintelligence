@@ -99,7 +99,6 @@
 							var label = this.format;
 							for (var i in _global.controls[key].storedStates) {
 								label = label.split("%" + i + "%").join(_global.controls[key].storedStates[i]);
-								trace("%" + i + "% == " + _global.controls[key].storedStates[i]);
 							}
 						} else {
 							var label = "%name% ";

@@ -3,7 +3,7 @@
 		//if (allSettings[i].nodeName == "common" || allSettings[i].attributes.type == _global.settings.deviceType) {
 			var settings = allSettings[i].childNodes;
 			for (var setting=0; setting<settings.length; setting++) {
-				if (Number(settings[setting].attributes.value) == settings[setting].attributes.value) {
+				if (settings[setting].attributes.name != "label" && Number(settings[setting].attributes.value) == settings[setting].attributes.value) {
 					_global.settings[settings[setting].attributes.name] = Number(settings[setting].attributes.value);
 				} else if (settings[setting].attributes.value == "true" || settings[setting].attributes.value == "false") {
 					_global.settings[settings[setting].attributes.name] = (settings[setting].attributes.value == "true");
@@ -204,7 +204,7 @@ defineZones = function (zones) {
 
 defineWindow = function (window_xml, zone, room) {
 	for (var attrib in window_xml.attributes) {
-		if (Number(window_xml.attributes[attrib]) == window_xml.attributes[attrib]) {
+		if (attrib != "label" && Number(window_xml.attributes[attrib]) == window_xml.attributes[attrib]) {
 			_global.zones[zone].rooms[room].window[attrib] = Number(window_xml.attributes[attrib]);
 		} else if (window_xml.attributes[attrib] == "true" || window_xml.attributes[attrib] == "false") {
 			_global.zones[zone].rooms[room].window[attrib] = (window_xml.attributes[attrib] == "true");
@@ -219,7 +219,7 @@ defineWindow = function (window_xml, zone, room) {
 		var tabObj = new Object();
 		tabObj.controls = new Array();
 		for (var attrib in tabs[tab].attributes) {
-			if (Number(tabs[tab].attributes[attrib]) == tabs[tab].attributes[attrib]) {
+			if (attrib != "label" && Number(tabs[tab].attributes[attrib]) == tabs[tab].attributes[attrib]) {
 				tabObj[attrib] = Number(settings[setting].attributes.value);
 			} else if (tabs[tab].attributes[attrib] == "true" || tabs[tab].attributes[attrib] == "false") {
 				tabObj[attrib] = (tabs[tab].attributes[attrib] == "true");
@@ -260,7 +260,7 @@ defineControlTypes = function (controlTypes) {
 				for (var item=0; item<items.length; item++) {
 					rowObj.items[item] = new Object();
 					for (var attrib in items[item].attributes) {		
-						if (Number(items[item].attributes[attrib]) == items[item].attributes[attrib]) {
+						if (attrib != "label" && attrib != "extra" && Number(items[item].attributes[attrib]) == items[item].attributes[attrib]) {
 							rowObj.items[item][attrib] = Number(items[item].attributes[attrib]);
 						} else if (items[item].attributes[attrib] == "true" || items[item].attributes[attrib] == "false") {
 							rowObj.items[item][attrib] = (items[item].attributes[attrib] == "true");

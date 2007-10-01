@@ -1470,7 +1470,7 @@ openStatusWindow = function (statusObj) {
 			}
 		}
 		this.maxItems = controls.length;
-		this.itemsPerPage = 10;
+		this.itemsPerPage = Math.floor((this.height + 5) / 35);
 		if (this.maxItems == 0) {
 			this._parent.close();
 		} else if (controls.length > this.itemsPerPage) {
@@ -1513,8 +1513,8 @@ openStatusWindow = function (statusObj) {
 	}
 	
 	var scrollBar_mc = window_mc.content_mc.createEmptyMovieClip("scrollBar_mc", 20);
-	createScrollBar(scrollBar_mc, 345, "update");
-	scrollBar_mc._x = 346;
+	createScrollBar(scrollBar_mc, window_mc.content_mc.height, "update");
+	scrollBar_mc._x = window_mc.content_mc.width - scrollBar_mc._width;
 	
 	window_mc.onClose = function () {
 		unsubscribe(this.content_mc.keys, this.content_mc);
