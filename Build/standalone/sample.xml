@@ -558,7 +558,7 @@
 		</control>
 		<control type="squeezePanel">
 			<row>
-				<item type="label" />
+				<item type="trackDetails" height="95" />
 			</row>
 			<row>
 				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="50" />
