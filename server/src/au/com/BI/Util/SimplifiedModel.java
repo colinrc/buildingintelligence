@@ -1141,7 +1141,13 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
 	public String getCatalogueValue (String ID, String parameterName, DeviceType device) throws ParameterException {
 		String value = "";
-		Map rawCatalogue = getCatalogueDef(getParameterValue(parameterName,device.getGroupName()));
+		String catalogueGroupName = "";
+		if (device == null) {
+			catalogueGroupName = "Group01";
+		} else {
+			catalogueGroupName = device.getGroupName();
+		}
+		Map rawCatalogue = getCatalogueDef(getParameterValue(parameterName,catalogueGroupName));
 		if (rawCatalogue == null ) {
 			throw new ParameterException ("Catalogue " + parameterName + " is not present in the configuration file.");
 		}

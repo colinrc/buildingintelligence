@@ -1,10 +1,16 @@
+== 5/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b66.zip V1.6-b66]  ==
+
+''' Comfort '''
+
+Solved null pointer exception. Resolves ticket :ticket:661]
+
 == 2/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b65.zip V1.6-b65]  ==
 
 ''' General '''
 
 Removed amount of logging at info level when the system is starting up.
 
-Added severe error if no configuration files are loaded when the system starts up, the system will hard exit in this situation.
+Added severe error if no configuration files are loaded when the system starts up, the system will hard exit in this situation.  Resolves [ticket:653]
 
 
 ''' Groovy models '''
