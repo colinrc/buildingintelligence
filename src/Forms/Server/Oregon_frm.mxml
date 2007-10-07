@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseConnectionForm  updateComplete="{addForm(advArray);}" creationPolicy="auto" xmlns:fx="Controls.*" xmlns="Forms.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+	<mx:Script>
+		<![CDATA[
+			import Forms.AdvancedParam;
+			public var newForms:Array = new Array;
+			
+			[Bindable]
+			public var model_param:String;
+			
+			[Bindable]
+			public var models:Array = [{label:"WMR968", data:"WMR968"}];
+			
+			public function model_paramChanged(event:Event):void{
+				modifiedFlag= true;
+				if (dataHolder.parameters.containsKey("MODEL") == true) { 
+					dataHolder.parameters.remove("MODEL");
+				}
+				dataHolder.parameters.put("MODEL", event.target.text);
+			}
+			public function model_paramInit():void {
+				model_param = dataHolder.parameters.getValue("MODEL");
+			}		
+			
+		]]>
+	</mx:Script>
+	<mx:Array id="advArray">
+		<mx:Label text="Parameters:"/>
+		<mx:HBox width="292" height="26" >
+			<mx:HBox width="16%" height="100%" >
+				<mx:Label text="Model:" width="100%"/>
+			</mx:HBox>
+			<fx:ComboBox id="model" width="110" value="{model_param}" updateComplete="model_paramInit()" change="model_paramChanged(event)" dataProvider="{models}" />
+		</mx:HBox>
+	</mx:Array>
+</BaseConnectionForm>

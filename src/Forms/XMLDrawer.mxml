@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel initialize="initAndShowXml" xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="100%">
+	<mx:TextArea x="0" y="0" width="100%" height="100%" id="xml_ta" wordWrap="true" editable="false" enabled="true"/>
+	
+	 <mx:Script>
+    <![CDATA[
+
+	import Utils.XMLHighlighter;
+	import flash.events.Event;
+	import flash.xml.*;
+
+	
+	private var node:XML;
+	private var dataObject:Object;
+	
+	
+	[Inspectable()]
+	public function setXML(myNode:XML):void {
+		node = myNode;
+		trace ("in XMLDrawer.setXML.." + node.toXMLString());
+		initAndShowXml();
+
+	}
+	
+	public function initAndShowXml():void {
+		//var newXML:XML = new XML("XML");
+		//newXML.appendChild(node);
+		var xmlHightlighter:XMLHighlighter = new XMLHighlighter();
+		
+		if (node != null && node.toString().length >0) {
+			xml_ta.htmlText = xmlHightlighter.highlight(node);
+		} else {
+			xml_ta.htmlText = "";
+		}
+	}
+	
+
+]]>
+</mx:Script>
+</mx:Panel>
