@@ -52,7 +52,7 @@
          public function setup(directory:File = null):void
         {
             if (!directory) {
-           		directory.nativePath = File.appResourceDirectory.nativePath + "\\projects";			
+           		directory.nativePath = File.appResourceDirectory.nativePath + "/projects";			
             }
             fileSystemList.directory = directory;
             fileSystemList.resetHistory(directory);
