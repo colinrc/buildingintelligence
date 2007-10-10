@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseForm label="Audio Videos" xmlns="Forms.*"  initialize="init()" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:Controls="Controls.*">
+	<addForm>
+		<mx:DataGrid  dataProvider="{dataHolder.raw_interfaces}" id="dataG" width="100%" height="100%" editable="false"  itemFocusIn="dataGFocusIn()" itemEditEnd="itemEnd(event)" itemEditBegin="itemBegin(event)" itemClick="single_click(event)" itemDoubleClick="double_click(event)"   doubleClickEnabled="true">
+			<mx:columns>
+				<Controls:DataGridColumnPlus id="key" editable="false" headerText="Key" width="60" dataField="display_name"/>
+				<Controls:DataGridColumnPlus id="desc" editable="false" headerText="Description" width="110" dataField="name"/>
+				<Controls:DataGridColumnPlus id="DDDT"  editable="false" dataField="catalogue" headerText="Catalog" width="120" minWidth="120" 
+	                       itemEditor="Utils.Cellrenderers.CatalogMultilineComboBox" editorDataField="result" />  
+				<Controls:DataGridColumnPlus id="DDDTCode"  editable="false" dataField="code" headerText="Code" width="120" minWidth="120" 
+	                       itemEditor="Utils.Cellrenderers.CodeMultilineComboBox" editorDataField="result" />  
+
+				<Controls:DataGridColumnPlus id="command" editable="false" headerText="Command" width="60" dataField="command"/>
+				<Controls:DataGridColumnPlus id="extra"  visible="{Application.application.advancedOn}"  editable="false" headerText="Extra" width="35" dataField="extra"/>
+				<Controls:DataGridColumnPlus id="extra2" visible="{Application.application.advancedOn}" editable="false" headerText="Extra2" width="35" dataField="extra2"/>
+				<Controls:DataGridColumnPlus id="extra3" visible="{Application.application.advancedOn}" editable="false" headerText="Extra3" width="35" dataField="extra3"/>
+				<Controls:DataGridColumnPlus id="extra4" visible="{Application.application.advancedOn}" editable="false" headerText="Extra4" width="35" dataField="extra4"/>
+				<Controls:DataGridColumnPlus id="extra5" visible="{Application.application.advancedOn}" editable="false" headerText="Extra5" width="35" dataField="extra5"/>
+			</mx:columns>
+		</mx:DataGrid>	
+		
+		<mx:Label id="lab" text="Variables:" />
+		<mx:DataGrid dataProvider="{dataG.selectedItem.vars}" id="dataV" width="100%" height="30%" editable="false" itemEditEnd="itemEndVaraible(event)" itemClick="single_click_variable(event)"  doubleClickEnabled="false">
+			<mx:columns>
+				<Controls:DataGridColumnPlus id="dgcName" editable="true" headerText="Name" width="100" dataField="NAME"/>
+				<Controls:DataGridColumnPlus id="dgcValue" editable="true" headerText="Value" width="100" dataField="VALUE"/>
+				</mx:columns>
+		</mx:DataGrid>	
+		<mx:HBox width="50%" borderStyle="solid" paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10">
+			<mx:Label id="lab2" text="Output string: " />
+			<mx:Label id="os" text="{outputString}" />
+		</mx:HBox>
+	</addForm>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.events.DataGridEvent;
+			import mx.collections.ArrayCollection;
+			import Utils.FixType;
+			import mx.utils.ObjectProxy;
+			import Objects.Server.*;
+			import Utils.Cellrenderers.CatalogMultilineComboBox;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.utils.ObjectUtil;
+			import mx.utils.object_proxy;
+			import flash.utils.IDataOutput;
+			import mx.core.Application;
+			import mx.core.ClassFactory;
+			import Events.ComboSelectedEvent;
+					
+			public var selectedRow:int = 0;
+			[Bindable]
+			public var outputString:String = "";
+					
+			private function init():void {
+				var bytes:ByteArray = new ByteArray();
+				bytes.writeObject(dataHolder);
+				bytes.position = 0;
+				//var temp = bytes.readObject();
+				undoObject =bytes.readObject();
+
+				var tempA:Array = new Array();
+				for (var i:int=0 ; i < dataHolder.catalogues.catalogues.length ; i++ ) {
+					tempA.push({label: dataHolder.catalogues.catalogues[i].name, data: dataHolder.catalogues.catalogues[i].name });
+				}
+				Application.application.catalogsMulti = tempA;
+				addEventListener(ComboSelectedEvent.COMBOSELECTEDEVENT,comboChanged);
+
+				//rend.dpValue = dataHolder.catalogues.catalogues;
+			}
+			
+			public function dataGFocusIn():void {
+				lab.text="Variables: in catalog " + dataG.selectedItem.catalogue
+				//set output string
+				var out = dataHolder.catalogues.getOutputString(dataG.selectedItem.catalogue, dataG.selectedItem.code);
+				if (dataHolder.catalogues.isVariablesWellFormed(dataG.selectedItem.catalogue ,dataG.selectedItem.code) == true ) {
+					//get variables and replace
+					//var vars:Array = dataHolder.catalogues.getVariablesArray(dataG.selectedItem.catalogue ,dataG.selectedItem.code)
+					var varsVal:Array = dataG.selectedItem.vars;
+					if (varsVal != null) {
+						for (var ref:int=0 ; ref < varsVal.length ; ref++) {
+							var f1:String = "%"+varsVal[ref].NAME.toString()+"%";
+							out = out.replace(f1, varsVal[ref].VALUE);
+						}
+					}
+				}
+				outputString =out;
+			}
+				
+			override public function new_click():void {
+				var custom:Object = new Object();
+				custom.active = "Y";
+				custom.key = "";
+				custom.name = "";
+				custom.display_name ="";
+				custom.regex = "Y";
+				custom.power = "";
+				custom.extra = "";
+				custom.extra2 = "";
+				custom.extra3 = "";
+				custom.extra4 = "";
+				custom.extra5 = "";
+								
+				dataHolder.raw_interfaces.addItem(custom);
+				
+				callLater(focusNewRow);
+			}
+			
+			override public function delete_click():void {
+				if (data.selectedItem != null) {
+					Alert.show("Are you sure, press OK to delete " +data.selectedItem.name, "Delete", (Alert.OK | Alert.CANCEL), this, alertHandler);
+            	}
+  			}
+        
+            // Event handler function for displaying the selected Alert button.
+            private function alertHandler(event:CloseEvent):void {
+                if (event.detail==Alert.OK) {
+                    dataHolder.raw_interfaces.removeItemAt(data.selectedIndex);
+                    dataG.dataProvider = dataHolder.raw_interfaces;
+                    modifed = true;
+	            }
+	                else {
+	                    trace("delete cancelled");
+				}
+            }
+			
+			public function focusNewRow():void {
+				setCatalogCodes(dataHolder.raw_interfaces[dataG.selectedIndex].catalogue);
+				dataG.dataProvider = dataHolder.raw_interfaces;
+				dataG.editedItemPosition = {columnIndex:0,rowIndex:dataG.dataProvider.length-1};
+				dataG.editable=true;
+				modifed = true;
+				
+			}
+			public function itemBegin(event:Event):void {
+				setCatalogCodes(dataHolder.raw_interfaces[dataG.selectedIndex].catalogue);
+				modifed = true;
+				trace (event.toString());
+			}
+			public function itemEnd(event:DataGridEvent):void {
+				//set provider for code
+				setCatalogCodes(dataHolder.raw_interfaces[dataG.selectedIndex].catalogue);
+				trace("intem end");
+				dataG.editable = false;
+			}
+			private function fixProvider():void {
+				dataG.dataProvider = dataHolder.raw_interfaces;
+			}
+			override public function undo_click(event:Event):void {			
+				dataHolder.raw_interfaces = ObjectUtil.copy(undoObject.raw_interfaces);
+				dataG.dataProvider = dataHolder.raw_interfaces;
+				modifed = false;	
+			}
+			public function single_click(event:Event):void {
+				trace("single click");
+				if (event.columnIndex ==0 ||event.columnIndex ==1 ||event.columnIndex ==3 || event.columnIndex ==4 ||event.columnIndex ==5 ||event.columnIndex ==6 ||event.columnIndex ==7 ||event.columnIndex ==8 ||event.columnIndex ==9) { 
+					dataG.editedItemPosition = {columnIndex:event.columnIndex,rowIndex:dataG.selectedIndex};
+					dataG.editable=true;
+					modifed = true;
+										 
+				}
+				else {
+					dataG.editedItemPosition = {columnIndex:event.columnIndex,rowIndex:dataG.selectedIndex};
+					dataG.editable=true;
+					modifed = true;
+					
+				}
+			}
+			
+			public function comboChanged(event:ComboSelectedEvent):void {
+				trace("in comboChanged");
+				var cat:Catalogues = dataHolder.catalogues;
+				if (event.label == ComboSelectedEvent.CATALOG) {
+					trace("catalog Changed");
+					if (dataG.selectedItem !=null) {
+						dataG.selectedItem.code = "";
+						//remove variables
+						var empty:Array =new Array();
+						dataG.selectedItem.vars = empty;
+					}
+				}
+				else if (event.label == ComboSelectedEvent.CODE) {
+					trace("CODE changed");
+					//check if the catalog's code's value uses :%variables% if so create vars, if not then remove any vars
+					
+					if (cat.isVariablesWellFormed(dataG.selectedItem.catalogue ,event.value) == false ) {
+						//remove the variables
+						var empty:Array =new Array();
+						dataG.selectedItem.vars = empty;
+						
+					} else {
+						//insert variables if not there
+						var empty:Array =new Array();
+						dataG.selectedItem.vars = empty;
+						if (dataG.selectedItem.vars.length == 0) {
+							empty = cat.getVariablesArray(dataG.selectedItem.catalogue ,event.value)
+							dataG.selectedItem.vars = empty;
+						}
+					}
+				}
+
+			}
+		
+			public function setCatalogCodes(catalog:String):void {
+				var tempA:Array = new Array();
+				for (var i:int=0 ; i < dataHolder.catalogues.catalogues.length ; i++ ) {
+					if (dataHolder.catalogues.catalogues[i].name == catalog) {
+						var c1:Catalogue = dataHolder.catalogues.catalogues[i];
+						for (var k:int=0 ; k < c1.items.length ; k++ ) {
+							tempA.push({label: c1.items[k].code, data: c1.items[k].code, val: c1.items[k].value });
+						}
+					}
+				}
+				Application.application.codesMulti = tempA;
+			}
+			
+			public function double_click(event:Event):void {
+				//open next screen
+				trace ("open "+dataG.selectedItem.raw_interfaces);
+			}
+			public function single_click_variable(event:Event):void {
+				trace("single click variable");
+				dataV.editedItemPosition = {columnIndex:event.columnIndex,rowIndex:dataV.selectedIndex};
+				dataV.editable=true;
+				modifed = true;
+ 			}
+ 			public function itemEndVaraible(event:DataGridEvent):void {
+				
+				trace("intem end V");
+				dataV.editable = false;
+			}
+
+		]]>
+	</mx:Script>
+</BaseForm>

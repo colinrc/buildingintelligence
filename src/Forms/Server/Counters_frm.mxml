@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseForm label="Cameras" xmlns="Forms.*"  initialize="init()" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:Controls="Controls.*">
+	<addForm>
+		<mx:DataGrid dataProvider="{dataHolder.counters}" id="dataG" width="100%" height="100%" editable="false" itemEditEnd="itemEnd(event)" itemEditBegin="itemBegin(event)" itemClick="single_click(event)" itemDoubleClick="double_click(event)" doubleClickEnabled="true">
+			<mx:columns>
+				<Controls:DataGridColumnPlus itemRenderer="Controls.CheckBoxPlus" id="active" headerText="Active" dataField="active"  width="22" editable="false" >
+					<Controls:extendedProperties>
+						<mx:Object onValue="Y" offValue="N" value="{data.active}"/>
+					</Controls:extendedProperties>
+				</Controls:DataGridColumnPlus>
+				<Controls:DataGridColumnPlus id="desc" editable="false" headerText="Description" width="110" dataField="name"/>
+				<Controls:DataGridColumnPlus id="key" editable="false" headerText="Key" width="60" dataField="display_name"/>
+				<Controls:DataGridColumnPlus id="cont" editable="false" headerText="Counter No(DEC)" width="60" dataField="key"/>
+				<Controls:DataGridColumnPlus id="max" editable="false" headerText="Max" width="60" dataField="max"/>
+			</mx:columns>
+		</mx:DataGrid>	
+	</addForm>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import Utils.FixType;
+			import mx.utils.ObjectProxy;
+			import Objects.Server.*;
+			import Utils.Cellrenderers.MultilineComboBox;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.utils.ObjectUtil;
+			import mx.utils.object_proxy;
+			import flash.utils.IDataOutput;
+		
+			private function init():void {
+				var bytes:ByteArray = new ByteArray();
+				bytes.writeObject(dataHolder);
+				bytes.position = 0;
+				//var temp = bytes.readObject();
+				undoObject =bytes.readObject();	
+			}
+				
+			override public function new_click():void {
+				var newCounter = new Object();
+				newCounter.name = "";
+				newCounter.display_name = "";
+				newCounter.key = "";
+				newCounter.active = "Y";
+				newCounter.max = "";
+				newCounter.power = "";
+				dataHolder.counters.addItem(newCounter);
+				
+				callLater(focusNewRow);
+			}
+			
+			override public function delete_click():void {
+				if (dataG.selectedItem != null) {
+					Alert.show("Are you sure, press OK to delete " +dataG.selectedItem.name, "Delete", (Alert.OK | Alert.CANCEL), this, alertHandler);
+            	}
+  			}
+        
+            // Event handler function for displaying the selected Alert button.
+            private function alertHandler(event:CloseEvent):void {
+                if (event.detail==Alert.OK) {
+                    dataHolder.counters.removeItemAt(dataG.selectedIndex);
+                    dataG.dataProvider = dataHolder.counters;
+                    modifed = true;
+	            }
+	                else {
+	                    trace("delete cancelled");
+				}
+            }
+			
+			public function focusNewRow():void {
+				dataG.dataProvider = dataHolder.counters;
+				dataG.editedItemPosition = {columnIndex:1,rowIndex:dataG.dataProvider.length-1};
+				dataG.editable=true;
+				modifed = true;
+				
+			}
+			public function itemBegin(event:Event):void {
+				modifed = true;
+				trace (event.toString());
+			}
+			public function itemEnd(event:Event):void {
+				dataG.editable = false;
+			}
+			private function fixProvider():void {
+				dataG.dataProvider = dataHolder.counters;
+			}
+			override public function undo_click(event:Event):void {			
+				dataHolder.counters = ObjectUtil.copy(undoObject.counters);
+				dataG.dataProvider = dataHolder.counters;
+				modifed = false;	
+			}
+			public function single_click(event:Event):void {
+				if (event.columnIndex >= 1) { 
+					dataG.editedItemPosition = {columnIndex:event.columnIndex,rowIndex:dataG.selectedIndex};
+					dataG.editable=true;
+					modifed = true;
+				}
+				else {
+					modifed = true;
+				}
+			}
+			
+			public function double_click(event:Event):void {
+				//open next screen
+				trace ("open "+dataG.selectedItem.counters);
+			}
+
+		]]>
+	</mx:Script>
+</BaseForm>

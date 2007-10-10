@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox   xmlns:mx="http://www.adobe.com/2006/mxml"  width="400" height="300">
+	<mx:TextInput id="port" text="{dataHolder.connection.port}" editable="true" change="mod(event)"  width="254"/>
+	<mx:TextInput id="address" text="{dataHolder.connection.address}" change="mod(event)" editable="true" />
+	<mx:Script>
+		<![CDATA[
+			import Forms.dataHolder;
+			import Forms.modifiedFlag;
+			import mx.core.UIComponent;
+			import mx.utils.ObjectProxy;
+			import mx.utils.ObjectUtil;
+			
+			[Bindable]
+			public var dataHolder:Object;
+		
+			
+			public function mod(event:Event):void{
+				
+				
+				dataHolder.connection.port = port.text;
+				dataHolder.connection.address = address.text;
+			}	
+			
+			
+
+		]]>
+	</mx:Script>
+</mx:VBox>
