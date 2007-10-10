@@ -42,6 +42,7 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 		outputHelper = new OutputHelper(this);
 		controlledHelper = new ControlledHelper();
 		analogueReader = new AnalogReader();
+		setPadding (2); 
 		this.setSTX (STX);
 		this.setETX (ETX);
 

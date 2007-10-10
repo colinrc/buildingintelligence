@@ -38,12 +38,12 @@ public class DoActionHelper {
 			case CommDevice.MailboxQuery:
 				Alert phoneAlert = (Alert)configHelper.getControlItem("AM17");
 
-				if (!phoneAlert.isActive()) {
-					logger.log(Level.FINE,"Phone messages have been configured to not be ignored.");
-					break;
-				}
 				if (phoneAlert == null) {
 					logger.log (Level.WARNING, "No Alarm entry has been set for AM17, the phone message alarm");
+					break;
+				}
+				if (phoneAlert.isActive()) {
+					logger.log(Level.FINER,"Phone messages have been configured to be ignored.");
 				}
 				else {
 					String message = phoneAlert.getMessage();

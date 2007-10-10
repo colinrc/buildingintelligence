@@ -1,3 +1,9 @@
+== 11/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b68.zip V1.6-b68]  ==
+
+''' Comfort '''
+
+Possibly resolved correct key padding for single digit comfort inputs / outputs.. ticket [ticket:664]
+
 == 5/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b67.zip V1.6-b67]  ==
 
 ''' Comfort '''

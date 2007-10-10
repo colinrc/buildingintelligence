@@ -64,16 +64,21 @@ protected String modelName = "";
 	}
 	
 	public CommsCommand getFirstCommandInSentQueue (){
-		if (!sentQueue.isEmpty())
-			return (CommsCommand)sentQueue.getFirst();
-		else
-			return null;
+		synchronized (sentQueue){
+			if (!sentQueue.isEmpty())
+				return (CommsCommand)sentQueue.getFirst();
+			else
+				return null;
+		}
 	}
 
 	public CommsCommand getLastCommandInSentQueue (){
-		if (!sentQueue.isEmpty())
-			return (CommsCommand)sentQueue.getLast();
-		else return null;
+		synchronized (sentQueue){
+			if (!sentQueue.isEmpty())
+				return (CommsCommand)sentQueue.getLast();
+			else 
+				return null;
+		}
 	}
 	
 	public CommsCommand getLastCommandSent () {
@@ -200,10 +205,12 @@ protected String modelName = "";
 	    } else {
 	    	if (logger.isLoggable(Level.FINEST)){
 	    		String sentKeySet = "";
-		    	for (CommsCommand i: sentQueue){
-		    		sentKeySet +=  i.actionCode + ":";
-		    	}
-		    	logger.log (Level.FINEST,"Items in sent queue : " + sentKeySet);
+	    		synchronized (sentQueue){
+			    	for (CommsCommand i: sentQueue){
+			    		sentKeySet +=  i.actionCode + ":";
+			    	}
+			    	logger.log (Level.FINEST,"Items in sent queue : " + sentKeySet);
+	    		}
 	    	}
 			if ((System.currentTimeMillis() - this.timeOfLastCommand) > CommDevice.DelayUntilCommandRepeat) {
 				logger.log(Level.INFO,"Commands not actioned in " + CommDevice.DelayUntilCommandRepeat + " ms, repeating. Time since request " + Long.toString(System.currentTimeMillis() - this.timeOfLastCommand)   );
