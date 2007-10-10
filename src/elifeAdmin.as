@@ -203,7 +203,7 @@
 			var fileSaver:XMLFile = new XMLFile();
 			
 			fileSaver.saveXMLFile("data/elifeAdmin.xml", eLifeAdmin_xml.toString());
-		}
+		}//same as comments
 		
 		
 		
@@ -620,7 +620,7 @@
 					}
 					else
 					{		
-						var f3Str:String = File.applicationResourceDirectory.nativePath + "\\projects";			
+						var f3Str:String = File.applicationResourceDirectory.nativePath +File.separator+"projects";			
 						var f3:File = File.applicationResourceDirectory.resolve(f3Str);
 					    fileOpenPanel = FileOpenPanel.show(f3);
 					}
@@ -636,7 +636,7 @@
 					}
 					else
 					{		
-						var f1Str:String = File.applicationResourceDirectory.nativePath + "\\projects\\"+project.name;			
+						var f1Str:String = File.applicationResourceDirectory.nativePath + File.separator+"projects"+File.separator+project.name;			
 						var f1:File = File.applicationResourceDirectory.resolve(f1Str);
 					    fileSavePanel = FileSavePanel.show(f1, project.name+".elp");
 					    fileSavePanel.addEventListener(FileEvent.SELECT, fileSaveSelected);
@@ -653,7 +653,7 @@
 					}
 					else
 					{		
-						var f2Str:String = File.applicationResourceDirectory.nativePath + "\\projects\\"+project.name;			
+						var f2Str:String = File.applicationResourceDirectory.nativePath + File.separator+"projects"+File.separator+project.name;			
 						var f2:File = File.applicationResourceDirectory.resolve(f2Str);
 					    fileSavePanel = FileSavePanel.show(f2, project.name+".elp");
 					}
@@ -684,7 +684,7 @@
 
 		private function selectPath_event(event:Event): void {
 			var dir:File = new File();
-			dir.nativePath = File.applicationResourceDirectory.nativePath + "\\projects";
+			dir.nativePath = File.applicationResourceDirectory.nativePath + File.separator+"projects";
 			var selectDir:FileCreateDirPanel = FileCreateDirPanel.show(dir, null);	
 			
 			selectDir.addEventListener(FileEvent.SELECT, dirCreateSelected);
@@ -796,7 +796,7 @@
         
         private function createNewProject(name:String, dir:String):void {
         	var file:File = new File();
-        	file.nativePath = File.applicationResourceDirectory.nativePath + "\\defaults\\default_project.elp";	
+        	file.nativePath = File.applicationResourceDirectory.nativePath + File.separator+"defaults"+File.separator+"default_project.elp";	
         	
 			var fileStream:FileStream = new FileStream();
             fileStream.open(file, FileMode.READ);
@@ -926,31 +926,31 @@
 			var f3:File = new File();
 			f3.nativePath = f3Str;
 		
-			f3.nativePath =f3Str + "\\server";	
+			f3.nativePath =f3Str + File.separator+"server";	
 			if (!f3.exists) {
 				f3.createDirectory();
-				f3.nativePath =f3Str + "\\server\\config";	
+				f3.nativePath =f3Str + File.separator+"server"+File.separator+"config";	
 				f3.createDirectory();
-				f3.nativePath =f3Str + "\\server\\datafiles";	
+				f3.nativePath =f3Str + File.separator+"server"+File.separator+"datafiles";	
 				f3.createDirectory();
-				f3.nativePath =f3Str + "\\server\\script";	
+				f3.nativePath =f3Str + File.separator+"server"+File.separator+"script";	
 				f3.createDirectory();
 			}
 					
-			f3.nativePath =f3Str + "\\client";	
+			f3.nativePath =f3Str + File.separator+"client";	
 			if (!f3.exists) {	
 				f3.createDirectory();
-				f3.nativePath =f3Str + "\\client\\lib";	
+				f3.nativePath =f3Str + File.separator+"client"+File.separator+"lib";	
 				f3.createDirectory();
-				f3.nativePath =f3Str + "\\client\\lib\\icons";	
+				f3.nativePath =f3Str + File.separator+"client"+File.separator+"lib"+File.separator+"icons";	
 				f3.createDirectory();
-				f3.nativePath =f3Str + "\\client\\lib\\maps";	
+				f3.nativePath =f3Str + File.separator+"client"+File.separator+"lib"+File.separator+"maps";	
 				f3.createDirectory();
-				f3.nativePath =f3Str + "\\client\\lib\\backgrounds";	
+				f3.nativePath =f3Str + File.separator+"client"+File.separator+"lib"+File.separator+"backgrounds";	
 				f3.createDirectory();
-				f3.nativePath =f3Str + "\\client\\lib\\sounds";	
+				f3.nativePath =f3Str + File.separator+"client"+File.separator+"lib"+File.separator+"sounds";	
 				f3.createDirectory();
-				f3.nativePath =f3Str + "\\client\\lib\\objects";	
+				f3.nativePath =f3Str + File.separator+"client"+File.separator+"lib"+File.separator+"objects";	
 				f3.createDirectory();
 			}
 			unsaved = true;
@@ -1069,7 +1069,7 @@
        	
         //	srv.url="http://localhost:8182/guard"
         //	srv.useProxy = true;
-        //	srv.destination = "c:\\";
+        //	srv.destination = "c:"+File.separator+"";
         ///	srv.setCredentials("jeff", "spec1");
         //	srv.resultFormat = "object";
         //srv.send();

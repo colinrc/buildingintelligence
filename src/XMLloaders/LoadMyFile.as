@@ -34,7 +34,7 @@ package XMLloaders {
 		public function loadFile(file:FileReference):void {
 			
 		    loader = XLoader.getInstance();
-		    loader.setURLandLoad("projects/"+file.name);
+		    loader.setURLandLoad("projects"+File.separator+file.name);
 		    loader.addEventListener("onInit", fileLoaded);
 		 
 		}

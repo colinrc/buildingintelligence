@@ -53,7 +53,7 @@
                               name:String = null):void
         {
             if (!directory) {
-                directory = File.appResourceDirectory.resolve(File.appResourceDirectory.nativePath + "\\projects");
+                directory = File.appResourceDirectory.resolve(File.appResourceDirectory.nativePath + File.separator+"projects");
             }
             fileSystemList.directory = directory;
             fileSystemList.resetHistory(directory);

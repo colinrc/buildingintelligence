@@ -9,7 +9,7 @@ package FileAccess
 		public function getIconNames():Array {
 			file = new File();
 			
-			file = File.applicationResourceDirectory.resolve("lib/icons/");
+			file = File.applicationResourceDirectory.resolve("lib"+File.separator+"icons"+File.separator);
 			var files:Array = file.listDirectory();
 			var iconFiles:Array= new Array();
 			for (f1 in files) {
