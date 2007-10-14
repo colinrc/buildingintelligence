@@ -1,0 +1,18 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+        <DESC>The BI Rako system</DESC>
+ 
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="IQRAKO" DESCRIPTION="Rako Lights">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                </CONNECTION>
+                
+                <RAKO>
+					<LIGHT ACTIVE="Y" KEY="00"  ROOM="0" NAME="All Lights" DISPLAY_NAME="ALL"  POWER_RATING="100"/>
+                    <LIGHT ACTIVE="Y" KEY="06"  ROOM="2" NAME="Garage light" DISPLAY_NAME="GARAGE_LIGHT"  POWER_RATING="100"/>
+                    <LIGHT ACTIVE="Y" KEY="07"  ROOM="3" NAME="Garage light" DISPLAY_NAME="KITCHEN_LIGHT"  POWER_RATING="100"/>
+               </RAKO>
+        </DEVICE>
+</CONFIG>
