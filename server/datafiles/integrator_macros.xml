@@ -1,0 +1,22 @@
+<MACROS>
+        <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="watering" TYPE="" STATUS="" RUNNING="0"> 
+                <CONTROL KEY="%EXTRA%" COMMAND="on" TARGET="All" TARGET_USER="" />
+                <CONTROL KEY="pause" COMMAND="pause" EXTRA="%EXTRA2%" TARGET="All" TARGET_USER="" /> 
+                <CONTROL KEY="%EXTRA%" COMMAND="off" TARGET="All" TARGET_USER="" /> 
+        </CONTROL>
+        <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="pool" TYPE="" STATUS="" RUNNING="0"> 
+                <CONTROL KEY="%EXTRA%" COMMAND="on" TARGET="All" TARGET_USER="" />
+                <CONTROL KEY="pause" COMMAND="pause" EXTRA="%EXTRA2%" TARGET="All" TARGET_USER="" /> 
+                <CONTROL KEY="%EXTRA%" COMMAND="off" TARGET="All" TARGET_USER="" /> 
+        </CONTROL>
+        <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="light" TYPE="" STATUS="" RUNNING="0"> 
+                <CONTROL KEY="%EXTRA%" COMMAND="on" TARGET="All" TARGET_USER="" />
+                <CONTROL KEY="pause" COMMAND="pause" EXTRA="%EXTRA2%" TARGET="All" TARGET_USER="" /> 
+                <CONTROL KEY="%EXTRA%" COMMAND="off" TARGET="All" TARGET_USER="" /> 
+        </CONTROL>
+        <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="TimeTestTimer" TYPE="" STATUS="" RUNNING="0"> 
+                <CONTROL KEY="TIMETEST_TIMER" COMMAND="on" TARGET="All" TARGET_USER="" />
+                <CONTROL KEY="pause" COMMAND="pause" EXTRA="600" TARGET="All" TARGET_USER="" /> 
+                <CONTROL KEY="TIMETEST_TIMER" COMMAND="off" TARGET="All" TARGET_USER="" /> 
+        </CONTROL>        
+</MACROS> 
