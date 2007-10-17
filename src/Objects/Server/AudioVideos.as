@@ -15,7 +15,8 @@
 		private var container:String="";
 		[Bindable]
 		public var audiovideos:ArrayCollection;
-		private var zoneHeader:String = "";
+		[Bindable]
+		public var zoneHeader:String = "";
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);

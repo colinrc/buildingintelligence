@@ -10,7 +10,7 @@
 				</Controls:DataGridColumnPlus>
 				<Controls:DataGridColumnPlus id="desc" editable="false" headerText="Description" width="110" dataField="name"/>
 				<Controls:DataGridColumnPlus id="key" editable="false" headerText="Key" width="60" dataField="display_name"/>
-				<Controls:DataGridColumnPlus id="zone" editable="false" headerText="{dataHolder.Data.zoneHeader}" width="60" dataField="key"/>
+				<Controls:DataGridColumnPlus id="zone" editable="false" headerText="{dataHolder.zoneHeader}" width="60" dataField="key"/>
 			</mx:columns>
 		</mx:DataGrid>	
 	</addForm>

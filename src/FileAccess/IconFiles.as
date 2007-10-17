@@ -9,8 +9,8 @@ package FileAccess
 		public function getIconNames():Array {
 			file = new File();
 			
-			file = File.applicationResourceDirectory.resolve("lib"+File.separator+"icons"+File.separator);
-			var files:Array = file.listDirectory();
+			file = File.applicationResourceDirectory.resolvePath("lib"+File.separator+"icons"+File.separator);
+			var files:Array = file.getDirectoryListing();
 			var iconFiles:Array= new Array();
 			for (f1 in files) {
 				var ext:String = files[f1].extension;

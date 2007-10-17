@@ -156,17 +156,19 @@
         */
         private function selectButton_clickHandler(event:MouseEvent):void
         {
-            var selectedFile:File = File(fileSystemList.selectedItem);
-            if (selectedFile.isDirectory)
-            {
-                fileSystemList.navigateDown()
-            }
-            else
-            {
-                var selectEvent:FileEvent = new FileEvent(FileEvent.SELECT);
-                selectEvent.file = selectedFile;
-                dispatchEvent(selectEvent);
-                PopUpManager.removePopUp(this);
+            if (fileSystemList.selectedItem) {
+	            var selectedFile:File = File(fileSystemList.selectedItem);
+	            if (selectedFile.isDirectory)
+	            {
+	                fileSystemList.navigateDown()
+	            }
+	            else
+	            {
+	                var selectEvent:FileEvent = new FileEvent(Event.SELECT);
+	                selectEvent.file = selectedFile;
+	                dispatchEvent(selectEvent);
+	                PopUpManager.removePopUp(this);
+	            }
             }
         }
 
@@ -200,7 +202,7 @@
                    enabled="{fileSystemList.canNavigateUp}"
                    click="upButton_clickHandler(event)"/>
     </mx:HBox>
-    <mx:FileSystemList id = "fileSystemList" width="100%" rowCount="8" select="fileSystemList_selectHandler(event)" />
+    <mx:FileSystemList id = "fileSystemList" width="100%" rowCount="8" doubleClick="selectButton_clickHandler(event)"/>
     <mx:HBox width="100%" horizontalAlign="center">
         <mx:Label text="Show files:"/>
         <mx:ComboBox id="showFilesComboBox" width="100%"

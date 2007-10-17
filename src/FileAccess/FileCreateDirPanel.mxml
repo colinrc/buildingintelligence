@@ -26,7 +26,7 @@
 
         [Bindable]
         public var saveFileButtonLabel:String = "Create Project";
-        
+         
         [Bindable] 
 		[Embed (source="../../bin/icons/createFolder.png")]
 		public var createFolder:Class;
@@ -53,7 +53,7 @@
                               name:String = null):void
         {
             if (!directory) {
-                directory = File.appResourceDirectory.resolve(File.appResourceDirectory.nativePath + File.separator+"projects");
+                directory = File.appResourceDirectory.resolvePath(File.appResourceDirectory.nativePath + File.separator+"projects");
             }
             fileSystemList.directory = directory;
             fileSystemList.resetHistory(directory);
@@ -93,9 +93,9 @@
         	if (fileNameTextInput.text.indexOf(".elp",0)<= 0) {
         		fileName = fileNameTextInput.text+".elp";
         	}
-            var selectEvent:FileEvent = new FileEvent(FileEvent.SELECT);
+            var selectEvent:FileEvent = new FileEvent(Event.SELECT);
             selectEvent.file =
-                fileSystemList.directory.resolve(fileName);
+                fileSystemList.directory.resolvePath(fileName);
             dispatchEvent(selectEvent);
         }
 
@@ -227,7 +227,7 @@
         {
         	trace("savebutton click:"+event.toString());
         	if (saveButton.label == openDirectoryButtonLabel) {
-        		var dir:File = fileSystemList.directory.resolve(fileNameTextInput.text);
+        		var dir:File = fileSystemList.directory.resolvePath(fileNameTextInput.text);
         		fileSystemList.navigateTo(dir);
         		fileSystemList.refresh();
         		fileNameTextInput.text = ""; 
@@ -241,7 +241,7 @@
         			fileName = fileNameTextInput.text;
         		}
         		//does dir exist?
-        		var checkDir:File = fileSystemList.directory.resolve(fileName);
+        		var checkDir:File = fileSystemList.directory.resolvePath(fileName);
         		if ( !checkDir.exists) {
         			checkDir.createDirectory();
         			fileSystemList.navigateTo(checkDir);
@@ -252,7 +252,7 @@
         }
  
  		private function create_clickHandler(event:MouseEvent):void {
- 			var newDir:File = fileSystemList.directory.resolve(fileNameTextInput.text);
+ 			var newDir:File = fileSystemList.directory.resolvePath(fileNameTextInput.text);
  			if (newDir.exists==true) {
  				Alert.show("The directory already exists","Error cannot create directory");
  			}

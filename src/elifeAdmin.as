@@ -1,66 +1,36 @@
 
-		import mx.controls.Alert;
-        import mx.messaging.Consumer;
-    	import mx.logging.Log;
-        import mx.controls.Menu;
-        import mx.events.MenuEvent;
-        import mx.containers.TabNavigator;
-        import mx.events.ItemClickEvent;
-        //import flash.events.MouseEvent;
-		import flash.net.*;
-		import flash.display.Sprite;
-	    import flash.events.*;
-	    import flash.net.FileFilter;
-	    import flash.net.FileReference;
-	    import flash.net.URLRequest;
- 		import flash.external.ExternalInterface;
- 		import flash.filesystem.*;
- 		import flash.system.Security;
- 		import mx.rpc.http.HTTPService;
- 		import mx.utils.ObjectProxy;
- 		import mx.messaging.*; 
- 		import mx.messaging.messages.SOAPMessage;
- 		import mx.rpc.AsyncToken;
- 		import mx.rpc.events.*;
- 		import flash.xml.XMLDocument;
- 		import mx.rpc.xml.XMLEncoder;
- 		import mx.collections.ArrayCollection;
-		import flash.net.sendToURL
-		import mx.core.Application;
-		import mx.core.ClassFactory;
-		import mx.containers.Form
-		import mx.managers.PopUpManager;
-		import flash.display.MovieClip;
-		import XMLloaders.*;
-	
-		import Objects.*;
-		import Objects.Server.*;
-		import Objects.Instances.*;
-		import Objects.Client.*;
-		import mx.messaging.config.ServerConfig;
-		import flash.xml.XMLNode;
-		import flash.xml.XMLNodeType;
-		import mx.controls.Tree;
-		import Forms.ITreeItemRenderer;
-		import Forms.MyTreeItemRenderer;
-		import mx.collections.ArrayCollection;
-		import mdm.*;
-		import flash.display.*;
+		import FileAccess.FileCreateDirPanel;
+		import FileAccess.FileOpenPanel;
+		import FileAccess.FileSavePanel;
+		import FileAccess.XMLFile;
+		
 		import Forms.*;
 		import Forms.Server.*;
-		import flash.utils.*;
-		import mx.utils.ObjectProxy;
-		import Utils.Cellrenderers.MultilineComboBox;
-		import mx.binding.utils.BindingUtils;
-		import mx.core.ApolloApplication;
 		
-		import FileAccess.FileOpenPanel;
-        import FileAccess.FileSavePanel;
-        import FileAccess.XMLFile;
-        
-        import mx.events.*;
-        import FileAccess.FileCreateDirPanel;
-        import mx.collections.XMLListCollection;
+		import Objects.*;
+		import Objects.Client.*;
+		import Objects.Instances.*;
+		import Objects.Server.*;
+		
+		import XMLloaders.*;
+		
+		import flash.display.*;
+		import flash.events.*;
+		import flash.filesystem.*;
+		import flash.net.*;
+		import flash.utils.*;
+		import flash.xml.XMLNode;
+		
+		import mdm.*;
+		
+		import mx.binding.utils.BindingUtils;
+		import mx.collections.XMLListCollection;
+		import mx.controls.Alert;
+		import mx.events.*;
+		import mx.messaging.*;
+		import mx.rpc.events.*;
+		import mx.utils.ObjectProxy;
+
 		
 		/************************* Init system variable *********************************/	
 		[Bindable]
@@ -170,6 +140,7 @@
 		public var designTree_xml:MyTreeNode;
 		[Bindable]
 		public var dt:XMLListCollection;
+		public var dtTemp:XML;
 		public var controlTree_xml:XML = new XML();
 		
 		private var current_tree_node:XML = null;
@@ -205,7 +176,14 @@
 			fileSaver.saveXMLFile("data/elifeAdmin.xml", eLifeAdmin_xml.toString());
 		}//same as comments
 		
-		
+		public function advLabel():void {
+			if (advancedOn == true) {
+				advanced.label = "To Basic";
+			}
+			else {
+				advanced.label = "To Advanced";
+			}
+		}
 		
 		
 		
@@ -228,7 +206,7 @@
 		}
 		
    		public function init():void {
-   			this.stage.window.addEventListener(flash.events.Event.CLOSING, closeMe );
+   		//	this.stage.window.addEventListener(flash.events.Event.CLOSING, closeMe );
 			dockedMenuBar.addEventListener(MenuEvent.ITEM_CLICK, itemClickInfo);
 			loadXMLfiles();
 			
@@ -298,21 +276,23 @@
 			
 						
 		}
+		
+		
 		public function renderTree():void {
-			/*
-			if (refreshData){
-				refreshData = false;
-				if (current_tree_openItems) {
-					for (var i:int;i<current_tree_openItems.length-1;i++) {
-						projectTree.expandItem(current_tree_openItems[i], true );
-					}
-					projectTree.validateDisplayList();
-					projectTree.validateNow();
-				}
-			}
-			*/
+			/* if(refreshData){
+                    // Refresh all rows on next update.
+                    projectTree.invalidateList();
+                    refreshData = false;
+                    projectTree.openItems = current_tree_openItems;
+                    // Validate and update the properties and layout
+                    // of this object and redraw it, if necessary.
+                    projectTree.validateNow();
+                }
+*/
+
 		}
 		public function refreshTheTree():void {
+			if (projectTree) { current_tree_openItems = projectTree.openItems};
 			
 			refreshData = true;
 			
@@ -338,42 +318,50 @@
 			
 				usedKeys = usedKeys.concat(clientList[client2].getUsedKeys());
 			}
-			//if (projectTree != null) {
-			dt = designTree_xml.getXML();
-			
-				//projectTree.dataProvider = dt;
-				if (projectTree) {projectTree.expandItem(dt[0], true)};
-				
-				
-			//}
-			
+						
 			workFlow.serverList.removeAll();
 			workFlow.clientList.removeAll();
 			workFlow.createWorkflow(designTree_xml);
-			
-			
-	
-			
-		}
-		public function treeUpdated():void {
-			if(current_tree_node) projectTree.selectedItem = current_tree_node;
-				if (current_tree_openItems) {
-					for (var i:int;i<current_tree_openItems.length-1;i++) {
-						for (var j:int;j<projectTree.items.length-1 ;j++){
-							if (current_tree_openItems[i].key == projectTree.data[j]){
-								projectTree.expandItem(projectTree.items[j], true );
-							}
-						}
-					}
-					projectTree.validateNow();
+			if (projectTree) {
+				var cOpen:Array = projectTree.openItems;
+				//projectTree.invalidateList();
+				dtTemp = designTree_xml.getXML();
+				var t1:XMLListCollection = new XMLListCollection(new XMLList(dtTemp));
+				
+				dt.removeAll();
+				dt.refresh();
+				for (var its in t1) {
+					dt.addItem(t1[its]);
 				}
-			//if (current_tree_openItems) projectTree.openItems = current_tree_openItems;
+				projectTree.dataProvider = dt;
+				projectTree.validateNow();
+				
+				for (it in cOpen) {
+					var n:XML = cOpen[it];
+					var key:String = n.@key;
+					var ob:Object = designTree_xml.fixOpenItems(projectTree, dt[0], key);
+					projectTree.expandItem(ob,true);
+				}
+			}			
+		}
+
+
+				
+		public function fixDTXML():void {
+			//dt.removeAll();
+			//for (var i:int=0;i<dtTemp.length;i++) {
+		
+			//designTree_xml.walkTree(projectTree,dtTemp,dt,true);
+			value = "test";
+			var icon:String = "error";
+			key = "test";
+			dt.setChildren(dtTemp);
+			//dt.children()[0].node[0].appendChild(new XML("<node name=\"test\" icon = \"err\" key=\"test\" />"));  
+				//dt.addItem(dtTemp[1]);
+			//}
+			
 		}
 		
-		public function changedTree():void {
-			current_tree_node = XML(projectTree.selectedItem);
-			current_tree_openItems = projectTree.openItems;
-		}
 		public function isValidIP(ip:String):Boolean  {
 			var isValid:Boolean = true;
 			var ip_arr:Array = ip.split(".");
@@ -424,6 +412,7 @@
 			eLifeAdmin_xml = fileLoader.getXMLFile("data/elifeAdmin.xml");
 			vDivBoxWidth = eLifeAdmin_xml.settings[0].@vDivBoxWidth;
 			hDivBoxHeight = eLifeAdmin_xml.settings[1].@hDivBoxHeight;
+			advancedOn = Boolean(eLifeAdmin_xml.settings[2].@advanced);
 			trace("Completed xml loads");
 		}
 		
@@ -431,6 +420,7 @@
 			var fileSaver:XMLFile = new XMLFile();
 			eLifeAdmin_xml.settings[0].@vDivBoxWidth = vDivBox.width.toString();
 			eLifeAdmin_xml.settings[1].@hDivBoxHeight = can1.height.toString();
+			eLifeAdmin_xml.settings[2].@advanced = advancedOn.toString();
 			fileSaver.saveXMLFile("data/elifeAdmin.xml", eLifeAdmin_xml.toString());
 		}
 		
@@ -439,6 +429,7 @@
 				var fileSaver:XMLFile = new XMLFile();
 				eLifeAdmin_xml.settings[0].@vDivBoxWidth = vDivBox.width.toString();
 				eLifeAdmin_xml.settings[1].@hDivBoxHeight = can1.height.toString();
+				eLifeAdmin_xml.settings[2].@advanced = advancedOn.toString();
 				fileSaver.saveXMLFile("data/elifeAdmin.xml", eLifeAdmin_xml.toString());
 			}
 			catch (error:TypeError) {
@@ -446,9 +437,10 @@
 				//just exit
 			}
 		}
+	
 				
 		public function openProject(project:String):void { 	
-		 //	= fileLoader.getXMLFile("projects/" + project + ".elp");	    
+		 //= fileLoader.getXMLFile("projects/" + project + ".elp");	    
 		   // loader.addEventListener("onInit", loadDefaultComfort);
 		  //  loader.addEventListener("onInit", continueOpenProject); 
 		}	
@@ -464,8 +456,11 @@
         
             
           //  trace ("Designtree xml:"+ designTree_xml.getXML());
-          	dt = designTree_xml.getXML();
+          	dtTemp = designTree_xml.getXML();
+          	dt = new XMLListCollection(new XMLList(dtTemp));
+		
 			projectTree.dataProvider = dt;
+			projectTree.validateNow();
 			
 		}	
 		/*********************************************************************************/
@@ -478,8 +473,8 @@
                	handleNavigation(currentObj);
         }
 
-		public function changeTreeEvt(event:flash.events.Event):void {
-        	if (event.currentTarget.selectedItem != null) {   
+		public function changeTreeEvt(event:flash.events.MouseEvent):void {
+			if (event.currentTarget.selectedItem != null) {   
 	            var key:String = event.currentTarget.selectedItem.@key;
 	            TextDescription.htmlText = workFlow.getDescription(key);
 	            currentObj = new ObjectProxy(workFlow.getObject(key));
@@ -620,11 +615,11 @@
 					}
 					else
 					{		
-						var f3Str:String = File.applicationResourceDirectory.nativePath +File.separator+"projects";			
-						var f3:File = File.applicationResourceDirectory.resolve(f3Str);
+						var f3Str:String = File.applicationResourceDirectory.nativePath + "\\projects";			
+						var f3:File = File.applicationResourceDirectory.resolvePath(f3Str);
 					    fileOpenPanel = FileOpenPanel.show(f3);
 					}
-					fileOpenPanel.addEventListener(FileEvent.SELECT, fileOpenSelected);
+					fileOpenPanel.addEventListener(Event.SELECT, fileOpenSelected);
 			     	fileOpenPanel.addEventListener(Event.CANCEL, fileOpenSelectedCancelled);
 			     	menuXML = menuXMLOpenProject;
 			      break;
@@ -637,7 +632,7 @@
 					else
 					{		
 						var f1Str:String = File.applicationResourceDirectory.nativePath + File.separator+"projects"+File.separator+project.name;			
-						var f1:File = File.applicationResourceDirectory.resolve(f1Str);
+						var f1:File = File.applicationResourceDirectory.resolvePath(f1Str);
 					    fileSavePanel = FileSavePanel.show(f1, project.name+".elp");
 					    fileSavePanel.addEventListener(FileEvent.SELECT, fileSaveSelected);
 				     	fileSavePanel.addEventListener(Event.CANCEL, fileSaveSelectedCancelled);
@@ -654,7 +649,7 @@
 					else
 					{		
 						var f2Str:String = File.applicationResourceDirectory.nativePath + File.separator+"projects"+File.separator+project.name;			
-						var f2:File = File.applicationResourceDirectory.resolve(f2Str);
+						var f2:File = File.applicationResourceDirectory.resolvePath(f2Str);
 					    fileSavePanel = FileSavePanel.show(f2, project.name+".elp");
 					}
 					fileSavePanel.addEventListener(FileEvent.SELECT, fileSaveSelected);
@@ -763,7 +758,7 @@
             projectFileStream.close();
             enableProjectFields(true);
             currentState = "projectOpen";
-            
+            advLabel();
         }
         
         private function fileOpenSelectedCancelled(event:Event):void 
@@ -1063,7 +1058,7 @@
 	        	}
         	} catch (except:Error)
         	{
-        		trace("Not yet implemented " + except.message);
+        		trace("Advanced bodyInstnace - Not yet implemented " + except.message);
         	}
         	
        	

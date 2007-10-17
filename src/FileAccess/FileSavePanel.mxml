@@ -77,9 +77,9 @@
         */
         private function dispatchSelectEvent():void
         {
-            var selectEvent:FileEvent = new FileEvent(FileEvent.SELECT);
+            var selectEvent:FileEvent = new FileEvent(Event.SELECT);
             selectEvent.file =
-                fileSystemList.directory.resolve(fileNameTextInput.text);
+                fileSystemList.directory.resolvePath(fileNameTextInput.text);
             dispatchEvent(selectEvent);
         }
 

@@ -18,7 +18,7 @@ package FileAccess
 		public function getXMLFile(name:String):XML {
 			detail= null;
 			file = new File();
-			file = File.applicationResourceDirectory.resolve(name);
+			file = File.applicationResourceDirectory.resolvePath(name);
 			
 			if (stream != null)	{
 				stream.close();
@@ -32,7 +32,7 @@ package FileAccess
 		
 		public function saveXMLFile(fileName:String, myDetail:String):void {
 			file = new File();
-			file = File.applicationResourceDirectory.resolve(fileName);
+			file = File.applicationResourceDirectory.resolvePath(fileName);
 			
 			if (stream != null)	{
 				stream.close();

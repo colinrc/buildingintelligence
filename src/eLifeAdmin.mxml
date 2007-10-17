@@ -74,7 +74,7 @@
                         <mx:Canvas width="100%" height="{hDivBoxHeight}" id="can1"  >
                             <mx:TabNavigator  tabIndex="2" borderStyle="outset" width="100%" height="100%" horizontalAlign="left" id="tabnav" borderColor="#400040" x="1" y="1">
                                 <mx:Canvas label="Project" width="100%" height="100%">
-                                    <mx:Tree x="0" y="0" width="100%" height="100%" dataProvider="{dt}" creationComplete ="treeUpdated()" change="changedTree()" click="changeTreeEvt(event)" dataTipField="dataTip" showDataTips="false" showRoot="false" iconFunction="getIcon" labelField="@name" id="projectTree"></mx:Tree>
+                                    <mx:Tree x="0" y="0" width="100%" height="100%" dataProvider="{dt}" showRoot="false" creationComplete="renderTree()" click="changeTreeEvt(event)"  iconFunction="getIcon" labelField="@name" id="projectTree"></mx:Tree>
                                 </mx:Canvas>
                                 <mx:Canvas label="Workflow" width="100%" height="100%" id="workFlowTree">
                                     <mx:Accordion x="1" y="1" width="100%" height="100%">

@@ -9,8 +9,10 @@
 	[Bindable("nuvo")]
 	[RemoteClass(alias="elifeAdmin.objects.server.nuvo")]
 	public class Nuvo extends Device {
-		private var audiovideos:AudioVideos;
-		private var inputs:Catalogue;
+		[Bindable]
+		public var audiovideos:AudioVideos;
+		[Bindable]
+		public var inputs:Catalogue;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -125,7 +127,7 @@
 				if(newData.@ACTIVE!=undefined){			
 					active = newData.@ACTIVE;
 				}
-				for (var child:int = 0; child<newData.children().length;child++){
+				for (var child:int = 0; child<newData.children().length();child++){
 					var myType:String = newData.children()[child].name();
 					switch (myType) {
 					case "CONNECTION" :
