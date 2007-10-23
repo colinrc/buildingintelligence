@@ -1,22 +1,28 @@
 ﻿package Objects.Instances {
-	import flash.xml.XMLNode;
 	import Objects.*;
-	import mx.core.Application;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
+	
 	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
+	import flash.utils.IExternalizable;
+	import flash.xml.XMLNode;
+	
+	import mx.collections.ArrayCollection;
+	import mx.core.Application;
 	
 	[Bindable("ServerInstance")]
 	[RemoteClass(alias="elifeAdmin.objects.instances.serverInstance")]
 	public class ServerInstance implements IExternalizable {
-		private var ipAddress:String="";
-		private var userName:String="";
-		private var password:String="";
-		private var clients:Array;
-		private var serverConnection:Object;
-		private var monitorConnection:Object;
-		private var treeNode:MyTreeNode;
-		private var sftpConnection:Object;
+		[Bindable]
+		public var ipAddress:String="";
+		[Bindable]
+		public var userName:String="";
+		[Bindable]
+		public var password:String="";
+		[Bindable]
+		public var clients:ArrayCollection;
+		public var serverConnection:Object;
+		public var monitorConnection:Object;
+		public var treeNode:MyTreeNode;
 		public var serverDesign:Object;
 		
 		public function writeExternal(output:IDataOutput):void {
@@ -35,7 +41,7 @@
 			ipAddress = input.readUTF() as String;
 			userName = input.readUTF() as String;
 			password = input.readUTF() as String;
-			clients = input.readObject() as Array;
+			clients = input.readObject() as ArrayCollection;
 			serverConnection = input.readObject() as Object;
 			monitorConnection = input.readObject() as Object;
 			treeNode = input.readObject() as MyTreeNode;
@@ -51,7 +57,7 @@
 			treeNode.removeNode();
 		} 
 		public function isValid():String {
-			return "ok";
+			return "server";
 		}
 		public function getKey():String {
 			return "";
@@ -64,7 +70,7 @@
 			ipAddress = "127.0.0.1";
 			userName = "";
 			password = "";
-			clients = new Array();
+			clients = new ArrayCollection();
 			serverConnection = new ServerConnection();
 			monitorConnection = new MonitorConnection();
 			
@@ -82,7 +88,7 @@
 			return serverNode;
 		}
 		public function setXML(newData:XML):void {
-			clients = new Array();
+			clients = new ArrayCollection();
 			if (newData.name().toString() == "serverInstance") {
 				if (newData.@ipAddress != undefined) {
 					ipAddress = newData.@ipAddress;
@@ -99,7 +105,7 @@
 					newClient.setXML(newData.children()[child]);
 					newClient.id = Application.application.formDepth++;
 					newClient.serverParent = this;
-					clients.push(newClient);
+					clients.addItem(newClient);
 				}
 			} else {
 				trace("ERROR, found node " + newData.name().toString() + ", expecting serverInstance");
@@ -130,7 +136,6 @@
 			password = newData.password;
 		}
 		public function setData(newData:Object):void {
-			_global.left_tree.setIsOpen(treeNode, false);
 			//Process client changes....
 			var newClients = new Array();
 			for (var index in newData.clients) {
@@ -148,8 +153,8 @@
 					}
 				}
 				if (found == false) {
-					clients[client].deleteSelf();
-					clients.splice(parseInt(client), 1);
+					clients.removeItemAt(client);
+					
 				}
 			}
 			for (var newClient in newClients) {
@@ -158,12 +163,12 @@
 					newClientXML.attributes.description = newClients[newClient].description;
 					newClientXML.attributes.ipAddress = newClients[newClient].ipAddress;
 					newClientObject.setXML(newClientXML);
-					newClientObject.id = _global.formDepth++;
+					newClientObject.id = Application.application.formDepth++;
 					newClientObject.serverParent = this;				
-					clients.push(newClientObject);
+					clients.addItem(newClientObject);
 					treeNode.appendChild(newClientObject.toTree());
 			}
-			_global.left_tree.setIsOpen(treeNode, true);
+			
 		}
 	}
 }

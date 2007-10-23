@@ -1,23 +1,25 @@
 ﻿package Objects.Instances {
-	import flash.xml.XMLNode;
+	import Forms.Control.Clients_frm;
+	
 	import Objects.*;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
+	
 	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
 	
 	[Bindable("ClientInstance")]
 	[RemoteClass(alias="elifeAdmin.objects.instances.clientInstance")]
 	public class ClientInstance {
-		private var ipAddress:String="";
-		private var userName:String="";
-		private var password:String="";
-		private var description:String="";
-		private var clientConnection:Object;
-		private var monitorConnection:Object;
-		private var treeNode:MyTreeNode;
-		private var sftpConnection:Object;
+		[Bindable]
+		public var ipAddress:String="";
+		public var userName:String="";
+		public var password:String="";
+		public var description:String="";
+		public var clientConnection:Object;
+		public var monitorConnection:Object;
+		public var treeNode:MyTreeNode;
 		public var serverParent:Object;
 		public var clientDesign:Object;
+		[Bindable]
 		public var name:String="";
 		public var id:int;
 		
@@ -62,7 +64,6 @@
 			userName = "";
 			password = "";
 			monitorConnection = new MonitorConnection();
-			sftpConnection = new SFTPConnection(false);
 		}
 		public function toXML():XML {
 			var clientNode:XML = new XML("<clientInstance />");
@@ -85,13 +86,18 @@
 			}
 		}
 		public function isValid():String {
-			return "ok";
+			return "client";
 		}
 		public function getKey():String {
 			return "";
 		}
 		public function getUniqueID():String {
 			return "-2";
+		}
+		
+		public function getClassForm():Class {
+			var className:Class = Forms.Control.Clients_frm;
+			return className;		
 		}
 		public function toTree():MyTreeNode {
 			var newNode:MyTreeNode = new MyTreeNode();

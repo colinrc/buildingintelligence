@@ -1,21 +1,23 @@
 ﻿package Objects {
-	//import mx.utils.Delegate;
-	import flash.xml.XMLNode;
+	import flash.events.DataEvent;
+	import flash.events.Event;
 	import flash.net.XMLSocket;
+	
+	import mx.utils.StringUtil;
 	public class MonitorConnection {
-		private var monitor_socket:XMLSocket;
-		private var monitorStatus:Boolean;
-		private var view:Object;
-		private var output:String;
-		private var ipAddress:String;
+		public var monitor_socket:XMLSocket;
+		public var monitorStatus:Boolean;
+		public var view:Object;
+		public var output:String;
+		public var ipAddress:String;
 		public function MonitorConnection():void {
 			monitor_socket = new XMLSocket();
 			view = undefined;
 			output = "";
 			monitorStatus = false;
-	//		monitor_socket.onClose = Delegate.create(this, monitorOnClose);
-	//		monitor_socket.onXML = Delegate.create(this, monitorOnXML);
-	//		monitor_socket.onConnect = Delegate.create(this, monitorOnConnect);
+			monitor_socket.addEventListener(Event.CLOSE, monitorOnClose);
+			monitor_socket.addEventListener(DataEvent.DATA, monitorOnXML);
+			monitor_socket.addEventListener(Event.CONNECT, monitorOnConnect);
 		}
 		public function disconnect():void {
 			if(monitorStatus){
@@ -26,7 +28,7 @@
 				appendOutput("Error: No Connection Present");			
 			}
 		}	
-		private function connect(inIpAddress:String, port:Number):void {
+		public function connect(inIpAddress:String, port:Number):void {
 			ipAddress = inIpAddress;
 			monitor_socket.connect(ipAddress, port);
 		}
@@ -45,10 +47,13 @@
 		public function getStatus():Boolean {
 			return monitorStatus;
 		}
-		private function getOutput():String{
+		public function getOutput():String{
 			return output;
 		}
-		private function monitorOnConnect(success:Boolean):void {
+		public function clearOutput():void {
+			output="";
+		}
+		public function monitorOnConnect(success:Boolean):void {
 			if (success) {
 				monitorStatus = true;
 				appendOutput("Monitor: Connected at "+ipAddress);
@@ -57,7 +62,7 @@
 				appendOutput("Monitor: Connection Failed at "+ipAddress);
 			}
 		}
-		private function monitorOnClose():void {
+		public function monitorOnClose():void {
 			monitorStatus = false;
 			appendOutput("Monitor: Disconnected at "+ipAddress);
 		}
@@ -67,35 +72,39 @@
 				view.notifyChange();
 			}
 		}	
-		private function startServer():void {
+		public function startServer():void {
 			if(monitorStatus){
 				sendToMonitor(new XML('<ADMIN COMMAND="START" />\n'));
+				appendOutput("Start: sent to Server");	
 			} else {
 				appendOutput("Error: No Connection Present");
 			}
 		}
-		private function stopServer():void {
+		public function stopServer():void {
 			if(monitorStatus){
 				sendToMonitor(new XML('<ADMIN COMMAND="STOP" />\n'));
+				appendOutput("Stop: sent to Server");	
 			} else {
 				appendOutput("Error: No Connection Present");
 			}
 		}
-		private function restartServer():void {
+		public function restartServer():void {
 			if(monitorStatus){		
-				sendToMonitor(new XML('<ADMIN COMMAND="RESTART" />\n'));		
+				sendToMonitor(new XML('<ADMIN COMMAND="RESTART" />\n'));
+				appendOutput("Restart: sent to Server");		
 			} else {
 				appendOutput("Error: No Connection Present");
 			}		
 		}
-		private function restartClient():void {
+		public function restartClient():void {
 			if(monitorStatus){		
 				sendToMonitor(new XML('<ADMIN COMMAND="CLIENT_RESTART" />\n'));
+				appendOutput("Restart: sent to Client");	
 			} else {
 				appendOutput("Error: No Connection Present");
 			}		
 		}
-		private function commit():void{
+		public function commit():void{
 			if(monitorStatus){		
 				sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="ewfmgr c: -commit" />\n'));
 				appendOutput("New settings commited. Please shutdown and restart");
@@ -108,12 +117,12 @@
 		public function setTime():void{
 			if(monitorStatus){		
 				sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="runme" />\n'));
-				appendOutput("Time updated. Commit and shutdown required1");
+				appendOutput("Time updated. Commit and shutdown required");
 			} else {
 				appendOutput("Error: No Connection Present");
 			}
 		}
-		private function shutdown():void{
+		public function shutdown():void{
 			if(monitorStatus){		
 				sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="shutdown -r -t 00" />\n'));
 				appendOutput("Shutting down... please wait for restart");
@@ -121,44 +130,48 @@
 				appendOutput("Error: No Connection Present");
 			}		
 		}
-		private function arbitraryCommand(inCommand:String){
+		public function arbitraryCommand(inCommand:String){
 			if(monitorStatus){		
 				sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="'+inCommand+'" />\n'));
 			} else {
 				appendOutput("Error: No Connection Present");
 			}		
 		}
-		private function select(fileName:String){
+		public function select(fileName:String){
 			if(monitorStatus){		
 				sendToMonitor(new XML('<ADMIN COMMAND="SELECT" EXTRA="'+fileName+'" />\n'));
 			} else {
 				appendOutput("Error: No Connection Present");
 			}		
 		}
-		private function monitorOnXML(inXML:XML) {
-			var inNode = inXML.firstChild;
-			while (inNode != null) {
+		public function monitorOnXML(inData:DataEvent) {
+			var thing:String = inData.data;
+			//remove trailing spaces thing.
+			var inXML:XML = new XML(thing);
+			var node:String = inXML.name();
+			for (var child in inXML.children()) {
 				//if valid node, ignoreWhite isnt working properly
-				if (inNode.nodeName != null) {
-					switch (inNode.nodeName) {
-					case "EXEC" :
-						for (var child in inNode.childNodes) {
-							if((inNode.childNodes[child].nodeName == "EXEC_ERROR")||(inNode.childNodes[child].nodeName == "EXEC_OUTPUT")){
-								var tempNode = inNode.childNodes[child];
-							 	for(var child in tempNode.childNodes) {
-									appendOutput(tempNode.childNodes[child].toString());
-								}					
-							}
+				var inSubXML:XML = inXML.children()[child];
+				var inSubNode:String = inSubXML.name();
+				
+				switch (inSubNode) {
+				case "EXEC" :
+					for (var execChild in inSubXML) {
+						var sname:String = inSubXML[child].name();
+						if((sname == "EXEC_ERROR")||(sname == "EXEC_OUTPUT")){
+							for(var child in inSubXML.children()) {
+								appendOutput(inSubXML.children()[child].toString());
+							}					
 						}
-						break;
-					case "ADMIN" :
-					 	for(var child in inNode.childNodes) {
-							appendOutput(inNode.childNodes[child].toString());
-						}
-						break;
 					}
+					break;
+				case "ADMIN" :
+				 	for(var execChild in inSubXML) {
+						appendOutput(inSubXML.children()[child].toString());
+					}
+					break;
 				}
-				inNode = inNode.nextSibling;
+				
 			}		
 		}
 	}

@@ -1,26 +1,36 @@
 ﻿package Objects {
 	//import mx.utils.Delegate
+	import flash.events.DataEvent;
+	import flash.events.ErrorEvent;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
 	import flash.net.XMLSocket;
-	import flash.xml.XMLNode;
-	import Objects.*;
+	import flash.xml.XMLDocument;
+	
+	import mx.collections.ArrayCollection;
 	public class ServerConnection {
-		private var server_socket:XMLSocket;
-		private var serverStatus:Boolean;
-		private var view:Object;
-		private var levels:Array;
-		private var ipAddress:String;
-		private var output:String;
+		public var server_socket:XMLSocket;
+		public var serverStatus:Boolean;
+		public var view:ArrayCollection;
+		[Bindable]
+		public var levels:ArrayCollection;
+		public var ipAddress:String;
+		public var port:int;
+		public var output:String;
 		public function ServerConnection():void {
 			server_socket = new XMLSocket();
-			view = undefined;		
+			view = new ArrayCollection();	
 			output = "";
 			serverStatus = false;
-			levels = new Array();
-		//	server_socket.onClose = Delegate.create(this, serverOnClose);
-		//	server_socket.onXML = Delegate.create(this, serverOnXML);
-		//	server_socket.onConnect = Delegate.create(this, serverOnConnect);
+			levels = new ArrayCollection();
+			server_socket.addEventListener(Event.CLOSE, serverOnClose);
+			server_socket.addEventListener(DataEvent.DATA, serverOnXML);
+			server_socket.addEventListener(Event.CONNECT, serverOnConnect);
+			server_socket.addEventListener(IOErrorEvent.IO_ERROR, serverIOError);
+			server_socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, ServerSecurityError);
 		}
-		public function getLevels():Array{
+		public function getLevels():ArrayCollection{
 			return levels;
 		}
 		public function disconnect():void {
@@ -33,77 +43,101 @@
 				appendOutput("Error: No Connection Present");			
 			}
 		}
-		private function connect(inIpAddress:String, port:int):void {
-			ipAddress = inIpAddress;
-			server_socket.connect(ipAddress, port);
+		public function connect(inIpAddress:String, inPort:int):void {
+			try {
+				//IOErrorEvent
+				ipAddress = inIpAddress;
+				port = inPort;
+				server_socket.connect(ipAddress, port);
+			}
+			catch (io:IOErrorEvent) {
+				serverStatus = false;
+				appendOutput("Server: Connection Failed at "+ipAddress);
+			} catch (any:ErrorEvent) {
+				trace ("error");
+			}
+			
 		}
-		public function sendToServer(inXML:XML):void {
+		public function sendToServer(inXML:Object):void {
 			server_socket.send(inXML);
 			
 		}
 		public function attachView(inView:Object):void {
-			var view = inView;
-			if (view != undefined) {
-				view.notifyChange();
+			view.addItem(inView);
+			if (inView != undefined) {
+				for (var i:int=0;i<view.length;i++) {
+					view[i].notifyChange();
+				}
 			}	
 		}
 		public function detachView():void {
-			view = undefined;
+			view.removeAll();
 		}
 		public function getStatus():Boolean {
 			return serverStatus;
 		}
-		private function getOutput():String{
+		public function getOutput():String{
 			return output;
 		}
-		private function serverOnConnect(success:Boolean):void {
-			if (success) {
-				serverStatus = true;
-				appendOutput("Server: Connected at "+ipAddress);
-				getDebugLevels();
-			} else {
-				serverStatus = false;
-				appendOutput("Server: Connection Failed at "+ipAddress);
-			}
+		public function clearOutput():void {
+			output="";
 		}
-		private function serverOnClose():void {
+		public function serverOnConnect(event:Event):void {
+			serverStatus = true;
+			appendOutput("Server: Connected at "+ipAddress);
+			getDebugLevels();
+		}
+		public function serverOnClose():void {
 			serverStatus = false;
 			appendOutput("Server: Disconnected at "+ipAddress);
 		}
+		public function serverIOError(event:IOErrorEvent):void {
+			
+			appendOutput("Server: IO Error at "+ipAddress+": "+event.text);
+		}
+		public function ServerSecurityError(event:SecurityErrorEvent):void {
+			
+			appendOutput("Server: Security Error at "+ipAddress+": "+event.text);
+		}
+		
 		public function appendOutput(inString:String):void {
 			output = inString + "\n"+output;
-			if (view != null) {
-				view.notifyChange();
+			for (var i:int=0;i<view.length;i++) {
+				view[i].notifyChange();
 			}
 		}
-		private function serverOnXML(inXML:XML) {
-			var inNode = inXML.firstChild;
-			while (inNode != null) {
-				//if valid node, ignoreWhite isnt working properly
-				if (inNode.nodeName != null) {
-					switch (inNode.nodeName) {
-					case "ERROR" :
-						appendDebugText(inNode);
-						break;
-					case "LOG" :
-						appendDebugText(inNode);
-						break;
-					case "DEBUG_PACKAGES" :
-						generateDebugPackages(inNode);
-						break;					
-					}
+		public function serverOnXML(inData:DataEvent) {
+			var lines:Array = inData.data.split("\n");
+
+			//remove trailing spaces thing.
+			//thing ="<![CDATA["+thing+"]]>";
+			var numLines:uint = lines.length;
+			for (var i:int = 0; i < numLines; i++)
+			{
+				var inXML:XML = new XML(lines[i]);
+				var node:String = inXML.name();
+				
+				switch (node) {
+				case "ERROR" :
+					appendDebugText(inXML);
+					break;
+				case "LOG" :
+					appendDebugText(inXML);
+					break;
+				case "DEBUG_PACKAGES" :
+					generateDebugPackages(inXML);
+					break;						
 				}
-				inNode = inNode.nextSibling;
 			}
 		}
-		private function convertTime(inTime):String {
+		public function convertTime(inTime):String {
 			var time:Date = new Date(inTime);
-			return time.getDay()+"-"+time.getMonth()+"-"+time.getFullYear()+" "+time.getHours()+":"+time.getMinutes()+":"+time.getSeconds();
+			return time.getDate()+"-"+(time.getMonth()+1)+"-"+time.getFullYear()+" "+time.getHours()+":"+time.getMinutes()+":"+time.getSeconds();
 		}	
-		public function appendDebugText(inNode:XMLNode):void {
+		public function appendDebugText(inNode:XML):void {
 			var logMessage = "";
-			logMessage += "<time>Time: "+convertTime(parseInt(inNode.attributes["TIME"]))+"</time>";
-			logMessage += inNode.attributes["SRC"]+", "+inNode.attributes["LEVEL"]+", "+inNode.attributes["MSG"]+"\n";
+			logMessage += "<time>Time: "+convertTime(parseInt(inNode..@TIME))+"</time>";
+			logMessage += inNode..@SRC+", "+inNode..@LEVEL+", "+inNode.@MSG+"\n";
 			appendOutput(logMessage);
 		}
 		public function setDefault() {
@@ -112,23 +146,28 @@
 			}
 			getDebugLevels();
 		}
-		private function changeDebugLevels(logLevel:String, pack:String):void {
-			sendToServer(new XML('<DEBUG PACKAGE="'+pack+'" LEVEL="'+logLevel+'" />\n'));
+		public function changeDebugLevels(logLevel:String, pack:String):void {
+			sendToServer('<DEBUG PACKAGE="'+pack+'" LEVEL="'+logLevel+'" />\n');
 			getDebugLevels();
 		}
-		public function generateDebugPackages(inLevels:XMLNode):void {
-			var inNode:XMLNode = inLevels.firstChild;
-			levels = new Array();
-			while (inNode != undefined) {
-				levels.push({shortname:inNode.attributes["SHORTNAME"], packagename:inNode.attributes["PACKAGENAME"], level:inNode.attributes["LEVEL"]});
-				inNode = inNode.nextSibling;
+		public function generateDebugPackages(inLevels:XML):void {
+			var inNode:XML = inLevels[0];
+			levels = new ArrayCollection();
+			for (var child in inLevels.children()) {
+				var inSubXML:XML = inLevels.children()[child];
+				var inSubName:String = inSubXML.name();
+				
+				levels.addItem({shortname:inSubXML..@SHORTNAME, packagename:inSubXML..@PACKAGENAME, level:inSubXML..@LEVEL});
 			}
+			
 			if (view != undefined) {
-				view.needRefresh();
-			}		
+				for (var i:int=0;i<view.length;i++) {
+					view[i].needRefresh();
+				}
+			}	
 		}
-		private function getDebugLevels():void {
-			sendToServer(new XML('<DEBUG_PACKAGES />\n'));
+		public function getDebugLevels():void {
+			sendToServer("<DEBUG_PACKAGES />\n");
 		}	
 	}
 }

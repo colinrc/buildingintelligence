@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" applicationComplete="init()"  width="1080" height="900" xmlns:ns1="Forms.Server.*" xmlns:ns2="Forms.*">
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" applicationComplete="init()"  width="1080" height="900" xmlns:ns1="Forms.Server.*" xmlns:ns2="Forms.*" xmlns:Control="Forms.Control.*">
     <mx:states>
         <mx:State name="project">
             <mx:AddChild relativeTo="{dockedMenuBar}" position="lastChild">
@@ -116,6 +116,35 @@
             <mx:SetProperty name="width" value="100%"/>
             <mx:SetProperty name="height" value="100%"/>
         </mx:State>
+      
+      
+        
+         <mx:State name="server" basedOn="project">
+            <mx:AddChild relativeTo="{dockedMenuBar}" position="after">
+                <mx:HDividedBox height="100%" width="100%" id="hdividedboxS" >
+                    <mx:VDividedBox height="100%" id="vDivBoxS"  width="{vDivBoxWidthS}">
+                        <mx:Canvas width="100%" height="{hDivBoxHeightS}" id="can2"  >
+                            <mx:TabNavigator  tabIndex="2" borderStyle="outset" width="100%" height="100%" horizontalAlign="left" id="tabnav2" borderColor="#400040" x="1" y="1">
+                                <mx:Canvas label="Project" width="100%" height="100%">
+                                    <mx:Tree x="0" y="0" width="100%" height="100%" dataProvider="{ct}" showRoot="false" click="changeCTTreeEvt(event)" creationComplete="renderCTTree()" iconFunction="getIcon" labelField="@name" id="ctTree"></mx:Tree>
+                                </mx:Canvas>
+                                
+                            </mx:TabNavigator>
+                        </mx:Canvas>
+                    </mx:VDividedBox>
+                	<mx:VBox id="controlBody" label="Control" width="100%" height="100%">
+                		<Control:baseView />
+                    </mx:VBox>
+                   
+                </mx:HDividedBox>
+            </mx:AddChild>
+            <mx:SetProperty name="width" value="100%"/>
+            <mx:SetProperty name="height" value="100%"/>
+        </mx:State>
+        
+        
+        
+        
     </mx:states>
 
     <mx:ApplicationControlBar id="dockedMenuBar" dock="true">

@@ -5,6 +5,8 @@
 		import FileAccess.XMLFile;
 		
 		import Forms.*;
+		import Forms.Control.clientView;
+		import Forms.Control.serverView;
 		import Forms.Server.*;
 		
 		import Objects.*;
@@ -58,8 +60,19 @@
 		public var folder:Class;
 		
 		[Bindable]
-		public var currentObj:ObjectProxy
-			
+		[Embed (source="../bin/icons/server.gif")]
+		public var server:Class;
+		
+		[Bindable]
+		[Embed (source="../bin/icons/client.gif")]
+		public var client:Class;
+		
+		[Bindable]
+		public var currentObj:ObjectProxy;
+		
+		[Bindable]
+		public var currentCTObj:ObjectProxy;
+					
 		static public var devTypes:Array = [
 			{label:"CBUS",data:Objects.Server.CBus},
 			{label:"COMFORT",data:Objects.Server.Comfort},
@@ -124,6 +137,10 @@
 		public var usedKeys:Array;
 		public var bodyInstance:Object;
 		
+		public var controlBodyInstance:Object;
+		public var serverViewObj:serverView = new serverView();
+		public var clientViewObj:clientView = new clientView();
+		
 		public var objClass:Class;
 	    public var obj2Class:Class;
 		
@@ -141,7 +158,13 @@
 		[Bindable]
 		public var dt:XMLListCollection;
 		public var dtTemp:XML;
-		public var controlTree_xml:XML = new XML();
+		
+		[Bindable]
+		public var ct:XMLListCollection;
+		public var ctTemp:XML;
+		
+		[Bindable]
+		public var controlTree_xml:MyTreeNode; 
 		
 		private var current_tree_node:XML = null;
 		private var current_tree_openItems:Array = null;
@@ -163,6 +186,14 @@
 		[Bindable]
 		[Bindable(event="hdivBoxHeightEvent")]
 		public var hDivBoxHeight:String = "500";
+		
+		[Bindable]
+		[Bindable(event="hdivBoxHeightEventS")]
+		public var hDivBoxHeightS:String = "500";
+		[Bindable]
+		[Bindable(event="vdivBoxWidthEventS")]
+		public var vDivBoxWidthS:String = "280";
+		
 		public var eLifeAdmin_xml:XML = new XML;
 		
 		public var uniqueID:int = 0;
@@ -185,6 +216,11 @@
 			}
 		}
 		
+		public function fileSystemTreeCreated(obj:Object) {
+			
+			//f1:File = new File("c:/");
+			//fileSystemTree.directory = f1;
+		}
 		
 		
 		public function incFormDepth():int {
@@ -233,6 +269,12 @@
            	 else if (item.@icon == "def") {
            	 	return def;
            	 }
+           	 else if (item.@icon == "server") {
+           	 	return server;
+           	 }
+           	 else if (item.@icon == "client") {
+           	 	return client;
+           	 }
            	 return null;
            }
 		public function getProject():Object {
@@ -242,9 +284,7 @@
 	
 		public function setProjectXML(proj:XML):void {
 			project_xml = proj;
-					
-			controlTree_xml:XML;
-			controlTree_xml = new XML();
+			
 			project = new Project(project_xml);
 			
 			//Append list of server designs and list of server implementations
@@ -266,7 +306,9 @@
 			
 
 			//trace("After clients:" + designTree_xml.getXML().toString());
-			controlTree_xml.appendChild(serverInstance.toTree());
+			
+			
+			
 			//trace(designTree_xml.toString());
 			
 			//
@@ -277,7 +319,9 @@
 						
 		}
 		
-		
+		public function renderCTTree():void {
+			
+		}
 		public function renderTree():void {
 			/* if(refreshData){
                     // Refresh all rows on next update.
@@ -295,6 +339,12 @@
 			if (projectTree) { current_tree_openItems = projectTree.openItems};
 			
 			refreshData = true;
+			
+			controlTree_xml = null;
+			controlTree_xml =new MyTreeNode();
+			controlTree_xml.make(0,"server",serverInstance);
+			controlTree_xml.appendChild(serverInstance.toTree());
+			if (ctTree) {ctTree.expandChildrenOf(ct,true)};
 			
 			designTree_xml = null;
 			designTree_xml =new MyTreeNode();
@@ -458,11 +508,48 @@
           //  trace ("Designtree xml:"+ designTree_xml.getXML());
           	dtTemp = designTree_xml.getXML();
           	dt = new XMLListCollection(new XMLList(dtTemp));
-		
 			projectTree.dataProvider = dt;
 			projectTree.validateNow();
+		
+			try {
+				ctTemp = controlTree_xml.getXML();
+				ct = new XMLListCollection(new XMLList(ctTemp));
+				ctTree.dataProvider = ct;
+				ctTree.validateNow();
+				ctTree.expandChildrenOf(ct.server,true);
+			} catch (ex:TypeError) {
+				trace("ctTree not initialized yet");
+			}
+			
+			
 			
 		}	
+		/*************************************************************************************/
+		//     COntrol Tree code
+		
+		public function changeCTTreeEvt(event:flash.events.MouseEvent):void {
+			if (event.currentTarget.selectedItem != null) {  
+				var nodes:XML =  new XML(event.currentTarget.selectedItem);
+	            var key:String = event.currentTarget.selectedItem.@key;
+	            currentCTObj = new ObjectProxy(serverInstance);
+	            handleCTNavigation(nodes);
+	        }
+           
+        }
+		private function handleCTNavigation(nodes:XML):void {
+			controlBody.removeAllChildren();
+			var firstNode:XML = nodes[0];
+			if (firstNode.@icon=="server") {
+				
+				controlBody.addChild(DisplayObject(serverViewObj));
+			} else {
+				controlBody.addChild(DisplayObject(clientViewObj));
+			}
+        	
+        }
+		
+		
+		
 		/*********************************************************************************/
 		//List and Tree events
 		
@@ -682,12 +769,12 @@
 			dir.nativePath = File.applicationResourceDirectory.nativePath + File.separator+"projects";
 			var selectDir:FileCreateDirPanel = FileCreateDirPanel.show(dir, null);	
 			
-			selectDir.addEventListener(FileEvent.SELECT, dirCreateSelected);
+			selectDir.addEventListener(Event.SELECT, dirCreateSelected);
 			selectDir.addEventListener(Event.CANCEL, dirCreateSelectedCancelled);
 			     	
 			
 		}
-		private function fileSaveSelected(event:FileEvent):void 
+		private function fileSaveSelected(event:Event):void 
         {
         	currentState = "projectOpen";
         	buttonBar.selectedIndex = "1";
@@ -711,7 +798,7 @@
         	projectFileStream.close();
         }
         
-        private function dirCreateSelected(event:FileEvent):void 
+        private function dirCreateSelected(event:Event):void 
         {
         	createNewProject(event.file.name, event.file.nativePath);
         }
@@ -739,7 +826,7 @@
         	Alert.show("You must set the project folder to start a new project","Please set the folder");
         }
 
-		private function fileOpenSelected(event:FileEvent):void 
+		private function fileOpenSelected(event:Event):void 
         {		
         	currentState = "projectDetails";
         	buttonBar.selectedIndex = "1";
@@ -899,6 +986,7 @@
 			      currentState = "projectOpen";
 			      break;
 			    case "Server Controls":
+			      currentState = "server";
 			      trace("Server Controls");
 			      break;
 			    case "Library":
