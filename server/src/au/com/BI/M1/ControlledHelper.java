@@ -90,8 +90,7 @@ public class ControlledHelper {
 				return;
 
 			// Check the command class
-			if (m1Command.getClass().equals(OutputChangeUpdate.class)
-					&& configHelper.checkForControl(m1Command.getKey() + "TOUT")) {
+			if (m1Command.getClass().equals(OutputChangeUpdate.class)) {
 				// Dave check this. the PIR triggers the Short, sort of makes
 				// sense, in other words the violate short means PIR on
 				// violate EOL means off.
@@ -130,7 +129,10 @@ public class ControlledHelper {
 				ZoneChangeUpdate zoneChangeUpdate = (ZoneChangeUpdate) m1Command;
 
 				BaseDevice theDevice = (BaseDevice) configHelper.getControlledItem(zoneChangeUpdate.getZone() + "CC"); 
-				if (theDevice == null) return;
+				if (theDevice == null){
+					logger.log(Level.FINER, "M1 command request was received for a device that has not been configured " + m1Command.getKey());
+					return;
+				}
 				String outputKey = theDevice.getOutputKey();
 				
 				handleZoneState(cache, commandQueue, m1, zoneChangeUpdate.getZoneStatus(), theDevice);

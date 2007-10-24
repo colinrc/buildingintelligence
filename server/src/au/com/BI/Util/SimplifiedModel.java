@@ -473,7 +473,11 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			if (configHelper.getLastCommandType() == MessageDirection.INPUT) {
 				doInputItem(command);
 			} else {
-				doControlledItem(command);
+				if (command.isCommsCommand())  {
+					doControlledItem(command);
+				} else {
+					logger.log (Level.WARNING,"A command of an unknown type is being processed : " + command.toString());
+				}
 			}
 		}
 	}

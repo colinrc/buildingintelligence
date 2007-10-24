@@ -18,6 +18,7 @@ import au.com.BI.LabelMgr.LabelError;
 import au.com.BI.LabelMgr.LabelMgr;
 import au.com.BI.Macro.*;
 import au.com.BI.Maintainance.DailyTaskFactory;
+import au.com.BI.Maintainance.RegularTaskFactory;
 import au.com.BI.Messaging.*;
 
 import java.util.logging.*;
@@ -79,6 +80,7 @@ public class Controller {
 	protected JettyHandler jettyHandler = null;
 	protected VersionManager versionManager = null;
 	protected DailyTaskFactory dailyTasks = null;
+	protected RegularTaskFactory regularTasks = null;
 
 	// All known object representations of devices active in the system
 	/**
@@ -228,6 +230,10 @@ public class Controller {
 		dailyTasks.setStartTime(bootstrap.getMaintenanceTime());
 		dailyTasks.setCalendarModel(calendarModel);
 		dailyTasks.start();
+		
+		regularTasks = new RegularTaskFactory();
+		regularTasks.setCommandList(commandQueue);
+		regularTasks.start();
 
 		try {
 			jettyHandler.start();

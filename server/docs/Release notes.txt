@@ -1,3 +1,15 @@
+== 24/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b69.zip V1.6-b69]  ==
+
+''' M1 '''
+
+Resolved issue if a status update has been received for an output that has not configured. ticket [ticket:663]
+
+''' General '''
+
+Added an event that triggers every 5 minutes which can be used to trigger scripts.  Implements enhancement [ticket:666]
+The event has a DISPLAY_NAME of "TRIGGER" , the COMMAND is "fire" and the EXTRA field contains the number of minutes (0,5, 10 ....) that caused the trigger to fire.
+See RegularEvent.groovy for an example using the trigger.
+
 == 11/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b68.zip V1.6-b68]  ==
 
 ''' Comfort '''
