@@ -1,13 +1,9 @@
 package FileAccess
 {
-	import flash.filesystem.*;
-    import mx.events.*;
 	import flash.events.Event;
-	import flash.events.IOErrorEvent;
-	import flash.events.FileStream;
-	import flash.net.FileReference;
-	import mx.utils.ObjectProxy;
-	import mx.core.Application;
+	import flash.filesystem.*;
+	
+	import mx.events.*;
 		
 	public class XMLFile
 	{
@@ -41,6 +37,46 @@ package FileAccess
 	        stream.open(file, FileMode.WRITE);
 	        stream.position = 0;
 	        stream.writeUTFBytes(myDetail);
+	        stream.close()
+			
+			return;
+		}
+		public function saveFile(fileName:String, myXMLString:String):void {
+			file = new File(fileName);
+			
+			if (stream != null)	{
+				stream.close();
+			}
+			stream = new FileStream();
+	        stream.open(file, FileMode.WRITE);
+	        stream.position = 0;
+	        stream.writeUTFBytes(myXMLString);
+	        stream.close()
+			
+			return;
+		}
+		
+		public function copyFile(fileNameFrom:String, fileNameTo:String):void {
+			var fromFile:File = new File(fileNameFrom);
+			var detail:String = null;
+			
+			if (stream != null)	{
+				stream.close();
+			}
+			stream = new FileStream();
+	        stream.open(fromFile, FileMode.READ);
+	        detail = stream.readUTFBytes(stream.bytesAvailable);
+			
+			
+			file = new File(fileNameTo);
+			
+			if (stream != null)	{
+				stream.close();
+			}
+			stream = new FileStream();
+	        stream.open(file, FileMode.WRITE);
+	        stream.position = 0;
+	        stream.writeUTFBytes(detail);
 	        stream.close()
 			
 			return;

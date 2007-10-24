@@ -146,7 +146,7 @@
 		public function getMacros():Array{
 			return macros.getMacros();
 		}
-		public function getScripts():XMLNode{
+		public function getScripts():XML{
 			return scripts.toXML();
 		}
 		public function toProject():XML {

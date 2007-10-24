@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas initialize="init()" deactivate="onUnload()" xmlns:mx="http://www.adobe.com/2006/mxml" width="720" height="648" xmlns:Controls="Controls.*">
+	<mx:Button x="115" y="10" label="Clear" id="clearServer" click="serverConnection.clearOutput();log_ta.htmlText=''"/>
+	<mx:TextArea x="10" y="11" text="Server Output:" width="97" height="24" editable="false" fontWeight="bold"/>
+	<mx:TextArea x="440" y="11" text="Debug Level" width="97" height="24" editable="false" fontWeight="bold"/>
+	<mx:TextArea x="10" y="37" width="422" height="87%" id="log_ta" editable="false"/>
+	<mx:DataGrid dataProvider="{serverConnection.levels}" x="440" y="38" height="87%" id="levels_dg" itemEditEnd="itemEnd(event)" itemEditBegin="itemBegin(event)" itemClick="single_click(event)" width="100%">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Package" dataField="shortname"/>
+			<Controls:DataGridColumnPlus id="DDDTLevel"  editable="false" dataField="level" headerText="Level" width="105" minWidth="105" 
+	                       itemEditor="Utils.Cellrenderers.DebugLevelsMultilineComboBox" editorDataField="result" />  
+			
+			<mx:DataGridColumn visible="false" headerText="packagename" dataField="packagename"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<mx:VBox x="10" y="605" height="43" width="100%" horizontalAlign="right" verticalAlign="middle">
+		<mx:Button label="Defaults" click="setDefault()" id="defaults_btn" labelPlacement="left"/>
+	</mx:VBox>
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.utils.ObjectProxy;
+			import Utils.Cellrenderers.DebugLevelsMultilineComboBox;
+			import Objects.ServerConnection;
+			import Objects.MonitorConnection;
+			import mx.core.Application;
+			import mx.events.DataGridEvent;
+			
+			public var serverConnection:ObjectProxy = new ObjectProxy(Application.application.serverInstance.serverConnection);
+			public var myStyles:StyleSheet;
+			
+			private function init():void {
+				serverConnection.attachView(this);
+				var temp:ArrayCollection = serverConnection.levels;
+				           		
+				myStyles = new StyleSheet();
+				myStyles.setStyle("time", {fontFamily:'Arial,Helvetica,sans-serif', textDecoration:'underline', fontSize:'10px', fontWeight:'bold', color:'#000000'});
+				myStyles.setStyle("error", {fontFamily:'Arial,Helvetica,sans-serif', fontSize:'12px', color:'#FF0000'});
+				log_ta.styleSheet = myStyles;
+				getDebugLevels();
+				log_ta.htmlText = serverConnection.getOutput();
+			}
+			public function onUnload():void{
+				serverConnection.detachView();
+			}
+			public function setDefault() {
+				serverConnection.setDefault();
+				generateDebugLevels(serverConnection.getLevels());
+				levels_dg.dataProvider = null;
+				levels_dg.dataProvider = serverConnection.levels;
+			}
+			public function deploy() {
+				trace("deploy files");
+				
+			}
+						
+			public function notifyChange():void{
+				log_ta.htmlText = serverConnection.getOutput();
+			}	
+			public function	needRefresh():void{
+				generateDebugLevels(serverConnection.getLevels());
+			}
+			
+			public function comboSelection(pack:String,level:String):void {
+				serverConnection.changeDebugLevels(level, pack);
+			}
+			public function generateDebugLevels(inLev:ArrayCollection):void {
+				
+				//inLevels = inLev;
+				trace ("inLevels="+inLev.toString());
+				trace ("levels="+serverConnection.levels.toString());
+			}
+			public function getDebugLevels():void {
+				serverConnection.getDebugLevels();
+			}
+			
+			public function itemBegin(event:Event):void {
+				modifed = true;
+				trace (event.toString());
+			}
+			public function itemEnd(event:DataGridEvent):void {
+				trace("intem end");
+				levels_dg.editable = false;
+			}
+			public function single_click(event:Event):void {
+				trace("single click");
+				if (event.columnIndex ==1) { 
+					levels_dg.editedItemPosition = {columnIndex:event.columnIndex,rowIndex:levels_dg.selectedIndex};
+					levels_dg.editable=true;
+					modifed = true;		
+					serverConnection.changeDebugLevels(serverConnection.levels[levels_dg.selectedIndex].level, serverConnection.levels[levels_dg.selectedIndex].packagename);
+					
+				}
+			}
+			
+			
+		]]>
+	</mx:Script>
+	
+	
+</mx:Canvas>
+
+	

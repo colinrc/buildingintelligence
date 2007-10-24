@@ -1092,9 +1092,9 @@
 				mdm.Dialogs.prompt("File saved to: " + file);
 			} */
 		}
-		 public function writeXMLFile(inNode:XMLNode, depth:Number):String  {
+		 public function writeXMLFile(inNode:XML, depth:Number):String  {
 			var tempString:String = "";
-			if (inNode.nodeType == 3) {
+			if (inNode.h.nodeType == 3) {
 				tempString += inNode.toString();
 				return tempString;
 			}

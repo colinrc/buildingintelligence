@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<BaseForm xmlns="Forms.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+	<addForm>
+		<mx:HBox width="100%" height="30" horizontalAlign="left">
+			<mx:Label text="Clients:" fontSize="11"  fontWeight="bold" />
+		</mx:HBox>
+		<mx:DataGrid  dataProvider="{clients.clients}"  editable="true" id="dataG" width="100%" height="100%" itemClick="single_click(event)">
+			<mx:columns>
+				<mx:DataGridColumn  headerText="Name" dataField="description" editable="true"/>
+				<mx:DataGridColumn  headerText="IP Address" dataField="ipAddress" editable="true"/>
+			</mx:columns>
+		</mx:DataGrid>	
+	</addForm>
+	<mx:Script>
+		<![CDATA[
+			import Objects.Instances.ClientInstance;
+			import mx.utils.ObjectProxy;
+			import Objects.ServerConnection;
+			import Objects.MonitorConnection;
+			import mx.core.Application;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+		
+		//	import air.net.SocketMonitor;
+		//	import flash.events.StatusEvent;
+			
+			public var clients:ObjectProxy = new ObjectProxy(Application.application.serverInstance);
+			
+			private function init():void {
+				var bytes:ByteArray = new ByteArray();
+				bytes.writeObject(clients.clients);
+				bytes.position = 0;
+				//var temp = bytes.readObject();
+				undoObject =bytes.readObject();	
+			}
+			
+			override public function new_click():void {
+				var newClient:ClientInstance = new ClientInstance();
+				
+				newClient.id = Application.application.formDepth++;
+				newClient.description = "";
+				newClient.ipAddress = "127.0.0.1";	
+				clients.clients.addItem(newClient);
+				
+				callLater(focusNewRow);
+			}
+			
+			override public function delete_click():void {
+				if (dataG.selectedItem != null) {
+					Alert.show("Are you sure, press OK to delete " +dataG.selectedItem.description, "Delete", (Alert.OK | Alert.CANCEL), this, alertHandler);
+            	}
+  			}
+        
+            // Event handler function for displaying the selected Alert button.
+            private function alertHandler(event:CloseEvent):void {
+                if (event.detail==Alert.OK) {
+                    clients.clients.removeItemAt(dataG.selectedIndex);
+                    dataG.dataProvider = clients.clients;
+                    modifed = true;
+	            }
+	                else {
+	                    trace("delete cancelled");
+				}
+            }
+			
+			public function focusNewRow():void {
+				dataG.dataProvider = clients.clients;
+				dataG.editedItemPosition = {columnIndex:1,rowIndex:dataG.dataProvider.length-1};
+				dataG.editable=true;
+				modifed = true;
+				
+			}
+			override public function undo_click(event:Event):void {			
+				clients.clients = ObjectUtil.copy(undoObject.clients.clients);
+				dataG.dataProvider = clients.clients;
+				modifed = false;	
+			}
+			public function single_click(event:Event):void {
+				if (event.columnIndex >= 0) { 
+					dataG.editedItemPosition = {columnIndex:event.columnIndex,rowIndex:dataG.selectedIndex};
+					dataG.editable=true;
+					modifed = true;
+				}
+				else {
+					modifed = true;
+				}
+			}
+			
+			]]>
+	</mx:Script>
+</BaseForm>
+	

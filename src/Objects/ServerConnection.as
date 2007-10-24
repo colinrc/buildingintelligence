@@ -59,7 +59,11 @@
 			
 		}
 		public function sendToServer(inXML:Object):void {
-			server_socket.send(inXML);
+			try {
+				server_socket.send(inXML);
+			} catch (error:Error) {
+				//socket not open yet
+			}
 			
 		}
 		public function attachView(inView:Object):void {
