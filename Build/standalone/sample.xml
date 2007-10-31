@@ -133,6 +133,10 @@
 		<app label="Audio On" command="A" extra="I" />
 		<app label="Audio Off" command="A" extra="O" />
 	</controlPanelApps>
+	<musicLibrary>
+		<setting name="sortBy" value="artist" />
+		<setting name="coverSize" value="100" />
+	</musicLibrary>
 	<property>
 		<zone name="Home" background="home.jpg" cycle="false" alignment="center">
 		</zone>
@@ -561,9 +565,10 @@
 				<item type="trackDetails" height="95" />
 			</row>
 			<row>
-				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="50" />
+				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="40" />
 				<item type="button" icon="volume-up" command="volume" extra="up" repeatRate="200" />
 				<item type="button" icon="volume-down" command="volume" extra="down" repeatRate="200" />
+				<item type="button" icon="find" command="launchLibrary" />
 			</row>
 			<row>
 				<item type="button" icon="media-play" command="PLAY" extra="" extra2="" />

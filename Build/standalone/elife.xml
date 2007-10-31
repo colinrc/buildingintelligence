@@ -9,7 +9,7 @@
 	<setting name="fullScreen" value="false" />
 	<setting name="scale" value="true" />
 	<setting name="hideMouseCursor" value="false" />
-	<setting name="debugMode" value="false" />
+	<setting name="debugMode" value="true" />
 	<setting name="COMPort" value="0" />
 	<setting name="webRefreshRate" value="5" />
 	<setting name="securityID" value="09du3q23487" />
