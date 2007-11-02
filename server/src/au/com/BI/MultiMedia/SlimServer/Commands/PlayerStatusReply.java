@@ -293,6 +293,10 @@ public class PlayerStatusReply extends SlimServerCommand {
 		
 		statusElement.setAttribute("id",getPlayerId());
 		
+		if (!StringUtils.isNullOrEmpty(getPlayerKey())) {
+			statusElement.setAttribute("key",this.getPlayerKey());
+		}
+		
 		if (!StringUtils.isNullOrEmpty(getPlayerName())) {
 			statusElement.setAttribute("player_name",getPlayerName());
 		}
