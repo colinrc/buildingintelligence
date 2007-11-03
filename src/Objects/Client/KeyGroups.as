@@ -1,17 +1,21 @@
 ﻿package Objects.Client {
+	import Forms.Client.KeyGroups_frm;
+	
 	import Objects.*;
-	import Objects.Client.KeyGroup;
+	
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
 	import flash.xml.XMLNode;
+	
+	import mx.collections.ArrayCollection;
 	import mx.core.Application;
 	import mx.utils.ObjectProxy;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
-	import flash.utils.IDataInput;
 	
 	[Bindable("KeyGroups")]
 	[RemoteClass(alias="elifeAdmin.objects.client.keyGroups")]
 	public class KeyGroups extends BaseElement {
-		private var keygroups:Array=new Array();
+		[Bindable]
+		public var keygroups:ArrayCollection=new ArrayCollection();
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -40,6 +44,10 @@
 		}
 		public override function getForm():String {
 			return "forms.project.client.keygroups";
+		}
+		public function getClassForm():Class {
+			var className:Class = Forms.Client.KeyGroups_frm;
+			return className;		
 		}
 		public override function toXML():XML {
 			var newNode:XML = new XML("<keygroups />");
@@ -73,13 +81,13 @@
 			return {keygroups:tempKeygroups, dataObject:this};
 		}
 		public override function setXML(newData:XML):void {
-			keygroups = new Array();
+			keygroups = new ArrayCollection();
 			if (newData.name() == "keygroups") {
 				for (var child:int=0; child< newData.children().length();child++) {
 					var keyGroup:KeyGroup = new KeyGroup();
 					keyGroup.setXML(newData.children()[child]);
 					keyGroup.id = Application.application.formDepth++;
-					keygroups.push(keyGroup);
+					keygroups.addItem(keyGroup);
 				}
 			} else {
 				trace("Error, received " + newData.name() + ", was expecting keygroups");
@@ -107,8 +115,7 @@
 					}
 				}
 				if (found == false) {
-					keygroups[keygroup].deleteSelf();
-					keygroups.splice(parseInt(keygroup), 1);
+					keygroups.removeItemAt(keygroup);
 				}
 			}
 			for (var newKeyGroup in newKeyGroups) {
@@ -117,9 +124,9 @@
 				var keyGroup:KeyGroup = new KeyGroup();
 				keyGroup.setXML(newNode);
 				keyGroup.id = newKeyGroups[newKeyGroup].id;
-				keygroups.push(keyGroup);
+				keygroups.addItem(keyGroup);
 			}
-			var treeLength:int = treeNode.childNodes.length;
+			var treeLength:int = treeNode.childObject.length;
 			for (var child:int = treeLength - 1; child > -1; child--) {
 				treeNode.childNodes[child].removeNode();
 			}

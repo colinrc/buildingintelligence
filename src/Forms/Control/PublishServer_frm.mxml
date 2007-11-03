@@ -10,7 +10,7 @@
 	</mx:Button>
 	<mx:Button x="320" y="268" click="addSel()" width="80" enabled="true" label="&gt;">
 	</mx:Button>
-	<mx:Button click="startServer()" x="163" y="358" label="Publish" labelPlacement="left"/>
+	<mx:Button click="publish()" x="163" y="358" label="Publish" labelPlacement="left"/>
 	<mx:Button x="163" y="468" label="Browse" id="browse_btn" labelPlacement="left" click="browsePathForExport()" width="67"/>
 	<mx:Button x="163" y="438" label="Export" id="export_btn" labelPlacement="left" click="export(pathInput.text)" width="67"/>
 	<mx:CheckBox x="37" y="74" label="File:"  labelPlacement="left" id="file_chk" fontWeight="bold"/>
@@ -48,6 +48,8 @@
 			public var path:String;
 			public var monitorConnection:ObjectProxy = new ObjectProxy(Application.application.serverInstance.monitorConnection);
 			public var serverConnection:ObjectProxy = new ObjectProxy(Application.application.serverInstance.serverConnection);
+			public var wsConnection:ObjectProxy = new ObjectProxy(Application.application.serverInstance.wsConnection);
+			
 			public var myStyles:StyleSheet;	
 			public var file:File = new File();
 			
@@ -107,6 +109,7 @@
 			}
 			
 			public function export(thePath:String= null):void{
+				var AppPath:String = File.applicationResourceDirectory.nativePath;
 				var path:String = "";
 				if (thePath==null||thePath=="") {
 					//use project path
@@ -130,8 +133,8 @@
 					case "IR Codes":
 						var save:XMLFile = new XMLFile();
 						try {
-							save.copyFile(path+"server"+File.separator+"datafiles"+File.separator+"ircodes.xml", Application.application.projectPath+File.separator+"server"+File.separator+"datafiles"+File.separator+"ircodes.xml");
-							output_ta.text = output_ta.text+"Server IR Codes exported to "+path+"server"+File.separator+"datafiles"+File.separator+"ircodes.xml \n";
+							save.copyFile(AppPath+File.separator+"datafiles"+File.separator+"ircodes.xml", path+File.separator+"server"+File.separator+"datafiles"+File.separator+"ircodes.xml");
+							output_ta.text = output_ta.text+"Server IR Codes exported to "+path+File.separator+"datafiles"+File.separator+"ircodes.xml \n";
 						} catch (error:Error) {
 							output_ta.text = output_ta.text+error.message+"\n";
 							output_ta.text = output_ta.text+"--ERROR--  Server IR Codes could not be copied from "+path+"server"+File.separator+"datafiles"+File.separator+"ircodes.xml \n"
@@ -163,7 +166,7 @@
 						break;
 					case "Calendar":
 						try {
-							save.copyFile(path+"server"+File.separator+"datafiles"+File.separator+"calendar.xml", Application.application.projectPath+File.separator+"server"+File.separator+"datafiles"+File.separator+"calendar.xml");
+							save.copyFile(AppPath+File.separator+"datafiles"+File.separator+"calendar.xml", path+File.separator+"server"+File.separator+"datafiles"+File.separator+"calendar.xml");
 							output_ta.text = output_ta.text+"Server Calendar exported to "+path+"server"+File.separator+"datafiles"+File.separator+"calendar.xml \n";
 						}catch (error:Error) {
 							output_ta.text = output_ta.text+error.message+"\n";
@@ -178,32 +181,32 @@
 				for(var publishItem in usedList.dataProvider){
 					switch(usedList.dataProvider[publishItem].label){
 						case "Server Config":
-							sftpConnection.setRemotePath("/server/config");
-							sftpConnection.putData(_global.writeXMLFile(_global.serverDesign.toXML(), 0),"server.xml");
+							wsConnection.setRemotePath("/server/config");
+							wsConnection.putData(Application.application.serverDesign.toXML().toXMLString(),"server.xml");
 							break;
 						case "Bootstrap Config":
-							sftpConnection.setRemotePath("/server/datafiles");
-							sftpConnection.putData(generateBootstrap(),"bootstrap.xml");
+							wsConnection.setRemotePath("/server/datafiles");
+							wsConnection.putData(generateBootstrap(),"bootstrap.xml");
 							break;
 						case "IR Codes":
-							sftpConnection.setLocalPath(appPath +"/datafiles");				
-							sftpConnection.setRemotePath("/server/datafiles");
-							sftpConnection.putItem("ircodes.xml");
+							wsConnection.setLocalPath(appPath +"/datafiles");				
+							wsConnection.setRemotePath("/server/datafiles");
+							wsConnection.putItem("ircodes.xml");
 							break;					
 						case "Scripts":
-							var scriptsNode = _global.serverDesign.getScripts();
+							var scriptsNode = serverDesign.getScripts();
 							for(var child in scriptsNode.childNodes){
-								sftpConnection.setLocalPath(_global.project.path+"/server/script");
-								sftpConnection.setRemotePath("/server/script");
-								sftpConnection.putItem(scriptsNode.childNodes[child].attributes["NAME"]+".py");
+								wsConnection.setLocalPath(_global.project.path+"/server/script");
+								wsConnection.setRemotePath("/server/script");
+								wsConnection.putItem(scriptsNode.childNodes[child].attributes["NAME"]+".py");
 							}
-							sftpConnection.setLocalPath(appPath +"/datafiles");
-							sftpConnection.setRemotePath("/server/datafiles");					
-							sftpConnection.putData(_global.writeXMLFile(scriptsNode, 0),"script_status.xml");
+							wsConnection.setLocalPath(appPath +"/datafiles");
+							wsConnection.setRemotePath("/server/datafiles");					
+							wsConnection.putData(_global.writeXMLFile(scriptsNode, 0),"script_status.xml");
 							break;
 						case "Macros":
-							sftpConnection.setLocalPath(appPath +"/datafiles");
-							sftpConnection.setRemotePath("/server/datafiles");				
+							wsConnection.setLocalPath(appPath +"/datafiles");
+							wsConnection.setRemotePath("/server/datafiles");				
 							var tempMacros = new XMLNode(1,"MACROS");
 							tempMacros.attributes.COMPLETE = "Y";
 							var tempIntegratorMacros = new XMLNode(1,"MACROS");
@@ -216,13 +219,13 @@
 									tempMacros.appendChild(macros[macro].publish());
 								}
 							}
-							sftpConnection.putData(_global.writeXMLFile(tempMacros, 0),"macros.xml");
-							sftpConnection.putData(_global.writeXMLFile(tempIntegratorMacros, 0),"integrator_macros.xml");
+							wsConnection.putData(_global.writeXMLFile(tempMacros, 0),"macros.xml");
+							wsConnection.putData(_global.writeXMLFile(tempIntegratorMacros, 0),"integrator_macros.xml");
 							break;
 						case "Calendar":
-							sftpConnection.setLocalPath(appPath +"/datafiles");				
-							sftpConnection.setRemotePath("/server/datafiles");
-							sftpConnection.putItem("calendar.xml");
+							wsConnection.setLocalPath(appPath +"/datafiles");				
+							wsConnection.setRemotePath("/server/datafiles");
+							wsConnection.putItem("calendar.xml");
 							break;					
 					}
 				}
@@ -268,7 +271,7 @@
 				refreshOutput();
 			}
 			public function refreshOutput():void {
-				//output_ta.text = sftpConnection.getOutput();
+				//output_ta.text = wsConnection.getOutput();
 			}
 			private function addSel() {
 				if (availableList.selectedItem != undefined) {

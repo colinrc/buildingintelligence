@@ -1,5 +1,6 @@
 ﻿package Objects.Instances {
 	import Objects.*;
+	import Objects.Server.Server;
 	
 	import flash.utils.IDataInput;
 	import flash.utils.IDataOutput;
@@ -20,10 +21,13 @@
 		public var password:String="";
 		[Bindable]
 		public var clients:ArrayCollection;
-		public var serverConnection:Object;
-		public var monitorConnection:Object;
+		public var serverConnection:ServerConnection;
+		public var wsConnection:WsConnection
+		public var monitorConnection:MonitorConnection;
 		public var treeNode:MyTreeNode;
-		public var serverDesign:Object;
+		public var serverDesign:Server;
+		public var id:int = 0;
+		
 		
 		public function writeExternal(output:IDataOutput):void {
 			output.writeUTF(ipAddress);
@@ -33,8 +37,9 @@
 			output.writeObject(serverConnection);
 			output.writeObject(monitorConnection);
 			output.writeObject(treeNode);
-			output.writeObject(sftpConnection);
+			output.writeObject(wsConnection);
 			output.writeObject(serverDesign);
+			output.writeObject(id);
 		}
 		
 		public function readExternal(input:IDataInput):void {
@@ -42,28 +47,28 @@
 			userName = input.readUTF() as String;
 			password = input.readUTF() as String;
 			clients = input.readObject() as ArrayCollection;
-			serverConnection = input.readObject() as Object;
-			monitorConnection = input.readObject() as Object;
+			serverConnection = input.readObject() as ServerConnection;
+			monitorConnection = input.readObject() as MonitorConnection;
 			treeNode = input.readObject() as MyTreeNode;
-			sftpConnection = input.readObject() as Object;
-			serverDesign = input.readObject() as Object;
-			
+			wsConnection = input.readObject() as WsConnection;
+			serverDesign = input.readObject() as ServerDesign;
+			id = input.readInt() as int;
 		}
 		
 		public function deleteSelf():void {
 			serverConnection.disconnectServer();
 			monitorConnection.disconnectMonitor();
-			sftpConnection.disconnect();
+			wsConnection.disconnect();
 			treeNode.removeNode();
 		} 
 		public function isValid():String {
 			return "server";
 		}
 		public function getKey():String {
-			return "";
+			return "server";
 		}
 		public function getUniqueID():String {
-			return "-1";
+			return this.id;
 		}
 		
 		public function ServerInstance() {
@@ -73,8 +78,8 @@
 			clients = new ArrayCollection();
 			serverConnection = new ServerConnection();
 			monitorConnection = new MonitorConnection();
-			
-			sftpConnection = new SFTPConnection(true);
+			id = Application.application.formDepth++;
+			wsConnection = new WsConnection(true);
 		}
 		public function toXML():XML {
 			var serverNode:XML = new XML("<serverInstance />");
@@ -89,7 +94,8 @@
 		}
 		public function setXML(newData:XML):void {
 			clients = new ArrayCollection();
-			if (newData.name().toString() == "serverInstance") {
+			var nodeName:String = newData.name();
+			if (nodeName == "serverInstance") {
 				if (newData.@ipAddress != undefined) {
 					ipAddress = newData.@ipAddress;
 				}
@@ -102,9 +108,10 @@
 				for (var child:int = 0; child < newData.children().length(); child++) {
 				
 					var newClient:ClientInstance = new ClientInstance();
-					newClient.setXML(newData.children()[child]);
 					newClient.id = Application.application.formDepth++;
 					newClient.serverParent = this;
+					newClient.setXML(newData.children()[child]);
+					
 					clients.addItem(newClient);
 				}
 			} else {
@@ -114,6 +121,7 @@
 		public function toTree():MyTreeNode {
 			var newNode:MyTreeNode = new MyTreeNode();
 			newNode.make(1,getName(),this);
+			newNode.object = this;
 			
 			for (var client:int = 0; client < clients.length; client++) {
 				newNode.appendChild(clients[client].toTree());
@@ -127,8 +135,23 @@
 		public function getClients():Object {
 			return {clients:clients, dataObject:this};
 		}
+		public function getClientDesigns():ArrayCollection {
+			var clientDesigns:ArrayCollection = new ArrayCollection();
+			for (var client:int = 0; client < serverDesign.clients.length; client++) {
+				clientDesigns.addItem({label:serverDesign.clients[client].description, data:serverDesign.clients[client].description});
+			}
+			return clientDesigns;
+		}
+		public function getClientDescriptions():ArrayCollection {
+			var clientDesc:ArrayCollection = new ArrayCollection();
+			for (var client:int = 0; client < clients.length; client++) {
+				clientDesc.addItem({label:clients[client].description, data:clients[client].description});
+			}
+			return clientDesc;
+		}
+		
 		public function getConnections():Object {
-			return {serverConnection:serverConnection, monitorConnection:monitorConnection, sftpConnection:sftpConnection, dataObject:this, ipAddress:ipAddress, userName:userName, password:password};
+			return {serverConnection:serverConnection, monitorConnection:monitorConnection, wsConnection:wsConnection, dataObject:this, ipAddress:ipAddress, userName:userName, password:password};
 		}
 		public function setDetails(newData:Object):void{
 			ipAddress = newData.ipAddress;

@@ -1,19 +1,30 @@
 ﻿package Objects.Client {
-	import flash.xml.XMLNode;
+	import Forms.Client.Overrides_frm;
+	import Forms.Client.Settings_frm;
+	
 	import Objects.*;
+	
+	import flash.utils.*;
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
+	import flash.xml.XMLNode;
+	
+	import mx.collections.ArrayCollection;
 	import mx.core.Application;
 	import mx.utils.ObjectProxy;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
-	import flash.utils.IDataInput;
 	
 	[Bindable("Client")]
 	[RemoteClass(alias="elifeAdmin.objects.client.client")]
 	public class Client extends BaseElement{
+		[Bindable]
 		public var description:String="";
-		public var attributes:Array;
+		[Bindable]
+		public var attributes:ArrayCollection;
+		[Bindable]
 		public var adminPin:String="";
+		[Bindable]
 		public var applicationXML:String="";
+		[Bindable]
 		public var integratorHtml:String="";	
 		public var sounds:Sounds;
 		public var status_bar:Status_Bar;
@@ -24,6 +35,7 @@
 		public var control_types:Control_Types;
 		public var calendar:Calendar;
 		public var keygroups:KeyGroups;
+		[Bindable]
 		public var attributeGroups:Array = ["settings","window","button","tabs"];
 		
 		public override function writeExternal(output:IDataOutput):void {
@@ -48,7 +60,7 @@
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);	
 			description = input.readUTF()as String;
-			attributes = input.readObject() as Array;
+			attributes = input.readObject() as ArrayCollection;
 			adminPin = input.readUTF()as String;
 			applicationXML = input.readUTF()as String;
 			integratorHtml = input.readUTF()as String;	
@@ -94,6 +106,13 @@
 		}
 		public override function getForm():String {
 			return "forms.project.client.settings";
+		}
+		public function getClassForm():Array {
+			var className:Class = Forms.Client.Settings_frm;
+			var class2Name:Class = Forms.Client.Overrides_frm;
+			
+			return [className,class2Name];			
+			
 		}
 		public override function toXML():XML {
 			var newNode:XML = new XML("<application />");
@@ -156,6 +175,10 @@
 		public override function getName():String{
 			return description;
 		}
+		
+		public function get2Name():String {
+			return "Overrides";
+		}
 		public  function get Data():ObjectProxy{
 			var ob:ObjectProxy = new ObjectProxy({attributes:attributes, dataObject:this, adminPin:adminPin, applicationXML:applicationXML, integratorHtml:integratorHtml});
 			return ob;
@@ -167,11 +190,78 @@
 			applicationXML = newData.applicationXML;
 			integratorHtml = newData.integratorHtml;	
 		}
-		public function getAttributes():Array{
+		public function getAttributes():ArrayCollection{
 			return attributes;
 		}
-		public function setAttributes(newAttributes:Array):void {
+		public function setAttributes(newAttributes:ArrayCollection):void {
 			attributes = newAttributes;
+		}
+		
+		public function modifyAttributes(search:String, funct:String, obj:Object) {
+			//var ADD:const = "ADD";
+			//var DEL:const = "DEL";
+			//var MOD:const = "MOD";
+			//event.items  kind "remove" "add" "refresh"(not used) "change"
+				
+			switch(funct){
+				case ("add"):
+					var descType:XML = describeType(obj);
+        			if (descType.@name == "Array") {
+        				var objArray:Array = obj;
+        				for (var i:int=0;i<objArray.length;i++) {
+        					var oo:Object = new Object();
+        					oo.name = objArray[i].label;
+        					if (objArray[i].value !=null) {
+        						oo.value = objArray[i].value;
+        					} else {
+        						oo.value = objArray[i].def;
+        					}
+        					attributes.addItem(oo);
+        				}
+        			} else {
+        				var oo:Object = new Object();
+    					oo.name = objArray.label;
+    					if (objArray.value !=null) {
+    						oo.value = objArray.value;
+    					} else {
+    						oo.value = objArray.def;
+    					}
+    					
+    					attributes.addItem(oo);
+        			}
+        			break;
+				case ("remove"):
+					var descType:XML = describeType(obj);
+        			if (descType.@name == "Array") {
+        				var objArray:Array = obj;
+        				for (var i:int=0;i<objArray.length;i++) {
+        					for (var j:int=0; j< attributes.length;j++) {
+	        					if (attributes[j].name == objArray[i].label) {
+	        						attributes.removeItemAt(j);
+								}
+        					}
+        				}
+        				
+        			} else {
+        				for (var i:int=0; i< attributes.length;i++) {
+        					if (attributes[i].name == search) {
+        						attributes.removeItemAt(i);
+							}
+        				}
+        			}
+					break;
+				case ("change"):
+					for (var i:int=0; i< attributes.length;i++) {
+						if (attributes[i].name == search) {
+							if (obj.value !=null) {
+        						attributes[i].value = obj.value;
+        					} else {
+        						attributes[i].value = obj.def;
+        					}
+						}
+					}
+
+			}
 		}
 		public function getKeyGroups():XMLNode{
 			return keygroups.toXML();
@@ -180,7 +270,7 @@
 			return control_types.toXML();
 		}
 		public override function setXML(newData:XML):void{
-			attributes = new Array();
+			attributes = new ArrayCollection();
 			adminPin = "4321";
 			applicationXML = "client.xml";
 			integratorHtml = "about:blank";
@@ -234,7 +324,7 @@
 										var newAttribute:Object = new Object();
 										newAttribute.name = name;
 										newAttribute.value = value;
-										attributes.push(newAttribute);
+										attributes.addItem(newAttribute);
 									break;
 									}
 						}

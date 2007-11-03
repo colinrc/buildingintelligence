@@ -203,6 +203,7 @@
 		public  function getClients():Array{
 			return clients;
 		}
+		
 		public  function setClients(newData:Object){
 			/*Close the left node, if nodes are added while node is open graphical glitches occur*/
 			//_global.left_tree.setIsOpen(treeNode, false);		

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" applicationComplete="init()"  width="1080" height="900" xmlns:ns1="Forms.Server.*" xmlns:ns2="Forms.*" xmlns:Control="Forms.Control.*">
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()"  width="1080" height="900" xmlns:ns1="Forms.Server.*" xmlns:ns2="Forms.*" xmlns:Control="Forms.Control.*">
     <mx:states>
         <mx:State name="project">
             <mx:AddChild relativeTo="{dockedMenuBar}" position="lastChild">

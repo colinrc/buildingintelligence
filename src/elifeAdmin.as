@@ -21,11 +21,11 @@
 		import flash.filesystem.*;
 		import flash.net.*;
 		import flash.utils.*;
-		import flash.xml.XMLNode;
 		
 		import mdm.*;
 		
 		import mx.binding.utils.BindingUtils;
+		import mx.collections.ArrayCollection;
 		import mx.collections.XMLListCollection;
 		import mx.controls.Alert;
 		import mx.events.*;
@@ -251,6 +251,14 @@
 			project = proj;
 		}
 		
+		public function getKeys():ArrayCollection {
+			var t1:ArrayCollection = new ArrayCollection();
+			for (var i:int = 0;i<keys.length;i++) {
+				t1.addItem({name:keys[i].toString()});
+			}
+			return t1;
+		}
+		
 		 public function getIcon(item:Object):Class {
            	
            	 //trace (item.@icon.toString());
@@ -299,20 +307,9 @@
 			var xmlNodeInstance:XML = project_xml.elements("serverInstance")[0];
 			
 			serverDesign.setXML(xmlNodeDesign);
-			serverInstance.setXML(xmlNodeInstance);
-			
-			//moved from before for each
 			serverInstance.serverDesign = serverDesign;
-			
-
-			//trace("After clients:" + designTree_xml.getXML().toString());
-			
-			
-			
-			//trace(designTree_xml.toString());
-			
-			//
-			
+			serverInstance.setXML(xmlNodeInstance);
+						
 			refreshTheTree();
 			keys = serverDesign.getKeys();
 			
@@ -344,7 +341,8 @@
 			controlTree_xml =new MyTreeNode();
 			controlTree_xml.make(0,"server",serverInstance);
 			controlTree_xml.appendChild(serverInstance.toTree());
-			if (ctTree) {ctTree.expandChildrenOf(ct,true)};
+			controlTree_xml.object = serverInstance;
+			if (ctTree) {ctTree.expandChildrenOf(ct.elements("server")[0],true)};
 			
 			designTree_xml = null;
 			designTree_xml =new MyTreeNode();
@@ -516,7 +514,7 @@
 				ct = new XMLListCollection(new XMLList(ctTemp));
 				ctTree.dataProvider = ct;
 				ctTree.validateNow();
-				ctTree.expandChildrenOf(ct.server,true);
+				ctTree.expandItem(ct.elements("server")[0],true);
 			} catch (ex:TypeError) {
 				trace("ctTree not initialized yet");
 			}
@@ -531,7 +529,7 @@
 			if (event.currentTarget.selectedItem != null) {  
 				var nodes:XML =  new XML(event.currentTarget.selectedItem);
 	            var key:String = event.currentTarget.selectedItem.@key;
-	            currentCTObj = new ObjectProxy(serverInstance);
+	            currentCTObj = new ObjectProxy(serverInstance.treeNode.getObjectinTree(key));
 	            handleCTNavigation(nodes);
 	        }
            
@@ -539,11 +537,13 @@
 		private function handleCTNavigation(nodes:XML):void {
 			controlBody.removeAllChildren();
 			var firstNode:XML = nodes[0];
+			var name:String = firstNode.@name;
 			if (firstNode.@icon=="server") {
 				
 				controlBody.addChild(DisplayObject(serverViewObj));
 			} else {
 				controlBody.addChild(DisplayObject(clientViewObj));
+			//	clientViewObj.clientControls.clientName = name;
 			}
         	
         }
@@ -629,7 +629,7 @@
         				var tab2:tabPanel = new tabPanel();
 	        			tab2.label = obj.get2Name();
 	        			var tab2Content:Object = new obj2Class();
-	        			tab2Content.dataHolder = obj.Data;
+	        			tab2Content.dataHolder = obj;
 	        			tab2.addChild(DisplayObject(tab2Content));
 	        			main.addChildAt(DisplayObject(tab2), 1);
 	        			
@@ -702,7 +702,7 @@
 					}
 					else
 					{		
-						var f3Str:String = File.applicationResourceDirectory.nativePath + "\\projects";			
+						var f3Str:String = File.applicationResourceDirectory.nativePath + File.separator+"projects";			
 						var f3:File = File.applicationResourceDirectory.resolvePath(f3Str);
 					    fileOpenPanel = FileOpenPanel.show(f3);
 					}
@@ -1057,41 +1057,9 @@
 			unSaved = false;
 		} else {
 			Alert.show("You must first enter the ProjectName on the details screen","Missing ProjectName");
-		/*
-			var tempString:String = mdm.Dialogs.inputBox("Enter project file name", "Enter project file name");
-			if (tempString != "false") {
-				projectFileName = project.path + tempString + ".elp";
-				var newProjXML:XMLNode = new XMLNode(1, "project");
-				for (var attr:int in project_xml) {
-					if (project[attr].length) {
-						newProjXML.attributes[attr] = _global.project[attr];
-					}
-				}
-				/*Append project contents to project node*
-				newProjXML.appendChild(serverDesign.toProject());
-				newProjXML.appendChild(serverInstance.toXML());
-				mdm.FileSystem.saveFile(projectFileName, writeXMLFile(newProjectXML, 0));
-			//	mdm.Application.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
-			//	mdm.Forms.MainForm.title = "eLIFE Admin Tool - [" + _global.projectFileName + "]";
-				unSaved = false; */  
+		 
 		}
-			/* //replace with apollo code or correct file system access
-			mdm.Dialogs.BrowseFile.buttonText = "Save";
-			mdm.Dialogs.BrowseFile.title = "Please select a " + saveType + ".xml file to save";
-			mdm.Dialogs.BrowseFile.dialogText = "Select a " + saveType + ".xml to Save";
-			mdm.Dialogs.BrowseFile.defaultExtension = "xml";
-			mdm.Dialogs.BrowseFile.filterList = "XML Files|*.xml";
-			mdm.Dialogs.BrowseFile.filterText = "XML Files|*.xml";
-			var file:Object = mdm.Dialogs.BrowseFile.show();
-			if (file != null) {
-				if (saveType == "Server") {
-					mdm.FileSystem.saveFile(file, writeXMLFile(serverDesign.toXML(), 0));
-				} else {
-					mdm.FileSystem.saveFile(file, writeXMLFile(client_test.toXML(), 0));
-				}
-				mdm.Dialogs.prompt("File saved to: " + file);
-			} */
-		}
+	    }
 		 public function writeXMLFile(inNode:XML, depth:Number):String  {
 			var tempString:String = "";
 			if (inNode.h.nodeType == 3) {

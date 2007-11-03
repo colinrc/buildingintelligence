@@ -1,9 +1,14 @@
 ﻿package Objects {
 	import flash.events.DataEvent;
+	import flash.events.ErrorEvent;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.net.XMLSocket;
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
 	
-	import mx.utils.StringUtil;
+	[Bindable("MonitorConnection")]
+	[RemoteClass(alias="elifeAdmin.objects.monitorConnection")]
 	public class MonitorConnection {
 		public var monitor_socket:XMLSocket;
 		public var monitorStatus:Boolean;
@@ -11,7 +16,9 @@
 		public var output:String;
 		public var ipAddress:String;
 		public function MonitorConnection():void {
+			
 			monitor_socket = new XMLSocket();
+			
 			view = undefined;
 			output = "";
 			monitorStatus = false;
@@ -19,6 +26,22 @@
 			monitor_socket.addEventListener(DataEvent.DATA, monitorOnXML);
 			monitor_socket.addEventListener(Event.CONNECT, monitorOnConnect);
 		}
+		
+		public function writeExternal(output:IDataOutput):void {
+			output.writeObject(monitor_socket);
+			output.writeBoolean(monitorStatus);
+			output.writeObject(view);
+			output.writeUTF(output);
+			output.writeUTF(ipAddress);
+		}
+		public function readExternal(input:IDataInput):void {
+			monitor_socket = input.readObject() as XMLSocket;
+			monitorStatus = input.readBoolean() as Boolean;
+			view = input.readObject() as Object;
+			output = input.readUTF() as String;
+			ipAddress = input.readUTF() as String;
+		}
+		
 		public function disconnect():void {
 			if(monitorStatus){
 				monitor_socket.close();
@@ -29,11 +52,21 @@
 			}
 		}	
 		public function connect(inIpAddress:String, port:Number):void {
-			ipAddress = inIpAddress;
-			monitor_socket.connect(ipAddress, port);
+			try {
+				ipAddress = inIpAddress;
+				monitor_socket.connect(ipAddress, port);
+			} catch (io:Error) {
+					serverStatus = false;
+					appendOutput("Monitor: Connection Failed at "+ipAddress);
+			} catch (any:ErrorEvent) {
+				trace ("error");
+			}
 		}
-		public function sendToMonitor(inXML:XML):void {
-			monitor_socket.send(inXML);
+		public function sendToMonitor(inXML:Object):void {
+			try {
+				monitor_socket.send(inXML);
+			} catch (error:Error) {
+			}
 		}
 		public function attachView(inView:Object):void {
 			view = inView;
@@ -74,7 +107,7 @@
 		}	
 		public function startServer():void {
 			if(monitorStatus){
-				sendToMonitor(new XML('<ADMIN COMMAND="START" />\n'));
+				sendToMonitor('<ADMIN COMMAND="START" />\n');
 				appendOutput("Start: sent to Server");	
 			} else {
 				appendOutput("Error: No Connection Present");
@@ -82,7 +115,7 @@
 		}
 		public function stopServer():void {
 			if(monitorStatus){
-				sendToMonitor(new XML('<ADMIN COMMAND="STOP" />\n'));
+				sendToMonitor('<ADMIN COMMAND="STOP" />\n');
 				appendOutput("Stop: sent to Server");	
 			} else {
 				appendOutput("Error: No Connection Present");
@@ -90,7 +123,7 @@
 		}
 		public function restartServer():void {
 			if(monitorStatus){		
-				sendToMonitor(new XML('<ADMIN COMMAND="RESTART" />\n'));
+				sendToMonitor('<ADMIN COMMAND="RESTART" />\n');
 				appendOutput("Restart: sent to Server");		
 			} else {
 				appendOutput("Error: No Connection Present");
@@ -98,7 +131,7 @@
 		}
 		public function restartClient():void {
 			if(monitorStatus){		
-				sendToMonitor(new XML('<ADMIN COMMAND="CLIENT_RESTART" />\n'));
+				sendToMonitor('<ADMIN COMMAND="CLIENT_RESTART" />\n');
 				appendOutput("Restart: sent to Client");	
 			} else {
 				appendOutput("Error: No Connection Present");
@@ -106,7 +139,7 @@
 		}
 		public function commit():void{
 			if(monitorStatus){		
-				sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="ewfmgr c: -commit" />\n'));
+				sendToMonitor('<ADMIN COMMAND="ARBITRARY" EXTRA="ewfmgr c: -commit" />\n');
 				appendOutput("New settings commited. Please shutdown and restart");
 			} else {
 				appendOutput("Error: No Connection Present");
@@ -116,7 +149,7 @@
 		
 		public function setTime():void{
 			if(monitorStatus){		
-				sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="runme" />\n'));
+				sendToMonitor('<ADMIN COMMAND="ARBITRARY" EXTRA="runme" />\n');
 				appendOutput("Time updated. Commit and shutdown required");
 			} else {
 				appendOutput("Error: No Connection Present");
@@ -124,7 +157,7 @@
 		}
 		public function shutdown():void{
 			if(monitorStatus){		
-				sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="shutdown -r -t 00" />\n'));
+				sendToMonitor('<ADMIN COMMAND="ARBITRARY" EXTRA="shutdown -r -t 00" />\n');
 				appendOutput("Shutting down... please wait for restart");
 			} else {
 				appendOutput("Error: No Connection Present");
@@ -132,14 +165,14 @@
 		}
 		public function arbitraryCommand(inCommand:String){
 			if(monitorStatus){		
-				sendToMonitor(new XML('<ADMIN COMMAND="ARBITRARY" EXTRA="'+inCommand+'" />\n'));
+				sendToMonitor('<ADMIN COMMAND="ARBITRARY" EXTRA="'+inCommand+'" />\n');
 			} else {
 				appendOutput("Error: No Connection Present");
 			}		
 		}
 		public function select(fileName:String){
 			if(monitorStatus){		
-				sendToMonitor(new XML('<ADMIN COMMAND="SELECT" EXTRA="'+fileName+'" />\n'));
+				sendToMonitor('<ADMIN COMMAND="SELECT" EXTRA="'+fileName+'" />\n');
 			} else {
 				appendOutput("Error: No Connection Present");
 			}		

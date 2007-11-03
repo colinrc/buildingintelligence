@@ -1,19 +1,25 @@
 ﻿package Objects.Client {
 	import Objects.*;
-	import flash.xml.XMLNode;
-	import mx.utils.ObjectProxy;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
-	import flash.utils.IDataInput;
 	
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
+	
+	import mx.collections.ArrayCollection;
+	import mx.utils.ObjectProxy;
+	import Forms.Client.KeyGroup_frm;
 	[Bindable("KeyGroup")]
 	[RemoteClass(alias="elifeAdmin.objects.client.keyGroup")]
 	public class KeyGroup extends BaseElement {
+		[Bindable]
 		public var name:String="";
+		[Bindable]
 		private var icon1:String="";
+		[Bindable]
 		private var icon2:String="";
+		[Bindable]
 		private var type:String="";
-		private var keys:Array;
+		[Bindable]
+		public var keys:ArrayCollection;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -30,7 +36,7 @@
 			icon1 = input.readUTF() as String;
 			icon2 = input.readUTF() as String;
 			type = input.readUTF() as String;
-			keys = input.readObject()as Array;
+			keys = input.readObject()as ArrayCollection;
 		}
 		
 		public function deleteSelf():void {
@@ -78,6 +84,10 @@
 		}
 		public override function getForm():String {
 			return "forms.project.client.keygroup";
+		}
+		public function getClassForm():Class {
+			var className:Class = Forms.Client.KeyGroup_frm;
+			return className;		
 		}
 		public override function toXML():XML {
 			var newNode:XML = new XML("<keygroup />");
@@ -129,7 +139,7 @@
 			icon1 = "";
 			icon2 = "";
 			type = "";
-			keys = new Array();
+			keys = new ArrayCollection();
 			
 			if (newData.name() == "keygroup") {
 				name = newData.@name;
@@ -138,7 +148,7 @@
 				type = newData.@controlType;
 				
 				for (var child:int =0; child< newData.children().length(); child++) {
-					keys.push(newData.children()[child].@name);
+					keys.addItem(newData.children()[child].@name);
 				}
 			} else {
 				trace("Error, received " + newData.name() + ", was expecting keygroup");

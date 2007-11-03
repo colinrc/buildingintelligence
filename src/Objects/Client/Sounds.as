@@ -9,7 +9,8 @@
 	[Bindable("Sounds")]
 	[RemoteClass(alias="elifeAdmin.objects.client.sounds")]
 	public class Sounds extends BaseElement {
-		private var sounds:Array;
+		[Bindable]
+		public var sounds:Array;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);

@@ -10,6 +10,8 @@ package Events
 		public static const COMBOSELECTEDEVENT:String = "ComboSelectedEvent";
 		public static const CODE:String = "CODE";
 		public static const CATALOG:String = "CATALOG";
+		public static const CLIENTDESIGN:String = "CLIENTDESIGN";
+		
 		
 		public function ComboSelectedEvent(myLabel:String, myData:Object, myValue:String)
 		{

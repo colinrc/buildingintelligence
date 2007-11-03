@@ -40,6 +40,7 @@
 			
 			public var monitorConnection:ObjectProxy = new ObjectProxy(Application.application.serverInstance.monitorConnection);
 			public var serverConnection:ObjectProxy = new ObjectProxy(Application.application.serverInstance.serverConnection);
+			
 			public var myStyles:StyleSheet;	
 			
 			private function init():void {

@@ -1,15 +1,16 @@
 package Controls
 {
     import flash.display.DisplayObject;
+    import flash.xml.*;
     
     import mx.controls.ComboBox;
+    import mx.controls.Image;
     import mx.controls.List;
     import mx.core.ClassFactory;
-    import flash.desktop.Icon;
-    import mx.controls.Image;
    
     public class IconComboBox extends mx.controls.ComboBox
     {
+        var a:XML = new XML();
         
         //create our own factory so we can set the properties before initialized    
         private var internalDropdownFactory:ClassFactory = new ClassFactory(List);

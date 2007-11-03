@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseForm label="KeyGroup" xmlns="Forms.*"  initialize="init()" xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="Utils.Cellrenderers.*" width="100%" height="100%" xmlns:Controls="Controls.*">
+	
+	<addForm>
+		<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+		<mx:VBox width="100%" height="90%" id ="first">
+			<mx:Canvas  width="100%" height="100%" >
+				<mx:VBox x="0" y="0" height="10%" width="100%">
+					<mx:Label text="Key Groups:" fontWeight="bold" fontSize="12"/>
+
+					<mx:HBox width="100%">
+						<mx:Label text="Group Name:" fontWeight="bold"/>
+						<mx:TextInput width="222" editable="false" id="Oname"/>
+					</mx:HBox>
+					<mx:HBox width="100%">
+						<mx:Label text="GIcons:---------------------------------------------" fontWeight="bold"/>
+						
+					</mx:HBox>
+				</mx:VBox>
+				<mx:VBox x="0" y="90" height="100%" width="100%">
+					<mx:HBox width="100%" height="100%">
+						<mx:VBox height="100%" minWidth="200" maxWidth="300" width="100%">
+							<mx:HBox width="100%" height="40">
+								<mx:TextArea text="Available Keys:" width="136" height="24" editable="false" fontWeight="bold"/>
+							</mx:HBox>
+							<mx:HBox width="100%" height="100%">
+								<mx:List dataProvider="{availableItems}" height="100%" labelField="name" id="availableList" enabled="true"  alternatingItemColors="[#FFFFFF, #DBEAF1]" width="100%"></mx:List>
+							</mx:HBox>
+						</mx:VBox>
+						<mx:VBox minWidth="80" maxWidth="95" width="100%" height="100%">
+							<mx:HBox width="100%" height="33%">
+							</mx:HBox>
+							<mx:HBox width="100%" height="33%">
+								<mx:VBox width="100%" height="100%">
+									<mx:Button width="100%" click="remSel()" label="&lt;">
+									</mx:Button>
+									<mx:Button width="100%" click="remAll()" label="&lt;&lt;">
+									</mx:Button>
+									<mx:Button width="100%" labelPlacement="left"  click="addAll()" label="&gt;&gt;">
+									</mx:Button>
+									<mx:Button width="100%" enabled="true" click="addSel()" label="&gt;">
+									</mx:Button>
+								</mx:VBox>
+							</mx:HBox>
+							<mx:HBox width="100%" height="33%">
+							</mx:HBox>
+						</mx:VBox>
+						<mx:VBox minWidth="200" maxWidth="300" width="100%" height="100%">
+							<mx:VBox height="100%" width="100%">
+								<mx:HBox width="100%" height="40">
+									<mx:TextArea text="Used Keys:" width="134" height="24" editable="false" fontWeight="bold"/>
+								</mx:HBox>
+								<mx:HBox width="100%" height="100%">
+									<mx:List dataProvider="{usedItems}" labelField="name" change="usedListClick(event)" height="100%" id="usedList" alternatingItemColors="[#FFFFFF, #DBEAF1]" enabled="true" width="100%"></mx:List>
+								</mx:HBox>
+							</mx:VBox>
+						</mx:VBox>
+						
+					</mx:HBox>
+				</mx:VBox>
+			</mx:Canvas>
+		</mx:VBox>
+	</mx:VBox>
+	</addForm>
+		
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import FileAccess.XMLFile;
+			import flash.events.Event;
+			import mx.events.CollectionEvent;
+			import mx.utils.ObjectProxy;
+			import Objects.ServerConnection;
+			import Objects.MonitorConnection;
+			import mx.core.Application;
+			import flash.filesystem.File;
+			import mx.collections.*;
+		
+						
+			private var undoObj:Object;
+			[Bindable]
+			private var modifiedFlag:Boolean;
+			
+			public function advanced(func:Boolean):void {
+				
+			}
+			override public function set undoObject(value:ObjectProxy):void {
+				undoObj = value;
+			}
+			override public function get undoObject():ObjectProxy {
+				return undoObj;
+			}
+			
+			
+			public var myStyles:StyleSheet;	
+			public var file:File = new File();
+			
+			public var sortA:Sort = new Sort();
+            public var sortB:Sort = new Sort();
+              
+			[Bindable]
+			public var availableItems:ArrayCollection;
+			
+			[Bindable]
+			public var usedItems:ArrayCollection;
+			
+			private function init():void {
+				
+				myStyles = new StyleSheet();
+				myStyles.setStyle("time", {fontFamily:'Arial,Helvetica,sans-serif', textDecoration:'underline', fontSize:'10px', fontWeight:'bold', color:'#000000'});
+				myStyles.setStyle("error", {fontFamily:'Arial,Helvetica,sans-serif', fontSize:'12px', color:'#FF0000'});
+				
+				availableItems = Application.application.getKeys();
+				usedItems = dataHolder.keys;
+				
+				buildLists();
+								
+				sortA.fields=[new SortField("name", true, false)];
+				sortB.fields=[new SortField("name", true, false)];
+				availableItems.sort = sortA;
+				usedItems.sort = sortB;
+				availableItems.refresh();
+				usedItems.refresh()
+				usedItems.addEventListener(CollectionEvent.COLLECTION_CHANGE,usedItemsChanged);
+			}
+			private function buildLists() {
+				for (var index in usedList.dataProvider) {
+					for (var availIndex in availableList.dataProvider) {
+						if (usedList.dataProvider[index].name == availableList.dataProvider[availIndex].name) {
+							availableItems.removeItemAt(availIndex);
+							break;
+						}
+					}
+				}
+			}
+
+			private function addSel() {
+				modifiedFlag = true;
+				if (availableList.selectedItem != undefined) {
+					usedItems.addItem(availableItems.removeItemAt(availableList.selectedIndex));
+					usedItems.sort = sortA;
+                	usedItems.refresh();
+                }
+			}
+			private function addAll() {
+				modifiedFlag = true;
+				var leftLength:int = availableItems.length;
+				for (var leftIndex:int = 0; leftIndex < leftLength; leftIndex++) {
+					usedItems.addItem(availableItems.removeItemAt(0));
+				}
+				usedItems.sort = sortA;
+                usedItems.refresh();
+			}
+			private function remSel() {
+				modifiedFlag = true;
+				if (usedList.selectedItem != undefined) {
+					availableItems.addItem(usedItems.removeItemAt(usedList.selectedIndex));
+					availableItems.sort = sortA;
+					availableItems.refresh();
+				}
+			}
+			private function remAll() {
+				modifiedFlag = true;
+				var rightLength:int = usedItems.length;
+				for (var rightIndex:int = 0; rightIndex < rightLength; rightIndex++) {
+					availableItems.addItem(usedItems.removeItemAt(0));
+				}
+				availableItems.sort = sortA;
+				availableItems.refresh();
+			}
+			private function usedListClick(event:Event) {
+				/*Oname.text = usedItems[usedList.selectedIndex].label;
+				if (usedItems[usedList.selectedIndex].value != null) {
+					Ovalue.text = usedItems[usedList.selectedIndex].value;
+				} else {
+					Ovalue.text = usedItems[usedList.selectedIndex].def;
+				}
+				if (usedItems[usedList.selectedIndex].type == "colour") {
+					OcolourPicker.selectedColor = Ovalue.text
+					OcolourPicker.visible = true;
+				} else {
+					OcolourPicker.visible = false;
+				} */
+			}
+			
+			
+			private function usedItemsChanged(event:Event) {
+			//	dataHolder.modifyAttributes("",event.kind, event.items);
+				
+			}
+		]]>
+	</mx:Script>
+
+</BaseForm>

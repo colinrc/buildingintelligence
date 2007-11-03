@@ -60,6 +60,13 @@ package Objects
 		public function getObject():Object {
 			return object;
 		}
+		public function getObjectinTree(key:String):Object {
+			if (myXML..@key == key) { return object; }
+			for (var i:int=0;i<childObject.length;i++) {
+				if (childObject[i].myXML..@key == key) { return childObject[i].object; }
+			}
+			return null;
+		}
 		public function setObject(obj:Object):void {
 			object= obj;
 		}	

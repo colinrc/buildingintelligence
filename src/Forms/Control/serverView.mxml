@@ -12,13 +12,13 @@
         <mx:Canvas label="Logging" width="100%" height="100%" id="log">
             <Control:Log_frm id="serverLogging" />
         </mx:Canvas>
-        <mx:Canvas label="IR" width="100%" height="100%" id="IR">
+        <mx:Canvas label="IR" width="100%" height="100%" id="ir">
             
         </mx:Canvas>
         <mx:Canvas label="Publish" width="100%" height="100%" id="Publish">
             <Control:PublishServer_frm id="serverPublish" />
         </mx:Canvas>
-        <mx:Canvas label="SFTP" width="100%" height="100%" id="SFTP">
+        <mx:Canvas label="File Transfer" width="100%" height="100%" id="ws">
             
         </mx:Canvas>
     </mx:TabNavigator>                            

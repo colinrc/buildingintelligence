@@ -25,6 +25,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import flash.system.fscommand;
 			import mx.collections.ArrayCollection;
 			import Utils.FixType;
 			import mx.utils.ObjectProxy;
@@ -108,9 +109,9 @@
 				if (event.columnIndex == 2) { 
 					//run editor
 					trace("run editor");
-					var ret:* = ExternalInterface.call("\\wscite\\scite.exe", dataG.selectedItem.name);
+					var ret:* = fscommand("exec","C:\BIBackup\AdminTool\Build\wscite.exe "+dataG.selectedItem.name);
 					if (ret == null || ret == undefined) {
-						trace(ret.toString());
+						//trace(ret.toString());
 					}
 
 				}

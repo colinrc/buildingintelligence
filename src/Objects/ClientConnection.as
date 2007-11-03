@@ -3,10 +3,11 @@
 	import flash.utils.IExternalizable;
 	import flash.utils.IDataOutput;
 	import flash.utils.IDataInput;
+	import flash.events.IOErrorEvent;
 	
-	[Bindable("MonitorConnection")]
-	[RemoteClass(alias="elifeAdmin.objects.server.monitorConnection")]
-	public class MonitorConnection {
+	[Bindable("ClientConnection")]
+	[RemoteClass(alias="elifeAdmin.objects.clientConnection")]
+	public class ClientConnection {
 		private var monitor_socket:XMLSocket;
 		private var viewAttached:Boolean;
 		private var monitorStatus:String;
@@ -21,7 +22,7 @@
 			output.writeUTF(monitorStatus);
 			output.writeObject(view);
 			output.writeUTF(__clientName);
-			output.writeUTF(output);
+			output.writeUTF(output); 
 		}
 		
 		public override function readExternal(input:IDataInput):void {
@@ -53,8 +54,13 @@
 			
 		}	
 		private function connectToMonitor(ipAddress:String, monitorPort:Number) {
-			output = "";		
-			monitor_socket.connect(ipAddress, monitorPort);
+			output = "";	
+			try {	
+				monitor_socket.connect(ipAddress, monitorPort);
+			} catch (iOError:IOErrorEvent) {
+				iOError.toString()
+			}
+			
 		}
 		public function getName():String {
 			return clientName;

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseForm label="Cameras" xmlns="Forms.*"  initialize="init()" xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:ns1="Utils.Cellrenderers.*" width="100%" height="100%" xmlns:Controls="Controls.*">
+	
+	<addForm>
+		<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+			<mx:VBox width="100%" height="90%" id ="first">
+				<mx:Canvas  width="100%" height="100%" >
+					<mx:VBox x="0" y="0" height="10%" width="100%">
+						<mx:Label text="System Overrides:" fontWeight="bold" fontSize="12"/>
+					</mx:VBox>
+					<mx:VBox x="0" y="63" height="100%" width="100%">
+						<mx:HBox width="100%" height="100%">
+							<mx:VBox height="100%" minWidth="200" maxWidth="300" width="100%">
+								<mx:HBox width="100%" height="40">
+									<mx:TextArea text="Available Overrides:" width="136" height="24" editable="false" fontWeight="bold"/>
+								</mx:HBox>
+								<mx:HBox width="100%" height="100%">
+									<mx:List dataProvider="{availableItems}" height="100%" id="availableList" enabled="true"  alternatingItemColors="[#FFFFFF, #DBEAF1]" width="100%"></mx:List>
+								</mx:HBox>
+							</mx:VBox>
+							<mx:VBox minWidth="80" maxWidth="95" width="100%" height="100%">
+								<mx:HBox width="100%" height="33%">
+								</mx:HBox>
+								<mx:HBox width="100%" height="33%">
+									<mx:VBox width="100%" height="100%">
+										<mx:Button width="100%" click="remSel()" label="&lt;">
+										</mx:Button>
+										<mx:Button width="100%" click="remAll()" label="&lt;&lt;">
+										</mx:Button>
+										<mx:Button width="100%" labelPlacement="left"  click="addAll()" label="&gt;&gt;">
+										</mx:Button>
+										<mx:Button width="100%" enabled="true" click="addSel()" label="&gt;">
+										</mx:Button>
+									</mx:VBox>
+								</mx:HBox>
+								<mx:HBox width="100%" height="33%">
+								</mx:HBox>
+							</mx:VBox>
+							<mx:VBox minWidth="200" maxWidth="300" width="100%" height="100%">
+								<mx:VBox height="100%" width="100%">
+									<mx:HBox width="100%" height="40">
+										<mx:TextArea text="Active Overrides:" width="134" height="24" editable="false" fontWeight="bold"/>
+									</mx:HBox>
+									<mx:HBox width="100%" height="100%">
+										<mx:List dataProvider="{usedItems}"  change="usedListClick(event)" height="100%" id="usedList" alternatingItemColors="[#FFFFFF, #DBEAF1]" enabled="true" width="100%"></mx:List>
+									</mx:HBox>
+								</mx:VBox>
+							</mx:VBox>
+							
+						</mx:HBox>
+					</mx:VBox>
+				</mx:Canvas>
+			</mx:VBox>
+			<mx:HBox width="100%">
+				<mx:Label text="Override Name:" fontWeight="bold"/>
+				<mx:TextInput width="222" editable="false" id="Oname"/>
+			</mx:HBox>
+			<mx:HBox width="100%">
+				<mx:Label text="Value:" fontWeight="bold"/>
+				<mx:TextInput  change="OValueChange(event)" width="276" id="Ovalue"/>
+				<mx:ColorPicker change="OColourChange(event)" id="OcolourPicker" visible="false"/>
+			</mx:HBox>
+		</mx:VBox>
+	</addForm>
+		
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import FileAccess.XMLFile;
+			import flash.events.Event;
+			import mx.events.CollectionEvent;
+			import mx.utils.ObjectProxy;
+			import Objects.ServerConnection;
+			import Objects.MonitorConnection;
+			import mx.core.Application;
+			import flash.filesystem.File;
+			import mx.collections.*;
+		
+						
+			private var undoObj:Object;
+			[Bindable]
+			private var modifiedFlag:Boolean;
+			
+			public function advanced(func:Boolean):void {
+				
+			}
+			override public function set undoObject(value:ObjectProxy):void {
+				undoObj = value;
+			}
+			override public function get undoObject():ObjectProxy {
+				return undoObj;
+			}
+			
+			
+			public var myStyles:StyleSheet;	
+			public var file:File = new File();
+			
+			public var sortA:Sort = new Sort();
+            public var sortB:Sort = new Sort();
+              
+			[Bindable]
+			public var availableItems:ArrayCollection;
+			
+			[Bindable]
+			public var usedItems:ArrayCollection;
+			
+			public var usedItemsAttributes:ObjectProxy;
+			
+			private function init():void {
+				
+				myStyles = new StyleSheet();
+				myStyles.setStyle("time", {fontFamily:'Arial,Helvetica,sans-serif', textDecoration:'underline', fontSize:'10px', fontWeight:'bold', color:'#000000'});
+				myStyles.setStyle("error", {fontFamily:'Arial,Helvetica,sans-serif', fontSize:'12px', color:'#FF0000'});
+				
+				usedItemsAttributes = new ObjectProxy(dataHolder.attributes);
+				
+				var tempXML:XML = Application.application.overrides_xml;
+				availableItems = new ArrayCollection();
+				usedItems = new ArrayCollection();
+				
+				buildLists(tempXML);
+				
+				sortA.fields=[new SortField("label", true, false)];
+				sortB.fields=[new SortField("label", true, false)];
+				availableItems.sort = sortA;
+				usedItems.sort = sortB;
+				availableItems.refresh();
+				usedItems.refresh()
+				usedItems.addEventListener(CollectionEvent.COLLECTION_CHANGE,usedItemsChanged);
+			}
+			private function buildLists(tempXML:XML) {
+				var tempNode:XML = tempXML;
+				for (var child in tempNode.children() ) {
+					var tempName:String = tempNode.children()[child].name();
+					var flag:Boolean = false;
+					for(var group in dataHolder.Data.dataObject.attributeGroups){
+						if(tempName == dataHolder.Data.dataObject.attributeGroups[group]){
+							flag = true;
+							break;
+						}
+					}
+					if(flag){
+						for (var index in tempNode.children()[child].children()) {
+							var tempObject = new Object();
+							tempObject.label = tempNode.children()[child].children()[index].@name.toString();
+							tempObject.type = tempNode.children()[child].children()[index].@type.toString();
+							tempObject.def = tempNode.children()[child].children()[index].@default.toString();
+							tempObject.description = tempNode.children()[child].children()[index].@description.toString();
+							availableItems.addItem(tempObject);
+						}
+					}
+				}
+				for (var attribute in dataHolder.attributes) {
+					var tempObject = new Object();
+					tempObject.label = dataHolder.attributes[attribute].name;
+					tempObject.value = dataHolder.attributes[attribute].value;
+					for (var index in availableList.dataProvider) {
+						if (tempObject.label == availableList.dataProvider[index].label) {
+								tempObject.type = availableList.dataProvider[index].type;
+								tempObject.def = availableList.dataProvider[index].def;
+								tempObject.description = availableList.dataProvider[index].description;
+								usedItems.addItem(tempObject);
+								availableItems.removeItemAt(index);
+								break;
+						}
+					}
+				}
+			}
+
+			private function addSel() {
+				modifiedFlag = true;
+				if (availableList.selectedItem != undefined) {
+					usedItems.addItem(availableItems.removeItemAt(availableList.selectedIndex));
+					usedItems.sort = sortA;
+                	usedItems.refresh();
+                }
+			}
+			private function addAll() {
+				modifiedFlag = true;
+				var leftLength:int = availableItems.length;
+				for (var leftIndex:int = 0; leftIndex < leftLength; leftIndex++) {
+					usedItems.addItem(availableItems.removeItemAt(0));
+				}
+				usedItems.sort = sortA;
+                usedItems.refresh();
+			}
+			private function remSel() {
+				modifiedFlag = true;
+				if (usedList.selectedItem != undefined) {
+					availableItems.addItem(usedItems.removeItemAt(usedList.selectedIndex));
+					availableItems.sort = sortA;
+					availableItems.refresh();
+				}
+			}
+			private function remAll() {
+				modifiedFlag = true;
+				var rightLength:int = usedItems.length;
+				for (var rightIndex:int = 0; rightIndex < rightLength; rightIndex++) {
+					availableItems.addItem(usedItems.removeItemAt(0));
+				}
+				availableItems.sort = sortA;
+				availableItems.refresh();
+			}
+			private function usedListClick(event:Event) {
+				Oname.text = usedItems[usedList.selectedIndex].label;
+				if (usedItems[usedList.selectedIndex].value != null) {
+					Ovalue.text = usedItems[usedList.selectedIndex].value;
+				} else {
+					Ovalue.text = usedItems[usedList.selectedIndex].def;
+				}
+				if (usedItems[usedList.selectedIndex].type == "colour") {
+					OcolourPicker.selectedColor = Ovalue.text
+					OcolourPicker.visible = true;
+				} else {
+					OcolourPicker.visible = false;
+				}
+			}
+			private function OColourChange(event:Event) {
+				Ovalue.text = "0x"+OcolourPicker.selectedColor.toString(16);
+				usedItems[usedList.selectedIndex].value = Ovalue.text;
+				dataHolder.modifyAttributes(usedItems[usedList.selectedIndex].label, event.type, usedItems[usedList.selectedIndex]);
+				modifiedFlag = true;
+			}
+			private function OValueChange(event:Event) {
+				usedItems[usedList.selectedIndex].value = Ovalue.text;
+				dataHolder.modifyAttributes(usedItems[usedList.selectedIndex].label, event.type, usedItems[usedList.selectedIndex]);
+				
+				modifiedFlag = true;
+			}
+			
+			private function usedItemsChanged(event:Event) {
+				dataHolder.modifyAttributes("",event.kind, event.items);
+				//event.items  kind "remove" "add" "refresh"(not used) "change"
+				trace(event.toString());
+				//set dataHolder.attributes
+				//for (a in usedItems) {
+				//	dataHolder.attributes.addItem(usedItems[a]);
+				//}
+			}
+		]]>
+	</mx:Script>
+
+</BaseForm>
