@@ -627,6 +627,20 @@
 		</item>
 	</step>
 	<step label="Client" stepOrder="2">
+		<item label="Configure KeyGroups" key="KeyGroups" order="0">
+			<description>
+		 	 <font size="12">
+		 		<p><b>Step1 - Add KeyGroups</b></p>
+			</font>
+			</description>
+		</item>
+		<item label="Configure KeyGroup" key="KeyGroup" order="0">
+			<description>
+		 	 <font size="12">
+		 		<p><b>Step1 - Add Keys to KeyGroup</b></p>
+			</font>
+			</description>
+		</item>
 		<item label="Configure Property" key="Property" order="1">
 			<description>
 		 	 <font size="12">
