@@ -3,13 +3,15 @@
 	<setting name="serverAddress" value="127.0.0.1" />
 	<setting name="serverProtocol" value="sockets" />
 	<setting name="serverPort" value="10000" />
+	<setting name="squeezeAddress" value="127.0.0.1" />
+	<setting name="squeezePort" value="9000" />
 	<setting name="applicationXML" value="sample.xml" />
 	<setting name="width" value="1024" />
 	<setting name="height" value="768" />
 	<setting name="fullScreen" value="false" />
 	<setting name="scale" value="true" />
 	<setting name="hideMouseCursor" value="false" />
-	<setting name="debugMode" value="true" />
+	<setting name="debugMode" value="false" />
 	<setting name="COMPort" value="0" />
 	<setting name="webRefreshRate" value="5" />
 	<setting name="securityID" value="09du3q23487" />
