@@ -1438,6 +1438,20 @@ public class Model
                 control = cont;
         }
 
+        public void info(String message) {
+            if (control == true) {
+                     logger.log(Level.INFO, message);
+            }
+        }
+        
+        public void warn(String message) {
+             logger.log(Level.WARNING, message);
+        }
+        
+        public void severe(String message) {
+            logger.log(Level.SEVERE, message);
+       }
+        
         public void log(String message) {
                 if (control == true) {
                          logger.log(Level.FINE, message);
