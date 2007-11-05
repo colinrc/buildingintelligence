@@ -1136,6 +1136,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			if (level == 255) normValue = 100;
 			
 			String rampRateStr = findRampCode (rampCodeStr);
+			if (rampRateStr.equals ("")){
+				logger.log (Level.WARNING, "A ramp rate that CBUS cannot support was specified");
+				return null;
+			}
 			byte rampRate = Byte.parseByte(rampRateStr,16);
 
 			byte appCode = Byte.parseByte(appCodeStr,16);
