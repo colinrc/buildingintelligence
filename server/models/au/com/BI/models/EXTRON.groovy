@@ -29,43 +29,43 @@ class EXTRON extends GroovyModel {
 			
 				// Handle any error messages
 				case "E01":
-					logger.log (Level.FINE,"Invalid input channel number (too large) " + command )
+					log ("Invalid input channel number (too large) " + command )
 					break;
 					
 				case "E10":
-					logger.log (Level.FINE,"Invalid command " + command )
+					log ("Invalid command " + command )
 					break;
 					
 				case "E11":
-					logger.log (Level.FINE,"Invalid preset number " + command )
+					log ("Invalid preset number " + command )
 					break;
 					
 				case "E12":
-					logger.log (Level.FINE,"Invalid output number (too large) " + command )
+					log ("Invalid output number (too large) " + command )
 					break;
 					
 				case "E13":
-					logger.log (Level.FINE,"Invalid value (out of range) " + command )
+					log ("Invalid value (out of range) " + command )
 					break;
 					
 				case "E14":
-					logger.log (Level.FINE,"Illegal command for this configuration " + command )
+					log ("Illegal command for this configuration " + command )
 					break;
 					
 				case "E17":
-					logger.log (Level.FINE,"Timeout (caused only by direct write of global preset) " + command )
+					log ("Timeout (caused only by direct write of global preset) " + command )
 					break;
 					
 				case "E21":
-					logger.log (Level.FINE,"Invalid room number " + command )
+					log ("Invalid room number " + command )
 					break;
 					
 				case "E24":
-					logger.log (Level.FINE,"Priveledge violation " + command )
+					log ("Priveledge violation " + command )
 					break;
 
 				default:
-					logger.log (Level.WARNING,"An unknown command was sent from the Extron Switcher " + command)
+					logger.log (Level.INFO,"An unknown command was sent from the Extron Switcher " + command)
 				}			
 			} catch (IndexOutOfBoundsException ex) {
 				logger.log (Level.WARNING,"The string from Extron Switcherr was incorrectly formatted " + command)
