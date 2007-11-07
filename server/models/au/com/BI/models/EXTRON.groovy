@@ -65,7 +65,7 @@ class EXTRON extends GroovyModel {
 					break;
 
 				default:
-					logger.log (Level.INFO,"An unknown command was sent from the Extron Switcher " + command)
+					logger.log (Level.FINE,"An unknown command was sent from the Extron Switcher " + command)
 				}			
 			} catch (IndexOutOfBoundsException ex) {
 				logger.log (Level.WARNING,"The string from Extron Switcherr was incorrectly formatted " + command)
