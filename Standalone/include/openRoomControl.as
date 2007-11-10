@@ -96,7 +96,7 @@
 		for (var tab=0; tab<tabs.length; tab++) {
 			var controls = tabs[tab].controls;
 			for (var control=0; control<controls.length; control++) {
-				unsubscribe(controls[control].key, this.content_mc["tab" + tab + "_mc"].tabContent_mc["control" + control + "_mc"]);
+				unsubscribe(controls[control].key, this.contentClip.tabs_mc.contentClips[tab]["control" + control + "_mc"]);
 				this.contentClip.tabs_mc.contentClips[tab]["control" + control + "_mc"].onClose();
 			}
 		}

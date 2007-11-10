@@ -267,6 +267,51 @@ receiveCmd = function (xml, ignoreSkip) {
 	} else if (msg.nodeName == "CONTROL" && msg.attributes.KEY == "LOCKSCREEN") {
 		setAuthenticated(false);
 		screenLocked = true;
+	} else if (msg.nodeName == "playerstatus") {
+		// squeezebox status msg
+		_global.players[msg.attributes.KEY] = new Object();
+		for (var i in msg.attributes) {
+			_global.players[msg.attributes.KEY][i] = msg.attributes[i];
+		}
+		_global.players[msg.attributes.KEY].track = new Object();
+		for (var i in msg.firstChild.firstChild.attributes) {
+			_global.players[msg.attributes.KEY].track[i] = msg.firstChild.firstChild.attributes[i];
+		}
+		broadcastChange(msg.attributes.KEY);
+	} else if (msg.nodeName == "albums") {
+		if (_global.players[msg.attributes.KEY] == undefined) _global.players[msg.attributes.KEY] = new Object();
+		var albums = _global.players[msg.attributes.KEY].albums = new Array();
+		for (var i=0; i<msg.childNodes.length; i++) {
+			var album = new Object();
+			album.id = msg.childNodes[i].attributes.id;
+			album.album = msg.childNodes[i].attributes.album;
+			album.coverArt = msg.childNodes[i].attributes.coverArt;
+			album.thumbCoverArt = msg.childNodes[i].attributes.thumbCoverArt;
+			album.disc = msg.childNodes[i].attributes.disc;
+			album.disccount = msg.childNodes[i].attributes.disccount;
+			album.compilation = (msg.childNodes[i].attributes.compilation == "true");
+			album.year = msg.childNodes[i].attributes.year;
+			albums.push(album);
+		}
+		broadcastChange(msg.attributes.KEY, "albums");
+	} else if (msg.nodeName == "artists") {
+		var artists = _global.players[msg.attributes.KEY].artists = new Array();
+		for (var i=0; i<msg.childNodes.length; i++) {
+			var artist = new Object();
+			artist.id = msg.childNodes[i].attributes.id;
+			artist.artist = msg.childNodes[i].attributes.artist;
+			artists.push(artist);
+		}
+		broadcastChange(msg.attributes.KEY, "artists");
+	} else if (msg.nodeName == "genres") {
+		var genres = _global.players[msg.attributes.KEY].genres = new Array();
+		for (var i=0; i<msg.childNodes.length; i++) {
+			var genre = new Object();
+			genre.id = msg.childNodes[i].attributes.id;
+			genre.genre = msg.childNodes[i].attributes.genre;
+			genres.push(genre);
+		}
+		broadcastChange(msg.attributes.KEY, "genres");
 	} else {
 		var control = _global.controls[msg.attributes.KEY];
 		if (control != undefined) {

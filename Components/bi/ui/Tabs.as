@@ -13,6 +13,7 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 	private var _tabOffAlpha:Number;
 
 	private var _position:String;
+	private var _displayAs:String;
 	private var _tabWidth:Number;
 	private var _tabHeight:Number;
 	private var _tabSpacing:Number;
@@ -57,6 +58,10 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 	
 	public function set tabPosition(position:String):Void {
 		_position = position;
+	}
+
+	public function set tabDisplayAs(displayAs:String):Void {
+		_displayAs = displayAs;
 	}
 	
 	public function set tabWidth(tabWidth:Number):Void {
@@ -120,6 +125,7 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 		if (_tabOffColour == null) _tabOffColour = _global.settings.tabOffColour;
 		if (_tabOffAlpha == null) _tabOffAlpha = _global.settings.tabOffAlpha;
 		if (_position == null) _position = _global.settings.tabPosition;
+		if (_displayAs == null) _displayAs = _global.settings.tabDisplayAs;
 		if (_tabWidth == null) _tabWidth = _global.settings.tabWidth;
 		if (_tabHeight == null) _tabHeight = _global.settings.tabHeight;
 		if (_tabSpacing == null) _tabSpacing = _global.settings.tabSpacing;
@@ -197,7 +203,7 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 					var tab_mc:MovieClip = tabsBackground_mc.createEmptyMovieClip("tab" + i + "_mc", i);
 				}
 				
-				if (_global.settings.tabDisplayAs == "icons") {
+				if (_global.settings.tabDisplayAs == "icons" && _displayAs == "icons") {
 					var bg_mc = tab_mc.createEmptyMovieClip("bg_mc", 0);
 					bg_mc.beginFill(_tabOnColour, _tabOpacity);
 					if (_position == "left") bg_mc.drawRect(0, 0, _tabWidth, _tabHeight, {tl:_cornerRadius,tr:0,bl:_cornerRadius,br:0});

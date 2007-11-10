@@ -40,6 +40,7 @@ createObjects = function () {
 	_global.controlPanelApps = new Array();
 	_global.tv = new Object();
 	_global.windowStack = new Object();
+	_global.players = new Object();
 }
 
 confirm = function (msg, scope, onYes, onNo, param1) {
@@ -1984,6 +1985,8 @@ createUsageGraphs = function (content_mc) {
 
 #include "calendar.as"
 
+#include "musicLibrary.as"
+
 createAppsPanel = function (content_mc) {
 	var btns_mc = content_mc.createEmptyMovieClip("btns_mc", 10);
 	for (var app=0; app<_global.controlPanelApps.length; app++) {
@@ -3010,7 +3013,7 @@ updateKey = function (key, state, value, force) {
 
 	if (changed || force) {
 		sendCmd(key, state, value, valueRest);
-		broadcastChange(key);
+		broadcastChange(key, null, true);
 	}
 }
 
@@ -3279,6 +3282,7 @@ setupScreenSaver = function () {
 }
 
 subscribe = function (keys, movieClip, sendCurrentState) {
+	//debug("Subscribe: " + keys + ":" + movieClip);
 	if (typeof(keys) == "string") keys = keys.split(",");
 	for (var q=0; q<keys.length; q++) {
 		var key = keys[q];
@@ -3289,15 +3293,20 @@ subscribe = function (keys, movieClip, sendCurrentState) {
 		if (_global.controls[key].subscribers == undefined) _global.controls[key].subscribers = new Array();
 		var subscribers = _global.controls[key].subscribers;
 		var i = subscribers.length;
+		var alreadySubscribed = false;
 		while (i--) {
-			if (subscribers[i] == movieClip) break;
+			if (subscribers[i] == movieClip) {
+				alreadySubscribed = true;
+				break;
+			}
 		}
-		subscribers.push(movieClip);
+		if (!alreadySubscribed) subscribers.push(movieClip);
 	}
 	if (sendCurrentState) movieClip.update(key, _global.controls[key].state, _global.controls[key].value);
 }
 
 unsubscribe = function (keys, movieClip) {
+	//debug("Unsubscribe: " + keys + ":" + movieClip);
 	if (typeof(keys) == "string") keys = keys.split(",");
 	for (var q=0; q<keys.length; q++) {
 		var key = keys[q];
@@ -3317,14 +3326,17 @@ unsubscribe = function (keys, movieClip) {
 	//trace("subscribers: " + counter);
 }
 
-broadcastChange = function (key, id) {
+broadcastChange = function (key, id, fromClient) {
 	//debug("broadcasting for " + key + ":")
 	var control = _global.controls[key];
 	for (var subscriber=0; subscriber<control.subscribers.length; subscriber++) {
-		if (id != undefined) {
+		if (id > 0) {
+			eval(control.subscribers[subscriber]).update(key, id);
+		} else if (typeof(id) == "string") {
+			// for music player, so we can send through what dataset we've just received and stored
 			eval(control.subscribers[subscriber]).update(key, id);
 		} else {
-			eval(control.subscribers[subscriber]).update(key, control.state, control.value);
+			eval(control.subscribers[subscriber]).update(key, control.state, control.value, fromClient);
 		}
 		//debug(" - " + control.subscribers[subscriber])
 	}

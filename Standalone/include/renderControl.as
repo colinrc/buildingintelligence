@@ -3,7 +3,7 @@
 
 	control_mc.controlTypeObj = _global.controlTypes[control.type];
 	control_mc.rows = _global.controlTypes[control.type].rows;
-	control_mc.update = function (key, state, value) {
+	control_mc.update = function (key, state, value, fromClient) {
 		var currentY = 0;
 		for (var row=0; row<this.rows.length; row++) {
 			var row_mc = this["row" + row + "_mc"];
@@ -16,7 +16,7 @@
 				
 				var items = this.rows[row].items;
 				for (var item=0; item<items.length; item++) {
-					row_mc["item" + item + "_mc"].update(key, state, value);
+					row_mc["item" + item + "_mc"].update(key, state, value, fromClient);
 				}
 			}
 		}
@@ -358,6 +358,34 @@
 					mediaPlayer = new mdm.MediaPlayer6(Math.round((point.x + (width / 2) - (control.srcWidth / 2)) / _global.screenRatio), Math.round(point.y / _global.screenRatio), Math.round(control.srcWidth / _global.screenRatio), Math.round(control.srcHeight / _global.screenRatio), control.src);
 					mediaPlayer.visible = false;
 					break;
+				case "trackDetails":
+					var item_mc = row_mc.createEmptyMovieClip("item" + item + "_mc", item);
+					
+					var detailsBoxBg_mc = item_mc.createEmptyMovieClip("bg_mc", 0);
+					detailsBoxBg_mc.beginFill(0x000000, 20);
+					detailsBoxBg_mc.drawRect(0, 0, width, items[item].height, 4);
+					detailsBoxBg_mc.endFill();
+										
+					var coverArt_mc = item_mc.createEmptyMovieClip("coverArt_mc", 10);
+					coverArt_mc._x = 5;
+					coverArt_mc._y = 5;
+					
+					var col2X = items[item].height;
+					item_mc.attachMovie("bi.ui.Label", "title_lb", 20, {_x:col2X, _y:5, settings:{width:width - col2X - 5, text:"Title: %title%"}});
+					item_mc.attachMovie("bi.ui.Label", "artist_lb", 30, {_x:col2X, _y:35, settings:{width:width - col2X - 5, text:"Artist: %artist%"}});
+					item_mc.attachMovie("bi.ui.Label", "album_lb", 40, {_x:col2X, _y:65, settings:{width:width - col2X - 5, text:"Album: %album%"}});
+					
+					item_mc.update = function (key, state, value, fromClient) {
+						if (!fromClient) {
+							this.title_lb.text = (_global.players[key].track.title != undefined) ? "Title: " + _global.players[key].track.title : "";
+							this.artist_lb.text = (_global.players[key].track.artist != undefined) ? "Artist: " + _global.players[key].track.artist : "";
+							this.album_lb.text = (_global.players[key].track.album != undefined) ? "Album: " + _global.players[key].track.album : "";
+							
+							this.coverArt_mc.loadMovie("http://" + _global.settings.squeezeAddress + ":" + _global.settings.squeezePort + "/music/current/thumb.jpg?playerid=" + _global.players[key].id + "&r=" + _global.players[key].track.duration);
+						}
+					}
+					
+					break;
 				case "space":
 					item_mc = null;
 					break;
@@ -428,6 +456,8 @@ performAction = function (key, command, extra) {
 			trace("URL: " + c);
 		}
 		loadURL.onLoad();
+	} else if (command.split(".")[0] == "func") {
+		_root[command.split(".")[1]](key);
 	} else {
 		updateKey(key, command, extra, true);
 	}
