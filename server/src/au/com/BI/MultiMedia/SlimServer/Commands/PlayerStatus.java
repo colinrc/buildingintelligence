@@ -34,6 +34,9 @@ public class PlayerStatus extends SlimServerCommand {
 		tags.add(SongInfoTag.ALBUM);
 		tags.add(SongInfoTag.ARTIST);
 		tags.add(SongInfoTag.DURATION);
+		tags.add(SongInfoTag.ALBUM_ID);
+		tags.add(SongInfoTag.TRACK_NUMBER);
+		tags.add(SongInfoTag.COVERART);
 	}
 
 	public String getCharset() {

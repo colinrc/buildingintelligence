@@ -252,27 +252,27 @@ public class PlayerStatusCommand implements CommandInterface {
 	}
 
 	public String getCommandCode() {
-		return null;
+		return "";
 	}
 
 	public String getExtra2Info() {
-		return null;
+		return "";
 	}
 
 	public String getExtra3Info() {
-		return null;
+		return "";
 	}
 
 	public String getExtra4Info() {
-		return null;
+		return "";
 	}
 
 	public String getExtra5Info() {
-		return null;
+		return "";
 	}
 
 	public String getExtraInfo() {
-		return null;
+		return "";
 	}
 
 	public void setCommand(String command) {

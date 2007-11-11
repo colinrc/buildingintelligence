@@ -19,7 +19,9 @@ import au.com.BI.MultiMedia.SlimServer.Commands.Play;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListControl;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListIndex;
+import au.com.BI.MultiMedia.SlimServer.Commands.Power;
 import au.com.BI.MultiMedia.SlimServer.Commands.Stop;
+import au.com.BI.MultiMedia.SlimServer.Commands.Volume;
 import au.com.BI.Util.StringUtils;
 
 public class OutputHelper {
@@ -541,6 +543,50 @@ public class OutputHelper {
 				if (control.getIndex() != -1) {
 					retCode = control.buildCommandString() + "\r\n";
 				}
+			} else if (command.getCommandCode().equalsIgnoreCase("volume")) {
+			
+				/*
+				 * <CONTROL KEY="LAPTOP" COMMAND="volume" EXTRA="up|down|<volume 0 .. 100>" EXTRA2"" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="volume" EXTRA="up" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="volume" EXTRA="down" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="volume" EXTRA="53.4" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 */
+				Volume control = new Volume();
+				control.setPlayerId(device.getKey());
+				
+				// first try to get up down command
+				if (command.getExtraInfo().equalsIgnoreCase("up")) {
+					control.setVolumeUp(true);
+				} else if (command.getExtraInfo().equalsIgnoreCase("down")) {
+					control.setVolumeDown(true);
+				} else {
+					try {
+						control.setVolume(Float.parseFloat(command.getExtraInfo()));
+					} catch (NumberFormatException e) {
+						logger.log(Level.WARNING,
+								"index found but it is not an integer");
+					}
+				}
+				
+				retCode = control.buildCommandString() + "\r\n";
+			} else if (command.getCommandCode().equalsIgnoreCase("power")) {
+			
+				/*
+				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="on|off" EXTRA2"" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="on" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="off" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 */
+				Power control = new Power();
+				control.setPlayerId(device.getKey());
+				
+				// first try to get up down command
+				if (command.getExtraInfo().equalsIgnoreCase("on")) {
+					control.setPower(true);
+				} else if (command.getExtraInfo().equalsIgnoreCase("off")) {
+					control.setPower(false);
+				}
+				
+				retCode = control.buildCommandString() + "\r\n";
 			}
 		}
 

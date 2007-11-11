@@ -34,6 +34,7 @@ public class Track {
 	private String lyrics;
 	private String remote;
 	private String title;
+	private String coverArtUrl;
 	
 	public Track() {
 		
@@ -271,9 +272,20 @@ public class Track {
 		return title;
 	}
 	
+	public String getCoverArtUrl() {
+		return coverArtUrl;
+	}
+
+	public void setCoverArtUrl(String coverArtUrl) {
+		this.coverArtUrl = coverArtUrl;
+	}
+
 	public Element getElement() {
 		Element track = new Element("item");
 		
+		if (!StringUtils.isNullOrEmpty(getId())) {
+			track.setAttribute("track_id",getId());
+		}
 		if (!StringUtils.isNullOrEmpty(getGenre())) {
 			track.setAttribute("genre",getGenre());
 		}
@@ -338,7 +350,11 @@ public class Track {
 			track.setAttribute("drm",getDrm());
 		}
 		if (!StringUtils.isNullOrEmpty(getCoverArt())) {
-			track.setAttribute("coverart",getCoverArt());
+			if (getCoverArt().equals("1") && !StringUtils.isNullOrEmpty(getTrackNumber())) {
+				track.setAttribute("coverart",getCoverArtUrl() + getId() + "/cover.jpg");
+				track.setAttribute("thumbcoverart",getCoverArtUrl() + getId() + "/thumb.jpg");
+//				track.setAttribute("coverart",getCoverArt());
+			}
 		}
 		if (!StringUtils.isNullOrEmpty(getModificationTime())) {
 			track.setAttribute("modificationTime",getModificationTime());

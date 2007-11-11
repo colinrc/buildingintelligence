@@ -68,7 +68,7 @@ public class ControlledHelper {
 			Iterator<Album> it = reply.getAlbums().iterator();
 			while (it.hasNext()) {
 				Album album = (Album)it.next();
-				album.setUrlPath(model.getURLPath());
+				album.setUrlPath(model.getCoverArtUrl());
 				
 				flashCommand.getAlbums().add(album);
 			}
@@ -115,6 +115,7 @@ public class ControlledHelper {
 			PlayerStatusReply reply = (PlayerStatusReply)_command;
 			DeviceType device = model.getConfigHelper().getControlledItem(reply.getPlayerId()); 
 			reply.setPlayerKey(device.getOutputKey());
+			reply.setCoverArtUrl(model.getCoverArtUrl());
 			
 			PlayerStatusCommand flashCommand = new PlayerStatusCommand();
 			flashCommand.setPlayerstatus(reply);
