@@ -569,12 +569,16 @@ public class OutputHelper {
 				}
 				
 				retCode = control.buildCommandString() + "\r\n";
-			} else if (command.getCommandCode().equalsIgnoreCase("power")) {
+			} else if (command.getCommandCode().equalsIgnoreCase("power") || 
+					   command.getCommandCode().equalsIgnoreCase("state")) {
 			
 				/*
 				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="on|off" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="on" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="off" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="state" EXTRA="on|off" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="state" EXTRA="on" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="state" EXTRA="off" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				 */
 				Power control = new Power();
 				control.setPlayerId(device.getKey());
