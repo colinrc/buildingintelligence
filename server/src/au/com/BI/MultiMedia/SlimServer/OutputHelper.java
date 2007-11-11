@@ -572,7 +572,7 @@ public class OutputHelper {
 			} else if (command.getCommandCode().equalsIgnoreCase("power")) {
 			
 				/*
-				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="on|off" EXTRA2"" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="on|off" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="on" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="off" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				 */
@@ -589,7 +589,7 @@ public class OutputHelper {
 				retCode = control.buildCommandString() + "\r\n";
 			}  else if (command.getCommandCode().equalsIgnoreCase("on")) {
 				/*
-				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="on" EXTRA2"" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="power" EXTRA="on" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				 */
 				Power control = new Power();
 				control.setPlayerId(device.getKey());
@@ -598,7 +598,7 @@ public class OutputHelper {
 				retCode = control.buildCommandString() + "\r\n";
 			}  else if (command.getCommandCode().equalsIgnoreCase("off")) {
 				/*
-				 * <CONTROL KEY="LAPTOP" COMMAND="off" EXTRA="" EXTRA2"" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="off" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				 */
 				Power control = new Power();
 				control.setPlayerId(device.getKey());
