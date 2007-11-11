@@ -284,7 +284,7 @@ public class Track {
 		Element track = new Element("item");
 		
 		if (!StringUtils.isNullOrEmpty(getId())) {
-			track.setAttribute("track_id",getId());
+			track.setAttribute("id",getId());
 		}
 		if (!StringUtils.isNullOrEmpty(getGenre())) {
 			track.setAttribute("genre",getGenre());
