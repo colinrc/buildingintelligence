@@ -377,11 +377,11 @@
 					
 					item_mc.update = function (key, state, value, fromClient) {
 						if (!fromClient) {
-							this.title_lb.text = (_global.players[key].track.title != undefined) ? "Title: " + _global.players[key].track.title : "";
-							this.artist_lb.text = (_global.players[key].track.artist != undefined) ? "Artist: " + _global.players[key].track.artist : "";
-							this.album_lb.text = (_global.players[key].track.album != undefined) ? "Album: " + _global.players[key].track.album : "";
+							this.title_lb.text = (_global.controls[key].track.title != undefined) ? "Title: " + _global.controls[key].track.title : "";
+							this.artist_lb.text = (_global.controls[key].track.artist != undefined) ? "Artist: " + _global.controls[key].track.artist : "";
+							this.album_lb.text = (_global.controls[key].track.album != undefined) ? "Album: " + _global.controls[key].track.album : "";
 							
-							this.coverArt_mc.loadMovie("http://" + _global.settings.squeezeAddress + ":" + _global.settings.squeezePort + "/music/current/thumb.jpg?playerid=" + _global.players[key].id + "&r=" + _global.players[key].track.duration);
+							this.coverArt_mc.loadMovie("http://" + _global.settings.squeezeAddress + ":" + _global.settings.squeezePort + "/music/current/thumb.jpg?playerid=" + _global.controls[key].id + "&r=" + _global.controls[key].track.duration);
 						}
 					}
 					

@@ -566,8 +566,8 @@
 			</row>
 			<row>
 				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="40" />
-				<item type="button" icon="volume-up" command="volume" extra="up" repeatRate="200" />
-				<item type="button" icon="volume-down" command="volume" extra="down" repeatRate="200" />
+				<item type="button" icon="volume-up" command="VOLUME" extra="up" repeatRate="200" />
+				<item type="button" icon="volume-down" command="VOLUME" extra="down" repeatRate="200" />
 				<item type="button" icon="find" command="func.openMusicLibrary" />
 			</row>
 			<row>
