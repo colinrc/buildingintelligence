@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,7 +66,7 @@ public class UpdateServlet extends HttpServlet {
     	Long ID = null;
     	Long serverID = null;
         HttpSession session = req.getSession(false);
-        Map  params = req.getParameterMap();
+        Map <String,String> params = req.getParameterMap();
         boolean emptyResponse = true;
         
         try {
@@ -186,16 +185,8 @@ public class UpdateServlet extends HttpServlet {
 			if (rootElement != null){
 				 command = clientCommandFactory.processXML(rootElement);
 			}
-	    	if (command != null){
-		    	if (sessionID == null  ){
-		    		logger.log(Level.WARNING,"ID was null");
-		    		return;
-		    	}else {
-					command.setOriginatingID(sessionID);	    		
-		    	}
-				commandQueue.add(command);
-
-	    	}
+			command.setOriginatingID(sessionID);	    		
+			commandQueue.add(command);
 			
 			resp.setContentType("text/html");
 	        java.io.PrintWriter out = resp.getWriter();

@@ -110,9 +110,10 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             	sslConnect.setName("SSL_CONNECT");
               server.setConnectors(new Connector[]{sslConnect});
  
+              
             // HTML Security realm
 
-            HashUserRealm webPass = new HashUserRealm();
+            HashUserRealm  webPass = new HashUserRealm ();
             webPass.setName("eLife");
             webPass.setConfig("datafiles/realm.properties");
             server.addUserRealm(webPass);
@@ -183,7 +184,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     
     public SecurityHandler  addUserNameSecurity (ContextHandler updateContextHandler, UserRealm webPass) {
         // Servlet Security config
-        SecurityHandler servletSec = new SecurityHandler();
+    	ELifeSecurityHandler servletSec = new ELifeSecurityHandler();
         
         servletSec.setServer(server);
         servletSec.setAuthMethod(Constraint.__BASIC_AUTH);
@@ -213,7 +214,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 		
 	}
 	
-    public void attatchComms(List commandQueue) throws au.com.BI.Comms.
+    public void attatchComms(List <CommandInterface> commandQueue) throws au.com.BI.Comms.
     ConnectionFail {};
 
 }
