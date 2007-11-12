@@ -516,8 +516,10 @@ public class ControlledHelper {
 				}
 			} else {
 			
+				if (m1Command.getKey ().equals(("CLIENT_SEND"))){
 				// Command has been built or handled already.
-				sendCommand(cache, commandQueue, m1Command);
+					sendCommand(cache, commandQueue, m1Command);
+				}
 			}
 		}
 	}
