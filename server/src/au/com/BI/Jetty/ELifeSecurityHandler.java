@@ -3,6 +3,7 @@
  */
 package au.com.BI.Jetty;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
@@ -23,13 +24,13 @@ public class ELifeSecurityHandler extends  SecurityHandler  {
 		// allowedIPs.put ("127.0.0.1",true);
 	}
 	
-	public boolean checkSecurityConstraints(String pathInContext, Request request, Response response) {
+	public boolean checkSecurityConstraints(String pathInContext, Request request, Response response)  throws IOException {
 		String callingIP = request.getRemoteAddr();
 		
 		if (allowedIPs.containsKey( callingIP))  {
 			return true;
 		} else {
-			return checkSecurityConstraints( pathInContext,  request,  response); 
+			return super.checkSecurityConstraints( pathInContext,  request,  response); 
 		}
 	}
 
