@@ -40,8 +40,13 @@ class IQRAKO extends GroovyModel {
 				def room = device.getAttributeValue ("ROOM")
 				returnWrapper.addCommOutput  ("ROOM " + room)	
 				returnWrapper.addCommOutput  ("CHANNEL " + device.getKey())
-				def levelForRako = Utility.scaleFromFlash (command.getExtraInfo(), 0,255,false) // false indicates the value does not need to be inverted, ie. 0 is the min level for the Rako
-				returnWrapper.addCommOutput  ("LEVEL " + levelForRako)
+				
+				if (command.getExtraInfo() == "") {
+					returnWrapper.addCommOutput  ("LEVEL 255")
+				} else {
+					def levelForRako = Utility.scaleFromFlash (command.getExtraInfo(), 0,255,false) // false indicates the value does not need to be inverted, ie. 0 is the min level for the Rako
+					returnWrapper.addCommOutput  ("LEVEL " + levelForRako)
+				}
 			}
 			
 			if (command.getCommandCode() == "off") {
