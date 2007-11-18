@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<BaseForm label="Control Types" xmlns="Forms.*"  initialize="init()" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:Controls="Controls.*">
+<BaseForm label="Key Groups" xmlns="Forms.*"  initialize="init()" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:Controls="Controls.*">
 	<addForm>
-		<mx:DataGrid  dataProvider="{dataHolder.controls}" id="dataG" width="100%" height="100%" editable="false"  itemEditEnd="itemEnd(event)" itemEditBegin="itemBegin(event)" itemClick="single_click(event)" itemDoubleClick="double_click(event)"   doubleClickEnabled="true">
+		<mx:DataGrid  dataProvider="{dataHolder.panels}" id="dataG" width="100%" height="100%" editable="false"  itemEditEnd="itemEnd(event)" itemEditBegin="itemBegin(event)" itemClick="single_click(event)" itemDoubleClick="double_click(event)"   doubleClickEnabled="true">
 			<mx:columns>
-				<Controls:DataGridColumnPlus id="dispName" editable="false" headerText="Control Type"  dataField="myType"/>
+				<Controls:DataGridColumnPlus id="dispName" editable="false" headerText="Key Group Name"  dataField="name"/>
 			</mx:columns>
 		</mx:DataGrid>	
 	</addForm>
 
 	<mx:Script>
 		<![CDATA[
+			import Objects.Client.Panel;
+			import Objects.Client.KeyGroup;
 			import mx.events.DataGridEvent;
 			import mx.collections.ArrayCollection;
 			import Utils.FixType;
@@ -39,11 +41,14 @@
 			
 				
 			override public function new_click():void {
-				var newControl:Object = new Object();
+				var newControl:Panel = new Panel();
+				newControl.name = "";
+				newControl.icon1 = "";
+				newControl.icon2 = "";
 				newControl.type = "";
 				newControl.id = "";
 								
-				dataHolder.controls.addItem(newControl);
+				dataHolder.keygroups.addItem(newControl);
 				
 				callLater(focusNewRow);
 			}
@@ -57,8 +62,8 @@
             // Event handler function for displaying the selected Alert button.
             private function alertHandler(event:CloseEvent):void {
                 if (event.detail==Alert.OK) {
-                    dataHolder.controls.removeItemAt(dataG.selectedIndex);
-                    dataG.dataProvider = dataHolder.controls;
+                    dataHolder.keygroups.removeItemAt(dataG.selectedIndex);
+                    dataG.dataProvider = dataHolder.keygroups;
                     modifed = true;
 	            }
 	                else {
@@ -66,12 +71,10 @@
 				}
             }
 			
-			public function focusNewRow():void {
-				
+			public function focusNewRow():void {	
 				dataG.editedItemPosition = {columnIndex:0,rowIndex:dataG.dataProvider.length-1};
 				dataG.editable=true;
-				modifed = true;
-				
+				modifed = true;	
 			}
 			public function itemBegin(event:Event):void {
 				modifed = true;
@@ -83,11 +86,11 @@
 				
 			}
 			private function fixProvider():void {
-				dataG.dataProvider = dataHolder.controls;
+				dataG.dataProvider = dataHolder.keygroups;
 			}
 			override public function undo_click(event:Event):void {			
-				dataHolder.controls = ObjectUtil.copy(undoObject.controls);
-				dataG.dataProvider = dataHolder.controls;
+				dataHolder.keygroups = ObjectUtil.copy(undoObject.keygroups);
+				dataG.dataProvider = dataHolder.keygroups;
 				modifed = false;	
 			}
 			public function single_click(event:Event):void {

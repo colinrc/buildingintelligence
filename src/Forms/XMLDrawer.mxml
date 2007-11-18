@@ -17,7 +17,7 @@
 	[Inspectable()]
 	public function setXML(myNode:XML):void {
 		node = myNode;
-		trace ("in XMLDrawer.setXML.." + node.toXMLString());
+		//trace ("in XMLDrawer.setXML.." + node.toXMLString());
 		initAndShowXml();
 
 	}

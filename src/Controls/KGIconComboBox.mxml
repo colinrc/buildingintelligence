@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" horizontalAlign="center" xmlns:Controls="Controls.*">
+   <mx:Script>
+        <![CDATA[
+        	import Forms.dataHolder;
+        	import Forms.type;
+        	import mx.core.UIComponent;
+        	import mx.core.Application;
+        	import mx.controls.Image;
+        	import Utils.IconUtility;
+        	import FileAccess.IconFiles;
+        	import mx.collections.ArrayCollection;
+        	// Define a property for returning the new value to the cell.
+        	[Bindable]
+            public var result:Object;
+                     
+            [Bindable]
+            public var dpValue:ArrayCollection = new ArrayCollection();
+			// Override the set method for the data property.
+			[Bindable]
+			override public function set data(value:Object):void 
+			{
+				super.data = value;
+				if (value != null) 
+				{
+					var currentValue:String = value.name;
+					var len:int = dpValue.length;
+					for (var i:int = 0; i < len; i++) 
+					{
+						if (dpValue[i].name == currentValue) 
+						{
+							editor.selectedIndex = i;
+							break;
+						}
+					}
+				}
+			} 
+			public function loseFocus(event:Event):void {
+				var index:int = editor.selectedIndex;
+				result = dpValue[index].name;
+				if (this.data!=null) {
+					this.data.type = dpValue[index].name;
+				}
+			}
+			public function inFocus(event:Event):void {
+				trace ("inFocus");
+				if (editor.selectedIndex >= 0) {
+					result = dpValue[editor.selectedIndex].name;
+				} else {
+					result = "";
+				}
+			} 
+			
+			public function onChange(event:Event):void 
+			{
+				var index:int = editor.selectedIndex;
+				result = dpValue[index].name;
+				
+				//this. = result;
+				//create object
+			}          
+			private function getIcon(item:Object):Class
+            {             
+                if (item){
+            		var i:Class = IconUtility.getClass(editor, item.nativePath,55,55);
+            		return i;
+            		var loader:Loader = new Loader();
+            		var url:URLRequest = new URLRequest(item.nativePath);
+            		
+					loader.load(url, new LoaderContext(true));
+       				var dObj:DisplayObject = DisplayObject(loader);
+            		var iconClass:Class;
+            		iconClass = Class(systemManager.getDefinitionByName(dObj));
+            		
+            		return iconClass;
+                }
+                return null;
+            }
+           // [Bindable]
+          //  public function set value(val:Object) : void {
+	       	//	value = val;
+	   		//}
+	   		//public function get value() : Object {
+	      // 		return value;
+	   	//	}
+	   
+            
+            private function init():void {
+            	var iconFiles:IconFiles = new IconFiles();
+            	dpValue = iconFiles.getIconNames();
+            }
+    	]]>
+    </mx:Script>
+ 	<Controls:IconComboBox id="editor"  initialize="init()" dataProvider="{dpValue}"  labelField="name"  iconFunction="{getIcon}"  creationComplete="inFocus(event)" focusOut="loseFocus(event)" change="onChange(event)"/>
+</mx:VBox>

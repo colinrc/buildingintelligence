@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<BaseForm label="Control Types" xmlns="Forms.*"  initialize="init()" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:Controls="Controls.*">
+<BaseForm label="Rooms" xmlns="Forms.*"  initialize="init()" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:Controls="Controls.*">
 	<addForm>
-		<mx:DataGrid  dataProvider="{dataHolder.controls}" id="dataG" width="100%" height="100%" editable="false"  itemEditEnd="itemEnd(event)" itemEditBegin="itemBegin(event)" itemClick="single_click(event)" itemDoubleClick="double_click(event)"   doubleClickEnabled="true">
+		<mx:DataGrid  dataProvider="{dataHolder.rooms}" id="dataG" width="100%" height="100%" editable="false"  itemEditEnd="itemEnd(event)" itemEditBegin="itemBegin(event)" itemClick="single_click(event)" itemDoubleClick="double_click(event)"   doubleClickEnabled="true">
 			<mx:columns>
-				<Controls:DataGridColumnPlus id="dispName" editable="false" headerText="Control Type"  dataField="myType"/>
+				<Controls:DataGridColumnPlus id="dispName" editable="false" headerText="Room Name"  dataField="name"/>
 			</mx:columns>
 		</mx:DataGrid>	
 	</addForm>
 
 	<mx:Script>
 		<![CDATA[
+			import Objects.Client.Room;
+			import Objects.Client.KeyGroup;
 			import mx.events.DataGridEvent;
 			import mx.collections.ArrayCollection;
 			import Utils.FixType;
@@ -39,11 +41,22 @@
 			
 				
 			override public function new_click():void {
-				var newControl:Object = new Object();
-				newControl.type = "";
-				newControl.id = "";
-								
-				dataHolder.controls.addItem(newControl);
+				var newRoom:Room = new Room();
+				newRoom.name = "";
+				newRoom.poly = "";
+				newRoom.switchZone = "";
+				newRoom.window = new Window();
+				var newNode:XML = new XML("<window></window>");
+				newRoom.window.setXML(newNode);
+				newRoom.doors = new Doors();		
+				var newNodeDoors:XML = new XML("<doors></doors>");
+				newRoom.doors.setXML(newNodeDoors);
+				newRoom.alerts = new AlertGroups();
+				var tempAlertGroups:XML = new XML("<AlertGroups></AlertGroups>");		
+				newRoom.alerts.setXML(tempAlertGroups);		
+				newRoom.alerts.setRoom(this);
+									
+				dataHolder.rooms.addItem(newRoom);
 				
 				callLater(focusNewRow);
 			}
@@ -57,8 +70,8 @@
             // Event handler function for displaying the selected Alert button.
             private function alertHandler(event:CloseEvent):void {
                 if (event.detail==Alert.OK) {
-                    dataHolder.controls.removeItemAt(dataG.selectedIndex);
-                    dataG.dataProvider = dataHolder.controls;
+                    dataHolder.rooms.removeItemAt(dataG.selectedIndex);
+                    dataG.dataProvider = dataHolder.rooms;
                     modifed = true;
 	            }
 	                else {
@@ -66,12 +79,10 @@
 				}
             }
 			
-			public function focusNewRow():void {
-				
+			public function focusNewRow():void {	
 				dataG.editedItemPosition = {columnIndex:0,rowIndex:dataG.dataProvider.length-1};
 				dataG.editable=true;
-				modifed = true;
-				
+				modifed = true;	
 			}
 			public function itemBegin(event:Event):void {
 				modifed = true;
@@ -83,11 +94,11 @@
 				
 			}
 			private function fixProvider():void {
-				dataG.dataProvider = dataHolder.controls;
+				dataG.dataProvider = dataHolder.rooms;
 			}
 			override public function undo_click(event:Event):void {			
-				dataHolder.controls = ObjectUtil.copy(undoObject.controls);
-				dataG.dataProvider = dataHolder.controls;
+				dataHolder.rooms = ObjectUtil.copy(undoObject.rooms);
+				dataG.dataProvider = dataHolder.rooms;
 				modifed = false;	
 			}
 			public function single_click(event:Event):void {

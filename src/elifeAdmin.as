@@ -1,4 +1,3 @@
-
 		import FileAccess.FileCreateDirPanel;
 		import FileAccess.FileOpenPanel;
 		import FileAccess.FileSavePanel;
@@ -22,8 +21,6 @@
 		import flash.net.*;
 		import flash.utils.*;
 		
-		import mdm.*;
-		
 		import mx.binding.utils.BindingUtils;
 		import mx.collections.ArrayCollection;
 		import mx.collections.XMLListCollection;
@@ -33,7 +30,17 @@
 		import mx.rpc.events.*;
 		import mx.utils.ObjectProxy;
 
-		
+		       public    	var MyImageClass:Function = function():Loader
+				{
+				    //we need a Loader that automatically loads our image
+				    var loader:Loader = new Loader();
+				 
+				    //the URL will come from the prototype
+				    loader.load(new URLRequest(this.url));
+				                
+				    //our "constructor" returns the Loader!
+				    return loader;
+				};
 		/************************* Init system variable *********************************/	
 		[Bindable]
 		[Embed (source="../bin/icons/check.png")]
@@ -584,9 +591,14 @@
        
         private function handleNavigation(obj:ObjectProxy):void {
         	body.label = "Not yet Implemented";
-        	var myDo:DisplayObject = main.getChildByName("body2");
-        	if (myDo != null) {
-        		main.removeChild(myDo);
+        	trace("num child="+main.getChildren().length.toString());
+        	for (var rdo:int=main.getChildren().length-1;rdo>0;rdo--) {
+        		trace("child="+main.getChildAt(rdo).name);
+        		var myDo:DisplayObject = main.getChildAt(rdo);
+        		if (myDo.name == "body2")
+        		{
+        		 	main.removeChildAt(rdo);
+        		}
         	}
         	
         	//main.childDescriptors[1].visible = false;
@@ -607,33 +619,32 @@
         			
         			var ac:Object = obj.getClassForm();
         			var descType:XML = describeType(ac);
-        			if (descType.@name == "Array") {
         			
-	        			objClass = ac[0];
-	        			obj2Class = ac[1];
+        			if (descType.@name == "Array") {
+        				//main body page
+        				bodyInstance = new ac[0]();
+        				bodyInstance.dataHolder = CurrentObject;
+        				body.label = obj.getName();  
+        				body.addChild(bodyInstance);
+        				
+        				//other tab pages, if they exist
+        				var tabName:ArrayCollection = obj.getOtherNames();
+        				for (var i:int=1;i<ac.length;i++) {
+        					var tabn:tabPanel = new tabPanel();
+		        			tabn.label = tabName[i];
+		        			var tabnContent:Object = new ac[i]();
+		        			tabnContent.dataHolder = obj;
+		        			tabn.addChild(DisplayObject(tabnContent));
+		        			main.addChildAt(DisplayObject(tabn), 1);
+        				}
         			}
         			else {
-        				objClass = ac;
-        				obj2Class = null;
+						bodyInstance = new ac();
+        				bodyInstance.dataHolder = CurrentObject;
+        				body.label = obj.getName();  
+        				body.addChild(bodyInstance);
         			}
-        			
-        			bodyInstance = new objClass();
-        			
-        			//var dataObj:ObjectProxy = new ObjectProxy(obj.getData());
-        			
-        			bodyInstance.dataHolder = CurrentObject;
-        			body.label = obj.getName();  
-        			body.addChild(bodyInstance);
-        			
-        			if (obj2Class != null) {
-        				var tab2:tabPanel = new tabPanel();
-	        			tab2.label = obj.get2Name();
-	        			var tab2Content:Object = new obj2Class();
-	        			tab2Content.dataHolder = obj;
-	        			tab2.addChild(DisplayObject(tab2Content));
-	        			main.addChildAt(DisplayObject(tab2), 1);
-	        			
-        			}        			
+        			      			
         		}
         		catch (err:Error) {
         			trace("Could not create body instance:  Error was "+err.message);

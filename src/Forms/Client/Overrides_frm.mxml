@@ -78,8 +78,6 @@
 		
 						
 			private var undoObj:Object;
-			[Bindable]
-			private var modifiedFlag:Boolean;
 			
 			public function advanced(func:Boolean):void {
 				

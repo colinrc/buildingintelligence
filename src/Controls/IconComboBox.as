@@ -1,32 +1,46 @@
 package Controls
 {
     import flash.display.DisplayObject;
+    import flash.display.Loader;
+    import flash.net.URLRequest;
+    import flash.system.LoaderContext;
     import flash.xml.*;
     
     import mx.controls.ComboBox;
-    import mx.controls.Image;
     import mx.controls.List;
     import mx.core.ClassFactory;
-   
-    public class IconComboBox extends mx.controls.ComboBox
+
+    public class IconComboBox extends Controls.ComboBox
     {
-        var a:XML = new XML();
-        
         //create our own factory so we can set the properties before initialized    
-        private var internalDropdownFactory:ClassFactory = new ClassFactory(List);
-        
+        private var internalDropdownFactory:ClassFactory = new ClassFactory(List); 
         //holds the icon image for display
-        private var displayIconObject:Object;
-                 
-        
+        [Bindable]
+        public var displayIconObject:Object;
         public function IconComboBox():void{
-            super();
-            
+            super();   
             //setup the properties on the factory before init so that
             //the drop down will gracefully adopt them.
             internalDropdownFactory.properties = { iconField:"",iconFunction:null };
             dropdownFactory = internalDropdownFactory;
         }
+       /* public override function set value(val:Object) : void {
+	    	candidateValue = val;
+       		valueDirty = true;
+       		invalidateProperties();
+       		//value = val;
+   		}
+   		public override function get value() : Object {
+	    	if (editable){
+				return text;
+			}
+			var item:Object = selectedItem;
+			
+			if (item == null || typeof(item) != "object") {
+				return item;
+			}
+			return "data" in item ? item.data : item.label;
+   		}*/
         
         /**
         * store the icon field
@@ -36,7 +50,6 @@ package Controls
         public function set iconField(value:String):void{
             _iconField = value;
             internalDropdownFactory.properties = {iconField:value};
-
         }
         public function get iconField():String{
             return _iconField;
@@ -54,34 +67,24 @@ package Controls
         public function get iconFunction():Function{
             return _iconFunction;
         }
-        
-        
         /**
         * when the index changes so should the icon 
         **/
         override public function set selectedIndex(value:int):void
         {
-            super.selectedIndex = value;
-            
+            super.selectedIndex = value;      
             if (value!=-1){ 
                 showIcon();
-            }
-            
+            }           
         }
-        
+       
         //set the icon to the selected item
-        private function showIcon():void
-        {
-            
-            var displayIcon:Image = itemToIcon(dataProvider[selectedIndex]);
-            
-            //remove the previous added object so that a new one can 
-            //be created. I would love to find a way to recycle this 
-            //displayIconObject??     
+        private function showIcon():void {
+          	var displayIcon:Class = itemToIcon(dataProvider[selectedIndex]);
             if (getChildByName("displayIconObject"))
             {
                 removeChild(getChildByName("displayIconObject"));
-            }
+            } 
 
             //if no icon then return
             if (!displayIcon)
@@ -92,23 +95,25 @@ package Controls
             }
             
             //add and size the obejct
-            var displayIconObject:Image = new Image();
-         
-            displayIconObject = displayIcon;
-            //displayIconObject.name="displayIconObject";
+            displayIconObject = new displayIcon();
+            displayIconObject.name="displayIconObject";
+           	
             addChild(DisplayObject(displayIconObject));
-            
+                
             // set the x based on corerradius
-            DisplayObject(displayIconObject).x = getStyle("cornerRadius");
+            
+            DisplayObject(displayIconObject).x = 1;//getStyle("cornerRadius");
             
             //set the y pos of the icon based on height
-            DisplayObject(displayIconObject).y = (height-DisplayObject(displayIconObject).height)/2;
+            DisplayObject(displayIconObject).y = 1;//(height-DisplayObject(displayIconObject).height)/2;
+            
+            DisplayObject(displayIconObject).scaleX *= 0.33;
+            DisplayObject(displayIconObject).scaleY *= 0.33;
+            
             
             //move the textinput to make room for the icon            
-            textInput.x=DisplayObject(displayIconObject).width+getStyle("cornerRadius");
-            
-                        
-        }
+            textInput.x=DisplayObject(displayIconObject).width ; //getStyle("cornerRadius");
+         }
                 
         /**
         * make sure to take into account the icon width 
@@ -116,7 +121,8 @@ package Controls
         override public function set measuredWidth(value:Number):void
         {
         	if (displayIconObject != null) {
-            	super.measuredWidth = value + (DisplayObject(displayIconObject).width+getStyle("cornerRadius"));
+           		 super.measuredWidth = value + (DisplayObject(displayIconObject).width)+15; // getStyle("cornerRadius"));
+            	//super.measuredWidth = value + (DisplayObject(displayIconObject).width); // getStyle("cornerRadius"));
         	}
         }
         
@@ -124,20 +130,18 @@ package Controls
         /**
         * grab the icon based on the data
         **/
-        public function itemToIcon(data:Object):Image
+        public function itemToIcon(data:Object):Class
         {
             if (data == null)
                 return null;
     
-            if (iconFunction != null) {
-            var i:Image = new Image();
-            i.source = data;
-                return iconFunction(i);
-            }
-            var iconClass:Image;
+            if (iconFunction != null)
+                return iconFunction(data);
+    
+            var iconClass:Class;
             var icon:*;
     
-            if (data is XML)
+            if (data is XMLDocument)
             {
                 try
                 {
@@ -166,9 +170,6 @@ package Controls
                 {
                     if (data[iconField] != null)
                     {
-                    	if (data[iconField] is Image)
-                            return data[iconField];
-                            
                         if (data[iconField] is Class)
                             return data[iconField];
     
@@ -189,8 +190,6 @@ package Controls
             }
     
             return null;
-        }
-        
-        
+        }   
     }
 }

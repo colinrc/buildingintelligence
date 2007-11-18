@@ -23,7 +23,7 @@
 			
 			private var undoObj:ObjectProxy;
 			[Bindable]
-			private var modifiedFlag:Boolean;
+			public var modifiedFlag:Boolean;
 			
 			private function init():void {
 				//undoObj = ObjectUtil.copy(dataHolder);
