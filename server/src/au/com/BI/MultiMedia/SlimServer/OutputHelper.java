@@ -14,6 +14,7 @@ import au.com.BI.Device.DeviceType;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseAlbums;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseArtists;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseGenres;
+import au.com.BI.MultiMedia.SlimServer.Commands.GetTracks;
 import au.com.BI.MultiMedia.SlimServer.Commands.Pause;
 import au.com.BI.MultiMedia.SlimServer.Commands.Play;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListCommand;
@@ -609,6 +610,90 @@ public class OutputHelper {
 
 				control.setPower(false);
 				
+				retCode = control.buildCommandString() + "\r\n";
+			} else if (command.getCommandCode().equalsIgnoreCase("getTracks")) {
+				/*
+				 * KEY is ignored
+				 * EXTRA is the page to be displayed
+				 * EXTRA2 is the number of items per page
+				 * EXTRA3 can be one of the following:
+				 *  - album
+				 *  - artist
+				 *  - genre
+				 *  - year
+				 * EXTRA4 is a search key
+				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="0" EXTRA2="20" EXTRA3="album:952" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="0" EXTRA2="20" EXTRA3="" EXTRA4="al" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="1" EXTRA2="20" EXTRA3="" EXTRA4="al" EXTRA5="" />
+				 */
+				GetTracks control = new GetTracks();
+				
+				if (!StringUtils.isNullOrEmpty(command.getExtra4Info())) {
+					control.setSearch(command.getExtra4Info());
+				}
+				
+				if (!StringUtils.isNullOrEmpty(command.getExtra2Info())) {
+					try {
+						control.setItemsPerResponse(Integer.parseInt(command.getExtra2Info()));
+					} catch (NumberFormatException e) {
+						logger.log(Level.WARNING,
+								"items per response found but is not an integer");
+					}
+				}
+				
+				if (!StringUtils.isNullOrEmpty(command.getExtraInfo())) {
+					try {
+						control.setStart(Integer.parseInt(command.getExtraInfo()) * control.getItemsPerResponse());
+					} catch (NumberFormatException e) {
+						logger.log(Level.WARNING,
+								"start found but is not an integer");
+					}
+				}
+				
+				String filter = command.getExtra3Info();
+				
+				if (!StringUtils.isNullOrEmpty(filter)) {
+					String[] filters = filter.split(";");
+					int positionOfColon = -1;
+					String tag = "";
+					String value = "";
+					
+					for (int i=0;i<filters.length;i++) {
+						positionOfColon = filters[i].indexOf(":");
+						tag = filters[i].substring(0,positionOfColon);
+						value = filters[i].substring(positionOfColon+1);
+						
+						if (tag.equalsIgnoreCase("year")) {
+							try {
+								control.setYear(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"year found but is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("genre")) {
+							try {
+								control.setGenre(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"genre found but is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("album")) {
+							try {
+								control.setAlbum(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"album found but is not an integer");
+							}
+						} else if (tag.equalsIgnoreCase("artist")) {
+							try {
+								control.setArtist(Integer.parseInt(value));
+							} catch (NumberFormatException e) {
+								logger.log(Level.WARNING,
+										"artist found but is not an integer");
+							}
+						}
+					}
+				}
 				retCode = control.buildCommandString() + "\r\n";
 			}
 		}

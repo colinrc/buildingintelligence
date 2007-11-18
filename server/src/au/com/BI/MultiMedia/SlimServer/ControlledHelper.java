@@ -18,9 +18,11 @@ import au.com.BI.MultiMedia.ArtistCommand;
 import au.com.BI.MultiMedia.Genre;
 import au.com.BI.MultiMedia.GenreCommand;
 import au.com.BI.MultiMedia.PlayerStatusCommand;
+import au.com.BI.MultiMedia.TrackCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseAlbumsReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseArtistsReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseGenresReply;
+import au.com.BI.MultiMedia.SlimServer.Commands.GetTracksReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayerStatusReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommandException;
@@ -120,6 +122,18 @@ public class ControlledHelper {
 			PlayerStatusCommand flashCommand = new PlayerStatusCommand();
 			flashCommand.setPlayerstatus(reply);
 			flashCommand.setDisplayName(device.getOutputKey());
+			flashCommand.setTargetDeviceID(-1);
+			flashCommand.setUser(model.currentUser);
+			flashCommand.setKey("CLIENT_SEND");
+			flashCommand.setCommand("PLAYER_STATUS");
+			sendCommand(cache,commandQueue,flashCommand);
+		} else if (_command.getClass().equals(GetTracksReply.class)) {
+			GetTracksReply reply = (GetTracksReply)_command;
+			
+			reply.setCoverArtUrl(model.getCoverArtUrl());
+			TrackCommand flashCommand = new TrackCommand();
+			flashCommand.setGetTracksReply(reply);
+			flashCommand.setDisplayName(model.getCurrentPlayer().getOutputKey());
 			flashCommand.setTargetDeviceID(-1);
 			flashCommand.setUser(model.currentUser);
 			flashCommand.setKey("CLIENT_SEND");

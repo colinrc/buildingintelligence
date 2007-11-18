@@ -47,6 +47,8 @@ public class SlimServerCommandFactory {
 					command = new SlimServerCommand(); // empty command
 				} else if (words[1].equals("status")) {
 					command = parsePlayerStatusReply(words);
+				} else if (words[0].equals("tracks")) {
+					command = parseGetTracksReply(words);
 				}
 			}
 			
@@ -473,6 +475,133 @@ public class SlimServerCommandFactory {
 		if (command.getTracks().size() != expectedCount) {
 			logger.log(Level.INFO,"Subscribe command expected " + expectedCount + " records but only received " + command.getTracks().size());
 		}
+		
+		return command;
+	}
+	
+	/**
+	 * Parse a player status message.
+	 * @param words
+	 * @return
+	 * @throws SlimServerCommandException
+	 */
+	public SlimServerCommand parseGetTracksReply(String[] words)
+		throws SlimServerCommandException {
+		GetTracksReply command = new GetTracksReply();
+		
+		int positionOfColon = 0;
+		String tag = "";
+		String value = "";
+		
+//		int expectedCount = 0;
+		// second should be the how many is returned
+//		try {
+//			expectedCount = Integer.parseInt(words[2]);
+//		} catch (NumberFormatException e) {
+//			throw new SlimServerCommandException("Expected an integer",e);
+//		}
+		
+		Track track = null;
+		for (int i=3; i < words.length; i++) {
+			String word = words[i];
+			try {
+				word = URLDecoder.decode(word,"UTF-8");
+			} catch (UnsupportedEncodingException e) {
+				throw new SlimServerCommandException("Cannot use UTF-8 encoding", e);
+			}
+			
+			positionOfColon = word.indexOf(":");
+			tag = word.substring(0,positionOfColon);
+			value = word.substring(positionOfColon+1);
+			
+			if (tag.equals("tag")) {
+				// ignore - this tells whomever is subscribed what tags to expect in the tracks
+			} else if (tag.equals("rescan")) {
+				if (value.equals("1")) {
+					command.setRescan(true);
+				} else {
+					command.setRescan(false);
+				}
+			} else if (tag.equals("search")) {
+				command.setSearch(value);
+			} else if (tag.equals("id")) {
+				if (track != null) {
+					command.getTracks().add(track);
+				}
+				track = new Track();
+				track.setId(value);
+			} else if (tag.equals("genre")) {
+				track.setGenre(value);
+			} else if (tag.equals("genre_id")) {
+				if (track != null) {
+					track.setGenreId(value);
+				}
+			} else if (tag.equals("artist")) {
+				track.setArtist(value);
+			} else if (tag.equals("artist_id")) {
+				if (track != null) {
+					track.setArtistId(value);
+				}
+			} else if (tag.equals("composer")) {
+				track.setComposer(value);
+			} else if (tag.equals("composer")) {
+				track.setComposer(value);
+			} else if (tag.equals("band")) {
+				track.setBand(value);
+			} else if (tag.equals("conductor")) {
+				track.setConductor(value);
+			} else if (tag.equals("album")) {
+				track.setAlbum(value);
+			} else if (tag.equals("album_id")) {
+				if (track != null) {
+					track.setAlbumId(value);
+				}
+			} else if (tag.equals("disc_number")) {
+				track.setDiscNumber(value);
+			} else if (tag.equals("disccount")) {
+				track.setDiscCount(value);
+			} else if (tag.equals("tracknum")) {
+				track.setTrackNumber(value);
+			} else if (tag.equals("year")) {
+				if (track != null) {
+					track.setYear(value);
+				}
+			} else if (tag.equals("bpm")) {
+				track.setBpm(value);
+			} else if (tag.equals("comment")) {
+				track.setComment(value);
+			} else if (tag.equals("type")) {
+				track.setType(value);
+			} else if (tag.equals("tagversion")) {
+				track.setTagVersion(value);
+			} else if (tag.equals("bitrate")) {
+				track.setBitRate(value);
+			} else if (tag.equals("filesize")) {
+				track.setFileSize(value);
+			} else if (tag.equals("drm")) {
+				track.setDrm(value);
+			} else if (tag.equals("coverart")) {
+				track.setCoverArt(value);
+			} else if (tag.equals("modificationTime")) {
+				track.setModificationTime(value);
+			} else if (tag.equals("url")) {
+				track.setUrl(value);
+			} else if (tag.equals("lyrics")) {
+				track.setLyrics(value);
+			} else if (tag.equals("remote")) {
+				track.setRemote(value);
+			} else if (tag.equals("title")) {
+				track.setTitle(value);
+			}
+		}
+		
+		if (track != null) {
+			command.getTracks().add(track);
+		}
+		
+//		if (command.getTracks().size() != expectedCount) {
+//			logger.log(Level.INFO,"Subscribe command expected " + expectedCount + " records but only received " + command.getTracks().size());
+//		}
 		
 		return command;
 	}
