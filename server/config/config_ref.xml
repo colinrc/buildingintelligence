@@ -362,6 +362,7 @@
                         <!-- PIRs - (IP) -->
                         <TOGGLE_INPUT ACTIVE="Y" KEY="01" NAME="Garage Input" DISPLAY_NAME="MEETING_PIR"/>
                         <TOGGLE_INPUT ACTIVE="Y" KEY="02" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT"/>
+                        <TOGGLE_INPUT ACTIVE="Y" KEY="03" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT"/>
                         <RAW_INTERFACE NAME="LIVING_LIGHT1" DISPLAY_NAME="LIVING_LIGHT1">
                                 <RAW_ITEMS CATALOGUE="Test List 1" PREFIX="01">
                                         <RAW COMMAND="on" CODE="all_fs"/>
@@ -376,10 +377,11 @@
                           Set alarms on this comfort when sent from this display, if more than 1 icon is used in flash,
                           list multiple ALARM entries, one for each DISPLAY_NAME
                         -->
-                        <ALARM KEY="" DISPLAY_NAME="ANYTHING"/>
-                        <ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell"/>
-                        <ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone"/>
-                        <ALERT KEY="" ACTIVE="Y" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange"/>
+                        <ALARM KEY="00" DISPLAY_NAME="ANYTHING"/>
+                        <ALERT KEY="-1" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell"/>
+                        <ALERT KEY="-2" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone"/>
+                        <ALERT KEY="-3" ACTIVE="Y" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange"/>
+                        
                         <ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="System"/>
                         <ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Phone Trouble" ALERT_TYPE="System"/>
                         <ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
@@ -408,7 +410,8 @@
                         <ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="User"/>
                         <ALERT KEY="17" DISPLAY_NAME="PHONE" MESSAGE="New Message for " ALERT_TYPE="User"/>
                         <!-- Special note; Alert 17 , is also used for system startup phone message reporting -->
-                        <!--  Correspond to AL command codes; ALERT_TYPE is the differentiation between various alert types -->
+                        
+                        <!--  Correspond to comfort AL command codes; ALERT_TYPE is the differentiation between various alert types -->
                         <ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Intruder Alarm" ALERT_TYPE="Alarm Type"/>
                         <ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="Alarm Type"/>
                         <ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Phone Line Trouble" ALERT_TYPE="Alarm Type"/>

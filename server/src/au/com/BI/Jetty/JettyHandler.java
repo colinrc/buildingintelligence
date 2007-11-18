@@ -17,6 +17,7 @@ import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.jetty.handler.DefaultHandler;
 import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.jetty.handler.HandlerCollection;
+import org.mortbay.jetty.security.BasicAuthenticator;
 import org.mortbay.jetty.security.Constraint;
 import org.mortbay.jetty.security.ConstraintMapping;
 import org.mortbay.jetty.security.HashUserRealm;
@@ -118,6 +119,8 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             webPass.setConfig("datafiles/realm.properties");
             server.addUserRealm(webPass);
 
+            //ELifeAuthenticator eLifeAuthenticator = new ELifeAuthenticator();
+            // Authenticator 
             // Call servlet directly
             ContextHandler updateContextHandler = new ContextHandler ();
 
@@ -184,11 +187,13 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     
     public SecurityHandler  addUserNameSecurity (ContextHandler updateContextHandler, UserRealm webPass) {
         // Servlet Security config
-    	ELifeSecurityHandler servletSec = new ELifeSecurityHandler();
+    	SecurityHandler servletSec = new SecurityHandler();
+
         
         servletSec.setServer(server);
         servletSec.setAuthMethod(Constraint.__BASIC_AUTH);
         servletSec.setUserRealm(webPass);
+
         ConstraintMapping servletConstraintMap = new ConstraintMapping();
         servletConstraintMap.setPathSpec("/*");
         Constraint servletConstraint = new Constraint();
@@ -198,6 +203,12 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         servletConstraintMap.setConstraint(servletConstraint);
         servletSec.setConstraintMappings(new ConstraintMapping[] {servletConstraintMap});
         servletSec.setHandler(updateContextHandler);
+        
+    	// ELifeAuthenticator eLifeAuthenticator = new ELifeAuthenticator ();
+        // BasicAuthenticator basicAuth = (BasicAuthenticator)servletSec.getAuthenticator();
+        // eLifeAuthenticator.setLocalAuth(basicAuth);
+        // servletSec.setAuthenticator(eLifeAuthenticator);
+        
         //servletSec.addHandler(updateContextHandler);
         return servletSec;
     }

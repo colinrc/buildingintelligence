@@ -6,6 +6,9 @@
     <library name="Groovy1.0-jsr06" systemlibrary="false">
         <archive javadoc="file:/Java/groovy-1.0-JSR-06/docs/xref/" path="/Java/groovy-1.0-JSR-06/embeddable/groovy-all-1.0-JSR-06.jar"/>
     </library>
+    <library name="Groovy1.1-RC2" systemlibrary="false">
+        <archive javadoc="file:/Java/groovy-1.1-rc-2/html/api/" path="/Java/groovy-1.1-rc-2/embeddable/groovy-all-1.1-rc-2.jar"/>
+    </library>
     <library name="JDom1.0" systemlibrary="false">
         <archive javadoc="file:/Java/jdom-1.0/build/apidocs/" path="/Java/jdom-1.0/build/jdom.jar" source="/Java/jdom-1.0/src/java"/>
         <archive path="/Java/jdom-1.0/lib/xml-apis.jar"/>
@@ -33,6 +36,16 @@
         <archive path="/Java/jetty-6.1.4/lib/ext/jetty-ajp-6.1.4.jar"/>
         <archive path="/Java/jetty-6.1.4/lib/ext/jetty-html-6.1.4.jar"/>
     </library>
+    <library name="Jetty6.1.6RC1" systemlibrary="false">
+        <archive javadoc="file:/Java/jetty-6.1.6rc1/javadoc/" path="/Java/jetty-6.1.6rc1/lib/jetty-6.1.6rc1.jar"/>
+        <archive path="/Java/jetty-6.1.6rc1/lib/jetty-util-6.1.6rc1.jar"/>
+        <archive path="/Java/jetty-6.1.6rc1/lib/servlet-api-2.5-6.1.6rc1.jar"/>
+        <archive path="/Java/jetty-6.1.6rc1/lib/ext/jetty-java5-threadpool-6.1.6rc1.jar"/>
+        <archive path="/Java/jetty-6.1.6rc1/lib/ext/jetty-servlet-tester-6.1.6rc1.jar"/>
+        <archive path="/Java/jetty-6.1.6rc1/lib/ext/jetty-sslengine-6.1.6rc1.jar"/>
+        <archive path="/Java/jetty-6.1.6rc1/lib/ext/jetty-ajp-6.1.6rc1.jar"/>
+        <archive path="/Java/jetty-6.1.6rc1/lib/ext/jetty-html-6.1.6rc1.jar"/>
+    </library>
     <library name="JRobin1.4.0" systemlibrary="false">
         <archive path="/Java/jrobin-1.4.0/lib/jrobin-1.4.0.jar"/>
         <archive path="/Java/jrobin-1.4.0/lib/snmp-1.3.jar"/>
@@ -57,6 +70,13 @@
         <archive path="/Java/quartz-1.5.2/lib/core/commons-logging.jar"/>
         <archive path="/Java/quartz-1.5.2/lib/core/commons-collections-3.1.jar"/>
         <archive path="/Java/quartz-1.5.2/lib/core/commons-logging-api.jar"/>
+    </library>
+    <library name="Quartz1.6.0" systemlibrary="false">
+        <archive javadoc="file:/Java/quartz-1.6.0/docs/api/" path="/Java/quartz-1.6.0/quartz-1.6.0.jar" source="/Java/quartz-1.6.0/src/java"/>
+        <archive path="/Java/quartz-1.6.0/lib/core/commons-collections-3.1.jar"/>
+        <archive path="/Java/quartz-1.6.0/lib/core/commons-logging-api.jar"/>
+        <archive path="/Java/quartz-1.6.0/lib/core/commons-logging.jar"/>
+        <archive path="/Java/quartz-1.6.0/lib/build/jta.jar"/>
     </library>
     <library name="Restlet 1.0b4" systemlibrary="false">
         <archive path="/Java/restlet-1.0rc4/lib/com.noelios.restlet.ext.httpclient_3.1.jar" source="/Java/restlet-1.0rc4/src/com.noelios.restlet.ext.httpclient_3.1"/>

@@ -1,3 +1,5 @@
+== 24/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b70.zip V1.6-b70]  [attachment:wiki:SoftwareReleases:eLife-1.6b70-libs.zip Libs-V1.6b70]  ==
+
 ''' CBUS '''
 
 Error messages improved for an illegal CBUS ramp rate. ticket [ticket:669]
@@ -11,6 +13,21 @@ Added logging methods, the info method will pay attention to logging active or i
   warn (String) 
   severe (String)
 }}}
+
+''' M1 '''
+
+Ensure M1 does not add commands to the queue unless they are fully formed; ensures log files are not filled by setups where the integrator has not properly configured
+the M1. Resolves enhancement [ticket:670]
+
+''' Slimserver '''
+
+Implemented ticket  [ticket:673], [ticket:662]
+
+''' Libraries '''
+
+Updated Jetty to 6.1.6RC1
+Updated Groovy to 1.1RC2
+Updated Quartz to 1.6.0
 
 == 24/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b69.zip V1.6-b69]  ==
 
