@@ -1,20 +1,27 @@
 ﻿package Objects.Client {
 	import Objects.*;
-	import flash.xml.XMLNode;
-	import mx.utils.ObjectProxy;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
+	
 	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
+	
+	import mx.collections.ArrayCollection;
+	import mx.utils.ObjectProxy;
 	
 	[Bindable("LoggingGroup")]
 	[RemoteClass(alias="elifeAdmin.objects.client.loggingGroup")]
 	public class LoggingGroup extends BaseElement {
-		private var name:String="";
-		private var icon:String="";
-		private var type:String="";
-		private var listenTo:String="";
-		private var controls:Array;
-		private var attributes:Array;
+		[Bindable]
+		public var name:String="";
+		[Bindable]
+		public var icon:String="";
+		[Bindable]
+		public var type:String="";
+		[Bindable]
+		public var listenTo:String="";
+		[Bindable]
+		public var controls:ArrayCollection;
+		[Bindable]
+		public var attributes:ArrayCollection;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -33,8 +40,8 @@
 			icon = input.readUTF() as String;
 			type = input.readUTF() as String;
 			listenTo = input.readUTF() as String;
-			controls = input.readObject()as Array;
-			attributes = input.readObject()as Array;
+			controls = input.readObject()as ArrayCollection;
+			attributes = input.readObject()as ArrayCollection;
 			
 		}
 		
@@ -121,8 +128,8 @@
 			icon = "";
 			listenTo = "";
 			type = "";
-			controls = new Array();
-			attributes = new Array();
+			controls = new ArrayCollection();
+			attributes = new ArrayCollection();
 			if (newData.name() == "group") {
 				
 				for (var child:int = 0; child < newData.attributes().length(); child++) {
@@ -141,12 +148,12 @@
 						type = newData.@type;
 						break;
 					default :
-						attributes.push({name:newData.attributes()[child].name(), value:newData.attributes()[child]});
+						attributes.addItem({name:newData.attributes()[child].name(), value:newData.attributes()[child]});
 						break;
 					}
 				}
 				for (var child:int =0; child< newData.children().length(); child++) {
-					controls.push(newData.children()[child]);
+					controls.addItem(newData.children()[child]);
 				}
 			} else {
 				trace("Error, received " + newData.name() + ", was expecting group");

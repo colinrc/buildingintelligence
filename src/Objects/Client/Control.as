@@ -11,19 +11,19 @@
 	[RemoteClass(alias="elifeAdmin.objects.client.control")]
 	public class Control extends BaseElement {
 		[Bindable]
-		public var type:String="";
+		public var myType:String="";
 		[Bindable]
 		public var rows:Array;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
-			output.writeUTF(type);
+			output.writeUTF(myType);
 			output.writeObject(rows);
 		}
 		
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
-			type = input.readUTF() as String;
+			myType = input.readUTF() as String;
 			rows = input.readObject()as Array;
 		}
 		
@@ -135,7 +135,7 @@
 		}
 		public override function toXML():XML {
 			var newNode = new XML("<control />");
-			newNode.@type = type;
+			newNode.@type = myType;
 			for (var row in rows) {
 				newNode.appendChild(rows[row]);
 			}
@@ -152,21 +152,21 @@
 			return "ClientControl";
 		}
 		public override function getName():String {
-			return "Control : " + type;
+			return "Control : " + myType;
 		}
 		public  function get Data():ObjectProxy {
 			var newNode = new XMLNode(1, "control");
-			newNode.@type = type;
+			newNode.@type = myType;
 			for (var row in rows) {
 				newNode.appendChild(rows[row]);
 			}
-			return {controlTypeData:newNode, type:type, dataObject:this};
+			return {controlTypeData:newNode, myType:type, dataObject:this};
 		}
 		public override function setXML(newData:XML):void {
 			rows = new Array();
 			
 			if (newData.name() == "control") {
-				type = newData.@type;
+				myType = newData.@type;
 				for (var child:int=0; child < newData.children().length(); child++) {
 					rows.push(newData.row[child]);
 				}
@@ -176,7 +176,7 @@
 		}
 		[Bindable]
 		public function set Data(newData:ObjectProxy):void {
-			newData.controlTypeData.attributes.type = newData.type;
+			newData.controlTypeData.attributes.type = newData.myType;
 			//rows = newData.rows;
 			setXML(newData.controlTypeData);
 		}

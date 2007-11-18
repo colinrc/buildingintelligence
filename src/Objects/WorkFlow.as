@@ -10,15 +10,16 @@
 	
 	//import mx.utils.Delegate;
 	import XMLloaders.XLoader;
-	import flash.xml.*;
+	
 	import flash.events.Event;
-	import mx.core.Application;
-	import mx.collections.ArrayCollection;
-	import utils.*;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
 	import flash.utils.IDataInput;
-	import flash.utils.describeType;
+	import flash.utils.IDataOutput;
+	import flash.utils.IExternalizable;
+	import flash.xml.*;
+	
+	import mx.collections.ArrayCollection;
+	
+	import utils.*;
 	
 	[Bindable("WorkFlow")]
 	[RemoteClass(alias="elifeAdmin.objects.server.workFlow")]
@@ -112,6 +113,16 @@
 			}
 			else if (clientObject.containsKey(key) == true) { 
 				return clientObject.getValue(key).object;
+			}
+			return null;
+		}
+		
+		public function getObjectWithNotExactKey(key:String):Object {
+			for (var i:int=0;i<clientList.length;i++) {
+				var st:String = clientList[i].key.split("_*_")[0];
+				if (st==key) {
+					return getObject(clientList[i].key);
+				}
 			}
 			return null;
 		}

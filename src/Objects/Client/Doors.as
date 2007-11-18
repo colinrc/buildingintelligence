@@ -1,16 +1,19 @@
 ﻿package Objects.Client {
 	import Objects.*;
-	import flash.xml.XMLNode;
-	import mx.utils.ObjectProxy;
-	import mx.core.Application;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
+	
 	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
+	
+	import mx.collections.ArrayCollection;
+	import mx.core.Application;
+	import mx.utils.ObjectProxy;
 	
 	[Bindable("Doors")]
 	[RemoteClass(alias="elifeAdmin.objects.client.doors")]
 	public class Doors extends BaseElement {
-		private var doors:Array;
+		[Bindable]
+		public var doors:ArrayCollection;
+		[Bindable]
 		public var room:Object;
 		
 		public override function writeExternal(output:IDataOutput):void {
@@ -21,7 +24,7 @@
 		
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
-			doors = input.readObject() as Array;
+			doors = input.readObject() as ArrayCollection;
 			room = input.readObject()as Object;
 		}
 		
@@ -83,10 +86,10 @@
 			return {doors:doors, dataObject:this, poly:room.poly, map:room.zone.map,background:room.zone.background};
 		}
 		public override function setXML(newData:XML):void {
-			doors = new Array();
+			doors = new ArrayCollection();
 			if(newData.name() == "doors"){
 				for (var child:int =0; child< newData.children().length(); child++) {
-					doors.push(newData.children()[child]);
+					doors.addItem(newData.children()[child]);
 				}
 			}
 			else{

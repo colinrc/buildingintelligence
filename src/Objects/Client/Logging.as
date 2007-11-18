@@ -38,7 +38,7 @@
 			for (var group in groups) {
 				if (groups[group].isValid()!="ok") {
 					flag = "warning";
-					appendValidationMsg("Group:" + groups[group].attributes["name"] + " is in error");
+					appendValidationMsg("Group:" + groups[group].name + " is in error");
 				}
 			}
 			return flag;

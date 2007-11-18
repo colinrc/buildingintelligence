@@ -1,4 +1,6 @@
 ﻿package Objects.Client {
+	import Forms.Client.KeyGroup_frm;
+	
 	import Objects.*;
 	
 	import flash.utils.IDataInput;
@@ -6,36 +8,35 @@
 	
 	import mx.collections.ArrayCollection;
 	import mx.utils.ObjectProxy;
-	import Forms.Client.KeyGroup_frm;
 	[Bindable("KeyGroup")]
 	[RemoteClass(alias="elifeAdmin.objects.client.keyGroup")]
 	public class KeyGroup extends BaseElement {
 		[Bindable]
 		public var name:String="";
 		[Bindable]
-		private var icon1:String="";
+		public var icon1:Object = new Object();
 		[Bindable]
-		private var icon2:String="";
+		public var icon2:Object = new Object();
 		[Bindable]
-		private var type:String="";
+		public var myType:String="";
 		[Bindable]
 		public var keys:ArrayCollection;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
 			output.writeUTF(name);
-			output.writeUTF(icon1);
-			output.writeUTF(icon2);
-			output.writeUTF(type);
+			output.writeObject(icon1);
+			output.writeObject(icon2);
+			output.writeUTF(myType);
 			output.writeObject(keys);
 		}
 		
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
 			name = input.readUTF() as String;
-			icon1 = input.readUTF() as String;
-			icon2 = input.readUTF() as String;
-			type = input.readUTF() as String;
+			icon1 = input.readObject() as Object;
+			icon2 = input.readObject() as Object;
+			myType = input.readUTF() as String;
 			keys = input.readObject()as ArrayCollection;
 		}
 		
@@ -94,18 +95,18 @@
 			if (name != "") {
 				newNode.@name = name;
 			}
-			if (icon1 != "") {
-				newNode.@icon1 = icon1;
+			if (icon1 != null&&icon1.name != "") {
+				newNode.@icon1 = icon1.name;
 			}
-			if (icon2 != "") {
-				newNode.@icon2 = icon2;
+			if (icon2!=null&&icon2.name != "") {
+				newNode.@icon2 = icon2.name;
 			}
-			if (type != "") {
-				newNode.@controlType = type;
+			if (myType != "") {
+				newNode.@controlType = myType;
 			}
 			for(var key in keys){
 				var newKeyNode:XML = new XML("<key />");
-				newKeyNode.@name = keys[key];
+				newKeyNode.@name = keys[key].name.toString();
 				newNode.appendChild(newKeyNode);
 			}
 			return newNode;
@@ -124,7 +125,7 @@
 			return "Key Group : " + name;
 		}
 		public  function get Data():ObjectProxy {
-			return {keys:keys, icon1:icon1, name:name, icon2:icon2, type:type, dataObject:this};
+			return {keys:keys, icon1:icon1, name:name, icon2:icon2, myType:myType, dataObject:this};
 		}
 		[Bindable]
 		public  function set Data(newData:ObjectProxy):void {
@@ -132,23 +133,23 @@
 			name = newData.name;
 			icon1 = newData.icon1;
 			icon2 = newData.icon2;
-			type = newData.type;
+			myType = newData.myType;
 		}
 		public override function setXML(newData:XML):void {
 			name = "";
-			icon1 = "";
-			icon2 = "";
-			type = "";
+			icon1 = new Object();
+			icon2 = new Object();
+			myType = "";
 			keys = new ArrayCollection();
 			
 			if (newData.name() == "keygroup") {
 				name = newData.@name;
-				icon1 = newData.@icon1;
-				icon2 = newData.@icon2;
-				type = newData.@controlType;
+				icon1.name = newData.@icon1;
+				icon2.name = newData.@icon2;
+				myType = newData.@controlType;
 				
 				for (var child:int =0; child< newData.children().length(); child++) {
-					keys.addItem(newData.children()[child].@name);
+					keys.addItem({name:newData.children()[child].@name.toString()});
 				}
 			} else {
 				trace("Error, received " + newData.name() + ", was expecting keygroup");

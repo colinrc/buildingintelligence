@@ -1,21 +1,28 @@
 ﻿package Objects.Client {
 	import Objects.*;
-	import flash.xml.XMLNode;
-	import mx.utils.ObjectProxy;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
+	
 	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
+	
+	import mx.utils.ObjectProxy;
 	
 	[Bindable("Room")]
 	[RemoteClass(alias="elifeAdmin.objects.client.room")]
 	public class Room extends BaseElement {
-		private var name:String="";
-		private var poly:String="";
-		private var switchZone:String="";
-		private var window:Window;
-		private var doors:Doors;
-		private var alerts:AlertGroups;
-		private var zone:Zone;
+		[Bindable]
+		public var name:String="";
+		[Bindable]
+		public var poly:String="";
+		[Bindable]
+		public var switchZone:String="";
+		[Bindable]
+		public var window:Window;
+		[Bindable]
+		public var doors:Doors;
+		[Bindable]
+		public var alerts:AlertGroups;
+		[Bindable]
+		public var zone:Zone;
 		public function Room(){
 			name = "";
 			poly = "";
@@ -82,6 +89,12 @@
 		public override function getForm():String {
 			return "forms.project.client.room";
 		}
+		
+		public function getClassForm():Class {
+			var className:Class = Forms.Client.Room_frm;
+			return className;		
+		}
+		
 		public override function toXML():XML {
 			var newNode = new XML("<room />");
 			if (name != "") {
@@ -133,15 +146,16 @@
 				
 				for (var child:int =0; child< newData.children().length(); child++) {
 					var childRec:XML = newData.children()[child];
-					switch (childRec.name()) {
+					var sw:String = childRec.name();
+					switch (sw) {
 					case "window" :
-						window.setXML(newData.childRec);
+						window.setXML(childRec);
 						break;
 					case "doors" :
-						doors.setXML(newData.childRec);
+						doors.setXML(childRec);
 						break;
 					case "alerts" :
-						tempAlertGroups.appendChild(newData.childRec);
+						tempAlertGroups.appendChild(childRec);
 						break;
 					}
 				}

@@ -1,16 +1,21 @@
 ﻿package Objects.Client {
+	import Forms.Client.Property_frm;
+	
 	import Objects.*;
+	
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
 	import flash.xml.XMLNode;
+	
+	import mx.collections.ArrayCollection;
 	import mx.core.Application;
 	import mx.utils.ObjectProxy;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
-	import flash.utils.IDataInput;
 	
 	[Bindable("Property")]
 	[RemoteClass(alias="elifeAdmin.objects.client.property")]
 	public class Property extends BaseElement {
-		private var zones:Array;
+		[Bindable]
+		public var zones:ArrayCollection;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -19,7 +24,7 @@
 		
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
-			zones = input.readObject()as Array;
+			zones = input.readObject()as ArrayCollection;
 		}
 		
 		public override function isValid():String {
@@ -34,6 +39,12 @@
 		public override function getForm():String {
 			return "forms.project.client.property";
 		}
+		
+		public function getClassForm():Class {
+			var className:Class = Forms.Client.Property_frm;
+			return className;		
+		}
+		
 		public override function toXML():XML {
 			var newNode:XML = new XML("<property />");
 			for (var zone:int = 0; zone < zones.length; zone++) {
@@ -62,14 +73,14 @@
 			return {zones:zones, dataObject:this};
 		}
 		public override function setXML(newData:XML):void {
-			zones = new Array();
+			zones = new ArrayCollection();
 			if (newData.name() == "property") {
 				for (var child:int = 0; child < newData.children().length(); child++) {
 					var newZone:Zone = new Zone();
 					var zoneXML:XML = newData.zone[child];
 					newZone.setXML(zoneXML);
 					newZone.id = mx.core.Application.application.formDepth++;
-					zones.push(newZone);
+					zones.addItem(newZone);
 				}
 			} else {
 				trace("Error, found " + newData.name() + ", was expecting property");
@@ -94,17 +105,16 @@
 					}
 				}
 				if (found == false) {
-					zones[zone].deleteSelf();
-					zones.splice(parseInt(zone), 1);
+					zones.removeItemAt(zone);
 				}
 			} 
 			for (var newZone in newZones) {
 				var newNode = new XMLNode(1, "zone");
 				newNode.attributes["name"] = newZones[newZone].name;
 				var newZone = new Objects.Client.Zone();
-				newZone.id = _global.formDepth++;
+				newZone.id = Application.application.formDepth++;
 				newZone.setXML(newNode);
-				zones.push(newZone);
+				zones.addItem(newZone);
 			}
 			//sort according to desired order
 			newZones = new Array();
@@ -116,14 +126,14 @@
 				}
 			}
 			zones = newZones;
-			var treeLength = treeNode.childNodes.length;
+			var treeLength = treeNode.childObject.length;
 			for(var child = treeLength-1; child > -1;child--){
-				treeNode.childNodes[child].removeNode();
+				treeNode.childObject[child].removeNode();
 			}
 			for(var zone = 0; zone<zones.length;zone++){
 				treeNode.appendChild(zones[zone].toTree());
 			}
-			_global.left_tree.setIsOpen(treeNode, true);
+			//refresh tree
 		}
 		public override function getUsedKeys():Array{
 			usedKeys = new Array();

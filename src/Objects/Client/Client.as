@@ -179,6 +179,12 @@
 		public function get2Name():String {
 			return "Overrides";
 		}
+		public function getOtherNames():ArrayCollection {
+			var tabNames:ArrayCollection = new ArrayCollection();
+			tabNames.addItem(getName());
+			tabNames.addItem("Overrides");
+			return tabNames;
+		}
 		public  function get Data():ObjectProxy{
 			var ob:ObjectProxy = new ObjectProxy({attributes:attributes, dataObject:this, adminPin:adminPin, applicationXML:applicationXML, integratorHtml:integratorHtml});
 			return ob;

@@ -1,16 +1,18 @@
 ﻿package Objects.Client {
 	import Objects.*;
-	import flash.xml.XMLNode;
+	
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
+	
+	import mx.collections.ArrayCollection;
 	import mx.core.Application;
 	import mx.utils.ObjectProxy;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
-	import flash.utils.IDataInput;
 	
 	[Bindable("Arbitrary")]
 	[RemoteClass(alias="elifeAdmin.objects.client.arbitrary")]
 	public class Arbitrary extends BaseElement {
-		private var items:Array;
+		[Bindable]
+		public var items:ArrayCollection;
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -19,7 +21,7 @@
 		
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
-			items = input.readObject()as Array;
+			items = input.readObject()as ArrayCollection;
 		}
 		
 		public override function isValid():String {
@@ -142,6 +144,12 @@
 		public override function getForm():String {
 			return "forms.project.client.arbitrary";
 		}
+		
+		public function getClassForm():Class {
+			var className:Class = Forms.Client.Arbitrary_frm;
+			return className;		
+		}
+		
 		public override function toXML():XML {
 			var newNode:XML = new XML("<arbitrary />");
 			for(var item:int in items) {
@@ -169,10 +177,10 @@
 			return items;
 		}
 		public override function setXML(newData:XML):void{
-			items = new Array();
+			items = new ArrayCollection();
 			if(newData.name() == "arbitrary"){
 				for (var child:int=0; child< newData.children().length();child++) {
-					items.push(newData.children()[child]);
+					items.addItem(newData.children()[child]);
 				}
 			}
 			else{

@@ -1,22 +1,31 @@
 ﻿package Objects.Client {
 	import Objects.*;
-	import flash.xml.XMLNode;
-	import mx.utils.ObjectProxy;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
+	
 	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
+	
+	import mx.collections.ArrayCollection;
+	import mx.utils.ObjectProxy;
 	
 	[Bindable("Panel")]
 	[RemoteClass(alias="elifeAdmin.objects.client.panel")]
 	public class Panel extends BaseElement {
-		private var controls:Array;
-		private var name:String="";
-		private var x_pos:String="";
-		private var y_pos:String="";
-		private var height:String="";
-		private var width:String="";
-		private var attributes:Array;
-		private var attributeGroups:Array = ["Window"];
+		[Bindable]
+		public var controls:ArrayCollection;
+		[Bindable]
+		public var name:String="";
+		[Bindable]
+		public var x_pos:String="";
+		[Bindable]
+		public var y_pos:String="";
+		[Bindable]
+		public var height:String="";
+		[Bindable]
+		public var width:String="";
+		[Bindable]
+		public var attributes:ArrayCollection;
+		[Bindable]
+		public var attributeGroups:ArrayCollection = new ArrayCollection(["Window"]);
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -32,14 +41,14 @@
 		
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
-			controls = input.readObject()as Array;
+			controls = input.readObject()as ArrayCollection;
 			name = input.readUTF() as String;
 			x_pos = input.readUTF() as String;
 			y_pos = input.readUTF() as String;
 			height = input.readUTF() as String;
 			width = input.readUTF() as String;
-			attributes = input.readObject()as Array;
-			attributeGroups = input.readObject()as Array;
+			attributes = input.readObject()as ArrayCollection;
+			attributeGroups = input.readObject()as ArrayCollection;
 		}
 		
 		public function deleteSelf():void {
@@ -96,14 +105,14 @@
 		public override function getForm():String {
 			return "forms.project.client.panel";
 		}
-		public function getAttributes():Array {
+		public function getAttributes():ArrayCollection {
 			return attributes;
 		}
-		public function setAttributes(newAttributes:Array) {
+		public function setAttributes(newAttributes:ArrayCollection) {
 			attributes = newAttributes;
 		}
 		public override function toXML():XML {
-			var newNode = new XML("<panel />");
+			var newNode:XML = new XML("<panel />");
 			for (var attribute in attributes) {
 				newNode.@[attributes[attribute].name] = attributes[attribute].value;
 			}
@@ -144,7 +153,7 @@
 			return {controls:controls, name:name, x_pos:x_pos, y_pos:y_pos, width:width, height:height, dataObject:this};
 		}
 		public override function setXML(newData:XML):void {
-			attributes = new Array();
+			attributes = new ArrayCollection();
 			name = "";
 			x_pos = "";
 			y_pos = "";
@@ -170,16 +179,16 @@
 						height = newData.@height;
 						break;
 					default :
-						attributes.push({name:newData.attributes()[child].name(), value:newData.attributes()[child]});
+						attributes.addItem({name:newData.attributes()[child].name(), value:newData.attributes()[child]});
 						break;
 					}
 				}
-				controls = new Array();
-				for (var child in newData.childNodes) {
-					controls.push(newData.childNodes[child]);
+				controls = new ArrayCollection();
+				for (var child in newData.children()) {
+					controls.addItem(newData.children()[child]);
 				}
 			} else {
-				trace("Error, found " + newData.nodeName + ", was expecting panel");
+				trace("Error, found " + newData.name() + ", was expecting panel");
 			}
 		}
 		[Bindable]

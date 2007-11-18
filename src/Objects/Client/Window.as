@@ -1,18 +1,27 @@
 ﻿package Objects.Client {
 	import Objects.*;
-	import flash.xml.XMLNode;
+	
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
+	
+	import mx.collections.ArrayCollection;
 	import mx.core.Application;
 	import mx.utils.ObjectProxy;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
-	import flash.utils.IDataInput;
 	
 	[Bindable("Window")]
 	[RemoteClass(alias="elifeAdmin.objects.client.window")]
 	public class Window extends BaseElement {
-		private var tabs:Array;
-		private var attributes:Array;
-		private var attributeGroups:Array = ["window", "tabs"];
+		[Bindable]
+		public var tabs:ArrayCollection;
+		[Bindable]
+		public var attributes:ArrayCollection;
+		[Bindable]
+		public var attributeGroups:ArrayCollection = new ArrayCollection();
+		
+		public function Window() {
+			attributeGroups.addItem("window");
+			attributeGroups.addItem("tabs");
+		}
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -23,9 +32,9 @@
 		
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
-			tabs = input.readObject()as Array;
-			attributes = input.readObject()as Array;
-			attributeGroups = input.readObject()as Array;
+			tabs = input.readObject()as ArrayCollection;
+			attributes = input.readObject()as ArrayCollection;
+			attributeGroups = input.readObject()as ArrayCollection;
 		}
 		
 		public override function isValid():String {
@@ -78,24 +87,24 @@
 		public  function get Data():ObjectProxy {
 			return {tabs:tabs, dataObject:this};
 		}
-		public function getAttributes():Array {
+		public function getAttributes():ArrayCollection {
 			return attributes;
 		}
-		public function setAttributes(newAttributes:Array) {
+		public function setAttributes(newAttributes:ArrayCollection) {
 			attributes = newAttributes;
 		}
 		public override function setXML(newData:XML):void {
-			attributes = new Array();
+			attributes = new ArrayCollection();
 			if (newData.name() == "window") {
 				for (var child:int = 0; child < newData.attributes().length(); child++) {
-					attributes.push({name:newData.attributes()[child].name(), value:newData.attributes()[chlid]});
+					attributes.addItem({name:newData.attributes()[child].name(), value:newData.attributes()[chlid]});
 				}
-				tabs = new Array();
+				tabs = new ArrayCollection();
 				for (var child:int =0; child< newData.children().length(); child++) {		
 					var newTab:Tab = new Tab();
 					newTab.setXML(newData.children()[child]);
 					newTab.id = Application.application.formDepth++;
-					tabs.push(newTab);
+					tabs.addItem(newTab);
 				}
 			} else {
 				trace("Error, found " + newData.name() + ", was expecting window");
@@ -105,11 +114,11 @@
 		public  function set Data(newData:ObjectProxy):void {
 			//_global.left_tree.setIsOpen(treeNode, false);
 			//process new tabs
-			var newTabs = new Array();
+			var newTabs:ArrayCollection = new ArrayCollection();
 			for (var index in newData.tabs) {
 				if (newData.tabs[index].id == undefined) {
-					newData.tabs[index].id = _global.formDepth++;
-					newTabs.push({name:newData.tabs[index].name, id:newData.tabs[index].id});
+					newData.tabs[index].id = Application.application.formDepth++;
+					newTabs.addItem({name:newData.tabs[index].name, id:newData.tabs[index].id});
 				}
 			}
 			for (var tab in tabs) {
@@ -122,37 +131,36 @@
 					}
 				}
 				if (found == false) {
-					tabs[tab].deleteSelf();
-					tabs.splice(parseInt(tab), 1);
+					tabs.removeItemAt(tab);
 				}
 			}
 			for (var newTab in newTabs) {
-				var newNode = new XMLNode(1, "tab");
-				newNode.attributes["name"] = newTabs[newTab].name;
-				var Tab = new Objects.Client.Tab();
-				Tab.setXML(newNode);
-				Tab.id = newTabs[newTab].id;
-				tabs.push(Tab);
+				var newNode:XML = new XML("<tab/>");
+				newNode.@name = newTabs[newTab].name;
+				var tab:Tab = new Objects.Client.Tab();
+				tab.setXML(newNode);
+				tab.id = newTabs[newTab].id;
+				tabs.addItem(tab);
 			}
 			//sort according to desired order
-			newTabs = new Array();
+			newTabs = new ArrayCollection();
 			for (var newTab = 0; newTab < newData.tabs.length; newTab++) {			
 				for (var tab = 0; tab < tabs.length; tab++) {			
 					if (newData.tabs[newTab].id == tabs[tab].id) {
-						newTabs.push(tabs[tab]);
+						newTabs.addItem(tabs[tab]);
 						break;
 					}
 				}
 			}
 			tabs = newTabs;
-			var treeLength = treeNode.childNodes.length;
+			var treeLength:int = treeNode.childObject.length;
 			for(var child = treeLength-1; child > -1;child--){
-				treeNode.childNodes[child].removeNode();
+				treeNode.childObject[child].removeNode();
 			}
 			for(var tab = 0; tab<tabs.length;tab++){
 				treeNode.appendChild(tabs[tab].toTree());
 			}		
-			_global.left_tree.setIsOpen(treeNode, true);
+			
 		}
 		public override function getUsedKeys():Array{
 			usedKeys = new Array();

@@ -76,7 +76,7 @@
 					var newControl:Control = new Control();
 					newControl.setXML(newData.control[child]);
 					newControl.id = mx.core.Application.application.formDepth++;
-					newControl.type = newData.control[child].@type;
+					newControl.myType = newData.control[child].@type;
 					controls.addItem(newControl);
 				}
 			} else {

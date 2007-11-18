@@ -1,24 +1,39 @@
 ﻿package Objects.Client {
+	import Forms.Client.Arbitrary_frm;
+	import Forms.Client.Panels_frm;
+	import Forms.Client.Rooms_frm;
+	import Forms.Client.Zone_frm;
+	
 	import Objects.*;
-	import flash.xml.XMLNode;
+	
+	import flash.utils.IDataInput;
+	import flash.utils.IDataOutput;
+	
+	import mx.collections.ArrayCollection;
 	import mx.core.Application;
 	import mx.utils.ObjectProxy;
-	import flash.utils.IExternalizable;
-	import flash.utils.IDataOutput;
-	import flash.utils.IDataInput;
 	
 	[Bindable("Zone")]
 	[RemoteClass(alias="elifeAdmin.objects.client.zone")]
 	public class Zone extends BaseElement {
-		private var rooms:Array;
-		private var panels:Array;
-		private var arbitrary:Arbitrary;
-		private var name:String="";
+		[Bindable]
+		public var rooms:ArrayCollection;
+		[Bindable]
+		public var panels:ArrayCollection;
+		[Bindable]
+		public var arbitrary:Arbitrary;
+		[Bindable]
+		public var name:String="";
+		[Bindable]
 		public var map:String="";
+		[Bindable]
 		public var background:String="";
-		private var cycle:String="";
-		private var alignment:String="";
-		private var hideFromList:String="";
+		[Bindable]
+		public var cycle:String="";
+		[Bindable]
+		public var alignment:String="";
+		[Bindable]
+		public var hideFromList:String="";
 		
 		public override function writeExternal(output:IDataOutput):void {
 			super.writeExternal(output);
@@ -35,8 +50,8 @@
 		
 		public override function readExternal(input:IDataInput):void {
 			super.readExternal(input);
-			rooms = input.readObject()as Array;
-			panels = input.readObject()as Array;
+			rooms = input.readObject()as ArrayCollection;
+			panels = input.readObject()as ArrayCollection;
 			arbitrary = input.readObject()as Arbitrary;
 			name = input.readUTF() as String;
 			map = input.readUTF() as String;
@@ -90,6 +105,22 @@
 		}
 		public override function getForm():String {
 			return "forms.project.client.zone";
+		}
+		
+		public function getClassForm():Array {
+			var className:Class = Forms.Client.Zone_frm;
+			var class2Name:Class = Forms.Client.Rooms_frm;
+			var class3Name:Class = Forms.Client.Arbitrary_frm;
+			var class4Name:Class = Forms.Client.Panels_frm;	
+			return [className,class2Name,class3Name,class4Name];				
+		}
+		public function getOtherNames():ArrayCollection {
+			var tabNames:ArrayCollection = new ArrayCollection();
+			tabNames.addItem(getName());
+			tabNames.addItem("Rooms");
+			tabNames.addItem(arbitrary.getName());
+			tabNames.addItem("Panels");
+			return tabNames;
 		}
 		public override function toXML():XML {
 			var newNode:XML = new XML("<zone />");
@@ -160,8 +191,8 @@
 			arbitrary.setData({items:items});
 		}
 		public override function setXML(newData:XML):void {
-			rooms = new Array();
-			panels = new Array();
+			rooms = new ArrayCollection();
+			panels = new ArrayCollection();
 			name = "";
 			map = "";
 			background = "";
@@ -188,7 +219,7 @@
 					newRoom.setXML(myRooms.room[room]);
 					newRoom.id = mx.core.Application.application.formDepth++;
 					newRoom.setZone(this);
-					rooms.push(newRoom);
+					rooms.addItem(newRoom);
 				}
 				
 				var myPanels:XML = newData.panels[0];
@@ -196,14 +227,13 @@
 					var newPanel:Panel = new Panel();
 					newPanel.setXML(myPanels.panel[panel]);
 					newPanel.id = mx.core.Application.application.formDepth++;						
-					panels.push(newPanel);
+					panels.addItem(newPanel);
 				}
 			} else {
 				trace("Error, found "+newData.name()+", was expecting zone");
 			}
 		}
 		public function setPanels(newData:Object):void {
-			_global.left_tree.setIsOpen(treeNode, false);		
 			var newPanels:Array = new Array();
 			for (var index in newData.panels) {
 				if (newData.panels[index].id == undefined) {
@@ -220,23 +250,22 @@
 					}
 				}
 				if (found == false) {
-					panels[panel].deleteSelf();
-					panels.splice(parseInt(panel), 1);
+					panels.removeItemAt(panel);
 				}
 			}
 			for (var newPanel in newPanels) {
-				var newNode:XMLNode = new XMLNode(1, "panel");
+				var newNode:XML = new XML("<panel/>");
 				newNode.@name = newPanels[newPanel].name;
-				var newPanel = new Objects.Client.Panel();
+				var newPanel:Panel = new Objects.Client.Panel();
 				newPanel.setXML(newNode);
-				newPanel.id = _global.formDepth++;			
+				newPanel.id = Application.application.formDepth++;			
 				treeNode.appendChild(newPanel.toTree());
-				panels.push(newPanel);
+				panels.addItem(newPanel);
 			}
-			_global.left_tree.setIsOpen(treeNode, true);				
+			//open tree		
 		}
 		public function setRooms(newData:Object):void {
-			_global.left_tree.setIsOpen(treeNode, false);		
+			//_global.left_tree.setIsOpen(treeNode, false);		
 			var newRooms = new Array();
 			for (var index in newData.rooms) {
 				if (newData.rooms[index].id == undefined) {
@@ -252,21 +281,20 @@
 					}
 				}
 				if (found == false) {
-					rooms[room].deleteSelf();
-					rooms.splice(parseInt(room), 1);
+					rooms.removeItemAt(room);
 				}
 			}
 			for (var newRoom in newRooms) {
-				var newNode = new XMLNode(1, "room");
+				var newNode:XML = new XML("<room/>");
 				newNode.@name = newRooms[newRoom].name;
 				var newRoom = new Objects.Client.Room();
 				newRoom.setXML(newNode);		
-				newRoom.id = _global.formDepth++;	
+				newRoom.id = Application.application.formDepth++;	
 				newRoom.setZone(this);
 				treeNode.appendChild(newRoom.toTree());			
-				rooms.push(newRoom);
+				rooms.addItem(newRoom);
 			}		
-			_global.left_tree.setIsOpen(treeNode, true);			
+			//_global.left_tree.setIsOpen(treeNode, true);			
 		}
 		[Bindable]
 		public  function set Data(newData:ObjectProxy):void {

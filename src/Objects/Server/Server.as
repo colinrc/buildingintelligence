@@ -195,7 +195,12 @@
 		 public function get2Name():String {
 			return "Client Designs";
 		}
-		
+		public function getOtherNames():ArrayCollection {
+			var tabNames:ArrayCollection = new ArrayCollection();
+			tabNames.addItem(getName());
+			tabNames.addItem("Client Designs");
+			return tabNames;
+		}
 		public  function get Data():ObjectProxy {
 			var ob:ObjectProxy = new ObjectProxy({description:description, devices:devices, dataObject:this, clients:clients});
 			return ob;
