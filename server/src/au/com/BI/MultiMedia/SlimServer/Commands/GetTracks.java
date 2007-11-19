@@ -142,6 +142,9 @@ public class GetTracks extends SlimServerCommand {
 		
 		if (album != -1) {
 			commandString += " album_id:" + album;
+			
+			// if there is an album filter then sort by the track number.
+			this.setSortByTitle(false);
 		}
 		
 		if (artist != -1) {
