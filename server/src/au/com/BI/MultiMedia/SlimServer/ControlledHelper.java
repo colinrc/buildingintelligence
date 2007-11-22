@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import au.com.BI.AlarmLogging.AlarmLogging;
+import au.com.BI.Alert.AlertCommand;
 import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
@@ -24,9 +25,11 @@ import au.com.BI.MultiMedia.SlimServer.Commands.BrowseArtistsReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseGenresReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.GetTracksReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayerStatusReply;
+import au.com.BI.MultiMedia.SlimServer.Commands.PowerReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommandException;
 import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommandFactory;
+import au.com.BI.Util.StringUtils;
 
 public class ControlledHelper {
 	protected Logger logger;
@@ -118,6 +121,15 @@ public class ControlledHelper {
 			DeviceType device = model.getConfigHelper().getControlledItem(reply.getPlayerId()); 
 			reply.setPlayerKey(device.getOutputKey());
 			reply.setCoverArtUrl(model.getCoverArtUrl());
+			String powerString = "";
+			
+			if (!StringUtils.isNullOrEmpty(reply.getPower())) {
+				if (reply.getPower().equals("0")) {
+					powerString = "OFF";
+				} else {
+					powerString = "ON";
+				}
+			}
 			
 			PlayerStatusCommand flashCommand = new PlayerStatusCommand();
 			flashCommand.setPlayerstatus(reply);
@@ -127,6 +139,27 @@ public class ControlledHelper {
 			flashCommand.setKey("CLIENT_SEND");
 			flashCommand.setCommand("PLAYER_STATUS");
 			sendCommand(cache,commandQueue,flashCommand);
+			
+			GetTracksReply getTracksReply = new GetTracksReply();
+			getTracksReply.setTracks(reply.getTracks());
+			getTracksReply.setCoverArtUrl(model.getCoverArtUrl());
+			TrackCommand trackCommand = new TrackCommand();
+			trackCommand.setGetTracksReply(getTracksReply);
+			trackCommand.setDisplayName(device.getOutputKey());
+			trackCommand.setTargetDeviceID(-1);
+			trackCommand.setUser(model.currentUser);
+			trackCommand.setKey("CLIENT_SEND");
+			trackCommand.setCommand("PLAYER_STATUS");
+			sendCommand(cache,commandQueue,trackCommand);
+			
+			CommandInterface flashCommand2 = new AlertCommand();
+			flashCommand2.setDisplayName(device.getOutputKey());
+			flashCommand2.setCommand(powerString);
+			flashCommand2.setTargetDeviceID(-1);
+			flashCommand2.setUser(model.currentUser);
+			flashCommand2.setKey ("CLIENT_SEND");
+			sendCommand(cache, commandQueue, flashCommand2);
+			
 		} else if (_command.getClass().equals(GetTracksReply.class)) {
 			GetTracksReply reply = (GetTracksReply)_command;
 			
@@ -139,6 +172,17 @@ public class ControlledHelper {
 			flashCommand.setKey("CLIENT_SEND");
 			flashCommand.setCommand("PLAYER_STATUS");
 			sendCommand(cache,commandQueue,flashCommand);
+		} else if (_command.getClass().equals(PowerReply.class)) {
+			PowerReply reply = (PowerReply)_command;
+			DeviceType device = model.getConfigHelper().getControlledItem(reply.getPlayerId());
+			
+			CommandInterface flashCommand = new AlertCommand();
+			flashCommand.setDisplayName(device.getOutputKey());
+			flashCommand.setCommand(reply.getPowerString());
+			flashCommand.setTargetDeviceID(-1);
+			flashCommand.setUser(model.currentUser);
+			flashCommand.setKey ("CLIENT_SEND");
+			sendCommand(cache, commandQueue, flashCommand);
 		}
 	}
 	

@@ -49,6 +49,8 @@ public class SlimServerCommandFactory {
 					command = parsePlayerStatusReply(words);
 				} else if (words[0].equals("tracks")) {
 					command = parseGetTracksReply(words);
+				} else if (words[1].equals("power")) {
+					command = parsePowerReply(words);
 				}
 			}
 			
@@ -602,6 +604,37 @@ public class SlimServerCommandFactory {
 //		if (command.getTracks().size() != expectedCount) {
 //			logger.log(Level.INFO,"Subscribe command expected " + expectedCount + " records but only received " + command.getTracks().size());
 //		}
+		
+		return command;
+	}
+	
+	/**
+	 * Parse a player status message.
+	 * @param words
+	 * @return
+	 * @throws SlimServerCommandException
+	 */
+	public SlimServerCommand parsePowerReply(String[] words)
+		throws SlimServerCommandException {
+		PowerReply command = new PowerReply();
+		
+		try {
+			command.setPlayerId(URLDecoder.decode(words[0], "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			logger.log(Level.INFO, "UTF-8 not supported");
+		}
+		
+		if (!StringUtils.isNullOrEmpty(words[2])) {
+			if (words[2].equals("0")) {
+				command.setPower(false);
+			} else if (words[2].equals("1")) {
+				command.setPower(true);
+			} else {
+				throw new SlimServerCommandException("power command did not specify a 0 or 1 value");
+			}
+		} else {
+			throw new SlimServerCommandException("power command did not specify a 0 or 1 value");
+		}
 		
 		return command;
 	}

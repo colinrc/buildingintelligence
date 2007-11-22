@@ -20,6 +20,7 @@ import au.com.BI.MultiMedia.SlimServer.Commands.Play;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListControl;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListIndex;
+import au.com.BI.MultiMedia.SlimServer.Commands.PlayerStatus;
 import au.com.BI.MultiMedia.SlimServer.Commands.Power;
 import au.com.BI.MultiMedia.SlimServer.Commands.Stop;
 import au.com.BI.MultiMedia.SlimServer.Commands.Volume;
@@ -622,9 +623,15 @@ public class OutputHelper {
 				 *  - genre
 				 *  - year
 				 * EXTRA4 is a search key
+				 * EXTRA5 is a sort - either tracknum, title, artist, album, year or genre
 				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="0" EXTRA2="20" EXTRA3="album:952" EXTRA4="" EXTRA5="" />
 				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="0" EXTRA2="20" EXTRA3="" EXTRA4="al" EXTRA5="" />
 				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="1" EXTRA2="20" EXTRA3="" EXTRA4="al" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="0" EXTRA2="20" EXTRA3="album:659" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="0" EXTRA2="20" EXTRA3="" EXTRA4="moby" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="0" EXTRA2="20" EXTRA3="artist:1490" EXTRA4="" EXTRA5="" />
+				 * 
+				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="0" EXTRA2="20" EXTRA3="currentplaylist" EXTRA4="" EXTRA5="" />
 				 */
 				GetTracks control = new GetTracks();
 				
@@ -651,6 +658,7 @@ public class OutputHelper {
 				}
 				
 				String filter = command.getExtra3Info();
+				boolean getCurrentTracks = false;
 				
 				if (!StringUtils.isNullOrEmpty(filter)) {
 					String[] filters = filter.split(";");
@@ -660,8 +668,14 @@ public class OutputHelper {
 					
 					for (int i=0;i<filters.length;i++) {
 						positionOfColon = filters[i].indexOf(":");
-						tag = filters[i].substring(0,positionOfColon);
-						value = filters[i].substring(positionOfColon+1);
+						
+						if (positionOfColon != -1) {
+							tag = filters[i].substring(0,positionOfColon);
+							value = filters[i].substring(positionOfColon+1);
+						} else {
+							tag = filters[i];
+							value = "";
+						}
 						
 						if (tag.equalsIgnoreCase("year")) {
 							try {
@@ -691,10 +705,21 @@ public class OutputHelper {
 								logger.log(Level.WARNING,
 										"artist found but is not an integer");
 							}
+						} else if (tag.equalsIgnoreCase("currentplaylist")) {
+							getCurrentTracks = true;
 						}
 					}
 				}
-				retCode = control.buildCommandString() + "\r\n";
+				
+				if (getCurrentTracks) {
+					PlayerStatus getCurrentTracksControl = new PlayerStatus();
+					getCurrentTracksControl.setPlayerId(device.getKey());
+					getCurrentTracksControl.setItemsPerResponse(control.getItemsPerResponse());
+					retCode = getCurrentTracksControl.buildCommandString() + "\r\n";
+					
+				} else {
+					retCode = control.buildCommandString() + "\r\n";
+				}
 			}
 		}
 

@@ -385,7 +385,7 @@ public class PlayerStatusReply extends SlimServerCommand {
 			statusElement.setAttribute("playlist_tracks",getPlaylistTracks());
 		}
 		
-		Element tracksElement = new Element("tracks");
+/*		Element tracksElement = new Element("tracks");
 
 		LinkedList trackElements = new LinkedList();
 		
@@ -395,7 +395,7 @@ public class PlayerStatusReply extends SlimServerCommand {
 		}
 		
 		tracksElement.addContent(trackElements);
-		statusElement.addContent(tracksElement);
+		statusElement.addContent(tracksElement); */
 		
 		return statusElement;
 	}

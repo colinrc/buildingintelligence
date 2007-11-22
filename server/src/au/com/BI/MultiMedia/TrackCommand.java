@@ -14,6 +14,7 @@ import au.com.BI.Command.Fields;
 import au.com.BI.JRobin.JRobinData;
 import au.com.BI.MultiMedia.SlimServer.Commands.GetTracksReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayerStatusReply;
+import au.com.BI.MultiMedia.SlimServer.Commands.SlimServerCommand;
 import au.com.BI.User.User;
 
 /**
@@ -24,7 +25,7 @@ public class TrackCommand implements CommandInterface {
 
 	public String key = "";
 
-	protected GetTracksReply getTracksReply;
+	protected SlimServerCommand getTracksReply;
 
 	protected String displayName = "";
 
@@ -311,11 +312,11 @@ public class TrackCommand implements CommandInterface {
 		
 	}
 
-	public GetTracksReply getGetTracksReply() {
+	public SlimServerCommand getGetTracksReply() {
 		return getTracksReply;
 	}
 
-	public void setGetTracksReply(GetTracksReply getTracksReply) {
+	public void setGetTracksReply(SlimServerCommand getTracksReply) {
 		this.getTracksReply = getTracksReply;
 	}
 }

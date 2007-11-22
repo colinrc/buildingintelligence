@@ -148,7 +148,7 @@ public class GetTracks extends SlimServerCommand {
 		}
 		
 		if (artist != -1) {
-			commandString += " artist_id:" + album;
+			commandString += " artist_id:" + artist;
 		}
 		
 		if (tags.size() > 0) {

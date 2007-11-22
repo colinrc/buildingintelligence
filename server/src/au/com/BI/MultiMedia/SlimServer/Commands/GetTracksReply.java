@@ -24,7 +24,7 @@ public class GetTracksReply extends SlimServerCommand {
 	public LinkedList<Track> getTracks() {
 		return tracks;
 	}
-	public void setArtists(LinkedList<Track> tracks) {
+	public void setTracks(LinkedList<Track> tracks) {
 		this.tracks = tracks;
 	}
 	public int getCount() {
