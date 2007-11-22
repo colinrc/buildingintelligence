@@ -385,7 +385,7 @@
 						if (items[item].art == "cover") {
 							var yMod = 310;
 						} else {
-							var yMod = 120;
+							var yMod = 110;
 						}
 					}
 					item_mc.attachMovie("bi.ui.Label", "title_lb", 20, {_x:xMod, _y:5 + yMod, settings:{width:width - xMod - 5, text:"Title: %title%"}});
@@ -399,9 +399,17 @@
 							this.album_lb.text = (_global.controls[key].track.album != undefined) ? "Album: " + _global.controls[key].track.album : "";
 							
 							if (_global.controls[key].track.album_id != this.lastAlbumID) {
+								this.coverArt_mc.unloadMovie();
 								this.coverArt_mc.loadMovie("http://" + _global.settings.squeezeAddress + ":" + _global.settings.squeezePort + "/music/current/" + this.art + ".jpg?playerid=" + _global.controls[key].id + "&r=" + _global.controls[key].track.id);
 								this.onEnterFrame = function () {
-									if (this.coverArt_mc._width > 4) {
+									if (this.coverArt_mc._width > 20) {
+										if (this.coverArt_mc._width > 300) {
+											this.coverArt_mc._width = 300;
+											this.coverArt_mc._yscale = this.coverArt_mc._xscale;
+										} else if (this.coverArt_mc._height > 300) {
+											this.coverArt_mc._height = 300;
+											this.coverArt_mc._xscale = this.coverArt_mc._yscale;
+										}
 										if (this.detailsPosition == "right") {
 											this.coverArt_mc._x = Math.round((this.bg_mc._height / 2) - (this.coverArt_mc._width / 2));
 										} else {
