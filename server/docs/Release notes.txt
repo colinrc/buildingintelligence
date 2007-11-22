@@ -1,4 +1,15 @@
-== 24/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b70.zip V1.6-b70]  [attachment:wiki:SoftwareReleases:eLife-1.6b70-libs.zip Libs-V1.6b70]  ==
+== 22/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b71.zip V1.6-b71]  [attachment:wiki:SoftwareReleases:eLife-1.6b71-libs.zip Libs-V1.6b71]  ==
+
+''' Libraries '''
+
+Updated Jetty to 6.1.6
+
+''' Squeezebox '''
+
+Incoprorated latest changes
+
+
+== 12/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b70.zip V1.6-b70]  [attachment:wiki:SoftwareReleases:eLife-1.6b70-libs.zip Libs-V1.6b70]  ==
 
 ''' CBUS '''
 
