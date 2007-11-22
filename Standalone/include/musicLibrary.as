@@ -13,10 +13,7 @@
 	window_mc.key = key;
 	window_mc.update = function (key, dataSetName) {
 		var dataSet = _global.controls[key][dataSetName];
-		switch (dataSetName) {
-			case "nowplaying":
-				var tab_mc = this.contentClip.tabs_mc.contentClips[0];
-				break;
+		switch (dataSetName) {		
 			case "albums":
 				var row = 0;
 				var col = 0;
@@ -112,6 +109,10 @@
 				tab_mc.buttons_mc.previous_btn.enabled = (tab_mc.page > _global.settings.genresPerPage);
 				tab_mc.buttons_mc.next_btn.enabled = (dataSet.length >= _global.settings.genresPerPage);
 				break;
+			default:
+				var tab_mc = this.contentClip.tabs_mc.contentClips[0];
+				tab_mc.control_mc.update(key);
+				break;
 		}
 	}
 	
@@ -133,19 +134,35 @@
 				break;
 			case "albums":
 				// <CONTROL KEY="<player key>" COMMAND="getAlbums" EXTRA="<page>" EXTRA2="<items per page>" EXTRA3="<optional filter>" EXTRA4="<search>" EXTRA5=""/>
-				sendCmd(this._parent._parent.key, "getAlbums", "1", [_global.settings.albumsPerPage]);
+				sendCmd(this._parent._parent.key, "getAlbums", "0", [_global.settings.albumsPerPage]);
 				break;
 			case "artists":
-				sendCmd(this._parent._parent.key, "getArtists", "1", [_global.settings.artistsPerPage]);
+				sendCmd(this._parent._parent.key, "getArtists", "0", [_global.settings.artistsPerPage]);
 				break;
 			case "genres":
-				sendCmd(this._parent._parent.key, "getGenres", "1", [_global.settings.genresPerPage]);
+				sendCmd(this._parent._parent.key, "getGenres", "0", [_global.settings.genresPerPage]);
 				break;
 		}
 	}
 	tabs_mc.addEventListener("changeTab", tabs_mc);
 	tabs_mc.activeTab = 0;
 	
+	// build now playing tab
+	var tab_mc = tabs_mc.contentClips[0];
+	tab_mc.attachMovie("bi.ui.Label", "nowPlayer_lb", 10, {settings:{text:"Now Playing", width:150, fontSize:16}});
+	var control_mc = tab_mc.createEmptyMovieClip("control_mc", 20);
+	control_mc._y = 40;
+	control_mc.width = tab_mc.width / 2 - 20;
+	control_mc.height - tab_mc.height - tab_mc.control_mc._y;
+	renderControl({key:key, type:"squeezePanelFull"}, control_mc, control_mc.width);
+	
+	tab_mc.attachMovie("bi.ui.Label", "currentPlaylist_lb", 30, {settings:{text:"Current Playlist", width:150, fontSize:16}, _x:Math.round(tab_mc.width / 2)});
+	var scrollBar_mc = tab_mc.createEmptyMovieClip("scrollBar_mc", 40);
+	createScrollBar(scrollBar_mc, tab_mc.height - 40, "update");
+	scrollBar_mc._x = tab_mc.width - scrollBar_mc._width;
+	scrollBar_mc._y = 40;
+	
+	// build other tabs
 	for (var i=1; i<tabData.length; i++) {
 		tabs_mc.contentClips[i].page = 1;
 		
@@ -179,5 +196,83 @@
 			sendCmd(this.key, "queueItem", this.filter + ":" + this.id);
 		}
 		content_mc.queueAll_btn.addEventListener("press", content_mc.queueAll_btn);
+
+		content_mc.key = key;
+		content_mc.filter = filter;
+		content_mc.update = function (key, dataSetName) {
+			if (key) this.key = key;
+			if (dataSetName) this.dataSetName = dataSetName;
+			
+			var dataSet = _global.controls[this.key][this.dataSetName];
+			if (!dataSet) return;
+			
+			var labels_mc = this.createEmptyMovieClip("labels_mc", 50);
+			labels_mc._y = 40;
+	
+			var label_tf = new TextFormat();
+			label_tf.color = 0xFFFFFF;
+			label_tf.size = 16;
+			label_tf.bold = true;
+			label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
+	
+			this.maxItems = dataSet.length;
+			if (dataSet.length > this.itemsPerPage) {
+				this.scrollBar_mc._visible = true;
+				this.scrollBar_mc.scrollUp_mc.enabled = this.startRow > 0;
+				this.scrollBar_mc.scrollDown_mc.enabled = this.startRow + this.itemsPerPage < this.maxItems;
+				var labelWidth = this.width - 40;
+			} else {
+				var labelWidth = this.width;
+				this.scrollBar_mc._visible = false;
+			}
+	
+			var counter = 0;
+			while (counter < this.itemsPerPage && this.startRow + counter < this.maxItems) {
+				var track = dataSet[this.startRow + counter];
+				var label_mc = labels_mc.createEmptyMovieClip("label" + counter + "_mc", counter);
+				label_mc._y = counter * 35;
+				label_mc.key = this.key;
+				label_mc.filter = this.filter;
+				label_mc.id = track.id;
+							
+				label_mc.createTextField("label" + counter + "_txt", 20, 3, 3, labelWidth - 30, 20);
+				var label_txt = label_mc["label" + counter + "_txt"];
+				label_txt.embedFonts = true;
+				label_txt.selectable = false;
+				label_txt.setNewTextFormat(label_tf);
+				if (this.filter == "album" && track.trackNum) {
+					label_txt.text = track.trackNum + ". " + track.title;
+				} else {
+					label_txt.text = track.title;
+				}
+	
+				var bg_mc = label_mc.createEmptyMovieClip("bg_mc", 0);
+				bg_mc.beginFill(0x4E75B5);
+				bg_mc.drawRect(0, 0, labelWidth, 30, 5);
+				bg_mc.endFill();
+				
+				label_mc.onPress2 = function () {
+					sendCmd(this.key, "queueItem", "track:" + this.id);
+				}
+	
+				counter++;
+			}
+		}
+		
+		var scrollBar_mc = content_mc.createEmptyMovieClip("scrollBar_mc", 20);
+		createScrollBar(scrollBar_mc, content_mc.height - 40, "update");
+		scrollBar_mc._x = window_mc.content_mc.width - scrollBar_mc._width;
+		scrollBar_mc._y = 40;
+		scrollBar_mc._visible = false;
+		content_mc.startRow = 0;
+		content_mc.itemsPerPage = Math.floor((content_mc.height - 40 + 5) / 35);
+
+		subscribe(key, content_mc);
+		
+		window_mc.onClose = function () {
+			unsubscribe(this.content_mc.key, this.content_mc);
+		}
+		
+		sendCmd(key, "getTracks", "0", ["20", filter + ":" + id]);
 	}
 }

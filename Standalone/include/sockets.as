@@ -269,21 +269,20 @@ receiveCmd = function (xml, ignoreSkip) {
 		screenLocked = true;
 	} else if (msg.nodeName == "playerstatus") {
 		// squeezebox status msg
-		if (_global.controls[msg.attributes.KEY] == undefined) _global.controls[msg.attributes.KEY] = new Object();
+		if (!_global.controls[msg.attributes.key]) _global.controls[msg.attributes.KEY] = new Object();
 		for (var i in msg.attributes) {
 			if (i == "power") {
-				_global.controls[msg.attributes.KEY]["state"] = (msg.attributes[i] == "1") ? "on" : "off";
+				_global.controls[msg.attributes.key]["state"] = (msg.attributes[i] == "1") ? "on" : "off";
 			} else {
-				_global.controls[msg.attributes.KEY][i] = msg.attributes[i];
+				_global.controls[msg.attributes.key][i] = msg.attributes[i];
 			}
 		}
-		_global.controls[msg.attributes.KEY].track = new Object();
+		_global.controls[msg.attributes.key].track = new Object();
 		for (var i in msg.firstChild.firstChild.attributes) {
-			_global.controls[msg.attributes.KEY].track[i] = msg.firstChild.firstChild.attributes[i];
+			_global.controls[msg.attributes.key].track[i] = msg.firstChild.firstChild.attributes[i];
 		}
-		broadcastChange(msg.attributes.KEY);
+		broadcastChange(msg.attributes.key);
 	} else if (msg.nodeName == "albums") {
-		if (_global.controls[msg.attributes.KEY] == undefined) _global.controls[msg.attributes.KEY] = new Object();
 		var albums = _global.controls[msg.attributes.KEY].albums = new Array();
 		for (var i=0; i<msg.childNodes.length; i++) {
 			var album = new Object();
@@ -316,6 +315,22 @@ receiveCmd = function (xml, ignoreSkip) {
 			genres.push(genre);
 		}
 		broadcastChange(msg.attributes.KEY, "genres");
+	} else if (msg.nodeName == "tracks") {
+		var tracks = _global.controls[msg.attributes.KEY].tracks = new Array();
+		for (var i=0; i<msg.childNodes.length; i++) {
+			var track = new Object();
+			track.id = msg.childNodes[i].attributes.id;
+			track.genre = msg.childNodes[i].attributes.genre;
+			track.artist = msg.childNodes[i].attributes.artist;
+			track.album = msg.childNodes[i].attributes.album;
+			track.albumID= msg.childNodes[i].attributes.album_id;
+			track.trackNum = msg.childNodes[i].attributes.tracknum;
+			track.coverArt = msg.childNodes[i].attributes.coverart;
+			track.thumbCoverArt = msg.childNodes[i].attributes.thumbcoverart;
+			track.title = msg.childNodes[i].attributes.title;
+			tracks.push(track);
+		}
+		broadcastChange(msg.attributes.KEY, "tracks");
 	} else {
 		var control = _global.controls[msg.attributes.KEY];
 		if (control != undefined) {

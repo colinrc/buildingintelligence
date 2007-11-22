@@ -363,25 +363,57 @@
 					
 					var detailsBoxBg_mc = item_mc.createEmptyMovieClip("bg_mc", 0);
 					detailsBoxBg_mc.beginFill(0x000000, 20);
-					detailsBoxBg_mc.drawRect(0, 0, width, items[item].height, 4);
-					detailsBoxBg_mc.endFill();
-										
-					var coverArt_mc = item_mc.createEmptyMovieClip("coverArt_mc", 10);
-					coverArt_mc._x = 5;
-					coverArt_mc._y = 5;
+					if (items[item].art == "cover") {
+						var boxHeight = 310;
+					} else {
+						var boxHeight = 110;
+					}
+					if (items[item].detailsPosition == "bottom") boxHeight += 100;
 					
-					var col2X = items[item].height;
-					item_mc.attachMovie("bi.ui.Label", "title_lb", 20, {_x:col2X, _y:5, settings:{width:width - col2X - 5, text:"Title: %title%"}});
-					item_mc.attachMovie("bi.ui.Label", "artist_lb", 30, {_x:col2X, _y:35, settings:{width:width - col2X - 5, text:"Artist: %artist%"}});
-					item_mc.attachMovie("bi.ui.Label", "album_lb", 40, {_x:col2X, _y:65, settings:{width:width - col2X - 5, text:"Album: %album%"}});
+					detailsBoxBg_mc.drawRect(0, 0, width, boxHeight, 4);
+					detailsBoxBg_mc.endFill();
+					var coverArt_mc = item_mc.createEmptyMovieClip("coverArt_mc", 10);
+					coverArt_mc._y = 5;
+					item_mc.art = items[item].art;
+					item_mc.detailsPosition = items[item].detailsPosition;
+					
+					if (items[item].detailsPosition == "right") {
+						var xMod = boxHeight;
+						var yMod = 0;
+					}  else {
+						var xMod = 10;
+						if (items[item].art == "cover") {
+							var yMod = 310;
+						} else {
+							var yMod = 120;
+						}
+					}
+					item_mc.attachMovie("bi.ui.Label", "title_lb", 20, {_x:xMod, _y:5 + yMod, settings:{width:width - xMod - 5, text:"Title: %title%"}});
+					item_mc.attachMovie("bi.ui.Label", "artist_lb", 30, {_x:xMod, _y:35 + yMod, settings:{width:width - xMod - 5, text:"Artist: %artist%"}});
+					item_mc.attachMovie("bi.ui.Label", "album_lb", 40, {_x:xMod, _y:65 + yMod, settings:{width:width - xMod - 5, text:"Album: %album%"}});
 					
 					item_mc.update = function (key, state, value, fromClient) {
-						if (!fromClient) {
+						if (!fromClient && _global.controls[key].track.id != this.lastTrackID) {
 							this.title_lb.text = (_global.controls[key].track.title != undefined) ? "Title: " + _global.controls[key].track.title : "";
 							this.artist_lb.text = (_global.controls[key].track.artist != undefined) ? "Artist: " + _global.controls[key].track.artist : "";
 							this.album_lb.text = (_global.controls[key].track.album != undefined) ? "Album: " + _global.controls[key].track.album : "";
 							
-							this.coverArt_mc.loadMovie("http://" + _global.settings.squeezeAddress + ":" + _global.settings.squeezePort + "/music/current/thumb.jpg?playerid=" + _global.controls[key].id + "&r=" + _global.controls[key].track.duration);
+							if (_global.controls[key].track.album_id != this.lastAlbumID) {
+								this.coverArt_mc.loadMovie("http://" + _global.settings.squeezeAddress + ":" + _global.settings.squeezePort + "/music/current/" + this.art + ".jpg?playerid=" + _global.controls[key].id + "&r=" + _global.controls[key].track.id);
+								this.onEnterFrame = function () {
+									if (this.coverArt_mc._width > 4) {
+										if (this.detailsPosition == "right") {
+											this.coverArt_mc._x = Math.round((this.bg_mc._height / 2) - (this.coverArt_mc._width / 2));
+										} else {
+											this.coverArt_mc._x = Math.round((this.bg_mc._width / 2) - (this.coverArt_mc._width / 2));
+										}
+										delete this.onEnterFrame;
+									}
+								}
+							}
+							
+							this.lastTrackID = _global.controls[key].track.id;
+							this.lastAlbumID = _global.controls[key].track.album_id;
 						}
 					}
 					

@@ -562,7 +562,7 @@
 		</control>
 		<control type="squeezePanel">
 			<row>
-				<item type="trackDetails" height="110" />
+				<item type="trackDetails" art="thumb" detailsPosition="right" />
 			</row>
 			<row>
 				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="40" />
@@ -595,6 +595,23 @@
 			<row cases="mode:manual">
 				<item type="button" label="open" command="position" extra="open" showOn="true" />
 				<item type="button" label="closed" command="position" extra="closed" showOn="true" />
+			</row>
+		</control>
+		<control type="squeezePanelFull">
+			<row>
+				<item type="trackDetails" art="cover" detailsPosition="bottom" />
+			</row>
+			<row>
+				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" />
+				<item type="button" icon="volume-up" command="VOLUME" extra="up" repeatRate="200" />
+				<item type="button" icon="volume-down" command="VOLUME" extra="down" repeatRate="200" />
+			</row>
+			<row>
+				<item type="button" icon="media-play" command="PLAY" extra="" extra2="" />
+				<item type="button" icon="media-stop" command="STOP" extra="" extra2="" />
+				<item type="button" icon="media-pause" command="PAUSE" extra="" extra2="" />
+				<item type="button" icon="media-step-rwd" command="previousItem" extra="" extra2="" repeatRate="200" />
+				<item type="button" icon="media-step-fwd" command="nextItem" extra="" extra2="" repeatRate="200" />
 			</row>
 		</control>
 	</controlTypes>
