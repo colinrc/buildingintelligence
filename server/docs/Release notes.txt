@@ -1,3 +1,9 @@
+== 23/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b72.zip V1.6-b72] 
+
+''' Squeezebox '''
+
+Added track list. ticket [ticket:678], [ticket:674]
+
 == 22/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b71.zip V1.6-b71]  [attachment:wiki:SoftwareReleases:eLife-1.6b71-libs.zip Libs-V1.6b71]  ==
 
 ''' Libraries '''
@@ -5,8 +11,7 @@
 Updated Jetty to 6.1.6
 
 ''' Squeezebox '''
-
-Incoprorated latest changes
+Incoprorated latest changes. ticket [ticket:662]
 
 
 == 12/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b70.zip V1.6-b70]  [attachment:wiki:SoftwareReleases:eLife-1.6b70-libs.zip Libs-V1.6b70]  ==
