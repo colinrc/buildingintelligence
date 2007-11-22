@@ -17,7 +17,6 @@ import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.jetty.handler.DefaultHandler;
 import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.jetty.handler.HandlerCollection;
-import org.mortbay.jetty.security.BasicAuthenticator;
 import org.mortbay.jetty.security.Constraint;
 import org.mortbay.jetty.security.ConstraintMapping;
 import org.mortbay.jetty.security.HashUserRealm;
@@ -204,10 +203,8 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         servletSec.setConstraintMappings(new ConstraintMapping[] {servletConstraintMap});
         servletSec.setHandler(updateContextHandler);
         
-    	// ELifeAuthenticator eLifeAuthenticator = new ELifeAuthenticator ();
-        // BasicAuthenticator basicAuth = (BasicAuthenticator)servletSec.getAuthenticator();
-        // eLifeAuthenticator.setLocalAuth(basicAuth);
-        // servletSec.setAuthenticator(eLifeAuthenticator);
+    	ELifeAuthenticator eLifeAuthenticator = new ELifeAuthenticator ();
+        servletSec.setAuthenticator(eLifeAuthenticator);
         
         //servletSec.addHandler(updateContextHandler);
         return servletSec;
