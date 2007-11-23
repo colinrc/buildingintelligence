@@ -349,7 +349,9 @@ public class Track {
 		if (!StringUtils.isNullOrEmpty(getDrm())) {
 			track.setAttribute("drm",getDrm());
 		}
-		if (!StringUtils.isNullOrEmpty(getCoverArt())) {
+		
+		// only show cover art if the getcoverart parameter is 1 and the coverart url is passed through
+		if (!StringUtils.isNullOrEmpty(getCoverArt()) && !StringUtils.isNullOrEmpty(getCoverArtUrl())) {
 			if (getCoverArt().equals("1") && !StringUtils.isNullOrEmpty(getTrackNumber())) {
 				track.setAttribute("coverart",getCoverArtUrl() + getId() + "/cover.jpg");
 				track.setAttribute("thumbcoverart",getCoverArtUrl() + getId() + "/thumb.jpg");

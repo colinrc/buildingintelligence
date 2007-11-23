@@ -66,6 +66,8 @@ public class ControlledHelper {
 		}
 		
 		if (_command.getClass().equals(BrowseAlbumsReply.class)) {
+			
+			// albums want coverart.
 			BrowseAlbumsReply reply = (BrowseAlbumsReply)_command;
 			
 			AlbumCommand flashCommand = new AlbumCommand();
@@ -142,7 +144,7 @@ public class ControlledHelper {
 			
 			GetTracksReply getTracksReply = new GetTracksReply();
 			getTracksReply.setTracks(reply.getTracks());
-			getTracksReply.setCoverArtUrl(model.getCoverArtUrl());
+			// getTracksReply.setCoverArtUrl(model.getCoverArtUrl());
 			TrackCommand trackCommand = new TrackCommand();
 			trackCommand.setGetTracksReply(getTracksReply);
 			trackCommand.setDisplayName(device.getOutputKey());
@@ -152,13 +154,13 @@ public class ControlledHelper {
 			trackCommand.setCommand("PLAYER_STATUS");
 			sendCommand(cache,commandQueue,trackCommand);
 			
-			CommandInterface flashCommand2 = new AlertCommand();
+			/* CommandInterface flashCommand2 = new AlertCommand();
 			flashCommand2.setDisplayName(device.getOutputKey());
 			flashCommand2.setCommand(powerString);
 			flashCommand2.setTargetDeviceID(-1);
 			flashCommand2.setUser(model.currentUser);
 			flashCommand2.setKey ("CLIENT_SEND");
-			sendCommand(cache, commandQueue, flashCommand2);
+			sendCommand(cache, commandQueue, flashCommand2); */
 			
 		} else if (_command.getClass().equals(GetTracksReply.class)) {
 			GetTracksReply reply = (GetTracksReply)_command;

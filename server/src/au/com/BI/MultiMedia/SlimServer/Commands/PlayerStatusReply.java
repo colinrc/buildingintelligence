@@ -385,17 +385,18 @@ public class PlayerStatusReply extends SlimServerCommand {
 			statusElement.setAttribute("playlist_tracks",getPlaylistTracks());
 		}
 		
-/*		Element tracksElement = new Element("tracks");
+		Element tracksElement = new Element("tracks");
 
-		LinkedList trackElements = new LinkedList();
+		LinkedList<Element> trackElements = new LinkedList<Element>();
 		
 		for (Track track: this.getTracks()) {
 			track.setCoverArtUrl(getCoverArtUrl());
 			trackElements.add(track.getElement());
+			break; // only get the first one
 		}
 		
 		tracksElement.addContent(trackElements);
-		statusElement.addContent(tracksElement); */
+		statusElement.addContent(tracksElement); 
 		
 		return statusElement;
 	}

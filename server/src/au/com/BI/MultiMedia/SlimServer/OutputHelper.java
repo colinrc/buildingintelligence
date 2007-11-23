@@ -713,7 +713,9 @@ public class OutputHelper {
 				
 				if (getCurrentTracks) {
 					PlayerStatus getCurrentTracksControl = new PlayerStatus();
+					getCurrentTracksControl.setSubscribe("");
 					getCurrentTracksControl.setPlayerId(device.getKey());
+					getCurrentTracksControl.setStart("0");
 					getCurrentTracksControl.setItemsPerResponse(control.getItemsPerResponse());
 					retCode = getCurrentTracksControl.buildCommandString() + "\r\n";
 					
