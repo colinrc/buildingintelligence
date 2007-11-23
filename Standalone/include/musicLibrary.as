@@ -111,7 +111,7 @@
 				break;
 			default:
 				var tab_mc = this.contentClip.tabs_mc.contentClips[0];
-				tab_mc.control_mc.update(key);
+				tab_mc.control_mc.update(key, dataSetName);
 				break;
 		}
 	}
@@ -130,7 +130,8 @@
 		// set window title
 		this._parent._parent.title = this.originalTitle + ": " + eventObj.name;
 		switch (eventObj.mode) {
-			case "nowplaying":
+			case "playlist":
+				sendCmd(this._parent._parent.key, "getTracks", "0", ["20", "currentplaylist"]);
 				break;
 			case "albums":
 				// <CONTROL KEY="<player key>" COMMAND="getAlbums" EXTRA="<page>" EXTRA2="<items per page>" EXTRA3="<optional filter>" EXTRA4="<search>" EXTRA5=""/>
@@ -157,10 +158,79 @@
 	renderControl({key:key, type:"squeezePanelFull"}, control_mc, control_mc.width);
 	
 	tab_mc.attachMovie("bi.ui.Label", "currentPlaylist_lb", 30, {settings:{text:"Current Playlist", width:150, fontSize:16}, _x:Math.round(tab_mc.width / 2)});
-	var scrollBar_mc = tab_mc.createEmptyMovieClip("scrollBar_mc", 40);
-	createScrollBar(scrollBar_mc, tab_mc.height - 40, "update");
+
+	tab_mc.key = key;
+	tab_mc.update = function (key, dataSetName) {
+		if (dataSetName && dataSetName != "tracks") return;
+
+		var dataSet = _global.controls[this.key]["tracks"];
+		
+		var labels_mc = this.createEmptyMovieClip("labels_mc", 40);
+		labels_mc._x = Math.round(this.width / 2);
+		labels_mc._y = 40;
+
+		var label_tf = new TextFormat();
+		label_tf.color = 0xFFFFFF;
+		label_tf.size = 16;
+		label_tf.bold = true;
+		label_tf.font = "bi.ui.Fonts:" + _global.settings.defaultFont;
+
+		this.maxItems = dataSet.length;
+		if (dataSet.length > this.itemsPerPage) {
+			this.scrollBar_mc._visible = true;
+			this.scrollBar_mc.scrollUp_mc.enabled = this.startRow > 0;
+			this.scrollBar_mc.scrollDown_mc.enabled = this.startRow + this.itemsPerPage < this.maxItems;
+			var labelWidth = Math.round(this.width / 2) - 40;
+		} else {
+			var labelWidth = Math.round(this.width / 2);
+			this.scrollBar_mc._visible = false;
+		}
+
+		var counter = 0;
+		while (counter < this.itemsPerPage && this.startRow + counter < this.maxItems) {
+			var track = dataSet[this.startRow + counter];
+			var label_mc = labels_mc.createEmptyMovieClip("label" + counter + "_mc", counter);
+			label_mc._y = counter * 35;
+			label_mc.key = this.key;
+			label_mc.filter = this.filter;
+			label_mc.id = track.id;
+			label_mc.index = this.startRow + counter;
+						
+			label_mc.createTextField("label" + counter + "_txt", 20, 3, 3, labelWidth - 30, 20);
+			var label_txt = label_mc["label" + counter + "_txt"];
+			label_txt.embedFonts = true;
+			label_txt.selectable = false;
+			label_txt.setNewTextFormat(label_tf);
+			label_txt.text = (this.startRow + counter + 1) + ". " + track.artist + " - " + track.title;
+
+			var bg_mc = label_mc.createEmptyMovieClip("bg_mc", 0);
+			bg_mc.beginFill(0x4E75B5);
+			bg_mc.drawRect(0, 0, labelWidth, 30, 5);
+			bg_mc.endFill();
+			
+			label_mc.onPress2 = function () {
+				// <CONTROL KEY="<key>" COMMAND="jumpToPosition" EXTRA="<index in playlist>" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+				sendCmd(this.key, "jumpToPosition", this.index);
+			}
+
+			counter++;
+		}
+	}
+	
+	var scrollBar_mc = tab_mc.createEmptyMovieClip("scrollBar_mc", 50);
+	createScrollBar(scrollBar_mc, tab_mc.height - 45, "update");
 	scrollBar_mc._x = tab_mc.width - scrollBar_mc._width;
 	scrollBar_mc._y = 40;
+	scrollBar_mc._visible = false;
+	tab_mc.key = key;
+	tab_mc.startRow = 0;
+	tab_mc.itemsPerPage = Math.floor((tab_mc.height - 40 + 5) / 35);
+	
+	subscribe(key, tab_mc);
+		
+	tab_mc.onClose = function () {
+		unsubscribe(this.key, this);
+	}
 	
 	// build other tabs
 	for (var i=1; i<tabData.length; i++) {
@@ -202,9 +272,9 @@
 		content_mc.update = function (key, dataSetName) {
 			if (key) this.key = key;
 			if (dataSetName) this.dataSetName = dataSetName;
-			
+
+			if (this.dataSetName != "tracks") return;
 			var dataSet = _global.controls[this.key][this.dataSetName];
-			if (!dataSet) return;
 			
 			var labels_mc = this.createEmptyMovieClip("labels_mc", 50);
 			labels_mc._y = 40;
@@ -260,8 +330,8 @@
 		}
 		
 		var scrollBar_mc = content_mc.createEmptyMovieClip("scrollBar_mc", 20);
-		createScrollBar(scrollBar_mc, content_mc.height - 40, "update");
-		scrollBar_mc._x = window_mc.content_mc.width - scrollBar_mc._width;
+		createScrollBar(scrollBar_mc, content_mc.height - 45, "update");
+		scrollBar_mc._x = content_mc.width - scrollBar_mc._width;
 		scrollBar_mc._y = 40;
 		scrollBar_mc._visible = false;
 		content_mc.startRow = 0;

@@ -336,8 +336,8 @@ receiveCmd = function (xml, ignoreSkip) {
 		if (control != undefined) {
 			if (control.state != msg.attributes.COMMAND) {
 				control.state = msg.attributes.COMMAND;
-				if (msg.attributes.COMMAND == "on" || msg.attributes.COMMAND == "off") {
-					control.storedStates["state"] = msg.attributes.COMMAND;
+				if (msg.attributes.COMMAND == "ON" || msg.attributes.COMMAND == "OFF" || msg.attributes.COMMAND == "on" || msg.attributes.COMMAND == "off") {
+					control.storedStates["state"] = msg.attributes.COMMAND.toLowerCase();
 				}
 				changed = true;
 			}
