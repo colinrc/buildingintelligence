@@ -23,13 +23,13 @@ Added HOLIDAY_MODE to indicate when people are away, allows scripts to react dif
 Resolves issue [ticket:679],[ticket:677]
 
 
-== 23/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b73.zip V1.6-b73] 
+== 23/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b73.zip V1.6-b73] ==
 
 ''' Squeezebox '''
 
 Updated track list. 
 
-== 23/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b72.zip V1.6-b72] 
+== 23/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b72.zip V1.6-b72] ==
 
 ''' Squeezebox '''
 
