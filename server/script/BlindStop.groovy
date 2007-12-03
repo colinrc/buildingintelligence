@@ -6,8 +6,7 @@ public class BlindStop extends BIScript  {
    // true if the script can be run multiple times in parallel
 	boolean ableToRunMultiple = false
 	
-	// This script will be run by the regular 5 minute event.
-	String[]  fireOnChange =   ["BLINDS"]
+	String[]  fireOnChange =   ["BLINDS:stop"]
 	
 	// If the script is able to be stopped before completion, generally not
 	boolean  stoppable = false;
@@ -15,15 +14,11 @@ public class BlindStop extends BIScript  {
 
 	def main (String[] argv) {
 		// The action contents of the script go here
+
+		elife.off "BLIND_UP"
+		elife.off "BLIND_DN"
 		
-		if (triggerCommand == "stop") { 
-		
-			elife.off("BLIND_UP")
-			elife.off("BLIND_DN")
-			
-			elife.setVariable("BlindUp",False);
-			elife.setVariable("BlindDn",False);
-		}
+		elife.setVariable "BlindUp",false;
+		elife.setVariable "BlindDn",false
 	}
 }
-	
