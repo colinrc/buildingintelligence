@@ -36,15 +36,17 @@
         <archive path="/Java/jetty-6.1.4/lib/ext/jetty-ajp-6.1.4.jar"/>
         <archive path="/Java/jetty-6.1.4/lib/ext/jetty-html-6.1.4.jar"/>
     </library>
-    <library name="Jetty6.1.6RC1" systemlibrary="false">
-        <archive javadoc="file:/Java/jetty-6.1.6rc1/javadoc/" path="/Java/jetty-6.1.6rc1/lib/jetty-6.1.6rc1.jar"/>
-        <archive path="/Java/jetty-6.1.6rc1/lib/jetty-util-6.1.6rc1.jar"/>
-        <archive path="/Java/jetty-6.1.6rc1/lib/servlet-api-2.5-6.1.6rc1.jar"/>
-        <archive path="/Java/jetty-6.1.6rc1/lib/ext/jetty-java5-threadpool-6.1.6rc1.jar"/>
-        <archive path="/Java/jetty-6.1.6rc1/lib/ext/jetty-servlet-tester-6.1.6rc1.jar"/>
-        <archive path="/Java/jetty-6.1.6rc1/lib/ext/jetty-sslengine-6.1.6rc1.jar"/>
-        <archive path="/Java/jetty-6.1.6rc1/lib/ext/jetty-ajp-6.1.6rc1.jar"/>
-        <archive path="/Java/jetty-6.1.6rc1/lib/ext/jetty-html-6.1.6rc1.jar"/>
+    <library name="Jetty6.1.6" systemlibrary="false">
+        <archive path="/Java/jetty-6.1.6/lib/jetty-6.1.6.jar"/>
+        <archive path="/Java/jetty-6.1.6/lib/jetty-util-6.1.6.jar"/>
+        <archive path="/Java/jetty-6.1.6/lib/servlet-api-2.5-6.1.6.jar"/>
+        <archive path="/Java/jetty-6.1.6/lib/ext/jetty-ajp-6.1.6.jar"/>
+        <archive path="/Java/jetty-6.1.6/lib/ext/jetty-client-6.1.6.jar"/>
+        <archive path="/Java/jetty-6.1.6/lib/ext/jetty-html-6.1.6.jar"/>
+        <archive path="/Java/jetty-6.1.6/lib/ext/jetty-java5-threadpool-6.1.6.jar"/>
+        <archive path="/Java/jetty-6.1.6/lib/ext/jetty-servlet-tester-6.1.6.jar"/>
+        <archive path="/Java/jetty-6.1.6/lib/ext/jetty-setuid-6.1.6.jar"/>
+        <archive path="/Java/jetty-6.1.6/lib/ext/jetty-sslengine-6.1.6.jar"/>
     </library>
     <library name="JRobin1.4.0" systemlibrary="false">
         <archive path="/Java/jrobin-1.4.0/lib/jrobin-1.4.0.jar"/>

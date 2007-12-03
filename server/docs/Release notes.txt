@@ -1,3 +1,34 @@
+== 3/Dec/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b74.zip V1.6-b74] 
+
+''' Scripts '''
+
+Groovy scripts modified to allow multiple scripts listening for the same trigger. 
+Groovy scripts can now be triggered by a combination of display name and command instead of just display name. 
+
+For example
+{{{
+	String[]  fireOnChange =   ["BLINDS:down"]
+
+or
+
+	String[]  fireOnChange =   ["BLINDS"]
+
+}}}
+
+''' Variables section in config_ref '''
+
+Corrected spelling of Latitude.
+Added HOLIDAY_MODE to indicate when people are away, allows scripts to react differently.
+
+Resolves issue [ticket:679],[ticket:677]
+
+
+== 23/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b73.zip V1.6-b73] 
+
+''' Squeezebox '''
+
+Updated track list. 
+
 == 23/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b72.zip V1.6-b72] 
 
 ''' Squeezebox '''

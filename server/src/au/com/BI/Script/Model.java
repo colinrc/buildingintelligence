@@ -29,7 +29,6 @@ import java.io.*;
 
 /**
  * @author Colin Canfield
- * @author Explorative Sofwtare Pty Ltd
  * This module provides an interface to the system for Scripts.
  * @see DeviceModel for methods level documentation and methods availlable for hooking into functionality
  */
@@ -81,19 +80,6 @@ public class Model
         }
 
 
-        /**
-         * New Devices are added via this method.
-         * <P>
-         * A script registering itself to listen to events should eventually call this method
-         * The reference to the script will be an instance of au.com.BI.Script
-         *
-         */
-        public void addControlledItem(String name, DeviceType details, MessageDirection controlType) {
-                String theKey = name;
-                if (configHelper.checkForControlledItem(theKey) == false) {
-                        configHelper.addControlledItem(theKey, details, controlType);
-                }
-        }
 
         /**
          * Main test point for the controller to request from this model if it controls a particular Command
@@ -135,7 +121,7 @@ public class Model
 				}
 
                 if (theWholeKey.equals("SCRIPT")) {
-                        doScriptItem(command, null); // script called via an explicit run command
+                        doScriptItem(command.getExtraInfo(), command.getCommandCode(),command.getExtra2Info(),null,command.getTargetDeviceID()); // script called via an explicit run command
                 }
                 else {
                         DeviceType device = configHelper.getOutputItem(theWholeKey);
@@ -149,14 +135,25 @@ public class Model
 
                                         try {
                                                 CommandInterface newCommand;
-                                                logger.log(Level.FINE,
-                                                  "*********Running script " + ( (Script) device).getNameOfScript());
-                                                newCommand = createInternalCommand("SCRIPT","", "run", ( (Script) device).getNameOfScript());
-                                                newCommand.setTargetDeviceModel(0);
-                                                //  configHelper.addControlledItem("SCRIPT", newCommand, DeviceType.OUTPUT);
-                                                doScriptItem(newCommand, command); // called via a trigger
-                                                // cache.setCachedCommand(newCommand.getKey(), newCommand);
-                                                //   sendCommand("SCRIPT","run",( (Script) device).getNameOfScript());
+                                                if (((Script)device).getScriptType() == ScriptType.Jython) {
+                                                	String scriptName = ((Script) device).getNameOfScript();
+                                                	
+	
+                                                	doScriptItem(scriptName,  "run", "", command,0L); // called via a trigger
+	                                                // cache.setCachedCommand(newCommand.getKey(), newCommand);
+
+                                                } else {
+                                                	// Groovy script (s)
+                                                	for (String scriptName:(((Script)device).getScriptListForCommand(""))){
+                                                		doScriptItem(scriptName,  "run", "", command,0L); 
+                                                	}
+                                                	String launchingCommand = command.getCommandCode();
+                                                	if (!launchingCommand.equals("")){
+	                                                	for (String scriptName:(((Script)device).getScriptListForCommand(launchingCommand))){
+	                                                		doScriptItem(scriptName,  "run", "", command,0L); 
+	                                                	}
+                                                	}
+                                                }
                                         }
                                         catch (ClassCastException ex) {
                                                 logger.log(Level.WARNING,
@@ -169,30 +166,25 @@ public class Model
         }
 
     	
-        public void doScriptItem(CommandInterface command, CommandInterface triggeringCommand) throws CommsFail {
-                String theWholeKey = command.getKey();
-                DeviceType device = configHelper.getOutputItem(theWholeKey);
-
+        public void doScriptItem(String scriptName, String commandStr, String scriptExtra, CommandInterface triggeringCommand, Long targetDeviceModel) throws CommsFail {
+            	logger.log(Level.FINE,"Running script " + scriptName);
+            
                 Command clientCommand = null;
 
                 logger.log(Level.FINER, "Received script command");
 
-                String commandStr = command.getCommandCode();
-                String extra2 = command.getExtra2Info();
-                User currentUser = command.getUser();
+
                 if (commandStr.equals("run")) {
-                	String scriptName = command.getExtraInfo();
 	                   if (groovyScriptHandler.ownsScript (scriptName)){
-	                        groovyScriptHandler.run(scriptName,command.getExtra2Info(), currentUser,triggeringCommand);
-	                        logger.log(Level.FINER, "Run Groovy script request received " + command.getExtraInfo());
+	                        groovyScriptHandler.run(scriptName,scriptExtra, currentUser,triggeringCommand);
+	                        logger.log(Level.FINER, "Run Groovy script request received " + scriptName);
 	                   } else {
-	                        scriptHandler.run( scriptName,command.getExtra2Info(), currentUser,triggeringCommand);
-	                        logger.log(Level.FINER, "Run Jython script request received " + command.getExtraInfo());	                	   
+	                        scriptHandler.run( scriptName,scriptExtra, currentUser,triggeringCommand);
+	                        logger.log(Level.FINER, "Run Jython script request received " + scriptName);	                	   
 	                   }
                 }
 
 	            if (commandStr.equals("finished")) {
-	            		String scriptName = command.getExtraInfo();
 	                    logger.log(Level.FINER, "Finished script " + scriptName );
 	                       
 	                    if (!groovyScriptHandler.ownsScript (scriptName)){
@@ -204,72 +196,72 @@ public class Model
 	                       else
 	                       {
 	                           scriptHandler.run(scriptName, triggeringCommand);
-	                           logger.log(Level.FINER, "Running queued script " + command.getExtraInfo());
+	                           logger.log(Level.FINER, "Running queued script " + scriptName);
 	                       }
 	                   }
 	                    	   
                }
 				if (commandStr.equals("save")) {
-	                if (extra2.equals("enabled")) {
-	                	if (!groovyScriptHandler.enableScript( (String) command.getExtraInfo(), currentUser) && 
-	                			!scriptHandler.enableScript( (String) command.getExtraInfo(), currentUser)  ){
+	                if (scriptExtra.equals("enabled")) {
+	                	if (!groovyScriptHandler.enableScript( scriptName, currentUser) && 
+	                			!scriptHandler.enableScript( scriptName, currentUser)  ){
 	                		logger.log (Level.WARNING,"Enable was called for a script that does not exist");
 	                }
 	                else {
 							clientCommand = doGetList ("");
-	                        logger.log(Level.FINER, "Enable script " + command.getExtraInfo());
+	                        logger.log(Level.FINER, "Enable script " + scriptName);
 	                }
 	                }
-	                if (extra2.equals("disabled")) {
-	                	if (!scriptHandler.disableScript( (String) command.getExtraInfo(), currentUser) &&
-	                        !groovyScriptHandler.disableScript( (String) command.getExtraInfo(), currentUser) ) {
+	                if (scriptExtra.equals("disabled")) {
+	                	if (!scriptHandler.disableScript( scriptName, currentUser) &&
+	                        !groovyScriptHandler.disableScript(scriptName, currentUser) ) {
 	                			logger.log (Level.WARNING,"Disable was called for a script that does not exist");
 	                        } else {
 								clientCommand = doGetList ("");
-		                        logger.log(Level.FINER, "Disable script " + command.getExtraInfo());
+		                        logger.log(Level.FINER, "Disable script " + scriptName);
 		                    }
 	                }
-	                if (extra2.equals("enableAll")) {
+	                if (scriptExtra.equals("enableAll")) {
 	                        scriptHandler.enableAll();
 	                        groovyScriptHandler.enableAll();
 	                        
 							clientCommand = doGetList ("");
-	                        logger.log(Level.FINER, "Enable All scripts " + command.getExtraInfo());
+	                        logger.log(Level.FINER, "Enable All scripts " + scriptName);
 	                }
-	                if (extra2.equals("disableAll")) {
+	                if (scriptExtra.equals("disableAll")) {
 	                        scriptHandler.disableAll();
 	                        groovyScriptHandler.disableAll();
 							clientCommand = doGetList ("");
-	                        logger.log(Level.FINER, "Disable All scripts " + command.getExtraInfo());
+	                        logger.log(Level.FINER, "Disable All scripts " + scriptName);
 	                }
 				}
 
                 if (commandStr.equals("getList")) {
-					clientCommand = doGetList (command.getExtraInfo());
+					clientCommand = doGetList (scriptName);
                 }
 
                 if (commandStr.equals("setStatus")) {
-					if (!groovyScriptHandler.setStatus(command.getExtraInfo(),command.getExtra2Info()) && 
-							!scriptHandler.setStatus(command.getExtraInfo(),command.getExtra2Info())) {
+					if (!groovyScriptHandler.setStatus(scriptName,scriptExtra) && 
+							!scriptHandler.setStatus(scriptName, scriptExtra)) {
 			
 						logger.log(Level.WARNING,
 							"A script status update was received for a script that does not exist "
 									+ name);
                 	} else {
                 		clientCommand = doGetList ("");
-                		logger.log(Level.FINER, "Setting status for " + command.getExtraInfo() + "=" + command.getExtra2Info());
+                		logger.log(Level.FINER, "Setting status for " + scriptName+ "=" + scriptExtra);
                 	}
                 }
 
                 if (commandStr.equals("abort")) {
-                	groovyScriptHandler.abort(command.getExtraInfo());
-					scriptHandler.abort(command.getExtraInfo());
+                	groovyScriptHandler.abort(scriptName);
+					scriptHandler.abort(scriptName);
 					clientCommand = doGetList ("");
-                    logger.log(Level.FINER, "Aborting script " + command.getExtraInfo());
+                    logger.log(Level.FINER, "Aborting script " + scriptName);
                 }
 
                 if (clientCommand != null) {
-                        clientCommand.setTargetDeviceID(command.getTargetDeviceID());
+                        clientCommand.setTargetDeviceID(targetDeviceModel);
                         clientCommand.setDisplayName("SCRIPT");
                         cache.setCachedCommand("SCRIPT", clientCommand);
                          commandQueue.add(clientCommand);
@@ -397,11 +389,9 @@ public class Model
 	        		groovyScriptFileHandler.loadScripts(this, "./script", groovyScriptRunBlockList, patterns,labelMgr);
 	                groovyScriptHandler = new GroovyScriptHandler(this, groovyScriptRunBlockList, groovyStatusFileName,groovyScriptFileHandler.getGse());
 	        		for (String scriptName :groovyScriptRunBlockList.keySet()){
-	        			Script newScript = new Script();
+
 	        			GroovyScriptRunBlock scriptRunBlock = groovyScriptRunBlockList.get (scriptName);
-	        			newScript.setNameOfScript(scriptName);
-	        			newScript.setScriptType (ScriptType.Groovy);
-	        			registerGroovyScript (scriptName, newScript,  scriptRunBlock);
+	        			registerGroovyScript (scriptName, scriptRunBlock);
 	        		}
 	        		logger.log(Level.FINE,"Loaded Groovy scripts");
 	        		groovyScriptHandler.loadScriptFile();
@@ -410,11 +400,35 @@ public class Model
 	        	}
 	    	}
 
-	    	public void registerGroovyScript (String myScript, Script currentScript,GroovyScriptRunBlock scriptRunBlock){
-	    		for (String triggerTags :scriptRunBlock.getFireOnChange()){
-	    		  addControlledItem(triggerTags, currentScript, MessageDirection.FROM_FLASH);
+	    	public void registerGroovyScript (String myScript, GroovyScriptRunBlock scriptRunBlock){
+	    		for (String triggerTag :scriptRunBlock.getFireOnChange()){
+	    			String tagParts[] = triggerTag.split(":");
+	    			String triggerDisplayName = tagParts [0];
+	    			try {
+	        			Script newScript;
+	        			if (configHelper.checkForOutputItem(triggerDisplayName)) {
+	        				newScript = (Script)configHelper.getOutputItem(triggerDisplayName);
+	        				// Already have a script responding to this display name
+	        			} else {
+	        				newScript = new Script();
+		        			newScript.setScriptType (ScriptType.Groovy);
+		        			newScript.setKey(myScript);
+	        				// No scripts yet listening for this display name
+	        			}
+	        			
+		    			if (tagParts.length == 1){
+		    				newScript.addScriptForCommand ("*", myScript) ;
+		    			} 
+		    			if (tagParts.length == 2){
+		    				newScript.addScriptForCommand (tagParts[1], myScript) ;
+		    			}
+		    			configHelper.addControlledItem(triggerDisplayName, newScript, MessageDirection.FROM_FLASH);
+	    			} catch (ClassCastException ex){
+	    				logger.log (Level.WARNING,"A non-script has been added to the script handler");
+	    			}
 	    		}
 	    	}
+	    	
 	    	
         public void loadJythonScripts() {
                 int j = 0;

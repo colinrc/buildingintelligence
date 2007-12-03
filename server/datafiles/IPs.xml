@@ -1,0 +1,8 @@
+<ip_list>
+	<full_function>
+		<ip value="127.0.0.1" />
+	</full_function>
+	
+	<push_only>
+	</push_only>
+</ip_list>

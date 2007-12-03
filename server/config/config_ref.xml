@@ -551,8 +551,10 @@
                 <VARIABLES>
                         <VARIABLE ACTIVE="N" NAME="Master Bedroom Light" DISPLAY_NAME="MASTERBED_LIGHT"/>
                         <VARIABLE ACTIVE="N" NAME="Bedroom 4 light" DISPLAY_NAME="BED4_LIGHT"/>
-                        <VARIABLE ACTIVE="Y" NAME="Lattitude" DISPLAY_NAME="Lattitude" INIT_COMMAND="on" INIT_EXTRA="-33.52" />
+                        <VARIABLE ACTIVE="Y" NAME="Latitude" DISPLAY_NAME="Latitude" INIT_COMMAND="on" INIT_EXTRA="-33.52" />
                         <VARIABLE ACTIVE="Y" NAME="Longitude" DISPLAY_NAME="Longitude" INIT_COMMAND="on" INIT_EXTRA="151.12" />
+                        <VARIABLE ACTIVE="Y" NAME="Holiday Mode" DISPLAY_NAME="HOLIDAY_MODE" INIT_COMMAND="off" INIT_EXTRA="0" />
+ 
                  </VARIABLES>
                 <CALENDAR_MESSAGES>
                 		   <ITEM NAME="AUTOCLOSE" VALUE="5" />

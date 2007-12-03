@@ -363,6 +363,37 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 
 	/**
+	 * Set the varaible Key,Value where value is a double, but stored as a string.
+	 * @param key The key to store the value for.
+	 * @param @value The value to store as a boolean.
+	 */
+	public void setVariable(String key, Boolean value) {
+		synchronized (variableCache) {
+			if (variableCache.containsKey(key) == true) {
+				variableCache.remove(key);
+				variableCache.put(key, value);
+				return;
+			}
+			variableCache.put(key, value);
+		}
+		return;
+	}
+	
+
+	/**
+	 * @return Returns the value stored in variable.
+	 * @param key The key to get the value for.
+	 */
+	public Boolean getBooleanVariable(String key) {
+		synchronized (variableCache) {
+			if (variableCache.containsKey(key) == true) {
+				return (Boolean) variableCache.get(key);
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Increment the variable Value
 	 * @param key The key to store the value for.
 	 */

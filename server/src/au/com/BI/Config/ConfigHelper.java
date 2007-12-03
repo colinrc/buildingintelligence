@@ -198,8 +198,9 @@ public class ConfigHelper {
 					logger.log (Level.INFO,"Attempted to add the device: " + name + " " + details.getName() + 
 							" when a device with the same key already exists: " + outputItems.get(name).getName());
 					
-				} 
-				outputItems.put(name,details);
+				} else {
+					outputItems.put(name,details);
+				}
 
 			} else {
 				if (inputItems.containsKey(name)){
