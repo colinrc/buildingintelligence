@@ -11,8 +11,11 @@ boolean ableToRunMultiple = false
 String[]  fireOnChange =   ["TRIGGER"]
 
 // If the script is able to be stopped before completion, generally not
-boolean  stoppable = false;
+boolean  stoppable = false
 
+boolean hidden  = true  // do not display script in the list sent to the flash client
+
+long autoLightOffInterval = 1200000// 20 minutes * 60 secs * 1000 ms
 
 	def main (String[] argv) {
 	// The action contents of the script go here
@@ -22,7 +25,15 @@ boolean  stoppable = false;
 			// Just in case the script was run from the Flash control plan, rather than picking up a message change.
 		}
 			
-		elife.log ("Regular script was triggered by minutes :  " + triggerExtra)			
+	   // example, if there's been no movement in the lounge for 20 mins turn the light off
+	   // HOLIDAY_MODE is a new global variable that can be used for scripts to behave differently when people are away
+	   // it should be added to the variables section of the config file
+		if (elife.isOff  ("HOLIDAY_MODE")  && elife.isOn  ("LOUNGE_LIGHT") &&   elife.getLastAccessTime ("LOUNGE_PIR") > autoLightOffInterval) {
+			elife.Off "LOUNGE_LIGHT"
+		}
+	   
+	   // triggerExtra contains the number of minutes past the hour
+		elife.log ("Regular script was triggered by minute :  " + triggerExtra)			
 			
 	}
 }
