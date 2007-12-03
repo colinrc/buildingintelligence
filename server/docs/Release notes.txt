@@ -1,4 +1,4 @@
-== 3/Dec/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b74.zip V1.6-b74] 
+== 3/Dec/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b74.zip V1.6-b74] ==
 
 ''' Scripts '''
 
