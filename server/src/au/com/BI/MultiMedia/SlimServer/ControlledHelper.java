@@ -143,6 +143,7 @@ public class ControlledHelper {
 			sendCommand(cache,commandQueue,flashCommand);
 			
 			GetTracksReply getTracksReply = new GetTracksReply();
+			getTracksReply.setForCurrentPlaylist(true);
 			getTracksReply.setTracks(reply.getTracks());
 			// getTracksReply.setCoverArtUrl(model.getCoverArtUrl());
 			TrackCommand trackCommand = new TrackCommand();

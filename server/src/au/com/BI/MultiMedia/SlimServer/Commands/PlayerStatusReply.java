@@ -386,6 +386,7 @@ public class PlayerStatusReply extends SlimServerCommand {
 		}
 		
 		Element tracksElement = new Element("tracks");
+		tracksElement.setAttribute("for", "currentplaylist");
 
 		LinkedList<Element> trackElements = new LinkedList<Element>();
 		

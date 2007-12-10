@@ -14,10 +14,20 @@ public class GetTracksReply extends SlimServerCommand {
 	private String search;
 	private LinkedList<Track> tracks;
 	private String coverArtUrl;
+	private int genre;
+	private int album;
+	private int artist;
+	private int year;
+	private boolean forCurrentPlaylist;
 	
 	public GetTracksReply() {
 		count = -1;
+		genre = -1;
+		album = -1;
+		artist = -1;
+		year = -1;
 		rescan = false;
+		forCurrentPlaylist = false;
 		tracks = new LinkedList<Track>();
 	}
 	
@@ -55,10 +65,73 @@ public class GetTracksReply extends SlimServerCommand {
 	public void setSearch(String search) {
 		this.search = search;
 	}
+	
+	public boolean isForCurrentPlaylist() {
+		return forCurrentPlaylist;
+	}
+
+	public void setForCurrentPlaylist(boolean currentPlaylist) {
+		forCurrentPlaylist = currentPlaylist;
+	}
+
+	public int getAlbum() {
+		return album;
+	}
+
+	public void setAlbum(int album) {
+		this.album = album;
+	}
+
+	public int getArtist() {
+		return artist;
+	}
+
+	public void setArtist(int artist) {
+		this.artist = artist;
+	}
+
+	public int getGenre() {
+		return genre;
+	}
+
+	public void setGenre(int genre) {
+		this.genre = genre;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public String getFor() {
+		String _for = "";
+		if (!forCurrentPlaylist) {
+			if (!StringUtils.isNullOrEmpty(search)) {
+				_for += "search:" + search + ";";
+			} else if (genre != -1) {
+				_for += "genre:" + genre + ";";
+			} else if (album != -1) {
+				_for += "album:" + album + ";";
+			} else if (artist != -1) {
+				_for += "artist:" + artist + ";";
+			} else if (year != -1) {
+				_for += "year:" + year + ";";
+			}
+			year = -1;
+		} else {
+			_for = "currentplaylist";
+		}
+		
+		return _for;
+	}
 
 	public Element getElement() {
 
 		Element tracksElement = new Element("tracks");
+		tracksElement.setAttribute("for", getFor());
 
 		LinkedList trackElements = new LinkedList();
 		
