@@ -1,10 +1,21 @@
 package au.com.BI.Config;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.*;
+
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+
 import Aladdin.*;
-import au.com.BI.Config.IPSecurity;
+
 
 public class Security {
     
@@ -26,7 +37,11 @@ public class Security {
     
     protected int lastFlashClients = 0;
     protected int lastWebCount = 0;
-    protected IPSecurity iPs = null;
+    
+    Map <String,Boolean>fullClients;
+    Map <String,Boolean>postOnlyClients;
+    
+    public enum IPType {FullFunction,PostOnly};
     
     public Security() {
 	/* login program number 0 */
@@ -35,10 +50,12 @@ public class Security {
 
     logger = Logger.getLogger(this.getClass().getPackage().getName());
 
-    /*
+    fullClients = new HashMap<String,Boolean> ();
+    postOnlyClients = new HashMap<String,Boolean> ();
+       
 	connected = true;
 	return ;
-   */
+   /*
     
      
 	InputStreamReader reader = new InputStreamReader(System.in);
@@ -83,6 +100,7 @@ public class Security {
 			fsize,
 			allowNumbers);
        }
+       */
 
     }
     
@@ -100,14 +118,10 @@ public class Security {
 		}
     }
     
-    public void loadIPs (String fileName) throws ConfigError {
-    	IPSecurity iPs = new IPSecurity();
-    	iPs.readIPs(fileName);
+    public void loadIPs (String baseDir, String fileName) throws ConfigError {
+   		readIPs(baseDir, fileName);
     }
     
-    public boolean iPInRange (String iP,  IPSecurity.IPType type){
-    	return iPs.iPInRange (iP, type);
-    }
     
     public final boolean allowWebClient(int clientCount) throws TooManyClientsException {
  
@@ -126,6 +140,68 @@ public class Security {
     
     public final boolean allowModel(int modelType,int modelCount){
 	return true;
+    }
+    
+        public void readIPs(String  baseDir, String fileName)
+    throws ConfigError {
+        // Create an instance of the tester and test
+        try {
+            SAXBuilder builder = null;
+            
+            builder = new SAXBuilder();
+            Document doc = builder.build(baseDir + File.separator + fileName);            
+            Element theConfig = doc.getRootElement();
+            
+
+            Element fullFunctionList = theConfig.getChild("full_function");
+            if (fullFunctionList != null) {
+            	for (Element i : (List<Element>)fullFunctionList.getChildren()) {
+            		String IP  = i.getAttributeValue("value");
+            		if (IP != null) {
+            			fullClients.put(IP, false);
+            		}
+            	}
+            }
+             
+            Element postOnlyList = theConfig.getChild("post_only");
+            if (postOnlyList != null) {
+            	for (Element i : (List<Element>)postOnlyList.getChildren()) {
+            		String IP  = i.getAttributeValue("value");
+            		if (IP != null) {
+            			postOnlyClients.put(IP, false);
+            		}
+            	}
+            }
+            
+        } catch (JDOMException e) {
+            throw new ConfigError(e);
+        } catch (IOException e) {
+            throw new ConfigError(e);
+        } catch (NullPointerException e) {
+            throw new ConfigError("IP Attribute not set properly in " + fileName);
+        }
+        
+    }
+  
+    public boolean iPInRange (String iP,  IPType ipType){
+    	switch (ipType){
+    	case FullFunction:
+    		if (fullClients.containsKey(iP)){
+    			return true;
+    		} else {
+    			return false;
+    		}
+
+
+    	case PostOnly:
+    		if (postOnlyClients.containsKey(iP)){
+    			return true;
+    		} else {
+    			return false;
+    		}
+
+    	}
+    	return false;
     }
     
     public boolean isConnected() {

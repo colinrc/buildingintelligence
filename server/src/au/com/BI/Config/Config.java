@@ -6,10 +6,8 @@ package au.com.BI.Config;
 import java.util.*;
 
 import au.com.BI.Flash.ClientCommand;
-import au.com.BI.Unit.UnitFactory;
 import au.com.BI.Util.*;
 
-import au.com.BI.ToggleSwitch.*;
 
 import java.io.*;
 import org.jdom.*;
@@ -19,29 +17,16 @@ import java.util.logging.*;
 import au.com.BI.AlarmLogging.*;
 import au.com.BI.Messaging.*;
 
-import au.com.BI.AV.*;
-import au.com.BI.Alert.*;
-import au.com.BI.Calendar.CalendarHandler;
-import au.com.BI.Camera.*;
 import au.com.BI.Command.*;
-import au.com.BI.CustomInput.*;
-import au.com.BI.Audio.*;
-import au.com.BI.Pump.*;
-import au.com.BI.Analog.*;
 import au.com.BI.GC100.*;
 import au.com.BI.GroovyModels.GroovyRunBlock;
-import au.com.BI.Counter.*;
 import au.com.BI.Device.DeviceFactories;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.LabelMgr.LabelMgr;
-import au.com.BI.VirtualOutput.*;
-import au.com.BI.PulseOutput.*;
 import au.com.BI.Macro.*;
 import au.com.BI.Home.Controls;
 import au.com.BI.Home.VersionManager;
-import au.com.BI.IR.*;
 import au.com.BI.JRobin.JRobinParser;
-import au.com.BI.Sensors.*;
 
 /**
  * @author Colin Canfield

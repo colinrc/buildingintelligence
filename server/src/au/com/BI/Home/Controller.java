@@ -108,7 +108,7 @@ public class Controller {
 
 		configLoaded = false;
 
-		// TODO convert this to an enum, and have it dynamicaly buil by scanning available model files
+		// TODO convert this to an enum, and have it dynamicaly built by scanning available model files
 		modelRegistry.put("COMFORT", "au.com.BI.Comfort.Model");
 		modelRegistry.put("RAW_CONNECTION", "au.com.BI.Raw.Model");
 		modelRegistry.put("FLASH_CLIENT", "au.com.BI.Flash.FlashHandler");
@@ -130,7 +130,6 @@ public class Controller {
 		modelRegistry.put("SIGN_VIDEO", "au.com.BI.SignVideo.Model");
 		modelRegistry.put("MACRO", "au.com.BI.Macro.Model");
 		modelRegistry.put("SCRIPT", "au.com.BI.Script.Model");
-		modelRegistry.put("PATTERN", "au.com.BI.Pattern.Model");
 		modelRegistry.put("AUTONOMIC_HOME", "au.com.BI.MultiMedia.AutonomicHome.Model");
 		modelRegistry.put("SLIM_SERVER", "au.com.BI.MultiMedia.SlimServer.Model");
 
@@ -143,6 +142,13 @@ public class Controller {
 			logger.log (Level.SEVERE, "Licensing failed, system shutting down");			
 			System.exit(0);
 		}
+		
+		try {
+		security.loadIPs("datafiles","IPs.xml");
+		} catch (ConfigError ecf){
+			logger.log (Level.INFO, ecf.getMessage());						
+		}
+		
 		config = new Config();
 		
 		controls = new Controls(cache);

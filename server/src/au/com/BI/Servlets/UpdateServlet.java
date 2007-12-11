@@ -164,7 +164,7 @@ public class UpdateServlet extends HttpServlet {
 	        return;
         }
         
-        Long sessionID = (Long)session.getAttribute("SessionID");
+        Long sessionID = (Long)session.getAttribute("ID");
     	ClientCommandFactory clientCommandFactory = (ClientCommandFactory)session.getAttribute("ClientCommandFactory");
         String message = req.getParameter("MESSAGE");
 
@@ -185,7 +185,7 @@ public class UpdateServlet extends HttpServlet {
 			if (rootElement != null){
 				 command = clientCommandFactory.processXML(rootElement);
 			}
-			command.setOriginatingID(sessionID);	    		
+			command.setOriginatingID(sessionID);
 			commandQueue.add(command);
 			
 			resp.setContentType("text/html");

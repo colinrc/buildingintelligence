@@ -204,6 +204,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         servletSec.setHandler(updateContextHandler);
         
     	ELifeAuthenticator eLifeAuthenticator = new ELifeAuthenticator ();
+    	eLifeAuthenticator.setSecurity(security);
         servletSec.setAuthenticator(eLifeAuthenticator);
         
         //servletSec.addHandler(updateContextHandler);
