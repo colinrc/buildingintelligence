@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.logging.*;
 import Aladdin.*;
+import au.com.BI.Config.IPSecurity;
 
 public class Security {
     
@@ -25,6 +26,7 @@ public class Security {
     
     protected int lastFlashClients = 0;
     protected int lastWebCount = 0;
+    protected IPSecurity iPs = null;
     
     public Security() {
 	/* login program number 0 */
@@ -81,7 +83,7 @@ public class Security {
 			fsize,
 			allowNumbers);
        }
- // */
+
     }
     
     public final boolean allowClient(int clientCount)  throws TooManyClientsException {
@@ -96,6 +98,15 @@ public class Security {
 		} catch (NullPointerException ex){
 		    return false;
 		}
+    }
+    
+    public void loadIPs (String fileName) throws ConfigError {
+    	IPSecurity iPs = new IPSecurity();
+    	iPs.readIPs(fileName);
+    }
+    
+    public boolean iPInRange (String iP,  IPSecurity.IPType type){
+    	return iPs.iPInRange (iP, type);
     }
     
     public final boolean allowWebClient(int clientCount) throws TooManyClientsException {
