@@ -3,6 +3,7 @@
 		<ip value="127.0.0.1" />
 	</full_function>
 	
-	<push_only>
-	</push_only>
+	<post_only>
+			<ip value="192.16.1.11" />
+	</post_only>
 </ip_list>
