@@ -1,3 +1,29 @@
+== 3/Dec/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b75.zip V1.6-b75] ==
+
+''' Squeezebox '''
+
+Fixes no status messages  [ticket:681]
+
+''' Jetty '''
+
+Can now specify IP addresses that will not be prompted for a user name and password. Add a file IPs.xml to the datafile directory and add the IP addresses to the full_function section.
+Resolves [ticket:667]
+
+Clients are included in the normal client session count security.
+
+{{{
+<ip_list>
+	<full_function>
+		<ip value="127.0.0.1" />
+	</full_function>
+	
+	<post_only>
+			<ip value="192.16.1.11" />
+	</post_only>
+</ip_list>
+
+}}}
+
 == 3/Dec/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b74.zip V1.6-b74] ==
 
 ''' Scripts '''
