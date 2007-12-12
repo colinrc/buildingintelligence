@@ -165,6 +165,10 @@ public class UpdateServlet extends HttpServlet {
         }
         
         Long sessionID = (Long)session.getAttribute("ID");
+        if (sessionID == null){
+        	logger.log (Level.FINE,"Web session was incorrectly set up, resetting");
+        	session.invalidate();
+        }
     	ClientCommandFactory clientCommandFactory = (ClientCommandFactory)session.getAttribute("ClientCommandFactory");
         String message = req.getParameter("MESSAGE");
 
