@@ -372,8 +372,6 @@
 					
 					detailsBoxBg_mc.drawRect(0, 0, width, boxHeight, 4);
 					detailsBoxBg_mc.endFill();
-					var coverArt_mc = item_mc.createEmptyMovieClip("coverArt_mc", 10);
-					coverArt_mc._y = 5;
 					item_mc.art = items[item].art;
 					item_mc.detailsPosition = items[item].detailsPosition;
 					
@@ -399,8 +397,10 @@
 							this.album_lb.text = (_global.controls[key].track.album != undefined) ? "Album: " + _global.controls[key].track.album : "";
 							
 							if (_global.controls[key].track.album_id != this.lastAlbumID) {
-								this.coverArt_mc.unloadMovie();
+								this.createEmptyMovieClip("coverArt_mc", 10);
+								this.coverArt_mc._y = 5;
 								this.coverArt_mc.loadMovie("http://" + _global.settings.squeezeAddress + ":" + _global.settings.squeezePort + "/music/current/" + this.art + ".jpg?playerid=" + _global.controls[key].id + "&r=" + _global.controls[key].track.id);
+								//debug("loading:" + "http://" + _global.settings.squeezeAddress + ":" + _global.settings.squeezePort + "/music/current/" + this.art + ".jpg?playerid=" + _global.controls[key].id + "&r=" + _global.controls[key].track.id);
 								this.onEnterFrame = function () {
 									if (this.coverArt_mc._width > 20) {
 										if (this.coverArt_mc._width > 300) {

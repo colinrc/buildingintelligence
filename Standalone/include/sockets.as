@@ -288,8 +288,7 @@ receiveCmd = function (xml, ignoreSkip) {
 			var album = new Object();
 			album.id = msg.childNodes[i].attributes.id;
 			album.album = msg.childNodes[i].attributes.album;
-			album.coverArt = msg.childNodes[i].attributes.coverArt;
-			album.thumbCoverArt = msg.childNodes[i].attributes.thumbCoverArt;
+			album.coverId = msg.childNodes[i].attributes.coverArt.split("/")[4];
 			album.disc = msg.childNodes[i].attributes.disc;
 			album.disccount = msg.childNodes[i].attributes.disccount;
 			album.compilation = (msg.childNodes[i].attributes.compilation == "true");
@@ -316,7 +315,14 @@ receiveCmd = function (xml, ignoreSkip) {
 		}
 		broadcastChange(msg.attributes.KEY, "genres");
 	} else if (msg.nodeName == "tracks") {
-		var tracks = _global.controls[msg.attributes.KEY].tracks = new Array();
+		if (!_global.controls[msg.attributes.KEY].tracks) _global.controls[msg.attributes.KEY].tracks = new Object();
+		if (msg.attributes["for"] == "currentplaylist" && msg.childNodes.length == 1) {
+			var tracks = _global.controls[msg.attributes.KEY].tracks["currentlyplaying"] = new Array();
+		} else if (msg.attributes["for"]) {
+			var tracks = _global.controls[msg.attributes.KEY].tracks[msg.attributes["for"]] = new Array();
+		} else {
+			var tracks = _global.controls[msg.attributes.KEY].tracks.undefined = new Array();
+		}
 		for (var i=0; i<msg.childNodes.length; i++) {
 			var track = new Object();
 			track.id = msg.childNodes[i].attributes.id;
@@ -330,7 +336,13 @@ receiveCmd = function (xml, ignoreSkip) {
 			track.title = msg.childNodes[i].attributes.title;
 			tracks.push(track);
 		}
-		broadcastChange(msg.attributes.KEY, "tracks");
+		if (msg.attributes["for"] == "currentplaylist" && tracks.length == 1) {
+			broadcastChange(msg.attributes.KEY, "tracks:currentlyplaying");
+		} else if (msg.attributes["for"]) {
+			broadcastChange(msg.attributes.KEY, "tracks:" + msg.attributes["for"]);
+		} else {
+			broadcastChange(msg.attributes.KEY, "tracks:undefined");
+		}
 	} else {
 		var control = _global.controls[msg.attributes.KEY];
 		if (control != undefined) {

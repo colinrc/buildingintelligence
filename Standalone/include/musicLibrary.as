@@ -31,11 +31,8 @@
 					album_mc.key = key;
 					album_mc.album = album;
 					var cover_mc = album_mc.createEmptyMovieClip("cover_mc", 0);
-					if (album.thumbCoverArt.indexOf("-1") > -1) {
-						cover_mc.loadMovie("http://" + _global.settings.squeezeAddress + ":" + _global.settings.squeezePort + "/music/0/thumb.jpg");
-					} else {
-						cover_mc.loadMovie(album.thumbCoverArt);
-					}
+					cover_mc.loadMovie("http://" + _global.settings.squeezeAddress + ":" + _global.settings.squeezePort + "/music/" + album.coverId + "/thumb.jpg");
+					//debug("loading:" + "http://" + _global.settings.squeezeAddress + ":" + _global.settings.squeezePort + "/music/" + album.coverId + "/thumb.jpg");
 					album_mc.onPress2 = function () {
 						selectTracks(this.key, "album", this.album.id, this.album.album);
 					}
@@ -160,10 +157,13 @@
 	tab_mc.attachMovie("bi.ui.Label", "currentPlaylist_lb", 30, {settings:{text:"Current Playlist", width:150, fontSize:16}, _x:Math.round(tab_mc.width / 2)});
 
 	tab_mc.key = key;
-	tab_mc.update = function (key, dataSetName) {
-		if (dataSetName && dataSetName != "tracks") return;
+	tab_mc.update = function (key, dataSetObj) {
+		if (dataSetObj) {
+			if (dataSetObj.split(":")[0] != "tracks") return;
+			if (dataSetObj.split(":")[1] != "currentplaylist" && dataSetObj.split(":")[1] != "currentlyplaying") return;				
+		}
 
-		var dataSet = _global.controls[this.key]["tracks"];
+		var dataSet = _global.controls[this.key]["tracks"]["currentplaylist"];
 		
 		var labels_mc = this.createEmptyMovieClip("labels_mc", 40);
 		labels_mc._x = Math.round(this.width / 2);
@@ -196,12 +196,16 @@
 			label_mc.id = track.id;
 			label_mc.index = this.startRow + counter;
 						
-			label_mc.createTextField("label" + counter + "_txt", 20, 3, 3, labelWidth - 30, 20);
-			var label_txt = label_mc["label" + counter + "_txt"];
+			label_mc.createTextField("label_txt", 20, 22, 3, labelWidth - 30, 20);
+			var label_txt = label_mc["label_txt"];
 			label_txt.embedFonts = true;
 			label_txt.selectable = false;
 			label_txt.setNewTextFormat(label_tf);
 			label_txt.text = (this.startRow + counter + 1) + ". " + track.artist + " - " + track.title;
+			
+			if (_global.controls[this.key].mode == "play" && track.id == _global.controls[this.key].track.id) {
+				label_mc.attachMovie("bi.ui.Icon", "play_mc", 50, {settings:{iconName:"media-play", size:20}, _x:2, _y:6});
+			}
 
 			var bg_mc = label_mc.createEmptyMovieClip("bg_mc", 0);
 			bg_mc.beginFill(0x4E75B5);
@@ -269,12 +273,18 @@
 
 		content_mc.key = key;
 		content_mc.filter = filter;
-		content_mc.update = function (key, dataSetName) {
-			if (key) this.key = key;
-			if (dataSetName) this.dataSetName = dataSetName;
-
-			if (this.dataSetName != "tracks") return;
-			var dataSet = _global.controls[this.key][this.dataSetName];
+		content_mc.update = function (key, dataSetObj) {
+			if (dataSetObj) {
+				if (dataSetObj.split(":")[0] != "tracks") return;
+				//if (dataSetObj.split(":")[1] != this.filter) return;
+				// hack until dataSetGen is actually being set correctly
+				if (dataSetObj.split(":")[1] != "undefined") return;				
+				
+				this.dataSetName = dataSetObj.split(":")[0];
+				this.dataSetGen = dataSetObj.split(":")[1];
+			}
+			
+			var dataSet = _global.controls[this.key][this.dataSetName][this.dataSetGen];
 			
 			var labels_mc = this.createEmptyMovieClip("labels_mc", 50);
 			labels_mc._y = 40;
