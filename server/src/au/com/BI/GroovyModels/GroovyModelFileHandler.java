@@ -6,13 +6,12 @@ package au.com.BI.GroovyModels;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import au.com.BI.Config.ConfigError;
 
 /**
- * @author colinc
+ * @author colin
  *
  */
 public class GroovyModelFileHandler {
@@ -22,20 +21,6 @@ public class GroovyModelFileHandler {
                 logger = Logger.getLogger(this.getClass().getPackage().getName());
         }
 
-        public void loadGroovyModelList(au.com.BI.Script.Model myScriptModel, String dir, Map <String,GroovyRunBlock>GroovyModelRunBlockList) throws ConfigError {
-
-                Integer fileNum;
-                fileNum = new Integer(0);
-                int i = 0;
-
-               loadGroovyModelList(dir,GroovyModelRunBlockList);
-
-                logger.log(Level.FINE, "Groovy Models loaded ");
-
-                myScriptModel.setScriptFiles(GroovyModelRunBlockList);
-                myScriptModel.setNumberOfScripts(GroovyModelRunBlockList.size());
-
-        }
 
   
         public void loadGroovyModelList(String directoryName, Map <String,GroovyRunBlock>GroovyModelRunBlockList) throws ConfigError {

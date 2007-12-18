@@ -26,7 +26,7 @@ public class Script extends BaseDevice implements DeviceType
 	public enum ScriptType {Jython,Groovy};
 	protected  ScriptType scriptType =ScriptType. Jython;
 
-	protected Map <String,List<String>> scriptsVersusCommands; // command to trigger, script name
+	protected Map <String,List<String>> scriptsVersusCommands; // command to trigger, groovy script name
 	
 	public Script (){
 		scriptsVersusCommands = new HashMap<String,List<String>>();

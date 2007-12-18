@@ -35,7 +35,7 @@ import java.io.*;
 public class Model
   extends SimplifiedModel implements DeviceModel {
 
-        public static int numberOfScripts = 0;
+        public int numberOfScripts = 0;
         public static final int numberRepeats = 4;
         public static final int MINUTE = 1;
         public static final int HOUR = 2;
@@ -53,7 +53,7 @@ public class Model
         protected GroovyScriptFileHandler groovyScriptFileHandler;
 		protected ConcurrentHashMap <String, GroovyScriptRunBlock>groovyScriptRunBlockList = null;
         
-        protected Map scriptFiles;
+        protected Map <String, ArrayList<String>>scriptFiles;
 
         public Model() {
                 super();
@@ -136,11 +136,11 @@ public class Model
                                         try {
                                                 CommandInterface newCommand;
                                                 if (((Script)device).getScriptType() == ScriptType.Jython) {
-                                                	String scriptName = ((Script) device).getNameOfScript();
+                                                	// String scriptName = ((Script) device).getNameOfScript();
                                                 	
-	
-                                                	doScriptItem(scriptName,  "run", "", command,0L); // called via a trigger
-	                                                // cache.setCachedCommand(newCommand.getKey(), newCommand);
+                                                	for (String scriptName:(((Script)device).getScriptListForCommand(""))){
+                                                		doScriptItem(scriptName,  "run", "", command,0L); 
+                                                	}
 
                                                 } else {
                                                 	// Groovy script (s)
@@ -405,7 +405,7 @@ public class Model
 	    			String tagParts[] = triggerTag.split(":");
 	    			String triggerDisplayName = tagParts [0];
 	    			try {
-	        			Script newScript;
+	        			Script newScript = null;
 	        			if (configHelper.checkForOutputItem(triggerDisplayName)) {
 	        				newScript = (Script)configHelper.getOutputItem(triggerDisplayName);
 	        				// Already have a script responding to this display name
@@ -435,14 +435,14 @@ public class Model
                 logger.log(Level.FINE,"Loading scripts");
 
                 String lsLine, lsCheck;
-                ArrayList linesOfFile, scripts;
+                ArrayList <String>linesOfFile;
+                ArrayList <Script> scripts;
                 Object hashKey;
-                Map files;
-                Script currentScript;
+                Map <String, ArrayList<String>>files;
 
                 lsLine = new String();
                 lsCheck = new String();
-                scripts = new ArrayList();
+                scripts = new ArrayList <Script>();
                 try {
                         scriptHandler.removeAllTimers();
 
@@ -456,8 +456,7 @@ public class Model
 	
 	                //loadScripts();
 	                files = getScriptFiles();
-	                Set sFiles = files.keySet();
-	                Iterator iteratorHash = sFiles.iterator();
+	                
 	
 	                setNumberOfScripts(files.size());
 	                scriptHandler = new ScriptHandler(getNumberOfScripts(), this, scriptRunBlockList,statusFileName); //,this.commandQueue);
@@ -466,13 +465,9 @@ public class Model
 					scriptHandler.loadScriptFile();
 	
 	                scriptHandler.initTimerLists();
-	                while (iteratorHash.hasNext()) {
-	                        hashKey = iteratorHash.next();
-	                        linesOfFile = (ArrayList) files.get(hashKey);
-	                        scripts.add(new Script());
-	                        currentScript = (Script) scripts.get(j);
-	                        currentScript.setNameOfScript( (String) hashKey);
-	
+	                for (String scriptName:files.keySet()){
+	                        linesOfFile =  files.get(scriptName);
+	                        
 	                        int i = 0;
 	                        lsLine = "";
 	
@@ -481,8 +476,7 @@ public class Model
 	                                lsLine = lsLine + linesOfFile.get(i);
 	                                i++;
 	                        }
-	                        parseScript(lsLine, currentScript);
-	                        j++;
+	                        parseScript(lsLine,scriptName);
 	                }
 	                scriptHandler.addTimerControls();
 	                logger.log(Level.FINE,"Scripts loaded");
@@ -491,11 +485,13 @@ public class Model
                 }
         }
 
-        public void parseScript(String myScript, Script currentScript) {
+        public void parseScript(String myScript, String scriptName) {
                 int begin = 0;
                 int end = 0;
                 int deviceType = 0;
                 String controlled, duration;
+                Script newScript = null;
+    			
 
                 // Step 1. Look for any fireScriptOn commands, these will be controlled and cause the script to fire when the device value is changed, all other firing of commands will be ignored
                 begin = myScript.indexOf("elife.fireScriptOn", 1);
@@ -508,7 +504,18 @@ public class Model
                         controlled = myScript.substring(begin, end);
                         //deviceType = getDeviceType(controlled);
                         //if (deviceType >= 0) {
-                        addControlledItem(controlled, currentScript, MessageDirection.FROM_FLASH);
+            			
+	        			if (configHelper.checkForOutputItem(controlled)) {
+	        				newScript = (Script)configHelper.getOutputItem(controlled);
+	        				// Already have a script responding to this display name
+	        			} else {
+	        				newScript = new Script();
+		        			newScript.setScriptType (ScriptType.Jython);
+		        			newScript.setKey(controlled);
+	        				// No scripts yet listening for this display name
+	        			}
+	        			newScript.addScriptForCommand("", scriptName);
+                        addControlledItem(controlled, newScript, MessageDirection.FROM_FLASH);
 
                         //}
                         begin = myScript.indexOf("elife.fireScriptOn", end);
@@ -528,7 +535,19 @@ public class Model
                        controlled = myScript.substring(begin, end);
                        //deviceType = getDeviceType(controlled);
                        //if (deviceType >= 0) {
-                       addControlledItem(controlled, currentScript, MessageDirection.FROM_FLASH);
+                       
+	        			if (configHelper.checkForOutputItem(controlled)) {
+	        				newScript = (Script)configHelper.getOutputItem(controlled);
+	        				// Already have a script responding to this display name
+	        			} else {
+	        				newScript = new Script();
+		        			newScript.setScriptType (ScriptType.Jython);
+		        			newScript.setKey(controlled);
+	        				// No scripts yet listening for this display name
+	        			}
+	        			newScript.addScriptForCommand("", scriptName);
+                        addControlledItem(controlled, newScript, MessageDirection.FROM_FLASH);
+
                        //}
                        begin = myScript.indexOf("elife.listenMacro", end);
                        if (begin > 0) {
@@ -546,7 +565,18 @@ public class Model
                         controlled = myScript.substring(begin, end);
                         //deviceType = getDeviceType(controlled);
                         //if (deviceType >= 0) {
-                        addControlledItem(controlled, currentScript, MessageDirection.FROM_FLASH);
+	        			if (configHelper.checkForOutputItem(controlled)) {
+	        				newScript = (Script)configHelper.getOutputItem(controlled);
+	        				// Already have a script responding to this display name
+	        			} else {
+	        				newScript = new Script();
+		        			newScript.setScriptType (ScriptType.Jython);
+		        			newScript.setKey(controlled);
+	        				// No scripts yet listening for this display name
+	        			}
+	        			newScript.addScriptForCommand("", scriptName);
+                        addControlledItem(controlled, newScript, MessageDirection.FROM_FLASH);
+
                         //}
                         begin = myScript.indexOf("elife.getValue", end);
                         if (begin > 0) {
@@ -564,7 +594,17 @@ public class Model
                         controlled = myScript.substring(begin, end);
                         //deviceType = getDeviceType(controlled);
                         //if (deviceType >= 0) {
-                        addControlledItem(controlled, currentScript, MessageDirection.FROM_FLASH);
+	        			if (configHelper.checkForOutputItem(controlled)) {
+	        				newScript = (Script)configHelper.getOutputItem(controlled);
+	        				// Already have a script responding to this display name
+	        			} else {
+	        				newScript = new Script();
+		        			newScript.setScriptType (ScriptType.Jython);
+		        			newScript.setKey(controlled);
+	        				// No scripts yet listening for this display name
+	        			}
+	        			newScript.addScriptForCommand("", scriptName);
+                        addControlledItem(controlled, newScript, MessageDirection.FROM_FLASH);
                         //}
                         begin = myScript.indexOf("elife.getCommand", end);
                         if (begin > 0) {
@@ -573,7 +613,7 @@ public class Model
                         ;
                 }
 
-                // Step 5. Look for any getLastAccessTimeDuration commands, these will be timmed and cause the script to fire at each timed interval
+                // Step 5. Look for any getLastAccessTimeDuration commands, these will be timed and cause the script to fire at each timed interval
 
                 begin = myScript.indexOf("elife.getLastAccessTimeDuration", 1);
                 while (begin > 0) {
@@ -588,13 +628,13 @@ public class Model
                         duration = myScript.substring(begin, end);
 
                         if (duration.equals("minute")) {
-                                scriptHandler.addTimerListMinute(currentScript.getNameOfScript());
+                                scriptHandler.addTimerListMinute(scriptName);
                         }
                         else if (duration.equals("hour")) {
-                                scriptHandler.addTimerListHour(currentScript.getNameOfScript());
+                                scriptHandler.addTimerListHour(scriptName);
                         }
                         else if (duration.equals("day")) {
-                                scriptHandler.addTimerListDay(currentScript.getNameOfScript());
+                                scriptHandler.addTimerListDay(scriptName);
                         }
 
                         begin = myScript.indexOf("elife.getLastAccessTimeDuration", end);
@@ -606,8 +646,7 @@ public class Model
                 // Step 6. Look for any isScriptStillRunning commands, these will be controlled and cause the script to fire when the device value is changed, all other firing of commands will be ignored
                 begin = myScript.indexOf("elife.isScriptStillRunning", 1);
 				synchronized (this.scriptRunBlockList) {
-					String nameOfScript = ((Script)currentScript).nameOfScript;
-					ScriptRunBlock scriptRunBlock = (ScriptRunBlock)scriptRunBlockList.get(nameOfScript);
+					ScriptRunBlock scriptRunBlock = (ScriptRunBlock)scriptRunBlockList.get(scriptName);
 					if (scriptRunBlock != null) {
 		                if (begin > 0) {
 		                		scriptRunBlock.setStoppable(true);
@@ -623,14 +662,11 @@ public class Model
                  * @deprecated
                  */
 
-                DeviceModel currentModel;
                 ConfigHelper currentConfigHelper;
                 String showModel;
 
-                Iterator allModels = getModelList().iterator();
-
-                while (allModels.hasNext()) {
-                        currentModel = (DeviceModel) allModels.next();
+    
+                for (DeviceModel currentModel:getModelList()){
 
                         showModel = currentModel.getName();
                         logger.log(Level.FINE, "Checking for script references in model ..." + showModel);
@@ -834,8 +870,7 @@ public class Model
                 Iterator theHashCachedCommands;
                 Object loCommand;
                 String lsCommand;
-                Collection hashCommands;
-                Map ObjectAtributes;
+                //Map ObjectAtributes;
                 cachedCommands = cache.getStartupItemList();
                 while (cachedCommands.hasNext()) {
                         loCommand = cachedCommands.next();
@@ -1391,11 +1426,11 @@ public class Model
         public void attatchComms(CommandQueue commandQueue) throws au.com.BI.Comms.
           ConnectionFail {};
 
-        public void setScriptFiles(Map myScriptFiles) {
+        public void setScriptFiles(Map <String, ArrayList<String>>myScriptFiles) {
                 this.scriptFiles = myScriptFiles;
         }
 
-        public Map getScriptFiles() {
+        public Map <String, ArrayList<String>>getScriptFiles() {
                 return this.scriptFiles;
         }
 

@@ -4,14 +4,14 @@ import java.util.*;
 public class ScriptRunBlock {
 	int repeatCount = 0;
 	boolean enabled = true;
-	LinkedList runs = null;
+	LinkedList <ScriptParams>runs = null;
 	public String statusString = "";
 	public boolean stoppable = false;
 	public Date lastUpdated = null;
 	public String name = "";
 	
 	public ScriptRunBlock () {
-		runs = new LinkedList();
+		runs = new LinkedList<ScriptParams>();
 		lastUpdated = new Date();
 	}
 	

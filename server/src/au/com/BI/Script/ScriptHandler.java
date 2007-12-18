@@ -23,7 +23,6 @@ import org.jdom.output.XMLOutputter;
 
 import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
-import au.com.BI.Flash.*;
 import au.com.BI.User.*;
 import java.util.logging.*;
 
@@ -36,13 +35,15 @@ public class ScriptHandler {
 	 */
 	protected String fileName;
 
-	protected Map scripts, abortingScript;
+	protected Map <String, ArrayList<String>>scripts;
+	protected Map <String, Integer>abortingScript;
 
 	protected Logger logger;
 	protected Cache cache;
 	
 	//  protected List commandList;
-	protected Map runningScripts, scriptRunBlockList;
+	protected Map <String, RunScript>runningScripts;
+	protected Map  <String, ScriptRunBlock>scriptRunBlockList;
 
 	protected Timer timerMinute, timerHour, timerDay;
 
@@ -64,15 +65,15 @@ public class ScriptHandler {
 
 
 	public ScriptHandler(int numberOfScripts,
-			au.com.BI.Script.Model scriptModel, Map scriptRunBlockList,
+			au.com.BI.Script.Model scriptModel, Map <String, ScriptRunBlock>scriptRunBlockList,
 			String statusFileName) { //,List commandList) {
 		super();
 		//scripts = new HashMap (numberOfScripts);
 		this.statusFileName = statusFileName;
 
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		runningScripts = Collections.synchronizedMap(new LinkedHashMap());
-		abortingScript = Collections.synchronizedMap(new HashMap());
+		runningScripts = Collections.synchronizedMap(new LinkedHashMap<String,RunScript>());
+		abortingScript = Collections.synchronizedMap(new HashMap<String, Integer>());
 		this.scriptRunBlockList = scriptRunBlockList;
 		// this.setCommandList(commandList);
 		this.scriptModel = scriptModel;
@@ -90,7 +91,7 @@ public class ScriptHandler {
 			ScriptRunBlock scriptRunBlock = (ScriptRunBlock) scriptRunBlockList
 					.get(scriptName);
 			if (scriptRunBlock.moreToRun()) {
-				returnCode = false; // don't flag it as finished; and run enxt one.
+				returnCode = false; // don't flag it as finished; and run next one.
 				scriptRunBlockList.put(scriptName, scriptRunBlock);
 			}
 		}
@@ -149,7 +150,7 @@ public class ScriptHandler {
 		if (scriptAlreadyRunning && !noQueue) {
 			ScriptParams params = new ScriptParams(parameter, user);
 			synchronized (scriptRunBlockList) {
-				ScriptRunBlock scriptRunBlock = (ScriptRunBlock) scriptRunBlockList
+				ScriptRunBlock scriptRunBlock =scriptRunBlockList
 						.get(scriptName);
 				scriptRunBlock.addRun(params);
 				scriptRunBlockList.put(scriptName, scriptRunBlock);
@@ -164,9 +165,9 @@ public class ScriptHandler {
 	}
 
 	public boolean runScript(String scriptName, User user, Model scriptModel, CommandInterface triggeringCommand) {
-		ArrayList linesOfScript = null;
+		ArrayList <String>linesOfScript = null;
 		synchronized (scripts) {
-			linesOfScript = (ArrayList) scripts.get(scriptName);
+			linesOfScript = scripts.get(scriptName);
 		}
 
 		if (linesOfScript == null) {
@@ -205,12 +206,12 @@ public class ScriptHandler {
 				Document doc = builder.build(statusFileName);
 				Element theConfig = doc.getRootElement();
 
-				List scriptsList = theConfig.getChildren();
+				List <Element>scriptsList = theConfig.getChildren();
 				
 				// Parse each script from the status file and ensure it is still on the system
-				Iterator eachScript = scriptsList.iterator();
+				Iterator <Element>eachScript = scriptsList.iterator();
 				while (eachScript.hasNext()) {
-					Element scriptElement = (Element) eachScript.next();
+					Element scriptElement= eachScript.next();
 					String name = scriptElement.getAttributeValue("NAME");
 					String enabled = scriptElement.getAttributeValue("ENABLED");
 					if (enabled == null)
@@ -238,12 +239,9 @@ public class ScriptHandler {
 						scriptRunBlock.setEnabled(true);
 					this.scriptRunBlockList.put(name, scriptRunBlock);
 				}
-				Iterator eachScriptBlock = scriptRunBlockList.values()
-						.iterator();
-				while (eachScriptBlock.hasNext()) {
-					Object item = eachScriptBlock.next();
-					scriptRunBlock = (ScriptRunBlock) item;
-					if (scriptRunBlock.getLastUpdated().before(now)) {
+				for (ScriptRunBlock iScriptRunBlock: scriptRunBlockList.values()){
+					scriptRunBlock = iScriptRunBlock;
+					if (iScriptRunBlock.getLastUpdated().before(now)) {
 						// Script on the file system but not yet in the status file.
 						updated = true;
 					}
@@ -269,11 +267,7 @@ public class ScriptHandler {
 		synchronized (scriptRunBlockList) {
 			try {
 				Element scriptStatusElm = new Element("SCRIPT_STATUS");
-				Iterator eachScript = this.scriptRunBlockList.values()
-						.iterator();
-				while (eachScript.hasNext()) {
-					ScriptRunBlock scriptRunBlock = (ScriptRunBlock) eachScript
-							.next();
+				for (ScriptRunBlock scriptRunBlock: scriptRunBlockList.values()){
 
 					Element scriptElement = new Element("SCRIPT");
 					scriptElement
@@ -433,7 +427,7 @@ public class ScriptHandler {
 
 	public void abort(String scriptName) {
 		synchronized (abortingScript) {
-			abortingScript.put(abortingScript, new Integer(1));
+			abortingScript.put(scriptName, new Integer(1));
 		}
 	}
 
@@ -473,10 +467,9 @@ public class ScriptHandler {
 		
 		synchronized (scripts) {
 			if (scriptName.equals("")) {
-				Iterator scriptNames = scripts.keySet().iterator();
-				while (scriptNames.hasNext()) {
-					Element scriptDef = buildListElement((String) scriptNames
-							.next());
+
+				for (String iScriptName: scripts.keySet()) {
+					Element scriptDef = buildListElement(iScriptName);
 					returnList.add( scriptDef);
 				}
 			} else {
@@ -489,13 +482,13 @@ public class ScriptHandler {
 
 	public Element buildListElement(String scriptName) {
 		String myTimer;
-		Object scriptObject = scripts.get(scriptName);
-		List script = (List) scriptObject;
-		if (script == null)
+
+		if (!scripts.containsKey(scriptName))
 			return null;
+
 		ScriptRunBlock scriptRunBlock = null;
 		synchronized (scriptRunBlockList){
-			scriptRunBlock = (ScriptRunBlock)scriptRunBlockList.get(scriptName);
+			scriptRunBlock = scriptRunBlockList.get(scriptName);
 		}
 		Element scriptDef = new Element("CONTROL");
 		scriptDef.setAttribute("KEY", "SCRIPT");
@@ -535,36 +528,10 @@ public class ScriptHandler {
 		return scriptDef;
 	}
 
-	public void put(String name, Element scriptElement) {
-		LinkedList script = parseElement(scriptElement);
-		if (script != null) {
-			synchronized (scripts) {
-				scripts.put(name, script);
-			}
-		}
-		this.saveScriptFile();
-	}
-
-	
-	public LinkedList parseElement(Element element) {
-		LinkedList newScript = new LinkedList();
-		List scriptCommands = element.getChildren();
-		Iterator scriptCommandList = scriptCommands.iterator();
-		while (scriptCommandList.hasNext()) {
-			Element scriptElement = (Element) scriptCommandList.next();
-			ClientCommand scriptElementCommand = new ClientCommand();
-			scriptElementCommand.setFromElement(scriptElement);
-			if (scriptElementCommand != null)
-				newScript.add(scriptElementCommand);
-		}
-		return newScript;
-	}
 
 	public void disableAll() {
 		RunScript theScript;
-		Iterator eachScript = runningScripts.keySet().iterator();
-		while (eachScript.hasNext()) {
-			String scriptName = (String) eachScript.next();
+		for (String scriptName: runningScripts.keySet()){
 			logger.log(Level.FINE, "Disable script " + scriptName);
 			synchronized (runningScripts) {
 				theScript = (RunScript) runningScripts.get(scriptName);
@@ -586,9 +553,7 @@ public class ScriptHandler {
 
 	public void enableAll() {
 		RunScript theScript;
-		Iterator eachScript = runningScripts.keySet().iterator();
-		while (eachScript.hasNext()) {
-			String scriptName = (String) eachScript.next();
+		for (String scriptName: runningScripts.keySet()){
 			logger.log(Level.FINE, "Enable script " + scriptName);
 			synchronized (runningScripts) {
 				theScript = (RunScript) runningScripts.get(scriptName);

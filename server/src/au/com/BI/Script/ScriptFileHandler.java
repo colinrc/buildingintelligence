@@ -30,7 +30,7 @@ public class ScriptFileHandler {
                 Integer fileNum;
                 fileNum = new Integer(0);
                 int i = 0;
-                Map <String,ArrayList>myFiles = Collections.synchronizedMap(new LinkedHashMap<String,ArrayList>(30));
+                Map <String,ArrayList<String>>myFiles = Collections.synchronizedMap(new LinkedHashMap<String,ArrayList<String>>(30));
 
                 myFiles = loadScriptList(dir,scriptRunBlockList);
 
@@ -41,7 +41,7 @@ public class ScriptFileHandler {
 
         }
 
-        public ArrayList fileRead(String myFile) { //throws ConfigError {
+        public ArrayList <String>fileRead(String myFile) { //throws ConfigError {
                 ArrayList <String>scriptList;
                 String record = null;
                 int recCount = 0;
@@ -53,7 +53,7 @@ public class ScriptFileHandler {
 
                         while ( (record = br.readLine()) != null) {
                                 recCount++;
-                                // remove lines we dont want
+                                // remove lines we don't want
                                 if (removeBadLines(record) == false) {
                                         scriptList.add(record + "\n");
                                 }
@@ -92,12 +92,11 @@ public class ScriptFileHandler {
                 return false;
         }
 
-        public Map <String,ArrayList> loadScriptList(String directoryName, Map <String,ScriptRunBlock>scriptRunBlockList)  throws ConfigError {
+        public Map <String,ArrayList<String>> loadScriptList(String directoryName, Map <String,ScriptRunBlock>scriptRunBlockList)  throws ConfigError {
                 try {
 
-		                ArrayList linesOfFile;
-		                HashMap <String,ArrayList> files;
-		                files = new HashMap<String,ArrayList>();
+		                ArrayList <String>linesOfFile;
+		                HashMap <String,ArrayList<String>> files = new HashMap<String,ArrayList<String>>();
 		                FilenameFilter filter = new FilenameFilter() {
 		                        public boolean accept(File dir, String name) {
 		                                return name.endsWith(".py");
