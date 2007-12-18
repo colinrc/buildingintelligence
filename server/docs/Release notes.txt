@@ -1,3 +1,10 @@
+== 18/Dec/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b76.zip V1.6-b76] ==
+
+''' Scripts '''
+
+Multiple Jython scripts can now be triggered from the same DISPLAY_NAME. Resolves ticket [ticket:682]
+
+
 == 3/Dec/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b75.zip V1.6-b75] ==
 
 ''' Squeezebox '''

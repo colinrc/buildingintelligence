@@ -1,0 +1,30 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+
+         <DEVICE ACTIVE="N" DESCRIPTION="Tutondo" DEVICE_TYPE="TUTONDO">
+                 <CONNECTION>
+                         <SERIAL ACTIVE="N" PORT="COM1" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+  
+                 </CONNECTION>
+                 <PARAMETERS>
+                         <ITEM VALUE="20" NAME="POLL_INTERVAL"/>
+                         <ITEM VALUE="B" NAME="PROTOCOL"/>
+                         <ITEM VALUE="Tutondo Inputs" NAME="INPUTS"/>
+                         <ITEM VALUE="Tutondo Functions" NAME="FUNCTIONS"/>
+                 </PARAMETERS>
+                 <CATALOGUE NAME="Tutondo Inputs">
+                         <ITEM VALUE="2" CODE="Marantz Tuner"/>
+                         <ITEM VALUE="1" CODE="Media Centre"/>
+                 </CATALOGUE>
+                 <CATALOGUE NAME="Tutondo Functions">
+                         <ITEM VALUE="2" CODE="Play"/>
+                         <ITEM VALUE="1" CODE="Stop"/>
+                 </CATALOGUE>
+                 <TUTONDO>
+                         <AUDIO_OUTPUT ACTIVE="Y"  DISPLAY_NAME="OFFICE_AUDIO" KEY="04" NAME="Office"/>
+                         <AUDIO_OUTPUT ACTIVE="Y"  DISPLAY_NAME="BEDROOM_AUDIO" KEY="03" NAME="Master Bedroom"/>
+                         <AUDIO_OUTPUT ACTIVE="Y"  DISPLAY_NAME="LOUNGE_AUDIO" KEY="02" NAME="Lounge"/>
+                         <AUDIO_OUTPUT ACTIVE="Y"  DISPLAY_NAME="FAMILY_AUDIO" KEY="01" NAME="Kitchen Family"/>
+                 </TUTONDO>
+         </DEVICE>
+</CONFIG>

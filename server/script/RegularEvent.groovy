@@ -28,8 +28,8 @@ long autoLightOffInterval = 1200000// 20 minutes * 60 secs * 1000 ms
 	   // example, if there's been no movement in the lounge for 20 mins turn the light off
 	   // HOLIDAY_MODE is a new global variable that can be used for scripts to behave differently when people are away
 	   // it should be added to the variables section of the config file
-		if (elife.isOff  ("HOLIDAY_MODE")  && elife.isOn  ("LOUNGE_LIGHT") &&   elife.getLastAccessTime ("LOUNGE_PIR") > autoLightOffInterval) {
-			elife.Off "LOUNGE_LIGHT"
+		if (elife.isOff  ("HOLIDAY_MODE")  && elife.isOn  ("MASTER_BED_LIGHT") &&   (elife.getLastAccessTime ("MASTER_BED_PIR") - System.currentTimeMillis()) > autoLightOffInterval) {
+			elife.Off "MASTER_BED_LIGHT"
 		}
 	   
 	   // triggerExtra contains the number of minutes past the hour

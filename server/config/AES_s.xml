@@ -1,0 +1,230 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+	<DESC>Project 3000 AES configuration</DESC>
+  <!-- 	
+  	Job No: AES Office
+	
+	Target Client File:	AES_c	
+											-->
+
+       <!-- ______________________________________  IR LEARNER _____________________________ -->
+        <!-- flow may be NONE, RTSCTS" -->
+        <DEVICE ACTIVE="N" NAME="IR_LEARNER" DISPLAY_NAME="IR LEARNER">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.70" PORT="4999"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5000"/>
+                </CONNECTION>
+                <PARAMETERS>
+                        <ITEM NAME="STX" VALUE=""/>
+                        <ITEM NAME="ETX" VALUE="\n"/>
+                </PARAMETERS>
+                <IR_LEARNER/>
+        </DEVICE>
+	<!-- _____________________________ GC-100 DEFS _____________________________-->
+	<DEVICE ACTIVE="Y" NAME="GC100" DISPLAY_NAME="GC100">
+		<CONNECTION>
+			<IP IP_ADDRESS="192.168.0.70" PORT="4998"/>
+		</CONNECTION>
+			<GC100_IR NAME="IR1">
+				<PARAMETERS>
+					<ITEM NAME="MODULE" VALUE="2"/>
+					<ITEM NAME="MODULE_TYPE" VALUE="IR"/>
+					<!-- Valid types are serial, IR or relay -->
+				</PARAMETERS>
+				<IR KEY="01" NAME="IR Port 1" AV_NAME="AV_RACK_1"/>
+				<IR KEY="02" NAME="IR Port 2" AV_NAME="AV_RACK_2"/>
+				<IR KEY="03" NAME="IR Port 3" AV_NAME="AV_RACK_3"/>
+			</GC100_IR>
+	</DEVICE>
+	<!-- ______________________________________  TUTONDO DEFS  ____________________  -->
+        <DEVICE ACTIVE="Y" NAME="TUTONDO" DISPLAY_NAME="Tutondo Audio">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5000"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.70" PORT="4999"/>
+                </CONNECTION>
+                <CATALOGUE NAME="Tutondo Inputs">
+                        <ITEM CODE="radio" VALUE="1"/>
+                        <ITEM CODE="cd" VALUE="2"/>
+                        <ITEM CODE="dvd" VALUE="3"/>
+                        <ITEM CODE="tv" VALUE="4"/>
+                        <ITEM CODE="mp3" VALUE="5"/>
+                </CATALOGUE>
+                <CATALOGUE NAME="Tutondo Functions">
+                        <ITEM CODE="cd-rw" VALUE="1"/>
+                        <ITEM CODE="cd-play" VALUE="4"/>
+                        <ITEM CODE="cd-ff" VALUE="5"/>
+                        <ITEM CODE="cd-stop" VALUE="3"/>
+                        <ITEM CODE="cd-pause" VALUE="9"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="INPUTS" VALUE="Tutondo Inputs"/>
+                        <ITEM NAME="FUNCTIONS" VALUE="Tutondo Functions"/>
+                        <ITEM NAME="POLL_INTERVAL" VALUE="10"/>
+                        <ITEM NAME="PROTOCOL" VALUE="B" />
+                </PARAMETERS>
+                <TUTONDO>
+                        <AUDIO KEY="1" DISPLAY_NAME="RECEPTION_AUDIO"/>
+                        <AUDIO KEY="2" DISPLAY_NAME="OFFICE_AUDIO"/>
+                        <AUDIO KEY="3" DISPLAY_NAME="WAREHOUSE_AUDIO"/>
+                </TUTONDO>
+        </DEVICE>
+	<!-- ______________________________________  CBUS DEFS  ____________________  -->
+
+
+	<DEVICE ACTIVE="Y" NAME="CBUS" DISPLAY_NAME="CBUS Lights">
+                <CONNECTION>
+                        <SERIAL ACTIVE="Y" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="NONE"/>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5000"/>
+                </CONNECTION>
+ 		<CBUS>
+			<!-- 			Lights			 -->
+				<LIGHT_CBUS ACTIVE="Y" RELAY="Y" KEY="00" NAME="RECEPTION" DISPLAY_NAME="RECEPTION" />
+				<LIGHT_CBUS ACTIVE="Y" RELAY="Y" KEY="01" NAME="ENTRY" DISPLAY_NAME="ENTRY" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="02" NAME="OFFICE" DISPLAY_NAME="OFFICE" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="03" NAME="WAREHOUSE" DISPLAY_NAME="WAREHOUSE" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="04" NAME="KITCHEN" DISPLAY_NAME="KITCHEN" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="05" NAME="PASSAGE" DISPLAY_NAME="PASSAGE" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="06" NAME="FEMALE" DISPLAY_NAME="FEMALE" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="07" NAME="MALE" DISPLAY_NAME="MALE" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="08" NAME="CINEMA_CENTRE" DISPLAY_NAME="CINEMA_CENTRE" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="09" NAME="CINEMA_FRONT" DISPLAY_NAME="CINEMA_FRONT" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="0A" NAME="CINEMA_WALL" DISPLAY_NAME="CINEMA_WALL" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="0F" NAME="BACK_OFFICE" DISPLAY_NAME="BACK_OFFICE" />
+				<!-- 			Blinds				 -->
+				<LIGHT_CBUS ACTIVE="Y" KEY="0B" NAME="BLIND_UP" DISPLAY_NAME="BLIND_UP" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="0C" NAME="BLIND_DN" DISPLAY_NAME="BLIND_DN" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="0D" NAME="SCREEN_UP" DISPLAY_NAME="SCREEN_UP" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="0E" NAME="SCREEN_DN" DISPLAY_NAME="SCREEN_DN" />
+				<!-- 			Tutondo				 -->
+				<LIGHT_CBUS ACTIVE="Y" KEY="C8" NAME="AUDIO_FAMILY_ON_OFF" DISPLAY_NAME="AUDIO_FAMILY_ON_OFF" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="C9" NAME="AUDIO_FAMILY_VOLUME_UP" DISPLAY_NAME="AUDIO_FAMILY_VOLUME_UP" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="CA" NAME="AUDIO_FAMILY_VOLUME_DN" DISPLAY_NAME="AUDIO_FAMILY_VOLUME_DN" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="CB" NAME="AUDIO_FAMILY_SOURCE_1" DISPLAY_NAME="AUDIO_FAMILY_SOURCE_1" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="CC" NAME="AUDIO_FAMILY_SOURCE_2" DISPLAY_NAME="AUDIO_FAMILY_SOURCE_2" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="CD" NAME="AUDIO_FAMILY_SOURCE_3" DISPLAY_NAME="AUDIO_FAMILY_SOURCE_3" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="CE" NAME="AUDIO_FAMILY_SOURCE_4" DISPLAY_NAME="AUDIO_FAMILY_SOURCE_4" />
+				<LIGHT_CBUS ACTIVE="Y" KEY="CF" NAME="AUDIO_FAMILY_SOURCE_5" DISPLAY_NAME="AUDIO_FAMILY_SOURCE_5" />
+			</CBUS>
+		</DEVICE>
+	<!-- _____________________________ COMFORT DEFS _____________________________-->
+	<DEVICE ACTIVE="Y" NAME="COMFORT" DISPLAY_NAME="Comfort" PASSWORD="1361">
+		<CONNECTION>
+			<SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+			<SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
+			<IP ACTIVE="Y" IP_ADDRESS="192.168.0.12" PORT="1001"/>
+			<IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5000"/>
+		</CONNECTION>
+		<!-- user codes are 1 - 16 , hex -->
+		<CATALOGUE NAME="COMFORT_USERS">
+			<ITEM CODE="01" VALUE="Zoltan"/>
+		</CATALOGUE>
+		<PARAMETERS>
+			<ITEM NAME="POLL_INTERVAL" VALUE="15"/>
+			<ITEM NAME="ANALOGUE_POLL_INTERVAL" VALUE="30"/>
+			<ITEM NAME="CBUS_APPLICATION" VALUE="38"/>
+			<ITEM NAME="CBUS_UCM" VALUE="12"/>
+			<ITEM NAME="COMFORT_USERS" VALUE="COMFORT_USERS"/>
+			<!-- ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" / -->
+			<!-- ITEM NAME="ALARM_IDS" VALUE="ALARM_IDS" / -->
+			<ITEM NAME="DOOR_IDS" VALUE="DOOR_IDS"/>
+		</PARAMETERS>
+		<COMFORT>
+				<!-- All codes are in hex -->
+				<!-- The first 2 chars are the key, the last two are a parameter to be passed to the flash client in the EXTRA field -->
+				<CUSTOM_INPUT KEY="BI01" NAME="Front Door Open Lights" DISPLAY_NAME="MACRO" COMMAND="run" EXTRA="Front Door Lights" />
+				<CUSTOM_INPUT KEY="BI02" NAME="Smoke Alarm Lights" DISPLAY_NAME="MACRO" COMMAND="run" EXTRA="Fire Alarm"/>
+				<CUSTOM_INPUT KEY="BI03" NAME="Security Alarm Lights" DISPLAY_NAME="MACRO" COMMAND="run" EXTRA="Security Alarm"/>
+				<CUSTOM_INPUT KEY="BI04" NAME="Away Mode Lights Off" DISPLAY_NAME="MACRO" COMMAND="run" EXTRA="Master Off"/>
+				<CUSTOM_INPUT KEY="BI05" NAME="Front Door Intercom" DISPLAY_NAME="MACRO" COMMAND="run" EXTRA="Intercom_Camera_TV" />
+				<TOGGLE_OUTPUT_MONITOR ACTIVE="N" KEY="01" NAME="Entry Door Lock" DISPLAY_NAME="ENTRY_LIGHTS"/>
+				<LIGHT_CBUS KEY="0F" ACTIVE="N" CBUS_APPLICATION="38" NAME="Lounge Lights" DISPLAY_NAME="LOUNGE_LIGHT"/>
+				<LIGHT_CBUS KEY="10" ACTIVE="N" NAME="kitchen Lights" DISPLAY_NAME="KITCHEN_BENCH_LIGHT"/>
+				<LIGHT_X10 KEY="01" ACTIVE="N" X10HOUSE_CODE="A" NAME="Family Room" DISPLAY_NAME="FAMILY_LIGHTS1"/>
+				<TOGGLE_OUTPUT_MONITOR KEY="02" ACTIVE="N" NAME="Lower Stairs Lights" DISPLAY_NAME="LOWER_STAIR_LIGHT"/>
+				<!-- 			Inputs: Doors 			-->
+				<TOGGLE_INPUT ACTIVE="Y" KEY="01" NAME="ENTRY_DOOR" DISPLAY_NAME="ENTRY_DOOR"/>
+				<!-- 			Inputs: PIRs 			-->
+				<TOGGLE_INPUT ACTIVE="Y" KEY="02" NAME="ENTRY_PIR" DISPLAY_NAME="ENTRY_PIR"/>
+				<TOGGLE_INPUT ACTIVE="Y" KEY="03" NAME="OFFICE_PIR" DISPLAY_NAME="OFFICE_PIR"/>
+				<TOGGLE_INPUT ACTIVE="Y" KEY="04" NAME="STORE_PIR" DISPLAY_NAME="STORE_PIR"/>
+
+				<!-- Analogue inputs -->
+				<ANALOGUE ACTIVE="N" KEY="01" NAME="Kitchen Light" DISPLAY_NAME="LOUNGE_LIGHT"/>
+				<!-- Set alarms on this comfort when sent from this display, if more than 1 icon is used in flash, 
+    		list multiple ALARM entries, one for each DISPLAY_NAME -->
+				<ALARM KEY="" DISPLAY_NAME="ANYTHING"/>
+				<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell"/>
+				<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone"/>
+				<ALERT KEY="" ACTIVE="Y" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange"/>
+				<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="System"/>
+				<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Phone Trouble" ALERT_TYPE="System"/>
+				<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+				<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+				<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort (disarmed in &lt; 90 seconds)" ALERT_TYPE="System" CLIENT_CAT="Serious"/>
+				<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Siren Tamper" ALERT_TYPE="System"/>
+				<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+				<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+				<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Fire (Response-activated)" ALERT_TYPE="System"/>
+				<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Panic (Response-activated)" ALERT_TYPE="System"/>
+				<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+				<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="ID"/>
+				<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="ID"/>
+				<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="Doorbell pressed" ALERT_TYPE="ID"/>
+				<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Communications Failure (RS485)"/>
+				<ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="Singin Tamper" ALERT_TYPE="ID"/>
+				<ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="Intruder" ALERT_TYPE="Zone"/>
+				<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Zone"/>
+				<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Zone"/>
+				<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Bypass" ALERT_TYPE="Zone"/>
+				<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Zone"/>
+				<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="User"/>
+				<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Arm Failure" ALERT_TYPE="User"/>
+				<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Security Off" ALERT_TYPE="User"/>
+				<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="User"/>
+				<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="User"/>
+				<ALERT KEY="17" DISPLAY_NAME="PHONE" MESSAGE="New Message for " ALERT_TYPE="User"/>
+				<!-- Special note; Alert 17 , is also used for system startup phone message reporting -->
+				<!--  Correspond to AL command codes; ALERT_TYPE is the differentiation between various alert types -->
+				<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Intruder Alarm" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Phone Line Trouble" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Arm Fail" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Zone Alert" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="Panic" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0C" DISPLAY_NAME="ALARM" MESSAGE="Fire" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Gas" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Family Care" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="0F" DISPLAY_NAME="ALARM" MESSAGE="Perimeter Alert" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Bypass Zone" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="System Disarmed" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="CMS Test" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Siren Trouble" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="RS485 Comms Fail" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Doorbell (Away)" ALERT_TYPE="Alarm Type"/>
+				<ALERT KEY="1B" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="Alarm Type"/>
+			</COMFORT>
+		</DEVICE>
+		<!-- _____________________________ Controls _____________________________-->
+	<CONTROLS>
+		<VARIABLES>
+				<VARIABLE ACTIVE="Y" NAME="BLINDS" DISPLAY_NAME="BLINDS"/>
+				<VARIABLE ACTIVE="Y" NAME="SCREEN" DISPLAY_NAME="SCREEN"/>
+		</VARIABLES>
+		<CALENDAR_MESSAGES>
+			<ITEM NAME="AUTOCLOSE" VALUE="15" />
+			<ITEM NAME="ICON" VALUE="calendar" />
+			<ITEM NAME="HIDECLOSE" VALUE="FALSE" />
+		</CALENDAR_MESSAGES>	
+	</CONTROLS>
+</CONFIG> 
