@@ -32,7 +32,7 @@ class RTI_IR extends GroovyModel {
 				def rtiUnit = configHelper.getControlledItem ("0")
 				switch (theCommand) {
 				
-				// Deal with the standard BIRTI commands - eg: BIRTI=command,LOUNGE_LIGHT,on 
+				// Deal with the standard BIRTI commands - eg: BIRTI=control,LOUNGE_LIGHT,on,foo 
 				case "BIRTI" :
 
 					logger.log (Level.FINE,"BIRTI received " + command )
@@ -42,7 +42,7 @@ class RTI_IR extends GroovyModel {
 					def rtiPart1 = birtiParm[0]
 					def rtiPart2 = birtiParm[1]
 					
-					if (birtiParm.length > 4 ) {
+					if (birtiParm.length > 5 ) {
 						logger.log (Level.WARNING,"Too many parameters for RTI model " + command )
 						break;
 					}	
@@ -51,27 +51,34 @@ class RTI_IR extends GroovyModel {
 					
 					// control is used to send eLIFE commands
 					case "control" :
-						if (birtiParm.length == 4 ) {
-							// Example BIRTI=control,LOUNGE_AUDIO,volume,up
+						switch (birtiParm.length) {
+						case "5":
+							//Example BIRTI=control,LOUNGE_AUDIO,src,radio,AV
 							def commandStr = birtiParm[2]
 							def extraStr = birtiParm[3]
-							
-							// Injects a command into the queue as if it came from a flash client.
+							def extra2Str = birtiParm[4]
+							//Injects a command into the queue as if it came from a flash client.
+							// Do not use this command to send to a DISPLAY_NAME that this model is processing in doOutputItems, or else a loop will result.
+							returnWrapper.injectCommand (rtiPart2,commandStr,extraStr,extra2Str)
+						break
+						
+						case "4":
+							//Example BIRTI=control,LOUNGE_AUDIO,volume,up
+							def commandStr = birtiParm[2]
+							def extraStr = birtiParm[3]
+							//Injects a command into the queue as if it came from a flash client.
 							// Do not use this command to send to a DISPLAY_NAME that this model is processing in doOutputItems, or else a loop will result.
 							returnWrapper.injectCommand (rtiPart2,commandStr,extraStr)
-							
-							// sends this command to flash; normally used after processing information from comms.
-							//returnWrapper.addFlashCommand (rtiPart2, commandStr, extraStr)
-							
-						} else {
+						break;
+
+						default:
 							// Example BIRTI=control,LOUNGE_LIGHT,on
 							def commandStr = birtiParm[2]
 							
 							// returnWrapper.addFlashCommand (rtiPart2, commandStr)
 							returnWrapper.injectCommand (rtiPart2,commandStr)
-							
-						}
 						break;
+						}
 						
 					// runmacro is used to start eLIFE macros
 					case "runmacro" :
