@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas initialize="init()" xmlns="Forms.*"  xmlns:mx="http://www.adobe.com/2006/mxml" >
+	
+	<mx:Script>
+	<![CDATA[
+		import mx.core.UIComponent;
+		import mx.core.Container;
+		import flash.display.*;
+		import flash.net.URLRequest;
+		import flash.events.Event;
+		public var pictLdr:Loader;
+		public var container:UIComponent;
+		private var fileName:String="";
+		public function init() {
+			pictLdr = new Loader();
+			
+		}
+		private function loadIt():void {	
+			pictLdr = new Loader();
+			if (fileName=="No Map") {
+				this.removeAllChildren();
+			} else {
+				var pictURL:String = File.applicationResourceDirectory.nativePath +File.separator+"lib"+File.separator+"maps"+File.separator+fileName;
+				var pictURLReq:URLRequest = new URLRequest(pictURL);			
+				
+				pictLdr.load(pictURLReq);
+				pictLdr.contentLoaderInfo.addEventListener(Event.COMPLETE, imgLoaded); 
+				pictLdr.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, imgIOError);
+			}
+		}
+		public function imgLoaded(event:Event):void
+		{
+			container = new UIComponent();
+			container.addChild(pictLdr.content);
+			this.removeAllChildren();
+			this.addChild(container);
+			Scale(175, 250);
+			
+		}
+		public function imgIOError(event:Event):void {
+			trace("IO error:"+event.toString());
+		}
+		public function Scale(height:Number, width:Number):void {
+			trace("Height="+height.toString()+" Width="+width.toString()+" .....in Scale..................................................................................");
+			if (pictLdr.content != null) {
+				trace("in scale content now ok..................................................................");
+				var x:Number = 1/(Number(pictLdr.content.width)/width);
+				this.scaleX = Number(x);
+				var y:Number = 1/(Number(pictLdr.content.height)/height);
+				this.scaleY = Number(y);
+				trace("xScale="+this.scaleX.toString()+"   yScale="+this.scaleY.toString()+"    .............");
+				trace("x="+this.x.toString()+ "    y="+this.y.toString());
+			}
+		}
+		[Bindable]
+		public function set FileName(fileN:String):void {
+			fileName = fileN;
+			if (fileName!=null&&fileName.length>0) {
+				loadIt();
+			}
+		}
+		public function get FileName():String {
+			return fileName;
+		}
+		]]>
+	</mx:Script>
+</mx:Canvas>

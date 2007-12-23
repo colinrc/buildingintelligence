@@ -1,11 +1,11 @@
 ﻿import mx.controls.*;
-import Controls.MapEditor;
+import Controls.MMapEditorNew
 import mx.utils.Delegate;
 
 class Forms.Project.Client.AlertGroups extends Forms.BaseForm {
 	private var alertgroups:Array;
 	private var poly:String;
-	private var roomEditor:MapEditor;
+	private var roomEditor:MMapEditorNew
 	private var name_lb:Label;
 	private var name_ti:TextInput;
 	private var map:String;

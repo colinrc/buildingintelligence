@@ -1,5 +1,5 @@
 ﻿import mx.controls.*;
-import Controls.MapEditor;
+import Controls.MMapEditorNew
 import mx.utils.Delegate;
 class Forms.Project.Client.Room extends Forms.BaseForm {
 	private var name:String;
@@ -8,7 +8,7 @@ class Forms.Project.Client.Room extends Forms.BaseForm {
 	private var switchZone_cmb:ComboBox;
 	private var poly:String;
 	private var save_btn:Button;
-	private var roomEditor:MapEditor;
+	private var roomEditor:MMapEditorNew
 	private var map:String;
 	private var background:String;
 	private var dataObject:Object;	

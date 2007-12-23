@@ -1,11 +1,11 @@
 ﻿import mx.controls.*;
-import Controls.MapEditor;
+import Controls.MMapEditorNew
 import mx.utils.Delegate;
 
 class Forms.Project.Client.Doors extends Forms.BaseForm {
 	private var doors:Array;
 	private var poly:String;
-	private var roomEditor:MapEditor;
+	private var roomEditor:MMapEditorNew
 	private var map:String;
 	private var background:String;
 	private var save_btn:Button;

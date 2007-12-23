@@ -30,17 +30,7 @@
 		import mx.rpc.events.*;
 		import mx.utils.ObjectProxy;
 
-		       public    	var MyImageClass:Function = function():Loader
-				{
-				    //we need a Loader that automatically loads our image
-				    var loader:Loader = new Loader();
-				 
-				    //the URL will come from the prototype
-				    loader.load(new URLRequest(this.url));
-				                
-				    //our "constructor" returns the Loader!
-				    return loader;
-				};
+
 		/************************* Init system variable *********************************/	
 		[Bindable]
 		[Embed (source="../bin/icons/check.png")]

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" horizontalAlign="center" xmlns:Controls="Controls.*">
+   <mx:Script>
+        <![CDATA[
+        	import Forms.dataHolder;
+        	import Forms.type;
+        	import mx.core.UIComponent;
+        	import mx.core.Application;
+        	import mx.controls.Image;
+        	import FileAccess.ImageFiles;
+        	import mx.collections.ArrayCollection;
+        	// Define a property for returning the new value to the cell.
+        	
+            public var result:Object;
+                     
+            [Bindable]
+            public var dpValue:ArrayCollection = new ArrayCollection();
+			// Override the set method for the data property.
+			
+			override public function set data(value:Object):void 
+			{
+				super.data = value;
+				if (value != null) 
+				{
+					var currentValue:String="";
+					if (this.id == "mapCombo") {
+						currentValue = value.map;
+					} else {
+						currentValue = value.background;
+					}
+					var len:int = dpValue.length;
+					for (var i:int = 0; i < len; i++) 
+					{
+						if (dpValue[i].name == currentValue) 
+						{
+							editor.selectedIndex = i;
+							break;
+						}
+					}
+				}
+			} 
+			public function loseFocus(event:Event):void {
+				var index:int = editor.selectedIndex;
+				result = dpValue[index].name;
+				if (this.data!=null) {
+					if (this.id == "mapCombo") {
+						this.data.map = dpValue[index].name;
+					} else {
+						this.data.background = dpValue[index].name;
+					}
+				}
+			}
+			
+			public function onChange(event:Event):void 
+			{
+				var index:int = editor.selectedIndex;
+				result = dpValue[index].name;
+				if (this.id == "mapCombo") {
+					this.data.map = dpValue[index].name;
+				} else {
+					this.data.background = dpValue[index].name;
+				}
+				
+				var imageChangeEvent:Event = new Event("IMAGE_CHANGE_EVENT",true);
+				this.dispatchEvent(imageChangeEvent);
+			}        
+			public function inFocus(event:Event):void {
+				trace ("inFocus");
+				if (editor.selectedIndex >= 0) {
+					result = dpValue[editor.selectedIndex].name;
+				} 
+			} 
+			  
+
+            
+            private function init():void {
+            	var imageFiles:ImageFiles = new ImageFiles();
+            	if (this.id == "mapCombo") {
+				   	dpValue = imageFiles.getImageNames();
+            	} else {
+            		dpValue = imageFiles.getBackgroundImageNames();
+            	}
+            }
+    	]]>
+    </mx:Script>
+ 	<Controls:ComboBox id="editor"  initialize="init()" dataProvider="{dpValue}"  labelField="name"  focusIn="inFocus(event)" focusOut="loseFocus(event)" change="onChange(event)"/>
+</mx:VBox>

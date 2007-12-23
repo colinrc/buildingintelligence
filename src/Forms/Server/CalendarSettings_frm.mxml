@@ -31,6 +31,7 @@
 	
 		<mx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
 			import flash.desktop.Icon;
 			import flash.filesystem.File;
 			import FileAccess.IconFiles;
@@ -46,7 +47,7 @@
 			public var dataHolder:ObjectProxy;
 						
 			[Bindable]
-			public var icons:Array;
+			public var icons:ArrayCollection;
 			
 			private var undoObj:Object;
 			[Bindable]

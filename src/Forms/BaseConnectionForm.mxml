@@ -151,6 +151,9 @@
 				}
 			}
 			
+			public function get Application() {
+				return null;
+			}
 			private function getDDIndex(search:String):int {
 				returndeviceTypeDD.indexOf(search)
 			}

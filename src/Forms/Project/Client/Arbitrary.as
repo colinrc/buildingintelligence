@@ -1,11 +1,11 @@
 ﻿import mx.controls.*;
 import mx.utils.Delegate;
-import Controls.MapEditor;
+import Controls.MMapEditorNew
 class Forms.Project.Client.Arbitrary extends Forms.BaseForm {
 	private var items:Array;
 	private var save_btn:Button;
 	private var type_cmb:ComboBox;
-	private var roomEditor:MapEditor;
+	private var roomEditor:MMapEditorNew
 	private var map:String;
 	private var background:String;
 	private var item_mc:MovieClip;
