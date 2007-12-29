@@ -19,6 +19,7 @@ public class GetTracksReply extends SlimServerCommand {
 	private int artist;
 	private int year;
 	private boolean forCurrentPlaylist;
+	private boolean forCurrentlyPlaying;
 	
 	public GetTracksReply() {
 		count = -1;
@@ -28,6 +29,7 @@ public class GetTracksReply extends SlimServerCommand {
 		year = -1;
 		rescan = false;
 		forCurrentPlaylist = false;
+		forCurrentlyPlaying = false;
 		tracks = new LinkedList<Track>();
 	}
 	
@@ -74,6 +76,14 @@ public class GetTracksReply extends SlimServerCommand {
 		forCurrentPlaylist = currentPlaylist;
 	}
 
+	public boolean isForCurrentlyPlaying() {
+		return forCurrentlyPlaying;
+	}
+
+	public void setForCurrentlyPlaying(boolean forCurrentlyPlaying) {
+		this.forCurrentlyPlaying = forCurrentlyPlaying;
+	}
+
 	public int getAlbum() {
 		return album;
 	}
@@ -108,7 +118,7 @@ public class GetTracksReply extends SlimServerCommand {
 
 	public String getFor() {
 		String _for = "";
-		if (!forCurrentPlaylist) {
+		if (!forCurrentPlaylist && !forCurrentlyPlaying) {
 			if (!StringUtils.isNullOrEmpty(search)) {
 				_for += "search:" + search + ";";
 			} else if (genre != -1) {
@@ -121,8 +131,10 @@ public class GetTracksReply extends SlimServerCommand {
 				_for += "year:" + year + ";";
 			}
 			year = -1;
-		} else {
+		} else if (forCurrentPlaylist) {
 			_for = "currentplaylist";
+		} else {
+			_for = "currentlyplaying";
 		}
 		
 		return _for;

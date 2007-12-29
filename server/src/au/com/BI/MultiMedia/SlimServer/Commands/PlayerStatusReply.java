@@ -39,6 +39,7 @@ public class PlayerStatusReply extends SlimServerCommand {
 	private String playlistTracks;
 	private LinkedList<Track> tracks;
 	private String coverArtUrl;
+	private String start;
 	
 	public PlayerStatusReply() {
 		tracks = new LinkedList<Track>();
@@ -293,6 +294,14 @@ public class PlayerStatusReply extends SlimServerCommand {
 		this.coverArtUrl = coverArtUrl;
 	}
 
+	public String getStart() {
+		return start;
+	}
+
+	public void setStart(String start) {
+		this.start = start;
+	}
+
 	public Element getElement() {
 		Element statusElement = new Element("playerstatus");
 		
@@ -386,7 +395,12 @@ public class PlayerStatusReply extends SlimServerCommand {
 		}
 		
 		Element tracksElement = new Element("tracks");
-		tracksElement.setAttribute("for", "currentplaylist");
+		
+		if (start.equals("-")) {
+			tracksElement.setAttribute("for", "currentlyplaying");
+		} else {
+			tracksElement.setAttribute("for", "currentplaylist");
+		}
 
 		LinkedList<Element> trackElements = new LinkedList<Element>();
 		

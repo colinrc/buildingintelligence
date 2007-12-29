@@ -232,6 +232,7 @@ public class OutputHelper {
 					<CONTROL KEY="LAPTOP" COMMAND="getGenres" EXTRA="0" EXTRA2="20" EXTRA3="artist:1" EXTRA4="" EXTRA5=""/>
 					<CONTROL KEY="LAPTOP" COMMAND="getGenres" EXTRA="0" EXTRA2="20" EXTRA3="album:104" EXTRA4="" EXTRA5=""/>
 					<CONTROL KEY="LAPTOP" COMMAND="getGenres" EXTRA="0" EXTRA2="1" EXTRA3="" EXTRA4="Love" EXTRA5=""/>
+					<CONTROL KEY="LAPTOP" COMMAND="getGenres" EXTRA="0" EXTRA2="1" EXTRA3="" EXTRA4="" EXTRA5=""/>
 					
 					returns
 					<genres KEY="LAPTOP">
@@ -633,6 +634,7 @@ public class OutputHelper {
 				 * 
 				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="0" EXTRA2="20" EXTRA3="currentplaylist" EXTRA4="" EXTRA5="" />
 				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="0" EXTRA2="20" EXTRA3="" EXTRA4="sandstorm" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="getTracks" EXTRA="0" EXTRA2="20" EXTRA3="" EXTRA4="genre:8" EXTRA5="" />
 				 */
 				GetTracks control = new GetTracks();
 				

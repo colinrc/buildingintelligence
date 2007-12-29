@@ -332,6 +332,9 @@ public class SlimServerCommandFactory {
 			throw new SlimServerCommandException("Expected an integer",e);
 		}
 		
+		// get the start
+		command.setStart(words[2]);
+		
 		Track track = null;
 		for (int i=4; i < words.length; i++) {
 			String word = words[i];

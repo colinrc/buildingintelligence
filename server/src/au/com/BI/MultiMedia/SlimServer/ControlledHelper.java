@@ -125,25 +125,34 @@ public class ControlledHelper {
 			reply.setCoverArtUrl(model.getCoverArtUrl());
 			String powerString = "";
 			
-			if (!StringUtils.isNullOrEmpty(reply.getPower())) {
-				if (reply.getPower().equals("0")) {
-					powerString = "OFF";
-				} else {
-					powerString = "ON";
+			// Only do the complete status when we are doing a currently playing status
+			// request
+			if (reply.getStart().equals("-")) {
+				if (!StringUtils.isNullOrEmpty(reply.getPower())) {
+					if (reply.getPower().equals("0")) {
+						powerString = "OFF";
+					} else {
+						powerString = "ON";
+					}
 				}
+				
+				PlayerStatusCommand flashCommand = new PlayerStatusCommand();
+				flashCommand.setPlayerstatus(reply);
+				flashCommand.setDisplayName(device.getOutputKey());
+				flashCommand.setTargetDeviceID(-1);
+				flashCommand.setUser(model.currentUser);
+				flashCommand.setKey("CLIENT_SEND");
+				flashCommand.setCommand("PLAYER_STATUS");
+				sendCommand(cache,commandQueue,flashCommand);
 			}
 			
-			PlayerStatusCommand flashCommand = new PlayerStatusCommand();
-			flashCommand.setPlayerstatus(reply);
-			flashCommand.setDisplayName(device.getOutputKey());
-			flashCommand.setTargetDeviceID(-1);
-			flashCommand.setUser(model.currentUser);
-			flashCommand.setKey("CLIENT_SEND");
-			flashCommand.setCommand("PLAYER_STATUS");
-			sendCommand(cache,commandQueue,flashCommand);
-			
 			GetTracksReply getTracksReply = new GetTracksReply();
-			getTracksReply.setForCurrentPlaylist(true);
+			
+			if (reply.getStart().equals("-")) {
+				getTracksReply.setForCurrentlyPlaying(true);
+			} else {
+				getTracksReply.setForCurrentPlaylist(true);
+			}
 			getTracksReply.setTracks(reply.getTracks());
 			// getTracksReply.setCoverArtUrl(model.getCoverArtUrl());
 			TrackCommand trackCommand = new TrackCommand();
