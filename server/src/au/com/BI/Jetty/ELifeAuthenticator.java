@@ -24,6 +24,7 @@ import au.com.BI.Config.Security.IPType;
 public class ELifeAuthenticator extends BasicAuthenticator  implements Authenticator {
 
 	public Security security;
+	protected IPType ipType = IPType.FullFunction;
 	
 	public  ELifeAuthenticator ()  {
 	}
@@ -32,11 +33,24 @@ public class ELifeAuthenticator extends BasicAuthenticator  implements Authentic
 		Request request, Response response) throws IOException {
 		String callingIP = request.getRemoteAddr();
 		
-		if (security.iPInRange(callingIP, IPType.FullFunction))  {
-			return SecurityHandler.__NOBODY;
-		} else {
-			return super.authenticate(  realm,  pathInContext, request,  response);
-		}
+		if (ipType == IPType.FullFunction) {
+			if (security.iPInRange(callingIP, IPType.FullFunction))  {
+				return SecurityHandler.__NOBODY;
+			} else {
+				return super.authenticate(  realm,  pathInContext, request,  response);
+			}
+		} 
+		
+
+		
+		if (ipType == IPType.PostOnly) {
+			if (security.iPInRange(callingIP, IPType.PostOnly))  {
+				return SecurityHandler.__NOBODY;
+			} else {
+				return null;
+			}
+		} 
+		return super.authenticate(  realm,  pathInContext, request,  response);
 	}
 	
 	public Security getSecurity() {
@@ -45,5 +59,13 @@ public class ELifeAuthenticator extends BasicAuthenticator  implements Authentic
 
 	public void setSecurity(Security security) {
 		this.security = security;
+	}
+
+	public IPType getIpType() {
+		return ipType;
+	}
+
+	public void setIpType(IPType ipType) {
+		this.ipType = ipType;
 	}
 }

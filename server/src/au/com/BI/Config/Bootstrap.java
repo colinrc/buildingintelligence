@@ -36,7 +36,6 @@ public class Bootstrap {
     protected int jettyPort = 80;
     protected int jettySSLPort = 443;
     private boolean jettyActive = false;
-    protected boolean requestUserNames = true;
     protected String  maintenanceTime = "";
     protected boolean integratorMode = false;
     
@@ -170,10 +169,6 @@ public class Bootstrap {
                 String jettyActiveStr = jettyConfig.getAttributeValue("ACTIVE");
                 if (jettyActiveStr != null && jettyActiveStr.equals ("Y")){
                 	setJettyActive(true);
-                }
-                String requestUserNames = jettyConfig.getAttributeValue("USER_NAMES");
-                if (requestUserNames != null && requestUserNames.equals ("N")){
-                	setRequestUserNames (false);
                 }
 
                 String jettyPortStr = jettyConfig.getAttributeValue("PORT");
@@ -347,14 +342,6 @@ public class Bootstrap {
     public void setJettyActive(boolean jettyActive) {
         this.jettyActive = jettyActive;
     }
-
-	public boolean isRequestUserNames() {
-		return requestUserNames;
-	}
-
-	public void setRequestUserNames(boolean requestUserNames) {
-		this.requestUserNames = requestUserNames;
-	}
 
 	public int getJettySSLPort() {
 		return jettySSLPort;
