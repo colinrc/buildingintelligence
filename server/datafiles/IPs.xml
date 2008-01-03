@@ -1,9 +1,8 @@
 <ip_list>
 	<full_function>
-		<ip value="127.0.0.1" />
 	</full_function>
 	
 	<post_only>
-			<ip value="192.16.1.11" />
+			<ip value="127.0.0.1" />
 	</post_only>
 </ip_list>
