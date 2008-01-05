@@ -19,6 +19,7 @@ import au.com.BI.MultiMedia.SlimServer.Commands.Pause;
 import au.com.BI.MultiMedia.SlimServer.Commands.Play;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListCommand;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListControl;
+import au.com.BI.MultiMedia.SlimServer.Commands.PlayListDelete;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayListIndex;
 import au.com.BI.MultiMedia.SlimServer.Commands.PlayerStatus;
 import au.com.BI.MultiMedia.SlimServer.Commands.Power;
@@ -724,6 +725,35 @@ public class OutputHelper {
 					
 				} else {
 					retCode = control.buildCommandString() + "\r\n";
+				}
+			} else if (command.getCommandCode().equalsIgnoreCase("currentplaylist")) {
+				/*
+				 * EXTRA is the current playlist command - currently only delete
+				 * EXTRA2 is index of the song to be removed from the current playlist
+				 * 
+				 * <CONTROL KEY="LAPTOP" COMMAND="currentplaylist" EXTRA="delete" EXTRA2="1" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="currentplaylist" EXTRA="delete" EXTRA2="4" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 * <CONTROL KEY="LAPTOP" COMMAND="currentplaylist" EXTRA="delete" EXTRA2="0" EXTRA3="" EXTRA4="" EXTRA5="" />
+				 */
+				if (command.getExtraInfo().equalsIgnoreCase("delete")) {
+					PlayListDelete control = new PlayListDelete();
+					control.setPlayerId(device.getKey());
+					
+					try {
+						control.setSongIndex(Integer.parseInt(command.getExtra2Info()));
+					} catch (NumberFormatException e) {
+						logger.log(Level.WARNING,
+								"songIndex found but is not an integer");
+					}
+					
+					if (control.getSongIndex() != -1) {
+						retCode = control.buildCommandString() + "\r\n";
+					} else {
+						retCode = "";
+					}
+					
+				} else {
+					retCode = "";
 				}
 			}
 		}
