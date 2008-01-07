@@ -267,12 +267,12 @@ public class CalendarEventFactory {
 			    if (name.equals("fri")) daysOfWeek += ",6" ;
 			    if (name.equals("sat")) daysOfWeek += ",7" ;
 			    if (name.equals("month")){
-				month = value;
+			    	month = value;
 			    }
 			    if (recurVal != 1){
-				interval = recurVal * dayMs * 7L;
+			    	interval = recurVal * dayMs * 7L;
 			    }
-			    
+			    year = "*";
 			}
 			if (eventType.equals("monthly")) {
 			    
@@ -290,16 +290,19 @@ public class CalendarEventFactory {
 			    }
 			    intervalMonth = recurVal;
 			    map.put ("IntervalMonth",intervalMonth);
+			    year = "*";
 			}
 			if (eventType.equals("daily")) {
 			    if (recurVal != 1 && !filter.contains("odd") && !filter.contains("even")){
 			    	interval = recurVal * dayMs;
 			    }
+			    year = "*";
 			}
 			if (eventType.equals("hourly")) {
 			    if (recurVal != 1){
 			    	interval = recurVal * hourMs;
 			    }
+			    year = "*";
 			}
 			if (eventType.equals("yearly")) {
 			    

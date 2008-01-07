@@ -5,4 +5,7 @@
   <event id="1178111027675" title="r" active="Y" alarm="Y" memo="fh" category="" startDate="2007-05-01" endDate="2009-05-03" time="09:52:00" eventType="daily" macroName="" extra="" extra2="" filter="odd">
     <pattern recur="3" />
   </event>
+    <event id="1199509204158" title="" active="Y" alarm="N" memo="" category="" startDate="2007-12-30" endDate="2008-12-30" time="08:30:00" eventType="daily" macroName="DLT1 Test" extra="" extra2="" filter="">
+    <pattern recur="1" />
+  </event>
 </events>

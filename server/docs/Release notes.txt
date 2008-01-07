@@ -1,3 +1,46 @@
+== 7/Jan/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b77.zip V1.6-b77]  [attachment:wiki:SoftwareReleases:eLife-1.6b77-libs.zip Libs-V1.6b77]  ==
+
+''' Calendar '''
+
+Ensure daily, monthly or hourly repeating events work across year boundaries.  Resolves issue [ticket:689]
+
+''' Jetty '''
+
+Request UserNames parameter removed from Bootstrap file, can be better handled by specifying the IP address to not prompt user IDs in the IPs.xml file.
+Updated Jetty version to 6.1.7.
+
+''' Groovy '''
+
+Updated Groovy version to 1.5.1.
+
+''' Squeezebox '''
+
+Incorporated fix for playlists. Resolves tickets [ticket:684],[ticket:685],[ticket[686]
+Incorporated support for deleting tracks. Enhancement [ticket:]
+
+''' Web '''
+
+Added support for simple post only devices. Supports enhancement [ticket:680]
+
+Devices can send commands to elife in the following way 
+
+{{{
+http://127.0.0.1:8081/post/update?ds=GARAGE_LIGHT&co=on&ex=100
+
+http://127.0.0.1:8081/post/update?ds=GARAGE_LIGHT&co=on&ex=100&ex2=5
+}}}
+
+The IP address for the controller device must be listed in the POST section of the IPs.xml file. 
+
+{{{
+<post_only>
+			<ip value="127.0.0.1" />
+	</post_only>
+}}}
+
+There must be sufficient post licenses purchased for the devices listed in the IPs.xml file. 
+Number of post only entries is in memory location 1
+
 == 18/Dec/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b76.zip V1.6-b76] ==
 
 ''' Scripts '''

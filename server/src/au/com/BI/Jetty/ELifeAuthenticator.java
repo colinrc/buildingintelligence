@@ -41,13 +41,11 @@ public class ELifeAuthenticator extends BasicAuthenticator  implements Authentic
 			}
 		} 
 		
-
-		
 		if (ipType == IPType.PostOnly) {
 			if (security.iPInRange(callingIP, IPType.PostOnly))  {
 				return SecurityHandler.__NOBODY;
 			} else {
-				return null;
+				return	null;
 			}
 		} 
 		return super.authenticate(  realm,  pathInContext, request,  response);

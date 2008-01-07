@@ -26,7 +26,9 @@ public class Security {
     public final int alarmModel = 3;
     public final int controllerModel = 4;
     
-    private  byte allowNumbers [] = {4};
+    private  byte allowNumbers [] = {4,2};
+    // First byte is number of full clients
+    // Second byte is number of post only clients
     
     private static final String vendor_code = new String("4PleHqy5Sr5zJKxsox07nI31nqP0vdw/XT/h4av881NagxNNel/5QxaeejwrZX9XezJHGQQZNyDZetkSyMyuCnyL9g1Ffnwxz5sCITcyYtNGL0VrvHo5Fm9pxJscHKGWfmLN/WLcTrfWalyh7IiNWbwSDKv78bomJVgziX1DTFsnjkzn4cKR96cPE0XJ19OgIv3DJH4XB87pWTzFxJ5U1ol9sT2Ts6Mi8Zl/A1O4v0IxORrVnqXfY4xwz4Flf21wWwXREy+d+9lLqFRFDtC1Gy0XcCTVmaBHIfUDz4QrsqS13AsdxNTNm31IdWIvWpN+k/RLBgUL36WdkQLwDSSry5XVUzC0DGnwiegHqHkZmEMZZV0UwvdUFMDAULv/v+BoFoju95U7ilSHREs5WTXNc9NCbNYK91xl+ekzQo5q6yTwTp99WLoEgwuD2Vai3UxqEow4O5y/QUCN5RRlwpZ6mx353+bzHlPntYQnDcF/UbxGNYER78ojHom6hwvSc2U/RIhqc2TXfLFRDszZDuH3iX1eHpp7/CbGiCXe9GnhOSYUubtdWS5VMl/mkbt6wMwOuro9z3ACXJHG29a3naQuvpOQEPXvJi0ss3mbDUbb6Ktq+xyZvOZ1muykfKrAPXqx5h/l3LE7z3nQ69+5712cWqkcUJAmbFkCZFo1Zb+khxPXfqRrQeI8q3LIFa5P1PVXrU0SE7TOQhqV2JoicAyUj50F/UsqNQ==");
     private boolean keyPresent = false;
@@ -41,7 +43,7 @@ public class Security {
     Map <String,Boolean>fullClients;
     Map <String,Boolean>postOnlyClients;
     
-    public enum IPType {FullFunction,PostOnly};
+    public enum IPType {FullFunction,PostOnly,PWDOnly};
     
     public Security() {
 	/* login program number 0 */
@@ -55,9 +57,9 @@ public class Security {
        /*
 	connected = true;
 	return ;
-   
+*/   
     
-     */
+     //*
 	InputStreamReader reader = new InputStreamReader(System.in);
 	BufferedReader in = new BufferedReader(reader);
 	 
@@ -165,12 +167,19 @@ public class Security {
              
             Element postOnlyList = theConfig.getChild("post_only");
             if (postOnlyList != null) {
+            	int numPostOnly = 0;
             	for (Element i : (List<Element>)postOnlyList.getChildren()) {
             		String IP  = i.getAttributeValue("value");
             		if (IP != null) {
-            			postOnlyClients.put(IP, false);
+            			numPostOnly++;
+            			if (numPostOnly <= this.getNumberPostClientsAllowed()){
+            				postOnlyClients.put(IP, false);
+            			}
             		}
             	}
+    			if (numPostOnly > this.getNumberPostClientsAllowed()){
+    				logger.log(Level.WARNING,numPostOnly + " post only services were specified in the IPs.xml file, however " + this.getNumberPostClientsAllowed() + " have been purchased, please contact your integrator");
+    			}
             }
             
         } catch (JDOMException e) {
@@ -212,5 +221,11 @@ public class Security {
     	return allowNumbers[0];
     }
     
-    
+    public int getNumberPostClientsAllowed () {
+    	if (allowNumbers.length > 1){
+    		return allowNumbers[1];
+    	} else{
+    		return 0;
+    	}
+    }    
 }
