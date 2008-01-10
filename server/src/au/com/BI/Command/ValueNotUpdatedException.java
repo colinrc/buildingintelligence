@@ -7,9 +7,9 @@ package au.com.BI.Command;
  * @version 1.0
  * @updated 18-Jan-2004 08:54:55 PM
  */
-public class KeyNotFoundException extends Exception{
+public class ValueNotUpdatedException extends Exception{
 
-	public KeyNotFoundException(){
+	public ValueNotUpdatedException(){
 
 	}
 
@@ -21,11 +21,11 @@ public class KeyNotFoundException extends Exception{
 	 * @param message
 	 * 
 	 */
-	public KeyNotFoundException(String message){
+	public ValueNotUpdatedException(String message){
 		super (message);
 	}
 
-	public KeyNotFoundException(String message, Throwable cause){
+	public ValueNotUpdatedException(String message, Throwable cause){
 		super (message, cause);
 	}
 	
