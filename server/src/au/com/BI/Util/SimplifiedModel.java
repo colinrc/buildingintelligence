@@ -1512,11 +1512,11 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
     /**
      * @return Returns the last accessed time of a device.
      */
-    public Object getLastAccessTime(String key) {
-            Object cachedValue;
+    public Long getLastAccessTime(String key)throws ValueNotUpdatedException {
+            Long cachedValue;
             cachedValue = cache.getCachedTime(key);
             if (cachedValue == null | cachedValue.equals(new Long(0))) {
-                    return "None";
+                throw new ValueNotUpdatedException ("Could not find " + key);
             }
             return cachedValue;
     }
@@ -1524,7 +1524,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
     /**
      * @return Returns the number of minutes since the device was last used.
      */
-    public Object getLastAccessTimeDuration(String key, String interval) {
+    public Long getLastAccessTimeDuration(String key, String interval) throws ValueNotUpdatedException {
             Long cachedLongValue, retValue;
             Object cachedValue;
             long duration;
@@ -1532,7 +1532,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
             java.lang.Double doubleValue;
             cachedValue = cache.getCachedTime(key);
             if (cachedValue == null | cachedValue.equals(new Long(0))) {
-                    return "None";
+                    throw new ValueNotUpdatedException ("Could not find " + key);
             }
             cachedLongValue = (Long) cachedValue;
             cachedTime = cachedLongValue.longValue();
@@ -1546,8 +1546,8 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
             else if (interval == "day") {
                     duration = duration / 86400000;
             }
-            retValue = new Long(duration);
-            return retValue;
+
+            return new Long(duration);
     }
     
     /**

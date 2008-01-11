@@ -770,97 +770,7 @@ public class Model
                 }
         }
 
-        /**
-         * @return Returns the current value for a device from a specified key.
-         */
-        public Object getValue(int extraVal, String key) {
-            CacheWrapper cachedValue = cache.getCachedObject(key);
-                if (cachedValue == null) {
-                        return "None";
-                }
-                if (cachedValue.isSet() == false) {
-                        Command retCommand;
-                        retCommand = (Command) cachedValue.getCommand();
-                        switch (extraVal) {
-                                case 1:
-                                        return retCommand.getExtraInfo();
-                                case 2:
-                                        return retCommand.getExtra2Info();
-                                case 3:
-                                        return retCommand.getExtra3Info();
-                                case 4:
-                                        return retCommand.getExtra4Info();
-                                case 5:
-                                        return retCommand.getExtra5Info();
-                        }
-                        return retCommand.getExtraInfo();
-                }else {
-                	return "isSet";
-                }
-        }
 
-        
-        /**
-         * @return Returns the last accessed time of a device.
-         */
-        public Object getLastAccessTime(String key) {
-                Object cachedValue;
-                cachedValue = cache.getCachedTime(key);
-                if (cachedValue == null | cachedValue.equals(new Long(0))) {
-                        return "None";
-                }
-                return cachedValue;
-        }
-
-        /**
-         * @return Returns the number of minutes since the device was last used.
-         */
-        public Object getLastAccessTimeDuration(String key, String interval) {
-                Long cachedLongValue, retValue;
-                Object cachedValue;
-                long duration;
-                long cachedTime = 0;
-                java.lang.Double doubleValue;
-                cachedValue = cache.getCachedTime(key);
-                if (cachedValue == null | cachedValue.equals(new Long(0))) {
-                        return "None";
-                }
-                cachedLongValue = (Long) cachedValue;
-                cachedTime = cachedLongValue.longValue();
-                duration = System.currentTimeMillis() - cachedTime;
-                if (interval == "minute") {
-                        duration = duration / 60000;
-                }
-                else if (interval == "hour") {
-                        duration = duration / 3600000;
-                }
-                else if (interval == "day") {
-                        duration = duration / 86400000;
-                }
-                retValue = new Long(duration);
-                return retValue;
-        }
-
-        /**
-         * @return Returns the current value for a device from a specified key and extra.
-         * Jeff what are you trying to do here. this won't work?
-         */
-		/*
-        public Object getValue(String key, String extra) {
-
-                Object returnValue;
-                HashMap ObjectAtributes;
-                CacheWrapper cachedValue = cache.getCachedObject(key);
-                if (cachedValue != null) {
-                        if (cachedValue.isSet() == true) {
-                                ObjectAtributes = (HashMap) cachedValue;
-                                returnValue = ObjectAtributes.get(extra);
-                                return returnValue.toString();
-                        }
-                }
-                return "None";
-        }
-        */
 
         /**
          *  Returns all current commands .
@@ -887,24 +797,6 @@ public class Model
                         }
                 }
         }
-
-        /**
-         * @return Returns the system Command for a given key.
-         */
-        public Object getCommand(String key) {
-            CacheWrapper cachedValue = cache.getCachedObject(key);
-                if (cachedValue == null) {
-                        return "None";
-                }
-                if (cachedValue.isSet() == false) {
-                        Command retCommand;
-                        retCommand = (Command) cachedValue.getCommand();
-                        return retCommand.getCommandCode();
-                } else {
-                	return "isSet";
-                }
-        }
-
 
 
      /**

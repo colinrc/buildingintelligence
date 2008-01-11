@@ -176,7 +176,7 @@ public class Model
             GroovyModel myModel = (GroovyModel) aModel;
             String modelName = myModel.getName();
             if (groovyModelClasses.containsKey(modelName)){
-            	logger.log (Level.INFO,"Not registering groovy model " + fileName + " as a model by that name already exists, check for a the same name from a jar file to Groovy source");
+            	logger.log (Level.INFO,"Not registering groovy model " + modelName + " from file " + fileName + " as a model by that name already exists, check for a the same name in a jar file or Groovy source");
             } else {
 	            controller.setupModel(myModel);
 	            deviceModels.add(myModel);
