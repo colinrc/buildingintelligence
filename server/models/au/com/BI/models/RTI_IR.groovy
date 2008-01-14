@@ -79,7 +79,8 @@ class RTI_IR extends GroovyModel {
 							returnWrapper.injectCommand (rtiPart2,commandStr)
 						break;
 						}
-						
+					break;
+					
 					// runmacro is used to start eLIFE macros
 					case "runmacro" :
 						// Example BIRTI=runmacro,fred
