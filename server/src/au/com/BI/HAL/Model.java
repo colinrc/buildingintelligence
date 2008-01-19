@@ -478,7 +478,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						logger.log (Level.INFO,"An incorrect HAL status line was received, some startup synchronisation may have been missed");
 					}
 					synchronized (comms) {
-					    comms.acknowledgeCommand(CommDevice.HalState,zone);
+					    comms.acknowledgeCommand(CommDevice.HalState,zone,true);
 					    logger.log (Level.FINEST,"acknowledging zone " + zone);
 					    comms.sendNextCommand();
 					}
@@ -502,13 +502,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			// Scan complete
 
 			if (!protocolB) {
-				comms.acknowledgeCommand(CommDevice.HalStartup);
+				comms.acknowledgeCommand(CommDevice.HalStartup,false);
 			    logger.log (Level.FINEST,"Received startup status, acknowleding and starting poll ");
 			    this.startPolling();
 				foundCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
 			}
 			else {
-				comms.acknowledgeCommand(CommDevice.HalStartup);
+				comms.acknowledgeCommand(CommDevice.HalStartup,false);
 				logger.log (Level.FINEST,"Received startup status ");
 
 				foundCommand = true; // means HAL has processed the startup instruction and is about to send the following block.
@@ -549,7 +549,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 
 		synchronized (comms) {
-		    comms.acknowledgeCommand(CommDevice.HalStartup);
+		    comms.acknowledgeCommand(CommDevice.HalStartup,false );
 		}
 		if (!foundCommand && HALReturn.matches("^\\d.*")) {
 		    try {

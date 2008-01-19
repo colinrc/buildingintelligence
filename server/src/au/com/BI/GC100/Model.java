@@ -88,11 +88,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	public void doStartup() throws CommsFail {
 		logger.warning("Connecting to the GC100");
-	    Iterator startupItems = configHelper.getStartupQueryItemsList();
-	    while (startupItems.hasNext()) {
+
+	    for (DeviceType toggleDev: configHelper.getAllStartupDeviceObjects()){
 				try { 
-			        String nextKey =  (String)startupItems.next();
-			        ToggleSwitch toggle =  (ToggleSwitch)configHelper.getStartupQueryItem(nextKey);
+			        ToggleSwitch toggle =  (ToggleSwitch)toggleDev;
 					CommsCommand gc100CommsCommand = new CommsCommand();
 					gc100CommsCommand.setKey (toggle.getKey());
 					gc100CommsCommand.setCommand("getstate,"+toggle.getKey()+ETX);
@@ -313,7 +312,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		    	    String deviceAddress =  gc100StringParts[1];
 				
 		    	    // comms.acknowlegeCommand(CommDevice.GC100_IRCommand,deviceAddress);
-		    	    comms.acknowledgeCommand(CommDevice.GC100_IRCommand,"");
+		    	    comms.acknowledgeCommand(CommDevice.GC100_IRCommand,"",false);
 		    	    CommsCommand lastCommandSent;
 		    	    if (comms.sendNextCommand(CommDevice.GC100_IRCommand)) {
 		    	    //if (comms.sendNextCommand(CommDevice.GC100_IRCommand,deviceAddress)) {
@@ -351,10 +350,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					if (lastCommandSent != null) {
 						String deviceAddress = lastCommandSent.getActionCode();
 		    	       		logger.log (Level.WARNING,"The GC100 received a command it did not understand " + lastCommandSent.getExtra2Info());
-		    	       		comms.acknowledgeCommand(CommDevice.GC100_IRCommand,deviceAddress);
+		    	       		comms.acknowledgeCommand(CommDevice.GC100_IRCommand,deviceAddress,false);
 		    	       		comms.sendNextCommand(CommDevice.GC100_IRCommand,deviceAddress);
 					} else {
-	    	       			comms.acknowledgeCommand(CommDevice.GC100_IRCommand);
+	    	       			comms.acknowledgeCommand(CommDevice.GC100_IRCommand,false);
 					}
 
 		    	    }

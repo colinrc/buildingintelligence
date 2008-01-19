@@ -95,11 +95,13 @@ public interface CommDevice {
 	/**
 	 * Clears a command from the sent queue
 	 * @param key If empty or null the last command sent is removed else the key is searched for in the sent queue
+	 * @param actionType Only match commands with this action type
+	 * 	@param allInstances If the call should remove every instance of the key type, or just the first
 	 * @return success if the key is found or not specified
 	 */
-	public boolean acknowledgeCommand(int actionType);
-	public boolean acknowledgeCommand(String key);
-	public boolean acknowledgeCommand(int actionType,String key);
+	public boolean acknowledgeCommand(int actionType, boolean allInstances);
+	public boolean acknowledgeCommand(String key, boolean allInstances);
+	public boolean acknowledgeCommand(int actionType,String key, boolean allInstances);
 
 	/**
 	 * The ETX array is the set of possible values to indicate the end of the data string

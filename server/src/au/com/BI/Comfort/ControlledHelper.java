@@ -77,7 +77,7 @@ public class ControlledHelper {
 			synchronized (comms) {
 				if (!comms.isCommandSentQueueEmpty()){
 					CommsCommand raSent = comms.getLastCommandSent();
-					comms.acknowledgeCommand("");
+					comms.acknowledgeCommand("",false);
 					logger.log (Level.FINEST,"Received DA return code " + raSent.getActionCode());
 					doActionHelper.handleReturnCode (raSent, comfortString,   cache ,configHelper, comfort);
 				}

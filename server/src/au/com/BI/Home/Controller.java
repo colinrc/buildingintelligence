@@ -235,6 +235,7 @@ public class Controller {
 		dailyTasks = new DailyTaskFactory();
 		dailyTasks.setStartTime(bootstrap.getMaintenanceTime());
 		dailyTasks.setCalendarModel(calendarModel);
+		dailyTasks.setCommandList(commandQueue);
 		dailyTasks.start();
 		
 		regularTasks = new RegularTaskFactory();

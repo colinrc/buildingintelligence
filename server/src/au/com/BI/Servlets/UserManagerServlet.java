@@ -38,14 +38,15 @@ public class UserManagerServlet extends HttpServlet {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
 
     }
-    
-    public  void doGet (HttpServletRequest req,
+  
+    protected  void doGet (HttpServletRequest req,
            HttpServletResponse resp) throws ServletException,java.io.IOException {
     	Long serverID = null;
         boolean emptyResponse = true;
         HttpSession session = req.getSession(true);  
     	ServletContext context =  session.getServletContext();
 		HashUserRealm userRealm = (HashUserRealm)context.getAttribute("UserManager");
+		String requestType = req.getMethod();
 		resp.setContentType("text/html");
 		
 		PrintWriter out = resp.getWriter();
@@ -65,7 +66,7 @@ public class UserManagerServlet extends HttpServlet {
     }
     
     
-    public void doPost(HttpServletRequest req,
+    protected void doPost(HttpServletRequest req,
             HttpServletResponse resp) throws ServletException,java.io.IOException {
         HttpSession session = req.getSession(true);  	
         String message = "";
@@ -167,7 +168,7 @@ public class UserManagerServlet extends HttpServlet {
     		
     		resp.println ("<HR>");
     		
-    		resp.println ("<FORM METHOD=\"POST\" ACTION=\"/UserManager\"");
+    		resp.println ("<FORM METHOD='POST' ACTION='/UserManager' >");
     		
     		if (isAdmin) {
 	       		resp.println ("<TABLE>");

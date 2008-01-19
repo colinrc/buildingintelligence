@@ -816,7 +816,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		switch (oppCode){
 			case (byte)0x60:
 				interpretChannelLevel (result,msg);
-				comms.acknowledgeCommand(DynaliteCommand.REQUEST_LEVEL,result.getFullKey());
+				comms.acknowledgeCommand(DynaliteCommand.REQUEST_LEVEL,result.getFullKey(),false);
 				comms.sendNextCommand(DynaliteCommand.REQUEST_LEVEL);
 				// process preset return value
 				break;

@@ -17,6 +17,7 @@ import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.jetty.handler.DefaultHandler;
 import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.jetty.handler.HandlerCollection;
+import org.mortbay.jetty.security.BasicAuthenticator;
 import org.mortbay.jetty.security.Constraint;
 import org.mortbay.jetty.security.ConstraintMapping;
 import org.mortbay.jetty.security.HashUserRealm;
@@ -112,7 +113,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         HashUserRealm  webPass = new HashUserRealm ();
         webPass.setName("eLife");
         webPass.setConfig("datafiles/realm.properties");
-        
+       
         try {
         	startHTTPServer (webPass);
 
@@ -139,6 +140,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 
             /** Normal webclient  context */
 
+            
             ContextHandler updateContextHandler = new ContextHandler ();
 
             updateContextHandler.setContextPath("/");
@@ -168,7 +170,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 
             sessionManager.addEventListener(new SessionCounter());
             SecurityHandler servletSec= addSecurity(updateContextHandler, IPType.FullFunction, webPass, "Session","/*");
- 
+
             
             /** User manager context */
 
@@ -184,16 +186,15 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             SessionHandler userMgrSessionHandler = new SessionHandler();
             userMgrSessionHandler.setHandler(userMgrHandler);
             
-            userMgrContextHandler.addHandler(userMgrHandler);        
+            // userMgrContextHandler.addHandler(userMgrHandler);        
             userMgrContextHandler.setHandler(userMgrSessionHandler);
             
             userMgrContextHandler.setAttribute("UserManager",webPass);
             SecurityHandler userMgrSec= addSecurity(userMgrContextHandler,IPType.PWDOnly,webPass, "UserManager","/*");
             
-       
             ContextHandlerCollection contexts = new ContextHandlerCollection();
-           	contexts.setHandlers(new org.mortbay.jetty.Handler[]{servletSec,userMgrSec});
-
+        	contexts.setHandlers(new org.mortbay.jetty.Handler[]{servletSec,userMgrSec});
+            
            	HandlerCollection handlers = new HandlerCollection();
             handlers.setHandlers(new org.mortbay.jetty.Handler[]{contexts,new DefaultHandler()});
             
@@ -232,14 +233,14 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         servletConstraint.setAuthenticate(true);
         servletConstraintMap.setConstraint(servletConstraint);
         servletSec.setConstraintMappings(new ConstraintMapping[] {servletConstraintMap});
-        servletSec.setHandler(updateContextHandler);
         
     	ELifeAuthenticator eLifeAuthenticator = new ELifeAuthenticator ();
     	eLifeAuthenticator.setSecurity(security);
     	eLifeAuthenticator.setIpType(ipType);
         servletSec.setAuthenticator(eLifeAuthenticator);
-        
-        //servletSec.addHandler(updateContextHandler);
+        servletSec.setHandler(updateContextHandler);
+               
+        // servletSec.addHandler(updateContextHandler);
         return servletSec;
     }
     

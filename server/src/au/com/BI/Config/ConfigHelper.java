@@ -8,32 +8,11 @@ import java.util.*;
 
 import java.util.logging.*;
 
-import au.com.BI.IR.IRFactory;
-import au.com.BI.Label.LabelFactory;
-import au.com.BI.Lights.LightFactory;
-import au.com.BI.MultiMedia.AutonomicHome.Device.WindowsMediaExtenderFactory;
-import au.com.BI.PulseOutput.PulseOutputFactory;
-import au.com.BI.Pump.PumpFactory;
-import au.com.BI.Raw.RawFactory;
-import au.com.BI.SMS.SMSFactory;
 import au.com.BI.Script.Script;
-import au.com.BI.Sensors.SensorFactory;
-import au.com.BI.Thermostat.ThermostatFactory;
-import au.com.BI.ToggleSwitch.ToggleSwitchFactory;
-import au.com.BI.Unit.UnitFactory;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
-import au.com.BI.VirtualOutput.VirtualOutputFactory;
-import au.com.BI.AV.AVFactory;
-import au.com.BI.Alert.AlertFactory;
-import au.com.BI.Analog.AnalogFactory;
-import au.com.BI.Audio.AudioFactory;
-import au.com.BI.Camera.CameraFactory;
 import au.com.BI.Config.ParameterBlock;
-import au.com.BI.Counter.CounterFactory;
-import au.com.BI.CustomConnect.CustomConnectFactory;
 import au.com.BI.CustomConnect.CustomConnectInput;
-import au.com.BI.CustomInput.CustomInputFactory;
 import au.com.BI.Device.DeviceType;
 
 public class ConfigHelper {

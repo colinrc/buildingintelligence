@@ -91,14 +91,17 @@ protected String modelName = "";
 	/**
 	 * Clears a command from the sent queue
 	 * @param key If empty or null the last command sent is removed else the key is searched for in the sent queue
+	 * @param allInstances If the call should remove every instance of the key type, or just the first
 	 * @return success if the key is found or not specified
 	 */
-	public boolean acknowledgeCommand (String key) {
+	public boolean acknowledgeCommand (String key, boolean allInstances) {
 		boolean returnCode = false;
+		boolean toContinue = true;
+		
 		if (key != null && !key.equals("")) {
 			synchronized (sentQueue){
 				Iterator <CommsCommand> sentListIter = sentQueue.iterator();
-				while (sentListIter.hasNext() && !returnCode) {
+				while (toContinue && sentListIter.hasNext() ) {
 					CommsCommand item = (CommsCommand)sentListIter.next();
 					if (item.actionCode.equals (key)){
 					    sentListIter.remove();
@@ -107,6 +110,7 @@ protected String modelName = "";
 						    (System.currentTimeMillis() - item.getCreationDate()));
 					    }
 					    returnCode = true;
+					    if (!allInstances) toContinue = false;
 					}
 				}
 			}
@@ -120,14 +124,19 @@ protected String modelName = "";
 	
 	/**
 	 * Clears a command from the sent queue
-	 * @param key If empty or null the last command sent is removed else the key is searched for in the sent queue
+	 * @param key If empty or null the last command sent is removed else the key is searched for in the sent queue'
+	 * @param actionType Only match commands with this action type
+	 * 	@param allInstances If the call should remove every instance of the key type, or just the first
 	 * @return success if the key is found or not specified
 	 */
-	public boolean acknowledgeCommand (int actionType,String key) {
+	public boolean acknowledgeCommand (int actionType,String key, boolean allInstances) {
+		boolean returnCode = false;
+		boolean toContinue = true;
+
 		if (key != null && !key.equals("")) {
 			synchronized (sentQueue){
 				Iterator <CommsCommand>sentListIter = sentQueue.iterator();
-				while (sentListIter.hasNext()) {
+				while (toContinue && sentListIter.hasNext()) {
 					CommsCommand item = (CommsCommand)sentListIter.next();
 					if (item.getActionType() == actionType &&  item.getActionCode().equals (key)){
 					    sentListIter.remove();
@@ -135,7 +144,8 @@ protected String modelName = "";
 						logger.log(Level.FINER,"Received acknowledgement for key " + key + " time diff (ms) " + 
 						    (System.currentTimeMillis() - item.getCreationDate()));
 					    }
-					    return true;
+					    returnCode = true;
+					    if (!allInstances) toContinue = false;
 					}
 				}
 			}
@@ -147,12 +157,19 @@ protected String modelName = "";
 		}
 	}
 
-	public boolean acknowledgeCommand (int actionType) {
+	/**
+	 * Clears a command from the sent queue
+	 * @param actionType Only match commands with this action type
+	 * 	@param allInstances If the call should remove every instance of the key type, or just the first
+	 * @return success if the key is found or not specified
+	 */
+	public boolean acknowledgeCommand (int actionType, boolean allInstances) {
 		boolean returnCode = false;
+		boolean toContinue = true;
 		synchronized (sentQueue){
 	
 			Iterator <CommsCommand>sentListIter = sentQueue.iterator();
-			while (sentListIter.hasNext()) {
+			while (toContinue && sentListIter.hasNext()) {
 				CommsCommand item = (CommsCommand)sentListIter.next();
 				if (item.getActionType() == actionType ){
 				    sentListIter.remove();
@@ -161,6 +178,7 @@ protected String modelName = "";
 					    (System.currentTimeMillis() - item.getCreationDate()));
 				    }
 				    returnCode = true;
+				    if (!allInstances) toContinue = false;
 				}
 			}
 		}

@@ -643,7 +643,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 							finishedStartup = true;
 						}
 
-						comms.acknowledgeCommand(""+secondLastChar);
+						comms.acknowledgeCommand(""+secondLastChar,false);
 						comms.sendNextCommand();
 					} else {
 						logger.log (Level.FINER,"Command failed " + secondLastChar + ", resending");

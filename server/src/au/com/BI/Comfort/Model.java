@@ -227,7 +227,7 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 	public void sendNextCommandInQueue () throws CommsFail {
 		synchronized (comms) {
 			comms.gotFeedback();
-			comms.acknowledgeCommand("");
+			comms.acknowledgeCommand("",false);
 			comms.sendNextCommand();
 		}
 	}

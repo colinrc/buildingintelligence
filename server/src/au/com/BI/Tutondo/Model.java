@@ -66,7 +66,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void attatchComms() 
 	throws ConnectionFail {
 	    if (!protocolB) { 
-			setTransmitMessageOnBytes(1); // tutondo only sends a single non CR terminated byte.
+			setTransmitMessageOnBytes(1); // tutondo A only sends a single non CR terminated byte.
 	    }
 		super.attatchComms( );
 	}
@@ -104,7 +104,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				pollValue = 3000;
 			}
 		}
-		if (pollValue == 0) pollValue = 1000; // 1 seconds minimum to make sure we don't flood comfort. 
+		if (pollValue == 0) pollValue = 1000; // 1 seconds minimum to make sure we don't flood tutondo. 
 		pollDevice.setPollValue(pollValue);
 		logger.log (Level.FINE,"Starting tutondo polling, interval = " + pollValueStr);
 		pollDevice.start();
@@ -228,10 +228,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				case DeviceType.AUDIO :
 					if ((outputAudioCommand = buildAudioString ((Audio)device,command)) != null) {
 						if (protocolB) {
-							logger.log(Level.FINER, "Message from flash generated audio event " + outputAudioCommand + " for zone " + device.getKey());
+							logger.log(Level.FINER, "Message from flash generated audio command " + outputAudioCommand + " for zone " + device.getKey());
 							comms.sendString(outputAudioCommand);
 						} else {
-							logger.log(Level.FINER, "Message from flash generated audio event for zone " + device.getKey());
+							logger.log(Level.FINER, "Message from flash generated audio command for zone " + device.getKey());
 							CommsCommand audioCommsCommand = new CommsCommand();
 							audioCommsCommand.setKey (device.getKey());
 							audioCommsCommand.setCommandBytes(outputAudioCommand);
@@ -323,7 +323,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				currentState = new StateOfZone();
 			
 			if (lastActionType == CommDevice.TutondoState ) {
-				comms.acknowledgeCommand(CommDevice.TutondoState,zone);
+				comms.acknowledgeCommand(CommDevice.TutondoState,zone, true);
 				comms.gotFeedback();
 				if (!protocolB) comms.sendNextCommand();
 				commandMatched = true;
@@ -343,7 +343,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 			
 			if (lastActionType == CommDevice.TutondoVolume) {
-				comms.acknowledgeCommand(CommDevice.TutondoVolume,zone);
+				comms.acknowledgeCommand(CommDevice.TutondoVolume,zone,true);
 				comms.gotFeedback();
 				if (!protocolB) comms.sendNextCommand();
 				logger.log(Level.FINEST,"Received feedback for tutondo volume");
@@ -362,7 +362,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 
 			if (lastActionType == CommDevice.TutondoPrograms) {
-				comms.acknowledgeCommand(CommDevice.TutondoPrograms,zone);
+				comms.acknowledgeCommand(CommDevice.TutondoPrograms,zone, true);
 				comms.gotFeedback();
 				if (!protocolB) comms.sendNextCommand();
 				logger.log(Level.FINEST,"Received feedback for tutondo src");
@@ -384,7 +384,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 			
 			if (!commandMatched && !protocolB){
-				comms.acknowledgeCommand("");
+				comms.acknowledgeCommand("", true);
 				comms.gotFeedback();
 				comms.sendNextCommand();
 			}

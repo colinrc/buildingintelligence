@@ -73,18 +73,20 @@ public class PollDevice extends Thread {
 		while (running) {
 			CommsCommand lastCommandSent;
 			
-			synchronized (comms) {
+
 			    lastCommandSent = comms.getLastCommandSent(); 
 				if (!comms.isCommandSentQueueEmpty() && 
-				        lastCommandSent != null && 
-						(lastCommandSent.getActionType() == CommDevice.TutondoState || 
-						        lastCommandSent.getActionType() == CommDevice.TutondoPrograms ||
-						        lastCommandSent.getActionType() == CommDevice.TutondoVolume)){
-					logger.log (Level.WARNING,"Tutondo is not responding, please check cabling.");
-					comms.acknowledgeCommand(CommDevice.TutondoState);
-					comms.acknowledgeCommand(CommDevice.TutondoPrograms);
-					comms.acknowledgeCommand(CommDevice.TutondoVolume);
-
+				        lastCommandSent != null) {
+					synchronized (comms) {
+						if  (lastCommandSent.getActionType() == CommDevice.TutondoState || 
+							        lastCommandSent.getActionType() == CommDevice.TutondoPrograms ||
+							        lastCommandSent.getActionType() == CommDevice.TutondoVolume){
+							 logger.log (Level.WARNING,"Tutondo is not responding, please check cabling.");
+						     comms.acknowledgeCommand(CommDevice.TutondoState, true);
+						     comms.acknowledgeCommand(CommDevice.TutondoPrograms, true);
+						     comms.acknowledgeCommand(CommDevice.TutondoVolume, true);
+						}
+					}
 				}
 				else {
 
@@ -101,11 +103,12 @@ public class PollDevice extends Thread {
 						startupCommsCommand.setExtraInfo (zoneName);
 						startupCommsCommand.setActionType(CommDevice.TutondoState);
 						try { 
-							comms.addCommandToQueue (startupCommsCommand);
-							if (protocol) comms.sendNextCommand ();
-
+							synchronized (comms){
+								comms.addCommandToQueue (startupCommsCommand);
+								if (protocol) comms.sendNextCommand ();
+							}
 						} catch (CommsFail e1) {
-							logger.log(Level.WARNING, "Communication failed starting up Tutondo " + e1.getMessage());
+							logger.log(Level.WARNING, "Communication failed polling Tutondo " + e1.getMessage());
 						} 
 
 						startupCommand = tutondoHelper.buildTutondoCommand(51, 0, zoneKey, protocol);
@@ -117,10 +120,12 @@ public class PollDevice extends Thread {
 						volumeCommand.setExtraInfo (zoneName);
 						volumeCommand.setActionType(CommDevice.TutondoVolume);
 						try { 
-							comms.addCommandToQueue (volumeCommand);
-							if (protocol) comms.sendNextCommand ();
+							synchronized (comms){
+								comms.addCommandToQueue (volumeCommand);
+								if (protocol) comms.sendNextCommand ();
+							}
 						} catch (CommsFail e1) {
-							logger.log(Level.WARNING, "Communication failed starting up Tutondo " + e1.getMessage());
+							logger.log(Level.WARNING, "Communication failed polling Tutondo " + e1.getMessage());
 						} 
 						
 						startupCommand = tutondoHelper.buildTutondoCommand(52, 0, zoneKey, protocol);
@@ -131,15 +136,16 @@ public class PollDevice extends Thread {
 						programCommsCommand.setKeepForHandshake(true);
 						programCommsCommand.setExtraInfo (zoneName);
 						programCommsCommand.setActionType(CommDevice.TutondoPrograms);
-						try { 
-							comms.addCommandToQueue (programCommsCommand);
-							if (protocol) comms.sendNextCommand ();
+						try {
+							synchronized (comms){							
+								comms.addCommandToQueue (programCommsCommand);
+								if (protocol) comms.sendNextCommand ();
+							}
 						} catch (CommsFail e1) {
-							logger.log(Level.WARNING, "Communication failed starting up Tutondo " + e1.getMessage());
+							logger.log(Level.WARNING, "Communication failed polling Tutondo " + e1.getMessage());
 						}
 						
 					}
-				}
 			}
 			try {
 				Thread.sleep (pollValue);

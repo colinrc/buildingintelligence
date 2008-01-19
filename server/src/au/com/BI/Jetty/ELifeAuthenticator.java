@@ -49,6 +49,7 @@ public class ELifeAuthenticator extends BasicAuthenticator  implements Authentic
 			}
 		} 
 		return super.authenticate(  realm,  pathInContext, request,  response);
+		
 	}
 	
 	public Security getSecurity() {

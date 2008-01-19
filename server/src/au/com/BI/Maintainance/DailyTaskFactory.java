@@ -14,6 +14,8 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 
+import au.com.BI.Command.CommandQueue;
+
 
 /**
  * @author colin
@@ -27,7 +29,8 @@ public class DailyTaskFactory  {
 	final String MAINTENANCE_GROUP = "Maintenance";
 	protected Scheduler sched = null;
     protected SchedulerFactory schedFact = null;
-    
+	private CommandQueue commandQueue;
+	
 	public DailyTaskFactory() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		try {
@@ -46,6 +49,7 @@ public class DailyTaskFactory  {
 		jobDetail.setGroup(MAINTENANCE_GROUP);
 		JobDataMap map = jobDetail.getJobDataMap();
 		map.put("CALENDAR", calendarModel);
+		map.put("COMMANDS", commandQueue);
 		jobDetail.setJobClass(DailyTask.class);
 
 
@@ -98,6 +102,14 @@ public class DailyTaskFactory  {
 
 	public void setCalendarModel(au.com.BI.Calendar.Model calendarModel) {
 		this.calendarModel = calendarModel;
+	}
+
+	public CommandQueue getCommandList() {
+		return commandQueue;
+	}
+
+	public void setCommandList(CommandQueue commandQueue) {
+		this.commandQueue = commandQueue;
 	}
 	
 }

@@ -108,7 +108,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			CommsCommand theCommand = (CommsCommand)command;
 			byte resp[] = theCommand.getCommandBytes();
 			if (resp != null) {
-				if (comms.acknowledgeCommand(CommDevice.PelcoSend,makeKey(resp[1]))) {
+				if (comms.acknowledgeCommand(CommDevice.PelcoSend,makeKey(resp[1]),false)) {
 					logger.log (Level.FINEST,"Acknowlegement was valid, sending next instruction");
 					comms.sendNextCommand(CommDevice.PelcoSend,makeKey(resp[1]));
 				}
