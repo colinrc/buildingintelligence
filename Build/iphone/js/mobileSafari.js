@@ -1,3 +1,5 @@
+showDebug = false;
+
 addEventListener("load", function() { setTimeout(hideURLbar, 0) }, false);
 function hideURLbar() {
 	window.scrollTo(0, 1);
@@ -19,7 +21,7 @@ setInterval(updateLayout, 400);
 */
 
 debug = function (msg) {
-	//return;
+	if (!showDebug) return;
 	var debug = document.getElementById("debug");
 	debug.innerHTML += msg + "<br>";
 	debug.scrollTop = debug.scrollHeight;
@@ -35,33 +37,38 @@ pollServer = function (init) {
 		xmlhttp.open("GET", _global.settings.serverProtocol + "://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update?SESSION_ID=" + _global.sessionID, false);
 	}
 	xmlhttp.send('');
-	s = new XMLSerializer().serializeToString(xmlhttp.responseXML);
-	s = s.replace(/</g, "&lt;");
-	s = s.replace(/>/g, "&gt;");
-	debug(s);
 	if (Sarissa.getParseErrorText(xmlhttp.responseXML) == Sarissa.PARSED_OK) {
-		if (init) {
-			debug("Connected: v" + xmlhttp.responseXML.firstChild.firstChild.attributes.version.value);
-			_global.sessionID = xmlhttp.responseXML.firstChild.firstChild.attributes.session.value;
-		} else {
+		var packetXML = xmlhttp.responseXML.firstChild.firstChild;
+		if (packetXML) {
+			if (init) {
+				debug("Connected: v" + packetXML.attributes["version"].value);
+				_global.sessionID = packetXML.attributes["session"].value;
+			} else {
+				switch (packetXML.nodeName) {
+					case "CONTROL":
+						if (!_global.controls[packetXML.attributes["KEY"].value]) _global.controls[packetXML.attributes["KEY"].value] = new Object();
+						_global.controls[packetXML.attributes["KEY"].value].command = packetXML.attributes["COMMAND"].value;
+						_global.controls[packetXML.attributes["KEY"].value].extra = packetXML.attributes["EXTRA"].value;
+						
+						var s = new XMLSerializer().serializeToString(packetXML);
+						s = s.replace(/</g, "&lt;");
+						s = s.replace(/>/g, "&gt;");
+						debug("Incoming packet: " + "\n" + s);
+						
+						refresh();
+						break;
+					default:
+						// a packet came in which we didn't know what to do with, so dump it to debug
+						var s = new XMLSerializer().serializeToString(packetXML);
+						s = s.replace(/</g, "&lt;");
+						s = s.replace(/>/g, "&gt;");
+						debug("Incoming packet: " + "\n" + s);
+				}
+			}
 		}
 	} else {
-		debug(Sarissa.getParseErrorText(xmlhttp.responseXML));
+		debug("Error: " + Sarissa.getParseErrorText(xmlhttp.responseXML));
 	}
-}
-
-serverSend = function () {
-	var controlForm = document.getElementById("controlForm");
-	debug('Send: &lt;CONTROL KEY="' + controlForm.key.value + '" COMMAND="' + controlForm.command.value  + '" EXTRA="' + controlForm.extra.value + '" /&gt;');
-	
-	sendObj = '';
-	sendObj += '&MESSAGE=<CONTROL KEY="' + controlForm.key.value + '" COMMAND="' + controlForm.command.value  + '" EXTRA="' + controlForm.extra.value + '" />';
-	sendObj += '&SESSION_ID=' + _global.sessionID + "&";
-	
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.open("POST", _global.settings.serverProtocol + "://" + _global.settings.serverAddress  + ":" + _global.settings.serverPort + "/webclient/update", false);
-	xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-	xmlhttp.send(sendObj);
 }
 
 xmlToObj = function (node) {
@@ -98,9 +105,12 @@ init = function () {
 	
 	_global = new Object();
 	_global.settings = new Object();
-	_global.rooms = new Object();
+	_global.controls = new Object();
+	_global.currentView = new Object();
 	
 	var canvas = document.getElementById("canvas");
+	
+	if (!showDebug) document.getElementById("debug").style.display = "none";
 	
 	debug("Loading elife.xml");
 	var xmlhttp = new XMLHttpRequest();
@@ -148,6 +158,10 @@ sendCmd = function (key, command, extra) {
 	if (command == undefined) var command = "";
 	if (extra == undefined) var extra = "";
 	
+	if (!_global.controls[key]) _global.controls[key] = new Object();
+	_global.controls[key].command = command;
+	_global.controls[key].extra = extra;
+	
 	var controlForm = document.getElementById("controlForm");
 	debug('Send: &lt;CONTROL KEY="' + key + '" COMMAND="' + command  + '" EXTRA="' + extra + '" /&gt;');
 	
@@ -186,41 +200,65 @@ drawRooms = function (zone) {
 }
 
 drawRoom = function (zone, room, tab) {
-	var roomXML = _global.zones.childNodes[zone].firstChild.childNodes[room];
-	var tabXML = roomXML.firstChild.childNodes[tab];
+	_global.currentView.zone = zone;
+	_global.currentView.room = room;
+	_global.currentView.tab = tab;
 	
-	canvas.innerHTML = "<h1>" + _global.zones.childNodes[zone].firstChild.childNodes[room].attributes["name"].value + "</h1>";
-	var output = "";
-	for (var i=0; i<roomXML.firstChild.childNodes.length; i++) {
-		if (i == tab) {
-			output += '<li class="on">'
-		} else {
-			output += '<li>'
+	refresh = function () {
+		var zone = _global.currentView.zone;
+		var room = _global.currentView.room;
+		var tab = _global.currentView.tab;
+		
+		var roomXML = _global.zones.childNodes[zone].firstChild.childNodes[room];
+		var tabXML = roomXML.firstChild.childNodes[tab];
+		
+		canvas.innerHTML = "<h1>" + _global.zones.childNodes[zone].firstChild.childNodes[room].attributes["name"].value + "</h1>";
+		var output = "";
+		for (var i=0; i<roomXML.firstChild.childNodes.length; i++) {
+			if (i == tab) {
+				output += '<li class="on">'
+			} else {
+				output += '<li>'
+			}
+			output += '<a href="javascript:drawRoom(' + zone + ',' + room + ',' + i + ')">';
+			//output += roomXML.firstChild.childNodes[i].attributes["name"].value;
+			if (roomXML.firstChild.childNodes[i].attributes["icon"]) {
+				output += '<img src="/lib/icons/' + roomXML.firstChild.childNodes[i].attributes["icon"].value + '.png">';
+			} else {
+				output += '<img src="/lib/icons/null.png">';
+			}
+			output += '</a></li>';
 		}
-		output += '<a href="javascript:drawRoom(' + zone + ',' + room + ',' + i + ')">';
-		//output += roomXML.firstChild.childNodes[i].attributes["name"].value;
-		if (roomXML.firstChild.childNodes[i].attributes["icon"]) {
-			output += '<img src="/lib/icons/' + roomXML.firstChild.childNodes[i].attributes["icon"].value + '.png">';
-		} else {
-			output += '<img src="/lib/icons/null.png">';
-		}
-		output += '</a></li>';
-	}
-	canvas.innerHTML += '<ul id="tabList">' + output + '</ul>';
-	
-	output = "";
-	for (var i=0; i<tabXML.childNodes.length; i++) {
-		output += '<label>' + tabXML.childNodes[i].attributes["name"].value + '</label>';
-		if (tabXML.childNodes[i].attributes["type"].value == "onOff") {
-			output += '<a href="javascript:sendCmd(\'' + tabXML.childNodes[i].attributes["key"].value + '\', \'on\')" class="button"><img src="/lib/icons/' + tabXML.childNodes[i].attributes["icons"].value.split(",")[0] + '.png"></a>';
-		} else {
+		canvas.innerHTML += '<ul id="tabList">' + output + '</ul>';
+		
+		output = "";
+		for (var i=0; i<tabXML.childNodes.length; i++) {
+			var key = tabXML.childNodes[i].attributes["key"].value;
+			if (_global.controls[key]) {
+				var command = _global.controls[key].command.toLowerCase();
+			} else {
+				var command = "";
+			}
 			
+			output += '<label>' + tabXML.childNodes[i].attributes["name"].value + '</label>';
+			if (tabXML.childNodes[i].attributes["type"].value == "onOff") {
+				output += '<a href="javascript:sendCmd(\'' + key + '\', \'' + (command == "on" ? "off" : "on") + '\');refresh();" class="button"><img src="/lib/icons/';
+				if (command == "on") {
+					output += tabXML.childNodes[i].attributes["icons"].value.split(",")[1];
+				} else {
+					output += tabXML.childNodes[i].attributes["icons"].value.split(",")[0];
+				}
+				output += '.png"></a>';
+			} else {
+				
+			}
 		}
+		canvas.innerHTML += '<div id="tab">' + output + '</div>';
+		
+		canvas.innerHTML += '<ul id="boxList"><li class="backButton"><a href="javascript:drawRooms(' + zone + ')">< Back</a></li></ul>';
+		hideURLbar()
 	}
-	canvas.innerHTML += '<div id="tab">' + output + '</div>';
-	
-	canvas.innerHTML += '<ul id="boxList"><li class="backButton"><a href="javascript:drawRooms(' + zone + ')">< Back</a></li></ul>';
-	hideURLbar()
+	refresh();
 }
 
 addEventListener("load", init, false);
