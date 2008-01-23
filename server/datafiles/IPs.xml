@@ -1,10 +1,10 @@
 <ip_list>
 	<full_function>
+
 	</full_function>
 	
 	<post_only>
-
-			<ip value="127.0.0.2" />			
+			<ip value="127.0.0.1" />			
 			<ip value="127.0.0.3" />
-				</post_only>
+	</post_only>
 </ip_list>

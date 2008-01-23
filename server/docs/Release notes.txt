@@ -1,3 +1,23 @@
+== 23/Jan/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b78.zip V1.6-b78]   ==
+
+''' Tutondo '''
+
+Modified to only lock comms between each individual device poll, rather than before all zones.
+Improved handling of a poll occurring when a previous poll had not yet been responded to.
+Resolves issue [ticket:695]
+
+''' Scripts '''
+
+Modified last update time calls to throw an exception if the item has never been updated.
+Changed Last update time calls to return a long rather than general Object; will simplify script coding.
+
+Merged duplicate calls in scripts and groovy models to a single version.
+
+
+''' Web '''
+
+Resolved web client issues [ticket:669]
+
 == 7/Jan/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b77.zip V1.6-b77]  [attachment:wiki:SoftwareReleases:eLife-1.6b77-libs.zip Libs-V1.6b77]  ==
 
 ''' Calendar '''

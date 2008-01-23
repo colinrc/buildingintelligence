@@ -168,7 +168,7 @@ public class UserManagerServlet extends HttpServlet {
     		
     		resp.println ("<HR>");
     		
-    		resp.println ("<FORM METHOD='POST' ACTION='/UserManager' >");
+    		resp.println ("<FORM METHOD='POST' ACTION='/UserManager/' >");
     		
     		if (isAdmin) {
 	       		resp.println ("<TABLE>");

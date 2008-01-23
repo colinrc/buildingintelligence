@@ -6,6 +6,7 @@ import au.com.BI.Util.SimplifiedModel;
 import au.com.BI.Util.ClientModel;
 import au.com.BI.Util.DeviceModel;
 import org.mortbay.jetty.bio.SocketConnector;
+import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
@@ -58,37 +59,47 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         connector.setPort(bootstrap.getJettyPort());
         connector.setMaxIdleTime(50000);
         connector.setName("HTTP_CONNECT");
-        client_server.setConnectors(new Connector[]{connector});
+        client_server.setConnectors(new Connector[]{connector}); 
+        
+        ContextHandlerCollection contexts = new ContextHandlerCollection();
         
         // HTML static handler
-        ContextHandler mainContextHandler = new ContextHandler ();
-        mainContextHandler.setContextPath("/html");
-        mainContextHandler.setResourceBase("../client/lib/html");
+        Context mainContext= new Context (contexts, "/html"); 
+        mainContext.setResourceBase("../client/lib/html");
 
-        ServletHandler servletHandler = new ServletHandler ();         
-        ServletHolder defServlet = servletHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
+        ServletHolder defServlet = mainContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
         defServlet.setInitParameter("dirAllowed","false");
-        mainContextHandler.setHandler(servletHandler);
-        
         
         /** Post only content */ 
         
-        ContextHandler postContextHandler = new ContextHandler ();
-        postContextHandler.setContextPath("/post");                       
-        postContextHandler.setAttribute("Cache",cache);
-        postContextHandler.setAttribute("ServerID",new Long (this.getServerID()));
-        postContextHandler.setAttribute("CommandQueue",commandQueue);
-        postContextHandler.setAttribute("Security",security);
+        Context postContext = new Context (contexts,"/post", Context.SECURITY | Context.NO_SESSIONS);
+                   
+        postContext.setAttribute("Cache",cache);
+        postContext.setAttribute("ServerID",new Long (this.getServerID()));
+        postContext.setAttribute("CommandQueue",commandQueue);
+        postContext.setAttribute("Security",security);       
+        postContext.addServlet("au.com.BI.Servlets.PostUpdateServlet","/update");
+ 
+          
+        SecurityHandler postContextMgrSrc = postContext.getSecurityHandler();
+        postContextMgrSrc.setUserRealm(webPass);
         
-        ServletHandler postHandler = new ServletHandler ();   
-        ServletHolder postUpdateServlet = postHandler.addServletWithMapping("au.com.BI.Servlets.PostUpdateServlet","/update"); 
-        postContextHandler.addHandler(postHandler);
-        SecurityHandler postSec= addSecurity(postContextHandler, IPType.PostOnly, webPass, "PostOnly","/*");
+        ELifeAuthenticator updateAuthenticator = new ELifeAuthenticator ();
+        updateAuthenticator.setSecurity(security);
+        updateAuthenticator.setIpType(IPType.PostOnly);
+        postContextMgrSrc.setAuthenticator(updateAuthenticator);
         
-        
-        ContextHandlerCollection contexts = new ContextHandlerCollection();
-        contexts.setHandlers(new org.mortbay.jetty.Handler[]{postSec,mainContextHandler});
+        Constraint postClientConstraint = new Constraint();
+        postClientConstraint.setName(Constraint.__BASIC_AUTH);;
+        postClientConstraint.setRoles(new String[]{"user","admin","moderator"});
+        postClientConstraint.setAuthenticate(true);
 
+       ConstraintMapping postClientCM = new ConstraintMapping();
+       postClientCM.setConstraint(postClientConstraint);
+       postClientCM.setPathSpec("/*");
+       
+        postContextMgrSrc.setConstraintMappings(new ConstraintMapping[]{postClientCM});
+        
         HandlerCollection handlers = new HandlerCollection();
         handlers.setHandlers(new org.mortbay.jetty.Handler[]{contexts,new DefaultHandler()});
         
@@ -121,10 +132,10 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             logger.log (Level.WARNING,"Problems starting web server " + ex.getMessage());
             throw ex;
         }
+
         
         try {
             server = new Server();
-            // jettyHandler.setSSL(bootstrap.isSSL());
             
               SslSocketConnector sslConnect = new SslSocketConnector();
             	sslConnect.setPort(bootstrap.getJettySSLPort());
@@ -135,66 +146,81 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             	sslConnect.setName("SSL_CONNECT");
               server.setConnectors(new Connector[]{sslConnect});
  
+              ContextHandlerCollection contexts = new ContextHandlerCollection();
+              
 
-            server.addUserRealm(webPass);
+            // Normal webclient  context
+             Constraint webClientConstraint = new Constraint();
+             webClientConstraint.setName(Constraint.__BASIC_AUTH);;
+             webClientConstraint.setRoles(new String[]{"user","admin","moderator"});
+             webClientConstraint.setAuthenticate(true);
 
-            /** Normal webclient  context */
-
+            ConstraintMapping webClientCM = new ConstraintMapping();
+            webClientCM.setConstraint(webClientConstraint);
+            webClientCM.setPathSpec("/*");
             
-            ContextHandler updateContextHandler = new ContextHandler ();
-
-            updateContextHandler.setContextPath("/");
-            //updateContextHandler.setContextPath("/");
-                       
-            updateContextHandler.setResourceBase("../www");
-            updateContextHandler.setConnectorNames(new String[]{"SSL_CONNECT"});
-
-            ServletHandler updateHandler = new ServletHandler ();   
-            ServletHolder updateServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.UpdateServlet","/webclient/update");
-            ServletHolder logoutServlet = updateHandler.addServletWithMapping("au.com.BI.Servlets.Logout","/webclient/logout");
-            ServletHolder defServlet = updateHandler.addServletWithMapping("org.mortbay.jetty.servlet.DefaultServlet","/");
             
-            SessionHandler sessionHandler = new SessionHandler();
-            sessionHandler.setHandler(updateHandler);
-           SessionManager sessionManager =  sessionHandler.getSessionManager();
-           sessionManager.setMaxInactiveInterval(timeout);
-           
-            updateContextHandler.setHandler(sessionHandler);
-            updateContextHandler.setAttribute("CacheBridgeFactory",cacheBridgeFactory);
-            updateContextHandler.setAttribute("AddressBook",addressBook);
-            updateContextHandler.setAttribute("CommandQueue",commandQueue);
-            updateContextHandler.setAttribute("Security",security);
-            updateContextHandler.setAttribute("ServerID",new Long (this.getServerID()));
-            updateContextHandler.setAttribute("VersionManager",this.getVersionManager());
-            updateContextHandler.setAttribute("WebClientCount",new Integer(0));
+            Context updateContext= new Context (contexts, "/",Context.SECURITY|Context.SESSIONS);
+                         
+            updateContext.setResourceBase("../www");
+            updateContext.setConnectorNames(new String[]{"SSL_CONNECT"});
 
-            sessionManager.addEventListener(new SessionCounter());
-            SecurityHandler servletSec= addSecurity(updateContextHandler, IPType.FullFunction, webPass, "Session","/*");
+            updateContext.addServlet("au.com.BI.Servlets.UpdateServlet","/webclient/update");
+            updateContext.addServlet("au.com.BI.Servlets.Logout","/webclient/logout");
+            updateContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
+                 
+           SessionManager updateContextSessionMgr =  updateContext.getSessionHandler().getSessionManager();
+           updateContextSessionMgr.setMaxInactiveInterval(timeout);
 
+           updateContext.setAttribute("CacheBridgeFactory",cacheBridgeFactory);
+           updateContext.setAttribute("AddressBook",addressBook);
+           updateContext.setAttribute("CommandQueue",commandQueue);
+           updateContext.setAttribute("Security",security);
+           updateContext.setAttribute("ServerID",new Long (this.getServerID()));
+           updateContext.setAttribute("VersionManager",this.getVersionManager());
+           updateContext.setAttribute("WebClientCount",new Integer(0));
+
+            updateContextSessionMgr.addEventListener(new SessionCounter());
+            
+            SecurityHandler updateMgrSec = updateContext.getSecurityHandler();
+            updateMgrSec.setUserRealm(webPass);
+            
+            ELifeAuthenticator updateAuthenticator = new ELifeAuthenticator ();
+            updateAuthenticator.setSecurity(security);
+            updateAuthenticator.setIpType(IPType.FullFunction);
+        	
+            updateMgrSec.setAuthenticator(updateAuthenticator);
+            
+            updateMgrSec.setConstraintMappings(new ConstraintMapping[]{webClientCM});
+                 
             
             /** User manager context */
+            
+            Constraint constraint = new Constraint();
+            constraint.setName(Constraint.__BASIC_AUTH);;
+            constraint.setRoles(new String[]{"user","admin","moderator"});
+            constraint.setAuthenticate(true);
 
-            ContextHandler userMgrContextHandler = new ContextHandler ();
-            userMgrContextHandler.setContextPath("/UserManager");                       
-            userMgrContextHandler.setConnectorNames(new String[]{"SSL_CONNECT"});
-            userMgrContextHandler.setAttribute("Security",security);
-            userMgrContextHandler.setAttribute("ServerID",new Long (this.getServerID()));
-                   
-            ServletHandler userMgrHandler = new ServletHandler ();   
-            ServletHolder userManager = userMgrHandler.addServletWithMapping("au.com.BI.Servlets.UserManagerServlet","/");            
+            ConstraintMapping cm = new ConstraintMapping();
+            cm.setConstraint(constraint);
+            cm.setPathSpec("/*");
             
-            SessionHandler userMgrSessionHandler = new SessionHandler();
-            userMgrSessionHandler.setHandler(userMgrHandler);
+  
+            Context userMgrContext = new Context (contexts, "/UserManager",Context.SECURITY|Context.SESSIONS);
+            userMgrContext.setAttribute("UserManager",webPass);
+            userMgrContext.setConnectorNames(new String[]{"SSL_CONNECT"});
+            userMgrContext.addServlet("au.com.BI.Servlets.UserManagerServlet", "/");
             
-            // userMgrContextHandler.addHandler(userMgrHandler);        
-            userMgrContextHandler.setHandler(userMgrSessionHandler);
-            
-            userMgrContextHandler.setAttribute("UserManager",webPass);
-            SecurityHandler userMgrSec= addSecurity(userMgrContextHandler,IPType.PWDOnly,webPass, "UserManager","/*");
-            
-            ContextHandlerCollection contexts = new ContextHandlerCollection();
-        	contexts.setHandlers(new org.mortbay.jetty.Handler[]{servletSec,userMgrSec});
-            
+            SecurityHandler userMgrSec = userMgrContext.getSecurityHandler();
+            userMgrSec.setUserRealm(webPass);
+        	
+            ELifeAuthenticator usrAuthenticator = new ELifeAuthenticator ();
+            usrAuthenticator.setSecurity(security);
+            usrAuthenticator.setIpType(IPType.PWDOnly);
+        	
+            userMgrSec.setAuthenticator(usrAuthenticator);
+            userMgrSec.setConstraintMappings(new ConstraintMapping[]{cm});
+                       
            	HandlerCollection handlers = new HandlerCollection();
             handlers.setHandlers(new org.mortbay.jetty.Handler[]{contexts,new DefaultHandler()});
             
@@ -209,41 +235,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         }
     }
     
-    
-    public SecurityHandler  addSecurity (ContextHandler updateContextHandler, IPType ipType, UserRealm webPass, String constraintName, String constraintPath) {
-        // Servlet Security config
-    	SecurityHandler servletSec = new SecurityHandler();
 
-        
-        servletSec.setServer(server);
-        servletSec.setAuthMethod(Constraint.__BASIC_AUTH);
-        servletSec.setUserRealm(webPass);
-
-        ConstraintMapping servletConstraintMap = new ConstraintMapping();
-        servletConstraintMap.setPathSpec(constraintPath);
-        Constraint servletConstraint = new Constraint();
-        servletConstraint.setName(constraintName);
-        
-        if (ipType == IPType.PostOnly){
-        	servletConstraint.setRoles(new String[]{""});
-        } else {
-           	servletConstraint.setRoles(new String[]{"user","admin","integrator"});       	
-        }
-        
-        servletConstraint.setAuthenticate(true);
-        servletConstraintMap.setConstraint(servletConstraint);
-        servletSec.setConstraintMappings(new ConstraintMapping[] {servletConstraintMap});
-        
-    	ELifeAuthenticator eLifeAuthenticator = new ELifeAuthenticator ();
-    	eLifeAuthenticator.setSecurity(security);
-    	eLifeAuthenticator.setIpType(ipType);
-        servletSec.setAuthenticator(eLifeAuthenticator);
-        servletSec.setHandler(updateContextHandler);
-               
-        // servletSec.addHandler(updateContextHandler);
-        return servletSec;
-    }
-    
      
     public void setCache(Cache cache){
         this.cache = cache;

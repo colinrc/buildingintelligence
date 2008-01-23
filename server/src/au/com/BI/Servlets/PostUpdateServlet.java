@@ -105,6 +105,14 @@ public class PostUpdateServlet extends HttpServlet {
 		
         cache.setCachedCommand(receivedCommand.getDisplayName(), receivedCommand);
         commandQueue.add(receivedCommand);
+        
+        out.println("<HTML><BODY>");
+        out.println("Post successful");
+        out.println("</BODY></HTML>");
+        resp.flushBuffer();
+        resp.setStatus(HttpServletResponse.SC_OK);
+
+        
         return;
     }
 		
