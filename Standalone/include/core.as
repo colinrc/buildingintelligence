@@ -1598,14 +1598,47 @@ openAbout = function () {
 
 toggleTV = function () {
 	if (tvStatus == "open") {
-		_root.tvHolder_mc.removeMovieClip();
-		var tmp = mdm.System.execStdOut(_global.settings.vlcClose);
+		_root.tv_mc.removeMovieClip();
+		var tmp = mdm.System.execStdOut(_global.tv.close);
 		tvStatus = "closed";
-	} else {
-		_root.attachMovie("tvHolder", "tvHolder_mc", 6000);
-		_root.tvHolder_mc._x = 570;
-		_root.tvHolder_mc._y = 510;
-		mdm.Process.create("VLC", 0, 0, 0, 0, "", _global.settings.vlcOpen, "c:\\", 2, 4);
+	} else {	
+		var windowObj = new Object();
+		windowObj.title = "";
+		windowObj.width = _global.settings.tvWindowWidth;
+		windowObj.height = _global.settings.tvWindowHeight;
+		
+		_root.createEmptyMovieClip("tv_mc", 700);
+		var window_mc = tv_mc.attachMovie("bi.ui.Window", "window_mc", 10, {settings:windowObj, _x:_global.settings.applicationWidth - windowObj.width - 129, _y:_global.settings.applicationHeight - windowObj.height - 13});
+		window_mc.content_mc.attachMovie("tvHolder", "tvHolder_mc", 20, {_x:window_mc.content_mc.width - 320, _y:window_mc.content_mc.height - 240, _alpha:70});
+		
+		window_mc.close = function () {
+			var tmp = mdm.System.execStdOut(_global.tv.close);
+			tvStatus = "closed";
+			this.removeMovieClip();
+		}
+		
+		window_mc.content_mc.createEmptyMovieClip("control_mc", 10);
+		var control_mc = window_mc.content_mc.control_mc;
+		
+		var availWidth = window_mc.content_mc.width - 320;
+		
+		var control = _global.tv.rows;
+		for (var i=0; i<control.length; i++) {
+			var row_mc = control_mc.createEmptyMovieClip("row" + i + "_mc", i);
+			row_mc._y = i * 35;
+			for (var z=0; z<control[i].items.length; z++) {
+				var item_mc = row_mc.attachMovie("bi.ui.Button", "button" + z + "_mc", z, {width:Math.round(availWidth / control[i].items.length) - 5, height: 30, iconName:control[i].items[z].icon, label:control[i].items[z].label});
+				item_mc.addEventListener("release", item_mc);
+				item_mc.command = control[i].items[z].command;
+				item_mc.release = function () {
+					mdm.Process.create("VLC", 0, 0, 0, 0, "", this.command, "c:\\", 2, 4);
+					debug(this.command);
+				}
+				item_mc._x = z * Math.round(availWidth / control[i].items.length);
+			}
+		}
+		
+		mdm.Process.create("VLC", 0, 0, 0, 0, "", _global.tv.open, "c:\\", 2, 4);
 		tvStatus = "open";
 	}
 }
@@ -3134,7 +3167,6 @@ layout = function () {
 	_root.createEmptyMovieClip("confirm_mc", 1500);
 	_root.createEmptyMovieClip("keyboard_mc", 2000);
 	_root.createEmptyMovieClip("screensaver_mc", 5000);
-	//_root.createEmptyMovieClip("tv_mc", 3000);
 		
 	bg_mc.beginFill(_global.settings.applicationBg);
 	bg_mc.drawRect(0, 0, _global.settings.applicationWidth, _global.settings.applicationHeight);
@@ -3252,12 +3284,6 @@ layout = function () {
 	appsBar_mc._y = _global.settings.appsBarY;
 
 	setupScreenSaver();
-	
-	tv_mc.update = function (key, state, value) {
-		openTV(state);
-	}
-	subscribe("TV", tv_mc);
-	tvStatus = "off";
 }
 
 setupScreenSaver = function () {

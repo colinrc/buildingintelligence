@@ -4,9 +4,6 @@
 			<setting name="showDropShadows" value="true" />
 			<setting name="modelBlur" value="true" />
 
-			<setting name="vlcOpen" value="c:/progra~1/videolan/vlc/vlc.exe --one-instance c:/test.avi --width 320 --height 240 --video-x 800 --video-y 600 --video-on-top --no-video-deco --intf dummy --dummy-quiet --loop"/>
-			<setting name="vlcClose" value="c:/progra~1/videolan/vlc/vlc.exe --one-instance vlc:quit"/>
-
 			<setting name="integratorHtml" value="lib/html/integrator.html" />
 		</common>
 	</settings>
@@ -115,6 +112,28 @@
 			<tab label="Macros" view="macros" macro="*" icon="atom" />
 		</window>
 	</calendar>
+	<tv>
+		<open command="c:/progra~1/videolan/vlc/vlc.exe --one-instance c:/test.avi --width 320 --height 240 --video-x 800 --video-y 600 --video-on-top --no-video-deco --intf dummy --dummy-quiet --loop"/>
+		<close command="c:/progra~1/videolan/vlc/vlc.exe --one-instance vlc:quit"/>
+		<control>
+			<row>
+				<item type="button" icon="chan-abc" command="vlc --lots of options --one-instance" />
+				<item type="button" label="Seven" command="vlc --lots of options --one-instance" />
+			</row>
+			<row>
+				<item type="button" icon="chan-abc" command="vlc --lots of options --one-instance" />
+				<item type="button" label="Seven" command="vlc --lots of options --one-instance" />
+			</row>
+			<row>
+				<item type="button" icon="chan-abc" command="vlc --lots of options --one-instance" />
+				<item type="button" label="Seven" command="vlc --lots of options --one-instance" />
+			</row>
+			<row>
+				<item type="button" icon="chan-abc" command="vlc --lots of options --one-instance" />
+				<item type="button" label="Seven" command="vlc --lots of options --one-instance" />
+			</row>
+		</control>
+	</tv>
 	<controlPanelApps>
 		<app label="Calculator" program="calc.exe" />
 		<app label="Fan On" command="E3" extra="I" />

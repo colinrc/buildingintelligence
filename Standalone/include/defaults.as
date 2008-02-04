@@ -182,6 +182,8 @@ _global.settings.clockFormat = "H:nn dddd, d mmmm yyyy";
 _global.settings.defaultBrowserURL = "http://www.google.com/";
 
 _global.settings.enableTVButton = true;
+_global.settings.tvWindowWidth = 600;
+_global.settings.tvWindowHeight = 300;
 
 _global.settings.albumsPerPage = 32;
 _global.settings.artistsPerPage = 48;

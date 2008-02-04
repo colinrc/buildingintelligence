@@ -400,30 +400,40 @@ defineControlPanelApps = function (apps) {
 }
 
 defineTV = function (nodes) {
-	_global.controls["TV"] = {key:"TV", name:"TV", icon:"tv"};
+	_global.tv = {key:"TV", name:"TV", icon:"tv", rows:[]};
+	
 	for (var i=0; i<nodes.length; i++) {
 		switch (nodes[i].nodeName) {
-			case ("inset") :
-				_global.tv.inset = {command:nodes[i].attributes.command, key:nodes[i].attributes.key, extra:nodes[i].attributes.extra};
+			case "open":
+				_global.tv.open = nodes[i].attributes.command;
 				break;
-			case ("fullscreen") :
-				_global.tv.fullscreen = {command:nodes[i].attributes.command, key:nodes[i].attributes.key, extra:nodes[i].attributes.extra};
+			case "close":
+				_global.tv.close = nodes[i].attributes.command;
 				break;
-			case ("close") :
-				_global.tv.close = {command:nodes[i].attributes.command, key:nodes[i].attributes.key, extra:nodes[i].attributes.extra};
-				break;			
-			case ("controlGrid") :
+			case "control":
 				var rowsData = new Array();
 				var rows = nodes[i].childNodes;
+				
 				for (var row=0; row<rows.length; row++) {
-					var cellsData = new Array();
-					var cells = rows[row].childNodes;
-					for (var cell=0; cell<cells.length; cell++) {
-						cellsData.push({command:cells[cell].attributes.command, key:cells[cell].attributes.key, extra:cells[cell].attributes.extra});						
+					var rowObj = _global.tv.rows[row] = {items:[]};
+					for (var attrib in rows[row].attributes) {
+						rowObj[attrib] = rows[row].attributes[attrib];
 					}
-					rowsData.push(cellsData);
+					
+					var items = rows[row].childNodes;
+					for (var item=0; item<items.length; item++) {
+						rowObj.items[item] = new Object();
+						for (var attrib in items[item].attributes) {		
+							if (attrib != "label" && attrib != "extra" && Number(items[item].attributes[attrib]) == items[item].attributes[attrib]) {
+								rowObj.items[item][attrib] = Number(items[item].attributes[attrib]);
+							} else if (items[item].attributes[attrib] == "true" || items[item].attributes[attrib] == "false") {
+								rowObj.items[item][attrib] = (items[item].attributes[attrib] == "true");
+							} else {
+								rowObj.items[item][attrib] = items[item].attributes[attrib];
+							}
+						}
+					}
 				}
-				_global.tv.controlGrid = {width:nodes[i].attributes.width, height:nodes[i].attributes.height, x:nodes[i].attributes.x, y:nodes[i].attributes.y, bgColour:nodes[i].attributes.bgColour, rows:rowsData};
 				break;
 		}
 	}
