@@ -400,7 +400,7 @@ defineControlPanelApps = function (apps) {
 }
 
 defineTV = function (nodes) {
-	_global.tv = {key:"TV", name:"TV", icon:"tv", rows:[]};
+	_global.tv = {key:"TV", name:"TV", icon:"tv", rows:[], macros:{}};
 	
 	for (var i=0; i<nodes.length; i++) {
 		switch (nodes[i].nodeName) {
@@ -409,6 +409,9 @@ defineTV = function (nodes) {
 				break;
 			case "close":
 				_global.tv.close = nodes[i].attributes.command;
+				break;
+			case "macro":
+				_global.tv.macros[nodes[i].attributes.name] = nodes[i].attributes.command;
 				break;
 			case "control":
 				var rowsData = new Array();

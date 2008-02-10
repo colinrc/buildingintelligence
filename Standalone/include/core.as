@@ -1598,23 +1598,27 @@ openAbout = function () {
 
 toggleTV = function () {
 	if (tvStatus == "open") {
-		_root.tv_mc.removeMovieClip();
-		var tmp = mdm.System.execStdOut(_global.tv.close);
-		tvStatus = "closed";
+		tv_mc.window_mc.close();
 	} else {	
 		var windowObj = new Object();
 		windowObj.title = "";
 		windowObj.width = _global.settings.tvWindowWidth;
 		windowObj.height = _global.settings.tvWindowHeight;
 		
-		_root.createEmptyMovieClip("tv_mc", 700);
+		_root.createEmptyMovieClip("tv_mc", 750);
 		var window_mc = tv_mc.attachMovie("bi.ui.Window", "window_mc", 10, {settings:windowObj, _x:_global.settings.applicationWidth - windowObj.width - 129, _y:_global.settings.applicationHeight - windowObj.height - 13});
 		window_mc.content_mc.attachMovie("tvHolder", "tvHolder_mc", 20, {_x:window_mc.content_mc.width - 320, _y:window_mc.content_mc.height - 240, _alpha:70});
 		
 		window_mc.close = function () {
 			var tmp = mdm.System.execStdOut(_global.tv.close);
 			tvStatus = "closed";
-			this.removeMovieClip();
+			
+			this.chromeID = setInterval(this, "removeChrome", _global.settings.tvChromeDelay);
+
+			this.removeChrome = function () {
+				this.removeMovieClip();
+				clearInterval(this.chromeID);
+			}		
 		}
 		
 		window_mc.content_mc.createEmptyMovieClip("control_mc", 10);
@@ -1629,10 +1633,22 @@ toggleTV = function () {
 			for (var z=0; z<control[i].items.length; z++) {
 				var item_mc = row_mc.attachMovie("bi.ui.Button", "button" + z + "_mc", z, {width:Math.round(availWidth / control[i].items.length) - 5, height: 30, iconName:control[i].items[z].icon, label:control[i].items[z].label});
 				item_mc.addEventListener("release", item_mc);
-				item_mc.command = control[i].items[z].command;
+				
+				for (var q in control[i].items[z]) {
+					trace(q + ":" + control[i].items[z][q])
+					item_mc[q] = control[i].items[z][q];
+				}
+
 				item_mc.release = function () {
-					mdm.Process.create("VLC", 0, 0, 0, 0, "", this.command, "c:\\", 2, 4);
-					debug(this.command);
+					if (this.macro) {
+						var command = _global.tv.macros[this.macro];
+						command = command.split("$chan").join(this.chan);
+						command = command.split("$file").join(this.file);
+					} else {
+						var command = this.command;
+					}
+					mdm.Process.create("VLC", 0, 0, 0, 0, "", command, "c:\\", 2, 4);
+					trace(command);
 				}
 				item_mc._x = z * Math.round(availWidth / control[i].items.length);
 			}

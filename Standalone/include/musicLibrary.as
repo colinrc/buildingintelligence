@@ -193,7 +193,7 @@
 			label_mc._y = counter * 35;
 			label_mc.key = this.key;
 			label_mc.filter = this.filter;
-			label_mc.id = track.id;
+			label_mc.track = track;
 			label_mc.index = this.startRow + counter;
 						
 			label_mc.createTextField("label_txt", 20, 22, 3, labelWidth - 30, 20);
@@ -215,6 +215,8 @@
 			label_mc.onPress2 = function () {
 				// <CONTROL KEY="<key>" COMMAND="jumpToPosition" EXTRA="<index in playlist>" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
 				sendCmd(this.key, "jumpToPosition", this.index);
+				//<CONTROL KEY="<key>" COMMAND="<add|load|delete|insert>" EXTRA="<album id>" EXTRA2="<year id>" EXTRA3="<track id>" EXTRA4="<genre id>" EXTRA5="<artist id>" />
+				//sendCmd(this.key, "delete", 0, [0, this.id]);
 			}
 
 			counter++;

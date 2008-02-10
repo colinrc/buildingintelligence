@@ -184,6 +184,7 @@ _global.settings.defaultBrowserURL = "http://www.google.com/";
 _global.settings.enableTVButton = true;
 _global.settings.tvWindowWidth = 600;
 _global.settings.tvWindowHeight = 300;
+_global.settings.tvChromeDelay = 500; //ms
 
 _global.settings.albumsPerPage = 32;
 _global.settings.artistsPerPage = 48;
