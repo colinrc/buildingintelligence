@@ -113,13 +113,12 @@
 		</window>
 	</calendar>
 	<tv>
-		<open command="c:/progra~1/videolan/vlc/vlc.exe --one-instance c:/test.avi --width 320 --height 240 --video-x 800 --video-y 600 --video-on-top --no-video-deco --intf dummy --dummy-quiet --loop"/>
 		<close command="c:/progra~1/videolan/vlc/vlc.exe --one-instance vlc:quit"/>
 		<macro name="tv" command='C:\progra~1\videolan\vlc\vlc --one-instance dshow:// :dshow-vdev="713x BDA Analog Capture" :dshow-adev="713x BDA Analog Audio Capture" :dshow-caching=200 :dshow-chroma="RV24" :no-dshow-config :no-dshow-tuner :dshow-tuner-channel=$chan :dshow-tuner-country=61 :dshow-tuner-input=2 --video-on-top --no-video-deco --intf dummy --dummy-quiet' />
 	        <macro name="web" command='C:\progra~1\videolan\vlc\vlc --one-instance http://test.com/$file --video-on-top --no-video-deco --intf dummy --dummy-quiet' />
 		<control>
 			<row>
-				<item type="button" icon="chan-abc" macro="tv" chan="9" />
+				<item type="button" icon="chan-abc" macro="tv" chan="9" default="true" />
 		                <item type="button" label="Seven"  macro="tv" chan="11" />
 			</row>
 			<row>

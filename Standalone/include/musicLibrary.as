@@ -324,6 +324,8 @@
 				label_txt.setNewTextFormat(label_tf);
 				if (this.filter == "album" && track.trackNum) {
 					label_txt.text = track.trackNum + ". " + track.title;
+				} else if (this.filter == "genre") {
+					label_txt.text = track.title + " by " + track.artist;
 				} else {
 					label_txt.text = track.title;
 				}
