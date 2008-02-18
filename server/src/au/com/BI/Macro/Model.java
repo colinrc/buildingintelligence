@@ -138,6 +138,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			    clientCommand.setFromElement (macro);
 			    clientCommand.setKey ("CLIENT_SEND");
 				clientCommand.setTargetDeviceID(command.getOriginatingID());
+	   			synchronized (cache){
+    				cache.setCachedCommand("MACRO", clientCommand,false);
+    			}
+                 commandQueue.add(clientCommand);
+ 
 			}
 		}
 		if (commandStr.equals("saveList")) {
@@ -168,24 +173,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 		}
 		if (doListUpdate) {
-            logger.log (Level.FINER, "Fetching macro list");
-		    Element macro = macroHandler.get(macroName,false,false);
-
-                    if (macro == null)
-                            logger.log (Level.WARNING, "Could not retrieve macro list");
-                    else {
-                        clientCommand = new ClientCommand();
-                        clientCommand.setFromElement (macro);
-                        clientCommand.setKey ("CLIENT_SEND");
-                        clientCommand.setDisplayName ("MACRO");
-                            clientCommand.setTargetDeviceID(0);
-                    }
-		}
-		if (clientCommand != null) {
-			synchronized (cache){
-				cache.setCachedCommand("MACRO", clientCommand,false);
-			}
-			commandQueue.add(clientCommand);
+			sendListToClient();
 		}
 	}
 	
@@ -207,7 +195,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
             }
 	}
 
-	
+
+
 
 	public void closeComms () {
 	    macroHandler.abortAll();

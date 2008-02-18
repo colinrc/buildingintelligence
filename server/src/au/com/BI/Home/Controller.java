@@ -232,6 +232,9 @@ public class Controller {
 		groovyModelHandler.setInstanceID(deviceModels.size() - 1);
 		groovyModelHandler.loadGroovyModels(this, deviceModels);
 
+		loadMacros();
+		loadScripts();
+		
 		dailyTasks = new DailyTaskFactory();
 		dailyTasks.setStartTime(bootstrap.getMaintenanceTime());
 		dailyTasks.setCalendarModel(calendarModel);
@@ -742,20 +745,11 @@ public class Controller {
 			}
 		}
 		if (commandCode.equals("LoadScripts")) {
-			try {
-				this.scriptModel.loadScripts();
-				this.scriptModel.sendListToClient();
-			} catch (Exception e) {
-				logger.log(Level.WARNING, "Scripts could not be loaded ");
-			}
+			loadScripts();
 		}
 		if (commandCode.equals("LoadMacros")) {
-			try {
-				this.macroHandler.readMacroFile(false);
-				this.macroModel.sendListToClient();
-			} catch (Exception e) {
-				logger.log(Level.WARNING, "Macros could not be loaded");
-			}
+			loadMacros();
+
 		}
 		if (commandCode.equals("LoadIRDB")) {
 			this.irCodeDB.readIRCodesFile("datafiles" + File.separator
@@ -780,6 +774,24 @@ public class Controller {
 		}
 	}
 
+	public void loadMacros () {
+		try {
+			this.macroHandler.readMacroFile(false);
+			this.macroModel.sendListToClient();
+		} catch (Exception e) {
+			logger.log(Level.WARNING, "Macros could not be loaded");
+		}
+	}
+	
+	public void loadScripts () {
+		try {
+			this.scriptModel.loadScripts();
+			this.scriptModel.sendListToClient();
+		} catch (Exception e) {
+			logger.log(Level.WARNING, "Scripts could not be loaded ");
+		}
+	}
+	
 	public void doSystemStartup(List<DeviceModel> deviceModels) {
 		scriptModel.setIrCodeDB(irCodeDB);
 		flashHandler.setIrCodeDB(irCodeDB);

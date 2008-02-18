@@ -111,7 +111,7 @@ public class Config {
 
 			List <Element>deviceConfigs = (List<Element>)theConfig.getChildren("DEVICE");
 			for (Element config: deviceConfigs){
-					DeviceModel newDeviceModel = parseDeviceModel(config, deviceModels, clientModels);
+					DeviceModel newDeviceModel = parseDeviceModel(config, deviceModels, clientModels,configFile.getName());
 					if (newDeviceModel != null){
 						logger.log (Level.FINE,"Registering model  " + newDeviceModel.getName());
 						parseCatalogueList (config,newDeviceModel);
@@ -270,7 +270,8 @@ public class Config {
 
         public DeviceModel parseDeviceModel(Element deviceConfig,
                                             List <DeviceModel>deviceModels,
-                                            List <DeviceModel>clientModels) throws
+                                            List <DeviceModel>clientModels, 
+                                            String name) throws
             JDOMException {
                 int intPowerRating = 0;
                 String deviceActive = deviceConfig.getAttributeValue("ACTIVE");
@@ -355,7 +356,7 @@ public class Config {
                                          DeviceModel.MAIN_DEVICE_GROUP);
                 deviceModel.setParameter("Password", password,
                                          DeviceModel.MAIN_DEVICE_GROUP);
-                logger.log (Level.INFO,"Adding device handler " + description);
+                logger.log (Level.INFO,"Adding device handler " + description + " from the file " + name);
 
                 parseConnection(deviceConfig, deviceModel);
                 return deviceModel;

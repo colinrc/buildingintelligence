@@ -89,6 +89,7 @@ public class ClientCommandFactory {
 			}
 		}
 		if (name.equals("MESSAGE")) {
+			clientCommand = new ClientCommand();
 			clientCommand.originatingID = ID;
 			clientCommand.setMessageFromFlash(rootElement);
 			clientCommand.setBroadcast(false);
@@ -101,6 +102,7 @@ public class ClientCommandFactory {
 			this.setUser(user);
 		}
 		if (name.equals("MACROS")) {
+			clientCommand = new ClientCommand();
 			clientCommand.setMessageFromFlash(rootElement);
 			clientCommand.setKey("MACRO");
 			clientCommand.setCommand("saveList");
