@@ -350,12 +350,10 @@ public class Track {
 			track.setAttribute("drm",getDrm());
 		}
 		
-		// only show cover art if the getcoverart parameter is 1 and the coverart url is passed through
-		if (!StringUtils.isNullOrEmpty(getCoverArt()) && !StringUtils.isNullOrEmpty(getCoverArtUrl())) {
+		// only show cover art if the getcoverart parameter is 1
+		if (!StringUtils.isNullOrEmpty(getCoverArt())) {
 			if (getCoverArt().equals("1") && !StringUtils.isNullOrEmpty(getTrackNumber())) {
-				track.setAttribute("coverart",getCoverArtUrl() + getId() + "/cover.jpg");
-				track.setAttribute("thumbcoverart",getCoverArtUrl() + getId() + "/thumb.jpg");
-//				track.setAttribute("coverart",getCoverArt());
+				track.setAttribute("coverID",getId());
 			}
 		}
 		if (!StringUtils.isNullOrEmpty(getModificationTime())) {

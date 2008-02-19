@@ -104,13 +104,10 @@ public class Album {
 		album.setAttribute("id", this.getId());
 		album.setAttribute("album", this.getAlbum());
 		album.setAttribute("title", this.getTitle());
-		
-		if (!StringUtils.isNullOrEmpty(this.getUrlPath())) {
-			if (!this.getArtworkTrackId().equals("-1")) {
-				album.setAttribute("coverArt", this.getUrlPath() + this.getArtworkTrackId() + "/cover.jpg");
-				album.setAttribute("thumbCoverArt", this.getUrlPath() + this.getArtworkTrackId() + "/thumb.jpg");
-			}
+		if (!StringUtils.isNullOrEmpty(this.getArtworkTrackId())) {
+			album.setAttribute("coverID",this.getArtworkTrackId());
 		}
+
 		album.setAttribute("disc",Integer.toString(this.getDisc()));
 		album.setAttribute("disccount",Integer.toString(this.getDisccount()));
 		album.setAttribute("compilation", Boolean.toString(this.isCompilation()));

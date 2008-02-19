@@ -350,6 +350,7 @@ public class OutputHelper {
 				// <CONTROL KEY="SQUEEZEBOX" COMMAND="ADD" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="18" EXTRA5="" />
 				// <CONTROL KEY="LAPTOP" COMMAND="ADD" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="18" EXTRA5="" />
 				// <CONTROL KEY="LAPTOP" COMMAND="LOAD" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="2" EXTRA5="" />
+				// <CONTROL KEY="LAPTOP" COMMAND="DELETE" EXTRA="" EXTRA2="" EXTRA3="0" EXTRA4="" EXTRA5="" />
 				int album_id = -1;
 				int year_id = -1;
 				int track_id = -1;
