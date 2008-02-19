@@ -25,6 +25,7 @@ import au.com.BI.M1.Commands.ControlOutputOff;
 import au.com.BI.M1.Commands.ControlOutputOn;
 import au.com.BI.M1.Commands.ControlOutputStatusRequest;
 import au.com.BI.M1.Commands.ControlOutputToggle;
+import au.com.BI.M1.Commands.Disarm;
 import au.com.BI.M1.Commands.Group;
 import au.com.BI.M1.Commands.PLCDeviceControl;
 import au.com.BI.M1.Commands.PLCDeviceOff;
@@ -270,6 +271,12 @@ public class OutputHelper {
 					m1Command.setUserCode(configHelper.getDeviceModel()
 							.getParameterValue("Password",
 									DeviceModel.MAIN_DEVICE_GROUP));
+					retCode = m1Command.buildM1String() + "\r\n";
+				} else if (command.getCommandCode().equals(
+						"DISARM")) {
+					Disarm m1Command = new Disarm();
+					m1Command.setPartition(command.getExtraInfo());
+					m1Command.setUserCode(command.getExtra2Info());
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
 			} else if (device.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
