@@ -32,11 +32,11 @@ import au.com.BI.Util.DeviceModel
 		   Fill in the section for the device your model controls.
 		*/
 		
-		void buildLightString (LightFascade device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+		void buildLightControlString (LightFascade device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 				if (command.getCommandCode () == "on") {
 					// build on string
-					lightLevel = paramToInt (command, EXTRA, 0, 255, "The light level is incorrect");
-					lightRate= paramToInt (command, EXTRA2, 0, 255, "The fade rate is incorrect");
+					def lightLevel = paramToInt (command, Fields.EXTRA, 0, 255, "The light level is incorrect");
+					 def lightRate= paramToInt (command, Fields.EXTRA2, 0, 255, "The fade rate is incorrect");
 					
 					returnWrapper.addCommOutput( device.getKey() + " " +  lightLevel  + " " + lightRate + "\n");
 				} else {
