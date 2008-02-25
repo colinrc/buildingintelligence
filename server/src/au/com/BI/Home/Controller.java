@@ -589,6 +589,7 @@ public class Controller {
 		String itemKey = item.getKey();
 		if (item.getCommandCode().startsWith("AV.")) {
 			int lastDot = item.getCommandCode().lastIndexOf(".");
+			// remove the AV.
 			if (lastDot == 2) {
 				itemKey = item.getCommandCode();
 			} else {
