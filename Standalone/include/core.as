@@ -1664,7 +1664,6 @@ toggleTV = function () {
 			}
 		}
 		
-		mdm.Process.create("VLC", 0, 0, 0, 0, "", _global.tv.open, "c:\\", 2, 4);
 		tvStatus = "open";
 	}
 }
