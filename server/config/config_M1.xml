@@ -1,7 +1,7 @@
 <CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
         <DESC>My demonstration configuration</DESC>
         <!-- _____________________________ M1 DEFS _____________________________ -->
-        <DEVICE ACTIVE="Y" NAME="M1" DISPLAY_NAME="M1" PASSWORD="1234">
+        <DEVICE ACTIVE="N" NAME="M1" DISPLAY_NAME="M1" PASSWORD="1234">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                           <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5006"/>

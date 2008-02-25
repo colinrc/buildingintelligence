@@ -26,7 +26,7 @@ import au.com.BI.Command.*
 	// The action contents of the script go here
 	
 			elife.on "DINING_LIGHT","100"
-			elife.sendCommand "","AV.GC100_IR1","NEC.on","2"
+			elife.sendCommand "","AV.STUDY_IR","NEC.on","2"
 	}
  
 }

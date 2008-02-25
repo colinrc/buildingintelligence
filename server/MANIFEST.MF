@@ -7,10 +7,10 @@ Class-Path: ../ext/build ../ext/jdom.jar ../ext/xml-apis.jar ../ext/xa
  ns-1.4.jar ../ext/jython.jar ../ext/RXTXcomm.jar ../ext/xmlunit1.0.ja
  r ../ext/bin-groovy ../ext/junit-4.3.1.jar ../ext/quartz-1.6.0.jar ..
  /ext/commons-collections-3.1.jar ../ext/commons-logging-api.jar ../ex
- t/commons-logging.jar ../ext/jta.jar ../ext/jetty-6.1.7.jar ../ext/je
- tty-util-6.1.7.jar ../ext/servlet-api-2.5-6.1.7.jar ../ext/jetty-ajp-
- 6.1.7.jar ../ext/jetty-client-6.1.7.jar ../ext/jetty-html-6.1.7.jar .
- ./ext/jetty-java5-threadpool-6.1.7.jar ../ext/jetty-servlet-tester-6.
- 1.7.jar ../ext/jetty-setuid-6.1.7.jar ../ext/jetty-sslengine-6.1.7.ja
- r ../ext/groovy-all-1.5.1.jar
+ t/commons-logging.jar ../ext/jta.jar ../ext/groovy-all-1.5.1.jar ../e
+ xt/jetty-6.1.7.jar ../ext/jetty-util-6.1.7.jar ../ext/servlet-api-2.5
+ -6.1.7.jar ../ext/jetty-ajp-6.1.7.jar ../ext/jetty-client-6.1.7.jar .
+ ./ext/jetty-html-6.1.7.jar ../ext/jetty-java5-threadpool-6.1.7.jar ..
+ /ext/jetty-servlet-tester-6.1.7.jar ../ext/jetty-setuid-6.1.7.jar ../
+ ext/jetty-sslengine-6.1.7.jar
 

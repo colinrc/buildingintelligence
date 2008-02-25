@@ -1,3 +1,15 @@
+== 26/Feb/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b79.zip V1.6-b79]   ==
+
+''' Macros '''
+
+Rectified a problem that macros were no longer being sent to the client on system startup.
+Resolves an issue which could cause various macro functions to crash. Resolves issue [ticket:708]
+
+''' Scripts '''
+
+Rectified a problem that scripts were no longer being sent to the client on system startup
+
+
 == 23/Jan/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b78.zip V1.6-b78]   ==
 
 ''' Tutondo '''
@@ -35,8 +47,8 @@ Updated Groovy version to 1.5.1.
 
 ''' Squeezebox '''
 
-Incorporated fix for playlists. Resolves tickets [ticket:684],[ticket:685],[ticket[686]
-Incorporated support for deleting tracks. Enhancement [ticket:]
+Incorporated fix for playlists. Resolves tickets [ticket:684],[ticket:685],[ticket:686]
+Incorporated support for deleting tracks. 
 
 ''' Web '''
 
