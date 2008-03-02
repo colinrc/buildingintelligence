@@ -16,7 +16,7 @@ public class Poll  extends Thread {
 	 * 
 	 */
 	protected Logger logger;
-	protected boolean running;
+	protected volatile boolean running;
 	protected CommDevice comms;
 	protected long pollValue;
 	protected String pollString =  "";

@@ -13,7 +13,6 @@ import java.util.*;
 
 import au.com.BI.Flash.*;
 import au.com.BI.Util.*;
-import au.com.BI.Calendar.EventCalendar;
 import au.com.BI.Command.Cache;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
@@ -24,10 +23,9 @@ import java.util.logging.*;
 
 import org.jdom.input.*;
 import org.jdom.output.XMLOutputter;
-import org.quartz.*;
 
 /**
- * @author colinc
+ * @author colin
  *
  * To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Generation - Code and Comments
@@ -99,17 +97,17 @@ public class MacroHandler {
 	}
 
 	public boolean run(String macroName, User user,CommandInterface origCommand) {
-		List macro;
+		List <ClientCommand>macro;
 		boolean doNotRun = false;
 		
 		String realName[] = macroName.split(":");
                 
 		synchronized (macros) {
-			macro = (List)macros.get(realName[0]);
+			macro = (List<ClientCommand>)macros.get(realName[0]);
 		}
                 if (macro == null){
         		synchronized (integratorMacros) {
-                            macro = (List)integratorMacros.get(realName[0]);
+                            macro = integratorMacros.get(realName[0]);
                     }
                     
                 }
@@ -193,7 +191,7 @@ public class MacroHandler {
 		    complete = false;
 		}
 		
-                Vector localMacroNames = null;
+                Vector <String> localMacroNames = null;
                 if (integrator){
                     localMacroNames = this.integratorMacroNames;
                 } else {
@@ -202,11 +200,10 @@ public class MacroHandler {
 
 		if (complete) {
 		    synchronized (localMacroNames) {
-			Iterator eachMacroName = localMacroNames.iterator();
 
-			while (eachMacroName.hasNext()) {
+			for (String eachMacroName: localMacroNames) {
 			    Element macroDef = null;
-			    macroDef =  buildListElement ((String)eachMacroName.next(),integrator,fullContents);
+			    macroDef =  buildListElement (eachMacroName,integrator,fullContents);
 			    try { 
 				if (macroDef != null) top.addContent(macroDef);
 			    } catch (NoSuchMethodError ex) {
@@ -235,7 +232,7 @@ public class MacroHandler {
 	public Element getContents (String macroName, boolean integrator) {
             Element top = new Element ("MACRO_CONTENTS");
 
-            Map localMacros;
+            Map <String,List<ClientCommand>>localMacros;
             if (integrator){
                 localMacros = integratorMacros;
             } else {
@@ -282,12 +279,12 @@ public class MacroHandler {
 	}
 	
 	public Element buildListElement (String macroName,boolean integrator,boolean includeContents) {
-		LinkedList macro;
+		List <ClientCommand>macro;
 
                 if (integrator){
-                    macro = (LinkedList)integratorMacros.get(macroName);
+                    macro = integratorMacros.get(macroName);
                 } else {
-                    macro = (LinkedList)macros.get(macroName);                    
+                    macro = macros.get(macroName);                    
                 }
 		if (macro == null) return null;
 		
@@ -310,9 +307,7 @@ public class MacroHandler {
                 }                    
 
                 if (includeContents){
-                    Iterator eachElementList = macro.iterator();
-                    while (eachElementList.hasNext()) {
-                            ClientCommand macroElement = (ClientCommand)eachElementList.next();
+                    for (ClientCommand macroElement: macro){
                             Element macroXML = macroElement.getXMLCommand();
                             macroDef.addContent(macroXML);
                     }
@@ -393,10 +388,9 @@ public class MacroHandler {
             try {
                 doc = builder.build(localFileName+".xml");
                 macrosElement = doc.getRootElement();
-                List macroList = macrosElement.getChildren();
-                Iterator eachMacro = macroList.iterator();
-                while (eachMacro.hasNext()){
-                        Element macro = (Element)eachMacro.next();
+                List <Element>macroList = macrosElement.getChildren();
+
+                for (Element macro:macroList){
                         String macroName = macro.getAttributeValue("EXTRA");
                         if (macroName == null) macroName = "";
                         List <ClientCommand>macroCommands = parseElement (macro,macroName);
@@ -503,9 +497,7 @@ public class MacroHandler {
 
     public void abortAll() {
 	    RunMacro theMacro;
-	    Iterator eachMacro = runningMacros.keySet().iterator();
-	    while (eachMacro.hasNext()) {
-	        String macroName = (String)eachMacro.next();
+	    for (String macroName: runningMacros.keySet()){
 	        logger.log (Level.FINE,"Aborting macro "+ macroName);
 		    synchronized (runningMacros) {
 		        theMacro = (RunMacro)runningMacros.get(macroName);

@@ -13,7 +13,7 @@ public class PollOutputs extends Thread {
 
 	protected Logger logger;
 
-	protected boolean running;
+	protected volatile boolean running;
 
 	protected CommDevice comms;
 

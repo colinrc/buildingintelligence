@@ -27,7 +27,7 @@ import au.com.BI.Command.UnknownCommandException;
 public class FlashClientHandler extends Thread {
 	protected Logger logger;
 	protected Socket clientConnection;
-	protected boolean thisThreadRunning;
+	protected volatile boolean thisThreadRunning;
 	protected InputStream i;
 	protected OutputStream o;
 	protected CommandQueue commandList;

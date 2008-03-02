@@ -1,6 +1,5 @@
 package au.com.BI.M1;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,7 +18,7 @@ public class PollTemperatureSensors extends Thread {
 
 	protected Logger logger;
 
-	protected boolean running;
+	protected volatile boolean running;
 
 	protected CommDevice comms;
 
@@ -29,7 +28,7 @@ public class PollTemperatureSensors extends Thread {
 
 	protected int deviceNumber = -1;
 
-	protected List temperatureSensors = null;
+	protected List<SensorFascade> temperatureSensors = null;
 
 	public PollTemperatureSensors() {
 		super();
@@ -69,9 +68,7 @@ public class PollTemperatureSensors extends Thread {
 
 					// how to only request if there is a change in the
 					// temperature?
-					Iterator eachTemp = temperatureSensors.iterator();
-					while (eachTemp.hasNext()) {
-						SensorFascade device = (SensorFascade) eachTemp.next();
+					for (SensorFascade device: temperatureSensors){
 						String outputM1Command = buildTemperatureString(device);
 						CommsCommand m1Command = new CommsCommand();
 						m1Command.setKey(device.getKey());
@@ -160,11 +157,11 @@ public class PollTemperatureSensors extends Thread {
 		this.deviceNumber = deviceNumber;
 	}
 
-	public List getTemperatureSensors() {
+	public List <SensorFascade>getTemperatureSensors() {
 		return temperatureSensors;
 	}
 
-	public void setTemperatureSensors(List temperatureSensors) {
+	public void setTemperatureSensors(List<SensorFascade> temperatureSensors) {
 		this.temperatureSensors = temperatureSensors;
 	}
 }

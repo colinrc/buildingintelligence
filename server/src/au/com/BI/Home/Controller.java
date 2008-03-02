@@ -45,7 +45,7 @@ public class Controller {
 
 	protected CommandQueue commandQueue;
 
-	protected boolean running;
+	protected volatile boolean running;
 
 	protected FlashHandler flashHandler;
 	protected au.com.BI.Admin.Model adminModel;
@@ -159,13 +159,6 @@ public class Controller {
 		macroHandler.setIntegratorFileName("integrator_macros");
 
 		macroHandler.setCommandList(commandQueue);
-		if (!macroHandler.readMacroFile(false) && logger != null) {
-			logger.log(Level.WARNING, "Could not read user macro file");
-		}
-		if (!macroHandler.readMacroFile(true) && logger != null) {
-			logger.log(Level.WARNING, "Could not read integrator macro file");
-		}
-
 
 		labelMgr = new LabelMgr();
 		try {
@@ -180,11 +173,6 @@ public class Controller {
 		this.setupModel(patterns);
 		deviceModels.add(patterns);
 		patterns.setInstanceID(deviceModels.size() - 1);
-
-		flashHandler = new FlashHandler(DeviceModel.PROBABLE_FLASH_CLIENTS,
-				security);
-		this.setupModel(flashHandler);
-		clientModels.add(flashHandler);
 
 		adminModel = new au.com.BI.Admin.Model(1);
 		this.setupModel(adminModel);
@@ -220,6 +208,7 @@ public class Controller {
 		scriptModel.setController(this);
 		this.setupModel(scriptModel);
 		scriptModel.setInstanceID(deviceModels.size() - 1);
+
 		
 		jettyHandler = new JettyHandler(security);
 		this.setupModel(jettyHandler);
@@ -231,10 +220,17 @@ public class Controller {
 		deviceModels.add(groovyModelHandler);
 		groovyModelHandler.setInstanceID(deviceModels.size() - 1);
 		groovyModelHandler.loadGroovyModels(this, deviceModels);
-
-		loadMacros();
-		loadScripts();
 		
+		if (!loadMacros(true)&& logger != null) {
+			logger.log(Level.WARNING, "Could not read user macro file");
+		}
+		if (!macroHandler.readMacroFile(true) && logger != null) {
+			logger.log(Level.WARNING, "Could not read integrator macro file");
+		}
+		if (!loadScripts(true) && logger != null) {
+			logger.log(Level.WARNING, "Could not read scripts file");
+		}
+
 		dailyTasks = new DailyTaskFactory();
 		dailyTasks.setStartTime(bootstrap.getMaintenanceTime());
 		dailyTasks.setCalendarModel(calendarModel);
@@ -245,6 +241,11 @@ public class Controller {
 		regularTasks.setCommandList(commandQueue);
 		regularTasks.start();
 
+		flashHandler = new FlashHandler(DeviceModel.PROBABLE_FLASH_CLIENTS,
+				security);
+		this.setupModel(flashHandler);
+		clientModels.add(flashHandler);
+		
 		try {
 			jettyHandler.start();
 		} catch (Exception ex) {
@@ -746,10 +747,10 @@ public class Controller {
 			}
 		}
 		if (commandCode.equals("LoadScripts")) {
-			loadScripts();
+			loadScripts(true);
 		}
 		if (commandCode.equals("LoadMacros")) {
-			loadMacros();
+			loadMacros(true);
 
 		}
 		if (commandCode.equals("LoadIRDB")) {
@@ -775,21 +776,25 @@ public class Controller {
 		}
 	}
 
-	public void loadMacros () {
+	public boolean  loadMacros (boolean sendToClient) {
 		try {
 			this.macroHandler.readMacroFile(false);
-			this.macroModel.sendListToClient();
+			if (sendToClient) this.macroModel.sendListToClient();
+			return true;
 		} catch (Exception e) {
 			logger.log(Level.WARNING, "Macros could not be loaded");
+			return false;
 		}
 	}
 	
-	public void loadScripts () {
+	public boolean  loadScripts (boolean sendToClient) {
 		try {
 			this.scriptModel.loadScripts();
-			this.scriptModel.sendListToClient();
+			if (sendToClient) this.scriptModel.sendListToClient();
+			return true;
 		} catch (Exception e) {
 			logger.log(Level.WARNING, "Scripts could not be loaded ");
+			return false;
 		}
 	}
 	

@@ -21,7 +21,7 @@ import au.com.BI.Audio.*;
  */
 public class PollDevice extends Thread {
 	protected Logger logger;
-	protected boolean running;
+	protected volatile boolean running;
 	protected CommDevice comms;
 	protected long pollValue;
 	protected ConfigHelper configHelper;

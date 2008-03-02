@@ -298,8 +298,8 @@ public class Model
 		public void sendListToClient() {
 			ClientCommand clientCommand = (ClientCommand)doGetList("");
 			clientCommand.setTargetDeviceID(-1);
-            cache.setCachedCommand("SCRIPT", clientCommand);
-            commandQueue.add(clientCommand);
+			cache.setCachedCommand("SCRIPT", clientCommand);
+			commandQueue.add(clientCommand);
 		}
 
 		public ClientCommand doGetList (String key) {
@@ -370,14 +370,6 @@ public class Model
 			loadScripts();
         }
         
- 	    	public void doClientStartup(CommandQueue commandQueue, long targetFlashDeviceID, long serverID){
-	    		if (scriptHandler != null) {
-		    	    ClientCommand clientCommand = this.doGetList("");
-		    	    clientCommand.setKey ("CLIENT_SEND");
-		    	    clientCommand.setTargetDeviceID(targetFlashDeviceID);
-		    	    commandQueue.add(clientCommand);
-	    		}
-	    	};
 	    	
 	    	public void loadScripts (){
 	    		loadGroovyScripts();
@@ -774,16 +766,16 @@ public class Model
 
         /**
          *  Returns all current commands .
+         *  CC Don't think this works, need to investigate what it was ever intended to do
          */
+        
         public void dumpCommands() {
-                Iterator cachedCommands;
                 Iterator theHashCachedCommands;
                 Object loCommand;
                 String lsCommand;
-                //Map ObjectAtributes;
-                cachedCommands = cache.getStartupItemList();
-                while (cachedCommands.hasNext()) {
-                        loCommand = cachedCommands.next();
+                for (String commandName : cache.getStartupItemList()){
+                	loCommand = cache.getCachedObject(commandName);
+
                         if (loCommand.getClass().getName().equals("java.util.Map")) {
                                 theHashCachedCommands = (Iterator) loCommand;
                                 while (theHashCachedCommands.hasNext()) {

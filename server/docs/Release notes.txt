@@ -1,3 +1,14 @@
+== 26/Feb/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b80.zip V1.6-b80]   [attachment:wiki:SoftwareReleases:eLife-1.6b80-libs.zip Libs-V1.6b80] ==
+
+''' Macros + Scripts '''
+
+Resolved issue where script and macro list were not sent on client connection. Ticket [ticket:710]
+
+''' General '''
+
+Added extra functionality to ensure thread safety on multi-core / multi processor machines with JDK 5 (dev environments).
+Updated JDOM to new version, bug fixes for XML parsing.
+
 == 26/Feb/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b79.zip V1.6-b79]   ==
 
 ''' Macros '''

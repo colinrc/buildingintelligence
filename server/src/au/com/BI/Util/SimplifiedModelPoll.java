@@ -9,7 +9,7 @@ package au.com.BI.Util;
  */
 public class SimplifiedModelPoll extends Thread {
 
-	protected boolean polling = false;
+	protected volatile boolean polling = false;
 	protected SimplifiedModel model = null;
 	protected long delay = 5000L;
 	

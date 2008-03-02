@@ -17,7 +17,7 @@ import au.com.BI.Command.CommandQueue;
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
 public class IPHeartbeat extends Thread {
-	protected boolean handleEvents = false;
+	protected volatile boolean handleEvents = false;
 	protected OutputStream os = null;
 	protected Logger logger;
 	protected boolean pausing = false;

@@ -21,7 +21,7 @@ import au.com.BI.Config.ConfigHelper;
 public class PollDevice extends Thread {
 	protected Logger logger;
 	protected List <Audio>audioDeviceQueue;
-	protected boolean running;
+	protected volatile boolean running;
 	protected CommDevice comms;
 	protected long pollValue;
 	protected TutondoHelper tutondoHelper;

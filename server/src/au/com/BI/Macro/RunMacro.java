@@ -16,14 +16,14 @@ import java.util.logging.*;
 
 public class RunMacro extends Thread {
 
-	protected List macro;
+	protected List  <ClientCommand>macro;
 	protected User user;
 	protected CommandQueue commandList;
 	protected Logger logger;
 	protected String macroName;
-	protected boolean continueToEnd;
-	protected Map runningMacros;
-	protected boolean abort = false;
+	protected volatile  boolean continueToEnd;
+	protected Map <String,RunMacro>runningMacros;
+	protected volatile  boolean abort = false;
 	protected boolean runningInTimer = false;
 	protected CommandInterface origCommand;
 	protected Cache cache = null;
@@ -34,7 +34,7 @@ public class RunMacro extends Thread {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}
 
-	public RunMacro(List macro, User user, String macroName,CommandInterface origCommand) {
+	public RunMacro(List  <ClientCommand>macro, User user, String macroName,CommandInterface origCommand) {
 		super();
 		this.macro = macro;
 		this.user = user;
@@ -62,11 +62,11 @@ public class RunMacro extends Thread {
 		
 		while ((doOnce || repeating) && !continueToEnd && !abort) {
 		    doOnce = false; // just run it once
-			Iterator macroItems = macro.iterator();
+			Iterator <ClientCommand> macroItems = macro.iterator();
 			while (!abort && macroItems.hasNext()) {
 			    commandDone = false;
 			    try {
-					ClientCommand clientCommand = (ClientCommand)((ClientCommand)(macroItems.next())).clone();
+					ClientCommand clientCommand = (ClientCommand)(macroItems.next()).clone();
 					clientCommand.setDisplayName(clientCommand.getKey());
 				    if (origCommand != null) {
 				    		if (clientCommand.getExtraInfo().startsWith("%")) {
@@ -165,14 +165,14 @@ public class RunMacro extends Thread {
     /**
      * @return Returns the runningMacros.
      */
-    public Map getRunningMacros() {
+    public Map <String,RunMacro>getRunningMacros() {
         return runningMacros;
     }
     
     /**
      * @param runningMacros The runningMacros to set.
      */
-    public void setRunningMacros(Map runningMacros) {
+    public void setRunningMacros(Map <String,RunMacro>runningMacros) {
         this.runningMacros = runningMacros;
     }
     

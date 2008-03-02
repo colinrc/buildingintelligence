@@ -19,7 +19,7 @@ public class AnalogReader  extends Thread {
 	 */
 	protected Logger logger;
 	protected List <Analog>analogueQueue;
-	protected boolean running;
+	protected volatile boolean running;
 	protected String STX;
 	protected String ETX;
 	protected CommDevice comms;

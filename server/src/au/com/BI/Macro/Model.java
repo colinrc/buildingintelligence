@@ -29,18 +29,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		this.setName("Macro");
         this.setAutoReconnect(false);
 	}
-
 	
-	public void doClientStartup(CommandQueue commandQueue, long targetFlashDeviceID, long serverID){
-		if (macroHandler != null){
-		    ClientCommand clientCommand = new ClientCommand();
-		    clientCommand.setFromElement (macroHandler.get("",false,false));
-		    clientCommand.setKey ("CLIENT_SEND");
-		    clientCommand.setTargetDeviceID(targetFlashDeviceID);
-			commandQueue.add(clientCommand);
-		}
-	};
-
 	public boolean isConnected () {
 		return true;
 	}
@@ -188,9 +177,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
                 clientCommand.setFromElement (macro);
                 clientCommand.setKey ("CLIENT_SEND");
                 clientCommand.setTargetDeviceID(0);
-    			synchronized (cache){
-    				cache.setCachedCommand("MACRO", clientCommand,false);
-    			}
+
+   				cache.setCachedCommand("MACRO", clientCommand,true );
                  commandQueue.add(clientCommand);
             }
 	}

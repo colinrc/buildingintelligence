@@ -296,8 +296,8 @@ public class Cache {
 			   }
         }
 		
-        public Iterator <String>getStartupItemList() {
-                return cachedCommands.keySet().iterator();
+        public Set <String>getStartupItemList() {
+                return cachedCommands.keySet();
         }
 		
         public void clear() {

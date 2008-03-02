@@ -38,7 +38,7 @@ public class FlashControlListener extends Thread {
     protected String Address = null;
     protected InetAddress iPAddress = null;
     protected Logger logger;
-    protected boolean running;
+    protected volatile boolean running;
     protected CommandQueue commandList = null;
     protected au.com.BI.Command.Cache cache = null;
     protected MacroHandler macroHandler = null;
@@ -107,50 +107,50 @@ public class FlashControlListener extends Thread {
 	    iPPort.setSoTimeout(60000);
 	    while (running) {
 		
-		//Block until I get a connection then go
-		try {
-		    
-		    Socket flashConnection = iPPort.accept();
-                    if (flashConnection.isConnected()){
-                        addTheHandler(flashConnection,false);
-                        numberFlashClients ++;
-                    }
-		    
-		} catch (ConnectionFail conn){
-		    logger.log(Level.SEVERE,"Could not attatch handler to client request");
-		} catch (SocketTimeoutException te) {
-		    synchronized (flashControllers) {
-			recentConnection = false;
-			ListIterator allControllers = flashControllers.listIterator();
-			boolean keepGoing = true;
-			numberFlashClients = 0;
-			while (keepGoing && allControllers.hasNext() ){
-			    FlashClientHandler flashClientHandler = (FlashClientHandler)allControllers.next();
-			    if (!sendXML(flashClientHandler,heartbeatDoc)) {
-			    	flashClientHandler.close();
-			    	addressBook.removeByID(flashClientHandler.getID());
-			    	allControllers.remove();
-					ClientCommand clientCommand = clientCommandFactory.buildListNamesCommand();
-					if (clientCommand != null) {
-							commandList.add(clientCommand);
+			//Block until I get a connection then go
+			try {
+			    
+			    Socket flashConnection = iPPort.accept();
+	                    if (flashConnection.isConnected()){
+	                        addTheHandler(flashConnection,false);
+	                        numberFlashClients ++;
+	                    }
+			    
+			} catch (ConnectionFail conn){
+			    logger.log(Level.SEVERE,"Could not attatch handler to client request");
+			} catch (SocketTimeoutException te) {
+			    synchronized (flashControllers) {
+					recentConnection = false;
+					ListIterator <FlashClientHandler>allControllers = flashControllers.listIterator();
+					boolean keepGoing = true;
+					numberFlashClients = 0;
+					while (keepGoing && allControllers.hasNext() ){
+					    FlashClientHandler flashClientHandler = (FlashClientHandler)allControllers.next();
+					    if (!sendXML(flashClientHandler,heartbeatDoc)) {
+					    	flashClientHandler.close();
+					    	addressBook.removeByID(flashClientHandler.getID());
+					    	allControllers.remove();
+							ClientCommand clientCommand = clientCommandFactory.buildListNamesCommand();
+							if (clientCommand != null) {
+									commandList.add(clientCommand);
+							}
+					    	
+					    	logger.log(Level.FINE,"Client went away, removing the handler");
+					    } else {
+					    	if (System.currentTimeMillis() - flashClientHandler.getConnectionTime()  < 60*1000*3) {
+					    		recentConnection = true;
+							}
+							numberFlashClients ++;
+					    }
 					}
-			    	
-			    	logger.log(Level.FINE,"Client went away, removing the handler");
-			    } else {
-			    	if (System.currentTimeMillis() - flashClientHandler.getConnectionTime()  < 60*1000*3) {
-			    		recentConnection = true;
-					}
-					numberFlashClients ++;
+				
+			    }
+			    try {
+			    	if (!recentConnection) security.allowClient(numberFlashClients);
+			    } catch (TooManyClientsException ex){
+			    	displayTooManyClients(numberFlashClients,ex);
 			    }
 			}
-			
-		    }
-		    try {
-		    	if (!recentConnection) security.allowClient(numberFlashClients);
-		    } catch (TooManyClientsException ex){
-		    	displayTooManyClients(numberFlashClients,ex);
-		    }
-		}
 	    }
 	}catch (IOException io){
 	    logger.log(Level.SEVERE, "Could not add client handler " +io.getMessage());
@@ -214,12 +214,9 @@ public class FlashControlListener extends Thread {
 	    return;
 	}
 	try {
-	    Iterator startupItemList = cache.getStartupItemList();
-	    String key = "";
 	    CacheWrapper cachedObject = null;
-	    while (startupItemList.hasNext()){
+	    for (String key:cache.getStartupItemList()){
 			try {
-			    key = (String)startupItemList.next();
 			    cachedObject = cache.getCachedObject(key);
 			    if (cachedObject == null) {
 					logger.log(Level.FINE,"Cache returned a null object for key " + key);
@@ -234,23 +231,20 @@ public class FlashControlListener extends Thread {
 			// logger.log (Level.WARNING,"object from cache for " + key + " is " + cachedObject.toString());
 			// Cached items are sets if the device requires all instances of the command to be cached
 			// cacheAllCommands returned true.
-			// For example, on audio when mute on / off is transmitted seperately to volume up / down
+			// For example, on audio when mute on / off is transmitted separately to volume up / down
 			// for the same audio device.
 			if (cachedObject.isSet()) {
-			    Collection commandList = cache.getSetElements((cachedObject));
-			    Iterator commandListIt = commandList.iterator();
-			    while (commandListIt.hasNext()){
-				Object theCommand = commandListIt.next();
-				try {
-				    if (!doCacheItem(client,(Command)theCommand)) {
-					logger.log(Level.FINE,"Client has disapeared, aborting startup");
-					break;
-				    }
-				} catch (ClassCastException ex) {
-				    logger.log(Level.FINE,"Cache item was marked as set, but was actually simple " + ex.getMessage());
-				} catch (Exception ex) {
-				    logger.log(Level.FINE,"An unknown error occurred running doChacheItem on " + theCommand.toString());
-				}
+				for (CommandInterface theCommand: cache.getSetElements((cachedObject))){
+					try {
+					    if (!doCacheItem(client,(Command)theCommand)) {
+						logger.log(Level.FINE,"Client has disapeared, aborting startup");
+						break;
+					    }
+					} catch (ClassCastException ex) {
+					    logger.log(Level.FINE,"Cache item was marked as set, but was actually simple " + ex.getMessage());
+					} catch (Exception ex) {
+					    logger.log(Level.FINE,"An unknown error occurred running doChacheItem on " + theCommand.toString());
+					}
 				
 			    }
 			    
@@ -288,10 +282,8 @@ public class FlashControlListener extends Thread {
 	} catch (IOException io) { }
 	
 	synchronized (flashControllers) {
-	    Iterator eachClient = flashControllers.iterator();
-	    while (eachClient.hasNext()){
-		FlashClientHandler nextClientHandler = (FlashClientHandler)eachClient.next();
-		nextClientHandler.setThisThreadRunning(false);
+		for (FlashClientHandler nextClientHandler: flashControllers){
+			nextClientHandler.setThisThreadRunning(false);
 	    }
 	}
     }

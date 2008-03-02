@@ -1,6 +1,5 @@
 package au.com.BI.M1;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,7 +16,7 @@ import au.com.BI.M1.Commands.RequestZoneVoltage;
 public class PollAnalogueInputs extends Thread {
 	protected Logger logger;
 
-	protected boolean running;
+	protected volatile boolean running;
 
 	protected CommDevice comms;
 
@@ -27,7 +26,7 @@ public class PollAnalogueInputs extends Thread {
 
 	protected int deviceNumber = -1;
 
-	protected List analogueInputs = null;
+	protected List <Analog>analogueInputs = null;
 
 	public PollAnalogueInputs() {
 		super();
@@ -67,9 +66,7 @@ public class PollAnalogueInputs extends Thread {
 
 					// how to only request if there is a change in the
 					// temperature?
-					Iterator analogueInput = analogueInputs.iterator();
-					while (analogueInput.hasNext()) {
-						Analog device = (Analog) analogueInput.next();
+					for (Analog device:analogueInputs){
 						String outputM1Command = buildAnalogueInputString(device);
 						CommsCommand m1Command = new CommsCommand();
 						m1Command.setKey(device.getKey());
@@ -157,11 +154,11 @@ public class PollAnalogueInputs extends Thread {
 		this.deviceNumber = deviceNumber;
 	}
 
-	public List getAnalogueInputs() {
+	public List<Analog>getAnalogueInputs() {
 		return analogueInputs;
 	}
 
-	public void setAnalogueInputs(List temperatureSensors) {
+	public void setAnalogueInputs(List <Analog>temperatureSensors) {
 		this.analogueInputs = temperatureSensors;
 	}
 }
