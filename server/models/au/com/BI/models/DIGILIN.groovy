@@ -24,13 +24,13 @@ class DIGILIN extends GroovyModel {
 	void buildUnitControlString (Unit device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 
 		// Recall a Scene
-		if (command.getCommandCode() == "on") {
+		if (command.getCommandCode() == "scene") {
 			def lightScene= paramToInt (command, Fields.EXTRA, 0, 500, "The scene is incorrect");
-			returnWrapper.addCommOutput (command.getExtraInfo() + "\n")
+			returnWrapper.addCommOutput (command.getExtraInfo() + "\r")
 
 		}else {
 		// build off string
-			returnWrapper.addCommOutput ("0\n" );
+			returnWrapper.addCommOutput ("0\r" );
 		}
 	}
 
