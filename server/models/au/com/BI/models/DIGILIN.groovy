@@ -26,11 +26,11 @@ class DIGILIN extends GroovyModel {
 		// Recall a Scene
 		if (command.getCommandCode() == "scene") {
 			def lightScene= paramToInt (command, Fields.EXTRA, 0, 500, "The scene is incorrect");
-			returnWrapper.addCommOutput (command.getExtraInfo() + "\r")
+			returnWrapper.addCommOutput (command.getExtraInfo() + "\r\n")
 
 		}else {
 		// build off string
-			returnWrapper.addCommOutput ("0\r" );
+			returnWrapper.addCommOutput ("0\r\n" );
 		}
 	}
 
