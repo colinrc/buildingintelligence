@@ -17,6 +17,11 @@
 <archive path="/Java/jdom-1.0/lib/xml-apis.jar"/>
 <archive path="/Java/jdom-1.0/lib/xalan.jar"/>
 </library>
+<library name="JDom1.1" systemlibrary="false">
+<archive path="/Java/jdom-1.1/lib/xml-apis.jar"/>
+<archive path="/Java/jdom-1.1/build/jdom.jar" source="/Java/jdom-1.1/src/java"/>
+<archive path="/Java/jdom-1.1/lib/xalan.jar"/>
+</library>
 <library name="Jetty6.0.0" systemlibrary="false">
 <archive path="/Java/jetty-6.0.0/lib/servlet-api-2.5-6.0.0.jar"/>
 <archive path="/Java/jetty-6.0.0/lib/jetty-util-6.0.0.jar"/>
@@ -40,9 +45,9 @@
 <archive path="/Java/jetty-6.1.4/lib/ext/jetty-html-6.1.4.jar"/>
 </library>
 <library name="Jetty6.1.7" systemlibrary="false">
-<archive path="/Java/jetty-6.1.7/lib/jetty-6.1.7.jar"/>
+<archive path="/Java/jetty-6.1.7/lib/jetty-6.1.7.jar" source="/Java/jetty-6.1.7/modules/jetty/src/main/java"/>
 <archive path="/Java/jetty-6.1.7/lib/jetty-util-6.1.7.jar"/>
-<archive path="/Java/jetty-6.1.7/lib/servlet-api-2.5-6.1.7.jar"/>
+<archive path="/Java/jetty-6.1.7/lib/servlet-api-2.5-6.1.7.jar" source="/Java/jetty-6.1.7/modules/servlet-api-2.5/src/main/java"/>
 <archive path="/Java/jetty-6.1.7/lib/ext/jetty-ajp-6.1.7.jar"/>
 <archive path="/Java/jetty-6.1.7/lib/ext/jetty-client-6.1.7.jar"/>
 <archive path="/Java/jetty-6.1.7/lib/ext/jetty-html-6.1.7.jar"/>

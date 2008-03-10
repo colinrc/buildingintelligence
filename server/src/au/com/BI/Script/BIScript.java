@@ -4,7 +4,9 @@
 package au.com.BI.Script;
 
 import au.com.BI.Command.Cache;
+import au.com.BI.Command.CacheWrapper;
 import au.com.BI.Command.CommandInterface;
+import au.com.BI.Command.ValueNotUpdatedException;
 import au.com.BI.LabelMgr.LabelMgr;
 import au.com.BI.Macro.MacroHandler;
 import groovy.lang.Binding;
@@ -80,6 +82,20 @@ public  class BIScript extends groovy.lang.Script {
 		return null;
 	}
 	
+    /**
+     * @return Returns the current value for a device from a specified key.
+     */
+    public int minutesSinceChanged(String key) {
+    	try {
+
+            long duration = triggerTime - elife.getLastAccessTime(key);
+            int returnVal = (int)(duration / 60000); // convert it to minutes
+            return returnVal;
+    	} catch (ValueNotUpdatedException ex){
+    		return 0;
+    	}
+    }
+    
 	public Object run () {
 		Binding binding = this.getBinding();
 		labelMgr = (LabelMgr)binding.getVariable("labelMgr");

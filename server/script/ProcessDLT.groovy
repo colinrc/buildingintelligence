@@ -85,5 +85,10 @@ boolean hidden = true
 			
 		}
 	}
+
+	def registerScript () {
+		def a = 4
+		a = a + 1
+	}
 }
 

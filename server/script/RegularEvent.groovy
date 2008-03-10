@@ -15,7 +15,7 @@ boolean  stoppable = false
 
 boolean hidden  = true  // do not display script in the list sent to the flash client
 
-long autoLightOffInterval = 120000// 20 minutes * 60 secs * 1000 ms
+long autoLightOffInterval = 12 
 
 	def main (String[] argv) {
 	// The action contents of the script go here
@@ -30,12 +30,9 @@ long autoLightOffInterval = 120000// 20 minutes * 60 secs * 1000 ms
 	   // it should be added to the variables section of the config file
 	   
 	   try {
-			if (elife.isOff  ("HOLIDAY_MODE")  && elife.isOn  ("MASTER_BED_LIGHT")) {
-				int a =5
-				a = a + 3;
-				long timeOn = System.currentTimeMillis() - elife.getLastAccessTime ("MASTER_BED_PIR");
-				if (timeOn  > autoLightOffInterval) {
-					elife.Off "MASTER_BED_LIGHT"
+			if (elife.isOff  ("HOLIDAY_MODE")   && elife.isOn  ("MASTER_BED_LIGHT")) {
+				if (minutesSinceChanged("MASTER_BED_PIR")  > autoLightOffInterval) {
+					elife.sendCommand("MASTER_BED_LIGHT","off")		
 				}
 			}
 	   } catch (ValueNotUpdatedException ex){

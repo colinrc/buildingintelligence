@@ -1,3 +1,25 @@
+''' Scripts '''
+
+Added a simple way to test how long since an item has been updated, minutesSinceChanged
+
+{{{
+
+   try {
+		if (elife.isOff  ("HOLIDAY_MODE")   && elife.isOn  ("MASTER_BED_LIGHT")) {
+			if (minutesSinceChanged("MASTER_BED_PIR")  > autoLightOffInterval) {
+				elife.sendCommand("MASTER_BED_LIGHT","off")		
+			}
+		}
+   } catch (ValueNotUpdatedException ex){
+	   // If the MASTER_BED_LIGHT or MASTER_BED_PIR are not configured in the system, the try/catch will ensure an error does not occur.
+	   elife.log ("The auto light off script is looking for an item that has not been configured. " + ex.getMessage());
+   }
+	   
+}}}
+
+Implemented enhancement [ticket:712]
+
+
 == 26/Feb/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b80.zip V1.6-b80]   [attachment:wiki:SoftwareReleases:eLife-1.6b80-libs.zip Libs-V1.6b80] ==
 
 ''' Macros + Scripts '''
