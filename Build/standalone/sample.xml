@@ -133,6 +133,9 @@
 				<item type="button" icon="chan-abc" command="vlc --lots of options --one-instance" />
 				<item type="button" label="Seven" command="vlc --lots of options --one-instance" />
 			</row>
+			<row>
+				<item type="volumeControl" />
+			</row>
 		</control>
 	</tv>
 	<controlPanelApps>
