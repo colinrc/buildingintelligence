@@ -1632,32 +1632,71 @@ toggleTV = function () {
 			row_mc._y = i * 35;
 			for (var z=0; z<control[i].items.length; z++) {
 				if (control[i].items[z].type == "button") {
-					var item_mc = row_mc.attachMovie("bi.ui.Button", "button" + z + "_mc", z, {width:Math.round(availWidth / control[i].items.length) - 5, height:30, iconName:control[i].items[z].icon, label:control[i].items[z].label, toggle:true});
+					
+					var buttonObj = control[i].items[z];
+					
+					if (typeof(buttonObj.commands) == "string") {
+						// for mute button
+						buttonObj.commands = buttonObj.commands.split(",");
+						buttonObj.icons = buttonObj.icons.split(",");
+						buttonObj.icon = buttonObj.icons[0];
+						trace("ahuhh:" + buttonObj.icons + ":" + buttonObj.commands + ":" + buttonObj.command);
+					}
+					
+					var item_mc = row_mc.attachMovie("bi.ui.Button", "button" + z + "_mc", z, {width:Math.round(availWidth / control[i].items.length) - 5, height:30, iconName:buttonObj.icon, label:buttonObj.label, toggle:true});
 					item_mc.addEventListener("press", item_mc);
 					
-					for (var q in control[i].items[z]) {
+					for (var q in buttonObj) {
 						//trace(q + ":" + control[i].items[z][q])
-						item_mc[q] = control[i].items[z][q];
+						item_mc[q] = buttonObj[q];
 					}
-	
-					item_mc.press = function () {
-						if (this.macro) {
-							var command = _global.tv.macros[this.macro];
-							command = command.split("$chan").join(this.chan);
-							command = command.split("$file").join(this.file);
-						} else {
-							var command = this.command;
+					
+					item_mc.update = function () {
+						if (this.commands) {
+							// for mute button
+							if (mdm.System.getMasterVolume() > 0) {
+								this.iconName = this.icons[1];
+							} else {
+								this.iconName = this.icons[0];
+							}
 						}
-						mdm.Process.create("VLC", 0, 0, 0, 0, "", command, "c:\\", 2, 4);
-						trace(command);
-						this.highlight = true;
-						if (this != _global.tv.currentChannel) {
-							eval(_global.tv.currentChannel).highlight = false;
-							_global.tv.currentChannel = this;
+					}
+					
+					item_mc.press = function () {
+						if (this.commands) {
+							// for mute button
+							if (mdm.System.getMasterVolume() > 0) {
+								this.sysVol = mdm.System.getMasterVolume();
+								mdm.System.setMasterVolume(0);
+							} else {
+								mdm.System.setMasterVolume(this.sysVol);
+							}
+							broadcastChange("mdm.systemVolume", null, true);
+						} else {
+							if (this.macro) {
+								var command = _global.tv.macros[this.macro];
+								command = command.split("$chan").join(this.chan);
+								command = command.split("$file").join(this.file);
+							} else {
+								var command = this.command;
+							}
+							mdm.Process.create("VLC", 0, 0, 0, 0, "", command, "c:\\", 2, 4);
+							this.highlight = true;
+							if (this != _global.tv.currentChannel) {
+								eval(_global.tv.currentChannel).highlight = false;
+								_global.tv.currentChannel = this;
+							}
 						}
 						
 					}
 					item_mc._x = z * Math.round(availWidth / control[i].items.length);
+					
+					if (buttonObj.commands) {
+						// for mute button
+						item_mc.sysVol = Math.round(65535 / 2);
+						subscribe("mdm.systemVolume", item_mc);
+						item_mc.update();
+					}
 					
 					if ((control[i].items[z]["default"] && !_global.tv.currentChannel) || (item_mc == _global.tv.currentChannel)) {
 						item_mc.press();
@@ -1676,10 +1715,11 @@ toggleTV = function () {
 						var value = Math.floor(this._xmouse / (this._width - (this._width * .1)) * 10) * 10;
 						if (value >= 0 && value <= 100) {
 							mdm.System.setMasterVolume(Math.round(65535 * (value / 100)));
-							this._parent.update();
+							broadcastChange("mdm.systemVolume", null, true);
 						}
 					}				
 					volumeSlider_mc.update();
+					subscribe("mdm.systemVolume", volumeSlider_mc);
 					
 					volumeSlider_mc._x = z * Math.round(availWidth / control[i].items.length);
 				}

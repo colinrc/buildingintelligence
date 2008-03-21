@@ -136,6 +136,9 @@
 			<row>
 				<item type="volumeControl" />
 			</row>
+			<row>
+				<item type="button" icons="speaker-off,speaker" commands="mute,unmute" />
+			</row>
 		</control>
 	</tv>
 	<controlPanelApps>

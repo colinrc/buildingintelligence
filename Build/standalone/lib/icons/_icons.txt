@@ -132,6 +132,7 @@ smokealarm-green.png
 smokealarm-red.png
 spanner.png
 speaker.png
+speaker-off.png
 sprinkler-off.png
 sprinkler.png
 sprinkler2-off.png
