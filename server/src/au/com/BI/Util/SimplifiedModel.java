@@ -1137,26 +1137,28 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 
 	public void addCheckSums(ReturnWrapper returnWrapper) {
-		if (returnWrapper.isMessageIsBytes()) {
-			for (int i = 0; i <  returnWrapper.getCommOutputBytes().size(); i++) {
-				byte [] arrayToCheck = returnWrapper.getCommOutputBytes().elementAt(i);
-				Byte returnCheck = addCheckSum(arrayToCheck);
-				if (returnCheck != null) {
-					byte []newArray = new byte[arrayToCheck.length+1];
-					System.arraycopy(arrayToCheck, 0, newArray, 0, arrayToCheck.length);
-					newArray [arrayToCheck.length ] = returnCheck;
-					returnWrapper.getCommOutputBytes().setElementAt(newArray,i);
+		if (this.isChecksumRequired()){
+			if (returnWrapper.isMessageIsBytes()) {
+				for (int i = 0; i <  returnWrapper.getCommOutputBytes().size(); i++) {
+					byte [] arrayToCheck = returnWrapper.getCommOutputBytes().elementAt(i);
+					Byte returnCheck = addCheckSum(arrayToCheck);
+					if (returnCheck != null) {
+						byte []newArray = new byte[arrayToCheck.length+1];
+						System.arraycopy(arrayToCheck, 0, newArray, 0, arrayToCheck.length);
+						newArray [arrayToCheck.length ] = returnCheck;
+						returnWrapper.getCommOutputBytes().setElementAt(newArray,i);
+					}
 				}
-			}
-		} else {
-			for (int i = 0; i <  returnWrapper.getCommOutputStrings().size();i++) {
-				byte [] arrayToCheck = returnWrapper.getCommOutputStrings().elementAt(i).getBytes();
-				Byte returnCheck = addCheckSum(arrayToCheck);
-				if (returnCheck != null) {
-					byte []newArray = new byte[arrayToCheck.length+1];
-					System.arraycopy(arrayToCheck, 0, newArray, 0, arrayToCheck.length);
-					newArray [arrayToCheck.length ] = returnCheck;
-					returnWrapper.getCommOutputStrings().setElementAt(new String(newArray),i);
+			} else {
+				for (int i = 0; i <  returnWrapper.getCommOutputStrings().size();i++) {
+					byte [] arrayToCheck = returnWrapper.getCommOutputStrings().elementAt(i).getBytes();
+					Byte returnCheck = addCheckSum(arrayToCheck);
+					if (returnCheck != null) {
+						byte []newArray = new byte[arrayToCheck.length+1];
+						System.arraycopy(arrayToCheck, 0, newArray, 0, arrayToCheck.length);
+						newArray [arrayToCheck.length ] = returnCheck;
+						returnWrapper.getCommOutputStrings().setElementAt(new String(newArray),i);
+					}
 				}
 			}
 		}

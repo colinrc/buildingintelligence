@@ -79,6 +79,7 @@ public class ModelParameters  {
 		protected boolean naturalPackets = false;
 		protected au.com.BI.Patterns.Model patterns = null;
 		protected boolean IPHeartbeat = true;;
+		protected boolean checksumRequired = false;
 		
 		public User currentUser = null;
 		
@@ -495,5 +496,13 @@ public class ModelParameters  {
 
 	public void setDeviceFactories(DeviceFactories deviceFactories) {
 		this.deviceFactories = deviceFactories;
+	}
+
+	public boolean isChecksumRequired() {
+		return checksumRequired;
+	}
+
+	public void setChecksumRequired(boolean checksumRequired) {
+		this.checksumRequired = checksumRequired;
 	}
 }
