@@ -1,1 +1,0 @@
-c:\progra~1\videolan\vlc\vlc.exe --one-instance vlc:quit

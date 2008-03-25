@@ -932,6 +932,8 @@ renderZone = function (zone, clip) {
 					alert_mc.keys = keys;
 					alert_mc.canSee = alerts[alert].canSee;
 					alert_mc.fadeInTime = _global.settings.miniAlertBtnFadeInTime;
+					alert_mc.showState = (alerts[alert].showState) ? alerts[alert].showState : "on";
+					alert_mc.hideState = (alerts[alert].hideState) ? alerts[alert].hideState : "off";
 					if (alerts[alert].fadeOutTime != undefined) {
 						alert_mc.fadeOutTime = alerts[alert].fadeOutTime;
 					} else {
@@ -976,11 +978,11 @@ renderZone = function (zone, clip) {
 					}
 					alert_mc.update = function (key, state) {
 						if (this.canSee == undefined || isAuthenticated(this.canSee)) {
-							if (state == "on" && !this.active) {
+							if (state == this.showState && !this.active) {
 								this.show();
-							} else if (state == "off" && this.active) {
+							} else if (state == this.hideState && this.active) {
 								for (var key=0; key<this.keys.length; key++) {
-									if (_global.controls[this.keys[key]].state == "on") return;
+									if (_global.controls[this.keys[key]].state == this.showState) return;
 								}
 								this.hide();
 							} else {

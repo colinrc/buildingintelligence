@@ -136,7 +136,7 @@ defineZones = function (zones) {
 								alertObj.alertsPos = {x:alert.attributes.x, y:alert.attributes.y, layout:alert.attributes.layout};
 								var alerts = alert.childNodes;
 								for (var alert=0; alert<alerts.length; alert++) {
-									alertObj.alerts.push({name:alerts[alert].attributes.name, keys:alerts[alert].attributes.keys, icon:alerts[alert].attributes.icon, fadeOutTime:alerts[alert].attributes.fadeOutTime});
+									alertObj.alerts.push({name:alerts[alert].attributes.name, keys:alerts[alert].attributes.keys, icon:alerts[alert].attributes.icon, fadeOutTime:alerts[alert].attributes.fadeOutTime, showState:alerts[alert].attributes.show, hideState:alerts[alert].attributes.hide});
 									var keys = alerts[alert].attributes.keys.split(",");
 									for (var key=0; key<keys.length; key++) {
 										if (_global.controls[keys[key]] == undefined) {

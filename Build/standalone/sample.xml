@@ -359,8 +359,8 @@
 						</tab>
 					</window>
 					<alerts>
-						<alert name="Lights" keys="BED2_LIGHT" icon="light-bulb" />
-						<alert name="Audio" keys="BED2_AUDIO" icon="music-note" />
+						<alert name="Lights" keys="BED2_LIGHT" icon="light-bulb" show="off" hide="on" />
+						<alert name="Audio" keys="BED2_AUDIO" icon="music-note" show="off" hide="on" />
 					</alerts>
 				</room>
 				<room name="Bedroom 3" poly="504,226, 504,391, 691,391, 691,226">

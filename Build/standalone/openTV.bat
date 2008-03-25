@@ -1,1 +1,0 @@
-c:\progra~1\videolan\vlc\vlc.exe --one-instance c:\test.avi --width 320 --height 240 --video-x 800 --video-y 600 --video-on-top --no-video-deco --intf dummy --dummy-quiet --loop
