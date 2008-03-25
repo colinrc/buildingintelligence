@@ -17,18 +17,13 @@ import java.util.regex.Pattern
 
 
 /**
-   This demonstration shows the basic pattern for groovy models.
    
-   The model contains various functions that are called by the system during operations.
-   
-   On startup the system will call doStartup()  ,this should contain any required commands to put the device in a state for communications with eLife.
-   
-   When instructions are received from the device  the model's processStringFromComms method is called. This is where you will process instructions 
-   and usually send the appropriate message to the flash client.
-   
-   When instructions are received from the flash client the models doOutputItem method is called.
-   
-
+   This model expects:
+	      A parameter block AV_INPUTS that describes the input connectors.
+          A parameter PROTOCOL that describes how the Integra is being communicated with, IP or serial .
+               - this is the final connection to the Integra, not the server. A Serial device connected via a GC100 has a SERIAL protocol.
+          A parameter MODEL with the integra model; eg. DTR5.2
+          AV zones in the configuration must follow a particular pattern, 01 is for the main zone, 02 for zone 2, 03 for zone 3.
 **/
 
 class Integra extends GroovyModel {
@@ -37,17 +32,26 @@ class Integra extends GroovyModel {
 	int keyPadding = 2;
 	String name = "Integra"
 	String appendToSentStrings = "\n"
-
+	String model = "DTR5.2"
+	boolean requiresChecksum = false // fasle is default
+	boolean ipProtocol = true // IP is default unless serial is specified
 	
 	Integra () {
 		super()
 		
-		configHelper.addParameterBlock  "AV",DeviceModel.MAIN_DEVICE_GROUP,"AV Source"
+		configHelper.addParameterBlock  "AV_INPUTS", DeviceModel.MAIN_DEVICE_GROUP, "AV Sources"
+		
 	}
 	
 	public void doStartup(ReturnWrapper returnWrapper) {
 		// Any instructions that should be set up the device for communication should be included here.
 		// This method is called after connection is made to the device
+		
+		def protocol = configHelper.getParameterValue ("PROTOCOL", DeviceModel.MAIN_DEVICE_GROUP)
+		if (protocol == null || protocol == "SERIAL") ipProtocol = false
+
+		def modelPar = configHelper.getParameterValue ("MODEL", DeviceModel.MAIN_DEVICE_GROUP)
+		if (modelPar != null ) model = modelPar
 
 	}
 
@@ -55,124 +59,42 @@ class Integra extends GroovyModel {
 	
 	void processStringFromComms (String command , ReturnWrapper returnWrapper) {
 
-		def matcher = command =~ /(OK|AU_PWR|AU_VOL|AU_SRC|AU_STARTED):?(\d*):?(\d*)/
-		 //  For details on groovy regular expressions see   http://groovy.codehaus.org/Tutorial+4+-+Regular+expressions+basics
-		
-		// Process string from the device that looks like  AU_VOL:zone:level  , AU_PWR:zone:0|1,   AU_SRC:zone:src,  AU_STARTED
 	
-		if (matcher.matches()) {
-			try {
-				def theCommand = matcher[0][1]  // For a pattern match that has only captured one line, each capture group i reffered to by matcher[0][group]
-	
-				switch (theCommand) {
-					case "OK":
-						// The last command has been acknowledged by the device so now send the next one
-						comms.acknowledgeCommand("")
-						comms.sendNextCommand()
-						break;
-
-					case "ERROR":
-						// The last command has been acknowledged by the device so now send the next one
-						comms.resendAllSentCommands()
-						break;
-
-					case "AU_STARTED" :
-						// received confirmation from the device that the initial setup is complete, now query the state of each item from the configuration file
-						doRestOfStartup(returnWrapper)
-						break
-						
-					case "AU_VOL" :
-						def zone = matcher[0][2]
-						      				// The zone will be used to look up the key field that is specified in the configuration file to refer to each audio zone
-						      				                  		
-						 def param = matcher[0][3]
-						 def theAudioDevice = configHelper.getControlledItem (zone)
-
-						 if (theAudioDevice == null){
-							 logger.log (Level.INFO,"An instruction received for a zone that has not been configured " + zone)
-						 } else {
-								
-							if (param == "00" ) {
-								returnWrapper.addFlashCommand (buildOffCommandForFlash ( theAudioDevice) )
-							} else {
-								returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "on", param) )	
-							}
-						 }
-						break
-					
-					case "AU_PWR"  :
-						def zone = matcher[0][2]
-							      				// The zone will be used to look up the key field that is specified in the configuration file to refer to each audio zone
-							      				                  		
-						def param = matcher[0][3]
-						def theAudioDevice = configHelper.getControlledItem (zone)
-						 if (theAudioDevice == null){
-							 logger.log (Level.INFO,"An instruction received for a zone that has not been configured " + zone)
-						 } else {
-																	
-							if (param  == "0" ) {
-								returnWrapper.addFlashCommand (buildOffCommandForFlash (theAudioDevice)  )
-							} else {
-								returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "on") )	
-							}	
-						 }
-						break
-						
-					case "AU_SRC"  :
-						def zone = matcher[0][2]
-							      				// The zone will be used to look up the key field that is specified in the configuration file to refer to each audio zone
-							      				                  		
-						def param = matcher[0][3]
-						def theAudioDevice = configHelper.getControlledItem (zone)
-						 if (theAudioDevice == null){
-							 logger.log (Level.INFO,"An instruction received for a zone that has not been configured " + zone)
-						 } else {
-							 try {
-								 def srcVal =  findKeyForParameterValue (param, "AUDIO_INPUTS", theAudioDevice )
-																		
-									returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "src", srcVal) )	
-							 } catch (ParameterException ex){
-								 logger.log (Level.INFO,"A source request was received for an input that has not been defined")
-							 }
-						 }
-						break
-					default:
-						logger.log (Level.WARNING,"An unknown command was sent from flash to the audio device" )
-				}			
-			} catch (IndexOutOfBoundsException ex) {
-				logger.log (Level.WARNING,"The string from the audio device was incorrectly formatted " + command)
-			}
-		} else {
-			logger.log (Level.WARNING,"The string from the audio device was incorrectly formatted " + command)
-		}
 	}
 
 
 
 	void buildAVControlString (AV device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
-		// receives a message from flash and builds the appropriate string for the audio device
-		
+		// receives a message from flash and builds the appropriate string for the audio device 
+		if (device.getKey() == "01") buildAVControlStringMain (device,  command,  returnWrapper) ;
+		if (device.getKey() == "02") buildAVControlStringZone2 (device,  command,  returnWrapper) ;
+		if (device.getKey() == "03") buildAVControlStringZone3 (device,  command,  returnWrapper) ;
+	}
+
+	void buildAVControlStringMain (AV device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+
 		// To switch on the audio device it requieres a string of this format      AU_PWR:zone:on or AW_PWR:zone:off
 		if (command.getCommandCode() ==  "on") {
-			returnWrapper.  ("!1PWR" + device.getKey() + "01")
+			buildOutputString ("1PWR" + device.getKey() + "01", returnWrapper)
 		}
 		
 		if (command.getCommandCode() ==  "off") {
-			returnWrapper.  ("!1PWR" + device.getKey() + "01")
+			buildOutputString  ("1PWR" + device.getKey() + "01", returnWrapper)
 		}
 		
-		if (command.getCommandCode() == "off") {
-			returnWrapper.addCommOutput ("AU_PWR:" + device.getKey() + ":0")
-		}
 
 		// To change the volume the format will be AU_VOL:zone:- or AU_VOL:zone:+ 
 		if (command.getCommandCode() == "volume") {
 			
 			if (command.getExtraInfo() == "up" )  {
-				returnWrapper.addCommOutput  ("AU_VOL:" + device.getKey() + ":+"	)					
-
-			} else { 
-				returnWrapper.addCommOutput  ("AU_VOL:" + device.getKey() + ":-")
+				buildOutputString   ("1MVL" + device.getKey() + ":+"	, returnWrapper)					
+			} 
+			if (command.getExtraInfo() == "down" )  {
+				buildOutputString   ("1MVL" + device.getKey() + ":+"	, returnWrapper)					
+			} 
+			
+			else { 
+				buildOutputString   ("1MVL" + device.getKey() + ":-", returnWrapper)
 			}
 		}
 		
@@ -182,20 +104,25 @@ class Integra extends GroovyModel {
 			
 				String newSrc = getCatalogueValue (command.getExtraInfo(), "AV_INPUTS", device )
 			
-				returnWrapper.addCommOutput ("AU_SRC:" + device.getKey() + ":" + newSrc		)		 
+				buildOutputString  ("SLI" + device.getKey() + ":" + newSrc		,returnWrapper		 )
 		}
 	}
-
 
 	
-	public Byte addCheckSum(byte [] calcValue) {
-
-		byte checksum = 0;
-		for (int i in calcValue){ 
-			checksum += i;
-		}
-
-		return new Byte((byte)(checksum&0xff));
+	void buildAVControlStringZone2 (AV device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+		// receives a message from flash and builds the appropriate string for the audio device
+		
 	}
-
+	
+	
+	void buildOutputString(String rawCommand, ReturnWrapper returnWrapper){
+		if (ipProtocol){
+			// Integra is using IP protocol
+			returnWrapper.addCommOutput(rawCommand.getBytes());	
+		} else {
+			// Serial protocol
+			returnWrapper.addCommOutput(rawCommand);
+		}
+	}
+	
 }
