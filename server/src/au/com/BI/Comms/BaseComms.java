@@ -123,6 +123,15 @@ protected String modelName = "";
 	}
 	
 	/**
+	 * Returns the number of elements in the sent queue waiting for acknowledgment.
+	 * @return The count
+	 */
+	public int getSizeOfSentQueue(){
+		return sentQueue.size();
+	}
+
+	
+	/**
 	 * Clears a command from the sent queue
 	 * @param key If empty or null the last command sent is removed else the key is searched for in the sent queue'
 	 * @param actionType Only match commands with this action type

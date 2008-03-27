@@ -37,7 +37,7 @@ class BI_TUNER extends GroovyModel {
 	int keyPadding = 2;
 	String name = "BI_TUNER"
 	String appendToSentStrings = "\n"
-
+		boolean checksumRequired = true
 	
 	BI_TUNER () {
 		super()

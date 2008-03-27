@@ -507,7 +507,8 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 				if (command.isCommsCommand())  {
 					doControlledItem(command);
 				} else {
-					logger.log (Level.WARNING,"A command of an unknown type is being processed : " + command.toString());
+					logger.log (Level.WARNING,"A command of an unknown type is being processed : " + command.getCommandCode() + ":" + 
+							command.getDisplayName() + ":" + command.getKey() + ":" + command.toString());
 				}
 			}
 		}

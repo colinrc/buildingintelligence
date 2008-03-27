@@ -104,6 +104,12 @@ public interface CommDevice {
 	public boolean acknowledgeCommand(int actionType,String key, boolean allInstances);
 
 	/**
+	 * Returns the number of elements in the sent queue waiting for acknowledgment.
+	 * @return The count
+	 */
+	public int getSizeOfSentQueue();
+	
+	/**
 	 * The ETX array is the set of possible values to indicate the end of the data string
 	 * @param etxArray
 	 */

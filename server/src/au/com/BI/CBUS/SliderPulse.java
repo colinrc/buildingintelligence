@@ -128,7 +128,7 @@ public class SliderPulse extends Thread {
 						 sendToFlash (key, "on" , 100);
 					 }else {
 						 increasingActions.put(key, currentVal);
-						 logger.log(Level.INFO,"Recording increase in level for key " + key + " to value "+ currentVal);
+						 logger.log(Level.FINE,"Recording increase in level for key " + key + " to value "+ currentVal);
 						 sendToFlash (key, "on" , currentVal);					 
 					 }
 				}
@@ -144,7 +144,7 @@ public class SliderPulse extends Thread {
 						 sendToFlash (key, "on" , 0);
 					 } else {
 						 decreasingActions.put(key, currentVal);
-						 logger.log(Level.INFO,"Recording increase in level for key " + key + " to value "+ currentVal);
+						 logger.log(Level.FINE,"Recording increase in level for key " + key + " to value "+ currentVal);
 						 sendToFlash (key, "on" , currentVal);	
 					 }
 

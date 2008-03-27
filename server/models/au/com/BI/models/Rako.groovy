@@ -33,7 +33,7 @@ class RAKO extends GroovyModel {
 	// Our light device expects 2 characters to specify the zone 
 	int keyPadding = 2;
 	String name = "RAKO"
-	String appendToSentStrings = "\n"
+	String appendToSentStrings = "\r"
 	String version = "1.0"
 	
 	RAKO () {
@@ -46,6 +46,8 @@ class RAKO extends GroovyModel {
 	}
 
 	void aboutToReadModelDetails() {
+		// Adding attributes allows a model to dynamically add more parameters on a line in the configuration file
+		
 		addStringAttribute (DeviceType.LIGHT, "ROOM" , true)
 		// The Room is needed as well as the channel (key) in order to build a unique identifier for the light. The element is mandatory.
 				

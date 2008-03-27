@@ -47,6 +47,7 @@ class BI_PUMP extends GroovyModel {
 	String name = "BI_PUMP"
 	String appendToSentStrings = "\n"
 
+
 	
 	BI_PUMP () {
 		super()

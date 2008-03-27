@@ -1,3 +1,5 @@
+== 27/Mar/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b81.zip V1.6-b81]  ==
+
 ''' Scripts '''
 
 Added a simple way to test how long since an item has been updated, minutesSinceChanged
@@ -14,11 +16,28 @@ Added a simple way to test how long since an item has been updated, minutesSince
 	   // If the MASTER_BED_LIGHT or MASTER_BED_PIR are not configured in the system, the try/catch will ensure an error does not occur.
 	   elife.log ("The auto light off script is looking for an item that has not been configured. " + ex.getMessage());
    }
-	   
+   
 }}}
 
 Implemented enhancement [ticket:712]
 
+''' CBUS '''
+
+Possible fix for CBUS thread exception. Resolves [ticket:713]
+
+Tuned logging level to remove excess slider pulse messages
+
+''' Tutondo '''
+
+Improved logging to try to determine what is causing unresponsiveness for some devices [ticket:695]
+
+''' General '''
+
+Improved logging of unknown commands on the central queue. 
+
+''' GC100 '''
+
+Added logging if a serial overflow has occurred. May assist ticket [ticket:695]
 
 == 26/Feb/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b80.zip V1.6-b80]   [attachment:wiki:SoftwareReleases:eLife-1.6b80-libs.zip Libs-V1.6b80] ==
 

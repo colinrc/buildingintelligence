@@ -331,6 +331,15 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				}
 				didCommand = true;
 		    	}
+		    	
+		    	if (gc100StringParts[0].equals("serialoverflow")) {
+		    	    String moduleAddress =  gc100StringParts[1];
+
+		    	    logger.log (Level.WARNING,"Please contact your integrator, a data overflow occurred on the GC100. Module " + moduleAddress);
+					didCommand = true;
+		    	}
+		    	
+
 		    	if (gc100StringParts[0].equals("statechange") || gc100StringParts[0].equals("state")) {
 		    	    String deviceAddress = gc100StringParts[1];
 		    	    String newState =  gc100StringParts[2];
