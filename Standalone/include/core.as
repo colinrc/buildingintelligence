@@ -1053,13 +1053,19 @@ renderZone = function (zone, clip) {
 					door_mc.endFill();
 				} else {
 					var pos = doors[door].pos;
-					if (doors[door].colour1 != undefined) {
+					door_mc.moveTo(pos[0], pos[1]);
+					if (doors[door].colour != undefined) {
+						door_mc.lineStyle(doors[door].thickness, doors[door].colour, 100, true, "normal", "none");
+					} else if (doors[door].colours != undefined && doors[door].colours.length == 2) {
+						door_mc.colours = doors[door].colours;
+						door_mc.lineStyle(doors[door].thickness, door_mc.colours[0], 100, true, "normal", "none");
+					} else if (doors[door].colour1 != undefined && doors[door].colour2 != undefined) {
 						door_mc.colours = [doors[door].colour1, doors[door].colour2];
+						door_mc.lineStyle(doors[door].thickness, door_mc.colours[0], 100, true, "normal", "none");					
 					} else {
 						door_mc.colours = [_global.settings.zoneDoorColour, _global.settings.zoneDoorColour];
+						door_mc.lineStyle(doors[door].thickness, door_mc.colours[0], 100, true, "normal", "none");
 					}
-					door_mc.moveTo(pos[0], pos[1]);
-					door_mc.lineStyle(doors[door].thickness, door_mc.colours[0], 100, true, "normal", "none");
 					door_mc.lineTo(pos[2], pos[3]);
 				}
 				door_mc.update = function (key, state, value) {

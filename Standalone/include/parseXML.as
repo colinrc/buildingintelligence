@@ -160,7 +160,7 @@ defineZones = function (zones) {
 										for (var p=0; p<pos.length; p++) {
 											pos[p] = Number(pos[p]);
 										}
-										_global.zones[zone].rooms[room].doors.push({name:doors[door].attributes.name, pos:pos, key:doors[door].attributes.key, colour1:doors[door].attributes.colour1, colour2:doors[door].attributes.colour2, thickness:doors[door].attributes.thickness});										
+										_global.zones[zone].rooms[room].doors.push({name:doors[door].attributes.name, pos:pos, key:doors[door].attributes.key, colour:doors[door].attributes.colour, colour1:doors[door].attributes.colour1, colour2:doors[door].attributes.colour2,  colours:doors[door].attributes.colours.split(","), thickness:doors[door].attributes.thickness});										
 									}
 									if (_global.controls[doors[door].attributes.key] == undefined) _global.controls[doors[door].attributes.key] = {key:doors[door].attributes.key, name:doors[door].attributes.name, zone:zones[zone].attributes.name, room:rooms[room].attributes.name};
 								}
