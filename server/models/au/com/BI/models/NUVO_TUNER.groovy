@@ -23,10 +23,17 @@ class NUVO_TUNER extends GroovyModel {
 		super()
 		
 
-		configHelper.addParameterBlock  "AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Audio Source"
+		// configHelper.addParameterBlock  "AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Audio Source"
 	}
 	
 	public void doStartup(ReturnWrapper returnWrapper) {
+		def theDeviceList = configHelper.getAllControlledDeviceObjects ()
+		for (i in theDeviceList){
+			
+			if (i.getDeviceType() == DeviceType.AUDIO) {
+				returnWrapper.addCommOutput  ("*T'" + i.getKey() + "'STATUS")
+			}
+		}
 
 	}
 
@@ -35,12 +42,11 @@ class NUVO_TUNER extends GroovyModel {
 
 		boolean commandFound = false
 		
-		// Process string from the device; there can be two AUDIO devices; A and B..   eg. 			#TÕtÕPRESETnn,ÓxyzÓ
+		// Process string from the device; there can be two AUDIO devices; A and B
+		// eg. 	#TÕtÕPRESETnn,ÓxyzÓ
 	
-		def  theTuner = command.subString (2,3) 
-		// second character, this may be the incorrect place, from the manual it is impossible to tell if the single quotes are included in the string or not.
-		
-		def String toMatch = command.subString (3) 
+		def  theTuner = command.subString (3,4) 		
+		def String toMatch = command.subString (5) 
 
 		def theAudioDevice = configHelper.getControlledItem (theTuner)
 		if (theAudioDevice == null) {
@@ -49,8 +55,38 @@ class NUVO_TUNER extends GroovyModel {
 		}
 		
 		if (!commandFound && toMatch.equals("OFF")){
+			// #T't'OFF
 			// generate command for flash to show that the tuner is off
 			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "off") )	
+			commandFound = true
+		}
+		
+		if (!commandFound && toMatch.startsWith("ON")){
+			def freqString = toMatch.substring (3,5)
+			switch (freqString) {
+			//#T't'ON,FM103.5
+			case "FM" :
+				def freqType = "FM"
+				def frequency = toMatch.substring (5)
+				break;
+			//#T't'ON,AM550
+			case "AM" :
+				def freqType = "AM"
+				def frequency = toMatch.substring (5)
+				break;
+			//#T't'ON,WX1
+			case "WX" :
+				def freqType = "WX"
+				def frequency = toMatch.substring (5)
+				break;
+			//#T't'ON,AUX
+			case "AU" :
+				def freqType = "AUX"
+				def frequency = "01"
+				break;
+			}
+			// generate command for flash to show that the tuner is on
+			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "on" , freqType , frequency) )	
 			commandFound = true
 		}
 
@@ -62,10 +98,39 @@ class NUVO_TUNER extends GroovyModel {
 			
 			if (presetDesc.length() > 1) presetDesc  = presetDesc.subString (presetDesc.length()-1) // remove the last double quote
 			
-			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "preset",presetNumber, presetDesc) )	
+			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "preset" , presetNumber , presetDesc) )	
 			commandFound = true
 		}
 
+		if (!commandFound && toMatch.startsWith("RDSPSN")){
+			// #TÕtÕRDSPSNÓxyzÓ
+			def String rdspsnString = toMatch.subString (7)
+			
+			if (rdspsnString.length() > 1) rdspsnString  = rdspsnString.subString (rdspsnString.length()-1) // remove the last double quote
+			
+			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "RDSPSN" , rdspsnString) )	
+			commandFound = true
+		}
+		
+		if (!commandFound && toMatch.startsWith("RDSRT")){
+			// #TÕtÕRDSRTÓxyzÓ
+			def String rdsrtString = toMatch.subString (6)
+			
+			if (rdsrtString.length() > 1) rdsrtString  = rdsrtString.subString (rdsrtString.length()-1) // remove the last double quote
+			
+			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "RDSRT" , rdsrtString) )	
+			commandFound = true
+		}
+		
+		if (!commandFound && toMatch.startsWith("FREQDESC")){
+			// #TÕtÕFREQDESCÓxyzÓ
+			def String descString = toMatch.subString (9)
+			
+			if (descString.length() > 1) descString  = descString.subString (descString.length()-1) // remove the last double quote
+			
+			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "FREQDESC" , descString) )	
+			commandFound = true
+		}
 		
 		if (!commandFound){
 			logger.log (Level.WARNING,"The string from the tuner was incorrectly formatted " + command)
@@ -75,42 +140,69 @@ class NUVO_TUNER extends GroovyModel {
 	
 
 	void buildAudioControlString (Audio device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
-	}
-
-	void buildAVControlString (AV device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
-		/* this will need to be fleshed out for NUVO tuner, you need to choose whether these will be AUDIO or AV devices in the config file */
 		
-		// To switch on the audio device it requieres a string of this format      AU_PWR:zone:on or AW_PWR:zone:off
+		// Deal with turning the Tuner on
 		if (command.getCommandCode() ==  "on") {
-			returnWrapper.addCommOutput  ("AU_PWR:" + device.getKey() + ":1")
+			returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'ON")
 		}
 		
 		if (command.getCommandCode() == "off") {
-			returnWrapper.addCommOutput ("AU_PWR:" + device.getKey() + ":0")
+			returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'OFF")
 		}
-
-		// To change the volume the format will be AU_VOL:zone:- or AU_VOL:zone:+ 
-		if (command.getCommandCode() == "volume") {
+		
+		if (command.getCommandCode() == "tune") {
 			
-			if (command.getExtraInfo() == "up" )  {
-				returnWrapper.addCommOutput  ("AU_VOL:" + device.getKey() + ":+"	)					
+			switch (command.getExtraInfo() ) {
+			case "FM" :
+				if (command.getExtra2Info() != "")  {
+					returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'FM" + command.getExtra2Info()	)
+					break;
 
-			} else { 
-				returnWrapper.addCommOutput  ("AU_VOL:" + device.getKey() + ":-")
+				} else { 
+					logger.log (Level.WARNING,"No FM Frequency given " + command)
+				}
+				break;
+			
+			case "AM" :
+				if (command.getExtra2Info() != "")  {
+					returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'FM" + command.getExtra2Info()	)
+					break;
+
+				} else { 
+					logger.log (Level.WARNING,"No AM Frequency given " + command)
+				}
+				break;
+				
+			case "WX" :
+				if (command.getExtra2Info() != "")  {
+					returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'AM" + command.getExtra2Info()	)
+					break;
+
+				} else { 
+					logger.log (Level.WARNING,"No AM Frequency given " + command)
+				}
+				
+			case "AUX" :
+				if (command.getExtra2Info() != "")  {
+					returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'WX" + command.getExtra2Info()	)
+					break;
+
+				} else { 
+					logger.log (Level.WARNING,"No WX Frequency given " + command)
+				}
+				
+			default:
+				logger.log (Level.WARNING,"No Frequency type given " + command)
+			
 			}
 		}
 		
-		
-		// To change the input source the format will be AU_SRC:zone:src_val
-		// The names of each input channel are listed in a catalogue that has been tied to AUDIO_INPUTS at the start of the model
-		
-		if (command.getCommandCode() == "src") {
-			
-				String newSrc = getCatalogueValue (command.getExtraInfo(), "AUDIO_INPUTS", device )
-			
-				returnWrapper.addCommOutput ("AU_SRC:" + device.getKey() + ":" + newSrc		)		 
+		if (command.getCommandCode() == "preset" && command.getExtraInfo() != "" ) {
+			returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'PRESET" + command.getExtraInfo() )
 		}
-	}
+		else { 
+			logger.log (Level.WARNING,"No preset given " + command)
+		}
 
 
 }
