@@ -7,7 +7,6 @@ import java.util.logging.Level
 import au.com.BI.Config.ParameterException
 import au.com.BI.Device.DeviceType
 import au.com.BI.Audio.Audio
-import au.com.BI.AV.AV
 
 
 
