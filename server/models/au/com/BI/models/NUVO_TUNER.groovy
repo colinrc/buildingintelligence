@@ -10,6 +10,7 @@ import au.com.BI.Audio.Audio
 
 
 
+
 class NUVO_TUNER extends GroovyModel {
 
 	// Our audio device expects 2 characters to specify the zone 
@@ -44,7 +45,7 @@ class NUVO_TUNER extends GroovyModel {
 		// Process string from the device; there can be two AUDIO devices; A and B
 		// eg. 	#T’t’PRESETnn,”xyz”
 	
-		def  theTuner = command.subString (3,4) 		
+		def theTuner = command.subString (3,4) 		
 		def String toMatch = command.subString (5) 
 
 		def theAudioDevice = configHelper.getControlledItem (theTuner)
@@ -202,6 +203,6 @@ class NUVO_TUNER extends GroovyModel {
 		else { 
 			logger.log (Level.WARNING,"No preset given " + command)
 		}
-
+	}
 
 }
