@@ -19,6 +19,9 @@ class NUVO_TUNER extends GroovyModel {
 	String appendToSentStrings = "\n"
 	boolean checksumRequired = false
 	
+	def freqType = ""
+	def frequency = ""
+	
 	NUVO_TUNER () {
 		super()
 		
@@ -44,9 +47,9 @@ class NUVO_TUNER extends GroovyModel {
 		
 		// Process string from the device; there can be two AUDIO devices; A and B
 		// eg. 	#TÕtÕPRESETnn,ÓxyzÓ
-	
-		def theTuner = command.subString (3,4) 		
-		def String toMatch = command.subString (5) 
+		
+		def theTuner = command.substring(3,4)
+		def String toMatch = command.substring(5) 
 
 		def theAudioDevice = configHelper.getControlledItem (theTuner)
 		if (theAudioDevice == null) {
@@ -66,37 +69,38 @@ class NUVO_TUNER extends GroovyModel {
 			switch (freqString) {
 			//#T't'ON,FM103.5
 			case "FM" :
-				def freqType = "FM"
-				def frequency = toMatch.substring (5)
+				freqType = "FM"
+				frequency = toMatch.substring (5)
 				break;
 			//#T't'ON,AM550
 			case "AM" :
-				def freqType = "AM"
-				def frequency = toMatch.substring (5)
+				freqType = "AM"
+				frequency = toMatch.substring (5)
 				break;
 			//#T't'ON,WX1
 			case "WX" :
-				def freqType = "WX"
-				def frequency = toMatch.substring (5)
+				freqType = "WX"
+				frequency = toMatch.substring (5)
 				break;
 			//#T't'ON,AUX
 			case "AU" :
-				def freqType = "AUX"
-				def frequency = "01"
+				freqType = "AUX"
+				frequency = "01"
 				break;
 			}
 			// generate command for flash to show that the tuner is on
-			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "on" , freqType , frequency) )	
+			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "on") )
+			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "tune" , freqType , frequency, "" , "" , "") )	
 			commandFound = true
 		}
 
 
 		if (!commandFound && toMatch.startsWith("PRESET")){
 			// #TÕtÕPRESETnn,ÓxyzÓ
-			def presetNumber = toMatch.subString (6,8)
-			def String presetDesc = toMatch.subString (10)
+			def presetNumber = toMatch.substring (6,8)
+			def String presetDesc = toMatch.substring (10)
 			
-			if (presetDesc.length() > 1) presetDesc  = presetDesc.subString (presetDesc.length()-1) // remove the last double quote
+			if (presetDesc.length() > 1) presetDesc  = presetDesc.substring (presetDesc.length()-1) // remove the last double quote
 			
 			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "preset" , presetNumber , presetDesc) )	
 			commandFound = true
@@ -104,9 +108,9 @@ class NUVO_TUNER extends GroovyModel {
 
 		if (!commandFound && toMatch.startsWith("RDSPSN")){
 			// #TÕtÕRDSPSNÓxyzÓ
-			def String rdspsnString = toMatch.subString (7)
+			def String rdspsnString = toMatch.substring (7)
 			
-			if (rdspsnString.length() > 1) rdspsnString  = rdspsnString.subString (rdspsnString.length()-1) // remove the last double quote
+			if (rdspsnString.length() > 1) rdspsnString  = rdspsnString.substring (rdspsnString.length()-1) // remove the last double quote
 			
 			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "RDSPSN" , rdspsnString) )	
 			commandFound = true
@@ -114,9 +118,9 @@ class NUVO_TUNER extends GroovyModel {
 		
 		if (!commandFound && toMatch.startsWith("RDSRT")){
 			// #TÕtÕRDSRTÓxyzÓ
-			def String rdsrtString = toMatch.subString (6)
+			def String rdsrtString = toMatch.substring (6)
 			
-			if (rdsrtString.length() > 1) rdsrtString  = rdsrtString.subString (rdsrtString.length()-1) // remove the last double quote
+			if (rdsrtString.length() > 1) rdsrtString  = rdsrtString.substring (rdsrtString.length()-1) // remove the last double quote
 			
 			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "RDSRT" , rdsrtString) )	
 			commandFound = true
@@ -124,9 +128,9 @@ class NUVO_TUNER extends GroovyModel {
 		
 		if (!commandFound && toMatch.startsWith("FREQDESC")){
 			// #TÕtÕFREQDESCÓxyzÓ
-			def String descString = toMatch.subString (9)
+			def String descString = toMatch.substring (9)
 			
-			if (descString.length() > 1) descString  = descString.subString (descString.length()-1) // remove the last double quote
+			if (descString.length() > 1) descString  = descString.substring (descString.length()-1) // remove the last double quote
 			
 			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "FREQDESC" , descString) )	
 			commandFound = true
