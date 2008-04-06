@@ -17,16 +17,14 @@ class NUVO_TUNER extends GroovyModel {
 	int keyPadding = 2;
 	String name = "NUVO_TUNER"
 	String appendToSentStrings = "\n"
+	String version = "1.0"
 	boolean checksumRequired = false
 	
-	def freqType = ""
-	def frequency = ""
+
 	
 	NUVO_TUNER () {
 		super()
 		
-
-		// configHelper.addParameterBlock  "AUDIO_INPUTS",DeviceModel.MAIN_DEVICE_GROUP,"Audio Source"
 	}
 	
 	public void doStartup(ReturnWrapper returnWrapper) {
@@ -50,8 +48,10 @@ class NUVO_TUNER extends GroovyModel {
 		
 		def theTuner = command.substring(3,4)
 		def String toMatch = command.substring(5) 
-
 		def theAudioDevice = configHelper.getControlledItem (theTuner)
+		def freqType = ""
+		def frequency = ""
+		
 		if (theAudioDevice == null) {
 			logger.log (Level.WARNING,"The tuner " + theTuner + " was not specified in the configuration file")
 			return
@@ -90,7 +90,7 @@ class NUVO_TUNER extends GroovyModel {
 			}
 			// generate command for flash to show that the tuner is on
 			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "on") )
-			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "tune" , freqType , frequency, "" , "" , "") )	
+			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "tune" , freqType , frequency , "" , "" , "") )	
 			commandFound = true
 		}
 
@@ -100,17 +100,17 @@ class NUVO_TUNER extends GroovyModel {
 			def presetNumber = toMatch.substring (6,8)
 			def String presetDesc = toMatch.substring (10)
 			
-			if (presetDesc.length() > 1) presetDesc  = presetDesc.substring (presetDesc.length()-1) // remove the last double quote
+			if (presetDesc.length() > 1) presetDesc  = presetDesc.substring (0,presetDesc.length()-1) // remove the last double quote
 			
-			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "preset" , presetNumber , presetDesc) )	
+			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "preset" , presetNumber , presetDesc) )
 			commandFound = true
 		}
 
 		if (!commandFound && toMatch.startsWith("RDSPSN")){
-			// #TÕtÕRDSPSNÓxyzÓ
+			// #TÕtÕRDSPSNÓstringÓ
 			def String rdspsnString = toMatch.substring (7)
 			
-			if (rdspsnString.length() > 1) rdspsnString  = rdspsnString.substring (rdspsnString.length()-1) // remove the last double quote
+			if (rdspsnString.length() > 1) rdspsnString  = rdspsnString.substring (0,rdspsnString.length()-1) // remove the last double quote
 			
 			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "RDSPSN" , rdspsnString) )	
 			commandFound = true
@@ -120,7 +120,7 @@ class NUVO_TUNER extends GroovyModel {
 			// #TÕtÕRDSRTÓxyzÓ
 			def String rdsrtString = toMatch.substring (6)
 			
-			if (rdsrtString.length() > 1) rdsrtString  = rdsrtString.substring (rdsrtString.length()-1) // remove the last double quote
+			if (rdsrtString.length() > 1) rdsrtString  = rdsrtString.substring (0,rdsrtString.length()-1) // remove the last double quote
 			
 			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "RDSRT" , rdsrtString) )	
 			commandFound = true
@@ -130,7 +130,7 @@ class NUVO_TUNER extends GroovyModel {
 			// #TÕtÕFREQDESCÓxyzÓ
 			def String descString = toMatch.substring (9)
 			
-			if (descString.length() > 1) descString  = descString.substring (descString.length()-1) // remove the last double quote
+			if (descString.length() > 1) descString  = descString.substring (0,descString.length()-1) // remove the last double quote
 			
 			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "FREQDESC" , descString) )	
 			commandFound = true
@@ -169,7 +169,7 @@ class NUVO_TUNER extends GroovyModel {
 			
 			case "AM" :
 				if (command.getExtra2Info() != "")  {
-					returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'FM" + command.getExtra2Info()	)
+					returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'AM" + command.getExtra2Info()	)
 					break;
 
 				} else { 
@@ -179,21 +179,16 @@ class NUVO_TUNER extends GroovyModel {
 				
 			case "WX" :
 				if (command.getExtra2Info() != "")  {
-					returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'AM" + command.getExtra2Info()	)
-					break;
-
-				} else { 
-					logger.log (Level.WARNING,"No AM Frequency given " + command)
-				}
-				
-			case "AUX" :
-				if (command.getExtra2Info() != "")  {
 					returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'WX" + command.getExtra2Info()	)
 					break;
 
 				} else { 
 					logger.log (Level.WARNING,"No WX Frequency given " + command)
 				}
+				
+			case "AUX" :
+				returnWrapper.addCommOutput  ("*T'" + device.getKey() + "'AUX" )
+				break;
 				
 			default:
 				logger.log (Level.WARNING,"No Frequency type given " + command)
