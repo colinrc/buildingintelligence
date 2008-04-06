@@ -89,6 +89,7 @@ public class PollDevice extends Thread {
 					}
 				}
 				else {
+					int count = 0;
 
 					for (Audio nextDevice:audioDeviceQueue){
 						String zoneKey = (nextDevice).getKey();
@@ -144,6 +145,13 @@ public class PollDevice extends Thread {
 						} catch (CommsFail e1) {
 							logger.log(Level.WARNING, "Communication failed polling Tutondo " + e1.getMessage());
 						}
+						if (count %3 == 0) {
+							try {
+								Thread.sleep (10); // give the GC100 time to clear itself
+							} catch (InterruptedException ie) {}
+
+						}
+						count ++;
 						
 					}
 			}

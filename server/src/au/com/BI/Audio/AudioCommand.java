@@ -37,29 +37,6 @@ public class AudioCommand extends Command implements CommandInterface {
 	{
 		super (key, commandCode,user,extraInfo);
 	}
-
-
-
-	/** 
-	 * Returns the XML representation of this command 
-	 */
-	public Element getXMLCommand () {
-		if (displayName == null || commandCode == null){ 
-			return null;
-		}
-		
-		Element element = new Element ("CONTROL");
-		element.setAttribute ("KEY", displayName);
-		element.setAttribute ("COMMAND", commandCode);
-		if (extraInfo != null) {
-			element.setAttribute ("EXTRA", extraInfo.toString());
-		}
-		else {
-			element.setAttribute ("EXTRA", "");
-		}
-			
-		return element;
-	}
 	
 	public boolean cacheAllCommands () {
 		return true;

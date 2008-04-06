@@ -1,3 +1,13 @@
+== 6/Apr/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b82.zip V1.6-b82]  ==
+
+''' All audio '''
+
+Resolved an issue where flash AUDIO commands would only include the first extra field.
+
+''' Tutondo '''
+
+Added a delay within the poll to help ensure the GC100 has time to clear it's buffer  [ticket:695]
+
 == 27/Mar/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b81.zip V1.6-b81]  ==
 
 ''' Scripts '''
