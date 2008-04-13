@@ -26,7 +26,7 @@ public class PollDevice extends Thread {
 	protected long pollValue;
 	protected TutondoHelper tutondoHelper;
 	protected ConfigHelper configHelper;
-	protected boolean protocol = false; // false is protocol A
+	protected volatile boolean protocol = false; // false is protocol A
 	
 	
 	/**

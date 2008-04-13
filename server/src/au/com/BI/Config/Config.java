@@ -44,7 +44,6 @@ public class Config {
 		public JRobinParser jRobinParser = null;
 		protected RawHelper rawHelper;
 		protected Map <String,String>modelRegistry = null;
-		protected Map <String,GroovyRunBlock>groovyModels = null;
 		protected MacroHandler macroHandler = null;
 		protected au.com.BI.Calendar.Model calendarModel = null;
 		protected Bootstrap bootstrap = null;
@@ -318,11 +317,10 @@ public class Config {
 		                        deviceModel = (DeviceModel) deviceModelClass.
 		                            newInstance();
 			          } else {
-			        	  if (this.groovyModels.containsKey(deviceConfigName)){
+			        	  if (groovyModelHandler.containsModel (deviceConfigName)){
 			        		  logger.log(Level.FINE, "Setting up groovy device . "+ deviceConfigName);
-			        		  GroovyRunBlock groovyRunBlock = groovyModels.get(deviceConfigName);
-			        		  if (groovyRunBlock == null) return null;
-			        		  deviceModel = groovyModelHandler.setupGroovyModel(groovyRunBlock,description);
+			        		  deviceModel = groovyModelHandler.setupGroovyModel(deviceConfigName,description);
+
 			        	  } else {
 			        		  logger.log(Level.SEVERE, "Device support was requested that has not been implemented yet. "+ deviceConfigName);
 			        	  }
@@ -665,14 +663,6 @@ public class Config {
 
 	public void setModelRegistry(Map <String,String>modelRegistry) {
 		this.modelRegistry = modelRegistry;
-	}
-
-	public Map <String,GroovyRunBlock>getGroovyModels() {
-		return groovyModels;
-	}
-
-	public void setGroovyModels(Map <String,GroovyRunBlock>groovyModels) {
-		this.groovyModels = groovyModels;
 	}
 
 	public MacroHandler getMacroHandler() {

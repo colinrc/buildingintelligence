@@ -75,14 +75,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		
 		synchronized (comms) {
 			comms.clearCommandQueue();
-
+		}
 		
 			if (pollDevice != null) pollDevice.setRunning(false);
 	
 			pollDevice = new PollDevice ();
 			pollDevice.setComms(comms);
 			pollDevice.setProtocol(protocolB);
-		}
 		for (DeviceType audioDevice: configHelper.getAllControlledDeviceObjects()){
 			try {
 				pollDevice.addAudioDevice((Audio)audioDevice);
@@ -240,7 +239,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 								try { 
 									comms.addCommandToQueue (audioCommsCommand);
 								} catch (CommsFail e1) {
-									throw new CommsFail ("Communication failed communitating with Tutondo " + e1.getMessage());
+									throw new CommsFail ("Communication failed communicating with Tutondo " + e1.getMessage());
 								} 
 							}
 							logger.log (Level.FINEST,"Queueing audio command for " + (String)audioCommsCommand.getExtraInfo());
@@ -301,19 +300,19 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					// For tutondo this will always be a single byte status code.
 				lastCommandSent = (CommsCommand)comms.getLastCommandSent();
 				lastActionType = lastCommandSent.getActionType();
-
-				if (tutondoResponse.length() == 0) {
-					logger.log(Level.WARNING,"Received zero length string from tutondo " + lastCommandSent.getKey());
-					comms.gotFeedback();
-					comms.sendNextCommand();
-					return;
-				}
-				tutondoCode = (byte)tutondoResponse.charAt(0);
-				logger.log(Level.FINEST, "Received byte " + String.valueOf(tutondoCode) + " from tutondo for zone " + lastCommandSent.getKey());
-				zone = lastCommandSent.getKey();				
-				audioDevice = (Audio)configHelper.getControlledItem(zone);
-				if (audioDevice == null) return;
 			}
+
+			if (tutondoResponse.length() == 0) {
+				logger.log(Level.WARNING,"Received zero length string from tutondo " + lastCommandSent.getKey());
+				comms.gotFeedback();
+				comms.sendNextCommand();
+				return;
+			}
+			tutondoCode = (byte)tutondoResponse.charAt(0);
+			logger.log(Level.FINEST, "Received byte " + String.valueOf(tutondoCode) + " from tutondo for zone " + lastCommandSent.getKey());
+			zone = lastCommandSent.getKey();				
+			audioDevice = (Audio)configHelper.getControlledItem(zone);
+			if (audioDevice == null) return;
 
 			StateOfZone currentState;
 			
@@ -323,9 +322,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				currentState = new StateOfZone();
 			
 			if (lastActionType == CommDevice.TutondoState ) {
-				comms.acknowledgeCommand(CommDevice.TutondoState,zone, true);
-				comms.gotFeedback();
-				if (!protocolB) comms.sendNextCommand();
+				if (!protocolB) {
+					comms.acknowledgeCommand(CommDevice.TutondoState,zone, true);
+					comms.gotFeedback();
+					comms.sendNextCommand();
+				} else {
+					comms.acknowledgeCommand(CommDevice.TutondoState, true);
+					comms.gotFeedback();					
+				}
 				commandMatched = true;
 				if ((tutondoCode & 2) == 2) {
 					currentState.setPower("on");
@@ -343,9 +347,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 			
 			if (lastActionType == CommDevice.TutondoVolume) {
-				comms.acknowledgeCommand(CommDevice.TutondoVolume,zone,true);
-				comms.gotFeedback();
-				if (!protocolB) comms.sendNextCommand();
+				if (!protocolB) {
+					comms.acknowledgeCommand(CommDevice.TutondoVolume,zone,true);
+					comms.gotFeedback();
+					comms.sendNextCommand();
+				} else {
+					comms.acknowledgeCommand(CommDevice.TutondoVolume,true);
+					comms.gotFeedback();
+				}
 				logger.log(Level.FINEST,"Received feedback for tutondo volume");
 				commandMatched = true;
 				String volume = String.valueOf(tutondoCode);
@@ -362,9 +371,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 
 			if (lastActionType == CommDevice.TutondoPrograms) {
-				comms.acknowledgeCommand(CommDevice.TutondoPrograms,zone, true);
-				comms.gotFeedback();
-				if (!protocolB) comms.sendNextCommand();
+				if (!protocolB) {
+					comms.acknowledgeCommand(CommDevice.TutondoPrograms,zone, true);
+					comms.gotFeedback();
+					comms.sendNextCommand();
+				} else {
+					comms.acknowledgeCommand(CommDevice.TutondoPrograms, true);
+					comms.gotFeedback();
+				}
 				logger.log(Level.FINEST,"Received feedback for tutondo src");
 				commandMatched = true;
 				String srcCode = String.valueOf(tutondoCode);

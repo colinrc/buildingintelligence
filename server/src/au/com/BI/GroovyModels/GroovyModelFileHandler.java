@@ -23,7 +23,7 @@ public class GroovyModelFileHandler {
 
 
   
-        public void loadGroovyModelList(String directoryName, Map <String,GroovyRunBlock>GroovyModelRunBlockList) throws ConfigError {
+        public void loadGroovyModelList(String directoryName, Map <String,GroovyRunBlock>groovyModelRunBlockMap) throws ConfigError {
                 // try {
 
 	                
@@ -45,12 +45,12 @@ public class GroovyModelFileHandler {
 	                for (int i = 0; i < stFiles.length; i += 1) {
 	                	String name = directoryName + stFiles[i];
 						// String name = stFiles[i].substring(0, stFiles[i].length() - 3);
-						synchronized (GroovyModelRunBlockList) {
+						synchronized (groovyModelRunBlockMap) {
 							GroovyRunBlock GroovyModelRunBlock = null;
-							if (!GroovyModelRunBlockList.containsKey(name)){
+							if (!groovyModelRunBlockMap.containsKey(name)){
 								GroovyModelRunBlock = new GroovyRunBlock();
 								GroovyModelRunBlock.setFileName(name);
-								GroovyModelRunBlockList.put(name,GroovyModelRunBlock);
+								groovyModelRunBlockMap.put(name,GroovyModelRunBlock);
 							}
 						}
 	                }

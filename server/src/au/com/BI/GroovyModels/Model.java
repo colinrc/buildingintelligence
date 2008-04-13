@@ -37,7 +37,7 @@ public class Model
         protected boolean control = true;
         protected String parameter;
         protected GroovyModelFileHandler groovyModelFileHandler;
-		protected ConcurrentHashMap<String,GroovyRunBlock> groovyModelFiles = null;
+		protected ConcurrentHashMap<String,GroovyRunBlock> groovyModelFilesMap = null;
 		protected ConcurrentHashMap<String,GroovyRunBlock> groovyModelClasses = null;
 		protected GroovyClassLoader gcl;
 
@@ -46,7 +46,7 @@ public class Model
                 super();
                 this.setName("GROOVY_MODEL_HANDLER");
                 groovyModelFileHandler = new GroovyModelFileHandler();
-                groovyModelFiles = new ConcurrentHashMap <String,GroovyRunBlock>(30); 
+                groovyModelFilesMap = new ConcurrentHashMap <String,GroovyRunBlock>(30); 
                 groovyModelClasses = new ConcurrentHashMap <String,GroovyRunBlock>(30); 
                 this.setConnected(true);
                 this.setAutoReconnect(false);
@@ -103,7 +103,7 @@ public class Model
 		} 
 
 
-        public void loadGroovyModels(Controller controller,List<DeviceModel>deviceModels) {
+        public void loadGroovyModels(List<DeviceModel>groovyDeviceModels) {
                 int j = 0;
                 logger.log(Level.FINE,"Loading Groovy Models");
 
@@ -111,11 +111,11 @@ public class Model
 
 				//get the script files and prepare for parsing
                 try {
-	                groovyModelFileHandler.loadGroovyModelList( "./models/",this.groovyModelFiles);
+	                groovyModelFileHandler.loadGroovyModelList( "./models/",this.groovyModelFilesMap);
 	            	
-	                for (GroovyRunBlock runBlock: groovyModelFiles.values()) {
+	                for (GroovyRunBlock runBlock: groovyModelFilesMap.values()) {
 	                	try {
-	                		registerGroovyModel ( controller,runBlock, deviceModels);
+	                		registerGroovyModel ( runBlock, groovyDeviceModels);
 	                	} catch (ConfigError ex){
 	                		logger.log(Level.WARNING, "There was an error loading configuration for " + runBlock.getFileName() + " " + ex.getMessage());
 	                	} catch (GroovyModelError ex){
@@ -123,13 +123,13 @@ public class Model
 	                	}
 	                }
 	                
-	                groovyModelFiles.clear();
+	                groovyModelFilesMap.clear();
 	                
-	                groovyModelFileHandler.loadGroovyModelList( "./models/au/com/BI/models/",this.groovyModelFiles);
+	                groovyModelFileHandler.loadGroovyModelList( "./models/au/com/BI/models/",this.groovyModelFilesMap);
 	
-	                for (GroovyRunBlock runBlock: groovyModelFiles.values()) {
+	                for (GroovyRunBlock runBlock: groovyModelFilesMap.values()) {
 	                	try {
-	                		registerGroovyModel ( controller,runBlock, deviceModels);
+	                		registerGroovyModel ( runBlock, groovyDeviceModels);
 	                	} catch (ConfigError ex){
 	                		logger.log(Level.WARNING, "There was an error loading configuration for " + runBlock.getFileName() + " " + ex.getMessage());
 	                	} catch (GroovyModelError ex){
@@ -143,7 +143,7 @@ public class Model
 	            }
         }
 
-        public void registerGroovyModel (Controller controller, GroovyRunBlock groovyRunBlock, List <DeviceModel>deviceModels) throws ConfigError, GroovyModelError{
+        protected  void registerGroovyModel ( GroovyRunBlock groovyRunBlock, List <DeviceModel>deviceModels) throws ConfigError, GroovyModelError{
         String completeFile = "";
         String fileName = groovyRunBlock.getFileName();
         try {
@@ -178,7 +178,6 @@ public class Model
             if (groovyModelClasses.containsKey(modelName)){
             	logger.log (Level.INFO,"Not registering groovy model " + modelName + " from file " + fileName + " as a model by that name already exists, check for a the same name in a jar file or Groovy source");
             } else {
-	            controller.setupModel(myModel);
 	            deviceModels.add(myModel);
 	            versionManager.setVersion(modelName,  myModel.getVersion());
 	            logger.log(Level.FINE, "Registering model " + modelName + " version " + myModel.getVersion() );
@@ -201,10 +200,14 @@ public class Model
         }
     }
         
-        public GroovyModel setupGroovyModel(GroovyRunBlock groovyRunBlock, String description)  throws IllegalAccessException,InstantiationException {
+        public GroovyModel setupGroovyModel(String deviceConfigName, String description)  throws IllegalAccessException,InstantiationException {
+        	
+			GroovyRunBlock groovyRunBlock = this.groovyModelClasses.get(deviceConfigName);
+			if (groovyRunBlock == null) return null;
+			  
 			Object model = groovyRunBlock.getTheClass().newInstance();
 			GroovyModel myModel = (GroovyModel) model;
-			//String loggerName = myModel.getClass().getPackage().getName();
+				//String loggerName = myModel.getClass().getPackage().getName();
 			//Logger newLogger = Logger.getLogger(loggerName);
 			myModel.setLogger (Logger.getLogger(myModel.getClass().getName()));
 			return myModel;
@@ -237,5 +240,17 @@ public class Model
 		public void setGroovyModelClasses(
 				ConcurrentHashMap<String, GroovyRunBlock> groovyModelClasses) {
 			this.groovyModelClasses = groovyModelClasses;
+		}
+
+		/**
+		 * @param deviceConfigName
+		 * @return If the groovy device has been parsed and loaded
+		 */
+		public boolean containsModel(String deviceConfigName) {
+			if (this.groovyModelClasses.containsKey(deviceConfigName)){
+				return true;
+			} else {
+				return false;
+			}
 		}
 }

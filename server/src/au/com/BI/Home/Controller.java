@@ -219,7 +219,13 @@ public class Controller {
 		this.setupModel(groovyModelHandler);
 		deviceModels.add(groovyModelHandler);
 		groovyModelHandler.setInstanceID(deviceModels.size() - 1);
-		groovyModelHandler.loadGroovyModels(this, deviceModels);
+		List <DeviceModel>groovyModels = new LinkedList<DeviceModel>();
+		groovyModelHandler.loadGroovyModels( groovyModels);
+		for (DeviceModel eachGroovyModel: groovyModels ){
+			
+			setupModel(eachGroovyModel);
+			deviceModels.add(eachGroovyModel);
+		}
 		
 		if (!loadMacros(true)&& logger != null) {
 			logger.log(Level.WARNING, "Could not read user macro file");
@@ -314,7 +320,6 @@ public class Controller {
 		config.setAlarmLogging(alarmLogging);
 		config.setAddressBook(addressBook);
 		config.setLabelMgr(labelMgr);
-		config.setGroovyModels(this.groovyModelHandler.getGroovyModelClasses());
 		config.setGroovyModelHandler(groovyModelHandler);
 		boolean commandDone;
 
