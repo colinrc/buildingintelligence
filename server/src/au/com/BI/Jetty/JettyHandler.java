@@ -37,7 +37,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     org.mortbay.jetty.Server server = null,client_server = null;
     Logger logger;
     Security security = null;
-    public static final int timeout = 30; // 1 minute timeout for a session;
+    public static final int timeout = 1; // 1 minute timeout for a session;
     
     public JettyHandler(Security security) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -180,7 +180,10 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
            updateContext.setAttribute("VersionManager",this.getVersionManager());
            updateContext.setAttribute("WebClientCount",new Integer(0));
 
-            updateContextSessionMgr.addEventListener(new SessionCounter());
+           SessionCounter sessionCounter = new SessionCounter ();
+  
+            updateContextSessionMgr.addEventListener(sessionCounter);
+            security.setSessionCounter (sessionCounter);
             
             SecurityHandler updateMgrSec = updateContext.getSecurityHandler();
             updateMgrSec.setUserRealm(webPass);

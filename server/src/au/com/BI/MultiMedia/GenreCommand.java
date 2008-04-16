@@ -46,7 +46,7 @@ public class GenreCommand implements CommandInterface {
 
 	public CommandInterface clone() throws CloneNotSupportedException {
 
-		CommandInterface newCopy;
+		GenreCommand newCopy;
 		try {
 			newCopy = this.getClass().newInstance();
 			// Command newCopy = new Command ();
@@ -58,6 +58,7 @@ public class GenreCommand implements CommandInterface {
 			newCopy.setDisplayName(this.getDisplayName());
 			newCopy.setTargetDeviceID(this.getTargetDeviceID());
 			newCopy.setTargetDeviceModel(this.getTargetDeviceModel());
+			newCopy.setGenres((LinkedList<Genre>)genres.clone());
 			return newCopy;
 		} catch (InstantiationException e) {
 			throw new CloneNotSupportedException("Cannot create new instance");

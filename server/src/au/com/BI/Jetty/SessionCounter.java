@@ -18,21 +18,25 @@ import javax.servlet.http.*;
 
 public class SessionCounter implements HttpSessionListener  {
 
-	private int currentSessionCount = 0;
+	private Integer currentSessionCount = 0;
 
 	private ServletContext context = null;
 
 	public void sessionCreated(HttpSessionEvent event) {
 
-		currentSessionCount++;
-
-		if (context == null) {
-			storeInServletContext(event);
+		synchronized (currentSessionCount){
+			currentSessionCount++;
+	
+			if (context == null) {
+				storeInServletContext(event);
+			}
 		}
 	}
 
 	public void sessionDestroyed(HttpSessionEvent event) {
-		currentSessionCount--;
+		synchronized (currentSessionCount){
+			currentSessionCount--;
+		}
 	}
 
 	/** The number of sessions currently in memory. */

@@ -1,8 +1,9 @@
 package au.com.BI.MultiMedia.SlimServer.Commands;
 
+
 import au.com.BI.Util.Type;
 
-public class PlayListCommand extends Type {
+public class PlayListCommand  extends Type {
 	
 	public static final PlayListCommand LOAD = new PlayListCommand("load", "LOAD");
 	public static final PlayListCommand ADD = new PlayListCommand("add","ADD");
@@ -20,4 +21,5 @@ public class PlayListCommand extends Type {
 	public static PlayListCommand getByDescription(String description) {
 		return((PlayListCommand)PlayListCommand.getByDescription(PlayListCommand.class, description));
 	}
+	
 }

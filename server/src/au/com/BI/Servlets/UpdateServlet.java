@@ -274,9 +274,7 @@ public class UpdateServlet extends HttpServlet {
  
     	Security security = (Security)context.getAttribute("Security");
     	
-		SessionCounter sessionCounter = (SessionCounter)context.getAttribute("sessionCounter");
-    	int numberClients = sessionCounter.getCurrentSessionCount();
-    	if (!security.allowWebClient(numberClients)){
+    	if (!security.allowWebClient()){
     		throw new TooManyClientsException ("You have requested more clients than you have licenses for, please contact your integrator");
     	}
         AddressBook addressBook = (AddressBook)context.getAttribute("AddressBook");

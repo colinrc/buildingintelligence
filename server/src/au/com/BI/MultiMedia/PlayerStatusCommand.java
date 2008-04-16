@@ -36,7 +36,7 @@ public class PlayerStatusCommand implements CommandInterface {
 
 	public CommandInterface clone() throws CloneNotSupportedException {
 
-		CommandInterface newCopy;
+		PlayerStatusCommand  newCopy;
 		try {
 			newCopy = this.getClass().newInstance();
 			// Command newCopy = new Command ();
@@ -48,6 +48,7 @@ public class PlayerStatusCommand implements CommandInterface {
 			newCopy.setDisplayName(this.getDisplayName());
 			newCopy.setTargetDeviceID(this.getTargetDeviceID());
 			newCopy.setTargetDeviceModel(this.getTargetDeviceModel());
+			newCopy.setPlayerstatus((PlayerStatusReply)playerstatus.clone());
 			return newCopy;
 		} catch (InstantiationException e) {
 			throw new CloneNotSupportedException("Cannot create new instance");

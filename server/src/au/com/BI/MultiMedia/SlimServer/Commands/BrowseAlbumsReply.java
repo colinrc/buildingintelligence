@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import au.com.BI.MultiMedia.Album;
 
-public class BrowseAlbumsReply extends SlimServerCommand {
+public class BrowseAlbumsReply  extends SlimServerCommand {
 	private int count;
 	private boolean rescan;
 	private LinkedList<Album> albums;

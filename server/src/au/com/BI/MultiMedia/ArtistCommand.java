@@ -46,7 +46,7 @@ public class ArtistCommand implements CommandInterface {
 
 	public CommandInterface clone() throws CloneNotSupportedException {
 
-		CommandInterface newCopy;
+		ArtistCommand newCopy;
 		try {
 			newCopy = this.getClass().newInstance();
 			// Command newCopy = new Command ();
@@ -58,6 +58,7 @@ public class ArtistCommand implements CommandInterface {
 			newCopy.setDisplayName(this.getDisplayName());
 			newCopy.setTargetDeviceID(this.getTargetDeviceID());
 			newCopy.setTargetDeviceModel(this.getTargetDeviceModel());
+			newCopy.setAlbums((LinkedList<Artist>)artists.clone());
 			return newCopy;
 		} catch (InstantiationException e) {
 			throw new CloneNotSupportedException("Cannot create new instance");
