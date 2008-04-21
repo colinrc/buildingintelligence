@@ -113,7 +113,6 @@ public class FlashControlListener extends Thread {
 			    Socket flashConnection = iPPort.accept();
 	                    if (flashConnection.isConnected()){
 	                        addTheHandler(flashConnection,false);
-	                        numberFlashClients ++;
 	                    }
 			    
 			} catch (ConnectionFail conn){
@@ -130,6 +129,7 @@ public class FlashControlListener extends Thread {
 					    	flashClientHandler.close();
 					    	addressBook.removeByID(flashClientHandler.getID());
 					    	allControllers.remove();
+					    	numberFlashClients--;
 							ClientCommand clientCommand = clientCommandFactory.buildListNamesCommand();
 							if (clientCommand != null) {
 									commandList.add(clientCommand);
@@ -140,15 +140,15 @@ public class FlashControlListener extends Thread {
 					    	if (System.currentTimeMillis() - flashClientHandler.getConnectionTime()  < 60*1000*3) {
 					    		recentConnection = true;
 							}
-							numberFlashClients ++;
+					    	numberFlashClients ++;
 					    }
 					}
 				
 			    }
 			    try {
-			    	if (!recentConnection) security.allowClient(numberFlashClients);
+			    	 security.allowClient(numberFlashClients);
 			    } catch (TooManyClientsException ex){
-			    	displayTooManyClients(numberFlashClients,ex);
+			    	if (!recentConnection) displayTooManyClients(numberFlashClients,ex);
 			    }
 			}
 	    }
