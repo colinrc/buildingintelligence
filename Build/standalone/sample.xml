@@ -94,6 +94,7 @@
 		<icon name="Logs" icon="notepad" func="openLogs" canOpen="" />
 		<icon name="Calendar" icon="calendar" func="openCalendar" canOpen="" />
 		<icon name="Control Panel" icon="gears" func="openControlPanel" canOpen="" />
+		<icon name="Logout" icon="door-open" func="webLogout" />
 		<icon name="Authenticate" icon="locked" func="openAuthentication" buttonBgColour="0xCC0000" buttonBorderColour="0xEE0000" />
 	</appsBar>
 	<calendar tabPosition="bottom">
@@ -172,6 +173,7 @@
 					<window>
 						<tab name="Lights &amp; Fan" icon="light-bulb">
 							<control name="Ground Floor Lights" key="ENSUITE_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
+							<control name="Test multi-key" keys="ENSUITE_LIGHT1,ENSUITE_LIGHT2" type="slider2" icons="light-bulb-off,light-bulb" />
 							<control name="Main Light" key="ENSUITE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
 							<control name="LV Light" key="ENSUITE_LV_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
 							<control name="Fan" key="ENSUITE_FAN" type="onOff" icons="fan-off,fan" />
@@ -456,6 +458,13 @@
 				<item type="button" label="off" command="off" extra="0" width="20" />
 				<item type="slider" command="on" extras="0,100" width="60" />
 				<item type="button" label="on" command="on" extra="100" extra2="40" extra3="0" width="20" />
+			</row>
+		</control>
+		<control type="slider2">
+			<row>
+				<item type="button" label="off" key="%key1%" command="off" extra="0" width="20" />
+				<item type="slider" command="on" extras="0,100" width="60" />
+				<item type="button" label="on" key="%key2%" command="on" extra="100" extra2="40" extra3="0" width="20" />
 			</row>
 		</control>
 		<control type="onOff">

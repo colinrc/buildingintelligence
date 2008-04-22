@@ -1844,6 +1844,14 @@ openAuthentication = function () {
 	}	
 }
 
+webLogout = function () {
+	if (_global.settings.serverProtocol == "https") {
+		var xml = new XML();
+		debug("HTTPS: /webclient/logout");
+		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/logout");
+	}
+}
+
 openControlPanel = function () {
 	var window_mc = showWindow({id:"controlPanel", width:"full", height:"full", title:"Control Panel", iconName:"gears", autoClose:false});
 	appsBar_mc.openControlPanel_mc.showHighlight();
@@ -3152,6 +3160,7 @@ screenLock = function () {
 	clearInterval(screenLockID);
 	screenLocked = true;
 	setAuthenticated(false);
+	webLogout();
 }
 
 screenSaver = function (mode) {

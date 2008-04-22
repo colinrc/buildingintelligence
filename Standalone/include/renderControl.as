@@ -556,7 +556,9 @@ attachButton = function (attachTo, control, buttonObj, name, depth, w, h) {
 	item_mc.addEventListener("release", item_mc);
 	
 	if (buttonObj.macro == undefined) {
-		if (buttonObj.key != undefined) {
+		if (control.keys) {
+			item_mc.key = control.keys[buttonObj.key.substr(4, buttonObj.key.length - 5) - 1];
+		} else if (buttonObj.key != undefined) {
 			item_mc.key = buttonObj.key;
 		} else {
 			item_mc.key = control.key;

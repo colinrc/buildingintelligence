@@ -232,11 +232,24 @@ defineWindow = function (window_xml, zone, room) {
 		
 		var controls = tabs[tab].childNodes;
 		for (var control=0; control<controls.length; control++) {
-			if (controls[control].attributes.key != undefined && _global.controls[controls[control].attributes.key] == undefined) _global.controls[controls[control].attributes.key] = {key:controls[control].attributes.key, zone:_global.zones[zone].attributes.name, room:_global.zones[zone].rooms[room].name, name:controls[control].attributes.name, storedStates:new Object()};
+			if (controls[control].attributes.key != undefined && _global.controls[controls[control].attributes.key] == undefined) {
+				_global.controls[controls[control].attributes.key] = {key:controls[control].attributes.key, zone:_global.zones[zone].attributes.name, room:_global.zones[zone].rooms[room].name, name:controls[control].attributes.name, storedStates:new Object()};
+			} else if (controls[control].attributes.keys != undefined) {
+				var keys = controls[control].attributes.keys.split(",");
+				for (var key=0; key<keys.length; key++) {
+					if (_global.controls[keys[key]] == undefined) {
+						_global.controls[keys[key]] = {key:keys[key], zone:_global.zones[zone].attributes.name, room:_global.zones[zone].rooms[room].name, name:controls[control].attributes.name, storedStates:new Object()};
+					}
+				}
+			}
 			//_global.controls[controls[control].attributes.key].storedStates["state"] = "on";
 			_global.zones[zone].rooms[room].window.tabs[tab].controls[control] = new Object();
 			for (var attrib in controls[control].attributes) {
-				_global.zones[zone].rooms[room].window.tabs[tab].controls[control][attrib] = controls[control].attributes[attrib];
+				if (attrib == "keys") {
+					_global.zones[zone].rooms[room].window.tabs[tab].controls[control][attrib] = controls[control].attributes[attrib].split(",");
+				} else {
+					_global.zones[zone].rooms[room].window.tabs[tab].controls[control][attrib] = controls[control].attributes[attrib];
+				}
 			}
 		}
 	}
