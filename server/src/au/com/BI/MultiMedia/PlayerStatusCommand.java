@@ -96,26 +96,22 @@ public class PlayerStatusCommand implements CommandInterface {
 	 * 
 	 * @return The requested field
 	 */
-	public String getValue(Fields commandField) {
-		/*
-		 * switch (commandField){ case COMMAND: return this.getCommandCode();
-		 * 
-		 * case KEY: return this.getKey();
-		 * 
-		 * case EXTRA: return this.getExtraInfo();
-		 * 
-		 * case EXTRA2: return this.getExtra2Info();
-		 * 
-		 * case EXTRA3: return this.getExtra3Info();
-		 * 
-		 * case EXTRA4: return this.getExtra4Info();
-		 * 
-		 * case EXTRA5: return this.getExtra5Info();
-		 * 
-		 * default: return "Unknown Field Requested"; }
-		 */
-		return "";
-	}
+
+		public String getValue(Fields commandField) {
+			  switch (commandField){ 
+			  
+				  case COMMAND: return this.getCommandCode();
+		
+				  case KEY: return this.getKey();
+				 case EXTRA: return "";
+				 case EXTRA2: return "";
+				 case EXTRA3: return "";
+				 case EXTRA4: return "";
+				 case EXTRA5: return "";
+				 
+				 default: return "Unknown Field Requested"; 
+			  }
+		}
 
 	public boolean isCommsCommand() {
 		return false;
@@ -253,7 +249,7 @@ public class PlayerStatusCommand implements CommandInterface {
 	}
 
 	public String getCommandCode() {
-		return "";
+		return "PlayerStatus";
 	}
 
 	public String getExtra2Info() {

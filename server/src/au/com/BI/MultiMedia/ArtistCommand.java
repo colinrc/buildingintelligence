@@ -108,24 +108,19 @@ public class ArtistCommand implements CommandInterface {
 	 * @return The requested field
 	 */
 	public String getValue(Fields commandField) {
-		/*
-		 * switch (commandField){ case COMMAND: return this.getCommandCode();
-		 * 
-		 * case KEY: return this.getKey();
-		 * 
-		 * case EXTRA: return this.getExtraInfo();
-		 * 
-		 * case EXTRA2: return this.getExtra2Info();
-		 * 
-		 * case EXTRA3: return this.getExtra3Info();
-		 * 
-		 * case EXTRA4: return this.getExtra4Info();
-		 * 
-		 * case EXTRA5: return this.getExtra5Info();
-		 * 
-		 * default: return "Unknown Field Requested"; }
-		 */
-		return "";
+		  switch (commandField){ 
+		  
+			  case COMMAND: return this.getCommandCode();
+	
+			  case KEY: return this.getKey();
+			 case EXTRA: return "";
+			 case EXTRA2: return "";
+			 case EXTRA3: return "";
+			 case EXTRA4: return "";
+			 case EXTRA5: return "";
+			 
+			 default: return "Unknown Field Requested"; 
+		  }
 	}
 
 	public boolean isCommsCommand() {
@@ -274,7 +269,7 @@ public class ArtistCommand implements CommandInterface {
 	}
 
 	public String getCommandCode() {
-		return null;
+		return "Artist";
 	}
 
 	public String getExtra2Info() {
