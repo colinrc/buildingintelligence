@@ -14,6 +14,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
+import au.com.BI.Jetty.SessionCounter;
+
 import Aladdin.*;
 
 
@@ -26,7 +28,7 @@ public class Security {
     public final int alarmModel = 3;
     public final int controllerModel = 4;
     
-    private  byte allowNumbers [] = {4,2};
+    private  byte allowNumbers [] = {2,2};
     // First byte is number of full clients
     // Second byte is number of post only clients
     
@@ -42,6 +44,7 @@ public class Security {
     
     Map <String,Boolean>fullClients;
     Map <String,Boolean>postOnlyClients;
+	private SessionCounter sessionCounter;
     
     public enum IPType {FullFunction,PostOnly,PWDOnly};
     
@@ -58,7 +61,7 @@ public class Security {
     /*
 	connected = true;
 	return ;
-  / */
+  */
     
     
 	InputStreamReader reader = new InputStreamReader(System.in);
@@ -111,7 +114,7 @@ public class Security {
 
 		lastFlashClients = clientCount;
 		try {
-		    if ((clientCount + lastWebCount ) > allowNumbers[0]) {
+		    if ((clientCount + sessionCounter.getCurrentSessionCount()  ) > allowNumbers[0]) {
 				throw new TooManyClientsException ("You have probably attempted to connect to the eLife server with more clients than you have purchased, if this problem persists please contact your integrator");
 		    } else {
 			return true;
@@ -126,11 +129,11 @@ public class Security {
     }
     
     
-    public final boolean allowWebClient(int clientCount) throws TooManyClientsException {
+    public final boolean allowWebClient() throws TooManyClientsException {
  
-		lastWebCount = clientCount;
+
 		try {
-		    if ((clientCount + lastFlashClients ) > allowNumbers[0]) {
+		    if ((lastFlashClients + sessionCounter.getCurrentSessionCount() ) > allowNumbers[0]) {
 				throw new TooManyClientsException ("You have probably attempted to connect to the eLife server with more clients than you have purchased, if this problem persists please contact your integrator");
 		    } else {
 			return true;
@@ -228,5 +231,14 @@ public class Security {
     	} else{
     		return 0;
     	}
-    }    
+    }
+
+	/**
+	 * @param sessionCounter
+	 */
+	public void setSessionCounter(SessionCounter sessionCounter) {
+		this.sessionCounter = sessionCounter;
+	}
+
+
 }

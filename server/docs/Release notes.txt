@@ -1,3 +1,17 @@
+== 29/Apr/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b83.zip V1.6-b83]  ==
+
+''' Groovy models '''
+
+Added a method to unit test groovy models.. See groovy model documentation for details. Implements [ticket:718]
+
+''' Security '''
+
+Improved counter of active sessions.
+
+''' Multimedia '''
+
+Improved compatability between Track lists , album lists etc. and web clients.
+
 == 6/Apr/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b82.zip V1.6-b82]  ==
 
 ''' All audio '''

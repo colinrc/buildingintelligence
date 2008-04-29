@@ -118,7 +118,8 @@ class Integra extends GroovyModel {
 	void buildOutputString(String rawCommand, ReturnWrapper returnWrapper){
 		if (ipProtocol){
 			// Integra is using IP protocol
-			returnWrapper.addCommOutput("ISCP" + '0x00'  + '0x00' + '0x00' + '0x10' +  Blocksize +  '0x01' + '0x0' + '0x0' + '0x0' + rawCommand.getBytes() + "\n");	
+			Byte [] lineToOutput = "ISCP".getBytes() + byte[]{0,0,0,0,0x10} + rawCommand.size()
+			returnWrapper.addCommOutput(  Blocksize +  '0x01' + '0x0' + '0x0' + '0x0' + rawCommand.getBytes() + "\n");	
 		} else {
 			// Serial protocol
 			returnWrapper.addCommOutput("!" + rawCommand + "\n");
