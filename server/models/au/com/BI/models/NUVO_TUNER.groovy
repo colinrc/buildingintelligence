@@ -100,7 +100,7 @@ class NUVO_TUNER extends GroovyModel {
 			def presetNumber = toMatch.substring (6,8)
 			def String presetDesc = toMatch.substring (10)
 			
-			if (presetDesc.length() > 1) presetDesc  = presetDesc.substring (0,presetDesc.length()-1) // remove the last double quote
+			if (presetDesc.length() > 1) presetDesc  = presetDesc.substring (1,presetDesc.length()-1) // remove the first and last double quotes
 			
 			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "preset" , presetNumber , presetDesc) )
 			commandFound = true
