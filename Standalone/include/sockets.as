@@ -58,7 +58,7 @@ serverSetup = function () {
 	if (_global.settings.serverAddress.length) {
 		if (_global.settings.serverProtocol == "https") {
 			isConnected = false;
-			setInterval(this, "getCachedData", _global.settings.webRefreshRate * 1000);
+			httpIntervalID = setInterval(this, "getCachedData", _global.settings.webRefreshRate * 1000);
 			getCachedData();
 		} else {
 			server = new XMLSocket();
@@ -96,6 +96,7 @@ getCachedData = function () {
 				}
 			}
 		} else {
+			clearInterval(httpIntervalID);
 			serverOnClose();
 		}
 	}
@@ -164,6 +165,8 @@ serverOnClose = function () {
 	isConnected = false;
 	if (_global.settings.serverProtocol == "sockets") {
 		serverConnectID = setInterval(_root, "serverConnect", _global.settings.serverRetryTime * 1000);
+	} else {
+		httpIntervalID = setInterval(this, "getCachedData",  _global.settings.serverRetryTime * 1000);
 	}
 }
 

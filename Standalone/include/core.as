@@ -1848,7 +1848,7 @@ webLogout = function () {
 	if (_global.settings.serverProtocol == "https") {
 		var xml = new XML();
 		debug("HTTPS: /webclient/logout");
-		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/logout");
+		getURL("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/logout");
 	}
 }
 
