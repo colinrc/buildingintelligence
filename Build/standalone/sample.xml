@@ -579,7 +579,16 @@
 				<item type="picker" command="on" label="%value% deg C" valueFormat="fred.%value%" minValue="0" maxValue="100" step="5" repeatRate="200" />
 			</row>
 		</control>
+
+
 		<control type="frontGateVideo">
+			<row>
+				<item type="video" src="lib/objects/MVI_2239.flv" format="flv" videoWidth="320" videoHeight="240" />
+			</row>
+		</control>
+
+
+		<control type="frontGateVideo_old">
 			<onShow command="url.http://172.16.3.150/control.cgi?cont_2=1&ok=dummy.htm,http://172.16.3.150/control.cgi?cont_2=4&ok=dummy.htm" />
 			<onHide command="" />
 			<onClose command="" />
