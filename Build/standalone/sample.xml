@@ -273,7 +273,7 @@
 							<control name="Master Bed Light" key="MASTER_BED_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
 						</tab>
 						<tab name="Audio" icon="music-note">
-							<control name="Audio" key="MASTER_BED_AUDIO" type="audioPanel" icon="music-note" />
+							<control name="Audio" keys="MASTER_BED_AUDIO,MASTER_BED_AUDIO2" type="audioPanel" icon="music-note" />
 						</tab>
 						<tab name="TV" icon="tv">
 							<control name="TV" key="MASTER_BED_TV" type="tvControl" icon="tv" />
@@ -499,13 +499,13 @@
 				<item type="label" states="on,off" formats="%name% (%src%):,%name% (OFF):" />
 			</row>
 			<row>
-				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="50" />
-				<item type="button" icon="volume-up" command="volume" extra="up" repeatRate="200" />
-				<item type="button" icon="volume-down" command="volume" extra="down" repeatRate="200" />
+				<item type="toggle" icons="power-red,power-green" key="%key1%" command="state" extras="on,off" width="50" />
+				<item type="button" icon="volume-up" key="%key1%" command="volume" extra="up" repeatRate="200" />
+				<item type="button" icon="volume-down" key="%key1%" command="volume" extra="down" repeatRate="200" />
 			</row>
 			<row cases="state:on">
-				<item type="button" icon="cd-music:1" command="src" extra="cd1" showOn="true" />
-				<item type="button" icon="cd-music:2" command="src" extra="cd2" showOn="true" />
+				<item type="button" icon="cd-music:1" key="%key2%" command="src" extra="cd1" showOn="true" />
+				<item type="button" icon="cd-music:2" key="%key2%" command="src" extra="cd2" showOn="true" />
 				<item type="button" icon="radio" command="src" extra="radio" showOn="true" />
 				<item type="button" icon="atom" command="src" extra="atom" showOn="true" />
 				<item type="button" icon="tv" command="src" extra="tv" showOn="true" />
@@ -583,7 +583,7 @@
 
 		<control type="frontGateVideo">
 			<row>
-				<item type="video" src="lib/objects/MVI_2239.flv" format="flv" videoWidth="320" videoHeight="240" />
+				<item type="video" src="D:/BI/eLife Client/Build/standalone/lib/objects/MVI_2239.flv" format="flv" videoWidth="320" videoHeight="240" />
 			</row>
 		</control>
 
