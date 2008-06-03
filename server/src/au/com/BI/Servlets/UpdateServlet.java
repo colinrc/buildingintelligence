@@ -46,11 +46,11 @@ public class UpdateServlet extends HttpServlet {
     CacheBridgeFactory cacheBridgeFactory = null;
     protected XMLOutputter xmlOut = null;
     protected Logger logger;
-    int MaxTimeOut= 360; // 360 seconds of inactivity before sessions are invalidated.
 
 	AddressBook addressBook = null;
 	VersionManager versionManager = null;
 	CommandQueue commandQueue = null;
+	SessionCounter sessionCounter = null;
 	
     /** Creates a new instance of UpdateServlet */
     public UpdateServlet() {
@@ -82,6 +82,17 @@ public class UpdateServlet extends HttpServlet {
 	        } else {
 	        	
 	        	try {
+	        		String initReq = (String)req.getParameter("INIT");
+	        		if (initReq != null && initReq.equals ("Y")){
+	    	            ID = System.currentTimeMillis();
+	    	            
+	    	            setupSession(ID, session, req.getRemoteUser());
+	    	            serverID = (Long)session.getAttribute("ServerID");
+	    	            extraStuffForStartup = newClient (ID, serverID, versionManager);
+	    	            emptyResponse = false;
+
+	        		}
+	        		
 		        	serverID = (Long)session.getAttribute("ServerID");
 		        	String handlingSession = (String)session.getAttribute("HANLDING_REQUEST") ;
 			        if (handlingSession == null || handlingSession.equals("Y")){
@@ -273,11 +284,21 @@ public class UpdateServlet extends HttpServlet {
     	ServletContext context =  session.getServletContext();
  
     	Security security = (Security)context.getAttribute("Security");
+   
+        if (addressBook.isUserConnected(user)){
+	        logger.log (Level.FINE, "Starting new session for existing web user " + user);
+        }
+        else {
+	        logger.log (Level.FINE, "Session created for web user " + user);
+	        addressBook.setUser(user, ID, AddressBook.Locations.HTTP);
+	
+	        sessionCounter.incrementCount();
+        }
+        
     	
     	if (!security.allowWebClient()){
     		throw new TooManyClientsException ("You have requested more clients than you have licenses for, please contact your integrator");
     	}
-        AddressBook addressBook = (AddressBook)context.getAttribute("AddressBook");
         
     	ClientCommandFactory clientCommandFactory =  ClientCommandFactory.getInstance();
     	clientCommandFactory.setID(ID);
@@ -292,7 +313,6 @@ public class UpdateServlet extends HttpServlet {
         session.setAttribute("ServerID",serverID);
         session.setAttribute("ID",ID);
         session.setAttribute("User", user);
-        session.setMaxInactiveInterval(MaxTimeOut);
 
     }
    
@@ -324,6 +344,8 @@ public class UpdateServlet extends HttpServlet {
         cacheBridgeFactory = (CacheBridgeFactory)context.getAttribute("CacheBridgeFactory");
         commandQueue = (CommandQueue)context.getAttribute("CommandQueue");
         versionManager = (VersionManager)context.getAttribute("VersionManager");
+      	addressBook = (AddressBook)context.getAttribute("AddressBook");
+        sessionCounter = (SessionCounter)context.getAttribute("SessionCounter");
         
         super.init();
     }

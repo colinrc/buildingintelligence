@@ -168,7 +168,7 @@ public class UserManagerServlet extends HttpServlet {
     		
     		resp.println ("<HR>");
     		
-    		resp.println ("<FORM METHOD='POST' ACTION='/UserManager/' >");
+    		resp.println ("<FORM METHOD='POST' ACTION='/UserManager/Users' >");
     		
     		if (isAdmin) {
 	       		resp.println ("<TABLE>");
@@ -206,6 +206,8 @@ public class UserManagerServlet extends HttpServlet {
 		  	}
  	  		
    	  		resp.println ("</FORM>");
+   	  		
+   	  		resp.println("<A HREF='/UserManager/Logout'>Logout</A> of the User Manager.");
 
 	  		resp.println("</BODY>");
 	  		resp.println("</HTML>");

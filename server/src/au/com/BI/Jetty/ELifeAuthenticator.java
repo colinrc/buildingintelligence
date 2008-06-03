@@ -10,7 +10,7 @@ import java.security.Principal;
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.Response;
 import org.mortbay.jetty.security.Authenticator;
-import org.mortbay.jetty.security.BasicAuthenticator;
+import org.mortbay.jetty.security.FormAuthenticator;
 import org.mortbay.jetty.security.SecurityHandler;
 import org.mortbay.jetty.security.UserRealm;
 
@@ -21,7 +21,7 @@ import au.com.BI.Config.Security.IPType;
  * @author colin
  *
  */
-public class ELifeAuthenticator extends BasicAuthenticator  implements Authenticator {
+public class ELifeAuthenticator extends FormAuthenticator  implements Authenticator {
 
 	public Security security;
 	protected IPType ipType = IPType.FullFunction;
@@ -67,4 +67,5 @@ public class ELifeAuthenticator extends BasicAuthenticator  implements Authentic
 	public void setIpType(IPType ipType) {
 		this.ipType = ipType;
 	}
+
 }

@@ -59,17 +59,22 @@ public class Logout extends HttpServlet {
         	session.invalidate();
         }
         
+        resp.sendRedirect("/");
+/*
+ * 
         resp.setContentType("text/html");
         
         java.io.PrintWriter out = resp.getWriter();
                 
         out.println("<HTML>");
         out.println("<BODY>");
-        out.println("<P>You have logged out");
+        out.println("<P>You have logged out of eLife");
+        out.println("<P>In two seconds you should be redirected to the eLife login page");
         out.println("</BODY>");
         out.println("</HTML>");
         resp.flushBuffer();
         resp.setStatus(HttpServletResponse.SC_OK);
+        */
     }
         
     

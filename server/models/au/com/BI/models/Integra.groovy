@@ -14,6 +14,7 @@ import au.com.BI.Audio.Audio
 import au.com.BI.AV.AV
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import java.nio.ByteBuffer
 
 
 /**
@@ -117,9 +118,17 @@ class Integra extends GroovyModel {
 	
 	void buildOutputString(String rawCommand, ReturnWrapper returnWrapper){
 		if (ipProtocol){
+			ByteBuffer outputBytes = ByteBuffer.allocate (rawCommand.size() + 16);
+			outBytes.order (BIG_ENDIAN)
+			
+			outputBytes.put ("ISCP".getBytes())
+			
+			String eISCPData = rawCommand  + "\n";
+			byte [] headerSize = new byte[]{0x0, 0x0, 0x0, 0x0, 0x10};
 			// Integra is using IP protocol
-			Byte [] lineToOutput = "ISCP".getBytes() + byte[]{0,0,0,0,0x10} + rawCommand.size()
-			returnWrapper.addCommOutput(  Blocksize +  '0x01' + '0x0' + '0x0' + '0x0' + rawCommand.getBytes() + "\n");	
+			Byte [] eISCPHeader = "ISCP".getBytes() + byte[]{0x0, 0x0, 0x0, 0x0, 0x10} + rawCommand.size();
+			returnWrapper.addCommOutput(  Blocksize +  '0x01' + '0x0' + '0x0' + '0x0' + eISCPData.getBytes() + "\n");	
+			
 		} else {
 			// Serial protocol
 			returnWrapper.addCommOutput("!" + rawCommand + "\n");

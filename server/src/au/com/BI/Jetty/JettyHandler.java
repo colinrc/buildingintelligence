@@ -11,14 +11,11 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.SessionManager;
-import org.mortbay.jetty.handler.ContextHandler;
-import org.mortbay.jetty.servlet.SessionHandler;
 
 import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.jetty.handler.DefaultHandler;
-import org.mortbay.jetty.servlet.ServletHandler;
 import org.mortbay.jetty.handler.HandlerCollection;
-import org.mortbay.jetty.security.BasicAuthenticator;
+
 import org.mortbay.jetty.security.Constraint;
 import org.mortbay.jetty.security.ConstraintMapping;
 import org.mortbay.jetty.security.HashUserRealm;
@@ -37,7 +34,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     org.mortbay.jetty.Server server = null,client_server = null;
     Logger logger;
     Security security = null;
-    public static final int timeout = 1; // 1 minute timeout for a session;
+    public static final int timeout = 30; // 1 minute timeout for a session;
     
     public JettyHandler(Security security) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -52,12 +49,10 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     }
     
     public void startHTTPServer (UserRealm webPass) throws Exception {
-    	
     	client_server = new Server();
         
         org.mortbay.jetty.bio.SocketConnector connector = new SocketConnector();
         connector.setPort(bootstrap.getJettyPort());
-        connector.setMaxIdleTime(50000);
         connector.setName("HTTP_CONNECT");
         client_server.setConnectors(new Connector[]{connector}); 
         
@@ -88,9 +83,10 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         updateAuthenticator.setSecurity(security);
         updateAuthenticator.setIpType(IPType.PostOnly);
         postContextMgrSrc.setAuthenticator(updateAuthenticator);
-        
+        updateAuthenticator.setLoginPage("/login.html");
+        updateAuthenticator.setErrorPage("/login_fail.html");
         Constraint postClientConstraint = new Constraint();
-        postClientConstraint.setName(Constraint.__BASIC_AUTH);;
+        postClientConstraint.setName(Constraint.__FORM_AUTH);
         postClientConstraint.setRoles(new String[]{"user","admin","moderator"});
         postClientConstraint.setAuthenticate(true);
 
@@ -139,7 +135,6 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             
               SslSocketConnector sslConnect = new SslSocketConnector();
             	sslConnect.setPort(bootstrap.getJettySSLPort());
-            	sslConnect.setMaxIdleTime(30000);
             	sslConnect.setKeystore("datafiles/keystore");
             	sslConnect.setPassword("building12");
             	sslConnect.setKeyPassword("building12");
@@ -151,7 +146,8 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 
             // Normal webclient  context
              Constraint webClientConstraint = new Constraint();
-             webClientConstraint.setName(Constraint.__BASIC_AUTH);;
+             webClientConstraint.setName(Constraint.__FORM_AUTH);
+             
              webClientConstraint.setRoles(new String[]{"user","admin","moderator"});
              webClientConstraint.setAuthenticate(true);
 
@@ -181,6 +177,9 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
            updateContext.setAttribute("WebClientCount",new Integer(0));
 
            SessionCounter sessionCounter = new SessionCounter ();
+           sessionCounter.setAddressBook(addressBook);
+           
+           updateContext.setAttribute("SessionCounter", sessionCounter);
   
             updateContextSessionMgr.addEventListener(sessionCounter);
             security.setSessionCounter (sessionCounter);
@@ -191,7 +190,8 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             ELifeAuthenticator updateAuthenticator = new ELifeAuthenticator ();
             updateAuthenticator.setSecurity(security);
             updateAuthenticator.setIpType(IPType.FullFunction);
-        	
+            updateAuthenticator.setLoginPage("/login.html");
+            updateAuthenticator.setErrorPage("/login_fail.html");
             updateMgrSec.setAuthenticator(updateAuthenticator);
             
             updateMgrSec.setConstraintMappings(new ConstraintMapping[]{webClientCM});
@@ -200,7 +200,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             /** User manager context */
             
             Constraint constraint = new Constraint();
-            constraint.setName(Constraint.__BASIC_AUTH);;
+            constraint.setName(Constraint.__FORM_AUTH);;
             constraint.setRoles(new String[]{"user","admin","moderator"});
             constraint.setAuthenticate(true);
 
@@ -210,15 +210,21 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             
   
             Context userMgrContext = new Context (contexts, "/UserManager",Context.SECURITY|Context.SESSIONS);
+            userMgrContext.setResourceBase("../www");
             userMgrContext.setAttribute("UserManager",webPass);
+            userMgrContext.setAttribute("AddressBook",addressBook);
             userMgrContext.setConnectorNames(new String[]{"SSL_CONNECT"});
-            userMgrContext.addServlet("au.com.BI.Servlets.UserManagerServlet", "/");
+            userMgrContext.addServlet("au.com.BI.Servlets.UserManagerServlet", "/Users");
+            userMgrContext.addServlet("au.com.BI.Servlets.LogoutUserManager", "/Logout");
+            userMgrContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
             
             SecurityHandler userMgrSec = userMgrContext.getSecurityHandler();
             userMgrSec.setUserRealm(webPass);
         	
             ELifeAuthenticator usrAuthenticator = new ELifeAuthenticator ();
             usrAuthenticator.setSecurity(security);
+            usrAuthenticator.setLoginPage("/login_UserMgr.html");
+            usrAuthenticator.setErrorPage("/login_fail_UserMgr.html");
             usrAuthenticator.setIpType(IPType.PWDOnly);
         	
             userMgrSec.setAuthenticator(usrAuthenticator);

@@ -31,17 +31,17 @@ public class AddressBook {
 		nameMap.put(name,new Long (ID));		
 		nameMapReverse.put(ID, name);
 	}
+	
+	public void setUser (String name, long ID,Locations location){
+		userMap.put(name,new Long (ID));		
+		userMapReverse.put(ID, name);
+	}
 
 	public long getIDFromName (String name){
 		if (nameMap.containsKey(name)) 
 			return ((Long)nameMap.get(name)).longValue();
 		else
 			return AddressBook.NOT_FOUND;
-	}
-	
-	public void setUser (String user, long ID,Locations location){
-		userMap.put(user,new Long (ID));		
-		userMapReverse.put(ID,user);
 	}
 
 	public long getIDFromUser (String user){
@@ -52,6 +52,18 @@ public class AddressBook {
 
 	}
 
+	public void userDisconnect (String userName) {
+		if (userMap.containsKey(userName)) {
+			long reverseKey = userMap.get(userName);
+			userMap.remove(userName);
+			userMapReverse.remove(reverseKey);
+		}
+	}
+	
+	public boolean isUserConnected (String userName){
+		return userName != null && userMap.containsKey(userName);	
+	}
+	
 	public ClientTypes getClientType() {
 		return clientType;
 	}

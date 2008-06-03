@@ -71,7 +71,7 @@ public class ClientCommandFactory {
 					}
 					if (command.equals("user")) {
 						synchronized (addressBook) {
-							addressBook.setUser(extra, ID,originating_location);
+							addressBook.setName(extra, ID,originating_location);
 						}
 						clientCommand = buildListNamesCommand();
 						commandBuilt = true;

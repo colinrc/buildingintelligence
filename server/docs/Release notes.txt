@@ -1,3 +1,20 @@
+== 3/Jun/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b84.zip V1.6-b84]  ==
+
+''' Jetty '''
+
+Ensure any time an INIT is received from a client, re send startup macros etc. Helps to better handle user reloading the web  page.
+
+Change session counting to not add a new session count if the user is already logged in; instead invalidate the first session.
+
+Implemented form based authentication. A login.html and login_fail.html file must be added to the to level web server root.  Resolves issue [ticket:728]
+
+''' User Manager '''
+
+The user manager URL has changed to /UserManager/Users.
+A logout function has been added to the user manager.
+For authentication the user manager requires two files, login_UserMgr.html and login_fail_UserMgr.html to be in the top level of the web server. 
+Their format is similar to the login.html and login_fail.html files (a sample has been provided in the client_build/standalone SVN path)
+
 == 29/Apr/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b83.zip V1.6-b83]  ==
 
 ''' Groovy models '''
