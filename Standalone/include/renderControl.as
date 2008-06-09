@@ -462,11 +462,12 @@
 		if (rows[row].cases != undefined) {
 			var cases = rows[row].cases.split(",");
 			row_mc.cases = new Array();
+			row_mc.key = rows[row].key;
 			for (var i=0; i<cases.length; i++) {
 				row_mc.cases.push({extra:cases[i].split(":")[0],values:cases[i].split(":")[1].split("|")});
 				row_mc.update = function () {
 					if (control.keys) {
-						var k = control.keys[0];
+						var k = control.keys[this.key.substr(4, this.key.length - 5) - 1];
 					} else {
 						var k = control.key
 					}
