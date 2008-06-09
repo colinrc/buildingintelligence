@@ -550,13 +550,13 @@
 				<item type="button" key="%key1%" icon="media-rwd" command="send_audio_command" extra="cd-rw" repeatRate="200" />
 				<item type="button" key="%key1%" icon="media-fwd" command="send_audio_command" extra="cd-ff" repeatRate="200" />
 			</row>
-			<row cases="state:on,src:radio_A" key="%key2%">
+			<row cases="state:on,src:radio_A" key="%key1%">
 				<item type="button" key="%key2%" label="JJJ" command="preset" extra="1" showOn="true" />
 				<item type="button" key="%key2%" label="MMM" command="preset" extra="6" showOn="true" />
 				<item type="button" key="%key2%" label="KKK" command="preset" extra="7" showOn="true" />
 				<item type="button" key="%key2%" label="Fox" command="preset" extra="8" showOn="true" />
 			</row>
-			<row cases="state:on,src:radio_B" key="%key2%">
+			<row cases="state:on,src:radio_B" key="%key1%">
 				<item type="button" key="%key3%" label="Chan1" command="preset" extra="1" showOn="true" />
 				<item type="button" key="%key3%" label="Chan2" command="preset" extra="6" showOn="true" />
 				<item type="button" key="%key3%" label="Chan3" command="preset" extra="7" showOn="true" />
