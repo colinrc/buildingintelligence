@@ -242,7 +242,7 @@
 							<control name="Dining Light" key="DINING_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
 						</tab>
 						<tab name="Audio" icon="music-note">
-							<control name="Audio" key="DINING_AUDIO" type="audioPanel" icon="music-note" />
+							<control name="Audio" keys="DINING_AUDIO,TUNER_A,TUNER_B" type="audioPanel_new" icon="music-note" />
 						</tab>
 					</window>
 					<alerts>
@@ -273,7 +273,7 @@
 							<control name="Master Bed Light" key="MASTER_BED_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
 						</tab>
 						<tab name="Audio" icon="music-note">
-							<control name="Audio" keys="MASTER_BED_AUDIO,MASTER_BED_AUDIO2" type="audioPanel" icon="music-note" />
+							<control name="Audio" keys="MASTER_BED_AUDIO" type="audioPanel" icon="music-note" />
 						</tab>
 						<tab name="TV" icon="tv">
 							<control name="TV" key="MASTER_BED_TV" type="tvControl" icon="tv" />
@@ -526,6 +526,41 @@
 			<row cases="state:on,src:atom">
 				<item type="button" icon="media-play" command="send_audio_command" extra="1" />
 				<item type="button" icon="media-stop" command="send_audio_command" extra="2" />
+			</row>
+		</control>
+		<control type="audioPanel_new">
+			<row>
+				<item type="label" key="%key1%" states="on,off" formats="%name% (%src%):,%name% (OFF):" />
+			</row>
+			<row>
+				<item type="toggle" key="%key1%" icons="power-red,power-green" command="state" extras="on,off" width="50" />
+				<item type="button" key="%key1%" icon="volume-up" command="volume" extra="up" repeatRate="200" />
+				<item type="button" key="%key1%" icon="volume-down" command="volume" extra="down" repeatRate="200" />
+			</row>
+			<row cases="state:on" key="%key1%">
+				<item type="button" key="%key1%" icon="cd-music:1" command="src" extra="cd1" showOn="true" />
+				<item type="button" key="%key1%" icon="cd-music:2" command="src" extra="cd2" showOn="true" />
+				<item type="button" key="%key1%" icon="radio:A" command="src" extra="radio_A" showOn="true" />
+				<item type="button" key="%key1%" icon="radio:B" command="src" extra="radio_B" showOn="true" />
+			</row>
+			<row cases="state:on,src:cd1|cd2" key="%key1%">
+				<item type="button" key="%key1%" icon="media-play" command="send_audio_command" extra="cd-play" />
+				<item type="button" key="%key1%" icon="media-stop" command="send_audio_command" extra="cd-stop" />
+				<item type="button" key="%key1%" icon="media-pause" command="send_audio_command" extra="cd-pause" />
+				<item type="button" key="%key1%" icon="media-rwd" command="send_audio_command" extra="cd-rw" repeatRate="200" />
+				<item type="button" key="%key1%" icon="media-fwd" command="send_audio_command" extra="cd-ff" repeatRate="200" />
+			</row>
+			<row cases="state:on,src:radio_A" key="%key2%">
+				<item type="button" key="%key2%" label="JJJ" command="preset" extra="1" showOn="true" />
+				<item type="button" key="%key2%" label="MMM" command="preset" extra="6" showOn="true" />
+				<item type="button" key="%key2%" label="KKK" command="preset" extra="7" showOn="true" />
+				<item type="button" key="%key2%" label="Fox" command="preset" extra="8" showOn="true" />
+			</row>
+			<row cases="state:on,src:radio_B" key="%key2%">
+				<item type="button" key="%key3%" label="Chan1" command="preset" extra="1" showOn="true" />
+				<item type="button" key="%key3%" label="Chan2" command="preset" extra="6" showOn="true" />
+				<item type="button" key="%key3%" label="Chan3" command="preset" extra="7" showOn="true" />
+				<item type="button" key="%key3%" label="Chan4" command="preset" extra="8" showOn="true" />
 			</row>
 		</control>
 		<control type="tvControl">

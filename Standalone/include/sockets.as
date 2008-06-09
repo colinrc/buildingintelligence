@@ -79,24 +79,24 @@ getCachedData = function () {
 		debug("HTTPS: /webclient/update?SESSION_ID=" + _global.sessionID);
 		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update?SESSION_ID=" + _global.sessionID);
 	}
-	xml.timeoutID = setTimeout(this, "serverOnClose", 3000);
+	httpTimeoutID = setTimeout(this, "serverOnClose", _global.settings.serverConnectTimeout * 1000);
 	xml.onLoad = function (success) {
-		clearTimeout(this.timeoutID);
-		if (success) {
-			if (commsError) {
-				window_mc.close();
-				delete commsError;
-			}
-			
+		clearTimeout(httpTimeoutID);
+		if (commsError) {
+			window_mc.close();
+			delete commsError;
+		}
+		if (success) {	
 			if (this.httpStatus == 200 || this.httpStatus == 0) { //SC_OK = 200 SC_NOCONTENT = 204
 				var packet = this.firstChild.childNodes;
 				for (var i=0; i<packet.length; i++) {
 					//debug("START:\n" + packet[i] + "\nEND");
 					receiveCmd(packet[i], true);
 				}
+			} else {
+				serverOnClose();
 			}
 		} else {
-			clearInterval(httpIntervalID);
 			serverOnClose();
 		}
 	}
@@ -149,24 +149,22 @@ serverOnConnect = function (status) {
 			delete commsError;
 		}
 	} else {
-		if (!_global.settings.debugMode) {
-			showCommsError();
-			commsError = true;
-		}
-		if (_global.settings.serverProtocol == "sockets") {
-			serverConnectID = setInterval(_root, "serverConnect", _global.settings.serverRetryTime * 1000);
-		}
+		serverOnClose();
 	}
 }
 
 serverOnClose = function () {
-	showCommsError();
-	commsError = true;
+	clearInterval(httpIntervalID);
+	clearInterval(httpTimeoutID);
+	if (!commsError) {
+		showCommsError();
+		commsError = true;
+	}
 	isConnected = false;
 	if (_global.settings.serverProtocol == "sockets") {
 		serverConnectID = setInterval(_root, "serverConnect", _global.settings.serverRetryTime * 1000);
 	} else {
-		httpIntervalID = setInterval(this, "getCachedData",  _global.settings.serverRetryTime * 1000);
+		httpIntervalID = setInterval(_root, "getCachedData",  _global.settings.serverRetryTime * 1000);
 	}
 }
 
@@ -242,6 +240,11 @@ receiveCmd = function (xml, ignoreSkip) {
 		if (msg.attributes.VIDEO != undefined) msgWin.video = msg.attributes.VIDEO;
 		if (msg.attributes.ALARM != undefined) msgWin.alarm = msg.attributes.ALARM;
 		showMessageWindow(msgWin);
+		
+		if (msg.attributes.TITLE == "Security") {
+			// we've hit a security infringement so stop polling
+			clearInterval(httpIntervalID);
+		}
 	} else if (msg.nodeName == "CONTROL" && msg.attributes.KEY == "MACRO") {
 		for (var i=0; i<_global.macros.length; i++) {
 			if (_global.macros[i].name ==  msg.attributes.EXTRA) break; 

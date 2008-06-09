@@ -3118,7 +3118,7 @@ createVideoViewer = function (item_mc, settings) {
 			}
 			this.stream.setBufferTime(5);
 			this.video.attachVideo(this.stream);
-			this.stream.play(this.src);		
+			this.stream.play(this.src);	
 		}
 		flvContainer_mc.loadFLV();
 	}

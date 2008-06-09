@@ -69,6 +69,7 @@
 				case "label":
 					var item_mc = row_mc.createEmptyMovieClip("item" + item + "_mc", item);
 					item_mc.name = control.name;
+					if (items[item].key) item_mc.key = control.keys[items[item].key.substr(4, items[item].key.length - 5) - 1];
 					item_mc.defaultState = items[item].defaultState;
 					item_mc.defaultValue = items[item].defaultValue;
 					item_mc.states = items[item].states.split(",");
@@ -78,6 +79,10 @@
 					item_mc.attachMovie("bi.ui.Label", "label_lb", 0, {settings:{width:width, label:control.name}});
 										
 					item_mc.update = function (key) {
+						if (this.key && this.key != key) {
+							return;
+						}
+						
 						var state = _global.controls[key].storedStates["state"];
 						var value = _global.controls[key].storedStates["on"];
 						
@@ -459,14 +464,19 @@
 			row_mc.cases = new Array();
 			for (var i=0; i<cases.length; i++) {
 				row_mc.cases.push({extra:cases[i].split(":")[0],values:cases[i].split(":")[1].split("|")});
-				row_mc.update = function (key) {
+				row_mc.update = function () {
+					if (control.keys) {
+						var k = control.keys[0];
+					} else {
+						var k = control.key
+					}
 					var show = false;
 					for (var i=0; i<this.cases.length; i++) {
 						for (var q=0; q<this.cases[i].values.length; q++) {
 							if (this.cases[i].values[q].substr(0,1) == "!") {
-								if (_global.controls[control.key].storedStates[this.cases[i].extra] == this.cases[i].values[q].substr(1)) show = false;
+								if (_global.controls[k].storedStates[this.cases[i].extra] == this.cases[i].values[q].substr(1)) show = false;
 							} else {
-								show = (_global.controls[control.key].storedStates[this.cases[i].extra] == this.cases[i].values[q])
+								show = (_global.controls[k].storedStates[this.cases[i].extra] == this.cases[i].values[q])
 								if (show) break;
 							}
 						}
@@ -477,7 +487,11 @@
 			}
 		}
 	}
-	control_mc.update(control.key);
+	if (control.key) {
+		control_mc.update(control.key);
+	} else {
+		control_mc.update(control.keys[0]);
+	}
 	//trace(getTimer() - a + "ms");
 }
 

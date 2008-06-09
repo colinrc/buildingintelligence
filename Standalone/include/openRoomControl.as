@@ -64,7 +64,11 @@
 				if (controls[control].canSee == undefined || isAuthenticated(controls[control].canSee)) {
 					var control_mc = this.contentClips[eventObj.id].createEmptyMovieClip("control" + controlCount + "_mc", controlCount);
 					renderControl(controls[control], control_mc, window_mc.contentClip.tabs_mc.contentClips[0].width);
-					subscribe(controls[control].key, control_mc);
+					if (controls[control].keys) {
+						subscribe(controls[control].keys, control_mc);
+					} else {
+						subscribe(controls[control].key, control_mc);
+					}
 					control_mc._y = lastY;
 					lastY += control_mc._height + 8;
 					controlCount++;
@@ -96,7 +100,11 @@
 		for (var tab=0; tab<tabs.length; tab++) {
 			var controls = tabs[tab].controls;
 			for (var control=0; control<controls.length; control++) {
-				unsubscribe(controls[control].key, this.contentClip.tabs_mc.contentClips[tab]["control" + control + "_mc"]);
+				if (controls[control].keys) {
+					unsubscribe(controls[control].keys, this.contentClip.tabs_mc.contentClips[tab]["control" + control + "_mc"]);
+				} else {
+					unsubscribe(controls[control].key, this.contentClip.tabs_mc.contentClips[tab]["control" + control + "_mc"]);
+				}
 				this.contentClip.tabs_mc.contentClips[tab]["control" + control + "_mc"].onClose();
 			}
 		}
