@@ -13,10 +13,8 @@ import au.com.BI.Audio.Audio
 
 class NUVO_TUNER extends GroovyModel {
 
-	// Our audio device expects 2 characters to specify the zone 
-	int keyPadding = 2;
 	String name = "NUVO_TUNER"
-	String appendToSentStrings = "\n"
+	String appendToSentStrings = "\r"
 	String version = "1.0"
 	boolean checksumRequired = false
 	
@@ -32,7 +30,7 @@ class NUVO_TUNER extends GroovyModel {
 		for (i in theDeviceList){
 			
 			if (i.getDeviceType() == DeviceType.AUDIO) {
-				returnWrapper.addCommOutput  ("*T'" + i.getKey() + "'STATUS")
+				returnWrapper.addCommOutput  ("*T'" + i.getKey() + "'STATUS\r")
 			}
 		}
 
@@ -96,9 +94,9 @@ class NUVO_TUNER extends GroovyModel {
 
 
 		if (!commandFound && toMatch.startsWith("PRESET")){
-			// #TÕtÕPRESETnn,ÓxyzÓ
+			// #TÕtÕPRESETnnÓxyzÓ
 			def presetNumber = toMatch.substring (6,8)
-			def String presetDesc = toMatch.substring (10)
+			def String presetDesc = toMatch.substring (9)
 			
 			if (presetDesc.length() > 1) presetDesc  = presetDesc.substring (1,presetDesc.length()-1) // remove the first and last double quotes
 			
@@ -108,11 +106,11 @@ class NUVO_TUNER extends GroovyModel {
 
 		if (!commandFound && toMatch.startsWith("RDSPSN")){
 			// #TÕtÕRDSPSNÓstringÓ
-			def String rdspsnString = toMatch.substring (7)
+			// def String rdspsnString = toMatch.substring (7)
 			
-			if (rdspsnString.length() > 1) rdspsnString  = rdspsnString.substring (0,rdspsnString.length()-1) // remove the last double quote
+			// if (rdspsnString.length() > 1) rdspsnString  = rdspsnString.substring (0,rdspsnString.length()-1) // remove the last double quote
 			
-			returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "RDSPSN" , rdspsnString) )	
+			//returnWrapper.addFlashCommand (buildCommandForFlash (theAudioDevice,  "RDSPSN" , rdspsnString) )	
 			commandFound = true
 		}
 		
