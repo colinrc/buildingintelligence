@@ -17,14 +17,13 @@ class NUVO_TUNER extends GroovyModel {
 	String appendToSentStrings = "\r"
 	String version = "1.0"
 	boolean checksumRequired = false
-	
+	String lastMatched = ""
 
-	
 	NUVO_TUNER () {
 		super()
 		
 	}
-	
+
 	public void doStartup(ReturnWrapper returnWrapper) {
 		def theDeviceList = configHelper.getAllControlledDeviceObjects ()
 		for (i in theDeviceList){
@@ -33,12 +32,13 @@ class NUVO_TUNER extends GroovyModel {
 				returnWrapper.addCommOutput  ("*T'" + i.getKey() + "'STATUS\r")
 			}
 		}
-
 	}
 
 	
 	void processStringFromComms (String command , ReturnWrapper returnWrapper) {
 
+		if (lastMatched.equals (command)) return // if the same string has been sent as last time do nothing
+		
 		boolean commandFound = false
 		
 		// Process string from the device; there can be two AUDIO devices; A and B
@@ -136,10 +136,10 @@ class NUVO_TUNER extends GroovyModel {
 		
 		if (!commandFound){
 			logger.log (Level.WARNING,"The string from the tuner was incorrectly formatted " + command)
-		}
+		} 
+		lastMatched = command// cache the command we just matched so we do not process it again if it is repeated
 	}
 
-	
 
 	void buildAudioControlString (Audio device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 		
@@ -201,5 +201,4 @@ class NUVO_TUNER extends GroovyModel {
 			logger.log (Level.WARNING,"No preset given " + command)
 		}
 	}
-
 }
