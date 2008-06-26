@@ -144,6 +144,23 @@ public class ControlsPanel extends JPanel
 				});
 		extraControls.add(reloadIR);	
 		
+		JPanel setStartup = new JPanel();
+		setStartup.setLayout (new FlowLayout (FlowLayout.LEADING));
+
+		final JTextField startupString = new JTextField(20);
+
+		
+		JButton launchSetStartup = new JButton("Set startup pattern");
+		launchSetStartup.addActionListener(
+				new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						systemStatusLabel.setText ("Setting startup");
+						ControlsPanel.this.eLife.setStartup(startupString.getText());
+					}
+				});
+		setStartup.add(launchSetStartup);	
+		setStartup.add (startupString);
+		
 		/*
 		arbitrary = new JTextField();
 		arbitrary.setText("Arbitrary Command");
@@ -169,6 +186,7 @@ public class ControlsPanel extends JPanel
 		allButtons.setLayout (new BoxLayout (allButtons, BoxLayout.Y_AXIS));
 		allButtons.add(serviceButtonsGroup);		
 		allButtons.add(extraControls);
+		allButtons.add(setStartup);
 		allButtons.add(systemStatus);		
 		add(allButtons,BorderLayout.NORTH);
 		

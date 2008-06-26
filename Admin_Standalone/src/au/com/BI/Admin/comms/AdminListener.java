@@ -4,7 +4,6 @@ package au.com.BI.Admin.comms;
  *
  */
 import au.com.BI.Admin.util.FileList;
-import au.com.BI.Admin.util.Base64Coder;
 import au.com.BI.Admin.Home.Admin;
 import java.io.*;
 import java.util.logging.*;

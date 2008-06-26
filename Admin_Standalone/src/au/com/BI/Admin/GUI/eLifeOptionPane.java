@@ -5,9 +5,6 @@ package au.com.BI.Admin.GUI;
 
 import au.com.BI.Admin.Home.Admin;
 import au.com.BI.Admin.Home.Project;
-import au.com.BI.Admin.comms.ConnectionManager;
-
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Component;
@@ -16,8 +13,6 @@ import javax.swing.*;
 
 import java.text.NumberFormat;
 import java.util.logging.*;
-import java.util.Properties;
-import java.io.File;
 
 public class eLifeOptionPane extends JDialog
 {

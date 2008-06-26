@@ -28,8 +28,8 @@ public class IRPanel extends JPanel
 	private boolean nameSet = false;
 	protected JTextField AVName = null;
 
-	private Vector learntActions;
-	private Vector learntDevices;
+	private Vector<String> learntActions;
+	private Vector<String> learntDevices;
 
 	public IRPanel(Admin eLife)
 	{
@@ -37,8 +37,8 @@ public class IRPanel extends JPanel
 		this.eLife = eLife;
 		logger = Logger.getLogger("Log");
 		this.setLayout(new BorderLayout());
-		learntActions = new Vector();
-		learntDevices = new Vector();
+		learntActions = new Vector<String>();
+		learntDevices = new Vector<String>();
 		
 		JPanel deviceSelect = new JPanel();
 		deviceSelect.setLayout (new FlowLayout (FlowLayout.LEADING));
@@ -281,8 +281,8 @@ public class IRPanel extends JPanel
 	}
 	
 	private class UpdateActionList implements Runnable {
-		Vector actions;
-		public UpdateActionList (Vector actions) {
+		Vector <String>actions;
+		public UpdateActionList (Vector <String>actions) {
 			this.actions = actions;
 		}
 		
@@ -291,9 +291,7 @@ public class IRPanel extends JPanel
 			irName.removeAllItems();
 		    	synchronized (learntActions){
 		    		learntActions = actions;
-			    	Iterator eachAction = actions.iterator();
-			    	while(eachAction.hasNext()){
-			    		String nextAction = (String)eachAction.next();
+		    		for (String nextAction:actions){
 			    		irName.addItem(nextAction);
 			    	}
 		    		
@@ -302,14 +300,14 @@ public class IRPanel extends JPanel
 	   }
 	}
 		
-	public void updateActionList (Vector actions) {
+	public void updateActionList (Vector <String>actions) {
 		UpdateActionList update = new UpdateActionList (actions);
 			SwingUtilities.invokeLater(update);
 	}
 	
 	private class UpdateDeviceList implements Runnable {
-		Vector devices;
-		public UpdateDeviceList (Vector devices) {
+		Vector <String>devices;
+		public UpdateDeviceList (Vector <String>devices) {
 			this.devices = devices;
 		}
 		
@@ -319,9 +317,7 @@ public class IRPanel extends JPanel
 		    	irDevice.removeAllItems();
 		    	synchronized (learntDevices){
 		    		learntDevices = devices;
-			    	Iterator eachDevice = devices.iterator();
-			    	while(eachDevice.hasNext()){
-			    		String nextDevice = (String)eachDevice.next();
+		    		for (String nextDevice: learntDevices){
 			    		irDevice.addItem(nextDevice);
 			    	}
 		    		
@@ -330,7 +326,7 @@ public class IRPanel extends JPanel
 	   }
 	}
 		
-	public void updateDeviceList (Vector devices) {
+	public void updateDeviceList (Vector <String>devices) {
 		UpdateDeviceList update = new UpdateDeviceList (devices);
 			SwingUtilities.invokeLater(update);
 	}

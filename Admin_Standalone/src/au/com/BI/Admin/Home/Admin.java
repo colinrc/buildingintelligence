@@ -17,9 +17,7 @@ import au.com.BI.Admin.comms.ConnectionManager;
 import au.com.BI.Admin.comms.IP;
 import java.awt.*;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 import java.util.logging.*;
-import java.util.Calendar;
 import java.util.Properties;
 
 // from Swing:
@@ -414,6 +412,15 @@ public class Admin extends JPanel
 		}	
 	}
 	
+	
+	public void setStartup(String startupString) {
+		try {
+			if (ip != null)
+				ip.sendAdminMessage ("<ADMIN SELECT=\"" + startupString + "\" />\n");
+		} catch (IOException e) {
+			logger.log (Level.WARNING,"Error in the admin connection " + e.getMessage());
+		}		
+	}
 	
 	public void restartClient() {
 		try {

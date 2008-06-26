@@ -10,16 +10,16 @@ import java.text.DateFormat;
 public class FileList {
 
 	private String dir;
-	private Vector names;
-	private Vector descs;
-	private Vector joined;
+	private Vector <String>names;
+	private Vector <String>descs;
+	private Vector<String> joined;
 	private DateFormat myFormat;
 	
 	public FileList(String dir){
 		this.dir = dir;
-		names = new Vector ();
-		descs = new Vector();
-		joined = new Vector();
+		names = new Vector <String>();
+		descs = new Vector<String>();
+		joined = new Vector<String>();
 		myFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,DateFormat.SHORT);
 	}
 	

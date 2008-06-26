@@ -267,7 +267,7 @@ public class LogPanel extends JPanel implements ItemListener {
 	    		}
 	    	}
 	    	if (this.mmifiltering) {
-	    		if (message.startsWith("Received ip packet : D") )
+	    		if (message.startsWith("CBUS:Received ip packet : D") )
 	    			return;
 	    		if (message.startsWith("Processing serial string D") )
 	    			return;

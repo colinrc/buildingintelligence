@@ -17,13 +17,13 @@ public class DebugContentHandler extends DefaultHandler implements ContentHandle
 	private Admin eLife;
 	private Logger logger;
 	protected boolean inError = false;
-	protected Vector iRActions = null;
-	protected Vector iRDevices = null;
+	protected Vector <String> iRActions = null;
+	protected Vector <String>iRDevices = null;
 	
 	public DebugContentHandler () {
 		logger = Logger.getLogger ("Log");
-		iRActions = new Vector ();
-		iRDevices = new Vector ();
+		iRActions = new Vector <String>();
+		iRDevices = new Vector <String>();
 		}
 
 	/**
@@ -155,10 +155,10 @@ public class DebugContentHandler extends DefaultHandler implements ContentHandle
 			}
 		}
 		if (qName.equals("IR_ACTION_LIST")) {
-			iRActions = new Vector ();
+			iRActions = new Vector <String>();
 		}
 		if (qName.equals("IR_DEVICE_LIST")) {
-			iRDevices = new Vector ();
+			iRDevices = new Vector <String>();
 		}
 		if (qName.equals("IR_ACTION_ITEM")) {
 			String name = atts.getValue ("NAME");

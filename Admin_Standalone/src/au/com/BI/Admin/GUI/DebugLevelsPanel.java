@@ -10,7 +10,6 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Iterator;
 import java.util.HashMap;
 import javax.swing.*;
 
@@ -21,7 +20,7 @@ public class DebugLevelsPanel extends JPanel implements ActionListener
 	private Admin eLife;
 	private JPanel debugMenus;
 	private Logger logger;
-	private HashMap debugMenuHash;
+	private HashMap <String,Integer>debugMenuHash;
 
 
 	public DebugLevelsPanel(Admin eLife)
@@ -31,7 +30,7 @@ public class DebugLevelsPanel extends JPanel implements ActionListener
 		logger = Logger.getLogger("Log");
 		this.setLayout(new FlowLayout());
 		this.setAlignmentX(LEFT_ALIGNMENT);
-		debugMenuHash = new HashMap (100);
+		debugMenuHash = new HashMap <String,Integer>(100);
 		renderPanels();
 	}
 	
@@ -40,8 +39,11 @@ public class DebugLevelsPanel extends JPanel implements ActionListener
 		addDebugMenu ("Config", "au.com.BI.Config","FINER");
 		addDebugMenu ("Comms", "au.com.BI.Comms");
 		addDebugMenu ("Script", "au.com.BI.Script");
-
-
+		addDebugMenu("Jetty", "au.com.BI.Jetty");
+		addDebugMenu("Groovy", "au.com.BI.GroovyModels");
+		addDebugMenu("IR Learner", "au.com.BI.IR");
+		addDebugMenu("Macro", "au.com.BI.Macro");
+		
 		addDebugMenu("Comfort", "au.com.BI.Comfort");
 		addDebugMenu("Raw", "au.com.BI.Raw");
 		addDebugMenu("Client", "au.com.BI.Flash");
@@ -49,20 +51,21 @@ public class DebugLevelsPanel extends JPanel implements ActionListener
 		addDebugMenu("HAL", "au.com.BI.HAL");
 		addDebugMenu("Tutondo", "au.com.BI.Tutondo");
 		addDebugMenu("CBUS", "au.com.BI.CBUS");
+		addDebugMenu("Kramer", "au.com.BI.Kramer");
+		addDebugMenu("Nuvo", "au.com.BI.Nuvo");
 		addDebugMenu("GC100", "au.com.BI.GC100");
-		addDebugMenu("Orgenon", "au.com.BI.OrgeonScientific");
-		addDebugMenu("IR_Learner", "au.com.BI.IR");
-		addDebugMenu("Macro", "au.com.BI.Macro");
+		addDebugMenu("Oregon", "au.com.BI.OregonScientific");
+		addDebugMenu("Slim Server", "au.com.BI.MultiMedia.SlimServer");
+		addDebugMenu("Autonomic", "au.com.BI.MultiMedia.AutonomicHome");		
 		addDebugMenu("JRobin", "au.com.BI.JRobin");
 		addDebugMenu("Pelco", "au.com.BI.Pelco");
-		addDebugMenu("DynaLight", "au.com.BI.DynaLight");
+		addDebugMenu("DynaLite", "au.com.BI.Dynalite");
 		addDebugMenu("M1", "au.com.BI.M1");
+
 	}
 
 	public void sendDebugLevels () {
-		Iterator eachPackage = debugMenuHash.keySet().iterator();
-		while (eachPackage.hasNext()) {
-			String nextPackage = (String)eachPackage.next();
+		for (String nextPackage:debugMenuHash.keySet()){
 			Integer theLevel = (Integer)debugMenuHash.get (nextPackage);
 			sendTheLevel (theLevel.intValue(),nextPackage);
 		}
