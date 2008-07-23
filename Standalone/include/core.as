@@ -3171,6 +3171,8 @@ screenSaver = function (mode) {
 			var holder1_mc = screensaver_mc.createEmptyMovieClip("holder1_mc", 0);
 			var holder2_mc = screensaver_mc.createEmptyMovieClip("holder2_mc", 1);
 			holder1_mc._visible = holder2_mc._visible = false;
+
+			screensaver_mc.imageArray = mdm.FileSystem.getFileList(_global.settings.screenLockPhotoPath, "*.jpg");
 			screensaver_mc.currentHolder = holder1_mc;
 			screensaver_mc.currentImage = 0;
 			screensaver_mc.loadPicture = function () {
@@ -3284,10 +3286,6 @@ layout = function () {
 		screenSaver("stop");
 	}
 	screensaver_mc._visible = false;
-	
-	if (_global.settings.screenLockDisplay == "photo") {
-		screensaver_mc.imageArray = mdm.FileSystem.getFileList(_global.settings.screenLockPhotoPath, "*.jpg");
-	}
 	
 	//if (_global.settings.device != "pda") bg2_mc.loadMovie(_global.settings.libLocation + "backgrounds/bg.png");
 		
