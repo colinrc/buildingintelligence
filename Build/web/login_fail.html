@@ -29,14 +29,17 @@
 			padding: 30px;
 			border: 1px solid #95A7C4;
 		}
-		input.normal, input.grey {
+		label {
+			display: block;
+			font-weight: bold;
+			text-align: left;
+			color: #ffffff;
+		}
+		input.normal {
 			display: block;
 			width: 100%;
 			margin: 0 0 10px 0;
 			color: #000;
-		}
-		input.grey {
-			color: #999;
 		}
 		input.button {
 			display: block;
@@ -63,9 +66,13 @@
 <table><tr><td>
 	<form name="AuthForm" action="j_security_check" method="post">
 		<h1>Welcome to eLIFE</h1>
-		<input type="text" name="j_username" class="grey" value="<username>" onFocus="if (this.value == '<username>') { this.value=''; this.className = 'normal'} else this.select()" onBlur="if (this.value == '') { this.value = '<username>'; this.className = 'grey'}">
-		<input type="text" name="j_password" class="grey" value="<password>" onFocus="if (this.value == '<password>') { this.value=''; this.className = 'normal'; this.type = 'password'} else this.select()" onBlur="if (this.value == '') { this.value = '<password>'; this.className = 'grey'; this.type = 'text'}">
-		<input type="submit" value="Start eLIFE" class="button">
+		
+		<label>Username:</label>
+		<input type="text" name="j_username" class="normal" />
+		<label>Password:</label>
+		<input type="password" name="j_password" class="normal" />
+
+		<input type="submit" value="Start eLIFE" class="button" />
 		
 		<div class="warning">Incorrect username or password.<br>Please try again.</div>
 	</form>
