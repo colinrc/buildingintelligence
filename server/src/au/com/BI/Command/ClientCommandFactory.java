@@ -13,7 +13,12 @@ import au.com.BI.Messaging.AddressBook.ClientTypes;
 import au.com.BI.Messaging.AddressBook.Locations;
 import au.com.BI.User.User;
 
+ /**
+ * This class takes a parsed string from the input buffer, usually as a result of a message from Flash, and then generates
+ * a corresponding Command object, adding it to the main controller loop.
+ */
 public class ClientCommandFactory {
+
     protected Logger logger;
     protected AddressBook addressBook;
     protected long ID = 0;
@@ -34,6 +39,7 @@ public class ClientCommandFactory {
 	 * @param xmlDoc
 	 *            A Sax representation of the document
 	 */
+	// TODO Add PolicyFileRequest 
 	public ClientCommand processXML(Element rootElement) throws UnknownCommandException {
 
 		String name = ""; // the name of the node
@@ -45,6 +51,15 @@ public class ClientCommandFactory {
 		logger.log(Level.FINER, "ELEMENT " + name);
 
 
+		if (name.equals("policy-file-request") && (!commandBuilt)){
+			clientCommand = new ClientCommand ();
+			clientCommand.originatingID = ID;
+			commandBuilt = true;
+			clientCommand.setKey("SYSTEM");
+			clientCommand.setCommand ("policyFile");
+			
+		}
+		
 		if (name.equals("CONTROL") && !commandBuilt) {
 			key = rootElement.getAttributeValue("KEY");
 			if (key != null) {
@@ -123,6 +138,7 @@ public class ClientCommandFactory {
 		clientCommand.setKey("ID");
 		return clientCommand;
 	}
+	
 	
 	public ClientCommand buildKeyPress(String key, Element rootElement) {
 		String name = ""; // the name of the node

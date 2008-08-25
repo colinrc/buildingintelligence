@@ -6,6 +6,8 @@ package au.com.BI.Home;
 
 import au.com.BI.User.*;
 import au.com.BI.Jetty.*;
+
+import org.jdom.Element;
 import org.quartz.*;
 
 
@@ -529,7 +531,32 @@ public class Controller {
 		scriptModel.doClientStartup(targetFlashDeviceID, serverID);
 	}
 
+	public ClientCommand buildPolicyFile(long  originatingID) {
+		String name = ""; // the name of the node
+		String extra = "";
+		
+//		<cross-domain-policy>
+//		<allow-access-from domain="*" to-ports="*" />
+//		</cross-domain-policy>
 
+		logger.log(Level.FINEST, "Returning policy file");
+		ClientCommand clientCommand = new ClientCommand();
+		clientCommand.setKey("CLIENT_SEND");
+		
+		Element policyFile = new Element("cross-domain-policy");
+		Element policyDetail = new Element ("allow-access-from");
+		policyDetail.setAttribute("domain","*");
+		policyDetail.setAttribute("to-ports","*");
+		policyFile.addContent(policyDetail);
+		
+		clientCommand.setTargetDeviceID(originatingID);
+		clientCommand.setFromElement(policyFile);
+		clientCommand.setMessageType(CommandInterface.RawElement);
+		clientCommand.originatingID = originatingID;
+
+		return clientCommand;
+
+	}
 
 	public boolean testForPattern(CommandInterface item) {
 		boolean successfulCommand = false;
@@ -756,7 +783,12 @@ public class Controller {
 		}
 		if (commandCode.equals("LoadMacros")) {
 			loadMacros(true);
-
+		}
+		if (commandCode.equals ("policyFile")){
+			long originatingID = command.getTargetDeviceID();
+			Command policyFile  = buildPolicyFile( originatingID);
+			cache.setCachedCommand("POLICYFILE", policyFile);
+			commandQueue.add(policyFile);
 		}
 		if (commandCode.equals("LoadIRDB")) {
 			this.irCodeDB.readIRCodesFile("datafiles" + File.separator

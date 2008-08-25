@@ -64,6 +64,8 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 
         ServletHolder defServlet = mainContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
         defServlet.setInitParameter("dirAllowed","false");
+        defServlet.setInitParameter("aliases", "true");
+        defServlet.setInitParameter("serveIcon", "false");
         
         /** Post only content */ 
         
@@ -163,7 +165,11 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 
             updateContext.addServlet("au.com.BI.Servlets.UpdateServlet","/webclient/update");
             updateContext.addServlet("au.com.BI.Servlets.Logout","/webclient/logout");
-            updateContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
+            ServletHolder  defServlet = updateContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
+            
+            defServlet.setInitParameter("dirAllowed","false");
+            defServlet.setInitParameter("aliases", "true");
+            defServlet.setInitParameter("serveIcon", "false");
                  
            SessionManager updateContextSessionMgr =  updateContext.getSessionHandler().getSessionManager();
            updateContextSessionMgr.setMaxInactiveInterval(timeout);
@@ -216,7 +222,11 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             userMgrContext.setConnectorNames(new String[]{"SSL_CONNECT"});
             userMgrContext.addServlet("au.com.BI.Servlets.UserManagerServlet", "/Users");
             userMgrContext.addServlet("au.com.BI.Servlets.LogoutUserManager", "/Logout");
-            userMgrContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
+            ServletHolder  useMgrDef  =userMgrContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
+
+            useMgrDef.setInitParameter("dirAllowed","false");
+            useMgrDef.setInitParameter("aliases", "true");
+            useMgrDef.setInitParameter("serveIcon", "false");
             
             SecurityHandler userMgrSec = userMgrContext.getSecurityHandler();
             userMgrSec.setUserRealm(webPass);

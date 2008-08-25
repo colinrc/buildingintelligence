@@ -21,12 +21,7 @@ import au.com.BI.User.*;
  */
 public class ClientCommand extends Command implements CommandInterface {
 
-	/**
-	public static final int RawXML = 1;
-	public static final int GUIControlActivate = 3;
-	public static final int LightInstantOn = 10;
-	public static final int LightInstantOff = 11;
-	**/
+
     public int messageType = CommandInterface.Control;
 	public long	originatingID;
 	protected String title;
@@ -179,6 +174,13 @@ public class ClientCommand extends Command implements CommandInterface {
 		    found = true;
 	    }
 	    if (messageType.equals ("events")) {
+	        this.setMessageType (CommandInterface.RawElement);
+		    this.setTarget(element.getAttributeValue("TARGET"));
+		    this.setTargetUser(element.getAttributeValue("TARGET_USER"));
+	        this.element = element;	        
+		    found = true;
+	    }
+	    if (messageType.equals ("POLICY")) {
 	        this.setMessageType (CommandInterface.RawElement);
 		    this.setTarget(element.getAttributeValue("TARGET"));
 		    this.setTargetUser(element.getAttributeValue("TARGET_USER"));
