@@ -216,25 +216,29 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             
   
             Context userMgrContext = new Context (contexts, "/UserManager",Context.SECURITY|Context.SESSIONS);
-            userMgrContext.setResourceBase("../www");
+            userMgrContext.setResourceBase("../www/UserManager");
             userMgrContext.setAttribute("UserManager",webPass);
             userMgrContext.setAttribute("AddressBook",addressBook);
             userMgrContext.setConnectorNames(new String[]{"SSL_CONNECT"});
+            ServletHolder  useMgrDef  =userMgrContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/*");
             userMgrContext.addServlet("au.com.BI.Servlets.UserManagerServlet", "/Users");
             userMgrContext.addServlet("au.com.BI.Servlets.LogoutUserManager", "/Logout");
-            ServletHolder  useMgrDef  =userMgrContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
-
+     
+                 
             useMgrDef.setInitParameter("dirAllowed","false");
             useMgrDef.setInitParameter("aliases", "true");
             useMgrDef.setInitParameter("serveIcon", "false");
+            useMgrDef.setInitParameter("redirectWelcome", "false");
+        
+            userMgrContext.setWelcomeFiles(new String[]{"Users","index.html"});
             
             SecurityHandler userMgrSec = userMgrContext.getSecurityHandler();
             userMgrSec.setUserRealm(webPass);
         	
             ELifeAuthenticator usrAuthenticator = new ELifeAuthenticator ();
             usrAuthenticator.setSecurity(security);
-            usrAuthenticator.setLoginPage("/login_UserMgr.html");
-            usrAuthenticator.setErrorPage("/login_fail_UserMgr.html");
+            usrAuthenticator.setLoginPage("/login.html");
+            usrAuthenticator.setErrorPage("/login_fail.html");
             usrAuthenticator.setIpType(IPType.PWDOnly);
         	
             userMgrSec.setAuthenticator(usrAuthenticator);

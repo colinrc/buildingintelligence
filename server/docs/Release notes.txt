@@ -1,3 +1,15 @@
+== 26/Aug/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b85.zip V1.6-b85]  ==
+
+''' Flash Client '''
+
+Ensure cross domain file is sent when requested to support newer flash player versions. Resolves issue [ticket:731],[ticket:734],[ticket:731]
+
+''' User Manager '''
+
+Ensure user manager redirects correctly on authentication. Resolves issue [ticket:735]
+To use their must be a subdirectory /UserManager created in the eLife website. Contents are index.html, login.html, login_fail.html. 
+Examples have been checked into the Client_Build/web project.
+
 == 3/Jun/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b84.zip V1.6-b84]  ==
 
 ''' Jetty '''
