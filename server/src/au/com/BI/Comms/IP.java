@@ -116,7 +116,7 @@ public class IP extends BaseComms implements CommDevice
 						commsSend.setHandleEvents(false);
 						commsSend.notify();
 				}
-				commsSend = new CommsSend(commsGroup);
+				commsSend = new CommsSend(commsGroup, deviceName);
 				commsSend.setInterCommandInterval(interCommandInterval);
 				commsSend.setOs(os);
 				commsSend.start();

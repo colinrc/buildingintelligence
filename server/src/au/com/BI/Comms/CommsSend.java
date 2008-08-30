@@ -23,10 +23,10 @@ public class CommsSend extends Thread implements Runnable{
 	protected long lastSendTime;
 	protected Logger logger;
 
-	public CommsSend(ThreadGroup threadGroup) {
+	public CommsSend(ThreadGroup threadGroup, String deviceName) {
 		super (threadGroup,"Comms Send");
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		this.setName("Comms Sender");
+		this.setName("Comms Sender:" + deviceName);
 		toSend = new LinkedBlockingQueue<byte[]>();
 	}
 	
