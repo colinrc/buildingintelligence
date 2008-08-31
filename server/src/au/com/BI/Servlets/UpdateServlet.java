@@ -63,6 +63,7 @@ public class UpdateServlet extends HttpServlet {
            HttpServletResponse resp) throws ServletException,java.io.IOException {
     	CacheBridge cacheBridge = null;
     	List<Element> extraStuffForStartup = null;
+    	
     	Long ID = null;
     	Long serverID = null;
         HttpSession session = req.getSession(false);
@@ -95,7 +96,7 @@ public class UpdateServlet extends HttpServlet {
 	        		
 		        	serverID = (Long)session.getAttribute("ServerID");
 		        	String handlingSession = (String)session.getAttribute("HANLDING_REQUEST") ;
-			        if (handlingSession == null || handlingSession.equals("Y")){
+		        if (handlingSession != null && handlingSession.equals("Y")){
 						resp.setContentType("text/xml");
 				        
 				        PrintWriter out = resp.getWriter();
