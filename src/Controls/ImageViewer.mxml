@@ -20,7 +20,7 @@
 			if (fileName=="No Map") {
 				this.removeAllChildren();
 			} else {
-				var pictURL:String = File.applicationResourceDirectory.nativePath +File.separator+"lib"+File.separator+"maps"+File.separator+fileName;
+				var pictURL:String = File.applicationStorageDirectory.nativePath +File.separator+"lib"+File.separator+"maps"+File.separator+fileName;
 				var pictURLReq:URLRequest = new URLRequest(pictURL);			
 				
 				pictLdr.load(pictURLReq);

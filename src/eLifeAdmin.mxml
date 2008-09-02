@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()" paddingLeft="0" paddingTop="10"  width="1024" height="768" xmlns:ns1="Forms.Server.*" xmlns:ns2="Forms.*" xmlns:Control="Forms.Control.*">
-    <mx:states>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="init()" paddingLeft="0" paddingTop="10"  width="1024" height="768" xmlns:ns1="Forms.Server.*" xmlns:ns2="Forms.*" xmlns:Control="Forms.Control.*">
+	   <mx:states>
         <mx:State name="project">
             <mx:AddChild relativeTo="{dockedMenuBar}" position="lastChild">
                 <mx:ToggleButtonBar  tabIndex="5" borderStyle="solid" horizontalGap="10" width="555" id="buttonBar" itemClick="buttonClick(event)">
@@ -180,6 +180,6 @@
             <menuitem label="About" data="About"/>
         </menuitem>
     </mx:XMLList>
-    <mx:Script source="elifeAdmin.as"/>
-    <mx:Script source="elifeAdminInit.as"/>
+    <mx:Script source="eLifeAdmin.as" />
+    <mx:Script source="eLifeAdminInit.as" />
 </mx:WindowedApplication>

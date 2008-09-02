@@ -703,8 +703,8 @@
 					}
 					else
 					{		
-						var f3Str:String = File.applicationResourceDirectory.nativePath + File.separator+"projects";			
-						var f3:File = File.applicationResourceDirectory.resolvePath(f3Str);
+						var f3Str:String = File.applicationStorageDirectory.nativePath + File.separator+"projects";			
+						var f3:File = File.applicationStorageDirectory.resolvePath(f3Str);
 					    fileOpenPanel = FileOpenPanel.show(f3);
 					}
 					fileOpenPanel.addEventListener(Event.SELECT, fileOpenSelected);
@@ -719,8 +719,8 @@
 					}
 					else
 					{		
-						var f1Str:String = File.applicationResourceDirectory.nativePath + File.separator+"projects"+File.separator+project.name;			
-						var f1:File = File.applicationResourceDirectory.resolvePath(f1Str);
+						var f1Str:String = File.applicationStorageDirectory.nativePath + File.separator+"projects"+File.separator+project.name;			
+						var f1:File = File.applicationStorageDirectory.resolvePath(f1Str);
 					    fileSavePanel = FileSavePanel.show(f1, project.name+".elp");
 					    fileSavePanel.addEventListener(FileEvent.SELECT, fileSaveSelected);
 				     	fileSavePanel.addEventListener(Event.CANCEL, fileSaveSelectedCancelled);
@@ -736,8 +736,8 @@
 					}
 					else
 					{		
-						var f2Str:String = File.applicationResourceDirectory.nativePath + File.separator+"projects"+File.separator+project.name;			
-						var f2:File = File.applicationResourceDirectory.resolvePath(f2Str);
+						var f2Str:String = File.applicationStorageDirectory.nativePath + File.separator+"projects"+File.separator+project.name;			
+						var f2:File = File.applicationStorageDirectory.resolvePath(f2Str);
 					    fileSavePanel = FileSavePanel.show(f2, project.name+".elp");
 					}
 					fileSavePanel.addEventListener(FileEvent.SELECT, fileSaveSelected);
@@ -767,7 +767,7 @@
 
 		private function selectPath_event(event:Event): void {
 			var dir:File = new File();
-			dir.nativePath = File.applicationResourceDirectory.nativePath + File.separator+"projects";
+			dir.nativePath = File.applicationStorageDirectory.nativePath + File.separator+"projects";
 			var selectDir:FileCreateDirPanel = FileCreateDirPanel.show(dir, null);	
 			
 			selectDir.addEventListener(Event.SELECT, dirCreateSelected);
@@ -879,7 +879,7 @@
         
         private function createNewProject(name:String, dir:String):void {
         	var file:File = new File();
-        	file.nativePath = File.applicationResourceDirectory.nativePath + File.separator+"defaults"+File.separator+"default_project.elp";	
+        	file.nativePath = File.applicationStorageDirectory.nativePath + File.separator+"defaults"+File.separator+"default_project.elp";	
         	
 			var fileStream:FileStream = new FileStream();
             fileStream.open(file, FileMode.READ);

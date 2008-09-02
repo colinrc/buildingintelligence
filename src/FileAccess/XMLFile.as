@@ -14,7 +14,18 @@ package FileAccess
 		public function getXMLFile(name:String):XML {
 			detail= null;
 			file = new File();
-			file = File.applicationResourceDirectory.resolvePath(name);
+			file = File.applicationStorageDirectory.resolvePath(name);
+			
+			if(!file.exists) { 
+ 
+				trace("Unable to find "+file.nativePath);
+		 		trace ("copy the bin\data dir to File.applicationResourceDirectory.");
+				//var f2:File = File.applicationResourceDirectory.resolvePath(pDirPath); 
+		 
+				//f2.copyTo(File.applicationStorageDirectory.resolvePath(pDirPath));
+		 
+			}
+
 			
 			if (stream != null)	{
 				stream.close();
@@ -28,7 +39,7 @@ package FileAccess
 		
 		public function saveXMLFile(fileName:String, myDetail:String):void {
 			file = new File();
-			file = File.applicationResourceDirectory.resolvePath(fileName);
+			file = File.applicationDirectory.resolvePath(fileName);
 			
 			if (stream != null)	{
 				stream.close();

@@ -12,7 +12,7 @@ package FileAccess
 		public function getImageNames():ArrayCollection {
 			file = new File();
 			
-			file = File.applicationResourceDirectory.resolvePath("lib"+File.separator+"maps"+File.separator);
+			file = File.applicationStorageDirectory.resolvePath("lib"+File.separator+"maps"+File.separator);
 			var files:Array = file.getDirectoryListing();
 			var imageFiles:ArrayCollection= new ArrayCollection();
 			
@@ -35,7 +35,7 @@ package FileAccess
 		public function getBackgroundImageNames():ArrayCollection {
 			file = new File();
 			
-			file = File.applicationResourceDirectory.resolvePath("lib"+File.separator+"backgrounds"+File.separator);
+			file = File.applicationStorageDirectory.resolvePath("lib"+File.separator+"backgrounds"+File.separator);
 			var files:Array = file.getDirectoryListing();
 			var imageFiles:ArrayCollection= new ArrayCollection();
 			
