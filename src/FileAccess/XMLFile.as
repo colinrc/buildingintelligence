@@ -17,9 +17,11 @@ package FileAccess
 			file = File.applicationStorageDirectory.resolvePath(name);
 			
 			if(!file.exists) { 
- 
+ 				trace("-----------------------------------------------------------------------------------");
 				trace("Unable to find "+file.nativePath);
-		 		trace ("copy the bin\data dir to File.applicationResourceDirectory.");
+		 		trace("copy the bin\data,defaults,lib and project dir to "+File.applicationStorageDirectory.nativePath.toString());
+				trace("and re-run the application");
+				
 				//var f2:File = File.applicationResourceDirectory.resolvePath(pDirPath); 
 		 
 				//f2.copyTo(File.applicationStorageDirectory.resolvePath(pDirPath));
