@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"  updateComplete="init()" width="100%" height="100%" xmlns:Controls="Controls.*">
-	<mx:HBox width="100%" height="95%">
+	<!-- mx:HBox width="100%" height="95%">
 		<Controls:MapEditor  mapName="{dataHolder.map}" backgroundName="{dataHolder.background}" >
 		</Controls:MapEditor>
-	</mx:HBox>
+	</mx:HBox -->
 		<mx:HBox width="100%" height="6%"  verticalAlign="bottom" horizontalGap="5" horizontalAlign="right">
 			<mx:Button label="Undo Changes" id="undo"  enabled="{modifiedFlag}" width="108" height="28" fontSize="10" click="undo_click(event)"/>
 		</mx:HBox>
