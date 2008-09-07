@@ -68,7 +68,7 @@ public class ProcessXML extends Thread
 		}
 	}
 	
-	public void findSchemas (String dir, Vector fileList,Vector dirList) {
+	public void findSchemas (String dir, Vector <String>fileList,Vector <String>dirList) {
 		File dirReader = new File(this.eSmart_install + "/" + dir);
 		File files[] = dirReader.listFiles();
 		if (files != null) {
@@ -88,7 +88,7 @@ public class ProcessXML extends Thread
 		}
 	}
 	
-	public void findTemplates (String dir, Vector fileList,Vector dirList,String destDir) {
+	public void findTemplates (String dir, Vector <String>fileList,Vector <String>dirList,String destDir) {
 		File dirReader = new File(this.eSmart_install + "/" + dir);
 		File files[] = dirReader.listFiles();
 		if (files != null) {
@@ -109,8 +109,8 @@ public class ProcessXML extends Thread
 	}
 	
 	public void sendSchemas () {
-		Vector fileList = new Vector (5);
-		Vector dirList = new Vector (5);
+		Vector <String>fileList = new Vector<String> (5);
+		Vector <String>dirList = new Vector <String>(5);
 		findSchemas ("server/templates" ,fileList,dirList);
 		Object files[] = fileList.toArray();
 		Object dirs[] = dirList.toArray();
@@ -121,8 +121,8 @@ public class ProcessXML extends Thread
 	}
 	
 	public void sendTemplates () {
-		Vector fileList = new Vector (5);
-		Vector dirList = new Vector (5);
+		Vector <String>fileList = new Vector<String> (5);
+		Vector <String>dirList = new Vector <String>(5);
 		findTemplates ("server/templates" ,fileList,dirList,"templates");
 		Object files[] = fileList.toArray();
 		Object dirs[] = dirList.toArray();
