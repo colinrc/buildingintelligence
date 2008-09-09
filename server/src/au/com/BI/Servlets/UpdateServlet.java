@@ -180,6 +180,15 @@ public class UpdateServlet extends HttpServlet {
         if (sessionID == null){
         	logger.log (Level.FINE,"Web session was incorrectly set up, resetting");
         	session.invalidate();
+			resp.setContentType("text/html");
+	        
+	        java.io.PrintWriter out = resp.getWriter();
+	        out.println("<HTML><BODY>");
+	        out.println("<P>Session was not correctly set up");
+	        out.println("</BODY></HTML>");
+	        resp.flushBuffer();
+	        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+	        return;
         }
     	ClientCommandFactory clientCommandFactory = (ClientCommandFactory)session.getAttribute("ClientCommandFactory");
         String message = req.getParameter("MESSAGE");
@@ -286,15 +295,10 @@ public class UpdateServlet extends HttpServlet {
  
     	Security security = (Security)context.getAttribute("Security");
    
-        if (addressBook.isUserConnected(user)){
-	        logger.log (Level.FINE, "Starting new session for existing web user " + user);
-        }
-        else {
-	        logger.log (Level.FINE, "Session created for web user " + user);
-	        addressBook.setUser(user, ID, AddressBook.Locations.HTTP);
-	
-	        sessionCounter.incrementCount();
-        }
+        logger.log (Level.FINE, "Session created for web user " + user);
+        addressBook.setUser(user, ID, AddressBook.Locations.HTTP);
+
+        sessionCounter.incrementCount();
         
     	
     	if (!security.allowWebClient()){

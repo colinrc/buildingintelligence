@@ -44,8 +44,11 @@ public class Logout extends HttpServlet {
         HttpSession session = req.getSession(false);  	
         
         if (session != null){
+        	
         	Long ID = (Long)session.getAttribute("ID");
         	ClientCommandFactory clientCommandFactory = (ClientCommandFactory)session.getAttribute("ClientCommandFactory");
+
+        	session.invalidate();
 
         	if (clientCommandFactory != null && ID != null && commandQueue  != null && addressBook != null){
             	clientCommandFactory.setID(ID);
@@ -53,13 +56,12 @@ public class Logout extends HttpServlet {
 					ClientCommand clientCommand = clientCommandFactory.buildListNamesCommand();
 					if (clientCommand != null) {
 						commandQueue.add(clientCommand);
-					}
-			    	
+					}			    	
         	}
-        	session.invalidate();
         }
         
-        resp.sendRedirect("/");
+        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        resp.sendRedirect("/index.html");
 /*
  * 
         resp.setContentType("text/html");

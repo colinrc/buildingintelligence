@@ -1,3 +1,15 @@
+'''Serial '''
+
+Incorporated RXTX serial library back into system. Issue [ticket:744]
+
+''' Web Client '''
+
+Add further redirection instruction on logout to try to work with Firefox better. Ticket [ticket:742]
+
+Ensure session is not incorrectly accessed if the service was not setup properly for some reason. Ticket [ticket:736]
+ 
+Simplied session counting procedure.Ticked [ticket:746]
+ 
 == 31/Aug/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b87.zip V1.6-b87]
  
 ''' Jetty '''
@@ -12,8 +24,6 @@ Release with correct manifest and libraries
 
 
 == 26/Aug/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b85.zip V1.6-b85]   [attachment:wiki:SoftwareReleases:eLife-1.6b85-libs.zip Libs-V1.6b85] ==
-
-''' Flash Client '''
 
 ''' Flash Client '''
 

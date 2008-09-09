@@ -54,14 +54,15 @@ public class SessionCounter implements HttpSessionListener  {
         	if (currentID.equals(oldID)){
         		// The user has not logged in again, this should occur from a time out
     	        addressBook.userDisconnect(user);
-				synchronized (currentSessionCount){
-					currentSessionCount--;
-				}
+
         	}
 	        logger.log (Level.FINE, "Session closed for web user " + user);
         } else {
         	logger.log (Level.FINE,"Session close was attempted however the user " + user + " is not logged in.");
         }
+		synchronized (currentSessionCount){
+			currentSessionCount--;
+		}
 	}
 
 	/** The number of sessions currently in memory. */

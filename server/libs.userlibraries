@@ -106,6 +106,9 @@
 <library name="restlet1.0rc4" systemlibrary="false">
 <archive path="/Java/restlet-1.0rc4/lib/com.noelios.restlet.jar"/>
 </library>
+<library name="RXTX2.1-7" systemlibrary="false">
+<archive nativelibpaths="/Java/rxtx-2.1-7r2/MACOSX_IDE/ForPackageMaker/Install/Library/Java/Extensions" path="/Java/rxtx-2.1-7r2/RXTXcomm.jar" source="/Java/rxtx-2.1-7r2/src"/>
+</library>
 <library name="xmlunit1.0" systemlibrary="false">
 <archive path="/Java/xmlunit/lib/xmlunit1.0.jar"/>
 </library>
