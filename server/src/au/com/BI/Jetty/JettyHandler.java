@@ -22,6 +22,8 @@ import org.mortbay.jetty.security.HashUserRealm;
 import org.mortbay.jetty.security.SecurityHandler;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.security.UserRealm;
+import org.mortbay.servlet.WelcomeFilter;
+
 import au.com.BI.Config.Security.IPType;
 //import org.mortbay.jetty.handler.*;
 import java.util.List;
@@ -167,6 +169,8 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             updateContext.addServlet("au.com.BI.Servlets.Logout","/webclient/logout");
             ServletHolder  defServlet = updateContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
             
+            updateContext.setWelcomeFiles(new String[]{"index.html"});
+            
             defServlet.setInitParameter("dirAllowed","false");
             defServlet.setInitParameter("aliases", "true");
             defServlet.setInitParameter("serveIcon", "false");
@@ -199,6 +203,8 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             updateAuthenticator.setLoginPage("/login.html");
             updateAuthenticator.setErrorPage("/login_fail.html");
             updateMgrSec.setAuthenticator(updateAuthenticator);
+
+            
             
             updateMgrSec.setConstraintMappings(new ConstraintMapping[]{webClientCM});
                  
@@ -220,17 +226,20 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             userMgrContext.setAttribute("UserManager",webPass);
             userMgrContext.setAttribute("AddressBook",addressBook);
             userMgrContext.setConnectorNames(new String[]{"SSL_CONNECT"});
+//            WelcomeFilter userWelcome  = userMgrContext.addFilter(new WelcomeFilter(), "/", "/Users");
+
             ServletHolder  useMgrDef  =userMgrContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/*");
+ //         ServletHolder  useMgrDef  =userMgrContext.addServlet("org.mortbay.jetty.servlet.WelcomeFilter","/");
+
             userMgrContext.addServlet("au.com.BI.Servlets.UserManagerServlet", "/Users");
             userMgrContext.addServlet("au.com.BI.Servlets.LogoutUserManager", "/Logout");
      
-                 
-            useMgrDef.setInitParameter("dirAllowed","false");
+            useMgrDef.setInitParameter("welcome","/Users");
             useMgrDef.setInitParameter("aliases", "true");
             useMgrDef.setInitParameter("serveIcon", "false");
             useMgrDef.setInitParameter("redirectWelcome", "false");
         
-            userMgrContext.setWelcomeFiles(new String[]{"Users","index.html"});
+           // userMgrContext.setWelcomeFiles(new String[]{"Users","index.html"});
             
             SecurityHandler userMgrSec = userMgrContext.getSecurityHandler();
             userMgrSec.setUserRealm(webPass);

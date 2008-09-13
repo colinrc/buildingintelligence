@@ -1,3 +1,5 @@
+== 13/Sep/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b87.zip V1.6-b87]   [attachment:wiki:SoftwareReleases:eLife-1.6b87-libs.zip Libs-V1.6b87] ==
+
 '''Serial '''
 
 Incorporated RXTX serial library back into system. Issue [ticket:744]
@@ -8,7 +10,11 @@ Add further redirection instruction on logout to try to work with Firefox better
 
 Ensure session is not incorrectly accessed if the service was not setup properly for some reason. Ticket [ticket:736]
  
-Simplied session counting procedure.Ticked [ticket:746]
+Simplied session counting procedure.Tickedt [ticket:746]
+
+''' CBUS '''
+
+Ensure slider pulse does not cause threading issue on comms reconnect. Ticket [ticket:745]
  
 == 31/Aug/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b87.zip V1.6-b87]
  

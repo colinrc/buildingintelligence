@@ -56,7 +56,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 		temperatureSensors = new LinkedList<SensorFascade>();
 		labels = new LinkedList<Label>();
-		sliderPulse = new SliderPulse();
 		mMIHelpers = new MMIHelpers(cBUSHelper, configHelper, comms, state, this);
 		etxChars = new int[] {'.','$','%','#','!','\''};
 
@@ -318,7 +317,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 		String pollTempStr = (String)this.getParameterValue("POLL_TEMP_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
 
-		if (sliderPulse != null) sliderPulse.setRunning (false);
+		if (sliderPulse != null) {
+			sliderPulse.setRunning (false);
+		}
+		sliderPulse = new SliderPulse();
 
 		String completeDimTimeStr = this.getParameterValue("COMPLETE_DIM_TIME", DeviceModel.MAIN_DEVICE_GROUP);
 
