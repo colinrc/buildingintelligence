@@ -33,6 +33,10 @@ public class ELifeAuthenticator extends FormAuthenticator  implements Authentica
 		Request request, Response response) throws IOException {
 		String callingIP = request.getRemoteAddr();
 		
+		if (request.getUri().getPath().endsWith("favicon.ico")) {
+			 return SecurityHandler.__NOBODY;
+		}
+		
 		if (ipType == IPType.FullFunction) {
 			if (security.iPInRange(callingIP, IPType.FullFunction))  {
 				return SecurityHandler.__NOBODY;

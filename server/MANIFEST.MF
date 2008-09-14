@@ -3,13 +3,14 @@ Ant-Version: Apache Ant 1.6.5
 Created-By: 1.5.0_06-64 ("Apple Computer, Inc.")
 Main-Class: au.com.BI.Home.eLife
 Class-Path: ../ext/build ../ext/jrobin-1.4.0.jar ../ext/snmp-1.3.jar .
- ./ext/junit-addons-1.4.jar ../ext/jython.jar ../ext/bin-groovy ../ext
- /quartz-1.6.0.jar ../ext/commons-collections-3.1.jar ../ext/commons-l
- ogging-api.jar ../ext/commons-logging.jar ../ext/jta.jar ../ext/xml-a
- pis.jar ../ext/jdom.jar ../ext/xalan.jar ../ext/jetty-6.1.11.jar ../e
- xt/jetty-util-6.1.11.jar ../ext/servlet-api-2.5-6.1.11.jar ../ext/jet
- ty-ajp-6.1.11.jar ../ext/jetty-client-6.1.11.jar ../ext/jetty-html-6.
- 1.11.jar ../ext/jetty-java5-threadpool-6.1.11.jar ../ext/jetty-servle
- t-tester-6.1.11.jar ../ext/jetty-setuid-6.1.11.jar ../ext/jetty-sslen
- gine-6.1.11.jar ../ext/groovy-all-1.5.6.jar ../ext/xmlunit1.0.jar
+ ./ext/junit-addons-1.4.jar ../ext/jython.jar ../ext/RXTXcomm.jar ../e
+ xt/bin-groovy ../ext/quartz-1.6.0.jar ../ext/commons-collections-3.1.
+ jar ../ext/commons-logging-api.jar ../ext/commons-logging.jar ../ext/
+ jta.jar ../ext/xml-apis.jar ../ext/jdom.jar ../ext/xalan.jar ../ext/j
+ etty-6.1.11.jar ../ext/jetty-util-6.1.11.jar ../ext/servlet-api-2.5-6
+ .1.11.jar ../ext/jetty-ajp-6.1.11.jar ../ext/jetty-client-6.1.11.jar 
+ ../ext/jetty-html-6.1.11.jar ../ext/jetty-java5-threadpool-6.1.11.jar
+  ../ext/jetty-servlet-tester-6.1.11.jar ../ext/jetty-setuid-6.1.11.ja
+ r ../ext/jetty-sslengine-6.1.11.jar ../ext/groovy-all-1.5.6.jar ../ex
+ t/xmlunit1.0.jar
 

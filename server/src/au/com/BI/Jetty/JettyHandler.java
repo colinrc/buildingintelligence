@@ -18,6 +18,7 @@ import org.mortbay.jetty.handler.HandlerCollection;
 
 import org.mortbay.jetty.security.Constraint;
 import org.mortbay.jetty.security.ConstraintMapping;
+import org.mortbay.jetty.security.FormAuthenticator;
 import org.mortbay.jetty.security.HashUserRealm;
 import org.mortbay.jetty.security.SecurityHandler;
 import org.mortbay.jetty.security.SslSocketConnector;
@@ -26,6 +27,7 @@ import org.mortbay.servlet.WelcomeFilter;
 
 import au.com.BI.Config.Security.IPType;
 //import org.mortbay.jetty.handler.*;
+import java.net.Authenticator;
 import java.util.List;
 import java.util.logging.*;
 
@@ -203,7 +205,6 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             updateAuthenticator.setLoginPage("/login.html");
             updateAuthenticator.setErrorPage("/login_fail.html");
             updateMgrSec.setAuthenticator(updateAuthenticator);
-
             
             
             updateMgrSec.setConstraintMappings(new ConstraintMapping[]{webClientCM});
@@ -229,7 +230,6 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 //            WelcomeFilter userWelcome  = userMgrContext.addFilter(new WelcomeFilter(), "/", "/Users");
 
             ServletHolder  useMgrDef  =userMgrContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/*");
- //         ServletHolder  useMgrDef  =userMgrContext.addServlet("org.mortbay.jetty.servlet.WelcomeFilter","/");
 
             userMgrContext.addServlet("au.com.BI.Servlets.UserManagerServlet", "/Users");
             userMgrContext.addServlet("au.com.BI.Servlets.LogoutUserManager", "/Logout");
@@ -239,7 +239,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             useMgrDef.setInitParameter("serveIcon", "false");
             useMgrDef.setInitParameter("redirectWelcome", "false");
         
-           // userMgrContext.setWelcomeFiles(new String[]{"Users","index.html"});
+           userMgrContext.setWelcomeFiles(new String[]{"Users","index.html"});
             
             SecurityHandler userMgrSec = userMgrContext.getSecurityHandler();
             userMgrSec.setUserRealm(webPass);
