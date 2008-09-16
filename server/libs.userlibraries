@@ -109,6 +109,9 @@
 <library name="RXTX2.1-7" systemlibrary="false">
 <archive nativelibpaths="/Java/rxtx-2.1-7r2/MACOSX_IDE/ForPackageMaker/Install/Library/Java/Extensions" path="/Java/rxtx-2.1-7r2/RXTXcomm.jar" source="/Java/rxtx-2.1-7r2/src"/>
 </library>
+<library name="webdav-1.2" systemlibrary="false">
+<archive path="/Java/webdav-servlet-1.2/webdav-servlet-1.2.jar" source="/Java/webdav-servlet-1.2/webdav-servlet-1.2-sources.jar"/>
+</library>
 <library name="xmlunit1.0" systemlibrary="false">
 <archive path="/Java/xmlunit/lib/xmlunit1.0.jar"/>
 </library>

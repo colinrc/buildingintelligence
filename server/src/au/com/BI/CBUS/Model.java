@@ -303,6 +303,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void doStartup() throws CommsFail {
 		tildeCount = 0;
 		this.mMIHelpers.comms = comms; //just to be sure.
+		sliderPulse = new SliderPulse();
 		super.doStartup();
 		
 		if (applicationCodes.isEmpty()) applicationCodes.add("38");
@@ -320,7 +321,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (sliderPulse != null) {
 			sliderPulse.setRunning (false);
 		}
-		sliderPulse = new SliderPulse();
+
 
 		String completeDimTimeStr = this.getParameterValue("COMPLETE_DIM_TIME", DeviceModel.MAIN_DEVICE_GROUP);
 
