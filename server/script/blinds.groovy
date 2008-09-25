@@ -86,6 +86,7 @@ public class blinds extends BIScript  {
 				elife.sendCommand (cbusDisplayName,"on","100")
 				break
 		}
+	}
 			
 }
 
