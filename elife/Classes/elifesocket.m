@@ -82,7 +82,7 @@
 						uint8_t tmpbuf[4096];
 						int currchar = 0;
 						int i;
-						// pull out each string from the buffer and XML Parse them
+						// pull out each foo string from the buffer and XML Parse them
 						while (currchar < len) {
 							i=0;
 							while (buffer[currchar]!='\0') {
