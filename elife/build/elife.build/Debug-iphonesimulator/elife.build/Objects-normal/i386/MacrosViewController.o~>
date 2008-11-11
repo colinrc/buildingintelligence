@@ -1,0 +1,4 @@
+In file included from /Users/cameron/XCode Apps/elife/elife/Classes/MacrosViewController.m:9:
+/Users/cameron/XCode Apps/elife/elife/Classes/MacrosViewController.h:13: error: syntax error before 'MacrosTableViewController'
+/Users/cameron/XCode Apps/elife/elife/Classes/MacrosViewController.h:16: error: syntax error before 'MacrosTableViewController'
+/Users/cameron/XCode Apps/elife/elife/Classes/MacrosViewController.m:13: error: no declaration of property 'macrosTabControl' found in the interface
