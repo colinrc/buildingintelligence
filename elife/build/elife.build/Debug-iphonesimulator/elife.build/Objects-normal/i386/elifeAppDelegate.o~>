@@ -1,6 +1,0 @@
-/Users/cameron/XCode Apps/elife/elife/Classes/elifeAppDelegate.m: In function '-[elifeAppDelegate applicationDidFinishLaunching:]':
-/Users/cameron/XCode Apps/elife/elife/Classes/elifeAppDelegate.m:109: error: 'elifesocket' undeclared (first use in this function)
-/Users/cameron/XCode Apps/elife/elife/Classes/elifeAppDelegate.m:109: error: (Each undeclared identifier is reported only once
-/Users/cameron/XCode Apps/elife/elife/Classes/elifeAppDelegate.m:109: error: for each function it appears in.)
-/Users/cameron/XCode Apps/elife/elife/Classes/elifeAppDelegate.m:109: error: 'myConnectSocket' undeclared (first use in this function)
-/Users/cameron/XCode Apps/elife/elife/Classes/elifeAppDelegate.m:106: warning: unused variable 'myParser'
