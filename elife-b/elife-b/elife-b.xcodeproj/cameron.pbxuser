@@ -24,13 +24,44 @@
 		activeBuildConfigurationName = Debug;
 		activeExecutable = 7E14862A0EE16E5A0021EBE9 /* elife-b */;
 		activeTarget = 1D6058900D05DD3D006BFB54 /* elife-b */;
+		addToTargets = (
+			1D6058900D05DD3D006BFB54 /* elife-b */,
+		);
 		codeSenseManager = 7E1486340EE16E780021EBE9 /* Code sense */;
 		executables = (
 			7E14862A0EE16E5A0021EBE9 /* elife-b */,
 		);
 		perUserDictionary = {
-			PBXPerProjectTemplateStateSaveDate = 249654874;
-			PBXWorkspaceStateSaveDate = 249654874;
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					833,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 249656069;
+			PBXWorkspaceStateSaveDate = 249656069;
+		};
+		perUserProjectItems = {
+			7E1486890EE172CB0021EBE9 = 7E1486890EE172CB0021EBE9 /* PBXBookmark */;
+			7E14868A0EE172CB0021EBE9 = 7E14868A0EE172CB0021EBE9 /* PBXTextBookmark */;
+			7E1486920EE173130021EBE9 /* PBXTextBookmark */ = 7E1486920EE173130021EBE9 /* PBXTextBookmark */;
+			7E1486930EE173130021EBE9 /* PBXTextBookmark */ = 7E1486930EE173130021EBE9 /* PBXTextBookmark */;
 		};
 		sourceControlManager = 7E1486330EE16E780021EBE9 /* Source Control */;
 		userBuildSettings = {
@@ -77,5 +108,46 @@
 	7E1486340EE16E780021EBE9 /* Code sense */ = {
 		isa = PBXCodeSenseManager;
 		indexTemplatePath = "";
+	};
+	7E1486820EE1728D0021EBE9 /* elifeXMLParser.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1011, 404}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 572}";
+		};
+	};
+	7E1486890EE172CB0021EBE9 /* PBXBookmark */ = {
+		isa = PBXBookmark;
+		fRef = 7E1486820EE1728D0021EBE9 /* elifeXMLParser.h */;
+	};
+	7E14868A0EE172CB0021EBE9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E1486820EE1728D0021EBE9 /* elifeXMLParser.h */;
+		name = "elifeXMLParser.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 412;
+		vrLoc = 0;
+	};
+	7E1486920EE173130021EBE9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E1486820EE1728D0021EBE9 /* elifeXMLParser.h */;
+		name = "elifeXMLParser.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 412;
+		vrLoc = 0;
+	};
+	7E1486930EE173130021EBE9 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E1486820EE1728D0021EBE9 /* elifeXMLParser.h */;
+		name = "elifeXMLParser.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 572;
+		vrLoc = 0;
 	};
 }
