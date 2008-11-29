@@ -1,0 +1,81 @@
+// !$*UTF8*$!
+{
+	1D3623240D0F684500981E51 /* elife_bAppDelegate.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {937, 404}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 490}";
+		};
+	};
+	1D3623250D0F684500981E51 /* elife_bAppDelegate.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {937, 644}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 664}";
+		};
+	};
+	1D6058900D05DD3D006BFB54 /* elife-b */ = {
+		activeExec = 0;
+		executables = (
+			7E14862A0EE16E5A0021EBE9 /* elife-b */,
+		);
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 7E14862A0EE16E5A0021EBE9 /* elife-b */;
+		activeTarget = 1D6058900D05DD3D006BFB54 /* elife-b */;
+		codeSenseManager = 7E1486340EE16E780021EBE9 /* Code sense */;
+		executables = (
+			7E14862A0EE16E5A0021EBE9 /* elife-b */,
+		);
+		perUserDictionary = {
+			PBXPerProjectTemplateStateSaveDate = 249654874;
+			PBXWorkspaceStateSaveDate = 249654874;
+		};
+		sourceControlManager = 7E1486330EE16E780021EBE9 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	29B97316FDCFA39411CA2CEA /* main.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {937, 404}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 374}";
+		};
+	};
+	7E14862A0EE16E5A0021EBE9 /* elife-b */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 1;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = "elife-b";
+		sourceDirectories = (
+		);
+	};
+	7E1486330EE16E780021EBE9 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryName = "bi-turnip";
+		};
+	};
+	7E1486340EE16E780021EBE9 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+}
