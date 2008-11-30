@@ -8,7 +8,7 @@ import java.net.*;
 
 import java.util.logging.*;
 import java.util.*;
-
+import au.com.BI.Jetty.*;
 
 /**
  * @author Colin Canfield
@@ -18,15 +18,13 @@ public class eLife_monitor
 {
 	
 	public String IPAddress = "";
-	public String devicePort = "10002";
+	public int port = 8082;
 	protected Level defaultDebugLevel = Level.INFO;
 	protected boolean running = true;
 	Logger logger;
 	boolean gettingLines = false;
 	protected String eSmart_install;
-	protected Socket adminConnection;
-	protected ProcessXML processXML;
-	protected ConnectionManager connection;
+	protected JettyHandler connection;
 	
 	
 	/**
@@ -39,7 +37,7 @@ public class eLife_monitor
 		
 		logger = Logger.getLogger("eLife_monitor");
 		running = true;
-		int port = 10002;
+
 	    // Read properties file.
 	    Properties properties = new Properties();
 	    try {
@@ -52,7 +50,7 @@ public class eLife_monitor
 	    	try {
 	    		port = Integer.parseInt(portStr);
 	    	} catch (NumberFormatException ex) {
-	    		port = 10002;
+	    		port = 8082;
 	    	}
 	    }
 	    
@@ -62,42 +60,17 @@ public class eLife_monitor
 
 		System.out.println ("Launching eLife monitor task V" + major_version + "." + 
 					minor_version);
-		
-		logger.info("Openning port " + port);
 
-		logger.info("Listening for connection on " + port);
-		connection = new ConnectionManager (port,this);
-		connection.start();
-	}
-
-	public void disconnect () {
+		logger.info("Listening for connections on " + port);
+		connection = new JettyHandler ();
 		try {
-			connection.stopHeartbeat();
-			running = false;
-			if (adminConnection != null) {
-				synchronized (adminConnection){
-					processXML.setGettingLines(false);
-					adminConnection.close();
-				}
-			}
-		} catch (IOException e) {
+			connection.start(port,eSmart_install,this);	
+		} catch (Exception e){
+			logger.log(Level.SEVERE,"Could not start monitor web server "+ e.getMessage());
 		}
-		gettingLines = false;
 	}
 	
-	public void connect (Socket adminConnection) {
 
-		this.adminConnection = adminConnection;
-		processXML = new ProcessXML (adminConnection,eSmart_install);
-		processXML.start();
-	}
-	
-	public boolean isConnected () {
-		if (processXML != null && processXML.isAlive()) 
-			return true;
-		else
-			return false;
-	}
 	
 	public static void main(String[] args)
 	{
