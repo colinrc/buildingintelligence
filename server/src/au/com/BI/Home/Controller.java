@@ -532,8 +532,7 @@ public class Controller {
 	}
 
 	public ClientCommand buildPolicyFile(long  originatingID) {
-		String name = ""; // the name of the node
-		String extra = "";
+
 		
 //		<cross-domain-policy>
 //		<allow-access-from domain="*" to-ports="*" />
@@ -711,7 +710,7 @@ public class Controller {
 			}
 			String className = stack[i].getClassName();
 			String methodName = stack[i].getMethodName();
-			boolean isNativeMethod = stack[i].isNativeMethod();
+			//boolean isNativeMethod = stack[i].isNativeMethod();
 			int line = stack[i].getLineNumber();
 			logger.logp(Level.FINER, className, methodName, String
 					.valueOf(line), ex);
@@ -719,7 +718,7 @@ public class Controller {
 	}
 
 	public void doSendCommand(CommandInterface command) {
-		String commandCode = command.getCommandCode();
+		// String commandCode = command.getCommandCode();
 		for (DeviceModel theClientModel: clientModels){
 			try {
 				theClientModel.doCommand(command);
@@ -754,7 +753,7 @@ public class Controller {
 			}
 
 		}
-		if (commandCode.equals("ClientAttach")) {
+		if (commandCode.equals("ClientAttatch")) {
 			try {
 				long flashID = Long.parseLong(command.getExtraInfo());
 				long serverID = Long.parseLong(command.getExtra2Info());
@@ -816,7 +815,7 @@ public class Controller {
 	public boolean  loadMacros (boolean sendToClient) {
 		try {
 			this.macroHandler.readMacroFile(false);
-			if (sendToClient) this.macroModel.sendListToClient();
+			if (sendToClient) this.macroModel.sendListToClient(0);
 			return true;
 		} catch (Exception e) {
 			logger.log(Level.WARNING, "Macros could not be loaded");
@@ -827,7 +826,7 @@ public class Controller {
 	public boolean  loadScripts (boolean sendToClient) {
 		try {
 			this.scriptModel.loadScripts();
-			if (sendToClient) this.scriptModel.sendListToClient();
+			if (sendToClient) this.scriptModel.sendListToClient(0);
 			return true;
 		} catch (Exception e) {
 			logger.log(Level.WARNING, "Scripts could not be loaded ");

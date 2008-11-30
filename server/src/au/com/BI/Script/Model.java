@@ -295,10 +295,10 @@ public class Model
 	    }
 	    */
                    
-		public void sendListToClient() {
+		public void sendListToClient(long targetFlashClient) {
 			ClientCommand clientCommand = (ClientCommand)doGetList("");
-			clientCommand.setTargetDeviceID(-1);
-			cache.setCachedCommand("SCRIPT", clientCommand);
+			clientCommand.setTargetDeviceID(targetFlashClient);
+			cache.setCachedCommand("SCRIPT", clientCommand,false);
 			commandQueue.add(clientCommand);
 		}
 

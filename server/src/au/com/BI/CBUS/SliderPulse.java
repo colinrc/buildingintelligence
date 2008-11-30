@@ -20,7 +20,7 @@ public class SliderPulse extends Thread {
 
 
 	public int completeDimTime = 5; // Time for ramp from 0 to 100 to top
-	public int dimIntervalTime = 500; // interval in miliseconds between each message
+	public final int dimIntervalTime = 500; // interval in miliseconds between each message
 	protected Logger logger;
 	protected volatile boolean running = true;
 	protected CommDevice comms;

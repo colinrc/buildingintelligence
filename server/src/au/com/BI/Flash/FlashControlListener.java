@@ -385,7 +385,7 @@ public class FlashControlListener extends Thread {
 		
 		Command initConnection = new Command();
 		initConnection.setKey("SYSTEM");
-		initConnection.setCommand("ClientAttach");
+		initConnection.setCommand("ClientAttatch");
 		initConnection.setExtraInfo(Long.toString(flashID));
 		initConnection.setExtra2Info(Long.toString(serverID));
 	    commandList.add(initConnection);

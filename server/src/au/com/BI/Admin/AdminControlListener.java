@@ -30,7 +30,7 @@ public class AdminControlListener extends Thread
 	protected String Address;
 	protected InetAddress iPAddress;
 	protected Logger logger;
-	protected boolean running;
+	protected volatile boolean running;
 	protected CommandQueue commandList;
 	protected Document heartbeatDoc;
 	protected boolean firstConnection = true;

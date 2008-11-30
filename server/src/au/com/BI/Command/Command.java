@@ -33,7 +33,7 @@ public class Command implements CommandInterface {
         protected Logger logger;
         protected boolean scriptCommand = false;
 
-        public User user;
+		public User user;
 
 
         public CommandInterface clone() throws CloneNotSupportedException {
@@ -55,6 +55,7 @@ public class Command implements CommandInterface {
         		newCopy.setDisplayName(this.getDisplayName());
         		newCopy.setTargetDeviceID(this.getTargetDeviceID());
         		newCopy.setTargetDeviceModel(this.getTargetDeviceModel());
+        		
         		return newCopy;			
         		} 
 			catch (InstantiationException e) {

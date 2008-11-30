@@ -16,9 +16,9 @@ import java.util.logging.Logger;
  */
 public class CommsSend extends Thread implements Runnable{
 	
-	int interCommandInterval = 0;
+	volatile int  interCommandInterval = 0;
 	BlockingQueue <byte[]>toSend = null;
-	boolean handleEvents = true;
+	volatile boolean handleEvents = true;
 	protected OutputStream os = null;
 	protected long lastSendTime;
 	protected Logger logger;
@@ -41,28 +41,28 @@ public class CommsSend extends Thread implements Runnable{
 	
 				if (nextMessage != null){
 				    if (interCommandInterval != 0){
-					long currentTimeDiff = System.currentTimeMillis() - lastSendTime;
-					try {
-						if (currentTimeDiff < interCommandInterval){
-                                                logger.log (Level.FINEST,"The next command to be sent is being delayed to meet minimum reponse time requirements for the device");
-                                                    try {
-                                                            Thread.sleep(interCommandInterval - currentTimeDiff);
-                                                    } catch (InterruptedException e) {
-
-                                                    }
+						long currentTimeDiff = System.currentTimeMillis() - lastSendTime;
+						try {
+							if (currentTimeDiff < interCommandInterval){
+	                                                logger.log (Level.FINEST,"The next command to be sent is being delayed to meet minimum reponse time requirements for the device");
+	                                                    try {
+	                                                            Thread.sleep(interCommandInterval - currentTimeDiff);
+	                                                    } catch (InterruptedException e) {
+	
+	                                                    }
+							}
+							lastSendTime = System.currentTimeMillis();
+	
+							synchronized (os){
+							    os.write(nextMessage);
+							    os.flush();
+	
+							}
+						} catch (IOException e) {
+							logger.log (Level.FINE,"Received IO exception on communication stream " + e.getMessage());
+							handleEvents = false;
+							throw new CommsFail ("Error sending information",e);
 						}
-						lastSendTime = System.currentTimeMillis();
-
-						synchronized (os){
-						    os.write(nextMessage);
-						    os.flush();
-
-						}
-					} catch (IOException e) {
-						logger.log (Level.FINE,"Received IO exception on communication stream " + e.getMessage());
-						handleEvents = false;
-						throw new CommsFail ("Error sending information",e);
-					}
 				    } else {
 					try {
 					    

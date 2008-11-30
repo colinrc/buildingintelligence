@@ -34,6 +34,17 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		return true;
 	}
 	
+    /** 
+     * Called when a new client connects to the server, the model must send the macro list explicitly rather than relying on the cache, as the 
+     * cached version may have been  overwritten by a MACRO status message.
+     * @param targetFlashDeviceID
+     * @param serverID
+     */
+	public void doClientStartup(long targetFlashDeviceID, long serverID){
+		sendListToClient(targetFlashDeviceID);
+	}
+
+
 
 	public boolean doIControl (String keyName, boolean isClientCommand)
 	{
@@ -162,11 +173,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 		}
 		if (doListUpdate) {
-			sendListToClient();
+			sendListToClient(-1);
 		}
 	}
 	
-	public void sendListToClient () {
+	public void sendListToClient (long clientID) {
             logger.log (Level.FINER, "Fetching macro list");
 	    Element macro = macroHandler.get("",false,false);
 
@@ -176,9 +187,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
                 ClientCommand clientCommand = new ClientCommand();
                 clientCommand.setFromElement (macro);
                 clientCommand.setKey ("CLIENT_SEND");
-                clientCommand.setTargetDeviceID(0);
+                clientCommand.setTargetDeviceID(clientID);
 
-   				cache.setCachedCommand("MACRO", clientCommand,true );
+   				cache.setCachedCommand("MACRO", clientCommand,false );
                  commandQueue.add(clientCommand);
             }
 	}

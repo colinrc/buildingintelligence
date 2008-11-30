@@ -143,4 +143,5 @@ public interface CommandInterface {
 		public boolean isAdminCommand();
 		
 		public CommandInterface clone() throws CloneNotSupportedException;
+		
 }

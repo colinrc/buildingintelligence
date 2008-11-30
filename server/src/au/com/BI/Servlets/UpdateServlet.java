@@ -318,6 +318,13 @@ public class UpdateServlet extends HttpServlet {
         session.setAttribute("ServerID",serverID);
         session.setAttribute("ID",ID);
         session.setAttribute("User", user);
+        
+		Command initConnection = new Command();
+		initConnection.setKey("SYSTEM");
+		initConnection.setCommand("ClientAttatch");
+		initConnection.setExtraInfo(Long.toString(ID));
+		initConnection.setExtra2Info(Long.toString(serverID));
+		commandQueue.add(initConnection);
 
     }
    
