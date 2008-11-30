@@ -16,6 +16,37 @@
 		288765080DF74369002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765070DF74369002DB57D /* CoreGraphics.framework */; };
 		28AD73880D9D96C1002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD73870D9D96C1002E5188 /* MainWindow.xib */; };
 		7E1486840EE1728D0021EBE9 /* elifeXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E1486830EE1728D0021EBE9 /* elifeXMLParser.m */; };
+		7EFCE6950EE26770007E7712 /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6600EE26770007E7712 /* CalendarViewController.m */; };
+		7EFCE6960EE26770007E7712 /* ControlBtnBtnBtnBtnBtnCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE6610EE26770007E7712 /* ControlBtnBtnBtnBtnBtnCell.xib */; };
+		7EFCE6970EE26770007E7712 /* ControlBtnBtnBtnBtnCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE6620EE26770007E7712 /* ControlBtnBtnBtnBtnCell.xib */; };
+		7EFCE6980EE26770007E7712 /* ControlBtnBtnBtnCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE6630EE26770007E7712 /* ControlBtnBtnBtnCell.xib */; };
+		7EFCE6990EE26770007E7712 /* ControlBtnBtnCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE6640EE26770007E7712 /* ControlBtnBtnCell.xib */; };
+		7EFCE69A0EE26770007E7712 /* ControlBtnSliderBtnCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE6650EE26770007E7712 /* ControlBtnSliderBtnCell.xib */; };
+		7EFCE69B0EE26770007E7712 /* ControlItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6670EE26770007E7712 /* ControlItem.m */; };
+		7EFCE69C0EE26770007E7712 /* ControlLabelCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE6680EE26770007E7712 /* ControlLabelCell.xib */; };
+		7EFCE69D0EE26770007E7712 /* ControlOnOffCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE6690EE26770007E7712 /* ControlOnOffCellView.xib */; };
+		7EFCE69E0EE26770007E7712 /* ControlsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE66B0EE26770007E7712 /* ControlsTableViewController.m */; };
+		7EFCE69F0EE26770007E7712 /* ControlTglBtnBtnCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE66C0EE26770007E7712 /* ControlTglBtnBtnCell.xib */; };
+		7EFCE6A00EE26770007E7712 /* ControlWebCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE66D0EE26770007E7712 /* ControlWebCell.xib */; };
+		7EFCE6A20EE26770007E7712 /* elifecontroltypeitem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6710EE26770007E7712 /* elifecontroltypeitem.m */; };
+		7EFCE6A30EE26770007E7712 /* elifecontroltypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6730EE26770007E7712 /* elifecontroltypes.m */; };
+		7EFCE6A40EE26770007E7712 /* elifemacro.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6750EE26770007E7712 /* elifemacro.m */; };
+		7EFCE6A50EE26770007E7712 /* eliferoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6770EE26770007E7712 /* eliferoom.m */; };
+		7EFCE6A60EE26770007E7712 /* eliferoomcontrol.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6790EE26770007E7712 /* eliferoomcontrol.m */; };
+		7EFCE6A70EE26770007E7712 /* eliferoomtab.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE67B0EE26770007E7712 /* eliferoomtab.m */; };
+		7EFCE6A80EE26770007E7712 /* elifesocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE67D0EE26770007E7712 /* elifesocket.m */; };
+		7EFCE6A90EE26770007E7712 /* elifezone.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE67F0EE26770007E7712 /* elifezone.m */; };
+		7EFCE6AA0EE26770007E7712 /* MacroCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE6800EE26770007E7712 /* MacroCellView.xib */; };
+		7EFCE6AB0EE26770007E7712 /* MacrosTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6820EE26770007E7712 /* MacrosTableViewController.m */; };
+		7EFCE6AC0EE26770007E7712 /* MacrosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6840EE26770007E7712 /* MacrosViewController.m */; };
+		7EFCE6AD0EE26770007E7712 /* RoomControlsTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6860EE26770007E7712 /* RoomControlsTabBarController.m */; };
+		7EFCE6AE0EE26770007E7712 /* RoomItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6880EE26770007E7712 /* RoomItem.m */; };
+		7EFCE6AF0EE26770007E7712 /* RoomsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE68A0EE26770007E7712 /* RoomsTableViewController.m */; };
+		7EFCE6B00EE26770007E7712 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE68C0EE26770007E7712 /* SettingsViewController.m */; };
+		7EFCE6B10EE26770007E7712 /* StatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE68E0EE26770007E7712 /* StatusViewController.m */; };
+		7EFCE6B20EE26770007E7712 /* ZoneItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6900EE26770007E7712 /* ZoneItem.m */; };
+		7EFCE6B30EE26770007E7712 /* ZonesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6920EE26770007E7712 /* ZonesTableViewController.m */; };
+		7EFCE6B40EE26770007E7712 /* ZonesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6940EE26770007E7712 /* ZonesViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +64,58 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7E1486820EE1728D0021EBE9 /* elifeXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifeXMLParser.h; sourceTree = "<group>"; };
 		7E1486830EE1728D0021EBE9 /* elifeXMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifeXMLParser.m; sourceTree = "<group>"; };
+		7EFCE65F0EE26770007E7712 /* CalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarViewController.h; sourceTree = "<group>"; };
+		7EFCE6600EE26770007E7712 /* CalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarViewController.m; sourceTree = "<group>"; };
+		7EFCE6610EE26770007E7712 /* ControlBtnBtnBtnBtnBtnCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ControlBtnBtnBtnBtnBtnCell.xib; path = Classes/ControlBtnBtnBtnBtnBtnCell.xib; sourceTree = "<group>"; };
+		7EFCE6620EE26770007E7712 /* ControlBtnBtnBtnBtnCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ControlBtnBtnBtnBtnCell.xib; path = Classes/ControlBtnBtnBtnBtnCell.xib; sourceTree = "<group>"; };
+		7EFCE6630EE26770007E7712 /* ControlBtnBtnBtnCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ControlBtnBtnBtnCell.xib; path = Classes/ControlBtnBtnBtnCell.xib; sourceTree = "<group>"; };
+		7EFCE6640EE26770007E7712 /* ControlBtnBtnCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ControlBtnBtnCell.xib; path = Classes/ControlBtnBtnCell.xib; sourceTree = "<group>"; };
+		7EFCE6650EE26770007E7712 /* ControlBtnSliderBtnCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ControlBtnSliderBtnCell.xib; path = Classes/ControlBtnSliderBtnCell.xib; sourceTree = "<group>"; };
+		7EFCE6660EE26770007E7712 /* ControlItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlItem.h; sourceTree = "<group>"; };
+		7EFCE6670EE26770007E7712 /* ControlItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlItem.m; sourceTree = "<group>"; };
+		7EFCE6680EE26770007E7712 /* ControlLabelCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ControlLabelCell.xib; path = Classes/ControlLabelCell.xib; sourceTree = "<group>"; };
+		7EFCE6690EE26770007E7712 /* ControlOnOffCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ControlOnOffCellView.xib; path = Classes/ControlOnOffCellView.xib; sourceTree = "<group>"; };
+		7EFCE66A0EE26770007E7712 /* ControlsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlsTableViewController.h; sourceTree = "<group>"; };
+		7EFCE66B0EE26770007E7712 /* ControlsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlsTableViewController.m; sourceTree = "<group>"; };
+		7EFCE66C0EE26770007E7712 /* ControlTglBtnBtnCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ControlTglBtnBtnCell.xib; path = Classes/ControlTglBtnBtnCell.xib; sourceTree = "<group>"; };
+		7EFCE66D0EE26770007E7712 /* ControlWebCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ControlWebCell.xib; path = Classes/ControlWebCell.xib; sourceTree = "<group>"; };
+		7EFCE6700EE26770007E7712 /* elifecontroltypeitem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifecontroltypeitem.h; sourceTree = "<group>"; };
+		7EFCE6710EE26770007E7712 /* elifecontroltypeitem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifecontroltypeitem.m; sourceTree = "<group>"; };
+		7EFCE6720EE26770007E7712 /* elifecontroltypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifecontroltypes.h; sourceTree = "<group>"; };
+		7EFCE6730EE26770007E7712 /* elifecontroltypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifecontroltypes.m; sourceTree = "<group>"; };
+		7EFCE6740EE26770007E7712 /* elifemacro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifemacro.h; sourceTree = "<group>"; };
+		7EFCE6750EE26770007E7712 /* elifemacro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifemacro.m; sourceTree = "<group>"; };
+		7EFCE6760EE26770007E7712 /* eliferoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eliferoom.h; sourceTree = "<group>"; };
+		7EFCE6770EE26770007E7712 /* eliferoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eliferoom.m; sourceTree = "<group>"; };
+		7EFCE6780EE26770007E7712 /* eliferoomcontrol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eliferoomcontrol.h; sourceTree = "<group>"; };
+		7EFCE6790EE26770007E7712 /* eliferoomcontrol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eliferoomcontrol.m; sourceTree = "<group>"; };
+		7EFCE67A0EE26770007E7712 /* eliferoomtab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eliferoomtab.h; sourceTree = "<group>"; };
+		7EFCE67B0EE26770007E7712 /* eliferoomtab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eliferoomtab.m; sourceTree = "<group>"; };
+		7EFCE67C0EE26770007E7712 /* elifesocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifesocket.h; sourceTree = "<group>"; };
+		7EFCE67D0EE26770007E7712 /* elifesocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifesocket.m; sourceTree = "<group>"; };
+		7EFCE67E0EE26770007E7712 /* elifezone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifezone.h; sourceTree = "<group>"; };
+		7EFCE67F0EE26770007E7712 /* elifezone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifezone.m; sourceTree = "<group>"; };
+		7EFCE6800EE26770007E7712 /* MacroCellView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MacroCellView.xib; path = Classes/MacroCellView.xib; sourceTree = "<group>"; };
+		7EFCE6810EE26770007E7712 /* MacrosTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacrosTableViewController.h; sourceTree = "<group>"; };
+		7EFCE6820EE26770007E7712 /* MacrosTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MacrosTableViewController.m; sourceTree = "<group>"; };
+		7EFCE6830EE26770007E7712 /* MacrosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacrosViewController.h; sourceTree = "<group>"; };
+		7EFCE6840EE26770007E7712 /* MacrosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MacrosViewController.m; sourceTree = "<group>"; };
+		7EFCE6850EE26770007E7712 /* RoomControlsTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomControlsTabBarController.h; sourceTree = "<group>"; };
+		7EFCE6860EE26770007E7712 /* RoomControlsTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoomControlsTabBarController.m; sourceTree = "<group>"; };
+		7EFCE6870EE26770007E7712 /* RoomItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomItem.h; sourceTree = "<group>"; };
+		7EFCE6880EE26770007E7712 /* RoomItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoomItem.m; sourceTree = "<group>"; };
+		7EFCE6890EE26770007E7712 /* RoomsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomsTableViewController.h; sourceTree = "<group>"; };
+		7EFCE68A0EE26770007E7712 /* RoomsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoomsTableViewController.m; sourceTree = "<group>"; };
+		7EFCE68B0EE26770007E7712 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		7EFCE68C0EE26770007E7712 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		7EFCE68D0EE26770007E7712 /* StatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusViewController.h; sourceTree = "<group>"; };
+		7EFCE68E0EE26770007E7712 /* StatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusViewController.m; sourceTree = "<group>"; };
+		7EFCE68F0EE26770007E7712 /* ZoneItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoneItem.h; sourceTree = "<group>"; };
+		7EFCE6900EE26770007E7712 /* ZoneItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZoneItem.m; sourceTree = "<group>"; };
+		7EFCE6910EE26770007E7712 /* ZonesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZonesTableViewController.h; sourceTree = "<group>"; };
+		7EFCE6920EE26770007E7712 /* ZonesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZonesTableViewController.m; sourceTree = "<group>"; };
+		7EFCE6930EE26770007E7712 /* ZonesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZonesViewController.h; sourceTree = "<group>"; };
+		7EFCE6940EE26770007E7712 /* ZonesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZonesViewController.m; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -54,6 +137,47 @@
 			isa = PBXGroup;
 			children = (
 				7E1486850EE172990021EBE9 /* XMLParser */,
+				7EFCE6BA0EE267E0007E7712 /* Socket */,
+				7EFCE65F0EE26770007E7712 /* CalendarViewController.h */,
+				7EFCE6600EE26770007E7712 /* CalendarViewController.m */,
+				7EFCE6660EE26770007E7712 /* ControlItem.h */,
+				7EFCE6670EE26770007E7712 /* ControlItem.m */,
+				7EFCE66A0EE26770007E7712 /* ControlsTableViewController.h */,
+				7EFCE66B0EE26770007E7712 /* ControlsTableViewController.m */,
+				7EFCE6700EE26770007E7712 /* elifecontroltypeitem.h */,
+				7EFCE6710EE26770007E7712 /* elifecontroltypeitem.m */,
+				7EFCE6720EE26770007E7712 /* elifecontroltypes.h */,
+				7EFCE6730EE26770007E7712 /* elifecontroltypes.m */,
+				7EFCE6740EE26770007E7712 /* elifemacro.h */,
+				7EFCE6750EE26770007E7712 /* elifemacro.m */,
+				7EFCE6760EE26770007E7712 /* eliferoom.h */,
+				7EFCE6770EE26770007E7712 /* eliferoom.m */,
+				7EFCE6780EE26770007E7712 /* eliferoomcontrol.h */,
+				7EFCE6790EE26770007E7712 /* eliferoomcontrol.m */,
+				7EFCE67A0EE26770007E7712 /* eliferoomtab.h */,
+				7EFCE67B0EE26770007E7712 /* eliferoomtab.m */,
+				7EFCE67E0EE26770007E7712 /* elifezone.h */,
+				7EFCE67F0EE26770007E7712 /* elifezone.m */,
+				7EFCE6810EE26770007E7712 /* MacrosTableViewController.h */,
+				7EFCE6820EE26770007E7712 /* MacrosTableViewController.m */,
+				7EFCE6830EE26770007E7712 /* MacrosViewController.h */,
+				7EFCE6840EE26770007E7712 /* MacrosViewController.m */,
+				7EFCE6850EE26770007E7712 /* RoomControlsTabBarController.h */,
+				7EFCE6860EE26770007E7712 /* RoomControlsTabBarController.m */,
+				7EFCE6870EE26770007E7712 /* RoomItem.h */,
+				7EFCE6880EE26770007E7712 /* RoomItem.m */,
+				7EFCE6890EE26770007E7712 /* RoomsTableViewController.h */,
+				7EFCE68A0EE26770007E7712 /* RoomsTableViewController.m */,
+				7EFCE68B0EE26770007E7712 /* SettingsViewController.h */,
+				7EFCE68C0EE26770007E7712 /* SettingsViewController.m */,
+				7EFCE68D0EE26770007E7712 /* StatusViewController.h */,
+				7EFCE68E0EE26770007E7712 /* StatusViewController.m */,
+				7EFCE68F0EE26770007E7712 /* ZoneItem.h */,
+				7EFCE6900EE26770007E7712 /* ZoneItem.m */,
+				7EFCE6910EE26770007E7712 /* ZonesTableViewController.h */,
+				7EFCE6920EE26770007E7712 /* ZonesTableViewController.m */,
+				7EFCE6930EE26770007E7712 /* ZonesViewController.h */,
+				7EFCE6940EE26770007E7712 /* ZonesViewController.m */,
 				28216C950DB411BC00E5133A /* FirstViewController.h */,
 				28216C960DB411BC00E5133A /* FirstViewController.m */,
 				1D3623240D0F684500981E51 /* elife_bAppDelegate.h */,
@@ -94,6 +218,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7EFCE6B60EE267AB007E7712 /* Controls */,
 				282CCBFD0DB6C98000C4EA27 /* SecondView.xib */,
 				28AD73870D9D96C1002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* Info.plist */,
@@ -118,6 +243,32 @@
 				7E1486830EE1728D0021EBE9 /* elifeXMLParser.m */,
 			);
 			name = XMLParser;
+			sourceTree = "<group>";
+		};
+		7EFCE6B60EE267AB007E7712 /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				7EFCE6610EE26770007E7712 /* ControlBtnBtnBtnBtnBtnCell.xib */,
+				7EFCE6620EE26770007E7712 /* ControlBtnBtnBtnBtnCell.xib */,
+				7EFCE6630EE26770007E7712 /* ControlBtnBtnBtnCell.xib */,
+				7EFCE6640EE26770007E7712 /* ControlBtnBtnCell.xib */,
+				7EFCE6650EE26770007E7712 /* ControlBtnSliderBtnCell.xib */,
+				7EFCE6680EE26770007E7712 /* ControlLabelCell.xib */,
+				7EFCE6690EE26770007E7712 /* ControlOnOffCellView.xib */,
+				7EFCE66C0EE26770007E7712 /* ControlTglBtnBtnCell.xib */,
+				7EFCE66D0EE26770007E7712 /* ControlWebCell.xib */,
+				7EFCE6800EE26770007E7712 /* MacroCellView.xib */,
+			);
+			name = Controls;
+			sourceTree = "<group>";
+		};
+		7EFCE6BA0EE267E0007E7712 /* Socket */ = {
+			isa = PBXGroup;
+			children = (
+				7EFCE67C0EE26770007E7712 /* elifesocket.h */,
+				7EFCE67D0EE26770007E7712 /* elifesocket.m */,
+			);
+			name = Socket;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,6 +315,16 @@
 			files = (
 				28AD73880D9D96C1002E5188 /* MainWindow.xib in Resources */,
 				282CCBFE0DB6C98000C4EA27 /* SecondView.xib in Resources */,
+				7EFCE6960EE26770007E7712 /* ControlBtnBtnBtnBtnBtnCell.xib in Resources */,
+				7EFCE6970EE26770007E7712 /* ControlBtnBtnBtnBtnCell.xib in Resources */,
+				7EFCE6980EE26770007E7712 /* ControlBtnBtnBtnCell.xib in Resources */,
+				7EFCE6990EE26770007E7712 /* ControlBtnBtnCell.xib in Resources */,
+				7EFCE69A0EE26770007E7712 /* ControlBtnSliderBtnCell.xib in Resources */,
+				7EFCE69C0EE26770007E7712 /* ControlLabelCell.xib in Resources */,
+				7EFCE69D0EE26770007E7712 /* ControlOnOffCellView.xib in Resources */,
+				7EFCE69F0EE26770007E7712 /* ControlTglBtnBtnCell.xib in Resources */,
+				7EFCE6A00EE26770007E7712 /* ControlWebCell.xib in Resources */,
+				7EFCE6AA0EE26770007E7712 /* MacroCellView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,6 +339,27 @@
 				1D3623260D0F684500981E51 /* elife_bAppDelegate.m in Sources */,
 				28216C970DB411BC00E5133A /* FirstViewController.m in Sources */,
 				7E1486840EE1728D0021EBE9 /* elifeXMLParser.m in Sources */,
+				7EFCE6950EE26770007E7712 /* CalendarViewController.m in Sources */,
+				7EFCE69B0EE26770007E7712 /* ControlItem.m in Sources */,
+				7EFCE69E0EE26770007E7712 /* ControlsTableViewController.m in Sources */,
+				7EFCE6A20EE26770007E7712 /* elifecontroltypeitem.m in Sources */,
+				7EFCE6A30EE26770007E7712 /* elifecontroltypes.m in Sources */,
+				7EFCE6A40EE26770007E7712 /* elifemacro.m in Sources */,
+				7EFCE6A50EE26770007E7712 /* eliferoom.m in Sources */,
+				7EFCE6A60EE26770007E7712 /* eliferoomcontrol.m in Sources */,
+				7EFCE6A70EE26770007E7712 /* eliferoomtab.m in Sources */,
+				7EFCE6A80EE26770007E7712 /* elifesocket.m in Sources */,
+				7EFCE6A90EE26770007E7712 /* elifezone.m in Sources */,
+				7EFCE6AB0EE26770007E7712 /* MacrosTableViewController.m in Sources */,
+				7EFCE6AC0EE26770007E7712 /* MacrosViewController.m in Sources */,
+				7EFCE6AD0EE26770007E7712 /* RoomControlsTabBarController.m in Sources */,
+				7EFCE6AE0EE26770007E7712 /* RoomItem.m in Sources */,
+				7EFCE6AF0EE26770007E7712 /* RoomsTableViewController.m in Sources */,
+				7EFCE6B00EE26770007E7712 /* SettingsViewController.m in Sources */,
+				7EFCE6B10EE26770007E7712 /* StatusViewController.m in Sources */,
+				7EFCE6B20EE26770007E7712 /* ZoneItem.m in Sources */,
+				7EFCE6B30EE26770007E7712 /* ZonesTableViewController.m in Sources */,
+				7EFCE6B40EE26770007E7712 /* ZonesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
