@@ -80,6 +80,10 @@ public class Model
         }
 
 
+ 		public void doClientStartup(long targetFlashDeviceID, long serverID){
+ 			this.sendListToClient(targetFlashDeviceID);
+ 		};
+
 
         /**
          * Main test point for the controller to request from this model if it controls a particular Command

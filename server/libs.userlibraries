@@ -3,17 +3,14 @@
 <library name="Groovy1.0" systemlibrary="false">
 <archive javadoc="jar:file:/Java/groovy-1.0/groovy-1.0.javadoc.jar!/" path="/Java/groovy-1.0/embeddable/groovy-all-1.0.jar" source="/Java/groovy-1.0/src"/>
 </library>
-<library name="Groovy1.0-jsr06" systemlibrary="false">
-<archive javadoc="file:/Java/groovy-1.0-JSR-06/docs/xref/" path="/Java/groovy-1.0-JSR-06/embeddable/groovy-all-1.0-JSR-06.jar"/>
-</library>
-<library name="Groovy1.1-RC2" systemlibrary="false">
-<archive javadoc="file:/Java/groovy-1.1-rc-2/html/api/" path="/Java/groovy-1.1-rc-2/embeddable/groovy-all-1.1-rc-2.jar"/>
-</library>
 <library name="Groovy1.5.1" systemlibrary="false">
 <archive path="/Java/groovy-1.5.1/embeddable/groovy-all-1.5.1.jar"/>
 </library>
 <library name="Groovy1.5.6" systemlibrary="false">
 <archive javadoc="file:/Java/groovy-1.5.6/html/gapi/" path="/Java/groovy-1.5.6/embeddable/groovy-all-1.5.6.jar"/>
+</library>
+<library name="Groovy1.5.7" systemlibrary="false">
+<archive javadoc="file:/Java/groovy-1.5.7/html/api/" path="/Java/groovy-1.5.7/embeddable/groovy-all-1.5.7.jar"/>
 </library>
 <library name="JDom1.0" systemlibrary="false">
 <archive javadoc="file:/Java/jdom-1.0/build/apidocs/" path="/Java/jdom-1.0/build/jdom.jar" source="/Java/jdom-1.0/src/java"/>
@@ -38,17 +35,18 @@
 <archive path="/Java/jetty-6.1.0/lib/ext/jetty-ajp-6.1.0.jar"/>
 <archive path="/Java/jetty-6.1.0/lib/ext/jetty-sslengine-6.1.0.jar"/>
 </library>
-<library name="Jetty6.1.11" systemlibrary="false">
-<archive path="/Java/jetty-6.1.11/lib/jetty-6.1.11.jar" source="/Java/jetty-6.1.11/modules/jetty/src/main/java"/>
-<archive path="/Java/jetty-6.1.11/lib/jetty-util-6.1.11.jar"/>
-<archive path="/Java/jetty-6.1.11/lib/servlet-api-2.5-6.1.11.jar" source="/Java/jetty-6.1.11/modules/servlet-api-2.5/src/main/java"/>
-<archive path="/Java/jetty-6.1.11/lib/ext/jetty-ajp-6.1.11.jar"/>
-<archive path="/Java/jetty-6.1.11/lib/ext/jetty-client-6.1.11.jar"/>
-<archive path="/Java/jetty-6.1.11/lib/ext/jetty-html-6.1.11.jar"/>
-<archive path="/Java/jetty-6.1.11/lib/ext/jetty-java5-threadpool-6.1.11.jar"/>
-<archive path="/Java/jetty-6.1.11/lib/ext/jetty-servlet-tester-6.1.11.jar"/>
-<archive path="/Java/jetty-6.1.11/lib/ext/jetty-setuid-6.1.11.jar"/>
-<archive path="/Java/jetty-6.1.11/lib/ext/jetty-sslengine-6.1.11.jar"/>
+<library name="Jetty6.1.14" systemlibrary="false">
+<archive path="/Java/jetty-6.1.14/lib/jetty-6.1.14.jar"/>
+<archive path="/Java/jetty-6.1.14/lib/jetty-util-6.1.14.jar"/>
+<archive path="/Java/jetty-6.1.14/lib/servlet-api-2.5-6.1.14.jar"/>
+<archive path="/Java/jetty-6.1.14/lib/ext/jetty-ajp-6.1.14.jar"/>
+<archive path="/Java/jetty-6.1.14/lib/ext/jetty-client-6.1.14.jar"/>
+<archive path="/Java/jetty-6.1.14/lib/ext/jetty-html-6.1.14.jar"/>
+<archive path="/Java/jetty-6.1.14/lib/ext/jetty-java5-threadpool-6.1.14.jar"/>
+<archive path="/Java/jetty-6.1.14/lib/ext/jetty-rewrite-handler-6.1.14.jar"/>
+<archive path="/Java/jetty-6.1.14/lib/ext/jetty-servlet-tester-6.1.14.jar"/>
+<archive path="/Java/jetty-6.1.14/lib/ext/jetty-setuid-6.1.14.jar"/>
+<archive path="/Java/jetty-6.1.14/lib/ext/jetty-sslengine-6.1.14.jar"/>
 </library>
 <library name="Jetty6.1.4" systemlibrary="false">
 <archive path="/Java/jetty-6.1.4/lib/jetty-6.1.4.jar"/>
