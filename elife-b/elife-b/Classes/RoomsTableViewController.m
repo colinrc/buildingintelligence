@@ -66,6 +66,9 @@
     }
     // Configure the cell
 	cell.text = thetab.name;
+	if ([thetab.tabattr objectForKey:@"icon"]) {
+		cell.image = [UIImage imageNamed:[[thetab.tabattr objectForKey:@"icon"] stringByAppendingString:@".png"]];
+	}
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
     return cell;
