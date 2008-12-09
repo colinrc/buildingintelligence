@@ -8,7 +8,7 @@
 
 #import "RoomsTableViewController.h"
 #import "ControlsTableViewController.h"
-#import "elifeAppDelegate.h"
+#import "elife_bAppDelegate.h"
 #import "elifezone.h"
 #import "eliferoom.h"
 #import "eliferoomtab.h"
@@ -16,7 +16,9 @@
 @implementation RoomsTableViewController
 //@synthesize roomlist;
 @synthesize zoneidx;
-@synthesize roomTabBar;
+@synthesize roomidx;
+//@synthesize roomTabBar;
+@synthesize roomTableView;
 
 - (id)initWithStyle:(UITableViewStyle)style {
     // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -42,16 +44,19 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:self.zoneidx];
-	NSLog(@"CurrentZone %@ => RoomCount %d",thezone.name,[thezone.roomlist count]);
-    return [thezone.roomlist count];
+	eliferoom *theroom = [thezone.roomlist objectAtIndex:roomidx];
+	NSLog(@"CurrentZone %@ => CurrentRoom %@ => Tabs %d",thezone.name,theroom.name,[theroom.tablist count]);
+    return [theroom.tablist count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:self.zoneidx];
+	eliferoom *theroom = [thezone.roomlist objectAtIndex:self.roomidx];
+	eliferoomtab *thetab = [theroom.tablist objectAtIndex:indexPath.row];
     
     static NSString *CellIdentifier = @"Cell";
     
@@ -60,7 +65,7 @@
         cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
     }
     // Configure the cell
-	cell.text = [[thezone.roomlist objectAtIndex:indexPath.row] name];
+	cell.text = thetab.name;
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
     return cell;
@@ -68,14 +73,26 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *activezone = [elifeappdelegate.elifezonelist objectAtIndex:self.zoneidx];
-	eliferoom *activeroom = [activezone.roomlist objectAtIndex:indexPath.row];
-	eliferoomtab *activetab;
-	NSInteger i;
-	NSMutableArray *thetabs = [[NSMutableArray alloc] init];
+	eliferoom *activeroom = [activezone.roomlist objectAtIndex:self.roomidx];
+	eliferoomtab *activetab = [activeroom.tablist objectAtIndex:indexPath.row];
+	//NSInteger i;
+	//NSMutableArray *thetabs = [[NSMutableArray alloc] init];
 	//NSString *iconname;
 	
+	if (self.roomTableView == nil) {
+		NSLog(@"creating a new controls view controller");
+		self.roomTableView = [[ControlsTableViewController alloc] init];
+	}
+	self.roomTableView.title = activetab.name;
+	self.roomTableView.zoneidx = self.zoneidx;
+	self.roomTableView.roomidx = self.roomidx;
+	self.roomTableView.tabidx = indexPath.row;
+	[self.roomTableView.tableView reloadData];
+	[elifeappdelegate.zonesNC pushViewController:self.roomTableView animated:TRUE];
+
+	/* tabbar version
 	if (self.roomTabBar == nil) {
 		self.roomTabBar = [[RoomControlsTabBarController alloc] init];
 	}
@@ -107,7 +124,7 @@
 		self.roomTabBar.selectedViewController = [thetabs objectAtIndex:0];
 	}
 	[elifeappdelegate.zonesNC pushViewController:self.roomTabBar animated:TRUE];
-
+	 */
 }
 
 
@@ -169,6 +186,7 @@
 //}
 
 - (void)dealloc {
+	//[self.roomTableView dealloc];
     [super dealloc];
 }
 

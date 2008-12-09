@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#include <CFNetwork/CFSocketStream.h>
 
 @interface elifesocket : NSObject {
 	NSInputStream *iStream;

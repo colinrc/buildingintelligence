@@ -138,7 +138,7 @@
 							<control name="1st Heat Lamp" key="ENSUITE_1_HEAT" type="onOff" icons="heater-off,heater" />
 							<control name="2nd Heat Lamp" key="ENSUITE_2_HEAT" type="onOff" icons="heater-off,heater" />
 						</tab>
-						<tab>
+						<tab name="Test KeyPad">
 							<control name="test" key="asd" type="rawKeyPad"/>
 						</tab>
 					</window>

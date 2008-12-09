@@ -7,7 +7,6 @@
 //
 
 #import "elife_bAppDelegate.h"
-#import "elifeAppDelegate.h"
 #import "MacrosViewController.h"
 #import "ZonesViewController.h"
 #import "StatusViewController.h"
@@ -75,13 +74,6 @@
 	[statusVC release];
 }
 
-- (void)CreateCalendarView {
-	CalendarViewController *calVC = [[CalendarViewController alloc] init];
-	calVC.title = @"Calendar";
-	[mainVClist addObject:calVC];
-	[calVC release];
-}
-
 - (void)CreateSettingsView {
 	SettingsViewController *setVC = [[SettingsViewController alloc] init];
 	setVC.title = @"Settings";
@@ -112,9 +104,8 @@
 	
 	// Create Tabs
 	[self CreateMacrosView];	
-	[self CreateZonesView];
 	[self CreateStatusView];
-	[self CreateCalendarView];
+	[self CreateZonesView];
 	[self CreateSettingsView];
 	
 	// Pass array of VC to rootTC

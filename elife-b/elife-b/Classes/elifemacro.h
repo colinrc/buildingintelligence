@@ -11,10 +11,12 @@
 
 @interface ElifeMacro : NSObject {
 	NSDictionary *macroattr;
+	BOOL running;
 }
 
 @property (nonatomic, retain) NSDictionary *macroattr;
+@property BOOL running;
 
 - (id)initWithDict:(NSDictionary *)thedict;
-
+- (BOOL)isRunning;
 @end

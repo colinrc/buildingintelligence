@@ -7,7 +7,9 @@
 //
 
 #import "ZonesTableViewController.h"
-#import "elifeAppDelegate.h"
+#import "elife_bAppDelegate.h"
+#import "elifezone.h"
+#import "eliferoom.h"
 
 @implementation ZonesTableViewController
 //@synthesize zonelist;
@@ -33,16 +35,23 @@
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
-
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	NSLog(@"number of zones %d",[elifeappdelegate.elifezonelist count]);
     return [elifeappdelegate.elifezonelist count];
 }
 
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:section];
+	NSLog(@"zones %d: room count %d",section, [thezone.roomlist count]);
+    return [thezone.roomlist count];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
+    return [[elifeappdelegate.elifezonelist objectAtIndex:section] name];
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -53,9 +62,9 @@
         cell = [[[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:CellIdentifier] autorelease];
     }
     // Configure the cell
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
-
-	cell.text = [[elifeappdelegate.elifezonelist objectAtIndex:indexPath.row] name];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:indexPath.section];
+	cell.text = [[thezone.roomlist objectAtIndex:indexPath.row] name];
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
     return cell;
@@ -64,13 +73,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	// push zone element view onto stack
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elifezone *activezone = [elifeappdelegate.elifezonelist objectAtIndex:indexPath.section];
+	eliferoom *activeroom = [activezone.roomlist objectAtIndex:indexPath.row];
+	
 	if (self.roomsTabView == nil) {
 		self.roomsTabView = [[RoomsTableViewController alloc] init];
 	}
 
-	self.roomsTabView.zoneidx = indexPath.row;
-	self.roomsTabView.title = [[elifeappdelegate.elifezonelist objectAtIndex:indexPath.row] name];
+	self.roomsTabView.zoneidx = indexPath.section;
+	self.roomsTabView.roomidx = indexPath.row;
+	self.roomsTabView.title = activeroom.name;
 	[self.roomsTabView.tableView reloadData];
 
 	[elifeappdelegate.zonesNC pushViewController:self.roomsTabView animated:TRUE];

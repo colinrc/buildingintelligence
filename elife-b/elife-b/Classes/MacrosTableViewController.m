@@ -7,7 +7,7 @@
 //
 
 #import "MacrosTableViewController.h"
-#import "elifeAppDelegate.h"
+#import "elife_bAppDelegate.h"
 
 @implementation MacrosTableViewController
 @synthesize myCell;
@@ -35,14 +35,14 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	NSLog(@"number of macros %d",[elifeappdelegate.elifemacrolist count]);
     return [elifeappdelegate.elifemacrolist count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	NSMutableArray *macrolist = elifeappdelegate.elifemacrolist;
 	UITableViewCell *cell = nil;
 
@@ -62,7 +62,8 @@
 	myLabel.text = [[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"EXTRA"];
 	
 	UIActivityIndicatorView *myActInd = (UIActivityIndicatorView *)[cell viewWithTag:11];
-	if ([[[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"RUNNING"] isEqualToString:@"1"]) {
+	//if ([[[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"RUNNING"] isEqualToString:@"1"]) {
+	if ([[macrolist objectAtIndex:indexPath.row] isRunning]) {	
 		[myActInd startAnimating];
 	}
 	
@@ -71,7 +72,7 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	NSMutableArray *macrolist = elifeappdelegate.elifemacrolist;
 	elifesocket *myServer = elifeappdelegate.elifesvr;
 	NSMutableArray *sendmsgs = elifeappdelegate.msgs_for_svr;
@@ -86,7 +87,8 @@
 	cell = [tableView cellForRowAtIndexPath:indexPath];
 	UILabel *myLabel = (UILabel *)[cell viewWithTag:10];
 	UIActivityIndicatorView *myActInd = (UIActivityIndicatorView *)[cell viewWithTag:11];
-	if ([[[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"RUNNING"] isEqualToString:@"0"]) {
+//	if ([[[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"RUNNING"] isEqualToString:@"0"]) {
+	if ([[macrolist objectAtIndex:indexPath.row] isRunning] == NO) {
 		[myActInd startAnimating];
 		NSLog(@"Send macro start");
 		NSString *msg = @"<CONTROL KEY=\"MACRO\" COMMAND=\"run\" EXTRA=\"";

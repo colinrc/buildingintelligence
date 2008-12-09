@@ -7,7 +7,7 @@
 //
 
 #import "ControlsTableViewController.h"
-#import "elifeAppDelegate.h"
+#import "elife_bAppDelegate.h"
 #import "elifezone.h"
 #import "eliferoom.h"
 #import "eliferoomtab.h"
@@ -39,7 +39,7 @@
 
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:self.zoneidx];
 	eliferoom *theroom = [thezone.roomlist objectAtIndex:roomidx];
 	eliferoomtab *thetab = [theroom.tablist objectAtIndex:tabidx];
@@ -49,7 +49,7 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:self.zoneidx];
 	eliferoom *theroom = [thezone.roomlist objectAtIndex:roomidx];
 	eliferoomtab *thetab = [theroom.tablist objectAtIndex:tabidx];
@@ -84,7 +84,7 @@
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:self.zoneidx];
 	eliferoom *theroom = [thezone.roomlist objectAtIndex:roomidx];
 	eliferoomtab *thetab = [theroom.tablist objectAtIndex:tabidx];
@@ -589,7 +589,7 @@
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:self.zoneidx];
 	eliferoom *theroom = [thezone.roomlist objectAtIndex:roomidx];
 	eliferoomtab *thetab = [theroom.tablist objectAtIndex:tabidx];
@@ -651,11 +651,15 @@
 */
 
 - (void)dealloc {
+//	[self.myCell dealloc];
+//	[self.zoneidx dealloc];
+//	[self.roomidx dealloc];
+//	[self.tabidx dealloc];
     [super dealloc];
 }
 
 - (IBAction)btnPress:(id)sender {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:self.zoneidx];
 	eliferoom *theroom = [thezone.roomlist objectAtIndex:roomidx];
 	eliferoomtab *thetab = [theroom.tablist objectAtIndex:tabidx];
@@ -672,7 +676,7 @@
 }
 
 - (IBAction)sliderDrag:(id)sender {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:self.zoneidx];
 	eliferoom *theroom = [thezone.roomlist objectAtIndex:roomidx];
 	eliferoomtab *thetab = [theroom.tablist objectAtIndex:tabidx];
@@ -690,7 +694,7 @@
 }
 
 - (IBAction)switchState:(id)sender {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:self.zoneidx];
 	eliferoom *theroom = [thezone.roomlist objectAtIndex:roomidx];
 	eliferoomtab *thetab = [theroom.tablist objectAtIndex:tabidx];
@@ -713,6 +717,10 @@
 		msg = [msg stringByAppendingString:@"\" COMMAND=\"on\" EXTRA=\"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
 		[sendmsgs addObject:msg];
 		[myServer sendmessage];
+		// change cell icon to "on" version
+		UIImageView *myImage = (UIImageView *)[cell viewWithTag:10];
+		NSArray *iconlist = [[thecontrol.roomctrlattr objectForKey:@"icons"] componentsSeparatedByString:@","];
+		myImage.image = [UIImage imageNamed:[[iconlist objectAtIndex:1] stringByAppendingString:@".png"]];
 	} else {
 		// send command "off" to elife
 		NSString *msg = @"<CONTROL KEY=\"";
@@ -720,7 +728,12 @@
 		msg = [msg stringByAppendingString:@"\" COMMAND=\"off\" EXTRA=\"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
 		[sendmsgs addObject:msg];
 		[myServer sendmessage];
+		// change cell icon to "off" version
+		UIImageView *myImage = (UIImageView *)[cell viewWithTag:10];
+		NSArray *iconlist = [[thecontrol.roomctrlattr objectForKey:@"icons"] componentsSeparatedByString:@","];
+		myImage.image = [UIImage imageNamed:[[iconlist objectAtIndex:0] stringByAppendingString:@".png"]];		
 	}
+	
 }
 
 

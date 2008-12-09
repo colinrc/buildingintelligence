@@ -8,7 +8,7 @@
 
 #import "elifesocket.h"
 #import "elifeXMLParser.h"
-#import "elifeAppDelegate.h"
+#import "elife_bAppDelegate.h"
 
 
 @implementation elifesocket
@@ -18,12 +18,46 @@
 - (void)connecttoelife {
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];  
 	NSString *elifehost = [userDefaults stringForKey:@"local_server_ip"];  
-	//NSString *elifehost = @"192.168.1.2";  
-	NSHost *host = [NSHost hostWithAddress:elifehost];
+//	if (![elifehost isEqualToString:@""]) {
+//		CFHostRef host;
+	//NSHost *host = [NSHost hostWithAddress:elifehost];
 	int elifeport = [userDefaults integerForKey:@"local_server_port"];
 	//int elifeport = 10000;
 	NSLog(@"Preparing to connect");
 	
+		if (![elifehost isEqualToString:@""]) {
+			CFHostRef           host;
+			CFReadStreamRef     readStream;
+			CFWriteStreamRef    writeStream;
+			
+	
+			
+			host = CFHostCreateWithName(NULL, (CFStringRef) elifehost);
+			if (host != NULL) {
+				(void) CFStreamCreatePairWithSocketToCFHost(NULL, host, elifeport, &readStream, &writeStream);
+				CFRelease(host);
+			}
+			else {
+				return;
+			}
+			
+			
+			iStream = [(NSInputStream *) readStream retain];
+			oStream = [(NSOutputStream *) writeStream retain];
+			
+			[iStream setDelegate:self];
+			[oStream setDelegate:self];
+			[iStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+			[oStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+			[iStream open];
+			[oStream open];
+		}
+	
+	 
+	
+	
+	
+	/*
 	if (host != nil)
 	{		
 		// iStream and oStream are instance variables
@@ -49,15 +83,19 @@
 		streamStatus = [iStream streamStatus];
 		streamStatus = [oStream streamStatus];
 	}
-	
+	*/
 }
 
 - (void)sendmessage {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	NSMutableArray *sendmsgs = elifeappdelegate.msgs_for_svr;
 	NSString *stringToSend;
 	NSData *dataToSend;
 	void *marker;
+	
+	//if (elifeappdelegate.connected_to_svr == NO) {
+	//	return;
+	//}
 	
 	NSLog(@"Messages pending: %d",[sendmsgs count]);
 	while ([sendmsgs count] > 0) {
@@ -81,7 +119,7 @@
 
 - (void)stream:(NSStream *)theStream handleEvent:(NSStreamEvent)streamEvent
 {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	NSMutableArray *sendmsgs = elifeappdelegate.msgs_for_svr;
 	NSLog(@"Stream event occurred, messages waiting to go: %d",[sendmsgs count]);
 	

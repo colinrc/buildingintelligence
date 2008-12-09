@@ -7,7 +7,7 @@
 //
 
 #import "elifeXMLParser.h"
-#import "elifeAppDelegate.h"
+#import "elife_bAppDelegate.h"
 #import "elifezone.h"
 #import "eliferoom.h"
 #import "eliferoomtab.h"
@@ -90,7 +90,7 @@ NSInteger ctrlrowidx;
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
 	NSDictionary *currentelement = [[NSDictionary alloc] init];
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	NSLog(@"Called XML Parser()");
 	
 	if ([elementName isEqualToString:@"zone"] && parsing_calendar==NO) {
@@ -225,7 +225,7 @@ NSInteger ctrlrowidx;
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-	elifeAppDelegate *elifeappdelegate = (elifeAppDelegate *)[[UIApplication sharedApplication] delegate];
+	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	
 	NSLog(@"Close tag: %@", elementName);
 	if ([currentstate count] > 1) {
@@ -239,7 +239,7 @@ NSInteger ctrlrowidx;
 	} else if ([elementName isEqualToString:@"MACROS"]) {
 		parsing_macros=NO;
 		MacrosViewController *macrosvc = [elifeappdelegate.mainVClist objectAtIndex:0];
-		[macrosvc.macrosTabControl.view reloadData];
+		[(UITableView *)macrosvc.macrosTabControl.view reloadData];
 		[macrosvc.macrosTabControl.view setNeedsDisplay];
 
 		

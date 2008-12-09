@@ -8,17 +8,22 @@
 
 #import <UIKit/UIKit.h>
 #import "RoomItem.h"
-#import "RoomControlsTabBarController.h"
+//#import "RoomControlsTabBarController.h"
+#import "ControlsTableViewController.h"
 
 @interface RoomsTableViewController : UITableViewController {
 	//NSMutableArray *roomlist;
 	NSInteger zoneidx;
-	RoomControlsTabBarController *roomTabBar;
+	NSInteger roomidx;
+	//RoomControlsTabBarController *roomTabBar;
+	ControlsTableViewController *roomTableView;
 }
 
 //@property (nonatomic, retain) NSMutableArray *roomlist;
 @property (nonatomic) NSInteger zoneidx;
-@property (nonatomic, retain) RoomControlsTabBarController *roomTabBar;
+@property (nonatomic) NSInteger roomidx;
+//@property (nonatomic, retain) RoomControlsTabBarController *roomTabBar;
+@property (nonatomic, retain) ControlsTableViewController *roomTableView;
 
 //- (void)addRoom:(RoomItem *)newroomitem;
 
