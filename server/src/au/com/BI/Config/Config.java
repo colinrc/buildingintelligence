@@ -27,6 +27,7 @@ import au.com.BI.Macro.*;
 import au.com.BI.Home.Controls;
 import au.com.BI.Home.VersionManager;
 import au.com.BI.JRobin.JRobinParser;
+import au.com.BI.Jetty.JettyHandler;
 
 /**
  * @author Colin Canfield
@@ -53,6 +54,7 @@ public class Config {
 		protected au.com.BI.GroovyModels.Model groovyModelHandler  = null;
 		protected LabelMgr labelMgr = null;
 		protected DeviceFactories deviceFactories;
+		protected JettyHandler jettyHandler;
 		
 	public Config() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -75,6 +77,7 @@ public class Config {
             calendarModel.getCalendarHandler().setCalendar_message_params (this.calendar_message_params);
             this.controls = controls;
             controls.clearVariables();
+            jettyHandler.clearForwards();
         }
         
 	public void removeModels (List <DeviceModel>deviceModels) {
@@ -153,14 +156,10 @@ public class Config {
 	@SuppressWarnings("unchecked")
         public void parseControl (Element controlElement) {
 		synchronized (controls) {
-			List controlSectionList = controlElement.getChildren("VARIABLES");
-			Iterator controlSectionIter = controlSectionList.iterator();
-			while (controlSectionIter.hasNext()) {
-				Element controlItem = (Element)controlSectionIter.next();
-				List variablesBlockList = controlItem.getChildren();
-				Iterator eachVariableBlockItemIter = variablesBlockList.iterator();
-				while (eachVariableBlockItemIter.hasNext()) {
-					Element variableBlockItem = (Element)eachVariableBlockItemIter.next();
+			List <Element>controlSectionList = controlElement.getChildren("VARIABLES");
+			for (Element controlItem:controlSectionList){
+				List <Element>variablesBlockList = controlItem.getChildren();
+				for (Element variableBlockItem:variablesBlockList){
 					if (variableBlockItem.getName().equals ("VARIABLE")) {
 						String active = (String)variableBlockItem.getAttributeValue("ACTIVE");
 						if (active == null || !active.equals("N")) {
@@ -188,14 +187,10 @@ public class Config {
 					}
 				}
 			}
-			List calendarParameters = controlElement.getChildren("CALENDAR_MESSAGES");
-			Iterator calSectionIter = calendarParameters.iterator();
-			while (calSectionIter.hasNext()) {
-				Element controlItem = (Element)calSectionIter.next();
-				List variablesBlockList = controlItem.getChildren();
-				Iterator eachVariableBlockItemIter = variablesBlockList.iterator();
-				while (eachVariableBlockItemIter.hasNext()) {
-					Element variableBlockItem = (Element)eachVariableBlockItemIter.next();
+			List <Element> calendarParameters = controlElement.getChildren("CALENDAR_MESSAGES");
+			for (Element controlItem: calendarParameters){
+				List <Element>variablesBlockList = controlItem.getChildren();
+				for (Element variableBlockItem:variablesBlockList){
 					if (variableBlockItem.getName().equals ("ITEM")) {
 						String name = (String)variableBlockItem.getAttributeValue("NAME");
 						String value = (String)variableBlockItem.getAttributeValue("VALUE");
@@ -207,7 +202,22 @@ public class Config {
 					}
 				}
 			}
-
+			List <Element>forwardsList = controlElement.getChildren("FORWARDS");
+			for (Element forwardsItem: forwardsList ) {
+				List <Element>forwardsBlockList = forwardsItem.getChildren();
+				for (Element forwardBlockItem:forwardsBlockList){
+					if (forwardBlockItem.getName().equals ("FORWARD")) {
+						String active = (String)forwardBlockItem.getAttributeValue("ACTIVE");
+						if (active == null || !active.equals("N")) {
+							String src = (String)forwardBlockItem.getAttributeValue("SRC");
+							String dest = (String)forwardBlockItem.getAttributeValue("DEST");
+							if (src != null && dest != null && !src.equals("") && !dest.equals ("")) {
+								jettyHandler.addForward(src,dest);
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		logger.log (Level.FINE,"Configured control section");
@@ -392,10 +402,12 @@ public class Config {
 				String deviceConnectionTypeString = connectLine.getName();
 				deviceModel.setParameter ("Connection_Type", deviceConnectionTypeString,DeviceModel.MAIN_DEVICE_GROUP);
 
-				String devicePort = connectLine.getAttributeValue("PORT");
-				String ipAddress = connectLine.getAttributeValue("IP_ADDRESS");
-				deviceModel.setParameter ("IP_Address", ipAddress,DeviceModel.MAIN_DEVICE_GROUP);
-				deviceModel.setParameter ("Device_Port", devicePort,DeviceModel.MAIN_DEVICE_GROUP);
+				if (deviceConnectionTypeString.equals( ("IP"))){
+					String devicePort = connectLine.getAttributeValue("PORT");
+					String ipAddress = connectLine.getAttributeValue("IP_ADDRESS");
+					deviceModel.setParameter ("IP_Address", ipAddress,DeviceModel.MAIN_DEVICE_GROUP);
+					deviceModel.setParameter ("Device_Port", devicePort,DeviceModel.MAIN_DEVICE_GROUP);
+				}
 
 				if (deviceConnectionTypeString.equals( ("SERIAL"))){
 					 baudRate = connectLine.getAttributeValue("BAUD");
@@ -739,6 +751,14 @@ public class Config {
 
 	public void setDeviceFactories(DeviceFactories deviceFactories) {
 		this.deviceFactories = deviceFactories;
+	}
+
+	public JettyHandler getJettyHandler() {
+		return jettyHandler;
+	}
+
+	public void setJettyHandler(JettyHandler jettyHandler) {
+		this.jettyHandler = jettyHandler;
 	}
 
 

@@ -29,6 +29,7 @@ import au.com.BI.Config.Security.IPType;
 //import org.mortbay.jetty.handler.*;
 import java.net.Authenticator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.*;
 
 
@@ -39,6 +40,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     Logger logger;
     Security security = null;
     public static final int timeout = 30; // 1 minute timeout for a session;
+    protected ConcurrentHashMap <String,String>forwards;
     
     public JettyHandler(Security security) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -46,6 +48,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         this.setName("JETTY");
         this.setAutoReconnect(false);
         this.security = security;
+        forwards= new ConcurrentHashMap<String,String>();
     }
     
     public boolean removeModelOnConfigReload() {
@@ -282,6 +285,22 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 	}
 	
     public void attatchComms(List <CommandInterface> commandQueue) throws au.com.BI.Comms.
-    ConnectionFail {};
+    ConnectionFail {}
+
+	/**
+	 * @param src
+	 * @param dest
+	 */
+	public void addForward(String src, String dest) {
+		forwards.put(src,dest);		
+	}
+
+	/**
+	 * 
+	 */
+	public void clearForwards() {
+		forwards.clear();
+		
+	};
 
 }

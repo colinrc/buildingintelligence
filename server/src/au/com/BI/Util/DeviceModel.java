@@ -464,6 +464,15 @@ public interface DeviceModel {
 	 */	
 	public void setDeviceKeysDecimal(boolean decimalKeys) ;
 	/**
+	 * True if the keys are specified in the configuration file as a string
+	 * @return True or false
+	 */
+	public boolean isDeviceKeysString();
+	/**
+	 * True if the keys are specified in the configuration file as a string
+	 */
+	public void setDeviceKeysString(boolean deviceKeysString) ;
+	/**
 	 * True if the keys are specified in the configuration file in decimal
 	 * @return True or false
 	 */

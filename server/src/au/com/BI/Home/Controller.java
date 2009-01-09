@@ -323,6 +323,7 @@ public class Controller {
 		config.setAddressBook(addressBook);
 		config.setLabelMgr(labelMgr);
 		config.setGroovyModelHandler(groovyModelHandler);
+		config.setJettyHandler(jettyHandler);
 		boolean commandDone;
 
 		logger.fine("Started the controller");

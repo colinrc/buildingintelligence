@@ -1,3 +1,20 @@
+''' General '''
+
+Added the ability to use strings rather than numbers as a device key in a model configuration file.  Use the folling call in the models startup code
+{{{
+   setDeviceKeyString (true) 
+}}}
+
+''' Jetty '''
+
+Added HTTP Forwarding to Jetty.
+In any config file CONTROL block add a forward section as follows.
+
+{{{
+
+}}}
+
+
 == 1/Dec/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b91.zip V1.6-b91] [attachment:wiki:SoftwareReleases:eLife-1.6b91-libs.zip Libs-V1.6b91] ==
 
 ''' Started '''

@@ -664,7 +664,10 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 								.getName());
 				comms.clearCommandQueue();
 			}
-		} else {
+		} 
+		
+		if (((String) this.getParameterValue("Connection_Type",
+				DeviceModel.MAIN_DEVICE_GROUP)).equals("IP")) {
 
 			if (comms != null) {
 				synchronized (comms) {
@@ -906,6 +909,9 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		String formatSpec = "%0";
 		formatSpec += padding;
 
+		if (isDeviceKeysString()){
+			return new Integer(key).toString();
+		}
 		if (!this.isDeviceKeysDecimal()) {
 			formatSpec += "X";
 		} else {
@@ -922,6 +928,9 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	public String formatKey(String key, DeviceType device)
 			throws NumberFormatException {
 		int keyInt = 0;
+		if (isDeviceKeysString()){
+			return key;
+		}
 		if (isConfigKeysInDecimal()) {
 			keyInt = Integer.parseInt(key);
 		} else {

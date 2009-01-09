@@ -71,6 +71,7 @@ public class ModelParameters  {
 		protected int interCommandInterval = 0;
         protected boolean deviceKeysDecimal = false;
         protected boolean configKeysInDecimal = false;
+        protected boolean deviceKeysString =false;
 		protected int padding = 1; // Number of digits to pad the key too in the device.
 		public DeviceType allDevices = null;
 		protected VersionManager versionManager = null;
@@ -504,5 +505,13 @@ public class ModelParameters  {
 
 	public void setChecksumRequired(boolean checksumRequired) {
 		this.checksumRequired = checksumRequired;
+	}
+
+	public boolean isDeviceKeysString() {
+		return deviceKeysString;
+	}
+
+	public void setDeviceKeysString(boolean deviceKeysString) {
+		this.deviceKeysString = deviceKeysString;
 	}
 }
