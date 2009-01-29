@@ -12,7 +12,7 @@ import au.com.BI.Device.DeviceType;
  * @author Colin Canfield
  *
  **/
-public class Sensor extends BaseDevice
+public class Sensor extends BaseDevice implements DeviceType
 {
 	
 	private String channel = "";
@@ -129,6 +129,10 @@ public class Sensor extends BaseDevice
 	
 	public boolean isRelay() {
 		return relay;
+	}
+	
+	public boolean keepStateForStartup() {
+		return false;
 	}
 
 
