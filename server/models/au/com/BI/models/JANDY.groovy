@@ -148,6 +148,30 @@ class JANDY extends GroovyModel {
 							def pumpDevice = configHelper.getControlledItem(PUMP)
 							
 							// Read the LED bits into a BitSet
+							// Merik; I Don't think this is right, looks like you are reading in a bit series eg. 100100100 rather than an integer that you convert.
+							
+							/* 
+							// You probably want something like;
+							// int toTest[] = new int[5];
+							// toTest[3] = Integer.parseInt(partsOfCommand[3])
+							
+							// then to test if the bit 0 is true
+							//  if (toTest[3] && 1 == 1 ) { 
+							 * do stuff 
+							 * }
+							 * 
+							 * to test if bit 1 is true
+							//  if (toTest[3 && 2 == 2) { 
+							 * do stuff  
+							 * }
+							 * 
+							 * 	to test if bit 2 is true
+							//  if (toTest[3 && 4 == 4) { 
+							 * do stuff  
+							 * }
+
+							*/
+							
 							for (int i = 0; i < ledString.lenght(); i++){
 								if (ledString.charAt(i) == '1'){
 									ledBits.set(i)
