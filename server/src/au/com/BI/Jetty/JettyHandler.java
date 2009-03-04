@@ -18,20 +18,17 @@ import org.mortbay.jetty.handler.HandlerCollection;
 
 import org.mortbay.jetty.security.Constraint;
 import org.mortbay.jetty.security.ConstraintMapping;
-import org.mortbay.jetty.security.FormAuthenticator;
 import org.mortbay.jetty.security.HashUserRealm;
 import org.mortbay.jetty.security.SecurityHandler;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.security.UserRealm;
-import org.mortbay.servlet.WelcomeFilter;
 
 import au.com.BI.Config.Security.IPType;
 //import org.mortbay.jetty.handler.*;
-import java.net.Authenticator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.*;
-
+import au.com.BI.Servlets.*;
 
 public class JettyHandler extends SimplifiedModel implements DeviceModel, ClientModel {
     boolean SSL = false;
@@ -64,6 +61,11 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         client_server.setConnectors(new Connector[]{connector}); 
         
         ContextHandlerCollection contexts = new ContextHandlerCollection();
+ 
+        // forwards handler
+        Context forwardContext = new Context (contexts,"/forwards");
+        forwardContext.addServlet ("au.com.BI.Servlets.RequestForward","/");
+        forwardContext.setAttribute("forwards", forwards);
         
         // HTML static handler
         Context mainContext= new Context (contexts, "/html"); 
@@ -74,6 +76,8 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         defServlet.setInitParameter("aliases", "true");
         defServlet.setInitParameter("serveIcon", "false");
         
+        
+         
         /** Post only content */ 
         
         Context postContext = new Context (contexts,"/post", Context.SECURITY | Context.NO_SESSIONS);

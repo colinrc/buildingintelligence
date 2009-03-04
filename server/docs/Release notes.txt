@@ -1,3 +1,20 @@
+''' Jetty '''
+
+Added HTTP Forwarding to Jetty.
+Added ForwardRequest servlet to handle the request forwarding.
+In any config file CONTROL block add a forward section as follows.
+
+{{{
+
+}}}
+
+== 4/Mar/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b92.zip V1.6-b92] 
+
+''' Macros '''
+
+Fixed issue where macros with a KEY being replaced by an EXTRA field would not correctly populate the KEY when run from a cient button.
+
+
 ''' General '''
 
 Added the ability to use strings rather than numbers as a device key in a model configuration file.  Use the folling call in the models startup code
@@ -5,14 +22,6 @@ Added the ability to use strings rather than numbers as a device key in a model 
    setDeviceKeyString (true) 
 }}}
 
-''' Jetty '''
-
-Added HTTP Forwarding to Jetty.
-In any config file CONTROL block add a forward section as follows.
-
-{{{
-
-}}}
 
 
 == 1/Dec/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b91.zip V1.6-b91] [attachment:wiki:SoftwareReleases:eLife-1.6b91-libs.zip Libs-V1.6b91] ==

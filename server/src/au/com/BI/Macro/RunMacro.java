@@ -67,7 +67,7 @@ public class RunMacro extends Thread {
 			    commandDone = false;
 			    try {
 					ClientCommand clientCommand = (ClientCommand)(macroItems.next()).clone();
-					clientCommand.setDisplayName(clientCommand.getKey());
+
 				    if (origCommand != null) {
 				    		if (clientCommand.getExtraInfo().startsWith("%")) {
 				    			clientCommand.setExtraInfo(readParam(clientCommand.getExtraInfo()));
@@ -117,6 +117,7 @@ public class RunMacro extends Thread {
 						
 					if (!commandDone) {
 					    commandDone = true;
+						clientCommand.setDisplayName(clientCommand.getKey());
 						commandList.add (clientCommand);
 					}
 			    } catch (CloneNotSupportedException ex){

@@ -164,22 +164,28 @@
                         <LIGHT_CBUS ACTIVE="N" KEY="0D" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" RELAY="Y" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="0E" NAME="Ensuite LV Light" DISPLAY_NAME="ENSUITE_LV_LIGHT" RELAY="N" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="10" NAME="Lounge LV Lights" DISPLAY_NAME="LOUNGE_LV_LIGHT" RELAY="N" POWER_RATING="80"/>
-                        <LIGHT_CBUS ACTIVE="Y" KEY="12" NAME="Master Bed Light" DISPLAY_NAME="MASTER_BED_LIGHT" POWER_RATING="100"/>
+ 
+                        <LIGHT_CBUS ACTIVE="N" KEY="12" NAME="Master Bed Light" DISPLAY_NAME="MASTER_BED_LIGHT" POWER_RATING="100"/>
                         
                         <LIGHT_CBUS ACTIVE="Y" KEY="15" NAME="Master Bed PIR" DISPLAY_NAME="MASTER_BED_PIR" POWER_RATING="100"/>
-                        
+
+    
                         <LIGHT_CBUS ACTIVE="Y" KEY="11" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" RELAY="Y" POWER_RATING="80"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="0F" NAME="Family Light" DISPLAY_NAME="FAMILY_LIGHT" POWER_RATING="80"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="08" NAME="Hall Light" DISPLAY_NAME="HALL_LIGHT" POWER_RATING="80"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="1E" NAME="Tessa Light" DISPLAY_NAME="TESSA_LIGHT" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="N" RELAY="Y" KEY="1E" NAME="Lounge LV Lights" DISPLAY_NAME="LOUNGE_LV_LIGHT" POWER_RATING="80"/>
  
- 						<LIGHT_CBUS KEY="09" ACTIVE="Y" RELAY="N" NAME="Kitchen light" DISPLAY_NAME="KITCHEN_LIGHT" />
+ 						<LIGHT_CBUS KEY="12" ACTIVE="N" RELAY="N" NAME="Kitchen light" DISPLAY_NAME="KITCHEN_LIGHT" />
  						<LIGHT_CBUS KEY="0A" ACTIVE="Y" RELAY="Y" NAME="Pool Cleaner Pump" DISPLAY_NAME="POOL_CLEANER_PUMP" />
                         
                         <LIGHT_CBUS ACTIVE="N" KEY="3C" NAME="Family Light" RELAY="Y"  DISPLAY_NAME="FAMILY_LIGHT" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="3B" NAME="Pool Light" DISPLAY_NAME="POOL_LIGHT" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="3B" NAME="Lounge Lv Light" RELAY="Y" DISPLAY_NAME="LOUNGE_LV_LIGHT" POWER_RATING="100"/>
+                        
+                         <LIGHT_CBUS KEY="01" ACTIVE="Y" RELAY="Y" NAME="Lounge Blind" DISPLAY_NAME="LOUNGE_BLIND_CBUS" />
+  						<LIGHT_CBUS KEY="12" ACTIVE="Y" RELAY="Y" NAME="Dining Blind" DISPLAY_NAME="DINING_BLIND_CBUS" />
+  
                 </CBUS>
         </DEVICE>
         <!-- ______________________________________  RAW DEFS _____________________________ -->
