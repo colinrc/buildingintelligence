@@ -172,7 +172,7 @@
 				<room name="Ensuite" poly="443,219,443,296,579,296,579,153,477,153,477,219">
 					<window>
 						<tab name="Test" icon="atom">
-							<control name="Macro Test" type="macro" macroName="button" args="OFFICE_LIGHT,20,Office Lights" />
+							<control name="Macro Test" type="macro" args="OFFICE_LIGHT,20,Office Lights" />
 						</tab>
 						<tab name="Lights &amp; Fan" icon="light-bulb">
 							<control name="Ground Floor Lights" key="ENSUITE_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
