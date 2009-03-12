@@ -698,7 +698,7 @@
 		</control>
 		<control type="macro">
 			<row>
-				<item type="button" macro="true" label="%arg3%" extra="button" extra2="%arg1%" extra3="" extra4="" extra5="%arg2%" width="25" showOn="true" />
+				<item type="button" macro="true" label="%arg3%" extra="button" extra2="%arg1%" extra3="" extra4="" extra5="%arg2%" width="25" />
 			</row>
 		</control>
 	</controlTypes>
