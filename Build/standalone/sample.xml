@@ -171,6 +171,9 @@
 			<rooms>
 				<room name="Ensuite" poly="443,219,443,296,579,296,579,153,477,153,477,219">
 					<window>
+						<tab name="Test" icon="atom">
+							<control name="Macro Test" type="macro" macroName="button" args="OFFICE_LIGHT,20,Office Lights" />
+						</tab>
 						<tab name="Lights &amp; Fan" icon="light-bulb">
 							<control name="Ground Floor Lights" key="ENSUITE_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
 							<control name="Test multi-key" keys="ENSUITE_LIGHT1,ENSUITE_LIGHT2" type="slider2" icons="light-bulb-off,light-bulb" />
@@ -691,6 +694,11 @@
 				<item type="button" icon="media-pause" command="PAUSE" extra="" extra2="" />
 				<item type="button" icon="media-step-rwd" command="previousItem" extra="" extra2="" repeatRate="200" />
 				<item type="button" icon="media-step-fwd" command="nextItem" extra="" extra2="" repeatRate="200" />
+			</row>
+		</control>
+		<control type="macro">
+			<row>
+				<item type="button" macro="true" label="%arg3%" extra="button" extra2="%arg1%" extra3="" extra4="" extra5="%arg2%" width="25" showOn="true" />
 			</row>
 		</control>
 	</controlTypes>

@@ -5,7 +5,7 @@ import flash.display.BitmapData;
 import flash.filters.BlurFilter;
 import flash.filters.ColorMatrixFilter;
 
-_global.clientVersion = "5.5.0b61";
+_global.clientVersion = "5.5.0b70";
 _global.serverVersion = "0.0.0"; 
 _global.clientStartTime = getTimer();
 

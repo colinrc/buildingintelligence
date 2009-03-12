@@ -72,7 +72,7 @@ serverSetup = function () {
 
 getCachedData = function () {
 	var xml = new XML();
-	if (!isConnected) {
+	if (!isConnected && 1 <> 1) {
 		debug("HTTPS: /webclient/update?INIT=Y&ID=" + _global.settings.securityID);
 		xml.load("https://" + _global.settings.serverAddress + ":" + _global.settings.serverPort + "/webclient/update?INIT=Y&ID=" + _global.settings.securityID);
 	} else {
@@ -246,12 +246,22 @@ receiveCmd = function (xml, ignoreSkip) {
 			clearInterval(httpIntervalID);
 		}
 	} else if (msg.nodeName == "CONTROL" && msg.attributes.KEY == "MACRO") {
+		var foundName = false;
 		for (var i=0; i<_global.macros.length; i++) {
-			if (_global.macros[i].name ==  msg.attributes.EXTRA) break; 
+			if (_global.macros[i].name == msg.attributes.EXTRA) {
+				foundName = true;
+				break; 
+			}
 		}
+		
+		if (!foundName) {
+			// in the case where a macro has been called that we didn't know about, create an obj for it
+			_global.macros.push({name:msg.attributes.EXTRA, running:false, status:{noToolbar:true}})
+		}
+		
 		if (msg.attributes.COMMAND == "started") {
 			_global.macros[i].running = true;
-			_global.macros[i].lastStarted =  new Date();
+			_global.macros[i].lastStarted = new Date();
 		} else {
 			_global.macros[i].running = false;
 			_global.macros[i].lastFinished =  new Date();

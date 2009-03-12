@@ -1966,7 +1966,8 @@ createLogContent = function (logObj, content_mc) {
 						var txt = logObj.label;
 						if (controlObj.room != undefined) txt = txt.split("%room%").join(controlObj.room);
 						if (controlObj.name != undefined) txt = txt.split("%name%").join(controlObj.name);
-								
+						// TODO: add key name as alternative subsitute
+						
 						var label_mc = this.labels_mc.createEmptyMovieClip("label" + control + "_mc", control);
 						label_mc._y = counter * 52;
 						label_mc.controlObj = logObj.controls[control];
@@ -3466,7 +3467,7 @@ broadcastChange = function (key, id, fromClient) {
 		} else {
 			eval(control.subscribers[subscriber]).update(key, control.state, control.value, fromClient);
 		}
-		//debug(" - " + control.subscribers[subscriber])
+		//debug(" - " + control.subscribers[subscriber] + ":" + key + ":" + control.state + ":" + control.value)
 	}
 }
 

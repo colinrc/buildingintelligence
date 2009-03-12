@@ -203,7 +203,7 @@
 						items[item].mode = "toggle";
 					}
 					var item_mc = attachButton(row_mc, control, items[item], "item" + item + "_mc", item, width, height);
-					if (buttonObj.macro != undefined) {
+					if (items[item].macro != undefined) {
 						item_mc.onShow = function () {
 							subscribe("MACRO", this);
 						}
@@ -556,6 +556,23 @@ attachButton = function (attachTo, control, buttonObj, name, depth, w, h) {
 	} else {
 		buttonObject.iconName = buttonObj.icon;
 	}
+	
+	var args = control.args.split(",");
+	for (var i=0; i<args.length; i++) {
+		if (buttonObject.label == "%arg" + (i + 1) + "%") {
+			buttonObject.label = args[i];
+		} else {
+			buttonObject.label.split("%arg" + (i + 1) + "%").join(args[i]);
+		}
+		buttonObject.labels.split("%arg" + (i + 1) + "%").join(args[i]);
+	}
+
+	var extras = "extra,extra2,extra3,extra4,extra5".split(",");
+	for (var i=0; i<extras.length; i++) {
+		if (buttonObj[extras[i]].substr(0, 4) == "%arg") {
+			buttonObj[extras[i]] = args[buttonObj[extras[i]].substr(4, 1) - 1];
+		}
+	}
 
 	if (buttonObj.sound != undefined) {
 		buttonObject.sound = buttonObj.sound;
@@ -706,6 +723,21 @@ attachButton = function (attachTo, control, buttonObj, name, depth, w, h) {
 				_global.macroStatus[this.macroID] = this.onChangeID;
 				this.highlight = true;
 			}
+		} else if (!this.macroName) {
+			// support for macros with extras, probably don't need either of the other two methods?
+			item_mc.toggle = true;
+			item_mc.extras = [buttonObj.extra, buttonObj.extra2, buttonObj.extra3, buttonObj.extra4, buttonObj.extra5];
+			this.highlight = this.false;
+			
+			item_mc.press = function () {
+				if (_global.macros[this.macroID].running) {
+					updateKey("MACRO", "abort", this.extras, true);
+					this.highlight = false;
+				} else {
+					updateKey("MACRO", "run", this.extras, true);
+					this.highlight = true;
+				}
+			}
 		} else {
 			item_mc.toggle = true;
 			if (_global.macros[macroID].running) item_mc.highlight = true;
@@ -726,7 +758,21 @@ attachButton = function (attachTo, control, buttonObj, name, depth, w, h) {
 			}
 		}
 		item_mc.update = function (key, state, value) {
-			if (value == this.macroName) {
+			if (state == this.extras[0] + ":" + this.extras[1]) {
+				if (this.macroID == undefined) {
+					for (var i=0; i<_global.macros.length; i++) {
+						if (_global.macros[i].name == this.extras[0] + ":" + this.extras[1]) {
+							this.macroID = i;
+							break; 
+						}
+					}
+				}
+				if (_global.macros[this.macroID].running) {
+					this.highlight = true;
+				} else {
+					this.highlight = false;
+				}
+			} else if (value == this.macroName) {
 				if (_global.macros[macroID].type == "dual") {
 					if (_global.macroStatus[this.macroID] == 0) {
 						this.label = _global.macros[this.macroID].controls[0].command;
@@ -738,11 +784,7 @@ attachButton = function (attachTo, control, buttonObj, name, depth, w, h) {
 						this.onChangeID = 0;
 					}
 				} else {
-					if (_global.macros[this.macroID].running) {
-						this.highlight = true;
-					} else {
-						this.highlight = false;
-					}
+					trace(key + ":" +  state +":"+ value);
 				}
 			}
 		}
