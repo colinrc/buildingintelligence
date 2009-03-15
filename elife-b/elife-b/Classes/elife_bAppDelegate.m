@@ -15,6 +15,8 @@
 #import "elifemacro.h"
 #import "RoomItem.h"
 #import "elifeXMLParser.h"
+#import "elifestatustab.h"
+#import "elifestatusitem.h"
 
 
 @implementation elife_bAppDelegate
@@ -26,6 +28,7 @@
 @synthesize elifezonelist;
 @synthesize elifectrltypes;
 @synthesize elifemacrolist;
+@synthesize elifestatustabs;
 @synthesize elifesvr;
 @synthesize msgs_for_svr;
 
@@ -33,6 +36,7 @@
 	// Create Macros VC
 	MacrosViewController *macrosVC = [[MacrosViewController alloc] init];
 	macrosVC.title = @"Macros";
+	macrosVC.tabBarItem.image = [UIImage imageNamed:@"tabbar-macro.png"];
 	
 	//Create table for macros display
 	MacrosTableViewController *macrosTable = [[MacrosTableViewController alloc] init];
@@ -54,7 +58,8 @@
 	// Create Zones Navigation Controller
 	zonesNC = [[ZonesViewController alloc] init];
 	zonesNC.title = @"Zones";
-	
+	zonesNC.tabBarItem.image = [UIImage imageNamed:@"tabbar-zones.png"];
+
 	//Create table for zones display
 	ZonesTableViewController *zonesTable = [[ZonesTableViewController alloc] init];
 	zonesTable.title = @"Zones";
@@ -69,7 +74,21 @@
 
 - (void)CreateStatusView {
 	StatusViewController *statusVC = [[StatusViewController alloc] init];
+	// register for notifications of status changes
+	int i,j;
+	elifestatustab *currstatustab;
+	elifestatusitem *curritem;
+	for (i=0; i<[elifestatustabs count];i++) {
+		currstatustab = [elifestatustabs objectAtIndex:i];
+		for (j=0; j<[currstatustab.statusitems count]; j++) {
+			curritem = [currstatustab.statusitems objectAtIndex:j];
+			[statusVC registerWithNotification:[curritem.key stringByAppendingString:@"_status"]];
+		}
+	}
+	
 	statusVC.title = @"Status";
+	statusVC.tabBarItem.image = [UIImage imageNamed:@"tabbar-status.png"];
+
 	[mainVClist addObject:statusVC];
 	[statusVC release];
 }
@@ -77,6 +96,8 @@
 - (void)CreateSettingsView {
 	SettingsViewController *setVC = [[SettingsViewController alloc] init];
 	setVC.title = @"Settings";
+	setVC.tabBarItem.image = [UIImage imageNamed:@"tabbar-prefs.png"];
+
 	[mainVClist addObject:setVC];
 	[setVC release];
 }	
@@ -86,13 +107,13 @@
 	elifezonelist = [[NSMutableArray alloc] init];
 	elifectrltypes = [[NSMutableArray alloc] init];
 	elifemacrolist = [[NSMutableArray alloc] init];
+	elifestatustabs = [[NSMutableArray alloc] init];
 	
 	// set up array for server messages
 	msgs_for_svr = [[NSMutableArray alloc] init];
 	
-	// Parse XML Data to establish initial setup - just faking the url at this stage
-	NSURL *url = [NSURL URLWithString: @"http://localhost/contacts.xml"];
-	elifeXMLParser *myParser = [[elifeXMLParser alloc] parseXMLAtURL:url toObject:@"Contact" parseError:nil];
+	// Load elife config
+	elifeXMLParser *myParser = [[elifeXMLParser alloc] initParser];
 	
 	// Trying Sockets
 	elifesvr = [[elifesocket alloc] init];
