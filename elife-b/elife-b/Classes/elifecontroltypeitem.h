@@ -10,12 +10,12 @@
 
 
 @interface elifecontroltypeitem : NSObject {
-	NSString *ctrlrowtype;
-	NSDictionary *rowattrs;
+	NSString *ctrlitemtype;
+	NSDictionary *itemattrs;
 }
 
-@property (nonatomic, retain) NSString *ctrlrowtype;
-@property (nonatomic, retain) NSDictionary *rowattrs;
+@property (nonatomic, retain) NSString *ctrlitemtype;
+@property (nonatomic, retain) NSDictionary *itemattrs;
 
 -(id)initWithType:(NSString *)thetype andAttrs:(NSDictionary *)theattrs;
 
