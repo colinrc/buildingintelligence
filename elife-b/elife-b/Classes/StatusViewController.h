@@ -13,4 +13,7 @@
 
 }
 
+- (void)registerWithNotification:(NSString *)thekey;
+
+
 @end
