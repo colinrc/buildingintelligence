@@ -14,76 +14,37 @@
 @implementation elifesocket
 @synthesize iStream;
 @synthesize oStream;
+@synthesize error_status;
 
 - (void)connecttoelife {
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];  
 	NSString *elifehost = [userDefaults stringForKey:@"local_server_ip"];  
-//	if (![elifehost isEqualToString:@""]) {
-//		CFHostRef host;
-	//NSHost *host = [NSHost hostWithAddress:elifehost];
 	int elifeport = [userDefaults integerForKey:@"local_server_port"];
-	//int elifeport = 10000;
-	NSLog(@"Preparing to connect");
 	
-		if (![elifehost isEqualToString:@""]) {
-			CFHostRef           host;
-			CFReadStreamRef     readStream;
-			CFWriteStreamRef    writeStream;
-			
-	
-			
-			host = CFHostCreateWithName(NULL, (CFStringRef) elifehost);
-			if (host != NULL) {
-				(void) CFStreamCreatePairWithSocketToCFHost(NULL, host, elifeport, &readStream, &writeStream);
-				CFRelease(host);
-			}
-			else {
-				return;
-			}
-			
-			
-			iStream = [(NSInputStream *) readStream retain];
-			oStream = [(NSOutputStream *) writeStream retain];
-			
-			[iStream setDelegate:self];
-			[oStream setDelegate:self];
-			[iStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-			[oStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-			[iStream open];
-			[oStream open];
+	if (![elifehost isEqualToString:@""]) {
+		CFHostRef           host;
+		CFReadStreamRef     readStream;
+		CFWriteStreamRef    writeStream;
+
+		host = CFHostCreateWithName(NULL, (CFStringRef) elifehost);
+		if (host != NULL) {
+			(void) CFStreamCreatePairWithSocketToCFHost(NULL, host, elifeport, &readStream, &writeStream);
+			CFRelease(host);
 		}
-	
-	 
-	
-	
-	
-	/*
-	if (host != nil)
-	{		
-		// iStream and oStream are instance variables
-		[NSStream getStreamsToHost:host port:elifeport inputStream:&iStream outputStream:&oStream];
-	
-		//iStream is instance var of NSSInputStream
-		[iStream retain];
+		else {
+			return;
+		}
+			
+		iStream = [(NSInputStream *) readStream retain];
+		oStream = [(NSOutputStream *) writeStream retain];
+			
 		[iStream setDelegate:self];
-		[iStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-		[iStream open];
-		
-		//oStream is instance var of NSSOutputStream
-		[oStream retain];
 		[oStream setDelegate:self];
+		[iStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 		[oStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-		[oStream open];		
-		
-		NSError *streamError;
-		streamError = [iStream streamError];
-		streamError = [oStream streamError];
-		
-		NSStreamStatus streamStatus;
-		streamStatus = [iStream streamStatus];
-		streamStatus = [oStream streamStatus];
+		[iStream open];
+		[oStream open];
 	}
-	*/
 }
 
 - (void)sendmessage {
@@ -92,12 +53,7 @@
 	NSString *stringToSend;
 	NSData *dataToSend;
 	void *marker;
-	
-	//if (elifeappdelegate.connected_to_svr == NO) {
-	//	return;
-	//}
-	
-	NSLog(@"Messages pending: %d",[sendmsgs count]);
+		
 	while ([sendmsgs count] > 0) {
 		//send data
 		stringToSend = [NSString stringWithFormat:@"%@\n", [sendmsgs objectAtIndex:0]];
@@ -111,7 +67,6 @@
 				remainingToWrite -= actuallyWritten;
 				marker += actuallyWritten;
 			}
-			NSLog(@"Command send: %@", stringToSend);
 			[sendmsgs removeObject:[sendmsgs objectAtIndex:0]];
 		}
 	}
@@ -121,7 +76,6 @@
 {
 	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	NSMutableArray *sendmsgs = elifeappdelegate.msgs_for_svr;
-	NSLog(@"Stream event occurred, messages waiting to go: %d",[sendmsgs count]);
 	
 	NSString *io;
 	if (theStream == iStream) io = @">>";
@@ -133,9 +87,13 @@
 		case NSStreamEventNone:
 			event = @"NSStreamEventNone";
 			NSLog(@"Cannot connect to host");
+			self.error_status++;
+			self.alertOtherAction;
 			break;
 		case NSStreamEventOpenCompleted:
 			event = @"NSStreamEventOpenCompleted";
+			self.error_status=0;
+			NSLog(@"Socket is open");
 			break;
 		case NSStreamEventHasBytesAvailable:
 			event = @"NSStreamEventHasBytesAvailable";
@@ -191,6 +149,8 @@
 		case NSStreamEventErrorOccurred:
 			event = @"NSStreamEventErrorOccurred";
 			NSLog(@"Cannot connect to host #2");
+			self.error_status++;
+			self.alertOtherAction;
 			break;
 		case NSStreamEventEndEncountered:
 			event = @"NSStreamEventEndEncountered";
@@ -203,8 +163,17 @@
 		default:
 			event = @"** Unknown";
 	}
-	
-	NSLog(@"%@ : %@", io, event);
+}
+
+- (void)alertOtherAction
+{
+	if (self.error_status == 1) {
+		// open an alert with two custom buttons
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"eLife Connection Error" message:@"The connection to the eLife server has been lost."
+												   delegate:self cancelButtonTitle:@"Exit" otherButtonTitles:@"Reconnect", nil];
+		[alert show];
+		[alert release];
+	}
 }
 
 
