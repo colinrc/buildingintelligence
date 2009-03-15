@@ -13,13 +13,17 @@
 	NSString *name;
 	NSString *key;
 	NSDictionary *roomctrlattr;
-	NSString *command;
+	NSString *ctrlstatus;
+	int ctrlval;
+	NSString *ctrlsrc;
 }
 
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *key;
 @property (nonatomic, retain) NSDictionary *roomctrlattr;
-@property (nonatomic, retain) NSString *command;
+@property (nonatomic, retain) NSString *ctrlstatus;
+@property (nonatomic) int ctrlval;
+@property (nonatomic, retain) NSString *ctrlsrc;
 
 - (id) initWithName:(NSString *)thename andKey:(NSString *)thekey andAttributes:(NSDictionary *)theattr;
 
