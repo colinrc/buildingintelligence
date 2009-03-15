@@ -65,8 +65,13 @@
 	//if ([[[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"RUNNING"] isEqualToString:@"1"]) {
 	if ([[macrolist objectAtIndex:indexPath.row] isRunning]) {	
 		[myActInd startAnimating];
+	} else {
+		[myActInd stopAnimating];
 	}
 	
+	// request notification of changes
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(macroUpdate:) name:[[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"EXTRA"] object:nil];
+
 	return cell;
 }
 
@@ -168,6 +173,13 @@
 
 - (void)dealloc {
     [super dealloc];
+}
+
+- (void)macroUpdate:(NSNotification *)notification {
+	NSString *thekey = [notification name];
+	NSLog(@"Observed macroUpdate message:%@", thekey);
+	[self.tableView setNeedsDisplay];
+	[self.tableView reloadData];
 }
 
 
