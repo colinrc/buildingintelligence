@@ -10,12 +10,12 @@
 
 
 @implementation elifecontroltypeitem
-@synthesize ctrlrowtype;
-@synthesize rowattrs;
+@synthesize ctrlitemtype;
+@synthesize itemattrs;
 
 -(id)initWithType:(NSString *)thetype andAttrs:(NSDictionary *)theattrs {
-	self.ctrlrowtype = thetype;
-	self.rowattrs = theattrs;
+	self.ctrlitemtype = thetype;
+	self.itemattrs = theattrs;
 	
 	return self;
 }
