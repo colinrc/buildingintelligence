@@ -25,4 +25,6 @@
 - (IBAction)sliderDrag:(id)sender;
 - (IBAction)switchState:(id)sender;
 
+-(void)videorefresh:(NSTimer *)theTimer;
+
 @end
