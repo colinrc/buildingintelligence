@@ -18,7 +18,7 @@
 }
 
 - (NSArray *)items;
-- (id)parseXMLAtURL:(NSURL *)url toObject:(NSString *)aClassName parseError:(NSError **)error;
+- (id)initParser;
 - (id)parseXMLData:(NSString *)xmldata;
 
 @end
