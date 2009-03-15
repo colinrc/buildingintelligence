@@ -12,12 +12,15 @@
 @interface elifesocket : NSObject {
 	NSInputStream *iStream;
 	NSOutputStream *oStream;
+	NSInteger error_status;
 }
 
 @property (nonatomic, retain) NSInputStream *iStream;
 @property (nonatomic, retain) NSOutputStream *oStream;
+@property (nonatomic) NSInteger error_status;
 
 - (void)connecttoelife;
 - (void)sendmessage;
+- (void)alertOtherAction;
 
 @end
