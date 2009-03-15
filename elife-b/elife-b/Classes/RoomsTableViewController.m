@@ -47,7 +47,6 @@
 	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:self.zoneidx];
 	eliferoom *theroom = [thezone.roomlist objectAtIndex:roomidx];
-	NSLog(@"CurrentZone %@ => CurrentRoom %@ => Tabs %d",thezone.name,theroom.name,[theroom.tablist count]);
     return [theroom.tablist count];
 }
 
@@ -85,8 +84,7 @@
 	//NSString *iconname;
 	
 	if (self.roomTableView == nil) {
-		NSLog(@"creating a new controls view controller");
-		self.roomTableView = [[ControlsTableViewController alloc] init];
+		self.roomTableView = [[ControlsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	}
 	self.roomTableView.title = activetab.name;
 	self.roomTableView.zoneidx = self.zoneidx;
@@ -95,39 +93,6 @@
 	[self.roomTableView.tableView reloadData];
 	[elifeappdelegate.zonesNC pushViewController:self.roomTableView animated:TRUE];
 
-	/* tabbar version
-	if (self.roomTabBar == nil) {
-		self.roomTabBar = [[RoomControlsTabBarController alloc] init];
-	}
-	self.roomTabBar.title = activeroom.name;
-	self.roomTabBar.zoneidx = self.zoneidx;
-	self.roomTabBar.roomidx = indexPath.row;
-	self.roomTabBar.hidesBottomBarWhenPushed = YES;
-	
-	// Loop through tab list in active room making ControlsTableViewController items
-	for (i=0; i < [activeroom.tablist count]; i++) {
-		ControlsTableViewController *activecontrolview = [[ControlsTableViewController alloc] initWithStyle:UITableViewStyleGrouped];
-		activetab = [activeroom.tablist objectAtIndex:i];
-		if (activetab.name != nil) {
-			activecontrolview.zoneidx = self.zoneidx;
-			activecontrolview.roomidx = indexPath.row;
-			activecontrolview.tabidx = i;
-		
-			activecontrolview.title = activetab.name;
-			activecontrolview.tabBarItem.image = [UIImage imageNamed:[[activetab.tabattr objectForKey:@"icon"] stringByAppendingString:@".png"]];
-			[thetabs addObject:activecontrolview];
-		}
-		
-		[activecontrolview release];
-	}
-
-	// Push Room TabBar onto Nav Controller
-	[self.roomTabBar setViewControllers:thetabs];
-	if ([thetabs count] != 0) {
-		self.roomTabBar.selectedViewController = [thetabs objectAtIndex:0];
-	}
-	[elifeappdelegate.zonesNC pushViewController:self.roomTabBar animated:TRUE];
-	 */
 }
 
 
