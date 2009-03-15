@@ -13,13 +13,17 @@
 @synthesize name;
 @synthesize key;
 @synthesize roomctrlattr;
-@synthesize command;
+@synthesize ctrlstatus;
+@synthesize ctrlval;
+@synthesize ctrlsrc;
 
 - (id) initWithName:(NSString *)thename andKey:(NSString *)thekey andAttributes:(NSDictionary *)theattr {
 	self.name = thename;
 	self.key = thekey;
 	self.roomctrlattr = theattr;
-	self.command = @"off";
+	self.ctrlstatus = @"off";
+	self.ctrlval = [[theattr objectForKey:@"EXTRA"] intValue];
+	self.ctrlsrc = @"";
 	
 	return self;
 }
