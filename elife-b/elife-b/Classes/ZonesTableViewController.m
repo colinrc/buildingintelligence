@@ -36,15 +36,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
-	NSLog(@"number of zones %d",[elifeappdelegate.elifezonelist count]);
-    return [elifeappdelegate.elifezonelist count];
+	return [elifeappdelegate.elifezonelist count];
 }
-
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	elifezone *thezone = [elifeappdelegate.elifezonelist objectAtIndex:section];
-	NSLog(@"zones %d: room count %d",section, [thezone.roomlist count]);
     return [thezone.roomlist count];
 }
 
@@ -88,7 +85,6 @@
 
 	[elifeappdelegate.zonesNC pushViewController:self.roomsTabView animated:TRUE];
 	
-	//[[[zonelist objectAtIndex:indexPath.row] parentNC] pushViewController:[[zonelist objectAtIndex:indexPath.row] zoneelemVC] animated:TRUE];
 }
 
 
