@@ -19,7 +19,7 @@
 	NSMutableArray *elifezonelist;
 	NSMutableArray *elifectrltypes;
 	NSMutableArray *elifemacrolist;
-	
+	NSMutableArray *elifestatustabs;
 	elifesocket *elifesvr;
 	NSMutableArray *msgs_for_svr;
 }
@@ -31,6 +31,7 @@
 @property (nonatomic, retain) NSMutableArray *elifezonelist;
 @property (nonatomic, retain) NSMutableArray *elifectrltypes;
 @property (nonatomic, retain) NSMutableArray *elifemacrolist;
+@property (nonatomic, retain) NSMutableArray *elifestatustabs;
 @property (nonatomic, retain) NSMutableArray *msgs_for_svr;
 @property (retain) elifesocket *elifesvr;
 
