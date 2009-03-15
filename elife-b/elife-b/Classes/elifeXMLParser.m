@@ -13,9 +13,12 @@
 #import "eliferoomtab.h"
 #import "eliferoomcontrol.h"
 #import "elifecontroltypes.h"
+#import "elifecontrolrow.h"
 #import "elifecontroltypeitem.h"
 #import "elifemacro.h"
 #import "MacrosViewController.h"
+#import "elifestatustab.h"
+#import "elifestatusitem.h"
 
 @implementation elifeXMLParser
 
@@ -25,9 +28,13 @@ eliferoom *currentroom;
 eliferoomtab *currentroomtab;
 eliferoomcontrol *currentroomctrl;
 elifecontroltypes *currentctrltype;
+elifestatustab *currentstatustab;
+elifestatusitem *currentstatusitem;
 BOOL parsing_calendar;
 BOOL parsing_ctrltypes;
 BOOL parsing_macros;
+BOOL parsing_status;
+BOOL superuseronly;
 NSInteger ctrlrowidx;
 
 - (NSArray *)items
@@ -35,53 +42,53 @@ NSInteger ctrlrowidx;
 	return items;
 }
 
-- (id)parseXMLAtURL:(NSURL *)url toObject:(NSString *)aClassName parseError:(NSError **)error {
+- (id)initParser {
 	[items release];
 	items = [[NSMutableArray alloc] init];
 	[currentstate release];
 	currentstate = [[NSMutableArray alloc] init];
 	
-	className = aClassName;
 	//you must then convert the path to a proper NSURL or it won't work
-    //NSURL *xmlURL = [NSURL fileURLWithPath:URL];
-	NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"sample.xml"];
+	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];  
+	NSString *elifehost = [userDefaults stringForKey:@"local_server_ip"]; 
+	NSString *defconfig = [userDefaults stringForKey:@"config_file"];
+	NSURL *configurl = [[NSURL alloc] initWithString:[[@"http://" stringByAppendingString:elifehost] stringByAppendingString:[@"/html/iphone/" stringByAppendingString:defconfig]]];
+	NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:defconfig];
 	
-    // here, for some reason you have to use NSClassFromString when trying to alloc NSXMLParser, otherwise you will get an object not found error
-    // this may be necessary only for the toolchain
-    //NSXMLParser *parser = [[ NSClassFromString(@"NSXMLParser") alloc] initWithContentsOfURL:xmlURL];
-    NSXMLParser *parser = [[ NSClassFromString(@"NSXMLParser") alloc] initWithData:[[NSData alloc] initWithContentsOfFile:path]];
+    NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:configurl];
+	if (parser = nil) {
+		parser = [[NSXMLParser alloc] initWithData:[[NSData alloc] initWithContentsOfFile:path]];
+	}
 	
-	//NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:url];
 	[parser setDelegate:self];
 	[parser setShouldProcessNamespaces:YES];
 	
-	[parser parse];
-	
-	if([parser parserError] && error) {
-		*error = [parser parserError];
+	if ([parser parse] == NO) {
+		[parser release];
+		parser = [[NSXMLParser alloc] initWithData:[[NSData alloc] initWithContentsOfFile:path]];
+		[parser setDelegate:self];
+		[parser setShouldProcessNamespaces:YES];
+		
+		
+		[parser parse];
 	}
-	
+		
 	[parser release];
 	
 	return self;
 }
 
 - (id)parseXMLData:(NSString *)xmldata {
-	NSLog(@"parsing %d bytes", [xmldata length]);
-	NSLog(@"XMLDATA: %@", xmldata);
 	NSXMLParser *myparser = [[NSXMLParser alloc] initWithData:[xmldata dataUsingEncoding:NSASCIIStringEncoding]];
 	
 	if (myparser == nil) {
-		NSLog(@"XML Parser could not initiate");
 		exit(0);
 	}
 	
 	[myparser setDelegate:self];
 	[myparser setShouldProcessNamespaces:YES];
 	
-	NSLog(@"calling XML parse()");
 	[myparser parse];
-	NSLog(@"Finished XML parse()");
 		
 	[myparser release];
 	
@@ -91,89 +98,107 @@ NSInteger ctrlrowidx;
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
 	NSDictionary *currentelement = [[NSDictionary alloc] init];
 	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
-	NSLog(@"Called XML Parser()");
-	
 	if ([elementName isEqualToString:@"zone"] && parsing_calendar==NO) {
-		// store zone name in currentstate array for future reference
-		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"elementtype",[attributeDict objectForKey:@"name"],@"name",nil];
-		[currentstate addObject:currentelement];
-		NSLog(@"Open tag: %@", elementName);
+		// check if zone is superuser only access and do not add to zonelist
+		NSString *canOpen = [attributeDict objectForKey:@"canOpen"];
+		if ([canOpen isEqualToString:@"superuser"]) {
+			superuseronly=YES;
+		} else {
+			superuseronly=NO;
+			// store zone name in currentstate array for future reference
+			currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"elementtype",[attributeDict objectForKey:@"name"],@"name",nil];
+			[currentstate addObject:currentelement];
 		
-		// create new zone object
-		elifezone *newzone = [[elifezone alloc] initWithName:[attributeDict objectForKey:@"name"] andAttributes:attributeDict];
-		NSLog(@"Adding zone %@",[attributeDict objectForKey:@"name"]);
-		// add newly created zone to the appdelegate elifezonelist
-		[elifeappdelegate.elifezonelist addObject:newzone];
-		NSLog(@"current zone count: %d", [elifeappdelegate.elifezonelist count]);
-		currentzone = [elifeappdelegate.elifezonelist  objectAtIndex:[elifeappdelegate.elifezonelist indexOfObject:newzone]];
-		NSLog(@"currentzone pointer %@",currentzone.name);
-		//[newzone release];
+			// create new zone object
+			elifezone *newzone = [[elifezone alloc] initWithName:[attributeDict objectForKey:@"name"] andAttributes:attributeDict];
+			// add newly created zone to the appdelegate elifezonelist
+			[elifeappdelegate.elifezonelist addObject:newzone];
+			currentzone = [elifeappdelegate.elifezonelist  objectAtIndex:[elifeappdelegate.elifezonelist indexOfObject:newzone]];
+			//[newzone release];
+		}
 		
 	} else if ([elementName isEqualToString:@"room"]) {
 		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
 		[currentstate addObject:currentelement];
-		NSLog(@"Open tag: %@", elementName);
 
-		// create new room object
-		eliferoom *newroom = [[eliferoom alloc] initWithName:[attributeDict objectForKey:@"name"] andAttributes:attributeDict];
-		NSLog(@"Adding room %@",[attributeDict objectForKey:@"name"]);
+		if (!superuseronly) {
+			// create new room object
+			eliferoom *newroom = [[eliferoom alloc] initWithName:[attributeDict objectForKey:@"name"] andAttributes:attributeDict];
 		
-		// Add room object to current zone
-		[currentzone.roomlist addObject:newroom];
-		NSLog(@"current room count: %d", [currentzone.roomlist count]);
-		NSLog(@"currentzone pointer %@",currentzone.name);
+			// Add room object to current zone
+			[currentzone.roomlist addObject:newroom];
+		
 
-
-		currentroom = [currentzone.roomlist objectAtIndex:[currentzone.roomlist indexOfObject:newroom]];
+			currentroom = [currentzone.roomlist objectAtIndex:[currentzone.roomlist indexOfObject:newroom]];
 				
-		[newroom release];
-	} else if ([elementName isEqualToString:@"tab"]) {
+			[newroom release];
+		}
+	} else if ([elementName isEqualToString:@"tab"] && (parsing_status == NO)) {
 		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
 		[currentstate addObject:currentelement];
-		NSLog(@"Open tag: %@", elementName);
 		
-		// create new roomtab object
-		eliferoomtab *newroomtab = [[eliferoomtab alloc] initWithName:[attributeDict objectForKey:@"name"] andAttributes:attributeDict];
+		if (!superuseronly) {
+			// create new roomtab object
+			eliferoomtab *newroomtab = [[eliferoomtab alloc] initWithName:[attributeDict objectForKey:@"name"] andAttributes:attributeDict];
 		
-		// add roomtab to current room
-		[currentroom.tablist addObject:newroomtab];
-		currentroomtab = [currentroom.tablist objectAtIndex:[currentroom.tablist indexOfObject:newroomtab]];
+			// add roomtab to current room
+			[currentroom.tablist addObject:newroomtab];
+			currentroomtab = [currentroom.tablist objectAtIndex:[currentroom.tablist indexOfObject:newroomtab]];
 		
-		[newroomtab release];
+			[newroomtab release];
+		}
+	} else if (([elementName isEqualToString:@"tab"] || [elementName isEqualToString:@"group"]) && (parsing_status == YES)) {
+		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
+		[currentstate addObject:currentelement];
+
+		// create new status group
+		elifestatustab *newstatustab = [[elifestatustab alloc] initWithName:[attributeDict objectForKey:@"name"] andDict:attributeDict];
+		
+		// add status group to AppDelegate
+		[elifeappdelegate.elifestatustabs addObject:newstatustab];
+		currentstatustab = [elifeappdelegate.elifestatustabs  objectAtIndex:[elifeappdelegate.elifestatustabs indexOfObject:newstatustab]];
+		[newstatustab release];
+	} else if ([elementName isEqualToString:@"control"] && (parsing_status == YES)) {
+		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
+		[currentstate addObject:currentelement];
+
+		// create new status item
+		elifestatusitem *newstatusitem = [[elifestatusitem alloc] initWithKey:[attributeDict objectForKey:@"key"]];
+		
+		// add status item to current status group
+		[currentstatustab.statusitems addObject:newstatusitem];
+		[newstatusitem release];
 	} else if ([elementName isEqualToString:@"CONTROL"] && (parsing_macros == YES)) {
 		// Defining a Macro
-		NSLog(@"Adding macro %@", [attributeDict objectForKey:@"EXTRA"]);
 		ElifeMacro *tmpmacro = [[ElifeMacro alloc] initWithDict:attributeDict];
 		[elifeappdelegate.elifemacrolist addObject:tmpmacro];
 		[tmpmacro release];
-		NSLog(@"Macrolist now has %d elements", [elifeappdelegate.elifemacrolist count]);
 
 	} else if ([elementName isEqualToString:@"control"] && (parsing_ctrltypes == NO)) {
 		// Defining a specific control for a room
 		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
 		[currentstate addObject:currentelement];
-		NSLog(@"Open tag: %@", elementName);
 		
-		// create new roomcontrol object
-		eliferoomcontrol *newroomctrl = [[eliferoomcontrol alloc] initWithName:[attributeDict objectForKey:@"name"] andKey:[attributeDict objectForKey:@"key"] andAttributes:attributeDict];
+		if (!superuseronly) {
+			// create new roomcontrol object
+			eliferoomcontrol *newroomctrl = [[eliferoomcontrol alloc] initWithName:[attributeDict objectForKey:@"name"] andKey:[attributeDict objectForKey:@"key"] andAttributes:attributeDict];
 		
-		// add control to current roomtab
-		[currentroomtab.controllist addObject:newroomctrl];
+			// add control to current roomtab
+			[currentroomtab.controllist addObject:newroomctrl];
 		
-		[newroomctrl release];		
+			[newroomctrl release];	
+		}
 	} else if ([elementName isEqualToString:@"control"] && (parsing_ctrltypes == YES)) {
 		//Defining a new control type
 		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
 		[currentstate addObject:currentelement];
-		NSLog(@"Open tag: %@", elementName);
 		
 		// Create a new controltype object
 		elifecontroltypes *newcontroltype = [[elifecontroltypes alloc] initWithType:[attributeDict objectForKey:@"type"]];
 		
-		// add newly created control type to the appdelegate elifezonelist
+		// add newly created control type to the appdelegate elife control type list
 		[elifeappdelegate.elifectrltypes addObject:newcontroltype];
 		currentctrltype = [elifeappdelegate.elifectrltypes  objectAtIndex:[elifeappdelegate.elifectrltypes indexOfObject:newcontroltype]];
-		NSLog(@"currentcontroltype pointer %@",currentctrltype.controltype);
 		//[newzone release];
 		
 		ctrlrowidx=-1;
@@ -181,16 +206,63 @@ NSInteger ctrlrowidx;
 		//runtime message from elife server
 		if ([[attributeDict objectForKey:@"KEY"] isEqualToString:@"MACRO"]) {
 			// macro state change being reported
-			NSLog(@"Macro %@ state change %@", [attributeDict objectForKey:@"EXTRA"], [attributeDict objectForKey:@"COMMAND"]);
+			// locate macro and update status
+			BOOL foundmacro=NO;
+			int i;
+			ElifeMacro *currmacro;
+			for (i=0; (!foundmacro) && i<[elifeappdelegate.elifemacrolist count]; i++) {
+				currmacro = [elifeappdelegate.elifemacrolist objectAtIndex:i];
+				if ([[currmacro.macroattr objectForKey:@"EXTRA"] isEqualToString:[attributeDict objectForKey:@"EXTRA"]]) {
+					foundmacro=YES;
+					if ([[attributeDict objectForKey:@"COMMAND"] isEqualToString:@"started"]) {
+						currmacro.running=YES;
+					} else if ([[attributeDict objectForKey:@"COMMAND"] isEqualToString:@"finished"]) {
+						currmacro.running=NO;
+					}
+				}
+			}
+			
+			// Send notification message to any observers
+			[[NSNotificationCenter defaultCenter] postNotificationName:[attributeDict objectForKey:@"EXTRA"] object:nil];
+
 		} else {
 			// control element state change
-			NSLog(@"Control %@ state change %@", [attributeDict objectForKey:@"KEY"], [attributeDict objectForKey:@"COMMAND"]);
+			//NSLog(@"Control %@ state change %@", [attributeDict objectForKey:@"KEY"], [attributeDict objectForKey:@"COMMAND"]);
+			//Locate control item and update status
+			BOOL foundctrl=NO;
+			int i,j,k,l;
+			elifezone *currzone;
+			eliferoom *currroom;
+			eliferoomtab *currtab;
+			eliferoomcontrol *currctrl;
+			for (i=0; (!foundctrl) && i<[elifeappdelegate.elifezonelist count]; i++) {
+				currzone = [elifeappdelegate.elifezonelist objectAtIndex:i];
+				for (j=0; (!foundctrl) && j<[currzone.roomlist count]; j++) {
+					currroom = [currzone.roomlist objectAtIndex:j];
+					for (k=0; (!foundctrl) && k<[currroom.tablist count]; k++) {
+						currtab = [currroom.tablist objectAtIndex:k];
+						for (l=0; (!foundctrl) && l<[currtab.controllist count]; l++) {
+							currctrl = [currtab.controllist objectAtIndex:l];
+							if ([currctrl.key isEqualToString:[attributeDict objectForKey:@"KEY"]]) {
+								foundctrl=YES;
+								currctrl.ctrlstatus = [attributeDict objectForKey:@"COMMAND"];
+								currctrl.ctrlval = [[attributeDict objectForKey:@"EXTRA"] intValue];
+							}
+						}
+					}
+				}
+			}
+			// Send notification message to any observers
+			[[NSNotificationCenter defaultCenter] postNotificationName:[attributeDict objectForKey:@"KEY"] object:nil];
+			[[NSNotificationCenter defaultCenter] postNotificationName:[[attributeDict objectForKey:@"KEY"] stringByAppendingString:@"_status"] object:nil];
 		}
 	} else if ([elementName isEqualToString:@"MACROS"]) {
 		parsing_macros=YES;
 		[elifeappdelegate.elifemacrolist release];
 		elifeappdelegate.elifemacrolist = [[NSMutableArray alloc] init];
-		NSLog(@"Starting to parse macros");
+		//NSLog(@"Starting to parse macros");
+	} else if ([elementName isEqualToString:@"statusBar"]) {
+		parsing_status=YES;
 	} else if ([elementName isEqualToString:@"calendar"]) {
 		parsing_calendar=YES;
 	} else if ([elementName isEqualToString:@"controlTypes"]) {
@@ -198,28 +270,35 @@ NSInteger ctrlrowidx;
 	} else if ([elementName isEqualToString:@"row"]) {
 		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
 		[currentstate addObject:currentelement];
-		NSLog(@"Open tag: %@", elementName);
 		
-		ctrlrowidx++;
-		[currentctrltype.displayrows addObject:[[NSMutableArray alloc] init]];
+		if (!superuseronly) {
+			// Create a new controltype row
+			elifecontrolrow *newcontrolrow = [[elifecontrolrow alloc] init];
+			newcontrolrow.rowattrs = [[NSMutableDictionary alloc] init];
+			if ([attributeDict objectForKey:@"cases"] != nil) {
+				[newcontrolrow.rowattrs setObject:[attributeDict objectForKey:@"cases"] forKey:@"cases"];
+			}
+			newcontrolrow.displayitems = [[NSMutableArray alloc] init];
+			
+			ctrlrowidx++;
+			[currentctrltype.displayrows addObject:newcontrolrow];
+		}
 	} else if ([elementName isEqualToString:@"item"]) {
 		// Define new control row definition
 		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
 		[currentstate addObject:currentelement];
-		NSLog(@"Open tag: %@", elementName);
 
-		// Create a new controltype item
-		elifecontroltypeitem *newcontroltypeitem = [[elifecontroltypeitem alloc] initWithType:[attributeDict objectForKey:@"type"] andAttrs:attributeDict];
+		if (!superuseronly) {
+			// Create a new controltype item
+			elifecontroltypeitem *newcontroltypeitem = [[elifecontroltypeitem alloc] initWithType:[attributeDict objectForKey:@"type"] andAttrs:attributeDict];
 		
-		// add newly created controltype item to current controltype
-		NSMutableArray *currentrow = [currentctrltype.displayrows objectAtIndex:ctrlrowidx];
-		[currentrow addObject:newcontroltypeitem];
-		
-		
+			// add newly created controltype item to current controltype
+			elifecontrolrow *currentrow = [currentctrltype.displayrows objectAtIndex:ctrlrowidx];
+			[currentrow.displayitems addObject:newcontroltypeitem];
+		}
 	} else {
 		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
 		[currentstate addObject:currentelement];
-		NSLog(@"Open tag: %@", elementName);
 	}
 	
 }
@@ -227,13 +306,14 @@ NSInteger ctrlrowidx;
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
 	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	
-	NSLog(@"Close tag: %@", elementName);
 	if ([currentstate count] > 1) {
 		[currentstate removeLastObject];
 	}
 
 	if ([elementName isEqualToString:@"calendar"]) {
 		parsing_calendar=NO;
+	} else if ([elementName isEqualToString:@"statusBar"]) {
+		parsing_status=NO;
 	} else if ([elementName isEqualToString:@"controlTypes"]) {
 		parsing_ctrltypes=NO;
 	} else if ([elementName isEqualToString:@"MACROS"]) {
@@ -241,21 +321,23 @@ NSInteger ctrlrowidx;
 		MacrosViewController *macrosvc = [elifeappdelegate.mainVClist objectAtIndex:0];
 		[(UITableView *)macrosvc.macrosTabControl.view reloadData];
 		[macrosvc.macrosTabControl.view setNeedsDisplay];
-
-		
-		
+	} else if ([elementName isEqualToString:@"zone"] && parsing_calendar==NO) {
+		// drop zone if it has no rooms
+		if ([currentzone.roomlist count] == 0) {
+			[elifeappdelegate.elifezonelist removeLastObject];
+		}
+		// reset zone state
+		superuseronly=NO;
 	}
-	
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
 {   
-	//NSLog(@"Found string: %@", string);
 	[currentNodeContent appendString:string];
 }
 
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
-    NSLog(@"Error %i,Description: %@, Line: %i, Column: %i", [parseError code],[[parser parserError] localizedDescription], [parser lineNumber],[parser columnNumber]);
+    //NSLog(@"Error %i,Description: %@, Line: %i, Column: %i", [parseError code],[[parser parserError] localizedDescription], [parser lineNumber],[parser columnNumber]);
  
 }
 
