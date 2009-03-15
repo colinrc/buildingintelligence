@@ -21,6 +21,9 @@
 	NSString *elifehost = [userDefaults stringForKey:@"local_server_ip"];  
 	int elifeport = [userDefaults integerForKey:@"local_server_port"];
 	
+	// Reset error status variable
+	self.error_status = 0;
+	
 	if (![elifehost isEqualToString:@""]) {
 		CFHostRef           host;
 		CFReadStreamRef     readStream;
@@ -54,6 +57,10 @@
 	NSData *dataToSend;
 	void *marker;
 		
+	if (self.error_status > 0) {
+		return;
+	}
+	
 	while ([sendmsgs count] > 0) {
 		//send data
 		stringToSend = [NSString stringWithFormat:@"%@\n", [sendmsgs objectAtIndex:0]];
@@ -73,10 +80,7 @@
 }
 
 - (void)stream:(NSStream *)theStream handleEvent:(NSStreamEvent)streamEvent
-{
-	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
-	NSMutableArray *sendmsgs = elifeappdelegate.msgs_for_svr;
-	
+{	
 	NSString *io;
 	if (theStream == iStream) io = @">>";
 	else io = @"<<";
@@ -173,6 +177,20 @@
 												   delegate:self cancelButtonTitle:@"Exit" otherButtonTitles:@"Reconnect", nil];
 		[alert show];
 		[alert release];
+	}
+}
+
+- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+	// use "buttonIndex" to decide your action
+	//
+	NSLog(@"Button clicked:%d",buttonIndex);
+	if (buttonIndex == 0) {
+		// cancel button clicked
+		exit(0);
+	} else {
+		// Reconnect button clicked
+		[self connecttoelife];
 	}
 }
 
