@@ -10,14 +10,12 @@
 
 
 @interface ControlTableCell : UITableViewCell {
-	NSTimer *celltimer;
 	NSInteger cellzoneidx;
 	NSInteger cellroomidx;
 	NSInteger celltabidx;
 	NSInteger cellcontrolidx;
 }
 
-@property (retain, nonatomic) NSTimer *celltimer;
 @property (nonatomic) NSInteger cellzoneidx;
 @property (nonatomic) NSInteger cellroomidx;
 @property (nonatomic) NSInteger celltabidx;
@@ -25,6 +23,5 @@
 
 
 - (id)initWithFrame:(CGRect)frame reuseIdentifier:(NSString *)reuseIdentifier zoneidx:(NSInteger)zoneidx roomidx:(NSInteger)roomidx tabidx:(NSInteger)tabidx controlidx:(NSInteger)controlidx;
-
 
 @end
