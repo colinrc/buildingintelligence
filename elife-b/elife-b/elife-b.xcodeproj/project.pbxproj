@@ -14,6 +14,18 @@
 		28216C970DB411BC00E5133A /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28216C960DB411BC00E5133A /* FirstViewController.m */; };
 		288765080DF74369002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765070DF74369002DB57D /* CoreGraphics.framework */; };
 		7E1486840EE1728D0021EBE9 /* elifeXMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E1486830EE1728D0021EBE9 /* elifeXMLParser.m */; };
+		7E15C2C20F1A068200CED3A1 /* elifestatusitem.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E15C2C10F1A068200CED3A1 /* elifestatusitem.m */; };
+		7E26D3A50EF21D1300C9D8D1 /* weld.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7E26D3A40EF21D1300C9D8D1 /* weld.xml */; };
+		7E313E0A0F6D1600006AB350 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 7E313E090F6D1600006AB350 /* Default.png */; };
+		7E46ACD40F2363B000DC6868 /* elifecontrolrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E46ACD30F2363B000DC6868 /* elifecontrolrow.m */; };
+		7E54A0110F405AFB0027A6B7 /* ControlPickerCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E54A0100F405AFB0027A6B7 /* ControlPickerCell.xib */; };
+		7E906AE10F4C2C2D00C57B08 /* ControlTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E906AE00F4C2C2D00C57B08 /* ControlTableCell.m */; };
+		7ECE9F6A0F0C656D006F1339 /* ControlOnOffCellView-New.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ECE9F690F0C656D006F1339 /* ControlOnOffCellView-New.xib */; };
+		7ECE9F7A0F0C6C2D006F1339 /* elifestatustab.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ECE9F790F0C6C2D006F1339 /* elifestatustab.m */; };
+		7ECF7B8A0F66082700C51802 /* tabbar-macro.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECF7B860F66082700C51802 /* tabbar-macro.png */; };
+		7ECF7B8B0F66082700C51802 /* tabbar-prefs.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECF7B870F66082700C51802 /* tabbar-prefs.png */; };
+		7ECF7B8C0F66082700C51802 /* tabbar-status.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECF7B880F66082700C51802 /* tabbar-status.png */; };
+		7ECF7B8D0F66082700C51802 /* tabbar-zones.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECF7B890F66082700C51802 /* tabbar-zones.png */; };
 		7EDBF2B50EEB1EAF00271CE0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EDBF2B40EEB1EAF00271CE0 /* CFNetwork.framework */; };
 		7EFCE6950EE26770007E7712 /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6600EE26770007E7712 /* CalendarViewController.m */; };
 		7EFCE6960EE26770007E7712 /* ControlBtnBtnBtnBtnBtnCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE6610EE26770007E7712 /* ControlBtnBtnBtnBtnBtnCell.xib */; };
@@ -211,6 +223,22 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7E1486820EE1728D0021EBE9 /* elifeXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifeXMLParser.h; sourceTree = "<group>"; };
 		7E1486830EE1728D0021EBE9 /* elifeXMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifeXMLParser.m; sourceTree = "<group>"; };
+		7E15C2C00F1A068200CED3A1 /* elifestatusitem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifestatusitem.h; sourceTree = "<group>"; };
+		7E15C2C10F1A068200CED3A1 /* elifestatusitem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifestatusitem.m; sourceTree = "<group>"; };
+		7E26D3A40EF21D1300C9D8D1 /* weld.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = weld.xml; sourceTree = "<group>"; };
+		7E313E090F6D1600006AB350 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		7E46ACD20F2363B000DC6868 /* elifecontrolrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifecontrolrow.h; sourceTree = "<group>"; };
+		7E46ACD30F2363B000DC6868 /* elifecontrolrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifecontrolrow.m; sourceTree = "<group>"; };
+		7E54A0100F405AFB0027A6B7 /* ControlPickerCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ControlPickerCell.xib; path = Classes/ControlPickerCell.xib; sourceTree = "<group>"; };
+		7E906ADF0F4C2C2D00C57B08 /* ControlTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlTableCell.h; sourceTree = "<group>"; };
+		7E906AE00F4C2C2D00C57B08 /* ControlTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlTableCell.m; sourceTree = "<group>"; };
+		7ECE9F690F0C656D006F1339 /* ControlOnOffCellView-New.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = "ControlOnOffCellView-New.xib"; path = "Classes/ControlOnOffCellView-New.xib"; sourceTree = "<group>"; };
+		7ECE9F780F0C6C2D006F1339 /* elifestatustab.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifestatustab.h; sourceTree = "<group>"; };
+		7ECE9F790F0C6C2D006F1339 /* elifestatustab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifestatustab.m; sourceTree = "<group>"; };
+		7ECF7B860F66082700C51802 /* tabbar-macro.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar-macro.png"; sourceTree = "<group>"; };
+		7ECF7B870F66082700C51802 /* tabbar-prefs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar-prefs.png"; sourceTree = "<group>"; };
+		7ECF7B880F66082700C51802 /* tabbar-status.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar-status.png"; sourceTree = "<group>"; };
+		7ECF7B890F66082700C51802 /* tabbar-zones.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar-zones.png"; sourceTree = "<group>"; };
 		7EDBF2B40EEB1EAF00271CE0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		7EFCE65F0EE26770007E7712 /* CalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarViewController.h; sourceTree = "<group>"; };
 		7EFCE6600EE26770007E7712 /* CalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarViewController.m; sourceTree = "<group>"; };
@@ -445,6 +473,8 @@
 				7EFCE66B0EE26770007E7712 /* ControlsTableViewController.m */,
 				7EFCE6700EE26770007E7712 /* elifecontroltypeitem.h */,
 				7EFCE6710EE26770007E7712 /* elifecontroltypeitem.m */,
+				7E46ACD20F2363B000DC6868 /* elifecontrolrow.h */,
+				7E46ACD30F2363B000DC6868 /* elifecontrolrow.m */,
 				7EFCE6720EE26770007E7712 /* elifecontroltypes.h */,
 				7EFCE6730EE26770007E7712 /* elifecontroltypes.m */,
 				7EFCE6740EE26770007E7712 /* elifemacro.h */,
@@ -481,6 +511,12 @@
 				28216C960DB411BC00E5133A /* FirstViewController.m */,
 				1D3623240D0F684500981E51 /* elife_bAppDelegate.h */,
 				1D3623250D0F684500981E51 /* elife_bAppDelegate.m */,
+				7ECE9F780F0C6C2D006F1339 /* elifestatustab.h */,
+				7ECE9F790F0C6C2D006F1339 /* elifestatustab.m */,
+				7E15C2C00F1A068200CED3A1 /* elifestatusitem.h */,
+				7E15C2C10F1A068200CED3A1 /* elifestatusitem.m */,
+				7E906ADF0F4C2C2D00C57B08 /* ControlTableCell.h */,
+				7E906AE00F4C2C2D00C57B08 /* ControlTableCell.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -517,6 +553,10 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7E313E090F6D1600006AB350 /* Default.png */,
+				7ECF7B850F6607E700C51802 /* tabbar-icons */,
+				7ECF7B840F6607D900C51802 /* icons-small */,
+				7E26D3A40EF21D1300C9D8D1 /* weld.xml */,
 				7EFCE8810EE291CC007E7712 /* icons */,
 				7EFCE70F0EE26B2C007E7712 /* sample.xml */,
 				7EFCE70D0EE26AE0007E7712 /* MainWindow.xib */,
@@ -547,6 +587,24 @@
 			name = XMLParser;
 			sourceTree = "<group>";
 		};
+		7ECF7B840F6607D900C51802 /* icons-small */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "icons-small";
+			sourceTree = "<group>";
+		};
+		7ECF7B850F6607E700C51802 /* tabbar-icons */ = {
+			isa = PBXGroup;
+			children = (
+				7ECF7B860F66082700C51802 /* tabbar-macro.png */,
+				7ECF7B870F66082700C51802 /* tabbar-prefs.png */,
+				7ECF7B880F66082700C51802 /* tabbar-status.png */,
+				7ECF7B890F66082700C51802 /* tabbar-zones.png */,
+			);
+			name = "tabbar-icons";
+			sourceTree = "<group>";
+		};
 		7EFCE6B60EE267AB007E7712 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
@@ -560,6 +618,8 @@
 				7EFCE66C0EE26770007E7712 /* ControlTglBtnBtnCell.xib */,
 				7EFCE66D0EE26770007E7712 /* ControlWebCell.xib */,
 				7EFCE6800EE26770007E7712 /* MacroCellView.xib */,
+				7ECE9F690F0C656D006F1339 /* ControlOnOffCellView-New.xib */,
+				7E54A0100F405AFB0027A6B7 /* ControlPickerCell.xib */,
 			);
 			name = Controls;
 			sourceTree = "<group>";
@@ -929,6 +989,14 @@
 				7EFCE8800EE291C0007E7712 /* warning.png in Resources */,
 				7EFCE8EB0EE29274007E7712 /* light-bulb-off.png in Resources */,
 				7EFCE8EC0EE29274007E7712 /* light-bulb.png in Resources */,
+				7E26D3A50EF21D1300C9D8D1 /* weld.xml in Resources */,
+				7ECE9F6A0F0C656D006F1339 /* ControlOnOffCellView-New.xib in Resources */,
+				7E54A0110F405AFB0027A6B7 /* ControlPickerCell.xib in Resources */,
+				7ECF7B8A0F66082700C51802 /* tabbar-macro.png in Resources */,
+				7ECF7B8B0F66082700C51802 /* tabbar-prefs.png in Resources */,
+				7ECF7B8C0F66082700C51802 /* tabbar-status.png in Resources */,
+				7ECF7B8D0F66082700C51802 /* tabbar-zones.png in Resources */,
+				7E313E0A0F6D1600006AB350 /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -964,6 +1032,10 @@
 				7EFCE6B20EE26770007E7712 /* ZoneItem.m in Sources */,
 				7EFCE6B30EE26770007E7712 /* ZonesTableViewController.m in Sources */,
 				7EFCE6B40EE26770007E7712 /* ZonesViewController.m in Sources */,
+				7ECE9F7A0F0C6C2D006F1339 /* elifestatustab.m in Sources */,
+				7E15C2C20F1A068200CED3A1 /* elifestatusitem.m in Sources */,
+				7E46ACD40F2363B000DC6868 /* elifecontrolrow.m in Sources */,
+				7E906AE10F4C2C2D00C57B08 /* ControlTableCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1001,13 +1073,14 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CODE_SIGN_IDENTITY = "iPhone Developer: Cameron Humphries";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Cameron Humphries";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				PROVISIONING_PROFILE = "C9E1C7F5-7B09-4918-89D0-1FF79A4D6D46";
+				PROVISIONING_PROFILE = "F6E94883-BCEA-4F4D-B11A-6CE2D69B748B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F6E94883-BCEA-4F4D-B11A-6CE2D69B748B";
 				SDKROOT = iphoneos2.2;
 			};
 			name = Debug;
@@ -1016,11 +1089,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Cameron Humphries";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Cameron Humphries";
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
+				PROVISIONING_PROFILE = "F6E94883-BCEA-4F4D-B11A-6CE2D69B748B";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F6E94883-BCEA-4F4D-B11A-6CE2D69B748B";
 				SDKROOT = iphoneos2.2;
 			};
 			name = Release;
