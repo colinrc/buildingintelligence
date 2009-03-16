@@ -725,13 +725,27 @@ attachButton = function (attachTo, control, buttonObj, name, depth, w, h) {
 			}
 		} else if (!this.macroName) {
 			// support for macros with extras, probably don't need either of the other two methods?
+			if (macroID == undefined) {
+				for (var i=0; i<_global.macros.length; i++) {
+					if (_global.macros[i].name == buttonObj.extra + ":" + buttonObj.extra2) {
+						item_mc.macroID = i;
+						break; 
+					}
+				}
+			}
+			
 			item_mc.toggle = true;
+			if (buttonObj.cancel.length) {
+				item_mc.cancel = buttonObj.cancel;
+			} else {
+				item_mc.cancel = "stop";
+			}
 			item_mc.extras = [buttonObj.extra, buttonObj.extra2, buttonObj.extra3, buttonObj.extra4, buttonObj.extra5];
-			this.highlight = this.false;
+			if (_global.macros[item_mc.macroID].running) item_mc.highlight = true;
 			
 			item_mc.press = function () {
 				if (_global.macros[this.macroID].running) {
-					updateKey("MACRO", "abort", this.extras, true);
+					updateKey("MACRO", this.cancel, this.extras, true);
 					this.highlight = false;
 				} else {
 					updateKey("MACRO", "run", this.extras, true);
@@ -740,7 +754,7 @@ attachButton = function (attachTo, control, buttonObj, name, depth, w, h) {
 			}
 		} else {
 			item_mc.toggle = true;
-			if (_global.macros[macroID].running) item_mc.highlight = true;
+			if (_global.macros[item_mc.macroID].running) item_mc.highlight = true;
 			
 			if (buttonObj.label != undefined) {
 				item_mc.label = buttonObj.label;
@@ -751,7 +765,7 @@ attachButton = function (attachTo, control, buttonObj, name, depth, w, h) {
 			
 			item_mc.press = function () {
 				if (_global.macros[this.macroID].running) {
-					updateKey("MACRO", "abort", this.macroName, true);
+					updateKey("MACRO", "complete", this.macroName, true);
 				} else {
 					updateKey("MACRO", "run", this.macroName, true);
 				}
@@ -783,8 +797,6 @@ attachButton = function (attachTo, control, buttonObj, name, depth, w, h) {
 						this.macroName = _global.macros[this.macroID].controls[1].command;
 						this.onChangeID = 0;
 					}
-				} else {
-					trace(key + ":" +  state +":"+ value);
 				}
 			}
 		}
