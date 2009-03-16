@@ -14,12 +14,14 @@
 	NSInteger zoneidx;
 	NSInteger roomidx;
 	NSInteger tabidx;
+	NSTimer *celltimer;
 }
 
 @property (nonatomic, assign) IBOutlet UITableViewCell *myCell;
 @property (nonatomic) NSInteger zoneidx;
 @property (nonatomic) NSInteger roomidx;
 @property (nonatomic) NSInteger tabidx;
+@property (nonatomic, retain) NSTimer *celltimer;
 
 - (IBAction)btnPress:(id)sender;
 - (IBAction)sliderDrag:(id)sender;
