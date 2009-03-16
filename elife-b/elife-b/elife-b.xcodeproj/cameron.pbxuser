@@ -64,6 +64,22 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
+			PBXConfiguration.PBXFileTableDataSource3.PBXSymbolsDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXSymbolsDataSource_SymbolNameID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					16,
+					200,
+					50,
+					677,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXSymbolsDataSource_SymbolTypeIconID,
+					PBXSymbolsDataSource_SymbolNameID,
+					PBXSymbolsDataSource_SymbolTypeID,
+					PBXSymbolsDataSource_ReferenceNameID,
+				);
+			};
 			PBXConfiguration.PBXFileTableDataSource3.XCSCMDataSource = {
 				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
@@ -72,7 +88,7 @@
 					20,
 					713,
 					20,
-					48.16259765625,
+					48,
 					43,
 					43,
 					20,
@@ -208,6 +224,17 @@
 			7E33ACCF0F6E5BFE0055B752 /* PBXTextBookmark */ = 7E33ACCF0F6E5BFE0055B752 /* PBXTextBookmark */;
 			7E33ACD00F6E5BFE0055B752 /* PBXTextBookmark */ = 7E33ACD00F6E5BFE0055B752 /* PBXTextBookmark */;
 			7E33ACD10F6E5BFE0055B752 /* PBXTextBookmark */ = 7E33ACD10F6E5BFE0055B752 /* PBXTextBookmark */;
+			7E33ACD40F6E5C430055B752 /* PBXTextBookmark */ = 7E33ACD40F6E5C430055B752 /* PBXTextBookmark */;
+			7E33ACD50F6E5C430055B752 /* PBXTextBookmark */ = 7E33ACD50F6E5C430055B752 /* PBXTextBookmark */;
+			7E33ACD70F6E5C430055B752 /* PBXTextBookmark */ = 7E33ACD70F6E5C430055B752 /* PBXTextBookmark */;
+			7E33ACD90F6E5C430055B752 /* PBXTextBookmark */ = 7E33ACD90F6E5C430055B752 /* PBXTextBookmark */;
+			7E33ACDA0F6E5C430055B752 /* PBXTextBookmark */ = 7E33ACDA0F6E5C430055B752 /* PBXTextBookmark */;
+			7E33ACDC0F6E5C430055B752 /* PBXTextBookmark */ = 7E33ACDC0F6E5C430055B752 /* PBXTextBookmark */;
+			7E33ACDE0F6E5C430055B752 /* PBXTextBookmark */ = 7E33ACDE0F6E5C430055B752 /* PBXTextBookmark */;
+			7E33ACE00F6E5C570055B752 /* PBXTextBookmark */ = 7E33ACE00F6E5C570055B752 /* PBXTextBookmark */;
+			7E33ACE10F6E5C570055B752 /* PBXTextBookmark */ = 7E33ACE10F6E5C570055B752 /* PBXTextBookmark */;
+			7E33ACE20F6E5C570055B752 /* PBXTextBookmark */ = 7E33ACE20F6E5C570055B752 /* PBXTextBookmark */;
+			7E33ACE30F6E5C570055B752 /* PBXTextBookmark */ = 7E33ACE30F6E5C570055B752 /* PBXTextBookmark */;
 			7E33C4DD0F5A4A6700BB5F25 = 7E33C4DD0F5A4A6700BB5F25 /* PBXTextBookmark */;
 			7E33C4E00F5A4A6700BB5F25 = 7E33C4E00F5A4A6700BB5F25 /* PBXTextBookmark */;
 			7E46AC510F2351A100DC6868 = 7E46AC510F2351A100DC6868 /* PBXTextBookmark */;
@@ -1505,6 +1532,158 @@
 		rLoc = 448;
 		rType = 0;
 		vrLen = 495;
+		vrLoc = 0;
+	};
+	7E33ACD40F6E5C430055B752 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E1486820EE1728D0021EBE9 /* elifeXMLParser.h */;
+		name = "elifeXMLParser.h: 21";
+		rLen = 0;
+		rLoc = 448;
+		rType = 0;
+		vrLen = 495;
+		vrLoc = 0;
+	};
+	7E33ACD50F6E5C430055B752 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E33ACD60F6E5C430055B752 /* cameron.pbxuser */;
+		name = "cameron.pbxuser: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1003;
+		vrLoc = 0;
+	};
+	7E33ACD60F6E5C430055B752 /* cameron.pbxuser */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text;
+		name = cameron.pbxuser;
+		path = "/Users/cameron/XCode Apps/elife-b/elife-b.xcodeproj/cameron.pbxuser";
+		sourceTree = "<absolute>";
+	};
+	7E33ACD70F6E5C430055B752 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E33ACD80F6E5C430055B752 /* project.pbxproj */;
+		name = "project.pbxproj: 1129";
+		rLen = 0;
+		rLoc = 101315;
+		rType = 0;
+		vrLen = 1861;
+		vrLoc = 78304;
+	};
+	7E33ACD80F6E5C430055B752 /* project.pbxproj */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text.pbxproject;
+		name = project.pbxproj;
+		path = "/Users/cameron/XCode Apps/elife-b/elife-b.xcodeproj/project.pbxproj";
+		sourceTree = "<absolute>";
+	};
+	7E33ACD90F6E5C430055B752 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E1486820EE1728D0021EBE9 /* elifeXMLParser.h */;
+		name = "elifeXMLParser.h: 21";
+		rLen = 0;
+		rLoc = 448;
+		rType = 0;
+		vrLen = 495;
+		vrLoc = 0;
+	};
+	7E33ACDA0F6E5C430055B752 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E33ACDB0F6E5C430055B752 /* project.pbxproj */;
+		name = "project.pbxproj: 1129";
+		rLen = 0;
+		rLoc = 101315;
+		rType = 0;
+		vrLen = 1861;
+		vrLoc = 78304;
+	};
+	7E33ACDB0F6E5C430055B752 /* project.pbxproj */ = {
+		isa = PBXFileReference;
+		name = project.pbxproj;
+		path = "/Users/cameron/XCode Apps/elife-b/elife-b.xcodeproj/project.pbxproj";
+		sourceTree = "<absolute>";
+	};
+	7E33ACDC0F6E5C430055B752 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E33ACDD0F6E5C430055B752 /* cameron.pbxuser */;
+		name = "cameron.pbxuser: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1003;
+		vrLoc = 0;
+	};
+	7E33ACDD0F6E5C430055B752 /* cameron.pbxuser */ = {
+		isa = PBXFileReference;
+		name = cameron.pbxuser;
+		path = "/Users/cameron/XCode Apps/elife-b/elife-b.xcodeproj/cameron.pbxuser";
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {915, 41678}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 1003}";
+		};
+	};
+	7E33ACDE0F6E5C430055B752 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E33ACDF0F6E5C430055B752 /* project.pbxproj */;
+		name = "project.pbxproj: 1129";
+		rLen = 0;
+		rLoc = 101315;
+		rType = 0;
+		vrLen = 1861;
+		vrLoc = 78304;
+	};
+	7E33ACDF0F6E5C430055B752 /* project.pbxproj */ = {
+		isa = PBXFileReference;
+		name = project.pbxproj;
+		path = "/Users/cameron/XCode Apps/elife-b/elife-b.xcodeproj/project.pbxproj";
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {915, 17864}}";
+			sepNavSelRange = "{101315, 0}";
+			sepNavVisRange = "{78304, 1861}";
+		};
+	};
+	7E33ACE00F6E5C570055B752 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E33ACDF0F6E5C430055B752 /* project.pbxproj */;
+		name = "project.pbxproj: 1129";
+		rLen = 0;
+		rLoc = 101315;
+		rType = 0;
+		vrLen = 1861;
+		vrLoc = 78304;
+	};
+	7E33ACE10F6E5C570055B752 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E33ACDD0F6E5C430055B752 /* cameron.pbxuser */;
+		name = "cameron.pbxuser: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1003;
+		vrLoc = 0;
+	};
+	7E33ACE20F6E5C570055B752 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E33ACDF0F6E5C430055B752 /* project.pbxproj */;
+		name = "project.pbxproj: 1129";
+		rLen = 0;
+		rLoc = 101315;
+		rType = 0;
+		vrLen = 1861;
+		vrLoc = 78304;
+	};
+	7E33ACE30F6E5C570055B752 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E33ACDD0F6E5C430055B752 /* cameron.pbxuser */;
+		name = "cameron.pbxuser: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 1003;
 		vrLoc = 0;
 	};
 	7E33C4DD0F5A4A6700BB5F25 /* PBXTextBookmark */ = {
