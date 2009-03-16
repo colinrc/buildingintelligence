@@ -17,7 +17,6 @@
 #import "elifecontrolrow.h"
 
 @implementation ControlTableCell
-@synthesize celltimer;
 @synthesize cellzoneidx;
 @synthesize cellroomidx;
 @synthesize celltabidx;
