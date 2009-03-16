@@ -22,15 +22,17 @@
 @synthesize zoneidx;
 @synthesize roomidx;
 @synthesize tabidx;
+@synthesize celltimer;
 
-/*
+
 - (id)initWithStyle:(UITableViewStyle)style {
     // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
     if (self = [super initWithStyle:style]) {
+		self.celltimer = nil;
     }
     return self;
 }
-*/
+
 
 /*
 // Implement viewDidLoad to do additional setup after loading the view.
@@ -717,22 +719,28 @@
 				currctrlitem = [currctrlrow.displayitems objectAtIndex:k];
 				itemattrs = currctrlitem.itemattrs;
 				if ([[itemattrs objectForKey:@"type"] isEqualToString:@"label"]) {
-					UIView *myuiobject = (UIView *)[cell viewWithTag:(j+1)*100+k];
+					//UIView *myuiobject = (UIView *)[cell viewWithTag:(j+1)*100+k];
 				} else if ([[itemattrs objectForKey:@"type"] isEqualToString:@"video"]) {
 					UIWebView *mywebview = (UIWebView *)[cell viewWithTag:(j+1)*100+k];
 					NSString *refrate = [itemattrs objectForKey:@"refreshRate"];
 					if (refrate) {
 						int rate = [refrate intValue];
-						/*cell.celltimer = */[NSTimer scheduledTimerWithTimeInterval:(rate/1000.0) target:self selector:@selector(videorefresh:) userInfo:mywebview repeats:YES];
+						if (![self.celltimer isValid]) {
+							self.celltimer = [NSTimer scheduledTimerWithTimeInterval:(rate/1000.0) target:self selector:@selector(videorefresh:) userInfo:mywebview repeats:YES];
+						}
 					}
 				} else if ([[itemattrs objectForKey:@"type"] isEqualToString:@"button"]) {
-					UIView *myuiobject = (UIView *)[cell viewWithTag:(j+1)*100+k];
+					UIButton *mybutton = (UIButton *)[cell viewWithTag:(j+1)*100+k];
+					[mybutton addTarget:self action:@selector(btnPress:) forControlEvents:UIControlEventTouchUpInside];
 				} else if ([[itemattrs objectForKey:@"type"] isEqualToString:@"toggle"]) {
-					UIView *myuiobject = (UIView *)[cell viewWithTag:(j+1)*100+k];
+					UIButton *mytoggle = (UIButton *)[cell viewWithTag:(j+1)*100+k];
+					[mytoggle addTarget:self action:@selector(btnPress:) forControlEvents:UIControlEventTouchUpInside];
 				}
 			}
 		}		
-	
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(buttonUpdate:) name:thecontrol.key object:nil];
+
 		return cell;
 	} else {
 		
@@ -795,10 +803,11 @@
     [super viewDidAppear:animated];
 }
 */
-/*
+
 - (void)viewWillDisappear:(BOOL)animated {
+	[self.celltimer invalidate];
 }
-*/
+
 /*
 - (void)viewDidDisappear:(BOOL)animated {
 }
@@ -824,12 +833,13 @@
 	eliferoomtab *thetab = [theroom.tablist objectAtIndex:tabidx];
 	elifesocket *myServer = elifeappdelegate.elifesvr;
 	NSMutableArray *sendmsgs = elifeappdelegate.msgs_for_svr;
+	int arrayoffset;
 
 	
 	UIButton *myBtn = (UIButton *)sender;
 	NSLog(@"Button tag: %d",myBtn.tag);
 	UITableViewCell *cell = (UITableViewCell *)[[myBtn superview] superview];
-	NSIndexPath *myindexPath = [(UITableView *)[cell superview] indexPathForCell:cell];
+	//NSIndexPath *myindexPath = [(UITableView *)[cell superview] indexPathForCell:cell];
 
 	eliferoomcontrol *thecontrol = [thetab.controllist objectAtIndex:cell.tag];
 	elifecontroltypes *thecontroltype;
@@ -837,21 +847,30 @@
 	
 	int i=0;
 	BOOL found=NO;
-	//NSLog(@"controltype count %d",[elifeappdelegate.elifectrltypes count]);
+	NSLog(@"controltype count %d",[elifeappdelegate.elifectrltypes count]);
 	while ((i < [elifeappdelegate.elifectrltypes count]) && !found) {
-		//NSLog(@"top of loop i=%d",i);
+		NSLog(@"top of loop i=%d",i);
 		thecontroltype = [elifeappdelegate.elifectrltypes objectAtIndex:i];
 		if ([controltypeid isEqualToString:[thecontroltype controltype]]) {
 			found=YES;
-			//NSLog(@"found a match");
+			NSLog(@"found a match:%@",[thecontroltype controltype]);
 		} else {
 			i++;
-			//NSLog(@"Tested %@, setting i=%d",[thecontroltype controltype],i);
+			NSLog(@"Tested %@, setting i=%d",[thecontroltype controltype],i);
 		}
 	}
 	
+	if ([controltypeid isEqualToString:@"testvideo"] ||
+		   [controltypeid isEqualToString:@"frontGateVideo"] ||
+		   [controltypeid isEqualToString:@"test2"])  {
+		arrayoffset=1;
+	} else {
+		arrayoffset=0;
+	}
+	
+	
 	if (myBtn.tag >= 100) {
-		elifecontrolrow *currdisplayrow = [thecontroltype.displayrows objectAtIndex:(int)(myBtn.tag-(myBtn.tag % 100))/100];
+		elifecontrolrow *currdisplayrow = [thecontroltype.displayrows objectAtIndex:(int)((myBtn.tag-(myBtn.tag % 100))/100)-arrayoffset];
 		elifecontroltypeitem *currdisplayitem = [currdisplayrow.displayitems objectAtIndex:(myBtn.tag % 100)];
 		NSString *thecommand;
 		NSString *theextra;
