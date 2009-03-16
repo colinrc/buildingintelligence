@@ -64,6 +64,7 @@
 	while ([sendmsgs count] > 0) {
 		//send data
 		stringToSend = [NSString stringWithFormat:@"%@\n", [sendmsgs objectAtIndex:0]];
+		NSLog(@"Sending message: %@",stringToSend);
 		dataToSend = [stringToSend dataUsingEncoding:NSUTF8StringEncoding];
 		if (oStream) {
 			int remainingToWrite = [dataToSend length];
