@@ -10,7 +10,7 @@
 package au.com.BI.Servlets;
 import javax.servlet.*;
 
-import java.util.*;
+
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +24,6 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
-import au.com.BI.Jetty.*;
 
 
 /**
@@ -33,24 +32,28 @@ import au.com.BI.Jetty.*;
  */
 public class Control extends HttpServlet {
     protected Logger logger;
-
+    protected String eSmart_Install = "";
 	
     /** Creates a new instance of ControlServlet */
     public Control() {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
+        
 
+    }
+    
+    public void init (ServletConfig cfg) throws ServletException {
+        ServletContext context = cfg.getServletContext();
+        eSmart_Install = (String)context.getAttribute("eSmart_Install");
+        
+        super.init();
     }
   
     protected  void doGet (HttpServletRequest req,
            HttpServletResponse resp) throws ServletException,java.io.IOException {
 		Process p = null;
-		boolean abort = false;
 		boolean commandFound = false;
 		int responseCode = HttpServletResponse.SC_OK;
 		
-    	HttpSession session = req.getSession(true);  
-
-        ServletContext context =  session.getServletContext();
         String commandName = req.getParameter("OP");
 		resp.setContentType("text/html");
 		PrintWriter output = resp.getWriter();
@@ -82,7 +85,6 @@ public class Control extends HttpServlet {
 			if (commandName.equals ("EXIT")) {
 				logger.log (Level.INFO,"Stopping monitor service");
 				output.println("<P>Stopping monitor service");
-				abort = true;
 				commandFound = true;
 			}
 			
@@ -116,24 +118,30 @@ public class Control extends HttpServlet {
 				commandFound = true;
 			}
 			if (commandName.equals ("SELECT")) {
-			    if (!extra.equals ("") ) {
+		        String extra = req.getParameter("PAR");
+			    if (extra != null && !extra.equals ("") ) {
 			        logger.log (Level.FINER,"Setting XML configuration file for startup " + extra);
 					commandFound = true;
-			        if (!setBootstrapFile (this.eSmart_install,extra,output)) {
-				        String returnString = "<SELECT>Startup file changed : " + extra + "</SELECT>\n";
-						synchronized (output){ 
-							output.write (returnString.getBytes());
-						}
+			        if (!setBootstrapFile (this.eSmart_Install,extra,output)) {
+				        String returnString = "Startup file changed : " + extra + "\n";
+						logger.log (Level.INFO,returnString);
+						output.println(returnString);
 			        }
 				} else {
 			        logger.log (Level.WARNING,"Select XML configuration file requested, but no filename was specified in the FILE parameter");
 				}
 			}
+			
+
 	 
         }
         
-	    
-	  	output.println("<P>Operation complete");
+		if (commandFound == false){
+	        logger.log (Level.SEVERE,"No commands were passed to the servlet for execution");
+		  	output.println("<P>No commands were sent to the servlet for execution");	        
+		} else {	
+		  	output.println("<P>Operation complete");			
+		}
 	  		
     	output.println("<P><A HREF='/index.html'>Return to main page</A>");
     	
@@ -144,8 +152,12 @@ public class Control extends HttpServlet {
 	    
     }    
      
-	public String getStartupFile (String eSmart_install, OutputStream output) {
-    	boolean errorCode = false;
+    public void sendError (String message, PrintWriter output){
+    	output.println ("<P>" + message);
+    	logger.log(Level.SEVERE,message);
+    }
+    
+	public String getStartupFile (String eSmart_install, PrintWriter output) {
 
     	String startupFile = null;
 	try {
@@ -159,7 +171,7 @@ public class Control extends HttpServlet {
 		Element bootup = topBoot.getChild("CONFIG_FILE");
 		
 		startupFile = bootup.getAttributeValue("NAME");
-		
+
 			
 	} catch (IOException e) {
 		sendError ("IO Error writing the file " + e.getMessage(),output);
@@ -167,9 +179,11 @@ public class Control extends HttpServlet {
 	} catch (JDOMException e1) {
 		sendError ("XML parse error on the bootstrap file " + e1.getMessage(),output);
 	}
+	return startupFile;
+	}
 
 
-	  public boolean setBootstrapFile (String eSmart_install, String extra,OutputStream output) {
+	  public boolean setBootstrapFile (String eSmart_install, String extra,PrintWriter output) {
 	    	boolean errorCode = false;
 		try {
 			String fileName = eSmart_install + "/server/datafiles/bootstrap.xml";
@@ -239,14 +253,14 @@ public class Control extends HttpServlet {
 
 		}
 
-	return startupFile;
+	return errorCode;
     }
 	
 		public void displayProcessResults (Process p, PrintWriter output) {
 			if (p != null ) {
 				String s= "";
 				BufferedReader stdInput = new BufferedReader (new InputStreamReader (p.getInputStream()));
-				BufferedReader stdError = new BufferedReader (new InputStreamReader (p.getErrorStream()));
+				//BufferedReader stdError = new BufferedReader (new InputStreamReader (p.getErrorStream()));
 				try {
 					output.println( "<RAW>");
 					while ((s = stdInput.readLine()) != null) {
@@ -259,75 +273,7 @@ public class Control extends HttpServlet {
 			}
 		}
 		
-	  public boolean setBootstrapFile (String eSmart_install, String extra,OutputStream output) {
-	    	boolean errorCode = false;
-		try {
-			String fileName = eSmart_install + "/server/datafiles/bootstrap.xml";
-			File theFile = new File (fileName);
-			
-			SAXBuilder saxb = new SAXBuilder(false); 
-			Document bootstrap = saxb.build (theFile);
-			
-			Element topBoot = bootstrap.getRootElement();
-			Element bootup = topBoot.getChild("CONFIG_FILE");
-			bootup.setAttribute("NAME",extra);
-			
-			File fileToUpload = new File (fileName+".new");
-			Document doc = new Document ();
-			topBoot.detach();
-			doc.setRootElement(topBoot);
 
-			XMLOutputter xmlOut = new XMLOutputter (Format.getPrettyFormat());
-			FileWriter out = new FileWriter(fileToUpload);
-			xmlOut.output(doc, out) ;
-			out.flush();
-			out.close();
-			logger.log (Level.FINE,"File write succeeded.");
-			
-			File oldFile = new File (fileName);
-			File newName = new File (fileName+".old");
-			
-			if (oldFile.exists()) {
-			    if (newName.exists() && !newName.delete()) {
-					sendError ("Could not delete old file "+oldFile.getName(),output);
-
-					errorCode = true;
-				    logger.log (Level.SEVERE, "Could not delete old file "+oldFile.getName());
-			    }
-				if (!oldFile.renameTo (newName)) { 
-					sendError ("Could not rename new file "+fileToUpload.getName()+" to " + oldFile.getName(),output);
-				    logger.log (Level.SEVERE, "Could not rename old file "+oldFile.getName()+" to " + newName.getName());
-					errorCode = true;
-				}
-			}
-
-			if (!fileToUpload.renameTo(oldFile)) {
-				sendError ("Could not rename new file "+fileToUpload.getName()+" to " + oldFile.getName(),output);
-			    logger.log (Level.SEVERE, "Could not rename new file "+fileToUpload.getName()+" to " + oldFile.getName());
-				errorCode = true;
-			}
-				    
-			File finalName = new File (fileName+".old");
-		    if (finalName.exists() && !finalName.delete()) {
-				sendError ("Could not delete old file "+finalName.getName(),output);
-
-			    logger.log (Level.SEVERE, "Could not delete old file "+finalName.getName());
-				errorCode = true;
-		    }
-			synchronized (output){
-				output.write((byte)0);
-				output.flush();
-			}
-
-				
-		} catch (IOException e) {
-			sendError ("IO Error writing the file " + e.getMessage(),output);
-			errorCode = true;
-		} catch (JDOMException e1) {
-			sendError ("XML parse error on the bootstrap file " + e1.getMessage(),output);
-			errorCode = true;
-
-		}
 
     public void destory() {
         super.destroy();
