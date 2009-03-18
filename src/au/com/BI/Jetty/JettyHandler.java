@@ -20,7 +20,7 @@ import org.mortbay.jetty.security.SslSocketConnector;
 //import org.mortbay.jetty.handler.*;
 import au.com.BI.Admin.*;
 import java.util.logging.*;
-
+ 
 
 public class JettyHandler {
     boolean SSL = false;
