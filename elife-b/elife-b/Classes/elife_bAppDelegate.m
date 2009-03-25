@@ -94,7 +94,8 @@
 }
 
 - (void)CreateSettingsView {
-	SettingsViewController *setVC = [[SettingsViewController alloc] init];
+	SettingsViewController *setVC = [[SettingsViewController alloc] initWithNibName:@"SettingsView" bundle:nil];
+
 	setVC.title = @"Settings";
 	setVC.tabBarItem.image = [UIImage imageNamed:@"tabbar-prefs.png"];
 
