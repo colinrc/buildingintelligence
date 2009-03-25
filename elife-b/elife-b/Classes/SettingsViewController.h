@@ -9,8 +9,16 @@
 #import <UIKit/UIKit.h>
 
 
-@interface SettingsViewController : UIViewController {
-
+@interface SettingsViewController : UIViewController <UITextFieldDelegate> {
+	IBOutlet UITextField *localserverip;
+	IBOutlet UITextField *localserverport;
+	IBOutlet UITextField *localconfigname;
 }
+
+@property (nonatomic, retain) IBOutlet UITextField *localserverip;
+@property (nonatomic, retain) IBOutlet UITextField *localserverport;
+@property (nonatomic, retain) IBOutlet UITextField *localconfigname;
+
+- (IBAction)finishEdit:(id)sender;
 
 @end
