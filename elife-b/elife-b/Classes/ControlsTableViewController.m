@@ -891,27 +891,39 @@
 			thecommand = [currdisplayitem.itemattrs objectForKey:@"command"];
 			theextra = [currdisplayitem.itemattrs objectForKey:@"extra"];
 			NSLog(@"###### command:%@ extra:%@",thecommand,theextra);
-			// send command to server
-			msg = @"<CONTROL KEY=\"";
-			msg = [msg stringByAppendingString:thecontrol.key];
-			msg = [msg stringByAppendingString:@"\" COMMAND=\""];
-			msg = [msg stringByAppendingString:thecommand];
-			msg = [msg stringByAppendingString:@"\" EXTRA=\""];
-			msg = [msg stringByAppendingString:theextra];
-			msg = [msg stringByAppendingString:@"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
-		}
-		if ([thecommand isEqualToString:@"on"] || [thecommand isEqualToString:@"off"]) {
-			thecontrol.ctrlstatus=thecommand;
-		} 
-		if ([thecommand isEqualToString:@"state"]) {
-			thecontrol.ctrlstatus=theextra;
-		}
-		if ([thecommand isEqualToString:@"src"]) {
-			thecontrol.ctrlsrc=theextra;
-		}
+			if ([thecommand hasPrefix:@"url."]) {
+				// send URL directly
+				UIWebView *myWebView = [[UIWebView alloc] init];
+				NSURL *myurl = [NSURL URLWithString:[thecommand substringFromIndex:4]];
+				NSLog(@"sending URL %@",[thecommand substringFromIndex:4]);
+				NSURLRequest *myurlreq = [NSURLRequest requestWithURL:myurl];
+				[myWebView loadRequest:myurlreq];
+				[myWebView release];
+			} else {
+				// send command to server
+				msg = @"<CONTROL KEY=\"";
+				msg = [msg stringByAppendingString:thecontrol.key];
+				msg = [msg stringByAppendingString:@"\" COMMAND=\""];
+				msg = [msg stringByAppendingString:thecommand];
+				msg = [msg stringByAppendingString:@"\" EXTRA=\""];
+				msg = [msg stringByAppendingString:theextra];
+				msg = [msg stringByAppendingString:@"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
+			
 		
-		[sendmsgs addObject:msg];
-		[myServer sendmessage];
+				if ([thecommand isEqualToString:@"on"] || [thecommand isEqualToString:@"off"]) {
+					thecontrol.ctrlstatus=thecommand;
+				} 
+				if ([thecommand isEqualToString:@"state"]) {
+					thecontrol.ctrlstatus=theextra;
+				}
+				if ([thecommand isEqualToString:@"src"]) {
+					thecontrol.ctrlsrc=theextra;
+				}
+		
+				[sendmsgs addObject:msg];
+				[myServer sendmessage];
+			}
+		}
 		
 	} else {
 		// send command to server
