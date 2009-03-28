@@ -188,6 +188,7 @@
 							}
 							if (itemcount == indexPath.row) {
 								currctrl.ctrlstatus=@"off";
+								currctrl.ctrlval=0;
 								// send command "off" to elife
 								NSString *msg = @"<CONTROL KEY=\"";
 								msg = [msg stringByAppendingString:currentitem.key];
