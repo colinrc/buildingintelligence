@@ -322,7 +322,7 @@
 		UISlider *mySlider = (UISlider *)[cell viewWithTag:12];
 		mySlider.continuous = NO;
 		[mySlider setValue:(thecontrol.ctrlval)/100.0 animated:YES];
-			
+		NSLog(@"Set slider to ctrlval:%d or %f",thecontrol.ctrlval,(thecontrol.ctrlval)/100.0);
 		cell.tag = indexPath.section;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sliderUpdate:) name:thecontrol.key object:nil];
 
