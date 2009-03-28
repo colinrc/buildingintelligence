@@ -26,6 +26,7 @@
 		7ECF7B8B0F66082700C51802 /* tabbar-prefs.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECF7B870F66082700C51802 /* tabbar-prefs.png */; };
 		7ECF7B8C0F66082700C51802 /* tabbar-status.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECF7B880F66082700C51802 /* tabbar-status.png */; };
 		7ECF7B8D0F66082700C51802 /* tabbar-zones.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ECF7B890F66082700C51802 /* tabbar-zones.png */; };
+		7ED95FCF0F79B21900903DD7 /* SettingsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7ED95FCE0F79B21900903DD7 /* SettingsView.xib */; };
 		7EDBF2B50EEB1EAF00271CE0 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EDBF2B40EEB1EAF00271CE0 /* CFNetwork.framework */; };
 		7EFCE6950EE26770007E7712 /* CalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EFCE6600EE26770007E7712 /* CalendarViewController.m */; };
 		7EFCE6960EE26770007E7712 /* ControlBtnBtnBtnBtnBtnCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7EFCE6610EE26770007E7712 /* ControlBtnBtnBtnBtnBtnCell.xib */; };
@@ -239,6 +240,7 @@
 		7ECF7B870F66082700C51802 /* tabbar-prefs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar-prefs.png"; sourceTree = "<group>"; };
 		7ECF7B880F66082700C51802 /* tabbar-status.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar-status.png"; sourceTree = "<group>"; };
 		7ECF7B890F66082700C51802 /* tabbar-zones.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar-zones.png"; sourceTree = "<group>"; };
+		7ED95FCE0F79B21900903DD7 /* SettingsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SettingsView.xib; path = Classes/SettingsView.xib; sourceTree = "<group>"; };
 		7EDBF2B40EEB1EAF00271CE0 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		7EFCE65F0EE26770007E7712 /* CalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalendarViewController.h; sourceTree = "<group>"; };
 		7EFCE6600EE26770007E7712 /* CalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalendarViewController.m; sourceTree = "<group>"; };
@@ -560,6 +562,7 @@
 				7EFCE8810EE291CC007E7712 /* icons */,
 				7EFCE70F0EE26B2C007E7712 /* sample.xml */,
 				7EFCE70D0EE26AE0007E7712 /* MainWindow.xib */,
+				7ED95FCE0F79B21900903DD7 /* SettingsView.xib */,
 				7EFCE6B60EE267AB007E7712 /* Controls */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 				7EFCE7320EE26BAE007E7712 /* Settings.bundle */,
@@ -997,6 +1000,7 @@
 				7ECF7B8C0F66082700C51802 /* tabbar-status.png in Resources */,
 				7ECF7B8D0F66082700C51802 /* tabbar-zones.png in Resources */,
 				7E313E0A0F6D1600006AB350 /* Default.png in Resources */,
+				7ED95FCF0F79B21900903DD7 /* SettingsView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
