@@ -147,9 +147,9 @@
 		var newNode = new XMLNode(1, this.getName());
 		newNode.appendChild(contacts.toTree());
 		newNode.appendChild(toggle_outputs.toTree());
-		newNode.appendChild(sensors.toTree());
-		newNode.appendChild(x10_lights.toTree());
-		newNode.appendChild(keypad.toTree());
+		//newNode.appendChild(sensors.toTree());
+		//newNode.appendChild(x10_lights.toTree());
+		//newNode.appendChild(keypad.toTree());
 		newNode.object = this;
 		treeNode = newNode;		
 		return newNode;

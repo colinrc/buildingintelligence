@@ -1,4 +1,4 @@
-<application description="PDA"> 
+<application description="Client-1"> 
 	<settings> 
 		<common> 
 			<setting value="client.xml" name="applicationXML"/> 
@@ -24,15 +24,15 @@
 		</window> 
 	</calendar> 
 	<sounds> 
-		<sound volume="40" file="sounds/ding.mp3" name="ding"/> 
+		<sound name="ding" file="sounds/ding.mp3" volume="40"/> 
 	</sounds> 
 	<statusBar> 
-		<group canOpen="" hide="off" show="on" icon="light-bulb" name="Lights"> 
-			<control key="BOGUS04"/> 
-			<control key="BOGUS03"/> 
-			<control key="BOGUS02"/> 
-			<control key="BOGUS01"/> 
-		</group> 
+		<group canOpen="" name="1234"/> 
+		<group canOpen="" name="asd"/> 
+		<group canOpen="" name="asd"/> 
+		<group canOpen="" name="26tf"/> 
+		<group canOpen="" name="asd"/> 
+		<group canOpen="" name="asd"/> 
 	</statusBar> 
 	<logging/> 
 	<appsBar> 
@@ -40,35 +40,73 @@
 		<icon canOpen="" func="openCalendar" icon="calendar" name="Calendar"/> 
 		<icon canOpen="superuser" func="openControlPanel" icon="gears" name="Control Panel"/> 
 		<icon canOpen="" func="openAuthentication" icon="locked" name="Authenticate"/> 
+		<icon canOpen="" name="TEst"/> 
 	</appsBar> 
 	<controlPanelApps/> 
 	<property> 
-		<zone hideFromList="false" alignment="center" cycle="false" map="homemap.swf" name="TestZone1"> 
+		<zone hideFromList="false" alignment="center" cycle="false" map="bi-office2.swf" name="Test Zone"> 
 			<arbitrary/> 
 			<rooms> 
-				<room poly="180,192,180,312,459,312,459,192" name="South Room"> 
+				<room poly="141,12,141,270,252,270,255,12" name="f"> 
 					<window> 
-						<tab icon="light-bulb" name="Lights"> 
-							<control icons="light-bulb-off,light-bulb" type="onOff" key="BOGUS04" name="South Room Relay"/> 
-							<control icons="light-bulb-off,light-bulb" type="slider" key="BOGUS02" name="South Room Dimmer"/> 
+						<tab icon="No Icon" name="lights"> 
+							<control icons="light-bulb-off,light-bulb" type="onOff" key="123"/> 
 						</tab> 
 					</window> 
-					<doors/> 
-					<alerts y="246" x="321" name="Lights"> 
-						<alert keys="BOGUS04,BOGUS02" icon="light-bulb" name="Lights"/> 
+					<doors> 
+						<door thickness="5" colour2="0x8740FF" colour1="0xF82DFF" pos="252,129,252,171" key=",mjui"/> 
+					</doors> 
+					<alerts y="undefined" x="undefined" name="test"> 
+						<alert keys="235235" icon="aircon-off" name="xcv"/> 
 					</alerts> 
 				</room> 
-				<room poly="180,72,459,72,459,192,180,192" name="North Room"> 
-					<window> 
-						<tab icon="light-bulb" name="Lights"> 
-							<control icons="light-bulb-off,light-bulb" type="onOff" key="BOGUS03" name="North Room Relay"/> 
-							<control icons="light-bulb-off,light-bulb" type="slider" key="BOGUS01" name="North Room Dimmer"/> 
-						</tab> 
-					</window> 
+				<room name="e"> 
+					<window/> 
 					<doors/> 
-					<alerts y="132" x="318" name="Lights"> 
-						<alert keys="BOGUS03,BOGUS01" icon="light-bulb" name="Lights"/> 
-					</alerts> 
+				</room> 
+				<room name="d"> 
+					<window/> 
+					<doors/> 
+				</room> 
+				<room name="c"> 
+					<window/> 
+					<doors/> 
+				</room> 
+				<room name="b"> 
+					<window/> 
+					<doors/> 
+				</room> 
+				<room name="a"> 
+					<window/> 
+					<doors/> 
+				</room> 
+			</rooms> 
+			<panels/> 
+		</zone> 
+		<zone name="sda"> 
+			<arbitrary/> 
+			<rooms/> 
+			<panels/> 
+		</zone> 
+		<zone name="asd"> 
+			<arbitrary/> 
+			<rooms/> 
+			<panels/> 
+		</zone> 
+		<zone name="james"> 
+			<arbitrary/> 
+			<rooms> 
+				<room name="asd"> 
+					<window/> 
+					<doors/> 
+				</room> 
+				<room name="dfcsf"> 
+					<window/> 
+					<doors/> 
+				</room> 
+				<room name="asd"> 
+					<window/> 
+					<doors/> 
 				</room> 
 			</rooms> 
 			<panels/> 
@@ -87,10 +125,17 @@
 		</control> 
 		<control type="onOff"> 
 			<row> 
+				<item icon="alarm-clock" type="button"/> 
+				<item type="button" label="button"/> 
+			</row> 
+			<row> 
 				<item type="label"/> 
 			</row> 
 			<row> 
 				<item type="toggle" command="state" extras="on,off" width="100"/> 
+			</row> 
+			<row> 
+				<item icons="aircon,alarm-clock" width="50" type="slider"/> 
 			</row> 
 		</control> 
 		<control type="audioPanel"> 
@@ -127,6 +172,86 @@
 				<item type="button" icon="media-stop" command="send_audio_command" extra="2"/> 
 			</row> 
 		</control> 
+		<control type="tvControl"> 
+			<row> 
+				<item type="label"/> 
+			</row> 
+			<row> 
+				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="50" sounds="ding,default"/> 
+				<item type="button" icon="volume-up" command="volume_up" repeatRate="200"/> 
+				<item type="button" icon="volume-down" command="volume_down" repeatRate="200"/> 
+			</row> 
+			<row cases="state:on"> 
+				<item type="button" icon="chan-abc" command="channel" extra="abc" showOn="true" sound="ding"/> 
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true"/> 
+				<item type="button" icon="chan-win" command="channel" extra="nine" showOn="true"/> 
+				<item type="button" icon="chan-prime" command="channel" extra="seven" showOn="true"/> 
+				<item type="button" icon="chan-10" command="channel" extra="ten" showOn="true"/> 
+			</row> 
+		</control> 
+		<control type="miniBrowser"> 
+			<row> 
+				<item type="button" icon="left-arrow" command="browser_back"/> 
+				<item type="button" icon="right-arrow" command="browser_forward"/> 
+				<item type="button" icon="media-stop" command="browser_stop"/> 
+			</row> 
+			<row> 
+				<item type="webBrowser"/> 
+			</row> 
+		</control> 
+		<control type="airCon"> 
+			<row> 
+				<item type="label"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="power-grey" command="AV.AC_CONT_MBED" extra="AC_AIRWELL.on_c_20" sounds="ding,default"/> 
+			</row> 
+			<row> 
+				<item type="button" label="18 C" command="AV.AC_CONT_MBED" extra="AC_AIRWELL.18_c" showOn="true"/> 
+				<item type="button" label="19 C" command="AV.AC_CONT_MBED" extra="AC_AIRWELL.19_c" showOn="true"/> 
+				<item type="button" label="20 C" command="AV.AC_CONT_MBED" extra="AC_AIRWELL.20_c" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" label="21 C" command="AV.AC_CONT_MBED" extra="AC_AIRWELL.21_c" showOn="true"/> 
+				<item type="button" label="22 C" command="AV.AC_CONT_MBED" extra="AC_AIRWELL.22_c" showOn="true"/> 
+				<item type="button" label="23 C" command="AV.AC_CONT_MBED" extra="AC_AIRWELL.23_c" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" label="24 C" command="AV.AC_CONT_MBED" extra="AC_AIRWELL.24_c" showOn="true"/> 
+				<item type="button" label="25 C" command="AV.AC_CONT_MBED" extra="AC_AIRWELL.25_c" showOn="true"/> 
+				<item type="button" label="26 C" command="AV.AC_CONT_MBED" extra="AC_AIRWELL.26_c" showOn="true"/> 
+			</row> 
+		</control> 
+		<control type="Pelco"> 
+			<row> 
+				<item label="Pelco" type="label"/> 
+			</row> 
+			<row> 
+				<item command="on" width="33" extra="auto" icon="power-green" type="button"/> 
+				<item commands="tilt,tilt" width="34" extras="up,20|stop," icon="up-arrow" type="button" mode="startStop"/> 
+				<item command="MACRO.run" width="33" extra="Pelco Centre" icon="power-red" type="button"/> 
+			</row> 
+			<row> 
+				<item commands="pan,pan" width="20" extras="left,50|stop," icon="media-rwd" type="button" mode="startStop"/> 
+				<item commands="pan,pan" width="20" extras="left,20|stop," icon="left-arrow" type="button" mode="startStop"/> 
+				<item key="MACRO" command="run" width="20" extra="_Pelco Stop" label="Stop" type="button"/> 
+				<item commands="pan,pan" width="20" extras="right,20|stop," icon="right-arrow" type="button" mode="startStop"/> 
+				<item commands="pan,pan" width="20" extras="right,50|stop," icon="media-fwd" type="button" mode="startStop"/> 
+			</row> 
+			<row> 
+				<item commands="zoom,zoom" width="33" extras="tele,|stop," label="Zoom In" type="button" mode="startStop"/> 
+				<item commands="tilt,tilt" width="34" extras="down,20|stop," icon="down-arrow" type="button" mode="startStop"/> 
+				<item commands="zoom,zoom" width="33" extras="wide,|stop," label="Zoom Out" type="button" mode="startStop"/> 
+			</row> 
+			<row> 
+				<item commands="focus,focus" width="50" extras="far,|stop," label="Focus Far" type="button" mode="startStop"/> 
+				<item commands="focus,focus" width="50" extras="near,|stop," label="Focus Near" type="button" mode="startStop"/> 
+			</row> 
+			<row> 
+				<item commands="iris,iris" width="50" extras="open,|stop," label="Iris Open" type="button" mode="startStop"/> 
+				<item commands="iris,iris" width="50" extras="close,|stop," label="Iris Close" type="button" mode="startStop"/> 
+			</row> 
+		</control> 
 		<control type="webcam"> 
 			<row> 
 				<item type="video" src="http://172.16.3.150/__live.jpg?&amp;&amp;&amp;" format="jpg" refreshRate="1000" videoWidth="320" videoHeight="240"/> 
@@ -138,15 +263,421 @@
 				<item showOn="" repeatRate="" command="url.http://172.16.3.150/control.cgi?cont_2=2&amp;ok=dummy.htm" width="25" extra3="" extra2="" extra="" icon="right-arrow" label="" type="button"/> 
 			</row> 
 		</control> 
+		<control type="channelControl1"> 
+			<row> 
+				<item type="button" icon="chan-10" command="channel" extra="10" showOn="true"/> 
+				<item type="button" icon="chan-31" command="channel" extra="31" showOn="true"/> 
+				<item type="button" icon="chan-31sydney" command="channel" extra="31sydney" showOn="true"/> 
+				<item type="button" icon="chan-7" command="channel" extra="7" showOn="true"/> 
+				<item type="button" icon="chan-9" command="channel" extra="9" showOn="true"/> 
+				<item type="button" icon="chan-a1" command="channel" extra="a1" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-abc" command="channel" extra="abc" showOn="true"/> 
+				<item type="button" icon="chan-acc" command="channel" extra="acc" showOn="true"/> 
+				<item type="button" icon="chan-adultsonly" command="channel" extra="adultsonly" showOn="true"/> 
+				<item type="button" icon="chan-aljazeera" command="channel" extra="aljazeera" showOn="true"/> 
+				<item type="button" icon="chan-animalplanet" command="channel" extra="animalplanet" showOn="true"/> 
+				<item type="button" icon="chan-antenna" command="channel" extra="antenna" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-arena" command="channel" extra="arena" showOn="true"/> 
+				<item type="button" icon="chan-art" command="channel" extra="art" showOn="true"/> 
+				<item type="button" icon="chan-bbcworld" command="channel" extra="bbcworld" showOn="true"/> 
+				<item type="button" icon="chan-bloomberg" command="channel" extra="bloomberg" showOn="true"/> 
+				<item type="button" icon="chan-cartoon" command="channel" extra="cartoon" showOn="true"/> 
+				<item type="button" icon="chan-cmc" command="channel" extra="cmc" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-cnbc" command="channel" extra="cnbc" showOn="true"/> 
+				<item type="button" icon="chan-cnn" command="channel" extra="cnn" showOn="true"/> 
+				<item type="button" icon="chan-cnnfn" command="channel" extra="cnnfn" showOn="true"/> 
+				<item type="button" icon="chan-comedy" command="channel" extra="comedy" showOn="true"/> 
+				<item type="button" icon="chan-discovery" command="channel" extra="discovery" showOn="true"/> 
+				<item type="button" icon="chan-disney" command="channel" extra="disney" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-espn" command="channel" extra="espn" showOn="true"/> 
+				<item type="button" icon="chan-expo" command="channel" extra="expo" showOn="true"/> 
+				<item type="button" icon="chan-fox8" command="channel" extra="fox8" showOn="true"/> 
+				<item type="button" icon="chan-foxclassics" command="channel" extra="foxclassics" showOn="true"/> 
+				<item type="button" icon="chan-foxfooty" command="channel" extra="foxfooty" showOn="true"/> 
+				<item type="button" icon="chan-foxnews" command="channel" extra="foxnews" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-foxsports1" command="channel" extra="foxsports1" showOn="true"/> 
+				<item type="button" icon="chan-foxsports2" command="channel" extra="foxsports2" showOn="true"/> 
+				<item type="button" icon="chan-fyi" command="channel" extra="fyi" showOn="true"/> 
+				<item type="button" icon="chan-games" command="channel" extra="games" showOn="true"/> 
+				<item type="button" icon="chan-hallmark" command="channel" extra="hallmark" showOn="true"/> 
+				<item type="button" icon="chan-history" command="channel" extra="history" showOn="true"/> 
+			</row> 
+		</control> 
+		<control type="channelControl2"> 
+			<row> 
+				<item type="button" icon="chan-lbc" command="channel" extra="lbc" showOn="true"/> 
+				<item type="button" icon="chan-lifestyle" command="channel" extra="lifestyle" showOn="true"/> 
+				<item type="button" icon="chan-mainevent" command="channel" extra="mainevent" showOn="true"/> 
+				<item type="button" icon="chan-maineventadults" command="channel" extra="maineventadults" showOn="true"/> 
+				<item type="button" icon="chan-maineventadultsftv" command="channel" extra="maineventadultsftv" showOn="true"/> 
+				<item type="button" icon="chan-movieextra" command="channel" extra="movieextra" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-moviegreats" command="channel" extra="moviegreats" showOn="true"/> 
+				<item type="button" icon="chan-movieone" command="channel" extra="movieone" showOn="true"/> 
+				<item type="button" icon="chan-mtv" command="channel" extra="mtv" showOn="true"/> 
+				<item type="button" icon="chan-musicmax" command="channel" extra="musicmax" showOn="true"/> 
+				<item type="button" icon="chan-nbn" command="channel" extra="nbn" showOn="true"/> 
+				<item type="button" icon="chan-ng" command="channel" extra="ng" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-nickelodeon" command="channel" extra="nickelodeon" showOn="true"/> 
+				<item type="button" icon="chan-odyssey" command="channel" extra="odyssey" showOn="true"/> 
+				<item type="button" icon="chan-ovation" command="channel" extra="ovation" showOn="true"/> 
+				<item type="button" icon="chan-prime" command="channel" extra="prime" showOn="true"/> 
+				<item type="button" icon="chan-rai" command="channel" extra="rai" showOn="true"/> 
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-showtime" command="channel" extra="showtime" showOn="true"/> 
+				<item type="button" icon="chan-showtime2" command="channel" extra="showtime2" showOn="true"/> 
+				<item type="button" icon="chan-skynews" command="channel" extra="skynews" showOn="true"/> 
+				<item type="button" icon="chan-skyracing" command="channel" extra="skyracing" showOn="true"/> 
+				<item type="button" icon="chan-tcm" command="channel" extra="tcm" showOn="true"/> 
+				<item type="button" icon="chan-tv1" command="channel" extra="tv1" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-tvsn" command="channel" extra="tvsn" showOn="true"/> 
+				<item type="button" icon="chan-uktv" command="channel" extra="uktv" showOn="true"/> 
+				<item type="button" icon="chan-v" command="channel" extra="v" showOn="true"/> 
+				<item type="button" icon="chan-w" command="channel" extra="w" showOn="true"/> 
+				<item type="button" icon="chan-weatherchannel" command="channel" extra="weatherchannel" showOn="true"/> 
+				<item type="button" icon="chan-win" command="channel" extra="win" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-worldmovies" command="channel" extra="worldmovies" showOn="true"/> 
+			</row> 
+		</control> 
+		<control type="channelControl2"> 
+			<row> 
+				<item type="button" icon="chan-lbc" command="channel" extra="lbc" showOn="true"/> 
+				<item type="button" icon="chan-lifestyle" command="channel" extra="lifestyle" showOn="true"/> 
+				<item type="button" icon="chan-mainevent" command="channel" extra="mainevent" showOn="true"/> 
+				<item type="button" icon="chan-maineventadults" command="channel" extra="maineventadults" showOn="true"/> 
+				<item type="button" icon="chan-maineventadultsftv" command="channel" extra="maineventadultsftv" showOn="true"/> 
+				<item type="button" icon="chan-movieextra" command="channel" extra="movieextra" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-moviegreats" command="channel" extra="moviegreats" showOn="true"/> 
+				<item type="button" icon="chan-movieone" command="channel" extra="movieone" showOn="true"/> 
+				<item type="button" icon="chan-mtv" command="channel" extra="mtv" showOn="true"/> 
+				<item type="button" icon="chan-musicmax" command="channel" extra="musicmax" showOn="true"/> 
+				<item type="button" icon="chan-nbn" command="channel" extra="nbn" showOn="true"/> 
+				<item type="button" icon="chan-ng" command="channel" extra="ng" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-nickelodeon" command="channel" extra="nickelodeon" showOn="true"/> 
+				<item type="button" icon="chan-odyssey" command="channel" extra="odyssey" showOn="true"/> 
+				<item type="button" icon="chan-ovation" command="channel" extra="ovation" showOn="true"/> 
+				<item type="button" icon="chan-prime" command="channel" extra="prime" showOn="true"/> 
+				<item type="button" icon="chan-rai" command="channel" extra="rai" showOn="true"/> 
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-showtime" command="channel" extra="showtime" showOn="true"/> 
+				<item type="button" icon="chan-showtime2" command="channel" extra="showtime2" showOn="true"/> 
+				<item type="button" icon="chan-skynews" command="channel" extra="skynews" showOn="true"/> 
+				<item type="button" icon="chan-skyracing" command="channel" extra="skyracing" showOn="true"/> 
+				<item type="button" icon="chan-tcm" command="channel" extra="tcm" showOn="true"/> 
+				<item type="button" icon="chan-tv1" command="channel" extra="tv1" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-tvsn" command="channel" extra="tvsn" showOn="true"/> 
+				<item type="button" icon="chan-uktv" command="channel" extra="uktv" showOn="true"/> 
+				<item type="button" icon="chan-v" command="channel" extra="v" showOn="true"/> 
+				<item type="button" icon="chan-w" command="channel" extra="w" showOn="true"/> 
+				<item type="button" icon="chan-weatherchannel" command="channel" extra="weatherchannel" showOn="true"/> 
+				<item type="button" icon="chan-win" command="channel" extra="win" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-worldmovies" command="channel" extra="worldmovies" showOn="true"/> 
+			</row> 
+		</control> 
+		<control type="channelControl2"> 
+			<row> 
+				<item type="button" icon="chan-lbc" command="channel" extra="lbc" showOn="true"/> 
+				<item type="button" icon="chan-lifestyle" command="channel" extra="lifestyle" showOn="true"/> 
+				<item type="button" icon="chan-mainevent" command="channel" extra="mainevent" showOn="true"/> 
+				<item type="button" icon="chan-maineventadults" command="channel" extra="maineventadults" showOn="true"/> 
+				<item type="button" icon="chan-maineventadultsftv" command="channel" extra="maineventadultsftv" showOn="true"/> 
+				<item type="button" icon="chan-movieextra" command="channel" extra="movieextra" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-moviegreats" command="channel" extra="moviegreats" showOn="true"/> 
+				<item type="button" icon="chan-movieone" command="channel" extra="movieone" showOn="true"/> 
+				<item type="button" icon="chan-mtv" command="channel" extra="mtv" showOn="true"/> 
+				<item type="button" icon="chan-musicmax" command="channel" extra="musicmax" showOn="true"/> 
+				<item type="button" icon="chan-nbn" command="channel" extra="nbn" showOn="true"/> 
+				<item type="button" icon="chan-ng" command="channel" extra="ng" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-nickelodeon" command="channel" extra="nickelodeon" showOn="true"/> 
+				<item type="button" icon="chan-odyssey" command="channel" extra="odyssey" showOn="true"/> 
+				<item type="button" icon="chan-ovation" command="channel" extra="ovation" showOn="true"/> 
+				<item type="button" icon="chan-prime" command="channel" extra="prime" showOn="true"/> 
+				<item type="button" icon="chan-rai" command="channel" extra="rai" showOn="true"/> 
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-showtime" command="channel" extra="showtime" showOn="true"/> 
+				<item type="button" icon="chan-showtime2" command="channel" extra="showtime2" showOn="true"/> 
+				<item type="button" icon="chan-skynews" command="channel" extra="skynews" showOn="true"/> 
+				<item type="button" icon="chan-skyracing" command="channel" extra="skyracing" showOn="true"/> 
+				<item type="button" icon="chan-tcm" command="channel" extra="tcm" showOn="true"/> 
+				<item type="button" icon="chan-tv1" command="channel" extra="tv1" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-tvsn" command="channel" extra="tvsn" showOn="true"/> 
+				<item type="button" icon="chan-uktv" command="channel" extra="uktv" showOn="true"/> 
+				<item type="button" icon="chan-v" command="channel" extra="v" showOn="true"/> 
+				<item type="button" icon="chan-w" command="channel" extra="w" showOn="true"/> 
+				<item type="button" icon="chan-weatherchannel" command="channel" extra="weatherchannel" showOn="true"/> 
+				<item type="button" icon="chan-win" command="channel" extra="win" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-worldmovies" command="channel" extra="worldmovies" showOn="true"/> 
+			</row> 
+		</control> 
+		<control type="channelControl2"> 
+			<row> 
+				<item type="button" icon="chan-lbc" command="channel" extra="lbc" showOn="true"/> 
+				<item type="button" icon="chan-lifestyle" command="channel" extra="lifestyle" showOn="true"/> 
+				<item type="button" icon="chan-mainevent" command="channel" extra="mainevent" showOn="true"/> 
+				<item type="button" icon="chan-maineventadults" command="channel" extra="maineventadults" showOn="true"/> 
+				<item type="button" icon="chan-maineventadultsftv" command="channel" extra="maineventadultsftv" showOn="true"/> 
+				<item type="button" icon="chan-movieextra" command="channel" extra="movieextra" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-moviegreats" command="channel" extra="moviegreats" showOn="true"/> 
+				<item type="button" icon="chan-movieone" command="channel" extra="movieone" showOn="true"/> 
+				<item type="button" icon="chan-mtv" command="channel" extra="mtv" showOn="true"/> 
+				<item type="button" icon="chan-musicmax" command="channel" extra="musicmax" showOn="true"/> 
+				<item type="button" icon="chan-nbn" command="channel" extra="nbn" showOn="true"/> 
+				<item type="button" icon="chan-ng" command="channel" extra="ng" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-nickelodeon" command="channel" extra="nickelodeon" showOn="true"/> 
+				<item type="button" icon="chan-odyssey" command="channel" extra="odyssey" showOn="true"/> 
+				<item type="button" icon="chan-ovation" command="channel" extra="ovation" showOn="true"/> 
+				<item type="button" icon="chan-prime" command="channel" extra="prime" showOn="true"/> 
+				<item type="button" icon="chan-rai" command="channel" extra="rai" showOn="true"/> 
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-showtime" command="channel" extra="showtime" showOn="true"/> 
+				<item type="button" icon="chan-showtime2" command="channel" extra="showtime2" showOn="true"/> 
+				<item type="button" icon="chan-skynews" command="channel" extra="skynews" showOn="true"/> 
+				<item type="button" icon="chan-skyracing" command="channel" extra="skyracing" showOn="true"/> 
+				<item type="button" icon="chan-tcm" command="channel" extra="tcm" showOn="true"/> 
+				<item type="button" icon="chan-tv1" command="channel" extra="tv1" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-tvsn" command="channel" extra="tvsn" showOn="true"/> 
+				<item type="button" icon="chan-uktv" command="channel" extra="uktv" showOn="true"/> 
+				<item type="button" icon="chan-v" command="channel" extra="v" showOn="true"/> 
+				<item type="button" icon="chan-w" command="channel" extra="w" showOn="true"/> 
+				<item type="button" icon="chan-weatherchannel" command="channel" extra="weatherchannel" showOn="true"/> 
+				<item type="button" icon="chan-win" command="channel" extra="win" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-worldmovies" command="channel" extra="worldmovies" showOn="true"/> 
+			</row> 
+		</control> 
+		<control type="channelControl2"> 
+			<row> 
+				<item type="button" icon="chan-lbc" command="channel" extra="lbc" showOn="true"/> 
+				<item type="button" icon="chan-lifestyle" command="channel" extra="lifestyle" showOn="true"/> 
+				<item type="button" icon="chan-mainevent" command="channel" extra="mainevent" showOn="true"/> 
+				<item type="button" icon="chan-maineventadults" command="channel" extra="maineventadults" showOn="true"/> 
+				<item type="button" icon="chan-maineventadultsftv" command="channel" extra="maineventadultsftv" showOn="true"/> 
+				<item type="button" icon="chan-movieextra" command="channel" extra="movieextra" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-moviegreats" command="channel" extra="moviegreats" showOn="true"/> 
+				<item type="button" icon="chan-movieone" command="channel" extra="movieone" showOn="true"/> 
+				<item type="button" icon="chan-mtv" command="channel" extra="mtv" showOn="true"/> 
+				<item type="button" icon="chan-musicmax" command="channel" extra="musicmax" showOn="true"/> 
+				<item type="button" icon="chan-nbn" command="channel" extra="nbn" showOn="true"/> 
+				<item type="button" icon="chan-ng" command="channel" extra="ng" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-nickelodeon" command="channel" extra="nickelodeon" showOn="true"/> 
+				<item type="button" icon="chan-odyssey" command="channel" extra="odyssey" showOn="true"/> 
+				<item type="button" icon="chan-ovation" command="channel" extra="ovation" showOn="true"/> 
+				<item type="button" icon="chan-prime" command="channel" extra="prime" showOn="true"/> 
+				<item type="button" icon="chan-rai" command="channel" extra="rai" showOn="true"/> 
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-showtime" command="channel" extra="showtime" showOn="true"/> 
+				<item type="button" icon="chan-showtime2" command="channel" extra="showtime2" showOn="true"/> 
+				<item type="button" icon="chan-skynews" command="channel" extra="skynews" showOn="true"/> 
+				<item type="button" icon="chan-skyracing" command="channel" extra="skyracing" showOn="true"/> 
+				<item type="button" icon="chan-tcm" command="channel" extra="tcm" showOn="true"/> 
+				<item type="button" icon="chan-tv1" command="channel" extra="tv1" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-tvsn" command="channel" extra="tvsn" showOn="true"/> 
+				<item type="button" icon="chan-uktv" command="channel" extra="uktv" showOn="true"/> 
+				<item type="button" icon="chan-v" command="channel" extra="v" showOn="true"/> 
+				<item type="button" icon="chan-w" command="channel" extra="w" showOn="true"/> 
+				<item type="button" icon="chan-weatherchannel" command="channel" extra="weatherchannel" showOn="true"/> 
+				<item type="button" icon="chan-win" command="channel" extra="win" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-worldmovies" command="channel" extra="worldmovies" showOn="true"/> 
+			</row> 
+		</control> 
+		<control type="channelControl2"> 
+			<row> 
+				<item type="button" icon="chan-lbc" command="channel" extra="lbc" showOn="true"/> 
+				<item type="button" icon="chan-lifestyle" command="channel" extra="lifestyle" showOn="true"/> 
+				<item type="button" icon="chan-mainevent" command="channel" extra="mainevent" showOn="true"/> 
+				<item type="button" icon="chan-maineventadults" command="channel" extra="maineventadults" showOn="true"/> 
+				<item type="button" icon="chan-maineventadultsftv" command="channel" extra="maineventadultsftv" showOn="true"/> 
+				<item type="button" icon="chan-movieextra" command="channel" extra="movieextra" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-moviegreats" command="channel" extra="moviegreats" showOn="true"/> 
+				<item type="button" icon="chan-movieone" command="channel" extra="movieone" showOn="true"/> 
+				<item type="button" icon="chan-mtv" command="channel" extra="mtv" showOn="true"/> 
+				<item type="button" icon="chan-musicmax" command="channel" extra="musicmax" showOn="true"/> 
+				<item type="button" icon="chan-nbn" command="channel" extra="nbn" showOn="true"/> 
+				<item type="button" icon="chan-ng" command="channel" extra="ng" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-nickelodeon" command="channel" extra="nickelodeon" showOn="true"/> 
+				<item type="button" icon="chan-odyssey" command="channel" extra="odyssey" showOn="true"/> 
+				<item type="button" icon="chan-ovation" command="channel" extra="ovation" showOn="true"/> 
+				<item type="button" icon="chan-prime" command="channel" extra="prime" showOn="true"/> 
+				<item type="button" icon="chan-rai" command="channel" extra="rai" showOn="true"/> 
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-showtime" command="channel" extra="showtime" showOn="true"/> 
+				<item type="button" icon="chan-showtime2" command="channel" extra="showtime2" showOn="true"/> 
+				<item type="button" icon="chan-skynews" command="channel" extra="skynews" showOn="true"/> 
+				<item type="button" icon="chan-skyracing" command="channel" extra="skyracing" showOn="true"/> 
+				<item type="button" icon="chan-tcm" command="channel" extra="tcm" showOn="true"/> 
+				<item type="button" icon="chan-tv1" command="channel" extra="tv1" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-tvsn" command="channel" extra="tvsn" showOn="true"/> 
+				<item type="button" icon="chan-uktv" command="channel" extra="uktv" showOn="true"/> 
+				<item type="button" icon="chan-v" command="channel" extra="v" showOn="true"/> 
+				<item type="button" icon="chan-w" command="channel" extra="w" showOn="true"/> 
+				<item type="button" icon="chan-weatherchannel" command="channel" extra="weatherchannel" showOn="true"/> 
+				<item type="button" icon="chan-win" command="channel" extra="win" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-worldmovies" command="channel" extra="worldmovies" showOn="true"/> 
+			</row> 
+		</control> 
+		<control type="channelControl2"> 
+			<row> 
+				<item type="button" icon="chan-lbc" command="channel" extra="lbc" showOn="true"/> 
+				<item type="button" icon="chan-lifestyle" command="channel" extra="lifestyle" showOn="true"/> 
+				<item type="button" icon="chan-mainevent" command="channel" extra="mainevent" showOn="true"/> 
+				<item type="button" icon="chan-maineventadults" command="channel" extra="maineventadults" showOn="true"/> 
+				<item type="button" icon="chan-maineventadultsftv" command="channel" extra="maineventadultsftv" showOn="true"/> 
+				<item type="button" icon="chan-movieextra" command="channel" extra="movieextra" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-moviegreats" command="channel" extra="moviegreats" showOn="true"/> 
+				<item type="button" icon="chan-movieone" command="channel" extra="movieone" showOn="true"/> 
+				<item type="button" icon="chan-mtv" command="channel" extra="mtv" showOn="true"/> 
+				<item type="button" icon="chan-musicmax" command="channel" extra="musicmax" showOn="true"/> 
+				<item type="button" icon="chan-nbn" command="channel" extra="nbn" showOn="true"/> 
+				<item type="button" icon="chan-ng" command="channel" extra="ng" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-nickelodeon" command="channel" extra="nickelodeon" showOn="true"/> 
+				<item type="button" icon="chan-odyssey" command="channel" extra="odyssey" showOn="true"/> 
+				<item type="button" icon="chan-ovation" command="channel" extra="ovation" showOn="true"/> 
+				<item type="button" icon="chan-prime" command="channel" extra="prime" showOn="true"/> 
+				<item type="button" icon="chan-rai" command="channel" extra="rai" showOn="true"/> 
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-showtime" command="channel" extra="showtime" showOn="true"/> 
+				<item type="button" icon="chan-showtime2" command="channel" extra="showtime2" showOn="true"/> 
+				<item type="button" icon="chan-skynews" command="channel" extra="skynews" showOn="true"/> 
+				<item type="button" icon="chan-skyracing" command="channel" extra="skyracing" showOn="true"/> 
+				<item type="button" icon="chan-tcm" command="channel" extra="tcm" showOn="true"/> 
+				<item type="button" icon="chan-tv1" command="channel" extra="tv1" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-tvsn" command="channel" extra="tvsn" showOn="true"/> 
+				<item type="button" icon="chan-uktv" command="channel" extra="uktv" showOn="true"/> 
+				<item type="button" icon="chan-v" command="channel" extra="v" showOn="true"/> 
+				<item type="button" icon="chan-w" command="channel" extra="w" showOn="true"/> 
+				<item type="button" icon="chan-weatherchannel" command="channel" extra="weatherchannel" showOn="true"/> 
+				<item type="button" icon="chan-win" command="channel" extra="win" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-worldmovies" command="channel" extra="worldmovies" showOn="true"/> 
+			</row> 
+		</control> 
+		<control type="channelControl2"> 
+			<row> 
+				<item type="button" icon="chan-lbc" command="channel" extra="lbc" showOn="true"/> 
+				<item type="button" icon="chan-lifestyle" command="channel" extra="lifestyle" showOn="true"/> 
+				<item type="button" icon="chan-mainevent" command="channel" extra="mainevent" showOn="true"/> 
+				<item type="button" icon="chan-maineventadults" command="channel" extra="maineventadults" showOn="true"/> 
+				<item type="button" icon="chan-maineventadultsftv" command="channel" extra="maineventadultsftv" showOn="true"/> 
+				<item type="button" icon="chan-movieextra" command="channel" extra="movieextra" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-moviegreats" command="channel" extra="moviegreats" showOn="true"/> 
+				<item type="button" icon="chan-movieone" command="channel" extra="movieone" showOn="true"/> 
+				<item type="button" icon="chan-mtv" command="channel" extra="mtv" showOn="true"/> 
+				<item type="button" icon="chan-musicmax" command="channel" extra="musicmax" showOn="true"/> 
+				<item type="button" icon="chan-nbn" command="channel" extra="nbn" showOn="true"/> 
+				<item type="button" icon="chan-ng" command="channel" extra="ng" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-nickelodeon" command="channel" extra="nickelodeon" showOn="true"/> 
+				<item type="button" icon="chan-odyssey" command="channel" extra="odyssey" showOn="true"/> 
+				<item type="button" icon="chan-ovation" command="channel" extra="ovation" showOn="true"/> 
+				<item type="button" icon="chan-prime" command="channel" extra="prime" showOn="true"/> 
+				<item type="button" icon="chan-rai" command="channel" extra="rai" showOn="true"/> 
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-showtime" command="channel" extra="showtime" showOn="true"/> 
+				<item type="button" icon="chan-showtime2" command="channel" extra="showtime2" showOn="true"/> 
+				<item type="button" icon="chan-skynews" command="channel" extra="skynews" showOn="true"/> 
+				<item type="button" icon="chan-skyracing" command="channel" extra="skyracing" showOn="true"/> 
+				<item type="button" icon="chan-tcm" command="channel" extra="tcm" showOn="true"/> 
+				<item type="button" icon="chan-tv1" command="channel" extra="tv1" showOn="true"/> 
+			</row> 
+			<row> 
+				<item type="button" icon="chan-worldmovies" command="channel" extra="worldmovies" showOn="true"/> 
+			</row> 
+		</control> 
+		<control type="IR"> 
+			<row> 
+				<item type="button" icon="media-start" command="AV.SONY" extra="SONY.back"/> 
+				<item type="button" icon="media-stop" command="AV.SONY" extra="SONY.stop"/> 
+				<item type="button" icon="media-play" command="AV.SONY" extra="SONY.play"/> 
+				<item type="button" icon="media-pause" command="AV.SONY" extra="SONY.pause"/> 
+				<item type="button" icon="media-end" command="AV.SONY" extra="SONY.next"/> 
+			</row> 
+		</control> 
 	</controlTypes> 
 	<keygroups> 
-		<keygroup controlType="slider" icon2="light-bulb" icon1="light-bulb-off" name="Lights-Slider"> 
-			<key name="BOGUS02"/> 
-			<key name="BOGUS01"/> 
-		</keygroup> 
-		<keygroup controlType="onOff" icon2="light-bulb" icon1="light-bulb-off" name="Lights-onOff"> 
-			<key name="BOGUS04"/> 
-			<key name="BOGUS03"/> 
+		<keygroup controlType="onOff" icon2="light-bulb" icon1="light-bulb-off" name="blah"> 
+			<key name="123"/> 
 		</keygroup> 
 	</keygroups> 
 </application> 

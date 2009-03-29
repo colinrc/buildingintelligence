@@ -158,12 +158,12 @@
 		sensors = new Objects.Server.CBusSensors();
 		lights = new Objects.Server.CBusLights();
 		relays = new Objects.Server.CBusRelays();
-		var newLabelNames = new XMLNode(1, "CATALOGUE");
-		newLabelNames.attributes["NAME"] = "Button Labels";
-		labelNames = new Objects.Server.Catalogue();
-		labelNames.setXML(newLabelNames);		
+		//var newLabelNames = new XMLNode(1, "CATALOGUE");
+		//newLabelNames.attributes["NAME"] = "Button Labels";
+		//labelNames = new Objects.Server.Catalogue();
+		//labelNames.setXML(newLabelNames);		
 		temperatureSensors = new Objects.Server.CBusTemperatureSensors();
-		labels = new Objects.Server.CBusLabels();
+		//labels = new Objects.Server.CBusLabels();
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
 				device_type = newData.attributes["NAME"];

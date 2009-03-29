@@ -25,7 +25,7 @@ class Controls.TreeSwitcher extends UIComponent {
 		bounds_mc._height = 0;
 	}
 	private function draw():Void {
-		tab_tb.dataProvider = [{label:"Project"},{label:"Workflow"}];
+		tab_tb.dataProvider = [{label:"Project"}];
 		tab_tb.selectedIndex = 0;			
 		clip1._visible = true;
 		clip2._visible = false;			
@@ -57,12 +57,12 @@ class Controls.TreeSwitcher extends UIComponent {
 	private function createChildren():Void {
 		//arrange();
 		clip1 = this.createObject("Tree", "clip1", 2, {hScrollPolicy:"on"});
-		clip2 = this.createObject("Tree", "clip2", 1);
+		//clip2 = this.createObject("Tree", "clip2", 1);
 		tab_tb = this.createObject("TabBar", "tab_tb", 3);
 		tab_tb.addItem("Project");
-		tab_tb.addItem("Workflow");
+		//tab_tb.addItem("Workflow");
 		clip1.setStyle("borderStyle","none");
-		clip2.setStyle("borderStyle","none");
+		//clip2.setStyle("borderStyle","none");
 		arrange();
 		tab_tb.addEventListener("change", Delegate.create(this, tabChange));
 	}

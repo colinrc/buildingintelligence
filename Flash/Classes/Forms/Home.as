@@ -55,6 +55,9 @@ class Forms.Home extends Forms.BaseForm {
 		}
 		if (_global.project.integrator.length) {
 			integrator_ti.text = _global.project.integrator;
+			
+			// merik uber hack
+			if (integrator_ti.text == "Merik") _root.setAdvancedMode();
 		}
 		if (_global.project.company.length) {
 			company_ti.text = _global.project.company;
