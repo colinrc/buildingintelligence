@@ -16,8 +16,8 @@
         
         <CONTROLS>
         	<FORWARDS>
-        		<FORWARD ACTIVE="Y" SRC="/camera.jpg" DEST="http://192.168.1.10/image.jpg" />
-        		<FORWARD ACTIVE="Y" SRC="/dir/" DEST="http://192.168.1.10/subdir/" />
+        		<FORWARD ACTIVE="Y" SRC="camera.jpg" DEST="http://127.0.0.1:8081/image.jpg" />
+        		<FORWARD ACTIVE="Y" SRC="dir/" DEST="http://127.0.0.1:8081/UserManager/" />
         	</FORWARDS>
         </CONTROLS>
 </CONFIG>
