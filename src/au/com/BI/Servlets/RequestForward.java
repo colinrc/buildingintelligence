@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,7 +60,7 @@ public class RequestForward implements Servlet {
 
  private ServletConfig config;
  private ServletContext context;
- protected ConcurrentHashMap <String,String>forwards;
+ protected ConcurrentHashMap <String,URL>forwards;
  
  /* (non-Javadoc)
   * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
@@ -69,7 +70,7 @@ public class RequestForward implements Servlet {
      this.config=config;
      logger = Logger.getLogger(this.getClass().getPackage().getName());
      this.context=config.getServletContext();
-     forwards = (ConcurrentHashMap<String,String>)context.getAttribute("forwards");
+     forwards = (ConcurrentHashMap<String,URL>)context.getAttribute("forwards");
 
      _client=new HttpClient();
      //_client.setConnectorType(HttpClient.CONNECTOR_SOCKET);
@@ -101,6 +102,7 @@ public class RequestForward implements Servlet {
      final HttpServletRequest request = (HttpServletRequest)req;
      final HttpServletResponse response = (HttpServletResponse)res;
      Address address = null;
+     URL destURL = null;
      
      if ("CONNECT".equalsIgnoreCase(request.getMethod()))
      {
@@ -122,9 +124,17 @@ public class RequestForward implements Servlet {
              
              try {
 	        	 String requestAddress = request.getContextPath();
-	        	 String  toTest [] = requestAddress.split ("/",2);
-	        	if (forwards.containsKey (toTest[0])){
-	        			address=new Address(request.getServerName(),request.getServerPort());	        		
+	        	 String  toTest [] = uri.split ("/",3);
+	        	if (forwards.containsKey (toTest[2])){
+	        			destURL = forwards.get(toTest[2]);
+	        			if (destURL.getPort() == -1){
+	        				address = new Address(destURL.getHost(),destURL.getDefaultPort());
+	        			} else {
+	        				address = new Address(destURL.getHost(),destURL.getPort());
+	        			}
+	        			
+	        	}else {
+	        		return;
 	        	}
 	        	
              } catch (IndexOutOfBoundsException ex){
@@ -193,14 +203,14 @@ public class RequestForward implements Servlet {
              
              exchange.setScheme(HttpSchemes.HTTPS.equals(request.getScheme())?HttpSchemes.HTTPS_BUFFER:HttpSchemes.HTTP_BUFFER);
              exchange.setMethod(request.getMethod());
-             exchange.setURI(uri);
+             exchange.setURI(destURL.getPath());
 
              exchange.setVersion(request.getProtocol());
              
 
              exchange.setAddress(address);
 
-             logger.log(Level.FINEST,"FORWARD TO http://"+address.getHost()+":"+address.getPort()+uri);
+             logger.log(Level.FINEST,"FORWARD TO "+address.getHost()+":"+address.getPort()+uri);
 
 
              // check connection header

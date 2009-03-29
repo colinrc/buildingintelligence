@@ -25,6 +25,8 @@ import org.mortbay.jetty.security.UserRealm;
 
 import au.com.BI.Config.Security.IPType;
 //import org.mortbay.jetty.handler.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.*;
@@ -37,7 +39,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     Logger logger;
     Security security = null;
     public static final int timeout = 30; // 1 minute timeout for a session;
-    protected ConcurrentHashMap <String,String>forwards;
+    protected ConcurrentHashMap <String,URL>forwards;
     
     public JettyHandler(Security security) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -45,7 +47,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         this.setName("JETTY");
         this.setAutoReconnect(false);
         this.security = security;
-        forwards= new ConcurrentHashMap<String,String>();
+        forwards= new ConcurrentHashMap<String,URL>();
     }
     
     public boolean removeModelOnConfigReload() {
@@ -296,7 +298,12 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 	 * @param dest
 	 */
 	public void addForward(String src, String dest) {
-		forwards.put(src,dest);		
+		try {
+			URL destURL = new URL(dest);
+			forwards.put(src,destURL);		
+		} catch (MalformedURLException ex){
+			logger.log (Level.WARNING,ex.getMessage () + " attempting to create a forward entry for " + dest);
+		}
 	}
 
 	/**
