@@ -124,10 +124,10 @@ class Integra extends GroovyModel {
 			outputBytes.put ("ISCP".getBytes())
 			
 			String eISCPData = rawCommand  + "\n";
-			byte [] headerSize = new byte[]{0x0, 0x0, 0x0, 0x0, 0x10};
+			//byte [] headerSize = new byte[]{0x0, 0x0, 0x0, 0x0, 0x10};
 			// Integra is using IP protocol
-			Byte [] eISCPHeader = "ISCP".getBytes() + byte[]{0x0, 0x0, 0x0, 0x0, 0x10} + rawCommand.size();
-			returnWrapper.addCommOutput(  Blocksize +  '0x01' + '0x0' + '0x0' + '0x0' + eISCPData.getBytes() + "\n");	
+			//Byte [] eISCPHeader = "ISCP".getBytes() + byte[]{0x0, 0x0, 0x0, 0x0, 0x10} + rawCommand.size();
+			//returnWrapper.addCommOutput(  Blocksize +  '0x01' + '0x0' + '0x0' + '0x0' + eISCPData.getBytes() + "\n");	
 			
 		} else {
 			// Serial protocol

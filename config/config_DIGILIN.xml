@@ -1,7 +1,7 @@
 <CONFIG>
         <DESC>Demonstration configuration for DIGILIN</DESC>
 
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="DIGILIN" DESCRIPTION="DIGILIN Scene Controller">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="DIGILIN" DESCRIPTION="DIGILIN Scene Controller">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                         <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>

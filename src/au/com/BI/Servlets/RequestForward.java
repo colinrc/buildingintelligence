@@ -201,7 +201,8 @@ public class RequestForward implements Servlet {
              };
 
              
-             exchange.setScheme(HttpSchemes.HTTPS.equals(request.getScheme())?HttpSchemes.HTTPS_BUFFER:HttpSchemes.HTTP_BUFFER);
+//             exchange.setScheme(HttpSchemes.HTTPS.equals(request.getScheme())?HttpSchemes.HTTPS_BUFFER:HttpSchemes.HTTP_BUFFER);
+             exchange.setScheme(destURL.getProtocol().equals("https")?HttpSchemes.HTTPS_BUFFER:HttpSchemes.HTTP_BUFFER);
              exchange.setMethod(request.getMethod());
              exchange.setURI(destURL.getPath());
 
@@ -209,8 +210,9 @@ public class RequestForward implements Servlet {
              
 
              exchange.setAddress(address);
+             String debugString = address.getHost()+":"+address.getPort()+destURL.getPath();
 
-             logger.log(Level.FINEST,"FORWARD TO "+address.getHost()+":"+address.getPort()+uri);
+             logger.log(Level.FINEST,"FORWARD TO "+debugString);
 
 
              // check connection header
