@@ -204,7 +204,7 @@ public class RequestForward implements Servlet {
 //             exchange.setScheme(HttpSchemes.HTTPS.equals(request.getScheme())?HttpSchemes.HTTPS_BUFFER:HttpSchemes.HTTP_BUFFER);
              exchange.setScheme(destURL.getProtocol().equals("https")?HttpSchemes.HTTPS_BUFFER:HttpSchemes.HTTP_BUFFER);
              exchange.setMethod(request.getMethod());
-             exchange.setURI(destURL.getPath());
+             exchange.setURI(destURL.toString());
 
              exchange.setVersion(request.getProtocol());
              
