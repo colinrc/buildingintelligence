@@ -63,11 +63,6 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         client_server.setConnectors(new Connector[]{connector}); 
         
         ContextHandlerCollection contexts = new ContextHandlerCollection();
- 
-        // forwards handler
-        Context forwardContext = new Context (contexts,"/forwards");
-        forwardContext.addServlet ("au.com.BI.Servlets.RequestForward","/");
-        forwardContext.setAttribute("forwards", forwards);
         
         // HTML static handler
         Context mainContext= new Context (contexts, "/html"); 
@@ -178,6 +173,9 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 
             updateContext.addServlet("au.com.BI.Servlets.UpdateServlet","/webclient/update");
             updateContext.addServlet("au.com.BI.Servlets.Logout","/webclient/logout");
+
+            
+            
             ServletHolder  defServlet = updateContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
             
             updateContext.setWelcomeFiles(new String[]{"index.html"});
@@ -207,6 +205,11 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             
             SecurityHandler updateMgrSec = updateContext.getSecurityHandler();
             updateMgrSec.setUserRealm(webPass);
+            
+            // forwards handler
+            //Context forwardContext = new Context (contexts,"/forwards",Context.SECURITY|Context.SESSIONS);
+            updateContext.addServlet ("au.com.BI.Servlets.RequestForward","/forward/*");
+            updateContext.setAttribute("forwards", forwards);
             
             ELifeAuthenticator updateAuthenticator = new ELifeAuthenticator ();
             updateAuthenticator.setSecurity(security);
