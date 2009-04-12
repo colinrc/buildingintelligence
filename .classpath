@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="ext/resolver.jar"/>
 	<classpathentry kind="lib" path="ext/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="ext/xml-apis.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetty6.1.7"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
