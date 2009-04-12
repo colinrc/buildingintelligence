@@ -5,16 +5,14 @@ Added ForwardRequest servlet to handle the request forwarding.
 In any config file CONTROL block add a forward section as follows.
 
 {{{
-        
         <CONTROLS>
         	<FORWARDS>
-        		<FORWARD ACTIVE="Y" SRC="camera.jpg" DEST="http://www.abc.net.au/homepage/2008/styles/abc_logo.png" />
-        		<FORWARD ACTIVE="Y" SRC="dir/" DEST="http://127.0.0.1:8081/UserManager/" />
+        		<FORWARD ACTIVE="Y" SRC="camera.jpg" DEST="http://127.0.0.1:8081/image.jpg" />
         	</FORWARDS>
         </CONTROLS>
 }}}
 
-== 4/Mar/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b92.zip V1.6-b92] 
+== 4/Mar/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b92.zip V1.6-b92]  ==
 
 ''' Macros '''
 
@@ -36,13 +34,13 @@ Added the ability to use strings rather than numbers as a device key in a model 
 
 Resolved issues with Macro and Sript list not being sent on client attatch if there had previously been a Script or Macro operation on the server.
 
-== 16/Sep/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b90.zip V1.6-b90]
+== 16/Sep/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b90.zip V1.6-b90] ==
 
 ''' CBUS '''
 
 Possible fix for CBUS startup issues.
 
-== 14/Sep/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b89.zip V1.6-b89]
+== 14/Sep/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b89.zip V1.6-b89] ==
 
 ''' Jetty '''
 
