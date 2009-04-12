@@ -16,8 +16,8 @@
         
         <CONTROLS>
         	<FORWARDS>
-        		<FORWARD ACTIVE="Y" SRC="camera.png" DEST="http://www.abc.net.au/homepage/2008/styles/abc_logo.png" />
-        		<FORWARD ACTIVE="Y" SRC="dir/" DEST="http://127.0.0.1:8081/UserManager/" />
+        		<FORWARD ACTIVE="Y" SRC="camera.jpg" DEST="http://ginini.com/nz/cpg/albums/userpics/west.jpg" />
+        		<FORWARD ACTIVE="Y" SRC="dir/" DEST="http://www.abc.net.au/" />
         	</FORWARDS>
         </CONTROLS>
 </CONFIG>

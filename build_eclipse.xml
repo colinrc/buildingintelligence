@@ -7,7 +7,7 @@
 	<taskdef resource="net/sf/ant4eclipse/antlib.xml" />
 	<property name="workspace" value="${basedir}/.." />
 	
-	<property name="project.name" value="eLife" />
+	<property name="project.name" value="eLife_Server" />
 	<property name="dist.jar" value="dist/eLife.jar" />
 	<userLibraries userlibraries="./libs.userlibraries" />
 	<getEclipseClasspath pathId="eLife.classpath" relative="true" workspace="${workspace}" projectName="${project.name}" />

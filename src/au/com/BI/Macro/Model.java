@@ -110,13 +110,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			doListUpdate = false;
 		}
 		if (commandStr.equals("stop")) {
-			macroHandler.complete(macroName,currentUser);
-			logger.log (Level.FINER, "Stopping macro " + macroName);
+			macroHandler.abort(macroName,currentUser);
+			logger.log (Level.FINER, "Aborting macro " + macroName);
 			doListUpdate = false;
 		}
 		if (commandStr.equals("complete")) {
 			macroHandler.complete(macroName,currentUser);
-			logger.log (Level.FINER, "Aborting macro " + macroName);
+			logger.log (Level.FINER, "Completing macro " + macroName);
 			doListUpdate = false;
 		}
 

@@ -12,6 +12,12 @@ In any config file CONTROL block add a forward section as follows.
         </CONTROLS>
 }}}
 
+== 12/Mar/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b3.zip V1.6-b93]  [attachment:wiki:SoftwareReleases:eLife-1.6b93-libs.zip Libs-V1.6b93] ==
+
+''' Macros '''
+
+Changed stop to be a synonym for abort rather than complete.
+
 == 4/Mar/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b92.zip V1.6-b92]  ==
 
 ''' Macros '''
