@@ -29,6 +29,10 @@
 		serverNode.attributes.userName = userName;
 		serverNode.attributes.password = password;
 		for (var client in clients) {
+			//trace("a" + client);
+			//serverNode.appendChild(clients[client].toXML());
+		}
+		for (var client=0; client<clients.length; client++) {
 			serverNode.appendChild(clients[client].toXML());
 		}
 		return serverNode;

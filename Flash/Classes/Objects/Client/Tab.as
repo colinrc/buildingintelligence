@@ -39,7 +39,7 @@
 		if (icon != "") {
 			newNode.attributes["icon"] = icon;
 		}
-		for (var control in controls) {
+		for (var control=0; control<controls.length; control++) {
 			newNode.appendChild(controls[control]);
 		}
 		return newNode;
@@ -84,7 +84,7 @@
 				}
 			}
 			controls = new Array();
-			for (var child in newData.childNodes) {
+			for (var child=0; child<newData.childNodes.length; child++) {
 				controls.push(newData.childNodes[child]);
 			}
 		} else {

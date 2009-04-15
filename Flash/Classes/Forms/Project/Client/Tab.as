@@ -79,7 +79,7 @@ class Forms.Project.Client.Tab extends Forms.BaseForm {
 		dataGridHandler = new Forms.DataGrid.DynamicDataGrid();
 		dataGridHandler.setDataGrid(controls_dg);
 		dataGridHandler.addKeyBoxColumn("key", "Key", DPKey, this, 150);
-		dataGridHandler.addTextInputColumn("name", "Control Name", restrictions, false, 100);
+		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false, 100);
 		dataGridHandler.addIconComboBoxColumn("icon1", "Icon 1", IconDP, false, 150);
 		dataGridHandler.addIconComboBoxColumn("icon2", "Icon 2", IconDP, false, 150);
 		dataGridHandler.addComboBoxColumn("type", "Control Type", DPControl, false, 150);

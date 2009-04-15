@@ -94,7 +94,7 @@
 		controlNode.appendChild(settings.toXML());
 		serverNode.appendChild(controlNode);
 		serverNode.appendChild(macros.toXML());
-		serverNode.appendChild(scripts.toXML());
+		//serverNode.appendChild(scripts.toXML());
 		serverNode.appendChild(JROBIN);
 		for (var device in devices) {
 			serverNode.appendChild(devices[device].toXML());
@@ -112,7 +112,7 @@
 			newNode.appendChild(settings.toTree());			
 		}
 		newNode.appendChild(macros.toTree());
-		newNode.appendChild(scripts.toTree());
+		//newNode.appendChild(scripts.toTree());
 		for (var device in devices) {
 			newNode.appendChild(devices[device].toTree());
 		}

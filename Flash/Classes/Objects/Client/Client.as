@@ -87,12 +87,12 @@
 		var newNode = new XMLNode(1,"Client");
 		newNode.appendChild(control_types.toTree());
 		newNode.appendChild(keygroups.toTree());
-		newNode.appendChild(Property.toTree());
 		newNode.appendChild(status_bar.toTree());
+		newNode.appendChild(apps_bar.toTree());
+		newNode.appendChild(Property.toTree());
 		newNode.appendChild(logging.toTree());
 		newNode.appendChild(calendar.toTree());		
 		newNode.appendChild(sounds.toTree());
-		newNode.appendChild(apps_bar.toTree());
 		if(_global.advanced){
 			newNode.appendChild(control_panel_apps.toTree());			
 		}					
