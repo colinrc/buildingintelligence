@@ -74,12 +74,17 @@ public class JettyHandler {
             
             Context updateContext= new Context (contexts, "/",Context.SECURITY|Context.SESSIONS);
                          
-            updateContext.setResourceBase("www");
+            updateContext.setResourceBase("monitor_web");
+            updateContext.setAttribute("eSmart_Install", installBase);
             updateContext.setConnectorNames(new String[]{"SSL_CONNECT"});
 
             updateContext.addServlet("au.com.BI.Servlets.Control","/control");
-            ServletHolder davServlet = updateContext.addServlet("webdav-servlet","/dav");
+            ServletHolder davServlet = updateContext.addServlet("net.sf.webdav.WebdavServlet","/dav");
             ServletHolder  defServlet = updateContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
+            
+            davServlet.setInitParameter("rootpath", installBase);
+            davServlet.setInitParameter("ResourceHandlerImplementation","net.sf.webdav.LocalFileSystemStore");
+            davServlet.setInitParameter("maxUploadSize","2000000"); // 2mb
             
             updateContext.setWelcomeFiles(new String[]{"index.html"});
             
@@ -115,6 +120,8 @@ public class JettyHandler {
             throw ex;
         }
     }
-    
+
+
+
 
 }
