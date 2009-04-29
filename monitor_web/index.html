@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+	<title>eLIFE Monitor Application</title>
+		<style type="text/css">
+		body, td {
+			font-family: arial, helvetica, sans-serif;
+			background-color: #52688D;
+			font-size: 12px;
+		}
+		table {
+			width: 100%;
+			height: 100%;
+		}
+		td {
+			text-align: center;
+		}
+		h1 {
+			color: #fff;
+			font-size: 18px;
+			font-family: trebuchet ms, arial, sans-serif;
+			margin: 0 0 10px 0;
+		}
+		form {
+			width: 300px;
+			display: block;
+			margin: 0 auto 0 auto;
+			padding: 30px;
+			border: 1px solid #95A7C4;
+		}
+		label {
+			display: block;
+			font-weight: bold;
+			text-align: left;
+			color: #ffffff;
+		}
+		input.normal {
+			display: block;
+			width: 100%;
+			margin: 0 0 10px 0;
+			color: #000;
+		}
+		input.button {
+			display: block;
+			margin: 20px auto 0 auto;
+			background-color: #7C90B0;
+			border: 1px solid #95A7C4;
+			color: #fff;
+			font-weight: bold;
+			font-size: 14px;
+			padding: 5px;
+		}
+	</style>
+</head>
+
+<body style="overflow:none;margin:0;padding:0;">
+
+<form name="runForm" action="/control" method="get">
+		<h1>eLIFE Monitor Controls</h1>
+<UL>	
+<LI><INPUT TYPE=RADIO GROUP="op" NAME="op" VALUE="START">Start eLife Server</LI>
+<LI><INPUT TYPE=RADIO GROUP="op" NAME="op" VALUE="STOP">Stop eLife Server</LI>
+<LI><INPUT TYPE=RADIO GROUP="op" NAME="op" VALUE="SELECT">Change configuration file pattern. <INPUT NAME="par"></INPUT>.xml</LI>
+<LI><INPUT TYPE=submit ="Run" class="button" /> <INPUT TYPE=submit value="Cancel" class="button" /></LI>
+</UL>
+</form>
+
+<P><A HREF="/control?op=STOP">Stop<A> eLife Server
+<P><A HREF="/control?op=EXIT">Stop<A> eLife Monitor
+<P><A HREF="/control?op=RESTART">Restart<A> eLife Server
+<P><A HREF="/control?op=CLIENT_RESTART">Restart<A> eLife Client
+
+</body>
+</html>
