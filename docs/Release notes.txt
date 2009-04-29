@@ -1,8 +1,20 @@
+''' Comfort '''
+Added parameter name for analog poll timing;
+both ANALOGUE_POLL_VALUE and ANALOGUE_POLL_VALUE can be used.
+
+Possible fix for thread state exception in the analog reader when comfort reconnects from a
+dropped communication link. Resolves issue [ticket:]
+
 ''' Jetty '''
 
-Added HTTP Forwarding to Jetty.
+Added HTTP Forwarding to Jetty. Implements enhancement [ticket:]
+
 Added ForwardRequest servlet to handle the request forwarding.
-In any config file CONTROL block add a forward section as follows.
+In any config file CONTROL block add a forward section as follows, to access the image the 
+URL would https://servername:8443/forward/camera.jpg.
+You should ensure the extension on the forward matches the file type to ensure maximum
+browser compatibility (eg. .gif for a destination .gif etc.)
+
 
 {{{
         <CONTROLS>
@@ -16,7 +28,7 @@ In any config file CONTROL block add a forward section as follows.
 
 ''' Macros '''
 
-Changed stop to be a synonym for abort rather than complete.
+Changed stop to be a synonym for abort rather than complete. Ticket [ticket:]
 
 == 4/Mar/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b92.zip V1.6-b92]  ==
 
@@ -27,7 +39,7 @@ Fixed issue where macros with a KEY being replaced by an EXTRA field would not c
 
 ''' General '''
 
-Added the ability to use strings rather than numbers as a device key in a model configuration file.  Use the folling call in the models startup code
+Added the ability to use strings rather than numbers as a device key in a model configuration file.  Use the following call in the models startup code
 {{{
    setDeviceKeyString (true) 
 }}}
@@ -38,7 +50,7 @@ Added the ability to use strings rather than numbers as a device key in a model 
 
 ''' Started '''
 
-Resolved issues with Macro and Sript list not being sent on client attatch if there had previously been a Script or Macro operation on the server.
+Resolved issues with Macro and Sript list not being sent on client attach if there had previously been a Script or Macro operation on the server.
 
 == 16/Sep/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b90.zip V1.6-b90] ==
 
@@ -64,7 +76,7 @@ Add further redirection instruction on logout to try to work with Firefox better
 
 Ensure session is not incorrectly accessed if the service was not setup properly for some reason. Ticket [ticket:736]
  
-Simplied session counting procedure.Tickedt [ticket:746]
+Simplified session counting procedure.Ticket [ticket:746]
 
 ''' CBUS '''
 
