@@ -46,7 +46,7 @@ public class Security {
     Map <String,Boolean>postOnlyClients;
 	private SessionCounter sessionCounter;
     
-    public enum IPType {FullFunction,PostOnly,PWDOnly};
+    public enum IPType {FullFunction,PostOnly,PWDOnly,Forward};
     
     public Security() {
 	/* login program number 0 */

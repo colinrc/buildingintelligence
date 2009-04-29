@@ -31,7 +31,7 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 	protected ComfortString comfortString = null;
 	protected OutputHelper outputHelper;
 	protected ControlledHelper controlledHelper;
-	protected AnalogReader analogueReader;
+	protected AnalogReader analogReader = null;
 	protected String applicationCode = "38";
 	protected String alert_zones = "";
 
@@ -41,7 +41,7 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 		startup = new Startup();
 		outputHelper = new OutputHelper(this);
 		controlledHelper = new ControlledHelper();
-		analogueReader = new AnalogReader();
+		analogReader = new AnalogReader();
 		setPadding (2); 
 		this.setSTX (STX);
 		this.setETX (ETX);
@@ -73,7 +73,7 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 		configHelper.clearItems();
 		comfortString.clear();
 		cache.clear();
-		analogueReader.clearItems();
+		if (analogReader != null) analogReader.clearItems();
 		this.addControlledItem ("LU",null,MessageDirection.FROM_HARDWARE); // special item
 		this.addControlledItem ("RA",null,MessageDirection.FROM_HARDWARE); // special item
 		this.addControlledItem ("OK",null,MessageDirection.FROM_HARDWARE); // special item
@@ -127,7 +127,7 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 
 					case DeviceType.ANALOGUE :
 						doNotAddToControlledList = true; // handled by a seperate thread
-						analogueReader.addAnalogueInput((Analog)details);
+						analogReader.addAnalogueInput((Analog)details);
 					break;
 
 					case DeviceType.ALERT: 
@@ -260,20 +260,33 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 
 	public void doStartup() throws CommsFail  {
 		startup.doStartup(configHelper, comms);
-		analogueReader.setComms(comms);
-		long analoguePoll = 30000; //default to every 30 seconds
-		String analoguePollValue = (String)this.getParameterValue("ANALOGUE_POLL_VALUE",DeviceModel.MAIN_DEVICE_GROUP);
-		if (analoguePollValue != null && !analoguePollValue.equals( (""))){
+		analogReader.setComms(comms);
+		long analogPoll = 30000; //default to every 30 seconds
+		String oldAnalogPollValue = (String)this.getParameterValue("ANALOGUE_POLL_VALUE",DeviceModel.MAIN_DEVICE_GROUP);
+		if (oldAnalogPollValue != null && !oldAnalogPollValue.equals( (""))){
 			try {
-				analoguePoll = Long.parseLong(analoguePollValue);
+				analogPoll = Long.parseLong(oldAnalogPollValue);
 			} catch (NumberFormatException ex) {
-				analoguePoll = 5000;
+				analogPoll = 5000;
 			}
 		}
-		if (analoguePoll < 5000) analoguePoll = 5000; // 5 seconds minimum to make sure we don't flood comfort.
-		analogueReader.setPollValue(analoguePoll);
-		analogueReader.start();
 
+		String analogPollValue = (String)this.getParameterValue("ANALOG_POLL_VALUE",DeviceModel.MAIN_DEVICE_GROUP);
+		if (analogPollValue != null && !analogPollValue.equals( (""))){
+			try {
+				analogPoll = Long.parseLong(analogPollValue);
+			} catch (NumberFormatException ex) {
+				analogPoll = 5000;
+			}
+		}
+		if (analogPoll < 5000) analogPoll = 5000; // 5 seconds minimum to make sure we don't flood comfort.
+		analogReader.setPollValue(analogPoll);
+		if (!analogReader.isRunning()) 
+		{
+			analogReader.start();
+		} else {
+			analogReader.clearItems();
+		}
 		String applicationCodeParam = ((String)this.getParameterValue("CBUS_APPLICATION",DeviceModel.MAIN_DEVICE_GROUP));
 		if (applicationCodeParam == null || applicationCodeParam.equals (""))
 			applicationCode = "38";
@@ -321,7 +334,7 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 		startup.setSTX(STX);
 		outputHelper.setSTX (STX);
 		controlledHelper.setSTX (STX);
-		analogueReader.setSTX (STX);
+		analogReader.setSTX (STX);
 	}
 
 	public void setETX (String ETX)
@@ -330,13 +343,13 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 		startup.setETX(ETX);
 		outputHelper.setETX (ETX);
 		controlledHelper.setETX (ETX);
-		analogueReader.setETX (ETX);
+		analogReader.setETX (ETX);
 	}
 
 
 	public void close() throws ConnectionFail {
-	    if (analogueReader != null)
-	        analogueReader.setRunning(false);
+	    if (analogReader != null)
+	        analogReader.setRunning(false);
 	    super.close();
 	}
 

@@ -97,7 +97,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         updateAuthenticator.setErrorPage("/login_fail.html");
         Constraint postClientConstraint = new Constraint();
         postClientConstraint.setName(Constraint.__FORM_AUTH);
-        postClientConstraint.setRoles(new String[]{"user","admin","moderator"});
+        postClientConstraint.setRoles(new String[]{"user","admin"});
         postClientConstraint.setAuthenticate(true);
 
        ConstraintMapping postClientCM = new ConstraintMapping();
@@ -158,7 +158,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
              Constraint webClientConstraint = new Constraint();
              webClientConstraint.setName(Constraint.__FORM_AUTH);
              
-             webClientConstraint.setRoles(new String[]{"user","admin","moderator"});
+             webClientConstraint.setRoles(new String[]{"user","admin"});
              webClientConstraint.setAuthenticate(true);
 
             ConstraintMapping webClientCM = new ConstraintMapping();
@@ -174,8 +174,11 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             updateContext.addServlet("au.com.BI.Servlets.UpdateServlet","/webclient/update");
             updateContext.addServlet("au.com.BI.Servlets.Logout","/webclient/logout");
 
-            
-            
+            // forwards handler
+            //Context forwardContext = new Context (contexts,"/forwards",Context.SECURITY|Context.SESSIONS);
+            updateContext.addServlet ("au.com.BI.Servlets.RequestForward","/forward/*");
+            updateContext.setAttribute("forwards", forwards);
+                        
             ServletHolder  defServlet = updateContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
             
             updateContext.setWelcomeFiles(new String[]{"index.html"});
@@ -206,11 +209,6 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             SecurityHandler updateMgrSec = updateContext.getSecurityHandler();
             updateMgrSec.setUserRealm(webPass);
             
-            // forwards handler
-            //Context forwardContext = new Context (contexts,"/forwards",Context.SECURITY|Context.SESSIONS);
-            updateContext.addServlet ("au.com.BI.Servlets.RequestForward","/forward/*");
-            updateContext.setAttribute("forwards", forwards);
-            
             ELifeAuthenticator updateAuthenticator = new ELifeAuthenticator ();
             updateAuthenticator.setSecurity(security);
             updateAuthenticator.setIpType(IPType.FullFunction);
@@ -226,7 +224,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
             
             Constraint constraint = new Constraint();
             constraint.setName(Constraint.__FORM_AUTH);;
-            constraint.setRoles(new String[]{"user","admin","moderator"});
+            constraint.setRoles(new String[]{"user","admin"});
             constraint.setAuthenticate(true);
 
             ConstraintMapping cm = new ConstraintMapping();
