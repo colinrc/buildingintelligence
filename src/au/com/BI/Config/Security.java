@@ -46,7 +46,7 @@ public class Security {
     Map <String,Boolean>postOnlyClients;
 	private SessionCounter sessionCounter;
     
-    public enum IPType {FullFunction,PostOnly,PWDOnly,Forward};
+    public enum IPType {FullFunction,PostOnly,PWDOnly};
     
     public Security() {
 	/* login program number 0 */
@@ -58,10 +58,10 @@ public class Security {
     fullClients = new HashMap<String,Boolean> ();
     postOnlyClients = new HashMap<String,Boolean> ();
        
-    //*
+    /*
 	connected = true;
 	return ;
-  /*
+  */
     
     
 	InputStreamReader reader = new InputStreamReader(System.in);

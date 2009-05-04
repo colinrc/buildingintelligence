@@ -53,13 +53,7 @@ public class ELifeAuthenticator extends FormAuthenticator  implements Authentica
 			}
 		} 
 		
-		if (ipType ==IPType.Forward){
-			if (security.isConnected()) {
-				return SecurityHandler.__NOBODY;
-			} else {
-				return null;
-			}
-		}
+
 		return super.authenticate(  realm,  pathInContext, request,  response);
 		
 	}

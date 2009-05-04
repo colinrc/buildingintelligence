@@ -1,13 +1,15 @@
+== 4/May/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b94.zip V1.6-b94]  [attachment:wiki:SoftwareReleases:eLife-1.6b94-libs.zip Libs-V1.6b94] ==
+
 ''' Comfort '''
 Added parameter name for analog poll timing;
-both ANALOGUE_POLL_VALUE and ANALOGUE_POLL_VALUE can be used.
+both ANALOG_POLL_VALUE and ANALOGUE_POLL_VALUE can be used.
 
 Possible fix for thread state exception in the analog reader when comfort reconnects from a
-dropped communication link. Resolves issue [ticket:]
+dropped communication link. Resolves issue [ticket:750]
 
 ''' Jetty '''
 
-Added HTTP Forwarding to Jetty. Implements enhancement [ticket:]
+Added HTTP Forwarding to Jetty. Implements enhancement [ticket:751]
 
 Added ForwardRequest servlet to handle the request forwarding.
 In any config file CONTROL block add a forward section as follows, to access the image the 
@@ -24,11 +26,13 @@ browser compatibility (eg. .gif for a destination .gif etc.)
         </CONTROLS>
 }}}
 
-== 12/Mar/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b3.zip V1.6-b93]  [attachment:wiki:SoftwareReleases:eLife-1.6b93-libs.zip Libs-V1.6b93] ==
+See  https://turnip.buildingintelligence.com.au/trac.cgi/wiki/ServerDocs/RequestForward for details.
+
+== 12/Mar/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b93.zip V1.6-b93]  [attachment:wiki:SoftwareReleases:eLife-1.6b93-libs.zip Libs-V1.6b93] ==
 
 ''' Macros '''
 
-Changed stop to be a synonym for abort rather than complete. Ticket [ticket:]
+Changed stop to be a synonym for abort rather than complete. Ticket [ticket:749]
 
 == 4/Mar/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b92.zip V1.6-b92]  ==
 
