@@ -12,8 +12,10 @@ dropped communication link. Resolves issue [ticket:750]
 Added HTTP Forwarding to Jetty. Implements enhancement [ticket:751]
 
 Added ForwardRequest servlet to handle the request forwarding.
+
 In any config file CONTROL block add a forward section as follows, to access the image the 
-URL would https://servername:8443/forward/camera.jpg.
+URL would be !https://servername:8443/forward/camera.jpg .
+
 You should ensure the extension on the forward matches the file type to ensure maximum
 browser compatibility (eg. .gif for a destination .gif etc.)
 
