@@ -22,11 +22,11 @@ class JANDY extends GroovyModel {
 	
 	JANDY () {
 		super()
-
+		 setDeviceKeysString (true) 
 	}
 	
 	public void doStartup(ReturnWrapper returnWrapper) {
-		
+		  
 		returnWrapper.addCommOutput ("#ECHO=0")
 		returnWrapper.addCommOutput ("#RSPFMT=0")
 		returnWrapper.addCommOutput ("#COSMSGS=1")
