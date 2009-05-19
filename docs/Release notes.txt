@@ -49,7 +49,7 @@ Fixed issue where macros with a KEY being replaced by an EXTRA field would not c
 
 Added the ability to use strings rather than numbers as a device key in a model configuration file.  Use the following call in the models startup code
 {{{
-   setDeviceKeyString (true) 
+   setDeviceKeysString (true) 
 }}}
 
 
