@@ -1,7 +1,7 @@
 <CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
         <DESC>Demonstration configuration for a Jandi pool controller</DESC>
          <!-- ______________________________________  Jandi DEFS  ____________________  -->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="JANDY" DESCRIPTION="Jandi Pool controller">
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="JANDY" DESCRIPTION="Jandy Pool controller">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
                         <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
