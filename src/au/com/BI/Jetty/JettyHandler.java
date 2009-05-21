@@ -62,7 +62,7 @@ public class JettyHandler {
 
             // Normal webclient  context
              Constraint webClientConstraint = new Constraint();
-             webClientConstraint.setName(Constraint.__FORM_AUTH);
+             webClientConstraint.setName(Constraint.__BASIC_AUTH);
              
              webClientConstraint.setRoles(new String[]{"admin"});
              webClientConstraint.setAuthenticate(true);
@@ -94,16 +94,9 @@ public class JettyHandler {
                  
            SessionManager updateContextSessionMgr =  updateContext.getSessionHandler().getSessionManager();
            updateContextSessionMgr.setMaxInactiveInterval(timeout);
-
-
             
             SecurityHandler updateMgrSec = updateContext.getSecurityHandler();
             updateMgrSec.setUserRealm(webPass);
-            
-            FormAuthenticator updateAuthenticator = new FormAuthenticator ();
-            updateAuthenticator.setLoginPage("/login.html");
-            updateAuthenticator.setErrorPage("/login_fail.html");
-            updateMgrSec.setAuthenticator(updateAuthenticator);        
             
             updateMgrSec.setConstraintMappings(new ConstraintMapping[]{webClientCM});
                              
