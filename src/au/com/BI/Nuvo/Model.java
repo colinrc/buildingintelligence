@@ -879,7 +879,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		    if (protocol == Protocols.GrandConcerto) {
 
 				returnVal.addCommOutput(String.format("*Z"+key+"PLAYPAUSE"));
-				logger.log (Level.FINEST,"Simulating play/pause in zone " + key);
+				logger.log (Level.FINEST,"Play/pause in zone " + key);
 				returnVal.setOutputCommandType ( Model.Control);
 		    }
 		}
@@ -888,7 +888,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		    if (protocol == Protocols.GrandConcerto) {
 
 				returnVal.addCommOutput(String.format("*Z"+key+"PREV"));
-				logger.log (Level.FINEST,"Simulating previous in zone " + key);
+				logger.log (Level.FINEST,"Previous in zone " + key);
 				returnVal.setOutputCommandType ( Model.Control);
 		    }
 		}
@@ -897,7 +897,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		    if (protocol == Protocols.GrandConcerto) {
 
 				returnVal.addCommOutput(String.format("*Z"+key+"NEXT"));
-				logger.log (Level.FINEST,"Simulating next in zone " + key);
+				logger.log (Level.FINEST,"Next in zone " + key);
 				returnVal.setOutputCommandType ( Model.Control);
 		    }
 		}

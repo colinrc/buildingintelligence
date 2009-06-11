@@ -366,7 +366,7 @@ public class Controller {
 		}
 
 
-		while (running) {
+		while (running) { // Main system loop
 			CommandInterface item;
 			commandDone = false;
 			if (!commandQueue.isEmpty()) {
@@ -490,7 +490,7 @@ public class Controller {
 				if (!clientKeySet && !jrobinSet && !commandDone
 						&& !item.isCommsCommand()) {
 					// comms commands always go to their specific target device
-					// flash commands only get sent to client handlers
+					// only flash commands only get sent to all device models
 					commandDone = true;
 					for (DeviceModel deviceModel:deviceModels){
 						successfulCommand = doDeviceCommand(deviceModel, item);

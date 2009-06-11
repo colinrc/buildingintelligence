@@ -281,12 +281,11 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 		}
 		if (analogPoll < 5000) analogPoll = 5000; // 5 seconds minimum to make sure we don't flood comfort.
 		analogReader.setPollValue(analogPoll);
-		if (!analogReader.isRunning()) 
+		if (analogReader.hasItems() && !analogReader.isRunning()) 
 		{
 			analogReader.start();
-		} else {
-			analogReader.clearItems();
-		}
+		} 
+		
 		String applicationCodeParam = ((String)this.getParameterValue("CBUS_APPLICATION",DeviceModel.MAIN_DEVICE_GROUP));
 		if (applicationCodeParam == null || applicationCodeParam.equals (""))
 			applicationCode = "38";

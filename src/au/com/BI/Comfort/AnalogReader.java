@@ -19,7 +19,7 @@ public class AnalogReader  extends Thread {
 	 */
 	protected Logger logger;
 	protected List <Analog>analogueQueue;
-	protected volatile boolean running;
+	protected volatile boolean running = false;
 	protected String STX;
 	protected String ETX;
 	protected CommDevice comms;
@@ -60,13 +60,14 @@ public class AnalogReader  extends Thread {
 
 	
 	public void run () {
+		
 		if (analogueQueue.isEmpty()) {
-			logger.log (Level.FINEST,"No analague items found");
+			logger.log (Level.FINEST,"No analog items found");
 			return;
 		}
 
 		running  = true;
-		
+
 		while (running){
 
 			for (Analog analogue:analogueQueue){
@@ -132,5 +133,11 @@ public class AnalogReader  extends Thread {
 	 */
 	public void setETX(String etx) {
 		ETX = etx;
+	}
+	/**
+	 * @return True if their are analog devices to poll
+	 */
+	public boolean hasItems() {
+		return !this.analogueQueue.isEmpty();
 	}
 }

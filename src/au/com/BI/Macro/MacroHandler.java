@@ -126,7 +126,7 @@ public class MacroHandler {
 			}
 			newMacro.setRunningMacros (runningMacros);
 			newMacro.start();
-			logger.log (Level.INFO,"Running macro " + macroName);
+			logger.log (Level.FINE,"Running macro " + macroName);
 			return true;
 		}
 	}
