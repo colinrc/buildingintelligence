@@ -292,7 +292,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (pollDevice != null)
 			pollDevice.setRunning(false);
 
-		pollDevice.start();
+		try {
+			pollDevice.start();
+		} catch (IllegalStateException ex){
+			logger.log(Level.WARNING,"Unable to start device poll, HAL may not function correctly");
+		}
 	}
 
 	public boolean doIControl(String keyName, boolean isClientCommand) {

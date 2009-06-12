@@ -27,9 +27,10 @@ class JANDY extends GroovyModel {
 	
 	public void doStartup(ReturnWrapper returnWrapper) {
 		  
-		returnWrapper.addCommOutput ("#ECHO=0")
-		returnWrapper.addCommOutput ("#RSPFMT=0")
-		returnWrapper.addCommOutput ("#COSMSGS=1")
+		returnWrapper.addCommOutput ("#ECHO = OFF")
+		returnWrapper.addCommOutput ("#RSPFMT = 0")
+		returnWrapper.addCommOutput ("#COSMSGS = 1")
+		returnWrapper.addCommOutput ("#CLEANR")
 		
 		def theDeviceList = configHelper.getAllControlledDeviceObjects ()
 		for (i in theDeviceList){
@@ -264,9 +265,9 @@ class JANDY extends GroovyModel {
 						
 				}			
 			} catch (IndexOutOfBoundsException ex) {
-				logger.log (Level.WARNING,"The string from Advantage Air was incorrectly formatted " + command + " " +ex.getMessage() )
+				logger.log (Level.WARNING,"The string from the Jandy pool controller was incorrectly formatted " + command + " " +ex.getMessage() )
 			} catch (NumberFormatException ex) {
-				logger.log (Level.WARNING,"The string from Advantage Air was incorrectly formatted " + command + " " +ex.getMessage() )
+				logger.log (Level.WARNING,"The string from Jandy pool controller was incorrectly formatted " + command + " " +ex.getMessage() )
 			}
 	}
 

@@ -320,6 +320,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 		if (sliderPulse != null) {
 			sliderPulse.setRunning (false);
+			sliderPulse = new SliderPulse();
 		}
 
 

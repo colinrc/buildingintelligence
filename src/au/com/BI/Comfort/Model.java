@@ -283,7 +283,11 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 		analogReader.setPollValue(analogPoll);
 		if (analogReader.hasItems() && !analogReader.isRunning()) 
 		{
-			analogReader.start();
+			try {
+				analogReader.start();
+			} catch (IllegalStateException ex){
+				logger.log (Level.WARNING,"Unable to start Comfort analog polling");
+			}
 		} 
 		
 		String applicationCodeParam = ((String)this.getParameterValue("CBUS_APPLICATION",DeviceModel.MAIN_DEVICE_GROUP));
