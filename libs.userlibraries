@@ -45,8 +45,8 @@
 <archive path="/Java/jetty-6.1.0/lib/ext/jetty-sslengine-6.1.0.jar"/>
 </library>
 <library name="Jetty6.1.17" systemlibrary="false">
-<archive javadoc="file:/Java/jetty-6.1.17/javadoc/" path="/Java/jetty-6.1.17/lib/jetty-6.1.17.jar"/>
-<archive javadoc="file:/Java/jetty-6.1.17/javadoc/" path="/Java/jetty-6.1.17/lib/jetty-util-6.1.17.jar"/>
+<archive javadoc="file:/Java/jetty-6.1.17/javadoc/" path="/Java/jetty-6.1.17/lib/jetty-6.1.17.jar" source="/Java/jetty-6.1.17/modules/jetty/src/main/java"/>
+<archive javadoc="file:/Java/jetty-6.1.17/javadoc/" path="/Java/jetty-6.1.17/lib/jetty-util-6.1.17.jar" source="/Java/jetty-6.1.17/modules/util/src/main/java"/>
 <archive path="/Java/jetty-6.1.17/lib/servlet-api-2.5-20081211.jar"/>
 <archive javadoc="file:/Java/jetty-6.1.17/javadoc/" path="/Java/jetty-6.1.17/lib/ext/jetty-ajp-6.1.17.jar"/>
 <archive javadoc="file:/Java/jetty-6.1.17/javadoc/" path="/Java/jetty-6.1.17/lib/ext/jetty-client-6.1.17.jar"/>
@@ -56,7 +56,20 @@
 <archive javadoc="file:/Java/jetty-6.1.17/javadoc/" path="/Java/jetty-6.1.17/lib/ext/jetty-servlet-tester-6.1.17.jar"/>
 <archive javadoc="file:/Java/jetty-6.1.17/javadoc/" path="/Java/jetty-6.1.17/lib/ext/jetty-setuid-6.1.17.jar"/>
 <archive javadoc="file:/Java/jetty-6.1.17/javadoc/" path="/Java/jetty-6.1.17/lib/ext/jetty-sslengine-6.1.17.jar"/>
-<archive path="/Java/jetty-6.1.17/lib/jsp-2.1/jsp-2.1-jetty-6.1.17.jar"/>
+</library>
+<library name="Jetty6.1.18" systemlibrary="false">
+<archive path="/Java/jetty-6.1.18/lib/jetty-6.1.18.jar"/>
+<archive path="/Java/jetty-6.1.18/lib/jetty-util-6.1.18.jar"/>
+<archive path="/Java/jetty-6.1.18/lib/servlet-api-2.5-20081211.jar"/>
+<archive path="/Java/jetty-6.1.18/lib/ext/jetty-ajp-6.1.18.jar"/>
+<archive path="/Java/jetty-6.1.18/lib/ext/jetty-client-6.1.18.jar"/>
+<archive path="/Java/jetty-6.1.18/lib/ext/jetty-html-6.1.18.jar"/>
+<archive path="/Java/jetty-6.1.18/lib/ext/jetty-java5-threadpool-6.1.18.jar"/>
+<archive path="/Java/jetty-6.1.18/lib/ext/jetty-rewrite-handler-6.1.18.jar"/>
+<archive path="/Java/jetty-6.1.18/lib/ext/jetty-servlet-tester-6.1.18.jar"/>
+<archive path="/Java/jetty-6.1.18/lib/ext/jetty-setuid-6.1.18.jar"/>
+<archive path="/Java/jetty-6.1.18/lib/ext/jetty-sslengine-6.1.18.jar"/>
+<archive path="/Java/jetty-6.1.18/lib/plus/jetty-plus-6.1.18.jar"/>
 </library>
 <library name="Jetty6.1.4" systemlibrary="false">
 <archive path="/Java/jetty-6.1.4/lib/jetty-6.1.4.jar"/>
@@ -123,6 +136,9 @@
 <library name="slf4j-1.5.6" systemlibrary="false">
 <archive path="/Java/slf4j-1.5.6/slf4j-jdk14-1.5.6.jar" source="/Java/slf4j-1.5.6/slf4j-jdk14-1.5.6-sources.jar"/>
 <archive path="/Java/slf4j-1.5.6/slf4j-api-1.5.6.jar" source="/Java/slf4j-1.5.6/slf4j-api-1.5.6-sources.jar"/>
+</library>
+<library name="Webdav-server-2.0" systemlibrary="false">
+<archive javadoc="jar:file:/Java/webdav-servlet-2.0/webdav-servlet-2.0-javadoc.jar!/" path="/Java/webdav-servlet-2.0/webdav-servlet-2.0.jar" source="/Java/webdav-servlet-2.0/webdav-servlet-2.0-sources.jar"/>
 </library>
 <library name="webdav-servlet-2.0-rc2" systemlibrary="false">
 <archive javadoc="jar:file:/Java/webdav-servlet-2.0-rc-2/webdav-servlet-2.0-rc-2-javadoc.jar!/" path="/Java/webdav-servlet-2.0-rc-2/webdav-servlet-2.0-rc-2.jar" source="/Java/webdav-servlet-2.0-rc-2/webdav-servlet-2.0-rc-2-sources.jar"/>

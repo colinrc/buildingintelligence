@@ -132,7 +132,7 @@
 		includes = "lib/*.jnilib" />
    <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
 		update="true"
-		basedir="src/au/com/BI/Home"
-		includes = "*.properties"  />
+		basedir="src/au/com/BI"
+		includes = "**/*.properties"  />
     </target>
 </project>

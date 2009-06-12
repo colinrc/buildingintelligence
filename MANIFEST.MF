@@ -13,12 +13,11 @@ Class-Path: ../ext/build ../ext/http-builder-0.3.0.jar ../ext/commons-
  .jar ../ext/quartz-1.6.0.jar ../ext/commons-collections-3.1.jar ../ex
  t/commons-logging-api.jar ../ext/commons-logging.jar ../ext/jta.jar .
  ./ext/RXTXcomm.jar ../ext/xmlunit1.0.jar ../ext/groovy-all-1.6.0.jar 
- ../ext/jetty-6.1.17.jar ../ext/jetty-util-6.1.17.jar ../ext/servlet-a
- pi-2.5-20081211.jar ../ext/jetty-ajp-6.1.17.jar ../ext/jetty-client-6
- .1.17.jar ../ext/jetty-html-6.1.17.jar ../ext/jetty-java5-threadpool-
- 6.1.17.jar ../ext/jetty-rewrite-handler-6.1.17.jar ../ext/jetty-servl
- et-tester-6.1.17.jar ../ext/jetty-setuid-6.1.17.jar ../ext/jetty-ssle
- ngine-6.1.17.jar ../ext/jsp-2.1-jetty-6.1.17.jar ../ext/webdav-servle
- t-2.0-rc-2.jar ../ext/slf4j-jdk14-1.5.6.jar ../ext/slf4j-api-1.5.6.ja
- r
+ ../ext/slf4j-jdk14-1.5.6.jar ../ext/slf4j-api-1.5.6.jar ../ext/jetty-
+ 6.1.18.jar ../ext/jetty-util-6.1.18.jar ../ext/servlet-api-2.5-200812
+ 11.jar ../ext/jetty-ajp-6.1.18.jar ../ext/jetty-client-6.1.18.jar ../
+ ext/jetty-html-6.1.18.jar ../ext/jetty-java5-threadpool-6.1.18.jar ..
+ /ext/jetty-rewrite-handler-6.1.18.jar ../ext/jetty-servlet-tester-6.1
+ .18.jar ../ext/jetty-setuid-6.1.18.jar ../ext/jetty-sslengine-6.1.18.
+ jar ../ext/jetty-plus-6.1.18.jar ../ext/webdav-servlet-2.0.jar
 

@@ -1,3 +1,5 @@
+== 12/Jun/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b95.zip V1.6-b95]  [attachment:wiki:SoftwareReleases:eLife-1.6b95-libs.zip Libs-V1.6b95] ==
+
 ''' Comfort '''
 
 Further work to resolve issue [ticket:750]
