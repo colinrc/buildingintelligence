@@ -126,9 +126,13 @@
 		update="true"
 		basedir="dist"
 		includes = "lib/*.dll" />
-        <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+     <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
 		update="true"
 		basedir="dist"
 		includes = "lib/*.jnilib" />
+   <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+		update="true"
+		basedir="src/au/com/BI/Home"
+		includes = "*.properties"  />
     </target>
 </project>
