@@ -1,0 +1,23 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+        <DESC>Configuration for an audio system called NUVO_TUNER</DESC>
+         <!-- ______________________________________  BI_PUMP DEFS  ____________________  -->
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="WEBCAM" DESCRIPTION="IP Connected Web Camera">
+                <CONNECTION>
+                <!-- This device is unusual in that there is no centralised controller, instead each webcam has it's own IP address -->
+                </CONNECTION>
+                
+                <PARAMETERS>
+                </PARAMETERS>
+                
+                <WEBCAM>
+                    <CAMERA ACTIVE="Y" KEY="http://127.0.0.1:8080/" DISPLAY_NAME="FRONT_DOOR_CAM" NAME="Front Door Camera" />
+                </WEBCAM>
+        </DEVICE>
+        
+        <CONTROLS>
+        	<FORWARDS>
+        		<FORWARD ACTIVE="Y" SRC="camera.gif" DEST="http://localhost/apache_pb.gif" />
+        		<FORWARD ACTIVE="Y" SRC="dir/" DEST="http://127.0.0.1:8081/UserManager/" />
+        	</FORWARDS>
+        </CONTROLS>
+</CONFIG>

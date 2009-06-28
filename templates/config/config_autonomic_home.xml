@@ -1,0 +1,12 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+	<DESC>Autonomic Home configuration</DESC>
+	<DEVICE ACTIVE="N" NAME="AUTONOMIC_HOME" DISPLAY_NAME="MCE" PASSWORD="1234">
+		<CONNECTION>
+			<IP ACTIVE="Y" IP_ADDRESS="192.168.0.15" PORT="5015"/>
+		</CONNECTION>
+		<AUTONOMIC_HOME>
+			<MEDIA_EXTENDER ACTIVE="Y" KEY="MCE" NAME="Media Server" DISPLAY_NAME="MCE" />
+			<MEDIA_EXTENDER ACTIVE="Y" KEY="XBOX360" NAME="XBOX360" DISPLAY_NAME="XBOX360" />
+		</AUTONOMIC_HOME>
+	</DEVICE>
+</CONFIG>

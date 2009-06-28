@@ -17,6 +17,7 @@ import au.com.BI.Lights.LightFactory;
 import au.com.BI.MultiMedia.AutonomicHome.Device.WindowsMediaExtenderFactory;
 import au.com.BI.PulseOutput.PulseOutputFactory;
 import au.com.BI.Pump.PumpFactory;
+import au.com.BI.Heater.HeaterFactory;
 import au.com.BI.Raw.RawFactory;
 import au.com.BI.SMS.SMSFactory;
 import au.com.BI.Sensors.SensorFactory;
@@ -49,6 +50,7 @@ public class DeviceFactories {
 	public RawFactory rawFactory;		
 	public AnalogFactory analogFactory;		
 	public PumpFactory pumpFactory;		
+	public HeaterFactory heaterFactory;		
 	public UnitFactory unitFactory;		
 	public IRFactory iRFactory;
 	public ThermostatFactory thermostatFactory;
@@ -70,6 +72,7 @@ public class DeviceFactories {
 		this.setRawFactory (RawFactory.getInstance());		
 		this.setAnalogFactory ( AnalogFactory.getInstance());		
 		this.setPumpFactory ( PumpFactory.getInstance());	
+		this.setHeaterFactory ( HeaterFactory.getInstance());	
 		this.setIRFactory (IRFactory.getInstance());		
 		this.setSmsFactory(SMSFactory.getInstance());
 		this.setLabelFactory (LabelFactory.getInstance());
@@ -305,6 +308,10 @@ public class DeviceFactories {
 
 	public void setPumpFactory(PumpFactory pumpFactory) {
 		this.pumpFactory = pumpFactory;
+	}
+	
+	public void setHeaterFactory(HeaterFactory heaterFactory) {
+		this.heaterFactory = heaterFactory;
 	}
 
 	public UnitFactory getUnitFactory() {

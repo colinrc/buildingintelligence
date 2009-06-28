@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"><xs:element name="CONFIG">
+                <xs:annotation>
+                        <xs:documentation>The top level container for the configuration file</xs:documentation>
+                </xs:annotation>
+                <xs:complexType mixed="true">
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                <xs:element ref="DESC" minOccurs="0"/>
+                                <xs:element ref="JROBIN" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="DEVICE" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="CONTROLS" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:choice>
+                        <xs:attribute name="lastUpdated" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:date"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element><xs:element name="DESC" type="xs:string"/><xs:element name="JROBIN">
+                <xs:annotation>
+                        <xs:documentation>Defines the JRobin configuration</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element name="DATA" maxOccurs="unbounded" minOccurs="0">
+                                        <xs:complexType>
+                                                <xs:attribute name="DISPLAY_NAME" use="optional">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string"/>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                                <xs:attribute name="VARIABLE" use="required">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string"/>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                                <xs:attribute name="SOURCE" use="optional">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string">
+                                                                        <xs:enumeration value="USAGE"/>
+                                                                        <xs:enumeration value="EXTRA_VALUE1"/>
+                                                                        <xs:enumeration value="EXTRA_VALUE2"/>
+                                                                        <xs:enumeration value="EXTRA_VALUE3"/>
+                                                                        <xs:enumeration value="EXTRA_VALUE4"/>
+                                                                        <xs:enumeration value="EXTRA_VALUE5"/>
+                                                                </xs:restriction>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                                <xs:attribute name="SEARCH_VALUE" use="optional">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string"/>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                                <xs:attribute name="DATASOURCE" use="required">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string"/>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                                <xs:attribute name="FUNCTION" use="required">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string">
+                                                                        <xs:enumeration value="TOTAL"/>
+                                                                        <xs:enumeration value="AVG"/>
+                                                                        <xs:enumeration value="MIN"/>
+                                                                        <xs:enumeration value="MAX"/>
+                                                                </xs:restriction>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                        </xs:complexType>
+                                </xs:element>
+                                <xs:element name="DATA_ALL" maxOccurs="unbounded" minOccurs="0">
+                                        <xs:complexType>
+                                                <xs:sequence>
+                                                        <xs:element name="DATASOURCE" maxOccurs="unbounded">
+                                                                <xs:complexType>
+                                                                        <xs:attribute name="VARIABLE" use="required">
+                                                                                <xs:simpleType>
+                                                                                        <xs:restriction base="xs:string"/>
+                                                                                </xs:simpleType>
+                                                                        </xs:attribute>
+                                                                        <xs:attribute name="SOURCE" use="optional">
+                                                                                <xs:simpleType>
+                                                                                        <xs:restriction base="xs:string">
+                                                                                                <xs:enumeration value="USAGE"/>
+                                                                                                <xs:enumeration value="EXTRA_VALUE1"/>
+                                                                                                <xs:enumeration value="EXTRA_VALUE2"/>
+                                                                                                <xs:enumeration value="EXTRA_VALUE3"/>
+                                                                                                <xs:enumeration value="EXTRA_VALUE4"/>
+                                                                                                <xs:enumeration value="EXTRA_VALUE5"/>
+                                                                                        </xs:restriction>
+                                                                                </xs:simpleType>
+                                                                        </xs:attribute>
+                                                                        <xs:attribute name="SEARCH_VALUE" use="optional">
+                                                                                <xs:simpleType>
+                                                                                        <xs:restriction base="xs:string"/>
+                                                                                </xs:simpleType>
+                                                                        </xs:attribute>
+                                                                        <xs:attribute name="FUNCTION" use="required">
+                                                                                <xs:simpleType>
+                                                                                        <xs:restriction base="xs:string">
+                                                                                                <xs:enumeration value="TOTAL"/>
+                                                                                                <xs:enumeration value="AVG"/>
+                                                                                                <xs:enumeration value="MIN"/>
+                                                                                                <xs:enumeration value="MAX"/>
+                                                                                        </xs:restriction>
+                                                                                </xs:simpleType>
+                                                                        </xs:attribute>
+                                                                </xs:complexType>
+                                                        </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="DISPLAY_NAME" use="optional">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string"/>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                        </xs:complexType>
+                                </xs:element>
+                                <xs:element name="DATA_POWER_CONSUMPTION" maxOccurs="unbounded" minOccurs="0">
+                                        <xs:complexType>
+                                                <xs:attribute name="DATASOURCE" use="required">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string"/>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                                <xs:attribute name="DISPLAY_NAME" use="required">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string"/>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                                <xs:attribute name="VARIABLE" use="required">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string"/>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                                <xs:attribute name="SOURCE" use="required">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string">
+                                                                        <xs:enumeration value="EXTRA_VALUE1"/>
+                                                                        <xs:enumeration value="EXTRA_VALUE2"/>
+                                                                        <xs:enumeration value="EXTRA_VALUE3"/>
+                                                                        <xs:enumeration value="EXTRA_VALUE4"/>
+                                                                        <xs:enumeration value="EXTRA_VALUE5"/>
+                                                                </xs:restriction>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                                <xs:attribute name="RATIO" use="optional">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string"/>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                        </xs:complexType>
+                                </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="INTERVAL" type="xs:long" use="required"/>
+                        <xs:attribute name="RRD" type="xs:string" use="required"/>
+                </xs:complexType>
+        </xs:element><xs:element name="DEVICE">
+                <xs:annotation>
+                        <xs:documentation>A device controller block. Eg. Comfort, CUBS</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="CONNECTION" />
+                                <xs:element ref="CATALOGUE" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="PARAMETERS" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="IR_LEARNER" minOccurs="0"/>
+                                <xs:element ref="TUTONDO" minOccurs="0" maxOccurs="unbounded" />
+                                <xs:element ref="HAL" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="CBUS" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="RAW_CONNECTION" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="COMFORT" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="OREGON" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="PELCO" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="DYNALITE" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="KRAMER" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="GC100_IR" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="GC100_Relay" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="CBUS"/>
+                                                <xs:enumeration value="COMFORT"/>
+                                                <xs:enumeration value="GC100"/>
+                                                <xs:enumeration value="HAL"/>
+                                                <xs:enumeration value="OREGON"/>
+                                                <xs:enumeration value="IR_LEARNER"/>
+                                                <xs:enumeration value="RAW_CONNECTION"/>
+                                                <xs:enumeration value="TUTONDO"/>
+                                                <xs:enumeration value="KRAMER"/>
+                                                <xs:enumeration value="PELCO"/>
+                                                <xs:enumeration value="DYNALITE"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="PASSWORD">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element><xs:element name="PARAMETERS">
+                <xs:annotation>
+                        <xs:documentation>Defines parameters to be passed to a model</xs:documentation>
+                </xs:annotation>
+                <xs:complexType mixed="true">
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                <xs:element name="ITEM" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                                <xs:attribute name="NAME" use="required">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string"/>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                                <xs:attribute name="VALUE" type="xs:string" use="required"/>
+                                        </xs:complexType>
+                                </xs:element>
+                        </xs:choice>
+                </xs:complexType>
+        </xs:element><xs:element name="CONNECTION">
+                <xs:annotation>
+                        <xs:documentation>Defines the physical connection, serial or IP, used for a device</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="SERIAL" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="IP" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element><xs:element name="IP">
+                <xs:annotation>
+                        <xs:documentation>Defines an IP connection</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="IP_ADDRESS" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="PORT" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:short"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element><xs:element name="SERIAL">
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="PORT" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="SUPPORTS_CD" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="BAUD" type="xs:unsignedInt" use="required"/>
+                        <xs:attribute name="STOP_BITS" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="1"/>
+                                                <xs:enumeration value="0"/>
+                                                <xs:enumeration value="2"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="PARITY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DATA_BITS" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte">
+                                                <xs:enumeration value="8"/>
+                                                <xs:enumeration value="7"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="FLOW" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="NONE"/>
+                                                <xs:enumeration value="RTSCTS"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element><xs:element name="COMFORT">
+                <xs:annotation>
+                        <xs:documentation>Defines a connection to a Comfort home automation system</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                                <xs:element ref="CUSTOM_INPUT"/>
+                                <xs:element ref="RAW_INTERFACE"/>
+                                <xs:element ref="COUNTER"/>
+                                <xs:element ref="TOGGLE_OUTPUT_MONITOR"/>
+                                <xs:element ref="LIGHT_CBUS"/>
+                                <xs:element ref="LIGHT_X10"/>
+                                <xs:element ref="PULSE_OUTPUT"/>
+                                <xs:element ref="TOGGLE_OUTPUT"/>
+                                <xs:element ref="ALARM"/>
+                                <xs:element ref="ALERT"/>
+                                <xs:element ref="ANALOGUE"/>
+                                <xs:element ref="TOGGLE_INPUT"/>
+                        </xs:choice>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="DYNALITE">
+                <xs:annotation>
+                        <xs:documentation>Defines a connection to a Dynalite controller</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                                <xs:element ref="LIGHT_DYNALITE" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="CONTACT_CLOSURE" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="IR" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:choice>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="CBUS">
+                <xs:annotation>
+                        <xs:documentation>Defines a connection to a CBUS controller</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                                <xs:element ref="LIGHT_CBUS" minOccurs="0" maxOccurs="unbounded"/>
+                                <xs:element ref="SENSOR" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:choice>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="TUTONDO">
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="AUDIO" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="KRAMER">
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="AV" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="PELCO">
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="CAMERA" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="HAL">
+                <xs:annotation>
+                        <xs:documentation>Defines a HAL audio system</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="AUDIO" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="OREGON">
+                <xs:annotation>
+                        <xs:documentation>Defines an Oregon weather system</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="SENSOR" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="RAW_CONNECTION">
+                <xs:annotation>
+                        <xs:documentation>Defines a device that is completely managed through string matches to RAW and CUSTOM_INPUT tage</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                                <xs:element ref="CUSTOM_INPUT"/>
+                                <xs:element ref="RAW_INTERFACE"/>
+                                <xs:element ref="RAW_ITEMS"/>
+                        </xs:choice>
+                </xs:complexType>
+        </xs:element><xs:element name="GC100_IR">
+                <xs:annotation>
+                        <xs:documentation>Defines a GC100 IR module</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="PARAMETERS"/>
+                                <xs:element ref="TOGGLE_INPUT" minOccurs="0" maxOccurs="unbounded"   />
+                                <xs:element ref="IR" minOccurs="0" maxOccurs="unbounded" />
+                        </xs:sequence>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element><xs:element name="GC100_Relay">
+                <xs:annotation>
+                        <xs:documentation>Defines a GC100 relay module</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="PARAMETERS"/>
+                                <xs:element ref="TOGGLE_OUTPUT" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element><xs:element name="CONTROLS">
+                <xs:annotation>
+                        <xs:documentation>Describes items used by the server that are not specific to a particular device</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element name="VARIABLES">
+                                        <xs:complexType>
+                                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                                        <xs:element name="VARIABLE">
+                                                                <xs:complexType>
+                                                                        <xs:attribute name="ACTIVE" use="optional">
+                                                                                <xs:simpleType>
+                                                                                        <xs:restriction base="xs:string">
+                                                                                                <xs:enumeration value="Y"/>
+                                                                                                <xs:enumeration value="N"/>
+                                                                                        </xs:restriction>
+                                                                                </xs:simpleType>
+                                                                        </xs:attribute>
+                                                                        <xs:attribute name="NAME" type="xs:string" use="required"/>
+                                                                        <xs:attribute name="DISPLAY_NAME" type="xs:string" use="required"/>
+									<xs:attribute name="INIT_COMMAND" type="xs:string" use="optional"/>
+									<xs:attribute name="INIT_EXTRA" type="xs:string" use="optional"/>
+									<xs:attribute name="INIT_EXTRA2" type="xs:string" use="optional"/>
+									<xs:attribute name="INIT_EXTRA3" type="xs:string" use="optional"/>
+									<xs:attribute name="INIT_EXTRA4" type="xs:string" use="optional"/>
+									<xs:attribute name="INIT_EXTRA5" type="xs:string" use="optional"/>
+                                                                </xs:complexType>
+                                                        </xs:element>
+                                                </xs:sequence>
+                                        </xs:complexType>
+                                </xs:element>
+                                <xs:element name="CALENDAR_MESSAGES">
+                                        <xs:complexType>
+                                                <xs:sequence minOccurs="0" maxOccurs="unbounded">
+					                                <xs:element name="ITEM" maxOccurs="unbounded">
+					                                        <xs:complexType>
+					                                                <xs:attribute name="NAME" type="xs:string" use="required"/>
+					                                                <xs:attribute name="VALUE" use="required">
+					                                                        <xs:simpleType>
+					                                                                <xs:restriction base="xs:string"/>
+					                                                        </xs:simpleType>
+					                                                </xs:attribute>
+					                                        </xs:complexType>
+					                                </xs:element>
+                                                </xs:sequence>
+                                        </xs:complexType>
+                                </xs:element>
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element><xs:element name="VARS">
+                <xs:complexType>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="VALUE" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element><xs:element name="IR">
+                <xs:annotation>
+                        <xs:documentation>Defines an infrared input devices</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="AV_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="ALARM">
+                <xs:annotation>
+                        <xs:documentation>Describes the string to be dispalyed on receiving an alarm code.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="KEY" type="xs:string" use="required"/>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="ALERT">
+                <xs:annotation>
+                        <xs:documentation>Describes the string to be displayed on receiving an alert code</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="Y"/>
+                                                <xs:enumeration value="N"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" type="xs:string" use="required"/>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="MESSAGE" type="xs:string" use="required"/>
+                        <xs:attribute name="ALERT_TYPE">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="Alarm Type"/>
+                                                <xs:enumeration value="DoorBell"/>
+                                                <xs:enumeration value="ID"/>
+                                                <xs:enumeration value="ModeChange"/>
+                                                <xs:enumeration value="Phone"/>
+                                                <xs:enumeration value="System"/>
+                                                <xs:enumeration value="User"/>
+                                                <xs:enumeration value="Zone"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="CLIENT_CAT">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="ANALOGUE">
+                <xs:annotation>
+                        <xs:documentation>Defines an analog input device</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        
+        <xs:element name="CAMERA">
+                <xs:annotation>
+                        <xs:documentation>Defines an camera zone, generally a room</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="ZOOM" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="AUDIO">
+                <xs:annotation>
+                        <xs:documentation>Defines an audio zone, generally a room</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element><xs:element name="AV">
+                <xs:annotation>
+                        <xs:documentation>Defines an AV zone, generally a room</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element><xs:element name="RAW_INTERFACE">
+                <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                                <xs:element ref="CUSTOM_INPUT"/>
+                                <xs:element ref="RAW_ITEMS"/>
+                        </xs:choice>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="POWER_RATING" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="CATALOGUE">
+                <xs:annotation>
+                        <xs:documentation>Catalogues are used for some models to define site specific information. For example names of people for Comfort login IDs</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element name="ITEM" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                                <xs:attribute name="VALUE" type="xs:string" use="required"/>
+                                                <xs:attribute name="CODE" use="required">
+                                                        <xs:simpleType>
+                                                                <xs:restriction base="xs:string"/>
+                                                        </xs:simpleType>
+                                                </xs:attribute>
+                                        </xs:complexType>
+                                </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        
+        
+        
+        
+        <xs:element name="COUNTER">
+                <xs:annotation>
+                        <xs:documentation>Specifies a counter to be monitored</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="MAX" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="POWER_RATING" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <xs:element name="IR_LEARNER" type="xs:string"/>
+        <xs:element name="LIGHT_DYNALITE">
+                <xs:annotation>
+                        <xs:documentation>Defines a CBUS light device</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        
+                        <xs:attribute name="RELAY" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="POWER_RATING" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="AREA" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="LIGHT_CBUS">
+                <xs:annotation>
+                        <xs:documentation>Defines a CBUS light device</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="CBUS_APPLICATION" use="optional" default="38">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="RELAY" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="POWER_RATING" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="AREA" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="SENSOR">
+                <xs:annotation>
+                        <xs:documentation>Defines a sensor input, for example wind speed.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="UNITS" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="CHANNEL" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="CBUS_APPLICATION" use="optional" default="38">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="POWER_RATING" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="LIGHT_X10">
+                <xs:annotation>
+                        <xs:documentation>Defines an X10 light device</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="X10HOUSE_CODE" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="POWER_RATING" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        
+        <xs:element name="PULSE_OUTPUT">
+                <xs:annotation>
+                        <xs:documentation>Defines a pulse output</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="POWER_RATING" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="RAW">
+                <xs:annotation>
+                        <xs:documentation>Defines a response to be sent to a device based on a pattern recieved from the Flash client</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="VARS" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="COMMAND" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="CODE" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="EXTRA" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="CUSTOM_INPUT">
+                <xs:annotation>
+                        <xs:documentation>Defines a custom input element.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="COMMAND" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY_IS_REGEX" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="Y"/>
+                                                <xs:enumeration value="N"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="EXTRA">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="POWER_RATING" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        
+        <xs:element name="RAW_ITEMS">
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element ref="RAW" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="CATALOGUE" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="PREFIX" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="CONTACT_CLOSURE">
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="TOGGLE_INPUT">
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="POWER_RATING" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="TOGGLE_OUTPUT">
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="POWER_RATING" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        <xs:element name="TOGGLE_OUTPUT_MONITOR">
+                <xs:complexType>
+                        <xs:attribute name="ACTIVE" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="N"/>
+                                                <xs:enumeration value="Y"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="KEY" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                                <xs:enumeration value="Entry Door Lock"/>
+                                                <xs:enumeration value="Lower Stairs Lights"/>
+                                        </xs:restriction>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="DISPLAY_NAME" use="required">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:string"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="POWER_RATING" use="optional">
+                                <xs:simpleType>
+                                        <xs:restriction base="xs:byte"/>
+                                </xs:simpleType>
+                        </xs:attribute>
+                </xs:complexType>
+        </xs:element>
+        
+        
+</xs:schema>

@@ -531,6 +531,10 @@ public class Config {
 						deviceFactories.pumpFactory.addPump(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.PUMP,groupName,rawHelper);
 					}
+					if (itemName.equals("HEATER")) {
+						deviceFactories.heaterFactory.addPump(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+								DeviceType.HEATER,groupName,rawHelper);
+					}
 					if (itemName.equals("LIGHT_X10")) {
 						if (deviceModel.getName().equals("COMFORT")){
 							deviceFactories.lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,

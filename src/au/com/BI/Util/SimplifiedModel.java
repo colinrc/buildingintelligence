@@ -11,6 +11,7 @@ package au.com.BI.Util;
 
 import au.com.BI.Camera.Camera;
 import au.com.BI.Pump.Pump;
+import au.com.BI.Heater.Heater;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.CommsCommand;
 import au.com.BI.Comms.CommsFail;
@@ -1013,6 +1014,14 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 							returnWrapper);
 					break;
 					
+				case DeviceType.HEATER:
+					logger.log(Level.FINE,
+							"A command for a heater  was issued from "
+									+ device.getName());
+					buildHeaterControlString((Heater) device, command,
+							returnWrapper);
+					break;
+					
 				case DeviceType.ALERT:
 					logger.log(Level.FINE,
 							"A command for an Alert device was issued from "
@@ -1602,6 +1611,10 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 	
 	public void buildPumpControlString(Pump device, CommandInterface command,
+			ReturnWrapper returnWrapper) throws ModelException {
+	}
+
+	public void buildHeaterControlString(Heater device, CommandInterface command,
 			ReturnWrapper returnWrapper) throws ModelException {
 	}
 

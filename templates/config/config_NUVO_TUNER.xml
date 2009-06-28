@@ -1,0 +1,19 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+        <DESC>Configuration for an audio system called NUVO_TUNER</DESC>
+         <!-- ______________________________________  BI_PUMP DEFS  ____________________  -->
+        <DEVICE ACTIVE="N" DEVICE_TYPE="NUVO_TUNER" DESCRIPTION="NUVO Dual Tuner">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USA49W1d1P1.1" SUPPORTS_CD="N" BAUD="19200" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="5000"/>
+                </CONNECTION>
+                
+                <PARAMETERS>
+                </PARAMETERS>
+                
+                <NUVO_TUNER>
+                    <AUDIO KEY="A" DISPLAY_NAME="LOUNGE_AIR" NAME="Lounge Room AC Zone" />
+					<AUDIO KEY="B" DISPLAY_NAME="KITCHEN_AIR" NAME="Kitchen AC Zone" />
+                </NUVO_TUNER>
+        </DEVICE>
+</CONFIG>

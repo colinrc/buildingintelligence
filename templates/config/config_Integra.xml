@@ -1,0 +1,47 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+
+
+
+         <DEVICE ACTIVE="N" DESCRIPTION="Integra" DEVICE_TYPE="INTEGRA">
+                 <CONNECTION>
+                         <SERIAL ACTIVE="N" PORT="COM1" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+  
+                 </CONNECTION>
+                 <PARAMETERS>
+                         <ITEM NAME="PROTOCOL" VALUE="IP" />
+                         <ITEM NAME="AV_INPUTS" VALUE="Integra Inputs" />
+                         <ITEM  NAME="MODEL" VALUE="DTR5.2" />
+                 </PARAMETERS>
+                 
+                 <CATALOGUE NAME="Integra Inputs">
+                         <ITEM VALUE="00" CODE="VIDEO1"/>
+                         <ITEM VALUE="01" CODE="VIDEO2"/>
+                         <ITEM VALUE="02" CODE="VIDEO3"/>
+                         <ITEM VALUE="03" CODE="VIDEO4"/>
+                         <ITEM VALUE="04" CODE="VIDEO5"/>
+                         <ITEM VALUE="05" CODE="VIDEO6"/>
+                         <ITEM VALUE="06" CODE="VIDEO7"/>
+                         <ITEM VALUE="10" CODE="DVD"/>
+                         <ITEM VALUE="20" CODE="TAPE1"/>
+                         <ITEM VALUE="21" CODE="TAPE2"/>
+                         <ITEM VALUE="22" CODE="PHONO"/>
+                         <ITEM VALUE="23" CODE="CD"/>
+                         <ITEM VALUE="24" CODE="FM"/>
+                         <ITEM VALUE="25" CODE="AM"/>
+                         <ITEM VALUE="26" CODE="TUNER"/>
+                         <ITEM VALUE="27" CODE="MUSIC SERVER"/>
+                         <ITEM VALUE="28" CODE="INTERNET RADIO"/>
+                        <ITEM VALUE="29" CODE="USB"/>
+                        <ITEM VALUE="30" CODE="MULTI CH"/>
+                        <ITEM VALUE="31" CODE="XM*1"/>
+                        <ITEM VALUE="32" CODE="SIRIUS*1"/>
+
+                 </CATALOGUE>
+                 <INTEGRA>
+                         <AV_OUTPUT ACTIVE="Y"  DISPLAY_NAME="FAMILY_AV" KEY="01" NAME="Main Amp"/>
+                         <AV_OUTPUT ACTIVE="Y"  DISPLAY_NAME="LOUNGE_AV" KEY="02" NAME="Zone 2"/>
+                         <AV_OUTPUT ACTIVE="Y"  DISPLAY_NAME="STUDY_AV" KEY="03" NAME="Zone 3"/>
+                 </INTEGRA>
+         </DEVICE>
+</CONFIG>

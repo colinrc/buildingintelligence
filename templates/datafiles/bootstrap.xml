@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BOOTSTRAP xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="bootstrap.xsd">
+
+	  <SERVER IP="" PORT="10000" />
+	  <ADMIN IP="" PORT="10001" />
+	  <INTEGRATOR_MODE ACTIVE="Y" />
+	  <CONFIG_FILE NAME="config_Jandy.xml" />
+	  <!-- CONFIG_FILE NAME="Office_s.xml" / -->	  
+	  <DEBUG LEVEL="INFO" FILE="N" CONSOLE="Y"  LOGDIR="server/log" />
+	  <RRDGRAPH DIR=".\JRobin\Graph\" />
+	  <RRDBDIRECTORY DIR=".\JRobin\" />
+	  <RRDXMLDIRECTORY DIR=".\JRobin\RRDDefinition\" />
+	  <JETTY PORT="8081" SSL_PORT="8443" ACTIVE="Y" />
+	  <MAINTENANCE TIME="23:45" />
+</BOOTSTRAP>
+
+

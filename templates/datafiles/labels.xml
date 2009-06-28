@@ -1,0 +1,43 @@
+<LABELS>
+
+	<TEXT>
+	         <LABEL KEY="FRONT_LIGHT" VALUE="Front Light"/>
+	         <LABEL KEY="VOLUME" VALUE="Volume Level"/>
+	         <LABEL KEY="SPRINKLERS" VALUE="Sprinklers"/>
+	         <LABEL KEY="DLT_LABEL_1" VALUE="Test 1"/>
+	            
+	         <LABEL KEY="ON" VALUE="on"/>
+	         <LABEL KEY="OFF" VALUE="off"/>
+	            
+	         <LABEL KEY="BLANK" VALUE=" "/>
+	            
+	        <LABEL KEY="CD1" VALUE="cd1"/>
+	        <LABEL KEY="CD2" VALUE="cd2"/>
+	        <LABEL KEY="DVD" VALUE="dvd"/>
+	        <LABEL KEY="TV" VALUE="tv"/>
+	            
+	        <LABEL KEY="AUDIO" VALUE="Audio"/>
+		    <LABEL KEY="UNKNOWN" VALUE=" "/>
+		    <LABEL KEY="AUDIODVD" VALUE="DVD"/>
+		    <LABEL KEY="AUDIORADIO" VALUE="Radio"/>
+		    <LABEL KEY="AUDIOKISS" VALUE="Kiss"/>
+		    <LABEL KEY="AUDIOTV" VALUE="TV"/>
+		    
+		    <LABEL KEY="DVDPLAY" VALUE="Play"/>
+		    <LABEL KEY="DVDSTOP" VALUE="Stop"/>
+		    <LABEL KEY="RADIONEXT" VALUE="Next"/>
+		    <LABEL KEY="RADIOPREV" VALUE="Prev"/>
+		    <LABEL KEY="KISSNEXT" VALUE="Next"/>
+		    <LABEL KEY="KISSNEXT" VALUE="Prev"/>
+		    <LABEL KEY="TVUP" VALUE="Chan Up"/>
+		    <LABEL KEY="TVDN" VALUE="Chan Dn"/>
+		  
+		  	<LABEL KEY="PLAY/STOP" VALUE="Play/Stop"/>  
+		    <LABEL KEY="NEXT/PREV" VALUE="Next/Prev"/>
+		    <LABEL KEY="UP/DOWN" VALUE="Up/Down"/>
+		    
+		    <LABEL KEY="VOLUP" VALUE="Vol up"/>  
+		    <LABEL KEY="VOLDN" VALUE="Vol down"/>  
+	</TEXT>
+
+</LABELS>
