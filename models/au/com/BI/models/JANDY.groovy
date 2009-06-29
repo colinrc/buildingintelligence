@@ -19,6 +19,7 @@ class JANDY extends GroovyModel {
 	String appendToSentStrings = "\r"
 	String version = "0.5"
 	boolean checksumRequired = false
+
 	
 	JANDY () {
 		super()
@@ -33,21 +34,29 @@ class JANDY extends GroovyModel {
 		returnWrapper.addCommOutput ("#CLEANR")
 		
 		def theDeviceList = configHelper.getAllControlledDeviceObjects ()
-		for (i in theDeviceList){
+		for ( DeviceType i in theDeviceList){
 			
-			if (i.getDeviceType() == DeviceType.THERMOSTAT) {
-				returnWrapper.addCommOutput  ("#" + i.getKey() + "?")
+			if (  i.getDeviceType()  == DeviceType.SENSOR) {
+				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
 			}
 			
 			if (i.getDeviceType() == DeviceType.PUMP) {
 				returnWrapper.addCommOutput  ("#" + i.getKey())
 			}
+			
+			if (  i.getDeviceType()   == DeviceType.HEATER) {
+				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
+			}
+			
+
 		}
 		// Usually polling is started once startup has been completed
 		// enablePoll (6) 
 		// The string will be sent every 3 seconds. Times less than around 3-5 seconds should not be used as most devices take around that long to respond, particularly if they are busy
 
 	}
+	
+
 	
 // We may have to poll for LED status
 //	public void doPoll(ReturnWrapper returnWrapper) {
@@ -275,40 +284,38 @@ class JANDY extends GroovyModel {
 		
 		// To switch on an Aqualink device it requires a string of this format      #PUMP=1 or #PUMP=0
 		if (command.getCommandCode() ==  "on") {
-			returnWrapper.addCommOutput  ("# " + device.getKey() + " = 1")
+			returnWrapper.addCommOutput  ("# " + device.getKey() + " = ON")
+			return
 		}
 		
 		if (command.getCommandCode() == "off") {
-			returnWrapper.addCommOutput ("# " + device.getKey() + " = 0")
+			returnWrapper.addCommOutput ("# " + device.getKey() + " = OFF")
+			return
 		}
 
 	}
 
+	void buildHeaterControlString (Pump device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+		
+		// To switch on an Aqualink device it requires a string of this format      #PUMP=1 or #PUMP=0
+		if (command.getCommandCode() ==  "on") {
+			returnWrapper.addCommOutput  ("# " + device.getKey() + " = ON")
+			return
+		}
+		
+		if (command.getCommandCode() == "off") {
+			returnWrapper.addCommOutput ("# " + device.getKey() + " = OFF")
+			return
+		}
 
-	void buildThermostatControlString (Thermostat device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 		try {
-			// Zone Temperature Set Point requires a string "ZSE=[ZoneNumber],[ZoneMode],[Setting]"
-			if (command.getCommandCode() ==  "set") {
-				def setPointStr = command.getExtraInfo()
-				def setPoint = setPointStr.toInteger() * 100
-				returnWrapper.addCommOutput  ("ZSE" + device.getKey() + ",1," + setPoint)
-			}
+			int x = 0;
+			x = Integer.parseInt(command.getExtraInfo()) // Make sure it really is a number
+			returnWrapper.addCommOutput ("# " + device.getKey() + " = " + x)
 			
-			// Zone set to Manual and Open requires a string "ZSE=[ZoneNumber],2,1"
-			if (command.getCommandCode() ==  "position") {
-				switch (command.getExtraInfo() ) {
-				case "open" :
-					returnWrapper.addCommOutput ("ZSE" + device.getKey() + ",2,1")
-					break;
-				case "closed" :
-					returnWrapper.addCommOutput ("ZSE" + device.getKey() + ",2,0")
-					break;
-				default :
-					logger.log (Level.WARNING,"Invalid HVAC zone position " + command )
-				}
-			}
-		} catch (NumberFormatException ex){
-			logger.log (Level.WARNING,"An invalid temperature was received " + command.getExtraInfo())
+		} catch (IllegalFormatException ex){
+			logger.log (Level.WARNING,"An incorrect command was sent to the Jandy heater " + command.getCommandCode());
 		}
 	}
+
 }

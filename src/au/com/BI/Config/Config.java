@@ -532,7 +532,7 @@ public class Config {
 								DeviceType.PUMP,groupName,rawHelper);
 					}
 					if (itemName.equals("HEATER")) {
-						deviceFactories.heaterFactory.addPump(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+						deviceFactories.heaterFactory.addHeater(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.HEATER,groupName,rawHelper);
 					}
 					if (itemName.equals("LIGHT_X10")) {

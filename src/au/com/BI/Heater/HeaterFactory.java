@@ -37,7 +37,7 @@ public class HeaterFactory extends DeviceFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addPump(DeviceModel targetDevice, List <DeviceModel>clientModels,
+	public void addHeater(DeviceModel targetDevice, List <DeviceModel>clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
