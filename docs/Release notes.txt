@@ -1,3 +1,12 @@
+== 30/Jun/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b96.zip V1.6-b96]  ==
+
+''' Jandy '''
+
+Added Jandy support [ticket:481]
+
+See ServerDocs/JandyModel for details.
+
+
 == 12/Jun/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b95.zip V1.6-b95]  [attachment:wiki:SoftwareReleases:eLife-1.6b95-libs.zip Libs-V1.6b95] ==
 
 ''' Comfort '''
