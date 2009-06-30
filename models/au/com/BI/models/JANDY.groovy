@@ -34,29 +34,11 @@ class JANDY extends GroovyModel {
 		returnWrapper.addCommOutput ("#COSMSGS = 1")
 		returnWrapper.addCommOutput ("#CLEANR")
 		
-		def theDeviceList = configHelper.getAllControlledDeviceObjects ()
-		for ( DeviceType i in theDeviceList){
-			
-			if (  i.getDeviceType()  == DeviceType.SENSOR) {
-				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
-			}
-			
-			if (i.getDeviceType() == DeviceType.PUMP) {
-				returnWrapper.addCommOutput  ("#" + i.getKey())
-			}
-			
-			if (  i.getDeviceType()   == DeviceType.THERMOSTAT) {
-				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
-			}
-
-			if (  i.getDeviceType()   == DeviceType.HEATER) {
-				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
-			}
-
-
-		}
+		doPoll (returnWrapper)
+		this.setIPHeartbeat(false) // not needed since we are sending out a regular poll which will keep the connection open
+		
 		// Usually polling is started once startup has been completed
-		// enablePoll (6) 
+		enablePoll (6) 
 		// The string will be sent every 3 seconds. Times less than around 3-5 seconds should not be used as most devices take around that long to respond, particularly if they are busy
 
 	}
@@ -294,5 +276,28 @@ class JANDY extends GroovyModel {
 		} catch (IllegalFormatException ex){
 			logger.log (Level.WARNING,"An incorrect command was sent to the Jandy heater " + command.getCommandCode());
 		}
+	}
+	
+	void doPoll (ReturnWrapper returnWrapper){
+		def theDeviceList = configHelper.getAllControlledDeviceObjects ()
+		for ( DeviceType i in theDeviceList){
+			
+			if (  i.getDeviceType()  == DeviceType.SENSOR) {
+				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
+			}
+			
+			if (i.getDeviceType() == DeviceType.PUMP) {
+				returnWrapper.addCommOutput  ("#" + i.getKey())
+			}
+			
+			if (  i.getDeviceType()   == DeviceType.THERMOSTAT) {
+				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
+			}
+
+			if (  i.getDeviceType()   == DeviceType.HEATER) {
+				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
+			}
+		}
+
 	}
 }
