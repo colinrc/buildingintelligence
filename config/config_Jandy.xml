@@ -1,6 +1,6 @@
 <CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
-        <DESC>Demonstration configuration for a Jandi pool controller</DESC>
-         <!-- ______________________________________  Jandi DEFS  ____________________  -->
+        <DESC>Demonstration configuration for a Jandy pool controller</DESC>
+         <!-- ______________________________________  Jandy DEFS  ____________________  -->
         <DEVICE ACTIVE="Y" DEVICE_TYPE="JANDY" DESCRIPTION="Jandy Pool controller">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
@@ -15,7 +15,8 @@
  
                 <JANDY>
                       <PUMP KEY="PUMP" ACTIVE="Y" NAME="Pool Pump" DISPLAY_NAME="POOL_PUMP"/>
-                      <PUMP KEY="SPA" ACTIVE="Y" DISPLAY_NAME="SPA_PUMP" NAME="Spa Pump" />
+                      <PUMP KEY="PUMPLO" ACTIVE="Y" NAME="Pool Pump Low Speed" DISPLAY_NAME="PUMP_LOW"/>
+                       <PUMP KEY="SPA" ACTIVE="Y" DISPLAY_NAME="SPA_PUMP" NAME="Spa Pump" />
 	
 	                   <OUTPUT KEY="CLEANR" ACTIVE="Y" NAME="Pool Cleaner"  DISPLAY_NAME="POOL_CLEANER"/>               
 	                   <OUTPUT KEY="WFALL" ACTIVE="Y" NAME="Waterfall"  DISPLAY_NAME="WATERFALL"/>               
