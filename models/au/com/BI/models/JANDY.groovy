@@ -8,6 +8,7 @@ import au.com.BI.Config.ParameterException
 import au.com.BI.Device.DeviceType
 import au.com.BI.Pump.Pump
 import au.com.BI.Thermostat.Thermostat
+import au.com.BI.Heater.Heater
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import java.util.BitSet
@@ -44,10 +45,14 @@ class JANDY extends GroovyModel {
 				returnWrapper.addCommOutput  ("#" + i.getKey())
 			}
 			
+			if (  i.getDeviceType()   == DeviceType.THERMOSTAT) {
+				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
+			}
+
 			if (  i.getDeviceType()   == DeviceType.HEATER) {
 				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
 			}
-			
+
 
 		}
 		// Usually polling is started once startup has been completed
@@ -89,68 +94,37 @@ class JANDY extends GroovyModel {
 						}
 						
 						switch (zzParm) {
-						case "PUMP" :
+						case "PUMP" : case "PUMPLO" : case "SPA" : case "WFALL" : 
 							if (partsOfCommand[3] == "1" ){
 								returnWrapper.addFlashCommand ( jandyDevice, "on")
 							} else {
 								returnWrapper.addFlashCommand ( jandyDevice, "off")
 							}
 							break;
-						case "PUMPLO" :
-							if (partsOfCommand[3] == "1" ){
+							
+							
+						 case "CLEANR" :
+							if (partsOfCommand[3] == "ON" ){
 								returnWrapper.addFlashCommand ( jandyDevice, "on")
 							} else {
 								returnWrapper.addFlashCommand ( jandyDevice, "off")
 							}
 							break;
-						case "SPA" :
+							
+						case "POOLHT" :  case "SPAHT" : 
 							if (partsOfCommand[3] == "1" ){
-								returnWrapper.addFlashCommand ( jandyDevice, "on")
+								returnWrapper.addFlashCommand ( jandyDevice, "on" , partsOfCommand[3]  )
 							} else {
 								returnWrapper.addFlashCommand ( jandyDevice, "off")
 							}
-							break;
-						case "WFALL" :
-							if (partsOfCommand[3] == "1" ){
-								returnWrapper.addFlashCommand ( jandyDevice, "on")
-							} else {
-								returnWrapper.addFlashCommand ( jandyDevice, "off")
-							}
-							break;
-						case "CLEANR" :
-							if (partsOfCommand[3] == "1" ){
-								returnWrapper.addFlashCommand ( jandyDevice, "on")
-							} else {
-								returnWrapper.addFlashCommand ( jandyDevice, "off")
-							}
-							break;
-						case "POOLHT" :
-							if (partsOfCommand[3] == "1" ){
-								returnWrapper.addFlashCommand ( jandyDevice, "enable")
-							} else {
-								returnWrapper.addFlashCommand ( jandyDevice, "off")
-							}
-							returnWrapper.addFlashCommand ( jandyDevice, "temp" , partsOfCommand[3] , partsOfCommand[4] )
 						    break;
 							
-						case "POOLTMP" :
-							returnWrapper.addFlashCommand ( jandyDevice, "temp" , partsOfCommand[3] , partsOfCommand[4] )
+							
+						case "POOLTMP" : case "AIRTMP" : case "SPATMP" : case "SOLTMP" :  case "POOLSP" : case "POOLSP2" : case "SPASP" :
+							returnWrapper.addFlashCommand ( jandyDevice, "on" , partsOfCommand[3]  )
 						    break;
-						case "AIRTMP" :
-							returnWrapper.addFlashCommand ( jandyDevice, "temp" , partsOfCommand[3] , partsOfCommand[4] )
-						    break;
-						case "SPATMP" :
-							returnWrapper.addFlashCommand ( jandyDevice, "temp" , partsOfCommand[3] , partsOfCommand[4] )
-						    break;
-						case "SOLTMP" :
-							returnWrapper.addFlashCommand ( jandyDevice, "temp" , partsOfCommand[3] , partsOfCommand[4] )
-						    break;
-						case "POOLSP" :
-							returnWrapper.addFlashCommand ( jandyDevice, "set" , partsOfCommand[3] , partsOfCommand[4] )
-						    break;
-						case "POOLSP2" :
-							returnWrapper.addFlashCommand ( jandyDevice, "set" , partsOfCommand[3] , partsOfCommand[4] )
-						    break;	
+							
+							
 						case "LEDS" :
 							def ledString = new String( partsOfCommand[3].toString(2) + partsOfCommand[4].toString(2) + partsOfCommand[5].toString(2) + partsOfCommand[6].toString(2) + partsOfCommand[7].toString(2))
 							def ledBits = new BitSet(ledString.length())
@@ -284,38 +258,41 @@ class JANDY extends GroovyModel {
 		
 		// To switch on an Aqualink device it requires a string of this format      #PUMP=1 or #PUMP=0
 		if (command.getCommandCode() ==  "on") {
-			returnWrapper.addCommOutput  ("# " + device.getKey() + " = ON")
+			returnWrapper.addCommOutput  ("#" + device.getKey() + " = ON")
 			return
 		}
 		
 		if (command.getCommandCode() == "off") {
-			returnWrapper.addCommOutput ("# " + device.getKey() + " = OFF")
+			returnWrapper.addCommOutput ("#" + device.getKey() + " = OFF")
 			return
 		}
 
 	}
 
-	void buildHeaterControlString (Pump device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+	void buildHeaterControlString (Heater device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 		
 		// To switch on an Aqualink device it requires a string of this format      #PUMP=1 or #PUMP=0
 		if (command.getCommandCode() ==  "on") {
-			returnWrapper.addCommOutput  ("# " + device.getKey() + " = ON")
+			returnWrapper.addCommOutput  ("#" + device.getKey() + " = ON")
 			return
 		}
 		
 		if (command.getCommandCode() == "off") {
-			returnWrapper.addCommOutput ("# " + device.getKey() + " = OFF")
+			returnWrapper.addCommOutput ("#" + device.getKey() + " = OFF")
 			return
 		}
 
+	}
+
+	void buildThermostatControlString (Thermostat device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+		
 		try {
 			int x = 0;
 			x = Integer.parseInt(command.getExtraInfo()) // Make sure it really is a number
-			returnWrapper.addCommOutput ("# " + device.getKey() + " = " + x)
+			returnWrapper.addCommOutput ("#" + device.getKey() + " = " + x)
 			
 		} catch (IllegalFormatException ex){
 			logger.log (Level.WARNING,"An incorrect command was sent to the Jandy heater " + command.getCommandCode());
 		}
 	}
-
 }

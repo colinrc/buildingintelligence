@@ -20,9 +20,13 @@
 	                   <OUTPUT KEY="CLEANR" ACTIVE="Y" NAME="Pool Cleaner"  DISPLAY_NAME="POOL_CLEANER"/>               
 	                   <OUTPUT KEY="WFALL" ACTIVE="Y" NAME="Waterfall"  DISPLAY_NAME="WATERFALL"/>               
 
-                      <HEATER KEY="POOLHT" ACTIVE="Y" NAME="Pool Heater"  DISPLAY_NAME="POOL_HEATER"/>               
-                      
-	   				  <HEATER KEY="SPAHT" ACTIVE="Y" DISPLAY_NAME="SPA_HEATER" NAME="Spa Heater" />
+                      <HEATER KEY="POOLHT" ACTIVE="Y" NAME="Pool Heater"  DISPLAY_NAME="POOL_HEATER"/>
+	   				  <HEATER KEY="SPAHT" ACTIVE="Y"  NAME="Spa Heater" DISPLAY_NAME="SPA_HEATER" />
+
+                     <THERMOSTAT KEY="POOLSP" ACTIVE="Y" NAME="Pool Heater Setpoint 1"  DISPLAY_NAME="POOL_HEATER_SP1"/>
+                     <THERMOSTAT KEY="POOLSP2" ACTIVE="Y" NAME="Pool Heater Setpoint 2"  DISPLAY_NAME="POOL_HEATER_SP2"/>
+	   				  <THERMOSTAT KEY="SPASP" ACTIVE="Y"  NAME="Spa Heater Setpoint" DISPLAY_NAME="SPA_HEATER_SP" />
+
  
                       <SENSOR KEY="AIRTEMP" ACTIVE="Y" NAME="Air temperature" DISPLAY_NAME="AIR_TEMP"  />
                       <SENSOR KEY="SOLARTEMP" ACTIVE="Y" NAME="Solar temperature and heater" DISPLAY_NAME="SOLAR_TEMP" />						

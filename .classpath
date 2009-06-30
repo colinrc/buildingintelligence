@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="test"/>
-	<classpathentry excluding="script_backup/" kind="src" path="script"/>
+	<classpathentry kind="src" path="script"/>
 	<classpathentry kind="src" path="models"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JDom1.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/HTTPBuilder0.3.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JDom1.1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JRobin1.4.0"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JUnit"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/junit-addons-1.4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jython"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Quartz1.5.2"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/RXTX2.1-7">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Java/rxtx-2.1-7r2/MACOSX_IDE/ForPackageMaker/Install/Library/Java/Extensions"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Quartz1.6.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/RXTX2.1-7"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xmlunit1.0"/>
-	<classpathentry exported="true" kind="lib" path="bin-groovy"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Groovy1.0"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetty6.1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Groovy1.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/slf4j-1.5.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetty6.1.18"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Webdav-server-2.0"/>
 	<classpathentry kind="output" path="build"/>
 </classpath>
