@@ -79,8 +79,16 @@ public class JettyHandler {
             updateContext.setConnectorNames(new String[]{"SSL_CONNECT"});
 
             updateContext.addServlet("au.com.BI.Servlets.Control","/control");
+
             ServletHolder davServlet = updateContext.addServlet("net.sf.webdav.WebdavServlet","/dav");
-            ServletHolder  defServlet = updateContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");
+            ServletHolder  defServlet = updateContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");      
+                      
+            davServlet.setInitParameter("rootpath", installBase);
+            davServlet.setInitParameter("ResourceHandlerImplementation","net.sf.webdav.LocalFileSystemStore");
+            davServlet.setInitParameter("maxUploadSize","2000000"); // 2mb
+            davServlet.setInitParameter("no-content-length-headers","0");            
+            davServlet.setInitParameter("lazyFolderCreationOnPut","0");  
+
             
             davServlet.setInitParameter("rootpath", installBase);
             davServlet.setInitParameter("ResourceHandlerImplementation","net.sf.webdav.LocalFileSystemStore");
@@ -94,7 +102,7 @@ public class JettyHandler {
                  
            SessionManager updateContextSessionMgr =  updateContext.getSessionHandler().getSessionManager();
            updateContextSessionMgr.setMaxInactiveInterval(timeout);
-            
+
             SecurityHandler updateMgrSec = updateContext.getSecurityHandler();
             updateMgrSec.setUserRealm(webPass);
             
