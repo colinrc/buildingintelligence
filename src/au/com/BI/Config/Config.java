@@ -593,7 +593,7 @@ public class Config {
 					}
 					if (itemName.equals("ANALOGUE") || itemName.equals ("ANALOG")) {
 						deviceFactories.analogFactory.addAnalog(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
-								DeviceType.ANALOGUE,groupName,rawHelper);
+								DeviceType.ANALOG,groupName,rawHelper);
 					}
 					if (itemName.equals("ALERT")) {
 						deviceFactories.alertFactory.addAlert(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,

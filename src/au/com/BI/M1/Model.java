@@ -89,7 +89,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		
 		try {
-			if (((DeviceType)details).getDeviceType() == DeviceType.ANALOGUE ){
+			if (((DeviceType)details).getDeviceType() == DeviceType.ANALOG ){
 				analogSensors.add ((Analog)details);
 			}
 		} catch (ClassCastException ex) {
@@ -233,7 +233,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			} else if (details.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
 				LightFascade light = (LightFascade)details;
 				deviceKeyAddition = "X10" + light.getX10HouseCode();
-			} else if (details.getDeviceType() == DeviceType.ANALOGUE) {
+			} else if (details.getDeviceType() == DeviceType.ANALOG) {
 				deviceKeyAddition = "ALG";
 			} else if (details.getDeviceType() == DeviceType.THERMOSTAT) {
 				deviceKeyAddition = "THERM";

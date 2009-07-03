@@ -950,7 +950,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		} else {
 			try {
 				switch (device.getDeviceType()) {
-				case DeviceType.ANALOGUE:
+				case DeviceType.ANALOG:
 					logger.log(Level.FINE,
 							"A command for an analog device was issued from "
 									+ device.getName());

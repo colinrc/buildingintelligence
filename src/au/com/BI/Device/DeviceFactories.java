@@ -172,7 +172,7 @@ public class DeviceFactories {
 			cameraFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
-		case DeviceType.ANALOGUE : 
+		case DeviceType.ANALOG : 
 			analogFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 

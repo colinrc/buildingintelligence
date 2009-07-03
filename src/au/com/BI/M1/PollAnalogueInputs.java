@@ -72,7 +72,7 @@ public class PollAnalogueInputs extends Thread {
 						m1Command.setKey(device.getKey());
 						m1Command.setKeepForHandshake(false);
 						m1Command.setCommand(outputM1Command);
-						m1Command.setActionType(DeviceType.ANALOGUE);
+						m1Command.setActionType(DeviceType.ANALOG);
 						m1Command.setActionCode(device.getKey());
 						m1Command.setExtraInfo(((Analog) (device))
 								.getOutputKey());

@@ -125,7 +125,7 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 						theKey = "XF" + ((LightFascade)details).getX10HouseCode() + theKey;
 					break;
 
-					case DeviceType.ANALOGUE :
+					case DeviceType.ANALOG :
 						doNotAddToControlledList = true; // handled by a seperate thread
 						analogReader.addAnalogueInput((Analog)details);
 					break;

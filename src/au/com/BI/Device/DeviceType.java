@@ -38,7 +38,7 @@ public interface DeviceType
 	public static final int ALARM = 22;
 	public static final int COUNTER = 23;
 	public static final int KEY_DIRECT_TO_COMMS = 24;
-	public static final int ANALOGUE = 25;
+	public static final int ANALOG = 25;
 	public static final int IR = 26;
 	public static final int VIRTUAL_OUTPUT = 27;
 	public static final int PULSE_OUTPUT = 28;

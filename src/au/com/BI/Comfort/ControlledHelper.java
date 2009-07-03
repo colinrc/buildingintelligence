@@ -166,7 +166,7 @@ public class ControlledHelper {
 				sendToFlash (cbusLightCommand,cache);
 				break;
 
-			case DeviceType.ANALOGUE:
+			case DeviceType.ANALOG:
 			    CommandInterface analogueCommand = (CommandInterface)((Analog)deviceType).buildDisplayCommand ();
 				analogueCommand.setKey ("CLIENT_SEND");
 				analogueCommand.setUser(command.getUser());

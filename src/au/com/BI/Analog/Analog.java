@@ -26,7 +26,7 @@ public class Analog extends BaseDevice implements DeviceType
 	}
 	public int getDeviceType ()
 	{
-		return DeviceType.ANALOGUE;
+		return DeviceType.ANALOG;
 	}
 
 	/**
