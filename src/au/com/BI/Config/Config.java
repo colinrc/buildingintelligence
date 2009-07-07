@@ -410,15 +410,16 @@ public class Config {
 				}
 
 				if (deviceConnectionTypeString.equals( ("SERIAL"))){
+					 String devicePort = connectLine.getAttributeValue("PORT");
 					 baudRate = connectLine.getAttributeValue("BAUD");
 					 dataBits = connectLine.getAttributeValue("DATA_BITS");
 					 stopBits = connectLine.getAttributeValue("STOP_BITS");
 					 parity = connectLine.getAttributeValue("PARITY");
 					 flowControl = connectLine.getAttributeValue("FLOW");
 					 supportsCD = connectLine.getAttributeValue("SUPPORTS_CD");
-				}
-				if (deviceConnectionTypeString.equals( ("SERIAL"))){
-					deviceModel.setParameter ("Baud_Rate", baudRate,DeviceModel.MAIN_DEVICE_GROUP);
+
+					deviceModel.setParameter ("Device_Port", devicePort,DeviceModel.MAIN_DEVICE_GROUP);
+					deviceModel.setParameter ("Baud_Rate", baudRate,DeviceModel.MAIN_DEVICE_GROUP);					
 					deviceModel.setParameter ("Flow_Control", flowControl,DeviceModel.MAIN_DEVICE_GROUP);
 					deviceModel.setParameter ("Stop_Bits",stopBits,DeviceModel.MAIN_DEVICE_GROUP);
 					deviceModel.setParameter ("Data_Bits",dataBits,DeviceModel.MAIN_DEVICE_GROUP);
