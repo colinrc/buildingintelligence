@@ -84,9 +84,9 @@ M1 is port 5006
 	<protocol>COMFORT</protocol>
 	<protocol_detail>CONTROLS</protocol_detail>
 	<type value="CONTROLS">
-		<key label="Alarm 01">AM01#0A</key>
-		<key label="Alarm 02">AM02#0A</key>
-		<key label="Doorbell">DB01#0A</key>
+		<key label="Alarm 01">#03AM01#0A</key>
+		<key label="Alarm 02">#03AM02#0A</key>
+		<key label="Doorbell">#03DB01#0A</key>
 	</type>
 </control>
 
