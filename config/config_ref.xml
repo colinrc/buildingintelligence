@@ -330,6 +330,10 @@
                 </CONNECTION>
                 <CATALOGUE NAME="DOOR_IDS">
                         <ITEM CODE="31" VALUE="Main door"/>
+                        <ITEM CODE="01" VALUE="Front door"/>
+                </CATALOGUE>
+                 <CATALOGUE NAME="ALERT_ZONES">
+                        <ITEM CODE="03" VALUE="Front Wall"/>
                 </CATALOGUE>
                 <!-- user codes are 1 - 16 , hex -->
                 <CATALOGUE NAME="COMFORT_USERS">
@@ -341,7 +345,7 @@
                         <ITEM NAME="CBUS_APPLICATION" VALUE="38"/>
                         <ITEM NAME="CBUS_UCM" VALUE="12"/>
                         <ITEM NAME="COMFORT_USERS" VALUE="COMFORT_USERS"/>
-                        <!-- ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" / -->
+                        <ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" />
                         <!-- ITEM NAME="ALARM_IDS" VALUE="ALARM_IDS" / -->
                         <ITEM NAME="DOOR_IDS" VALUE="DOOR_IDS"/>
                         <ITEM NAME="SHOW_KEYPAD_MODES" VALUE="01,04"/>
