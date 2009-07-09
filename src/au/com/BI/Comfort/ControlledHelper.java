@@ -309,40 +309,41 @@ public class ControlledHelper {
 					break;
 
 				case ALARM_ZONE :
-					{
-					String inputZone = comfortString.theParameter;
-					DeviceType inputDevice = (DeviceType)configHelper.getControlledItem(inputZone);
+				{
 					String lookupValue = "";
 					if (!alert.isActive()) {
-						logger.log(Level.FINE,"Comfort alarm " + comfortString.theParameter + " was received, but has been configured to not be reported.");
+						logger.log(Level.FINE,"Zone alarm " + comfortString.theParameter + " was received, but has been configured to not be reported.");
 						break;
 					}					
-					if (inputDevice == null) {
-						logger.log (Level.WARNING,"No input has been defined for zone " + inputZone);
+
+					try {
+						lookupValue = comfort.getCatalogueValue(comfortString.theParameter,"ALERT_ZONES",alert);
+						
+					} catch (ParameterException ex){
+						logger.log (Level.WARNING,"No zone has been defined for zone " + comfortString.theParameter);
 						lookupValue = "(unknown input)";
 					}
-					else {
-						lookupValue = inputDevice.getName();
-					}
-					alertCommand.setExtraInfo((String)alert.getMessage() + lookupValue);
+
+
+					alertCommand.setExtraInfo((String)alert.getMessage() + " " + lookupValue);
 					}
 					break;
 
-				case ALERT_DOORBELL :
-				{
-				if (!alert.isActive()) {
-					logger.log(Level.FINE,"Comfort alarm " + comfortString.theParameter + " was received, but has been configured to not be reported.");
-					break;
-				}
-				String lookupValue;
-				try {
-					lookupValue = comfort.getCatalogueValue(comfortString.theParameter,"DOOR_IDS",alert);
-					alertCommand.setExtraInfo((String)alert.getMessage() + lookupValue);
-				} catch (ParameterException e) {
-					logger.log (Level.WARNING,"No Door description has been defined in the door IDS catalogue for " + 
-							comfortString.theParameter);
-					alertCommand.setExtraInfo((String)alert.getMessage());
-				}
+			case ALERT_DOORBELL :
+			{
+					if (!alert.isActive()) {
+						logger.log(Level.FINE,"Comfort alarm " + comfortString.theParameter + " was received, but has been configured to not be reported.");
+						break;
+					}
+					String lookupValue;
+					try {
+						lookupValue = comfort.getCatalogueValue(comfortString.theParameter,"DOOR_IDS",alert);
+						alertCommand.setExtraInfo((String)alert.getMessage() + lookupValue);
+					} catch (ParameterException e) {
+						logger.log (Level.WARNING,"No Door description has been defined in the door IDS catalogue for " + 
+								comfortString.theParameter);
+						alertCommand.setExtraInfo((String)alert.getMessage());
+					}
 				}
 				break;
 

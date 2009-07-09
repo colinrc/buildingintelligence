@@ -43,8 +43,11 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 		controlledHelper = new ControlledHelper();
 		analogReader = new AnalogReader();
 		setPadding (2); 
+
 		this.setSTX (STX);
 		this.setETX (ETX);
+		
+		this.setDeviceKeysString(true);
 
 		this.addControlledItem ("LU",null,MessageDirection.FROM_HARDWARE); // special item
 		this.addControlledItem  ("SERIAL",null,MessageDirection.FROM_HARDWARE);
@@ -130,9 +133,9 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 						analogReader.addAnalogueInput((Analog)details);
 					break;
 
-					case DeviceType.ALERT: 
-						AlarmTypeCode alarmTypeCode =((Alert)details).getAlarmTypeCode();
-						switch (alarmTypeCode) {
+					case DeviceType.ALERT:  
+						AlarmTypeCode alertTypeCode =((Alert)details).getAlarmTypeCode();
+						switch (alertTypeCode) {
 							case ALERT_DOORBELL :
 								theKey = "DB";
 								break;
@@ -150,8 +153,23 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 								break;
 						}
 					break;
+					
+					 case DeviceType.ALARM:
+						AlarmTypeCode alarmTypeCode =((Alarm)details).getAlarmTypeCode();
+
+						switch (alarmTypeCode) {
+							case ALARM_ID : case ALARM_ZONE : case ALARM_USER : case ALARM_SYSTEM :
+								theKey = "AM" + ((Alarm)details).getKey();//
+								break;
+							case ALARM_TYPE :
+								theKey = "AL" + ((Alarm)details).getKey();
+								break;
+						}
+					break;
 
 				}
+
+
 			}
 
 			if (controlType == MessageDirection.FROM_FLASH ) {
@@ -160,16 +178,23 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 					case DeviceType.TOGGLE_OUTPUT : case DeviceType.TOGGLE_OUTPUT_MONITOR:
 						theKey = name;
 						break;
+					case DeviceType.ALARM : case DeviceType.ALERT:
+						if (!theKey.equals(00)){
+							doNotAddToControlledList = true;							
+						}
+						break;
 				}
 			}
 		}
+		
 
 		if (!doNotAddToControlledList) configHelper.addControlledItem (theKey, details, controlType);
 		if (!doNotAddToControlledList && !secondKey.equals("")) configHelper.addControlledItem (secondKey, details, controlType);
 	}
 
 
-	public void addStartupQueryItem (String name, Object  details, MessageDirection controlType) {
+
+public void addStartupQueryItem (String name, Object  details, MessageDirection controlType) {
 
 		startup.addStartupQueryItem (configHelper,name, (DeviceType)details, controlType);
 	}

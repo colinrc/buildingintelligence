@@ -6,20 +6,21 @@
 <library name="Groovy1.6" systemlibrary="false">
 <archive path="/Java/groovy-1.6.0/embeddable/groovy-all-1.6.0.jar"/>
 </library>
-<library name="HTTPBuilder0.3.0" systemlibrary="false">
-<archive javadoc="file:/Java/http-builder-0.3.0/target/site/" path="/Java/http-builder-0.3.0/target/http-builder-0.3.0.jar" source="/Java/http-builder-0.3.0/src/main/java"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/commons-beanutils-1.7.0.jar"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/commons-codec-1.3.jar"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/commons-collections-3.2.jar"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/commons-lang-2.4.jar"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/commons-logging-1.1.1.jar"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/ezmorph-1.0.4.jar"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/httpclient-4.0-beta1.jar"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/httpcore-4.0-beta2.jar"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/json-lib-2.2.2-jdk15.jar"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/nekohtml-1.9.9.jar"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/xercesImpl-2.8.1.jar"/>
-<archive path="/Java/http-builder-0.3.0/target/dependencies/xml-apis-1.3.03.jar"/>
+<library name="HTTPBuilder0.5.0RC1" systemlibrary="false">
+<archive path="/Java/http-builder-0.5.0-RC1/target/http-builder-0.5.0-RC1.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/commons-beanutils-1.7.0.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/commons-codec-1.3.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/commons-collections-3.2.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/commons-lang-2.4.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/commons-logging-1.1.1.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/ezmorph-1.0.4.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/httpclient-4.0-beta2.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/httpcore-4.0-beta3.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/json-lib-2.2.2-jdk15.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/nekohtml-1.9.9.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/xercesImpl-2.8.1.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/xml-apis-1.3.03.jar"/>
+<archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/xml-resolver-1.2.jar"/>
 </library>
 <library name="JDom1.0" systemlibrary="false">
 <archive javadoc="file:/Java/jdom-1.0/build/apidocs/" path="/Java/jdom-1.0/build/jdom.jar" source="/Java/jdom-1.0/src/java"/>
@@ -44,19 +45,19 @@
 <archive path="/Java/jetty-6.1.0/lib/ext/jetty-ajp-6.1.0.jar"/>
 <archive path="/Java/jetty-6.1.0/lib/ext/jetty-sslengine-6.1.0.jar"/>
 </library>
-<library name="Jetty6.1.18" systemlibrary="false">
-<archive path="/Java/jetty-6.1.18/lib/jetty-6.1.18.jar"/>
-<archive path="/Java/jetty-6.1.18/lib/jetty-util-6.1.18.jar"/>
-<archive path="/Java/jetty-6.1.18/lib/servlet-api-2.5-20081211.jar"/>
-<archive path="/Java/jetty-6.1.18/lib/ext/jetty-ajp-6.1.18.jar"/>
-<archive path="/Java/jetty-6.1.18/lib/ext/jetty-client-6.1.18.jar"/>
-<archive path="/Java/jetty-6.1.18/lib/ext/jetty-html-6.1.18.jar"/>
-<archive path="/Java/jetty-6.1.18/lib/ext/jetty-java5-threadpool-6.1.18.jar"/>
-<archive path="/Java/jetty-6.1.18/lib/ext/jetty-rewrite-handler-6.1.18.jar"/>
-<archive path="/Java/jetty-6.1.18/lib/ext/jetty-servlet-tester-6.1.18.jar"/>
-<archive path="/Java/jetty-6.1.18/lib/ext/jetty-setuid-6.1.18.jar"/>
-<archive path="/Java/jetty-6.1.18/lib/ext/jetty-sslengine-6.1.18.jar"/>
-<archive path="/Java/jetty-6.1.18/lib/plus/jetty-plus-6.1.18.jar"/>
+<library name="Jetty6.1.19" systemlibrary="false">
+<archive path="/Java/jetty-6.1.19/lib/jetty-6.1.19.jar"/>
+<archive path="/Java/jetty-6.1.19/lib/jetty-util-6.1.19.jar"/>
+<archive path="/Java/jetty-6.1.19/lib/servlet-api-2.5-20081211.jar"/>
+<archive path="/Java/jetty-6.1.19/lib/ext/jetty-ajp-6.1.19.jar"/>
+<archive path="/Java/jetty-6.1.19/lib/ext/jetty-client-6.1.19.jar"/>
+<archive path="/Java/jetty-6.1.19/lib/ext/jetty-html-6.1.19.jar"/>
+<archive path="/Java/jetty-6.1.19/lib/ext/jetty-rewrite-handler-6.1.19.jar"/>
+<archive path="/Java/jetty-6.1.19/lib/ext/jetty-setuid-6.1.19.jar"/>
+<archive path="/Java/jetty-6.1.19/lib/ext/jetty-sslengine-6.1.19.jar"/>
+<archive path="/Java/jetty-6.1.19/lib/plus/jetty-plus-6.1.19.jar"/>
+<archive path="/Java/jetty-6.1.19/lib/ext/jetty-java5-stats-6.1.19.jar"/>
+<archive path="/Java/jetty-6.1.19/lib/ext/jetty-java5-threadpool-6.1.19.jar"/>
 </library>
 <library name="Jetty6.1.4" systemlibrary="false">
 <archive path="/Java/jetty-6.1.4/lib/jetty-6.1.4.jar"/>
@@ -113,9 +114,6 @@
 <archive path="/Java/quartz-1.6.0/lib/core/commons-logging-api.jar"/>
 <archive path="/Java/quartz-1.6.0/lib/core/commons-logging.jar"/>
 <archive path="/Java/quartz-1.6.0/lib/build/jta.jar"/>
-</library>
-<library name="restlet1.0rc4" systemlibrary="false">
-<archive path="/Java/restlet-1.0rc4/lib/com.noelios.restlet.jar"/>
 </library>
 <library name="RXTX2.1-7" systemlibrary="false">
 <archive nativelibpaths="/Java/rxtx-2.1-7r2/MACOSX_IDE/ForPackageMaker/Install/Library/Java/Extensions" path="/Java/rxtx-2.1-7r2/RXTXcomm.jar" source="/Java/rxtx-2.1-7r2/src"/>

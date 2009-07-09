@@ -1,3 +1,33 @@
+== 1/Jul/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b97.zip V1.6-b97]   [attachment:wiki:SoftwareReleases:eLife-1.6b97-libs.zip Libs-V1.6b97]  ==
+
+Resolved error messages when adding duplicate ALARM devices for the Comfort configuration. [ticket:753]
+The display_name that has been used with the device with key 00 is the display_name that flash should send arm messages too.
+
+For example
+{{{
+        <ALARM KEY="00" DISPLAY_NAME="ALARM"/>
+}}}                     
+Resolves comfort alarm [ticket:695]
+
+Added comfort zone name support, to be used the integrator must add an ALERT_ZONES parameter table, otherwise the zone number will be
+reported.
+
+For example
+{{{
+   <CATALOGUE NAME="ALERT_ZONES">
+        <ITEM CODE="01" VALUE="Front Wall"/>
+    </CATALOGUE>
+    
+    <PARAMETERS>
+        <ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" />
+    </PARAMETERS>
+}}}
+
+
+''' Serial '''
+
+Resolved port not found error [ticket:752]
+
 == 30/Jun/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b96.zip V1.6-b96]  ==
 
 ''' Jandy '''

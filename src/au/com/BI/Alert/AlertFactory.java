@@ -55,12 +55,9 @@ public class AlertFactory extends DeviceFactory{
 			theInput.setGroupName (groupName);
 			targetDevice.addControlledItem(key, theInput, type);
 			targetDevice.addStartupQueryItem(key, theInput, type);
-			if (outKey != null && !outKey.equals("") &&
-					(!targetDevice.getName().equals ("COMFORT") || 
-							(targetDevice.getName().equals("COMFORT") && theInput.getKey() == "00"))) {
-				// If it is a COMFORT device we only want to add the ALARM entry for key 00 to the devices for Flash to send messages to, 
-				// this is used to arm the unit		
-				targetDevice.addControlledItem(outKey, theInput, MessageDirection.FROM_FLASH);
+			
+			if (outKey != null && !outKey.equals("")) { 					
+					targetDevice.addControlledItem(outKey, theInput, MessageDirection.FROM_FLASH);
 			}
 		} catch (NumberFormatException ex ){
 			logger.log (Level.INFO,"An illegal key was specified for the alert " + name);
@@ -91,19 +88,14 @@ public class AlertFactory extends DeviceFactory{
 			String key = targetDevice.formatKey (tmpKey,theOutput);
 			theOutput.setKey (key);
 			theOutput.setGroupName (groupName);
+
+			targetDevice.addStartupQueryItem(key, theOutput, type);		
 			targetDevice.addControlledItem(key, theOutput, type);
-			targetDevice.addStartupQueryItem(key, theOutput, type);
-					
-			if (outKey != null && !outKey.equals("") && 
-					(!targetDevice.getName().equals ("COMFORT") || 
-							(targetDevice.getName().equals("COMFORT") && theOutput.getKey() == "00"))) {
-				// If it is a COMFORT device we only want to add the ALARM entry for key 00 to the devices for Flash to send messages to, 
-				// this is used to arm the unit
+
+			if (outKey != null && !outKey.equals("")) {
 
 				targetDevice.addControlledItem(outKey, theOutput, MessageDirection.FROM_FLASH);
-				for (DeviceModel clientModel :clientModels){
-					clientModel.addControlledItem(outKey, theOutput, type);
-				}
+
 			}
 		} catch (NumberFormatException ex ){
 			logger.log (Level.INFO,"An illegal key was specified for the alarm " + name);

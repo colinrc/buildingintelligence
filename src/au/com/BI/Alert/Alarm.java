@@ -16,6 +16,8 @@ import au.com.BI.Dynalite.DynaliteDevice;
 public class Alarm extends BaseDevice implements DeviceType,DynaliteDevice
 {
 
+	protected String alarmType = "";
+	
 	public Alarm (String name, int deviceType, String outputKey){
 		this.name = name;
 		this.deviceType = deviceType;
@@ -55,6 +57,37 @@ public class Alarm extends BaseDevice implements DeviceType,DynaliteDevice
 		return alarmCommand;
 	}
 	
+	
+	/**
+	 * @return Returns the alarmType.
+	 */
+	public String getAlarmType() {
+		return alarmType;
+	}
+	/**
+	 * @param alarmType The alarmType to set.
+	 */
+	public void setAlarmType(String alarmType) {
+		this.alarmType = alarmType;
+	}
+	/**
+	 * Returns the Alarm type as a constant.
+	 * @return
+	 */
+	public AlarmTypeCode getAlarmTypeCode() {
+		if (alarmType == null) {
+			return AlarmTypeCode.NA;
+		}
+		if (alarmType.equals ("User")) return AlarmTypeCode.ALARM_USER;
+		if (alarmType.equals ("ID")) return AlarmTypeCode.ALARM_ID;
+		if (alarmType.equals ("Zone")) return AlarmTypeCode.ALARM_ZONE;
+		if (alarmType.equals ("System")) return AlarmTypeCode.ALARM_SYSTEM;
+		if (alarmType.equals ("DoorBell")) return AlarmTypeCode.ALERT_DOORBELL;
+		if (alarmType.equals ("Phone")) return AlarmTypeCode.ALERT_PHONE;
+		if (alarmType.equals ("ModeChange")) return AlarmTypeCode.ALERT_MODE_CHANGE;
+		if (alarmType.equals ("Alarm Type")) return AlarmTypeCode.ALARM_TYPE;
+		return AlarmTypeCode.NA;
+	}
 	public boolean isAreaDevice() {
 
 		return false;
