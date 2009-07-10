@@ -142,7 +142,7 @@
         </DEVICE>
 
         !-- ______________________________________  CBUS DEFS  ____________________  -->
-        <DEVICE ACTIVE="Y" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Lights">
+        <DEVICE ACTIVE="N" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Lights">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
@@ -319,7 +319,7 @@
                 </COMFORT>
         </DEVICE>
         <!-- _____________________________ COMFORT DEFS _____________________________-->
-        <DEVICE ACTIVE="N" DEVICE_TYPE="COMFORT" DESCRIPTION="Comfort" PASSWORD="1234">
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="COMFORT" DESCRIPTION="Comfort" PASSWORD="1234">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
@@ -330,6 +330,10 @@
                 </CONNECTION>
                 <CATALOGUE NAME="DOOR_IDS">
                         <ITEM CODE="31" VALUE="Main door"/>
+                        <ITEM CODE="01" VALUE="Front door"/>
+                </CATALOGUE>
+                 <CATALOGUE NAME="ALERT_ZONES">
+                        <ITEM CODE="03" VALUE="Front Wall"/>
                 </CATALOGUE>
                 <!-- user codes are 1 - 16 , hex -->
                 <CATALOGUE NAME="COMFORT_USERS">
@@ -341,7 +345,7 @@
                         <ITEM NAME="CBUS_APPLICATION" VALUE="38"/>
                         <ITEM NAME="CBUS_UCM" VALUE="12"/>
                         <ITEM NAME="COMFORT_USERS" VALUE="COMFORT_USERS"/>
-                        <!-- ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" / -->
+                        <ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" />
                         <!-- ITEM NAME="ALARM_IDS" VALUE="ALARM_IDS" / -->
                         <ITEM NAME="DOOR_IDS" VALUE="DOOR_IDS"/>
                         <ITEM NAME="SHOW_KEYPAD_MODES" VALUE="01,04"/>
@@ -383,14 +387,18 @@
                         <!-- Analogue inputs -->
                         <ANALOGUE ACTIVE="N" KEY="01" NAME="Kitchen Light" DISPLAY_NAME="LOUNGE_LIGHT"/>
                         <!--
-                          Set alarms on this comfort when sent from this display, if more than 1 icon is used in flash,
-                          list multiple ALARM entries, one for each DISPLAY_NAME
+                          Set alarms on this comfort when sent from this display
+							The ALARM device with KEY="00" is the only device target that can be used for ARM messages; 
+							ie. Flash should be configured to send arm messages to the display_name listed in the device, here ALARM
                         -->
-                        <ALARM KEY="00" DISPLAY_NAME="ANYTHING"/>
+                        <ALARM KEY="00" DISPLAY_NAME="ALARM"/>
+                        
                         <ALERT KEY="-1" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell"/>
                         <ALERT KEY="-2" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone"/>
                         <ALERT KEY="-3" ACTIVE="Y" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange"/>
                         
+                        <!-- System alerts correspond to Comfort AM messages -->
+                      
                         <ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="System"/>
                         <ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Phone Trouble" ALERT_TYPE="System"/>
                         <ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
@@ -406,11 +414,13 @@
                         <ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="ID"/>
                         <ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="Doorbell pressed" ALERT_TYPE="ID"/>
                         <ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Communications Failure (RS485)"/>
-                        <ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="Singin Tamper" ALERT_TYPE="ID"/>
+                        <ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="Sing in Tamper" ALERT_TYPE="ID"/>
+                        
+                        <!-- Correspond to comfort AL codes -->
                         <ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="Intruder" ALERT_TYPE="Zone"/>
                         <ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Zone"/>
-                        <ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Zone"/>
-                        <ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Bypass" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="0C" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Zone"/>
+                        <ALERT KEY="0F" DISPLAY_NAME="ALARM" MESSAGE="Bypass" ALERT_TYPE="Zone"/>
                         <ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Zone"/>
                         <ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="User"/>
                         <ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Arm Failure" ALERT_TYPE="User"/>

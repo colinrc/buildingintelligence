@@ -2,22 +2,23 @@ Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.6.5
 Created-By: 1.5.0_06-64 ("Apple Computer, Inc.")
 Main-Class: au.com.BI.Home.eLife
-Class-Path: ../ext/build ../ext/http-builder-0.3.0.jar ../ext/commons-
- beanutils-1.7.0.jar ../ext/commons-codec-1.3.jar ../ext/commons-colle
- ctions-3.2.jar ../ext/commons-lang-2.4.jar ../ext/commons-logging-1.1
- .1.jar ../ext/ezmorph-1.0.4.jar ../ext/httpclient-4.0-beta1.jar ../ex
- t/httpcore-4.0-beta2.jar ../ext/json-lib-2.2.2-jdk15.jar ../ext/nekoh
- tml-1.9.9.jar ../ext/xercesImpl-2.8.1.jar ../ext/xml-apis-1.3.03.jar 
- ../ext/xml-apis.jar ../ext/jdom.jar ../ext/xalan.jar ../ext/jrobin-1.
- 4.0.jar ../ext/snmp-1.3.jar ../ext/junit-addons-1.4.jar ../ext/jython
- .jar ../ext/quartz-1.6.0.jar ../ext/commons-collections-3.1.jar ../ex
- t/commons-logging-api.jar ../ext/commons-logging.jar ../ext/jta.jar .
- ./ext/RXTXcomm.jar ../ext/xmlunit1.0.jar ../ext/groovy-all-1.6.0.jar 
- ../ext/slf4j-jdk14-1.5.6.jar ../ext/slf4j-api-1.5.6.jar ../ext/jetty-
- 6.1.18.jar ../ext/jetty-util-6.1.18.jar ../ext/servlet-api-2.5-200812
- 11.jar ../ext/jetty-ajp-6.1.18.jar ../ext/jetty-client-6.1.18.jar ../
- ext/jetty-html-6.1.18.jar ../ext/jetty-java5-threadpool-6.1.18.jar ..
- /ext/jetty-rewrite-handler-6.1.18.jar ../ext/jetty-servlet-tester-6.1
- .18.jar ../ext/jetty-setuid-6.1.18.jar ../ext/jetty-sslengine-6.1.18.
- jar ../ext/jetty-plus-6.1.18.jar ../ext/webdav-servlet-2.0.jar
+Class-Path: ../ext/build ../ext/xml-apis.jar ../ext/jdom.jar ../ext/xa
+ lan.jar ../ext/jrobin-1.4.0.jar ../ext/snmp-1.3.jar ../ext/junit-addo
+ ns-1.4.jar ../ext/jython.jar ../ext/quartz-1.6.0.jar ../ext/commons-c
+ ollections-3.1.jar ../ext/commons-logging-api.jar ../ext/commons-logg
+ ing.jar ../ext/jta.jar ../ext/RXTXcomm.jar ../ext/xmlunit1.0.jar ../e
+ xt/groovy-all-1.6.0.jar ../ext/slf4j-jdk14-1.5.6.jar ../ext/slf4j-api
+ -1.5.6.jar ../ext/webdav-servlet-2.0.jar ../ext/jetty-6.1.19.jar ../e
+ xt/jetty-util-6.1.19.jar ../ext/servlet-api-2.5-20081211.jar ../ext/j
+ etty-ajp-6.1.19.jar ../ext/jetty-client-6.1.19.jar ../ext/jetty-html-
+ 6.1.19.jar ../ext/jetty-rewrite-handler-6.1.19.jar ../ext/jetty-setui
+ d-6.1.19.jar ../ext/jetty-sslengine-6.1.19.jar ../ext/jetty-plus-6.1.
+ 19.jar ../ext/jetty-java5-stats-6.1.19.jar ../ext/jetty-java5-threadp
+ ool-6.1.19.jar ../ext/http-builder-0.5.0-RC1.jar ../ext/commons-beanu
+ tils-1.7.0.jar ../ext/commons-codec-1.3.jar ../ext/commons-collection
+ s-3.2.jar ../ext/commons-lang-2.4.jar ../ext/commons-logging-1.1.1.ja
+ r ../ext/ezmorph-1.0.4.jar ../ext/httpclient-4.0-beta2.jar ../ext/htt
+ pcore-4.0-beta3.jar ../ext/json-lib-2.2.2-jdk15.jar ../ext/nekohtml-1
+ .9.9.jar ../ext/xercesImpl-2.8.1.jar ../ext/xml-apis-1.3.03.jar ../ex
+ t/xml-resolver-1.2.jar
 

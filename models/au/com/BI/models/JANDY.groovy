@@ -38,8 +38,8 @@ class JANDY extends GroovyModel {
 		this.setIPHeartbeat(false) // not needed since we are sending out a regular poll which will keep the connection open
 		
 		// Usually polling is started once startup has been completed
-		enablePoll (6) 
-		// The string will be sent every 3 seconds. Times less than around 3-5 seconds should not be used as most devices take around that long to respond, particularly if they are busy
+		//enablePoll (6) 
+		// Jandy is supposed to announce changes so we'll keep polling off to see how reliable it is
 
 	}
 	
@@ -59,11 +59,18 @@ class JANDY extends GroovyModel {
 				def theCommand = partsOfCommand[0]
 				
 				if (theCommand.startsWith("?")){
-					logger.log (Level.WARNING,"Invalid command warning " + theCommand )
+					if (!theCommand.equals("?11") && !theCommand.equals("?12") ) {
+						
+						logger.log (Level.WARNING,"Invalid command warning " + theCommand )
+					}
 				}
 				
 				switch (theCommand) {
 
+					case "Jandy" :
+						doStartup(returnWrapper) // unit was reset
+						break
+						
 					case "!00" :
 						logger.log (Level.FINE,"Valid command received " + command )
 
