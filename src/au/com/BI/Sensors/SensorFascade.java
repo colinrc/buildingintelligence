@@ -306,4 +306,12 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	public void setAttributeValue(String name, String value) {
 		sensor.setAttributeValue(name, value);
 	}
+	
+	public String getRoom() {
+		return sensor.getRoom();
+	}
+
+	public void setRoom(String room) {
+		sensor.setRoom(room);
+	}
 }

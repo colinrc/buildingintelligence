@@ -22,6 +22,7 @@ public class BaseDevice {
 	protected String key="";
 	protected String groupName;
 	protected Map rawCodes;
+	protected String room = "";
 	protected Map <String, String>extraAttributes;
 
 	public BaseDevice () {
@@ -162,6 +163,14 @@ public class BaseDevice {
 	
 	public void clearAttributeValues (){
 		extraAttributes.clear();
+	}
+
+	public String getRoom() {
+		return room;
+	}
+
+	public void setRoom(String room) {
+		this.room = room;
 	}
 	
 }

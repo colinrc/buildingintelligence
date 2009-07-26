@@ -155,5 +155,9 @@ public interface DeviceType
 	public void clearAttributeValues (); 
 	public String getAttributeValue (String name) throws UnknownFieldException;
 
+	public String getRoom();
+
+	public void setRoom(String room) ;
+	
 }
 	

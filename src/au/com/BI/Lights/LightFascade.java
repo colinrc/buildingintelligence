@@ -406,5 +406,13 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 		light.setAttributeValue(name, value);
 		
 	}
+	
+	public String getRoom() {
+		return light.getRoom();
+	}
+
+	public void setRoom(String room) {
+		light.setRoom(room);
+	}
 
 }
