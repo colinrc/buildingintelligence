@@ -29,7 +29,7 @@ public class ConnectionManager extends Thread {
 	}
 	
 	public void connect (String IPaddress, int adminPort, int monitorPort) {
-		logger.info("Openning monitor IP " + IPaddress + " port " + monitorPort);
+		logger.info("Using monitor IP " + IPaddress + " port " + monitorPort);
 		logger.info("Openning admin IP " + IPaddress + " port " + adminPort);
 		
 		updatingParams = true;

@@ -216,42 +216,6 @@ public class AdminListener extends Thread
 			eLife.alreadyInUse (errorString,JOptionPane.ERROR_MESSAGE);
 		}
 	
-		if (name.equals("DELETE")) {
-			String resultsString = rootElement.getText();
-			String dir = rootElement.getAttributeValue ("DIR");
-			synchronized (eLife) {
-				setResults (dir,resultsString);
-				eLife.readFiles(dir);
-			}	
-		}
-		if (name.equals("UPLOAD")) {
-			String result = rootElement.getAttributeValue ("RESULT");
-			String dir = rootElement.getAttributeValue ("DIR");
-			if (result.equals ("SUCCESS")) {
-				synchronized (eLife) {
-					setResults (dir,"Buffer uploaded succesfully");
-					eLife.readFiles(dir);
-				}				
-			} else {
-				String resultsString = rootElement.getText();
-				setResults (dir,resultsString);
-			}
-		}	
-		if (name.equals("FILES")) {
-			String dir = rootElement.getAttributeValue("DIR");
-			if (dir != null && !dir.equals ("")) {
-				FileList fileList = new FileList (dir);
-				List eachFile = rootElement.getChildren("FILE");
-				Iterator eachFileIter = eachFile.iterator();
-				while (eachFileIter.hasNext()) {
-					Element file = (Element)eachFileIter.next();
-					String fileName = file.getAttributeValue ("NAME");
-					String timestamp = file.getAttributeValue ("MOD");
-					String desc = file.getAttributeValue ("DESC");
-					fileList.addItem(fileName,desc,timestamp);	
-				}
-			}
-		}
 	}
 
 	public void setResults (String dir, String resultsString) {
