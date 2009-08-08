@@ -9,6 +9,7 @@ import au.com.BI.Device.DeviceType
 import au.com.BI.Pump.Pump
 import au.com.BI.Thermostat.Thermostat
 import au.com.BI.Heater.Heater
+import au.com.BI.ToggleSwitch.ToggleSwitch
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import java.util.BitSet
@@ -245,7 +246,7 @@ class JANDY extends GroovyModel {
 
 	void buildPumpControlString (Pump device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 		
-		// To switch on an Aqualink device it requires a string of this format      #PUMP=1 or #PUMP=0
+		// To switch on an Aqualink device it requires a string of this format      #PUMP= ON or #PUMP= OFF
 		if (command.getCommandCode() ==  "on") {
 			returnWrapper.addCommOutput  ("#" + device.getKey() + " = ON")
 			return
@@ -260,7 +261,7 @@ class JANDY extends GroovyModel {
 
 	void buildHeaterControlString (Heater device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 		
-		// To switch on an Aqualink device it requires a string of this format      #PUMP=1 or #PUMP=0
+		// To switch on an Aqualink device it requires a string of this format      #PUMP= ON or #PUMP=OFF
 		if (command.getCommandCode() ==  "on") {
 			returnWrapper.addCommOutput  ("#" + device.getKey() + " = ON")
 			return
@@ -273,6 +274,21 @@ class JANDY extends GroovyModel {
 
 	}
 
+	void buildToggleOutputControlString (ToggleSwitch device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+		
+		// To switch on an Aqualink device it requires a string of this format      #PUMP= ON  or #PUMP= OFF
+		if (command.getCommandCode() ==  "on") {
+			returnWrapper.addCommOutput  ("#" + device.getKey() + " = ON")
+			return
+		}
+		
+		if (command.getCommandCode() == "off") {
+			returnWrapper.addCommOutput ("#" + device.getKey() + " = OFF")
+			return
+		}
+
+	}
+	
 	void buildThermostatControlString (Thermostat device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 		
 		try {

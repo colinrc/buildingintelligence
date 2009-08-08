@@ -29,10 +29,10 @@
 	   				  <THERMOSTAT KEY="SPASP" ACTIVE="Y"  NAME="Spa Heater Setpoint" DISPLAY_NAME="SPA_HEATER_SP" />
 
  
-                      <SENSOR KEY="AIRTEMP" ACTIVE="Y" NAME="Air temperature" DISPLAY_NAME="AIR_TEMP"  />
-                      <SENSOR KEY="SOLARTEMP" ACTIVE="Y" NAME="Solar temperature and heater" DISPLAY_NAME="SOLAR_TEMP" />						
-                      <SENSOR KEY="POOLTEMP" ACTIVE="Y" NAME="Pool temperature" DISPLAY_NAME="POOL_TEMP"  />
-                      <SENSOR KEY="SPATEMP" ACTIVE="Y" NAME="Spa temperature" DISPLAY_NAME="SPA_TEMP" />						
+                      <SENSOR KEY="AIRTMP" ACTIVE="Y" NAME="Air temperature" DISPLAY_NAME="AIR_TEMP"  />
+                      <SENSOR KEY="SOLTMP" ACTIVE="Y" NAME="Solar temperature and heater" DISPLAY_NAME="SOLAR_TEMP" />						
+                      <SENSOR KEY="POOLTMP" ACTIVE="Y" NAME="Pool temperature" DISPLAY_NAME="POOL_TEMP"  />
+                      <SENSOR KEY="SPATMP" ACTIVE="Y" NAME="Spa temperature" DISPLAY_NAME="SPA_TEMP" />						
  
 					  <!-- The key names here are magic, they are purely used to tie Jandy functions to particular client display names. 
 					           If the Jandy does not have a feature installed set the corresponding line to ACTIVE=N and it will not be used -->
