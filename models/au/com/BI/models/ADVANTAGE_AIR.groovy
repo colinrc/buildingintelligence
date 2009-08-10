@@ -32,7 +32,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 	}
 	
 	public void doStartup(ReturnWrapper returnWrapper) {
-
+		setDeviceKeysString(true)
 		returnWrapper.addCommOutput ("ASU=1")
 		returnWrapper.addCommOutput ("RCS=?")
 		returnWrapper.addCommOutput ("FRE=?")
@@ -46,6 +46,14 @@ class ADVANTAGE_AIR extends GroovyModel {
 		}
 	}
 	
+	String formatKey (String key, DeviceType theDevice){
+		if (theDevice.getDeviceType() == DeviceType.SENSOR){
+			return "SE:" + key // if this is a sensor build an artifical key for the zone so we do not get conflict with the thermostat
+		}
+		
+		return key
+	}
+	
 	void processStringFromComms (String command , ReturnWrapper returnWrapper) {
 		
 		def partsOfCommand = command.split("=")
@@ -53,6 +61,10 @@ class ADVANTAGE_AIR extends GroovyModel {
 			try {
 				def theCommand = partsOfCommand[0]
 				def hvacUnit = configHelper.getControlledItem ("0")
+				if (hvacUnit == null){
+					logger.log (Level.WARNING,"No Advantage AIR system unit with key 0 has been defined")
+					return
+				}
 				switch (theCommand) {
 					case "OK":
 						logger.log (Level.FINE,"OK received " + command )
@@ -142,8 +154,8 @@ class ADVANTAGE_AIR extends GroovyModel {
 					case "+ZST" :
 						logger.log (Level.FINE,"+ZST received " + command )
 						def zstParm = partsOfCommand[1].split(",")
-						def temperatureSensor = configHelper.getControlledItem (zstParm[0])
-						if (temperatureSensor != null )
+						def thermostat = configHelper.getControlledItem (zstParm[0])
+						if (thermostat != null )
 						{	
 							def zoneMode = ""
 							def zonePosition = ""
@@ -158,14 +170,21 @@ class ADVANTAGE_AIR extends GroovyModel {
 							// Deal with the Zone Position
 							if (zstParm[3] == "1") zonePosition = "open" else zonePosition = "closed"
 							
+
+							
+							returnWrapper.addFlashCommand (thermostat,  "mode", zoneMode )
+							returnWrapper.addFlashCommand (thermostat,  "position", zonePosition )
+							returnWrapper.addFlashCommand (thermostat,  "set", setPoint )
+
+						}
+						
+						def thermometer = configHelper.getControlledItem ("SE:"+zstParm[0])
+						if (thermometer != null )
+						{	
 							// Deal with the Current Zone Temperature
 							def currentTempStr = zstParm[4]
 							def currentTemp = currentTempStr.toInteger() / 100
-							
-							returnWrapper.addFlashCommand (temperatureSensor,  "mode", zoneMode )
-							returnWrapper.addFlashCommand (temperatureSensor,  "position", zonePosition )
-							returnWrapper.addFlashCommand (temperatureSensor,  "set", setPoint )
-							returnWrapper.addFlashCommand (temperatureSensor,  "on", currentTemp )
+							returnWrapper.addFlashCommand (thermometer,  "on", currentTemp )							
 						}
 						break
 						
