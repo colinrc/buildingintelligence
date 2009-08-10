@@ -52,11 +52,11 @@ class ADVANTAGE_AIR extends GroovyModel {
 
 			try {
 				def theCommand = partsOfCommand[0]
-				def hvacUnit = configHelper.getControlledItem (0)
+				def hvacUnit = configHelper.getControlledItem ("0")
 				switch (theCommand) {
 					case "OK":
 						logger.log (Level.FINE,"OK received " + command )
-						comms.acknowledgeCommand("")
+						comms.acknowledgeCommand("",false)
 						comms.sendNextCommand()
 						break;
 
@@ -182,10 +182,10 @@ class ADVANTAGE_AIR extends GroovyModel {
 						def sysUV = ""
 							
 						// Deal with System Status
-						if (sysParm[1] == "1") sysStatus = "on" else sysStatus = "off"
+						if (sysParm[0] == "1")  sysStatus = "on"  else  sysStatus = "off"
 							
 						// Deal with the Fan Modes
-						def sysFanModes = sysParm[2]
+						def sysFanModes = sysParm[1]
 						switch (sysFanModes) {
 						case "1" :
 							sysFan = "low"
@@ -199,7 +199,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 						}
 							
 						// Deal with the System Mode
-						def sysModeModes = sysParm[3]
+						def sysModeModes = sysParm[2]
 						switch (sysModeModes) {
 						case "1" :
 							sysMode = "cool"
@@ -216,7 +216,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 						}
 							
 						// Deal with the Fresh Air Modes
-						def sysFreshModes = sysParm[4]
+						def sysFreshModes = sysParm[3]
 						switch (sysFreshModes) {
 						case "1" :
 							sysFresh = "outside"
@@ -231,7 +231,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 						
 						// TODO: Check what comes back if these options are not present
 						// Deal with the Filter Modes
-						def sysFilterModes = sysParm[5]
+						def sysFilterModes = sysParm[4]
 						switch (sysFilterModes) {
 						case "1" :
 							sysFilter = "on"
@@ -244,7 +244,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 						}
 							
 						// Deal with the Ioniser Modes
-						def sysIoniserModes = sysParm[6]
+						def sysIoniserModes = sysParm[5]
 						switch (sysIoniserModes) {
 						case "1" :
 							sysIoniser = "on"
@@ -257,7 +257,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 						}
 							
 						// Deal with the UV Modes
-						def sysUVModes = sysParm[7]
+						def sysUVModes = sysParm[6]
 						switch (sysUVModes) {
 						case "1" :
 							sysUV = "on"
