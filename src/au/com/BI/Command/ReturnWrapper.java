@@ -155,6 +155,109 @@ public class ReturnWrapper {
 		}
 		
 
+		public void addComplexFlashCommand(DeviceType device,
+				String command) {
+			 addFlashCommand(device, command, "", "", "", "", "", 0,true);
+		}
+		
+		public void addComplexFlashCommand(String displayName,
+				String command) {
+			 addFlashCommand(displayName, command, "", "", "", "", "", 0,true);
+		}
+		
+		public void addComplexFlashCommand(DeviceType device,
+				String command, String extra) {
+			 addFlashCommand(device, command, extra, "", "", "", "", 0,true);
+		}
+		
+		public void addComplexFlashCommand(String displayName,
+				String command, String extra) {
+			 addFlashCommand(displayName, command, extra, "", "", "", "", 0,true);
+		}
+
+		public void addComplexFlashCommand(DeviceType device,
+				String command, Integer extra) {
+			 addFlashCommand(device, command, extra.toString(), "", "", "", "", 0,true);
+		}
+		
+		public void addComplexFlashCommand(String displayName,
+				String command, Integer extra) {
+			 addFlashCommand(displayName, command, extra.toString(), "", "", "", "", 0,true);
+		}
+		
+		public void addComplexFlashCommand(DeviceType device,
+				String command, Double extra) {
+			Integer truncVal = new Integer( extra.intValue());
+			 addFlashCommand(device, command, truncVal.toString() , "", "", "", "", 0,true);
+		}
+		
+		public void addComplexFlashCommand(String displayName,
+				String command, Double extra) {
+			Integer truncVal = new Integer( extra.intValue());
+			 addFlashCommand(displayName, command, truncVal.toString() , "", "", "", "", 0,true);
+		}
+		
+		public void addComplexFlashCommand(DeviceType device,
+				String command, String extra, String extra2) {
+			 addFlashCommand(device, command, extra, extra2, "", "", "",
+					0,true);
+		}
+		
+		public void addComplexFlashCommand(String displayName,
+				String command, String extra, String extra2) {
+			 addFlashCommand(displayName, command, extra, extra2, "", "", "",
+					0,true);
+		}
+
+		public void addComplexFlashCommand(DeviceType device,
+				String command, String extra, String extra2, String extra3) {
+			 addFlashCommand(device, command, extra, extra2, extra3, "",
+					"", 0,true);
+		}
+
+		public void addComplexFlashCommand(String displayName,
+				String command, String extra, String extra2, String extra3) {
+			 addFlashCommand(displayName, command, extra, extra2, extra3, "",
+					"", 0,true);
+		}
+		
+		public void addComplexFlashCommand(DeviceType device,
+				String command, String extra, String extra2, String extra3,
+				String extra4) {
+			 addFlashCommand(device, command, extra, extra2, extra3,
+					extra4, "", 0,true);
+		}
+
+		public void addComplexFlashCommand(String displayName,
+				String command, String extra, String extra2, String extra3,
+				String extra4) {
+			 addFlashCommand(displayName, command, extra, extra2, extra3,
+					extra4, "", 0,true);
+		}
+
+		public void addComplexFlashCommand(DeviceType device,
+				String command, String extra, String extra2, String extra3,
+				String extra4, String extra5) {
+			 addFlashCommand(device, command, extra, extra2, extra3,
+					extra4, extra5, 0,true);
+		}
+		
+		public void addComplexFlashCommand(String displayName,
+				String command, String extra, String extra2, String extra3,
+				String extra4, String extra5) {
+			 addFlashCommand(displayName, command, extra, extra2, extra3,
+					extra4, extra5, 0,true);
+		}
+
+		public void  addComplexFlashCommand(DeviceType device,
+				String command, String extra, String extra2, String extra3,
+				String extra4, String extra5, long targetDeviceID) {
+
+			addFlashCommand( device, command,  extra,  extra2,  extra3,  extra4,  extra5,  targetDeviceID, true); 
+		}
+		
+		
+		
 		public void addFlashCommand(DeviceType device,
 				String command) {
 			 addFlashCommand(device, command, "", "", "", "", "", 0);
@@ -252,6 +355,18 @@ public class ReturnWrapper {
 		public void  addFlashCommand(DeviceType device,
 				String command, String extra, String extra2, String extra3,
 				String extra4, String extra5, long targetDeviceID) {
+
+			addFlashCommand( device, command,  extra,  extra2,  extra3,  extra4,  extra5,  targetDeviceID, false); 
+		}
+		
+		
+		
+		
+		
+		
+		public void  addFlashCommand(DeviceType device,
+				String command, String extra, String extra2, String extra3,
+				String extra4, String extra5, long targetDeviceID,boolean complex) {
 			CommandInterface flCommand = device.buildDisplayCommand();
 			flCommand.setKey("CLIENT_SEND");
 			flCommand.setTargetDeviceID(targetDeviceID);
@@ -261,12 +376,22 @@ public class ReturnWrapper {
 			flCommand.setExtra3Info(extra3);
 			flCommand.setExtra4Info(extra4);
 			flCommand.setExtra5Info(extra5);
+			if (complex) flCommand.cacheAllCommands();
 			addFlashCommand (flCommand);
+		}
+		
+		
+		public void  addFlashCommand(String displayName,
+				String command, String extra, String extra2, String extra3,
+				String extra4, String extra5, long targetDeviceID ) {
+			
+			addFlashCommand( displayName,  command,  extra,  extra2,  extra3, extra4,  extra5,  targetDeviceID,false);
+			
 		}
 		
 		public void  addFlashCommand(String displayName,
 				String command, String extra, String extra2, String extra3,
-				String extra4, String extra5, long targetDeviceID) {
+				String extra4, String extra5, long targetDeviceID,boolean complex) {
 			Command flCommand = new Command();
 			flCommand.setDisplayName(displayName);
 			flCommand.setKey("CLIENT_SEND");
@@ -277,6 +402,7 @@ public class ReturnWrapper {
 			flCommand.setExtra3Info(extra3);
 			flCommand.setExtra4Info(extra4);
 			flCommand.setExtra5Info(extra5);
+			if (complex) flCommand.cacheAllCommands();
 			addFlashCommand (flCommand);
 		}
 		

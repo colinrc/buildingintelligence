@@ -83,15 +83,15 @@ class ADVANTAGE_AIR extends GroovyModel {
 							break;
 						case "1" :
 						    FRESH = "YES"
-						    returnWrapper.addFlashCommand (hvacUnit,  "fresh", "outside" )
+						    returnWrapper.addComplexFlashCommand (hvacUnit,  "fresh", "outside" )
 						    break;
 						case "2" :
 						    FRESH = "YES"
-						    returnWrapper.addFlashCommand (hvacUnit,  "fresh", "recirc" )
+						    returnWrapper.addComplexFlashCommand (hvacUnit,  "fresh", "recirc" )
 						    break;
 						case "4" :
 						    FRESH = "YES"
-						    returnWrapper.addFlashCommand (hvacUnit,  "fresh", "auto" )
+						    returnWrapper.addComplexFlashCommand (hvacUnit,  "fresh", "auto" )
 						    break;
 						}                             
 						                             
@@ -109,12 +109,12 @@ class ADVANTAGE_AIR extends GroovyModel {
 							break;
 						case "1" :
 							FILTER = "YES"
-							returnWrapper.addFlashCommand (hvacUnit,  "filter", "on" )
+							returnWrapper.addComplexFlashCommand (hvacUnit,  "filter", "on" )
 							FILTER_STATE = "1"
 							break;
 						case "0" :
 							FILTER = "YES"
-							returnWrapper.addFlashCommand (hvacUnit,  "filter", "off" )
+							returnWrapper.addComplexFlashCommand (hvacUnit,  "filter", "off" )
 							FILTER_STATE = "0"
 							break;
 						}
@@ -125,12 +125,12 @@ class ADVANTAGE_AIR extends GroovyModel {
 							break;
 						case "1" :
 							IONISER = "YES"
-							returnWrapper.addFlashCommand (hvacUnit,  "ioniser", "on" )
+							returnWrapper.addComplexFlashCommand (hvacUnit,  "ioniser", "on" )
 							IONISER_STATE = "1"
 							break;
 						case "0" :
 							IONISER = "YES"
-							returnWrapper.addFlashCommand (hvacUnit,  "ioniser", "off" )
+							returnWrapper.addComplexFlashCommand (hvacUnit,  "ioniser", "off" )
 							IONISER_STATE = "0"
 							break;
 						}
@@ -141,12 +141,12 @@ class ADVANTAGE_AIR extends GroovyModel {
 							break;
 						case "1" :
 							UV = "YES"
-							returnWrapper.addFlashCommand (hvacUnit,  "uv", "on" )
+							returnWrapper.addComplexFlashCommand (hvacUnit,  "uv", "on" )
 							UV_STATE = "1"
 							break;
 						case "0" :
 							UV = "YES"
-							returnWrapper.addFlashCommand (hvacUnit,  "uv", "off" )
+							returnWrapper.addComplexFlashCommand (hvacUnit,  "uv", "off" )
 							UV_STATE = "0"
 							break;
 						}
@@ -172,9 +172,9 @@ class ADVANTAGE_AIR extends GroovyModel {
 							
 
 							
-							returnWrapper.addFlashCommand (thermostat,  "mode", zoneMode )
-							returnWrapper.addFlashCommand (thermostat,  "position", zonePosition )
-							returnWrapper.addFlashCommand (thermostat,  "set", setPoint )
+							returnWrapper.addComplexFlashCommand (thermostat,  "mode", zoneMode )
+							returnWrapper.addComplexFlashCommand (thermostat,  "position", zonePosition )
+							returnWrapper.addComplexFlashCommand (thermostat,  "set", setPoint )
 
 						}
 						
@@ -288,13 +288,13 @@ class ADVANTAGE_AIR extends GroovyModel {
 							break;
 						}
 							
-						returnWrapper.addFlashCommand (hvacUnit,  sysStatus )
-						returnWrapper.addFlashCommand (hvacUnit,  "mode", sysMode )
-						returnWrapper.addFlashCommand (hvacUnit,  "fan", sysFan )
-						returnWrapper.addFlashCommand (hvacUnit,  "fresh", sysFresh )
-						returnWrapper.addFlashCommand (hvacUnit,  "filter", sysFilter )
-						returnWrapper.addFlashCommand (hvacUnit,  "ioniser", sysIoniser )
-						returnWrapper.addFlashCommand (hvacUnit,  "uv", sysUV )
+						returnWrapper.addComplexFlashCommand (hvacUnit,  sysStatus )
+						returnWrapper.addComplexFlashCommand (hvacUnit,  "mode", sysMode )
+						returnWrapper.addComplexFlashCommand (hvacUnit,  "fan", sysFan )
+						returnWrapper.addComplexFlashCommand (hvacUnit,  "fresh", sysFresh )
+						returnWrapper.addComplexFlashCommand (hvacUnit,  "filter", sysFilter )
+						returnWrapper.addComplexFlashCommand (hvacUnit,  "ioniser", sysIoniser )
+						returnWrapper.addComplexFlashCommand (hvacUnit,  "uv", sysUV )
 						break
 					default:
 					logger.log (Level.WARNING,"An unknown command was sent from the Advantage Air controller " + command)
