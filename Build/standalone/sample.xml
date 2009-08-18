@@ -75,7 +75,7 @@
 		<group name="Test" icon="gears" type="web" url="http://www.sparkos.com/" />
 	</logging>
 	<appsBar>
-		<icon name="Air Con" icon="aircon" func="openWindow" canOpen="">
+		<icon name="Air Con" icon="aircon" func="openWindow" canOpen="superuser">
 			<window>
 				<tab name="Lights &amp; Fan" icon="light-bulb">
 					<control name="Ground Floor Lights" key="ENSUITE_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />

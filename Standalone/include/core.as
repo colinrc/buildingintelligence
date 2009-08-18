@@ -508,7 +508,11 @@ renderAppsBar = function () {
 			
 			icon_mc.press = function () {
 				if (this.canOpen == "superuser" && !isAuthenticated("superuser")) {
-					openPinPad(authenticateUser, this.func);
+					if (this.func == "openWindow") {
+						openPinPad(authenticateUser, "openRoomControl", this.iconObj);
+					} else {
+						openPinPad(authenticateUser, this.func);
+					}
 				} else {
 					if (this.func == "runexe") {
 						mdm.System.exec(this.program);
@@ -2967,18 +2971,19 @@ authenticateUser = function (pin) {
 	if (pin == _global.settings.adminPin) {
 		_global.adminLastVerified = getTimer();
 		setAuthenticated(true);
-		if (_root.onUnlock != undefined) _root[_root.onUnlock]();
+		if (_root.onUnlock != undefined) _root[_root.onUnlock](_root.onUnlockObj);
 	} else if (pin.length) {
 		showMessageWindow({title:"Invalid Password", height:100, content:"The password you entered was incorrect.", icon:"warning", hideClose:false, autoClose:10});
 	}
 	_root.pinPadOpen = false;
-	delete _root.onUnlock;
+	delete _root.onUnlock, _root.onUnlockObj;
 }
 
-openPinPad = function (func, onUnlock) {
+openPinPad = function (func, onUnlock, onUnlockObj) {
 	if (_root.pinPadOpen || commsError) return;
 	_root.pinPadOpen = true;
 	_root.onUnlock = onUnlock;
+	_root.onUnlockObj = onUnlockObj;
 	showKeyboard(15, func, this, "", true, "pin");
 }
 
