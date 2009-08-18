@@ -504,6 +504,7 @@ renderAppsBar = function () {
 			icon_mc.program = iconObj.program;
 			icon_mc.canOpen = iconObj.canOpen;
 			icon_mc.showOn = true;
+			icon_mc.iconObj = iconObj;
 			
 			icon_mc.press = function () {
 				if (this.canOpen == "superuser" && !isAuthenticated("superuser")) {
@@ -513,6 +514,8 @@ renderAppsBar = function () {
 						mdm.System.exec(this.program);
 					} else if (this.func == "toggleTV") {
 						toggleTV();
+					} else if (this.func == "openWindow") {
+						openRoomControl(this.iconObj, null);						
 					} else {
 						_root[this.func]();
 					}

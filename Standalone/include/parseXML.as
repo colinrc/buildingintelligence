@@ -55,6 +55,10 @@ defineAppsBar = function (icons) {
 		for (var attrib in icons[icon].attributes) {
 			appObj[attrib] = icons[icon].attributes[attrib];
 		}
+		if (icons[icon].childNodes.length) {
+			trace("got one: icon" + icon);
+			appObj.window = defineWindow(icons[icon].childNodes[0]);
+		}
 		_global.appsBar.push(appObj);
 	}
 }
@@ -203,16 +207,22 @@ defineZones = function (zones) {
 }
 
 defineWindow = function (window_xml, zone, room) {
+	if (!zone) {
+		trace("must be defining for apps bar");
+		var window = new Object();
+	} else {
+		var window = _global.zones[zone].rooms[room].window;
+	}
 	for (var attrib in window_xml.attributes) {
 		if (attrib != "label" && Number(window_xml.attributes[attrib]) == window_xml.attributes[attrib]) {
-			_global.zones[zone].rooms[room].window[attrib] = Number(window_xml.attributes[attrib]);
+			window[attrib] = Number(window_xml.attributes[attrib]);
 		} else if (window_xml.attributes[attrib] == "true" || window_xml.attributes[attrib] == "false") {
-			_global.zones[zone].rooms[room].window[attrib] = (window_xml.attributes[attrib] == "true");
+			window[attrib] = (window_xml.attributes[attrib] == "true");
 		} else {
-			_global.zones[zone].rooms[room].window[attrib] = window_xml.attributes[attrib];
+			window[attrib] = window_xml.attributes[attrib];
 		}
 	}
-	_global.zones[zone].rooms[room].window.tabs = new Array();
+	window.tabs = new Array();
 	var tabs = window_xml.childNodes;
 	for (var tab=0; tab<tabs.length; tab++) {
 		
@@ -228,7 +238,7 @@ defineWindow = function (window_xml, zone, room) {
 			}
 		}
 		
-		_global.zones[zone].rooms[room].window.tabs.push(tabObj);
+		window.tabs.push(tabObj);
 		
 		var controls = tabs[tab].childNodes;
 		for (var control=0; control<controls.length; control++) {
@@ -243,16 +253,17 @@ defineWindow = function (window_xml, zone, room) {
 				}
 			}
 			//_global.controls[controls[control].attributes.key].storedStates["state"] = "on";
-			_global.zones[zone].rooms[room].window.tabs[tab].controls[control] = new Object();
+			window.tabs[tab].controls[control] = new Object();
 			for (var attrib in controls[control].attributes) {
 				if (attrib == "keys") {
-					_global.zones[zone].rooms[room].window.tabs[tab].controls[control][attrib] = controls[control].attributes[attrib].split(",");
+					window.tabs[tab].controls[control][attrib] = controls[control].attributes[attrib].split(",");
 				} else {
-					_global.zones[zone].rooms[room].window.tabs[tab].controls[control][attrib] = controls[control].attributes[attrib];
+					window.tabs[tab].controls[control][attrib] = controls[control].attributes[attrib];
 				}
 			}
 		}
 	}
+	if (!zone) return window;
 }
 
 defineControlTypes = function (controlTypes) {
