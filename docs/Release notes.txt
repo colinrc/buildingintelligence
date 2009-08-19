@@ -1,7 +1,14 @@
+== 19/Aug/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b99.zip V1.6-b99]  ==
+
 ''' Jandy '''
 
 Implement OUTPUT functions to support the output controls.  Resolves [ticket:754]
+Ensure PUMP and SPA units are correctly queried on startup. Resolves [ticket:757]
+Jandy now includes error text in the log file. Resolved [ticket:756]
 
+''' Advantage Air '''
+
+The SYS message is now correctly interpreted (as per updated docs received from Advantage Air). Resolves [ticket:758]
 
 == 10/Jul/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b98.zip V1.6-b98]  ==
 
