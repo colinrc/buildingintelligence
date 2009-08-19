@@ -187,12 +187,16 @@ class ADVANTAGE_AIR extends GroovyModel {
 							returnWrapper.addFlashCommand (thermometer,  "on", currentTemp )							
 						}
 						break
-						
+
+// SYS=[on/off],[ SystemMode],[SystemFan],[Economy],[FreshAirMode],[FilterON/OFF],[ IoniserON/OFF],[UVLightON/OFF] 
+					      
+
 					case "+SYS" :
 						logger.log (Level.FINE,"+SYS received " + command )
 						def sysParm = partsOfCommand[1].split(",")
 						
 						def sysStatus = ""
+						def sysEconomy = ""
 						def sysFan = ""
 						def sysMode = ""
 						def sysFresh = ""
@@ -202,9 +206,26 @@ class ADVANTAGE_AIR extends GroovyModel {
 							
 						// Deal with System Status
 						if (sysParm[0] == "1")  sysStatus = "on"  else  sysStatus = "off"
-							
+
+						// Deal with the System Mode
+						def sysModeModes = sysParm[1]
+						switch (sysModeModes) {
+							case "1" :
+								sysMode = "cool"
+								break;
+							case "2" :
+								sysMode = "heat"
+								break;
+							case "3" :
+								sysMode = "vent"
+								break;
+							case "4" :
+								sysMode = "auto"
+								break;
+							}
+						
 						// Deal with the Fan Modes
-						def sysFanModes = sysParm[1]
+						def sysFanModes = sysParm[2]
 						switch (sysFanModes) {
 						case "1" :
 							sysFan = "low"
@@ -216,26 +237,22 @@ class ADVANTAGE_AIR extends GroovyModel {
 							sysFan = "high"
 							break;
 						}
-							
-						// Deal with the System Mode
-						def sysModeModes = sysParm[2]
-						switch (sysModeModes) {
+
+						// Deal with Economy Mode
+						def sysEconomyMode = sysParm[3]
+						switch (sysEconomyMode) {
 						case "1" :
-							sysMode = "cool"
+							sysEconomy = "on"
 							break;
-						case "2" :
-							sysMode = "heat"
-							break;
-						case "3" :
-							sysMode = "vent"
-							break;
-						case "4" :
-							sysMode = "auto"
+						case "0" :
+							sysEconomy = "off"
 							break;
 						}
+						
+
 							
 						// Deal with the Fresh Air Modes
-						def sysFreshModes = sysParm[3]
+						def sysFreshModes = sysParm[4]
 						switch (sysFreshModes) {
 						case "1" :
 							sysFresh = "outside"
@@ -243,14 +260,14 @@ class ADVANTAGE_AIR extends GroovyModel {
 						case "2" :
 							sysFresh = "recirc"
 							break;
-						case "3" :
+						case "4" :
 							sysFresh = "auto"
 							break;
 						}
 						
 						// TODO: Check what comes back if these options are not present
 						// Deal with the Filter Modes
-						def sysFilterModes = sysParm[4]
+						def sysFilterModes = sysParm[5]
 						switch (sysFilterModes) {
 						case "1" :
 							sysFilter = "on"
@@ -262,21 +279,10 @@ class ADVANTAGE_AIR extends GroovyModel {
 							break;
 						}
 							
-						// Deal with the Ioniser Modes
-						def sysIoniserModes = sysParm[5]
-						switch (sysIoniserModes) {
-						case "1" :
-							sysIoniser = "on"
-							IONISER_STATE = "1"
-							break;
-						case "0" :
-							sysIoniser = "off"
-							IONISER_STATE = "0"
-							break;
-						}
+
 							
 						// Deal with the UV Modes
-						def sysUVModes = sysParm[6]
+						def sysUVModes = sysParm[7]
 						switch (sysUVModes) {
 						case "1" :
 							sysUV = "on"
@@ -293,7 +299,8 @@ class ADVANTAGE_AIR extends GroovyModel {
 						returnWrapper.addComplexFlashCommand (hvacUnit,  "fan", sysFan )
 						returnWrapper.addComplexFlashCommand (hvacUnit,  "fresh", sysFresh )
 						returnWrapper.addComplexFlashCommand (hvacUnit,  "filter", sysFilter )
-						returnWrapper.addComplexFlashCommand (hvacUnit,  "ioniser", sysIoniser )
+						returnWrapper.addComplexFlashCommand (hvacUnit,  "economy", sysEconomy )
+						// not implemented by advantage air returnWrapper.addComplexFlashCommand (hvacUnit,  "ioniser", sysIoniser )
 						returnWrapper.addComplexFlashCommand (hvacUnit,  "uv", sysUV )
 						break
 					default:

@@ -19,7 +19,7 @@ class JANDY extends GroovyModel {
 
 	String name = "JANDY"
 	String appendToSentStrings = "\r"
-	String version = "0.5"
+	String version = "1.0"
 	boolean checksumRequired = false
 
 	
@@ -36,7 +36,7 @@ class JANDY extends GroovyModel {
 		returnWrapper.addCommOutput ("#CLEANR")
 		
 		doPoll (returnWrapper)
-		this.setIPHeartbeat(false) // not needed since we are sending out a regular poll which will keep the connection open
+		this.setIPHeartbeat(true) 
 		
 		// Usually polling is started once startup has been completed
 		//enablePoll (6) 
@@ -62,7 +62,7 @@ class JANDY extends GroovyModel {
 				if (theCommand.startsWith("?")){
 					if (!theCommand.equals("?11") && !theCommand.equals("?12") ) {
 						
-						logger.log (Level.WARNING,"Invalid command warning " + theCommand )
+						logger.log (Level.WARNING,"Invalid command warning " + command )
 					}
 				}
 				
@@ -310,7 +310,7 @@ class JANDY extends GroovyModel {
 			}
 			
 			if (i.getDeviceType() == DeviceType.PUMP) {
-				returnWrapper.addCommOutput  ("#" + i.getKey())
+				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
 			}
 			
 			if (  i.getDeviceType()   == DeviceType.THERMOSTAT) {
