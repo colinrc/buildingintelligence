@@ -25,7 +25,26 @@
     </target>
     
 	<target name="jar" />
-        <target name="build_dist" depends="jar,templates" >
+    	
+    <target name="models" depends="init" >		
+     <mkdir dir="dist/models" />
+	 <for param="file" keepgoing="true" >
+		<path>
+    		<fileset dir="models" includes="**/*.groovy"/>
+ 	  	</path>
+  	  	<sequential>
+  		
+    		<propertyregex override="yes"
+  		    	property="program"  input="@{file}"
+      			regexp=".*/([^\.]*)\.groovy" replace="\1"/>
+   
+  			<jar destfile="dist/models/${program}.jar" basedir="models" file="${groovy_file}.groovy" />
+
+ 	 	</sequential>
+	 </for>
+	</target>
+
+        <target name="build_dist" depends="jar,templates,models" >
     	 	
 		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
 			update="false"
@@ -54,6 +73,10 @@
 			update="true"
 			basedir="."
 			includes = "config/config*.xml" />	
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="dist"
+			includes = "models/*.jar" />	
     	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
 			update="true"
 			basedir="."

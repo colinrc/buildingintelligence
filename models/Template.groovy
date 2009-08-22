@@ -1,5 +1,3 @@
-package models;
-
 import au.com.BI.Device.DeviceType
 import au.com.BI.Command.*
 import au.com.BI.GroovyModels.*
@@ -12,6 +10,9 @@ import au.com.BI.Analog.Analog
 import au.com.BI.Camera.Camera
 import au.com.BI.ToggleSwitch.ToggleSwitch
 import au.com.BI.PulseOutput.PulseOutput
+import au.com.BI.Pump.Pump
+import au.com.BI.Thermostat.Thermostat
+import au.com.BI.Heater.Heater
 import au.com.BI.Util.DeviceModel
 // Include this block in all models
 

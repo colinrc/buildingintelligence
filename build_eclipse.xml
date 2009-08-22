@@ -5,6 +5,13 @@
      <import  file="ant_stubs/util_stubs.xml"/>
        
 	<taskdef resource="net/sf/ant4eclipse/antlib.xml" />
+	
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+  		<classpath>
+    		<pathelement location="/Java/ant-contrib/ant-contrib-1.0b3.jar"/>
+  		</classpath>
+	</taskdef>	
+	
 	<property name="workspace" value="${basedir}/.." />
 	
 	<property name="project.name" value="eLife_Server" />
@@ -71,7 +78,7 @@
 		<echo>To run this application from the command line without Ant, try:</echo>
 		<echo>java -jar "${dist.jar}"</echo>
 	</target>
-    	
+
 	
 	<target name="dist" depends="load-version-number,update_xml,build_dist,increment" />
 	<target name="dist-no-inc" depends="load-version-number,update_xml,build_dist" />
