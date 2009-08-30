@@ -15,7 +15,7 @@ import java.util.regex.Pattern
 class ADVANTAGE_AIR extends GroovyModel {
 	
 	String name = "ADVANTAGE_AIR"
-	String appendToSentStrings = "\n"
+	String appendToSentStrings = "\r"
 	def FRESH = ""
 	def FILTER = ""
 	def IONISER = ""
@@ -317,14 +317,18 @@ class ADVANTAGE_AIR extends GroovyModel {
 
 	void buildUnitControlString (Unit device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 
+		boolean foundCommand = false
+		
 		// To switch on the HVAC system requires a string "SRU=1"
 		if (command.getCommandCode() == "on") {
 			returnWrapper.addCommOutput ("SRU=1")
+			return;
 		}
 		
 		// To switch off the HVAC system requires a string "SRU=0"
 		if (command.getCommandCode() == "off") {
 			returnWrapper.addCommOutput ("SRU=0")
+			return;
 		}
 		
 		// To set the HVAC fan speed requires a string "SFA=[SPEED]"
@@ -332,16 +336,21 @@ class ADVANTAGE_AIR extends GroovyModel {
 			switch (command.getExtraInfo() ) {
 			case "low" :
 				returnWrapper.addCommOutput ("ZFA=1")
+				foundCommand =true
 				break;
 			case "medium" :
 				returnWrapper.addCommOutput ("ZFA=2")
+				foundCommand =true
 				break;
 			case "high" :
 				returnWrapper.addCommOutput ("ZFA=3")
+				foundCommand =true
 				break;
 			default :
 				logger.log (Level.WARNING,"Invalid HVAC fan speed " + command )
 			}
+			if (foundCommand) return;
+
 		}
 		
 		// To set the HVAC mode requires a string "SMO=[MODE]"
@@ -349,19 +358,24 @@ class ADVANTAGE_AIR extends GroovyModel {
 			switch (command.getExtraInfo() ) {
 			case "cool" :
 				returnWrapper.addCommOutput ("SMO=1")
+				foundCommand =true
 				break;
 			case "heat" :
 				returnWrapper.addCommOutput ("SMO=2")
+				foundCommand =true
 				break;
 			case "vent" :
 				returnWrapper.addCommOutput ("SMO=3")
+				foundCommand =true
 				break;
 			case "auto" :
 				returnWrapper.addCommOutput ("SMO=4")
+				foundCommand =true
 				break;
 			default :
 				logger.log (Level.WARNING,"Invalid HVAC Mode " + command )
 			}
+			if (foundCommand) return;
 		}
 		
 		// To set the HVAC fresh air mode requires a string "FRE=[MODE]"
@@ -370,20 +384,27 @@ class ADVANTAGE_AIR extends GroovyModel {
 				switch (command.getExtraInfo() ) {
 				case "outside" :
 					returnWrapper.addCommOutput ("FRE=1")
+					foundCommand =true
 					break;
 				case "recirc" :
 					returnWrapper.addCommOutput ("FRE=2")
+					foundCommand =true
 					break;
 				case "auto" :
 					returnWrapper.addCommOutput ("FRE=4")
+					foundCommand =true
 					break;
 				default :
 					logger.log (Level.WARNING,"Invalid  fresh air HVAC Mode " + command )
 				}
 			}
-			else
+			else {
 				logger.log (Level.WARNING,"Command for non-installed Fresh Air Unit received " + command )
+
 			}
+			if (foundCommand) return;
+		}
+			
 		
 		// To set the HVAC filter mode requires a string "FIL=[FilterON/OFF],[IoniserON/OFF],[UVLightON/OFF]"
 		if (command.getCommandCode() ==  "filter") {
@@ -391,52 +412,64 @@ class ADVANTAGE_AIR extends GroovyModel {
 				switch (command.getExtraInfo() ) {
 				case "on" :
 					returnWrapper.addCommOutput ( "FIL=1," + IONISER_STATE + "," + UV_STATE )
+					foundCommand =true
 					break;
 				case "off" :
 					returnWrapper.addCommOutput ("FIL=0," + IONISER_STATE + "," + UV_STATE )
+					foundCommand =true
 					break;
 				default :
 					logger.log (Level.WARNING,"Invalid filter command " + command )
 				}
 			}
-			else
+			else {
 				logger.log (Level.WARNING,"Command for non-installed Filter Unit received or unknown state " + command )
 			}
+			if (foundCommand) return;
+		}
 		
 		if (command.getCommandCode() ==  "ioniser") {
 			if ( IONISER == "YES" || IOSISER_STATE != "" ) {
 				switch (command.getExtraInfo() ) {
 				case "on" :
 					returnWrapper.addCommOutput ( "FIL=" + FILTER_STATE + ",1," + UV_STATE )
+					foundCommand =true				
 					break;
 				case "off" :
 					returnWrapper.addCommOutput ( "FIL=" + FILTER_STATE + ",0," + UV_STATE )
+					foundCommand =true
 					break;
 				default :
 					logger.log (Level.WARNING,"Invalid ioniser command " + command )
 				}
 			}
-			else
+			else{
 				logger.log (Level.WARNING,"Command for non-installed Ioniser Unit received or unknown state " + command )
 			}
+			if (foundCommand) return;
+		}
 		
 		if (command.getCommandCode() ==  "uv") {
 			if ( UV == "YES" || UV_STATE != "" ) {
 				switch (command.getExtraInfo() ) {
 				case "on" :
 					returnWrapper.addCommOutput ( "FIL=" + FILTER_STATE + "," + IONISER_STATE + ",1" )
+					foundCommand =true
 					break;
 				case "off" :
 					returnWrapper.addCommOutput ( "FIL=" + FILTER_STATE + "," + IONISER_STATE + ",0" )
+					foundCommand =true
 					break;
 				default :
 					logger.log (Level.WARNING,"Invalid uv command " + command )
 				}
 			}
-			else
+			else{
 				logger.log (Level.WARNING,"Command for non-installed UV Unit received or unknown state " + command )
 			}
+			if (foundCommand) return;
 		}
+	}
 
 
 	void buildThermostatControlString (Thermostat device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
@@ -464,5 +497,7 @@ class ADVANTAGE_AIR extends GroovyModel {
 		} catch (NumberFormatException ex){
 			logger.log (Level.WARNING,"An invalid temperature was received " + command.getExtraInfo())
 		}
+	
 	}
 }
+	
