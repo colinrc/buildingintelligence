@@ -4,7 +4,8 @@
         <DEVICE ACTIVE="Y" DEVICE_TYPE="JANDY" DESCRIPTION="Jandy Pool controller">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.usbserial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
-                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="cc-blk.dyndns.org" PORT="4999"/>
                         <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
                 </CONNECTION>
                 
@@ -33,7 +34,12 @@
                       <SENSOR KEY="SOLTMP" ACTIVE="Y" NAME="Solar temperature and heater" DISPLAY_NAME="SOLAR_TEMP" />						
                       <SENSOR KEY="POOLTMP" ACTIVE="Y" NAME="Pool temperature" DISPLAY_NAME="POOL_TEMP"  />
                       <SENSOR KEY="SPATMP" ACTIVE="Y" NAME="Spa temperature" DISPLAY_NAME="SPA_TEMP" />						
- 
+
+                      <AUXILIARY KEY="AUX1" ACTIVE="Y" NAME="Auxiliary 1" DISPLAY_NAME="AUX1"  />
+                      <AUXILIARY KEY="AUX2" ACTIVE="Y" NAME="Auxiliary 2" DISPLAY_NAME="AUX2"  />
+                      <AUXILIARY KEY="AUX3" ACTIVE="Y" NAME="Auxiliary 3" DISPLAY_NAME="AUX3"  />
+                      <AUXILIARY KEY="AUXX" ACTIVE="Y" NAME="Auxiliary X - solar temp port" DISPLAY_NAME="AUXX"  />
+                       
 					  <!-- The key names here are magic, they are purely used to tie Jandy functions to particular client display names. 
 					           If the Jandy does not have a feature installed set the corresponding line to ACTIVE=N and it will not be used -->
 						 

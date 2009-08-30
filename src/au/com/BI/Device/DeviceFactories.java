@@ -7,6 +7,7 @@ import au.com.BI.AV.AVFactory;
 import au.com.BI.Alert.AlertFactory;
 import au.com.BI.Analog.AnalogFactory;
 import au.com.BI.Audio.AudioFactory;
+import au.com.BI.Auxiliary.AuxiliaryFactory;
 import au.com.BI.Camera.CameraFactory;
 import au.com.BI.Counter.CounterFactory;
 import au.com.BI.CustomConnect.CustomConnectFactory;
@@ -51,6 +52,7 @@ public class DeviceFactories {
 	public AnalogFactory analogFactory;		
 	public PumpFactory pumpFactory;		
 	public HeaterFactory heaterFactory;		
+	public AuxiliaryFactory auxiliaryFactory;	
 	public UnitFactory unitFactory;		
 	public IRFactory iRFactory;
 	public ThermostatFactory thermostatFactory;
@@ -73,6 +75,7 @@ public class DeviceFactories {
 		this.setAnalogFactory ( AnalogFactory.getInstance());		
 		this.setPumpFactory ( PumpFactory.getInstance());	
 		this.setHeaterFactory ( HeaterFactory.getInstance());	
+		this.setAuxiliaryFactory ( AuxiliaryFactory.getInstance());	
 		this.setIRFactory (IRFactory.getInstance());		
 		this.setSmsFactory(SMSFactory.getInstance());
 		this.setLabelFactory (LabelFactory.getInstance());
@@ -200,6 +203,14 @@ public class DeviceFactories {
 			unitFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
 
+		case DeviceType.HEATER : 
+			heaterFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
+			break;
+
+		case DeviceType.AUXILIARY : 
+			auxiliaryFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
+			break;
+			
 		case DeviceType.WINDOWS_MEDIA_EXTENDER : 
 			windowsMediaExtenderFactory.addDeviceAttribute(deviceModel, attributeName,mandatory);
 			break;
@@ -314,11 +325,20 @@ public class DeviceFactories {
 		this.heaterFactory = heaterFactory;
 	}
 
+
 	public UnitFactory getUnitFactory() {
 		return unitFactory;
 	}
 
 	public void setUnitFactory(UnitFactory unitFactory) {
 		this.unitFactory = unitFactory;
+	}
+
+	public AuxiliaryFactory getAuxiliaryFactory() {
+		return auxiliaryFactory;
+	}
+
+	public void setAuxiliaryFactory(AuxiliaryFactory auxiliaryFactory) {
+		this.auxiliaryFactory = auxiliaryFactory;
 	}
 }

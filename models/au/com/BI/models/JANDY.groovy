@@ -76,6 +76,10 @@ class JANDY extends GroovyModel {
 						logger.log (Level.FINE,"Valid command received " + command )
 
 						def zzParm = partsOfCommand[1]
+
+                        if (zzParm == "ECHO" || zzParm == "RSPFMT" || zzParm == "COSMSGS") 
+                        	return;
+
 						def jandyDevice = configHelper.getControlledItem (zzParm)
 						
 						if (jandyDevice == null){
@@ -84,6 +88,8 @@ class JANDY extends GroovyModel {
 						}
 						
 						switch (zzParm) {
+
+							
 						case "PUMP" : case "PUMPLO" : case "SPA" : case "WFALL" : 
 							if (partsOfCommand[3] == "1" ){
 								returnWrapper.addFlashCommand ( jandyDevice, "on")
@@ -108,14 +114,30 @@ class JANDY extends GroovyModel {
 								returnWrapper.addFlashCommand ( jandyDevice, "off")
 							}
 						    break;
-							
-							
+
+
+						case ~/AUX[1-9]/ : 
+							if (partsOfCommand[3] == "1" ){
+								returnWrapper.addFlashCommand ( jandyDevice, "on" , partsOfCommand[3]  )
+							} else {
+								returnWrapper.addFlashCommand ( jandyDevice, "off")
+							}
+						    break;
+
+						case ~/AUXX/ : 
+							if (partsOfCommand[3] == "1" ){
+								returnWrapper.addFlashCommand ( jandyDevice, "on" , partsOfCommand[3]  )
+							} else {
+								returnWrapper.addFlashCommand ( jandyDevice, "off")
+							}
+						    break;
+
 						case "POOLTMP" : case "AIRTMP" : case "SPATMP" : case "SOLTMP" :  case "POOLSP" : case "POOLSP2" : case "SPASP" :
 							returnWrapper.addFlashCommand ( jandyDevice, "on" , partsOfCommand[3]  )
 						    break;
 							
 							
-						case "LEDS" :
+						case "LEDS_OLD" : // do not want this to be picked up
 							def ledString = new String( partsOfCommand[3].toString(2) + partsOfCommand[4].toString(2) + partsOfCommand[5].toString(2) + partsOfCommand[6].toString(2) + partsOfCommand[7].toString(2))
 							def ledBits = new BitSet(ledString.length())
 							def spaDevice = configHelper.getControlledItem(SPA)
@@ -318,6 +340,10 @@ class JANDY extends GroovyModel {
 			}
 
 			if (  i.getDeviceType()   == DeviceType.HEATER) {
+				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
+			}
+
+			if (  i.getDeviceType()   == DeviceType.AUXILIARY) {
 				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
 			}
 		}

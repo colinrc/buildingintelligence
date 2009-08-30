@@ -49,6 +49,7 @@ import au.com.BI.Alert.Alarm;
 import au.com.BI.Alert.Alert;
 import au.com.BI.Analog.Analog;
 import au.com.BI.Audio.Audio;
+import au.com.BI.Auxiliary.Auxiliary;
 
 public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
@@ -1022,6 +1023,14 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 							returnWrapper);
 					break;
 					
+				case DeviceType.AUXILIARY:
+					logger.log(Level.FINE,
+							"A command for an auxiliary device  was issued from "
+									+ device.getName());
+					buildAuxiliaryControlString((Auxiliary) device, command,
+							returnWrapper);
+					break;
+					
 				case DeviceType.ALERT:
 					logger.log(Level.FINE,
 							"A command for an Alert device was issued from "
@@ -1618,6 +1627,10 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			ReturnWrapper returnWrapper) throws ModelException {
 	}
 
+	public void buildAuxiliaryControlString(Auxiliary device, CommandInterface command,
+			ReturnWrapper returnWrapper) throws ModelException {
+	}
+	
 	public void buildLightControlString(LightFascade device, CommandInterface command,
 			ReturnWrapper returnWrapper) throws ModelException {
 	}

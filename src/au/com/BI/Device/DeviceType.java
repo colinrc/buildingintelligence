@@ -81,6 +81,9 @@ public interface DeviceType
 	
 	public static final int HEATER = 57;
 	
+	public static final int AUXILIARY = 58;
+
+	
 	// Likely number of raw commands for device line. More is allowed.
 	public static final int PROBABLE_NUMBER_RAW = 10;
 

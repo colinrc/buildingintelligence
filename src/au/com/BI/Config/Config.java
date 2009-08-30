@@ -536,6 +536,10 @@ public class Config {
 						deviceFactories.heaterFactory.addHeater(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.HEATER,groupName,rawHelper);
 					}
+					if (itemName.equals("AUXILIARY")) {
+						deviceFactories.auxiliaryFactory.addAuxiliary(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+								DeviceType.AUXILIARY,groupName,rawHelper);
+					}
 					if (itemName.equals("LIGHT_X10")) {
 						if (deviceModel.getName().equals("COMFORT")){
 							deviceFactories.lightFactory.addLight( deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,

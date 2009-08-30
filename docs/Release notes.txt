@@ -1,3 +1,8 @@
+''' Jandy '''
+
+Implemented Auxiliary devices
+Swallowed echo'd messages on Jandy startup rather than incorrectly generating an error
+
 == 19/Aug/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b99.zip V1.6-b99]  ==
 
 ''' Jandy '''
