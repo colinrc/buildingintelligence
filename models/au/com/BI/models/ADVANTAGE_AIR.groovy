@@ -72,6 +72,12 @@ class ADVANTAGE_AIR extends GroovyModel {
 						comms.sendNextCommand()
 						break;
 
+					case "ERROR":
+						logger.log (Level.FINE,"ERROR received " + command )
+						comms.acknowledgeCommand("",false)
+						comms.sendNextCommand()
+						break;
+						
 					case "+FRE" :
 						logger.log (Level.FINE,"+FRE received " + command )
 
