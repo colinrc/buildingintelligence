@@ -341,15 +341,15 @@ class ADVANTAGE_AIR extends GroovyModel {
 		if (command.getCommandCode() ==  "fan") {
 			switch (command.getExtraInfo() ) {
 			case "low" :
-				returnWrapper.addCommOutput ("ZFA=1")
+				returnWrapper.addCommOutput ("SFA=1")
 				foundCommand =true
 				break;
 			case "medium" :
-				returnWrapper.addCommOutput ("ZFA=2")
+				returnWrapper.addCommOutput ("SFA=2")
 				foundCommand =true
 				break;
 			case "high" :
-				returnWrapper.addCommOutput ("ZFA=3")
+				returnWrapper.addCommOutput ("SFA=3")
 				foundCommand =true
 				break;
 			default :
