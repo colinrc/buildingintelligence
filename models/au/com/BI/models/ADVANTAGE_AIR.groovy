@@ -484,17 +484,17 @@ class ADVANTAGE_AIR extends GroovyModel {
 			if (command.getCommandCode() ==  "set") {
 				def setPointStr = command.getExtraInfo()
 				def setPoint = setPointStr.toInteger() * 100
-				returnWrapper.addCommOutput  ("ZSE" + device.getKey() + ",1," + setPoint)
+				returnWrapper.addCommOutput  ("ZSE=" + device.getKey() + ",1," + setPoint)
 			}
 			
 			// Zone set to Manual and Open requires a string "ZSE=[ZoneNumber],2,1"
 			if (command.getCommandCode() ==  "position") {
 				switch (command.getExtraInfo() ) {
 				case "open" :
-					returnWrapper.addCommOutput ("ZSE" + device.getKey() + ",2,1")
+					returnWrapper.addCommOutput ("ZSE=" + device.getKey() + ",2,1")
 					break;
 				case "closed" :
-					returnWrapper.addCommOutput ("ZSE" + device.getKey() + ",2,0")
+					returnWrapper.addCommOutput ("ZSE=" + device.getKey() + ",2,0")
 					break;
 				default :
 					logger.log (Level.WARNING,"Invalid HVAC zone position " + command )
