@@ -22,7 +22,6 @@ class bi.ui.Icon extends bi.ui.CoreUI {
 	public function set size(size:Number):Void {
 		if (size != undefined) {
 			_size = size;
-			//setSize(_size, _size);
 			_width = _size;
 			_yscale = _xscale;
 		}		
@@ -107,10 +106,10 @@ class bi.ui.Icon extends bi.ui.CoreUI {
 			_overlayBg.endFill();
 			
 			if (_overlayAlign.substr(1, 1) == "R") {
-				_overlayContainer._x = Math.round(__width - _overlayContainer._width);
+				_overlayContainer._x = Math.round(_width - _overlayContainer._width);
 			}
 			if (_overlayAlign.substr(0, 1) == "B") {
-				_overlayContainer._y = Math.round(__height - _overlayContainer._height);
+				_overlayContainer._y = Math.round(_height - _overlayContainer._height);
 			}			
 		} else {
 			removeMovieClip("_overlayContainer");

@@ -214,7 +214,8 @@ class bi.ui.Tabs extends bi.ui.CoreUI {
 					
 					var iconSize:Number = (_tabWidth < _tabHeight) ? _tabWidth : _tabHeight;
 					iconSize = Math.round(iconSize * .8);
-					var icon_mc:MovieClip = tab_mc.attachMovie("bi.ui.Icon", "icon_mc", 10, {settings:{size:iconSize, iconName:_tabs_array[i].iconName}});
+					var icon_mc:MovieClip = tab_mc.attachMovie("bi.ui.Icon", "icon_mc", 10, {size:iconSize, iconName:"atom"});
+					icon_mc.iconName = _tabs_array[i].iconName;
 					icon_mc._x = Math.round((_tabWidth / 2) - (iconSize / 2));
 					icon_mc._y = Math.round((_tabHeight / 2) - (iconSize / 2));
 				} else {

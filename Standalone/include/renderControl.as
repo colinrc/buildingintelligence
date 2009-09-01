@@ -120,7 +120,7 @@
 					break;
 				case "picker":
 					var item_mc = row_mc.createEmptyMovieClip("item" + item + "_mc", item);
-					item_mc.value = 50;
+					item_mc.value = items[item].minValue;
 					var upButton_mc = item_mc.attachMovie("bi.ui.Button", "upButton_mc", 10, {settings:{width:50, height:height, iconName:"up-arrow"}});
 					var label_mc = item_mc.attachMovie("bi.ui.Button", "label_mc", 20, {settings:{width:width - 104, height:height, label:""}});
 					label_mc._x = 52;
@@ -168,6 +168,17 @@
 						if (this._parent.value < this.minValue) this._parent.value = this.minValue;
 						this._parent.label_mc.setValue(this._parent.value);
 					}
+					item_mc.update = function (key, state) {
+						// if state/value are undefined then get the current value of the key for its desired state
+						if (state == undefined) var state = _global.controls[key].storedStates["state"];
+				
+						if (state == this.label_mc.command) {
+							this.value = _global.controls[key].storedStates[this.label_mc.command];
+							
+							this.label_mc.setValue(this.value);
+						}
+					}
+					
 					break;
 				case "slider":
 					var item_mc = row_mc.createEmptyMovieClip("item" + item + "_mc", item);
@@ -550,7 +561,7 @@ attachButton = function (attachTo, control, buttonObj, name, depth, w, h) {
 		buttonObject.label = labels[0];
 	} else if (buttonObj.label.length) {
 		buttonObject.label = buttonObj.label.toString();
-	} else if (icons.length == 2) {
+	} else if (icons.length == 2 && !buttonObj.icon.length) {
 		buttonObject.icons = icons;
 		buttonObject.iconName = icons[0];
 	} else {

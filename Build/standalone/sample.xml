@@ -86,6 +86,7 @@
 				<tab name="Heaters" icon="heater">
 					<control name="1st Heat Lamp" key="ENSUITE_1_HEAT" type="onOff" icons="heater-off,heater" />
 					<control name="2nd Heat Lamp" key="ENSUITE_2_HEAT" type="onOff" icons="heater-off,heater" />
+					<control name="test" key="ENSUITE_LIGHT" type="airCon" icons="aircon-off,aircon" />
 				</tab>
 			</window>
 		</icon>
@@ -171,10 +172,10 @@
 			<rooms>
 				<room name="Ensuite" poly="443,219,443,296,579,296,579,153,477,153,477,219">
 					<window>
-						<tab name="Test" icon="atom">
+						<tab name="Test" icon="atom:test">
 							<control name="Macro Test" type="macro" args="OFFICE_LIGHT,40,Office Lights" />
 						</tab>
-						<tab name="Lights &amp; Fan" icon="light-bulb">
+						<tab name="Lights &amp; Fan" icon="light-bulb:2">
 							<control name="Ground Floor Lights" key="ENSUITE_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
 							<control name="Test multi-key" keys="ENSUITE_LIGHT1,ENSUITE_LIGHT2" type="slider2" icons="light-bulb-off,light-bulb" />
 							<control name="Main Light" key="ENSUITE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
@@ -192,7 +193,7 @@
 							<control name="Squeeze Control" key="Desktop" type="squeezePanel" />
 						</tab>
 						<tab name="Test A/C" icon="aircon">
-							<control name="A/C" key="fred" type="acRoomPanel" />
+							<control name="AC System" key="AC_SYSTEM" type="acRoomPanel" icons="aircon-off,aircon" />
 						</tab>
 					</window>
 					<alerts x="520" y="190">
@@ -614,7 +615,7 @@
 				<item type="label" />
 			</row>
 			<row>
-				<item type="picker" command="on" label="%value% deg C" valueFormat="fred.%value%" minValue="0" maxValue="100" step="5" repeatRate="200" />
+				<item type="picker" command="on" label="%value% deg C" valueFormat="%value%" minValue="0" maxValue="100" step="5" repeatRate="200" />
 			</row>
 		</control>
 

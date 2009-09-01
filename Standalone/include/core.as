@@ -2028,7 +2028,7 @@ createLogContent = function (logObj, content_mc) {
 
 					label_mc.press = function () {
 						this.logObj.log.splice(this.event, 1);
-						trace(this.tab);
+						//trace(this.tab);
 						this.tab.update();
 					}
 					label_mc.addEventListener("press", label_mc);

@@ -1,5 +1,4 @@
 ﻿openRoomControl = function (room, roomPoly) {
-	trace("a");
 	var windowObject = new Object();
 	windowObject.title = room.name;
 	windowObject.iconName = statusObj.icon;
