@@ -86,7 +86,7 @@
 				<tab name="Heaters" icon="heater">
 					<control name="1st Heat Lamp" key="ENSUITE_1_HEAT" type="onOff" icons="heater-off,heater" />
 					<control name="2nd Heat Lamp" key="ENSUITE_2_HEAT" type="onOff" icons="heater-off,heater" />
-					<control name="test" key="ENSUITE_LIGHT" type="airCon" icons="aircon-off,aircon" />
+					<control name="test" key="ENSUITE_AC" type="airCon" icons="aircon-off,aircon" />
 				</tab>
 			</window>
 		</icon>
@@ -615,7 +615,7 @@
 				<item type="label" />
 			</row>
 			<row>
-				<item type="picker" command="on" label="%value% deg C" valueFormat="%value%" minValue="0" maxValue="100" step="5" repeatRate="200" />
+				<item type="picker" command="set" label="%value% deg C" valueFormat="%value%" minValue="0" maxValue="100" step="5" repeatRate="200" />
 			</row>
 		</control>
 

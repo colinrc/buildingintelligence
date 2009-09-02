@@ -170,8 +170,8 @@
 					}
 					item_mc.update = function (key, state) {
 						// if state/value are undefined then get the current value of the key for its desired state
-						if (state == undefined) var state = _global.controls[key].storedStates["state"];
-				
+						if (state == undefined) var state = this.label_mc.command;
+
 						if (state == this.label_mc.command) {
 							this.value = _global.controls[key].storedStates[this.label_mc.command];
 							
