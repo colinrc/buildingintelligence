@@ -133,7 +133,7 @@ class JANDY extends GroovyModel {
 						    break;
 
 						case "POOLTMP" : case "AIRTMP" : case "SPATMP" : case "SOLTMP" :  case "POOLSP" : case "POOLSP2" : case "SPASP" :
-							returnWrapper.addFlashCommand ( jandyDevice, "on" , partsOfCommand[3]  )
+							returnWrapper.addFlashCommand ( jandyDevice, "on" , Integer.parseInt(partsOfCommand[3]) & 127 )
 						    break;
 							
 							
