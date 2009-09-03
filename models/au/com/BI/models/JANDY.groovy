@@ -9,6 +9,7 @@ import au.com.BI.Device.DeviceType
 import au.com.BI.Pump.Pump
 import au.com.BI.Thermostat.Thermostat
 import au.com.BI.Heater.Heater
+import au.com.BI.Auxiliary.Auxiliary;
 import au.com.BI.ToggleSwitch.ToggleSwitch
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -33,7 +34,6 @@ class JANDY extends GroovyModel {
 		returnWrapper.addCommOutput ("#ECHO = OFF")
 		returnWrapper.addCommOutput ("#RSPFMT = 0")
 		returnWrapper.addCommOutput ("#COSMSGS = 1")
-		returnWrapper.addCommOutput ("#CLEANR")
 		
 		doPoll (returnWrapper)
 		this.setIPHeartbeat(true) 
@@ -62,7 +62,7 @@ class JANDY extends GroovyModel {
 				if (theCommand.startsWith("?")){
 					if (!theCommand.equals("?11") && !theCommand.equals("?12") ) {
 						
-						logger.log (Level.WARNING,"Invalid command warning " + command )
+						logger.log (Level.WARNING,"Invalid command " + command )
 					}
 				}
 				
@@ -296,6 +296,30 @@ class JANDY extends GroovyModel {
 
 	}
 
+	void buildAuxiliaryControlString (Auxiliary device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
+		
+		// To switch on an Aqualink device it requires a string of this format      #PUMP= ON or #PUMP=OFF
+		if (command.getCommandCode() ==  "on") {
+			returnWrapper.addCommOutput  ("#" + device.getKey() + " = ON")
+			return
+		}
+		
+		if (command.getCommandCode() == "off") {
+			returnWrapper.addCommOutput ("#" + device.getKey() + " = OFF")
+			return
+		}
+
+		if (command.getCommandCode() == "up") {
+			returnWrapper.addCommOutput ("#" + device.getKey() + " +")
+			return
+		}
+
+		if (command.getCommandCode() == "down") {
+			returnWrapper.addCommOutput ("#" + device.getKey() + " -")
+			return
+		}
+	}
+	
 	void buildToggleOutputControlString (ToggleSwitch device, CommandInterface command, ReturnWrapper returnWrapper)  throws ParameterException {
 		
 		// To switch on an Aqualink device it requires a string of this format      #PUMP= ON  or #PUMP= OFF
@@ -324,27 +348,36 @@ class JANDY extends GroovyModel {
 	}
 	
 	void doPoll (ReturnWrapper returnWrapper){
+
 		def theDeviceList = configHelper.getAllControlledDeviceObjects ()
 		for ( DeviceType i in theDeviceList){
-			
+			String stringToAdd = ""
 			if (  i.getDeviceType()  == DeviceType.SENSOR) {
-				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
+				stringToAdd = "#" + i.getKey() + " ?";
 			}
 			
-			if (i.getDeviceType() == DeviceType.PUMP) {
-				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
+			if (i.getDeviceType() == DeviceType.PUMP  ) {
+				stringToAdd = "#" + i.getKey() + " ?";
 			}
 			
 			if (  i.getDeviceType()   == DeviceType.THERMOSTAT) {
-				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
+				stringToAdd = "#" + i.getKey() + " ?";
 			}
 
-			if (  i.getDeviceType()   == DeviceType.HEATER) {
-				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
+			if (  i.getDeviceType()   == DeviceType.HEATER ) {
+				stringToAdd =  "#" + i.getKey() + " ?";
 			}
 
-			if (  i.getDeviceType()   == DeviceType.AUXILIARY) {
-				returnWrapper.addCommOutput  ("#" + i.getKey() + " ?")
+			if (  i.getDeviceType()   == DeviceType.AUXILIARY  ) {
+				if (i.getKey().equals("CLEANR")){
+					stringToAdd = "#CLEANR";
+				} else {
+					stringToAdd = "#" + i.getKey() + " ?";				
+				}
+			}
+			if (stringToAdd != "") {
+				logger.log (Level.INFO,"Sending command : " + stringToAdd)
+				returnWrapper.addCommOutput(stringToAdd)
 			}
 		}
 
