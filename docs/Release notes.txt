@@ -1,7 +1,15 @@
+== 19/Aug/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b100.zip V1.6-b100]  ==
+
 ''' Jandy '''
 
 Implemented Auxiliary devices
 Swallowed echo'd messages on Jandy startup rather than incorrectly generating an error
+
+''' Advantage Air '''
+
+Resolved issues with Status line from unit
+Added error handler
+
 
 == 19/Aug/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b99.zip V1.6-b99]  ==
 
