@@ -75,6 +75,10 @@
 			includes = "config/config*.xml" />	
 		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
 			update="true"
+			basedir="."
+			includes = "docs/Release notes.txt" />	
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
 			basedir="dist"
 			includes = "models/*.jar" />	
     	<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
