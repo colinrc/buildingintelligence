@@ -1,3 +1,10 @@
+== 25/Sep/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b101.zip V1.6-b101]  ==
+
+''' Groovy '''
+
+Resolved model packaging issue.
+Moved sample model, Template.groovy, to templates directory rather than models.
+
 == 19/Aug/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b100.zip V1.6-b100]  ==
 
 ''' Jandy '''
