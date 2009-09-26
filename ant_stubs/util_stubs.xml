@@ -28,9 +28,9 @@
     	
     <target name="models" depends="init" >		
      <mkdir dir="dist/models" />
-	 <for param="file" keepgoing="true" >
+	 <for param="file" keepgoing="false" >
 		<path>
-    		<fileset dir="models" includes="**/*.groovy"/>
+    		<fileset dir="models" includes="au/**/*.groovy"/>
  	  	</path>
   	  	<sequential>
   		
@@ -38,7 +38,8 @@
   		    	property="program"  input="@{file}"
       			regexp=".*/([^\.]*)\.groovy" replace="\1"/>
    
-  			<jar destfile="dist/models/${program}.jar" basedir="models" file="${groovy_file}.groovy" />
+  			<jar destfile="dist/models/${program}.jar" basedir="models" includes="au/com/BI/models/${program}.groovy" />
+  			<echo message="Building model jar ${program}.jar using groovy file ${program}.groovy" />
 
  	 	</sequential>
 	 </for>
@@ -54,6 +55,11 @@
 			update="true"
 			basedir="."
 			includes = "my.properties" />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
+			update="true"
+			basedir="."
+			includes = "templates/models/*.groovy" 	
+	    	excludes = ".." />
 		<zip destfile="dist/${app_name}-${major_version}${minor_version}.zip" 
 			update="true"
 			basedir="."
