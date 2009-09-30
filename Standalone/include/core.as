@@ -866,10 +866,11 @@ renderZone = function (zone, clip) {
 			room_mc.moveTo(0, 0);
 			room_mc.endFill();
 			room_mc._alpha = 0;
-			
+
 			if (rooms[room].window.tabs.length) {
 				room_mc.onPress2 = function () {
 					if (this.roomObj.canOpen == undefined || isAuthenticated(this.roomObj.canOpen)) {
+						trace("b");
 						this._alpha = 100;
 						var timeBeforeFade = new Tween(this, null, Regular.easeInOut, 0, 0, _global.settings.roomHighlightTime, true);
 						timeBeforeFade.obj = this;

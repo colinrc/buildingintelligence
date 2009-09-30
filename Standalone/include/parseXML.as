@@ -57,7 +57,7 @@ defineAppsBar = function (icons) {
 		}
 		if (icons[icon].childNodes.length) {
 			trace("got one: icon" + icon);
-			appObj.window = defineWindow(icons[icon].childNodes[0]);
+			appObj.window = defineWindow(icons[icon].childNodes[0], -1);
 		}
 		_global.appsBar.push(appObj);
 	}
@@ -207,8 +207,9 @@ defineZones = function (zones) {
 }
 
 defineWindow = function (window_xml, zone, room) {
-	if (!zone) {
+	if (zone == -1) {
 		trace("must be defining for apps bar");
+		zone = 0;
 		var window = new Object();
 	} else {
 		var window = _global.zones[zone].rooms[room].window;
