@@ -166,8 +166,7 @@
 		<setting name="coverSize" value="100" />
 	</musicLibrary>
 	<property>
-		<zone name="Home" background="home.jpg" cycle="false" alignment="center">
-		</zone>
+		
 		<zone name="Downstairs" map="downstairs.swf" cycle="false" alignment="center">
 			<rooms>
 				<room name="Ensuite" poly="443,219,443,296,579,296,579,153,477,153,477,219">
