@@ -11,6 +11,7 @@ package au.com.BI.Comfort;
 */
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
+import au.com.BI.Device.Device;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.*;
 import au.com.BI.User.User;
@@ -47,7 +48,8 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 		this.setSTX (STX);
 		this.setETX (ETX);
 		
-		this.setDeviceKeysString(true);
+		// this.setDeviceKeysString(true);
+		// Leave as default formatKey behavior but overwrite formatting for alarms
 
 		this.addControlledItem ("LU",null,MessageDirection.FROM_HARDWARE); // special item
 		this.addControlledItem  ("SERIAL",null,MessageDirection.FROM_HARDWARE);
@@ -61,6 +63,16 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 
 		}
 
+	// Overwrite default formatKey behavior for alarms
+	public String formatKey(String key, DeviceType device)
+	throws NumberFormatException {
+		if (device.getDeviceType() == Device.ALARM || device.getDeviceType() == DeviceType.ALERT){
+			return key;
+		} else{		
+			return super.formatKey(key, device);
+		}
+	}
+	
 	public void setCommandQueue (CommandQueue commandQueue){
 		super.setCommandQueue(commandQueue);
 		outputHelper.setCommandQueue(commandQueue);
@@ -86,6 +98,7 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 
 	}
 
+	
 	public void addControlledItem (String name, DeviceType details, MessageDirection controlType) {
 		String theKey = name;
 		String secondKey = "";
@@ -99,7 +112,7 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 
 				switch (deviceType) {
 					case DeviceType.TOGGLE_INPUT:
-					    theKey = "IP" + theKey;
+					    theKey = "IP" +theKey;
 						break;
 
 					case DeviceType.TOGGLE_OUTPUT: case DeviceType.TOGGLE_OUTPUT_MONITOR:
@@ -230,7 +243,6 @@ public void addStartupQueryItem (String name, Object  details, MessageDirection 
 
 	public void doCommand (CommandInterface command) throws CommsFail
 	{
-		String theWholeKey = command.getKey();
 
 		if (configHelper.getLastCommandType() == MessageDirection.NOT_CONTROLLED) {
 			sendNextCommandInQueue();

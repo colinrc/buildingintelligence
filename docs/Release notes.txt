@@ -1,3 +1,7 @@
+''' Comfort '''
+
+Resolved issue with outputs not functioning. [ticket:759]
+
 == 25/Sep/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b101.zip V1.6-b101]  ==
 
 ''' Groovy '''
