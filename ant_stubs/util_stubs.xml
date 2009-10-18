@@ -39,7 +39,6 @@
       			regexp=".*/([^\.]*)\.groovy" replace="\1"/>
    
   			<jar destfile="dist/models/${program}.jar" basedir="models" includes="au/com/BI/models/${program}.groovy" />
-  			<echo message="Building model jar ${program}.jar using groovy file ${program}.groovy" />
 
  	 	</sequential>
 	 </for>
