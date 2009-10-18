@@ -5,8 +5,8 @@
 	  <SERVER IP="" PORT="10000" />
 	  <ADMIN IP="" PORT="10001" />
 	  <INTEGRATOR_MODE ACTIVE="Y" />
-	  <CONFIG_FILE NAME="config_Jandy.xml" />
-	  <!-- CONFIG_FILE NAME="Office_s.xml" / -->	  
+	  <!-- CONFIG_FILE NAME="config_BI_ADVANTAGE_AIR.xml" / -->
+	  <CONFIG_FILE NAME="Zammit_s.xml" />  
 	  <DEBUG LEVEL="INFO" FILE="N" CONSOLE="Y"  LOGDIR="server/log" />
 	  <RRDGRAPH DIR=".\JRobin\Graph\" />
 	  <RRDBDIRECTORY DIR=".\JRobin\" />
