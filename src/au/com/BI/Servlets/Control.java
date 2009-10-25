@@ -63,10 +63,10 @@ public class Control extends HttpServlet {
 		output = resp.getWriter();
 		if (xmlMode)
 		{
-			output.println("<HTML>");		
-			output.println("<BODY>");
+			output.println("<RESP>");	
 		} else {
-			output.println("<RESP>");		
+			output.println("<HTML>");		
+			output.println("<BODY>");	
 		}
 	  	
         if (commandName == null){

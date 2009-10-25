@@ -4,7 +4,7 @@
  */
 package au.com.BI.Admin;
 import java.io.*;
-import java.net.*;
+
 
 import java.util.logging.*;
 import java.util.*;
@@ -19,7 +19,7 @@ public class eLife_monitor
 	
 	public String IPAddress = "";
 	public int port = 8082;
-	protected Level defaultDebugLevel = Level.INFO;
+	protected Level defaultDebugLevel = Level.ALL;
 	protected boolean running = true;
 	Logger logger;
 	boolean gettingLines = false;
@@ -38,6 +38,7 @@ public class eLife_monitor
 		logger = Logger.getLogger("eLife_monitor");
 		running = true;
 
+		logger.setLevel(defaultDebugLevel);
 	    // Read properties file.
 	    Properties properties = new Properties();
 	    try {
@@ -62,7 +63,7 @@ public class eLife_monitor
 					minor_version);
 
 		logger.info("Listening for connections on " + port);
-		connection = new JettyHandler ();
+		connection = new JettyHandler (this.defaultDebugLevel);
 		try {
 			connection.start(port,eSmart_Install,this);	
 		} catch (Exception e){
@@ -74,8 +75,7 @@ public class eLife_monitor
 	
 	public static void main(String[] args)
 	{
-
-		eLife_monitor monitor = new eLife_monitor();
+		new eLife_monitor();
 
 	}
 }

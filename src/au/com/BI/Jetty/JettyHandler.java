@@ -1,35 +1,38 @@
 package au.com.BI.Jetty;
 
-import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.SessionManager;
+import org.eclipse.jetty.servlet.DefaultServlet;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
 
-import org.mortbay.jetty.handler.ContextHandlerCollection;
-import org.mortbay.jetty.handler.DefaultHandler;
-import org.mortbay.jetty.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.ssl.SslConnector;
 
-import org.mortbay.jetty.security.Constraint;
-import org.mortbay.jetty.security.ConstraintMapping;
-import org.mortbay.jetty.security.FormAuthenticator;
-import org.mortbay.jetty.security.HashUserRealm;
-import org.mortbay.jetty.security.SecurityHandler;
-import org.mortbay.jetty.security.SslSocketConnector;
+import org.eclipse.jetty.http.security.Constraint;
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.authentication.BasicAuthenticator;
+import org.eclipse.jetty.server.ssl.SslSocketConnector;
 
-//import org.mortbay.jetty.handler.*;
+//import org.eclipse.jetty.server.handler.*;
 import au.com.BI.Admin.*;
-import java.util.logging.*;
- 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Logger;
+import java.util.logging.Level; 
 
 public class JettyHandler {
     boolean SSL = false;
-    org.mortbay.jetty.Server server = null,client_server = null;
+    org.eclipse.jetty.server.Server server = null,client_server = null;
     Logger logger;
     public static final int timeout = 30; // 1 minute timeout for a session;
     
-    public JettyHandler() {
+    public JettyHandler(Level debugLevel) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
+        logger.setLevel( debugLevel);
     }
     
     
@@ -37,85 +40,83 @@ public class JettyHandler {
   
     throws Exception {
         // Create the server
-
-    	
-        
-        // HTML Security realm
-
-        HashUserRealm  webPass = new HashUserRealm ();
-        webPass.setName("eLife_Monitor");
-        webPass.setConfig(installBase + "/datafiles/realm.properties");
         
         try {
-            server = new Server();
+        	if (logger.getLevel() != Level.INFO){
+            	System.setProperty("DEBUG", "true");
+            	System.setProperty("VERBOSE", "true");
+        	}
+            server = new Server(0);
             
-              SslSocketConnector sslConnect = new SslSocketConnector();
+              SslConnector sslConnect = new SslSocketConnector();
             	sslConnect.setPort(portNumber);
             	sslConnect.setKeystore(installBase + "/datafiles/keystore");
             	sslConnect.setPassword("building12");
             	sslConnect.setKeyPassword("building12");
-            	sslConnect.setName("SSL_CONNECT");
               server.setConnectors(new Connector[]{sslConnect});
- 
-              ContextHandlerCollection contexts = new ContextHandlerCollection();
-              
-
+               
+              HashLoginService  webPass = new HashLoginService ("eLife_Monitor",installBase + "/datafiles/realm.properties");
+              webPass.setRefreshInterval(60000);
+              server.addBean(webPass);
+                
             // Normal webclient  context
-             Constraint webClientConstraint = new Constraint();
-             webClientConstraint.setName(Constraint.__BASIC_AUTH);
+             ConstraintSecurityHandler constraintSecurityHandler = new ConstraintSecurityHandler();
              
-             webClientConstraint.setRoles(new String[]{"admin"});
+             Constraint webClientConstraint = new Constraint();
              webClientConstraint.setAuthenticate(true);
-
+             webClientConstraint.setName("eLife Monitor");
+             webClientConstraint.setRoles(new String[]{"admin","integrator"});
+             
             ConstraintMapping webClientCM = new ConstraintMapping();
-            webClientCM.setConstraint(webClientConstraint);
             webClientCM.setPathSpec("/*");
+            webClientCM.setConstraint(webClientConstraint);
             
-            
-            Context updateContext= new Context (contexts, "/",Context.SECURITY|Context.SESSIONS);
-                         
-            updateContext.setResourceBase("monitor_web");
+            Set<String> userRoles = new HashSet<String>();
+            userRoles.add("admin");
+            userRoles.add("integrator");
+            constraintSecurityHandler.setConstraintMappings(new ConstraintMapping[]{webClientCM},userRoles);
+            constraintSecurityHandler.setAuthenticator(new BasicAuthenticator());
+            constraintSecurityHandler.setLoginService(webPass);
+            constraintSecurityHandler.setStrict(false);
+           
+           	HandlerList handlers = new HandlerList();    
+
+           	ServletContextHandler updateContext= 
+            	new ServletContextHandler (handlers, "/",true,true);         
+  
+             handlers.addHandler(new DefaultHandler());
+
+         
             updateContext.setAttribute("eSmart_Install", installBase);
-            updateContext.setConnectorNames(new String[]{"SSL_CONNECT"});
-
+            updateContext.setWelcomeFiles(new String[]{"index.html"});       
             updateContext.addServlet("au.com.BI.Servlets.Control","/control");
-
-            ServletHolder davServlet = updateContext.addServlet("net.sf.webdav.WebdavServlet","/dav");
-            ServletHolder  defServlet = updateContext.addServlet("org.mortbay.jetty.servlet.DefaultServlet","/");      
-                      
+            
+            ServletHolder davServlet = updateContext.addServlet("net.sf.webdav.WebdavServlet","/dav");                
             davServlet.setInitParameter("rootpath", installBase);
             davServlet.setInitParameter("ResourceHandlerImplementation","net.sf.webdav.LocalFileSystemStore");
             davServlet.setInitParameter("maxUploadSize","2000000"); // 2mb
             davServlet.setInitParameter("no-content-length-headers","0");            
             davServlet.setInitParameter("lazyFolderCreationOnPut","0");  
-
             
-            davServlet.setInitParameter("rootpath", installBase);
-            davServlet.setInitParameter("ResourceHandlerImplementation","net.sf.webdav.LocalFileSystemStore");
-            davServlet.setInitParameter("maxUploadSize","2000000"); // 2mb
+            ServletHolder defServletHold= new ServletHolder(new DefaultServlet());
+            updateContext.addServlet(defServletHold,"/");  
+            defServletHold.setInitParameter("dirAllowed","false");
+            defServletHold.setInitParameter("aliases", "true");
+            defServletHold.setInitParameter("serveIcon", "false");
+            defServletHold.setInitParameter("resourceBase","monitor_web");   
             
-            updateContext.setWelcomeFiles(new String[]{"index.html"});
-            
-            defServlet.setInitParameter("dirAllowed","false");
-            defServlet.setInitParameter("aliases", "true");
-            defServlet.setInitParameter("serveIcon", "false");
-                 
-           SessionManager updateContextSessionMgr =  updateContext.getSessionHandler().getSessionManager();
-           updateContextSessionMgr.setMaxInactiveInterval(timeout);
-
-            SecurityHandler updateMgrSec = updateContext.getSecurityHandler();
-            updateMgrSec.setUserRealm(webPass);
-            
-            updateMgrSec.setConstraintMappings(new ConstraintMapping[]{webClientCM});
-                             
-           	HandlerCollection handlers = new HandlerCollection();
-            handlers.setHandlers(new org.mortbay.jetty.Handler[]{contexts,new DefaultHandler()});
-            
-            server.setHandler(handlers);
+           
+            updateContext.setSecurityHandler(constraintSecurityHandler);
+          
             server.setStopAtShutdown(true);
-
+            constraintSecurityHandler.setHandler(handlers);
+            server.setHandler(handlers);
+            //server.setHandler(updateContext);
+            
             // Start the http server
             server.start ();
+            System.err.println(server.dump());
+            server.join();
         } catch (Exception ex){
             logger.log (Level.WARNING,"Problems starting web server " + ex.getMessage());
             throw ex;
