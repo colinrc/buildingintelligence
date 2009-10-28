@@ -9,6 +9,8 @@ import java.util.logging.*;
 
 import au.com.BI.Command.CommandQueue;
 import au.com.BI.Comms.*;
+import au.com.BI.Util.DeviceModel;
+
 import java.util.*;
 import java.net.*;
 
@@ -38,14 +40,14 @@ public class AdminControlListener extends Thread
 	protected LogHandler sh = null;
 	protected String logDir;
 	protected AdminClientHandler currentAdminController = null;
-	protected HashMap modelRegistry = null;
-	protected Collection modelList;
+	protected HashMap <String,DeviceModel>modelRegistry = null;
+	protected Collection <DeviceModel> modelList;
 	protected Date startupTime;
 	protected String startupFile;
 	protected au.com.BI.IR.Model irLearner;
 	
 	public AdminControlListener (List<AdminClientHandler> adminControllers, int portNumber, String address,CommandQueue commandList,Level defaultDebugLevel,
-			HashMap modelRegistry, Date startupTime, String startupFile,String logDir, au.com.BI.IR.Model irLearner, LogHandler sh) 
+			HashMap <String,DeviceModel>modelRegistry, Date startupTime, String startupFile,String logDir, au.com.BI.IR.Model irLearner, LogHandler sh) 
 		throws CommsFail
 	{
 		heartbeatDoc = new Document (new Element ("heartbeat"));
@@ -161,7 +163,7 @@ public class AdminControlListener extends Thread
 
 	
 	public void sendToOneClient (Document xmlDoc, long originatingID){
-		Iterator clients = adminControllers.iterator();
+		Iterator <AdminClientHandler>clients = adminControllers.iterator();
 		while (clients.hasNext()){
 			AdminClientHandler client = (AdminClientHandler)clients.next();
 			try {
@@ -174,9 +176,9 @@ public class AdminControlListener extends Thread
 	}
 	
 	public void sendToOneClient (String xmlDoc, long originatingID) {
-		Iterator clients = adminControllers.iterator();
+		Iterator <AdminClientHandler>clients = adminControllers.iterator();
 		while (clients.hasNext()){
-			AdminClientHandler client = (AdminClientHandler)clients.next();
+			AdminClientHandler client = clients.next();
 			try {
 				if (client.getID() == originatingID) client.sendXML(xmlDoc);
 			} catch (IOException ex) {
@@ -194,9 +196,9 @@ public class AdminControlListener extends Thread
 	}
     
 	public void sendToAllClients (Document xmlDoc, long originatingID)  {
-		Iterator clients = adminControllers.iterator();
+		Iterator <AdminClientHandler>clients = adminControllers.iterator();
 		while (clients.hasNext()){
-			AdminClientHandler client = (AdminClientHandler)clients.next();
+			AdminClientHandler client = clients.next();
 			try {
 				if (client.getID() != originatingID) client.sendXML(xmlDoc);
 			} catch (IOException ex) {
@@ -207,9 +209,9 @@ public class AdminControlListener extends Thread
 	}
 	
 	public void sendToAllClients (String xmlDoc, long originatingID)  {
-		Iterator clients = adminControllers.iterator();
+		Iterator <AdminClientHandler>clients = adminControllers.iterator();
 		while (clients.hasNext()){
-			AdminClientHandler client = (AdminClientHandler)clients.next();
+			AdminClientHandler client = clients.next();
 			try {
 				if (client.getID() != originatingID) client.sendXML(xmlDoc);
 			} catch (IOException ex) {
@@ -242,13 +244,13 @@ public class AdminControlListener extends Thread
 	/**
 	 * @return Returns the modelList.
 	 */
-	public Collection getModelList() {
+	public Collection <DeviceModel>getModelList() {
 		return modelList;
 	}
 	/**
 	 * @param modelList The modelList to set.
 	 */
-	public void setModelList(Collection modelList) {
+	public void setModelList(Collection <DeviceModel>modelList) {
 		this.modelList = modelList;
 	}
 

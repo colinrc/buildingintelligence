@@ -21,6 +21,7 @@ import au.com.BI.Config.Security.IPType;
  * @author colin
  *
  */
+@SuppressWarnings("serial")
 public class ELifeAuthenticator extends FormAuthenticator  implements Authenticator {
 
 	public Security security;

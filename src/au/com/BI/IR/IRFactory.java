@@ -1,6 +1,5 @@
 package au.com.BI.IR;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +35,7 @@ public class IRFactory  extends DeviceFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addIR(DeviceModel targetDevice, List clientModels,
+	public void addIR(DeviceModel targetDevice, List <DeviceModel>clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		
 		if (targetDevice.getName().equals("GC100")) {
@@ -52,9 +51,8 @@ public class IRFactory  extends DeviceFactory {
 		
 				if (outKey != null && !outKey.equals("")) {
 					targetDevice.addControlledItem("AV." + outKey, theOutput, MessageDirection.FROM_FLASH);
-					Iterator clientModelList = clientModels.iterator();
-					while (clientModelList.hasNext()) {
-						DeviceModel clientModel = (DeviceModel) clientModelList.next();
+
+					for (DeviceModel clientModel: clientModels){
 						clientModel.addControlledItem("AV." + outKey, theOutput, type);
 					}
 				}

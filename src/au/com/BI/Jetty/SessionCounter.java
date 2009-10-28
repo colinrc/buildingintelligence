@@ -4,8 +4,6 @@
 package au.com.BI.Jetty;
 
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,8 +35,6 @@ public class SessionCounter implements HttpSessionListener  {
 	}
 
 	public void sessionCreated(HttpSessionEvent event) {
-        HttpSession session = event.getSession();
-
 		if (context == null) {
 			storeInServletContext(event);
 		}

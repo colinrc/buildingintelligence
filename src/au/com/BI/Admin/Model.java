@@ -34,7 +34,7 @@ public class Model extends SimplifiedModel implements DeviceModel, ClientModel
 	protected Level defaultDebugLevel = Level.INFO;
 	
 	protected int InstanceID;
-	protected HashMap modelRegistry;
+	protected HashMap <String,DeviceModel>modelRegistry;
 	protected au.com.BI.IR.Model irLearner;
 	protected LogHandler logHandler;
 	
@@ -105,7 +105,8 @@ public class Model extends SimplifiedModel implements DeviceModel, ClientModel
 	/**
 	 Closes the connection	 */
 	public void closeComms() throws ConnectionFail {
-		if (false && adminControlListener != null)
+		// This used to be commented out, but I cannot see why CC
+		if (adminControlListener != null)
 			adminControlListener.stopRunning ();
 	}
 	
@@ -176,12 +177,10 @@ public class Model extends SimplifiedModel implements DeviceModel, ClientModel
 	
 	
 	public void sendActionList (String device) { 
-		Set actionList = this.irCodeDB.getActions (device);
+		Set <String>actionList = this.irCodeDB.getActions (device);
 		Element returnXML = new Element("IR_ACTION_LIST");
 		if (actionList != null){
-			Iterator eachAction = actionList.iterator();
-			while (eachAction.hasNext()) {
-				String actionName = (String)eachAction.next();
+			for (String actionName:actionList){
 				Element newItem = new Element ("IR_ACTION_ITEM");
 				newItem.setAttribute("NAME",actionName);
 				returnXML.addContent(newItem);
@@ -191,12 +190,11 @@ public class Model extends SimplifiedModel implements DeviceModel, ClientModel
 	}
 	
 	public void sendIRDeviceList() {
-		Set deviceList = irCodeDB.getDevices();
+		Set <String> deviceList = irCodeDB.getDevices();
 		Element returnXML = new Element("IR_DEVICE_LIST");
 		if (deviceList != null){
-			Iterator eachDevice = deviceList.iterator();
-			while (eachDevice.hasNext()) {
-				String actionName = (String)eachDevice.next();
+
+			for (String actionName:deviceList){
 				Element newItem = new Element ("IR_DEVICE_ITEM");
 				newItem.setAttribute("NAME",actionName);
 				returnXML.addContent(newItem);
@@ -238,7 +236,7 @@ public class Model extends SimplifiedModel implements DeviceModel, ClientModel
 	 * Sets the list of all known models in the system
 	 * @param modelRegistry
 	 */
-	public void setModelRegistry (HashMap modelRegistry) {
+	public void setModelRegistry (HashMap <String,DeviceModel>modelRegistry) {
 		this.modelRegistry = modelRegistry;
 	}
 	

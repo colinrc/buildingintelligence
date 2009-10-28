@@ -100,7 +100,7 @@ class JANDY extends GroovyModel {
 							
 							
 						 case "CLEANR" :
-							if (partsOfCommand[3] == "ON" ){
+							if (partsOfCommand[3] == "1" ){
 								returnWrapper.addFlashCommand ( jandyDevice, "on")
 							} else {
 								returnWrapper.addFlashCommand ( jandyDevice, "off")
@@ -108,7 +108,7 @@ class JANDY extends GroovyModel {
 							break;
 							
 						case "POOLHT" :  case "SPAHT" : 
-							if (partsOfCommand[3] == "1" ){
+							if (partsOfCommand[3] == "1" || partsOfCommand[3] == "2"){
 								returnWrapper.addFlashCommand ( jandyDevice, "on" , partsOfCommand[3]  )
 							} else {
 								returnWrapper.addFlashCommand ( jandyDevice, "off")

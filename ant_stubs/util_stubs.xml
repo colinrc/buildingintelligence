@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="bi_stuff" basedir=".." >
-	<taskdef name="xmltask" 
+	<taskdef name="xmltask"
 	            classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
 	
 	<target name="update_xml" depends="" description="updates the xml layout file">
@@ -25,7 +25,8 @@
     </target>
     
 	<target name="jar" />
-    	
+	<target name="init" />
+	    	
     <target name="models" depends="init" >		
      <mkdir dir="dist/models" />
 	 <for param="file" keepgoing="false" >
