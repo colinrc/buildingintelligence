@@ -30,6 +30,7 @@ import org.jdom.output.XMLOutputter;
  *
  * @author colin
  */
+@SuppressWarnings("serial")
 public class Control extends HttpServlet {
     protected Logger logger;
     protected String eSmart_Install = "";
@@ -58,7 +59,7 @@ public class Control extends HttpServlet {
 		
         String commandName = req.getParameter("op");
         String respType = req.getParameter("resp");
-        if (resp != null && !resp.equals("html")){xmlMode = true;};
+        if (respType != null && !respType.equals("html")){xmlMode = true;};
 		resp.setContentType("text/html");
 		output = resp.getWriter();
 		if (xmlMode)

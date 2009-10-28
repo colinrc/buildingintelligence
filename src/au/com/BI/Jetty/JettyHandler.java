@@ -42,7 +42,7 @@ public class JettyHandler {
         // Create the server
         
         try {
-        	if (logger.getLevel() != Level.INFO){
+        	if (logger.getLevel().intValue() > Level.INFO.intValue()){
             	System.setProperty("DEBUG", "true");
             	System.setProperty("VERBOSE", "true");
         	}
@@ -115,15 +115,14 @@ public class JettyHandler {
             
             // Start the http server
             server.start ();
-            System.err.println(server.dump());
+            if (logger.getLevel().intValue() > Level.INFO.intValue()) {
+            	System.err.println(server.dump());
+            }
             server.join();
         } catch (Exception ex){
             logger.log (Level.WARNING,"Problems starting web server " + ex.getMessage());
             throw ex;
         }
     }
-
-
-
 
 }
