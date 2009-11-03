@@ -768,32 +768,6 @@ public class Model
 
 
 
-        /**
-         *  Returns all current commands .
-         *  CC Don't think this works, need to investigate what it was ever intended to do
-         */
-        
-        public void dumpCommands() {
-                Iterator theHashCachedCommands;
-                Object loCommand;
-                String lsCommand;
-                for (String commandName : cache.getStartupItemList()){
-                	loCommand = cache.getCachedObject(commandName);
-
-                        if (loCommand.getClass().getName().equals("java.util.Map")) {
-                                theHashCachedCommands = (Iterator) loCommand;
-                                while (theHashCachedCommands.hasNext()) {
-                                        lsCommand = theHashCachedCommands.next().toString();
-                                        logger.log(Level.FINE, "HashCommand : " + lsCommand);
-                                }
-                        }
-                        else {
-                                lsCommand = loCommand.toString();
-                                logger.log(Level.FINE, "Command : " + lsCommand);
-                        }
-                }
-        }
-
 
      /**
            * @param key,command,extra Create a command system command.
