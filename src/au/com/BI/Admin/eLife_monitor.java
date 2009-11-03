@@ -19,7 +19,7 @@ public class eLife_monitor
 	
 	public String IPAddress = "";
 	public int port = 8082;
-	protected Level defaultDebugLevel = Level.ALL;
+	protected Level defaultDebugLevel = Level.INFO;
 	protected boolean running = true;
 	Logger logger;
 	boolean gettingLines = false;

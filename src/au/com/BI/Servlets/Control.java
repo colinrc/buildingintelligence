@@ -159,12 +159,12 @@ public class Control extends HttpServlet {
 	        logger.log (Level.SEVERE,"No commands were passed to the servlet for execution");
 	        sendError("No commands were sent to the servlet for execution");	        
 		} else {	
-		  	sendMessage("Operation complete");			
+		  	sendStatus("OK","Operation complete","");			
 		}
 	  		
 		if (xmlMode)
 		{
-			output.println("</RESP>");
+			output.println("</resp>");
 			
 		}else {
 			output.println("<P><A HREF='/index.html'>Return to main page</A>");
@@ -179,7 +179,7 @@ public class Control extends HttpServlet {
      
     public void sendError (String message){
 		if (xmlMode){
-			output.println ("<ERROR>" + message + "<ERROR />" );
+			output.println ("<error>" + message + "<error />" );
 		} else {
 			output.println ("<P>" + message);			
 		}
@@ -188,11 +188,20 @@ public class Control extends HttpServlet {
     
     public void sendMessage (String message){
 		if (xmlMode){
-			output.println ("<RESP_LINE>" + message + "<RESP_LINE />" );
+			output.println ("  <resp_line>" + message + "<resp_line />" );
 		} else {
 			output.println ("<P class=\"normal\">" + message);			
 		}
-    	logger.log(Level.SEVERE,message);
+    	logger.log(Level.INFO,message);
+    }
+    
+    public void sendStatus (String status,String message,String errorMessage){
+		if (xmlMode){
+			output.println ("  <status code=\"" + status + "\" msg=\"" + message + "\" error=\"" + errorMessage + "\"/>" );
+		} else {
+			output.println ("<P class=\"normal\">" + message);			
+		}
+    	logger.log(Level.INFO,message);
     }
     
 	public String getStartupFile () {
@@ -303,16 +312,23 @@ public class Control extends HttpServlet {
 				try {
 					if (!xmlMode){
 						output.println( "<RAW>");
+					} else {
+						output.println( "  <EXEC_RESULTS>");						
 					}
 					while ((s = stdInput.readLine()) != null) {
 						if (xmlMode){
-							output.println("<RESULT>" + s + "<RESULT />");
+							output.println("    <RESULT_LINE>" + s + "<RESULT_LINE />");
 						} else {
 							output.println("<P>" + s);							
 						}
 					}
+					if (xmlMode){
+						output.println( "  </EXEC_RESULTS>");						
+					}
 					if (!xmlMode){
 						output.println( "</RAW>");
+					} else {
+						output.println( "  <EXEC_RESULTS>");						
 					}
 				} catch (IOException e) {
 
