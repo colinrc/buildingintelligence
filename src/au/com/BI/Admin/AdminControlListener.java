@@ -40,14 +40,14 @@ public class AdminControlListener extends Thread
 	protected LogHandler sh = null;
 	protected String logDir;
 	protected AdminClientHandler currentAdminController = null;
-	protected HashMap <String,DeviceModel>modelRegistry = null;
+	protected HashMap <String,String>modelRegistry = null;
 	protected Collection <DeviceModel> modelList;
 	protected Date startupTime;
 	protected String startupFile;
 	protected au.com.BI.IR.Model irLearner;
 	
 	public AdminControlListener (List<AdminClientHandler> adminControllers, int portNumber, String address,CommandQueue commandList,Level defaultDebugLevel,
-			HashMap <String,DeviceModel>modelRegistry, Date startupTime, String startupFile,String logDir, au.com.BI.IR.Model irLearner, LogHandler sh) 
+			HashMap <String,String>modelRegistry, Date startupTime, String startupFile,String logDir, au.com.BI.IR.Model irLearner, LogHandler sh) 
 		throws CommsFail
 	{
 		heartbeatDoc = new Document (new Element ("heartbeat"));

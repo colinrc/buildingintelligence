@@ -6,7 +6,6 @@ package au.com.BI.CustomConnect;
 import java.util.LinkedList;
 import java.util.List;
 
-import au.com.BI.Device.DeviceType;
 
 /**
  * @author colin

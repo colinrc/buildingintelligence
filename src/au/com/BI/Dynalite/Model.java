@@ -611,11 +611,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	
 	public void interpretRampStop (InterpretResult result, byte msg[]) {
 	// Fade channel or area to level , 1c is classic, others linear
-		CommandInterface dynResult = null;
-		int level = dynaliteHelper.scaleLevelForFlash(msg[4]);
 		byte channel = msg[2];
 		byte area = msg[1];
-		DynaliteDevice dev = null;
 		if (channel == (byte)0xff){
 			result.setRescanLevels(true);
 			result.setRescanArea(area);

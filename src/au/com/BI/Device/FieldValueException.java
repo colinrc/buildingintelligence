@@ -7,6 +7,7 @@ package au.com.BI.Device;
  * @version 1.0
  * @updated 18-Jan-2004 08:54:55 PM
  */
+@SuppressWarnings("serial")
 public class FieldValueException extends Exception{
 
 	public FieldValueException(){

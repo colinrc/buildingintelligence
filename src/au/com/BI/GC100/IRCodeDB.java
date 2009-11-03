@@ -134,7 +134,6 @@ public class IRCodeDB {
 		for (String device:devices.keySet()){
 				
 			Map <String,String>dbItems = (LinkedHashMap<String,String>)devices.get(device);
-
 			Map <String,String>dbFrequencies = (LinkedHashMap <String,String>)deviceItemFreqs.get(device);		
 
 			Element deviceElement = new Element ("IR_DEVICE");
@@ -181,6 +180,7 @@ public class IRCodeDB {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean readIRCodesFile(String fileName)  {
 		SAXBuilder builder = null;
 		Element macrosElement;
@@ -195,18 +195,11 @@ public class IRCodeDB {
 		try {
 			doc = builder.build(fileName);
 			macrosElement = doc.getRootElement();
-			List deviceList = macrosElement.getChildren();
-			Iterator eachDevice = deviceList.iterator();
-			
-			while (eachDevice.hasNext()){
-				Element device = (Element)eachDevice.next();
+			for (Element device:(List<Element>)macrosElement.getChildren()){
 				String deviceName = device.getAttributeValue("NAME");
 				
 				if (deviceName != null && !deviceName.equals("")) {
-					List codeList = device.getChildren();
-					Iterator eachCode = codeList.iterator();
-					while (eachCode.hasNext()){
-						Element code = (Element)eachCode.next();
+					for (Element code:(List<Element>)device.getChildren()){
 						String irCodeKey = code.getAttributeValue("KEY");
 						String irCodeFreq = code.getAttributeValue("FRQ");
 						String irCodeVal = code.getAttributeValue("VALS");
@@ -281,7 +274,7 @@ public class IRCodeDB {
 		        return "";
 		    
 			if (devices.containsKey( deviceName)) {
-			    Map dbFrequencies = (LinkedHashMap)deviceItemFreqs.get(deviceName);
+			    Map <String,String>dbFrequencies = (LinkedHashMap<String,String>)deviceItemFreqs.get(deviceName);
 			    if (dbFrequencies == null) {
 			        logger.log(Level.INFO,"GC100 IR code DB inconsistent.");
 			        return "";

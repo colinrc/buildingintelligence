@@ -34,7 +34,7 @@ public class Model extends SimplifiedModel implements DeviceModel, ClientModel
 	protected Level defaultDebugLevel = Level.INFO;
 	
 	protected int InstanceID;
-	protected HashMap <String,DeviceModel>modelRegistry;
+	protected HashMap <String,String>modelRegistry;
 	protected au.com.BI.IR.Model irLearner;
 	protected LogHandler logHandler;
 	
@@ -236,7 +236,7 @@ public class Model extends SimplifiedModel implements DeviceModel, ClientModel
 	 * Sets the list of all known models in the system
 	 * @param modelRegistry
 	 */
-	public void setModelRegistry (HashMap <String,DeviceModel>modelRegistry) {
+	public void setModelRegistry (HashMap <String,String>modelRegistry) {
 		this.modelRegistry = modelRegistry;
 	}
 	

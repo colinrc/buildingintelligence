@@ -19,7 +19,6 @@ import au.com.BI.Messaging.*;
 
 import au.com.BI.Command.*;
 import au.com.BI.GC100.*;
-import au.com.BI.GroovyModels.GroovyRunBlock;
 import au.com.BI.Device.DeviceFactories;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.LabelMgr.LabelMgr;
@@ -437,7 +436,7 @@ public class Config {
 	@SuppressWarnings("unchecked")
 	protected void parseDevices(Element deviceConfig, DeviceModel deviceModel,
 				List <DeviceModel>clientModels, String groupName) throws JDOMException {
-		int type;
+		int type =DeviceType.NA;
 		int groupNumber = 1; // used if a name is not specified; group 0 is reserved for overall device configuration
 
 		// An item is the next level
@@ -461,7 +460,7 @@ public class Config {
 			if (!foundElement) {
                                 String powerRating;
                                 int intPowerRating;
-				String deviceSpecName = topLevel.getName();
+
 
 				String group = topLevel.getAttributeValue("NAME");
 				if (group == null) 
@@ -644,14 +643,15 @@ public class Config {
 	 *
 	 */
 	public void readParameters (DeviceModel deviceModel,Element parameterBlock,String groupName) {
-		List parameters = parameterBlock.getChildren("ITEM");
-		Iterator eachParameter = parameters.iterator();
-		while (eachParameter.hasNext()) {
-			Element parameter = (Element)eachParameter.next();
-			String paramKey = parameter.getAttributeValue("NAME");
-			String paramValue = parameter.getAttributeValue("VALUE");
-			if (paramKey != null && !paramKey.equals ("")) {
-				deviceModel.setParameter(paramKey,Utility.unEscape(paramValue),groupName);
+		List <Element>parameters = parameterBlock.getChildren("ITEM");
+
+		if (parameters != null){
+			for (Element parameter:parameters){
+				String paramKey = parameter.getAttributeValue("NAME");
+				String paramValue = parameter.getAttributeValue("VALUE");
+				if (paramKey != null && !paramKey.equals ("")) {
+					deviceModel.setParameter(paramKey,Utility.unEscape(paramValue),groupName);
+				}
 			}
 		}
 

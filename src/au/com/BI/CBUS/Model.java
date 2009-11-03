@@ -961,7 +961,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			retCodes.add((byte)0); // options
 			
 			int  theCommand = 160 +3 + theLabel.length();
-			byte tCommand = (byte)theCommand;
 			retCodes.add((byte)theCommand);
 			int intGroup = Integer.parseInt(key,16);
 			retCodes.add((byte)intGroup); // group address

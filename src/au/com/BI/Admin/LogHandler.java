@@ -7,7 +7,6 @@ package au.com.BI.Admin;
 import java.io.OutputStream;
 import java.util.logging.*;
 import java.util.Vector;
-import java.util.Iterator;
 import java.util.Calendar;
 
 /**
@@ -43,9 +42,7 @@ public class LogHandler extends StreamHandler
 	    if (!sentBuffer) {
 	    	buffering = false;
 	    	sentBuffer = true;
-	    	Iterator eachRecord = startupLogBuffer.iterator();
-	    	while (eachRecord.hasNext()) {
-	    		LogRecord nextRecord = (LogRecord)eachRecord.next();
+	    	for (LogRecord nextRecord:startupLogBuffer){
 	    		publish(nextRecord);
 	    	}
 	    	startupLogBuffer.clear();

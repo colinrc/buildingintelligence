@@ -117,8 +117,6 @@ public class OutputHelper {
 			comfortCommand = STX + rawBuiltCommand;
 			commandFound = true;
 		}
-		String theCommand = command.getCommandCode();
-		
 
 		if (	!commandFound ){
 			switch (device.getDeviceType()) {
@@ -250,13 +248,11 @@ public class OutputHelper {
 
 	public String buildAlarmString (Alarm device, CommandInterface command, ConfigHelper configHelper, au.com.BI.Comfort.Model comfort){
 		String comfortCommand = "";
-		boolean commandFound = false;
 		
 		String rawBuiltCommand = model.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			comfortCommand = STX + rawBuiltCommand;
-			commandFound = true;
 		}
 		String theCommand = command.getCommandCode();
 		
@@ -271,12 +267,10 @@ public class OutputHelper {
 			    String alarm_mode = device.getModeCode (commandBits[1]);
 			    
 				comfortCommand = STX + "M!" + alarm_mode + userID;	
-				commandFound = true;
 		    }
 		}
 		if (command.getCommandCode().equals ("event_log")) {
 			comfortCommand = STX + "E?";	
-			commandFound = true;
 		}
 		logger.log(Level.FINER, "Build comms string "+ comfortCommand);
 		
@@ -285,21 +279,17 @@ public class OutputHelper {
 	
 	public String buildPulseOutputString (PulseOutput device, CommandInterface command, ConfigHelper configHelper, au.com.BI.Comfort.Model comfort){
 		String comfortCommand = "";
-		boolean commandFound = false;
 		
 		String rawBuiltCommand = model.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			comfortCommand = STX + rawBuiltCommand;
-			commandFound = true;
 		}
-		String theCommand = command.getCommandCode();
 		
 		if (command.getCommandCode().equals ("on")) {
 
 			if (command.getExtraInfo().equals ("")) {
 				comfortCommand = STX + "P!" + device.getKey() + "FF";						
-				commandFound = true;
 			} else {
 				int level = Integer.parseInt((String)command.getExtraInfo());
 				level = 255 * level/device.getMax();
@@ -307,11 +297,9 @@ public class OutputHelper {
 				if (hexLevel.length() == 1) hexLevel = "0" + hexLevel;
 	
 				comfortCommand = STX + "P!" +  device.getKey() + hexLevel;
-				commandFound = true;
 			}
 		} else {
 			comfortCommand = STX + "P!" + device.getKey() + "00";	
-			commandFound = true;
 		}
 		logger.log(Level.FINER, "Build comms string "+ comfortCommand);
 		
@@ -320,21 +308,17 @@ public class OutputHelper {
 	
 	public String buildVirtualOutputString (Counter device, CommandInterface command, ConfigHelper configHelper, au.com.BI.Comfort.Model comfort){
 		String comfortCommand = "";
-		boolean commandFound = false;
 		
 		String rawBuiltCommand = model.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			comfortCommand = STX + rawBuiltCommand;
-			commandFound = true;
 		}
-		String theCommand = command.getCommandCode();
 		
 		if (command.getCommandCode().equals ("on")) {
 
 			if (command.getExtraInfo().equals ("")) {
 				comfortCommand = STX + "OV" + device.getKey() + "FF";						
-				commandFound = true;
 			} else {
 				int level = Integer.parseInt((String)command.getExtraInfo());
 				level = 255 * level/device.getMax();
@@ -342,11 +326,9 @@ public class OutputHelper {
 				if (hexLevel.length() == 1) hexLevel = "0" + hexLevel;
 	
 				comfortCommand = STX + "OV" +  device.getKey() + hexLevel;
-				commandFound = true;
 			}
 		} else {
 			comfortCommand = STX + "OV" + device.getKey() + "00";	
-			commandFound = true;
 		}
 		logger.log(Level.FINER, "Build comms string "+ comfortCommand);
 		
@@ -356,21 +338,17 @@ public class OutputHelper {
 	
 	public String buildCounterString (Counter device, CommandInterface command, ConfigHelper configHelper, au.com.BI.Comfort.Model comfort){
 		String comfortCommand = "";
-		boolean commandFound = false;
 		
 		String rawBuiltCommand = model.doRawIfPresent (command, device);
 		if (rawBuiltCommand != null)
 		{
 			comfortCommand = STX + rawBuiltCommand;
-			commandFound = true;
 		}
-		String theCommand = command.getCommandCode();
 		
 		if (command.getCommandCode().equals ("on")) {
 
 			if (command.getExtraInfo().equals ("")) {
 				comfortCommand = STX + "C!" + device.getKey() + "FF";						
-				commandFound = true;
 			} else {
 				int level = Integer.parseInt((String)command.getExtraInfo());
 				level = 255 * level/device.getMax();
@@ -378,11 +356,9 @@ public class OutputHelper {
 				if (hexLevel.length() == 1) hexLevel = "0" + hexLevel;
 	
 				comfortCommand = STX + "C!" +  device.getKey() + hexLevel;
-				commandFound = true;
 			}
 		} else {
 			comfortCommand = STX + "C!" + device.getKey() + "00";	
-			commandFound = true;
 		}
 		logger.log(Level.FINER, "Build comms string "+ comfortCommand);
 		

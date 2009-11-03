@@ -7,6 +7,7 @@ package au.com.BI.Config;
  * @version 1.0
  * @updated 18-Jan-2004 08:54:55 PM
  */
+@SuppressWarnings("serial")
 public class TooManyClientsException extends Exception{
 
 	public TooManyClientsException(){

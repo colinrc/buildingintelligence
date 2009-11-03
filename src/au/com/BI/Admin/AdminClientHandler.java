@@ -34,19 +34,19 @@ public class AdminClientHandler extends Thread
 	protected CommandQueue commandList;
 	protected long ID;
 	protected boolean isAdmin = false;
-	protected HashMap modelRegistry;
-	protected Collection modelList;
+	protected HashMap <String,String>modelRegistry;
+	protected Collection <DeviceModel>modelList;
 	protected Date startupTime;
 	protected String startupFile;
 	protected String logDir;
 	protected au.com.BI.IR.Model irLearner;
 	
-	protected List clientList; // used to remove this thread in case of disaster
+	protected List <AdminClientHandler>clientList; // used to remove this thread in case of disaster
 	protected XMLOutputter xmlOut;
 	protected BufferedReader rd;
 	
-	public AdminClientHandler (Socket connection,CommandQueue commandList, List clientList,
-			HashMap modelRegistry, Date startupTime, String startupFile,String logDir) throws ConnectionFail {
+	public AdminClientHandler (Socket connection,CommandQueue commandList, List <AdminClientHandler>clientList,
+			HashMap <String,String>modelRegistry, Date startupTime, String startupFile,String logDir) throws ConnectionFail {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		clientConnection = connection;
 		this.commandList = commandList;
@@ -303,10 +303,7 @@ public class AdminClientHandler extends Thread
 			buildPackageMenuXML (returnXML,"Comms","au.com.BI.Comms");
 			buildPackageMenuXML (returnXML,"Script","au.com.BI.Script");
 			
-			Iterator allPackages = this.modelRegistry.keySet().iterator();
-			
-			while (allPackages.hasNext()) {
-			    String shortName = (String)allPackages.next();
+			for (String shortName:this.modelRegistry.keySet()){
 			    String fullClassName = (String)modelRegistry.get(shortName);
 				buildPackageMenuXML (returnXML,shortName,fullClassName);
 			}    
@@ -463,13 +460,13 @@ public class AdminClientHandler extends Thread
 	/**
 	 * @return Returns the modelList.
 	 */
-	public Collection getModelList() {
+	public Collection <DeviceModel>getModelList() {
 		return modelList;
 	}
 	/**
 	 * @param modelList The modelList to set.
 	 */
-	public void setModelList(Collection modelList) {
+	public void setModelList(Collection <DeviceModel>modelList) {
 		this.modelList = modelList;
 	}
 

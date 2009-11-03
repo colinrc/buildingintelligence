@@ -9,8 +9,6 @@ import au.com.BI.Device.DeviceType;
 import au.com.BI.Util.*;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.*;
 
@@ -82,6 +80,7 @@ public class CustomConnect extends BaseDevice implements DeviceType
 		
 		if (extraValues.containsKey("%NUMBER%") ){
 			try {
+				@SuppressWarnings("unused")
 				int intVal = Integer.parseInt(extraVal);
 				returnValue.isNumber = true;
 				CustomOutputExtraValue theVal = extraValues.get("%NUMBER%");

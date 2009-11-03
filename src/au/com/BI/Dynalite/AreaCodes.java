@@ -121,7 +121,6 @@ public class AreaCodes {
 	List <DynaliteDevice>findAllAreas () {
 		LinkedList <DynaliteDevice>allAreas = new LinkedList<DynaliteDevice>();
 		for (String nextArea:areaCodes.keySet()){
-			LinkedList <DynaliteDevice>deviceList = areaCodes.get(nextArea);
 			for (DynaliteDevice nextItem: areaCodes.get(nextArea)){
 				if (nextItem.isAreaDevice()) {
 					allAreas.add (nextItem);
