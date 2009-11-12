@@ -1,3 +1,9 @@
+== 14/Nov/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b104.zip V1.6-b104]  ==
+
+''' Jetty '''
+
+Updated to conform to old and new flash client http handhsakes (INIT or SESSION_ID)
+
 == 28/Oct/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b103.zip V1.6-b103]  ==
 
 ''' Jandy '''

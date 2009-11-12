@@ -12,10 +12,8 @@ import javax.servlet.*;
 
 import java.io.PrintWriter;
 import java.io.StringReader;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,6 +40,7 @@ import au.com.BI.Messaging.AddressBook.Locations;
  *
  * @author colinc
  */
+@SuppressWarnings("serial")
 public class UpdateServlet extends HttpServlet {
     CacheBridgeFactory cacheBridgeFactory = null;
     protected XMLOutputter xmlOut = null;
@@ -67,7 +66,6 @@ public class UpdateServlet extends HttpServlet {
     	Long ID = null;
     	Long serverID = null;
         HttpSession session = req.getSession(false);
-        Map <String,String> params = req.getParameterMap();
         boolean emptyResponse = true;
         
         try {
@@ -81,22 +79,23 @@ public class UpdateServlet extends HttpServlet {
 	            extraStuffForStartup = newClient (ID, serverID, versionManager);
 	            emptyResponse = false;
 	        } else {
-	        	
 	        	try {
-	        		String initReq = (String)req.getParameter("INIT");
-	        		if (initReq != null && initReq.equals ("Y")){
+		        	String initReq = (String)req.getParameter("INIT");
+		        	String SessionID = (String)req.getParameter("SESSION_ID");
+		        	
+	        		if ((initReq != null && initReq.equals ("Y")) || (SessionID != null && SessionID.equals("undefined"))){
 	    	            ID = System.currentTimeMillis();
 	    	            
 	    	            setupSession(ID, session, req.getRemoteUser());
 	    	            serverID = (Long)session.getAttribute("ServerID");
 	    	            extraStuffForStartup = newClient (ID, serverID, versionManager);
 	    	            emptyResponse = false;
-
 	        		}
 	        		
-		        	serverID = (Long)session.getAttribute("ServerID");
+
 		        	String handlingSession = (String)session.getAttribute("HANLDING_REQUEST") ;
-		        if (handlingSession != null && handlingSession.equals("Y")){
+		        	
+		        	if (handlingSession != null && handlingSession.equals("Y")){
 						resp.setContentType("text/xml");
 				        
 				        PrintWriter out = resp.getWriter();
@@ -152,12 +151,7 @@ public class UpdateServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest req,
             HttpServletResponse resp) throws ServletException,java.io.IOException {
-        HttpSession session = req.getSession(false);  	
-
-        Map  params = req.getParameterMap();
-        boolean emptyResponse = true;
-        LocalSession localSession = null;
-        
+        HttpSession session = req.getSession(false);  	        
         
     	SAXBuilder saxb = null;
     	saxb = new SAXBuilder(false); // get a SAXBuilder
@@ -261,9 +255,6 @@ public class UpdateServlet extends HttpServlet {
     public void returnTooManyClients (HttpServletRequest req,
             HttpServletResponse resp, HttpSession session, TooManyClientsException ex )
     {
-    	Date currentTime = new Date();
-    	
-
 		logger.log(Level.WARNING, "Too many clients error " + ex.getMessage());
 		resp.setContentType("text/xml");
         try {
@@ -310,7 +301,7 @@ public class UpdateServlet extends HttpServlet {
     	clientCommandFactory.setOriginating_location(Locations.HTTP);
     	clientCommandFactory.setAddressBook(addressBook);
     	
-        VersionManager versionManager = (VersionManager)context.getAttribute("VersionManager");
+        // VersionManager versionManager = (VersionManager)context.getAttribute("VersionManager");
         Long serverID = (Long)context.getAttribute("ServerID");
         
         session.setAttribute("CacheBridge",cacheBridgeFactory.createCacheBridge(ID));

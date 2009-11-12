@@ -129,7 +129,7 @@ public class FlashControlListener extends Thread {
 					    	flashClientHandler.close();
 					    	addressBook.removeByID(flashClientHandler.getID());
 					    	allControllers.remove();
-					    	numberFlashClients--;
+
 							ClientCommand clientCommand = clientCommandFactory.buildListNamesCommand();
 							if (clientCommand != null) {
 									commandList.add(clientCommand);

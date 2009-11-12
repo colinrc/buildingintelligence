@@ -28,7 +28,7 @@ public class Security {
     public final int alarmModel = 3;
     public final int controllerModel = 4;
     
-    private  byte allowNumbers [] = {4,2};
+    private  byte allowNumbers [] = {2,2};
     // First byte is number of full clients
     // Second byte is number of post only clients
     
@@ -58,10 +58,10 @@ public class Security {
     fullClients = new HashMap<String,Boolean> ();
     postOnlyClients = new HashMap<String,Boolean> ();
        
-    
+    /*
 	connected = true;
 	return ;
-   /*
+   */
     
     
 	InputStreamReader reader = new InputStreamReader(System.in);
