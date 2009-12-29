@@ -64,14 +64,14 @@ public class Control extends HttpServlet {
 		output = resp.getWriter();
 		if (xmlMode)
 		{
-			output.println("<RESP>");	
+			output.println("<resp>");	
 		} else {
 			output.println("<HTML>");		
 			output.println("<BODY>");	
 		}
 	  	
         if (commandName == null){
-        	sendError("Please pass correct operation as op (START|STOP|EXIT|RESTART|CLIENT_RESTART|SELECT");	   	  		
+        	sendStatus("UNKNOWN_OP","","Please pass correct operation as op (START|STOP|EXIT|RESTART|CLIENT_RESTART|GET_CONFIG|SET_CONFIG");	   	  		
 		    responseCode = HttpServletResponse.SC_BAD_REQUEST;
         	
         } else {
@@ -80,6 +80,7 @@ public class Control extends HttpServlet {
 				sendMessage("Starting eLife service");
 				p = Runtime.getRuntime().exec ("net start eLife");
 				displayProcessResults (p);
+				sendStatus("OK","Starting eLife service","");	
 				commandFound = true;
 			}
 	
@@ -88,12 +89,14 @@ public class Control extends HttpServlet {
 				sendMessage("Stopping eLife service");
 				p = Runtime.getRuntime().exec ("net stop eLife");			
 				displayProcessResults (p);
+				sendStatus("OK","Stopping eLife server","");	
 				commandFound = true;
 			}
 	
 			if (commandName.equals ("EXIT")) {
 				logger.log (Level.INFO,"Stopping monitor service");
 				sendMessage("Stopping monitor service");
+				sendStatus("OK","Stopping monitor service","");					
 				commandFound = true;
 			}
 			
@@ -104,6 +107,7 @@ public class Control extends HttpServlet {
 				displayProcessResults (p);
 				p = Runtime.getRuntime().exec ("net start eLife");
 				displayProcessResults (p);
+				sendStatus("OK","eLife server restarted","");			
 				commandFound = true;
 			}
 			/*
@@ -124,28 +128,38 @@ public class Control extends HttpServlet {
 				sendMessage("Restarting eLife client");
 				p = Runtime.getRuntime().exec ("taskkill /F /IM elife.exe");			
 				displayProcessResults (p);
+				sendStatus("OK","Client restarted","");	
 				commandFound = true;
 			}
-			if (commandName.equals ("GET_STARTUP")) {
+			if (commandName.equals ("GET_CONFIG")) {
 				logger.log (Level.INFO,"Fetching current configuration file");
-				String startupFile = this.getStartupFile();
-				if (xmlMode){
-					this.sendMessage(startupFile);
-				}else {
-					this.sendMessage("Current configuration file is " + startupFile);
+				try {
+					String startupFile = this.getStartupFile();
+					if (xmlMode){
+						this.sendMessage(startupFile);
+						sendStatus("OK","Configuration file retrieved","");			
+					}else {
+						this.sendMessage("Current configuration file is " + startupFile);
+					}
+				} catch  (CommandFail ex){
+					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
 				}
 				commandFound = true;
 			}
-			if (commandName.equals ("SELECT")) {
+			if (commandName.equals ("SET_CONFIG")) {
 		        String extra = req.getParameter("par")+".xml";
 			    if (extra != null && !extra.equals ("") ) {
 			        logger.log (Level.FINER,"Setting XML configuration file for startup " + extra);
-					commandFound = true;
-			        if (!setBootstrapFile (this.eSmart_Install,extra,output)) {
-				        String returnString = "Startup file changed : " + extra + "\n";
+			    	try {
+						commandFound = true;
+				        setBootstrapFile (this.eSmart_Install,extra,output);
+				        String returnString = "Configuration file changed : " + extra + "\n";
 						logger.log (Level.INFO,returnString);
 						sendMessage(returnString);
-			        }
+						sendStatus("OK","Configuration file changed","");				
+			    	} catch (CommandFail ex) {
+						sendStatus(ex.getErrorCode(),"",ex.getMessage());									    		
+			    	}
 				} else {
 			        logger.log (Level.WARNING,"Select XML configuration file requested, but no filename was specified in the FILE parameter");
 				}
@@ -157,9 +171,7 @@ public class Control extends HttpServlet {
         
 		if (commandFound == false){
 	        logger.log (Level.SEVERE,"No commands were passed to the servlet for execution");
-	        sendError("No commands were sent to the servlet for execution");	        
-		} else {	
-		  	sendStatus("OK","Operation complete","");			
+	        sendStatus("COMMAND_NOT_FOUND","","No commands were sent to the servlet for execution");	        
 		}
 	  		
 		if (xmlMode)
@@ -176,15 +188,7 @@ public class Control extends HttpServlet {
 	    resp.setStatus(responseCode);
 	    
     }    
-     
-    public void sendError (String message){
-		if (xmlMode){
-			output.println ("<error>" + message + "<error />" );
-		} else {
-			output.println ("<P>" + message);			
-		}
-    	logger.log(Level.SEVERE,message);
-    }
+
     
     public void sendMessage (String message){
 		if (xmlMode){
@@ -199,40 +203,47 @@ public class Control extends HttpServlet {
 		if (xmlMode){
 			output.println ("  <status code=\"" + status + "\" msg=\"" + message + "\" error=\"" + errorMessage + "\"/>" );
 		} else {
-			output.println ("<P class=\"normal\">" + message);			
+			if (errorMessage.equals("")){
+				output.println ("<P class=\"normal\">Status:" + status + " " + message);			
+			} else {
+				output.println ("<P class=\"normal\">Status:" + status + " " + errorMessage);							
+			}
 		}
-    	logger.log(Level.INFO,message);
+		if (status.equals("OK")){
+			logger.log(Level.INFO,message);
+		} else {
+			logger.log(Level.SEVERE,message);
+		}
     }
     
-	public String getStartupFile () {
+	public String getStartupFile () throws CommandFail {
 
-    	String startupFile = null;
-	try {
-		String fileName = eSmart_Install + "/server/datafiles/bootstrap.xml";
-		File theFile = new File (fileName);
-		
-		SAXBuilder saxb = new SAXBuilder(false); 
-		Document bootstrap = saxb.build (theFile);
-		
-		Element topBoot = bootstrap.getRootElement();
-		Element bootup = topBoot.getChild("CONFIG_FILE");
-		
-		startupFile = bootup.getAttributeValue("NAME");
-		return startupFile;
-
+	    String startupFile = null;
+	
+	    try {
+			String fileName = eSmart_Install + "/datafiles/bootstrap.xml";
+			File theFile = new File (fileName);
 			
-	} catch (IOException e) {
-		sendError ("IO Error writing the file " + e.getMessage());
-
-	} catch (JDOMException e1) {
-		sendError ("XML parse error on the bootstrap file " + e1.getMessage());
+			SAXBuilder saxb = new SAXBuilder(false); 
+			Document bootstrap = saxb.build (theFile);
+			
+			Element topBoot = bootstrap.getRootElement();
+			Element bootup = topBoot.getChild("CONFIG_FILE");
+			
+			startupFile = bootup.getAttributeValue("NAME");
+			return startupFile;
+	
+				
+		} catch (IOException e) {
+				throw new CommandFail ("IO_ERROR","IO Error writing the file " + e.getMessage());
+		
+		} catch (JDOMException e1) {
+				throw new CommandFail ("BOOTSTRAP_FAIL","XML parse error on the bootstrap file " + e1.getMessage());
+		}
 	}
-	return startupFile;
-	}
 
 
-	  public boolean setBootstrapFile (String eSmart_install, String extra,PrintWriter output) {
-	    	boolean errorCode = false;
+	  public void setBootstrapFile (String eSmart_install, String extra,PrintWriter output) throws CommandFail {
 		try {
 			String fileName = eSmart_install + "/datafiles/bootstrap.xml";
 			File theFile = new File (fileName);
@@ -261,30 +272,24 @@ public class Control extends HttpServlet {
 			
 			if (oldFile.exists()) {
 			    if (newName.exists() && !newName.delete()) {
-					sendError ("Could not delete old file "+oldFile.getName());
-
-					errorCode = true;
 				    logger.log (Level.SEVERE, "Could not delete old file "+oldFile.getName());
+			    	throw new CommandFail("IO_ERROR","Could not delete old file "+oldFile.getName());
 			    }
 				if (!oldFile.renameTo (newName)) { 
-					sendError ("Could not rename new file "+fileToUpload.getName()+" to " + oldFile.getName());
 				    logger.log (Level.SEVERE, "Could not rename old file "+oldFile.getName()+" to " + newName.getName());
-					errorCode = true;
+					throw new CommandFail("IO_ERROR","Could not rename new file "+fileToUpload.getName()+" to " + oldFile.getName());
 				}
 			}
 
 			if (!fileToUpload.renameTo(oldFile)) {
-				sendError ("Could not rename new file "+fileToUpload.getName()+" to " + oldFile.getName());
 			    logger.log (Level.SEVERE, "Could not rename new file "+fileToUpload.getName()+" to " + oldFile.getName());
-				errorCode = true;
+				throw new CommandFail("IO_ERROR","Could not rename new file "+fileToUpload.getName()+" to " + oldFile.getName());
 			}
 				    
 			File finalName = new File (fileName+".old");
 		    if (finalName.exists() && !finalName.delete()) {
-				sendError ("Could not delete old file "+finalName.getName());
-
 			    logger.log (Level.SEVERE, "Could not delete old file "+finalName.getName());
-				errorCode = true;
+			    throw new CommandFail("IO_ERROR","Could not delete old file "+finalName.getName());
 		    }
 			synchronized (output){
 				output.write((byte)0);
@@ -293,15 +298,10 @@ public class Control extends HttpServlet {
 
 				
 		} catch (IOException e) {
-			sendError ("IO Error writing the file " + e.getMessage());
-			errorCode = true;
+			throw new CommandFail("IO_ERROR","IO Error writing the file " + e.getMessage());
 		} catch (JDOMException e1) {
-			sendError ("XML parse error on the bootstrap file " + e1.getMessage());
-			errorCode = true;
-
+			throw new CommandFail("BOOTSTRAP_FAIL","XML parse error on the bootstrap file " + e1.getMessage());
 		}
-
-	return errorCode;
     }
 	
 		public void displayProcessResults (Process p) {
@@ -313,22 +313,19 @@ public class Control extends HttpServlet {
 					if (!xmlMode){
 						output.println( "<RAW>");
 					} else {
-						output.println( "  <EXEC_RESULTS>");						
+						output.println( "  <exec_results>");						
 					}
 					while ((s = stdInput.readLine()) != null) {
 						if (xmlMode){
-							output.println("    <RESULT_LINE>" + s + "<RESULT_LINE />");
+							output.println("    <result_line>" + s + "<result_line />");
 						} else {
 							output.println("<P>" + s);							
 						}
 					}
 					if (xmlMode){
-						output.println( "  </EXEC_RESULTS>");						
-					}
-					if (!xmlMode){
+						output.println( "  </exec_results>");						
+					}else {
 						output.println( "</RAW>");
-					} else {
-						output.println( "  <EXEC_RESULTS>");						
 					}
 				} catch (IOException e) {
 
