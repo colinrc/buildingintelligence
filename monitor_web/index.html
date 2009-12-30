@@ -58,8 +58,12 @@
 <form name="runForm" action="/control" method="get">
 		<h1>eLIFE Monitor Controls</h1>
 <UL>	
+<LI><INPUT TYPE=RADIO GROUP="op" NAME="op" VALUE="RESTART">Restart eLife Server</LI>
 <LI><INPUT TYPE=RADIO GROUP="op" NAME="op" VALUE="START">Start eLife Server</LI>
 <LI><INPUT TYPE=RADIO GROUP="op" NAME="op" VALUE="STOP">Stop eLife Server</LI>
+<P>
+<LI><INPUT TYPE=RADIO GROUP="op" NAME="op" VALUE="CLIENT_RESTART">Restart eLife Client</LI>
+<P>
 <LI><INPUT TYPE=RADIO GROUP="op" NAME="op" VALUE="SELECT">Change configuration file pattern. <INPUT NAME="par"></INPUT>.xml</LI>
 <LI><INPUT TYPE=submit ="Run" class="button" /> <INPUT TYPE=submit value="Cancel" class="button" /></LI>
 </UL>
@@ -69,6 +73,5 @@
 <P><A HREF="/control?op=EXIT">Stop<A> eLife Monitor
 <P><A HREF="/control?op=RESTART">Restart<A> eLife Server
 <P><A HREF="/control?op=CLIENT_RESTART">Restart<A> eLife Client
-
 </body>
 </html>
