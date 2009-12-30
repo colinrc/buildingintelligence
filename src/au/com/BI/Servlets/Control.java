@@ -25,7 +25,6 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 
-
 /**
  *
  * @author colin
@@ -164,8 +163,18 @@ public class Control extends HttpServlet {
 			        logger.log (Level.WARNING,"Select XML configuration file requested, but no filename was specified in the FILE parameter");
 				}
 			}
-			
+			if (commandName.equals ("LOGOUT")) {
+				logger.log (Level.INFO,"Logging out of monitor service");
+				sendMessage("Logging out of monitor service");
+		        HttpSession session = req.getSession(false);  	
+		        
+		        if (session != null){
+		        	session.invalidate();
+		        }
 
+				sendStatus("OK","Logged out of monitor","");	
+				commandFound = true;
+			}
 	 
         }
         
