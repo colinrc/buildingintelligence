@@ -65,7 +65,8 @@ public class Control extends HttpServlet {
 		{
 			output.println("<resp>");	
 		} else {
-			output.println("<HTML>");		
+			output.println("<HTML>");
+			output.println("<link REL=STYLESHEET HREF=\"style.css\" TEXT=\"text/css\">");
 			output.println("<BODY>");	
 		}
 	  	
