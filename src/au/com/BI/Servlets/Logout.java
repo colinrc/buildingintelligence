@@ -8,18 +8,15 @@
  */
 
 package au.com.BI.Servlets;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.jdom.output.XMLOutputter;
+import org.eclipse.jetty.security.HashLoginService;
 
 import au.com.BI.Command.ClientCommandFactory;
 import au.com.BI.Command.CommandQueue;
 import au.com.BI.Flash.ClientCommand;
-import au.com.BI.Home.VersionManager;
 import au.com.BI.Jetty.CacheBridgeFactory;
 import au.com.BI.Messaging.AddressBook;
 
@@ -28,6 +25,7 @@ import au.com.BI.Messaging.AddressBook;
  *
  * @author colinc
  */
+@SuppressWarnings("serial")
 public class Logout extends HttpServlet {
     CacheBridgeFactory cacheBridgeFactory = null;
     AddressBook  addressBook = null;
@@ -49,7 +47,6 @@ public class Logout extends HttpServlet {
         	ClientCommandFactory clientCommandFactory = (ClientCommandFactory)session.getAttribute("ClientCommandFactory");
 
         	session.invalidate();
-
         	if (clientCommandFactory != null && ID != null && commandQueue  != null && addressBook != null){
             	clientCommandFactory.setID(ID);
 			    	addressBook.removeByID(ID);
@@ -60,23 +57,8 @@ public class Logout extends HttpServlet {
         	}
         }
         
-        resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        resp.sendRedirect("/index.html");
-/*
- * 
-        resp.setContentType("text/html");
-        
-        java.io.PrintWriter out = resp.getWriter();
-                
-        out.println("<HTML>");
-        out.println("<BODY>");
-        out.println("<P>You have logged out of eLife");
-        out.println("<P>In two seconds you should be redirected to the eLife login page");
-        out.println("</BODY>");
-        out.println("</HTML>");
-        resp.flushBuffer();
-        resp.setStatus(HttpServletResponse.SC_OK);
-        */
+        resp.sendRedirect("/UserManager");
+
     }
         
     

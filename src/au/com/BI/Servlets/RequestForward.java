@@ -25,14 +25,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mortbay.io.Buffer;
-import org.mortbay.jetty.HttpSchemes;
-import org.mortbay.jetty.client.Address;
-import org.mortbay.jetty.client.HttpClient;
-import org.mortbay.jetty.client.HttpExchange;
-import org.mortbay.util.IO;
-import org.mortbay.util.ajax.Continuation;
-import org.mortbay.util.ajax.ContinuationSupport;
+import org.eclipse.jetty.io.Buffer;
+import org.eclipse.jetty.http.HttpSchemes;
+import org.eclipse.jetty.client.Address;
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.HttpExchange;
+import org.eclipse.jetty.util.IO;
+import org.eclipse.jetty.continuation.Continuation;
+import org.eclipse.jetty.continuation.ContinuationSupport;
 
 
 
