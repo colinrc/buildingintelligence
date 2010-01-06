@@ -9,23 +9,22 @@ import org.eclipse.jetty.server.bio.SocketConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.SessionManager;
 
-import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 
 import org.eclipse.jetty.http.security.Constraint;
 import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
-import org.eclipse.jetty.security.SecurityHandler;
+import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.server.ssl.SslSocketConnector;
 
-import org.eclipse.jetty.servlet.DefaultServlet;
 
 import au.com.BI.Config.Security.IPType;
 //import org.eclipse.jetty.server.handler.*;
@@ -34,7 +33,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.*;
-import au.com.BI.Servlets.*;
 
 public class JettyHandler extends SimplifiedModel implements DeviceModel, ClientModel {
     boolean SSL = false;
@@ -52,6 +50,9 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         this.setAutoReconnect(false);
         this.security = security;
         forwards= new ConcurrentHashMap<String,URL>();
+        if (logger.isLoggable(Level.INFO)){
+        	System.setProperty("org.eclipse.jetty.util.log.DEBUG", "true");
+        }
     }
     
     public boolean removeModelOnConfigReload() {
@@ -61,7 +62,8 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     public void startHTTPServer (HashLoginService webPass) throws Exception {
     	client_server = new Server(0);
     	
-        server.addBean(webPass);
+    	client_server.addBean(webPass);
+    	
         
         org.eclipse.jetty.server.bio.SocketConnector connector = new SocketConnector();
         connector.setPort(bootstrap.getJettyPort());
@@ -131,8 +133,9 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         /** Post only content */            
         IPInRangeHandler iPInRangeHandler = new IPInRangeHandler();
         iPInRangeHandler.setIpType(IPType.PostOnly);
-        ServletContextHandler postContext = new ServletContextHandler (contexts,"/post", null,iPInRangeHandler,null,null);
-        
+        iPInRangeHandler.setSecurity(security);
+        ServletContextHandler postContext = new ServletContextHandler (contexts,"/post", true,false);
+        postContext.setSecurityHandler(iPInRangeHandler);
         postContext.setAttribute("Cache",cache);
         postContext.setAttribute("ServerID",new Long (this.getServerID()));
         postContext.setAttribute("CommandQueue",commandQueue);
@@ -163,14 +166,16 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
        webClientCM.setConstraint(webClientConstraint);
        webClientCM.setPathSpec("/*");
        
-       FormAuthenticator updateAuthenticator = new FormAuthenticator ("/login.html","/login_fail.html",false);
        IPInRangeHandler fullFunctionSecHandler = new IPInRangeHandler();
        fullFunctionSecHandler.setSecurity(security);
        fullFunctionSecHandler.setIpType(IPType.FullFunction);
-       fullFunctionSecHandler.setAuthenticator(updateAuthenticator);
+       fullFunctionSecHandler.setAuthenticator(new FormAuthenticator ("/login.html","/login_fail.html",false));
        fullFunctionSecHandler.setConstraintMappings(new ConstraintMapping[] {webClientCM});
-       ServletContextHandler updateContext= new ServletContextHandler (contexts, "/",null,fullFunctionSecHandler,null,null);
-                    
+       
+       
+       ServletContextHandler updateContext= new ServletContextHandler (contexts, "/",true,true);
+       updateContext.setSecurityHandler(fullFunctionSecHandler);
+       SessionHandler sessionHandler = updateContext.getSessionHandler();
        updateContext.setResourceBase("../www");
        updateContext.setConnectorNames(new String[]{"SSL_CONNECT"});
 
@@ -190,7 +195,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
        defServlet.setInitParameter("aliases", "true");
        defServlet.setInitParameter("serveIcon", "false");
             
-      SessionManager updateContextSessionMgr =  updateContext.getSessionHandler().getSessionManager();
+      SessionManager updateContextSessionMgr =  sessionHandler.getSessionManager();
       updateContextSessionMgr.setMaxInactiveInterval(timeout);
 
       updateContext.setAttribute("CacheBridgeFactory",cacheBridgeFactory);
@@ -217,26 +222,27 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         constraint.setRoles(new String[]{"user","admin","integrator"});
         constraint.setAuthenticate(true);
 
+
         ConstraintMapping cm = new ConstraintMapping();
         cm.setConstraint(constraint);
-        cm.setPathSpec("/*");
-
-        IPInRangeHandler usrSecHandler = new IPInRangeHandler();
-        FormAuthenticator usrAuthenticator = new FormAuthenticator ("/login.html","/login_fail.html",false);
-        usrSecHandler.setSecurity(security);
-        usrSecHandler.setIpType(IPType.PWDOnly);
-        usrSecHandler.setAuthenticator(usrAuthenticator);
+        cm.setPathSpec("/Users/*");
         
+        IPInRangeHandler usrSecHandler = new IPInRangeHandler();
+        //ConstraintSecurityHandler usrSecHandler = new ConstraintSecurityHandler();
+        usrSecHandler.setAuthenticator(new FormAuthenticator ("/login.html","/login_fail.html",false));
+        usrSecHandler.setSecurity(security);
+        //usrSecHandler.setAuthenticator(new BasicAuthenticator ());
+
         usrSecHandler.setConstraintMappings(new ConstraintMapping[]{cm});
         
-        ServletContextHandler userMgrContext = new ServletContextHandler (contexts, "/UserManager",null,usrSecHandler,null,null);
+        ServletContextHandler userMgrContext = new ServletContextHandler (contexts, "/UserManager",true,true);
+        userMgrContext.setSecurityHandler(usrSecHandler);
         userMgrContext.setResourceBase("../www/UserManager");
         userMgrContext.setAttribute("UserManager",webPass);
         userMgrContext.setAttribute("AddressBook",addressBook);
         userMgrContext.setConnectorNames(new String[]{"SSL_CONNECT"});
 
-        ServletHolder  useMgrDef  =userMgrContext.addServlet("org.eclipse.jetty.servlet.DefaultServlet","/*");
-
+        ServletHolder useMgrDef = userMgrContext.addServlet("org.eclipse.jetty.servlet.DefaultServlet","/*");
         userMgrContext.addServlet("au.com.BI.Servlets.UserManagerServlet", "/Users");
         userMgrContext.addServlet("au.com.BI.Servlets.LogoutUserManager", "/Logout");
  
@@ -244,9 +250,9 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         useMgrDef.setInitParameter("aliases", "true");
         useMgrDef.setInitParameter("serveIcon", "false");
         useMgrDef.setInitParameter("redirectWelcome", "false");
+        userMgrContext.setSecurityHandler(usrSecHandler);
     
-       userMgrContext.setWelcomeFiles(new String[]{"Users","index.html"});
-
+        userMgrContext.setWelcomeFiles(new String[]{"Users","index.html"});
     }
     
     
