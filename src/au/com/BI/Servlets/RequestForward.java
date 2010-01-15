@@ -112,7 +112,7 @@ public class RequestForward implements Servlet {
      {
          final InputStream in=request.getInputStream();
          final OutputStream out=response.getOutputStream();
-         final Continuation continuation = ContinuationSupport.getContinuation(request,request);
+         final Continuation continuation = ContinuationSupport.getContinuation(request);
 
 
          if (!continuation.isPending())

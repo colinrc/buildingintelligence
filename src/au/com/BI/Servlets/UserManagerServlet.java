@@ -76,7 +76,7 @@ public class UserManagerServlet extends HttpServlet {
         HttpSession session = req.getSession(false);  	
         String message = "";
         String[] userType = {""};
-        
+        boolean userFileUpdated = false;
     	ServletContext context =  session.getServletContext();
     	HashLoginService userRealm = (HashLoginService)context.getAttribute("UserManager");
 
@@ -96,15 +96,12 @@ public class UserManagerServlet extends HttpServlet {
 	        	if (op.equals ("Change Password")){
 	        		String newPasstxt = req.getParameter ("PWD");
 	        		String user = req.getParameter ("USER");
-	        		
+	        		 
         			userType[0] = setUserType(user,req);
-        			if (userType[0].equals ("admin") && (!req.isUserInRole("admin") && !req.isUserInRole("integrator"))) {
-        				message = "Only an admin user or integrator can change the password of this user";
+        			if (!user.equals(req.getRemoteUser()) && (!req.isUserInRole("admin") && !req.isUserInRole("integrator"))) {
+        				message = "Only an admin user or integrator can change the password of a user other than themself";
         			}
-        			if (userType[0].equals ("integrator") && !req.isUserInRole("integrator")) {
-        				message = "Only an integrator can change the password of an integrator";
-        			}	
-        			if (!message.equals("")){
+        			if (!message.equals("")){ 
 		        		if (newPasstxt == null || newPasstxt.equals ("") || user == null || user.equals("")){
 		        			message = "New password cannot be empty";
 		        		} else {
@@ -113,7 +110,7 @@ public class UserManagerServlet extends HttpServlet {
 			        		String newPwd = rawPwd +userType;
 			        		properties.put (user,newPwd);
 			        		userRealm.putUser (user,Credential.getCredential(rawPwd),userType);
-	
+			        		userFileUpdated = true;
 			        		message = "Password changed for " + user;
 		        		}
         			}
@@ -122,10 +119,11 @@ public class UserManagerServlet extends HttpServlet {
 	        	if (op.equals ("Add User")){
 	        		String newPasstxt = req.getParameter ("NEW_PWD");
 	        		String user = req.getParameter ("NEW_USER");
-        			userType[0] = setUserType(user,req);
+	        		userType[0] = setUserType(req.getParameter ("newUserRole"),req);
+
         			
         			if ((!req.isUserInRole("integrator") && !req.isUserInRole("admin"))){
-	        			message = "Only an integrator or admin user can add new users";
+	        			message = "Only an admin or integrator can add new users";
         			}
         			else {
 	
@@ -133,12 +131,13 @@ public class UserManagerServlet extends HttpServlet {
 		        			message = "New password and / or user cannot be empty";
 		        		} else {
 		        			String rawPwd = "CRYPT:" + UnixCrypt.crypt (newPasstxt, new Date().toString());
-			        		String newPwd = rawPwd +"," + userType;
+			        		String newPwd = rawPwd +"," + userType[0];
 			        		
 			        		properties.put (user,newPwd);
 			        		userRealm.putUser (user,Credential.getCredential(rawPwd),userType);
 			        		//userRealm.addUserToRole (user,userType);
 			        		message = "User " + user + " added";
+			        		userFileUpdated = true;
 		        		}
         			}
 	        	}
@@ -154,14 +153,16 @@ public class UserManagerServlet extends HttpServlet {
 		        		//userRealm.disassociate(userRealm.getPrincipal( user));
 	        			userRealm.removeUser(user);
 		        		message = "User " + user + " deleted";
+		        		userFileUpdated = true;
 	        		}
 	        	}
 
 	        }
-	        //FileOutputStream outStream = new FileOutputStream("datafiles/realm.properties");
-	        //properties.store (outStream,null);
-    		//outStream.close();
-
+	        if (userFileUpdated){
+		        OutputStream outStream = userRealm.getConfigResource().getOutputStream();
+		        properties.store (outStream,null);
+	    		outStream.close();
+	        }
 			displayUsers(resp.getWriter(),message,userRealm, 
 					req.getRemoteUser(), req.isUserInRole("admin"),req.isUserInRole("integrator"));
 			
@@ -174,10 +175,10 @@ public class UserManagerServlet extends HttpServlet {
 		String userType;
 		userType = "user";
 		
-		if (reqUserType.equals ("admin")&& (req.isUserInRole("integrator") || req.isUserInRole("admin"))){
+		if (reqUserType.equals ("admin")&& !req.isUserInRole("user") ){
 			userType = "admin";
 		} 
-		if (reqUserType.equals ("integrator") && req.isUserInRole("integrator")){
+		if (reqUserType.equals ("integrator") && !req.isUserInRole("user")){
 			userType = "integrator";
 		} 
 		return userType;
@@ -189,9 +190,9 @@ public class UserManagerServlet extends HttpServlet {
  
     	     // }
     		resp.println("<HTML>");
-    		resp.println("<link REL=STYLESHEET HREF=\"/style.css\" TEXT=\"text/css\">");
+    		// resp.println("<link REL=STYLESHEET HREF=\"/style.css\" TEXT=\"text/css\">");
     		resp.println("<BODY>");
-    	 
+    		resp.println("<CENTER>");    	 
     		resp.println ("<H1>eLife User Manager </H1>");
 
     		if (!message.equals("")){
@@ -203,11 +204,12 @@ public class UserManagerServlet extends HttpServlet {
     		resp.println ("<FORM METHOD='POST' ACTION='/UserManager/Users' >");
     		
     		if (isAdmin || isIntegrator) {
-	       		resp.println ("<TABLE>");
+	       		resp.println ("<TABLE BORDER='1'>");
+	   	        resp.print ("<TR class=\"TableHeader\"><TH> </TH><TH>Name</TH><TH>Role</TH></TR>");
 	       	    		
 	       		for (String name:userRealm.getUsers().keySet()){
-	    	   	        resp.println ("<TR><TD><INPUT TYPE='RADIO' NAME='USER' VALUE='" + name + "'><TD>"+name+"</TD></TR>");
-	   	    	 
+	    	   	        resp.print ("<TR><TD><INPUT TYPE='RADIO' CLASS='radio' NAME='USER' VALUE='" + name + "'></TD><TD>"+name+"</TD>");
+	    	   	        resp.println ("</TR>");
 	    	     }
 	 
 	       		resp.println ("</TABLE>");
@@ -233,14 +235,18 @@ public class UserManagerServlet extends HttpServlet {
 	 	  		resp.println ("<P>To <BOLD>add a user</BOLD> enter the details below");	  		
 	 	  		resp.println ("<P>User: <INPUT NAME='NEW_USER' VALUE=''>");
 	 	  		resp.println ("<P>Password: <INPUT NAME='NEW_PWD' VALUE=''>");
-	 	  		resp.println ("<INPUT TYPE=SUBMIT NAME='OP' VALUE='Add User'>");
+	 	  		resp.print ("<P>Role: ");
+	 	  		resp.print ( "User<INPUT TYPE='radio' NAME='newUserRole' VALUE='user' SELECTED> </INPUT>  ");
+	 	  		resp.print ( "Admin<INPUT TYPE='radio' NAME='newUserRole' VALUE='admin'> </INPUT>  ");
+	 	  		resp.println ( "Integrator<INPUT TYPE='radio' NAME='newUserRole' VALUE='integrator'> </INPUT>  ");
+	 	  		resp.println ("<P><INPUT TYPE=SUBMIT NAME='OP' VALUE='Add User'>");
 		  		resp.println ("<HR>");
 		  	}
  	  		
    	  		resp.println ("</FORM>");
    	  		
    	  		resp.println("<A HREF='/UserManager/Logout'>Logout</A> of the User Manager.");
-
+    		resp.println("</CENTER>");   
 	  		resp.println("</BODY>");
 	  		resp.println("</HTML>");
     }    
