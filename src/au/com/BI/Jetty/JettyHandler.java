@@ -80,9 +80,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         defServlet.setInitParameter("dirAllowed","false");
         defServlet.setInitParameter("aliases", "true");
         defServlet.setInitParameter("serveIcon", "false");
-        
-
-        
+           
         contexts.addHandler(new DefaultHandler());
         
         client_server.setHandler(contexts);
@@ -129,6 +127,11 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     }
     
     protected void addPostOnlyContext (ContextHandlerCollection contexts){
+   
+        Constraint postClientConstraint = new Constraint();
+        postClientConstraint.setName(Constraint.__FORM_AUTH);
+        postClientConstraint.setRoles(new String[]{"user","admin","integrator"});
+        postClientConstraint.setAuthenticate(true);
         
         /** Post only content */            
         IPInRangeHandler iPInRangeHandler = new IPInRangeHandler();
@@ -143,11 +146,6 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         postContext.setAttribute("IPType",IPType.PostOnly);    
         postContext.addServlet("au.com.BI.Servlets.PostUpdateServlet","/update");
 
-        Constraint postClientConstraint = new Constraint(); 
-        postClientConstraint.setName(Constraint.__FORM_AUTH);
-        postClientConstraint.setRoles(new String[]{"user","admin"});
-        postClientConstraint.setAuthenticate(true);
-        
         ConstraintMapping postClientCM = new ConstraintMapping();
         postClientCM.setConstraint(postClientConstraint);
         postClientCM.setPathSpec("/*");
@@ -228,10 +226,9 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         cm.setPathSpec("/Users/*");
         
         IPInRangeHandler usrSecHandler = new IPInRangeHandler();
-        //ConstraintSecurityHandler usrSecHandler = new ConstraintSecurityHandler();
+        usrSecHandler.setIpType(IPType.PWDOnly);
         usrSecHandler.setAuthenticator(new FormAuthenticator ("/login.html","/login_fail.html",false));
         usrSecHandler.setSecurity(security);
-        //usrSecHandler.setAuthenticator(new BasicAuthenticator ());
 
         usrSecHandler.setConstraintMappings(new ConstraintMapping[]{cm});
         
