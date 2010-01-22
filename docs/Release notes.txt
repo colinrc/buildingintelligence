@@ -1,3 +1,12 @@
+''' Jetty '''
+
+Updated to Jetty 7
+
+''' User Manager '''
+
+Updated to support admin/integrator roles ( in preparation for monitor release)
+
+
 == 14/Nov/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b104.zip V1.6-b104]  ==
 
 ''' Jetty '''

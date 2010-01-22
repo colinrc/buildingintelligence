@@ -18,9 +18,7 @@ import org.eclipse.jetty.server.handler.HandlerCollection;
 
 import org.eclipse.jetty.http.security.Constraint;
 import org.eclipse.jetty.security.ConstraintMapping;
-import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
-import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.server.ssl.SslSocketConnector;
@@ -182,9 +180,8 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
        
        // forwards handler
        //Context forwardContext = new Context (contexts,"/forwards",Context.SECURITY|Context.SESSIONS);
-       updateContext.addServlet ("au.com.BI.Servlets.RequestForward","/forward/*");
        updateContext.setAttribute("forwards", forwards);
-                   
+       updateContext.addServlet ("au.com.BI.Servlets.RequestForward","/forward/*");
        ServletHolder  defServlet = updateContext.addServlet("org.eclipse.jetty.servlet.DefaultServlet","/");
        
        updateContext.setWelcomeFiles(new String[]{"index.html"});
