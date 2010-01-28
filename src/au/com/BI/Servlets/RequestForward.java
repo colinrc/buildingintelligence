@@ -23,6 +23,13 @@ import org.eclipse.jetty.util.log.Logger;
  * @author colin
  * Based on the AsyncProxyServlet source from the Jetty distribution
  * 
+ * Transparent Proxy. This convenience extension to ProxyServlet configures the servlet as a transparent proxy. The servlet is configured with init parameter:
+
+ProxyTo - a URI like http://host:80/context to which the request is proxied.
+Prefix - a URI prefix that is striped from the start of the forwarded URI.
+For example, if a request was received at /foo/bar and the ProxyTo was 
+http://host:80/context and the Prefix was /foo, then the request would be proxied to http://host:80/context/bar
+ * 
  */
 public class RequestForward extends ProxyServlet
 {
@@ -31,8 +38,6 @@ public class RequestForward extends ProxyServlet
  * 
  */
 
-         String _prefix;
-         String _proxyTo;
          Map <String,String>forwards;
 	         
          public RequestForward()
@@ -51,28 +56,20 @@ public class RequestForward extends ProxyServlet
          public void init(ServletConfig config) throws ServletException
          {
         	 forwards = (Map<String,String>)config.getServletContext().getAttribute("forwards");
-             if (config.getInitParameter("ProxyTo")!=null)
-                 _proxyTo=config.getInitParameter("ProxyTo");
-             if (config.getInitParameter("Prefix")!=null)
-                 _prefix=config.getInitParameter("Prefix");
-             if (_proxyTo==null)
-                 throw new UnavailableException("No ProxyTo");
+        	 
              super.init(config);
-             _log.info(_name+" @ "+(_prefix==null?"-":_prefix)+ " to "+_proxyTo);
          }
 
          @Override
          protected HttpURI proxyHttpURI(final String scheme, final String serverName, int serverPort, final String uri) throws MalformedURLException
          {
-             if (_prefix!=null && !uri.startsWith(_prefix))
-                 return null;
- 
-             if (_prefix!=null)
-                 return new HttpURI(_proxyTo+uri.substring(_prefix.length()));
-             return new HttpURI(_proxyTo+uri);
+        	 for (String _prefix: forwards.keySet()){
+        		 if (uri.startsWith(_prefix)){
+        			 return new HttpURI(forwards.get(_prefix)+uri.substring(_prefix.length()));
+        		 }
+        	 }
+             return new HttpURI(uri);   
          }
-
-
  
 
          /* (non-Javadoc)
