@@ -19,6 +19,7 @@ import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.http.security.Constraint;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.server.ssl.SslSocketConnector;
@@ -91,7 +92,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 
     
 
-    public void startClientProtocolServer (HashLoginService webPass) throws Exception {
+    public void startClientProtocolServer (LoginService webPass) throws Exception {
         server = new Server(0);
         
         server.addBean(webPass);
@@ -109,10 +110,6 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         addNormalWebClientContext (contexts);
         addUserManagerContext (contexts,webPass);
         
-        // TEST THIS CHANGE TO THE NEW HANDLER CC contexts.addHandler(new DefaultHandler());
-                   
-       	//HandlerCollection handlers = new HandlerCollection();
-        //handlers.setHandlers(new org.eclipse.jetty.server.Handler[]{contexts,new DefaultHandler()});
         contexts.addHandler(new DefaultHandler());
         
         //server.setHandler(handlers);
@@ -209,7 +206,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
       security.setSessionCounter (sessionCounter);            
 	}
 
-    protected void addUserManagerContext (HandlerCollection contexts, HashLoginService webPass) {
+    protected void addUserManagerContext (HandlerCollection contexts, LoginService webPass) {
         // User manager context 
         
         Constraint constraint = new Constraint();
@@ -259,7 +256,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     	
         
         // HTML Security realm
-        HashLoginService  webPass = new HashLoginService ("eLife","datafiles/realm.properties");
+        HashLoginService  webPass = new BIHashLoginService ("eLife","datafiles/realm.properties");
         webPass.setRefreshInterval(60000);
         try {
         	startHTTPServer (webPass);
