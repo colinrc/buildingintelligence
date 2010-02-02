@@ -4,19 +4,15 @@
 package au.com.BI.Servlets;
 
 
-import org.eclipse.jetty.servlets.*;
+// import org.eclipse.jetty.servlets.*;
 
 
 import java.net.MalformedURLException;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.UnavailableException;
 import org.eclipse.jetty.http.HttpURI;
-import org.eclipse.jetty.util.log.Log;
-import org.eclipse.jetty.util.log.Logger;
 
 
 /**
@@ -65,12 +61,13 @@ public class RequestForward extends ProxyServlet
          {
         	 for (String _prefix: forwards.keySet()){
         		 if (uri.startsWith(_prefix)){
-        			 return new HttpURI(forwards.get(_prefix)+uri.substring(_prefix.length()));
+        			 String newURL = forwards.get(_prefix);
+        			 newURL += uri.substring(_prefix.length());
+        			 return new HttpURI(newURL);
         		 }
         	 }
-             return new HttpURI(uri);   
+             return new HttpURI(scheme + "://" + serverName + ":" + serverPort + "/" + uri);   
          }
- 
 
          /* (non-Javadoc)
           * @see javax.servlet.Servlet#getServletInfo()
