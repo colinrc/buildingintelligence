@@ -580,6 +580,9 @@
                 		   <ITEM NAME="ICON" VALUE="calendar" />
                 		   <ITEM NAME="HIDECLOSE" VALUE="FALSE" />
                 </CALENDAR_MESSAGES>
+                <FORWARDS>
+                	<FORWARD ACTIVE="Y" SRC="camera.jpg" DEST="http://127.0.0.1:8081/image.jpg" />
+                </FORWARDS>
         </CONTROLS>
 
          

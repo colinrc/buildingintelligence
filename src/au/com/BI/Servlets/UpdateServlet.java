@@ -57,6 +57,7 @@ public class UpdateServlet extends HttpServlet {
     	xmlOut = new XMLOutputter();
 
     }
+
     
     public  void doGet (HttpServletRequest req,
            HttpServletResponse resp) throws ServletException,java.io.IOException {
@@ -71,10 +72,10 @@ public class UpdateServlet extends HttpServlet {
         try {
         	if (session == null){
         		session = req.getSession(true);       
-                session.setAttribute("HANLDING_REQUEST", "Y");
+                session.setAttribute("HANDLING_REQUEST", "Y");
 	            ID = System.currentTimeMillis();
 	            
-	            setupSession(ID, session, req.getRemoteUser());
+	            setupSession(ID, session, req);
 	            serverID = (Long)session.getAttribute("ServerID");
 	            extraStuffForStartup = newClient (ID, serverID, versionManager);
 	            emptyResponse = false;
@@ -86,7 +87,7 @@ public class UpdateServlet extends HttpServlet {
 	        		if ((initReq != null && initReq.equals ("Y")) || (SessionID != null && SessionID.equals("undefined"))){
 	    	            ID = System.currentTimeMillis();
 	    	            
-	    	            setupSession(ID, session, req.getRemoteUser());
+	    	            setupSession(ID, session, req);
 	    	            serverID = (Long)session.getAttribute("ServerID");
 	    	            extraStuffForStartup = newClient (ID, serverID, versionManager);
 	    	            emptyResponse = false;
@@ -280,11 +281,16 @@ public class UpdateServlet extends HttpServlet {
 		session.invalidate();
     }
     
-    public void setupSession (Long ID,  HttpSession session, String user) throws TooManyClientsException {
+    public void setupSession (Long ID,  HttpSession session, HttpServletRequest req) throws TooManyClientsException {
         
     	ServletContext context =  session.getServletContext();
  
     	Security security = (Security)context.getAttribute("Security");
+    	
+    	String user = req.getRemoteUser();
+    	if (user == null){
+    		user = "Unknown on the web";
+    	}
    
         logger.log (Level.FINE, "Session created for web user " + user);
         addressBook.setUser(user, ID, AddressBook.Locations.HTTP);

@@ -9,10 +9,6 @@
 
 package au.com.BI.Servlets;
 import javax.servlet.*;
-
-
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +24,7 @@ import au.com.BI.Jetty.*;
  *
  * @author colinc
  */
+@SuppressWarnings("serial")
 public class PostUpdateServlet extends HttpServlet {
     CacheBridgeFactory cacheBridgeFactory = null;
     protected Logger logger;
@@ -47,7 +44,6 @@ public class PostUpdateServlet extends HttpServlet {
     public  void doGet (HttpServletRequest req,
            HttpServletResponse resp) throws ServletException,java.io.IOException {
 
-    	Long ID = null;
 
         String command = req.getParameter("co");
         String displayName = req.getParameter("ds");

@@ -40,7 +40,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     Logger logger;
     Security security = null;
     public static final int timeout = 30; // 1 minute timeout for a session;
-    protected ConcurrentHashMap <String,URL>forwards;
+    protected ConcurrentHashMap <String,String>forwards;
     
     public JettyHandler(Security security) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -48,7 +48,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         this.setName("JETTY");
         this.setAutoReconnect(false);
         this.security = security;
-        forwards= new ConcurrentHashMap<String,URL>();
+        forwards= new ConcurrentHashMap<String,String>();
         if (logger.isLoggable(Level.INFO)){
         	System.setProperty("org.eclipse.jetty.util.log.DEBUG", "true");
         }
@@ -178,7 +178,9 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
        // forwards handler
        //Context forwardContext = new Context (contexts,"/forwards",Context.SECURITY|Context.SESSIONS);
        updateContext.setAttribute("forwards", forwards);
-       updateContext.addServlet ("au.com.BI.Servlets.RequestForward","/forward/*");
+       ServletHolder forwardServlet = updateContext.addServlet ("au.com.BI.Servlets.RequestForward","/forward/*");
+       forwardServlet.setInitParameter ("maxThreads","5");
+       forwardServlet.setInitParameter ("maxConnections","5");
        ServletHolder  defServlet = updateContext.addServlet("org.eclipse.jetty.servlet.DefaultServlet","/");
        
        updateContext.setWelcomeFiles(new String[]{"index.html"});
@@ -296,12 +298,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
 	 * @param dest
 	 */
 	public void addForward(String src, String dest) {
-		try {
-			URL destURL = new URL(dest);
-			forwards.put(src,destURL);		
-		} catch (MalformedURLException ex){
-			logger.log (Level.WARNING,ex.getMessage () + " attempting to create a forward entry for " + dest);
-		}
+		forwards.put("/forward/" + src,dest);		
 	}
 
 	/**
