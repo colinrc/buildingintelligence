@@ -274,7 +274,7 @@ public class ProxyServlet implements Servlet
                 exchange.setScheme(HttpSchemes.HTTPS.equals(url.getScheme())?HttpSchemes.HTTPS_BUFFER:HttpSchemes.HTTP_BUFFER);
 //                exchange.setScheme(HttpSchemes.HTTPS.equals(request.getScheme())?HttpSchemes.HTTPS_BUFFER:HttpSchemes.HTTP_BUFFER);
                 exchange.setMethod(request.getMethod());
-		exchange.setURL(url.toString());
+                exchange.setURL(url.toString());
                 exchange.setVersion(request.getProtocol());
                 
                 if (debug!=0)

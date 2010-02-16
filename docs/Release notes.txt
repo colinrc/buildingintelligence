@@ -1,3 +1,5 @@
+== 14/Feb/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b104.zip V1.6-b104]  ==
+
 ''' Jetty '''
 
 Updated to Jetty 7
@@ -6,6 +8,9 @@ Updated to Jetty 7
 
 Updated to support admin/integrator roles ( in preparation for monitor release)
 
+''' Forwards '''
+
+There is a known issue that forwards to a non-https port do not currently function
 
 == 14/Nov/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b104.zip V1.6-b104]  ==
 

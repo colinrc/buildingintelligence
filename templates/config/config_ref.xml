@@ -581,7 +581,11 @@
                 		   <ITEM NAME="HIDECLOSE" VALUE="FALSE" />
                 </CALENDAR_MESSAGES>
                 <FORWARDS>
-                	<FORWARD ACTIVE="Y" SRC="camera.jpg" DEST="http://127.0.0.1:8081/image.jpg" />
+                	<FORWARD ACTIVE="N" SRC="camera.jpg" DEST="http://127.0.0.1:8081/image.jpg" />
+                	<FORWARD ACTIVE="Y" SRC="abc" DEST="http://www.abc.net.au/" />
+                	<FORWARD ACTIVE="Y" SRC="anz" DEST="https://www.anz.com/personal/" />
+                	
+                	<FORWARD ACTIVE="Y" SRC="gin" DEST="http://ginini.com/hosting-recommendation.html" />
                 </FORWARDS>
         </CONTROLS>
 
