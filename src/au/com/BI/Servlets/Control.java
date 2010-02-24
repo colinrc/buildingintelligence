@@ -17,6 +17,10 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.*;
 
+import net.sf.webdav.WebdavServlet;
+
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -71,7 +75,7 @@ public class Control extends HttpServlet {
 		}
 	  	
         if (commandName == null){
-        	sendStatus("UNKNOWN_OP","","Please pass correct operation as op (START|STOP|EXIT|RESTART|CLIENT_RESTART|GET_CONFIG|SET_CONFIG");	   	  		
+        	sendStatus("UNKNOWN_OP","","Please pass correct operation as op (START|STOP|EXIT|RESTART|CLIENT_RESTART|GET_CONFIG|SET_CONFIG|SHARE|SHARE_STOP|LOGOUT");	   	  		
 		    responseCode = HttpServletResponse.SC_BAD_REQUEST;
         	
         } else {
@@ -164,6 +168,35 @@ public class Control extends HttpServlet {
 			        logger.log (Level.WARNING,"Select XML configuration file requested, but no filename was specified in the FILE parameter");
 				}
 			}
+			if (commandName.equals ("SHARE")) {
+				logger.log (Level.INFO,"Sharing eLife file system");
+				try {
+					if (xmlMode){
+						this.enableWebdav();
+						sendStatus("OK","File system available through webdav at /dav","");			
+					}else {
+						this.sendMessage("File system available through webdav at /dav");
+					}
+				} catch  (CommandFail ex){
+					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
+				}
+				commandFound = true;
+			}
+			if (commandName.equals ("STOP_SHARE")) {
+				logger.log (Level.INFO,"Disabling sharing eLife file system");
+				try {
+					String startupFile = this.getStartupFile();
+					if (xmlMode){
+						this.disableWebdav();
+						sendStatus("OK","File system available through webdav at /dav","");			
+					}else {
+						this.sendMessage("File system available through webdav at /dav");
+					}
+				} catch  (CommandFail ex){
+					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
+				}
+				commandFound = true;
+			}
 			if (commandName.equals ("LOGOUT")) {
 				logger.log (Level.INFO,"Logging out of monitor service");
 				sendMessage("Logging out of monitor service");
@@ -200,7 +233,34 @@ public class Control extends HttpServlet {
     }    
 
     
-    public void sendMessage (String message){
+    private void enableWebdav() throws CommandFail{
+    	ServletContextHandler updateContext= (ServletContextHandler)this.getServletContext();
+    	if (updateContext == null){
+    		throw new CommandFail ("WebDav Context was not created");
+    	}
+    	try {    	
+    		updateContext.start();
+    	} catch (Exception ex){
+    		throw new CommandFail ("Could not start WebDav context " + ex.getMessage());
+    	}
+		
+	}
+
+    private void disableWebdav() throws CommandFail{
+    	ServletContextHandler updateContext= (ServletContextHandler)this.getServletContext();
+    	if (updateContext == null){
+    		throw new CommandFail ("WebDav Context was not created");
+    	}
+    	try {    	
+    		updateContext.start();
+    	} catch (Exception ex){
+    		throw new CommandFail ("Could not stop WebDav context " + ex.getMessage());
+    	}
+		
+	}
+
+
+	public void sendMessage (String message){
 		if (xmlMode){
 			output.println ("  <resp_line>" + message + "<resp_line />" );
 		} else {

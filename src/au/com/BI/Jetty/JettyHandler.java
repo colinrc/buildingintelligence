@@ -1,5 +1,7 @@
 package au.com.BI.Jetty;
 
+import net.sf.webdav.WebdavServlet;
+
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -91,13 +93,6 @@ public class JettyHandler {
             updateContext.setWelcomeFiles(new String[]{"index.html"});       
             updateContext.addServlet("au.com.BI.Servlets.Control","/control");
             
-            ServletHolder davServlet = updateContext.addServlet("net.sf.webdav.WebdavServlet","/dav");                
-            davServlet.setInitParameter("rootpath", installBase);
-            davServlet.setInitParameter("ResourceHandlerImplementation","net.sf.webdav.LocalFileSystemStore");
-            davServlet.setInitParameter("maxUploadSize","2000000"); // 2mb
-            davServlet.setInitParameter("no-content-length-headers","0");            
-            davServlet.setInitParameter("lazyFolderCreationOnPut","0");  
-            
             ServletHolder defServletHold= new ServletHolder(new DefaultServlet());
             updateContext.addServlet(defServletHold,"/");  
             defServletHold.setInitParameter("dirAllowed","false");
@@ -105,7 +100,18 @@ public class JettyHandler {
             defServletHold.setInitParameter("serveIcon", "false");
             defServletHold.setInitParameter("resourceBase","monitor_web");   
             
-           
+
+            ServletContextHandler webDavContext= 
+            	new ServletContextHandler (handlers, "/",true,true);  
+            ServletHolder davServletHolder = new ServletHolder (new WebdavServlet());   
+            davServletHolder.setInitParameter("rootpath", installBase);
+            davServletHolder.setInitParameter("ResourceHandlerImplementation","net.sf.webdav.LocalFileSystemStore");
+            davServletHolder.setInitParameter("maxUploadSize","2000000"); // 2mb
+            davServletHolder.setInitParameter("no-content-length-headers","0");            
+            davServletHolder.setInitParameter("lazyFolderCreationOnPut","0");  
+            webDavContext.addServlet(davServletHolder, "/dav");
+
+            updateContext.setAttribute("WebDavContext", webDavContext);
             updateContext.setSecurityHandler(constraintSecurityHandler);
           
             server.setStopAtShutdown(true);
@@ -115,6 +121,7 @@ public class JettyHandler {
             
             // Start the http server
             server.start ();
+            webDavContext.stop();
             if (logger.getLevel().intValue() > Level.INFO.intValue()) {
             	System.err.println(server.dump());
             }
