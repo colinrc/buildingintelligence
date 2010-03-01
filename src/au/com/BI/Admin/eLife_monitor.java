@@ -57,7 +57,8 @@ public class eLife_monitor
 	    
 	    String major_version = properties.getProperty("major_version");
 	    String minor_version = properties.getProperty("minor_version");
-	    eSmart_Install = properties.getProperty("eSmart_install");
+	    String read_eSmart_Install = properties.getProperty("eSmart_install");
+	    eSmart_Install = System.getProperty("eSmart_install",read_eSmart_Install);
 
 		System.out.println ("Launching eLife monitor task V" + major_version + "." + 
 					minor_version);

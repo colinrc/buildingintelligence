@@ -83,10 +83,22 @@ public class JettyHandler {
            
            	HandlerList handlers = new HandlerList();    
 
+            ServletContextHandler webDavContext= 
+            	new ServletContextHandler (handlers, "/dav",true,true);  
+            webDavContext.setAllowNullPathInfo(true);
+            ServletHolder davServletHolder = new ServletHolder (new WebdavServlet());   
+            davServletHolder.setInitParameter("rootpath", installBase);
+            davServletHolder.setInitParameter("ResourceHandlerImplementation","net.sf.webdav.LocalFileSystemStore");
+            davServletHolder.setInitParameter("maxUploadSize","2000000"); // 2mb
+            davServletHolder.setInitParameter("no-content-length-headers","0");            
+            davServletHolder.setInitParameter("lazyFolderCreationOnPut","0");  
+            webDavContext.addServlet(davServletHolder, "/*");
+
            	ServletContextHandler updateContext= 
             	new ServletContextHandler (handlers, "/",true,true);         
-  
-             handlers.addHandler(new DefaultHandler());
+            updateContext.setAttribute("WebDavContext", webDavContext);
+            
+            handlers.addHandler(new DefaultHandler());
 
          
             updateContext.setAttribute("eSmart_Install", installBase);
@@ -100,28 +112,15 @@ public class JettyHandler {
             defServletHold.setInitParameter("serveIcon", "false");
             defServletHold.setInitParameter("resourceBase","monitor_web");   
             
-
-            ServletContextHandler webDavContext= 
-            	new ServletContextHandler (handlers, "/",true,true);  
-            ServletHolder davServletHolder = new ServletHolder (new WebdavServlet());   
-            davServletHolder.setInitParameter("rootpath", installBase);
-            davServletHolder.setInitParameter("ResourceHandlerImplementation","net.sf.webdav.LocalFileSystemStore");
-            davServletHolder.setInitParameter("maxUploadSize","2000000"); // 2mb
-            davServletHolder.setInitParameter("no-content-length-headers","0");            
-            davServletHolder.setInitParameter("lazyFolderCreationOnPut","0");  
-            webDavContext.addServlet(davServletHolder, "/dav");
-
-            updateContext.setAttribute("WebDavContext", webDavContext);
             updateContext.setSecurityHandler(constraintSecurityHandler);
           
             server.setStopAtShutdown(true);
             constraintSecurityHandler.setHandler(handlers);
             server.setHandler(handlers);
-            //server.setHandler(updateContext);
             
             // Start the http server
             server.start ();
-            webDavContext.stop();
+            webDavContext.stop(); // stop webdav until it is explicitly started by the integrator
             if (logger.getLevel().intValue() > Level.INFO.intValue()) {
             	System.err.println(server.dump());
             }

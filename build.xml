@@ -2,22 +2,74 @@
     <description>
         The monitor service for the eLife
     </description>
+
+	<taskdef resource="net/sf/ant4eclipse/antlib.xml" />
 	
-<target name="jar"  >
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+  		<classpath>
+    		<pathelement location="/Java/ant-contrib/ant-contrib-1.0b3.jar"/>
+  		</classpath>
+	</taskdef>	
+	
+	<property name="workspace" value="${basedir}/.." />
+	
+	<property name="project.name" value="eLife_Monitor" />
+	<property name="dist.jar" value="dist/eMonitor.jar" />
+	<userLibraries userlibraries="../eLife_Server/libs.userlibraries" />
+	<getEclipseClasspath pathId="eLife.classpath" relative="true" workspace="${workspace}" projectName="${project.name}" />
+	<getEclipseClasspath property="eLife.jar_libs" relative="true" workspace="${workspace}" projectName="${project.name}" />
+	<available file="dist/lib" type="dir" property="lib_dir.present"/>
+	<available file="ext" type="dir" property="ext_dir.present"/>
+	<available file="dist/bin" type="dir" property="bin_dir.present"/>
+	<getOutputpath property="classes.dir" workspace="${workspace}" projectName="${project.name}" />
+	
+	<target name="init">
+		<delete>
+			<fileset dir="dist" includes="**/*" excludes="ext/*" followsymlinks="false" >
+				<exclude name="ext/*" />
+				<exclude name="*.zip" />
+			</fileset>
+		</delete>
+        <echo message="Emptied previous dist file" />
+		
+	</target>
+	
+	<target name="compile" depends="init" >
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" >
+            <src path="src"/>
+        </javac>
+
+    </target>
+	
+<target name="jar" depends="compile" >
+		
+	<pathconvert property="flattended.jars" refid="eLife.classpath" pathsep=" ">
+	    <chainedmapper>
+	        <flattenmapper/>
+	        <globmapper from="*" to="../ext/*"/>
+	    </chainedmapper>
+	</pathconvert>
+	<manifest file="MANIFEST.MF" mode="update" >
+		<attribute name="Class-Path" value="${flattended.jars}" />
+	</manifest>
 	<jar destfile="dist/eMonitor.jar" 
 		update="false"
 		basedir="bin" 
 		includes = "**/*.class" 
 		excludes = "**/*\$*.class"
-		manifest="manifest" />
+		manifest="MANIFEST.MF" />
 	<jar destfile="dist/eMonitor.jar" 
 		update="true"
 		basedir="src" 
 		includes = "**/*.properties" 
-		 />
+	 />
+	<echo>To run this application from the command line without Ant, try:</echo>
+	<echo>java -jar "${dist.jar}"</echo>
 </target>
 	
-<target name="dist" depends="dist_clean,increment,jar" >
+
+	
+<target name="dist" depends="dist_clean,jar,increment" >
 	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
 		update="false"
 		basedir="dist" 

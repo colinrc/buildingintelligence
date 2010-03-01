@@ -39,18 +39,18 @@ public class Control extends HttpServlet {
     protected String eSmart_Install = "";
     protected boolean xmlMode = false;
     protected PrintWriter output = null;
+    ServletContextHandler webDavContextHandler = null;
 	
     /** Creates a new instance of ControlServlet */
     public Control() {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
-        
 
     }
     
     public void init (ServletConfig cfg) throws ServletException {
         ServletContext context = cfg.getServletContext();
         eSmart_Install = (String)context.getAttribute("eSmart_Install");
-        
+        webDavContextHandler = (ServletContextHandler)context.getAttribute("WebDavContext");
         super.init();
     }
   
@@ -171,8 +171,8 @@ public class Control extends HttpServlet {
 			if (commandName.equals ("SHARE")) {
 				logger.log (Level.INFO,"Sharing eLife file system");
 				try {
+					this.enableWebdav(req);
 					if (xmlMode){
-						this.enableWebdav();
 						sendStatus("OK","File system available through webdav at /dav","");			
 					}else {
 						this.sendMessage("File system available through webdav at /dav");
@@ -185,12 +185,11 @@ public class Control extends HttpServlet {
 			if (commandName.equals ("STOP_SHARE")) {
 				logger.log (Level.INFO,"Disabling sharing eLife file system");
 				try {
-					String startupFile = this.getStartupFile();
+					this.disableWebdav(req);
 					if (xmlMode){
-						this.disableWebdav();
-						sendStatus("OK","File system available through webdav at /dav","");			
+						sendStatus("OK","File system disabled from /dav","");			
 					}else {
-						this.sendMessage("File system available through webdav at /dav");
+						this.sendMessage("File system disabled at /dav");
 					}
 				} catch  (CommandFail ex){
 					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
@@ -233,26 +232,26 @@ public class Control extends HttpServlet {
     }    
 
     
-    private void enableWebdav() throws CommandFail{
-    	ServletContextHandler updateContext= (ServletContextHandler)this.getServletContext();
-    	if (updateContext == null){
+    private void enableWebdav(HttpServletRequest req) throws CommandFail{
+    	
+    	if (webDavContextHandler == null){
     		throw new CommandFail ("WebDav Context was not created");
     	}
     	try {    	
-    		updateContext.start();
+    		webDavContextHandler.start();
     	} catch (Exception ex){
     		throw new CommandFail ("Could not start WebDav context " + ex.getMessage());
     	}
 		
 	}
 
-    private void disableWebdav() throws CommandFail{
-    	ServletContextHandler updateContext= (ServletContextHandler)this.getServletContext();
-    	if (updateContext == null){
+    private void disableWebdav(HttpServletRequest req) throws CommandFail{
+
+        if (webDavContextHandler == null){
     		throw new CommandFail ("WebDav Context was not created");
     	}
     	try {    	
-    		updateContext.start();
+    		webDavContextHandler.stop();
     	} catch (Exception ex){
     		throw new CommandFail ("Could not stop WebDav context " + ex.getMessage());
     	}
