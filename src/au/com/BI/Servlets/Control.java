@@ -16,11 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.*;
-
-import net.sf.webdav.WebdavServlet;
-
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -81,20 +77,20 @@ public class Control extends HttpServlet {
         } else {
 			if (commandName.equals ("START")) {
 				logger.log (Level.INFO,"Starting eLife service");
+				commandFound = true;
 				sendMessage("Starting eLife service");
 				p = Runtime.getRuntime().exec ("net start eLife");
 				displayProcessResults (p);
 				sendStatus("OK","Starting eLife service","");	
-				commandFound = true;
 			}
 	
 			if (commandName.equals ("STOP")) {
 				logger.log (Level.INFO,"Stopping eLife service");
+				commandFound = true;
 				sendMessage("Stopping eLife service");
 				p = Runtime.getRuntime().exec ("net stop eLife");			
 				displayProcessResults (p);
 				sendStatus("OK","Stopping eLife server","");	
-				commandFound = true;
 			}
 	
 			if (commandName.equals ("EXIT")) {
@@ -106,13 +102,13 @@ public class Control extends HttpServlet {
 			
 			if (commandName.equals ("RESTART")) {
 				logger.log (Level.INFO,"Restarting eLife service");
+				commandFound = true;
 				sendMessage("Restarting eLife service");
 				p = Runtime.getRuntime().exec ("net stop eLife");
 				displayProcessResults (p);
 				p = Runtime.getRuntime().exec ("net start eLife");
 				displayProcessResults (p);
 				sendStatus("OK","eLife server restarted","");			
-				commandFound = true;
 			}
 			/*
 			if (commandName.equals ("ARBITRARY")) {
@@ -129,14 +125,15 @@ public class Control extends HttpServlet {
 			*/
 			if (commandName.equals ("CLIENT_RESTART")) {
 				logger.log (Level.INFO,"Restarting client service");
+				commandFound = true;
 				sendMessage("Restarting eLife client");
 				p = Runtime.getRuntime().exec ("taskkill /F /IM elife.exe");			
 				displayProcessResults (p);
 				sendStatus("OK","Client restarted","");	
-				commandFound = true;
 			}
 			if (commandName.equals ("GET_CONFIG")) {
 				logger.log (Level.INFO,"Fetching current configuration file");
+				commandFound = true;
 				try {
 					String startupFile = this.getStartupFile();
 					if (xmlMode){
@@ -148,28 +145,29 @@ public class Control extends HttpServlet {
 				} catch  (CommandFail ex){
 					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
 				}
-				commandFound = true;
 			}
 			if (commandName.equals ("SET_CONFIG")) {
-		        String extra = req.getParameter("par")+".xml";
-			    if (extra != null && !extra.equals ("") ) {
+				commandFound = true;
+		        String extra = req.getParameter("par");
+			    if (extra != null && !extra.trim().equals ("") ) {
+			    	extra += ".xml";
 			        logger.log (Level.FINER,"Setting XML configuration file for startup " + extra);
 			    	try {
-						commandFound = true;
 				        setBootstrapFile (this.eSmart_Install,extra,output);
 				        String returnString = "Configuration file changed : " + extra + "\n";
 						logger.log (Level.INFO,returnString);
-						sendMessage(returnString);
-						sendStatus("OK","Configuration file changed","");				
+						sendStatus("OK",returnString,"");			
 			    	} catch (CommandFail ex) {
-						sendStatus(ex.getErrorCode(),"",ex.getMessage());									    		
+						sendStatus(ex.getErrorCode(),"",ex.getMessage());	
 			    	}
 				} else {
-			        logger.log (Level.WARNING,"Select XML configuration file requested, but no filename was specified in the FILE parameter");
+			        logger.log (Level.WARNING,"Set configuration file requested, but no filename was specified in the FILE parameter");
+					sendStatus("MISSING_PARAMTER","","No file pattern was specifed to change the configuration entry to");	
 				}
 			}
 			if (commandName.equals ("SHARE")) {
 				logger.log (Level.INFO,"Sharing eLife file system");
+				commandFound = true;
 				try {
 					this.enableWebdav(req);
 					if (xmlMode){
@@ -180,10 +178,10 @@ public class Control extends HttpServlet {
 				} catch  (CommandFail ex){
 					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
 				}
-				commandFound = true;
 			}
 			if (commandName.equals ("STOP_SHARE")) {
 				logger.log (Level.INFO,"Disabling sharing eLife file system");
+				commandFound = true;
 				try {
 					this.disableWebdav(req);
 					if (xmlMode){
@@ -194,10 +192,10 @@ public class Control extends HttpServlet {
 				} catch  (CommandFail ex){
 					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
 				}
-				commandFound = true;
 			}
 			if (commandName.equals ("LOGOUT")) {
 				logger.log (Level.INFO,"Logging out of monitor service");
+				commandFound = true;
 				sendMessage("Logging out of monitor service");
 		        HttpSession session = req.getSession(false);  	
 		        
@@ -206,7 +204,8 @@ public class Control extends HttpServlet {
 		        }
 
 				sendStatus("OK","Logged out of monitor","");	
-				commandFound = true;
+		        resp.sendRedirect("/");
+
 			}
 	 
         }
