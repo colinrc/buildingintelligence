@@ -68,7 +68,7 @@ public class eLife_monitor
 		try {
 			connection.start(port,eSmart_Install,this);	
 		} catch (Exception e){
-			logger.log(Level.SEVERE,"Could not start monitor web server "+ e.getMessage());
+			logger.log(Level.SEVERE,"Could not start monitor web server "+ e.getCause());
 		}
 	}
 	

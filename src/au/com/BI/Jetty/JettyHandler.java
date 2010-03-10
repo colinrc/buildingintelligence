@@ -110,7 +110,8 @@ public class JettyHandler {
             defServletHold.setInitParameter("dirAllowed","false");
             defServletHold.setInitParameter("aliases", "true");
             defServletHold.setInitParameter("serveIcon", "false");
-            defServletHold.setInitParameter("resourceBase","monitor_web");   
+            String webLocation = System.getProperty("monitor_web", "../monitor_web");
+            defServletHold.setInitParameter("resourceBase",webLocation);   
             
             updateContext.setSecurityHandler(constraintSecurityHandler);
           

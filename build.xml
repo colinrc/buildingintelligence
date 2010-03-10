@@ -1,36 +1,57 @@
-<project name="eLife_monitor" default="dist" basedir=".">
+<project name="eLife_monitor" default="dist" basedir="."
+	 xmlns:ant4eclipse="antlib:org.ant4eclipse"
+	         xmlns:antcontrib="antlib:net.sf.antcontrib">
+
     <description>
         The monitor service for the eLife
     </description>
 
-	<taskdef resource="net/sf/ant4eclipse/antlib.xml" />
+
+		<taskdef uri="antlib:net.sf.antcontrib"
+		         resource="net/sf/antcontrib/antlib.xml" />
+
+		<taskdef uri="antlib:org.ant4eclipse"
+		         resource="org/ant4eclipse/antlib.xml" />
 	
-	<taskdef resource="net/sf/antcontrib/antlib.xml">
-  		<classpath>
-    		<pathelement location="/Java/ant-contrib/ant-contrib-1.0b3.jar"/>
-  		</classpath>
-	</taskdef>	
 	
-	<property name="workspace" value="${basedir}/.." />
+	<property name="workspace" value="/Users/colin/Documents/workspace" />
+	<property file="src/au/com/BI/Admin/my.properties"/>
 	
-	<property name="project.name" value="eLife_Monitor" />
-	<property name="dist.jar" value="dist/eMonitor.jar" />
-	<userLibraries userlibraries="../eLife_Server/libs.userlibraries" />
-	<getEclipseClasspath pathId="eLife.classpath" relative="true" workspace="${workspace}" projectName="${project.name}" />
-	<getEclipseClasspath property="eLife.jar_libs" relative="true" workspace="${workspace}" projectName="${project.name}" />
+	<property name="project.name" value="eLife_monitor" />
+	<property name="dist.jar" value="dist/bin/eMonitor.jar" />
+	<ant4eclipse:userLibraries userlibraries="../eLife_Server/libs.userlibraries" />
+	<ant4eclipse:getJdtClassPath pathId="eLife.classpath" relative="no" workspaceDirectory="${workspace}" projectName="${project.name}" />
+	<ant4eclipse:getJdtClassPath property="eLife.jar_libs" relative="no" workspaceDirectory="${workspace}" projectName="${project.name}" />
 	<available file="dist/lib" type="dir" property="lib_dir.present"/>
 	<available file="ext" type="dir" property="ext_dir.present"/>
 	<available file="dist/bin" type="dir" property="bin_dir.present"/>
-	<getOutputpath property="classes.dir" workspace="${workspace}" projectName="${project.name}" />
+	<ant4eclipse:getJdtOutputPath property="classes.dir" workspaceDirectory="${workspace}" projectName="${project.name}" />
+	
+	<target name="run" depends="jar" >
+		<ant4eclipse:getProjectDirectory workspacedirectory="${workspace}"
+                                 projectname="eLife_Server_16"
+	                         property="eSmart_install.dir" />
+	                         
+	    <ant4eclipse:getJdtClassPath property="eLife.runclasspath"
+	    				workspaceDirectory="${workspace}"
+                             projectName="${project.name}" />
+                             
+		<echo message="Running ${dist.jar} with classpath ${eLife.runclasspath}" />
+	    <java jar="${dist.jar}" 
+			fork="yes" 
+	    	classpath="${eLife.runclasspath}" >
+			<sysproperty key="eSmart_install" value="${eSmart_install.dir}" />
+			<sysproperty key="monitor_web" value="./monitor_web" />
+		</java>
+	</target>
 	
 	<target name="init">
 		<delete>
-			<fileset dir="dist" includes="**/*" excludes="ext/*" followsymlinks="false" >
-				<exclude name="ext/*" />
-				<exclude name="*.zip" />
-			</fileset>
+			<fileset dir="dist" includes="**/*" followsymlinks="false" />
 		</delete>
         <echo message="Emptied previous dist file" />
+        
+		<mkdir dir="dist/bin" />
 		
 	</target>
 	
@@ -52,13 +73,13 @@
 	<manifest file="MANIFEST.MF" mode="update" >
 		<attribute name="Class-Path" value="${flattended.jars}" />
 	</manifest>
-	<jar destfile="dist/eMonitor.jar" 
+	<jar destfile="dist/bin/eMonitor.jar" 
 		update="false"
 		basedir="bin" 
 		includes = "**/*.class" 
 		excludes = "**/*\$*.class"
 		manifest="MANIFEST.MF" />
-	<jar destfile="dist/eMonitor.jar" 
+	<jar destfile="dist/bin/eMonitor.jar" 
 		update="true"
 		basedir="src" 
 		includes = "**/*.properties" 
@@ -68,21 +89,22 @@
 </target>
 	
 
-	
-<target name="dist" depends="dist_clean,jar,increment" >
+<target name="build_zip">
 	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
 		update="false"
 		basedir="dist" 
-		includes = "*.jar"  />
+		includes = "**/*.jar"  />
+	 <zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip"
+		update="true"
+		basedir="." 
+		includes = "monitor_web/*" 
+	 />
 </target>
+	
+<target name="dist" depends="init,jar,build_zip,increment" />
 
-<target name="dist_clean" depends="" >
-	  <delete>
-	    <fileset dir="dist" includes="*.zip"/>
-	  </delete>
-</target>
 
-<target name="increment" depends="" description="Increments build number and creates a zip file.">
+<target name="increment" depends="" description="Increments build number.">
 <propertyfile file="src/au/com/BI/Admin/my.properties" >
   <entry  key="minor_version" type="int" operation="+" value="1" />
 </propertyfile>
