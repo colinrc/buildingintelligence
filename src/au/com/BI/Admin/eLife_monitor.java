@@ -24,6 +24,7 @@ public class eLife_monitor
 	Logger logger;
 	boolean gettingLines = false;
 	protected String eSmart_Install;
+	protected String webRoot;
 	protected JettyHandler connection;
 	
 	
@@ -58,13 +59,15 @@ public class eLife_monitor
 	    String major_version = properties.getProperty("major_version");
 	    String minor_version = properties.getProperty("minor_version");
 	    String read_eSmart_Install = properties.getProperty("eSmart_install");
+	    String webBase = properties.getProperty("web_base");
+	    
 	    eSmart_Install = System.getProperty("eSmart_install",read_eSmart_Install);
 
 		System.out.println ("Launching eLife monitor task V" + major_version + "." + 
 					minor_version);
 
 		logger.info("Listening for connections on " + port);
-		connection = new JettyHandler (this.defaultDebugLevel);
+		connection = new JettyHandler (this.defaultDebugLevel,webBase);
 		try {
 			connection.start(port,eSmart_Install,this);	
 		} catch (Exception e){

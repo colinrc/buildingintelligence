@@ -31,10 +31,12 @@ public class JettyHandler {
     org.eclipse.jetty.server.Server server = null,client_server = null;
     Logger logger;
     public static final int timeout = 30; // 1 minute timeout for a session;
+    protected String webBase = "";
     
-    public JettyHandler(Level debugLevel) {
+    public JettyHandler(Level debugLevel,String webBase) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
         logger.setLevel( debugLevel);
+        this.webBase = webBase;
     }
     
     
@@ -110,7 +112,7 @@ public class JettyHandler {
             defServletHold.setInitParameter("dirAllowed","false");
             defServletHold.setInitParameter("aliases", "true");
             defServletHold.setInitParameter("serveIcon", "false");
-            String webLocation = System.getProperty("monitor_web", "../monitor_web");
+            String webLocation = System.getProperty("monitor_web", webBase);
             defServletHold.setInitParameter("resourceBase",webLocation);   
             
             updateContext.setSecurityHandler(constraintSecurityHandler);

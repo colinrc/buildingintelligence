@@ -27,21 +27,21 @@
 	<available file="dist/bin" type="dir" property="bin_dir.present"/>
 	<ant4eclipse:getJdtOutputPath property="classes.dir" workspaceDirectory="${workspace}" projectName="${project.name}" />
 	
-	<target name="run" depends="jar" >
+	<target name="run" depends="compile" >
 		<ant4eclipse:getProjectDirectory workspacedirectory="${workspace}"
-                                 projectname="eLife_Server_16"
+                                 projectname="eLife_Server"
 	                         property="eSmart_install.dir" />
 	                         
 	    <ant4eclipse:getJdtClassPath property="eLife.runclasspath"
 	    				workspaceDirectory="${workspace}"
                              projectName="${project.name}" />
                              
-		<echo message="Running ${dist.jar} with classpath ${eLife.runclasspath}" />
-	    <java jar="${dist.jar}" 
+	    <java classname="au.com.BI.Admin.eLife_monitor" 
 			fork="yes" 
+	    	dir="bin"
 	    	classpath="${eLife.runclasspath}" >
 			<sysproperty key="eSmart_install" value="${eSmart_install.dir}" />
-			<sysproperty key="monitor_web" value="./monitor_web" />
+			<sysproperty key="monitor_web" value="../monitor_web" />
 		</java>
 	</target>
 	

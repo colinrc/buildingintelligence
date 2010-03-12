@@ -94,10 +94,20 @@ public class Control extends HttpServlet {
 			}
 	
 			if (commandName.equals ("EXIT")) {
-				logger.log (Level.INFO,"Stopping monitor service");
-				sendMessage("Stopping monitor service");
-				sendStatus("OK","Stopping monitor service","");					
+				try {
+					logger.log (Level.INFO,"Stopping monitor service");
+					this.disableWebdav(req);
+				} catch  (CommandFail ex){
+					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
+				}
+				if (xmlMode){
+					sendStatus("OK","Stopping monitor service","");					
+				}else {
+					sendMessage("Stopping monitor service");
+				}
+				System.exit(0);
 				commandFound = true;
+
 			}
 			
 			if (commandName.equals ("RESTART")) {
