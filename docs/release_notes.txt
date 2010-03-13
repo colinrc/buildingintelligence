@@ -4,7 +4,7 @@ Incorporated WEBDAV to simplify access to eLife file system
 Incorporated an embedded web application to allow access to monitor functions without requiring the admin tool.
 To run the embedded web application goto https://server:8082/ , log in using your elife admin account
 Brought java libs in line with eLife libs to simplify release process.
-Released V2.0
+Released [attachment:wiki:SoftwareReleases:eLife_monitor_2.0.zip V2.0] ==
 
 2005/12/11
 Ensure script files are sent to the admin client in base 64 encoding.
