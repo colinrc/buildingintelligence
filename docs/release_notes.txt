@@ -1,3 +1,10 @@
+== 2010/03/16 ==
+Add a property for datafiles location
+eg.  -DeSmart_install="../eLife_Server" -Dmonitor_web="./monitor_web" -Ddatafiles="../eLife_Server/datafiles"
+
+Released [attachment:wiki:SoftwareReleases:eLife_monitor_2.1.zip V2.1] 
+
+
 == 2010/02/28 ==
 Rewrote as a Restful interface for admin functions
 Incorporated WEBDAV to simplify access to eLife file system
@@ -10,7 +17,7 @@ however the path to the server installation and the web installation will need t
 environment commands.
 eg.  -DeSmart_install="../eLife_Server" -Dmonitor_web="./monitor_web"
 
-Released [attachment:wiki:SoftwareReleases:eLife_monitor_2.0.zip V2.0] ==
+Released [attachment:wiki:SoftwareReleases:eLife_monitor_2.0.zip V2.0] 
 
 == 2005/12/11 ==
 Ensure script files are sent to the admin client in base 64 encoding.
