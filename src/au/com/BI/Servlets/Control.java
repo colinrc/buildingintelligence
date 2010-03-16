@@ -32,7 +32,7 @@ import org.jdom.output.XMLOutputter;
 @SuppressWarnings("serial")
 public class Control extends HttpServlet {
     protected Logger logger;
-    protected String eSmart_Install = "";
+    protected String datafiles = "";
     protected boolean xmlMode = false;
     protected PrintWriter output = null;
     ServletContextHandler webDavContextHandler = null;
@@ -45,7 +45,7 @@ public class Control extends HttpServlet {
     
     public void init (ServletConfig cfg) throws ServletException {
         ServletContext context = cfg.getServletContext();
-        eSmart_Install = (String)context.getAttribute("eSmart_Install");
+        datafiles = (String)context.getAttribute("datafiles");
         webDavContextHandler = (ServletContextHandler)context.getAttribute("WebDavContext");
         super.init();
     }
@@ -163,7 +163,7 @@ public class Control extends HttpServlet {
 			    	extra += ".xml";
 			        logger.log (Level.FINER,"Setting XML configuration file for startup " + extra);
 			    	try {
-				        setBootstrapFile (this.eSmart_Install,extra,output);
+				        setBootstrapFile (datafiles,extra,output);
 				        String returnString = "Configuration file changed : " + extra + "\n";
 						logger.log (Level.INFO,returnString);
 						sendStatus("OK",returnString,"");			
@@ -299,7 +299,7 @@ public class Control extends HttpServlet {
 	    String startupFile = null;
 	
 	    try {
-			String fileName = eSmart_Install + "/datafiles/bootstrap.xml";
+			String fileName = datafiles + "/bootstrap.xml";
 			File theFile = new File (fileName);
 			
 			SAXBuilder saxb = new SAXBuilder(false); 
@@ -321,9 +321,9 @@ public class Control extends HttpServlet {
 	}
 
 
-	  public void setBootstrapFile (String eSmart_install, String extra,PrintWriter output) throws CommandFail {
+	  public void setBootstrapFile (String datafiles, String extra,PrintWriter output) throws CommandFail {
 		try {
-			String fileName = eSmart_install + "/datafiles/bootstrap.xml";
+			String fileName = datafiles+ "/bootstrap.xml";
 			File theFile = new File (fileName);
 			
 			SAXBuilder saxb = new SAXBuilder(false); 

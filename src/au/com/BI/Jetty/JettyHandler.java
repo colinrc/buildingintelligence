@@ -32,15 +32,19 @@ public class JettyHandler {
     Logger logger;
     public static final int timeout = 30; // 1 minute timeout for a session;
     protected String webBase = "";
+    String datafiles = "";
+    String installBase = "";
     
-    public JettyHandler(Level debugLevel,String webBase) {
+    public JettyHandler(Level debugLevel,String webBase,String datafiles,String installBase) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
         logger.setLevel( debugLevel);
         this.webBase = webBase;
+        this.datafiles = datafiles;
+        this.installBase = installBase;
     }
     
     
-    public  void start(int portNumber,String installBase,eLife_monitor eLife_mon)
+    public  void start(int portNumber,eLife_monitor eLife_mon)
   
     throws Exception {
         // Create the server
@@ -54,12 +58,12 @@ public class JettyHandler {
             
               SslConnector sslConnect = new SslSocketConnector();
             	sslConnect.setPort(portNumber);
-            	sslConnect.setKeystore(installBase + "/datafiles/keystore");
+            	sslConnect.setKeystore(datafiles + "/keystore");
             	sslConnect.setPassword("building12");
             	sslConnect.setKeyPassword("building12");
               server.setConnectors(new Connector[]{sslConnect});
                
-              HashLoginService  webPass = new HashLoginService ("eLife_Monitor",installBase + "/datafiles/realm.properties");
+              HashLoginService  webPass = new HashLoginService ("eLife_Monitor",datafiles + "/realm.properties");
               webPass.setRefreshInterval(60000);
               server.addBean(webPass);
                 
@@ -104,6 +108,7 @@ public class JettyHandler {
 
          
             updateContext.setAttribute("eSmart_Install", installBase);
+            updateContext.setAttribute("datafiles", datafiles);
             updateContext.setWelcomeFiles(new String[]{"index.html"});       
             updateContext.addServlet("au.com.BI.Servlets.Control","/control");
             
@@ -112,8 +117,7 @@ public class JettyHandler {
             defServletHold.setInitParameter("dirAllowed","false");
             defServletHold.setInitParameter("aliases", "true");
             defServletHold.setInitParameter("serveIcon", "false");
-            String webLocation = System.getProperty("monitor_web", webBase);
-            defServletHold.setInitParameter("resourceBase",webLocation);   
+            defServletHold.setInitParameter("resourceBase",webBase);   
             
             updateContext.setSecurityHandler(constraintSecurityHandler);
           
@@ -129,7 +133,7 @@ public class JettyHandler {
             }
             server.join();
         } catch (Exception ex){
-            logger.log (Level.WARNING,"Problems starting web server " + ex.getMessage());
+            logger.log (Level.WARNING,"Problems starting web server " + ex.getCause());
             throw ex;
         }
     }

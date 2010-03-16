@@ -60,16 +60,19 @@ public class eLife_monitor
 	    String minor_version = properties.getProperty("minor_version");
 	    String read_eSmart_Install = properties.getProperty("eSmart_install");
 	    String webBase = properties.getProperty("web_base");
-	    
+	    String datafiles = properties.getProperty("datafiles");
+	    	    
 	    eSmart_Install = System.getProperty("eSmart_install",read_eSmart_Install);
+	    String monitor_web = System.getProperty("monitor_web",webBase);
+	    String datafilesLoc = System.getProperty("datafiles",datafiles);
 
 		System.out.println ("Launching eLife monitor task V" + major_version + "." + 
 					minor_version);
 
 		logger.info("Listening for connections on " + port);
-		connection = new JettyHandler (this.defaultDebugLevel,webBase);
+		connection = new JettyHandler (this.defaultDebugLevel,monitor_web,datafilesLoc,eSmart_Install);
 		try {
-			connection.start(port,eSmart_Install,this);	
+			connection.start(port,this);	
 		} catch (Exception e){
 			logger.log(Level.SEVERE,"Could not start monitor web server "+ e.getCause());
 		}
