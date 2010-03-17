@@ -15,6 +15,7 @@
 	
 	
 	<property name="workspace" value="/Users/colin/Documents/workspace" />
+	<property name="ext" value="monitor_ext" />
 	<property file="src/au/com/BI/Admin/my.properties"/>
 	
 	<property name="project.name" value="eLife_monitor" />
@@ -23,7 +24,6 @@
 	<ant4eclipse:getJdtClassPath pathId="eLife.classpath" relative="no" workspaceDirectory="${workspace}" projectName="${project.name}" />
 	<ant4eclipse:getJdtClassPath property="eLife.jar_libs" relative="no" workspaceDirectory="${workspace}" projectName="${project.name}" />
 	<available file="dist/lib" type="dir" property="lib_dir.present"/>
-	<available file="ext" type="dir" property="ext_dir.present"/>
 	<available file="dist/bin" type="dir" property="bin_dir.present"/>
 	<ant4eclipse:getJdtOutputPath property="classes.dir" workspaceDirectory="${workspace}" projectName="${project.name}" />
 	
@@ -45,13 +45,29 @@
 		</java>
 	</target>
 	
+	<target name="copy-libs" depends="init" >
+		<pathconvert pathsep="," property="massaged_jar_libs" refid="eLife.classpath" >
+			<map from="/Java" to="Java" />
+		</pathconvert>
+		<echo>List of jar files is ${eLife.jar_libs}</echo>
+		<echo>Massaged jar files list is ${massaged_jar_libs}</echo>
+
+		<delete  includeemptydirs="true" quiet="true" >
+			<fileset dir="dist/${ext}" includes="**/*" />
+		</delete>
+		<copy todir="dist/${ext}" flatten="true" >
+		   <fileset dir="/" includes="${massaged_jar_libs}"  />
+		</copy>
+	</target>
+	
 	<target name="init">
 		<delete>
 			<fileset dir="dist" includes="**/*" followsymlinks="false" />
 		</delete>
         <echo message="Emptied previous dist file" />
         
-		<mkdir dir="dist/bin" />
+		<mkdir dir="dist/bin"/>
+		<mkdir dir="dist/${ext}" />
 		
 	</target>
 	
@@ -67,7 +83,7 @@
 	<pathconvert property="flattended.jars" refid="eLife.classpath" pathsep=" ">
 	    <chainedmapper>
 	        <flattenmapper/>
-	        <globmapper from="*" to="../ext/*"/>
+	        <globmapper from="*" to="../${ext}/*"/>
 	    </chainedmapper>
 	</pathconvert>
 	<manifest file="MANIFEST.MF" mode="update" >
@@ -99,9 +115,13 @@
 		basedir="." 
 		includes = "monitor_web/*" 
 	 />
+	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
+		update="true"
+		basedir="dist" 
+		includes = "${ext}/*.jar" />
 </target>
 	
-<target name="dist" depends="init,jar,build_zip,increment" />
+<target name="dist" depends="init,jar,copy-libs,build_zip,increment" />
 
 
 <target name="increment" depends="" description="Increments build number.">
