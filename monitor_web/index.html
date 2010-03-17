@@ -20,8 +20,12 @@
 <LI><A HREF="/control?op=STOP_SHARE">Stop sharing<A> eLife file system</LI>
 <P>
 <LI><A HREF="/control?op=GET_CONFIG">Read<A> current configuration file pattern</LI>
-<LI><INPUT TYPE=HIDDEN NAME="op" VALUE="SET_CONFIG">Change configuration file pattern. <INPUT NAME="par"></INPUT>.xml</LI>
-<LI><INPUT TYPE=submit VALUE="Change" class="button" /></LI>
+<LI>Change configuration file pattern. <INPUT NAME="filename"></INPUT>.xml</LI>
+<LI><INPUT TYPE=submit NAME="op" VALUE="SET_CONFIG" /></LI>
+<P>
+<LI><A HREF="/control?op=GET_NAME">Read<A> current server name</LI>
+<LI><Change current server name. <INPUT NAME="serverName"></INPUT></LI>
+<LI><INPUT TYPE=submit NAME="op" VALUE="SET_NAME" /></LI>
 <P>
 <!-- LI><A HREF="/control?op=LOGOUT">Logout<A> of the monitor application</LI -->
 <LI><A HREF="/control?op=EXIT">Stop<A> eLife Monitor</LI>

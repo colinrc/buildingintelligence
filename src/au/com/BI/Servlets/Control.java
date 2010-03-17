@@ -71,7 +71,7 @@ public class Control extends HttpServlet {
 		}
 	  	
         if (commandName == null){
-        	sendStatus("UNKNOWN_OP","","Please pass correct operation as op (START|STOP|EXIT|RESTART|CLIENT_RESTART|GET_CONFIG|SET_CONFIG|SHARE|SHARE_STOP|LOGOUT");	   	  		
+        	sendStatus("UNKNOWN_OP","","Please pass correct operation as op (START|STOP|EXIT|RESTART|CLIENT_RESTART|GET_CONFIG|SET_CONFIG|SHARE|SHARE_STOP");	   	  		
 		    responseCode = HttpServletResponse.SC_BAD_REQUEST;
         	
         } else {
@@ -145,7 +145,7 @@ public class Control extends HttpServlet {
 				logger.log (Level.INFO,"Fetching current configuration file");
 				commandFound = true;
 				try {
-					String startupFile = this.getStartupFile();
+					String startupFile = this.getBootstrapParameter(datafiles,"CONFIG_FILE");
 					if (xmlMode){
 						this.sendMessage(startupFile);
 						sendStatus("OK","Configuration file retrieved","");			
@@ -158,12 +158,12 @@ public class Control extends HttpServlet {
 			}
 			if (commandName.equals ("SET_CONFIG")) {
 				commandFound = true;
-		        String extra = req.getParameter("par");
+		        String extra = req.getParameter("filename");
 			    if (extra != null && !extra.trim().equals ("") ) {
 			    	extra += ".xml";
 			        logger.log (Level.FINER,"Setting XML configuration file for startup " + extra);
 			    	try {
-				        setBootstrapFile (datafiles,extra,output);
+				        setBootstrapParameter (datafiles,"CONFIG_FILE",extra);
 				        String returnString = "Configuration file changed : " + extra + "\n";
 						logger.log (Level.INFO,returnString);
 						sendStatus("OK",returnString,"");			
@@ -171,8 +171,43 @@ public class Control extends HttpServlet {
 						sendStatus(ex.getErrorCode(),"",ex.getMessage());	
 			    	}
 				} else {
-			        logger.log (Level.WARNING,"Set configuration file requested, but no filename was specified in the FILE parameter");
+			        logger.log (Level.WARNING,"Set configuration file requested, but no filename was specified in the par parameter");
 					sendStatus("MISSING_PARAMTER","","No file pattern was specifed to change the configuration entry to");	
+				}
+			}
+			if (commandName.equals ("GET_NAME")) {
+				logger.log (Level.INFO,"Fetching current server name");
+				commandFound = true;
+				try {
+					String serverName = this.getBootstrapParameter(datafiles,"SERVER_NAME");
+					if (serverName == null) serverName = "Uknown";
+					if (xmlMode){
+						this.sendMessage(serverName);
+						sendStatus("OK","Server name retrieved","");			
+					}else {
+						this.sendMessage("Current sever name file is " + serverName);
+					}
+				} catch  (CommandFail ex){
+					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
+				}
+			}
+			if (commandName.equals ("SET_NAME")) {
+				commandFound = true;
+		        String extra = req.getParameter("serverName");
+			    if (extra != null && !extra.trim().equals ("") ) {
+			    	extra += ".xml";
+			        logger.log (Level.FINER,"Setting server name " + extra);
+			    	try {
+				        setBootstrapParameter (datafiles,"SERVER_NAME",extra);
+				        String returnString = "Server name : " + extra + "\n";
+						logger.log (Level.INFO,returnString);
+						sendStatus("OK",returnString,"");			
+			    	} catch (CommandFail ex) {
+						sendStatus(ex.getErrorCode(),"",ex.getMessage());	
+			    	}
+				} else {
+			        logger.log (Level.WARNING,"Set server name requested, but no name was specified in the par parameter");
+					sendStatus("MISSING_PARAMTER","","No server name was specifed to change the name to");	
 				}
 			}
 			if (commandName.equals ("SHARE")) {
@@ -240,8 +275,8 @@ public class Control extends HttpServlet {
 	    
     }    
 
-    
-    private void enableWebdav(HttpServletRequest req) throws CommandFail{
+
+	private void enableWebdav(HttpServletRequest req) throws CommandFail{
     	
     	if (webDavContextHandler == null){
     		throw new CommandFail ("WebDav Context was not created");
@@ -294,7 +329,7 @@ public class Control extends HttpServlet {
 		}
     }
     
-	public String getStartupFile () throws CommandFail {
+	public String getBootstrapParameter (String datafiles, String parameter) throws CommandFail {
 
 	    String startupFile = null;
 	
@@ -306,9 +341,12 @@ public class Control extends HttpServlet {
 			Document bootstrap = saxb.build (theFile);
 			
 			Element topBoot = bootstrap.getRootElement();
-			Element bootup = topBoot.getChild("CONFIG_FILE");
-			
-			startupFile = bootup.getAttributeValue("NAME");
+			Element bootup = topBoot.getChild(parameter);
+			if (bootup == null){
+				return null;
+			} else {
+				startupFile = bootup.getAttributeValue("NAME");
+			}
 			return startupFile;
 	
 				
@@ -321,7 +359,7 @@ public class Control extends HttpServlet {
 	}
 
 
-	  public void setBootstrapFile (String datafiles, String extra,PrintWriter output) throws CommandFail {
+	  public void setBootstrapParameter (String datafiles, String parameter, String extra) throws CommandFail {
 		try {
 			String fileName = datafiles+ "/bootstrap.xml";
 			File theFile = new File (fileName);
@@ -330,7 +368,11 @@ public class Control extends HttpServlet {
 			Document bootstrap = saxb.build (theFile);
 			
 			Element topBoot = bootstrap.getRootElement();
-			Element bootup = topBoot.getChild("CONFIG_FILE");
+			Element bootup = topBoot.getChild(parameter);
+			if (bootup == null){
+				bootup = new Element(parameter);
+				topBoot.addContent(bootup);
+			}
 			bootup.setAttribute("NAME",extra);
 			
 			File fileToUpload = new File (fileName+".new");
@@ -369,16 +411,14 @@ public class Control extends HttpServlet {
 			    logger.log (Level.SEVERE, "Could not delete old file "+finalName.getName());
 			    throw new CommandFail("IO_ERROR","Could not delete old file "+finalName.getName());
 		    }
-			synchronized (output){
-				output.write((byte)0);
-				output.flush();
-			}
 
 				
 		} catch (IOException e) {
 			throw new CommandFail("IO_ERROR","IO Error writing the file " + e.getMessage());
 		} catch (JDOMException e1) {
 			throw new CommandFail("BOOTSTRAP_FAIL","XML parse error on the bootstrap file " + e1.getMessage());
+		} catch (NullPointerException e2){
+			throw new CommandFail("NULL_POINTER","Error in updating the bootstrap file");
 		}
     }
 	

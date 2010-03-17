@@ -1,3 +1,7 @@
+=== Monitor Release Notes ===
+
+See [MonitorDocs/ResfulApi,Monitor application] for documentation
+
 == 2010/03/17 ==
 Added libs to the distribution zip, changed references from /ext to /monitor_ext to allow parallel isntallation
 with eLife server.
