@@ -1,5 +1,5 @@
 === Monitor Release Notes ===
-See [MonitorDocs/ResfulApi,Monitor application] for documentation
+See [MonitorDocs/ResfulApi,the Monitor application wiki page] for documentation
 
 
 == 2010/03/18 ==
