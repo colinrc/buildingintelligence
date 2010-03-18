@@ -3,12 +3,20 @@
 <head>
 	<title>eLIFE Monitor Application</title>
 	<link REL=STYLESHEET HREF="style.css" TEXT="text/css">
-</head>
 
+<script type="text/javascript">
+function doSubmit( paramName,id,  op)
+{
+	document.getElementById('op').value = op;
+    document.forms["runForm"].submit();
+}
+</script>
+</head>
 <body style="overflow:none;margin:0;padding:0;">
 
 <form name="runForm" action="/control" method="get">
-		<h1>eLIFE Monitor Controls</h1>
+
+<h1>eLIFE Monitor Controls</h1>
 <UL>	
 <LI><A HREF="/control?op=START">Start<A> eLife Server</LI>
 <LI><A HREF="/control?op=RESTART">Restart<A> eLife Server</LI>
@@ -20,16 +28,19 @@
 <LI><A HREF="/control?op=STOP_SHARE">Stop sharing<A> eLife file system</LI>
 <P>
 <LI><A HREF="/control?op=GET_CONFIG">Read<A> current configuration file pattern</LI>
-<LI>Change configuration file pattern. <INPUT NAME="filename"></INPUT>.xml</LI>
-<LI><INPUT TYPE=submit NAME="op" VALUE="SET_CONFIG" /></LI>
+<LI>Change configuration file pattern. <INPUT NAME="filename" id="filename"></INPUT>.xml</LI>
+<UL><INPUT TYPE=button VALUE="Update" onClick="doSubmit('filename','filename','SET_CONFIG');"/></UL>
+
 <P>
 <LI><A HREF="/control?op=GET_NAME">Read<A> current server name</LI>
-<LI><Change current server name. <INPUT NAME="serverName"></INPUT></LI>
-<LI><INPUT TYPE=submit NAME="op" VALUE="SET_NAME" /></LI>
+<LI><Change current server name. <INPUT NAME="serverName" id="serverName"></INPUT></LI>
+<UL><INPUT TYPE=button VALUE="Update"
+	onClick="doSubmit('filename','serverName','SET_NAME');"/></UL>
 <P>
 <!-- LI><A HREF="/control?op=LOGOUT">Logout<A> of the monitor application</LI -->
 <LI><A HREF="/control?op=EXIT">Stop<A> eLife Monitor</LI>
 </UL>
+<input type=hidden name="op" id="op" value="" />
 </form>
 </body>
 </html>
