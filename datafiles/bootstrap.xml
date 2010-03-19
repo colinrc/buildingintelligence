@@ -11,5 +11,6 @@
   <RRDXMLDIRECTORY DIR=".\JRobin\RRDDefinition\" />
   <JETTY PORT="8081" SSL_PORT="8443" ACTIVE="Y" />
   <MAINTENANCE TIME="23:45" />
+  <SERVER_NAME NAME="Colin's eLife Server.xml" />
 </BOOTSTRAP>
 

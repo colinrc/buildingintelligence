@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="MacRoman" standalone="no"?>
+<?xml version="1.0"  standalone="no"?>
 <eclipse-userlibraries version="2">
     <library name="Groovy1.0" systemlibrary="false">
         <archive javadoc="jar:file:/Java/groovy-1.0/groovy-1.0.javadoc.jar!/" path="/Java/groovy-1.0/embeddable/groovy-all-1.0.jar" source="/Java/groovy-1.0/src"/>
