@@ -2,6 +2,9 @@
 See [MonitorDocs/ResfulApi,the Monitor application wiki page] for documentation
 
 
+Added bonjour support for monitor service, requires bonjour libraries to be installed on target machine jvm.
+
+
 == 2010/03/18 ==
 Added support for reading and updating server name from the bootstrap file, will be used for later bonjour support.
 Updated HTML forms for the embedded website.

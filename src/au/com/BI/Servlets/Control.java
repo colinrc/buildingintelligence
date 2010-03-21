@@ -17,12 +17,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.*;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import au.com.BI.Admin.BootstrapHandler;
 
 
 /**
@@ -37,9 +32,12 @@ public class Control extends HttpServlet {
     protected PrintWriter output = null;
     ServletContextHandler webDavContextHandler = null;
 	
+    protected BootstrapHandler bootstrapHandler;
+    
     /** Creates a new instance of ControlServlet */
     public Control() {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
+        bootstrapHandler = new BootstrapHandler();
 
     }
     
@@ -145,7 +143,7 @@ public class Control extends HttpServlet {
 				logger.log (Level.INFO,"Fetching current configuration file");
 				commandFound = true;
 				try {
-					String startupFile = this.getBootstrapParameter(datafiles,"CONFIG_FILE");
+					String startupFile = bootstrapHandler.getBootstrapParameter(datafiles,"CONFIG_FILE");
 					if (xmlMode){
 						this.sendMessage(startupFile);
 						sendStatus("OK","Configuration file retrieved","");			
@@ -163,7 +161,7 @@ public class Control extends HttpServlet {
 			    	extra += ".xml";
 			        logger.log (Level.FINER,"Setting XML configuration file for startup " + extra);
 			    	try {
-				        setBootstrapParameter (datafiles,"CONFIG_FILE",extra);
+			    		bootstrapHandler.setBootstrapParameter (datafiles,"CONFIG_FILE",extra);
 				        String returnString = "Configuration file changed : " + extra + "\n";
 						logger.log (Level.INFO,returnString);
 						sendStatus("OK",returnString,"");			
@@ -179,7 +177,7 @@ public class Control extends HttpServlet {
 				logger.log (Level.INFO,"Fetching current server name");
 				commandFound = true;
 				try {
-					String serverName = this.getBootstrapParameter(datafiles,"SERVER_NAME");
+					String serverName = bootstrapHandler.getBootstrapParameter(datafiles,"SERVER_NAME");
 					if (serverName == null) serverName = "Uknown";
 					if (xmlMode){
 						this.sendMessage(serverName);
@@ -198,7 +196,7 @@ public class Control extends HttpServlet {
 			    	extra += ".xml";
 			        logger.log (Level.FINER,"Setting server name " + extra);
 			    	try {
-				        setBootstrapParameter (datafiles,"SERVER_NAME",extra);
+			    		bootstrapHandler.setBootstrapParameter (datafiles,"SERVER_NAME",extra);
 				        String returnString = "Server name : " + extra + "\n";
 						logger.log (Level.INFO,returnString);
 						sendStatus("OK",returnString,"");			
@@ -329,99 +327,6 @@ public class Control extends HttpServlet {
 		}
     }
     
-	public String getBootstrapParameter (String datafiles, String parameter) throws CommandFail {
-
-	    String startupFile = null;
-	
-	    try {
-			String fileName = datafiles + "/bootstrap.xml";
-			File theFile = new File (fileName);
-			
-			SAXBuilder saxb = new SAXBuilder(false); 
-			Document bootstrap = saxb.build (theFile);
-			
-			Element topBoot = bootstrap.getRootElement();
-			Element bootup = topBoot.getChild(parameter);
-			if (bootup == null){
-				return null;
-			} else {
-				startupFile = bootup.getAttributeValue("NAME");
-			}
-			return startupFile;
-	
-				
-		} catch (IOException e) {
-				throw new CommandFail ("IO_ERROR","IO Error writing the file " + e.getMessage());
-		
-		} catch (JDOMException e1) {
-				throw new CommandFail ("BOOTSTRAP_FAIL","XML parse error on the bootstrap file " + e1.getMessage());
-		}
-	}
-
-
-	  public void setBootstrapParameter (String datafiles, String parameter, String extra) throws CommandFail {
-		try {
-			String fileName = datafiles+ "/bootstrap.xml";
-			File theFile = new File (fileName);
-			
-			SAXBuilder saxb = new SAXBuilder(false); 
-			Document bootstrap = saxb.build (theFile);
-			
-			Element topBoot = bootstrap.getRootElement();
-			Element bootup = topBoot.getChild(parameter);
-			if (bootup == null){
-				bootup = new Element(parameter);
-				topBoot.addContent(bootup);
-			}
-			bootup.setAttribute("NAME",extra);
-			
-			File fileToUpload = new File (fileName+".new");
-			Document doc = new Document ();
-			topBoot.detach();
-			doc.setRootElement(topBoot);
-
-			XMLOutputter xmlOut = new XMLOutputter (Format.getPrettyFormat());
-			FileWriter out = new FileWriter(fileToUpload);
-			xmlOut.output(doc, out) ;
-			out.flush();
-			out.close();
-			logger.log (Level.FINE,"File write succeeded.");
-			
-			File oldFile = new File (fileName);
-			File newName = new File (fileName+".old");
-			
-			if (oldFile.exists()) {
-			    if (newName.exists() && !newName.delete()) {
-				    logger.log (Level.SEVERE, "Could not delete old file "+oldFile.getName());
-			    	throw new CommandFail("IO_ERROR","Could not delete old file "+oldFile.getName());
-			    }
-				if (!oldFile.renameTo (newName)) { 
-				    logger.log (Level.SEVERE, "Could not rename old file "+oldFile.getName()+" to " + newName.getName());
-					throw new CommandFail("IO_ERROR","Could not rename new file "+fileToUpload.getName()+" to " + oldFile.getName());
-				}
-			}
-
-			if (!fileToUpload.renameTo(oldFile)) {
-			    logger.log (Level.SEVERE, "Could not rename new file "+fileToUpload.getName()+" to " + oldFile.getName());
-				throw new CommandFail("IO_ERROR","Could not rename new file "+fileToUpload.getName()+" to " + oldFile.getName());
-			}
-				    
-			File finalName = new File (fileName+".old");
-		    if (finalName.exists() && !finalName.delete()) {
-			    logger.log (Level.SEVERE, "Could not delete old file "+finalName.getName());
-			    throw new CommandFail("IO_ERROR","Could not delete old file "+finalName.getName());
-		    }
-
-				
-		} catch (IOException e) {
-			throw new CommandFail("IO_ERROR","IO Error writing the file " + e.getMessage());
-		} catch (JDOMException e1) {
-			throw new CommandFail("BOOTSTRAP_FAIL","XML parse error on the bootstrap file " + e1.getMessage());
-		} catch (NullPointerException e2){
-			throw new CommandFail("NULL_POINTER","Error in updating the bootstrap file");
-		}
-    }
-	
 		public void displayProcessResults (Process p) {
 			if (p != null ) {
 				String s= "";

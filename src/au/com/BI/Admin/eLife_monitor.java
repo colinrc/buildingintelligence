@@ -8,7 +8,12 @@ import java.io.*;
 
 import java.util.logging.*;
 import java.util.*;
+
+import com.apple.dnssd.DNSSDException;
+
+import au.com.BI.Comms.HandleBonjour;
 import au.com.BI.Jetty.*;
+import au.com.BI.Servlets.CommandFail;
 
 /**
  * @author Colin Canfield
@@ -69,6 +74,24 @@ public class eLife_monitor
 		System.out.println ("Launching eLife monitor task V" + major_version + "." + 
 					minor_version);
 
+		BootstrapHandler bootstrapHandler = new BootstrapHandler();
+		HandleBonjour handleBonjour = new HandleBonjour(Level.INFO);
+		
+		String serverName = "Unknown";
+		try {
+			serverName = bootstrapHandler.getBootstrapParameter(datafiles,"SERVER_NAME");
+			
+		} catch  (CommandFail ex){
+			logger.log(Level.FINEST,"Could not read initial server name");
+		} 
+
+		try {
+			handleBonjour.startBonjour("Monitor Service : " + serverName,port);
+		} catch (DNSSDException ex){
+			logger.log(Level.WARNING,"Could not start Bonjour service");
+		}
+
+		
 		logger.info("Listening for connections on " + port);
 		connection = new JettyHandler (this.defaultDebugLevel,monitor_web,datafilesLoc,eSmart_Install);
 		try {
@@ -76,6 +99,7 @@ public class eLife_monitor
 		} catch (Exception e){
 			logger.log(Level.SEVERE,"Could not start monitor web server "+ e.getCause());
 		}
+		handleBonjour.stopBonjour();
 	}
 	
 
