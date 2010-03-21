@@ -21,6 +21,8 @@ import org.eclipse.jetty.server.ssl.SslSocketConnector;
 
 //import org.eclipse.jetty.server.handler.*;
 import au.com.BI.Admin.*;
+import au.com.BI.Comms.HandleBonjour;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -34,13 +36,15 @@ public class JettyHandler {
     protected String webBase = "";
     String datafiles = "";
     String installBase = "";
+    HandleBonjour handleBonjour = null;
     
-    public JettyHandler(Level debugLevel,String webBase,String datafiles,String installBase) {
+    public JettyHandler(Level debugLevel,String webBase,String datafiles,String installBase,HandleBonjour handleBonjour) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
         logger.setLevel( debugLevel);
         this.webBase = webBase;
         this.datafiles = datafiles;
         this.installBase = installBase;
+        this.handleBonjour = handleBonjour;
     }
     
     
@@ -108,9 +112,11 @@ public class JettyHandler {
 
          
             updateContext.setAttribute("eSmart_Install", installBase);
+            updateContext.setAttribute("handleBonjour", handleBonjour);
             updateContext.setAttribute("datafiles", datafiles);
             updateContext.setWelcomeFiles(new String[]{"index.html"});       
             updateContext.addServlet("au.com.BI.Servlets.Control","/control");
+            
             
             ServletHolder defServletHold= new ServletHolder(new DefaultServlet());
             updateContext.addServlet(defServletHold,"/");  

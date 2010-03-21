@@ -10,11 +10,13 @@ public class HandleBonjour implements RegisterListener
 	protected int port;
 	Logger logger = null;
 	protected DNSSDRegistration monService = null;
+	protected DNSSDRegistration webDavShare = null;
 	protected String serverName = "Unknown";
 	
-	public HandleBonjour(Level debugLevel) {
+	public HandleBonjour(Level debugLevel,int port) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
         logger.setLevel( debugLevel);
+        this.port = port;
 	}
 
 	// Display error message on failure
@@ -33,16 +35,30 @@ public class HandleBonjour implements RegisterListener
 	}
 
 	  // Do the registration
-	public void startBonjour (String name,int port)
+	public void startBonjour (String name)
 	    throws DNSSDException
     {
 		logger.log(Level.FINER,"Bonjour Registration Starting");
 		logger.log(Level.FINER,"Requested Name: " + name + " port : " + Integer.toString(port));
-		monService = DNSSD.register(name, "_eLife_Monitor._tcp", port, this);
+		monService = DNSSD.register(name, "_elife_monitor._tcp", port, this);
     }
 	
 	public void stopBonjour (){
 		logger.log(Level.FINER,"Bonjour Registration Stopping");
-		monService.stop();
+		if (monService != null) monService.stop();
+	}
+	
+	  // Do the registration
+	public void startWebDavShare (String name)
+	    throws DNSSDException
+    {
+		logger.log(Level.FINER,"Bonjour Registration Starting");
+		logger.log(Level.FINER,"Requested Name: " + name + " port : " + Integer.toString(port));
+		webDavShare = DNSSD.register(name, "webdavs._tcp", port, this);
+    }
+	
+	public void stopWebDavShare (){
+		logger.log(Level.FINER,"Bonjour Registration Stopping");
+		if (webDavShare != null ) webDavShare.stop();
 	}
 }

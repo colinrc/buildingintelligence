@@ -17,11 +17,15 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.*;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+
+import com.apple.dnssd.DNSSDException;
+
 import au.com.BI.Admin.BootstrapHandler;
+import au.com.BI.Comms.HandleBonjour;
 
 
 /**
- *
+ * 
  * @author colin
  */
 @SuppressWarnings("serial")
@@ -31,8 +35,10 @@ public class Control extends HttpServlet {
     protected boolean xmlMode = false;
     protected PrintWriter output = null;
     ServletContextHandler webDavContextHandler = null;
+    protected HandleBonjour handleBonjour = null;
 	
     protected BootstrapHandler bootstrapHandler;
+    protected String serverName;
     
     /** Creates a new instance of ControlServlet */
     public Control() {
@@ -44,7 +50,13 @@ public class Control extends HttpServlet {
     public void init (ServletConfig cfg) throws ServletException {
         ServletContext context = cfg.getServletContext();
         datafiles = (String)context.getAttribute("datafiles");
-        webDavContextHandler = (ServletContextHandler)context.getAttribute("WebDavContext");
+        handleBonjour = (HandleBonjour)context.getAttribute("handleBonjour");
+        webDavContextHandler = (ServletContextHandler)context.getAttribute("WebDavContext");        
+        try {
+        	serverName = bootstrapHandler.getBootstrapParameter(datafiles,"SERVER_NAME");
+        } catch (CommandFail ex){
+        	logger.log(Level.INFO,"Could not read initial server name "+ ex.getCause());
+        }
         super.init();
     }
   
@@ -95,14 +107,11 @@ public class Control extends HttpServlet {
 				try {
 					logger.log (Level.INFO,"Stopping monitor service");
 					this.disableWebdav(req);
+					handleBonjour.stopWebDavShare();
 				} catch  (CommandFail ex){
 					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
 				}
-				if (xmlMode){
-					sendStatus("OK","Stopping monitor service","");					
-				}else {
-					sendMessage("Stopping monitor service");
-				}
+				sendStatus("OK","Stopping monitor service","");					
 				System.exit(0);
 				commandFound = true;
 
@@ -177,7 +186,7 @@ public class Control extends HttpServlet {
 				logger.log (Level.INFO,"Fetching current server name");
 				commandFound = true;
 				try {
-					String serverName = bootstrapHandler.getBootstrapParameter(datafiles,"SERVER_NAME");
+					serverName = bootstrapHandler.getBootstrapParameter(datafiles,"SERVER_NAME");
 					if (serverName == null) serverName = "Uknown";
 					if (xmlMode){
 						this.sendMessage(serverName);
@@ -197,6 +206,7 @@ public class Control extends HttpServlet {
 			        logger.log (Level.FINER,"Setting server name " + extra);
 			    	try {
 			    		bootstrapHandler.setBootstrapParameter (datafiles,"SERVER_NAME",extra);
+			    		serverName = extra;
 				        String returnString = "Server name : " + extra + "\n";
 						logger.log (Level.INFO,returnString);
 						sendStatus("OK",returnString,"");			
@@ -213,11 +223,13 @@ public class Control extends HttpServlet {
 				commandFound = true;
 				try {
 					this.enableWebdav(req);
-					if (xmlMode){
-						sendStatus("OK","File system available through webdav at /dav","");			
-					}else {
-						this.sendMessage("File system available through webdav at /dav");
+					try {
+						handleBonjour.startWebDavShare(serverName);
+					} catch (DNSSDException e) {
+						logger.log(Level.WARNING,"Could not register webdav service with bonjour " + e.getCause());
 					}
+					sendStatus("OK","File system available through webdav at /dav","");			
+
 				} catch  (CommandFail ex){
 					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
 				}
@@ -227,11 +239,8 @@ public class Control extends HttpServlet {
 				commandFound = true;
 				try {
 					this.disableWebdav(req);
-					if (xmlMode){
-						sendStatus("OK","File system disabled from /dav","");			
-					}else {
-						this.sendMessage("File system disabled at /dav");
-					}
+					handleBonjour.stopWebDavShare();
+					sendStatus("OK","File system disabled at /dav","");			
 				} catch  (CommandFail ex){
 					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
 				}

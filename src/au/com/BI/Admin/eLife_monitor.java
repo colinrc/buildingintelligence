@@ -75,7 +75,7 @@ public class eLife_monitor
 					minor_version);
 
 		BootstrapHandler bootstrapHandler = new BootstrapHandler();
-		HandleBonjour handleBonjour = new HandleBonjour(Level.INFO);
+		HandleBonjour handleBonjour = new HandleBonjour(Level.INFO,port);
 		
 		String serverName = "Unknown";
 		try {
@@ -86,14 +86,14 @@ public class eLife_monitor
 		} 
 
 		try {
-			handleBonjour.startBonjour("Monitor Service : " + serverName,port);
+			handleBonjour.startBonjour("Monitor Service : " + serverName);
 		} catch (DNSSDException ex){
 			logger.log(Level.WARNING,"Could not start Bonjour service");
 		}
 
 		
 		logger.info("Listening for connections on " + port);
-		connection = new JettyHandler (this.defaultDebugLevel,monitor_web,datafilesLoc,eSmart_Install);
+		connection = new JettyHandler (this.defaultDebugLevel,monitor_web,datafilesLoc,eSmart_Install,handleBonjour);
 		try {
 			connection.start(port,this);	
 		} catch (Exception e){
