@@ -31,6 +31,7 @@ public class eLife_monitor
 	protected String eSmart_Install;
 	protected String webRoot;
 	protected JettyHandler connection;
+	protected static HandleBonjour handleBonjour = null;
 	
 	
 	/**
@@ -75,7 +76,7 @@ public class eLife_monitor
 					minor_version);
 
 		BootstrapHandler bootstrapHandler = new BootstrapHandler();
-		HandleBonjour handleBonjour = new HandleBonjour(Level.INFO,port);
+		handleBonjour = new HandleBonjour(Level.INFO,port);
 		
 		String serverName = "Unknown";
 		try {
@@ -94,6 +95,9 @@ public class eLife_monitor
 		
 		logger.info("Listening for connections on " + port);
 		connection = new JettyHandler (this.defaultDebugLevel,monitor_web,datafilesLoc,eSmart_Install,handleBonjour);
+		
+
+	    
 		try {
 			connection.start(port,this);	
 		} catch (Exception e){
@@ -106,6 +110,13 @@ public class eLife_monitor
 	
 	public static void main(String[] args)
 	{
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+	        public void run() {
+	            if (handleBonjour != null)
+	            	handleBonjour.stopBonjour();
+	        }
+	    });;
+	    
 		new eLife_monitor();
 
 	}

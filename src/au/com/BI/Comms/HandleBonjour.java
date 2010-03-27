@@ -12,6 +12,7 @@ public class HandleBonjour implements RegisterListener
 	protected DNSSDRegistration monService = null;
 	protected DNSSDRegistration webDavShare = null;
 	protected String serverName = "Unknown";
+	protected boolean sharing = false;
 	
 	public HandleBonjour(Level debugLevel,int port) {
         logger = Logger.getLogger(this.getClass().getPackage().getName());
@@ -54,11 +55,20 @@ public class HandleBonjour implements RegisterListener
     {
 		logger.log(Level.FINER,"Bonjour Registration Starting");
 		logger.log(Level.FINER,"Requested Name: " + name + " port : " + Integer.toString(port));
-		webDavShare = DNSSD.register(name, "webdavs._tcp", port, this);
+		if (sharing){
+			this.stopWebDavShare();
+		}
+		webDavShare = DNSSD.register(name, "_webdavs._tcp", port, this);
+		TXTRecord txtRecord = new TXTRecord(  );
+		txtRecord.set("path", "/webdav");
+		webDavShare.getTXTRecord().update(0, txtRecord.getRawBytes(),0);
+
+		sharing = true;
     }
 	
 	public void stopWebDavShare (){
 		logger.log(Level.FINER,"Bonjour Registration Stopping");
 		if (webDavShare != null ) webDavShare.stop();
+		sharing = false;
 	}
 }

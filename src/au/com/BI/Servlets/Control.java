@@ -202,7 +202,6 @@ public class Control extends HttpServlet {
 				commandFound = true;
 		        String extra = req.getParameter("serverName");
 			    if (extra != null && !extra.trim().equals ("") ) {
-			    	extra += ".xml";
 			        logger.log (Level.FINER,"Setting server name " + extra);
 			    	try {
 			    		bootstrapHandler.setBootstrapParameter (datafiles,"SERVER_NAME",extra);
@@ -228,7 +227,7 @@ public class Control extends HttpServlet {
 					} catch (DNSSDException e) {
 						logger.log(Level.WARNING,"Could not register webdav service with bonjour " + e.getCause());
 					}
-					sendStatus("OK","File system available through webdav at /dav","");			
+					sendStatus("OK","File system available through webdav at /webdav","");			
 
 				} catch  (CommandFail ex){
 					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
@@ -240,7 +239,7 @@ public class Control extends HttpServlet {
 				try {
 					this.disableWebdav(req);
 					handleBonjour.stopWebDavShare();
-					sendStatus("OK","File system disabled at /dav","");			
+					sendStatus("OK","File system share removed from /webdav","");			
 				} catch  (CommandFail ex){
 					sendStatus(ex.getErrorCode(),"",ex.getMessage());						
 				}

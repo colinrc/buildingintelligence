@@ -94,7 +94,7 @@ public class JettyHandler {
            	HandlerList handlers = new HandlerList();    
 
             ServletContextHandler webDavContext= 
-            	new ServletContextHandler (handlers, "/dav",true,true);  
+            	new ServletContextHandler (handlers, "/webdav",true,true);  
             webDavContext.setAllowNullPathInfo(true);
             ServletHolder davServletHolder = new ServletHolder (new WebdavServlet());   
             davServletHolder.setInitParameter("rootpath", installBase);

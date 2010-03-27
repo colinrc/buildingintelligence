@@ -1,46 +1,58 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-	<title>eLIFE Monitor Application</title>
-	<link REL=STYLESHEET HREF="style.css" TEXT="text/css">
+<html><head><title>eLIFE Monitor Application</title>
 
-<script type="text/javascript">
+  
+
+  
+  
+  <link rel="STYLESHEET" href="style.css" text="text/css">
+
+  
+  <script type="text/javascript">
 function doSubmit( paramName,id,  op)
 {
 	document.getElementById('op').value = op;
     document.forms["runForm"].submit();
 }
-</script>
-</head>
-<body style="overflow:none;margin:0;padding:0;">
+  </script></head><body>
+<h1>eLIFE Monitor Service</h1>
 
-<form name="runForm" action="/control" method="get">
+<form name="runForm" method="get" target="/control">
+  <ul>
+    <div>
+    <li><a href="/control?op=START"><span style="font-weight: bold;">Start</span> eLife Server</a></li>
+    <li><a href="/control?op=RESTART"><span style="font-weight: bold;">Restart</span> eLife Server</a>
+    </li>
+    <li><a href="/control?op=STOP"><span style="font-weight: bold;">Stop</span> eLife Server</a></li>
+    <p> </p>
+    <li><a href="/control?op=CLIENT_RESTART"><span style="font-weight: bold;">Restart</span> eLife Client</a></li>
+    </div>
+    <div style="">
+    <li><a href="/control?op=SHARE"><span style="font-weight: bold;">Start sharing</span> eLife file
+system</a></li>
+    <li><a href="/control?op=STOP_SHARE"><span style="font-weight: bold;">Stop sharing</span> eLife file
+system</a></li>
+    </div>
+    <div>
+    <li><a href="/control?op=GET_CONFIG"><span style="font-weight: bold;">Read current
+configuration</span> file pattern</a></li>
+    <li><a><span style="font-weight: bold;">Change configuration</span> file pattern. <input name="filename" id="filename">.xml</a></li>
+    <ul>
+      <a><input value="Update" onclick="doSubmit('filename','filename','SET_CONFIG');" type="button"></a>
+    </ul>
+    </div>
+    <div>
+    <li><a href="/control?op=GET_NAME">Read <span style="font-weight: bold;">current server</span> name</a></li>
+    <li><a>Change <span style="font-weight: bold;">current server name</span>. <input name="serverName" id="serverName"></a></li>
+    <ul>
+      <a><input value="Update" onclick="doSubmit('filename','serverName','SET_NAME');" type="button"></a>
+    </ul>
+    </div>
+    <div>
+    <li><a href="/control?op=EXIT"><span style="font-weight: bold;">Stop</span> eLife Monitor</a></li>
+    </div>
+  </ul>
+  <input name="op" id="op" value="" type="hidden"></form>
 
-<h1>eLIFE Monitor Controls</h1>
-<UL>	
-<LI><A HREF="/control?op=START">Start<A> eLife Server</LI>
-<LI><A HREF="/control?op=RESTART">Restart<A> eLife Server</LI>
-<LI><A HREF="/control?op=STOP">Stop<A> eLife Server</LI>
-<P>
-<LI><A HREF="/control?op=CLIENT_RESTART">Restart<A> eLife Client</LI>
-<P>
-<LI><A HREF="/control?op=SHARE">Start sharing<A> eLife file system</LI>
-<LI><A HREF="/control?op=STOP_SHARE">Stop sharing<A> eLife file system</LI>
-<P>
-<LI><A HREF="/control?op=GET_CONFIG">Read<A> current configuration file pattern</LI>
-<LI>Change configuration file pattern. <INPUT NAME="filename" id="filename"></INPUT>.xml</LI>
-<UL><INPUT TYPE=button VALUE="Update" onClick="doSubmit('filename','filename','SET_CONFIG');"/></UL>
-
-<P>
-<LI><A HREF="/control?op=GET_NAME">Read<A> current server name</LI>
-<LI><Change current server name. <INPUT NAME="serverName" id="serverName"></INPUT></LI>
-<UL><INPUT TYPE=button VALUE="Update"
-	onClick="doSubmit('filename','serverName','SET_NAME');"/></UL>
-<P>
-<!-- LI><A HREF="/control?op=LOGOUT">Logout<A> of the monitor application</LI -->
-<LI><A HREF="/control?op=EXIT">Stop<A> eLife Monitor</LI>
-</UL>
-<input type=hidden name="op" id="op" value="" />
-</form>
-</body>
-</html>
+<!-- A HREF="/control?op=LOGOUT">Logout<A> of the monitor application -->
+</body></html>

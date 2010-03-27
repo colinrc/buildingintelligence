@@ -3,7 +3,8 @@ See [MonitorDocs/ResfulApi,the Monitor application wiki page] for documentation
 
 
 Added bonjour support for monitor service, requires bonjour libraries to be installed on target machine jvm.
-
+Changed share URL from /dav to /webdav to fit the apache standard
+Added a seperate handler for the webdav handler, port 8023
 
 == 2010/03/18 ==
 Added support for reading and updating server name from the bootstrap file, will be used for later bonjour support.
