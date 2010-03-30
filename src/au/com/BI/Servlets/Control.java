@@ -75,9 +75,13 @@ public class Control extends HttpServlet {
 		{
 			output.println("<resp>");	
 		} else {
-			output.println("<HTML>");
-			output.println("<link REL=STYLESHEET HREF=\"style.css\" TEXT=\"text/css\">");
-			output.println("<BODY>");	
+			output.println("<html><head>");
+			output.println("<title>eLIFE Monitor Application</title>");
+			output.println("<link rel='STYLESHEET' href='style.css' text='text/css'>");
+			output.println("</head>");
+			output.println("<body>");
+			output.println("<h1>eLIFE Monitor Service</h1>");
+			output.println("<div>");			
 		}
 	  	
         if (commandName == null){
@@ -272,7 +276,7 @@ public class Control extends HttpServlet {
 			
 		}else {
 			output.println("<P><A HREF='/index.html'>Return to main page</A>");
-    	
+			output.println("</div>");
 			output.println("</BODY>");
 			output.println("</HTML>");
 		}

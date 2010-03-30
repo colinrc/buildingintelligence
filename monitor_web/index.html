@@ -1,7 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html><head><title>eLIFE Monitor Application</title>
-
-  
+<html><head>
+  <title>eLIFE Monitor Application</title>
 
   
   
@@ -14,21 +13,25 @@ function doSubmit( paramName,id,  op)
 	document.getElementById('op').value = op;
     document.forms["runForm"].submit();
 }
-  </script></head><body>
+  </script>
+</head><body>
 <h1>eLIFE Monitor Service</h1>
 
 <form name="runForm" method="get" target="/control">
   <ul>
     <div>
-    <li><a href="/control?op=START"><span style="font-weight: bold;">Start</span> eLife Server</a></li>
-    <li><a href="/control?op=RESTART"><span style="font-weight: bold;">Restart</span> eLife Server</a>
-    </li>
-    <li><a href="/control?op=STOP"><span style="font-weight: bold;">Stop</span> eLife Server</a></li>
+    <li><a href="/control?op=START"><span style="font-weight: bold;">Start</span>
+eLife Server</a></li>
+    <li><a href="/control?op=RESTART"><span style="font-weight: bold;">Restart</span>
+eLife Server</a> </li>
+    <li><a href="/control?op=STOP"><span style="font-weight: bold;">Stop</span>
+eLife Server</a></li>
     <p> </p>
     <li><a href="/control?op=CLIENT_RESTART"><span style="font-weight: bold;">Restart</span> eLife Client</a></li>
     </div>
     <div style="">
-    <li><a href="/control?op=SHARE"><span style="font-weight: bold;">Start sharing</span> eLife file
+    <li><a href="/control?op=SHARE"><span style="font-weight: bold;">Start
+sharing</span> eLife file
 system</a></li>
     <li><a href="/control?op=STOP_SHARE"><span style="font-weight: bold;">Stop sharing</span> eLife file
 system</a></li>
@@ -36,20 +39,23 @@ system</a></li>
     <div>
     <li><a href="/control?op=GET_CONFIG"><span style="font-weight: bold;">Read current
 configuration</span> file pattern</a></li>
-    <li><a><span style="font-weight: bold;">Change configuration</span> file pattern. <input name="filename" id="filename">.xml</a></li>
+    <li><span style="font-weight: bold;">Change configuration</span>
+file pattern. <input name="filename" id="filename">.xml</li>
     <ul>
-      <a><input value="Update" onclick="doSubmit('filename','filename','SET_CONFIG');" type="button"></a>
+      <a><input value="Update" onclick="doSubmit('filename','filename','SET_CONFIG');" class="myButton" type="button"></a>
     </ul>
     </div>
     <div>
     <li><a href="/control?op=GET_NAME">Read <span style="font-weight: bold;">current server</span> name</a></li>
-    <li><a>Change <span style="font-weight: bold;">current server name</span>. <input name="serverName" id="serverName"></a></li>
+    <li>Change <span style="font-weight: bold;">current server name</span>.
+      <input name="serverName" id="serverName"></li>
     <ul>
-      <a><input value="Update" onclick="doSubmit('filename','serverName','SET_NAME');" type="button"></a>
+      <a><input value="Update" onclick="doSubmit('filename','serverName','SET_NAME');" class="myButton" type="button"></a>
     </ul>
     </div>
     <div>
-    <li><a href="/control?op=EXIT"><span style="font-weight: bold;">Stop</span> eLife Monitor</a></li>
+    <li><a href="/control?op=EXIT"><span style="font-weight: bold;">Stop</span>
+eLife Monitor</a></li>
     </div>
   </ul>
   <input name="op" id="op" value="" type="hidden"></form>

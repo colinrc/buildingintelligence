@@ -39,12 +39,16 @@ body {
 }
 a:visited, a:link, li {
   background-position: left center;
-  color: #ffffff;
   text-decoration: none;
-  text-align: left;
   font-size: 14px;
+  color: #ffffff;
+  text-align: left;
 }
 a:hover {
-  text-decoration: none;
   color: #cccc33;
 }
+input.myButton:hover
+{
+  color: #cccc33;
+}
+

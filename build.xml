@@ -31,7 +31,11 @@
 		<ant4eclipse:getProjectDirectory workspacedirectory="${workspace}"
                                  projectname="eLife_Server"
 	                         property="eSmart_install.dir" />
-	                         
+
+		<ant4eclipse:getProjectDirectory workspacedirectory="${workspace}"
+                                 projectname="eLife_monitor"
+	                         property="eSmart_Monitor.dir" />
+
 	    <ant4eclipse:getJdtClassPath property="eLife.runclasspath"
 	    				workspaceDirectory="${workspace}"
                              projectName="${project.name}" />
@@ -41,7 +45,8 @@
 	    	dir="bin"
 	    	classpath="${eLife.runclasspath}" >
 			<sysproperty key="eSmart_install" value="${eSmart_install.dir}" />
-			<sysproperty key="monitor_web" value="../monitor_web" />
+			<sysproperty key="monitor_web" value="${eSmart_Monitor.dir}/monitor_web" />
+			<sysproperty key="datafiles" value="${eSmart_install.dir}/datafiles" />
 		</java>
 	</target>
 	
