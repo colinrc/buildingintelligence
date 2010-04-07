@@ -89,7 +89,7 @@ public class JettyHandler {
             constraintSecurityHandler.setConstraintMappings(new ConstraintMapping[]{webClientCM},userRoles);
             constraintSecurityHandler.setAuthenticator(new BasicAuthenticator());
             constraintSecurityHandler.setLoginService(webPass);
-            constraintSecurityHandler.setStrict(false);
+            constraintSecurityHandler.setStrict(true);
            
            	HandlerList handlers = new HandlerList();    
 
