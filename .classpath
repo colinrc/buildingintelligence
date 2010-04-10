@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/slf4j-1.5.6"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Webdav-server-2.0"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JDom1.1"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jetty7.0.2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jdom1.1.1"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
