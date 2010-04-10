@@ -70,8 +70,27 @@ public class JettyHandler {
               HashLoginService  webPass = new HashLoginService ("eLife_Monitor",datafiles + "/realm.properties");
               webPass.setRefreshInterval(60000);
               server.addBean(webPass);
-                
-            // Normal webclient  context
+
+              // webdav context security handler
+              ConstraintSecurityHandler webDavConstraintSecurityHandler = new ConstraintSecurityHandler();
+              Constraint webdavClientConstraint = new Constraint();
+              webdavClientConstraint.setAuthenticate(true);
+              webdavClientConstraint.setName("eLife webdav");
+              webdavClientConstraint.setRoles(new String[]{"admin","integrator"});
+              
+             ConstraintMapping webdavClientCM = new ConstraintMapping();
+             webdavClientCM.setPathSpec("/*");
+             webdavClientCM.setConstraint(webdavClientConstraint);
+             
+             Set<String> webdavUserRoles = new HashSet<String>();
+             webdavUserRoles.add("admin");
+             webdavUserRoles.add("integrator");
+             webDavConstraintSecurityHandler.setConstraintMappings(new ConstraintMapping[]{webdavClientCM},webdavUserRoles);
+             webDavConstraintSecurityHandler.setAuthenticator(new BasicAuthenticator());
+             webDavConstraintSecurityHandler.setLoginService(webPass);
+             webDavConstraintSecurityHandler.setStrict(true);             
+              
+              // Normal webclient  context security handler
              ConstraintSecurityHandler constraintSecurityHandler = new ConstraintSecurityHandler();
              
              Constraint webClientConstraint = new Constraint();
@@ -91,6 +110,7 @@ public class JettyHandler {
             constraintSecurityHandler.setLoginService(webPass);
             constraintSecurityHandler.setStrict(true);
            
+            // Handlers
            	HandlerList handlers = new HandlerList();    
 
             ServletContextHandler webDavContext= 
@@ -102,6 +122,7 @@ public class JettyHandler {
             davServletHolder.setInitParameter("maxUploadSize","2000000"); // 2mb
             davServletHolder.setInitParameter("no-content-length-headers","0");            
             davServletHolder.setInitParameter("lazyFolderCreationOnPut","0");  
+            webDavContext.setSecurityHandler(webDavConstraintSecurityHandler);
             webDavContext.addServlet(davServletHolder, "/*");
 
            	ServletContextHandler updateContext= 
