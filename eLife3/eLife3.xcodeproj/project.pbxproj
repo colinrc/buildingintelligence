@@ -11,10 +11,19 @@
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		28216C970DB411BC00E5133A /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28216C960DB411BC00E5133A /* FirstViewController.m */; };
-		282CCBFE0DB6C98000C4EA27 /* SecondView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 282CCBFD0DB6C98000C4EA27 /* SecondView.xib */; };
 		288765080DF74369002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765070DF74369002DB57D /* CoreGraphics.framework */; };
 		28AD73880D9D96C1002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD73870D9D96C1002E5188 /* MainWindow.xib */; };
+		7E2E8B0D10FE685100668D2C /* settingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E2E8B0B10FE685100668D2C /* settingsViewController.m */; };
+		7E2E8B0E10FE685100668D2C /* settingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E2E8B0C10FE685100668D2C /* settingsViewController.xib */; };
+		7E2E8B2B10FE69B200668D2C /* macrosViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E2E8B2910FE69B200668D2C /* macrosViewController.m */; };
+		7E2E8B2C10FE69B200668D2C /* macrosViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E2E8B2A10FE69B200668D2C /* macrosViewController.xib */; };
+		7E2E8B3010FE6A0C00668D2C /* statusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E2E8B2E10FE6A0C00668D2C /* statusViewController.m */; };
+		7E2E8B3110FE6A0C00668D2C /* statusViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E2E8B2F10FE6A0C00668D2C /* statusViewController.xib */; };
+		7E2E8B3510FE6A2200668D2C /* zonesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E2E8B3310FE6A2200668D2C /* zonesViewController.m */; };
+		7E2E8B3610FE6A2200668D2C /* zonesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E2E8B3410FE6A2200668D2C /* zonesViewController.xib */; };
+		7E2E8B5D11017D5B00668D2C /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7E2E8B5C11017D5B00668D2C /* Settings.bundle */; };
+		7E2E8BBC1101947C00668D2C /* elifesocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E2E8BBB1101947C00668D2C /* elifesocket.m */; };
+		7E2E8BCF1101980A00668D2C /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E2E8BCE1101980A00668D2C /* CFNetwork.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,13 +32,26 @@
 		1D3623250D0F684500981E51 /* eLife3AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eLife3AppDelegate.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* eLife3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eLife3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		28216C950DB411BC00E5133A /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
-		28216C960DB411BC00E5133A /* FirstViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
-		282CCBFD0DB6C98000C4EA27 /* SecondView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SecondView.xib; sourceTree = "<group>"; };
 		288765070DF74369002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		28A0AB4B0D9B1048005BE974 /* eLife3_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eLife3_Prefix.pch; sourceTree = "<group>"; };
 		28AD73870D9D96C1002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7E2E8B0A10FE685100668D2C /* settingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = settingsViewController.h; sourceTree = "<group>"; };
+		7E2E8B0B10FE685100668D2C /* settingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = settingsViewController.m; sourceTree = "<group>"; };
+		7E2E8B0C10FE685100668D2C /* settingsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = settingsViewController.xib; path = Classes/settingsViewController.xib; sourceTree = "<group>"; };
+		7E2E8B2810FE69B200668D2C /* macrosViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macrosViewController.h; sourceTree = "<group>"; };
+		7E2E8B2910FE69B200668D2C /* macrosViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = macrosViewController.m; sourceTree = "<group>"; };
+		7E2E8B2A10FE69B200668D2C /* macrosViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = macrosViewController.xib; path = Classes/macrosViewController.xib; sourceTree = "<group>"; };
+		7E2E8B2D10FE6A0C00668D2C /* statusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = statusViewController.h; sourceTree = "<group>"; };
+		7E2E8B2E10FE6A0C00668D2C /* statusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = statusViewController.m; sourceTree = "<group>"; };
+		7E2E8B2F10FE6A0C00668D2C /* statusViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = statusViewController.xib; path = Classes/statusViewController.xib; sourceTree = "<group>"; };
+		7E2E8B3210FE6A2200668D2C /* zonesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zonesViewController.h; sourceTree = "<group>"; };
+		7E2E8B3310FE6A2200668D2C /* zonesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = zonesViewController.m; sourceTree = "<group>"; };
+		7E2E8B3410FE6A2200668D2C /* zonesViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = zonesViewController.xib; path = Classes/zonesViewController.xib; sourceTree = "<group>"; };
+		7E2E8B5C11017D5B00668D2C /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		7E2E8BBA1101947C00668D2C /* elifesocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifesocket.h; sourceTree = "<group>"; };
+		7E2E8BBB1101947C00668D2C /* elifesocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifesocket.m; sourceTree = "<group>"; };
+		7E2E8BCE1101980A00668D2C /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* eLife3-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "eLife3-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -41,6 +63,7 @@
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765080DF74369002DB57D /* CoreGraphics.framework in Frameworks */,
+				7E2E8BCF1101980A00668D2C /* CFNetwork.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -50,10 +73,17 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				28216C950DB411BC00E5133A /* FirstViewController.h */,
-				28216C960DB411BC00E5133A /* FirstViewController.m */,
+				7E2E8BB91101945C00668D2C /* Socket */,
 				1D3623240D0F684500981E51 /* eLife3AppDelegate.h */,
 				1D3623250D0F684500981E51 /* eLife3AppDelegate.m */,
+				7E2E8B0A10FE685100668D2C /* settingsViewController.h */,
+				7E2E8B0B10FE685100668D2C /* settingsViewController.m */,
+				7E2E8B2810FE69B200668D2C /* macrosViewController.h */,
+				7E2E8B2910FE69B200668D2C /* macrosViewController.m */,
+				7E2E8B2D10FE6A0C00668D2C /* statusViewController.h */,
+				7E2E8B2E10FE6A0C00668D2C /* statusViewController.m */,
+				7E2E8B3210FE6A2200668D2C /* zonesViewController.h */,
+				7E2E8B3310FE6A2200668D2C /* zonesViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -74,6 +104,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				7E2E8B5C11017D5B00668D2C /* Settings.bundle */,
 			);
 			name = eLife3;
 			sourceTree = "<group>";
@@ -90,9 +121,12 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				282CCBFD0DB6C98000C4EA27 /* SecondView.xib */,
 				28AD73870D9D96C1002E5188 /* MainWindow.xib */,
 				8D1107310486CEB800E47090 /* eLife3-Info.plist */,
+				7E2E8B0C10FE685100668D2C /* settingsViewController.xib */,
+				7E2E8B2A10FE69B200668D2C /* macrosViewController.xib */,
+				7E2E8B2F10FE6A0C00668D2C /* statusViewController.xib */,
+				7E2E8B3410FE6A2200668D2C /* zonesViewController.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -103,8 +137,18 @@
 				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
 				1D30AB110D05D00D00671497 /* Foundation.framework */,
 				288765070DF74369002DB57D /* CoreGraphics.framework */,
+				7E2E8BCE1101980A00668D2C /* CFNetwork.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7E2E8BB91101945C00668D2C /* Socket */ = {
+			isa = PBXGroup;
+			children = (
+				7E2E8BBA1101947C00668D2C /* elifesocket.h */,
+				7E2E8BBB1101947C00668D2C /* elifesocket.m */,
+			);
+			name = Socket;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,7 +194,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				28AD73880D9D96C1002E5188 /* MainWindow.xib in Resources */,
-				282CCBFE0DB6C98000C4EA27 /* SecondView.xib in Resources */,
+				7E2E8B0E10FE685100668D2C /* settingsViewController.xib in Resources */,
+				7E2E8B2C10FE69B200668D2C /* macrosViewController.xib in Resources */,
+				7E2E8B3110FE6A0C00668D2C /* statusViewController.xib in Resources */,
+				7E2E8B3610FE6A2200668D2C /* zonesViewController.xib in Resources */,
+				7E2E8B5D11017D5B00668D2C /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -163,7 +211,11 @@
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* eLife3AppDelegate.m in Sources */,
-				28216C970DB411BC00E5133A /* FirstViewController.m in Sources */,
+				7E2E8B0D10FE685100668D2C /* settingsViewController.m in Sources */,
+				7E2E8B2B10FE69B200668D2C /* macrosViewController.m in Sources */,
+				7E2E8B3010FE6A0C00668D2C /* statusViewController.m in Sources */,
+				7E2E8B3510FE6A2200668D2C /* zonesViewController.m in Sources */,
+				7E2E8BBC1101947C00668D2C /* elifesocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
