@@ -2,15 +2,17 @@
 
 
 
-         <DEVICE ACTIVE="N" DESCRIPTION="Integra" DEVICE_TYPE="INTEGRA">
+         <DEVICE ACTIVE="Y" DESCRIPTION="Integra" DEVICE_TYPE="INTEGRA">
                  <CONNECTION>
                          <SERIAL ACTIVE="N" PORT="COM1" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
-                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                         <SERIAL ACTIVE="N" PORT="/dev/tty.USA49W1a2P1.1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
+                         <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="60000"/>
   
                  </CONNECTION>
                  <PARAMETERS>
-                         <ITEM NAME="PROTOCOL" VALUE="IP" />
                          <ITEM NAME="AV_INPUTS" VALUE="Integra Inputs" />
+                         <ITEM NAME="AV_SURROUND" VALUE="Integra Surround" />
+                         <ITEM NAME="AV_SURROUND_ZONE2" VALUE="Integra Surround Zone 2" />
                          <ITEM  NAME="MODEL" VALUE="DTR5.2" />
                  </PARAMETERS>
                  
@@ -32,12 +34,66 @@
                          <ITEM VALUE="26" CODE="TUNER"/>
                          <ITEM VALUE="27" CODE="MUSIC SERVER"/>
                          <ITEM VALUE="28" CODE="INTERNET RADIO"/>
-                        <ITEM VALUE="29" CODE="USB"/>
-                        <ITEM VALUE="30" CODE="MULTI CH"/>
-                        <ITEM VALUE="31" CODE="XM*1"/>
-                        <ITEM VALUE="32" CODE="SIRIUS*1"/>
-
+                         <ITEM VALUE="29" CODE="USB"/>
+                         <ITEM VALUE="30" CODE="MULTI CH"/>
+                         <ITEM VALUE="31" CODE="XM*1"/>
+                         <ITEM VALUE="32" CODE="SIRIUS*1"/>
+                         <ITEM VALUE="80" CODE="SOURCE"/>
+                         <ITEM VALUE="QSTN" CODE="query"/>
                  </CATALOGUE>
+                 <CATALOGUE NAME="Integra Surround">
+                         <ITEM VALUE="00" CODE="STEREO"/>
+                         <ITEM VALUE="01" CODE="DIRECT"/>
+                         <ITEM VALUE="02" CODE="SURROUND"/>
+                         <ITEM VALUE="03" CODE="FILM"/>
+                         <ITEM VALUE="04" CODE="THX"/>
+                         <ITEM VALUE="05" CODE="ACTION"/>
+                         <ITEM VALUE="06" CODE="MUSICAL"/>
+                         <ITEM VALUE="07" CODE="MONO MOVIE"/>
+                         <ITEM VALUE="08" CODE="ORCHESTRA"/>
+                         <ITEM VALUE="09" CODE="UNPLUGGED"/>
+                         <ITEM VALUE="0A" CODE="STUDIO MIX"/>
+                         <ITEM VALUE="0B" CODE="TV LOGIC"/>
+                         <ITEM VALUE="0C" CODE="ALL CH STEREO"/>
+                         <ITEM VALUE="0D" CODE="THEATER-DIMENSIONAL"/>
+                         <ITEM VALUE="0E" CODE="ENHANCED 7/ENHANCE"/>
+                         <ITEM VALUE="0F" CODE="MONO"/>
+                         <ITEM VALUE="11" CODE="PURE AUDIO"/>
+                         <ITEM VALUE="12" CODE="MULTIPLEX"/>
+                         <ITEM VALUE="13" CODE="FULL MONO"/>
+                         <ITEM VALUE="14" CODE="DOLBY VIRTUAL"/>
+                         <ITEM VALUE="40" CODE="5.1 CH SURROUND"/>
+<!--                     <ITEM VALUE="40" CODE="STRAIGHT DECODE*1"/> -->
+                         <ITEM VALUE="41" CODE="DOLBY EX/DTS ES"/>
+<!--                     <ITEM VALUE="41" CODE="DOLBY EX*2"/> -->
+                         <ITEM VALUE="42" CODE="THX CINEMA"/>
+                         <ITEM VALUE="43" CODE="THX SURROUND EX"/>
+                         <ITEM VALUE="50" CODE="U2/S2 CINEMA"/>
+                         <ITEM VALUE="51" CODE="MUSIC MODE"/>
+                         <ITEM VALUE="52" CODE="GAMES MODE"/>
+                         <ITEM VALUE="80" CODE="PLII/PLIIX MOVIE"/>
+                         <ITEM VALUE="81" CODE="PLII/PLIIX MUSIC"/>
+                         <ITEM VALUE="82" CODE="NEO:6 CINEMA"/>
+                         <ITEM VALUE="83" CODE="NEO:6 MUSIC"/>
+                         <ITEM VALUE="84" CODE="PLII/PLIIX THX CINEMA"/>
+                         <ITEM VALUE="85" CODE="NEO:6 THX CINEMA"/>
+                         <ITEM VALUE="86" CODE="PLII/PLIIX GAME"/>
+                         <ITEM VALUE="87" CODE="NEURAL SURR*3"/>
+                         <ITEM VALUE="88" CODE="NEURAL THX"/>
+                         <ITEM VALUE="89" CODE="PLII THX GAMES"/>
+                         <ITEM VALUE="8A" CODE="NEO:6 THX GAMES"/>
+                         <ITEM VALUE="UP" CODE="LITENING MODE UP"/>
+                         <ITEM VALUE="DOWN" CODE="LISTENING MODE DOWN"/>
+                         <ITEM VALUE="QSTN" CODE="query"/>
+                 </CATALOGUE>                 
+                 <CATALOGUE NAME="Integra Surround Zone 2">
+                         <ITEM VALUE="00" CODE="STEREO"/>
+                         <ITEM VALUE="01" CODE="DIRECT"/>
+                         <ITEM VALUE="0F" CODE="MONO"/>
+                         <ITEM VALUE="12" CODE="MULTIPLEX"/>
+                         <ITEM VALUE="87" CODE="DVS(PI2)"/>
+                         <ITEM VALUE="88" CODE="DVS(NEO6)"/>
+                 </CATALOGUE>                 
                  <INTEGRA>
                          <AV_OUTPUT ACTIVE="Y"  DISPLAY_NAME="FAMILY_AV" KEY="01" NAME="Main Amp"/>
                          <AV_OUTPUT ACTIVE="Y"  DISPLAY_NAME="LOUNGE_AV" KEY="02" NAME="Zone 2"/>
