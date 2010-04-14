@@ -7,13 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "elifesocket.h"
 
-@interface eLife3AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate> {
+@interface eLife3AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, UIActionSheetDelegate> {
     UIWindow *window;
     UITabBarController *tabBarController;
+	elifesocket *elifeSvrConn;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
+@property (nonatomic, retain) elifesocket *elifeSvrConn;
 
 @end
