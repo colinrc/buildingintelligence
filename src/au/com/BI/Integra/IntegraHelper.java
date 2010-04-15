@@ -7,8 +7,6 @@ import au.com.BI.Util.Utility;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.log4j.lf5.LogLevel;
-
 /**
  * @author richardlemon
  * Helper class to encapsulate the Integra protocol specific code.
@@ -128,10 +126,7 @@ public class IntegraHelper {
 	public boolean validSourceDevice(String inCommand){
 		try
 		{
-			if (isSerial())
-				return inCommand.substring(1, 2).equals(UnitType );
-			
-			return inCommand.substring(0,1).equals(UnitType);
+			return inCommand.substring(1, 2).equals(UnitType );
 		}
 		catch(IndexOutOfBoundsException ex)
 		{
@@ -147,10 +142,7 @@ public class IntegraHelper {
 	public String getInputValue(String inCommand){
 		try
 		{
-		if (isSerial())
 			return inCommand.substring(5);
-		
-		return inCommand.substring(4);
 		}
 		catch(IndexOutOfBoundsException ex)
 		{
@@ -166,16 +158,41 @@ public class IntegraHelper {
 	public String getInputCommand(String inCommand){
 		try
 		{
-			if (isSerial())
-				return inCommand.substring(2,5);
-			
-			return inCommand.substring(1,4);
+			return inCommand.substring(2,5);
 		}
 		catch(IndexOutOfBoundsException ex)
 		{
 			logger.log (Level.WARNING, "Received command to short for Integra, couldn't read command code");
 		}
 		return "";
+	}
+	
+	public byte [] formatByteArray(String cmdStr)
+	{
+		if (isSerial())
+			return cmdStr.getBytes();
+		
+		int hdrsize = 0x10;
+		byte[] retval = new byte[hdrsize + cmdStr.length()];
+		byte[] hdr = {'I','S','C','P'};
+		System.arraycopy(hdr, 0, retval, 0, 4);
+		byte[] hdrlen = {(byte)(hdrsize >>> 24),
+				(byte)(hdrsize >>> 16),
+				(byte)(hdrsize >>> 8),
+				(byte)hdrsize};
+		System.arraycopy(hdrlen, 0, retval, 4, 4);
+		int datasize = cmdStr.length();
+		byte[] datalen = { (byte)(datasize >>> 24),
+							(byte)(datasize >>> 16),
+							(byte)(datasize >>> 8),
+							(byte)datasize};
+		System.arraycopy(datalen, 0, retval, 8, 4);
+		retval[12] = 0x01; // version
+		byte[] reserved = {0x00,0x00,0x00};
+		System.arraycopy(reserved, 0, retval, 13, 3);
+		System.arraycopy(cmdStr.getBytes(), 0, retval, 16, cmdStr.length());
+
+		return retval;
 	}
 	/**
 	 * Using the format of the command figure out which device we are looking at
@@ -269,8 +286,7 @@ public class IntegraHelper {
 	public String outVolume(int zone, String action){
 		String outCommand = new String();
 		// TODO test is probably unnecessary string + null = string?
-		if (isSerial())
-			outCommand += getSTX();
+		outCommand += getSTX();
 		outCommand += UnitType;
 
 		String integraCmd = commandMap.volume.getIntegraCommand(zone);
@@ -311,8 +327,8 @@ public class IntegraHelper {
 	{
 		String outCommand = new String();
 		// TODO test is probably unnecessary string + null = string?
-		if (isSerial())
-			outCommand += getSTX();
+		
+		outCommand += getSTX();
 		outCommand += UnitType;
 
 		String integraCmd = commandMap.mute.getIntegraCommand(zone);
@@ -348,8 +364,7 @@ public class IntegraHelper {
 	{
 		String outCommand = new String();
 		// TODO test is probably unnecessary string + null = string?
-		if (isSerial())
-			outCommand += getSTX();
+		outCommand += getSTX();
 		outCommand += UnitType;
 
 		String integraCmd = commandMap.power.getIntegraCommand(zone);
@@ -385,8 +400,7 @@ public class IntegraHelper {
 	{
 		String outCommand = new String();
 		// TODO test is probably unnecessary string + null = string?
-		if (isSerial())
-			outCommand += getSTX();
+		outCommand += getSTX();
 		outCommand += UnitType;
 
 		String integraCmd = commandMap.src.getIntegraCommand(zone);
@@ -406,8 +420,7 @@ public class IntegraHelper {
 	{
 		String outCommand = new String();
 		// TODO test is probably unnecessary string + null = string?
-		if (isSerial())
-			outCommand += getSTX();
+		outCommand += getSTX();
 		outCommand += UnitType;
 
 		String integraCmd = commandMap.preset.getIntegraCommand(zone);
