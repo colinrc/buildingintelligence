@@ -208,7 +208,7 @@ public class IntegraHelper {
 	 * @param volume hex volume string from device
 	 * @return scaled volume value 0..100
 	 */
-	int scaleVolume(String volume)
+	String scaleVolumeForFlash(String volume)
 	{
 		int retVal = -1;
 		try
@@ -216,7 +216,7 @@ public class IntegraHelper {
 			int nVal = Integer.parseInt(volume, 16);
 			// if type == dtr5.2 or dtr6.2 then 0..80 is full scale
 			// else 0..100 is full scale
-			if (deviceModel == "DTR5.2" || deviceModel == "DTR6.2"){
+			if (deviceModel.equals("DTR5.2") || deviceModel.equals("DTR6.2")){
 				// scale 0..80 to 0..100
 				 retVal = Utility.scaleForFlash(String.valueOf(nVal), 0, 80,false);
 			}
@@ -227,8 +227,38 @@ public class IntegraHelper {
 		{
 			logger.log (Level.WARNING,"Volume value invalid " + ex.getMessage());
 		}
-		if ( retVal > 100) retVal = -1; 
-		return retVal;
+		if ( retVal > 100) 
+			return ""; 
+		
+		return String.valueOf(retVal);
+	}
+	/**
+	 * Given the hex volume value scale to 0..100
+	 * @param volume hex volume string from device
+	 * @return scaled volume value 0..100
+	 */
+	String scaleVolumeFromFlash(String volume)
+	{
+		int retVal = -1;
+		try
+		{
+			// if type == dtr5.2 or dtr6.2 then 0..80 is full scale
+			// else 0..100 is full scale
+			if (deviceModel == "DTR5.2" || deviceModel == "DTR6.2"){
+				// scale 0..80 to 0..100
+				 retVal = Utility.scaleFromFlash(volume, 0, 80,false);
+			}
+			else 
+				retVal = Utility.scaleFromFlash(volume, 0, 100,false);
+			}
+		catch(NumberFormatException ex)
+		{
+			logger.log (Level.WARNING,"Volume value invalid " + ex.getMessage());
+		}
+		if ( retVal > 100) 
+			return "";
+		
+		return Integer.toHexString(retVal);
 	}
 	/**
 	 * creates output volume string to send to the device
@@ -260,8 +290,15 @@ public class IntegraHelper {
 			outCommand += "QSTN" + getETX();
 		}
 		else 
-			outCommand = null;
-		
+		{
+			// we have a number for the volume level...
+			String volLevel = scaleVolumeFromFlash(action);
+			// number didn't interpret... 
+			if (volLevel.equals(""))
+				return null;
+
+			outCommand += volLevel + getETX();
+		}
 		return outCommand;
 	}
 	/**

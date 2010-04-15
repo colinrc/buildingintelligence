@@ -259,13 +259,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		else if (cmd.equals("MVL") || cmd.equals("ZVL") || cmd.equals("VL3"))
 		{
 			logger.log (Level.FINE, "Received volume command " + cmd);
-			int volForFlash = integraHelper.scaleVolume(val);
+			String volForFlash = integraHelper.scaleVolumeForFlash(val);
 			
-			if (volForFlash > 0)
+			if (!volForFlash.equals(""))
 			{
-				String volForFlashString = String.valueOf(volForFlash);
 				//currentState.setVolume(volForFlashString);
-				result.addFlashCommand(buildCommandForFlash ( avDevice, "volume",volForFlashString,"","","","",0));					
+				result.addFlashCommand(buildCommandForFlash ( avDevice, "volume",volForFlash,"","","","",0));					
 			}
 		}
 		else if (cmd.equals("SLI") || cmd.equals("SLZ") || cmd.equals("SL3"))
