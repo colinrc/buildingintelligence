@@ -134,7 +134,7 @@ public class Controller {
 		modelRegistry.put("SCRIPT", "au.com.BI.Script.Model");
 		modelRegistry.put("AUTONOMIC_HOME", "au.com.BI.MultiMedia.AutonomicHome.Model");
 		modelRegistry.put("SLIM_SERVER", "au.com.BI.MultiMedia.SlimServer.Model");
-
+		modelRegistry.put("INTEGRA", "au.com.BI.Integra.Model");
 	}
 
 	public void setUp() throws CommsFail {
