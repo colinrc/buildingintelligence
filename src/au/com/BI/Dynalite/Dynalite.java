@@ -44,9 +44,9 @@ public class Dynalite extends BaseDevice implements LightDevice,DeviceType,Dynal
 	 * @return
 	 */
 	public CommandInterface buildDisplayCommand () {
-		DynaliteCommand cBUSCommand = new DynaliteCommand ();
-		cBUSCommand.setDisplayName(getOutputKey());
-		return cBUSCommand;
+		DynaliteCommand dynaLightCommand = new DynaliteCommand ();
+		dynaLightCommand.setDisplayName(getOutputKey());
+		return dynaLightCommand;
 	}
 
 	/**
