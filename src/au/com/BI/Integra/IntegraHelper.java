@@ -106,10 +106,7 @@ public class IntegraHelper {
 	 * @return either STX for serial or null for TCP/IP
 	 */
 	public String getSTX(){
-		String retStr = null;
-		if (isSerial())
-			retStr = STX;
-		return retStr;
+		return STX;
 	}
 	/**
 	 * gets the end of transmission character
@@ -126,6 +123,8 @@ public class IntegraHelper {
 	public boolean validSourceDevice(String inCommand){
 		try
 		{
+			if (isIP())
+				return inCommand.substring(17,18).equals(UnitType);
 			return inCommand.substring(1, 2).equals(UnitType );
 		}
 		catch(IndexOutOfBoundsException ex)
@@ -142,6 +141,8 @@ public class IntegraHelper {
 	public String getInputValue(String inCommand){
 		try
 		{
+			if (isIP())
+				return inCommand.substring(21);
 			return inCommand.substring(5);
 		}
 		catch(IndexOutOfBoundsException ex)
@@ -158,6 +159,8 @@ public class IntegraHelper {
 	public String getInputCommand(String inCommand){
 		try
 		{
+			if (isIP())
+				return inCommand.substring(18,21);
 			return inCommand.substring(2,5);
 		}
 		catch(IndexOutOfBoundsException ex)
