@@ -127,7 +127,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 	*/
 
-	
+
 	public void addControlledItem (String name, DeviceType details, MessageDirection controlType) {
 
 		try {
@@ -156,16 +156,25 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			logger.log( Level.WARNING,"Attempted to add an incorrect device type to the CBUS model");
 		}
 	}
-
+	/**
+	 * 
+	 * @param cbusDevice
+	 * @return
+	 */
 	public int getStateLevel (CBUSDevice cbusDevice) {
 		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(),cbusDevice.getDeviceType());
 		if (!state.containsKey(theKey)) return 100;
 
 		StateOfGroup  cBusState = (StateOfGroup)state.get(theKey);
 		return cBusState.getLevel();
-
 	}
-
+	/**
+	 * Called by sendOutput to update the state model
+	 * @param cbusDevice
+	 * @param command
+	 * @param extra
+	 * @return
+	 */
 	public boolean setState (CBUSDevice cbusDevice, String command, int extra){
 		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(),cbusDevice.getDeviceType());
 		StateOfGroup cBusState = null;
@@ -182,7 +191,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		state.put(theKey,cBusState);
 		return cBusState.isDirty;
 	}
-
+	/**
+	 * 
+	 * @param theKey
+	 * @param command
+	 * @param extra
+	 * @return
+	 */
 	public boolean setState (String theKey, String command, int extra){
 		StateOfGroup cBusState = null;
 		if (state.containsKey(theKey)) {
@@ -198,7 +213,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		state.put(theKey,cBusState);
 		return cBusState.isDirty;
 	}
-
+	/**
+	 * Not actually called when setting the state from flash, is called when setting the 
+	 * state from the wall to set the setfromclient to false.
+	 * TODO can we remove this and add the negation to the from wall method?
+	 * @param cbusDevice
+	 * @param flashControl
+	 * @return true if we have changed the cbus state
+	 */
 	public boolean setStateFromFlash (CBUSDevice cbusDevice, boolean flashControl){
 		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(),cbusDevice.getDeviceType());
 		StateOfGroup cBusState = null;
@@ -212,7 +234,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		state.put(theKey,cBusState);
 		return cBusState.isDirty;
 	}
-	
+	/**
+	 * Called by doControlledItem when a Command comes in from the wall controller,
+	 * sets the cbus state to handle the command
+	 * @param cbusDevice 
+	 * @param wallControl
+	 * @return true if we have changed the cbus state
+	 */
 	public boolean setStateFromWallPanel(CBUSDevice cbusDevice, boolean wallControl){
 		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(), cbusDevice.getDeviceType());
 		StateOfGroup cBusState = null;
@@ -226,7 +254,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		state.put(theKey,cBusState);
 		return cBusState.isDirty;
 	}
-	
+	/**
+	 * 
+	 * @param cbusDevice
+	 * @return
+	 */
 	public boolean getStateFromFlash (CBUSDevice cbusDevice){
 		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(), cbusDevice.getDeviceType());
 		StateOfGroup cBusState = (StateOfGroup)state.get(theKey);
@@ -236,19 +268,36 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return false;
 		}
 	}
-
+	/**
+	 * Called when script or flash changes state of a cbus device
+	 * @param cbusDevice
+	 * @param cBusState
+	 * @return
+	 */
 	public boolean setState (CBUSDevice cbusDevice, StateOfGroup cBusState){
 		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(),cbusDevice.getDeviceType());
 
 		state.put(theKey,cBusState);
 		return cBusState.isDirty;
 	}
-	
+	/**
+	 * 
+	 * @param cbusDevice
+	 * @param power
+	 * @param level
+	 * @return
+	 */
 	public boolean testState (CBUSDevice cbusDevice,String power, String level) {
 		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(), cbusDevice.getDeviceType());
 		return testState (theKey,power,level);
 	}
-		
+	/**
+	 * Called by MMI when we are initializing the system to the current cbus state
+	 * @param theKey
+	 * @param power
+	 * @param levelStr
+	 * @return
+	 */
 	public boolean testState (String theKey,String power, String levelStr) {
 
 		try{
@@ -258,8 +307,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return false;
 		}
 	}
-		 
-
+	/**
+	 * Called by MMI when we are initializing the system to the current cbus state
+	 * @param theKey
+	 * @param power
+	 * @param level
+	 * @return
+	 */
 	public boolean testState (String theKey,String power, int level) {
 		StateOfGroup stateOfGroup = this.getCurrentState(theKey);
 		if (stateOfGroup == null) return false;
@@ -268,8 +322,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (stateOfGroup.getLevel() != level) return false;
 		return true;
 	}
-		 
-
+	/**
+	 * 
+	 * @param cbusDevice
+	 */
 	public void setStateClean (CBUSDevice cbusDevice) {
 		String theKey = cBUSHelper.buildKey(cbusDevice.getApplicationCode(),cbusDevice.getKey(),cbusDevice.getDeviceType());
 		if (state.containsKey(theKey)) {
@@ -278,8 +334,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			state.put( theKey,cBusState);
 		}
 	}
-
-	public void addStartupQueryItem (String name, Object details, MessageDirection controlType){
+	/**
+	 * 
+	 */
+	public void addStartupQueryItem (String name, Object details, MessageDirection controlType) {
 		try {
 			if (((DeviceType)details).getDeviceType() == DeviceType.TEMPERATURE ){
 				temperatureSensors.add ((SensorFascade)details);
@@ -299,7 +357,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 
 	}
-
+	/**
+	 * 
+	 */
 	public void doStartup() throws CommsFail {
 		tildeCount = 0;
 		this.mMIHelpers.comms = comms; //just to be sure.
@@ -313,7 +373,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		comms.sendString("~~"+ETX);
 
 	}
-
+	/**
+	 * 
+	 * @throws CommsFail
+	 */
 	public void doRestOfStartup () throws CommsFail {
 
 		String pollTempStr = (String)this.getParameterValue("POLL_TEMP_INTERVAL", DeviceModel.MAIN_DEVICE_GROUP);
@@ -375,7 +438,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			comms.addCommandToQueue (cbusCommsCommand);
 		}
 	}
-	
+	/**
+	 * 
+	 * @throws CommsFail
+	 */
 	public void requestAllLevels () throws CommsFail{
 		mMIHelpers.clearAllLevelMMIQueues();
 		for (DeviceType eachDevice:configHelper.getAllControlledDeviceObjects()) {
@@ -391,7 +457,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		mMIHelpers.sendAllLevelMMIQueues();
 	}
-
+	/**
+	 * 
+	 * @return
+	 * @throws CommsFail
+	 */
 	public boolean setCBUSParameters () throws CommsFail{
 		// Ensure MMI messages are switched on
 		try {
@@ -449,12 +519,16 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 
 	}
-
+	/**
+	 * 
+	 */
     public int logout(User user) throws CommsFail {
     	pollTemperatures.setRunning(false);
         return DeviceModel.SUCCESS;
     }
-    
+    /**
+     * 
+     */
 	public boolean doIControl (String keyName, boolean isClientCommand)
 	{
 		configHelper.wholeKeyChecked(keyName);
@@ -473,9 +547,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 		}
 	}
-
-
-
+	/**
+	 * Sends a command to the CBUS device specified in the command parameter, 
+	 * used by scripts and clients to send commands to the devices attached 
+	 * to the cbus
+	 * 
+	 * @param command	The command to send, encapsulates all of the info	
+	 */
 	public void doOutputItem (CommandInterface command) throws CommsFail {
 		String theWholeKey = command.getKey();
 		DeviceType device = configHelper.getOutputItem(theWholeKey);
@@ -575,14 +653,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 		}
 	}
-
 	/**
 	 * Controlled item is the default item type.
-	 * The system will call this function if it is not from flash.
-	 * ie. It is from the serial port.
+	 * The system will call this function if the command is not from flash.
+	 * ie. the command is from the serial port.
+	 * @param command	The command to handle, encapsulates all of the data
 	 */
-
-	
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{
 		boolean didCommand=false;
@@ -855,8 +931,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		} catch (IndexOutOfBoundsException inEx) {
 		}
 	}
-
-
+	/**
+	 * 
+	 */
 	public void clearAllQueues(){
 		comms.clearCommandQueue();
 		mMIHelpers.cachedMMI.clear();
@@ -864,7 +941,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		mMIHelpers.sendingExtended.clear();
 		mMIHelpers.clearAllLevelMMIQueues();
 	}
-	
+	/**
+	 * 
+	 * @param cbusDevice	The cbus device that has changed state
+	 * @param command		the command to send (on/off)	
+	 * @param extra			Any extra info for the command
+	 * @param currentUser	The user sending the command
+	 */
 	protected void sendCommandToFlash (CBUSDevice cbusDevice,String command,int extra,User currentUser){
 		this.setState ((CBUSDevice)cbusDevice,command,extra);
 		CommandInterface cbusCommand = null;
@@ -885,8 +968,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		this.setStateClean (cbusDevice);
 		this.sendToFlash(-1,cbusCommand);
 	}
-	
-
+	/**
+	 * Used to send the states received from cbus mmi to the controller command handler  
+	 * @param keyStr	The CBUS id of the attached device
+	 * @param command	The command to send (on/off)
+	 * @param extra		Extra info for the command
+	 * @param user		The user sending the command
+	 */
 	public void sendOutput (String keyStr, String command, String extra,User user) {
 
 		//logger.log (Level.FINEST,"Sending MMI output App Code : "  + appCode + " command " + command + " group " + keyStr);
@@ -926,7 +1014,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 
 	}
-
+	/**
+	 * 
+	 * @param device
+	 * @param command
+	 * @param currentChar
+	 * @return
+	 * @throws CommsFail
+	 */
 	public String buildCBUSLabelString (Label device, CommandInterface command,String currentChar) throws CommsFail {
 		String cBUSOutputString = null;
 		boolean commandFound = false;
@@ -949,7 +1044,16 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		return cBUSOutputString;
 	}
-			
+	/**
+	 * 	
+	 * @param appCodeStr
+	 * @param key
+	 * @param catalogueStr
+	 * @param flavour
+	 * @param currentChar
+	 * @param device
+	 * @return
+	 */
 	protected String buildCBUSLabelCommand (String appCodeStr, String key, String catalogueStr, String flavour, String currentChar, Label device) {
 		String returnString = "";
 		try {
@@ -991,7 +1095,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return null;
 		}
 	}
-	
+	/**
+	 * 
+	 * @param device
+	 * @param command
+	 * @param currentChar
+	 * @return
+	 * @throws CommsFail
+	 */
 	public String buildCBUSLightString (CBUSDevice device, CommandInterface command,String currentChar) throws CommsFail {
 		String cBUSOutputString = null;
 		boolean commandFound = false;
@@ -1060,8 +1171,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 		}
 	}
-	
-	
+	/**
+	 * 
+	 * @param vals
+	 * @return
+	 */
 	public byte calcChecksum(Vector<Byte> vals) {
 		int total = 0;
 
@@ -1072,7 +1186,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		byte twosComp = (byte)((~remainder + 1)&0xff);
 		return twosComp;			
 	}
-	
+	/**
+	 * 
+	 * @param toCalc
+	 * @return
+	 */
 	protected String calcChecksum (String toCalc) {
 		int total = 0;
 		for (int i = 0; i < toCalc.length(); i+=2) {
@@ -1087,7 +1205,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (hexCheck.length() > 2) hexCheck = hexCheck.substring(hexCheck.length() - 2);
 		return hexCheck.toUpperCase();
 	}
-
+	/**
+	 * 
+	 * @param cBUSCommand
+	 * @param appCodeStr
+	 * @param group
+	 * @param key
+	 * @return
+	 */
 	protected String buildCBUSOnOffCommand (String cBUSCommand, String appCodeStr,  String group, String key) {
 		try {
 			int appCode = Integer.parseInt(appCodeStr,16);
@@ -1108,7 +1233,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return null;
 		}
 	}
-
+	/**
+	 * 
+	 * @param appCodeStr
+	 * @param startGroup
+	 * @param key
+	 * @return
+	 */
 	protected String buildCBUSLevelRequestCommand (String appCodeStr,  int startGroup,String key) {
 		try {
 			byte appCode = Byte.parseByte(appCodeStr,16);
@@ -1129,8 +1260,15 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return null;
 		}
 	}
-
-
+	/**
+	 * 
+	 * @param rampCodeStr
+	 * @param appCodeStr
+	 * @param levelStr
+	 * @param group
+	 * @param key
+	 * @return
+	 */
 	protected String buildCBUSRampToCommand (String rampCodeStr, String appCodeStr, String levelStr, String group, String key)  {
 		try {
 			int level = Integer.parseInt(levelStr);
@@ -1165,7 +1303,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return null;
 		}
 	}
-
+	/**
+	 * 
+	 * @param buffer
+	 * @return
+	 */
 	public boolean passChecksum(String buffer) {
 		int l = buffer.length();
 		if (l < 2) return false;
@@ -1189,9 +1331,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return false;
 		}
 	}
-
-	
-
+	/**
+	 * 
+	 * @param rampRate
+	 * @return
+	 */
 	public String findRampCode (String rampRate) {
 		String retCode = "";
 		if (rampRate.equals("0")) retCode = "02";
@@ -1212,35 +1356,62 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (rampRate.equals("17m")) retCode = "7A";
 		return retCode;
 	}
-
-
+	/**
+	 * 
+	 * @param appCode
+	 * @param group
+	 * @param deviceType
+	 * @return
+	 */
 	public boolean hasState (String appCode, String group,int deviceType) {
 		return hasState(cBUSHelper.buildKey(appCode,group, deviceType));
 	}
-	
+	/**
+	 * 
+	 * @param fullKey
+	 * @return
+	 */
 	public boolean hasState (String fullKey) {
 		return state.containsKey(fullKey);		
 	}
-
+	/**
+	 * 
+	 * @param appCode
+	 * @param group
+	 * @param deviceType
+	 * @return
+	 */
 	public StateOfGroup getCurrentState (String appCode, String group, int deviceType) {
 		return getCurrentState (cBUSHelper.buildKey(appCode,group,deviceType));
 	}
-
+	/**
+	 * 
+	 * @param fullKey
+	 * @return
+	 */
 	public StateOfGroup getCurrentState (String fullKey) {
 		StateOfGroup currentState = (StateOfGroup)state.get(fullKey);
 		if (currentState == null) currentState = new StateOfGroup();
 		return currentState;
 	}
-
-
+	/**
+	 * 
+	 * @param appCode
+	 * @param group
+	 * @param currentState
+	 * @param deviceType
+	 */
 	public void setCurrentState (String appCode, String group, StateOfGroup currentState,int deviceType) {
 		setCurrentState (cBUSHelper.buildKey(appCode,group, deviceType),currentState);
 	}
-	
+	/**
+	 * 
+	 * @param fullKey
+	 * @param currentState
+	 */
 	public void setCurrentState (String fullKey, StateOfGroup currentState) {
 		state.put(fullKey, currentState);
 	}	
-	
 	/**
 	 * @return Returns the applicationCode.
 	 */
@@ -1254,11 +1425,16 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		this.applicationCode = applicationCode;
 		this.applicationCodeByte = Byte.parseByte(applicationCode,16);
 	}
-
+	/**
+	 * 
+	 */
 	public boolean doIPHeartbeat () {
 	    return false;
 	}
-	
+	/**
+	 * 
+	 * @return
+	 */
 	public String nextKey () {
 		if (currentChar == 'z') {
 			currentChar = 'g';
@@ -1267,16 +1443,18 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		return String.valueOf(currentChar);
 	}
-
-
+	/**
+	 * 
+	 * @return
+	 */
 	public long getLastSentTime() {
 		return lastSentTime;
 	}
-
-
+	/**
+	 * 
+	 * @param lastSentTime
+	 */
 	public void setLastSentTime(long lastSentTime) {
 		this.lastSentTime = lastSentTime;
 	}
-	
-
 }
