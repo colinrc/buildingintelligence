@@ -125,10 +125,10 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		return configHelper.getControlItem(formatKey(key, null));
 	}
 	/**
-	 * 
-	 * @param srcCode
-	 * @param catalogName
-	 * @param device
+	 * Maps a parameter code back to a value
+	 * @param srcCode the parameter code we are looking for
+	 * @param catalogName	the catalogue name
+	 * @param device	the device we are handling
 	 * @return
 	 * @throws ParameterException
 	 */

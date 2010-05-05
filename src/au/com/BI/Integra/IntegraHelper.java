@@ -17,8 +17,8 @@ public class IntegraHelper {
 	protected String deviceModel = null;	// the model number of the hardware
 	protected String commsLine = null;		// the type of comms, serial or ip
 	protected final String STX = "!";		// start of TX
-	protected final String ETX = "\n";		// end of TX
-	protected final String ERX = "\0x1A";	// end of RX
+	protected final String ETX = "\r";		// end of TX
+	protected final String ERX = "\n";	// end of RX
 	protected final String UnitType = "1";	// the unit type always 1 for receiver
 	protected Logger logger = null;
 	
