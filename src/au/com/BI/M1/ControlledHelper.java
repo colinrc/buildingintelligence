@@ -133,17 +133,16 @@ public class ControlledHelper {
 					logger.log(Level.FINER, "M1 command request was received for a device that has not been configured " + m1Command.getKey());
 					return;
 				}
-				String outputKey = theDevice.getOutputKey();
 				
 				handleZoneState(cache, commandQueue, m1, zoneChangeUpdate.getZoneStatus(), theDevice);
 				
 			} else if (m1Command.getClass().equals(ZoneStatusReport.class)) {
 				ZoneStatusReport zoneStatusReport = (ZoneStatusReport)m1Command;
 				
-				for (int i=0;i<zoneStatusReport.getZoneStatus().length; i++) {
+				for (int i=0; i < zoneStatusReport.getZoneStatus().length; i++) {
 					ZoneStatus zoneStatus = zoneStatusReport.getZoneStatus()[i];
 					
-					BaseDevice theDevice = (BaseDevice) configHelper.getControlledItem(Utility.padString(Integer.toString(i), 3) + "CC"); 
+					BaseDevice theDevice = (BaseDevice) configHelper.getControlledItem(Utility.padString(Integer.toString(i+1), 3) + "CC"); 
 					
 					// See if the input is a controlled device
 					if (theDevice != null) {
@@ -537,7 +536,7 @@ public class ControlledHelper {
 	 * NORMAL_SHORT = off
 	 * VIOLATED_EOL = on
 	 * VIOLATED_OPEN = on
-	 * VIOLATED_SHORT = off
+	 * VIOLATED_SHORT = on
 	 * BYPASSED_EOL = security log
 	 * BYPASSED_OPEN = security log
 	 * BYPASSED_SHORT = security log
