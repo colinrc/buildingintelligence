@@ -1,14 +1,14 @@
 <CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
 
-
-
          <DEVICE ACTIVE="Y" DESCRIPTION="Integra" DEVICE_TYPE="INTEGRA">
+         
                  <CONNECTION>
                          <SERIAL ACTIVE="N" PORT="COM1" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
                          <SERIAL ACTIVE="N" PORT="/dev/tty.USA49W1a2P1.1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
-                         <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="60000"/>
+                         <IP ACTIVE="Y" IP_ADDRESS="10.200.0.18" PORT="60128"/>
   
                  </CONNECTION>
+         
                  <PARAMETERS>
                          <ITEM NAME="AV_INPUTS" VALUE="Integra Inputs" />
                          <ITEM NAME="AV_SURROUND" VALUE="Integra Surround" />
