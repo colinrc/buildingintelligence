@@ -1,87 +1,87 @@
-        <DEVICE ACTIVE="Y" NAME="COMFORT" DISPLAY_NAME="Comfort">
-                <CONNECTION>
-                </CONNECTION>
-                <CATALOGUE NAME="Door IDs">
-                </CATALOGUE>
-                <!-- user codes are 1 - 16 , hex -->
-                <CATALOGUE NAME="Comfort Users">
-                </CATALOGUE>
-                <PARAMETERS>
-                        <ITEM NAME="POLL_INTERVAL" VALUE="15"/>
-                        <ITEM NAME="ANALOGUE_POLL_INTERVAL" VALUE="30"/>
-                        <ITEM NAME="CBUS_APPLICATION" VALUE="38"/>
-                        <ITEM NAME="CBUS_UCM" VALUE="12"/>
-                        <ITEM NAME="COMFORT_USERS" VALUE="Comfort Users"/>
-                        <ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES"/>
-                        <ITEM NAME="ALARM_IDS" VALUE="ALARM_IDS" />
-                        <ITEM NAME="DOOR_IDS" VALUE="Door IDs"/>
-                        <ITEM NAME="SHOW_KEYPAD_MODES" VALUE="01,04"/>
-                </PARAMETERS>
-                <COMFORT>
-                	<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell"/>
-                	<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone"/>
-                	<ALERT KEY="" ACTIVE="Y" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange"/>
-					<ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="Intruder" ALERT_TYPE="Zone"/>
-					<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Zone"/>
-					<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="System"/>
-					<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="ID"/>
-					<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Phone Trouble" ALERT_TYPE="System"/>
-					<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="User"/>
-					<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Arm Failure" ALERT_TYPE="User"/>
-					<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
-					<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Security Off" ALERT_TYPE="User"/>
-					<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="User"/>
-					<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="ID"/>
-					<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
-					<ALERT KEY="0C" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Zone"/>
-					<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort (disarmed in &lt; 90 seconds)" ALERT_TYPE="System" CLIENT_CAT="Serious"/>
-					<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Siren Tamper" ALERT_TYPE="System"/>
-					<ALERT KEY="0F" DISPLAY_NAME="ALARM" MESSAGE="Bypass" ALERT_TYPE="Zone"/>
-					<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
-					<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="User"/>
-					<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
-					<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Zone"/>
-					<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Fire (Response-activated)" ALERT_TYPE="System"/>
-					<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Panic (Response-activated)" ALERT_TYPE="System"/>
-					<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
-					<ALERT KEY="17" DISPLAY_NAME="PHONE" MESSAGE="New Message for " ALERT_TYPE="User"/>
-					<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="Doorbell pressed" ALERT_TYPE="ID"/>
-					<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Communications Failure (RS485)"/>
-					<ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="Sign-in Tamper" ALERT_TYPE="ID"/>
 
-				<!-- Special note; Alert 17 , is also used for system startup phone message reporting -->
-				<!--  Correspond to AL command codes; ALERT_TYPE is the differentiation between various alert types -->
-<!--				<ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="No Alarm" ALERT_TYPE="Alarm Type"/> -->
-					<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Intruder Alarm" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Phone Line Trouble" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Arm Fail" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Zone Alert" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="Panic" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="0C" DISPLAY_NAME="ALARM" MESSAGE="Fire" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Gas" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Family Care" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="0F" DISPLAY_NAME="ALARM" MESSAGE="Perimeter Alert" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Bypass Zone" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="System Disarmed" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="CMS Test" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Siren Trouble" ALERT_TYPE="Alarm Type"/>
-<!-- 				<ALERT KEY="17" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="Alarm Type"/> -->
-					<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="RS485 Comms Fail" ALERT_TYPE="Alarm Type"/>
-					<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Doorbell (Away)" ALERT_TYPE="Alarm Type"/>
-<!--	 			<ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="HomesafFse (Spare)" ALERT_TYPE="Alarm Type"/> -->
-					<ALERT KEY="1B" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="Alarm Type"/>
-<!-- 				<ALERT KEY="1C" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="Alarm Type"/> -->
-<!-- 				<ALERT KEY="1D" DISPLAY_NAME="ALARM" MESSAGE="New Message" ALERT_TYPE="Alarm Type"/> -->
-<!--				<ALERT KEY="1E" DISPLAY_NAME="ALARM" MESSAGE="Engineer Sign-in" ALERT_TYPE="Alarm Type"/> -->
-<!--				<ALERT KEY="1F" DISPLAY_NAME="ALARM" MESSAGE="Sign-in Tamper" ALERT_TYPE="Alarm Type"/> -->
-                </COMFORT>
-        </DEVICE>
+<DEVICE ACTIVE="Y" DEVICE_TYPE="COMFORT" DISPLAY_NAME="Comfort">
+	<CONNECTION></CONNECTION>
+	<CATALOGUE NAME="DOOR_IDS"></CATALOGUE>
+<!-- user codes are 1 - 16 , hex -->
+	<CATALOGUE NAME="COMFORT_USERS"></CATALOGUE>
+	<PARAMETERS>
+		<ITEM NAME="POLL_INTERVAL" VALUE="15"/>
+		<ITEM NAME="ANALOGUE_POLL_INTERVAL" VALUE="30"/>
+		<ITEM NAME="CBUS_APPLICATION" VALUE="38"/>
+		<ITEM NAME="CBUS_UCM" VALUE="12"/>
+		<ITEM NAME="COMFORT_USERS" VALUE="COMFORT_USERS"/>
+		<ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES"/>
+		<ITEM NAME="ALARM_IDS" VALUE="ALARM_IDS" />
+		<ITEM NAME="DOOR_IDS" VALUE="DOOR_IDS"/>
+		<ITEM NAME="SHOW_KEYPAD_MODES" VALUE="01,04"/>
+	</PARAMETERS>
+	<COMFORT>
+		<ALARM KEY="00" DISPLAY_NAME="ANYTHING"/>
+		<ALERT KEY="-1" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell"/>
+		<ALERT KEY="-2" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone"/>
+		<ALERT KEY="-3" ACTIVE="Y" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange"/>
+					
+		<ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="Intruder" ALERT_TYPE="Zone"/>
+		<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Zone"/>
+		<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="System"/>
+		<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="ID"/>
+		<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Phone Trouble" ALERT_TYPE="System"/>
+		<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="User"/>
+		<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Arm Failure" ALERT_TYPE="User"/>
+		<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+		<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Security Off" ALERT_TYPE="User"/>
+		<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="User"/>
+		<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="ID"/>
+		<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+		<ALERT KEY="0C" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Zone"/>
+		<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort (disarmed in &lt; 90 seconds)" ALERT_TYPE="System" CLIENT_CAT="Serious"/>
+		<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Siren Tamper" ALERT_TYPE="System"/>
+		<ALERT KEY="0F" DISPLAY_NAME="ALARM" MESSAGE="Bypass" ALERT_TYPE="Zone"/>
+		<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+		<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="User"/>
+		<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+		<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Zone"/>
+		<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Fire (Response-activated)" ALERT_TYPE="System"/>
+		<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Panic (Response-activated)" ALERT_TYPE="System"/>
+		<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="System"/>
+		<ALERT KEY="17" DISPLAY_NAME="PHONE" MESSAGE="New Message for " ALERT_TYPE="User"/>
+		<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="Doorbell pressed" ALERT_TYPE="ID"/>
+		<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Communications Failure (RS485)"/>
+		<ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="Sign-in Tamper" ALERT_TYPE="ID"/>
+
+<!-- Special note; Alert 17 , is also used for system startup phone message reporting -->
+<!-- Correspond to AL command codes; ALERT_TYPE is the differentiation between various alert types -->
+<!--	<ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="No Alarm" ALERT_TYPE="Alarm Type"/> -->
+		<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Intruder Alarm" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="02" DISPLAY_NAME="ALARM" MESSAGE="Duress" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="03" DISPLAY_NAME="ALARM" MESSAGE="Phone Line Trouble" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="04" DISPLAY_NAME="ALARM" MESSAGE="Arm Fail" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="05" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="06" DISPLAY_NAME="ALARM" MESSAGE="Zone Alert" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="07" DISPLAY_NAME="ALARM" MESSAGE="Low Battery" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="08" DISPLAY_NAME="ALARM" MESSAGE="Power Fail" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="09" DISPLAY_NAME="ALARM" MESSAGE="Panic" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="0A" DISPLAY_NAME="ALARM" MESSAGE="Entry Alert" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="0B" DISPLAY_NAME="ALARM" MESSAGE="Tamper" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="0C" DISPLAY_NAME="ALARM" MESSAGE="Fire" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="0D" DISPLAY_NAME="ALARM" MESSAGE="Gas" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="0E" DISPLAY_NAME="ALARM" MESSAGE="Family Care" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="0F" DISPLAY_NAME="ALARM" MESSAGE="Perimeter Alert" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="10" DISPLAY_NAME="ALARM" MESSAGE="Bypass Zone" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="11" DISPLAY_NAME="ALARM" MESSAGE="System Disarmed" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="12" DISPLAY_NAME="ALARM" MESSAGE="CMS Test" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="13" DISPLAY_NAME="ALARM" MESSAGE="System Armed" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="14" DISPLAY_NAME="ALARM" MESSAGE="Alarm Abort" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="15" DISPLAY_NAME="ALARM" MESSAGE="Entry Warning" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="16" DISPLAY_NAME="ALARM" MESSAGE="Siren Trouble" ALERT_TYPE="Alarm Type"/>
+<!--	<ALERT KEY="17" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="Alarm Type"/> -->
+		<ALERT KEY="18" DISPLAY_NAME="ALARM" MESSAGE="RS485 Comms Fail" ALERT_TYPE="Alarm Type"/>
+		<ALERT KEY="19" DISPLAY_NAME="ALARM" MESSAGE="Doorbell (Away)" ALERT_TYPE="Alarm Type"/>
+<!--	<ALERT KEY="1A" DISPLAY_NAME="ALARM" MESSAGE="HomesafFse (Spare)" ALERT_TYPE="Alarm Type"/> -->
+		<ALERT KEY="1B" DISPLAY_NAME="ALARM" MESSAGE="Dial Test" ALERT_TYPE="Alarm Type"/>
+<!--	<ALERT KEY="1C" DISPLAY_NAME="ALARM" MESSAGE="Not Used" ALERT_TYPE="Alarm Type"/> -->
+<!--	<ALERT KEY="1D" DISPLAY_NAME="ALARM" MESSAGE="New Message" ALERT_TYPE="Alarm Type"/> -->
+<!--	<ALERT KEY="1E" DISPLAY_NAME="ALARM" MESSAGE="Engineer Sign-in" ALERT_TYPE="Alarm Type"/> -->
+<!--	<ALERT KEY="1F" DISPLAY_NAME="ALARM" MESSAGE="Sign-in Tamper" ALERT_TYPE="Alarm Type"/> -->
+	</COMFORT>
+</DEVICE>
