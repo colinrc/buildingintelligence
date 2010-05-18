@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import java.io.IOException;
 import java.text.NumberFormat;
 
 import org.gjt.sp.jedit.GUIUtilities;
@@ -15,6 +16,8 @@ import org.gjt.sp.jedit.jEdit;
 import org.gjt.sp.jedit.AbstractOptionPane;
 import org.gjt.sp.jedit.browser.VFSBrowser;
 import org.gjt.sp.jedit.gui.FontSelector;
+
+import java.util.Properties;
 import java.util.logging.*;
 
 
@@ -38,6 +41,21 @@ public class eLifeOptionPane extends AbstractOptionPane
 
 	public void _init()
 	{
+
+	    Properties properties = new Properties();
+	    try {
+	    		properties.load(this.getClass().getResourceAsStream("my.properties"));
+	    } catch (IOException e) {
+	    }
+	       
+	    String major_version = properties.getProperty("major_version");
+	    String minor_version = properties.getProperty("minor_version");
+
+	    JPanel versionPanel = new JPanel();
+		JLabel versionLabel = new JLabel ("eLife Admin Tool Version :" + major_version + "." + minor_version);
+		versionPanel.add (versionLabel);
+		addComponent (versionPanel);
+
 		JPanel ipBox = new JPanel();
 		JLabel ipLabel = new JLabel ("eLife Server IP");
 		ipBox.add (ipLabel);
@@ -111,6 +129,7 @@ public class eLifeOptionPane extends AbstractOptionPane
 		workDirPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 		
 		addComponent (workDirPanel);
+
 	}
 
 	public void setCWD (String workDir) {

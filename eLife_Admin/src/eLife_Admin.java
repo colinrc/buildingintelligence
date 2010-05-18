@@ -71,9 +71,9 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 		
 		this.tabPanel = new eLife_AdminTabbedPane(this);
 		if (!workDir.equals ("")) {
-			tabPanel.getControlsPanel().updateSystemStatus("eLife V" + major_version + "." + minor_version + " Work Dir : " + workDir);
+			tabPanel.getControlsPanel().updateSystemStatus("eLife Admin V" + major_version + "." + minor_version + ": Work Dir : " + workDir);
 		} else {
-			tabPanel.getControlsPanel().updateSystemStatus("eLife V" + major_version + "." + minor_version + " Please set work directory");			
+			tabPanel.getControlsPanel().updateSystemStatus("eLife Admin V" + major_version + "." + minor_version + ": Please set work directory");			
 		}
 		add(this.tabPanel,BorderLayout.CENTER);
 
