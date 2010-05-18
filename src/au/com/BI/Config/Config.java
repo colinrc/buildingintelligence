@@ -283,7 +283,16 @@ public class Config {
             JDOMException {
                 int intPowerRating = 0;
                 String deviceActive = deviceConfig.getAttributeValue("ACTIVE");
-                if (deviceActive != null && !deviceActive.equals("Y"))return null;
+                if (deviceActive != null && !deviceActive.equals("Y"))
+                {
+                    String description = deviceConfig.getAttributeValue("DESCRIPTION");
+                    if (description == null) 
+                    {
+                		description = deviceConfig.getAttributeValue("DISPLAY_NAME");
+                    }
+                	logger.log(Level.WARNING,"Configuration is not active for: " + description);
+                	return null;
+                }
 
                 String deviceConfigName = deviceConfig.getAttributeValue("DEVICE_TYPE");
                 if (deviceConfigName == null) {
