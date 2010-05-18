@@ -581,8 +581,16 @@ setUpLogging = function () {
 					msg += " ";
 					msg = msg.split("%timestamp%").join(now.dateTimeFormat(this.groupObj.timeformat));
 					//msg = msg.split("%datestamp%").join(now.dateTimeFormat(this.groupObj.dateFormat));
-					msg = msg.split("%room%").join(controlObj.room);
-					msg = msg.split("%name%").join(controlObj.name);
+					
+					if (controlObj.room == undefined)
+						msg = msg.split("%room%").join("Panel");
+					else					
+						msg = msg.split("%room%").join(controlObj.room);
+						
+					if (controlObj.name == undefined)
+						msg = msg.split("%name%").join(this.groupObj.controls[control].name);
+					else					
+						msg = msg.split("%name%").join(controlObj.name);
 					msg = msg.split("%state%").join(state);
 					msg = msg.split("%extra%").join(value);
 					log.unshift({timestamp:now, msg:msg});
