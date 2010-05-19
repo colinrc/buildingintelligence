@@ -73,20 +73,20 @@
 		for (var attribute in attributes) {
 			newNode.attributes[attributes[attribute].name] = attributes[attribute].value;
 		}
-		if (name != "") {
-			newNode.attributes["name"] = name;
+		if (y_pos != "") {
+			newNode.attributes["y"] = y_pos;
 		}
 		if (x_pos != "") {
 			newNode.attributes["x"] = x_pos;
 		}
-		if (y_pos != "") {
-			newNode.attributes["y"] = y_pos;
-		}
-		if (height != "") {
-			newNode.attributes["height"] = height;
+		if (name != "") {
+			newNode.attributes["name"] = name;
 		}
 		if (width != "") {
 			newNode.attributes["width"] = width;
+		}
+		if (height != "") {
+			newNode.attributes["height"] = height;
 		}
 		for (var control in controls) {
 			newNode.appendChild(controls[control]);
