@@ -68,12 +68,16 @@ public class OutputHelper {
 
 			String retCode = "";
 
-			if (device.getDeviceType() == DeviceType.TOGGLE_OUTPUT) {
+			if (device.getDeviceType() == DeviceType.TOGGLE_OUTPUT)
+			{
 				retCode = buildToggleOutput((DeviceType) device, command);
-			} else if (command.getKey().equals(m1.getDescription())
-					&& (device.getDeviceType() == DeviceType.VIRTUAL_OUTPUT)) {
-				if (command.getCommandCode().equalsIgnoreCase("ALL_X10_ON")) {
-					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
+			}
+			else if (command.getKey().equals(m1.getDescription()) && (device.getDeviceType() == DeviceType.VIRTUAL_OUTPUT))
+			{
+				if (command.getCommandCode().equalsIgnoreCase("ALL_X10_ON"))
+				{
+					if (command.getExtraInfo() == null || command.getExtraInfo() == "") 
+					{
 						logger.log(Level.WARNING,"For ALL_X10_ON command the extra info (for house code) cannot be null");
 						return;
 					}
@@ -83,8 +87,11 @@ public class OutputHelper {
 					plcDeviceControl.setUnitCode("");
 					plcDeviceControl.setTime(command.getExtra2Info());
 					retCode = plcDeviceControl.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase("ALL_X10_OFF")) {
-					if (command.getExtraInfo() == null || command.getExtraInfo() == "") {
+				}
+				else if (command.getCommandCode().equalsIgnoreCase("ALL_X10_OFF"))
+				{
+					if (command.getExtraInfo() == null || command.getExtraInfo() == "") 
+					{
 						logger.log(Level.WARNING,"For ALL_X10_OFF command the extra info (for house code) cannot be null");
 						return;
 					}
@@ -94,19 +101,24 @@ public class OutputHelper {
 					plcDeviceControl.setUnitCode("");
 					plcDeviceControl.setTime(command.getExtra2Info());
 					retCode = plcDeviceControl.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase("ARMING_STATUS_REQUEST")) {
+				} 
+				else if (command.getCommandCode().equalsIgnoreCase("ARMING_STATUS_REQUEST"))
+				{
 					ArmingStatusRequest m1Command = new ArmingStatusRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase(
-						"ALARM_BY_ZONE_REQUEST")) {
+				}
+				else if (command.getCommandCode().equalsIgnoreCase("ALARM_BY_ZONE_REQUEST")) 
+				{
 					AlarmByZoneRequest m1Command = new AlarmByZoneRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase(
-						"CONTROL_OUTPUT_STATUS_REQUEST")) {
+				}
+				else if (command.getCommandCode().equalsIgnoreCase("CONTROL_OUTPUT_STATUS_REQUEST")) 
+				{
 					ControlOutputStatusRequest m1Command = new ControlOutputStatusRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase(
-						"REQUEST_TEMPERATURE")) {
+				} 
+				else if (command.getCommandCode().equalsIgnoreCase("REQUEST_TEMPERATURE"))
+				{
 					RequestTemperature m1Command = new RequestTemperature();
 					Group group = Group.getByValue(command.getExtraInfo());
 					if (group == null) {
@@ -119,7 +131,9 @@ public class OutputHelper {
 					m1Command.setGroup(group);
 					m1Command.setDevice(command.getExtra2Info());
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase("TASK_ACTIVATION")) {
+				} 
+				else if (command.getCommandCode().equalsIgnoreCase("TASK_ACTIVATION")) 
+				{
 					TaskActivation m1Command = new TaskActivation();
 					
 					if (command.getExtraInfo() == null || command.getExtraInfo().equals("")) {
@@ -147,20 +161,29 @@ public class OutputHelper {
 					}
 					
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase("PLC_STATUS")) {
+				} 
+				else if (command.getCommandCode().equalsIgnoreCase("PLC_STATUS")) 
+				{
 					PLCStatusRequest m1Command = new PLCStatusRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase("REQUEST_ZONE_VOLTAGE")) {
+				} 
+				else if (command.getCommandCode().equalsIgnoreCase("REQUEST_ZONE_VOLTAGE"))
+				{
 					RequestZoneVoltage m1Command = new RequestZoneVoltage();
 					m1Command.setZone(Utility.padString(command.getExtraInfo(),3));
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase("ZONE_STATUS_REQUEST")) {
+				} 
+				else if (command.getCommandCode().equalsIgnoreCase("ZONE_STATUS_REQUEST"))
+				{
 					ZoneStatusRequest m1Command = new ZoneStatusRequest();
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase("SPEAK_WORD")) {
+				} 
+				else if (command.getCommandCode().equalsIgnoreCase("SPEAK_WORD"))
+				{
 					SpeakWord m1Command = new SpeakWord();
 					
-					if (command.getExtraInfo() == null || command.getExtraInfo().equals("")) {
+					if (command.getExtraInfo() == null || command.getExtraInfo().equals(""))
+					{
 						logger.log(Level.WARNING, "Speak word command received with no extra information");
 						return;
 					}
@@ -185,7 +208,9 @@ public class OutputHelper {
 					}
 					
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase("SPEAK_PHRASE")) {
+				}
+				else if (command.getCommandCode().equalsIgnoreCase("SPEAK_PHRASE"))
+				{
 					SpeakPhrase m1Command = new SpeakPhrase();
 					
 					if (command.getExtraInfo() == null || command.getExtraInfo().equals("")) {
@@ -213,82 +238,103 @@ public class OutputHelper {
 					}
 					
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equalsIgnoreCase("ZONE_BYPASS")) {
+				} 
+				else if (command.getCommandCode().equalsIgnoreCase("ZONE_BYPASS"))
+				{
 					ZoneBypassRequest m1Command = new ZoneBypassRequest();
 					
 					m1Command.setPinCode(command.getExtraInfo());
 					m1Command.setZone(command.getExtra2Info());
 					m1Command.setArea(command.getExtra3Info());
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("ARM_TO_AWAY")) {
+				}
+				else if (command.getCommandCode().equals("ARM_TO_AWAY")) 
+				{
 					ArmToAway m1Command = new ArmToAway();
 					m1Command.setPartition(command.getExtraInfo());
 					m1Command.setUserCode(configHelper.getDeviceModel()
 							.getParameterValue("Password",
 									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("ARM_TO_STAY_HOME")) {
+				}
+				else if (command.getCommandCode().equals("ARM_TO_STAY_HOME"))
+				{
 					ArmToStayHome m1Command = new ArmToStayHome();
 					m1Command.setPartition(command.getExtraInfo());
 					m1Command.setUserCode(configHelper.getDeviceModel()
 							.getParameterValue("Password",
 									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals(
-						"ARM_TO_STAY_INSTANT")) {
+				} 
+				else if (command.getCommandCode().equals("ARM_TO_STAY_INSTANT"))
+				{
 					ArmToStayInstant m1Command = new ArmToStayInstant();
 					m1Command.setPartition(command.getExtraInfo());
 					m1Command.setUserCode(configHelper.getDeviceModel()
 							.getParameterValue("Password",
 									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("ARM_TO_NIGHT")) {
+				}
+				else if (command.getCommandCode().equals("ARM_TO_NIGHT"))
+				{
 					ArmToNight m1Command = new ArmToNight();
 					m1Command.setPartition(command.getExtraInfo());
 					m1Command.setUserCode(configHelper.getDeviceModel()
 							.getParameterValue("Password",
 									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals("ARM_TO_VACATION")) {
+				}
+				else if (command.getCommandCode().equals("ARM_TO_VACATION"))
+				{
 					ArmToVacation m1Command = new ArmToVacation();
 					m1Command.setPartition(command.getExtraInfo());
 					m1Command.setUserCode(configHelper.getDeviceModel()
 							.getParameterValue("Password",
 									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals(
-						"ARM_STEP_TO_NEXT_AWAY_MODE")) {
+				}
+				else if (command.getCommandCode().equals("ARM_STEP_TO_NEXT_AWAY_MODE"))
+				{
 					ArmStepToNextAwayMode m1Command = new ArmStepToNextAwayMode();
 					m1Command.setPartition(command.getExtraInfo());
 					m1Command.setUserCode(configHelper.getDeviceModel()
 							.getParameterValue("Password",
 									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals(
-						"ARM_STEP_TO_NEXT_STAY_MODE")) {
+				}
+				else if (command.getCommandCode().equals("ARM_STEP_TO_NEXT_STAY_MODE"))
+				{
 					ArmStepToNextStayMode m1Command = new ArmStepToNextStayMode();
 					m1Command.setPartition(command.getExtraInfo());
 					m1Command.setUserCode(configHelper.getDeviceModel()
 							.getParameterValue("Password",
 									DeviceModel.MAIN_DEVICE_GROUP));
 					retCode = m1Command.buildM1String() + "\r\n";
-				} else if (command.getCommandCode().equals(
-						"DISARM")) {
+				} 
+				else if (command.getCommandCode().equals("DISARM"))
+				{
 					Disarm m1Command = new Disarm();
 					m1Command.setPartition(command.getExtraInfo());
 					m1Command.setUserCode(command.getExtra2Info());
 					retCode = m1Command.buildM1String() + "\r\n";
 				}
-			} else if (device.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) {
+			}
+			else if (device.getDeviceType() == DeviceType.COMFORT_LIGHT_X10) 
+			{
 				retCode = buildX10Light((LightFascade) device, command);
-			} else if (device.getDeviceType() == DeviceType.THERMOSTAT) {
-				if (command.getCommandCode().equals("REQUEST")) {
+			} 
+			else if (device.getDeviceType() == DeviceType.THERMOSTAT) 
+			{
+				if (command.getCommandCode().equals("REQUEST")) 
+				{
 					RequestThermostatData m1Command = new RequestThermostatData();
 					m1Command.setKey(device.getKey());
 					m1Command.setThermostat(device.getKey());
 					retCode = m1Command.buildM1String() + "\r\n";
 					logger.log(Level.FINER, "Requesting thermostat data for " + device.getKey());
-				} else if (command.getCommandCode().equals("SET")) {
+				}
+				else if (command.getCommandCode().equals("SET")) 
+				{
 					if (command.getExtraInfo() == null || command.getExtraInfo().equals("")) {
 						logger.log(Level.WARNING, "Setting thermostat will require the element in extra information");
 						return;
@@ -300,43 +346,71 @@ public class OutputHelper {
 					SetThermostatData m1Command = new SetThermostatData();
 					m1Command.setThermostat(device.getKey());
 					
-					if (command.getExtraInfo().equals("MODE")) {
+					if (command.getExtraInfo().equals("MODE")) 
+					{
 						m1Command.setElement(ThermostatElement.MODE);
-						if (command.getExtra2Info().equals("OFF")) {
+						if (command.getExtra2Info().equals("OFF"))
+						{
 							m1Command.setValue("00");
-						} else if (command.getExtra2Info().equals("HEAT")) {
+						}
+						else if (command.getExtra2Info().equals("HEAT")) 
+						{
 							m1Command.setValue("01");
-						} else if (command.getExtra2Info().equals("COOL")) {
+						}
+						else if (command.getExtra2Info().equals("COOL"))
+						{
 							m1Command.setValue("02");
-						} else if (command.getExtra2Info().equals("AUTO")) {
+						}
+						else if (command.getExtra2Info().equals("AUTO"))
+						{
 							m1Command.setValue("03");
-						} else if (command.getExtra2Info().equals("EMERGENCY_HEAT")) {
+						}
+						else if (command.getExtra2Info().equals("EMERGENCY_HEAT")) 
+						{
 							m1Command.setValue("04");
-						} else {
+						}
+						else 
+						{
 							logger.log(Level.WARNING, "Thermostat element set to MODE but invalid value encountered " + command.getExtra2Info());
 							return;
 						}
-					} else if (command.getExtraInfo().equals("HOLD")) {
+					}
+					else if (command.getExtraInfo().equals("HOLD"))
+					{
 						m1Command.setElement(ThermostatElement.HOLD);
-						if (command.getExtra2Info().equals("FALSE")) {
+						if (command.getExtra2Info().equals("FALSE"))
+						{
 							m1Command.setValue("00");
-						} else if (command.getExtra2Info().equals("TRUE")) {
+						}
+						else if (command.getExtra2Info().equals("TRUE"))
+						{
 							m1Command.setValue("01");
-						} else {
+						}
+						else
+						{
 							logger.log(Level.WARNING, "Thermostat element set to HOLD but invalid value encountered " + command.getExtra2Info());
 							return;
 						}
-					} else if (command.getExtraInfo().equals("FAN")) {
+					}
+					else if (command.getExtraInfo().equals("FAN"))
+					{
 						m1Command.setElement(ThermostatElement.FAN);
-						if (command.getExtra2Info().equals("FAN_AUTO")) {
+						if (command.getExtra2Info().equals("FAN_AUTO"))
+						{
 							m1Command.setValue("00");
-						} else if (command.getExtra2Info().equals("FAN_TURNED_ON")) {
+						}
+						else if (command.getExtra2Info().equals("FAN_TURNED_ON"))
+						{
 							m1Command.setValue("01");
-						} else {
+						}
+						else
+						{
 							logger.log(Level.WARNING, "Thermostat element set to FAN but invalid value encountered " + command.getExtra2Info());
 							return;
 						}
-					} else if (command.getExtraInfo().equals("COOLSETPOINT")) {
+					} 
+					else if (command.getExtraInfo().equals("COOLSETPOINT"))
+					{
 						m1Command.setElement(ThermostatElement.COOLSETPOINT);
 						try {
 							Integer value = Integer.valueOf(command.getExtraInfo());
@@ -350,7 +424,9 @@ public class OutputHelper {
 							return;
 						}
 						
-					} else if (command.getExtraInfo().equals("HEATSETPOINT")) {
+					}
+					else if (command.getExtraInfo().equals("HEATSETPOINT"))
+					{
 						m1Command.setElement(ThermostatElement.HEATSETPOINT);
 						try {
 							Integer value = Integer.valueOf(command.getExtraInfo());
@@ -363,19 +439,24 @@ public class OutputHelper {
 							logger.log(Level.WARNING, "Thermostat element set to COOLSETPOINT but invalid value encountered " + command.getExtra2Info());
 							return;
 						}
-					} else {
+					}
+					else
+					{
 						logger.log(Level.WARNING, "Invalid element in extra information " + command.getExtraInfo());
 						return;
 					}
 					retCode = m1Command.buildM1String() + "\r\n";
 					logger.log(Level.FINER, "Setting thermostat data");
-				} else {
+				}
+				else
+				{
 					logger.log(Level.WARNING, "Received a command code for a thermostat that was not REQUEST or SET. Command code was: " + command.getCommandCode());
 					return;
 				}
 			}
 
-			if (!retCode.equals("")) {
+			if (!retCode.equals("")) 
+			{
 				// comms.sendString(retCode); When using the queue you should not also explicitly send the string. CC 
 				logger.log(Level.FINER, "Sending command to M1: " + retCode);
 				CommsCommand _commsCommand = new CommsCommand(theWholeKey,retCode,null);
@@ -386,7 +467,6 @@ public class OutputHelper {
 				}
 			}
 		}
-
 	}
 
 	/**

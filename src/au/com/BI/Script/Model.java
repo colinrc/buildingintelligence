@@ -206,15 +206,18 @@ public class Model
 	                    	   
                }
 				if (commandStr.equals("save")) {
-	                if (scriptExtra.equals("enabled")) {
+	                if (scriptExtra.equals("enabled")) 
+	                {
 	                	if (!groovyScriptHandler.enableScript( scriptName, currentUser) && 
-	                			!scriptHandler.enableScript( scriptName, currentUser)  ){
+	                			!scriptHandler.enableScript( scriptName, currentUser)  )
+	                	{
 	                		logger.log (Level.WARNING,"Enable was called for a script that does not exist");
-	                }
-	                else {
+	                	}
+	                	else 
+	                	{
 							clientCommand = doGetList ("");
 	                        logger.log(Level.FINER, "Enable script " + scriptName);
-	                }
+	                	}
 	                }
 	                if (scriptExtra.equals("disabled")) {
 	                	if (!scriptHandler.disableScript( scriptName, currentUser) &&
