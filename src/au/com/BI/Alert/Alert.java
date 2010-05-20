@@ -40,6 +40,15 @@ public class Alert extends BaseDevice implements DeviceType
 		if (modeCode.equals("04")) return "Vacation Mode.";
 		return "";
 	}
+	
+	public String getModeCode (String modeStr) {
+		if (modeStr.equals("Security Off")) return "00";
+		if (modeStr.equals("Away Mode")) return "01";
+		if (modeStr.equals("Night Mode")) return "02";
+		if (modeStr.equals("Day Mode")) return "03";
+		if (modeStr.equals("Vacation Mode")) return "04";
+		return "";
+	}
 
 	/**
 	 * Return the client display command for the alarm.
