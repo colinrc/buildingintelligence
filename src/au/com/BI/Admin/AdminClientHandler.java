@@ -120,8 +120,6 @@ public class AdminClientHandler extends Thread
 		
 		while (thisThreadRunning)
 		{
-
-
 			// endflag is set to true when we see a "null" byte
 			String newBuffer = "";
 			try {
@@ -141,6 +139,8 @@ public class AdminClientHandler extends Thread
 				processBuffer (newBuffer.trim());
 			}
 		}
+
+		logger.info("Client connection dropped. Handler stopped");
 	}
 	
 	public void processBuffer (String readBuffer)
