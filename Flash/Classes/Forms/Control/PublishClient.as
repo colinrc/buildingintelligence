@@ -234,7 +234,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 			}
 		}
 	}
-	public function generateBootstrap():String{
+	public function generateBootstrap():XMLNode{
 		var newBootstrapXML = new XMLNode(1,"client");
 		var newServerNode = new XMLNode(1,"setting");
 		newServerNode.attributes.name = "serverAddress";
@@ -277,7 +277,7 @@ class Forms.Control.PublishClient extends Forms.BaseForm {
 			newDebugNode.attributes.value = "false";
 		}
 		newBootstrapXML.appendChild(newDebugNode);		
-		return _global.writeXMLFile(newBootstrapXML,0);
+		return newBootstrapXML;
 	}
 	public function notifyChange():Void{
 		refreshOutput();
