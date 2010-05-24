@@ -3579,7 +3579,8 @@ loadIcons = function () {
 		}
 		
 		// load the list of icons and store them into the icon objects
-		if (mdm.Application.path != undefined) {
+		debug("application path: " + _global.settings.libLocation.split("://",1));
+		if ((_global.settings.libLocation.split("://",1)[0] != "http") && (mdm.Application.path != undefined)) {
 			_global.iconNames = mdm.FileSystem.getFileList(mdm.Application.path + _global.settings.libLocation + "icons", "*.png");
 			
 			if (iconNames.length) {
