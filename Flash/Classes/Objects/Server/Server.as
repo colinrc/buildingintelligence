@@ -20,7 +20,7 @@
 		var new_client = new Objects.Client.Client();
 		new_client.setXML(_global.default_client_xml.firstChild);
 		//mdm.Dialogs.prompt(_global.default_client_xml);
-		JROBIN = new XMLNode(1,"JROBIN");
+		JROBIN = null;
 		new_client.description = "Client-1";
 		new_client.id = _global.formDepth++;
 		clients.push(new_client);		
@@ -72,7 +72,8 @@
 		controlNode.appendChild(controls.toXML());
 		controlNode.appendChild(settings.toXML());
 		serverNode.appendChild(controlNode);
-		serverNode.appendChild(JROBIN);
+		if (JROBIN != null)
+			serverNode.appendChild(JROBIN);
 		for (var device in devices) {
 			serverNode.appendChild(devices[device].toXML());
 		}
