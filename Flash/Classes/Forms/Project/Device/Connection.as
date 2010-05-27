@@ -55,7 +55,7 @@ class Forms.Project.Device.Connection extends Forms.BaseForm {
 				connection.attributes["PORT"] = dataObj.port;
 			}
 			if (dataObj.baud != "") {
-				connection.attributes["BAUD"] = dataObj.baud;
+				connection.attributes["BAUD"] = dataObj.baud.toString();
 			}
 			if (dataObj.parity != "") {
 				connection.attributes["PARITY"] = dataObj.parity;
@@ -64,10 +64,10 @@ class Forms.Project.Device.Connection extends Forms.BaseForm {
 				connection.attributes["SUPPORTS_CD"] = dataObj.supportsCd;
 			}
 			if (dataObj.stopBits != "") {
-				connection.attributes["STOP_BITS"] = dataObj.stopBits;
+				connection.attributes["STOP_BITS"] = dataObj.stopBits.toString();
 			}
 			if (dataObj.dataBits != "") {
-				connection.attributes["DATA_BITS"] = dataObj.dataBits;
+				connection.attributes["DATA_BITS"] = dataObj.dataBits.toString();
 			}
 			if (dataObj.flow != "") {
 				connection.attributes["FLOW"] = dataObj.flow;
