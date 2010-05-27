@@ -32,6 +32,10 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 			title_lb.text = "Sensor:";
 			var keyType = "Sensor\nName";
 			break;
+		case "M1_OUTPUT":
+			title_lb.text = "M1 Outputs:";
+			var keyType = "Output\nName";
+			break;			
 		}
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
@@ -52,7 +56,13 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false, 150);
 		if((toggle_type == "SENSOR")||(toggle_type =="OUTPUT")){
 			dataGridHandler.addTextInputColumn("key", keyType, restrictions, false, 200);
-		} else{
+		}
+		else if (toggle_type == "M1_OUTPUT")
+		{
+			dataGridHandler.addTextInputColumn("key", keyType, powerRestrictions, false, 200);
+		}
+		else
+		{
 			dataGridHandler.addTextInputColumn("key", keyType, keyRestrictions, false, 60);
 			dataGridHandler.addTextInputColumn("power", "Power\nRating", powerRestrictions, true, 80);
 		}

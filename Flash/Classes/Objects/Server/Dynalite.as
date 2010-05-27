@@ -175,7 +175,7 @@
 		lights = new Objects.Server.DynaliteLights();
 		relays = new Objects.Server.DynaliteRelays();
 		lightAreas = new Objects.Server.DynaliteLightAreas();
-		contacts = new Objects.Server.ContactClosures();
+		contacts = new Objects.Server.ContactClosures("DYNA");
 		alarms = new Objects.Server.Alarms();
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){

@@ -162,11 +162,11 @@
 		description ="";
 		active = "Y";		
 		parameters = new Array();		
-		contacts = new Objects.Server.ContactClosures();
+		contacts = new Objects.Server.ContactClosures("M1");
 		sensors = new Objects.Server.M1Sensors();
 		x10_lights = new Objects.Server.X10Lights();
 		keypad = new Objects.Server.Keypad();
-		toggle_outputs = new Objects.Server.Toggles("TOGGLE_OUTPUT");
+		toggle_outputs = new Objects.Server.Toggles("M1_OUTPUT");
 		if (newData.nodeName == "DEVICE") {
 			if(newData.attributes["NAME"]!=undefined){
 				device_type = newData.attributes["NAME"];
@@ -197,9 +197,11 @@
 						case "LIGHT_X10":
 							tempX10Lights.appendChild(tempNode.childNodes[M1Device]);
 							break;
+						case "INPUT":
 						case "CONTACT_CLOSURE" :
 							tempContacts.appendChild(tempNode.childNodes[M1Device]);
 							break;
+						case "OUTPUT":
 						case "TOGGLE_OUTPUT":
 							tempToggleOutputs.appendChild(tempNode.childNodes[M1Device]);
 							break;

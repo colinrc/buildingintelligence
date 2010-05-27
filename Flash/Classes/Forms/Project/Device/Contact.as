@@ -2,6 +2,7 @@
 import mx.utils.Delegate;
 class Forms.Project.Device.Contact extends Forms.BaseForm {
 	private var save_btn:Button;
+	private var closure_type:String;
 	private var contacts:Array;
 	private var contacts_dg:DataGrid;
 	private var dataGridHandler:Object;
@@ -13,8 +14,8 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 		restrictions.maxChars = undefined;
 		restrictions.restrict = "";
 		var keyRestrictions = new Object();		
-		keyRestrictions.maxChars = 2;
-		keyRestrictions.restrict = "0-9A-Fa-f";			
+		keyRestrictions.maxChars = 3;
+		keyRestrictions.restrict = "0-9";			
 		var values = new Object();
 		values.True = "Y";
 		values.False = "N";
@@ -23,8 +24,10 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 		dataGridHandler.addActiveColumn("active", values);
 		dataGridHandler.addTextInputColumn("display_name", "Key", restrictions, false,200);
 		dataGridHandler.addTextInputColumn("name", "Description", restrictions, false,200);
-		dataGridHandler.addTextInputColumn("key", "Input\nKey (HEX)", keyRestrictions, false,80);
-		dataGridHandler.addTextInputColumn("box", "Box (HEX)", keyRestrictions, false,80);
+		dataGridHandler.addTextInputColumn("key", "Input Key", keyRestrictions, false,80);
+		if (closure_type == "DYNA"){
+			dataGridHandler.addTextInputColumn("box", "Box", keyRestrictions, false,80);
+		}
 		dataGridHandler.setDataGridDataProvider(contacts);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
 		new_btn.addEventListener("click", Delegate.create(this, newItem));
