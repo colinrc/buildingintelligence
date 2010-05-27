@@ -32,7 +32,8 @@ class Forms.Project.Device.Contact extends Forms.BaseForm {
 			dataGridHandler.addTextInputColumn("box", "Box (HEX)", dynaRestrictions, false,80);
 		}
 		else {
-			dataGridHandler.addTextInputColumn("key", "Input Key", keyRestrictions, false,80);
+			dataGridHandler.addTextInputColumn("key", "Input\nKey (DEC)", keyRestrictions, false,80);
+			dataGridHandler.addTextInputColumn("area", "Area (DEC)", keyRestrictions, false,80);
 		}
 		dataGridHandler.setDataGridDataProvider(contacts);
 		delete_btn.addEventListener("click", Delegate.create(this, deleteItem));
