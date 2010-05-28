@@ -119,23 +119,21 @@
                 		<ITEM NAME="PROTOCOL" VALUE="CLASSIC" />
                 </PARAMETERS>
                 <DYNALITE>
-                
                         <CONTACT_CLOSURE ACTIVE="Y" KEY="01" BOX="02" NAME="Button 1" DISPLAY_NAME="BUTTON_1" />
                         <CONTACT_CLOSURE ACTIVE="Y" KEY="02" BOX="02" NAME="Button 2" DISPLAY_NAME="BUTTON_2" />
-                        
+
                         <IR ACTIVE="Y" KEY="01" BOX="02" NAME="IR 1" DISPLAY_NAME="IR_1" />
-                        
-					 <ALARM KEY="ALARM" DISPLAY_NAME="ALARM" NAME="Panic Messages" />
-					 
-					
+
+					 	<ALARM KEY="ALARM" DISPLAY_NAME="ALARM" NAME="Panic Messages" />
+
                         <LIGHT_DYNALITE_AREA ACTIVE="Y" KEY="04" NAME="Area 01" DISPLAY_NAME="GARAGE_LIGHT" />
                         <LIGHT_DYNALITE_AREA ACTIVE="Y" KEY="02" NAME="Area 02" DISPLAY_NAME="BBQ_LIGHT" />
 
-                        <LIGHT_DYNALITE ACTIVE="Y" KEY="01" BLA="01" AREA="04" NAME="Bedroom Light" DISPLAY_NAME="MASTER_BED_LIGHT" POWER_RATING="100"/>
-                         <LIGHT_DYNALITE ACTIVE="Y" KEY="01" BLA="01" AREA="02" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" POWER_RATING="100"/>
- 
+						<LIGHT_DYNALITE ACTIVE="Y" KEY="01" BLA="01" AREA="04" NAME="Bedroom Light" DISPLAY_NAME="MASTER_BED_LIGHT" POWER_RATING="100"/>
+						<LIGHT_DYNALITE ACTIVE="Y" KEY="01" BLA="01" AREA="02" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" POWER_RATING="100"/>
+
                         <LIGHT_DYNALITE ACTIVE="Y" KEY="02" BLA="01" AREA="03" NAME="Dining Light" DISPLAY_NAME="DINING_LIGHT" POWER_RATING="100"/>
-      
+
                         <LIGHT_DYNALITE ACTIVE="Y" KEY="05" RELAY="Y" AREA="01" NAME="BBQ Floods" DISPLAY_NAME="BBQ_FLOODS" POWER_RATING="100"/>
                         <LIGHT_DYNALITE ACTIVE="Y" KEY="06" AREA="02" RELAY="Y" NAME="Back Door Light" DISPLAY_NAME="BACK_DOOR_LIGHT" POWER_RATING="100"/>
                 </DYNALITE>
@@ -486,9 +484,9 @@
                                 <!-- Valid types are serial, IR or relay -->
                         </PARAMETERS>
 
+                        <TOGGLE_INPUT KEY="3" NAME="Switch 2" DISPLAY_NAME="SWITCH_TWO" />
                         <IR KEY="01" NAME="Kitchen IR" AV_NAME="KITCHEN_IR2"/>
                         <IR KEY="02" NAME="Porch IR" AV_NAME="PORCH_IR2"/>
-                        <TOGGLE_INPUT KEY="3" NAME="Switch 2" DISPLAY_NAME="SWITCH_TWO" />
                 </GC100_IR>
                 
                 <GC100_Relay NAME="Relay">
@@ -584,7 +582,6 @@
                 	<FORWARD ACTIVE="N" SRC="camera.jpg" DEST="http://127.0.0.1:8081/image.jpg" />
                 	<FORWARD ACTIVE="Y" SRC="abc" DEST="http://www.abc.net.au/" />
                 	<FORWARD ACTIVE="Y" SRC="anz" DEST="https://www.anz.com/personal/" />
-                	
                 	<FORWARD ACTIVE="Y" SRC="gin" DEST="http://ginini.com/hosting-recommendation.html" />
                 </FORWARDS>
         </CONTROLS>
