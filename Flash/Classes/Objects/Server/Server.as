@@ -346,7 +346,7 @@
 				treeNode.appendChild(newCustomConnect.toTree());
 				devices.push(newCustomConnect);
 				break;
-			case "JANDI":
+			case "JANDY":
 				var newJandy = new Objects.Server.Jandy();
 				newJandy.setXML(_global.jandy_XML.firstChild);
 				//newJandy.setXML(newNode);
@@ -492,7 +492,7 @@
 						newCustomConnect.active = "Y";		
 						devices.push(newCustomConnect);
 						break;
-					case "JANDI":
+					case "JANDY":
 						var newJandy = new Objects.Server.Jandy();
 						newJandy.setXML(newData.childNodes[child]);
 						newJandy.id = _global.formDepth++;
