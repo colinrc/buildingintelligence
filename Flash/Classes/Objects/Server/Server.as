@@ -348,7 +348,8 @@
 				break;
 			case "JANDI":
 				var newJandy = new Objects.Server.Jandy();
-				newJandy.setXML(newNode);
+				newJandy.setXML(_global.jandy_XML.firstChild);
+				//newJandy.setXML(newNode);
 				newJandy.id = _global.formDepth++;								
 				newJandy.active = "Y";				
 				treeNode.appendChild(newJandy.toTree());
