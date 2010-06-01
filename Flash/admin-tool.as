@@ -167,6 +167,7 @@ server_xml.onLoad = function(success) {
 		mdm.Dialogs.prompt("Error, server.xml file not loaded!");
 	}
 };
+
 var comfort_XML = new XML();
 comfort_XML.ignoreWhite = true;
 comfort_XML.onLoad = function(success) {
@@ -177,6 +178,17 @@ comfort_XML.onLoad = function(success) {
 };
 _global.comfort_XML = comfort_XML;
 _global.comfort_XML.load("defaults/default_comfort.xml");
+
+var jandy_XML = new XML();
+jandy_XML.ignoreWhite = true;
+jandy_XML.onLoad = function(success) {
+	if (success) {
+	} else {
+		mdm.Dialogs.prompt("Error, 'defaults/default_jandy.xml' file not loaded!");
+	}
+};
+_global.jandy_XML = jandy_XML;
+_global.jandy_XML.load("defaults/default_jandy.xml");
 /**************************************************************************************/
 function openFile(openType:String):Void {
 	mdm.Dialogs.BrowseFile.buttonText = "Open";
