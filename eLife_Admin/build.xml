@@ -1,23 +1,39 @@
 <?xml version="1.0"?>
 
-<project name="eLife_Admin" default="install" basedir=".">
-	
+<project name="eLife_Admin" default="install" basedir="." xmlns:ant4eclipse="antlib:org.ant4eclipse" xmlns:antcontrib="antlib:net.sf.antcontrib">
+
+
+	<description>The eLife jEdit plugin</description>
+
+	<taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml">
+  		<classpath>
+    		<pathelement location="/Java/ant-contrib/ant-contrib-1.0b3.jar"/>
+  		</classpath>
+	</taskdef>	
+
+	<taskdef uri="antlib:org.ant4eclipse" resource="org/ant4eclipse/antlib.xml">
+ 		<classpath>
+    		<pathelement location="/Java/ant4eclipse1.0.0.M2/org.ant4eclipse_1.0.0.M2.jar"/>
+  		</classpath>
+	</taskdef>	
+
+	<property name="workspace" value="${basedir}/.." />
 	<property file="build.properties"/>
+
+	<property name="project.name" value="eLife_Admin" />
+	<property name="dist.jar" value="dist/eLife_Admin.jar" />
+
+	<ant4eclipse:userLibraries userlibraries="../eLife_Server/libs.userlibraries" />
+	<ant4eclipse:getJdtClassPath pathId="eLife.classpath" relative="no" workspaceDirectory="${workspace}" projectName="${project.name}" />
+	<ant4eclipse:getJdtClassPath property="eLife.jar_libs" relative="no" workspaceDirectory="${workspace}" projectName="${project.name}" />
+	<ant4eclipse:getJdtOutputPath property="classes.dir" workspaceDirectory="${workspace}" projectName="${project.name}" />
 	
 	<property name="jedit.install.dir.mac" value="/jEdit 4.2" />
 	<property name="jedit.install.dir.pc" value="d:\\Program Files\\jEdit" />
 	<property name="jedit.install.dir" value="${jedit.install.dir.mac}" />
 	
-	<property name="jar.name" value="eLife_Admin.jar"/>
-	
 	<property name="install.dir" value="${jedit.install.dir}/jars"/>
 
-	
-	<path id="project.class.path">
-		<pathelement location="${jedit.install.dir}/jedit.jar"/>
-		<pathelement location="."/>
-	</path>
-	
 	<target name="init">
 		<delete file="docbook-wrapper.xsl" />
 		<echo file="docbook-wrapper.xsl" message="&lt;xsl:stylesheet"/>
@@ -29,12 +45,12 @@
 	
 	<target name="compile">
 		<javac srcdir="src" destdir="bin" deprecation="on" includeJavaRuntime="yes">
-			<classpath refid="project.class.path"/>
+			<classpath refid="eLife.classpath"/>
 		</javac>
 	</target>
 	
 	<target name="jar">
-		<jar jarfile="dist/${jar.name}">
+		<jar jarfile="${dist.jar}">
 			<fileset dir="bin">
 				<include name="**/*.class"/>
 			</fileset>
@@ -81,27 +97,24 @@
 	</target>
 	
 	<target name="dist_clean" depends="">
-		<delete>
-			<fileset dir="dist" includes="*.zip"/>
-		</delete>
-		<!-- Get the latest from SVN -->
 		<exec executable="svn">
 			   <arg line="up"/>
-		</exec>
-
+		</exec>	
+		<delete>
+			<fileset dir="dist" includes="**/*.zip"/>
+			<fileset dir="dist" includes="**/*.jar"/>
+		</delete>
 	</target>
 	
-	<target name="dist" depends="dist_clean,increment,install">
+	<target name="dist" depends="dist_clean,increment,compile,install">
 		<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" update="false" basedir="dist" includes="*.jar" />
 	</target>
 
-	<target name="dist-no-inc" depends="dist_clean,install">
-		<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" update="false" basedir="dist" includes="*.jar" />
-	</target>
+	<target name="dist-no-inc" depends="compile,install" />
 	
 	<target name="install" depends="jar">
 		<mkdir dir="${install.dir}"/>
-		<copy todir="${install.dir}" file="dist/${jar.name}" />
+		<copy todir="${install.dir}" file="${dist.jar}" />
 	</target>
 	
 </project>
