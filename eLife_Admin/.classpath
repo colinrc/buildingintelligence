@@ -3,6 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="ext/jdom.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/jEdit 4.2/jedit.jar"/>
+	<classpathentry kind="lib" path="/Java/jedit/Contents/Resources/Java/jedit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
