@@ -42,7 +42,7 @@ public class ScriptsPanel extends JPanel
 		list.addActionListener(
 			new ActionListener() {
 				public void actionPerformed(ActionEvent evt) {
-					ScriptsPanel.this.eLife.readFiles("server/script");
+					ScriptsPanel.this.eLife.readFiles("server/script","");
 				}
 			});
 		serviceButtons.add (list);
