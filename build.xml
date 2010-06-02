@@ -66,8 +66,11 @@
 		</exec>
 	</target>
 	
-	<target name="clean" depends="init" />
-	
+	<target name="clean" depends="init">
+		<delete>
+			<fileset dir="bin" includes="**/*.class" followsymlinks="false" />
+		</delete>
+	</target>
 	<target name="compile" depends="init">
 		<javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}">
 			<src path="src"/>
