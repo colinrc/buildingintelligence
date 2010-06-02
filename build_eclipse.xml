@@ -35,6 +35,14 @@
         <echo message="Emptied previous dist file" />
 		
 	</target>
+
+	<target name="clean" depends="init">
+		<delete>
+			<fileset dir="bin" includes="**/*" followsymlinks="false" >
+			</fileset>
+		</delete>
+        <echo message="Emptied previous bin/ directory" />		
+	</target>
 	
 	<target name="build-lib-dir" depends="" unless="lib_dir.present" >    	
 	   	<mkdir dir="dist/lib" />
@@ -45,6 +53,7 @@
     <target name="compile" depends="init" >
         <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" >
             <src path="src"/>
+            <classpath refid="eLife.classpath"/>
         </javac>
         <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}">
             <src path="test"/>
