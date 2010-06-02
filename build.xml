@@ -1,23 +1,24 @@
-<project name="eLife_monitor" default="dist" basedir="."
-	 xmlns:ant4eclipse="antlib:org.ant4eclipse"
-	         xmlns:antcontrib="antlib:net.sf.antcontrib">
 
-    <description>
-        The monitor service for the eLife
-    </description>
+<project name="eLife_monitor" default="dist" basedir="." xmlns:ant4eclipse="antlib:org.ant4eclipse" xmlns:antcontrib="antlib:net.sf.antcontrib">
 
-
-		<taskdef uri="antlib:net.sf.antcontrib"
-		         resource="net/sf/antcontrib/antlib.xml" />
-
-		<taskdef uri="antlib:org.ant4eclipse"
-		         resource="org/ant4eclipse/antlib.xml" />
+	<description>The monitor service for the eLife</description>
 	
-	
-	<property name="workspace" value="/Users/colin/Documents/workspace" />
+	<taskdef uri="antlib:net.sf.antcontrib" resource="net/sf/antcontrib/antlib.xml">
+  		<classpath>
+    		<pathelement location="/Java/ant-contrib/ant-contrib-1.0b3.jar"/>
+  		</classpath>
+	</taskdef>	
+
+	<taskdef uri="antlib:org.ant4eclipse" resource="org/ant4eclipse/antlib.xml">
+ 		<classpath>
+    		<pathelement location="/Java/ant4eclipse1.0.0.M2/org.ant4eclipse_1.0.0.M2.jar"/>
+  		</classpath>
+	</taskdef>	
+
+	<property name="workspace" value="${basedir}/.." />
 	<property name="ext" value="monitor_ext" />
 	<property file="src/au/com/BI/Admin/my.properties"/>
-	
+
 	<property name="project.name" value="eLife_monitor" />
 	<property name="dist.jar" value="dist/bin/eMonitor.jar" />
 	<ant4eclipse:userLibraries userlibraries="../eLife_Server/libs.userlibraries" />
@@ -27,41 +28,29 @@
 	<available file="dist/bin" type="dir" property="bin_dir.present"/>
 	<ant4eclipse:getJdtOutputPath property="classes.dir" workspaceDirectory="${workspace}" projectName="${project.name}" />
 	
-	<target name="run" depends="compile" >
-		<ant4eclipse:getProjectDirectory workspacedirectory="${workspace}"
-                                 projectname="eLife_Server"
-	                         property="eSmart_install.dir" />
-
-		<ant4eclipse:getProjectDirectory workspacedirectory="${workspace}"
-                                 projectname="eLife_monitor"
-	                         property="eSmart_Monitor.dir" />
-
-	    <ant4eclipse:getJdtClassPath property="eLife.runclasspath"
-	    				workspaceDirectory="${workspace}"
-                             projectName="${project.name}" />
-                             
-	    <java classname="au.com.BI.Admin.eLife_monitor" 
-			fork="yes" 
-	    	dir="bin"
-	    	classpath="${eLife.runclasspath}" >
+	<target name="run" depends="compile">
+		<ant4eclipse:getProjectDirectory workspacedirectory="${workspace}" projectname="eLife_Server" property="eSmart_install.dir" />
+		<ant4eclipse:getProjectDirectory workspacedirectory="${workspace}" projectname="eLife_monitor" property="eSmart_Monitor.dir" />
+		<ant4eclipse:getJdtClassPath property="eLife.runclasspath" workspaceDirectory="${workspace}" projectName="${project.name}" />
+		<java classname="au.com.BI.Admin.eLife_monitor" fork="yes" dir="bin" classpath="${eLife.runclasspath}">
 			<sysproperty key="eSmart_install" value="${eSmart_install.dir}" />
 			<sysproperty key="monitor_web" value="${eSmart_Monitor.dir}/monitor_web" />
 			<sysproperty key="datafiles" value="${eSmart_install.dir}/datafiles" />
 		</java>
 	</target>
 	
-	<target name="copy-libs" depends="init" >
-		<pathconvert pathsep="," property="massaged_jar_libs" refid="eLife.classpath" >
+	<target name="copy-libs" depends="init">
+		<pathconvert pathsep="," property="massaged_jar_libs" refid="eLife.classpath">
 			<map from="/Java" to="Java" />
 		</pathconvert>
 		<echo>List of jar files is ${eLife.jar_libs}</echo>
 		<echo>Massaged jar files list is ${massaged_jar_libs}</echo>
-
-		<delete  includeemptydirs="true" quiet="true" >
+		
+		<delete includeemptydirs="true" quiet="true">
 			<fileset dir="dist/${ext}" includes="**/*" />
 		</delete>
-		<copy todir="dist/${ext}" flatten="true" >
-		   <fileset dir="/" includes="${massaged_jar_libs}"  />
+		<copy todir="dist/${ext}" flatten="true">
+			<fileset dir="/" includes="${massaged_jar_libs}" />
 		</copy>
 	</target>
 	
@@ -69,72 +58,54 @@
 		<delete>
 			<fileset dir="dist" includes="**/*" followsymlinks="false" />
 		</delete>
-        <echo message="Emptied previous dist file" />
-        
+		<echo message="Emptied previous dist file" />
 		<mkdir dir="dist/bin"/>
 		<mkdir dir="dist/${ext}" />
-		
+   		<exec executable="svn">
+			   <arg line="up"/>
+		</exec>
 	</target>
 	
-	<target name="compile" depends="init" >
-        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" >
-            <src path="src"/>
-        </javac>
-
-    </target>
+	<target name="clean" depends="init" />
 	
-<target name="jar" depends="compile" >
-		
-	<pathconvert property="flattended.jars" refid="eLife.classpath" pathsep=" ">
-	    <chainedmapper>
-	        <flattenmapper/>
-	        <globmapper from="*" to="../${ext}/*"/>
-	    </chainedmapper>
-	</pathconvert>
-	<manifest file="MANIFEST.MF" mode="update" >
-		<attribute name="Class-Path" value="${flattended.jars}" />
-	</manifest>
-	<jar destfile="dist/bin/eMonitor.jar" 
-		update="false"
-		basedir="bin" 
-		includes = "**/*.class" 
-		excludes = "**/*\$*.class"
-		manifest="MANIFEST.MF" />
-	<jar destfile="dist/bin/eMonitor.jar" 
-		update="true"
-		basedir="src" 
-		includes = "**/*.properties" 
-	 />
-	<echo>To run this application from the command line without Ant, try:</echo>
-	<echo>java -jar "${dist.jar}"</echo>
-</target>
-	
+	<target name="compile" depends="init">
+		<javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}">
+			<src path="src"/>
+	        <classpath refid="eLife.classpath"/>
+		</javac>
+	</target>
 
-<target name="build_zip">
-	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
-		update="false"
-		basedir="dist" 
-		includes = "**/*.jar"  />
-	 <zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip"
-		update="true"
-		basedir="." 
-		includes = "monitor_web/*" 
-	 />
-	<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
-		update="true"
-		basedir="dist" 
-		includes = "${ext}/*.jar" />
-</target>
-	
-<target name="dist" depends="init,jar,copy-libs,build_zip,increment" />
+	<target name="jar" depends="compile">
+		<pathconvert property="flattended.jars" refid="eLife.classpath" pathsep=" ">
+			<chainedmapper>
+				<flattenmapper/>
+				<globmapper from="*" to="../${ext}/*"/>
+			</chainedmapper>
+		</pathconvert>
+		<manifest file="MANIFEST.MF" mode="update">
+			<attribute name="Class-Path" value="${flattended.jars}" />
+		</manifest>
+		<jar destfile="dist/bin/eMonitor.jar" update="false" basedir="bin" includes="**/*.class" excludes="**/*\$*.class" manifest="MANIFEST.MF" />
+		<jar destfile="dist/bin/eMonitor.jar" update="true" basedir="src" includes="**/*.properties" />
+		<echo>To run this application from the command line without Ant, try:</echo>
+		<echo>java -jar "${dist.jar}"</echo>
+	</target>
 
+	<target name="build_zip">
+		<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" update="false" basedir="dist" includes="**/*.jar" />
+		<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" update="true" basedir="." includes="monitor_web/*" />
+		<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" update="true" basedir="dist" includes="${ext}/*.jar" />
+	</target>
 
-<target name="increment" depends="" description="Increments build number.">
-<propertyfile file="src/au/com/BI/Admin/my.properties" >
-  <entry  key="minor_version" type="int" operation="+" value="1" />
-</propertyfile>
-<property file="src/au/com/BI/Admin/my.properties" />
-	<echo message="Version number now ${major_version}.${minor_version}" />
-</target>
+	<target name="dist" depends="init,jar,copy-libs,build_zip,increment" />
+	<target name="dist-no-inc" depends="init,jar,copy-libs,build_zip" />
+
+	<target name="increment" depends="" description="Increments build number.">
+		<propertyfile file="src/au/com/BI/Admin/my.properties">
+			<entry key="minor_version" type="int" operation="+" value="1" />
+		</propertyfile>
+		<property file="src/au/com/BI/Admin/my.properties" />
+		<echo message="Version number now ${major_version}.${minor_version}" />
+	</target>
 
 </project>
