@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="MacRoman" standalone="no"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <eclipse-userlibraries version="2">
     <library name="Groovy1.6" systemlibrary="false">
         <archive path="/Java/groovy-1.6.0/embeddable/groovy-all-1.6.0.jar"/>
