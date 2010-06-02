@@ -1206,7 +1206,7 @@
 					<xs:restriction base="xs:string"/>
 				</xs:simpleType>
 			</xs:attribute>
-			<xs:attribute name="CHANNEL" use="required">
+			<xs:attribute name="CHANNEL" use="optional">
 				<xs:simpleType>
 					<xs:restriction base="xs:string"/>
 				</xs:simpleType>
