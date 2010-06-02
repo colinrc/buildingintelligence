@@ -189,6 +189,18 @@ jandy_XML.onLoad = function(success) {
 };
 _global.jandy_XML = jandy_XML;
 _global.jandy_XML.load("defaults/default_jandy.xml");
+
+var advantage_XML = new XML();
+advantage_XML.ignoreWhite = true;
+advantage_XML.onLoad = function(success) {
+	if (success) {
+	} else {
+		mdm.Dialogs.prompt("Error, 'defaults/default_advantage.xml' file not loaded!");
+	}
+};
+_global.advantage_XML = advantage_XML;
+_global.advantage_XML.load("defaults/default_advantage.xml");
+
 /**************************************************************************************/
 function openFile(openType:String):Void {
 	mdm.Dialogs.BrowseFile.buttonText = "Open";

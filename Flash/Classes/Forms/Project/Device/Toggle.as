@@ -33,6 +33,10 @@ class Forms.Project.Device.Toggle extends Forms.BaseForm {
 			title_lb.text = "Sensor:";
 			var keyType = "Sensor\nName";
 			break;
+		case "THERMOSTAT":
+			title_lb.text = "Thermostat:";
+			var keyType = "Thermostat\nName";
+			break;
 		}
 		var restrictions = new Object();
 		restrictions.maxChars = undefined;
