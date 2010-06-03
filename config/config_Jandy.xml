@@ -1,6 +1,6 @@
 <CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
-        <DESC>Demonstration configuration for a Jandy pool controller</DESC>
-         <!-- ______________________________________  Jandy DEFS  ____________________  -->
+        <DESC>Default configuration for a Jandy pool controller</DESC>
+        <!-- ____________________________  Jandy DEFS  _______________________  -->
         <DEVICE ACTIVE="Y" DEVICE_TYPE="JANDY" DESCRIPTION="Jandy Pool controller">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="/dev/tty.usbserial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="RTSCTS"/>
@@ -14,18 +14,23 @@
                 </PARAMETERS>
  
                 <JANDY>
+					  <!-- 
+					  The key names here are magic, they are purely used to tie Jandy functions to particular client display names. 
+					  If the Jandy does not have a feature installed set the corresponding line to ACTIVE=N and it will not be used
+					  The AUX1,2,3 are dependant on the dip switch settings for DIP1,2,3 and XX is the solar heater if unused.
+					  -->
                       <PUMP KEY="PUMP" ACTIVE="Y" NAME="Pool Pump" DISPLAY_NAME="POOL_PUMP"/>
                       <PUMP KEY="PUMPLO" ACTIVE="Y" NAME="Pool Pump Low Speed" DISPLAY_NAME="PUMP_LOW"/>
-                       <PUMP KEY="SPA" ACTIVE="Y" DISPLAY_NAME="SPA_PUMP" NAME="Spa Pump" />
+                      <PUMP KEY="SPA" ACTIVE="Y" DISPLAY_NAME="SPA_PUMP" NAME="Spa Pump" />
 	
-	                   <OUTPUT KEY="CLEANR" ACTIVE="Y" NAME="Pool Cleaner"  DISPLAY_NAME="POOL_CLEANER"/>               
-	                   <OUTPUT KEY="WFALL" ACTIVE="Y" NAME="Waterfall"  DISPLAY_NAME="WATERFALL"/>               
+	                  <OUTPUT KEY="CLEANR" ACTIVE="Y" NAME="Pool Cleaner"  DISPLAY_NAME="POOL_CLEANER"/>               
+	                  <OUTPUT KEY="WFALL" ACTIVE="Y" NAME="Waterfall"  DISPLAY_NAME="WATERFALL"/>               
 
                       <HEATER KEY="POOLHT" ACTIVE="Y" NAME="Pool Heater"  DISPLAY_NAME="POOL_HEATER"/>
 	   				  <HEATER KEY="SPAHT" ACTIVE="Y"  NAME="Spa Heater" DISPLAY_NAME="SPA_HEATER" />
 
-                     <THERMOSTAT KEY="POOLSP" ACTIVE="Y" NAME="Pool Heater Setpoint 1"  DISPLAY_NAME="POOL_HEATER_SP1"/>
-                     <THERMOSTAT KEY="POOLSP2" ACTIVE="N" NAME="Pool Heater Setpoint 2"  DISPLAY_NAME="POOL_HEATER_SP2"/>
+                      <THERMOSTAT KEY="POOLSP" ACTIVE="Y" NAME="Pool Heater Setpoint 1"  DISPLAY_NAME="POOL_HEATER_SP1"/>
+                      <THERMOSTAT KEY="POOLSP2" ACTIVE="N" NAME="Pool Heater Setpoint 2"  DISPLAY_NAME="POOL_HEATER_SP2"/>
 	   				  <THERMOSTAT KEY="SPASP" ACTIVE="Y"  NAME="Spa Heater Setpoint" DISPLAY_NAME="SPA_HEATER_SP" />
 
  
@@ -34,16 +39,11 @@
                       <SENSOR KEY="POOLTMP" ACTIVE="Y" NAME="Pool temperature" DISPLAY_NAME="POOL_TEMP"  />
                       <SENSOR KEY="SPATMP" ACTIVE="Y" NAME="Spa temperature" DISPLAY_NAME="SPA_TEMP" />						
 
-                      <AUXILIARY KEY="CLEANR" ACTIVE="N" NAME="Cleaner" DISPLAY_NAME="CLEANER"  />
-                      <AUXILIARY KEY="AUX1" ACTIVE="Y" NAME="Auxiliary 1" DISPLAY_NAME="AUX1"  />
-                      
-                      <AUXILIARY KEY="AUX2" ACTIVE="Y" NAME="Auxiliary 2" DISPLAY_NAME="AUX2"  />
-                      <AUXILIARY KEY="AUX3" ACTIVE="Y" NAME="Auxiliary 3" DISPLAY_NAME="AUX3"  />
+                      <AUXILIARY KEY="AUX1" ACTIVE="N" NAME="Auxiliary 1 - cleaner" DISPLAY_NAME="AUX1"  />
+                      <AUXILIARY KEY="AUX2" ACTIVE="N" NAME="Auxiliary 2 - pumplo" DISPLAY_NAME="AUX2"  />
+                      <AUXILIARY KEY="AUX3" ACTIVE="N" NAME="Auxiliary 3 - waterfall" DISPLAY_NAME="AUX3"  />
                       <AUXILIARY KEY="AUXX" ACTIVE="Y" NAME="Auxiliary X - solar temp port" DISPLAY_NAME="AUXX"  />
                        
-					  <!-- The key names here are magic, they are purely used to tie Jandy functions to particular client display names. 
-					           If the Jandy does not have a feature installed set the corresponding line to ACTIVE=N and it will not be used -->
-						 
                 </JANDY>
         </DEVICE>
         
