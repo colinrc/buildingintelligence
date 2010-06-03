@@ -1,4 +1,4 @@
-<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
         <DESC>Extron Configuration</DESC>
          <!-- ______________________________________  BI_PUMP DEFS  ____________________  -->
         <DEVICE ACTIVE="N" DEVICE_TYPE="EXTRON" DESCRIPTION="Extron Switcher">
