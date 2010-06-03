@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="bi_stuff" basedir=".." >
-	<taskdef name="xmltask"
-	            classname="com.oopsconsultancy.xmltask.ant.XmlTask"/>
-	
+	<taskdef name="xmltask" classname="com.oopsconsultancy.xmltask.ant.XmlTask">
+  		<classpath>
+    		<pathelement location="/Java/xmltask/xmltask.jar"/>
+  		</classpath>
+	</taskdef>	
+
 	<target name="update_xml" depends="" description="updates the xml layout file">
 		<xmltask source="layout.xml" dest="layout.xml"  > 
 		   <replace path="/layout/elife/@version" 

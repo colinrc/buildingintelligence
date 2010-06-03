@@ -4,7 +4,11 @@
     <description>Builds, tests, and runs the project server.</description>
      <import  file="ant_stubs/util_stubs.xml"/>
        
-	<taskdef resource="net/sf/ant4eclipse/antlib.xml" />
+	<taskdef resource="net/sf/ant4eclipse/antlib.xml" >
+  		<classpath>
+    		<pathelement location="/Java/ant4eclipse/ant4eclipse-0.5.0.rc1.jar"/>
+  		</classpath>
+	</taskdef>	
 	
 	<taskdef resource="net/sf/antcontrib/antlib.xml">
   		<classpath>
