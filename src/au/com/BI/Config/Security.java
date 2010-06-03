@@ -59,10 +59,9 @@ public class Security {
     postOnlyClients = new HashMap<String,Boolean> ();
        
     
-	connected = true;
-	return ;
-   /*
-    
+//	connected = true;
+//	return ;
+      
     
 	InputStreamReader reader = new InputStreamReader(System.in);
 	BufferedReader in = new BufferedReader(reader);
@@ -106,7 +105,6 @@ public class Security {
 			fsize,
 			allowNumbers);
        }
-       // */
 
     }
     
