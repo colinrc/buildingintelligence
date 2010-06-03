@@ -107,7 +107,7 @@
         <!-- the key is the Kramer output, Display name is the flash icon name -->
 
 
-        !-- ______________________________________  DynaLite DEFS  ____________________  -->
+        <!-- ______________________________________  DynaLite DEFS  ____________________  -->
         <DEVICE ACTIVE="N" DEVICE_TYPE="DYNALITE" DESCRIPTION="DynaLite Lights">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N"  FLOW="NONE"/>
@@ -139,7 +139,7 @@
                 </DYNALITE>
         </DEVICE>
 
-        !-- ______________________________________  CBUS DEFS  ____________________  -->
+        <!-- ______________________________________  CBUS DEFS  ____________________  -->
         <DEVICE ACTIVE="N" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Lights">
                 <CONNECTION>
                         <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
@@ -585,6 +585,4 @@
                 	<FORWARD ACTIVE="Y" SRC="gin" DEST="http://ginini.com/hosting-recommendation.html" />
                 </FORWARDS>
         </CONTROLS>
-
-         
 </CONFIG>
