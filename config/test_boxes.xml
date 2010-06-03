@@ -14,11 +14,14 @@
 			<ITEM NAME="ICON" VALUE="calendar" />
 			<ITEM NAME="HIDECLOSE" VALUE="FALSE" />
 		</CALENDAR_MESSAGES>
+       	<FORWARDS>
+       		<FORWARD ACTIVE="Y" SRC="../client.xml" DEST="http://127.0.0.1:8081/client.xml" />
+       	</FORWARDS>
 	</CONTROLS>
 
-	<DEVICE ACTIVE="Y" DEVICE_TYPE="COMFORT" DISPLAY_NAME="Comfort with CBUS" PASSWORD="1234">
+	<DEVICE ACTIVE="Y" DEVICE_TYPE="COMFORT" DESCRIPTION="Comfort with CBUS" PASSWORD="1234">
 		<CONNECTION>
-			<SERIAL ACTIVE="Y" PORT="/dev/tty.USA49W1a2P2.2" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+			<SERIAL ACTIVE="Y" PORT="/dev/tty.USA49W3a2P2.2" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
 			<IP ACTIVE="N" IP_ADDRESS="192.168.0.210" PORT="1001"/>
 		</CONNECTION>
 		<CATALOGUE NAME="DOOR_IDS">
@@ -80,10 +83,10 @@
 				<ANALOGUE ACTIVE="N" KEY="01" NAME="Kitchen Light" DISPLAY_NAME="LOUNGE_LIGHT"/>
 				<!-- Set alarms on this comfort when sent from this display, if more than 1 icon is used in flash, 
 				list multiple ALARM entries, one for each DISPLAY_NAME -->
-				<ALARM KEY="" DISPLAY_NAME="ANYTHING"/>
-				<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell"/>
-				<ALERT KEY="" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone"/>
-				<ALERT KEY="" ACTIVE="Y" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange"/>
+				<ALARM KEY="00" DISPLAY_NAME="ALARM" />
+				<ALERT KEY="-1" DISPLAY_NAME="ALARM" MESSAGE="There is a visitor, " ALERT_TYPE="DoorBell"/>
+				<ALERT KEY="-2" DISPLAY_NAME="ALARM" MESSAGE="The phone rung at " ALERT_TYPE="Phone"/>
+				<ALERT KEY="-3" ACTIVE="Y" DISPLAY_NAME="ALARM" MESSAGE="Mode set by " ALERT_TYPE="ModeChange"/>
 				
 				<ALERT KEY="00" DISPLAY_NAME="ALARM" MESSAGE="Intruder" ALERT_TYPE="Zone"/>
 				<ALERT KEY="01" DISPLAY_NAME="ALARM" MESSAGE="Zone Trouble" ALERT_TYPE="Zone"/>
@@ -148,12 +151,10 @@
 <!--			<ALERT KEY="1E" DISPLAY_NAME="ALARM" MESSAGE="Engineer Sign-in" ALERT_TYPE="Alarm Type"/> -->
 <!--			<ALERT KEY="1F" DISPLAY_NAME="ALARM" MESSAGE="Sign-in Tamper" ALERT_TYPE="Alarm Type"/> -->
 		</COMFORT>
-
 	</DEVICE>
-	
 	<DEVICE ACTIVE="Y" DEVICE_TYPE="CBUS" DISPLAY_NAME="CBUS Lights">
 		<CONNECTION>
-			<SERIAL ACTIVE="Y" PORT="/dev/tty.USA49W1a2P1.1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+			<SERIAL ACTIVE="Y" PORT="/dev/tty.USA49W3a2P1.1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
 			<IP ACTIVE="N" IP_ADDRESS="192.168.0.66" PORT="14000"/>
 		</CONNECTION>
 		<PARAMETERS>
@@ -169,6 +170,23 @@
 			<LIGHT_CBUS KEY="03" ACTIVE="Y" NAME="Dining Light" DISPLAY_NAME="DINING_LIGHT" />
 			<LIGHT_CBUS KEY="04" ACTIVE="Y" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" />
 		</CBUS>
+	</DEVICE>
+		<DEVICE ACTIVE="N" DEVICE_TYPE="GC100" DISPLAY_NAME="GC100">
+                <CONNECTION>
+                        <IP ACTIVE="Y" IP_ADDRESS="192.168.0.201" PORT="4998"/>
+                </CONNECTION>
+                <PARAMETERS>                
+                </PARAMETERS>
+                <GC100_IR NAME="IR1">
+                        <PARAMETERS>
+                                <ITEM NAME="MODULE" VALUE="4"/>
+                                <ITEM NAME="MODULE_TYPE" VALUE="IR"/>
+                                <!-- Valid types are serial, IR or relay -->
+                        </PARAMETERS>
+                        <IR KEY="01" NAME="Downstairs" AV_NAME="TUNER"/>
+			<IR KEY="02" NAME="Upstairs" AV_NAME="AVCLOSET1"/>
+                        <IR KEY="03" NAME="Upstairs" AV_NAME="AVCLOSET2"/>
+                </GC100_IR>
 	</DEVICE>
 </CONFIG>
 
