@@ -491,7 +491,7 @@ public class eLife_Admin extends JPanel implements EBComponent, eLife_AdminActio
 		try {
 			if (ip != null) {
 				if (dir.endsWith("script")) {
-					ip.sendMonitorMessage ("<ADMIN COMMAND=\"LIST\" DIR=\"" + dir + "\" FILTER=\".py\" />\n");
+					ip.sendMonitorMessage ("<ADMIN COMMAND=\"LIST\" DIR=\"" + dir + "\" FILTER=\"\" />\n");
 				} else {
 					ip.sendMonitorMessage ("<ADMIN COMMAND=\"LIST\" DIR=\"" + dir + "\" FILTER=\".xml\" />\n");					
 				}
