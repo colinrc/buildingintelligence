@@ -30,7 +30,7 @@ public class BIHashLoginService extends HashLoginService implements
 			throw new Error ("User cannot be empty");
 		}		
 		String rawPwd = "CRYPT:" + UnixCrypt.crypt (newPwdtxt, new Date().toString());
-		String newPwd = rawPwd +roles[0];
+		String newPwd = rawPwd + "," + roles[0];
 		try {
 			readFile();
 			super.putUser (userID,Credential.getCredential(newPwdtxt),roles);
