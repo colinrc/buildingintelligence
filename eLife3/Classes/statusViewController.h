@@ -13,4 +13,8 @@
 
 }
 
+- (void)registerWithNotification:(NSString *)thekey;
+- (void)statusUpdate:(NSNotification *)notification;
+	
+
 @end

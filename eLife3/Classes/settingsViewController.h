@@ -9,15 +9,18 @@
 #import <UIKit/UIKit.h>
 
 
-@interface settingsViewController : UIViewController {
+@interface settingsViewController : UITableViewController <UITextFieldDelegate>{
 	UITextField *elifesvr;
 	UITextField *elifesvrport;
+	UITextField *config_file;
+	UITextField *config_port;
+	UITextField *remote_server_url;
 }
 
 @property (nonatomic, retain) IBOutlet UITextField *elifesvr;
 @property (nonatomic, retain) IBOutlet UITextField *elifesvrport;
-
-- (IBAction)textFieldDoneEditing:(id)sender;
-- (IBAction)backgroundTap:(id)sender;
+@property (nonatomic, retain) IBOutlet UITextField *config_file;
+@property (nonatomic, retain) IBOutlet UITextField *config_port;
+@property (nonatomic, retain) IBOutlet UITextField *remote_server_url;
 
 @end

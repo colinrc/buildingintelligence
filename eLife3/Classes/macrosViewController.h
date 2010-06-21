@@ -10,7 +10,9 @@
 
 
 @interface macrosViewController : UITableViewController {
-
+	IBOutlet UITableViewCell *tmpCell;
 }
+
+@property (nonatomic, assign) IBOutlet UITableViewCell *tmpCell;
 
 @end

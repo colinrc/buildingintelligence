@@ -9,6 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "elifesocket.h"
 
+// tab order helper
+enum tabs{
+	macro_tab,
+	status_tab,
+	rooms_tab,
+	more_tab
+};
+
 @interface eLife3AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, UIActionSheetDelegate> {
     UIWindow *window;
     UITabBarController *tabBarController;

@@ -7,38 +7,54 @@
 //
 
 #import "statusViewController.h"
-
+#import "Control.h"
+#import "controlMap.h"
+#import "statusGroup.h"
+#import "statusGroupMap.h"
+#import "eLife3AppDelegate.h"
 
 @implementation statusViewController
 
-/*
+
 - (id)initWithStyle:(UITableViewStyle)style {
     // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
     if (self = [super initWithStyle:style]) {
     }
+	
+	
     return self;
 }
-*/
 
-/*
+// called at load into memory, good place to alloc stuff
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+	
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	
 }
-*/
 
-/*
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-}
-*/
-/*
+	 // register with all of the controls for update notifications
+	 NSString *currentKey;
+	 for (currentKey in [statusGroupMap sharedInstance].group_data_ )
+	 {
+		 NSString* currentControl;
+		 for (currentControl in [[statusGroupMap sharedInstance].group_data_ objectForKey:currentKey])
+		 {
+			 if (currentControl != nil)
+				 [self registerWithNotification:[currentControl stringByAppendingString:@"_status"]];
+		 }
+	 }
+ }
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+	[self.tableView reloadData];
 }
-*/
+
 /*
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
@@ -73,18 +89,52 @@
 
 #pragma mark Table view methods
 
+// get the number of groups
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+	int i = [[statusGroupMap sharedInstance].group_names_ count];
+//	NSLog(@"help me I cant take it %i", i);
+	return i;
+}
+// get the group heading
+// TODO: think about the memory managment here
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	@try {
+		statusGroup *tmpGroup = [[statusGroupMap sharedInstance].group_names_ objectAtIndex:section];
+		return tmpGroup.name_;
+	}
+	@catch (NSException * e) {
+		NSLog(@"tried to index out of the array");
+	}
+	return @"";
 }
 
-
-// Customize the number of rows in the table view.
+// Get the number of showing items for this group
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+	return [[statusGroupMap sharedInstance]activeItems:section];
 }
 
+/*
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+	return 1;
+}
+*/
+/*
+ - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+ return nil;
+ }
+*/
+/*
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+	return NO;
+}
+*/
+/*
+- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+	return nil;
+}
+*/
 
-// Customize the appearance of table view cells.
+// Put the individual items into the groups
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString *CellIdentifier = @"Cell";
@@ -94,17 +144,49 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
-    // Set up the cell...
+	// Set up the cell...
 	
-    return cell;
+	// get the status group
+	statusGroup *status_group = [[statusGroupMap sharedInstance] getGroup:indexPath.section];
+	if (status_group != nil)
+	{
+		// get the control
+		Control *control = [[statusGroupMap sharedInstance] activeControl:indexPath.section:indexPath.row];
+		// if we can't find the control make the row blank
+		if (control != nil)
+		{	
+			// set the text
+			UILabel *myLabel = (UILabel *)[cell textLabel];
+			myLabel.text = control.name_;
+			
+			// set the icon
+			UIImageView *myIcon = [cell imageView];
+			myIcon.image = [UIImage imageNamed:[status_group.icon_ stringByAppendingString:@".png"]];
+		}
+	}	
+	return cell;
 }
 
-
+// handle a row selection
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here. Create and push another view controller.
-	// AnotherViewController *anotherViewController = [[AnotherViewController alloc] initWithNibName:@"AnotherView" bundle:nil];
-	// [self.navigationController pushViewController:anotherViewController];
-	// [anotherViewController release];
+
+	// get the status group
+	statusGroup *status_group = [[statusGroupMap sharedInstance] getGroup:indexPath.section];
+	if (status_group != nil)
+	{
+		// get the control
+		Control *control = [[statusGroupMap sharedInstance] activeControl:indexPath.section:indexPath.row];
+		if (control != nil)
+		{
+			// send off message
+			NSString *msg = @"<CONTROL KEY=\"";
+			msg = [msg stringByAppendingString:control.key_];
+			msg = [msg stringByAppendingString:@"\" COMMAND=\"off\" EXTRA=\"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
+			eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+
+			[elifeappdelegate.elifeSvrConn sendmessage:msg];
+		}
+	}
 }
 
 
@@ -147,11 +229,19 @@
 }
 */
 
+- (void)registerWithNotification:(NSString *)thekey {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusUpdate:) name:thekey object:nil];
+}
+
+- (void)statusUpdate:(NSNotification *)notification {
+	[self.tableView setNeedsDisplay];
+	[self.tableView reloadData];
+}
+
 
 - (void)dealloc {
     [super dealloc];
 }
-
 
 @end
 

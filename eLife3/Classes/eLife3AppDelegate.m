@@ -7,7 +7,8 @@
 //
 
 #import "eLife3AppDelegate.h"
-
+#import "macroList.h"
+#import "clientParser.h"
 
 @implementation eLife3AppDelegate
 
@@ -33,6 +34,12 @@
 	// Attempt to connect to eLife Server
 	elifeSvrConn = [[elifesocket alloc] init];
 	[elifeSvrConn connectToELife];
+	
+	// TODO: decide whether to loop this or config file??
+	// retrieve the client XML and parse
+	clientParser *clientxml = [[clientParser alloc] init];
+	[clientxml checkSuccess];
+	[clientxml release];
 }
 
 
@@ -51,6 +58,7 @@
 // Allow the user to either terminate the application or change to the settings page
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
 	self.tabBarController.selectedIndex = 3;
+	// TODO: navigate to the settings page
 }
 
 - (void)dealloc {

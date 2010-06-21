@@ -6,39 +6,44 @@
 //  Copyright 2010 Humphries Consulting Pty Ltd. All rights reserved.
 //
 
+#import "elifesocket.h"
+#import "eLife3AppDelegate.h"
 #import "macrosViewController.h"
-
+#import "macroList.h"
+#import "macro.h"
 
 @implementation macrosViewController
 
-/*
+@synthesize tmpCell;
+
+
 - (id)initWithStyle:(UITableViewStyle)style {
     // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
     if (self = [super initWithStyle:style]) {
     }
     return self;
 }
-*/
 
-/*
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+	// request notification of macros added
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(macroUpdate:) name:@"addMacro" object:nil];
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
-*/
+
 
 /*
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 }
 */
-/*
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+	[self.tableView reloadData];
 }
-*/
 /*
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
@@ -80,11 +85,14 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+	NSLog(@"macro rows: %d", [[macroList sharedInstance] countMacros]);
+    return [[macroList sharedInstance].macrolist_ count];
 }
 
 
-// Customize the appearance of table view cells.
+/**
+ OnUpdate type function, framewok calls this function to populate the view
+ */
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString *CellIdentifier = @"Cell";
@@ -95,16 +103,74 @@
     }
     
     // Set up the cell...
+	macroList *macrolist = [macroList sharedInstance];
+	macro *tmpMacro = [macrolist.macrolist_ objectAtIndex:indexPath.row];
+	
+    // Configure the cell
+	UILabel *myLabel = (UILabel *)[cell textLabel];
+	NSString *tmpStr = [tmpMacro.macroattr objectForKey:@"EXTRA"];
+	myLabel.text = tmpStr;
+	
+	UIActivityIndicatorView *myActInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+	cell.accessoryView = myActInd;
+	if ([[macrolist.macrolist_ objectAtIndex:indexPath.row] isRunning]) {
+		NSLog(@"macro - start animating");
+		[myActInd startAnimating];
+	} else {
+		[myActInd stopAnimating];
+		NSLog(@"macro - stop animating");
+	}
+	
+	[myActInd release];	
+	
+	// request notification of changes
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(macroUpdate:) name:tmpStr object:nil];
+	
+	NSLog(@"macro name:%@",tmpStr);
 	
     return cell;
 }
 
-
+/**
+ User selected the table row, start the macro if not running
+ Stop the macro if it is already running
+ */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Navigation logic may go here. Create and push another view controller.
-	// AnotherViewController *anotherViewController = [[AnotherViewController alloc] initWithNibName:@"AnotherView" bundle:nil];
-	// [self.navigationController pushViewController:anotherViewController];
-	// [anotherViewController release];
+
+	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+	NSMutableArray *macrolist = [[macroList sharedInstance] macrolist_];
+	elifesocket *myServer = elifeappdelegate.elifeSvrConn;
+//	NSMutableArray *sendmsgs = elifeappdelegate.msgs_for_svr;
+	UITableViewCell *cell = nil;
+	
+	NSLog(@"Macro %@ selected", [[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"EXTRA"]);
+	
+	NSLog(@"changing macro state %@: current %@", [[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"EXTRA"], 
+		  [[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"RUNNING"]);
+	
+    // Configure the view for the selected state
+	cell = [tableView cellForRowAtIndexPath:indexPath];
+	UILabel *myLabel = (UILabel *)[cell textLabel];
+	UIActivityIndicatorView *myActInd = (UIActivityIndicatorView *)[cell  accessoryView];
+
+	if ([[macrolist objectAtIndex:indexPath.row] isRunning] == NO) 
+	{
+		NSLog(@"macro - start animating");
+		[myActInd startAnimating];
+		NSLog(@"Send macro start");
+		NSString *msg = @"<CONTROL KEY=\"MACRO\" COMMAND=\"run\" EXTRA=\"";
+		msg = [msg stringByAppendingString:[myLabel text]];
+		msg = [msg stringByAppendingString:@"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
+		[myServer sendmessage:msg];
+	} else {
+		NSLog(@"macro - stop animating");
+		[myActInd stopAnimating];
+		NSLog(@"Send macro stop");
+		NSString *msg = @"<CONTROL KEY=\"MACRO\" COMMAND=\"complete\" EXTRA=\"";
+		msg = [msg stringByAppendingString:[myLabel text]];
+		msg = [msg stringByAppendingString:@"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
+		[myServer sendmessage:msg];
+	}
 }
 
 
@@ -147,6 +213,12 @@
 }
 */
 
+- (void)macroUpdate:(NSNotification *)notification {
+//	NSString *thekey = [notification name];
+//	NSLog(@"Observed macroUpdate message:%@", thekey);
+	[self.tableView setNeedsDisplay];
+	[self.tableView reloadData];
+}
 
 - (void)dealloc {
     [super dealloc];

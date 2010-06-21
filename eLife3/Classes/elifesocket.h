@@ -20,7 +20,7 @@
 @property (nonatomic) NSInteger error_status;
 
 - (void)connectToELife;
-- (void)sendMessage;
+- (void)sendmessage:(NSString *)theMessage;
 - (void)alertOtherAction;
 
 @end
