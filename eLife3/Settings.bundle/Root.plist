@@ -19,6 +19,10 @@
 			<string>eLife Server Name/IP</string>
 			<key>Key</key>
 			<string>elifesvr</string>
+			<key>DefautValue</key>
+			<string>192.168.1.1</string>
+			<key>KeyboardType</key>
+			<string>NumbersAndPunctuation</string>
 			<key>AutocapitalizationType</key>
 			<string>None</string>
 			<key>AutocorrectionType</key>
@@ -31,10 +35,54 @@
 			<string>eLife Server Port</string>
 			<key>Key</key>
 			<string>elifesvrport</string>
+			<key>DefaultValue</key>
+			<string>10000</string>
+			<key>KeyboardType</key>
+			<string>Number Pad</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Configuration Filename</string>
+			<key>Key</key>
+			<string>config_file</string>
+			<key>DefaultValue</key>
+			<string>client.xml</string>
+			<key>KeyboardType</key>
+			<string>Alphabet</string>
 			<key>AutocapitalizationType</key>
 			<string>None</string>
 			<key>AutocorrectionType</key>
 			<string>No</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>eLife Config Port</string>
+			<key>Key</key>
+			<string>config_port</string>
+			<key>DefaultValue</key>
+			<string>8081</string>
+			<key>KeyboardType</key>
+			<string>Number Pad</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>eLife Remote Settings</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>elife Server URL</string>
+			<key>Key</key>
+			<string>remote_server_url</string>
+			<key>KeyboardType</key>
+			<string>URL</string>
 		</dict>
 	</array>
 </dict>
