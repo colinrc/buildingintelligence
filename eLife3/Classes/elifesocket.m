@@ -74,7 +74,9 @@
 	
 	//send data
 	stringToSend = [NSString stringWithFormat:@"%@\n", theMessage];
+#ifdef _DEBUG
 	NSLog(@"Sending message: %@",stringToSend);
+#endif
 	dataToSend = [stringToSend dataUsingEncoding:NSUTF8StringEncoding];
 	if (oStream) {
 		int remainingToWrite = [dataToSend length];
@@ -110,7 +112,7 @@
 		case NSStreamEventOpenCompleted:
 			event = @"NSStreamEventOpenCompleted";
 			self.error_status=0;
-			NSLog(@"Socket is open");
+//			NSLog(@"Socket is open");
 			break;
 		case NSStreamEventHasBytesAvailable:
 			event = @"NSStreamEventHasBytesAvailable";
@@ -122,7 +124,6 @@
 				//while ([iStream hasBytesAvailable])
 				//{
 				len = [iStream read:buffer maxLength:sizeof(buffer)];
-				NSLog(@"Bytes read: %d", len);
 				if (len > 0)
 				{
 					xmlParser *myparser;
@@ -142,8 +143,10 @@
 							NSString *output = [[NSString alloc] initWithBytes:tmpbuf length:i+1 encoding:NSASCIIStringEncoding];
 							//NSData *theData = [[NSData alloc] initWithBytes:buffer length:len];
 							//NSLog(@"Sending data to XML Parser: %d bytes", [output length]);
+#ifdef _DEBUG
+							NSLog(@"Bytes read: %d", len);
 							NSLog(@"received xml data: %@", output);
-							
+#endif							
 							myparser = [[[xmlParser alloc] initParser] parseXMLData:output];
 							[myparser release];
 							[output release];
@@ -196,7 +199,7 @@
 {
 	// use "buttonIndex" to decide your action
 	//
-	NSLog(@"Button clicked:%d",buttonIndex);
+//	NSLog(@"Button clicked:%d",buttonIndex);
 	if (buttonIndex == 0) {
 		// cancel button clicked
 		exit(0);

@@ -11,16 +11,15 @@
 
 @interface clientParser : NSObject < UIAlertViewDelegate > {
 	NSString *className;
-	NSMutableArray *items;
-	NSObject *item; // stands for any class    
 	NSString *currentNodeName;
 	NSMutableString *currentNodeContent;
-	NSMutableArray *currentstate;
 	Boolean parserSuccess;
+	NSTimer *timer_;
 }
 
-- (NSArray *)items;
+@property (nonatomic, retain) NSTimer *timer_;
+@property (nonatomic) Boolean parserSuccess;
 - (id)init;
--(Boolean)checkSuccess;
+-(void)loadConfig;
 
 @end

@@ -38,7 +38,6 @@
 	// TODO: decide whether to loop this or config file??
 	// retrieve the client XML and parse
 	clientParser *clientxml = [[clientParser alloc] init];
-	[clientxml checkSuccess];
 	[clientxml release];
 }
 

@@ -16,6 +16,9 @@
 
 @implementation clientParser
 
+@synthesize timer_;
+@synthesize parserSuccess;
+
 bool superuseronly = false;
 
 typedef enum {
@@ -33,21 +36,20 @@ parserState current_state;
 NSString *zone_name;
 NSString *room_name;
 
-- (NSArray *)items
-{
-	return items;
-}
 
 - (id)init {
 	
 	self = [super init];
-	
-	[items release];
-	items = [[NSMutableArray alloc] init];
-	[currentstate release];
-	currentstate = [[NSMutableArray alloc] init];
-	parserSuccess = NO;
+	[self retain]; //we are going to manage our own lifecycle and release when we have got the config...
+	[self loadConfig];
+	return self;
+}
 
+// TODO: refactor for edge cases
+-(void)loadConfig {
+	static BOOL firstAlert = TRUE;
+	self.parserSuccess = NO;
+	NSData *data;
 	//Let's try to get the client XML from the server @ http://{server ip}/html/iphone/{config xml filename}
 	NSURL *configurl = nil;
 	NSString *path = nil;
@@ -61,75 +63,97 @@ NSString *room_name;
 	NSString *defport = [userDefaults stringForKey:@"config_port"];
 	if (defport == nil)
 		defport = @"8081";
-
+	
 	path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:defconfig];
 
+//	NSLog(@"loadConfig: trying to load the client config file %@",path);
+	
+	
 	if (elifehost != nil )
 	{
 		
 		NSString *str_url = [[@"http://" stringByAppendingString:elifehost]
-										stringByAppendingString:[@":" 
-										stringByAppendingString:[defport 
-										stringByAppendingString:[@"/html/iphone/" stringByAppendingString:defconfig]]]];
-
+							 stringByAppendingString:[@":" 
+													  stringByAppendingString:[defport 
+																			   stringByAppendingString:[@"/html/iphone/" stringByAppendingString:defconfig]]]];
+		
 		configurl = [[NSURL alloc] initWithString:str_url];
 		
 		NSURLRequest * request = [NSURLRequest requestWithURL:configurl cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:3];
 		NSURLResponse *response;
 		NSError *error;
-		NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse: &response error: &error];
+		data = [NSURLConnection sendSynchronousRequest:request returningResponse: &response error: &error];
+		int status_code = [(NSHTTPURLResponse*) response statusCode];
+		if (status_code < 400) // http ok from jetty
+			parser = [[NSXMLParser alloc] initWithData:data];
 
+		[configurl release];
+	}
+	
+	// if we can't get the file from the server let's try to get a locally cached version
+	if (parser == nil) {
+		data = [NSData dataWithContentsOfFile:path];
 		parser = [[NSXMLParser alloc] initWithData:data];
 	}
-
-		// if we can't get the file from the server let's try to get a locally cached version
-	if (parser == nil) {
-		parser = [[NSXMLParser alloc] initWithData:[[NSData alloc] initWithContentsOfFile:path]];
-	}
-
+	
 	if (parser != nil)
 	{
 		// setup the parser
 		[parser setDelegate:self];
 		[parser setShouldProcessNamespaces:YES];
-
+		
 		// if parse fails
-		parserSuccess = [parser parse];
-			
+		self.parserSuccess = [parser parse];
+		
 		if (parserSuccess == NO) {
 			// try again with local file
 			[parser release];
 			parser = [[NSXMLParser alloc] initWithData:[[NSData alloc] initWithContentsOfFile:path]];
 			[parser setDelegate:self];
 			[parser setShouldProcessNamespaces:YES];
-			parserSuccess = [parser parse];
+			self.parserSuccess = [parser parse];
 		}
 		// cleanup
 		[parser release];
 	}
 	
-	// TODO: need to get the XML into a local file...
-	
-	return self;
+	if (self.parserSuccess == YES){
+		// need to get the XML into a local file...
+		[data writeToFile:path atomically:NO];
+		// if we warned them should we tell them all is good now?
+		if (!firstAlert)
+		{
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"eLife Cofiguration Success" message:@"Finished downloading the configuration and caching a local copy."
+														   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		}
+		[self release]; // we can suicide, job done
+	}
+	else {
+		// Need to add a timer event to try again in 5 seconds
+		self.timer_ = [NSTimer scheduledTimerWithTimeInterval:5 
+													   target:self
+													 selector:@selector(loadConfig)
+													 userInfo:nil
+													  repeats:NO];
+		// warn the user once that the config doesn't exist
+		if ((elifehost != nil) && firstAlert) {
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"eLife Cofiguration Error" message:@"Could not download the configuration and there is no local copy."
+														   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+			firstAlert = FALSE;
+		}
+	}
 }
 
-// tests to see if we got the client xml
--(Boolean)checkSuccess {
-	if (parserSuccess == NO)
-	{	
-		NSLog(@"Very bad, can't parse the URL and have no local copy");
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"eLife Cofiguration Error" message:@"Could not download the configuration and there is no local copy."
-													   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-		[alert show];
-	}
-	return parserSuccess;
-}
 
 /**
  \brief	Handles the status bar entries for tab and group elements
  */
 void handleZone(NSDictionary *attributeDict) {
-	NSLog(@"handleZone %@",[attributeDict objectForKey:@"name"]);
+//	NSLog(@"handleZone %@",[attributeDict objectForKey:@"name"]);
 	// create a new zone object if required
 	zone_name = [attributeDict objectForKey:@"name"];
 }	
@@ -137,7 +161,7 @@ void handleZone(NSDictionary *attributeDict) {
  \brief	Adds a room 
  */
 void addRoom(NSDictionary *attributeDict) {
-	NSLog(@"addRoom %@",[attributeDict objectForKey:@"name"]);
+//	NSLog(@"addRoom %@",[attributeDict objectForKey:@"name"]);
 
 	current_state = parsing_room;
 	// set the room name to the name found
@@ -149,7 +173,7 @@ void addRoom(NSDictionary *attributeDict) {
  */
 void handleRoomTab(NSDictionary * attributeDict)
 {
-	NSLog(@"handleRoomTab %@", [attributeDict objectForKey:@"name"]);
+//	NSLog(@"handleRoomTab %@", [attributeDict objectForKey:@"name"]);
 	if (!superuseronly) {
 		// create new roomtab object
 		//		eliferoomtab *newroomtab = [[eliferoomtab alloc] initWithName:[attributeDict objectForKey:@"name"] andAttributes:attributeDict];
@@ -165,20 +189,20 @@ void handleRoomTab(NSDictionary * attributeDict)
  \brief	Adds a room entry from a control element
  */
 void addRoomItem(NSDictionary *attributeDict) {
-	NSLog(@"addRoomItem %@",[attributeDict objectForKey:@"name"]);
+//	NSLog(@"addRoomItem %@",[attributeDict objectForKey:@"name"]);
 	// create new control object
 	Control *control = [[Control alloc] initWithDictionary:attributeDict];
 	if ([[controlMap sharedInstance] addControl:control] == NO)
-		NSLog(@"Control already exists %@", [attributeDict objectForKey:@"key"]);
-
+	{
+		NSLog(@"Control problem adding %@", [attributeDict objectForKey:@"key"]);
+	}
 	[control release];
 }
-
 /**
  \brief	Handles the status bar entries for tab and group elements
  */
 void handleStatus(NSDictionary *attributeDict) {
-	NSLog(@"handleStatus %@", [attributeDict objectForKey:@"name"]);
+//	NSLog(@"handleStatus %@", [attributeDict objectForKey:@"name"]);
 	
 	// create new status group
 	[[statusGroupMap sharedInstance] addGroup:attributeDict];
@@ -187,29 +211,21 @@ void handleStatus(NSDictionary *attributeDict) {
  \brief	Adds a status bar entry from a control element
  */
 void addStatusItem(NSDictionary *attributeDict) {
-	NSLog(@"addStatusItem %@",[attributeDict objectForKey:@"key"]);
-
+//	NSLog(@"addStatusItem %@",[attributeDict objectForKey:@"key"]);
 	// create new control object
 	Control *control = [[Control alloc] initWithDictionary:attributeDict];
 	if ([[controlMap sharedInstance] addControl:control] == NO)
-		NSLog(@"Control already exists %@", [attributeDict objectForKey:@"key"]);
-	
+	{
+		NSLog(@"Control problem adding %@", [attributeDict objectForKey:@"key"]);
+	}
 	[[statusGroupMap sharedInstance] addStatusItem:control];
 	[control release];
-
-	// create new status item
-	//	elifestatusitem *newstatusitem = [[elifestatusitem alloc] initWithKey:[attributeDict objectForKey:@"key"]];
-	
-	// add status item to current status group
-	//	[currentstatustab.statusitems addObject:newstatusitem];
-	//	[newstatusitem release];
 }
-
 /**
  \brief	Adds a control entry from a controltype element
  */
 void addControl(NSDictionary *attributeDict) {
-	NSLog(@"addControl ");
+//	NSLog(@"addControl ");
 	// Create a new controltype object
 	//	elifecontroltypes *newcontroltype = [[elifecontroltypes alloc] initWithType:[attributeDict objectForKey:@"type"]];
 	
@@ -218,22 +234,20 @@ void addControl(NSDictionary *attributeDict) {
 	//	currentctrltype = [elifeappdelegate.elifectrltypes  objectAtIndex:[elifeappdelegate.elifectrltypes indexOfObject:newcontroltype]];
 	//[newzone release];
 }
-
 /**
  \brief	Adds a control item from a control element
  */
 void addArbitraryItem(NSDictionary *attributeDict) {
-	NSLog(@"addControlItem ");
+//	NSLog(@"addControlItem ");
 	if (!superuseronly) {
 		// add a new controltype item
 	}
 }
-
 /**
  \brief	Adds a control row from a control element
  */
 void addControlRow(NSDictionary *attributeDict) {
-	NSLog(@"addControlRow ");
+//	NSLog(@"addControlRow ");
 	if (!superuseronly) {
 		// add a new row object
 	}
@@ -247,7 +261,7 @@ void addControlRow(NSDictionary *attributeDict) {
  */
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
 	
-	NSDictionary *currentelement = [[NSDictionary alloc] init];
+//	NSDictionary *currentelement = [[NSDictionary alloc] init];
 	//	elife_bAppDelegate *elifeappdelegate = (elife_bAppDelegate *)[[UIApplication sharedApplication] delegate];
 	if ([elementName isEqualToString:@"zone"]) {
 		// are we parsing the calendar
@@ -263,21 +277,17 @@ void addControlRow(NSDictionary *attributeDict) {
 			else
 			{
 				superuseronly=NO;
-				currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"elementtype",[attributeDict objectForKey:@"name"],@"name",nil];
-				[currentstate addObject:currentelement];
+//				currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"elementtype",[attributeDict objectForKey:@"name"],@"name",nil];
 				handleZone(attributeDict);
 			}
 		}
 	} else if ([elementName isEqualToString:@"room"]) {
-		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
-		[currentstate addObject:currentelement];
-		
-		addRoom(currentelement);
+//		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
+		addRoom(attributeDict);
 		
 	} else if ([elementName isEqualToString:@"tab"]) {
 		// status bar or room
-		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
-		[currentstate addObject:currentelement];
+//		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
 		if (current_state == parsing_status)
 		{
 			handleStatus(attributeDict);
@@ -289,8 +299,7 @@ void addControlRow(NSDictionary *attributeDict) {
 	} else if ([elementName isEqualToString:@"group"]) {
 		if (current_state == parsing_status)
 		{
-			currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
-			[currentstate addObject:currentelement];
+//			currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
 			handleStatus(attributeDict);
 		}
 		else if (current_state == parsing_logging)
@@ -298,8 +307,7 @@ void addControlRow(NSDictionary *attributeDict) {
 			NSLog(@"TODO: add the logging handling code");
 		}
 	} else if ([elementName isEqualToString:@"control"]) {
-		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
-		[currentstate addObject:currentelement];
+//		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
 		if (current_state == parsing_status)
 		{
 			addStatusItem(attributeDict);
@@ -313,8 +321,7 @@ void addControlRow(NSDictionary *attributeDict) {
 			addRoomItem(attributeDict);
 		}
 	} else if ([elementName isEqualToString:@"item"]) {
-		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
-		[currentstate addObject:currentelement];
+//		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
 		if (current_state == parsing_arbitrary) {
 			// add a zone arbitrary item
 			addArbitraryItem(attributeDict);
@@ -330,8 +337,7 @@ void addControlRow(NSDictionary *attributeDict) {
 	} else 	if ([elementName isEqualToString:@"logging"]) {
 		current_state = parsing_logging;
 	} else {
-		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
-		[currentstate addObject:currentelement];
+//		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
 	}
 }
 
@@ -340,9 +346,6 @@ void addControlRow(NSDictionary *attributeDict) {
  */
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
 	
-	if ([currentstate count] > 1) {
-		[currentstate removeLastObject];
-	}
 	
 	if ([elementName isEqualToString:@"calendar"]) {
 		current_state = parsing_none;
@@ -381,8 +384,6 @@ void addControlRow(NSDictionary *attributeDict) {
 
 - (void)dealloc
 {
-	[items release];
-	[currentstate release];
 	[super dealloc];
 }
 

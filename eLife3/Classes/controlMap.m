@@ -123,6 +123,7 @@ static controlMap * sharedInstance = nil;
 	if (tmpCtl == nil)
 	{
 		// ERROR we got a server message for an unknown control
+		// TODO: Think about message and stugg
 		NSLog(@"Message for unkown control %@", [data objectForKey:@"KEY"]);
 		return NO;
 	}

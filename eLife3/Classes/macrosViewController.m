@@ -85,7 +85,7 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	NSLog(@"macro rows: %d", [[macroList sharedInstance] countMacros]);
+//	NSLog(@"macro rows: %d", [[macroList sharedInstance] countMacros]);
     return [[macroList sharedInstance].macrolist_ count];
 }
 
@@ -114,11 +114,11 @@
 	UIActivityIndicatorView *myActInd = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 	cell.accessoryView = myActInd;
 	if ([[macrolist.macrolist_ objectAtIndex:indexPath.row] isRunning]) {
-		NSLog(@"macro - start animating");
+//		NSLog(@"macro - start animating");
 		[myActInd startAnimating];
 	} else {
 		[myActInd stopAnimating];
-		NSLog(@"macro - stop animating");
+//		NSLog(@"macro - stop animating");
 	}
 	
 	[myActInd release];	
@@ -126,7 +126,7 @@
 	// request notification of changes
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(macroUpdate:) name:tmpStr object:nil];
 	
-	NSLog(@"macro name:%@",tmpStr);
+//	NSLog(@"macro name:%@",tmpStr);
 	
     return cell;
 }
@@ -143,10 +143,10 @@
 //	NSMutableArray *sendmsgs = elifeappdelegate.msgs_for_svr;
 	UITableViewCell *cell = nil;
 	
-	NSLog(@"Macro %@ selected", [[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"EXTRA"]);
+//	NSLog(@"Macro %@ selected", [[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"EXTRA"]);
 	
-	NSLog(@"changing macro state %@: current %@", [[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"EXTRA"], 
-		  [[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"RUNNING"]);
+//	NSLog(@"changing macro state %@: current %@", [[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"EXTRA"], 
+//		  [[[macrolist objectAtIndex:indexPath.row] macroattr] objectForKey:@"RUNNING"]);
 	
     // Configure the view for the selected state
 	cell = [tableView cellForRowAtIndexPath:indexPath];
@@ -155,17 +155,17 @@
 
 	if ([[macrolist objectAtIndex:indexPath.row] isRunning] == NO) 
 	{
-		NSLog(@"macro - start animating");
+//		NSLog(@"macro - start animating");
 		[myActInd startAnimating];
-		NSLog(@"Send macro start");
+//		NSLog(@"Send macro start");
 		NSString *msg = @"<CONTROL KEY=\"MACRO\" COMMAND=\"run\" EXTRA=\"";
 		msg = [msg stringByAppendingString:[myLabel text]];
 		msg = [msg stringByAppendingString:@"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
 		[myServer sendmessage:msg];
 	} else {
-		NSLog(@"macro - stop animating");
+//		NSLog(@"macro - stop animating");
 		[myActInd stopAnimating];
-		NSLog(@"Send macro stop");
+//		NSLog(@"Send macro stop");
 		NSString *msg = @"<CONTROL KEY=\"MACRO\" COMMAND=\"complete\" EXTRA=\"";
 		msg = [msg stringByAppendingString:[myLabel text]];
 		msg = [msg stringByAppendingString:@"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
