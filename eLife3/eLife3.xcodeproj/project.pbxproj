@@ -169,6 +169,9 @@
 		1A3EE0CB11C751C400EEA1D8 /* controlMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3EE0CA11C751C400EEA1D8 /* controlMap.m */; };
 		1A3EE2CD11C882AE00EEA1D8 /* statusGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3EE2CC11C882AE00EEA1D8 /* statusGroup.m */; };
 		1A3EE38811C898DD00EEA1D8 /* statusGroupMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3EE38711C898DD00EEA1D8 /* statusGroupMap.m */; };
+		1AD38DAB11D1D17900F06273 /* Command.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD38DAA11D1D17900F06273 /* Command.m */; };
+		1AD38DCE11D1D6C300F06273 /* serverConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD38DCD11D1D6C300F06273 /* serverConnection.m */; };
+		1AD38DE011D1D95C00F06273 /* elifehttp.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD38DDF11D1D95C00F06273 /* elifehttp.m */; };
 		1D3623260D0F684500981E51 /* eLife3AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* eLife3AppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -359,6 +362,12 @@
 		1A3EE2CC11C882AE00EEA1D8 /* statusGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = statusGroup.m; sourceTree = "<group>"; };
 		1A3EE38611C898DD00EEA1D8 /* statusGroupMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = statusGroupMap.h; sourceTree = "<group>"; };
 		1A3EE38711C898DD00EEA1D8 /* statusGroupMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = statusGroupMap.m; sourceTree = "<group>"; };
+		1AD38DA911D1D17900F06273 /* Command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Command.h; sourceTree = "<group>"; };
+		1AD38DAA11D1D17900F06273 /* Command.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Command.m; sourceTree = "<group>"; };
+		1AD38DCC11D1D6C300F06273 /* serverConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serverConnection.h; sourceTree = "<group>"; };
+		1AD38DCD11D1D6C300F06273 /* serverConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = serverConnection.m; sourceTree = "<group>"; };
+		1AD38DDE11D1D95C00F06273 /* elifehttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = elifehttp.h; sourceTree = "<group>"; };
+		1AD38DDF11D1D95C00F06273 /* elifehttp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = elifehttp.m; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* eLife3AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eLife3AppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* eLife3AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eLife3AppDelegate.m; sourceTree = "<group>"; };
@@ -439,6 +448,12 @@
 				1A3EE2CC11C882AE00EEA1D8 /* statusGroup.m */,
 				1A3EE38611C898DD00EEA1D8 /* statusGroupMap.h */,
 				1A3EE38711C898DD00EEA1D8 /* statusGroupMap.m */,
+				1AD38DA911D1D17900F06273 /* Command.h */,
+				1AD38DAA11D1D17900F06273 /* Command.m */,
+				1AD38DCC11D1D6C300F06273 /* serverConnection.h */,
+				1AD38DCD11D1D6C300F06273 /* serverConnection.m */,
+				1AD38DDE11D1D95C00F06273 /* elifehttp.h */,
+				1AD38DDF11D1D95C00F06273 /* elifehttp.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -897,6 +912,9 @@
 				1A3EE0CB11C751C400EEA1D8 /* controlMap.m in Sources */,
 				1A3EE2CD11C882AE00EEA1D8 /* statusGroup.m in Sources */,
 				1A3EE38811C898DD00EEA1D8 /* statusGroupMap.m in Sources */,
+				1AD38DAB11D1D17900F06273 /* Command.m in Sources */,
+				1AD38DCE11D1D6C300F06273 /* serverConnection.m in Sources */,
+				1AD38DE011D1D95C00F06273 /* elifehttp.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -915,6 +933,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
 				INFOPLIST_FILE = "eLife3-Info.plist";
 				PRODUCT_NAME = eLife3;
+				SDKROOT = iphonesimulator4.0;
 			};
 			name = Debug;
 		};
@@ -927,6 +946,7 @@
 				GCC_PREFIX_HEADER = eLife3_Prefix.pch;
 				INFOPLIST_FILE = "eLife3-Info.plist";
 				PRODUCT_NAME = eLife3;
+				SDKROOT = iphonesimulator4.0;
 			};
 			name = Release;
 		};

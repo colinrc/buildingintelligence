@@ -179,12 +179,13 @@
 		if (control != nil)
 		{
 			// send off message
-			NSString *msg = @"<CONTROL KEY=\"";
-			msg = [msg stringByAppendingString:control.key_];
-			msg = [msg stringByAppendingString:@"\" COMMAND=\"off\" EXTRA=\"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
 			eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
-
-			[elifeappdelegate.elifeSvrConn sendmessage:msg];
+			
+			Command *myCommand = [[Command alloc] init];
+			myCommand.key_ = control.key_;
+			myCommand.command_ =@"off";
+			[elifeappdelegate.elifeSvrConn sendCommand:myCommand];
+			[myCommand release];
 		}
 	}
 }

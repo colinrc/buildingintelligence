@@ -6,7 +6,7 @@
 //  Copyright 2010 Humphries Consulting Pty Ltd. All rights reserved.
 //
 
-#import "elifesocket.h"
+#import "serverConnection.h"
 #import "eLife3AppDelegate.h"
 #import "macrosViewController.h"
 #import "macroList.h"
@@ -139,7 +139,7 @@
 
 	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
 	NSMutableArray *macrolist = [[macroList sharedInstance] macrolist_];
-	elifesocket *myServer = elifeappdelegate.elifeSvrConn;
+	serverConnection *myServer = elifeappdelegate.elifeSvrConn;
 //	NSMutableArray *sendmsgs = elifeappdelegate.msgs_for_svr;
 	UITableViewCell *cell = nil;
 	
@@ -158,18 +158,22 @@
 //		NSLog(@"macro - start animating");
 		[myActInd startAnimating];
 //		NSLog(@"Send macro start");
-		NSString *msg = @"<CONTROL KEY=\"MACRO\" COMMAND=\"run\" EXTRA=\"";
-		msg = [msg stringByAppendingString:[myLabel text]];
-		msg = [msg stringByAppendingString:@"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
-		[myServer sendmessage:msg];
+		Command *myCommand = [[Command alloc] init];
+		myCommand.key_ = @"MACRO";
+		myCommand.command_ =@"run";
+		myCommand.extra_=[myLabel text];
+		[myServer sendCommand:myCommand];
+		[myCommand release];
 	} else {
 //		NSLog(@"macro - stop animating");
 		[myActInd stopAnimating];
 //		NSLog(@"Send macro stop");
-		NSString *msg = @"<CONTROL KEY=\"MACRO\" COMMAND=\"complete\" EXTRA=\"";
-		msg = [msg stringByAppendingString:[myLabel text]];
-		msg = [msg stringByAppendingString:@"\" EXTRA2=\"\" EXTRA3=\"\" EXTRA4=\"\" EXTRA5=\"\" />"];
-		[myServer sendmessage:msg];
+		Command *myCommand = [[Command alloc] init];
+		myCommand.key_ = @"MACRO";
+		myCommand.command_ =@"complete";
+		myCommand.extra_=[myLabel text];
+		[myServer sendCommand:myCommand];
+		[myCommand release];
 	}
 }
 

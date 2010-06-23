@@ -22,17 +22,10 @@ bool parsing_macros = false;
 
 @implementation xmlParser
 
-- (NSArray *)items
-{
-	return items;
-}
-
 -(id)initParser {
 	self = [super init];
-	[items release];
-	items = [[NSMutableArray alloc] init];
-	[currentstate release];
-	currentstate = [[NSMutableArray alloc] init];
+//	[currentstate release];
+//	currentstate = [[NSMutableArray alloc] init];
 
 	return self;
 }
@@ -79,9 +72,6 @@ void updateControl(NSDictionary *attributeDict) {
 */
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
 
-	NSDictionary *currentelement = [[NSDictionary alloc] init];
-
-
 	if ([elementName isEqualToString:@"CONTROL"]) {
 		// parsing macro stuff
 		if (parsing_macros)
@@ -102,9 +92,6 @@ void updateControl(NSDictionary *attributeDict) {
 		// parsing connect return?
 		parsing_macros = YES;
 		[[macroList sharedInstance] deleteMacros];
-	} else {
-		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
-		[currentstate addObject:currentelement];
 	}
 }
 
@@ -113,9 +100,9 @@ void updateControl(NSDictionary *attributeDict) {
  */
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
 
-	if ([currentstate count] > 1) {
-		[currentstate removeLastObject];
-	}
+//	if ([currentstate count] > 1) {
+//		[currentstate removeLastObject];
+//	}
 	
 	if ([elementName isEqualToString:@"MACROS"]) {
 		parsing_macros = NO;
@@ -136,8 +123,7 @@ void updateControl(NSDictionary *attributeDict) {
  */
 - (void)dealloc
 {
-	[items release];
-	[currentstate release];
+//	[currentstate release];
 	[super dealloc];
 }
 

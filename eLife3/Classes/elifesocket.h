@@ -7,20 +7,25 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Command.h"
 
-
-@interface elifesocket : NSObject {
+@interface elifesocket : NSObject <NSStreamDelegate> {
 	NSInputStream *iStream;
 	NSOutputStream *oStream;
-	NSInteger error_status;
-	
+	NSInteger state_;
+	NSDate *lastCommTime;
+	NSTimer *timer_;
 }
+
 @property (nonatomic, retain) NSInputStream *iStream;
 @property (nonatomic, retain) NSOutputStream *oStream;
-@property (nonatomic) NSInteger error_status;
+@property (nonatomic, retain) NSTimer *timer_;
+@property (nonatomic, retain) NSDate *lastCommTime;
+@property (nonatomic) NSInteger state_;
 
-- (void)connectToELife;
-- (void)sendmessage:(NSString *)theMessage;
-- (void)alertOtherAction;
+-(id)init;
+-(Boolean)tryConnect;
+-(void)disconnect;
+-(void)sendCommand:(Command *)theCommand;
 
 @end

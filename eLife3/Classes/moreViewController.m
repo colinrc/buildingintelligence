@@ -8,6 +8,7 @@
 
 #import "moreViewController.h"
 #import "settingsViewController.h"
+#import "eLife3AppDelegate.h"
 
 @implementation moreViewController
 
@@ -23,7 +24,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+	settingsNotShown_ = YES;	// we haven't been to the settings page yet...
+								// needed so we can back out of settings on an 
+								// unconfigured system 
+	
     // Uncomment the following line to preserve selection between presentations.
     //self.clearsSelectionOnViewWillAppear = NO;
  
@@ -31,7 +35,6 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	
 	// Add some data into the array
-	
 }
 
 
@@ -45,11 +48,23 @@
     [super viewWillAppear:animated];
 }
 */
-/*
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+	//check to see if we have to go straight to the settings page
+	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+	if ((elifeappdelegate.noServerSet_) && settingsNotShown_) {
+		settingsNotShown_ = NO;
+		UIViewController *controller = [[settingsViewController alloc] initWithNibName:@"settingsViewController" bundle:nil];
+		
+		UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle: @"Back" style: UIBarButtonItemStyleBordered target: nil action: nil];
+		[[self navigationItem] setBackBarButtonItem: newBackButton];
+		[newBackButton release];
+		
+		[self.navigationController pushViewController:controller animated:YES];
+		[controller release];
+	}
 }
-*/
 /*
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
@@ -80,7 +95,6 @@
     // Return the number of rows in the section.
     return [[moreViewController rowNames] count];
 }
-
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -125,15 +139,11 @@
     }   
 }
 */
-
-
 /*
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
 }
 */
-
-
 /*
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -151,6 +161,10 @@
 			// create a settings view
 			controller = [[settingsViewController alloc] initWithNibName:@"settingsViewController" bundle:nil];
 			break;
+		case 1:
+			// create logs view
+		case 2:
+			// create calendar view
 		default:
 			// bad didn't handle that title
 			return;

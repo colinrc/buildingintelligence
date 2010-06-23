@@ -9,16 +9,13 @@
 #import <Foundation/Foundation.h>
 
 
-@interface xmlParser : NSObject {
+@interface xmlParser : NSObject <NSXMLParserDelegate> {
 	NSString *className;
-	NSMutableArray *items;
-	NSObject *item; // stands for any class    
 	NSString *currentNodeName;
 	NSMutableString *currentNodeContent;
-	NSMutableArray *currentstate;
+//	NSMutableArray *currentstate;
 }
 
-- (NSArray *)items;
 - (id)initParser;
 - (id)parseXMLData:(NSString *)xmldata;
 

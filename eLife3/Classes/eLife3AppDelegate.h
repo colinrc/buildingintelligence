@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "elifesocket.h"
+#import "serverConnection.h"
 
 // tab order helper
 enum tabs{
@@ -17,14 +17,16 @@ enum tabs{
 	more_tab
 };
 
-@interface eLife3AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, UIActionSheetDelegate> {
+@interface eLife3AppDelegate : NSObject <UIApplicationDelegate, UIActionSheetDelegate> {
     UIWindow *window;
     UITabBarController *tabBarController;
-	elifesocket *elifeSvrConn;
+	serverConnection *elifeSvrConn;
+	Boolean noServerSet_;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
-@property (nonatomic, retain) elifesocket *elifeSvrConn;
+@property (nonatomic, retain) serverConnection *elifeSvrConn;
+@property (nonatomic) Boolean noServerSet_;
 
 @end

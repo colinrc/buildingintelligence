@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface clientParser : NSObject < UIAlertViewDelegate > {
+@interface clientParser : NSObject < UIAlertViewDelegate, NSXMLParserDelegate> {
 	NSString *className;
 	NSString *currentNodeName;
 	NSMutableString *currentNodeContent;

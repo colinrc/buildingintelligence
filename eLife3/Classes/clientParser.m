@@ -137,8 +137,9 @@ NSString *room_name;
 													 selector:@selector(loadConfig)
 													 userInfo:nil
 													  repeats:NO];
+		
 		// warn the user once that the config doesn't exist
-		if ((elifehost != nil) && firstAlert) {
+		if ((elifehost != nil) && ![elifehost isEqualToString:@""] && firstAlert == YES) {
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"eLife Cofiguration Error" message:@"Could not download the configuration and there is no local copy."
 														   delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
 			[alert show];
@@ -147,8 +148,6 @@ NSString *room_name;
 		}
 	}
 }
-
-
 /**
  \brief	Handles the status bar entries for tab and group elements
  */
