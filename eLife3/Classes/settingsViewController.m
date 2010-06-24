@@ -15,6 +15,7 @@
 @synthesize config_file;
 @synthesize config_port;
 @synthesize remote_server_url;
+@synthesize remote_refresh_rate;
 
 #pragma mark View methods
 /*
@@ -37,7 +38,7 @@
 	elifesvrport = [[UITextField alloc] init];
 	elifesvrport.text = [defaults objectForKey:@"elifesvrport"];
 	elifesvrport.returnKeyType = UIReturnKeyDone;
-	elifesvrport.keyboardType = UIKeyboardTypeNumberPad;
+	elifesvrport.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
 	elifesvrport.delegate = self;
 
 	config_file = [[UITextField alloc] init];
@@ -49,7 +50,7 @@
 	config_port = [[UITextField alloc] init];
 	config_port.text = [defaults objectForKey:@"config_port"];
 	config_port.returnKeyType = UIReturnKeyDone;
-	config_port.keyboardType = UIKeyboardTypeNumberPad;
+	config_port.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
 	config_port.delegate = self;
 
 	remote_server_url = [[UITextField alloc] init];
@@ -57,7 +58,13 @@
 	remote_server_url.returnKeyType = UIReturnKeyDone;
 	remote_server_url.keyboardType = UIKeyboardTypeURL;
 	remote_server_url.delegate = self;
-
+	
+	remote_refresh_rate = [[UITextField alloc] init];
+	remote_refresh_rate.text = [defaults objectForKey:@"remote_refresh_rate"];
+	remote_refresh_rate.returnKeyType = UIReturnKeyDone;
+	remote_refresh_rate.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+	remote_refresh_rate.delegate = self;
+	
 	[super viewDidLoad];
 }
 /*
@@ -71,7 +78,8 @@
 - (void)viewWillAppear:(BOOL)animated {
 	// notify everyone the config is being edited
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"elife_settings_start" object:nil];
-	
+//	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
+//											name:UIKeyboardWillHideNotification object:nil];
 }
 // Get any changes to user settings and save them.
 - (void)viewWillDisappear:(BOOL)animated {
@@ -81,9 +89,11 @@
 	[defaults setObject:config_file.text forKey:@"config_file"];
 	[defaults setObject:config_port.text forKey:@"config_port"];
 	[defaults setObject:remote_server_url.text forKey:@"remote_server_url"];
+	[defaults setObject:remote_refresh_rate.text forKey:@"remote_refresh_rate"];
 
 	// notify everyone the config editing is done
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"elife_settings_end" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	// animate off
 	[super viewWillDisappear:animated];
 }
@@ -102,6 +112,7 @@
 	[elifesvrport release];
 	[config_file release];
 	[remote_server_url release];
+	[remote_refresh_rate release];
 }
 
 #pragma mark Data source methods
@@ -134,6 +145,9 @@
 			case 0:
 				return @"eLife Server URL";
 				break;
+			case 1:
+				return @"Update rate";
+				break;
 		}				
 	}
 	
@@ -158,6 +172,8 @@
 			case 3:
 				return self.config_port;
 				break;
+			default:
+				return self.remote_server_url; // next in line
 		}
 	}
 	else if (indexPath.section == 1)
@@ -166,6 +182,10 @@
 		switch (indexPath.row) {
 			case 0:
 				return self.remote_server_url;
+				break;
+			case 1:
+			default:
+				return self.remote_refresh_rate;
 				break;
 		}				
 	}
@@ -199,7 +219,7 @@
 			return 4;
 			break;
 		case 1:
-			return 1;
+			return 2;
 			break;
 	}
 	return 0;
@@ -244,6 +264,7 @@
 
 	// cell edit field
 	UILabel * detailLabel = [cell detailTextLabel];
+	detailLabel.textAlignment = UITextAlignmentLeft;
 	UITextField *tmpView = [self detailLabel:indexPath];
 	detailLabel.text = tmpView.text;
 
@@ -262,9 +283,14 @@
 	UITextField *tmpView = [self detailLabel:indexPath];
 	UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
 	UILabel *detailLabel = [cell detailTextLabel];
+	UILabel *textLabel = [cell textLabel];
 	
-	CGRect tmpFrame = [detailLabel frame]; // the existing frame 
-	tmpFrame.size.width += 3; // space for the cursor
+//	CGRect cellFrame = [cell frame];
+	CGRect textFrame = [textLabel frame]; // the existing frame 
+//	CGRect detailFrame = [detailLabel frame];
+	CGRect tmpFrame = textFrame;
+	tmpFrame.origin.x = textFrame.size.width + textFrame.origin.x + 10;
+	tmpFrame.size.width = 290 - tmpFrame.origin.x; // space for the cursor
 	tmpView.frame = tmpFrame;
 	tmpView.textColor = detailLabel.textColor;
 	cell.accessoryView = tmpView;
@@ -282,8 +308,10 @@
 	UITextField *tmpView = (UITextField *) cell.accessoryView;
 	UILabel *detailLabel = [cell detailTextLabel];
 	
-	detailLabel.text = tmpView.text; 
-	cell.accessoryView = nil;
+	if (tmpView != nil) {
+		detailLabel.text = tmpView.text; 
+		cell.accessoryView = nil;
+	}
 
 	[tableView setNeedsDisplay];
 }
@@ -322,11 +350,50 @@
 
 #pragma mark keyboard handling methods
 
-// TODO: code keyboard handling
+// Get the next logical indexPath, if last return self
+-(NSIndexPath *)indexPathForNextRow {
+	NSIndexPath * indexPath = [self.tableView indexPathForSelectedRow];
+	NSIndexPath * tmp = nil;
+	if (indexPath != nil) {
+		if (indexPath.section == 0){
+			switch (indexPath.row) {
+				case 0:
+				case 1:
+				case 2:
+					tmp  =  [NSIndexPath indexPathForRow:indexPath.row + 1 inSection:indexPath.section];
+					[tmp retain];
+					break;
+				default:
+					tmp  =  [NSIndexPath indexPathForRow:0 inSection:indexPath.section + 1];
+					[tmp retain];
+					break;
+			}
 
+		} else if (indexPath.section == 1){
+			switch (indexPath.row) {
+				case 0:
+				case 1:
+				default:
+					tmp  =  [NSIndexPath indexPathForRow:1 inSection:indexPath.section];
+					[tmp retain];
+					break;
+			}
+		}
+		return [tmp autorelease];
+	}
+	return nil;
+}
 // Handle the enter key. Dismiss the keyboard
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	[textField resignFirstResponder];
+
+	// want to handle the hiding of the edit cells
+	NSIndexPath * indexPath = [self indexPathForNextRow];
+	if (indexPath != nil) {
+		[self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+		[self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+	}
+
 	return YES;
 }
 
@@ -337,9 +404,10 @@
 	NSLog(@"keyboard is on it's way");
 	// need to check if we have to increase the scroll length
 }
+ 
 // and back to where we were
 -(void) keyboardWillHide:(NSNotification *)notification {
-	NSLog(@"keyboard is heading off");	
+	NSLog(@"keyboard is heading off");
 }
 */
 
@@ -353,6 +421,5 @@
 	[remote_server_url release];
     [super dealloc];
 }
-
 
 @end
