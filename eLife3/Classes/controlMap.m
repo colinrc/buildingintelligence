@@ -123,7 +123,7 @@ static controlMap * sharedInstance = nil;
 	if (tmpCtl == nil)
 	{
 		// ERROR we got a server message for an unknown control
-		// TODO: Think about message and stugg
+		// TODO: Think about message and stuff
 		NSLog(@"Message for unkown control %@", [data objectForKey:@"KEY"]);
 		return NO;
 	}
@@ -137,8 +137,8 @@ static controlMap * sharedInstance = nil;
 	tmpCtl.extra5_ = [data objectForKey:@"EXTRA5"];
 
 	// Send notification message to any observers
-	[[NSNotificationCenter defaultCenter] postNotificationName:tmpCtl.key_ object:nil];
-	[[NSNotificationCenter defaultCenter] postNotificationName:[tmpCtl.key_ stringByAppendingString:@"_status"] object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:tmpCtl.key_ object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:[tmpCtl.key_ stringByAppendingString:@"_status"] object:self];
 	
 	return YES;
 }

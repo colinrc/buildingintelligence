@@ -57,6 +57,7 @@
 
 		// stop the watchdog
 		[self.timer_  invalidate];
+		self.timer_ = nil;
 		// set a timer to request every request interval
 		self.timer_ = [NSTimer scheduledTimerWithTimeInterval:web_refresh 
 													   target:self

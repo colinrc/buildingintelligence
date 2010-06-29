@@ -21,12 +21,15 @@ enum tabs{
     UIWindow *window;
     UITabBarController *tabBarController;
 	serverConnection *elifeSvrConn;
-	Boolean noServerSet_;
+	Boolean server_not_setup_;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 @property (nonatomic, retain) serverConnection *elifeSvrConn;
-@property (nonatomic) Boolean noServerSet_;
+@property (nonatomic) Boolean server_not_setup_;
+
+-(void)networkUpdate:(UITableViewController *)table;
+
 
 @end

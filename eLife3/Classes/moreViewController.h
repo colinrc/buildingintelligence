@@ -11,7 +11,7 @@
 
 @interface moreViewController : UITableViewController {
 	NSMutableArray* rows;
-	Boolean settingsNotShown_;
+	Boolean have_shown_settings;
 }
 
 @end

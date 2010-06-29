@@ -29,7 +29,9 @@
 
 	// request notification of macros added
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(macroUpdate:) name:@"addMacro" object:nil];
-
+	// network change notification
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkUpdate:) name:@"networkChange:" object:nil];
+	
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
@@ -42,6 +44,9 @@
 */
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+	// lets set the nav bar network state
+	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[elifeappdelegate networkUpdate:self];	
 	[self.tableView reloadData];
 }
 /*
@@ -73,6 +78,7 @@
 - (void)viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -216,14 +222,26 @@
     return YES;
 }
 */
-
+/**
+ Callback for the addMacro: notification
+ */
 - (void)macroUpdate:(NSNotification *)notification {
-//	NSString *thekey = [notification name];
-//	NSLog(@"Observed macroUpdate message:%@", thekey);
+	//	NSString *thekey = [notification name];
+	//	NSLog(@"Observed macroUpdate message:%@", thekey);
 	[self.tableView setNeedsDisplay];
 	[self.tableView reloadData];
 }
-
+/**
+ Callback for the network state icon
+ */
+- (void)networkUpdate:(NSNotification *)notification {
+	
+	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[elifeappdelegate networkUpdate:self];
+}
+/**
+ clean up
+ */
 - (void)dealloc {
     [super dealloc];
 }

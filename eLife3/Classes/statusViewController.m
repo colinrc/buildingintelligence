@@ -20,21 +20,32 @@
     // Override initWithStyle: if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
     if (self = [super initWithStyle:style]) {
     }
-	
-	
+
     return self;
 }
-
-// called at load into memory, good place to alloc stuff
+/**
+ called at load into memory, good place to alloc stuff
+ */
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	// network change notification
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkUpdate:) name:@"networkChange:" object:nil];
+	// TODO: Add notifiction for settings
 	
 }
-
-
+/**
+ Leaving memory better unsubscribe from stuff
+ */
+-(void)viewDidUnload {
+	[super viewDidUnload];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+/**
+ About to show
+ */
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 	 // register with all of the controls for update notifications
@@ -48,13 +59,17 @@
 				 [self registerWithNotification:[currentControl stringByAppendingString:@"_status"]];
 		 }
 	 }
+	// set the network state icon
+	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[elifeappdelegate networkUpdate:self];
  }
-
+/**
+ Shown, lets reload the data
+ */
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 	[self.tableView reloadData];
 }
-
 /*
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
@@ -65,7 +80,6 @@
 	[super viewDidDisappear:animated];
 }
 */
-
 /*
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -73,7 +87,9 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 */
-
+/**
+ iPhone is low on memory can we help?
+ */
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
@@ -81,15 +97,11 @@
 	// Release any cached data, images, etc that aren't in use.
 }
 
-- (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
-}
-
-
 #pragma mark Table view methods
 
-// get the number of groups
+/**
+ get the number of groups
+ */
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	int i = [[statusGroupMap sharedInstance].group_names_ count];
 //	NSLog(@"help me I cant take it %i", i);
@@ -107,8 +119,9 @@
 	}
 	return @"";
 }
-
-// Get the number of showing items for this group
+/**
+ Get the number of showing items for this group
+ */
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	return [[statusGroupMap sharedInstance]activeItems:section];
 }
@@ -133,8 +146,9 @@
 	return nil;
 }
 */
-
-// Put the individual items into the groups
+/**
+ Put the individual items into the groups
+ */
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString *CellIdentifier = @"Cell";
@@ -166,8 +180,9 @@
 	}	
 	return cell;
 }
-
-// handle a row selection
+/**
+ handle a row selection
+ */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	// get the status group
@@ -189,8 +204,6 @@
 		}
 	}
 }
-
-
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -198,8 +211,6 @@
     return YES;
 }
 */
-
-
 /*
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -213,15 +224,11 @@
     }   
 }
 */
-
-
 /*
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
 }
 */
-
-
 /*
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -229,17 +236,30 @@
     return YES;
 }
 */
-
+/**
+ Register for notification for this control key
+ */
 - (void)registerWithNotification:(NSString *)thekey {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusUpdate:) name:thekey object:nil];
 }
-
+/**
+ Got update for control, reshow the table
+ */
 - (void)statusUpdate:(NSNotification *)notification {
 	[self.tableView setNeedsDisplay];
 	[self.tableView reloadData];
 }
-
-
+/**
+ Callback for the network state icon
+ */
+- (void)networkUpdate:(NSNotification *)notification {
+	
+	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[elifeappdelegate networkUpdate:self];
+}
+/**
+ Clean up
+ */
 - (void)dealloc {
     [super dealloc];
 }

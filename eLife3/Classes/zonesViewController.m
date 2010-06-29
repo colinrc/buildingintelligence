@@ -7,7 +7,7 @@
 //
 
 #import "zonesViewController.h"
-
+#import "eLife3AppDelegate.h"
 
 @implementation zonesViewController
 
@@ -19,21 +19,22 @@
     return self;
 }
 */
-
-/*
 - (void)viewDidLoad {
-    [super viewDidLoad];
+	[super viewDidLoad];
+	// network change notification
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkUpdate:) name:@"networkChange:" object:nil];
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
-*/
-
-/*
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	
+	// set the network state icon
+	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[elifeappdelegate networkUpdate:self];
 }
-*/
+
 /*
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -66,8 +67,8 @@
 }
 
 - (void)viewDidUnload {
-	// Release any retained subviews of the main view.
-	// e.g. self.myOutlet = nil;
+	[super viewDidUnload];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -76,15 +77,15 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
-
-
-// Customize the number of rows in the table view.
+/**
+ Customize the number of rows in the table view.
+ */
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 0;
 }
-
-
-// Customize the appearance of table view cells.
+/**
+ Customize the appearance of table view cells.
+ */
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString *CellIdentifier = @"Cell";
@@ -98,16 +99,15 @@
 	
     return cell;
 }
-
-
+/**
+ Handle row selection
+ */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // Navigation logic may go here. Create and push another view controller.
 	// AnotherViewController *anotherViewController = [[AnotherViewController alloc] initWithNibName:@"AnotherView" bundle:nil];
 	// [self.navigationController pushViewController:anotherViewController];
 	// [anotherViewController release];
 }
-
-
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -115,8 +115,6 @@
     return YES;
 }
 */
-
-
 /*
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -130,15 +128,11 @@
     }   
 }
 */
-
-
 /*
 // Override to support rearranging the table view.
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
 }
 */
-
-
 /*
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -146,8 +140,17 @@
     return YES;
 }
 */
-
-
+/**
+ Callback for the network state icon
+ */
+- (void)networkUpdate:(NSNotification *)notification {
+	
+	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[elifeappdelegate networkUpdate:self];
+}
+/**
+ Clean up the class
+ */
 - (void)dealloc {
     [super dealloc];
 }

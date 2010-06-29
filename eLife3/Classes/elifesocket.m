@@ -16,11 +16,11 @@
 #include <sys/socket.h>
 
 @implementation elifesocket
-@synthesize iStream;
-@synthesize oStream;
+//@synthesize iStream;
+//@synthesize oStream;
 @synthesize state_;
 @synthesize lastCommTime;
-@synthesize timer_;
+//@synthesize timer_;
 
 /**
  default initializer sets up a listen to the network status
@@ -31,44 +31,21 @@
 	}
 	return self;
 }
-// Alert the user about our network state
-- (void)alertOtherAction
-{
-	if (self.state_ == unconnected_) {
-		// open an alert with two custom buttons
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"eLife Connection Error" message:@"The connection to the eLife server has been lost."
-													   delegate:self cancelButtonTitle:@"Exit" otherButtonTitles:@"Reconnect", nil];
-		[alert show];
-		[alert release];
-	}
-}
-// Alert the user about our network state
-- (void)alertView:(UIAlertView *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-	// use "buttonIndex" to decide your action
-	//
-	//	NSLog(@"Button clicked:%d",buttonIndex);
-	if (buttonIndex == 0) {
-		// cancel button clicked
-		exit(0);
-	} else {
-		// Reconnect button clicked
-		[self tryConnect];
-	}
-}
-// close any open streams
--(void)closeStream:(NSStream *)theStream {
-	if (theStream == nil)
-		return;
-	[theStream close]; // implicitly removes from runloop
-	[theStream release];
-	theStream = nil;
-}
 // shutdown the class
 -(void)disconnect {
-	[self closeStream:iStream];
-	[self closeStream:oStream];
-	[self.timer_ invalidate];
+	[timer_ invalidate];
+	timer_ = nil;
+
+	if (iStream != nil){
+		[iStream close]; // implicitly removes from runloop
+		[iStream release];
+		iStream = nil;
+	}
+	if (oStream != nil){
+		[oStream close]; // implicitly removes from runloop
+		[oStream release];
+		oStream = nil;
+	}
 }
 /**
  Connect to the server using the sockets connection.
@@ -76,9 +53,8 @@
  or can route to it over a VPN? 
  */
 - (Boolean)localConnect {
-	[self closeStream:iStream];
-	[self closeStream:oStream];
-	
+	[self disconnect];
+
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];  
 	NSString *elifehost = [userDefaults stringForKey:@"elifesvr"];  
 	int elifeport = [userDefaults integerForKey:@"elifesvrport"];
@@ -114,9 +90,10 @@
 		[iStream open];
 		[oStream open];
 		// put a timed event on the queue to see if things are good...
-		[self.timer_  invalidate];
+		[timer_  invalidate];
+		timer_ = nil;
 		// Need to add a timer event to try again in 5 seconds
-		self.timer_ = [NSTimer scheduledTimerWithTimeInterval:15 
+		timer_ = [NSTimer scheduledTimerWithTimeInterval:15 
 													   target:self
 													 selector:@selector(watchdog)
 													 userInfo:nil
@@ -145,11 +122,11 @@
 #ifdef _DEBUG
 		NSLog(@"testConnection: last comms %f",timeInterval);
 #endif
-		[self alertOtherAction];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"network_down" object:self];
 		return;
 	}
 	
-	self.timer_ = [NSTimer scheduledTimerWithTimeInterval:15
+	timer_ = [NSTimer scheduledTimerWithTimeInterval:15
 												   target:self
 												 selector:@selector(watchdog)
 												 userInfo:nil
@@ -225,7 +202,7 @@
 			break;
 		case NSStreamEventOpenCompleted:
 			self.state_= connected_;
-//			NSLog(@"Socket is open");
+			NSLog(@"Socket is open");
 			break;
 		case NSStreamEventHasBytesAvailable:
 			self.state_ = connected_;
@@ -266,26 +243,23 @@
 				}
 				// last comm time...
 				self.lastCommTime = [NSDate date];
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"network_data" object:self];
 			}
 			break;
 		case NSStreamEventHasSpaceAvailable:
-/*			NSLog(@"Space in the stream available");
-			if (theStream == oStream)
+			NSLog(@"Space in the stream available");
+/*			if (theStream == oStream)
 			{
 				[self sendMessage];
 			}
 */			break;
 		case NSStreamEventErrorOccurred:
-			NSLog(@"Cannot connect to host #2");
-			self.state_ = unconnected_;
-			[self alertOtherAction];
-			break;
 		case NSStreamEventEndEncountered:
-            [theStream close];
-            [theStream removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-            [theStream release];
-            theStream = nil;
-			// TODO: think about this edge case
+			NSLog(@"NSStreamEventEnd or Error occurred");
+			self.state_ = unconnected_;
+			[timer_  invalidate];
+			timer_ = nil;
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"network_down" object:self];
 			break;
 		default:
 			event = @"** Unknown";

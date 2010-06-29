@@ -24,10 +24,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	settingsNotShown_ = YES;	// we haven't been to the settings page yet...
+	have_shown_settings = NO;	// we haven't been to the settings page yet...
 								// needed so we can back out of settings on an 
 								// unconfigured system 
 	
+	// network change notification
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkUpdate:) name:@"networkChange:" object:nil];
+
     // Uncomment the following line to preserve selection between presentations.
     //self.clearsSelectionOnViewWillAppear = NO;
  
@@ -43,18 +46,20 @@
 	return [NSArray arrayWithObjects:@"Settings", @"Logs", @"Calendar", nil];
 }
 
-/*
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[elifeappdelegate networkUpdate:self];
 }
-*/
+
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 	//check to see if we have to go straight to the settings page
 	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
-	if ((elifeappdelegate.noServerSet_) && settingsNotShown_) {
-		settingsNotShown_ = NO;
+	if ((elifeappdelegate.server_not_setup_) && have_shown_settings == NO) {
+		have_shown_settings = YES;
 		UIViewController *controller = [[settingsViewController alloc] initWithNibName:@"settingsViewController" bundle:nil];
 		
 		UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithTitle: @"Back" style: UIBarButtonItemStyleBordered target: nil action: nil];
@@ -192,8 +197,16 @@
 - (void)viewDidUnload {
     // Relinquish ownership of anything that can be recreated in viewDidLoad or on demand.
     // For example: self.myOutlet = nil;
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
+/**
+ Callback for the network state icon
+ */
+- (void)networkUpdate:(NSNotification *)notification {
+	
+	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[elifeappdelegate networkUpdate:self];
+}
 
 - (void)dealloc {
     [super dealloc];

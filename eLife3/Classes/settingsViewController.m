@@ -77,7 +77,7 @@
 // Called when the view is about to appear
 - (void)viewWillAppear:(BOOL)animated {
 	// notify everyone the config is being edited
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"elife_settings_start" object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"elife_settings_start" object:self];
 //	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
 //											name:UIKeyboardWillHideNotification object:nil];
 }
@@ -90,9 +90,11 @@
 	[defaults setObject:config_port.text forKey:@"config_port"];
 	[defaults setObject:remote_server_url.text forKey:@"remote_server_url"];
 	[defaults setObject:remote_refresh_rate.text forKey:@"remote_refresh_rate"];
+	[defaults synchronize];
 
+	// TODO: set some dirty bit so we know if there has been any changes
 	// notify everyone the config editing is done
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"elife_settings_end" object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"elife_settings_end" object:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	// animate off
 	[super viewWillDisappear:animated];

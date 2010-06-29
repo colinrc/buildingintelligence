@@ -84,7 +84,7 @@ NSString *room_name;
 		NSError *error;
 		data = [NSURLConnection sendSynchronousRequest:request returningResponse: &response error: &error];
 		int status_code = [(NSHTTPURLResponse*) response statusCode];
-		if (status_code < 400) // http ok from jetty
+		if ((data != nil ) && (status_code < 400)) // http ok from jetty
 			parser = [[NSXMLParser alloc] initWithData:data];
 
 		[configurl release];
@@ -92,6 +92,7 @@ NSString *room_name;
 	
 	// if we can't get the file from the server let's try to get a locally cached version
 	if (parser == nil) {
+		NSLog(@"Trying local cached client config");
 		data = [NSData dataWithContentsOfFile:path];
 		parser = [[NSXMLParser alloc] initWithData:data];
 	}
@@ -107,6 +108,7 @@ NSString *room_name;
 		
 		if (parserSuccess == NO) {
 			// try again with local file
+			NSLog(@"Trying local cached client config 2");
 			[parser release];
 			parser = [[NSXMLParser alloc] initWithData:[[NSData alloc] initWithContentsOfFile:path]];
 			[parser setDelegate:self];

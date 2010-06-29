@@ -77,8 +77,7 @@ static macroList * sharedInstance = nil;
 		[macrolist_ addObject:temp_macro];
 		[temp_macro release];
 
-		NSString *tmp = @"addMacro";
-		[[NSNotificationCenter defaultCenter] postNotificationName:tmp object:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"addMacro" object:self];
 		//NSLog(@"macro entries: %d", [macrolist_ count]);
 	}
 }
@@ -103,14 +102,14 @@ static macroList * sharedInstance = nil;
 					if (current_macro.running != YES)
 					{
 						current_macro.running=YES;
-						[[NSNotificationCenter defaultCenter] postNotificationName:[item objectForKey:@"EXTRA"] object:nil];
+						[[NSNotificationCenter defaultCenter] postNotificationName:[item objectForKey:@"EXTRA"] object:self];
 					}
 
 				} else if ([[item objectForKey:@"COMMAND"] isEqualToString:@"finished"]) {
 					if (current_macro.running !=NO)
 					{
 						current_macro.running=NO;
-						[[NSNotificationCenter defaultCenter] postNotificationName:[item objectForKey:@"EXTRA"] object:nil];
+						[[NSNotificationCenter defaultCenter] postNotificationName:[item objectForKey:@"EXTRA"] object:self];
 					}
 				}
 				else {
