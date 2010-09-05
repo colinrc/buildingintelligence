@@ -794,7 +794,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 				}
 				if (!didCommand && cbusStartByte == 5) {
-					String retApplicationCode = cBUSString.substring(4,6);
+					logger.log(Level.FINER, cBUSString);
+
+					String srcDevice = cBUSString.substring(2,4); // where the command came from
+					String retApplicationCode = cBUSString.substring(4,6); // which application group the command is for 
+
 					String restOfString = "";
 					if ((cBUSString.substring(6,8)).equals("00")) {
 						restOfString = cBUSString.substring(8);
@@ -803,10 +807,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						restOfString = cBUSString.substring(10);
 					}
 
-
-					String commandCode = restOfString.substring(0,2);
+					String commandCode = restOfString.substring(0,2); // the command byte
 					String restOfCommand = restOfString.substring(2);
-					String cBusGroup = restOfCommand.substring(0,2);
+					String cBusGroup = restOfCommand.substring(0,2); // which cbus group the command is for
 
 					
 					if (!didCommand && commandCode.equals ("09")) {
@@ -842,75 +845,104 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						}
 					}
 					if (!didCommand && commandCode.equals("01")) {
-						CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode, cBusGroup,DeviceType.LIGHT_CBUS));
+						// need to be able to loop the remaining string ramping each of the lights
+						do {
+							commandCode = restOfString.substring(0,2);
+							restOfCommand = restOfString.substring(2);
+							cBusGroup = restOfCommand.substring(0,2);
+							try {
+								restOfString = restOfCommand.substring(2);
+							} catch (IndexOutOfBoundsException e)
+							{
+								restOfString = "";
+							}
+							logger.log(Level.FINER,"remaining command:" + restOfString);
+							logger.log(Level.FINER,"command:" + commandCode + " appid:" + retApplicationCode + " group:" + cBusGroup);
+							CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode, cBusGroup,DeviceType.LIGHT_CBUS));
 
-						if (cbusDevice == null) {
-							didCommand = true;
-						}
-						else {
-							this.setStateFromFlash(cbusDevice,false);
-							this.setStateFromWallPanel(cbusDevice,true);
-							if (!cbusDevice.isRelay())sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
-							sendCommandToFlash (cbusDevice,"off",0,currentUser);
-							didCommand = true;
-						}
-					}
-					if (!didCommand && rampCodes.indexOf(commandCode) > -1) {
-						try {
-							CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
-
-							if (cbusDevice == null ) {
+							if (cbusDevice == null) {
 								didCommand = true;
 							}
 							else {
 								this.setStateFromFlash(cbusDevice,false);
 								this.setStateFromWallPanel(cbusDevice,true);
-								String rampLevel = restOfCommand.substring(2,4);
-								int x = 0;
-								try {
-									x = Integer.parseInt(rampLevel,16);
-								} catch (NumberFormatException ex) {
-									logger.log (Level.FINEST,"Received invalid ramp level for Cbus " + rampLevel);
-								}
-								if (cbusDevice.isRelay()){
-									if (x == 0){
-										this.setState (cbusDevice,"off",0); 
-										sendCommandToFlash (cbusDevice,"off",0,currentUser);
-									} else {
-										this.setState (cbusDevice,"on",100); 
-										sendCommandToFlash (cbusDevice,"on",100,currentUser);									
-									}
-								}
-								else {
-									int percLevel = 100 * (x + 2) / cbusDevice.getMax();
-									if (percLevel < DeviceModel.FLASH_SLIDER_RES) percLevel = FLASH_SLIDER_RES;
-	
-									if (x == 1 || x == cbusDevice.getMax()  && cbusDevice.isGenerateDimmerVals()){
-										// indicates start of a fade  while the button is pressed.
-										int oldLevel = this.getStateLevel(cbusDevice);
-										
-										if (x == 1) 	
-											sliderPulse.addToDecreasingQueue(cbusDevice.getOutputKey(), oldLevel);
-										else
-											sliderPulse.addToIncreasingQueue(cbusDevice.getOutputKey(), oldLevel);
-											
-										this.setState (cbusDevice,"on",percLevel); 
-										// set the state, but don't send the level to the user, this will occur from sliderPulse
-										
-									} else {
-										sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
-		
-										if (this.setState (cbusDevice,"on",percLevel)) {
-											sendCommandToFlash (cbusDevice,"on",percLevel,currentUser);
-										}
-									}
-								}
-
+								if (!cbusDevice.isRelay())sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
+								sendCommandToFlash (cbusDevice,"off",0,currentUser);
 								didCommand = true;
 							}
-						} catch (ClassCastException ex ) {
-							logger.log (Level.WARNING,"CBUS level command received from a device that does not support it " + ex.getMessage());
-						}
+						} while (restOfString.length() >= 6);
+
+					}
+					if (!didCommand && rampCodes.indexOf(commandCode) > -1) {
+						// need to be able to loop the remaining string ramping each of the lights
+						do {
+							commandCode = restOfString.substring(0,2);
+							restOfCommand = restOfString.substring(2);
+							cBusGroup = restOfCommand.substring(0,2);
+							String rampLevel = restOfCommand.substring(2,4);
+							try {
+								restOfString = restOfCommand.substring(4);
+							} catch (IndexOutOfBoundsException e)
+							{
+								restOfString = "";
+							}
+							logger.log(Level.FINER,"remaining command:" + restOfString);
+							logger.log(Level.FINER,"command:" + commandCode + " appid:" + retApplicationCode + " group:" + cBusGroup);
+							try {
+								CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
+
+								if (cbusDevice == null ) {
+									didCommand = true;
+								}
+								else {
+									this.setStateFromFlash(cbusDevice,false);
+									this.setStateFromWallPanel(cbusDevice,true);
+									int x = 0;
+									try {
+										x = Integer.parseInt(rampLevel,16);
+									} catch (NumberFormatException ex) {
+										logger.log (Level.FINEST,"Received invalid ramp level for Cbus " + rampLevel);
+									}
+									if (cbusDevice.isRelay()){
+										if (x == 0){
+											this.setState (cbusDevice,"off",0); 
+											sendCommandToFlash (cbusDevice,"off",0,currentUser);
+										} else {
+											this.setState (cbusDevice,"on",100); 
+											sendCommandToFlash (cbusDevice,"on",100,currentUser);									
+										}
+									}
+									else {
+										int percLevel = 100 * (x + 2) / cbusDevice.getMax();
+										if (percLevel < DeviceModel.FLASH_SLIDER_RES) percLevel = FLASH_SLIDER_RES;
+
+										if (x == 1 || x == cbusDevice.getMax()  && cbusDevice.isGenerateDimmerVals()){
+											// indicates start of a fade  while the button is pressed.
+											int oldLevel = this.getStateLevel(cbusDevice);
+
+											if (x == 1) 	
+												sliderPulse.addToDecreasingQueue(cbusDevice.getOutputKey(), oldLevel);
+											else
+												sliderPulse.addToIncreasingQueue(cbusDevice.getOutputKey(), oldLevel);
+
+											this.setState (cbusDevice,"on",percLevel); 
+											// set the state, but don't send the level to the user, this will occur from sliderPulse
+
+										} else {
+											sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
+
+											if (this.setState (cbusDevice,"on",percLevel)) {
+												sendCommandToFlash (cbusDevice,"on",percLevel,currentUser);
+											}
+										}
+									}
+
+									didCommand = true;
+								}
+							} catch (ClassCastException ex ) {
+								logger.log (Level.WARNING,"CBUS level command received from a device that does not support it " + ex.getMessage());
+							}
+						} while (restOfString.length() >= 6);
 					}
 				}
 
