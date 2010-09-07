@@ -680,6 +680,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	/**
 	 * Handle normal command processing
+	 * refer to Clipsal Serial Interface User Guide (firmware version 4)
+	 * document number: CBUS-SIUG
 	 */
 	private void normalCommands(String cBUSString, User currentUser) {
 		boolean didCommand = false;
@@ -854,7 +856,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 
 	/**
-	 * point to point command 0x06 with priority code medium high (binary MSB 10)
+	 * point to point command 0x06 
 	 * @return
 	 * TODO This function does not do any network handling, we need to strip route information
 	 */
@@ -862,7 +864,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	{
 		boolean didCommand = false;
 		
-		if (cbusPriorityByte == 0x80) {
+		// if priority code medium high (binary MSB 10) then temperature according to Colin
+		// TODO need to look at getting the application and switching on that instead maybe
+		if (cbusPriorityByte == 0x80) { 
 			// temperature readings do not have checksum
 			String deviceID = cBUSString.substring (2,4);
 			SensorFascade cbusDevice = (SensorFascade)configHelper.getControlledItem(deviceID);
