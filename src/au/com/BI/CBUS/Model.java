@@ -1,7 +1,7 @@
 /*
  * Created on Jul 13, 2004
  *
-*/
+ */
 package au.com.BI.CBUS;
 
 
@@ -42,7 +42,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected MMIHelpers mMIHelpers;
 	protected char  lastCharOfHandshake = 'a';
 	protected SliderPulse sliderPulse = null;
-	
+
 	int []etxChars;
 	String etxString = "";
 
@@ -62,7 +62,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		etxString = new String(".$%#!\'");
 		this.setPadding(2);
 		this.setInterCommandInterval(0);
-		
+
 	}
 
 
@@ -118,14 +118,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			cbusCommand.setCommand (theState.getPower());
 			cbusCommand.setExtraInfo(String.valueOf(theState.getLevel()));
 			cbusCommand.setKey ("CLIENT_SEND");
-	
+
 			this.sendToFlash(-1,cbusCommand);
 		} catch (ClassCastException ex){
-			
+
 		}
 
 	}
-	*/
+	 */
 
 
 	public void addControlledItem (String name, DeviceType details, MessageDirection controlType) {
@@ -138,7 +138,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				if (details.getDeviceType() == DeviceType.LIGHT_CBUS) {
 					String appCode = device.getApplicationCode() ;
 					theKey = cBUSHelper.buildKey(appCode,name, details.getDeviceType() );
-					
+
 					applicationCodes.add(appCode);
 				}
 				if (details.getDeviceType() == DeviceType.SENSOR) {
@@ -250,7 +250,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			cBusState = new StateOfGroup();
 		}
 		cBusState.setFromWall(wallControl);
-	
+
 		state.put(theKey,cBusState);
 		return cBusState.isDirty;
 	}
@@ -342,7 +342,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			if (((DeviceType)details).getDeviceType() == DeviceType.TEMPERATURE ){
 				temperatureSensors.add ((SensorFascade)details);
 			}
-			
+
 		} catch (ClassCastException ex) {
 			logger.log (Level.FINE,"A temperature sensor was added that was not the expected type " + ex.getMessage());
 		}
@@ -351,7 +351,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			if (((DeviceType)details).getDeviceType() == DeviceType.LABEL ){
 				labels.add ((Label)details);
 			}
-			
+
 		} catch (ClassCastException ex) {
 			logger.log (Level.FINE,"A label was added that was not the expected type " + ex.getMessage());
 		}
@@ -365,7 +365,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		this.mMIHelpers.comms = comms; //just to be sure.
 		sliderPulse = new SliderPulse();
 		super.doStartup();
-		
+
 		if (applicationCodes.isEmpty()) applicationCodes.add("38");
 		// CommsCommand cbusCommsCommand = new CommsCommand();
 		//   cbusCommsCommand.setCommand("~~"+ETX);
@@ -397,13 +397,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				logger.log (Level.WARNING,"The complete dim time (parameter COMPLETE_DIM_TIME was incorrectly specified, a default of 5 seconds will be used. " + ex.getMessage());
 			}
 		}
-			
+
 		sliderPulse.setCommandQueue(commandQueue);
 		sliderPulse.setDeviceNumber(InstanceID);
 		sliderPulse.setCBUSModel(this);
 		sliderPulse.setCache(cache);
 		sliderPulse.start();
-		
+
 		try {
 			tempPollValue = Long.parseLong(pollTempStr) * 1000;
 		} catch (NumberFormatException ex) {
@@ -423,12 +423,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		} else {
 			logger.log(Level.FINE,"Not starting temperature polls");
 		}
-		
+
 		for (Label label: labels){
 			String currentChar = this.nextKey();
 			String toSend = this.buildCBUSLabelString(label, new ClientCommand(label.getOutputKey(),"label",null,label.getDefaultLabel(),"","","",""), currentChar);
 			logger.log (Level.FINER, "Setting default label for " + label.getOutputKey() + ":" + label.getDefaultLabel());
-			
+
 			CommsCommand cbusCommsCommand = new CommsCommand();
 			cbusCommsCommand.setActionCode (currentChar);
 			cbusCommsCommand.setKeepForHandshake(true);
@@ -465,7 +465,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public boolean setCBUSParameters () throws CommsFail{
 		// Ensure MMI messages are switched on
 		try {
-	
+
 			CommsCommand cbusCommsCommand1 = new CommsCommand();
 			String toSend = "A32100FF"; // param 21 = FF = control all app numbers
 			// String checkSum = this.calcChecksum(toSend);
@@ -482,8 +482,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			cbusCommsCommand2.setActionCode(actionCode);
 			// String checkSum = this.calcChecksum(toSend);
 			cbusCommsCommand2.setCommand("@"+toSend2 + actionCode+ETX);  // interface should be in basic mode at this stage, so no checksum should be sent.
-	
-			
+
+
 			CommsCommand cbusCommsCommand3 = new CommsCommand();
 			String toSend3 = "A3300029"; // 30 = option 1; CONNECT|SRCHK|MONITOR
 			actionCode = this.nextKey();
@@ -498,7 +498,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			cbusCommsCommand4.setActionCode(actionCode);
 			cbusCommsCommand4.setCommand("@"+toSend4 + checkSum+  actionCode+ETX);
 			cbusCommsCommand4.setKeepForHandshake(true);
-				
+
 			CommsCommand cbusCommsCommand5 = new CommsCommand();
 			String toSend5 = "A3420006"; // power up notification on , LOCAL_SAL on
 			checkSum = this.calcChecksum(toSend5);
@@ -522,13 +522,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	/**
 	 * 
 	 */
-    public int logout(User user) throws CommsFail {
-    	pollTemperatures.setRunning(false);
-        return DeviceModel.SUCCESS;
-    }
-    /**
-     * 
-     */
+	public int logout(User user) throws CommsFail {
+		pollTemperatures.setRunning(false);
+		return DeviceModel.SUCCESS;
+	}
+	/**
+	 * 
+	 */
 	public boolean doIControl (String keyName, boolean isClientCommand)
 	{
 		configHelper.wholeKeyChecked(keyName);
@@ -569,86 +569,86 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			logger.log(Level.FINER, "Monitored CBUS event sending to group " + device.getKey());
 
 			switch (device.getDeviceType()) {
-				case DeviceType.LIGHT_CBUS :
-					String currentChar = this.nextKey();
-					LightFascade lightDevice = (LightFascade)device;
-					String fullKey = this.cBUSHelper.buildKey(lightDevice.getApplicationCode(),lightDevice.getKey(),lightDevice.getDeviceType());
-					mMIHelpers.sendingExtended.remove(fullKey);  
-					// the build cbusstring will add a new entry if a new ramp has been sent
-					// ensure that Level CBUS returns will not be decoded, as the user has done an action since
-					
-					if ((outputCbusCommand = buildCBUSLightString ((LightFascade)device,command,currentChar)) != null) {
+			case DeviceType.LIGHT_CBUS :
+				String currentChar = this.nextKey();
+				LightFascade lightDevice = (LightFascade)device;
+				String fullKey = this.cBUSHelper.buildKey(lightDevice.getApplicationCode(),lightDevice.getKey(),lightDevice.getDeviceType());
+				mMIHelpers.sendingExtended.remove(fullKey);  
+				// the build cbusstring will add a new entry if a new ramp has been sent
+				// ensure that Level CBUS returns will not be decoded, as the user has done an action since
 
-						
+				if ((outputCbusCommand = buildCBUSLightString ((LightFascade)device,command,currentChar)) != null) {
+
+
+					CommsCommand cbusCommsCommand = new CommsCommand();
+					cbusCommsCommand.setActionCode (currentChar);
+					cbusCommsCommand.setKeepForHandshake(true);
+					cbusCommsCommand.setCommand(outputCbusCommand);
+					cbusCommsCommand.setExtraInfo (((LightFascade)(device)).getOutputKey());
+
+					try {
+						//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
+						comms.addCommandToQueue (cbusCommsCommand);
+					} catch (CommsFail e1) {
+						logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
+						throw new CommsFail ("Error communicating with CBUS");
+					}
+					logger.log (Level.FINEST,"Queueing cbus command " + currentChar + " for " + (String)cbusCommsCommand.getExtraInfo());
+
+				}
+
+				break;
+
+			case DeviceType.LABEL: 
+				String currentCbusKey = this.nextKey();
+				Label label = (Label)device;
+				String fullKeyLabel = this.cBUSHelper.buildKey(label.getApplicationCode(),label.getKey(),device.getDeviceType());
+				String commandCode = command.getCommandCode();
+				if (commandCode.equals ("label")) {
+					if ((outputCbusCommand = buildCBUSLabelString (label,command,currentCbusKey)) != null) {
+
+
 						CommsCommand cbusCommsCommand = new CommsCommand();
-						cbusCommsCommand.setActionCode (currentChar);
+						cbusCommsCommand.setActionCode (currentCbusKey);
 						cbusCommsCommand.setKeepForHandshake(true);
 						cbusCommsCommand.setCommand(outputCbusCommand);
-						cbusCommsCommand.setExtraInfo (((LightFascade)(device)).getOutputKey());
+						cbusCommsCommand.setExtraInfo (label.getOutputKey());
 
-							try {
-								//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
-								comms.addCommandToQueue (cbusCommsCommand);
-							} catch (CommsFail e1) {
-								logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
-								throw new CommsFail ("Error communicating with CBUS");
-							}
-						logger.log (Level.FINEST,"Queueing cbus command " + currentChar + " for " + (String)cbusCommsCommand.getExtraInfo());
+						try {
+							//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
+							comms.addCommandToQueue (cbusCommsCommand);
+						} catch (CommsFail e1) {
+							logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
+							throw new CommsFail ("Error communicating with CBUS");
+						}
+						logger.log (Level.FINEST,"Queueing cbus command " + currentCbusKey + " for " + (String)cbusCommsCommand.getExtraInfo());
+					}
+				} 
+				if (commandCode.equals ("on") || commandCode.equals("off")) {
+					mMIHelpers.sendingExtended.remove(fullKeyLabel);  
+					// the build cbusstring will add a new entry if a new ramp has been sent
+					// ensure that Level CBUS returns will not be decoded, as the user has done an action since
+
+					if ((outputCbusCommand = buildCBUSLightString (label,command,currentCbusKey)) != null) {
+
+
+						CommsCommand cbusCommsCommand = new CommsCommand();
+						cbusCommsCommand.setActionCode (currentCbusKey);
+						cbusCommsCommand.setKeepForHandshake(true);
+						cbusCommsCommand.setCommand(outputCbusCommand);
+						cbusCommsCommand.setExtraInfo (label.getOutputKey());
+
+						try {
+							//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
+							comms.addCommandToQueue (cbusCommsCommand);
+						} catch (CommsFail e1) {
+							logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
+							throw new CommsFail ("Error communicating with CBUS");
+						}
+						logger.log (Level.FINEST,"Queueing cbus command " + currentCbusKey + " for " + (String)cbusCommsCommand.getExtraInfo());
 
 					}
-
-					break;
-					
-				case DeviceType.LABEL: 
-					String currentCbusKey = this.nextKey();
-					Label label = (Label)device;
-					String fullKeyLabel = this.cBUSHelper.buildKey(label.getApplicationCode(),label.getKey(),device.getDeviceType());
-					String commandCode = command.getCommandCode();
-					if (commandCode.equals ("label")) {
-						if ((outputCbusCommand = buildCBUSLabelString (label,command,currentCbusKey)) != null) {
-		
-								
-								CommsCommand cbusCommsCommand = new CommsCommand();
-								cbusCommsCommand.setActionCode (currentCbusKey);
-								cbusCommsCommand.setKeepForHandshake(true);
-								cbusCommsCommand.setCommand(outputCbusCommand);
-								cbusCommsCommand.setExtraInfo (label.getOutputKey());
-		
-									try {
-										//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
-										comms.addCommandToQueue (cbusCommsCommand);
-									} catch (CommsFail e1) {
-										logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
-										throw new CommsFail ("Error communicating with CBUS");
-									}
-								logger.log (Level.FINEST,"Queueing cbus command " + currentCbusKey + " for " + (String)cbusCommsCommand.getExtraInfo());
-						}
-					} 
-					if (commandCode.equals ("on") || commandCode.equals("off")) {
-						mMIHelpers.sendingExtended.remove(fullKeyLabel);  
-						// the build cbusstring will add a new entry if a new ramp has been sent
-						// ensure that Level CBUS returns will not be decoded, as the user has done an action since
-						
-						if ((outputCbusCommand = buildCBUSLightString (label,command,currentCbusKey)) != null) {
-
-							
-							CommsCommand cbusCommsCommand = new CommsCommand();
-							cbusCommsCommand.setActionCode (currentCbusKey);
-							cbusCommsCommand.setKeepForHandshake(true);
-							cbusCommsCommand.setCommand(outputCbusCommand);
-							cbusCommsCommand.setExtraInfo (label.getOutputKey());
-
-								try {
-									//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
-									comms.addCommandToQueue (cbusCommsCommand);
-								} catch (CommsFail e1) {
-									logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
-									throw new CommsFail ("Error communicating with CBUS");
-								}
-							logger.log (Level.FINEST,"Queueing cbus command " + currentCbusKey + " for " + (String)cbusCommsCommand.getExtraInfo());
-
-						}
-					}
+				}
 
 			}
 		}
@@ -661,308 +661,404 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	 */
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{
-		boolean didCommand=false;
 		String cBUSString = command.getKey().trim();
-			//logger.log(Level.FINER, "Parsing : " + cBUSString );
+		logger.log(Level.FINER, "Parsing : " + cBUSString );
 		User currentUser = command.getUser();
-		
-			try {
-				if (cBUSString.indexOf("~") >= 0 ) {
-					tildeCount ++;
-					if (tildeCount > 0) {
-						clearAllQueues();
-						this.state.clear();
-						didCommand = true;
-						logger.log (Level.FINE,"Received confirmation of CBUS ~~~ init, sending initial parameters");
-						doRestOfStartup();
-					}
-					// should be covered by next line     requestAllLevels();
-					return;
-				}
-				if (cBUSString.endsWith("+")) {
-					// Power up notification received so reset all parameters.
-					clearAllQueues();
-					this.state.clear();
-					didCommand = true;
-					comms.sendString("~~"+ETX); // force the interface back into basic mode
-					return;
-				}
 
-				if (cBUSString.contains("!")) {
-					
-					logger.log (Level.FINER,"CBUS buffer overflow or checksum failure");
-					try {
-						comms.resendAllSentCommands();
-					} catch (CommsFail ex) {
-						throw new CommsFail ("Communications failed with CBUS " + ex.getMessage());
-					}
-					return;
-				}
+		try 
+		{
+			// first handle the odd commands, either error or startup
+			if (exceptionCommands(cBUSString))
+				return; // shortcut for processing of exception commands, ensure they don't flow into the normal command handling.
 
-				if (cBUSString.startsWith("@A3420")  ) {
-					logger.log (Level.FINER,"CBUS startup complete, starting normal MMI processing.");
-					finishedStartup = true;
-					didCommand = true;
-				}
-				if (cBUSString.startsWith("@A32")) {
-					logger.log (Level.FINER,"Received confirmation, change parameter " + cBUSString.substring(3,5));
-					didCommand = true;
-				}
-				if (cBUSString.startsWith("@A34")) {
-					logger.log (Level.FINER,"Received confirmation, change parameter " + cBUSString.substring(3,5));
-					didCommand = true;
-				}
-				
-				char lastChar = cBUSString.charAt(cBUSString.length()-1);
-				if ( etxString.indexOf(lastChar) >= 0) {
-					char secondLastChar = cBUSString.charAt(cBUSString.length()-2);
-					if (lastChar == '.') {
-						logger.log (Level.FINEST,"Received confirmation for command " + secondLastChar);
-						if (!finishedStartup && secondLastChar == lastCharOfHandshake) {
-							logger.log (Level.FINER,"CBUS startup complete, starting normal MMI processing.");
-							finishedStartup = true;
-						}
+			// now do the normal commands
+			normalCommands(cBUSString, currentUser);
 
-						comms.acknowledgeCommand(""+secondLastChar,false);
-						comms.sendNextCommand();
-					} else {
-						logger.log (Level.FINER,"Command failed " + secondLastChar + ", resending");
-						comms.repeatCommand(String.valueOf(secondLastChar));
-					}
-					return;
-				}
-				if (didCommand)return ; // shortcut for processing of startup parameter changes, ensure they don't flow into the normal command handling.
-
-				int cbusStartByte = 0;
-				try {
-					cbusStartByte = Integer.parseInt(cBUSString.substring(0,2),16);
-				} catch (NumberFormatException ex) {
-					logger.log (Level.FINEST,"Trying to parse MMI message but the first byte is not hex " + ex.getMessage());
-					return;
-				}
-				if (!didCommand && cbusStartByte == 134) {
-					// temperature readings do not have checksum
-
-					String deviceID = cBUSString.substring (2,4);
-					SensorFascade cbusDevice = (SensorFascade)configHelper.getControlledItem(deviceID);
-					if (cbusDevice == null) {
-						didCommand = true;
-					}
-					else {
-						try {
-							String temperatureStr = cBUSString.substring(12, 14);
-							byte temperature = Byte.parseByte(temperatureStr,16);
-							if (!this.testState(deviceID, "on", temperature)){
-								logger.log(Level.FINE,"Received a change in temperature");
-								sendCommandToFlash (cbusDevice,"on",temperature,currentUser);	
-								this.setState(deviceID, "on",temperature);
-							}
-						} catch (ArrayIndexOutOfBoundsException ex){
-							logger.log (Level.INFO,"Cbus temperature command is not correctly formatted " + cBUSString);
-						}catch (NumberFormatException ex){
-							logger.log (Level.INFO,"Cbus temperature command is not correctly formatted " + cBUSString);
-						}
-						didCommand = true;
-					}
-				}
-
-				/*
-				 * Theoretically redo a level request if there has been checksum failure, but causes a race condition on startup
-				 * a CBUS produces a large number of checksum errors when requesting levels
-				 * 
-				if (!didCommand && !passChecksum(cBUSString)){
-					logger.log (Level.FINEST,"Resending level request");
-					comms.clearCommandQueue();
-					comms.resendAllSentCommands();
-					this.requestAllLevels();
-					return;
-				}
-				*/
-
-				if (!didCommand && ((cbusStartByte & 120) == 8)) {
-					// Measurement command
-					/*
-					logger.log (Level.FINE,"Received measurement command " + cBUSString);
-					String deviceID = cBUSString.substring (2,4);
-					logger.log (Level.FINE,"For device ID " + deviceID);
-					try {
-						SensorFascade sensor = (SensorFascade)configHelper.getControlledItem(deviceID);
-					} catch (ClassCastException ex) {
-						logger.log (Level.WARNING,"Measurement Device ID matched a CBUS device that was not a Sensor");
-					}
-					*/
-
-				}
-				if (!didCommand && cbusStartByte == 5) {
-					logger.log(Level.FINER, cBUSString);
-
-					String srcDevice = cBUSString.substring(2,4); // where the command came from
-					String retApplicationCode = cBUSString.substring(4,6); // which application group the command is for 
-
-					String restOfString = "";
-					if ((cBUSString.substring(6,8)).equals("00")) {
-						restOfString = cBUSString.substring(8);
-					}
-					else {
-						restOfString = cBUSString.substring(10);
-					}
-
-					String commandCode = restOfString.substring(0,2); // the command byte
-					String restOfCommand = restOfString.substring(2);
-					String cBusGroup = restOfCommand.substring(0,2); // which cbus group the command is for
-
-					
-					if (!didCommand && commandCode.equals ("09")) {
-						CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
-						if (cbusDevice != null) {
-							this.setStateFromFlash(cbusDevice,false);
-							this.setStateFromWallPanel(cbusDevice,true);
-							if (!cbusDevice.isRelay())sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
-							if (cbusDevice.supportsLevelMMI()) {
-								mMIHelpers.sendExtendedQuery (cBusGroup,retApplicationCode, currentUser, true,"");
-								// Main point to trigger a ramp up sequence from a cbus button press
-								// Test this to see if it stops sending once 0 or 255 has been reached.
-							} else {
-								sendCommandToFlash (cbusDevice,"on",100,currentUser);
-								didCommand = true;
-							}
-						}
-						didCommand = true;
-					}
-
-					if (!didCommand && commandCode.equals("79") ) {
-
-						CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
-						if (cbusDevice == null) {
-							didCommand = true;
-						}
-						else {
-							this.setStateFromFlash(cbusDevice,false);
-							this.setStateFromWallPanel(cbusDevice,true);
-							if (!cbusDevice.isRelay())sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
-							sendCommandToFlash (cbusDevice,"on",100,currentUser);
-							didCommand = true;
-						}
-					}
-					if (!didCommand && commandCode.equals("01")) {
-						// need to be able to loop the remaining string ramping each of the lights
-						do {
-							commandCode = restOfString.substring(0,2);
-							restOfCommand = restOfString.substring(2);
-							cBusGroup = restOfCommand.substring(0,2);
-							try {
-								restOfString = restOfCommand.substring(2);
-							} catch (IndexOutOfBoundsException e)
-							{
-								restOfString = "";
-							}
-							logger.log(Level.FINER,"remaining command:" + restOfString);
-							logger.log(Level.FINER,"command:" + commandCode + " appid:" + retApplicationCode + " group:" + cBusGroup);
-							CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode, cBusGroup,DeviceType.LIGHT_CBUS));
-
-							if (cbusDevice == null) {
-								didCommand = true;
-							}
-							else {
-								this.setStateFromFlash(cbusDevice,false);
-								this.setStateFromWallPanel(cbusDevice,true);
-								if (!cbusDevice.isRelay())sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
-								sendCommandToFlash (cbusDevice,"off",0,currentUser);
-								didCommand = true;
-							}
-						} while (restOfString.length() >= 6);
-
-					}
-					if (!didCommand && rampCodes.indexOf(commandCode) > -1) {
-						// need to be able to loop the remaining string ramping each of the lights
-						do {
-							commandCode = restOfString.substring(0,2);
-							restOfCommand = restOfString.substring(2);
-							cBusGroup = restOfCommand.substring(0,2);
-							String rampLevel = restOfCommand.substring(2,4);
-							try {
-								restOfString = restOfCommand.substring(4);
-							} catch (IndexOutOfBoundsException e)
-							{
-								restOfString = "";
-							}
-							logger.log(Level.FINER,"remaining command:" + restOfString);
-							logger.log(Level.FINER,"command:" + commandCode + " appid:" + retApplicationCode + " group:" + cBusGroup);
-							try {
-								CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
-
-								if (cbusDevice == null ) {
-									didCommand = true;
-								}
-								else {
-									this.setStateFromFlash(cbusDevice,false);
-									this.setStateFromWallPanel(cbusDevice,true);
-									int x = 0;
-									try {
-										x = Integer.parseInt(rampLevel,16);
-									} catch (NumberFormatException ex) {
-										logger.log (Level.FINEST,"Received invalid ramp level for Cbus " + rampLevel);
-									}
-									if (cbusDevice.isRelay()){
-										if (x == 0){
-											this.setState (cbusDevice,"off",0); 
-											sendCommandToFlash (cbusDevice,"off",0,currentUser);
-										} else {
-											this.setState (cbusDevice,"on",100); 
-											sendCommandToFlash (cbusDevice,"on",100,currentUser);									
-										}
-									}
-									else {
-										int percLevel = 100 * (x + 2) / cbusDevice.getMax();
-										if (percLevel < DeviceModel.FLASH_SLIDER_RES) percLevel = FLASH_SLIDER_RES;
-
-										if (x == 1 || x == cbusDevice.getMax()  && cbusDevice.isGenerateDimmerVals()){
-											// indicates start of a fade  while the button is pressed.
-											int oldLevel = this.getStateLevel(cbusDevice);
-
-											if (x == 1) 	
-												sliderPulse.addToDecreasingQueue(cbusDevice.getOutputKey(), oldLevel);
-											else
-												sliderPulse.addToIncreasingQueue(cbusDevice.getOutputKey(), oldLevel);
-
-											this.setState (cbusDevice,"on",percLevel); 
-											// set the state, but don't send the level to the user, this will occur from sliderPulse
-
-										} else {
-											sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
-
-											if (this.setState (cbusDevice,"on",percLevel)) {
-												sendCommandToFlash (cbusDevice,"on",percLevel,currentUser);
-											}
-										}
-									}
-
-									didCommand = true;
-								}
-							} catch (ClassCastException ex ) {
-								logger.log (Level.WARNING,"CBUS level command received from a device that does not support it " + ex.getMessage());
-							}
-						} while (restOfString.length() >= 6);
-					}
-				}
-
-
-				if (!didCommand  && cbusStartByte >= 192 && cbusStartByte < 224 && finishedStartup ) {
-					mMIHelpers.processMMI (cBUSString, currentUser); 
-					didCommand = true;
-				}
-
-				if (!didCommand  && cbusStartByte >= 224 && cbusStartByte < 255 ) {
-
-					mMIHelpers.processLevelMMI (cBUSString,currentUser);
-					didCommand = true;
-				}
-
-
-	
 		} catch (IndexOutOfBoundsException inEx) {
 		}
 	}
+
+	/**
+	 * Handle normal command processing
+	 */
+	private void normalCommands(String cBUSString, User currentUser) {
+		boolean didCommand = false;
+		// normal command processing
+		int cbusStartByte = 0;
+		try 
+		{
+			// get the command type and priority byte
+			cbusStartByte = Integer.parseInt(cBUSString.substring(0,2),16);
+		} 
+		catch (NumberFormatException ex) {
+			logger.log (Level.FINEST,"Trying to parse MMI message but the first byte is not hex " + ex.getMessage());
+			return;
+		}
+
+		int prioritylevel  = cbusStartByte & 0xC0; 	// top 2 bits of command byte
+		int commandType = cbusStartByte & 0x3F; 	// last 3 bits of command byte + other status
+		logger.log(Level.FINEST, "command:" + commandType + " priority:" + prioritylevel);
+
+		switch (commandType)
+		{
+		case 0x03:
+			logger.log(Level.FINER, "CBUS: PtPtMP command received");
+			didCommand = handlePointToPointToMultiPoint(cBUSString,	currentUser, cbusStartByte);
+			break;
+		case 0x05:
+			logger.log(Level.FINER, "CBUS: PtMP command received");
+			didCommand = handlePointToMultipoint(cBUSString, currentUser);
+			break;
+		case 0x06:
+			logger.log(Level.FINER, "CBUS: PtP command received");
+			didCommand = handlePointToPoint(cBUSString,	currentUser, prioritylevel);
+			break;
+		default:
+			// now we are handling common application language commands 
+			switch(prioritylevel)
+			{
+			case 0x00:
+				if (commandType == 0x08)
+					logger.log(Level.FINER, "RESET command received");
+				else if (commandType == 0x1A)
+					logger.log(Level.FINER, "RECALL command received");
+				else if (commandType == 0x21)
+					logger.log(Level.FINER, "IDENTIFY command received");
+				else if (commandType == 0x2A)
+					logger.log(Level.FINER, "GETSTATUS command received");
+				else if (commandType == 0x32)
+					logger.log(Level.FINER, "ACKNOWLEDGE command received");
+				break;
+			case 0x80:
+				logger.log(Level.FINER, "REPLY command received");
+				break;
+			case 0xC0:
+				// we have a status reply, either standard or extended
+				// the commandType == number of bytes following (max seems to be 0x1F..?)
+				if (finishedStartup && commandType < 32) {
+					logger.log(Level.FINER, "STATUS command received");
+					mMIHelpers.processMMI (cBUSString, currentUser);
+					didCommand = true;
+				}
+				else if (commandType  >= 32){
+					logger.log(Level.FINER, "EXTENDED STATUS command received");
+					mMIHelpers.processLevelMMI (cBUSString,currentUser);
+					didCommand = true;
+				}
+				break;
+			}
+			break;
+		}
+	}
+
+	/**
+	 * Handles the CBUS start-up and CBUS error code commands
+	 * @param cBUSString - the command string
+	 * @return true if there were any commands processed
+	 */
+	private boolean exceptionCommands(String cBUSString) {
+		boolean didCommand = false;
+		
+		if (cBUSString.indexOf("~") >= 0 )
+		{
+			tildeCount ++;
+			if (tildeCount > 0) {
+				clearAllQueues();
+				this.state.clear();
+				didCommand = true;
+				logger.log (Level.FINE,"Received confirmation of CBUS ~~~ init, sending initial parameters");
+				doRestOfStartup();
+			}
+			// should be covered by next line     requestAllLevels();
+			return didCommand;
+		}
+		if (cBUSString.endsWith("+")) 
+		{
+			// Power up notification received so reset all parameters.
+			clearAllQueues();
+			this.state.clear();
+			didCommand = true;
+			comms.sendString("~~"+ETX); // force the interface back into basic mode
+			return didCommand;
+		}
+
+		if (cBUSString.contains("!"))
+		{
+
+			logger.log (Level.FINER,"CBUS buffer overflow or checksum failure");
+			try {
+				comms.resendAllSentCommands();
+			} catch (CommsFail ex) {
+				throw new CommsFail ("Communications failed with CBUS " + ex.getMessage());
+			}
+			return didCommand;
+		}
+
+		if (cBUSString.startsWith("@A3420"))
+		{
+			logger.log (Level.FINER,"CBUS startup complete, starting normal MMI processing.");
+			finishedStartup = true;
+			didCommand = true;
+		}
+
+		if (cBUSString.startsWith("@A32")) 
+		{
+			logger.log (Level.FINER,"Received confirmation, change parameter " + cBUSString.substring(3,5));
+			didCommand = true;
+		}
+
+		if (cBUSString.startsWith("@A34")) 
+		{
+			logger.log (Level.FINER,"Received confirmation, change parameter " + cBUSString.substring(3,5));
+			didCommand = true;
+		}
+
+		char lastChar = cBUSString.charAt(cBUSString.length()-1);
+		if ( etxString.indexOf(lastChar) >= 0) 
+		{
+			char secondLastChar = cBUSString.charAt(cBUSString.length()-2);
+			if (lastChar == '.')
+			{
+				logger.log (Level.FINEST,"Received confirmation for command " + secondLastChar);
+				if (!finishedStartup && secondLastChar == lastCharOfHandshake)
+				{
+					logger.log (Level.FINER,"CBUS startup complete, starting normal MMI processing.");
+					finishedStartup = true;
+				}
+
+				comms.acknowledgeCommand(""+secondLastChar,false);
+				comms.sendNextCommand();
+			}
+			else
+			{
+				logger.log (Level.FINER,"Command failed " + secondLastChar + ", resending");
+				comms.repeatCommand(String.valueOf(secondLastChar));
+			}
+			return didCommand;
+		}
+		return didCommand;
+	}
+
+	/**
+	 * Stub function we do not yet handle any of these commands
+	 * @return
+	 */
+	private boolean handlePointToPointToMultiPoint(String cBUSString, User currentUser, int cbusStartByte) {
+		// TODO Auto-generated method stub
+		// TODO This function does not do any network handling, we need to strip route information
+		return false;
+	}
+
+
+	/**
+	 * point to point command 0x06 with priority code medium high (binary MSB 10)
+	 * @return
+	 * TODO This function does not do any network handling, we need to strip route information
+	 */
+	private boolean handlePointToPoint( String cBUSString, User currentUser, int cbusPriorityByte)
+	{
+		boolean didCommand = false;
+		
+		if (cbusPriorityByte == 0x80) {
+			// temperature readings do not have checksum
+			String deviceID = cBUSString.substring (2,4);
+			SensorFascade cbusDevice = (SensorFascade)configHelper.getControlledItem(deviceID);
+			if (cbusDevice == null) {
+				didCommand = true;
+			}
+			else {
+				try {
+					String temperatureStr = cBUSString.substring(12, 14);
+					byte temperature = Byte.parseByte(temperatureStr,16);
+					if (!this.testState(deviceID, "on", temperature)){
+						logger.log(Level.FINE,"Received a change in temperature");
+						sendCommandToFlash (cbusDevice,"on",temperature,currentUser);	
+						this.setState(deviceID, "on",temperature);
+					}
+				} catch (ArrayIndexOutOfBoundsException ex){
+					logger.log (Level.INFO,"Cbus temperature command is not correctly formatted " + cBUSString);
+				}catch (NumberFormatException ex){
+					logger.log (Level.INFO,"Cbus temperature command is not correctly formatted " + cBUSString);
+				}
+				didCommand = true;
+			}
+		}
+		return didCommand;
+	}
+
+	/**
+	 * Handle cbus command 0x05 point to multipoint commands at all command levels
+	 * @return
+	 */
+	private boolean handlePointToMultipoint(String cBUSString, User currentUser)
+	{
+
+		boolean didCommand = false;
+		logger.log(Level.FINER, cBUSString);
+
+		String srcDevice = cBUSString.substring(2,4); // where the command came from
+		String retApplicationCode = cBUSString.substring(4,6); // which application group the command is for 
+
+		String restOfString = "";
+		if ((cBUSString.substring(6,8)).equals("00")) {
+			restOfString = cBUSString.substring(8);
+		}
+		else {
+			restOfString = cBUSString.substring(10);
+		}
+
+		String commandCode = restOfString.substring(0,2); // the command byte
+		int commandInt = Integer.parseInt(commandCode,16);
+		int argc = commandInt & 0x07;
+		commandInt = commandInt & 0x78;
+		logger.log(Level.FINEST, "command code " + commandInt +"arguments: " + argc);
+		String restOfCommand = restOfString.substring(2);
+		String cBusGroup = restOfCommand.substring(0,2); // which cbus group the command is for
+
+		if (!didCommand && retApplicationCode.equals("CA")) {
+			// trigger control (scene command)
+			// command code is as below (02 == trigger) (01 == trigger min) (79 == trigger max) (09 == trigger kill) (101LLLLL = trigger label (LLLLL = label number in binary))
+			String actionSelector = restOfCommand.substring(2,4);
+			logger.log(Level.FINER,"received scene trigger" );
+			logger.log(Level.FINEST,"command:" + commandCode + " trigger group:" + cBusGroup + " action selector:" + actionSelector);
+			didCommand = true;
+		}
+
+		if (!didCommand && commandCode.equals ("09")) {
+			CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
+			if (cbusDevice != null) {
+				this.setStateFromFlash(cbusDevice,false);
+				this.setStateFromWallPanel(cbusDevice,true);
+				if (!cbusDevice.isRelay())sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
+				if (cbusDevice.supportsLevelMMI()) {
+					mMIHelpers.sendExtendedQuery (cBusGroup,retApplicationCode, currentUser, true,"");
+					// Main point to trigger a ramp up sequence from a cbus button press
+					// Test this to see if it stops sending once 0 or 255 has been reached.
+				} else {
+					sendCommandToFlash (cbusDevice,"on",100,currentUser);
+					didCommand = true;
+				}
+			}
+			didCommand = true;
+		}
+
+		if (!didCommand && commandCode.equals("79") ) {
+
+			CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
+			if (cbusDevice == null) {
+				didCommand = true;
+			}
+			else {
+				this.setStateFromFlash(cbusDevice,false);
+				this.setStateFromWallPanel(cbusDevice,true);
+				if (!cbusDevice.isRelay())sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
+				sendCommandToFlash (cbusDevice,"on",100,currentUser);
+				didCommand = true;
+			}
+		}
+		if (!didCommand && commandCode.equals("01")) {
+			// need to be able to loop the remaining string ramping each of the lights
+			do {
+				commandCode = restOfString.substring(0,2);
+				restOfCommand = restOfString.substring(2);
+				cBusGroup = restOfCommand.substring(0,2);
+				try {
+					restOfString = restOfCommand.substring(2);
+				} catch (IndexOutOfBoundsException e)
+				{
+					restOfString = "";
+				}
+				logger.log(Level.FINEST,"remaining command:" + restOfString);
+				logger.log(Level.FINEST,"command:" + commandCode + " appid:" + retApplicationCode + " group:" + cBusGroup);
+				CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode, cBusGroup,DeviceType.LIGHT_CBUS));
+
+				if (cbusDevice == null) {
+					didCommand = true;
+				}
+				else {
+					this.setStateFromFlash(cbusDevice,false);
+					this.setStateFromWallPanel(cbusDevice,true);
+					if (!cbusDevice.isRelay())sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
+					sendCommandToFlash (cbusDevice,"off",0,currentUser);
+					didCommand = true;
+				}
+			} while (restOfString.length() >= 6);
+
+		}
+		if (!didCommand && rampCodes.indexOf(commandCode) > -1) {
+			// need to be able to loop the remaining string ramping each of the lights
+			do {
+				commandCode = restOfString.substring(0,2);
+				restOfCommand = restOfString.substring(2);
+				cBusGroup = restOfCommand.substring(0,2);
+				String rampLevel = restOfCommand.substring(2,4);
+				try {
+					restOfString = restOfCommand.substring(4);
+				} catch (IndexOutOfBoundsException e)
+				{
+					restOfString = "";
+				}
+				logger.log(Level.FINEST,"remaining command:" + restOfString);
+				logger.log(Level.FINEST,"command:" + commandCode + " appid:" + retApplicationCode + " group:" + cBusGroup);
+				try {
+					CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(retApplicationCode , cBusGroup,DeviceType.LIGHT_CBUS));
+
+					if (cbusDevice == null ) {
+						didCommand = true;
+					}
+					else {
+						this.setStateFromFlash(cbusDevice,false);
+						this.setStateFromWallPanel(cbusDevice,true);
+						int x = 0;
+						try {
+							x = Integer.parseInt(rampLevel,16);
+						} catch (NumberFormatException ex) {
+							logger.log (Level.FINEST,"Received invalid ramp level for Cbus " + rampLevel);
+						}
+						if (cbusDevice.isRelay()){
+							if (x == 0){
+								this.setState (cbusDevice,"off",0); 
+								sendCommandToFlash (cbusDevice,"off",0,currentUser);
+							} else {
+								this.setState (cbusDevice,"on",100); 
+								sendCommandToFlash (cbusDevice,"on",100,currentUser);									
+							}
+						}
+						else {
+							int percLevel = 100 * (x + 2) / cbusDevice.getMax();
+							if (percLevel < DeviceModel.FLASH_SLIDER_RES) percLevel = FLASH_SLIDER_RES;
+
+							if (x == 1 || x == cbusDevice.getMax()  && cbusDevice.isGenerateDimmerVals()){
+								// indicates start of a fade  while the button is pressed.
+								int oldLevel = this.getStateLevel(cbusDevice);
+
+								if (x == 1) 	
+									sliderPulse.addToDecreasingQueue(cbusDevice.getOutputKey(), oldLevel);
+								else
+									sliderPulse.addToIncreasingQueue(cbusDevice.getOutputKey(), oldLevel);
+
+								this.setState (cbusDevice,"on",percLevel); 
+								// set the state, but don't send the level to the user, this will occur from sliderPulse
+
+							} else {
+								sliderPulse.removeFromQueues(cbusDevice.getOutputKey());
+
+								if (this.setState (cbusDevice,"on",percLevel)) {
+									sendCommandToFlash (cbusDevice,"on",percLevel,currentUser);
+								}
+							}
+						}
+
+						didCommand = true;
+					}
+				} catch (ClassCastException ex ) {
+					logger.log (Level.WARNING,"CBUS level command received from a device that does not support it " + ex.getMessage());
+				}
+			} while (restOfString.length() >= 6);
+		}
+		return didCommand;
+	}
+
 	/**
 	 * 
 	 */
@@ -1030,14 +1126,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					if (cbusDevice instanceof Label){
 						cbusCommand = ((Label)cbusDevice).buildDisplayCommand ();
 					}
-						cbusCommand.setCommand (command);
-						cbusCommand.setExtraInfo(Integer.toString(newLevel));
-						cbusCommand.setKey ("CLIENT_SEND");
-						cbusCommand.setUser(user);
-						cache.setCachedCommand(cbusCommand.getDisplayName(),cbusCommand);
-						this.sendToFlash(-1,cbusCommand);
-						this.setStateClean (cbusDevice);
-						//logger.log (Level.FINEST,"Sending to flash " + cbusCommand.getDisplayName() + " " + command + " level " + Integer.toString(newLevel));
+					cbusCommand.setCommand (command);
+					cbusCommand.setExtraInfo(Integer.toString(newLevel));
+					cbusCommand.setKey ("CLIENT_SEND");
+					cbusCommand.setUser(user);
+					cache.setCachedCommand(cbusCommand.getDisplayName(),cbusCommand);
+					this.sendToFlash(-1,cbusCommand);
+					this.setStateClean (cbusDevice);
+					//logger.log (Level.FINEST,"Sending to flash " + cbusCommand.getDisplayName() + " " + command + " level " + Integer.toString(newLevel));
 				} catch (NumberFormatException ex) {
 				}
 			}
@@ -1095,7 +1191,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			retCodes.add( (byte)5);
 			retCodes.add(Byte.parseByte(appCodeStr,16));
 			retCodes.add((byte)0); // options
-			
+
 			int  theCommand = 160 +3 + theLabel.length();
 			retCodes.add((byte)theCommand);
 			int intGroup = Integer.parseInt(key,16);
@@ -1166,7 +1262,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				cBUSOutputString = buildCBUSRampToCommand (rampRate,device.getApplicationCode(),levelStr, device.getKey(),currentChar);
 				stateOfGroup.setPower("on",false);
 				stateOfGroup.setLevel(Integer.parseInt(levelStr),false);
-		
+
 
 			}
 			commandFound = true;
@@ -1179,7 +1275,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				stateOfGroup.setLevel(0,false);
 				commandFound = true;
 			} else {
-	
+
 				cBUSOutputString =buildCBUSOnOffCommand ("01", device.getApplicationCode(),device.getKey(),currentChar);
 				stateOfGroup.setPower("off",false);
 				stateOfGroup.setLevel(0,false);
@@ -1307,7 +1403,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			//byte levelPerc = ((byte)((level / 100 ) * 255));
 			int normValue = (int)((double)level / 100.0 * 255.0);
 			if (level == 255) normValue = 100;
-			
+
 			String rampRateStr = findRampCode (rampCodeStr);
 			if (rampRateStr.equals ("")){
 				logger.log (Level.WARNING, "A ramp rate that CBUS cannot support was specified");
@@ -1461,7 +1557,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	 * 
 	 */
 	public boolean doIPHeartbeat () {
-	    return false;
+		return false;
 	}
 	/**
 	 * 
