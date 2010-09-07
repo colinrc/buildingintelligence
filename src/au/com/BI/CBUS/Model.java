@@ -749,6 +749,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 			break;
 		}
+		if (didCommand) {
+			
+		}
 	}
 
 	/**
@@ -892,12 +895,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	 */
 	private boolean handlePointToMultipoint(String cBUSString, User currentUser)
 	{
-
 		boolean didCommand = false;
-		logger.log(Level.FINER, cBUSString);
 
 		String srcDevice = cBUSString.substring(2,4); // where the command came from
 		String retApplicationCode = cBUSString.substring(4,6); // which application group the command is for 
+		logger.log(Level.FINEST, "source device:" + srcDevice + "application: " + retApplicationCode);
 
 		String restOfString = "";
 		if ((cBUSString.substring(6,8)).equals("00")) {
