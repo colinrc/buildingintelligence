@@ -508,10 +508,8 @@ public class Controller {
 						Thread.sleep(100);
 						i ++;
 				} while (commandQueue.isEmpty() && i < 5);
-			} catch (InterruptedException ex) {
-			}
-			;
-
+			} catch (InterruptedException ex) {}
+			
 			Thread.yield();
 		}
 	}
