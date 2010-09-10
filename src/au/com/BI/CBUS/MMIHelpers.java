@@ -45,6 +45,21 @@ public class MMIHelpers {
 		this.state = state;
 	}
 	
+	/**
+	 * Process an MMI status command e.g.
+	 * D83800A02200000000000000000000000000000000000000002E
+	 * where the command is as follows:
+	 * byte 1 = 0xC0 + command length
+	 * byte 2 = application ID (0x38 here meaning lighting)
+	 * byte 3 = group address offset (00 here means we start at address 00 to 4*(command length) ) 
+	 * byte 4 to end == bit mask of group addresses in this application 2 bits per address
+	 * 			bit masks (00 = group doesn't exist, 01 = group on, 10 = group off, 11 = group error)
+	 * 			first byte = A0 = 1010 0000, so group 00 and 01 don't exist, group 02 & 03 == 10 == off
+	 * 			second byte = 22 = group 4 = off, group 6 = off, group 5 & 7 do not exist. 
+	 * @param cBUSString
+	 * @param currentUser
+	 * @throws CommsFail
+	 */
 	protected void processMMI (String cBUSString, User currentUser ) throws CommsFail {
 		String MMIKey = cBUSString.substring(0,6);
 		String lastMMI = (String)cachedMMI.get (MMIKey);
@@ -52,7 +67,7 @@ public class MMIHelpers {
 		int numPairs = 0;
 
 		try {
-			numPairs = Integer.parseInt(numCharsStr,16) - 192;
+			numPairs = Integer.parseInt(numCharsStr,16) - 0xC0;
 		} catch (NumberFormatException ex) {
 			logger.log (Level.FINEST,"Received invalid pair count from Cbus MMI " + numCharsStr);
 		}
@@ -93,10 +108,10 @@ public class MMIHelpers {
 						logger.log (Level.FINEST,"Received invalid MMI status byte " + pairVal);
 					}
 	
-					testValue1 = value & 3;
-					testValue2 = value & 12;
-					testValue3 = value & 48;
-					testValue4 = value & 192;
+					testValue1 = value & 0x03; // first bit pair
+					testValue2 = value & 0x0C; // second bit pair
+					testValue3 = value & 0x30; // third bit pair
+					testValue4 = value & 0xC0; // fourth bit pair
 	
 					if (testValue1 == 1) { 
 						int key = firstKey + i * 4;
@@ -421,7 +436,6 @@ public class MMIHelpers {
 		}
 		levelMMIQueues.put(appNumber,appList);
 	}
-	
 
 	public void sendExtendedQuery (String key, String appCode, User user, boolean immediate,String targetLevel) throws CommsFail{
 		try {
@@ -434,9 +448,6 @@ public class MMIHelpers {
 			sendExtendedQuery (key,appCode, user,immediate,"");
 		} catch (NumberFormatException ex) {}
 	}
-
-
-
 
 	public void sendExtendedQuery (int key, String appCode, User user, boolean immediate,String targetLevel) throws CommsFail {
 		

@@ -27,14 +27,14 @@ public class PollTemperatures extends Thread {
 	protected CommandQueue commandQueue = null;
 	protected int deviceNumber = -1;
 	protected List <SensorFascade>temperatureSensors = null;
-	
+
 	public PollTemperatures() {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 		this.setName("CBUS temperature poll");
 	}
-	
-	
+
+
 	/**
 	 * @return Returns the pollValue.
 	 */
@@ -52,20 +52,20 @@ public class PollTemperatures extends Thread {
 		running = false;
 	}
 
-		
+
 	public void run ()  {
 		running = true;
 		try {
 			while (running) {
-			    /*
+				/*
 			    synchronized (comms){
 			    	comms.acknowlegeCommand(DeviceType.TEMPERATURE);
 			    }*/
 
-			    synchronized (temperatureSensors) {
-			    		for (SensorFascade device: temperatureSensors) {
+				synchronized (temperatureSensors) {
+					for (SensorFascade device: temperatureSensors) {
 
-			    			String outputCbusCommand = buildTempString (device);
+						String outputCbusCommand = buildTempString (device);
 						CommsCommand cbusCommsCommand = new CommsCommand();
 						cbusCommsCommand.setKey (device.getKey());
 						cbusCommsCommand.setKeepForHandshake(false);
@@ -78,9 +78,9 @@ public class PollTemperatures extends Thread {
 								comms.addCommandToQueue (cbusCommsCommand);
 							} 
 							logger.log (Level.FINEST,"Queueing cbus temperature probe "  + " for " + (String)cbusCommsCommand.getExtraInfo());
-				    		}
-			    		}
-			    }
+						}
+					}
+				}
 				try {
 					Thread.sleep (pollValue );
 				} catch (InterruptedException ie) {}
@@ -96,7 +96,7 @@ public class PollTemperatures extends Thread {
 
 		}
 	}
-		/**
+	/**
 	 * @return Returns the running.
 	 */
 	public boolean isRunning() {
@@ -108,15 +108,23 @@ public class PollTemperatures extends Thread {
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
-	
+
 	public String buildTempString(DeviceType device) {
-		String retCode = "\06";
+		String retCode = "\\" + "06";
 		retCode += Utility.padString (device.getKey(),2);
 		retCode += "002A0E02";
-		return retCode;
+		
+		byte remainder = (byte)(((byte)6 + Byte.parseByte(device.getKey(),16) + 0x2A + 0x0E + 0x02) % 256);
+		byte twosComp = (byte)-remainder;
+
+		String hexCheck = Integer.toHexString(twosComp);
+		if (hexCheck.length() == 1) hexCheck = "0" + hexCheck;
+		if (hexCheck.length() > 2) hexCheck = hexCheck.substring(hexCheck.length() - 2);
+
+		return retCode + hexCheck + '\r';
 	}
 
-	
+
 	/**
 	 * @param comms The comms to set.
 	 */
