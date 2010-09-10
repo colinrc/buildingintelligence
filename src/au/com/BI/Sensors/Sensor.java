@@ -54,9 +54,9 @@ public class Sensor extends BaseDevice implements DeviceType
 		return lightCommand;
 	}
 	
-	public int getDeviceType () {
-		return DeviceType.SENSOR;
-	}
+//	public int getDeviceType () {
+//		return DeviceType.SENSOR;
+//	}
 	/**
 	 * @return Returns the max.
 	 */
