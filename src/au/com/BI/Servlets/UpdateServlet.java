@@ -299,6 +299,7 @@ public class UpdateServlet extends HttpServlet {
         
     	
     	if (!security.allowWebClient()){
+    		// TODO add code to turf another login for this user...
     		throw new TooManyClientsException ("You have requested more clients than you have licenses for, please contact your integrator");
     	}
         
