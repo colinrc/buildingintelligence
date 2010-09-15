@@ -16,8 +16,9 @@ import au.com.BI.Sensors.*;
 
 /**
  * @author colinc
- *
- *
+ * Polls the clipsal 5031TS temperature sensor
+ * Setup to only poll at a maximimum of once
+ * every 20 seconds
  */
 public class PollTemperatures extends Thread {
 	protected Logger logger;
@@ -45,7 +46,10 @@ public class PollTemperatures extends Thread {
 	 * @param pollValue The pollValue to set.
 	 */
 	public void setPollValue(long pollValue) {
-		this.pollValue = pollValue;
+		if (pollValue > 20 )
+			this.pollValue = pollValue;
+		else
+			this.pollValue = 20;
 	}
 
 	public void clearItems () {
