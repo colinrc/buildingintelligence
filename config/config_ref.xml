@@ -155,8 +155,10 @@
                 </PARAMETERS>
                 
                 <CBUS>
-                        <SENSOR ACTIVE="N" KEY="00" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
-                        <TEMPERATURE ACTIVE="N" KEY="42" NAME="Temp Sensor2" DISPLAY_NAME="TEMP_SENSOR2" />
+                        <SENSOR ACTIVE="N" KEY="00" CHANNEL="01" UNITS="00" SCALE="1.0" OFFSET="0.0" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
+                        <TEMPERATURE ACTIVE="N" KEY="42" UNITS="00" SCALE="1.0" OFFSET="0.0" NAME="Temp Sensor2" DISPLAY_NAME="TEMP_SENSOR2" />
+                        <THERMOSTAT_CBUS RELAY="Y" ACTIVE="Y" KEY="01" NAME="Study" DISPLAY_NAME="CLIMATE_CONTROL_FIRST_FLOOR" />
+
                         <LIGHT_CBUS ACTIVE="N" KEY="35" CBUS_APPLICATION="30" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="0C" NAME="Office Light" DISPLAY_NAME="OFFICE_LIGHT" POWER_RATING="100"/>
                         <LIGHT_CBUS ACTIVE="N" KEY="0D" NAME="Ensuite Light" DISPLAY_NAME="ENSUITE_LIGHT" RELAY="Y" POWER_RATING="100"/>
