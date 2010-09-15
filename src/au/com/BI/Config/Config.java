@@ -628,6 +628,10 @@ public class Config {
 						deviceFactories.thermostatFactory.addThermostat(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.THERMOSTAT,groupName,rawHelper);
 					}
+					if (itemName.equals("THERMOSTAT_CBUS")) {
+						deviceFactories.sensorFactory.addSensor(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
+								DeviceType.THERMOSTAT_CBUS,groupName,rawHelper);
+					}
 					if (itemName.equals("UNIT")) {
 						deviceFactories.unitFactory.addUnit(deviceModel, clientModels, item, MessageDirection.FROM_HARDWARE,
 								DeviceType.UNIT,groupName,rawHelper);

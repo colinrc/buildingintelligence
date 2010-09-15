@@ -3,6 +3,8 @@
  *
  */
 package au.com.BI.Sensors;
+import java.text.DecimalFormat;
+
 import au.com.BI.Util.*;
 import au.com.BI.Command.*;
 import au.com.BI.Device.DeviceType;
@@ -18,12 +20,16 @@ public class Sensor extends BaseDevice implements DeviceType
 	private String channel = "";
 	private String group = "";
 	protected int max;
+	protected int zones;
 	protected String applicationCode = "38";
-	protected String units = "";
-	protected boolean relay = false;
-	protected String temperature;
-
 	
+	protected String units = "";
+	protected double scale = 1.0;
+	protected double offset = 0.0;
+	
+	protected boolean relay = false;
+	protected String level;
+
 	public Sensor (String name, String channel, String units, int deviceType){
 		this.name = name;
 		this.deviceType = deviceType;
@@ -42,21 +48,17 @@ public class Sensor extends BaseDevice implements DeviceType
 		this.units = units;
 		this.group = group;
 	}
-	
 
 	/**
-	 * Returns a display command represented by the light object
+	 * Returns a display command represented by the sensor object
 	 * @return
 	 */
 	public CommandInterface buildDisplayCommand () {
-		SensorCommand lightCommand = new SensorCommand ();
-		lightCommand.setDisplayName(getOutputKey());
-		return lightCommand;
+		SensorCommand sensorCommand = new SensorCommand ();
+		sensorCommand.setDisplayName(getOutputKey());
+		return sensorCommand;
 	}
-	
-//	public int getDeviceType () {
-//		return DeviceType.SENSOR;
-//	}
+
 	/**
 	 * @return Returns the max.
 	 */
@@ -68,6 +70,19 @@ public class Sensor extends BaseDevice implements DeviceType
 	 */
 	public void setMax(int max) {
 		this.max = max;
+	}
+
+	/**
+	 * @return Returns the zone.
+	 */
+	public int getZones() {
+		return zones;
+	}
+	/**
+	 * @param max The max to set.
+	 */
+	public void setZones(int zones) {
+		this.zones = zones;
 	}
 
 	/**
@@ -106,7 +121,35 @@ public class Sensor extends BaseDevice implements DeviceType
 	public void setUnits(String units) {
 		this.units = units;
 	}
-
+	/**
+	 * get the unit value offset
+	 * @return double offset value to apply
+	 */
+	public double getOffset() {
+		return offset;
+	}
+	/**
+	 * Set the unit offset value
+	 * @param offset the value to set the offset
+	 */
+	public void setOffset(double offset) {
+		this.offset = offset;
+	}
+	/**
+	 * get the unit scale value
+	 * @return double scale value to apply
+	 */
+	public double getScale() {
+		return scale;
+	}
+	/**
+	 * Set the scale value
+	 * @param scale the scale value to set
+	 */
+	public void setScale(double scale) {
+		this.scale = scale;
+	}
+	
 	public String getGroup() {
 		return group;
 	}
@@ -115,14 +158,33 @@ public class Sensor extends BaseDevice implements DeviceType
 		this.group = group;
 	}
 
-	public String getTemperature() {
-		return temperature;
+	public String getLevel() {
+		return level;
 	}
 
-	public void setTemperature(String temperature) {
-		this.temperature = temperature;
+	public void setLevel(String level) {
+		this.level = level;
 	}
-
+	public String getFormattedLevel() {
+		String retVal = "";
+		try {
+			double level = Integer.parseInt(this.level);
+			level = level*scale + offset;
+			DecimalFormat onePlace = new DecimalFormat("0.0");
+			retVal = onePlace.format(level) + " " + units;
+		}
+		catch (NumberFormatException ex) {}
+		return retVal;
+	}
+	public double getAdjustedLevel() {
+		double retVal = 0.0;
+		try {
+			retVal = Integer.parseInt(this.level);
+			retVal = retVal*scale + offset;
+		}
+		catch (NumberFormatException ex) {}
+		return retVal;
+	}
 	public void setRelay(boolean relay) {
 		this.relay = relay;
 	}
@@ -134,6 +196,4 @@ public class Sensor extends BaseDevice implements DeviceType
 	public boolean keepStateForStartup() {
 		return false;
 	}
-
-
 }

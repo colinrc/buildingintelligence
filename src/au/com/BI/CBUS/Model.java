@@ -12,6 +12,7 @@ import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Util.*;
 import au.com.BI.User.*;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.logging.*;
 import au.com.BI.Sensors.*;
@@ -99,7 +100,21 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		super.setETXArray (etxChars);
 		super.attatchComms();
 	}
-
+	/**
+	 * Pads a hex value with leading zeros till the string is padding long
+	 * @param hexVal	The hex value to pad
+	 * @param padding	The number of chars required
+	 * @return	The string representing the padded value
+	 */
+	protected String hexPad(String hexVal, int padding) {
+		int missing = padding - hexVal.length();
+		String retVal = hexVal;
+		
+		for (int i = 0 ; i < missing ; i++) {
+			retVal = "0" + retVal;
+		}
+		return retVal;
+	}
 	/*
 	public void doClientStartup (List commandQueue, long targetFlashDeviceID) {
 
@@ -138,11 +153,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				if (details.getDeviceType() == DeviceType.LIGHT_CBUS) {
 					String appCode = device.getApplicationCode() ;
 					theKey = cBUSHelper.buildKey(appCode,name, details.getDeviceType() );
-
 					applicationCodes.add(appCode);
 				}
 				if (details.getDeviceType() == DeviceType.SENSOR) {
 					theKey = name;
+				}
+				if (details.getDeviceType() == DeviceType.THERMOSTAT_CBUS) {
+					String appCode = device.getApplicationCode() ;
+					theKey = cBUSHelper.buildKey(appCode,name, details.getDeviceType() );;
 				}
 				if (details.getDeviceType() == DeviceType.LABEL) {
 					String appCode = device.getApplicationCode() ;
@@ -355,7 +373,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		} catch (ClassCastException ex) {
 			logger.log (Level.FINE,"A label was added that was not the expected type " + ex.getMessage());
 		}
-
 	}
 	/**
 	 * 
@@ -371,7 +388,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		//   cbusCommsCommand.setCommand("~~"+ETX);
 		// set basic at first , don't bother queueing for this.
 		comms.sendString("~~"+ETX);
-
 	}
 	/**
 	 * 
@@ -385,7 +401,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			sliderPulse.setRunning (false);
 			sliderPulse = new SliderPulse();
 		}
-
 
 		String completeDimTimeStr = this.getParameterValue("COMPLETE_DIM_TIME", DeviceModel.MAIN_DEVICE_GROUP);
 
@@ -483,7 +498,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			cbusCommsCommand2.setActionCode(actionCode);
 			// String checkSum = this.calcChecksum(toSend);
 			cbusCommsCommand2.setCommand("@"+toSend2 + actionCode+ETX);  // interface should be in basic mode at this stage, so no checksum should be sent.
-
 
 			CommsCommand cbusCommsCommand3 = new CommsCommand();
 			String toSend3 = "A3300029"; // 30 = option 1; CONNECT|SRCHK|MONITOR
@@ -601,6 +615,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				break;
 
 			case DeviceType.LABEL: 
+			{
 				String currentCbusKey = this.nextKey();
 				Label label = (Label)device;
 				String fullKeyLabel = this.cBUSHelper.buildKey(label.getApplicationCode(),label.getKey(),device.getDeviceType());
@@ -647,10 +662,63 @@ public class Model extends SimplifiedModel implements DeviceModel {
 							throw new CommsFail ("Error communicating with CBUS");
 						}
 						logger.log (Level.FINEST,"Queueing cbus command " + currentCbusKey + " for " + (String)cbusCommsCommand.getExtraInfo());
-
 					}
 				}
+			}
+			case DeviceType.THERMOSTAT_CBUS:
+			{
+				String currentCbusKey = this.nextKey();
+				SensorFascade sensor = (SensorFascade) device;
+				String fullKeySensor = this.cBUSHelper.buildKey(sensor.getApplicationCode(),sensor.getKey(),device.getDeviceType());
+				String commandCode = command.getCommandCode();
+				// on - off - set-point - cool - heat
+				if (commandCode.equals ("on") || commandCode.equals("off")) {
+					mMIHelpers.sendingExtended.remove(fullKeySensor);
 
+					// if command is on or off build a light string for relay
+					if ((outputCbusCommand = buildCBUSLightString (sensor,command,currentCbusKey)) != null) {
+
+						CommsCommand cbusCommsCommand = new CommsCommand();
+						cbusCommsCommand.setActionCode (currentCbusKey);
+						cbusCommsCommand.setKeepForHandshake(true);
+						cbusCommsCommand.setCommand(outputCbusCommand);
+						cbusCommsCommand.setExtraInfo (sensor.getOutputKey());
+
+						try {
+							//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
+							comms.addCommandToQueue (cbusCommsCommand);
+						} catch (CommsFail e1) {
+							logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
+							throw new CommsFail ("Error communicating with CBUS");
+						}
+						logger.log (Level.FINEST,"Queueing cbus command " + currentCbusKey + " for " + (String)cbusCommsCommand.getExtraInfo());
+					}
+				}				
+				else {
+					// if it is any other command we need to build an aircon command
+					if ((outputCbusCommand = buildCBUSAirconString (sensor,command,currentCbusKey)) != null) {
+
+						CommsCommand cbusCommsCommand = new CommsCommand();
+						cbusCommsCommand.setActionCode (currentCbusKey);
+						cbusCommsCommand.setKeepForHandshake(true);
+						cbusCommsCommand.setCommand(outputCbusCommand);
+						cbusCommsCommand.setExtraInfo (sensor.getOutputKey());
+
+						try {
+							//comms.sendCommandAndKeepInSentQueue (cbusCommsCommand);
+							comms.addCommandToQueue (cbusCommsCommand);
+						} catch (CommsFail e1) {
+							logger.log(Level.WARNING, "Communication failed communicating with CBUS " + e1.getMessage());
+							throw new CommsFail ("Error communicating with CBUS");
+						}
+						logger.log (Level.FINEST,"Queueing cbus command " + currentCbusKey + " for " + (String)cbusCommsCommand.getExtraInfo());
+					}
+				}
+				break;
+			}
+			default:
+				logger.log(Level.FINE, "CBUS: message not handled:"+ theWholeKey);
+				break;
 			}
 		}
 	}
@@ -986,8 +1054,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				logger.log(Level.FINER, "TEMPERATURE command string:" + cBUSString);				
 				byte temperature = Byte.parseByte(cBUSString.substring(4, 6),16);
 				double exactTemperature =  temperature + ((double)Integer.parseInt(cBUSString.substring(6,8),16)) / 256.0;
-				logger.log(Level.FINER, "TEMPERATURE value:" + exactTemperature);				
-				sendCommandToFlash (cbusDevice,"on",String.valueOf(exactTemperature),currentUser);
+				cbusDevice.setLevel(Integer.toString((int)(10*exactTemperature)));
+				cbusDevice.setScale(0.1);
+				DecimalFormat onePlace = new DecimalFormat("0.0");
+				logger.log(Level.FINER, "TEMPERATURE value:" + exactTemperature + " corrected:" + onePlace.format(cbusDevice.getAdjustedLevel()));				
+				sendCommandToFlash (cbusDevice,"on",onePlace.format(cbusDevice.getAdjustedLevel()),currentUser);
 				this.setState(cBusGroup, "on",temperature);
 
 			} catch (IndexOutOfBoundsException ex){
@@ -1179,11 +1250,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		boolean didCommand = false;
 
 		try {
+			String applicationCode = "AC"; 
 			String commandCode = currentCommand.substring(0,2); // the command byte
 			int commandInt = Integer.parseInt(commandCode, 16);
 			String zoneGroup;
 			String zoneList;
-			
+
 			switch (commandInt)
 			{
 			case 0x05:
@@ -1194,15 +1266,24 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			case 0x0D:
 				// humidity plant status
 				logger.log(Level.FINE, "CBUS: HVAC: Humidity check plant status");			
-			break;
+				break;
 			case 0x15:
 			{
 				zoneGroup = currentCommand.substring(2,4);
 				zoneList = currentCommand.substring(4,6);
 				String sensorStatus = currentCommand.substring(10);
 				double temperature = (double)Short.parseShort(currentCommand.substring(6,10),16) / 256.0;
-
 				logger.log(Level.FINE, "CBUS: HVAC: temperature:" + temperature + " sensor status:" + sensorStatus);
+				
+				CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(applicationCode , zoneGroup,DeviceType.THERMOSTAT_CBUS));
+				if (cbusDevice == null) {
+					logger.log(Level.WARNING, "CBUS: No Air-conditioning Device defined for application:" + applicationCode + " group:" + zoneGroup);
+				}
+				else {
+					// current temperature
+					DecimalFormat onePlace = new DecimalFormat("0.0");
+					sendCommandToFlash (cbusDevice,"temperature", onePlace.format(temperature),currentUser);
+				}
 				didCommand =  true;
 				break;
 			}
@@ -1213,7 +1294,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				zoneList = currentCommand.substring(4,6);
 				String sensorStatus = currentCommand.substring(10);
 				double humidity = (double)Integer.parseInt(currentCommand.substring(6,10),16) / 655.35;
-				
+
 				logger.log(Level.FINE, "CBUS: HVAC: humidity:" + humidity + " sensor status:" + sensorStatus);			
 				didCommand = true;
 				break;
@@ -1221,7 +1302,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			case 0x89:
 				// HVAC schedule entry
 				logger.log(Level.FINE, "CBUS: HVAC: schedule entry");
-			break;
+				break;
 			case 0xA9:
 				// Humidity schedule entry
 				logger.log(Level.FINE, "CBUS: HVAC: Humidity schedule entry");
@@ -1256,9 +1337,19 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					levelActual = level / 327.67; 
 				} else {
 					levelActual = level / 256.0;
+					CBUSDevice cbusDevice = (CBUSDevice)configHelper.getControlledItem(cBUSHelper.buildKey(applicationCode , zoneGroup,DeviceType.THERMOSTAT_CBUS));
+					if (cbusDevice == null) {
+						logger.log(Level.WARNING, "CBUS: No Air-conditioning Device defined for application:" + applicationCode + " group:" + zoneGroup);
+					}
+					else {
+						// setpoint temperature
+						DecimalFormat onePlace = new DecimalFormat("0.0");
+						sendCommandToFlash (cbusDevice,"value", onePlace.format(levelActual),currentUser);
+					}
 				}
+
+				logger.log(Level.FINE, "CBUS: HVAC: set zone hvac mode zone:" + zoneGroup + " zonelist:" + zoneList + " mode:" + hvacMode + " type:" + hvacType + " level:" + levelActual + " auxLevel:" + auxLevel);
 				
-				logger.log(Level.FINE, "CBUS: HVAC: set zone hvac mode zone:" + zoneGroup + " zonelist:" + zoneList + " mode:" + hvacMode + " type:" + hvacType + " level:" + levelActual + " auxLevel:" + auxLevel);			
 				break;
 			}
 			case 0x36:
@@ -1270,8 +1361,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				int hvacType = Integer.parseInt(currentCommand.substring(8,10),16);
 				byte level = Byte.parseByte(currentCommand.substring(10,12),16);
 				int auxLevel = Integer.parseInt(currentCommand.substring(12,14),16);
-				
-				logger.log(Level.FINE, "CBUS: HVAC: set plant hvac level zone:" + zoneGroup + " zonelist:" + zoneList + " mode:" + hvacMode + " type:" + hvacType + " level:" + level + " auxLevel:" + auxLevel);			
+
+				logger.log(Level.FINE, "CBUS: HVAC: set plant hvac level zone:" + zoneGroup + " zonelist:" + zoneList + " mode:" + hvacMode + " type:" + hvacType + " level:" + level + " auxLevel:" + auxLevel);
 				didCommand = true;
 				break;
 			}
@@ -1311,7 +1402,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		catch (NumberFormatException ex) {}
 		catch (IndexOutOfBoundsException ex) {}
-		
+
 		return didCommand;
 	}
 	/**
@@ -1739,6 +1830,88 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 	}
 	/**
+	 * Handles the CBUS thermostat, don't need to deal with on/off these are
+	 * done above as lighting commands
+	 * There are some assumptions made at this early stage of the code
+	 * 1. We are not targeting a specific aircon or heater, just sending a FF device
+	 * 2. We are only handling the first zone in the group
+	 * 3. We are not handling the auxiliary level
+	 * 4. We are only sending the mode part of the HVAC status
+	 * 5. We are not dealing with humidity control just yet
+ 	 */
+	public String buildCBUSAirconString (CBUSDevice device, CommandInterface command,String currentChar) throws CommsFail {
+		String cBUSOutputString = null;
+		boolean commandFound = false;
+
+		String rawBuiltCommand = doRawIfPresent (command, (DeviceType)device);
+		if (rawBuiltCommand != null)
+		{
+			cBUSOutputString = rawBuiltCommand;
+			commandFound = true;
+		}
+		String theCommand = command.getCommandCode();
+		if (!commandFound && theCommand == "") {
+			logger.log(Level.WARNING, "Empty command received from client "+ command.getCommandCode());
+			return null;
+		}
+
+		// HVAC type  FF (let anyone deal with it)
+		String type = "FF";
+		// group list will be only zone 1 for now
+		String groupList = "01";
+		// auxLevel will be 0 for now
+		String auxLevel = "00";
+		// The set point level we are after
+		String hexLevel = "";
+		// mode bytes 000 == off
+		String mode = "00";
+		// sets the unit to heat
+		if (theCommand.equals("heat") ) {
+			String levelStr = command.getExtraInfo();
+			// mode bytes 001
+			mode = "01";
+			short rawLevel = (short) (Integer.parseInt(levelStr) * 256);
+			 hexLevel = hexPad(Integer.toString(rawLevel,16),4);
+		}
+		// sets the unit to cool
+		if (theCommand.equals("cool") ) {
+			String levelStr = command.getExtraInfo();
+			// mode bytes 010
+			mode = "02";
+			// HVAC type  FF (let anyone deal with it)
+			short rawLevel = (short) (Integer.parseInt(levelStr) * 256);
+			hexLevel = hexPad(Integer.toString(rawLevel,16),4);
+		}
+		// changes the set-point on the thermostat 
+		if (theCommand.equals("auto") ) {
+			String levelStr = command.getExtraInfo();
+			// mode bytes 011
+			mode = "03";
+			short rawLevel = (short) (Integer.parseInt(levelStr) * 256);
+			hexLevel = hexPad(Integer.toString(rawLevel,16),4);
+			if (hexLevel.equals("")) {
+				logger.log(Level.WARNING, "Set command without level received from client " + command.getCommandCode());
+			}
+		}
+		// sets the fan/vent only
+		if (theCommand.equals("fan") ) { 
+			String levelStr = command.getExtraInfo();
+			// mode bytes 100
+			mode = "04";
+			// HVAC type  FF (let anyone deal with it)
+			short rawLevel = (short) (Integer.parseInt(levelStr) * 327.67);
+			hexLevel = hexPad(Integer.toString(rawLevel,16),4);
+		}
+
+		if (hexLevel.length() > 0) {
+			cBUSOutputString = buildCBUSAirconCommand("2F", device.getApplicationCode(), device.getKey(), groupList, mode, type, hexLevel, auxLevel,  currentChar);	
+			return cBUSOutputString;
+		}
+		else {
+			return null;
+		}
+	}
+	/**
 	 * 
 	 * @param vals
 	 * @return
@@ -1760,6 +1933,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	 */
 	protected String calcChecksum (String toCalc) {
 		int total = 0;
+		logger.log(Level.FINE, "calculate checksum for: " + toCalc);
 		for (int i = 0; i < toCalc.length(); i+=2) {
 			String nextPart = toCalc.substring(i,i+2);
 			int val = Integer.parseInt(nextPart,16);
@@ -1795,7 +1969,30 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			returnString = returnString + key + ETX;
 			return returnString;
 		} catch (NumberFormatException er) {
-			logger.log (Level.FINE, "Zone entry for CBUS is malformed. Command : " + cBUSCommand + "Group : " + group);
+			logger.log (Level.FINE, "Zone entry for CBUS is malformed. Command : " + cBUSCommand + " Group : " + group);
+			logger.log (Level.FINEST, "Error: " + er.getMessage());
+			return null;
+		}
+	}
+	/**
+	 * build an air-conditioning string command 0x2F or 0x47
+	 * @param cBUSCommand	The command byte
+	 * @param appCodeStr	The application byte
+	 * @param group			The group byte
+	 * @param key			The sequence key
+	 * @return	The command string or null if the string can't be built
+	 */
+	protected String buildCBUSAirconCommand (String cBUSCommand, String appCodeStr,  String group, String groupList, String mode, String type, String level, String auxLevel, String key) {
+		try
+		{
+			String returnString = "05" + appCodeStr + "00" + cBUSCommand + group + groupList + mode + type + level + auxLevel;	// create the string
+			returnString += calcChecksum(returnString);	// add the checksum
+			returnString = returnString.toUpperCase();	// make it upper-case?
+			returnString = "\\" + returnString + key + ETX;	// add the sequence character and the end of message
+			return returnString;
+		}
+		catch (NumberFormatException er) {
+			logger.log (Level.FINE, "Zone entry for CBUS is malformed. Command : " + cBUSCommand + " Group : " + group);
 			logger.log (Level.FINEST, "Error: " + er.getMessage());
 			return null;
 		}

@@ -36,7 +36,7 @@ public class SensorFactory  extends DeviceFactory {
 
 			String channel = "";
 			String units = "";
-			String group = element.getAttributeValue("GROUP");;
+			String group = element.getAttributeValue("GROUP");
 			String outKey = element.getAttributeValue("DISPLAY_NAME");
 
 			SensorFascade theSensor = new SensorFascade(name, channel, units, group, connectionType, outKey,name);
@@ -44,14 +44,62 @@ public class SensorFactory  extends DeviceFactory {
 			this.parseExtraAttributes(outKey , targetDevice, theSensor,  element);
 			theSensor.setKey(key);
 			theSensor.setGroupName(groupName);
-
 			
+			units = element.getAttributeValue("UNITS");
+			if (units != null)
+				theSensor.setUnits(units);
+
+			String scale = element.getAttributeValue("SCALE");
+			if (scale != null)
+			{
+				try {
+					double dscale = Double.parseDouble(scale);
+					theSensor.setScale(dscale);
+				} 
+				catch(NumberFormatException ex) {}
+			}
+
+			String offset = element.getAttributeValue("OFFSET");
+			if (offset != null)
+			{
+				try {
+					double doffset = Double.parseDouble(offset);
+					theSensor.setOffset(doffset);
+				} 
+				catch(NumberFormatException ex) {}
+			}
+
+
 			if (connectionType == DeviceType.SENSOR) {
 				theSensor.setMax("255");
 				channel = element.getAttributeValue("CHANNEL");
-				units = element.getAttributeValue("UNITS");
+				theSensor.setChannel(channel);
 				group = element.getAttributeValue("GROUP");
+				theSensor.setGroup(group);
 			}
+			if (connectionType == DeviceType.THERMOSTAT_CBUS) {
+				String applicationCode = element.getAttributeValue("CBUS_APPLICATION");
+				String relay = element.getAttributeValue("RELAY");
+				String max = element.getAttributeValue("MAX");
+				String zones = element.getAttributeValue("ZONES");
+		
+				if (applicationCode != null) {
+					theSensor.setApplicationCode(applicationCode);
+				}
+				else { // want to default application to aircon app group
+					theSensor.setApplicationCode("AC");
+				}
+				if (max != null) {
+					theSensor.setMax(max);
+				}
+				if (relay != null) {
+					theSensor.setRelay(relay);
+				}
+				if (zones != null) {
+					theSensor.setZones(zones);
+				}
+			}
+
 			targetDevice.addControlledItem(key, theSensor, type);
 			targetDevice.addStartupQueryItem(key, theSensor, type);
 	

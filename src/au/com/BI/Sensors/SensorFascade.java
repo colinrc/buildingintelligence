@@ -32,6 +32,9 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 		if (deviceType == DeviceType.SENSOR ) {
 			sensor.setMax (255);
 		}
+		if (deviceType == DeviceType.THERMOSTAT_CBUS) {
+			sensor.setMax(0xFFFF);
+		}
 	}
 
 	public int getClientCommand() {
@@ -44,6 +47,9 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 		sensor.setOutputKey(outputKey);
 		if (deviceType == DeviceType.SENSOR ) {
 			sensor.setMax (255);
+		}
+		if (deviceType == DeviceType.THERMOSTAT_CBUS) {
+			sensor.setMax(0xFFFF);
 		}
 	}
 	
@@ -58,6 +64,9 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 		if (deviceType == DeviceType.SENSOR ) {
 			sensor.setMax (255);
 		}
+		if (deviceType == DeviceType.THERMOSTAT_CBUS) {
+			sensor.setMax(0xFFFF);
+		}
 	}
 
 	public SensorFascade (String name, String channel, String units, String group, int deviceType, String outputKey, String deviceName){
@@ -66,6 +75,9 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 		sensor.setOutputKey(outputKey);
 		if (deviceType == DeviceType.SENSOR ) {
 			sensor.setMax (255);
+		}
+		if (deviceType == DeviceType.THERMOSTAT_CBUS) {
+			sensor.setMax(0xFFFF);
 		}
 	}
 
@@ -105,14 +117,15 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	 */
 	public final void setRawCodes(Map rawCodes) {
 		sensor.setRawCodes (rawCodes);
-	}	
+	}
+
 	public void setKey (String originalKey) {
 		sensor.setKey (originalKey);
 	}
+	
 	public String getKey (){
 		return sensor.getKey();
 	}
-
 
 	public int getDeviceType () {
 		return sensor.getDeviceType();
@@ -134,7 +147,6 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	public String getCommand (){
 		return sensor.getCommand();
 	}
-	
 
 	/**
 	 * @return Returns the outputKey.
@@ -151,7 +163,6 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	{
 		sensor.setOutputKey(outputKey);
 	}
-
 
 	/**
 	 * @return Returns the outputKey.
@@ -188,42 +199,39 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	/**
 	 * @param command The command to set.
 	 */
-	public final void setCommand(String command)
-	{
+	public final void setCommand(String command) {
 		sensor.setCommand(command);
 	}
 
 	/**
 	 * @param deviceType The deviceType to set.
 	 */
-	public final void setDeviceType(int deviceType)
-	{
+	public final void setDeviceType(int deviceType) {
 		this.setDeviceType (deviceType);
 	}
 
 	/**
 	 * @param name The name to set.
 	 */
-	public final void setName(String name)
-	{
+	public final void setName(String name) {
 		this.setName(name);
 	}
 
-	
 	/**
 	 * @return Returns the applicationCode.
 	 */
 	public String getApplicationCode() {
-		return "";
+		return sensor.getApplicationCode();
 	}
 	/**
 	 * @param applicationCode The applicationCode to set.
 	 */
 	public void setApplicationCode(String applicationCode) {
+		sensor.setApplicationCode(applicationCode);
 	}
 	
 	/**
-	 * @param max The applicationCode to set.
+	 * @param max The max to set.
 	 */
 	public void setMax(String max) {
 		int maxLevel = 100;
@@ -248,6 +256,33 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	public String getMaxStr () {
 		return Integer.toString(sensor.getMax());
 	}
+	/**
+	 * @param zone The zones to set.
+	 */
+	public void setZones(String zones) {
+		int zonesLevel = 0;
+		if (zones != null) {
+			try {
+				zonesLevel = Integer.parseInt(zones);
+			} catch (NumberFormatException ex) {
+				zonesLevel = 0;
+			}
+		}
+		sensor.setZones(zonesLevel);
+	}
+	
+	public void setZones (int zones){
+		sensor.setZones(zones);
+	}
+	
+	public int getZones() {
+		return sensor.getZones();
+	}
+
+	public String geZonesStr () {
+		return Integer.toString(sensor.getZones());
+	}
+	
 	
 	public void setGroupName (String groupName) {
 		sensor.setGroupName(groupName);
@@ -269,12 +304,16 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 		return sensor.getGroup();
 	}
 	
-	public String getTemperature() {
-		return sensor.getTemperature();
+	public String getLevel() {
+		return sensor.getLevel();
 	}
 	
-	public void setTemperature(String temperature) {
-		sensor.setTemperature(temperature);
+	public void setLevel(String level) {
+		sensor.setLevel(level);
+	}
+	
+	public double getAdjustedLevel() {
+		return sensor.getAdjustedLevel();
 	}
 	
 	public boolean isGenerateDimmerVals() {
@@ -282,7 +321,7 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	}
 
 	public void setGenerateDimmerVals(boolean generateDimmerVals) {
-			// Meaningless for sensors
+		// Meaningless for sensors
 	}
 	
 	/* 
@@ -313,5 +352,21 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 
 	public void setRoom(String room) {
 		sensor.setRoom(room);
+	}
+	
+	public void setScale(double scale) {
+		sensor.setScale(scale);
+	}
+	
+	public double getScale() {
+		return sensor.getScale();
+	}
+	
+	public void setOffset(double offset) {
+		sensor.setOffset(offset);
+	}
+	
+	public double getOffset() {
+		return sensor.getOffset();
 	}
 }

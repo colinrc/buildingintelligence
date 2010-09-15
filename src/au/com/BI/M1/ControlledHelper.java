@@ -186,8 +186,8 @@ public class ControlledHelper {
 				_command.setKey("CLIENT_SEND");
 				_command.setCommand("on");
 
-				if (sensor.getTemperature() == null
-						|| !sensor.getTemperature().equals(
+				if (sensor.getLevel() == null
+						|| !sensor.getLevel().equals(
 								_command.getExtraInfo())) {
 
 					logger.log(Level.FINER,
@@ -196,7 +196,7 @@ public class ControlledHelper {
 											.toString() + ":device:"
 									+ requestTemperatureReply.getDevice() + ":"
 									+ adjustedTemperature);
-					sensor.setTemperature(_command.getExtraInfo());
+					sensor.setLevel(_command.getExtraInfo());
 					
 					sendCommand(cache, commandQueue, _command);
 				} else {
