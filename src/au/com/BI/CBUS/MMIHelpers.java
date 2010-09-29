@@ -397,7 +397,7 @@ public class MMIHelpers {
 		
 		String currentChar = model.nextKey();
 		
-		String outputCbusCommand = model.buildCBUSLevelRequestCommand(appNumber, number,currentChar);
+		String outputCbusCommand = cBUSHelper.buildCBUSLevelRequestCommand(appNumber, number,currentChar);
 
 		
 		if (outputCbusCommand == null || outputCbusCommand.trim().equals("")){

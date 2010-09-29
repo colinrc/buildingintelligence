@@ -56,7 +56,6 @@ public class PollTemperatures extends Thread {
 		running = false;
 	}
 
-
 	public void run ()  {
 		running = true;
 		try {

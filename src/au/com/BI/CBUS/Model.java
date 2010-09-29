@@ -28,7 +28,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected char ETX='\r';
 	protected String applicationCode = "38";
 	protected byte applicationCodeByte = 0x38;
-	protected String rampCodes = ":02:0A:12:1A:22:2A:32:3A:42:4A:52:5A:62:6A:72:7A";
 	protected HashSet <String>applicationCodes = null;
 	protected CBUSHelper cBUSHelper;
 
@@ -99,21 +98,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 		super.setETXArray (etxChars);
 		super.attatchComms();
-	}
-	/**
-	 * Pads a hex value with leading zeros till the string is padding long
-	 * @param hexVal	The hex value to pad
-	 * @param padding	The number of chars required
-	 * @return	The string representing the padded value
-	 */
-	protected String hexPad(String hexVal, int padding) {
-		int missing = padding - hexVal.length();
-		String retVal = hexVal;
-		
-		for (int i = 0 ; i < missing ; i++) {
-			retVal = "0" + retVal;
-		}
-		return retVal;
 	}
 	/*
 	public void doClientStartup (List commandQueue, long targetFlashDeviceID) {
@@ -426,7 +410,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		setCBUSParameters ();
 
-		// FIXME unreachable since a change in the sensor facade in 2006
 		if (!temperatureSensors.isEmpty() && tempPollValue != 0L) {
 			if  (pollTemperatures != null) pollTemperatures.setRunning(false); // switch off any which may have already existed
 			pollTemperatures = new PollTemperatures();
@@ -508,7 +491,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 			CommsCommand cbusCommsCommand4 = new CommsCommand();
 			String toSend4 = "A3410029";  // Set power up mode to teh same as current operation mode
-			String checkSum = this.calcChecksum(toSend4);
+			String checkSum = cBUSHelper.calcChecksum(toSend4);
 			actionCode = this.nextKey();
 			cbusCommsCommand4.setActionCode(actionCode);
 			cbusCommsCommand4.setCommand("@"+toSend4 + checkSum+  actionCode+ETX);
@@ -516,7 +499,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 			CommsCommand cbusCommsCommand5 = new CommsCommand();
 			String toSend5 = "A3420006"; // power up notification on , LOCAL_SAL on
-			checkSum = this.calcChecksum(toSend5);
+			checkSum = cBUSHelper.calcChecksum(toSend5);
 			actionCode = this.nextKey();
 			cbusCommsCommand5.setActionCode(actionCode);
 			cbusCommsCommand5.setCommand("@"+ toSend5  +checkSum + actionCode+ ETX);
@@ -1146,7 +1129,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			break;
 		case 0xCA:
 			// triggering (scenes)
-			didCommand = handleScene(restOfString);
+			didCommand = cBUSHelper.handleScene(restOfString);
 			break;
 		case 0x19:
 			// temperature broadcast
@@ -1493,7 +1476,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			return true;
 		}
 
-		if (rampCodes.indexOf(commandCode) > -1) {
+		if (cBUSHelper.rampCodes.indexOf(commandCode) > -1) {
 			// need to be able to loop the remaining string ramping each of the lights
 			String rampLevel = currentCommand.substring(4,6);
 			try {
@@ -1552,29 +1535,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		return false;
 	}
-	/**
-	 * Handles a scene command 
-	 * @param restOfString
-	 * @return
-	 */
-	private boolean handleScene(String restOfString) {
-		// trigger control (scene command)
-		// command code is as below (02 == trigger) (01 == trigger min) (79 == trigger max) (09 == trigger kill) (101LLLLL = trigger label (LLLLL = label number in binary))
-		try {
-			String commandCode = restOfString.substring(0,2); // the command byte
-			String cBusGroup = restOfString.substring(2,4); // which cbus group the command is for
-			String actionSelector = restOfString.substring(4,6);
-
-			logger.log(Level.FINER,"received scene trigger" );
-			logger.log(Level.FINEST,"command:" + commandCode + " trigger group:" + cBusGroup + " action selector:" + actionSelector);
-		}
-		catch (IndexOutOfBoundsException ex) {
-			logger.log(Level.WARNING,"scene trigger not enough arguments...");			
-		}
-
-		return true;
-	}
-
 	/**
 	 * 
 	 */
@@ -1683,61 +1643,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			if (flavour.equals("")) flavour = "0";
 			labelMgr.setLabelState(device.getOutputKey(), catalogueStr);
 
-			cBUSOutputString =buildCBUSLabelCommand (device.getApplicationCode(), device.getKey(), catalogueStr, flavour, currentChar,device);
+			String theLabel = labelMgr.getLabelText(catalogueStr);
+			cBUSOutputString = cBUSHelper.buildCBUSLabelCommand (device.getApplicationCode(), device.getKey(), theLabel, flavour, currentChar,device);
 			// labelState.set (device.getOutputKey(),command.getExtra2Info());
 		}
 		return cBUSOutputString;
-	}
-	/**
-	 * 	
-	 * @param appCodeStr
-	 * @param key
-	 * @param catalogueStr
-	 * @param flavour
-	 * @param currentChar
-	 * @param device
-	 * @return
-	 */
-	protected String buildCBUSLabelCommand (String appCodeStr, String key, String catalogueStr, String flavour, String currentChar, Label device) {
-		String returnString = "";
-		try {
-			String theLabel = labelMgr.getLabelText(catalogueStr);
-			logger.log(Level.FINEST,"Building a CBUS label string " + theLabel + " for device "+ device.getOutputKey());
-			Vector <Byte> retCodes = new Vector<Byte>();
-			retCodes.add( (byte)5);
-			retCodes.add(Byte.parseByte(appCodeStr,16));
-			retCodes.add((byte)0); // options
-
-			int  theCommand = 160 +3 + theLabel.length();
-			retCodes.add((byte)theCommand);
-			int intGroup = Integer.parseInt(key,16);
-			retCodes.add((byte)intGroup); // group address
-			retCodes.add((byte)0); 
-			retCodes.add((byte)1); // language english
-
-			for (int i = 0; i < theLabel.length(); i ++){
-				char eachChar = theLabel.charAt(i);
-				retCodes.add((byte)eachChar);
-			}
-			byte checkSum = calcChecksum(retCodes);
-			boolean firstChar = true; // first is different
-			for (int i:retCodes){
-				if (firstChar) {
-					returnString = "\\05";
-					firstChar = false;
-				}
-				else
-					returnString += String.format("%02X", i&0xff);
-			}
-			returnString += String.format("%02X",checkSum);
-			returnString += currentChar + ETX;
-
-			return returnString;
-
-		} catch (NumberFormatException er) {
-			logger.log (Level.INFO, "Group address is in error for CBUS Label command : "+ er.getMessage());
-			return null;
-		}
 	}
 	/**
 	 * 
@@ -1768,14 +1678,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (theCommand.equals("on") ) {
 			String levelStr = command.getExtraInfo();
 			if (levelStr.equals("")) {
-				cBUSOutputString =buildCBUSOnOffCommand ("79", device.getApplicationCode(), device.getKey(),currentChar);
+				cBUSOutputString = cBUSHelper.buildCBUSOnOffCommand ("79", device.getApplicationCode(), device.getKey(),currentChar);
 				stateOfGroup.setPower("on",false);
 				stateOfGroup.setLevel(100,false);
 			}
 			else {
 				String rampRate = command.getExtra2Info();
 				if (rampRate.equals("")) rampRate = "0";
-				cBUSOutputString = buildCBUSRampToCommand (rampRate,device.getApplicationCode(),levelStr, device.getKey(),currentChar);
+				cBUSOutputString = cBUSHelper.buildCBUSRampToCommand (rampRate,device.getApplicationCode(),levelStr, device.getKey(),currentChar);
 				stateOfGroup.setPower("on",false);
 				stateOfGroup.setLevel(Integer.parseInt(levelStr),false);
 			}
@@ -1785,13 +1695,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		if (theCommand.equals("off") || theCommand.equals("down") ) {
 			String rampRate = command.getExtra2Info();
 			if (!rampRate.equals("")) {
-				cBUSOutputString = buildCBUSRampToCommand (rampRate,device.getApplicationCode(),"0", device.getKey(),currentChar);
+				cBUSOutputString = cBUSHelper.buildCBUSRampToCommand (rampRate,device.getApplicationCode(),"0", device.getKey(),currentChar);
 				stateOfGroup.setPower("on",false);
 				stateOfGroup.setLevel(0,false);
 				commandFound = true;
 			} else {
 
-				cBUSOutputString =buildCBUSOnOffCommand ("01", device.getApplicationCode(),device.getKey(),currentChar);
+				cBUSOutputString = cBUSHelper.buildCBUSOnOffCommand ("01", device.getApplicationCode(),device.getKey(),currentChar);
 				stateOfGroup.setPower("off",false);
 				stateOfGroup.setLevel(0,false);
 				commandFound = true;
@@ -1800,7 +1710,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		// stop used on shutter / blind controls set level == 1% to stop them
 		if (theCommand.equals("stop") ) { 
 			String rampRate = "0";
-			cBUSOutputString = buildCBUSRampToCommand (rampRate,device.getApplicationCode(),"1", device.getKey(),currentChar);
+			cBUSOutputString = cBUSHelper.buildCBUSRampToCommand (rampRate,device.getApplicationCode(),"1", device.getKey(),currentChar);
 			stateOfGroup.setPower("on",false);
 			stateOfGroup.setLevel(1,false);
 			commandFound = true;
@@ -1808,7 +1718,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		// up used on shutter / blind controls set level == 99% to raise them
 		if (theCommand.equals("up") ) { 
 			String rampRate = "0";
-			cBUSOutputString = buildCBUSRampToCommand (rampRate,device.getApplicationCode(),"99", device.getKey(),currentChar);
+			cBUSOutputString = cBUSHelper.buildCBUSRampToCommand (rampRate,device.getApplicationCode(),"99", device.getKey(),currentChar);
 			stateOfGroup.setPower("on",false);
 			stateOfGroup.setLevel(99,false);
 			commandFound = true;
@@ -1871,7 +1781,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			// mode bytes 001
 			mode = "01";
 			short rawLevel = (short) (Integer.parseInt(levelStr) * 256);
-			 hexLevel = hexPad(Integer.toString(rawLevel,16),4);
+			 hexLevel = cBUSHelper.hexPad(Integer.toString(rawLevel,16),4);
 		}
 		// sets the unit to cool
 		if (theCommand.equals("cool") ) {
@@ -1880,7 +1790,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			mode = "02";
 			// HVAC type  FF (let anyone deal with it)
 			short rawLevel = (short) (Integer.parseInt(levelStr) * 256);
-			hexLevel = hexPad(Integer.toString(rawLevel,16),4);
+			hexLevel = cBUSHelper.hexPad(Integer.toString(rawLevel,16),4);
 		}
 		// changes the set-point on the thermostat 
 		if (theCommand.equals("auto") ) {
@@ -1888,7 +1798,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			// mode bytes 011
 			mode = "03";
 			short rawLevel = (short) (Integer.parseInt(levelStr) * 256);
-			hexLevel = hexPad(Integer.toString(rawLevel,16),4);
+			hexLevel = cBUSHelper.hexPad(Integer.toString(rawLevel,16),4);
 			if (hexLevel.equals("")) {
 				logger.log(Level.WARNING, "Set command without level received from client " + command.getCommandCode());
 			}
@@ -1900,225 +1810,16 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			mode = "04";
 			// HVAC type  FF (let anyone deal with it)
 			short rawLevel = (short) (Integer.parseInt(levelStr) * 327.67);
-			hexLevel = hexPad(Integer.toString(rawLevel,16),4);
+			hexLevel = cBUSHelper.hexPad(Integer.toString(rawLevel,16),4);
 		}
 
 		if (hexLevel.length() > 0) {
-			cBUSOutputString = buildCBUSAirconCommand("2F", device.getApplicationCode(), device.getKey(), groupList, mode, type, hexLevel, auxLevel,  currentChar);	
+			cBUSOutputString = cBUSHelper.buildCBUSAirconCommand("2F", device.getApplicationCode(), device.getKey(), groupList, mode, type, hexLevel, auxLevel,  currentChar);	
 			return cBUSOutputString;
 		}
 		else {
 			return null;
 		}
-	}
-	/**
-	 * 
-	 * @param vals
-	 * @return
-	 */
-	public byte calcChecksum(Vector<Byte> vals) {
-		int total = 0;
-
-		for (int i: vals){
-			total += i;
-		}
-		int remainder = total % 256;
-		byte twosComp = (byte)((~remainder + 1)&0xff);
-		return twosComp;			
-	}
-	/**
-	 * 
-	 * @param toCalc
-	 * @return
-	 */
-	protected String calcChecksum (String toCalc) {
-		int total = 0;
-		logger.log(Level.FINE, "calculate checksum for: " + toCalc);
-		for (int i = 0; i < toCalc.length(); i+=2) {
-			String nextPart = toCalc.substring(i,i+2);
-			int val = Integer.parseInt(nextPart,16);
-			total += val;
-		}
-		byte remainder = (byte)(total % 256);
-		byte twosComp = (byte)-remainder;
-		String hexCheck = Integer.toHexString(twosComp); 
-		if (hexCheck.length() == 1) hexCheck = "0" + hexCheck;
-		if (hexCheck.length() > 2) hexCheck = hexCheck.substring(hexCheck.length() - 2);
-		return hexCheck.toUpperCase();
-	}
-	/**
-	 * 
-	 * @param cBUSCommand
-	 * @param appCodeStr
-	 * @param group
-	 * @param key
-	 * @return
-	 */
-	protected String buildCBUSOnOffCommand (String cBUSCommand, String appCodeStr,  String group, String key) {
-		try {
-			int appCode = Integer.parseInt(appCodeStr,16);
-			byte remainder = (byte)(((byte)5 + appCode + Byte.parseByte(cBUSCommand,16) + Integer.parseInt(group,16)) % 256);
-			byte twosComp = (byte)-remainder;
-
-			String hexCheck = Integer.toHexString(twosComp);
-			if (hexCheck.length() == 1) hexCheck = "0" + hexCheck;
-			if (hexCheck.length() > 2) hexCheck = hexCheck.substring(hexCheck.length() - 2);
-
-			String returnString = "\\05" + appCodeStr + "00" + cBUSCommand + group + hexCheck;
-			returnString = returnString.toUpperCase();
-			returnString = returnString + key + ETX;
-			return returnString;
-		} catch (NumberFormatException er) {
-			logger.log (Level.FINE, "Zone entry for CBUS is malformed. Command : " + cBUSCommand + " Group : " + group);
-			logger.log (Level.FINEST, "Error: " + er.getMessage());
-			return null;
-		}
-	}
-	/**
-	 * build an air-conditioning string command 0x2F or 0x47
-	 * @param cBUSCommand	The command byte
-	 * @param appCodeStr	The application byte
-	 * @param group			The group byte
-	 * @param key			The sequence key
-	 * @return	The command string or null if the string can't be built
-	 */
-	protected String buildCBUSAirconCommand (String cBUSCommand, String appCodeStr,  String group, String groupList, String mode, String type, String level, String auxLevel, String key) {
-		try
-		{
-			String returnString = "05" + appCodeStr + "00" + cBUSCommand + group + groupList + mode + type + level + auxLevel;	// create the string
-			returnString += calcChecksum(returnString);	// add the checksum
-			returnString = returnString.toUpperCase();	// make it upper-case?
-			returnString = "\\" + returnString + key + ETX;	// add the sequence character and the end of message
-			return returnString;
-		}
-		catch (NumberFormatException er) {
-			logger.log (Level.FINE, "Zone entry for CBUS is malformed. Command : " + cBUSCommand + " Group : " + group);
-			logger.log (Level.FINEST, "Error: " + er.getMessage());
-			return null;
-		}
-	}
-	/**
-	 * 
-	 * @param appCodeStr
-	 * @param startGroup
-	 * @param key
-	 * @return
-	 */
-	protected String buildCBUSLevelRequestCommand (String appCodeStr,  int startGroup,String key) {
-		try {
-			byte appCode = Byte.parseByte(appCodeStr,16);
-			byte remainder = (byte)((5+255+115 + 7 + appCode + startGroup ) % 256);
-			byte twosComp = (byte)-remainder;
-			String numStr = Integer.toHexString(startGroup);
-			if (numStr.length() == 1) numStr = "0" + numStr;
-
-			String hexCheck = Integer.toHexString(twosComp);
-			if (hexCheck.length() == 1) hexCheck = "0" + hexCheck;
-			if (hexCheck.length() > 2) hexCheck = hexCheck.substring(hexCheck.length() - 2);
-
-			String returnString = "\\05FF007307" + appCodeStr + numStr + hexCheck ;
-			returnString = returnString.toUpperCase();
-			return returnString + key + ETX;
-		} catch (NumberFormatException er) {
-			logger.log (Level.FINE, "Application code is in error for level request : " + appCodeStr);
-			return null;
-		}
-	}
-	/**
-	 * 
-	 * @param rampCodeStr
-	 * @param appCodeStr
-	 * @param levelStr
-	 * @param group
-	 * @param key
-	 * @return
-	 */
-	protected String buildCBUSRampToCommand (String rampCodeStr, String appCodeStr, String levelStr, String group, String key)  {
-		try {
-			int level = Integer.parseInt(levelStr);
-			//byte levelPerc = ((byte)((level / 100 ) * 255));
-			int normValue = (int)((double)level / 100.0 * 255.0);
-			if (level == 255) normValue = 100;
-
-			String rampRateStr = findRampCode (rampCodeStr);
-			if (rampRateStr.equals ("")){
-				logger.log (Level.WARNING, "A ramp rate that CBUS cannot support was specified");
-				return null;
-			}
-			byte rampRate = Byte.parseByte(rampRateStr,16);
-
-			byte appCode = Byte.parseByte(appCodeStr,16);
-
-			byte remainder = (byte)(((byte)5 + appCode + rampRate + normValue + Integer.parseInt(group,16)) % 256);
-			byte twosComp = (byte)-remainder;
-			String hexCheck = Integer.toHexString(twosComp);
-			if (hexCheck.length() == 1) hexCheck = "0" + hexCheck;
-			if (hexCheck.length() > 2) hexCheck = hexCheck.substring(hexCheck.length() - 2);
-
-			String hexLevel = Integer.toHexString(normValue);
-			if (hexLevel.length() == 1) hexLevel = "0" + hexLevel;
-			if (hexLevel.length() > 2) hexLevel = hexLevel.substring(hexLevel.length() - 2);
-
-			String returnString = "\\05" + appCodeStr + "00" + rampRateStr + group + hexLevel + hexCheck;
-			returnString = returnString.toUpperCase();
-			return returnString + key + ETX;
-		} catch (NumberFormatException er) {
-			logger.log (Level.SEVERE, "Zone entry for CBUS is malformed : " + group);
-			return null;
-		}
-	}
-	/**
-	 * 
-	 * @param buffer
-	 * @return
-	 */
-	public boolean passChecksum(String buffer) {
-		int l = buffer.length();
-		if (l < 2) return false;
-		try {
-			int total = 0;
-			byte checksum = (byte)Integer.parseInt(buffer.substring(l-2),16);
-
-			for (int i = 0; i < l-2 ; i+= 2){
-				total += Integer.parseInt(buffer.substring(i,i+2),16);
-			}
-			byte remainder = (byte)(total % 256);
-			byte twosComp = (byte)-remainder;
-			if (twosComp != checksum){
-				logger.log (Level.FINE,"CBUS String failed checksum. 2s cmp = " + twosComp + " chk = " + checksum + " Buffer was " + buffer );
-				return false;
-			} else {
-				return true;
-			}
-		} catch (NumberFormatException ex){
-			logger.log (Level.WARNING,"CBUS string contained a non-hex character. " + ex.getMessage() + " Buffer was "+ buffer);;
-			return false;
-		}
-	}
-	/**
-	 * 
-	 * @param rampRate
-	 * @return
-	 */
-	public String findRampCode (String rampRate) {
-		String retCode = "";
-		if (rampRate.equals("0")) retCode = "02";
-		if (rampRate.equals("4")) retCode = "0A";
-		if (rampRate.equals("8")) retCode = "12";
-		if (rampRate.equals("12")) retCode = "1A";
-		if (rampRate.equals("20")) retCode = "22";
-		if (rampRate.equals("30")) retCode = "2A";
-		if (rampRate.equals("40")) retCode = "32";
-		if (rampRate.equals("1m")) retCode = "3A";
-		if (rampRate.equals("1.5m")) retCode = "42";
-		if (rampRate.equals("2m")) retCode = "4A";
-		if (rampRate.equals("3m")) retCode = "52";
-		if (rampRate.equals("5m")) retCode = "5A";
-		if (rampRate.equals("7m")) retCode = "62";
-		if (rampRate.equals("10m")) retCode = "6A";
-		if (rampRate.equals("15m")) retCode = "72";
-		if (rampRate.equals("17m")) retCode = "7A";
-		return retCode;
 	}
 	/**
 	 * 
@@ -2176,19 +1877,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void setCurrentState (String fullKey, StateOfGroup currentState) {
 		state.put(fullKey, currentState);
 	}	
-	/**
-	 * @return Returns the applicationCode.
-	 */
-	public String getApplicationCode() {
-		return applicationCode;
-	}
-	/**
-	 * @param applicationCode The applicationCode to set.
-	 */
-	public void setApplicationCode(String applicationCode) {
-		this.applicationCode = applicationCode;
-		this.applicationCodeByte = Byte.parseByte(applicationCode,16);
-	}
 	/**
 	 * 
 	 */
