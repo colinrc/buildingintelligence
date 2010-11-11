@@ -56,7 +56,32 @@ public class blinds extends BIScript  {
 	boolean ableToRunMultiple = true
 
 	// List the variables that will cause the script to run when they change
-	String[]  fireOnChange =   ["FAMILY_BLIND","DINING_BLIND"]
+	String[]  fireOnChange =   ["BLIND_BATHROOM_BLOCK",			"BLIND_BATHROOM_SHADE",
+								"BLIND_BEDROOM_2_BLOCK",		"BLIND_BEDROOM_2_SHADE",
+								"BLIND_BEDROOM_3_BLOCK",		"BLIND_BEDROOM_3_SHADE",
+								"BLIND_DINING_BLOCK",			"BLIND_DINING_SHADE",
+								"BLIND_GUEST_EXTERNAL",
+								"BLIND_GUEST_DOOR_BLOCK",		"BLIND_GUEST_DOOR_SHADE",
+								"BLIND_GUEST_LHS_BLOCK",		"BLIND_GUEST_LHS_SHADE",
+								"BLIND_GUEST_RHS_BLOCK",		"BLIND_GUEST_RHS_SHADE",
+								"BLIND_KITCHEN_BLOCK",			"BLIND_KITCHEN_SHADE",
+								"BLIND_LIVING_LHS_SHADE",		"BLIND_LIVING_LHS_SHADE",
+								"BLIND_LIVING_RHS_BLOCK",		"BLIND_LIVING_RHS_SHADE",
+								"BLIND_LIVING_SIDE_LHS_BLOCK",	"BLIND_LIVING_SIDE_LHS_SHADE",
+								"BLIND_LIVING_SIDE_RHS_BLOCK",	"BLIND_LIVING_SIDE_RHS_SHADE",
+								"BLIND_STAIRS_BOTTOM",			"BLIND_STAIRS_TOP",
+								"BLIND_MBED_CENTRE_BLOCK",		"BLIND_MBED_CENTRE_SHADE",
+								"BLIND_MBED_LEFT_BLOCK",		"BLIND_MBED_LEFT_SHADE",
+								"BLIND_MBED_RIGHT_BLOCK",		"BLIND_MBED_RIGHT_SHADE",
+								"BLIND_MBED_ROBE",
+								"BLIND_ENSUITE_BLOCK",			"BLIND_ENSUITE_SHADE",
+								"BLIND_LIVING_TERRACE_FRONT",	"BLIND_LIVING_TERRACE_SIDE",
+								"BLIND_ENTRY",
+								"BLIND_RUMPUS_LEFT",			"BLIND_RUMPUS_RIGHT",
+								"BLIND_RUMPUS_SIDE",
+								"BLIND_RUMPUS_TERRACE_LEFT",	"BLIND_RUMPUS_TERRACE_RIGHT",
+								"BLIND_STUDY"
+								]
 
 	// If the script is able to be stopped before completion, generally no
 	boolean  stoppable = false;
@@ -87,6 +112,5 @@ public class blinds extends BIScript  {
 				break
 		}
 	}
-			
 }
 
