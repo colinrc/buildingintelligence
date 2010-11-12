@@ -470,7 +470,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	
 	void setOffset (byte area, byte offset) {
 		String key = Byte.toString(area);
-		this.areaOffset.put(key,new Byte(offset));
+		this.areaOffset.put(key, offset);
 	}
 	
 	byte getOffset (byte area) {

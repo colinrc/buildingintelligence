@@ -25,7 +25,7 @@ public class RegularTaskFactory  {
 	protected Logger logger = null;
 
 	protected JobDetail jobDetail = null;
-	final String MAINTENANCE_GROUP = "Maintenance";
+	static final String MAINTENANCE_GROUP = "Maintenance";
 	protected Scheduler sched = null;
     protected SchedulerFactory schedFact = null;
 	private CommandQueue commandQueue;

@@ -122,12 +122,12 @@ public class CacheWrapper {
 	}
 	
 	public String showStackTrace () {
-		String outString = "";
+		StringBuffer outString = new StringBuffer();
 		StackTraceElement [] methods = new Throwable().fillInStackTrace().getStackTrace();
 		for (int i = 2; i < methods.length; i ++ ) {
-			outString += methods[i] + ":";
+			outString.append(methods[i] + ":");
 		}
-		return outString;
+		return outString.toString();
 	}
 	
 	public void setCommand (String key, CommandInterface command) {
@@ -146,7 +146,7 @@ public class CacheWrapper {
 	}
 	
 	public Long getCreationDate() {
-		return new Long (this.creationTime);
+		return this.creationTime;
 	}
 
 	public String getKey() {

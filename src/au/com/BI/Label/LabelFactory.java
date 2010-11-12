@@ -2,6 +2,7 @@ package au.com.BI.Label;
 
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
@@ -50,7 +51,8 @@ public class LabelFactory  extends DeviceFactory {
 			cbusApplication = element.getAttributeValue("CBUS_APPLICATION");
 		}
 		String generateDimmerVals  = element.getAttributeValue("GENERATE_DIMMER_VALS");
-		
+		logger.log(Level.INFO, "added label device" + display_name);
+
 		Label label = new Label (display_name,connectionType);
 
 		key = targetDevice.formatKey(key,label);

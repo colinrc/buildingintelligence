@@ -16,7 +16,6 @@ import java.util.Calendar;
 public class LogHandler extends StreamHandler
 {
 
-	OutputStream logOutput;
 	private boolean buffering = false;
 	private boolean sentBuffer = false;
 	private Vector <LogRecord>startupLogBuffer;
@@ -37,7 +36,6 @@ public class LogHandler extends StreamHandler
 	}
 	
 	public void setOutputStream (OutputStream outputStream) throws SecurityException {
-	    this.logOutput = outputStream;
 	    super.setOutputStream (outputStream);
 	    if (!sentBuffer) {
 	    	buffering = false;

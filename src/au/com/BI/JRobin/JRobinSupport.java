@@ -123,10 +123,10 @@ public class JRobinSupport {
 		synchronized (variableCache) {
 			if (variableCache.containsKey(key) == true) {
 				variableCache.remove(key);
-				variableCache.put(key, new Long(value));
+				variableCache.put(key, value);
 				return;
 			}
-			variableCache.put(key, new Long(value));
+			variableCache.put(key, value);
 		}
 		return;
 	}

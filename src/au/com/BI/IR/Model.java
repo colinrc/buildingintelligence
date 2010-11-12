@@ -138,7 +138,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	    String compress1[] = new String[5];
 	    String compress2[] = new String[5];
 	    int compressCounter = 0;
-	    String outputString = "1,1";
+	    StringBuffer outputString = new StringBuffer("1,1");
 
 	    Pattern p = Pattern.compile("(^(\\d*)([ABCD]+))$");
 	    int compressPos;
@@ -146,7 +146,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	    String strBits[] = gc100Code.split (",");
 	    try {
 			for (int i = 0; i < strBits.length-1; i+=2){
-			    outputString += ",";
+			    outputString.append(",");
 
 			    Matcher m = p.matcher(strBits[i+1]);
 
@@ -155,7 +155,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			    if (m.matches()) {
 			        secondField = m.group(2);
 			        String theChars = m.group(3);
-		            outputString += strBits[i] + "," + secondField;
+		            outputString.append(strBits[i] + "," + secondField);
 
 		            if (compressCounter < 5) {
 		                compress1[compressCounter] = strBits[i];
@@ -165,11 +165,11 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 			        for (int j = 0; j < theChars.length(); j++) {
 			            compressPos = theChars.charAt(j) - 'A';
-			            outputString += "," + compress1[compressPos] + "," + compress2[compressPos];
+			            outputString.append("," + compress1[compressPos] + "," + compress2[compressPos]);
 			        }
 			    }
 				else {
-		            outputString += strBits[i] + "," + strBits[i+1];
+		            outputString.append(strBits[i] + "," + strBits[i+1]);
 		            if (compressCounter < 5) {
 		                compress1[compressCounter] = strBits[i];
 		                compress2[compressCounter] = strBits[i+1];
@@ -184,7 +184,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	        logger.log (Level.INFO,"IR string was malformed");
 	    }
 
-	    return outputString;
+	    return outputString.toString();
 	}
 	
 	public void sendConfigCommand (String ir_command)   {

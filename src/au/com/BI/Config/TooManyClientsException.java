@@ -14,10 +14,6 @@ public class TooManyClientsException extends Exception{
 
 	}
 
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-
 	/**
 	 * @param message
 	 * 

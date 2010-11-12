@@ -5,9 +5,6 @@
 package au.com.BI.DynamicDevice;
 import au.com.BI.Command.*;
 import au.com.BI.User.*;
-import java.util.*;
-import org.jdom.*;
-
 
 /**
  * @author Colin Canfield
@@ -16,13 +13,10 @@ import org.jdom.*;
  *
  */
 public class DynamicDeviceCommand extends Command implements CommandInterface {
-
-	private Map keyList;
 	
 	public static int RawText = 1;
 	
 	public String port;
-	
 	
 	public DynamicDeviceCommand ()
 	{

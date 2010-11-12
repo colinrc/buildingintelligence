@@ -46,7 +46,7 @@ public class ScriptFileHandler {
                         FileReader fr = new FileReader(myFile);
                         BufferedReader br = new BufferedReader(fr);
                         scriptList = new ArrayList<String>();
-                        record = new String();
+                        record = "";
 
                         while ( (record = br.readLine()) != null) {
                                 recCount++;
@@ -56,7 +56,7 @@ public class ScriptFileHandler {
                                 }
                         }
                         ;
-                        logger.log(Level.FINE, new Integer(recCount) + " lines of code in script file " + myFile);
+                        logger.log(Level.FINE,recCount + " lines of code in script file " + myFile);
                         return scriptList;
 
                 }

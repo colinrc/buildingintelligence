@@ -12,10 +12,6 @@ public class CalendarException extends Exception {
 
 	}
 
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-
 	/**
 	 * @param message
 	 * 

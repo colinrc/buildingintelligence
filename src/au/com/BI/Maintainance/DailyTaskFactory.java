@@ -26,7 +26,7 @@ public class DailyTaskFactory  {
 	protected au.com.BI.Calendar.Model calendarModel = null;
 	protected String startTime = "23:30";
 	protected JobDetail jobDetail = null;
-	final String MAINTENANCE_GROUP = "Maintenance";
+	static final String MAINTENANCE_GROUP = "Maintenance";
 	protected Scheduler sched = null;
     protected SchedulerFactory schedFact = null;
 	private CommandQueue commandQueue;

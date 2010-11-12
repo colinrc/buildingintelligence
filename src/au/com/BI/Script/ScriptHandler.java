@@ -176,7 +176,7 @@ public class ScriptHandler {
 									+ scriptName);
 			return false;
 		} else {
-			abortingScript.put(scriptName, new Integer(0)); // Why ?????? CC
+			abortingScript.put(scriptName, 0); // Why ?????? CC
 			RunScript newScript = new RunScript(scriptName, user,
 					linesOfScript, scriptModel, triggeringCommand);
 			newScript.setCache(cache);
@@ -426,7 +426,7 @@ public class ScriptHandler {
 
 	public void abort(String scriptName) {
 		synchronized (abortingScript) {
-			abortingScript.put(scriptName, new Integer(1));
+			abortingScript.put(scriptName,  1);
 		}
 	}
 

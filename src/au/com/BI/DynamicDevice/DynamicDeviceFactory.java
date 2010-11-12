@@ -3,6 +3,7 @@ package au.com.BI.DynamicDevice;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
@@ -42,6 +43,7 @@ public class DynamicDeviceFactory {
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
+		logger.log(Level.INFO, "added dymanic device" + display_name);
 		DynamicDevice dynamicDevice = new DynamicDevice (display_name,connectionType);
 
 		key = targetDevice.formatKey(key,dynamicDevice);

@@ -160,7 +160,7 @@ public class GroovyScriptHandler {
 				Document doc = builder.build(statusFileName);
 				Element theConfig = doc.getRootElement();
 
-				List <Element> scriptsList = (List<Element>)theConfig.getChildren();
+				List <Element> scriptsList = theConfig.getChildren();
 				
 				// Parse each script from the status file and ensure it is still on the system
 
@@ -173,7 +173,7 @@ public class GroovyScriptHandler {
 					if (status == null)
 						status = "";
 					if (scriptRunBlockList.containsKey(name)) {
-						Object item = scriptRunBlockList.get(name);
+						 Object item = scriptRunBlockList.get(name);
 						 scriptRunBlock = (GroovyScriptRunBlock)item;
 						 scriptRunBlock.clearRunningInfo();
 					} else {

@@ -85,9 +85,6 @@ public class SerialParameters{
     	    this.parity = SerialPort.PARITY_ODD;
     	}
         }
-	public void finalize() throws Throwable {
-
-	}
 
 	/**
 	 * @param portName The name of the port.

@@ -2,7 +2,6 @@ package au.com.BI.Script;
 import java.util.*;
 
 public class ScriptRunBlock {
-	int repeatCount = 0;
 	boolean enabled = true;
 	LinkedList <ScriptParams>runs = null;
 	public String statusString = "";

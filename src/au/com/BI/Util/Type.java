@@ -9,6 +9,11 @@ import java.util.Set;
 
 public class Type implements Serializable, Cloneable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private transient String value;
 
 	private transient String desc;

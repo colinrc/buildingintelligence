@@ -77,11 +77,6 @@ public class RunScript extends Thread {
       cache.setCachedCommand("SCRIPT",started);
        commandList.add(started);
 
-
-
-      String lsLine;
-      lsLine = new String();
-
       try {
 
         PythonInterpreter interp = new PythonInterpreter();
@@ -94,22 +89,22 @@ public class RunScript extends Thread {
         interp.set("client", client);
 
         int i = 0;
-        lsLine = "";
+        StringBuilder lsLine = new StringBuilder();
 
         //problem in getting :python lines to interp the next line properly
         //have entered lines in to one string and then processed, this allows for indentation in Python script to work.
         while (i < linesOfScript.size()) {
-          lsLine = lsLine + (String) linesOfScript.get(i);
+          lsLine.append(linesOfScript.get(i));
           i++;
         }
         ;
 
         logger.log(Level.FINEST,
-                   "Script Lines: " + new Integer(i).toString() +
+                   "Script Lines: " + String.valueOf(i) +
                    " Contains: " +
-                   lsLine);
+                   lsLine.toString());
 
-        interp.exec(lsLine);
+        interp.exec(lsLine.toString());
 
         logger.log(Level.FINEST, "Completed Jython Script: " + scriptName);
       }

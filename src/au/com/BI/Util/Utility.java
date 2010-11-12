@@ -3,57 +3,57 @@ package au.com.BI.Util;
 
 public class Utility {
 	public static String parseString (String str){
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		int totalLength = str.length();
 		for (int i = 0; i < totalLength; i ++){
 			if (str.charAt(i) == '#'){
 				i ++;
 				try {
 					if (str.charAt(i) == '#') {
-						result += '#'; 
+						result.append('#'); 
 					} else {
 						try {
 							int a = Integer.parseInt(str.substring(i,i+2),16);
-							result += (char)a;
+							result.append(a);
 
 						} catch (NumberFormatException ex) {};
 						i++;
 					}
 				} catch (IndexOutOfBoundsException ex) {
-					result += '#';
+					result.append('#');
 				}
 			} else {
-				result += str.charAt(i);
+				result.append(str.charAt(i));
 			}
 		}
-		return result;
+		return result.toString();
 	}
 	
 	public static String parseBytesForPrint (byte str[]) {
-	   String toWrite = "";
+	   StringBuilder toWrite = new StringBuilder();
 	   for (int i = 0; i < str.length; i ++ ){
 		   int eachOne = str[i];
 		   if ( eachOne < 32 || eachOne > 126   ){
 			   String hexVers = Integer.toHexString(eachOne);
 			   if (hexVers.length() == 1) hexVers = "0" + hexVers;
-			   toWrite += "#" + hexVers;
+			   toWrite.append("#" + hexVers);
 		   } else {
-			   toWrite += (char)eachOne;
+			   toWrite.append(eachOne);
 		   }
 	   }
-	   return toWrite;
+	   return toWrite.toString();
 	}
 	
 	public static String allBytesToHex (byte str[]) {
-		   String toWrite = "";
+		   StringBuilder toWrite = new StringBuilder();
 		   for (int i = 0; i < str.length; i ++ ){
 			   byte eachOne = str[i];
 			   String hexVers = Integer.toHexString(eachOne);
 			   if (hexVers.length() > 2) hexVers = hexVers.substring(hexVers.length()-2);
 			   if (hexVers.length() == 1) hexVers = "0" + hexVers;
-			   toWrite += "#" + hexVers;
+			   toWrite.append("#" + hexVers);
 		   }
-		   return toWrite;
+		   return toWrite.toString();
 		}
 	
 	public static String padStringTohex (int inp){
@@ -190,47 +190,47 @@ public class Utility {
 		
 		if (value.length() >=  4){
 			if (value.regionMatches(0,"HEX1",0,4)) {
-				String escapedValue = "";
+				StringBuilder escapedValue = new StringBuilder();
 				int startChar = 4;
 				while (startChar < value.length()) {
 					String nextVal = value.substring(startChar,startChar + 2);
 					try {
-						escapedValue = escapedValue + (char)(Integer.valueOf(nextVal,16).intValue());
+						escapedValue.append((char)(Integer.valueOf(nextVal,16).intValue()));
 					} catch (NumberFormatException e) {
 						
 					}
 					startChar += 2;
 				}
-				return escapedValue;
+				return escapedValue.toString();
 			}
 		}
 
 		String [] bits = value.split ("\\\\");
 		if (bits.length > 1 ) {
-			String escapedValue = bits[0]; // first is handled specially, it is impossible for it to be an escaped code
+			StringBuffer escapedValue = new StringBuffer(bits[0]); // first is handled specially, it is impossible for it to be an escaped code
 			for (int i = 1; i < bits.length; i += 1) {
 				if (bits[i].length() > 0) {
 					char charToMatch = bits[i].charAt(0);
 					if (charToMatch == 'r') {
-						escapedValue += "\r";
-						if (bits[i].length() > 1) escapedValue += bits[i].substring(1);
+						escapedValue.append("\r");
+						if (bits[i].length() > 1) escapedValue.append(bits[i].substring(1));
 					}
 					if (charToMatch == 'n') {
-						escapedValue += "\n";
-						if (bits[i].length() > 1) escapedValue += bits[i].substring(1);
+						escapedValue.append("\n");
+						if (bits[i].length() > 1) escapedValue.append(bits[i].substring(1));
 					}
 					try {
 						if (charToMatch == 'x') {
 							String hexCodes = bits[i].substring(1,3);
 							byte decoded = Integer.valueOf(hexCodes,16).byteValue();
-							escapedValue += (char)decoded;
-							if (bits[i].length() > 3) escapedValue += bits[i].substring(3);
+							escapedValue.append((char)decoded);
+							if (bits[i].length() > 3) escapedValue.append(bits[i].substring(3));
 						}
 					} catch (NumberFormatException err) {
 					}
 				}
 			}
-			return escapedValue;
+			return escapedValue.toString();
 		}
 		
 		return value;

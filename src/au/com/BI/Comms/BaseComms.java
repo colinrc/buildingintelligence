@@ -230,10 +230,10 @@ protected String modelName = "";
 	        sendNextCommand();
 	    } else {
 	    	if (logger.isLoggable(Level.FINEST)){
-	    		String sentKeySet = "";
+	    		StringBuffer sentKeySet = new StringBuffer();
 	    		synchronized (sentQueue){
 			    	for (CommsCommand i: sentQueue){
-			    		sentKeySet +=  i.actionCode + ":";
+			    		sentKeySet.append(i.actionCode + ":");
 			    	}
 			    	logger.log (Level.FINEST,"Items in sent queue : " + sentKeySet);
 	    		}

@@ -125,50 +125,50 @@ public class BrowseAlbums extends SlimServerCommand {
 
 	@Override
 	public String buildCommandString() {
-		String commandString = "albums " + start + " " + itemsPerResponse;
+		StringBuffer commandString = new StringBuffer("albums " + start + " " + itemsPerResponse);
 		
 		if (!StringUtils.isNullOrEmpty(search)) {
-			commandString += " search:";
+			commandString.append(" search:");
 			try {
-				commandString += URLEncoder.encode(search, "UTF-8");
+				commandString.append(URLEncoder.encode(search, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				logger.log(Level.INFO, "UTF-8 not supported");
 			}
 		}
 		
 		if (genre != -1) {
-			commandString += " genre_id:" + genre;
+			commandString.append(" genre_id:" + genre);
 		}
 		
 		if (artist != -1) {
-			commandString += " artist_id:" + artist;
+			commandString.append(" artist_id:" + artist);
 		}
 		
 		if (track != -1) {
-			commandString += " track_id:" + track;
+			commandString.append(" track_id:" + track);
 		}
 		
 		if (year != -1) {
-			commandString += " year:" + year;
+			commandString.append(" year:" + year);
 		}
 		
 		if (compilation) {
-			commandString += " compliation:1";
+			commandString.append(" compliation:1");
 		} else {
-			commandString += " compilation:0";
+			commandString.append(" compilation:0");
 		}
 		
 		if (sort != SortOrder.NONE) {
-			commandString += " sort:" + sort.getValue();
+			commandString.append(" sort:" + sort.getValue());
 		}
 		
 		if (tags.size() > 0) {
-			commandString += " tags:";
+			commandString.append(" tags:");
 			for (AlbumTag tag: tags) {
-				commandString += tag.getValue();
+				commandString.append(tag.getValue());
 			}
 		}
 		
-		return commandString;
+		return commandString.toString();
 	}
 }

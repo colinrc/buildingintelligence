@@ -14,12 +14,10 @@ import org.eclipse.jetty.security.LoginService;
 public class BIHashLoginService extends HashLoginService implements
 		LoginService {
 	
-	String dataFile = "";
 	Properties properties;
 	
 	public BIHashLoginService (String realm, String dataFile){
 		super (realm,dataFile);
-		this.dataFile = dataFile;
 	}
 	
 	public void putUser (String userID, String newPwdtxt, String [] roles) throws Error {
@@ -57,7 +55,16 @@ public class BIHashLoginService extends HashLoginService implements
 	
 	public void readFile() throws IOException {
     	properties = new Properties();
-   		properties.load(new FileInputStream("datafiles/realm.properties"));
+    	FileInputStream is = new FileInputStream("datafiles/realm.properties");
+    	try {
+    		properties.load(is);
+    	}
+    	catch(IOException ex) {
+    		
+    	}
+    	finally {
+    		is.close();
+    	}
 	}
 	
 	public void writeFile () throws IOException {

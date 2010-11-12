@@ -35,7 +35,7 @@ public class JRobinData {
          public String toString() {
                  String showValues;
                  showValues = "RRDName:" + this.RRDName + "\n" +
-                   "RRDInterval:" + new Long(updateInterval).toString() + "\n";
+                   "RRDInterval:" + String.valueOf(updateInterval) + "\n";
                  return showValues;
          }
 
@@ -73,31 +73,6 @@ public class JRobinData {
                  return false;
          }
 
-
-        /**
-         * @param add a data element.
-         */
-        private void addData (JRobinDataItem dataItem) {
-                data.add(dataItem);
-                numberOfData ++;
-        }
-
-        /**
-         * @param add a dataAll element.
-         */
-        private void addDataAll(JRobinDataItem dataItem) {
-                data.add(dataItem);
-                numberOfDataAll++;
-        }
-
-        /**
-         * @param add a DataPowerConumption element.
-         */
-        private void addDataPowerConumption(JRobinDataItem dataItem) {
-                data.add(dataItem);
-                numberOfDataPowerConumption++;
-        }
-
         /**
          * Returns a JRobin data Item
          *
@@ -116,13 +91,14 @@ public class JRobinData {
          * @return JRobinDataItem
          */
        public JRobinDataItem getDataItem(String key) {
-               if (data.contains(key)) {
+           // FIXME Looks like the old code below is correct, some sort of equals overload    
+    	   if (data.contains(key)) {
                        int i = 0;
                        i = data.indexOf(key);
                        JRobinDataItem jRobinDataItem = (JRobinDataItem)data.get(i);
                        return jRobinDataItem;
                }
-                return null;
+               return null;
 
                 /*
                                Iterator eachItem = data.iterator();
@@ -142,10 +118,10 @@ public class JRobinData {
         * @param key String
         * @return Arraylist of JRobinDataItem
         */
-       public ArrayList getJRobinDataItems(String key) {
+       public ArrayList<JRobinDataItem> getJRobinDataItems(String key) {
 
                ArrayList <JRobinDataItem>dataItemsAL = new ArrayList<JRobinDataItem>(data.size());
-               Iterator eachItem = data.iterator();
+               Iterator<JRobinDataItem> eachItem = data.iterator();
                while (eachItem.hasNext()) {
                        JRobinDataItem jRobinDataItem = (JRobinDataItem) eachItem.next();
                        if (jRobinDataItem.getDisplayName().equals(key)) {
@@ -159,12 +135,12 @@ public class JRobinData {
        }
 
 
-       public ArrayList getJRobinDataItemVariables() {
-               ArrayList <String>variables = new ArrayList<String>(20);
-               Iterator eachItem = data.iterator();
+       public ArrayList<String> getJRobinDataItemVariables() {
+               ArrayList<String> variables = new ArrayList<String>(20);
+               Iterator<JRobinDataItem> eachItem = data.iterator();
                int i=0;
                while (eachItem.hasNext()) {
-                       JRobinDataItem jRobinDataItem = (JRobinDataItem)eachItem.next();
+                       JRobinDataItem jRobinDataItem = eachItem.next();
                      //  variables.add(jRobinDataItem.getVariable());
                        variables.add(jRobinDataItem.getVariable() + "_~COUNT");
                        variables.add(jRobinDataItem.getVariable() + "_~TIME");
@@ -213,9 +189,9 @@ public class JRobinData {
         public boolean findDisplayName(String key) {
                 //check data
 
-                Iterator eachItem = data.iterator();
+                Iterator<JRobinDataItem> eachItem = data.iterator();
                 while (eachItem.hasNext()) {
-                        JRobinDataItem jRobinDataItem = (JRobinDataItem) eachItem.next();
+                        JRobinDataItem jRobinDataItem = eachItem.next();
                         if (jRobinDataItem.getDisplayName().equals(key)) {
                                 return true;
                         }

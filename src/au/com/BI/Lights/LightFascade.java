@@ -7,6 +7,7 @@ import au.com.BI.Util.*;
 import au.com.BI.X10.*;
 import au.com.BI.CBUS.*;
 import au.com.BI.Command.*;
+import au.com.BI.Config.RawItemDetails;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Device.UnknownFieldException;
 import au.com.BI.Dynalite.*;
@@ -105,13 +106,13 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 	/**
 	 * @return Returns the rawCodes.
 	 */
-	public final Map getRawCodes() {
+	public final Map<String, RawItemDetails> getRawCodes() {
 		return light.getRawCodes();
 	}
 	/**
 	 * @param rawCodes The rawCodes to set.
 	 */
-	public final void setRawCodes(Map rawCodes) {
+	public final void setRawCodes(Map<String, RawItemDetails> rawCodes) {
 		light.setRawCodes (rawCodes);
 	}
 	public void setKey (String originalKey) {

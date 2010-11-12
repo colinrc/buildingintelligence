@@ -6,6 +6,7 @@ package au.com.BI.GroovyModels;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import au.com.BI.Config.ConfigError;
@@ -25,6 +26,7 @@ public class GroovyModelFileHandler {
   
         public void loadGroovyModelList(String directoryName, Map <String,GroovyRunBlock>groovyModelRunBlockMap) throws ConfigError {
                 // try {
+    		logger.log(Level.INFO, "loading groovy models");
 
 	                
 	                FilenameFilter filter = new FilenameFilter() {

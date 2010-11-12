@@ -153,7 +153,7 @@ public class Cache {
         public Long getCachedTime(String key) {
                 CacheWrapper cacheObject = this.getCachedObject(key);
                 if (cacheObject == null) {
-                        return new Long(0);
+                        return 0L;
                 }else {
 					return cacheObject.getCreationDate();
                 }

@@ -24,29 +24,29 @@ public class AddressBook {
 		userMap = new ConcurrentHashMap<String,Long>();
 		nameMapReverse = new ConcurrentHashMap<Long,String>();
 		userMapReverse = new ConcurrentHashMap<Long,String>();
-		nameMap.put(ALL,new Long (ALL_INT));
+		nameMap.put(ALL, ALL_INT);
 	}
 	
 	public void setName (String name, long ID,Locations location){
-		nameMap.put(name,new Long (ID));		
+		nameMap.put(name, ID);		
 		nameMapReverse.put(ID, name);
 	}
 	
 	public void setUser (String name, long ID,Locations location){
-		userMap.put(name,new Long (ID));		
+		userMap.put(name, ID);		
 		userMapReverse.put(ID, name);
 	}
 
 	public long getIDFromName (String name){
-		if (nameMap.containsKey(name)) 
-			return ((Long)nameMap.get(name)).longValue();
+		if (nameMap.containsKey(name))
+			return nameMap.get(name);
 		else
 			return AddressBook.NOT_FOUND;
 	}
 
 	public long getIDFromUser (String user){
 		if (nameMap.containsKey(user)) 
-			return ((Long)userMap.get(user)).longValue();		
+			return userMap.get(user);		
 		else
 			return AddressBook.NOT_FOUND;
 

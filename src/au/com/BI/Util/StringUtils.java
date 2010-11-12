@@ -6,11 +6,11 @@ public class StringUtils {
 
 	public static String[] split(String str, char x) {
 		Vector<String> v = new Vector<String>();
-		String str1 = new String();
+		String str1 = "";
 		for (int i = 0; i < str.length(); i++) {
 			if (str.charAt(i) == x) {
 				v.add(str1);
-				str1 = new String();
+				str1 = "";
 			} else {
 				str1 += str.charAt(i);
 			}
@@ -19,7 +19,7 @@ public class StringUtils {
 		String array[];
 		array = new String[v.size()];
 		for (int i = 0; i < array.length; i++) {
-			array[i] = new String((String) v.elementAt(i));
+			array[i] = v.elementAt(i).toString();
 		}
 		return array;
 	}
@@ -32,7 +32,7 @@ public class StringUtils {
 		String array[];
 		array = new String[v.size()];
 		for (int i = 0; i < array.length; i++) {
-			array[i] = new String((String) v.elementAt(i));
+			array[i] = v.elementAt(i).toString();
 		}
 		return array;
 	}

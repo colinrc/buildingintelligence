@@ -31,9 +31,9 @@ public class Hasp {
    */
   private int status;
 
-  public static final String HASP_UPDATEINFO  = new String("<haspformat format=\"updateinfo\"/>\0");   /*!< hasp_get_sessioninfo() format to get update info (C2V) */
-  public static final String HASP_SESSIONINFO = new String("<haspformat format=\"sessioninfo\"/>\0");  /*!< hasp_get_sessioninfo() format to get session info */
-  public static final String HASP_KEYINFO     = new String("<haspformat format=\"keyinfo\"/>\0");      /*!< hasp_get_sessioninfo() format to get key/hardware info */
+  public static final String HASP_UPDATEINFO  = "<haspformat format=\"updateinfo\"/>\0";   /*!< hasp_get_sessioninfo() format to get update info (C2V) */
+  public static final String HASP_SESSIONINFO = "<haspformat format=\"sessioninfo\"/>\0";  /*!< hasp_get_sessioninfo() format to get session info */
+  public static final String HASP_KEYINFO     = "<haspformat format=\"keyinfo\"/>\0";      /*!< hasp_get_sessioninfo() format to get key/hardware info */
 
   /**
    * "Featuretype" mask

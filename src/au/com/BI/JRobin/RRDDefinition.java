@@ -92,28 +92,26 @@ public class RRDDefinition {
 
     public String fileRead(String myFile) {
       logger.log(Level.FINE, "In fileRead");
-      String rrdTemplate;
       String record = null;
       int recCount = 0;
       try {
         FileReader fr = new FileReader(myFile);
         BufferedReader br = new BufferedReader(fr);
-        rrdTemplate = new String();
-        record = new String();
+        StringBuffer rrdTemplate = new StringBuffer();
+        record = "";
 
         while (( record = br.readLine()) != null) {
                recCount++;
-               rrdTemplate = rrdTemplate + record + "\n";
+               rrdTemplate.append(rrdTemplate + record + "\n");
         };
-        logger.log(Level.INFO, new Integer(recCount) + " lines in xml file " + myFile);
-        return rrdTemplate;
+        logger.log(Level.INFO, recCount + " lines in xml file " + myFile);
+        return rrdTemplate.toString();
 
       } catch (IOException e) {
         logger.log(Level.SEVERE, "Error in reading xml file " + myFile + ":"
                                   + e.getMessage());
         return null;
       }
-
     }
 
 

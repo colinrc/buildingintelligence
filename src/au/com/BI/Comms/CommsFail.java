@@ -18,10 +18,6 @@ public class CommsFail extends RuntimeException{
 
 	}
 
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-
 	/**
 	 * @param message
 	 * 

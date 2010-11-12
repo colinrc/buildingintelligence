@@ -6,7 +6,7 @@ package au.com.BI.Util;
 import java.util.*;
 
 import au.com.BI.Command.*;
-import au.com.BI.Device.DeviceType;
+import au.com.BI.Config.RawItemDetails;
 import au.com.BI.Device.UnknownFieldException;
 
 
@@ -21,7 +21,7 @@ public class BaseDevice {
 	protected String command="";
 	protected String key="";
 	protected String groupName;
-	protected Map rawCodes;
+	protected Map<String, RawItemDetails> rawCodes;
 	protected String room = "";
 	protected Map <String, String>extraAttributes;
 
@@ -112,13 +112,13 @@ public class BaseDevice {
 	/**
 	 * @return Returns the rawCodes.
 	 */
-	public final Map getRawCodes() {
+	public final Map<String, RawItemDetails> getRawCodes() {
 		return rawCodes;
 	}
 	/**
 	 * @param rawCodes The rawCodes to set.
 	 */
-	public final void setRawCodes(Map rawCodes) {
+	public final void setRawCodes(Map<String, RawItemDetails> rawCodes) {
 		this.rawCodes = rawCodes;
 	}
 	/**

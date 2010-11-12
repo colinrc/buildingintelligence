@@ -15,9 +15,4 @@ public class Event{
 	public Event(){
 
 	}
-
-	public void finalize() throws Throwable {
-
-	}
-
 }

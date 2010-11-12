@@ -26,15 +26,13 @@ import org.eclipse.jetty.server.ssl.SslSocketConnector;
 
 
 import au.com.BI.Config.Security.IPType;
-//import org.eclipse.jetty.server.handler.*;
-import java.net.MalformedURLException;
-import java.net.URL;
+
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.*;
 
 public class JettyHandler extends SimplifiedModel implements DeviceModel, ClientModel {
-    boolean SSL = false;
+
     CacheBridgeFactory cacheBridgeFactory = null;
     org.eclipse.jetty.server.Server server = null,client_server = null;
     Security security = null;
@@ -134,7 +132,7 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
         ServletContextHandler postContext = new ServletContextHandler (contexts,"/post", true,false);
         postContext.setSecurityHandler(iPInRangeHandler);
         postContext.setAttribute("Cache",cache);
-        postContext.setAttribute("ServerID",new Long (this.getServerID()));
+        postContext.setAttribute("ServerID", this.getServerID());
         postContext.setAttribute("CommandQueue",commandQueue);
         postContext.setAttribute("Security",security);       
         postContext.setAttribute("IPType",IPType.PostOnly);    
@@ -195,9 +193,9 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
       updateContext.setAttribute("AddressBook",addressBook);
       updateContext.setAttribute("CommandQueue",commandQueue);
       updateContext.setAttribute("Security",security);
-      updateContext.setAttribute("ServerID",new Long (this.getServerID()));
+      updateContext.setAttribute("ServerID", this.getServerID());
       updateContext.setAttribute("VersionManager",this.getVersionManager());
-      updateContext.setAttribute("WebClientCount",new Integer(0));
+      updateContext.setAttribute("WebClientCount", 0);
       
       SessionCounter sessionCounter = new SessionCounter ();
       sessionCounter.setAddressBook(addressBook);

@@ -2,6 +2,7 @@ package au.com.BI.Raw;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
@@ -37,17 +38,19 @@ public class RawFactory  extends DeviceFactory {
 	 * @param type
 	 *            INPUT | OUTPUT | MONITORED
 	 */
-	public void addRaw(DeviceModel targetDevice, List clientModels,
+	public void addRaw(DeviceModel targetDevice, List<DeviceModel> clientModels,
 			Element element, MessageDirection type, int connectionType,String groupName,RawHelper rawHelper) {
 		String name = element.getAttributeValue("NAME");
 		String outKey = element.getAttributeValue("DISPLAY_NAME");
+		logger.log(Level.INFO, "added raw device" + outKey);
+
 		ToggleSwitch theInput = new ToggleSwitch(name,
 				connectionType, outKey);
 		theInput.setGroupName(groupName);
 		rawHelper.checkForRaw ( element,theInput);
 		if (outKey != null && !outKey.equals("")) {
 			targetDevice.addControlledItem(outKey, theInput, MessageDirection.FROM_FLASH);
-			Iterator clientModelList = clientModels.iterator();
+			Iterator<DeviceModel> clientModelList = clientModels.iterator();
 			while (clientModelList.hasNext()) {
 				DeviceModel clientModel = (DeviceModel) clientModelList.next();
 				clientModel.addControlledItem(outKey, theInput, type);

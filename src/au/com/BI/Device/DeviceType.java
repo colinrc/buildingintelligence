@@ -5,6 +5,7 @@
 package au.com.BI.Device;
 import java.util.*;
 import au.com.BI.Command.*;
+import au.com.BI.Config.RawItemDetails;
 
 /**
  * @author Colin Canfield
@@ -121,11 +122,11 @@ public interface DeviceType
 	/**
 	 * @return Returns the rawCodes.
 	 */
-	public Map getRawCodes();
+	public Map<String, RawItemDetails> getRawCodes();
 		/**
 		 * @param rawCodes The rawCodes to set.
 		 */
-	public void setRawCodes(Map rawCodes);
+	public void setRawCodes(Map<String, RawItemDetails> rawCodes);
 	
 	/**
 	 * Returns true if this device type cannot be actively queried for state. 

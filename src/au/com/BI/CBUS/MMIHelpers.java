@@ -458,7 +458,7 @@ public class MMIHelpers {
 			if (cbusDevice != null) {
 				if (cbusDevice.supportsLevelMMI()) { 
 					int startNumber = (int)(key / 32) * 32;
-					Integer startNumberInt = new Integer (startNumber);
+					Integer startNumberInt = startNumber;
 					
 					if (!targetLevel.equals("")) {
 						this.sendingExtended.put(keyStr,targetLevel);

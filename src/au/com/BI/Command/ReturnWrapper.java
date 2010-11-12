@@ -187,13 +187,13 @@ public class ReturnWrapper {
 		
 		public void addComplexFlashCommand(DeviceType device,
 				String command, Double extra) {
-			Integer truncVal = new Integer( extra.intValue());
+			Integer truncVal = extra.intValue();
 			 addFlashCommand(device, command, truncVal.toString() , "", "", "", "", 0,true);
 		}
 		
 		public void addComplexFlashCommand(String displayName,
 				String command, Double extra) {
-			Integer truncVal = new Integer( extra.intValue());
+			Integer truncVal = extra.intValue();
 			 addFlashCommand(displayName, command, truncVal.toString() , "", "", "", "", 0,true);
 		}
 		
@@ -290,13 +290,13 @@ public class ReturnWrapper {
 		
 		public void addFlashCommand(DeviceType device,
 				String command, Double extra) {
-			Integer truncVal = new Integer( extra.intValue());
+			Integer truncVal = extra.intValue();
 			 addFlashCommand(device, command, truncVal.toString() , "", "", "", "", 0);
 		}
 		
 		public void addFlashCommand(String displayName,
 				String command, Double extra) {
-			Integer truncVal = new Integer( extra.intValue());
+			Integer truncVal = extra.intValue();
 			 addFlashCommand(displayName, command, truncVal.toString() , "", "", "", "", 0);
 		}
 		

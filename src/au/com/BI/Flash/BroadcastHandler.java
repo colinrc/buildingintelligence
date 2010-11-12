@@ -4,7 +4,6 @@
  */
 package au.com.BI.Flash;
 
-import java.io.OutputStream;
 import java.util.logging.*;
 
 
@@ -15,7 +14,6 @@ import java.util.logging.*;
 public class BroadcastHandler extends StreamHandler
 {
 
-	OutputStream logOutput;
 	protected FlashControlListener flashControlListener = null;
 
 	/**

@@ -59,7 +59,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		mMIHelpers = new MMIHelpers(cBUSHelper, configHelper, comms, state, this);
 		etxChars = new int[] {'.','$','%','#','!','\''};
 
-		etxString = new String(".$%#!\'");
+		etxString = ".$%#!\'";
 		this.setPadding(2);
 		this.setInterCommandInterval(0);
 

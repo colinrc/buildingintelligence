@@ -1,6 +1,7 @@
 package au.com.BI.MultiMedia.SlimServer.Device;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
@@ -38,7 +39,7 @@ public class SqueezeBoxFactory {
 	 * @param rawHelper
 	 */
 	public void addSqueezeBox(DeviceModel targetDevice,
-			List clientModels,
+			List<DeviceModel> clientModels,
 			Element element,
 			MessageDirection type,
 			int connectionType,
@@ -48,7 +49,8 @@ public class SqueezeBoxFactory {
 		String name = element.getAttributeValue("NAME");
 		String key = element.getAttributeValue("KEY");
 		String displayName = element.getAttributeValue("DISPLAY_NAME");
-		
+		logger.log(Level.INFO, "added squeezebox device" + displayName);
+
 		SqueezeBox squeezeBox = new SqueezeBox();
 		squeezeBox.setKey(key);
 		squeezeBox.setName(name);

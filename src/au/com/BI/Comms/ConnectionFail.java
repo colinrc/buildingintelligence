@@ -18,10 +18,6 @@ public class ConnectionFail extends Exception{
 
 	}
 
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
-
 	/**
 	 * @param message customized message
 	 * 

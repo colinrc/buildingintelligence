@@ -39,7 +39,7 @@ public class WindowsMediaExtenderFactory  extends DeviceFactory {
 	 * @param rawHelper
 	 */
 	public void addMediaExtender(DeviceModel targetDevice,
-			List clientModels,
+			List<DeviceModel> clientModels,
 			Element element,
 			MessageDirection type,
 			int connectionType,
@@ -49,7 +49,8 @@ public class WindowsMediaExtenderFactory  extends DeviceFactory {
 		String name = element.getAttributeValue("NAME");
 		String key = element.getAttributeValue("KEY");
 		String displayName = element.getAttributeValue("DISPLAY_NAME");
-		
+		logger.log(Level.INFO, "added windows media extender device" + displayName);
+
 		WindowsMediaExtender extender = new WindowsMediaExtender();
 		extender.setKey(key);
 		extender.setName(name);

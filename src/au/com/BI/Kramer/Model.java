@@ -21,18 +21,7 @@ import java.util.logging.*;
 
 
 public class Model extends SimplifiedModel implements DeviceModel {
-	
-	private class KramerCommands { 
-		byte[] avOutputSuffix = null;
-		byte[] avOutputString = null;
-		byte[] avOutputParam = null;
-		boolean error = false;
-		String errorDescription = "";
 		
-		int outputCommandType;
-		int paramCommandType;
-	}
-	
 	protected String outputVideoCommand = "";
 
 	protected HashMap <String,String>currentSrc;
@@ -233,7 +222,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 				if (command.getExtra3Info().equals("VIDEO_ONLY")){
 						srcCode = getCatalogueValue(extra, "AV_INPUTS",device);
-						int src = Integer.parseInt(srcCode);
 						setCurrentSrc(device.getKey(),srcCode);
 						returnVal.avOutputParam = kramerHelper.buildKramerCommand(8,1,1,command.getExtra2Info());
 						//returnVal.avOutputSuffix = kramerHelper.buildKramerCommand(8,1,0,command.getExtra2Info());
@@ -242,7 +230,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				}
 				if (command.getExtra3Info().equals("AUDIO_ONLY")){
 						srcCode = getCatalogueValue(extra, "AUDIO_INPUTS",device);
-						int src = Integer.parseInt(srcCode);
 						setCurrentSrc(device.getKey(),srcCode);
 						returnVal.avOutputParam = kramerHelper.buildKramerCommand(8,1,1,command.getExtra2Info());
 						//returnVal.avOutputSuffix = kramerHelper.buildKramerCommand(8,0,0,command.getExtra2Info());
@@ -299,3 +286,15 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 	
 }
+
+class KramerCommands { 
+	byte[] avOutputSuffix = null;
+	byte[] avOutputString = null;
+	byte[] avOutputParam = null;
+	boolean error = false;
+	String errorDescription = "";
+	
+	int outputCommandType;
+	int paramCommandType;
+}
+

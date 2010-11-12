@@ -95,36 +95,36 @@ public class PlayerStatus extends SlimServerCommand {
 
 	@Override
 	public String buildCommandString() {
-		String commandString = "";
+		StringBuilder commandString = new StringBuilder();
 		
 		if (StringUtils.isNullOrEmpty(playerId)) {
 			return "";
 		} else {
 			try {
-				commandString += URLEncoder.encode(playerId, "UTF-8");
+				commandString.append(URLEncoder.encode(playerId, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				logger.log(Level.INFO, "UTF-8 not supported");
 			}
 		}
 		
-		commandString += " status " + start + " " + itemsPerResponse;
+		commandString.append(" status " + start + " " + itemsPerResponse);
 		
 		if (tags.size() > 0) {
-			commandString += " tags:";
+			commandString.append(" tags:");
 			for (SongInfoTag tag: tags) {
-				commandString += tag.getValue();
+				commandString.append(tag.getValue());
 			}
 		}
 		
 		if (!StringUtils.isNullOrEmpty(charset)) {
-			commandString += " charset:" + charset;
+			commandString.append(" charset:" + charset);
 		}
 		
 		if (!StringUtils.isNullOrEmpty(subscribe)) {
-			commandString += " subscribe:" + subscribe;
+			commandString.append(" subscribe:" + subscribe);
 		}
 		
-		return commandString;
+		return commandString.toString();
 	}
 	
 	

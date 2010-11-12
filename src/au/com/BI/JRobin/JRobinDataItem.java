@@ -22,9 +22,9 @@ public class JRobinDataItem {
         private double ratio;
         private double powerRating;
         private int itemType;
-        final int DATATYPE = 1;
-        final int DATAALLTYPE = 2;
-        final int DATAPOWERCONSUMPTIONTYPE = 3;
+        static final int DATATYPE = 1;
+        static final int DATAALLTYPE = 2;
+        static final int DATAPOWERCONSUMPTIONTYPE = 3;
 
         /**
          *

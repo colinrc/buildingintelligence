@@ -1,6 +1,7 @@
 package au.com.BI.CustomInput;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
@@ -42,6 +43,7 @@ public class CustomInputFactory  extends DeviceFactory {
 		String outKey = element.getAttributeValue("DISPLAY_NAME");
 		String extra = element.getAttributeValue("EXTRA");
 		String isRegEx = element.getAttributeValue("KEY_IS_REGEX");
+		logger.log(Level.INFO, "added custom input device" + outKey);
 		CustomInput theInput = new CustomInput ();
 
 

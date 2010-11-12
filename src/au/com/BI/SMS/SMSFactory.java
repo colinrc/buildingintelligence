@@ -2,6 +2,7 @@ package au.com.BI.SMS;
 
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
@@ -42,6 +43,7 @@ public class SMSFactory extends DeviceFactory  {
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
+		logger.log(Level.INFO, "added SMS device" + display_name);
 		SMS sms = new SMS (display_name,connectionType);
 
 		key = targetDevice.formatKey(key,sms);

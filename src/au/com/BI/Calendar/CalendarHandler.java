@@ -29,12 +29,11 @@ public class CalendarHandler {
 	 * 
 	 */
 	protected String fileName = "";
-    private String integratorFileName = "";
 	protected String calendarFileName = "";
 	protected Logger logger;
 	protected CommandQueue commandList = null;
 	protected EventCalendar eventCalendar = null;
-	protected Map calendar_message_params;
+	protected Map<String, String> calendar_message_params;
     protected Cache cache = null;
     MacroHandler macroHandler = null;
                 
@@ -92,11 +91,11 @@ public class CalendarHandler {
             } */
     }
 
-    public Map getCalendar_message_params() {
+    public Map<String, String> getCalendar_message_params() {
 		return calendar_message_params;
 	}
 
-	public void setCalendar_message_params(Map calendar_message_params) {
+	public void setCalendar_message_params(Map<String, String> calendar_message_params) {
 		this.calendar_message_params = calendar_message_params;
 	}
 

@@ -18,8 +18,6 @@ import org.jdom.*;
  */
 public class LightCommand extends Command implements CommandInterface{
 
-	private Map keyList;
-	
 	public static int RawText = 1;
 	
 	public String port;

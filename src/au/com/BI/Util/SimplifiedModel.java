@@ -26,7 +26,6 @@ import au.com.BI.Config.RawItemDetails;
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.PulseOutput.PulseOutput;
 import au.com.BI.SMS.SMS;
-import au.com.BI.Sensors.Sensor;
 import au.com.BI.Sensors.SensorFascade;
 import au.com.BI.ToggleSwitch.ToggleSwitch;
 import au.com.BI.Thermostat.Thermostat;
@@ -61,6 +60,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	protected ConfigHelper configHelper;
 	protected boolean queueCommands  = false;
 	protected SimplifiedModelPoll simplifiedModelPoll = null;
+	private final Object lock = new Object();
     
 	public SimplifiedModel () {
         configHelper = new ConfigHelper(this);
@@ -180,7 +180,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 								+ " input catalogue name was not specified in the device Parameter block");
 			}
 
-			Map inputs = this.getCatalogueDef(paramDef);
+			Map<String, String> inputs = this.getCatalogueDef(paramDef);
 			if (inputs == null) {
 				throw new SetupException(
 						"The "
@@ -246,7 +246,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	}
 
 	public void sendWrapperItems(ReturnWrapper returnWrapper) {
-		if (!returnWrapper.isError()) {
+		if (returnWrapper != null && !returnWrapper.isError()) {
 			if (returnWrapper.isMessageIsBytes()) {
 				for (byte[] avOutputString : returnWrapper.getCommOutputBytes()) {
 					if (returnWrapper.isQueueCommands()) {
@@ -356,10 +356,10 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		synchronized (variableCache) {
 			if (variableCache.containsKey(key) == true) {
 				variableCache.remove(key);
-				variableCache.put(key, new Long(value));
+				variableCache.put(key, value);
 				return;
 			}
-			variableCache.put(key, new Long(value));
+			variableCache.put(key, value);
 		}
 		return;
 	}
@@ -392,7 +392,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 				return (Boolean) variableCache.get(key);
 			}
 		}
-		return null;
+		return false;
 	}
 	
 	/**
@@ -421,7 +421,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					longValue = (Long) variableCache.get(key);
 					numLong = longValue.longValue();
 					numLong = numLong + 1;
-					longValue = new Long(numLong);
+					longValue = numLong;
 					variableCache.remove(key);
 					variableCache.put(key, longValue);
 					return;
@@ -461,7 +461,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 					longValue = (Long) variableCache.get(key);
 					numLong = longValue.longValue();
 					numLong = numLong - 1;
-					longValue = new Long(numLong);
+					longValue = numLong;
 					variableCache.remove(key);
 					variableCache.put(key, longValue);
 					return;
@@ -541,7 +541,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
 	public void sendToSerial(String outputRawCommand) throws CommsFail {
 		if (this.connected == true) {
-			synchronized (comms) {
+			synchronized (lock) {
 				comms.sendString(outputRawCommand);
 			}
 		}
@@ -559,7 +559,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	
 	public void sendToSerial(byte[] outputRawCommand) throws CommsFail {
 		if (this.connected == true) {
-			synchronized (comms) {
+			synchronized (lock) {
 				comms.sendString(outputRawCommand);
 			}
 		}
@@ -591,7 +591,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		avCommsCommand.setActionType(outputCommandType);
 		avCommsCommand.setExtraInfo(outputKey);
 		avCommsCommand.setKeepForHandshake(keyForHandshake);
-		synchronized (comms) {
+		synchronized (lock) {
 			try {
 				comms.addCommandToQueue(avCommsCommand);
 			} catch (CommsFail e1) {
@@ -611,7 +611,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		avCommsCommand.setActionType(outputCommandType);
 		avCommsCommand.setExtraInfo(outputKey);
 		avCommsCommand.setKeepForHandshake(keyForHandshake);
-		synchronized (comms) {
+		synchronized (lock) {
 			try {
 				comms.addCommandToQueue(avCommsCommand);
 			} catch (CommsFail e1) {
@@ -636,7 +636,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 				DeviceModel.MAIN_DEVICE_GROUP)).equals("SERIAL")) {
 
 			if (comms != null) {
-				synchronized (comms) {
+				synchronized (lock) {
 					comms.close();
 				}
 			} else
@@ -659,7 +659,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 				comms.setInterCommandInterval(interCommandInterval);
 			parameters = new SerialParameters();
 			parameters.buildFromDevice(this);
-			synchronized (comms) {
+			synchronized (lock) {
 				((Serial) comms).connect((String) this.getParameterValue(
 						"Device_Port", DeviceModel.MAIN_DEVICE_GROUP),
 						parameters, commandQueue, this.getInstanceID(), this
@@ -672,7 +672,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 				DeviceModel.MAIN_DEVICE_GROUP)).equals("IP")) {
 
 			if (comms != null) {
-				synchronized (comms) {
+				synchronized (lock) {
 					comms.close();
 					comms = null;
 				}
@@ -695,7 +695,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			if (penultimateArray != null)
 				comms.setPenultimateArray(penultimateArray);
 
-			synchronized (comms) {
+			synchronized (lock) {
 				((IP) comms).connect((String) this.getParameterValue(
 						"IP_Address", DeviceModel.MAIN_DEVICE_GROUP),
 						(String) this.getParameterValue("Device_Port",
@@ -712,7 +712,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	 Closes the connection	 */
 	public void closeComms() throws ConnectionFail {
 		if (comms != null) {
-			synchronized (comms) {
+			synchronized (lock) {
 				comms.close();
 			}
 		}
@@ -912,7 +912,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		formatSpec += padding;
 
 		if (isDeviceKeysString()){
-			return new Integer(key).toString();
+			return String.valueOf(key);
 		}
 		if (!this.isDeviceKeysDecimal()) {
 			formatSpec += "X";
@@ -1212,7 +1212,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		} else {
 			catalogueGroupName = device.getGroupName();
 		}
-		Map rawCatalogue = getCatalogueDef(getParameterValue(parameterName,catalogueGroupName));
+		Map<String, String> rawCatalogue = getCatalogueDef(getParameterValue(parameterName,catalogueGroupName));
 		if (rawCatalogue == null ) {
 			throw new ParameterException ("Catalogue " + parameterName + " is not present in the configuration file.");
 		}
@@ -1262,7 +1262,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			DeviceType targetDevice) {
 
 
-		Map rawCodes = targetDevice.getRawCodes(); // the list specified in the config for this device line.
+		Map<String, RawItemDetails> rawCodes = targetDevice.getRawCodes(); // the list specified in the config for this device line.
 
 		if (rawCodes != null) {
 			String commandName = command.getCommandCode();
@@ -1274,7 +1274,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 				rawCode = (RawItemDetails) rawCodes.get(commandName); // pull up details for the line				
 
 			if (rawCode != null) {
-				Map rawCatalogue = getCatalogueDef(rawCode.getCatalogue());
+				Map<String,String> rawCatalogue = getCatalogueDef(rawCode.getCatalogue());
 				if (rawCatalogue == null) {
 					logger.log(Level.WARNING,
 							"Specified raw catalogue is not defined : "
@@ -1305,7 +1305,6 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 			return ;
 
 		CustomConnect customConnect = (CustomConnect) device;
-		Boolean isNumber = false;
 
 		try {
 				CustomOutputExtraValueReturn outValue = customConnect.getValue(command
@@ -1332,9 +1331,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 	    for (CustomConnectInput customInput: configHelper.getCustomConnectInputList()) {
 	    	for (CustomConnectInputDetails customInputDetails: customInput.getCustomConnectInputDetails()){
 		    	try {
-			    	String inputListKey = "";
-				    boolean matched = false;
-			        
+
 			    	Matcher matcherResults;
 			    	if (command.hasByteArray()){
 			    		matcherResults = customInputDetails.getMatcher(command.getKey().toString());			    		
@@ -1543,7 +1540,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
     public Long getLastAccessTime(String key)throws ValueNotUpdatedException {
             Long cachedValue;
             cachedValue = cache.getCachedTime(key);
-            if (cachedValue == null || cachedValue.equals(new Long(0))) {
+            if (cachedValue == null || cachedValue.equals(0L)) {
                 throw new ValueNotUpdatedException ("Could not find " + key);
             }
             return cachedValue;
@@ -1553,13 +1550,13 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
      * @return Returns the number of minutes since the device was last used.
      */
     public Long getLastAccessTimeDuration(String key, String interval) throws ValueNotUpdatedException {
-            Long cachedLongValue, retValue;
+            Long cachedLongValue;
             Object cachedValue;
             long duration;
             long cachedTime = 0;
-            java.lang.Double doubleValue;
+
             cachedValue = cache.getCachedTime(key);
-            if (cachedValue == null || cachedValue.equals(new Long(0))) {
+            if (cachedValue == null || cachedValue.equals(0L)) {
                     throw new ValueNotUpdatedException ("Could not find " + key);
             }
             cachedLongValue = (Long) cachedValue;

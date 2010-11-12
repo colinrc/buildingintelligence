@@ -2,6 +2,7 @@ package au.com.BI.Pump;
 
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
@@ -42,6 +43,8 @@ public class PumpFactory extends DeviceFactory {
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
+		logger.log(Level.INFO, "added pump device" + display_name);
+
 		Pump pump = new Pump (display_name,connectionType);
 
 		key = targetDevice.formatKey(key,pump);

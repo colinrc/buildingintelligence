@@ -4,6 +4,7 @@
 package au.com.BI.Jetty;
 
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +25,7 @@ import au.com.BI.Messaging.AddressBook;
 
 public class SessionCounter implements HttpSessionListener  {
 
-	private Integer currentSessionCount = 0;
+	private AtomicInteger currentSessionCount = new AtomicInteger(0);
 
 	private ServletContext context = null;
 	Logger logger;
@@ -56,22 +57,17 @@ public class SessionCounter implements HttpSessionListener  {
         } else {
         	logger.log (Level.FINE,"Session close was attempted however the user " + user + " is not logged in.");
         }
-		synchronized (currentSessionCount){
-			currentSessionCount--;
-		}
+		currentSessionCount.decrementAndGet();
 	}
 
 	/** The number of sessions currently in memory. */
 
 	public int getCurrentSessionCount() {
-		return (currentSessionCount);
+		return (currentSessionCount.intValue());
 	}
 	
 	public int incrementCount() {
-		synchronized (currentSessionCount){
-			currentSessionCount++;
-		}
-		return currentSessionCount;
+		return currentSessionCount.incrementAndGet();
 	}
 
 	private void storeInServletContext(HttpSessionEvent event) {

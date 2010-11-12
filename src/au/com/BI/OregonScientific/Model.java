@@ -188,13 +188,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			byte secondKey = message[1];
 	
 			if (message[0] == 6 || message[0] == 5) {
-				if (!cacheDiffers(new Byte(message[0]),message)) {
+				if (!cacheDiffers(message[0],message)) {
 					return;
 				}
 				readIntTemp (message,message[0],secondKey);
 			}
 			if (message[0] == 3) {
-				if (!cacheDiffers(new Byte(message[0]),message)) {
+				if (!cacheDiffers(message[0],message)) {
 					return;
 				}
 				readOutTemp (message,message[0],secondKey);

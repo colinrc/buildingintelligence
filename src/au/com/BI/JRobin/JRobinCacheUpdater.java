@@ -22,9 +22,9 @@ import java.util.logging.*;
 public class JRobinCacheUpdater {
 
 
-        final int DATATYPE = 1;
-        final int DATAALLTYPE = 2;
-        final int DATAPOWERCONSUMPTIONTYPE = 3;
+        static final int DATATYPE = 1;
+        static final int DATAALLTYPE = 2;
+        static final int DATAPOWERCONSUMPTIONTYPE = 3;
         protected Logger logger;
         protected JRobinSupport jRobinSupport;
 
@@ -36,7 +36,7 @@ public class JRobinCacheUpdater {
         public void doCommandForJRobin(CommandInterface command) {
                 JRobinData jRobinData;
                 String sValue;
-                sValue = new String();
+                sValue = "";
                 String search;
                 double value;
                 value = 0;
@@ -48,7 +48,7 @@ public class JRobinCacheUpdater {
                         logger.log(Level.FINE, "RRD jRobinData is null from: " + command.toString());
                         return;
                 }
-                ArrayList dataItems;
+                ArrayList<JRobinDataItem> dataItems;
 
                 String displayName;
                 if (command.isClient()) {
@@ -65,7 +65,7 @@ public class JRobinCacheUpdater {
                }
 
 
-                Iterator theDataItem = dataItems.iterator();
+                Iterator<JRobinDataItem> theDataItem = dataItems.iterator();
                 while (theDataItem.hasNext()) {
                         jRobinDataItem = (JRobinDataItem) theDataItem.next();
 
@@ -126,7 +126,7 @@ public class JRobinCacheUpdater {
                                 //get old value
                                 double oldVal;
                                 String sOldValue;
-                                sOldValue = new String();
+                                sOldValue = "";
                                 try {
                                         oldVal = jRobinSupport.getDoubleVariable(jRobinDataItem.getVariable()).doubleValue();
                                 }
@@ -210,18 +210,8 @@ public class JRobinCacheUpdater {
 
 
                                 //get old time
-                                long oldtime, lastQueryTime, lastAccessTime, startTime, endTime;
+                                long lastQueryTime, lastAccessTime, startTime, endTime;
                                 double powerRating, ratio, elapsedTime;
-                                String sOldTime, sLastQueryTime;
-                                sOldTime = new String();
-                                sLastQueryTime = new String();
-
-                                try {
-                                        oldtime = jRobinSupport.getLongVariable(jRobinDataItem.getVariable() + "_~TIME").longValue();
-                                }
-                                catch (NullPointerException ex) {
-                                        oldtime = 0;
-                                }
 
                                 try {
                                         lastQueryTime = jRobinSupport.getLongVariable(jRobinData.getRRDName() + "_~LASTQTIME").longValue();

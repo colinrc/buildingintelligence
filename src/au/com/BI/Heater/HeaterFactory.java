@@ -2,6 +2,7 @@ package au.com.BI.Heater;
 
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jdom.Element;
@@ -42,6 +43,7 @@ public class HeaterFactory extends DeviceFactory {
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
+		logger.log(Level.INFO, "added heater device" + display_name);
 		Heater heater = new Heater (display_name,connectionType);
 
 		key = targetDevice.formatKey(key,heater);

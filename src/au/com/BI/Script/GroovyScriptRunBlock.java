@@ -6,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GroovyScriptRunBlock {
-	int repeatCount = 0;
 	boolean enabled = true;
 	ConcurrentLinkedQueue <ScriptParams>runs; 
 	ConcurrentHashMap<Long,RunGroovyScript>running;

@@ -5,6 +5,7 @@
 package au.com.BI.Sensors;
 import au.com.BI.CBUS.*;
 import au.com.BI.Command.*;
+import au.com.BI.Config.RawItemDetails;
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Device.UnknownFieldException;
 
@@ -109,13 +110,13 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	/**
 	 * @return Returns the rawCodes.
 	 */
-	public final Map getRawCodes() {
+	public final Map<String, RawItemDetails> getRawCodes() {
 		return sensor.getRawCodes();
 	}
 	/**
 	 * @param rawCodes The rawCodes to set.
 	 */
-	public final void setRawCodes(Map rawCodes) {
+	public final void setRawCodes(Map<String, RawItemDetails> rawCodes) {
 		sensor.setRawCodes (rawCodes);
 	}
 

@@ -208,7 +208,7 @@ public class IntegraHelper {
 	String getDeviceKey(String command){
 		try
 		{
-			String key = new String("01");
+			String key ="01";
 			String cmd = getInputCommand(command);
 			if (cmd.charAt(0) == 'Z' || cmd.charAt(2) == 'Z')
 				key = "02";
@@ -287,7 +287,7 @@ public class IntegraHelper {
 	 * @return
 	 */
 	public String outVolume(int zone, String action){
-		String outCommand = new String();
+		String outCommand = "";
 		// TODO test is probably unnecessary string + null = string?
 		outCommand += getSTX();
 		outCommand += UnitType;
@@ -328,7 +328,7 @@ public class IntegraHelper {
 	 */
 	public String outMute(int zone, String action)
 	{
-		String outCommand = new String();
+		String outCommand = "";
 		// TODO test is probably unnecessary string + null = string?
 		
 		outCommand += getSTX();
@@ -365,7 +365,7 @@ public class IntegraHelper {
 	 */
 	public String outPower(int zone, String action)
 	{
-		String outCommand = new String();
+		String outCommand = "";
 		// TODO test is probably unnecessary string + null = string?
 		outCommand += getSTX();
 		outCommand += UnitType;
@@ -401,7 +401,7 @@ public class IntegraHelper {
 	 */
 	public String outSource(int zone, String action)
 	{
-		String outCommand = new String();
+		String outCommand = "";
 		// TODO test is probably unnecessary string + null = string?
 		outCommand += getSTX();
 		outCommand += UnitType;
@@ -421,7 +421,7 @@ public class IntegraHelper {
 	 */
 	public String outPreset(int zone, String action)
 	{
-		String outCommand = new String();
+		String outCommand = "";
 		// TODO test is probably unnecessary string + null = string?
 		outCommand += getSTX();
 		outCommand += UnitType;

@@ -21,17 +21,7 @@ public class Device extends BaseDevice implements DeviceType
 	protected Logger logger = null;
 	
 	protected String key;
-	
 
-	private class FieldDetails {
-		FieldTypes fieldType = FieldTypes.Unknown;
-		String name = "";
-		int maxVal = 0;
-		int minVal = 0;
-		String errorMessage;
-		boolean optional = false;
-	};
-	
 	public Device (String name, int deviceType, String outputKey){
 		super (name,deviceType,outputKey);
 		logger = Logger.getLogger(this.getClass().getPackage().getName()+"."+name);
@@ -47,24 +37,6 @@ public class Device extends BaseDevice implements DeviceType
 	public int getClientCommand ()
 	{
 		return DeviceType.NA;
-	}
-	
-	public void addIntField (String fieldName, FieldTypes fieldType,String errorMessage, int minVal, int maxVal, boolean optional){
-		FieldDetails fieldDetails = new FieldDetails();
-		fieldDetails.fieldType = FieldTypes.Integer;
-		fieldDetails.maxVal = maxVal;
-		fieldDetails.minVal = minVal;
-		fieldDetails.name = fieldName;
-		fieldDetails.optional = optional;
-		fieldTypes.put (fieldName,fieldDetails);
-	}
-
-	public void addStrField (String fieldName, FieldTypes fieldType,String errorMessage, boolean optional){
-		FieldDetails fieldDetails = new FieldDetails();
-		fieldDetails.fieldType = FieldTypes.String;
-		fieldDetails.name = fieldName;
-		fieldDetails.optional = optional;
-		fieldTypes.put (fieldName,fieldDetails);
 	}
 	
 	public void addStrValue (String name , String  value,String errorMessage, int minVal, int maxVal) throws UnknownFieldException,FieldValueException {
@@ -117,3 +89,13 @@ public class Device extends BaseDevice implements DeviceType
 		this.deviceName = deviceName;
 	}
 }
+
+
+class FieldDetails {
+	String name = "";
+	int maxVal = 0;
+	int minVal = 0;
+	boolean optional = false;
+};
+
+

@@ -121,49 +121,49 @@ public class GetTracks extends SlimServerCommand {
 
 	@Override
 	public String buildCommandString() {
-		String commandString = "tracks " + start + " " + itemsPerResponse;
+		StringBuilder commandString = new StringBuilder("tracks " + start + " " + itemsPerResponse);
 		
 		if (!StringUtils.isNullOrEmpty(search)) {
-			commandString += " search:";
+			commandString.append(" search:");
 			try {
-				commandString += URLEncoder.encode(search, "UTF-8");
+				commandString.append(URLEncoder.encode(search, "UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				logger.log(Level.INFO, "UTF-8 not supported");
 			}
 		}
 		
 		if (year != -1) {
-			commandString += " year:" + year;
+			commandString.append(" year:" + year);
 		}
 		
 		if (genre != -1) {
-			commandString += " genre_id:" + genre;
+			commandString.append(" genre_id:" + genre);
 		}
 		
 		if (album != -1) {
-			commandString += " album_id:" + album;
+			commandString.append(" album_id:" + album);
 			
 			// if there is an album filter then sort by the track number.
 			this.setSortByTitle(false);
 		}
 		
 		if (artist != -1) {
-			commandString += " artist_id:" + artist;
+			commandString.append(" artist_id:" + artist);
 		}
 		
 		if (tags.size() > 0) {
-			commandString += " tags:";
+			commandString.append(" tags:");
 			for (SongInfoTag tag: tags) {
-				commandString += tag.getValue();
+				commandString.append(tag.getValue());
 			}
 		}
 		
 		if (sortByTitle) {
-			commandString += " sort:title";
+			commandString.append(" sort:title");
 		} else {
-			commandString += " sort:tracknum";
+			commandString.append(" sort:tracknum");
 		}
 		
-		return commandString;
+		return commandString.toString();
 	}
 }

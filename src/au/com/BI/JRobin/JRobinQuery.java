@@ -4,8 +4,6 @@
  */
 package au.com.BI.JRobin;
 
-
-import au.com.BI.Home.Controller;
 import java.util.logging.*;
 import java.util.*;
 import au.com.BI.JRobin.JRobinData;
@@ -19,9 +17,9 @@ public class JRobinQuery extends Thread {
         protected JRobinData jRobinData;
         protected String RRDName;
 
-        final int DATATYPE = 1;
-        final int DATAALLTYPE = 2;
-        final int DATAPOWERCONSUMPTIONTYPE = 3;
+        static final int DATATYPE = 1;
+        static final int DATAALLTYPE = 2;
+        static final int DATAPOWERCONSUMPTIONTYPE = 3;
 
         public JRobinQuery (JRobinData jRobinData , JRobinSupport jRobinSupport) {
                 this.jRobinSupport = jRobinSupport;
@@ -55,7 +53,7 @@ public class JRobinQuery extends Thread {
                         int numOfDataItems = jRobinData.getNumberOfDataItems() - 1;
                         long endTime;
                         endTime = System.currentTimeMillis();
-                        String variable, key;
+                        String key;
 
                         while (i <= numOfDataItems) {
                                 jRobinDataItem = jRobinData.getDataItem(i);
@@ -71,7 +69,6 @@ public class JRobinQuery extends Thread {
                                         double powerRating, ratio;
                                         long startTime, lastQuerytTime;
                                         double value, oldConsume, consume,elapsedTime;
-                                        double valuesPower[] = new double[numOfDataItems];
 
                                         try {
                                                 oldConsume = jRobinSupport.getDoubleVariable(jRobinDataItem.getVariable() + "_~CONSUME").doubleValue();
@@ -118,7 +115,6 @@ public class JRobinQuery extends Thread {
                                 else {
                                         //process DATA and DATA_ALL
 
-                                        String count;
                                         double value;
                                         double countValue;
 
@@ -157,7 +153,7 @@ public class JRobinQuery extends Thread {
                         logger.log(Level.FINE, "update rrd with " + values.toString());
                         jRobinSupport.rrdUpdate(RRDName, values);
 
-                        ArrayList variables;
+                        ArrayList<String> variables;
                         variables = jRobinData.getJRobinDataItemVariables();
                         jRobinSupport.clearVariables(variables);
                         jRobinSupport.setLongVariable(jRobinData.getRRDName() + "_~LASTQTIME", endTime);

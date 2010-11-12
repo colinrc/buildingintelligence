@@ -1,5 +1,7 @@
 package au.com.BI.Home;
 import java.io.File;
+import java.io.InputStream;
+
 import au.com.BI.Admin.LogHandler;
 import au.com.BI.Admin.BIFormatter;
 import java.io.IOException;
@@ -27,24 +29,33 @@ public class eLife {
 	Logger logger;
 	Level defaultLogLevel = Level.INFO;
 	LogHandler sh;
-	Logger globalLogger;
 	
 	public eLife (String configName,boolean runHarness, LogHandler sh,  boolean sysOutPrint ) {
 
 		this.sh = sh;
 		logger = Logger.getLogger("au.com.BI");
-		//this.logger = globalLogger;
 		
 		Bootstrap bootstrap = new Bootstrap();
 	    Properties properties = new Properties();
+	    InputStream is = null;
 	    try {
-	    		properties.load(this.getClass().getResourceAsStream("my.properties"));
-	    } catch (IOException e) {
+	    	is = this.getClass().getResourceAsStream("my.properties");
+	    	properties.load(is);
+	    } 
+	    catch (IOException e) {
+	    }
+	    finally {
+	    	try {
+	    		if (is != null)
+	    			is.close();
+			}
+	    	catch (IOException e) {
+				e.printStackTrace();
+			}
 	    }
 
 	    String major_version = properties.getProperty("major_version");
 	    String minor_version = properties.getProperty("minor_version");
-	    String eSmart_install = properties.getProperty("eSmart_install");
 
 	    String outString = "";
 	    
@@ -56,7 +67,8 @@ public class eLife {
 	    
 
 		System.out.println ("Launching eLife V" + outString);
-		logger.log (Level.INFO,"Launching eLife V" + outString);
+		if (logger != null)
+			logger.log (Level.INFO,"Launching eLife V" + outString);
 
 		if (sysOutPrint){
 			System.setProperty("DEBUG","true");
@@ -167,7 +179,6 @@ public class eLife {
 	
 	public static void main(String[] args)
 	{
-		boolean runHarness = true;
 		boolean verbose = false;
 		
 		if (args.length > 0) {

@@ -434,12 +434,10 @@ public class Model
 
                 logger.log(Level.FINE,"Loading scripts");
 
-                String lsLine; //, lsCheck;
+                StringBuilder lsLine = new StringBuilder(); //, lsCheck;
                 ArrayList <String>linesOfFile;
 
                 Map <String, ArrayList<String>>files;
-
-                lsLine = new String();
 
                 try {
                         scriptHandler.removeAllTimers();
@@ -467,14 +465,14 @@ public class Model
 	                        linesOfFile =  files.get(scriptName);
 	                        
 	                        int i = 0;
-	                        lsLine = "";
+	                        lsLine.delete(0, lsLine.length());
 	
 	                        // Now collect the lines looking for items to remove.
 	                        while (i < linesOfFile.size()) {
-	                                lsLine = lsLine + linesOfFile.get(i);
+	                                lsLine.append(linesOfFile.get(i));
 	                                i++;
 	                        }
-	                        parseScript(lsLine,scriptName);
+	                        parseScript(lsLine.toString(),scriptName);
 	                }
 	                scriptHandler.addTimerControls();
 	                logger.log(Level.FINE,"Scripts loaded");
@@ -860,7 +858,7 @@ public class Model
                 rrdVO.setRRDValue(value);
 
                 long ltime;
-                ltime = new Float(time).longValue();
+                ltime = (long) time;
 
                 rrdVO.setStartTime(ltime);
                 sendCommand.setRrdValueObject(rrdVO);
@@ -880,7 +878,7 @@ public class Model
                 rrdVO.setRRDValues(values);
 
                 long ltime;
-                ltime = new Float(time).longValue();
+                ltime =  (long) time;
 
                 rrdVO.setStartTime(ltime);
                 sendCommand.setRrdValueObject(rrdVO);
@@ -899,8 +897,8 @@ public class Model
                 fetchData = null;
 
                 long lstart,lend;
-                lstart = new Float(startTime).longValue();
-                lend = new Float(endTime).longValue();
+                lstart = (long) startTime;
+                lend = (long) endTime;
 
 
                 try {
@@ -949,8 +947,8 @@ public class Model
                 rrdVO.setGraphType(graphType);
 
                 long lstart,lend;
-                lstart = new Float(startTime).longValue();
-                lend = new Float(endTime).longValue();
+                lstart = (long) startTime;
+                lend = (long) endTime;
 
                 rrdVO.setStartTime(lstart);
                 rrdVO.setEndTime(lend);
@@ -977,8 +975,8 @@ public class Model
                 rrdVO.setGraphType(graphType);
 
                 long lstart,lend;
-                lstart = new Float(startTime).longValue();
-                lend = new Float(endTime).longValue();
+                lstart = (long)  startTime;
+                lend = (long) endTime;
 
                 rrdVO.setStartTime(lstart);
                 rrdVO.setEndTime(lend);
@@ -1005,8 +1003,8 @@ public class Model
                 rrdVO.setGraphType(graphType);
 
                 long lstart,lend;
-                lstart = new Float(startTime).longValue();
-                lend = new Float(endTime).longValue();
+                lstart = (long) startTime;
+                lend = (long) endTime;
 
                 rrdVO.setStartTime(lstart);
                 rrdVO.setEndTime(lend);

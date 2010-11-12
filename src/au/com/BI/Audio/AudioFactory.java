@@ -2,7 +2,7 @@ package au.com.BI.Audio;
 
 
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import org.jdom.Element;
 
@@ -42,6 +42,7 @@ public class AudioFactory extends DeviceFactory {
 		String key = element.getAttributeValue("KEY");
 		String command = element.getAttributeValue("COMMAND");
 		String display_name = element.getAttributeValue("DISPLAY_NAME");
+		logger.log(Level.INFO, "added audio device" + display_name);
 		Audio audio = new Audio (display_name,connectionType);
 
 		key = targetDevice.formatKey(key,audio);
