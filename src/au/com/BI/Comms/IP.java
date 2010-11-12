@@ -30,7 +30,6 @@ public class IP extends BaseComms implements CommDevice
 	protected int etxArray[] = null;
 	protected int stxArray[] = null;
 	protected int penultimateVals[] = null;
-	protected int transmitMessageOnBytes = 0;
 	protected String deviceName = "";
 
 	

@@ -9,6 +9,11 @@ package au.com.BI.Comms;
  */
 public class ConnectionFail extends Exception{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 359677372997470162L;
+
 	public ConnectionFail(){
 
 	}

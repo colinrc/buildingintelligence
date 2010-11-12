@@ -141,7 +141,7 @@ public class ClientCommandFactory {
 	
 	
 	public ClientCommand buildKeyPress(String key, Element rootElement) {
-		String name = ""; // the name of the node
+
 		String extra = "";
 
 		Attribute extraAttribute = rootElement.getAttribute("EXTRA");
@@ -155,7 +155,7 @@ public class ClientCommandFactory {
 	}
 
 	public ClientCommand buildMessage(Element rootElement) {
-		String name = ""; // the name of the node
+
 		ClientCommand newCommand = new ClientCommand();
 		newCommand.setKey("MESSAGE");
 		newCommand.setDisplayName("MESSAGE");
@@ -200,7 +200,7 @@ public class ClientCommandFactory {
 	}
 
 	public ClientCommand buildCommand(String key, Element rootElement) {
-		String name = ""; // the name of the node
+
 		String command = rootElement.getAttributeValue("COMMAND");
 		if (command == null)
 			command = "";

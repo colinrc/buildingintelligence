@@ -27,9 +27,6 @@ public class ScriptFileHandler {
 
         public void loadScripts(au.com.BI.Script.Model myScriptModel, String dir, Map <String,ScriptRunBlock>scriptRunBlockList) throws ConfigError {
 
-                Integer fileNum;
-                fileNum = new Integer(0);
-                int i = 0;
                 Map <String,ArrayList<String>>myFiles = Collections.synchronizedMap(new LinkedHashMap<String,ArrayList<String>>(30));
 
                 myFiles = loadScriptList(dir,scriptRunBlockList);

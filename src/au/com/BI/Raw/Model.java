@@ -13,7 +13,6 @@ import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
 
-import java.util.*;
 import java.util.regex.*;
 import java.util.logging.*;
 import au.com.BI.Flash.*;
@@ -30,7 +29,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected Poll pollReaders[];
 	protected String STX;
 	protected String ETX;
-	protected Logger logger;
 
 	public Model () {
 		super();

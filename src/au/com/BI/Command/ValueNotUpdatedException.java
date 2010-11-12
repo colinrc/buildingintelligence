@@ -9,6 +9,11 @@ package au.com.BI.Command;
  */
 public class ValueNotUpdatedException extends Exception{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3628316996495402089L;
+
 	public ValueNotUpdatedException(){
 
 	}

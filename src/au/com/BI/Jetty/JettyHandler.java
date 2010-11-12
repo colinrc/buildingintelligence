@@ -37,7 +37,6 @@ public class JettyHandler extends SimplifiedModel implements DeviceModel, Client
     boolean SSL = false;
     CacheBridgeFactory cacheBridgeFactory = null;
     org.eclipse.jetty.server.Server server = null,client_server = null;
-    Logger logger;
     Security security = null;
     public static final int timeout = 30; // 1 minute timeout for a session;
     protected ConcurrentHashMap <String,String>forwards;

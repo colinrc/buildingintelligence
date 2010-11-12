@@ -204,20 +204,6 @@ public class SensorFascade implements  DeviceType,CBUSDevice {
 	}
 
 	/**
-	 * @param deviceType The deviceType to set.
-	 */
-	public final void setDeviceType(int deviceType) {
-		this.setDeviceType (deviceType);
-	}
-
-	/**
-	 * @param name The name to set.
-	 */
-	public final void setName(String name) {
-		this.setName(name);
-	}
-
-	/**
 	 * @return Returns the applicationCode.
 	 */
 	public String getApplicationCode() {

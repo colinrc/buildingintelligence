@@ -63,9 +63,9 @@ public class GroovyScriptHandler {
 	public boolean run(String scriptName, CommandInterface triggeringCommand) {
 		GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
 				.get(scriptName);
-		ScriptParams params = scriptRunBlock.nextRun();
 
 		if (scriptRunBlock != null) {
+			ScriptParams params = scriptRunBlock.nextRun();
 			return runScript(scriptRunBlock,  scriptModel, params,true);
 		} else {
 			return false;
@@ -83,7 +83,6 @@ public class GroovyScriptHandler {
 	}
 	
 	public boolean run(String scriptName, String parameter, User user, CommandInterface triggeringCommand) {
-		boolean doNotRun = false;
 
 			GroovyScriptRunBlock scriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
 					.get(scriptName);
@@ -280,7 +279,7 @@ public class GroovyScriptHandler {
 
 	protected boolean setScriptEnable(String scriptName, User user,
 			boolean enabled)  {
-		if (scriptName == null && !scriptName.equals("")) {
+		if (scriptName == null || scriptName.equals("")) {
 			return false;
 		}
 
@@ -347,13 +346,10 @@ public class GroovyScriptHandler {
 	}
 
 	public Element buildListElement(GroovyScriptRunBlock scriptRunBlock) {
-		String myTimer;
-
 
 		Element scriptDef = new Element("CONTROL");
 		scriptDef.setAttribute("KEY", "SCRIPT");
 		scriptDef.setAttribute("COMMAND", "getList");
-		scriptDef.setAttribute("EXTRA", scriptRunBlock.getName());
 		
 		if (scriptRunBlock == null) {
 			// I don't think this can ever be reached
@@ -362,6 +358,7 @@ public class GroovyScriptHandler {
 			scriptRunBlock.setName("NEW");
 		}
 
+		scriptDef.setAttribute("EXTRA", scriptRunBlock.getName());
 
 		if (scriptRunBlock.isEnabled()){
 			scriptDef.setAttribute("ENABLED", "enabled");
@@ -404,7 +401,6 @@ public class GroovyScriptHandler {
 	}
 
 	public void disableAll() {
-		RunGroovyScript theScript;
 
 		for (String scriptName: scriptRunBlockList.keySet()){
 			logger.log(Level.FINE, "Disable script " + scriptName);
@@ -420,7 +416,7 @@ public class GroovyScriptHandler {
 	}
 
 	public void enableAll() {
-		RunGroovyScript theScript;
+
 		for (String scriptName: scriptRunBlockList.keySet()){
 			logger.log(Level.FINE, "Enable script " + scriptName);
 

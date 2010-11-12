@@ -139,7 +139,6 @@ protected String modelName = "";
 	 * @return success if the key is found or not specified
 	 */
 	public boolean acknowledgeCommand (int actionType,String key, boolean allInstances) {
-		boolean returnCode = false;
 		boolean toContinue = true;
 
 		if (key != null && !key.equals("")) {
@@ -153,7 +152,7 @@ protected String modelName = "";
 						logger.log(Level.FINER,"Received acknowledgement for key " + key + " time diff (ms) " + 
 						    (System.currentTimeMillis() - item.getCreationDate()));
 					    }
-					    returnCode = true;
+
 					    if (!allInstances) toContinue = false;
 					}
 				}

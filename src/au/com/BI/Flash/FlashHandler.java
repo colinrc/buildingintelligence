@@ -29,8 +29,6 @@ public class FlashHandler extends SimplifiedModel implements DeviceModel, Client
 	protected FlashControlListener flashControlListener;
 
 
-	protected String name;
-	protected Logger logger;
 	protected HashMap parameters;
 	private Security security;
 
@@ -41,8 +39,6 @@ public class FlashHandler extends SimplifiedModel implements DeviceModel, Client
 	protected int InstanceID;
 
 	protected Map rawDefs;
-
-	protected au.com.BI.Command.Cache cache;
 
 
 	/**

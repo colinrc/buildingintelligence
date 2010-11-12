@@ -10,9 +10,7 @@ public class Power extends SlimServerCommand {
 	private String playerId;
 	private boolean power;
 	private boolean powerQuery;
-	
-	Logger logger;
-	
+		
 	public Power() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}

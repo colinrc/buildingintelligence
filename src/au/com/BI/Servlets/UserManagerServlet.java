@@ -10,16 +10,11 @@
 package au.com.BI.Servlets;
 import javax.servlet.*;
 
-import java.util.*;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.*;
-
-import org.eclipse.jetty.security.HashLoginService;
-import org.eclipse.jetty.http.security.Credential;
-import org.eclipse.jetty.http.security.UnixCrypt;
 
 import au.com.BI.Jetty.BIHashLoginService;
 
@@ -70,8 +65,6 @@ public class UserManagerServlet extends HttpServlet {
         HttpSession session = req.getSession(false);  	
         String message = "";
         String[] userType = {""};
-    	ServletContext context =  session.getServletContext();
-    	BIHashLoginService userRealm = (BIHashLoginService)context.getAttribute("UserManager");
 
     	if (req.isUserInRole(null) || session == null){
        		logger.log (Level.WARNING,"A user attempted to execute the User Manager without being logged in");
@@ -80,7 +73,9 @@ public class UserManagerServlet extends HttpServlet {
             return;
     	}
     	
-
+    	ServletContext context =  session.getServletContext();
+    	BIHashLoginService userRealm = (BIHashLoginService)context.getAttribute("UserManager");
+    	
     	try {
         		
 	        String op = req.getParameter("OP");

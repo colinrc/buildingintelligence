@@ -5,15 +5,12 @@ import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import au.com.BI.Util.StringUtils;
-
 public class PlayListIndex extends SlimServerCommand {
 
 	private String playerId;
 	private int positiveIndex;
 	private int negativeIndex;
 	private int index;
-	Logger logger;
 	
 	public PlayListIndex() {
 		positiveIndex = -1;

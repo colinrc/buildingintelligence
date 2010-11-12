@@ -31,7 +31,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected Poll pollReaders[];
 	protected String STX;
 	protected String ETX;
-	protected Logger logger;
 	protected HashMap <Byte,String>weatherCache;
 
 	protected int []penChars;
@@ -92,7 +91,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		byte secondKey = 0;
 
 		if (details != null) {
-			int deviceType = ((DeviceType)details).getDeviceType();
 
 			if (controlType == MessageDirection.FROM_HARDWARE ) {
 
@@ -136,7 +134,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					logger.log (Level.WARNING,"Oregen received a command that reported to be comms but is not.");
 				}
 
-				if (message.length < 7){
+				if (message == null  || message.length < 7){
 					logger.log(Level.WARNING,"Weather station returned an invalid string");
 					return;					
 				}

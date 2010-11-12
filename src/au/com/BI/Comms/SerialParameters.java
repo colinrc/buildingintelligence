@@ -20,8 +20,6 @@ public class SerialParameters{
 	private boolean supportsCD = true;
 	private int parity;
 	protected Logger logger;
-	private boolean isDtr = false;
-	private boolean isRTS = false;
 
 	/**
 	 * Default = 9600 , 8, 1, N

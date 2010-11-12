@@ -40,7 +40,7 @@ public class OnOffVolume  implements IntegratorPattern {
 					lastValue = previousValue.getCommand();
 					}
 			}
-			if (lastValue.getCommandCode().equals ("on")) {
+			if (lastValue != null && lastValue.getCommandCode().equals ("on")) {
 				wasOn = true;
 			}
 		}

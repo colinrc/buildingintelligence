@@ -27,7 +27,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected HashMap <String,String>currentSrc;
 	protected TutondoHelper tutondoHelper;
 	protected PollDevice pollDevice;
-	protected CommandQueue commandQueue;
 	protected boolean protocolB;
 	
 	public Model () {
@@ -268,7 +267,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		int tutondoCode = 0;
 		String responseParts[] = new String[6];
 		int respCommand = -1;
-		int respParam = -1;
+//		int respParam = -1;
 		String zone = "";
 		int lastActionType = CommDevice.UnkownCommand;
 		
@@ -282,7 +281,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				if (audioDevice == null) return;
 				logger.log(Level.FINEST, "Received byte " + responseParts[4] + " from tutondo for zone " + zone);
 				respCommand = Integer.parseInt(responseParts[1]);
-				respParam = Integer.parseInt(responseParts[3]);
+//				respParam = Integer.parseInt(responseParts[3]);
 				if (respCommand == 50) lastActionType = CommDevice.TutondoState;
 				if (respCommand == 51) lastActionType = CommDevice.TutondoVolume;
 				if (respCommand == 52) lastActionType = CommDevice.TutondoPrograms;

@@ -12,9 +12,7 @@ public class Volume extends SlimServerCommand {
 	private boolean volumeUp;
 	private boolean volumeDown;
 	private boolean volumeQuery;
-	
-	Logger logger;
-	
+		
 	public Volume() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
 	}

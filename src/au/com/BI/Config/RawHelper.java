@@ -12,25 +12,25 @@ import org.jdom.Element;
 public class RawHelper {
 
 	public void checkForRaw(Element element, DeviceType destDevice){
-		List rawLists = element.getChildren("RAW_ITEMS");
+		List<Element> rawLists = element.getChildren("RAW_ITEMS");
 		if (rawLists.isEmpty()){
 			destDevice.setRawCodes(null);
 			return;
 		}
-		HashMap rawItemDefs = new HashMap (DeviceType.PROBABLE_NUMBER_RAW);
-		Iterator eachRawList = rawLists.iterator();
+		HashMap<String, RawItemDetails> rawItemDefs = new HashMap<String, RawItemDetails> (DeviceType.PROBABLE_NUMBER_RAW);
+		Iterator<Element> eachRawList = rawLists.iterator();
 		while (eachRawList.hasNext()){
 			Element rawItemList = (Element)eachRawList.next();
 			String catalogue = rawItemList.getAttributeValue("CATALOGUE");
-			List rawItemDefList = rawItemList.getChildren("RAW");
+			List<Element> rawItemDefList = rawItemList.getChildren("RAW");
 	
-			Iterator eachRawItem = rawItemDefList.iterator();
+			Iterator<Element> eachRawItem = rawItemDefList.iterator();
 			while (eachRawItem.hasNext()){
 				Element rawItem = (Element)eachRawItem.next();
 				String code = rawItem.getAttributeValue("CODE");
 				String extra = rawItem.getAttributeValue("EXTRA");
 	
-				List variables = rawItem.getChildren("VARS");
+				List<Element> variables = rawItem.getChildren("VARS");
 	
 				RawItemDetails rawItemDetails;
 	
@@ -38,8 +38,8 @@ public class RawHelper {
 					rawItemDetails = new RawItemDetails (catalogue, code, null);
 				}
 				else {
-					HashMap variableMap = new HashMap (10); // random number
-					Iterator eachVariable = variables.iterator();
+					HashMap<String, String> variableMap = new HashMap<String, String> (10); // random number
+					Iterator<Element> eachVariable = variables.iterator();
 					while (eachVariable.hasNext()){
 						Element nextVariable = (Element)eachVariable.next();
 						String varName = nextVariable.getAttributeValue("NAME");

@@ -53,8 +53,8 @@ public class Bootstrap {
             Document doc = builder.build(fileName);
             Element theConfig = doc.getRootElement();
             
-            List graphInfo = theConfig.getChildren("RRDGRAPH");
-            Iterator graphList = graphInfo.iterator();
+            List<Element> graphInfo = theConfig.getChildren("RRDGRAPH");
+            Iterator<Element> graphList = graphInfo.iterator();
             if (graphList.hasNext()) {
                 Element dirElement = (Element) graphList.next();
                 rrdGraphDir = dirElement.getAttributeValue("DIR");
@@ -62,8 +62,8 @@ public class Bootstrap {
                 rrdGraphDir = "." + File.separator + "JRobin" + File.separator + "Graph";
             }
             
-            List rrdDirEntries = theConfig.getChildren("RRDBDIRECTORY");
-            Iterator rrdDirEntriesIter = rrdDirEntries.iterator();
+            List<Element> rrdDirEntries = theConfig.getChildren("RRDBDIRECTORY");
+            Iterator<Element> rrdDirEntriesIter = rrdDirEntries.iterator();
             if (rrdDirEntriesIter.hasNext()) {
                 Element dirElement = (Element) rrdDirEntriesIter.next();
                 RRDBDIRECTORY = dirElement.getAttributeValue("DIR");
@@ -71,8 +71,8 @@ public class Bootstrap {
                 RRDBDIRECTORY = "." + File.separator + "JRobin" + File.separator + "RRDBDIRECTORY" + File.separator;
             }
             
-            List rrdXmlDirEntries = theConfig.getChildren("RRDXMLDIRECTORY");
-            Iterator rrdXmlDirEntriesIter = rrdXmlDirEntries.iterator();
+            List<Element> rrdXmlDirEntries = theConfig.getChildren("RRDXMLDIRECTORY");
+            Iterator<Element> rrdXmlDirEntriesIter = rrdXmlDirEntries.iterator();
             if (rrdXmlDirEntriesIter.hasNext()) {
                 Element dirElement = (Element) rrdXmlDirEntriesIter.next();
                 RRDXMLDIRECTORY = dirElement.getAttributeValue("DIR");

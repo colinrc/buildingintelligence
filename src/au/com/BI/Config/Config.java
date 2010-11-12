@@ -445,7 +445,7 @@ public class Config {
 	@SuppressWarnings("unchecked")
 	protected void parseDevices(Element deviceConfig, DeviceModel deviceModel,
 				List <DeviceModel>clientModels, String groupName) throws JDOMException {
-		int type =DeviceType.NA;
+
 		int groupNumber = 1; // used if a name is not specified; group 0 is reserved for overall device configuration
 
 		// An item is the next level
@@ -458,7 +458,7 @@ public class Config {
 
 			if (topLevelName.equals ("PARAMETERS")) {
 				readParameters (deviceModel,topLevel,groupName);
-				type = DeviceType.NA;
+
 				foundElement = true;
 				deviceModel.finishedReadingParameters();
 			}
@@ -501,7 +501,7 @@ public class Config {
 
 					if (itemName.equals ("PARAMETERS")) {
 						readParameters (deviceModel,item,groupName);
-						type = DeviceType.NA;
+
 					}
 
 					if (itemName.equals("TOGGLE_OUTPUT") || itemName.equals("OUTPUT")) {
@@ -678,7 +678,7 @@ public class Config {
 		}
 	}
 	
-	public HashMap getCalendar_message_params() {
+	public HashMap<String, String> getCalendar_message_params() {
 		return calendar_message_params;
 	}
 

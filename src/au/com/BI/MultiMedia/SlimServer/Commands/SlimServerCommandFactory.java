@@ -2,7 +2,6 @@ package au.com.BI.MultiMedia.SlimServer.Commands;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,6 +79,7 @@ public class SlimServerCommandFactory {
 			throw new SlimServerCommandException("Expected an integer",e);
 		}
 		
+		@SuppressWarnings("unused")
 		int expectedCount = 0;
 		// second should be the how many is returned
 		try {
@@ -180,6 +180,7 @@ public class SlimServerCommandFactory {
 			throw new SlimServerCommandException("Expected an integer",e);
 		}
 		
+		@SuppressWarnings("unused")
 		int expectedCount = 0;
 		// second should be the how many is returned
 		try {
@@ -249,6 +250,7 @@ public class SlimServerCommandFactory {
 			throw new SlimServerCommandException("Expected an integer",e);
 		}
 		
+		@SuppressWarnings("unused")
 		int expectedCount = 0;
 		// second should be the how many is returned
 		try {

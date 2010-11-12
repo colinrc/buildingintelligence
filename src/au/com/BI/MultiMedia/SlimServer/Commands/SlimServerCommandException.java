@@ -2,6 +2,11 @@ package au.com.BI.MultiMedia.SlimServer.Commands;
 
 public class SlimServerCommandException extends Exception {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5473665952029321647L;
+
 	public SlimServerCommandException() {
 		super();
 	}

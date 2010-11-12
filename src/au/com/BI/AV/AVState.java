@@ -26,7 +26,7 @@ public class AVState {
 	}
 	
 	public void setVolume(String volume) {
-		if (volume != this.volume){
+		if (!volume.equals(this.volume)){
 			this.volume = volume;
 			this.vol = Integer.parseInt(volume);
 			this.setChanged(true);
@@ -51,7 +51,7 @@ public class AVState {
 	}
 
 	public boolean testMute(String testVal) {
-		if (testVal.equals (mute))
+		if (testVal.equals ("mute"))
 			return true;
 		else
 			return false;
@@ -130,7 +130,7 @@ public class AVState {
 	}	
 	
 	public boolean testExt_mute(String testVal) {
-		if (testVal.equals (ext_mute))
+		if (testVal.equals("ext_mute"))
 			return true;
 		else
 			return false;

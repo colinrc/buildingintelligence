@@ -79,11 +79,7 @@ public class PollDevice extends Thread {
 	
 	
 	public void run ()  {
-		byte[] startupCommand = new byte[6];
 		running = true;
-		boolean containsState = false;
-		boolean containsStartup = false;
-		CommsCommand lastCommandSent;
 		boolean commandSent = false;
 		
 			while (running) {

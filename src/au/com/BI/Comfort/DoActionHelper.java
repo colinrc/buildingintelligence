@@ -73,7 +73,6 @@ public class DoActionHelper {
 			case CommDevice.AnalogueQuery:
 				String deviceKey = raSent.getSrcCommand().getKey();
 				if(!comfortString.theParameter.equals ((String)previousValue.get(deviceKey))){
-					int returnParam = new Integer(comfortString.theParameter).byteValue();
 	
 					AnalogCommand analogueCommand = new AnalogCommand ("CLIENT_SEND","on",null);
 					analogueCommand.setDisplayName(raSent.getDisplayName());

@@ -289,13 +289,13 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	}
 	
 	public void startPolling () {
-		if (pollDevice != null)
+		if (pollDevice != null) {
 			pollDevice.setRunning(false);
-
-		try {
-			pollDevice.start();
-		} catch (IllegalStateException ex){
-			logger.log(Level.WARNING,"Unable to start device poll, HAL may not function correctly");
+			try {
+				pollDevice.start();
+			} catch (IllegalStateException ex){
+				logger.log(Level.WARNING,"Unable to start device poll, HAL may not function correctly");
+			}
 		}
 	}
 
@@ -722,8 +722,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			Audio audio = (Audio)device; 
 				
 			
-			StateOfZone currentState = getCurrentState(audio.getKey()); 
 			if (audio != null){
+				StateOfZone currentState = getCurrentState(audio.getKey()); 
 				if (power.equals ("0")) {
 					currentState.setPower("off");
 				} else {

@@ -51,8 +51,6 @@ public class MacroEvent implements Job {
         String memo;
         String filter;
         String popup;
-        String id;
-        String category;
 
 	    //  String instGroup = context.getJobDetail().getGroup();
 
@@ -63,13 +61,11 @@ public class MacroEvent implements Job {
 	      command  = dataMap.getString("command");
 	      extra  = dataMap.getString("extra");
 	      title = dataMap.getString("Title");
-	      id = dataMap.getString("Id");
 	      popup = dataMap.getString("Popup");
 	      alarm = dataMap.getString("Alarm");
 	      target = dataMap.getString("Target");
 	      target_user = dataMap.getString("TargetUser");
 	      
-	      category = dataMap.getString("Category");
 	      skipDates = (SkipDates)dataMap.get("SkipDates");
 		  macroHandler = (MacroHandler)dataMap.get ("MacroHandler");
 		  memo =dataMap.getString ("Memo");
@@ -100,7 +96,7 @@ public class MacroEvent implements Job {
 			  int dayNumber = java.util.Calendar.getInstance().get(Calendar.DATE);
 			  boolean isOdd = false;
 			  
-			  if (dayNumber % 2 == 1){
+			  if ((dayNumber & 0x01) == 1){
 				  isOdd = true;
 			  }
 			  

@@ -106,8 +106,8 @@ public class ScriptHandler {
 	public boolean run(String scriptName, CommandInterface triggeringCommand) {
 		ScriptRunBlock scriptRunBlock = (ScriptRunBlock) scriptRunBlockList
 				.get(scriptName);
-		ScriptParams params = scriptRunBlock.nextRun();
 		if (scriptRunBlock != null) {
+			ScriptParams params = scriptRunBlock.nextRun();
 			return runScript(scriptName,  params.getUser(),scriptModel, triggeringCommand);
 		} else {
 			return false;
@@ -116,7 +116,6 @@ public class ScriptHandler {
 	}
 
 	public boolean run(String scriptName, String parameter, User user, CommandInterface triggeringCommand) {
-		boolean doNotRun = false;
 
 		synchronized (this.scriptRunBlockList) {
 			ScriptRunBlock scriptRunBlock = (ScriptRunBlock) scriptRunBlockList
@@ -389,7 +388,7 @@ public class ScriptHandler {
 
 	protected boolean setScriptEnable(String scriptName, User user,
 			boolean enabled) {
-		if (scriptName == null && !scriptName.equals("")) {
+		if (scriptName == null || scriptName.equals("")) {
 			return false;
 		}
 		RunScript theScript;

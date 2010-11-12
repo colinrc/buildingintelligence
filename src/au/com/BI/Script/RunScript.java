@@ -65,7 +65,6 @@ public class RunScript extends Thread {
   public void run()  {
     boolean repeating = false;
     boolean doOnce = true;
-    boolean commandDone = false;
 
     while ( (doOnce || repeating) && enable) {
       doOnce = false; // just run it once

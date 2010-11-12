@@ -14,7 +14,6 @@ import au.com.BI.Util.DeviceModel;
 
 public class Model extends SimplifiedModel implements DeviceModel {
 
-	protected Logger logger = null;
 	protected IntegraHelper integraHelper = null;
 	protected String deviceModel = null;	// the model number of the hardware
 	

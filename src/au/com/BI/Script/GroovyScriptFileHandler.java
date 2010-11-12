@@ -40,18 +40,13 @@ public class GroovyScriptFileHandler {
         public void loadScripts(Model myScriptModel, String dir, ConcurrentHashMap <String,GroovyScriptRunBlock>scriptRunBlockList, 
         		au.com.BI.Patterns.Model patterns, LabelMgr labelMgr) throws ConfigError {
 
-                Integer fileNum;
-
-                
                 try {
                 	CompilerConfiguration cfg = new CompilerConfiguration();
                 	cfg.setScriptBaseClass("au.com.BI.Script.BIScript");
-                	groovyClassLoader =new GroovyClassLoader (this.getClass().getClassLoader(),cfg);
+                	groovyClassLoader = new GroovyClassLoader (this.getClass().getClassLoader(),cfg);
 					gse = new GroovyScriptEngine (dir,groovyClassLoader);
 
-	                fileNum = new Integer(0);
-	                int i = 0;
-	               loadScriptList(dir,scriptRunBlockList, patterns,labelMgr);
+					loadScriptList(dir,scriptRunBlockList, patterns,labelMgr);
 	
 	                logger.log(Level.FINE, "Script files loaded ");
 	
@@ -61,7 +56,6 @@ public class GroovyScriptFileHandler {
 					throw new ConfigError (e);
 
 				}
-
         }
 
 

@@ -3,6 +3,10 @@ package au.com.BI.MultiMedia.SlimServer.Commands;
 import au.com.BI.Util.Type;
 
 public class AlbumTag extends Type {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4175693611968481866L;
 	public static final AlbumTag ALBUM = new AlbumTag("l","album");
 	public static final AlbumTag YEAR = new AlbumTag("y","year");
 	public static final AlbumTag ARTWORK_TRACK_ID = new AlbumTag("j","artwork track ID");

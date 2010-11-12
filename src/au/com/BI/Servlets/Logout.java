@@ -12,8 +12,6 @@ package au.com.BI.Servlets;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.eclipse.jetty.security.HashLoginService;
-
 import au.com.BI.Command.ClientCommandFactory;
 import au.com.BI.Command.CommandQueue;
 import au.com.BI.Flash.ClientCommand;

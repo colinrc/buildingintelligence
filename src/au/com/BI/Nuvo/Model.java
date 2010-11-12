@@ -31,7 +31,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected String outputAudioCommand = "";
 	protected HashMap <String,AVState>state;
 	protected NuvoHelper nuvoHelper;
-	protected Logger logger = null;
 	protected Vector <String>srcGroup;
 	
 	public static final String AllZones = "00";
@@ -515,7 +514,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	public AVState getState(String key) {
 		AVState currentState = state.get(key);
-		boolean alwaysUpdateState = false;
+
 		if (currentState == null){
 			currentState = new AVState();
 			state.put(key, currentState);
@@ -638,14 +637,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 								AVState stateForItem = getState(audioDevice.getKey());
 								if (stateForItem != null){ 
 									String newVol = currentState.volumeUp();
-									int newVal = Utility.scaleFromFlash(newVol,0,79,true);
 									stateForItem.setVolume(newVol);
 								}
 								else{
 									logger.log (Level.WARNING,"AVState was not correctly set up within the Nuvo system, please contact your integrator ");
 								}
 								String newVol = currentState.volumeUp();
-								int newVal = Utility.scaleFromFlash(newVol,0,79,true);
 								stateForItem.setVolume(newVol);
 	
 								returnVal.addCommOutput("*Z"+audioDevice.getKey()+"VOL"+newVol);
@@ -676,7 +673,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						if (!audioDevice.getKey().equals(Model.AllZones)) {
 							if (protocol == Protocols.Standard){
 								String newVol = currentState.volumeDown();
-								int newVal = Utility.scaleFromFlash(newVol,0,79,true);
 								AVState stateForItem = getState(audioDevice.getKey());
 								if (stateForItem != null) 
 									stateForItem.setVolume(newVol);

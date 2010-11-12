@@ -38,7 +38,6 @@ public class JRobinCacheUpdater {
                 String sValue;
                 sValue = new String();
                 String search;
-                search = new String();
                 double value;
                 value = 0;
 
@@ -50,7 +49,6 @@ public class JRobinCacheUpdater {
                         return;
                 }
                 ArrayList dataItems;
-                dataItems = new ArrayList(jRobinData.getNumberOfDataItems());
 
                 String displayName;
                 if (command.isClient()) {

@@ -16,6 +16,11 @@ public class ConfigError extends Exception {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = -186475200768664751L;
+
+	/**
+	 * 
+	 */
 	public ConfigError() {
 		super();
 	}

@@ -205,6 +205,7 @@ public class UpdateServlet extends HttpServlet {
 			if (rootElement != null){
 				 command = clientCommandFactory.processXML(rootElement);
 			}
+
 			command.setOriginatingID(sessionID);
 			commandQueue.add(command);
 			

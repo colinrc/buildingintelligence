@@ -15,7 +15,6 @@ import au.com.BI.Device.DeviceType;
  **/
 public class Analog extends BaseDevice implements DeviceType
 {
-	protected String key;
 	
 	public Analog (String name, int deviceType, String outputKey){
 		super (name,deviceType,outputKey);

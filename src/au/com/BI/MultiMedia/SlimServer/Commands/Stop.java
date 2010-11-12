@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 public class Stop extends SlimServerCommand {
 	private String playerId;
-	Logger logger;
 	
 	public Stop() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());

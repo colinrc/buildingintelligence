@@ -5,8 +5,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import au.com.BI.User.User;
-
 public class GroovyScriptRunBlock {
 	int repeatCount = 0;
 	boolean enabled = true;

@@ -6,6 +6,7 @@
 package au.com.BI.Calendar;
 
 import java.util.*;
+import java.util.Calendar;
 
 import org.quartz.*;
 
@@ -76,7 +77,7 @@ public class CalendarEventFactory {
 	String endDate = nextEvent.getAttributeValue("endDate");
 	String time  = nextEvent.getAttributeValue("time");
 	String hours = "";
-	String orig_hour = "";
+//	String orig_hour = "";
 	String dateBits[] = startDate.split("-");
 	String year = dateBits[0];
 	String orig_year = "";
@@ -215,7 +216,7 @@ public class CalendarEventFactory {
 	String dateOfMonth = "?";
 	
 	if (eventType.equals("hourly")) {
-	    orig_hour = hours;
+//	    orig_hour = hours;
 	    hours="*";
 	}
 	if (eventType.equals("yearly")) {
@@ -249,7 +250,7 @@ public class CalendarEventFactory {
 	    map.put("RecurVal", recurVal);
 	    
 	    
-	    Iterator attributeList = patternXML.getAttributes().iterator();
+	    Iterator<Attribute> attributeList = patternXML.getAttributes().iterator();
 	    while (attributeList.hasNext()) {
 		Attribute patternElement = (Attribute)attributeList.next();
 

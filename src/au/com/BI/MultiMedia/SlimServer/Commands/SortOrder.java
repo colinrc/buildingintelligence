@@ -4,6 +4,10 @@ import au.com.BI.Util.Type;
 
 public class SortOrder extends Type {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5961105210611839885L;
 	public static final SortOrder NONE = new SortOrder("none", "none");
 	public static final SortOrder ALBUM = new SortOrder("album","album");
 	public static final SortOrder NEW = new SortOrder("new","new");

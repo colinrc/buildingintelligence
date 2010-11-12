@@ -4,7 +4,6 @@
 package au.com.BI.Script;
 
 import au.com.BI.Command.Cache;
-import au.com.BI.Command.CacheWrapper;
 import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.ValueNotUpdatedException;
 import au.com.BI.LabelMgr.LabelMgr;
@@ -69,7 +68,7 @@ public  class BIScript extends groovy.lang.Script {
 	}
 	
 	public void doRegisterScript (LabelMgr labelMgr, au.com.BI.Patterns.Model patterns ){
-		Binding binding = this.getBinding();
+
 		this.labelMgr = labelMgr;
 		this.patterns = patterns;
 

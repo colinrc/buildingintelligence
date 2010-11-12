@@ -7,7 +7,6 @@ import org.jdom.Element;
 
 import au.com.BI.Config.RawHelper;
 import au.com.BI.Device.DeviceType;
-import au.com.BI.MultiMedia.AutonomicHome.Device.WindowsMediaExtender;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
 

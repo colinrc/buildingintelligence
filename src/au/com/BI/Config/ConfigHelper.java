@@ -124,11 +124,6 @@ public class ConfigHelper {
 		return startupQueryItems.keySet().iterator();
 	}
 
-	
-	private Collection<DeviceType> getAllInputDeviceObjects(){
-		return inputItems.values();		
-	}
-	
 	public Collection<DeviceType> getAllControlledDeviceObjects(){
 		return controlledItems.values();		
 	}
@@ -142,11 +137,6 @@ public class ConfigHelper {
 		return startupQueryItems.values();		
 	}
 
-
-	private Collection<String> getAllInputDeviceKeys(){
-		return inputItems.keySet();		
-	}
-	
 	public Collection<String> getAllControlledDeviceKeys(){
 		return controlledItems.keySet();		
 	}

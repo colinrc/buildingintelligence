@@ -198,22 +198,6 @@ public class LightFascade implements  DeviceType,CBUSDevice,LightDevice,Dynalite
 	}
 
 	/**
-	 * @param deviceType The deviceType to set.
-	 */
-	public final void setDeviceType(int deviceType)
-	{
-		this.setDeviceType (deviceType);
-	}
-
-	/**
-	 * @param name The name to set.
-	 */
-	public final void setName(String name)
-	{
-		this.setName(name);
-	}
-
-	/**
 	 * Return the client display command for the light.
 	 * For a light this is the same as the interpretted command
 	 */

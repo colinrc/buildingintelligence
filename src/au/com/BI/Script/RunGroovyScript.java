@@ -56,7 +56,6 @@ public class RunGroovyScript extends Thread {
   public void run()  {
     boolean repeating = false;
     boolean doOnce = true;
-    boolean commandDone = false;
 
     while ( (doOnce || repeating) && enable) {
       doOnce = false; // just run it once
@@ -70,9 +69,6 @@ public class RunGroovyScript extends Thread {
 	      cache.setCachedCommand("SCRIPT",started);
 	       commandList.add(started);
 	   }
-
-      String lsLine;
-      lsLine = new String();
 
       try {
         logger.log(Level.FINEST, "Running Groovy Script: " + scriptName);

@@ -251,10 +251,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				}
 				if (command.getExtra3Info().equals("AV") ||command.getExtra3Info().equals("") ){
 					srcCode = getCatalogueValue(extra, "AV_INPUTS",device);
-					int src = Integer.parseInt(srcCode);
 					
 					String audioSrcCode = getCatalogueValue(extra, "AUDIO_INPUTS",device);
-					int audioSrc = Integer.parseInt(srcCode);
 					
 					setCurrentSrc(device.getKey(),srcCode);
 					returnVal.avOutputString =kramerHelper.buildSwitchCommand (1,device.getKey(),srcCode, command.getExtra2Info()); 

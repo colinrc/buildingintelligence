@@ -165,7 +165,6 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 		boolean sendBuffer = false;
 		int newData = 0;
 		int prevData = -1;
-		boolean lastCharacterEOL = false;
 		int newDataCounter = 0;
 		
 
@@ -252,7 +251,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 	protected boolean readLineAtATime ()  {
 		boolean sendBuffer = false;
 		int newData = 0;
-		boolean lastCharacterEOL = false;
+
 		int newDataCounter = 0;
 
 
@@ -309,7 +308,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 	}
 
 	protected boolean readNaturalPacket ()  {
-		boolean sendBuffer = false;
+
 		byte [] buffer  = null;
 		
 		try { 
@@ -323,7 +322,7 @@ public class SerialListener extends Thread implements SerialPortEventListener , 
 			command.setTargetDeviceModel(this.targetDeviceModel);
 			commandList.add (command);
 		} catch (IOException ex) {
-			sendBuffer = false;
+
 			this.handleEvents=false;
 			throw new CommsFail ("Error receiving information",ex);
 		}

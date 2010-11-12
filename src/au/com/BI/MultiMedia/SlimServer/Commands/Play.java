@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 public class Play extends SlimServerCommand {
 	private String playerId;
-	Logger logger;
 	
 	public Play() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());

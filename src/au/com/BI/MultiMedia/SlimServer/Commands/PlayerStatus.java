@@ -14,7 +14,6 @@ import au.com.BI.Util.StringUtils;
  *
  */
 public class PlayerStatus extends SlimServerCommand {
-	Logger logger;
 	private String playerId;
 	private String start;
 	private int itemsPerResponse;

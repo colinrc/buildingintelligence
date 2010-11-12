@@ -5,8 +5,6 @@
 package au.com.BI.Pump;
 import au.com.BI.Command.*;
 import au.com.BI.User.*;
-import org.jdom.*;
-
 
 /**
  * @author Colin Canfield

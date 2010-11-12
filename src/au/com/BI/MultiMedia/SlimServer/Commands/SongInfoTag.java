@@ -3,6 +3,10 @@ package au.com.BI.MultiMedia.SlimServer.Commands;
 import au.com.BI.Util.Type;
 
 public class SongInfoTag extends Type {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5420000996491271081L;
 	public static final SongInfoTag GENRE = new SongInfoTag("g","genre");
 	public static final SongInfoTag GENRE_ID = new SongInfoTag("p","genre_id");
 	public static final SongInfoTag ARTIST = new SongInfoTag("a","artist");

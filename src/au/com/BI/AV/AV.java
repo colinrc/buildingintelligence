@@ -15,8 +15,6 @@ import au.com.BI.Device.DeviceType;
  **/
 public class AV extends BaseDevice implements DeviceType
 {
-	protected String name="";
-	protected String command="";
 	
 	public AV (String name, int deviceType){
 		super (name,deviceType);

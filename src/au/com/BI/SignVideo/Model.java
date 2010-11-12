@@ -22,11 +22,8 @@ import java.util.logging.*;
 
 
 public class Model extends SimplifiedModel implements DeviceModel {
-	
-
-	
+		
 	protected String outputAVCommand = "";
-	protected Logger logger = null;
 	protected Vector <String>srcGroup;
 	protected boolean readingStatus = false;
 	protected int statusCount = 0;
@@ -79,7 +76,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						if (toSend != null && !toSend.isError()) {
 
 							logger.log(Level.FINER, "AV event for zone " + device.getKey() + " received from flash");
-							byte[] theVal = new byte[1];
+//							byte[] theVal = new byte[1];
 							
 						    for(byte[] avOutputString : toSend.getCommOutputBytes()) {		
 						    	sendToSerial(avOutputString, avDevice.getKey(), avDevice.getOutputKey(),DeviceType.SIGN_VIDEO_SWITCH,false);

@@ -9,7 +9,6 @@ import au.com.BI.Camera.Camera;
 import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Device.DeviceType;
-import au.com.BI.User.User;
 import au.com.BI.Util.*;
 
 import java.util.*;
@@ -25,7 +24,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	protected Matcher matcherResults;
 	protected String STX;
 	protected String ETX;
-	protected Logger logger;
 	protected int protocol = ProtocolD;
 	
 	static final int ProtocolA = 0;
@@ -101,8 +99,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 	public void doControlledItem (CommandInterface command) throws CommsFail
 	{
-		boolean didCommand=false;
-		User currentUser = command.getUser();
 		logger.log (Level.FINEST,"Received a Pelco ack");
 		try {
 			CommsCommand theCommand = (CommsCommand)command;

@@ -97,7 +97,6 @@ public class ControlledHelper {
 			deviceType = (DeviceType)configHelper.getStartupQueryItem(comfortString.comfortKey);
 		else
 			deviceType = (DeviceType)configHelper.getControlledItem(comfortString.comfortKey);
-		int commandCode = DeviceType.UKNOWN_EVENT;
 		
 		if (deviceType == null) {
 			return;

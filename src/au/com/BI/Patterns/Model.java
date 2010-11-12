@@ -24,9 +24,6 @@ import au.com.BI.Flash.ClientCommand;
 
 public class Model extends SimplifiedModel implements DeviceModel {
 
-
-	protected Logger logger;
-
 	protected Map <String, IntegratorPattern> patterns;
 	
 	public Model () {

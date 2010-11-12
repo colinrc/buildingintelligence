@@ -124,7 +124,6 @@ public class IPListener extends Thread implements CommsListener
 	 */
 	public void run () throws RuntimeException {
 		handleEvents = true;
-		int bytesRead = 0;
 		readArray =  new byte [transmitOnBytes + 1];
 		if (is == null) return;
 		
@@ -139,7 +138,6 @@ public class IPListener extends Thread implements CommsListener
 			rd = new BufferedReader(new InputStreamReader(is));			
 		}
 
-		String str = new String();
 		startPos = 0;
 		curPos = 0;
 		
@@ -205,7 +203,7 @@ public class IPListener extends Thread implements CommsListener
 					bytesToRead = transmitOnBytes - startPos;
 				}
 				bytesRead = is.read(readArray, startPos,bytesToRead );
-				int oldStartPos = startPos;
+
 				if (bytesRead >= 0) {
 					
 					startPos += bytesRead;
@@ -387,7 +385,7 @@ public class IPListener extends Thread implements CommsListener
 	}
 	
 	protected boolean processNaturalPacket ()  {
-		boolean sendBuffer = false;
+
 		byte [] buffer  = null;
 		
 		try { 
@@ -404,7 +402,7 @@ public class IPListener extends Thread implements CommsListener
 			}
 
 		} catch (IOException ex) {
-			sendBuffer = false;
+
 			this.handleEvents=false;
 			throw new CommsFail ("Error receiving information",ex);
 		}

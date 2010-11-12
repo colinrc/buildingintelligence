@@ -19,8 +19,9 @@ import au.com.BI.Flash.*;
 
 import au.com.BI.Script.ScriptHandler;
 import au.com.BI.Script.Script.ScriptType;
-import au.com.BI.User.User;
 import org.jdom.Element;
+
+import au.com.BI.JRobin.JRobinSupport;
 import au.com.BI.JRobin.RRDValueObject;
 import au.com.BI.Home.Controller;
 import java.io.IOException;
@@ -138,7 +139,7 @@ public class Model
                                 if (device.getDeviceType() == DeviceType.SCRIPT) {
 
                                         try {
-                                                CommandInterface newCommand;
+
                                                 if (((Script)device).getScriptType() == ScriptType.Jython) {
                                                 	// String scriptName = ((Script) device).getNameOfScript();
                                                 	
@@ -430,18 +431,16 @@ public class Model
 	    	
 	    	
         public void loadJythonScripts() {
-                int j = 0;
+
                 logger.log(Level.FINE,"Loading scripts");
 
-                String lsLine, lsCheck;
+                String lsLine; //, lsCheck;
                 ArrayList <String>linesOfFile;
-                ArrayList <Script> scripts;
-                Object hashKey;
+
                 Map <String, ArrayList<String>>files;
 
                 lsLine = new String();
-                lsCheck = new String();
-                scripts = new ArrayList <Script>();
+
                 try {
                         scriptHandler.removeAllTimers();
 
@@ -487,7 +486,7 @@ public class Model
         public void parseScript(String myScript, String scriptName) {
                 int begin = 0;
                 int end = 0;
-                int deviceType = 0;
+
                 String controlled, duration;
                 Script newScript = null;
     			
@@ -751,53 +750,36 @@ public class Model
     				return false;
     			}
         }
-        
+
         /**
          * @return Returns the current value for a device from a specified key.
          */
         public Object getValue(String key) {
-                CacheWrapper cachedValue = cache.getCachedObject(key);
-                if (cachedValue == null) {
-                        return "None";
-                }
-                if (cachedValue.isSet() == false) {
-                        Command retCommand;
-                        retCommand = (Command) cachedValue.getCommand();
-                        return retCommand.getExtraInfo();
-                }else {
-                	return "isSet";
-                }
+        	CacheWrapper cachedValue = cache.getCachedObject(key);
+        	if (cachedValue == null) {
+        		return "None";
+        	}
+        	if (cachedValue.isSet() == false) {
+        		Command retCommand;
+        		retCommand = (Command) cachedValue.getCommand();
+        		return retCommand.getExtraInfo();
+        	}else {
+        		return "isSet";
+        	}
         }
 
+        /**
+         * @param key,command,extra Create a command system command.
+         */
+        public void sendCommand(String key, String command) {
 
+        	sendCommand ( key,  command,  "",  "",  "",  "","");
+        }
 
-
-     /**
-           * @param key,command,extra Create a command system command.
-           */
-          private CommandInterface createInternalCommand(String key, String display, String command, String extra) {
-                  CommandInterface sendCommand;
-                      sendCommand = new Command();
-                      sendCommand.setCommand(command);
-                      sendCommand.setExtraInfo(extra);
-                      sendCommand.setDisplayName(display);
-                      sendCommand.setKey(key);
-                      return sendCommand;
-     }
-
-
-          /**
-           * @param key,command,extra Create a command system command.
-           */
-          public void sendCommand(String key, String command) {
-
-       	   sendCommand ( key,  command,  "",  "",  "",  "","");
-          }
-
-       /**
-        * @param key,command,extra Create a command system command.
-        */
-       public void sendCommand(String key, String command, String extra) {
+        /**
+         * @param key,command,extra Create a command system command.
+         */
+        public void sendCommand(String key, String command, String extra) {
 
     	   sendCommand ( key,  command,  extra,  "",  "",  "","");
        }
@@ -912,8 +894,7 @@ public class Model
         public FetchData fetchDataRRD(String rrd, String dataSource, float startTime, float endTime) {
                 RrdDb rrdDb;
                 rrdDb = null;
-                double rrdValue;
-                rrdValue = 0;
+
                 FetchData fetchData;
                 fetchData = null;
 
@@ -923,7 +904,7 @@ public class Model
 
 
                 try {
-                        rrdDb = mainController.jRobinSupport.useRrd(mainController.jRobinSupport.getRRDBDIRECTORY() + rrd + ".rrd");
+                        rrdDb = JRobinSupport.useRrd(mainController.jRobinSupport.getRRDBDIRECTORY() + rrd + ".rrd");
                         FetchRequest fetchRequest = rrdDb.createFetchRequest(dataSource, lstart, lend);
                         fetchData = fetchRequest.fetchData();
                 }
@@ -937,7 +918,7 @@ public class Model
                 }
                 finally {
                         try {
-                                mainController.jRobinSupport.releaseRrd(rrdDb);
+                                JRobinSupport.releaseRrd(rrdDb);
                         }
                         catch (IOException e) {
                                 logger.log(Level.SEVERE,
@@ -947,8 +928,8 @@ public class Model
                                 logger.log(Level.SEVERE,
                                   "RRD Exception error " + e.getMessage() + e.toString());
                         }
-                        return fetchData;
                 }
+                return fetchData;
         }
 
         /**

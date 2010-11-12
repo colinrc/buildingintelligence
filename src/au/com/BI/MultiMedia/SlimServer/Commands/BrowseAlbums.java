@@ -2,12 +2,10 @@ package au.com.BI.MultiMedia.SlimServer.Commands;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import au.com.BI.MultiMedia.Album;
 import au.com.BI.Util.StringUtils;
 
 public class BrowseAlbums extends SlimServerCommand {
@@ -21,7 +19,6 @@ public class BrowseAlbums extends SlimServerCommand {
 	boolean compilation;
 	SortOrder sort;
 	LinkedList<AlbumTag> tags;
-	Logger logger;
 	
 	public BrowseAlbums() {
 		start = -1;

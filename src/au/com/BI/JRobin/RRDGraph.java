@@ -186,7 +186,7 @@ public class RRDGraph {
       else if (graphType == "JPEG") {
         graph.saveAsJPEG(RRDGRAPH + graphName, width, height, quality);
       }
-      else if (graphType == "GIF") {
+      else if (graphType.equals("GIF")) {
         graph.saveAsGIF(RRDGRAPH + graphName, width, height);
       }
     }
@@ -350,7 +350,7 @@ public class RRDGraph {
       else if (graphType == "JPEG") {
         graph.saveAsJPEG(RRDGRAPH + graphName, width, height, quality);
       }
-      else if (graphType == "GIF") {
+      else if (graphType.equals("GIF")) {
         graph.saveAsGIF(RRDGRAPH + graphName, width, height);
       }
     }
@@ -519,7 +519,7 @@ public class RRDGraph {
       else if (graphType == "JPEG") {
         graph.saveAsJPEG(RRDGRAPH + graphName, width, height, quality);
       }
-      else if (graphType == "GIF") {
+      else if (graphType.equals("GIF")) {
         graph.saveAsGIF(RRDGRAPH + graphName, width, height);
       }
     }

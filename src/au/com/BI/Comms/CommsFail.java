@@ -9,6 +9,11 @@ package au.com.BI.Comms;
  */
 public class CommsFail extends RuntimeException{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 292821338705949768L;
+
 	public CommsFail(){
 
 	}

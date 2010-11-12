@@ -27,7 +27,6 @@ public class Model extends SimplifiedModel implements DeviceModel  {
 	protected String STX = "\003";
 	protected String ETX = "\r";
 	protected Startup startup;
-	protected boolean isStartupQuery = false;
 
 	protected ComfortString comfortString = null;
 	protected OutputHelper outputHelper;

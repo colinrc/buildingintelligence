@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 public class Pause extends SlimServerCommand {
 	private String playerId;
-	Logger logger;
 	
 	public Pause() {
 		logger = Logger.getLogger(this.getClass().getPackage().getName());

@@ -15,8 +15,6 @@ import au.com.BI.Device.DeviceType;
  **/
 public class SMS extends BaseDevice implements DeviceType
 {
-	protected String name="";
-	protected String command="";
 	
 	public SMS (String name, int deviceType){
 		super (name,deviceType);

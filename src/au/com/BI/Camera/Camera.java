@@ -15,15 +15,13 @@ import au.com.BI.Device.DeviceType;
  **/
 public class Camera extends BaseDevice implements DeviceType
 {
-	protected String name="";
-	protected String command="";
 	protected String zoom="";
 	protected int zoomInt = 0;
 	
 	public Camera (String name, int deviceType){
 		super (name,deviceType);
-		this.command = "";
-		this.outputKey = "";
+		command = "";
+		outputKey = "";
 	}
 	public boolean keepStateForStartup () {
 		return false;

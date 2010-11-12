@@ -25,9 +25,7 @@ public class Model extends SimplifiedModel implements DeviceModel, ClientModel
 	protected List <AdminClientHandler>adminClientHandlers;
 	protected AdminControlListener adminControlListener;
 	
-	
-	protected Logger logger;
-	
+		
 	public int connectionType = DeviceModel.IP;
 	public String IPAddress = "";
 	public String devicePort = "10001";

@@ -9,6 +9,11 @@ package au.com.BI.Config;
  */
 public class ParameterException extends Exception{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1166793973353914312L;
+
 	public ParameterException(){
 
 	}

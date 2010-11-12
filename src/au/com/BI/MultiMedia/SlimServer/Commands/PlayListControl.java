@@ -18,7 +18,6 @@ public class PlayListControl extends SlimServerCommand {
 	private int year_id;
 	private int playlist_id;
 	private String playlist_name;
-	Logger logger;
 	
 	public PlayListControl() {
 		command = PlayListCommand.ADD;

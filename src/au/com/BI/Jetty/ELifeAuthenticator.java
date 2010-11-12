@@ -29,9 +29,6 @@ public class ELifeAuthenticator extends FormAuthenticator  implements Authentica
 
 	public Authentication validateRequest(Request request, Response response,boolean mandatory) throws IOException, ServerAuthException {
 		String callingIP = request.getRemoteAddr();
-		
-
-		
 
 		return super.validateRequest(  request,  response, mandatory);
 		

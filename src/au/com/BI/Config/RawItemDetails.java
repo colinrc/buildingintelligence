@@ -17,16 +17,16 @@ import au.com.BI.Command.*;
 public class RawItemDetails {
 	protected String catalogue;
 	protected String code;
-	protected HashMap variableMap;
+	protected HashMap<String,String> variableMap;
 	
 	/**
 	 * Used to encapsulate raw details specified against a device.
 	 */
-	public RawItemDetails(String catalogue, String code, HashMap variableMap) {
+	public RawItemDetails(String catalogue, String code, HashMap<String, String> variableMap) {
 		this.catalogue = catalogue;
 		this.code = code;
 		if (variableMap == null)
-			this.variableMap = new HashMap(5);
+			this.variableMap = new HashMap<String, String>(5);
 		else
 			this.variableMap = variableMap;
 	}
@@ -57,13 +57,13 @@ public class RawItemDetails {
 	/**
 	 * @return Returns the variableMap.
 	 */
-	public HashMap getVariableMap() {
+	public HashMap<String, String> getVariableMap() {
 		return variableMap;
 	}
 	/**
 	 * @param variableMap The variableMap to set.
 	 */
-	public void setVariableMap(HashMap variableMap) {
+	public void setVariableMap(HashMap<String, String> variableMap) {
 		this.variableMap = variableMap;
 	}
 	
@@ -75,7 +75,7 @@ public class RawItemDetails {
 	public String populateVariables (String catalogueValue, CommandInterface command) {
 		if (catalogueValue == null) return null;
 		if (catalogueValue.equals ("")) return "";
-		Iterator vars = variableMap.keySet().iterator();
+		Iterator<String> vars = variableMap.keySet().iterator();
 		catalogueValue = catalogueValue.replaceAll("%EXTRA%", command.getExtraInfo());
 		catalogueValue = catalogueValue.replaceAll("%EXTRA2%", command.getExtra2Info());
 		catalogueValue = catalogueValue.replaceAll("%EXTRA3%", command.getExtra3Info());

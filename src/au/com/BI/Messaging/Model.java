@@ -16,7 +16,6 @@ import au.com.BI.Flash.*;
 
  */
 public class Model extends SimplifiedModel implements DeviceModel {
-	protected Logger logger;
 
 	//protected AddressBook addressBook = null;
 

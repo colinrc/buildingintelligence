@@ -19,7 +19,12 @@ import javax.servlet.http.*;
  */
 public class LogoutUserManager extends HttpServlet {
 
-    /** Creates a new instance of UpdateServlet */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2658662832271967029L;
+
+	/** Creates a new instance of UpdateServlet */
     public LogoutUserManager() {
     }
     

@@ -9,6 +9,11 @@ package au.com.BI.Command;
  */
 public class UnknownCommandException extends Exception{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5015606659183333627L;
+
 	public UnknownCommandException(){
 
 	}

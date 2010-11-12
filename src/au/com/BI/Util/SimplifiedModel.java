@@ -1464,8 +1464,6 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
 			}
 			resultLookup.appendTail(sb);
-			stringToBeScanned = sb.toString();
-
 
 			return sb.toString();
 		} catch (IllegalArgumentException ex) {
@@ -1545,7 +1543,7 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
     public Long getLastAccessTime(String key)throws ValueNotUpdatedException {
             Long cachedValue;
             cachedValue = cache.getCachedTime(key);
-            if (cachedValue == null | cachedValue.equals(new Long(0))) {
+            if (cachedValue == null || cachedValue.equals(new Long(0))) {
                 throw new ValueNotUpdatedException ("Could not find " + key);
             }
             return cachedValue;
@@ -1561,23 +1559,23 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
             long cachedTime = 0;
             java.lang.Double doubleValue;
             cachedValue = cache.getCachedTime(key);
-            if (cachedValue == null | cachedValue.equals(new Long(0))) {
+            if (cachedValue == null || cachedValue.equals(new Long(0))) {
                     throw new ValueNotUpdatedException ("Could not find " + key);
             }
             cachedLongValue = (Long) cachedValue;
             cachedTime = cachedLongValue.longValue();
             duration = System.currentTimeMillis() - cachedTime;
-            if (interval == "minute") {
+            if (interval.equals("minute")) {
                     duration = duration / 60000;
             }
-            else if (interval == "hour") {
+            else if (interval.equals("hour")) {
                     duration = duration / 3600000;
             }
-            else if (interval == "day") {
+            else if (interval.equals("day")) {
                     duration = duration / 86400000;
             }
 
-            return new Long(duration);
+            return  Long.valueOf(duration);
     }
     
     /**

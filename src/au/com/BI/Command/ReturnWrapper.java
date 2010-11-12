@@ -135,7 +135,7 @@ public class ReturnWrapper {
 				}
 				index = 0;
 				for (byte[] i:toTest.getCommOutputBytes() ) {
-					if (!this.outputBytes.get(index).equals(i)) return false;
+					if (this.outputBytes.get(index) != i) return false;
 				}
 				index = 0;
 				for (CommandInterface i:toTest.getOutputFlash() ) {

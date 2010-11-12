@@ -4,7 +4,6 @@ import java.util.LinkedList;
 
 import org.jdom.Element;
 
-import au.com.BI.MultiMedia.Artist;
 import au.com.BI.MultiMedia.Track;
 import au.com.BI.Util.StringUtils;
 

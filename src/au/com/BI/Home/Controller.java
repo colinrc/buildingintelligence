@@ -139,9 +139,9 @@ public class Controller {
 
 	public void setUp() throws CommsFail {
 		if (security != null){
-			logger.log (Level.INFO,"Licensing intialised,  number of clients allowed. Full : "  + security.getNumberClientsAllowed() + ", Post only : "+  + security.getNumberPostClientsAllowed() );
+			if (logger != null) logger.log (Level.INFO,"Licensing intialised,  number of clients allowed. Full : "  + security.getNumberClientsAllowed() + ", Post only : "+  + security.getNumberPostClientsAllowed() );
 		} else {
-			logger.log (Level.SEVERE, "Licensing failed, system shutting down");			
+			if (logger != null) logger.log (Level.SEVERE, "Licensing failed, system shutting down");			
 			System.exit(0);
 		}
 		
