@@ -647,6 +647,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 						logger.log (Level.FINEST,"Queueing cbus command " + currentCbusKey + " for " + (String)cbusCommsCommand.getExtraInfo());
 					}
 				}
+				break;
 			}
 			case DeviceType.THERMOSTAT_CBUS:
 			{

@@ -59,13 +59,11 @@ public class CBUS extends BaseDevice implements LightDevice,CBUSDevice
 	 */
 	public void setApplicationCode(String applicationCode) {
 		if (applicationCode == null) {
-			applicationCode  = Byte.toString((byte)56);
-			return;
+			applicationCode  = "38";
 		}
 			
 		if (applicationCode.length() == 1) {
-			applicationCode  = "0"+ applicationCode;
-			return;
+			applicationCode  = "0" + applicationCode;
 		}
 		this.applicationCode = applicationCode;
 	}
