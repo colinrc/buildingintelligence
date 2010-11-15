@@ -354,7 +354,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			result = (DynaliteInputDevice)configHelper.getControlledItem(theKey);
 			return result;
 		} catch (ClassCastException ex){
-			logger.log(Level.WARNING,"A incorrect device was added to the dynalite control block " + ((DeviceType)result).getName());
+			logger.log(Level.WARNING,"A incorrect device was added to the dynalite control block ");
 			return null;
 		}
 	}
@@ -369,7 +369,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			}
 			return result;
 		} catch (ClassCastException ex){
-			logger.log(Level.WARNING,"A incorrect device was added to the dynalite control block " + ((DeviceType)result).getName());
+			logger.log(Level.WARNING,"A incorrect device was added to the dynalite control block ");
 			return null;
 		}
 	}
