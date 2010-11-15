@@ -6,6 +6,11 @@ public class SkipEntry {
 	Date startDate;
 	Date endDate;
 	
+	public int hashCode() {
+		  assert false : "hashCode not designed";
+		  return 42; // any arbitrary constant will do 
+	 }
+
 	public Date getStartDate() {
 		return startDate;
 	}
@@ -21,7 +26,6 @@ public class SkipEntry {
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-	
 	public boolean equals (Object toTest){
 		if (!(toTest instanceof SkipEntry)) 
 			return false;
