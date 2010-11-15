@@ -3,6 +3,7 @@ package au.com.BI.Device;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -90,7 +91,16 @@ public class DeviceFactory {
 
 	public void parseExtraAttributes (String key, DeviceModel targetDevice , DeviceType deviceType, Element element) {
 			Map <String, ExtraAttribute> attribs = extraAttributes.get(targetDevice);
-			if (attribs != null && !attribs.isEmpty()){
+			if (attribs != null && !attribs.isEmpty())
+			{
+/*				for(Entry<String, ExtraAttribute> e : extraAttributes.get(targetDevice).entrySet())
+				{
+					String value = e.getKey();
+					ExtraAttribute att = e.getValue();
+					here;
+				}
+*/				
+				
 				for (String attribName: attribs.keySet()){
 					String value = element.getAttributeValue(attribName);
 					ExtraAttribute attributeDetails = attribs.get(attribName);
