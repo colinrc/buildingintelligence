@@ -67,21 +67,21 @@ public class Command implements CommandInterface {
         }
         
         public boolean equals(Object toTest) {
-        		if (toTest instanceof au.com.BI.Command.CommandInterface ){
-        			CommandInterface toTestCommand = (CommandInterface)toTest;
-        			if (!key.equals(toTestCommand.getKey())) return false;
-	           	if (!extraInfo.equals(toTestCommand.getExtraInfo())) return false;
-	           	if (!extra2Info.equals(toTestCommand.getExtra2Info())) return false;
-	           	if (!extra3Info.equals(toTestCommand.getExtra3Info())) return false;
-	           	if (!extra4Info.equals(toTestCommand.getExtra4Info())) return false;
-	          	if (!extra5Info.equals(toTestCommand.getExtra5Info())) return false;
-	          	if (!displayName.equals(toTestCommand.getDisplayName())) return false;
-	         	if (!commandCode.equals(toTestCommand.getCommandCode())) return false;
-	         	          	           	        		
-	         	return true;
-        		} else {
-        			return super.equals (toTest);
-        		}
+        	if (toTest instanceof au.com.BI.Command.CommandInterface ){
+        		CommandInterface toTestCommand = (CommandInterface)toTest;
+        		if (!key.equals(toTestCommand.getKey())) return false;
+        		if (!extraInfo.equals(toTestCommand.getExtraInfo())) return false;
+        		if (!extra2Info.equals(toTestCommand.getExtra2Info())) return false;
+        		if (!extra3Info.equals(toTestCommand.getExtra3Info())) return false;
+        		if (!extra4Info.equals(toTestCommand.getExtra4Info())) return false;
+        		if (!extra5Info.equals(toTestCommand.getExtra5Info())) return false;
+        		if (!displayName.equals(toTestCommand.getDisplayName())) return false;
+        		if (!commandCode.equals(toTestCommand.getCommandCode())) return false;
+
+        		return true;
+        	} else {
+        		return super.equals (toTest);
+        	}
         }
         
         public void setJRobinData(au.com.BI.JRobin.JRobinData jRobinData) {

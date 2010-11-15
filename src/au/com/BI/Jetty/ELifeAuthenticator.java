@@ -11,8 +11,6 @@ import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.authentication.FormAuthenticator;
 import org.eclipse.jetty.security.ServerAuthException;
 
-import au.com.BI.Config.Security;
-import au.com.BI.Config.Security.IPType;
 
 /**
  * @author colin
@@ -28,13 +26,8 @@ public class ELifeAuthenticator extends FormAuthenticator  implements Authentica
 	}
 
 	public Authentication validateRequest(Request request, Response response,boolean mandatory) throws IOException, ServerAuthException {
-		String callingIP = request.getRemoteAddr();
 
 		return super.validateRequest(  request,  response, mandatory);
 		
 	}
-
-
-
-
 }
