@@ -1,6 +1,9 @@
 package au.com.BI.Script;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.*;
 
 import au.com.BI.Command.Cache;
@@ -9,7 +12,7 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
 import au.com.BI.LabelMgr.LabelMgr;
 
-public class TestGroovyTimingTest extends TestCase {
+public class TestGroovyTimingTest {
 	Model scriptModel = null;
 	ScriptHandler sciptHandler = null;
 	Map scriptRunBlockList = null;
@@ -17,8 +20,9 @@ public class TestGroovyTimingTest extends TestCase {
 	Cache cache = null;
 	CommandQueue commandQueue = null;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+
 		scriptModel = new Model();
 		labelMgr = new LabelMgr();
 		 commandQueue = new CommandQueue();
@@ -31,13 +35,7 @@ public class TestGroovyTimingTest extends TestCase {
 		scriptRunBlockList = scriptModel.groovyScriptRunBlockList;
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
-
-	
-
+	@Test
 	public void testScriptPerformance2Commands() {
 		// 
 

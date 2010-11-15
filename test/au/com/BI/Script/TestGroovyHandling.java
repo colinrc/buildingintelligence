@@ -1,6 +1,10 @@
 package au.com.BI.Script;
 
-import junit.framework.TestCase;
+
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.*;
 
 import au.com.BI.Command.Cache;
@@ -9,7 +13,7 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.Command.CommandQueue;
 import au.com.BI.LabelMgr.LabelMgr;
 
-public class TestGroovyHandling extends TestCase {
+public class TestGroovyHandling {
 	Model scriptModel = null;
 	ScriptHandler sciptHandler = null;
 	Map scriptRunBlockList = null;
@@ -17,8 +21,8 @@ public class TestGroovyHandling extends TestCase {
 	Cache cache = null;
 	
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	public void setUp() throws Exception {
+
 		scriptModel = new Model();
 		labelMgr = new LabelMgr();
 		CommandQueue commandQueue = new CommandQueue();
@@ -29,10 +33,6 @@ public class TestGroovyHandling extends TestCase {
 		scriptModel.loadGroovyScripts();
 		sciptHandler = scriptModel.getScriptHandler();
 		scriptRunBlockList = scriptModel.groovyScriptRunBlockList;
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	/*
@@ -51,9 +51,7 @@ public class TestGroovyHandling extends TestCase {
 
 	}
 
-	/*
-	 * Test method for 'au.com.BI.Script.ScriptHandler.setStatus(String, String)'
-	 */
+	// FIXME null pointer exception on test
 	public void testSetStatus() {
 		// 
 		scriptModel.getGroovyScriptHandler().setStatus("TimeTest","HIDDEN,OTHER,SOME");
@@ -63,47 +61,37 @@ public class TestGroovyHandling extends TestCase {
 
 	}
 
-	/*
-	 * Test method for 'au.com.BI.Script.ScriptHandler.setScriptEnable(String, User, boolean)'
-	 */
+	@Test
 	public void testSetScriptEnable() {
 		// 
 
 	}
 
-	/*
-	 * Test method for 'au.com.BI.Script.ScriptHandler.isScriptStillRunning(String)'
-	 */
+	@Test
 	public void testIsScriptStillRunning() {
 		// 
 
 	}
 
-	/*
-	 * Test method for 'au.com.BI.Script.ScriptHandler.buildListElement(String)'
-	 */
+	@Test
 	public void testBuildListElement() {
 		// 
 
 	}
 
-	/*
-	 * Test method for 'au.com.BI.Script.ScriptHandler.parseElement(Element)'
-	 */
+	@Test
 	public void testParseElement() {
 		// 
 
 	}
 
-	/*
-	 * Test method for 'au.com.BI.Script.ScriptHandler.isScriptRunning(String)'
-	 */
+	@Test
 	public void testIsScriptRunning() {
 		// 
 
 	}
 	
-
+	// FIXME null pointer exception on test
 	public void testRunScript() {
 		// 
 		CommandInterface triggeringCommand = new Command();
@@ -118,6 +106,4 @@ public class TestGroovyHandling extends TestCase {
 		
 		scriptModel.groovyScriptHandler.runScript(scriptRunBlock, scriptModel, params,false);
 	}
-	
-
 }

@@ -2,9 +2,12 @@ package au.com.BI.MultiMedia.SlimServer;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.LinkedList;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import au.com.BI.MultiMedia.SlimServer.Commands.AlbumTag;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseAlbums;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseAlbumsReply;
 import au.com.BI.MultiMedia.SlimServer.Commands.BrowseArtists;
@@ -41,6 +44,7 @@ public class TestSlimServer {
 		browseAlbums.setItemsPerResponse(20);
 		browseAlbums.setArtist(2);
 		browseAlbums.setCompilation(false);
+		browseAlbums.setTags(new LinkedList<AlbumTag>());
 		assertEquals(browseAlbums.buildCommandString(),"albums 0 20 artist_id:2 compilation:0");
 		
 		browseAlbums.setGenre(0);

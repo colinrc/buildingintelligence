@@ -11,23 +11,24 @@ import au.com.BI.Flash.ClientCommand;
 import au.com.BI.SignVideo.Model;
 import au.com.BI.Util.DeviceModel;
 import au.com.BI.Util.MessageDirection;
-import junit.framework.*;
+
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 import au.com.BI.junitx.ListOfArrayAssert;
 
-public class TestCommandsFromFlash extends TestCase {
+public class TestCommandsFromFlash {
 	private Model model = null;
 	AV avFrontRoom = null;
 	AV avAll = null;
 	AV kitchenAV = null;
 	AV studyAV = null;
 	
-	public static void main(String[] args) {
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		model = new Model();
 	
 		avAll = new AV ("All",DeviceType.AUDIO);
@@ -72,10 +73,7 @@ public class TestCommandsFromFlash extends TestCase {
 		
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
+	@Test
 	public void testBuildAVAllOff() {
 		ClientCommand testCommand = new ClientCommand("ALL","off",null,"","","","","");
 		byte[] expectedOut = new byte[]{((byte)0xA5)};
@@ -100,6 +98,7 @@ public class TestCommandsFromFlash extends TestCase {
 		ListAssert.assertEquals ("Return value for all off failed",val.getOutputFlash(),expectedOutFlash);
 	}
 
+	@Test
 	public void testBuildAVAllOn() {
 		ClientCommand testCommand = new ClientCommand("ALL","on",null,"","","","","");
 		byte[] expectedOut = new byte[]{((byte)0xA4)};
@@ -123,6 +122,7 @@ public class TestCommandsFromFlash extends TestCase {
 		ListAssert.assertEquals ("Return value for all on failed",val.getOutputFlash(),expectedOutFlash);
 	}
 	
+	@Test
 	public void testBuildAVSrc() {
 		ClientCommand testCommand = new ClientCommand("FRONT_AV","src",null,"DVD1","","","","");
 		byte[] expectedOut = new byte[]{((byte)0x10)};
@@ -136,7 +136,7 @@ public class TestCommandsFromFlash extends TestCase {
 				
 		ClientCommand testCommand4 = new ClientCommand("FRONT_AV","src",null,"x","","","","");
 		ReturnWrapper val4 = model.buildAVString(avFrontRoom, testCommand4);
-		Assert.assertEquals ("Return value for unknown src failed",true,val4.isError());
+		assertEquals ("Return value for unknown src failed",true,val4.isError());
 
 		ClientCommand testCommand5 = new ClientCommand("KITCHEN_AV","src",null,"DVD1","","AUDIO_ONLY","","");
 		ReturnWrapper val5 = model.buildAVString(this.kitchenAV, testCommand5);
@@ -152,7 +152,7 @@ public class TestCommandsFromFlash extends TestCase {
 
 	}
 	
-	
+	@Test
 	public void testBuildAVPreset() {
 		ClientCommand testCommand = new ClientCommand("ALL","preset",null,"2","","","","");
 
@@ -164,7 +164,7 @@ public class TestCommandsFromFlash extends TestCase {
 		ListOfArrayAssert.assertByteEquals("Return value for av preset failed",val.getCommOutputBytes(),expectedOutVec);	
 	}
 
-
+	@Test
 	public void testBuildAVPresetSet() {
 		ClientCommand testCommand = new ClientCommand("ALL","preset_set",null,"2","","","","");
 		byte[] expectedOut = new byte[]{((byte)0x91)};
@@ -172,6 +172,7 @@ public class TestCommandsFromFlash extends TestCase {
 		ArrayAssert.assertEquals ("Return value for preset store failed",expectedOut,val.getCommOutputBytes().firstElement());
 	}
 	
+	@Test
 	public void testBuildAVSrcAll() {
 		
 		ClientCommand testCommand3 = new ClientCommand("ALL","src",null,"DVD2","","","","");

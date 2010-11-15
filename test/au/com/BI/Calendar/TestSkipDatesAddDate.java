@@ -1,27 +1,27 @@
 package au.com.BI.Calendar;
 
-import junit.framework.TestCase;
-import junitx.framework.*;
+import org.junit.Before;
+import org.junit.Test;
+
+import au.com.BI.Calendar.SkipDates;
+import au.com.BI.Calendar.SkipEntry;
+import static junit.framework.Assert.*;
 import java.util.*;
 
-public class TestSkipDatesAddDate extends TestCase {
+import junitx.framework.ListAssert;
+
+public class TestSkipDatesAddDate {
 	SkipDates skipDates;
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() {
 		skipDates = new SkipDates ();
-	}
-
-	/*
-	 * Test method for 'au.com.BI.Calendar.SkipDates.parseEvent(Element)'
-	 */
-	public void testParseEvent() {
-
 	}
 
 	/*
 	 * Test method for 'au.com.BI.Calendar.SkipDates.addDates(String, String)'
 	 */
+	@Test
 	public void testAddDates() {
 		skipDates.addDates("2005-12-01","2005-12-15");
 		skipDates.addDates("2005-12-17","2005-12-19");	

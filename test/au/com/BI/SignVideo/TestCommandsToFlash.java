@@ -10,18 +10,24 @@ import au.com.BI.junitx.*;
 import junitx.framework.ListAssert;
 import au.com.BI.Command.*;
 import au.com.BI.Device.DeviceType;
-import junit.framework.*;
 
-public class TestCommandsToFlash extends TestCase {
+import junitx.framework.ArrayAssert;
+import au.com.BI.junitx.ListOfArrayAssert;
+
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
+public class TestCommandsToFlash {
 	private Model model = null;
 	AV avFrontRoom = null;
 	AV avAll = null;
 	AV kitchenAV = null;
 	AV studyAV = null;
 	
-	protected void setUp() throws Exception {
-		super.setUp();
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+
 		model = new Model();
 		model.setPadding (1);
 	
@@ -66,6 +72,7 @@ public class TestCommandsToFlash extends TestCase {
  
 	}
 
+	@Test
 	public void testInterpretPowerOn() {
 		
 		CommsCommand testString = new CommsCommand();
@@ -93,6 +100,7 @@ public class TestCommandsToFlash extends TestCase {
 		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOutFlash);
 	}
 
+	@Test
 	public void testInterpretPowerOff() {
 		
 		CommsCommand testString = new CommsCommand();
@@ -120,7 +128,7 @@ public class TestCommandsToFlash extends TestCase {
 		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOutFlash);
 	}
 	
-	
+	@Test
 	public void testInterpretPreset() {
 		
 		CommsCommand testString = new CommsCommand();
@@ -144,6 +152,7 @@ public class TestCommandsToFlash extends TestCase {
 		ListOfArrayAssert.assertByteEquals("State query after preset failed",val.getCommOutputBytes(),expectedOutBytes);
 	}
 	
+	@Test
 	public void testInterpretSrc() {
 		
 		CommsCommand testString = new CommsCommand();
@@ -159,14 +168,14 @@ public class TestCommandsToFlash extends TestCase {
 		ListAssert.assertEquals ("Return value for src failed",val.getOutputFlash(),expectedOutFlash);
 	}
 	
-public void testInterpretIncorrectSrc() {
+	@Test
+	public void testInterpretIncorrectSrc() {
 		
 		CommsCommand testString = new CommsCommand();
 		testString.setCommandBytes(new byte[]{((byte)0x26)});
 
-		
 		ReturnWrapper val = model.interpretBytesFromSignVideo(testString);
-		Assert.assertEquals ("Return value for incorrect src failed",val.getOutputFlash().size(),0);
+		assertEquals ("Return value for incorrect src failed",val.getOutputFlash().size(),0);
 	}
 	
 }

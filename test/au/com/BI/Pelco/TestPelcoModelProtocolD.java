@@ -4,17 +4,21 @@ import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Util.MessageDirection;
 import au.com.BI.Camera.*;
 import au.com.BI.Device.DeviceType;
-import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
 
-public class TestPelcoModelProtocolD extends TestCase {
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
+public class TestPelcoModelProtocolD {
 	private Model model = null;
 	Camera cameraFrontCamera01 = null;
 	Camera cameraFrontCamera10 = null;
 	Camera cameraFrontCamera02 = null;
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+
 		model = new Model();
 		model.setProtocol("D");
 		
@@ -36,7 +40,7 @@ public class TestPelcoModelProtocolD extends TestCase {
 		model.addControlledItem("BACK_CAMERA",cameraFrontCamera10,MessageDirection.FROM_FLASH);
 	}
 
-
+	@Test
 	public void testAddCheckSum() {
 		PelcoOutput pelcoOutput = new PelcoOutput ();
 		pelcoOutput.outputCodes[0] = (byte)0xff;
@@ -49,9 +53,7 @@ public class TestPelcoModelProtocolD extends TestCase {
 		assertEquals ("Checksum failed",0x42,pelcoOutput.outputCodes[6]);
 	}
 	
-	/*
-	 * Test method for 'au.com.BI.Pelco.Model.buildCameraArray(Camera, CommandInterface)'
-	 */
+	@Test
 	public void testBuildCameraArray_on() {
 		ClientCommand testCommand = new ClientCommand("FRONT_CAMERA","on",null,"manual","","","","");
 		byte expectedOut[] = new byte[]{(byte)0xFF, (byte)0x01, (byte)0x88, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x89};
@@ -59,6 +61,7 @@ public class TestPelcoModelProtocolD extends TestCase {
 		ArrayAssert.assertEquals ("Return value for camera on failed",expectedOut,vals.outputCodes);
 	}
 
+	@Test
 	public void testBuildCameraArray_off() {
 		ClientCommand testCommand = new ClientCommand("FRONT_CAMERA","off",null,"","","","","");
 		byte expectedOut[] = new byte[]{(byte)0xFF, (byte)0x01, (byte)0x08, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x09};
@@ -66,6 +69,7 @@ public class TestPelcoModelProtocolD extends TestCase {
 		ArrayAssert.assertEquals ("Return value for camera off failed",expectedOut,vals.outputCodes);
 	}
 	
+	@Test
 	public void testBuildCameraArray_pan_left() {
 		ClientCommand testCommand = new ClientCommand("SIDE_CAMERA","pan",null,"left","32","","","");
 		byte expectedOut[] = new byte[]{(byte)0xFF, (byte)0x02, (byte)0x00, (byte)0x04, (byte)0x20, (byte)0x00, (byte)0x26};
@@ -73,18 +77,23 @@ public class TestPelcoModelProtocolD extends TestCase {
 		ArrayAssert.assertEquals ("Return value for camera pan left failed",expectedOut,vals.outputCodes);
 	}
 	
+	@Test
 	public void testBuildCameraArray_pan_abs() {
 		ClientCommand testCommand = new ClientCommand("SIDE_CAMERA","pan",null,"4097","","","","");
 		byte expectedOut[] = new byte[]{(byte)0xFF, (byte)0x02, (byte)0x0, (byte)0x4b, (byte)0x10, (byte)0x01, (byte)0x5e};
 		PelcoOutput vals = model.buildCameraArray(cameraFrontCamera02,testCommand);
 		ArrayAssert.assertEquals ("Return value for camera pan left failed",expectedOut,vals.outputCodes);
 	}
+
+	@Test
 	public void testBuildCameraArray_tilt_abs() {
 		ClientCommand testCommand = new ClientCommand("SIDE_CAMERA","tilt",null,"4096","","","","");
 		byte expectedOut[] = new byte[]{(byte)0xFF, (byte)0x02, (byte)0x0, (byte)0x4d, (byte)0x10, (byte)0x00, (byte)0x5f};
 		PelcoOutput vals = model.buildCameraArray(cameraFrontCamera02,testCommand);
 		ArrayAssert.assertEquals ("Return value for camera pan left failed",expectedOut,vals.outputCodes);
 	}
+
+	@Test
 	public void testBuildCameraArray_on_tilt_focus() {
 		ClientCommand onCommand = new ClientCommand("BACK_CAMERA","on",null,"manual","","","","");
 		ClientCommand focusCommand = new ClientCommand("BACK_CAMERA","focus",null,"far","","","","");

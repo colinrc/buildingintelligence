@@ -1,6 +1,9 @@
 package au.com.BI.Dynalite;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Dynalite.DynaliteDevice;
 import au.com.BI.Dynalite.DynaliteHelper;
@@ -11,7 +14,7 @@ import au.com.BI.Lights.*;
 import au.com.BI.Util.*;
 import junitx.framework.*;
 
-public class TestDynaliteModelFromFlash extends TestCase {
+public class TestDynaliteModelFromFlash {
 
 	private Model model = null;
 	LightFascade testWithChannelA02C03 = null;
@@ -23,13 +26,11 @@ public class TestDynaliteModelFromFlash extends TestCase {
 	ClientCommand channel01RampToSeconds = null;
 	private DynaliteHelper dynaliteHelper = null;
 	
-	public TestDynaliteModelFromFlash(String arg0) {
-		super(arg0);
+	public TestDynaliteModelFromFlash() {
 	}
 
-	protected void setUp() throws Exception {
-		super.setUp();
-
+	@Before
+	public void setUp() throws Exception {
 		
 		testWithChannelA02C03 = new LightFascade( "Channel Plus Area", DeviceType.LIGHT_DYNALITE ,"CHANNEL01_PLUS_AREA01","DYNALITE");
 		testWithChannelA02C03.setAreaCode("02");
@@ -49,14 +50,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		dynaliteHelper = model.getDynaliteHelper();
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
-
-	/*
-	 * Test method for 'au.com.BI.Dynalite.Model.buildDynaliteRampToCommand(String, String, int, int, String, String)'
-	 */
+	@Test
 	public void testDynaliteLinearFadeArea() {
 		byte ret1[] = new byte[]{(byte)0x1C,02,2,(byte)0x71,(byte)0x82,(byte)0x32,(byte)0xff,(byte)0xbc};
 		byte ret2[] = new byte[]{(byte)0x1C,02,2,(byte)0x72,(byte)0x82,(byte)0x32,(byte)0xff,(byte)0xbb};
@@ -75,7 +69,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 			
 	}
 	
-
+	@Test
 	public void testDynaliteClassicFadeArea() {
 		byte ret1[] = new byte[]{(byte)0x1C,04,(byte)0x82,(byte)0x79,(byte)0x64,(byte)0x00,(byte)0xff,(byte)0x82};
 	
@@ -91,6 +85,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		ArrayAssert.assertEquals("Return value for area fade to 50% over 2 seconds failed",ret1,result1.outputCodes);
 	}
 	
+	@Test
 	public void testDynaliteLevelRequestCommand() {
 		byte ret1[] = new byte[]{(byte)0x1C,02,4,(byte)0x61,0,0x0,(byte)0xff,(byte)0x7e};
 
@@ -101,6 +96,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		assertEquals ("Level request area parsing failed",true,result2.isError);
 	}
 
+	@Test
 	public void testDynaliteLinearPreset() {
 		byte ret1[] = new byte[]{(byte)0x1C,06,0x09,0x65,0x64,0,(byte)0xff,(byte)0x0d};
 
@@ -109,6 +105,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		
 	}
 
+	@Test
 	public void testDynaliteClassicPreset() {
 		byte ret1[] = new byte[]{(byte)0x1C,02,0x64,0x03,0x0,0,(byte)0xff,(byte)0x7c};
 
@@ -123,6 +120,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 
 	}
 	
+	@Test
 	public void testFindSingleDevice () {
 		DynaliteDevice dev = model.findSingleDevice(DynaliteHelper.Light,2,3,false);
 		assertEquals ("Find Single Device found incorrect device",dev,testWithChannelA02C03);
@@ -138,6 +136,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		
 	}
 		
+	@Test
 	public void testDynaliteLinkArea() {
 		byte ret1[] = new byte[]{(byte)0x1C,04,(byte)0x80,0x20,0x0,0,(byte)0xff,(byte)0xc0};
 		dynaliteHelper.addChecksum (ret1);
@@ -151,6 +150,7 @@ public class TestDynaliteModelFromFlash extends TestCase {
 		
 	}
 	
+	@Test
 	public void testDynaliteUnlinkArea() {
 		byte ret1[] = new byte[]{(byte)0x1C,04,(byte)0x80,0x21,0x0,0,(byte)0xff,(byte)0x40};
 

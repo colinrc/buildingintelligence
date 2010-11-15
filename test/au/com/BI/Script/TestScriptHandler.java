@@ -1,23 +1,23 @@
 package au.com.BI.Script;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.*;
 
-public class TestScriptHandler extends TestCase {
+public class TestScriptHandler {
 	Model scriptModel = null;
 	ScriptHandler sciptHandler = null;
 	Map scriptRunBlockList = null;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+
 		scriptModel = new Model();
 		scriptModel.loadJythonScripts();
 		sciptHandler = scriptModel.getScriptHandler();
 		scriptRunBlockList = scriptModel.scriptRunBlockList;
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 
 	/*
@@ -36,9 +36,7 @@ public class TestScriptHandler extends TestCase {
 
 	}
 
-	/*
-	 * Test method for 'au.com.BI.Script.ScriptHandler.setStatus(String, String)'
-	 */
+	@Test
 	public void testSetStatus() {
 		// 
 		scriptModel.getScriptHandler().setStatus("test","HIDDEN,OTHER,SOME");
@@ -87,5 +85,4 @@ public class TestScriptHandler extends TestCase {
 		// 
 
 	}
-
 }

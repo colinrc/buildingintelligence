@@ -7,21 +7,23 @@ import au.com.BI.Command.CommandInterface;
 import au.com.BI.Comms.CommsCommand;
 import au.com.BI.CustomConnect.*;
 import au.com.BI.Device.DeviceType;
-import junit.framework.TestCase;
 
-public class TestSimplifiedModel extends TestCase {
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
+public class TestSimplifiedModel {
 
 	SimplifiedModel testModel = null;
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+
 		testModel = new SimplifiedModel();
 		testModel.setName("Test model");
 	}
 	
-	/*
-	 * Test method for 'au.com.BI.Util.BaseModel.formatKey(String)'
-	 */
+	@Test
 	public void testFormatKeyHexHex2Padding() {
 		testModel.setConfigKeysInDecimal(false);
 		testModel.setDeviceKeysDecimal(false);
@@ -30,6 +32,7 @@ public class TestSimplifiedModel extends TestCase {
 		assertEquals ("Format Key Hex Hex 2 padding failed","0A",result);
 	}
 
+	@Test
 	public void testFormatKeyHexHex1Padding() {
 		testModel.setConfigKeysInDecimal(false);
 		testModel.setDeviceKeysDecimal(false);
@@ -38,7 +41,7 @@ public class TestSimplifiedModel extends TestCase {
 		assertEquals ("Format Key Hex Hex 1 padding failed","A",result);
 	}
 
-
+	@Test
 	public void testFormatKeyDecHex2Padding() {
 		testModel.setConfigKeysInDecimal(true);
 		testModel.setDeviceKeysDecimal(false);
@@ -47,6 +50,7 @@ public class TestSimplifiedModel extends TestCase {
 		assertEquals ("Format Key Dec Hex 2 padding failed","0A",result);
 	}
 
+	@Test
 	public void testFormatKeyDecDec3Padding() {
 		testModel.setConfigKeysInDecimal(true);
 		testModel.setDeviceKeysDecimal(true);

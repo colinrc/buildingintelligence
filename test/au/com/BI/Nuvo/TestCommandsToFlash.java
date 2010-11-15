@@ -9,17 +9,20 @@ import au.com.BI.Util.MessageDirection;
 import junitx.framework.ListAssert;
 import au.com.BI.Command.*;
 import au.com.BI.Device.DeviceType;
-import junit.framework.*;
 
-public class TestCommandsToFlash extends TestCase {
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
+public class TestCommandsToFlash {
 	private Model model = null;
 	Audio audioFrontRoom = null;
 	Audio audioAll = null;
 	Audio kitchenAudio = null;
 	
-	protected void setUp() throws Exception {
-		super.setUp();
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+
 		model = new Model();
 	
 		audioAll = new Audio ("All",DeviceType.AUDIO);
@@ -57,6 +60,7 @@ public class TestCommandsToFlash extends TestCase {
 		model.setPadding (2); // device requires 2 character keys that are 0 padded.
 	}
 
+	@Test
 	public void testInterpretStringFromNuvo() {
 		
 		Command testString = new Command();
@@ -79,6 +83,7 @@ public class TestCommandsToFlash extends TestCase {
 		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOut);
 	}
 	
+	@Test
 	public void testInterpretVolume() {
 		
 		Command testString = new Command();
@@ -92,6 +97,7 @@ public class TestCommandsToFlash extends TestCase {
 		ListAssert.assertContains ("Return value for interpret volume failed",val.getOutputFlash(),testCommand);
 	}
 	
+	@Test
 	public void testInterpretStatus() {
 
 		Vector <CommandInterface>expectedOut = new Vector<CommandInterface>();	
@@ -116,9 +122,9 @@ public class TestCommandsToFlash extends TestCase {
 		
 		ListAssert.assertContains ("Return value for interpret status volume failed",val.getOutputFlash(),testCommand);
 		
-		Assert.assertFalse ("Interpret status incorrectly contained power",val.getOutputFlash().contains(testCommand2));
+		assertFalse ("Interpret status incorrectly contained power",val.getOutputFlash().contains(testCommand2));
 		
-		Assert.assertFalse ("Interpret status incorrectly contained src",val.getOutputFlash().contains(testCommand3));
+		assertFalse ("Interpret status incorrectly contained src",val.getOutputFlash().contains(testCommand3));
 		
 		testString.setKey("#Z01PWRON,SRC1,GRP0,VOL-00");
 		val = model.interpretStringFromNuvo(testString);
@@ -127,9 +133,10 @@ public class TestCommandsToFlash extends TestCase {
 		testCommand4.setDisplayName("FRONT_AUDIO");
 		expectedOut.add(testCommand4);
 		
-		Assert.assertFalse ("Interpret status did not detect src change",val.getOutputFlash().contains(testCommand4));
+		assertFalse ("Interpret status did not detect src change",val.getOutputFlash().contains(testCommand4));
 	}
 	
+	@Test
 	public void testInterpretZoneStatus() {
 
 		Vector <CommandInterface>expectedOut = new Vector<CommandInterface>();	

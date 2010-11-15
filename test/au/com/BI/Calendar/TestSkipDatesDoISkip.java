@@ -1,21 +1,19 @@
 package au.com.BI.Calendar;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+import static junit.framework.Assert.*;
 import java.util.*;
 
-public class TestSkipDatesDoISkip extends TestCase {
+public class TestSkipDatesDoISkip {
 	SkipDates skipDates;
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
 		skipDates = new SkipDates ();
 	}
 
-
-
-	/*
-	 * Test method for 'au.com.BI.Calendar.SkipDates.doISkipDate(Date)'
-	 */
+	@Test
 	public void testDoISkipDate() {
 		skipDates.addDates("2005-12-01","2005-12-15");
 		skipDates.addDates("2005-12-17","2005-12-19");	

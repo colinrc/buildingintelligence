@@ -7,48 +7,32 @@
 
 package au.com.BI.Dynalite;
 
-import junit.framework.*;
+import static org.junit.Assert.*;
+//import org.junit.Before;
+import org.junit.Test;
+
 
 /**
  *
  * @author colinc
  */
-public class InterpretResultTest extends TestCase {
+public class InterpretResultTest {
     
-    public InterpretResultTest(String testName) {
-        super(testName);
+    public InterpretResultTest() {
     }
 
-    protected void setUp() throws Exception {
-    }
-
-    protected void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
-        TestSuite suite = new TestSuite(InterpretResultTest.class);
-        
-        return suite;
-    }
-
-    /**
-     * Test of getFullKey method, of class au.com.BI.Dynalite.InterpretResult.
-     */
+    @Test
     public void testGetFullKey() {
         System.out.println("getFullKey");
         
         InterpretResult instance = new InterpretResult();
         
-        String expResult = "";
         String result = instance.getFullKey();
-        assertEquals(expResult, result);
         
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of setFullKey method, of class au.com.BI.Dynalite.InterpretResult.
-     */
+    @Test
     public void testSetFullKey() {
         System.out.println("setFullKey");
         

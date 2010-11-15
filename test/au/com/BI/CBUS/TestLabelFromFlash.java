@@ -1,38 +1,28 @@
-/**
- * 
- */
 package au.com.BI.CBUS;
 
-import java.util.HashMap;
 
-import au.com.BI.Command.ReturnWrapper;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import au.com.BI.Flash.ClientCommand;
 import au.com.BI.Label.Label;
 import au.com.BI.LabelMgr.LabelMgr;
 import au.com.BI.CBUS.Model;
 import au.com.BI.Device.DeviceType;
-import au.com.BI.Util.DeviceModel;
-import junit.framework.TestCase;
-import junitx.framework.ArrayAssert;
 
 /**
  * @author colin
  *
  */
-public class TestLabelFromFlash extends TestCase {
+public class TestLabelFromFlash {
 	protected Label testLabel;
 	protected Label testLabel2;
 	private Model model = null;
 	
-	public static void main(String[] args) {
+	@Before
+	public void setUp() {
 
-	}
-	
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
 		model = new Model();
 		LabelMgr labelMgr = new LabelMgr();
 		model.setLabelMgr(labelMgr);
@@ -52,9 +42,7 @@ public class TestLabelFromFlash extends TestCase {
 		labelMgr.addLabel("SPRINKLERS","Sprinklers");
 	}
 
-	/**
-	 * Test method for {@link au.com.BI.CBUS.Model#buildCBUSLabelString(au.com.BI.Label.Label, au.com.BI.Command.CommandInterface, java.lang.String)}.
-	 */
+	@Test
 	public void testBuildCBUSLabelString() {
 		ClientCommand testCommand = new ClientCommand("VOLUME","label",null,"Test","","","","");
 		String expectedOut = "\\05"+"3800A81600015465737474F0g\r";
@@ -65,9 +53,7 @@ public class TestLabelFromFlash extends TestCase {
 	}
 
 
-	/**
-	 * Test method for {@link au.com.BI.CBUS.Model#buildCBUSLabelString(au.com.BI.Label.Label, au.com.BI.Command.CommandInterface, java.lang.String)}.
-	 */
+	@Test
 	public void testBuildCBUSLabelStringVolume () {
 		ClientCommand testCommand = new ClientCommand("VOLUME","label",null,"VOLUME_CONTROL","","","","");
 		String expectedOut = "\\05"+"3800AF170001566F6C756D65204C6576656C6Ci\r";

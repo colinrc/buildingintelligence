@@ -1,6 +1,9 @@
 package au.com.BI.Dynalite;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import au.com.BI.Device.DeviceType;
 import au.com.BI.Dynalite.DynaliteCommand;
 import au.com.BI.Dynalite.DynaliteHelper;
@@ -14,7 +17,7 @@ import java.util.*;
 import au.com.BI.ToggleSwitch.*;
 import au.com.BI.IR.*;
 
-public class TestDynaliteModelFromDevice extends TestCase {
+public class TestDynaliteModelFromDevice {
 
 	private Model model = null;
 	LightFascade testA03C03 = null;
@@ -28,14 +31,12 @@ public class TestDynaliteModelFromDevice extends TestCase {
 	ClientCommand channel01RampToSeconds = null;
 	DynaliteHelper dynaliteHelper  = null;
 	
-	public TestDynaliteModelFromDevice(String arg0) {
-		super(arg0);
+	public TestDynaliteModelFromDevice() {
 	}
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() {
 
-		
 		testA03C03 = new LightFascade( "A03C03", DeviceType.LIGHT_DYNALITE ,"A03C03","DYNALITE");
 		testA03C03.setAreaCode("03");
 		testA03C03.setKey("03");
@@ -81,12 +82,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		model.addControlledItem("07",testir7box6,MessageDirection.FROM_HARDWARE);	
 	}
 
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
-
-
+	@Test
 	public void testFindDevicesInArea() {
 		List result = null;
 		LinkedList <LightFascade>testRes = new LinkedList<LightFascade>();
@@ -96,9 +92,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Finding devices in area failed",testRes,result);
 	}
 	
-	/*
-	 * Test method for 'au.com.BI.Dynalite.Model.buildDynaliteRampToCommand(String, String, int, int, String, String)'
-	 */
+	@Test
 	public void testInterpretAreaOff() {
 		byte ret1[] = new byte[]{(byte)0x1C,03,(byte)0x64,(byte)0x04,(byte)0x00,(byte)0x00,(byte)0xff,(byte)0x7a};
 		InterpretResult result = new InterpretResult();
@@ -113,6 +107,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Interpretting dynalite area off failed",testRes,result.decoded);
 	}
 	
+	@Test
 	public void testInterpretLinearPreset() {
 		byte ret1[] = new byte[]{(byte)0x1C,06,(byte)0x09,(byte)0x65,(byte)0x00,(byte)0x00,(byte)0xff,(byte)0x00};
 		dynaliteHelper.addChecksum(ret1);
@@ -131,6 +126,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Interpretting dynalite linear preset failed",testRes,result.decoded);
 	}
 	
+	@Test
 	public void testInterpretRampUp() {
 		byte ret1[] = new byte[]{(byte)0x1C,07,(byte)0xff,(byte)0x69,(byte)0x00,(byte)0x0,(byte)0xff,(byte)0x00};
 		dynaliteHelper.addChecksum(ret1);
@@ -149,6 +145,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Interpretting dynalite linear preset failed",testRes,result.decoded);
 	}
 	
+	@Test
 	public void testInterpretRampDown() {
 		byte ret1[] = new byte[]{(byte)0x1C,03,(byte)0xff,(byte)0x68,(byte)0x00,(byte)0x0,(byte)0xff,(byte)0x00};
 		dynaliteHelper.addChecksum(ret1);
@@ -166,6 +163,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Interpretting dynalite linear preset failed",testRes,result.decoded);
 	}
 	
+	@Test
 	public void testInterpretClassicPreset() {
 		byte ret1[] = new byte[]{(byte)0x1C,02,(byte)0x0,(byte)0x03,(byte)0x00,(byte)0x00,(byte)0xff,(byte)0x00};
 		dynaliteHelper.addChecksum(ret1);
@@ -183,7 +181,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Interpretting dynalite classic preset failed",testRes,result.decoded);
 	}
 	
-	
+	@Test
 	public void testInterpretIR() {
 		byte ret1[] = new byte[]{(byte)0x5C,(byte)0xa7,(byte)0x06,(byte)0x49,(byte)0x07,(byte)0x00,(byte)0x00,(byte)0xa7};
 		InterpretResult result = new InterpretResult();
@@ -195,6 +193,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Interpretting IR failed",testRes,result.decoded);
 	}
 
+	@Test
 	public void testInterpretSwitch() {
 		byte ret1[] = new byte[]{(byte)0x5C,(byte)0xa7,(byte)0x02,(byte)0x43,(byte)0x04,(byte)0x00,(byte)0xff,(byte)0xb5};
 		InterpretResult result = new InterpretResult();
@@ -206,6 +205,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Interpretting switch failed",testRes,result.decoded);
 	}
 	
+	@Test
 	public void testInterpretFadeChannelOrArea() {
 		byte ret1[] = new byte[]{(byte)0x1C,02,(byte)0x02,(byte)0x71,(byte)0x82,(byte)0x32,(byte)0xff,(byte)0x00};
 		dynaliteHelper.addChecksum(ret1);
@@ -239,6 +239,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 
 	}
 	
+	@Test
 	public void testInterpretClassicPresetOffset() {
 		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
 		DynaliteCommand a2cc00 = new DynaliteCommand("CLIENT_SEND","offset",null,"15","","255","","");
@@ -263,6 +264,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Interpretting offset for area 44",testRes,result.decoded);
 	}
 	
+	@Test
 	public void testInterpretChannelLevel() {
 		byte ret1[] = new byte[]{(byte)0x1C,(byte)0x10,(byte)0x04,(byte)0x60,(byte)0x6e,(byte)0x6e,(byte)0xff,(byte)0x95};
 		InterpretResult result = new InterpretResult();
@@ -274,6 +276,7 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Interpretting dynalite level failed",testRes,result.decoded);
 	}
 		
+	@Test
 	public void testInterpretClassicFadeAreaLevel() {
 		LightFascade testA4C00 = new LightFascade("A04C00", DeviceType.LIGHT_DYNALITE ,"A04C00","DYNALITE");
 		testA4C00.setAreaCode("04");
@@ -289,6 +292,8 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		model.interpretClassicAreaLevel(result, ret1);
 		ListAssert.assertEquals("Interpretting dynalite level failed",testRes,result.decoded);
 	}
+
+	@Test
 	public void testInterpretClassicChannelLevel() {
 		LightFascade testA06C09 = new LightFascade("A06C09", DeviceType.LIGHT_DYNALITE ,"A06C09","DYNALITE");
 		testA06C09.setAreaCode("06");
@@ -310,6 +315,4 @@ public class TestDynaliteModelFromDevice extends TestCase {
 		ListAssert.assertEquals("Interpretting dynalite channel level failed",testRes2,result2.decoded);
 
 	}
-	
-	
 }

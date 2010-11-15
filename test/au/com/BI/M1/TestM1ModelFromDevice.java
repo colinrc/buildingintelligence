@@ -1,6 +1,9 @@
 package au.com.BI.M1;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import au.com.BI.M1.Commands.AlarmByZoneRequest;
 import au.com.BI.M1.Commands.ArmStepToNextAwayMode;
 import au.com.BI.M1.Commands.ArmStepToNextStayMode;
@@ -51,14 +54,14 @@ import au.com.BI.ToggleSwitch.ToggleSwitch;
 import au.com.BI.Util.Utility;
 
 
-public class TestM1ModelFromDevice extends TestCase {
+public class TestM1ModelFromDevice {
 
 	private Model model = null;
 	private ToggleSwitch testSwitch1 = null;
 	private M1Helper m1Helper = null;
 
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() {
 		
 		model = new Model();
 //		testSwitch1 = new ToggleSwitch("testM1Switch",MessageDirection);
@@ -69,12 +72,8 @@ public class TestM1ModelFromDevice extends TestCase {
 //		
 //		model.addControlledItem("M1PIR",testSwitch1,DeviceType.TOGGLE_OUTPUT);
 	}
-	
-	protected void tearDown() throws Exception { 
-		super.tearDown();
-	}
-	
 
+	@Test
 	public void testM1CommandFactory() {
 		String str = m1Helper.buildCompleteM1String("CC" + Utility.padString("001",3) + "0" + "00"); // off command for the output change control
 		M1Command m1Command = M1CommandFactory.getInstance().getM1Command(str);
