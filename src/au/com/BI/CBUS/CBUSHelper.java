@@ -80,7 +80,7 @@ public class CBUSHelper {
 	 * @param toCalc
 	 * @return
 	 */
-	protected String calcChecksum (String toCalc) {
+	public String calcChecksum (String toCalc) {
 		int total = 0;
 		logger.log(Level.FINE, "calculate checksum for: " + toCalc);
 		for (int i = 0; i < toCalc.length(); i+=2) {
