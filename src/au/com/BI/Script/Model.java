@@ -391,7 +391,10 @@ public class Model
 	        		for (String scriptName :groovyScriptRunBlockList.keySet()){
 
 	        			GroovyScriptRunBlock scriptRunBlock = groovyScriptRunBlockList.get (scriptName);
-	        			registerGroovyScript (scriptName, scriptRunBlock);
+	        			if (scriptRunBlock != null)
+	        				registerGroovyScript (scriptName, scriptRunBlock);
+	        			else 
+	        				logger.log(Level.WARNING, "Problem reading script file for :" + scriptName);
 	        		}
 	        		logger.log(Level.FINE,"Loaded Groovy scripts");
 	        		groovyScriptHandler.loadScriptFile();
