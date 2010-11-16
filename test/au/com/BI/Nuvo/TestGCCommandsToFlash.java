@@ -100,7 +100,6 @@ public class TestGCCommandsToFlash extends TestCase {
 		
 		Command testString = new Command();
 		testString.setKey("#Z1,ON,SRC4,VOL0,DND0,LOCK0");
-		Vector <CommandInterface>expectedOut = new Vector<CommandInterface>();
 		
 		AudioCommand testCommand = new AudioCommand("CLIENT_SEND","volume",null,"100");
 		testCommand.setDisplayName("FRONT_AUDIO");

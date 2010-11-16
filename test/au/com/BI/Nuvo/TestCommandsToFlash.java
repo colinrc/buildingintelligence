@@ -88,7 +88,6 @@ public class TestCommandsToFlash {
 		
 		Command testString = new Command();
 		testString.setKey("#Z01PWRON,SRC2,GRP0,VOL-79");
-		Vector <CommandInterface>expectedOut = new Vector<CommandInterface>();
 		
 		AudioCommand testCommand = new AudioCommand("CLIENT_SEND","volume",null,"0");
 		testCommand.setDisplayName("FRONT_AUDIO");
