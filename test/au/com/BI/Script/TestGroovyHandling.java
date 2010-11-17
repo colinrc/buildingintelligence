@@ -16,11 +16,11 @@ import au.com.BI.LabelMgr.LabelMgr;
 public class TestGroovyHandling {
 	Model scriptModel = null;
 	ScriptHandler sciptHandler = null;
-	Map scriptRunBlockList = null;
+	Map<String,GroovyScriptRunBlock> scriptRunBlockList = null;
 	LabelMgr labelMgr = null;
 	Cache cache = null;
 	
-
+	@Before
 	public void setUp() throws Exception {
 
 		scriptModel = new Model();
@@ -39,7 +39,7 @@ public class TestGroovyHandling {
 	 * Test method for 'au.com.BI.Script.ScriptHandler.loadScriptFile()'
 	 */
 	public void testLoadScriptFile() {
-		// 
+		// FIXME test not coded
 
 	}
 
@@ -47,11 +47,11 @@ public class TestGroovyHandling {
 	 * Test method for 'au.com.BI.Script.ScriptHandler.saveScriptFile()'
 	 */
 	public void testSaveScriptFile() {
-		// 
+		// FIXME test not coded
 
 	}
 
-	// FIXME null pointer exception on test
+	@Test
 	public void testSetStatus() {
 		// 
 		scriptModel.getGroovyScriptHandler().setStatus("TimeTest","HIDDEN,OTHER,SOME");
@@ -61,37 +61,32 @@ public class TestGroovyHandling {
 
 	}
 
-	@Test
 	public void testSetScriptEnable() {
-		// 
+		// FIXME test not coded
 
 	}
 
-	@Test
 	public void testIsScriptStillRunning() {
-		// 
+		// FIXME test not coded
 
 	}
 
-	@Test
 	public void testBuildListElement() {
-		// 
+		// FIXME test not coded
 
 	}
 
-	@Test
 	public void testParseElement() {
-		// 
+		// FIXME test not coded
 
 	}
 
-	@Test
 	public void testIsScriptRunning() {
-		// 
+		// FIXME test not coded
 
 	}
 	
-	// FIXME null pointer exception on test
+	@Test
 	public void testRunScript() {
 		// 
 		CommandInterface triggeringCommand = new Command();
