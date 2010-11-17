@@ -93,17 +93,14 @@ public class DeviceFactory {
 			Map <String, ExtraAttribute> attribs = extraAttributes.get(targetDevice);
 			if (attribs != null && !attribs.isEmpty())
 			{
-/*				for(Entry<String, ExtraAttribute> e : extraAttributes.get(targetDevice).entrySet())
+				for(Entry<String, ExtraAttribute> e : extraAttributes.get(targetDevice).entrySet())
 				{
-					String value = e.getKey();
-					ExtraAttribute att = e.getValue();
-					here;
-				}
-*/				
-				
-				for (String attribName: attribs.keySet()){
+					String attribName = e.getKey();
+					ExtraAttribute attributeDetails = e.getValue();
+
+//				for (String attribName: attribs.keySet()){
 					String value = element.getAttributeValue(attribName);
-					ExtraAttribute attributeDetails = attribs.get(attribName);
+//					ExtraAttribute attributeDetails = attribs.get(attribName);
 					if (value == null) {
 						deviceType.setAttributeValue(attribName,"");
 						if (attributeDetails.isMandatory() == true ) {

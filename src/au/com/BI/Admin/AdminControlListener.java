@@ -29,7 +29,7 @@ public class AdminControlListener extends Thread
 	
 	protected List <AdminClientHandler>adminControllers;
 	protected int portNumber;
-	protected String Address;
+//	protected String Address;
 	protected InetAddress iPAddress;
 	protected Logger logger;
 	protected volatile boolean running;
@@ -158,7 +158,9 @@ public class AdminControlListener extends Thread
 
 		try {
 		    if (iPPort != null) iPPort.close();
-		} catch (IOException io) { }
+		} catch (IOException io) {
+			io.printStackTrace();
+		}
 	}
 
 	

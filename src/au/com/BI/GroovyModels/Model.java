@@ -8,15 +8,13 @@ import au.com.BI.Command.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
 import au.com.BI.Config.*;
-import au.com.BI.Device.DeviceType;
+import au.com.BI.Flash.*;
 
 import groovy.lang.GroovyClassLoader;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.*;
 import java.util.logging.*;
-import au.com.BI.Flash.*;
-import au.com.BI.Home.Controller;
-import au.com.BI.User.User;
 import java.util.*;
 
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -66,20 +64,16 @@ public class Model
         }
 
         public void doOuptutCommand (CommandInterface command) throws CommsFail {
-                String theWholeKey = command.getKey();
-                DeviceType device = configHelper.getOutputItem(theWholeKey);
 
                 Command clientCommand = null;
 
                 logger.log(Level.FINER, "Received script command");
 
                 String commandStr = command.getCommandCode();
-                String extra2 = command.getExtra2Info();
-                User currentUser = command.getUser();
+
                 if (commandStr.equals("getList")) {
 					clientCommand = doGetList ();
                 }
-
 
                 if (clientCommand != null) {
                         clientCommand.setTargetDeviceID(command.getTargetDeviceID());
@@ -104,10 +98,7 @@ public class Model
 
 
         public void loadGroovyModels(List<DeviceModel>groovyDeviceModels) {
-                int j = 0;
                 logger.log(Level.FINE,"Loading Groovy Models");
-
-                String lsLine, lsCheck;
 
 				//get the script files and prepare for parsing
                 try {
@@ -144,7 +135,7 @@ public class Model
         }
 
         protected  void registerGroovyModel ( GroovyRunBlock groovyRunBlock, List <DeviceModel>deviceModels) throws ConfigError, GroovyModelError{
-        String completeFile = "";
+
         String fileName = groovyRunBlock.getFileName();
         try {
             File theGroovyFile = new File(fileName);

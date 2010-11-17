@@ -24,12 +24,12 @@ import au.com.BI.Flash.ClientCommand;
 
 public class Model extends SimplifiedModel implements DeviceModel {
 
-	protected Map <String, IntegratorPattern> patterns;
+	protected Map <String, IntegratorPattern> integratorPatterns;
 	
 	public Model () {
 		super();
 		logger = Logger.getLogger(this.getClass().getPackage().getName());
-		patterns  =new HashMap <String,IntegratorPattern>();
+		integratorPatterns  =new HashMap <String,IntegratorPattern>();
 	}
 
 
@@ -37,7 +37,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	{
 		keyName = keyName.trim();
 		
-		if (patterns.containsKey(keyName)) 
+		if (integratorPatterns.containsKey(keyName)) 
 			return true;
 		else 
 			return false;
@@ -48,7 +48,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void doOutputItem (CommandInterface command) throws CommsFail {
 		String theWholeKey = command.getKey();
 		
-		IntegratorPattern pattern = patterns.get(theWholeKey);
+		IntegratorPattern pattern = integratorPatterns.get(theWholeKey);
 		if (pattern != null) {
 			pattern.run(command , cache);
 		}
@@ -59,7 +59,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void doControlledItem (CommandInterface command) throws CommsFail {
 		String theWholeKey = command.getDisplayName();
 		
-		IntegratorPattern pattern = patterns.get(theWholeKey);
+		IntegratorPattern pattern = integratorPatterns.get(theWholeKey);
 		if (pattern != null) {
 			pattern.run(command , cache);
 		}
@@ -77,13 +77,12 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		onOffVolume.setRunFromScript(runFromScript);
 		onOffVolume.setPatterns(this);
 
-		patterns.put(triggerItem, onOffVolume);
+		integratorPatterns.put(triggerItem, onOffVolume);
 		
 	}
 	
 	public void removeONOffVolume (String triggerItem) {
-		patterns.remove(triggerItem);
-		
+		integratorPatterns.remove(triggerItem);
 	}
 
 
@@ -103,11 +102,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
         myCommand.setKey(key);
         //  cache.setCachedCommand(key, myCommand);
         // don't cache it as it has to look like it came from flash, the target model will cache it as appropriate (ie. set or simple).
-        
         commandQueue.add(myCommand);
-        
         return;
-
     }
-
 }

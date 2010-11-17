@@ -8,7 +8,6 @@ import au.com.BI.Command.*;
 import au.com.BI.Macro.*;
 import au.com.BI.Comms.*;
 import au.com.BI.Util.*;
-import au.com.BI.User.*;
 
 import java.util.*;
 import java.util.logging.*;
@@ -90,7 +89,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public void doCalendarItem (CommandInterface commandIntf) {
 	    ClientCommand command = (ClientCommand)commandIntf;
 	    boolean doListUpdate = false;
-            long targetDeviceID = 0;
             
 	    try {
 	        command = (ClientCommand)commandIntf;
@@ -102,7 +100,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		String commandStr = command.getCommandCode();
 		String eventID = "";
                 String extra = command.getExtraInfo();
-		User currentUser = command.getUser();
+
 		EventCalendar eventCalendar = calendarHandler.getEventCalendar();
 		boolean successfullyParsed = true;
 
@@ -132,7 +130,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			logger.log (Level.FINER, "Listing all calendar entries to the client.");
                         doListUpdate = true;
                         eventID = "";
-                        targetDeviceID = command.getOriginatingID();
 		}
 
 		if (commandStr.equals("save")) {
@@ -141,8 +138,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			Element original_message = command.getMessageFromFlash();
 			if (original_message == null) return;
 
-			List elements = original_message.getChildren();
-			Iterator eachEvent = elements.iterator();
+			List<Element> elements = original_message.getChildren();
+			Iterator<Element> eachEvent = elements.iterator();
 			while (eachEvent.hasNext()) {
 			    Element nextEvent = (Element)eachEvent.next();
 			    try {

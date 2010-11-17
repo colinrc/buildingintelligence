@@ -88,5 +88,8 @@ public class AlertCommand extends Command implements CommandInterface {
 			
 		return element;
 	}
-	
+    
+	public boolean equals(Object toTest) {
+    	return super.equals(toTest);
+    }
 }

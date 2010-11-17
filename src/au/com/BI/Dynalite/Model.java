@@ -575,7 +575,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		// Fade channel or area to level , 1c is classic, others linear
 			CommandInterface dynResult = null;
 			int level = dynaliteHelper.scaleLevelForFlash(msg[4]);
-			int channel = msg[2];
+			int channel = 0xff & msg[2];
 			int area = msg[1];
 
 			int rate = 0;
@@ -652,7 +652,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		// Fade channel or area to level , 1c is classic, others linear
 			CommandInterface dynResult = null;
 			int level = 0;
-			byte channel = msg[2];
+			int channel = 0xff &  msg[2];
 			byte area = msg[1];
 			if (channel == 0xff){
 

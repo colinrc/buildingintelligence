@@ -90,27 +90,15 @@ public class JRobinData {
          * @param key String
          * @return JRobinDataItem
          */
-       public JRobinDataItem getDataItem(String key) {
-           // FIXME Looks like the old code below is correct, some sort of equals overload    
-    	   if (data.contains(key)) {
-                       int i = 0;
-                       i = data.indexOf(key);
-                       JRobinDataItem jRobinDataItem = (JRobinDataItem)data.get(i);
-                       return jRobinDataItem;
-               }
-               return null;
+        public JRobinDataItem getDataItem(String key) {
 
-                /*
-                               Iterator eachItem = data.iterator();
-                               while (eachItem.hasNext()) {
-                                       JRobinDataItem jRobinDataItem = (JRobinDataItem)eachItem.next();
-                                       if (jRobinDataItem.getDisplayName().equals(key)) {
-                                               return jRobinDataItem;
-                                       }
-                               }
-                               return null;
-                 */
-       }
+        	for (JRobinDataItem eachItem: data){
+        		if (eachItem.getDisplayName().equals(key))
+        			return eachItem;
+        	}
+        	
+        	return null;
+        }
 
        /**
         * Returns all JRobin data Item's with displayName

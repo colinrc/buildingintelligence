@@ -13,12 +13,12 @@ public class GeneralDynaliteResult {
 	byte rescanChannel = 0;
 	protected boolean isError = false;
 	protected String errorMessage;
-	Exception ex = null;
-	
+	public Exception ex = null;
+
 	public GeneralDynaliteResult() {
 		 linkedDeviceCommands = new LinkedList <CommandInterface>();	
 	}
-	
+
 	public List <CommandInterface>getLinkedDeviceCommands() {
 		return linkedDeviceCommands;
 	}

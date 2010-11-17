@@ -136,7 +136,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		}
 		else {
 
-			String outputIRCommand = null;
 			cache.setCachedCommand(command.getKey(),command);
 			
 			switch (device.getDeviceType()) {

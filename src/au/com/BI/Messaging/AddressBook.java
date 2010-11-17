@@ -38,15 +38,17 @@ public class AddressBook {
 	}
 
 	public long getIDFromName (String name){
-		if (nameMap.containsKey(name))
-			return nameMap.get(name);
+		Long nmLong = nameMap.get(name);
+		if (nmLong != null)
+			return nmLong;
 		else
 			return AddressBook.NOT_FOUND;
 	}
 
 	public long getIDFromUser (String user){
-		if (nameMap.containsKey(user)) 
-			return userMap.get(user);		
+		Long umLong = userMap.get(user);	
+		if (umLong != null) 
+			return umLong;
 		else
 			return AddressBook.NOT_FOUND;
 
@@ -54,9 +56,10 @@ public class AddressBook {
 
 	public void userDisconnect (String userName) {
 		if (userMap.containsKey(userName)) {
-			long reverseKey = userMap.get(userName);
+			Long umLong = userMap.get(userName);
 			userMap.remove(userName);
-			userMapReverse.remove(reverseKey);
+			if (umLong != null)
+				userMapReverse.remove(umLong);
 		}
 	}
 	

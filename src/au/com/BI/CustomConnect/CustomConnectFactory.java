@@ -64,7 +64,7 @@ public class CustomConnectFactory  extends DeviceFactory {
 			String commandCondition = eachCondition.getAttributeValue("IF_COMMAND");
 			String extraCondition = eachCondition.getAttributeValue("IF_EXTRA");
 			String eachLineName = eachCondition.getAttributeValue("NAME");
-			if (value != null  && commandCondition != null || !value.equals ("") && !commandCondition.equals ("") ) {
+			if (value != null  && commandCondition != null && !value.equals ("") && !commandCondition.equals ("") ) {
 				for (CustomConnect customConnect:deviceList){
 					value = value.replaceAll("%KEY%", customConnect.getKey());
 					customConnect.addOutputCondition(commandCondition, extraCondition, value, eachLineName);

@@ -223,7 +223,9 @@ public class FlashClientHandler extends Thread {
 		try {
 			rd.close();
 			i.close();
-		} catch (IOException ex){};
+		} catch (IOException ex){
+			ex.printStackTrace();
+		};
 	}
 	
 	/**

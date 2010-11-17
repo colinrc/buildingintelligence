@@ -33,8 +33,8 @@ public class RRDDefinition {
     }
 
     public void startUp(String RRDDirectory, String RRDDefDirectory) {
-      HashMap xmlFiles;
-      HashMap rrdFiles;
+      HashMap<String,String> xmlFiles;
+      HashMap<String,String> rrdFiles;
       Object hashKey;
       String key;
 
@@ -115,10 +115,10 @@ public class RRDDefinition {
     }
 
 
-    public HashMap loadRRDList(final String extFilter, String directoryName ) {
+    public HashMap<String,String> loadRRDList(final String extFilter, String directoryName ) {
       logger.log(Level.FINE, "In loadRRDList");
-      HashMap files;
-      files = new HashMap();
+      HashMap<String,String> files;
+      files = new HashMap<String,String>();
 
       FilenameFilter filter = new FilenameFilter() {
         public boolean accept(File dir, String name) {

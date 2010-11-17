@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,7 +18,6 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-
 
 /**
  * @author colin Canfield
@@ -133,19 +133,21 @@ public class IRCodeDB {
 
 		for (String device:devices.keySet()){
 				
-			Map <String,String>dbItems = (LinkedHashMap<String,String>)devices.get(device);
-			Map <String,String>dbFrequencies = (LinkedHashMap <String,String>)deviceItemFreqs.get(device);		
+//			Map <String,String>dbItems = (LinkedHashMap<String,String>)devices.get(device);
 
 			Element deviceElement = new Element ("IR_DEVICE");
 	        deviceElement.setAttribute ("NAME",device);
 	        deviceElement.setAttribute ("DESCRIPTION","");
 	        topElement.addContent(deviceElement);
 			    
-			for (String nextKey: dbItems.keySet()){
+			for(Entry<String, String> e :  devices.get(device).entrySet())
+			{
+				String nextKey = e.getKey();
+//			for (String nextKey: dbItems.keySet()){
 
 			    Element nextCode = new Element ("IR_CODE");
 			    nextCode.setAttribute("KEY",nextKey);
-			    if (deviceElement != null) deviceElement.addContent(dbItems.get(nextKey));
+			    if (deviceElement != null) deviceElement.addContent(e.getValue());
 			}
 		}		
 	}
@@ -158,7 +160,7 @@ public class IRCodeDB {
 		
 		for (String device:devices.keySet()){
 		    
-			Map <String,String>dbItems = (LinkedHashMap<String,String>)devices.get(device);
+//			Map <String,String>dbItems = (LinkedHashMap<String,String>)devices.get(device);
 			Map <String,String>dbFrequencies = (LinkedHashMap<String,String>)deviceItemFreqs.get(device);		
 
 			Element deviceElement = new Element ("DEVICE");
@@ -166,11 +168,15 @@ public class IRCodeDB {
 	        deviceElement.setAttribute ("DESCRIPTION","");
 	        topElement.addContent(deviceElement);
 
-			for (String nextKey: dbItems.keySet()){
+		    
+			for(Entry<String, String> e :  devices.get(device).entrySet())
+			{
+				String nextKey = e.getKey();
+//			for (String nextKey: dbItems.keySet()){
 
 			    Element nextCode = new Element ("CODE");
 			    nextCode.setAttribute("KEY",nextKey);
-			    nextCode.setAttribute("VALS",(String)dbItems.get(nextKey));
+			    nextCode.setAttribute("VALS",(String)e.getValue());
 			    nextCode.setAttribute("FRQ",(String)dbFrequencies.get(nextKey));
 			    if (deviceElement != null) deviceElement.addContent(nextCode);
 			}
@@ -292,5 +298,4 @@ public class IRCodeDB {
 	        return "";
 	    }
 	}
-
 }

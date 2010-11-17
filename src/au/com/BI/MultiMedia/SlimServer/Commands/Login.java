@@ -3,7 +3,7 @@ package au.com.BI.MultiMedia.SlimServer.Commands;
 import au.com.BI.Util.StringUtils;
 
 public class Login extends SlimServerCommand {
-	String user;
+	String userName;
 	String password;
 
 	public void setPassword(String password) {
@@ -11,15 +11,15 @@ public class Login extends SlimServerCommand {
 	}
 
 	public void setUser(String user) {
-		this.user = user;
+		this.userName = user;
 	}
 
 	@Override
 	public String buildCommandString() {
 		String commandString = "login";
 		
-		if (!StringUtils.isNullOrEmpty(user)) {
-			commandString += " " + user + " " + password;
+		if (!StringUtils.isNullOrEmpty(userName)) {
+			commandString += " " + userName + " " + password;
 		}
 		return commandString;
 	}

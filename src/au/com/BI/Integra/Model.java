@@ -1,6 +1,7 @@
 package au.com.BI.Integra;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -136,11 +137,15 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 		String groupName = device.getGroupName();
 		String paramMapName = getParameterValue(catalogName, groupName);
-		Map<String, String> inputParameters = getCatalogueDef(paramMapName);
+//		Map<String, String> inputParameters = getCatalogueDef(paramMapName);
 		String returnVal = "";
 
-		for (String eachItem : inputParameters.keySet()) {
-			if (inputParameters.get(eachItem).equals(srcCode)) {
+	    
+		for(Entry<String, String> e :  getCatalogueDef(paramMapName).entrySet())
+		{
+			String eachItem = e.getKey();
+//		for (String eachItem : inputParameters.keySet()) {
+			if (e.getValue().equals(srcCode)) {
 				returnVal = eachItem;
 				break;
 			}

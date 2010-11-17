@@ -110,8 +110,12 @@ public class GroovyScriptHandler {
 					+ " twice");
 			return false;
 		}
-		GroovyScriptRunBlock groovyScriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList
-		.get(scriptName);
+		
+		GroovyScriptRunBlock groovyScriptRunBlock = (GroovyScriptRunBlock) scriptRunBlockList.get(scriptName);
+	
+		if (groovyScriptRunBlock == null)
+			return false;
+		
 		ScriptParams params = new ScriptParams(parameter, user);
 		params.setTriggeringCommand (triggeringCommand);
 		if (groovyScriptRunBlock.isRunning()  && !noQueue) {
@@ -124,7 +128,6 @@ public class GroovyScriptHandler {
 		}
 
 		return runScript(groovyScriptRunBlock, scriptModel,  params,true);
-
 	}
 
 	public boolean runScript(GroovyScriptRunBlock groovyScriptRunBlock,  Model scriptModel, ScriptParams scriptParams, boolean asThread) {
@@ -166,22 +169,23 @@ public class GroovyScriptHandler {
 
 				for (Element scriptElement:scriptsList ){
 					String name = scriptElement.getAttributeValue("NAME");
+					
 					String enabled = scriptElement.getAttributeValue("ENABLED");
 					if (enabled == null)
 						enabled = "";
+					
 					String status = scriptElement.getAttributeValue("STATUS");
 					if (status == null)
 						status = "";
-					if (scriptRunBlockList.containsKey(name)) {
-						 Object item = scriptRunBlockList.get(name);
-						 scriptRunBlock = (GroovyScriptRunBlock)item;
-						 scriptRunBlock.clearRunningInfo();
-					} else {
-
+					
+					scriptRunBlock = scriptRunBlockList.get(name);
+					if (scriptRunBlock == null) {
 						toRemove.add(name);
 						updated = true;
 						continue;
 					}
+					
+					scriptRunBlock.clearRunningInfo();
 					scriptRunBlock.setStatusString(status);
 					scriptRunBlock.setLastUpdated(now);
 
@@ -189,6 +193,7 @@ public class GroovyScriptHandler {
 						scriptRunBlock.setEnabled(false);
 					else
 						scriptRunBlock.setEnabled(true);
+					
 					this.scriptRunBlockList.put(name, scriptRunBlock);
 				}
 				for (String i: toRemove) {
@@ -313,8 +318,9 @@ public class GroovyScriptHandler {
 		if (!abortingScript.containsKey(scriptName))
 			return true;
 
-		int val = abortingScript.get(scriptName);
-		if (val  == 1)
+		Integer asInt = abortingScript.get(scriptName);
+		
+		if (asInt != null && asInt  == 1)
 			return false;
 		else
 			return true;

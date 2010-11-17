@@ -205,6 +205,8 @@ public class UpdateServlet extends HttpServlet {
 			if (rootElement != null){
 				 command = clientCommandFactory.processXML(rootElement);
 			}
+			else 
+				throw new UnknownCommandException ("The XML from the client is not valid");
 
 			command.setOriginatingID(sessionID);
 			commandQueue.add(command);

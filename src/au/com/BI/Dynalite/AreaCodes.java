@@ -23,7 +23,7 @@ public class AreaCodes {
 		areaCodes.clear();
 	}
 	
-	// @TODO fix
+	//FIXME 
 	void addJoin ( String areaCode,String toAreaOffsetStr){
 		int toAreaOffset = Integer.parseInt(toAreaOffsetStr);
 		addJoin (areaCode,toAreaOffset);
@@ -48,6 +48,7 @@ public class AreaCodes {
 		}
 	}
 
+	// FIXME the code to remove join is broken
 	void removeJoin ( String areaCode,String toArea){
 		int toAreaInt = Integer.parseInt(toArea);
 		removeJoin (areaCode,toAreaInt);
@@ -96,7 +97,7 @@ public class AreaCodes {
 			device.decLinkCount();
 		}
 		synchronized (keys){
-			if (keys.contains(keys)) areaCodes.remove(device);
+			if (keys.contains(device)) keys.remove(device);
 			areaCodes.put(areaCode,keys);
 		}
 	}

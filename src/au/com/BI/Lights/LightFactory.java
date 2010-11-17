@@ -72,7 +72,7 @@ public class LightFactory extends DeviceFactory {
 			String relay = element.getAttributeValue("RELAY");
 			String bla = element.getAttributeValue("BLA");
 			int channel = 0;
-			int box = 0;
+
 			if (areaCode != null) {
 				theLight.setAreaCode(areaCode);
 			}
@@ -99,14 +99,13 @@ public class LightFactory extends DeviceFactory {
 	
 		if (outKey != null && !outKey.equals("")) {
 			targetDevice.addControlledItem(outKey, theLight, MessageDirection.FROM_FLASH);
-			Iterator clientModelList = clientModels.iterator();
+			Iterator<DeviceModel> clientModelList = clientModels.iterator();
 			while (clientModelList.hasNext()) {
 				DeviceModel clientModel = (DeviceModel) clientModelList.next();
 				clientModel.addControlledItem(outKey, theLight, type);
 			}
 		}
 	}
-
 
 	/**
 	 *
@@ -142,13 +141,11 @@ public class LightFactory extends DeviceFactory {
 	
 		if (outKey != null && !outKey.equals("")) {
 			targetDevice.addControlledItem(outKey, theLight, MessageDirection.FROM_FLASH);
-			Iterator clientModelList = clientModels.iterator();
+			Iterator<DeviceModel> clientModelList = clientModels.iterator();
 			while (clientModelList.hasNext()) {
 				DeviceModel clientModel = (DeviceModel) clientModelList.next();
 				clientModel.addControlledItem(outKey, theLight, type);
 			}
 		}
 	}
-
-
 }

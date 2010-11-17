@@ -11,7 +11,6 @@ import au.com.BI.Device.DeviceType;
 import au.com.BI.User.User;
 import au.com.BI.Util.*;
 import au.com.BI.Macro.*;
-import au.com.BI.Messaging.*;
 
 import java.util.*;
 import org.jdom.*;
@@ -36,7 +35,7 @@ public class FlashHandler extends SimplifiedModel implements DeviceModel, Client
 	public String IPAddress = "";
 	public String devicePort = "10000";
 
-	protected int InstanceID;
+	protected int instanceID;
 
 	protected Map rawDefs;
 
@@ -59,7 +58,7 @@ public class FlashHandler extends SimplifiedModel implements DeviceModel, Client
         this.setAutoReconnect(false);
 	}
 
-        public void setParameter(String name, Object value) {
+    public void setParameter(String name, Object value) {
 		parameters.put(name,value);
 	}
 

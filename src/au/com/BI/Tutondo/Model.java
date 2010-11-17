@@ -218,7 +218,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 			logger.log(Level.SEVERE, "Error in config, no output key for " + theWholeKey);
 		}
 		else {
-			byte[] outputAudioCommand = null;
+			byte[] outputAudioCommand;
 			cache.setCachedCommand(command.getKey(),command);
 			
 				
@@ -226,7 +226,8 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				case DeviceType.AUDIO :
 					if ((outputAudioCommand = buildAudioString ((Audio)device,command)) != null) {
 						if (protocolB) {
-							logger.log(Level.FINER, "Message from flash generated audio command " + outputAudioCommand + " for zone " + device.getKey());
+							String outString = new String(outputAudioCommand);
+							logger.log(Level.FINER, "Message from flash generated audio command " + outString + " for zone " + device.getKey());
 							comms.sendString(outputAudioCommand);
 						} else {
 							logger.log(Level.FINER, "Message from flash generated audio command for zone " + device.getKey());
@@ -265,7 +266,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 
 
 		int tutondoCode = 0;
-		String responseParts[] = new String[6];
+		String responseParts[];
 		int respCommand = -1;
 //		int respParam = -1;
 		String zone = "";

@@ -169,13 +169,14 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	public boolean cacheDiffers(Byte key, byte value[]){
 		boolean returnVal = false;
 		
+		String strVal = new String(value);
 		if (this.weatherCache.containsKey(key)){
-			if (!value.equals ((String)weatherCache.get(key))){
+			if (!strVal.equals ((String)weatherCache.get(key))){
 				returnVal = true;
-				weatherCache.put(key,String.valueOf(value));
+				weatherCache.put(key,strVal);
 			}
 		} else {
-			weatherCache.put(key,String.valueOf(value));
+			weatherCache.put(key,strVal);
 			returnVal = true;
 		}
 		return returnVal;

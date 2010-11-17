@@ -34,6 +34,7 @@ import au.com.BI.User.User;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1240,8 +1241,11 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 
 		String returnVal = "";
 
-		for (String eachItem : inputParameters.keySet()) {
-			int programVal = Integer.parseInt(inputParameters.get(eachItem));
+		for(Entry<String, String> e : inputParameters.entrySet())
+		{
+			String eachItem = e.getKey();
+//		for (String eachItem : inputParameters.keySet()) {
+			int programVal = Integer.parseInt(e.getValue());
 			if (programVal == srcVal) {
 				returnVal = eachItem;
 			}

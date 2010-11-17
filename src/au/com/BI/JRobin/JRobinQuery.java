@@ -150,7 +150,11 @@ public class JRobinQuery extends Thread {
 
                                 i++;
                         }
-                        logger.log(Level.FINE, "update rrd with " + values.toString());
+                        StringBuffer strbuff = new StringBuffer();
+                        for (double val: values) {
+                        	strbuff.append(val);
+                        }
+                        logger.log(Level.FINE, "update rrd with " + strbuff.toString());
                         jRobinSupport.rrdUpdate(RRDName, values);
 
                         ArrayList<String> variables;

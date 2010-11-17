@@ -16,18 +16,14 @@ import org.jdom.*;
  */
 public class AlarmCommand extends Command implements CommandInterface {
 	
-	public static int RawText = 1;
+	public final static int RawText = 1;
 	
 	public String port;
-	
-	
+
 	public AlarmCommand ()
 	{
 	    super();
 	}
-
-
-
 
 	/** 
 	 * Returns the XML representation of this command 
@@ -43,6 +39,5 @@ public class AlarmCommand extends Command implements CommandInterface {
 		element.setAttribute ("COMMAND", "on");
 			
 		return element;
-	}
-	
+	}	
 }

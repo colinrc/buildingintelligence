@@ -183,7 +183,9 @@ public class IP extends BaseComms implements CommDevice
 			} catch (IOException e) {
 				try {
 					ipSocket.close();
-				} catch (IOException ie){};
+				} catch (IOException ie){
+					ie.printStackTrace();
+				};
 				portOpen = false;
 				throw new ConnectionFail ("Failure closing port",e);
 			}
@@ -191,7 +193,9 @@ public class IP extends BaseComms implements CommDevice
 			// Close the port.
 			try {
 				ipSocket.close();
-			} catch (IOException ie){};
+			} catch (IOException ie){
+				ie.printStackTrace();
+			};
 			portOpen = false;
 		}
 

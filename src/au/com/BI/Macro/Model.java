@@ -85,9 +85,6 @@ public class Model extends SimplifiedModel implements DeviceModel {
 	    }
 		ClientCommand clientCommand = null;
 
-		String theWholeKey = command.getKey();
-		DeviceType device = configHelper.getOutputItem(theWholeKey);
-
 		logger.log (Level.FINER, "Received macro command");
 
 		pureMacroName = command.getExtraInfo();

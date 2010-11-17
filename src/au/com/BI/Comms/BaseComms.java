@@ -520,7 +520,8 @@ protected String modelName = "";
 			logger.log (Level.INFO,"A null message was attempted to be sent from the model " + this.getModelName());
 		} else {
 			if (logger.isLoggable(Level.FINER)){
-				logger.log (Level.FINER, modelName + ":Sending string " + message);
+				String strMessage = new String(message);
+				logger.log (Level.FINER, modelName + ":Sending string " + strMessage);
 			}
 			commsSend.toSend.add(message);
 		}

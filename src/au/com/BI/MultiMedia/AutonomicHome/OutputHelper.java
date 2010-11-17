@@ -65,27 +65,38 @@ public class OutputHelper {
 					// GENRES
 					// NOWPLAYING
 					// PLAYLISTS
+					// FIXME the following is wrong, need to make the ret string command specific 
 					if (command.getExtraInfo().equalsIgnoreCase("ALBUMS")) {
 						BrowseAlbums browseAlbums = new BrowseAlbums();
 						retCode = browseAlbums.buildCommandString() + "\r\n";
 					} else if (command.getExtraInfo().equalsIgnoreCase("ARTISTS")) {
-						
+						BrowseAlbums browseAlbums = new BrowseAlbums();
+						retCode = browseAlbums.buildCommandString() + "\r\n";						
 					} else if (command.getExtraInfo().equalsIgnoreCase("GENRES")) {
-						
+						BrowseAlbums browseAlbums = new BrowseAlbums();
+						retCode = browseAlbums.buildCommandString() + "\r\n";
 					} else if (command.getExtraInfo().equalsIgnoreCase("NOWPLAYING")) {
-						
+						BrowseAlbums browseAlbums = new BrowseAlbums();
+						retCode = browseAlbums.buildCommandString() + "\r\n";
 					} else if (command.getExtraInfo().equalsIgnoreCase("PLAYLISTS")) {
-						
+						BrowseAlbums browseAlbums = new BrowseAlbums();
+						retCode = browseAlbums.buildCommandString() + "\r\n";
 					}
-					
+					else {
 					// what are we browsing?
-					
+						retCode = "";
+					}
 					// 
 				} else if (command.getCommandCode().equalsIgnoreCase("PLAY")) {
-					
+					// FIXME the following is wrong, need to make the ret string command specific 
+					retCode = "Play\r\n";
 				} else if (command.getCommandCode().equalsIgnoreCase("TRANSPORT")) {
 					// transport commands
 					// play, pause, stop, fast forward, rewind
+					// FIXME the following is wrong, need to make the ret string command specific 
+					retCode = "Play|Pause|Stop|FF|Rew\r\n";
+				} else {
+					retCode ="";
 				}
 			}
 		}
