@@ -35,11 +35,16 @@ public class ListOfArrayAssert {
             return;
         }
 
+        String formatted = "[length]";
+
+        if (expected == null) {
+        	Assert.assertEquals(formatted, 0, actual.size());
+        }
+        
         for (int ii = 0; ii < expected.size(); ii++) {
 
             ArrayAssert.assertEquals(message, (byte[])actual.get(ii), (byte[])expected.get(ii));
         }
-        String formatted = "[length]";
         if (message != null) {
             formatted = message + " " + formatted;
         }
