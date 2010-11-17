@@ -207,7 +207,7 @@ public class TestCommandsFromFlash {
 		assertEquals ("Return value for volume failed",expectedOut2,val2.getCommOutputStrings().firstElement());
 		
 		ClientCommand testCommand3 = new ClientCommand("FRONT_AUDIO","volume",null,"0","","","","");
-		String expectedOut3 = "*Z01VOL78"; // FIXME changed from 78 to 79 needs to be checked
+		String expectedOut3 = "*Z01VOL79";
 		ReturnWrapper val3 = model.buildAudioString(audioFrontRoom, testCommand3);
 		assertEquals ("Return value for volume failed",expectedOut3,val3.getCommOutputStrings().firstElement());
 	}
@@ -256,12 +256,12 @@ public class TestCommandsFromFlash {
 	@Test
 	public void testBuildAudioVolumeDownLimit() {
 		ClientCommand testCommand2 = new ClientCommand("FRONT_AUDIO","volume",null,"0","","","","");
-		String expectedOut2 = "*Z01VOL78";  // FIXME changed from 78 to 79 needs to be checked
+		String expectedOut2 = "*Z01VOL79";
 		ReturnWrapper val2 = model.buildAudioString(audioFrontRoom, testCommand2);
 		assertEquals ("Return value for volume set failed",expectedOut2,val2.getCommOutputStrings().firstElement());
 		
 		ClientCommand testCommand = new ClientCommand("audioFrontRoom","volume",null,"down","","","","");
-		String expectedOut = "*Z01VOL78"; // FIXME changed from 78 to 79 needs to be checked
+		String expectedOut = "*Z01VOL79";
 		ReturnWrapper val = model.buildAudioString(audioFrontRoom, testCommand);
 		assertEquals ("Control value for volume down past limit failed",expectedOut,val.getCommOutputStrings().firstElement());
 		AudioCommand volUpdateCommand = new AudioCommand("CLIENT_SEND","volume",null,"0");		
