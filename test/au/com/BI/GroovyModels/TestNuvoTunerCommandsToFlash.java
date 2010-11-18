@@ -1,5 +1,9 @@
 package au.com.BI.GroovyModels;
 
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -22,8 +26,8 @@ public class TestNuvoTunerCommandsToFlash extends GroovyModelTestCase {
 		return "NUVO_TUNER";
 	}
 
-	
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		super.setUp();
 
 		// Below this line is the setting up the devices that will be used for testing. 
@@ -58,8 +62,8 @@ public class TestNuvoTunerCommandsToFlash extends GroovyModelTestCase {
 		model.setPadding (2); // device requires 2 character keys that are 0 padded.
 	}
 
+	@Test
 	public void testInterpretOff() {
-		
 
 		String testString = "#T'A'OFF";
 		
@@ -69,12 +73,11 @@ public class TestNuvoTunerCommandsToFlash extends GroovyModelTestCase {
 		testCommand.setDisplayName("LOUNGE_AIR");
 		expectedOut.add(testCommand);
 
-		/*
+/*
 		AudioCommand testCommand2 = new AudioCommand("CLIENT_SEND","src",null,"cd2");
 		testCommand2.setDisplayName("KITCHEN_AIR");
 		expectedOut.add(testCommand2);
 */
-
 
 		ReturnWrapper val = new ReturnWrapper();
 		try {
@@ -85,13 +88,13 @@ public class TestNuvoTunerCommandsToFlash extends GroovyModelTestCase {
 		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOut);
 	}
 	
+	@Test
 	public void testInterpretPreset () {
-		
 
 		String testString = "#TÕBÕPRESET02,Ó\"test\"";
 		
 		Vector <CommandInterface>expectedOut = new Vector<CommandInterface>();
-		/*
+/*
 		AudioCommand testCommand = new AudioCommand("CLIENT_SEND","off",null,"");
 		testCommand.setDisplayName("LOUNGE_AIR");
 		expectedOut.add(testCommand);
@@ -108,8 +111,7 @@ public class TestNuvoTunerCommandsToFlash extends GroovyModelTestCase {
 		} catch (CommsProcessException e) {
 			fail(e.getMessage());
 		}
+		
 		ListAssert.assertEquals ("Return value for interpret failed",val.getOutputFlash(),expectedOut);
-	}
-
-	
+	}	
 }
