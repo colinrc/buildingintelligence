@@ -1337,10 +1337,10 @@ public class SimplifiedModel extends ModelParameters implements DeviceModel {
 		    	try {
 
 			    	Matcher matcherResults;
-			    	if (command.hasByteArray()){
-			    		matcherResults = customInputDetails.getMatcher(command.getKey().toString());			    		
+			    	if (command.hasByteArray()){ // FIXME some changes here that need testing somehow
+			    		matcherResults = customInputDetails.getMatcher(new String(command.getCommandBytes()));			    		
 			    	} else {
-			    		matcherResults = customInputDetails.getMatcher(command.getKey());
+			    		matcherResults = customInputDetails.getMatcher(command.getCommandCode());
 			    	}
 		            if (matcherResults.matches()) {
 						configHelper.setLastCommandType(MessageDirection.FROM_HARDWARE);

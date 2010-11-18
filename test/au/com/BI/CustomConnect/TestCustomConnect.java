@@ -88,13 +88,12 @@ public class TestCustomConnect {
 
 	@Test
 	public void testCustomCommandInputString () {
+		
 		CustomConnect connection = new CustomConnect();
 		connection.setName("Test Connection");
 		connection.setDeviceType(DeviceType.CUSTOM_CONNECT);
-		connection.setKey(testModel.formatKey("1", connection));
+		connection.setKey("1");
 		connection.setOutputKey("TEST_CONNECTION1");
-
-
 		testModel.addControlledItem(connection.getOutputKey(), connection, MessageDirection.FROM_FLASH);
 		testModel.addControlledItem(connection.getKey(), connection, MessageDirection.FROM_HARDWARE);				
 
@@ -104,7 +103,6 @@ public class TestCustomConnect {
 		connection2.setDeviceType(DeviceType.CUSTOM_CONNECT);
 		connection2.setKey(testModel.formatKey("2", connection));
 		connection2.setOutputKey("TEST_CONNECTION2");
-
 		testModel.addControlledItem(connection2.getOutputKey(), connection2, MessageDirection.FROM_FLASH);
 		testModel.addControlledItem(connection2.getKey(), connection2, MessageDirection.FROM_HARDWARE);				
 
@@ -113,9 +111,7 @@ public class TestCustomConnect {
 		customConnectInput.addCustomConnectInputDetails(new CustomConnectInputDetails("AU_PWR (\\d+) off", "@2", "Power off","off","", "", "", "", ""));
 		customConnectInput.addCustomConnectInputDetails(new CustomConnectInputDetails("AU_VOL (\\d+)=(\\d+)", "@1", "Set Volume","volume","%SCALE @2 0 60%", "", "", "", ""));
 		customConnectInput.addCustomConnectInputDetails(new CustomConnectInputDetails("AU_SRC (\\d+) (\\d+)", "@1", "Set Input Source","src","%LOOKUP AUDIO_INPUTS @2 %", "", "", "", ""));
-
 		//<INSTRING TO_MATCH="AU_SRC (\d+) (\d+)"  NAME="Set Input Source" KEY="@1" COMMAND="src" EXTRA="%LOOKUP AUDIO_INPUTS @2 %" />
-
 		testModel.addCustomConnectInput(customConnectInput);
 
 		runCustomCommandInputString(connection, "AU_PWR 1 on", "on" , "", "" , "" ,"","", "TEST_CONNECTION1");
@@ -127,7 +123,8 @@ public class TestCustomConnect {
 		runCustomCommandInputString(connection, "AU_SRC 1 2", "src" , "cd2", "" , "" ,"","", "TEST_CONNECTION1");
 	}
 	
-	public void runCustomCommandInputString(CustomConnect connection, String commsCode, String commandCode, String extra, String extra2, String extra3, String extra4, String extra5,  String display_name) {
+	public void runCustomCommandInputString(CustomConnect connection, String commsCode, String commandCode, String extra, String extra2, String extra3, String extra4, String extra5,  String display_name)
+	{
 		ReturnWrapper returnWrapper = new ReturnWrapper();
 		CommsCommand command = new CommsCommand();
 		command.setCommand(commsCode);
@@ -162,5 +159,90 @@ public class TestCustomConnect {
 			Assert.fail(ex.getMessage());
 		}
 	}
+	
+	@Test
+	public void testCustomCommandInputByteArray () {
+		
+		CustomConnect connection = new CustomConnect();
+		connection.setName("Test Connection");
+		connection.setDeviceType(DeviceType.CUSTOM_CONNECT);
+		connection.setKey("1");
+		connection.setOutputKey("TEST_CONNECTION1");
+		testModel.addControlledItem(connection.getOutputKey(), connection, MessageDirection.FROM_FLASH);
+		testModel.addControlledItem(connection.getKey(), connection, MessageDirection.FROM_HARDWARE);				
+
+
+		CustomConnect connection2 = new CustomConnect();
+		connection2.setName("Test Connection");
+		connection2.setDeviceType(DeviceType.CUSTOM_CONNECT);
+		connection2.setKey(testModel.formatKey("2", connection));
+		connection2.setOutputKey("TEST_CONNECTION2");
+		testModel.addControlledItem(connection2.getOutputKey(), connection2, MessageDirection.FROM_FLASH);
+		testModel.addControlledItem(connection2.getKey(), connection2, MessageDirection.FROM_HARDWARE);				
+
+		CustomConnectInput customConnectInput = new CustomConnectInput();
+		customConnectInput.addCustomConnectInputDetails(new CustomConnectInputDetails("AU_PWR (\\d+) on", "@1", "Power on","on","", "", "", "", ""));
+		customConnectInput.addCustomConnectInputDetails(new CustomConnectInputDetails("AU_PWR (\\d+) off", "@2", "Power off","off","", "", "", "", ""));
+		customConnectInput.addCustomConnectInputDetails(new CustomConnectInputDetails("AU_VOL (\\d+)=(\\d+)", "@1", "Set Volume","volume","%SCALE @2 0 60%", "", "", "", ""));
+		customConnectInput.addCustomConnectInputDetails(new CustomConnectInputDetails("AU_SRC (\\d+) (\\d+)", "@1", "Set Input Source","src","%LOOKUP AUDIO_INPUTS @2 %", "", "", "", ""));
+		//<INSTRING TO_MATCH="AU_SRC (\d+) (\d+)"  NAME="Set Input Source" KEY="@1" COMMAND="src" EXTRA="%LOOKUP AUDIO_INPUTS @2 %" />
+		testModel.addCustomConnectInput(customConnectInput);
+
+		String command = "AU_PWR 1 on";
+		byte[] testInput = command.getBytes();
+		runCustomCommandInputByteArray(connection, testInput, "on" , "", "" , "" ,"","", "TEST_CONNECTION1");
+
+		ReturnWrapper failWrapper = new ReturnWrapper();
+		command = "AU_PWR 1 off";
+		testInput = command.getBytes();
+		runCustomCommandInputByteArray(connection, testInput, failWrapper);
+		command = "AU_VOL 1=60";
+		testInput = command.getBytes();
+		runCustomCommandInputByteArray(connection, testInput, "volume" , "100", "" , "" ,"","", "TEST_CONNECTION1");
+		command = "AU_VOL 2=30";
+		testInput = command.getBytes();
+		runCustomCommandInputByteArray(connection, testInput, "volume" , "50", "" , "" ,"","", "TEST_CONNECTION2");
+		command = "AU_SRC 1 2";
+		testInput = command.getBytes();
+		runCustomCommandInputByteArray(connection, testInput, "src" , "cd2", "" , "" ,"","", "TEST_CONNECTION1");
+	}
+	
+	public void runCustomCommandInputByteArray(CustomConnect connection, byte[] commsCode, String commandCode, String extra, String extra2, String extra3, String extra4, String extra5,  String display_name)
+	{
+		ReturnWrapper returnWrapper = new ReturnWrapper();
+		CommsCommand command = new CommsCommand();
+		command.setCommandBytes(commsCode);
+
+		CustomConnectCommand outCommand = new CustomConnectCommand();
+		outCommand.setCommand(commandCode);
+		outCommand.setExtraInfo(extra);
+		outCommand.setExtra2Info(extra2);
+		outCommand.setExtra3Info(extra3);
+		outCommand.setExtra4Info(extra4);
+		outCommand.setExtra5Info(extra5);
+		outCommand.setDisplayName(display_name);
+		outCommand.setKey("CLIENT_SEND");
+
+		try {
+			testModel.doCustomConnectInputIfPresent(command,  returnWrapper);
+			assertEquals("Custom Connection failed " ,  outCommand, returnWrapper.getOutputFlash().firstElement());
+		} catch (CommsProcessException ex){
+			Assert.fail(ex.getMessage());
+		}
+	}
+	
+	public void runCustomCommandInputByteArray(CustomConnect connection, byte[] commsCode,  ReturnWrapper testWrapper) {
+		ReturnWrapper returnWrapper = new ReturnWrapper();
+		CommsCommand command = new CommsCommand();
+		command.setCommandBytes(commsCode);
+
+		try {
+			testModel.doCustomConnectInputIfPresent(command,  returnWrapper);
+			assertEquals("Custom Connection failed " ,  testWrapper, returnWrapper);
+		} catch (CommsProcessException ex){
+			Assert.fail(ex.getMessage());
+		}
+	}
+
 }
 
