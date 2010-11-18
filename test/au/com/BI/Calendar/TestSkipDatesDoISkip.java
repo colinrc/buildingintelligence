@@ -15,8 +15,8 @@ public class TestSkipDatesDoISkip {
 
 	@Test
 	public void testDoISkipDate() {
-		skipDates.addDates("2005-12-01","2005-12-15");
-		skipDates.addDates("2005-12-17","2005-12-19");	
+		skipDates.addDates("2005-12-01 12:00:00","2005-12-15 12:00:00");
+		skipDates.addDates("2005-12-17 12:00:00","2005-12-19 12:00:00");	
 
 		assertEquals("Do I skip failed ",false,skipDates.doISkipDate(new Date (105,11,16)));
 		assertEquals("Do I skip failed on start date",true,skipDates.doISkipDate(new Date (105,11,1)));

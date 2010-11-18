@@ -23,8 +23,8 @@ public class TestSkipDatesAddDate {
 	 */
 	@Test
 	public void testAddDates() {
-		skipDates.addDates("2005-12-01","2005-12-15");
-		skipDates.addDates("2005-12-17","2005-12-19");	
+		skipDates.addDates("2005-12-01 12:00:00","2005-12-15 12:00:00");
+		skipDates.addDates("2005-12-17 12:00:00","2005-12-19 12:00:00");	
 		LinkedList testList = new LinkedList();
 		SkipEntry testSkipEntry = new SkipEntry ();
 		testSkipEntry.setStartDate(new Date(105,11,1));

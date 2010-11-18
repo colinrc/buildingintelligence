@@ -9,20 +9,19 @@ import java.util.List;
 import au.com.BI.GroovyModels.GroovyModel;
 import au.com.BI.GroovyModels.Model;
 import au.com.BI.Home.VersionManager;
-import junit.framework.TestCase;
+import static junit.framework.Assert.*;
 
 /**
  * @author colin
  *
  */
-public class GroovyModelTestCase extends TestCase {
+public class GroovyModelTestCase {
 	
 	protected Model groovyModelHandler = null;
 	protected GroovyModel model = null;
 	protected String modelToTest = "SET";
 
 	protected void setUp() throws Exception {
-		super.setUp();
 
 		// Include this block to set up a groovy model test
 		groovyModelHandler = new au.com.BI.GroovyModels.Model();

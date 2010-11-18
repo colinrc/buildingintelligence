@@ -177,9 +177,9 @@ public class TestCommandsFromFlash {
 		
 		ClientCommand testCommand3 = new ClientCommand("ALL","src",null,"DVD2","","","","");
 		Vector<byte[]> expectedOut = new Vector<byte[]>();
-		expectedOut.add(new byte[]{((byte)0x11)});
-		expectedOut.add(new byte[]{((byte)0x21)});
 		expectedOut.add(new byte[]{((byte)0x31)});
+		expectedOut.add(new byte[]{((byte)0x21)});
+		expectedOut.add(new byte[]{((byte)0x11)});
 		
 		Vector <CommandInterface>expectedOutFlash = new Vector<CommandInterface>();
 		

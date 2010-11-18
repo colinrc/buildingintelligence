@@ -1,14 +1,25 @@
 package au.com.BI.M1;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.After;
+import org.junit.Test;
 
-public class TestM1ModelFromFlash extends TestCase {
+
+// FIXME test cases not yet written
+public class TestM1ModelFromFlash {
 	
-	protected void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUp() throws Exception {
+
+	}
+	@After
+	public void tearDown() throws Exception {
+
 	}
 	
-	protected void tearDown() throws Exception {
-		super.tearDown();
+	@Test
+	public void testThis() {
+		assertEquals("This should never fail",new Integer(1), new Integer(1));
 	}
 }

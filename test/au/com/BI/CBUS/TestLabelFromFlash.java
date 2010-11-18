@@ -45,7 +45,7 @@ public class TestLabelFromFlash {
 	@Test
 	public void testBuildCBUSLabelString() {
 		ClientCommand testCommand = new ClientCommand("VOLUME","label",null,"Test","","","","");
-		String expectedOut = "\\05"+"3800A81600015465737474F0g\r";
+		String expectedOut = "\\05"+"3800A82200015465737474E4g\r";
 		String val = model.buildCBUSLabelString(testLabel, testCommand, "g");
 		assertEquals ("Return value for label failed",expectedOut,val);
 		//Volume Level
@@ -56,7 +56,7 @@ public class TestLabelFromFlash {
 	@Test
 	public void testBuildCBUSLabelStringVolume () {
 		ClientCommand testCommand = new ClientCommand("VOLUME","label",null,"VOLUME_CONTROL","","","","");
-		String expectedOut = "\\05"+"3800AF170001566F6C756D65204C6576656C6Ci\r";
+		String expectedOut = "\\05"+"3800AF230001566F6C756D65204C6576656C60i\r";
 		String val = model.buildCBUSLabelString(testLabel2, testCommand, "i");
 		assertEquals ("Return value for volume label failed",expectedOut,val);
 	}
