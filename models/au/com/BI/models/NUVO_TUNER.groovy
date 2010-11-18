@@ -96,7 +96,7 @@ class NUVO_TUNER extends GroovyModel {
 		if (!commandFound && toMatch.startsWith("PRESET")){
 			// #TÕtÕPRESETnnÓxyzÓ
 			def presetNumber = toMatch.substring (6,8)
-			def String presetDesc = toMatch.substring (9)
+			def String presetDesc = toMatch.substring (10)
 			
 			if (presetDesc.length() > 1) presetDesc  = presetDesc.substring (1,presetDesc.length()-1) // remove the first and last double quotes
 			
