@@ -156,9 +156,16 @@ public class TestDynaliteModelFromDevice {
 		model.addControlledItem(testA03C00.getKey(),testA03C00,MessageDirection.FROM_HARDWARE);		
 		InterpretResult result = new InterpretResult();
 		LinkedList <DynaliteCommand>testRes = new LinkedList<DynaliteCommand>();
+		DynaliteCommand a03C3ramp = new DynaliteCommand("CLIENT_SEND","off",null,"0","0","255","","");
+		a03C3ramp.setDisplayName("A03C03");
+		testRes.add(a03C3ramp);
+		DynaliteCommand a03C4ramp = new DynaliteCommand("CLIENT_SEND","off",null,"0","0","255","","");
+		a03C4ramp.setDisplayName("A03C04");
+		testRes.add(a03C4ramp);
 		DynaliteCommand a03C0ramp = new DynaliteCommand("CLIENT_SEND","off",null,"0","0","255","","");
 		a03C0ramp.setDisplayName("A03C00");
 		testRes.add(a03C0ramp);
+		
 		model.interpretRampDown(result, ret1);
 		ListAssert.assertEquals("Interpretting dynalite linear preset failed",testRes,result.decoded);
 	}

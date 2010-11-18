@@ -21,7 +21,7 @@ public class InterpretResultTest {
     public InterpretResultTest() {
     }
 
-    @Test
+    // FIXME unfinished test case
     public void testGetFullKey() {
         System.out.println("getFullKey");
         
@@ -32,7 +32,7 @@ public class InterpretResultTest {
         fail("The test case is a prototype.");
     }
 
-    @Test
+    // FIXME unfinished test case
     public void testSetFullKey() {
         System.out.println("setFullKey");
         
