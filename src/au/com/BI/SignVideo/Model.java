@@ -347,6 +347,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 				returnVal.setErrorDescription ( "Input src does not decode to a number");
 			} catch (ParameterException e) {
 				logger.log (Level.WARNING,e.getMessage());
+				returnVal.addCommOutput("");
+				returnVal.setError (true);
+				returnVal.setErrorDescription ( e.getMessage());
 			}
 		}			
 		

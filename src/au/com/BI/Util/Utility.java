@@ -13,8 +13,9 @@ public class Utility {
 						result.append('#'); 
 					} else {
 						try {
-							int a = Integer.parseInt(str.substring(i,i+2),16);
-							result.append(a);
+							
+							byte a = Byte.parseByte(str.substring(i,i+2),16);
+							result.append((char)a);
 
 						} catch (NumberFormatException ex) {};
 						i++;
@@ -32,13 +33,13 @@ public class Utility {
 	public static String parseBytesForPrint (byte str[]) {
 	   StringBuilder toWrite = new StringBuilder();
 	   for (int i = 0; i < str.length; i ++ ){
-		   int eachOne = str[i];
+		   byte eachOne = str[i];
 		   if ( eachOne < 32 || eachOne > 126   ){
 			   String hexVers = Integer.toHexString(eachOne);
 			   if (hexVers.length() == 1) hexVers = "0" + hexVers;
 			   toWrite.append("#" + hexVers);
 		   } else {
-			   toWrite.append(eachOne);
+			   toWrite.append((char)eachOne);
 		   }
 	   }
 	   return toWrite.toString();
