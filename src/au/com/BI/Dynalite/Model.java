@@ -575,7 +575,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		// Fade channel or area to level , 1c is classic, others linear
 			CommandInterface dynResult = null;
 			int level = dynaliteHelper.scaleLevelForFlash(msg[4]);
-			int channel = 0xff & msg[2];
+			byte channel = msg[2]; 
 			int area = msg[1];
 
 			int rate = 0;
@@ -591,7 +591,7 @@ public class Model extends SimplifiedModel implements DeviceModel {
 					break;
 
 			}
-			if (channel == 0xff){
+			if (channel == (byte)0xff){// FIXME changed behavior code path now active
 
 				for (DynaliteDevice dev: areaCodes.findDevicesInArea(area,true,msg[6])){
 					dynResult = buildCommandForFlash ((DeviceType)dev,"on",level,rate,msg[6],this.currentUser);			
@@ -652,9 +652,9 @@ public class Model extends SimplifiedModel implements DeviceModel {
 		// Fade channel or area to level , 1c is classic, others linear
 			CommandInterface dynResult = null;
 			int level = 0;
-			int channel = 0xff &  msg[2];
+			byte channel = msg[2];
 			byte area = msg[1];
-			if (channel == 0xff){
+			if (channel == (byte)0xff){// FIXME changed behavior code path now active
 
 				for (DynaliteDevice dev: areaCodes.findDevicesInArea(area,true,msg[6])){
 					dynResult = buildCommandForFlash ((DeviceType)dev,"off",level,0,255,this.currentUser);			
