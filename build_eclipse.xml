@@ -65,17 +65,18 @@
 
     <target name="compile" depends="init" >
         <echo>build src to "${classes.dir}"</echo>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" includeAntRuntime="false">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" includeAntRuntime="false" target="1.5">
             <src path="src"/>
             <classpath refid="eLife.classpath"/>
         </javac>
         <echo>build test to "${classes.dir}"</echo>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" includeAntRuntime="false">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" includeAntRuntime="false" target="1.5">
             <src path="test"/>
             <classpath refid="eLife.classpath"/>
         </javac>
        	<echo>build script to "${classes.dir}"</echo>
         <groovyc srcdir="script" destdir="${classes.dir}">
+        	<javac target="1.5" debug="true" />
             <classpath>
             	<pathelement path="${classes.dir}"/>
             	<path refid="eLife.classpath"/>
@@ -83,6 +84,7 @@
         </groovyc>
    		<echo>build models to "${classes.dir}"</echo>
         <groovyc srcdir="models" destdir="${classes.dir}">
+        	<javac target="1.5" debug="true" />
             <classpath>
             	<pathelement path="${classes.dir}"/>
             	<path refid="eLife.classpath"/>
