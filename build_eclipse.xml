@@ -1,8 +1,8 @@
 <?eclipse.ant.import?>
 
 <project basedir="." default="build" name="eLife">
-    <description>Builds, tests, and runs the project server.</description>
-     <import  file="ant_stubs/util_stubs.xml"/>
+	<description>Builds, tests, and runs the project server.</description>
+	<import  file="ant_stubs/util_stubs.xml"/>
        
 	<taskdef resource="net/sf/ant4eclipse/antlib.xml" >
   		<classpath>
@@ -16,18 +16,28 @@
   		</classpath>
 	</taskdef>	
 	
-	<property name="workspace" value="${basedir}/.." />
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
+  		<classpath>
+    		<pathelement location="/Java/groovy-1.6.0/embeddable/groovy-all-1.6.8.jar"/>
+  		</classpath>
+	</taskdef>
 	
+	<property name="workspace" value="${basedir}/.." />
 	<property name="project.name" value="eLife_Server" />
 	<property name="dist.jar" value="dist/eLife.jar" />
 	<userLibraries userlibraries="./libs.userlibraries" />
 	<getEclipseClasspath pathId="eLife.classpath" relative="true" workspace="${workspace}" projectName="${project.name}" />
 	<getEclipseClasspath property="eLife.jar_libs" relative="true" workspace="${workspace}" projectName="${project.name}" />
-	<available file="dist/lib" type="dir" property="lib_dir.present"/>
+	<available file="lib" type="dir" property="lib_dir.present"/>
+	<available file="junit" type="dir" property="junit_dir.present"/>
 	<available file="ext" type="dir" property="ext_dir.present"/>
-	<available file="dist/bin" type="dir" property="bin_dir.present"/>
 	<getOutputpath property="classes.dir" workspace="${workspace}" projectName="${project.name}" />
 
+	<path id="classpath.ant">
+   		<pathelement location="/Development/cruisecontrol/lib/junit-4.4.jar" />
+		<pathelement location="bin"/>
+		<pathelement location="${build.dir}/test"/>
+  	</path>	
 	
 	<target name="init">
 		<delete>
@@ -53,20 +63,33 @@
 	   	<mkdir dir="dist/lib" />
 	</target>	
 
-
-	
     <target name="compile" depends="init" >
-        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" >
+        <echo>build src to "${classes.dir}"</echo>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" includeAntRuntime="false">
             <src path="src"/>
             <classpath refid="eLife.classpath"/>
         </javac>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}">
+        <echo>build test to "${classes.dir}"</echo>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" includeAntRuntime="false">
             <src path="test"/>
             <classpath refid="eLife.classpath"/>
         </javac>
+       	<echo>build script to "${classes.dir}"</echo>
+        <groovyc srcdir="script" destdir="${classes.dir}">
+            <classpath>
+            	<pathelement path="${classes.dir}"/>
+            	<path refid="eLife.classpath"/>
+            </classpath>
+        </groovyc>
+   		<echo>build models to "${classes.dir}"</echo>
+        <groovyc srcdir="models" destdir="${classes.dir}">
+            <classpath>
+            	<pathelement path="${classes.dir}"/>
+            	<path refid="eLife.classpath"/>
+            </classpath>
+        </groovyc>
     </target>
 	
-
 	<target name="jar" depends="compile" >
 		
 		<pathconvert property="flattended.jars" refid="eLife.classpath" pathsep=" ">
@@ -93,10 +116,21 @@
 		<echo>java -jar "${dist.jar}"</echo>
 	</target>
 
+        	
+	<target name="build-junit-dir" depends="" unless="junit_dir.present" >    	
+	   	<mkdir dir="junit" />
+	</target>	
 	
-	<target name="dist" depends="load-version-number,update_xml,build_dist,increment" />
-	<target name="dist-no-inc" depends="load-version-number,update_xml,build_dist" />
-	<target name="build" depends="dist-no-inc" />
+	<target name="unit-tests" description="run the unit tests" depends="jar, build-junit-dir">
+		<junit printsummary="true" failureproperty="junit.failure">
+		<classpath refid="classpath.ant"/>
+        <classpath refid="eLife.classpath"/>
+			<batchtest todir="junit">
+        			<fileset dir="test"/>
+        			<formatter type="xml"/>
+      			</batchtest>
+		</junit>
+	</target>
 
 	<target name="copy-libs" depends="init,build-ext-dir" >
 		<pathconvert pathsep="," property="massaged_jar_libs" refid="eLife.classpath" >
@@ -106,29 +140,29 @@
 		<echo>Massaged jar files list is ${massaged_jar_libs}</echo>
 
 		<delete  includeemptydirs="true" quiet="true" >
-			<fileset dir="dist/ext" includes="**/*" />
+			<fileset dir="tmp/ext" includes="**/*" />
 		</delete>
 		<delete  includeemptydirs="true" quiet="true" >
-			<fileset dir="dist/lib" includes="**/*" />
+			<fileset dir="tmp/lib" includes="**/*" />
 		</delete>
-		<copy todir="dist/ext" flatten="true" >
+		<copy todir="tmp/ext" flatten="true" >
 		   <fileset dir="/" includes="${massaged_jar_libs}"  />
 		</copy>
-		<copy todir="dist/ext" flatten="true" >
+		<copy todir="tmp/ext" flatten="true" >
 		   <fileset dir="./wrapper" includes="*.jar"  />
 		</copy>
 		<delete  includeemptydirs="true" quiet="true" >
-		    	<fileset dir="dist/ext" >
+		    	<fileset dir="tmp/ext" >
 		    		<include name="junit*" />
 		    		<include name="nbunit*" />
 		    		<include name="xmlunit*" />
 	    		</fileset>
 		</delete>
-		<copy todir="dist/lib" flatten="true" >
+		<copy todir="tmp/lib" flatten="true" >
 				<fileset dir="." includes="*.dll"  />
 			   	<fileset dir="." includes="*.jnilib"  />
 		</copy>
-	<copy todir="dist/lib" flatten="true" >
+	<copy todir="tmp/lib" flatten="true" >
 			<fileset dir="./wrapper" includes="*.dll"  />
 	</copy>	
 	</target>
@@ -137,23 +171,24 @@
          <property file="src/au/com/BI/Home/my.properties" />
 		<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
 			update="false"
-			basedir="dist" 
+			basedir="tmp" 
 			includes = "ext/*.jar" />
-        <!-- copy todir="dist">
-	    	<fileset dir="." includes="*.dll" />
-	    	<fileset dir="." includes="*.jnilib" />
-		</copy -->
-	<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
-		update="true"
-		basedir="dist"
-		includes = "lib/*.dll" />
-     <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
-		update="true"
-		basedir="dist"
-		includes = "lib/*.jnilib" />
-   <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
-		update="true"
-		basedir="src/au/com/BI"
-		includes = "**/*.properties"  />
+        <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+            update="true"
+            basedir="lib"
+            includes = "*.dll" />
+        <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+            update="true"
+            basedir="lib"
+            includes = "*.jnilib" />
+        <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+            update="true"
+            basedir="src/au/com/BI"
+            includes = "**/*.properties"  />
     </target>
+    
+	<target name="dist" depends="load-version-number,update_xml,build_dist,increment,unit-tests, dist-libs" />
+   	<target name="dist-no-inc" depends="load-version-number,update_xml,build_dist,unit-tests, dist-libs" />
+	<target name="build" depends="dist-no-inc" />
+
 </project>
