@@ -142,12 +142,12 @@ public class FlashControlListener extends Thread {
 						}
 
 					}
-					try {
-						security.allowClient(numberFlashClients);
+/*					try {
+					security.allowClient(numberFlashClients);
 					} catch (TooManyClientsException ex){
 						if (!recentConnection) displayTooManyClients(numberFlashClients,ex);
 					}
-				}
+*/				}
 			}
 		}catch (IOException io){
 			logger.log(Level.SEVERE, "Could not add client handler " +io.getMessage());

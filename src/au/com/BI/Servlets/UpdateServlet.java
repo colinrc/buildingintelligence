@@ -301,11 +301,11 @@ public class UpdateServlet extends HttpServlet {
         sessionCounter.incrementCount();
         
     	
-    	if (!security.allowWebClient()){
+/*    	if (!security.allowWebClient()){
     		// TODO add code to turf another login for this user...
     		throw new TooManyClientsException ("You have requested more clients than you have licenses for, please contact your integrator");
     	}
-        
+*/        
     	ClientCommandFactory clientCommandFactory =  ClientCommandFactory.getInstance();
     	clientCommandFactory.setID(ID);
     	clientCommandFactory.setOriginating_location(Locations.HTTP);
