@@ -76,7 +76,8 @@
  Connects the most likely connection
  */
 -(Boolean)connect {
-	
+	[reconnect_timer_ invalidate];
+	reconnect_timer_ = nil;
 	if (status_ == ReachableDirect)
 	{
 		// means we have WIFI and that the address and port are reachable

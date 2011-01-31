@@ -94,7 +94,7 @@
 
 	// TODO: set some dirty bit so we know if there has been any changes
 	// notify everyone the config editing is done
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"elife_settings_end" object:self];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"elife_settings_end" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	// animate off
 	[super viewWillDisappear:animated];
