@@ -199,7 +199,7 @@
 
 // get the number of groups
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 22;
+	return 12;
 }
 // get the group heading
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -226,26 +226,6 @@
 	}
 	return 0;
 }
-/*
- - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
- return 1;
- }
- */
-/*
- - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
- return nil;
- }
- */
-/*
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- return NO;
- }
- */
-/*
- - (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
- return nil;
- }
- */
 
 // Put the individual items into the groups
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -295,6 +275,7 @@
 	tmpFrame.size.width = 290 - tmpFrame.origin.x; // space for the cursor
 	tmpView.frame = tmpFrame;
 	tmpView.textColor = detailLabel.textColor;
+	tmpView.textAlignment = UITextAlignmentRight;
 	cell.accessoryView = tmpView;
 	detailLabel.text = nil;
 	
@@ -317,38 +298,6 @@
 
 	[tableView setNeedsDisplay];
 }
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
- 
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
- }
- */
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 #pragma mark keyboard handling methods
 
@@ -385,33 +334,13 @@
 	}
 	return nil;
 }
+
 // Handle the enter key. Dismiss the keyboard
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	[textField resignFirstResponder];
 
-	// want to handle the hiding of the edit cells
-	NSIndexPath * indexPath = [self indexPathForNextRow];
-	if (indexPath != nil) {
-		[self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
-		[self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
-	}
-
 	return YES;
 }
-
-/*
-// show/hide scrolling
-// start that scrolling...
--(void) keyboardWillShow:(NSNotification *)notification {
-	NSLog(@"keyboard is on it's way");
-	// need to check if we have to increase the scroll length
-}
- 
-// and back to where we were
--(void) keyboardWillHide:(NSNotification *)notification {
-	NSLog(@"keyboard is heading off");
-}
-*/
 
 #pragma mark Cleanup
 
