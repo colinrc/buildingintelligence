@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1A03F4BF11C1CFDB008FADBA /* clientParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A03F4BE11C1CFDB008FADBA /* clientParser.m */; };
 		1A03F55611C1F8EA008FADBA /* settingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A03F55511C1F8EA008FADBA /* settingsViewController.xib */; };
+		1A0E08EF12F7925500C41622 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0E08EE12F7925500C41622 /* AsyncUdpSocket.m */; };
 		1A2D19D211BE200F001A9635 /* aircon-off.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D193F11BE200F001A9635 /* aircon-off.png */; };
 		1A2D19D311BE200F001A9635 /* aircon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D194011BE200F001A9635 /* aircon.png */; };
 		1A2D19D411BE200F001A9635 /* alarm-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D194111BE200F001A9635 /* alarm-clock.png */; };
@@ -172,6 +173,10 @@
 		1A552AD211D9BB300015B4BD /* Airport.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A552AD111D9BB300015B4BD /* Airport.png */; };
 		1A552AD411D9BB420015B4BD /* red.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A552AD311D9BB420015B4BD /* red.png */; };
 		1A552AD611D9BB500015B4BD /* WWAN5.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A552AD511D9BB500015B4BD /* WWAN5.png */; };
+		1ABE0E7812FA5F0A00DDAFE9 /* zoneList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0E7712FA5F0A00DDAFE9 /* zoneList.m */; };
+		1ABE0E7D12FA605F00DDAFE9 /* Zone.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0E7C12FA605F00DDAFE9 /* Zone.m */; };
+		1ABE0EC312FA6A5500DDAFE9 /* Room.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0EC212FA6A5500DDAFE9 /* Room.m */; };
+		1ACD749912FB98A2005C0DB0 /* Alert.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ACD749812FB98A2005C0DB0 /* Alert.m */; };
 		1AD38DAB11D1D17900F06273 /* Command.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD38DAA11D1D17900F06273 /* Command.m */; };
 		1AD38DCE11D1D6C300F06273 /* serverConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD38DCD11D1D6C300F06273 /* serverConnection.m */; };
 		1AD38DE011D1D95C00F06273 /* elifehttp.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD38DDF11D1D95C00F06273 /* elifehttp.m */; };
@@ -200,6 +205,8 @@
 		1A03F4BD11C1CFDB008FADBA /* clientParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = clientParser.h; sourceTree = "<group>"; };
 		1A03F4BE11C1CFDB008FADBA /* clientParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = clientParser.m; sourceTree = "<group>"; };
 		1A03F55511C1F8EA008FADBA /* settingsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = settingsViewController.xib; sourceTree = "<group>"; };
+		1A0E08ED12F7925500C41622 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncUdpSocket.h; path = Classes/AsyncUdpSocket.h; sourceTree = "<group>"; };
+		1A0E08EE12F7925500C41622 /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncUdpSocket.m; path = Classes/AsyncUdpSocket.m; sourceTree = "<group>"; };
 		1A2D193F11BE200F001A9635 /* aircon-off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "aircon-off.png"; path = "icons/aircon-off.png"; sourceTree = "<group>"; };
 		1A2D194011BE200F001A9635 /* aircon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = aircon.png; path = icons/aircon.png; sourceTree = "<group>"; };
 		1A2D194111BE200F001A9635 /* alarm-clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "alarm-clock.png"; path = "icons/alarm-clock.png"; sourceTree = "<group>"; };
@@ -371,6 +378,14 @@
 		1A552AD111D9BB300015B4BD /* Airport.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Airport.png; path = icons/Airport.png; sourceTree = "<group>"; };
 		1A552AD311D9BB420015B4BD /* red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = red.png; path = icons/red.png; sourceTree = "<group>"; };
 		1A552AD511D9BB500015B4BD /* WWAN5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = WWAN5.png; path = icons/WWAN5.png; sourceTree = "<group>"; };
+		1ABE0E7612FA5F0A00DDAFE9 /* zoneList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zoneList.h; sourceTree = "<group>"; };
+		1ABE0E7712FA5F0A00DDAFE9 /* zoneList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = zoneList.m; sourceTree = "<group>"; };
+		1ABE0E7B12FA605F00DDAFE9 /* Zone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zone.h; sourceTree = "<group>"; };
+		1ABE0E7C12FA605F00DDAFE9 /* Zone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Zone.m; sourceTree = "<group>"; };
+		1ABE0EC112FA6A5500DDAFE9 /* Room.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Room.h; sourceTree = "<group>"; };
+		1ABE0EC212FA6A5500DDAFE9 /* Room.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Room.m; sourceTree = "<group>"; };
+		1ACD749712FB98A2005C0DB0 /* Alert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Alert.h; sourceTree = "<group>"; };
+		1ACD749812FB98A2005C0DB0 /* Alert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Alert.m; sourceTree = "<group>"; };
 		1AD38DA911D1D17900F06273 /* Command.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Command.h; sourceTree = "<group>"; };
 		1AD38DAA11D1D17900F06273 /* Command.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Command.m; sourceTree = "<group>"; };
 		1AD38DCC11D1D6C300F06273 /* serverConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serverConnection.h; sourceTree = "<group>"; };
@@ -468,6 +483,14 @@
 				1AD38DCD11D1D6C300F06273 /* serverConnection.m */,
 				1AD38DDE11D1D95C00F06273 /* elifehttp.h */,
 				1AD38DDF11D1D95C00F06273 /* elifehttp.m */,
+				1ABE0E7612FA5F0A00DDAFE9 /* zoneList.h */,
+				1ABE0E7712FA5F0A00DDAFE9 /* zoneList.m */,
+				1ABE0E7B12FA605F00DDAFE9 /* Zone.h */,
+				1ABE0E7C12FA605F00DDAFE9 /* Zone.m */,
+				1ABE0EC112FA6A5500DDAFE9 /* Room.h */,
+				1ABE0EC212FA6A5500DDAFE9 /* Room.m */,
+				1ACD749712FB98A2005C0DB0 /* Alert.h */,
+				1ACD749812FB98A2005C0DB0 /* Alert.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -669,6 +692,8 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1A0E08ED12F7925500C41622 /* AsyncUdpSocket.h */,
+				1A0E08EE12F7925500C41622 /* AsyncUdpSocket.m */,
 				1AD96FDC11D43119001E722E /* Reachability.h */,
 				1AD96FDD11D43119001E722E /* Reachability.m */,
 				28A0AB4B0D9B1048005BE974 /* eLife3_Prefix.pch */,
@@ -734,7 +759,14 @@
 			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "eLife3" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* eLife3 */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -941,6 +973,11 @@
 				1AD38DCE11D1D6C300F06273 /* serverConnection.m in Sources */,
 				1AD38DE011D1D95C00F06273 /* elifehttp.m in Sources */,
 				1AD96FDE11D43119001E722E /* Reachability.m in Sources */,
+				1A0E08EF12F7925500C41622 /* AsyncUdpSocket.m in Sources */,
+				1ABE0E7812FA5F0A00DDAFE9 /* zoneList.m in Sources */,
+				1ABE0E7D12FA605F00DDAFE9 /* Zone.m in Sources */,
+				1ABE0EC312FA6A5500DDAFE9 /* Room.m in Sources */,
+				1ACD749912FB98A2005C0DB0 /* Alert.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

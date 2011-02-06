@@ -175,6 +175,7 @@
 			
 			// set the icon
 			UIImageView *myIcon = [cell imageView];
+			myIcon.contentMode = UIViewContentModeScaleAspectFit;
 			myIcon.image = [UIImage imageNamed:[status_group.icon_ stringByAppendingString:@".png"]];
 		}
 	}	

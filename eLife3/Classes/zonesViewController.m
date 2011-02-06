@@ -8,6 +8,7 @@
 
 #import "zonesViewController.h"
 #import "eLife3AppDelegate.h"
+#import "zoneList.h"
 
 @implementation zonesViewController
 
@@ -73,15 +74,29 @@
 
 
 #pragma mark Table view methods
-
+/**
+ get the number of groups
+ */
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+	int i = [[zoneList sharedInstance] count];
+	//	NSLog(@"help me I cant take it %i", i);
+	return i;
 }
+/**
+ get the group heading
+*/
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+
+	NSString *tmpName = [[zoneList sharedInstance]  nameFor:section];
+	return tmpName;
+}
+
 /**
  Customize the number of rows in the table view.
  */
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+	// get the number of rooms in this zone
+	return [[zoneList sharedInstance] roomsInZone:section];
 }
 /**
  Customize the appearance of table view cells.
@@ -96,7 +111,18 @@
     }
     
     // Set up the cell...
-	
+	Zone *zone = [[zoneList sharedInstance] getZone:indexPath.section];
+	if (zone != nil) {
+		Room *room = [zone getRoom:indexPath.row];
+		if (room != nil) {
+			// add the room name
+			UILabel *roomLabel = (UILabel*) [cell textLabel];
+			roomLabel.text = room.name_;
+			// TODO think about icons for alerts
+			// check the room for active alerts and add small icons?
+		}
+	}
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     return cell;
 }
 /**

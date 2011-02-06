@@ -25,6 +25,9 @@
     // Add the tab bar controller's current view as a subview of the window
     [window addSubview:tabBarController.view];
 	
+	// see if we can get some uPNP
+	elifeSvrConn = [[serverConnection alloc] init];
+
 	// Check user prefs
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	if (([[defaults objectForKey:@"elifesvr"] length] <= 0) ||
@@ -37,7 +40,6 @@
 	}
 
 	// Attempt to connect to eLife Server
-	elifeSvrConn = [[serverConnection alloc] init];
 	[elifeSvrConn connect];
 	
 	// retrieve the client XML and parse
@@ -55,7 +57,7 @@
  Set network status icon
  */
 -(void)networkUpdate:(UITableViewController *)table {
-	
+	NSLog(@"************** networkUpdate:(UITableViewController *)table");
 	UIBarButtonItem * rightBarButtonItem;
 	// get the state
 	switch (elifeSvrConn.status_) {

@@ -26,15 +26,18 @@
  Setup the class
  */
 -(id)init{
-
+	
 	if (self = [super init]) {
-
+		discoverTries_ = 0;
 		status_ = ReachableDirect; // FIXME: only true right now...
 		socket_ = [[elifesocket alloc] init];
 		http_ = [[elifehttp alloc] init];
 		reconnect_timer_ = nil;
 		serverUp_ = YES;
+		
+		[self discover_eLife];
 		[self setReachability];
+		
 		// listen for network failure messages
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkFault:)
 													 name:@"network_down" object:nil];
@@ -46,11 +49,141 @@
 													 name:@"elife_settings_end" object:nil];
 		// listen for connectivity changes
 		[[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(networkChanged:)
-														name: kReachabilityChangedNotification object: nil];
+													 name: kReachabilityChangedNotification object: nil];
 	}
 	
 	return self;
 }
+/**
+ Runs a SDDP discovery poll, three polls with 3 second timeout
+ if we find a server then replace the config
+ */
+-(void)discover_eLife {
+	[ssdpSock close];
+	ssdpSock = nil;
+	ssdpSock = [[AsyncUdpSocket alloc] initWithDelegate:self];
+	[ssdpSock enableBroadcast:TRUE error:nil];
+	NSString *str = @"M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nMX: 3\r\nST: ssdp:all\r\nHOST: 239.255.255.250:1900\r\n\r\n";    
+	[ssdpSock bindToPort:0 error:nil];
+	[ssdpSock joinMulticastGroup:@"239.255.255.250" error:nil];
+	[ssdpSock sendData:[str dataUsingEncoding:NSUTF8StringEncoding] 
+				toHost: @"239.255.255.250" port: 1900 withTimeout:-1 tag:1];
+	[ssdpSock receiveWithTimeout: 3 tag:1];
+}
+
+/**
+ Listens to the SDDP group for any eLife messages
+ */
+-(void)listen_eLife {
+	[ssdpSock close];
+	ssdpSock = nil;
+	ssdpSock = [[AsyncUdpSocket alloc] initWithDelegate:self];
+	[ssdpSock enableBroadcast:TRUE error:nil];
+	[ssdpSock bindToAddress:@"239.255.255.250" port:1900 error:nil];
+	[ssdpSock joinMulticastGroup:@"239.255.255.250" error:nil];
+	[ssdpSock receiveWithTimeout: -1 tag:2];
+}
+
+/**
+ Handles the data recieved callback for SDDP 
+ */
+- (BOOL)onUdpSocket:(AsyncUdpSocket *)sock didReceiveData:(NSData *)data withTag:(long)tag fromHost:(NSString *)host port:(UInt16)port {
+	NSLog(@"%s %d %@ %d",__FUNCTION__,tag,host,port);
+	NSString *aStr = [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+	//	NSLog(@"Recieved data:\n%@",aStr);
+	
+	if (tag == 1) {
+		// TODO when we get an elife server strip the data
+		NSRange elife = [aStr rangeOfString:@"eLife"];
+		if ( elife.location != NSNotFound)
+		{
+			[self completeSearch:aStr];
+			return YES;
+		}
+	}
+	else if (tag == 2)
+	{
+		NSRange elife = [aStr rangeOfString:@"X_CONF"];
+		if (elife.location != NSNotFound)
+		{
+			[self completeSearch:aStr];
+			return YES;
+		}
+	}
+	
+	// don't have our response, keep trying
+	return NO;
+}
+
+/**
+ Does the config setting after we have found an eLife, if we can find the data
+ */
+-(void) completeSearch:(NSString *) message {
+	
+	NSLog(@"**** success %s",__FUNCTION__);
+	//	NSLog(@"Recieved message:\n%@",message);
+	NSArray *lines = [message componentsSeparatedByString:@"\r\n"];
+	NSString * urlstr = nil;
+	
+	for (NSString *element in lines) {
+		if ([element hasPrefix:@"X_CONF:"]) {
+			urlstr = [element stringByReplacingOccurrencesOfString:@"X_CONF:" withString:@""];
+			urlstr = [urlstr stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+			break;
+		}
+	}
+	
+	if (urlstr != nil) {
+		NSURL* url = [NSURL URLWithString:urlstr];
+		if (url != nil) {
+			NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+			
+			NSString *host = [url host];
+			if (host != nil)
+				[defaults setObject:host forKey:@"elifesvr"];
+			NSString *port = [[url port] stringValue];
+			if (port != nil)
+				[defaults setObject:port forKey:@"config_port"];
+			NSString *file = [url lastPathComponent];
+			if (file != nil)
+				[defaults setObject:file forKey:@"config_file"];
+
+			serverUp_ = YES;
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"networkChange:" object: self];
+			[defaults synchronize];
+		}
+		else {
+			NSLog(@"ERROR IN PNP: Malformed URL");
+		}
+	}
+	
+	[self listen_eLife];
+}
+
+
+/**
+ Did not get the data from the call, knock thrice...
+ */
+- (void)onUdpSocket:(AsyncUdpSocket *)sock didNotReceiveDataWithTag:(long)tag dueToError:(NSError *)error {
+	if (tag  == 1) {
+		
+		if (discoverTries_ < 3) {
+			//			NSLog(@"**** fail %s",__FUNCTION__);
+			discoverTries_ ++;
+			[ssdpSock close];
+			ssdpSock = nil;
+			[self discover_eLife];
+		}
+		else {
+			[self listen_eLife];
+		}
+	}
+	else if (tag == 2) {
+		//		NSLog(@"**** listen fail %s",__FUNCTION__);
+		[self listen_eLife];
+	}
+}
+
 /**
  setup the Reachability callbacks
  */
@@ -142,6 +275,7 @@
 				status_ = ReachableDirect;
 				NSLog(@"networkChanged: status change direct");
 				[[NSNotificationCenter defaultCenter] postNotificationName:@"networkChange:" object: self];
+				[self discover_eLife];
 				[self connect];
 			}
 		}
@@ -220,7 +354,7 @@
 		
 	}
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"networkChange:" object: self];
-
+	
 }
 /**
  Notified when the comms class has data

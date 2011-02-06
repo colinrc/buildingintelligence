@@ -13,13 +13,14 @@
 #import "Control.h"
 #import "controlMap.h"
 #import "statusGroupMap.h"
+#import "Room.h"
+#import "Zone.h"
+#import "zoneList.h"
 
 @implementation clientParser
 
 @synthesize timer_;
 @synthesize parserSuccess;
-
-bool superuseronly = false;
 
 typedef enum {
 	parsing_none,
@@ -33,9 +34,10 @@ typedef enum {
 } parserState;
 
 parserState current_state;
-NSString *zone_name;
-NSString *room_name;
 
+NSString * current_zone_name;
+NSString * current_room_name;
+NSString * current_tab_name;
 
 - (id)init {
 	
@@ -155,27 +157,72 @@ NSString *room_name;
  */
 void handleZone(NSDictionary *attributeDict) {
 //	NSLog(@"handleZone %@",[attributeDict objectForKey:@"name"]);
-	// create a new zone object if required
-	zone_name = [attributeDict objectForKey:@"name"];
+	// create a new zone object if require
+	current_zone_name = [attributeDict objectForKey:@"name"];
+	Zone *zone = [[Zone alloc] initWithDictionary:attributeDict];
+	if ([[zoneList sharedInstance] addZone:zone] == NO) {
+		NSLog(@"Zone item, problem adding %@", current_zone_name);		
+	}
+	[zone release];
 }	
 /**
- \brief	Adds a room 
+ \brief	Adds a panel to a zone
  */
-void addRoom(NSDictionary *attributeDict) {
-//	NSLog(@"addRoom %@",[attributeDict objectForKey:@"name"]);
+void addZonePanels(NSDictionary *attributeDict) {
+	//	NSLog(@"addZonePanel %@",[attributeDict objectForKey:@"name"]);
+}
+/**
+ \brief	Adds an arbitrary to a zone
+ */
+void addZoneArbitrary(NSDictionary *attributeDict) {
+	//	NSLog(@"addZoneArbitrary %@",[attributeDict objectForKey:@"name"]);
+}
+/**
+ \brief	Adds a room to a zone
+ */
+void addZoneRoom(NSDictionary *attributeDict) {
+	//	NSLog(@"addZoneRoom %@",[attributeDict objectForKey:@"name"]);
+	
+	current_room_name = [attributeDict objectForKey:@"name"];
 
-	current_state = parsing_room;
-	// set the room name to the name found
-	room_name = [attributeDict objectForKey:@"name"];
+	Room *room = [[Room alloc] initWithDictionary: attributeDict];
 	// push a room object onto the room list
-}	
+	[[zoneList sharedInstance] addRoom: room];
+	[room release];
+}
+/**
+ \brief adds a window for a room
+ */
+void addRoomWindow(NSDictionary *attributeDict) {
+	
+}
+
+/**
+ \brief adds a room alert
+ */
+void addRoomAlert(NSDictionary *attributeDict) {
+	Alert *alert = [[Alert alloc] initWithDictionary:attributeDict];
+	
+	[[zoneList sharedInstance] addAlert:alert];
+
+	[alert release];
+}
+
+/**
+ \brief adds a room door notifier
+ */
+void addRoomDoor(NSDictionary *attributeDict) {
+	
+}
+
 /**
  \brief	Handles the room window tab entries
  */
-void handleRoomTab(NSDictionary * attributeDict)
+void handleRoomWindowTab(NSDictionary * attributeDict)
 {
-//	NSLog(@"handleRoomTab %@", [attributeDict objectForKey:@"name"]);
-	if (!superuseronly) {
+//	NSLog(@"handleRoomWindowTab %@", [attributeDict objectForKey:@"name"]);
+	current_tab_name = [attributeDict objectForKey:@"name"];
+	
 		// create new roomtab object
 		//		eliferoomtab *newroomtab = [[eliferoomtab alloc] initWithName:[attributeDict objectForKey:@"name"] andAttributes:attributeDict];
 		
@@ -184,18 +231,22 @@ void handleRoomTab(NSDictionary * attributeDict)
 		//		currentroomtab = [currentroom.tablist objectAtIndex:[currentroom.tablist indexOfObject:newroomtab]];
 		
 		//		[newroomtab release];
-	}
 }
 /**
  \brief	Adds a room entry from a control element
  */
-void addRoomItem(NSDictionary *attributeDict) {
-//	NSLog(@"addRoomItem %@",[attributeDict objectForKey:@"name"]);
+void addRoomControl(NSDictionary *attributeDict) {
+//	NSLog(@"addRoomControl %@",[attributeDict objectForKey:@"name"]);
 	// create new control object
 	Control *control = [[Control alloc] initWithDictionary:attributeDict];
-	if ([[controlMap sharedInstance] addControl:control] == NO)
+	if ([[controlMap sharedInstance] addControl:control] == YES)
 	{
-		NSLog(@"Control problem adding %@", [attributeDict objectForKey:@"key"]);
+		// the control is valid lets add it to the room 
+		[[zoneList sharedInstance] addControl: current_room_name: current_tab_name: control];
+	}
+	else
+	{
+		NSLog(@"Room item, control problem adding %@", [attributeDict objectForKey:@"key"]);
 	}
 	[control release];
 }
@@ -217,7 +268,7 @@ void addStatusItem(NSDictionary *attributeDict) {
 	Control *control = [[Control alloc] initWithDictionary:attributeDict];
 	if ([[controlMap sharedInstance] addControl:control] == NO)
 	{
-		NSLog(@"Control problem adding %@", [attributeDict objectForKey:@"key"]);
+		NSLog(@"Status item, control problem adding %@", [attributeDict objectForKey:@"key"]);
 	}
 	[[statusGroupMap sharedInstance] addStatusItem:control];
 	[control release];
@@ -240,18 +291,15 @@ void addControl(NSDictionary *attributeDict) {
  */
 void addArbitraryItem(NSDictionary *attributeDict) {
 //	NSLog(@"addControlItem ");
-	if (!superuseronly) {
-		// add a new controltype item
-	}
+	// add a new controltype item
 }
 /**
  \brief	Adds a control row from a control element
  */
 void addControlRow(NSDictionary *attributeDict) {
 //	NSLog(@"addControlRow ");
-	if (!superuseronly) {
-		// add a new row object
-	}
+	// add a new row object
+
 }
 /**
  \brief Parser start tag callback funciton.
@@ -271,31 +319,21 @@ void addControlRow(NSDictionary *attributeDict) {
 		}
 		else
 		{
-			NSString *canOpen = [attributeDict objectForKey:@"canOpen"];
-			// check if zone is superuser only access and do not add to zonelist
-			if ([canOpen isEqualToString:@"superuser"]) 
-				superuseronly=YES;
-			else
-			{
-				superuseronly=NO;
-//				currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"elementtype",[attributeDict objectForKey:@"name"],@"name",nil];
-				handleZone(attributeDict);
-			}
+			handleZone(attributeDict);
 		}
 	} else if ([elementName isEqualToString:@"room"]) {
-//		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
-		addRoom(attributeDict);
+		current_state = parsing_room;
+		addZoneRoom(attributeDict);
 		
 	} else if ([elementName isEqualToString:@"tab"]) {
 		// status bar or room
-//		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
 		if (current_state == parsing_status)
 		{
 			handleStatus(attributeDict);
 		}
 		else if (current_state == parsing_room) {
 			// handle roomtab
-			handleRoomTab(attributeDict);
+			handleRoomWindowTab(attributeDict);
 		}
 	} else if ([elementName isEqualToString:@"group"]) {
 		if (current_state == parsing_status)
@@ -308,7 +346,7 @@ void addControlRow(NSDictionary *attributeDict) {
 			NSLog(@"TODO: add the logging handling code");
 		}
 	} else if ([elementName isEqualToString:@"control"]) {
-//		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
+
 		if (current_state == parsing_status)
 		{
 			addStatusItem(attributeDict);
@@ -319,7 +357,7 @@ void addControlRow(NSDictionary *attributeDict) {
 		}
 		else if (current_state == parsing_room){
 			// handle room controls
-			addRoomItem(attributeDict);
+			addRoomControl(attributeDict);
 		}
 	} else if ([elementName isEqualToString:@"item"]) {
 //		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
@@ -335,8 +373,14 @@ void addControlRow(NSDictionary *attributeDict) {
 		current_state = parsing_calendar;
 	} else 	if ([elementName isEqualToString:@"arbitrary"]) {
 		current_state = parsing_arbitrary;
+		addArbitraryItem(attributeDict);
 	} else 	if ([elementName isEqualToString:@"logging"]) {
 		current_state = parsing_logging;
+	} else 	if ([elementName isEqualToString:@"alert"]) {
+		if (current_state == parsing_room) {
+			// add a room alert
+			addRoomAlert(attributeDict);
+		}
 	} else {
 //		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
 	}
@@ -359,15 +403,17 @@ void addControlRow(NSDictionary *attributeDict) {
 	}
 	else if ([elementName isEqualToString:@"room"]) {
 		current_state = parsing_none;
-		room_name = nil;
+		current_room_name = nil;
+	}
+	else if ([elementName isEqualToString:@"tab"]) {
+		current_tab_name = nil;
 	}
 	else if ([elementName isEqualToString:@"arbitrary"]) {
 		current_state = parsing_none;
 	}
 	else if ([elementName isEqualToString:@"zone"]) {
 		// reset zone state
-		superuseronly=NO;
-		zone_name = nil;
+		current_zone_name = nil;
 	}
 	else if ([elementName isEqualToString:@"logging"]) {
 		current_state = parsing_none;
@@ -387,8 +433,5 @@ void addControlRow(NSDictionary *attributeDict) {
 {
 	[super dealloc];
 }
-
-
-
 
 @end

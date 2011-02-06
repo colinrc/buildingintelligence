@@ -86,18 +86,20 @@ static controlMap * sharedInstance = nil;
 	
 	if (control.type_ != nil)
 	{
-		if (tmp.type_ != nil && control.type_ != tmp.type_)
+		if ( tmp.type_ == nil )
+		{
+			// type_ accessor is type copy
+			tmp.type_ = control.type_ ;
+		}
+		else if (![control.type_ isEqualToString:tmp.type_])
 		{
 			// we have a problem..
 			NSLog(@"Control %@ has 2 different types [%@ != %@]", control.key_, control.type_, tmp.type_);
 			return NO;
 		}
-		else {
-			// type_ accessor is type copy
-			tmp.type_ = control.type_ ;
-		}
 	}
-
+	
+	
 	if ((control.name_ != nil) && (tmp.name_ == nil)){
 		// name_ accessor is type copy
 		tmp.name_ = control.name_ ;
@@ -127,7 +129,7 @@ static controlMap * sharedInstance = nil;
 		NSLog(@"Message for unkown control %@", [data objectForKey:@"KEY"]);
 		return NO;
 	}
-
+	
 	// all of the accessors are type copy for the control object
 	tmpCtl.command_ = [data objectForKey:@"COMMAND"];
 	tmpCtl.extra_  = [data objectForKey:@"EXTRA"];
@@ -135,7 +137,7 @@ static controlMap * sharedInstance = nil;
 	tmpCtl.extra3_ = [data objectForKey:@"EXTRA3"];
 	tmpCtl.extra4_ = [data objectForKey:@"EXTRA4"];
 	tmpCtl.extra5_ = [data objectForKey:@"EXTRA5"];
-
+	
 	// Send notification message to any observers
 	[[NSNotificationCenter defaultCenter] postNotificationName:tmpCtl.key_ object:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:[tmpCtl.key_ stringByAppendingString:@"_status"] object:self];
