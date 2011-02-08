@@ -127,6 +127,7 @@ static macroList * sharedInstance = nil;
 	@synchronized(self) {
 		macrolist_ = [[NSMutableArray alloc] init];
 	}
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"addMacro" object:self];
 }
 
 -(NSInteger)countMacros {

@@ -18,10 +18,14 @@
 
 -(Boolean)addZone:(Zone* )zone;
 -(Zone*)getZone:(NSUInteger)index;
+-(Zone*)getCurrentZone;
 
 -(Boolean)addRoom:(Room*)room;
 -(Boolean)addAlert:(Alert*)alert;
--(Boolean)addControl:(NSString*)roomName:(NSString*)tabName:(Control*)control;
+-(Boolean)addDoor:(Door *) door;
+
+-(Boolean)addTab:(NSString*) tabName;
+-(Boolean)addControl:(Control*)control;
 -(int)count;
 -(NSString*)nameFor:(NSUInteger)index;
 -(NSUInteger)roomsInZone:(NSUInteger)index;

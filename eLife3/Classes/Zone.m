@@ -19,12 +19,12 @@
 	{
 		cycle_ = [[data objectForKey:@"cycle"] boolValue];
 		skipForPDA_ = [[data objectForKey:@"skipForPDA"] boolValue];
-		background_ = [data objectForKey:@"background"];
-		alignment_ = [data objectForKey:@"alignment"];
+		background_ = [[data objectForKey:@"background"] copy];
+		alignment_ = [[data objectForKey:@"alignment"] copy];
 		canOpen_ = [[data objectForKey:@"canOpen"] boolValue];
 		hideFromList_ = [[data objectForKey:@"hideFromList"] boolValue];
-		map_ = [data objectForKey:@"map"];
-		name_ = [data objectForKey:@"name"];
+		map_ = [[data objectForKey:@"map"] copy];
+		name_ = [[data objectForKey:@"name"] copy];
 	}	
 	return self;
 }
@@ -36,10 +36,19 @@
 	self = [super init];
 	rooms_ = [[NSMutableDictionary alloc] init];
 	roomNames_ = [[NSMutableArray alloc] init];	
-	alerts_ = [[NSMutableArray alloc] init];	
 	return self;
 }
-
+/**
+ Standard destructor thingie
+ 
+-(void)release {
+	[background_ release];
+	[alignment_ release];
+	[map_ release];
+	[name_ release];
+	[rooms_ release]; // releases all objects as well
+	[roomNames_ release]; // releases all objects as well
+} */
 /**
  Add a new room to the zone
  */
@@ -56,17 +65,38 @@
 	return NO;
 }
 /**
- Add a new room to the zone
+ Add a new alert to the zone
  */
 -(Boolean)addAlert:(Alert*)alert {
-
-	[alerts_ addObject:alert];
-	return YES;
+	
+	Room* currentRoom = [self getCurrentRoom];
+	
+	if (currentRoom == nil)
+		return NO;
+	
+	return [currentRoom addAlert:alert];
+}
+/**
+ Add a new door to the zone
+ */
+-(Boolean)addDoor:(Door*)door {
+	
+	Room* currentRoom = [self getCurrentRoom];
+	
+	if (currentRoom == nil)
+		return NO;
+	
+	return [currentRoom addDoor:door];
 }
 /**
  get the last room
  */
--(Room*)getCurrentRoom:(NSString*)roomName {
+-(Room*)getCurrentRoom {
+	
+	if ([roomNames_ count] < 1)
+		return nil;
+	
+	NSString* roomName = [roomNames_ objectAtIndex:[roomNames_ count] - 1];
 	return [rooms_ objectForKey:roomName];
 }
 
@@ -77,6 +107,28 @@
 	}
 	return [rooms_ objectForKey:[roomNames_ objectAtIndex:index]];	
 }	
+/**
+ Adds a tab to the current room
+ */
+-(Boolean)addTab:(NSString *)tabName {
+	Room* currentRoom = [self getCurrentRoom];
+	
+	if (currentRoom == nil)
+		return NO;
+	
+	return [currentRoom addTab:tabName];	
+}
+/**
+ adds a control to the current room
+ */
+-(Boolean)addControl: (Control*) control {
+	Room* currentRoom = [self getCurrentRoom];
+	
+	if (currentRoom == nil)
+		return NO;
+	
+	return [currentRoom addControl:control];	
+}
 
 /**
  get number of roons

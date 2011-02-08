@@ -13,7 +13,6 @@
 @interface Zone : NSObject {
 	NSMutableDictionary* rooms_;
 	NSMutableArray* roomNames_;
-	NSMutableArray* alerts_;
 
 	Boolean cycle_;
 	Boolean skipForPDA_;
@@ -31,8 +30,12 @@
 
 -(Boolean)addRoom:(Room*)room;
 -(Boolean)addAlert:(Alert*)alert;
+-(Boolean)addDoor:(Door*)door;
 
--(Room*)getCurrentRoom: (NSString*)roomName;
+-(Boolean)addTab:(NSString*)tabName;
+-(Boolean)addControl: (Control*) control;
+
+-(Room*)getCurrentRoom;
 -(Room*)getRoom:(NSUInteger)index;
 -(int)count;
 

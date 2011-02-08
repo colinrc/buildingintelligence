@@ -238,6 +238,10 @@
 	
 	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
 	[elifeappdelegate networkUpdate:self];
+	
+	// may want to invalidate if we have a new connection
+	[self.tableView setNeedsDisplay];
+	[self.tableView reloadData];
 }
 /**
  clean up

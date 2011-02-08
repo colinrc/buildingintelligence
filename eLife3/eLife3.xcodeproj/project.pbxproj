@@ -166,6 +166,11 @@
 		1A2D1B6511BF2322001A9635 /* xmlParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D1B6411BF2322001A9635 /* xmlParser.m */; };
 		1A2D1C4011BF5617001A9635 /* macroList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D1C3F11BF5617001A9635 /* macroList.m */; };
 		1A2D1C6711BF5E28001A9635 /* macro.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A2D1C6611BF5E28001A9635 /* macro.m */; };
+		1A320B0912FF9D370003FE95 /* Door.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A320B0812FF9D370003FE95 /* Door.m */; };
+		1A320BA512FFB01D0003FE95 /* logList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A320BA412FFB01D0003FE95 /* logList.m */; };
+		1A320C1B1300A5810003FE95 /* LogRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A320C1A1300A5810003FE95 /* LogRecord.m */; };
+		1A320CDE1300C6050003FE95 /* logViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A320CDD1300C6050003FE95 /* logViewController.xib */; };
+		1A320CE21300C69D0003FE95 /* logViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A320CE11300C69D0003FE95 /* logViewController.m */; };
 		1A3EE0A511C74FA000EEA1D8 /* Control.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3EE0A411C74FA000EEA1D8 /* Control.m */; };
 		1A3EE0CB11C751C400EEA1D8 /* controlMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3EE0CA11C751C400EEA1D8 /* controlMap.m */; };
 		1A3EE2CD11C882AE00EEA1D8 /* statusGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3EE2CC11C882AE00EEA1D8 /* statusGroup.m */; };
@@ -367,6 +372,15 @@
 		1A2D1C3F11BF5617001A9635 /* macroList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = macroList.m; sourceTree = "<group>"; };
 		1A2D1C6511BF5E28001A9635 /* macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macro.h; sourceTree = "<group>"; };
 		1A2D1C6611BF5E28001A9635 /* macro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = macro.m; sourceTree = "<group>"; };
+		1A320B0712FF9D370003FE95 /* Door.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Door.h; sourceTree = "<group>"; };
+		1A320B0812FF9D370003FE95 /* Door.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Door.m; sourceTree = "<group>"; };
+		1A320BA312FFB01D0003FE95 /* logList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = logList.h; sourceTree = "<group>"; };
+		1A320BA412FFB01D0003FE95 /* logList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = logList.m; sourceTree = "<group>"; };
+		1A320C191300A5810003FE95 /* LogRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogRecord.h; sourceTree = "<group>"; };
+		1A320C1A1300A5810003FE95 /* LogRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogRecord.m; sourceTree = "<group>"; };
+		1A320CDD1300C6050003FE95 /* logViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = logViewController.xib; sourceTree = "<group>"; };
+		1A320CE01300C69D0003FE95 /* logViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = logViewController.h; sourceTree = "<group>"; };
+		1A320CE11300C69D0003FE95 /* logViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = logViewController.m; sourceTree = "<group>"; };
 		1A3EE0A311C74FA000EEA1D8 /* Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Control.h; sourceTree = "<group>"; };
 		1A3EE0A411C74FA000EEA1D8 /* Control.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Control.m; sourceTree = "<group>"; };
 		1A3EE0C911C751C400EEA1D8 /* controlMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = controlMap.h; sourceTree = "<group>"; };
@@ -491,6 +505,12 @@
 				1ABE0EC212FA6A5500DDAFE9 /* Room.m */,
 				1ACD749712FB98A2005C0DB0 /* Alert.h */,
 				1ACD749812FB98A2005C0DB0 /* Alert.m */,
+				1A320B0712FF9D370003FE95 /* Door.h */,
+				1A320B0812FF9D370003FE95 /* Door.m */,
+				1A320BA312FFB01D0003FE95 /* logList.h */,
+				1A320BA412FFB01D0003FE95 /* logList.m */,
+				1A320C191300A5810003FE95 /* LogRecord.h */,
+				1A320C1A1300A5810003FE95 /* LogRecord.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -510,6 +530,8 @@
 				1D3623250D0F684500981E51 /* eLife3AppDelegate.m */,
 				1A2D1A8311BE24C0001A9635 /* moreViewController.h */,
 				1A2D1A8411BE24C0001A9635 /* moreViewController.m */,
+				1A320CE01300C69D0003FE95 /* logViewController.h */,
+				1A320CE11300C69D0003FE95 /* logViewController.m */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -685,6 +707,7 @@
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				7E2E8B5C11017D5B00668D2C /* Settings.bundle */,
+				1A320CDD1300C6050003FE95 /* logViewController.xib */,
 			);
 			name = eLife3;
 			sourceTree = "<group>";
@@ -943,6 +966,7 @@
 				1A552AD211D9BB300015B4BD /* Airport.png in Resources */,
 				1A552AD411D9BB420015B4BD /* red.png in Resources */,
 				1A552AD611D9BB500015B4BD /* WWAN5.png in Resources */,
+				1A320CDE1300C6050003FE95 /* logViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -978,6 +1002,10 @@
 				1ABE0E7D12FA605F00DDAFE9 /* Zone.m in Sources */,
 				1ABE0EC312FA6A5500DDAFE9 /* Room.m in Sources */,
 				1ACD749912FB98A2005C0DB0 /* Alert.m in Sources */,
+				1A320B0912FF9D370003FE95 /* Door.m in Sources */,
+				1A320BA512FFB01D0003FE95 /* logList.m in Sources */,
+				1A320C1B1300A5810003FE95 /* LogRecord.m in Sources */,
+				1A320CE21300C69D0003FE95 /* logViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

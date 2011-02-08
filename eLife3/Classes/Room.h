@@ -8,9 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "Control.h"
+#import "Alert.h"
+#import "Door.h"
 
 @interface Room : NSObject {
 	NSMutableDictionary* tabs_;
+	NSMutableArray* tabNames_;
+	NSMutableArray* alerts_;
+	NSMutableArray* doors_;
 	
 	NSString* name_;
 	Boolean canOpen_;
@@ -22,6 +27,10 @@
 
 -(id)initWithDictionary:(NSDictionary *)data;
 
--(Boolean)addControl:(NSString*)currentTab:(Control*)control;
+-(Boolean)addTab: (NSString*)tabName;
+-(Boolean)addAlert:(Alert *)alert;
+-(Boolean)addDoor:(Door*)door;
+  
+-(Boolean)addControl: (Control*)control;
 
 @end

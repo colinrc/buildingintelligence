@@ -8,7 +8,6 @@
 
 #import "Room.h"
 
-
 @implementation Room
 
 @synthesize name_;
@@ -19,10 +18,10 @@
 	
 	if ([self init])
 	{
-		name_ = [data objectForKey:@"name"];
+		name_ = [[data objectForKey:@"name"] copy];
 		canOpen_ = [[data objectForKey:@"canOpen"] boolValue];
-		switchZone_ = [data objectForKey:@"switchZone"];
-		poly_ = [data objectForKey:@"poly"];
+		switchZone_ = [[data objectForKey:@"switchZone"] copy];
+		poly_ = [[data objectForKey:@"poly"] copy];
 	}
 	return self;
 }
@@ -33,24 +32,68 @@
 	
 	self = [super init];
 	tabs_ = [[NSMutableDictionary alloc] init];	
+	alerts_ = [[NSMutableArray alloc] init];
+	doors_ = [[NSMutableArray alloc] init];
 	return self;
+}
+/**
+ Standard destructor thingie
+ 
+-(void)release {
+	[name_ release];
+	[switchZone_ release];
+	[poly_ release];
+	[tabs_ release];   // releases all objects as well
+	[alerts_ release]; // releases all objects as well
+	[doors_ release];  // releases all objects as well
+}*/
+/**
+ Add alert
+ */
+-(Boolean)addAlert:(Alert*)alert {
+	[alerts_ addObject:alert];
+	return YES;
+}
+/**
+ Add door
+ */
+-(Boolean)addDoor:(Door*)door {
+	[doors_ addObject:door];
+	return YES;
+}
+/**
+ Add Tab to room
+ */
+-(Boolean)addTab:(NSString*) tabName {
+	// get the item from the map
+	NSMutableArray *tmpArray = [tabs_ objectForKey:tabName];
+	
+	if (tmpArray == nil)
+	{
+		[tabNames_ addObject:tabName];
+		NSMutableArray *newArray = [[NSMutableArray alloc] init];
+		[tabs_  setObject:newArray forKey:tabName];
+		[newArray release]; // collection holds reference
+	}
+
+	return YES;
 }
 /**
  Add control to room
  */
--(Boolean)addControl:(NSString*) currentTab: (Control*)control {
+-(Boolean)addControl: (Control*)control {
 	// get the item from the map
-	NSMutableArray *tmpArray = [tabs_ objectForKey:currentTab];
+	if ([tabNames_ count] < 1)
+		return NO;
 	
-	if (tmpArray == nil)
-	{
-		NSMutableArray *newArray = [[NSMutableArray alloc] init];
-		[tabs_  setObject:newArray forKey:currentTab];
-		[newArray release]; // collection holds reference
-		// now get it for the addition
-		tmpArray = [tabs_ objectForKey:currentTab];
+	NSString* tabName = [tabNames_ objectAtIndex:[tabNames_ count] -1];
+	NSMutableArray *tmpArray =  [tabs_ objectForKey:tabName];
+	
+	if (tmpArray == nil) {
+		return NO;
 	}
-	// add something to the array
+
+	// add the control to the array
 	[tmpArray addObject:control];
 	return YES;
 }

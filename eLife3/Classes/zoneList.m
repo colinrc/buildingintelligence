@@ -77,24 +77,30 @@ static zoneList * sharedInstance = nil;
 -(Boolean)addZone:(Zone* )zone {
 	
 	if ([zones_ objectForKey:zone.name_] == nil) { 
-		[zones_ setObject:zone forKey:zone.name_];
-		[zoneNames_ addObject:zone.name_];
+		[zones_ setObject:zone forKey:zone.name_ ];
+		[zoneNames_ addObject:zone.name_ ];
 		return YES;
 	}
 	// zone already exists, error...
 	NSAssert(NO, @"Unfinished code");
 	return NO;
 }
-	
 /**
- Add a room to the specified zone
+ Gets the last zone added
  */
--(Boolean)addRoom:(Room *)room {
+-(Zone*) getCurrentZone {
 	if ([zoneNames_ count] < 1)
-		return NO;
+		return nil;
 	
 	NSString* zoneName = [zoneNames_ objectAtIndex:[zoneNames_ count] -1];
-	Zone* currentZone = [zones_ objectForKey:zoneName];
+	return [zones_ objectForKey:zoneName];
+}
+
+/**
+ Add a room to the current zone
+ */
+-(Boolean)addRoom:(Room *)room {
+	Zone* currentZone = [self getCurrentZone];
 	
 	if (currentZone == nil) {
 		return NO;
@@ -103,14 +109,10 @@ static zoneList * sharedInstance = nil;
 	return [currentZone addRoom:room];		 
 }
 /**
- Add a room to the specified zone
+ Add an alert to the current zone
  */
 -(Boolean)addAlert:(Alert *) alert {
-	if ([zoneNames_ count] < 1)
-		return NO;
-	
-	NSString* zoneName = [zoneNames_ objectAtIndex:[zoneNames_ count] -1];
-	Zone* currentZone = [zones_ objectForKey:zoneName];
+	Zone* currentZone = [self getCurrentZone];
 	
 	if (currentZone == nil) {
 		return NO;
@@ -119,28 +121,41 @@ static zoneList * sharedInstance = nil;
 	return [currentZone addAlert: alert];		 
 }
 /**
- Add a control to the specified zone:room 
-*/
--(Boolean)addControl:(NSString*)roomName:(NSString*)tabName:(Control*)control {
+ Add a door to the current zone
+ */
+-(Boolean)addDoor:(Door *) door {
+	Zone* currentZone = [self getCurrentZone];
 	
-	if ([zoneNames_ count] < 1)
+	if (currentZone == nil) {
 		return NO;
+	}
 	
-	NSString* zoneName = [zoneNames_ objectAtIndex:[zoneNames_ count] -1];
-	Zone* currentZone = [zones_ objectForKey:zoneName];
+	return [currentZone addDoor: door];		 
+}
+/**
+ Add a control to the current zone
+*/
+-(Boolean)addControl:(Control*)control {
+	Zone* currentZone = [self getCurrentZone];
 
 	if (currentZone == nil) {
 		NSAssert(NO, @"Unfinished code");
 		return NO;
 	}
+	return [currentZone addControl: control];
+}
+/**
+ Add a tab to the current zone
+ */
+-(Boolean)addTab:(NSString*)tabName {
+	Zone* currentZone = [self getCurrentZone];
 	
-	Room* currentRoom = [currentZone getCurrentRoom:roomName];
-	if (currentRoom == nil){ 
+	if (currentZone == nil) {
 		NSAssert(NO, @"Unfinished code");
 		return NO;
 	}
 	
-	return [currentRoom addControl: tabName: control];
+	return [currentZone addTab:tabName];
 }
 /**
  Returns the number of zones
@@ -159,7 +174,9 @@ static zoneList * sharedInstance = nil;
 
 	return [zoneNames_ objectAtIndex:index];
 }
-
+/**
+ Returns the number of rooms in the Zone by index
+ */
 -(NSUInteger)roomsInZone:(NSUInteger)index {
 	
 	if ((index < 0) || index > [zoneNames_ count]) {
@@ -170,7 +187,9 @@ static zoneList * sharedInstance = nil;
 	return [[zones_ objectForKey:[zoneNames_ objectAtIndex:index]] count];
 	
 }
-
+/**
+ Returns a Zone for the given index
+ */
 -(Zone*)getZone:(NSUInteger)index {
 
 	if ((index < 0) || index > [zoneNames_ count]) {

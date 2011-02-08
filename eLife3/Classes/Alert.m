@@ -19,8 +19,8 @@
 	
 	if ([self init])
 	{
-		name_ = [data objectForKey:@"name"];
-		icon_ = [data objectForKey:@"icon"];
+		name_ = [[data objectForKey:@"name"] copy];
+		icon_ = [[data objectForKey:@"icon"] copy];
 		[self addKeys:[data objectForKey:@"keys"]];
 	}
 	return self;
@@ -33,6 +33,14 @@
 	self = [super init];
 	keys_ = [[NSMutableArray alloc] init];	
 	return self;
+}
+/**
+ Standard destructor thingie
+ */
+-(void) release {
+	[name_ release];
+	[icon_ release];
+	[keys_ release]; // releases all objects as well
 }
 /**
  Add a key for the alert,

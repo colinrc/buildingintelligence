@@ -16,6 +16,8 @@
 #import "Room.h"
 #import "Zone.h"
 #import "zoneList.h"
+#import "logList.h"
+#import "LogRecord.h"
 
 @implementation clientParser
 
@@ -191,13 +193,6 @@ void addZoneRoom(NSDictionary *attributeDict) {
 	[room release];
 }
 /**
- \brief adds a window for a room
- */
-void addRoomWindow(NSDictionary *attributeDict) {
-	
-}
-
-/**
  \brief adds a room alert
  */
 void addRoomAlert(NSDictionary *attributeDict) {
@@ -212,7 +207,11 @@ void addRoomAlert(NSDictionary *attributeDict) {
  \brief adds a room door notifier
  */
 void addRoomDoor(NSDictionary *attributeDict) {
+	Door *door = [[Door alloc] initWithDictionary:attributeDict];
 	
+	[[zoneList sharedInstance] addDoor:door];
+	
+	[door release];
 }
 
 /**
@@ -222,15 +221,7 @@ void handleRoomWindowTab(NSDictionary * attributeDict)
 {
 //	NSLog(@"handleRoomWindowTab %@", [attributeDict objectForKey:@"name"]);
 	current_tab_name = [attributeDict objectForKey:@"name"];
-	
-		// create new roomtab object
-		//		eliferoomtab *newroomtab = [[eliferoomtab alloc] initWithName:[attributeDict objectForKey:@"name"] andAttributes:attributeDict];
-		
-		// add roomtab to current room
-		//		[currentroom.tablist addObject:newroomtab];
-		//		currentroomtab = [currentroom.tablist objectAtIndex:[currentroom.tablist indexOfObject:newroomtab]];
-		
-		//		[newroomtab release];
+	[[zoneList sharedInstance] addTab:current_tab_name];
 }
 /**
  \brief	Adds a room entry from a control element
@@ -242,7 +233,7 @@ void addRoomControl(NSDictionary *attributeDict) {
 	if ([[controlMap sharedInstance] addControl:control] == YES)
 	{
 		// the control is valid lets add it to the room 
-		[[zoneList sharedInstance] addControl: current_room_name: current_tab_name: control];
+		[[zoneList sharedInstance] addControl: control];
 	}
 	else
 	{
@@ -301,6 +292,28 @@ void addControlRow(NSDictionary *attributeDict) {
 	// add a new row object
 
 }
+
+/**
+ \brief	Handles the logging tab entries
+ */
+void handleLoggingTab(NSDictionary * attributeDict)
+{
+	//	NSLog(@"handleRoomWindowTab %@", [attributeDict objectForKey:@"name"]);
+	current_tab_name = [attributeDict objectForKey:@"name"];
+	
+	LogRecord* record = [[LogRecord alloc] initWithDictionary:attributeDict];
+	[[logList sharedInstance] addTab:record];
+	[record release];
+}
+/**
+ Adds a control to the logging tab
+ */
+void addLogControl(NSDictionary* attributeDict) {
+
+	NSString* controlKey = [attributeDict objectForKey:@"key"];
+	[[logList sharedInstance] addControl:controlKey];
+}
+
 /**
  \brief Parser start tag callback funciton.
  Handles the found tag event from the parser and then does a 
@@ -325,25 +338,20 @@ void addControlRow(NSDictionary *attributeDict) {
 		current_state = parsing_room;
 		addZoneRoom(attributeDict);
 		
-	} else if ([elementName isEqualToString:@"tab"]) {
+	} else if (([elementName isEqualToString:@"tab"]) || 
+			   ([elementName isEqualToString:@"group"]))   {
 		// status bar or room
-		if (current_state == parsing_status)
-		{
+		if (current_state == parsing_status) {
+			// Handle status bar tab entry
 			handleStatus(attributeDict);
 		}
 		else if (current_state == parsing_room) {
-			// handle roomtab
+			// handle room tab entry
 			handleRoomWindowTab(attributeDict);
 		}
-	} else if ([elementName isEqualToString:@"group"]) {
-		if (current_state == parsing_status)
-		{
-//			currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",[attributeDict objectForKey:@"name"],@"name",nil];
-			handleStatus(attributeDict);
-		}
-		else if (current_state == parsing_logging)
-		{
-			NSLog(@"TODO: add the logging handling code");
+		else if (current_state == parsing_logging) {
+			// handle logging tab entry
+			handleLoggingTab(attributeDict);
 		}
 	} else if ([elementName isEqualToString:@"control"]) {
 
@@ -358,6 +366,10 @@ void addControlRow(NSDictionary *attributeDict) {
 		else if (current_state == parsing_room){
 			// handle room controls
 			addRoomControl(attributeDict);
+		}
+		else if (current_state == parsing_logging) {
+			// handle logging control
+			addLogControl(attributeDict);
 		}
 	} else if ([elementName isEqualToString:@"item"]) {
 //		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
