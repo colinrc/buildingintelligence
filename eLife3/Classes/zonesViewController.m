@@ -118,7 +118,7 @@
 			// add the room name
 			UILabel *roomLabel = (UILabel*) [cell textLabel];
 			roomLabel.text = room.name_;
-			// TODO think about icons for alerts
+			// TODO: think about icons for alerts
 			// check the room for active alerts and add small icons?
 		}
 	}

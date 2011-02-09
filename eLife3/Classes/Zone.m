@@ -40,15 +40,16 @@
 }
 /**
  Standard destructor thingie
- 
--(void)release {
+ */
+-(void)dealloc {
 	[background_ release];
 	[alignment_ release];
 	[map_ release];
 	[name_ release];
 	[rooms_ release]; // releases all objects as well
 	[roomNames_ release]; // releases all objects as well
-} */
+	[super dealloc];
+}
 /**
  Add a new room to the zone
  */

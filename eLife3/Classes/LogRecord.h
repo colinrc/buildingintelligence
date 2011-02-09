@@ -10,14 +10,20 @@
 
 
 @interface LogRecord : NSObject {
-	NSString* name_;
-	NSString* icon_;
-	NSMutableArray* messages_;
-	NSMutableArray* format_;
-	Boolean tally_;
-	NSString* timeFormat_;
+	NSString* name_;			// log group name
+	NSString* icon_;			// log group icon
+	NSString* events_;	// the control events to log
+	NSMutableArray* format_;	// the log record format
+	Boolean tally_;				// tally or log
+	NSString* timeFormat_;		// the time format
+	NSMutableArray* logEntries_;// the log messages
 }
 
 @property (nonatomic, copy) NSString* name_;
+
+// adds a new log entry
+-(void)addEntry: (NSNotification *)notification;
+-(NSString*)getLogEntry:(NSUInteger)index;
+-(NSUInteger)count;
 
 @end

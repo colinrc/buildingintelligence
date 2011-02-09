@@ -38,15 +38,16 @@
 }
 /**
  Standard destructor thingie
- 
--(void)release {
+ */
+-(void)dealloc {
 	[name_ release];
 	[switchZone_ release];
 	[poly_ release];
 	[tabs_ release];   // releases all objects as well
 	[alerts_ release]; // releases all objects as well
 	[doors_ release];  // releases all objects as well
-}*/
+	[super dealloc];
+}
 /**
  Add alert
  */

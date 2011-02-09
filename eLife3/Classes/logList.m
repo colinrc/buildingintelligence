@@ -66,28 +66,39 @@ static logList *sharedInstance = nil;
 /**
  Gets the tab name for the index value or empty string
  */
--(NSString*)getTabForIndex:(NSUInteger)index {
+-(NSString*)getTabNameForIndex:(NSUInteger)index {
 	if (index < [tabs_ count])
 		return [[tabs_ objectAtIndex:index] name_];
 	return @"";
 }
 /**
+ Gets the tab for the index value or empty string
+ */
+-(LogRecord*)getTabForIndex:(NSUInteger)index {
+	if (index < [tabs_ count])
+		return [tabs_ objectAtIndex:index];
+	
+	return nil;
+}
+/**
  Gets the number of log entries for the tab
  */
 -(NSUInteger)getEntriesForIndex:(NSUInteger)index {
+	
+	if (index < [tabs_ count])
+		return [[tabs_ objectAtIndex:index] count];
+
 	return 0;
 }
 /**
  Gets the current (last) tab name
  */
--(NSString*)getCurrentTab {
+-(LogRecord*)getCurrentTab {
 	
 	if ([tabs_ count] < 1)
 		return nil;
 	
-	LogRecord* record = [tabs_ objectAtIndex:[tabs_ count] - 1];
-	
-	return record.name_;
+	return [tabs_ objectAtIndex:[tabs_ count] - 1];
 }
 /**
  Gets the tab name for control name
@@ -109,15 +120,17 @@ static logList *sharedInstance = nil;
  */
 -(Boolean)addControl:(NSString*) controlKey {
 
-	NSString* tabName = [self getCurrentTab];
-	if (tabName == nil)
+	LogRecord* tab = [self getCurrentTab];
+	if (tab == nil || [tab name_] == nil)
 		return NO;
 
 	// add control to tab map
 	if ([controls_ objectForKey:controlKey] != nil)
 		return NO; // can only have one log type per control
 
-	[controls_ setObject:tabName forKey:controlKey];
+	[controls_ setObject:[tab name_] forKey:controlKey];
+	
+	[[NSNotificationCenter defaultCenter] addObserver:tab selector:@selector(addEntry:) name:controlKey object:nil];
 	
 	return YES;
 }

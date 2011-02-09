@@ -20,6 +20,8 @@
 @synthesize extra3_;
 @synthesize extra4_;
 @synthesize extra5_;
+@synthesize tally_;
+@synthesize room_;
 
 -(id)initWithDictionary:(NSDictionary *)data {
 
@@ -34,7 +36,8 @@
 	self.extra3_ = @"";
 	self.extra4_ = @"";
 	self.extra5_ = @"";
-	
+	self.tally_ = 0;
+	self.room_ = @"";
 	return self;
 }
 
@@ -48,6 +51,7 @@
 	[extra3_ release];
 	[extra4_ release];
 	[extra5_ release];
+	[room_ release];
 }
 
 @end

@@ -99,10 +99,14 @@ static controlMap * sharedInstance = nil;
 		}
 	}
 	
-	
 	if ((control.name_ != nil) && (tmp.name_ == nil)){
 		// name_ accessor is type copy
 		tmp.name_ = control.name_ ;
+	}	
+
+	if ((control.room_ != nil) && (tmp.room_ == nil)){
+		// name_ accessor is type copy
+		tmp.room_ = control.room_;
 	}	
 	
 	return YES;

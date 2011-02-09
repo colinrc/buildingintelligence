@@ -19,6 +19,8 @@
 	NSString *extra3_;
 	NSString *extra4_;
 	NSString *extra5_;
+	NSString *room_;
+	NSUInteger tally_;
 }
 
 @property (nonatomic, copy) NSString *name_;
@@ -30,6 +32,8 @@
 @property (nonatomic, copy) NSString *extra3_;
 @property (nonatomic, copy) NSString *extra4_;
 @property (nonatomic, copy) NSString *extra5_;
+@property (nonatomic, copy) NSString *room_;
+@property (nonatomic) NSUInteger tally_;
 
 -(id)initWithDictionary:(NSDictionary *)data;
 

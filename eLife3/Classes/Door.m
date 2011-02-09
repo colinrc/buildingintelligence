@@ -35,10 +35,11 @@
 /**
  Standard destructor thingie
  */
--(void) release {
+-(void) dealloc {
 	[name_ release];
 	[key_ release];
 	[pos_ release];
+	[super dealloc];
 }
 
 @end

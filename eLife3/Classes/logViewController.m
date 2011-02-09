@@ -36,7 +36,8 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	// network change notification
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkUpdate:) name:@"networkChange:" object:nil];
-
+	// log change notification
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(logUpdate:) name:@"logUpdate" object:nil];
 }
 
 
@@ -91,7 +92,7 @@
  */
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 //	return @"test";
-	return [[logList sharedInstance] getTabForIndex:section];
+	return [[logList sharedInstance] getTabNameForIndex:section];
 }
 /**
  Get the number of log entries for this log type
@@ -113,7 +114,15 @@
     }
     
     // Configure the cell...
-    
+    LogRecord* group =  [[logList sharedInstance] getTabForIndex:indexPath.section];
+	if (group != nil) {
+		// set the log message
+		UILabel *myLabel = (UILabel *)[cell textLabel];
+		myLabel.text = [group getLogEntry:indexPath.row];
+		myLabel.numberOfLines = 5;
+		myLabel.font = [UIFont systemFontOfSize:14.0];
+
+	}
     return cell;
 }
 
@@ -187,19 +196,20 @@
 	[super viewDidUnload];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
-/**
- Register for notification for this control key
- */
-- (void)registerWithNotification:(NSString *)thekey {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusUpdate:) name:thekey object:nil];
-}
 /**
  Got update for control, reshow the table
  */
 - (void)logUpdate:(NSNotification *)notification {
 	[self.tableView setNeedsDisplay];
 	[self.tableView reloadData];
+}
+/**
+ Callback for the network state icon
+ */
+- (void)networkUpdate:(NSNotification *)notification {
+	
+	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
+	[elifeappdelegate networkUpdate:self];
 }
 
 - (void)dealloc {

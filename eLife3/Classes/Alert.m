@@ -37,10 +37,11 @@
 /**
  Standard destructor thingie
  */
--(void) release {
+-(void) dealloc {
 	[name_ release];
 	[icon_ release];
 	[keys_ release]; // releases all objects as well
+	[super dealloc];
 }
 /**
  Add a key for the alert,

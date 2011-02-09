@@ -93,7 +93,7 @@
 	//	NSLog(@"Recieved data:\n%@",aStr);
 	
 	if (tag == 1) {
-		// TODO when we get an elife server strip the data
+		// TODO: when we get an elife server strip the data
 		NSRange elife = [aStr rangeOfString:@"eLife"];
 		if ( elife.location != NSNotFound)
 		{

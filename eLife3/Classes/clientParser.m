@@ -230,6 +230,7 @@ void addRoomControl(NSDictionary *attributeDict) {
 //	NSLog(@"addRoomControl %@",[attributeDict objectForKey:@"name"]);
 	// create new control object
 	Control *control = [[Control alloc] initWithDictionary:attributeDict];
+	control.room_ = current_room_name;
 	if ([[controlMap sharedInstance] addControl:control] == YES)
 	{
 		// the control is valid lets add it to the room 
@@ -265,34 +266,12 @@ void addStatusItem(NSDictionary *attributeDict) {
 	[control release];
 }
 /**
- \brief	Adds a control entry from a controltype element
- */
-void addControl(NSDictionary *attributeDict) {
-//	NSLog(@"addControl ");
-	// Create a new controltype object
-	//	elifecontroltypes *newcontroltype = [[elifecontroltypes alloc] initWithType:[attributeDict objectForKey:@"type"]];
-	
-	// add newly created control type to the appdelegate elife control type list
-	//	[elifeappdelegate.elifectrltypes addObject:newcontroltype];
-	//	currentctrltype = [elifeappdelegate.elifectrltypes  objectAtIndex:[elifeappdelegate.elifectrltypes indexOfObject:newcontroltype]];
-	//[newzone release];
-}
-/**
  \brief	Adds a control item from a control element
  */
 void addArbitraryItem(NSDictionary *attributeDict) {
 //	NSLog(@"addControlItem ");
 	// add a new controltype item
 }
-/**
- \brief	Adds a control row from a control element
- */
-void addControlRow(NSDictionary *attributeDict) {
-//	NSLog(@"addControlRow ");
-	// add a new row object
-
-}
-
 /**
  \brief	Handles the logging tab entries
  */
@@ -310,8 +289,19 @@ void handleLoggingTab(NSDictionary * attributeDict)
  */
 void addLogControl(NSDictionary* attributeDict) {
 
-	NSString* controlKey = [attributeDict objectForKey:@"key"];
-	[[logList sharedInstance] addControl:controlKey];
+	Control *control = [[Control alloc] initWithDictionary:attributeDict];
+	if ([[controlMap sharedInstance] addControl:control] == NO)
+	{
+		[[logList sharedInstance] addControl:control.key_];
+	}
+}
+/**
+ \brief	Adds a control entry from a controltype element,
+ these are on/off slider and the like
+ */
+void addControlType(NSDictionary *attributeDict) {
+	//	NSLog(@"addControlType ");
+	
 }
 
 /**
@@ -361,7 +351,7 @@ void addLogControl(NSDictionary* attributeDict) {
 		}
 		else if (current_state == parsing_ctrltypes){
 			// handle control types
-			addControl(attributeDict);
+			addControlType(attributeDict);
 		}
 		else if (current_state == parsing_room){
 			// handle room controls

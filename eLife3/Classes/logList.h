@@ -17,8 +17,9 @@
 
 +(logList*)sharedInstance;
 
--(NSString*)getTabForIndex:(NSUInteger)index;
+-(NSString*)getTabNameForIndex:(NSUInteger)index;
 -(NSUInteger)getEntriesForIndex:(NSUInteger)index;
+-(LogRecord*)getTabForIndex:(NSUInteger)index;
 
 -(Boolean)addTab:(LogRecord*)tab;
 -(Boolean)addControl:(NSString*)controlKey;
