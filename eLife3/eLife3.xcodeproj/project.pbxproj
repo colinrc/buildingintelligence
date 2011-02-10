@@ -10,6 +10,7 @@
 		1A03F4BF11C1CFDB008FADBA /* clientParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A03F4BE11C1CFDB008FADBA /* clientParser.m */; };
 		1A03F55611C1F8EA008FADBA /* settingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A03F55511C1F8EA008FADBA /* settingsViewController.xib */; };
 		1A0E08EF12F7925500C41622 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0E08EE12F7925500C41622 /* AsyncUdpSocket.m */; };
+		1A2147BB130380C4004FBE11 /* sliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A2147BA130380C4004FBE11 /* sliderCell.xib */; };
 		1A2D19D211BE200F001A9635 /* aircon-off.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D193F11BE200F001A9635 /* aircon-off.png */; };
 		1A2D19D311BE200F001A9635 /* aircon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D194011BE200F001A9635 /* aircon.png */; };
 		1A2D19D411BE200F001A9635 /* alarm-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D194111BE200F001A9635 /* alarm-clock.png */; };
@@ -169,7 +170,6 @@
 		1A320B0912FF9D370003FE95 /* Door.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A320B0812FF9D370003FE95 /* Door.m */; };
 		1A320BA512FFB01D0003FE95 /* logList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A320BA412FFB01D0003FE95 /* logList.m */; };
 		1A320C1B1300A5810003FE95 /* LogRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A320C1A1300A5810003FE95 /* LogRecord.m */; };
-		1A320CDE1300C6050003FE95 /* logViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A320CDD1300C6050003FE95 /* logViewController.xib */; };
 		1A320CE21300C69D0003FE95 /* logViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A320CE11300C69D0003FE95 /* logViewController.m */; };
 		1A3EE0A511C74FA000EEA1D8 /* Control.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3EE0A411C74FA000EEA1D8 /* Control.m */; };
 		1A3EE0CB11C751C400EEA1D8 /* controlMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A3EE0CA11C751C400EEA1D8 /* controlMap.m */; };
@@ -178,6 +178,9 @@
 		1A552AD211D9BB300015B4BD /* Airport.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A552AD111D9BB300015B4BD /* Airport.png */; };
 		1A552AD411D9BB420015B4BD /* red.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A552AD311D9BB420015B4BD /* red.png */; };
 		1A552AD611D9BB500015B4BD /* WWAN5.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A552AD511D9BB500015B4BD /* WWAN5.png */; };
+		1A5ABB261302443400A76B77 /* logViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A5ABB251302443400A76B77 /* logViewController.xib */; };
+		1A5ABB32130244C500A76B77 /* roomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5ABB30130244C500A76B77 /* roomViewController.m */; };
+		1A5ABB33130244C500A76B77 /* roomViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A5ABB31130244C500A76B77 /* roomViewController.xib */; };
 		1ABE0E7812FA5F0A00DDAFE9 /* zoneList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0E7712FA5F0A00DDAFE9 /* zoneList.m */; };
 		1ABE0E7D12FA605F00DDAFE9 /* Zone.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0E7C12FA605F00DDAFE9 /* Zone.m */; };
 		1ABE0EC312FA6A5500DDAFE9 /* Room.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0EC212FA6A5500DDAFE9 /* Room.m */; };
@@ -212,6 +215,7 @@
 		1A03F55511C1F8EA008FADBA /* settingsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = settingsViewController.xib; sourceTree = "<group>"; };
 		1A0E08ED12F7925500C41622 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncUdpSocket.h; path = Classes/AsyncUdpSocket.h; sourceTree = "<group>"; };
 		1A0E08EE12F7925500C41622 /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncUdpSocket.m; path = Classes/AsyncUdpSocket.m; sourceTree = "<group>"; };
+		1A2147BA130380C4004FBE11 /* sliderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = sliderCell.xib; sourceTree = "<group>"; };
 		1A2D193F11BE200F001A9635 /* aircon-off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "aircon-off.png"; path = "icons/aircon-off.png"; sourceTree = "<group>"; };
 		1A2D194011BE200F001A9635 /* aircon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = aircon.png; path = icons/aircon.png; sourceTree = "<group>"; };
 		1A2D194111BE200F001A9635 /* alarm-clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "alarm-clock.png"; path = "icons/alarm-clock.png"; sourceTree = "<group>"; };
@@ -378,7 +382,6 @@
 		1A320BA412FFB01D0003FE95 /* logList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = logList.m; sourceTree = "<group>"; };
 		1A320C191300A5810003FE95 /* LogRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogRecord.h; sourceTree = "<group>"; };
 		1A320C1A1300A5810003FE95 /* LogRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogRecord.m; sourceTree = "<group>"; };
-		1A320CDD1300C6050003FE95 /* logViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = logViewController.xib; sourceTree = "<group>"; };
 		1A320CE01300C69D0003FE95 /* logViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = logViewController.h; sourceTree = "<group>"; };
 		1A320CE11300C69D0003FE95 /* logViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = logViewController.m; sourceTree = "<group>"; };
 		1A3EE0A311C74FA000EEA1D8 /* Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Control.h; sourceTree = "<group>"; };
@@ -392,6 +395,10 @@
 		1A552AD111D9BB300015B4BD /* Airport.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Airport.png; path = icons/Airport.png; sourceTree = "<group>"; };
 		1A552AD311D9BB420015B4BD /* red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = red.png; path = icons/red.png; sourceTree = "<group>"; };
 		1A552AD511D9BB500015B4BD /* WWAN5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = WWAN5.png; path = icons/WWAN5.png; sourceTree = "<group>"; };
+		1A5ABB251302443400A76B77 /* logViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = logViewController.xib; sourceTree = "<group>"; };
+		1A5ABB2F130244C500A76B77 /* roomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = roomViewController.h; sourceTree = "<group>"; };
+		1A5ABB30130244C500A76B77 /* roomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = roomViewController.m; sourceTree = "<group>"; };
+		1A5ABB31130244C500A76B77 /* roomViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = roomViewController.xib; path = Classes/roomViewController.xib; sourceTree = "<group>"; };
 		1ABE0E7612FA5F0A00DDAFE9 /* zoneList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zoneList.h; sourceTree = "<group>"; };
 		1ABE0E7712FA5F0A00DDAFE9 /* zoneList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = zoneList.m; sourceTree = "<group>"; };
 		1ABE0E7B12FA605F00DDAFE9 /* Zone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zone.h; sourceTree = "<group>"; };
@@ -532,6 +539,8 @@
 				1A2D1A8411BE24C0001A9635 /* moreViewController.m */,
 				1A320CE01300C69D0003FE95 /* logViewController.h */,
 				1A320CE11300C69D0003FE95 /* logViewController.m */,
+				1A5ABB2F130244C500A76B77 /* roomViewController.h */,
+				1A5ABB30130244C500A76B77 /* roomViewController.m */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -707,7 +716,6 @@
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				7E2E8B5C11017D5B00668D2C /* Settings.bundle */,
-				1A320CDD1300C6050003FE95 /* logViewController.xib */,
 			);
 			name = eLife3;
 			sourceTree = "<group>";
@@ -730,8 +738,11 @@
 			children = (
 				1A2D193E11BE1F7E001A9635 /* icons */,
 				28AD73870D9D96C1002E5188 /* MainWindow.xib */,
+				1A2147BA130380C4004FBE11 /* sliderCell.xib */,
 				8D1107310486CEB800E47090 /* eLife3-Info.plist */,
 				7E2E8B2A10FE69B200668D2C /* macrosViewController.xib */,
+				1A5ABB31130244C500A76B77 /* roomViewController.xib */,
+				1A5ABB251302443400A76B77 /* logViewController.xib */,
 				7E2E8B2F10FE6A0C00668D2C /* statusViewController.xib */,
 				7E2E8B3410FE6A2200668D2C /* zonesViewController.xib */,
 				1A2D1A7811BE2390001A9635 /* moreViewController.xib */,
@@ -966,7 +977,9 @@
 				1A552AD211D9BB300015B4BD /* Airport.png in Resources */,
 				1A552AD411D9BB420015B4BD /* red.png in Resources */,
 				1A552AD611D9BB500015B4BD /* WWAN5.png in Resources */,
-				1A320CDE1300C6050003FE95 /* logViewController.xib in Resources */,
+				1A5ABB261302443400A76B77 /* logViewController.xib in Resources */,
+				1A5ABB33130244C500A76B77 /* roomViewController.xib in Resources */,
+				1A2147BB130380C4004FBE11 /* sliderCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1006,6 +1019,7 @@
 				1A320BA512FFB01D0003FE95 /* logList.m in Sources */,
 				1A320C1B1300A5810003FE95 /* LogRecord.m in Sources */,
 				1A320CE21300C69D0003FE95 /* logViewController.m in Sources */,
+				1A5ABB32130244C500A76B77 /* roomViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

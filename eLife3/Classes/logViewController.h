@@ -13,7 +13,6 @@
 
 }
 
-- (void)registerWithNotification:(NSString *)thekey;
 - (void)logUpdate:(NSNotification *)notification;
 
 @end

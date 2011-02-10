@@ -70,20 +70,20 @@ static controlMap * sharedInstance = nil;
  Adds a control to the control map, returns false if it can't
  */
 -(Boolean)addControl:(Control *)control {
-	if (control.key_ == nil)
-	{
+	if (control.key_ == nil){
 		// wont be seeing updates for this object
 		return NO;
 	}
 	
 	Control * tmp = [controls_ objectForKey:control.key_];
-	if (tmp == nil)
+	if (tmp == nil) // new control, set and leave
 	{
 		// setObject retains the control object 
 		[controls_ setObject:control forKey:control.key_];
 		return YES;
 	}
 	
+	// already have a control set fields equal
 	if (control.type_ != nil)
 	{
 		if ( tmp.type_ == nil )
@@ -99,9 +99,15 @@ static controlMap * sharedInstance = nil;
 		}
 	}
 	
-	if ((control.name_ != nil) && (tmp.name_ == nil)){
-		// name_ accessor is type copy
-		tmp.name_ = control.name_ ;
+	if (control.name_ != nil) {
+		
+		if ((tmp.name_ == nil) || ([tmp.name_ length] == 0)) {
+			// name_ accessor is type copy
+			tmp.name_ = control.name_ ;
+		} else if (![control.name_ isEqualToString:tmp.name_]) {
+			// something odd many named string
+			NSLog(@"Control %@ has 2 different names [%@ != %@]", control.key_, control.name_, tmp.name_);
+		}
 	}	
 
 	if ((control.room_ != nil) && (tmp.room_ == nil)){

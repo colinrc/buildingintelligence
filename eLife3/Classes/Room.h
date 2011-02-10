@@ -33,4 +33,10 @@
   
 -(Boolean)addControl: (Control*)control;
 
+-(NSUInteger)tabCount;
+-(NSString*)tabNameForIndex:(NSUInteger)index;
+-(NSMutableArray*)tabForIndex:(NSUInteger)index;
+-(NSUInteger)itemCountForTabIndex:(NSUInteger)index;
+-(Control*)itemForIndex:(NSUInteger)tabIndex:(NSUInteger)itemIndex;
+
 @end

@@ -34,12 +34,15 @@
 	tabs_ = [[NSMutableDictionary alloc] init];	
 	alerts_ = [[NSMutableArray alloc] init];
 	doors_ = [[NSMutableArray alloc] init];
+	tabNames_ = [[NSMutableArray alloc] init];
 	return self;
 }
 /**
  Standard destructor thingie
  */
 -(void)dealloc {
+	NSLog(@"************** dealloc room");
+	
 	[name_ release];
 	[switchZone_ release];
 	[poly_ release];
@@ -80,15 +83,21 @@
 	return YES;
 }
 /**
+ Gets the contents of the current tab
+ */
+-(NSMutableArray*)currentTab {
+	// get the item from the map
+	if ([tabNames_ count] < 1)
+		return nil;
+	
+	return [tabs_ objectForKey:[self tabNameForIndex:[tabNames_ count] - 1]];	
+}
+/**
  Add control to room
  */
 -(Boolean)addControl: (Control*)control {
-	// get the item from the map
-	if ([tabNames_ count] < 1)
-		return NO;
 	
-	NSString* tabName = [tabNames_ objectAtIndex:[tabNames_ count] -1];
-	NSMutableArray *tmpArray =  [tabs_ objectForKey:tabName];
+	NSMutableArray* tmpArray = [self currentTab];
 	
 	if (tmpArray == nil) {
 		return NO;
@@ -97,6 +106,54 @@
 	// add the control to the array
 	[tmpArray addObject:control];
 	return YES;
+}
+/**
+ Returns the number of tabs in this room
+ */
+-(NSUInteger)tabCount {
+	return [tabNames_ count];
+}
+/**
+ Returns the tab name for the given index, empty string if out of bounds
+ */
+-(NSString*)tabNameForIndex:(NSUInteger)index {
+	if (index >= [tabNames_ count])
+		return @"";
+	
+	return [tabNames_ objectAtIndex:index];
+}
+/**
+ Gets the array of controls for the tab
+ */
+-(NSMutableArray*)tabForIndex:(NSUInteger)index {
+	
+	return [tabs_ objectForKey:[self tabNameForIndex:index]];
+}
+/**
+ Returns the number of controls in this tab
+ */
+-(NSUInteger)itemCountForTabIndex:(NSUInteger) index {
+	
+	NSMutableArray* tmpArray = [self tabForIndex:index];
+	if (tmpArray == nil)
+		return 0;
+	
+	return [tmpArray count];
+}
+
+/**
+ Returns the control for the tab and item index
+ */
+-(Control*)itemForIndex:(NSUInteger) tabIndex:(NSUInteger) itemIndex {
+	
+	NSMutableArray* tmpArray = [self tabForIndex:tabIndex];
+	if (tmpArray == nil)
+		return nil;
+	
+	if (itemIndex >= [tmpArray count])
+		return nil;
+
+	return [tmpArray objectAtIndex:itemIndex];
 }
 
 @end

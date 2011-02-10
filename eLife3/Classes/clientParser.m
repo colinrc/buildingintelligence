@@ -50,6 +50,8 @@ NSString * current_tab_name;
 }
 
 // TODO: refactor for edge cases
+// TODO: clear globals
+
 -(void)loadConfig {
 	static BOOL firstAlert = TRUE;
 	self.parserSuccess = NO;
@@ -234,7 +236,7 @@ void addRoomControl(NSDictionary *attributeDict) {
 	if ([[controlMap sharedInstance] addControl:control] == YES)
 	{
 		// the control is valid lets add it to the room 
-		[[zoneList sharedInstance] addControl: control];
+		[[zoneList sharedInstance] addControl: [[controlMap sharedInstance] findControl:control.key_]];
 	}
 	else
 	{
@@ -258,11 +260,15 @@ void addStatusItem(NSDictionary *attributeDict) {
 //	NSLog(@"addStatusItem %@",[attributeDict objectForKey:@"key"]);
 	// create new control object
 	Control *control = [[Control alloc] initWithDictionary:attributeDict];
-	if ([[controlMap sharedInstance] addControl:control] == NO)
+	if ([[controlMap sharedInstance] addControl:control] == YES)
 	{
+		
+		[[statusGroupMap sharedInstance] addStatusItem:[[controlMap sharedInstance] findControl:control.key_]];
+	}
+	else	{
 		NSLog(@"Status item, control problem adding %@", [attributeDict objectForKey:@"key"]);
 	}
-	[[statusGroupMap sharedInstance] addStatusItem:control];
+
 	[control release];
 }
 /**
@@ -290,10 +296,14 @@ void handleLoggingTab(NSDictionary * attributeDict)
 void addLogControl(NSDictionary* attributeDict) {
 
 	Control *control = [[Control alloc] initWithDictionary:attributeDict];
-	if ([[controlMap sharedInstance] addControl:control] == NO)
+	if ([[controlMap sharedInstance] addControl:control] == YES)
 	{
+		// only using control name as a key in a map,
+		// map copies key so we don't have to worry about
+		// lifetime
 		[[logList sharedInstance] addControl:control.key_];
 	}
+	[control release];
 }
 /**
  \brief	Adds a control entry from a controltype element,

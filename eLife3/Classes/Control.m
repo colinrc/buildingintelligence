@@ -29,6 +29,10 @@
 	
 	self.name_ = [data objectForKey:@"name"];
 	self.key_ = [data objectForKey:@"key"];
+	if ([key_ isEqualToString:@"KEYPAD"])
+	{
+		NSLog(@"name=%@",name_);
+	}
 	self.type_ = [data objectForKey:@"type"];
 	self.command_ = @"";
 	self.extra_ = @"";
@@ -41,7 +45,7 @@
 	return self;
 }
 
--(void)release {
+-(void)dealloc {
 	[name_ release];
 	[key_ release];
 	[type_ release];
@@ -52,6 +56,7 @@
 	[extra4_ release];
 	[extra5_ release];
 	[room_ release];
+	[super dealloc];
 }
 
 @end
