@@ -15,8 +15,6 @@
 	NSMutableDictionary* controls_;
 }
 
-+(logList*)sharedInstance;
-
 -(NSString*)getTabNameForIndex:(NSUInteger)index;
 -(NSUInteger)getEntriesForIndex:(NSUInteger)index;
 -(LogRecord*)getTabForIndex:(NSUInteger)index;

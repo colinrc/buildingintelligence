@@ -104,7 +104,6 @@
 	
 	Boolean isSlider = NO;
 	Boolean isOnOff = NO;
-	Boolean isPlain = NO;
 	
     // Configure the cell...
 	Control* tmpControl = [room_ itemForIndex:indexPath.section :indexPath.row];
@@ -120,7 +119,6 @@
 		}
 	}
 	// if we aren't claimed were a plain control
-	isPlain = !isOnOff && !isSlider;
 	
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
@@ -163,6 +161,8 @@
 	} else {
 		UILabel *label = (UILabel*) [cell textLabel];
 		label.text = tmpControl.name_;
+		// we are going to want to make a special window
+		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	}
 	
 	
@@ -264,6 +264,17 @@
 	 [self.navigationController pushViewController:detailViewController animated:YES];
 	 [detailViewController release];
 	 */
+	Control* tmpControl = [room_ itemForIndex:indexPath.section :indexPath.row];
+    if (tmpControl == nil)
+		return; // cant get a control bail
+	if ([tmpControl.type_ isEqualToString:@"onOff"])
+			return; // already handle this
+	if ([tmpControl.type_ isEqualToString:@"slider"])
+			return; // already handle this
+	
+	// if we are here we need to look at going to a new page
+	// and building some sort of crazy control as per the XML
+	
 }
 
 

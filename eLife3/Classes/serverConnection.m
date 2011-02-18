@@ -98,6 +98,7 @@
 		if ( elife.location != NSNotFound)
 		{
 			[self completeSearch:aStr];
+			[aStr release];
 			return YES;
 		}
 	}
@@ -107,10 +108,11 @@
 		if (elife.location != NSNotFound)
 		{
 			[self completeSearch:aStr];
+			[aStr release];
 			return YES;
 		}
 	}
-	
+	[aStr release];
 	// don't have our response, keep trying
 	return NO;
 }

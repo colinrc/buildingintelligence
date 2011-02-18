@@ -8,7 +8,7 @@
 
 #import "logViewController.h"
 #import "eLife3AppDelegate.h"
-#import "logList.h"
+#import "globalConfig.h"
 
 @implementation logViewController
 
@@ -85,21 +85,21 @@
  */
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-	return [[logList sharedInstance] count];
+	return [[globalConfig sharedInstance].logging_ count];
 }
 /**
  Get the log type name
  */
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 //	return @"test";
-	return [[logList sharedInstance] getTabNameForIndex:section];
+	return [[globalConfig sharedInstance].logging_ getTabNameForIndex:section];
 }
 /**
  Get the number of log entries for this log type
  */
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-	return [[logList sharedInstance] getEntriesForIndex:section];
+	return [[globalConfig sharedInstance].logging_ getEntriesForIndex:section];
 }
 
 
@@ -114,7 +114,7 @@
     }
     
     // Configure the cell...
-    LogRecord* group =  [[logList sharedInstance] getTabForIndex:indexPath.section];
+    LogRecord* group =  [[globalConfig sharedInstance].logging_ getTabForIndex:indexPath.section];
 	if (group != nil) {
 		// set the log message
 		UILabel *myLabel = (UILabel *)[cell textLabel];

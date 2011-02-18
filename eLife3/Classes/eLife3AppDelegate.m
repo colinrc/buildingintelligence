@@ -18,6 +18,15 @@
 @synthesize elifeSvrConn;
 @synthesize server_not_setup_;
 
+-(id) init {
+	self = [super init];
+	
+	img_red_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]];
+	img_wwan_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"WWAN5.png"]];
+	img_airport_ = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Airport.png"]];
+	return self;
+}
+
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 
 	server_not_setup_ = NO;
@@ -62,29 +71,34 @@
 	// get the state
 	switch (elifeSvrConn.status_) {
 		case NotReachable:
-			rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]]];
+			rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:img_red_];
 			table.navigationItem.rightBarButtonItem = rightBarButtonItem;
+			[rightBarButtonItem release];
 			NSLog(@"not reachable");
 			break;
 		case ReachableDirect:
 			if (elifeSvrConn.serverUp_) {
 				NSLog(@"reachable direct");
-				rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Airport.png"]]];
+				rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:img_airport_];
 				table.navigationItem.rightBarButtonItem = rightBarButtonItem;
+				[rightBarButtonItem release];
 			} else {
-				rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]]];
+				rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:img_red_];
 				table.navigationItem.rightBarButtonItem = rightBarButtonItem;
+				[rightBarButtonItem release];
 				NSLog(@"server down");
 			}
 			break;
 		case ReachableViaRouting:
 			if (elifeSvrConn.serverUp_) {
-				rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"WWAN5.png"]]];
+				rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:img_wwan_];
 				table.navigationItem.rightBarButtonItem = rightBarButtonItem;
+				[rightBarButtonItem release];
 				NSLog(@"reachable routing");
 			} else {
-				rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"red.png"]]];
+				rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:img_red_];
 				table.navigationItem.rightBarButtonItem = rightBarButtonItem;
+				[rightBarButtonItem release];
 				NSLog(@"server down");
 			}
 			break;
@@ -99,6 +113,9 @@
 - (void)dealloc {
     [tabBarController release];
     [window release];
+	[img_red_ release];
+	[img_wwan_ release];
+	[img_airport_ release];
     [super dealloc];
 }
 

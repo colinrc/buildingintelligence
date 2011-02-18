@@ -17,8 +17,6 @@
 
 @property (nonatomic, retain) NSMutableDictionary *controls_;
 
-+(controlMap*)sharedInstance;
-
 -(Boolean)addControl:(Control *)control;
 -(Boolean)updateControl:(NSDictionary *)data;
 -(Control*)findControl:(NSString *)key;

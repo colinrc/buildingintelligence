@@ -7,58 +7,12 @@
 //
 
 #import "statusGroupMap.h"
-#import "controlMap.h"
-
-static statusGroupMap * sharedInstance = nil;
-
+#import "globalConfig.h"
 
 @implementation statusGroupMap
 
 @synthesize group_names_;
 @synthesize group_data_;
-
-
-+ (statusGroupMap*)sharedInstance
-{
-    @synchronized(self)
-    {
-        if (sharedInstance == nil)
-		{
-			sharedInstance = [[statusGroupMap alloc] init];
-		}
-    }
-    return sharedInstance;
-}
-
-+ (id)allocWithZone:(NSZone *)zone {
-    @synchronized(self) {
-        if (sharedInstance == nil) {
-            sharedInstance = [super allocWithZone:zone];
-            return sharedInstance;  // assignment and return on first allocation
-        }
-    }
-    return nil; // on subsequent allocation attempts return nil
-}
-
-- (id)copyWithZone:(NSZone *)zone {
-    return self;
-}
-
-- (id)retain {
-    return self;
-}
-
-- (unsigned)retainCount {
-    return UINT_MAX;  // denotes an object that cannot be released
-}
-
-- (void)release {
-    //do nothing
-}
-
-- (id)autorelease {
-    return self;
-}
 
 /**
  Standard constructor thingie
@@ -78,7 +32,7 @@ static statusGroupMap * sharedInstance = nil;
 	
 	statusGroup *group = [[statusGroup alloc] initWithDictionary:data];
 	[group_names_ addObject:group];
-	//[group release]; // collection has added a retain
+	[group release]; // collection has added a retain
 }
 
 // add a status item to the current group tag 
@@ -95,8 +49,9 @@ static statusGroupMap * sharedInstance = nil;
 		tmpArray = [group_data_ objectForKey:currentKey.name_];
 	}
 	// add something to the array
-	[tmpArray addObject:[control.key_ copy]];
-	
+	NSString *tmpStr = [control.key_ copy];
+	[tmpArray addObject:control.key_];
+	[tmpStr release];
 }
 
 // return the status group object at the index
@@ -118,7 +73,7 @@ static statusGroupMap * sharedInstance = nil;
 		NSMutableArray *tmpArray = [group_data_ objectForKey:groupKey.name_];
 		
 		for (int i = 0; i < [tmpArray count]; i++) {
-			Control *control = [[controlMap sharedInstance] findControl:[tmpArray objectAtIndex:i]];
+			Control *control = [[globalConfig sharedInstance].controls_ findControl:[tmpArray objectAtIndex:i]];
 			if ([control.command_ isEqualToString:groupKey.show_])
 				count++;
 		}
@@ -136,7 +91,7 @@ static statusGroupMap * sharedInstance = nil;
 	NSMutableArray *tmpArray = [group_data_ objectForKey:groupKey.name_];
 	
 	for (int i = 0; i < [tmpArray count]; i++) {
-		Control *control = [[controlMap sharedInstance] findControl:[tmpArray objectAtIndex:i]];
+		Control *control = [[globalConfig sharedInstance].controls_ findControl:[tmpArray objectAtIndex:i]];
 		if ([control.command_ isEqualToString:groupKey.show_])
 		{
 			if (count == row)

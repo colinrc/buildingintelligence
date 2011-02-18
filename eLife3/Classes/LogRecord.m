@@ -8,7 +8,7 @@
 
 #import "LogRecord.h"
 #import "Control.h"
-#import "controlMap.h"
+#import "globalConfig.h"
 
 @implementation LogRecord
 
@@ -57,7 +57,7 @@
  */
 -(void)addEntry: (NSNotification *)notification {
 	// get the control this event is for
-	Control * control = [[controlMap sharedInstance] findControl:[notification name]];
+	Control * control = [[globalConfig sharedInstance].controls_ findControl:[notification name]];
 	if (control == nil)
 		return;
 	

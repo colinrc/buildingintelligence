@@ -12,12 +12,10 @@
 #import "statusViewController.h"
 #import "Control.h"
 #import "controlMap.h"
-#import "statusGroupMap.h"
 #import "Room.h"
 #import "Zone.h"
-#import "zoneList.h"
-#import "logList.h"
 #import "LogRecord.h"
+#import "globalConfig.h"
 
 @implementation clientParser
 
@@ -116,13 +114,14 @@ NSString * current_tab_name;
 			// try again with local file
 			NSLog(@"Trying local cached client config 2");
 			[parser release];
-			parser = [[NSXMLParser alloc] initWithData:[[NSData alloc] initWithContentsOfFile:path]];
+			parser = [[NSXMLParser alloc] initWithData:[NSData dataWithContentsOfFile:path]];
 			[parser setDelegate:self];
 			[parser setShouldProcessNamespaces:YES];
 			self.parserSuccess = [parser parse];
 		}
 		// cleanup
 		[parser release];
+		
 	}
 	
 	if (self.parserSuccess == YES){
@@ -164,7 +163,7 @@ void handleZone(NSDictionary *attributeDict) {
 	// create a new zone object if require
 	current_zone_name = [attributeDict objectForKey:@"name"];
 	Zone *zone = [[Zone alloc] initWithDictionary:attributeDict];
-	if ([[zoneList sharedInstance] addZone:zone] == NO) {
+	if ([[globalConfig sharedInstance].zones_ addZone:zone] == NO) {
 		NSLog(@"Zone item, problem adding %@", current_zone_name);		
 	}
 	[zone release];
@@ -191,7 +190,7 @@ void addZoneRoom(NSDictionary *attributeDict) {
 
 	Room *room = [[Room alloc] initWithDictionary: attributeDict];
 	// push a room object onto the room list
-	[[zoneList sharedInstance] addRoom: room];
+	[[globalConfig sharedInstance].zones_ addRoom: room];
 	[room release];
 }
 /**
@@ -200,7 +199,7 @@ void addZoneRoom(NSDictionary *attributeDict) {
 void addRoomAlert(NSDictionary *attributeDict) {
 	Alert *alert = [[Alert alloc] initWithDictionary:attributeDict];
 	
-	[[zoneList sharedInstance] addAlert:alert];
+	[[globalConfig sharedInstance].zones_ addAlert:alert];
 
 	[alert release];
 }
@@ -211,7 +210,7 @@ void addRoomAlert(NSDictionary *attributeDict) {
 void addRoomDoor(NSDictionary *attributeDict) {
 	Door *door = [[Door alloc] initWithDictionary:attributeDict];
 	
-	[[zoneList sharedInstance] addDoor:door];
+	[[globalConfig sharedInstance].zones_ addDoor:door];
 	
 	[door release];
 }
@@ -223,7 +222,7 @@ void handleRoomWindowTab(NSDictionary * attributeDict)
 {
 //	NSLog(@"handleRoomWindowTab %@", [attributeDict objectForKey:@"name"]);
 	current_tab_name = [attributeDict objectForKey:@"name"];
-	[[zoneList sharedInstance] addTab:current_tab_name];
+	[[globalConfig sharedInstance].zones_ addTab:current_tab_name];
 }
 /**
  \brief	Adds a room entry from a control element
@@ -233,10 +232,10 @@ void addRoomControl(NSDictionary *attributeDict) {
 	// create new control object
 	Control *control = [[Control alloc] initWithDictionary:attributeDict];
 	control.room_ = current_room_name;
-	if ([[controlMap sharedInstance] addControl:control] == YES)
+	if ([[globalConfig sharedInstance].controls_ addControl:control] == YES)
 	{
 		// the control is valid lets add it to the room 
-		[[zoneList sharedInstance] addControl: [[controlMap sharedInstance] findControl:control.key_]];
+		[[globalConfig sharedInstance].zones_ addControl: [[globalConfig sharedInstance].controls_ findControl:control.key_]];
 	}
 	else
 	{
@@ -251,7 +250,7 @@ void handleStatus(NSDictionary *attributeDict) {
 //	NSLog(@"handleStatus %@", [attributeDict objectForKey:@"name"]);
 	
 	// create new status group
-	[[statusGroupMap sharedInstance] addGroup:attributeDict];
+	[[globalConfig sharedInstance].statusbar_ addGroup:attributeDict];
 }
 /**
  \brief	Adds a status bar entry from a control element
@@ -260,10 +259,10 @@ void addStatusItem(NSDictionary *attributeDict) {
 //	NSLog(@"addStatusItem %@",[attributeDict objectForKey:@"key"]);
 	// create new control object
 	Control *control = [[Control alloc] initWithDictionary:attributeDict];
-	if ([[controlMap sharedInstance] addControl:control] == YES)
+	if ([[globalConfig sharedInstance].controls_ addControl:control] == YES)
 	{
 		
-		[[statusGroupMap sharedInstance] addStatusItem:[[controlMap sharedInstance] findControl:control.key_]];
+		[[globalConfig sharedInstance].statusbar_ addStatusItem:[[globalConfig sharedInstance].controls_ findControl:control.key_]];
 	}
 	else	{
 		NSLog(@"Status item, control problem adding %@", [attributeDict objectForKey:@"key"]);
@@ -287,7 +286,7 @@ void handleLoggingTab(NSDictionary * attributeDict)
 	current_tab_name = [attributeDict objectForKey:@"name"];
 	
 	LogRecord* record = [[LogRecord alloc] initWithDictionary:attributeDict];
-	[[logList sharedInstance] addTab:record];
+	[[globalConfig sharedInstance].logging_ addTab:record];
 	[record release];
 }
 /**
@@ -296,12 +295,12 @@ void handleLoggingTab(NSDictionary * attributeDict)
 void addLogControl(NSDictionary* attributeDict) {
 
 	Control *control = [[Control alloc] initWithDictionary:attributeDict];
-	if ([[controlMap sharedInstance] addControl:control] == YES)
+	if ([[globalConfig sharedInstance].controls_ addControl:control] == YES)
 	{
 		// only using control name as a key in a map,
 		// map copies key so we don't have to worry about
 		// lifetime
-		[[logList sharedInstance] addControl:control.key_];
+		[[globalConfig sharedInstance].logging_ addControl:control.key_];
 	}
 	[control release];
 }
@@ -310,7 +309,7 @@ void addLogControl(NSDictionary* attributeDict) {
  these are on/off slider and the like
  */
 void addControlType(NSDictionary *attributeDict) {
-	//	NSLog(@"addControlType ");
+	NSLog(@"addControlType %@", [attributeDict objectForKey:@"type"]);
 	
 }
 

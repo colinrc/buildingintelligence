@@ -8,6 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+// control needs a state variable map
+// state can be {state, on, src}
+// not sure if there are other state
+// variable names, seems as though it is
+// free form key / value pair of strings
 
 @interface Control : NSObject {
 	NSString *name_;
@@ -21,6 +26,7 @@
 	NSString *extra5_;
 	NSString *room_;
 	NSUInteger tally_;
+	NSMutableDictionary *state_info_;
 }
 
 @property (nonatomic, copy) NSString *name_;

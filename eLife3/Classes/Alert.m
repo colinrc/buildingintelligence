@@ -8,7 +8,7 @@
 
 #import "Alert.h"
 #import "Control.h"
-#import "controlMap.h"
+#import "globalConfig.h"
 
 @implementation Alert
 @synthesize name_;
@@ -52,7 +52,7 @@
 	
 	NSArray *controlKeys = [keysString componentsSeparatedByString:@","];
 	if ([controlKeys count] < 1) {
-		Control *control = [[controlMap sharedInstance] findControl:keysString];
+		Control *control = [[globalConfig sharedInstance].controls_ findControl:keysString];
 		if (control != nil) {
 			NSLog(@"Found key: %@", control.key_);
 		}
@@ -63,7 +63,7 @@
 	else {	
 		for (NSString* key in controlKeys)
 		{
-			Control *control = [[controlMap sharedInstance] findControl:key];
+			Control *control = [[globalConfig sharedInstance].controls_ findControl:key];
 			if (control != nil) {
 				NSLog(@"Found key: %@", control.key_);
 			}

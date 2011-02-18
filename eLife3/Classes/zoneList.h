@@ -14,8 +14,6 @@
 	NSMutableArray* zoneNames_;
 }
 
-+(zoneList*)sharedInstance;
-
 -(Boolean)addZone:(Zone* )zone;
 -(Zone*)getZone:(NSUInteger)index;
 -(Zone*)getCurrentZone;

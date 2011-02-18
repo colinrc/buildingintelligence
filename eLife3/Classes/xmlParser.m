@@ -14,9 +14,8 @@
 //
 
 #import "xmlParser.h"
-#import "macroList.h"
+#import "globalConfig.h"
 #import "macro.h"
-#import "controlMap.h"
 
 bool parsing_macros = false;
 
@@ -59,7 +58,7 @@ void updateControl(NSDictionary *attributeDict) {
 	if ([tmpStr isEqualToString:@"MACRO"] || [tmpStr isEqualToString:@"SCRIPT"])
 		 return;
 		 
-	[[controlMap sharedInstance] updateControl:attributeDict ];
+	[[globalConfig sharedInstance].controls_ updateControl:attributeDict ];
 }	
 
 
@@ -78,11 +77,11 @@ void updateControl(NSDictionary *attributeDict) {
 		{
 			// defining the macros
 			// add a macro to the macro list
-			[[macroList sharedInstance] addMacro:attributeDict];
+			[[globalConfig sharedInstance].macros_ addMacro:attributeDict];
 		} else if ([[attributeDict objectForKey:@"KEY"] isEqualToString:@"MACRO"]) {
 			// macro state change being reported
 			// locate macro and update status
-			[[macroList sharedInstance] updateMacro:attributeDict];
+			[[globalConfig sharedInstance].macros_ updateMacro:attributeDict];
 		} else {
 			// control element state change
 			updateControl(attributeDict);
@@ -91,7 +90,7 @@ void updateControl(NSDictionary *attributeDict) {
 	} else if ([elementName isEqualToString:@"MACROS"]) {
 		// parsing connect return?
 		parsing_macros = YES;
-		[[macroList sharedInstance] deleteMacros];
+		[[globalConfig sharedInstance].macros_ deleteMacros];
 	}
 }
 

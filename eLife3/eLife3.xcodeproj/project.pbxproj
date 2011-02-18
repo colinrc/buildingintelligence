@@ -181,6 +181,9 @@
 		1A5ABB261302443400A76B77 /* logViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A5ABB251302443400A76B77 /* logViewController.xib */; };
 		1A5ABB32130244C500A76B77 /* roomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A5ABB30130244C500A76B77 /* roomViewController.m */; };
 		1A5ABB33130244C500A76B77 /* roomViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A5ABB31130244C500A76B77 /* roomViewController.xib */; };
+		1A6FE7A3130CC81100A08EA7 /* controlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE7A1130CC81100A08EA7 /* controlViewController.m */; };
+		1A6FE7A4130CC81100A08EA7 /* controlViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A6FE7A2130CC81100A08EA7 /* controlViewController.xib */; };
+		1A6FEA34130E320A00A08EA7 /* globalConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FEA33130E320A00A08EA7 /* globalConfig.m */; };
 		1ABE0E7812FA5F0A00DDAFE9 /* zoneList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0E7712FA5F0A00DDAFE9 /* zoneList.m */; };
 		1ABE0E7D12FA605F00DDAFE9 /* Zone.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0E7C12FA605F00DDAFE9 /* Zone.m */; };
 		1ABE0EC312FA6A5500DDAFE9 /* Room.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0EC212FA6A5500DDAFE9 /* Room.m */; };
@@ -399,6 +402,11 @@
 		1A5ABB2F130244C500A76B77 /* roomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = roomViewController.h; sourceTree = "<group>"; };
 		1A5ABB30130244C500A76B77 /* roomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = roomViewController.m; sourceTree = "<group>"; };
 		1A5ABB31130244C500A76B77 /* roomViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = roomViewController.xib; path = Classes/roomViewController.xib; sourceTree = "<group>"; };
+		1A6FE7A0130CC81100A08EA7 /* controlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = controlViewController.h; sourceTree = "<group>"; };
+		1A6FE7A1130CC81100A08EA7 /* controlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = controlViewController.m; sourceTree = "<group>"; };
+		1A6FE7A2130CC81100A08EA7 /* controlViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = controlViewController.xib; sourceTree = "<group>"; };
+		1A6FEA32130E320A00A08EA7 /* globalConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = globalConfig.h; sourceTree = "<group>"; };
+		1A6FEA33130E320A00A08EA7 /* globalConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = globalConfig.m; sourceTree = "<group>"; };
 		1ABE0E7612FA5F0A00DDAFE9 /* zoneList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zoneList.h; sourceTree = "<group>"; };
 		1ABE0E7712FA5F0A00DDAFE9 /* zoneList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = zoneList.m; sourceTree = "<group>"; };
 		1ABE0E7B12FA605F00DDAFE9 /* Zone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zone.h; sourceTree = "<group>"; };
@@ -518,6 +526,8 @@
 				1A320BA412FFB01D0003FE95 /* logList.m */,
 				1A320C191300A5810003FE95 /* LogRecord.h */,
 				1A320C1A1300A5810003FE95 /* LogRecord.m */,
+				1A6FEA32130E320A00A08EA7 /* globalConfig.h */,
+				1A6FEA33130E320A00A08EA7 /* globalConfig.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -541,6 +551,9 @@
 				1A320CE11300C69D0003FE95 /* logViewController.m */,
 				1A5ABB2F130244C500A76B77 /* roomViewController.h */,
 				1A5ABB30130244C500A76B77 /* roomViewController.m */,
+				1A6FE7A0130CC81100A08EA7 /* controlViewController.h */,
+				1A6FE7A1130CC81100A08EA7 /* controlViewController.m */,
+				1A6FE7A2130CC81100A08EA7 /* controlViewController.xib */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -980,6 +993,7 @@
 				1A5ABB261302443400A76B77 /* logViewController.xib in Resources */,
 				1A5ABB33130244C500A76B77 /* roomViewController.xib in Resources */,
 				1A2147BB130380C4004FBE11 /* sliderCell.xib in Resources */,
+				1A6FE7A4130CC81100A08EA7 /* controlViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1020,6 +1034,8 @@
 				1A320C1B1300A5810003FE95 /* LogRecord.m in Sources */,
 				1A320CE21300C69D0003FE95 /* logViewController.m in Sources */,
 				1A5ABB32130244C500A76B77 /* roomViewController.m in Sources */,
+				1A6FE7A3130CC81100A08EA7 /* controlViewController.m in Sources */,
+				1A6FEA34130E320A00A08EA7 /* globalConfig.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

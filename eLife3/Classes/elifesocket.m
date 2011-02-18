@@ -214,7 +214,6 @@
 				len = [iStream read:buffer maxLength:sizeof(buffer)];
 				if (len > 0)
 				{
-					xmlParser *myparser;
 					uint8_t tmpbuf[4096];
 					int currchar = 0;
 					int i;
@@ -235,7 +234,8 @@
 							NSLog(@"Bytes read: %d", len);
 							NSLog(@"received xml data: %@", output);
 #endif							
-							myparser = [[[xmlParser alloc] initParser] parseXMLData:output];
+							xmlParser *myparser = [[xmlParser alloc] initParser];
+							[myparser parseXMLData:output];
 							[myparser release];
 							[output release];
 						}

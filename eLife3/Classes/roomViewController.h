@@ -17,4 +17,6 @@
 @property (nonatomic, assign) IBOutlet UITableViewCell *sliderCell_;
 @property (nonatomic,retain) Room* room_;
 
+- (void)registerWithNotification:(NSString *)thekey;
+
 @end

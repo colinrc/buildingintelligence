@@ -8,7 +8,7 @@
 
 #import "zonesViewController.h"
 #import "eLife3AppDelegate.h"
-#import "zoneList.h"
+#import "globalConfig.h"
 #import "roomViewController.h"
 
 @implementation zonesViewController
@@ -79,7 +79,7 @@
  get the number of groups
  */
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	int i = [[zoneList sharedInstance] count];
+	int i = [[globalConfig sharedInstance].zones_ count];
 	//	NSLog(@"help me I cant take it %i", i);
 	return i;
 }
@@ -88,7 +88,7 @@
  */
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	
-	NSString *tmpName = [[zoneList sharedInstance]  nameFor:section];
+	NSString *tmpName = [[globalConfig sharedInstance].zones_  nameFor:section];
 	return tmpName;
 }
 
@@ -97,7 +97,7 @@
  */
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	// get the number of rooms in this zone
-	return [[zoneList sharedInstance] roomsInZone:section];
+	return [[globalConfig sharedInstance].zones_ roomsInZone:section];
 }
 /**
  Customize the appearance of table view cells.
@@ -112,7 +112,7 @@
     }
     
     // Set up the cell...
-	Zone *zone = [[zoneList sharedInstance] getZone:indexPath.section];
+	Zone *zone = [[globalConfig sharedInstance].zones_ getZone:indexPath.section];
 	if (zone != nil) {
 		Room *room = [zone getRoom:indexPath.row];
 		if (room != nil) {
@@ -134,7 +134,7 @@
 	// AnotherViewController *anotherViewController = [[AnotherViewController alloc] initWithNibName:@"AnotherView" bundle:nil];
 	// [self.navigationController pushViewController:anotherViewController];
 	// [anotherViewController release];
-	Zone *zone = [[zoneList sharedInstance] getZone:indexPath.section];
+	Zone *zone = [[globalConfig sharedInstance].zones_ getZone:indexPath.section];
 	if (zone != nil)
 	{
 		Room *room = [zone getRoom:indexPath.row];

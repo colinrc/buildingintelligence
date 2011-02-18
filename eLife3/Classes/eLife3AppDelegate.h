@@ -22,6 +22,9 @@ enum tabs{
     UITabBarController *tabBarController;
 	serverConnection *elifeSvrConn;
 	Boolean server_not_setup_;
+	UIImageView* img_wwan_;
+	UIImageView* img_red_;
+	UIImageView* img_airport_;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;

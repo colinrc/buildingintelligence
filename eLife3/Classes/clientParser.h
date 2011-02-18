@@ -19,7 +19,7 @@
 
 @property (nonatomic, retain) NSTimer *timer_;
 @property (nonatomic) Boolean parserSuccess;
-- (id)init;
+-(id)init;
 -(void)loadConfig;
 
 @end

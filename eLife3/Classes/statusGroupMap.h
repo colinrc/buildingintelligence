@@ -19,9 +19,6 @@
 
 @property (nonatomic, retain) NSMutableArray* group_names_;
 @property (nonatomic, retain) NSMutableDictionary* group_data_;
-
-+(statusGroupMap*)sharedInstance;
-
 -(void)addGroup:(NSDictionary *)data;
 -(void)addStatusItem:(Control *)control;
 -(statusGroup*)getGroup:(NSInteger)group;

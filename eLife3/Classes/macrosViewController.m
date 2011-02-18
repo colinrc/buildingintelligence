@@ -9,7 +9,7 @@
 #import "serverConnection.h"
 #import "eLife3AppDelegate.h"
 #import "macrosViewController.h"
-#import "macroList.h"
+#import "globalConfig.h"
 #import "macro.h"
 
 @implementation macrosViewController
@@ -91,8 +91,8 @@
 
 // Customize the number of rows in the table view.
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-//	NSLog(@"macro rows: %d", [[macroList sharedInstance] countMacros]);
-    return [[macroList sharedInstance].macrolist_ count];
+//	NSLog(@"macro rows: %d", [[globalConfig sharedInstance].macros_ countMacros]);
+    return [[globalConfig sharedInstance].macros_.macrolist_ count];
 }
 
 
@@ -109,7 +109,7 @@
     }
     
     // Set up the cell...
-	macroList *macrolist = [macroList sharedInstance];
+	macroList *macrolist = [globalConfig sharedInstance].macros_;
 	macro *tmpMacro = [macrolist.macrolist_ objectAtIndex:indexPath.row];
 	
     // Configure the cell
@@ -144,7 +144,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
-	NSMutableArray *macrolist = [[macroList sharedInstance] macrolist_];
+	NSMutableArray *macrolist = [globalConfig sharedInstance].macros_.macrolist_;
 	serverConnection *myServer = elifeappdelegate.elifeSvrConn;
 //	NSMutableArray *sendmsgs = elifeappdelegate.msgs_for_svr;
 	UITableViewCell *cell = nil;

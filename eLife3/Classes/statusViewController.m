@@ -9,8 +9,7 @@
 #import "statusViewController.h"
 #import "Control.h"
 #import "controlMap.h"
-#import "statusGroup.h"
-#import "statusGroupMap.h"
+#import "globalConfig.h"
 #import "eLife3AppDelegate.h"
 
 @implementation statusViewController
@@ -50,10 +49,10 @@
     [super viewWillAppear:animated];
 	 // register with all of the controls for update notifications
 	 NSString *currentKey;
-	 for (currentKey in [statusGroupMap sharedInstance].group_data_ )
+	 for (currentKey in [globalConfig sharedInstance].statusbar_.group_data_ )
 	 {
 		 NSString* currentControl;
-		 for (currentControl in [[statusGroupMap sharedInstance].group_data_ objectForKey:currentKey])
+		 for (currentControl in [[globalConfig sharedInstance].statusbar_.group_data_ objectForKey:currentKey])
 		 {
 			 if (currentControl != nil)
 				 [self registerWithNotification:[currentControl stringByAppendingString:@"_status"]];
@@ -103,7 +102,7 @@
  get the number of groups
  */
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	int i = [[statusGroupMap sharedInstance].group_names_ count];
+	int i = [[globalConfig sharedInstance].statusbar_.group_names_ count];
 //	NSLog(@"help me I cant take it %i", i);
 	return i;
 }
@@ -111,7 +110,7 @@
 // TODO: think about the memory managment here
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	@try {
-		statusGroup *tmpGroup = [[statusGroupMap sharedInstance].group_names_ objectAtIndex:section];
+		statusGroup *tmpGroup = [[globalConfig sharedInstance].statusbar_.group_names_ objectAtIndex:section];
 		return tmpGroup.name_;
 	}
 	@catch (NSException * e) {
@@ -123,7 +122,7 @@
  Get the number of showing items for this group
  */
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return [[statusGroupMap sharedInstance]activeItems:section];
+	return [[globalConfig sharedInstance].statusbar_ activeItems:section];
 }
 
 /*
@@ -161,11 +160,11 @@
 	// Set up the cell...
 	
 	// get the status group
-	statusGroup *status_group = [[statusGroupMap sharedInstance] getGroup:indexPath.section];
+	statusGroup *status_group = [[globalConfig sharedInstance].statusbar_ getGroup:indexPath.section];
 	if (status_group != nil)
 	{
 		// get the control
-		Control *control = [[statusGroupMap sharedInstance] activeControl:indexPath.section:indexPath.row];
+		Control *control = [[globalConfig sharedInstance].statusbar_ activeControl:indexPath.section:indexPath.row];
 		// if we can't find the control make the row blank
 		if (control != nil)
 		{	
@@ -187,11 +186,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 	// get the status group
-	statusGroup *status_group = [[statusGroupMap sharedInstance] getGroup:indexPath.section];
+	statusGroup *status_group = [[globalConfig sharedInstance].statusbar_ getGroup:indexPath.section];
 	if (status_group != nil)
 	{
 		// get the control
-		Control *control = [[statusGroupMap sharedInstance] activeControl:indexPath.section:indexPath.row];
+		Control *control = [[globalConfig sharedInstance].statusbar_ activeControl:indexPath.section:indexPath.row];
 		if (control != nil)
 		{
 			// send off message

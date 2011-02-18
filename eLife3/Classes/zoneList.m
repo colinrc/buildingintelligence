@@ -8,54 +8,7 @@
 
 #import "zoneList.h"
 
-static zoneList * sharedInstance = nil;
-
 @implementation zoneList
-
-/**
- Singleton ctr
- */
-+ (zoneList*)sharedInstance
-{
-    @synchronized(self)
-    {
-        if (sharedInstance == nil)
-		{
-			sharedInstance = [[zoneList alloc] init];
-		}
-    }
-    return sharedInstance;
-}
-
-+ (id)allocWithZone:(NSZone *)zone {
-    @synchronized(self) {
-        if (sharedInstance == nil) {
-            sharedInstance = [super allocWithZone:zone];
-            return sharedInstance;  // assignment and return on first allocation
-        }
-    }
-    return nil; // on subsequent allocation attempts return nil
-}
-
-- (id)copyWithZone:(NSZone *)zone {
-    return self;
-}
-
-- (id)retain {
-    return self;
-}
-
-- (unsigned)retainCount {
-    return UINT_MAX;  // denotes an object that cannot be released
-}
-
-- (void)release {
-    //do nothing
-}
-
-- (id)autorelease {
-    return self;
-}
 
 /**
  Standard constructor thingie

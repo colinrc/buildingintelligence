@@ -8,54 +8,9 @@
 
 #import "controlMap.h"
 
-static controlMap * sharedInstance = nil;
-
 @implementation controlMap
 
 @synthesize controls_;
-
-
-+ (controlMap*)sharedInstance
-{
-    @synchronized(self)
-    {
-        if (sharedInstance == nil)
-		{
-			sharedInstance = [[controlMap alloc] init];
-		}
-    }
-    return sharedInstance;
-}
-
-+ (id)allocWithZone:(NSZone *)zone {
-    @synchronized(self) {
-        if (sharedInstance == nil) {
-            sharedInstance = [super allocWithZone:zone];
-            return sharedInstance;  // assignment and return on first allocation
-        }
-    }
-    return nil; // on subsequent allocation attempts return nil
-}
-
-- (id)copyWithZone:(NSZone *)zone {
-    return self;
-}
-
-- (id)retain {
-    return self;
-}
-
-- (unsigned)retainCount {
-    return UINT_MAX;  // denotes an object that cannot be released
-}
-
-- (void)release {
-    //do nothing
-}
-
-- (id)autorelease {
-    return self;
-}
 
 /**
  Standard constructor thingie
@@ -147,7 +102,7 @@ static controlMap * sharedInstance = nil;
 	tmpCtl.extra3_ = [data objectForKey:@"EXTRA3"];
 	tmpCtl.extra4_ = [data objectForKey:@"EXTRA4"];
 	tmpCtl.extra5_ = [data objectForKey:@"EXTRA5"];
-	
+
 	// Send notification message to any observers
 	[[NSNotificationCenter defaultCenter] postNotificationName:tmpCtl.key_ object:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:[tmpCtl.key_ stringByAppendingString:@"_status"] object:self];

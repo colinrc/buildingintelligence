@@ -29,12 +29,13 @@
 }
 
 // need to free the copied strings
--(void)release {
+-(void)dealloc {
 
 	[name_ release];
 	[icon_ release];
 	[show_ release];
 	[hide_ release];
+	[super dealloc];
 }
 
 @end
