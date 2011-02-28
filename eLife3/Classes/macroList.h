@@ -15,7 +15,6 @@
 
 -(void)addMacro:(NSDictionary *)item;
 -(void)updateMacro:(NSDictionary *)item;
--(void)deleteMacros;
 -(NSInteger)countMacros;
 
 @property (nonatomic, retain) NSMutableArray *macrolist_;

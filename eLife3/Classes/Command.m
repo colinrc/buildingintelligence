@@ -34,4 +34,15 @@
 	return self;		
 }
 
+-(void) dealloc  {
+	[key_ release];
+	[command_ release];
+	[extra_ release];
+	[extra2_ release];
+	[extra3_ release];
+	[extra4_ release];
+	[extra5_ release];
+	[super dealloc];
+}
+
 @end

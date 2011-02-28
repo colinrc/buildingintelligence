@@ -16,11 +16,8 @@
 #include <sys/socket.h>
 
 @implementation elifesocket
-//@synthesize iStream;
-//@synthesize oStream;
 @synthesize state_;
 @synthesize lastCommTime;
-//@synthesize timer_;
 
 /**
  default initializer sets up a listen to the network status
@@ -28,6 +25,9 @@
 -(id)init {
 	if ( self = [super init])
 	{
+		host_ = NULL;
+		readStream_ = NULL;
+		writeStream_ = NULL;
 	}
 	return self;
 }
@@ -46,6 +46,18 @@
 		[oStream release];
 		oStream = nil;
 	}
+	if (host_) {
+		CFRelease(host_);
+		host_ = NULL;
+	}
+	if (readStream_) {
+		CFRelease(readStream_);
+		readStream_ = NULL;
+	}
+	if (writeStream_) {
+		CFRelease(writeStream_);	
+		writeStream_ = NULL;
+	}
 }
 /**
  Connect to the server using the sockets connection.
@@ -61,21 +73,19 @@
 	self.lastCommTime = [NSDate date];
 
 	if (![elifehost isEqualToString:@""] && elifehost != NULL) {
-		CFHostRef           host;
-		CFReadStreamRef     readStream;
-		CFWriteStreamRef    writeStream;
 		
-		host = CFHostCreateWithName(NULL, (CFStringRef) elifehost);
-		if (host != NULL) {
-			(void) CFStreamCreatePairWithSocketToCFHost(NULL, host, elifeport, &readStream, &writeStream);
-			CFRelease(host);
+		host_ = CFHostCreateWithName(NULL, (CFStringRef) elifehost);
+		if (host_ != NULL) {
+			(void) CFStreamCreatePairWithSocketToCFHost(NULL, host_, elifeport, &readStream_, &writeStream_);
+			CFRelease(host_);
+			host_ = NULL;
 		}
 		else {
 			return NO;
 		}
 		
-		iStream = [(NSInputStream *) readStream retain];
-		oStream = [(NSOutputStream *) writeStream retain];
+		iStream = [(NSInputStream *) readStream_ retain];
+		oStream = [(NSOutputStream *) writeStream_ retain];
 		
 		// Ensure the CF & BSD socket is closed when the streams are closed.
 		CFReadStreamSetProperty((CFReadStreamRef)iStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);

@@ -15,11 +15,12 @@
 	NSInteger state_;
 	NSDate *lastCommTime;
 	NSTimer *timer_;
+
+	CFHostRef           host_;
+	CFReadStreamRef     readStream_;
+	CFWriteStreamRef    writeStream_;
 }
 
-//@property (nonatomic, retain) NSInputStream *iStream;
-//@property (nonatomic, retain) NSOutputStream *oStream;
-//@property (nonatomic, retain) NSTimer *timer_;
 @property (nonatomic, retain) NSDate *lastCommTime;
 @property (nonatomic) NSInteger state_;
 

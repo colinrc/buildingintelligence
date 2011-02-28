@@ -18,7 +18,7 @@
  */
 -(id)init {
 	self = [super init];
-	macrolist_ = [[NSMutableArray alloc] init];
+	macrolist_ = [[NSMutableArray alloc] initWithCapacity:5];
 	return self;
 }
 /**
@@ -85,15 +85,8 @@
 	}
 }
 /**
- Clears the macro list
+ returns the number of macros defined
  */
--(void)deleteMacros {
-	@synchronized(self) {
-		macrolist_ = [[NSMutableArray alloc] init];
-	}
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"addMacro" object:self];
-}
-
 -(NSInteger)countMacros {
 	return [macrolist_ count];
 }

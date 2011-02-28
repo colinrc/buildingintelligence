@@ -55,12 +55,21 @@
 	return self;
 }
 /**
+ Cleans up the socket should stop leaks
+ */
+-(void) cleanupUDP {
+	if (ssdpSock != nil) {
+		[ssdpSock close];
+		[ssdpSock release];
+		ssdpSock = nil;	
+	}
+}
+/**
  Runs a SDDP discovery poll, three polls with 3 second timeout
  if we find a server then replace the config
  */
 -(void)discover_eLife {
-	[ssdpSock close];
-	ssdpSock = nil;
+	[self cleanupUDP];
 	ssdpSock = [[AsyncUdpSocket alloc] initWithDelegate:self];
 	[ssdpSock enableBroadcast:TRUE error:nil];
 	NSString *str = @"M-SEARCH * HTTP/1.1\r\nMAN: \"ssdp:discover\"\r\nMX: 3\r\nST: ssdp:all\r\nHOST: 239.255.255.250:1900\r\n\r\n";    
@@ -75,8 +84,7 @@
  Listens to the SDDP group for any eLife messages
  */
 -(void)listen_eLife {
-	[ssdpSock close];
-	ssdpSock = nil;
+	[self cleanupUDP];
 	ssdpSock = [[AsyncUdpSocket alloc] initWithDelegate:self];
 	[ssdpSock enableBroadcast:TRUE error:nil];
 	[ssdpSock bindToAddress:@"239.255.255.250" port:1900 error:nil];
@@ -172,8 +180,6 @@
 		if (discoverTries_ < 3) {
 			//			NSLog(@"**** fail %s",__FUNCTION__);
 			discoverTries_ ++;
-			[ssdpSock close];
-			ssdpSock = nil;
 			[self discover_eLife];
 		}
 		else {

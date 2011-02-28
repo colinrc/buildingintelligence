@@ -90,7 +90,6 @@ void updateControl(NSDictionary *attributeDict) {
 	} else if ([elementName isEqualToString:@"MACROS"]) {
 		// parsing connect return?
 		parsing_macros = YES;
-		[[globalConfig sharedInstance].macros_ deleteMacros];
 	}
 }
 
