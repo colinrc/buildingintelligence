@@ -21,6 +21,14 @@
 	macrolist_ = [[NSMutableArray alloc] init];
 	return self;
 }
+/**
+ Standard destructor thingie
+ */
+-(void) dealloc 
+{
+	[macrolist_ release];
+	[super dealloc];
+}
 
 /**
  Adds a new macro to the list, called during startup

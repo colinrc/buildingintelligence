@@ -29,4 +29,6 @@
 
 +(globalConfig*)sharedInstance;
 
+-(void)reset; // TODO: need to be able to cleanup
+
 @end

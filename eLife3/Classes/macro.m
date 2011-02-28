@@ -17,7 +17,7 @@
 - (id)initWithDict:(NSDictionary *)thedict {
 	self = [super init];
 	
-	self.macroattr = [thedict copy];
+	self.macroattr = thedict;
 	if ([[thedict objectForKey:@"RUNNING"] isEqualToString:@"1"]) {
 		self.running = YES;
 	} else {
@@ -25,6 +25,12 @@
 	}
 	
 	return self;
+}
+
+- (void) dealloc 
+{
+	[macroattr release];
+	[super dealloc];
 }
 
 - (BOOL)isRunning {

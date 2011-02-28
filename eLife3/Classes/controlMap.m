@@ -20,7 +20,14 @@
 	controls_ = [[NSMutableDictionary alloc] init];
 	return self;
 }
-
+/**
+ Standard destructor thingie
+ */
+-(void) dealloc 
+{
+	[controls_ release];
+	[super dealloc];
+}
 /**
  Adds a control to the control map, returns false if it can't
  */

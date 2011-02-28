@@ -22,8 +22,15 @@
 	
 	return self;
 }
-
-
+/**
+ Standard destructor thingie
+ */
+- (void) dealloc
+{
+	[zones_ release];
+	[zoneNames_ release];
+	[super dealloc];
+}
 /**
  Add the zone to the zone list
  */

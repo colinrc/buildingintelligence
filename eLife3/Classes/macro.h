@@ -14,8 +14,8 @@
 	BOOL running;
 }
 
-@property (nonatomic, retain) NSDictionary *macroattr;
-@property BOOL running;
+@property (nonatomic, copy) NSDictionary *macroattr;
+@property (nonatomic) BOOL running;
 
 - (id)initWithDict:(NSDictionary *)thedict;
 - (BOOL)isRunning;

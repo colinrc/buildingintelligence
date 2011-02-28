@@ -73,4 +73,18 @@ static globalConfig *sharedInstance = nil;
 @synthesize zones_;
 @synthesize statusbar_;
 
+-(void)reset {
+	[logging_ release];
+	[controls_ release];
+	[macros_ release];
+	[zones_ release];
+	[statusbar_ release];
+
+	logging_ = [[logList alloc] init];
+	controls_ = [[controlMap alloc] init];
+	macros_ = [[macroList alloc] init];
+	zones_ = [[zoneList alloc] init];
+	statusbar_ = [[statusGroupMap alloc] init];
+}
+
 @end

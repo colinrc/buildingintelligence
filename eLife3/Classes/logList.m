@@ -19,6 +19,18 @@
 	controls_ = [[NSMutableDictionary alloc] init];	
 	return self;
 }
+/**
+ Standard destructor thingie
+ */
+- (void) dealloc
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[tabs_ release];
+	[controls_ release];
+
+	[super dealloc];
+}
+
 
 /**
  Gets the tab name for the index value or empty string

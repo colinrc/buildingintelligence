@@ -26,7 +26,15 @@
 
 	return self;
 }
-
+/**
+ Standard destructor thingie
+ */
+- (void) dealloc 
+{
+	[group_data_ release];
+	[group_names_ release];
+	[super dealloc];
+}
 // add a status group to array
 -(void)addGroup:(NSDictionary *)data {
 	

@@ -46,9 +46,10 @@
 	[name_ release];
 	[switchZone_ release];
 	[poly_ release];
-	[tabs_ release];   // releases all objects as well
-	[alerts_ release]; // releases all objects as well
-	[doors_ release];  // releases all objects as well
+	[tabs_ release];	// releases all objects as well
+	[alerts_ release];	// releases all objects as well
+	[doors_ release];	// releases all objects as well
+	[tabNames_ release];// releases all objects as well
 	[super dealloc];
 }
 /**
@@ -74,7 +75,7 @@
 	
 	if (tmpArray == nil)
 	{
-		[tabNames_ addObject:tabName];
+		[tabNames_ addObject:[tabName copy]];
 		NSMutableArray *newArray = [[NSMutableArray alloc] init];
 		[tabs_  setObject:newArray forKey:tabName];
 		[newArray release]; // collection holds reference
@@ -140,7 +141,6 @@
 	
 	return [tmpArray count];
 }
-
 /**
  Returns the control for the tab and item index
  */
