@@ -25,20 +25,30 @@
 -(id)initWithDictionary:(NSDictionary *)data {
 
 	self = [self init];
+	[keys_ initWithDictionary:data];
+	NSString *tmp = [data objectForKey:@"name"];
+	self.name_ = (tmp != nil) ? tmp : @"";
 	
-	self.name_ = [data objectForKey:@"name"];
-	self.key_ = [data objectForKey:@"key"];
-	if ([key_ isEqualToString:@"KEYPAD"])
-	{
-		NSLog(@"name=%@",name_);
-	}
-	self.type_ = [data objectForKey:@"type"];
-	self.command_ = @"";
-	self.extra_ = @"";
-	self.extra2_ = @"";
-	self.extra3_ = @"";
-	self.extra4_ = @"";
-	self.extra5_ = @"";
+	tmp = [data objectForKey:@"key"];
+	self.key_ = (tmp != nil) ? tmp : @"";
+	
+	if ([key_ isEqualToString:@"KEYPAD"]) NSLog(@"name=%@",name_);
+	
+	tmp = [data objectForKey:@"type"];
+	self.type_ = (tmp != nil) ? tmp : @"";
+	tmp = [data objectForKey:@"command"];
+	self.command_ = tmp;
+	tmp = [data objectForKey:@"extra_"];
+	self.extra_ = (tmp != nil) ? tmp : @"";
+	tmp = [data objectForKey:@"extra2_"];
+	self.extra2_ = (tmp != nil) ? tmp : @"";
+	tmp = [data objectForKey:@"extra3_"];
+	self.extra3_ = (tmp != nil) ? tmp : @"";
+	tmp = [data objectForKey:@"extra4_"];
+	self.extra4_ = (tmp != nil) ? tmp : @"";
+	tmp = [data objectForKey:@"extra5_"];
+	self.extra5_ = (tmp != nil) ? tmp : @"";
+
 	self.tally_ = 0;
 	self.room_ = @"";
 	return self;
@@ -67,6 +77,7 @@
 	[extra5_ release];
 	[room_ release];
 	[state_info_ release];
+	[keys_ release];
 	[super dealloc];
 }
 
@@ -106,13 +117,18 @@
  setter for the extra string, custom implementation to update the state
  map as well
  Set the control state with the command as the key to the extra value
- state_info_[command] = extra 
+ state_info_[command] = extra 
  */
 -(void)setExtra_:(NSString *) newExtra {
 	if (extra_ != newExtra) {
 		[extra_ release];
 		extra_ = [newExtra copy];
-		[state_info_ setObject:extra_ forKey:command_];
+		if (extra_ != nil && command_ != nil)
+			[state_info_ setObject:extra_ forKey:command_];
 	}
+}
+
+-(NSString*) stateFor:(NSString*)key {
+	return [state_info_ objectForKey:key];
 }
 @end

@@ -11,7 +11,6 @@
 #import "eLife3AppDelegate.h"
 #import "statusViewController.h"
 #import "Control.h"
-#import "controlMap.h"
 #import "Room.h"
 #import "Zone.h"
 #import "LogRecord.h"
@@ -309,8 +308,17 @@ void addLogControl(NSDictionary* attributeDict) {
  these are on/off slider and the like
  */
 void addControlType(NSDictionary *attributeDict) {
-	NSLog(@"addControlType %@", [attributeDict objectForKey:@"type"]);
-	
+	//	NSLog(@"addControlType %@", [attributeDict objectForKey:@"type"]);
+	[[globalConfig sharedInstance].uicontrols_ addControlType:attributeDict];
+}
+
+void addControlRow(NSDictionary *attributeDict) {
+	//	NSLog(@"addControlType %@", [attributeDict objectForKey:@"type"]);
+	[[globalConfig sharedInstance].uicontrols_ addControlRow:attributeDict];
+}
+void addControlItem(NSDictionary *attributeDict) {
+	//	NSLog(@"addControlType %@", [attributeDict objectForKey:@"type"]);
+	[[globalConfig sharedInstance].uicontrols_ addControlItem:attributeDict];
 }
 
 /**
@@ -370,11 +378,23 @@ void addControlType(NSDictionary *attributeDict) {
 			// handle logging control
 			addLogControl(attributeDict);
 		}
+	} else 	if ([elementName isEqualToString:@"alert"]) {
+		if (current_state == parsing_room) {
+			// add a room alert
+			addRoomAlert(attributeDict);
+		}
 	} else if ([elementName isEqualToString:@"item"]) {
 //		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
 		if (current_state == parsing_arbitrary) {
 			// add a zone arbitrary item
 			addArbitraryItem(attributeDict);
+		}
+		else if (current_state == parsing_ctrltypes) {
+			addControlItem(attributeDict);
+		}
+	} else if ([elementName isEqualToString:@"row"]) {
+		if (current_state == parsing_ctrltypes) {
+			addControlRow(attributeDict);
 		}
 	} else if ([elementName isEqualToString:@"statusBar"]) {
 		current_state = parsing_status;
@@ -387,11 +407,6 @@ void addControlType(NSDictionary *attributeDict) {
 		addArbitraryItem(attributeDict);
 	} else 	if ([elementName isEqualToString:@"logging"]) {
 		current_state = parsing_logging;
-	} else 	if ([elementName isEqualToString:@"alert"]) {
-		if (current_state == parsing_room) {
-			// add a room alert
-			addRoomAlert(attributeDict);
-		}
 	} else {
 //		currentelement = [NSDictionary dictionaryWithObjectsAndKeys:elementName,@"element",nil];
 	}

@@ -48,7 +48,7 @@
 	// already have a control set fields equal
 	if (control.type_ != nil)
 	{
-		if ( tmp.type_ == nil )
+		if ( tmp.type_ == nil  || [tmp.type_ length] == 0)
 		{
 			// type_ accessor is type copy
 			tmp.type_ = control.type_ ;

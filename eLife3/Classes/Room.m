@@ -75,7 +75,9 @@
 	
 	if (tmpArray == nil)
 	{
-		[tabNames_ addObject:[tabName copy]];
+		NSString* tmpStr = [tabName copy];
+		[tabNames_ addObject:tmpStr];
+		[tmpStr release];
 		NSMutableArray *newArray = [[NSMutableArray alloc] init];
 		[tabs_  setObject:newArray forKey:tabName];
 		[newArray release]; // collection holds reference

@@ -27,6 +27,7 @@
 	NSString *room_;
 	NSUInteger tally_;
 	NSMutableDictionary *state_info_;
+	NSMutableDictionary *keys_;
 }
 
 @property (nonatomic, copy) NSString *name_;
@@ -42,5 +43,6 @@
 @property (nonatomic) NSUInteger tally_;
 
 -(id)initWithDictionary:(NSDictionary *)data;
+-(NSString*) stateFor:(NSString*)key;
 
 @end

@@ -11,6 +11,8 @@
 #import "zoneList.h"
 #import "Room.h"
 #import "eLife3AppDelegate.h"
+#import "controlViewController.h"
+
 
 @implementation roomViewController
 
@@ -129,13 +131,13 @@
 			onOff.tag = (indexPath.section << 8) + indexPath.row;
 			cell.accessoryView = onOff;
 		}
-		else if (isSlider) 
+/*		else if (isSlider) 
 		{
 			[[NSBundle mainBundle] loadNibNamed:@"sliderCell" owner:self options:nil];
 			cell = sliderCell_;
 			self.sliderCell_ = nil;
 		}
-		else { // isPlain
+*/		else { // isPlain
 			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
 		}
 
@@ -148,8 +150,7 @@
 		UILabel *label = (UILabel*) [cell textLabel];
 		label.text = tmpControl.name_;
 		[onOff addTarget:self action:@selector(onOffChanged:) forControlEvents:UIControlEventValueChanged];
-	} 
-	else if (isSlider) {
+/*	} else if (isSlider) {
 		// now we can add some stuff to our custom cell
 		UILabel *label =  (UILabel *)[cell viewWithTag:1];
 		label.text = tmpControl.name_;
@@ -158,7 +159,7 @@
 		slider.value = [tmpControl.extra_ intValue];
 		[slider addTarget:self action:@selector(sliderChanged:) forControlEvents:UIControlEventValueChanged];
 		
-	} else {
+*/	} else {
 		UILabel *label = (UILabel*) [cell textLabel];
 		label.text = tmpControl.name_;
 		// we are going to want to make a special window
@@ -269,11 +270,16 @@
 		return; // cant get a control bail
 	if ([tmpControl.type_ isEqualToString:@"onOff"])
 			return; // already handle this
-	if ([tmpControl.type_ isEqualToString:@"slider"])
-			return; // already handle this
+//	if ([tmpControl.type_ isEqualToString:@"slider"])
+//			return; // already handle this
 	
 	// if we are here we need to look at going to a new page
 	// and building some sort of crazy control as per the XML
+	controlViewController *viewController = [controlViewController alloc];
+	viewController.control_ = tmpControl;
+	// TODO: add control info to view
+	[self.navigationController pushViewController:viewController animated:YES];
+	[viewController release];
 	
 }
 

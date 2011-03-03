@@ -62,7 +62,8 @@ static globalConfig *sharedInstance = nil;
 	macros_ = [[macroList alloc] init];
 	zones_ = [[zoneList alloc] init];
 	statusbar_ = [[statusGroupMap alloc] init];
-	
+	uicontrols_ = [[uiControlList alloc] init];
+
 	return self;
 }
 
@@ -72,6 +73,7 @@ static globalConfig *sharedInstance = nil;
 @synthesize macros_;
 @synthesize zones_;
 @synthesize statusbar_;
+@synthesize uicontrols_;
 
 -(void)reset {
 	[logging_ release];
@@ -79,12 +81,14 @@ static globalConfig *sharedInstance = nil;
 	[macros_ release];
 	[zones_ release];
 	[statusbar_ release];
+	[uicontrols_ release];
 
 	logging_ = [[logList alloc] init];
 	controls_ = [[controlMap alloc] init];
 	macros_ = [[macroList alloc] init];
 	zones_ = [[zoneList alloc] init];
 	statusbar_ = [[statusGroupMap alloc] init];
+	uicontrols_ = [[uiControlList alloc] init];
 }
 
 @end

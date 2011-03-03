@@ -12,6 +12,8 @@
 #import "macroList.h"
 #import "zoneList.h"
 #import "statusGroupMap.h"
+#import "uiControlList.h"
+
 
 @interface globalConfig : NSObject {
 	logList* logging_;
@@ -19,6 +21,8 @@
 	macroList* macros_;
 	zoneList* zones_;
 	statusGroupMap* statusbar_;
+	uiControlList* uicontrols_;
+	
 }
 
 @property(nonatomic, retain) logList* logging_;
@@ -26,6 +30,7 @@
 @property(nonatomic, retain) macroList* macros_;
 @property(nonatomic, retain) zoneList* zones_;
 @property(nonatomic, retain) statusGroupMap* statusbar_;
+@property(nonatomic, retain) uiControlList* uicontrols_;
 
 +(globalConfig*)sharedInstance;
 

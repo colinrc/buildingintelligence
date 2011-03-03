@@ -194,6 +194,8 @@
 		1AD96F8F11D41D38001E722E /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AD96F8E11D41D38001E722E /* README.txt */; };
 		1AD96FDE11D43119001E722E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD96FDD11D43119001E722E /* Reachability.m */; };
 		1AD9701811D43790001E722E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD9701711D43790001E722E /* SystemConfiguration.framework */; };
+		1AFA3A83131DD2920054AF23 /* uiControlList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFA3A82131DD2920054AF23 /* uiControlList.m */; };
+		1AFA3B82131DEC350054AF23 /* controlRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFA3B81131DEC350054AF23 /* controlRow.m */; };
 		1D3623260D0F684500981E51 /* eLife3AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* eLife3AppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -404,7 +406,7 @@
 		1A5ABB31130244C500A76B77 /* roomViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = roomViewController.xib; path = Classes/roomViewController.xib; sourceTree = "<group>"; };
 		1A6FE7A0130CC81100A08EA7 /* controlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = controlViewController.h; sourceTree = "<group>"; };
 		1A6FE7A1130CC81100A08EA7 /* controlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = controlViewController.m; sourceTree = "<group>"; };
-		1A6FE7A2130CC81100A08EA7 /* controlViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = controlViewController.xib; sourceTree = "<group>"; };
+		1A6FE7A2130CC81100A08EA7 /* controlViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = controlViewController.xib; path = Classes/controlViewController.xib; sourceTree = "<group>"; };
 		1A6FEA32130E320A00A08EA7 /* globalConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = globalConfig.h; sourceTree = "<group>"; };
 		1A6FEA33130E320A00A08EA7 /* globalConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = globalConfig.m; sourceTree = "<group>"; };
 		1ABE0E7612FA5F0A00DDAFE9 /* zoneList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zoneList.h; sourceTree = "<group>"; };
@@ -425,6 +427,10 @@
 		1AD96FDC11D43119001E722E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Classes/Reachability.h; sourceTree = "<group>"; };
 		1AD96FDD11D43119001E722E /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Classes/Reachability.m; sourceTree = "<group>"; };
 		1AD9701711D43790001E722E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		1AFA3A81131DD2920054AF23 /* uiControlList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiControlList.h; sourceTree = "<group>"; };
+		1AFA3A82131DD2920054AF23 /* uiControlList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = uiControlList.m; sourceTree = "<group>"; };
+		1AFA3B80131DEC350054AF23 /* controlRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = controlRow.h; sourceTree = "<group>"; };
+		1AFA3B81131DEC350054AF23 /* controlRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = controlRow.m; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* eLife3AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = eLife3AppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* eLife3AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = eLife3AppDelegate.m; sourceTree = "<group>"; };
@@ -528,6 +534,10 @@
 				1A320C1A1300A5810003FE95 /* LogRecord.m */,
 				1A6FEA32130E320A00A08EA7 /* globalConfig.h */,
 				1A6FEA33130E320A00A08EA7 /* globalConfig.m */,
+				1AFA3A81131DD2920054AF23 /* uiControlList.h */,
+				1AFA3A82131DD2920054AF23 /* uiControlList.m */,
+				1AFA3B80131DEC350054AF23 /* controlRow.h */,
+				1AFA3B81131DEC350054AF23 /* controlRow.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -553,7 +563,6 @@
 				1A5ABB30130244C500A76B77 /* roomViewController.m */,
 				1A6FE7A0130CC81100A08EA7 /* controlViewController.h */,
 				1A6FE7A1130CC81100A08EA7 /* controlViewController.m */,
-				1A6FE7A2130CC81100A08EA7 /* controlViewController.xib */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -760,6 +769,7 @@
 				7E2E8B3410FE6A2200668D2C /* zonesViewController.xib */,
 				1A2D1A7811BE2390001A9635 /* moreViewController.xib */,
 				1A03F55511C1F8EA008FADBA /* settingsViewController.xib */,
+				1A6FE7A2130CC81100A08EA7 /* controlViewController.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1036,6 +1046,8 @@
 				1A5ABB32130244C500A76B77 /* roomViewController.m in Sources */,
 				1A6FE7A3130CC81100A08EA7 /* controlViewController.m in Sources */,
 				1A6FEA34130E320A00A08EA7 /* globalConfig.m in Sources */,
+				1AFA3A83131DD2920054AF23 /* uiControlList.m in Sources */,
+				1AFA3B82131DEC350054AF23 /* controlRow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
