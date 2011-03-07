@@ -16,6 +16,9 @@
 	int current_row_;// straight row counter +1 per row
 	int current_column_;// percentage of screen width we are at
 	int remaining_items_;// number of items left to show
+	
+	NSMutableArray* views_;
+	
 }
 
 @property (nonatomic, retain) Control* control_;
@@ -24,11 +27,16 @@
 @property (nonatomic) int current_column_;
 @property (nonatomic) int remaining_items_;
 
+// geometry code
 -(void) nextRow;
+-(CGRect) getItemRect: (NSString*) widthStr;
+
+// xml code
 -(Boolean) evaluateCases:(NSString*)cases;
 -(void) addLabel:(NSDictionary *)labelDict;
 -(void) addSlider:(NSDictionary *)labelDict;
 -(void) addButton:(NSDictionary *)labelDict;
 -(void) addToggle:(NSDictionary *)labelDict;
+-(void) addSpace:(NSDictionary *)labelDict;
 
 @end

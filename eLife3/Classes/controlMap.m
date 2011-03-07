@@ -77,6 +77,8 @@
 		tmp.room_ = control.room_;
 	}	
 	
+	tmp.keys_ = control.keys_;
+	
 	return YES;
 }
 

@@ -11,7 +11,6 @@
 
 @interface roomViewController : UITableViewController {
 	Room *room_;
-	UITableViewCell *sliderCell_;
 }
 
 @property (nonatomic, assign) IBOutlet UITableViewCell *sliderCell_;

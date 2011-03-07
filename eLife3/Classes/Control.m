@@ -25,7 +25,7 @@
 -(id)initWithDictionary:(NSDictionary *)data {
 
 	self = [self init];
-	[keys_ initWithDictionary:data];
+	keys_ = [[NSMutableDictionary alloc ]initWithDictionary:data copyItems:YES];
 	NSString *tmp = [data objectForKey:@"name"];
 	self.name_ = (tmp != nil) ? tmp : @"";
 	
@@ -80,14 +80,12 @@
 	[keys_ release];
 	[super dealloc];
 }
-
 /**
  Custom getter for the command_ string
  */
 -(NSString*)command_ {
 	return command_;
 }
-
 /**
  setter for the command string, custom implementation to update the state
  map as well.
@@ -105,14 +103,12 @@
 		}
 	}
 }
-
 /**
  Custom getter for the extra string
  */
 -(NSString*) extra_ {
 	return extra_;
 }
-
 /**
  setter for the extra string, custom implementation to update the state
  map as well
@@ -127,8 +123,39 @@
 			[state_info_ setObject:extra_ forKey:command_];
 	}
 }
-
+/**
+ Get the stored state
+ */
 -(NSString*) stateFor:(NSString*)key {
+	if (key == nil)
+		return nil;
 	return [state_info_ objectForKey:key];
 }
+/** 
+ Get the key-value for the control
+ */
+-(NSString*) valueFor:(NSString*)key {
+	return [keys_ objectForKey:key] ;
+}
+/**
+ Set the key dictionary, loop the new dict and push the
+ Key value pairs in
+ */
+-(void)setKeys_:(NSMutableDictionary *) newKey {
+	for (NSString* current_key in newKey) {
+		if ([keys_ objectForKey:current_key] == nil) {
+			[keys_ setObject:[[newKey objectForKey:current_key] copy] forKey:current_key];
+		}
+		else if ([[keys_ objectForKey:current_key] caseInsensitiveCompare:[newKey objectForKey:current_key]] != NSOrderedSame) {
+			NSLog(@"control key differs %@ ",current_key);
+		}
+	}
+}
+/** 
+ Get the XML attr dictionary
+ */
+-(NSMutableDictionary*) keys_ {
+	return keys_;
+}
+
 @end

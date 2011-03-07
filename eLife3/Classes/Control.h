@@ -41,8 +41,10 @@
 @property (nonatomic, copy) NSString *extra5_;
 @property (nonatomic, copy) NSString *room_;
 @property (nonatomic) NSUInteger tally_;
+@property (nonatomic, retain) NSMutableDictionary *keys_;
 
 -(id)initWithDictionary:(NSDictionary *)data;
 -(NSString*) stateFor:(NSString*)key;
-
+-(NSString*) valueFor:(NSString*)key;
+-(void)setKeys_:(NSMutableDictionary *) newKey;
 @end

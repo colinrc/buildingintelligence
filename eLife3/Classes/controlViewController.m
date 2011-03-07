@@ -52,6 +52,13 @@
 
 #import "controlViewController.h"
 #import "globalConfig.h"
+#import "Command.h"
+#import "eLife3AppDelegate.h"
+
+#import "uiButton.h"
+#import "uiLabel.h"
+#import "uiToggle.h"
+#import "uiSlider.h"
 
 @implementation controlViewController
 
@@ -114,23 +121,18 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 		for (NSDictionary* item in row.items_) {
 			switch ([row getItemType:[item objectForKey:@"type"]]) {
 				case label:
-				{
 					[self addLabel:item];
-				}
 					break;
 				case picker:
 					break;
 				case slider:
-				{
 					[self addSlider:item];
-				}
 					break;
 				case button:
-				{
 					[self addButton:item];
-				}
 					break;
 				case toggle:
+					[self addToggle:item];
 					break;
 				case toggled:
 					break;
@@ -143,6 +145,7 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 				case trackDetails:
 					break;
 				case space:
+					[self addSpace:item];
 					break;
 				default:
 					break;
@@ -153,13 +156,11 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	}
 }
 
-
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations.
     return YES;
 }
-
 
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
@@ -172,8 +173,8 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
 
 - (void)dealloc {
     [super dealloc];
@@ -215,56 +216,32 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	current_column_ += percentage;
 	return CGRectMake(left, top, width, height);
 }
+#pragma mark -
+#pragma mark control building code
 
 /**
  Add a label item
  */
 - (void) addLabel: (NSDictionary*)labelDict {
+
+	uiLabel *myLabel = [[uiLabel alloc] initWithFrame:[self getItemRect:[labelDict objectForKey:@"width"]]];
+	myLabel.control_ = control_;
+	myLabel.attributes_ = labelDict;
 	
-	NSString* state = [control_ stateFor:@"state"];
-	if (state == nil) {
-		state = [labelDict objectForKey: @"defaultState"];
-	}
-	
-	NSString* value = [control_ stateFor:@"on"];
-	if (value == nil) {
-		value = [labelDict objectForKey:@"defaultValue"];
-	}
-	NSString* src = [control_ stateFor:@"src"];
-	
-	NSString* labelString = [labelDict objectForKey:@"formats"];
-	if (labelString == nil) {
-		labelString = @"%name% ";
-		if (state != nil) labelString = [labelString stringByAppendingString:@"(%state%)"];
-	}
-	
-	// the format string label thing
-	if (control_.name_ != nil)
-		labelString = [labelString stringByReplacingOccurrencesOfString:@"%name%" withString:control_.name_];
-	if (state != nil)
-		labelString = [labelString stringByReplacingOccurrencesOfString:@"%state%" withString:state];
-	if (value != nil)
-		labelString = [labelString stringByReplacingOccurrencesOfString:@"%value%" withString:value];
-	if (src != nil)
-		labelString = [labelString stringByReplacingOccurrencesOfString:@"%src%" withString:src];
-	
-	UILabel *myLabel = [[UILabel alloc] initWithFrame:[self getItemRect:[labelDict objectForKey:@"width"]]];
-	myLabel.text = labelString;
-	myLabel.textAlignment = UITextAlignmentCenter;
-	myLabel.backgroundColor = UIColorFromRGB(0x7C90B0);
+	[myLabel updateControl];
 	[self.view addSubview:myLabel];
 }
 /**
  Adds a slider to the control
  */
 -(void) addSlider:(NSDictionary *)labelDict {
-	NSArray* icons = [[labelDict objectForKey:@"icons"] componentsSeparatedByString:@","];
-	// TODO: make a custom slider that uses the icon values
-	UISlider *mySlider = [[UISlider alloc] initWithFrame:[self getItemRect:[labelDict objectForKey:@"width"]]];
-	mySlider.maximumValue = 100;
-	mySlider.minimumValue = 0;
-	mySlider.value = [[control_ stateFor:@"value"] intValue];
-	mySlider.backgroundColor = UIColorFromRGB(0x7C90B0);
+	
+	uiSlider *mySlider = [[uiSlider alloc] initWithFrame:[self getItemRect:[labelDict objectForKey:@"width"]]];
+	mySlider.control_ = control_;
+	mySlider.attributes_ = labelDict;
+	
+	[mySlider updateControl];
+	[mySlider addTarget:mySlider action:@selector(sliderAction:) forControlEvents:UIControlEventValueChanged];
 	[self.view addSubview:mySlider];
 }
 /**
@@ -272,45 +249,37 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
  */
 -(void) addButton:(NSDictionary *)labelDict {
 	
-	UIButton *myButton = [[UIButton alloc] initWithFrame:[self getItemRect:[labelDict objectForKey:@"width"]]];
-	NSString* iconStr = [labelDict objectForKey:@"icon"];
-	if (iconStr != nil) {
-		UIImage* icon = [UIImage imageNamed:[iconStr stringByAppendingString:@".png"]];
-		if (icon != nil){
-			[myButton setImage:icon forState:UIControlStateNormal];
-		}
-	}
-	NSString* labelStr = [labelDict objectForKey:@"label"];
-	if (labelStr != nil) {
-		[myButton setTitle:labelStr forState:UIControlStateNormal];
-	}
-	
-	myButton.backgroundColor = UIColorFromRGB(0x7C90B0);
+	uiButton *myButton = [[uiButton alloc] initWithFrame:[self getItemRect:[labelDict objectForKey:@"width"]]];
+	myButton.control_ = control_;
+	myButton.attributes_ = labelDict;
+
+	[myButton updateControl];
+	[myButton addTarget:myButton action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:myButton];
 }
 /**
- Adds a toggle to the control 
+ Adds a toggle button to the control, a toggle button displays
+ different icons or labels depending on the controls state.
  */
 -(void) addToggle:(NSDictionary *)labelDict {
 	
-	UIButton *myButton = [[UIButton alloc] initWithFrame:[self getItemRect:[labelDict objectForKey:@"width"]]];
-	NSArray* icons = [[labelDict objectForKey:@"icons"] componentsSeparatedByString:@","];
-	if (icons != nil) {
-		NSString* iconStr = [icons objectAtIndex:0];
-		if (iconStr != nil) {
-			UIImage* icon = [UIImage imageNamed:[iconStr stringByAppendingString:@".png"]];
-			if (icon != nil){
-				[myButton setImage:icon forState:UIControlStateNormal];
-			}
-		}
-	}
-	NSString* labelStr = [labelDict objectForKey:@"label"];
-	if (labelStr != nil) {
-		[myButton setTitle:labelStr forState:UIControlStateNormal];
-	}
+	uiToggle *myButton = [[uiToggle alloc] initWithFrame:[self getItemRect:[labelDict objectForKey:@"width"]]];
+	myButton.control_ = control_;
+	myButton.attributes_ = labelDict;
 	
-	myButton.backgroundColor = UIColorFromRGB(0x7C90B0);
+	[myButton updateControl];
+	
+	[myButton addTarget:myButton action:@selector(toggleAction:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:myButton];
 }
+/**
+ Adds some whitespace
+ */
+-(void) addSpace:(NSDictionary *)labelDict {
+	
+	[self getItemRect:[labelDict objectForKey:@"width"]];
+}
+
+#pragma mark -
 
 @end

@@ -99,119 +99,22 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *PlainCellIdentifier  = @"Cell";
-    static NSString *OnOffCellIdentifier  = @"OnOffCell";
-    static NSString *SliderCellIdentifier = @"sliderCell";
-    NSString *CellIdentifier = PlainCellIdentifier;
-	
-	Boolean isSlider = NO;
-	Boolean isOnOff = NO;
-	
     // Configure the cell...
 	Control* tmpControl = [room_ itemForIndex:indexPath.section :indexPath.row];
-    if (tmpControl != nil)
-	{
-		if ([tmpControl.type_ isEqualToString:@"onOff"]) {
-			isOnOff = YES;
-			CellIdentifier = OnOffCellIdentifier;
-		} 
-		else if ([tmpControl.type_ isEqualToString:@"slider"]) {
-			isSlider = YES;
-			CellIdentifier = SliderCellIdentifier;
-		}
-	}
-	// if we aren't claimed were a plain control
-	
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-		if (isOnOff) {
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-			// if we are on off add a sliding switch?
-			UISwitch* onOff = [[UISwitch alloc] initWithFrame:CGRectMake(0,0,32,32)];
-			onOff.tag = (indexPath.section << 8) + indexPath.row;
-			cell.accessoryView = onOff;
-		}
-/*		else if (isSlider) 
-		{
-			[[NSBundle mainBundle] loadNibNamed:@"sliderCell" owner:self options:nil];
-			cell = sliderCell_;
-			self.sliderCell_ = nil;
-		}
-*/		else { // isPlain
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-		}
 
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+    if (cell == nil) {
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"] autorelease];
     }
     
-	if (isOnOff)
-	{
-		UISwitch* onOff = (UISwitch*) cell.accessoryView;
-		onOff.on = [tmpControl.command_ isEqualToString:@"on"];
-		UILabel *label = (UILabel*) [cell textLabel];
-		label.text = tmpControl.name_;
-		[onOff addTarget:self action:@selector(onOffChanged:) forControlEvents:UIControlEventValueChanged];
-/*	} else if (isSlider) {
-		// now we can add some stuff to our custom cell
-		UILabel *label =  (UILabel *)[cell viewWithTag:1];
-		label.text = tmpControl.name_;
-		UISlider* slider = (UISlider*)[cell viewWithTag:2];
-		slider.tag = (indexPath.section << 8) + indexPath.row;
-		slider.value = [tmpControl.extra_ intValue];
-		[slider addTarget:self action:@selector(sliderChanged:) forControlEvents:UIControlEventValueChanged];
-		
-*/	} else {
-		UILabel *label = (UILabel*) [cell textLabel];
-		label.text = tmpControl.name_;
-		// we are going to want to make a special window
-		cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-	}
-	
-	
-	// if we are audio add a |< [] |> >|
-	
+	UILabel *label = (UILabel*) [cell textLabel];
+	label.text = tmpControl.name_;
+	// we are going to want to make a special window
+	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
     return cell;
 }
 
--(void)onOffChanged:(id)sender {
-	NSUInteger tag = [sender tag];
-	NSUInteger section = tag >> 8;
-	NSUInteger row = tag & 0xFF;
-	NSLog(@"section= %i row = %i",section, row);
-	Control* tmpControl = [room_ itemForIndex:section :row];
-    if (tmpControl != nil)
-	{
-		UISwitch *onOff = (UISwitch*) sender;
-		NSLog(@"switch is %i",onOff.on);
-		Command *myCommand = [[Command alloc] init];
-		myCommand.key_ = tmpControl.key_;
-		myCommand.command_ = (onOff.on)? @"on" : @"off";
-		eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
-		[elifeappdelegate.elifeSvrConn sendCommand:myCommand];
-		[myCommand release];
-		
-	}
-}
-
--(void)sliderChanged:(id)sender {
-	NSUInteger tag = [sender tag];
-	NSUInteger section = tag >> 8;
-	NSUInteger row = tag & 0xFF;
-	NSLog(@"section= %i row = %i",section, row);
-	Control* tmpControl = [room_ itemForIndex:section :row];
-    if (tmpControl != nil)
-	{
-		UISlider *slider = (UISlider*)sender;
-		NSLog(@"slider is %2.0f",slider.value);
-		Command *myCommand = [[Command alloc] init];
-		myCommand.key_ = tmpControl.key_;
-		myCommand.command_ = (slider.value > 1.0)? @"on" : @"off";
-		if (slider.value > 1.0)
-			myCommand.extra_ = [NSString stringWithFormat:@"%2.0f", slider.value];
-		eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
-		[elifeappdelegate.elifeSvrConn sendCommand:myCommand];
-		[myCommand release];
-	}		
-}
 /*
  // Override to support conditional editing of the table view.
  - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -268,11 +171,7 @@
 	Control* tmpControl = [room_ itemForIndex:indexPath.section :indexPath.row];
     if (tmpControl == nil)
 		return; // cant get a control bail
-	if ([tmpControl.type_ isEqualToString:@"onOff"])
-			return; // already handle this
-//	if ([tmpControl.type_ isEqualToString:@"slider"])
-//			return; // already handle this
-	
+
 	// if we are here we need to look at going to a new page
 	// and building some sort of crazy control as per the XML
 	controlViewController *viewController = [controlViewController alloc];
@@ -280,7 +179,6 @@
 	// TODO: add control info to view
 	[self.navigationController pushViewController:viewController animated:YES];
 	[viewController release];
-	
 }
 
 
@@ -326,7 +224,6 @@
 - (void)dealloc {
     [super dealloc];
 }
-
 
 @end
 
