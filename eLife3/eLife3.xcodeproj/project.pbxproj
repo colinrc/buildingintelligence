@@ -10,7 +10,6 @@
 		1A03F4BF11C1CFDB008FADBA /* clientParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A03F4BE11C1CFDB008FADBA /* clientParser.m */; };
 		1A03F55611C1F8EA008FADBA /* settingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A03F55511C1F8EA008FADBA /* settingsViewController.xib */; };
 		1A0E08EF12F7925500C41622 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A0E08EE12F7925500C41622 /* AsyncUdpSocket.m */; };
-		1A2147BB130380C4004FBE11 /* sliderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A2147BA130380C4004FBE11 /* sliderCell.xib */; };
 		1A2D19D211BE200F001A9635 /* aircon-off.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D193F11BE200F001A9635 /* aircon-off.png */; };
 		1A2D19D311BE200F001A9635 /* aircon.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D194011BE200F001A9635 /* aircon.png */; };
 		1A2D19D411BE200F001A9635 /* alarm-clock.png in Resources */ = {isa = PBXBuildFile; fileRef = 1A2D194111BE200F001A9635 /* alarm-clock.png */; };
@@ -194,6 +193,10 @@
 		1AD96F8F11D41D38001E722E /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1AD96F8E11D41D38001E722E /* README.txt */; };
 		1AD96FDE11D43119001E722E /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AD96FDD11D43119001E722E /* Reachability.m */; };
 		1AD9701811D43790001E722E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AD9701711D43790001E722E /* SystemConfiguration.framework */; };
+		1AF7603113208EB800B8DDAB /* uiButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7603013208EB800B8DDAB /* uiButton.m */; };
+		1AF7603413208EC200B8DDAB /* uiToggle.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7603313208EC200B8DDAB /* uiToggle.m */; };
+		1AF7603713208ECE00B8DDAB /* uiSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7603613208ECE00B8DDAB /* uiSlider.m */; };
+		1AF7603D13208F0000B8DDAB /* uiLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7603C13208F0000B8DDAB /* uiLabel.m */; };
 		1AFA3A83131DD2920054AF23 /* uiControlList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFA3A82131DD2920054AF23 /* uiControlList.m */; };
 		1AFA3B82131DEC350054AF23 /* controlRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AFA3B81131DEC350054AF23 /* controlRow.m */; };
 		1D3623260D0F684500981E51 /* eLife3AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* eLife3AppDelegate.m */; };
@@ -220,7 +223,6 @@
 		1A03F55511C1F8EA008FADBA /* settingsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = settingsViewController.xib; sourceTree = "<group>"; };
 		1A0E08ED12F7925500C41622 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncUdpSocket.h; path = Classes/AsyncUdpSocket.h; sourceTree = "<group>"; };
 		1A0E08EE12F7925500C41622 /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncUdpSocket.m; path = Classes/AsyncUdpSocket.m; sourceTree = "<group>"; };
-		1A2147BA130380C4004FBE11 /* sliderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = sliderCell.xib; sourceTree = "<group>"; };
 		1A2D193F11BE200F001A9635 /* aircon-off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "aircon-off.png"; path = "icons/aircon-off.png"; sourceTree = "<group>"; };
 		1A2D194011BE200F001A9635 /* aircon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = aircon.png; path = icons/aircon.png; sourceTree = "<group>"; };
 		1A2D194111BE200F001A9635 /* alarm-clock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "alarm-clock.png"; path = "icons/alarm-clock.png"; sourceTree = "<group>"; };
@@ -427,6 +429,14 @@
 		1AD96FDC11D43119001E722E /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = Classes/Reachability.h; sourceTree = "<group>"; };
 		1AD96FDD11D43119001E722E /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = Classes/Reachability.m; sourceTree = "<group>"; };
 		1AD9701711D43790001E722E /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		1AF7602F13208EB800B8DDAB /* uiButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiButton.h; sourceTree = "<group>"; };
+		1AF7603013208EB800B8DDAB /* uiButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = uiButton.m; sourceTree = "<group>"; };
+		1AF7603213208EC200B8DDAB /* uiToggle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiToggle.h; sourceTree = "<group>"; };
+		1AF7603313208EC200B8DDAB /* uiToggle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = uiToggle.m; sourceTree = "<group>"; };
+		1AF7603513208ECE00B8DDAB /* uiSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiSlider.h; sourceTree = "<group>"; };
+		1AF7603613208ECE00B8DDAB /* uiSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = uiSlider.m; sourceTree = "<group>"; };
+		1AF7603B13208F0000B8DDAB /* uiLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiLabel.h; sourceTree = "<group>"; };
+		1AF7603C13208F0000B8DDAB /* uiLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = uiLabel.m; sourceTree = "<group>"; };
 		1AFA3A81131DD2920054AF23 /* uiControlList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiControlList.h; sourceTree = "<group>"; };
 		1AFA3A82131DD2920054AF23 /* uiControlList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = uiControlList.m; sourceTree = "<group>"; };
 		1AFA3B80131DEC350054AF23 /* controlRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = controlRow.h; sourceTree = "<group>"; };
@@ -538,6 +548,14 @@
 				1AFA3A82131DD2920054AF23 /* uiControlList.m */,
 				1AFA3B80131DEC350054AF23 /* controlRow.h */,
 				1AFA3B81131DEC350054AF23 /* controlRow.m */,
+				1AF7602F13208EB800B8DDAB /* uiButton.h */,
+				1AF7603013208EB800B8DDAB /* uiButton.m */,
+				1AF7603213208EC200B8DDAB /* uiToggle.h */,
+				1AF7603313208EC200B8DDAB /* uiToggle.m */,
+				1AF7603513208ECE00B8DDAB /* uiSlider.h */,
+				1AF7603613208ECE00B8DDAB /* uiSlider.m */,
+				1AF7603B13208F0000B8DDAB /* uiLabel.h */,
+				1AF7603C13208F0000B8DDAB /* uiLabel.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -760,7 +778,6 @@
 			children = (
 				1A2D193E11BE1F7E001A9635 /* icons */,
 				28AD73870D9D96C1002E5188 /* MainWindow.xib */,
-				1A2147BA130380C4004FBE11 /* sliderCell.xib */,
 				8D1107310486CEB800E47090 /* eLife3-Info.plist */,
 				7E2E8B2A10FE69B200668D2C /* macrosViewController.xib */,
 				1A5ABB31130244C500A76B77 /* roomViewController.xib */,
@@ -1002,7 +1019,6 @@
 				1A552AD611D9BB500015B4BD /* WWAN5.png in Resources */,
 				1A5ABB261302443400A76B77 /* logViewController.xib in Resources */,
 				1A5ABB33130244C500A76B77 /* roomViewController.xib in Resources */,
-				1A2147BB130380C4004FBE11 /* sliderCell.xib in Resources */,
 				1A6FE7A4130CC81100A08EA7 /* controlViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1048,6 +1064,10 @@
 				1A6FEA34130E320A00A08EA7 /* globalConfig.m in Sources */,
 				1AFA3A83131DD2920054AF23 /* uiControlList.m in Sources */,
 				1AFA3B82131DEC350054AF23 /* controlRow.m in Sources */,
+				1AF7603113208EB800B8DDAB /* uiButton.m in Sources */,
+				1AF7603413208EC200B8DDAB /* uiToggle.m in Sources */,
+				1AF7603713208ECE00B8DDAB /* uiSlider.m in Sources */,
+				1AF7603D13208F0000B8DDAB /* uiLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
