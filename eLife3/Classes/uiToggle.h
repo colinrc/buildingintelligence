@@ -19,6 +19,5 @@
 
 -(void) updateControl;
 -(void) toggleAction:(id)sender;
--(void) statusUpdate:(NSNotification *)notification;
 
 @end

@@ -19,6 +19,5 @@
 
 -(void) updateControl;
 -(void) buttonAction:(id)sender;
--(void) statusUpdate:(NSNotification *)notification;
 
 @end

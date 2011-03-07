@@ -18,6 +18,5 @@
 @property (nonatomic, retain) Control* control_;
 
 -(void) updateControl;
--(void) statusUpdate:(NSNotification *)notification;
 
 @end

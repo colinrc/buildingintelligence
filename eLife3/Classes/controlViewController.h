@@ -39,4 +39,7 @@
 -(void) addToggle:(NSDictionary *)labelDict;
 -(void) addSpace:(NSDictionary *)labelDict;
 
+-(void) statusUpdate:(NSNotification *)notification;
+-(void) updateView;
+
 @end

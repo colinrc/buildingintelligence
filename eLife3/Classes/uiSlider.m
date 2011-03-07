@@ -17,23 +17,9 @@ extern UIColor* UIColorFromRGB(uint rgbValue);
 @synthesize attributes_;
 
 /**
- Override the standard setter to subscribe to updates
- */
--(void) setControl_:(Control *)control {
-	
-	if (control.key_ != control_.key_) {
-		if (control_ != nil)
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:[control_.key_ stringByAppendingString:@"_status"] object:nil];
-		control_ = [control retain];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusUpdate:) name:[control_.key_ stringByAppendingString:@"_status"] object:nil];
-	}
-}
-
-/**
  Cleanup
  */
 -(void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[control_ release];
 	[attributes_ release];
 	[super dealloc];
@@ -51,6 +37,7 @@ extern UIColor* UIColorFromRGB(uint rgbValue);
 		
 	}
 
+	self.continuous = NO;
 	self.maximumValue = 100;
 	self.minimumValue = 0;
 	self.value = [[control_ stateFor:@"value"] intValue];
@@ -71,13 +58,6 @@ extern UIColor* UIColorFromRGB(uint rgbValue);
 	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
 	[elifeappdelegate.elifeSvrConn sendCommand:myCommand];
 	[myCommand release];
-}
-/**
- Called by control when there is data from server
- */
-- (void)statusUpdate:(NSNotification *)notification {
-	NSLog(@"slider update for control %@", control_.key_);
-	self.value = [control_.extra_ intValue];
 }
 
 @end

@@ -18,30 +18,16 @@ extern UIColor* UIColorFromRGB(uint rgbValue);
 @synthesize attributes_;
 
 /**
- Override the standard setter to subscribe to updates
- */
--(void) setControl_:(Control *)control {
-	
-	if (control.key_ != control_.key_) {
-		if (control_ != nil)
-			[[NSNotificationCenter defaultCenter] removeObserver:self name:[control_.key_ stringByAppendingString:@"_status"] object:nil];
-		control_ = [control retain];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusUpdate:) name:[control_.key_ stringByAppendingString:@"_status"] object:nil];
-	}
-}
-
-/**
  Cleanup
  */
 -(void) dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[control_ release];
 	[attributes_ release];
 	[super dealloc];
 }
 /**
  Updates the control as per the eLife way
- TODO: don't need this as this control does not update
+ TODO: don't need this here this control does not update, init?
  */
 -(void) updateControl {
 	// look for an icon
@@ -79,15 +65,10 @@ extern UIColor* UIColorFromRGB(uint rgbValue);
 	Command *myCommand = [[Command alloc] init];
 	myCommand.key_ = control_.key_;
 	myCommand.command_ = [attributes_ objectForKey:@"command"];
+	myCommand.extra_ = [attributes_ objectForKey:@"extra"];
 	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
 	[elifeappdelegate.elifeSvrConn sendCommand:myCommand];
 	[myCommand release];
-}
-/**
- Called by control when there is data from server
- */
-- (void)statusUpdate:(NSNotification *)notification {
-	
 }
 
 @end

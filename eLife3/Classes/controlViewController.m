@@ -83,6 +83,16 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
+-(void) setControl_:(Control *) control {
+	if (control != control_) {
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:[control_.key_ stringByAppendingString:@"_status"] object:nil];
+		[control_ release];
+		control_ = [control retain];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusUpdate:) name:[control_.key_ stringByAppendingString:@"_status"] object:nil];
+	}
+}
+
+
 /** 
  Need to implement to create view manually...
  */
@@ -111,6 +121,9 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
  */
 - (void)viewDidLoad {
     [super viewDidLoad];
+	[self updateView];
+}
+-(void) updateView {
 	self.currentControl_ = [[globalConfig sharedInstance].uicontrols_ getControlRows:control_.type_ ];
 	// TODO: loop through the control rows adding them to the view 
 	// if the case statements for the rows mean they are visible
@@ -193,9 +206,41 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
  and see if we need to show the row
  */
 -(Boolean)evaluateCases:(NSString *)cases {
-	
-	// TODO: need to do the string mangling
-	return YES;
+	Boolean show = NO;
+
+	if (cases == nil)
+		return YES; // no case set for this row
+
+	NSArray *entries = [cases componentsSeparatedByString:@","]; // split into different cases 
+	for (NSString *entry in entries) {
+		show = NO;
+		NSArray *stuff = [entry componentsSeparatedByString:@":"]; // split into case / condition
+		if ([stuff count] == 2) {
+			NSString *stateVar = [stuff objectAtIndex:0];
+			NSString *state = [control_ stateFor:stateVar];
+			NSArray *conditions = [[stuff objectAtIndex:1] componentsSeparatedByString:@"|"]; // split conditions
+			for (NSString *condition in conditions) {
+				if ([condition hasPrefix:@"!"]) {
+					if (state != nil || ![condition hasSuffix:state]) {
+						show = YES;
+						break;
+					}
+				}
+				if (state != nil && [condition hasSuffix:state]) {
+					show = YES;
+					break;
+				}
+			}
+		}
+		else {
+			NSLog(@"Error in row case statement, state:value required");
+			show = NO;
+		}
+
+		if (!show) // if any of the cases are no do not show
+			break;
+	}
+	return show;
 }
 /**
  Gets the items bounding rectangle based on the width 
@@ -223,13 +268,14 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
  Add a label item
  */
 - (void) addLabel: (NSDictionary*)labelDict {
-
+	
 	uiLabel *myLabel = [[uiLabel alloc] initWithFrame:[self getItemRect:[labelDict objectForKey:@"width"]]];
 	myLabel.control_ = control_;
 	myLabel.attributes_ = labelDict;
 	
 	[myLabel updateControl];
 	[self.view addSubview:myLabel];
+	[myLabel release];
 }
 /**
  Adds a slider to the control
@@ -243,6 +289,7 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	[mySlider updateControl];
 	[mySlider addTarget:mySlider action:@selector(sliderAction:) forControlEvents:UIControlEventValueChanged];
 	[self.view addSubview:mySlider];
+	[mySlider release];
 }
 /**
  Adds a button to the control 
@@ -252,10 +299,11 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	uiButton *myButton = [[uiButton alloc] initWithFrame:[self getItemRect:[labelDict objectForKey:@"width"]]];
 	myButton.control_ = control_;
 	myButton.attributes_ = labelDict;
-
+	
 	[myButton updateControl];
 	[myButton addTarget:myButton action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:myButton];
+	[myButton release];
 }
 /**
  Adds a toggle button to the control, a toggle button displays
@@ -271,6 +319,7 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	
 	[myButton addTarget:myButton action:@selector(toggleAction:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:myButton];
+	[myButton release];
 }
 /**
  Adds some whitespace
@@ -281,5 +330,19 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 }
 
 #pragma mark -
+
+-(void) statusUpdate:(NSNotification *)notification {
+
+	NSArray *subviews = self.view.subviews;
+	for (UIView *currentView in subviews) {
+		[currentView removeFromSuperview];
+	}
+
+	self.current_row_ = 0;
+	self.current_column_ = 0;
+	self.remaining_items_ = 0;
+
+	[self updateView];
+}
 
 @end

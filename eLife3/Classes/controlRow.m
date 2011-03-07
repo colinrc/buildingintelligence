@@ -73,7 +73,8 @@
 		return toggle;
 	} else if ([itemType caseInsensitiveCompare:@"video"] == NSOrderedSame) {
 		return video;
-	} else if ([itemType caseInsensitiveCompare:@"browser"] == NSOrderedSame) {
+	} else if (([itemType caseInsensitiveCompare:@"browser"] == NSOrderedSame) ||
+			   ([itemType caseInsensitiveCompare:@"webbrowser"] == NSOrderedSame)) {
 		return browser;
 	} else if ([itemType caseInsensitiveCompare:@"mediaPlayer"] == NSOrderedSame) {
 		return mediaPlayer;

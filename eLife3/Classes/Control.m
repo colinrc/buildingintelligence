@@ -97,8 +97,8 @@
 	if (newCommand != command_) {
 		[command_ release];
 		command_ = [newCommand copy];
-		if (([command_ caseInsensitiveCompare:@"no"] == NSOrderedSame) || 
-			([command_ caseInsensitiveCompare:@"yes"])) {
+		if (([command_ caseInsensitiveCompare:@"on"] == NSOrderedSame) || 
+			([command_ caseInsensitiveCompare:@"off"] == NSOrderedSame)) {
 			[state_info_ setObject:command_ forKey:@"state"];
 		}
 	}
