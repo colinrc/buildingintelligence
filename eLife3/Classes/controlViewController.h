@@ -38,6 +38,7 @@
 -(void) addButton:(NSDictionary *)labelDict;
 -(void) addToggle:(NSDictionary *)labelDict;
 -(void) addSpace:(NSDictionary *)labelDict;
+-(void) addBrowser:(NSDictionary *)labelDict;
 
 -(void) statusUpdate:(NSNotification *)notification;
 -(void) updateView;

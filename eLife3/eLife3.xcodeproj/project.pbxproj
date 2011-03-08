@@ -183,6 +183,7 @@
 		1A6FE7A3130CC81100A08EA7 /* controlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FE7A1130CC81100A08EA7 /* controlViewController.m */; };
 		1A6FE7A4130CC81100A08EA7 /* controlViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1A6FE7A2130CC81100A08EA7 /* controlViewController.xib */; };
 		1A6FEA34130E320A00A08EA7 /* globalConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6FEA33130E320A00A08EA7 /* globalConfig.m */; };
+		1A7F40631325A52D00CE6655 /* uiBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A7F40621325A52D00CE6655 /* uiBrowser.m */; };
 		1ABE0E7812FA5F0A00DDAFE9 /* zoneList.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0E7712FA5F0A00DDAFE9 /* zoneList.m */; };
 		1ABE0E7D12FA605F00DDAFE9 /* Zone.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0E7C12FA605F00DDAFE9 /* Zone.m */; };
 		1ABE0EC312FA6A5500DDAFE9 /* Room.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ABE0EC212FA6A5500DDAFE9 /* Room.m */; };
@@ -411,6 +412,8 @@
 		1A6FE7A2130CC81100A08EA7 /* controlViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = controlViewController.xib; path = Classes/controlViewController.xib; sourceTree = "<group>"; };
 		1A6FEA32130E320A00A08EA7 /* globalConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = globalConfig.h; sourceTree = "<group>"; };
 		1A6FEA33130E320A00A08EA7 /* globalConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = globalConfig.m; sourceTree = "<group>"; };
+		1A7F40611325A52D00CE6655 /* uiBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uiBrowser.h; sourceTree = "<group>"; };
+		1A7F40621325A52D00CE6655 /* uiBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = uiBrowser.m; sourceTree = "<group>"; };
 		1ABE0E7612FA5F0A00DDAFE9 /* zoneList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zoneList.h; sourceTree = "<group>"; };
 		1ABE0E7712FA5F0A00DDAFE9 /* zoneList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = zoneList.m; sourceTree = "<group>"; };
 		1ABE0E7B12FA605F00DDAFE9 /* Zone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Zone.h; sourceTree = "<group>"; };
@@ -556,6 +559,8 @@
 				1AF7603613208ECE00B8DDAB /* uiSlider.m */,
 				1AF7603B13208F0000B8DDAB /* uiLabel.h */,
 				1AF7603C13208F0000B8DDAB /* uiLabel.m */,
+				1A7F40611325A52D00CE6655 /* uiBrowser.h */,
+				1A7F40621325A52D00CE6655 /* uiBrowser.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -1068,6 +1073,7 @@
 				1AF7603413208EC200B8DDAB /* uiToggle.m in Sources */,
 				1AF7603713208ECE00B8DDAB /* uiSlider.m in Sources */,
 				1AF7603D13208F0000B8DDAB /* uiLabel.m in Sources */,
+				1A7F40631325A52D00CE6655 /* uiBrowser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1086,7 +1092,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = _DEBUG;
 				INFOPLIST_FILE = "eLife3-Info.plist";
 				PRODUCT_NAME = eLife3;
-				SDKROOT = iphonesimulator4.0;
+				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};

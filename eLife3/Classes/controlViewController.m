@@ -59,6 +59,7 @@
 #import "uiLabel.h"
 #import "uiToggle.h"
 #import "uiSlider.h"
+#import "uiBrowser.h"
 
 @implementation controlViewController
 
@@ -125,7 +126,7 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 }
 -(void) updateView {
 	self.currentControl_ = [[globalConfig sharedInstance].uicontrols_ getControlRows:control_.type_ ];
-	// TODO: loop through the control rows adding them to the view 
+	// loop through the control rows adding them to the view 
 	// if the case statements for the rows mean they are visible
 	for (controlRow* row in currentControl_) {
 		if (![self evaluateCases:row.cases_]) 
@@ -150,8 +151,11 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 				case toggled:
 					break;
 				case video:
+					// try to use the browser
+					[self addBrowser:item];
 					break;
 				case browser:
+					[self addBrowser:item];
 					break;
 				case mediaPlayer:
 					break;
@@ -261,6 +265,35 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	current_column_ += percentage;
 	return CGRectMake(left, top, width, height);
 }
+/**
+ Gets a big square for a browser
+ TODO: fix for screen rotation
+ */
+- (CGRect) getBrowserRect: (NSDictionary*) attribs {
+	
+	NSString *strWidth = [attribs objectForKey:@"videoWidth"];
+	NSString *strHeight= [attribs objectForKey:@"videoHeight"];
+
+	int height = [strHeight intValue];
+	if (height == 0) {
+		height = 8*48; // eight rows
+	}
+	int width = [strWidth intValue];
+	if (width == 0) {
+		width = 318; // full screen width (minus borders)
+	}
+		
+	int top = current_row_ * 50 + 1;
+	int left = 1;
+
+	current_row_ += height / 50;
+	if ((height % 50) == 0) // if we overflow then add a row
+		current_row_ -= 1;
+		
+	current_column_ = 0;
+	
+	return CGRectMake(left, top, width, height);
+}
 #pragma mark -
 #pragma mark control building code
 
@@ -328,9 +361,26 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	
 	[self getItemRect:[labelDict objectForKey:@"width"]];
 }
+/**
+ Adds a mini browser
+ */
+-(void) addBrowser:(NSDictionary *)labelDict {
+	uiBrowser *myBrowser = [[uiBrowser alloc] initWithFrame:[self getBrowserRect:labelDict]];
+
+	myBrowser.control_ = control_;
+	myBrowser.attributes_ = labelDict;
+	
+	[myBrowser updateControl];
+	[self.view addSubview:myBrowser];	
+}
+
 
 #pragma mark -
-
+/**
+ Updates the view when the control state changes,
+ need to totally redraw as the row cases may make 
+ some controls appear or dissapear.
+ */
 -(void) statusUpdate:(NSNotification *)notification {
 
 	NSArray *subviews = self.view.subviews;

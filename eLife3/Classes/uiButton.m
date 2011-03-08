@@ -65,7 +65,8 @@ extern UIColor* UIColorFromRGB(uint rgbValue);
 	Command *myCommand = [[Command alloc] init];
 	myCommand.key_ = control_.key_;
 	myCommand.command_ = [attributes_ objectForKey:@"command"];
-	myCommand.extra_ = [attributes_ objectForKey:@"extra"];
+	if ([attributes_ objectForKey:@"extra"] != nil)
+		myCommand.extra_ = [attributes_ objectForKey:@"extra"];
 	eLife3AppDelegate *elifeappdelegate = (eLife3AppDelegate *)[[UIApplication sharedApplication] delegate];
 	[elifeappdelegate.elifeSvrConn sendCommand:myCommand];
 	[myCommand release];

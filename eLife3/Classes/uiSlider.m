@@ -40,7 +40,7 @@ extern UIColor* UIColorFromRGB(uint rgbValue);
 	self.continuous = NO;
 	self.maximumValue = 100;
 	self.minimumValue = 0;
-	self.value = [[control_ stateFor:@"value"] intValue];
+	self.value = [[control_ stateFor:control_.command_] intValue];
 	self.backgroundColor = UIColorFromRGB(0x7C90B0);	
 }
 /**

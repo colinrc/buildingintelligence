@@ -34,6 +34,6 @@
 
 +(globalConfig*)sharedInstance;
 
--(void)reset; // TODO: need to be able to cleanup
+-(void)reset; // cleans the current config to load a new one
 
 @end

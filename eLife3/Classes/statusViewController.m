@@ -32,7 +32,7 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	// network change notification
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkUpdate:) name:@"networkChange:" object:nil];
-	// TODO: Add notifiction for settings
+	// TODO: Add notifiction for settings, need to check whether table data change handles this
 	
 }
 /**
