@@ -62,7 +62,10 @@ extern UIColor* UIColorFromRGB(uint rgbValue);
 			[self setTitle:labelStr forState:UIControlStateNormal];
 		}
 	}
-	
+
+	self.titleLabel.shadowColor = [UIColor blackColor];
+	self.titleLabel.shadowOffset = CGSizeMake(4.0, 4.0);
+	self.reversesTitleShadowWhenHighlighted = YES;
 	self.backgroundColor = UIColorFromRGB(0x7C90B0);
 }
 /**

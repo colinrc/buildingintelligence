@@ -63,6 +63,8 @@
 
 @implementation controlViewController
 
+@synthesize scrollView;
+@synthesize controls_;
 @synthesize control_;
 @synthesize currentControl_;
 @synthesize current_row_;
@@ -84,25 +86,17 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
--(void) setControl_:(Control *) control {
-	if (control != control_) {
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:[control_.key_ stringByAppendingString:@"_status"] object:nil];
-		[control_ release];
-		control_ = [control retain];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusUpdate:) name:[control_.key_ stringByAppendingString:@"_status"] object:nil];
-	}
-}
-
-
 /** 
  Need to implement to create view manually...
  */
 - (void)loadView {
-	self.view = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 1024)];
-	self.view.backgroundColor = UIColorFromRGB(0x476390);
+	self.scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 320, 480)];
+	scrollView.scrollEnabled = YES;
+	scrollView.backgroundColor = UIColorFromRGB(0x476390);
 	self.current_row_ = 0;
 	self.current_column_ = 0;
 	self.remaining_items_ = 0;
+	self.view = scrollView;
 }
 
 // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -125,52 +119,60 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	[self updateView];
 }
 -(void) updateView {
-	self.currentControl_ = [[globalConfig sharedInstance].uicontrols_ getControlRows:control_.type_ ];
-	// loop through the control rows adding them to the view 
-	// if the case statements for the rows mean they are visible
-	for (controlRow* row in currentControl_) {
-		if (![self evaluateCases:row.cases_]) 
-			continue;
-		remaining_items_ = [row.items_ count];
-		for (NSDictionary* item in row.items_) {
-			switch ([row getItemType:[item objectForKey:@"type"]]) {
-				case label:
-					[self addLabel:item];
-					break;
-				case picker:
-					break;
-				case slider:
-					[self addSlider:item];
-					break;
-				case button:
-					[self addButton:item];
-					break;
-				case toggle:
-					[self addToggle:item];
-					break;
-				case toggled:
-					break;
-				case video:
-					// try to use the browser
-					[self addBrowser:item];
-					break;
-				case browser:
-					[self addBrowser:item];
-					break;
-				case mediaPlayer:
-					break;
-				case trackDetails:
-					break;
-				case space:
-					[self addSpace:item];
-					break;
-				default:
-					break;
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+	// loop through the controls 
+	for (control_ in controls_) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusUpdate:) name:[control_.key_ stringByAppendingString:@"_status"] object:nil];	
+		self.currentControl_ = [[globalConfig sharedInstance].uicontrols_ getControlRows:control_.type_ ];
+		// loop through the control rows adding them to the view 
+		// if the case statements for the rows mean they are visible
+		for (controlRow* row in currentControl_) {
+			if (![self evaluateCases:row.cases_]) 
+				continue;
+			remaining_items_ = [row.items_ count];
+			for (NSDictionary* item in row.items_) {
+				switch ([row getItemType:[item objectForKey:@"type"]]) {
+					case label:
+						[self addLabel:item];
+						break;
+					case picker:
+						break;
+					case slider:
+						[self addSlider:item];
+						break;
+					case button:
+						[self addButton:item];
+						break;
+					case toggle:
+						[self addToggle:item];
+						break;
+					case toggled:
+						break;
+					case video:
+						// try to use the browser
+						[self addBrowser:item];
+						break;
+					case browser:
+						[self addBrowser:item];
+						break;
+					case mediaPlayer:
+						break;
+					case trackDetails:
+						break;
+					case space:
+						[self addSpace:item];
+						break;
+					default:
+						break;
+				}
+				remaining_items_--;
 			}
-			remaining_items_--;
+			[self nextRow];
 		}
-		[self nextRow];
 	}
+	
+	[scrollView setContentSize:CGSizeMake([self.view bounds].size.width, current_row_*50)];
 }
 
 // Override to allow orientations other than the default portrait orientation.
@@ -194,6 +196,7 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 }
 
 - (void)dealloc {
+	[scrollView release];
     [super dealloc];
 }
 
@@ -211,10 +214,10 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
  */
 -(Boolean)evaluateCases:(NSString *)cases {
 	Boolean show = NO;
-
+	
 	if (cases == nil)
 		return YES; // no case set for this row
-
+	
 	NSArray *entries = [cases componentsSeparatedByString:@","]; // split into different cases 
 	for (NSString *entry in entries) {
 		show = NO;
@@ -225,7 +228,7 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 			NSArray *conditions = [[stuff objectAtIndex:1] componentsSeparatedByString:@"|"]; // split conditions
 			for (NSString *condition in conditions) {
 				if ([condition hasPrefix:@"!"]) {
-					if (state != nil || ![condition hasSuffix:state]) {
+					if (state == nil || ![condition hasSuffix:state]) {
 						show = YES;
 						break;
 					}
@@ -240,7 +243,7 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 			NSLog(@"Error in row case statement, state:value required");
 			show = NO;
 		}
-
+		
 		if (!show) // if any of the cases are no do not show
 			break;
 	}
@@ -273,7 +276,7 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	
 	NSString *strWidth = [attribs objectForKey:@"videoWidth"];
 	NSString *strHeight= [attribs objectForKey:@"videoHeight"];
-
+	
 	int height = [strHeight intValue];
 	if (height == 0) {
 		height = 8*48; // eight rows
@@ -282,14 +285,14 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	if (width == 0) {
 		width = 318; // full screen width (minus borders)
 	}
-		
+	
 	int top = current_row_ * 50 + 1;
 	int left = 1;
-
+	
 	current_row_ += height / 50;
 	if ((height % 50) == 0) // if we overflow then add a row
 		current_row_ -= 1;
-		
+	
 	current_column_ = 0;
 	
 	return CGRectMake(left, top, width, height);
@@ -366,7 +369,7 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
  */
 -(void) addBrowser:(NSDictionary *)labelDict {
 	uiBrowser *myBrowser = [[uiBrowser alloc] initWithFrame:[self getBrowserRect:labelDict]];
-
+	
 	myBrowser.control_ = control_;
 	myBrowser.attributes_ = labelDict;
 	
@@ -382,16 +385,16 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
  some controls appear or dissapear.
  */
 -(void) statusUpdate:(NSNotification *)notification {
-
+	
 	NSArray *subviews = self.view.subviews;
 	for (UIView *currentView in subviews) {
 		[currentView removeFromSuperview];
 	}
-
+	
 	self.current_row_ = 0;
 	self.current_column_ = 0;
 	self.remaining_items_ = 0;
-
+	
 	[self updateView];
 }
 

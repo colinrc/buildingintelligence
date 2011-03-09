@@ -35,7 +35,7 @@
 -(void)disconnect {
 	[timer_ invalidate];
 	timer_ = nil;
-
+	
 	if (iStream != nil){
 		[iStream close]; // implicitly removes from runloop
 		[iStream release];
@@ -66,12 +66,12 @@
  */
 - (Boolean)localConnect {
 	[self disconnect];
-
+	
 	NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];  
 	NSString *elifehost = [userDefaults stringForKey:@"elifesvr"];  
 	int elifeport = [userDefaults integerForKey:@"elifesvrport"];
 	self.lastCommTime = [NSDate date];
-
+	
 	if (![elifehost isEqualToString:@""] && elifehost != NULL) {
 		
 		host_ = CFHostCreateWithName(NULL, (CFStringRef) elifehost);
@@ -104,10 +104,10 @@
 		timer_ = nil;
 		// Need to add a timer event to try again in 5 seconds
 		timer_ = [NSTimer scheduledTimerWithTimeInterval:15 
-													   target:self
-													 selector:@selector(watchdog)
-													 userInfo:nil
-													  repeats:NO];
+												  target:self
+												selector:@selector(watchdog)
+												userInfo:nil
+												 repeats:NO];
 		
 		return YES;
 	}
@@ -137,16 +137,16 @@
 	}
 	
 	timer_ = [NSTimer scheduledTimerWithTimeInterval:15
-												   target:self
-												 selector:@selector(watchdog)
-												 userInfo:nil
-												  repeats:NO];
+											  target:self
+											selector:@selector(watchdog)
+											userInfo:nil
+											 repeats:NO];
 }
 /**
  Writes the data to the open server connection.
  */
 - (void)sendmessage:(NSString *)theMessage {
-
+	
 	if (self.state_ == unconnected_) {
 		return;
 	}
@@ -181,23 +181,27 @@
  Writes the data to the open server connection.
  */
 - (void)sendCommand:(Command *)theCommand {
-
-	NSString *msg = @"<CONTROL KEY=\"";
-	msg = [msg stringByAppendingString:theCommand.key_];
-	msg = [msg stringByAppendingString:@"\" COMMAND=\""];
-	msg = [msg stringByAppendingString:theCommand.command_];
-	msg = [msg stringByAppendingString:@"\" EXTRA=\""];
-	msg = [msg stringByAppendingString:theCommand.extra_];
-	msg = [msg stringByAppendingString:@"\" EXTRA2=\""];
-	msg = [msg stringByAppendingString:theCommand.extra2_];
-	msg = [msg stringByAppendingString:@"\" EXTRA3=\""];
-	msg = [msg stringByAppendingString:theCommand.extra3_];
-	msg = [msg stringByAppendingString:@"\" EXTRA4=\""];
-	msg = [msg stringByAppendingString:theCommand.extra4_];
-	msg = [msg stringByAppendingString:@"\" EXTRA5=\""];
-	msg = [msg stringByAppendingString:theCommand.extra5_];
-	msg = [msg stringByAppendingString:@"\" />"];
-	[self sendmessage:msg];
+	@try {
+		NSString *msg = @"<CONTROL KEY=\"";
+		msg = [msg stringByAppendingString:theCommand.key_];
+		msg = [msg stringByAppendingString:@"\" COMMAND=\""];
+		msg = [msg stringByAppendingString:theCommand.command_];
+		msg = [msg stringByAppendingString:@"\" EXTRA=\""];
+		msg = [msg stringByAppendingString:theCommand.extra_];
+		msg = [msg stringByAppendingString:@"\" EXTRA2=\""];
+		msg = [msg stringByAppendingString:theCommand.extra2_];
+		msg = [msg stringByAppendingString:@"\" EXTRA3=\""];
+		msg = [msg stringByAppendingString:theCommand.extra3_];
+		msg = [msg stringByAppendingString:@"\" EXTRA4=\""];
+		msg = [msg stringByAppendingString:theCommand.extra4_];
+		msg = [msg stringByAppendingString:@"\" EXTRA5=\""];
+		msg = [msg stringByAppendingString:theCommand.extra5_];
+		msg = [msg stringByAppendingString:@"\" />"];
+		[self sendmessage:msg];
+	}
+	@catch (NSException * e) {
+		NSLog(@"Failed to send command, command malformed");
+	}
 }
 /**
  Callback handler for the socket stream class.
@@ -258,11 +262,11 @@
 			break;
 		case NSStreamEventHasSpaceAvailable:
 			NSLog(@"Space in the stream available");
-/*			if (theStream == oStream)
-			{
-				[self sendMessage];
-			}
-*/			break;
+			/*			if (theStream == oStream)
+			 {
+			 [self sendMessage];
+			 }
+			 */			break;
 		case NSStreamEventErrorOccurred:
 		case NSStreamEventEndEncountered:
 			NSLog(@"NSStreamEventEnd or Error occurred");

@@ -21,6 +21,7 @@
 @synthesize extra5_;
 @synthesize tally_;
 @synthesize room_;
+@synthesize state_info_;
 
 -(id)initWithDictionary:(NSDictionary *)data {
 

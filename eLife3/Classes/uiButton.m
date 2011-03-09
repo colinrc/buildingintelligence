@@ -51,6 +51,9 @@ extern UIColor* UIColorFromRGB(uint rgbValue);
 	if (soundStr != nil) {
 		[self setTitle:labelStr forState:UIControlStateNormal];
 	}
+	self.reversesTitleShadowWhenHighlighted = YES;
+	self.titleLabel.shadowColor = [UIColor blackColor];
+	self.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 	self.backgroundColor = UIColorFromRGB(0x7C90B0);
 	[self setNeedsDisplay];
 }

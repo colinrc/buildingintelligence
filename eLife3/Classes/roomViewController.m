@@ -79,20 +79,12 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return [room_ tabCount];
+	return 1;
 }
-/**
- get the group heading
- */
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	
-	return [room_ tabNameForIndex:section];
-}
-
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return [room_ itemCountForTabIndex:section];
+	return [room_ tabCount];
 }
 
 
@@ -100,7 +92,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     // Configure the cell...
-	Control* tmpControl = [room_ itemForIndex:indexPath.section :indexPath.row];
 
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
     if (cell == nil) {
@@ -108,7 +99,7 @@
     }
     
 	UILabel *label = (UILabel*) [cell textLabel];
-	label.text = tmpControl.name_;
+	label.text = [room_ tabNameForIndex:indexPath.row];
 	// we are going to want to make a special window
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
@@ -161,22 +152,16 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
     // Navigation logic may go here. Create and push another view controller.
-    /*
-	 <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-	 // ...
-	 // Pass the selected object to the new view controller.
-	 [self.navigationController pushViewController:detailViewController animated:YES];
-	 [detailViewController release];
-	 */
-	Control* tmpControl = [room_ itemForIndex:indexPath.section :indexPath.row];
-    if (tmpControl == nil)
-		return; // cant get a control bail
+
+	NSMutableArray* tab = [room_ tabForIndex:indexPath.row];
+    if (tab == nil)
+		return; // cant get the control list
 
 	// if we are here we need to look at going to a new page
 	// and building some sort of crazy control as per the XML
 	controlViewController *viewController = [controlViewController alloc];
-	viewController.control_ = tmpControl;
-	// TODO: add control info to view
+	viewController.controls_ = tab;
+
 	[self.navigationController pushViewController:viewController animated:YES];
 	[viewController release];
 }

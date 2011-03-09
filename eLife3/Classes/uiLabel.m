@@ -28,6 +28,7 @@ extern UIColor* UIColorFromRGB(uint rgbValue);
  */
 -(void) updateControl {
 	NSString* state = [control_ stateFor:@"state"];
+	NSArray* states = [[attributes_ objectForKey:@"states"] componentsSeparatedByString:@","];
 	if (state == nil) {
 		state = [attributes_ objectForKey: @"defaultState"];
 	}
@@ -38,26 +39,48 @@ extern UIColor* UIColorFromRGB(uint rgbValue);
 	}
 	NSString* src = [control_ stateFor:@"src"];
 	
-	NSString* labelString = [attributes_ objectForKey:@"formats"];
+	NSArray* fomats = [[attributes_ objectForKey:@"formats"] componentsSeparatedByString:@","];
+	NSString* format = [attributes_ objectForKey:@"format"];
+	NSString* labelString;
+	if ([states count] > 1) {
+		if ((state != nil) && ([state caseInsensitiveCompare:[states objectAtIndex:0]] == NSOrderedSame)) {
+			labelString = [fomats objectAtIndex:0];
+		}
+		else if ((state != nil) && ([state caseInsensitiveCompare:[states objectAtIndex:1]] == NSOrderedSame)) {
+			labelString = [fomats objectAtIndex:1];
+		}
+		else {
+			labelString = @"%name% ";
+		}		
+		
+	} else if (format != nil) {
+		labelString = format;
+		NSArray * allStates = [control_.state_info_ allValues];
+		for (int i = 0 ; i < [allStates count] ; i++) {
+			NSString * currentState = [allStates objectAtIndex:i];
+			NSString *fmtStr = [NSString stringWithFormat:@"%%%i%%",i];
+			labelString = [labelString stringByReplacingOccurrencesOfString:fmtStr withString:(currentState != nil) ? currentState : @""];
+		}
+	} else {
+		labelString = @"%name% ";
+		if (state != nil) labelString = [labelString stringByAppendingString:@"(%state%)"];
+	}
+
+
 	if (labelString == nil) {
 		labelString = @"%name% ";
 		if (state != nil) labelString = [labelString stringByAppendingString:@"(%state%)"];
 	}
 	
 	// the format string label thing
-	if (control_.name_ != nil)
-		labelString = [labelString stringByReplacingOccurrencesOfString:@"%name%" withString:control_.name_];
-	if (state != nil)
-		labelString = [labelString stringByReplacingOccurrencesOfString:@"%state%" withString:state];
-	if (value != nil)
-		labelString = [labelString stringByReplacingOccurrencesOfString:@"%value%" withString:value];
-	if (src != nil)
-		labelString = [labelString stringByReplacingOccurrencesOfString:@"%src%" withString:src];
+	labelString = [labelString stringByReplacingOccurrencesOfString:@"%name%" withString:(control_.name_ != nil) ? control_.name_ : @""];
+	labelString = [labelString stringByReplacingOccurrencesOfString:@"%state%" withString:(state != nil) ? state : @""];
+	labelString = [labelString stringByReplacingOccurrencesOfString:@"%value%" withString:(value != nil) ? value : @""];
+	labelString = [labelString stringByReplacingOccurrencesOfString:@"%src%" withString:(src != nil) ? src : @""];
 
 	self.text = labelString;
 	self.textAlignment = UITextAlignmentCenter;
 	self.backgroundColor = UIColorFromRGB(0x7C90B0);
-	
 }
 
 @end

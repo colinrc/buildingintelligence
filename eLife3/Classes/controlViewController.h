@@ -11,6 +11,8 @@
 
 @interface controlViewController : UIViewController //<UIScrollViewDelegate> 
 {
+	UIScrollView *scrollView;
+	NSMutableArray* controls_; // the list of controls we are handling
 	Control* control_;// The control we are handling
 	NSMutableArray* currentControl_; // array of control rows
 	int current_row_;// straight row counter +1 per row
@@ -21,6 +23,8 @@
 	
 }
 
+@property (nonatomic, retain) UIScrollView *scrollView;
+@property (nonatomic, retain) NSMutableArray* controls_; 
 @property (nonatomic, retain) Control* control_;
 @property (nonatomic, retain) NSMutableArray* currentControl_;
 @property (nonatomic) int current_row_;
