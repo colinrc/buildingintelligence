@@ -374,7 +374,8 @@ UIColor* UIColorFromRGBA(uint rgbaValue) {
 	myBrowser.attributes_ = labelDict;
 	
 	[myBrowser updateControl];
-	[self.view addSubview:myBrowser];	
+	[self.view addSubview:myBrowser];
+    [myBrowser release];    
 }
 
 

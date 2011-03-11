@@ -145,7 +145,9 @@
 -(void)setKeys_:(NSMutableDictionary *) newKey {
 	for (NSString* current_key in newKey) {
 		if ([keys_ objectForKey:current_key] == nil) {
-			[keys_ setObject:[[newKey objectForKey:current_key] copy] forKey:current_key];
+            NSString* tmpObj = [[newKey objectForKey:current_key] copy];
+			[keys_ setObject:tmpObj forKey:current_key];
+            [tmpObj release];
 		}
 		else if ([[keys_ objectForKey:current_key] caseInsensitiveCompare:[newKey objectForKey:current_key]] != NSOrderedSame) {
 			NSLog(@"control key differs %@ ",current_key);
