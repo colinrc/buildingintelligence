@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" xmlns:local="*" height="768" width="1024">
+
+	<local:MapEditor x="10" y="10"  mapName="bi-office2.swf" backgroundName="home.jpg">
+	</local:MapEditor>
+	
+</mx:WindowedApplication>

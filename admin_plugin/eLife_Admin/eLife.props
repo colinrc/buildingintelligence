@@ -1,0 +1,55 @@
+# Properties file for eLife plugin
+
+
+# jEdit only needs to load the plugin the first time the user accesses it
+# the presence of this property also tells jEdit the plugin is using the new API
+plugin.eLifePlugin.activate=defer
+
+# These two properties are required for all plugins
+plugin.eLifePlugin.name=eLife
+plugin.eLifePlugin.author=Colin Canfield
+plugin.eLifePlugin.jars=jdom.jar
+plugin.eLifePlugin.version=0.1
+
+# online help
+plugin.eLifePlugin.docs=index.html
+
+# we only have one dependency, jEdit 4.2, since we use the new plugin API
+plugin.eLifePlugin.depend.0=jedit 04.02.01.00
+
+# plugin menu
+plugin.eLifePlugin.menu=eLife \
+
+# action labels for actions supplied by dockables.xml
+eLife.label=eLife
+
+# action labels for actions supplied by actions.xml
+eLife.upload-config.label=Upload configuration file
+eLife.select-config.label=Selects a configuration file
+eLife.upload-datafile.label=Upload data file
+
+# plugin option pane
+plugin.eLifePlugin.option-pane=eLife
+
+# Option pane activation BeanShell snippet
+options.eLife.code=new eLifeOptionPane();
+
+# Option pane labels
+options.eLife.label=eLife
+
+
+# window title
+eLife.title=eLife
+
+# window toolbar buttons
+eLife.connect.icon=Plus.png
+eLife.disconnect.icon=Minus.png
+
+# default settings
+options.eLife.show-filepath=true
+options.eLife.font=Monospaced
+options.eLife.fontstyle=0
+options.eLife.fontsize=14
+
+# Setting not defined but supplied for completeness
+options.eLife.filepath=
