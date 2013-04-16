@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseConnectionForm updateComplete="{addForm(advArray);CBatt.selected =false;}" creationPolicy="auto" xmlns="Forms.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+	<mx:Array id="advArray">
+		<mx:Label fontWeight="bold" text="Parameters:"/>
+		<mx:HBox width="292" height="26" >
+			<mx:HBox width="16%" height="100%" >
+				<mx:Label text="Poll Interval:" width="100%"/>
+			</mx:HBox>
+			<mx:TextInput id="pollInterval" text="{pollInterval_param}"  updateComplete="pollInterval_paramInit()" change="pollInterval_paramChanged(event)"/>
+		</mx:HBox>
+		<mx:HBox width="292" height="26" >
+			<mx:HBox width="16%" height="100%" >
+				<mx:Label text="Analog Poll Interval:" width="100%"/>
+			</mx:HBox>
+			<mx:TextInput id="analogPollInterval" text="{analogPollInterval_param}"  updateComplete="analogPollInterval_paramInit()" change="analogPollInterval_paramChanged(event)"/>
+		</mx:HBox>
+		<mx:HBox width="292" height="26" >
+			<mx:HBox width="16%" height="100%" >
+				<mx:Label text="Show KeyPad Modes:" width="100%"/>
+			</mx:HBox>
+			<mx:TextInput id="showKeyPad" text="{showKeyPad_param}"  updateComplete="showKeyPad_paramInit()" change="showKeyPad_paramChanged(event)"/>
+		</mx:HBox>
+		<mx:HBox width="292" height="26">
+			<mx:CheckBox id="CBatt" labelPlacement="left" label="CBus Attached:"/>
+		</mx:HBox>
+		<mx:HBox width="292" height="26" >
+			<mx:HBox width="16%" height="100%" >
+				<mx:Label text="CBus Application:" width="100%"/>
+			</mx:HBox>
+			<mx:TextInput  enabled="{CBatt.selected}" id="cbusApplication" text="{cbusApplication_param}"  updateComplete="cbusApplication_paramInit()" change="cbusApplication_paramChanged(event)"/>
+		</mx:HBox>
+		<mx:HBox width="292" height="26" >
+			<mx:HBox width="16%" height="100%" >
+				<mx:Label text="CBus UCM:" width="100%"/>
+			</mx:HBox>
+			<mx:TextInput  enabled="{CBatt.selected}" id="cbusUCM" text="{cbusUCM_param}"  updateComplete="cbusUCM_paramInit()" change="cbusUCM_paramChanged(event)"/>
+		</mx:HBox>
+	</mx:Array>
+	<mx:Script>
+		<![CDATA[
+			public function pollInterval_paramChanged(event:Event):void{
+				if (dataHolder.parameters.containsKey("POLL_INTERVAL") == true) { 
+					dataHolder.parameters.remove("POLL_INTERVAL");
+				}
+				dataHolder.parameters.put("POLL_INTERVAL", event.target.text);
+			}
+			
+			public function pollInterval_paramInit():void {
+				pollInterval_param = dataHolder.parameters.getValue("POLL_INTERVAL");
+			}
+			
+			public function analogPollInterval_paramChanged(event:Event):void{
+				if (dataHolder.parameters.containsKey("ANALOGUE_POLL_INTERVAL") == true) { 
+					dataHolder.parameters.remove("ANALOGUE_POLL_INTERVAL");
+				}
+				dataHolder.parameters.put("ANALOGUE_POLL_INTERVAL", event.target.text);
+			}
+			
+			public function analogPollInterval_paramInit():void{
+				analogPollInterval_param = dataHolder.parameters.getValue("ANALOGUE_POLL_INTERVAL");
+			}
+			
+			public function showKeyPad_paramChanged(event:Event):void{
+				if (dataHolder.parameters.containsKey("SHOW_KEYPAD_MODES") == true) { 
+					dataHolder.parameters.remove("SHOW_KEYPAD_MODES");
+				}
+				dataHolder.parameters.put("SHOW_KEYPAD_MODES", event.target.text);
+			}
+			
+			public function showKeyPad_paramInit():void {
+				showKeyPad_param = dataHolder.parameters.getValue("SHOW_KEYPAD_MODES");
+			}
+			
+			public function cbusApplication_paramChanged(event:Event):void{
+				if (dataHolder.parameters.containsKey("CBUS_APPLICATION") == true) { 
+					dataHolder.parameters.remove("CBUS_APPLICATION");
+				}
+				dataHolder.parameters.put("CBUS_APPLICATION", event.target.text);
+			}
+			
+			public function cbusApplication_paramInit():void {
+				cbusApplication_param = dataHolder.parameters.getValue("CBUS_APPLICATION");
+				if (cbusApplication_param != null && cbusApplication_param.length > 0) CBatt.selected = true;
+			}
+			public function cbusUCM_paramChanged(event:Event):void{
+				if (dataHolder.parameters.containsKey("CBUS_UCM") == true) { 
+					dataHolder.parameters.remove("CBUS_UCM");
+				}
+				dataHolder.parameters.put("CBUS_UCM", event.target.text);
+			}
+			
+			public function cbusUCM_paramInit():void {
+				cbusUCM_param = dataHolder.parameters.getValue("CBUS_UCM");
+				if (cbusUCM_param != null && cbusUCM_param.length > 0) CBatt.selected = true;
+			}
+		]]>
+	</mx:Script>
+</BaseConnectionForm>

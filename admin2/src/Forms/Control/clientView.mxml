@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas  xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:Control="Forms.Control.*">
+    <mx:TabNavigator  tabIndex="4" borderStyle="outset" width="100%" height="100%" horizontalAlign="left" id="mainCS" borderColor="#400040" x="0" y="0">
+        <mx:VBox id="Ccontrol" label="Control" width="100%" height="100%">
+            <Control:ClientControls_frm id="clientControls" >
+            </Control:ClientControls_frm>
+        
+        </mx:VBox>
+		<mx:Canvas label="Publish" width="100%" height="100%" id="ClientPublish">
+			<Control:PublishClient_frm id="clientPublish">
+				
+			</Control:PublishClient_frm>
+        </mx:Canvas>
+        <mx:Canvas label="File Transfer" width="100%" height="100%" id="ClientSWS">    
+        </mx:Canvas>
+    </mx:TabNavigator>                
+</mx:Canvas>

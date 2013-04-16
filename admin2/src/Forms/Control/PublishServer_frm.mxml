@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas initialize="init()" xmlns:mx="http://www.adobe.com/2006/mxml" width="720" height="648" xmlns:ns1="Utils.Cellrenderers.*">
+	<mx:TextArea x="148" y="159" text="Available Items:" width="105" height="24" editable="false" fontWeight="bold"/>
+	<mx:TextArea x="408" y="159" text="Used Items:" width="105" height="24" editable="false" fontWeight="bold"/>
+	<mx:Button click="remSel()" x="320" y="298" width="80" label="&lt;">
+	</mx:Button>
+	<mx:Button x="320" y="328" click="remAll()" width="80" label="&lt;&lt;">
+	</mx:Button>
+	<mx:Button x="320" y="238" click="addAll()" width="80" labelPlacement="left" label="&gt;&gt;">
+	</mx:Button>
+	<mx:Button x="320" y="268" click="addSel()" width="80" enabled="true" label="&gt;">
+	</mx:Button>
+	<mx:Button click="publish()" x="163" y="358" label="Publish" labelPlacement="left"/>
+	<mx:Button x="163" y="468" label="Browse" id="browse_btn" labelPlacement="left" click="browsePathForExport()" width="67"/>
+	<mx:Button x="163" y="438" label="Export" id="export_btn" labelPlacement="left" click="export(pathInput.text)" width="67"/>
+	<mx:CheckBox x="37" y="74" label="File:"  labelPlacement="left" id="file_chk" fontWeight="bold"/>
+	<mx:CheckBox x="94" y="74" label="Console:"  labelPlacement="left" id="console_chk" fontWeight="bold"/>
+	<ns1:DebugLevelsMultilineComboBox x="222" y="74" width="120"   id="level">
+	</ns1:DebugLevelsMultilineComboBox>
+	<mx:Label x="175" y="76" text="Level:" fontWeight="bold" height="22"/>
+	<mx:List dataProvider="{availableItems}" x="150" y="191" height="159" id="availableList" enabled="true"  alternatingItemColors="[#FFFFFF, #DBEAF1]"  width="162"></mx:List>
+	<mx:List dataProvider="{usedItems}" x="408" y="191" height="159" id="usedList" alternatingItemColors="[#FFFFFF, #DBEAF1]" enabled="true"></mx:List>
+	<mx:Label x="249" y="451" text="Export Path:" fontWeight="bold"/>
+	<mx:TextInput x="249" y="468" id="pathInput" editable="true" enabled="true" width="321"/>
+	<mx:TextArea x="10" y="498" width="701" height="140" id="output_ta" editable="false"/>
+	<mx:Button x="163" y="388" label="Export to Project" id="exportToProject_btn" labelPlacement="left" click="export()" width="124"/>
+	<mx:Label x="10" y="10" text="Bootstrap Settings:" fontWeight="bold" fontSize="12"/>
+	<mx:Label x="148" y="131" text="Publish Items:" fontWeight="bold" fontSize="12"/>
+	<mx:Label x="37" y="46" text="Debug:" fontWeight="bold" fontSize="12"/>
+	<mx:Label x="10" y="470" text="Log Results:" fontWeight="bold" fontSize="12"/>
+	
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import FileAccess.XMLFile;
+			import flash.events.Event;
+			import mx.utils.ObjectProxy;
+			import Objects.ServerConnection;
+			import Objects.MonitorConnection;
+			import mx.core.Application;
+			import flash.filesystem.File;
+			import mx.collections.*;
+		
+		//	import air.net.SocketMonitor;
+		//	import flash.events.StatusEvent;
+			public var path:String;
+			public var monitorConnection:ObjectProxy = new ObjectProxy(Application.application.serverInstance.monitorConnection);
+			public var serverConnection:ObjectProxy = new ObjectProxy(Application.application.serverInstance.serverConnection);
+			public var wsConnection:ObjectProxy = new ObjectProxy(Application.application.serverInstance.wsConnection);
+			
+			public var myStyles:StyleSheet;	
+			public var file:File = new File();
+			
+			public var sortA:Sort = new Sort();
+              
+			[Bindable]
+			public var availableItems:ArrayCollection;
+			
+			[Bindable]
+			public var usedItems:ArrayCollection;
+			
+			
+			static public var initItems:Array = [
+					{label:"Bootstrap Config",data:"Bootstrap Config"},
+					{label:"Calendar",data:"Calendar"},
+					{label:"IR Codes",data:"IR Codes"},
+					{label:"Macros",data:"Macros"},
+					{label:"Scripts",data:"Scripts"},
+					{label:"Server Config",data:"Server Config"}
+				];
+				
+			private function init():void {
+				monitorConnection.attachView(this);	
+				serverConnection.attachView(this);
+				
+				myStyles = new StyleSheet();
+				myStyles.setStyle("time", {fontFamily:'Arial,Helvetica,sans-serif', textDecoration:'underline', fontSize:'10px', fontWeight:'bold', color:'#000000'});
+				myStyles.setStyle("error", {fontFamily:'Arial,Helvetica,sans-serif', fontSize:'12px', color:'#FF0000'});
+								
+				availableItems = new ArrayCollection(initItems);
+				usedItems = new ArrayCollection();
+			//	socketMonitor = new SocketMonitor('www.adobe.com',80);
+				//socketMonitor.addEventListener(StatusEvent.STATUS, socketStatusChange);
+				//socketMonitor.start();
+				sortA.fields=[new SortField("label", true, true)];
+				
+			}
+			public function fstCreated():void {
+				fileSystemTree.directory= FileSystemTree.COMPUTER;
+			}
+			private function deploy() {
+				trace("deploy files");
+			}
+					
+			public function needRefresh():void{
+				trace("needRefresh in server controls");
+			}
+			
+			public function browsePathForExport():void {
+				file.browseForDirectory("Select the folder to Export files to");
+				file.addEventListener(Event.SELECT, fileBrowseSelectListener);
+				
+			}
+			public function fileBrowseSelectListener(event:Event):void {
+				file = event.target as File;
+				pathInput.text = file.nativePath.toString();
+			}
+			
+			public function export(thePath:String= null):void{
+				var AppPath:String = File.applicationResourceDirectory.nativePath;
+				var path:String = "";
+				if (thePath==null||thePath=="") {
+					//use project path
+					path = Application.application.project.path;
+				} else {
+					path = pathInput.text;
+				}
+				for(var publishItem in usedList.dataProvider){
+				switch(usedList.dataProvider[publishItem].label){
+					case "Server Config":
+						var theXML:String = Application.application.serverDesign.toXML().toXMLString();
+						var save:XMLFile = new XMLFile();
+						save.saveFile(path+"server"+File.separator+"config"+File.separator+"server.xml", theXML);
+						output_ta.text = output_ta.text+"Server Configuration exported to "+path+"server"+File.separator+"config"+File.separator+"server.xml \n";
+						break;
+					case "Bootstrap Config":
+						var save:XMLFile = new XMLFile();
+						save.saveFile(path+"server"+File.separator+"datafiles"+File.separator+"bootstrap.xml", generateBootstrap().toXMLString());
+						output_ta.text = output_ta.text+"Server Bootstrap exported to "+path+"server"+File.separator+"datafiles"+File.separator+"bootstrap.xml \n";
+						break;
+					case "IR Codes":
+						var save:XMLFile = new XMLFile();
+						try {
+							save.copyFile(AppPath+File.separator+"datafiles"+File.separator+"ircodes.xml", path+File.separator+"server"+File.separator+"datafiles"+File.separator+"ircodes.xml");
+							output_ta.text = output_ta.text+"Server IR Codes exported to "+path+File.separator+"datafiles"+File.separator+"ircodes.xml \n";
+						} catch (error:Error) {
+							output_ta.text = output_ta.text+error.message+"\n";
+							output_ta.text = output_ta.text+"--ERROR--  Server IR Codes could not be copied from "+path+"server"+File.separator+"datafiles"+File.separator+"ircodes.xml \n"
+							output_ta.text = output_ta.text+"--ERROR--  to "+path+"server"+File.separator+"datafiles"+File.separator+"ircodes.xml \n";
+						}
+						break;					
+					case "Scripts":
+						var save:XMLFile = new XMLFile();
+						save.saveFile(path+"server"+File.separator+"datafiles"+File.separator+"script_status.xml", Application.application.serverDesign.getScripts());
+						output_ta.text = output_ta.text+"Server Scripts exported to "+path+"server"+File.separator+"datafiles"+File.separator+"script_status.xml \n";
+						break;
+					case "Macros":
+						var tempMacros:XML= new XML("<MACROS />");
+						tempMacros.@COMPLETE = "Y";
+						var tempIntegratorMacros:XML = new XML("<MACROS />");
+						tempIntegratorMacros.@COMPLETE = "Y";					
+						var macros:Array = Application.application.serverDesign.getMacros();
+						for(var macro = 0; macro<macros.length; macro++){
+							if(macros[macro].integrator){
+								tempIntegratorMacros.appendChild(macros[macro].publish());
+							} else{
+								tempMacros.appendChild(macros[macro].publish());
+							}
+						}
+						var save:XMLFile = new XMLFile();
+						save.saveFile(path+"server"+File.separator+"datafiles"+File.separator+"macros.xml", tempMacros.toXMLString());
+						save.saveFile(path+"server"+File.separator+"datafiles"+File.separator+"integrator_macros.xml", tempIntegratorMacros.toXMLString());
+						output_ta.text = output_ta.text+"Server Macros exported to "+path+"server"+File.separator+"datafiles"+File.separator+" \n";
+						break;
+					case "Calendar":
+						try {
+							save.copyFile(AppPath+File.separator+"datafiles"+File.separator+"calendar.xml", path+File.separator+"server"+File.separator+"datafiles"+File.separator+"calendar.xml");
+							output_ta.text = output_ta.text+"Server Calendar exported to "+path+"server"+File.separator+"datafiles"+File.separator+"calendar.xml \n";
+						}catch (error:Error) {
+							output_ta.text = output_ta.text+error.message+"\n";
+							output_ta.text = output_ta.text+"--ERROR-- Server Calendar could not be copied from "+path+"server"+File.separator+"datafiles"+File.separator+"calendar.xml"
+							output_ta.text = output_ta.text+"--ERROR-- to "+path+"server"+File.separator+"datafiles"+File.separator+"calendar.xml \n";
+						}
+						break;					
+					}
+				}
+			}
+			public function publish(){
+				for(var publishItem in usedList.dataProvider){
+					switch(usedList.dataProvider[publishItem].label){
+						case "Server Config":
+							wsConnection.setRemotePath("/server/config");
+							wsConnection.putData(Application.application.serverDesign.toXML().toXMLString(),"server.xml");
+							break;
+						case "Bootstrap Config":
+							wsConnection.setRemotePath("/server/datafiles");
+							wsConnection.putData(generateBootstrap(),"bootstrap.xml");
+							break;
+						case "IR Codes":
+							wsConnection.setLocalPath(appPath +"/datafiles");				
+							wsConnection.setRemotePath("/server/datafiles");
+							wsConnection.putItem("ircodes.xml");
+							break;					
+						case "Scripts":
+							var scriptsNode = serverDesign.getScripts();
+							for(var child in scriptsNode.childNodes){
+								wsConnection.setLocalPath(_global.project.path+"/server/script");
+								wsConnection.setRemotePath("/server/script");
+								wsConnection.putItem(scriptsNode.childNodes[child].attributes["NAME"]+".py");
+							}
+							wsConnection.setLocalPath(appPath +"/datafiles");
+							wsConnection.setRemotePath("/server/datafiles");					
+							wsConnection.putData(_global.writeXMLFile(scriptsNode, 0),"script_status.xml");
+							break;
+						case "Macros":
+							wsConnection.setLocalPath(appPath +"/datafiles");
+							wsConnection.setRemotePath("/server/datafiles");				
+							var tempMacros = new XMLNode(1,"MACROS");
+							tempMacros.attributes.COMPLETE = "Y";
+							var tempIntegratorMacros = new XMLNode(1,"MACROS");
+							tempIntegratorMacros.attributes.COMPLETE = "Y";					
+							var macros = _global.serverDesign.getMacros();
+							for(var macro = 0; macro<macros.length; macro++){
+								if(macros[macro].integrator){
+									tempIntegratorMacros.appendChild(macros[macro].publish());
+								} else{
+									tempMacros.appendChild(macros[macro].publish());
+								}
+							}
+							wsConnection.putData(_global.writeXMLFile(tempMacros, 0),"macros.xml");
+							wsConnection.putData(_global.writeXMLFile(tempIntegratorMacros, 0),"integrator_macros.xml");
+							break;
+						case "Calendar":
+							wsConnection.setLocalPath(appPath +"/datafiles");				
+							wsConnection.setRemotePath("/server/datafiles");
+							wsConnection.putItem("calendar.xml");
+							break;					
+					}
+				}
+			}
+			public function generateBootstrap():XML{
+				var newBootstrapXML:XML = new XML("<BOOTSTRAP />");
+				var newServerNode:XML = new XML("<SERVER />");
+				newServerNode.@IP = "";
+				newServerNode.@PORT = "10000";
+				newBootstrapXML.appendChild(newServerNode);
+				var newAdminNode:XML = new XML("<ADMIN />");
+				newAdminNode.@IP = "";
+				newAdminNode.@PORT = "10001";
+				newBootstrapXML.appendChild(newAdminNode);
+				var newConfigNode:XML = new XML("<CONFIG_FILE />");
+				newConfigNode.@NAME = "server.xml";
+				newBootstrapXML.appendChild(newConfigNode);
+				var newDebugNode:XML = new XML("<DEBUG />");
+				if(file_chk.selected){
+					newDebugNode.@FILE = "Y";
+				} else{
+					newDebugNode.@FILE = "N";
+				}
+				if(console_chk.selected){
+					newDebugNode.@CONSOLE = "Y";
+				} else{
+					newDebugNode.@CONSOLE = "N";
+				}
+				newDebugNode.@LEVEL = level.result;
+				newBootstrapXML.appendChild(newDebugNode);
+				var newRRDGraphNode:XML = new XML("<RRDGRAPH />");
+				newRRDGraphNode.@DIR = "./JRobin/Graph/";
+				newBootstrapXML.appendChild(newRRDGraphNode);
+				var newRRDDirectoryNode:XML = new XML("<RRDBDIRECTORY />");
+				newRRDDirectoryNode.@DIR = "./JRobin/";
+				newBootstrapXML.appendChild(newRRDDirectoryNode);
+				var newRRDXMLNode:XML = new XML("<RRDXMLDIRECTORY />");
+				newRRDXMLNode.@DIR = "./JRobin/RRDDefinition/";
+				newBootstrapXML.appendChild(newRRDXMLNode);
+				return newBootstrapXML;
+			}
+			public function notifyChange():void{
+				refreshOutput();
+			}
+			public function refreshOutput():void {
+				//output_ta.text = wsConnection.getOutput();
+			}
+			private function addSel() {
+				if (availableList.selectedItem != undefined) {
+					usedItems.addItem(availableItems.removeItemAt(availableList.selectedIndex));
+					usedItems.sort = sortA;
+                	usedItems.refresh();
+                }
+			}
+			private function addAll() {
+				var leftLength:int = availableItems.length;
+				for (var leftIndex:int = 0; leftIndex < leftLength; leftIndex++) {
+					usedItems.addItem(availableItems.removeItemAt(0));
+				}
+				usedItems.sort = sortA;
+                usedItems.refresh();
+			}
+			private function remSel() {
+				if (usedList.selectedItem != undefined) {
+					availableItems.addItem(usedItems.removeItemAt(usedList.selectedIndex));
+					availableItems.sort = sortA;
+					availableItems.refresh();
+				}
+			}
+			private function remAll() {
+				var rightLength:int = usedItems.length;
+				for (var rightIndex:int = 0; rightIndex < rightLength; rightIndex++) {
+					availableItems.addItem(usedItems.removeItemAt(0));
+				}
+				availableItems.sort = sortA;
+				availableItems.refresh();
+			}
+		]]>
+	</mx:Script>
+	
+	
+</mx:Canvas>
+
+	

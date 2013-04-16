@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:UIComponent xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:geom="flash.geom.*" >
+	<geom:Rectangle id="imagesRect" height="400" width="600" x="0" y="0"  />
+	<mx:UIComponent id="background" x="0" y="0" scrollRect="{imagesRect}">
+	</mx:UIComponent>
+	<mx:UIComponent id="content" x="0" y="0" scrollRect="{imagesRect}">
+	</mx:UIComponent>
+</mx:UIComponent>

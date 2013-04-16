@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"  initialize="init()" horizontalAlign="center" xmlns:Controls="Controls.*">
+   <mx:Script>
+        <![CDATA[
+        	import Forms.dataHolder;
+        	import Forms.type;
+        	import mx.core.UIComponent;
+        	import mx.core.Application;
+        	import mx.controls.Image;
+        	import Utils.IconUtility;
+        	import FileAccess.IconFiles;
+        	import mx.collections.ArrayCollection;
+        	import Objects.Client.Control_Types;
+        	// Define a property for returning the new value to the cell.
+        	[Bindable]
+            public var result:Object;
+            
+            [Bindable]
+            public var controlTypes:Control_Types = new Control_Types();
+            
+            [Bindable]
+            public var controls:ArrayCollection = new ArrayCollection();
+                     
+            [Bindable]
+            public var dpValue:ArrayCollection = new ArrayCollection();
+			// Override the set method for the data property.
+			
+			[Bindable]
+			override public function set data(value:Object):void 
+			{
+				super.data = value;
+				if (value != null) 
+				{
+					var currentValue:String = value.name;
+					var len:int = dpValue.length;
+					for (var i:int = 0; i < len; i++) 
+					{
+						if (dpValue[i].data == currentValue) 
+						{
+							edt.selectedIndex = i;
+							break;
+						}
+					}
+				}
+			} 
+				
+			[Bindable]
+			public function set value(theValue:Object):void 
+			{
+				super.value = theValue;
+				if (theValue != null) 
+				{
+					var currentValue:String = theValue.name;
+					var len:int = dpValue.length;
+					for (var i:int = 0; i < len; i++) 
+					{
+						if (dpValue[i].data == currentValue) 
+						{
+							edt.selectedIndex = i;
+							break;
+						}
+					}
+				}
+			} 
+			
+			public function get value():Object {
+				return super.value;
+			}
+			public function loseFocus(event:Event):void {
+				var index:int = edt.selectedIndex;
+				result = dpValue[index].data;
+				if (this.data!=null) {
+					this.data.name = dpValue[index].label;
+				}
+			}
+			public function inFocus(event:Event):void {
+				trace ("inFocus");
+				var len:int = dpValue.length;
+				for (var i:int = 0; i < len; i++) 
+				{
+					if (dpValue[i].data == result) 
+					{
+						edt.selectedIndex = i;
+						break;
+					}
+				}
+			} 
+			
+			public function onChange(event:Event):void 
+			{
+				var index:int = edt.selectedIndex;
+				result = dpValue[index].data;
+				//myData = result;
+			}          
+			
+			public function init():void {
+				controlTypes = Application.application.workFlow.getObjectWithNotExactKey("ClientControl_Types");
+				controls = controlTypes.controls;
+				for (var i:int=0;i<controls.length;i++) {
+					dpValue.addItem({label:controls[i].myType, data:controls[i].myType});
+				}
+				
+			}
+    	]]>
+    </mx:Script>
+ 	<Controls:ComboBox id="edt" dataProvider="{dpValue}"  width="100%"  creationComplete="inFocus(event)" focusOut="loseFocus(event)" change="onChange(event)"/>
+</mx:VBox>

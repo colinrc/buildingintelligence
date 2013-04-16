@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox   xmlns:mx="http://www.adobe.com/2006/mxml"  width="100%" height="100%">
+	<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%">
+		<mx:VBox width="100%" height="90%" id ="first">
+			<mx:Canvas  width="100%" height="100%" >
+				<mx:VBox x="0" y="0" height="10%" width="100%">
+					<mx:Label text="Key Groups:" fontWeight="bold" fontSize="12"/>
+
+					<mx:HBox width="100%">
+						<mx:Label text="Group Name:" fontWeight="bold"/>
+						<mx:TextInput width="222" editable="false" id="Oname"/>
+					</mx:HBox>
+					<mx:HBox width="100%">
+						<mx:Label text="GIcons:---------------------------------------------" fontWeight="bold"/>
+						
+					</mx:HBox>
+				</mx:VBox>
+				<mx:VBox x="0" y="90" height="100%" width="100%">
+					<mx:HBox width="100%" height="100%">
+						<mx:VBox height="100%" minWidth="200" maxWidth="300" width="100%">
+							<mx:HBox width="100%" height="40">
+								<mx:TextArea text="Available Keys:" width="136" height="24" editable="false" fontWeight="bold"/>
+							</mx:HBox>
+							<mx:HBox width="100%" height="100%">
+								<mx:List dataProvider="{availableItems}" height="100%" id="availableList" enabled="true"  alternatingItemColors="[#FFFFFF, #DBEAF1]" width="100%"></mx:List>
+							</mx:HBox>
+						</mx:VBox>
+						<mx:VBox minWidth="80" maxWidth="95" width="100%" height="100%">
+							<mx:HBox width="100%" height="33%">
+							</mx:HBox>
+							<mx:HBox width="100%" height="33%">
+								<mx:VBox width="100%" height="100%">
+									<mx:Button width="100%" click="remSel()" label="&lt;">
+									</mx:Button>
+									<mx:Button width="100%" click="remAll()" label="&lt;&lt;">
+									</mx:Button>
+									<mx:Button width="100%" labelPlacement="left"  click="addAll()" label="&gt;&gt;">
+									</mx:Button>
+									<mx:Button width="100%" enabled="true" click="addSel()" label="&gt;">
+									</mx:Button>
+								</mx:VBox>
+							</mx:HBox>
+							<mx:HBox width="100%" height="33%">
+							</mx:HBox>
+						</mx:VBox>
+						<mx:VBox minWidth="200" maxWidth="300" width="100%" height="100%">
+							<mx:VBox height="100%" width="100%">
+								<mx:HBox width="100%" height="40">
+									<mx:TextArea text="Used Keys:" width="134" height="24" editable="false" fontWeight="bold"/>
+								</mx:HBox>
+								<mx:HBox width="100%" height="100%">
+									<mx:List dataProvider="{usedItems}"  change="usedListClick(event)" height="100%" id="usedList" alternatingItemColors="[#FFFFFF, #DBEAF1]" enabled="true" width="100%"></mx:List>
+								</mx:HBox>
+							</mx:VBox>
+						</mx:VBox>
+						
+					</mx:HBox>
+				</mx:VBox>
+			</mx:Canvas>
+		</mx:VBox>
+	</mx:VBox>
+</mx:VBox>

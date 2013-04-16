@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+    creationComplete="initApp()"
+    pageTitle="DataGrid Item Renderer Demo" viewSourceURL="srcview/index.html">
+    <mx:Script>
+        <![CDATA[
+			import mx.collections.IViewCursor;
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.ResultEvent;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.managers.CursorManager;
+
+			[Bindable]
+			private var itemAC:ArrayCollection;
+
+			private function initApp():void
+			{
+				CursorManager.setBusyCursor();
+				itemConn.send();
+			}
+ 
+			private function resultItemHandler(event:ResultEvent):void  
+			{
+				var source:ArrayCollection = itemConn.lastResult.items.item as ArrayCollection;
+				var cursor:IViewCursor = source.createCursor();
+				var result:ArrayCollection = new ArrayCollection();
+				while (!cursor.afterLast)
+				{
+					var currentObj:Object = cursor.current;
+					// --  Field hasLogo:  Simple encoder for boolean value --
+					var cv:String = currentObj["hasLogo"];
+					cv = cv.toUpperCase();
+					var newValue:Boolean = false;
+					if (cv == "YES" || cv == "TRUE" || cv.toString() == "1") 
+					{
+						newValue = true;
+					}
+					currentObj["hasLogo"] = newValue;
+					//
+					result.addItem(currentObj);
+					cursor.moveNext();
+				}
+ 				// --
+				itemAC = result;          	
+				CursorManager.removeBusyCursor();
+			}
+			// -----   -----
+			private function doAddItem():void  
+			{
+				itemAC.addItem({name: "Item_"+(itemAC.length+1), quantity:1, color:"white", size:"small", hasLogo:false});
+			}
+			
+			private function doGenerateXML():void  
+			{
+				var document:XMLDocument = new XMLDocument("<items></items>");
+				var rootNode:XMLNode = document.firstChild;
+				var len:int = itemAC.length;
+				for (var i:int = 0; i < len; i++) 
+				{
+					var currentItem:Object = itemAC[i];
+					// --
+ 					var elementNode:XMLNode = document.createElement("item"); 			
+ 					rootNode.appendChild(elementNode);	
+ 					// --
+					for (var field:* in currentItem) 
+					{
+						var value:* = currentItem[field];
+						var newValue:* = value;
+						// Encoder for field hasLogo: boolean to yes,no
+						if (field == "hasLogo") 
+						{
+							newValue = (value ? "yes" : "no");
+						}
+						// Warning: Flex creates mx_internal_uid properties for any objects that are dynamic 
+						if (field != "mx_internal_uid") {
+							elementNode.attributes[field] = newValue;
+						}		
+					}
+				}
+				// --
+				var showXML:XML = new XML(document.firstChild);
+				infoTA.text = showXML.toXMLString();
+				mainVS.selectedChild=xmlView;
+			}
+            ]]>
+    </mx:Script>     		           
+ 	<mx:HTTPService id="itemConn" url="items.xml" useProxy="false" result="resultItemHandler(event)"/>
+
+	<mx:Panel layout="absolute" left="5" top="5" right="5" bottom="5" title="DataGrid Renderer Demo">
+	    <mx:ViewStack id="mainVS" width="100%" height="100%" creationPolicy="all">
+			<mx:VBox id="dgView" left="5" top="5" right="5" bottom="5">
+				<mx:DataGrid id="itemDG" dataProvider="{itemAC}" editable="true" width="100%" height="100%">
+					<mx:columns>
+						<mx:DataGridColumn dataField="name" headerText="Item" />
+						<mx:DataGridColumn dataField="quantity" headerText="Quantity" width="100" minWidth="70" 
+								rendererIsEditor="true"  editorDataField="result" itemRenderer="renderer.QuantityRenderer"/>
+						<mx:DataGridColumn dataField="color" headerText="Color" width="80" 
+								rendererIsEditor="true"  editorDataField="result" itemRenderer="renderer.ColorPickerRenderer"/>	
+						<mx:DataGridColumn dataField="size" headerText="Size" width="140" minWidth="130" 
+								rendererIsEditor="true"  editorDataField="result" itemRenderer="renderer.SizeRenderer"/>	
+						<mx:DataGridColumn dataField="hasLogo" headerText="Logo?" width="100"
+								rendererIsEditor="true"  editorDataField="result" itemRenderer="renderer.CheckRenderer"/>										
+					</mx:columns>
+				</mx:DataGrid>	
+				<mx:HBox paddingBottom="5" paddingLeft="5" paddingTop="5">
+					<mx:Button label="Generate XML" width="120" click="doGenerateXML();"/>
+					<mx:Button label="New Item" click="doAddItem()"/>
+				</mx:HBox>
+			</mx:VBox>
+
+			<mx:VBox id="xmlView" left="5" top="5" right="5" bottom="5">
+				<mx:TextArea id="infoTA" width="100%" height="100%" />
+				<mx:HBox paddingBottom="5" paddingLeft="5" paddingTop="5">
+					<mx:Button label="Back" width="120" click="mainVS.selectedChild=dgView"/>
+				</mx:HBox>
+			</mx:VBox>	
+		</mx:ViewStack>		
+	</mx:Panel>
+</mx:Application>

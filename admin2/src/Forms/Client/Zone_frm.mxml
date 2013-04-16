@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"  updateComplete="init()" width="100%" height="100%" xmlns:ns2="flash.display.*" xmlns:Controls="Controls.*" xmlns:ns1="Utils.Cellrenderers.*" xmlns:Utils="Utils.*">
+	<mx:Label text="Zone" fontWeight="bold" fontSize="12"/>
+	<mx:VBox height="12">
+	</mx:VBox>
+	<mx:VBox width="100%" height="90%">
+		<mx:HBox width="90%" height="30">
+			<mx:VBox height="28">
+			</mx:VBox>
+			<mx:Label text="Name:" fontWeight="bold" width="102"/>
+			<mx:TextInput width="97" editable="true" id="zoneName" change="nameChange()" text="{dataHolder.name}" enabled="true"/>
+		</mx:HBox>
+		<mx:HBox width="100%" height="30">
+			<mx:VBox height="24">
+				<mx:VBox height="24">
+					<mx:VBox height="24">
+					</mx:VBox>
+				</mx:VBox>
+			</mx:VBox>
+			<mx:Label text="Alignment:" fontWeight="bold" width="102"/>
+			<Controls:AlignmentComboBox id="alignCombo" data="{dataHolder}" result="{dataHolder.alignment}" width="179">
+			</Controls:AlignmentComboBox>
+		
+		</mx:HBox>
+		<mx:HBox width="100%" height="30">
+			<mx:VBox height="29">
+			</mx:VBox>
+			<mx:Label fontWeight="bold" width="102"/>
+			<Utils:YNCheckBox  label="Cycle:" id="cyc"  textAlign="left"  result="{dataHolder.cycle}"/>
+		</mx:HBox>
+		<mx:HBox width="100%" height="30">
+			<mx:VBox height="29">
+			</mx:VBox>
+			<mx:Label fontWeight="bold" width="102"/>
+			<Utils:YNCheckBox label="Hide From List:"  result="{dataHolder.hideFromList}" id="hideF"/>
+		</mx:HBox>
+		<mx:HBox width="100%" height="199">
+			<mx:VBox height="29">
+			</mx:VBox>
+			<mx:Label fontWeight="bold" width="102" text="Map:"/>
+			<Controls:ImageComboBox id="mapCombo" data="{dataHolder}" result="{dataHolder.map}" width="220">
+			</Controls:ImageComboBox>
+			<Controls:ImageViewer  id="map_ldr"  width="250" height="175"/>
+			</mx:HBox>
+		<mx:HRule width="800" height="1"/>
+		<mx:HBox width="100%" height="180">
+			<mx:VBox height="29">
+			</mx:VBox>
+			<mx:Label fontWeight="bold" width="102" text="Background:"/>
+			<Controls:ImageComboBox id="bgCombo" data="{dataHolder}" result="{dataHolder.background}" width="220">
+			</Controls:ImageComboBox>
+			<Controls:BackgroundImageViewer id="bg_ldr"  width="250" height="175"/>
+		</mx:HBox>
+	
+	</mx:VBox>
+		<mx:HBox width="100%" height="6%"  verticalAlign="bottom" horizontalGap="5" horizontalAlign="right">
+			<mx:Button label="Undo Changes" id="undo"  enabled="{modifiedFlag}" width="108" height="28" fontSize="10" click="undo_click(event)"/>
+		</mx:HBox>
+
+		<mx:Script>
+		<![CDATA[
+		
+			import flash.desktop.Icon;
+			import flash.filesystem.File;
+			import FileAccess.IconFiles;
+			import mx.core.Application;
+			import Forms.modifiedFlag;
+			import mx.core.UIComponent;
+			import mx.utils.ObjectProxy;
+			import mx.utils.ObjectUtil;
+			import Objects.Server.Connection;
+			import mx.controls.Image;
+			import flash.display.Loader;
+			
+			[Bindable]
+			public var dataHolder:ObjectProxy;
+						
+			private var undoObj:Object;
+			[Bindable]
+			private var modifiedFlag:Boolean;
+			private function bgDataChange(event:Event):void {
+				trace("bgdatachange................................................................");
+				if (bg_ldr != null) {
+					bg_ldr.FileName = bgCombo.result;
+					
+				}
+			}
+			private function mapDataChange(event:Event):void {
+				trace("MapDataChange.............................................................");
+				if (map_ldr != null) {
+					map_ldr.FileName = mapCombo.result;
+					
+				}
+			}
+			private function fixCYC(event:Event):void {
+				dataHolder.cycle = event.currentTarget.result;
+			}
+			private function fixHideF(event:Event):void {
+				dataHolder.hideFromList = event.currentTarget.result;
+			}
+			private function nameChange():void {
+				dataHolder.name = zoneName.text;
+			}
+			public function advanced(func:Boolean):void {
+				
+			}
+			public function set undoObject(value:ObjectProxy):void {
+				undoObj = value;
+			}
+			public function get undoObject():ObjectProxy {
+				return undoObj;
+			}
+			
+			private function init():void {
+				//map_ldr.autoLoad = true;
+				//map_ldr.scaleContent = true;
+				map_ldr.opaqueBackground = 0x0099CC;
+				
+				//bg_ldr.autoLoad = true;
+				//bg_ldr.scaleContent = true;
+				bg_ldr.opaqueBackground = 0x0099CC; 
+				
+				bgCombo.addEventListener("IMAGE_CHANGE_EVENT",bgDataChange);
+				mapCombo.addEventListener("IMAGE_CHANGE_EVENT",mapDataChange);
+				cyc.addEventListener(Event.CHANGE,fixCYC);
+				hideF.addEventListener(Event.CHANGE,fixHideF);
+				
+				map_ldr.FileName = mapCombo.result;
+				
+				bg_ldr.FileName = bgCombo.result;
+				
+			}
+			public function new_click():void {
+				//override this method
+				
+			}
+			public function delete_click():void {
+				//override this method
+				
+			}
+			public function undo_click(event:Event):void {
+				//override this method
+				//dataHolder = ObjectUtil.copy(undoObj);
+				//modifed = false;		
+			}
+            
+		]]>
+		</mx:Script>
+		
+</mx:VBox>

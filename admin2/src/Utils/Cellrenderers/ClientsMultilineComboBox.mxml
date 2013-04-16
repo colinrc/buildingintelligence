@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" initialize="init()" horizontalAlign="left">
+   <mx:Script>
+        <![CDATA[
+        	import mx.collections.ArrayCollection;
+        	import mx.core.Application;
+        	import Events.ComboSelectedEvent;
+            // Define a property for returning the new value to the cell.
+            [Bindable]
+            public var result:String="";
+            public var oldValue:String="";
+            [Bindable]
+            public var dpValue:Array;
+            public var jumpedIn:Boolean =false;
+            public function init() {
+            	dpValue = Application.application.serverInstance.getClientDesigns().toArray();
+            }
+                    
+			// Override the set method for the data property.
+			override public function set data(value:Object):void 
+			{
+				
+				if (value != null&&value !="") 
+				{
+					
+					super.data = value;
+					var currentValue:String = value;
+					var len:int = dpValue.length;
+					for (var i:int = 0; i < len; i++) 
+					{
+						if (dpValue[i].data == currentValue) 
+						{
+							editor.selectedIndex = i;
+							break;
+						}
+					}
+
+
+				}
+			} 
+			public function loseFocus(event:Event):void {
+				trace("looseFocus");
+				if (result == null ||result == "") {
+					result = dpValue[editor.selectedIndex].data;
+				}
+			}     
+			public function inFocus(event:Event):void {
+				jumpedIn = true;
+				trace ("inFocus");
+				result = dpValue[editor.selectedIndex].data;
+			}        
+	
+			public function onChange(event:Event):void 
+			{
+				jumpedIn = false;
+				trace("onChange");
+				var index:int = editor.selectedIndex;
+				result = dpValue[index].data;
+				//dispatch message to parent
+				var ev:ComboSelectedEvent = new ComboSelectedEvent(ComboSelectedEvent.CLIENTDESIGN,data,result);
+				dispatchEvent(ev); 
+			
+			}          
+        ]]>
+    </mx:Script>
+ 	<mx:ComboBox id="editor" dataProvider="{dpValue}" width="100%"  creationComplete="inFocus(event)"  focusOut="loseFocus(event)" change="onChange(event)"/>
+</mx:VBox>	

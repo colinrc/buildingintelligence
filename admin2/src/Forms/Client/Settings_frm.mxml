@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"  updateComplete="init()" width="100%" height="100%" xmlns:Controls="Controls.*">
+	<mx:Label text="Setttings" fontWeight="bold" fontSize="12"/>
+	<mx:VBox height="12">
+	</mx:VBox>
+	<mx:VBox width="100%" height="90%">
+		<mx:HBox width="90%" height="30">
+			<mx:VBox height="28">
+			</mx:VBox>
+			<mx:Label text="Admin Pin:" fontWeight="bold" width="102"/>
+			<mx:TextInput width="97" restrict="0-9" id="adminPin" text="{dataHolder.adminPin}"/>
+		</mx:HBox>
+		<mx:HBox width="100%" height="30">
+			<mx:VBox height="24">
+				<mx:VBox height="24">
+					<mx:VBox height="24">
+					</mx:VBox>
+				</mx:VBox>
+			</mx:VBox>
+			<mx:Label text="Application XML:" fontWeight="bold" width="102"/>
+			<mx:TextInput width="162" id="appXML" text="{dataHolder.applicationXML}"/>
+			
+		</mx:HBox>
+		<mx:HBox width="100%" height="30">
+			<mx:VBox height="29">
+			</mx:VBox>
+			<mx:Label text="Integrator HTML:" fontWeight="bold"/>
+			<mx:TextInput width="500" id="integratorHtml" text="{dataHolder.integratorHtml}"/>
+		</mx:HBox>
+	
+	</mx:VBox>
+		<mx:HBox width="100%" height="6%"  verticalAlign="bottom" horizontalGap="5" horizontalAlign="right">
+			<mx:Button label="Undo Changes" id="undo"  enabled="{modifiedFlag}" width="108" height="28" fontSize="10" click="undo_click(event)"/>
+		</mx:HBox>
+
+		<mx:Script>
+		<![CDATA[
+			import flash.desktop.Icon;
+			import flash.filesystem.File;
+			import FileAccess.IconFiles;
+			import mx.core.Application;
+			import Forms.modifiedFlag;
+			import mx.core.UIComponent;
+			import mx.utils.ObjectProxy;
+			import mx.utils.ObjectUtil;
+			import Objects.Server.Connection;
+			import mx.controls.Image;
+			
+			[Bindable]
+			public var dataHolder:ObjectProxy;
+						
+			private var undoObj:Object;
+			[Bindable]
+			private var modifiedFlag:Boolean;
+			
+			public function advanced(func:Boolean):void {
+				
+			}
+			public function set undoObject(value:ObjectProxy):void {
+				undoObj = value;
+			}
+			public function get undoObject():ObjectProxy {
+				return undoObj;
+			}
+			
+			private function init():void {
+			}
+			public function new_click():void {
+				//override this method
+				
+			}
+			public function delete_click():void {
+				//override this method
+				
+			}
+			public function undo_click(event:Event):void {
+				//override this method
+				//dataHolder = ObjectUtil.copy(undoObj);
+				//modifed = false;		
+			}
+            
+		]]>
+		</mx:Script>
+		
+</mx:VBox>

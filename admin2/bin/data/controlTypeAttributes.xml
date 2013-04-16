@@ -1,0 +1,22 @@
+<controlTypeAttributes>
+			<controlTypeAttribute name="states" type="string" description=""/>
+			<controlTypeAttribute name="formats" type="string" description=""/>
+			<controlTypeAttribute name="defaultState" type="string" description=""/>
+			<controlTypeAttribute name="defaultValue" type="string" description=""/>
+			<controlTypeAttribute name="label" type="string" description=""/>
+			<controlTypeAttribute name="command" type="string" description=""/>
+			<controlTypeAttribute name="extra" type="string" description=""/>
+			<controlTypeAttribute name="extra2" type="string" description=""/>
+			<controlTypeAttribute name="extra3" type="string" description=""/>
+			<controlTypeAttribute name="extras" type="string" description=""/>
+			<controlTypeAttribute name="repeatRate" type="string" description=""/>
+			<controlTypeAttribute name="icon" type="string" description=""/>
+			<controlTypeAttribute name="icons" type="string" description=""/>
+			<controlTypeAttribute name="showOn" type="string" description=""/>
+			<controlTypeAttribute name="sounds" type="string" description=""/>
+			<controlTypeAttribute name="sound" type="string" description=""/>
+			<controlTypeAttribute name="valueFormat" type="string" description=""/>
+			<controlTypeAttribute name="minValue" type="string" description=""/>
+			<controlTypeAttribute name="maxValue" type="string" description=""/>
+			<controlTypeAttribute name="step" type="string" description=""/>
+</controlTypeAttributes>

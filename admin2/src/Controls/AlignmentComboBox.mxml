@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" horizontalAlign="center">
+   <mx:Script>
+        <![CDATA[
+        	// Define a property for returning the new value to the cell.
+            public var result:Object;
+            
+            [Bindable]
+            public var dpValue:Array = [
+				{label:"centre",data:"centre"},
+				{label:"top left",data:"top left"}
+			]
+			// Override the set method for the data property.
+			override public function set data(value:Object):void 
+			{
+				super.data = value;
+				if (value != null) 
+				{
+					var currentValue:String = value.alignment;
+					var len:int = dpValue.length;
+					for (var i:int = 0; i < len; i++) 
+					{
+						if (dpValue[i].data == currentValue) 
+						{
+							editor.selectedIndex = i;
+							break;
+						}
+					}
+				}
+			} 
+			public function loseFocus():void {
+				var index:int = editor.selectedIndex;
+				result = dpValue[index].data;
+				this.data.alignment = dpValue[index].label;
+			}
+			public function inFocus(event:Event):void {
+				trace ("inFocus");
+				result = dpValue[editor.selectedIndex].data;
+			} 
+			
+			public function onChange():void 
+			{
+				var index:int = editor.selectedIndex;
+				result = dpValue[index].data;
+				this.data.alignment = dpValue[index].label;
+				
+				//this.data = result;
+				//create object
+			}          
+        ]]>
+    </mx:Script>
+ 	<mx:ComboBox id="editor" dataProvider="{dpValue}" width="100%" creationComplete="inFocus(event)" focusOut="loseFocus()" change="onChange()"/>
+</mx:VBox>
