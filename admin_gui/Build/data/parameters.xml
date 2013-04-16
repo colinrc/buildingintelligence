@@ -1,0 +1,13 @@
+<device TYPE="RAW_CONNECTION">
+		<parameter name="STX" default=""/>
+		<parameter name="ETX" default="\n"/>
+		<parameter name="STARTUP1" default="+++ATH0\n"/>
+		<parameter name="STARTUP2" default="Starup string 2\n"/>
+		<parameter name="STARTUP3" default="Starup string 3\n"/>
+		<parameter name="STARTUP4" default="Starup string 4\n"/>
+		<parameter name="STARTUP5" default="Starup string 5\n"/>
+		<parameter name="POLL_VALUE1" default="180"/>
+		<parameter name="POLL_STRING1" default="First poll\x20World\r\n"/>
+		<parameter name="POLL_VALUE2" default="270"/>
+		<parameter name="POLL_STRING2" default="Second poll\n"/>
+</device>
