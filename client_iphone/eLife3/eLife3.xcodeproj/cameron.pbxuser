@@ -1,0 +1,340 @@
+// !$*UTF8*$!
+{
+	1D3623240D0F684500981E51 /* eLife3AppDelegate.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1125, 483}}";
+			sepNavSelRange = "{209, 0}";
+			sepNavVisRange = "{0, 619}";
+		};
+	};
+	1D3623250D0F684500981E51 /* eLife3AppDelegate.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1125, 793}}";
+			sepNavSelRange = "{1097, 0}";
+			sepNavVisRange = "{161, 1151}";
+		};
+	};
+	1D6058900D05DD3D006BFB54 /* eLife3 */ = {
+		activeExec = 0;
+		executables = (
+			7E12739910F9A62D005F6544 /* eLife3 */,
+		);
+	};
+	29B97313FDCFA39411CA2CEA /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 7E12739910F9A62D005F6544 /* eLife3 */;
+		activeTarget = 1D6058900D05DD3D006BFB54 /* eLife3 */;
+		addToTargets = (
+			1D6058900D05DD3D006BFB54 /* eLife3 */,
+		);
+		codeSenseManager = 7E12739E10F9A64B005F6544 /* Code sense */;
+		executables = (
+			7E12739910F9A62D005F6544 /* eLife3 */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					923,
+					20,
+					48,
+					43,
+					43,
+					20,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+					PBXFileDataSource_SCM_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 292921512;
+			PBXWorkspaceStateSaveDate = 292921512;
+		};
+		perUserProjectItems = {
+			7E2E8B4810FE70E200668D2C = 7E2E8B4810FE70E200668D2C /* PBXTextBookmark */;
+			7E2E8B4910FE70E200668D2C = 7E2E8B4910FE70E200668D2C /* PBXTextBookmark */;
+			7E2E8B4A10FE70E200668D2C = 7E2E8B4A10FE70E200668D2C /* PBXTextBookmark */;
+			7E2E8B4B10FE70E200668D2C = 7E2E8B4B10FE70E200668D2C /* PBXTextBookmark */;
+			7E2E8B68110180F600668D2C = 7E2E8B68110180F600668D2C /* PlistBookmark */;
+			7E2E8B8C11018F7300668D2C = 7E2E8B8C11018F7300668D2C /* PBXTextBookmark */;
+			7E5FF3041175A07300AD96F2 = 7E5FF3041175A07300AD96F2 /* PBXTextBookmark */;
+			7E5FF3051175A07300AD96F2 = 7E5FF3051175A07300AD96F2 /* PBXTextBookmark */;
+			7E5FF3061175A07300AD96F2 = 7E5FF3061175A07300AD96F2 /* PBXTextBookmark */;
+			7E5FF3071175A07300AD96F2 = 7E5FF3071175A07300AD96F2 /* PBXTextBookmark */;
+			7E5FF3081175A07300AD96F2 = 7E5FF3081175A07300AD96F2 /* PlistBookmark */;
+			7E5FF3091175A07300AD96F2 = 7E5FF3091175A07300AD96F2 /* PlistBookmark */;
+			7E5FF3271175A0B500AD96F2 /* PlistBookmark */ = 7E5FF3271175A0B500AD96F2 /* PlistBookmark */;
+			7EE443FB1122E02100978DC4 = 7EE443FB1122E02100978DC4 /* PBXTextBookmark */;
+		};
+		sourceControlManager = 7E12739D10F9A64B005F6544 /* Source Control */;
+		userBuildSettings = {
+			OBJROOT = "$(SYMROOT)";
+			SYMROOT = /Users/cameron/XCode/eLife/eLife3/eLife3/build;
+		};
+	};
+	7E12739910F9A62D005F6544 /* eLife3 */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		dylibVariantSuffix = "";
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = eLife3;
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	7E12739D10F9A64B005F6544 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = Turnip;
+			};
+		};
+	};
+	7E12739E10F9A64B005F6544 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	7E2E8B0A10FE685100668D2C /* settingsViewController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1125, 483}}";
+			sepNavSelRange = "{501, 0}";
+			sepNavVisRange = "{0, 520}";
+		};
+	};
+	7E2E8B0B10FE685100668D2C /* settingsViewController.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1146, 1105}}";
+			sepNavSelRange = "{1398, 67}";
+			sepNavVisRange = "{1090, 1081}";
+		};
+	};
+	7E2E8B2810FE69B200668D2C /* macrosViewController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1125, 496}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 257}";
+		};
+	};
+	7E2E8B2910FE69B200668D2C /* macrosViewController.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1125, 2145}}";
+			sepNavSelRange = "{1802, 0}";
+			sepNavVisRange = "{1387, 1073}";
+		};
+	};
+	7E2E8B2D10FE6A0C00668D2C /* statusViewController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1125, 496}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 257}";
+		};
+	};
+	7E2E8B3210FE6A2200668D2C /* zonesViewController.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1125, 496}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRange = "{0, 255}";
+		};
+	};
+	7E2E8B4810FE70E200668D2C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E2E8B2D10FE6A0C00668D2C /* statusViewController.h */;
+		name = "statusViewController.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 257;
+		vrLoc = 0;
+	};
+	7E2E8B4910FE70E200668D2C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E2E8B3210FE6A2200668D2C /* zonesViewController.h */;
+		name = "zonesViewController.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 255;
+		vrLoc = 0;
+	};
+	7E2E8B4A10FE70E200668D2C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E2E8B2810FE69B200668D2C /* macrosViewController.h */;
+		name = "macrosViewController.h: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 257;
+		vrLoc = 0;
+	};
+	7E2E8B4B10FE70E200668D2C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E2E8B2910FE69B200668D2C /* macrosViewController.m */;
+		name = "macrosViewController.m: 77";
+		rLen = 0;
+		rLoc = 1802;
+		rType = 0;
+		vrLen = 1073;
+		vrLoc = 1387;
+	};
+	7E2E8B68110180F600668D2C /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 8D1107310486CEB800E47090 /* eLife3-Info.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = "/Users/cameron/XCode/eLife/eLife3/eLife3/eLife3-Info.plist";
+		rLen = 0;
+		rLoc = 9223372036854775808;
+	};
+	7E2E8B6A110180F600668D2C /* Root.plist */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text.plist.xml;
+		name = Root.plist;
+		path = /Users/cameron/XCode/eLife/eLife3/eLife3/Settings.bundle/Root.plist;
+		sourceTree = "<absolute>";
+	};
+	7E2E8B8C11018F7300668D2C /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E2E8B0B10FE685100668D2C /* settingsViewController.m */;
+		name = "settingsViewController.m: 48";
+		rLen = 67;
+		rLoc = 1398;
+		rType = 0;
+		vrLen = 1081;
+		vrLoc = 1090;
+	};
+	7E2E8BBA1101947C00668D2C /* elifesocket.h */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1125, 483}}";
+			sepNavSelRange = "{476, 0}";
+			sepNavVisRange = "{0, 535}";
+		};
+	};
+	7E2E8BBB1101947C00668D2C /* elifesocket.m */ = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1174, 2626}}";
+			sepNavSelRange = "{1634, 0}";
+			sepNavVisRange = "{4974, 993}";
+		};
+	};
+	7E5FF3041175A07300AD96F2 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E2E8BBB1101947C00668D2C /* elifesocket.m */;
+		name = "elifesocket.m: 50";
+		rLen = 0;
+		rLoc = 1634;
+		rType = 0;
+		vrLen = 993;
+		vrLoc = 4974;
+	};
+	7E5FF3051175A07300AD96F2 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E2E8BBA1101947C00668D2C /* elifesocket.h */;
+		name = "elifesocket.h: 22";
+		rLen = 0;
+		rLoc = 476;
+		rType = 0;
+		vrLen = 535;
+		vrLoc = 0;
+	};
+	7E5FF3061175A07300AD96F2 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 7E2E8B0A10FE685100668D2C /* settingsViewController.h */;
+		name = "settingsViewController.h: 21";
+		rLen = 0;
+		rLoc = 501;
+		rType = 0;
+		vrLen = 520;
+		vrLoc = 0;
+	};
+	7E5FF3071175A07300AD96F2 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623240D0F684500981E51 /* eLife3AppDelegate.h */;
+		name = "eLife3AppDelegate.h: 11";
+		rLen = 0;
+		rLoc = 209;
+		rType = 0;
+		vrLen = 619;
+		vrLoc = 0;
+	};
+	7E5FF3081175A07300AD96F2 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 7E2E8B6A110180F600668D2C /* Root.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = /Users/cameron/XCode/eLife/eLife3/eLife3/Settings.bundle/Root.plist;
+		rLen = 0;
+		rLoc = 9223372036854775808;
+	};
+	7E5FF3091175A07300AD96F2 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 7E5FF30A1175A07300AD96F2 /* Root.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = /Users/cameron/XCode/eLife/eLife3/eLife3/Settings.bundle/Root.plist;
+		rLen = 0;
+		rLoc = 9223372036854775808;
+	};
+	7E5FF30A1175A07300AD96F2 /* Root.plist */ = {
+		isa = PBXFileReference;
+		lastKnownFileType = text.plist.xml;
+		name = Root.plist;
+		path = /Users/cameron/XCode/eLife/eLife3/eLife3/Settings.bundle/Root.plist;
+		sourceTree = "<absolute>";
+	};
+	7E5FF3271175A0B500AD96F2 /* PlistBookmark */ = {
+		isa = PlistBookmark;
+		fRef = 7E5FF30A1175A07300AD96F2 /* Root.plist */;
+		fallbackIsa = PBXBookmark;
+		isK = 0;
+		kPath = (
+		);
+		name = /Users/cameron/XCode/eLife/eLife3/eLife3/Settings.bundle/Root.plist;
+		rLen = 0;
+		rLoc = 9223372036854775807;
+	};
+	7EE443FB1122E02100978DC4 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = 1D3623250D0F684500981E51 /* eLife3AppDelegate.m */;
+		name = "eLife3AppDelegate.m: 35";
+		rLen = 0;
+		rLoc = 1097;
+		rType = 0;
+		vrLen = 1151;
+		vrLoc = 161;
+	};
+}
