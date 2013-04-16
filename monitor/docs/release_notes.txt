@@ -1,0 +1,97 @@
+Released [attachment:wiki:SoftwareReleases:eLife_monitor_2.4.zip V2.4] 
+
+=== Monitor Release Notes ===
+See [MonitorDocs/ResfulApi,the Monitor application wiki page] for documentation
+
+Added bonjour support for monitor service, requires bonjour libraries to be installed on target machine jvm.
+Changed share URL from /dav to /webdav to fit the apache standard
+Added a seperate handler for the webdav handler, port 8023
+
+Full property support is now
+
+-DeSmart_install="../eLife_Server" -Dmonitor_web="./monitor_web" -Ddatafiles="../eLife_Server/datafiles"
+
+== 2010/03/18 ==
+Added support for reading and updating server name from the bootstrap file, will be used for later bonjour support.
+Updated HTML forms for the embedded website.
+
+Released [attachment:wiki:SoftwareReleases:eLife_monitor_2.3.zip V2.3] 
+
+== 2010/03/17 ==
+Added libs to the distribution zip, changed references from /ext to /monitor_ext to allow parallel isntallation
+with eLife server.
+
+Released [attachment:wiki:SoftwareReleases:eLife_monitor_2.2.zip V2.2] 
+
+== 2010/03/16 ==
+Add a property for datafiles location
+eg.  -DeSmart_install="../eLife_Server" -Dmonitor_web="./monitor_web" -Ddatafiles="../eLife_Server/datafiles"
+
+Released [attachment:wiki:SoftwareReleases:eLife_monitor_2.1.zip V2.1] 
+
+
+== 2010/02/28 ==
+Rewrote as a Restful interface for admin functions
+Incorporated WEBDAV to simplify access to eLife file system
+Incorporated an embedded web application to allow access to monitor functions without requiring the admin tool.
+To run the embedded web application goto https://server:8082/ , log in using your elife admin account
+Brought java libs in line with eLife libs to simplify release process.
+To install, unzip and ensure monitor_web is parallel to the bin directory containing the jar file.
+Launch using java -jar eMonitor.jar with bin as the current directory, other current directories can be used
+however the path to the server installation and the web installation will need to be specified using java 
+environment commands.
+eg.  -DeSmart_install="../eLife_Server" -Dmonitor_web="./monitor_web"
+
+Released [attachment:wiki:SoftwareReleases:eLife_monitor_2.0.zip V2.0] 
+
+== 2005/12/11 ==
+Ensure script files are sent to the admin client in base 64 encoding.
+Support upload of base 64 encoded files, add the attribute BASE64=Y to the upload XML header.
+Released V1.47
+
+== 2005/6/14 ==
+Added base 64 support for log files
+Released V1.44
+
+== 2005/6/7 ==
+Added support for wildcard file selection in directory list. Supports log file access to admin plugin
+Released V1.43
+
+== 2005/2/26 ==
+Handled connection from two Jedit plugin connections better
+Added startup parsing of bootstrap and passing startup file to jEdit plugin
+Added better error transmitting to the admin plugin 
+Added heartbeat to detect jEdit plugin client going away
+Released V1.39
+
+== 2005/2/26 ==
+Fixed listing of script files
+Released version 1.38
+
+== 2005/2/24 ==
+Added last modifed timestamp to file list
+Released version 1.36
+
+== 2005/2/20 ==
+Modified to only pic up schema's from the templates directory. This must be used with eLife server 0.9.106 or above
+Released version 1.35
+
+== 2005/2/19 ==
+All schema and dtd's files are now sent whenever the admin tool connects
+Released version 1.34
+
+== 2005/2/17 ==
+XML parser misreports some erros as IO errors. Files with IO errors are now sent in the file list.
+Released version 1.33
+
+== 2005/2/15 ==
+Ensured all file are sent in directory listing; even if they contain XML problems
+Released version 1.32
+
+== 2005/2/13 ==
+Added client restart command
+Released version 1.31
+
+== 2005/2/11 ==
+Ensure download can send arbitrary length files
+Released version 1.30

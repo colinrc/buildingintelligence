@@ -1,0 +1,54 @@
+table {
+  width: 100%;
+  height: 100%;
+}
+td {
+  text-align: center;
+}
+h1 {
+  margin: 0 0 10px;
+  padding: 30px;
+  font-family: trebuchet ms,arial,sans-serif;
+  font-size: 18px;
+  display: block;
+  text-align: center;
+}
+div {
+  border: 1px solid #95a7c4;
+  margin: 0 auto 2pt;
+  padding: 30px;
+  width: 450px;
+  display: block;
+}
+section {
+  border: 1px solid #95a7c4;
+  margin: 0 auto;
+  padding: 30px;
+  width: 300px;
+  display: block;
+}
+label {
+  display: block;
+  font-weight: bold;
+  text-align: left;
+  color: #ffffff;
+}
+body {
+  color: #ffffff;
+  background-color: #333399;
+}
+a:visited, a:link, li {
+  background-position: left center;
+  text-decoration: none;
+  font-size: 14px;
+  color: #ffffff;
+  text-align: left;
+}
+a:hover {
+  color: #cccc33;
+}
+input.myButton:hover
+{
+  color: #cccc33;
+}
+

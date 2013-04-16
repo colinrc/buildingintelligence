@@ -1,0 +1,23 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.1
+Created-By: 14.3-b01-101 (Apple Inc.)
+Main-Class: au.com.BI.Admin.eLife_monitor
+Class-Path: ../monitor_ext/bin ../monitor_ext/slf4j-jdk14-1.5.6.jar ..
+ /monitor_ext/slf4j-api-1.5.6.jar ../monitor_ext/webdav-servlet-2.0.ja
+ r ../monitor_ext/jetty-ajp-7.0.2.v20100331.jar ../monitor_ext/jetty-a
+ nnotations-7.0.2.v20100331.jar ../monitor_ext/jetty-client-7.0.2.v201
+ 00331.jar ../monitor_ext/jetty-continuation-7.0.2.v20100331.jar ../mo
+ nitor_ext/jetty-deploy-7.0.2.v20100331.jar ../monitor_ext/jetty-http-
+ 7.0.2.v20100331.jar ../monitor_ext/jetty-io-7.0.2.v20100331.jar ../mo
+ nitor_ext/jetty-jmx-7.0.2.v20100331.jar ../monitor_ext/jetty-jndi-7.0
+ .2.v20100331.jar ../monitor_ext/jetty-plus-7.0.2.v20100331.jar ../mon
+ itor_ext/jetty-policy-7.0.2.v20100331.jar ../monitor_ext/jetty-rewrit
+ e-7.0.2.v20100331.jar ../monitor_ext/jetty-security-7.0.2.v20100331.j
+ ar ../monitor_ext/jetty-server-7.0.2.v20100331.jar ../monitor_ext/jet
+ ty-servlet-7.0.2.v20100331.jar ../monitor_ext/jetty-servlets-7.0.2.v2
+ 0100331.jar ../monitor_ext/jetty-util-7.0.2.v20100331.jar ../monitor_
+ ext/jetty-webapp-7.0.2.v20100331.jar ../monitor_ext/jetty-websocket-7
+ .0.2.v20100331.jar ../monitor_ext/jetty-xml-7.0.2.v20100331.jar ../mo
+ nitor_ext/servlet-api-2.5.jar ../monitor_ext/xalan.jar ../monitor_ext
+ /xml-apis.jar ../monitor_ext/jdom.jar
+
