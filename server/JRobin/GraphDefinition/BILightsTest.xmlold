@@ -1,0 +1,141 @@
+<rrd_graph_def>
+     <span>
+         <!-- ISO FORMAT: yyyy-MM-dd HH:mm:ss -->
+         <start>${startTime}</start>
+         <!--  timestamp in seconds is also allowed -->
+         <end>${endTime}</end>
+     </span>
+     <options>
+         <anti_aliasing>true</anti_aliasing>
+         <arrow_color>#FF0000</arrow_color>
+         <axis_color>#00FFFF</axis_color>
+         <back_color>#123450</back_color>
+         <background>#FFFFFF</background>
+         <base_value>1024</base_value>
+         <canvas>#112211</canvas>
+         <left_padding>55</left_padding>
+         <default_font>
+             <name>Times</name>
+             <style>BOLD ITALIC</style>
+             <size>15</size>
+         </default_font>
+         <default_font_color>#000000</default_font_color>
+         <frame_color>#0000FF</frame_color>
+         <front_grid>true</front_grid>
+         <grid_range>
+             <lower>1</lower>
+             <upper>20</upper>
+             <rigid>false</rigid>
+         </grid_range>
+         <grid_x>true</grid_x>
+         <grid_y>false</grid_y>
+         <border>
+             <color>#505050</color>
+             <width>10</width>
+         </border>
+         <major_grid_color>#500050</major_grid_color>
+         <major_grid_x>true</major_grid_x>
+         <major_grid_y>true</major_grid_y>
+         <minor_grid_color>#FF00FF</minor_grid_color>
+         <minor_grid_x>true</minor_grid_x>
+         <minor_grid_y>true</minor_grid_y>
+      <!--   <overlay>overlay_image.png</overlay> -->
+         <show_legend>true</show_legend>
+         <show_signature>true</show_signature>
+         <time_axis>
+             <!-- ALLOWED TIME UNITS: SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, YEAR -->
+             <!--min_grid_time_unit>SECOND</min_grid_time_unit>
+             <min_grid_unit_steps>5</min_grid_unit_steps-->
+             <maj_grid_time_unit>MINUTE</maj_grid_time_unit>
+             <maj_grid_unit_steps>1</maj_grid_unit_steps>
+             <!--date_format>HH:mm</date_forma -->
+             <center_labels>true</center_labels>
+         </time_axis>
+         <time_axis_label>time</time_axis_label>
+         <title>RRD Test</title>
+         <title_font>
+             <name>Verdana</name>
+             <style>BOLD</style>
+             <size>17</size>
+         </title_font>
+         <title_font_color>#FF0000</title_font_color>
+         <units_exponent>2</units_exponent>
+         <value_axis>
+             <grid_step>5</grid_step>
+             <label_step>10</label_step>
+         </value_axis>
+         <vertical_label>Usage</vertical_label>
+     </options>
+     <datasources>
+	     <def>
+                     <name>TESSA_LIGHT</name>
+                     <rrd>${rrdPath}BITest.rrd</rrd>
+                     <source>TESSA_LIGHT</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>TESSA_LIGHT_POWER</name>
+                     <rrd>${rrdPath}BITest.rrd</rrd>
+                     <source>TESSA_LIGHT_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+	      <def>
+                     <name>AINSLEE_LIGHT</name>
+                     <rrd>${rrdPath}BITest.rrd</rrd>
+                     <source>AINSLEE_LIGHT</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>AINSLEE_LIGHT_POWER</name>
+                     <rrd>${rrdPath}BITest.rrd</rrd>
+                     <source>AINSLEE_LIGHT_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+	      <def>
+                     <name>AMY_LIGHT</name>
+                     <rrd>${rrdPath}BITest.rrd</rrd>
+                     <source>AMY_LIGHT</source>
+                     <cf>AVERAGE</cf>
+             </def>
+             <def>
+                     <name>AMY_LIGHT_POWER</name>
+                     <rrd>${rrdPath}BITest.rrd</rrd>
+                     <source>AMY_LIGHT_POWER</source>
+                     <cf>AVERAGE</cf>
+             </def>
+     </datasources>
+     <graph>
+         <area>
+             <datasource>TESSA_LIGHT</datasource>
+             <color>#FF6000</color>
+             <legend>Tessa Usage</legend>
+         </area>
+         <line>
+             <datasource>TESSA_LIGHT_POWER</datasource>
+             <color>#105577</color>
+             <legend>Tessa Power KW</legend>
+         </line>
+	 <area>
+             <datasource>AINSLEE_LIGHT</datasource>
+             <color>#FF6000</color>
+             <legend>Ainslee Usage</legend>
+         </area>
+         <line>
+             <datasource>AINSLEE_LIGHT_POWER</datasource>
+             <color>#105577</color>
+             <legend>Ainslee Power KW</legend>
+         </line>
+	 <area>
+             <datasource>AMY_LIGHT</datasource>
+             <color>#FF6000</color>
+             <legend>Amy Usage</legend>
+         </area>
+         <line>
+             <datasource>AMY_LIGHT_POWER</datasource>
+             <color>#105577</color>
+             <legend>Amy Power KW</legend>
+         </line>
+
+         <comment>Building Intelligence</comment>
+     </graph>
+ </rrd_graph_def>

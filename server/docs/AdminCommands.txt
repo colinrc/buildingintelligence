@@ -1,0 +1,44 @@
+This is a brief description of the admin commands for communication to port 10001. A more complete version
+will be written later.
+
+
+Debug Commands
+
+<DEBUG_PACKAGES />
+Lists all current packages (models, eg.Comfort) in the system and there current debug level.
+
+Response :
+
+<DEBUG_PACKAGES>
+<DEBUG_MENU SHORTNAME="Global" PACKAGENAME="au.com.BI" LEVEL="INFO" />
+<DEBUG_MENU SHORTNAME="Config" PACKAGENAME="au.com.BI.Config" LEVEL="INFO" />
+<DEBUG_MENU SHORTNAME="Comms" PACKAGENAME="au.com.BI.Comms" LEVEL="INFO" />
+<DEBUG_MENU SHORTNAME="Script" PACKAGENAME="au.com.BI.Script" LEVEL="INFO" />
+......
+</DEBUG_PACKAGES>
+
+
+
+<DEBUG PACKAGE="Package Name" LEVEL="Level" />
+eg.
+<DEBUG PACKAGE="au.com.BI.Flash" LEVEL="FINEST" />
+Sets the debug level for a package.
+Level strings are standard java debug levels;
+WARNING,SEVERE,INFO,FINE,FINER,FINEST
+
+
+
+A standard java log trace is sent based on the levels set for each package above.
+The only information of interest to be displayed is the last word in the class, date and the message.
+eg.
+<record>
+  <date>2004-12-06T23:45:38</date>
+  <millis>1102337138044</millis>
+  <sequence>26</sequence>
+  <logger>au.com.BI.Flash</logger>
+  <level>INFO</level>
+  <class>au.com.BI.Flash.FlashControlListener</class>
+  <method>addTheHandler</method>
+  <thread>11</thread>
+  <message>Client connection received</message>
+</record>

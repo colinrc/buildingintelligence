@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<layout>
+	<elife version="eLife-1.6b107"/>
+	<dirs>
+		<dir desc="System data files" name="./datafiles"/>
+		<dir desc="System configuration" name="./config"/>
+		<dir desc="Groovy and Jython script files" name="./script"/>
+		<dir desc="Groovy model files" name="./models"/>
+		<dir desc="Main flash files" name="./client"/>
+	</dirs>
+</layout>

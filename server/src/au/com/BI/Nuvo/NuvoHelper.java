@@ -1,0 +1,49 @@
+/*
+ * Created on Jun 10, 2004
+ *
+ */
+package au.com.BI.Nuvo;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import au.com.BI.Nuvo.Protocols;
+
+public class NuvoHelper {
+	protected Logger logger;
+	public Protocols protocol = Protocols.Standard; 
+
+	public NuvoHelper () {
+		logger = Logger.getLogger(this.getClass().getPackage().getName());	
+	}
+	
+
+	protected String buildSwitchCommand (int command,  String zone,String src,String machineNumber) {
+		try {
+			String outputArr ="";
+			if (src == null) {
+				logger.log (Level.WARNING, "SRC selection entry for Nuvo is unknown ");
+				return null;
+			}
+			if (machineNumber != null &&  !machineNumber.equals("")) {
+			}
+			if (!src.equals("")) {
+			}
+
+			return outputArr;
+		} catch (NumberFormatException er) {
+			logger.log (Level.WARNING, "Zone or machine entry for Nuvo is malformed " + zone + " : machine : " + machineNumber);
+			return null;
+		}
+	}
+
+
+	public Protocols getProtocol() {
+		return protocol;
+	}
+
+
+	public void setProtocol(Protocols protocol) {
+		this.protocol = protocol;
+	}
+
+}

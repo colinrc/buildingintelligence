@@ -1,0 +1,71 @@
+<CONFIG lastUpdated="2005-01-13">
+
+<DESC>Example config showing use of RAW</DESC>
+
+<CATALOGUE NAME="Pool Commands">
+<ITEM CODE="TEMPSET" VALUE="TMP=%EXTRA%" />
+<ITEM CODE="POWER" VALUE="PWR=%STATE%" />
+</CATALOGUE>
+
+<!-- DEVICE NAME="RAW_INTERFACE" ACTIVE="Y" DISPLAY_NAME="Pool Heater" CONNECTION="SERIAL" PORT="COM6" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE" -->
+<DEVICE ACTIVE="Y" NAME="RAW_INTERFACE" DISPLAY_NAME="Raw Input" CONNECTION="IP" IP_ADDRESS="127.0.0.1" PORT="5000">
+
+
+<PARAMETERS>
+<ITEM NAME="STX" VALUE="" />
+<ITEM NAME="ETX" VALUE="\r\n" />
+<ITEM NAME="POLL_VALUE" VALUE="0" />
+<ITEM NAME="POLL_STRING" VALUE="STATUS\x20TEMP\r\n" />
+</PARAMETERS>
+
+
+
+<!-- Looking for "PWR=ON" or "PWR=OFF" coming from the pool heater. This arrives every time the unit is turned on or off -->
+<!-- This example uses the REGEX capability of CUSTOM_INPUT -->
+<CUSTOM_INPUT KEY="(PWR)=(ON|OFF)" KEY_IS_REGEX="Y" NAME="Pool Heater" DISPLAY_NAME="POOL_HEATER" COMMAND="@2"/>
+
+<!-- The following two commented lines demonstrate how you could do it with no REGEX but exact match -->
+<!--CUSTOM_INPUT KEY="PWR=OFF" NAME="Pool Heater" DISPLAY_NAME="POOL_HEATER" COMMAND="off"/-->
+<!--CUSTOM_INPUT KEY="PWR=ON" NAME="Pool Heater" DISPLAY_NAME="POOL_HEATER" COMMAND="on"/-->
+
+<!-- Looking for "TMP=nn" coming from the pool heater. This string arrives every time the set point changes -->
+<!-- The second token represented by "@2" is populated with (/d+) which matches one or many digits -->
+
+<CUSTOM_INPUT KEY="(TMP)=(\d+)" KEY_IS_REGEX="Y" NAME="Pool Heater Set Point" DISPLAY_NAME="POOL_HEATER_SETPOINT" COMMAND="ON" EXTRA="@2" />
+
+<!-- Looking for "TMP=nn" coming from the pool heater. This string arrives every time the set point changes. -->
+<!-- The alternate way is commented below where the Key matches exactly and any string that follows is placed in EXTRA automatically -->
+<!-- Note that the extra field is populated with the string that follows the KEY -->
+<!-- CUSTOM_INPUT KEY="TMP=" NAME="Pool Heater Set Point" DISPLAY_NAME="POOL_HEATER_SETPOINT" COMMAND="ON" /-->
+
+
+<!-- Looking for "ACTUALTMP=nn" coming from the pool heater. This string arrives every time the STATUS TEMP command is run -->
+<CUSTOM_INPUT KEY="(ACTUAL\sTMP)=(\d+)" KEY_IS_REGEX="Y" NAME="Pool Temperature" DISPLAY_NAME="POOL_TEMP" COMMAND="ON" EXTRA="@2" />
+
+<!-- Looking for "LIGHT=ON" or "LIGHT=OFF" coming from the pool heater. This arrives every time the light is turned on or off -->
+<CUSTOM_INPUT KEY="(LIGHT)=(ON|OFF)" KEY_IS_REGEX="Y" NAME="Pool Light" DISPLAY_NAME="POOL_LIGHT" COMMAND="@2" />
+
+<RAW_INTERFACE NAME="Pool Heater" DISPLAY_NAME="POOL_HEATER" >
+<RAW_ITEMS CATALOGUE="Pool Commands" >
+<RAW COMMAND="on" CODE="POWER" >
+<VARS NAME="STATE" VALUE="ON" />
+</RAW>
+</RAW_ITEMS>
+</RAW_INTERFACE>
+
+<RAW_INTERFACE NAME="Pool Heater" DISPLAY_NAME="POOL_HEATER" >
+<RAW_ITEMS CATALOGUE="Pool Commands" >
+<RAW COMMAND="off" CODE="POWER" >
+<VARS NAME="STATE" VALUE="OFF" />
+</RAW>
+</RAW_ITEMS>
+</RAW_INTERFACE>
+
+<RAW_INTERFACE NAME="Pool Heater Set Point" DISPLAY_NAME="POOL_HEATER_SETPOINT" >
+<RAW_ITEMS CATALOGUE="Pool Commands" >
+<RAW COMMAND="on" CODE="TEMPSET" />
+</RAW_ITEMS>
+</RAW_INTERFACE>
+
+</DEVICE>
+</CONFIG>

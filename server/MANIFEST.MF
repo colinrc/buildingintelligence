@@ -1,0 +1,31 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.6.5
+Created-By: 1.5.0_06-64 ("Apple Computer, Inc.")
+Main-Class: au.com.BI.Home.eLife
+Class-Path: ../ext/bin ../ext/groovy-all-1.6.0.jar ../ext/http-builder
+ -0.5.0-RC1.jar ../ext/commons-beanutils-1.7.0.jar ../ext/commons-code
+ c-1.3.jar ../ext/commons-collections-3.2.jar ../ext/commons-lang-2.4.
+ jar ../ext/commons-logging-1.1.1.jar ../ext/ezmorph-1.0.4.jar ../ext/
+ httpclient-4.0-beta2.jar ../ext/httpcore-4.0-beta3.jar ../ext/json-li
+ b-2.2.2-jdk15.jar ../ext/nekohtml-1.9.9.jar ../ext/xercesImpl-2.8.1.j
+ ar ../ext/xml-apis-1.3.03.jar ../ext/xml-resolver-1.2.jar ../ext/xala
+ n.jar ../ext/xml-apis.jar ../ext/jdom.jar ../ext/jetty-ajp-7.0.2.v201
+ 00331.jar ../ext/jetty-annotations-7.0.2.v20100331.jar ../ext/jetty-c
+ lient-7.0.2.v20100331.jar ../ext/jetty-continuation-7.0.2.v20100331.j
+ ar ../ext/jetty-deploy-7.0.2.v20100331.jar ../ext/jetty-http-7.0.2.v2
+ 0100331.jar ../ext/jetty-io-7.0.2.v20100331.jar ../ext/jetty-jmx-7.0.
+ 2.v20100331.jar ../ext/jetty-jndi-7.0.2.v20100331.jar ../ext/jetty-pl
+ us-7.0.2.v20100331.jar ../ext/jetty-policy-7.0.2.v20100331.jar ../ext
+ /jetty-rewrite-7.0.2.v20100331.jar ../ext/jetty-security-7.0.2.v20100
+ 331.jar ../ext/jetty-server-7.0.2.v20100331.jar ../ext/jetty-servlet-
+ 7.0.2.v20100331.jar ../ext/jetty-servlets-7.0.2.v20100331.jar ../ext/
+ jetty-util-7.0.2.v20100331.jar ../ext/jetty-webapp-7.0.2.v20100331.ja
+ r ../ext/jetty-websocket-7.0.2.v20100331.jar ../ext/jetty-xml-7.0.2.v
+ 20100331.jar ../ext/servlet-api-2.5.jar ../ext/jrobin-1.4.0.jar ../ex
+ t/snmp-1.3.jar ../ext/org.json.jar ../ext/junit-addons-1.4.jar ../ext
+ /junit.jar ../ext/junit-4.3.1.jar ../ext/jython.jar ../ext/log4j-1.2.
+ 13.jar ../ext/quartz-1.6.0.jar ../ext/commons-collections-3.1.jar ../
+ ext/commons-logging-api.jar ../ext/commons-logging.jar ../ext/jta.jar
+  ../ext/RXTXcomm.jar ../ext/slf4j-jdk14-1.5.6.jar ../ext/slf4j-api-1.
+ 5.6.jar ../ext/webdav-servlet-2.0.jar ../ext/xmlunit1.0.jar
+

@@ -1,0 +1,76 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+        <DESC>Demonstration configuration for an audio system called BI_TUNER</DESC>
+         <!-- ______________________________________  BI_TUNER DEFS  ____________________  -->
+        <DEVICE ACTIVE="N" DEVICE_TYPE="BI_TUNER" DESCRIPTION="Audio Tuner">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="5000"/>
+                </CONNECTION>
+                
+                <CATALOGUE NAME="Main Rack Audio">
+                        <ITEM CODE="cd1" VALUE="1"/>
+                        <ITEM CODE="cd2" VALUE="2"/>
+                        <ITEM CODE="digital" VALUE="3"/>
+                        <ITEM CODE="tv" VALUE="4"/>
+                </CATALOGUE>
+                
+                <PARAMETERS>
+                     <ITEM NAME="AUDIO_INPUTS" VALUE="Main Rack Audio" />
+                     <!-- ITEM NAME="APPEND_TO_SENT_STRINGS" VALUE="&#13;" /   not needed as it is in the model itself. -->
+                </PARAMETERS>
+                
+                <BI_TUNER>
+                           <!-- This line matches a string from the device for the volume in one 1, the Garage Audio.   -->                           
+                         <CUSTOM_INPUT KEY="AU_VOL 01=(\d+)" NAME="Garage Audio" DISPLAY_NAME="GARAGE_AUDIO"  COMMAND="on" EXTRA="@1"/>
+                         
+                          <!-- Look for the zone name corresponding to the first field in the list of all configured devices (apart from CUSTOM_INPUT devices ) -->
+                           <!-- This line with match a string from the device such as the following for a volume of 10 for the Study Audio      VOL 02 10  -->                           
+                       	<CUSTOM_INPUT KEY="AU_VOL (\d+)=(\d+)"  NAME="Volume For Zone" 
+                         														DISPLAY_NAME="%Match(@1,AUDIO,DisplayName)%" COMMAND="on" EXTRA="@2"/>
+
+ 						<!-- Any string from the device which has not been processed by the CUSTOM_INPUT instructions will be sent to the  
+ 										processCommsString method in the Groovy Model specified by the DEVICE_TYPE parameter for this configuration block  -->
+ 					
+ 					
+ 					
+ 						<!-- If a command has been received from flash for the Mater bedroom audio or the dining room audio, process it here -->
+                        <CUSTOM_CONNECT NAME="Audio Processor" >
+                        		<KEY VALUE="1" DISPLAY_NAME="MASTER_BED_AUDIO" NAME="Master Bedroom Audio" />
+                        		<KEY VALUE="2" DISPLAY_NAME="DINING_AUDIO" NAME="Dining Room Audio" />
+   
+                           		<OUTSTRING IF_COMMAND="on"  NAME="Power On" VALUE="AU_PWR %KEY% on"  />
+                        		<OUTSTRING IF_COMMAND="off"  NAME="Power Off" VALUE="AU_PWR %KEY% off" />
+ 
+                       		   <OUTSTRING IF_COMMAND="bass"  NAME="Set Bass" VALUE="AU_PWR %KEY% bass %COMMAND.EXTRA%" />
+                        		                        		
+                        		                     		                       		
+                       			<OUTSTRING IF_COMMAND="src"  IF_EXTRA="cd1"  NAME="Select source 1" VALUE="AU_SRC %KEY% 1"  />
+                        		<OUTSTRING IF_COMMAND="src"  NAME="Select source"  VALUE="AU_SRC %KEY% %LOOKUP AUDIO_INPUTS COMMAND.EXTRA %"  />
+  
+                        		<OUTSTRING IF_COMMAND="volume" IF_EXTRA="up"  NAME="Volume Up" VALUE="AU_VOL %KEY% vol +"  />
+                        		<OUTSTRING IF_COMMAND="volume" IF_EXTRA="down"  NAME="Volume Down" VALUE="AU_VOL %KEY% vol -"  />
+                        		<OUTSTRING IF_COMMAND="volume" IF_EXTRA="%NUMBER%"  NAME="Set Volume" VALUE="AU_VOL %KEY% vol %SCALE 0 60 %"  />
+                       		
+                        		<INSTRING TO_MATCH="AU_VOL (\d+)=\+"  NAME="Volume Up" KEY="@1" COMMAND="volume" EXTRA="up" />
+                        		<INSTRING TO_MATCH="AU_VOL (\d+)=\-"  NAME="Volume Down" KEY="@1" COMMAND="volume" EXTRA="up" />
+                           		<INSTRING TO_MATCH="AU_VOL (\d+)=(\d+)"  NAME="Set Volume" KEY="@1" COMMAND="volume" EXTRA="%SCALE @2 0 60%" />
+  
+                             	<INSTRING TO_MATCH="AU_SRC (\d+) (\d+)"  NAME="Set Input Source" KEY="@1" COMMAND="src" EXTRA="%LOOKUP AUDIO_INPUTS @2 %" />
+                             		                      		
+                        		<INSTRING TO_MATCH="AU_PWR (\d+) on" NAME="Power on" KEY="@1" COMMAND="on" />
+                        		
+                          </CUSTOM_CONNECT>
+                        
+ 						<!-- If a command has been received from flash for sudio audio, do not process it here. It will be processed by the buildCustomConnectString method in the 
+ 						         Groovy Model refered to in the DEVICE_TYPE parameter for this configuration block, BI_TUNER   -->
+                        <CUSTOM_CONNECT KEY="6" DISPLAY_NAME="STUDY_AUDIO" NAME="Study Audio" />
+                        
+                         <!-- If a command has been received from flash for sudio audio, do not process it here. It will be processed by the buildAudioString method in the 
+ 						         Groovy Model refered to in the DEVICE_TYPE parameter for this configuration block, BI_TUNER   -->
+                        <AUDIO KEY="5" DISPLAY_NAME="KITCHEN_AV" NAME="Kitchen Audio" />
+                </BI_TUNER>
+        </DEVICE>
+        
+ 
+</CONFIG>

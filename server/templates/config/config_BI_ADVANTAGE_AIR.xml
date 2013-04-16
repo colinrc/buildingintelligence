@@ -1,0 +1,24 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+        <DESC>Demonstration configuration for an audio system called BI_TUNER</DESC>
+         <!-- ______________________________________  BI_PUMP DEFS  ____________________  -->
+        <DEVICE ACTIVE="Y" DEVICE_TYPE="ADVANTAGE_AIR" DESCRIPTION="Advantage Air controller">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" SUPPORTS_CD="N" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5001"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="5000"/>
+                </CONNECTION>
+                
+                <PARAMETERS>
+                </PARAMETERS>
+                
+                <ADVANTAGE_AIR>
+                	<UNIT KEY="0" DISPLAY_NAME="AC_SYSTEM" NAME="AC System" />
+                    <THERMOSTAT KEY="2" DISPLAY_NAME="STUDY_AIR" NAME="Study AC Zone" />
+                    <THERMOSTAT KEY="4" DISPLAY_NAME="LOUNGE_AIR" NAME="Lounge Room AC Zone" />
+
+                    <SENSOR KEY="2" DISPLAY_NAME="STUDY_TEMP" NAME="Study AC Temperature" />
+                    <SENSOR KEY="4" DISPLAY_NAME="LOUNGE_TEMP" NAME="Lounge Room AC Temperature" />
+                    
+                </ADVANTAGE_AIR>
+        </DEVICE>
+</CONFIG>

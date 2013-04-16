@@ -1,0 +1,196 @@
+<?eclipse.ant.import?>
+
+<project basedir="." default="build" name="eLife">
+	<description>Builds, tests, and runs the project server.</description>
+	<import  file="ant_stubs/util_stubs.xml"/>
+       
+	<taskdef resource="net/sf/ant4eclipse/antlib.xml" >
+  		<classpath>
+    		<pathelement location="/Java/ant4eclipse/ant4eclipse-0.5.0.rc1.jar"/>
+  		</classpath>
+	</taskdef>	
+	
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+  		<classpath>
+    		<pathelement location="/Java/ant-contrib/ant-contrib-1.0b3.jar"/>
+  		</classpath>
+	</taskdef>	
+	
+	<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc">
+  		<classpath>
+    		<pathelement location="/Java/groovy-1.6.0/embeddable/groovy-all-1.6.8.jar"/>
+  		</classpath>
+	</taskdef>
+	
+	<property name="workspace" value="${basedir}/.." />
+	<property name="project.name" value="eLife_Server" />
+	<property name="dist.jar" value="dist/eLife.jar" />
+	<userLibraries userlibraries="./libs.userlibraries" />
+	<getEclipseClasspath pathId="eLife.classpath" relative="true" workspace="${workspace}" projectName="${project.name}" />
+	<getEclipseClasspath property="eLife.jar_libs" relative="true" workspace="${workspace}" projectName="${project.name}" />
+	<available file="lib" type="dir" property="lib_dir.present"/>
+	<available file="junit" type="dir" property="junit_dir.present"/>
+	<available file="ext" type="dir" property="ext_dir.present"/>
+	<getOutputpath property="classes.dir" workspace="${workspace}" projectName="${project.name}" />
+
+	<path id="classpath.ant">
+   		<pathelement location="/Development/cruisecontrol/lib/junit-4.4.jar" />
+		<pathelement location="bin"/>
+		<pathelement location="${build.dir}/test"/>
+  	</path>	
+	
+	<target name="init">
+		<delete>
+			<fileset dir="dist" includes="**/*" excludes="ext/*" followsymlinks="false" >
+				<exclude name="ext/*" />
+				<exclude name="*.zip" />
+			</fileset>
+		</delete>
+        <echo message="Emptied previous dist file" />
+		
+	</target>
+
+	<target name="clean" depends="init">
+		<delete>
+			<fileset dir="bin" includes="**/*.class" followsymlinks="false" >
+				<exclude name=".svn/*" />
+			</fileset>
+		</delete>
+        <echo message="Emptied previous bin/ directory" />		
+	</target>
+	
+	<target name="build-lib-dir" depends="" unless="lib_dir.present" >    	
+	   	<mkdir dir="dist/lib" />
+	</target>	
+
+    <target name="compile" depends="init" >
+        <echo>build src to "${classes.dir}"</echo>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" includeAntRuntime="false" target="1.5">
+            <src path="src"/>
+            <classpath refid="eLife.classpath"/>
+        </javac>
+        <echo>build test to "${classes.dir}"</echo>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" includeAntRuntime="false" target="1.5">
+            <src path="test"/>
+            <classpath refid="eLife.classpath"/>
+        </javac>
+       	<echo>build script to "${classes.dir}"</echo>
+        <groovyc srcdir="script" destdir="${classes.dir}">
+        	<javac target="1.5" debug="true" />
+            <classpath>
+            	<pathelement path="${classes.dir}"/>
+            	<path refid="eLife.classpath"/>
+            </classpath>
+        </groovyc>
+   		<echo>build models to "${classes.dir}"</echo>
+        <groovyc srcdir="models" destdir="${classes.dir}">
+        	<javac target="1.5" debug="true" />
+            <classpath>
+            	<pathelement path="${classes.dir}"/>
+            	<path refid="eLife.classpath"/>
+            </classpath>
+        </groovyc>
+    </target>
+	
+	<target name="jar" depends="compile" >
+		
+		<pathconvert property="flattended.jars" refid="eLife.classpath" pathsep=" ">
+		    <chainedmapper>
+		        <flattenmapper/>
+		        <globmapper from="*" to="../ext/*"/>
+		    </chainedmapper>
+		</pathconvert>
+		<manifest file="MANIFEST.MF" mode="update" >
+			<attribute name="Class-Path" value="${flattended.jars}" />
+		</manifest>
+		<jar destfile="${dist.jar}" 
+			update="false"
+			basedir="${classes.dir}" 
+			includes = "**/*.class" 
+			excludes = "**/Test*.class"
+			manifest="MANIFEST.MF" />
+		<jar destfile="${dist.jar}" 
+			update="true"
+			basedir="src" 
+			includes = "**/*.properties" 
+			 />
+		<echo>To run this application from the command line without Ant, try:</echo>
+		<echo>java -jar "${dist.jar}"</echo>
+	</target>
+
+        	
+	<target name="build-junit-dir" depends="" unless="junit_dir.present" >    	
+	   	<mkdir dir="junit" />
+	</target>	
+	
+	<target name="unit-tests" description="run the unit tests" depends="jar, build-junit-dir">
+		<junit printsummary="true" failureproperty="junit.failure">
+		<classpath refid="classpath.ant"/>
+        <classpath refid="eLife.classpath"/>
+			<batchtest todir="junit">
+        			<fileset dir="test"/>
+        			<formatter type="xml"/>
+      			</batchtest>
+		</junit>
+	</target>
+
+	<target name="copy-libs" depends="init,build-ext-dir" >
+		<pathconvert pathsep="," property="massaged_jar_libs" refid="eLife.classpath" >
+			<map from="/Java" to="Java" />
+		</pathconvert>
+		<echo>List of jar files is ${eLife.jar_libs}</echo>
+		<echo>Massaged jar files list is ${massaged_jar_libs}</echo>
+
+		<delete  includeemptydirs="true" quiet="true" >
+			<fileset dir="tmp/ext" includes="**/*" />
+		</delete>
+		<delete  includeemptydirs="true" quiet="true" >
+			<fileset dir="tmp/lib" includes="**/*" />
+		</delete>
+		<copy todir="tmp/ext" flatten="true" >
+		   <fileset dir="/" includes="${massaged_jar_libs}"  />
+		</copy>
+		<copy todir="tmp/ext" flatten="true" >
+		   <fileset dir="./wrapper" includes="*.jar"  />
+		</copy>
+		<delete  includeemptydirs="true" quiet="true" >
+		    	<fileset dir="tmp/ext" >
+		    		<include name="junit*" />
+		    		<include name="nbunit*" />
+		    		<include name="xmlunit*" />
+	    		</fileset>
+		</delete>
+		<copy todir="tmp/lib" flatten="true" >
+				<fileset dir="." includes="*.dll"  />
+			   	<fileset dir="." includes="*.jnilib"  />
+		</copy>
+	<copy todir="tmp/lib" flatten="true" >
+			<fileset dir="./wrapper" includes="*.dll"  />
+	</copy>	
+	</target>
+		
+    <target name="dist-libs"  depends="copy-libs" >
+         <property file="src/au/com/BI/Home/my.properties" />
+		<zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+			update="false"
+			basedir="tmp" 
+			includes = "ext/*.jar" />
+        <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+            update="true"
+            basedir="lib"
+            includes = "*.dll" />
+        <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+            update="true"
+            basedir="lib"
+            includes = "*.jnilib" />
+        <zip destfile="dist/${app_name}-${major_version}${minor_version}-libs.zip" 
+            update="true"
+            basedir="src/au/com/BI"
+            includes = "**/*.properties"  />
+    </target>
+    
+	<target name="dist" depends="load-version-number,update_xml,build_dist,increment,unit-tests, dist-libs" />
+   	<target name="dist-no-inc" depends="load-version-number,update_xml,build_dist,unit-tests, dist-libs" />
+	<target name="build" depends="dist-no-inc" />
+
+</project>

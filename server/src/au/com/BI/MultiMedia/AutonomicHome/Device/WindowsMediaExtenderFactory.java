@@ -1,0 +1,63 @@
+package au.com.BI.MultiMedia.AutonomicHome.Device;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.jdom.Element;
+
+import au.com.BI.Config.RawHelper;
+import au.com.BI.Device.DeviceFactory;
+import au.com.BI.Device.DeviceType;
+import au.com.BI.Util.DeviceModel;
+import au.com.BI.Util.MessageDirection;
+
+public class WindowsMediaExtenderFactory  extends DeviceFactory {
+	Logger logger;
+	
+	private WindowsMediaExtenderFactory() {
+		logger = Logger.getLogger(this.getClass().getPackage().getName());
+	}
+	
+	private static WindowsMediaExtenderFactory _singleton = null;
+	
+	public static WindowsMediaExtenderFactory getInstance() {
+		if (_singleton == null) {
+			_singleton = new WindowsMediaExtenderFactory();
+		}
+		return (_singleton);
+	}
+	
+	/**
+	 * Add a media extender.
+	 * @param targetDevice
+	 * @param clientModels
+	 * @param element
+	 * @param type
+	 * @param connectionType
+	 * @param groupName
+	 * @param rawHelper
+	 */
+	public void addMediaExtender(DeviceModel targetDevice,
+			List<DeviceModel> clientModels,
+			Element element,
+			MessageDirection type,
+			int connectionType,
+			String groupName,
+			RawHelper rawHelper) {
+		
+		String name = element.getAttributeValue("NAME");
+		String key = element.getAttributeValue("KEY");
+		String displayName = element.getAttributeValue("DISPLAY_NAME");
+		logger.log(Level.INFO, "added windows media extender device" + displayName);
+
+		WindowsMediaExtender extender = new WindowsMediaExtender();
+		extender.setKey(key);
+		extender.setName(name);
+		extender.setOutputKey(displayName);
+		extender.setDeviceType(DeviceType.WINDOWS_MEDIA_EXTENDER);
+
+		targetDevice.addControlledItem(key, extender, MessageDirection.FROM_HARDWARE);
+		targetDevice.addControlledItem(key, extender, MessageDirection.FROM_FLASH);
+	}
+}

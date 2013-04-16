@@ -1,0 +1,59 @@
+<CONTROL KEY="MASTERBED_LIGHTS3" COMMAND="on" EXTRA="" />
+<CONTROL KEY="MASTERBED_LIGHTS2" COMMAND="off" EXTRA="" />
+<CONTROL KEY="MASTERBED_LIGHTS1" COMMAND="on" EXTRA="" />
+<CONTROL KEY="ENSUITE_FAN" COMMAND="off" EXTRA="" />
+<CONTROL KEY="ENSUITE_LIGHTS2" COMMAND="on" EXTRA="" />
+<CONTROL KEY="ENSUITE_LIGHTS1" COMMAND="on" EXTRA="" />
+
+Audio 
+volUp volDown src
+
+alarm
+NAME="Alarm item" COMMAND="ALARM" EXTRA="stuff to display"
+
+
+
+	For the keypad could you send the key pressed as a the extra.
+
+kk key values: 01 to 09, 0A = ÒFÓ key 0B = *, 0C = #, , 0D = ÒAWAYÓ, 0E = ÒNIGHTÓ, 0F = ÒDAY.
+
+<CONTROL NAME="KEYPAD" COMMAND="KeyPress"  EXTRA="kk" />
+
+
+<control key="MACRO" command="save" extra="myMacro"> 
+  <control key="" command="" extra=""/>
+  <control key="NULL" command="pause" extra="5">
+  <control key="" command="" extra=""/>
+  <control key="" command="" extra=""/>
+</control>
+
+key="MACRO" command="getList", command="save", command="run"
+
+
+<CONTROL KEY="SYSTEM_MESSAGE" COMMAND="ON" EXTRA="Stuff to display">
+
+------------------------
+Audio commands (parameters in [] sent in extra field )
+(not all audio devices will support all audio commands)
+
+mute, mute [on,off]
+power, power [on, off]
+intercom, intercom [on,off]
+volume_up, volume_down
+src  [zone_name]
+audio_macro [macro_number]
+send_audio_command [command number]     # the command is sent to the currently selected src. These are the 8 functions availlable on HAL
+
+
+
+--------------------
+Raw zone is
+    <RAW_ONLY NAME="PATIO_AUDIO"   DISPLAY_NAME="PATIO_AUDIO"   TYPE="Output">
+    		<RAW_ITEMS CATALOGUE="Audio stuff" >
+	        	<RAW COMMAND="right" CODE="right">
+	        		<PARAM NAME="ZONE" VALUE="r" />
+	        		<PARAM NAME="ZONE2" VALUE="\x52" />
+	        	</RAW>
+    		</RAW_ITEMS>
+    		
+    		

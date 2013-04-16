@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<eclipse-userlibraries version="2">
+    <library name="Groovy1.6" systemlibrary="false">
+        <archive path="/Java/groovy-1.6.0/embeddable/groovy-all-1.6.0.jar"/>
+    </library>
+    <library name="HTTPBuilder0.5.0RC1" systemlibrary="false">
+        <archive path="/Java/http-builder-0.5.0-RC1/target/http-builder-0.5.0-RC1.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/commons-beanutils-1.7.0.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/commons-codec-1.3.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/commons-collections-3.2.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/commons-lang-2.4.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/commons-logging-1.1.1.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/ezmorph-1.0.4.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/httpclient-4.0-beta2.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/httpcore-4.0-beta3.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/json-lib-2.2.2-jdk15.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/nekohtml-1.9.9.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/xercesImpl-2.8.1.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/xml-apis-1.3.03.jar"/>
+        <archive path="/Java/http-builder-0.5.0-RC1/target/dependencies/xml-resolver-1.2.jar"/>
+    </library>
+    <library name="Jdom1.1.1" systemlibrary="false">
+        <archive path="/Java/jdom-1.1.1/lib/xalan.jar"/>
+        <archive path="/Java/jdom-1.1.1/lib/xml-apis.jar"/>
+        <archive javadoc="file:/Java/jdom-1.1.1/build/apidocs/" path="/Java/jdom-1.1.1/build/jdom.jar"/>
+    </library>
+    <library name="Jetty7.0.2" systemlibrary="false">
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-ajp-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-ajp/src/main/java/org"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-annotations-7.0.2.v20100331.jar"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-client-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-client/src/main/java/org"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-continuation-7.0.2.v20100331.jar"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-deploy-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-deploy/src/main/java/org"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-http-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-http/src/main/java/org"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-io-7.0.2.v20100331.jar"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-jmx-7.0.2.v20100331.jar"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-jndi-7.0.2.v20100331.jar"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-plus-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-plus/src/main/java/org"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-policy-7.0.2.v20100331.jar"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-rewrite-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-rewrite/src/main/java/org"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-security-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-security/src/main/java"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-server-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-server/src/main/java/org"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-servlet-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-servlet/src/main/java/org"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-servlets-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-servlets/src/main/java"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-util-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-util/src/main/java/org"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-webapp-7.0.2.v20100331.jar"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-websocket-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-websocket/src/main/java/org"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/jetty-xml-7.0.2.v20100331.jar" source="/Users/colin/Documents/Projects/jetty-project-7.0.2.v20100331/jetty-xml/src/main/java/org"/>
+        <archive path="/Java/jetty-distribution-7.0.2.v20100331/lib/servlet-api-2.5.jar"/>
+    </library>
+    <library name="JRobin1.4.0" systemlibrary="false">
+        <archive path="/Java/jrobin-1.4.0/lib/jrobin-1.4.0.jar"/>
+        <archive path="/Java/jrobin-1.4.0/lib/snmp-1.3.jar"/>
+    </library>
+    <library name="JSon2.0" systemlibrary="false">
+        <archive path="/Java/restlet-1.0rc4/lib/org.json_2.0/org.json.jar" source="/Java/restlet-1.0rc4/src/org.restlet.ext.json_2.0"/>
+    </library>
+    <library name="junit-addons-1.4" systemlibrary="false">
+        <archive javadoc="file:/Java/junit-addons-1.4/api/" path="/Java/junit-addons-1.4/junit-addons-1.4.jar" source="/Java/junit-addons-1.4/src.jar"/>
+    </library>
+    <library name="JUnit3.8.1" systemlibrary="false">
+        <archive javadoc="file:/Java/junit3.8.1/javadoc/" path="/Java/junit3.8.1/junit.jar" source="/Java/junit3.8.1/src.jar"/>
+    </library>
+    <library name="Junit4.3.1" systemlibrary="false">
+        <archive javadoc="file:/Java/junit4.3.1/javadoc/" path="/Java/junit4.3.1/junit-4.3.1.jar" source="/Java/junit4.3.1/junit-4.3.1-src.jar"/>
+    </library>
+    <library name="Jython" systemlibrary="false">
+        <archive path="/Java/jython-2.1/1.5Compabable/jython.jar"/>
+    </library>
+    <library name="Log4j1.2.13" systemlibrary="false">
+        <archive path="/Java/log4j-1.2.13/log4j-1.2.13.jar"/>
+    </library>
+    <library name="Quartz1.6.0" systemlibrary="false">
+        <archive javadoc="file:/Java/quartz-1.6.0/docs/api/" path="/Java/quartz-1.6.0/quartz-1.6.0.jar" source="/Java/quartz-1.6.0/src/java"/>
+        <archive path="/Java/quartz-1.6.0/lib/core/commons-collections-3.1.jar"/>
+        <archive path="/Java/quartz-1.6.0/lib/core/commons-logging-api.jar"/>
+        <archive path="/Java/quartz-1.6.0/lib/core/commons-logging.jar"/>
+        <archive path="/Java/quartz-1.6.0/lib/build/jta.jar"/>
+    </library>
+    <library name="RXTX2.1-7" systemlibrary="false">
+        <archive nativelibpaths="/Java/rxtx-2.1-7r2/MACOSX_IDE/ForPackageMaker/Install/Library/Java/Extensions" path="/Java/rxtx-2.1-7r2/RXTXcomm.jar" source="/Java/rxtx-2.1-7r2/src"/>
+    </library>
+    <library name="slf4j-1.5.6" systemlibrary="false">
+        <archive path="/Java/slf4j-1.5.6/slf4j-jdk14-1.5.6.jar" source="/Java/slf4j-1.5.6/slf4j-jdk14-1.5.6-sources.jar"/>
+        <archive path="/Java/slf4j-1.5.6/slf4j-api-1.5.6.jar" source="/Java/slf4j-1.5.6/slf4j-api-1.5.6-sources.jar"/>
+    </library>
+    <library name="Webdav-server-2.0" systemlibrary="false">
+        <archive javadoc="jar:file:/Java/webdav-servlet-2.0/webdav-servlet-2.0-javadoc.jar!/" path="/Java/webdav-servlet-2.0/webdav-servlet-2.0.jar" source="/Java/webdav-servlet-2.0/webdav-servlet-2.0-sources.jar"/>
+    </library>
+    <library name="xmlunit1.0" systemlibrary="false">
+        <archive path="/Java/xmlunit/lib/xmlunit1.0.jar"/>
+    </library>
+</eclipse-userlibraries>

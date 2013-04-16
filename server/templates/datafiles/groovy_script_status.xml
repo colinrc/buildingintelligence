@@ -1,0 +1,13 @@
+<SCRIPT_STATUS>
+  <SCRIPT NAME="BlindUp" ENABLED="enabled" FORCED_HIDDEN="false" STATUS="" />
+  <SCRIPT NAME="TimeTest" ENABLED="enabled" FORCED_HIDDEN="false" STATUS="" />
+  <SCRIPT NAME="blinds" ENABLED="enabled" FORCED_HIDDEN="false" STATUS="" />
+  <SCRIPT NAME="M1_CBUS_Example" ENABLED="enabled" FORCED_HIDDEN="true" STATUS="" />
+  <SCRIPT NAME="GroovyDiningLight" ENABLED="enabled" FORCED_HIDDEN="false" STATUS="" />
+  <SCRIPT NAME="BlindStop" ENABLED="enabled" FORCED_HIDDEN="false" STATUS="" />
+  <SCRIPT NAME="BlindDown" ENABLED="enabled" FORCED_HIDDEN="false" STATUS="" />
+  <SCRIPT NAME="dlt_merik" ENABLED="enabled" FORCED_HIDDEN="false" STATUS="" />
+  <SCRIPT NAME="RegularEvent" ENABLED="enabled" FORCED_HIDDEN="true" STATUS="" />
+  <SCRIPT NAME="dlt_zeljko4" ENABLED="enabled" FORCED_HIDDEN="true" STATUS="" />
+  <SCRIPT NAME="ProcessDLT" ENABLED="enabled" FORCED_HIDDEN="true" STATUS="" />
+</SCRIPT_STATUS>

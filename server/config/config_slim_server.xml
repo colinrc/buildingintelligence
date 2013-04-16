@@ -1,0 +1,17 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+	<DESC>Autonomic Home configuration</DESC>
+	<DEVICE ACTIVE="N" NAME="SLIM_SERVER" DISPLAY_NAME="SLIM_SERVER" PASSWORD="admin">
+		<CONNECTION>
+			<IP ACTIVE="Y" IP_ADDRESS="192.168.0.3" PORT="9090"/>
+		</CONNECTION>
+		<PARAMETERS>
+    		<ITEM NAME="USER" VALUE="admin"/>
+    		<ITEM NAME="DEFAULT_SEARCH_RESULTS" VALUE="5"/>
+       	</PARAMETERS>
+		<SLIM_SERVER>
+			<AUDIO ACTIVE="Y" KEY="65:4a:5e:d9:df:91" NAME="Soft Squeeze Laptop" DISPLAY_NAME="LAPTOP" />
+			<AUDIO ACTIVE="Y" KEY="a1:79:c5:8f:b6:2c" NAME="Soft Squeeze IMAC" DISPLAY_NAME="IMAC" />
+			<AUDIO ACTIVE="Y" KEY="00:04:20:05:ba:99" NAME="Squeeze Box" DISPLAY_NAME="SQUEEZEBOX" />
+		</SLIM_SERVER>
+	</DEVICE>
+</CONFIG>

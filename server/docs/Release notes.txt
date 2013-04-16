@@ -1,0 +1,3564 @@
+== 14/Feb/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b105.zip V1.6-b105] [attachment:wiki:SoftwareReleases:eLife-1.6b105-libs.zip Libs-V1.6b105] ==
+
+''' Jetty '''
+
+Updated to Jetty 7
+
+''' User Manager '''
+
+Updated to support admin/integrator roles ( in preparation for monitor release)
+
+''' Forwards '''
+
+There is a known issue that forwards to a non-https port do not currently function
+
+== 14/Nov/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b104.zip V1.6-b104]  ==
+
+''' Jetty '''
+
+Updated to conform to old and new flash client http handhsakes (INIT or SESSION_ID)
+
+== 28/Oct/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b103.zip V1.6-b103]  ==
+
+''' Jandy '''
+
+Resolved issue reporting cleaner on /off. Resovles issue [ticket:760]
+Implements stanby state. [ticket:761]
+
+== 18/Oct/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b102.zip V1.6-b102]  ==
+
+''' Comfort '''
+
+Resolved issue with outputs not functioning. [ticket:759]
+
+== 25/Sep/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b101.zip V1.6-b101]  ==
+
+''' Groovy '''
+
+Resolved model packaging issue.
+Moved sample model, Template.groovy, to templates directory rather than models.
+
+== 19/Aug/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b100.zip V1.6-b100]  ==
+
+''' Jandy '''
+
+Implemented Auxiliary devices
+Swallowed echo'd messages on Jandy startup rather than incorrectly generating an error
+
+''' Advantage Air '''
+
+Resolved issues with Status line from unit
+Added error handler
+
+
+== 19/Aug/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b99.zip V1.6-b99]  ==
+
+''' Jandy '''
+
+Implement OUTPUT functions to support the output controls.  Resolves [ticket:754]
+Ensure PUMP and SPA units are correctly queried on startup. Resolves [ticket:757]
+Jandy now includes error text in the log file. Resolved [ticket:756]
+
+''' Advantage Air '''
+
+The SYS message is now correctly interpreted (as per updated docs received from Advantage Air). Resolves [ticket:758]
+
+== 10/Jul/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b98.zip V1.6-b98]  ==
+
+''' Jandy '''
+
+Removed polling, more selective error reporting
+
+== 1/Jul/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b97.zip V1.6-b97]   [attachment:wiki:SoftwareReleases:eLife-1.6b97-libs.zip Libs-V1.6b97]  ==
+
+Resolved error messages when adding duplicate ALARM devices for the Comfort configuration. [ticket:753]
+The display_name that has been used with the device with key 00 is the display_name that flash should send arm messages too.
+
+For example
+{{{
+        <ALARM KEY="00" DISPLAY_NAME="ALARM"/>
+}}}                     
+Resolves comfort alarm [ticket:695]
+
+Added comfort zone name support, to be used the integrator must add an ALERT_ZONES parameter table, otherwise the zone number will be
+reported.
+
+For example
+{{{
+   <CATALOGUE NAME="ALERT_ZONES">
+        <ITEM CODE="01" VALUE="Front Wall"/>
+    </CATALOGUE>
+    
+    <PARAMETERS>
+        <ITEM NAME="ALERT_ZONES" VALUE="ALERT_ZONES" />
+    </PARAMETERS>
+}}}
+
+
+''' Serial '''
+
+Resolved port not found error [ticket:752]
+
+== 30/Jun/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b96.zip V1.6-b96]  ==
+
+''' Jandy '''
+
+Added Jandy support [ticket:481]
+
+See ServerDocs/JandyModel for details.
+
+
+== 12/Jun/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b95.zip V1.6-b95]  [attachment:wiki:SoftwareReleases:eLife-1.6b95-libs.zip Libs-V1.6b95] ==
+
+''' Comfort '''
+
+Further work to resolve issue [ticket:750]
+
+''' Macro '''
+
+Changed debug trace for running a macro to be announced at FINE level rather than INFO, should reduce log file size
+
+''' CBUS '''
+
+Ensure CBUS does not hang on IllegalStateException on device reconnect
+
+''' HAL '''
+
+Ensure HAL does not hang on IllegalStateException on device reconnect
+
+== 4/May/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b94.zip V1.6-b94]  [attachment:wiki:SoftwareReleases:eLife-1.6b94-libs.zip Libs-V1.6b94] ==
+
+''' Comfort '''
+
+Added parameter name for analog poll timing;
+both ANALOG_POLL_VALUE and ANALOGUE_POLL_VALUE can be used.
+
+Possible fix for thread state exception in the analog reader when comfort reconnects from a
+dropped communication link. Resolves issue [ticket:750]
+
+
+''' Jetty '''
+
+Added HTTP Forwarding to Jetty. Implements enhancement [ticket:751]
+
+Added !ForwardRequest servlet to handle the request forwarding.
+
+In any config file CONTROL block add a forward section as follows, to access the image the 
+URL would be !https://servername:8443/forward/camera.jpg .
+
+You should ensure the extension on the forward matches the file type to ensure maximum
+browser compatibility (eg. .gif for a destination .gif etc.)
+
+
+{{{
+        <CONTROLS>
+        	<FORWARDS>
+        		<FORWARD ACTIVE="Y" SRC="camera.jpg" DEST="http://127.0.0.1:8081/image.jpg" />
+        	</FORWARDS>
+        </CONTROLS>
+}}}
+
+See  https://turnip.buildingintelligence.com.au/trac.cgi/wiki/ServerDocs/RequestForward for details.
+
+== 12/Mar/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b93.zip V1.6-b93]  [attachment:wiki:SoftwareReleases:eLife-1.6b93-libs.zip Libs-V1.6b93] ==
+
+''' Macros '''
+
+Changed stop to be a synonym for abort rather than complete. Ticket [ticket:749]
+
+== 4/Mar/09 Released [attachment:wiki:SoftwareReleases:eLife-1.6b92.zip V1.6-b92]  ==
+
+''' Macros '''
+
+Fixed issue where macros with a KEY being replaced by an EXTRA field would not correctly populate the KEY when run from a cient button.
+
+
+''' General '''
+
+Added the ability to use strings rather than numbers as a device key in a model configuration file.  Use the following call in the models startup code
+{{{
+   setDeviceKeysString (true) 
+}}}
+
+
+
+== 1/Dec/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b91.zip V1.6-b91] [attachment:wiki:SoftwareReleases:eLife-1.6b91-libs.zip Libs-V1.6b91] ==
+
+''' Started '''
+
+Resolved issues with Macro and Sript list not being sent on client attach if there had previously been a Script or Macro operation on the server.
+
+== 16/Sep/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b90.zip V1.6-b90] ==
+
+''' CBUS '''
+
+Possible fix for CBUS startup issues.
+
+== 14/Sep/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b89.zip V1.6-b89] ==
+
+''' Jetty '''
+
+Hack to get rid of firefox's 3.0's broken favicon.ico handling. 
+
+== 13/Sep/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b88.zip V1.6-b88]   [attachment:wiki:SoftwareReleases:eLife-1.6b88-libs.zip Libs-V1.6b88] ==
+
+'''Serial '''
+
+Incorporated RXTX serial library back into system. Issue [ticket:744]
+
+''' Web Client '''
+
+Add further redirection instruction on logout to try to work with Firefox better. Ticket [ticket:742]
+
+Ensure session is not incorrectly accessed if the service was not setup properly for some reason. Ticket [ticket:736]
+ 
+Simplified session counting procedure.Ticket [ticket:746]
+
+''' CBUS '''
+
+Ensure slider pulse does not cause threading issue on comms reconnect. Ticket [ticket:745]
+ 
+== 31/Aug/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b87.zip V1.6-b87]
+ 
+''' Jetty '''
+
+Resolved startup and web push issue [ticket:732]
+
+== 30/Aug/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b86.zip V1.6-b86]   [attachment:wiki:SoftwareReleases:eLife-1.6b86-libs.zip Libs-V1.6b86] ==
+
+''' General '''
+
+Release with correct manifest and libraries
+
+
+== 26/Aug/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b85.zip V1.6-b85]   [attachment:wiki:SoftwareReleases:eLife-1.6b85-libs.zip Libs-V1.6b85] ==
+
+''' Flash Client '''
+
+Ensure cross domain file is sent when requested to support newer flash player versions. Resolves issue [ticket:731],[ticket:734],[ticket:731]
+
+''' User Manager '''
+
+Ensure user manager redirects correctly on authentication. Resolves issue [ticket:735]
+To use their must be a subdirectory /UserManager created in the eLife website. Contents are index.html, login.html, login_fail.html. 
+Examples have been checked into the Client_Build/web project.
+
+== 3/Jun/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b84.zip V1.6-b84]  ==
+
+''' Jetty '''
+
+Ensure any time an INIT is received from a client, re send startup macros etc. Helps to better handle user reloading the web  page.
+
+Change session counting to not add a new session count if the user is already logged in; instead invalidate the first session.
+
+Implemented form based authentication. A login.html and login_fail.html file must be added to the to level web server root.  Resolves issue [ticket:728]
+
+''' User Manager '''
+
+The user manager URL has changed to /UserManager/Users.
+A logout function has been added to the user manager.
+For authentication the user manager requires two files, login_UserMgr.html and login_fail_UserMgr.html to be in the top level of the web server. 
+Their format is similar to the login.html and login_fail.html files (a sample has been provided in the client_build/standalone SVN path)
+
+== 29/Apr/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b83.zip V1.6-b83]  ==
+
+''' Groovy models '''
+
+Added a method to unit test groovy models.. See groovy model documentation for details. Implements [ticket:718]
+
+''' Security '''
+
+Improved counter of active sessions.
+
+''' Multimedia '''
+
+Improved compatability between Track lists , album lists etc. and web clients.
+
+== 6/Apr/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b82.zip V1.6-b82]  ==
+
+''' All audio '''
+
+Resolved an issue where flash AUDIO commands would only include the first extra field.
+
+''' Tutondo '''
+
+Added a delay within the poll to help ensure the GC100 has time to clear it's buffer  [ticket:695]
+
+== 27/Mar/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b81.zip V1.6-b81]  ==
+
+''' Scripts '''
+
+Added a simple way to test how long since an item has been updated, minutesSinceChanged
+
+{{{
+
+   try {
+		if (elife.isOff  ("HOLIDAY_MODE")   && elife.isOn  ("MASTER_BED_LIGHT")) {
+			if (minutesSinceChanged("MASTER_BED_PIR")  > autoLightOffInterval) {
+				elife.sendCommand("MASTER_BED_LIGHT","off")		
+			}
+		}
+   } catch (ValueNotUpdatedException ex){
+	   // If the MASTER_BED_LIGHT or MASTER_BED_PIR are not configured in the system, the try/catch will ensure an error does not occur.
+	   elife.log ("The auto light off script is looking for an item that has not been configured. " + ex.getMessage());
+   }
+   
+}}}
+
+Implemented enhancement [ticket:712]
+
+''' CBUS '''
+
+Possible fix for CBUS thread exception. Resolves [ticket:713]
+
+Tuned logging level to remove excess slider pulse messages
+
+''' Tutondo '''
+
+Improved logging to try to determine what is causing unresponsiveness for some devices [ticket:695]
+
+''' General '''
+
+Improved logging of unknown commands on the central queue. 
+
+''' GC100 '''
+
+Added logging if a serial overflow has occurred. May assist ticket [ticket:695]
+
+== 26/Feb/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b80.zip V1.6-b80]   [attachment:wiki:SoftwareReleases:eLife-1.6b80-libs.zip Libs-V1.6b80] ==
+
+''' Macros + Scripts '''
+
+Resolved issue where script and macro list were not sent on client connection. Ticket [ticket:710]
+
+''' General '''
+
+Added extra functionality to ensure thread safety on multi-core / multi processor machines with JDK 5 (dev environments).
+Updated JDOM to new version, bug fixes for XML parsing.
+
+== 26/Feb/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b79.zip V1.6-b79]   ==
+
+''' Macros '''
+
+Rectified a problem that macros were no longer being sent to the client on system startup.
+Resolves an issue which could cause various macro functions to crash. Resolves issue [ticket:708]
+
+''' Scripts '''
+
+Rectified a problem that scripts were no longer being sent to the client on system startup
+
+
+== 23/Jan/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b78.zip V1.6-b78]   ==
+
+''' Tutondo '''
+
+Modified to only lock comms between each individual device poll, rather than before all zones.
+Improved handling of a poll occurring when a previous poll had not yet been responded to.
+Resolves issue [ticket:695]
+
+''' Scripts '''
+
+Modified last update time calls to throw an exception if the item has never been updated.
+Changed Last update time calls to return a long rather than general Object; will simplify script coding.
+
+Merged duplicate calls in scripts and groovy models to a single version.
+
+
+''' Web '''
+
+Resolved web client issues [ticket:669]
+
+== 7/Jan/08 Released [attachment:wiki:SoftwareReleases:eLife-1.6b77.zip V1.6-b77]  [attachment:wiki:SoftwareReleases:eLife-1.6b77-libs.zip Libs-V1.6b77]  ==
+
+''' Calendar '''
+
+Ensure daily, monthly or hourly repeating events work across year boundaries.  Resolves issue [ticket:689]
+
+''' Jetty '''
+
+Request UserNames parameter removed from Bootstrap file, can be better handled by specifying the IP address to not prompt user IDs in the IPs.xml file.
+Updated Jetty version to 6.1.7.
+
+''' Groovy '''
+
+Updated Groovy version to 1.5.1.
+
+''' Squeezebox '''
+
+Incorporated fix for playlists. Resolves tickets [ticket:684],[ticket:685],[ticket:686]
+Incorporated support for deleting tracks. 
+
+''' Web '''
+
+Added support for simple post only devices. Supports enhancement [ticket:680]
+
+Devices can send commands to elife in the following way 
+
+{{{
+http://127.0.0.1:8081/post/update?ds=GARAGE_LIGHT&co=on&ex=100
+
+http://127.0.0.1:8081/post/update?ds=GARAGE_LIGHT&co=on&ex=100&ex2=5
+}}}
+
+The IP address for the controller device must be listed in the POST section of the IPs.xml file. 
+
+{{{
+<post_only>
+			<ip value="127.0.0.1" />
+	</post_only>
+}}}
+
+There must be sufficient post licenses purchased for the devices listed in the IPs.xml file. 
+Number of post only entries is in memory location 1
+
+== 18/Dec/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b76.zip V1.6-b76] ==
+
+''' Scripts '''
+
+Multiple Jython scripts can now be triggered from the same DISPLAY_NAME. Resolves ticket [ticket:682]
+
+
+== 3/Dec/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b75.zip V1.6-b75] ==
+
+''' Squeezebox '''
+
+Fixes no status messages  [ticket:681]
+
+''' Jetty '''
+
+Can now specify IP addresses that will not be prompted for a user name and password. Add a file IPs.xml to the datafile directory and add the IP addresses to the full_function section.
+Resolves [ticket:667]
+
+Clients are included in the normal client session count security.
+
+{{{
+<ip_list>
+	<full_function>
+		<ip value="127.0.0.1" />
+	</full_function>
+	
+	<post_only>
+			<ip value="192.16.1.11" />
+	</post_only>
+</ip_list>
+
+}}}
+
+== 3/Dec/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b74.zip V1.6-b74] ==
+
+''' Scripts '''
+
+Groovy scripts modified to allow multiple scripts listening for the same trigger. 
+Groovy scripts can now be triggered by a combination of display name and command instead of just display name. 
+
+For example
+{{{
+	String[]  fireOnChange =   ["BLINDS:down"]
+
+or
+
+	String[]  fireOnChange =   ["BLINDS"]
+
+}}}
+
+''' Variables section in config_ref '''
+
+Corrected spelling of Latitude.
+Added HOLIDAY_MODE to indicate when people are away, allows scripts to react differently.
+
+Resolves issue [ticket:679],[ticket:677]
+
+
+== 23/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b73.zip V1.6-b73] ==
+
+''' Squeezebox '''
+
+Updated track list. 
+
+== 23/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b72.zip V1.6-b72] ==
+
+''' Squeezebox '''
+
+Added track list. ticket [ticket:678], [ticket:674]
+
+== 22/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b71.zip V1.6-b71]  [attachment:wiki:SoftwareReleases:eLife-1.6b71-libs.zip Libs-V1.6b71]  ==
+
+''' Libraries '''
+
+Updated Jetty to 6.1.6
+
+''' Squeezebox '''
+Incoprorated latest changes. ticket [ticket:662]
+
+
+== 12/Nov/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b70.zip V1.6-b70]  [attachment:wiki:SoftwareReleases:eLife-1.6b70-libs.zip Libs-V1.6b70]  ==
+
+''' CBUS '''
+
+Error messages improved for an illegal CBUS ramp rate. ticket [ticket:669]
+
+''' GROOVY '''
+
+Added logging methods, the info method will pay attention to logging active or inactive where the warn and severe will always log. ticket [ticket:671]
+
+{{{
+  info(String)
+  warn (String) 
+  severe (String)
+}}}
+
+''' M1 '''
+
+Ensure M1 does not add commands to the queue unless they are fully formed; ensures log files are not filled by setups where the integrator has not properly configured
+the M1. Resolves enhancement [ticket:670]
+
+''' Slimserver '''
+
+Implemented ticket  [ticket:673], [ticket:662]
+
+''' Libraries '''
+
+Updated Jetty to 6.1.6RC1
+Updated Groovy to 1.1RC2
+Updated Quartz to 1.6.0
+
+== 24/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b69.zip V1.6-b69]  ==
+
+''' M1 '''
+
+Resolved issue if a status update has been received for an output that has not configured. ticket [ticket:663]
+
+''' General '''
+
+Added an event that triggers every 5 minutes which can be used to trigger scripts.  Implements enhancement [ticket:666]
+The event has a DISPLAY_NAME of "TRIGGER" , the COMMAND is "fire" and the EXTRA field contains the number of minutes (0,5, 10 ....) that caused the trigger to fire.
+See RegularEvent.groovy for an example using the trigger.
+
+== 11/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b68.zip V1.6-b68]  ==
+
+''' Comfort '''
+
+Possibly resolved correct key padding for single digit comfort inputs / outputs.. ticket [ticket:664]
+
+== 5/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b67.zip V1.6-b67]  ==
+
+''' Comfort '''
+
+Resolved null pointer exception when the phone alert message (AM17) is not configured. ticket [ticket:661]
+
+
+== 5/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b66.zip V1.6-b66]  ==
+
+''' Comfort '''
+
+Solved null pointer exception. Resolves ticket :ticket:661]
+
+== 2/Oct/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b65.zip V1.6-b65]  ==
+
+''' General '''
+
+Removed amount of logging at info level when the system is starting up.
+
+Added severe error if no configuration files are loaded when the system starts up, the system will hard exit in this situation.  Resolves [ticket:653]
+
+
+''' Groovy models '''
+
+Added the ability for the extra attribute to be optional.  
+
+{{{
+   For example to expect lights to have an optional attribute called UNIT include this method in your model.
+   
+   void finishedReadingModelParameters() {
+	    addStringAttribute (DeviceType.Light, "UNIT" ,false )
+	}
+	
+}}}
+
+
+''' Cbus '''
+
+Removed extraneous notifications for devices that do not have generated slider pulses.
+
+''' Web '''
+
+Moved eLife web session handling to use normal web session handling rather than custom. 
+Maintenance is greatly simplified as is the requirements for http client protocols; the INIT process is no longer required from a web client as the system
+can now determine if it is a new session.
+
+''' Comfort '''
+
+Comfort startup issue resolved. [ticket: 656] (alarm notification issue still outstanding)
+
+== 2/Sep/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b64.zip V1.6-b64]  ==
+
+''' Groovy models '''
+
+Clear groovy model list between loading jar and groovy source versions; solves the system attempting to register jar models twice. Ticket [ticket:650]
+
+Added a method to add commands that appear to have come from Flash injectCommand (...), the same parameters as addFlashCommand are used.
+Do not use this method to send a command configured in the model to process when sent from Flash; otherwise a loop will result. Ticket [ticket:652]
+
+== 24/Aug/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b63.zip V1.6-b63]  ==
+
+''' Models '''
+
+Added to ReturnWrapper addFlashCommand versions that accept a String for the display name rather than the device object. 
+The device object is always preferable as it contains other information as well, however the string versions can be used when an underlying
+device is not present. Enhancement [ticket:649]
+
+Groovy models can now be packaged in jar files. The full path must be present to the package.
+For example to create a jar file from the a groovy  au.com.BI.models.template change directory to the models directory then 
+{{{
+      jar cf template.jar au/com/BI/models/template.groovy
+}}}
+Enhancement [ticket:648]
+
+== 24/Aug/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b62.zip V1.6-b62]  ==
+
+''' General '''
+
+Added the ability for models to add custom attributes to device lines in the configuration files.
+
+{{{
+   For example to expect lights to have an attribute called UNIT include this method in your model.
+   
+   void finishedReadingModelParameters() {
+	    addStringAttribute (DeviceType.Light, "UNIT" )
+	}
+	
+}}}
+
+To access these attributes call
+{{{	
+	getAttributeValue (name)  
+}}}
+
+This method throws an au.com.BI.Device.UnknownFieldException if you request a field that has not been added.
+Resolves [ticket:644],[ticket:643]
+
+Added more detailed exception reporting for configuration file loading failures and for communication failures.
+Ensured groovy models go through the same startup procedures as ordinary models.
+
+== 4/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b61.zip V1.6-b61]  ==
+
+''' Nuvo '''
+
+Simple Grand Concerto support added.
+The protocol should be set in the parameters; the default if this is not present is to use the Essentia protocol.
+
+<ITEM NAME="PROTOCOL" VALUE="GC"/>
+
+Groups and joined zones are not directly supported, however status updates should ensure all zones are correctly displayed.
+
+Concerto commands for audio control have been added;
+   COMMAND="play/pause" | "prev"  | "next"
+
+Commands for loudness has been added
+   COMMAND="loud" EXTRA="on|off"
+   
+No playlist support is present.
+
+Implements enhancement [ticket:639]
+
+
+''' Models  '''
+
+Added convenience methods addCommandForFlash to the ReturnWrapper object. 
+Added a general type to handle units...   buildUnitControlString ()    the type is DeviceType.UNIT
+
+Added access methods for the cache
+
+* Object getCommand(String key)
+* Object getValue(String key)
+* Object getValue(int extraVal, String key)
+* Object getLastAccessTime(String key)   (time in ms since epoch)
+* Object getLastAccessTimeDuration(String key, String interval)   interval = minute | hour | day 
+
+== 4/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b60.zip V1.6b60]  [attachment:wiki:SoftwareReleases:eLife-1.6-b60-libs.zip Libs-V1.6b60] ==
+
+''' Jetty '''
+
+Changed permission on the user admin utility.
+Non-admin users can only change their own passwords; where admin users have the full add/ change/ delete functionality.
+Resolves ticket [ticket:638]
+
+== 2/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b59.zip V1.6b59]  ==
+
+''' Jetty '''
+
+Fixed problem with adding a user.
+
+== 1/Jul/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b58.zip V1.6b58]  ==
+
+''' Jetty '''
+
+Added user manager
+
+https://ELIFE_SERVER:8443/UserManager
+
+
+== 25/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b57.zip V1.6b57]  ==
+
+''' GroovyModels '''
+
+Added enablePoll (time interval), and disablePoll()
+
+When polling is enabled the doPoll (returnWrapper) method will be called at every poll interval.
+
+
+== 18/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b56.zip V1.6b56]  ==
+
+''' Squeezebox '''
+
+Incorporated squeezebox changes
+
+
+== 15/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b55.zip V1.6b55]  ==
+
+''' Groovy Models '''
+
+Added another demonstration model, BI_PUMP
+
+''' General '''
+
+Added a pump type
+
+
+== 14/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b54.zip V1.6b54]  ==
+
+''' Groovy Models '''
+
+Exposed the comms command queue interface to groovy models as well as the simple comms sending methods.
+During the groovy model initialisation call
+
+	setQueueCommands(true)  
+
+The model will queue commands instead of immediately sending them. 
+
+On receiving the acknowledge from the device to send the next command the model must acknowledge the previous command then send the next comamnd
+This will be in the processStringFromComms method.
+
+comms.acknowledgeCommand("")
+comms.sendNextCommand()
+
+It is also possible to resend all sent commands that have not yet been acknowledged if an error is received
+
+comms.resendAllSentCommands()
+
+The example groovy model shows this is operation.
+
+
+It is possible to override the model default for an particular method populating a returnWrapper 
+(usually this would only be in the doStartup method for initialisation where devices often behave differently to normal operations),
+
+     call returnWrapper.setQueueCommands (true | false)
+
+
+== 9/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b53.zip V1.6b53]  ==
+
+''' Groovy Modes '''
+
+Added thermostats to simplified model.  Override the buildThermostatControlString method.
+
+Added dummy stubs for thermostats and sensors to the example groove model.
+
+
+== 9/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b52.zip V1.6b52]  ==
+
+''' Groovy Models'''
+
+Added a hook to send initialisation commands to a device every time it connects
+
+elife.doStartup (ReturnWrapper returnWrapper)
+
+See the demonstration groovy model, BI_Tuner, for usage.
+
+Significant enhancements were made to the BI_Tuner groovy model
+
+
+== 3/Jun/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b51.zip V1.6b51]  ==
+
+''' Groovy '''
+
+Added a command to attempt to determine the current volume for an AV device.   elife.getVolume (audio_zone_name)   
+either the current volume or "unknown" will be returned.
+Resolves ticket [ticket:632]
+
+Added access to sending IR commands for scripts.  Resolves ticket [ticket:608]
+elife.sendIR ("Device Name of GC100 IR output",  "key from IR code database")   
+elife.sendIR ("Device Name of GC100 IR output",  "key from IR code database","number of repeats")   
+
+For example
+
+elife.sendIR ("STUDY_IR","Philips MC-200.VOLUP")
+
+					
+== 28/May/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b50.zip V1.6b50]  ==
+
+''' Groovy '''
+
+Added a command to attempt to determine the current source for an AV device.   elife.getSource (audio_zone_name)   
+either the name or "unknown" will be returned.
+
+== 27/May/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b49.zip V1.6b49]  ==
+
+''' Groovy '''
+
+Provided a hook for scripts to do activity when they are first started. The method registerScript () will be called. Resolves ticket [ticket:630]
+See [ServerDocs/GroovyScript] for details
+
+Added the elife.isOn  and elife.isOff  methods to groovy scripts. The call requires the item you are querying to be passed as a parameter.
+    eg. elife.isOn ("SHOWROOM_AUDIO") will return true if it is currently on.
+
+''' Patterns '''
+Added a concept of integrator patterns to represent standard things integrators would otherwise put into script
+The first pattern is for on / off volume control.
+
+Implemented a pattern to execute on / off / volume  
+
+(Should no longer be used)
+
+''' HAL '''
+
+HAL implementation complete. Resolves ticket [ticket:618]
+
+''' Scrips '''
+
+Modified the dlt_zeljko4 script to use the first button to switch on , then cycle through devices.
+Commens have been added to the script to show CBUS configuration
+ (ensure the label BLANK with a value of "" is added to the labels.xml file)
+
+
+''' Slim server '''
+
+Incorporated latest changes.
+
+== 14/May/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b48.zip V1.6b48]  ==
+
+''' HAL '''
+
+Further work in buffer processing of the new HAL protocol.
+
+== 5/May/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b47.zip V1.6b47]  ==
+
+''' Calendar '''
+
+Added recur value for odd/even events. This can be used with daily events; and will give the recurring interval from the start of the month; 
+eg. every second odd day will start with the 3rd, then the 7th etc.  Ticket [ticket:682]
+
+Added ACTIVE="N" events back into the calendar event list sent to the client, this will allow events to be temporarily swiched off then switched back on. etc. 
+Old events will be cleaned up by the maintenance task.
+
+Refactored calendar model out of the macro model into it's own model; debugging was becoming too complex.
+
+Ensure non recurring events are always correctly executed 
+
+Ensure ACTIVE="N" events are saved when editted.
+
+''' General '''
+
+Lots more Java5 type checking
+
+Added more Java5 type collection handling to the config handler
+
+Ensure no extraneous synchronising on the command list that could slow down operations.
+
+== 28/Mar/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b46.zip V1.6b46]  ==
+
+''' HAL '''
+
+Implemented new HAL protocol
+
+
+''' Comms '''
+
+Added natural packet protocol, in this mode the system will send packets as they are received on serial or IP conections, no processing occurs.
+
+
+''' General '''
+
+Added layout.xml file describing directories that the admin tool will manage.
+ 
+== 4/Mar/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b45.zip V1.6b45]  ==
+
+''' CBUS '''
+
+Further type cast work for ticket [ticket:617]
+
+== 4/Mar/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b44.zip V1.6b44]  ==
+
+''' Script '''
+
+Ensured groovy_script_status file is written, in a similar way to the jython script_status_file in datafiles.
+If a script is hidden it will not be included in lists sent to the client or generate start / stop messages. Resolves ticket [ticket:610]
+If groovy scripts contain a hidden=true line they will never be sent to the client, this overrides STATUS string values.
+
+''' CBUS '''
+
+Solve type cast issue when processing Level MMI requests. Resolves ticket [ticket:617]
+
+== 26/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b43.zip V1.6b43]  ==
+
+''' CBUS '''
+
+Dynamically generates messages when ramping buttons are being pressed. Resolves ticket [ticket:605]
+
+See [ServerDocs/CBUSModel] for details.
+
+
+
+== 20/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b42.zip V1.6b42]  ==
+
+''' Script '''
+
+Added  isRunning(scriptName) and isRunning(macroName) to the scriptHandler and macroHandler respectively. 
+
+Both handles are now present in the script binding bock and can be called using    macroHandler.isRunning (macroName)  or scriptHandler.isRunning(scriptName). Resolves ticket [ticket:607]
+
+''' M1 '''
+
+Merged in changeset 1367
+
+== 14/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b41.zip V1.6b41]  ==
+
+''' Tutundo '''
+
+Fixed tutondo volume command code. Resolves ticket [ticket:606]
+
+== 13/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b40.zip V1.6b40]  ==
+
+''' Tutundo '''
+
+Fixed tutondo volume scaling
+
+== 12/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b39.zip V1.6b39]  ==
+
+''' Scripting '''
+
+Make messages from flash handled properly
+
+''' M1 '''
+
+Roll in updates
+
+== 11/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b38.zip V1.6b38]  ==
+
+''' Scripting '''
+
+Ensure multiple script runs are handled correctly
+
+''' M1 '''
+
+Roll in updates
+
+== 11/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b37.zip V1.6b37]  ==
+
+''' Scripting '''
+
+Simplified groovy scripting, ProcessDLT.groovy demonstrates these capabilities.
+
+''' M1 '''
+
+Roll in updates
+
+== 5/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b36.zip V1.6b36]  ==
+
+''' CBUS '''
+
+Fixed issue with incorrect data type on sending to flash.
+
+''' Scripting '''
+
+Raised log level if running twice
+
+== 5/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b35.zip V1.6bb35]  ==
+
+''' CBUS '''
+
+Fixed issue with incorrect data type when processing MMI messages from a Label device.
+
+
+''' M1 '''
+
+Updates to TALK
+
+== 1/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b34.zip V1.6bb34]  ==
+
+''' Scripting '''
+
+Added a sendCommand method for no command only with no extra,extra2....  parameters
+
+
+''' M1 '''
+
+Updates for consistency 
+
+== 1/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b33.zip V1.6bb33]  ==
+
+''' Scripting '''
+
+Updating scripting to only use the elife.sendCommand function. Removed first parameter of sendCommand call.
+
+== 1/Feb/07 Released [attachment:wiki:SoftwareReleases:eLife-1.6b32.zip V1.6bb32]  [attachment:wiki:SoftwareReleases:eLife-1.6b32-libs.zip Libs-V1.6b32] ==
+
+''' Scripting '''
+
+Implemented initial groovy script system. See [http://groovy.codehause.org] for Groovy language documentation, and [ServerDocs/GroovyScripting] for details 
+of the scripting implementation. Issue [ticket:464]
+
+Refactored Jython scripting to allow integrated support of Groovy and Jython scripts (eg. on list of scripts sent to the client).
+
+''' Admin '''
+
+Fixed issue on reloading scripts.
+
+''' General '''
+
+Split finishedLoadingConfig into two methods, one which is called before every comms connect (prepareToAttatchComms) , and one which is called once (finishedReadingConfig). 
+Removes excessive adding of internal devices. Resolves [ticket:594],[ticket:597]
+
+''' M1 '''
+
+Merged in latest changes.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b31.zip V1.6b31]   ==
+
+''' General '''
+
+Moved second message insance to INFO of stack trace.
+
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b30.zip V1.6b30]   ==
+
+''' General '''
+
+Show full stack trace for a command added to the cache with no display name, move to INFO so it does not display on the client.
+
+Allow multiple scripts to be added keyed to the same Display name.
+
+''' Script '''
+
+Ensure script communication messages have correct display names
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b29.zip V1.6b29]   ==
+
+''' General '''
+
+Added error messages if two devices with the same key are added to a model.
+
+Tuned cache error message to display calling method trace, if no display_name is provided. Resovles [ticket:592]
+
+''' CBUS '''
+
+Ensure state is correctly cleared dring startup, to ensure correct MMI processing. Resolves [ticket:591]
+
+Ensure CBUS properly attends to decimal strings in the config file.
+
+Ensure DLT devices can send and receive levels.  Resolves [ticket:14]
+
+''' Jython Scripts '''
+
+Ensure messages created in scripts are sent to both other flash clients and to physical devices. Resolves [ticket:589]
+
+Allow access to the cache for scripts  elife.getCache().
+
+Allow access to the command that caused a script to fire within the script  
+ *  triggeringEvent.getCommandCode() 
+ * triggeringEvent.getExtraValue()
+  * triggeringEvent.getExtra2Value()  etc.
+
+Refactored message creation methods to use a single method rather than repeating the content 6 times (Jeff what were you thinking :-)  )
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b28.zip V1.6b28]   ==
+
+''' HAL '''
+
+Changed polling to hopefully resolve all null pointers in HAL
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b27.zip V1.6b27]   ==
+
+''' HAL '''
+
+Fixed null pointer in HAL
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b26.zip V1.6b26]   ==
+
+''' HAL '''
+
+Fixed null pointer if poll occurs before scan is complete from HAL. Resolves [ticket:587]
+
+''' Security '''
+
+Changed too many clients message to indicate contacting the integrator if the problem persists. Resolves [ticket:586]
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b25.zip V1.6b25]   ==
+
+''' Comms '''
+
+Removed synchronization which may have been hanging startup. Thread not owner exception may return as a result.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b24.zip V1.6b24]   ==
+
+''' Cbus '''
+
+Added further label debug statements.
+
+''' M1 '''
+
+Incorporated changes
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b23.zip V1.6b23]   ==
+
+''' Cbus '''
+
+Changed default label key selector tag for DLT from DEFAULT to DEFAULT_LABEL_KEY
+
+''' Cache '''
+ 
+Ensure commands sent to the cache with a null display name do not cause a null pointer exception.
+
+''' Comms '''
+
+Changed thread locking method for comms send. Should resolve thread not owner issue
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b22.zip V1.6b22]   ==
+
+''' Security '''
+
+Added number of clients to startup messages
+
+''' Cache '''
+
+Ensure cache is properly set up, even if the device model does not correctly set the display name for the flash command. Resolves [ticket:584]
+
+''' HAL '''
+
+Simplified HAL model
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b21.zip V1.6b21]   ==
+
+''' HAL '''
+
+Simplified HAL model
+
+IAdded debugging statements.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b20.zip V1.6b20]   ==
+
+''' M1 '''
+
+Incorporated fixes.
+
+''' Web '''
+
+Ensure all XML packets to be sent to the web browser have a correct target display name. Resolves [ticket:580]
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b19.zip V1.6b19]   ==
+
+''' CBUS '''
+
+Ensure non-ascii IP characters are captured at all logging levels.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b18.zip V1.6b18]   ==
+
+''' M1 '''
+
+Ensure null state variables do not break start up.
+Set cache correctly for the web client.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b16.zip V1.6b16]   ==
+
+''' M1 '''
+
+Rolled in PIR changes.
+
+''' Calendar '''
+
+Fixed problem with ACTIVE="N" on repeating events. Solves ticket [ticket:575]
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b15.zip V1.6b15]   ==
+
+''' CBUS '''
+
+Ensure MMI helper does not get comms reference before comms is properly set up in master model.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b14.zip V1.6b14]   ==
+
+''' CBUS '''
+
+Ensure end of startup will be recognized even if CBUS is not echoing startup strings.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b13.zip V1.6b13]   ==
+
+''' CBUS '''
+
+Recognize CBUS startup even if MMI corrupts the startup string.
+Correct CBUS startup handshaking to use correct protocol information.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b12.zip V1.6b12]   ==
+
+''' CBUS '''
+
+Moved MMI into its own object to simpliy Cbus debugging.
+Resolved CBUS startup parameter issues.
+Solved CBUS checksum issues.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b11.zip V1.6b11]   ==
+
+''' CBUS '''
+
+Fixed startup and performance issues
+
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b10.zip V1.6b10]   ==
+
+''' M1 '''
+
+Fixed null pointers in M1 when events occur that a device has not configured.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b9.zip V1.6b9]   ==
+
+''' Jetty '''
+
+Fixed bug with https updating.
+
+''' General '''
+
+Improved concurrency handling in the servlet interface.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b8.zip V1.6b8]   ==
+
+''' Jetty '''
+
+Fixed bug with https updating.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b7.zip V1.6b7]   ==
+
+''' Jetty '''
+
+Updated sessions to be explicitly sent via GET or POST parameters, rather than relying on cookies. To support ticket [ticket:567]
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b6.zip V1.6b6]   ==
+
+''' Script '''
+
+Added the ability for a jython script to find the state of a label using the getLabelState call.  
+The returned value is the key from the list of strings configured for use for the label device.
+The pseudocode to use this would be 
+  * listen for an event from a DLT
+  * call getLabelState
+  * execute parts of the script as appropriate based on the label return value. 
+
+''' General '''
+
+Added hooks for models to more easily add checksums to outgoing messages.
+Override the  following method.
+
+{{{
+	Byte addCheckSum(byte [] rawMessage) 
+	
+	Store the resulting checksum from teh bytes of rawMessage into result and return it, return null for no checksum.
+}}}	
+	
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b5.zip V1.6b5]   ==
+
+''' Jetty '''
+
+Ensure message and ID list commands do not crash the server with a HTTPS client. Resolves ticket [ticket:557]
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b4.zip V1.6b4]   ==
+
+''' Jetty ''' 
+
+Ensure HTTPS server can deliver static HTML from address ../www. resolves [ticket:553]
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b3.zip V1.6b3]   ==
+
+''' Jetty ''' 
+
+Updated file mappings
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b2.zip V1.6b2]   ==
+
+''' Calendar ''' 
+ 
+Fixed null pointer on macro save [ticket:543]
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6b1.zip V1.6b1]  [attachment:wiki:SoftwareReleases:eLife-1.6b1-libs.zip Libs-V1.6b1] ==
+
+''' General '''
+
+Released beta 1
+
+''' Messaging '''
+
+When a tcp client connection is dropped the list of current names will be updated and sent to all clients.
+When a HTTP client calls /webclient/logout the list will also be updated and sent.
+
+Resolves [ticket:6]
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a19.zip V1.6a19] 
+
+''' General '''
+
+Solved CPU high usage problem. Resolves ticket [ticket:541]
+
+''' Messaging '''
+
+Added listing of currently known clients to each client for use with named messages. [ticket:6]
+Details are at [ServerDocs/ClientCommunication]
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a18.zip V1.6a18] 
+
+''' Jetty '''
+
+Feed jetty startup errors to the logging system to assist debugging startup problems
+
+''' Script '''
+
+Ensure missing script directory will not kill the system on startup
+
+''' Templates '''
+
+Added Jetty user / password template   realm.properties   to the templates captured in the release file
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a17.zip V1.6a17] 
+
+''' Bootstrap '''
+
+Added INTEGRATOR_MODE ACTIVE="Y|N"  (default N) to the bootstrap file. This will later be used to provide extra debugging of running triggers and integrator macros.
+
+''' Labels '''
+
+Labels moved from config file to it's own file (labels.xml under datafiles), this will facilitate label support accross multiple devices , eg. CBUS + Dynalite
+ 
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a16.zip V1.6a16] [attachment:wiki:SoftwareReleases:eLife-1.6a16-libs.zip Libs-V1.6a16 ]==
+
+''' General '''
+
+Mods to build scripts to ensure Groovy libraries are included
+
+
+''' CBUS '''
+
+Fixed bug with startup synchronizing
+Split startup to wait until response from CBUS
+
+A file labels.xml must be created in the datafiles directory as follows.
+
+{{{
+
+<LABELS>
+	<TEXT>
+	            <LABEL KEY="FRONT_LIGHT" VALUE="Front Light"/>
+	            <LABEL KEY="VOLUME" VALUE="Volume Level"/>
+	            <LABEL KEY="SPRINKLERS" VALUE="Sprinklers"/>
+	</TEXT>
+</LABELS>
+
+}}}
+
+Configuration of each DLT is within a CBUS block as follows
+
+<LABEL ACTIVE="Y" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT = "SPRINKLERS" />
+
+The label can be changed dynamically by a CONTROL message within a script or macro.
+
+For example
+
+{{{
+
+  <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="DLT1 front light" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
+    <CONTROL KEY="DLT1" COMMAND="label" EXTRA="FRONT_LIGHT" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" TARGET="All" TARGET_USER="" />
+  </CONTROL>
+  
+ }}}
+  
+  
+''' Comfort '''
+
+Fixed bug with comfort startup synchronizing
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a15.zip V1.6a15] [attachment:wiki:SoftwareReleases:eLife-1.6a15-libs.zip Libs-V1.6a15 ]==
+
+''' Sign Video '''
+
+Many bug fixes
+
+''' Comms '''
+
+Fixed bug where comms would not properly queue multiple serial 
+messages if the system did not attend quickly enough to the 
+message. Will impact many devices 
+
+''' Jetty '''
+
+Updated to Jetty 6.0.1
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a14.zip V1.6a14] ==
+
+''' Jetty '''
+
+Ensure that multiple http get calls from the same session cannot conflict. if the session from a previous call is not yet complete the following call
+will return an empty record set. Resolves Issue [ticket:490]
+
+When there is no new instructions for the client to process the http return code will be set to SC_NOCONTENT. If there is content present it will be SC_OK.
+In this way the get call can be processed extremely effeciently by the client. Completes enhancement [ticket:493]
+
+''' Flash '''
+
+Increased heartbeat speed to every 10 seconds. Need feedback from James if this is to fast for flash.
+
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a13.zip V1.6a13] ==
+
+''' General '''
+
+Added daily maintenance task. An entry should be added to the bootstrap file specifying the time to run, if it is not specified the default time is 11:30PM
+{{{
+  <MAINTENANCE TIME="12:10" />
+}}}
+
+''' Calendar '''
+
+Added active="Y|N" flag to calendar entries. The default is active="Y" if it is not specified.
+
+
+''' Raw '''
+
+Parameter handling changed to be the similar for processing catalogues from flash or from devices. HAL, Comfort, Nuvo, SignVideo and Kramer updated. Changes
+should be transparent.
+Added CUSTOM_CONNECT input methods
+Base model refactored into two classes to improve readability, there will be no visible consequences.
+
+Lookup and Scale abilities added for both INPUT and OUTPUT directions for CUSTOM_CONNECT items.
+
+New Raw form is available to configuration with device type=Raw_Connection  or any model derived from the SimpleModel base type and using the 
+updated methods. Currently only DMX uses these methods.
+
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a12.zip V1.6a12] ==
+
+''' Raw '''
+
+Added a much simpler method for Raw processing using a new command CUSTOM_CONNECT. see [ServerDocs/CustomConnect] for details. This has been integrated 
+into all Java models, Groovy model support and into the Java Raw model.  For all models, if the raw strings match from CUSTOM_CONNECT the model will not 
+attempt to further process the message from the flash client. If the raw processing does not produce a result the model is called for more advanced processing.
+
+LOOKUP does not yet function correctly 
+
+Implementing issue [ticket:473]
+
+''' General '''
+
+Added a utility method to simplify reading Command object parameters, includes range checking and error messages. 
+ * paramToInt
+
+''' Build system '''
+
+The build system has been updated to ensure the produced directory structure matches the structure used in client machines
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a11.zip V1.6a11] ==
+
+''' General '''
+
+Added -vvv flag for enhanced debugging
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a10.zip V1.6a10] ==
+
+''' Groovy '''
+
+Ensure the models directory not existing will not crash the server on startup.
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a9.zip V1.6a9] [attachment:wiki:SoftwareReleases:eLife-1.6a9-libs.zip Libs-V1.6a9 ] ==
+
+''' General '''
+
+General code updates to assist Groovy models
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a8.zip V1.6a8] [attachment:wiki:SoftwareReleases:eLife-libs-1.6a8.zip Libs-V1.6a8  ] ==
+
+''' Groovy '''
+ 
+Initial groovy model support. Place .groovy model files into ''' models ''' directory.
+
+''' Jetty '''
+
+Jetty upgraded to 6 RC0.
+
+Ensure macro status information is sent to web clients.
+Ensure script status information is sent to web clients.
+
+''' Macros '''
+
+Fixed problem running macros.
+Fixed various thread issues with macro update messages.
+Resolved issues [ticket:460],[ticket:461]
+
+''' Scripts '''
+
+Fixed concurrent modification error for web clients with script messages.
+Fixed 'element already has parent error'
+Resolved issue [ticket:467],[ticket:468]
+
+''' Comms '''
+
+Fixed threadlock when sending 'complex' commands.
+
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a7.zip V1.6a7] ==
+
+''' Nuvo '''
+
+Rectified issues with volume control. Complete enhancement [ticket:354]
+
+''' Kramer '''
+
+Updated to use common configuration catalogue support rather than model specific.
+
+''' Jetty '''
+
+Added correct number of session count handling for HTTPS clients.
+Added "Too Many Clients" message when appropriate
+Rewrote cache handler to support complex commands (eg. audio) as well as simple commands. Resolves issue [ticket:4]
+
+''' System '''
+
+Enforced stronger type checking in many places to make use of JDK5 type checking, for compile time type validation rather than run time exceptions.
+Central command queue wrapped in an object to simplify later changes to a messaging bus, needed to support master/slave models and possible script engines running 
+in seperate JVMs.
+
+FormatKey updated to accept the device being called by the device factory.  The formatKey method in the model can be used to customise the key per device if required.
+Resolved issue [ticket:444]
+
+INPUT,OUTPUT,MONITORED,STARTUP types moved from the DeviceType interface to an enum, MessageDirection . This allows type checking and stops confusion with other 
+DeviceType constants.   Various bugs were found and corrected as part of this process. 
+
+Alarm type codes were moved from the DeviceType interface to their own enum; AlarmTypeCode.
+
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a6.zip V1.6a6] ==
+
+''' Comms '''
+
+Added the ability for a model to specify the minimum time between packets to be sent to the device. This is to stop flooding device inputs. The value should be set before the 
+device connection, the constructor is a reasonable place.
+
+{{{
+		this.setInterCommandInterval(10);
+}}}
+
+
+Improved IO exception handling for both serial and IP connections, the system should catch more errors and result in a system reconnection.
+
+
+''' Jetty '''
+
+Changed Jetty to HTTPS,  the certificate is placed in the datafiles directory in a file called keystore. It must have an access password of "building12".
+WWWROOT has been removed from the bootfiles configuration, instead www is hard coded, the HTML wrapper file that delivers the flash file should be provided from this location.
+A servlet to log out has been added; SERVERPATH/webclient/logout
+A flag has been added to the bootstrap file to disable user name / password challenges, this is to facilitate flash development within the flash IDE which is incapable of providing this
+information.
+Servlet startup modified to expect a parameter INIT=x (anything). The flash client should not start updating until the initial response i received, this will guarantee session handling is 
+correct.
+The address book has been expanded to understand TCP / HTTP/ jabber connections for a user or client interface, this will facilitate messaging at a future stage.
+A client redirect has been added /html will map to ../../Bi/Client/Lib/Html
+Added an explicit logout servlet, it is mapped to /webclient/logout
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a5.zip V1.6a5] ==
+
+This release requires a new library set. Also download eLife-libs-1.6a5.zip
+
+''' Jetty '''
+
+Upraded Jetty to 6b17.
+Initial jetty implementation; to retrieve a list of XML messages since the last request submit a get request to /webclient/update.
+To post a new value sumbit a post request with MESSAGE="message string" to /webclient/update 
+An username/password is required to access the update servlet, for the moment test using plain/plain.
+The jetty server must be switched on in the bootstrap.xml file
+For testing it may be useful to place a small HTML file in the www directory of the server. This will be served as the index file
+(http://127.0.0.1:8081/)
+
+{{{
+<html>
+  <head>
+    <title>test page</title>
+  </head>
+  <body>
+  <p>A test page for the update servlet.
+  
+  <FORM ACTION="http://127.0.0.1:8081/webclient/update" METHOD="POST" >
+  <INPUT NAME="MESSAGE" SIZE="80"  VALUE='<CONTROL KEY="GARAGE_LIGHT" COMMAND="on" />'/>
+  <P>
+  <INPUT TYPE="SUBMIT" />
+  </FORM>
+  
+  </body>
+</html>
+}}}
+
+''' Config '''
+
+It is now possible to specify keys in decimal rather than hex.Include the following parameter in the device block.
+
+{{{
+   <ITEM NAME="DECIMAL_KEYS" VALUE="Y" />
+}}}
+
+
+''' General '''
+
+Refactoring accross most of the system to help simplify model building.
+Many support methods added to simplify model building.
+
+    General catalogue support
+    	configHelper.addParameterBlock 
+    	configHelper.getCatalogueValue
+    	findKeyForParameterValue
+    	finishedReadParameters (A hook which occurs after the configuration parser has read the to level parameters 
+    	    but has not yet begun the individual device entries.)
+    	
+    Key formatting 
+        FormatKey  (called automatically as the configuration file is read, formatting is based on the following parameters)
+        setConfigKeysInDecimal    (if the keys have been specified as decimal rather than hex in the configuration file)
+        setKeysInDecimal  (if the device expects decimal keys rather than the normal hex)
+        setPadding  (the number of 0 padded characters to include with the key)
+
+    General Audio Visual state support
+        AV.State
+        
+    Command structures
+        buildCommandForFlash
+        sendToFlash
+        BuildReturnWrapper (to encapsulate the results of any command interpretation in model; either from Flash or from the device)
+        
+    Junit
+        ListOfArrayAssert (A testing class to assist with vectors of byte arrays, as used in the BuildReturnWraper object)
+
+
+== Released [attachment:wiki:SoftwareReleases:eLife-1.6a2.zip V1.6a2] ==
+
+''' M1 '''
+
+Incorporated M1 startup and temperature code. See [wiki:ServerDocs/ElkModel] for details.
+
+''' General '''
+
+Restructured project to support netbeans or eclipse layout.
+
+Modified ant build files for netbeans or eclipse builds.
+
+Release is Java 1.5 compatable, when used with the included libraries.
+
+Update ant build files to include libraries on major version releases
+
+Allow for multiple configuration fiels to be specified. In the bootstrap file use a wildcard for the filename.
+
+{{{
+  <CONFIG_FILE NAME="config_.*xml" />
+}}}
+
+''' Jetty '''
+
+Incorporated Jetty webserver. Configuration is via the bootstrap file, currently SSL is not available.
+
+{{{
+  <JETTY DOCROOT="www" PORT="8081" SSL="N" ACTIVE="Y" />
+}}}
+
+== Started 1.6 branch ==
+
+== Released [attachment:wiki:SoftwareReleases:elife-server-1.5b15.zip V1.5b15] ==
+
+''' Dynalite '''
+
+Added update of linked devices when a change is received (eg. switched on or off)
+ Resolved Issues: [ticket:4]
+
+
+''' GC100 '''
+
+Ensure a bad command cannot block the communications to the device.
+ Resolved Issues: [ticket:152]
+
+
+== Released [attachment:wiki:SoftwareReleases:elife-server-1.5b13.zip V1.5b13] ==
+
+''' Macro '''
+
+Revert macro's to sending macro list after saving
+
+
+''' Logging '''
+
+Try to ensure empty "severe error" messages are not sent to the flash client
+
+
+''' Comms '''
+
+Ensure comms device know their associated models for more meaninful error reporting.
+IP and serial listener modified to support end byes markers larger than 128 (eg. 255 for Orgenon)
+
+''' Alerts '''
+
+Add single point to send alert and alarm messages. Simplifying later migration to persistent logging.
+
+
+''' Calendar '''
+
+Renamed alarm to popup
+Added audible field
+Added target and target_user fields for messages. target_user is for future use.
+
+== Released [attachment:wiki:SoftwareReleases:elife-server-1.5b12.zip V1.5b12] ==
+
+''' Calendar '''
+
+Added ID,category and alarm field.
+
+Ensure alarm does not trigger if it is flagged as N.
+
+Handle calendar files created before the new fields.
+
+Add hourly and yearly recurrences.
+
+ Resolved Issues: [ticket:7],[ticket:8]
+
+''' Dynalite '''
+
+Added ramp up / down for channels and areas
+
+''' Scripts '''
+
+Added validation to ensure script and macro handlers are not called if they have not yet fully initialised.
+
+Improved error handling if a correct configuration script has not been specified.
+
+
+2/2/2006
+Released V1.5b11
+Ensure macro, calendar and script lists are sent to the client for every client connection.
+
+
+1/2/2006
+Released V1.5b10
+
+''' Security '''
+
+Added a 3 minute grace period for flash client connections before the security message appears. This will allow
+restarts of the client to not trigger a 'number of clients' security violation.
+
+''' General Code '''
+
+Added a hook for every model which is called on every new client connection, doClientStartup.
+
+Removed AWT gui harness for main application, it is not longer used and caused maintenance problems.
+
+Refactored configuration module to use factory singleton pattern, should facilitate testing.
+
+Began to integrate a server ID concept to facilitate master slave development.
+
+ 
+26/1/2006
+Released V1.5b9
+''' Calendar '''
+
+Added the ability to store EXTRA, EXTRA2,EXTRA3, COMMAND fields in the calendar record. 
+
+These are passed to the macro command when it runs. 
+
+Extra4,EXTRA5 are unavailable as they are used internally to pass information to the running macro.
+
+For example the following macro will switch the light passed in the extra field on. 
+
+It will be set to the level specified in extra2, the macro will pause for the time specified
+in extra3 then switch it off.
+
+{{{
+ <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="Light On" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
+    <CONTROL KEY="%EXTRA%" COMMAND="on" EXTRA="%EXTRA2%" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+        <CONTROL KEY="" COMMAND="pause" EXTRA="%EXTRA3%"  />
+ <CONTROL KEY="%EXTRA%" COMMAND="off" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+}}}
+
+The appropriate calendar entry to run this macro once would be
+ <event title="Test Light On" description="Test Light On" date="2006-01-26" time="15:41:16" eventType="once" macroName="Light On" extra="OFFICE_LIGHT" extra2="50" extra3="5" />
+
+
+Calendar subsystem refactored to facilitate testing.
+
+Added the ability to have the target control (ie. KEY) as a parameter.
+
+Calendar entries now maintain their order through multiple saves.
+
+
+20/1/2006
+Released V1.5b8
+
+''' Comms '''
+
+Ensure IP receiver does not overflow buffer in receipt of very large or numerous packets.
+
+Only resend a comms command that hasn't acknowleged 3 times before clearing the comamnd- ensures a rogue
+command cannot block a device. (only applies with devices that acknowleging commands)
+
+''' CBUS '''
+
+Fix infinite memory usage from CBUS temperature polls if the cbus network does not reply.
+
+Added POLL_TEMP_INTERVAL to CBUS configuration file, interval in seconds between polls.
+
+Ensure CBUS connection going away will not cause null pointer in the cbus temperature probe.
+
+''' Dynalite '''
+
+Ensure a light level of 1% is interpretted as off.
+
+Ensure correct behaviour for area fades.
+
+
+14/1/2006
+Corrected bug in IP listener for fixed length packets, if two packets were received before the 
+first is processed it was possible for the second to overwrite the first. This could have effected
+CBUS, Tutondo on protocol A, Dynalight, Pelco, when connected via IP.
+
+
+
+12/1/2006
+Released V1.5b7
+
+''' Dynalite '''
+
+Interpret preset changes from dynalite network.
+
+Scan levels of devices in an area after preset change in an area.
+
+''' CBUS '''
+
+Added support for temperature sensors
+
+Configuration syntax is
+{{{
+	<TEMPERATURE ACTIVE="Y" KEY="42" NAME="Temp Sensor2" DISPLAY_NAME="TEMP_SENSOR2" />
+}}}
+
+A message will be sent to the client whenever the temperature changes. Temperatures are reported in whole numbers only
+
+{{{
+	COMMAND="on" EXTRA="temperature"
+}}}
+
+
+''' Configuration '''
+
+Added ANALOG synonym for ANALOGUE
+
+Added AUDIO_OUTPUT synonym for AUDIO
+
+Added AV_OUTPUT synonym for AV
+
+Added CAMERA_INPUT synonym for CAMERA
+
+Refactored configuration parser to be more modular.
+
+Changed model DISPLAY_NAME to DESCRIPTION; DISPLAY_NAME can still be used
+
+Changed model NAME to DEVICE_TYPE; NAME can still be used
+
+
+2005/12/18
+Released V1.5b6
+
+''' Named Clients '''
+
+Infrastructure support for named clients has been added.
+
+If a client sends a CONTROL message with KEY="ID" COMMAND="name" EXTRA="name for the client" the address book 
+will be updated with this information.
+
+If a client sends a CONTROL message with KEY="ID"  COMMAND="user" EXTRA="user name" the address book will
+be updated with this information.
+
+The fields TARGET and TARGET_USER have been added to all client XML packets, initially only MESSAGE control 
+types will be useful. Underlying support for TARGET_USER has not yet been fully implemented, more functionality
+is required for it to be fully useful.
+
+If a TARGET is specified and a MESSAGE command is sent from the client; it will be conveyed to the TARGET.
+
+A target of All sends the message to all clients apart from the orginating client. -1 is the default if
+no specific target has been specified.
+
+A target of All_Inc_Src sends the message to all clients, this may prove to not be useful.
+
+Message structure is
+{{{
+	<MESSAGE TARGET="Kitchen" TITLE="Test" HIDECLODE="TRUE" AUTOCLOSE="5" ICON="" CONTENT="Hello" />
+    <MESSAGE TARGET="Lounge" TITLE="Test" HIDECLODE="TRUE" AUTOCLOSE="5" ICON="" CONTENT="Hello" />
+	<MESSAGE TARGET="All" TITLE="Test" HIDECLODE="TRUE" AUTOCLOSE="5" ICON="" CONTENT="Hello" />
+}}}
+
+	The flash identification command is as follows. This should be sent as soon as possible after initial 
+	connection to facilitate messaging.
+{{{
+	<CONTROL KEY="ID" COMMAND="name" EXTRA="Lounge"  />
+	<CONTROL KEY="ID" COMMAND="name" EXTRA="Kitchen"  />
+}}}
+
+''' Calendar '''
+
+Added ability for the calendar to skip dates.
+
+Add <skip start_date="yyyy-mm-dd" end_date="yyyy-mm-dd" /> elements to the particular event XML block.
+
+Muliple skip elements can be added to an event; all dates are inclusive.
+
+
+''' Dynalite Initial Release '''
+
+Dynalite understands ordinary light commands; off/on level.
+
+Fade times can also be given in the extra2 message field, fades can be minutes or seconds; eg. EXTRA2="10m" instructs the
+fade to occur over 10 minutes. EXTRA2="10" will indicate 10 seconds. Most dynalite commands support up to 28 minutes for 
+fades.
+
+Fades originating from the dynalite network will send messages to flash with the fade time included in EXTRA2.
+
+Lights are configured as follows
+
+{{{
+	<LIGHT_DYNALITE ACTIVE="Y" KEY="01" AREA="01" NAME="Garage Light" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>
+}}}
+ 
+Area commands are supported using key=0-; fades to this key will operate on all lights in the area, and any linked areas.
+
+Area commands originating in the dynalite network will be sent to that key.
+
+  
+Presets are supported;  eg.  command="preset" extra="preset_number" 
+
+Switching an area off using preset 4 is the preferred way to switch lights off in an area when the dynalite network has been
+configured in this manner (recomended by dynalite). 
+
+Preset changes should be sent to the area key configured as described above as presets operate on areas, not individual 
+channels.
+
+Classic presets pay attention to offset levels in the same manner as the Dynalite network.
+
+Fade times can given for preset switching in the EXTRA2 field in the same manner as light fades.
+
+Preset changes in the network are returned to flash with the same structure.
+
+Classic preset offset commands are supported. Send command="preset" extra="preset_number" , the target device should
+be the area device controlling a particular area number (ie . channel 0)  
+
+
+Classic and Linear protocols are supported, their is a parameter in the config file to which protocol to use for message
+generation. The system will always interpret both.
+{{{
+	<ITEM NAME="PROTOCOL" VALUE="Linear | Classic" />
+}}}
+
+All command can accept a join parameter in EXTRA3; the value will be passed directly to dynalite, see dynalite documentation
+for join details.
+
+All commands originating in the system will have the join parameter sent back to the client, a script writer may wish to use
+this value.
+
+
+Switch and IR commands send on/off messages as applicable to the flash client. The switches must be configured in the
+dynalite network to send a key message. For example to listen to box 01, key 01. press/release actions on the button will 
+generate on/off messages to BUTTON_1
+{{{
+	<CONTACT_CLOSURE ACTIVE="Y" KEY="01" BOX="01" NAME="Button 1" DISPLAY_NAME="BUTTON_1" />
+}}}
+
+Todo.
+
+Area Linking
+
+Alarm Messages
+
+Determinine light levels after preset switch.
+
+''' Security '''
+
+Fixed bug where number of clients is not correctly counted if clients connecct within the first 30 seconds of
+server startup and never reboot.
+
+''' Bugs '''
+
+Ensure script handler will not crash if the config file specified in the bootstrap file is not found.
+
+Fixed bug with serial handler; will possibly oregon scientific handling. 
+
+
+2005/11/30
+Enabled security for number of clients using HASP key
+
+Released V1.5b5
+
+2005/11/27
+Macros calls no longer list all macros for run,abort or complete commands. Instead the macro started and finished 
+messages are only transmitted.
+
+Macros can be run with a 'virtual name' to differentiate multiple instances of the same running macro. Run the 
+macro with EXTRA="macro_name:label". macro_name will be used to identify the true macro to run whereas the entire 
+field (macro_name=label" will be used to communicate start and finish messages to the client. 
+
+For example. 
+A macro is called on_light you would like to call it from two buttons on the client
+one would generate 
+{{{
+   COMMAND="run" EXTRA="on_light:LOUGE_LIGHT" 
+   the other could be COMMAND="run" EXTRA="on_light:GARAGE_LIGHT"
+}}}
+
+Added macro pause based on a passed in value for the length (passed in via the EXTRA field)
+
+Ugraded quartz scheduling library to version 1.5.1
+
+''' 2005/11/23 Released V1.5b4 '''
+
+updated number scheme
+
+Added ability to place a parameter in the DISPLAY_NAME field of macros.
+
+''' 2005/11/9 Released V1.5b2 '''
+
+Possible fix for HAL implemented.
+
+''' 2005/10/29 Release V1.1.5 '''
+
+Fixed Kramer AV src selection with an input not specified in both audio and video input catalogues.
+
+Further checking for script updating on file system
+
+
+''' 2005/10/27 Released V1.1.3 '''
+
+Fixed severe_error alert bug
+
+
+'''2005/10/27 Released V1.1.1 '''
+
+Fixed problems with adding and removing script files.
+
+Fixed client display of severe errors
+
+Updated numbering
+
+
+''' 2005/10/26 Released V0.9.237 '''
+
+Made flash dialog modal for security
+
+
+''' 2005/10/26 Released V0.9.236 '''
+
+HASP security model added; client count only supported at this stage.
+
+Ensure the HASP JNI library is in the java run path
+
+Memory location 0 is number of clients
+
+Bug with two GC100 IR modules rectified
+
+
+
+''' 2005/9/30 Released version 0.9.235 '''
+
+Updates to suppport Kramer model
+
+Ensure input names for both audio and video catalogues are correct, when using extra="AV" or extra="" commands (rather 
+then VIDEO_ONLY or AUDIO_ONLY) both catalogues will be checked for the input name. For simplicity it is recomended you
+connect AV units to the same input number for both audio and video.
+
+Commands are 
+
+preset selection. 
+{{{
+	COMMAND="preset" EXTRA="#preset number" EXTRA2="#machine_number#"  (should be sent to the ALL device)
+}}}
+
+src          
+{{{
+	COMMAND="src" EXTRA="#source name#" EXTRA2="#machine number#" EXTRA3="AV|AUDIO_ONLY|VIDEO_ONLY"
+}}}
+
+The kramer block should be similar to this
+{{{
+                <CATALOGUE NAME="Kramer Audio Inputs">
+                        <ITEM CODE="cd1" VALUE="1"/>
+                        <ITEM CODE="cd2" VALUE="2"/>
+                        <ITEM CODE="digital" VALUE="3"/>
+                        <ITEM CODE="tv" VALUE="4"/>
+                </CATALOGUE>
+                <CATALOGUE NAME="Kramer Video Inputs">
+                        <ITEM CODE="cd1" VALUE="1"/>
+                        <ITEM CODE="cd2" VALUE="2"/>
+                </CATALOGUE>
+                <PARAMETERS>
+                        <ITEM NAME="AUDIO_INPUTS" VALUE="Kramer Audio Inputs"/>
+                        <ITEM NAME="AV_INPUTS" VALUE="Kramer Video Inputs"/>
+                </PARAMETERS>
+                <KRAMER>
+                        <AV KEY="0" DISPLAY_NAME="ALL"/>
+                        <AV KEY="1" DISPLAY_NAME="FAMILY_AV"/>
+                        <AV KEY="2" DISPLAY_NAME="KITCHEN_AV"/>
+                        <AV KEY="3" DISPLAY_NAME="STUDY_AV"/>
+                </KRAMER>
+}}}
+
+             
+
+''' 2005/9/25 Released version 0.9.234 '''
+
+Improved logging for binary IO to all serial devices.
+
+Significant refactoring within script model. No changes were made to the script interpretter, or API interface to flash 
+client or other system components.
+
+Scripts will now queue if attempted to run again when it is currently running. Up to 4 times will be queued. More than
+4 will be ignored.
+
+If a script must not be queued, send no_queue in the extra parameter of the script run.  
+
+
+''' Pelco '''
+
+Supports camera only, no alarm functionality is yet included.
+
+Commands from flash.
+
+||Command||Extra||Extra2
+||on||auto/manual (a) 
+||off
+||pan||left/right/stop/0-35999(b)||0-64(c)
+||tilt||up/down/stop/0-35999(b)||0-63(c)
+||zoom||wide/tele/stop
+||focus||far/near/stop
+||iris||open/close/stop
+||preset||1-32(d)
+
+ * (a) Scan. The default is for auto scan.
+ * (b) Not all devices pay attention to an absolute number.
+ * (c) Speed. 0 is very slow, not stationary.
+ * (d) Many devices support more than 32 presets.
+
+Cameras must be specied in the PELCO block of the config file. The format is
+
+
+{{{
+<CAMERA ACTIVE="Y" KEY="1" DISPLAY_NAME="FRONT_CAMERA" ZOOM="b8" />
+}}}
+
+
+This represents a camera listening on address1, with a zoom capability of 148
+
+Following is a test macro; this will switch on the camera listening on address 0 ; 
+
+It will start it panning left for 5 seconds
+
+It will then stop the pan and switch off.
+
+ 
+{{{
+ <CONTROL KEY="MACRO" COMMAND="getList" EXTRA="Camera test" TYPE="" STATUS="noDelete,noEdit" RUNNING="0">
+    <CONTROL KEY="FRONT_CAMERA" COMMAND="on" EXTRA="manual" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+    <CONTROL KEY="FRONT_CAMERA" COMMAND="pan" EXTRA="left" EXTRA2="32" EXTRA3="" EXTRA4="" EXTRA5="" />
+    <CONTROL KEY="pause" COMMAND="pause" EXTRA="5" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+    <CONTROL KEY="FRONT_CAMERA" COMMAND="pan" EXTRA="stop" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />
+    <CONTROL KEY="FRONT_CAMERA" COMMAND="off" EXTRA="" EXTRA2="" EXTRA3="" EXTRA4="" EXTRA5="" />  
+  </CONTROL>
+}}}
+
+
+''' 2005/9/14 Released version 0.9.232 '''
+
+Improved logging for messages containing unprintable characters.
+
+Resend instructions which have not been attended to in a reasonable time
+
+
+''' 2005/9/14 Released version 0.9.231 '''
+
+Fixed errors in adding CBUS devices to the system when parsing the config file
+
+
+''' 2005/9/13 Released version 0.9.230 '''
+
+Can now send multiple IR codes from one instruction. Use commas between instructions. This would generally be used to select a 2 digit
+channel or station.
+
+eg. 
+
+{{{
+<item type="button" icon="volume-up" command="AV.STUDY_IR" extra="Philips MC-200.VOLUP,Philips MC-200.CD" repeatRate="200" />
+}}}
+
+Added Kramer preset selection. COMMAND="preset" EXTRA="#preset number" EXTRA2="#machine_number#" 
+extra 2 is optional
+
+
+
+Added Dynalite commands
+{{{
+	COMMAND="preset" EXTRA="#preset#" EXTRA2="#fade rate#" EXTRA3="#join#" 
+	COMMAND="on" EXTRA="#level#" EXTRA2="#fade rate#" EXTRA3="#join#" 
+	COMMAND="off" EXTRA="" EXTRA2="#fade rate#" EXTRA3="#join#" 
+}}}
+join defaults through to 255.
+
+fade rate ranges from 0.02 to 65535 seconds. This is rounded to the nearest 0.02 seconds.
+     rate can be expressed as minutes  eg. 2m
+
+
+Corrected errors in GC100 log messages
+
+Corrected problems in handling of queued comms messages
+
+Ensured GC100 IR strings are queue accross multiple IR ports, rather than in parrallel. Should solve issues with
+GC100s being used to drive devices on multiple IR port within a single macro/script
+
+
+
+
+
+ 
+''' 2005/8/25 Released version 0.9.229 '''
+
+Extra HAL debugging added
+
+Added ability for scripts to run more than once simultaneously, set EXTRA2=no_lock in the script call
+
+First release kramer module. 
+
+Commands are 
+
+ * COMMAND="volume" EXTRA="up/down/level" (level is 0-99) EXTRA2="machine number"
+ * COMMAND="bass" EXTRA="up/down/level" (level is 0-99) EXTRA2="machine number" 
+ * COMMAND="src" EXTRA="input source" EXTRA2="machine number" EXTRA3="AV/AUDIO_ONLY/VIDEO_ONLY" default is AV
+
+if AV,VIDEO_ONLY or an empty string is used in EXTRA3 the AV_INPUTS catalogue will be used to map the source name to an inupt 
+channel. if AUDIO_ONLY is specified the AUDIO_INPUTS catalogue will be used. This allows audio only devices to be specified in a 
+meaningful way.
+
+Machine number is only needed if multiple switches have been daisy chained to one RS232 port.
+Ouput number is determined by the key specified in the configuration file; output of 0 is used to switch an input to every output.
+Audio and video commands refer to the output circuit rather than the inputs, 
+eg. the output volume for a particular screen is increased.
+
+Added macro parameters. If a field in a command from the macro contains %EXTRA2%,%EXTRA3% the value will be 
+replaced with the corresponding field from the command object that ran the MACRO. If the macro contains %COMMAND% or %EXTRA%
+they value will be read from the EXTRA4 or EXTRA5 field respectively. (The COMMAND and EXTRA fields are unavailable as they are 
+used to specify running the MACRO). 
+
+
+
+
+2005/7/25
+Added tests to HAL to ensure strings are in the proper format before decoding. Should stop array out of bounds exceptions
+Released version 0.9.228
+
+2005/7/25
+Added further debugging information for severe errors
+Released version 0.9.227
+
+2005/7/24
+Ensure HAL poll functions
+Released version 0.9.226
+
+2005/7/24
+Changed HAL poll to iterate through configured devices rather than INPUT catalogue
+Released version 0.9.225
+
+2005/7/23
+Really make sure all level MMIs are decoded, including the top one per string.
+Released version 0.9.224
+
+2005/7/23
+Ensure all group addresses in a level MMI are decoded. Previously top 4 were missed.
+Ensure Level MMI is enabled immediately.
+Released version 0.9.223
+
+2005/7/21
+Fixed exception in admin connection when no IR learner is configured
+Ensure hidden macros do not get 'erased' on macro updates
+Released version 0.9.222
+
+2005/7/19
+Added tutondo debugging to log output commands when using protocol B
+Tutodono send_audio_command can now be directed to a SUF/TIF slot rather than the currently selected source,
+  put EXTR2="..." with the source label you with the instruction to go to. eg. EXTRA2="digital". This will generally
+  be used for a macro or a script setting up characteristics before switching source.
+  If extra2 is not specified or is empty the instruction will default to the program (source) currently selected.
+
+HAL handling of send_audio_command has been updated in the same manner. 
+Ensure GC100 does not attempt to process commands not meant for it (remove GC100 received command it did not understand error)
+Released version 0.9.221
+
+2005/7/18
+Added further feedback for IR learner timeout updates
+Released version 0.9.220
+
+2005/7/15
+Ensure illegal GC100 IR strings are thrown out rather than retrying.
+Released version 0.9.219
+
+2005/7/15
+Further CBUS updates to ensure state is as current as possible.
+Ensure ramp with command on ramp to 0 ; is considered the same state as off 0.
+Returned checksum in pelco model
+Released version 0.9.218
+
+2005/7/14
+Added extra exception catching accross all models.
+
+Fixed bug where Control/variable INIT_EXTRA4 and INIT_EXTRA5 parameters were ignored.
+Updated MMI handling to fix CBUS problem on MMI overwriting last user action
+Released version 0.9.217
+
+2005/7/12
+Ensure illegal entries in calendar file will not crash the system
+Fixed some parse combination issues for multiple day (weekly) events in calendar file
+Initial Pelco framework
+Possible CBUS fix, removal of many Level MMI requests
+Released version 0.9.216
+
+2005/7/7/
+Modified order of startup to ensure parameters are tested before connection. May resolve tutondo protocol A issues
+Added ramp code to off command. Include in extra2, in the same way as the on command
+Removed ramp command in CBUS. Instead use on or off command with an extra2 field with the ramp code
+Released version 0.9.215
+
+2005/7/5
+Rewrote CBUS level and ramp handling - removed interactive slider, not possible without causing random disruptions 
+to the CBUS lighting network.
+Added support to send commands to the IR learner, will support updating end value for IR learning
+Schema file updated
+Modified admin interaction XML for Test IR. Testing will not function until admin plug in V0.32
+Released version 0.9.214
+
+2005/6/28
+Added filter="odd/even" attribute to calendar events; to select odd or even days of the month.
+If filter is not present, or the value is "" no filtering will be done.
+Released version 0.9.213
+
+2005/6/27
+Ensure CBUS level calculations are correct
+Ensure no MMI debugging code left over
+Released version 0.9.212
+
+2005/6/26
+Fixed bug in serial handler introduced in 0.9.210
+Reintroduced CBUS command to be sent only after receiving confirmation of the previous command. Ensures all 
+commands are executed correctly.
+Confirmed CBUS ramp commands; command code is ramp, legal values are 
+		0,4,8,12,20,30,40,1m,1.5m,2m,3m,5m,7m,10m,15m,17m
+Released version 0.9.211
+
+2005/6/23
+Renamed weather station to Oregon to facilitate display
+Added ability to terminate comms strings with two known bytes to support weather station
+Fix for CBUS to ensure on receipt of buffer overrun all commands not yet processed will be resent.
+
+2005/6/20
+Ensure power poll will not override HAL power on / off
+Initial implementation of oregon weather station 
+- see config_ref for configuration details, 
+- currently supports internal and external temperature sensors
+Released version 0.9.209
+
+2005/6/14
+Changed disconnect / reconnect messages to WARNING level.
+Added support for Admin commands in Controller to ensure they doln't get sent to the wrong model.
+Released version 0.9.208
+
+2005/6/13
+Added client message for severe and warning messages
+Added support for IR catalogue commands for admin plugin.
+Released version 0.9.207
+
+2005/6/1
+Implemented CUSTOM_INPUT into comfort model
+Ensure only one message is created for a client command.
+Released version 0.9.206
+
+2005/6/1
+Ensure custom input commands are sent to both the client and to other models
+Interrupt macros which may be sleeping if they are aborted.
+Released version 0.9.205
+
+2005/5/26
+Ensure CBUS commands have priority over internal synchronisation
+Removed excess tutondo debug logging that is no longer required
+Released version 0.9.203
+
+2005/5/24
+Modified the script methods for createCommand to replace where sendCommand was being used.
+Released version 0.9.202
+
+2005/5/23
+Finally corrected tutondo poll responses
+Added macro isHidden element to STATUS
+Added better threading support to the comms handler
+Released version 0.9.200
+
+2005/5/16
+Corrected tutuondo responses from device polling
+Released version 0.9.197
+
+2005/5/15
+Further tutondo state test updates
+Released version 0.9.196
+
+2005/5/15
+Send tutondo volume updates to client
+Released version 0.9.195
+
+2005/5/14
+Further refinements to tutondo for protocol B
+Added the ability to set absolute volume;  use COMMAND="VOLUME" EXTRA="vol level 0-100"
+Released version 0.9.193
+
+2005/5/13
+Further work on tutondo B handshaking
+Released version 0.9.190
+
+2005/5/13
+Improvements to tutondo command handshaking
+Released version 0.9.189
+
+2005/5/12
+Implemented tutondo protocol B
+Use parameter NAME="PROTOCOL" VALUE="B" in the configuration file.
+The default value is A
+Released version 0.9.188
+
+2005/5/11
+Ensure all EXTRA fields are sent to the client, not just EXTRA1.
+Mode change keypad vs screen lock information is in EXTRA2. In the appopriate message (described below for 0.9.171)
+Released version 0.9.187
+
+2005/5/8
+Ensured HAL does not do IP heartbeat as it already does polling.
+Released version 0.9.186
+
+2005/5/5
+Added repeat count for IR codes in EXTRA2
+Fixed crash the first time a script accessed the cache if the object did not exist in the cache
+Released version 0.9.185
+
+2005/5/4
+Solved new cache bugs
+Released vesion 0.9.184
+
+2005/5/3
+Incorporated script logging updates
+Released version 0.9.183
+
+2005/5/3
+Rewrote cache handler to improve system stability
+Released version 0.9.182
+
+2005/5/3
+Fixed client startup for complex cache types
+Incorporated script changes
+Released version 0.9.181
+
+2005/5/2
+Added guards for cache handling
+Released version 0.9.173
+
+2005/5/1
+Ensure scripts are never run if disabled
+Changed CBUS to jump to full ramp on (or minimum) if detecting button held down. This will be later adjusted if
+the ramp to level is set before the max or min is reached (ie. the button is released).
+Fixed problem with variable name in cache; they were keyed by NAME rather than DISPLAY_NAME
+Fixed problem with cache not correctly sending key to second client connecting.
+Released version 0.9.172
+
+2005/4/27
+Allow any case for script hidden status.
+Moved startup handling into a seperate thread
+Restart startup handling when a device fails to automatically reconnect.
+Send script to client once a script is complete
+Removed CBUS ramp interactive ramp up / down temporarily.
+*** This version will not display ramp to max/min ********************
+Added CONTROL command sent to flash to show the state of the alarm.
+The messages are
+<CONTROL KEY="CLIENT_SEND" COMMAND="ModeChange" EXTRA="mode number" EXTRA2="SHOW_COMFORT_KEYPAD|SHOW_SCREENLOCK" />
+as appropriate.
+
+
+The showkeypad extra field is controlled by a parameter to comfort; SHOW_KEYPAD_MODES this should be set with the
+modes that will generate the keypad message. If not specified the default value is
+VALUE="01,04"
+
+Modes are
+ * 00 = Security Off
+ * 01 = Away Mode
+ * 02 = Night Mode
+ * 03 = Day Mode
+ * 04 = Vacation Mode
+
+Released version 0.9.171
+
+
+2005/4/26
+Ensure CBUS throws connection failures forcing reconnect when needed
+Fixed problem with IP handler
+Released version 0.9.170
+
+2005/4/25
+Dynamically increase the flash communication buffer if required.
+Ensure cron macros are not misfired on startup
+Released version 0.9.169
+
+2005/4/24
+Added the ability for individual device models to have custom heartbeat strings; override the getHeartbeatString method.
+Set the GC100 to use getversion as heartbeat string
+Ensure admin connections going away properly removes the admin handler
+Added the log directory to admin connection information
+Added LOGDIR line to bootstrap to inform the system where the file logs are being stored. This location is controlled by the
+wrapper.conf file.
+
+Renamed AV: to AV. and MACRO: to MACRO.  This will allow them to be used in client state lines; it was impossible before as :
+is the field seperator used for the state line.
+Added the ability to optionally put a reference number after an IR sending command. Place .x after the command. This reference
+number is ignored by the server but it allows multiple state information to be determined in the client for devices being
+controlled by the same IR port.
+
+The following example is for a Philips micro component system, it illustrates the useage. STUDY_IR has been configured as an
+IR port on the GC100.
+{{{
+		<control type="studyAudio">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="toggle" icons="power-red,power-green" command="AV.STUDY_IR" extras="Philips MC-200.Off,Philips MC-200.Off" width="50" />
+				<item type="button" icon="volume-up" command="AV.STUDY_IR" extra="Philips MC-200.VOLUP" repeatRate="200" />
+				<item type="button" icon="volume-down" command="AV.STUDY_IR" extra="Philips MC-200.VOLDN" repeatRate="200" />
+			</row>
+			<row>
+				<item type="button" icon="cd-music" command="AV.STUDY_IR.1" extra="Philips MC-200.CD" showOn="true" />
+				<item type="button" icon="atom" command="AV.STUDY_IR.1" extra="Philips MC-200.Tape" showOn="true" />
+				<item type="button" icon="radio" command="AV.STUDY_IR.1" extra="Philips MC-200.TUNER" showOn="true" />
+				<item type="button" icon="music-note" command="AV.STUDY_IR.1" extra="Philips MC-200.AUX" showOn="true" />
+			</row>
+			<row cases="AV.STUDY_IR.1:Philips MC-200.CD|Philips MC-200.Tape">
+				<item type="button" icon="media-step-rwd" command="AV.STUDY_IR" extra="Philips MC-200.REW_TRACK" repeatRate="200" />
+				<item type="button" icon="media-rwd" command="AV.STUDY_IR" extra="Philips MC-200.REWIND" repeatRate="200" />
+				<item type="button" icon="media-play" command="AV.STUDY_IR" extra="Philips MC-200.PLAY" />
+				<item type="button" icon="media-pause" command="AV.STUDY_IR" extra="Philips MC-200.PLAY" />
+				<item type="button" icon="media-fwd" command="AV.STUDY_IR" extra="Philips MC-200.FASTFORWARD" repeatRate="200" />
+				<item type="button" icon="media-step-fwd" command="AV.STUDY_IR" extra="Philips MC-200.FF_TRACK" repeatRate="200" />
+				<item type="button" icon="media-stop" command="AV.STUDY_IR" extra="Philips MC-200.STOP" />
+			</row>
+			<row cases="AV.STUDY_IR.1:Philips MC-200.TUNER">
+				<item type="button" icon="down-arrow" command="AV.STUDY_IR" extra="Philips MC-200.REW_TRACK" />
+				<item type="button" icon="up-arrow" command="AV.STUDY_IR" extra="Philips MC-200.FF_TRACK" />
+				<item type="button" icon="left-arrow" command="AV.STUDY_IR" extra="Philips MC-200.REWIND" />
+				<item type="button" icon="right-arrow" command="AV.STUDY_IR" extra="Philips MC-200.FASTFORWARD" />
+			</row>
+		</control>
+}}}
+Released version 0.9.168
+
+
+2005/4/23
+Renamed demoConfig.xml to config_ref.xml to ensure customised version are not overwritten.
+Added MACRO:xxx command type to run a macro from any button
+Ensure macro and script model show as connected
+Added control variable initialiser values. See config_ref CONTROLS section for details.
+Added config_ref.xml to build
+Relased version 0.9.167
+
+2005/4/22
+Ensure macro list is saved in entirety.
+Released version 0.9.166
+
+2005/4/21
+Ensure script status file is correctly handled when no scripts are present
+Added support for the Calendar entries in the config file to be used for Calendar messages
+See the full release notes below for 0.9.164 for syntax in the Config file
+Released version 0.9.165
+
+2005/4/20
+Ensure status changes for scripts caused the resulting list to be returned
+Added message popups for calendar events
+Scripts with a STATUS of HIDDEN in the datafiles/script_status.xml are not displayed to the client
+Fixed problem with Script enabled / disabled
+Added elements to the config CONTROLS definitions controlling message parameters.
+{{{
+                <CALENDAR_MESSAGES>
+                		   <ITEM NAME="AUTOCLOSE" VALUE="ON" />
+                		   <ITEM NAME="ICON" VALUE="" />
+                		   <ITEM NAME="HIDECLOSE" VALUE="HIDECLOSE" />
+                </CALENDAR_MESSAGES>
+}}}
+Updated demoConfig.xml file
+Update schema
+Released version 0.9.164
+
+2005/4/18
+Incorporated latest jrobin and script logging changes
+Added STOPPABLE=(Y/N) to SCRIPT get list command to support client displaying scripts that can be aborted
+Added SCRIPT ABORT command (EXTRA is script name); ie. the same syntax as for macros.
+Released version 0.9.163
+
+2005/4/17
+Ensure scripts run from commands from physical devices and from flash
+Ensure scripts properly update both flash and client
+Renamed script API STATUS field to ENABLED
+Added script STATUS field to list and script_status file
+Added script API call to set STATUS field
+Released version 0.9.162
+
+2005/4/15
+Ensure messages from Flash with an empty dislay_name are not passed through
+Substantial work on CBUS correctnous
+Released version 0.9.161
+
+2005/4/14
+Updates to CBUS startup
+Released version 0.9.160
+
+2005/4/14
+Change CBUS to only pay attention to 3 MMI updates
+Refactored CBUS doCommand routine to improve readability
+Released version 0.9.159
+
+2005/4/13
+Ensure CBUS uses a consistent case to match keys
+Released version 0.9.158
+
+2005/4/13
+Incorporated cache update time changes
+Fixed GC100 IR command bug
+Changes to support IR learning with the admin tool.
+Released version 0.9.157
+
+2005/4/11
+Updated schema
+Released version 0.9.156
+
+2005/4/11
+Fixed problem with timeout support (SUPPORTS_CD command) in serial driver
+Released version 0.9.155
+
+2005/4/10
+Added debug comments for IR commands; level must be finer or above for the GC100
+Incorporated JRobin changes
+Released version 0.9.153
+
+2005/4/10
+Do not set timeout on serial port if carrier detect is not present
+Released version 0.9.152
+
+2005/4/8
+Added SUPPORTS_CD Y/N for serial parameter supporting carrier detect. Default is Y.
+Updated schema
+Ensure macro order is maintained.
+Ensure IR Code DB order is maintained.
+Added isAdmin flag to command objects to facilitate passing messages to admin clients
+Output IR Code DB, with name of IR command just learnt to admin client
+Released version 0.9.151
+
+2005/4/7
+Incorporated latest jrobin changes
+Added char by char debug ability to comm listener
+Released version 0.9.150
+
+2005/4/7
+Fixed schema support for GC100
+Released version 0.9.148
+
+2005/4/6
+Ensure the new script list is sent to all client if the server reload script command is run
+Ensure messages do not 'leak' into the incorrect section of the controller.
+Further cbus work.
+Released version 0.9.147
+
+2005/4/6
+Added script status accross shutdown /restart
+Incorporated latest JRobin changes
+Further CBUS work
+Released version 0.9.145
+
+2005/4/5
+Fixed problem with listing script files to the client
+Released version 0.9.144
+
+2005/4/4
+Added version number initial client connection to allow about box in the client
+Added single byte processing to the serial layer to support new CBUS control system
+Released version 0.9.143
+
+2005/4/4
+Temporary release not sending level request on button ramp change. Solves problems with input load status light.
+Released version 0.9.142
+
+
+2005/4/3
+Rewrote CBUS handling for level MMI
+Fixed bugs in IP listener
+Incorporated latest JRobin version
+Released version 0.9.141
+
+2005/3/26
+Added clean shutdown if the client port is already in use, this most likely means the server has been run twice.
+Various strengthening of null handling for jrobin
+Ensured JRobin REALLY isn't called when is not active
+Rewrote fixed length message IP buffer handling; used by Tutondo
+Changed CBUS to wait for a reply before sending next command
+Rewrote CBUS to use known character for end of string; other than purely cr lf
+Currently only implemented for IP, not serial
+Released version 0.9.140
+
+2005/3/23
+Added RELAY="Y/N" to the Cbus light configuration
+Don't send level requests unless the device is capable of responding.
+Updated schema
+Released version 0.9.137
+
+2005/3/22
+Made script status commands return list of all scripts
+Fixed flash client command handling of extra2....
+Released version 0.9.136
+
+2005/3/21
+Added script status support
+Released verison 0.9.135
+
+2005/3/21
+Added proper support for status and type fields for macros
+Released version 0.9.133
+
+2005/3/21
+Improved CBUS light handling
+Released version 09.132
+
+2005/3/20
+Put JRobin code back in,
+Made JRobin only start up when it is switched on in the config
+Fixed problem with comfort over IP
+Released version 09.9.131
+
+2005/3/19
+Temporarily commented JRobin code
+Released version 0.9.130
+
+2005/3/17
+Fixed single event triggers
+Releaesd version 0.9.127
+
+2005/3/16
+Fixed manifest problem
+Released version 0.9.126
+
+2005/3/15
+Re-enabled extended level queries
+Added checking of time fields from calendar file
+Released version 0.9.125
+
+2005/3/15
+Test release for CBUS. Will not function perfectly but should not mis-report lights
+Released version 0.9.124
+
+2005/3/14
+Cleaned up some JRobin call code to remove IO exception
+Fixed problem with calendar event delete
+Hack to CBUS to only send level MMI requests on startup to see if that fixes a problem
+Released version 0.9.123
+
+2005/3/14
+Further changes to manifest
+Released version 0.9.122
+
+2005/3/14
+Added quartz libraries to manifest
+Released version 0.9.121
+
+2005/3/14
+Do not respond to CBUS MMI until level reply has been received
+Added Quartz events
+Rewrote calendar model for quartz
+Added hour and minute element to calendar xml. These accept cron syntax
+(eg. minute="10/5"   = 10 past, them 5 min intervals  or   eg.  minute="10,15")
+Modified bootstrap RRD entries
+Further cleaning up CBUS entries
+Released version 0.9.120
+
+2005/3/11
+Added further changes for CBUS
+Released \version 0.9.119
+
+2005/3/10
+Added CBUS checksum checking to incoming commands
+Fixed bug that pushed too many level queries to cbus
+Change build script to place jar at top level and include template files in the correct place
+Note. Time macros are not functioning in this release
+Released version 0.9.118
+
+2005/3/8
+Added large amount of CBUS level logging
+Fixed potential CBUS problem with two devices having same Key on different application numbers
+Fixed problem with number pairs interpretation in Level MMI string
+Released version 0.9.117
+
+
+2005/3/7
+Fixed problem with two messages being broadcast to flash
+Merged latest script changes
+Fixed problem if no jrobin datasources were specified
+Added TYPE parameter to macros
+Released version 0.9.116
+
+2005/3/7
+Fixed problem with IP listener
+Released version 0.9.115
+
+2005/3/6
+Changed CBUS startup parameters to capture all application messages
+Added support for Level MMI requests
+Completely rewrote CBUS receiving from serial port code.
+Added support for CBUS network powering up.
+Ensure Level requests are only sent to devices that can support it.
+Correctly handle cbus control button being pressed for a long time
+Released version 0.9.114
+
+2005/3/2
+Added further debugging for Comms messages
+Changed CBUS connection parameter to try to get more cbus messages
+Released version 0.9.113
+
+2005/3/1
+Added extra debugging for HAL
+Added extra pause if HAL fails
+Released version 0.9.112
+
+2005/2/28
+Updated Schema
+Added extra monitoring to CBUS
+Released version 0.9.111
+
+2005/2/28
+Renamed THERMOMETER as SENSOR
+Added Channel and Units field to SENSOR
+Updated demoConfig.xml and schema
+Removed extraneous logging messages
+Added CBUS debugging messages
+Released version 0.9.110
+
+
+2005/2/24
+Moved debug socket listener to 10003 to avoid conflicts with scp
+Ensure debug messages have <> removed
+Ensure scripts model returns script list properly
+Released version 0.9.109
+
+2005/2/23
+Test for Carrier Detect before sending characters to the serial port. A side effect is that
+2 wire serial connections will not work.
+Updated JRobin schema entry
+Updated logging system
+Fixed JRobin controller loop to call original models as well
+Added XML message return for IR learn with no learner configured
+Released version 0.9.108
+
+2005/2/21
+Fixed build script to add full template heirarchy to zip file
+Released version 0.9.107
+
+2005/2/20
+Ensure getExtra calls to command object do not return null
+Change build script to copy schema files to the template directory in the same heirarchy as the installation
+Shuting down before the controller has launched will no longer crash the system
+The RXTX driver not being in the library path is now handled gracefully
+Released version 0.9.106
+
+2005/2/18
+Change rampRate to use valid CBUS times.
+Values are 0,4,8, 12, 20,30,40,1m, 1.5m, 2m, 3m, 5m, 7m,10m,15m,17m
+
+2005/2/17
+Fixed bug in Active line for individual device lines not functioning
+RAMP_RATE removed from LIGHT_CBUS line, as it should be sent per command from flash in EXTRA2.
+EXTRA2, EXTRA3, EXTRA4 support added flash command messages
+
+2005/2/16
+Added RAMP_RATE parameter to LIGHT_CBUS
+Added MAX level to LIGHT_CBUS
+Added THERMOMETER to CBUS model
+Added CBUS_APPLICATION to LIGHT_CBUS and THERMOMETER
+Updated schema
+Added Sensor model, only supports cbus thermometer so far.
+
+2005/2/13
+Log handler now created in system startup; 3 minutes is buffered and outputted to the
+first log handler (probably eLife admin client) that connects.
+Automatically run the eLife_Startup macro when launching if present.
+Released version 0.9.105
+
+2005/2/13
+Added IR Learning capabilities from client
+Fixed problem with all comms messages being sent to all clients; causing looping messages.
+Removed SPEC from configuration file.
+Updated schema
+Released version 0.9.104
+
+2005/2/11
+Improved communications support with eLife_Admin
+Released Version 0.9.103
+
+2005/2/5
+Fixed messages from flash
+Released Version 0.9.102
+
+2005/1/2
+Fixed class cast errors for command variables.
+Various changes to support command control.
+Released Version 0.9.100
+
+2005/1/30
+Fixed reload scripts from GUI.
+Added reload scripts to admin controlls.
+Removed entire script contents being dumped to logs.
+Changed debug XML to enable XCDATA xml messages.
+Many changes to assist control protocol
+Released version 0.9.98
+
+2005/1/29
+Added variables section to config
+Moved script launch to after all device calls to ensure devices can act and update cache as required before the
+script occurs.
+Added templates directory to distribution zip file
+Released version 0.9.97
+
+2005/1/28
+Remodelled JRobin definition and updating
+Format is now as follows; this creates two jrobin update tasks
+{{{
+	<JROBIN INTERVAL="30" RRD="test">
+		<DATA DATASOURCE="LOUNGE_LIGHT"/>
+		<DATA DATASOURCE="HALL_LIGHT"/>
+	</JROBIN>
+	<JROBIN INTERVAL="40" RRD="lounge_activity">
+		<DATA DATASOURCE="LOUNGE_LIGHT"/>
+	</JROBIN>
+}}}
+Released version 0.9.96
+
+2005/1/27
+Renamed RAW_INTERFACE device to RAW_CONNECTION to allow a schema design that better facilitates
+constructing configuration files.
+Produced schema for configuration files
+Added multiple poll strings for raw. Use parameters POLL_VALUE[1-9] and POLL_STRING[1-0]
+Added multiple startup strings for raw. Use parameters STARTUP[1-9]
+Released version 0.9.95
+
+2005/1/26
+Incorporated JRobin queries.
+See release notes for verison 0.9.94 for config details.
+Released version 0.9.94
+
+2005/1/25
+Linked bootstrap calls to controller
+
+2005/1/24
+Moved catalogue entries inside appropriate DEVICE entry in the config file
+Moved connection to its own block rathe than attribute values
+Fine tuned logging to remove overly verbose startup at INFO level
+Added guards to ensure null key in comfort analogue will not kill startup
+GC100 groups changed to multiple device entries in spec block
+Created XML schema for config file
+Added bootstrap entries for RRDBDIRECTORY and RRDXMLDIRECTORY
+Released version 0.9.93
+
+2005/1/22
+Integrated latest JRobin version
+Moved Graph directory specification to bootstrap file
+Added config file and startup time messages to admin connection
+Modified Admin interface for better communication to controller plugin
+Released version 0.9.92
+
+2005/1/20
+Integrated latest JRobin version
+Released Version 0.9.91
+
+2005/1/17
+Updated admin debugging interface
+
+2005/1/16
+Modified debug trace to be a single line, simplifies the monitor application
+Improved threadlock resiliance for flash client handler
+Ensure RAW generated commands are correctly sent to flash
+Ensure command loops do not occur from RAW commands
+Released Version 09.90
+
+2005/1/15
+Ensure JRobin startup errors will not crash server
+Released Version 09.89
+
+2005/1/13
+Incorporated JRobin code into controller
+Moved script model out of client and device loop to ensure it is always called for all command types.
+Removed cause of CLIENT_SEND error message
+Updated jar manifest to include JRobin jar files, add files from support area into the ext directory.
+Released Version 09.88
+
+2005/1/13
+Updated script error message
+Fixed regex replacement with an empty string
+Added %EXTRA% variable to raw catalogues
+Completed renaming RAW_ONLY to RAW_INTERFACE
+Released Version 09.87
+
+2004/12/30
+Increased log file size to 10mb
+Released Version 09.85
+
+2004/12/30
+Added guards to ensure no parameters in a device block with not crash server.
+Fixed IRCodes DB still being written to config directory
+Added a bootstrap line to specify debug levels
+Chnaged log level names to match java logging levels
+
+2004/12/24
+Added scripts to the client model list
+Moved properties file into the jar file
+
+2004/12/22
+Added access methods for a models configHelper
+
+2004/12/19
+Fixed GC100
+
+2004/12/17
+Fixed minor bug with cbus direct
+Released version 0.9.76
+
+2004/12/15
+Fixed regex expressions
+Allow regex replacements in DISPLAY_NAME, COMMAND or EXTRA for CUSTOM_INPUT (use @1 to replace with the first
+matched group)
+Changed regex match in raw to allow multiple input fields to match
+Released Version 0.9.74
+
+2004/12/14
+Added RAW poll string; specified in the parameter block along with the poll interval (POLL_STRING, POLL_VALUE)
+
+2004/12/14
+Incorporated scripting engine.
+Wrote automated release ant file
+Added Admin (port 10001)  message to reload scripts (<RELOAD_SCRIPTS />
+Add device models now have access to the entire device model list
+Released version 0.9.73
+
+2004/12/7
+Debug levels are now set correctly
+
+2004/12/5
+Ensure macro and calendar changes are sent to all clients
+Added Admin DEBUG_PACKAGES command to list all current debug packages and levels
+Released Version 0.9.71
+
+2004/11/29
+Ensured admin connections going away does not crash server
+
+2004/11/28
+Added newline after log file entries to facilitate viewing by telnet until flash client is complete
+Ensured all instances of Command objects call ancestor constructor to set creation time.
+Added getCreationTime method for all commands; to enable length of time in cache calcuations
+Add macro model back into the model list
+
+2004/11/25
+Released version 0.9.69. First service release
+Added DEBUG level command to admin port
+
+2004/11/23
+Integrated java service wrapper
+Version 0.9.68 released
+Added shutdown hooks to ensure models have a chance to attempt clean shutdown if the service is shutdown
+
+2004/11/16 Added admin model to controller.startup
+Initial admin handler
+Ensure macro and calendar list are only sent to the client that the request originated from
+Built jar file, first release
+
+2004/11/10
+Adding jar release items
+
+2004/11/09
+Released 9.68
+Fixed bug in saving macros
+
+2004/11/08
+Added partial support for targetting particular flash client only; first step towards macros + events going to all clients
+Added support for Admin flash handler, first stage to seperating GUI
+
+2004/11/07
+Converted IR Learnt method call to command queue
+
+Revision 1.89  2004/11/05 12:44:21  colinc
+Added demo Script handler instance
+
+Revision 1.88  2004/11/01 04:39:56  colinc
+Ensured reading config file does not delete current macros, calendar or scripts
+
+Revision 1.87  2004/10/31 13:44:24  colinc
+Improved logging messages for calendar and macros
+
+Revision 1.86  2004/10/29 11:18:16  colinc
+Fixed flash handling for startup with scripts
+
+Revision 1.84  2004/10/28 10:12:11  colinc
+Renamed application as eLife
+
+Revision 1.82  2004/10/27 06:36:40  colinc
+Syncing Mac and Windows source repository
+
+Revision 1.79  2004/10/27 06:04:06  colinc
+Added CVS keywords to assist in version control
+
+27/Oct 09.57
+No direct code changes. Javadoc added to assist script writer.
+
+26/Oct 09.56
+Renamed eclipse project as eSmart in CVS
+Renamed main class as eSmart, launch scripts must be updated
+Added framework for script model
+Moved flash configuration to bootstrap.xml in datafiles directory
+Flash connection now happens when the system launches, rather than when the config file is read
+
+25/Oct 09.55
+Moved IR Code DB initialisation to correct location for scripted started rather than GUI
+Moved macros, calendar and ircodedb files to HOME/datafiles directory.
+
+24/Oct 09.54
+Extra guards for IR database
+Ensure AV commands are not cached
+
+24/Oct 09.53
+Added guards for incorrect IR database initialisation
+
+24/Oct 09.52
+Changes to flash client handler to ensure system will yield to other processes
+Added guards to ensure bad macro code will not kill the server
+Added guards in CG100 code to ensure empty strings will not cause crashes
+Added version number to startup
+
+21/Oct 09.51
+Improvements to flash client handler to improve performance
+
+20/Oct 09.48
+Rolled tutondo and comms back forwards
+Added abort all macros command when config is being re-read or system shutting down
+Macros moved to its own model instead of incorrectly handled in the Flash handler
+Added extra error checking for valid IP ports in configuration file
+
+16/Oct 09.47
+Added extra guards for GC100
+
+15/Oct
+Improved timed events reliability.
+Lowered to 1 min. intervals for launch time test.
+
+14/Oct 09.45
+Ensured tutudono only sends 6 characters in array
+
+14/Oct 09.44
+Rolled back tutondo model to version 09.39
+
+14/Oct 09.43
+Rolled back comms package to version 09.39
+
+14/Oct 09.42
+Updated event calendar XML to the latest version
+
+14/Oct
+Version 09.41
+Event calendar support for one off events added. Events with repeat will be treated as one off.
+Full event details are saved and sent to the flash client.
+
+13/Oct
+Version 09.40
+Fixed tutondo handshaking with IP connection
+
+13/Oct
+Version 09.39
+Fixed tutondo handshaking
+
+12/Oct
+Version 09.38
+Fixed bug with ModeChange command
+Fixed bug with CustomInput command used with Comfort
+
+9/Oct
+Version 09.37
+Added flash command to be sent on Comfort mode change (COMMAND="ModeChange EXTRA="mode"), along with the log messsage
+
+4/Oct
+Version 09.36
+Improved IR logging
+Improved IR GUI update
+
+3/Oct
+Version 09.35
+Added CONTENT support in macros for messages.
+
+2/Oct
+Version 09.34
+Added hideclose support in macros for messages.
+
+2/Oct
+Version 09.33
+IR DB handling re-written
+IRL supported completed
+HAL standby command support; indentical to off as HAL does not support full power off.
+Incorporate standby support for Tutondo. power off / on / standy; or    on / off. Off given as a seperate command with
+act as standby.
+
+30/Seo
+Version 09.32
+More resilience around macro file handling.
+
+30/Sep
+Version 09.31
+Ensure macros can contain Flash message events.
+Macros can now be triggered by messages created by external devices. See documentation V1.11 or above for details.
+Added running flag to macros.
+
+
+27/Sep
+Version 09.30
+Significant improvements on Cbus MMI handling.
+Macros now include a STATUS field in their header XML. See documentation V1.10 or above for details.
+Added set alarm functions for Comfort.
+Changed macro saving to work around windows bug.
+
+26/Sep
+Version 09.29
+Ensure configuration errors do not crash controller.
+Added more flash debugging.
+Added optional IP heartbeat if devices do not require it (code level, not configuration); may solve ip mixing up commands
+from different devices.
+Improved error messages
+GC100 changed to respond to AV:AV_DEVICE command name rather than listening for a DEVICE_NAME
+Added command to match and serial string in RAW_DEVICE and send it straight through as the Extra parameter (use key *)
+
+25/Sep
+Version 09.28
+Fixed class cast problems in Comfort
+Fixed HAL handshaking error, class cast problems
+
+25/Sep
+Version 09.27
+No longer required to specify input / monitored / output in the confuration file
+
+24/Sep
+Version 09.26
+Fixed TOGGLE_OUTPUT problem in Comfort (Bug #39)
+
+24/Sep
+Version 09.25
+GC100 complete
+HAL state query changed to use new base comms library (should be identical)
+Problem in flash handler not allowing the configuration file to be reloaded has been fixed
+
+21/Sep
+Version 09.24
+Various trace commands wording improved.
+GC100 output commands added.
+
+21/Sep
+Version 09-23
+Fixed caching problems causing issues on startup sync.
+Added goto start for macros (note lower case for consistency with pause).
+    <CONTROL KEY="" COMMAND="goto" EXTRA="start" />
+
+Macro abort executed from Macro stop or abort commands.
+Macro complete command added.
+Messages sent to flash for macro start and complete ( COMMAND="start" EXTRA="macroname" , command="finished" EXTRA="macroname");
+
+19/Sep
+Version 09-22
+Tutondo / HAL modified to use on / off commands rather than power on / off.
+Cache changed to store hash of each command sent when required (eg. audio ; state of power, + source device).
+Fixes illegal class cast exception.
+
+17/Sep
+Version 09-21
+HAL and GC100 now use correct cache interface; stop class cast exception.
+
+16/Sep
+Version 09-20
+Fixed HAL getting confused on polling messages.
+FIxed HAL restarting on lost command /poll sychronisation and lost connection.
+
+16/Sep
+Version 09-19
+Updated HAL poll command.
+
+15/Sep
+Version 09-18
+HAL command brought into sync with flash command.
+Intercom will now only send when changed.
+
+15/Sep
+Version 09-17
+Added support for application codes other than 38 for CBUS through comfort. Sending only, comfort will
+not report levels for application codes other than 38.
+
+14/Sep
+Removed E0 handling in HAL
+Changed macro writer to write whitespace formatted xml.
+Changed to use Version 1.0 of the jdom library for xml parsing.
+
+14/Sep
+Version 09-15
+Fixed CBUS handling of 0F escapes for switch on from flash client, makes on 100% on slider.
+Only specific commands will now be kept for handshaking, should speed up startup.
+Force HAL startup through comms, regardless if waiting for another command for acknowledgement.
+
+14/Sep
+Version 09-14
+Further changes for comfort command handshaking
+
+13/Sep
+Version 09-13
+Corrected bug with flash client controller not allowing config file to be reloaded.
+Ensured cbus always shows lights as on, when at a very low level.
+Enforced strict command handshaking for serial commands as Comfort does not appear to use hardware handshaking
+to correctly block from buffer overload.
+
+12/Sep
+Version 09-12
+Refactored many Comfort commands to be more meaningful.
+Updated documentation for new commands.
+Added comfort pulse and virtual output commands.
+Fixed comfort Cbus escape character handling.
+Changed Cbus direct to ensure a level is always sent; if unknown max is sent.
+
+7/Sep
+Version 09-11
+Implemented binding to different flash ports as specified in config file.
+Completed master / slave controllers.
+Use a line such as <SERVER IP="" PORT="9999" MASTER="127.0.0.1" MASTER_PORT="10000" /> to specify an instance is a slave.
+If a server is to be a master, or is in a single machine installation, remove the MASTER and MASTER_PORT entries.
+
+6/Sep
+Version 09-10
+Rewrite of HAL
+
+5/Sep
+Version 09-09
+Extended comms queue handling to support individual command acknowledgement, better device handshaking
+Rewrite of HAL
+
+26/Aug
+Completed move to RXTX libraries
+
+19/Aug
+Version 09-02.
+Added initial GC100 code.
+Refactored devices into single inherited class to improve testing and new implementation time.
+Added heirarchical parameter files. If no local parameter for a group has been specified, global parameters will be searched.
+Error handling for communications was improved.
+GUI harness sizes fine tuned.
+Console message should now be warning or above only.
+Documentation updated (version 1.3)
+
+17/Aug
+Version 09-01.
+Error messages improved.java.logfile
+
+13/Aug
+Added groups to configuration file.
+
+11/Aug
+Added ability to run with no GUI. Specify an N on the command line after the configuration file name.
+Moved all logging specification to properties file when GUI is not running.
+Specify the logging properties file using standard java methods.
+	java -Djava.util.logging.config.file=config/logging.properties HelloHouse ......
+
+9/Aug
+Changed harness to swing based.
+Added debug level fine tuning.
+Changed logging model to heirarchical.
+
+7/Aug
+Refactored ConfigHelper into the config package.
+
+6/Aug
+Finally fixed Cbus MMI handling.
+Fixed Cbus flash client startup.
+
+4/Aug
+Improved log handling.
+Fixed MMI startup problem.
+
+4/Aug
+Slight improvement to ramp handling. If user ramp input is complete before MMI sequence,a 100 or 0 % message will not be sent to flash
+ie. The slider will not bounce to either end then to the actual level.
+
+3/Aug
+Made on cbus command force lights to 100%.
+Fixed problem with state mismatch; hex / percent.
+
+3/Aug
+Now support multiple cbus application codes in cbus direct.
+CBUS_APPLICATION removed from cbus direct parameters; it is now considered the default if not specified on a device line.
+
+3/Aug
+CBus direct complete for single Cbus application
+
+24/Jul
+Documentation release
+
+18/Jul
+CBUS_UCM moved to application parameter rather than each line.
+Created BaseComms class to simplify creating/maintaining comms classes
+
+17/Jul
+Changed command queue handling; can now confirm out of sequence command responses from devices.
+
+15/Jul
+CBUS raw device built
+
+12/Jul
+X10 refactored into seperate device
+CBUS refacted into seperate device
+BaseDevice built to simplify Device implementation
+
+10/Jul
+Fixed X10 absolute level, will only function with LD11 X10 interface; not LW10.
+
+8/Jul
+Added X10 bright/dim commands
+First hit at X10 absolute level
+
+7/Jul
+Fixed macro save
+Added macro delete
+Added macro enabled flag; use standard COMMAND XML; with COMMAND=enabled EXTRA="Y" , "N"
+Made comms layer for comfort threadsafe, ensures analogue poll thread is safe.
+Analogue inputs are safe. Syntax in config file is :
+   <ANALOGUE ACTIVE="N" KEY="01" NAME="Lounge Light"   DISPLAY_NAME="LOUNGE_LIGHT" TYPE="Monitored" />
+A parameter can be added to the comfort model specification for analogue poll delay
+	ANALOGUE_POLL_VALUE
+
+5/Jul
+Fixed HAL polling
+Changed RAW_DEFS to CATALOGUE in config file
+Added ACTIVE flag to alert messages; if not present the message is considered Active.
+Changed HAL audio commands and INPUTS/FUNCTIONS catalogues to be the same as tutondo.
+		ie. For Send_Audio_Commands from flash, send the command string which should
+			be specified in the FUNCTIONS catalogue.
+
+4/Jul
+Fixed Tutondo issues
+Fixed serial timing
+Added macro start message
+
+
+30/Jun
+Switched order of tutondo startup  to do power then src.
+Added HAL polling for continous state reporting.
+
+22/Jun
+Changed cache to support muliple commands per device
+Changed tutondo commands to be grouped into one per action. eg. power on / off; volume up / down
+Command on/off toggle is cached specially, only one is stored, the other is erased if present
+
+21/Jun
+Fixed power dirty flag for tutondo
+
+14/Jun
+Added ACTIVE flag to item lines in the server config file
+Changed minimum interval for tutondo if none specified. Now 1 sec. Default now 3 seconds
+Removed software handshake instructions for serial port sending.
+Changed CurrentState to be aware of whether changes came from State or src
+
+
+10/Jun
+Added polling for status and current program in tutondo.
+Poll interval is set in the POLL_INTERVAL parameter in the server config file
+Analogue inputs now only transmit to client on changed value
+Flash output correctly functioning
+
+10/Jun
+Added analogue poll interval parameter for Comfort.
+For example the folling comfort parameter block sets an interval of 30 seconds
+{{{
+	<PARAMETERS>
+		<ITEM NAME="ANALOGUE_POLL_INTERVAL" VALUE="30" />
+	</PARAMETERS>
+}}}
+
+Fixed analouge thread ownership problem
+
+8/Jun
+Modifed handling of src codes from tutondo.
+Use flash config such as...
+{{{
+			<row cases="state:on">
+				<item type="button" icon="cd-music" command="src" extra="cd1" showOn="true" />
+				<item type="button" icon="cd-music" command="src" extra="cd2" showOn="true" />
+				<item type="button" icon="atom" command="src" extra="atom" showOn="true" />
+				<item type="button" icon="tv" command="src" extra="tv" showOn="true" />
+			</row>
+			<row cases="state:on,src:cd1|cd2">
+				<item type="button" icon="left-arrow" command="send_audio_command" extra="cd_rw" />
+				<item type="button" icon="media-play" command="send_audio_command" extra="cd_play" />
+				<item type="button" icon="right-arrow" command="send_audio_command" extra="cd_ff" />
+				<item type="button" icon="media-stop" command="send_audio_command" extra="cd_stop" />
+				<item type="button" icon="media-pause" command="send_audio_command" extra="cd_pause" />
+			</row>
+
+}}}
+The server config file maps these audio commands to program slots.
+{{{
+<RAW_DEFS NAME="Tutondo Functions">
+	<ITEM CODE="cd_play" VALUE="0" />
+	<ITEM CODE="cd_rw" VALUE="1" />
+....
+}}}
+
+6/Jun
+Ensure all tutondo commands are queued
+Moved Tutondo to use raw bytes for output
+Added comms methods for raw bytes as well as Strings
+
+5/Jun   (release Tutondo 0_05)
+Added state to tutondo
+Fixed startup handshaking for tutondo
+Corrected Tutondo transmit codes
+
+4/Jun
+Updated Tutondo string building
+
+1/Jun
+Updated Tutondo startup
+Tested Counters function
+Completed analogue polling
+Added support for a display name for each model, to be used in error reporting
+
+18/May
+Fixed startup bug that triggered phone ring
+
+17/May
+Fixed alarms
+Raw IP interface added.
+RAW_SERIAL refactored to RAW_INTERFACE to reflect IP + serial.
+Added CUSTOM_INPUT for serial transmit to service in type RAW_SERIAL.
+Fixed parsing of \n in config file.
+Added ACTIVE flag in Device config lines. Useful if you are building config files for various devices that need the same serial port.
+Added variables for raw serial output (see RAW_SERIAL) in config file for examples.
+Added STX ETX to raw serial to simplify configuration.
+Removed PREFIX entry in config file, it wasn't useful.
+
+Created release notes file

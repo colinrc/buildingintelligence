@@ -1,0 +1,204 @@
+/*
+ * Created on Dec 28, 2003
+ *
+*/
+package au.com.BI.Comms;
+
+import java.io.*;
+import java.util.logging.*;
+import java.net.*;
+
+import au.com.BI.Command.CommandQueue;
+
+/**
+ * @author Colin Canfield
+ * @version 1.0
+ * @updated 18-Jan-2004 08:54:55 PM
+ * Implements a multithreaded serial listener.
+ * Serial events are received on a seperate thread.
+ * Command line seperated strings are placed on the queue.
+ * The main controller can be notified to process this.
+ */
+public class IP extends BaseComms implements CommDevice
+{
+
+	protected Socket ipSocket;
+	protected IPListener ipListener = null;
+	protected InetAddress ipAddress;
+	protected int port;
+	protected IPHeartbeat ipHeartbeat;
+	protected int etxArray[] = null;
+	protected int stxArray[] = null;
+	protected int penultimateVals[] = null;
+	protected String deviceName = "";
+
+	
+	public IP ()  {
+
+		logger = Logger.getLogger(this.getClass().getPackage().getName());
+	}
+		
+	
+
+	public void setPenultimateArray(int[] penultimateVals) {
+		this.penultimateVals = penultimateVals;
+	}
+	
+	public boolean sendNextCommand() throws CommsFail{	
+		if (ipHeartbeat != null) ipHeartbeat.pause(true);
+		super.sendNextCommand();
+		if (ipHeartbeat != null) ipHeartbeat.pause(false);
+		return true;
+	}
+	
+	public boolean repeatLastCommand () throws CommsFail {
+		if (ipHeartbeat != null) ipHeartbeat.pause(true);
+		boolean returnCode = super.repeatLastCommand();
+		if (ipHeartbeat != null) ipHeartbeat.pause(false);
+		
+		return returnCode;
+	}
+	
+	public void setETXArray (int etxArray[]){
+		this.etxArray = etxArray;
+	}
+
+	public void setSTXArray (int stxArray[]){
+		this.stxArray = stxArray;
+	}
+	
+	public void setTransmitMessageOnBytes (int transmitMessageOnBytes) {
+		this.transmitMessageOnBytes = transmitMessageOnBytes;
+	}
+	
+	/**
+	 * 
+	 * @param ipAddressTxt The IP address
+	 * @param portNum The ip port
+	 * @throws au.com.BI.comms.ConnectionFail
+	 */
+	public void connect (String ipAddressTxt, String portNum,  CommandQueue commandList, int targetDeviceModel, boolean doHeartBeat, 
+			String heartbeatString,String deviceName)
+		throws ConnectionFail 
+		{
+			this.deviceName = deviceName;
+			try
+			{
+				commsGroup = new CommsGroup ("Comms group: " + deviceName);
+				commsGroup.setModelNumber(targetDeviceModel);
+				commsGroup.setCommandQueue(commandList);
+				
+				this.clearCommandQueue(); // if this is a reconnect make sure nothing is left over from the previous connection.
+
+				ipListener = new IPListener(commsGroup);
+				if (naturalPackets) ipListener.setNaturalPackets(true) ;
+
+				if (etxArray != null) ipListener.setEndBytes(etxArray);
+				if (penultimateVals != null) ipListener.setPenultimateVals(penultimateVals);
+				if (stxArray != null) ipListener.setStartBytes(stxArray);
+				if (transmitMessageOnBytes > 0) ipListener.setTransmitMessageOnBytes(transmitMessageOnBytes);
+
+				this.ipAddress = InetAddress.getByName (ipAddressTxt);
+				
+				ipListener.setTargetDeviceModel (targetDeviceModel);
+				this.port = Integer.parseInt(portNum); 
+				SocketAddress sockaddr = new InetSocketAddress(ipAddress, port);
+
+				logger.log (Level.FINEST,"Openning IP " + ipAddressTxt + " port " + portNum);
+				ipSocket = new Socket ();
+				int timeoutMs = 0;   // wait forever for new data
+		        ipSocket.connect(sockaddr, timeoutMs);
+				os = ipSocket.getOutputStream();
+				is = ipSocket.getInputStream();
+				
+				if (commsSend != null){
+						commsSend.setHandleEvents(false);
+						commsSend.notify();
+				}
+				commsSend = new CommsSend(commsGroup, deviceName);
+				commsSend.setInterCommandInterval(interCommandInterval);
+				commsSend.setOs(os);
+				commsSend.start();
+				
+				if (doHeartBeat) {
+					ipHeartbeat = new IPHeartbeat (commsGroup);
+					ipHeartbeat.setDeviceName(deviceName);
+					ipHeartbeat.setCommandQueue(commandList);
+					ipHeartbeat.setDeviceNumber(targetDeviceModel);
+					ipHeartbeat.setHeartbeatString (heartbeatString);
+					ipHeartbeat.setOutputStream(os);
+					ipHeartbeat.start();
+				}
+				
+				ipSocket.setKeepAlive(true);
+				ipListener.setInputStream (is);
+				ipListener.setDeviceName (deviceName);
+				ipListener.setCommandList(commandList);
+				if (this.transmitMessageOnBytes > 0)
+				    ipListener.setTransmitMessageOnBytes(this.transmitMessageOnBytes);
+
+				ipListener.setHandleEvents(true);
+				ipListener.start();
+				portOpen=true;
+		    } catch (UnknownHostException e) {
+	    			throw new ConnectionFail ("Could not find system " + e.getMessage());
+	    		} catch (SocketTimeoutException e) {
+		    		throw new ConnectionFail ("Could not connect " + e.getMessage());
+		    } catch (IOException e) {
+		    		throw new ConnectionFail (e.getMessage());
+		    } catch (NumberFormatException e) {
+		    		throw new ConnectionFail ("IP port is not a valid number " + e.getMessage());
+			    	 	
+		    }
+		}
+
+	public  boolean isConnected () {
+		return portOpen;
+	}
+
+	public void gotFeedback() {
+		super.gotFeedback();
+		if (ipHeartbeat != null && ipHeartbeat.pausing ){
+			ipHeartbeat.pause(false);
+		}
+	}
+	
+	public void close () throws ConnectionFail 
+	{
+		if (ipSocket != null) {
+			if (ipHeartbeat != null) {
+				ipHeartbeat.setHandleEvents(false);
+			}
+			try {
+			// close the i/o streams.
+				if (os != null) {
+				    synchronized (os) {
+				    	if (os != null) os.close();
+				    }
+			    }
+				if (ipListener != null) {
+					ipListener.setHandleEvents(false);
+				}
+				if (is != null) is.close();
+			} catch (IOException e) {
+				try {
+					ipSocket.close();
+				} catch (IOException ie){
+					ie.printStackTrace();
+				};
+				portOpen = false;
+				throw new ConnectionFail ("Failure closing port",e);
+			}
+			
+			// Close the port.
+			try {
+				ipSocket.close();
+			} catch (IOException ie){
+				ie.printStackTrace();
+			};
+			portOpen = false;
+		}
+
+	}
+	
+}

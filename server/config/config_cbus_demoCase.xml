@@ -1,0 +1,68 @@
+<CONFIG lastUpdated="2004-03-18" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="eLife_Config_Schema.xsd">
+        <DESC>The BI demonstration CBUS system</DESC>
+ 
+        !-- ______________________________________  CBUS DEFS  ____________________  -->
+        <DEVICE ACTIVE="N" DEVICE_TYPE="CBUS" DESCRIPTION="CBUS Demo Case">
+                <CONNECTION>
+                        <SERIAL ACTIVE="N" PORT="COM1" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" FLOW="NONE"/>
+                        <SERIAL ACTIVE="N" PORT="/dev/tty.USB Serial" BAUD="9600" STOP_BITS="1" PARITY="N" DATA_BITS="8" SUPPORTS_CD="N" FLOW="RTSCTS" />
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.70" PORT="4999"/>
+                        <IP ACTIVE="N" IP_ADDRESS="192.168.1.6" PORT="10001"/>
+                        <IP ACTIVE="Y" IP_ADDRESS="127.0.0.1" PORT="5004"/>
+                </CONNECTION>
+                
+                <PARAMETERS>
+                	<!-- ITEM NAME="POLL_TEMP_INTERVAL" VALUE="5" / -->
+                	<ITEM NAME="COMPLETE_DIM_TIME" VALUE="5" />
+                	<ITEM NAME="DECIMAL_KEYS" VALUE="Y" />
+                </PARAMETERS>
+                
+                <CBUS>
+                    <LIGHT_CBUS ACTIVE="N" KEY="11" RELAY="Y"  NAME="Relay 10" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>
+                    
+                        <LIGHT_CBUS ACTIVE="Y" KEY="1" RELAY="Y"  NAME="Relay 1" DISPLAY_NAME="DINING_LIGHT" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="2" RELAY="Y"  NAME="Relay 2" DISPLAY_NAME="RELAY2" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="3" RELAY="Y"  NAME="Relay 3" DISPLAY_NAME="RELAY3" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="4" RELAY="Y"  NAME="Relay 4" DISPLAY_NAME="RELAY4" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="5" RELAY="Y"  NAME="Relay 5" DISPLAY_NAME="RELAY5" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="7" RELAY="Y"  NAME="Relay 6" DISPLAY_NAME="RELAY6" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="8" RELAY="Y"  NAME="Relay 7" DISPLAY_NAME="RELAY7" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="9" RELAY="Y"  NAME="Relay 8" DISPLAY_NAME="RELAY8" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="10" RELAY="Y"  NAME="Relay 9" DISPLAY_NAME="RELAY9" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="11" RELAY="Y"  NAME="Relay 10" DISPLAY_NAME="RELAY10" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="13" RELAY="Y"  NAME="Relay 11" DISPLAY_NAME="RELAY11" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="16" RELAY="Y"  NAME="Relay 12" DISPLAY_NAME="RELAY12" POWER_RATING="100"/>
+     
+                        <LIGHT_CBUS ACTIVE="Y" KEY="17"   NAME="Dimmer 1" DISPLAY_NAME="DIMMER1" POWER_RATING="100"/>                      
+                        <LIGHT_CBUS ACTIVE="N" KEY="22"   NAME="Dimmer 2" DISPLAY_NAME="DIMMER2" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="N" KEY="23"   NAME="Dimmer 3" DISPLAY_NAME="DIMMER3" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="18"   NAME="Dimmer 4" DISPLAY_NAME="DIMMER4" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="19"   NAME="Dimmer 5" DISPLAY_NAME="DIMMER5" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="20"   NAME="Dimmer 6" DISPLAY_NAME="DIMMER6" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="21"   NAME="Dimmer 7" DISPLAY_NAME="DIMMER7" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="24"   NAME="Dimmer 8" DISPLAY_NAME="DIMMER8" POWER_RATING="100"/>
+
+                        <LIGHT_CBUS ACTIVE="N" KEY="2"   NAME="Reflection 1" DISPLAY_NAME="GARAGE_LIGHT" POWER_RATING="100"/>                      
+                        <LIGHT_CBUS ACTIVE="N" KEY="3"   NAME="Reflection 2" DISPLAY_NAME="REFLECTION2" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="4"   NAME="Reflection 3" DISPLAY_NAME="REFLECTION3" POWER_RATING="100"/>
+                        <LIGHT_CBUS ACTIVE="Y" KEY="5"   NAME="Reflection 4" DISPLAY_NAME="REFLECTION4" POWER_RATING="100"/>
+                                                
+                        <LABEL ACTIVE="N" KEY="22"   NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT_LABEL_KEY = "ON" />
+                        <LABEL ACTIVE="Y" KEY="22" NAME="DLT 1"  DISPLAY_NAME="DLT1" DEFAULT_LABEL_KEY="ON" />
+                        
+                        <LABEL ACTIVE="Y" KEY="23"   NAME="DLT 2" DISPLAY_NAME="DLT_2" DEFAULT_LABEL_KEY="CD1"  />
+                        <LABEL ACTIVE="Y" KEY="2"   NAME="DLT 3"  DISPLAY_NAME="DLT3"  GENERATE_DIMMER_VALS="N"   DEFAULT_LABEL_KEY="FRONT_LIGHT" />
+                        <LABEL ACTIVE="Y" KEY="3"   NAME="DLT 4"  DISPLAY_NAME="DLT4"  />
+                        <LABEL ACTIVE="Y" KEY="200"   NAME="DLT 5" RELAY="Y" DISPLAY_NAME="DLT5"  />
+                        <LABEL ACTIVE="Y" KEY="201"   NAME="DLT 6" RELAY="Y" DISPLAY_NAME="DLT6" />
+                        <LABEL ACTIVE="Y" KEY="202"   NAME="DLT 7"  RELAY="Y" DISPLAY_NAME="DLT7" DEFAULT_LABEL_KEY="VOLUP"  />
+                        <LABEL ACTIVE="Y" KEY="220"   NAME="DLT 8"   RELAY="Y" DISPLAY_NAME="DLT8"  DEFAULT_LABEL_KEY="VOLDN" />
+
+                       <SENSOR ACTIVE="N" KEY="25" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
+                        <SENSOR ACTIVE="N" KEY="4" CHANNEL="01" UNITS="00" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
+  
+                        <TEMPERATURE ACTIVE="Y" KEY="110" NAME="Temp Sensor" DISPLAY_NAME="TEMP_SENSOR" />
+                     
+               </CBUS>
+        </DEVICE>
+</CONFIG>

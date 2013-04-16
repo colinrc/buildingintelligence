@@ -1,0 +1,5 @@
+import sys
+import time
+print "start Hi there from timer test"
+a = do.getLastAccessTimeDuration("LOUNGE_LIGHT","minute")
+print a

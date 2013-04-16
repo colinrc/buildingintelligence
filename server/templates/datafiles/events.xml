@@ -1,0 +1,15 @@
+<events>
+	<event title="Test Event 1" description="once on 10 october" date="2004-10-10" time="09:00:00" macroName="" />
+	<event title="Test Event 2" description="once on 27 september" date="2004-09-27" time="09:00:00" macroName="" />
+	<event title="Test Event 3" description="once on 15 december" date="2004-12-15" time="09:00:00" macroName="" />
+	<event title="Test Event 4" description="once on 1 april" date="2004-04-01" time="09:00:00" macroName="" />
+	<event title="Test Event 5" description="every second tuesday" startDate="2004-01-01" endDate="2004-12-31" eventType="weekly" time="09:00:00" macroName="">
+		<pattern sun="0" sat="0" fri="0" thu="0" wed="0" tue="1" mon="0" recur="2" />
+	</event>
+	<event title="Test Event 6" description="third wednesday of each month" startDate="2004-01-01" endDate="2004-12-31" eventType="monthly" time="09:00:00" macroName="">
+		<pattern day="wed" week="3" recur="1" />
+	</event>
+	<event title="Test Event 7" description="last friday of april" startDate="2004-01-01" endDate="2004-12-31" eventType="yearly" time="09:00:00" macroName="">
+		<pattern day="fri" week="5" month="3" />
+	</event>
+</events>
