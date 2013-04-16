@@ -1,0 +1,25 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eLifeTerminate", "eLifeTerminate\eLifeTerminate.csproj", "{5B8B47DF-BB0C-4A47-920F-CD8954099E39}"
+EndProject
+Project("{B900F1C2-3D47-4FEC-85B3-04AAF18C3634}") = "eLifeTerminateCAB", "eLifeTerminateCAB\eLifeTerminateCAB.vddproj", "{AA14930E-4DF6-4356-8CB7-384F43221A52}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5B8B47DF-BB0C-4A47-920F-CD8954099E39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B8B47DF-BB0C-4A47-920F-CD8954099E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B8B47DF-BB0C-4A47-920F-CD8954099E39}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5B8B47DF-BB0C-4A47-920F-CD8954099E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B8B47DF-BB0C-4A47-920F-CD8954099E39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B8B47DF-BB0C-4A47-920F-CD8954099E39}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{AA14930E-4DF6-4356-8CB7-384F43221A52}.Debug|Any CPU.ActiveCfg = Debug
+		{AA14930E-4DF6-4356-8CB7-384F43221A52}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
