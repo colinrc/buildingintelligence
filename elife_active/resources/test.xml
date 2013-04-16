@@ -1,0 +1,75 @@
+<application lastUpdated="2006-03-07">
+	<room name="Lounge Room">
+			<group name="Lights" icons="light-bulb-off,light-bulb">
+					<control name="Light 1" key="RELAY_01" type="toggle" extras="off,on"/>
+					<control name="Interactive" key="DIMMER_01" type="slider" extras="off,on" interactive="true"/>
+					<control name="Non Interactive" key="DIMMER_02" type="slider" extras="off,on" interactive="false"/>
+					<control name="Light 2" key="RELAY_02" type="toggle" extras="off,on"/>
+			</group>
+			<group name="Blinds" icons="blinds-closed,blinds-open">
+					<control name="North Window" key="LOUNGE_BLIND_1" type="toggle" extras="down,up"/>
+					<control name="West Window" key="LOUNGE_BLIND_2" type="toggle" extras="down,up"/>
+			</group>
+			<group name="Fans" icons="fan-off,fan">
+					<control name="Fan" key="FAN_1" type="toggle" extras="off,on"/>
+			</group>
+			<group name="Heaters" icons="heater-off,heater">
+					<control name="Heater" key="HEATER_1" type="toggle" extras="off,on"/>
+			</group>
+			<group name="Speakers" icons="volume-down,volume-up">
+					<control name="Center Speakers" key="LOUNGE_SPEAKER_1" type="toggle" extras="off,on"/>
+					<control name="Rear Speakers" key="LOUNGE_SPEAKER_2" type="toggle" extras="off,on"/>
+			</group>
+	</room>
+	<room name="Bedroom">
+			<group name="Lights" icons="light-bulb-off,light-bulb">
+					<control name="Light 1" key="Light_1" type="toggle" extras="off,on"/>
+					<control name="Light 2" key="Light_2" type="toggle" extras="off,on"/>
+					<control name="Light 3" key="Light_3" type="toggle" extras="off,on"/>
+			</group>
+			<group name="Blinds" icons="blinds-closed,blinds-open">
+					<control name="Blind 1" key="Blind_1" type="toggle" extras="down,up"/>
+					<control name="Blind 2" key="Blind_2" type="toggle" extras="down,up"/>
+					<control name="Blind 3" key="Blind_3" type="toggle" extras="down,up"/>
+			</group>
+	</room>
+		<room name="Kitchen">
+			<group name="Lights" icons="light-bulb-off,light-bulb">
+					<control name="Light 1" key="Light_1" type="toggle" extras="off,on"/>
+					<control name="Light 2" key="Light_2" type="toggle" extras="off,on"/>
+					<control name="Light 3" key="Light_3" type="toggle" extras="off,on"/>
+			</group>
+			<group name="Speakers" icons="volume-down,volume-up">
+					<control name="Speaker 1" key="Speaker_1" type="toggle" extras="off,on"/>
+					<control name="Speaker 2" key="Speaker_2" type="toggle" extras="off,on"/>
+					<control name="Speaker 3" key="Speaker_3" type="toggle" extras="off,on"/>
+			</group>
+			<group name="Blinds" icons="blinds-closed,blinds-open">
+					<control name="Blind 1" key="Blind_1" type="toggle" extras="down,up"/>
+					<control name="Blind 2" key="Blind_2" type="toggle" extras="down,up"/>
+					<control name="Blind 3" key="Blind_3" type="toggle" extras="down,up"/>
+			</group>
+	</room>
+		<room name="Outdoors">
+			<group name="Lights" icons="light-bulb-off,light-bulb">
+					<control name="Light 1" key="Light_1" type="toggle" extras="off,on"/>
+					<control name="Light 2" key="Light_2" type="toggle" extras="off,on"/>
+					<control name="Light 3" key="Light_3" type="toggle" extras="off,on"/>
+			</group>
+			<group name="Sprinklers" icons="sprinkler-off,sprinkler">
+					<control name="Sprinkler 1" key="Sprinkler_1" type="toggle" extras="off,on"/>
+					<control name="Sprinkler 2" key="Sprinkler_2" type="toggle" extras="off,on"/>
+					<control name="Sprinkler 3" key="Sprinkler_3" type="toggle" extras="off,on"/>
+			</group>
+			<group name="Sprinklers 2" icons="sprinkler2-off,sprinkler2">
+					<control name="Sprinkler 4" key="Sprinkler_4" type="toggle" extras="off,on"/>
+					<control name="Sprinkler 5" key="Sprinkler_5" type="toggle" extras="off,on"/>
+					<control name="Sprinkler 6" key="Sprinkler_6" type="toggle" extras="off,on"/>
+			</group>
+			<group name="Doors" icons="door-closed,door-open">
+					<control name="Door 1" key="Door_1" type="toggle" extras="off,on"/>
+					<control name="Door 2" key="Door_2" type="toggle" extras="off,on"/>
+					<control name="Door 3" key="Door_3" type="toggle" extras="off,on"/>
+			</group>
+	</room>
+</application>

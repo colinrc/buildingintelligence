@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry
+        excluding=".svn/|au/.svn/|au/com/.svn/|au/com/BI/.svn/|au/com/BI/GUI/.svn/"
+        kind="src" path="src"/>
+    <classpathentry
+        excluding=".svn/|images/.svn/|images/base/.svn/|images/elife_active/.svn/|images/highlight/.svn/|images/base/Thumbs.db|images/elife_active/Thumbs.db|images/highlight/Thumbs.db"
+        kind="src" path="resources"/>
+    <classpathentry exported="true" kind="src" path="/eLife_Java_Client"/>
+    <classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+    <classpathentry kind="lib" path="D:/BI/eLife_Java_Client/ext/kxml2-2.2.2.jar"/>
+    <classpathentry kind="lib" path="D:/BI/eLife_Java_Client/ext/kxml2-min-2.2.2.jar"/>
+    <classpathentry kind="output" path="bin"/>
+</classpath>
