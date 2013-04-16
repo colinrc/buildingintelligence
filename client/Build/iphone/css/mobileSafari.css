@@ -1,0 +1,118 @@
+body {
+	font-family: Helvetica;
+	font-size: 12px;
+	color: #ffffff;
+	-webkit-text-size-adjust: none;
+	background-color: #52688D;
+	margin: 0;
+	padding: 5px;
+}
+
+a {
+	text-decoration: none;
+	color: #000000;
+}
+
+h1, h2, h3 {
+	text-align: center;
+	color: #ffffff;
+	margin: 0;
+}
+
+h1 {
+	font-size: 16px;
+	margin-bottom: 5px;
+}
+
+div#debug {
+	height: 50%;
+	overflow-y: scroll;
+}
+
+div#canvas {
+	width: 100%;
+	height: 100%;
+	min-height: 800px;
+}
+
+ul#boxList {
+	margin: 0 auto 0 auto;
+	padding: 0;
+	width: 80%;
+	list-style: none;
+	text-align: center;
+}
+
+ul#boxList li a {
+	display: block;
+	line-height: 22px;
+	font-size: 16px;
+	text-align: center;
+	border: 1px solid #555555;
+	-webkit-border-radius: 5px;
+	background: #eeeeee;
+	padding: 5px;
+	margin: 15px;
+}
+
+ul#boxlist li.backButton {
+	width: 100px;
+	margin: 0 auto 0 auto;
+}
+
+ul#tabList {
+	list-style: none;
+	margin: 0 10px 0 10px;
+	padding: 0;
+	text-align: center;
+}
+
+ul#tabList li {
+	display: block;
+	float: left;
+	width: 40px;
+	height: 40px;
+	margin: 0 3px 0 3px;
+	padding: 4px 4px 0 4px;
+	border: 1px solid #3B5887;
+	-webkit-border-top-left-radius: 5px;
+	-webkit-border-top-right-radius: 5px;
+	background-color: #3B5887;
+}
+
+ul#tabList li.on {
+	border: 1px solid #597096;
+	background-color: #597096;
+}
+
+ul#tabList li a img {
+	border: none;
+	height: 90%;
+}
+
+div#tab {
+	border: 1px solid #597096;
+	-webkit-border-radius: 5px;
+	background-color: #597096;
+	clear: left;
+	padding: 10px;
+}
+
+div#tab label {
+	font-size: 14px;
+	display: block;
+	margin-top: 5px;
+}
+
+div#tab a.button {
+	display: block;
+	background-color: #7C90B0;
+	-webkit-border-radius: 5px;
+	text-align: center;
+	padding: 4px;
+}
+
+div#tab a.button img {
+	height: 35px;
+	border: none;
+}

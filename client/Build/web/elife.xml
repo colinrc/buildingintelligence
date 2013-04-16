@@ -1,0 +1,13 @@
+<client>
+	<setting name="clientName" value="webClient"/>
+	<setting name="serverProtocol" value="https" />
+	<setting name="serverAddress" value="127.0.0.1" />
+	<setting name="serverPort" value="8443" />
+	<setting name="applicationXML" value="sample.xml" />
+	<setting name="fullScreen" value="false" />
+	<setting name="hideMouseCursor" value="false" />
+	<setting name="debugMode" value="true" />
+	<setting name="webRefreshRate" value="5" />
+	<setting name="allowScale" value="true" />
+	<setting name="securityID" value="09du3q23487" />
+</client>

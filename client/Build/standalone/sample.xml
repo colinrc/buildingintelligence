@@ -1,0 +1,705 @@
+<application lastUpdated="2005-10-31">
+	<settings>
+		<common>	
+			<setting name="showDropShadows" value="true" />
+			<setting name="modelBlur" value="true" />
+
+			<setting name="integratorHtml" value="lib/html/integrator.html" />
+		</common>
+	</settings>
+	<sounds>
+		<sound name="ding" file="sounds/ding.mp3" volume="40" />
+		<sound name="alarm" file="sounds/CTU24.mp3" volume="40" />
+	</sounds>
+	<statusBar>
+		<group name="Lights" icon="light-bulb" windowWidth="300" windowHeight="300" windowBgOpacity="60" windowBgColour1="0xFFCC00" windowBgColour2="0x990000" windowCornerRadius="10" windowBorderColour="0xCC0000" windowBorderWidth="2" windowShadowOffset="10" show="on" hide="off">
+			<control key="ENSUITE_LIGHT" />
+			<control key="ENSUITE_LV_LIGHT" />
+			<control key="LAUNDRY_LIGHT" />
+			<control key="ENTRY_LIGHT" />
+			<control key="LIVING_LIGHT1" />
+			<control key="LIVING_LIGHT2" />
+			<control key="LIVING_LIGHT3" />
+			<control key="LIVING_LIGHT4" />
+			<control key="DINING_LIGHT" />
+			<control key="KITCHEN_LIGHT" />
+			<control key="MASTER_BED_LIGHT" />
+			<control key="GUEST_TOILET_LIGHT" />
+			<control key="WIR_LIGHT" />
+			<control key="GARAGE_LIGHT" />
+			<control key="BED1_LIGHT" />
+			<control key="BED2_LIGHT" />
+			<control key="BED3_LIGHT" />
+			<control key="ENSUITE2_LIGHT" />
+			<control key="ENSUITE2_LV_LIGHT" />
+			<control key="BATH_LIGHT" />
+			<control key="BATH_LV_LIGHT" />
+		</group>
+		<group name="Heaters" icon="heater" show="on" hide="off">
+			<control key="ENSUITE_1_HEAT" />
+			<control key="ENSUITE_2_HEAT" />
+			<control key="ENSUITE2_1_HEAT" />
+			<control key="ENSUITE2_2_HEAT" />
+			<control key="BATH_1_HEAT" />
+			<control key="BATH_2_HEAT" />
+		</group>
+		<group name="Fans" icon="fan" show="on" hide="off">
+			<control key="ENSUITE_FAN" />
+			<control key="ENSUITE2_FAN" />
+			<control key="BATH_FAN" />
+		</group>
+		<group name="Audio" icon="music-note" show="on" hide="off">
+			<control key="LIVING_AUDIO" />
+			<control key="DINING_AUDIO" />
+			<control key="KITCHEN_AUDIO" />
+			<control key="MASTER_BED_AUDIO" />
+			<control key="BED1_AUDIO" />
+			<control key="BED2_AUDIO" />
+			<control key="BED3_AUDIO" />
+		</group>
+		<group name="TV" icon="tv" show="on" hide="off">
+			<control key="LIVING_TV" />
+			<control key="MASTER_BED_TV" />
+		</group>
+	</statusBar>
+	<logging>
+		<group name="Lights" icon="light-bulb" listenTo="on,off" label="%room%: %name%" timeformat="HH:mm d mmmm yyyy" type="tally">
+			<control key="ENSUITE_LIGHT" />
+		</group>
+		<group name="PIRs" icon="green-man" listenTo="on" label="%room% PIR" timeformat="HH:mm d mmmm yyyy" type="tally">
+			<control key="ENTRY_PIR" />
+		</group>
+		<group name="Doors" icon="door-open" listenTo="on,off" label="%name% opened %timestamp%,%name% closed %timestamp%" type="log" timeformat="HH:mm d mmmm yyyy">
+			<control key="GARAGE_DOOR" />
+		</group>
+		<group name="Test" icon="gears" type="web" url="http://www.sparkos.com/" />
+	</logging>
+	<appsBar>
+		<icon name="Air Con" icon="aircon" func="openWindow" canOpen="superuser">
+			<window>
+				<tab name="Lights &amp; Fan" icon="light-bulb">
+					<control name="Ground Floor Lights" key="ENSUITE_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
+					<control name="Main Light" key="ENSUITE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+					<control name="LV Light" key="ENSUITE_LV_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+					<control name="Fan" key="ENSUITE_FAN" type="onOff" icons="fan-off,fan" />
+				</tab>
+				<tab name="Heaters" icon="heater">
+					<control name="1st Heat Lamp" key="ENSUITE_1_HEAT" type="onOff" icons="heater-off,heater" />
+					<control name="2nd Heat Lamp" key="ENSUITE_2_HEAT" type="onOff" icons="heater-off,heater" />
+					<control name="test" key="ENSUITE_AC" type="airCon" icons="aircon-off,aircon" />
+				</tab>
+			</window>
+		</icon>
+		<icon name="TV" icon="tv" func="toggleTV" canOpen="" />
+		<icon name="Web" icon="atom" func="openBrowser" canOpen="" />
+		<icon name="Logs" icon="notepad" func="openLogs" canOpen="" />
+		<icon name="Calendar" icon="calendar" func="openCalendar" canOpen="" />
+		<icon name="Control Panel" icon="gears" func="openControlPanel" canOpen="" />
+		<icon name="Logout" icon="door-open" func="webLogout" />
+		<icon name="Authenticate" icon="locked" func="openAuthentication" buttonBgColour="0xCC0000" buttonBorderColour="0xEE0000" />
+	</appsBar>
+	<calendar tabPosition="bottom">
+		<categories>
+			<category name="Birthday" icon="light-bulb" />
+			<category name="Appointment" icon="videocamera" />
+			<category name="Reminder" icon="fireplace" />
+		</categories>
+		<window>
+			<tab label="Today" view="today" icon="calendar" />
+			<tab label="Watering" view="filtered" macro="watering" icon="sprinkler">
+				<zone key="WATER_FRONT_LAWN" label="Front lawn" />
+				<zone key="WATER_BACK_LAWN" label="Back lawn" />
+				<zone key="WATER_BACK_GARDEN" label="Back garden" />
+			</tab>
+			<tab label="Macros" view="macros" macro="*" icon="atom" />
+		</window>
+	</calendar>
+	<tv>
+		<close command="c:/progra~1/videolan/vlc/vlc.exe --one-instance vlc:quit"/>
+		<macro name="tv" command='C:\progra~1\videolan\vlc\vlc --one-instance dshow:// :dshow-vdev="713x BDA Analog Capture" :dshow-adev="713x BDA Analog Audio Capture" :dshow-caching=200 :dshow-chroma="RV24" :no-dshow-config :no-dshow-tuner :dshow-tuner-channel=$chan :dshow-tuner-country=61 :dshow-tuner-input=2 --video-on-top --no-video-deco --intf dummy --dummy-quiet' />
+	        <macro name="web" command='C:\progra~1\videolan\vlc\vlc --one-instance http://test.com/$file --video-on-top --no-video-deco --intf dummy --dummy-quiet' />
+		<control>
+			<row>
+				<item type="button" icon="chan-abc" macro="tv" chan="9" default="true" />
+		                <item type="button" label="Seven"  macro="tv" chan="11" />
+			</row>
+			<row>
+				<item type="button" icon="chan-abc" command="vlc --lots of options --one-instance" />
+				<item type="button" label="Seven" command="vlc --lots of options --one-instance" />
+			</row>
+			<row>
+				<item type="button" icon="chan-abc"  macro="web" file="test.mpg" />
+              			<item type="button" label="Seven" macro="web" file="test2.mpg" /> 
+			</row>
+			<row>
+				<item type="button" icon="chan-abc" command="vlc --lots of options --one-instance" />
+				<item type="button" label="Seven" command="vlc --lots of options --one-instance" />
+			</row>
+			<row>
+				<item type="volumeControl" />
+			</row>
+			<row>
+				<item type="button" icons="speaker-off,speaker" commands="mute,unmute" />
+			</row>
+		</control>
+	</tv>
+	<controlPanelApps>
+		<app label="Calculator" program="calc.exe" />
+		<app label="Fan On" command="E3" extra="I" />
+		<app label="Fan Off" command="E3" extra="O" />
+		<app label="Button 1 Blue" command="L1" extra="B" />
+		<app label="Button 1 Yellow" command="L1" extra="Y" />
+		<app label="Button 1 Off" command="L1" extra="0" />
+		<app label="Button 2 Blue" command="L2" extra="B" />
+		<app label="Button 2 Yellow" command="L2" extra="Y" />
+		<app label="Button 2 Off" command="L3" extra="0" />
+		<app label="Button 3 Blue" command="L3" extra="B" />
+		<app label="Button 3 Yellow" command="L3" extra="Y" />
+		<app label="Button 3 Off" command="L3" extra="0" />
+		<app label="Halo Bright" command="B1" extra="9" />
+		<app label="Halo Dim" command="B1" extra="5" />
+		<app label="Audio On" command="A" extra="I" />
+		<app label="Audio Off" command="A" extra="O" />
+	</controlPanelApps>
+	<musicLibrary>
+		<setting name="sortBy" value="artist" />
+		<setting name="coverSize" value="100" />
+	</musicLibrary>
+	<property>
+		
+		<zone name="Downstairs" map="downstairs.swf" cycle="false" alignment="center">
+			<rooms>
+				<room name="Ensuite" poly="443,219,443,296,579,296,579,153,477,153,477,219">
+					<window>
+						<tab name="Test" icon="atom:test">
+							<control name="Macro Test" type="macro" args="OFFICE_LIGHT,40,Office Lights" />
+						</tab>
+						<tab name="Lights &amp; Fan" icon="light-bulb:2">
+							<control name="Ground Floor Lights" key="ENSUITE_LIGHT" type="slider" icons="light-bulb-off,light-bulb" />
+							<control name="Test multi-key" keys="ENSUITE_LIGHT1,ENSUITE_LIGHT2" type="slider2" icons="light-bulb-off,light-bulb" />
+							<control name="Main Light" key="ENSUITE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+							<control name="LV Light" key="ENSUITE_LV_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+							<control name="Fan" key="ENSUITE_FAN" type="onOff" icons="fan-off,fan" />
+						</tab>
+						<tab name="Heaters" icon="heater">
+							<control name="1st Heat Lamp" key="ENSUITE_1_HEAT" type="onOff" icons="heater-off,heater" />
+							<control name="2nd Heat Lamp" key="ENSUITE_2_HEAT" type="onOff" icons="heater-off,heater" />
+						</tab>
+						<tab name="Raw Key Pad">
+							<control name="test" key="asd" type="rawKeyPad" />
+						</tab>
+						<tab name="Squeeze Control" icon="music-note">
+							<control name="Squeeze Control" key="Desktop" type="squeezePanel" />
+						</tab>
+						<tab name="Test A/C" icon="aircon">
+							<control name="AC System" key="AC_SYSTEM" type="acRoomPanel" icons="aircon-off,aircon" />
+						</tab>
+					</window>
+					<alerts x="520" y="190">
+						<alert name="Lights" keys="ENSUITE_LIGHT,ENSUITE_LV_LIGHT" icon="light-bulb" />
+					</alerts>
+					<alerts x="520" y="260">
+						<alert name="Heater" keys="ENSUITE_1_HEAT,ENSUITE_2_HEAT" icon="heater" />
+						<alert name="Fan" keys="ENSUITE_FAN" icon="fan" />
+					</alerts>
+				</room>
+				<room name="Laundry" poly="328,389,396,389,396,343,328,343">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Laundry Light" key="LAUNDRY_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+					</window>
+					<alerts>
+						<alert name="Lights" keys="LAUNDRY_LIGHT" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="Entry" poly="165,298,328,298,328,343,396,343,396,286,377,286,377,201,310,201,310,240,214,240,214,201,165,201">
+					<window windowHeight="475">
+						<tab name="Lights" icon="light-bulb">
+							<control name="Entry Light" key="ENTRY_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Front Gate" icon="videocamera">
+							<control name="Front Gate Video" type="frontGateVideo" />
+						</tab>
+					</window>
+					<alerts>
+						<alert name="Lights" keys="ENTRY_LIGHT" icon="light-bulb" />
+					</alerts>
+					<doors>
+						<door name="Front Door" thickness="5" pos="185,297,246,297" key="FRONT_GATE" colour1="0xDB0000" colour2="0x3383D5" />
+					</doors>
+				</room>
+				<room name="Living Room" poly="165,201,377,201,377,168,339,168,339,9,136,9,136,29,129,165" switchZone="Living Room">
+					<doors>
+						<door name="Lounge Window" pos="161,6,95,5" key="LIVING_WINDOW" colour="0x3383D5" />
+					</doors>
+					<alerts>
+						<alert name="TV" keys="LIVING_TV" icon="tv" />
+						<alert name="Audio" keys="LIVING_AUDIO" icon="music-note" />
+						<alert name="Lights" keys="LIVING_LIGHT1,LIVING_LIGHT2,LIVING_LIGHT3,LIVING_LIGHT4" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="Dining Room" poly="25,30,25,46,4,67,4,130,25,153,25,165,129,165,136,29">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Dining Light" key="DINING_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Audio" icon="music-note">
+							<control name="Audio" keys="DINING_AUDIO,TUNER_A,TUNER_B" type="audioPanel_new" icon="music-note" />
+						</tab>
+					</window>
+					<alerts>
+						<alert name="Lights" keys="DINING_LIGHT" icon="light-bulb" />
+						<alert name="Audio" keys="DINING_AUDIO" icon="music-note" />
+					</alerts>
+				</room>
+				<room name="Kitchen" poly="25,165,25,339,42,339,63,360,124,360,147,338,165,338,165,201,129,165">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Kitchen Light" key="KITCHEN_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Audio" icon="music-note">
+							<control name="Audio" key="KITCHEN_AUDIO" type="audioPanel" icon="music-note" />
+						</tab>
+					</window>
+					<alerts>
+						<alert name="Lights" keys="KITCHEN_LIGHT" icon="light-bulb" />
+						<alert name="Audio" keys="KITCHEN_AUDIO" icon="music-note" />
+					</alerts>
+					<doors>
+						<door name="Back Door" pos="21,283,6,34" key="BACK_DOOR" colour="0xDB0000" />
+					</doors>
+				</room>
+				<room name="Master Bedroom" poly="339,9,339,168,377,168,377,153,528,153,528,9">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Master Bed Light" key="MASTER_BED_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Audio" icon="music-note">
+							<control name="Audio" keys="MASTER_BED_AUDIO" type="audioPanel" icon="music-note" />
+						</tab>
+						<tab name="TV" icon="tv">
+							<control name="TV" key="MASTER_BED_TV" type="tvControl" icon="tv" />
+						</tab>
+					</window>
+					<alerts>
+						<alert name="Lights" keys="MASTER_BED_LIGHT" icon="light-bulb" />
+						<alert name="Audio" keys="MASTER_BED_AUDIO" icon="music-note" />
+						<alert name="TV" keys="MASTER_BED_TV" icon="tv" />
+					</alerts>
+				</room>
+				<room name="Guest Toilet" poly="377,219,377,285,396,285,396,296,441,296,441,219">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Guest Toilet Light" key="GUEST_TOILET_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+					</window>
+					<alerts>
+						<alert name="Lights" keys="GUEST_TOILET_LIGHT" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="Walk-in Wardrobe" poly="377,153,377,219,477,219,477,153">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="WIR Light" key="WIR_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+					</window>
+					<alerts>
+						<alert name="Lights" keys="WIR_LIGHT" icon="light-bulb" />
+					</alerts>
+				</room>
+				<room name="Garage" poly="328,389,328,454,388,454,388,551,646,551,646,298,396,298,396,389">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Garage Light" key="GARAGE_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Test COM Port" icon="atom">
+							<control name="Test" key="COM_PORT" type="testComPort" />
+						</tab>
+					</window>
+					<alerts x="360" y="420">
+						<alert name="Lights" keys="GARAGE_LIGHT" icon="light-bulb" />
+					</alerts>
+					<doors>
+						<door name="Garage Door" pos="641,330,6,189" key="GARAGE_DOOR" colour="0xDB0000" />
+						<door name="Garage Door" pos="333,387,29,5" key="GARAGE_INTERAL_DOOR" colour="0xDB7C00" />
+					</doors>
+				</room>
+			</rooms>
+			<arbitrary>
+				<item type="label" x="650" y="5" label="Test Buttons:" fontSize="14" fontColour="0xFFFFFF" />
+				<item type="button" x="650" y="35" width="150" buttonFontSize="12" labels="Garage open,Garage closed" command="state" extras="on,off" key="GARAGE_DOOR" />
+				<item type="button" x="650" y="70" width="150" buttonFontSize="12" labels="Internal open,Internal closed" command="state" extras="on,off" key="GARAGE_INTERAL_DOOR" />
+				<item type="button" x="650" y="105" width="150" buttonFontSize="12" labels="Entry open,Entry closed" command="state" extras="on,off" key="FRONT_DOOR" />
+				<item type="button" x="650" y="140" width="150" buttonFontSize="12" labels="Back open,Back closed" command="state" extras="on,off" key="BACK_DOOR" />
+				<item type="button" x="650" y="175" width="150" buttonFontSize="12" labels="Window open,Window closed" command="state" extras="on,off" key="LIVING_WINDOW" />
+				<item type="button" x="650" y="210" width="150" buttonFontSize="12" labels="Car in,Car out" command="state" extras="on,off" key="GARAGE_CAR_1" />
+				<item type="object" src="car.swf" x="415" y="345" width="205" height="75" key="GARAGE_CAR_1" show="on" hide="off" />
+				<item type="object" src="car.swf" x="415" y="435" width="205" height="75" key="GARAGE_CAR_2" show="on" hide="off" />
+			</arbitrary>
+		</zone>
+		<zone name="Upstairs" map="upstairs.swf" cycle="false" alignment="center">
+			<rooms>
+				<room name="Bedroom 1" poly="57,224, 232,225, 257,270, 257,406, 198,406, 198,389, 102,389, 102,302, 57,302">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Bedroom 1 Light" key="BED1_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Audio" icon="music-note">
+							<control name="Audio" key="BED1_AUDIO" type="audioPanel" icon="music-note" />
+						</tab>
+					</window>
+					<alerts>
+						<alert name="Lights" keys="BED1_LIGHT" icon="light-bulb" />
+						<alert name="Audio" keys="BED1_AUDIO" icon="music-note" />
+					</alerts>
+				</room>
+				<room name="Bedroom 2" poly="489,28, 488,146, 504,146, 504,195, 691,195, 691,28">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Bedroom 2 Light" key="BED2_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Audio" icon="music-note">
+							<control name="Audio" key="BED2_AUDIO" type="audioPanel" icon="music-note" />
+						</tab>
+					</window>
+					<alerts>
+						<alert name="Lights" keys="BED2_LIGHT" icon="light-bulb" show="off" hide="on" />
+						<alert name="Audio" keys="BED2_AUDIO" icon="music-note" show="off" hide="on" />
+					</alerts>
+				</room>
+				<room name="Bedroom 3" poly="504,226, 504,391, 691,391, 691,226">
+					<window>
+						<tab name="Lights" icon="light-bulb">
+							<control name="Bedroom 3 Light" key="BED3_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+						</tab>
+						<tab name="Audio" icon="music-note">
+							<control name="Audio" key="BED3_AUDIO" type="audioPanel" icon="music-note" />
+						</tab>
+					</window>
+					<alerts>
+						<alert name="Lights" keys="BED3_LIGHT" icon="light-bulb" />
+						<alert name="Audio" keys="BED3_AUDIO" icon="music-note" />
+					</alerts>
+				</room>
+				<room name="Ensuite" poly="340,389, 340,315, 309,315, 309,296, 257,296, 257,389">
+					<window>
+						<tab name="Lights &amp; Fan" icon="light-bulb">
+							<control name="Main Light" key="ENSUITE2_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+							<control name="LV Light" key="ENSUITE2_LV_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+							<control name="Fan" key="ENSUITE2_FAN" type="onOff" icons="fan-off,fan" />
+						</tab>
+						<tab name="Heaters" icon="heater">
+							<control name="1st Heat Lamp" key="ENSUITE2_1_HEAT" type="onOff" icons="heater-off,heater" />
+							<control name="2nd Heat Lamp" key="ENSUITE2_2_HEAT" type="onOff" icons="heater-off,heater" />
+						</tab>
+					</window>
+					<alerts >
+						<alert name="Lights" keys="ENSUITE2_LIGHT,ENSUITE2_LV_LIGHT" icon="light-bulb" />
+						<alert name="Heater" keys="ENSUITE2_1_HEAT,ENSUITE2_2_HEAT" icon="heater" />
+						<alert name="Fan" keys="ENSUITE2_FAN" icon="fan" />
+					</alerts>
+				</room>
+				<room name="Bathroom" poly="440,389, 504,389, 504,316, 340,316, 340,389, 381,389, 381,403, 440,403">
+					<window>
+						<tab name="Lights &amp; Fan" icon="light-bulb">
+							<control name="Main Light" key="BATH_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+							<control name="LV Light" key="BATH_LV_LIGHT" type="onOff" icons="light-bulb-off,light-bulb" />
+							<control name="Fan" key="BATH_FAN" type="onOff" icons="fan-off,fan" />
+						</tab>
+						<tab name="Heaters" icon="heater">
+							<control name="1st Heat Lamp" key="BATH_1_HEAT" type="onOff" icons="heater-off,heater" />
+							<control name="2nd Heat Lamp" key="BATH_2_HEAT" type="onOff" icons="heater-off,heater" />
+						</tab>
+					</window>
+					<alerts >
+						<alert name="Lights" keys="BATH_LIGHT,BATH_LV_LIGHT" icon="light-bulb" />
+						<alert name="Heater" keys="BATH_1_HEAT,BATH_2_HEAT" icon="heater" />
+						<alert name="Fan" keys="BATH_FAN" icon="fan" />
+					</alerts>
+				</room>				
+			</rooms>
+		</zone>
+		<zone name="Living Room" map="living.png" cycle="false" alignment="center" hideFromList="true">
+			<rooms>
+				<room name="Living Room">
+					<doors>
+						<door name="Lounge Window" pos="150,57,206,12" key="LIVING_WINDOW" colour="0x3383D5" />
+					</doors>
+					<alerts x="155" y="120">
+						<alert name="TV" keys="LIVING_TV" icon="tv" />
+						<alert name="Audio" keys="LIVING_AUDIO" icon="music-note" />
+					</alerts>
+				</room>
+			</rooms>
+			<arbitrary>
+				<item type="label" x="650" y="5" label="Test Buttons:" fontSize="14" fontColour="0xFFFFFF" />
+				<item type="button" x="650" y="35" width="150" buttonFontSize="12" labels="Light 1 on,Light 1 off" command="state" extras="off,on" key="LIVING_LIGHT1" buttonBgColour="0xCC0000" buttonBorderColour="0xEE0000" buttonFontColour="0xFFFFFF" />
+				<item type="button" x="650" y="70" width="150" buttonFontSize="12" labels="Light 2 on,Light 2 off" command="state" extras="off,on" key="LIVING_LIGHT2" />
+				<item type="button" x="650" y="105" width="150" buttonFontSize="12" labels="Light 3 on,Light 3 off" command="state" extras="off,on" key="LIVING_LIGHT3" />
+				<item type="button" x="650" y="140" width="150" buttonFontSize="12" labels="Light 4 on,Light 4 off"command="state" extras="off,on" key="LIVING_LIGHT4" />
+
+				<item type="button" x="650" y="175" width="150" buttonFontSize="12" labels="Window open,Window closed" commands="on,off" key="LIVING_WINDOW" />
+
+				<item type="button" x="650" y="210" width="150" buttonFontSize="12" labels="TV on,TV off" commands="off,on" key="LIVING_TV" />
+				<item type="button" x="650" y="245" width="150" buttonFontSize="12" labels="Audio on,Audio off" commands="off,on" key="LIVING_AUDIO" />
+
+
+				<item type="icon" x="231" y="119" icons="light-bulb-off,light-bulb" commands="on,off" key="LIVING_LIGHT1" />
+				<item type="icon" x="490" y="119" icons="light-bulb-off,light-bulb" commands="on,off" key="LIVING_LIGHT2" />
+				<item type="icon" x="231" y="426" icons="light-bulb-off,light-bulb" commands="on,off" key="LIVING_LIGHT3" />
+				<item type="icon" x="490" y="426" icons="light-bulb-off,light-bulb" commands="on,off" key="LIVING_LIGHT4" />
+			</arbitrary>
+		</zone>
+	</property>
+	<controlTypes>
+		<control type="slider">
+			<row>
+				<item type="label" states="on,off" formats="%name% (%value%%):,%name% (OFF):" defaultState="off" defaultValue="0" />
+			</row>
+			<row>
+				<item type="button" label="off" command="off" extra="0" width="20" />
+				<item type="slider" command="on" extras="0,100" width="60" />
+				<item type="button" label="on" command="on" extra="100" extra2="40" extra3="0" width="20" />
+			</row>
+		</control>
+		<control type="slider2">
+			<row>
+				<item type="button" label="off" key="%key1%" command="off" extra="0" width="20" />
+				<item type="slider" command="on" extras="0,100" width="60" />
+				<item type="button" label="on" key="%key2%" command="on" extra="100" extra2="40" extra3="0" width="20" />
+			</row>
+		</control>
+		<control type="onOff">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="toggle" command="state" extras="on,off" />
+			</row>
+		</control>
+		<control type="upDown">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="button" icon="up-arrow" command="up" repeatRate="200" />
+				<item type="button" icon="down-arrow" command="down" repeatRate="200" />
+			</row>
+		</control>
+		<control type="miniBrowser">
+			<row>
+				<item type="button" icon="left-arrow" command="browser.back" />
+				<item type="button" icon="right-arrow" command="browser.forward" />
+				<item type="button" icon="media-stop" command="browser.stop" />
+			</row>
+			<row>
+				<item type="browser" />
+			</row>
+		</control>
+		<control type="audioPanel">
+			<row>
+				<item type="label" states="on,off" formats="%name% (%src%):,%name% (OFF):" />
+			</row>
+			<row>
+				<item type="toggle" icons="power-red,power-green" key="%key1%" command="state" extras="on,off" width="50" />
+				<item type="button" icon="volume-up" key="%key1%" command="volume" extra="up" repeatRate="200" />
+				<item type="button" icon="volume-down" key="%key1%" command="volume" extra="down" repeatRate="200" />
+			</row>
+			<row cases="state:on">
+				<item type="button" icon="cd-music:1" key="%key2%" command="src" extra="cd1" showOn="true" />
+				<item type="button" icon="cd-music:2" key="%key2%" command="src" extra="cd2" showOn="true" />
+				<item type="button" icon="radio" command="src" extra="radio" showOn="true" />
+				<item type="button" icon="atom" command="src" extra="atom" showOn="true" />
+				<item type="button" icon="tv" command="src" extra="tv" showOn="true" />
+			</row>
+			<row cases="state:on,src:cd1|cd2">
+				<item type="button" icon="media-play" command="send_audio_command" extra="cd-play" />
+				<item type="button" icon="media-stop" command="send_audio_command" extra="cd-stop" />
+				<item type="button" icon="media-pause" command="send_audio_command" extra="cd-pause" />
+				<item type="button" icon="media-rwd" command="send_audio_command" extra="cd-rw" repeatRate="200" />
+				<item type="button" icon="media-fwd" command="send_audio_command" extra="cd-ff" repeatRate="200" />
+			</row>
+			<row cases="state:on,src:!cd1|!cd2">
+				<item type="button" icon="left-arrow" command="send_audio_command" extra="5" />
+				<item type="button" icon="right-arrow" command="send_audio_command" extra="6" />
+				<item type="button" icon="up-arrow" command="send_audio_command" extra="7" />
+				<item type="button" icon="down-arrow" command="send_audio_command" extra="8" />
+			</row>
+			<row cases="state:on,src:atom">
+				<item type="button" icon="media-play" command="send_audio_command" extra="1" />
+				<item type="button" icon="media-stop" command="send_audio_command" extra="2" />
+			</row>
+		</control>
+		<control type="audioPanel_new">
+			<row>
+				<item type="label" key="%key1%" states="on,off" formats="%name% (%src%):,%name% (OFF):" />
+			</row>
+			<row>
+				<item type="toggle" key="%key1%" icons="power-red,power-green" command="state" extras="on,off" width="50" />
+				<item type="button" key="%key1%" icon="volume-up" command="volume" extra="up" repeatRate="200" />
+				<item type="button" key="%key1%" icon="volume-down" command="volume" extra="down" repeatRate="200" />
+			</row>
+			<row cases="state:on" key="%key1%">
+				<item type="button" key="%key1%" icon="cd-music:1" command="src" extra="cd1" showOn="true" />
+				<item type="button" key="%key1%" icon="cd-music:2" command="src" extra="cd2" showOn="true" />
+				<item type="button" key="%key1%" icon="radio:A" command="src" extra="radio_A" showOn="true" />
+				<item type="button" key="%key1%" icon="radio:B" command="src" extra="radio_B" showOn="true" />
+			</row>
+			<row cases="state:on,src:cd1|cd2" key="%key1%">
+				<item type="button" key="%key1%" icon="media-play" command="send_audio_command" extra="cd-play" />
+				<item type="button" key="%key1%" icon="media-stop" command="send_audio_command" extra="cd-stop" />
+				<item type="button" key="%key1%" icon="media-pause" command="send_audio_command" extra="cd-pause" />
+				<item type="button" key="%key1%" icon="media-rwd" command="send_audio_command" extra="cd-rw" repeatRate="200" />
+				<item type="button" key="%key1%" icon="media-fwd" command="send_audio_command" extra="cd-ff" repeatRate="200" />
+			</row>
+			<row cases="state:on,src:radio_A" key="%key1%">
+				<item type="button" key="%key2%" label="JJJ" command="preset" extra="1" showOn="true" />
+				<item type="button" key="%key2%" label="MMM" command="preset" extra="6" showOn="true" />
+				<item type="button" key="%key2%" label="KKK" command="preset" extra="7" showOn="true" />
+				<item type="button" key="%key2%" label="Fox" command="preset" extra="8" showOn="true" />
+			</row>
+			<row cases="state:on,src:radio_B" key="%key1%">
+				<item type="button" key="%key3%" label="Chan1" command="preset" extra="1" showOn="true" />
+				<item type="button" key="%key3%" label="Chan2" command="preset" extra="6" showOn="true" />
+				<item type="button" key="%key3%" label="Chan3" command="preset" extra="7" showOn="true" />
+				<item type="button" key="%key3%" label="Chan4" command="preset" extra="8" showOn="true" />
+			</row>
+		</control>
+		<control type="tvControl">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="50" sounds="ding,default" />
+				<item type="button" icon="volume-up" command="volume_up" repeatRate="200" />
+				<item type="button" icon="volume-down" command="volume_down" repeatRate="200" />
+			</row>
+			<row cases="state:on">
+				<item type="button" icon="chan-abc" command="channel" extra="abc" showOn="true" sound="ding"/>
+				<item type="button" icon="chan-sbs" command="channel" extra="sbs" showOn="true" />
+				<item type="button" icon="chan-win" command="channel" extra="nine" showOn="true" />
+				<item type="button" icon="chan-prime" command="channel" extra="seven" showOn="true" />
+				<item type="button" icon="chan-10" command="channel" extra="ten" showOn="true" />
+			</row>
+		</control>
+		<control type="rawKeyPad">
+			<row>
+				<item type="button" label="1" command="keyPress" extra="01" />
+				<item type="button" label="2" command="keyPress" extra="02" />
+				<item type="button" label="3" command="keyPress" extra="03" />
+				<item type="button" label="Away" command="keyPress" extra="0D" />
+			</row>
+			<row>
+				<item type="button" label="4" command="keyPress" extra="04" />
+				<item type="button" label="5" command="keyPress" extra="05" />
+				<item type="button" label="6" command="keyPress" extra="06" />
+				<item type="button" icon="moon" command="keyPress" extra="0E" />
+			</row>
+			<row>
+				<item type="button" label="7" command="keyPress" extra="07" />
+				<item type="button" label="8" command="keyPress" extra="08" />
+				<item type="button" label="9" command="keyPress" extra="09" />
+				<item type="button" icon="sun" command="keyPress" extra="0F" />
+			</row>
+			<row>
+				<item type="button" label="*" command="keyPress" extra="0B" />
+				<item type="button" label="0" command="keyPress" extra="00" />
+				<item type="button" label="#" command="keyPress" extra="0C" />
+				<item type="button" label="F" command="keyPress" extra="0A" />
+			</row>
+		</control>
+		<control type="airCon">
+			<row>
+				<item type="label" />
+			</row>
+			<row>
+				<item type="picker" command="set" label="%value% deg C" valueFormat="%value%" minValue="0" maxValue="100" step="5" repeatRate="200" />
+			</row>
+		</control>
+
+
+		<control type="frontGateVideo">
+			<row>
+				<item type="video" src="D:/BI/eLife Client/Build/standalone/lib/objects/MVI_2239.flv" format="flv" videoWidth="320" videoHeight="240" />
+			</row>
+		</control>
+
+
+		<control type="frontGateVideo_old">
+			<onShow command="url.http://172.16.3.150/control.cgi?cont_2=1&ok=dummy.htm,http://172.16.3.150/control.cgi?cont_2=4&ok=dummy.htm" />
+			<onHide command="" />
+			<onClose command="" />
+			<row>
+				<item type="video" src="http://172.16.3.150/__live.jpg?&&&" format="jpg" refreshRate="500" videoWidth="320" videoHeight="240" />
+			</row>
+			<row>
+				<item type="button" label="Left" command="url.http://172.16.3.150/control.cgi?cont_2=1&ok=dummy.htm" repeatRate="500" />
+				<item type="button" label="Right" command="url.http://172.16.3.150/control.cgi?cont_2=2&ok=dummy.htm" repeatRate="500" />
+			</row>
+			<row>
+				<item type="button" label="Up" command="url.http://172.16.3.150/control.cgi?cont_2=4&ok=dummy.htm" repeatRate="500" />
+				<item type="button" label="Down" command="url.http://172.16.3.150/control.cgi?cont_2=8&ok=dummy.htm" repeatRate="500" />
+			</row>
+		</control>
+		<control type="squeezePanel">
+			<row>
+				<item type="trackDetails" art="thumb" detailsPosition="bottom" />
+			</row>
+			<row>
+				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" width="40" />
+				<item type="button" icon="volume-up" command="VOLUME" extra="up" repeatRate="200" />
+				<item type="button" icon="volume-down" command="VOLUME" extra="down" repeatRate="200" />
+				<item type="button" icon="find" command="func.openMusicLibrary" />
+			</row>
+			<row>
+				<item type="button" icon="media-play" command="PLAY" extra="" extra2="" />
+				<item type="button" icon="media-stop" command="STOP" extra="" extra2="" />
+				<item type="button" icon="media-pause" command="PAUSE" extra="" extra2="" />
+				<item type="button" icon="media-step-rwd" command="previousItem" extra="" extra2="" repeatRate="200" />
+				<item type="button" icon="media-step-fwd" command="nextItem" extra="" extra2="" repeatRate="200" />
+			</row>
+		</control>
+		<control type="acRoomPanel">
+			<row cases="mode:auto">
+				<item type="label" format="%name% (%mode%): %set% deg C" />
+			</row>
+			<row cases="mode:manual">
+				<item type="label" format="%name% (%mode%): %set% deg C [%position%]" />
+			</row>
+			<row>
+				<item type="button" label="auto" command="mode" extra="auto" showOn="true" />
+				<item type="button" label="manual" command="mode" extra="manual" showOn="true" />
+			</row>
+			<row cases="mode:auto">
+				<item type="picker" command="set" label="%value% deg C" minValue="16" maxValue="25" step="1" repeatRate="200" />
+			</row>
+			<row cases="mode:manual">
+				<item type="button" label="open" command="position" extra="open" showOn="true" />
+				<item type="button" label="closed" command="position" extra="closed" showOn="true" />
+			</row>
+		</control>
+		<control type="squeezePanelFull">
+			<row>
+				<item type="trackDetails" art="cover" detailsPosition="bottom" />
+			</row>
+			<row>
+				<item type="toggle" icons="power-red,power-green" command="state" extras="on,off" />
+				<item type="button" icon="volume-up" command="VOLUME" extra="up" repeatRate="200" />
+				<item type="button" icon="volume-down" command="VOLUME" extra="down" repeatRate="200" />
+			</row>
+			<row>
+				<item type="button" icon="media-play" command="PLAY" extra="" extra2="" />
+				<item type="button" icon="media-stop" command="STOP" extra="" extra2="" />
+				<item type="button" icon="media-pause" command="PAUSE" extra="" extra2="" />
+				<item type="button" icon="media-step-rwd" command="previousItem" extra="" extra2="" repeatRate="200" />
+				<item type="button" icon="media-step-fwd" command="nextItem" extra="" extra2="" repeatRate="200" />
+			</row>
+		</control>
+		<control type="macro">
+			<row>
+				<item type="button" macro="true" cancel="stop" label="%arg3%" extra="button" extra2="%arg1%" extra3="" extra4="" extra5="%arg2%" width="25" />
+			</row>
+		</control>
+	</controlTypes>
+</application>
