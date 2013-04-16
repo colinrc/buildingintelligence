@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+
+<project name="eLife_Admin" default="dist" basedir=".">
+
+	<property file="build.properties"/>
+
+	<taskdef resource="net/sf/ant4eclipse/antlib.xml" />
+	<property name="workspace" value="${basedir}/.." />
+	
+	<property name="project.name" value="Admin_Standalone" />
+	<property name="dist.jar" value="dist/eLife_Admin.jar" />
+	<userLibraries userlibraries="./libs.userlibraries" />
+	<getEclipseClasspath pathId="eLife_Admin.classpath" relative="true" workspace="${workspace}" projectName="${project.name}" />
+	<getEclipseClasspath property="eLife_Admin.jar_libs" relative="true" workspace="${workspace}" projectName="${project.name}" />
+	<available file="dist/lib" type="dir" property="lib_dir.present"/>
+	<available file="ext" type="dir" property="ext_dir.present"/>
+	<available file="dist/bin" type="dir" property="bin_dir.present"/>
+	<getOutputpath property="classes.dir" workspace="${workspace}" projectName="${project.name}" />
+	
+	<property name="jar.name"  value="eLife_Admin.jar"/>
+
+	<path id="project.class.path">
+		<pathelement location="."/>
+	</path>
+
+	<target name="init">
+		<delete>
+			<fileset dir="dist" includes="**/*" excludes="ext/*" followsymlinks="false" >
+				<exclude name="ext/*" />
+				<exclude name="*.zip" />
+			</fileset>
+		</delete>
+        <echo message="Emptied previous dist file" />
+		
+	</target>
+
+    <target name="compile" depends="init" >
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}" >
+            <src path="src"/>
+        	<classpath refid="eLife_Admin.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${classes.dir}">
+            <src path="test"/>
+            <classpath refid="eLife_Admin.classpath"/>
+        </javac>
+    </target>
+
+	
+	<target name="jar"  depends="compile">
+		<jar destfile="dist/${app_name}.jar" 
+			update="false"
+			basedir="bin" 
+			includes = "**/*.class" 
+			manifest="MANIFEST.MF"
+		/>
+		<jar destfile="dist/${app_name}.jar" 
+			update="true"
+			basedir="src" 
+			includes = "**/my.properties" 
+			 />
+		<jar destfile="dist/${app_name}.jar" 
+			update="true"
+			basedir="src/" 
+			includes = "images/*" 
+			 />
+	</target>
+	
+
+	<target name="clean" depends="">
+		<delete>
+			<fileset dir="bin">
+				<include name="**/*.class"/>
+			</fileset>
+		</delete>
+	</target>
+
+
+	<target name="clean-dist" depends="clean">
+		<delete file="${install.dir}/${jar.name}" />
+	</target>
+	<target name="increment" depends="" description="Increments build number and creates a zip file.">
+		<propertyfile file="src/au/com/BI/Admin/Home/my.properties" >
+		<entry  key="minor_version" type="int" operation="+" value="1" />
+	</propertyfile>
+	<property file="src/au/com/BI/Admin/Home/my.properties" />
+		<echo message="Version number now ${major_version}.${minor_version}" />
+	</target>
+
+	<target name="dist_clean" depends="" >
+		  <delete>
+		    <fileset dir="dist" includes="*.zip"/>
+		  </delete>
+	</target>
+		    	
+	<target name="dist" depends="dist_clean,increment,jar" >
+		<zip destfile="dist/${app_name}_${major_version}.${minor_version}.zip" 
+			update="false"
+			basedir="dist" 
+			includes = "*.jar"  />
+	</target>
+	
+	
+
+	
+</project>
