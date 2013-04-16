@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+    <classpathentry
+        excluding=".svn/|au/.svn/|au/com/.svn/|au/com/BI/.svn/|au/com/BI/simulator/.svn/"
+        kind="src" path="src"/>
+    <classpathentry
+        excluding=".svn/|images/.svn/|lib/.svn/|lib/icons/.svn/|images/base/.svn/|images/elife_active/.svn/|images/highlight/.svn/|images/levels/.svn/|images/base/Thumbs.db|images/elife_active/Thumbs.db|images/highlight/Thumbs.db"
+        kind="src" path="resources"/>
+    <classpathentry kind="src" path="/elife_active"/>
+    <classpathentry kind="src" path="/eLife_Java_Client"/>
+    <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/1.5"/>
+    <classpathentry kind="output" path="bin"/>
+</classpath>

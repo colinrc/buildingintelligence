@@ -1,0 +1,6 @@
+<client>
+	<setting name="serverAddress" value="NOWHERE" />
+	<setting name="applicationXML" value="test.xml" />
+	<setting name="fullScreen" value="false" />
+	<setting name="debugMode" value="false" />
+</client>
