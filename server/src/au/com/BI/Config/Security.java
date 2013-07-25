@@ -55,11 +55,11 @@ public class Security {
     fullClients = new HashMap<String,Boolean> ();
     postOnlyClients = new HashMap<String,Boolean> ();
        
-//	connected = true;
-//	return ;
+    connected = true;
+    return ;
 
 
-//	InputStreamReader reader = new InputStreamReader(System.in);
+/*	InputStreamReader reader = new InputStreamReader(System.in);
 //	BufferedReader in = new BufferedReader(reader);
 	 
 	 hasp = new Hasp(Hasp.HASP_PROGNUM_DEFAULT_FID);
@@ -101,7 +101,7 @@ public class Security {
 			fsize,
 			allowNumbers);
        }
-   }
+*/   }
     
     public final boolean allowClient(int clientCount)  throws TooManyClientsException {
 
