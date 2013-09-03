@@ -1,1 +1,22 @@
 eLife
+
+The eLife home automation product.
+
+This software encompasses a Java home automation server able to talk to numerous systems including CBUS, Jandy, X10, Comfort, NESS ELK M1 and many more.
+
+There are also some clients available, the most mature current client is the SWF flash based client, there are also clients in various stages of development for iPhone and Java.
+
+There are several server configuration examples available in the config directory.
+
+TODO:
+
+Provide a default install in zip file format with minimal functionality.
+
+Provide install and configuration documentation.
+
+Provide Linux install packages (deb and rpm).
+
+Provide a Windows WIX installer.
+
+Provide a HTML5 based client.
+
