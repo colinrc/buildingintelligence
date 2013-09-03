@@ -1,0 +1,5 @@
+The wrapper.conf file in this directory is used by the wrapper jar, this provides windows service functionality when running elife on windows.
+
+The the elife and emonitor files are init files for debian based systems and have been used and tested on the raspberry pi raspbian operating system.
+
+
